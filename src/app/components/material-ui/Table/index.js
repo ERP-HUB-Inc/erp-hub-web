@@ -57,7 +57,3 @@ export class CTable extends Component {
   }
 }
 
-CTable.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
