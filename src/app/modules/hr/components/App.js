@@ -6,8 +6,9 @@ export default class App extends Component {
     render() {
         return (
             <div>
-                <this.Modal/>
-                <this.Table/>
+                <this.Modal />
+                <this.Table />
+                <EmployeeList />
             </div>
         );
     }

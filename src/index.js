@@ -1,23 +1,49 @@
-// import React from "react";
-// import ReactDOM from "react-dom";
-// import { Provider } from "react-redux";
-// import "./index.css";
-// import App from "./App";
-
-// ReactDOM.render(<App />, document.getElementById("root"));
-
-import React from "react";
+import * as React from "react";
 import { render } from "react-dom";
-import { createStore } from "redux";
+import { createLogger } from "redux-logger";
+import thunk from "redux-thunk";
+import {
+  Translate,
+  localeReducer as locale,
+  setActiveLanguage
+} from "react-localize-redux";
+import {
+  createStore,
+  combineReducers,
+  applyMiddleware
+} from "redux";
 import { Provider } from "react-redux";
 import App from "./app/modules/hr/components/App";
-import rootReducer from "./app/modules/hr/reducers";
+import employees from "./app/modules/hr/reducers";
+import promise from "redux-promise-middleware";
+import {
+  initLanguage,
+  setTranslation
+} from "./app/modules/common/actions/language";
 
-const store = createStore(rootReducer);
+const middlewar = applyMiddleware(promise(), thunk, createLogger());
 
-render(
+const store = createStore(combineReducers({
+  locale,
+  employees
+}),
+middlewar);
+
+store.dispatch(initLanguage());
+
+store.dispatch(setTranslation());
+
+store.dispatch(setActiveLanguage("en"));
+
+const Application = () => (
   <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById("root")
+    <div>
+      <App />
+      <h2>Start editing to see some magic happen {"\u2728"}</h2>
+      <Translate id="text_login" />
+      <Translate id="text_contact_us" />
+    </div>
+  </Provider>
 );
+
+render(<Application />, document.getElementById("root"));

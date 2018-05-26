@@ -23,6 +23,15 @@ export default class EmployeeList extends Component {
                         </tbody>
                     </table>
                 }
+                <div>
+                    <button onClick={() => this.props.changeLanguage("en")}>English</button>
+                </div>
+                <div>
+                    <button onClick={() => this.props.changeLanguage("fr")}>French</button>
+                </div>
+                <div>
+                    <button onClick={() => this.props.changeLanguage("es")}>Espance</button>
+                </div>
             </div>
         );
     }

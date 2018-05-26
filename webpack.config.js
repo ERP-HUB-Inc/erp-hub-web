@@ -11,6 +11,9 @@ module.exports = {
         path: DIST_DIR + "/app",
         filename: "bundle.js"
     },
+    node: {
+       fs: "empty"
+    },
     plugins: [
         new CleanWebpackPlugin(["dist"]),
         new HtmlWebpackPlugin({

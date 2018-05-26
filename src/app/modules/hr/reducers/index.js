@@ -9,4 +9,4 @@ function employees(state = [{ id: 101, name: "Morn Sophanna", position: "Develop
     ];
 }
 
-export default combineReducers({ employees });
+export default employees;
