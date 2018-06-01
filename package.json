@@ -9,7 +9,9 @@
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.1.1",
+    "cross-fetch": "^2.2.0",
     "dotenv": "^5.0.1",
+    "dotenv-webpack": "^1.5.5",
     "eslint": "^4.19.1",
     "fs": "0.0.1-security",
     "lodash": "^4.17.10",
@@ -28,7 +30,7 @@
   "scripts": {
     "start": "set PORT=3081 & react-scripts start",
     "build": "react-scripts build",
-    "webpack": "webpack-dev-server --mode development --open",
+    "webpack": "webpack-dev-server --mode production --open",
     "webpack:build": "webpack --mode production",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

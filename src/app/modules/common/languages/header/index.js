@@ -1,4 +1,9 @@
 export const header = {
+    "text_header": [
+        "Header-En",
+        "Header-Fr",
+        "Header-Es"
+    ],
     "text_login": [
         "Login-En",
         "Login-Fr",
