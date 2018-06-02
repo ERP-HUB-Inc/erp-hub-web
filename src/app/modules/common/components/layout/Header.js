@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Translate, setActiveLanguage } from "react-localize-redux";
 import "./styles/Header.css";
+import "./styles/Test.scss";
 
 export default class Header extends Component {
 	constructor(props) {
