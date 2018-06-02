@@ -1,4 +1,4 @@
-export const header = {
+const headers = {
     "text_header": [
         "Header-En",
         "Header-Fr",
@@ -20,3 +20,5 @@ export const header = {
         "Profile-Es"
     ]
 };
+
+export default headers;

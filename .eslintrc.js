@@ -14,7 +14,6 @@ module.exports = {
     "rules": {
         "semi": ["error", "always"],
         "quotes": ["error", "double"],
-        "no-trailing-whitespace": true,
-        "no-useless-constructor": "error"
+        "no-trailing-whitespace": true
     }
 };

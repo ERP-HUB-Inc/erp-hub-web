@@ -1,6 +1,6 @@
 import { initialize, addTranslation } from "react-localize-redux";
-import { header } from "../languages/header";
-import { footer } from "../languages/footer";
+import headers from "../languages/headers";
+import footers from "../languages/footers";
 
 export function initLanguage() {
     return initialize([
@@ -11,5 +11,5 @@ export function initLanguage() {
 }
 
 export function setTranslation() {
-    return addTranslation({...header, ...footer});
+    return addTranslation({...headers, ...footers});
 }

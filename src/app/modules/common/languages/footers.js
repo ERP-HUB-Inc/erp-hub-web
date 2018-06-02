@@ -1,4 +1,4 @@
-export const footer = {
+const footers = {
     "text_contact_us": [
         "Contact Us-En",
         "Contact Us-Fr",
@@ -10,3 +10,5 @@ export const footer = {
         "Subscription-Es"
     ]
 };
+
+export default footers;

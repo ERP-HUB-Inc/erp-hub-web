@@ -15,11 +15,15 @@ export default class EmployeeList extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {
+                            {/* {
                                 this.props.employees.map((employee, index) => (
                                     <Employee key={index} {...employee} onClick={() => this.props.todoOnClick(employee)}/>
                                 ))
-                            }
+                            } */}
+                            <tr>
+                                <td>hello</td>
+                                <td>hello</td>
+                            </tr>
                         </tbody>
                     </table>
                 }

@@ -2,7 +2,7 @@ import React, { Component as RComponent } from "react";
 import { 
     CTable,
     CModal
-} from "../../../components/ant-ui";
+} from "../../common/elements/ant-ui";
 
 export default class Component extends RComponent {
     constructor(props) {
