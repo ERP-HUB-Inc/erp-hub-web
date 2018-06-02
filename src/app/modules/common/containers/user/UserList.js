@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import User from "../components/user/User";
-import { fetchUsers } from "../actions/users";
+import User from "../../components/user/User";
+import { fetchUsers } from "../../actions/users";
 
 class UserList extends Component {
 	componentDidMount() {

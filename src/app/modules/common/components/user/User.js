@@ -1,11 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
+import Component from "../Component";
 
 export default class User extends Component {
     render() {
         return (
             <div>
                 {
-                    this.props.fetching ? <h2>Record Loading</h2> : <h2>Record Loaded</h2>
+                    this.props.fetching ? <h2 className="color">Record Loading</h2> : <h2 className="color">Record Loaded</h2>
                 }
                 {
                     <table border={1}>
