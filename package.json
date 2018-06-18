@@ -29,7 +29,8 @@
     "redux-promise-middleware": "^5.1.1",
     "redux-thunk": "^2.2.0",
     "sass": "^1.5.1",
-    "sass-loader": "^7.0.1"
+    "sass-loader": "^7.0.1",
+    "react-router-dom": "^4.2.2"
   },
   "scripts": {
     "start": "set PORT=3081 & react-scripts start",
