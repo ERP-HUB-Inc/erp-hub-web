@@ -1,7 +1,21 @@
+@import "~bootstrap/scss/bootstrap.scss";
+@import "SideBar.scss";
+@import "Input.scss";
+@import "Header.scss";
+// @import "Footer.scss";
+
 $font-stack:    Helvetica, sans-serif;
 $primary-color: rgb(214, 25, 25);
 
 body {
-  font: 100% $font-stack;
-  color: $primary-color
+  margin: 0;
+  background-color: rgba(247, 247, 247, 0.705) !important;
+}
+
+.content {
+  margin-left: 100px
+}
+
+.clearFloat {
+  clear: both
 }

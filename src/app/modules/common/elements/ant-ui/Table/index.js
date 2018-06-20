@@ -48,9 +48,9 @@ const data = [{
 }];
 
 export class CTable extends Component {
-    render() {
-        return (
-            <Table columns={columns} dataSource={data} />
-        );
-    }
+  render() {
+    return (
+      <Table columns={columns} dataSource={data} />
+    );
+  }
 }

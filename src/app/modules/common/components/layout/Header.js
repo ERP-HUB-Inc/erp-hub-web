@@ -1,41 +1,50 @@
 import React from "react";
 import { Menu, Dropdown, Button, Icon } from "antd";
 import Component from "../Component";
-import "./styles/Header.css";
+import { reduxForm } from "redux-form";
 
-export default class Header extends Component {
-	constructor(props) {
-		super(props);
-		this.switchLanguage = this.switchLanguage.bind(this);
-	}
+class Header extends Component {
+  constructor(props) {
+    super(props);
+    this.switchLanguage = this.switchLanguage.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
-	switchLanguage(key) {
-		const { dispatch } = this.props;
-		dispatch(this.changeLanguage(key));
-	}
+  switchLanguage(key) {
+    const { dispatch } = this.props;
+    dispatch(this.changeLanguage(key));
+  }
 
-	render() {
-		const menu = (
-			<Menu>
-			  <Menu.Item key="1" onClick={() => this.switchLanguage("en")}>English</Menu.Item>
-			  <Menu.Item key="2" onClick={() => this.switchLanguage("fr")}>French</Menu.Item>
-			  <Menu.Item key="3" onClick={() => this.switchLanguage("es")}>Espain</Menu.Item>
-			</Menu>
-		);
+  handleSubmit(){
+    alert("dd");
+  }
 
-		return (
-			<div className="header">
-				<ul className="right">
-					<li>
-						<Dropdown overlay={menu}>
-							<Button style={{ marginLeft: 8 }}>
-								English <Icon type="down" />
-							</Button>
-						</Dropdown>
-					</li>
-				</ul>
-				<this.clearFloating />
-			</div>
-		);
-	}
+  render() {
+    return (
+      // <div className="header">
+      <this.Col md="8">
+        {/* <this.Row> */}
+        <this.Col md="2 border-right">
+          <div className="logo-title"> Store VEIN </div>
+              Backoffice
+        </this.Col>
+        <this.Col md="5 search-block">
+          <form onSubmit={ this.handleSubmit }>
+            <this.Field
+              name="title"
+              type="text"
+              placeholder="Search Transaction, invoice or help"
+              component={ this.InputRedux }
+            />
+          </form>
+        </this.Col>
+        {/* </this.Row> */}
+      </this.Col> 
+      // </div>
+    );
+  }
 }
+
+export default reduxForm({
+  form: "search", 
+})(Header);

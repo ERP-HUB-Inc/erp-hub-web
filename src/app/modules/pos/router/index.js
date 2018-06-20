@@ -7,21 +7,21 @@ import UserList from "../../common/containers/user/UserList";
 import Test from "../../common/containers/test";
 
 class Router extends Component {
-	render() {
-		return (
-			<div>
-				<SideBar />
-				<div className="content">
-					<Header />
-						<Switch>
-							<Route path="/test" name="Home" component={ Test } />
-							<Route path="/" name="Home" component={ UserList } />
-						</Switch>
-					<Footer />
-				</div>
-			</div>
-		);
-	}
+  render() {
+    return (
+      <div>
+        <SideBar />
+        <div className="content">
+          <Header />
+          <Switch>
+            <Route path="/test" name="Home" component={ Test } />
+            <Route path="/" name="Home" component={ UserList } />
+          </Switch>
+          <Footer />
+        </div>
+      </div>
+    );
+  }
 }
 
 export default Router;

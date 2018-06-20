@@ -1,14 +1,12 @@
-import React, { Component } from "react";
-import "./styles/SideBar.css";
+import React from "react";
+import Component from "../Component";
 
 export default class SideBar extends Component {
-    render() {
-        return (
-            <div>
-                <div className="wrapSideBar">
-                    SideBar
-                </div>
-            </div>
-        );
-    }
+  render() {
+    return (
+      <this.Col md="4">
+            ddd
+      </this.Col>
+    );
+  }
 }

@@ -14,6 +14,10 @@ module.exports = {
     "rules": {
         "semi": ["error", "always"],
         "quotes": ["error", "double"],
-        "no-trailing-whitespace": true
+        "no-trailing-whitespace": true,
+        "indent": [
+            "error",
+            2
+        ],
     }
 };

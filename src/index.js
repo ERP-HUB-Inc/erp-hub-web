@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import App from "./app/modules/common/containers/App";
 import configureStore from "./app/store/configureStore";
 import Localization from "./app/localization";
+import "bootstrap/dist/css/bootstrap.min.css";
  
 let store = configureStore();
 store = new Localization(store);
