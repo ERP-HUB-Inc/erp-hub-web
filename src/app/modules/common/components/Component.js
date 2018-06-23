@@ -9,10 +9,19 @@ import
 import Header from "../elements/ant-ui/Header";
 import { InputRedux } from "../elements/react-strap";
 import {  
+  Container,
   Col,
-  Row
+  Row,
+  Form,
+  Button,
+  Dropdown, 
+  DropdownItem, 
+  DropdownToggle, 
+  DropdownMenu
 } from "reactstrap";
-import "./layout/styles/Style.scss";
+import "./layout/styles/Style.css";
+import "bootstrap/dist/css/bootstrap.css";
+import { Layout, Menu, Icon } from "antd";
 
 export default class Component extends RComponent {
   constructor(props) {
@@ -36,12 +45,24 @@ export default class Component extends RComponent {
     this.Field = Field;
 
     //React Strap 
+    this.Container = Container;
     this.Col = Col;
     this.Row = Row;
     this.InputRedux = InputRedux;
+    this.Form = Form;
+    this.Button = Button;
+    this.Dropdown = Dropdown;
+    this.DropdownItem = DropdownItem;
+    this.DropdownToggle = DropdownToggle;
+    this.DropdownMenu = DropdownMenu;
 
     //Redux
     // this.Field = Field;
+
+    //Ant
+    this.Layout = Layout;
+    this.Menu = Menu;
+    this.Icon = Icon;
 
   }
 

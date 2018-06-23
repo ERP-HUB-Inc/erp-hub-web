@@ -3,13 +3,13 @@ import headers from "../languages/headers";
 import footers from "../languages/footers";
 
 export function initLanguage() {
-    return initialize([
-        { name: "English", code: "en" },
-        { name: "French", code: "fr" },
-        { name: "Espance", code: "es" }
-    ]);
+  return initialize([
+    { name: "English", code: "en" },
+    { name: "French", code: "fr" },
+    { name: "Espance", code: "es" }
+  ]);
 }
 
 export function setTranslation() {
-    return addTranslation({...headers, ...footers});
+  return addTranslation({...headers, ...footers});
 }

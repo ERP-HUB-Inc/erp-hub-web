@@ -11,7 +11,7 @@ export class InputRedux extends Component {
 
   render() {
     const {
-      input: { value, onChange, onFocus, onBlur },
+      input: { onChange, onFocus, onBlur },
       label,
       required,
       placeholder,
@@ -31,7 +31,7 @@ export class InputRedux extends Component {
           onBlur={onBlur}
           placeholder={placeholder}
           valid={ touched && error ? false : null }
-          value={ value }
+          // value={ value }
         />
         {touched &&
           ((error && <FormText className="select-error"> {error} </FormText>) ||
