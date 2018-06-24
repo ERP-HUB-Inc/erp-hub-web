@@ -35,10 +35,6 @@
         border: none;
     }
 
-    /* .main-search input::placeholder { 
-        color: red !important;
-    } */
-
     .main-search i.search-icon {
         position: absolute;
         font-size: 19px;
@@ -56,7 +52,6 @@
     }
 
     /* user account */
-
     .main-user-select {
         float: right;
         margin-right: 113px;
