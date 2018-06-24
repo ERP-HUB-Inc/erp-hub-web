@@ -60,7 +60,7 @@ class Headers extends Component {
                    
               </this.Col>
               <this.Col md="4">
-                   
+                <this.Noteicon/>
               </this.Col>
               <this.Col md="4">
                 <UserSelect />

@@ -4,7 +4,8 @@ import { Field } from "redux-form";
 import 
 { 
   CTable,
-  CModal
+  CModal,
+  Noteicon
 } from "../elements/ant-ui";
 import Header from "../elements/ant-ui/Header";
 import { InputRedux } from "../elements/react-strap";
@@ -31,6 +32,7 @@ export default class Component extends RComponent {
     this.Table = () => (<CTable/>);
     this.Modal = () => (<CModal/>);
     this.Header = () => (<Header/>);
+    this.Noteicon = () => (<Noteicon/>);
 
     // Other
     this.clearFloating = () => <div className="clearFloat"></div>;
