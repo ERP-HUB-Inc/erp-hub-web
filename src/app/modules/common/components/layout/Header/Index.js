@@ -55,18 +55,12 @@ class Headers extends Component {
             </this.Form>
           </this.Col>
           <this.Col md="7">
-            {/* <ul className="help-layout">
-              <li className="help">Help</li>
-              <li className="useracc">
-                <UserSelect />
-              </li>
-            </ul> */}
             <this.Row>
               <this.Col md="4">
-                    Help
+                   
               </this.Col>
               <this.Col md="4">
-                    Notation
+                   
               </this.Col>
               <this.Col md="4">
                 <UserSelect />
