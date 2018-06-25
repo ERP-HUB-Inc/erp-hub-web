@@ -1,5 +1,4 @@
 import React from "react";
-// import Component from "../Component";
 import PropTypes from "prop-types";
 import { Layout, Menu, Icon } from "antd";
 const { Sider } = Layout;
@@ -17,21 +16,10 @@ export default class SideBar extends React.Component {
       >
         <div className="logo" />
         <Menu theme="dark" mode="inline">
-          <Menu.Item key="1">
-            <Icon type="user" />
-            <span>nav 1</span>
-          </Menu.Item>
-          <Menu.Item key="2">
-            <Icon type="video-camera" />
-            <span>nav 2</span>
-          </Menu.Item>
-          <Menu.Item key="3">
-            <Icon type="upload" />
-            <span>nav 3</span>
-          </Menu.Item>
           <SubMenu
+            className="main-manu-item"
             key="sub2"
-            title={<span><Icon type="team" /><span>Team</span></span>}
+            title={<span><i className="fa fa-address-book"><span className="menu-title">Team 1</span></i></span>}
           >
             <Menu.Item>
               Title 1
@@ -49,7 +37,8 @@ export default class SideBar extends React.Component {
           <SubMenu
             className="main-manu-item"
             key="sub3"
-            title={<span><Icon type="team" /><span>Team 2</span></span>}
+            // title={<span><Icon type="team" /><span>Team 2</span></span>}
+            title={<i className="fa fa-align-justify"><span className="menu-title">Team 2</span></i>}
           >
             <Menu.Item>
               Title 2

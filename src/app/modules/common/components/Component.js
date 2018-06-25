@@ -20,6 +20,7 @@ import {
   DropdownToggle, 
   DropdownMenu
 } from "reactstrap";
+import { NavLink } from "react-router-dom";
 import "./layout/styles/Style.css";
 import "bootstrap/dist/css/bootstrap.css";
 import { Layout, Menu, Icon } from "antd";
@@ -57,6 +58,7 @@ export default class Component extends RComponent {
     this.DropdownItem = DropdownItem;
     this.DropdownToggle = DropdownToggle;
     this.DropdownMenu = DropdownMenu;
+    this.NavLink = NavLink;
 
     //Redux
     // this.Field = Field;

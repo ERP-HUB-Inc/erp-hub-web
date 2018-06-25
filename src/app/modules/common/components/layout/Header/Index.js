@@ -36,14 +36,14 @@ class Headers extends Component {
           type={ collapsed ? "menu-unfold" : "menu-fold" }
           onClick={ toggle }
         />
-        <this.Row>
-          <this.Col md="2">
+        <this.Row className="block-search">
+          <this.Col md="2" lg="2">
             <div className="border-right">
               <div className="logo-title"> Store VEIN </div>
               Backoffice
             </div>
           </this.Col>
-          <this.Col md="3 main-search">
+          <this.Col md="5 main-search" lg="5">
             <this.Form onSubmit={ this.handleSubmit }>
               <Icon type="search" className="search-icon"/>
               <this.Field
@@ -54,20 +54,18 @@ class Headers extends Component {
               />
             </this.Form>
           </this.Col>
-          <this.Col md="7">
+          <this.Col xs="12" sm="12" md="5" lg="5">
             <this.Row>
-              <this.Col md="4">
-                   
-              </this.Col>
-              <this.Col md="4">
-                <this.Noteicon/>
-              </this.Col>
-              <this.Col md="4">
+              <this.Col xs="12" md="12">
                 <UserSelect />
               </this.Col>
             </this.Row>
           </this.Col>
         </this.Row>
+      
+      
+
+
       </Header>
     );
   }

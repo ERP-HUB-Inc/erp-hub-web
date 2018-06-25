@@ -2,6 +2,7 @@
 @import "Mobile.css";
 @import "Header.css";
 @import '~antd/dist/antd.css';
+@import "~font-awesome/css/font-awesome.css";
 
 body {
     margin: 0;
@@ -15,7 +16,6 @@ body {
 html {
     height: 100%;
 }
-
 
 .ant-layout.ant-layout-has-sider {
     height: 100% !important;
@@ -75,4 +75,9 @@ html {
 
 .antd-pro-notice-icon-clear {
     display: none;
+}
+
+.notice-icon .ant-badge sup {
+    background-color: #FFD627;
+    color: #4E8189;
 }
