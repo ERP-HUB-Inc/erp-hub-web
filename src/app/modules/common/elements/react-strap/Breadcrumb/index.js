@@ -5,8 +5,7 @@ export class BreadcrumbLayout extends Component {
   render(){
     const {
       titleNow,
-      pageNow,
-      urlNow
+      pageNow
     } = this.props;
     return(
       <div>
