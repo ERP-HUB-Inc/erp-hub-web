@@ -15,8 +15,9 @@ class UserList extends Component {
     return (
       <div className="manitem">
         {/* <User {...this.props} /> */}
-		
-        <this.BreadcrumbLayout>
+        <this.BreadcrumbLayout
+          titleNow="Transactions"
+        >
           {
             Manuitem.map((value,key) => {	
 			  return(
@@ -29,9 +30,8 @@ class UserList extends Component {
            
             })
           }
-
         </this.BreadcrumbLayout>
-
+        <this.Table />
       </div>
     );
   }

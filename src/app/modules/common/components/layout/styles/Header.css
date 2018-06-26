@@ -24,6 +24,7 @@
     .ant-layout-header {
         padding: 14px !important;
         height: 77px;
+        z-index: 2;
     }
 
     /* search */

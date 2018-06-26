@@ -9,6 +9,10 @@ body {
     background-color: #F7F7F7 !important;
 }
 
+.ant-table-body table tr td,h4.breadcrumb-title {
+    color: #B0B0B0;
+}
+
 .clearFloat {
     clear: both;
 }
@@ -104,8 +108,31 @@ html {
     content: "  |";
 }
 
-
-
 .breadcrumb a.breadcrumb-link:last-child:after {
     content: "";
 }
+
+h4.breadcrumb-title {
+    text-transform: uppercase;
+}
+
+/* pagination */
+
+.ant-pagination-item {
+    background-color: #EAEAEA;
+}
+
+.ant-pagination-item-active {
+    background-color: #0D62AF !important;
+    color: white;
+    border-color: none;
+}
+
+/* table */
+.ant-table-body table tr th {
+    color: #B0B0B0;
+    font-weight: bold;
+}
+
+
+
