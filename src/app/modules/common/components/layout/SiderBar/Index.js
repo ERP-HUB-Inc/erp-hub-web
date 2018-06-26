@@ -33,7 +33,6 @@ export default class SideBar extends React.Component {
               Team 2
             </Menu.Item>
           </SubMenu>
-
           <SubMenu
             className="main-manu-item"
             key="sub3"

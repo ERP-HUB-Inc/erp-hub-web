@@ -8,7 +8,10 @@ import
   Noteicon
 } from "../elements/ant-ui";
 import Header from "../elements/ant-ui/Header";
-import { InputRedux } from "../elements/react-strap";
+import { InputRedux,
+  Breadcrumb,
+  BreadcrumbLayout 
+} from "../elements/react-strap";
 import {  
   Container,
   Col,
@@ -59,7 +62,9 @@ export default class Component extends RComponent {
     this.DropdownToggle = DropdownToggle;
     this.DropdownMenu = DropdownMenu;
     this.NavLink = NavLink;
-
+    this.Breadcrumb = Breadcrumb;
+    this.BreadcrumbLayout = BreadcrumbLayout;
+    
     //Redux
     // this.Field = Field;
 

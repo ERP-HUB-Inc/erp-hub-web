@@ -10,7 +10,7 @@ body {
 }
 
 .clearFloat {
-    clear: both
+    clear: both;
 }
 
 html {
@@ -80,4 +80,32 @@ html {
 .notice-icon .ant-badge sup {
     background-color: #FFD627;
     color: #4E8189;
+}
+
+/* breadcrumb */
+.breadcrumb {
+    background-color: #EAEAEA !important;
+}
+
+.breadcrumb a ,.breadcrumb a.breadcrumb-link:active{
+    color: #B0B0B0;
+}
+
+.breadcrumb a { 
+    padding: 3px;
+}
+
+.breadcrumb a.breadcrumb-link:first-of-type{
+    /* content: ""; */
+    color: red !important;
+}
+
+.breadcrumb a.breadcrumb-link:after {
+    content: "  |";
+}
+
+
+
+.breadcrumb a.breadcrumb-link:last-child:after {
+    content: "";
 }
