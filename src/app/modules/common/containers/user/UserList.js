@@ -2,9 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import Component from "../../components/Component";
 import { fetchUsers } from "../../actions/users";
+import { reduxForm } from "redux-form"; 
 import Manuitem from "../../components/layout/SiderBar/MenuItem";
 
 class UserList extends Component {
+  
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(fetchUsers());
@@ -20,17 +22,32 @@ class UserList extends Component {
         >
           {
             Manuitem.map((value,key) => {	
-			  return(
+			    	return(
                 <this.Breadcrumb
                   to={ value.link }
                   key={ value }
                   nextPage={ value.title }
-        		/>
+                />
 			  );
            
             })
           }
         </this.BreadcrumbLayout>
+      
+        <this.Row>
+          <this.Col md="4">
+            <this.Field name="favoriteColor" 
+              component={ this.Selects }
+              defaultValue="all"
+              placeholder="Status"
+            >
+              <option value="all" selected>All</option>
+              <option value="red">Red</option>
+              <option value="redd">Reddd</option>
+            </this.Field>
+          </this.Col>
+        </this.Row>
+
         <this.Table />
       </div>
     );
@@ -41,6 +58,7 @@ function mapStateToProps(state) {
   // return state.reducer.user;
 }
 
-
-export default connect(mapStateToProps)(UserList);
+export default reduxForm({
+  form: "FormSearchs"
+})(UserList);
 

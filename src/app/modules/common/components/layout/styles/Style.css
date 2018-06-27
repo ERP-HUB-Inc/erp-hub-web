@@ -135,5 +135,12 @@ h4.breadcrumb-title {
     font-weight: bold;
 }
 
+/* ant select */
+.main-antselect .ant-select-selection {
+    border: none !important;
+    border-radius: 0px;
+}
+
+
 
 

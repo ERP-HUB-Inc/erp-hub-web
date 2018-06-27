@@ -6,7 +6,8 @@ import
 { 
   CTable,
   CModal,
-  Noteicon
+  Noteicon,
+  Selects
 } from "../elements/ant-ui";
 import Header from "../elements/ant-ui/Header";
 import { InputRedux,
@@ -22,22 +23,26 @@ import {
   Dropdown, 
   DropdownItem, 
   DropdownToggle, 
-  DropdownMenu
+  DropdownMenu,
+  FormGroup,
+  Label,
+  FormText
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import "./layout/styles/Style.css";
 import "bootstrap/dist/css/bootstrap.css";
-import { Layout, Menu, Icon } from "antd";
+import { Layout, Menu, Icon , Select } from "antd";
 
 export default class Component extends RComponent {
   constructor(props) {
     super(props);
 
-    // Element
+    // Element Ant ui
     this.Table = () => (<CTable/>);
     this.Modal = () => (<CModal/>);
     this.Header = () => (<Header/>);
     this.Noteicon = () => (<Noteicon/>);
+    this.Selects = Selects;
 
     // Other
     this.clearFloating = () => <div className="clearFloat"></div>;
@@ -66,6 +71,9 @@ export default class Component extends RComponent {
     this.NavLink = NavLink;
     this.Breadcrumb = Breadcrumb;
     this.BreadcrumbLayout = BreadcrumbLayout;
+    this.FormGroup = FormGroup;
+    this.Label = Label;
+    this.FormText = FormText;
     
     //Redux
     // this.Field = Field;
@@ -74,6 +82,7 @@ export default class Component extends RComponent {
     this.Layout = Layout;
     this.Menu = Menu;
     this.Icon = Icon;
+    this.Select = Select;
 
   }
 
