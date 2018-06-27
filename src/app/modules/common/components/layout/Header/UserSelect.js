@@ -1,13 +1,4 @@
 import React from "react";
-// import {  
-//   Dropdown, 
-//   DropdownItem, 
-//   DropdownToggle, 
-//   DropdownMenu
-// } from "reactstrap";
-// import { 
-//   NavLink 
-// } from "react-router-dom";
 import Component from "../../Component";
 import { Icon } from "antd";
 
