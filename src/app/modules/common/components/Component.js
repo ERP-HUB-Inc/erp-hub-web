@@ -7,7 +7,8 @@ import
   CTable,
   CModal,
   Noteicon,
-  Selects
+  Selects,
+  DateRank
 } from "../elements/ant-ui";
 import Header from "../elements/ant-ui/Header";
 import { InputRedux,
@@ -43,6 +44,7 @@ export default class Component extends RComponent {
     this.Header = () => (<Header/>);
     this.Noteicon = () => (<Noteicon/>);
     this.Selects = Selects;
+    this.DateRank = DateRank;
 
     // Other
     this.clearFloating = () => <div className="clearFloat"></div>;

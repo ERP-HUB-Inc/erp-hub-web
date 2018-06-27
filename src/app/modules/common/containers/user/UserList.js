@@ -35,7 +35,7 @@ class UserList extends Component {
         </this.BreadcrumbLayout>
       
         <this.Row>
-          <this.Col md="4">
+          <this.Col md="2">
             <this.Field name="favoriteColor" 
               component={ this.Selects }
               defaultValue="all"
@@ -45,6 +45,9 @@ class UserList extends Component {
               <option value="red">Red</option>
               <option value="redd">Reddd</option>
             </this.Field>
+          </this.Col>
+          <this.Col md="2">
+            <this.DateRank/>
           </this.Col>
         </this.Row>
 
