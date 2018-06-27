@@ -1,16 +1,16 @@
 import React from "react";
 import Component from "../../Component";
 import UserSelect from "./UserSelect";
-import { reduxForm } from "redux-form";
 import { Icon } from "antd";
 import { Layout } from "antd";
+import SearchForm from "./Search/";
 const { Header } = Layout;
 
 class Headers extends Component {
   constructor(props) {
     super(props);
     this.switchLanguage = this.switchLanguage.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
     this.toggle = this.toggle.bind(this);
   }
 
@@ -23,8 +23,8 @@ class Headers extends Component {
     this.props.toggle;
   }
 
-  handleSubmit({title}){
-    alert(title);
+  handleSubmit(values){
+    alert(values.title);
   }
 
   render() {
@@ -44,15 +44,7 @@ class Headers extends Component {
             </div>
           </this.Col>
           <this.Col md="5 main-search" lg="5">
-            <this.Form onSubmit={ this.handleSubmit }>
-              <Icon type="search" className="search-icon"/>
-              <this.Field
-                name="title"
-                type="text"
-                placeholder="Search Transaction, invoice or help"
-                component={ this.InputRedux }
-              />
-            </this.Form>
+            <SearchForm />
           </this.Col>
           <this.Col xs="12" sm="12" md="5" lg="5">
             <this.Row>
@@ -62,15 +54,10 @@ class Headers extends Component {
             </this.Row>
           </this.Col>
         </this.Row>
-      
-      
-
 
       </Header>
     );
   }
 }
 
-export default reduxForm({
-  form: "search", 
-})(Headers);
+export default Headers;

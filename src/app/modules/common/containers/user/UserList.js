@@ -38,7 +38,7 @@ class UserList extends Component {
 }
 
 function mapStateToProps(state) {
-  return state.reducer.user;
+  // return state.reducer.user;
 }
 
 

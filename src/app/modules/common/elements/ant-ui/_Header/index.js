@@ -3,7 +3,10 @@ import {
   Col,
   Row
 } from "reactstrap";
-import { Field,reduxForm } from "redux-form";
+
+function submit(values){
+  alert(values.search);
+}
 
 const renderField = ({
   input,
@@ -30,10 +33,6 @@ class Header extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(){
-    alert("dd");
-  }
-
   render() {
     return (
       <div className="header">
@@ -44,14 +43,7 @@ class Header extends Component {
               Backoffice
             </Col>
             <Col md="5">
-              <form onSubmit={ this.handleSubmit }>
-                <Field
-                  name="search"
-                  type="text"
-                  component={ renderField }
-                  placeholder="Search Transaction Invoice or"
-                />
-              </form>
+              
             </Col>
             <Col md="5">
               
@@ -63,7 +55,5 @@ class Header extends Component {
   }
 }
 
-export default reduxForm({
-  form: "Headers", 
-})(Header);
+export default Header;
 

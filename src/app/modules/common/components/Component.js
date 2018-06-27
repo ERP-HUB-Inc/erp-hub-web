@@ -1,6 +1,7 @@
 import React, { Component as RComponent } from "react";
 import { Translate, setActiveLanguage } from "react-localize-redux";
 import { Field } from "redux-form";
+import { connect } from "react-redux";
 import 
 { 
   CTable,
@@ -49,6 +50,7 @@ export default class Component extends RComponent {
 
     // Redux Form
     this.Field = Field;
+    this.connect = connect;
 
     //React Strap 
     this.Container = Container;

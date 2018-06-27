@@ -1,5 +1,6 @@
 
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import {  
   FormGroup,
   Input,
@@ -9,9 +10,16 @@ import {
 
 export class InputRedux extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      valid: false
+    };
+  }
+
   render() {
     const {
-      input: { onChange, onFocus, onBlur },
+      input: { value, onChange, onFocus, onBlur },
       label,
       required,
       placeholder,
@@ -20,7 +28,7 @@ export class InputRedux extends Component {
         touched, error, warning, valid
       }
     } = this.props;
-
+    console.log("valid" + !(touched && valid));
     return (
       <FormGroup>
         <Label>{label} <span className="text-danger"> {required} </span></Label>
@@ -31,14 +39,25 @@ export class InputRedux extends Component {
           onBlur={onBlur}
           placeholder={placeholder}
           valid={ touched && error ? false : null }
-          // value={ value }
+          value={ value }
         />
         {touched &&
-          ((error && <FormText className="select-error"> {error} </FormText>) ||
-            (warning && <FormText className="select-error"> {warning} </FormText>))}
+        ((error && <FormText className="select-error"> {error} </FormText>) ||
+          (warning && <FormText className="select-error"> {warning} </FormText>))}
       </FormGroup>
     );
 
   }
 
 }
+
+InputRedux.propTypes = {
+  type: PropTypes.string,
+  name: PropTypes.string,
+  placeholder: PropTypes.string,
+  label: PropTypes.string,
+  input: PropTypes.any,
+  required: PropTypes.string,
+  meta: PropTypes.any,
+  values: PropTypes.string
+};
