@@ -7,14 +7,6 @@ import {
 import { Select } from "antd";
 const Option = Select.Option;
 
-// function handleBlur() {
-//   console.log("blur");
-// }
-  
-// function handleFocus() {
-//   console.log("focus");
-// }
-
 export class Selects extends Component{
 
   constructor(props) {

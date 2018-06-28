@@ -1,7 +1,11 @@
 import React, { Component } from "react";
+import {  
+  FormGroup,
+  Label,
+  FormText
+} from "reactstrap";
 import { DatePicker } from "antd";
 import moment from "moment";
-import { Label } from "reactstrap";
 const RangePicker = DatePicker.RangePicker;
 
 function onChange(dates, dateStrings) {
@@ -11,14 +15,18 @@ function onChange(dates, dateStrings) {
 
 export class DateRank extends Component {
   render(){
+
+    const { label,
+      placeholder
+    } = this.props;
+
     return (
       <div className="main-date-picker">
         <RangePicker
           ranges={{ Today: [moment(), moment()], "This Month": [moment(), moment().endOf("month")] }}
           onChange={onChange}
-          placeholder=""
         />
-        {/* <Label>User</Label> */}
+        <Label>{ label }</Label>
       </div>
     );
   }

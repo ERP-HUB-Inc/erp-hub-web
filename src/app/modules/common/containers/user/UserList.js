@@ -22,14 +22,13 @@ class UserList extends Component {
         >
           {
             Manuitem.map((value,key) => {	
-			    	return(
+              return(
                 <this.Breadcrumb
                   to={ value.link }
                   key={ value }
                   nextPage={ value.title }
                 />
-			  );
-           
+              );
             })
           }
         </this.BreadcrumbLayout>
@@ -48,10 +47,19 @@ class UserList extends Component {
             </this.Field>
           </this.Col>
           <this.Col md="2">
-            <this.DateRank/>
+            <this.Field 
+              name="datepicker" 
+              component={ this.DateRank }
+              label="Date1"
+            />
           </this.Col>
           <this.Col md="2">
-           
+            <this.Field 
+              name="datepicker" 
+              component={ this.DateRank }
+              label="Date2"
+              placeholder="Select Date Rank"
+            />
           </this.Col>
         </this.Row>
 
