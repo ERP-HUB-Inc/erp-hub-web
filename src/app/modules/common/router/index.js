@@ -3,6 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import SideBar from "../../../modules/common/components/layout/SiderBar/Index";
 import Headers from "../../../modules/common/components/layout/Header/Index";
 import UserList from "../../common/containers/user/UserList";
+import Home from "../../common/containers/home/Index";
 import Test from "../containers/test";
 import Component from "../components/Component";
 import { Layout } from "antd";
@@ -53,7 +54,7 @@ class Router extends Component {
           <Content onClick={ this.Content } className={ layoutContent }>
             <Switch>
               <Route path="/dd" name="Create" component={ UserList } />
-              <Route path="/" name="Create" component={ Test } />
+              <Route path="/" name="Create" component={ Home } />
             </Switch>
           </Content>  
         </Layout>

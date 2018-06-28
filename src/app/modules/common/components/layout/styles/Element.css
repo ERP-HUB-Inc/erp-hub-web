@@ -4,16 +4,13 @@
 .main-antselect label,
 .main-antselect .ant-select-selection-selected-value,
 .main-date-picker label,
-.main-input label
+.main-input label,
+.main-input input::placeholder,
+.main-home-page
 {
     color: #A8A8A8;
 }
 
-/* .mix-element-shadow {
-    webkit-box-shadow: 0px 4px 0px 0px rgba(234,234,234,1);
-    -moz-box-shadow: 0px 4px 0px 0px rgba(234,234,234,1);
-    box-shadow: 0px 3px 0px 0px rgba(234,234,234,1);
-} */
 
 .mix-none-border,
 .main-antselect .ant-select-selection,
@@ -83,4 +80,40 @@
     width: 50px;
 }
 
+/* card */
+
+.color,
+.main-home-page span.icon,
+.main-home-page .card-footer a  
+{
+    color: #0D62AF;
+}
+
+.main-home-page .card {
+    border-radius: 0px;
+}
+
+.main-home-page span.icon
+ {
+    font-size: 60px;
+}
+
+.main-home-page .total{
+    font-size: 16px;
+}
+
+.main-home-page .price {
+    font-weight: bold;
+    font-size: 32px;
+}
+
+.main-home-page .card-footer {
+    text-align: right;
+    background-color: white;
+}
+
+.main-home-page .card-footer a {
+    font-weight: bold;
+    text-transform: uppercase;
+}
 
