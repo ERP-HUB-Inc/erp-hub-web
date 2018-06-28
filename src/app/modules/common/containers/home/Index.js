@@ -5,7 +5,26 @@ class Home extends Component {
   render(){
     return(
       <div>
+        
         <this.Row>
+          <this.Col md="6">
+            <div class="dashboard ">
+              <ul>
+                <li>
+                  <this.BreadcrumbTitle 
+                    title="Dashboad"
+                  />
+                </li>
+                <li>
+                  <this.Switchs />
+                </li>
+              </ul>
+            </div>
+
+          </this.Col>
+        </this.Row>
+
+        <this.Row>          
           <this.Col md="3">
             <this.Cards
               price="0.00"

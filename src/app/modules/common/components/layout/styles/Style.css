@@ -135,6 +135,13 @@ h4.breadcrumb-title {
     font-weight: bold;
 }
 
+/* home page  */
+.dashboard ul li {
+    list-style-type: none;
+    float: left;
+    margin-right: 16px;
+}
+
 
 
 

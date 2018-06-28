@@ -20,6 +20,17 @@ export class BreadcrumbLayout extends Component {
   }
 }
 
+export class BreadcrumbTitle extends Component {
+  render(){
+    const {
+      title
+    } = this.props;
+    return(
+      <h4 className="breadcrumb-title">{ title }</h4>
+    );
+  }
+}
+
 export class Breadcrumb extends Component {
   render(){
     const {
