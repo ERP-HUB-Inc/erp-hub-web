@@ -8,7 +8,7 @@ import {
   FormText,
 } from "reactstrap";
 
-export class InputRedux extends Component {
+export class SapleInput extends Component {
 
   constructor(props) {
     super(props);
@@ -30,7 +30,7 @@ export class InputRedux extends Component {
     } = this.props;
     console.log("valid" + !(touched && valid));
     return (
-      <div className="main-input">
+      <div>
         <FormGroup>
           <Label>{label} <span className="text-danger"> {required} </span></Label>
           <Input
@@ -53,7 +53,7 @@ export class InputRedux extends Component {
 
 }
 
-InputRedux.propTypes = {
+SapleInput.propTypes = {
   type: PropTypes.string,
   name: PropTypes.string,
   placeholder: PropTypes.string,

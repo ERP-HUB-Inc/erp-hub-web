@@ -16,7 +16,8 @@ function onChange(dates, dateStrings) {
 export class DateRank extends Component {
   render(){
 
-    const { label,
+    const { 
+      label,
       placeholder
     } = this.props;
 

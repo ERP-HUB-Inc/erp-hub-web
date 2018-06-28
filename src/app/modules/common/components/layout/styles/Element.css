@@ -3,20 +3,22 @@
 .element-color,
 .main-antselect label,
 .main-antselect .ant-select-selection-selected-value,
-.main-date-picker label
+.main-date-picker label,
+.main-input label
 {
     color: #A8A8A8;
 }
 
-.mix-element-shadow {
+/* .mix-element-shadow {
     webkit-box-shadow: 0px 4px 0px 0px rgba(234,234,234,1);
     -moz-box-shadow: 0px 4px 0px 0px rgba(234,234,234,1);
     box-shadow: 0px 3px 0px 0px rgba(234,234,234,1);
-}
+} */
 
 .mix-none-border,
 .main-antselect .ant-select-selection,
-.main-date-picker .ant-calendar-picker-input 
+.main-date-picker .ant-calendar-picker-input,
+.main-input input
  {
     border: none !important;
     border-radius: 0px;
@@ -26,7 +28,8 @@
 }
 
 .main-antselect label,
-.main-date-picker label
+.main-date-picker label,
+.main-input label
 {
     position: absolute;
     line-height: 23px;
@@ -36,6 +39,7 @@
     z-index: 1;
     transform: scale(0.75) translate(0px, -28px) ;
     transform-origin: left top 0px ;
+    text-transform: capitalize;
 }
 
 .main-antselect .ant-select-selection__rendered {
@@ -43,13 +47,15 @@
 }
 
 .main-antselect .ant-select-selection-selected-value,
-.main-date-picker .ant-calendar-picker-input 
+.main-date-picker .ant-calendar-picker-input,
+.main-input input
 {
     font-size: 17px;
 }
 
 .main-antselect .ant-select-selection--single,
-.main-date-picker .ant-calendar-picker-input 
+.main-date-picker .ant-calendar-picker-input,
+.main-input input 
 {
     height: 50px !important;
 }

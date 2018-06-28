@@ -13,7 +13,8 @@ import
 import Header from "../elements/ant-ui/Header";
 import { InputRedux,
   Breadcrumb,
-  BreadcrumbLayout 
+  BreadcrumbLayout,
+  SapleInput
 } from "../elements/react-strap";
 import {  
   Container,
@@ -73,6 +74,7 @@ export default class Component extends RComponent {
     this.NavLink = NavLink;
     this.Breadcrumb = Breadcrumb;
     this.BreadcrumbLayout = BreadcrumbLayout;
+    this.SapleInput = SapleInput;
     this.FormGroup = FormGroup;
     this.Label = Label;
     this.FormText = FormText;

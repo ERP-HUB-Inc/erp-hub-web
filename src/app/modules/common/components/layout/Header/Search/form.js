@@ -17,7 +17,7 @@ class FormSearch extends Component {
         <this.Field
           name="txtsearch"
           type="text"
-          component={ this.InputRedux }
+          component={ this.SapleInput }
           placeholder="Search Transaction Invoice or"
         />
       </this.Form>

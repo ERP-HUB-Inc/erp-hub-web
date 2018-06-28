@@ -61,6 +61,14 @@ class UserList extends Component {
               placeholder="Select Date Rank"
             />
           </this.Col>
+          <this.Col md="2">
+            <this.Field 
+              name="datepicker" 
+              component={ this.InputRedux }
+              label="Date2"
+              placeholder="Search for Customer"
+            />
+          </this.Col>
         </this.Row>
 
         <this.Table />
