@@ -2,6 +2,7 @@
 @import "Mobile.css";
 @import "Header.css";
 @import "Color.scss";
+@import "Element.css";
 @import '~antd/dist/antd.css';
 @import "~font-awesome/css/font-awesome.css";
 
@@ -135,11 +136,6 @@ h4.breadcrumb-title {
     font-weight: bold;
 }
 
-/* ant select */
-.main-antselect .ant-select-selection {
-    border: none !important;
-    border-radius: 0px;
-}
 
 
 

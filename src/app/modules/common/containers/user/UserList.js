@@ -40,6 +40,7 @@ class UserList extends Component {
               component={ this.Selects }
               defaultValue="all"
               placeholder="Status"
+              label="test"
             >
               <option value="all" selected>All</option>
               <option value="red">Red</option>
@@ -48,6 +49,9 @@ class UserList extends Component {
           </this.Col>
           <this.Col md="2">
             <this.DateRank/>
+          </this.Col>
+          <this.Col md="2">
+           
           </this.Col>
         </this.Row>
 

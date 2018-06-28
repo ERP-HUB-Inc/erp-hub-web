@@ -15,7 +15,6 @@ class SearchForm extends Component {
 
   onSubmit({txtsearch=""}){
     let error = null;
-    alert(txtsearch);
     if (error != null) {
       throw new SubmissionError(error);
     } else {

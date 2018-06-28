@@ -1,0 +1,32 @@
+/* ant select */
+.mix-element-shadow {
+    webkit-box-shadow: 0px 4px 0px 0px rgba(234,234,234,1);
+    -moz-box-shadow: 0px 4px 0px 0px rgba(234,234,234,1);
+    box-shadow: 0px 3px 0px 0px rgba(234,234,234,1);
+}
+
+.mix-none-border,
+.main-antselect .ant-select-selection,
+.main-date-picker .ant-calendar-picker-input 
+ {
+    border: none !important;
+    border-radius: 0px;
+    webkit-box-shadow: 0px 4px 0px 0px rgba(234,234,234,1);
+    -moz-box-shadow: 0px 4px 0px 0px rgba(234,234,234,1);
+    box-shadow: 0px 3px 0px 0px rgba(234,234,234,1);
+}
+
+/* .main-date-picker .ant-calendar-picker-input {
+    display: flex;
+    flex-flow: column-reverse;
+    margin-bottom: 1em;
+}
+
+.main-date-picker .ant-calendar-picker-input,.main-date-picker label {
+    transition: all 0.2s;
+    touch-action: manipulation;
+}
+
+.main-date-picker:focus {
+    border: 1px solid red !important;
+} */
