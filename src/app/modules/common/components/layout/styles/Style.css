@@ -101,17 +101,16 @@ html {
     padding: 3px;
 }
 
-.breadcrumb a.breadcrumb-link:first-of-type{
-    /* content: ""; */
-    color: red !important;
-}
-
 .breadcrumb a.breadcrumb-link:after {
     content: "  |";
 }
 
 .breadcrumb a.breadcrumb-link:last-child:after {
     content: "";
+}
+
+.breadcrumb a a.breadcrumb-link:first-child:after {
+    content: "  >" !important;
 }
 
 h4.breadcrumb-title {
