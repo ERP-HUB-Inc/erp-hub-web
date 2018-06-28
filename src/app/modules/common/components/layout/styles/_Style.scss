@@ -2,6 +2,7 @@
 @import "SideBar.scss";
 @import "Input.scss";
 @import "Header.scss";
+@import "Color.scss";
 // @import "Footer.scss";
 
 $font-stack:    Helvetica, sans-serif;
@@ -18,4 +19,8 @@ body {
 
 .clearFloat {
   clear: both
+}
+
+header .ant-layout-header {
+  background-color: $red !important;
 }
