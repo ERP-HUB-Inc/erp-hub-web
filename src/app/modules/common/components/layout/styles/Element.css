@@ -55,7 +55,8 @@
 
 .main-antselect .ant-select-selection--single,
 .main-date-picker .ant-calendar-picker-input,
-.main-input input 
+.main-input input,
+.main-search-button button 
 {
     height: 50px !important;
 }
@@ -64,8 +65,22 @@
     font-size: 19px;
 }
 
-
 /* date picker rank */
 .main-date-picker .ant-calendar-range-picker-separator {
     display: none;
 }
+
+/* search button */
+
+.button-search-color,
+.main-search-button button,
+.main-search-button button:focus {
+    background-color: #093163;
+}
+
+.main-search-button button {
+    color: white;
+    width: 50px;
+}
+
+

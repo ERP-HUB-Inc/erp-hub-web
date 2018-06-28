@@ -8,7 +8,8 @@ import
   CModal,
   Noteicon,
   Selects,
-  DateRank
+  DateRank,
+  SearchButton
 } from "../elements/ant-ui";
 import Header from "../elements/ant-ui/Header";
 import { InputRedux,
@@ -87,6 +88,7 @@ export default class Component extends RComponent {
     this.Menu = Menu;
     this.Icon = Icon;
     this.Select = Select;
+    this.SearchButton = SearchButton;
 
   }
 

@@ -69,6 +69,10 @@ class UserList extends Component {
               placeholder="Search for Customer"
             />
           </this.Col>
+          <this.Col md="2">
+            <this.SearchButton />
+          </this.Col>
+          
         </this.Row>
 
         <this.Table />
