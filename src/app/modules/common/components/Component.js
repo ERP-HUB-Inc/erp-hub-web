@@ -9,7 +9,8 @@ import
   Noteicon,
   Selects,
   DateRank,
-  SearchButton
+  SearchButton,
+  Switchs
 } from "../elements/ant-ui";
 import Header from "../elements/ant-ui/Header";
 import { InputRedux,
@@ -17,8 +18,7 @@ import { InputRedux,
   BreadcrumbLayout,
   BreadcrumbTitle,
   SapleInput,
-  Cards,
-  Switchs
+  Cards
 } from "../elements/react-strap";
 import {  
   Container,
@@ -84,7 +84,6 @@ export default class Component extends RComponent {
     this.Label = Label;
     this.FormText = FormText;
     this.Cards = Cards;
-    this.Switchs = Switchs;
     
     //Redux
     // this.Field = Field;
@@ -95,6 +94,7 @@ export default class Component extends RComponent {
     this.Icon = Icon;
     this.Select = Select;
     this.SearchButton = SearchButton;
+    this.Switchs = Switchs;
 
   }
 

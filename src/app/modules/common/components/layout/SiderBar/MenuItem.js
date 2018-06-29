@@ -2,7 +2,7 @@ export default [
   {
     title : "Transaction",
     icon : "address-book",
-    link : "/transaction",
+    link : "/dd",
   },
   {
     title : "Sale History",

@@ -15,7 +15,7 @@ export class Switchs extends Component {
   render(){
     return(
       <div>
-        <Switch defaultChecked onChange={ this.onChange } />
+        <Switch defaultChecked onChange={ this.props.onChange } />
       </div>
     );
   }
