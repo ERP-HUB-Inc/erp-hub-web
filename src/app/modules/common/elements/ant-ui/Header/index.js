@@ -40,7 +40,9 @@ class Header extends Component {
           <Row>
             <Col md="2 border-right">
               <div className="logo-title"> Store VEIN </div>
-              Backoffice
+              <div className="slowgan-title">
+                Backoffice
+              </div>
             </Col>
             <Col md="5">
               

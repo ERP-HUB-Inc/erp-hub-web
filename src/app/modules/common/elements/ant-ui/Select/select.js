@@ -4,8 +4,10 @@ import {
   Label,
   FormText
 } from "reactstrap";
-import { Select } from "antd";
+import { Select,Form } from "antd";
+
 const Option = Select.Option;
+const FormItem = Form.Item;
 
 export class Selects extends Component{
 
@@ -38,32 +40,42 @@ export class Selects extends Component{
       value,
       defaultValue,
       meta: {
-        touched, error, warning, valid
+        touched, error, warning
       }
     } = this.props;
     return(
       <div className="main-antselect">
         <FormGroup>
           <Label className="">{label} <span className="text-danger"> {required} </span></Label>
-          <Select
-            showSearch
-            style={{ width: "100%" }}
-            placeholder={ placeholder }
-            optionFilterProp="children"
-            onChange={ () => this.handleChange(value)}
-            onFocus={ this.handleFocus }
-            onBlur={ this.handleBlur }
-            defaultValue={ defaultValue }
-            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+          <FormItem
+            validateStatus={ touched && error ? "error" : ""  }
+            help = 
+              {touched && 
+               ((
+                 error && <span>{error}</span> || warning && <span>{warning}</span>
+               ))
+              }
           >
-            { children }
-            <Option value={ value }>
-              { options }
-            </Option>
-          </Select>
-          {touched &&
+            <Select
+              showSearch
+              style={{ width: "100%" }}
+              placeholder={ placeholder }
+              optionFilterProp="children"
+              onChange={ () => this.handleChange(value)}
+              onFocus={ this.handleFocus }
+              onBlur={ this.handleBlur }
+              defaultValue={ defaultValue }
+              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+            >
+              { children }
+              <Option value={ value }>
+                { options }
+              </Option>
+            </Select>
+            {touched &&
         ((error && <FormText className="select-error"> {error} </FormText>) ||
           (warning && <FormText className="select-error"> {warning} </FormText>))}
+          </FormItem>
         </FormGroup>
       </div>
     );

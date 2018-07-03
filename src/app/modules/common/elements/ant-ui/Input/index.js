@@ -1,10 +1,10 @@
 
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import {  
   FormGroup,
   Label
 } from "reactstrap";
+
 import { Form, Input } from "antd";
 
 const FormItem = Form.Item;
@@ -21,26 +21,34 @@ export class SapleInput extends Component {
 
   render() {
     const {
-      input: { value, onChange, onFocus, onBlur },
+      input, 
       label,
-      required,
-      placeholder,
-      meta: {
-        touched, error, warning, validateStatus, valid
-      }
+      type,
+      meta: { touched, error, warning },
+      placeholder
     } = this.props;
-    console.log("valid" + !(touched && valid));
+    console.log("valid" + touched);
     return (
       <div className="main-input">
         <FormGroup>
           <Label>
-            {label} <span className="text-danger"> {required} </span>
+            { label }
           </Label>
           <FormItem
             hasFeedback
-            validateStatus={ touched && error ? "warning" : "success"  }
+            validateStatus={ touched && error ? "error" : ""  }
+            help = 
+              {touched && 
+                ((
+                  error && <span>{error}</span> || warning && <span>{warning}</span>
+                ))
+              }
           >
-            <Input placeholder={ placeholder } />
+            <Input 
+              {...input} 
+              placeholder={ placeholder } 
+              type={type} 
+            />
           </FormItem>
         </FormGroup>
       </div>
@@ -49,14 +57,3 @@ export class SapleInput extends Component {
   }
 
 }
-
-SapleInput.propTypes = {
-  type: PropTypes.string,
-  name: PropTypes.string,
-  placeholder: PropTypes.string,
-  label: PropTypes.string,
-  input: PropTypes.any,
-  required: PropTypes.string,
-  meta: PropTypes.any,
-  values: PropTypes.string
-};

@@ -114,6 +114,7 @@ html {
 
 .breadcrumb a { 
     padding: 3px;
+    font-size: 12pt;
 }
 
 .breadcrumb a.breadcrumb-link:after {
@@ -130,6 +131,7 @@ html {
 
 h4.breadcrumb-title {
     text-transform: uppercase;
+    font-size: 20pt;
 }
 
 /* pagination */

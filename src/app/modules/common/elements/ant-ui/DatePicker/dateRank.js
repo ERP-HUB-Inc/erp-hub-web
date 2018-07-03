@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import {  
-  FormGroup,
   Label,
-  FormText
+  FormGroup
 } from "reactstrap";
-import { DatePicker } from "antd";
+import { DatePicker,Form } from "antd";
 import moment from "moment";
+
 const RangePicker = DatePicker.RangePicker;
+const FormItem = Form.Item;
 
 function onChange(dates, dateStrings) {
   console.log("From: ", dates[0], ", to: ", dates[1]);
@@ -18,16 +19,30 @@ export class DateRank extends Component {
 
     const { 
       label,
-      placeholder
+      meta: { touched, error, warning }
     } = this.props;
 
     return (
       <div className="main-date-picker">
-        <RangePicker
-          ranges={{ Today: [moment(), moment()], "This Month": [moment(), moment().endOf("month")] }}
-          onChange={onChange}
-        />
-        <Label>{ label }</Label>
+        <FormGroup>
+          <Label>{ label }</Label>
+          <FormItem
+            validateStatus={ touched && error ? "error" : ""  }
+            help = 
+              {touched && 
+               ((
+                 error && <span>{error}</span> || warning && <span>{warning}</span>
+               ))
+              }
+          >
+            <RangePicker
+              ranges={{ Today: [moment(), moment()], "This Month": [moment(), moment().endOf("month")] }}
+              onChange={onChange}
+              validateStatus="error"
+              help="Please select the correct date"
+            />
+          </FormItem>
+        </FormGroup>
       </div>
     );
   }

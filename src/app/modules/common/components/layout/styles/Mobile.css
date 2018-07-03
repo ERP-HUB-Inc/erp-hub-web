@@ -91,6 +91,10 @@
         max-width: 100px !important;
         min-width: 100px !important;
         width: 100px !important;
+        /* flex: 0 0 90px !important;
+        max-width: 90px !important;
+        min-width: 90px !important;
+        width: 90px !important; */
     }
 
     .main-manu-item span.menu-title {

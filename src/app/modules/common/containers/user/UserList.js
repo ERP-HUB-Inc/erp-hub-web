@@ -1,17 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
 import Component from "../../components/Component";
-// import Autocompletes from "./Autocomplete";
-import { fetchUsers } from "../../actions/users";
+// import { fetchUsers } from "../../actions/users";
+import Synvalidation from "./form";
 import { reduxForm } from "redux-form"; 
 import Manuitem from "../../components/layout/SiderBar/MenuItem";
 
 class UserList extends Component {
   
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(fetchUsers());
-  }
+  // componentDidMount() {
+  //   const { dispatch } = this.props;
+  //   // dispatch(fetchUsers());
+  // }
 
   render() {
 	  console.log("getitem",Manuitem);
@@ -26,73 +26,15 @@ class UserList extends Component {
               return(
                 <this.Breadcrumb
                   to={ value.link }
-                  key={ value }
+                  key={ key }
                   nextPage={ value.title }
                 />
               );
             })
           }
         </this.BreadcrumbLayout>
-      
-        <this.Row>
-          <this.Col md="2">
-            <this.Field name="favoriteColor" 
-              component={ this.Selects }
-              defaultValue="all"
-              placeholder="Status"
-              label="test"
-            >
-              <option value="all" selected>All</option>
-              <option value="red">Red</option>
-              <option value="redd">Reddd</option>
-            </this.Field>
-          </this.Col>
-          <this.Col md="2">
-            <this.Field 
-              name="datepicker" 
-              component={ this.DateRank }
-              label="Date1"
-            />
-          </this.Col>
-          <this.Col md="2">
-            <this.Field 
-              name="datepicker" 
-              component={ this.DateRank }
-              label="Date2"
-              placeholder="Select Date Rank"
-            />
-          </this.Col>
-          <this.Col md="2">
-            <this.Field 
-              name="datepicker" 
-              component={ this.InputRedux }
-              label="Date2"
-              placeholder="Search for Customer"
-            />
-          </this.Col>
-          <this.Col md="4">
-            {/* <Autocompletes /> */}
-            <this.Field 
-              name="autocomplete" 
-              component={ this.AutoComplete }
-              label="Date2"
-              placeholder="Search Product"
-            />
-            
-          </this.Col>
-          <this.Col md="2">
-            <this.Field 
-              name="search" 
-              component={ this.Antinput }
-              label="Date2"
-              placeholder="Search Product"
-            />
-          </this.Col>
-          <this.Col md="2">
-            <this.SearchButton />
-          </this.Col>
-          
-        </this.Row>
+        
+        <Synvalidation />
 
         <this.Table />
       </div>
@@ -100,11 +42,9 @@ class UserList extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  // return state.reducer.user;
-}
+// function mapStateToProps(state) {
+//   // return state.reducer.user;
+// }
 
-export default reduxForm({
-  form: "FormSearchs"
-})(UserList);
+export default UserList;
 
