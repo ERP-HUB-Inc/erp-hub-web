@@ -11,13 +11,25 @@ body {
     background-color: #F7F7F7 !important;
 }
 
-.ant-table-body table tr td,h4.breadcrumb-title {
+.ant-table-body table tr td,h4.breadcrumb-title,
+table  tr td .current,
+table tr td .list-code,
+.main-input::placeholder
+{
     color: #B0B0B0;
+}
+
+.main-input input::placeholder,
+.main-date-picker input::placeholder,
+.main-antselect .ant-select-selection-selected-value
+{
+    font-size: 11px;
 }
 
 .clearFloat {
     clear: both;
 }
+
 
 html {
     height: 100%;
@@ -89,11 +101,14 @@ html {
 }
 
 /* breadcrumb */
-.breadcrumb {
+.breadcrumb,
+.auto-complete-input input 
+{
     background-color: #EAEAEA !important;
 }
 
-.breadcrumb a ,.breadcrumb a.breadcrumb-link:active{
+.breadcrumb a ,
+.breadcrumb a.breadcrumb-link:active {
     color: #B0B0B0;
 }
 
@@ -145,6 +160,115 @@ h4.breadcrumb-title {
     float: left;
     margin-right: 16px;
 }
+
+/* auto complete */
+
+.react-autosuggest__suggestion {
+    padding: 0px 20px;
+}
+
+.react-autosuggest__suggestions-container--open {
+    width: 100% !important;
+    border: none !important;
+}
+
+table tr td .list-product-name {
+    width: 184px;
+}
+
+table  tr td .product-in-stock, table  tr td .list-product-name  {
+    font-size: 8px;
+    color: #191919;
+    font-weight: bold;
+}
+
+table  tr td .current {
+    font-size: 8px;
+    font-weight: bold;
+}
+
+table tr td .current-price {
+    font-size: 14px;
+}
+
+table tr td .list-total-price {
+    font-size: 22px;   
+}
+
+table tr td .list-code {
+    font-size: 7px;
+}
+
+.search-list-table table td {
+    border-top: none !important;
+}
+
+.search-list-table {
+    border-bottom: 1px solid #FAFAFA;
+}
+
+.search-list-table::last {
+    border-bottom: none;
+}
+
+.react-autosuggest__suggestions-list {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+ul.react-autosuggest__suggestions-list::after {
+    content:"";
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid white;
+    top: -7px;
+    right: 8px;
+    position: absolute;
+}
+
+ul.react-autosuggest__suggestions-list li table {
+    border-bottom: none !important;
+}
+
+.search-list-table table {
+    margin-bottom: 0px;
+}
+
+.auto-complete-input input {
+    width: 100%;
+}
+
+.auto-complete-input span.icon-search {
+    position: absolute;
+    top: 17px;
+    left: 22px;
+    z-index: 1;
+}
+
+.auto-complete-input span.icon-search,
+.auto-complete-input span.icon-plus
+{
+    font-size: 19px;
+}
+
+.auto-complete-input span.icon-plus {
+    float: right;
+    position: absolute;
+    top: 17px;
+    right: 22px;
+}
+
+.auto-complete-input input {
+    padding-left: 36px;
+}
+
+/* Badges  */
+.search-list-table table tr td .badge-secondary {
+    border-radius: 1px;
+    background-color: #0D62AF;
+    margin-right: 2px;
+    font-weight: normal;
+}
+
 
 
 

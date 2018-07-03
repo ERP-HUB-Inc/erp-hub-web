@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Table } from "reactstrap";
 
-export  class CTable extends Component {
+export class CTable extends Component {
   render() {
     return (
       <Table>

@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Component from "../../components/Component";
+// import Autocompletes from "./Autocomplete";
 import { fetchUsers } from "../../actions/users";
 import { reduxForm } from "redux-form"; 
 import Manuitem from "../../components/layout/SiderBar/MenuItem";
@@ -67,6 +68,24 @@ class UserList extends Component {
               component={ this.InputRedux }
               label="Date2"
               placeholder="Search for Customer"
+            />
+          </this.Col>
+          <this.Col md="4">
+            {/* <Autocompletes /> */}
+            <this.Field 
+              name="autocomplete" 
+              component={ this.AutoComplete }
+              label="Date2"
+              placeholder="Search Product"
+            />
+            
+          </this.Col>
+          <this.Col md="2">
+            <this.Field 
+              name="search" 
+              component={ this.Antinput }
+              label="Date2"
+              placeholder="Search Product"
             />
           </this.Col>
           <this.Col md="2">
