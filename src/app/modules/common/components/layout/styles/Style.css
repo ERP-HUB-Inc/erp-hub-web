@@ -23,7 +23,7 @@ table tr td .list-code,
 .main-date-picker input::placeholder,
 .main-antselect .ant-select-selection-selected-value
 {
-    font-size: 11px;
+    font-size: 8pt;
 }
 
 .clearFloat {
@@ -161,6 +161,15 @@ h4.breadcrumb-title {
     margin-right: 16px;
 }
 
+.ant-table-body tr th {
+    font-size: 11pt;
+    text-transform: uppercase;
+}
+
+.ant-table-body tr td {
+    font-size: 8pt;
+}
+
 /* auto complete */
 
 .react-autosuggest__suggestion {
@@ -177,26 +186,26 @@ table tr td .list-product-name {
 }
 
 table  tr td .product-in-stock, table  tr td .list-product-name  {
-    font-size: 8px;
+    font-size: 8pt;
     color: #191919;
     font-weight: bold;
 }
 
 table  tr td .current {
-    font-size: 8px;
+    font-size: 8pt;
     font-weight: bold;
 }
 
 table tr td .current-price {
-    font-size: 14px;
+    font-size: 14pt;
 }
 
 table tr td .list-total-price {
-    font-size: 22px;   
+    font-size: 22pt;   
 }
 
 table tr td .list-code {
-    font-size: 7px;
+    font-size: 7pt;
 }
 
 .search-list-table table td {
@@ -267,6 +276,7 @@ ul.react-autosuggest__suggestions-list li table {
     background-color: #0D62AF;
     margin-right: 2px;
     font-weight: normal;
+    font-size: 6pt;
 }
 
 

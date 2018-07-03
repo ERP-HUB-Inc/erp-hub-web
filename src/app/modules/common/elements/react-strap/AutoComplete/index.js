@@ -4,19 +4,24 @@ import { ListSearch } from "../ListSearch";
 
 const languages = [
   {
-    name: "C",
+    name: "Ch",
     sex: "M",
     year: 1972
   },
   {
-    name: "C",
+    name: "Cl",
     sex: "M",
     year: 1972
   },
   {
-    name: "Elm",
+    name: "Ci",
     sex: "M",
-    year: 2012
+    year: 1972
+  },
+  {
+    name: "Cd",
+    sex: "M",
+    year: 1972
   },
   {
     name: "Plm",

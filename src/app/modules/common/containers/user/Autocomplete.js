@@ -14,9 +14,14 @@ const languages = [
     year: 1972
   },
   {
-    name: "Elm",
+    name: "C",
     sex: "M",
-    year: 2012
+    year: 1972
+  },
+  {
+    name: "C",
+    sex: "M",
+    year: 1972
   },
   {
     name: "Plm",
