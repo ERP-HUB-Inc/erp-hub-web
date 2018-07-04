@@ -112,6 +112,8 @@ export class CTable extends React.Component {
         pagination={this.state.pagination}
         loading={this.state.loading}
         onChange={this.handleTableChange}
+        total={10}
+        showTotal={10}
       />
     );
   }

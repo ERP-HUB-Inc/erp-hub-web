@@ -4,6 +4,7 @@ export * from "./Modal";
 export * from "./Noteicon";
 export * from "./Select/select";
 export * from "./DatePicker/dateRank";
-export * from "./Button/search";
+export * from "./Button/actionButton";
 export * from "./Switch";
 export * from "./Input";
+export * from "./Waiting";

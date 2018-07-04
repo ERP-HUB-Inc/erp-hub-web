@@ -54,6 +54,7 @@ class Router extends Component {
           <Content onClick={ this.Content } className={ layoutContent }>
             <Switch>
               <Route path="/dd" name="Create" component={ UserList } />
+              <Route path="/sale_history" name="Create" component={ Home } />
               <Route path="/" name="Create" component={ Home } />
             </Switch>
           </Content>  

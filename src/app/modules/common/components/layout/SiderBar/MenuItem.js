@@ -7,7 +7,7 @@ export default [
   {
     title : "Sale History",
     icon : "inbox",
-    link : "/salehistory",
+    link : "sale_history",
   },
   {
     title : "Sale Order",

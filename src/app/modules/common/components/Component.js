@@ -10,9 +10,10 @@ import
   Noteicon,
   Selects,
   DateRank,
-  SearchButton,
+  ActionButton,
   Switchs,
-  SapleInput as Antinput
+  SapleInput as Antinput,
+  Waiting
 } from "../elements/ant-ui";
 import Header from "../elements/ant-ui/Header";
 import { InputRedux,
@@ -102,9 +103,10 @@ export default class Component extends RComponent {
     this.Menu = Menu;
     this.Icon = Icon;
     this.Select = Select;
-    this.SearchButton = SearchButton;
+    this.ActionButton = ActionButton;
     this.Switchs = Switchs;
     this.Antinput = Antinput;
+    this.Waiting = Waiting;
 
   }
 

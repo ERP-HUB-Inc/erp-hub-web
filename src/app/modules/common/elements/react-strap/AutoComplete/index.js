@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import Autosuggest from "react-autosuggest";
+import {  
+  FormGroup,
+} from "reactstrap";
 import { ListSearch } from "../ListSearch";
 
 const languages = [
@@ -92,16 +95,18 @@ renderSuggestion = (suggestion="") => (
     // Finally, render it!
     return (
       <div className="main-input auto-complete-input">
-        <span className="fa fa-plus-circle icon-search"></span>
-        <Autosuggest
-          suggestions={suggestions}
-          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-          getSuggestionValue={getSuggestionValue}
-          renderSuggestion={this.renderSuggestion}
-          inputProps={inputProps}
-        />
-        <span className="fa fa-plus-circle icon-plus"></span>
+        <FormGroup>
+          <span className="fa fa-plus-circle icon-search"></span>
+          <Autosuggest
+            suggestions={suggestions}
+            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+            getSuggestionValue={getSuggestionValue}
+            renderSuggestion={this.renderSuggestion}
+            inputProps={inputProps}
+          />
+          <span className="fa fa-plus-circle icon-plus"></span>
+        </FormGroup>
       </div>
     );
 

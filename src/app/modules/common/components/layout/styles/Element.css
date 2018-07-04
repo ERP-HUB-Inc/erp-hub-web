@@ -8,7 +8,7 @@
 .main-input input::placeholder,
 .main-home-page
 {
-    color: #A8A8A8;
+    color: #9A9A9A;
 }
 
 .main-home-page {
@@ -78,10 +78,11 @@
 /* search button */
 
 .button-search-color,
-.main-search-button button,
-.main-search-button button:focus {
+.main-search-button button {
     background-color: #093163;
 }
+
+/* .main-search-button button:focus  */
 
 .main-search-button button {
     color: white;
@@ -204,3 +205,9 @@ body {
     color: #777;
   }
   
+
+  /* spint waiting  */
+  .main-waiting .ant-spin {
+    width: 100%;
+    padding: 0;
+  }

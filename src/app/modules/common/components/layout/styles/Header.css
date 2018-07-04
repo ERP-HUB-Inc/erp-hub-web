@@ -3,13 +3,14 @@
     .main-user-select li a,
     .border-right,
     .main-search input::placeholder,
-    .main-search i
+    .main-search i,
+    .main-user-select ul li
     {
-        color: #C7C7C7;
+        color: #9A9A9A;
     }
     
     .header .border-right {
-        border-right: 2px solid #EAEAEA;
+        border-right: 2px solid #9A9A9A;
     }
 
     .header .logo-title {
@@ -71,7 +72,6 @@
         float: left;
         padding: 0px 26px;
         font-size: 15pt;
-        color: #C7C7C7;
     }
 
     .dropdown.nav-item {
