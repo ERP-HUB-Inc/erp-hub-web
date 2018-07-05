@@ -21,7 +21,7 @@
 .main-date-picker .ant-calendar-picker-input,
 .main-input input
  {
-    border: none !important;
+    border: none;
     border-radius: 0px;
     webkit-box-shadow: 0px 4px 0px 0px rgba(234,234,234,1);
     -moz-box-shadow: 0px 4px 0px 0px rgba(234,234,234,1);

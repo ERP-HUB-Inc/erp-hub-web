@@ -13,7 +13,8 @@ import
   ActionButton,
   Switchs,
   SapleInput as Antinput,
-  Waiting
+  Waiting,
+  Checkboxs
 } from "../elements/ant-ui";
 import Header from "../elements/ant-ui/Header";
 import { InputRedux,
@@ -107,6 +108,7 @@ export default class Component extends RComponent {
     this.Switchs = Switchs;
     this.Antinput = Antinput;
     this.Waiting = Waiting;
+    this.Checkboxs = Checkboxs;
 
   }
 

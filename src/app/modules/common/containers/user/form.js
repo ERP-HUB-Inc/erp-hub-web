@@ -31,9 +31,15 @@ class Synvalidation extends Component {
     const { handleSubmit } = this.props;
     return(
       <div>
-        <this.Waiting />
+        {/* <this.Waiting /> */}
         <this.Form onSubmit={ handleSubmit }>
           <this.Row>
+            <this.Col md="2">
+              <this.Field 
+                component={ this.Checkboxs }
+                label={["Apple"]}
+              />
+            </this.Col>
             <this.Col md="2">
               <this.Field name="favoriteColor" 
                 component={ this.Selects }
