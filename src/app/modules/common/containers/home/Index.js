@@ -39,7 +39,7 @@ class Home extends Component {
                   />
                 </li>
                 <li>
-                  <this.Switchs onChange={  this.Switch } />
+                  <this.Switchs onChange={ this.Switch } />
                 </li>
               </ul>
             </div>

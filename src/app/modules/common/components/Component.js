@@ -44,7 +44,8 @@ import {
 import { NavLink } from "react-router-dom";
 import "./layout/styles/Style.css";
 import "bootstrap/dist/css/bootstrap.css";
-import { Layout, Menu, Icon , Select } from "antd";
+import { Layout, Menu, Icon , Select, Collapse } from "antd";
+const Panel = Collapse.Panel;
 
 export default class Component extends RComponent {
   constructor(props) {
@@ -109,6 +110,8 @@ export default class Component extends RComponent {
     this.Antinput = Antinput;
     this.Waiting = Waiting;
     this.Checkboxs = Checkboxs;
+    this.Collapse = Collapse;
+    this.Panel = Panel;
 
   }
 

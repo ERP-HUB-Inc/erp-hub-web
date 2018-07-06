@@ -7,7 +7,7 @@ import { ListSearch } from "../ListSearch";
 
 const languages = [
   {
-    name: "Ch",
+    name: "Cocacola",
     sex: "M",
     year: 1972
   },

@@ -9,3 +9,4 @@ export * from "./Switch";
 export * from "./Input";
 export * from "./Waiting";
 export * from "./Checkbox";
+export * from "./ListCollapse";
