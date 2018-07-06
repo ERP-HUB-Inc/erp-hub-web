@@ -7,10 +7,16 @@
 .main-input label,
 .main-input input::placeholder,
 .main-home-page,
-.main-antselect .ant-select-selection-selected-value
+.main-antselect .ant-select-selection-selected-value,
+.main-input input[type=text],
+.main-input.auto-complete-input span
 {
     color: #9A9A9A;
 }
+
+/* .main-input input[type=text] {
+    color: red;
+} */
 
 .main-home-page {
     padding-top: 21px;

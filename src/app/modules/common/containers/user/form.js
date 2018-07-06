@@ -26,18 +26,24 @@ class Synvalidation extends Component {
       <div>
         
         <this.Row>   
-
+          
           <this.Col md="6"> 
+
+            <this.Tooltips />
 
             <this.Form onSubmit={ handleSubmit }>
               <this.Row>
-                <this.Col xs="12" md="2">
+
+                <this.Col xs="12" md="3">
+                 
+                </this.Col>
+                <this.Col xs="12" md="3">
                   <this.Field 
                     component={ this.Checkboxs }
                     label={["Apple"]}
                   />
                 </this.Col>
-                <this.Col xs="12" md="2">
+                <this.Col xs="12" md="3">
                   <this.Field name="favoriteColor" 
                     component={ this.Selects }
                     defaultValue="all"
@@ -49,14 +55,14 @@ class Synvalidation extends Component {
                     <option value="redd">Reddd</option>
                   </this.Field>
                 </this.Col>
-                <this.Col xs="12" md="2">
+                <this.Col xs="12" md="3">
                   <this.Field 
                     name="datepicker" 
                     component={ this.DateRank }
                     label="Date1"
                   />
                 </this.Col>
-                <this.Col xs="12" md="2">
+                <this.Col xs="12" md="3">
                   <this.Field 
                     name="datepicker" 
                     component={ this.DateRank }
@@ -64,7 +70,7 @@ class Synvalidation extends Component {
                     placeholder="Select Date Rank"
                   />
                 </this.Col>
-                <this.Col xs="12" md="2">
+                <this.Col xs="12" md="3">
                   <this.Field 
                     name="searchfor" 
                     component={ this.InputRedux }

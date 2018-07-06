@@ -310,10 +310,22 @@ li.ant-pagination-next .ant-pagination-item-link
 } 
 
 /* tooltips */
-.main-tooltip .ant-tooltip-inner {
-    width: 194px;
+.ant-tooltip-inner {
+    background-color: white;
+    border-radius: 0;
     height: 122px;
+    width: 194px;
 }
+
+.main-tooltip button {
+    border: none;
+}
+
+.ant-tooltip .ant-tooltip-arrow {
+    border-right-color: white;
+    color:black;
+}
+
 
 /* checkbox */
 .main-check .ant-checkbox-checked .ant-checkbox-inner {
@@ -332,9 +344,13 @@ li.ant-pagination-next .ant-pagination-item-link
     font-size: 13pt;
 }
 
-
+/* error */
 .has-error .ant-input {
-    border: 1px solid red;
+    border: 1px solid #B90000;
+}
+
+.has-error .ant-form-explain {
+    color: #B90000;
 }
 
 /* collapse */

@@ -14,7 +14,8 @@ import
   Switchs,
   SapleInput as Antinput,
   Waiting,
-  Checkboxs
+  Checkboxs,
+  Tooltips
 } from "../elements/ant-ui";
 import Header from "../elements/ant-ui/Header";
 import { InputRedux,
@@ -112,6 +113,7 @@ export default class Component extends RComponent {
     this.Checkboxs = Checkboxs;
     this.Collapse = Collapse;
     this.Panel = Panel;
+    this.Tooltips = Tooltips;
 
   }
 

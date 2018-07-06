@@ -10,3 +10,4 @@ export * from "./Input";
 export * from "./Waiting";
 export * from "./Checkbox";
 export * from "./ListCollapse";
+export * from "./Tooltips";
