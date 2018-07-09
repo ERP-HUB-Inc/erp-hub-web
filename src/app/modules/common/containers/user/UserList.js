@@ -1,7 +1,5 @@
 import React from "react";
-import { connect } from "react-redux";
 import Component from "../../components/Component";
-import ValidationForm from "./index";
 import ListCollapse from "./Panel";
 import { reduxForm } from "redux-form"; 
 import Manuitem from "../../components/layout/SiderBar/MenuItem";
@@ -13,18 +11,27 @@ const validate = values => {
   } else if (values.username.length > 15) {
     errors.username = "Must be 15 characters or less";
   }
+
+  if (!values.favoriteColor) {
+    errors.favoriteColor = "Required";
+  }
+
+  if(!values.rangepicker){
+    errors.rangepicker = "Required";
+  }
+
+  if(!values.Apple){
+    errors.Apple = "Required";
+  }
+
   return errors;
 };
 
 class UserList extends Component {
-
-
   render() {
-    console.log("getitem",Manuitem);
     const { handleSubmit } = this.props;
     return (
       <div className="manitem">
-        {/* <User {...this.props} /> */}
         <this.BreadcrumbLayout
           titleNow="Transactions"
         >
@@ -41,8 +48,6 @@ class UserList extends Component {
           }
         </this.BreadcrumbLayout>
         
-        {/* <ValidationForm /> */}
-        
         <this.Row>
           <this.Col md="6">   
             <div className="main-input">
@@ -56,9 +61,11 @@ class UserList extends Component {
                   </this.Col>
                   <this.Col xs="12" md="3">
                     <this.Field 
-                      name="apple"
-                      component={ this.Checkboxs }
-                      label={["Apple"]}
+                      label="Apple" 
+                      name="apple" 
+                      component={ this.FieldComponent(this.Checkbox) } 
+                      type="checkbox" 
+                      className="main-check"
                     />
                   </this.Col>
                   <this.Col xs="12" md="3">
@@ -73,22 +80,16 @@ class UserList extends Component {
                       <option value="red">Red</option>
                       <option value="redd">Reddd</option>
                     </this.Field>
+
                   </this.Col>
                   <this.Col xs="12" md="3">
-                    <this.Field 
-                      name="datepicker1" 
-                      type="date"
+                    <this.Field
+                      label="Filter dates"
+                      name="rangepicker"
                       component={ this.DateRank }
-                      label="Date1"
-                    />
-                  </this.Col>
-                  <this.Col xs="12" md="3">
-                    <this.Field 
-                      name="datepicker" 
-                      type="date"
-                      component={ this.DateRank }
-                      label="Date2"
-                      placeholder="Select Date Rank"
+                      placeholder={["From", "To"]}
+                      onFocus={e => e.preventDefault()}
+                      onBlur={e => e.preventDefault()}
                     />
                   </this.Col>
                   <this.Col xs="12" md="3">
@@ -138,8 +139,7 @@ class UserList extends Component {
     );
   }
 }
-
-
+  
 export default reduxForm({
   form: "syncValidation",  
   validate                     

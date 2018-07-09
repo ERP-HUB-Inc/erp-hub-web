@@ -1,12 +1,9 @@
 import React, { Component } from "react";
 import {  
   FormGroup,
-  Label,
-  FormText
+  Label
 } from "reactstrap";
 import { Select,Form } from "antd";
-
-const Option = Select.Option;
 const FormItem = Form.Item;
 
 export class Selects extends Component{
@@ -32,12 +29,11 @@ export class Selects extends Component{
 
   render(){
     const {
+      input,
       label,
       required,
-      options,
       children,
       placeholder,
-      value,
       defaultValue,
       meta: {
         touched, error, warning
@@ -57,27 +53,35 @@ export class Selects extends Component{
               }
           >
             <Select
-              showSearch
               style={{ width: "100%" }}
               placeholder={ placeholder }
-              optionFilterProp="children"
-              onChange={ () => this.handleChange(value)}
+              onChange={ this.handleChange}
               onFocus={ this.handleFocus }
               onBlur={ this.handleBlur }
               defaultValue={ defaultValue }
-              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              {...input}
             >
-              { children }
-              <Option value={ value }>
-                { options }
-              </Option>
+              { children } 
             </Select>
-            {touched &&
-        ((error && <FormText className="select-error"> {error} </FormText>) ||
-          (warning && <FormText className="select-error"> {warning} </FormText>))}
           </FormItem>
         </FormGroup>
       </div>
     );
   }
 } 
+
+// export default Selects = Component => ({ input, meta, children, hasFeedback, label, ...rest }) => {
+//   const hasError = meta.touched && meta.invalid;
+//   return (
+//     <div className="main-antselect">
+//       <FormItem
+//         label={label}
+//         validateStatus={hasError ? "error" : "success"}
+//         hasFeedback={hasFeedback && hasError}
+//         help={hasError && meta.error}
+//       >
+//         <Component {...input} {...rest} children={children} />
+//       </FormItem>
+//     </div>
+//   );
+// };
