@@ -1,10 +1,20 @@
 import React from "react";
-import { connect } from "react-redux";
 import Component from "../../components/Component";
-import ValidationForm from "./index";
+import PropTypes from "prop-types";
 import ListCollapse from "./Panel";
-import { reduxForm } from "redux-form"; 
-import Manuitem from "../../components/layout/SiderBar/MenuItem";
+// import { reduxForm } from "redux-form/immutable"; 
+import { reduxForm } from "redux-form";
+
+
+// function validate(values) {
+//   const errors = {};
+//   if (!values.get("username")) {
+//     errors.username = "Required";
+//   } else if (values.get("username").length > 15) {
+//     errors.username = "Must be 15 characters or less";
+//   }
+//   return errors;
+// };
 
 const validate = values => {
   const errors = {};
@@ -16,38 +26,29 @@ const validate = values => {
   return errors;
 };
 
-class UserList extends Component {
 
+class Synvalidation extends Component {
 
-  render() {
-    console.log("getitem",Manuitem);
-    const { handleSubmit } = this.props;
-    return (
-      <div className="manitem">
-        {/* <User {...this.props} /> */}
-        <this.BreadcrumbLayout
-          titleNow="Transactions"
-        >
-          {
-            Manuitem.map((value,key) => {	
-              return(
-                <this.Breadcrumb
-                  to={ value.link }
-                  key={ key }
-                  nextPage={ value.title }
-                />
-              );
-            })
-          }
-        </this.BreadcrumbLayout>
-        
-        {/* <ValidationForm /> */}
-        
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(values,e){
+    e.preventDefault();
+    alert(JSON.stringify(values));
+  }
+
+  render(){
+    // const { handleSubmit } = this.props;
+    return(
+      <div>
+
         <this.Row>
           <this.Col md="6">   
             <div className="main-input">
               <this.Tooltips />
-              <form onSubmit={ handleSubmit }>
+              <form onSubmit={ this.handleSubmit }>
             
                 <this.Row>
 
@@ -62,12 +63,11 @@ class UserList extends Component {
                     />
                   </this.Col>
                   <this.Col xs="12" md="3">
-                    <this.Field 
-                      name="favoriteColor" 
+                    <this.Field name="favoriteColor" 
                       component={ this.Selects }
                       defaultValue="all"
                       placeholder="Status"
-                      label="Select"
+                      label="test"
                     >
                       <option value="all" selected>All</option>
                       <option value="red">Red</option>
@@ -76,8 +76,7 @@ class UserList extends Component {
                   </this.Col>
                   <this.Col xs="12" md="3">
                     <this.Field 
-                      name="datepicker1" 
-                      type="date"
+                      name="datepicker" 
                       component={ this.DateRank }
                       label="Date1"
                     />
@@ -85,7 +84,6 @@ class UserList extends Component {
                   <this.Col xs="12" md="3">
                     <this.Field 
                       name="datepicker" 
-                      type="date"
                       component={ this.DateRank }
                       label="Date2"
                       placeholder="Select Date Rank"
@@ -119,8 +117,13 @@ class UserList extends Component {
                     />
                   </this.Col>
                   <this.Col xs="12" md="2">
-                    <this.ActionButton  icon="search" />
+                    <this.ActionButton
+                      icon="search"
+                      color="#093163"
+                    />
                   </this.Col>
+
+                  <this.ActionButton />
           
                 </this.Row>
               </form>
@@ -131,16 +134,19 @@ class UserList extends Component {
             <ListCollapse/>
           </this.Col>
         </this.Row>
-
-
-        <this.Table />
+       
       </div>
     );
   }
 }
 
+Synvalidation.propTypes = {
+  handleSubmit: PropTypes.any,
+  submitting: PropTypes.any,
+  onSubmit: PropTypes.any
+};
 
 export default reduxForm({
-  form: "syncValidation",  
-  validate                     
-})(UserList);
+  form: "syncValidation",
+  validate
+})(Synvalidation);

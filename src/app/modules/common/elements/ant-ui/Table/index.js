@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { Table } from "antd";
 import reqwest from "reqwest";
 

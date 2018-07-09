@@ -18,6 +18,7 @@ export class DateRank extends Component {
   render(){
 
     const { 
+      type,
       label,
       meta: { touched, error, warning }
     } = this.props;
@@ -36,6 +37,8 @@ export class DateRank extends Component {
               }
           >
             <RangePicker
+              // {...input} 
+              type={ type } 
               ranges={{ Today: [moment(), moment()], "This Month": [moment(), moment().endOf("month")] }}
               onChange={onChange}
               validateStatus="error"

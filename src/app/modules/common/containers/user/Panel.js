@@ -35,13 +35,15 @@ class ListCollapse extends Component {
           >
             <div>
               <this.Row>
-                <this.Col xs="2" md="2">
-                  <this.Field 
-                    name="qty" 
-                    component={ this.Antinput }
-                    label="Quantity"
-                  />
-                </this.Col>
+                <div className="list-collapse-input">
+                  <this.Col xs="2" md="2">
+                    <this.Field 
+                      name="qty" 
+                      component={ this.Antinput }
+                      label="Quantity"
+                    />
+                  </this.Col>
+                </div>
               </this.Row>
             </div> 
           </this.Panel>

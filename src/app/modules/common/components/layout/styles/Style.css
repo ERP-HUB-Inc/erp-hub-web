@@ -22,6 +22,10 @@ table tr td .list-code,
     color: #9A9A9A !important;
 }
 
+.main-input input:read-only {
+    box-shadow: none;
+}
+
 .main-input input::placeholder,
 .main-date-picker input::placeholder,
 .main-antselect .ant-select-selection-selected-value
@@ -389,6 +393,13 @@ li.ant-pagination-next .ant-pagination-item-link
     font-size: 22pt !important;
     line-height: 65px !important;
     left: 7px !important;
+}
+
+/* input collapse */
+.list-collapse-input .main-input input {
+    /* box-shadow: none;
+    border-bottom: 1px solid red;
+    width: 100%; */
 }
 
 

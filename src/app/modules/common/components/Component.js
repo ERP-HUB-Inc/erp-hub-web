@@ -1,7 +1,7 @@
 import React, { Component as RComponent } from "react";
 import { Translate, setActiveLanguage } from "react-localize-redux";
 import { Field } from "redux-form";
-import { Field as SynField } from "redux-form/immutable";
+// import { Field as SynField } from "redux-form/immutable";
 import { connect } from "react-redux";
 import 
 { 
@@ -71,7 +71,7 @@ export default class Component extends RComponent {
 
     // Redux Form
     this.Field = Field;
-    this.SynField = SynField;
+    // this.SynField = SynField;
     this.connect = connect;
 
     //React Strap 

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 export class BreadcrumbLayout extends Component {
@@ -46,3 +47,16 @@ export class Breadcrumb extends Component {
     );
   }
 }
+
+BreadcrumbLayout.propTypes = {
+  titleNow: PropTypes.string
+};
+
+Breadcrumb.propTypes = {
+  nextPage: PropTypes.string,
+  to: PropTypes.string
+};
+
+BreadcrumbTitle.propTypes = {
+  title: PropTypes.string
+};
