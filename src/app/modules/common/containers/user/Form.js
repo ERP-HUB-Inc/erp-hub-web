@@ -2,30 +2,62 @@ import React from "react";
 import Component from "../../components/Component";
 import ListCollapse from "./Panel";
 import { reduxForm } from "redux-form"; 
+import { validation } from "../../../common/util/";
 import Manuitem from "../../components/layout/SiderBar/MenuItem";
 
-const validate = values => {
-  const errors = {};
-  if (!values.username) {
-    errors.username = "Required";
-  } else if (values.username.length > 15) {
-    errors.username = "Must be 15 characters or less";
-  }
+// const validate = values => {
+//   const errors = {};
+//   if (!values.username) {
+//     errors.username = "Required";
+//   } else if (values.username.length > 15) {
+//     errors.username = "Must be 15 characters or less";
+//   }
 
-  if (!values.favoriteColor) {
-    errors.favoriteColor = "Required";
-  }
+//   if (!values.favoriteColor) {
+//     errors.favoriteColor = "Required";
+//   }
 
-  if(!values.rangepicker){
-    errors.rangepicker = "Required";
-  }
+//   if(!values.rangepicker){
+//     errors.rangepicker = "Required";
+//   }
 
-  if(!values.Apple){
-    errors.Apple = "Required";
-  }
+//   if(!values.Apple){
+//     errors.Apple = "Required";
+//   }
 
-  return errors;
-};
+//   return errors;
+// };
+
+function validate({username="",rangepicker="",favoriteColor="",
+  searchtwo="",email=""}){
+  const rules = {
+    username: {
+      required: true,
+      value: username
+    },
+    rangepicker: {
+      required: true,
+      value: rangepicker,
+      type: ""
+    },
+    favoriteColor: {
+      required: true,
+      value: favoriteColor,
+      type: ""
+    },
+    searchtwo: {
+      required: true,
+      value: searchtwo,
+      type: "interger"
+    },
+    email: {
+      required: true,
+      value: email,
+      type: "email"
+    }
+  };
+  return validation(rules);
+}
 
 class UserList extends Component {
   render() {
@@ -57,7 +89,13 @@ class UserList extends Component {
                 <this.Row>
 
                   <this.Col xs="12" md="3">
-                 
+                    <this.Field 
+                      name="email"
+                      type="text"
+                      component={ this.Antinput }
+                      label="Email"
+                      placeholder="Email"
+                    />
                   </this.Col>
                   <this.Col xs="12" md="3">
                     <this.Field 
@@ -94,10 +132,10 @@ class UserList extends Component {
                   </this.Col>
                   <this.Col xs="12" md="3">
                     <this.Field 
-                      name="searchfor"
+                      name="searchtwo"
                       type="text"
                       component={ this.Antinput }
-                      label="Date2"
+                      label="Search2"
                       placeholder="Search Product"
                     />
                   </this.Col>
@@ -113,9 +151,9 @@ class UserList extends Component {
                   <this.Col xs="12" md="2">
                     <this.Field 
                       name="username"
-                      type="text"
+                      type="number"
                       component={ this.Antinput }
-                      label="Date2"
+                      label="Search"
                       placeholder="Search Product"
                     />
                   </this.Col>
@@ -141,6 +179,6 @@ class UserList extends Component {
 }
   
 export default reduxForm({
-  form: "syncValidation",  
+  form: "syncValidation",
   validate                     
 })(UserList);

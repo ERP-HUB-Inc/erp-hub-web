@@ -1,14 +1,26 @@
 import moment from "moment";
 
+export function Email(value = "") {
+  return value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+}
+
 //Validation input
 export function validation(rules) { 
   const errors = {};
+  const type = {};
   for(var field in rules){
     var rule = rules[field];
-    var value = rule["value"];
-    console.log("values",field);
-    if(!field){
-      errors.field = "This field is required";
+    var values = rule["value"];
+    var gettype = rule["type"];
+    // var type = rule["type"];
+    console.log("gettype", gettype);
+
+    if(!values){
+      errors[field] = "The Field is required"; 
+    }else if(type[gettype] = "email" && !Email(values)){
+      errors[field] = "The Field is email";
+    }else{
+      errors[field] = ""; 
     }
   }
   return errors;

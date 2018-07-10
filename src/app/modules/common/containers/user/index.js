@@ -1,5 +1,5 @@
 import React,{ Component } from "react";
-import Synvalidation from "./UserList";
+import Synvalidation from "./Form";
 
 function getValue(values){
   alert(JSON.stringify(values));
