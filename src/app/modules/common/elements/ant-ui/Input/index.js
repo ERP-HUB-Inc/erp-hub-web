@@ -27,7 +27,6 @@ export class SapleInput extends Component {
       meta: { touched, error, warning },
       placeholder
     } = this.props;
-    console.log("valid" + touched);
     return (
       <div>
         <FormGroup>
