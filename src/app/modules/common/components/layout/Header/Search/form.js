@@ -27,7 +27,7 @@ class FormSearch extends Component {
 
 FormSearch.propTypes = {
   handleSubmit: PropTypes.any,
-  submitting: PropTypes.string,
+  submitting: PropTypes.bool,
   onSubmit: PropTypes.func
 };
 

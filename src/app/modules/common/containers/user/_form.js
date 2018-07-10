@@ -1,8 +1,20 @@
 import React from "react";
 import Component from "../../components/Component";
+import PropTypes from "prop-types";
 import ListCollapse from "./Panel";
-import { reduxForm } from "redux-form"; 
-import Manuitem from "../../components/layout/SiderBar/MenuItem";
+// import { reduxForm } from "redux-form/immutable"; 
+import { reduxForm } from "redux-form";
+
+
+// function validate(values) {
+//   const errors = {};
+//   if (!values.get("username")) {
+//     errors.username = "Required";
+//   } else if (values.get("username").length > 15) {
+//     errors.username = "Must be 15 characters or less";
+//   }
+//   return errors;
+// };
 
 const validate = values => {
   const errors = {};
@@ -11,48 +23,32 @@ const validate = values => {
   } else if (values.username.length > 15) {
     errors.username = "Must be 15 characters or less";
   }
-
-  if (!values.favoriteColor) {
-    errors.favoriteColor = "Required";
-  }
-
-  if(!values.rangepicker){
-    errors.rangepicker = "Required";
-  }
-
-  if(!values.Apple){
-    errors.Apple = "Required";
-  }
-
   return errors;
 };
 
-class UserList extends Component {
-  render() {
-    const { handleSubmit } = this.props;
-    return (
-      <div className="manitem">
-        <this.BreadcrumbLayout
-          titleNow="Transactions"
-        >
-          {
-            Manuitem.map((value,key) => {	
-              return(
-                <this.Breadcrumb
-                  to={ value.link }
-                  key={ key }
-                  nextPage={ value.title }
-                />
-              );
-            })
-          }
-        </this.BreadcrumbLayout>
-        
+
+class Synvalidation extends Component {
+
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(values,e){
+    e.preventDefault();
+    alert(JSON.stringify(values));
+  }
+
+  render(){
+    // const { handleSubmit } = this.props;
+    return(
+      <div>
+
         <this.Row>
           <this.Col md="6">   
             <div className="main-input">
               <this.Tooltips />
-              <form onSubmit={ handleSubmit }>
+              <form onSubmit={ this.handleSubmit }>
             
                 <this.Row>
 
@@ -61,35 +57,36 @@ class UserList extends Component {
                   </this.Col>
                   <this.Col xs="12" md="3">
                     <this.Field 
-                      label="Apple" 
-                      name="apple" 
-                      component={ this.FieldComponent(this.Checkbox) } 
-                      type="checkbox" 
-                      className="main-check"
+                      name="apple"
+                      component={ this.Checkboxs }
+                      label={["Apple"]}
                     />
                   </this.Col>
                   <this.Col xs="12" md="3">
-                    <this.Field 
-                      name="favoriteColor" 
+                    <this.Field name="favoriteColor" 
                       component={ this.Selects }
                       defaultValue="all"
                       placeholder="Status"
-                      label="Select"
+                      label="test"
                     >
                       <option value="all" selected>All</option>
                       <option value="red">Red</option>
                       <option value="redd">Reddd</option>
                     </this.Field>
-
                   </this.Col>
                   <this.Col xs="12" md="3">
-                    <this.Field
-                      label="Filter dates"
-                      name="rangepicker"
+                    <this.Field 
+                      name="datepicker" 
                       component={ this.DateRank }
-                      placeholder={["From", "To"]}
-                      onFocus={e => e.preventDefault()}
-                      onBlur={e => e.preventDefault()}
+                      label="Date1"
+                    />
+                  </this.Col>
+                  <this.Col xs="12" md="3">
+                    <this.Field 
+                      name="datepicker" 
+                      component={ this.DateRank }
+                      label="Date2"
+                      placeholder="Select Date Rank"
                     />
                   </this.Col>
                   <this.Col xs="12" md="3">
@@ -120,8 +117,13 @@ class UserList extends Component {
                     />
                   </this.Col>
                   <this.Col xs="12" md="2">
-                    <this.ActionButton  icon="search" />
+                    <this.ActionButton
+                      icon="search"
+                      color="#093163"
+                    />
                   </this.Col>
+
+                  <this.ActionButton />
           
                 </this.Row>
               </form>
@@ -132,15 +134,19 @@ class UserList extends Component {
             <ListCollapse/>
           </this.Col>
         </this.Row>
-
-
-        <this.Table />
+       
       </div>
     );
   }
 }
-  
+
+Synvalidation.propTypes = {
+  handleSubmit: PropTypes.any,
+  submitting: PropTypes.any,
+  onSubmit: PropTypes.any
+};
+
 export default reduxForm({
-  form: "syncValidation",  
-  validate                     
-})(UserList);
+  form: "syncValidation",
+  validate
+})(Synvalidation);

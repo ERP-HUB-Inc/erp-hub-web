@@ -15,9 +15,15 @@ body {
 table  tr td .current,
 table tr td .list-code,
 .main-input::placeholder,
-.ant-table-body table tr th 
+.ant-table-body table tr th,
+.main-collapse .ant-collapse-header .specification,
+.main-collapse .ant-collapse-header i.arrow
 {
-    color: #9A9A9A;
+    color: #9A9A9A !important;
+}
+
+.main-input input:read-only {
+    box-shadow: none;
 }
 
 .main-input input::placeholder,
@@ -308,10 +314,22 @@ li.ant-pagination-next .ant-pagination-item-link
 } 
 
 /* tooltips */
-.main-tooltip .ant-tooltip-inner {
-    width: 194px;
+.ant-tooltip-inner {
+    background-color: white;
+    border-radius: 0;
     height: 122px;
+    width: 194px;
 }
+
+.main-tooltip button {
+    border: none;
+}
+
+.ant-tooltip .ant-tooltip-arrow {
+    border-right-color: white;
+    color:black;
+}
+
 
 /* checkbox */
 .main-check .ant-checkbox-checked .ant-checkbox-inner {
@@ -330,11 +348,58 @@ li.ant-pagination-next .ant-pagination-item-link
     font-size: 13pt;
 }
 
-
+/* error */
 .has-error .ant-input {
-    border: 1px solid red;
+    border: 1px solid #B90000;
 }
 
+.has-error .ant-form-explain {
+    color: #B90000;
+}
 
+/* collapse */
+.main-collapse .ant-collapse {
+    border: none;
+}
+
+.main-collapse .ant-collapse-header {
+    background-color: white;
+    font-size: 8pt;
+}
+
+.main-collapse .ant-collapse-header .collapse-title {
+    font-size: 8pt;
+    font-weight: bold;
+}
+
+.main-collapse .ant-collapse-header .collapse-price {
+    font-size: 12pt;
+    color: #093163;
+}
+
+.main-collapse .ant-collapse-header .specification {
+    font-size: 7pt;
+}
+
+.ant-collapse > .ant-collapse-item {
+    border: none;
+}
+
+.main-collapse .ant-collapse-content {
+    border: none;
+}
+
+.main-collapse .ant-collapse-header i.arrow {
+    font-size: 22pt !important;
+    line-height: 65px !important;
+    left: 7px !important;
+}
+
+/* input collapse */
+.list-collapse-input .main-input input {
+    /* box-shadow: none;
+    border-bottom: 1px solid red;
+    width: 100%; */
+}
 
 

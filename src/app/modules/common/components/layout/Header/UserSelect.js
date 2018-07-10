@@ -34,7 +34,7 @@ export default class UserSelect extends Component {
             <this.DropdownToggle nav caret className="title-user">
               <span className="user-acc">User Account</span>
             </this.DropdownToggle>
-            <div class="icon-user">
+            <div className="icon-user">
               <Icon type="user" />
             </div>
             <this.DropdownMenu>

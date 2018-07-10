@@ -18,8 +18,8 @@ export class ActionButton extends Component {
 
     return(
       <div className="main-search-button">
-        <FormGroup>
-          <Button icon={ icon } 
+        <FormGroup> 
+          <Button htmlType="submit" icon={ icon } 
             style={ stylecolor } 
             className={ classname }  
           />

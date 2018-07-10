@@ -4,7 +4,12 @@ import Component from "../../components/Component";
 
 const languages = [
   {
-    name: "C",
+    name: "Cocacola",
+    sex: "M",
+    year: 1972
+  },
+  {
+    name: "Fanta",
     sex: "M",
     year: 1972
   },
@@ -14,12 +19,7 @@ const languages = [
     year: 1972
   },
   {
-    name: "C",
-    sex: "M",
-    year: 1972
-  },
-  {
-    name: "C",
+    name: "d",
     sex: "M",
     year: 1972
   },
@@ -27,7 +27,17 @@ const languages = [
     name: "Plm",
     sex: "M",
     year: 2012
-  }
+  },
+  {
+    name: "C",
+    sex: "M",
+    year: 1972
+  },
+  {
+    name: "test",
+    sex: "M",
+    year: 1972
+  },
 ];
 
 // Teach Autosuggest how to calculate suggestions for any given input value.

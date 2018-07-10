@@ -29,7 +29,7 @@ export class SapleInput extends Component {
     } = this.props;
     console.log("valid" + touched);
     return (
-      <div className="main-input">
+      <div>
         <FormGroup>
           <Label>
             { label }
@@ -47,7 +47,7 @@ export class SapleInput extends Component {
             <Input 
               {...input} 
               placeholder={ placeholder } 
-              type={type} 
+              type={ type } 
             />
           </FormItem>
         </FormGroup>

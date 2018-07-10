@@ -6,13 +6,24 @@
 .main-date-picker label,
 .main-input label,
 .main-input input::placeholder,
-.main-home-page
+.main-home-page,
+.main-antselect .ant-select-selection-selected-value,
+.main-input input[type=text],
+.main-input.auto-complete-input span
 {
     color: #9A9A9A;
 }
 
+/* .main-input input[type=text] {
+    color: red;
+} */
+
 .main-home-page {
     padding-top: 21px;
+}
+
+.main-antselect .ant-select-selection-selected-value {
+    font-weight: bold;
 }
 
 
@@ -23,9 +34,9 @@
  {
     border: none;
     border-radius: 0px;
-    webkit-box-shadow: 0px 4px 0px 0px rgba(234,234,234,1);
-    -moz-box-shadow: 0px 4px 0px 0px rgba(234,234,234,1);
-    box-shadow: 0px 3px 0px 0px rgba(234,234,234,1);
+    webkit-box-shadow: 0px 2px 0px 0px rgba(234,234,234,1);
+    -moz-box-shadow: 0px 2px 0px 0px rgba(234,234,234,1);
+    box-shadow: 0px 2px 0px 0px rgba(234,234,234,1);
 }
 
 .main-antselect label,

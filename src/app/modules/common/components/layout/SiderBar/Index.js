@@ -59,5 +59,5 @@ export default class SideBar extends React.Component {
 }
 
 SideBar.propTypes = {
-  collapsed: PropTypes.string
+  collapsed: PropTypes.any
 };

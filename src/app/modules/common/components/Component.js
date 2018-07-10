@@ -1,7 +1,7 @@
 import React, { Component as RComponent } from "react";
 import { Translate, setActiveLanguage } from "react-localize-redux";
 import { Field } from "redux-form";
-import { Field as SynField } from "redux-form/immutable";
+// import { Field as SynField } from "redux-form/immutable";
 import { connect } from "react-redux";
 import 
 { 
@@ -14,7 +14,9 @@ import
   Switchs,
   SapleInput as Antinput,
   Waiting,
-  Checkboxs
+  Checkboxs,
+  Tooltips,
+  FieldComponent
 } from "../elements/ant-ui";
 import Header from "../elements/ant-ui/Header";
 import { InputRedux,
@@ -44,7 +46,9 @@ import {
 import { NavLink } from "react-router-dom";
 import "./layout/styles/Style.css";
 import "bootstrap/dist/css/bootstrap.css";
-import { Layout, Menu, Icon , Select } from "antd";
+import { Layout, Menu, Icon , Select, Collapse, Checkbox } from "antd";
+const Panel = Collapse.Panel;
+const { Option } = Select;
 
 export default class Component extends RComponent {
   constructor(props) {
@@ -69,7 +73,7 @@ export default class Component extends RComponent {
 
     // Redux Form
     this.Field = Field;
-    this.SynField = SynField;
+    // this.SynField = SynField;
     this.connect = connect;
 
     //React Strap 
@@ -109,6 +113,12 @@ export default class Component extends RComponent {
     this.Antinput = Antinput;
     this.Waiting = Waiting;
     this.Checkboxs = Checkboxs;
+    this.Checkbox = Checkbox;
+    this.Collapse = Collapse;
+    this.Panel = Panel;
+    this.Tooltips = Tooltips;
+    this.Option = Option;
+    this.FieldComponent = FieldComponent;
 
   }
 
