@@ -40,7 +40,7 @@ class Synvalidation extends Component {
   }
 
   render(){
-    // const { handleSubmit } = this.props;
+    const { handleSubmit } = this.props;
     return(
       <div>
 
@@ -48,7 +48,7 @@ class Synvalidation extends Component {
           <this.Col md="6">   
             <div className="main-input">
               <this.Tooltips />
-              <form onSubmit={ this.handleSubmit }>
+              <form onSubmit={ handleSubmit }>
             
                 <this.Row>
 

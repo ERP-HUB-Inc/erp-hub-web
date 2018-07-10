@@ -12,12 +12,12 @@ import
   DateRank,
   ActionButton,
   Switchs,
-  SapleInput as Antinput,
   Waiting,
   Checkboxs,
   Tooltips,
   FieldComponent
 } from "../elements/ant-ui";
+import Antinput from "../../common/elements/ant-ui/Input/";
 import Header from "../elements/ant-ui/Header";
 import { InputRedux,
   Breadcrumb,

@@ -8,7 +8,6 @@ import { DatePicker,Form } from "antd";
 const RangePicker = DatePicker.RangePicker;
 const FormItem = Form.Item;
 
-
 export class DateRank extends Component {
   render(){
 

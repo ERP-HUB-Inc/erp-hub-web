@@ -16,7 +16,11 @@ export const FieldComponent = Component => ({ input,classsName, meta, children, 
         hasFeedback={hasFeedback && hasError}
         help={hasError && meta.error}
       >
-        <Component {...input} {...rest} children={children} />
+        <Component 
+          {...input} 
+          {...rest} 
+          children={children} 
+        />
       </FormItem>
     </div>
   );
