@@ -1,4 +1,4 @@
-export default class Utils {
+class Utils {
   isInvalidEmail(value) {
     return !value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
   }
@@ -7,3 +7,5 @@ export default class Utils {
     return !value;
   }
 }
+
+export default new Utils;
