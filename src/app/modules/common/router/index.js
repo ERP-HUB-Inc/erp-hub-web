@@ -2,11 +2,11 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import SideBar from "../../../modules/common/components/layout/SiderBar/Index";
 import Headers from "../../../modules/common/components/layout/Header/Index";
-import UserList from "../../common/containers/user/";
+import UserList from "../../common/containers/user";
 import Home from "../../common/containers/home/Index";
-import Test from "../containers/test";
 import Component from "../components/Component";
 import { Layout } from "antd";
+import ComponentList from "../../common/containers/component";
 const { Content } = Layout;
 
 class Router extends Component {
@@ -39,12 +39,11 @@ class Router extends Component {
   }
 
   render() {
-
-    const { collapsed,
+    const {
+      collapsed,
       sidebarCollapsed,
       display,
-      layoutContent } = 
-    this.state;
+      layoutContent} = this.state;
 
     return (
       <Layout>
@@ -53,6 +52,7 @@ class Router extends Component {
           <Headers collapsed={ collapsed } toggle={ this.toggle } />
           <Content onClick={ this.Content } className={ layoutContent }>
             <Switch>
+              <Route path="/component" name="Create" component={ ComponentList } />
               <Route path="/dd" name="Create" component={ UserList } />
               <Route path="/sale_history" name="Create" component={ Home } />
               <Route path="/" name="Create" component={ Home } />

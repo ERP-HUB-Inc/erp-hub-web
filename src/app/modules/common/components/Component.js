@@ -1,7 +1,6 @@
 import React, { Component as RComponent } from "react";
 import { Translate, setActiveLanguage } from "react-localize-redux";
 import { Field } from "redux-form";
-// import { Field as SynField } from "redux-form/immutable";
 import { connect } from "react-redux";
 import 
 { 
@@ -17,9 +16,10 @@ import
   Tooltips,
   FieldComponent
 } from "../elements/ant-ui";
-import Antinput from "../../common/elements/ant-ui/Input/";
+import Antinput from "../../common/elements/ant-ui/Input";
 import Header from "../elements/ant-ui/Header";
-import { InputRedux,
+import {
+  InputRedux,
   Breadcrumb,
   BreadcrumbLayout,
   BreadcrumbTitle,

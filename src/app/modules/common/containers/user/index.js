@@ -1,16 +1,16 @@
 import React,{ Component } from "react";
-import Synvalidation from "./Form";
+import Form from "./Form";
 
 function getValue(values){
   alert(JSON.stringify(values));
 }
 
-class ValidationForm extends Component {
+class UserList extends Component {
   render(){
     return(
-      <Synvalidation onSubmit={ getValue } />
+      <Form onSubmit={ getValue } />
     );
   }
 }
 
-export default ValidationForm;
+export default UserList;

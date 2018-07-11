@@ -2,7 +2,7 @@ import React from "react";
 import Component from "../../components/Component";
 import ListCollapse from "./Panel";
 import { reduxForm } from "redux-form"; 
-import { validation } from "../../../common/util/";
+import { validation } from "../../../common/util";
 import Manuitem from "../../components/layout/SiderBar/MenuItem";
 
 // const validate = values => {
@@ -85,9 +85,7 @@ class UserList extends Component {
             <div className="main-input">
               <this.Tooltips />
               <form onSubmit={ handleSubmit }>
-            
                 <this.Row>
-
                   <this.Col xs="12" md="3">
                     <this.Field 
                       name="email"

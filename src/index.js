@@ -11,8 +11,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 let store = configureStore();
 store = new Localization(store);
 
-// const store = configureStore();
-
 render(
   <Provider store={store}>
     <App />
