@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { Form, Input } from "antd";
 import { FormGroup, Label } from "reactstrap";

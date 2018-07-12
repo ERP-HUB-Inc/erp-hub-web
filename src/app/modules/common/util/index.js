@@ -33,8 +33,8 @@ export function validate(rules) {
     var rule = rules[field];
     var value = rule["value"];
     if (
-      (rule["required"] == true && value== null) ||
-        (typeof value == "string" && value.trim() == "")
+      (rule["required"] === true && value === null) ||
+        (typeof value === "string" && value.trim() === "")
     ) {
       errors[field] = "This field is required";
       isError = true;

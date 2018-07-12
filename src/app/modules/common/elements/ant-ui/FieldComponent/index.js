@@ -1,8 +1,4 @@
-import React, { Component } from "react";
-import {  
-  FormGroup,
-  Label
-} from "reactstrap";
+import React from "react";
 import { Form } from "antd";
 const FormItem = Form.Item;
 
