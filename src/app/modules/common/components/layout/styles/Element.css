@@ -9,7 +9,11 @@
 .main-home-page,
 .main-antselect .ant-select-selection-selected-value,
 .main-input input[type=text],
-.main-input.auto-complete-input span
+.main-input.auto-complete-input span,
+.main-trash button ,
+.main-trash button:hover,
+.main-trash button:focus,
+.main-trash button:active
 {
     color: #9A9A9A;
 }
@@ -146,8 +150,6 @@
 
 
 
-
-
 body {
     font-family: Helvetica, sans-serif;
   }
@@ -221,4 +223,11 @@ body {
   .main-waiting .ant-spin {
     width: 100%;
     padding: 0;
+  }
+
+  /* Trash button */
+  .main-trash button {
+    border: none;
+    background-color: white !important;
+    font-size: 20pt;
   }

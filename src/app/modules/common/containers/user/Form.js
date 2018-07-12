@@ -28,36 +28,36 @@ import Manuitem from "../../components/layout/SiderBar/MenuItem";
 //   return errors;
 // };
 
-function validate({username="",rangepicker="",favoriteColor="",
-  searchtwo="",email=""}){
-  const rules = {
-    username: {
-      required: true,
-      value: username
-    },
-    rangepicker: {
-      required: true,
-      value: rangepicker,
-      type: ""
-    },
-    favoriteColor: {
-      required: true,
-      value: favoriteColor,
-      type: ""
-    },
-    searchtwo: {
-      required: true,
-      value: searchtwo,
-      type: "interger"
-    },
-    email: {
-      required: true,
-      value: email,
-      type: "email"
-    }
-  };
-  return validation(rules);
-}
+// function validate({username="",rangepicker="",favoriteColor="",
+//   searchtwo="",email=""}){
+//   const rules = {
+//     username: {
+//       required: true,
+//       value: username
+//     },
+//     rangepicker: {
+//       required: true,
+//       value: rangepicker,
+//       type: ""
+//     },
+//     favoriteColor: {
+//       required: true,
+//       value: favoriteColor,
+//       type: ""
+//     },
+//     searchtwo: {
+//       required: true,
+//       value: searchtwo,
+//       type: "interger"
+//     },
+//     email: {
+//       required: true,
+//       value: email,
+//       type: "email"
+//     }
+//   };
+//   return validation(rules);
+// }
 
 class UserList extends Component {
   render() {
@@ -177,6 +177,5 @@ class UserList extends Component {
 }
   
 export default reduxForm({
-  form: "syncValidation",
-  validate                     
+  form: "syncValidation"                     
 })(UserList);

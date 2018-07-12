@@ -7,7 +7,7 @@ import { ListSearch } from "../ListSearch";
 
 const languages = [
   {
-    name: "Cocacola",
+    name: "MYDBSH Cotton V-neck t shirt",
     sex: "M",
     year: 1972
   },
@@ -49,23 +49,39 @@ export class AutoComplete extends Component {
   constructor() {
     super();
     this.state = {
-      value: "",
+      value: '',
+      suggestion:'',
       suggestions: []
     };
+    this.onKeyPress = this.onKeyPress.bind(this);
   }
 
   onChange = (event, { newValue }) => {
     this.setState({
       value: newValue
     });
+    // alert(newValue);
   };
+
+  onKeyPress(e){
+    if (e.key === 'Enter') {
+      var el1 = this.refs.ref1;
+
+      this.setState({
+        value: "dd"
+      });
+    }
+  }
 
 // Use your imagination to render suggestions.
 renderSuggestion = (suggestion="") => (
   <div>
     {/* {suggestion.name}
     {suggestion.sex} */}
-    <ListSearch/>
+
+    {/* <input ref="ref1" type="text" value={ suggestion.name }/> */}
+
+    <ListSearch/> 
   </div>
 );
 
@@ -89,7 +105,8 @@ renderSuggestion = (suggestion="") => (
     const inputProps = {
       placeholder: `${placeholder}`,
       value,
-      onChange: this.onChange
+      onChange: this.onChange,
+      onKeyPress: this.onKeyPress
     };
 
     // Finally, render it!
@@ -98,6 +115,7 @@ renderSuggestion = (suggestion="") => (
         <FormGroup>
           <span className="fa fa-plus-circle icon-search"></span>
           <Autosuggest
+            multiSection={true}
             suggestions={suggestions}
             onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
             onSuggestionsClearRequested={this.onSuggestionsClearRequested}

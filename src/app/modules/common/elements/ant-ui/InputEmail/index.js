@@ -14,10 +14,12 @@ class InputEmail extends Element {
     alert("Did mount");
     this.props.textRequire = <this.Translate id="text_require" />;
     this.props.textInvalid = <this.Translate id="text_invalid" />;
+    this.validation();
   }
 
   handleChange() {
     // console.log("Input Email Handle Change");
+
   }
 
   handleValidator({email = ""}) {
@@ -55,10 +57,10 @@ class InputEmail extends Element {
   }   
 }
 
-InputEmail.defaultProps = {
-  textRequire: "",
-  textInvalid: ""
-};
+// InputEmail.defaultProps = {
+//   textRequire: "",
+//   textInvalid: ""
+// };
 
 export default ReduxForm({
   form: "syncValidation",

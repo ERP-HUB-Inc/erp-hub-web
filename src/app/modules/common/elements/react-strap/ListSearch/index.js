@@ -19,7 +19,7 @@ export class ListSearch extends Component {
                 img
               </td>
               <td>
-                <div className="list-product-name">
+                <div id="Target" className="list-product-name">
                   MYDBSH Cotton V-neck t shirt 
                 </div>
                 <div className="list-code">
