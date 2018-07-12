@@ -1,31 +1,25 @@
 import React from "react";
 import Component from "../../components/Component";
+import Diagram from "../../components/home/Diagram";
+import Guide from "../../components/home/Guide";
 
 class Home extends Component {
 
   constructor() {
     super();
-    this.Switch = this.Switch.bind(this);
+    this.toggleDashboard = this.toggleDashboard.bind(this);
     this.state = {
-      shown: true,
+      isShowDiagram: true
     };
   }	
 
-  Switch(){
+  toggleDashboard() {
     this.setState({
-      shown: !this.state.shown
+      isShowDiagram: this.state.isShowDiagram ? false : true
     });
   }
 
   render(){
-
-    var shown = {
-      display: this.state.shown ? "block" : "none"
-    };
-		
-    var hidden = {
-      display: this.state.shown ? "none" : "block"
-    };
 
     return(
       <div>
@@ -39,7 +33,7 @@ class Home extends Component {
                   />
                 </li>
                 <li>
-                  <this.Switchs onChange={ this.Switch } />
+                  <this.Switchs onChange={ this.toggleDashboard } />
                 </li>
               </ul>
             </div>
@@ -79,11 +73,10 @@ class Home extends Component {
         </this.Row>
 
         <this.Row>
-          <this.Col md="12" style={ shown }>
-            Role Map 
-          </this.Col>
-          <this.Col md="12" style={ hidden }>
-            Diagram
+          <this.Col md="12">
+            {
+              this.state.isShowDiagram ? <Diagram/> : <Guide/>
+            }
           </this.Col>
         </this.Row>
 
