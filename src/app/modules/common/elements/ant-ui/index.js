@@ -7,6 +7,7 @@ export * from "./DatePicker/dateRank";
 export * from "./Button/actionButton";
 export * from "./Switch";
 export * from "./Input";
+export * from "./InputEmail";
 export * from "./Waiting";
 export * from "./Checkbox";
 export * from "./ListCollapse";

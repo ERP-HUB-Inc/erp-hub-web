@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
 import { Form, Input } from "antd";
 import { FormGroup, Label } from "reactstrap";
-import { Translate, setActiveLanguage } from "react-localize-redux";
+import { Translate, } from "react-localize-redux";
 import TextInput from "../ant-ui/Input";
-import Utils from "./utils";
 
 export default class Element extends Component {
   constructor(props) {
@@ -24,8 +23,6 @@ export default class Element extends Component {
     //localization
     this.Translate = Translate;
 
-    //share function
-    this.Utils = new Utils;
   }
 }
 
