@@ -6,41 +6,6 @@ class InputEmail extends Element {
 
   constructor(props) {
     super(props);
-<<<<<<< HEAD
-    this.handleChange = this.handleChange.bind(this);
-    this.validation = this.validation.bind(this);
-    this.handleValidator = this.handleValidator.bind(this);
-  }
-
-  componentDidMount() {
-    alert("Did mount");
-    this.props.textRequire = <this.Translate id="text_require" />;
-    this.props.textInvalid = <this.Translate id="text_invalid" />;
-    this.validation();
-  }
-
-  handleChange() {
-    // console.log("Input Email Handle Change");
-
-  }
-
-  handleValidator({email = ""}) {
-    const rule = {
-      required: true
-    };
-    return this.validation(email);
-  }
-
-  validation(value) {
-    alert("Validator");
-    const errors = {};
-    if (this.Utils.isRequired(value)) {
-      errors.email = this.props.textRequire; 
-    } else if (this.Utils.isInvalidEmail(value)) {
-      errors.email = this.props.textInvalid;
-    }
-    return errors;
-=======
     this.rules = [
       {
         type: "email",
@@ -59,7 +24,6 @@ class InputEmail extends Element {
         message: this.props.errorLenght
       }
     ];
->>>>>>> 42dd1ea565463a842f357f655f3d971564c5daf6
   }
 
   render() {
@@ -77,12 +41,6 @@ class InputEmail extends Element {
   }   
 }
 
-<<<<<<< HEAD
-// InputEmail.defaultProps = {
-//   textRequire: "",
-//   textInvalid: ""
-// };
-=======
 InputEmail.defaultProps = {
   name: "email",
   label: "Email",
@@ -93,7 +51,6 @@ InputEmail.defaultProps = {
   errorRequired: "Email required",
   errorLenght: "Over allow character lenght"
 };
->>>>>>> 42dd1ea565463a842f357f655f3d971564c5daf6
 
 export default ReduxForm({
   form: "syncValidation"

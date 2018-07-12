@@ -115,7 +115,7 @@ renderSuggestion = (suggestion="") => (
         <FormGroup>
           <span className="fa fa-plus-circle icon-search"></span>
           <Autosuggest
-            multiSection={true}
+            // multiSection={true}
             suggestions={suggestions}
             onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
             onSuggestionsClearRequested={this.onSuggestionsClearRequested}

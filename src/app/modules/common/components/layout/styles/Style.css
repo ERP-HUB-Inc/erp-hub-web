@@ -3,6 +3,7 @@
 @import "Header.css";
 @import "Color.scss";
 @import "Element.css";
+@import "StyleFont.css";
 @import '~antd/dist/antd.css';
 @import "~font-awesome/css/font-awesome.css";
 
@@ -11,7 +12,7 @@ body {
     background-color: #F7F7F7 !important;
 }
 
-.ant-table-body table tr td,h4.breadcrumb-title,
+h4.breadcrumb-title,
 table  tr td .current,
 table tr td .list-code,
 .main-input::placeholder,
@@ -20,6 +21,15 @@ table tr td .list-code,
 .main-collapse .ant-collapse-header i.arrow
 {
     color: #9A9A9A !important;
+}
+
+/* format size */
+.font-size,
+.ant-table-body table tr th,
+.breadcrumb a,
+.main-collapse .ant-collapse-header .collapse-price
+{
+    font-size: 12pt;
 }
 
 .form-control:focus,
@@ -120,8 +130,8 @@ html {
 }
 
 .notice-icon .ant-badge sup {
-    background-color: #FFD627;
-    color: #4E8189;
+    background-color:#FE6006;
+    color: white;
 }
 
 /* breadcrumb */
@@ -133,12 +143,11 @@ html {
 
 .breadcrumb a ,
 .breadcrumb a.breadcrumb-link:active {
-    color: #B0B0B0;
+    color: #9A9A9A;
 }
 
 .breadcrumb a { 
     padding: 3px;
-    font-size: 12pt;
     text-transform: uppercase;
 }
 
@@ -173,13 +182,16 @@ h4.breadcrumb-title {
 
 /* table */
 .ant-table-body table tr th {
-    /* color: #B0B0B0; */
-    font-weight: bold;
     border-top: 1px solid #EAEAEA;
+}
+
+tr:nth-child(odd) {
+    background-color: #ECECEC;
 }
 
 .ant-table-body table tr td {
     border-bottom: none;
+    color: #4D4F5C;
 }
 
 /* home page  */
@@ -356,7 +368,7 @@ ul.react-autosuggest__suggestions-list li table {
 
 .auto-complete-input span.icon-search {
     position: absolute;
-    top: 17px;
+    top: 8px;
     left: 22px;
     z-index: 1;
 }
@@ -370,7 +382,7 @@ ul.react-autosuggest__suggestions-list li table {
 .auto-complete-input span.icon-plus {
     float: right;
     position: absolute;
-    top: 17px;
+    top: 8px;
     right: 22px;
 }
 
@@ -464,7 +476,6 @@ li.ant-pagination-next .ant-pagination-item-link
 }
 
 .main-collapse .ant-collapse-header .collapse-price {
-    font-size: 12pt;
     color: #093163;
     font-weight: bold;
 }

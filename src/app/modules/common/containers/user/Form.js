@@ -1,6 +1,7 @@
 import React from "react";
 import Component from "../../components/Component";
-import ListCollapse from "./Panel";
+import ListCollapse from "./page/Panel";
+import { CTable as Table } from "./page/Table/";
 import { reduxForm } from "redux-form"; 
 import { validation } from "../../../common/util";
 import Manuitem from "../../components/layout/SiderBar/MenuItem";
@@ -168,9 +169,7 @@ class UserList extends Component {
             <ListCollapse/>
           </this.Col>
         </this.Row>
-
-
-        <this.Table />
+        <Table />
       </div>
     );
   }

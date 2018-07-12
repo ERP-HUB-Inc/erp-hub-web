@@ -1,5 +1,5 @@
 import React from "react";
-import Component from "../../components/Component";
+import Component from "../../../components/Component";
 
 class ListCollapse extends Component {
   render(){

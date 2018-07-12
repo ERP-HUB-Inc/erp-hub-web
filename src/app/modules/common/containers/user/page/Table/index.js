@@ -4,28 +4,6 @@ import reqwest from "reqwest";
 import { Pagination } from "antd";
 
 
-// const data = [{
-//   key: "1",
-//   name: "John Brown",
-//   age: 32,
-//   address: "New York No. 1 Lake Park",
-// }, {
-//   key: "2",
-//   name: "Joe Black",
-//   age: 42,
-//   address: "London No. 1 Lake Park",
-// }, {
-//   key: "3",
-//   name: "Jim Green",
-//   age: 32,
-//   address: "Sidney No. 1 Lake Park",
-// }, {
-//   key: "4",
-//   name: "Jim Red",
-//   age: 32,
-//   address: "London No. 2 Lake Park",
-// }];
-
 const columns = [{
   title: "Name",
   dataIndex: "name",
@@ -98,7 +76,7 @@ export class CTable extends React.Component {
       type: "json",
     }).then((data) => {
 
-      console.log("get data",this.state.pagination);
+      console.log("get data",data);
 
       const pagination = { ...this.state.pagination };
       // Read total count from server
