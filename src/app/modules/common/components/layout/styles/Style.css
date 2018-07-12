@@ -3,6 +3,7 @@
 @import "Header.css";
 @import "Color.scss";
 @import "Element.css";
+@import "StyleFont.css";
 @import '~antd/dist/antd.css';
 @import "~font-awesome/css/font-awesome.css";
 
@@ -11,7 +12,7 @@ body {
     background-color: #F7F7F7 !important;
 }
 
-.ant-table-body table tr td,h4.breadcrumb-title,
+h4.breadcrumb-title,
 table  tr td .current,
 table tr td .list-code,
 .main-input::placeholder,
@@ -20,6 +21,31 @@ table tr td .list-code,
 .main-collapse .ant-collapse-header i.arrow
 {
     color: #9A9A9A !important;
+}
+
+/* format size */
+.font-size,
+.ant-table-body table tr th,
+.breadcrumb a,
+.main-collapse .ant-collapse-header .collapse-price
+{
+    font-size: 12pt;
+}
+
+.form-control:focus,
+input:focus
+{
+    box-shadow:none !important;
+}
+
+.border-color {
+    border: 1px solid #EAEAEA ;
+}
+
+.border-bottom,
+.list-collapse-input input
+{
+    border-bottom: 1px solid #EAEAEA;
 }
 
 .main-input input:read-only {
@@ -104,8 +130,8 @@ html {
 }
 
 .notice-icon .ant-badge sup {
-    background-color: #FFD627;
-    color: #4E8189;
+    background-color:#FE6006;
+    color: white;
 }
 
 /* breadcrumb */
@@ -117,12 +143,11 @@ html {
 
 .breadcrumb a ,
 .breadcrumb a.breadcrumb-link:active {
-    color: #B0B0B0;
+    color: #9A9A9A;
 }
 
 .breadcrumb a { 
     padding: 3px;
-    font-size: 12pt;
     text-transform: uppercase;
 }
 
@@ -157,13 +182,16 @@ h4.breadcrumb-title {
 
 /* table */
 .ant-table-body table tr th {
-    /* color: #B0B0B0; */
-    font-weight: bold;
     border-top: 1px solid #EAEAEA;
+}
+
+tr:nth-child(odd) {
+    background-color: #ECECEC;
 }
 
 .ant-table-body table tr td {
     border-bottom: none;
+    color: #4D4F5C;
 }
 
 /* home page  */
@@ -188,6 +216,81 @@ h4.breadcrumb-title {
 
 /* auto complete */
 
+.react-autosuggest__container {
+    position: relative;
+  }
+  
+  .react-autosuggest__input {
+    width: 240px;
+    height: 30px;
+    padding: 10px 20px;
+    font-family: Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+  }
+  
+  .react-autosuggest__input--focused {
+    outline: none;
+  }
+  
+  .react-autosuggest__input--open {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  
+  .react-autosuggest__suggestions-container {
+    display: none;
+  }
+  
+  .react-autosuggest__suggestions-container--open {
+    display: block;
+    position: absolute;
+    top: 51px;
+    width: 280px;
+    border: 1px solid #aaa;
+    background-color: #fff;
+    font-family: Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    z-index: 2;
+  }
+  
+  .react-autosuggest__suggestions-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+  
+  .react-autosuggest__suggestion {
+    cursor: pointer;
+    padding: 10px 20px;
+  }
+  
+  .react-autosuggest__suggestion--highlighted {
+    background-color: #ddd;
+  }
+  
+  .react-autosuggest__section-container {
+    border-top: 1px dashed #ccc;
+  }
+  
+  .react-autosuggest__section-container--first {
+    border-top: 0;
+  }
+  
+  .react-autosuggest__section-title {
+    padding: 10px 0 0 10px;
+    font-size: 12px;
+    color: #777;
+  }
+
+
+
+  
 .react-autosuggest__suggestion {
     padding: 0px 20px;
 }
@@ -265,7 +368,7 @@ ul.react-autosuggest__suggestions-list li table {
 
 .auto-complete-input span.icon-search {
     position: absolute;
-    top: 17px;
+    top: 8px;
     left: 22px;
     z-index: 1;
 }
@@ -279,7 +382,7 @@ ul.react-autosuggest__suggestions-list li table {
 .auto-complete-input span.icon-plus {
     float: right;
     position: absolute;
-    top: 17px;
+    top: 8px;
     right: 22px;
 }
 
@@ -373,8 +476,8 @@ li.ant-pagination-next .ant-pagination-item-link
 }
 
 .main-collapse .ant-collapse-header .collapse-price {
-    font-size: 12pt;
     color: #093163;
+    font-weight: bold;
 }
 
 .main-collapse .ant-collapse-header .specification {
@@ -396,10 +499,26 @@ li.ant-pagination-next .ant-pagination-item-link
 }
 
 /* input collapse */
-.list-collapse-input .main-input input {
-    /* box-shadow: none;
-    border-bottom: 1px solid red;
-    width: 100%; */
+
+.list-collapse-input {
+    width: 100% !important;
 }
 
+.list-collapse-input input {
+    border: none;
+    border-radius: 1px;
+    border-bottom: 1px solid #EAEAEA;
+}
+
+.list-collapse-input label {
+    font-size: 5pt;
+    position: absolute;
+    line-height: 23px;
+    top: -6px;
+    left: 16px;
+    transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+    z-index: 1;
+    transform-origin: left top 0px;
+    text-transform: capitalize;
+}
 

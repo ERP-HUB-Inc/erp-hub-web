@@ -10,14 +10,14 @@ class TextInput extends Element {
       validateStatus: "",
       success:""
     };
-    this.handleChange = this.handleChange.bind(this);
+    // this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(e){
-    this.props.handleChange();
-    const value = e.target.value;
-    this.setState({value});
-  }
+  // handleChange(e){
+  //   this.props.handleChange();
+  //   const value = e.target.value;
+  //   this.setState({value});
+  // }
 
   render() {
     const {
@@ -49,8 +49,8 @@ class TextInput extends Element {
               {...input} 
               placeholder={ placeholder } 
               type={ type } 
-              value={ value }
-              onChange={this.handleChange}
+              // value={ value }
+              // onChange={this.handleChange}
             />
           </this.FormItem>
         </this.FormGroup>

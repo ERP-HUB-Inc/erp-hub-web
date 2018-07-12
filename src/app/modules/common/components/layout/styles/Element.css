@@ -1,6 +1,6 @@
 /* ant select */
 
-.element-color,
+/* .element-color,
 .main-antselect label,
 .main-antselect .ant-select-selection-selected-value,
 .main-date-picker label,
@@ -9,9 +9,54 @@
 .main-home-page,
 .main-antselect .ant-select-selection-selected-value,
 .main-input input[type=text],
-.main-input.auto-complete-input span
+.main-input.auto-complete-input span,
+.main-trash button ,
+.main-trash button:hover,
+.main-trash button:focus,
+.main-trash button:active
 {
-    color: #9A9A9A;
+    color: #4D4F5C;
+} */
+
+.element-color,
+.main-antselect .ant-select-selection-selected-value,
+.main-input input::placeholder,
+.main-home-page,
+.main-antselect .ant-select-selection-selected-value,
+.main-input input[type=text],
+.main-trash button ,
+.main-trash button:hover,
+.main-trash button:focus,
+.main-trash button:active
+{
+    color: #4D4F5C;
+}
+
+.main-antselect label,
+.main-date-picker label,
+.main-input label {
+    font-size: 8pt;
+}
+
+/* .main-antselect label,
+.main-date-picker label,
+.main-input label,
+.main-input.auto-complete-input span,
+{
+    color:red !important;
+} */
+
+.main-input input::placeholder,
+.main-antselect input::placeholder {
+    font-size: 12pt !important;
+}
+
+
+.main-input input::placeholder,
+.main-antselect input::placeholder {
+    position: absolute;
+    left: 20px;
+    top: 0px;
 }
 
 /* .main-input input[type=text] {
@@ -52,10 +97,11 @@
     transform: scale(0.75) translate(0px, -28px) ;
     transform-origin: left top 0px ;
     text-transform: capitalize;
+    color: #9A9A9A;
 }
 
 .main-antselect .ant-select-selection__rendered {
-    line-height: 50px !important;
+    line-height: 30px !important;
 }
 
 .main-antselect .ant-select-selection-selected-value,
@@ -70,15 +116,15 @@
 .main-input input,
 .main-search-button button 
 {
-    height: 50px !important;
+    height: 30px !important;
 }
 
 .main-search input::placeholder {
-    font-size: 15pt;
+    font-size: 12pt;
 }
 
 .main-antselect .ant-select-arrow {
-    font-size: 19px;
+    font-size: 8px;
 }
 
 /* date picker rank */
@@ -93,18 +139,16 @@
     background-color: #093163;
 }
 
-/* .main-search-button button:focus  */
 
 .main-search-button button {
     color: white;
-    width: 50px;
+    width: 30px;
 }
 
-.main-search i.search-icon {
+.main-search-button i{
     position: absolute;
-    font-size: 16pt;
-    top: 28px;
-    left: 22px;
+    top: 8px;
+    left: 7px;
 }
 
 /* card */
@@ -143,8 +187,6 @@
     font-weight: bold;
     text-transform: uppercase;
 }
-
-
 
 
 
@@ -221,4 +263,11 @@ body {
   .main-waiting .ant-spin {
     width: 100%;
     padding: 0;
+  }
+
+  /* Trash button */
+  .main-trash button {
+    border: none;
+    background-color: white !important;
+    font-size: 20pt;
   }

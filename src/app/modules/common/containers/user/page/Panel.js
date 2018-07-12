@@ -1,5 +1,5 @@
 import React from "react";
-import Component from "../../components/Component";
+import Component from "../../../components/Component";
 
 class ListCollapse extends Component {
   render(){
@@ -14,7 +14,7 @@ class ListCollapse extends Component {
                     MYDBSH Cotton V-neck t shirt
                 </div>
                 <this.Row className="collapse-header">
-                  <this.Col xs="4" md="6">
+                  <this.Col xs="4" md="4">
                     <div className="specification">
                         SKU: 32572725521 Categories: FOR MEN, T-Shirts For Men, Tops & Shirts
                     </div>
@@ -29,24 +29,51 @@ class ListCollapse extends Component {
                         $11.32
                     </div>
                   </this.Col>
+                  <this.Col xs="4" md="2">
+                    <div>
+                      <this.TrashButton
+                      
+                      />
+                    </div>
+                  </this.Col>
                 </this.Row>
               </div>
             }
           >
-            <div>
-              <this.Row>
+            
+            <this.Row>
+              <this.Col md="12"> 
                 <div className="list-collapse-input">
-                  <this.Col xs="2" md="2">
-                    <this.Field 
-                      name="qty" 
-                      component={ this.Antinput }
-                      label="Quantity"
-                    />
-                  </this.Col>
+                  <this.Row>
+                    <this.Col xs="2" md="2">
+                      <this.Field 
+                        name="qty1" 
+                        component={ this.Antinput }
+                        label="Quantity"
+                      />
+                    </this.Col>
+                    <this.Col xs="2" md="2">
+                      <this.Field 
+                        name="qty2" 
+                        component={ this.Antinput }
+                        label="Quantity"
+                      />
+                    </this.Col>
+                    <this.Col xs="2" md="2">
+                      <this.Field 
+                        name="qty3" 
+                        component={ this.Antinput }
+                        label="Quantity"
+                      />
+                    </this.Col>
+                  </this.Row>
                 </div>
-              </this.Row>
-            </div> 
+              </this.Col> 
+            </this.Row>
+             
           </this.Panel>
+
+
           <this.Panel 
             key="2"
             header={
@@ -76,6 +103,8 @@ class ListCollapse extends Component {
           >
             Quantity 
           </this.Panel>
+
+
         </this.Collapse> 
       </div>
     );

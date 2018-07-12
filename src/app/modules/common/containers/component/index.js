@@ -9,7 +9,7 @@ export default class ComponentList extends Component {
   
   render(){
     return(
-      <div>
+      <div className="main-input">
         <h3>Welcome to CA Component !!!</h3>
         <InputEmail name="email1" placeholder="Email" required={true} />
         <InputEmail name="email2" placeholder="Email" required={true} />

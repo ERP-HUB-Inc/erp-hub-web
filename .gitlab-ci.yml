@@ -1,0 +1,23 @@
+image: node:8.11.3
+
+cache:
+  paths:
+  - node_modules/
+
+stages:
+  - test
+
+test_async:
+  stage: test
+  script:
+   - npm install
+  tags:
+    - docker
+    
+test_db:
+  stage: test
+  script:
+   - react-scripts start
+  tags:
+    - docker
+

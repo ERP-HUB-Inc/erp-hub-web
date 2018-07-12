@@ -13,3 +13,4 @@ export * from "./Checkbox";
 export * from "./ListCollapse";
 export * from "./Tooltips";
 export * from "./FieldComponent/";
+export * from "./Button/trashButton";

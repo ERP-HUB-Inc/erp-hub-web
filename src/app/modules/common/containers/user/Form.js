@@ -1,6 +1,7 @@
 import React from "react";
 import Component from "../../components/Component";
-import ListCollapse from "./Panel";
+import ListCollapse from "./page/Panel";
+import { CTable as Table } from "./page/Table/";
 import { reduxForm } from "redux-form"; 
 import { validation } from "../../../common/util";
 import Manuitem from "../../components/layout/SiderBar/MenuItem";
@@ -28,36 +29,36 @@ import Manuitem from "../../components/layout/SiderBar/MenuItem";
 //   return errors;
 // };
 
-function validate({username="",rangepicker="",favoriteColor="",
-  searchtwo="",email=""}){
-  const rules = {
-    username: {
-      required: true,
-      value: username
-    },
-    rangepicker: {
-      required: true,
-      value: rangepicker,
-      type: ""
-    },
-    favoriteColor: {
-      required: true,
-      value: favoriteColor,
-      type: ""
-    },
-    searchtwo: {
-      required: true,
-      value: searchtwo,
-      type: "interger"
-    },
-    email: {
-      required: true,
-      value: email,
-      type: "email"
-    }
-  };
-  return validation(rules);
-}
+// function validate({username="",rangepicker="",favoriteColor="",
+//   searchtwo="",email=""}){
+//   const rules = {
+//     username: {
+//       required: true,
+//       value: username
+//     },
+//     rangepicker: {
+//       required: true,
+//       value: rangepicker,
+//       type: ""
+//     },
+//     favoriteColor: {
+//       required: true,
+//       value: favoriteColor,
+//       type: ""
+//     },
+//     searchtwo: {
+//       required: true,
+//       value: searchtwo,
+//       type: "interger"
+//     },
+//     email: {
+//       required: true,
+//       value: email,
+//       type: "email"
+//     }
+//   };
+//   return validation(rules);
+// }
 
 class UserList extends Component {
   render() {
@@ -168,15 +169,12 @@ class UserList extends Component {
             <ListCollapse/>
           </this.Col>
         </this.Row>
-
-
-        <this.Table />
+        <Table />
       </div>
     );
   }
 }
   
 export default reduxForm({
-  form: "syncValidation",
-  validate                     
+  form: "syncValidation"                     
 })(UserList);
