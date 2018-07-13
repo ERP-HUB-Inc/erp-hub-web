@@ -16,7 +16,14 @@
 }
 
 .menu-left .user-account {
-    color: #9A9A9A
+    color: #9A9A9A !important
+}
+
+.menu-left .user-account .title,
+.menu-left .user-account .icon-down {
+    position: relative;
+    top: -5px;
+
 }
 
 .ant-dropdown {
@@ -30,4 +37,36 @@
 
 .ant-popover.antd-pro-notice-icon-popover {
     top: 60px !important
+}
+
+.ant-popover-arrow {
+    display: none
+}
+
+.icon-right {
+    padding-right: 5px
+}
+
+.icon-left {
+    padding-left: 5px
+}
+
+.icon-down {
+    font-size: 10px
+}
+
+.icon-User,
+.icon-Bell,
+.icon-Help {
+    font-size: 18pt
+}
+
+.anticon.anticon-bell {
+    display: none
+}
+
+.ant-badge-count {
+    top: -24px;
+    left: 2px;
+    background-color: #FE6006
 }

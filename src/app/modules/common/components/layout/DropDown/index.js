@@ -25,21 +25,27 @@ export default class UserSelect extends Component {
 
   render() {
     return(
-      <ul className="menu-left list-unstyled scssbg">
+      <ul className="menu-left list-unstyled">
         <li>
-          <this.Noteicon />
-        </li>
-        <li>
-          <span className="help">Help</span>&nbsp; 
-          <i className="fa fa-question-circle help-icon"></i>
-        </li>
-          
-        <Dropdown overlay={this.menu} trigger={["click"]}>
-          <a className="ant-dropdown-link user-account" href="#">
-            User Account <Icon type="down" />
+          <a className="user-account" href="#">
+            <this.Noteicon />
           </a>
-        </Dropdown>
-          
+        </li>
+        <li>
+          <a className="user-account">
+            <span class="icon-Help icon-right"></span>
+            <span className="title">Help</span>
+          </a>
+        </li>
+        <li>
+          <Dropdown overlay={this.menu} trigger={["click"]}>
+            <a className="ant-dropdown-link user-account" href="#">
+              <span class="icon-User icon-right"></span>
+              <span className="title">User Account</span> 
+              <span class="icon-down icon-left"></span>
+            </a>
+          </Dropdown>
+        </li>  
       </ul>
     );
   }

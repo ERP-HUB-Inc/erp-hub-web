@@ -59,7 +59,7 @@ export class Noteicon extends Component {
   render(){
     return(
       <NoticeIcon
-        className="notice-icon"
+        className="icon-Bell"
         count={5}
         onItemClick={onItemClick}
         onClear={onClear}
