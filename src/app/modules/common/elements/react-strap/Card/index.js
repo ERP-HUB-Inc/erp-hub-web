@@ -26,7 +26,7 @@ export class Cards extends Component {
               <Row>
                 <Col xs="5" md="5">
                   <span className="icon">
-                    <i className={`${ icon }`}></i>
+                    <span className={`${ icon }`}></span>
                   </span>
                 </Col>
                 <Col xs="7" md="7" className="clear-margin">
