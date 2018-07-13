@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'ca';
-  src:  url('fonts/ca.eot?h3xpgu');
-  src:  url('fonts/ca.eot?h3xpgu#iefix') format('embedded-opentype'),
-    url('fonts/ca.ttf?h3xpgu') format('truetype'),
-    url('fonts/ca.woff?h3xpgu') format('woff'),
-    url('fonts/ca.svg?h3xpgu#ca') format('svg');
+  src:  url('fonts/ca.eot?59fkju');
+  src:  url('fonts/ca.eot?59fkju#iefix') format('embedded-opentype'),
+    url('fonts/ca.ttf?59fkju') format('truetype'),
+    url('fonts/ca.woff?59fkju') format('woff'),
+    url('fonts/ca.svg?59fkju#ca') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-move-down:before {
+  content: "\e915";
+}
+.icon-previous:before {
+  content: "\e91e";
+}
+.icon-next:before {
+  content: "\e930";
+}
+.icon-move-up:before {
+  content: "\e947";
+}
 .icon-Minus:before {
   content: "\e921";
 }
@@ -90,9 +102,6 @@
 .icon-customer:before {
   content: "\e914";
 }
-.icon-down:before {
-  content: "\e915";
-}
 .icon-employee:before {
   content: "\e916";
 }
@@ -116,9 +125,6 @@
 }
 .icon-items:before {
   content: "\e91d";
-}
-.icon-left:before {
-  content: "\e91e";
 }
 .icon-list:before {
   content: "\e91f";
@@ -167,9 +173,6 @@
 }
 .icon-reports:before {
   content: "\e92f";
-}
-.icon-right:before {
-  content: "\e930";
 }
 .icon-role:before {
   content: "\e931";
@@ -236,9 +239,6 @@
 }
 .icon-undo:before {
   content: "\e946";
-}
-.icon-up:before {
-  content: "\e947";
 }
 .icon-usd:before {
   content: "\e948";

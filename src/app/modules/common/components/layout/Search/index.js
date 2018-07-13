@@ -1,10 +1,13 @@
 import React from "react";
 import FormSearch from "./form";
 import { connect } from "react-redux";
-import { getFormValues } from "redux-form";
-import { submit } from "redux-form";
-import { SubmissionError } from "redux-form";
-import Component from "../../../Component";
+import { 
+  getFormValues,
+  submit,
+  SubmissionError
+} from "redux-form";
+import Component from "../../Component";
+import "./index.css";
 
 class SearchForm extends Component {
 
@@ -24,9 +27,7 @@ class SearchForm extends Component {
 
   render(){
     return(
-      <div>
-        <FormSearch onSubmit={this.onSubmit}/>
-      </div>
+      <FormSearch onSubmit={this.onSubmit}/>
     );
   }
 }
