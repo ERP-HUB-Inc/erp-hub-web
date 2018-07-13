@@ -1,16 +1,12 @@
     /* color */
     .header-color,.padding-title,.icon-user,
-    .main-user-select li a,
+    /* .main-user-select li a, */
     .border-right,
     .main-search input::placeholder,
     .main-search i,
-    .main-user-select ul li
+    /* .main-user-select ul li */
     {
         color: #9A9A9A;
-    }
-    
-    .header .border-right {
-        border-right: 2px solid #9A9A9A;
     }
 
     .header .logo-title {
@@ -27,9 +23,13 @@
         padding: 8px;
     }
 
+    .ant-layout-header,
+    .header-left {
+        height: 70px;
+    }
+
     .ant-layout-header {
-        padding: 14px !important;
-        height: 77px;
+        padding: 0 0;
         z-index: 2;
     }
 
@@ -60,19 +60,19 @@
 
     /* user account */
 
-    .main-user-select {
+    /* .main-user-select {
         float: right;
         position: relative;
         left: -90px;
         top: 11px;
-    }
+    } */
 
-    .main-user-select ul li {
+    /* .main-user-select ul li {
         list-style-type: none;
         float: left;
         padding: 0px 26px;
-        font-size: 15pt;
-    }
+        font-size: 14px;
+    } */
 
     .dropdown.nav-item {
         list-style-type: none;
@@ -98,6 +98,16 @@
     .nav-link {
         padding: 0px !important;
     }
+
+    .header-left {
+        display: table
+    }
+
+    .ant-popover.antd-pro-notice-icon-popover {
+        top: 60px !important
+    }
+
+
 
 
 

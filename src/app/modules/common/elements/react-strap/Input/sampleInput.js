@@ -28,11 +28,10 @@ export class SapleInput extends Component {
         touched, error, warning, valid
       }
     } = this.props;
-    console.log("valid" + !(touched && valid));
     return (
       <div>
         <FormGroup>
-          <Label>{label} <span className="text-danger"> {required} </span></Label>
+          <Label>{label} <span> {required} </span></Label>
           <Input
             type={type}
             onChange={onChange}

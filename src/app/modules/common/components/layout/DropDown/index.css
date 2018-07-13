@@ -1,0 +1,15 @@
+.menu-left {
+    margin: 0;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right
+}
+
+.menu-left li {
+    padding: 0 25px;
+    display: inline-block
+}
+
+.menu-left .user-account {
+    color: #9A9A9A
+}

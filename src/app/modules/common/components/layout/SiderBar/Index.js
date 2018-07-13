@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Layout, Menu, Icon } from "antd";
+import "./index.css";
 const { Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
@@ -36,7 +37,6 @@ export default class SideBar extends React.Component {
           <SubMenu
             className="main-manu-item"
             key="sub3"
-            // title={<span><Icon type="team" /><span>Team 2</span></span>}
             title={<i className="fa fa-align-justify"><span className="menu-title">Team 2</span></i>}
           >
             <Menu.Item>
