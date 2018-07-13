@@ -32,7 +32,7 @@ class Headers extends Component {
           type={ collapsed ? "menu-unfold" : "menu-fold" }
           onClick={ toggle }
         />
-        <this.Row>
+        <this.Row className="clear-margin">
           <this.Col md="2">
             <div className="border-right">
               <div className="logo-title"> Store VEIN </div>

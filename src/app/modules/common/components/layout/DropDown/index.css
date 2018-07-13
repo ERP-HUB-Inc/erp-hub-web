@@ -10,6 +10,24 @@
     display: inline-block
 }
 
+.menu-left .user-account,
+.ant-dropdown-menu li a {
+    text-decoration: none
+}
+
 .menu-left .user-account {
     color: #9A9A9A
+}
+
+.ant-dropdown {
+    top: 70px !important
+}
+
+.ant-dropdown .ant-dropdown-menu,
+.ant-popover-inner {
+    border-radius: 0
+}
+
+.ant-popover.antd-pro-notice-icon-popover {
+    top: 60px !important
 }
