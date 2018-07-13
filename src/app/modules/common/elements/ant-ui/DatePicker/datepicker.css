@@ -1,0 +1,15 @@
+.main-date-picker .ant-calendar-range-picker-separator {
+    display: none;
+}
+
+.main-date-picker .ant-calendar-picker-input {
+    height: 30px;
+}
+
+.main-date-picker .ant-calendar-range-picker-separator {
+    display: none;
+}
+
+.main-date-picker label {
+    font-size: 8pt;
+}

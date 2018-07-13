@@ -27,7 +27,7 @@ export default class UserSelect extends Component {
           </li>
           <li>
             <span className="help">Help</span>&nbsp; 
-            <i className="fa fa-question-circle help-icon"></i>
+            <i className="user-acc help-icon"></i>
           </li>
           
           <this.Dropdown nav isOpen={ userOpen } toggle={ this.usertoggle }>

@@ -3,6 +3,7 @@ import {
   Label,
   FormGroup
 } from "reactstrap";
+import "./datepicker.css"; 
 import { DatePicker,Form } from "antd";
 
 const RangePicker = DatePicker.RangePicker;
