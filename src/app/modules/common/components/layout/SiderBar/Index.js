@@ -30,15 +30,14 @@ export default class SideBar extends React.Component {
   }
 
   handleHidden() {
-    setTimeout(function() {
-      if (!this.state.isHoverOnSubMenu) { //when mouse not hover on submenu hide submenu
-        this.setState({classToggle: "hidden"});
-      }
-    }.bind(this), 500);
+    this.setState({classToggle: "hidden"});
   }
 
   handleHoverOnSubMenu() {
-    this.setState({isHoverOnSubMenu: true});
+    this.setState({
+      isHoverOnSubMenu: true,
+      classToggle: "show"
+    });
   }
 
   handleLeaveFromSubMenu() {
@@ -49,7 +48,6 @@ export default class SideBar extends React.Component {
   }
 
   render() {
-    console.log("IsHoverOnSubMenu:", this.state.isHoverOnSubMenu);
     const subMenuItemTitle = Object.keys(this.state.menuItems);
     return (
       <div>
