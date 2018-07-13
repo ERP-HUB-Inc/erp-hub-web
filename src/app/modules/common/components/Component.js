@@ -47,6 +47,7 @@ import {
 import { NavLink } from "react-router-dom";
 import "./layout/styles/Style.css";
 import "bootstrap/dist/css/bootstrap.css";
+import "font-awesome/css/font-awesome.css";
 import { Layout, Menu, Icon , Select, Collapse, Checkbox } from "antd";
 const Panel = Collapse.Panel;
 const { Option } = Select;

@@ -4,7 +4,6 @@
 @import "Element.css";
 @import "StyleFont.css";
 @import '~antd/dist/antd.css';
-@import "~font-awesome/css/font-awesome.css";
 
 body {
     margin: 0;
