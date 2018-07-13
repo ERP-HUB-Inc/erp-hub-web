@@ -1,16 +1,16 @@
 import React from "react";
 import Component from "../../Component";
-import UserSelect from "./UserSelect";
+import DropDown from "../DropDown";
 import { Icon } from "antd";
 import { Layout } from "antd";
-import SearchForm from "./Search/";
+import SearchForm from "./Search";
+import "./index.css";
 const { Header } = Layout;
 
 class Headers extends Component {
   constructor(props) {
     super(props);
     this.switchLanguage = this.switchLanguage.bind(this);
-    // this.handleSubmit = this.handleSubmit.bind(this);
     this.toggle = this.toggle.bind(this);
   }
 
@@ -22,11 +22,7 @@ class Headers extends Component {
   toggle(){
     this.props.toggle;
   }
-
-  handleSubmit(values){
-    alert(values.title);
-  }
-
+  
   render() {
     const { collapsed,toggle } = this.props;
     return (
@@ -36,22 +32,18 @@ class Headers extends Component {
           type={ collapsed ? "menu-unfold" : "menu-fold" }
           onClick={ toggle }
         />
-        <this.Row className="block-search">
-          <this.Col md="2" lg="2">
+        <this.Row>
+          <this.Col md="2">
             <div className="border-right">
               <div className="logo-title"> Store VEIN </div>
               Backoffice
             </div>
           </this.Col>
-          <this.Col md="5 main-search" lg="5">
+          <this.Col md="6 main-search">
             <SearchForm />
           </this.Col>
-          <this.Col xs="12" sm="12" md="5" lg="5">
-            <this.Row>
-              <this.Col xs="12" md="12">
-                <UserSelect />
-              </this.Col>
-            </this.Row>
+          <this.Col md="4" className="header-left">
+            <DropDown />
           </this.Col>
         </this.Row>
 

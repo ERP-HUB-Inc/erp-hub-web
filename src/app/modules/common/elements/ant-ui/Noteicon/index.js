@@ -58,34 +58,32 @@ const noticeData = getNoticeData(data);
 export class Noteicon extends Component {
   render(){
     return(
-      <div>
-        <NoticeIcon
-          className="notice-icon"
-          count={5}
-          onItemClick={onItemClick}
-          onClear={onClear}
-          popupAlign={{ offset: [20, -16] }}
-        >
-          <NoticeIcon.Tab
-            list={noticeData["test1"]}
-            title="test1"
-            emptyText="test1"
-            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
-          />
-          <NoticeIcon.Tab
-            list={noticeData["test2"]}
-            title="Test2"
-            emptyText="Test2"
-            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
-          />
-          <NoticeIcon.Tab
-            list={noticeData["test3"]}
-            title="Test3"
-            emptyText="Test3"
-            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
-          />
-        </NoticeIcon>
-      </div>
+      <NoticeIcon
+        className="notice-icon"
+        count={5}
+        onItemClick={onItemClick}
+        onClear={onClear}
+        popupAlign={{ offset: [20, -16] }}
+      >
+        <NoticeIcon.Tab
+          list={noticeData["test1"]}
+          title="test1"
+          emptyText="test1"
+          emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
+        />
+        <NoticeIcon.Tab
+          list={noticeData["test2"]}
+          title="Test2"
+          emptyText="Test2"
+          emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
+        />
+        <NoticeIcon.Tab
+          list={noticeData["test3"]}
+          title="Test3"
+          emptyText="Test3"
+          emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
+        />
+      </NoticeIcon>
     );
   }
 }

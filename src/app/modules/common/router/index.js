@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import SideBar from "../../../modules/common/components/layout/SiderBar/Index";
+// import SideBar from "../../../modules/common/components/layout/SiderBar/index";
 import Headers from "../../../modules/common/components/layout/Header/Index";
 import UserList from "../../common/containers/user";
 import Home from "../../common/containers/home/Index";
@@ -47,18 +47,16 @@ class Router extends Component {
 
     return (
       <Layout>
-        <SideBar collapsed={ sidebarCollapsed } display={ display } />
-        <Layout>
-          <Headers collapsed={ collapsed } toggle={ this.toggle } />
-          <Content onClick={ this.Content } className={ layoutContent }>
-            <Switch>
-              <Route path="/component" name="Create" component={ ComponentList } />
-              <Route path="/dd" name="Create" component={ UserList } />
-              <Route path="/sale_history" name="Create" component={ Home } />
-              <Route path="/" name="Create" component={ Home } />
-            </Switch>
-          </Content>  
-        </Layout>
+        {/* <SideBar collapsed={ sidebarCollapsed } display={ display } /> */}
+        <Headers collapsed={ collapsed } toggle={ this.toggle } />
+        <Content onClick={ this.Content } className={ layoutContent }>
+          <Switch>
+            <Route path="/component" name="Create" component={ ComponentList } />
+            <Route path="/dd" name="Create" component={ UserList } />
+            <Route path="/sale_history" name="Create" component={ Home } />
+            <Route path="/" name="Create" component={ Home } />
+          </Switch>
+        </Content>  
       </Layout>
     );
   }
