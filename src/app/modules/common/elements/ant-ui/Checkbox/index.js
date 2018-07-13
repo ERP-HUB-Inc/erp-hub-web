@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Checkbox } from "antd";
-
+import "./index.css"; 
 const CheckboxGroup = Checkbox.Group;
 
 function onChange(checkedValues) {

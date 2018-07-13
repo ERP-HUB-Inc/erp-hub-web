@@ -1,6 +1,7 @@
 
 import React, { Component } from "react";
 import { Collapse } from "antd";
+import "./index.css"; 
 const Panel = Collapse.Panel;
 
 export class ListCollapse extends Component {

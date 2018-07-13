@@ -1,6 +1,5 @@
 
 .element-color,
-.main-antselect .ant-select-selection-selected-value,
 .main-input input::placeholder,
 .main-home-page,
 .main-antselect .ant-select-selection-selected-value,
@@ -25,7 +24,8 @@
 
 
 .main-input input::placeholder,
-.main-antselect input::placeholder {
+/* .main-antselect input::placeholder { */
+{
     position: absolute;
     left: 20px;
     top: 0px;
@@ -35,14 +35,14 @@
     padding-top: 21px;
 }
 
-.main-antselect .ant-select-selection-selected-value {
+/* .main-antselect .ant-select-selection-selected-value {
     font-weight: bold;
-}
+} */
 
 
 .mix-none-border,
-.main-antselect .ant-select-selection,
-.main-date-picker .ant-calendar-picker-input,
+/* .main-antselect .ant-select-selection, */
+/* .main-date-picker .ant-calendar-picker-input, */
 .main-input input
  {
     border: none;
@@ -52,7 +52,7 @@
     box-shadow: 0px 2px 0px 0px rgba(234,234,234,1);
 }
 
-.main-antselect label,
+
 .main-input label
 {
     position: absolute;
@@ -67,9 +67,9 @@
     color: #9A9A9A;
 }
 
-.main-antselect .ant-select-selection__rendered {
+/* .main-antselect .ant-select-selection__rendered {
     line-height: 30px !important;
-}
+} */
 
 .main-antselect .ant-select-selection-selected-value,
 /* .main-date-picker .ant-calendar-picker-input, */
@@ -89,9 +89,9 @@
     font-size: 12pt;
 }
 
-.main-antselect .ant-select-arrow {
+/* .main-antselect .ant-select-arrow {
     font-size: 8px;
-}
+} */
 
 
 
@@ -113,44 +113,6 @@
     top: 8px;
     left: 7px;
 }
-
-/* card */
-
-.color,
-.main-home-page span.icon,
-.main-home-page .card-footer a  
-{
-    color: #0D62AF;
-}
-
-.main-home-page .card {
-    border-radius: 0px;
-}
-
-.main-home-page span.icon
- {
-    font-size: 60px;
-}
-
-.main-home-page .total{
-    font-size: 16px;
-}
-
-.main-home-page .price {
-    font-weight: bold;
-    font-size: 32px;
-}
-
-.main-home-page .card-footer {
-    text-align: right;
-    background-color: white;
-}
-
-.main-home-page .card-footer a {
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
 
 
 body {

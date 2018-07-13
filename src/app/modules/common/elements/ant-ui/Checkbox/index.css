@@ -1,0 +1,16 @@
+/* checkbox */
+.main-check .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #093163;
+    border-color: #093163;
+}
+
+.main-check .ant-checkbox-inner {
+    width: 18px;
+    height: 18px;
+}
+
+.main-check label.ant-checkbox-group-item {
+    color: #191919;
+    font-weight: bold;
+    font-size: 13pt;
+}
