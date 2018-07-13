@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import "./index.css"; 
 import { Link } from "react-router-dom";
 
 export class BreadcrumbLayout extends Component {
@@ -12,7 +13,7 @@ export class BreadcrumbLayout extends Component {
         <h4 className="breadcrumb-title">{ titleNow }</h4>
         <div className="breadcrumb">
           <Link to={ "/" }>  
-            <i className="fa fa-home"></i>
+            <i className="icon-Home"></i>
           </Link>
           <a href="dd"><i className="fa fa-angle-right"></i></a>
           { this.props.children } 

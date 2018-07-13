@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'ca';
-  src:  url('fonts/ca.eot?phxehn');
-  src:  url('fonts/ca.eot?phxehn#iefix') format('embedded-opentype'),
-    url('fonts/ca.ttf?phxehn') format('truetype'),
-    url('fonts/ca.woff?phxehn') format('woff'),
-    url('fonts/ca.svg?phxehn#ca') format('svg');
+  src:  url('fonts/ca.eot?h3xpgu');
+  src:  url('fonts/ca.eot?h3xpgu#iefix') format('embedded-opentype'),
+    url('fonts/ca.ttf?h3xpgu') format('truetype'),
+    url('fonts/ca.woff?h3xpgu') format('woff'),
+    url('fonts/ca.svg?h3xpgu#ca') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,192 +24,228 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-storevein:before {
-  content: "\e900";
-}
-.icon-switch:before {
-  content: "\e901";
-}
-.icon-down:before {
-  content: "\e902";
-}
-.icon-employee:before {
-  content: "\e903";
-}
-.icon-customer:before {
-  content: "\e904";
-}
-.icon-Account:before {
-  content: "\e905";
-}
-.icon-Add-Minus:before {
-  content: "\e906";
-}
-.icon-Add:before {
-  content: "\e907";
-}
-.icon-Arrow-Down:before {
-  content: "\e908";
-}
-.icon-Arrows:before {
-  content: "\e909";
-}
-.icon-Barcode:before {
-  content: "\e90a";
-}
-.icon-Bell:before {
-  content: "\e90b";
-}
-.icon-Bin:before {
-  content: "\e90c";
-}
-.icon-Brand:before {
-  content: "\e90d";
-}
-.icon-Businessman:before {
-  content: "\e90e";
-}
-.icon-Calendar:before {
-  content: "\e90f";
-}
-.icon-Change:before {
-  content: "\e910";
-}
-.icon-Checkbox:before {
-  content: "\e911";
-}
-.icon-Checked:before {
-  content: "\e912";
-}
-.icon-Close:before {
-  content: "\e913";
-}
-.icon-Help:before {
-  content: "\e914";
-}
-.icon-Home:before {
-  content: "\e915";
-}
-.icon-Icon:before {
-  content: "\e916";
-}
-.icon-Information:before {
-  content: "\e917";
-}
-.icon-Items:before {
-  content: "\e918";
-}
-.icon-List:before {
-  content: "\e919";
-}
-.icon-Network:before {
-  content: "\e91a";
-}
-.icon-Payment-Method:before {
-  content: "\e91b";
-}
-.icon-Payment-Report:before {
-  content: "\e91c";
-}
-.icon-Performance:before {
-  content: "\e91d";
-}
-.icon-Pre-Order:before {
-  content: "\e91e";
-}
-.icon-Price-Book:before {
-  content: "\e91f";
-}
-.icon-Printer:before {
-  content: "\e920";
-}
-.icon-Product-Add:before {
+.icon-Minus:before {
   content: "\e921";
 }
-.icon-Product-Add2:before {
+.icon-product-add:before {
+  content: "\e900";
+}
+.icon-account:before {
+  content: "\e901";
+}
+.icon-add:before {
+  content: "\e902";
+}
+.icon-add-minus:before {
+  content: "\e903";
+}
+.icon-arrow-down:before {
+  content: "\e904";
+}
+.icon-arrow-left:before {
+  content: "\e905";
+}
+.icon-arrow-right:before {
+  content: "\e906";
+}
+.icon-arrow-up:before {
+  content: "\e907";
+}
+.icon-arrows:before {
+  content: "\e908";
+}
+.icon-barcode:before {
+  content: "\e909";
+}
+.icon-bell:before {
+  content: "\e90a";
+}
+.icon-bin:before {
+  content: "\e90b";
+}
+.icon-brand:before {
+  content: "\e90c";
+}
+.icon-businessman:before {
+  content: "\e90d";
+}
+.icon-calendar:before {
+  content: "\e90e";
+}
+.icon-change:before {
+  content: "\e90f";
+}
+.icon-checkbox:before {
+  content: "\e910";
+}
+.icon-checked:before {
+  content: "\e911";
+}
+.icon-clear:before {
+  content: "\e912";
+}
+.icon-close:before {
+  content: "\e913";
+}
+.icon-customer:before {
+  content: "\e914";
+}
+.icon-down:before {
+  content: "\e915";
+}
+.icon-employee:before {
+  content: "\e916";
+}
+.icon-export:before {
+  content: "\e917";
+}
+.icon-help:before {
+  content: "\e918";
+}
+.icon-home:before {
+  content: "\e919";
+}
+.icon-icon:before {
+  content: "\e91a";
+}
+.icon-import:before {
+  content: "\e91b";
+}
+.icon-information:before {
+  content: "\e91c";
+}
+.icon-items:before {
+  content: "\e91d";
+}
+.icon-left:before {
+  content: "\e91e";
+}
+.icon-list:before {
+  content: "\e91f";
+}
+.icon-logo:before {
+  content: "\e920";
+}
+.icon-network:before {
   content: "\e922";
 }
-.icon-Promotion:before {
+.icon-payment-method:before {
   content: "\e923";
 }
-.icon-Purchasing:before {
+.icon-payment-report:before {
   content: "\e924";
 }
-.icon-Push-Button:before {
+.icon-performance:before {
   content: "\e925";
 }
-.icon-Receipt:before {
+.icon-pre-order:before {
   content: "\e926";
 }
-.icon-Refresh:before {
+.icon-price-book:before {
   content: "\e927";
 }
-.icon-Reports:before {
+.icon-printer:before {
   content: "\e928";
 }
-.icon-Role:before {
+.icon-product-add2:before {
   content: "\e929";
 }
-.icon-Sale-Report:before {
+.icon-promotion:before {
   content: "\e92a";
 }
-.icon-Sale-Return:before {
+.icon-purchasing:before {
   content: "\e92b";
 }
-.icon-Save:before {
+.icon-push-button:before {
   content: "\e92c";
 }
-.icon-Search:before {
+.icon-receipt:before {
   content: "\e92d";
 }
-.icon-Settings:before {
+.icon-refresh:before {
   content: "\e92e";
 }
-.icon-Shopping-Basket:before {
+.icon-reports:before {
   content: "\e92f";
 }
-.icon-Stock-Audit:before {
+.icon-right:before {
   content: "\e930";
 }
-.icon-Stock-Return:before {
+.icon-role:before {
   content: "\e931";
 }
-.icon-Stock-Transfer:before {
+.icon-sale-report:before {
   content: "\e932";
 }
-.icon-Stock:before {
+.icon-sale-return:before {
   content: "\e933";
 }
-.icon-Store:before {
+.icon-save:before {
   content: "\e934";
 }
-.icon-Tags:before {
+.icon-search:before {
   content: "\e935";
 }
-.icon-Tax-Report:before {
+.icon-settings:before {
   content: "\e936";
 }
-.icon-Tax:before {
+.icon-shopping-basket:before {
   content: "\e937";
 }
-.icon-Time:before {
+.icon-stock:before {
   content: "\e938";
 }
-.icon-Timesheet:before {
+.icon-stock-audit:before {
   content: "\e939";
 }
-.icon-Types:before {
+.icon-stock-return:before {
   content: "\e93a";
 }
-.icon-Undo:before {
+.icon-stock-transfer:before {
   content: "\e93b";
 }
-.icon-Usd:before {
+.icon-store:before {
   content: "\e93c";
 }
-.icon-User:before {
+.icon-storevein:before {
   content: "\e93d";
 }
-.icon-Userman:before {
+.icon-switchoff:before {
   content: "\e93e";
+}
+.icon-switchon:before {
+  content: "\e93f";
+}
+.icon-tags:before {
+  content: "\e940";
+}
+.icon-tax:before {
+  content: "\e941";
+}
+.icon-tax-report:before {
+  content: "\e942";
+}
+.icon-time:before {
+  content: "\e943";
+}
+.icon-timesheet:before {
+  content: "\e944";
+}
+.icon-types:before {
+  content: "\e945";
+}
+.icon-undo:before {
+  content: "\e946";
+}
+.icon-up:before {
+  content: "\e947";
+}
+.icon-usd:before {
+  content: "\e948";
+}
+.icon-user:before {
+  content: "\e949";
+}
+.icon-userman:before {
+  content: "\e94a";
 }

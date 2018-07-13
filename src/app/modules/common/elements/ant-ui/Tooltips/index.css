@@ -1,0 +1,16 @@
+/* tooltips */
+.ant-tooltip-inner {
+    background-color: white;
+    border-radius: 0;
+    height: 122px;
+    width: 194px;
+}
+
+.main-tooltip button {
+    border: none;
+}
+
+.ant-tooltip .ant-tooltip-arrow {
+    border-right-color: white;
+    color:black;
+}

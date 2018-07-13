@@ -15,7 +15,8 @@ export class Cards extends Component {
       icon,
       totalText,
       price,
-      to
+      to,
+      unit
     } = this.props;
     return(
       <div className="main-home-page">   
@@ -23,17 +24,18 @@ export class Cards extends Component {
           <CardBody>
             <CardText>
               <Row>
-                <Col md="6">
+                <Col xs="5" md="5">
                   <span className="icon">
-                    <i className={`fa fa-${ icon }`}></i>
+                    <i className={`${ icon }`}></i>
                   </span>
                 </Col>
-                <Col md="6">
+                <Col xs="7" md="7" className="clear-margin">
                   <div className="total">
                     { totalText }
                   </div>
                   <div className="price">
-                    $ { price }
+                    $ { price } 
+                    <span className="unit">&nbsp;{ unit }</span>
                   </div>
                 </Col>
               </Row>
