@@ -24,7 +24,7 @@
         padding: 0px;
     }
 
-    .main-search,.border-right,.main-user-select .help, 
+    .main-user-select .help, 
     .main-user-select .user-acc
     {
         display: none;

@@ -79,41 +79,10 @@
 }
 
 .main-antselect .ant-select-selection--single,
-.main-input input,
-.main-search-button button 
+.main-input input 
 {
     height: 30px !important;
 }
-
-.main-search input::placeholder {
-    font-size: 12pt;
-}
-
-/* .main-antselect .ant-select-arrow {
-    font-size: 8px;
-} */
-
-
-
-/* search button */
-
-.button-search-color,
-.main-search-button button {
-    background-color: #093163;
-}
-
-
-.main-search-button button {
-    color: white;
-    width: 30px;
-}
-
-.main-search-button i{
-    position: absolute;
-    top: 8px;
-    left: 7px;
-}
-
 
 body {
     font-family: Helvetica, sans-serif;

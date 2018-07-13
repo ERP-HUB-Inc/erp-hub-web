@@ -1,0 +1,36 @@
+.main-search {
+    height: 70px;
+    display: table;
+}
+
+.main-search form {
+    display: table-cell;
+    vertical-align: middle
+}
+
+.main-search input::placeholder {
+    font-size: 10pt;
+    color: #BCBCCB
+}
+
+.icon-Search {
+    position: absolute;
+    font-size: 14pt;
+    top: 28px;
+    color: #9A9A9A !important
+}
+
+.main-search input {
+    border: none;
+    width: 100%;
+    padding-left: 26px;
+}
+
+.header-left .store-name {
+    display: table-cell;
+    vertical-align: middle
+}
+
+.header-left .store-name .wrap-title {
+    border-right: 1px solid #ECECEC;
+}

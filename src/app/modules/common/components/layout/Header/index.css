@@ -1,18 +1,19 @@
-    /* color */
-    .header-color,.padding-title,.icon-user,
-    /* .main-user-select li a, */
-    .border-right,
-    .main-search input::placeholder,
-    .main-search i,
-    /* .main-user-select ul li */
+
+    .header-color,
+    .padding-title,
+    .icon-user,
     {
         color: #9A9A9A;
     }
 
-    .header .logo-title {
-        color: #216FB6;
+    .store-name .title {
+        color: #4F2B0B;
         font-weight: bold;
-        font-size: 16pt;
+        font-size: 18pt;
+    }
+
+    .header .back-office {
+        font-size: 10pt
     }
 
     .header .slowgan-title {
@@ -33,46 +34,11 @@
         z-index: 2;
     }
 
-    /* search */
-    .main-search {
-        top: -16px;
-    }
-
-    .main-search input {
-        border: none;
-    }
-
-    .main-search i.search-icon {
-        position: absolute;
-        font-size: 19px;
-        top: 30px;
-        left: 22px;
-    }
-
-    .main-search input {
-        padding-left: 36px;
-    }
 
     ul.help-layout li {
         list-style-type: none;
         float: left;
     }
-
-    /* user account */
-
-    /* .main-user-select {
-        float: right;
-        position: relative;
-        left: -90px;
-        top: 11px;
-    } */
-
-    /* .main-user-select ul li {
-        list-style-type: none;
-        float: left;
-        padding: 0px 26px;
-        font-size: 14px;
-    } */
 
     .dropdown.nav-item {
         list-style-type: none;
@@ -107,6 +73,17 @@
     .clear-margin {
         margin-right: 0px !important;
         margin-left: 0px !important
+    }
+
+    .store-logo {
+        width: 90px;
+        height: 70px;
+        position: fixed;
+        background-color: #093163
+    }
+
+    .wrap-header {
+        margin-left: 90px !important
     }
 
 

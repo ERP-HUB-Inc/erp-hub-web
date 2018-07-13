@@ -1,5 +1,5 @@
 import React from "react";
-import Component from "../../../Component";
+import Component from "../../Component";
 import PropTypes from "prop-types";
 import { reduxForm } from "redux-form"; 
 
@@ -13,12 +13,13 @@ class FormSearch extends Component {
     const { handleSubmit } = this.props;
     return(
       <this.Form onSubmit={ handleSubmit }>
-        <this.Icon type="search" className="search-icon"/>
+        <span className="icon-Search"></span>
         <this.Field
-          name="txtsearch"
+          name="generalsearch"
           type="text"
-          component={ this.SapleInput }
-          placeholder="Search Transaction Invoice or"
+          component="input"
+          class="form-control"
+          placeholder="Search Transaction Invoice or help"
         />
       </this.Form>
     );
