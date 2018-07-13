@@ -124,7 +124,7 @@ class UserList extends Component {
                       label="Filter dates"
                       name="rangepicker"
                       component={ this.DateRank }
-                      placeholder={["From", "To"]}
+                      placeholder={[""]}
                       onFocus={e => e.preventDefault()}
                       onBlur={e => e.preventDefault()}
                     />

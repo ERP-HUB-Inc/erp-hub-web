@@ -6,6 +6,7 @@ import { Card,
   Col,
   Row,
 } from "reactstrap";
+import "./index.css"; 
 import { Link } from "react-router-dom";
 
 export class Cards extends Component {

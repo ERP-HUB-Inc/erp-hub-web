@@ -13,3 +13,11 @@
 .main-date-picker label {
     font-size: 8pt;
 }
+
+.main-date-picker .ant-calendar-picker-input {
+    border: none;
+    border-radius: 0px;
+    webkit-box-shadow: 0px 2px 0px 0px rgba(234,234,234,1);
+    -moz-box-shadow: 0px 2px 0px 0px rgba(234,234,234,1);
+    box-shadow: 0px 2px 0px 0px rgba(234,234,234,1);
+}

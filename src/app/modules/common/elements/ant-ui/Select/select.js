@@ -3,6 +3,7 @@ import {
   FormGroup,
   Label
 } from "reactstrap";
+import "./index.css"; 
 import { Select,Form } from "antd";
 const FormItem = Form.Item;
 
