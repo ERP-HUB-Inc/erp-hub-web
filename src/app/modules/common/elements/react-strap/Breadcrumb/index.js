@@ -13,7 +13,7 @@ export class BreadcrumbLayout extends Component {
         <h4 className="breadcrumb-title">{ titleNow }</h4>
         <div className="breadcrumb">
           <Link to={ "/" }>  
-            <i className="icon-Home"></i>
+            <span className="icon-Home"></span>
           </Link>
           <a href="dd"><i className="fa fa-angle-right"></i></a>
           { this.props.children } 

@@ -9,7 +9,7 @@
     border-radius: 5px;
 }
 
-.breadcrumb a i {
+.breadcrumb a span {
     font-size: 20pt;
     color: #4D4F5C;
 }
