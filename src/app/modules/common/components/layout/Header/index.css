@@ -79,7 +79,17 @@
         width: 90px;
         height: 70px;
         position: fixed;
-        background-color: #093163
+        background-color: #093163;
+        text-align: center;
+        line-height: 70px;
+        display: table;
+    }
+
+    .store-logo .icon-logo {
+        color: white;
+        display: table-cell;
+        vertical-align: middle;
+        font-size: 30pt
     }
 
     .wrap-header {

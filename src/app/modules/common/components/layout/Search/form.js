@@ -13,7 +13,7 @@ class FormSearch extends Component {
     const { handleSubmit } = this.props;
     return(
       <this.Form onSubmit={ handleSubmit }>
-        <span className="icon-Search"></span>
+        <span className="icon-search"></span>
         <this.Field
           name="generalsearch"
           type="text"

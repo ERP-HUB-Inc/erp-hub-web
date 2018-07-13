@@ -20,7 +20,7 @@
 }
 
 .menu-left .user-account .title,
-.menu-left .user-account .icon-down {
+.menu-left .user-account .icon-move-down {
     position: relative;
     top: -5px;
 
@@ -51,13 +51,13 @@
     padding-left: 5px
 }
 
-.icon-down {
+.icon-move-down {
     font-size: 10px
 }
 
-.icon-User,
-.icon-Bell,
-.icon-Help {
+.icon-user,
+.icon-bell,
+.icon-help {
     font-size: 18pt
 }
 

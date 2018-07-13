@@ -33,7 +33,7 @@ class Headers extends Component {
           onClick={ toggle }
         />
         <div className="store-logo">
-
+          <span className="icon-logo"></span>
         </div>
         <this.Row className="wrap-header clear-margin">
           <this.Col md="2" className="header-left">

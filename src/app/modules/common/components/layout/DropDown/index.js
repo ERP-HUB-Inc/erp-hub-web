@@ -33,16 +33,16 @@ export default class UserSelect extends Component {
         </li>
         <li>
           <a className="user-account">
-            <span class="icon-Help icon-padding-right"></span>
+            <span className="icon-help icon-padding-right"></span>
             <span className="title">Help</span>
           </a>
         </li>
         <li>
           <Dropdown overlay={this.menu} trigger={["click"]}>
             <a className="ant-dropdown-link user-account" href="#">
-              <span class="icon-User icon-padding-right"></span>
+              <span className="icon-user icon-padding-right"></span>
               <span className="title">User Account</span> 
-              <span class="icon-down icon-padding-left"></span>
+              <span className="icon-move-down icon-padding-left"></span>
             </a>
           </Dropdown>
         </li>  
