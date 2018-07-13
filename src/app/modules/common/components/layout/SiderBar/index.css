@@ -1,7 +1,7 @@
 #sidebar {
     padding-top: 70px;
     background-image: url("../styles/images/sidebar-bg.jpg");
-    background-repeat-y: no-repeat;
+    background-repeat-y: repeat;
     background-size: 116px;
     width: 90px;
     position: fixed;
@@ -19,8 +19,15 @@
     color: #FFD627
 }
 
-#sidebar>ul li:hover {
-    background-color: white
+#sidebar>ul li:hover,
+#sidebar>ul li.hover {
+    background-color: white;
+    margin-left: 5px;
+    -webkit-transition: margin-left 0.1s;
+    -khtml-transition: margin-left 0.1s;
+    -moz-transition: margin-left 0.1s;
+    -ms-transition: margin-left 0.1s;
+    transition: margin-left 0.1s;
 }
 
 #sidebar>ul>li:hover a {
@@ -36,7 +43,7 @@
     display: block
 }
 
-#sidebar>ul>li {
+#sidebar>ul>li>a {
     padding: 10px 10px
 }
 
@@ -74,12 +81,12 @@
 }
 
 #sum-menu ul li a [class^="icon-"] {
-    font-size: 16pt
+    font-size: 14pt
 }
 
 #sum-menu ul li a span.item-text {
     position: relative;
-    left: 10px;
+    left: 15px;
     top: -4px;
 }
 
@@ -90,10 +97,12 @@
     padding-bottom: 10px;
 }
 
-.hidden {
-    display: none
+#sidebar .hidden {
+    display: none;
+    transition: display 0.1s;
 }
 
-.show {
-    display: block
+#sidebar .show {
+    display: block;
+    transition: display 0.1s;
 }
