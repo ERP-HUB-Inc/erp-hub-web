@@ -24,7 +24,6 @@
 
 
 .main-input input::placeholder,
-/* .main-antselect input::placeholder { */
 {
     position: absolute;
     left: 20px;
@@ -35,14 +34,7 @@
     padding-top: 21px;
 }
 
-/* .main-antselect .ant-select-selection-selected-value {
-    font-weight: bold;
-} */
-
-
 .mix-none-border,
-/* .main-antselect .ant-select-selection, */
-/* .main-date-picker .ant-calendar-picker-input, */
 .main-input input
  {
     border: none;
@@ -67,12 +59,7 @@
     color: #9A9A9A;
 }
 
-/* .main-antselect .ant-select-selection__rendered {
-    line-height: 30px !important;
-} */
-
-.main-antselect .ant-select-selection-selected-value,
-/* .main-date-picker .ant-calendar-picker-input, */
+.main-antselect .ant-select-selection-selected-value
 .main-input input
 {
     font-size: 17px;
@@ -88,11 +75,6 @@
 .main-search input::placeholder {
     font-size: 12pt;
 }
-
-/* .main-antselect .ant-select-arrow {
-    font-size: 8px;
-} */
-
 
 
 /* search button */

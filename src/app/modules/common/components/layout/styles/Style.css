@@ -50,6 +50,10 @@ input:focus
     box-shadow: none;
 }
 
+.main-input input {
+    padding-left: 9px;
+}
+
 .main-input input::placeholder,
 .main-date-picker input::placeholder,
 .main-antselect .ant-select-selection-selected-value
@@ -146,7 +150,7 @@ html {
 
 /* table */
 .ant-table-body table tr th {
-    border-top: 1px solid #EAEAEA;
+    background-color: #F7F7F7; 
 }
 
 tr:nth-child(odd) {

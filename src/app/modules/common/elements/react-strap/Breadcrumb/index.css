@@ -9,6 +9,11 @@
     border-radius: 5px;
 }
 
+.breadcrumb a i {
+    font-size: 20pt;
+    color: #4D4F5C;
+}
+
 .breadcrumb a ,
 .breadcrumb a.breadcrumb-link:active {
     color: #9A9A9A;

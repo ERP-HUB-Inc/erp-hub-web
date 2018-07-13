@@ -1,10 +1,8 @@
     /* color */
     .header-color,.padding-title,.icon-user,
-    /* .main-user-select li a, */
     .border-right,
     .main-search input::placeholder,
     .main-search i,
-    /* .main-user-select ul li */
     {
         color: #9A9A9A;
     }
