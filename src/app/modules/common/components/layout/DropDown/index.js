@@ -1,6 +1,7 @@
 import React from "react";
 import Component from "../../Component";
 import "./index.css";
+import "./index.scss";
 import { Menu, Dropdown, Icon } from "antd";
 
 export default class UserSelect extends Component {
@@ -24,7 +25,7 @@ export default class UserSelect extends Component {
 
   render() {
     return(
-      <ul className="menu-left list-unstyled">
+      <ul className="menu-left list-unstyled scssbg">
         <li>
           <this.Noteicon />
         </li>

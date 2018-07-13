@@ -99,12 +99,14 @@
         padding: 0px !important;
     }
 
-    .header-left {
-        display: table
+    .header .header-left {
+        display: table;
+        padding-right: 15px
     }
 
-    .ant-popover.antd-pro-notice-icon-popover {
-        top: 60px !important
+    .clear-margin {
+        margin-right: 0px !important;
+        margin-left: 0px !important
     }
 
 
