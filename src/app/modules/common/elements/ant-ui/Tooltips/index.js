@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Tooltip, Button } from "antd";
+import "./index.css"; 
 
 const text = <span>prompt text dd dff ddd</span>;
 const buttonWidth = 70;

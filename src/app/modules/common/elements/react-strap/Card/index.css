@@ -1,8 +1,26 @@
 .color,
-.main-home-page span.icon,
-.main-home-page .card-footer a  
+.main-home-page .card-footer a,
+.main-home-page .price,
+.main-home-page .total   
 {
-    color: #0D62AF;
+    color: #9A9A9A;
+}
+
+.main-home-page .card {
+    border: 1px solid #EAEAEA;
+}
+
+.clear-margin {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.main-home-page span.icon {
+    color: #0D62AF; 
+}
+
+.main-home-page .card-footer a {
+    text-transform: uppercase;
 }
 
 .main-home-page .card {
@@ -12,23 +30,30 @@
 .main-home-page span.icon
  {
     font-size: 60px;
+    margin-left: 39px;
 }
 
-.main-home-page .total{
-    font-size: 16px;
+.main-home-page .card-footer a
+{
+    font-size: 12pt;
+}
+
+.main-home-page .total, 
+.main-home-page .price span.unit
+{
+    font-size: 12pt;
 }
 
 .main-home-page .price {
-    font-weight: bold;
+    font-weight: 500;
     font-size: 32px;
 }
 
 .main-home-page .card-footer {
-    text-align: right;
+    text-align: center;
     background-color: white;
 }
 
-.main-home-page .card-footer a {
-    font-weight: bold;
-    text-transform: uppercase;
+.main-home-page .card-footer a:hover {
+    text-decoration: none;
 }

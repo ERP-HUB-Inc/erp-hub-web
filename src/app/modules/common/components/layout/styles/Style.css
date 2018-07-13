@@ -132,40 +132,6 @@ html {
     color: white;
 }
 
-/* breadcrumb */
-.breadcrumb,
-.auto-complete-input input 
-{
-    background-color: #EAEAEA !important;
-}
-
-.breadcrumb a ,
-.breadcrumb a.breadcrumb-link:active {
-    color: #9A9A9A;
-}
-
-.breadcrumb a { 
-    padding: 3px;
-    text-transform: uppercase;
-}
-
-.breadcrumb a.breadcrumb-link:after {
-    content: "  |";
-}
-
-.breadcrumb a.breadcrumb-link:last-child:after {
-    content: "";
-}
-
-.breadcrumb a a.breadcrumb-link:first-child:after {
-    content: "  >" !important;
-}
-
-h4.breadcrumb-title {
-    text-transform: uppercase;
-    font-size: 20pt;
-}
-
 /* pagination */
 
 .ant-pagination-item {
@@ -413,24 +379,6 @@ li.ant-pagination-next .ant-pagination-item-link
 {
     height: 20px !important;
 } 
-
-/* tooltips */
-.ant-tooltip-inner {
-    background-color: white;
-    border-radius: 0;
-    height: 122px;
-    width: 194px;
-}
-
-.main-tooltip button {
-    border: none;
-}
-
-.ant-tooltip .ant-tooltip-arrow {
-    border-right-color: white;
-    color:black;
-}
-
 
 /* error */
 .has-error .ant-input {

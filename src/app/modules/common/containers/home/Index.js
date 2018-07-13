@@ -44,7 +44,7 @@ class Home extends Component {
           <this.Col md="3">
             <this.Cards
               price="0.00"
-              icon="angellist"
+              icon="icon-Usd"
               totalText="Total sale"
               to="read"
             />
@@ -52,21 +52,21 @@ class Home extends Component {
           <this.Col md="3">
             <this.Cards
               price="0.00"
-              icon="angellist"
+              icon="icon-List"
               totalText="Total sale"
             />
           </this.Col>
           <this.Col md="3">
             <this.Cards
               price="0.00"
-              icon="angellist"
+              icon="icon-Stock"
               totalText="Total sale"
             />
           </this.Col>
           <this.Col md="3">
             <this.Cards
               price="0.00"
-              icon="angellist"
+              icon="icon-customer"
               totalText="Total sale"
             />
           </this.Col>
