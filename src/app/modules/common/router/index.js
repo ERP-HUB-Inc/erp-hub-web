@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import SideBar from "../../../modules/common/components/layout/SiderBar/index";
+// import SideBar from "../../../modules/common/components/layout/SiderBar/index";
 import Headers from "../../../modules/common/components/layout/Header/Index";
 import UserList from "../../common/containers/user";
 import Home from "../../common/containers/home/Index";
