@@ -10,14 +10,11 @@ deploy_prod:
     - apk update && apk upgrade
     - apk add git openssh bash
     # Add target server`s secret key
-    #- mkdir ~/.ssh
-    #- echo /root/.ssh/id_rsa | base64 -d > ~/.ssh/id_rsa
-    #- chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
-    - sshpass -V
-    - export SSHPASS=@bC*123
-    - sshpass -e scp -o stricthostkeychecking=no -r . root@178.128.61.100:/var/www/html
+    - mkdir ~/.ssh
+    - echo $TARGET_SERVER_SECRET_KEY_BASE64 | base64 -d > ~/.ssh/id_rsa
+    - chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
     - echo "Test ssh connection"
-    - ssh -o StrictHostKeyChecking=no -T "root@178.128.61.100"
+    - ssh -o StrictHostKeyChecking=no -T "ubuntu@$TARGET_SERVER_HOST"
     # Delploy
     - echo "Setup tagget server directories"
     - pm2 deploy ecosystem.config.js production setup 2>&1 || true
