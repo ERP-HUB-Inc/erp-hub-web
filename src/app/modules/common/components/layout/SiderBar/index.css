@@ -30,7 +30,8 @@
     transition: margin-left 0.1s;
 }
 
-#sidebar>ul>li:hover a {
+#sidebar>ul>li:hover a,
+#sidebar>ul>li.hover a {
     color: #093163
 }
 

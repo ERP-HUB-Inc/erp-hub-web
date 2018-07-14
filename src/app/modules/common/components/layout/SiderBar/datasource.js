@@ -46,7 +46,29 @@ const dataSource = {
       title: "Promotions",
       icon: "icon-promotion"
     }
-  ]
+  ],
+  stock: [
+    {
+      title: "Stock",
+      icon: "icon-time"
+    },
+    {
+      title: "Stock Control",
+      icon: "icon-pre-order"
+    },
+    {
+      title: "Re-Order Point",
+      icon: "icon-sale-return"
+    },
+    {
+      title: "Purchase Orders",
+      icon: "icon-sale-return"
+    },
+    {
+      title: "Stock Return",
+      icon: "icon-sale-return"
+    }
+  ],
 };
 
 export default dataSource;

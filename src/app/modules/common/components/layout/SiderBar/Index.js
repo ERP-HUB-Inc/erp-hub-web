@@ -47,6 +47,11 @@ export default class SideBar extends React.Component {
     });
   }
 
+  removeClassCurrentlyHover() {
+    const oldElement = document.querySelectorAll(".sidebar-menu-item");
+    oldElement.classList.remove("hover");
+  }
+
   render() {
     const subMenuItemTitle = Object.keys(this.state.menuItems);
     return (
@@ -54,13 +59,25 @@ export default class SideBar extends React.Component {
         <div id="sidebar">
           <ul className="list-unstyled text-center">
             <li className="active"><a href="#"><span className="icon-home"></span></a></li>
-            <li onMouseEnter={() => this.handleShow("transactions")}  onMouseLeave={() => this.handleHidden()}><a href="#"><span className="icon-list"></span></a></li>
-            <li onMouseEnter={() => this.handleShow("products")} onMouseLeave={() => this.handleHidden()}><a href="#"><span className="icon-items"></span></a></li>
-            <li onMouseEnter={() => this.handleShow("stock")} onMouseLeave={() => this.handleHidden()}><a href="#"><span className="icon-stock"></span></a></li>
-            <li onMouseEnter={() => this.handleShow("customer")} onMouseLeave={() => this.handleHidden()}><a href="#"><span className="icon-customer"></span></a></li>
+            <li id="transactions" className="sidebar-menu-item" onMouseEnter={() => this.handleShow("transactions")}  onMouseLeave={() => this.handleHidden()}>
+              <a href="#"><span className="icon-list"></span></a>
+            </li>
+            <li id="products" className="sidebar-menu-item" onMouseEnter={() => this.handleShow("products")} onMouseLeave={() => this.handleHidden()}>
+              <a href="#"><span className="icon-items"></span></a>
+            </li>
+            <li id="stock" className="sidebar-menu-item" onMouseEnter={() => this.handleShow("stock")} onMouseLeave={() => this.handleHidden()}>
+              <a href="#"><span className="icon-stock"></span></a>
+            </li>
+            <li onMouseEnter={() => this.handleShow("customer")} onMouseLeave={() => this.handleHidden()}>
+              <a href="#"><span className="icon-customer"></span></a>
+            </li>
             <li onMouseEnter={() => this.handleShow("employee")} onMouseLeave={() => this.handleHidden()}><a href="#"><span className="icon-employee"></span></a></li>
-            <li onMouseEnter={() => this.handleShow("report")} onMouseLeave={() => this.handleHidden()}><a href="#"><span className="icon-reports"></span></a></li>
-            <li onMouseEnter={() => this.handleShow("setting")} onMouseLeave={() => this.handleHidden()}><a href="#"><span className="icon-settings"></span></a></li>
+            <li onMouseEnter={() => this.handleShow("report")} onMouseLeave={() => this.handleHidden()}>
+              <a href="#"><span className="icon-reports"></span></a>
+            </li>
+            <li onMouseEnter={() => this.handleShow("setting")} onMouseLeave={() => this.handleHidden()}>
+              <a href="#"><span className="icon-settings"></span></a>
+            </li>
           </ul>
           <div id="sum-menu" className={this.state.classToggle} onMouseEnter={() => this.handleHoverOnSubMenu()} onMouseLeave={() => this.handleLeaveFromSubMenu()}>
             { 

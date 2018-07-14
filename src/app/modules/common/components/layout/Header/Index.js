@@ -27,11 +27,6 @@ class Headers extends Component {
     const { collapsed,toggle } = this.props;
     return (
       <Header className="header" style={{ background: "#fff" }}>
-        <Icon
-          className="trigger "
-          type={ collapsed ? "menu-unfold" : "menu-fold" }
-          onClick={ toggle }
-        />
         <div className="store-logo">
           <span className="icon-logo"></span>
         </div>
