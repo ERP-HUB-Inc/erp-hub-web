@@ -10,9 +10,9 @@ deploy_prod:
     - apk update && apk upgrade
     - apk add git openssh bash
     # Add target server`s secret key
-    - mkdir ~/.ssh
-    - echo /root/.ssh/id_rsa | base64 -d > ~/.ssh/id_rsa
-    - chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
+    #- mkdir ~/.ssh
+    #- echo /root/.ssh/id_rsa | base64 -d > ~/.ssh/id_rsa
+    #- chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
     - echo "Test ssh connection"
     - ssh -o StrictHostKeyChecking=no -T "root@178.128.61.100"
     # Delploy
