@@ -85,9 +85,17 @@
     font-size: 14pt
 }
 
-#sum-menu ul li a span.item-text {
+#sum-menu ul li a .item {
+    display: inline-block
+}
+
+#sum-menu ul li a .icon {
+    width: 30px
+}
+
+#sum-menu ul li a .item-text {
     position: relative;
-    left: 15px;
+    left: 5px;
     top: -4px;
 }
 
@@ -106,4 +114,12 @@
 #sidebar .show {
     display: block;
     transition: display 0.1s;
+}
+
+#version {
+    font-size: 10pt;
+    color: #FFFFFF;
+    position: absolute;
+    top: 97%;
+    left: 25px;
 }

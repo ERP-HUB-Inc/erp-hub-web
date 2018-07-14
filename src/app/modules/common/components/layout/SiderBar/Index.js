@@ -87,7 +87,7 @@ export default class SideBar extends React.Component {
                   <div className="title text-center text-uppercase">{subMenuItemTitle}</div>
                   <ul className="list-unstyled text-left text-uppercase">
                     {
-                      this.state.menuItems[subMenuItemTitle].map((menu, key) => <li key={key}><a href="#"><span className={menu["icon"]}></span><span className="item-text">{menu["title"]}</span></a></li>)
+                      this.state.menuItems[subMenuItemTitle].map((menu, key) => <li key={key}><a href="#"><div className="icon item"><span className={menu["icon"]}></span></div><div className="item-text item">{menu["title"]}</div></a></li>)
                     }
                   </ul>
                 </div>
@@ -95,6 +95,7 @@ export default class SideBar extends React.Component {
                 ""
             }
           </div>
+          <div id="version">V1.0.0</div>
         </div>
       </div>
     );
