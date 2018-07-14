@@ -1,4 +1,4 @@
-const headers = {
+export default {
   "text_header": [
     "Header-En",
     "Header-Fr",
@@ -25,5 +25,3 @@ const headers = {
     "Store VEIN-Es"
   ]
 };
-
-export default headers;

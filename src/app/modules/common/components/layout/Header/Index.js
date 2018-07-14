@@ -1,7 +1,6 @@
 import React from "react";
 import Component from "../../Component";
 import DropDown from "../DropDown";
-import { Icon } from "antd";
 import { Layout } from "antd";
 import SearchForm from "../Search";
 import "./index.css";
@@ -11,20 +10,14 @@ class Headers extends Component {
   constructor(props) {
     super(props);
     this.switchLanguage = this.switchLanguage.bind(this);
-    this.toggle = this.toggle.bind(this);
   }
 
   switchLanguage(key) {
     const { dispatch } = this.props;
     dispatch(this.changeLanguage(key));
   }
-
-  toggle(){
-    this.props.toggle;
-  }
   
   render() {
-    const { collapsed,toggle } = this.props;
     return (
       <Header className="header" style={{ background: "#fff" }}>
         <div className="store-logo">
@@ -43,7 +36,7 @@ class Headers extends Component {
             <SearchForm />
           </this.Col>
           <this.Col md="7" className="header-left">
-            <DropDown />
+            <DropDown onSwitchLanguage={this.switchLanguage} currentLanguage={this.getCurrentLanguage(this.props.locale)}/>
           </this.Col>
         </this.Row>
       </Header>

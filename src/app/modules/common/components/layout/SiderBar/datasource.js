@@ -70,24 +70,27 @@ import PurchaseHistory from "../../../../crm/containers/customers/PurchaseHistor
 
 /*==============================END COMMON===================================*/
 
+import React from "react";
+import { Translate } from "react-localize-redux";
+
 const dataSource = {
   transactions: {
     icon: "icon-list",
     subItems: [
       {
-        title: "Sale History",
+        title: <Translate id="text_sale_history" />,
         icon: "icon-time",
         route: "/transactions/sale-history",
         component: SaleHistory
       },
       {
-        title: "Sale Order",
+        title: <Translate id="text_sale_order" />,
         icon: "icon-pre-order",
         route: "/transactions/sale-order",
         component: SaleOrder
       },
       {
-        title: "Return Exchange",
+        title: <Translate id="text_return_exchange" />,
         icon: "icon-sale-return",
         route: "/transactions/return-exchange",
         component: ReturnExchange

@@ -2,7 +2,7 @@ import React from "react";
 import { Layout } from "antd";
 import { Route, Switch } from "react-router-dom";
 import SideBar from "../../../modules/common/components/layout/SiderBar";
-import Headers from "../../../modules/common/components/layout/Header";
+import Headers from "../../common/containers/layout/Header";
 import UserList from "../../common/containers/user";
 import Home from "../../common/containers/home";
 import Component from "../components/Component";

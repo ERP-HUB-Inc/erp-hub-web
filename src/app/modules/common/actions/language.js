@@ -1,6 +1,7 @@
 import { initialize, addTranslation } from "react-localize-redux";
 import headers from "../languages/headers";
 import footers from "../languages/footers";
+import sidebar from "../languages/sidebar";
 import text from "../elements/common/language/text";
 import title from "../elements/common/language/title";
 import error from "../elements/common/language/error";
@@ -18,6 +19,7 @@ export function setTranslation() {
     ...footers,
     ...text,
     ...title,
-    ...error
+    ...error,
+    ...sidebar
   });
 }

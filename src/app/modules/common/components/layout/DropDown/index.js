@@ -2,9 +2,9 @@ import React from "react";
 import Component from "../../Component";
 import "./index.css";
 import "./index.scss";
-import { Menu, Dropdown, Icon } from "antd";
+import { Menu, Dropdown } from "antd";
 
-export default class UserSelect extends Component {
+export default class MenuDropDown extends Component {
   constructor(props) {
     super(props);
     
@@ -19,6 +19,13 @@ export default class UserSelect extends Component {
         <Menu.Item>
           <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">3rd menu item</a>
         </Menu.Item>
+      </Menu>
+    );
+
+    this.menuLanguage = (
+      <Menu>
+        <Menu.Item onClick={() => this.props.onSwitchLanguage("en")}>English</Menu.Item>
+        <Menu.Item onClick={() => this.props.onSwitchLanguage("fr")}>French</Menu.Item>
       </Menu>
     );
   }
@@ -45,7 +52,16 @@ export default class UserSelect extends Component {
               <span className="icon-move-down icon-padding-left"></span>
             </a>
           </Dropdown>
-        </li>  
+        </li>
+        <li>
+          <Dropdown overlay={this.menuLanguage} trigger={["click"]}>
+            <a className="ant-dropdown-link user-account" href="#">
+              <span className="icon-change icon-padding-right"></span>
+              <span className="title">{this.props.currentLanguage.name}</span> 
+              <span className="icon-move-down icon-padding-left"></span>
+            </a>
+          </Dropdown>
+        </li>
       </ul>
     );
   }
