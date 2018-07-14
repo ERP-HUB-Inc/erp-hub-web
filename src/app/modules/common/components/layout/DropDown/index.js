@@ -14,7 +14,7 @@ export default class MenuDropDown extends Component {
         <Menu.Item><this.Translate id="text_logout"/></Menu.Item>
       </Menu>
     );
-
+    // HELLO WORLD
     this.menuLanguage = (
       <Menu>
         {
