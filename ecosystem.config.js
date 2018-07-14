@@ -1,11 +1,11 @@
 // Target server hostname or IP address
-const TARGET_SERVER_HOST = process.env.TARGET_SERVER_HOST ? process.env.TARGET_SERVER_HOST.trim() : '';
+const TARGET_SERVER_HOST = '178.128.61.100';
 // Target server username
-const TARGET_SERVER_USER = process.env.TARGET_SERVER_USER ? process.env.TARGET_SERVER_USER.trim() : '';
+const TARGET_SERVER_USER = 'root';
 // Target server application path
-const TARGET_SERVER_APP_PATH = `/home/${TARGET_SERVER_USER}/app`;
+const TARGET_SERVER_APP_PATH = `/home/178.128.61.100/app`;
 // Your repository
-const REPO = 'git@gitlab.com:yourUsername/test-server.git';
+const REPO = 'https://gitlab.com/casolution/internals/pos.git';
 
 module.exports = {
   /**
