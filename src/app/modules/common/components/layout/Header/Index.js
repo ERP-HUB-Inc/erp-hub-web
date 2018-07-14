@@ -28,7 +28,7 @@ class Headers extends Component {
             <div className="store-name">
               <div className="wrap-title">
                 <div className="title">store VEIN </div>
-                <div className="back-office">Backoffice</div>
+                <div className="back-office">{<this.Translate id="text_back_office"/>}</div>
               </div>
             </div>
           </this.Col>
@@ -36,7 +36,7 @@ class Headers extends Component {
             <SearchForm />
           </this.Col>
           <this.Col md="7" className="header-left">
-            <DropDown onSwitchLanguage={this.switchLanguage} currentLanguage={this.getCurrentLanguage(this.props.locale)}/>
+            <DropDown onSwitchLanguage={this.switchLanguage} localization={this.props.locale} currentLanguage={this.getCurrentLanguage(this.props.locale)}/>
           </this.Col>
         </this.Row>
       </Header>

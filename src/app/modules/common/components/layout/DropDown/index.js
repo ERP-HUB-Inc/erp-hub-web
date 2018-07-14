@@ -10,22 +10,16 @@ export default class MenuDropDown extends Component {
     
     this.menu = (
       <Menu>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">1st menu item</a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">2nd menu item</a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">3rd menu item</a>
-        </Menu.Item>
+        <Menu.Item><this.Translate id="text_profile"/></Menu.Item>
+        <Menu.Item><this.Translate id="text_logout"/></Menu.Item>
       </Menu>
     );
 
     this.menuLanguage = (
       <Menu>
-        <Menu.Item onClick={() => this.props.onSwitchLanguage("en")}>English</Menu.Item>
-        <Menu.Item onClick={() => this.props.onSwitchLanguage("fr")}>French</Menu.Item>
+        {
+          this.props.localization.languages.map((local, key) => <Menu.Item onClick={() => this.props.onSwitchLanguage(local.code)}>{local.name}</Menu.Item>)
+        }
       </Menu>
     );
   }
@@ -41,14 +35,14 @@ export default class MenuDropDown extends Component {
         <li>
           <a className="user-account">
             <span className="icon-help icon-padding-right"></span>
-            <span className="title">Help</span>
+            <span className="title"><this.Translate id="text_help"/></span>
           </a>
         </li>
         <li>
           <Dropdown overlay={this.menu} trigger={["click"]}>
             <a className="ant-dropdown-link user-account" href="#">
               <span className="icon-user icon-padding-right"></span>
-              <span className="title">User Account</span> 
+              <span className="title"><this.Translate id="text_user_account"/></span> 
               <span className="icon-move-down icon-padding-left"></span>
             </a>
           </Dropdown>

@@ -9,7 +9,7 @@ import error from "../elements/common/language/error";
 export function initLanguage() {
   return initialize([
     { name: "English", code: "en" },
-    { name: "French", code: "fr" }
+    { name: "Myanmar", code: "my" }
   ]);
 }
 
