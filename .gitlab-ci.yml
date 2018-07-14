@@ -11,8 +11,8 @@ deploy_prod:
     - apk add git openssh bash
     # Add target server`s secret key
     - mkdir ~/.ssh
-    - echo $TARGET_SERVER_SECRET_KEY_BASE64 | base64 -d > ~/.ssh/id_rsa
-    - chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
+    - echo $TARGET_SERVER_SECRET_KEY_BASE64 | base64 -d > ~/id_rsa_2
+    - chmod 700 ~/ && chmod 600 ~/*
     - echo "Test ssh connection"
     - ssh -o StrictHostKeyChecking=no -T "root@178.128.61.100"
     # Delploy
