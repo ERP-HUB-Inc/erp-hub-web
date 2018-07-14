@@ -13,6 +13,9 @@ deploy_prod:
     #- mkdir ~/.ssh
     #- echo /root/.ssh/id_rsa | base64 -d > ~/.ssh/id_rsa
     #- chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
+    - sshpass -V
+    - export SSHPASS=@bC*123
+    - sshpass -e scp -o stricthostkeychecking=no -r . root@178.128.61.100:/var/www/html
     - echo "Test ssh connection"
     - ssh -o StrictHostKeyChecking=no -T "root@178.128.61.100"
     # Delploy
