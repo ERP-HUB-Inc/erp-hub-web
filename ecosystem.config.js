@@ -15,7 +15,7 @@ module.exports = {
   apps: [
     {
       name: 'testApp',
-      script: 'public.js',
+      script: 'publish.js',
       env: {
         NODE_ENV: 'development'
       },
