@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import dataSource from "./datasource";
 import "./index.css";
 
@@ -58,7 +59,7 @@ export default class SideBar extends React.Component {
       <div>
         <div id="sidebar">
           <ul className="list-unstyled text-center">
-            <li className="active"><a href="#"><span className="icon-home"></span></a></li>
+            <li className="active"><Link to="/"><span className="icon-home"></span></Link></li>
             <li id="transactions" className="sidebar-menu-item" onMouseEnter={() => this.handleShow("transactions")}  onMouseLeave={() => this.handleHidden()}>
               <a href="#"><span className="icon-list"></span></a>
             </li>
@@ -75,7 +76,7 @@ export default class SideBar extends React.Component {
             <li onMouseEnter={() => this.handleShow("report")} onMouseLeave={() => this.handleHidden()}>
               <a href="#"><span className="icon-reports"></span></a>
             </li>
-            <li onMouseEnter={() => this.handleShow("setting")} onMouseLeave={() => this.handleHidden()}>
+            <li onMouseEnter={() => this.handleShow("settings")} onMouseLeave={() => this.handleHidden()}>
               <a href="#"><span className="icon-settings"></span></a>
             </li>
           </ul>
@@ -87,7 +88,7 @@ export default class SideBar extends React.Component {
                   <div className="title text-center text-uppercase">{subMenuItemTitle}</div>
                   <ul className="list-unstyled text-left text-uppercase">
                     {
-                      this.state.menuItems[subMenuItemTitle].map((menu, key) => <li key={key}><a href="#"><div className="icon item"><span className={menu["icon"]}></span></div><div className="item-text item">{menu["title"]}</div></a></li>)
+                      this.state.menuItems[subMenuItemTitle].map((menu, key) => <li key={key}> <Link to={ menu["route"] }><div className="icon item"><span className={menu["icon"]}></span></div><div className="item-text item">{menu["title"]}</div></Link></li>)
                     }
                   </ul>
                 </div>
