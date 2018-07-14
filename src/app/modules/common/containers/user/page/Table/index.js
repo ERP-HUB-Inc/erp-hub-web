@@ -48,7 +48,7 @@ export class CTable extends React.Component {
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
     this.setState({
-      pagination: pager,
+      pagination: pager
     });
     console.log("field",sorter.field);
     console.log("Filter:", filters);
@@ -69,7 +69,7 @@ export class CTable extends React.Component {
       url: "https://randomuser.me/api",
       method: "get",
       data: {
-        results: 5,
+        results: 10,
         page:2,
         ...params,
       },
@@ -79,13 +79,18 @@ export class CTable extends React.Component {
       console.log("get data",data);
 
       const pagination = { ...this.state.pagination };
+
       // Read total count from server
       pagination.total = data.totalCount;
       pagination.total = 200;
+
+      console.log("pagination",pagination);
+
       this.setState({
         loading: false,
         data: data.results,
         pagination,
+        total: 200
       });
     });
   }
@@ -105,6 +110,11 @@ export class CTable extends React.Component {
           loading={this.state.loading}
           onChange={this.handleTableChange}
           total={10}
+        />
+
+        <Pagination 
+          defaultCurrent={1} 
+          total={ this.state.total } 
         />
       </div>
     );

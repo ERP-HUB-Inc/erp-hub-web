@@ -3,62 +3,7 @@ import Component from "../../components/Component";
 import ListCollapse from "./page/Panel";
 import { CTable as Table } from "./page/Table/";
 import { reduxForm } from "redux-form"; 
-import { validation } from "../../../common/util";
 import Manuitem from "../../components/layout/SiderBar/MenuItem";
-
-// const validate = values => {
-//   const errors = {};
-//   if (!values.username) {
-//     errors.username = "Required";
-//   } else if (values.username.length > 15) {
-//     errors.username = "Must be 15 characters or less";
-//   }
-
-//   if (!values.favoriteColor) {
-//     errors.favoriteColor = "Required";
-//   }
-
-//   if(!values.rangepicker){
-//     errors.rangepicker = "Required";
-//   }
-
-//   if(!values.Apple){
-//     errors.Apple = "Required";
-//   }
-
-//   return errors;
-// };
-
-// function validate({username="",rangepicker="",favoriteColor="",
-//   searchtwo="",email=""}){
-//   const rules = {
-//     username: {
-//       required: true,
-//       value: username
-//     },
-//     rangepicker: {
-//       required: true,
-//       value: rangepicker,
-//       type: ""
-//     },
-//     favoriteColor: {
-//       required: true,
-//       value: favoriteColor,
-//       type: ""
-//     },
-//     searchtwo: {
-//       required: true,
-//       value: searchtwo,
-//       type: "interger"
-//     },
-//     email: {
-//       required: true,
-//       value: email,
-//       type: "email"
-//     }
-//   };
-//   return validation(rules);
-// }
 
 class UserList extends Component {
   render() {
@@ -82,7 +27,7 @@ class UserList extends Component {
         </this.BreadcrumbLayout>
         
         <this.Row>
-          <this.Col md="6">   
+          <this.Col md="12">   
             <div className="main-input">
               <this.Tooltips />
               <form onSubmit={ handleSubmit }>
@@ -138,15 +83,6 @@ class UserList extends Component {
                       placeholder="Search Product"
                     />
                   </this.Col>
-                  <this.Col xs="12" md="4">
-                    <this.Field 
-                      name="autocomplete" 
-                      component={ this.AutoComplete }
-                      label="Date2"
-                      placeholder="Search Product"
-                    />
-            
-                  </this.Col>
                   <this.Col xs="12" md="2">
                     <this.Field 
                       name="username"
@@ -165,7 +101,7 @@ class UserList extends Component {
             </div>
           </this.Col>
          
-          <this.Col md="6">  
+          <this.Col md="12">  
             <ListCollapse/>
           </this.Col>
         </this.Row>
