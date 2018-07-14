@@ -19,26 +19,17 @@ export class Cards extends Component {
       unit
     } = this.props;
     return(
-      <div className="main-home-page">   
+      <div className="wrap-card">   
         <Card>
           <CardBody>
             <CardText>
-              <Row>
-                <Col xs="5" md="5">
-                  <span className="icon">
-                    <span className={`${ icon }`}></span>
-                  </span>
-                </Col>
-                <Col xs="7" md="7" className="clear-margin">
-                  <div className="total">
-                    { totalText }
-                  </div>
-                  <div className="price">
-                    $ { price } 
-                    <span className="unit">&nbsp;{ unit }</span>
-                  </div>
-                </Col>
-              </Row>
+              <span className={`${ icon }`}></span>
+              <div className="total">
+                { totalText }
+              </div>
+              <div className="price">
+                { price }
+              </div>
             </CardText>
           </CardBody>
           <CardFooter className="text-muted">

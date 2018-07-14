@@ -1,13 +1,17 @@
 .color,
-.main-home-page .card-footer a,
-.main-home-page .price,
-.main-home-page .total   
+.wrap-card .card-footer a,
+.wrap-card .price,
+.wrap-card .total   
 {
     color: #9A9A9A;
 }
 
-.main-home-page .card {
+.wrap-card .card {
     border: 1px solid #EAEAEA;
+}
+
+.card-body .card-text {
+    display: flex
 }
 
 .clear-margin {
@@ -15,45 +19,46 @@
     padding: 0 !important;
 }
 
-.main-home-page span.icon {
+.wrap-card [class^="icon-"] {
     color: #0D62AF; 
 }
 
-.main-home-page .card-footer a {
+.wrap-card .card-footer a {
     text-transform: uppercase;
 }
 
-.main-home-page .card {
+.wrap-card .card {
     border-radius: 0px;
+    padding: 0px
 }
 
-.main-home-page span.icon
+.wrap-card [class^="icon-"]
  {
-    font-size: 60px;
-    margin-left: 39px;
+    font-size: 36pt
 }
 
-.main-home-page .card-footer a
+.wrap-card .card-footer a
 {
-    font-size: 12pt;
+    font-size: 10pt;
+    text-decoration: none
 }
 
-.main-home-page .total, 
-.main-home-page .price span.unit
+.wrap-card .total
 {
-    font-size: 12pt;
+    font-size: 10pt;
 }
 
-.main-home-page .price {
+.wrap-card .price {
     font-weight: 500;
-    font-size: 32px;
+    font-size: 24pt;
 }
 
-.main-home-page .card-footer {
+.wrap-card .card-footer {
     text-align: center;
     background-color: white;
+    padding: 5px 10px;
 }
 
-.main-home-page .card-footer a:hover {
+.wrap-card .card-footer a:hover {
     text-decoration: none;
 }

@@ -2,6 +2,7 @@ import React from "react";
 import Component from "../../components/Component";
 import Diagram from "../../components/home/Diagram";
 import Guide from "../../components/home/Guide";
+import Board from "../../components/home/Board";
 
 class Home extends Component {
 
@@ -40,36 +41,11 @@ class Home extends Component {
 
           </this.Col>
         </this.Row>
-        <this.Row>          
-          <this.Col md="3">
-            <this.Cards
-              price="0.00"
-              icon="icon-userman"
-              totalText="Total sale"
-              to="read"
-            />
-          </this.Col>
-          <this.Col md="3">
-            <this.Cards
-              price="0.00"
-              icon="icon-list"
-              totalText="Total sale"
-            />
-          </this.Col>
-          <this.Col md="3">
-            <this.Cards
-              price="0.00"
-              icon="icon-stock"
-              totalText="Total sale"
-            />
-          </this.Col>
-          <this.Col md="3">
-            <this.Cards
-              price="0.00"
-              icon="icon-customer"
-              totalText="Total sale"
-            />
-          </this.Col>
+        <this.Row>
+          <Board total="0.00" icon="icon-userman" title="Today's Sale" route="read"/>
+          <Board total="0.00" icon="icon-list" title="Today's Transaction" route="read"/>
+          <Board total="0.00" icon="icon-stock" title="Today's Product Sold" route="read"/>
+          <Board total="0.00" icon="icon-customer" title="Total Customers" route="read"/>
         </this.Row>
 
         <this.Row>
