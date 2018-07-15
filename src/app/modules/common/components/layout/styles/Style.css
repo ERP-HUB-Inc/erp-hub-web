@@ -162,17 +162,6 @@ tr:nth-child(odd) {
     color: #4D4F5C;
 }
 
-/* home page  */
-.dashboard ul {
-    padding: 0;
-}
-
-.dashboard ul li {
-    list-style-type: none;
-    float: left;
-    margin-right: 16px;
-}
-
 .ant-table-body tr th {
     font-size: 11pt;
     text-transform: uppercase;
