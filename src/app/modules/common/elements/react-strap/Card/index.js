@@ -23,12 +23,18 @@ export class Cards extends Component {
         <Card>
           <CardBody>
             <CardText>
-              <span className={`${ icon }`}></span>
-              <div className="total">
-                { totalText }
-              </div>
-              <div className="price">
-                { price }
+              <div className="wrap-content">
+                <div className="block-icon">
+                  <span className={icon}></span>
+                </div>
+                <div className="block-text">
+                  <div className="total">
+                    { totalText }
+                  </div>
+                  <div className="price">
+                    { price }
+                  </div>
+                </div>
               </div>
             </CardText>
           </CardBody>

@@ -45,7 +45,7 @@ class Home extends Component {
           <Board total="0.00" icon="icon-userman" title="Today's Sale" route="read"/>
           <Board total="0.00" icon="icon-list" title="Today's Transaction" route="read"/>
           <Board total="0.00" icon="icon-stock" title="Today's Product Sold" route="read"/>
-          <Board total="0.00" icon="icon-customer" title="Total Customers" route="read"/>
+          <Board total="0" icon="icon-customer" title="Total Customers" route="read"/>
         </this.Row>
 
         <this.Row>

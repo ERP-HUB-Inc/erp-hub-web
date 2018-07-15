@@ -7,7 +7,7 @@ export default class Board extends Component {
   }
   render() {
     return (
-      <this.Col md={this.props.grid}>
+      <this.Col lg={this.props.gridLg} md={this.props.gridMd} sm={this.props.gridSm}>
         <this.Cards
           price={this.props.total}
           icon={this.props.icon}
@@ -20,5 +20,7 @@ export default class Board extends Component {
 }
 
 Board.defaultProps = {
-  grid: 3
+  gridLg: 3,
+  gridMd: 6,
+  gridSm: 12
 };
