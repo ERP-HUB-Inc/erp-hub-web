@@ -8,10 +8,6 @@ export default class List extends Component {
     this.onChange = this.onChange.bind(this);
   }
 
-  componentDidMount() {
-    
-  }
-
   onChange(pagination, filters, sorter) {
     console.log("params", pagination, filters, sorter);
   }

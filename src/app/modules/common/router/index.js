@@ -6,7 +6,6 @@ import Headers from "../../common/containers/layout/Header";
 import UserList from "../../common/containers/user";
 import Home from "../../common/containers/home";
 import Component from "../components/Component";
-import ComponentList from "../../common/containers/component";
 import dataSource from "../components/layout/SiderBar/datasource";
 const { Content } = Layout;
 
