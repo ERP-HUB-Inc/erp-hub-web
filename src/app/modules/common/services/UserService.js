@@ -1,8 +1,8 @@
 import BaseService from "./BaseService";
 
 class UserService extends BaseService {
-	lists() {
-		return this.fetchData({ 
+  lists() {
+    return this.fetchData({ 
 	      url: `${this.baseUrl}/user/v1/lists`,
 	      method: "GET",
 	      data: {},
@@ -10,7 +10,7 @@ class UserService extends BaseService {
 	        "Content-Type": "application/json"
 	      }
 	    });
-	}
+  }
 }
 
 export default new UserService();

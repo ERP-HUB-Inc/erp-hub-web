@@ -1,34 +1,12 @@
 import React from "react";
 import { Table } from "antd";
 import reqwest from "reqwest";
-import { Pagination } from "antd";
-
-const columns = [{
-  title: "Name",
-  dataIndex: "name",
-  sorter: true,
-  render: name => `${name.first} ${name.last}`,
-  filters: [
-    { text: "jesus sanz", value: "jesus sanz" },
-    { text: "liliosa da mota", value: "liliosa da mota" },
-  ],
-  width: "20%",
-}, {
-  title: "Gender",
-  dataIndex: "gender",
-  filters: [
-    { text: "Male", value: "male" },
-    { text: "Female", value: "female" },
-  ],
-  width: "20%",
-}, {
-  title: "Email",
-  dataIndex: "email",
-}];
+import columns from "./column";
+import "./index.css";
 
 const pagination = { position: "both" };
 
-export class CTable extends React.Component {
+export default class List extends React.Component {
   
   constructor(props) {
     super(props);
@@ -40,17 +18,12 @@ export class CTable extends React.Component {
     this.handleTableChange = this.handleTableChange.bind(this);
   }
   
-  // get value from column field
   handleTableChange (pagination, filters, sorter)  {
-    console.log("pagination",pagination);
-    console.log("sorter",sorter);
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
     this.setState({
       pagination: pager
     });
-    console.log("field",sorter.field);
-    console.log("Filter:", filters);
     this.fetch({
       results: pagination.pageSize,
       page: pagination.current,
@@ -76,11 +49,8 @@ export class CTable extends React.Component {
 
       const pagination = { ...this.state.pagination };
 
-      // Read total count from server
       pagination.total = data.totalCount;
       pagination.total = 200;
-
-      console.log("pagination",pagination);
 
       this.setState({
         loading: false,
@@ -96,20 +66,25 @@ export class CTable extends React.Component {
   }
 
   render() {
+    const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRows: ", selectedRows);
+      },
+      getCheckboxProps: record => ({
+        disabled: record.name === "Disabled User", // Column configuration not to be checked
+        name: record.name,
+      }),
+    };
     return (
       <div>
         <Table
+          rowSelection={rowSelection}
           columns={columns}
           dataSource={this.state.data}
           pagination={this.state.pagination}
           loading={this.state.loading}
           onChange={this.handleTableChange}
           total={10}
-        />
-
-        <Pagination 
-          defaultCurrent={1} 
-          total={ this.state.total } 
         />
       </div>
     );

@@ -46,7 +46,8 @@ import {
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import "./layout/styles/Style.css";
-import "bootstrap/dist/css/bootstrap.css";
+// import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.css";
 import { Layout, Menu, Icon , Select, Collapse, Checkbox } from "antd";
 const Panel = Collapse.Panel;
@@ -57,7 +58,7 @@ export default class Component extends RComponent {
     super(props);
 
     // Element Ant ui
-    this.Table = () => (<CTable/>);
+    this.Table = CTable;
     this.Modal = () => (<CModal/>);
     this.Header = () => (<Header/>);
     this.Noteicon = () => (<Noteicon/>);

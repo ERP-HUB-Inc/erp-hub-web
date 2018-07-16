@@ -1,4 +1,5 @@
 import React from "react";
+import List from "../../../components/Tax";
 
 export default class Tax extends React.Component {
   constructor(props) {
@@ -6,9 +7,7 @@ export default class Tax extends React.Component {
   }
   render() {
     return (
-      <div>
-        Tax
-      </div>
+      <List />
     );
   }
 }

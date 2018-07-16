@@ -1,14 +1,23 @@
 import React from "react";
+import { connect } from "react-redux";
+import List from "../../../components/PaymentMethod";
+import { fetchPaymentMethods } from "../../../action/paymentMethod";
 
-export default class PaymentMethod extends React.Component {
-  constructor(props) {
-    super(props);
+class PaymentMethod extends React.Component {
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(fetchPaymentMethods());
   }
+
   render() {
     return (
-      <div>
-        Brands
-      </div>
+      <List {...this.props} />
     );
   }
 }
+
+function mapStateToProps(state) {
+  return state.reducer.paymentMethod;
+}
+
+export default connect(mapStateToProps)(PaymentMethod);

@@ -1,18 +1,13 @@
-import logger from "redux-logger";
+import { createLogger } from "redux-logger";
 import thunk from "redux-thunk";
-import rootReducer from "../reducers";
-import { createStore, applyMiddleware } from "redux";
+import { reducer as form } from "redux-form";
+import promise from "redux-promise-middleware";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+import { localeReducer as locale, } from "react-localize-redux";
+import reducer from "../reducers";
 
-export default function configureStore(initialState) {
-  const middlewares = [];
-  if (process.env.NODE_ENV !== "production") {
-    middlewares.push(logger);
-  }
-  middlewares.push(thunk);
-  const store = createStore(
-    rootReducer,
-    initialState,
-    applyMiddleware(...middlewares)
-  );
-  return store;
-}
+const middlewar = applyMiddleware(promise(), thunk, createLogger());
+
+const configureStore = () => createStore(combineReducers({ locale, reducer, form }), middlewar);
+
+export default configureStore;

@@ -1,7 +1,7 @@
 import React from "react";
 import Component from "../../components/Component";
 import ListCollapse from "./page/Panel";
-import { CTable as Table } from "./page/Table/";
+import { CTable as Table } from "./page/Table";
 import { reduxForm } from "redux-form"; 
 import Manuitem from "../../components/layout/SiderBar/MenuItem";
 
@@ -10,9 +10,7 @@ class UserList extends Component {
     const { handleSubmit } = this.props;
     return (
       <div className="manitem">
-        <this.BreadcrumbLayout
-          titleNow="Transactions"
-        >
+        <this.BreadcrumbLayout titleNow="Transactions">
           {
             Manuitem.map((value,key) => {	
               return(
@@ -95,12 +93,10 @@ class UserList extends Component {
                   <this.Col xs="12" md="2">
                     <this.ActionButton  icon="search" />
                   </this.Col>
-          
                 </this.Row>
               </form>
             </div>
           </this.Col>
-         
           <this.Col md="12">  
             <ListCollapse/>
           </this.Col>
