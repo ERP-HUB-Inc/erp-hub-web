@@ -77,7 +77,6 @@ html {
 }
 
 .ant-layout-content {
-    margin: 24px 16px;
     padding: 24px;
     background:#F7F7F7;
     min-height: 280px;
@@ -89,7 +88,7 @@ html {
 }
 
 .ant-layout-content {
-    margin-top: 77px;
+    margin-top: 50px;
     margin-left: 90px
 }
 
@@ -161,17 +160,6 @@ tr:nth-child(odd) {
 .ant-table-body table tr td {
     border-bottom: none;
     color: #4D4F5C;
-}
-
-/* home page  */
-.dashboard ul {
-    padding: 0;
-}
-
-.dashboard ul li {
-    list-style-type: none;
-    float: left;
-    margin-right: 16px;
 }
 
 .ant-table-body tr th {

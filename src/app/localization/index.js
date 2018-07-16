@@ -8,7 +8,7 @@ export default class Localization {
   constructor(store) {
     store.dispatch(initLanguage());
     store.dispatch(setTranslation());
-    store.dispatch(setActiveLanguage("fr"));
+    store.dispatch(setActiveLanguage("en"));
     return store;
   }
 }

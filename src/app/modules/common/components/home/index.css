@@ -1,0 +1,15 @@
+.dashboard ul {
+    padding-left: 0;
+    margin-bottom: 0;
+    padding-top: 20px;
+    padding-bottom: 20px
+}
+
+.dashboard ul li {
+    list-style-type: none;
+    display: inline-block
+}
+
+.dashboard ul li h4 {
+    margin-bottom: 0
+}

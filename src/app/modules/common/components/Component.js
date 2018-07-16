@@ -1,5 +1,5 @@
 import React, { Component as RComponent } from "react";
-import { Translate, setActiveLanguage } from "react-localize-redux";
+import { Translate, setActiveLanguage, getActiveLanguage } from "react-localize-redux";
 import { Field } from "redux-form";
 import { connect } from "react-redux";
 import 
@@ -131,5 +131,9 @@ export default class Component extends RComponent {
 
   changeLanguage(key) {
     return setActiveLanguage(key);
+  }
+
+  getCurrentLanguage(state) {
+    return getActiveLanguage(state);
   }
 }

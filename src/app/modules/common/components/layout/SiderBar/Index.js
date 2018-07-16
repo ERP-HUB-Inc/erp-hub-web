@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import dataSource from "./datasource";
 import "./index.css";
 
@@ -15,6 +16,8 @@ export default class SideBar extends React.Component {
     this.handleHidden = this.handleHidden.bind(this);
     this.handleHoverOnSubMenu = this.handleHoverOnSubMenu.bind(this);
     this.handleLeaveFromSubMenu = this.handleLeaveFromSubMenu.bind(this);
+    this.menuParentItem = this.menuParentItem.bind(this);
+    this.subMenuItem = this.subMenuItem.bind(this);
   }
 
   handleShow(menu) {
@@ -52,32 +55,35 @@ export default class SideBar extends React.Component {
     oldElement.classList.remove("hover");
   }
 
+  menuParentItem(key, title, icon) {
+    return (
+      <li key={key} id={title} className="sidebar-menu-item" onMouseEnter={() => this.handleShow(title)}  onMouseLeave={() => this.handleHidden()}>
+        <a href=""><span className={icon}></span></a>
+      </li>
+    );
+  }
+
+  subMenuItem(key, route, title, icon) {
+    return (
+      <li key={key}>
+        <Link to={ route }>
+          <div className="icon item"><span className={icon}></span></div>
+          <div className="item-text item">{title}</div>
+        </Link>
+      </li>
+    );
+  }
+
   render() {
     const subMenuItemTitle = Object.keys(this.state.menuItems);
     return (
       <div>
         <div id="sidebar">
           <ul className="list-unstyled text-center">
-            <li className="active"><a href="#"><span className="icon-home"></span></a></li>
-            <li id="transactions" className="sidebar-menu-item" onMouseEnter={() => this.handleShow("transactions")}  onMouseLeave={() => this.handleHidden()}>
-              <a href="#"><span className="icon-list"></span></a>
-            </li>
-            <li id="products" className="sidebar-menu-item" onMouseEnter={() => this.handleShow("products")} onMouseLeave={() => this.handleHidden()}>
-              <a href="#"><span className="icon-items"></span></a>
-            </li>
-            <li id="stock" className="sidebar-menu-item" onMouseEnter={() => this.handleShow("stock")} onMouseLeave={() => this.handleHidden()}>
-              <a href="#"><span className="icon-stock"></span></a>
-            </li>
-            <li onMouseEnter={() => this.handleShow("customer")} onMouseLeave={() => this.handleHidden()}>
-              <a href="#"><span className="icon-customer"></span></a>
-            </li>
-            <li onMouseEnter={() => this.handleShow("employee")} onMouseLeave={() => this.handleHidden()}><a href="#"><span className="icon-employee"></span></a></li>
-            <li onMouseEnter={() => this.handleShow("report")} onMouseLeave={() => this.handleHidden()}>
-              <a href="#"><span className="icon-reports"></span></a>
-            </li>
-            <li onMouseEnter={() => this.handleShow("setting")} onMouseLeave={() => this.handleHidden()}>
-              <a href="#"><span className="icon-settings"></span></a>
-            </li>
+            <li className="active"><Link to="/"><span className="icon-home"></span></Link></li>
+            {
+              Object.keys(this.state.dataSource).map((parentKey, parentIndex) => this.menuParentItem(parentIndex, parentKey, this.state.dataSource[parentKey]["icon"]))
+            }
           </ul>
           <div id="sum-menu" className={this.state.classToggle} onMouseEnter={() => this.handleHoverOnSubMenu()} onMouseLeave={() => this.handleLeaveFromSubMenu()}>
             { 
@@ -87,7 +93,7 @@ export default class SideBar extends React.Component {
                   <div className="title text-center text-uppercase">{subMenuItemTitle}</div>
                   <ul className="list-unstyled text-left text-uppercase">
                     {
-                      this.state.menuItems[subMenuItemTitle].map((menu, key) => <li key={key}><a href="#"><span className={menu["icon"]}></span><span className="item-text">{menu["title"]}</span></a></li>)
+                      this.state.menuItems[subMenuItemTitle]["subItems"].map((menu, key) => this.subMenuItem(key, menu["route"], menu["title"], menu["icon"]))
                     }
                   </ul>
                 </div>
@@ -95,6 +101,7 @@ export default class SideBar extends React.Component {
                 ""
             }
           </div>
+          <div id="version">V1.0.0</div>
         </div>
       </div>
     );
