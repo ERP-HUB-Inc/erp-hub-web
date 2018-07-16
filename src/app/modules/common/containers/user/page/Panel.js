@@ -30,10 +30,10 @@ class ListCollapse extends Component {
                     </div>
                   </this.Col>
                   <this.Col xs="4" md="2">
-                    <div>
-                      <this.TrashButton
-                      
-                      />
+                    <div className="trash">
+                      <this.Link to={ "#" }>  
+                        <span className="icon-bin"></span>
+                      </this.Link>
                     </div>
                   </this.Col>
                 </this.Row>
@@ -79,22 +79,29 @@ class ListCollapse extends Component {
             header={
               <div>
                 <div className="collapse-title">
-                    MYDBSH Cotton V-neck t shirt
+                  MYDBSH Cotton V-neck t shirt
                 </div>
                 <this.Row className="collapse-header">
-                  <this.Col xs="4" md="6">
+                  <this.Col xs="4" md="4">
                     <div className="specification">
-                        SKU: 32572725521 Categories: FOR MEN, T-Shirts For Men, Tops & Shirts
+                      SKU: 32572725521 Categories: FOR MEN, T-Shirts For Men, Tops & Shirts
                     </div>
                   </this.Col>
                   <this.Col xs="4" md="3">
                     <div className="collapse-price">
-                        4
+                      4
                     </div>
                   </this.Col>
                   <this.Col xs="4" md="3">
                     <div className="collapse-price">
-                        $11.32
+                      $11.32
+                    </div>
+                  </this.Col>
+                  <this.Col xs="4" md="2">
+                    <div className="trash">
+                      <this.Link to={ "#" }>  
+                        <span className="icon-bin"></span>
+                      </this.Link>
                     </div>
                   </this.Col>
                 </this.Row>
