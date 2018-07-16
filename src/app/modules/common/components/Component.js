@@ -44,7 +44,10 @@ import {
   Label,
   FormText
 } from "reactstrap";
-import { NavLink } from "react-router-dom";
+import { 
+  NavLink,
+  Link 
+} from "react-router-dom";
 import "./layout/styles/Style.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "font-awesome/css/font-awesome.css";
@@ -90,6 +93,7 @@ export default class Component extends RComponent {
     this.DropdownToggle = DropdownToggle;
     this.DropdownMenu = DropdownMenu;
     this.NavLink = NavLink;
+    this.Link = Link;
     this.Breadcrumb = Breadcrumb;
     this.BreadcrumbTitle = BreadcrumbTitle;
     this.BreadcrumbLayout = BreadcrumbLayout;
