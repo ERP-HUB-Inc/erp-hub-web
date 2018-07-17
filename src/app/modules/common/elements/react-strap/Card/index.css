@@ -10,6 +10,10 @@
     margin-bottom: 10px
 }
 
+.wrap-card .block-icon {
+    text-align: right;
+}
+
 .wrap-card .card {
     border: 1px solid #EAEAEA;
 }
@@ -31,11 +35,6 @@
     width: 200px;
     margin: 0 auto
 }
-
-/* .clear-margin {
-    margin: 0 !important;
-    padding: 0 !important;
-} */
 
 .wrap-card [class^="icon-"] {
     color: #0D62AF; 

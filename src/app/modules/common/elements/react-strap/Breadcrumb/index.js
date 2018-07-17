@@ -55,7 +55,8 @@ BreadcrumbLayout.propTypes = {
 
 Breadcrumb.propTypes = {
   nextPage: PropTypes.string,
-  to: PropTypes.string
+  to: PropTypes.string,
+  key: PropTypes.bool
 };
 
 BreadcrumbTitle.propTypes = {

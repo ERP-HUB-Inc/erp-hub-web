@@ -18,7 +18,7 @@ export default class MenuDropDown extends Component {
     this.menuLanguage = (
       <Menu>
         {
-          this.props.localization.languages.map((local, key) => <Menu.Item onClick={() => this.props.onSwitchLanguage(local.code)}>{local.name}</Menu.Item>)
+          this.props.localization.languages.map((local, key) => <Menu.Item key={ key } onClick={() => this.props.onSwitchLanguage(local.code)}>{local.name}</Menu.Item>)
         }
       </Menu>
     );
