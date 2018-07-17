@@ -14,7 +14,8 @@ class TaxService extends BaseService {
 	      method: "GET",
 	      data: {},
 	      headers: {
-	        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMDAwMDAwMS0wMDAxLTIwMTgtMDAwMS0wMDAwMDAwMSIsImlhdCI6MTUzMTcyMTIzMX0.JPOJSNqCPXWeAFkBfkdSULvTPI6TIXW6LYmJRWUDyL4"
 	      }
 	    });
   }

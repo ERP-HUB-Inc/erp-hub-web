@@ -3,12 +3,12 @@ import ProductList from "../containers/ProductList";
 import AddProduct from "../containers/AddProduct";
 
 export default class App extends Component {
-    render() {
-        return (
-            <div>
-                <AddProduct/>
-                <ProductList />
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div>
+        <AddProduct/>
+        <ProductList />
+      </div>
+    );
+  }
 }

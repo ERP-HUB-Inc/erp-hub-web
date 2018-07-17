@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import List from "../../../components/PaymentMethod";
-import { fetchPaymentMethods } from "../../../action/paymentMethod";
+import List from "../../../components/settings/PaymentMethod";
+import { fetchPaymentMethods } from "../../../action/settings/paymentMethod";
 
 class PaymentMethod extends React.Component {
   componentDidMount() {

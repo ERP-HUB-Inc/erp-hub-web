@@ -1,14 +1,17 @@
 import React from "react";
+import { connect } from "react-redux";
+import List from "../../../components/settings/StoreAccount";
 
-export default class StoreAccount extends React.Component {
+class StoreAccount extends React.Component {
   constructor(props) {
     super(props);
   }
   render() {
     return (
-      <div>
-        Store Account
-      </div>
+      <List {...this.props} />
     );
   }
 }
+
+
+export default connect()(StoreAccount);

@@ -1,14 +1,16 @@
 import React from "react";
+import { connect } from "react-redux";
+import List from "../../../components/settings/RoleAccess";
 
-export default class RoleAccess extends React.Component {
+class RoleAccess extends React.Component {
   constructor(props) {
     super(props);
   }
   render() {
     return (
-      <div>
-        Role Access
-      </div>
+      <List {...this.props} />
     );
   }
 }
+
+export default connect()(RoleAccess);

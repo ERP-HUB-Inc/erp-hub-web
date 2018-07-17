@@ -1,5 +1,5 @@
 import React from "react";
-import Component from "../Component";
+import Component from "../../Component";
 import columns from "./column";
 
 export default class List extends Component {
@@ -14,7 +14,9 @@ export default class List extends Component {
 
   render() {
     return (
-      <this.Table columns={columns} dataSource={this.props.paymentMethods.data} onChange={this.onChange} loading={this.props.fetching}/>
+      <div>
+        <this.Table columns={columns} dataSource={this.props.paymentMethods.data} onChange={this.onChange} loading={this.props.fetching}/>
+      </div>
     );
   }
 }

@@ -1,7 +1,7 @@
 const users = {
-    "col-header-position": [
-        "Position",
-        "តួនាទី",
-        "PosItion"
-    ]
+  "col-header-position": [
+    "Position",
+    "តួនាទី",
+    "PosItion"
+  ]
 };

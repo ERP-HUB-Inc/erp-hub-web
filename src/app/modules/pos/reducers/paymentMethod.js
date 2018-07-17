@@ -2,7 +2,7 @@ import {
   REQUEST_PAYMENT_METHOD_PENDING,
   REQUEST_PAYMENT_METHOD_REJECTED,
   REQUEST_PAYMENT_METHOD_FULFILLED
-} from "../constants/paymentMethod";
+} from "../constants/settings/paymentMethod";
 import initialState from "../../common/reducers/initialState";
 
 const paymentMethod = (state = initialState("paymentMethods"), action) => {
