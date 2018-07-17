@@ -44,6 +44,7 @@ export class CTable extends React.Component {
   handleTableChange (pagination, filters, sorter)  {
     console.log("pagination",pagination);
     console.log("sorter",sorter);
+    console.log("filter:", filters);
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
     this.setState({

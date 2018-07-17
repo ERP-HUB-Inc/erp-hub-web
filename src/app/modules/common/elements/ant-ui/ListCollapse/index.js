@@ -5,11 +5,6 @@ import "./index.css";
 const Panel = Collapse.Panel;
 
 export class ListCollapse extends Component {
-
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <Collapse accordion >

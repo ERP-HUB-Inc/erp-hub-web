@@ -1,0 +1,51 @@
+.ant-table-content {
+    margin-top: 15px
+}
+
+.ant-table-fixed .ant-table-thead tr th {
+    padding-top: 7px;
+    padding-bottom: 8px
+}
+
+.ant-table-body-inner table tr td {
+    text-align: center
+}
+
+.ant-table-body-inner table tr td a {
+    text-decoration: none;
+    text-align: center
+} 
+
+.ant-table-content,
+.ant-table-fixed .ant-table-thead tr th {
+    border-top: 0.5px solid #EAEAEA
+}
+
+.ant-table-body table tr th, 
+.ant-table-fixed .ant-table-thead tr th {
+    background-color: #F7F7F7; 
+}
+
+tr:nth-child(odd) {
+    background-color: #ECECEC;
+}
+
+.ant-table-body table tr td {
+    color: #4D4F5C;
+    font-size: 8pt;
+}
+
+.ant-table-tbody > tr > td {
+    border-bottom: none
+}
+
+.ant-table-tbody > tr > td {
+    padding: 12px 16px 
+}
+
+
+.ant-table-body table tr th,
+.ant-table-body-inner table tr th {
+    font-size: 11pt;
+    text-transform: uppercase;
+}

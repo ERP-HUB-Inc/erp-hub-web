@@ -3,9 +3,9 @@ import {
 	REQUEST_USERS_REJECTED,
 	REQUEST_USERS_FULFILLED
 } from "../constants/users";
-import initialState from "./initialState";
+import InitialState from "./initialState";
 
-const user = (state = initialState("users"), action) => {
+const user = (state = InitialState.request("users"), action) => {
 	switch(action.type) {
 	  case REQUEST_USERS_PENDING: {
 			return {

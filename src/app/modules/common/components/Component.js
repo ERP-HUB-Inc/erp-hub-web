@@ -35,7 +35,6 @@ import {
   Col,
   Row,
   Form,
-  Button,
   Dropdown, 
   DropdownItem, 
   DropdownToggle, 
@@ -52,7 +51,17 @@ import "./layout/styles/Style.css";
 // import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.css";
-import { Layout, Menu, Icon , Select, Collapse, Checkbox } from "antd";
+import {
+  Layout,
+  Menu,
+  Icon,
+  Select,
+  Collapse,
+  Checkbox,
+  Button,
+  Popconfirm,
+  message
+} from "antd";
 const Panel = Collapse.Panel;
 const { Option } = Select;
 
@@ -62,6 +71,9 @@ export default class Component extends RComponent {
 
     // Element Ant ui
     this.Table = CTable;
+    this.Button = Button;
+    this.Message = message;
+    this.Popconfirm = Popconfirm;
     this.Modal = () => (<CModal/>);
     this.Header = () => (<Header/>);
     this.Noteicon = () => (<Noteicon/>);
@@ -88,7 +100,6 @@ export default class Component extends RComponent {
     this.Row = Row;
     this.InputRedux = InputRedux;
     this.Form = Form;
-    this.Button = Button;
     this.Dropdown = Dropdown;
     this.DropdownItem = DropdownItem;
     this.DropdownToggle = DropdownToggle;

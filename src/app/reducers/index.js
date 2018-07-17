@@ -1,10 +1,11 @@
 import { combineReducers } from "redux";
 import user from "../modules/common/reducers/user";
-import paymentMethod from "../modules/pos/reducers/paymentMethod";
+import PaymentMethod from "../modules/pos/reducers/paymentMethod";
 
 const reducer = combineReducers({ 
   user,
-  paymentMethod
+  paymentMethod: PaymentMethod.request,
+  paymentMethodArchive: PaymentMethod.archive,
 });
 
 export default reducer;

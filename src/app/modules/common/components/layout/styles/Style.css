@@ -15,6 +15,7 @@ table  tr td .current,
 table tr td .list-code,
 .main-input::placeholder,
 .ant-table-body table tr th,
+.ant-table-body-inner table tr th,
 .main-collapse .ant-collapse-header .specification,
 .main-collapse .ant-collapse-header i.arrow
 {
@@ -146,29 +147,6 @@ html {
     background-color: #0D62AF !important;
     color: white;
     border-color: none;
-}
-
-/* table */
-.ant-table-body table tr th {
-    background-color: #F7F7F7; 
-}
-
-tr:nth-child(odd) {
-    background-color: #ECECEC;
-}
-
-.ant-table-body table tr td {
-    border-bottom: none;
-    color: #4D4F5C;
-}
-
-.ant-table-body tr th {
-    font-size: 11pt;
-    text-transform: uppercase;
-}
-
-.ant-table-body tr td {
-    font-size: 8pt;
 }
 
 /* auto complete */

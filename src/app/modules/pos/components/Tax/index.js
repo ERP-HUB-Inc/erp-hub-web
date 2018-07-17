@@ -35,13 +35,13 @@ export default class List extends React.Component {
   }
 
   fetch (params = {}) {
+    console.log("Params:", params);
     this.setState({ loading: true });
     reqwest({
       url: "https://randomuser.me/api",
       method: "get",
       data: {
         results: 10,
-        page:2,
         ...params,
       },
       type: "json",
@@ -75,6 +75,7 @@ export default class List extends React.Component {
         name: record.name,
       }),
     };
+    console.log("Pagination:", this.state.pagination);
     return (
       <div>
         <Table
@@ -84,7 +85,6 @@ export default class List extends React.Component {
           pagination={this.state.pagination}
           loading={this.state.loading}
           onChange={this.handleTableChange}
-          total={10}
         />
       </div>
     );

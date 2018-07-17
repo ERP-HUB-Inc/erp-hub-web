@@ -58,7 +58,7 @@ export default class SideBar extends React.Component {
   menuParentItem(key, title, icon) {
     return (
       <li key={key} id={title} className="sidebar-menu-item" onMouseEnter={() => this.handleShow(title)}  onMouseLeave={() => this.handleHidden()}>
-        <a href=""><span className={icon}></span></a>
+        <a href="javascript:;"><span className={icon}></span></a>
       </li>
     );
   }

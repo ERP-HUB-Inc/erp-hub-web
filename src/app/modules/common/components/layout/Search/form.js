@@ -4,11 +4,6 @@ import PropTypes from "prop-types";
 import { reduxForm } from "redux-form"; 
 
 class FormSearch extends Component {
-
-  constructor(props) {
-    super(props);
-  }
-
   render(){
     const { handleSubmit } = this.props;
     return(
