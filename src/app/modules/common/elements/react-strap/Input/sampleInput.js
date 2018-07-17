@@ -25,7 +25,7 @@ export class SapleInput extends Component {
       placeholder,
       type,
       meta: {
-        touched, error, warning, valid
+        touched, error, warning
       }
     } = this.props;
     return (

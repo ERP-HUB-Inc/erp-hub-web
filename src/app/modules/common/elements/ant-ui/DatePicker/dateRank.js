@@ -28,7 +28,7 @@ export class DateRank extends Component {
             help = 
               {touched && 
                ((
-                 error && <span>{error}</span> || warning && <span>{warning}</span>
+                 (error && <span>{error}</span>) || (warning && <span>{warning}</span>)
                ))
               }
           >

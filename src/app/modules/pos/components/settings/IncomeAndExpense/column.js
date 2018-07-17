@@ -1,5 +1,3 @@
-import React from "react";
-
 export default [{
   title: "Name",
   dataIndex: "name",

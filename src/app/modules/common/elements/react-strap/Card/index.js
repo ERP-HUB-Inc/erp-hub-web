@@ -12,8 +12,7 @@ export class Cards extends Component {
       icon,
       totalText,
       price,
-      to,
-      unit
+      to
     } = this.props;
     return(
       <div className="wrap-card">   

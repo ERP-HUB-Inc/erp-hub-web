@@ -24,12 +24,11 @@ export default class MenuDropDown extends Component {
     );
   }
 
-  // TEST HELLO WORLD
   render() {
     return(
       <ul className="menu-left list-unstyled">
         <li>
-          <a className="user-account" href="#">
+          <a className="user-account" href="javascript:;">
             <this.Noteicon />
           </a>
         </li>
@@ -41,7 +40,7 @@ export default class MenuDropDown extends Component {
         </li>
         <li>
           <Dropdown overlay={this.menu} trigger={["click"]}>
-            <a className="ant-dropdown-link user-account" href="#">
+            <a className="ant-dropdown-link user-account" href="javascript:;">
               <span className="icon-user icon-padding-right"></span>
               <span className="title"><this.Translate id="text_user_account"/></span> 
               <span className="icon-move-down icon-padding-left"></span>
@@ -50,7 +49,7 @@ export default class MenuDropDown extends Component {
         </li>
         <li>
           <Dropdown overlay={this.menuLanguage} trigger={["click"]}>
-            <a className="ant-dropdown-link user-account" href="#">
+            <a className="ant-dropdown-link user-account" href="javascript:;">
               <span className="icon-change icon-padding-right"></span>
               <span className="title">{this.props.currentLanguage.name}</span> 
               <span className="icon-move-down icon-padding-left"></span>

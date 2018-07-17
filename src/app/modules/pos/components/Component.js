@@ -10,7 +10,7 @@ export default class CComponent extends Component {
   }
 
   sortOrder(order) {
-    if (order == "descend") {
+    if (order === "descend") {
       return "DESC";
     } else {
       return "ASC";

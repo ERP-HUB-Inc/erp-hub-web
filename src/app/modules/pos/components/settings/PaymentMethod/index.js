@@ -52,6 +52,7 @@ export default class List extends Component {
 
     return (
       <div>
+        <this.Button type="danger">Danger</this.Button>
         <this.Table
           rowSelection={rowSelection}
           dataSource={this.props.paymentMethods.data}

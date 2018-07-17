@@ -1,6 +1,6 @@
 
 import React from "react";
-import Element, { ReduxForm } from "../../common/Element";
+import Element from "../../common/Element";
 
 class TextInput extends Element {
 
@@ -10,14 +10,7 @@ class TextInput extends Element {
       validateStatus: "",
       success:""
     };
-    // this.handleChange = this.handleChange.bind(this);
   }
-
-  // handleChange(e){
-  //   this.props.handleChange();
-  //   const value = e.target.value;
-  //   this.setState({value});
-  // }
 
   render() {
     const {
@@ -27,7 +20,6 @@ class TextInput extends Element {
       meta: { touched, error, warning },
       placeholder
     } = this.props;
-    const { value } = this.state;
 
     return (
       <div>
@@ -41,7 +33,7 @@ class TextInput extends Element {
             help = 
               {touched && 
                 ((
-                  error && <span>{error}</span> || warning && <span>{warning}</span>
+                  (error && <span>{error}</span>) || (warning && <span>{warning}</span>)
                 ))
               }
           >
