@@ -1,8 +1,8 @@
 import {
   REQUEST_PAYMENT_METHOD,
   ARCHIVE_PAYMENT_METHOD
-} from "../constants/paymentMethod";
-import PaymentMethodService from "../services/settings/PaymentMethodService";
+} from "../../constants/settings/paymentMethod";
+import PaymentMethodService from "../../services/settings/PaymentMethodService";
 
 export default {
   fetchPaymentMethods: (limit, offset, sortField, sortOrder) => {

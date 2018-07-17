@@ -1,14 +1,16 @@
 import React from "react";
+import { connect } from "react-redux";
+import List from "../../../components/settings/ReceiptTemplate";
 
-export default class ReceiptTemplate extends React.Component {
+class ReceiptTemplate extends React.Component {
   constructor(props) {
     super(props);
   }
   render() {
     return (
-      <div>
-        Brands
-      </div>
+      <List {...this.props} />
     );
   }
 }
+
+export default connect()(ReceiptTemplate);

@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import List from "../../../components/PaymentMethod";
+import List from "../../../components/settings/PaymentMethod";
 
 class PaymentMethod extends React.Component {
   render() {

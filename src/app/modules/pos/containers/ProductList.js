@@ -4,15 +4,15 @@ import { addProduct } from "../action";
 
 // write as a function
 const mapStateToProps = state => ({ 
-   products: state.products 
-  });
+  products: state.products 
+});
 
 const mapDispatchToProps = dispatch => {
-    return {
-      todoOnClick: name => {
-        dispatch(addProduct(name));
-      }
-    };
+  return {
+    todoOnClick: name => {
+      dispatch(addProduct(name));
+    }
+  };
 };
 
 // write as a function style 2

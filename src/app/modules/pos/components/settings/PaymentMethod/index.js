@@ -1,7 +1,7 @@
 import React from "react";
-import Component from "../Component";
+import Component from "../../Component";
 import columns from "./column";
-import PaymentMethod from "../../action/paymentMethod";
+import PaymentMethod from "../../../action/settings/paymentMethod";
 
 export default class List extends Component {
   constructor(props) {
@@ -32,7 +32,7 @@ export default class List extends Component {
   confirm() {
     const { dispatch } = this.props;
     dispatch(PaymentMethod.archivePaymentMethods(1234));
-    this.Message.info('Click on Yes.' + this.state.selectedRowKeys);
+    this.Message.info("Click on Yes." + this.state.selectedRowKeys);
   }
 
   render() {
@@ -52,16 +52,13 @@ export default class List extends Component {
 
     return (
       <div>
-        <this.Popconfirm placement="topLeft" title={this.confirmTextDelete} onConfirm={this.confirm} okText={this.okText} cancelText={this.cancelText}>
-          <this.Button type="danger"><span class="icon-bin icon-padding-right"></span>Delete</this.Button>
-        </this.Popconfirm>
         <this.Table
-          rowSelection={rowSelection} 
-          columns={columns}
+          rowSelection={rowSelection}
           dataSource={this.props.paymentMethods.data}
-          loading={this.props.fetching} 
+          columns={columns}
+          pagination={pagination}
           onChange={this.onChange} 
-          pagination={pagination}/>
+          loading={this.props.fetching}/>
       </div>
     );
   }

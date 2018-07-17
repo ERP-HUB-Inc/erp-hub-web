@@ -13,7 +13,7 @@ class FormSearch extends Component {
           name="generalsearch"
           type="text"
           component="input"
-          class="form-control"
+          className="form-control"
           placeholder="Search Transaction Invoice or help"
         />
       </this.Form>

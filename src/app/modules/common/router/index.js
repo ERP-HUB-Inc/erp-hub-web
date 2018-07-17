@@ -52,7 +52,11 @@ export default class Router extends Component {
         <Content onClick={ this.Content } className={ layoutContent }>
           <Switch>
             {
-              Object.keys(dataSource).map((key, index) => dataSource[key]["subItems"].map(value => <Route path={value["route"]} name="Create" component={value["component"]} />))
+              Object.keys(dataSource).map((key) => 
+                dataSource[key]["subItems"].map(value =>
+                  <Route path={value["route"]} name="Create" component={value["component"]} />
+                )
+              )
             }
             <Route path="/test-component" name="Create" component={ UserList }></Route>
             <Route path="/" name="Create" component={ Home } />

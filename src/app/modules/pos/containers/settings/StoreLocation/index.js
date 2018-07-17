@@ -1,14 +1,17 @@
 import React from "react";
+import { connect } from "react-redux";
+import List from "../../../components/settings/StoreLocation";
 
-export default class StoreLocation extends React.Component {
+class StoreLocation extends React.Component {
   constructor(props) {
     super(props);
   }
   render() {
     return (
-      <div>
-        Store Location
-      </div>
+      <List {...this.props} />
     );
   }
 }
+
+
+export default connect()(StoreLocation);

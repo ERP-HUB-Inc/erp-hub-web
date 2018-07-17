@@ -1,14 +1,17 @@
 import React from "react";
+import { connect } from "react-redux";
+import List from "../../../components/settings/IncomeAndExpense";
 
-export default class IncomeAndExpense extends React.Component {
+class IncomeAndExpense extends React.Component {
   constructor(props) {
     super(props);
   }
   render() {
     return (
-      <div>
-        Income And Expense
-      </div>
+      <List {...this.props} />
     );
   }
 }
+
+
+export default connect()(IncomeAndExpense);
