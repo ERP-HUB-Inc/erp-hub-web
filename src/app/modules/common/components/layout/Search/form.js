@@ -1,7 +1,7 @@
 import React from "react";
 import Component from "../../Component";
 import PropTypes from "prop-types";
-import { reduxForm } from "redux-form"; 
+import { reduxForm } from "redux-form";
 
 class FormSearch extends Component {
   render(){
