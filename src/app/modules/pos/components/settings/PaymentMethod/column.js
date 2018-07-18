@@ -1,10 +1,12 @@
 export default [{
   title: "Name",
   dataIndex: "name",
-  sorter: true
+  key: "name",
+  sorter: true,
 }, {
   title: "Description",
   dataIndex: "description",
+  key: "description",
   sorter: true
 }
 ];

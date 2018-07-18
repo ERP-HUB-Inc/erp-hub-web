@@ -2,27 +2,11 @@
     margin-top: 15px
 }
 
-.ant-table-fixed .ant-table-thead tr th {
-    padding-top: 7px;
-    padding-bottom: 8px
-}
-
-.ant-table-body-inner table tr td {
-    text-align: center
-}
-
-.ant-table-body-inner table tr td a {
-    text-decoration: none;
-    text-align: center
-} 
-
-.ant-table-content,
-.ant-table-fixed .ant-table-thead tr th {
+.ant-table-content{
     border-top: 0.5px solid #EAEAEA
 }
 
-.ant-table-body table tr th, 
-.ant-table-fixed .ant-table-thead tr th {
+.ant-table-body table tr th {
     background-color: #F7F7F7; 
 }
 
@@ -43,6 +27,9 @@ tr:nth-child(odd) {
     padding: 12px 16px 
 }
 
+.ant-table-thead > tr > th {
+    padding: 10px 16px;
+}
 
 .ant-table-body table tr th,
 .ant-table-body-inner table tr th {

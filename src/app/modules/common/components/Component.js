@@ -48,7 +48,6 @@ import {
   Link 
 } from "react-router-dom";
 import "./layout/styles/Style.css";
-// import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.css";
 import {
@@ -117,9 +116,6 @@ export default class Component extends RComponent {
     this.ListSearch = ListSearch;
     this.Badges = Badges;
     this.AutoComplete = AutoComplete;
-    
-    //Redux
-    // this.Field = Field;
 
     //Ant
     this.Layout = Layout;

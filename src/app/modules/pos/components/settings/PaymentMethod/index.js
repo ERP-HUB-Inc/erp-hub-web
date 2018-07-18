@@ -7,9 +7,13 @@ export default class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedRowKeys: []
+      filter: {},
+      current: 0,
+      selectedRowKeys: [],
+      selectedListIds: []
     };
     this.onChange = this.onChange.bind(this);
+    this.onSelectChange = this.onSelectChange.bind(this);
     this.confirm = this.confirm.bind(this);
   }
 
@@ -26,23 +30,33 @@ export default class List extends Component {
       sorter.field,
       this.sortOrder(sorter.order)
     ];
+    this.setState({current: pagination.current});
     dispatch(PaymentMethod.fetchPaymentMethods(...filter));
   }
 
   confirm() {
     const { dispatch } = this.props;
-    dispatch(PaymentMethod.archivePaymentMethods(1234));
-    this.Message.info("Click on Yes." + this.state.selectedRowKeys);
+
+    dispatch(PaymentMethod.archivePaymentMethods(this.state.selectedListIds));
+
+    this.Message.info("Success");
+
+    dispatch(PaymentMethod.fetchPaymentMethods(this.pageSize, this.state.current));
+    
+    this.setState({selectedRowKeys: []});
+  }
+
+  onSelectChange(selectedRowKeys, selectedRows) {
+    this.setState({
+      selectedListIds: this.mapSelectedListIds(selectedRows),
+      selectedRowKeys
+    });
   }
 
   render() {
     const rowSelection = {
-      onChange: (selectedRowKeys, selectedRows) => {
-        this.setState({
-          selectedRowKeys
-        });
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRows: ", selectedRows);
-      }
+      selectedRowKeys: this.state.selectedRowKeys,
+      onChange: this.onSelectChange
     };
 
     const pagination = {
@@ -52,7 +66,10 @@ export default class List extends Component {
 
     return (
       <div>
-        <this.Button type="danger">Danger</this.Button>
+        <this.Button type="primary" className="mg-right"><span className="icon-add icon-padding-right"></span>Add</this.Button>
+        <this.Popconfirm placement="topLeft" title={this.confirmTextDelete} onConfirm={this.confirm} okText={this.okText} cancelText={this.cancelText}>
+          <this.Button type="danger"><span className="icon-bin icon-padding-right"></span>Delete</this.Button>
+        </this.Popconfirm>
         <this.Table
           rowSelection={rowSelection}
           dataSource={this.props.paymentMethods.data}
