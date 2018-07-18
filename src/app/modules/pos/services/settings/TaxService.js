@@ -8,17 +8,33 @@ class TaxService extends BaseService {
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 
-  lists() {
+  lists(
+    limit, 
+    offset, 
+    sortField, 
+    sortOrder
+  ) {
     return this.fetchData({ 
-	      url: `${this.baseUrl}/lists`,
+	      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}`,
 	      method: "GET",
-	      data: {},
-	      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMDAwMDAwMS0wMDAxLTIwMTgtMDAwMS0wMDAwMDAwMSIsImlhdCI6MTUzMTcyMTIzMX0.JPOJSNqCPXWeAFkBfkdSULvTPI6TIXW6LYmJRWUDyL4"
-	      }
+	      data: this.data,
+	      headers: this.header
 	    });
   }
+
+
+  archive(ids) {
+    return this.fetchData({ 
+      url: `${this.baseUrl}/archive/${ids}`,
+      method: "DELETE",
+      data: this.data,
+      headers: this.header
+    });
+  }
+
 }
+
+
+
 
 export default new TaxService();

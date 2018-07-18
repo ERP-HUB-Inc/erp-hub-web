@@ -1,15 +1,15 @@
 export default [{
   title: "Name",
   dataIndex: "name",
-  sorter: false
+  sorter: true
 }, {
   title: "Rate",
   dataIndex: "rate",
-  sorter: false
+  sorter: true
 },
 {
   title: "label On Invoice",
   dataIndex: "labelOnInvoice",
-  sorter: false
+  sorter: true
 }
 ];
