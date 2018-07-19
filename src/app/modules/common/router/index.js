@@ -12,45 +12,15 @@ const { Content } = Layout;
 export default class Router extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      sidebarCollapsed: true,
-      display: "",
-      layoutContent: ""
-    }; 
-    this.toggle = this.toggle.bind(this);
-    this.Content = this.Content.bind(this);
-  }
-
-  toggle(){
-    this.setState({
-      collapsed: !this.state.collapsed,
-      sidebarCollapsed: !this.state.sidebarCollapsed,
-      display: "block",
-      layoutContent: "layoutContent"
-    });
-  }
-
-  Content(){
-    this.setState({
-      display: "none",
-      sidebarCollapsed: true,
-      layoutContent: ""
-    });
   }
 
   render() {
-    const {
-      collapsed,
-      sidebarCollapsed,
-      display,
-      layoutContent} = this.state;
-
     return (
       <div>
         <Layout>
-          <Headers collapsed={ collapsed } toggle={ this.toggle } />
-          <SideBar collapsed={ sidebarCollapsed } display={ display } />
-          <Content onClick={ this.Content } className={ layoutContent }>
+          <Headers />
+          <SideBar />
+          <Content className="layoutContent">
             <Switch>
               {
                 Object.keys(dataSource).map((key) => 
