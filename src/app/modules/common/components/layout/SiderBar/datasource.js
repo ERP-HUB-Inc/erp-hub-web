@@ -157,25 +157,25 @@ const dataSource = {
     subItems: [
       {
         title: "Stock",
-        icon: "icon-time",
+        icon: "icon-stock",
         route: "/stock",
         component: Stock
       },
       {
         title: "Stock Control",
-        icon: "icon-pre-order",
+        icon: "icon-barcode",
         route: "/stock/control",
         component: StockControl
       },
       {
         title: "Re-Order Point",
-        icon: "icon-sale-return",
+        icon: "icon-undo",
         route: "/stock/re-order-point",
         component: ReOrderPoint
       },
       {
         title: "Purchase Orders",
-        icon: "icon-sale-return",
+        icon: "icon-purchasing",
         route: "/stock/purchase-order",
         component: PurchaseOrder
       },
@@ -187,13 +187,13 @@ const dataSource = {
       },
       {
         title: "Stock Transfer",
-        icon: "icon-sale-return",
+        icon: "icon-stock-transfer",
         route: "/stock/transfer",
         component: StockTransfer
       },
       {
         title: "Stock Audit",
-        icon: "icon-sale-return",
+        icon: "icon-stock-audit",
         route: "/stock/return",
         component: StockAudit
       },
@@ -210,19 +210,19 @@ const dataSource = {
     subItems: [
       {
         title: "Group Customer",
-        icon: "icon-time",
+        icon: "icon-employee",
         route: "/customers/group",
         component: GroupCustomer
       },
       {
         title: "Manage Customer",
-        icon: "icon-pre-order",
+        icon: "icon-customer ",
         route: "/customers/manage",
         component: ManageCustomer
       },
       {
         title: "Purchase History",
-        icon: "icon-sale-return",
+        icon: "icon-time",
         route: "/customers/history",
         component: PurchaseHistory
       }
@@ -233,19 +233,19 @@ const dataSource = {
     subItems: [
       {
         title: "Manage Employee",
-        icon: "icon-time",
+        icon: "icon-employee",
         route: "/employees/manage",
         component: ManageEmployee
       },
       {
         title: "Timesheets",
-        icon: "icon-pre-order",
+        icon: "icon-timesheet",
         route: "/employees/timesheet",
         component: TimeSheet
       },
       {
         title: "Performance",
-        icon: "icon-sale-return",
+        icon: "icon-performance",
         route: "/employees/performance",
         component: Performance
       }
@@ -256,31 +256,31 @@ const dataSource = {
     subItems: [
       {
         title: "Sale Report",
-        icon: "icon-time",
+        icon: "icon-sale-report",
         route: "/reports/sale",
         component: SaleReport
       },
       {
         title: "Purchase Report",
-        icon: "icon-pre-order",
+        icon: "icon-purchasing",
         route: "/reports/purchase",
         component: PurchaseReport
       },
       {
         title: "Products Report",
-        icon: "icon-sale-return",
+        icon: "icon-items",
         route: "/reports/product",
         component: ProductReport
       },
       {
         title: "Inventory Report",
-        icon: "icon-sale-return",
+        icon: "icon-stock",
         route: "/reports/inventory",
         component: InventoryReport
       },
       {
         title: "Payment Report",
-        icon: "icon-sale-return",
+        icon: "icon-payment-report",
         route: "/reports/payment",
         component: PaymentReport
       },
@@ -292,13 +292,13 @@ const dataSource = {
       },
       {
         title: "Profit & Lost Report",
-        icon: "icon-sale-return",
+        icon: "icon-reports",
         route: "/reports/profit-lost",
         component: ProfitAndLostReport
       },
       {
         title: "Tax Report",
-        icon: "icon-sale-return",
+        icon: "icon-tax-report",
         route: "/reports/tax",
         component: TaxReport
       }
@@ -309,37 +309,37 @@ const dataSource = {
     subItems: [
       {
         title: "Store Account",
-        icon: "icon-time",
+        icon: "icon-account",
         route: "/settings/account",
         component: StoreAccount
       },
       {
         title: "Store Location",
-        icon: "icon-pre-order",
+        icon: "icon-store",
         route: "/settings/location",
         component: StoreLocation
       },
       {
         title: "Receipt Template",
-        icon: "icon-sale-return",
+        icon: "icon-receipt",
         route: "/settings/receipt-template",
         component: ReceiptTemplate
       },
       {
         title: "Payment Method",
-        icon: "icon-sale-return",
+        icon: "icon-payment-method",
         route: "/settings/payment-method",
         component: PaymentMethod
       },
       {
         title: "Tax",
-        icon: "icon-sale-return",
+        icon: "icon-tax",
         route: "/settings/tax",
         component: Tax
       },
       {
         title: "Role",
-        icon: "icon-sale-return",
+        icon: "icon-role",
         route: "/settings/role",
         component: RoleAccess
       },
@@ -356,7 +356,7 @@ const dataSource = {
         component: Currency
       },
       {
-        title: "Store Language",
+        title: "Language",
         icon: "icon-sale-return",
         route: "/settings/language",
         component: StoreLanguage
