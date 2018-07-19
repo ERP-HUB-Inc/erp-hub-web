@@ -1,13 +1,18 @@
 import React, { Component } from "react";
 import Router from "../../common/router";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter,Route, Switch } from "react-router-dom";
 
 export default class App extends Component {
   render() {
     return (
-      <BrowserRouter> 
-        <Router />
-      </BrowserRouter> 
+      <div>
+        <BrowserRouter> 
+          <Switch>
+            <Route path="/login" name="Create" component=""></Route>
+            <Router />
+          </Switch>
+        </BrowserRouter> 
+      </div>
     );
   }
 }
