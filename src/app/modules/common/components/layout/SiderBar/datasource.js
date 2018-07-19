@@ -43,6 +43,7 @@ import PaymentMethod from "../../../../pos/containers/settings/PaymentMethod";
 import RoleAccess from "../../../../pos/containers/settings/RoleAccess";
 import IncomeAndExpense from "../../../../pos/containers/settings/IncomeAndExpense";
 import Currency from "../../../../pos/containers/settings/Currency";
+import StoreLanguage from "../../../../pos/containers/settings/StoreLanguage";
 
 /*==============================END POS===================================*/
 
@@ -353,6 +354,12 @@ const dataSource = {
         icon: "icon-sale-return",
         route: "/settings/currency",
         component: Currency
+      },
+      {
+        title: "Store Language",
+        icon: "icon-sale-return",
+        route: "/settings/language",
+        component: StoreLanguage
       }
     ]
   }

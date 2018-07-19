@@ -1,26 +1,27 @@
 import BaseService from "../BaseService";
 
-class PaymentMethodService extends BaseService {
+class StoreLanguageService extends BaseService {
 
   constructor() {
     super();
-    this.module = "payment-method";
+    this.module = "language";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 
   lists(
-    limit,
-    offset,
-    sortField,
+    limit, 
+    offset, 
+    sortField, 
     sortOrder
   ) {
     return this.fetchData({ 
 	      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}`,
 	      method: "GET",
-        data: this.data,
+	      data: this.data,
 	      headers: this.header
 	    });
   }
+
 
   archive(ids) {
     return this.fetchData({ 
@@ -30,6 +31,10 @@ class PaymentMethodService extends BaseService {
       headers: this.header
     });
   }
+
 }
 
-export default new PaymentMethodService();
+
+
+
+export default new StoreLanguageService();

@@ -46,23 +46,25 @@ export default class Router extends Component {
       layoutContent} = this.state;
 
     return (
-      <Layout>
-        <Headers collapsed={ collapsed } toggle={ this.toggle } />
-        <SideBar collapsed={ sidebarCollapsed } display={ display } />
-        <Content onClick={ this.Content } className={ layoutContent }>
-          <Switch>
-            {
-              Object.keys(dataSource).map((key) => 
-                dataSource[key]["subItems"].map(value =>
-                  <Route path={value["route"]} name="Create" component={value["component"]} />
+      <div>
+        <Layout>
+          <Headers collapsed={ collapsed } toggle={ this.toggle } />
+          <SideBar collapsed={ sidebarCollapsed } display={ display } />
+          <Content onClick={ this.Content } className={ layoutContent }>
+            <Switch>
+              {
+                Object.keys(dataSource).map((key) => 
+                  dataSource[key]["subItems"].map(value =>
+                    <Route path={value["route"]} name="Create" component={value["component"]} />
+                  )
                 )
-              )
-            }
-            <Route path="/test-component" name="Create" component={ UserList }></Route>
-            <Route path="/" name="Create" component={ Home } />
-          </Switch>
-        </Content>
-      </Layout>
+              }
+              <Route path="/test-component" name="Create" component={ UserList }></Route>
+              <Route path="/" name="Create" component={ Home } />
+            </Switch>
+          </Content>
+        </Layout>
+      </div>
     );
   }
 }
