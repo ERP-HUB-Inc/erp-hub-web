@@ -2,8 +2,8 @@ import {
   REQUEST_TAX_PENDING,
   REQUEST_TAX_REJECTED,
   REQUEST_TAX_FULFILLED
-} from "../constants/settings/tax";
-import InitialState from "../../common/reducers/initialState";
+} from "../../constants/settings/tax";
+import InitialState from "../../../common/reducers/initialState";
   
 const paymentMethod = (state = InitialState.request("tax"), action) => {
   switch(action.type) {

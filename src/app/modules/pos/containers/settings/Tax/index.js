@@ -1,13 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import List from "../../../components/settings/Tax";
-import { fetchTax } from "../../../action/settings/fetchTax";
 
 class Tax extends React.Component {
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(fetchTax());
-  }
 
   render() {
     return (

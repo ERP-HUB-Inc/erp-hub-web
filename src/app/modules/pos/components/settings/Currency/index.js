@@ -1,6 +1,6 @@
 import React from "react";
 import Component from "../../Component";
-import TaxMethod from "../../../action/settings/tax";
+import CurrencyMethod from "../../../action/settings/currency";
 import columns from "./column";
 
 export default class List extends Component {
@@ -14,12 +14,12 @@ export default class List extends Component {
     this.onChange = this.onChange.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
     this.confirm = this.confirm.bind(this);
-    
+
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(TaxMethod.fetchTax(this.pageSize));
+    dispatch(CurrencyMethod.fetchCurrency(this.pageSize));
   }
 
   onChange(pagination, filters, sorter) {
@@ -31,14 +31,14 @@ export default class List extends Component {
       this.sortOrder(sorter.order)
     ];
     this.setState({current: pagination.current});
-    dispatch(TaxMethod.fetchTax(...filter));
+    dispatch(CurrencyMethod.fetchCurrency(...filter));
   }
 
   confirm() {
     const { dispatch } = this.props;
-    dispatch(TaxMethod.archive(this.state.selectedListIds));
+    dispatch(CurrencyMethod.archive(this.state.selectedListIds));
     this.Message.info("Success");
-    dispatch(TaxMethod.fetchTax(this.pageSize, this.state.current));
+    dispatch(CurrencyMethod.fetchCurrency(this.pageSize, this.state.current));
     this.setState({selectedRowKeys: []});
   }
  
@@ -50,9 +50,10 @@ export default class List extends Component {
   }
 
   render() {
+    
     const pagination = {
-      total: this.props.tax.total,
-      pageSize: this.props.tax.limit
+      total: this.props.currency.total,
+      pageSize: this.props.currency.limit
     };
 
     const rowSelection = {
@@ -69,7 +70,7 @@ export default class List extends Component {
         <this.Table
           rowSelection={rowSelection} 
           columns={columns} 
-          dataSource={this.props.tax.data} 
+          dataSource={this.props.currency.data} 
           pagination={pagination}
           onChange={this.onChange} 
           loading={this.props.fetching}
