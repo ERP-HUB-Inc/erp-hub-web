@@ -1,0 +1,116 @@
+.wrap-client-login {
+    box-shadow: 0 0 4px 0 rgba(0,0,0,0.5);
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.wrap-client-login .wrap-blog-logo,
+.wrap-client-login {
+    height: 360px
+}
+
+.wrap-client-login .wrap-blog-logo {
+    width: 250px;
+    display: table;
+    background-color: #093163;
+    position: fixed
+}
+
+.wrap-client-login .wrap-blog-logo .blog-logo {
+    display: table-cell;
+    vertical-align: middle
+}
+
+.wrap-client-login .blog-logo .icon-logo {
+    color: white
+}
+
+.wrap-client-login .blog-logo .icon-logo {
+    font-size: 60pt
+}
+
+.wrap-client-login .blog-logo .inner-logo .text {
+    color: #FFD627
+}
+
+.wrap-client-login .blog-login {
+    margin-left: 250px;
+    padding: 20px 30px
+}
+
+.wrap-client-login .blog-login .header,
+.wrap-client-login .blog-logo .inner-logo .text {
+    font-size: 18pt
+}
+
+.wrap-client-login .blog-login .header .title{
+    color: #4F2B0B
+}
+
+.wrap-client-login .blog-login .header .back-office {
+    color: #9B9B9B;
+    font-size: 10pt
+}
+
+.wrap-client-login .blog-login .wrap-login {
+    margin-top: 20px
+}
+
+.wrap-client-login .blog-login .wrap-login .your-store-name {
+    margin-bottom: 25px
+}
+
+.wrap-client-login .blog-login .wrap-login .store-name{
+    color: #4D4F5C;
+    font-weight: 500;
+    font-size: 14px
+}
+
+.wrap-client-login .blog-login .wrap-login .store-url {
+    color: #9B9B9B;
+    font-size: 10pt
+}
+
+.wrap-client-login .blog-login .wrap-login button {
+    width: 150px;
+    margin-top: 5px;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    font-size: 10pt;
+    background-color: #093163;
+    border-radius: 3px;
+    border: none;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.5)
+}
+
+.wrap-client-login .blog-login .wrap-login .wrap-help {
+    margin-top: 20px
+}
+
+.wrap-client-login .blog-login .wrap-login .help {
+    font-size: 12pt;
+    position: relative;
+    bottom: 5px;
+}
+
+.wrap-client-login .blog-login .wrap-login .help,
+.wrap-client-login .blog-login .wrap-login .icon-help {
+    color: #9A9A9A;
+    font-weight: 500;
+}
+
+.clear-padding {
+    padding: 0 !important
+}
+
+.clear-padding-l {
+    padding-left: 0 !important
+}
+
+.clear-padding-r {
+    padding-right: 0 !important
+}
