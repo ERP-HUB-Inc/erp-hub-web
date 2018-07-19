@@ -3,8 +3,12 @@ export default [{
   dataIndex: "name",
   sorter: true
 }, {
-  title: "Description",
-  dataIndex: "description",
+  title: "Code",
+  dataIndex: "code",
+  sorter: true
+}, {
+  title: "Address",
+  dataIndex: "address",
   sorter: true
 }
 ];

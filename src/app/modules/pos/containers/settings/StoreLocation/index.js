@@ -13,5 +13,9 @@ class StoreLocation extends React.Component {
   }
 }
 
+function mapStateToProps(state) {
+  console.log("storelocation",state.reducer.storeLocation);
+  return state.reducer.storeLocation;
+}
 
-export default connect()(StoreLocation);
+export default connect(mapStateToProps)(StoreLocation);
