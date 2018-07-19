@@ -10,10 +10,6 @@ import dataSource from "../components/layout/SiderBar/datasource";
 const { Content } = Layout;
 
 export default class Router extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div>
