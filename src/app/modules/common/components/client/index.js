@@ -33,6 +33,7 @@ class ClientSignIn extends Component {
               <this.FormGroup>
                 <this.Field
                   name="username"
+                  placeholder="User name"
                   type="text"
                   component="input"
                   className="ant-input"
@@ -41,12 +42,13 @@ class ClientSignIn extends Component {
               <this.FormGroup>
                 <this.Field
                   name="password"
+                  placeholder="Password"
                   type="password"
                   component="input"
                   className="ant-input"
                 />
               </this.FormGroup>
-              <this.Button type="primary" loading={false}>Sign In</this.Button>
+              <this.Button type="info">Sign In</this.Button>
               <div className="wrap-help"><span className="icon-help icon-padding-right"></span><span className="help">Help</span></div>
             </div>
           </div>

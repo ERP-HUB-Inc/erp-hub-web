@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import 
 { 
   CTable,
-  CModal,
   Noteicon,
   Selects,
   DateRank,
@@ -15,6 +14,7 @@ import
   Checkboxs,
   Tooltips,
   FieldComponent,
+  Button,
   TrashButton
 } from "../elements/ant-ui";
 import Antinput from "../../common/elements/ant-ui/Input";
@@ -57,7 +57,7 @@ import {
   Select,
   Collapse,
   Checkbox,
-  Button,
+  Modal,
   Popconfirm,
   message
 } from "antd";
@@ -73,7 +73,7 @@ export default class Component extends RComponent {
     this.Button = Button;
     this.Message = message;
     this.Popconfirm = Popconfirm;
-    this.Modal = () => (<CModal/>);
+    this.Modal = Modal;
     this.Header = () => (<Header/>);
     this.Noteicon = () => (<Noteicon/>);
     this.Selects = Selects;

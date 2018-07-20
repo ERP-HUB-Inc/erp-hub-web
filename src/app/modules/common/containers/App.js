@@ -1,14 +1,15 @@
-import React, { Component } from "react";
+import React from "react";
 import Router from "../../common/router";
-import { BrowserRouter,Route, Switch } from "react-router-dom";
+import ClientLogin from "./client";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
-export default class App extends Component {
+export default class App extends React.Component {
   render() {
     return (
       <div>
         <BrowserRouter> 
           <Switch>
-            <Route path="/login" name="Create" component=""></Route>
+            <Route path="/signin" component={ClientLogin}></Route>
             <Router />
           </Switch>
         </BrowserRouter> 

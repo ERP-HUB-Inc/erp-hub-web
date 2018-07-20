@@ -14,3 +14,4 @@ export * from "./ListCollapse";
 export * from "./Tooltips";
 export * from "./FieldComponent/";
 export * from "./Button/trashButton";
+export * from "./Button";
