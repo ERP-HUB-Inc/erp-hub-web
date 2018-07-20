@@ -14,12 +14,21 @@ export class AnimationInput extends Element {
     this.onFocus = this.onFocus.bind(this);
     this.onBlur = this.onBlur.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleOut = this.handleOut.bind(this);
+
   } 
 
   onFocus(){
-    this.setState({
-      focus:"focused"
-    });
+    this.focused();
+  }
+
+  handleOut(){
+    alert("out");
+  }
+
+  handleClick(){
+    this.focused();
   }
 
   handleChange(e) {
@@ -28,13 +37,24 @@ export class AnimationInput extends Element {
 
   onBlur(e){
     if(e.target.value == ""){
-      this.setState({
-        focus: "focus-relative"
-      });
+      this.focusrelativeLabel();
     }
+  }
+
+  focusrelativeLabel(){
+    this.setState({
+      focus: "focus-relative"
+    });
+  }
+
+  focused(){
+    this.setState({
+      focus:"focused"
+    });
   }
     
   render() {
+    const { label } = this.props;
     const { focus,
       value,
       form_label 
@@ -42,8 +62,8 @@ export class AnimationInput extends Element {
     return (
       <div className="form-wrapper">
         <div className={ focus }>
-          <label className={ form_label }>
-            What is your name?
+          <label onClick={ this.handleClick } className={ form_label }>
+            { label }
           </label>
           <input 
             className="form-input" 

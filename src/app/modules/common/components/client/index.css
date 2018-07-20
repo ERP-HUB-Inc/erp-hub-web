@@ -10,11 +10,12 @@
 
 .wrap-client-login .wrap-blog-logo,
 .wrap-client-login {
-    height: 360px
+    height: 360px;
+    width: 632px;
 }
 
 .wrap-client-login .wrap-blog-logo {
-    width: 250px;
+    width: 257px;
     display: table;
     background-color: #093163;
     position: fixed
@@ -39,7 +40,8 @@
 
 .wrap-client-login .blog-login {
     margin-left: 250px;
-    padding: 20px 30px
+    padding: 20px 30px;
+    width: 365px;
 }
 
 .wrap-client-login .blog-login .header,
