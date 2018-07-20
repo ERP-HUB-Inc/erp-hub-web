@@ -75,20 +75,12 @@
     font-size: 10pt
 }
 
-.wrap-client-login .blog-login .wrap-login button {
-    width: 150px;
-    margin-top: 5px;
-    color: #FFFFFF;
-    text-transform: uppercase;
-    font-size: 10pt;
-    background-color: #093163;
-    border-radius: 3px;
-    border: none;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.5)
-}
-
 .wrap-client-login .blog-login .wrap-login .wrap-help {
     margin-top: 20px
+}
+
+.wrap-client-login .blog-login .wrap-login button {
+    width: 150px
 }
 
 .wrap-client-login .blog-login .wrap-login .help {

@@ -3,19 +3,19 @@ import { Table } from "antd";
 import "./index.css";
 
 export class CTable extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     return (
-      <Table
-        rowSelection={this.props.rowSelection}
-        columns={this.props.columns}
-        dataSource={this.props.dataSource}
-        pagination={this.props.pagination}
-        loading={this.props.loading}
-        onChange={this.props.onChange}
-      />
+      <div>
+        <Table
+          rowSelection={this.props.rowSelection}
+          columns={this.props.columns}
+          dataSource={this.props.dataSource}
+          pagination={this.props.pagination}
+          loading={this.props.loading}
+          onChange={this.props.onChange}
+          onRow={this.props.onRow}
+        />
+      </div>
     );
   }
 
