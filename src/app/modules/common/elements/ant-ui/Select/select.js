@@ -11,6 +11,11 @@ export class Selects extends Component{
 
   constructor(props) {
     super(props);
+    this.state = {
+      focus: "",
+      value: ""
+    };
+
     this.handleChange = this.handleChange.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
     this.handleFocus = this.handleFocus.bind(this);
@@ -18,6 +23,11 @@ export class Selects extends Component{
 
   handleChange(value) {
     console.log(`selected ${value}`);
+    if(value == ""){
+      this.setState({
+        focus: ""
+      });
+    }
   }
 
   handleBlur() {
@@ -25,6 +35,9 @@ export class Selects extends Component{
   }
 
   handleFocus() {
+    this.setState({
+      focus: "focus-label"
+    });
     console.log("focus");
   }
 
@@ -35,24 +48,17 @@ export class Selects extends Component{
       required,
       children,
       placeholder,
-      defaultValue,
-      meta: {
-        touched, error, warning
-      }
+      defaultValue
     } = this.props;
+    const { focus } = this.state;
     return(
       <div className="main-antselect">
         <FormGroup>
-          <Label className="">{label} <span className="text-danger"> {required} </span></Label>
-          <FormItem
-            validateStatus={ touched && error ? "error" : ""  }
-            help = 
-              {touched && 
-               ((
-                 error && <span>{error}</span> || warning && <span>{warning}</span>
-               ))
-              }
-          >
+          <Label className={ focus }>
+            {label} 
+            <span className="text-danger"> {required} </span>
+          </Label>
+          <FormItem>
             <Select
               style={{ width: "100%" }}
               placeholder={ placeholder }
@@ -70,19 +76,3 @@ export class Selects extends Component{
     );
   }
 } 
-
-// export default Selects = Component => ({ input, meta, children, hasFeedback, label, ...rest }) => {
-//   const hasError = meta.touched && meta.invalid;
-//   return (
-//     <div className="main-antselect">
-//       <FormItem
-//         label={label}
-//         validateStatus={hasError ? "error" : "success"}
-//         hasFeedback={hasFeedback && hasError}
-//         help={hasError && meta.error}
-//       >
-//         <Component {...input} {...rest} children={children} />
-//       </FormItem>
-//     </div>
-//   );
-// };

@@ -77,6 +77,19 @@ export default class List extends Component {
           onChange={this.onChange} 
           loading={this.props.fetching}
         />
+        <this.AnimationInput/>
+        <this.AnimationInput/>
+        <this.AnimationInput/>
+
+        <this.Selects
+          label="Select values"
+        >
+          <option value="" selected></option>
+          <option value="all" selected>All</option>
+          <option value="red">Red</option>
+          <option value="redd">Reddd</option>
+        </this.Selects>
+
       </div>
     );
   }

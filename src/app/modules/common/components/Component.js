@@ -15,7 +15,8 @@ import
   Checkboxs,
   Tooltips,
   FieldComponent,
-  TrashButton
+  TrashButton,
+  AnimationInput
 } from "../elements/ant-ui";
 import Antinput from "../../common/elements/ant-ui/Input";
 import Header from "../elements/ant-ui/Header";
@@ -125,6 +126,7 @@ export default class Component extends RComponent {
     this.ActionButton = ActionButton;
     this.Switchs = Switchs;
     this.Antinput = Antinput;
+    this.AnimationInput = AnimationInput;
     this.Waiting = Waiting;
     this.Checkboxs = Checkboxs;
     this.Checkbox = Checkbox;
