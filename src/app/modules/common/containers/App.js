@@ -1,6 +1,7 @@
 import React from "react";
 import Router from "../../common/router";
 import ClientLogin from "./client";
+import loginStore from "./client/loginStore";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 export default class App extends React.Component {
@@ -10,6 +11,7 @@ export default class App extends React.Component {
         <BrowserRouter> 
           <Switch>
             <Route path="/signin" component={ClientLogin}></Route>
+            <Route path="/signin-store" component={loginStore}></Route>
             <Router />
           </Switch>
         </BrowserRouter> 

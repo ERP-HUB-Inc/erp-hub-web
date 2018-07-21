@@ -16,7 +16,8 @@ import
   FieldComponent,
   TrashButton,
   AnimationInput,
-  Button
+  Button,
+  LoginLayout
 } from "../elements/ant-ui";
 import Antinput from "../../common/elements/ant-ui/Input";
 import Header from "../elements/ant-ui/Header";
@@ -136,6 +137,7 @@ export default class Component extends RComponent {
     this.Option = Option;
     this.FieldComponent = FieldComponent;
     this.TrashButton = TrashButton;
+    this.LoginLayout = LoginLayout;
 
   }
 

@@ -8,6 +8,37 @@
     right: 0;
 }
 
+.blog-login .wrap-help {
+    position: relative;
+    top: 15px;
+    color: #9A9A9A;
+}
+
+.blog-login .header {
+    position: relative;
+    top: -26px;
+}
+
+.blog-logo .header{
+    position: relative;
+    top: 5px;
+}
+
+.wrap-client-login .main-signin {
+    float: right;
+}
+
+.main-signin .ant-btn {
+    width: 150px;
+}
+
+.wrap-client-login .store-link {
+    font-size: 12pt;
+    color: #4D4F5C;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
 .wrap-client-login .wrap-blog-logo,
 .wrap-client-login {
     height: 360px;
@@ -41,7 +72,7 @@
 .wrap-client-login .blog-login {
     margin-left: 250px;
     padding: 20px 30px;
-    width: 365px;
+    width: 377px;
 }
 
 .wrap-client-login .blog-login .header,
@@ -95,6 +126,11 @@
 .wrap-client-login .blog-login .wrap-login .icon-help {
     color: #9A9A9A;
     font-weight: 500;
+}
+
+.wrap-help .help  {
+    position: relative;
+    top: -5px;
 }
 
 .clear-padding {

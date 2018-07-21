@@ -54,8 +54,11 @@ export class AnimationInput extends Element {
   }
     
   render() {
-    const { label } = this.props;
-    const { focus, value, form_label } = this.state;
+    const { label,notation } = this.props;
+    const { focus,
+      value,
+      form_label 
+    } = this.state;
     return (
       <div className="form-wrapper">
         <div className={ focus }>
@@ -70,6 +73,11 @@ export class AnimationInput extends Element {
             onFocus={ this.onFocus } 
             onBlur={ this.onBlur }
           />
+          { notation != "" ? 
+            <div className="input-note-right">
+              <label>{ notation }</label>
+            </div>
+            : "" }
         </div>
       </div>
     );
