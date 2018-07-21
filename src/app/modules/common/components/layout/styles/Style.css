@@ -27,6 +27,18 @@ table tr td .list-code,
     margin-right: 8px
 }
 
+label {
+    margin-bottom: 0 !important
+}
+
+.ant-form-item-label {
+    line-height: normal !important
+}
+
+.ant-form-item {
+    margin-bottom: 10px !important
+}
+
 /* format size */
 .font-size,
 .ant-table-body table tr th,

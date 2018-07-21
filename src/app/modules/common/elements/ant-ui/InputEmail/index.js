@@ -31,7 +31,7 @@ export default class InputEmail extends Element {
       <this.Field 
         name={this.props.name}
         type="text"
-        placeholter={this.props.placeholter}
+        placeholder={this.props.placeholder}
         component={ TextInput }
         label={this.props.label}
         required = {this.props.required}
