@@ -148,4 +148,19 @@ export default class Component extends RComponent {
   getCurrentLanguage(state) {
     return getActiveLanguage(state);
   }
+
+  getCurrentIndexLanguage(state) {
+    const currentLanguage = getActiveLanguage(state);
+    const languages = state.languages;
+    for (var i=0; i<state.languages.length; i++) {
+      if (state.languages[i].code ===currentLanguage.code) {
+        return i;
+      }
+    }
+  }
+
+  CATranslate(key, state) {
+    const currentIndex = this.getCurrentIndexLanguage(state);
+    return state.translations[key][currentIndex];
+  }
 }

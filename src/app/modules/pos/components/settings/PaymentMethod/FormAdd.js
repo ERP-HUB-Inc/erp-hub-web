@@ -6,7 +6,7 @@ export default class Add extends Component {
   render() {
     return (
       <div>
-        <InputEmail name="name" label="Name" required={true} />
+        <InputEmail name="name" label="Name" required={false} />
         <InputEmail name="description" label="Description" required={false} />
       </div>
     );

@@ -31,8 +31,8 @@ label {
     margin-bottom: 0 !important
 }
 
-.ant-form-item-label {
-    line-height: normal !important
+.ant-form-item-label label:after {
+    content: "";
 }
 
 .ant-form-item {

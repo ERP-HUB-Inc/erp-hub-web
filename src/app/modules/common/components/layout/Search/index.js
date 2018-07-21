@@ -1,48 +1,26 @@
 import React from "react";
-import FormSearch from "./form";
-import { connect } from "react-redux";
-import { 
-  getFormValues,
-  submit,
-  SubmissionError
-} from "redux-form";
+import { reduxForm } from "redux-form";
 import Component from "../../Component";
 import "./index.css";
 
-class SearchForm extends Component {
-
-  constructor(props) {
-    super(props);
-    this.onSubmit = this.onSubmit.bind(this);
-  }
-
-  onSubmit({txtsearch=""}){
-    let error = null;
-    if (error != null) {
-      throw new SubmissionError(error);
-    } else {
-      
-    }
-  }
-
+class FormSearch extends Component {
   render(){
+    const { handleSubmit } = this.props;
     return(
-      <FormSearch onSubmit={this.onSubmit}/>
+      <this.Form onSubmit={ handleSubmit }>
+        <span className="icon-search"></span>
+        <this.Field
+          name="generalsearch"
+          type="text"
+          component="input"
+          className="form-control"
+          placeholder={this.CATranslate("text_search_transaction", this.props.locale)}
+        />
+      </this.Form>
     );
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    values: getFormValues("FormSearch")(state),
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    submitForm: () => dispatch(submit("FormSearch"))
-  };
-};
-  
-
-export default connect(mapStateToProps,mapDispatchToProps)(SearchForm);
+export default reduxForm({
+  form: "FormSearch"
+})(FormSearch);
