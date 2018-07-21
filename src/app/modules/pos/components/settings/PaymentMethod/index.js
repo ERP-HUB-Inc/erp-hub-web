@@ -1,5 +1,7 @@
+import React from "react";
 import List from "../../List";
 import columns from "./column";
+import FormAdd from "./FormAdd";
 import PaymentMethod from "../../../action/settings/paymentMethod";
 import "./index.css";
 
@@ -12,7 +14,7 @@ export default class PaymentMethodList extends List {
     };
 
     this.title = "Payment Method";
-    this.reducerProp ="paymentMethods";
+    this.reducerProp = "paymentMethod";
   }
 
   componentDidMount() {
@@ -26,8 +28,17 @@ export default class PaymentMethodList extends List {
     dispatch(PaymentMethod.fetchPaymentMethods(...this.filter));
   }
 
+  handleSubmit() {
+    const { dispatch, formAdd } = this.props;
+    super.handleSubmit();
+    dispatch(PaymentMethod.addPaymentMethods(formAdd.values));
+  }
+
   handleAdd() {
     super.handleAdd();
+    this.setState({
+      modalConten: <FormAdd/>
+    });
   }
 
   handleDelete() {

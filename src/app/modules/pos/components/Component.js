@@ -7,8 +7,6 @@ export default class CComponent extends Component {
     this.confirmTextDelete = "Are you sure delete this record?";
     this.okText = "Yes";
     this.cancelText = "No";
-    this.AnimationInput;
-    this.Selects;
   }
 
   sortOrder(order) {

@@ -10,11 +10,13 @@ class InputText extends Element {
     const { input } = this.props;
     delete input["value"];
     return (
-      <this.FormGroup>
-        <this.FormItem label={this.props.label}>
-          {getFieldDecorator(this.props.name, {rules: this.props.rules})(<this.Input {...input} type={this.props.type} placeholder={this.props.placeholder}/>)}
-        </this.FormItem>
-      </this.FormGroup>
+      <this.FormItem>
+        {
+          getFieldDecorator(this.props.name, {rules: this.props.rules})(
+            <this.Input {...input} type={this.props.type} placeholder={this.props.placeholder}/>
+          )
+        }
+      </this.FormItem>
     );
   }
 }

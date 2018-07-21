@@ -1,17 +1,25 @@
 import React from "react";
 import { connect } from "react-redux";
-import List from "../../../components/settings/PaymentMethod";
+import { formValueSelector , reduxForm } from "redux-form";
+import PaymentMethodList from "../../../components/settings/PaymentMethod";
 
 class PaymentMethod extends React.Component {
   render() {
     return (
-      <List {...this.props} />
+      <PaymentMethodList {...this.props} />
     );
   }
 }
 
 function mapStateToProps(state) {
-  return state.reducer.paymentMethod;
+  return {
+    formAdd: state.form.formPaymentMethod,
+    paymentMethod: state.reducer.paymentMethod
+  };
 }
 
-export default connect(mapStateToProps)(PaymentMethod);
+const SelectingPaymentMethodForm = reduxForm({
+  form: "formPaymentMethod"
+})(PaymentMethod);
+
+export default connect(mapStateToProps)(SelectingPaymentMethodForm);

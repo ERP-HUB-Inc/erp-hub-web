@@ -13,7 +13,9 @@ export default class List extends Component {
       selectedListIds: [],
       modaltitle: "Payment Method",
       modalVisible: false,
-      modalSource: {}
+      modalSource: {},
+      modalConten: null,
+      submitPending: false
     };
 
     this.filter= [],
@@ -63,6 +65,12 @@ export default class List extends Component {
     });
   }
 
+  handleSubmit() {
+    this.setState({
+      submitPending: true
+    });
+  }
+
   handleAdd() {
     this.setState({
       modalVisible: true
@@ -85,9 +93,10 @@ export default class List extends Component {
   }
 
   render() {
+    const props = this.props[this.reducerProp];
     const pagination = {
-      total: this.props[this.reducerProp].total,
-      pageSize: this.props[this.reducerProp].limit
+      total: props.list.total,
+      pageSize: props.list.limit
     };
   
     const rowSelection = {
@@ -126,14 +135,14 @@ export default class List extends Component {
         {/* ===============TABLE LIST============ */}
         <this.Table 
           rowSelection={rowSelection}
-          dataSource={this.props[this.reducerProp].data}
+          dataSource={props.list.data}
           columns={this.state.columns}
           pagination={pagination}
           onChange={this.onChange}
           onRow={record =>({
             onDoubleClick:(e)=> this.handleEdit(record)
           })}
-          loading={this.props.fetching}
+          loading={props.fetching}
         />
 
         {/* ===============MODAL============ */}
@@ -148,11 +157,12 @@ export default class List extends Component {
               footer={
                 <div>
                   <this.Button className="danger" onClick={() => this.handleCancel()}><span className="icon-close icon-padding-right"></span>CANCEL</this.Button>
-                  <this.Button className="info" onClick={() => this.handleCancel()}><span className="icon-checked icon-padding-right"></span>OK</this.Button>
+                  <this.Button loading={this.state.submitPending} className="info" onClick={() => this.handleSubmit()}><span className="icon-checked icon-padding-right"></span>OK</this.Button>
                 </div>
               }
             >
-              <p>{JSON.stringify(this.state.modalSource)}</p>
+              {/* <p>{JSON.stringify(this.state.modalSource)}</p> */}
+              {this.state.modalConten}
             </this.Modal>
             :
             ""

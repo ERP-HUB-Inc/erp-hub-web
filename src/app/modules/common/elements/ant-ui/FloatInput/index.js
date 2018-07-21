@@ -1,30 +1,24 @@
 
 import React from "react";
 import "./index.css";
-import Element from "../../common/Element";
+import Element, { Form } from "../../common/Element";
 
-export class AnimationInput extends Element {
-
+class FloatInput extends Element {
   constructor(props){
     super(props);
     this.state = {
       focus: "form-group",
-      form_label: "form-label"
+      formLabel: "form-label"
     };
     this.onFocus = this.onFocus.bind(this);
     this.onBlur = this.onBlur.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.handleOut = this.handleOut.bind(this);
 
   } 
 
   onFocus(){
     this.focused();
-  }
-
-  handleOut(){
-    alert("out");
   }
 
   handleClick(){
@@ -54,26 +48,35 @@ export class AnimationInput extends Element {
   }
     
   render() {
+    console.log("Props:",  this.props);
     const { label } = this.props;
-    const { focus, value, form_label } = this.state;
+    const { focus, value, formLabel } = this.state;
+    const { getFieldDecorator } = this.props.form;
+    const { input } = this.props;
+    delete input["value"];
     return (
       <div className="form-wrapper">
         <div className={ focus }>
-          <label onClick={ this.handleClick } className={ form_label }>
+          <label onClick={ this.handleClick } className={ formLabel }>
             { label }
           </label>
-          <input 
-            className="form-input" 
-            type="text" 
-            value={ value } 
-            onChange={ this.handleChange } 
-            onFocus={ this.onFocus } 
-            onBlur={ this.onBlur }
-          />
+          {
+            getFieldDecorator("email", {rules: this.props.rules})(
+              <input 
+                {...input}
+                className="form-input" 
+                type="text"
+                onChange={ this.handleChange } 
+                onFocus={ this.onFocus } 
+                onBlur={ this.onBlur }
+              />
+            )  
+          }
         </div>
       </div>
     );
   }
-
 }
+
+export default Form.create()(FloatInput);
 

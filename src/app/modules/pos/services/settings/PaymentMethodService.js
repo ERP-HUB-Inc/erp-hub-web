@@ -15,11 +15,11 @@ class PaymentMethodService extends BaseService {
     sortOrder
   ) {
     return this.fetchData({ 
-	      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}`,
-	      method: "GET",
-        data: this.data,
-	      headers: this.header
-	    });
+      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}`,
+      method: "GET",
+      data: this.data,
+      headers: this.header
+    });
   }
 
   archive(ids) {
@@ -27,6 +27,20 @@ class PaymentMethodService extends BaseService {
       url: `${this.baseUrl}/archive/${ids}`,
       method: "DELETE",
       data: this.data,
+      headers: this.header
+    });
+  }
+
+  add(data) {
+    return this.fetchData({
+      url: `${this.baseUrl}/create`,
+      method: "POST",
+      data: {
+        name: "Hello Method",
+        description: "Test insert from Front End",
+        isSystem: 0,
+        isDefault: 0
+      },
       headers: this.header
     });
   }
