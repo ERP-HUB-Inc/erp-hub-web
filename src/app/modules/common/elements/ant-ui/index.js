@@ -16,3 +16,4 @@ export * from "./Tooltips";
 export * from "./FieldComponent/";
 export * from "./Button/trashButton";
 export * from "./Button";
+export * from "./LoginLayout/";

@@ -54,7 +54,7 @@ export class AnimationInput extends Element {
   }
     
   render() {
-    const { label } = this.props;
+    const { label,notation } = this.props;
     const { focus,
       value,
       form_label 
@@ -73,6 +73,11 @@ export class AnimationInput extends Element {
             onFocus={ this.onFocus } 
             onBlur={ this.onBlur }
           />
+          { notation != "" ? 
+            <div className="input-note-right">
+              <label>{ notation }</label>
+            </div>
+            : "" }
         </div>
       </div>
     );

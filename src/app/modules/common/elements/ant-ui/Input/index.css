@@ -10,6 +10,15 @@
     margin-bottom: 15px; 
   }
 
+  .form-wrapper .input-note-right {
+    float: right;
+    position: absolute;
+    top: 10px;
+    font-size: 12pt;
+    color: #4D4F5C;
+    right: 0;
+  }
+
   .form-wrapper input {
       color: #D1D2D5;
       border-bottom: 1px solid #EAEAEA;

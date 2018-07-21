@@ -1,11 +1,11 @@
 import React from "react";
 import Component from "../../components/Component";
-import ClientSignIn from "../../components/client/signInClient";
+import SignInStore from "../../components/client/signInStore";
 
 export default class SignIn extends Component {
   render() {
     return (
-      <ClientSignIn/>
+      <SignInStore/>
     );
   }
 } 
