@@ -39,6 +39,11 @@ label {
     margin-bottom: 10px !important
 }
 
+/*Ant Input*/
+.ant-input {
+    border-radius: 3px
+}
+
 /* format size */
 .font-size,
 .ant-table-body table tr th,

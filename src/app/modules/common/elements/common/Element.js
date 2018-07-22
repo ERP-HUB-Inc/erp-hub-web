@@ -8,7 +8,7 @@ import {
 } from "antd";
 import { FormGroup, Label } from "reactstrap";
 import { Translate, } from "react-localize-redux";
-import TextInput from "../ant-ui/Input";
+import { TextInput } from "../ant-ui/Input";
 
 export default class Element extends Component {
   constructor(props) {

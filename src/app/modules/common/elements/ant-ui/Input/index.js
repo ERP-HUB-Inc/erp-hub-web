@@ -2,7 +2,7 @@
 import React from "react";
 import Element from "../../common/Element";
 
-class TextInput extends Element {
+export class TextInput extends Element {
 
   constructor(props) {
     super(props);
@@ -52,5 +52,3 @@ class TextInput extends Element {
   }
 
 }
-
-export default TextInput;

@@ -17,11 +17,10 @@ import
   TrashButton,
   AnimationInput,
   Button,
+  TextInput,
   LoginLayout,
   RadioRegister
 } from "../elements/ant-ui";
-import Antinput from "../elements/ant-ui/Input";
-import Header from "../elements/ant-ui/Header";
 import {
   InputRedux,
   Breadcrumb,
@@ -79,7 +78,6 @@ export default class Component extends RComponent {
     this.Alert = Alert;
     this.Popconfirm = Popconfirm;
     this.Modal = Modal;
-    this.Header = () => (<Header/>);
     this.Noteicon = () => (<Noteicon/>);
     this.Selects = Selects;
     this.DateRank = DateRank;
@@ -129,7 +127,7 @@ export default class Component extends RComponent {
     this.Select = Select;
     this.ActionButton = ActionButton;
     this.Switchs = Switchs;
-    this.Antinput = Antinput;
+    this.Antinput = TextInput;
     this.AnimationInput = AnimationInput;
     this.Waiting = Waiting;
     this.Checkboxs = Checkboxs;
