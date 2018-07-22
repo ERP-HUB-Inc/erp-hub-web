@@ -83,7 +83,6 @@ export default class List extends Component {
 
   handleEdit(modalSource) {
     this.setState({
-      modalVisible: true,
       modalSource
     });
   }
@@ -104,7 +103,7 @@ export default class List extends Component {
 
     if (addingProps.response != null) { // Here is repsonse from add action and combinde response data to the list.
       fetchingProps.list.data = [addingProps.response.data, ...fetchingProps.list.data];
-      // this.props.dispatch({type: this.RESET_CONSTANT});
+      this.props.dispatch({type: this.RESET_CONSTANT});
     }
     
     // handle for change select checkbox on table row
@@ -190,6 +189,7 @@ export default class List extends Component {
               }
             >
               {addingProps.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
+              {this.state.dataSource}
               {this.state.modalConten}
             </this.Modal>
             :

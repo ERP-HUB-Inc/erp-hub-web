@@ -1,5 +1,5 @@
 import React from "react";
-import InputEmail from "../../../../common/elements/ant-ui/InputEmail";
+import InputText from "../../../../common/elements/ant-ui/InputText";
 import Select from "../../../../common/elements/ant-ui/Select";
 import Component from "../../Component";
 
@@ -17,8 +17,8 @@ export default class Add extends Component {
     ];
     return (
       <div>
-        <InputEmail name="name" label="Name" placeholder="Please input your name"/>
-        <InputEmail  name="description" label="Description" placeholder="Description"/>
+        <InputText name="name" label="Name" placeholder="Please input your name" required={true}/>
+        <InputText name="description" label="Description" placeholder="Description"/>
         <Select name="status" label="Status" placeholder="Please select status" dataSource={dataSource} defaultValue={1}/>
       </div>
     );
