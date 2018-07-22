@@ -15,7 +15,8 @@ export default class PaymentMethodList extends List {
     };
 
     this.title = "Payment Method";
-    this.reducerProp = "paymentMethod";
+    this.fetchingProp = "paymentMethod";
+    this.addingProp = "paymentMethodAdd";
     this.RESET_CONSTANT = RESET_PAYMENT_METHOD;
   }
 
@@ -33,11 +34,11 @@ export default class PaymentMethodList extends List {
   handleSubmit() {
     const { dispatch, formAdd } = this.props;
     dispatch(PaymentMethodAction.add(formAdd.values));
-    super.handleCancel();
   }
 
   handleAdd() {
-    super.handleAdd();
+    const { dispatch } = this.props;
+    dispatch(PaymentMethodAction.showForm());
     this.setState({
       modalConten: <FormAdd/>
     });

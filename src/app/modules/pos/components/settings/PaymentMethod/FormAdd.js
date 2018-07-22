@@ -18,7 +18,7 @@ export default class Add extends Component {
     return (
       <div>
         <InputEmail name="name" label="Name" placeholder="Please input your name"/>
-        <InputEmail name="description" label="Description" placeholder="Description"/>
+        <InputEmail  name="description" label="Description" placeholder="Description"/>
         <Select name="status" label="Status" placeholder="Please select status" dataSource={dataSource} defaultValue={1}/>
       </div>
     );

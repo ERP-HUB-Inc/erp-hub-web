@@ -14,29 +14,34 @@ export default class List extends Component {
       modaltitle: "Payment Method",
       modalVisible: false,
       modalSource: {},
-      modalConten: null,
-      submitPending: false
+      modalConten: null, // the content that show in modal content
     };
 
     this.filter= [],
-    this.title = "General";
-    this.module = "settings"; // This compare to parent key in datasource in sidebar
-    this.reducerProp = "";
+    this.title = "General"; // title of the list
+    this.module = "settings"; // This compare to parent key in datasource in sidebar when render breadcrump
+    this.fetchingProp = "paymentMethod"; // prop of reducer of fetching record that get from map state to prop from container
+    this.addingProp = "paymentMethodAdd"; // prop of reducer of adding record that get from map state to prop from container
 
     this.pageSize = 10;
     this.confirmTextDelete = "Are you sure delete this record?";
-    this.requiredMessage = "Please input all required field.";
-    this.okText = "Yes";
-    this.cancelText = "No";
-    this.messageSuccess = "Success";
+    this.requiredMessage = "Please input all required field."; // require message display on modal popup
+    this.okText = "Yes"; // text button on alert of delete action
+    this.cancelText = "No"; // text button on alert of delete action
+    this.messageSuccess = "Success"; // message display after delete action
 
-    this.onChange = this.onChange.bind(this);
+    this.onChange = this.onChange.bind(this); // handle when user change filter, access pagination
     this.onSelectChange = this.onSelectChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
 
     this.RESET_CONSTANT = "RESET";
   }
 
+  /**
+   * handle for tranform from ant sorting string to match with api
+   * api doesn't reconize descend or ascend just know only desc and asc
+   * @param {*} order 
+   */
   sortOrder(order) {
     if (order === "descend") {
       return "DESC";
@@ -44,7 +49,11 @@ export default class List extends Component {
       return "ASC";
     }
   }
- 
+
+  /**
+  * convert to array object to collection id of record for multiple delete ex: [1, 2, 3]
+  * @param {*} values 
+  */
   mapSelectedListIds(values) {
     return values.map(value => value.id);
   }
@@ -68,14 +77,9 @@ export default class List extends Component {
     });
   }
 
-  handleSubmit() {
-  }
+  handleSubmit() {}
 
-  handleAdd() {
-    this.setState({
-      modalVisible: true
-    });
-  }
+  handleAdd() {}
 
   handleEdit(modalSource) {
     this.setState({
@@ -87,30 +91,34 @@ export default class List extends Component {
   handleDelete() {}
 
   handleCancel() {
-    this.setState({
-      modalVisible: false,
-      modalConten: null
-    });
+    this.props.dispatch({type: this.RESET_CONSTANT});
   }
 
   render() {
-    let props = this.props;
+    let fetchingProps = this.props[this.fetchingProp];
+    const addingProps = this.props[this.addingProp];
     const pagination = {
-      total: props.list.total,
-      pageSize: props.list.limit
+      total: fetchingProps.list.total,
+      pageSize: fetchingProps.list.limit
     };
 
-    if (props.response != null) { // Here is repsonse from add action
-      props.list.data = [props.response.data, ...props.list.data];
-      this.props.dispatch({type: this.RESET_CONSTANT});
+    if (addingProps.response != null) { // Here is repsonse from add action and combinde response data to the list.
+      fetchingProps.list.data = [addingProps.response.data, ...fetchingProps.list.data];
+      // this.props.dispatch({type: this.RESET_CONSTANT});
     }
-  
+    
+    // handle for change select checkbox on table row
     const rowSelection = {
       selectedRowKeys: this.state.selectedRowKeys,
       onChange: this.onSelectChange
     };
-
+  
+    // get current path of breadcrum compare with url
     const currentPath = window.location.pathname;
+
+    // get value for display popup value 
+    let showModal = this.state.modalVisible;
+
     return (
       <div style={{marginTop: "15px"}}>
         <div className="float-left list-title">
@@ -131,30 +139,40 @@ export default class List extends Component {
         <this.clearFloating/>
         <div className="breadcrumb">
           <ul className="list-unstyled">
-            <li><this.Link to="/"><span className="icon-home"></span></this.Link></li>
-            <li className="fast-nav text-uppercase"><this.Link to="/">{this.module}</this.Link></li>
+            <li>
+              <this.Link to="/"><span className="icon-home"></span></this.Link>
+            </li>
+            <li className="fast-nav text-uppercase">
+              <this.Link to="/">{this.module}</this.Link>
+            </li>
             {
-              menuSource[this.module]["subItems"].map((value, index) => <li className={(currentPath==value["route"] ? "active" : "") + " fast-nav"} key={index}><this.Link to={value["route"]}>{value["title"]}</this.Link></li>)
+              menuSource[this.module]["subItems"].map((value, index) =>
+                <li className={(currentPath==value["route"] ? "active" : "") + " fast-nav"} key={index}>
+                  <this.Link to={value["route"]}>{value["title"]}</this.Link>
+                </li>
+              )
             }
           </ul>
         </div>
+        {/* ===============ENDACTION BUTTON====== */}
+
         {/* ===============TABLE LIST============ */}
         <this.Table 
           rowSelection={rowSelection}
-          dataSource={props.list.data}
+          dataSource={fetchingProps.list.data}
           columns={this.state.columns}
           pagination={pagination}
           onChange={this.onChange}
           onRow={record =>({
             onDoubleClick:(e)=> this.handleEdit(record)
           })}
-          loading={props.fetching}
+          loading={fetchingProps.fetching}
         />
+        {/* ===============END TABLE LIST============ */}
 
         {/* ===============MODAL============ */}
-
         {
-          this.state.modalVisible ? 
+          addingProps.showForm ? 
             <this.Modal
               title={this.state.modaltitle}
               wrapClassName="vertical-center-modal"
@@ -162,18 +180,22 @@ export default class List extends Component {
               onOk={this.onOk}
               footer={
                 <div>
-                  <this.Button className="danger" onClick={() => this.handleCancel()}><span className="icon-close icon-padding-right"></span>CANCEL</this.Button>
-                  <this.Button  className="info" onClick={() => this.handleSubmit()}><span className="icon-checked icon-padding-right"></span>OK</this.Button>
+                  <this.Button className="danger" onClick={() => this.handleCancel()}>
+                    <span className="icon-close icon-padding-right"></span>CANCEL
+                  </this.Button>
+                  <this.Button loading={addingProps.adding}  className="info" onClick={() => this.handleSubmit()}>
+                    <span className="icon-checked icon-padding-right"></span>OK
+                  </this.Button>
                 </div>
               }
             >
-              {/* <p>{JSON.stringify(this.state.modalSource)}</p> */}
-              <this.Alert message={this.requiredMessage} type="error" />
+              {addingProps.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
               {this.state.modalConten}
             </this.Modal>
             :
             ""
         }
+        {/* ===============END MODAL============ */}
       </div>
     );
   }

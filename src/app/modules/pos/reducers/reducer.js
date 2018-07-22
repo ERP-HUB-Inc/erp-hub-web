@@ -53,33 +53,42 @@ export default {
       return state;
     }
   },
-  add: (state, action, [PEDDING, REJECT, FULFILLED, RESET]) => {
+  add: (state, action, [PEDDING, REJECT, FULFILLED, SHOW_FORM, RESET]) => {
     switch(action.type) {
+    case SHOW_FORM: {
+      return {
+        ...state,
+        showForm: true
+      };
+    }
     case PEDDING: {
       return {
         ...state,
-        adding: true
+        adding: true,
+        showForm: true
       };
     }
     case REJECT: {
       return {
         ...state,
         adding: false,
-        error: action.payload.data
+        showForm: true,
+        error: action.payload.response.data
       };
     }
     case FULFILLED: {
       return {
-        ...state, 
+        ...state,
         adding: false,
+        showForm: false,
         added: true,
         response: action.payload.data
       };
     }
     case RESET: {
       return {
-        ...state, 
         adding: false,
+        showForm: false,
         added: false,
         response: null
       };

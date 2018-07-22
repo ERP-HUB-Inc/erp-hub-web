@@ -8,6 +8,7 @@ import {
   ADD_PAYMENT_METHOD_PENDING,
   ADD_PAYMENT_METHOD_REJECTED,
   ADD_PAYMENT_METHOD_FULFILLED,
+  SHOW_PAYMENT_METHOD_FORM,
   RESET_PAYMENT_METHOD
 } from "../../constants/settings/paymentMethod";
 import InitialState from "../../../common/reducers/initialState";
@@ -35,6 +36,7 @@ export default {
       ADD_PAYMENT_METHOD_PENDING,
       ADD_PAYMENT_METHOD_REJECTED,
       ADD_PAYMENT_METHOD_FULFILLED,
+      SHOW_PAYMENT_METHOD_FORM,
       RESET_PAYMENT_METHOD
     ];
     return reducer.add(state, action, constants);

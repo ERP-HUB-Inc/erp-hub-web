@@ -20,6 +20,7 @@ export default {
   },
   add: (key="response") => {
     return {
+      showForm: false,
       adding: false,
       added: false,
       [key]: null,
