@@ -1,21 +1,25 @@
 import React from "react";
 import { connect } from "react-redux";
-import List from "../../../components/settings/StoreLocation";
+import { reduxForm } from "redux-form";
+import StoreLocationList from "../../../components/settings/StoreLocation";
 
 class StoreLocation extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     return (
-      <List {...this.props} />
+      <StoreLocationList {...this.props} />
     );
   }
 }
 
 function mapStateToProps(state) {
-  console.log("storelocation",state.reducer.storeLocation);
-  return state.reducer.storeLocation;
+  return {
+    formAdd: state.form.formStoreLocation,
+    storeLocation: state.reducer.storeLocation
+  };
 }
 
-export default connect(mapStateToProps)(StoreLocation);
+const SelectingStoreLocation = reduxForm({
+  form: "formStoreLocation"
+})(StoreLocation);
+
+export default connect(mapStateToProps)(SelectingStoreLocation);

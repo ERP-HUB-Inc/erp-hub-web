@@ -7,7 +7,7 @@ export default {
       error: null
     };
   },
-  archive: (key="datas") => {
+  archive: (key="success") => {
     return {
       archiving: false,
       archived: false,
@@ -15,10 +15,10 @@ export default {
       error: null
     };
   },
-  update: (key="datas") => {
+  update: (key="response") => {
     //TODO Here
   },
-  add: (key="datas") => {
+  add: (key="response") => {
     return {
       adding: false,
       added: false,

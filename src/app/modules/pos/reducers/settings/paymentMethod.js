@@ -10,87 +10,31 @@ import {
   ADD_PAYMENT_METHOD_FULFILLED
 } from "../../constants/settings/paymentMethod";
 import InitialState from "../../../common/reducers/initialState";
+import reducer from "../reducer";
 
 export default {
   request: (state = InitialState.request(), action) => {
-    switch(action.type) {
-    case REQUEST_PAYMENT_METHOD_PENDING: {
-      return {
-        ...state,
-        fetching: true
-      };
-    }
-    case REQUEST_PAYMENT_METHOD_REJECTED: {
-      return {
-        ...state,
-        fetching: false,
-        error: action.payload.data
-      };
-    }
-    case REQUEST_PAYMENT_METHOD_FULFILLED: {
-      return {
-        ...state, 
-        fetching: false,
-        fetched: true,
-        list: action.payload.data
-      };
-    }
-    default:
-      return state;
-    }
+    const constants = [
+      REQUEST_PAYMENT_METHOD_PENDING,
+      REQUEST_PAYMENT_METHOD_REJECTED,
+      REQUEST_PAYMENT_METHOD_FULFILLED
+    ];
+    return reducer.request(state, action, constants);
   },
-  archive: (state = InitialState.archive("success"), action) => {
-    switch(action.type) {
-    case ARCHIVE_PAYMENT_METHOD_PENDING: {
-      return {
-        ...state,
-        archiving: true
-      };
-    }
-    case ARCHIVE_PAYMENT_METHOD_REJECTED: {
-      return {
-        ...state,
-        archiving: false,
-        error: action.payload.data
-      };
-    }
-    case ARCHIVE_PAYMENT_METHOD_FULFILLED: {
-      return {
-        ...state, 
-        archiving: false,
-        archived: true,
-        success: action.payload.data
-      };
-    }
-    default:
-      return state;
-    }
+  archive: (state = InitialState.archive(), action) => {
+    const constants = [
+      ARCHIVE_PAYMENT_METHOD_PENDING,
+      ARCHIVE_PAYMENT_METHOD_REJECTED,
+      ARCHIVE_PAYMENT_METHOD_FULFILLED
+    ];
+    return reducer.archive(state, action, constants);
   },
-  add: (state = InitialState.add("response"), action) => {
-    switch(action.type) {
-    case ADD_PAYMENT_METHOD_PENDING: {
-      return {
-        ...state,
-        adding: true
-      };
-    }
-    case ADD_PAYMENT_METHOD_REJECTED: {
-      return {
-        ...state,
-        adding: false,
-        error: action.payload.data
-      };
-    }
-    case ADD_PAYMENT_METHOD_FULFILLED: {
-      return {
-        ...state, 
-        adding: false,
-        added: true,
-        response: action.payload.data
-      };
-    }
-    default:
-      return state;
-    }
+  add: (state = InitialState.add(), action) => {
+    const constants = [
+      ADD_PAYMENT_METHOD_PENDING,
+      ADD_PAYMENT_METHOD_REJECTED,
+      ADD_PAYMENT_METHOD_FULFILLED
+    ];
+    return reducer.add(state, action, constants);
   }
 };

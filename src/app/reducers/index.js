@@ -8,10 +8,11 @@ import storeLanguage from "../modules/pos/reducers/settings/storeLanguage";
 
 const reducer = combineReducers({ 
   user,
-  tax,
-  currency,
-  storeLocation,
-  storeLanguage,
+  tax: tax.request,
+  taxArchive: tax.archive,
+  currency: currency.request,
+  storeLocation: storeLocation.request,
+  storeLanguage: storeLanguage.request,
   paymentMethod: PaymentMethod.request,
   paymentMethodArchive: PaymentMethod.archive,
 });

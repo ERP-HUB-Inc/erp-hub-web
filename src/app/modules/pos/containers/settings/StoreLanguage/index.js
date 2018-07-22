@@ -1,18 +1,25 @@
 import React from "react";
 import { connect } from "react-redux";
-import List from "../../../components/settings/StoreLanguage";
+import { reduxForm } from "redux-form";
+import StoreLanguageList from "../../../components/settings/StoreLanguage";
 
-class Currency extends React.Component {
+class StoreLanguage extends React.Component {
 
   render() {
     return (
-      <List {...this.props} />
+      <StoreLanguageList {...this.props} />
     );
   }
 }
 
 function mapStateToProps(state) {
-  return state.reducer.storeLanguage;
+  return {
+    storeLanguage: state.reducer.storeLanguage
+  };
 }
 
-export default connect(mapStateToProps)(Currency);
+const SelectingStoreLanguageForm = reduxForm({
+  form: "formStoreLanguage"
+})(StoreLanguage);
+
+export default connect(mapStateToProps)(SelectingStoreLanguageForm);

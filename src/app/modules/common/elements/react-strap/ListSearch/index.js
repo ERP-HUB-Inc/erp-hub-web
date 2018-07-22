@@ -4,11 +4,6 @@ import { Table } from "reactstrap";
 import { Badges } from "../Badges";
 
 export class ListSearch extends Component {
-  
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="search-list-table">

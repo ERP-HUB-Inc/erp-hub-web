@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { reduxForm } from "redux-form";
 import List from "../../../components/settings/Currency";
 
 class Currency extends React.Component {
@@ -12,7 +13,14 @@ class Currency extends React.Component {
 }
 
 function mapStateToProps(state) {
-  return state.reducer.currency;
+  return {
+    formAdd: state.form.formCurrency,
+    currency: state.reducer.currency
+  };
 }
 
-export default connect(mapStateToProps)(Currency);
+const SelectingCurrency = reduxForm({
+  form: "formCurrency"
+})(Currency);
+
+export default connect(mapStateToProps)(SelectingCurrency);

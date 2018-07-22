@@ -6,7 +6,7 @@ import {
 import TaxService from "../../services/settings/TaxService";
 
 export default{
-  fetchTax:(limit, offset, sortField, sortOrder) => {
+  fetch:(limit, offset, sortField, sortOrder) => {
     return dispatch => {
       return dispatch({
         type: REQUEST_TAX,

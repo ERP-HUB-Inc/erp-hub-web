@@ -1,40 +1,41 @@
-import {
+import {          
   REQUEST_CURRENCY_PENDING,
   REQUEST_CURRENCY_REJECTED,
-  REQUEST_CURRENCY_FULFILLED
+  REQUEST_CURRENCY_FULFILLED,
+  ARCHIVE_CURRENCY_PENDING,
+  ARCHIVE_CURRENCY_REJECTED,
+  ARCHIVE_CURRENCY_FULFILLED,
+  ADD_CURRENCY_PENDING,
+  ADD_CURRENCY_REJECTED,
+  ADD_CURRENCY_FULFILLED
 } from "../../constants/settings/currency";
 import InitialState from "../../../common/reducers/initialState";
+import reducer from "../reducer";
     
-const currencyMethod = (state = InitialState.request("currency"), action) => {
-  switch(action.type) {
-  
-  case REQUEST_CURRENCY_PENDING: {
-    return {
-      ...state,
-      fetching: true
-    };
-  }
-  case REQUEST_CURRENCY_REJECTED: {
-    return {
-      ...state,
-      fetching: false,
-      error: action.payload.data
-    };
-  }
-  
-  case REQUEST_CURRENCY_FULFILLED: {
-    return {
-      ...state, 
-      fetching: false,
-      fetched: false,
-      currency: action.payload.data
-    };
-  }
-  
-  default:
-    return state;
+export default {
+  request: (state = InitialState.request(), action) => {
+    const constants = [
+      REQUEST_CURRENCY_PENDING,
+      REQUEST_CURRENCY_REJECTED,
+      REQUEST_CURRENCY_FULFILLED
+    ];
+    return reducer.request(state, action, constants);
+  },
+  archive: (state = InitialState.archive(), action) => {
+    const constants = [
+      ARCHIVE_CURRENCY_PENDING,
+      ARCHIVE_CURRENCY_REJECTED,
+      ARCHIVE_CURRENCY_FULFILLED
+    ];
+    return reducer.archive(state, action, constants);
+  },
+  add: (state = InitialState.add(), action) => {
+    const constants = [
+      ADD_CURRENCY_PENDING,
+      ADD_CURRENCY_REJECTED,
+      ADD_CURRENCY_FULFILLED
+    ];
+    return reducer.add(state, action, constants);
   }
 };
-    
-export default currencyMethod;
     

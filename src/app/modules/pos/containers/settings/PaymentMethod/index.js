@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { formValueSelector , reduxForm } from "redux-form";
+import { reduxForm } from "redux-form";
 import PaymentMethodList from "../../../components/settings/PaymentMethod";
 
 class PaymentMethod extends React.Component {

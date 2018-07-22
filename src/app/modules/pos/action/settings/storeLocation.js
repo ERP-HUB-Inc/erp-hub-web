@@ -6,7 +6,7 @@ import {
 import LoctionService from "../../services/settings/StoreLocationService";
 
 export default{
-  fetchstoreLocation:(limit, offset, sortField, sortOrder) => {
+  fetch:(limit, offset, sortField, sortOrder) => {
     return dispatch => {
       return dispatch({
         type: REQUEST_STORE_LOCATION,
