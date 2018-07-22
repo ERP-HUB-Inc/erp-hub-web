@@ -1,9 +1,8 @@
-.ant-table-content {
-    margin-top: 15px
-}
 
 .ant-table-content{
-    border-top: 0.5px solid #EAEAEA
+    margin-top: 15px;
+    border-top: 0.5px solid #f1efef;
+    border-radius: 3px;
 }
 
 .ant-table-body table tr th {

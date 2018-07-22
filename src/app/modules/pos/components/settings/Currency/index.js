@@ -8,6 +8,7 @@ export default class CurrencyList extends List {
   constructor(props) {
     super(props);
     this.state = {
+      ...this.state,
       modaltitle: "Currency",
       columns
     };
@@ -27,6 +28,30 @@ export default class CurrencyList extends List {
     const { dispatch } = this.props;
 
     super.onChange(pagination, filters, sorter);
+
+    dispatch(CurrencyAction.fetch(...this.filter));
+  }
+
+  onChangePagination(pageNumber, pageSize) {
+    const { dispatch } = this.props;
+
+    this.filter = [
+      pageSize,
+      (pageNumber - 1) * pageSize,
+    ];
+
+    dispatch(CurrencyAction.fetch(...this.filter));
+
+    this.setState({ current: pageNumber});
+  }
+
+  onShowSizeChange(current, pageSize) {
+    const { dispatch } = this.props;
+
+    this.filter = [
+      pageSize,
+      current,
+    ];
 
     dispatch(CurrencyAction.fetch(...this.filter));
   }
