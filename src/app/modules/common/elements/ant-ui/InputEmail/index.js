@@ -2,7 +2,7 @@ import React from "react";
 import Element, { ReduxForm } from "../../common/Element";
 import TextInput from "./input";
 
-class InputEmail extends Element {
+export default class InputEmail extends Element {
 
   constructor(props) {
     super(props);
@@ -31,9 +31,9 @@ class InputEmail extends Element {
       <this.Field 
         name={this.props.name}
         type="text"
+        placeholder={this.props.placeholder}
         component={ TextInput }
         label={this.props.label}
-        placeholder={this.props.placeholder}
         required = {this.props.required}
         rules = {this.rules}
       />
@@ -52,6 +52,3 @@ InputEmail.defaultProps = {
   errorLenght: "Over allow character lenght"
 };
 
-export default ReduxForm({
-  form: "syncValidation"
-})(InputEmail);

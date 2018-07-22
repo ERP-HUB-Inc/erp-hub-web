@@ -1,5 +1,5 @@
 export default {
-  request: (key="datas") => {
+  request: (key="list") => {
     return {
       fetching: false,
       fetched: false,
@@ -17,5 +17,13 @@ export default {
   },
   update: (key="datas") => {
     //TODO Here
+  },
+  add: (key="datas") => {
+    return {
+      adding: false,
+      added: false,
+      [key]: false,
+      error: null
+    };
   }
 };

@@ -33,7 +33,7 @@ class Headers extends Component {
             </div>
           </this.Col>
           <this.Col md="3 main-search">
-            <SearchForm />
+            <SearchForm locale={this.props.locale}/>
           </this.Col>
           <this.Col md="7" className="header-left">
             <DropDown onSwitchLanguage={this.switchLanguage} localization={this.props.locale} currentLanguage={this.getCurrentLanguage(this.props.locale)}/>

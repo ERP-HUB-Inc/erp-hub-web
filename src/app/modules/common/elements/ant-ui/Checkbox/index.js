@@ -1,26 +1,20 @@
 import React, { Component } from "react";
+import Element from "../../common/Element";
 import { Checkbox } from "antd";
-import "./index.css"; 
-const CheckboxGroup = Checkbox.Group;
+import "./index.css";
 
-function onChange(checkedValues) {
-  console.log("checked = ", checkedValues);
-}
-
-export class Checkboxs extends Component {
+export class Checkboxs extends Element {
   render(){
-    const { 
-      label,
-      defaultValue
-    } = this.props;
-    return(
-      <div className="main-check">
-        <CheckboxGroup 
-          options={ label } 
-          defaultValue={ defaultValue }
-          onChange={ onChange } 
-        />
-      </div>
+    return (
+      <this.Field 
+        name={this.props.name}
+        type="checkbox"
+        component={ Checkbox }
+        label={this.props.label}
+        placeholder={this.props.placeholder}
+        required = {this.props.required}
+        rules = {this.rules}
+      />
     );
   }
 } 

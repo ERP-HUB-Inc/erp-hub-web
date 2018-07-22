@@ -4,12 +4,15 @@ import {
   REQUEST_PAYMENT_METHOD_FULFILLED,
   ARCHIVE_PAYMENT_METHOD_PENDING,
   ARCHIVE_PAYMENT_METHOD_REJECTED,
-  ARCHIVE_PAYMENT_METHOD_FULFILLED
+  ARCHIVE_PAYMENT_METHOD_FULFILLED,
+  ADD_PAYMENT_METHOD_PENDING,
+  ADD_PAYMENT_METHOD_REJECTED,
+  ADD_PAYMENT_METHOD_FULFILLED
 } from "../../constants/settings/paymentMethod";
 import InitialState from "../../../common/reducers/initialState";
 
 export default {
-  request: (state = InitialState.request("paymentMethods"), action) => {
+  request: (state = InitialState.request(), action) => {
     switch(action.type) {
     case REQUEST_PAYMENT_METHOD_PENDING: {
       return {
@@ -29,7 +32,7 @@ export default {
         ...state, 
         fetching: false,
         fetched: true,
-        paymentMethods: action.payload.data
+        list: action.payload.data
       };
     }
     default:
@@ -57,6 +60,33 @@ export default {
         archiving: false,
         archived: true,
         success: action.payload.data
+      };
+    }
+    default:
+      return state;
+    }
+  },
+  add: (state = InitialState.add("response"), action) => {
+    switch(action.type) {
+    case ADD_PAYMENT_METHOD_PENDING: {
+      return {
+        ...state,
+        adding: true
+      };
+    }
+    case ADD_PAYMENT_METHOD_REJECTED: {
+      return {
+        ...state,
+        adding: false,
+        error: action.payload.data
+      };
+    }
+    case ADD_PAYMENT_METHOD_FULFILLED: {
+      return {
+        ...state, 
+        adding: false,
+        added: true,
+        response: action.payload.data
       };
     }
     default:
