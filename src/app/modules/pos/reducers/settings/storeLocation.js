@@ -1,40 +1,41 @@
 import {
   REQUEST_STORE_LOCATION_PENDING,
   REQUEST_STORE_LOCATION_REJECTED,
-  REQUEST_STORE_LOCATION_FULFILLED
+  REQUEST_STORE_LOCATION_FULFILLED,
+  ARCHIVE_STORE_LOCATION_PENDING,
+  ARCHIVE_STORE_LOCATION_REJECTED,
+  ARCHIVE_STORE_LOCATION_FULFILLED,
+  ADD_STORE_LOCATION_PENDING,
+  ADD_STORE_LOCATION_REJECTED,
+  ADD_STORE_LOCATION_FULFILLED
 } from "../../constants/settings/storeLocation";
 import InitialState from "../../../common/reducers/initialState";
+import reducer from "../reducer";
       
-const storeLocation = (state = InitialState.request("storeLocation"), action) => {
-  switch(action.type) {
-    
-  case  REQUEST_STORE_LOCATION_PENDING: {
-    return {
-      ...state,
-      fetching: true
-    };
-  }
-  case REQUEST_STORE_LOCATION_REJECTED: {
-    return {
-      ...state,
-      fetching: false,
-      error: action.payload.data
-    };
-  }
-    
-  case REQUEST_STORE_LOCATION_FULFILLED: {
-    return {
-      ...state, 
-      fetching: false,
-      fetched: false,
-      storeLocation: action.payload.data
-    };
-  }
-    
-  default:
-    return state;
+export default {
+  request: (state = InitialState.request(), action) => {
+    const constants = [
+      REQUEST_STORE_LOCATION_PENDING,
+      REQUEST_STORE_LOCATION_REJECTED,
+      REQUEST_STORE_LOCATION_FULFILLED
+    ];
+    return reducer.request(state, action, constants);
+  },
+  archive: (state = InitialState.archive(), action) => {
+    const constants = [
+      ARCHIVE_STORE_LOCATION_PENDING,
+      ARCHIVE_STORE_LOCATION_REJECTED,
+      ARCHIVE_STORE_LOCATION_FULFILLED
+    ];
+    return reducer.archive(state, action, constants);
+  },
+  add: (state = InitialState.add(), action) => {
+    const constants = [
+      ADD_STORE_LOCATION_PENDING,
+      ADD_STORE_LOCATION_REJECTED,
+      ADD_STORE_LOCATION_FULFILLED
+    ];
+    return reducer.add(state, action, constants);
   }
 };
-      
-export default storeLocation;
       

@@ -1,8 +1,8 @@
 import React from "react";
-import Component from "../../Component";
 import columns from "./column";
+import List from "../../List";
 
-export default class List extends Component {
+export default class RoleAccessList extends List {
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);

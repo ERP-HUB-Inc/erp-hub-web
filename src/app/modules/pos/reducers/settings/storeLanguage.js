@@ -1,40 +1,41 @@
 import {
   REQUEST_STORE_LANGUAGE_PENDING,
   REQUEST_STORE_LANGUAGE_REJECTED,
-  REQUEST_STORE_LANGUAGE_FULFILLED
+  REQUEST_STORE_LANGUAGE_FULFILLED,
+  ARCHIVE_STORE_LANGUAGE_PENDING,
+  ARCHIVE_STORE_LANGUAGE_REJECTED,
+  ARCHIVE_STORE_LANGUAGE_FULFILLED,
+  ADD_STORE_LANGUAGE_PENDING,
+  ADD_STORE_LANGUAGE_REJECTED,
+  ADD_STORE_LANGUAGE_FULFILLED
 } from "../../constants/settings/storeLanguage";
 import InitialState from "../../../common/reducers/initialState";
+import reducer from "../reducer";
       
-const storeLocation = (state = InitialState.request("storeLanguage"), action) => {
-  switch(action.type) {
-    
-  case  REQUEST_STORE_LANGUAGE_PENDING: {
-    return {
-      ...state,
-      fetching: true
-    };
-  }
-  case REQUEST_STORE_LANGUAGE_REJECTED: {
-    return {
-      ...state,
-      fetching: false,
-      error: action.payload.data
-    };
-  }
-    
-  case REQUEST_STORE_LANGUAGE_FULFILLED: {
-    return {
-      ...state, 
-      fetching: false,
-      fetched: false,
-      storeLanguage: action.payload.data
-    };
-  }
-    
-  default:
-    return state;
+export default {
+  request: (state = InitialState.request(), action) => {
+    const constants = [
+      REQUEST_STORE_LANGUAGE_PENDING,
+      REQUEST_STORE_LANGUAGE_REJECTED,
+      REQUEST_STORE_LANGUAGE_FULFILLED
+    ];
+    return reducer.request(state, action, constants);
+  },
+  archive: (state = InitialState.archive(), action) => {
+    const constants = [
+      ARCHIVE_STORE_LANGUAGE_PENDING,
+      ARCHIVE_STORE_LANGUAGE_REJECTED,
+      ARCHIVE_STORE_LANGUAGE_FULFILLED
+    ];
+    return reducer.archive(state, action, constants);
+  },
+  add: (state = InitialState.add(), action) => {
+    const constants = [
+      ADD_STORE_LANGUAGE_PENDING,
+      ADD_STORE_LANGUAGE_REJECTED,
+      ADD_STORE_LANGUAGE_FULFILLED
+    ];
+    return reducer.add(state, action, constants);
   }
 };
-      
-export default storeLocation;
       

@@ -6,7 +6,7 @@ import {
 import CurrencyService from "../../services/settings/CurrencyService";
 
 export default {
-  fetchCurrency: (limit, offset, sortField, sortOrder) => {
+  fetch: (limit, offset, sortField, sortOrder) => {
     return dispatch => {
       return dispatch({
         type: REQUEST_CURRENCY,

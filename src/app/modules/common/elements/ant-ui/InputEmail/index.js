@@ -1,6 +1,7 @@
 import React from "react";
-import Element, { ReduxForm } from "../../common/Element";
 import TextInput from "./input";
+import Element from "../../common/Element";
+import "./index.css";
 
 export default class InputEmail extends Element {
 

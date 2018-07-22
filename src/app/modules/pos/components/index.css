@@ -53,3 +53,7 @@
 .breadcrumb ul li.fast-nav:last-child:after {
     content: ""
 }
+
+.ant-alert.ant-alert-no-icon {
+    margin-bottom: 15px
+}

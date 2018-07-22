@@ -1,40 +1,42 @@
 import {
   REQUEST_TAX_PENDING,
   REQUEST_TAX_REJECTED,
-  REQUEST_TAX_FULFILLED
+  REQUEST_TAX_FULFILLED,
+  ARCHIVE_TAX_PENDING,
+  ARCHIVE_TAX_REJECTED,
+  ARCHIVE_TAX_FULFILLED,
+  ADD_TAX_PENDING,
+  ADD_TAX_REJECTED,
+  ADD_TAX_FULFILLED
 } from "../../constants/settings/tax";
 import InitialState from "../../../common/reducers/initialState";
+import reducer from "../reducer";
   
-const paymentMethod = (state = InitialState.request("tax"), action) => {
-  switch(action.type) {
-
-  case REQUEST_TAX_PENDING: {
-    return {
-      ...state,
-      fetching: true
-    };
-  }
-  case REQUEST_TAX_REJECTED: {
-    return {
-      ...state,
-      fetching: false,
-      error: action.payload.data
-    };
-  }
-
-  case REQUEST_TAX_FULFILLED: {
-    return {
-      ...state, 
-      fetching: false,
-      fetched: false,
-      tax: action.payload.data
-    };
-  }
-
-  default:
-    return state;
+export default {
+  request: (state = InitialState.request(), action) => {
+    const constants = [
+      REQUEST_TAX_PENDING,
+      REQUEST_TAX_REJECTED,
+      REQUEST_TAX_FULFILLED
+    ];
+    return reducer.request(state, action, constants);
+  },
+  archive: (state = InitialState.archive(), action) => {
+    const constants = [
+      ARCHIVE_TAX_PENDING,
+      ARCHIVE_TAX_REJECTED,
+      ARCHIVE_TAX_FULFILLED
+    ];
+    return reducer.archive(state, action, constants);
+  },
+  add: (state = InitialState.add(), action) => {
+    const constants = [
+      ADD_TAX_PENDING,
+      ADD_TAX_REJECTED,
+      ADD_TAX_FULFILLED
+    ];
+    return reducer.add(state, action, constants);
   }
 };
   
-export default paymentMethod;
   

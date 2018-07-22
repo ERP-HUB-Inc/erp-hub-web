@@ -1,81 +1,55 @@
 import React from "react";
-import Component from "../../Component";
-import CurrencyMethod from "../../../action/settings/currency";
 import columns from "./column";
+import FormAdd from "./FormAdd";
+import List from "../../List";
+import CurrencyAction from "../../../action/settings/currency";
 
-export default class List extends Component {
+export default class CurrencyList extends List {
   constructor(props) {
     super(props);
     this.state = {
-      selectedRowKeys: [],
-      selectedListIds: []
+      modaltitle: "Currency",
+      columns
     };
 
-    this.onChange = this.onChange.bind(this);
-    this.onSelectChange = this.onSelectChange.bind(this);
-    this.confirm = this.confirm.bind(this);
-
+    this.title = "Currency";
+    this.reducerProp = "currency";
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(CurrencyMethod.fetchCurrency(this.pageSize));
+    
+    dispatch(CurrencyAction.fetch(this.pageSize));
   }
 
   onChange(pagination, filters, sorter) {
     const { dispatch } = this.props;
-    const filter = [
-      this.pageSize,
-      (pagination.current - 1) * this.pageSize,
-      sorter.field,
-      this.sortOrder(sorter.order)
-    ];
-    this.setState({current: pagination.current});
-    dispatch(CurrencyMethod.fetchCurrency(...filter));
+
+    super.onChange(pagination, filters, sorter);
+
+    dispatch(CurrencyAction.fetch(...this.filter));
   }
 
-  confirm() {
-    const { dispatch } = this.props;
-    dispatch(CurrencyMethod.archive(this.state.selectedListIds));
-    this.Message.info("Success");
-    dispatch(CurrencyMethod.fetchCurrency(this.pageSize, this.state.current));
-    this.setState({selectedRowKeys: []});
-  }
- 
-  onSelectChange(selectedRowKeys, selectedRows) {
+  handleAdd() {
+    super.handleAdd();
     this.setState({
-      selectedListIds: this.mapSelectedListIds(selectedRows),
-      selectedRowKeys
+      modalConten: <FormAdd/>
     });
   }
 
-  render() {
-    
-    const pagination = {
-      total: this.props.currency.total,
-      pageSize: this.props.currency.limit
-    };
+  handleDelete() {
+    const { dispatch } = this.props;
 
-    const rowSelection = {
-      selectedRowKeys: this.state.selectedRowKeys,
-      onChange: this.onSelectChange
-    };
-    
-    return (
-      <div>
-        <this.Button type="primary" className="mg-right"><span className="icon-add icon-padding-right"></span>Add</this.Button>
-        <this.Popconfirm placement="topLeft" title={this.confirmTextDelete} onConfirm={this.confirm} okText={this.okText} cancelText={this.cancelText}>
-          <this.Button type="danger"><span className="icon-bin icon-padding-right"></span>Delete</this.Button>
-        </this.Popconfirm>
-        <this.Table
-          rowSelection={rowSelection} 
-          columns={columns} 
-          dataSource={this.props.currency.data} 
-          pagination={pagination}
-          onChange={this.onChange} 
-          loading={this.props.fetching}
-        />
-      </div>
-    );
+    dispatch(CurrencyAction.archive(this.state.selectedListIds));
+
+    this.Message.info(this.messageSuccess);
+
+    dispatch(CurrencyAction.fetch(this.pageSize, this.state.current));
+
+    this.setState({selectedRowKeys: []});
+  }
+
+  render() {
+    return super.render();
   }
 }

@@ -36,8 +36,7 @@ class PaymentMethodService extends BaseService {
       url: `${this.baseUrl}/create`,
       method: "POST",
       data: {
-        name: "Hello Method",
-        description: "Test insert from Front End",
+        ...data,
         isSystem: 0,
         isDefault: 0
       },

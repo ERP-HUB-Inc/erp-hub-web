@@ -1,6 +1,8 @@
-import List from "../../List";
-import TaxMethod from "../../../action/settings/tax";
+import React from "react";
+import FormAdd from "./FormAdd";
 import columns from "./column";
+import List from "../../List";
+import TaxAction from "../../../action/settings/tax";
 
 export default class TaxList extends List {
   constructor(props) {
@@ -19,7 +21,7 @@ export default class TaxList extends List {
   componentDidMount() {
     const { dispatch } = this.props;
 
-    dispatch(TaxMethod.fetchTax(this.pageSize));
+    dispatch(TaxAction.fetch(this.pageSize));
   }
 
   onChange(pagination, filters, sorter) {
@@ -27,21 +29,24 @@ export default class TaxList extends List {
 
     super.onChange(pagination, filters, sorter);
 
-    dispatch(TaxMethod.fetchTax(...this.filter));
+    dispatch(TaxAction.fetch(...this.filter));
   }
 
   handleAdd() {
     super.handleAdd();
+    this.setState({
+      modalConten: <FormAdd/>
+    });
   }
 
   handleDelete() {
     const { dispatch } = this.props;
 
-    dispatch(TaxMethod.archive(this.state.selectedListIds));
+    dispatch(TaxAction.archive(this.state.selectedListIds));
 
     this.Message.info(this.messageSuccess);
 
-    dispatch(TaxMethod.fetchTax(this.pageSize, this.state.current));
+    dispatch(TaxAction.fetch(this.pageSize, this.state.current));
 
     this.setState({selectedRowKeys: []});
   }

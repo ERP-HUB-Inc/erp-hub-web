@@ -1,8 +1,9 @@
 import React from "react";
-import List from "../../List";
 import columns from "./column";
 import FormAdd from "./FormAdd";
-import PaymentMethod from "../../../action/settings/paymentMethod";
+import List from "../../List";
+import { RESET_PAYMENT_METHOD } from "../../../constants/settings/paymentMethod";
+import PaymentMethodAction from "../../../action/settings/paymentMethod";
 import "./index.css";
 
 export default class PaymentMethodList extends List {
@@ -14,28 +15,30 @@ export default class PaymentMethodList extends List {
     };
 
     this.title = "Payment Method";
-    this.reducerProp = "paymentMethod";
+    this.fetchingProp = "paymentMethod";
+    this.addingProp = "paymentMethodAdd";
+    this.RESET_CONSTANT = RESET_PAYMENT_METHOD;
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(PaymentMethod.fetchPaymentMethods(this.pageSize));
+    dispatch(PaymentMethodAction.fetch(this.pageSize));
   }
 
   onChange(pagination, filters, sorter) {
     const { dispatch } = this.props;
     super.onChange(pagination, filters, sorter);
-    dispatch(PaymentMethod.fetchPaymentMethods(...this.filter));
+    dispatch(PaymentMethodAction.fetch(...this.filter));
   }
 
   handleSubmit() {
     const { dispatch, formAdd } = this.props;
-    super.handleSubmit();
-    dispatch(PaymentMethod.addPaymentMethods(formAdd.values));
+    dispatch(PaymentMethodAction.add(formAdd.values));
   }
 
   handleAdd() {
-    super.handleAdd();
+    const { dispatch } = this.props;
+    dispatch(PaymentMethodAction.showForm());
     this.setState({
       modalConten: <FormAdd/>
     });
@@ -44,11 +47,11 @@ export default class PaymentMethodList extends List {
   handleDelete() {
     const { dispatch } = this.props;
 
-    dispatch(PaymentMethod.archivePaymentMethods(this.state.selectedListIds));
+    dispatch(PaymentMethodAction.archive(this.state.selectedListIds));
 
     this.Message.info(this.messageSuccess);
 
-    dispatch(PaymentMethod.fetchPaymentMethods(this.pageSize, this.state.current));
+    dispatch(PaymentMethodAction.fetch(this.pageSize, this.state.current));
     
     this.setState({selectedRowKeys: []});
   }

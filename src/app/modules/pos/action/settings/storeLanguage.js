@@ -5,7 +5,7 @@ import {
 } from "../../constants/settings/storeLanguage";
 import LanguageService from "../../services/settings/StoreLanguage";
 
-export default{
+export default {
   fetch:(limit, offset, sortField, sortOrder) => {
     return dispatch => {
       return dispatch({
