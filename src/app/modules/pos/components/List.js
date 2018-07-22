@@ -25,6 +25,7 @@ export default class List extends Component {
 
     this.pageSize = 10;
     this.confirmTextDelete = "Are you sure delete this record?";
+    this.requiredMessage = "Please input all required field.";
     this.okText = "Yes";
     this.cancelText = "No";
     this.messageSuccess = "Success";
@@ -32,6 +33,8 @@ export default class List extends Component {
     this.onChange = this.onChange.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+
+    this.RESET_CONSTANT = "RESET";
   }
 
   sortOrder(order) {
@@ -66,9 +69,6 @@ export default class List extends Component {
   }
 
   handleSubmit() {
-    this.setState({
-      submitPending: true
-    });
   }
 
   handleAdd() {
@@ -88,16 +88,22 @@ export default class List extends Component {
 
   handleCancel() {
     this.setState({
-      modalVisible: false
+      modalVisible: false,
+      modalConten: null
     });
   }
 
   render() {
-    const props = this.props[this.reducerProp];
+    let props = this.props;
     const pagination = {
       total: props.list.total,
       pageSize: props.list.limit
     };
+
+    if (props.response != null) { // Here is repsonse from add action
+      props.list.data = [props.response.data, ...props.list.data];
+      this.props.dispatch({type: this.RESET_CONSTANT});
+    }
   
     const rowSelection = {
       selectedRowKeys: this.state.selectedRowKeys,
@@ -157,11 +163,12 @@ export default class List extends Component {
               footer={
                 <div>
                   <this.Button className="danger" onClick={() => this.handleCancel()}><span className="icon-close icon-padding-right"></span>CANCEL</this.Button>
-                  <this.Button loading={this.state.submitPending} className="info" onClick={() => this.handleSubmit()}><span className="icon-checked icon-padding-right"></span>OK</this.Button>
+                  <this.Button  className="info" onClick={() => this.handleSubmit()}><span className="icon-checked icon-padding-right"></span>OK</this.Button>
                 </div>
               }
             >
               {/* <p>{JSON.stringify(this.state.modalSource)}</p> */}
+              <this.Alert message={this.requiredMessage} type="error" />
               {this.state.modalConten}
             </this.Modal>
             :

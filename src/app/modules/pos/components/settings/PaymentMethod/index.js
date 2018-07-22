@@ -2,6 +2,7 @@ import React from "react";
 import columns from "./column";
 import FormAdd from "./FormAdd";
 import List from "../../List";
+import { RESET_PAYMENT_METHOD } from "../../../constants/settings/paymentMethod";
 import PaymentMethodAction from "../../../action/settings/paymentMethod";
 import "./index.css";
 
@@ -15,6 +16,7 @@ export default class PaymentMethodList extends List {
 
     this.title = "Payment Method";
     this.reducerProp = "paymentMethod";
+    this.RESET_CONSTANT = RESET_PAYMENT_METHOD;
   }
 
   componentDidMount() {
@@ -30,8 +32,8 @@ export default class PaymentMethodList extends List {
 
   handleSubmit() {
     const { dispatch, formAdd } = this.props;
-    super.handleSubmit();
     dispatch(PaymentMethodAction.add(formAdd.values));
+    super.handleCancel();
   }
 
   handleAdd() {

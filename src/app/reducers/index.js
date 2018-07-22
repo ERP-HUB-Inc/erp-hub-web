@@ -15,6 +15,7 @@ const reducer = combineReducers({
   storeLanguage: storeLanguage.request,
   paymentMethod: PaymentMethod.request,
   paymentMethodArchive: PaymentMethod.archive,
+  paymentMethodAdd: PaymentMethod.add,
 });
 
 export default reducer;

@@ -22,7 +22,7 @@ export default {
     return {
       adding: false,
       added: false,
-      [key]: false,
+      [key]: null,
       error: null
     };
   }

@@ -1,7 +1,8 @@
 import {
   REQUEST_PAYMENT_METHOD,
   ARCHIVE_PAYMENT_METHOD,
-  ADD_PAYMENT_METHOD
+  ADD_PAYMENT_METHOD,
+  RESET_PAYMENT_METHOD
 } from "../../constants/settings/paymentMethod";
 import PaymentMethodService from "../../services/settings/PaymentMethodService";
 
@@ -27,6 +28,14 @@ export default {
       return dispatch({
         type: ADD_PAYMENT_METHOD,
         payload: PaymentMethodService.add(data)
+      });
+    };
+  },
+  reset: () => {
+    return dispatch => {
+      return dispatch({
+        type: RESET_PAYMENT_METHOD,
+        payload: null
       });
     };
   }

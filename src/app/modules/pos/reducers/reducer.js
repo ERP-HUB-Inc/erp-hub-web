@@ -53,7 +53,7 @@ export default {
       return state;
     }
   },
-  add: (state, action, [PEDDING, REJECT, FULFILLED]) => {
+  add: (state, action, [PEDDING, REJECT, FULFILLED, RESET]) => {
     switch(action.type) {
     case PEDDING: {
       return {
@@ -76,7 +76,15 @@ export default {
         response: action.payload.data
       };
     }
-    default:
+    case RESET: {
+      return {
+        ...state, 
+        adding: false,
+        added: false,
+        response: null
+      };
+    }
+    default: 
       return state;
     }
   }

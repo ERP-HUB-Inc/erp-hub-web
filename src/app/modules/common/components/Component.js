@@ -62,7 +62,8 @@ import {
   Checkbox,
   Modal,
   Popconfirm,
-  message
+  message,
+  Alert
 } from "antd";
 const Panel = Collapse.Panel;
 const { Option } = Select;
@@ -75,6 +76,7 @@ export default class Component extends RComponent {
     this.Table = CTable;
     this.Button = Button;
     this.Message = message;
+    this.Alert = Alert;
     this.Popconfirm = Popconfirm;
     this.Modal = Modal;
     this.Header = () => (<Header/>);
