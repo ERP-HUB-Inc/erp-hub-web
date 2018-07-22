@@ -17,8 +17,8 @@ export default class Add extends Component {
     ];
     return (
       <div>
-        <InputText name="name" label="Name" placeholder="Please input your name" required={true}/>
-        <InputText name="description" label="Description" placeholder="Description"/>
+        <InputText name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
+        <InputText name="description" label="Description" placeholder="Description" max={255}/>
         <Select name="status" label="Status" placeholder="Please select status" dataSource={dataSource} defaultValue={1}/>
       </div>
     );

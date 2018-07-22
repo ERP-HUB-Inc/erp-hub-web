@@ -13,7 +13,8 @@ export default class CurrencyList extends List {
     };
 
     this.title = "Currency";
-    this.reducerProp = "currency";
+    this.fetchingProp = "currency";
+    this.addingProp = "currencyAdd";
   }
 
   componentDidMount() {
