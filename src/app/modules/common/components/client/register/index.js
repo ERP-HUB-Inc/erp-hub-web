@@ -34,17 +34,7 @@ class ClientRegister extends Component {
               label="Comfirm Password"
               component={ this.AnimationInput }
             />
-
             <this.RadioRegister />
-
-            {/* <div>
-              <this.Link className="store-link" to="dd">
-              have and account? Sign in 
-              </this.Link>
-              <div className="main-signin">
-                <this.Button type="info">START</this.Button>
-              </div>
-            </div> */}
           </this.FormGroup>
         </this.LoginLayout>
       </div>
