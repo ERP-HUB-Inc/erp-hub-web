@@ -14,7 +14,7 @@ class StoreLanguage extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    storeLanguage: state.reducer.storeLanguage
+    ...state.reducer.storeLanguage
   };
 }
 
