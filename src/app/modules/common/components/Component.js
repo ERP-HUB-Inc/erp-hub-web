@@ -17,9 +17,10 @@ import
   TrashButton,
   AnimationInput,
   Button,
-  LoginLayout
+  LoginLayout,
+  RadioRegister
 } from "../elements/ant-ui";
-import Antinput from "../../common/elements/ant-ui/Input";
+import Antinput from "../elements/ant-ui/Input";
 import Header from "../elements/ant-ui/Header";
 import {
   InputRedux,
@@ -138,6 +139,7 @@ export default class Component extends RComponent {
     this.FieldComponent = FieldComponent;
     this.TrashButton = TrashButton;
     this.LoginLayout = LoginLayout;
+    this.RadioRegister = RadioRegister;
 
   }
 
