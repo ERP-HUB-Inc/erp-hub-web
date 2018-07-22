@@ -1,0 +1,57 @@
+import React from "react";
+import { reduxForm } from "redux-form";
+import Component from "../../Component";
+import "./index.css";
+
+class ClientRegister extends Component {
+  render() {
+    return (
+      <div>
+        <this.LoginLayout>
+          <div className="title">
+            <h6>Start Register with Us</h6>
+          </div>
+          <this.FormGroup>
+            <this.Field
+              name="username"
+              type="text"
+              label="Email"
+              component={ this.AnimationInput }
+            />
+          </this.FormGroup>
+          <this.FormGroup>
+            <this.Field
+              name="username"
+              type="text"
+              label="Password"
+              component={ this.AnimationInput }
+            />
+          </this.FormGroup>
+          <this.FormGroup>
+            <this.Field
+              name="Username"
+              type="text"
+              label="Comfirm Password"
+              component={ this.AnimationInput }
+            />
+
+            <this.RadioRegister />
+
+            {/* <div>
+              <this.Link className="store-link" to="dd">
+              have and account? Sign in 
+              </this.Link>
+              <div className="main-signin">
+                <this.Button type="info">START</this.Button>
+              </div>
+            </div> */}
+          </this.FormGroup>
+        </this.LoginLayout>
+      </div>
+    );
+  }
+}
+
+export default reduxForm({
+  form: "clientLogin"
+})(ClientRegister);
