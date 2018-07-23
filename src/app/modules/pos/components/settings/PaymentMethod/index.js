@@ -1,7 +1,8 @@
 import React from "react";
 import columns from "./column";
 import FormAdd from "./FormAdd";
-import CreateForm from "../../../containers/settings/PaymentMethod/CreateForm";
+import FormCreate from "../../../containers/settings/PaymentMethod/FormCreate";
+import FormUpdate from "../../../containers/settings/PaymentMethod/FormUpdate";
 import List from "../../List";
 import { RESET_PAYMENT_METHOD } from "../../../constants/settings/paymentMethod";
 import PaymentMethodAction from "../../../action/settings/paymentMethod";
@@ -31,9 +32,17 @@ export default class PaymentMethodList extends List {
     const { dispatch } = this.props;
     dispatch(PaymentMethodAction.showForm());
     this.setState({
-      modalConten: <CreateForm/>
+      modalConten: <FormCreate/>
     });
-  } 
+  }
+
+  handleShowFormEdit(rowData) {
+    const { dispatch } = this.props;
+    dispatch(PaymentMethodAction.showForm(rowData));
+    this.setState({
+      modalConten: <FormUpdate/>
+    });
+  }
 
   handleDelete() {
     const { dispatch } = this.props;

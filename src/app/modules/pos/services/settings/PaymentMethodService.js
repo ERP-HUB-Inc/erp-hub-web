@@ -44,10 +44,10 @@ class PaymentMethodService extends BaseService {
     });
   }
 
-  edit(data) {
+  update(data, id = "00000001-0001-2018-0001-00000119") {
     return this.fetchData({
-      url: `${this.baseUrl}/create`,
-      method: "POST",
+      url: `${this.baseUrl}/update/${id}`,
+      method: "PUT",
       data: {
         ...data,
         isSystem: 0,

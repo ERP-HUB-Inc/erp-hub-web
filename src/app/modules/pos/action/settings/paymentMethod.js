@@ -2,6 +2,7 @@ import {
   REQUEST_PAYMENT_METHOD,
   ARCHIVE_PAYMENT_METHOD,
   ADD_PAYMENT_METHOD,
+  UPDATE_PAYMENT_METHOD,
   SHOW_PAYMENT_METHOD_FORM,
   RESET_PAYMENT_METHOD
 } from "../../constants/settings/paymentMethod";
@@ -32,6 +33,14 @@ export default {
       });
     };
   },
+  update: (data, id) => {
+    return dispatch => {
+      return dispatch({
+        type: UPDATE_PAYMENT_METHOD,
+        payload: PaymentMethodService.update(data, id)
+      });
+    };
+  },
   reset: () => {
     return dispatch => {
       return dispatch({
@@ -40,11 +49,11 @@ export default {
       });
     };
   },
-  showForm: () => {
+  showForm: (data) => {
     return dispatch => {
       return dispatch({
         type: SHOW_PAYMENT_METHOD_FORM,
-        payload: null
+        payload: data
       });
     };
   }

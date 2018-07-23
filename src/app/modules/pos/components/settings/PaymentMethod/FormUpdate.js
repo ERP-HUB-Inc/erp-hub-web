@@ -7,13 +7,13 @@ import PaymentMethodAction from "../../../action/settings/paymentMethod";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.title = "Payment Method";
-    this.addingPropReducer = "paymentMethodAdd";
+    this.title = "Payment Method:Update";
+    this.addingPropReducer = "paymentMethodUpdate";
     this.dispatch = this.props.dispatch;
   }
   handleSubmit() {
     const { formAdd } = this.props;
-    this.dispatch(PaymentMethodAction.add(formAdd.values));
+    this.dispatch(PaymentMethodAction.update(formAdd.values));
   }
     
   handleCancel() {
@@ -21,16 +21,16 @@ export default class Form extends Modal {
   }
 
   render() {
-    const {paymentMethodAdd} = this.props;
+    const {paymentMethodUpdate} = this.props;
     
-    if (paymentMethodAdd.response != null) {
+    if (paymentMethodUpdate.response != null) {
       this.dispatch(PaymentMethodAction.reset());
     }
 
-    if (paymentMethodAdd.showForm) {
+    if (paymentMethodUpdate.showForm) {
       this.content = (
         <div>
-          {paymentMethodAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
+          {paymentMethodUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
           <InputText name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
           <InputText name="description" label="Description" placeholder="Description" max={255}/>
           <Select name="status" label="Status" placeholder="Please select status" dataSource={this.statusDataSource} defaultValue={1}/>

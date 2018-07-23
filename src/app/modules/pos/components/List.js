@@ -117,7 +117,7 @@ export default class List extends Component {
    * just handle for show user click on single row and display form edit
    * it will overide in child class
    */
-  handleEdit(modalSource) {
+  handleShowFormEdit(modalSource) {
     this.setState({
       modalSource
     });
@@ -197,7 +197,7 @@ export default class List extends Component {
             pagination={false} //
             onChange={this.onChange}
             onRow={record =>({
-              onDoubleClick:(e)=> this.handleEdit(record)
+              onDoubleClick:(e)=> this.handleShowFormEdit(record)
             })}
             loading={fetchingProps.fetching}
           />
