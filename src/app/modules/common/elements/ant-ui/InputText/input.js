@@ -20,7 +20,6 @@ class InputText extends Element {
 
 InputText.defaultProps = {
   name: "name",
-  label: "Name",
   type: "text",
   required: false
 };

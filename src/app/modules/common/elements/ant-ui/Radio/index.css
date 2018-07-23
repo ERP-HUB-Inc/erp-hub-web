@@ -8,7 +8,11 @@
 }
 
 .main-radio .ant-radio-button-wrapper {
-    margin-right: 10px;
+    margin-right: 16px;
+}
+
+.main-radio .ant-radio-button-wrapper:last-child {
+    margin-right: 0px;
 }
 
 .main-radio .ant-radio-button-wrapper-checked::before {
@@ -30,7 +34,7 @@
 
 .main-radio .radio-title {
     color: #4D4F5C;
-    font-size: 14pt;
+    font-size: 11pt;
     font-weight: 500;
 }
 

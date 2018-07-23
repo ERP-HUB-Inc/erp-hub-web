@@ -1,55 +1,78 @@
 import React from "react";
-import { reduxForm } from "redux-form";
 import Component from "../../Component";
 import "./index.css";
 
-class ClientRegister extends Component {
+export default class ClientRegister extends Component {
   render() {
     return (
-      <div>
-        <this.LoginLayout>
-          <div className="title">
-            <h6>Start Register with Us</h6>
-          </div>
-          <this.FormGroup>
-            <this.Field
-              name="username"
-              type="text"
-              label="Email"
-              component={ this.AnimationInput }
-            />
-          </this.FormGroup>
-          <this.FormGroup>
-            <this.Field
-              name="username"
-              type="text"
-              label="Password"
-              component={ this.AnimationInput }
-            />
-          </this.FormGroup>
-          <this.FormGroup>
-            <this.Field
-              name="Username"
-              type="text"
-              label="Comfirm Password"
-              component={ this.AnimationInput }
-            />
-            <this.RadioRegister />
-          </this.FormGroup>
-          <div>
-            <this.Link className="store-link" to="dd">
-              have and account? sign in
-            </this.Link>
-            <div className="main-signin">
-              <this.Button type="info">START</this.Button>
+      <this.Row>
+        <this.Col className="clear-padding wrap-client-login wrap-client-register">
+          <div className="wrap-blog-logo">
+            <div className="blog-logo text-center">
+              <div className="inner-logo">
+                <div className="logo">
+                  <span className="icon-logo"></span>
+                </div>
+                <div className="text">
+                  <strong>store</strong>Vein
+                </div>
+              </div>
             </div>
           </div>
-        </this.LoginLayout>
-      </div>
+          <div className="blog-register">
+            <div className="wrap-help"><span className="icon-help icon-padding-right"></span><span className="help">Help</span></div>
+            <div className="header text-right">
+              <div className="title"><strong>store</strong>Vein</div>
+              <div className="back-office">Backoffice</div>
+            </div>
+            <div className="title">
+              <h6>Start Register with Us</h6>
+            </div>
+            <this.Field
+              name="email"
+              type="text"
+              label="Email"
+              placeholder="Email"
+              component={ this.InputText }
+            />
+            <this.Field
+              name="password"
+              type="text"
+              label="Password"
+              placeholder="Password"
+              component={ this.InputText }
+            />
+            <this.Field
+              name="comfirmpassword"
+              type="text"
+              label="Comfirm Password"
+              placeholder="Comfirm Password"
+              component={ this.InputText }
+            />
+            <div>
+              <this.FormGroup>
+                <this.Field 
+                  label="Country"
+                  name="favoriteColor" 
+                  type="radio"
+                  component={ this.RadioRegisterGroup }
+                >
+                  <this.RadioRegister title="Global" language="England" currency="USD" value="a"/>
+                  <this.RadioRegister title="Cambodia" language="England" currency="USD"  value="b" />
+                  <this.RadioRegister title="Myanmar" language="England" currency="USD"  value="c" />
+                </this.Field> 
+              </this.FormGroup>
+
+              <this.Link  to="sign in">
+                <span className="have-acc">have and account?</span> <span className="store-link">sign in </span>
+              </this.Link>
+              <div className="main-signin">
+                <this.Button type="info">START</this.Button>
+              </div>
+            </div>
+          </div>
+        </this.Col>
+      </this.Row>
     );
   }
 }
-
-export default reduxForm({
-  form: "clientLogin"
-})(ClientRegister);

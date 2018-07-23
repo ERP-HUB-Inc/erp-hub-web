@@ -1,7 +1,7 @@
 import React from "react";
 import { reduxForm } from "redux-form";
 import Component from "../../Component";
-import "./index.css";
+// import "./index.css";
 
 class SignInStore extends Component {
   render() {

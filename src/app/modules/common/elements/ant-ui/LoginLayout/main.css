@@ -1,0 +1,135 @@
+.wrap-client-login {
+    box-shadow: 0 0 4px 0 rgba(0,0,0,0.5);
+    margin: auto !important;
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    background-color: white;
+}
+
+.header.text-right {
+    position: relative;
+    top: -25px;
+}
+
+.wrap-client-login .ant-form-item {
+    margin-bottom: 0px !important;
+}
+
+.wrap-client-login span.have-acc {
+    color: #4D4F5C !important;
+    font-size: 10pt !important;
+}
+
+.wrap-client-login a:hover {
+    text-decoration: none !important;
+}
+
+.blog-login .wrap-help {
+    position: relative !important;
+    top: 15px !important;
+    color: #9A9A9A !important;
+}
+
+.wrap-client-login .wrap-blog-logo,
+.wrap-client-login {
+    height: 452px !important;
+    width: 632px !important;
+}
+
+.wrap-client-login .wrap-blog-logo {
+    width: 257px !important;
+    display: table !important;
+    background-color: #093163 !important;
+    position: fixed !important;
+}
+
+.wrap-client-login .wrap-blog-logo .blog-logo {
+    display: table-cell !important;
+    vertical-align: middle !important;
+}
+
+.wrap-client-login .blog-logo .icon-logo {
+    color: white !important;
+}
+
+.wrap-client-login .blog-logo .icon-logo {
+    font-size: 60pt !important;
+}
+
+.wrap-client-login .blog-logo .inner-logo .text {
+    color: #FFD627 !important;
+}
+
+.wrap-client-login .blog-login {
+    margin-left: 250px;
+    padding: 20px 30px;
+    width: 377px  !important;
+}
+
+.wrap-client-login .blog-login .header,
+.wrap-client-login .blog-logo .inner-logo .text {
+    font-size: 18pt !important;
+}
+
+.wrap-client-login .blog-login .header .title{
+    color: #4F2B0B !important;
+}
+
+.wrap-client-login .blog-login .header .back-office {
+    color: #9B9B9B !important;
+    font-size: 10pt !important;
+}
+
+.wrap-client-login .blog-login .wrap-login {
+    margin-top: 20px !important;
+}
+
+.wrap-client-login .blog-login .wrap-login .your-store-name {
+    margin-bottom: 25px !important;
+}
+
+.wrap-client-login .blog-login .wrap-login .store-name{
+    color: #4D4F5C !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+}
+
+.wrap-client-login .blog-login .wrap-login .store-url {
+    color: #9B9B9B !important;
+    font-size: 10pt !important;
+}
+
+.wrap-client-login .blog-login .wrap-login .wrap-help {
+    margin-top: 20px !important;
+}
+
+.wrap-client-login .blog-login .wrap-login button {
+    width: 150px !important;
+}
+
+.wrap-client-login .blog-login .wrap-login .help {
+    font-size: 12pt !important;
+    position: relative !important;
+    bottom: 5px !important;
+}
+
+.wrap-client-login .blog-login .wrap-login .help,
+.wrap-client-login .blog-login .wrap-login .icon-help {
+    color: #9A9A9A !important;
+    font-weight: 500 !important;
+}
+
+.clear-padding {
+    padding: 0 !important;
+}
+
+.clear-padding-l {
+    padding-left: 0 !important;
+}
+
+.clear-padding-r {
+    padding-right: 0 !important;
+} 
