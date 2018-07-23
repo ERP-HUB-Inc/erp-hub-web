@@ -9,6 +9,11 @@
     font-weight: 500;
 }
 
+.wrap-client-login .main-field,
+.wrap-client-login .signin-button
+ {
+    margin-top: 8px;
+} 
 
 .blog-register {
     margin-left: 250px;
@@ -16,11 +21,12 @@
     width: 377px !important;
 }
 
-
 .wrap-client-login .wrap-blog-logo,
 .wrap-client-login {
-    height: 359px !important;
+    height: 359px;
+    width: 632px;
 }
+
 
 .wrap-client-login .storename {
     color: #4D4F5C;
@@ -29,4 +35,11 @@
     line-height: 23px;
 }
 
-/* .store-email  */
+.wrap-client-login .store-email {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.wrap-client-login .store-email .store-email-url {
+    color: #CDCCCC;
+}

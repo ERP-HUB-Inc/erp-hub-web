@@ -13,6 +13,10 @@ class InputText extends Element {
             <this.Input {...input} type={this.props.type} placeholder={this.props.placeholder}/>
           )
         }
+        { this.props.notation !="" ?
+          <label className="notation-textfield">{ this.props.notation }</label>
+          : ""  
+        }
       </this.FormItem>
     );
   }

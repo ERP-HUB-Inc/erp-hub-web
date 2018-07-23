@@ -35,8 +35,8 @@
 
 .wrap-client-login .wrap-blog-logo,
 .wrap-client-login {
-    height: 452px !important;
-    width: 632px !important;
+    height: 452px;
+    width: 632px;
 }
 
 .wrap-client-login .wrap-blog-logo {

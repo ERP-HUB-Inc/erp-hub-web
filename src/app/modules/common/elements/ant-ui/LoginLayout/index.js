@@ -4,12 +4,12 @@ import "./main.css";
 
 export class LoginLayout extends React.Component {
   render() {
-    const { clasbloglogo,clasbloglogin } = this.props;
+    const { clasBlogLogo,classBlogLogin } = this.props;
     return (
       <Row>
-        <Col className="clear-padding wrap-client-login">
+        <Col className={ classBlogLogin }>
           <Col className="clear-padding wrap-client-login">
-            <div className="wrap-blog-logo">
+            <div className={ clasBlogLogo }>
               <div className="blog-logo text-center">
                 <div className="inner-logo">
                   <div className="logo">
@@ -36,3 +36,9 @@ export class LoginLayout extends React.Component {
   }
 
 }
+
+LoginLayout.defaultProps = {
+  clasBlogLogo: "wrap-blog-logo",
+  classBlogLogin: "clear-padding wrap-client-login"
+};
+
