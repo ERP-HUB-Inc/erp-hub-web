@@ -3,7 +3,7 @@
 }
 
 .wrap-client-login .store-link {
-    font-size: 12pt;
+    font-size: 10pt;
     color: #4D4F5C;
     text-decoration: underline;
     font-weight: 500;
@@ -30,7 +30,7 @@
 
 .wrap-client-login .wrap-blog-logo,
 .wrap-client-login {
-    height: 360px;
+    height: 452px;
     width: 632px;
 }
 

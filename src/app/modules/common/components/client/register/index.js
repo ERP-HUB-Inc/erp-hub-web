@@ -36,6 +36,14 @@ class ClientRegister extends Component {
             />
             <this.RadioRegister />
           </this.FormGroup>
+          <div>
+            <this.Link className="store-link" to="dd">
+              have and account? sign in
+            </this.Link>
+            <div className="main-signin">
+              <this.Button type="info">START</this.Button>
+            </div>
+          </div>
         </this.LoginLayout>
       </div>
     );
