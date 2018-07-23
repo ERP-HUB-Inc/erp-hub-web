@@ -7,7 +7,9 @@ import {
   ARCHIVE_TAX_FULFILLED,
   ADD_TAX_PENDING,
   ADD_TAX_REJECTED,
-  ADD_TAX_FULFILLED
+  ADD_TAX_FULFILLED,
+  SHOW_TAX_FORM,
+  RESET_TAX,
 } from "../../constants/settings/tax";
 import InitialState from "../../../common/reducers/initialState";
 import reducer from "../reducer";
@@ -33,7 +35,9 @@ export default {
     const constants = [
       ADD_TAX_PENDING,
       ADD_TAX_REJECTED,
-      ADD_TAX_FULFILLED
+      ADD_TAX_FULFILLED,
+      SHOW_TAX_FORM,
+      RESET_TAX
     ];
     return reducer.add(state, action, constants);
   }

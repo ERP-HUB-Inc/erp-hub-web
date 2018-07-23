@@ -9,22 +9,20 @@ export default class List extends Component {
     super(props);
     this.state = {
       current: 1,
-      columns: [],
       selectedRowKeys: [],
       selectedListIds: [],
-      modaltitle: "Payment Method",
       modalVisible: false,
       modalSource: {},
       modalConten: null, // the content that show in modal content
     };
 
-    this.filter= [],
-    this.title = "General"; // title of the list
+    this.columns = [],
+    this.filter = [],
     this.module = "settings"; // This compare to parent key in datasource in sidebar when render breadcrump
     this.fetchingProp = "paymentMethod"; // prop of reducer of fetching record that get from map state to prop from container
     this.addingProp = "paymentMethodAdd"; // prop of reducer of adding record that get from map state to prop from container
 
-    this.pageSize = 10;
+    this.pageSize = 10; // default limit record display in table list
     this.confirmTextDelete = "Are you sure delete this record?";
     this.requiredMessage = "Please input all required field."; // require message display on modal popup
     this.okText = "Yes"; // text button on alert of delete action
@@ -109,21 +107,27 @@ export default class List extends Component {
     });
   }
 
-  handleSubmit() {}
+  /**
+   * just handle for show create form only
+   * it will overide in child class
+   */
+  handleShowFormAdd() {}
 
-  handleAdd() {}
-
+  /**
+   * just handle for show user click on single row and display form edit
+   * it will overide in child class
+   */
   handleEdit(modalSource) {
     this.setState({
       modalSource
     });
   }
 
+  /**
+   * handle delete multi record
+   * it will overide in child class
+   */
   handleDelete() {}
-
-  handleCancel() {
-    this.props.dispatch({type: this.RESET_CONSTANT});
-  }
 
   render() {
     let fetchingProps = this.props[this.fetchingProp];
@@ -147,9 +151,6 @@ export default class List extends Component {
   
     // get current path of breadcrum compare with url
     const currentPath = window.location.pathname;
-
-    // get value for display popup value 
-    let showModal = this.state.modalVisible;
 
     return (
       <div style={{marginTop: "15px"}}>
@@ -176,7 +177,7 @@ export default class List extends Component {
         <div className="table-wrapper">
           {/* ===============ACTION BUTTON============ */}
           <div className="float-left">
-            <this.Button type="info" className="mg-right" onClick={() => this.handleAdd()}>
+            <this.Button type="info" className="mg-right" onClick={() => this.handleShowFormAdd()}>
               <span className="icon-add icon-padding-right"></span>Add
             </this.Button>
             <this.Popconfirm placement="topLeft" title={this.confirmTextDelete} onConfirm={this.handleDelete} okText={this.okText} cancelText={this.cancelText}>
@@ -192,7 +193,7 @@ export default class List extends Component {
           <this.Table 
             rowSelection={rowSelection}
             dataSource={fetchingProps.list.data}
-            columns={this.state.columns}
+            columns={this.columns}
             pagination={false} //
             onChange={this.onChange}
             onRow={record =>({
@@ -203,33 +204,11 @@ export default class List extends Component {
         </div>
         {/* ===============END TABLE LIST============ */}
 
-        {/* ===============MODAL============ */}
+        {/* ===============DISPLAY MODAL POPUP============ */}
         {
-          addingProps.showForm ? 
-            <this.Modal
-              title={this.state.modaltitle}
-              wrapClassName="vertical-center-modal"
-              visible={true}
-              onOk={this.onOk}
-              footer={
-                <div>
-                  <this.Button className="danger" onClick={() => this.handleCancel()}>
-                    <span className="icon-close icon-padding-right"></span>CANCEL
-                  </this.Button>
-                  <this.Button loading={addingProps.adding}  className="info" onClick={() => this.handleSubmit()}>
-                    <span className="icon-checked icon-padding-right"></span>OK
-                  </this.Button>
-                </div>
-              }
-            >
-              {addingProps.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-              {this.state.dataSource}
-              {this.state.modalConten}
-            </this.Modal>
-            :
-            ""
+          this.state.modalConten
         }
-        {/* ===============END MODAL============ */}
+        {/* ===============END DISPLAY MODAL POPUP============ */}
       </div>
     );
   }

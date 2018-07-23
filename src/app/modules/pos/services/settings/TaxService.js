@@ -22,12 +22,24 @@ class TaxService extends BaseService {
 	    });
   }
 
-
   archive(ids) {
     return this.fetchData({ 
       url: `${this.baseUrl}/archive/${ids}`,
       method: "DELETE",
       data: this.data,
+      headers: this.header
+    });
+  }
+
+  add(data) {
+    return this.fetchData({
+      url: `${this.baseUrl}/create`,
+      method: "POST",
+      data: {
+        ...data,
+        isSystem: 0,
+        isDefault: 0
+      },
       headers: this.header
     });
   }

@@ -43,6 +43,19 @@ class PaymentMethodService extends BaseService {
       headers: this.header
     });
   }
+
+  edit(data) {
+    return this.fetchData({
+      url: `${this.baseUrl}/create`,
+      method: "POST",
+      data: {
+        ...data,
+        isSystem: 0,
+        isDefault: 0
+      },
+      headers: this.header
+    });
+  }
 }
 
 export default new PaymentMethodService();

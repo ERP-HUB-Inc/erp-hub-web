@@ -12,3 +12,6 @@ export const ADD_TAX            = "ADD_TAX";
 export const ADD_TAX_PENDING    = "ADD_TAX_PENDING";
 export const ADD_TAX_REJECTED   = "ADD_TAX_REJECTED";
 export const ADD_TAX_FULFILLED  = "ADD_TAX_FULFILLED";
+
+export const RESET_TAX       = "RESET_TAX";
+export const SHOW_TAX_FORM   = "SHOW_TAX_FORM";
