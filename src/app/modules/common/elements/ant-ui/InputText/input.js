@@ -9,7 +9,7 @@ class InputText extends Element {
     return (
       <this.FormItem label={this.props.label}>
         {
-          getFieldDecorator(this.props.name, {rules: this.props.rules})(
+          getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.data})(
             <this.Input {...input} type={this.props.type} placeholder={this.props.placeholder}/>
           )
         }

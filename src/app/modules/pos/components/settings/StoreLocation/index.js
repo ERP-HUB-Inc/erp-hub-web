@@ -6,11 +6,7 @@ import StoreLocationAction from "../../../action/settings/storeLocation";
 export default class StoreLocationList extends List {
   constructor(props) {
     super(props);
-    this.state = {
-      modaltitle: "Store Location",
-      columns
-    };
-
+    this.columns = columns;
     this.title = "Store Location";
     this.fetchingProp = "storeLocation";
     this.addingProp = "storeLocationAdd";

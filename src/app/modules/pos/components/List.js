@@ -186,6 +186,7 @@ export default class List extends Component {
               </this.Button>
             </this.Popconfirm>
           </div>
+
           <div className="float-right">
             <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
           </div>

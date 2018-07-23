@@ -7,12 +7,7 @@ import CurrencyAction from "../../../action/settings/currency";
 export default class CurrencyList extends List {
   constructor(props) {
     super(props);
-    this.state = {
-      ...this.state,
-      modaltitle: "Currency",
-      columns
-    };
-
+    this.columns = columns;
     this.title = "Currency";
     this.fetchingProp = "currency";
     this.addingProp = "currencyAdd";

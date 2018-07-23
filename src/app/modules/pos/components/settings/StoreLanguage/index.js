@@ -6,11 +6,7 @@ import StoreLanguageAction from "../../../action/settings/storeLanguage";
 export default class StoreLanguageList extends List {
   constructor(props) {
     super(props);
-    this.state = {
-      modaltitle: "Language",
-      columns
-    };
-
+    this.columns = columns;
     this.title = "Language";
     this.fetchingProp = "storeLanguage";
     this.addingProp = "storeLanguageAdd";

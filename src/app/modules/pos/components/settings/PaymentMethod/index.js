@@ -24,7 +24,33 @@ export default class PaymentMethodList extends List {
 
   onChange(pagination, filters, sorter) {
     const { dispatch } = this.props;
+
     super.onChange(pagination, filters, sorter);
+    
+    dispatch(PaymentMethodAction.fetch(...this.filter));
+  }
+
+  onChangePagination(pageNumber, pageSize) {
+    const { dispatch } = this.props;
+
+    this.filter = [
+      pageSize,
+      (pageNumber - 1) * pageSize,
+    ];
+
+    dispatch(PaymentMethodAction.fetch(...this.filter));
+
+    this.setState({ current: pageNumber});
+  }
+
+  onShowSizeChange(current, pageSize) {
+    const { dispatch } = this.props;
+
+    this.filter = [
+      pageSize,
+      current,
+    ];
+
     dispatch(PaymentMethodAction.fetch(...this.filter));
   }
 

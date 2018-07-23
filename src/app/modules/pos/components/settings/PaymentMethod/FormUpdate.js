@@ -31,9 +31,9 @@ export default class Form extends Modal {
       this.content = (
         <div>
           {paymentMethodUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <InputText name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
-          <InputText name="description" label="Description" placeholder="Description" max={255}/>
-          <Select name="status" label="Status" placeholder="Please select status" dataSource={this.statusDataSource} defaultValue={1}/>
+          <InputText data={paymentMethodUpdate.data.name} name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
+          <InputText data={paymentMethodUpdate.data.description} name="description" label="Description" placeholder="Description" max={255}/>
+          <Select name="status" label="Status" placeholder="Please select status" dataSource={this.statusDataSource} defaultValue={paymentMethodUpdate.data.status}/>
         </div>
       );
       return super.render();

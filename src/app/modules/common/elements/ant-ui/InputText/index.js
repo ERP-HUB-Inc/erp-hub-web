@@ -27,6 +27,7 @@ export default class Input extends Element {
         placeholder={this.props.placeholder}
         component={ InputText }
         label={this.props.label}
+        data={this.props.data}
         required = {this.props.required}
         rules = {this.rules}
       />
