@@ -15,7 +15,8 @@ class Currency extends React.Component {
 function mapStateToProps(state) {
   return {
     formAdd: state.form.formCurrency,
-    ...state.reducer.currency
+    currency: state.reducer.currency,
+    currencyAdd: state.reducer.currencyAdd
   };
 }
 

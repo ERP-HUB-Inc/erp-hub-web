@@ -1,4 +1,5 @@
 import React from "react";
+import { Pagination } from "antd";
 import Component  from "../../common/components/Component";
 import menuSource from "../../common/components/layout/SiderBar/datasource";
 import "./index.css";
@@ -7,7 +8,7 @@ export default class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 0,
+      current: 1,
       columns: [],
       selectedRowKeys: [],
       selectedListIds: [],
@@ -31,6 +32,8 @@ export default class List extends Component {
     this.messageSuccess = "Success"; // message display after delete action
 
     this.onChange = this.onChange.bind(this); // handle when user change filter, access pagination
+    this.onShowSizeChange = this.onShowSizeChange.bind(this);
+    this.onChangePagination = this.onChangePagination.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
 
@@ -60,6 +63,12 @@ export default class List extends Component {
 
   componentDidMount() {}
 
+  /**
+   * when user change sort in each column
+   * @param {*} pagination 
+   * @param {*} filters 
+   * @param {*} sorter 
+   */
   onChange(pagination, filters, sorter) {
     this.filter = [
       this.pageSize,
@@ -70,6 +79,29 @@ export default class List extends Component {
     this.setState({current: pagination.current});
   }
 
+  /**
+   * when user change pagination
+   * @param {*} page 
+   * @param {*} pageSize 
+   */
+  onChangePagination(page, pageSize) {
+    console.log(page, pageSize);
+  }
+
+  /**
+   * when user change size of row
+   * @param {*} current 
+   * @param {*} pageSize 
+   */
+  onShowSizeChange(current, pageSize) {
+    console.log(current, pageSize);
+  }
+
+  /**
+   * when user select check box
+   * @param {*} selectedRowKeys 
+   * @param {*} selectedRows 
+   */
   onSelectChange(selectedRowKeys, selectedRows) {
     this.setState({
       selectedListIds: this.mapSelectedListIds(selectedRows),
@@ -83,7 +115,6 @@ export default class List extends Component {
 
   handleEdit(modalSource) {
     this.setState({
-      modalVisible: true,
       modalSource
     });
   }
@@ -99,12 +130,13 @@ export default class List extends Component {
     const addingProps = this.props[this.addingProp];
     const pagination = {
       total: fetchingProps.list.total,
-      pageSize: fetchingProps.list.limit
+      pageSize: fetchingProps.list.limit,
+      current: this.state.current
     };
 
     if (addingProps.response != null) { // Here is repsonse from add action and combinde response data to the list.
       fetchingProps.list.data = [addingProps.response.data, ...fetchingProps.list.data];
-      // this.props.dispatch({type: this.RESET_CONSTANT});
+      this.props.dispatch({type: this.RESET_CONSTANT});
     }
     
     // handle for change select checkbox on table row
@@ -121,22 +153,6 @@ export default class List extends Component {
 
     return (
       <div style={{marginTop: "15px"}}>
-        <div className="float-left list-title">
-          {this.title}
-        </div>
-        {/* ===============ACTION BUTTON============ */}
-        <div className="float-right">
-          <this.Button type="info" className="mg-right" onClick={() => this.handleAdd()}>
-            <span className="icon-add icon-padding-right"></span>Add
-          </this.Button>
-          <this.Popconfirm placement="topLeft" title={this.confirmTextDelete} onConfirm={this.handleDelete} okText={this.okText} cancelText={this.cancelText}>
-            <this.Button type="danger">
-              <span className="icon-bin icon-padding-right"></span>Delete
-            </this.Button>
-          </this.Popconfirm>
-        </div>
-        
-        <this.clearFloating/>
         <div className="breadcrumb">
           <ul className="list-unstyled">
             <li>
@@ -157,17 +173,34 @@ export default class List extends Component {
         {/* ===============ENDACTION BUTTON====== */}
 
         {/* ===============TABLE LIST============ */}
-        <this.Table 
-          rowSelection={rowSelection}
-          dataSource={fetchingProps.list.data}
-          columns={this.state.columns}
-          pagination={pagination}
-          onChange={this.onChange}
-          onRow={record =>({
-            onDoubleClick:(e)=> this.handleEdit(record)
-          })}
-          loading={fetchingProps.fetching}
-        />
+        <div className="table-wrapper">
+          {/* ===============ACTION BUTTON============ */}
+          <div className="float-left">
+            <this.Button type="info" className="mg-right" onClick={() => this.handleAdd()}>
+              <span className="icon-add icon-padding-right"></span>Add
+            </this.Button>
+            <this.Popconfirm placement="topLeft" title={this.confirmTextDelete} onConfirm={this.handleDelete} okText={this.okText} cancelText={this.cancelText}>
+              <this.Button type="danger">
+                <span className="icon-bin icon-padding-right"></span>Delete
+              </this.Button>
+            </this.Popconfirm>
+          </div>
+          <div className="float-right">
+            <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
+          </div>
+          <this.clearFloating/>
+          <this.Table 
+            rowSelection={rowSelection}
+            dataSource={fetchingProps.list.data}
+            columns={this.state.columns}
+            pagination={false} //
+            onChange={this.onChange}
+            onRow={record =>({
+              onDoubleClick:(e)=> this.handleEdit(record)
+            })}
+            loading={fetchingProps.fetching}
+          />
+        </div>
         {/* ===============END TABLE LIST============ */}
 
         {/* ===============MODAL============ */}
@@ -190,6 +223,7 @@ export default class List extends Component {
               }
             >
               {addingProps.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
+              {this.state.dataSource}
               {this.state.modalConten}
             </this.Modal>
             :

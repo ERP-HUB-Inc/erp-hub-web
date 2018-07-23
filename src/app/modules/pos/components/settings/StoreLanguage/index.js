@@ -12,7 +12,8 @@ export default class StoreLanguageList extends List {
     };
 
     this.title = "Language";
-    this.reducerProp = "storeLanguage";
+    this.fetchingProp = "storeLanguage";
+    this.addingProp = "storeLanguageAdd";
   }
 
   componentDidMount() {

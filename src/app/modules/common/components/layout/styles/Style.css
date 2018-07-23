@@ -39,6 +39,11 @@ label {
     margin-bottom: 10px !important
 }
 
+/*Ant Input*/
+.ant-input {
+    border-radius: 3px
+}
+
 /* format size */
 .font-size,
 .ant-table-body table tr th,
@@ -151,18 +156,6 @@ html {
 .notice-icon .ant-badge sup {
     background-color:#FE6006;
     color: white;
-}
-
-/* pagination */
-
-.ant-pagination-item {
-    background-color: #EAEAEA;
-}
-
-.ant-pagination-item-active {
-    background-color: #0D62AF !important;
-    color: white;
-    border-color: none;
 }
 
 /* auto complete */
@@ -352,7 +345,17 @@ ul.react-autosuggest__suggestions-list li table {
 
 /* pagination */
 
-.ant-table-pagination .ant-pagination-item,
+/* .ant-pagination-item {
+    background-color: #EAEAEA;
+} */
+
+.ant-pagination-item-active {
+    background-color: #0D62AF !important;
+    color: white;
+    border-color: none;
+}
+
+/* .ant-table-pagination .ant-pagination-item,
 .ant-pagination-prev,
 .ant-pagination-next
 {
@@ -365,7 +368,7 @@ ul.ant-pagination a.ant-pagination-item-link:after,
 li.ant-pagination-next .ant-pagination-item-link
 {
     height: 20px !important;
-} 
+}  */
 
 /* error */
 .has-error .ant-input {

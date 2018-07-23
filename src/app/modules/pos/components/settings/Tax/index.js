@@ -15,7 +15,8 @@ export default class TaxList extends List {
 
     this.title = "Tax";
 
-    this.reducerProp ="tax";
+    this.fetchingProp = "tax";
+    this.addingProp = "taxAdd";
   }
   
   componentDidMount() {

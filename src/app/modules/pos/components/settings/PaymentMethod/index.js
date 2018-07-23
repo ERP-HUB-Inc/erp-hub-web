@@ -10,6 +10,7 @@ export default class PaymentMethodList extends List {
   constructor(props) {
     super(props);
     this.state = {
+      ...this.state,
       modaltitle: "Payment Method",
       columns
     };

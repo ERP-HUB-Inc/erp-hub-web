@@ -1,13 +1,13 @@
-.list-title {
-    font-weight: 500;
-    font-size: 18pt;
-    color: #9A9A9A
+.table-wrapper {
+    background-color: white;
+    padding: 15px 15px
 }
 
 .breadcrumb {
     margin-top: 15px;
     border-radius: 3px;
-    padding: 10px 15px
+    padding: 10px 15px;
+    background-color: #ffffff !important;
 }
 
 .breadcrumb ul {

@@ -15,7 +15,8 @@ class Tax extends React.Component {
 function mapStateToProps(state) {
   return {
     formAdd: state.form.formTax,
-    ...state.reducer.tax
+    tax: state.reducer.tax,
+    taxAdd: state.reducer.taxAdd
   };
 }
 
