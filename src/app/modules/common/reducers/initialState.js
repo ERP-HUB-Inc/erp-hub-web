@@ -16,7 +16,14 @@ export default {
     };
   },
   update: (key="response") => {
-    //TODO Here
+    return {
+      showForm: false,
+      updating: false,
+      updated: false,
+      data: null,
+      [key]: null,
+      error: null
+    };
   },
   add: (key="response") => {
     return {

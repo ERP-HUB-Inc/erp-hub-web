@@ -43,6 +43,19 @@ class PaymentMethodService extends BaseService {
       headers: this.header
     });
   }
+
+  update(data, id = "00000001-0001-2018-0001-00000119") {
+    return this.fetchData({
+      url: `${this.baseUrl}/update/${id}`,
+      method: "PUT",
+      data: {
+        ...data,
+        isSystem: 0,
+        isDefault: 0
+      },
+      headers: this.header
+    });
+  }
 }
 
 export default new PaymentMethodService();

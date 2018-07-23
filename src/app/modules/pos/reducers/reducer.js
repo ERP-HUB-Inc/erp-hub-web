@@ -96,5 +96,50 @@ export default {
     default: 
       return state;
     }
+  },
+  update: (state, action, [PEDDING, REJECT, FULFILLED, SHOW_FORM, RESET]) => {
+    switch(action.type) {
+    case SHOW_FORM: {
+      return {
+        ...state,
+        data: action.payload,
+        showForm: true
+      };
+    }
+    case PEDDING: {
+      return {
+        ...state,
+        adding: true,
+        showForm: true
+      };
+    }
+    case REJECT: {
+      return {
+        ...state,
+        updating: false,
+        showForm: true,
+        error: action.payload.response.data
+      };
+    }
+    case FULFILLED: {
+      return {
+        ...state,
+        updating: false,
+        showForm: false,
+        updated: true,
+        response: action.payload.data
+      };
+    }
+    case RESET: {
+      return {
+        updating: false,
+        showForm: false,
+        updated: false,
+        response: null
+      };
+    }
+    default: 
+      return state;
+    }
   }
 };

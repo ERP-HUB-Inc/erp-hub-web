@@ -2,21 +2,18 @@ import React from "react";
 import FormAdd from "./FormAdd";
 import columns from "./column";
 import List from "../../List";
+// import CreateForm from "../../../containers/settings/PaymentMethod/CreateForm";
 import TaxAction from "../../../action/settings/tax";
+// import PaymentMethodAction from "../../../action/settings/paymentMethod";
+import { RESET_TAX } from "../../../constants/settings/tax";
 
 export default class TaxList extends List {
   constructor(props) {
     super(props);
-
-    this.state = ({
-      modaltitle: "TAX",
-      columns
-    });
-
-    this.title = "Tax";
-
+    this.columns = columns;
     this.fetchingProp = "tax";
     this.addingProp = "taxAdd";
+    this.RESET_CONSTANT = RESET_TAX;
   }
   
   componentDidMount() {
@@ -33,8 +30,15 @@ export default class TaxList extends List {
     dispatch(TaxAction.fetch(...this.filter));
   }
 
-  handleAdd() {
-    super.handleAdd();
+  handleSubmit() {
+    const { dispatch, formAdd } = this.props;
+    dispatch(TaxAction.add(formAdd.values));
+  }
+
+  handleShowFormAdd() {
+    const { dispatch } = this.props;
+    dispatch(TaxAction.showForm());
+    // dispatch(PaymentMethodAction.showForm());
     this.setState({
       modalConten: <FormAdd/>
     });

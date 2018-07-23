@@ -1,6 +1,8 @@
 import React from "react";
 import columns from "./column";
 import FormAdd from "./FormAdd";
+import FormCreate from "../../../containers/settings/PaymentMethod/FormCreate";
+import FormUpdate from "../../../containers/settings/PaymentMethod/FormUpdate";
 import List from "../../List";
 import { RESET_PAYMENT_METHOD } from "../../../constants/settings/paymentMethod";
 import PaymentMethodAction from "../../../action/settings/paymentMethod";
@@ -9,13 +11,7 @@ import "./index.css";
 export default class PaymentMethodList extends List {
   constructor(props) {
     super(props);
-    this.state = {
-      ...this.state,
-      modaltitle: "Payment Method",
-      columns
-    };
-
-    this.title = "Payment Method";
+    this.columns = columns;
     this.fetchingProp = "paymentMethod";
     this.addingProp = "paymentMethodAdd";
     this.RESET_CONSTANT = RESET_PAYMENT_METHOD;
@@ -32,16 +28,19 @@ export default class PaymentMethodList extends List {
     dispatch(PaymentMethodAction.fetch(...this.filter));
   }
 
-  handleSubmit() {
-    const { dispatch, formAdd } = this.props;
-    dispatch(PaymentMethodAction.add(formAdd.values));
-  }
-
-  handleAdd() {
+  handleShowFormAdd() {
     const { dispatch } = this.props;
     dispatch(PaymentMethodAction.showForm());
     this.setState({
-      modalConten: <FormAdd/>
+      modalConten: <FormCreate/>
+    });
+  }
+
+  handleShowFormEdit(rowData) {
+    const { dispatch } = this.props;
+    dispatch(PaymentMethodAction.showForm(rowData));
+    this.setState({
+      modalConten: <FormUpdate/>
     });
   }
 

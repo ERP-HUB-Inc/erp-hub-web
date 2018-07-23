@@ -20,6 +20,7 @@ const reducer = combineReducers({
   paymentMethod: PaymentMethod.request,
   paymentMethodArchive: PaymentMethod.archive,
   paymentMethodAdd: PaymentMethod.add,
+  paymentMethodUpdate: PaymentMethod.update,
 });
 
 export default reducer;
