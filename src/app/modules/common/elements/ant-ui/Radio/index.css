@@ -7,6 +7,19 @@
     margin-right: 3px;
 }
 
+.main-radio .ant-radio-button-wrapper {
+    margin-right: 10px;
+}
+
+.main-radio .ant-radio-button-wrapper-checked::before {
+    background-color: none !important;
+}
+
+.main-radio .ant-radio-button-wrapper-checked {
+    box-shadow: -1px 0 0 0 #4D4F5C !important;
+    border-left: none !important;
+}
+
 .main-radio .ant-radio-button-wrapper-checked {
     border: 1px solid #4D4F5C;
 }
@@ -17,7 +30,7 @@
 
 .main-radio .radio-title {
     color: #4D4F5C;
-    font-size: 16pt;
+    font-size: 14pt;
     font-weight: 500;
 }
 
