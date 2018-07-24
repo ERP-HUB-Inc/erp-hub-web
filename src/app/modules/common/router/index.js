@@ -4,6 +4,7 @@ import { Route, Switch } from "react-router-dom";
 import SideBar from "../../../modules/common/components/layout/SiderBar";
 import Headers from "../../common/containers/layout/Header";
 import UserList from "../../common/containers/user";
+import offlineDB from "../../common/containers/offline";
 import Home from "../../common/containers/home";
 import Component from "../components/Component";
 import dataSource from "../components/layout/SiderBar/datasource";
@@ -25,6 +26,7 @@ export default class Router extends Component {
                   )
                 )
               }
+              <Route path="/offline" name="Create" component={ offlineDB }></Route>
               <Route path="/test-component" name="Create" component={ UserList }></Route>
               <Route path="/" name="Create" component={ Home } />
             </Switch>

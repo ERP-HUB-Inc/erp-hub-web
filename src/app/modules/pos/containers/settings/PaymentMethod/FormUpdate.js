@@ -15,13 +15,12 @@ function mapStateToProps(state) {
   return {
     formUpdate: state.form.formPaymentMethodUpdate,
     paymentMethodUpdate: state.reducer.paymentMethodUpdate,
-    initialValues: {name: "hello"}
+    initialValues: state.reducer.paymentMethodUpdate.data
   };
 }
 
 const SelectingPaymentMethodForm = reduxForm({
-  form: "formPaymentMethod",
-  enableReinitialize: true
+  form: "formPaymentMethodUpdate"
 })(PaymentMethodForm);
 
 export default connect(mapStateToProps)(SelectingPaymentMethodForm);

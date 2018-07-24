@@ -2,6 +2,7 @@ import React, { Component as RComponent } from "react";
 import { Translate, setActiveLanguage, getActiveLanguage } from "react-localize-redux";
 import { Field } from "redux-form";
 import { connect } from "react-redux";
+import { Util } from "../util";
 import 
 { 
   CTable,
@@ -144,6 +145,9 @@ export default class Component extends RComponent {
     this.RadioRegisterGroup = RadioRegisterGroup;
     this.InputText = InputText;
     this.RadioRegister = RadioRegister;
+
+    // Util function
+    this.Util = new Util;
 
   }
 

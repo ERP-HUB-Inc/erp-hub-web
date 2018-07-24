@@ -23,9 +23,10 @@ export default class Form extends Modal {
   render() {
     const {paymentMethodAdd} = this.props;
     
-    if (paymentMethodAdd.response != null) {
-      this.dispatch(PaymentMethodAction.reset());
-    }
+    // For Now we reset state in the list
+    // if (paymentMethodAdd.response != null) {
+    //   this.dispatch(PaymentMethodAction.reset());
+    // }
 
     if (paymentMethodAdd.showForm) {
       this.content = (

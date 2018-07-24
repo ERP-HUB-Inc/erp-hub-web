@@ -12,8 +12,8 @@ export default class Form extends Modal {
     this.dispatch = this.props.dispatch;
   }
   handleSubmit() {
-    const { formAdd } = this.props;
-    this.dispatch(PaymentMethodAction.update(formAdd.values));
+    const { formUpdate } = this.props;
+    this.dispatch(PaymentMethodAction.update(formUpdate.values, formUpdate.values.id));
   }
     
   handleCancel() {
@@ -23,17 +23,18 @@ export default class Form extends Modal {
   render() {
     const {paymentMethodUpdate} = this.props;
     
-    if (paymentMethodUpdate.response != null) {
-      this.dispatch(PaymentMethodAction.reset());
-    }
+    // For Now we reset state in the list
+    // if (paymentMethodUpdate.response != null) {
+    //   this.dispatch(PaymentMethodAction.reset());
+    // }
 
     if (paymentMethodUpdate.showForm) {
       this.content = (
         <div>
           {paymentMethodUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <InputText name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
-          <InputText name="description" label="Description" placeholder="Description" max={255}/>
-          <Select name="status" label="Status" placeholder="Please select status" dataSource={this.statusDataSource} defaultValue={1}/>
+          <InputText data={paymentMethodUpdate.data.name} name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
+          <InputText data={paymentMethodUpdate.data.description} name="description" label="Description" placeholder="Description" max={255}/>
+          <Select name="status" label="Status" placeholder="Please select status" dataSource={this.statusDataSource} defaultValue={paymentMethodUpdate.data.status}/>
         </div>
       );
       return super.render();

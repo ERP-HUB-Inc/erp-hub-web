@@ -44,7 +44,7 @@ class PaymentMethodService extends BaseService {
     });
   }
 
-  update(data, id = "00000001-0001-2018-0001-00000119") {
+  update(data, id) {
     return this.fetchData({
       url: `${this.baseUrl}/update/${id}`,
       method: "PUT",
