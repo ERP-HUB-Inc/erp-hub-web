@@ -4,13 +4,13 @@
     width: 377px !important;
 }
 
-.wrap-client-register {
-    height: 500px !important;
+.wrap-client-register-detail {
+    height: 800px !important;
     width: 632px !important;
 }
 
-.wrap-client-register .wrap-blog-logo {
-    height: 500px !important;
+.wrap-client-register-detail .wrap-blog-logo {
+    height: 800px !important;
 }
 
 .blog-register .wrap-help {
@@ -19,3 +19,6 @@
     color: #9A9A9A !important;
 }
 
+.wrap-client-login .clear-padding-col {
+    padding-right: 0px !important;
+}

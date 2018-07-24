@@ -53,18 +53,18 @@ export default class ClientRegister extends Component {
               <this.FormGroup>
                 <this.Field 
                   label="Country"
-                  name="favoriteColor" 
+                  name="language" 
                   type="radio"
                   component={ this.RadioRegisterGroup }
                 >
-                  <this.RadioRegister title="Global" language="England" currency="USD" value="a"/>
-                  <this.RadioRegister title="Cambodia" language="England" currency="USD"  value="b" />
-                  <this.RadioRegister title="Myanmar" language="England" currency="USD"  value="c" />
+                  <this.RadioRegister title="Global" language="England" currency="USD" value="global"/>
+                  <this.RadioRegister title="Cambodia" language="Khmer" currency="KHR"  value="cambodia" />
+                  <this.RadioRegister title="Myanmar" language="Burme" currency="MMX"  value="myanmar" />
                 </this.Field> 
               </this.FormGroup>
 
               <this.Link  to="sign in">
-                <span className="have-acc">have and account?</span> <span className="store-link">sign in </span>
+                <span className="have-acc">Have and account?</span> <span className="store-link">sign in </span>
               </this.Link>
               <div className="main-signin">
                 <this.Button type="info">START</this.Button>

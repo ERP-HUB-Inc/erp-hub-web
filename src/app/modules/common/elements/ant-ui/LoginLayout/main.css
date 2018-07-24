@@ -9,6 +9,15 @@
     background-color: white;
 }
 
+.wrap-client-login label {
+    font-size: 10pt;
+    color: #9A9A9A;
+}
+
+.wrap-client-login input::placeholder {
+    color:#2C2C2C !important;
+}
+
 .header.text-right {
     position: relative;
     top: -25px;
@@ -31,6 +40,11 @@
     position: relative !important;
     top: 15px !important;
     color: #9A9A9A !important;
+}
+
+.wrap-help .help {
+    position: relative;
+    top: -6px;
 }
 
 .wrap-client-login .wrap-blog-logo,
@@ -69,16 +83,17 @@
     width: 377px  !important;
 }
 
-.wrap-client-login .blog-login .header,
-.wrap-client-login .blog-logo .inner-logo .text {
+.blog-login .header,
+.blog-logo .inner-logo .text {
     font-size: 18pt !important;
 }
 
-.wrap-client-login .blog-login .header .title{
+.header .title{
     color: #4F2B0B !important;
+    font-size: 24pt;
 }
 
-.wrap-client-login .blog-login .header .back-office {
+.header .back-office {
     color: #9B9B9B !important;
     font-size: 10pt !important;
 }

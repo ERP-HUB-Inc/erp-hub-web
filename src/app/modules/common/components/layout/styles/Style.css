@@ -78,8 +78,8 @@ input:focus
 }
 
 .main-input input::placeholder,
-.main-date-picker input::placeholder,
-.main-antselect .ant-select-selection-selected-value
+.main-date-picker input::placeholder
+/* .main-antselect .ant-select-selection-selected-value */
 {
     font-size: 8pt;
 }
