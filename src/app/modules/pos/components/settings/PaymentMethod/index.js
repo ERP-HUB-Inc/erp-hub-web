@@ -1,10 +1,9 @@
 import React from "react";
 import columns from "./column";
-import FormAdd from "./FormAdd";
+import List from "../../List";
 import FormCreate from "../../../containers/settings/PaymentMethod/FormCreate";
 import FormUpdate from "../../../containers/settings/PaymentMethod/FormUpdate";
-import List from "../../List";
-import { RESET_PAYMENT_METHOD } from "../../../constants/settings/paymentMethod";
+import Constant from "../../../constants/settings/paymentMethod";
 import PaymentMethodAction from "../../../action/settings/paymentMethod";
 import "./index.css";
 
@@ -15,11 +14,12 @@ export default class PaymentMethodList extends List {
     this.fetchingProp = "paymentMethod";
     this.addingProp = "paymentMethodAdd";
     this.updatingProp = "paymentMethodUpdate";
-    this.RESET_CONSTANT = RESET_PAYMENT_METHOD;
+    this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
+    
     dispatch(PaymentMethodAction.fetch(this.pageSize));
   }
 

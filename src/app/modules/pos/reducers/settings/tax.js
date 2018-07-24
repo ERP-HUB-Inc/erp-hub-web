@@ -2,12 +2,19 @@ import {
   REQUEST_TAX_PENDING,
   REQUEST_TAX_REJECTED,
   REQUEST_TAX_FULFILLED,
+
   ARCHIVE_TAX_PENDING,
   ARCHIVE_TAX_REJECTED,
   ARCHIVE_TAX_FULFILLED,
+
   ADD_TAX_PENDING,
   ADD_TAX_REJECTED,
   ADD_TAX_FULFILLED,
+
+  UPDATE_TAX_PENDING,
+  UPDATE_TAX_REJECTED,
+  UPDATE_TAX_FULFILLED,
+
   SHOW_TAX_FORM,
   RESET_TAX,
 } from "../../constants/settings/tax";
@@ -40,6 +47,16 @@ export default {
       RESET_TAX
     ];
     return reducer.add(state, action, constants);
+  },
+  update: (state = InitialState.update(), action) => {
+    const constants = [
+      UPDATE_TAX_PENDING,
+      UPDATE_TAX_REJECTED,
+      UPDATE_TAX_FULFILLED,
+      SHOW_TAX_FORM,
+      RESET_TAX
+    ];
+    return reducer.update(state, action, constants);
   }
 };
   

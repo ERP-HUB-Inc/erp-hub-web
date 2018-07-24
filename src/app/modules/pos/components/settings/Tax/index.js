@@ -2,7 +2,7 @@ import React from "react";
 import FormAdd from "./FormAdd";
 import columns from "./column";
 import List from "../../List";
-// import CreateForm from "../../../containers/settings/PaymentMethod/CreateForm";
+// import FormCreate from "../../../containers/settings/PaymentMethod/FormCreate";
 import TaxAction from "../../../action/settings/tax";
 // import PaymentMethodAction from "../../../action/settings/paymentMethod";
 import { RESET_TAX } from "../../../constants/settings/tax";
@@ -13,6 +13,7 @@ export default class TaxList extends List {
     this.columns = columns;
     this.fetchingProp = "tax";
     this.addingProp = "taxAdd";
+    this.updatingProp = "taxUpdate";
     this.RESET_CONSTANT = RESET_TAX;
   }
   

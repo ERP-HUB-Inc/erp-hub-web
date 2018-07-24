@@ -9,5 +9,50 @@ export default class BaseService extends Service {
       "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMDAwMDAwMS0wMDAxLTIwMTgtMDAwMS0wMDAwMDAwMSIsImlhdCI6MTUzMTcyMTIzMX0.JPOJSNqCPXWeAFkBfkdSULvTPI6TIXW6LYmJRWUDyL4"
     };
   }
+
+  lists(
+    limit,
+    offset,
+    sortField,
+    sortOrder
+  ) {
+    return this.fetchData({ 
+      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}`,
+      data: this.data,
+      headers: this.header
+    });
+  }
+
+  archive(ids) {
+    return this.deleteData({ 
+      url: `${this.baseUrl}/archive/${ids}`,
+      data: this.data,
+      headers: this.header
+    });
+  }
+
+  add(data) {
+    return this.addData({
+      url: `${this.baseUrl}/create`,
+      data: {
+        ...data,
+        isSystem: 0,
+        isDefault: 0
+      },
+      headers: this.header
+    });
+  }
+
+  update(data, id) {
+    return this.updateData({
+      url: `${this.baseUrl}/update/${id}`,
+      data: {
+        ...data,
+        isSystem: 0,
+        isDefault: 0
+      },
+      headers: this.header
+    });
+  }
   
 }

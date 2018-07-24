@@ -16,17 +16,50 @@ export default class BaseService {
     return url;
   }
 
-  fetchData(option = {
-    method: "GET",
+  addData(option = {
     url: "",
     headers: {},
     data: {},
   }) {
     const response = axios({
-		  method: option.method,
-		  url: option.url,
-		  headers: option.headers,
-		  data: option.data
+		  method: "POST",
+		  ...option
+    });
+    return response;
+  }
+
+  fetchData(option = {
+    url: "",
+    headers: {},
+    data: {},
+  }) {
+    const response = axios({
+		  method: "GET",
+		  ...option
+    });
+    return response;
+  }
+
+  updateData(option = {
+    url: "",
+    headers: {},
+    data: {},
+  }) {
+    const response = axios({
+		  method: "PUT",
+		  ...option
+    });
+    return response;
+  }
+
+  deleteData(option = {
+    url: "",
+    headers: {},
+    data: {},
+  }) {
+    const response = axios({
+      method: "DELETE",
+      ...option
     });
     return response;
   }

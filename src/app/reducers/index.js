@@ -10,6 +10,7 @@ const reducer = combineReducers({
   user,
   tax: tax.request,
   taxAdd: tax.add,
+  taxUpdate: tax.update,
   taxArchive: tax.archive,
   currency: currency.request,
   currencyAdd: currency.add,

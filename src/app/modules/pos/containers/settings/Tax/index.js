@@ -16,6 +16,7 @@ function mapStateToProps(state) {
     formAdd: state.form.formTax,
     tax: state.reducer.tax,
     taxAdd: state.reducer.taxAdd,
+    taxUpdate: state.reducer.taxUpdate
     // paymentMethodAdd: state.reducer.paymentMethodAdd 
     // use for call other form
   };

@@ -7,17 +7,6 @@ class UnitService extends BaseService {
     this.module = "unit";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
-
-  lists() {
-    return this.fetchData({ 
-	      url: `${this.baseUrl}/lists`,
-	      method: "GET",
-	      data: {},
-	      headers: {
-	        "Content-Type": "application/json"
-	      }
-	    });
-  }
 }
 
 export default new UnitService();

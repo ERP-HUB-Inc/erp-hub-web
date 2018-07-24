@@ -1,18 +1,11 @@
-import {
-  REQUEST_PAYMENT_METHOD,
-  ARCHIVE_PAYMENT_METHOD,
-  ADD_PAYMENT_METHOD,
-  UPDATE_PAYMENT_METHOD,
-  SHOW_PAYMENT_METHOD_FORM,
-  RESET_PAYMENT_METHOD
-} from "../../constants/settings/paymentMethod";
+import Constant from "../../constants/settings/paymentMethod";
 import PaymentMethodService from "../../services/settings/PaymentMethodService";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder) => {
     return dispatch => {
       return dispatch({
-        type: REQUEST_PAYMENT_METHOD,
+        type: Constant.REQUEST_PAYMENT_METHOD,
         payload: PaymentMethodService.lists(limit, offset, sortField, sortOrder)
       });
     };
@@ -20,7 +13,7 @@ export default {
   archive: (ids) => {
     return dispatch => {
       return dispatch({
-        type: ARCHIVE_PAYMENT_METHOD,
+        type: Constant.ARCHIVE_PAYMENT_METHOD,
         payload: PaymentMethodService.archive(ids)
       });
     };
@@ -28,7 +21,7 @@ export default {
   add: (data) => {
     return dispatch => {
       return dispatch({
-        type: ADD_PAYMENT_METHOD,
+        type: Constant.ADD_PAYMENT_METHOD,
         payload: PaymentMethodService.add(data)
       });
     };
@@ -36,7 +29,7 @@ export default {
   update: (data, id) => {
     return dispatch => {
       return dispatch({
-        type: UPDATE_PAYMENT_METHOD,
+        type: Constant.UPDATE_PAYMENT_METHOD,
         payload: PaymentMethodService.update(data, id)
       });
     };
@@ -44,7 +37,7 @@ export default {
   reset: () => {
     return dispatch => {
       return dispatch({
-        type: RESET_PAYMENT_METHOD,
+        type: Constant.RESET_PAYMENT_METHOD,
         payload: null
       });
     };
@@ -52,7 +45,7 @@ export default {
   showForm: (data) => {
     return dispatch => {
       return dispatch({
-        type: SHOW_PAYMENT_METHOD_FORM,
+        type: Constant.SHOW_PAYMENT_METHOD_FORM,
         payload: data
       });
     };

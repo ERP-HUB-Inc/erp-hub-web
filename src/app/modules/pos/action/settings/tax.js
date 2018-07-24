@@ -3,6 +3,7 @@ import {
   REQUEST_TAX,
   ARCHIVE_TAX,
   ADD_TAX,
+  UPDATE_TAX,
   RESET_TAX,
   SHOW_TAX_FORM
 } from "../../constants/settings/tax";
@@ -30,6 +31,14 @@ export default{
       return dispatch({
         type: ADD_TAX,
         payload: TaxService.add(data)
+      });
+    };
+  },
+  update: (data, id) => {
+    return dispatch => {
+      return dispatch({
+        type: UPDATE_TAX,
+        payload: TaxService.update(data, id)
       });
     };
   },
