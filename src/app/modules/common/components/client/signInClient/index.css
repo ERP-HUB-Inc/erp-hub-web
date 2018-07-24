@@ -9,122 +9,37 @@
     font-weight: 500;
 }
 
+.wrap-client-login .main-field,
+.wrap-client-login .signin-button
+ {
+    margin-top: 8px;
+} 
 
-
-
-.wrap-client-login {
-    box-shadow: 0 0 4px 0 rgba(0,0,0,0.5);
-    margin: auto;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
-.blog-login .wrap-help {
-    position: relative;
-    top: 15px;
-    color: #9A9A9A;
+.blog-register {
+    margin-left: 250px;
+    padding: 20px 30px;
+    width: 377px !important;
 }
 
 .wrap-client-login .wrap-blog-logo,
 .wrap-client-login {
-    height: 452px;
+    height: 359px;
     width: 632px;
 }
 
-.wrap-client-login .wrap-blog-logo {
-    width: 257px;
-    display: table;
-    background-color: #093163;
-    position: fixed
-}
 
-.wrap-client-login .wrap-blog-logo .blog-logo {
-    display: table-cell;
-    vertical-align: middle
-}
-
-.wrap-client-login .blog-logo .icon-logo {
-    color: white
-}
-
-.wrap-client-login .blog-logo .icon-logo {
-    font-size: 60pt
-}
-
-.wrap-client-login .blog-logo .inner-logo .text {
-    color: #FFD627
-}
-
-.wrap-client-login .blog-login {
-    margin-left: 250px;
-    padding: 20px 30px;
-    width: 377px;
-}
-
-.wrap-client-login .blog-login .header,
-.wrap-client-login .blog-logo .inner-logo .text {
-    font-size: 18pt
-}
-
-.wrap-client-login .blog-login .header .title{
-    color: #4F2B0B
-}
-
-.wrap-client-login .blog-login .header .back-office {
-    color: #9B9B9B;
-    font-size: 10pt
-}
-
-.wrap-client-login .blog-login .wrap-login {
-    margin-top: 20px
-}
-
-.wrap-client-login .blog-login .wrap-login .your-store-name {
-    margin-bottom: 25px
-}
-
-.wrap-client-login .blog-login .wrap-login .store-name{
+.wrap-client-login .storename {
     color: #4D4F5C;
+    font-size: 18px;
     font-weight: 500;
-    font-size: 14px
+    line-height: 23px;
 }
 
-.wrap-client-login .blog-login .wrap-login .store-url {
-    color: #9B9B9B;
-    font-size: 10pt
-}
-
-.wrap-client-login .blog-login .wrap-login .wrap-help {
-    margin-top: 20px
-}
-
-.wrap-client-login .blog-login .wrap-login button {
-    width: 150px
-}
-
-.wrap-client-login .blog-login .wrap-login .help {
-    font-size: 12pt;
-    position: relative;
-    bottom: 5px;
-}
-
-.wrap-client-login .blog-login .wrap-login .help,
-.wrap-client-login .blog-login .wrap-login .icon-help {
-    color: #9A9A9A;
+.wrap-client-login .store-email {
+    font-size: 12px;
     font-weight: 500;
 }
 
-.clear-padding {
-    padding: 0 !important
-}
-
-.clear-padding-l {
-    padding-left: 0 !important
-}
-
-.clear-padding-r {
-    padding-right: 0 !important
+.wrap-client-login .store-email .store-email-url {
+    color: #CDCCCC;
 }

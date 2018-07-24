@@ -18,3 +18,4 @@ export * from "./Button/trashButton";
 export * from "./Button";
 export * from "./LoginLayout";
 export * from "./Radio/register";
+export * from "./InputText/input";

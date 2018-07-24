@@ -6,38 +6,40 @@ import "./index.css";
 class ClientSignIn extends Component {
   render() {
     return (
-
       <this.LoginLayout>
-        <this.FormGroup>
+        <div className="storename">Super Store</div>
+        <div className="store-email">
+          superstore<span className="store-email-url">.storevein.com</span>
+        </div>
+        <div className="main-field">
           <this.Field
             name="username"
             placeholder="User name"
             type="text"
             label="User Name"
-            component={ this.AnimationInput }
+            component={ this.InputText }
             className="ant-input"
           />
-        </this.FormGroup>
-        <this.FormGroup>
           <this.Field
             name="password"
             placeholder="Password"
             type="password"
             label="Password"
-            component={ this.AnimationInput }
+            component={ this.InputText }
             className="ant-input"
           />
-        </this.FormGroup>
-        <div>
-          <this.Link className="store-link" to="dd">
+          <div className="signin-button">
+            <this.FormGroup>
+              <this.Link className="store-link" to="dd">
               it's not my store
-          </this.Link>
-          <div className="main-signin">
-            <this.Button type="info">Sign In</this.Button>
+              </this.Link>
+              <div className="main-signin">
+                <this.Button type="info">Sign In</this.Button>
+              </div>
+            </this.FormGroup>
           </div>
         </div>
       </this.LoginLayout>
-
     );
   }
 }

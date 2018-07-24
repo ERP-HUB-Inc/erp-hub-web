@@ -1,7 +1,18 @@
-/* .wrap-client-login {
-    height: 452px;
-} */
 
-/* .wrap-client-login .wrap-blog-logo {
-    height: 452px;
-} */
+
+
+.blog-register {
+    margin-left: 250px;
+    padding: 20px 30px;
+    width: 377px !important;
+}
+
+
+.wrap-client-register {
+    height: 500px !important;
+    width: 632px !important;
+}
+
+.wrap-client-register .wrap-blog-logo {
+    height: 500px !important;
+}

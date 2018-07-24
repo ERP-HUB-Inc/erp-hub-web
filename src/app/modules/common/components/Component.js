@@ -20,8 +20,10 @@ import
   Button,
   TextInput,
   LoginLayout,
+  RadioRegisterGroup,
   RadioRegister
 } from "../elements/ant-ui";
+import InputText from "../elements/ant-ui/InputText/input";
 import {
   InputRedux,
   Breadcrumb,
@@ -140,6 +142,8 @@ export default class Component extends RComponent {
     this.FieldComponent = FieldComponent;
     this.TrashButton = TrashButton;
     this.LoginLayout = LoginLayout;
+    this.RadioRegisterGroup = RadioRegisterGroup;
+    this.InputText = InputText;
     this.RadioRegister = RadioRegister;
 
     // Util function
