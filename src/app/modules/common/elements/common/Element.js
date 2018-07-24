@@ -8,7 +8,6 @@ import {
 } from "antd";
 import { FormGroup, Label } from "reactstrap";
 import { Translate, } from "react-localize-redux";
-import { TextInput } from "../ant-ui/Input";
 
 export default class Element extends Component {
   constructor(props) {
@@ -25,7 +24,6 @@ export default class Element extends Component {
     //ant ui
     this.Input = Input;
     this.FormItem = form.Item;
-    this.TextInput = TextInput;
     this.Checkbox = Checkbox;
     this.Select = Select;
     this.Option = Option;

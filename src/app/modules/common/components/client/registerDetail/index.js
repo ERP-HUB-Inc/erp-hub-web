@@ -28,108 +28,90 @@ export default class ClientRegister extends Component {
             <div className="title">
               <h6>Please tell us about your store </h6>
             </div>
-            <this.Field
+            <this.InputText
               name="bName"
               type="text"
               label="Business name"
               placeholder="Super Store"
-              component={ this.InputText }
             />
-            <this.Field
+            <this.InputText
               name="domain_name"
               type="text"
               label="Domain name"
               notation=".storevein.com"
               placeholder="Domain Name"
-              component={ this.InputText }
             />
-            <this.Field 
+            <this.Select 
               name="b_type" 
               label="Business Type"
-              component={ this.Selects }
-              defaultValue="all"
-              placeholder="Status"
-            >
-              <option value="all" selected>Retail</option>
-              <option value="red">HoleSale</option>
-            </this.Field>
-            <this.Field 
+              defaultValue="A"
+              placeholder="Business Type"
+              dataSource={[{ name: "A", value: 0 }]}
+            />
+            <this.Select 
               name="b_plan" 
               label="Business Plan"
-              component={ this.Selects }
-              defaultValue="all"
-              placeholder="Status"
-            >
-              <option value="all" selected>Business Pro</option>
-            </this.Field>
+              defaultValue="Lite"
+              placeholder="Business Plan"
+              dataSource={[{ name: "Lite", value: 0 }, { name: "Pro", value: 1 }]}
+            />
             <this.Row>
               <this.Col md="6" className="clear-padding-col">
-                <this.Field
+                <this.InputText
                   name="fname"
                   type="text"
                   label="First Name"
-                  component={ this.InputText }
                 />
               </this.Col>
               <this.Col md="6">
-                <this.Field
+                <this.InputText
                   name="lname"
                   type="text"
                   label="Last Name"
                   placeholder="John"
-                  component={ this.InputText }
                 />
               </this.Col>
             </this.Row>
             <this.Row>
               <this.Col md="3" className="clear-padding-col">
-                <this.Field
+                <this.InputText
                   name="code"
                   type="text"
                   label="Code"
                   placeholder="Peter"
-                  component={ this.InputText }
                 />
               </this.Col>
               <this.Col md="9">
-                <this.Field
+                <this.InputText
                   name="p_number"
                   type="number"
                   label="Phone number"
                   placeholder="012 345 678"
-                  component={ this.InputText }
                 />
               </this.Col>
             </this.Row>
-            <this.Field 
+            <this.Select 
               name="t_zone" 
-              label="Time zone"
-              component={ this.Selects }
-              defaultValue="all"
+              label="Time Zone"
+              defaultValue="Time Zone"
               placeholder="Status"
-            >
-              <option value="all" selected>Time</option>
-            </this.Field>
-            <this.Field 
+              dataSource={[{ name: "Time Zone", value: 0 }]}
+            />
+            <this.Select 
               name="currency" 
               label="Currency"
-              component={ this.Selects }
-              defaultValue="all"
-            >
-              <option value="all" selected>Time</option>
-            </this.Field>
-            <this.Field 
+              defaultValue="Khmer"
+              placeholder="Currency"
+              dataSource={[{ name: "Khmer", value: 0 }]}
+            />
+            <this.Select 
               name="language" 
               label="Language"
-              component={ this.Selects }
-            >
-              <option value="all" selected>Time</option>
-            </this.Field>
-            <div>
-              <div className="main-signin">
-                <this.Button type="info">LET'S GO</this.Button>
-              </div>
-            </div>
+              defaultValue="English"
+              placeholder="Language"
+              dataSource={[{ name: "English", value: 0 }]}
+            />
+            <this.Button className="main-signin" type="info">LET'S GO</this.Button>
           </div>
         </this.Col>
       </this.Row>

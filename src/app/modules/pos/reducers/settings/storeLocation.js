@@ -26,6 +26,16 @@ export default {
       Constant.ADD_STORE_LOCATION_FULFILLED
     ];
     return reducer.add(state, action, constants);
+  },
+  update: (state = InitialState.update(), action) => {
+    const constants = [
+      Constant.UPDATE_STORE_LOCATION_PENDING,
+      Constant.UPDATE_STORE_LOCATION_REJECTED,
+      Constant.UPDATE_STORE_LOCATION_FULFILLED,
+      Constant.RESET_STORE_LOCATION,
+      Constant.SHOW_STORE_LOCATION_FORM
+    ];
+    return reducer.update(state, action, constants);
   }
 };
       

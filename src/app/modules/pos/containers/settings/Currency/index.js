@@ -16,7 +16,8 @@ function mapStateToProps(state) {
   return {
     formAdd: state.form.formCurrency,
     currency: state.reducer.currency,
-    currencyAdd: state.reducer.currencyAdd
+    currencyAdd: state.reducer.currencyAdd,
+    currencyUpdate: state.reducer.currencyUpdate
   };
 }
 

@@ -43,7 +43,9 @@ export default class BaseService extends Service {
     });
   }
 
-  update(data, id) {
+  update(data) {
+    const {id} = data;
+    delete data["id"];
     return this.updateData({
       url: `${this.baseUrl}/update/${id}`,
       data: {

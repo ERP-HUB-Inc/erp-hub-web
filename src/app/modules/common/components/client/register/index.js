@@ -28,26 +28,23 @@ export default class ClientRegister extends Component {
             <div className="title">
               <h6>Start Register with Us</h6>
             </div>
-            <this.Field
+            <this.InputText
               name="email"
               type="text"
               label="Email"
               placeholder="Email"
-              component={ this.InputText }
             />
-            <this.Field
+            <this.InputText
               name="password"
               type="text"
               label="Password"
               placeholder="Password"
-              component={ this.InputText }
             />
-            <this.Field
+            <this.InputText
               name="comfirmpassword"
               type="text"
               label="Comfirm Password"
               placeholder="Comfirm Password"
-              component={ this.InputText }
             />
             <div>
               <this.FormGroup>
@@ -63,7 +60,7 @@ export default class ClientRegister extends Component {
                 </this.Field> 
               </this.FormGroup>
 
-              <this.Link  to="sign in">
+              <this.Link to="/signin">
                 <span className="have-acc">Have and account?</span> <span className="store-link">sign in </span>
               </this.Link>
               <div className="main-signin">

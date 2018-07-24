@@ -10,6 +10,7 @@ export default class StoreLocationList extends List {
     this.title = "Store Location";
     this.fetchingProp = "storeLocation";
     this.addingProp = "storeLocationAdd";
+    this.updatingProp = "storeLocationUpdate";
   }
 
   componentDidMount() {

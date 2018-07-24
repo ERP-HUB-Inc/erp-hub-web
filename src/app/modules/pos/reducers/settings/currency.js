@@ -26,6 +26,16 @@ export default {
       Constant.ADD_CURRENCY_FULFILLED
     ];
     return reducer.add(state, action, constants);
+  },
+  update: (state = InitialState.update(), action) => {
+    const constants = [
+      Constant.UPDATE_CURRENCY_PENDING,
+      Constant.UPDATE_CURRENCY_REJECTED,
+      Constant.UPDATE_CURRENCY_FULFILLED,
+      Constant.SHOW_CURRENCY_FORM,
+      Constant.RESET_CURRENCY
+    ];
+    return reducer.update(state, action, constants);
   }
 };
     

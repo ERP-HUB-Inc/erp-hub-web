@@ -12,25 +12,21 @@ class ClientSignIn extends Component {
           superstore<span className="store-email-url">.storevein.com</span>
         </div>
         <div className="main-field">
-          <this.Field
+          <this.InputText
             name="username"
             placeholder="User name"
             type="text"
             label="User Name"
-            component={ this.InputText }
-            className="ant-input"
           />
-          <this.Field
+          <this.InputText
             name="password"
             placeholder="Password"
             type="password"
             label="Password"
-            component={ this.InputText }
-            className="ant-input"
           />
           <div className="signin-button">
             <this.FormGroup>
-              <this.Link className="store-link" to="dd">
+              <this.Link className="store-link" to="/signin-register">
               it's not my store
               </this.Link>
               <div className="main-signin">

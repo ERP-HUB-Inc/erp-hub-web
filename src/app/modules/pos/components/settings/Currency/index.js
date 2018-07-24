@@ -1,6 +1,5 @@
 import React from "react";
 import columns from "./column";
-import FormAdd from "./FormAdd";
 import List from "../../List";
 import CurrencyAction from "../../../action/settings/currency";
 
@@ -11,6 +10,7 @@ export default class CurrencyList extends List {
     this.title = "Currency";
     this.fetchingProp = "currency";
     this.addingProp = "currencyAdd";
+    this.updatingProp = "currencyUpdate";
   }
 
   componentDidMount() {
@@ -54,7 +54,7 @@ export default class CurrencyList extends List {
   handleAdd() {
     super.handleAdd();
     this.setState({
-      modalConten: <FormAdd/>
+      modalConten: <div></div>
     });
   }
 

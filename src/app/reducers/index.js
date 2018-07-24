@@ -6,18 +6,26 @@ import currency from "../modules/pos/reducers/settings/currency";
 import storeLocation from "../modules/pos/reducers/settings/storeLocation";
 import storeLanguage from "../modules/pos/reducers/settings/storeLanguage";
 
-const reducer = combineReducers({ 
+const reducer = combineReducers({
+  // SETTING MODULE
   user,
   tax: tax.request,
   taxAdd: tax.add,
   taxUpdate: tax.update,
   taxArchive: tax.archive,
+
   currency: currency.request,
   currencyAdd: currency.add,
+  currencyUpdate: currency.update,
+
   storeLocation: storeLocation.request,
   storeLocationAdd: storeLocation.add,
+  storeLocationUpdate: storeLocation.update,
+
   storeLanguage: storeLanguage.request,
   storeLanguageAdd: storeLanguage.add,
+  storeLanguageUpdate: storeLanguage.update,
+  
   paymentMethod: PaymentMethod.request,
   paymentMethodArchive: PaymentMethod.archive,
   paymentMethodAdd: PaymentMethod.add,

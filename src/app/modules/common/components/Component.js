@@ -7,7 +7,7 @@ import
 { 
   CTable,
   Noteicon,
-  Selects,
+  Select,
   DateRank,
   ActionButton,
   Switchs,
@@ -18,12 +18,11 @@ import
   TrashButton,
   AnimationInput,
   Button,
-  TextInput,
+  InputText,
   LoginLayout,
   RadioRegisterGroup,
   RadioRegister
 } from "../elements/ant-ui";
-import InputText from "../elements/ant-ui/InputText/input";
 import {
   InputRedux,
   Breadcrumb,
@@ -59,7 +58,6 @@ import {
   Layout,
   Menu,
   Icon,
-  Select,
   Collapse,
   Checkbox,
   Modal,
@@ -82,7 +80,7 @@ export default class Component extends RComponent {
     this.Popconfirm = Popconfirm;
     this.Modal = Modal;
     this.Noteicon = () => (<Noteicon/>);
-    this.Selects = Selects;
+    this.Select = Select;
     this.DateRank = DateRank;
 
     // Other
@@ -127,10 +125,8 @@ export default class Component extends RComponent {
     this.Layout = Layout;
     this.Menu = Menu;
     this.Icon = Icon;
-    this.Select = Select;
     this.ActionButton = ActionButton;
     this.Switchs = Switchs;
-    this.Antinput = TextInput;
     this.AnimationInput = AnimationInput;
     this.Waiting = Waiting;
     this.Checkboxs = Checkboxs;

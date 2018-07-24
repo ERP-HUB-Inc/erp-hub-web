@@ -2,7 +2,7 @@ import React from "react";
 import Element from "../../common/Element";
 import "./index.css";
 
-export default class InputEmail extends Element {
+export class Select extends Element {
 
   constructor(props) {
     super(props);
@@ -13,7 +13,7 @@ export default class InputEmail extends Element {
   render() {
     return (
       <this.Field 
-        component={ Select }
+        component={ SelectElement }
         {...this.props}
       />
     );
@@ -21,7 +21,7 @@ export default class InputEmail extends Element {
 }
 
 
-class Select extends Element {   
+class SelectElement extends Element {   
   render() {
     const { input } = this.props;
     delete input["value"];

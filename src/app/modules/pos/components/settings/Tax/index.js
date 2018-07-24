@@ -1,5 +1,4 @@
 import React from "react";
-import FormAdd from "./FormAdd";
 import columns from "./column";
 import List from "../../List";
 // import FormCreate from "../../../containers/settings/PaymentMethod/FormCreate";
@@ -41,7 +40,7 @@ export default class TaxList extends List {
     dispatch(TaxAction.showForm());
     // dispatch(PaymentMethodAction.showForm());
     this.setState({
-      modalConten: <FormAdd/>
+      modalConten: <div></div>
     });
   }
 

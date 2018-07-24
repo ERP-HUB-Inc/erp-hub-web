@@ -1,9 +1,9 @@
 import React from "react";
-import InputText from "./input";
+import Input from "./input";
 import Element from "../../common/Element";
 import "./index.css";
 
-export default class Input extends Element {
+export class InputText extends Element {
 
   constructor(props) {
     super(props);
@@ -25,7 +25,7 @@ export default class Input extends Element {
         name={this.props.name}
         type="text"
         placeholder={this.props.placeholder}
-        component={ InputText }
+        component={ Input }
         label={this.props.label}
         data={this.props.data}
         required = {this.props.required}

@@ -15,7 +15,8 @@ function mapStateToProps(state) {
   return {
     formAdd: state.form.formStoreLocation,
     storeLocation: state.reducer.storeLocation,
-    storeLocationAdd: state.reducer.storeLocation
+    storeLocationAdd: state.reducer.storeLocationAdd,
+    storeLocationUpdate: state.reducer.storeLocationUpdate
   };
 }
 

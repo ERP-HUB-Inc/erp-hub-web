@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "../../shares/Modal";
-import InputText from "../../../../common/elements/ant-ui/InputText";
-import Select from "../../../../common/elements/ant-ui/Select";
+import { InputText } from "../../../../common/elements/ant-ui/InputText";
+import { Select } from "../../../../common/elements/ant-ui/Select";
 import PaymentMethodAction from "../../../action/settings/paymentMethod";
 
 export default class Form extends Modal {
@@ -13,7 +13,7 @@ export default class Form extends Modal {
   }
   handleSubmit() {
     const { formUpdate } = this.props;
-    this.dispatch(PaymentMethodAction.update(formUpdate.values, formUpdate.values.id));
+    this.dispatch(PaymentMethodAction.update(formUpdate.values));
   }
     
   handleCancel() {

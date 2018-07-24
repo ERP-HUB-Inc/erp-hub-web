@@ -12,6 +12,7 @@ class PaymentMethodForm extends React.Component {
 }
 
 function mapStateToProps(state) {
+  console.log("Update:", state.reducer.paymentMethodUpdate.data);
   return {
     formUpdate: state.form.formPaymentMethodUpdate,
     paymentMethodUpdate: state.reducer.paymentMethodUpdate,
@@ -20,7 +21,8 @@ function mapStateToProps(state) {
 }
 
 const SelectingPaymentMethodForm = reduxForm({
-  form: "formPaymentMethodUpdate"
+  form: "formPaymentMethodUpdate",
+  enableReinitialize: true
 })(PaymentMethodForm);
 
 export default connect(mapStateToProps)(SelectingPaymentMethodForm);

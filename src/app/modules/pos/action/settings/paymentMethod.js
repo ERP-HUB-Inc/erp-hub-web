@@ -26,11 +26,11 @@ export default {
       });
     };
   },
-  update: (data, id) => {
+  update: (data) => {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_PAYMENT_METHOD,
-        payload: PaymentMethodService.update(data, id)
+        payload: PaymentMethodService.update(data)
       });
     };
   },
