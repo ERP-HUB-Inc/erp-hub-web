@@ -1,0 +1,42 @@
+.blog-register {
+    margin-left: 250px;
+    padding: 20px 30px;
+    width: 377px !important;
+    font-size: 9pt;
+    color:#4D4F5C;
+}
+
+.wrap-client-register-success {
+    height: 452px !important;
+    width: 632px !important;
+}
+
+.wrap-client-register-success .wrap-blog-logo {
+    height: 452px !important;
+}
+
+.wrap-client-register-success .register-complete-layout {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+ul.main-register-complete {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    clear: both;
+}
+
+ul.main-register-complete li {
+    float: left;
+    margin-right: 11px;
+}
+
+.main-register-success {
+    margin-top: 45px;
+    float: right;
+}
+
+.main-register-success button {
+    width: 116px;
+}
