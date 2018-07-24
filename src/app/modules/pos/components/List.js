@@ -139,7 +139,6 @@ export default class List extends Component {
       pageSize: fetchingProps.pagination.limit,
       current: this.state.current
     };
-
     
     // Here is repsonse from add action and combinde response data to the list.
     if (addingProps.response != null) {

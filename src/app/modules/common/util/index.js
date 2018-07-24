@@ -64,4 +64,10 @@ export class Util {
   findArrayIndex(collection, prop, value) {
     return _.findIndex(collection, [prop, value]);
   }
+
+  mapWithKey(datas) {
+    datas.map((element, index) => {
+      return element.key = index;
+    });
+  }
 }
