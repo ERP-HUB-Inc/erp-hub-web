@@ -1,15 +1,12 @@
   
-import { 
-  REQUEST_STORE_LOCATION,
-  ARCHIVE_STORE_LOCATION
-} from "../../constants/settings/storeLocation";
+import Constant from "../../constants/settings/storeLocation";
 import LoctionService from "../../services/settings/StoreLocationService";
 
 export default{
   fetch:(limit, offset, sortField, sortOrder) => {
     return dispatch => {
       return dispatch({
-        type: REQUEST_STORE_LOCATION,
+        type: Constant.REQUEST_STORE_LOCATION,
         payload: LoctionService.lists(limit, offset, sortField, sortOrder)
       });
     };
@@ -17,7 +14,7 @@ export default{
   archive: (ids) => {
     return dispatch => {
       return dispatch({
-        type: ARCHIVE_STORE_LOCATION,
+        type: Constant.ARCHIVE_STORE_LOCATION,
         payload: LoctionService.archive(ids)
       });
     };

@@ -1,39 +1,29 @@
-import {
-  REQUEST_STORE_LOCATION_PENDING,
-  REQUEST_STORE_LOCATION_REJECTED,
-  REQUEST_STORE_LOCATION_FULFILLED,
-  ARCHIVE_STORE_LOCATION_PENDING,
-  ARCHIVE_STORE_LOCATION_REJECTED,
-  ARCHIVE_STORE_LOCATION_FULFILLED,
-  ADD_STORE_LOCATION_PENDING,
-  ADD_STORE_LOCATION_REJECTED,
-  ADD_STORE_LOCATION_FULFILLED
-} from "../../constants/settings/storeLocation";
+import Constant from "../../constants/settings/storeLocation";
 import InitialState from "../../../common/reducers/initialState";
 import reducer from "../reducer";
       
 export default {
   request: (state = InitialState.request(), action) => {
     const constants = [
-      REQUEST_STORE_LOCATION_PENDING,
-      REQUEST_STORE_LOCATION_REJECTED,
-      REQUEST_STORE_LOCATION_FULFILLED
+      Constant.REQUEST_STORE_LOCATION_PENDING,
+      Constant.REQUEST_STORE_LOCATION_REJECTED,
+      Constant.REQUEST_STORE_LOCATION_FULFILLED
     ];
     return reducer.request(state, action, constants);
   },
   archive: (state = InitialState.archive(), action) => {
     const constants = [
-      ARCHIVE_STORE_LOCATION_PENDING,
-      ARCHIVE_STORE_LOCATION_REJECTED,
-      ARCHIVE_STORE_LOCATION_FULFILLED
+      Constant.ARCHIVE_STORE_LOCATION_PENDING,
+      Constant.ARCHIVE_STORE_LOCATION_REJECTED,
+      Constant.ARCHIVE_STORE_LOCATION_FULFILLED
     ];
     return reducer.archive(state, action, constants);
   },
   add: (state = InitialState.add(), action) => {
     const constants = [
-      ADD_STORE_LOCATION_PENDING,
-      ADD_STORE_LOCATION_REJECTED,
-      ADD_STORE_LOCATION_FULFILLED
+      Constant.ADD_STORE_LOCATION_PENDING,
+      Constant.ADD_STORE_LOCATION_REJECTED,
+      Constant.ADD_STORE_LOCATION_FULFILLED
     ];
     return reducer.add(state, action, constants);
   }

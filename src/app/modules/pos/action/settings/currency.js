@@ -1,15 +1,12 @@
   
-import { 
-  REQUEST_CURRENCY,
-  ARCHIVE_CURRENCY
-} from "../../constants/settings/currency";
+import Constant from "../../constants/settings/currency";
 import CurrencyService from "../../services/settings/CurrencyService";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder) => {
     return dispatch => {
       return dispatch({
-        type: REQUEST_CURRENCY,
+        type: Constant.REQUEST_CURRENCY,
         payload: CurrencyService.lists(limit, offset, sortField, sortOrder)
       });
     };
@@ -17,7 +14,7 @@ export default {
   archive: (ids) => {
     return dispatch => {
       return dispatch({
-        type:  ARCHIVE_CURRENCY,
+        type:  Constant.ARCHIVE_CURRENCY,
         payload: CurrencyService.archive(ids)
       });
     };

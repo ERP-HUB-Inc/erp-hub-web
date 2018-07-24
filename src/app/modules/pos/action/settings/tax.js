@@ -1,19 +1,12 @@
   
-import { 
-  REQUEST_TAX,
-  ARCHIVE_TAX,
-  ADD_TAX,
-  UPDATE_TAX,
-  RESET_TAX,
-  SHOW_TAX_FORM
-} from "../../constants/settings/tax";
+import Constant from "../../constants/settings/tax";
 import TaxService from "../../services/settings/TaxService";
 
 export default{
   fetch:(limit, offset, sortField, sortOrder) => {
     return dispatch => {
       return dispatch({
-        type: REQUEST_TAX,
+        type: Constant.REQUEST_TAX,
         payload: TaxService.lists(limit, offset, sortField, sortOrder)
       });
     };
@@ -21,7 +14,7 @@ export default{
   archive: (ids) => {
     return dispatch => {
       return dispatch({
-        type: ARCHIVE_TAX,
+        type: Constant.ARCHIVE_TAX,
         payload: TaxService.archive(ids)
       });
     };
@@ -29,7 +22,7 @@ export default{
   add: (data) => {
     return dispatch => {
       return dispatch({
-        type: ADD_TAX,
+        type: Constant.ADD_TAX,
         payload: TaxService.add(data)
       });
     };
@@ -37,7 +30,7 @@ export default{
   update: (data, id) => {
     return dispatch => {
       return dispatch({
-        type: UPDATE_TAX,
+        type: Constant.UPDATE_TAX,
         payload: TaxService.update(data, id)
       });
     };
@@ -45,7 +38,7 @@ export default{
   reset: () => {
     return dispatch => {
       return dispatch({
-        type: RESET_TAX,
+        type: Constant.RESET_TAX,
         payload: null
       });
     };
@@ -53,7 +46,7 @@ export default{
   showForm: () => {
     return dispatch => {
       return dispatch({
-        type: SHOW_TAX_FORM,
+        type: Constant.SHOW_TAX_FORM,
         payload: null
       });
     };
