@@ -21,6 +21,7 @@ export default class List extends Component {
     this.module = "settings"; // This compare to parent key in datasource in sidebar when render breadcrump
     this.fetchingProp = "paymentMethod"; // prop of reducer of fetching record that get from map state to prop from container
     this.addingProp = "paymentMethodAdd"; // prop of reducer of adding record that get from map state to prop from container
+    this.updatingProp = "paymentMethodUpdate"; // prop of reducer of adding record that get from map state to prop from container
 
     this.pageSize = 10; // default limit record display in table list
     this.confirmTextDelete = "Are you sure delete this record?";
@@ -79,11 +80,11 @@ export default class List extends Component {
 
   /**
    * when user change pagination
-   * @param {*} page 
+   * @param {*} current: current page number of pagination 
    * @param {*} pageSize 
    */
-  onChangePagination(page, pageSize) {
-    console.log(page, pageSize);
+  onChangePagination(current, pageSize) {
+    console.log(current, pageSize);
   }
 
   /**
@@ -132,14 +133,24 @@ export default class List extends Component {
   render() {
     let fetchingProps = this.props[this.fetchingProp];
     const addingProps = this.props[this.addingProp];
+    const updatingProps = this.props[this.updatingProp];
     const pagination = {
-      total: fetchingProps.list.total,
-      pageSize: fetchingProps.list.limit,
+      total: fetchingProps.pagination.total,
+      pageSize: fetchingProps.pagination.limit,
       current: this.state.current
     };
 
-    if (addingProps.response != null) { // Here is repsonse from add action and combinde response data to the list.
-      fetchingProps.list.data = [addingProps.response.data, ...fetchingProps.list.data];
+    
+    // Here is repsonse from add action and combinde response data to the list.
+    if (addingProps.response != null) {
+      fetchingProps.list = [addingProps.response.data, ...fetchingProps.list];
+      this.props.dispatch({type: this.RESET_CONSTANT});
+    }
+
+    // Here is repsonse from updating action and update response data to the list.
+    if (updatingProps.response != null) {
+      const updateIndex = this.Util.findArrayIndex(fetchingProps.list, "id", updatingProps.response.data.id);
+      fetchingProps.list.splice(updateIndex, 1, updatingProps.response.data);
       this.props.dispatch({type: this.RESET_CONSTANT});
     }
     
@@ -193,7 +204,7 @@ export default class List extends Component {
           <this.clearFloating/>
           <this.Table 
             rowSelection={rowSelection}
-            dataSource={fetchingProps.list.data}
+            dataSource={fetchingProps.list}
             columns={this.columns}
             pagination={false} //
             onChange={this.onChange}

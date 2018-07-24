@@ -1,4 +1,5 @@
 import moment from "moment";
+import _ from "lodash";
 
 export function Email(value = "") {
   return value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
@@ -57,4 +58,10 @@ export function toRelative(value) {
 export function toDate(value) {
   const date = moment(value).format("DD/MMMM/YY h:mm a");
   return date;
+}
+
+export class Util {
+  findArrayIndex(collection, prop, value) {
+    return _.findIndex(collection, [prop, value]);
+  }
 }

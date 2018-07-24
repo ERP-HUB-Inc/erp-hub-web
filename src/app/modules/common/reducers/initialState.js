@@ -3,6 +3,11 @@ export default {
     return {
       fetching: false,
       fetched: false,
+      pagination: {
+        limit: 0,
+        offset: 0,
+        total: 0
+      },
       [key]: [],
       error: null
     };

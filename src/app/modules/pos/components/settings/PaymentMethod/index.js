@@ -14,6 +14,7 @@ export default class PaymentMethodList extends List {
     this.columns = columns;
     this.fetchingProp = "paymentMethod";
     this.addingProp = "paymentMethodAdd";
+    this.updatingProp = "paymentMethodUpdate";
     this.RESET_CONSTANT = RESET_PAYMENT_METHOD;
   }
 
@@ -30,17 +31,17 @@ export default class PaymentMethodList extends List {
     dispatch(PaymentMethodAction.fetch(...this.filter));
   }
 
-  onChangePagination(pageNumber, pageSize) {
+  onChangePagination(current, pageSize) {
     const { dispatch } = this.props;
 
     this.filter = [
       pageSize,
-      (pageNumber - 1) * pageSize,
+      (current - 1) * pageSize,
     ];
 
     dispatch(PaymentMethodAction.fetch(...this.filter));
 
-    this.setState({ current: pageNumber});
+    this.setState({ current});
   }
 
   onShowSizeChange(current, pageSize) {

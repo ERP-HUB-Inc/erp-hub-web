@@ -12,8 +12,8 @@ export default class Form extends Modal {
     this.dispatch = this.props.dispatch;
   }
   handleSubmit() {
-    const { formAdd } = this.props;
-    this.dispatch(PaymentMethodAction.update(formAdd.values));
+    const { formUpdate } = this.props;
+    this.dispatch(PaymentMethodAction.update(formUpdate.values, formUpdate.values.id));
   }
     
   handleCancel() {
@@ -23,9 +23,10 @@ export default class Form extends Modal {
   render() {
     const {paymentMethodUpdate} = this.props;
     
-    if (paymentMethodUpdate.response != null) {
-      this.dispatch(PaymentMethodAction.reset());
-    }
+    // For Now we reset state in the list
+    // if (paymentMethodUpdate.response != null) {
+    //   this.dispatch(PaymentMethodAction.reset());
+    // }
 
     if (paymentMethodUpdate.showForm) {
       this.content = (
