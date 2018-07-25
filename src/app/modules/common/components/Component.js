@@ -19,10 +19,12 @@ import
   AnimationInput,
   Button,
   InputText,
+  InputEmail,
   LoginLayout,
   RadioRegisterGroup,
   RadioRegister
 } from "../elements/ant-ui";
+import InputPassword from "../elements/ant-ui/InputPassword";
 import {
   InputRedux,
   Breadcrumb,
@@ -140,6 +142,8 @@ export default class Component extends RComponent {
     this.LoginLayout = LoginLayout;
     this.RadioRegisterGroup = RadioRegisterGroup;
     this.InputText = InputText;
+    this.InputEmail = InputEmail;
+    this.InputPassword = InputPassword;
     this.RadioRegister = RadioRegister;
 
     // Util function

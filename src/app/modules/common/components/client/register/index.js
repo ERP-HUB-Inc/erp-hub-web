@@ -28,23 +28,18 @@ export default class ClientRegister extends Component {
             <div className="title">
               <h6>Start Register with Us</h6>
             </div>
-            <this.InputText
+            <this.InputEmail
               name="email"
-              type="text"
               label="Email"
               placeholder="Email"
+              required={true}
             />
-            <this.InputText
-              name="password"
-              type="text"
+            <this.InputPassword
               label="Password"
+              confirmLabel="Comfirm Password"
               placeholder="Password"
-            />
-            <this.InputText
-              name="comfirmpassword"
-              type="text"
-              label="Comfirm Password"
-              placeholder="Comfirm Password"
+              confirmPlaceholder="Comfirm Password"
+              required={true}
             />
             <div>
               <this.FormGroup>

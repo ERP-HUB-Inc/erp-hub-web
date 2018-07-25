@@ -3,7 +3,7 @@ import TextInput from "./input";
 import Element from "../../common/Element";
 import "./index.css";
 
-export default class InputEmail extends Element {
+export  class InputEmail extends Element {
 
   constructor(props) {
     super(props);
