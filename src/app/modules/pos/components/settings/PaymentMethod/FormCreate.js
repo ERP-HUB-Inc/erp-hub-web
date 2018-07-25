@@ -28,12 +28,14 @@ export default class Form extends Modal {
     //   this.dispatch(PaymentMethodAction.reset());
     // }
 
+    console.log("paymentMethodAdd",paymentMethodAdd);
+
     if (paymentMethodAdd.showForm) {
       this.content = (
         <div>
           {paymentMethodAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
           <InputText name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
-          <InputText name="description" label="Description" placeholder="Description" max={255}/>
+          <InputText type="number" name="description" label="Description" placeholder="Description" max={255}/>
           <Select name="status" label="Status" placeholder="Please select status" dataSource={this.statusDataSource} defaultValue={1}/>
         </div>
       );

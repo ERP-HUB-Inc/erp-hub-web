@@ -1,8 +1,9 @@
 import reducer from "../reducer";
+import { combineReducers } from "redux";
 import Constant from "../../constants/settings/storeLanguage";
 import InitialState from "../../../common/reducers/initialState";
       
-export default {
+export default combineReducers({
   request: (state = InitialState.request(), action) => {
     const constants = [
       Constant.REQUEST_STORE_LANGUAGE_PENDING,
@@ -37,5 +38,5 @@ export default {
     ];
     return reducer.update(state, action, constants);
   }
-};
+});
       

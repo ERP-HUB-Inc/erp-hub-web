@@ -1,8 +1,9 @@
 import Constant from "../../constants/settings/storeLocation";
+import { combineReducers } from "redux";
 import InitialState from "../../../common/reducers/initialState";
 import reducer from "../reducer";
       
-export default {
+export default combineReducers({
   request: (state = InitialState.request(), action) => {
     const constants = [
       Constant.REQUEST_STORE_LOCATION_PENDING,
@@ -37,5 +38,5 @@ export default {
     ];
     return reducer.update(state, action, constants);
   }
-};
+});
       

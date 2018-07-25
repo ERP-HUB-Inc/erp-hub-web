@@ -13,10 +13,14 @@ class StoreLocation extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    // formAdd: state.form.formStoreLocation,
+    // storeLocation: state.reducer.storeLocation,
+    // storeLocationAdd: state.reducer.storeLocationAdd,
+    // storeLocationUpdate: state.reducer.storeLocationUpdate
     formAdd: state.form.formStoreLocation,
-    storeLocation: state.reducer.storeLocation,
-    storeLocationAdd: state.reducer.storeLocationAdd,
-    storeLocationUpdate: state.reducer.storeLocationUpdate
+    storeLocation: state.reducer.storeLocation.request,
+    storeLocationAdd: state.reducer.storeLocation.add,
+    storeLocationUpdate: state.reducer.storeLocation.update
   };
 }
 

@@ -17,6 +17,8 @@ function mapStateToProps(state) {
     tax: state.reducer.tax.request,
     taxAdd: state.reducer.tax.add,
     taxUpdate: state.reducer.tax.update
+    // paymentMethodAdd: state.reducer.paymentMethodAdd 
+    // use for call other form
   };
 }
 

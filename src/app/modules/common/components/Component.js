@@ -19,6 +19,7 @@ import
   AnimationInput,
   Button,
   InputText,
+  InputNumber,
   LoginLayout,
   RadioRegisterGroup,
   RadioRegister
@@ -140,6 +141,7 @@ export default class Component extends RComponent {
     this.LoginLayout = LoginLayout;
     this.RadioRegisterGroup = RadioRegisterGroup;
     this.InputText = InputText;
+    this.InputNumber = InputNumber;
     this.RadioRegister = RadioRegister;
 
     // Util function

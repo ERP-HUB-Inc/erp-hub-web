@@ -14,7 +14,7 @@ class PaymentMethodForm extends React.Component {
 function mapStateToProps(state) {
   return {
     formAdd: state.form.formPaymentMethod,
-    paymentMethodAdd: state.reducer.paymentMethodAdd
+    paymentMethodAdd: state.reducer.PaymentMethods.add
   };
 }
 

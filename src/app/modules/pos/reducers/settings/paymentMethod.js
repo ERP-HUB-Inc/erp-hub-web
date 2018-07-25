@@ -1,9 +1,10 @@
 import reducer from "../reducer";
+import { combineReducers } from "redux";
 import Constant from "../../constants/settings/paymentMethod";
 import PaymentMethodSchema from "../../schemas/settings/paymentMethod";
 import InitialState from "../../../common/reducers/initialState";
 
-export default {
+export default combineReducers({
   request: (state = InitialState.request(), action) => {
     const constants = [
       Constant.REQUEST_PAYMENT_METHOD_PENDING,
@@ -40,4 +41,4 @@ export default {
     ];
     return reducer.update(state, action, constants);
   }
-};
+});

@@ -38,7 +38,7 @@ export default class Modal extends Component {
             <this.Button className="danger" onClick={() => this.handleCancel()}>
               <span className="icon-close icon-padding-right"></span>CANCEL
             </this.Button>
-            <this.Button loading={this.props[this.addingPropReducer].adding}  className="info" onClick={() => this.handleSubmit()}>
+            <this.Button loading={this.props[this.addingPropReducer].adding} className="info" onClick={() => this.handleSubmit()}>
               <span className="icon-checked icon-padding-right"></span>OK
             </this.Button>
           </div>

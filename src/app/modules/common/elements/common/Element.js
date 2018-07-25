@@ -4,7 +4,8 @@ import {
   Form as form,
   Input,
   Checkbox,
-  Select
+  Select,
+  InputNumber
 } from "antd";
 import { FormGroup, Label } from "reactstrap";
 import { Translate, } from "react-localize-redux";
@@ -23,6 +24,7 @@ export default class Element extends Component {
 
     //ant ui
     this.Input = Input;
+    this.InputNumber = InputNumber;
     this.FormItem = form.Item;
     this.Checkbox = Checkbox;
     this.Select = Select;

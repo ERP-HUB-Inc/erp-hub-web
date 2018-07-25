@@ -32,6 +32,7 @@ export default class BaseService extends Service {
   }
 
   add(data) {
+    // alert(JSON.stringify(data));
     return this.addData({
       url: `${this.baseUrl}/create`,
       data: {
@@ -45,7 +46,6 @@ export default class BaseService extends Service {
 
   update(data) {
     const {id} = data;
-    delete data["id"];
     return this.updateData({
       url: `${this.baseUrl}/update/${id}`,
       data: {
