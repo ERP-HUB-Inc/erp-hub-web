@@ -19,3 +19,5 @@ export * from "./LoginLayout";
 export * from "./Radio/register";
 export * from "./InputText";
 export * from "./InputNumber";
+export * from "./InputEmail";
+// export * from "./InputPassword";
