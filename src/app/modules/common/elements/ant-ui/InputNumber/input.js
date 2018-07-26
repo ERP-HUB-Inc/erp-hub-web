@@ -9,11 +9,18 @@ class InputNumbers extends Element {
     const { input } = this.props;
     delete input["value"];
 
+    console.log("input values",input);
+
     return (
       <this.FormItem label={this.props.label}>
         {
           getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.data})(
-            <this.InputNumber defaultValue={ this.props.defaultValue } placeholder={this.props.placeholder} { ...input } />
+            <this.InputNumber 
+              defaultValue={ this.props.defaultValue } 
+              type={ this.props.type }
+              placeholder={ this.props.placeholder } 
+              { ...input } 
+            />
           )
         }
       </this.FormItem>

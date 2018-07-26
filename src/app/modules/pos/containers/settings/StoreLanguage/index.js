@@ -14,14 +14,11 @@ class StoreLanguage extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    formAdd: state.form.formStoreLanguage,
     storeLanguage: state.reducer.storeLanguage.request,
     storeLanguageAdd: state.reducer.storeLanguage.add,
     storeLanguageUpdate: state.reducer.storeLanguage.update
   };
 }
 
-const SelectingStoreLanguageForm = reduxForm({
-  form: "formStoreLanguage"
-})(StoreLanguage);
-
-export default connect(mapStateToProps)(SelectingStoreLanguageForm);
+export default connect(mapStateToProps)(StoreLanguage);

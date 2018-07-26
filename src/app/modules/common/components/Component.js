@@ -19,11 +19,7 @@ import
   AnimationInput,
   Button,
   InputText,
-<<<<<<< HEAD
   InputNumber,
-=======
-  InputEmail,
->>>>>>> 4b8d32f96a703a6a61ed9d0f179ecd7a50be97f8
   LoginLayout,
   RadioRegisterGroup,
   RadioRegister
@@ -146,12 +142,7 @@ export default class Component extends RComponent {
     this.LoginLayout = LoginLayout;
     this.RadioRegisterGroup = RadioRegisterGroup;
     this.InputText = InputText;
-<<<<<<< HEAD
     this.InputNumber = InputNumber;
-=======
-    this.InputEmail = InputEmail;
-    this.InputPassword = InputPassword;
->>>>>>> 4b8d32f96a703a6a61ed9d0f179ecd7a50be97f8
     this.RadioRegister = RadioRegister;
 
     // Util function

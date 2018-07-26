@@ -43,11 +43,11 @@ export default{
       });
     };
   },
-  showForm: () => {
+  showForm: (data) => {
     return dispatch => {
       return dispatch({
         type: Constant.SHOW_TAX_FORM,
-        payload: null
+        payload: data
       });
     };
   }
