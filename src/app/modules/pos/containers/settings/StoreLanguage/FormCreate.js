@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { reduxForm } from "redux-form";
 import FormCreate from "../../../components/settings/StoreLanguage/FormCreate";
 
-class PaymentMethodForm extends React.Component {
+class StoreLanguageForm extends React.Component {
   render() {
     return (
       <FormCreate {...this.props} />
@@ -13,13 +13,13 @@ class PaymentMethodForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    formStoreLanguage: state.form.formStoreLanguage,
-    formLanguageAdd: state.reducer.tax.add
+    storeLanguageFormAdd: state.form.formStoreLanguage,
+    storeLanguageAdd: state.reducer.storeLanguage.add
   };
 }
 
 const SelectingPaymentMethodForm = reduxForm({
   form: "formStoreLanguage"
-})(PaymentMethodForm);
+})(StoreLanguageForm);
 
 export default connect(mapStateToProps)(SelectingPaymentMethodForm);

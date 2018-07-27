@@ -44,8 +44,6 @@ export default class StoreLanguageList extends List {
     });
   }
 
-
-
   handleAdd() {
     super.handleAdd();
   }

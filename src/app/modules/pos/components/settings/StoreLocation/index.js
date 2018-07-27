@@ -1,6 +1,8 @@
 import React from "react";
 import columns from "./column";
 import List from "../../List";
+import FormCreate from "../../../containers/settings/StoreLocation/FormCreate";
+import FormUpdate from "../../../containers/settings/StoreLocation/FormUpdate";
 import StoreLocationAction from "../../../action/settings/storeLocation";
 
 export default class StoreLocationList extends List {
@@ -22,6 +24,22 @@ export default class StoreLocationList extends List {
     const { dispatch } = this.props;
     super.onChange(pagination, filters, sorter);
     dispatch(StoreLocationAction.fetch(...this.filter));
+  }
+
+  handleShowFormAdd() {
+    const { dispatch } = this.props;
+    dispatch(StoreLocationAction.showForm());
+    this.setState({
+      modalConten: <FormCreate />
+    });
+  }
+
+  handleShowFormEdit(rowData) {
+    const { dispatch } = this.props;
+    dispatch(StoreLocationAction.showForm(rowData));
+    this.setState({
+      modalConten: <FormUpdate/>
+    });
   }
 
   handleAdd() {

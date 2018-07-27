@@ -12,6 +12,11 @@
         font-size: 18pt;
     }
 
+    .header .user-account .title-user {
+        position: relative;
+        top: -5px;
+    }
+
     .header .back-office {
         font-size: 10pt
     }

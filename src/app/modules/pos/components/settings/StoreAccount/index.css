@@ -1,0 +1,10 @@
+.main-layout {
+    background-color: white;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+}
+
+.main-layout .general {
+    border-bottom: 1px solid #ECECEC;
+}

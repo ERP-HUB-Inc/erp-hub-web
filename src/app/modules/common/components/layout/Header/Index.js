@@ -27,7 +27,7 @@ class Headers extends Component {
           <this.Col md="2" className="header-left">
             <div className="store-name">
               <div className="wrap-title">
-                <div className="title">store VEIN </div>
+                <div className="title-user">store VEIN </div>
                 <div className="back-office">{<this.Translate id="text_back_office"/>}</div>
               </div>
             </div>

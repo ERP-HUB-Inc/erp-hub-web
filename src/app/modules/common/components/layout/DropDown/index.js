@@ -35,14 +35,14 @@ export default class MenuDropDown extends Component {
         <li>
           <a className="user-account">
             <span className="icon-help icon-padding-right"></span>
-            <span className="title"><this.Translate id="text_help"/></span>
+            <span className="title-user"><this.Translate id="text_help"/></span>
           </a>
         </li>
         <li>
           <Dropdown overlay={this.menu} trigger={["click"]}>
             <a className="ant-dropdown-link user-account" href="javascript:;">
               <span className="icon-user icon-padding-right"></span>
-              <span className="title"><this.Translate id="text_user_account"/></span> 
+              <span className="title-user"><this.Translate id="text_user_account"/></span> 
               <span className="icon-move-down icon-padding-left"></span>
             </a>
           </Dropdown>
@@ -51,7 +51,7 @@ export default class MenuDropDown extends Component {
           <Dropdown overlay={this.menuLanguage} trigger={["click"]}>
             <a className="ant-dropdown-link user-account" href="javascript:;">
               <span className="icon-change icon-padding-right"></span>
-              <span className="title">{this.props.currentLanguage.name}</span> 
+              <span className="title-user">{this.props.currentLanguage.name}</span> 
               <span className="icon-move-down icon-padding-left"></span>
             </a>
           </Dropdown>

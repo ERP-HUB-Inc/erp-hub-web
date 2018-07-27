@@ -1,10 +1,8 @@
 import React from "react";
-import Input from "./input";
+import { DatePic } from "./datePicker";
 import Element from "../../common/Element";
-import "./index.css";
 
-export class InputText extends Element {
-
+export class DatePickers extends Element {
   constructor(props) {
     super(props);
     this.rules = [
@@ -29,19 +27,12 @@ export class InputText extends Element {
         name={this.props.name}
         type="text"
         placeholder={this.props.placeholder}
-        component={ Input }
+        component={ DatePic }
         label={this.props.label}
         data={this.props.data}
-        required = {this.props.required}
-        rules = {this.rules}
       />
     );
   }   
 }
 
-Input.defaultProps = {
-  max: 3,
-  errorRequired: "Field required.",
-  errorLenght: "Over allow character lenght."
-};
 

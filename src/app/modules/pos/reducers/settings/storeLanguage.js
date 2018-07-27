@@ -24,7 +24,9 @@ export default combineReducers({
     const constants = [
       Constant.ADD_STORE_LANGUAGE_PENDING,
       Constant.ADD_STORE_LANGUAGE_REJECTED,
-      Constant.ADD_STORE_LANGUAGE_FULFILLED
+      Constant.ADD_STORE_LANGUAGE_FULFILLED,
+      Constant.SHOW_STORE_LANGUAGE_FORM,
+      Constant.RESET_STORE_LANGUAGE
     ];
     return reducer.add(state, action, constants);
   },
