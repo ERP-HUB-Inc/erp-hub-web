@@ -3,6 +3,7 @@ import Input from "./input";
 import Element from "../../common/Element";
 import "./index.css";
 
+
 export class InputNumber extends Element {
 
   constructor(props) {
@@ -23,7 +24,9 @@ export class InputNumber extends Element {
     return (
       <this.Field 
         name={this.props.name}
-        defaultValue={ parseInt(this.props.defaultValue)}
+        type={this.props.type}
+        parse={ value => Number(value) }
+        defaultValue={ this.props.defaultValue }
         placeholder={this.props.placeholder}
         component={ Input }
         label={this.props.label}

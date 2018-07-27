@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { reduxForm } from "redux-form";
-import FormUpdate from "../../../components/settings/Tax/FormUpdate";
+import FormUpdate from "../../../components/settings/StoreLocation/FormUpdate";
 
 class TaxForm extends React.Component {
   render() {
@@ -13,14 +13,14 @@ class TaxForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    formUpdate: state.form.formTaxUpdate,
-    taxUpdate: state.reducer.tax.update,
-    initialValues: state.reducer.tax.update.data
+    formUpdate: state.form.formLanguageUpdate,
+    storeLocationUpdate: state.reducer.storeLocation.update,
+    initialValues: state.reducer.storeLocation.update.data
   };
 }
 
 const UpdateTax = reduxForm({
-  form: "formTaxUpdate",
+  form: "formLanguageUpdate",
   enableReinitialize: true
 })(TaxForm);
 

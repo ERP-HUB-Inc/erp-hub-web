@@ -8,7 +8,6 @@ import
   CTable,
   Noteicon,
   Select,
-  DateRank,
   ActionButton,
   Switchs,
   Waiting,
@@ -19,11 +18,13 @@ import
   AnimationInput,
   Button,
   InputText,
-  InputNumber,
   InputEmail,
+  InputNumber,
   LoginLayout,
   RadioRegisterGroup,
-  RadioRegister
+  RadioRegister,
+  DatePickers,
+  RadioButton
 } from "../elements/ant-ui";
 import InputPassword from "../elements/ant-ui/InputPassword";
 import {
@@ -84,7 +85,6 @@ export default class Component extends RComponent {
     this.Modal = Modal;
     this.Noteicon = () => (<Noteicon/>);
     this.Select = Select;
-    this.DateRank = DateRank;
 
     // Other
     this.clearFloating = () => <div className="clearFloat"></div>;
@@ -144,9 +144,11 @@ export default class Component extends RComponent {
     this.RadioRegisterGroup = RadioRegisterGroup;
     this.InputText = InputText;
     this.InputNumber = InputNumber;
-    this.InputEmail = InputEmail;
     this.InputPassword = InputPassword;
     this.RadioRegister = RadioRegister;
+    this.InputEmail = InputEmail;
+    this.DatePickers = DatePickers;
+    this.RadioButton = RadioButton;
 
     // Util function
     this.Util = new Util;

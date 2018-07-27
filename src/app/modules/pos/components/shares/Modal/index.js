@@ -28,6 +28,7 @@ export default class Modal extends Component {
   handleCancel() {}
 
   render() {
+    console.log("My Props:", this.props[this.addingPropReducer]);
     return (
       <this.Modal
         title={this.title}

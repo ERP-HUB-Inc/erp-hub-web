@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { reduxForm } from "redux-form";
-import FormUpdate from "../../../components/settings/Tax/FormUpdate";
+import FormUpdate from "../../../components/settings/Currency/FormUpdate";
 
-class TaxForm extends React.Component {
+class CurrencyUpdateForm extends React.Component {
   render() {
     return (
       <FormUpdate {...this.props} />
@@ -13,15 +13,15 @@ class TaxForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    formUpdate: state.form.formTaxUpdate,
-    taxUpdate: state.reducer.tax.update,
-    initialValues: state.reducer.tax.update.data
+    formUpdate: state.form.formCurrencyUpdate,
+    currencyUpdate: state.reducer.currency.update,
+    initialValues: state.reducer.currency.update.data
   };
 }
 
 const UpdateTax = reduxForm({
-  form: "formTaxUpdate",
+  form: "formCurrencyUpdate",
   enableReinitialize: true
-})(TaxForm);
+})(CurrencyUpdateForm);
 
 export default connect(mapStateToProps)(UpdateTax);

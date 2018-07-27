@@ -188,7 +188,7 @@ export default class List extends Component {
           {/* ===============ACTION BUTTON============ */}
           <div className="float-left">
             <this.Button type="info" className="mg-right" onClick={() => this.handleShowFormAdd()}>
-              <span className="icon-add icon-padding-right"></span>Add
+              <span className="icon-add icon-padding-right"></span>Add New
             </this.Button>
             <this.Popconfirm placement="topLeft" title={this.confirmTextDelete} onConfirm={this.handleDelete} okText={this.okText} cancelText={this.cancelText}>
               <this.Button type="danger">

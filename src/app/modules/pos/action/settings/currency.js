@@ -18,5 +18,37 @@ export default {
         payload: CurrencyService.archive(ids)
       });
     };
+  },
+  add: (data) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.ADD_CURRENCY,
+        payload: CurrencyService.add(data)
+      });
+    };
+  },
+  update: (data, id) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.UPDATE_CURRENCY,
+        payload: CurrencyService.update(data, id)
+      });
+    };
+  },
+  reset: () => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.RESET_CURRENCY,
+        payload: null
+      });
+    };
+  },
+  showForm: (data) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.SHOW_CURRENCY_FORM,
+        payload: data
+      });
+    };
   }
 };

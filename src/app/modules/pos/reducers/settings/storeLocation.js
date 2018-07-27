@@ -24,7 +24,9 @@ export default combineReducers({
     const constants = [
       Constant.ADD_STORE_LOCATION_PENDING,
       Constant.ADD_STORE_LOCATION_REJECTED,
-      Constant.ADD_STORE_LOCATION_FULFILLED
+      Constant.ADD_STORE_LOCATION_FULFILLED,
+      Constant.SHOW_STORE_LOCATION_FORM,
+      Constant.RESET_STORE_LOCATION
     ];
     return reducer.add(state, action, constants);
   },
@@ -33,8 +35,8 @@ export default combineReducers({
       Constant.UPDATE_STORE_LOCATION_PENDING,
       Constant.UPDATE_STORE_LOCATION_REJECTED,
       Constant.UPDATE_STORE_LOCATION_FULFILLED,
-      Constant.RESET_STORE_LOCATION,
-      Constant.SHOW_STORE_LOCATION_FORM
+      Constant.SHOW_STORE_LOCATION_FORM,
+      Constant.RESET_STORE_LOCATION
     ];
     return reducer.update(state, action, constants);
   }

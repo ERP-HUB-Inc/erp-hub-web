@@ -1,6 +1,8 @@
 import React from "react";
 import columns from "./column";
 import List from "../../List";
+import FormCreate from "../../../containers/settings/Currency/FormCreate";
+import FormUpdate from "../../../containers/settings/Currency/FormUpdate";
 import CurrencyAction from "../../../action/settings/currency";
 
 export default class CurrencyList extends List {
@@ -50,6 +52,23 @@ export default class CurrencyList extends List {
 
     dispatch(CurrencyAction.fetch(...this.filter));
   }
+
+  handleShowFormAdd() {
+    const { dispatch } = this.props;
+    dispatch(CurrencyAction.showForm());
+    this.setState({
+      modalConten: <FormCreate/>
+    });
+  }
+
+  handleShowFormEdit(rowData) {
+    const { dispatch } = this.props;
+    dispatch(CurrencyAction.showForm(rowData));
+    this.setState({
+      modalConten: <FormUpdate/>
+    });
+  }
+
 
   handleAdd() {
     super.handleAdd();
