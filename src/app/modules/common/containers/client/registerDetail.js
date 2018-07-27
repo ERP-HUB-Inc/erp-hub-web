@@ -7,13 +7,24 @@ import ClientRegisterDetail from "../../components/client/registerDetail";
 class RegisterDetail extends Component {
   render() {
     return (
-      <ClientRegisterDetail />
+      <ClientRegisterDetail {...this.props}/>
     );
   }
 } 
 
 const RegisterDetailForm =  reduxForm({
-  form: "clientRegisterDetail"
+  form: "clientRegisterFormDetail"
 })(RegisterDetail);
+
+function mapStateToProps(state) {
+  return {
+    clientRegisterFormDetail: state.form.clientRegisterFormDetail,
+    clientRegister: state.reducer.client.register,
+    currencies: state.reducer.currencySystem.request,
+    languages: state.reducer.languageSystem.request,
+    businessPlans: state.reducer.businessPlan.request,
+    businessTypes: state.reducer.businessType.request
+  };
+}
  
-export default connect ()(RegisterDetailForm);
+export default connect (mapStateToProps)(RegisterDetailForm);

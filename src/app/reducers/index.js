@@ -1,4 +1,9 @@
 import { combineReducers } from "redux";
+import currencySystem from "../modules/common/reducers/currency";
+import businessPlan from "../modules/common/reducers/businessPlan";
+import businessType from "../modules/common/reducers/businessType";
+import languageSystem from "../modules/common/reducers/language";
+import client from "../modules/common/reducers/client";
 import user from "../modules/common/reducers/user";
 import PaymentMethods from "../modules/pos/reducers/settings/paymentMethod";
 import tax from "../modules/pos/reducers/settings/tax";
@@ -7,6 +12,11 @@ import storeLocation from "../modules/pos/reducers/settings/storeLocation";
 import storeLanguage from "../modules/pos/reducers/settings/storeLanguage";
 
 const reducer = combineReducers({
+  client,
+  currencySystem,
+  languageSystem,
+  businessPlan,
+  businessType,
   // SETTING MODULE
   user,
   tax,

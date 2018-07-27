@@ -6,6 +6,9 @@ export default class BaseService {
     this.baseUrl = this.generateAPIUrl();
     this.version = "v1";
     this.module = "";
+    this.header = {
+      "Content-Type": "application/json"
+    };
   }
 
   generateAPIUrl() {

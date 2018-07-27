@@ -11,11 +11,11 @@
 
 .wrap-client-login label {
     font-size: 10pt;
-    color: #9A9A9A;
+    color: #2C2C2C;
 }
 
 .wrap-client-login input::placeholder {
-    color:#2C2C2C !important;
+    color:#9A9A9A !important;
 }
 
 .header.text-right {

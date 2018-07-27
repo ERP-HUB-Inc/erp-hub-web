@@ -15,6 +15,9 @@ export class InputText extends Element {
       {
         max: this.props.max,
         message: this.props.errorLenght
+      },
+      {
+        whitespace: true
       }
     ];
   }

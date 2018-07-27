@@ -9,7 +9,8 @@ export class Button extends React.Component {
         disabled={this.props.disabled}
         onClick={this.props.onClick}
         loading={this.props.loading}
-        className={this.props.type + " " + this.props.className}>
+        className={this.props.type + " " + this.props.className}
+        style={this.style}>
         {this.props.children}
       </AntButton>
     );

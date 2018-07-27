@@ -19,11 +19,8 @@ import
   AnimationInput,
   Button,
   InputText,
-<<<<<<< HEAD
   InputNumber,
-=======
   InputEmail,
->>>>>>> 4b8d32f96a703a6a61ed9d0f179ecd7a50be97f8
   LoginLayout,
   RadioRegisterGroup,
   RadioRegister
@@ -44,7 +41,6 @@ import {
   Container,
   Col,
   Row,
-  Form,
   Dropdown, 
   DropdownItem, 
   DropdownToggle, 
@@ -64,6 +60,7 @@ import {
   Layout,
   Menu,
   Icon,
+  Form,
   Collapse,
   Checkbox,
   Modal,
@@ -108,7 +105,6 @@ export default class Component extends RComponent {
     this.Col = Col;
     this.Row = Row;
     this.InputRedux = InputRedux;
-    this.Form = Form;
     this.Dropdown = Dropdown;
     this.DropdownItem = DropdownItem;
     this.DropdownToggle = DropdownToggle;
@@ -141,17 +137,15 @@ export default class Component extends RComponent {
     this.Panel = Panel;
     this.Tooltips = Tooltips;
     this.Option = Option;
+    this.Form = Form;
     this.FieldComponent = FieldComponent;
     this.TrashButton = TrashButton;
     this.LoginLayout = LoginLayout;
     this.RadioRegisterGroup = RadioRegisterGroup;
     this.InputText = InputText;
-<<<<<<< HEAD
     this.InputNumber = InputNumber;
-=======
     this.InputEmail = InputEmail;
     this.InputPassword = InputPassword;
->>>>>>> 4b8d32f96a703a6a61ed9d0f179ecd7a50be97f8
     this.RadioRegister = RadioRegister;
 
     // Util function

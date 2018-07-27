@@ -4,16 +4,23 @@ import  { connect } from "react-redux";
 import Component from "../../components/Component";
 import ClientRegister from "../../components/client/register";
 
-class SignIn extends Component {
+class Register extends Component {
   render() {
     return (
-      <ClientRegister />
+      <ClientRegister {...this.props}/>
     );
   }
 } 
 
 const RegisterForm =  reduxForm({
-  form: "clientLogin"
-})(SignIn);
+  form: "clientRegisterFormStepOne"
+})(Register);
+
+function mapStateToProps(state) {
+  return {
+    clientFormRegisterFormStepOne: state.form.clientRegisterFormStepOne,
+    clientRegister: state.reducer.client.register
+  };
+}
  
-export default connect ()(RegisterForm);
+export default connect (mapStateToProps)(RegisterForm);

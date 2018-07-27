@@ -4,29 +4,6 @@ import Element from "../../common/Element";
 import "./index.css";
 
 export  class InputEmail extends Element {
-
-  constructor(props) {
-    super(props);
-    this.rules = [
-      {
-        type: "email",
-        message: this.props.errorInvalid
-      },
-      {
-        required: this.props.required,
-        message: this.props.errorRequired
-      },
-      {
-        min: this.props.min,
-        message: this.props.errorLenght
-      },
-      {
-        max: this.props.max,
-        message: this.props.errorLenght
-      }
-    ];
-  }
-
   render() {
     return (
       <this.Field 
@@ -35,8 +12,8 @@ export  class InputEmail extends Element {
         placeholder={this.props.placeholder}
         component={ TextInput }
         label={this.props.label}
-        required = {this.props.required}
-        rules = {this.rules}
+        required={this.props.required}
+        validator={this.props.validator}
       />
     );
   }   

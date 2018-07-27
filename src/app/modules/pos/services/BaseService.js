@@ -6,7 +6,7 @@ export default class BaseService extends Service {
     this.data = {};
     this.header =  {
       "Content-Type": "application/json",
-      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMDAwMDAwMS0wMDAxLTIwMTgtMDAwMS0wMDAwMDAwMSIsImlhdCI6MTUzMTcyMTIzMX0.JPOJSNqCPXWeAFkBfkdSULvTPI6TIXW6LYmJRWUDyL4"
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMDAwMDAwMS0wMDAxLTIwMTgtMDAwMS0wMDAwMDAwMSIsImlhdCI6MTUzMjY3OTYwM30.RzRDtZo0pxk57lsAvmII1-E_TVMDgYSrkK_QR1ahQcs"
     };
   }
 
