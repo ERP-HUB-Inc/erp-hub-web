@@ -45,4 +45,8 @@
     color: #9A9A9A;
 }
 
+.main-ant-wrapper .ant-radio-wrapper {
+    margin-right: 25px !important;
+}
+
 

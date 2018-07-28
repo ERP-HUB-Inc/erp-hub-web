@@ -29,7 +29,6 @@ export class DatePickers extends Element {
         placeholder={this.props.placeholder}
         component={ DatePic }
         label={this.props.label}
-        data={this.props.data}
       />
     );
   }   

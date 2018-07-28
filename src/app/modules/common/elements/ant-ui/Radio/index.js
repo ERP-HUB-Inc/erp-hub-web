@@ -7,12 +7,9 @@ export class RadioButton extends Element {
     return (
       <this.Field 
         name={this.props.name}
-        type="text"
-        placeholder={this.props.placeholder}
         component={ NormalRadio }
         label={this.props.label}
         data = { this.props.data }
-        data={this.props.data}
       />
     );
   }   

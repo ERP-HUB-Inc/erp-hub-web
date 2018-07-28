@@ -8,8 +8,6 @@ import Element from "../../common/Element";
 import { Radio } from "antd";
 
 
-const plainOptions = ["Apple", "Pear", "Orange"];
-
 const RadioGroup = Radio.Group;
 
 export class NormalRadio extends Element {
@@ -36,9 +34,16 @@ export class NormalRadio extends Element {
       label
     } = this.props;
     return (
-      <this.FormItem label={ label }>
-        <RadioGroup options={ this.props.data } onChange={this.onChange1} value={this.state.value1} { ...input }/>
-      </this.FormItem>
+      <div className="main-ant-wrapper">
+        <this.FormItem label={ label }>
+          <RadioGroup 
+            options={ this.props.data } 
+            onChange={this.onChange1} 
+            { ...input }
+          />
+        </this.FormItem>
+        <br />
+      </div>
     );
   }
 }
