@@ -10,11 +10,16 @@ export default class FormStoreLocationCreate extends Modal {
     this.title = "Store Location";
     this.addingPropReducer = "storeLocationAdd";
     this.dispatch = this.props.dispatch;
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
-  
-  handleSubmit() {
-    const { storeLocationFormAdd } = this.props;
-    this.dispatch(StoreLocationAction.add(storeLocationFormAdd.values));
+
+  handleSubmit (e) {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        this.dispatch(StoreLocationAction.add(values));
+      }
+    });
   }
     
   handleCancel() {
@@ -22,14 +27,13 @@ export default class FormStoreLocationCreate extends Modal {
   }
   
   render() {
-    const { storeLocationAdd } = this.props;
+    const { storeLocationAdd, form } = this.props;
     if (storeLocationAdd.showForm) {
       this.content = (
         <div>
           {storeLocationAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <InputText name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
-          <InputNumber type="number" name="code" placeholder="Code"  label="Code"/>
-          <InputText type="text" name="address" placeholder="Address"  label="Address"/>
+          <InputText form={form} name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
+          <InputText form={form} type="text" name="address" placeholder="Address" label="Address"/>
         </div>
       );
       return super.render();

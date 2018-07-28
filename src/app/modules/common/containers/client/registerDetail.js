@@ -12,13 +12,8 @@ class RegisterDetail extends Component {
   }
 } 
 
-const RegisterDetailForm =  reduxForm({
-  form: "clientRegisterFormDetail"
-})(RegisterDetail);
-
 function mapStateToProps(state) {
   return {
-    clientRegisterFormDetail: state.form.clientRegisterFormDetail,
     clientRegister: state.reducer.client.register,
     currencies: state.reducer.currencySystem.request,
     languages: state.reducer.languageSystem.request,
@@ -27,4 +22,4 @@ function mapStateToProps(state) {
   };
 }
  
-export default connect (mapStateToProps)(RegisterDetailForm);
+export default connect (mapStateToProps)(RegisterDetail);

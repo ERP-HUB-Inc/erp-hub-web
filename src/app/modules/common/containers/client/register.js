@@ -12,15 +12,10 @@ class Register extends Component {
   }
 } 
 
-const RegisterForm =  reduxForm({
-  form: "clientRegisterFormStepOne"
-})(Register);
-
 function mapStateToProps(state) {
   return {
-    clientFormRegisterFormStepOne: state.form.clientRegisterFormStepOne,
     clientRegister: state.reducer.client.register
   };
 }
  
-export default connect (mapStateToProps)(RegisterForm);
+export default connect (mapStateToProps)(Register);

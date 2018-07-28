@@ -1,16 +1,14 @@
 import React from "react";
 import Element, { Form } from "../../common/Element";
 
-class InputText extends Element {
+export default class InputText extends Element {
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { input } = this.props;
-    delete input["value"];
     return (
       <this.FormItem label={this.props.label}>
         {
           getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.data})(
-            <this.Input {...input} type={this.props.type} placeholder={this.props.placeholder}/>
+            <this.Input type={this.props.type} placeholder={this.props.placeholder} />
           )
         }
         { this.props.notation !="" ?
@@ -28,4 +26,4 @@ InputText.defaultProps = {
   required: false
 };
 
-export default Form.create()(InputText);
+// export default Form.create()(InputText);

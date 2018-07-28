@@ -84,4 +84,26 @@ export class Util {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
   }
+
+  isValidFormSubmit(requiredField, formValues) {
+    let valid = false;
+
+    if (requiredField == null) return valid;
+
+    if (formValues != null && "values" in formValues) {
+      const reduxFormValues = formValues.values;
+      for (const prop in requiredField) {
+        if (reduxFormValues[prop] == null || reduxFormValues[prop] == "undefined") {
+          valid = true;
+        } else {
+          valid = false;
+        }
+      }
+    } else {
+      valid = false;
+    }
+
+    return valid;
+    // to disable button we need to return true
+  }
 }

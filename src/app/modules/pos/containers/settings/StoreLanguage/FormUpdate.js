@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
-import { reduxForm } from "redux-form";
+import { Form } from "antd";
 import FormUpdate from "../../../components/settings/StoreLanguage/FormUpdate";
 
-class TaxForm extends React.Component {
+class StoreLanguageForm extends React.Component {
   render() {
     return (
       <FormUpdate {...this.props} />
@@ -13,15 +13,17 @@ class TaxForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    formUpdate: state.form.formLanguageUpdate,
     languageUpdate: state.reducer.storeLanguage.update,
     initialValues: state.reducer.storeLanguage.update.data
   };
 }
 
-const UpdateTax = reduxForm({
-  form: "formLanguageUpdate",
-  enableReinitialize: true
-})(TaxForm);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
 
-export default connect(mapStateToProps)(UpdateTax);
+const storeLanguageForm = Form.create(mapPropsToFields)(StoreLanguageForm);
+
+export default connect(mapStateToProps)(storeLanguageForm);

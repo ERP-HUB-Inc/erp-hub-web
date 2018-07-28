@@ -4,7 +4,6 @@ import Element, { Form } from "../../common/Element";
 export default class Confirm extends Element {
   render() {
     const { input } = this.props;
-    delete input["value"];
     return (
       <this.FormItem label={this.props.label}>
         {

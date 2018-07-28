@@ -9,29 +9,29 @@ export class InputNumber extends Element {
   constructor(props) {
     super(props);
     this.rules = [
-      // {
-      //   required: this.props.required,
-      //   message: this.props.errorRequired
-      // },
-      // {
-      //   max: this.props.max,
-      //   message: this.props.errorLenght
-      // }
+      {
+        required: this.props.required,
+        message: this.props.errorRequired
+      },
+      {
+        max: this.props.max,
+        message: this.props.errorLenght
+      }
     ];
   }
 
   render() {
     return (
-      <this.Field 
+      <Input 
         name={this.props.name}
-        type={this.props.type}
+        type="number"
         parse={ value => Number(value) }
         defaultValue={ this.props.defaultValue }
         placeholder={this.props.placeholder}
-        component={ Input }
         label={this.props.label}
         data={this.props.data}
         required = {this.props.required}
+        form={this.props.form}
         rules = {this.rules}
       />
     );

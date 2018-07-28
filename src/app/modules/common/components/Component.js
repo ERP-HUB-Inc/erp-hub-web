@@ -12,7 +12,6 @@ import
   Switchs,
   Waiting,
   Checkboxs,
-  Tooltips,
   FieldComponent,
   TrashButton,
   AnimationInput,
@@ -20,13 +19,13 @@ import
   InputText,
   InputEmail,
   InputNumber,
+  InputPassword,
   LoginLayout,
   RadioRegisterGroup,
   RadioRegister,
   DatePickers,
   RadioButton
 } from "../elements/ant-ui";
-import InputPassword from "../elements/ant-ui/InputPassword";
 import {
   InputRedux,
   Breadcrumb,
@@ -67,7 +66,8 @@ import {
   Modal,
   Popconfirm,
   message,
-  Alert
+  Alert,
+  Tooltip
 } from "antd";
 const Panel = Collapse.Panel;
 const { Option } = Select;
@@ -135,7 +135,7 @@ export default class Component extends RComponent {
     this.Checkbox = Checkbox;
     this.Collapse = Collapse;
     this.Panel = Panel;
-    this.Tooltips = Tooltips;
+    this.Tooltip = Tooltip;
     this.Option = Option;
     this.Form = Form;
     this.FieldComponent = FieldComponent;

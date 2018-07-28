@@ -10,12 +10,18 @@ export default class FormUpdate extends Modal {
     this.title = "Store Location:Update";
     this.addingPropReducer = "storeLocationUpdate";
     this.dispatch = this.props.dispatch;
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
-  
-  handleSubmit() {
-    const { formUpdate } = this.props;
-    alert(JSON.stringify(formUpdate.values));
-    this.dispatch(StoreLocationAction.update(formUpdate.values));
+
+  handleSubmit (e) {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        const {storeLocationUpdate} = this.props;
+        values["id"] = storeLocationUpdate.data.id;
+        this.dispatch(StoreLocationAction.update(values));
+      }
+    });
   }
     
   handleCancel() {
@@ -23,14 +29,13 @@ export default class FormUpdate extends Modal {
   }
   
   render() {
-    const { storeLocationUpdate } = this.props;
+    const { storeLocationUpdate, form } = this.props;
     if (storeLocationUpdate.showForm) {
       this.content = (
         <div>
           {storeLocationUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <InputText name="name" data={ storeLocationUpdate.data.name } label="Name" placeholder="Please input your name" required={true} max={100}/>
-          <InputNumber type="number" data={ storeLocationUpdate.data.code } name="code" placeholder="Code"  label="Code"/>
-          <InputText type="text" data={ storeLocationUpdate.data.address } name="address" placeholder="Address"  label="Address"/>
+          <InputText form={form} name="name" data={ storeLocationUpdate.data.name } label="Name" placeholder="Please input your name" required={true} max={100}/>
+          <InputText form={form} name="address" data={ storeLocationUpdate.data.address } label="Address" placeholder="Address"/>
         </div>
       );
       return super.render();

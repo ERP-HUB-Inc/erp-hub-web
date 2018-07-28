@@ -26,6 +26,7 @@ export default class List extends Component {
     this.pageSize = 10; // default limit record display in table list
     this.confirmTextDelete = "Are you sure delete this record?";
     this.requiredMessage = "Please input all required field."; // require message display on modal popup
+    this.confirmTitle = "COMPLETED";
     this.okText = "Yes"; // text button on alert of delete action
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
@@ -35,6 +36,7 @@ export default class List extends Component {
     this.onChangePagination = this.onChangePagination.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleConfirm = this.handleConfirm.bind(this);
 
     this.RESET_CONSTANT = "RESET";
   }
@@ -128,7 +130,23 @@ export default class List extends Component {
    * handle delete multi record
    * it will overide in child class
    */
-  handleDelete() {}
+  handleConfirm() {
+    this.setState({modalVisible: true});
+  }
+
+  /**
+   * handle cancel confirm delete
+  */
+  handleCancel() {
+    this.setState({modalVisible: false});
+  }
+
+  /**
+   * handle procedd delete
+  */
+  handleDelete() {
+    this.setState({modalVisible: false});
+  }
 
   render() {
     let fetchingProps = this.props[this.fetchingProp];
@@ -190,11 +208,9 @@ export default class List extends Component {
             <this.Button type="info" className="mg-right" onClick={() => this.handleShowFormAdd()}>
               <span className="icon-add icon-padding-right"></span>Add New
             </this.Button>
-            <this.Popconfirm placement="topLeft" title={this.confirmTextDelete} onConfirm={this.handleDelete} okText={this.okText} cancelText={this.cancelText}>
-              <this.Button type="danger">
-                <span className="icon-bin icon-padding-right"></span>Delete
-              </this.Button>
-            </this.Popconfirm>
+            <this.Button type="danger" onClick={() => this.handleConfirm()}>
+              <span className="icon-bin icon-padding-right"></span>Delete
+            </this.Button>
           </div>
 
           <div className="float-right">
@@ -220,8 +236,31 @@ export default class List extends Component {
           this.state.modalConten
         }
         {/* ===============END DISPLAY MODAL POPUP============ */}
+
+        <this.Modal
+          visible={this.state.modalVisible}
+          wrapClassName="confirm-delete"
+          footer={null}    
+        >
+          <div>
+            <span className="icon-help icon-padding-right"></span>
+            <span className="title">{this.confirmTitle}</span><br/>
+            <span>{this.confirmTextDelete}</span>
+
+          </div>
+          <div className="ant-modal-footer">
+            <this.Button className="danger" onClick={() => this.handleCancel()}>
+              <span className="icon-close icon-padding-right"></span>NO
+            </this.Button>
+            <this.Button onClick={() => this.handleDelete()} loading={false} className="info">
+              <span className="icon-checked icon-padding-right"></span>YES
+            </this.Button>
+          </div>
+        </this.Modal>
       </div>
     );
   }
 }
+
+
 

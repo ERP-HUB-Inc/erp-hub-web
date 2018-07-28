@@ -57,3 +57,19 @@
 .ant-alert.ant-alert-no-icon {
     margin-bottom: 15px
 }
+
+.confirm-delete .ant-modal {
+    width: 375px !important
+}
+
+.confirm-delete .ant-modal .icon-help {
+    color: #093163
+}
+
+.confirm-delete .ant-modal .title {
+    font-size: 12pt;
+    color: #4D4F5C;
+    font-weight: 500;
+    position: relative;
+    bottom: 5px
+}

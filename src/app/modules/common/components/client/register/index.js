@@ -1,4 +1,5 @@
 import React from "react";
+import { Form } from "antd";
 import Component from "../../Component";
 import ClientAction from "../../../actions/client";
 import ClientRegiserDetail from "../../../containers/client/registerDetail";
@@ -6,16 +7,20 @@ import RegisterComplete from "../../../containers/client/registerComplete";
 import ClientService from "../../../services/ClientService";
 import "./index.css";
 
-export default class ClientRegister extends Component {
+class ClientRegister extends Component {
   constructor(props) {
     super(props);
-    this.startRegister = this.startRegister.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.checkIsEmailAlreadyExist = this.checkIsEmailAlreadyExist.bind(this);
   }
-  startRegister() {
-    const {dispatch, clientFormRegisterFormStepOne} = this.props;
-    dispatch(ClientAction.startRegister(clientFormRegisterFormStepOne.values, 2));
-
+  handleSubmit (e) {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        const {dispatch} = this.props;
+        dispatch(ClientAction.startRegister(values, 2));
+      }
+    });
   }
 
   checkIsEmailAlreadyExist(rule, value, callback) {
@@ -41,6 +46,8 @@ export default class ClientRegister extends Component {
     } else if(this.props.clientRegister.step == 3) {
       nextStepContent = <RegisterComplete/>;
     }
+
+    const { form } = this.props;
 
     return (
       <div>
@@ -69,41 +76,48 @@ export default class ClientRegister extends Component {
                   <div className="title">
                     <h6>Start Register with Us</h6>
                   </div>
-                  <this.InputEmail
-                    name="email"
-                    label="Email"
-                    placeholder="Email"
-                    required={true}
-                    validator={this.checkIsEmailAlreadyExist}
-                  />
-                  <this.InputPassword
-                    label="Password"
-                    confirmLabel="Comfirm Password"
-                    placeholder="Password"
-                    confirmPlaceholder="Comfirm Password"
-                    required={true}
-                  />
-                  <div>
-                    <this.FormGroup>
-                      <this.Field 
-                        label="Country"
-                        name="countryId" 
-                        type="radio"
-                        component={ this.RadioRegisterGroup }
-                      >
-                        <this.RadioRegister title="Global" language="English" currency="USD" value="1"/>
-                        <this.RadioRegister title="Cambodia" language="Khmer" currency="KHR"  value="2" />
-                        <this.RadioRegister title="Myanmar" language="Burma" currency="MMX"  value="3" />
-                      </this.Field> 
-                    </this.FormGroup>
+                  <Form onSubmit={this.handleSubmit}>
+                    <this.InputEmail
+                      name="email"
+                      label="Email"
+                      placeholder="Email"
+                      required={true}
+                      form={form}
+                      initialValue="ppp@gmail.com"
+                      validator={this.checkIsEmailAlreadyExist}
+                    />
+                    <this.InputPassword
+                      label="Password"
+                      confirmLabel="Comfirm Password"
+                      placeholder="Password"
+                      confirmPlaceholder="Comfirm Password"
+                      required={true}
+                      form={form}
+                    />
+                    <div>
+                      <this.FormGroup>
+                        <this.RadioRegisterGroup 
+                          label="Country"
+                          name="countryId" 
+                          type="radio"
+                          defaultValue={2}
+                          required={true}
+                          form={form}
+                        >
+                          <this.RadioRegister title="Global" language="English" currency="USD" value="1"/>
+                          <this.RadioRegister title="Cambodia" language="Khmer" currency="KHR"  value="2" />
+                          <this.RadioRegister title="Myanmar" language="Burma" currency="MMX"  value="3" />
+                        </this.RadioRegisterGroup> 
+                      </this.FormGroup>
 
-                    <this.Link to="/signin">
-                      <span className="have-acc">Have an account?</span> <span className="store-link">sign in </span>
-                    </this.Link>
-                    <div className="main-signin">
-                      <this.Button onClick={() => this.startRegister()} type="info" htmlType="submit">START</this.Button>
+                      <this.Link to="/signin">
+                        <span className="have-acc">Have an account?</span> <span className="store-link">sign in </span>
+                      </this.Link>
+                      <div className="main-signin">
+                        <this.Button htmlType="submit" type="info">START</this.Button>
+                      </div>
                     </div>
-                  </div>
+                  </Form>
                 </div>
               </this.Col>
             </this.Row>
@@ -114,3 +128,5 @@ export default class ClientRegister extends Component {
     );
   }
 }
+
+export default Form.create()(ClientRegister);
