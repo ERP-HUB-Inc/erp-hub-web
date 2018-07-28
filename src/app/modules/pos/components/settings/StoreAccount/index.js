@@ -104,8 +104,8 @@ export default class StoreAccountList extends Element {
                 <div className="general">
                   <h6>Billing</h6>
                 </div>
-                <this.DatePickers label="Register date"/>
-                <this.DatePickers label="Expired date"/>
+                <this.DatePickers name="register_date" label="Register date"/>
+                <this.DatePickers  name="expired_date" label="Expired date"/>
                 <div className="general">
                   <h6>Plan</h6>
                 </div>

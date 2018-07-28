@@ -86,6 +86,7 @@ export default class ClientRegister extends Component {
                   <div>
                     <this.FormGroup>
                       <this.Field 
+                        class_main_radio="main-radio"
                         label="Country"
                         name="countryId" 
                         type="radio"

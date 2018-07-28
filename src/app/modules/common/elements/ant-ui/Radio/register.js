@@ -12,10 +12,11 @@ export class RadioRegisterGroup extends Component {
   }
 
   render() {
-    const { input,label } = this.props;
+    const { input,label,class_main_radio } = this.props;
     return (
       <div>
-        <div className="main-radio" style={{ marginTop: 16 }}>
+        <div className={ class_main_radio } style={{ marginTop: 16 }}>
+          {/* <div className="main-radio" style={{ marginTop: 16 }}> */}
           <label>{ label }</label>
           <RadioGroup 
             onChange={ this.onChange } 
