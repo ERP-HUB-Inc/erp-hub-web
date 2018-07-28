@@ -113,6 +113,7 @@ export default class StoreAccountList extends Element {
                   <this.Field 
                     name="language" 
                     type="radio"
+                    class_main_radio="main-radio-acc"
                     component={ this.RadioRegisterGroup }
                   >
                     <this.RadioRegister title="Lite" language="Small business" value="global"/>
