@@ -1,5 +1,6 @@
 import React from "react";
 import Component from "../../Component";
+import history from "../../../router/history";
 import "./index.css";
 import "./index.scss";
 import { Menu, Dropdown } from "antd";
@@ -7,11 +8,11 @@ import { Menu, Dropdown } from "antd";
 export default class MenuDropDown extends Component {
   constructor(props) {
     super(props);
-    
+    this.handleLogOut = this.handleLogOut.bind(this);
     this.menu = (
       <Menu>
         <Menu.Item><this.Translate id="text_profile"/></Menu.Item>
-        <Menu.Item><this.Translate id="text_logout"/></Menu.Item>
+        <Menu.Item onClick={() => this.handleLogOut()}><this.Translate id="text_logout"/></Menu.Item>
       </Menu>
     );
     
@@ -22,6 +23,11 @@ export default class MenuDropDown extends Component {
         }
       </Menu>
     );
+  }
+
+  handleLogOut() {
+    localStorage.removeItem("accessToken");
+    history.push("/signin");
   }
 
   render() {

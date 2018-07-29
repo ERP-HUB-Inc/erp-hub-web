@@ -1,23 +1,39 @@
 import React from "react";
-import { Form } from "antd";
+import { Redirect } from "react-router-dom";
 import Component from "../../Component";
+import history from "../../../router/history";
+import ClientAction from "../../../actions/client";
 import "./index.css";
 
-class ClientSignIn extends Component {
+export default class ClientSignIn extends Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.dispatch = this.props.dispatch;
   }
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        
+        this.dispatch(ClientAction.signin(values.username, values.password));
       }
     });
   }
   render() {
-    const { form } = this.props; // form here get from ANT Form
+    const { response, form } = this.props; // form here get from ANT Form
+    if (
+      response.error != null
+      && [404, 601].indexOf(response.error.code)
+      && response.submiting == false
+    ) {
+      this.Message.error("Username or password is not found.");
+      this.dispatch(ClientAction.reset());
+    }else if(response.response != null) {
+      localStorage.setItem("accessToken", JSON.stringify(response.response));
+      this.dispatch(ClientAction.reset());
+      history.push("/");
+    }
+
     return (
       <this.LoginLayout>
         <div className="storename">Super Store</div>
@@ -25,7 +41,7 @@ class ClientSignIn extends Component {
           superstore<span className="store-email-url">.storevein.com</span>
         </div>
         <div className="main-field">
-          <Form onSubmit={this.handleSubmit}>
+          <this.Form onSubmit={this.handleSubmit}>
             <this.InputText
               name="username"
               placeholder="User name"
@@ -35,30 +51,26 @@ class ClientSignIn extends Component {
               required={true}
               form={form}
             />
-            <this.InputText
-              name="password"
-              placeholder="Password"
-              type="password"
+            <this.InputPassword
               label="Password"
-              errorRequired="Password is required."
+              placeholder="Password"
               required={true}
+              checkConfirm={false}
               form={form}
             />
             <div className="signin-button">
               <this.FormGroup>
-                <this.Link className="store-link" to="/signin-register">
+                <this.Link className="store-link" to="/register">
               it's not my store
                 </this.Link>
                 <div className="main-signin">
-                  <this.Button htmlType="submit" type="info">Sign In</this.Button>
+                  <this.Button loading={response.submiting} htmlType="submit" type="info">Sign In</this.Button>
                 </div>
               </this.FormGroup>
             </div>
-          </Form>
+          </this.Form>
         </div>
       </this.LoginLayout>
     );
   }
 }
-
-export default Form.create()(ClientSignIn);

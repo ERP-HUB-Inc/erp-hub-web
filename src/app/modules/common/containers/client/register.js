@@ -1,5 +1,4 @@
 import React from "react";
-import { reduxForm } from "redux-form";
 import  { connect } from "react-redux";
 import Component from "../../components/Component";
 import ClientRegister from "../../components/client/register";

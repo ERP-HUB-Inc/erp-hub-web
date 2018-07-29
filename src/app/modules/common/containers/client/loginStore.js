@@ -1,11 +1,27 @@
 import React from "react";
+import { connect } from "react-redux";
+import { Form } from "antd";
 import Component from "../../components/Component";
 import SignInStore from "../../components/client/signInStore";
 
-export default class SignIn extends Component {
+class SignInStoreForm extends Component {
   render() {
     return (
-      <SignInStore/>
+      <SignInStore {...this.props}/>
     );
   }
-} 
+}
+
+function mapStateToProps(state) {
+	return {};
+}
+
+function mapPropsToFields(props) {
+	return {
+		form: props.form
+	};
+}
+
+const signInStoreForm = Form.create(mapPropsToFields)(SignInStoreForm);
+
+export default connect(mapStateToProps)(signInStoreForm);

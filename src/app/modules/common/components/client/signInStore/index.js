@@ -1,10 +1,10 @@
 import React from "react";
-import { reduxForm } from "redux-form";
 import Component from "../../Component";
 import "./index.css";
 
-class SignInStore extends Component {
+export default class SignInStore extends Component {
   render() {
+    const {form} = this.props;
     return (
       <div>
         <this.LoginLayout
@@ -15,14 +15,14 @@ class SignInStore extends Component {
             <h6>Find Your store Name </h6>
           </div>
           <this.FormGroup>
-            <this.Field
+            <this.InputText
               name="username"
               placeholder="User name"
               type="text"
               label="Store Name"
               notation=".storevien.com"
-              component={ this.InputText }
               className="ant-input"
+              form={form}
             />
             <div className="main-signin">
               <this.Button type="info">REGISTER</this.Button>
@@ -33,7 +33,3 @@ class SignInStore extends Component {
     );
   }
 }
-
-export default reduxForm({
-  form: "signinstore"
-})(SignInStore);

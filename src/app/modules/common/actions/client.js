@@ -28,5 +28,20 @@ export default {
         payload: ClientService.register(data)
       });
     };
+  },
+  signin: (userName, password) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.CLIENT_SIGNIN,
+        payload: ClientService.signin(userName, password)
+      });
+    };
+  },
+  reset: () => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.CLIENT_SIGNIN_RESET
+      });
+    };
   }
 };

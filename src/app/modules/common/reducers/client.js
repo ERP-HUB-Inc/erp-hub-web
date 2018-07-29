@@ -53,6 +53,42 @@ export default combineReducers({
     default: 
       return state;
     }
+  },
+  signin: (state = {submiting: false, submited: false, error: null, response: null}, action) => {
+    switch(action.type) {
+    case Constant.CLIENT_SIGNIN_PENDING: {
+      return {
+        ...state,
+        submiting: true
+      };
+    }
+    case Constant.CLIENT_SIGNIN_REJECTED: {
+      return {
+        ...state,
+        submiting: false,
+        error: action.payload.response.data.error
+      };
+    }
+    case Constant.CLIENT_SIGNIN_FULFILLED: {
+      return {
+        ...state, 
+        submiting: false,
+        submited: true,
+        response: action.payload.data.data
+      };
+    }
+    case Constant.CLIENT_SIGNIN_RESET: {
+      return {
+        ...state,
+        submiting: false,
+        submited: false,
+        error: null,
+        response: null
+      };
+    }
+    default:
+      return state;
+    }
   }
 });
     

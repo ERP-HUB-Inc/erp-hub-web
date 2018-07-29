@@ -72,12 +72,6 @@ export class Util {
   }
 
   renameObjectKey(template, source) {
-    return source.map((value1, key1) => {
-      var renameResult = _.mapKeys(value1, function(value, key) {
-        return template[key];
-      });
-      return renameResult;
-    });
   }
 
   isValidEmail(email) {
@@ -105,5 +99,13 @@ export class Util {
 
     return valid;
     // to disable button we need to return true
+  }
+
+  getAccessToken() {
+    if (!localStorage.getItem("accessToken")) return null;
+    
+    let result = localStorage.getItem("accessToken");
+    result = JSON.parse(result);
+    return result.accessToken
   }
 }
