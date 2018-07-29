@@ -1,0 +1,54 @@
+import Constant from "../../constants/settings/receiptTemplate";
+import ReceiptService from "../../services/settings/ReceiptService";
+
+export default {
+  fetch: (limit, offset, sortField, sortOrder) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_RECEIPT,
+        payload: ReceiptService.lists(limit, offset, sortField, sortOrder)
+      });
+    };
+  },
+  archive: (ids) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.ARCHIVE_RECEIPT,
+        payload: ReceiptService.archive(ids)
+      });
+    };
+  },
+  add: (data) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.ADD_RECEIPT,
+        payload: ReceiptService.add(data)
+      });
+    };
+  },
+  update: (data) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.UPDATE_RECEIPT,
+        payload: ReceiptService.update(data)
+      });
+    };
+  },
+  reset: () => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.RESET_RECEIPT,
+        payload: null
+      });
+    };
+  },
+  showForm: (data) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.SHOW_RECEIPT_FORM,
+        payload: data
+      });
+    };
+  }
+};
+
