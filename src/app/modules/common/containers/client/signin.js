@@ -13,15 +13,15 @@ class SignInClientForm extends Component {
 }
 
 function mapStateToProps(state) {
-	return {
-		response: state.reducer.client.signin
-	};
+  return {
+    response: state.reducer.client.signin
+  };
 }
 
 function mapPropsToFields(props) {
-	return {
-		form: props.form
-	};
+  return {
+    form: props.form
+  };
 }
 
 const signInClientForm = Form.create(mapPropsToFields)(SignInClientForm);
