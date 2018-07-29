@@ -76,11 +76,13 @@ export default class PaymentMethodList extends List {
 
     dispatch(PaymentMethodAction.archive(this.state.selectedListIds));
 
-    this.Message.info(this.messageSuccess);
-
     dispatch(PaymentMethodAction.fetch(this.pageSize, this.state.current));
     
     this.setState({selectedRowKeys: []});
+
+    super.handleDelete();
+
+    this.Message.info(this.messageSuccess);
   }
 
   render() {

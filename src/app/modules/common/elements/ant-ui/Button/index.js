@@ -10,6 +10,7 @@ export class Button extends React.Component {
         onClick={this.props.onClick}
         loading={this.props.loading}
         className={this.props.type + " " + this.props.className}
+        htmlType={this.props.htmlType}
         style={this.style}>
         {this.props.children}
       </AntButton>

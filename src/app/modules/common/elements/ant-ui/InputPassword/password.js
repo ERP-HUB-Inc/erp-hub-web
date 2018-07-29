@@ -4,7 +4,6 @@ import Element, { Form } from "../../common/Element";
 export default class Password extends Element {
   render() {
     const { input } = this.props;
-    delete input["value"];
     return (
       <this.FormItem label={this.props.label}>
         {
@@ -12,7 +11,8 @@ export default class Password extends Element {
             required: true, message: "Please input your password!",
           }, {
             validator: this.props.validateToNextPassword,
-          }]})(
+          }]
+          })(
             <this.Input {...input} type={this.props.type} placeholder={this.props.placeholder}/>
           )
         }

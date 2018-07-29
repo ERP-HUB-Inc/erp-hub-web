@@ -4,7 +4,7 @@ import Confirm from "./confirm";
 import Element, { Form } from "../../common/Element";
 import "./index.css";
 
-class InputPassword extends Element {
+export  class InputPassword extends Element {
   constructor(props) {
     super(props);
     this.state = {
@@ -43,26 +43,24 @@ class InputPassword extends Element {
     const { getFieldDecorator } = this.props.form;
     return (
       <div>
-        <this.Field 
+        <Password
           name="password"
           type="password"
           getFieldDecorator={getFieldDecorator}
           validateToNextPassword={this.validateToNextPassword}
           placeholder={this.props.placeholder}
-          component={Password }
           label={this.props.label}
           required = {this.props.required}
         />
         { 
           this.props.checkConfirm ?
-            <this.Field 
+            <Confirm 
               name="confirm"
               type="password"
               getFieldDecorator={getFieldDecorator}
               compareToFirstPassword={this.compareToFirstPassword}
               handleConfirmBlur={this.handleConfirmBlur}
               placeholder={this.props.confirmPlaceholder}
-              component={ Confirm }
               label={this.props.confirmLabel}
               required = {this.props.required}
             />
@@ -81,6 +79,5 @@ InputPassword.defaultProps = {
   errorRequired: "Please input your password!"
 };
 
-export default Form.create()(InputPassword);
 
 

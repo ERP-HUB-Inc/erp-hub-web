@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { reduxForm } from "redux-form";
+import { Form } from "antd";
 import List from "../../../components/settings/Tax";
 
 class Tax extends React.Component {
@@ -13,15 +13,10 @@ class Tax extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    formAdd: state.form.formTax,
     tax: state.reducer.tax.request,
     taxAdd: state.reducer.tax.add,
     taxUpdate: state.reducer.tax.update
   };
 }
 
-const SelectingTax = reduxForm({
-  form: "formTax"
-})(Tax);
-
-export default connect(mapStateToProps)(SelectingTax);
+export default connect(mapStateToProps)(Tax);

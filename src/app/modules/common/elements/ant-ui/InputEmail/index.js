@@ -6,14 +6,15 @@ import "./index.css";
 export  class InputEmail extends Element {
   render() {
     return (
-      <this.Field 
+      <TextInput 
         name={this.props.name}
         type="text"
         placeholder={this.props.placeholder}
-        component={ TextInput }
         label={this.props.label}
         required={this.props.required}
         validator={this.props.validator}
+        initialValue={this.props.initialValue}
+        form={this.props.form}
       />
     );
   }   

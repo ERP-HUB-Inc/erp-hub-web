@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "../../shares/Modal";
+import StoreLanguageAction from "../../../action/settings/storeLanguage";
 import { InputText } from "../../../../common/elements/ant-ui/InputText";
-import SoreLanguage from "../../../action/settings/storeLanguage";
 
 export default class Form extends Modal {
   constructor(props) {
@@ -9,25 +9,32 @@ export default class Form extends Modal {
     this.title = "Language";
     this.addingPropReducer = "languageUpdate";
     this.dispatch = this.props.dispatch;
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit() {
-    const { formUpdate } = this.props;
-    this.dispatch(SoreLanguage.update(formUpdate.values));
+  handleSubmit (e) {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        const {languageUpdate} = this.props;
+        values["id"] = languageUpdate.data.id;
+        this.dispatch(StoreLanguageAction.update(values));
+      }
+    });
   }
     
   handleCancel() {
-    this.dispatch(SoreLanguage.reset());
+    this.dispatch(StoreLanguageAction.reset());
   }
   
   render() {
-    const { languageUpdate } = this.props;
+    const { languageUpdate, form } = this.props;
     if (languageUpdate.showForm) {
       this.content = (
         <div>
           {languageUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <InputText data={languageUpdate.data.name}  name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
-          <InputText data={languageUpdate.data.code} type="number" name="code" label="Code"/>
+          <InputText form={form} data={languageUpdate.data.name}  name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
+          <InputText form={form} data={languageUpdate.data.code} type="number" name="code" placeholder="Code" label="Code"/>
         </div>
       );
       return super.render();

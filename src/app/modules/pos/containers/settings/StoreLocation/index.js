@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { reduxForm } from "redux-form";
 import StoreLocationList from "../../../components/settings/StoreLocation";
 
 class StoreLocation extends React.Component {
@@ -13,15 +12,10 @@ class StoreLocation extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    formAdd: state.form.formStoreLocation,
     storeLocation: state.reducer.storeLocation.request,
     storeLocationAdd: state.reducer.storeLocation.add,
     storeLocationUpdate: state.reducer.storeLocation.update
   };
 }
 
-const SelectingStoreLocation = reduxForm({
-  form: "formStoreLocation"
-})(StoreLocation);
-
-export default connect(mapStateToProps)(SelectingStoreLocation);
+export default connect(mapStateToProps)(StoreLocation);

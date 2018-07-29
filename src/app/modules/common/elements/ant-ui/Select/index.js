@@ -7,15 +7,13 @@ export class Select extends Element {
   constructor(props) {
     super(props);
     this.rules = [
+      { required: this.props.required, message: this.props.errorRequired }
     ];
   }
 
   render() {
     return (
-      <this.Field 
-        component={ SelectElement }
-        {...this.props}
-      />
+      <SelectElement {...this.props} rules={this.rules} />
     );
   }   
 }
@@ -23,19 +21,23 @@ export class Select extends Element {
 
 class SelectElement extends Element {   
   render() {
-    const { input } = this.props;
-    delete input["value"];
+    const { getFieldDecorator } = this.props.form;
     return (
       <this.FormItem label={this.props.label}>
-        <this.Select
-          defaultValue={this.props.defaultValue}
-          style={{ width: "100%" }}
-          {...input}
-        >
-          {
-            this.props.dataSource.map((value, index) => <this.Option key={index} value={value.value}>{value.name}</this.Option>)
-          }
-        </this.Select>
+        {
+          getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.defaultValue})(
+            <this.Select
+              placeholder={this.props.placeholder}
+              style={{ width: "100%" }}
+            >
+              {
+                this.props.dataSource.map((value, index) =>
+                  <this.Option key={index} value={value.value}>{value.name}</this.Option>
+                )
+              }
+            </this.Select>
+          )
+        }
       </this.FormItem>
     );
   }

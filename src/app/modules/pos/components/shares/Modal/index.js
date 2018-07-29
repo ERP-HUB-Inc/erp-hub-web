@@ -1,4 +1,5 @@
 import React from "react";
+import { Form } from "antd";
 import Component from "../../Component";
 import "./index.css";
 
@@ -9,7 +10,6 @@ export default class Modal extends Component {
     this.dispatch = this.props.dispatch;
     this.content = "";
     this.requiredMessage = "Please input all required field.";
-    this.addingPropReducer = "";
     this.statusDataSource = [
       {
         name: "Active",
@@ -28,24 +28,24 @@ export default class Modal extends Component {
   handleCancel() {}
 
   render() {
-    console.log("My Props:", this.props[this.addingPropReducer]);
     return (
       <this.Modal
         title={this.title}
         wrapClassName="vertical-center-modal"
         visible={true}
-        footer={
-          <div>
+        footer={null}
+      >
+        <Form onSubmit={this.handleSubmit}> 
+          {this.content}
+          <div className="ant-modal-footer">
             <this.Button className="danger" onClick={() => this.handleCancel()}>
               <span className="icon-close icon-padding-right"></span>CANCEL
             </this.Button>
-            <this.Button loading={this.props[this.addingPropReducer].adding} className="info" onClick={() => this.handleSubmit()}>
+            <this.Button htmlType="submit" loading={false} className="info">
               <span className="icon-checked icon-padding-right"></span>OK
             </this.Button>
           </div>
-        }
-      >
-        {this.content}
+        </Form>
       </this.Modal>
     );
   }

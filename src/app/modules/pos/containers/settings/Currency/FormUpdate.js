@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { reduxForm } from "redux-form";
+import { Form } from "antd";
 import FormUpdate from "../../../components/settings/Currency/FormUpdate";
 
 class CurrencyUpdateForm extends React.Component {
@@ -13,15 +13,17 @@ class CurrencyUpdateForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    formUpdate: state.form.formCurrencyUpdate,
     currencyUpdate: state.reducer.currency.update,
     initialValues: state.reducer.currency.update.data
   };
 }
 
-const UpdateTax = reduxForm({
-  form: "formCurrencyUpdate",
-  enableReinitialize: true
-})(CurrencyUpdateForm);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
 
-export default connect(mapStateToProps)(UpdateTax);
+const currencyUpdateForm = Form.create(mapPropsToFields)(CurrencyUpdateForm);
+
+export default connect(mapStateToProps)(currencyUpdateForm);

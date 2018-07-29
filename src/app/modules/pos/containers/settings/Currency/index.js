@@ -14,15 +14,10 @@ class Currency extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    formAdd: state.form.formCurrency,
     currency: state.reducer.currency.request,
     currencyAdd: state.reducer.currency.add,
     currencyUpdate: state.reducer.currency.update
   };
 }
 
-const SelectingCurrency = reduxForm({
-  form: "formCurrency"
-})(Currency);
-
-export default connect(mapStateToProps)(SelectingCurrency);
+export default connect(mapStateToProps)(Currency);

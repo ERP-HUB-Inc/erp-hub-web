@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { reduxForm } from "redux-form";
+import { Form } from "antd";
 import FormUpdate from "../../../components/settings/PaymentMethod/FormUpdate";
 
 class PaymentMethodForm extends React.Component {
@@ -13,15 +13,17 @@ class PaymentMethodForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    formUpdate: state.form.formPaymentMethodUpdate,
     paymentMethodUpdate: state.reducer.PaymentMethods.update,
     initialValues: state.reducer.PaymentMethods.update.data
   };
 }
 
-const SelectingPaymentMethodForm = reduxForm({
-  form: "formPaymentMethodUpdate",
-  enableReinitialize: true
-})(PaymentMethodForm);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
 
-export default connect(mapStateToProps)(SelectingPaymentMethodForm);
+const paymentMethodForm = Form.create(mapPropsToFields)(PaymentMethodForm);
+
+export default connect(mapStateToProps)(paymentMethodForm);

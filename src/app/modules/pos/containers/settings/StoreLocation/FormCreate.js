@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { reduxForm } from "redux-form";
+import { Form } from "antd";
 import FormCreate from "../../../components/settings/StoreLocation/FormCreate";
 
 class StoreLanguageForm extends React.Component {
@@ -18,8 +18,12 @@ function mapStateToProps(state) {
   };
 }
 
-const StoreLocation = reduxForm({
-  form: "formStoreLocation"
-})(StoreLanguageForm);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
 
-export default connect(mapStateToProps)(StoreLocation);
+const storeLanguageForm = Form.create(mapPropsToFields)(StoreLanguageForm);
+
+export default connect(mapStateToProps)(storeLanguageForm);

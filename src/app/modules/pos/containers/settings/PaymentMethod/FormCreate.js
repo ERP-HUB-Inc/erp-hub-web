@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { reduxForm } from "redux-form";
+import { Form } from "antd";
 import FormCreate from "../../../components/settings/PaymentMethod/FormCreate";
 
 class PaymentMethodForm extends React.Component {
@@ -13,13 +13,16 @@ class PaymentMethodForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    formAdd: state.form.formPaymentMethod,
     paymentMethodAdd: state.reducer.PaymentMethods.add
   };
 }
 
-const SelectingPaymentMethodForm = reduxForm({
-  form: "formPaymentMethod"
-})(PaymentMethodForm);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
 
-export default connect(mapStateToProps)(SelectingPaymentMethodForm);
+const paymentMethodForm =  Form.create(mapPropsToFields)(PaymentMethodForm);
+
+export default connect(mapStateToProps)(paymentMethodForm);

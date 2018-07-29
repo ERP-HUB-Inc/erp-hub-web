@@ -19,24 +19,24 @@ export class InputText extends Element {
       {
         min: this.props.min,
         message: this.props.errorLenght
-      },
-      {
-        whitespace: true
       }
     ];
   }
 
   render() {
     return (
-      <this.Field 
-        name={this.props.name}
+      <Input 
         type="text"
+        name={this.props.name}
         placeholder={this.props.placeholder}
-        component={ Input }
         label={this.props.label}
         data={this.props.data}
-        required = {this.props.required}
-        rules = {this.rules}
+        required={this.props.required}
+        notation={this.props.notation}
+        errorLenght={this.props.errorLenght}
+        errorRequired={this.props.errorRequired}
+        form={this.props.form}
+        rules={this.rules}
       />
     );
   }   
