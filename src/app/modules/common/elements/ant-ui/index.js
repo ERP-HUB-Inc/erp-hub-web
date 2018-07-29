@@ -21,4 +21,5 @@ export * from "./Radio";
 export * from "./InputText";
 export * from "./InputNumber";
 export * from "./InputEmail";
+export * from "./Upload";
 // export * from "./InputPassword";

@@ -1,13 +1,22 @@
 import React from "react";
 import { connect } from "react-redux";
-import List from "../../../components/settings/ReceiptTemplate";
+import ReceiptTemplateList from "../../../components/settings/ReceiptTemplate";
 
-class ReceiptTemplate extends React.Component {
+class PaymentMethod extends React.Component {
   render() {
     return (
-      <List {...this.props} />
+      <ReceiptTemplateList {...this.props} />
     );
   }
 }
 
-export default connect()(ReceiptTemplate);
+function mapStateToProps(state) {
+  return {
+    receipt: state.reducer.receiptTemplate.request,
+    receiptAdd: state.reducer.receiptTemplate.add,
+    receiptArchive: state.reducer.receiptTemplate.archive,
+    receiptUpdate: state.reducer.receiptTemplate.update
+  };
+}
+
+export default connect(mapStateToProps)(PaymentMethod);
