@@ -1,27 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom";
-// import "antd/dist/antd.css";
-// import "./index.css";
+import Element, { Form } from "../../common/Element";
 import { Upload, Icon, Modal } from "antd";
 
-class PicturesUpload extends React.Component {
+export default class PicturesUpload extends Element {
 
   constructor(props){
     super(props);
     this.state = {
       previewImage: "",
-      fileList: [
-        {
-          uid: -1,
-          name: "xxx.png",
-          status: "done",
-          url:
-            "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        }
-      ]
+      fileList: []
     };
   }
-
 
   handleCancel () {
     this.setState({ previewVisible: false });
@@ -35,7 +24,8 @@ class PicturesUpload extends React.Component {
   }
 
   handleChange({ fileList }) {
-    this.setState({ fileList });
+    // alert(fileList);
+    // this.setState({ fileList });
   }
 
   render() {
@@ -49,27 +39,26 @@ class PicturesUpload extends React.Component {
     );
     return (
       <div className="clearfix">
-        <label>{ this.props.label }</label>
-        <Upload
-          action="//jsonplaceholder.typicode.com/posts/"
-          listType="picture-card"
-          onPreview={this.handlePreview}
-          onChange={this.handleChange}
-          showUploadList={true}
-          {...input}
-        >
-          {fileList.length >= 3 ? null : uploadButton}
-        </Upload>
-        <Modal
-          visible={previewVisible}
-          footer={null}
-          onCancel={this.handleCancel}
-        >
-          <img alt="example" style={{ width: "100%" }} src={previewImage} />
-        </Modal>
+        <this.FormItem label={this.props.label}>
+          <Upload
+            action="//jsonplaceholder.typicode.com/posts/"
+            listType="picture-card"
+            onPreview={this.handlePreview}
+            onChange={this.handleChange}
+            showUploadList={true}
+          >
+            {fileList.length >= 3 ? null : uploadButton}
+          </Upload>
+          <Modal
+            visible={previewVisible}
+            footer={null}
+            onCancel={this.handleCancel}
+          >
+            <img alt="example" style={{ width: "100%" }} src={previewImage} />
+          </Modal>
+        </this.FormItem>
       </div>
     );
   }
 }
 
-export default PicturesUpload;

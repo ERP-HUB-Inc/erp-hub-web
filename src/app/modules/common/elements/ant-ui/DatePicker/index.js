@@ -23,13 +23,14 @@ export class DatePickers extends Element {
 
   render() {
     return (
-      <this.Field 
-        name={this.props.name}
-        type="text"
-        placeholder={this.props.placeholder}
-        component={ DatePic }
-        label={this.props.label}
-      />
+      // <this.Field 
+      //   name={this.props.name}
+      //   type="text"
+      //   placeholder={this.props.placeholder}
+      //   component={ DatePic }
+      //   label={this.props.label}
+      // />
+      <DatePic />
     );
   }   
 }

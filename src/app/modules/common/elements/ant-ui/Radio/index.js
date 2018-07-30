@@ -5,9 +5,8 @@ import Element from "../../common/Element";
 export class RadioButton extends Element {
   render() {
     return (
-      <this.Field 
+      <NormalRadio 
         name={this.props.name}
-        component={ NormalRadio }
         label={this.props.label}
         data = { this.props.data }
       />
