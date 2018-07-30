@@ -10,4 +10,13 @@ class RoleAccess extends React.Component {
   }
 }
 
-export default connect()(RoleAccess);
+function mapStateToProps(state) {
+  return {
+    roleAccess: state.reducer.roleAccess.request,
+    roleAccessAdd: state.reducer.roleAccess.add,
+    roleAccessArchive: state.reducer.roleAccess.archive,
+    roleAccessUpdate: state.reducer.roleAccess.update
+  };
+}
+
+export default connect(mapStateToProps)(RoleAccess);

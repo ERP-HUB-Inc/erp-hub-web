@@ -3,8 +3,6 @@ import {
   FormGroup,
 } from "reactstrap";
 import { Button } from "reactstrap";
-import { Link } from "react-router-dom";
-
 
 export class TrashButton extends Component {
   render(){

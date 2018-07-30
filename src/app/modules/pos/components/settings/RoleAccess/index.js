@@ -1,22 +1,91 @@
 import React from "react";
 import columns from "./column";
 import List from "../../List";
+import FormCreate from "../../../containers/settings/PaymentMethod/FormCreate";
+import FormUpdate from "../../../containers/settings/PaymentMethod/FormUpdate";
+import Constant from "../../../constants/settings/roleAccess";
+import RoleAccessAction from "../../../action/settings/roleAccess";
+import "./index.css";
 
-export default class RoleAccessList extends List {
+export default class PaymentMethodList extends List {
   constructor(props) {
     super(props);
-    this.onChange = this.onChange.bind(this);
+    this.columns = columns;
+    this.fetchingProp = "roleAccess";
+    this.addingProp = "roleAccessAdd";
+    this.updatingProp = "roleAccessUpdate";
+    this.RESET_CONSTANT = Constant.RESET_ROLE_ACCESS;
+  }
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    
+    dispatch(RoleAccessAction.fetch(this.pageSize));
   }
 
   onChange(pagination, filters, sorter) {
-    console.log("params", pagination, filters, sorter);
+    const { dispatch } = this.props;
+
+    super.onChange(pagination, filters, sorter);
+    
+    dispatch(RoleAccessAction.fetch(...this.filter));
+  }
+
+  onChangePagination(current, pageSize) {
+    const { dispatch } = this.props;
+
+    this.filter = [
+      pageSize,
+      (current - 1) * pageSize,
+    ];
+
+    dispatch(RoleAccessAction.fetch(...this.filter));
+
+    this.setState({ current});
+  }
+
+  onShowSizeChange(current, pageSize) {
+    const { dispatch } = this.props;
+
+    this.filter = [
+      pageSize,
+      current,
+    ];
+
+    dispatch(RoleAccessAction.fetch(...this.filter));
+  }
+
+  handleShowFormAdd() {
+    const { dispatch } = this.props;
+    dispatch(RoleAccessAction.showForm());
+    this.setState({
+      modalConten: <FormCreate/>
+    });
+  }
+
+  handleShowFormEdit(rowData) {
+    const { dispatch } = this.props;
+    dispatch(RoleAccessAction.showForm(rowData));
+    this.setState({
+      modalConten: <FormUpdate/>
+    });
+  }
+
+  handleDelete() {
+    const { dispatch } = this.props;
+
+    dispatch(RoleAccessAction.archive(this.state.selectedListIds));
+
+    dispatch(RoleAccessAction.fetch(this.pageSize, this.state.current));
+    
+    this.setState({selectedRowKeys: []});
+
+    super.handleDelete();
+
+    this.Message.info(this.messageSuccess);
   }
 
   render() {
-    return (
-      <div>
-        <this.Table columns={columns}  onChange={this.onChange} loading={this.props.fetching}/>
-      </div>
-    );
+    return super.render();
   }
 }
