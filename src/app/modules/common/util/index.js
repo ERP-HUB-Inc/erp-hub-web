@@ -106,4 +106,11 @@ export class Util {
     return valid;
     // to disable button we need to return true
   }
+
+  getAccessToken(key) {
+    if (!localStorage.getItem(key)) return null;
+    let result = localStorage.getItem(key);
+    result = JSON.parse(result);
+    return result.accessToken;
+  }
 }

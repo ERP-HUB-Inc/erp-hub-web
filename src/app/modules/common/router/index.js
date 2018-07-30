@@ -1,17 +1,22 @@
 import React from "react";
 import { Layout } from "antd";
 import { Route, Switch } from "react-router-dom";
+import { connect } from "react-redux";
 import SideBar from "../../../modules/common/components/layout/SiderBar";
 import Headers from "../../common/containers/layout/Header";
-import UserList from "../../common/containers/user";
+import UserList from "../../common/containers/client/signin";
 import offlineDB from "../../common/containers/offline";
 import Home from "../../common/containers/home";
 import Component from "../components/Component";
 import dataSource from "../components/layout/SiderBar/datasource";
+import AuthAction from "../actions/authentication";
+import ConstantAuth from "../constants/authentication";
 const { Content } = Layout;
 
-export default class Router extends Component {
+class Router extends Component {
   render() {
+    const {dispatch} = this.props;
+    // dispatch(AuthAction.checkAuthentication(this.Util.getAccessToken(ConstantAuth.ACCESS_TOKEN)));
     return (
       <div>
         <Layout>
@@ -26,9 +31,9 @@ export default class Router extends Component {
                   )
                 )
               }
-              <Route path="/offline" name="Create" component={ offlineDB }></Route>
-              <Route path="/test-component" name="Create" component={ UserList }></Route>
-              <Route path="/" name="Create" component={ Home } />
+              <Route path="/offline" component={ offlineDB }></Route>
+              <Route path="/test-component" component={ UserList }></Route>
+              <Route path="/" component={Home}></Route>
             </Switch>
           </Content>
         </Layout>
@@ -36,4 +41,13 @@ export default class Router extends Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    authentication: state.reducer.client.checkAuthentication
+  };
+}
+
+export default connect(mapStateToProps)(Router);
+
 

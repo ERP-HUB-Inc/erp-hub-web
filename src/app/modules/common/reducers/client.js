@@ -1,6 +1,7 @@
 import reducer from "./reducer";
 import { combineReducers } from "redux";
 import Constant from "../constants/client";
+import ConstantAuth from "../constants/authentication";
 import InitialState from "./initialState";
     
 export default combineReducers({
@@ -51,6 +52,105 @@ export default combineReducers({
       };
     }
     default: 
+      return state;
+    }
+  },
+  signin: (state = {submiting: false, submited: false, error: null, response: null}, action) => {
+    switch(action.type) {
+    case Constant.CLIENT_SIGNIN_PENDING: {
+      return {
+        ...state,
+        submiting: true
+      };
+    }
+    case Constant.CLIENT_SIGNIN_REJECTED: {
+      return {
+        ...state,
+        submiting: false,
+        error: action.payload.response.data.error
+      };
+    }
+    case Constant.CLIENT_SIGNIN_FULFILLED: {
+      return {
+        ...state, 
+        submiting: false,
+        submited: true,
+        response: action.payload.data.data
+      };
+    }
+    case Constant.CLIENT_SIGNIN_RESET: {
+      return {
+        ...state,
+        submiting: false,
+        submited: false,
+        error: null,
+        response: null
+      };
+    }
+    default:
+      return state;
+    }
+  },
+  signinDomain: (state = {submiting: false, submited: false, error: null, response: null}, action) => {
+    switch(action.type) {
+    case Constant.DOMAIN_SIGNIN_PENDING: {
+      return {
+        ...state,
+        submiting: true
+      };
+    }
+    case Constant.DOMAIN_SIGNIN_REJECTED: {
+      return {
+        ...state,
+        submiting: false,
+        error: action.payload.response.data.error
+      };
+    }
+    case Constant.DOMAIN_SIGNIN_FULFILLED: {
+      return {
+        ...state, 
+        submiting: false,
+        submited: true,
+        response: action.payload.data.data
+      };
+    }
+    case Constant.DOMAIN_SIGNIN_RESET: {
+      return {
+        ...state,
+        submiting: false,
+        submited: false,
+        error: null,
+        response: null
+      };
+    }
+    default:
+      return state;
+    }
+  },
+  checkAuthentication: (state = {checking: false, checked: false, error: null, response: null}, action) => {
+    switch(action.type) {
+    case ConstantAuth.CHECK_AUTHENTICATION_PENDING: {
+      return {
+        ...state,
+        checking: true
+      };
+    }
+    case ConstantAuth.CHECK_AUTHENTICATION_REJECTED: {
+      return {
+        ...state,
+        checking: false,
+        error: action.payload
+      };
+    }
+    case ConstantAuth.CHECK_AUTHENTICATION_FULFILLED: {
+      return {
+        ...state, 
+        checking: false,
+        checked: true,
+        response: action.payload
+      };
+    }
+    default:
       return state;
     }
   }

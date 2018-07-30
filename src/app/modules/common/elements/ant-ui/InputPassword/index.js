@@ -21,8 +21,8 @@ export  class InputPassword extends Element {
       if (value && this.state.confirmDirty) {
         form.validateFields(["confirm"], { force: true });
       }
-      callback();
     }
+    callback();
   }
 
   compareToFirstPassword (rule, value, callback) {

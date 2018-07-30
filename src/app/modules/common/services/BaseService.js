@@ -1,4 +1,5 @@
 import axios from "axios";
+import {Util} from "../util";
 
 export default class BaseService {
 
@@ -6,6 +7,7 @@ export default class BaseService {
     this.baseUrl = this.generateAPIUrl();
     this.version = "v1";
     this.module = "";
+    this.Util = new Util();
     this.header = {
       "Content-Type": "application/json"
     };

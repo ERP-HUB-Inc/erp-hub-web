@@ -1,10 +1,37 @@
 import React from "react";
-import { reduxForm } from "redux-form";
 import Component from "../../Component";
+import history from "../../../router/history";
+import ClientAction from "../../../actions/client";
+import ConstantAuth from "../../../constants/authentication";
 import "./index.css";
 
-class SignInStore extends Component {
+export default class SignInStore extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  handleSubmit (e) {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        const {dispatch} = this.props;
+        dispatch(ClientAction.signinDomain(values.storeName));
+      }
+    });
+  }
+
   render() {
+    const {response, form} = this.props;
+    if (response.response != null) {
+      localStorage.setItem(ConstantAuth.STORE_ACCESS_TOKEN, JSON.stringify(response.response));
+      history.push("/signin");
+    } else if (response.error != null) {
+      if (response.error.code == 404) {
+        const {dispatch} = this.props;
+        this.Message.error("Store doesn't exist.");
+        dispatch(ClientAction.resetSignInDomain());
+      }
+    }
     return (
       <div>
         <this.LoginLayout
@@ -14,26 +41,26 @@ class SignInStore extends Component {
           <div className="title">
             <h6>Find Your store Name </h6>
           </div>
-          <this.FormGroup>
-            <this.Field
-              name="username"
-              placeholder="User name"
-              type="text"
-              label="Store Name"
-              notation=".storevien.com"
-              component={ this.InputText }
-              className="ant-input"
-            />
-            <div className="main-signin">
-              <this.Button type="info">REGISTER</this.Button>
-            </div>
-          </this.FormGroup>
+          <this.Form onSubmit={this.handleSubmit}>
+            <this.FormGroup>
+              <this.InputText
+                name="storeName"
+                placeholder="Store name"
+                type="text"
+                label="Store Name"
+                notation=".storevien.com"
+                className="ant-input"
+                required={true}
+                errorRequired="Store name is required."
+                form={form}
+              />
+              <div className="main-signin">
+                <this.Button htmlType="submit" type="info">SUBMIT</this.Button>
+              </div>
+            </this.FormGroup>
+          </this.Form>
         </this.LoginLayout>
       </div>
     );
   }
 }
-
-export default reduxForm({
-  form: "signinstore"
-})(SignInStore);

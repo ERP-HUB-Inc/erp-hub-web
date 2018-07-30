@@ -12,7 +12,7 @@ class ClientService extends BaseService {
       {
         url: `${this.baseUrl}/find/${option.column}/${option.value}`,
         data: {},
-        header: this.header
+        headers: this.header
       }
     );
   }
@@ -20,8 +20,34 @@ class ClientService extends BaseService {
   register(data) {
     return this.addData({
       url: `${this.baseUrl}/register`,
-      header: this.header,
+      headers: this.header,
       data
+    });
+  }
+
+  signin(userName, password) {
+    this.module = "auth";
+    this.baseUrl = `${this.generateAPIUrl()}/${this.module}/${this.version}`;
+    return this.addData({
+      url: `${this.baseUrl}/login`,
+      headers: {
+        "Content-Type": "application/json",
+        "storeKey": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjYXNvbHV0aW9uIiwiaWF0IjoxNTMyODI3MTYzfQ.l03WAKuXkzXTzeDwIpVDXV0e_cSFpc229X5n2mlmFaA",
+        "userName": userName,
+        "password": password
+      },
+      data: {}
+    });
+  }
+
+  domainSignin(storeName) {
+    return this.addData({
+      url: `${this.baseUrl}/signin`,
+      headers: {
+        "Content-Type": "application/json",
+        "storeName": storeName
+      },
+      data: {}
     });
   }
 }

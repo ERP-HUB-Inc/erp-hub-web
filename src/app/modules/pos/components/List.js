@@ -131,7 +131,9 @@ export default class List extends Component {
    * it will overide in child class
    */
   handleConfirm() {
-    this.setState({modalVisible: true});
+    if (this.state.selectedRowKeys.length > 0) {
+      this.setState({modalVisible: true});
+    }
   }
 
   /**
@@ -208,7 +210,7 @@ export default class List extends Component {
             <this.Button type="info" className="mg-right" onClick={() => this.handleShowFormAdd()}>
               <span className="icon-add icon-padding-right"></span>Add New
             </this.Button>
-            <this.Button type="danger" onClick={() => this.handleConfirm()}>
+            <this.Button disabled={this.state.selectedRowKeys.length <= 0} type="danger" onClick={() => this.handleConfirm()}>
               <span className="icon-bin icon-padding-right"></span>Delete
             </this.Button>
           </div>
