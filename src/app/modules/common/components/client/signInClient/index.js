@@ -60,7 +60,7 @@ export default class ClientSignIn extends Component {
             />
             <div className="signin-button">
               <this.FormGroup>
-                <this.Link className="store-link" to="/register">
+                <this.Link className="store-link" to="/signin-store">
               it's not my store
                 </this.Link>
                 <div className="main-signin">

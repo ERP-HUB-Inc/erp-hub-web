@@ -7,9 +7,21 @@ export default class InputText extends Element {
     return (
       <this.FormItem label={this.props.label}>
         {
-          getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.data})(
-            <this.Input type={this.props.type} placeholder={this.props.placeholder} />
-          )
+          getFieldDecorator(this.props.name, {rules: [
+            {
+              required: this.props.required,
+              message: this.props.errorRequired
+            },
+            {
+              min: this.props.min,
+              message: this.props.errorLenght
+            },
+            {
+              validator: this.props.validator
+            }
+          ],
+          initialValue: this.props.data})
+          (<this.Input type={this.props.type} placeholder={this.props.placeholder} />)
         }
         { this.props.notation !="" ?
           <label className="notation-textfield">{ this.props.notation }</label>
@@ -23,6 +35,7 @@ export default class InputText extends Element {
 InputText.defaultProps = {
   name: "name",
   type: "text",
+  max: 255,
   required: false
 };
 

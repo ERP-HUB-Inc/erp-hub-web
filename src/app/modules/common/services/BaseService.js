@@ -1,4 +1,5 @@
 import axios from "axios";
+import ConstantAuth from "../constants/authentication";
 import {Util} from "../util";
 
 export default class BaseService {
@@ -8,6 +9,7 @@ export default class BaseService {
     this.version = "v1";
     this.module = "";
     this.Util = new Util();
+    this.ConstantAuth = ConstantAuth;
     this.header = {
       "Content-Type": "application/json"
     };

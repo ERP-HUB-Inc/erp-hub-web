@@ -19,7 +19,7 @@ const PrivateRoute = ({component: AdminComponent, ...rest }) => (
   <Route {...rest} render={props => (
     localStorage.getItem(Authentication.ACCESS_TOKEN)
       ? <AdminComponent {...props} />
-      : <Redirect to="/signin" />
+      : <Redirect to="/signin-store" />
   )} />
 );
 

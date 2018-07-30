@@ -8,8 +8,10 @@ import "./index.css";
 export default class SignInStore extends Component {
   constructor(props) {
     super(props);
+    this.errorMessage=null;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -28,7 +30,7 @@ export default class SignInStore extends Component {
     } else if (response.error != null) {
       if (response.error.code == 404) {
         const {dispatch} = this.props;
-        this.Message.error("Store doesn't exist.");
+        this.Message.error("Store does not exist.");
         dispatch(ClientAction.resetSignInDomain());
       }
     }
@@ -51,7 +53,7 @@ export default class SignInStore extends Component {
                 notation=".storevien.com"
                 className="ant-input"
                 required={true}
-                errorRequired="Store name is required."
+                errorRequired="Please enter your store address."
                 form={form}
               />
               <div className="main-signin">

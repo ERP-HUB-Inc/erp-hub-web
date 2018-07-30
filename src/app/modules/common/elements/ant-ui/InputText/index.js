@@ -4,25 +4,6 @@ import Element from "../../common/Element";
 import "./index.css";
 
 export class InputText extends Element {
-
-  constructor(props) {
-    super(props);
-    this.rules = [
-      {
-        required: this.props.required,
-        message: this.props.errorRequired
-      },
-      {
-        max: this.props.max,
-        message: this.props.errorLenght
-      },
-      {
-        min: this.props.min,
-        message: this.props.errorLenght
-      }
-    ];
-  }
-
   render() {
     return (
       <Input 
@@ -35,8 +16,8 @@ export class InputText extends Element {
         notation={this.props.notation}
         errorLenght={this.props.errorLenght}
         errorRequired={this.props.errorRequired}
+        validator={this.props.validator}
         form={this.props.form}
-        rules={this.rules}
       />
     );
   }   

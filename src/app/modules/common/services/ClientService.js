@@ -32,7 +32,7 @@ class ClientService extends BaseService {
       url: `${this.baseUrl}/login`,
       headers: {
         "Content-Type": "application/json",
-        "storeKey": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjYXNvbHV0aW9uIiwiaWF0IjoxNTMyODI3MTYzfQ.l03WAKuXkzXTzeDwIpVDXV0e_cSFpc229X5n2mlmFaA",
+        "storeKey": `Bearer ${this.Util.getAccessToken(this.ConstantAuth.STORE_ACCESS_TOKEN)}`,
         "userName": userName,
         "password": password
       },

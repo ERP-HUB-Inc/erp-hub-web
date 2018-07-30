@@ -1,13 +1,13 @@
 import Service from "../../common/services/BaseService";
-import Authentication from "../../common/constants/authentication";
 
 export default class BaseService extends Service {
   constructor() {
     super();
     this.data = {};
+    console.log("Access Token:", this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN));
     this.header =  {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${this.Util.getAccessToken(Authentication.ACCESS_TOKEN)}`
+      "Authorization": `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`
     };
   }
 
@@ -33,7 +33,6 @@ export default class BaseService extends Service {
   }
 
   add(data) {
-    // alert(JSON.stringify(data));
     return this.addData({
       url: `${this.baseUrl}/create`,
       data: {
