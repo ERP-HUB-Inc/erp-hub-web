@@ -37,6 +37,21 @@ export default {
       });
     };
   },
+  signinDomain: (domain) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.DOMAIN_SIGNIN,
+        payload: ClientService.domainSignin(domain)
+      });
+    };
+  },
+  resetSignInDomain: () => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.DOMAIN_SIGNIN_RESET
+      });
+    };
+  },
   reset: () => {
     return dispatch => {
       return dispatch({

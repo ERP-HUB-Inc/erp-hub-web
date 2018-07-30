@@ -1,7 +1,7 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
 import Component from "../../Component";
 import history from "../../../router/history";
+import Authentication from "../../../constants/authentication";
 import ClientAction from "../../../actions/client";
 import "./index.css";
 
@@ -29,7 +29,7 @@ export default class ClientSignIn extends Component {
       this.Message.error("Username or password is not found.");
       this.dispatch(ClientAction.reset());
     }else if(response.response != null) {
-      localStorage.setItem("accessToken", JSON.stringify(response.response));
+      localStorage.setItem(Authentication.ACCESS_TOKEN, JSON.stringify(response.response));
       this.dispatch(ClientAction.reset());
       history.push("/");
     }

@@ -2,20 +2,19 @@ import React from "react";
 import PrivateRoute from "../router/privateRouter";
 import history from "../router/history";
 import Application from "../../common/router";
-import Home from "./home";
 import ClientLogin from "./client/signin";
 import loginStore from "./client/loginStore";
 import ClientRegister from "./client/register";
 import ClientRegisterDetail from "./client/registerDetail";
 import ClientRegisterComplete from "./client/registerComplete";
-import { BrowserRouter, Route, Redirect, Router, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Router, Switch } from "react-router-dom";
 import CRUD from "../../../crud";
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     history.listen((location, action) => {
-    });
+    });
   }
   render() {
     return (
@@ -30,7 +29,7 @@ export default class App extends React.Component {
                 <Route path="/register" component={ClientRegister}></Route>
                 <Route path="/register-detail" component={ClientRegisterDetail}></Route>
                 <Route path="/signin-complete" component={ClientRegisterComplete}></Route>
-                <PrivateRoute path="/" name="admin" component={Application} loginComponent={ClientLogin}/>
+                <PrivateRoute path="/" component={Application} loginComponent={ClientLogin}/>
               </div>
             </Router>
           </Switch>
