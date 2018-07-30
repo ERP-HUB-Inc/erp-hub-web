@@ -7,7 +7,8 @@ export default class BaseService extends Service {
     this.data = {};
     this.header =  {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${this.Util.getAccessToken(Authentication.ACCESS_TOKEN)}`
+      // "Authorization": `Bearer ${this.Util.getAccessToken(Authentication.ACCESS_TOKEN)}`
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjYXNvbHV0aW9uIiwiaWF0IjoxNTMyOTI0OTc4fQ.caF9sEoDYv9VirQaO4RE23WQbLgnUOfI7siZ6oJQ5C0"
     };
   }
 
