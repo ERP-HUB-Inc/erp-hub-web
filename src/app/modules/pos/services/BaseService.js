@@ -4,7 +4,6 @@ export default class BaseService extends Service {
   constructor() {
     super();
     this.data = {};
-    console.log("Access Token:", this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN));
     this.header =  {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`

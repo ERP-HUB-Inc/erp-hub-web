@@ -1,6 +1,6 @@
 import React from "react";
+import { Form } from "antd";
 import { connect } from "react-redux";
-import { reduxForm } from "redux-form";
 import List from "../../../components/settings/StoreAccount";
 
 class StoreAccount extends React.Component {
@@ -17,8 +17,12 @@ function mapStateToProps(state) {
   };
 }
 
-const Account = reduxForm({
-  form: "formStoreLocation"
-})(StoreAccount);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
 
-export default connect(mapStateToProps)(Account);
+const storeAccount =  Form.create(mapPropsToFields)(StoreAccount);
+
+export default connect(mapStateToProps)(storeAccount);

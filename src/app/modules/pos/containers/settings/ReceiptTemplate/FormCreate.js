@@ -1,9 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Form } from "antd";
 import { reduxForm } from "redux-form";
 import FormCreate from "../../../components/settings/ReceiptTemplate/FormCreate";
 
-class StoreLanguageForm extends React.Component {
+class ReceiptTemplateForm extends React.Component {
   render() {
     return (
       <FormCreate {...this.props} />
@@ -18,8 +19,12 @@ function mapStateToProps(state) {
   };
 }
 
-const StoreLocation = reduxForm({
-  form: "formReceiptTemplate"
-})(StoreLanguageForm);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
 
-export default connect(mapStateToProps)(StoreLocation);
+const receiptTemplateForm =  Form.create(mapPropsToFields)(ReceiptTemplateForm);
+
+export default connect(mapStateToProps)(receiptTemplateForm);

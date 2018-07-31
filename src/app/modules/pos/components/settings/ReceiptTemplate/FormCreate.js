@@ -4,17 +4,23 @@ import { InputText } from "../../../../common/elements/ant-ui/InputText";
 import { InputNumber } from "../../../../common/elements/ant-ui/InputNumber";
 import ReceiptAction from "../../../action/settings/receiptTemplate";
 
-export default class FormStoreLocationCreate extends Modal {
+export default class FormReciptTemplateCreate extends Modal {
   constructor(props) {
     super(props);
     this.title = "Receipt Template";
     this.addingPropReducer = "receiptAdd";
     this.dispatch = this.props.dispatch;
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
     
-  handleSubmit() {
-    const { receiptFormAdd } = this.props;
-    this.dispatch(ReceiptAction.add(receiptFormAdd.values));
+  handleSubmit(e) {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        alert(JSON.stringify(values));
+        this.dispatch(ReceiptAction.add(values));
+      }
+    });
   }
     
   handleCancel() {
@@ -22,15 +28,30 @@ export default class FormStoreLocationCreate extends Modal {
   }
   
   render() {
-    const { receiptAdd } = this.props;
+    const { receiptAdd,form } = this.props;
     if (receiptAdd.showForm) {
       this.content = (
         <div>
           { receiptAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <InputText name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
-          <InputNumber type="number" name="code" placeholder="Code"  label="Code"/>
-          <this.UploadImg name="upload" label="Receipt Logo" />
-          <InputText type="text" name="address" placeholder="VAT"  label="Tax name on receipt"/>
+          <InputText
+            name="name"
+            label="Name"
+            placeholder="Please input your name"
+            required={true}
+            errorRequired="Please input your name"
+            max={100}
+            form={form}/>
+          <InputNumber 
+            type="number" 
+            name="code" 
+            placeholder="Code"  
+            label="Code" 
+            form={form} />
+          <this.UploadImg 
+            name="upload" 
+            label="Receipt Logo" 
+            form={form} 
+          />   
         </div>
       );
       return super.render();

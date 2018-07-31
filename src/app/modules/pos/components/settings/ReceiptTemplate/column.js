@@ -19,12 +19,12 @@ export default [{
 },
 {
   title: "Update",
-  dataIndex: "store",
+  dataIndex: "update",
   sorter: true
 },
 {
   title: "Status",
-  dataIndex: "store",
+  dataIndex: "status",
   sorter: true
 }
 ];
