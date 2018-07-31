@@ -12,6 +12,7 @@ import storeLocation from "../modules/pos/reducers/settings/storeLocation";
 import storeLanguage from "../modules/pos/reducers/settings/storeLanguage";
 import receiptTemplate from "../modules/pos/reducers/settings/receiptTemplate";
 import incomeAndExpense from "../modules/pos/reducers/settings/incomeAndExpense";
+import roleAccess from "../modules/pos/reducers/settings/roleAccess";
 
 const reducer = combineReducers({
   client,
@@ -27,7 +28,8 @@ const reducer = combineReducers({
   storeLanguage,
   PaymentMethods,
   receiptTemplate,
-  incomeAndExpense
+  incomeAndExpense,
+  roleAccess
 });
 
 export default reducer;

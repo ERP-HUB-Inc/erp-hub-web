@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import { reduxForm } from "redux-form";
 import FormCreate from "../../../components/settings/ReceiptTemplate/FormCreate";
 
 class ReceiptTemplateForm extends React.Component {

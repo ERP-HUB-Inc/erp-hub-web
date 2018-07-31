@@ -1,8 +1,8 @@
 import React from "react";
-import Component from "../../components/Component";
-import Diagram from "../../components/home/Diagram";
-import Guide from "../../components/home/Guide";
-import Board from "../../components/home/Board";
+import Component from "../Component";
+import Diagram from "./Diagram";
+import Guide from "./Guide";
+import Board from "./Board";
 import "./index.css";
 
 export default class Home extends Component {

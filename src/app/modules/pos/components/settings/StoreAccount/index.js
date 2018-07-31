@@ -1,5 +1,5 @@
 import React from "react";
-import Element from "../../../components/Component";
+import Element from "../../Component";
 import "./index.css";
 import menuSource from "../../../../common/components/layout/SiderBar/datasource";
 
