@@ -73,6 +73,8 @@ import {
 const Panel = Collapse.Panel;
 const { Option } = Select;
 
+const CheckboxGroup = Checkbox.Group;
+
 export default class Component extends RComponent {
   constructor(props) {
     super(props);
@@ -134,6 +136,7 @@ export default class Component extends RComponent {
     this.Waiting = Waiting;
     this.Checkboxs = Checkboxs;
     this.Checkbox = Checkbox;
+    this.CheckboxGroup = CheckboxGroup;
     this.Collapse = Collapse;
     this.Panel = Panel;
     this.Tooltip = Tooltip;

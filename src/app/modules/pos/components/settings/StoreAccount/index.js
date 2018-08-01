@@ -38,7 +38,7 @@ export default class StoreAccountList extends Element {
               <this.Link to="/"><span className="icon-home"></span></this.Link>
             </li>
             <li className="fast-nav text-uppercase">
-              <this.Link to="/">{this.module}</this.Link>
+              <this.Link to="/">SETTINGS</this.Link>
             </li>
             {
               menuSource["settings"]["subItems"].map((value, index) =>
@@ -49,6 +49,7 @@ export default class StoreAccountList extends Element {
             }
           </ul>
         </div>
+
         <div className="main-layout">
           <this.Row>
             <this.Col md="4">   

@@ -1,0 +1,80 @@
+.main-row-role-access {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    background-color: white;
+    padding: 33px 0px;
+}
+
+.main-role-access .ant-collapse > .ant-collapse-item > .ant-collapse-header .arrow{
+    left: auto;
+    right: 10px;
+}
+
+.main-role-access .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    padding: 12px 0 12px 18px !important;
+    font-size: 9pt;
+    color: #4D4F5C;
+    font-weight: 500;
+}
+
+.main-role-access .ant-collapse {
+    padding: 8px;
+    background-color: white;
+}
+
+.main-role-access .ant-checkbox-group .ant-checkbox-group-item {
+    display: table !important;
+    padding: 7px 10px !important;
+}
+
+.main-role-access .ant-collapse-header i {
+    color: #093163;
+    font-weight: bold;
+}
+
+.main-role-access .ant-collapse-header {
+    border-bottom: 1px solid white;
+    background-color: #FAFAFA !important;
+} 
+
+.main-role-access .ant-collapse-content {
+    border-top: none !important;
+}
+
+.main-role-access .ant-collapse {
+    border: 1px solid #ECECEC;
+    border-radius: 0;
+}
+
+/* checkbox color */
+.main-role-access .ant-checkbox-inner {
+    border: 1px solid #4D4F5C !important;
+}
+
+/* input text */
+.main-role-access input {
+    border: none;
+    width: 100%;
+    padding-left: 50px;
+}
+
+.main-role-access .icon-search {
+    position: absolute;
+    font-size: 14pt;
+    top: 18px;
+    color: #9A9A9A !important;
+    z-index: 1;
+    left: 39px;
+}
+
+.main-role-access input {
+    border-left: 2px solid #BCBCCB; 
+    border-radius: 0;
+    height: 50px;
+}
+
+.main-role-access button.save-button {
+    position: relative;
+    top: 10px;
+    width: 119px;
+}

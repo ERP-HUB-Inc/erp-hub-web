@@ -15,7 +15,9 @@ function mapStateToProps(state) {
     roleAccess: state.reducer.roleAccess.request,
     roleAccessAdd: state.reducer.roleAccess.add,
     roleAccessArchive: state.reducer.roleAccess.archive,
-    roleAccessUpdate: state.reducer.roleAccess.update
+    roleAccessUpdate: state.reducer.roleAccess.update,
+    showListRole: "showListRole",
+    ShowLayout: "6"
   };
 }
 
