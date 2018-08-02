@@ -32,6 +32,7 @@ export default class ClientSignIn extends Component {
       localStorage.setItem(Authentication.ACCESS_TOKEN, JSON.stringify(response.response));
       this.dispatch(ClientAction.reset());
       history.push("/");
+      window.location.reload();
     }
 
     return (

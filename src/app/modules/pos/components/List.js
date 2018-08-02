@@ -225,7 +225,7 @@ export default class List extends Component {
               <span className="icon-add icon-padding-right"></span>Add New
             </this.Button>
             <this.Button disabled={this.state.selectedRowKeys.length <= 0} type="danger" onClick={() => this.handleConfirm()}>
-              <span className="icon-bin icon-padding-right"></span>Delete
+              <span className="icon-delete icon-padding-right"></span>Delete
             </this.Button>
           </div> 
 

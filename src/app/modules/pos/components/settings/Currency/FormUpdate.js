@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "../../shares/Modal";
 import { InputText } from "../../../../common/elements/ant-ui/InputText";
+import { Select } from "../../../../common/elements/ant-ui/Select";
 import { InputNumber } from "../../../../common/elements/ant-ui/InputNumber";
 import CurrencyAction from "../../../action/settings/currency";
 
@@ -37,6 +38,13 @@ export default class Form extends Modal {
           <InputText form={form} name="name" data={ currencyUpdate.data.name } label="Name" placeholder="Please input your name" required={true} min={ 3 } max={100}/>
           <InputText form={form} type="text" data={ currencyUpdate.data.symbol } name="symbol" placeholder="Symbol"  label="Symbol"/>
           <InputNumber form={form} type="number" data={ currencyUpdate.data.value } name="value" placeholder="Value"  label="Value"/>
+          <Select
+            name="status"
+            label="Status"
+            placeholder="Please select status"
+            dataSource={this.statusDataSource}
+            defaultValue={currencyUpdate.data.status}
+            form={form}/>
         </div>
       );
       return super.render();

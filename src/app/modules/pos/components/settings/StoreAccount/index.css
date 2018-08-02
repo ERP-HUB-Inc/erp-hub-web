@@ -58,6 +58,23 @@
     color: #9A9A9A;
 }
 
+
 .main-ant-wrapper .ant-radio-wrapper {
     margin-right: 25px !important;
+}
+
+/* radio */
+
+.main-store-account .ant-radio-group .ant-radio-wrapper {
+    display: table !important;
+    padding: 7px 0px !important;
+}
+
+.btn-submit-center {
+    margin-top: 20px;
+}
+
+.btn-submit-center button {
+    margin: auto !important;
+    left: 50% !important;
 }

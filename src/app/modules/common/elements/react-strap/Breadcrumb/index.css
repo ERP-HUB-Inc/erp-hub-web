@@ -5,6 +5,10 @@
     background-color: #EAEAEA !important;
 }
 
+.breadcrumb ul li a span {
+    font-size: 19pt;
+}
+
 .breadcrumb {
     border-radius: 5px;
 }

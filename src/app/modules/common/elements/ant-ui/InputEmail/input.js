@@ -31,7 +31,7 @@ export default class InputText extends Element {
             {
               validator: this.props.validator
             }
-          ],initialValue: this.props.initialValue})
+          ],initialValue: this.props.data})
           (
             <this.Input type={this.props.type} placeholder={this.props.placeholder}/>
           )

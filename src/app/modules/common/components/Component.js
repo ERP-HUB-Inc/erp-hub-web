@@ -25,7 +25,8 @@ import
   RadioRegister,
   DatePickers,
   RadioButton,
-  UploadImg
+  UploadImg,
+  saveButton
 } from "../elements/ant-ui";
 import {
   InputRedux,
@@ -154,6 +155,7 @@ export default class Component extends RComponent {
     this.DatePickers = DatePickers;
     this.RadioButton = RadioButton;
     this.UploadImg = UploadImg;
+    this.saveButton = saveButton;
 
     // Util function
     this.Util = new Util;

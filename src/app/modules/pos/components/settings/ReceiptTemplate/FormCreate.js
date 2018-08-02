@@ -1,7 +1,5 @@
 import React from "react";
 import Modal from "../../shares/Modal";
-import { InputText } from "../../../../common/elements/ant-ui/InputText";
-import { InputNumber } from "../../../../common/elements/ant-ui/InputNumber";
 import ReceiptAction from "../../../action/settings/receiptTemplate";
 
 export default class FormReciptTemplateCreate extends Modal {
@@ -33,7 +31,7 @@ export default class FormReciptTemplateCreate extends Modal {
       this.content = (
         <div>
           { receiptAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <InputText
+          <this.InputText
             name="name"
             label="Name"
             placeholder="Please input your name"
@@ -41,7 +39,7 @@ export default class FormReciptTemplateCreate extends Modal {
             errorRequired="Please input your name"
             max={100}
             form={form}/>
-          <InputNumber 
+          <thisInputNumber 
             type="number" 
             name="code" 
             placeholder="Code"  
@@ -52,6 +50,13 @@ export default class FormReciptTemplateCreate extends Modal {
             label="Receipt Logo" 
             form={form} 
           />   
+          <this.Select
+            name="status"
+            label="Status"
+            placeholder="Please select status"
+            dataSource={this.statusDataSource}
+            defaultValue={1}
+            form={form}/>
         </div>
       );
       return super.render();

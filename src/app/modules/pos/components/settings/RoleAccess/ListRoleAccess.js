@@ -53,9 +53,7 @@ class ListRoleAccess extends Component {
             </this.Form>
           </this.Col>
           <this.Col md="2">
-            <this.Button type="info" className="mg-right save-button">
-              <span className="icon-save icon-padding-right"></span>Save
-            </this.Button>
+            <this.saveButton className="mg-right save-button"/>
           </this.Col> 
         </this.Row>
 
