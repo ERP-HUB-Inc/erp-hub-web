@@ -10,6 +10,18 @@ export default class BaseService extends Service {
     };
   }
 
+  detail(
+    ids
+  ){
+    return this.fetchData({ 
+      url: `${this.baseUrl}/detail/${ids}`,
+      data: this.data,
+      headers: this.header
+    });
+  }
+
+  
+
   lists(
     limit,
     offset,
@@ -22,6 +34,7 @@ export default class BaseService extends Service {
       headers: this.header
     });
   }
+
 
   archive(ids) {
     return this.deleteData({ 

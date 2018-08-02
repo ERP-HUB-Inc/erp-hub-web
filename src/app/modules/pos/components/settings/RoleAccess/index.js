@@ -1,8 +1,11 @@
 import React from "react";
 import columns from "./column";
-import List from "../../List";
+// import List from "../../List";
+import List from "./List";
 import FormCreate from "../../../containers/settings/PaymentMethod/FormCreate";
 import FormUpdate from "../../../containers/settings/PaymentMethod/FormUpdate";
+import ListRoleAccess from "../../../containers/settings/RoleAccess/ListRoleAccess";
+// import ListRoleAccess from "./ListRoleAccess";
 import Constant from "../../../constants/settings/roleAccess";
 import RoleAccessAction from "../../../action/settings/roleAccess";
 import "./index.css";
@@ -10,16 +13,23 @@ import "./index.css";
 export default class PaymentMethodList extends List {
   constructor(props) {
     super(props);
+
     this.columns = columns;
     this.fetchingProp = "roleAccess";
     this.addingProp = "roleAccessAdd";
     this.updatingProp = "roleAccessUpdate";
+    this.showListRole = "showListRole";
+    this.Layout = "6";
     this.RESET_CONSTANT = Constant.RESET_ROLE_ACCESS;
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
     
+    this.setState({
+      ListRoles: <ListRoleAccess/>
+    });
+
     dispatch(RoleAccessAction.fetch(this.pageSize));
   }
 

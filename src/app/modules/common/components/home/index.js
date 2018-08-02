@@ -33,6 +33,7 @@ export default class Home extends Component {
                   <this.BreadcrumbTitle title="Dashboad" />
                 </li>
                 <li style={{marginLeft: "15px"}}>
+                  {/* <this.Switchs onChange={ this.toggleDashboard } /> */}
                   <this.Switchs onChange={ this.toggleDashboard } />
                 </li>
               </ul>
@@ -41,7 +42,7 @@ export default class Home extends Component {
           </this.Col>
         </this.Row>
         <this.Row>
-          <Board total="0.00" icon="icon-userman" title="Today's Sale" route="read"/>
+          <Board total="0.00" icon="icon-dollar" title="Today's Sale" route="read"/>
           <Board total="0.00" icon="icon-list" title="Today's Transaction" route="read"/>
           <Board total="0.00" icon="icon-stock" title="Today's Product Sold" route="read"/>
           <Board total="0" icon="icon-customer" title="Total Customers" route="read"/>

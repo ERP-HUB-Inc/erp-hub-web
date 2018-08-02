@@ -22,13 +22,12 @@
 }
 
 .breadcrumb ul li a {
-    font-size: 10pt
+    font-size: 9pt
 }
 
 .breadcrumb ul li a:hover,
 .breadcrumb ul li.active a {
-    font-weight: 600;
-    color: #4D4F5C
+    color: #4D4F5C  
 }
 
 .breadcrumb ul li::after,

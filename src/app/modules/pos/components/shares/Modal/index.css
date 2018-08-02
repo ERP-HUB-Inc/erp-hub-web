@@ -27,7 +27,6 @@
 
 .breadcrumb ul li a:hover,
 .breadcrumb ul li.active a {
-    font-weight: 600;
     color: #4D4F5C
 }
 

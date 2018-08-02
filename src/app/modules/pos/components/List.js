@@ -8,13 +8,19 @@ export default class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      layut: "12",
       current: 1,
       selectedRowKeys: [],
       selectedListIds: [],
       modalVisible: false,
       modalSource: {},
-      modalConten: null, // the content that show in modal content
+      ListRoles: null,
+      modalConten: null // the content that show in modal content
     };
+    
+    //access role
+    this.showListRoles = "";
+    this.layout = "";
 
     this.columns = [],
     this.filter = [],
@@ -37,6 +43,8 @@ export default class List extends Component {
     this.onSelectChange = this.onSelectChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
+
+
 
     this.RESET_CONSTANT = "RESET";
   }
@@ -151,6 +159,10 @@ export default class List extends Component {
   }
 
   render() {
+    // role access
+    // const showListRoles = this.props[this.showListRole];
+    // const Layout = this.props[this.Layout];
+
     let fetchingProps = this.props[this.fetchingProp];
     const addingProps = this.props[this.addingProp];
     const updatingProps = this.props[this.updatingProp];
@@ -181,8 +193,9 @@ export default class List extends Component {
   
     // get current path of breadcrum compare with url
     const currentPath = window.location.pathname;
-
+    
     return (
+      
       <div style={{marginTop: "15px"}}>
         <div className="breadcrumb">
           <ul className="list-unstyled">
@@ -203,7 +216,8 @@ export default class List extends Component {
         </div>
         {/* ===============ENDACTION BUTTON====== */}
 
-        {/* ===============TABLE LIST============ */}
+        {/* ===============TABLE LIST============ */}   
+
         <div className="table-wrapper">
           {/* ===============ACTION BUTTON============ */}
           <div className="float-left">
@@ -211,9 +225,9 @@ export default class List extends Component {
               <span className="icon-add icon-padding-right"></span>Add New
             </this.Button>
             <this.Button disabled={this.state.selectedRowKeys.length <= 0} type="danger" onClick={() => this.handleConfirm()}>
-              <span className="icon-bin icon-padding-right"></span>Delete
+              <span className="icon-delete icon-padding-right"></span>Delete
             </this.Button>
-          </div>
+          </div> 
 
           <div className="float-right">
             <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
@@ -238,6 +252,7 @@ export default class List extends Component {
           this.state.modalConten
         }
         {/* ===============END DISPLAY MODAL POPUP============ */}
+            
 
         <this.Modal
           visible={this.state.modalVisible}
@@ -260,9 +275,7 @@ export default class List extends Component {
           </div>
         </this.Modal>
       </div>
+      
     );
   }
 }
-
-
-

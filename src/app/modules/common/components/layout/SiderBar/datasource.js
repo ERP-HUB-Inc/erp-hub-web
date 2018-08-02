@@ -345,19 +345,19 @@ const dataSource = {
       },
       {
         title: "Income & Expense",
-        icon: "icon-sale-return",
+        icon: "icon-operation",
         route: "/settings/income-expense",
         component: IncomeAndExpense
       },
       {
         title: "Currency",
-        icon: "icon-sale-return",
+        icon: "icon-currency",
         route: "/settings/currency",
         component: Currency
       },
       {
         title: "Language",
-        icon: "icon-sale-return",
+        icon: "icon-language",
         route: "/settings/language",
         component: StoreLanguage
       }

@@ -18,13 +18,15 @@ export class InputText extends Element {
         errorRequired={this.props.errorRequired}
         validator={this.props.validator}
         form={this.props.form}
+        min={ this.props.min }
+        max={ this.props.max }
       />
     );
   }   
 }
 
 Input.defaultProps = {
-  max: 3,
+  max: 255,
   errorRequired: "Field required.",
   errorLenght: "Over allow character lenght."
 };

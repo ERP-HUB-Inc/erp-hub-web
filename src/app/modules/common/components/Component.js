@@ -25,7 +25,8 @@ import
   RadioRegister,
   DatePickers,
   RadioButton,
-  UploadImg
+  UploadImg,
+  saveButton
 } from "../elements/ant-ui";
 import {
   InputRedux,
@@ -72,6 +73,8 @@ import {
 } from "antd";
 const Panel = Collapse.Panel;
 const { Option } = Select;
+
+const CheckboxGroup = Checkbox.Group;
 
 export default class Component extends RComponent {
   constructor(props) {
@@ -134,6 +137,7 @@ export default class Component extends RComponent {
     this.Waiting = Waiting;
     this.Checkboxs = Checkboxs;
     this.Checkbox = Checkbox;
+    this.CheckboxGroup = CheckboxGroup;
     this.Collapse = Collapse;
     this.Panel = Panel;
     this.Tooltip = Tooltip;
@@ -151,6 +155,7 @@ export default class Component extends RComponent {
     this.DatePickers = DatePickers;
     this.RadioButton = RadioButton;
     this.UploadImg = UploadImg;
+    this.saveButton = saveButton;
 
     // Util function
     this.Util = new Util;
