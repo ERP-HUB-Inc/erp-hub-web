@@ -1,43 +1,15 @@
-// import React, { Component } from "react";
-// import { Switch } from "antd";
-
-// export class Switchs extends Component {
-
-//   constructor(props) {
-//     super(props);
-//     this.onChange = this.onChange.bind(this);
-//   }
-
-//   onChange(checked) {
-//     console.log(`switch to ${checked}`);
-//   }
-
-//   render(){
-//     return(
-//       <div>
-//         <Switch defaultChecked onChange={ this.props.onChange } />
-//       </div>
-//     );
-//   }
-// }
-
-
-import React, { Component } from "react";
+import React from "react";
+import Element, { Form } from "../../common/Element";
+import "./index.css";
 import { Switch } from "antd";
 
-// let defaultProps = {
-//   checkedChildren: "Checked",
-//   unCheckedChildren: "Unchecked"
-// }; 
-
-export class Switchs extends Component {
+export class Switchs extends Element {
 
   constructor(props) {
     super(props);
-    const checked =  (this.props.value == 1) ? true : false;
+    const checked =  this.props.value == 1;
     this.state = {
-      // ...defaultProps,
-      ...this.props,
+      ...this.props,      
       checked
     };
     this.onChange = this.onChange.bind(this);
@@ -54,10 +26,12 @@ export class Switchs extends Component {
 
   render(){
     return(
-      <div>
-        <Switch defaultChecked {...this.state}  onChange={ this.onChange } />
+      <div className="main-switch">
+        <this.FormItem label={ this.props.label }>
+          <Switch defaultChecked {...this.state}  onChange={ this.onChange } />
+        </this.FormItem>
       </div>
-    );
+    );  
   }
 }
 

@@ -14,6 +14,8 @@ import receiptTemplate from "../modules/pos/reducers/settings/receiptTemplate";
 import incomeAndExpense from "../modules/pos/reducers/settings/incomeAndExpense";
 import roleAccess from "../modules/pos/reducers/settings/roleAccess";
 import storeAccount from "../modules/pos/reducers/settings/storeAccount";
+// Employee
+import managementEmployee from "../modules/hr/reducers/employees/managementEmployee";
 
 const reducer = combineReducers({
   client,
@@ -31,7 +33,9 @@ const reducer = combineReducers({
   receiptTemplate,
   incomeAndExpense,
   roleAccess,
-  storeAccount
+  storeAccount,
+  // Employee
+  managementEmployee
 });
 
 export default reducer;

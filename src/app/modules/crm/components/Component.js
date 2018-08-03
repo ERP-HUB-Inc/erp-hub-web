@@ -1,13 +1,7 @@
-import React, { Component as RComponent } from "react";
-import { 
-    CTable,
-    CModal
-} from "../../common/elements/ant-ui";
-
-export default class Component extends RComponent {
-    constructor(props) {
-        super(props);
-        this.Table = () => (<CTable/>);
-        this.Modal = () => (<CModal/>);
-    }
+import Component  from "../../common/components/Component";
+export default class CComponent extends Component {
+  constructor(props){
+    super(props);
+    this.dispatch = this.props.dispatch;
+  }
 }

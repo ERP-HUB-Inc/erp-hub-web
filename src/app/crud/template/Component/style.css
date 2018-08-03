@@ -37,7 +37,8 @@
     font-size: 15pt;
     text-transform: uppercase;
     color: #4D4F5C;
-    font-weight: 500    
+    font-weight: 500;    
+    text-transform: uppercase;
 }
 
 .ant-modal-close-x {
