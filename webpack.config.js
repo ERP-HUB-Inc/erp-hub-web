@@ -1,6 +1,7 @@
 var path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+const webpack = require("webpack");
 const Dotenv = require("dotenv-webpack");
 
 var DIST_DIR = path.resolve(__dirname, "dist");
@@ -10,7 +11,8 @@ module.exports = {
   entry: SRC_DIR + "/index.js",
   output: {
     path: DIST_DIR + "/app",
-    filename: "bundle.js"
+    filename: "bundle.js",
+    publicPath: "/"
   },
   node: {
     fs: "empty"
@@ -62,5 +64,10 @@ module.exports = {
         }]
       }
     ]
+  },
+  devServer: {
+    historyApiFallback: true,
+    inline:true,
+    port: 8008
   }
 };
