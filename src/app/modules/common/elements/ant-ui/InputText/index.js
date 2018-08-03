@@ -20,6 +20,7 @@ export class InputText extends Element {
         form={this.props.form}
         min={ this.props.min }
         max={ this.props.max }
+        disabled= { this.props.disabled }
       />
     );
   }   

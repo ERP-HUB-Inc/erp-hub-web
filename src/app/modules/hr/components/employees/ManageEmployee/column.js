@@ -1,13 +1,15 @@
+
+
 export default [{
   title: "Date",
-  dataIndex: "createdAt",
+  dataIndex:"createdAt",
   key: "createdAt",
-  sorter: true,
-}, {
-  title: "Name",
-  dataIndex: "firstName",
-  key: "firstName",
   sorter: true
+}, {
+  title: "full Name",
+  dataIndex: "firstName",
+  sorter: true,
+  render: firstName => `${firstName}`
 },
 {
   title: "Phone No",

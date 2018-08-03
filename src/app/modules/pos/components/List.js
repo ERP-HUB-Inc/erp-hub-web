@@ -159,9 +159,6 @@ export default class List extends Component {
   }
 
   render() {
-    // role access
-    // const showListRoles = this.props[this.showListRole];
-    // const Layout = this.props[this.Layout];
 
     let fetchingProps = this.props[this.fetchingProp];
     const addingProps = this.props[this.addingProp];
@@ -215,6 +212,9 @@ export default class List extends Component {
           </ul>
         </div>
         {/* ===============ENDACTION BUTTON====== */}
+
+
+
 
         {/* ===============TABLE LIST============ */}   
 
@@ -270,7 +270,7 @@ export default class List extends Component {
               <span className="icon-close icon-padding-right"></span>CANCEL
             </this.Button>
             <this.Button onClick={() => this.handleDelete()} loading={false} className="info">
-              <span className="icon-save icon-padding-right"></span>SAVE
+              <span className="icon-checked icon-padding-right"></span>YES
             </this.Button>
           </div>
         </this.Modal>

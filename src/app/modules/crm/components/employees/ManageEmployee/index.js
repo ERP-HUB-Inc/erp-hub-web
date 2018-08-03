@@ -1,8 +1,8 @@
 import React from "react";
 import columns from "./column";
 import List from "../../List";
-import FormCreate from "../../../containers/employees/manageEmployee/FormCreate";
-import FormUpdate from "../../../containers/employees/manageEmployee/FormUpdate";
+import FormCreate from "../../../containers/employees/ManageEmployee/FormCreate";
+import FormUpdate from "../../../containers/employees/ManageEmployee/FormUpdate";
 import Constant from "../../../constants/employees/managementEmployee";
 import ManageEmployeeAction from "../../../actions/employees/manageEmployee";
 import "./index.css";

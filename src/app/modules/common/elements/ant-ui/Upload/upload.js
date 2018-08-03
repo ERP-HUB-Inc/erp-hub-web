@@ -1,5 +1,6 @@
 import React from "react";
 import Element, { Form } from "../../common/Element";
+import "./index.css";
 import { Upload, Icon, Modal } from "antd";
 
 export default class PicturesUpload extends Element {
@@ -8,7 +9,8 @@ export default class PicturesUpload extends Element {
     super(props);
     this.state = {
       previewImage: "",
-      fileList: []
+      fileList: [],
+      upload: false
     };
   }
 
@@ -33,12 +35,18 @@ export default class PicturesUpload extends Element {
     const { previewVisible, previewImage, fileList } = this.state;
     const uploadButton = (
       <div>
-        <Icon type="plus" />
-        <div className="ant-upload-text">Upload</div>
+        <span className="icon-upload"></span>
+        <div className="ant-upload-text">
+          <div className="upload-extension-title">. JPG  . PNG . GIF</div>
+          <div className="upload-file-title">
+            You can also upload files by <br/>
+            <span>clicking here </span>
+          </div>
+        </div>
       </div>
     );
     return (
-      <div className="clearfix">
+      <div className="clearfix main-upload">
         <this.FormItem label={this.props.label}>
           <Upload
             action="//jsonplaceholder.typicode.com/posts/"
