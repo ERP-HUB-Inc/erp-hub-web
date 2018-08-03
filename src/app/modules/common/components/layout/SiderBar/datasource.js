@@ -50,7 +50,7 @@ import StoreLanguage from "../../../../pos/containers/settings/StoreLanguage";
 /*==============================HR===================================*/
 
 // EMPLOYEE
-import ManageEmployee from "../../../../hr/containers/employees/ManageEmployee";
+import ManageEmployee from "../../../../hr/containers/employees/manageEmployee";
 import Performance from "../../../../hr/containers/employees/Performance";
 import TimeSheet from "../../../../hr/containers/employees/TimeSheet";
 
@@ -60,9 +60,12 @@ import TimeSheet from "../../../../hr/containers/employees/TimeSheet";
 /*==============================CRM===================================*/
 
 // CUSTOMER
-import GroupCustomer from "../../../../crm/containers/customers/GroupCustomer";
-import ManageCustomer from "../../../../crm/containers/customers/ManageCustomer";
-import PurchaseHistory from "../../../../crm/containers/customers/PurchaseHistory";
+// import GroupCustomer from "../../../../crm/containers/customers/GroupCustomer";
+// import ManageCustomer from "../../../../crm/containers/customers/ManageCustomer";
+// import PurchaseHistory from "../../../../crm/containers/customers/PurchaseHistory";
+import GroupCustomer from "../../../../crm/containers/employees/manageEmployee";
+import ManageCustomer from "../../../../crm/containers/employees/manageEmployee";
+import PurchaseHistory from "../../../../crm/containers/employees/manageEmployee";
 
 /*==============================END CRM===================================*/
 

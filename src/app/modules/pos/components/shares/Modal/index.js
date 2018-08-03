@@ -39,10 +39,10 @@ export default class Modal extends Component {
           {this.content}
           <div className="ant-modal-footer">
             <this.Button className="danger" onClick={() => this.handleCancel()}>
-              <span className="icon-close icon-padding-right"></span>CANCEL
-            </this.Button>
+              <span className="icon-cancel icon-padding-right"></span>CANCEL
+            </this.Button>  
             <this.Button htmlType="submit" loading={false} className="info">
-              <span className="icon-checked icon-padding-right"></span>OK
+              <span className="icon-save icon-padding-right"></span>SAVE
             </this.Button>
           </div>
         </Form>

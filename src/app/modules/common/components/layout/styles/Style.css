@@ -1,4 +1,5 @@
 
+
 @import "Mobile.css";
 @import "Color.scss";
 @import "Element.css";
@@ -22,10 +23,22 @@ table tr td .list-code,
     color: #9A9A9A !important;
 }
 
+.ant-table-body table tr th {
+    text-transform: uppercase;
+}
+
 .table-wrapper .icon-delete {
     font-size: 12pt;
     position: relative;
     top: 2px;
+}
+
+/* tab */
+.ant-tabs.ant-tabs-card > 
+.ant-tabs-bar .ant-tabs-tab-active,
+.ant-tabs-nav .ant-tabs-tab:hover
+{
+    color: #4D4F5C;
 }
 
 /* button */

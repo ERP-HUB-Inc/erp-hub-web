@@ -7,7 +7,7 @@ export class InputText extends Element {
   render() {
     return (
       <Input 
-        type="text"
+        type={ this.props.type }
         name={this.props.name}
         placeholder={this.props.placeholder}
         label={this.props.label}
@@ -28,6 +28,7 @@ export class InputText extends Element {
 Input.defaultProps = {
   max: 255,
   errorRequired: "Field required.",
-  errorLenght: "Over allow character lenght."
+  errorLenght: "Over allow character lenght.",
+  type: "text"
 };
 

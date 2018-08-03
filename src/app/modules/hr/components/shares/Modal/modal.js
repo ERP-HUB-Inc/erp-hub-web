@@ -1,0 +1,53 @@
+import React from "react";
+import Component from "../../Component";
+import { Form } from "antd";
+import "./index.css";
+
+export class Modal extends Component {
+  constructor(props) {
+    super(props);
+    this.title = this.props.title;
+    this.dispatch = this.props.dispatch;
+    this.content = "";
+    this.requiredMessage = "Please input all required field.";
+    this.statusDataSource = [
+      {
+        name: "Active",
+        value: 1
+      },
+      {
+        name: "Deactive",
+        value: 0
+      }
+    ];
+  }
+  handleSubmit() {
+    console.log("submit modal");
+  }
+    
+  handleCancel() {}
+
+  render() {
+    return (
+      <this.Modal
+        title={this.title}
+        wrapClassName="vertical-center-modal"
+        visible={true}
+        footer={null}
+      >
+        <Form onSubmit={this.handleSubmit}> 
+          {this.content}
+          <div className="ant-modal-footer">
+            <this.Button className="danger" onClick={() => this.handleCancel()}>
+              <span className="icon-cancel icon-padding-right"></span>CANCEL
+            </this.Button>
+            
+            <this.Button htmlType="submit" loading={false} className="info">
+              <span className="icon-save icon-padding-right"></span>SAVE
+            </this.Button>
+          </div>
+        </Form>
+      </this.Modal>
+    );
+  }
+}

@@ -1,0 +1,10 @@
+.main-switch .ant-form-item-label label { 
+    position: absolute; 
+    color: #4D4F5C;
+    left: 53px;
+    top: 30px;
+}
+
+.main-switch .ant-switch-checked {
+    background-color: #093163;
+}

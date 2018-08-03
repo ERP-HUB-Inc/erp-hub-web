@@ -26,7 +26,8 @@ import
   DatePickers,
   RadioButton,
   UploadImg,
-  saveButton
+  saveButton,
+  InputTextArea
 } from "../elements/ant-ui";
 import {
   InputRedux,
@@ -69,10 +70,13 @@ import {
   Popconfirm,
   message,
   Alert,
-  Tooltip
+  Tooltip,
+  Tabs
 } from "antd";
 const Panel = Collapse.Panel;
 const { Option } = Select;
+
+const TabPane = Tabs.TabPane;
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -156,6 +160,9 @@ export default class Component extends RComponent {
     this.RadioButton = RadioButton;
     this.UploadImg = UploadImg;
     this.saveButton = saveButton;
+    this.TabPane = TabPane;
+    this.Tabs = Tabs;
+    this.InputTextArea = InputTextArea;
 
     // Util function
     this.Util = new Util;
