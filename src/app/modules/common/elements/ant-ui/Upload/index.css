@@ -1,0 +1,22 @@
+.main-upload span.icon-upload {
+    font-size: 35pt;
+    color: #838383;
+}
+
+.main-upload .upload-extension-title {
+    font-size: 5.25pt;
+}
+
+.main-upload .upload-file-title {
+    font-size: 7.5pt;
+}
+
+.main-upload .upload-file-title span {
+    color:blue;
+    text-decoration: underline;
+}
+
+.main-upload .ant-upload.ant-upload-select-picture-card {
+    border: 2px dashed #d9d9d9;
+    background-color: white;
+}                   

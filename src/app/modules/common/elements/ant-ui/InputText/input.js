@@ -21,7 +21,7 @@ export default class InputText extends Element {
             }
           ],
           initialValue: this.props.data})
-          (<this.Input type={this.props.type} placeholder={this.props.placeholder} />)
+          (<this.Input type={this.props.type} placeholder={this.props.placeholder} disabled= { this.props.disabled } />) 
         }
         { this.props.notation !="" ?
           <label className="notation-textfield">{ this.props.notation }</label>
@@ -36,7 +36,8 @@ InputText.defaultProps = {
   name: "name",
   type: "text",
   max: 255,
-  required: false
+  required: false,
+  disabled: false
 };
 
 // export default Form.create()(InputText);

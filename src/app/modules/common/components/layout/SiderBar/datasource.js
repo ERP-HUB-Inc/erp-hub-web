@@ -63,9 +63,9 @@ import TimeSheet from "../../../../hr/containers/employees/TimeSheet";
 // import GroupCustomer from "../../../../crm/containers/customers/GroupCustomer";
 // import ManageCustomer from "../../../../crm/containers/customers/ManageCustomer";
 // import PurchaseHistory from "../../../../crm/containers/customers/PurchaseHistory";
-import GroupCustomer from "../../../../crm/containers/employees/manageEmployee";
-import ManageCustomer from "../../../../crm/containers/employees/manageEmployee";
-import PurchaseHistory from "../../../../crm/containers/employees/manageEmployee";
+import GroupCustomer from "../../../../crm/containers/employees/ManageEmployee";
+import ManageCustomer from "../../../../crm/containers/employees/ManageEmployee";
+import PurchaseHistory from "../../../../crm/containers/employees/ManageEmployee";
 
 /*==============================END CRM===================================*/
 

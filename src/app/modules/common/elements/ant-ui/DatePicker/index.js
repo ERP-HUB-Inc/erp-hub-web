@@ -16,7 +16,7 @@ export class DatePickers extends Element {
       },
       {
         min: this.props.min,
-        message: this.props.errorLenght
+        message: this.props.errorLenght 
       }
     ];
   }
@@ -24,10 +24,22 @@ export class DatePickers extends Element {
   render() {
     return (
       <DatePic
+        label={ this.props.label }
+        name={ this.props.name }
+        rules={ this.rules }
+        required = {this.props.required}  
         label={this.props.label}
+        data={this.props.data}
+        defaultValue={ this.props.defaultValue }
+        form={this.props.form}
       />
     );
   }   
 }
+
+DatePickers.defaultProps = {
+  errorRequired: "Field required.",
+};
+
 
 
