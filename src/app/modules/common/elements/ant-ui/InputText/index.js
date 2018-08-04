@@ -11,6 +11,7 @@ export class InputText extends Element {
         name={this.props.name}
         placeholder={this.props.placeholder}
         label={this.props.label}
+        help={this.props.help}
         data={this.props.data}
         required={this.props.required}
         notation={this.props.notation}

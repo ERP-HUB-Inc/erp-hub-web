@@ -50,7 +50,7 @@ import StoreLanguage from "../../../../pos/containers/settings/StoreLanguage";
 /*==============================HR===================================*/
 
 // EMPLOYEE
-import ManageEmployee from "../../../../hr/containers/employees/manageEmployee";
+import ManageEmployee from "../../../../hr/containers/employees/ManageEmployee";
 import Performance from "../../../../hr/containers/employees/Performance";
 import TimeSheet from "../../../../hr/containers/employees/TimeSheet";
 
