@@ -23,7 +23,7 @@ export default class BaseService {
     return url;
   }
 
-  addData(option = {
+  POST(option = {
     url: "",
     headers: {},
     data: {},
@@ -35,7 +35,7 @@ export default class BaseService {
     return response;
   }
 
-  fetchData(option = {
+  GET(option = {
     url: "",
     headers: {},
     data: {},
@@ -47,7 +47,7 @@ export default class BaseService {
     return response;
   }
 
-  updateData(option = {
+  PUT(option = {
     url: "",
     headers: {},
     data: {},
@@ -59,7 +59,7 @@ export default class BaseService {
     return response;
   }
 
-  deleteData(option = {
+  DELETE(option = {
     url: "",
     headers: {},
     data: {},

@@ -8,8 +8,10 @@ import "./index.css";
 export default class SignInStore extends Component {
   constructor(props) {
     super(props);
-    this.errorMessage=null;
+    this.errorMessage = null;
+    this.validateClassStatus = "";
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   handleSubmit (e) {
@@ -17,9 +19,17 @@ export default class SignInStore extends Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const {dispatch} = this.props;
+        localStorage.removeItem(ConstantAuth.STORE_NAME);
+        localStorage.setItem(ConstantAuth.STORE_NAME, values.storeName);
         dispatch(ClientAction.signinDomain(values.storeName));
       }
     });
+  }
+
+  handleKeyDown () {
+    this.errorMessage = null;
+    this.validateClassStatus = "";
+    localStorage.removeItem(ConstantAuth.STORE_NAME);
   }
 
   render() {
@@ -30,7 +40,8 @@ export default class SignInStore extends Component {
     } else if (response.error != null) {
       if (response.error.code == 404) {
         const {dispatch} = this.props;
-        this.Message.error("Store does not exist.");
+        this.errorMessage = "Store does not exist.";
+        this.validateClassStatus = "has-error";
         dispatch(ClientAction.resetSignInDomain());
       }
     }
@@ -44,7 +55,7 @@ export default class SignInStore extends Component {
             <h6>Find Your store Name </h6>
           </div>
           <this.Form onSubmit={this.handleSubmit}>
-            <this.FormGroup>
+            <this.FormGroup className={this.validateClassStatus}>
               <this.InputText
                 name="storeName"
                 placeholder="Store name"
@@ -54,10 +65,15 @@ export default class SignInStore extends Component {
                 className="ant-input"
                 required={true}
                 errorRequired="Please enter your store address."
+                validateClassStatus={this.validateClassStatus}
+                handleKeyDown={() => this.handleKeyDown()}
                 form={form}
               />
+              {
+                this.errorMessage != null ? <div className="ant-form-explain">{this.errorMessage}</div> : "" 
+              }
               <div className="main-signin">
-                <this.Button htmlType="submit" type="info">SUBMIT</this.Button>
+                <this.Button loading={response.submiting} htmlType="submit" type="info">SUBMIT</this.Button>
               </div>
             </this.FormGroup>
           </this.Form>

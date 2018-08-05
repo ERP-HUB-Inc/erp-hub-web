@@ -8,7 +8,7 @@ class AuthService extends BaseService {
   }
 
   checkAuthenticated(accessToken) {
-    return this.addData(
+    return this.POST(
       {
         url: `${this.baseUrl}/check/authenticated`,
         data: {},

@@ -8,7 +8,7 @@ class CurrencyService extends BaseService {
   }
 
   findSystemRecord(option = {column: "", value: ""}) {
-    return this.fetchData(
+    return this.GET(
       {
         url: `${this.baseUrl}/find/all`,
         data: {},

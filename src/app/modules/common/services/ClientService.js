@@ -8,7 +8,7 @@ class ClientService extends BaseService {
   }
 
   findClientByColumn(option = {column: "", value: ""}) {
-    return this.fetchData(
+    return this.GET(
       {
         url: `${this.baseUrl}/find/${option.column}/${option.value}`,
         data: {},
@@ -18,7 +18,7 @@ class ClientService extends BaseService {
   }
 
   register(data) {
-    return this.addData({
+    return this.POST({
       url: `${this.baseUrl}/register`,
       headers: this.header,
       data
@@ -28,7 +28,7 @@ class ClientService extends BaseService {
   signin(userName, password) {
     this.module = "auth";
     this.baseUrl = `${this.generateAPIUrl()}/${this.module}/${this.version}`;
-    return this.addData({
+    return this.POST({
       url: `${this.baseUrl}/login`,
       headers: {
         "Content-Type": "application/json",
@@ -41,7 +41,7 @@ class ClientService extends BaseService {
   }
 
   domainSignin(storeName) {
-    return this.addData({
+    return this.POST({
       url: `${this.baseUrl}/signin`,
       headers: {
         "Content-Type": "application/json",

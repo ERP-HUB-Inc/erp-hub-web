@@ -25,9 +25,9 @@ export default class App extends React.Component {
               <div>
                 <Route path="/crud" component={CRUD} />
                 <Route path="/signin" component={ClientLogin} />
-                <Route path="/signin-store" component={loginStore}></Route>
+                <Route path="/signin/store" component={loginStore}></Route>
                 <Route path="/register" component={ClientRegister}></Route>
-                <Route path="/register-detail" component={ClientRegisterDetail}></Route>
+                <Route path="/register/detail" component={ClientRegisterDetail}></Route>
                 <Route path="/signin-complete" component={ClientRegisterComplete}></Route>
                 <PrivateRoute path="/" component={Application} loginComponent={ClientLogin}/>
               </div>

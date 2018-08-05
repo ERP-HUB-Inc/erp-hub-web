@@ -2,7 +2,7 @@ import BaseService from "./BaseService";
 
 class UserService extends BaseService {
   lists() {
-    return this.fetchData({ 
+    return this.GET({ 
 	      url: `${this.baseUrl}/user/v1/lists`,
 	      method: "GET",
 	      data: {},

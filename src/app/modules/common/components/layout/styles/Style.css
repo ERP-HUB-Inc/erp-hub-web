@@ -1,9 +1,9 @@
 
 
-@import "Mobile.css";
+/* @import "Mobile.css"; */
 @import "Color.scss";
 @import "Element.css";
-@import "StyleFont.css";
+@import "Font.css";
 @import '~antd/dist/antd.css';
 
 body {

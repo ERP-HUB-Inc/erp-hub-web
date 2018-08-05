@@ -21,7 +21,7 @@ export default class InputText extends Element {
             }
           ],
           initialValue: this.props.data})
-          (<this.Input type={this.props.type} placeholder={this.props.placeholder} disabled= { this.props.disabled } />) 
+          (<this.Input type={this.props.type} placeholder={this.props.placeholder} disabled= { this.props.disabled } onKeyDown={this.props.handleKeyDown}/>) 
         }
         { this.props.notation !="" ?
           <label className="notation-textfield">{ this.props.notation }</label>

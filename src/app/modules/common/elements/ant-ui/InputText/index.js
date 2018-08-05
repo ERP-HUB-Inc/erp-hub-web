@@ -19,9 +19,10 @@ export class InputText extends Element {
         errorRequired={this.props.errorRequired}
         validator={this.props.validator}
         form={this.props.form}
-        min={ this.props.min }
-        max={ this.props.max }
-        disabled= { this.props.disabled }
+        min={this.props.min}
+        max={this.props.max}
+        handleKeyDown={this.props.handleKeyDown}
+        disabled= {this.props.disabled}
       />
     );
   }   

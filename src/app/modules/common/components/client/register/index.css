@@ -5,7 +5,8 @@
 }
 
 .wrap-client-register {
-    height: 500px !important;
+    min-height: 500px !important;
+    height: fit-content;
     width: 632px !important;
 }
 

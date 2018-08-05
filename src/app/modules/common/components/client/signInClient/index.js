@@ -1,7 +1,7 @@
 import React from "react";
 import Component from "../../Component";
 import history from "../../../router/history";
-import Authentication from "../../../constants/authentication";
+import ConstantAuth from "../../../constants/authentication";
 import ClientAction from "../../../actions/client";
 import "./index.css";
 
@@ -10,7 +10,13 @@ export default class ClientSignIn extends Component {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.dispatch = this.props.dispatch;
+    this.storeName = localStorage.getItem(ConstantAuth.STORE_NAME);
   }
+
+  componentDidMount () {
+    this.storeName = localStorage.getItem(ConstantAuth.STORE_NAME);
+  }
+
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -29,17 +35,16 @@ export default class ClientSignIn extends Component {
       this.Message.error("Username or password is not found.");
       this.dispatch(ClientAction.reset());
     }else if(response.response != null) {
-      localStorage.setItem(Authentication.ACCESS_TOKEN, JSON.stringify(response.response));
+      localStorage.setItem(ConstantAuth.ACCESS_TOKEN, JSON.stringify(response.response));
       this.dispatch(ClientAction.reset());
       history.push("/");
-      window.location.reload();
     }
 
     return (
       <this.LoginLayout>
-        <div className="storename">Super Store</div>
+        <div className="storename text-uppercase">{this.storeName}</div>
         <div className="store-email">
-          superstore<span className="store-email-url">.storevein.com</span>
+          {this.storeName}<span className="store-email-url">.storevein.com</span>
         </div>
         <div className="main-field">
           <this.Form onSubmit={this.handleSubmit}>
@@ -61,8 +66,8 @@ export default class ClientSignIn extends Component {
             />
             <div className="signin-button">
               <this.FormGroup>
-                <this.Link className="store-link" to="/signin-store">
-              it's not my store
+                <this.Link className="store-link" to="/register">
+                  it's not my store
                 </this.Link>
                 <div className="main-signin">
                   <this.Button loading={response.submiting} htmlType="submit" type="info">Sign In</this.Button>

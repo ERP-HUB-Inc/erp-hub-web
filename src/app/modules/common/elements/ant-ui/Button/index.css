@@ -15,3 +15,22 @@
 .ant-btn.danger {
     background-color: #B90000
 }
+
+.ant-btn.info:hover,
+.ant-btn.info:focus,
+.ant-btn.info:active,
+.ant-btn.info.active {
+    background: #124586 !important
+}
+
+.ant-btn.danger:hover,
+.ant-btn.danger:focus,
+.ant-btn.danger:active,
+.ant-btn.danger.active {
+    background: #c72727 !important
+}
+
+.ant-btn:hover,
+.ant-btn:focus {
+    color: white !important
+}
