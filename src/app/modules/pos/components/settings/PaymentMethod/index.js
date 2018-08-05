@@ -5,6 +5,7 @@ import FormCreate from "../../../containers/settings/PaymentMethod/FormCreate";
 import FormUpdate from "../../../containers/settings/PaymentMethod/FormUpdate";
 import Constant from "../../../constants/settings/paymentMethod";
 import PaymentMethodAction from "../../../action/settings/paymentMethod";
+import PaymentMethodService from "../../../services/settings/PaymentMethodService";
 import "./index.css";
 
 export default class PaymentMethodList extends List {
@@ -14,45 +15,9 @@ export default class PaymentMethodList extends List {
     this.fetchingProp = "paymentMethod";
     this.addingProp = "paymentMethodAdd";
     this.updatingProp = "paymentMethodUpdate";
+    this.service = PaymentMethodService;
+    this.action = PaymentMethodAction;
     this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
-  }
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    
-    dispatch(PaymentMethodAction.fetch(this.pageSize));
-  }
-
-  onChange(pagination, filters, sorter) {
-    const { dispatch } = this.props;
-
-    super.onChange(pagination, filters, sorter);
-    
-    dispatch(PaymentMethodAction.fetch(...this.filter));
-  }
-
-  onChangePagination(current, pageSize) {
-    const { dispatch } = this.props;
-
-    this.filter = [
-      pageSize,
-      (current - 1) * pageSize,
-    ];
-
-    dispatch(PaymentMethodAction.fetch(...this.filter));
-
-    this.setState({ current});
-  }
-
-  onShowSizeChange(current, pageSize) {
-    const { dispatch } = this.props;
-
-    this.filter = [
-      pageSize,
-      current,
-    ];
-
-    dispatch(PaymentMethodAction.fetch(...this.filter));
   }
 
   handleShowFormAdd() {
@@ -69,20 +34,6 @@ export default class PaymentMethodList extends List {
     this.setState({
       modalConten: <FormUpdate/>
     });
-  }
-
-  handleDelete() {
-    const { dispatch } = this.props;
-
-    dispatch(PaymentMethodAction.archive(this.state.selectedListIds));
-
-    dispatch(PaymentMethodAction.fetch(this.pageSize, this.state.current));
-    
-    this.setState({selectedRowKeys: []});
-
-    super.handleDelete();
-
-    this.Message.info(this.messageSuccess);
   }
 
   render() {

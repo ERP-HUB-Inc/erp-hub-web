@@ -13,6 +13,7 @@ export default class List extends Component {
       selectedRowKeys: [],
       selectedListIds: [],
       modalVisible: false,
+      deleting: false,
       modalSource: {},
       ListRoles: null,
       modalConten: null // the content that show in modal content
@@ -37,14 +38,15 @@ export default class List extends Component {
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
 
+    this.service = null;
+    this.action = null;
+
     this.onChange = this.onChange.bind(this); // handle when user change filter, access pagination
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
     this.onChangePagination = this.onChangePagination.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
-
-
 
     this.RESET_CONSTANT = "RESET";
   }
@@ -70,7 +72,10 @@ export default class List extends Component {
     return values.map(value => value.id);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(this.action.fetch(this.pageSize));
+  }
 
   /**
    * when user change sort in each column
@@ -79,13 +84,16 @@ export default class List extends Component {
    * @param {*} sorter 
    */
   onChange(pagination, filters, sorter) {
+    const { dispatch } = this.props;
+
     this.filter = [
       this.pageSize,
       (pagination.current - 1) * this.pageSize,
       sorter.field,
       this.sortOrder(sorter.order)
     ];
-    this.setState({current: pagination.current});
+    
+    dispatch(this.action.fetch(...this.filter));
   }
 
   /**
@@ -94,7 +102,16 @@ export default class List extends Component {
    * @param {*} pageSize 
    */
   onChangePagination(current, pageSize) {
-    console.log(current, pageSize);
+    const { dispatch } = this.props;
+
+    this.filter = [
+      pageSize,
+      (current - 1) * pageSize,
+    ];
+
+    dispatch(this.action.fetch(...this.filter));
+
+    this.setState({ current });
   }
 
   /**
@@ -103,7 +120,16 @@ export default class List extends Component {
    * @param {*} pageSize 
    */
   onShowSizeChange(current, pageSize) {
-    console.log(current, pageSize);
+    const { dispatch } = this.props;
+
+    this.filter = [
+      pageSize,
+      (current - 1) * pageSize,
+    ];
+
+    dispatch(this.action.fetch(...this.filter));
+
+    this.setState({ current });
   }
 
   /**
@@ -155,7 +181,26 @@ export default class List extends Component {
    * handle procedd delete
   */
   handleDelete() {
-    this.setState({modalVisible: false});
+    const { dispatch } = this.props;
+    
+    this.setState({deleting: true});
+
+    this.service.archive(this.state.selectedListIds)
+      .then(response => {
+
+        dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
+    
+        this.setState({selectedRowKeys: []});
+
+        this.setState({modalVisible: false});
+
+        this.Message.info(this.messageSuccess);
+
+        this.setState({deleting: false});
+      })
+      .catch(err => {
+        this.setState({deleting: false});
+      });
   }
 
   render() {
@@ -214,8 +259,6 @@ export default class List extends Component {
         {/* ===============ENDACTION BUTTON====== */}
 
 
-
-
         {/* ===============TABLE LIST============ */}   
 
         <div className="table-wrapper">
@@ -269,7 +312,7 @@ export default class List extends Component {
             <this.Button className="danger" onClick={() => this.handleCancel()}>
               <span className="icon-close icon-padding-right"></span>CANCEL
             </this.Button>
-            <this.Button onClick={() => this.handleDelete()} loading={false} className="info">
+            <this.Button onClick={() => this.handleDelete()} loading={this.state.deleting} className="info">
               <span className="icon-checked icon-padding-right"></span>YES
             </this.Button>
           </div>

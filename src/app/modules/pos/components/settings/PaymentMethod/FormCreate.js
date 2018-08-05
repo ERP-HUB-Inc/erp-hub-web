@@ -42,7 +42,6 @@ export default class FormCreate extends Modal {
             max={100}
             form={form}/>
           <InputText
-            type="number"
             name="description"
             label="Description"
             placeholder="Description"
