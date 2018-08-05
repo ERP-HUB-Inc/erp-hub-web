@@ -4,6 +4,7 @@ import footers from "../languages/footers";
 import sidebar from "../languages/sidebar";
 import text from "../elements/common/language/text";
 import title from "../elements/common/language/title";
+import modal from "../../pos/languages/shares/modal";
 import incomeAndExpense from "../../pos/languages/settings/incomeAndExpense";
 import paymentMethod from "../../pos/languages/settings/paymentMethod";
 import receiptTemplate from "../../pos/languages/settings/receiptTemplate";
@@ -28,6 +29,7 @@ export function setTranslation() {
     ...title,
     ...error,
     ...sidebar,
+    ...modal,
     ...incomeAndExpense,
     ...paymentMethod,
     ...receiptTemplate,

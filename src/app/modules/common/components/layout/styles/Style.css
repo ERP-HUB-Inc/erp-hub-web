@@ -4,7 +4,6 @@
 @import "Color.scss";
 @import "Element.css";
 @import "Font.css";
-@import '~antd/dist/antd.css';
 
 body {
     margin: 0;

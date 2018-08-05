@@ -7,7 +7,7 @@ import PaymentMethodAction from "../../../action/settings/paymentMethod";
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = "Payment Method";
+    this.title = <this.Translate id="create_title" />;
     this.addingPropReducer = "paymentMethodAdd";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -27,7 +27,7 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    const {paymentMethodAdd, form} = this.props;
+    const {paymentMethodAdd, form, locale} = this.props;
 
     if (paymentMethodAdd.showForm) {
       this.content = (
@@ -35,21 +35,21 @@ export default class FormCreate extends Modal {
           {paymentMethodAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
           <InputText
             name="name"
-            label="Name"
-            placeholder="Please input your name"
+            label={<this.Translate id="input_text_name" />}
+            placeholder={this.CATranslate("input_placeholder_name", locale)}
             required={true}
-            errorRequired="Please input your name"
+            errorRequired={<this.Translate id="error_require_input_name" />}
             max={100}
             form={form}/>
           <InputText
             name="description"
-            label="Description"
-            placeholder="Description"
+            label={<this.Translate id="input_text_description" />}
+            placeholder={this.CATranslate("input_placeholder_description", locale)}
             max={255}
             form={form}/>
           <Select
             name="status"
-            label="Status"
+            label={<this.Translate id="input_text_status" />}
             placeholder="Please select status"
             dataSource={this.statusDataSource}
             defaultValue={1}

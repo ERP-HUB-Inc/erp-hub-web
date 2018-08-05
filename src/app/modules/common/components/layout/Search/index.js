@@ -9,10 +9,9 @@ class FormSearch extends Component {
     return(
       <this.Form onSubmit={ handleSubmit }>
         <span className="icon-search"></span>
-        <this.Field
+        <input
           name="generalsearch"
           type="text"
-          component="input"
           className="form-control"
           placeholder={this.CATranslate("text_search_transaction", this.props.locale)}
         />

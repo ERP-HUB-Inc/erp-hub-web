@@ -30,6 +30,11 @@
     background: #c72727 !important
 }
 
+.ant-btn.danger[disabled],
+.ant-btn.danger[disabled]:hover {
+    background-color: #b35959 !important
+}
+
 .ant-btn:hover,
 .ant-btn:focus {
     color: white !important
