@@ -73,8 +73,10 @@ export default class List extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(this.action.fetch(this.pageSize));
+    if (this.action != null) {
+      const { dispatch } = this.props;
+      dispatch(this.action.fetch(this.pageSize));
+    }
   }
 
   /**
@@ -84,16 +86,16 @@ export default class List extends Component {
    * @param {*} sorter 
    */
   onChange(pagination, filters, sorter) {
-    const { dispatch } = this.props;
-
-    this.filter = [
-      this.pageSize,
-      (pagination.current - 1) * this.pageSize,
-      sorter.field,
-      this.sortOrder(sorter.order)
-    ];
-    
-    dispatch(this.action.fetch(...this.filter));
+    if (this.action != null) {
+      const { dispatch } = this.props;
+      this.filter = [
+        this.pageSize,
+        (pagination.current - 1) * this.pageSize,
+        sorter.field,
+        this.sortOrder(sorter.order)
+      ];
+      dispatch(this.action.fetch(...this.filter));
+    }
   }
 
   /**
@@ -102,16 +104,15 @@ export default class List extends Component {
    * @param {*} pageSize 
    */
   onChangePagination(current, pageSize) {
-    const { dispatch } = this.props;
-
-    this.filter = [
-      pageSize,
-      (current - 1) * pageSize,
-    ];
-
-    dispatch(this.action.fetch(...this.filter));
-
-    this.setState({ current });
+    if (this.action != null) {
+      const { dispatch } = this.props;
+      this.filter = [
+        pageSize,
+        (current - 1) * pageSize,
+      ];
+      dispatch(this.action.fetch(...this.filter));
+      this.setState({ current });
+    }
   }
 
   /**
@@ -120,16 +121,15 @@ export default class List extends Component {
    * @param {*} pageSize 
    */
   onShowSizeChange(current, pageSize) {
-    const { dispatch } = this.props;
-
-    this.filter = [
-      pageSize,
-      (current - 1) * pageSize,
-    ];
-
-    dispatch(this.action.fetch(...this.filter));
-
-    this.setState({ current });
+    if (this.action != null) {
+      const { dispatch } = this.props;
+      this.filter = [
+        pageSize,
+        (current - 1) * pageSize,
+      ];
+      dispatch(this.action.fetch(...this.filter));
+      this.setState({ current });
+    }
   }
 
   /**
@@ -181,26 +181,21 @@ export default class List extends Component {
    * handle procedd delete
   */
   handleDelete() {
-    const { dispatch } = this.props;
-    
-    this.setState({deleting: true});
-
-    this.service.archive(this.state.selectedListIds)
-      .then(response => {
-
-        dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
-    
-        this.setState({selectedRowKeys: []});
-
-        this.setState({modalVisible: false});
-
-        this.Message.info(this.messageSuccess);
-
-        this.setState({deleting: false});
-      })
-      .catch(err => {
-        this.setState({deleting: false});
-      });
+    if (this.service != null) {
+      const { dispatch } = this.props;
+      this.setState({deleting: true});
+      this.service.archive(this.state.selectedListIds)
+        .then(response => {
+          dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
+          this.setState({selectedRowKeys: []});
+          this.setState({modalVisible: false});
+          this.Message.info(this.messageSuccess);
+          this.setState({deleting: false});
+        })
+        .catch(err => {
+          this.setState({deleting: false});
+        });
+    }
   }
 
   render() {

@@ -1,6 +1,6 @@
 .ant-btn.info,
 .ant-btn.danger {
-    color: #FFFFFF;
+    color: #FFFFFF !important;
     text-transform: uppercase;
     font-size: 10pt;
     border-radius: 3px;

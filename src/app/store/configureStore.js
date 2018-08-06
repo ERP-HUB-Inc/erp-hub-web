@@ -6,7 +6,13 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import { localeReducer as locale, } from "react-localize-redux";
 import reducer from "../reducers";
 
-const middlewar = applyMiddleware(promise(), thunk, createLogger());
+const registerMiddleWare = [promise(), thunk];
+
+if (process.env.REACT_APP_ENV == "DEV") {
+  registerMiddleWare.push(createLogger());
+}
+
+const middlewar = applyMiddleware(...registerMiddleWare);
 
 const configureStore = () => createStore(combineReducers({ locale, reducer, form }), middlewar);
 
