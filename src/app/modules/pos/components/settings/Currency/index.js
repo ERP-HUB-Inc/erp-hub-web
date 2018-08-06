@@ -4,6 +4,7 @@ import List from "../../List";
 import FormCreate from "../../../containers/settings/Currency/FormCreate";
 import FormUpdate from "../../../containers/settings/Currency/FormUpdate";
 import CurrencyAction from "../../../action/settings/currency";
+import CurrencyService from "../../../services/settings/CurrencyService";
 
 export default class CurrencyList extends List {
   constructor(props) {
@@ -13,44 +14,8 @@ export default class CurrencyList extends List {
     this.fetchingProp = "currency";
     this.addingProp = "currencyAdd";
     this.updatingProp = "currencyUpdate";
-  }
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    
-    dispatch(CurrencyAction.fetch(this.pageSize));
-  }
-
-  onChange(pagination, filters, sorter) {
-    const { dispatch } = this.props;
-
-    super.onChange(pagination, filters, sorter);
-
-    dispatch(CurrencyAction.fetch(...this.filter));
-  }
-
-  onChangePagination(pageNumber, pageSize) {
-    const { dispatch } = this.props;
-
-    this.filter = [
-      pageSize,
-      (pageNumber - 1) * pageSize,
-    ];
-
-    dispatch(CurrencyAction.fetch(...this.filter));
-
-    this.setState({ current: pageNumber});
-  }
-
-  onShowSizeChange(current, pageSize) {
-    const { dispatch } = this.props;
-
-    this.filter = [
-      pageSize,
-      current,
-    ];
-
-    dispatch(CurrencyAction.fetch(...this.filter));
+    this.service = CurrencyService;
+    this.action = CurrencyAction;
   }
 
   handleShowFormAdd() {
@@ -67,26 +32,6 @@ export default class CurrencyList extends List {
     this.setState({
       modalConten: <FormUpdate/>
     });
-  }
-
-
-  handleAdd() {
-    super.handleAdd();
-    this.setState({
-      modalConten: <div></div>
-    });
-  }
-
-  handleDelete() {
-    const { dispatch } = this.props;
-
-    dispatch(CurrencyAction.archive(this.state.selectedListIds));
-
-    this.Message.info(this.messageSuccess);
-
-    dispatch(CurrencyAction.fetch(this.pageSize, this.state.current));
-
-    this.setState({selectedRowKeys: []});
   }
 
   render() {

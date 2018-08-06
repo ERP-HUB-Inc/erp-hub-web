@@ -4,7 +4,8 @@ import List from "../../List";
 import FormCreate from "../../../containers/settings/IncomeAndExpense/FormCreate";
 import FormUpdate from "../../../containers/settings/IncomeAndExpense/FormUpdate";
 import Constant from "../../../constants/settings/incomeAndExpense";
-import IncomeEXpenseAction from "../../../action/settings/incomeAndExpense";
+import IncomeExpenseAction from "../../../action/settings/incomeAndExpense";
+import IncomeExpenseService from "../../../services/settings/IncomeExpense";
 // import "./index.css";
 
 export default class IncomeAndExpenseList extends List {
@@ -14,50 +15,14 @@ export default class IncomeAndExpenseList extends List {
     this.fetchingProp = "incomeAndExpense";
     this.addingProp = "incomeAndExpenseAdd";
     this.updatingProp = "incomeAndExpenseUpdate";
+    this.service = IncomeExpenseService;
+    this.action = IncomeExpenseAction;
     this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
-  }
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    
-    dispatch(IncomeEXpenseAction.fetch(this.pageSize));
-  }
-
-  onChange(pagination, filters, sorter) {
-    const { dispatch } = this.props;
-
-    super.onChange(pagination, filters, sorter);
-    
-    dispatch(IncomeEXpenseAction.fetch(...this.filter));
-  }
-
-  onChangePagination(current, pageSize) {
-    const { dispatch } = this.props;
-
-    this.filter = [
-      pageSize,
-      (current - 1) * pageSize,
-    ];
-
-    dispatch(IncomeEXpenseAction.fetch(...this.filter));
-
-    this.setState({ current});
-  }
-
-  onShowSizeChange(current, pageSize) {
-    const { dispatch } = this.props;
-
-    this.filter = [
-      pageSize,
-      current,
-    ];
-
-    dispatch(IncomeEXpenseAction.fetch(...this.filter));
   }
 
   handleShowFormAdd() {
     const { dispatch } = this.props;
-    dispatch(IncomeEXpenseAction.showForm());
+    dispatch(IncomeExpenseAction.showForm());
     this.setState({
       modalConten: <FormCreate/>
     });
@@ -65,24 +30,10 @@ export default class IncomeAndExpenseList extends List {
 
   handleShowFormEdit(rowData) {
     const { dispatch } = this.props;
-    dispatch(IncomeEXpenseAction.showForm(rowData));
+    dispatch(IncomeExpenseAction.showForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });
-  }
-
-  handleDelete() {
-    const { dispatch } = this.props;
-
-    dispatch(IncomeEXpenseAction.archive(this.state.selectedListIds));
-
-    dispatch(IncomeEXpenseAction.fetch(this.pageSize, this.state.current));
-    
-    this.setState({selectedRowKeys: []});
-
-    super.handleDelete();
-
-    this.Message.info(this.messageSuccess);
   }
 
   render() {
