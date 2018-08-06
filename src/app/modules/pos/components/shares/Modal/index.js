@@ -9,6 +9,7 @@ export default class Modal extends Component {
     this.title = this.props.title;
     this.dispatch = this.props.dispatch;
     this.content = "";
+    this.submitLoading = false;
     this.requiredMessage = "Please input all required field.";
     this.statusDataSource = [
       {
@@ -41,7 +42,7 @@ export default class Modal extends Component {
             <this.Button className="danger" onClick={() => this.handleCancel()}>
               <span className="icon-cancel icon-padding-right"></span><this.Translate id="button_text_cancel" />
             </this.Button>  
-            <this.Button htmlType="submit" loading={false} className="info">
+            <this.Button htmlType="submit" loading={this.submitLoading} className="info">
               <span className="icon-save icon-padding-right"></span><this.Translate id="button_text_save" />
             </this.Button>
           </div>

@@ -28,7 +28,10 @@ export default class Form extends Modal {
   }
 
   render() {
+
     const {paymentMethodUpdate, form} = this.props;
+
+    this.submitLoading = paymentMethodUpdate.updating;
 
     if (paymentMethodUpdate.showForm) {
       this.content = (

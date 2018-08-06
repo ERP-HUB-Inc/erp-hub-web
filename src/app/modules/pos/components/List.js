@@ -187,10 +187,12 @@ export default class List extends Component {
       this.service.archive(this.state.selectedListIds)
         .then(response => {
           dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
-          this.setState({selectedRowKeys: []});
-          this.setState({modalVisible: false});
+          this.setState({
+            selectedRowKeys: [],
+            modalVisible: false,
+            deleting: false
+          });
           this.Message.info(this.messageSuccess);
-          this.setState({deleting: false});
         })
         .catch(err => {
           this.setState({deleting: false});
