@@ -24,7 +24,7 @@ export class InputText extends Element {
         handleKeyDown={this.props.handleKeyDown}
         defaultValue={ this.props.defaultValue }
         disabled= {this.props.disabled}
-        value={ this.props.value }
+        // value={ this.props.value }
       />
     );
   }   

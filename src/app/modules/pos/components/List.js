@@ -223,9 +223,12 @@ export default class List extends Component {
           </li>
           {
             menuSource[this.module]["subItems"].map((value, index) =>
-              <li className={(currentPath==value["route"] ? "active" : "") + " fast-nav"} key={index}>
-                <this.Link to={value["route"]}>{value["title"]}</this.Link>
-              </li>
+              "isFashNav" in value && value["isFashNav"] ? 
+                <li className={(currentPath==value["route"] ? "active" : "") + " fast-nav"} key={index}>
+                  <this.Link to={value["route"]}>{value["title"]}</this.Link>
+                </li>
+                :
+                ""
             )
           }
         </ul>

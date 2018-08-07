@@ -315,61 +315,71 @@ const dataSource = {
         title: "Store Account",
         icon: "icon-account",
         route: "/settings/account",
-        component: StoreAccount
+        component: StoreAccount,
+        isFashNav: true
       },
       {
         title: "Store Location",
         icon: "icon-store",
         route: "/settings/location",
-        component: StoreLocation
+        component: StoreLocation,
+        isFashNav: false
       },
       {
         title: "Receipt Template",
         icon: "icon-receipt",
         route: "/settings/receipt-template",
-        component: ReceiptTemplate
+        component: ReceiptTemplate,
+        isFashNav: true
       },
       {
         title: "Payment Method",
         icon: "icon-payment-method",
         route: "/settings/payment-method",
-        component: PaymentMethod
+        component: PaymentMethod,
+        isFashNav: false
       },
       {
         title: "Tax",
         icon: "icon-tax",
         route: "/settings/tax",
-        component: Tax
+        component: Tax,
+        isFashNav: true
       },
       {
         title: "Role Access",
         icon: "icon-role",
         route: "/settings/role",
-        component: RoleAccess
+        component: RoleAccess,
+        isFashNav: true
       },
       {
         title: "Income & Expense",
         icon: "icon-operation",
         route: "/settings/income-expense",
-        component: IncomeAndExpense
+        component: IncomeAndExpense,
+        isFashNav: false
       },
       {
         title: "Currency",
         icon: "icon-currency",
         route: "/settings/currency",
-        component: Currency
+        component: Currency,
+        isFashNav: false
       },
       {
         title: "Language",
         icon: "icon-language",
         route: "/settings/language",
-        component: StoreLanguage
+        component: StoreLanguage,
+        isFashNav: false
       },
       {
         title: "Operation Record",
         icon: "icon-language",
         route: "/settings/operation-record",
-        component: OperationRecord
+        component: OperationRecord,
+        isFashNav: true
       }
     ]
   }

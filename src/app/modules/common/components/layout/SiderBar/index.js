@@ -93,7 +93,9 @@ export default class SideBar extends React.Component {
                   <div className="title text-center text-uppercase">{subMenuItemTitle}</div>
                   <ul className="list-unstyled text-left text-uppercase">
                     {
-                      this.state.menuItems[subMenuItemTitle]["subItems"].map((menu, key) => this.subMenuItem(key, menu["route"], menu["title"], menu["icon"]))
+                      this.state.menuItems[subMenuItemTitle]["subItems"].map((menu, key) => 
+                        this.subMenuItem(key, menu["route"], menu["title"], menu["icon"])
+                      )
                     }
                   </ul>
                 </div>
