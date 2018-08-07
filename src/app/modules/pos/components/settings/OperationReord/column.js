@@ -1,13 +1,12 @@
 import moment from "moment";
 
-
 export default [{
   title: "Date",
   dataIndex: "createdAt",
   sorter: true,
-  // render: (createdAt) =>  (
-  //   moment("2018-08-06 17:28:38.575542","YYYY/MM/DD")
-  // )
+  render: createdAt =>  (
+    moment(" " + createdAt).format("YYYY/MM/DD")
+  )
 }, {
   title: "Name",  
   dataIndex: "name",  
