@@ -53,7 +53,6 @@ export default class FormCreate extends Modal {
           <Select
             name="status"
             label={<this.Translate id="input_text_status" />}
-            placeholder="Please select status"
             dataSource={this.statusDataSource}
             defaultValue={1}
             form={form}/>

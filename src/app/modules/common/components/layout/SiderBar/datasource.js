@@ -341,7 +341,7 @@ const dataSource = {
         component: Tax
       },
       {
-        title: "Role",
+        title: "Role Access",
         icon: "icon-role",
         route: "/settings/role",
         component: RoleAccess

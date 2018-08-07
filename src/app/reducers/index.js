@@ -13,6 +13,7 @@ import storeLanguage from "../modules/pos/reducers/settings/storeLanguage";
 import receiptTemplate from "../modules/pos/reducers/settings/receiptTemplate";
 import incomeAndExpense from "../modules/pos/reducers/settings/incomeAndExpense";
 import roleAccess from "../modules/pos/reducers/settings/roleAccess";
+import privilege from "../modules/pos/reducers/settings/privilege";
 import storeAccount from "../modules/pos/reducers/settings/storeAccount";
 // Employee
 import managementEmployee from "../modules/hr/reducers/employees/managementEmployee";
@@ -33,6 +34,7 @@ const reducer = combineReducers({
   receiptTemplate,
   incomeAndExpense,
   roleAccess,
+  privilege,
   storeAccount,
   // Employee
   managementEmployee

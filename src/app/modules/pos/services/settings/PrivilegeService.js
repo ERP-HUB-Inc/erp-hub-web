@@ -1,12 +1,12 @@
 import BaseService from "../BaseService";
 
-class RoleAccessService extends BaseService {
+class PrivilegeService extends BaseService {
 
   constructor() {
     super();
-    this.module = "role";
+    this.module = "privilege";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 }
 
-export default new RoleAccessService();
+export default new PrivilegeService();

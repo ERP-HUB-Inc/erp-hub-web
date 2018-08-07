@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import FormUpdate from "../../../components/settings/PaymentMethod/FormUpdate";
+import FormUpdate from "../../../components/settings/RoleAccess/FormUpdate";
 
-class PaymentMethodForm extends React.Component {
+class RoleAccessForm extends React.Component {
   render() {
     return (
       <FormUpdate {...this.props} />
@@ -13,8 +13,9 @@ class PaymentMethodForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    paymentMethodUpdate: state.reducer.PaymentMethods.update,
-    initialValues: state.reducer.PaymentMethods.update.data
+    roleAccessUpdate: state.reducer.roleAccess.update,
+    initialValues: state.reducer.roleAccess.update.data,
+    locale: state.locale
   };
 }
 
@@ -24,6 +25,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const paymentMethodForm = Form.create(mapPropsToFields)(PaymentMethodForm);
+const roleAccessForm = Form.create(mapPropsToFields)(RoleAccessForm);
 
-export default connect(mapStateToProps)(paymentMethodForm);
+export default connect(mapStateToProps)(roleAccessForm);

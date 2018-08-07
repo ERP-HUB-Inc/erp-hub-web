@@ -1,5 +1,7 @@
 import React from "react";
+import { normalize, schema } from "normalizr";
 import Component  from "../../../components/Component";
+import PrivilegeAction from "../../../action/settings/privilege";
 import "./index.css";
 
 const text = `
@@ -9,7 +11,7 @@ const text = `
 const plainOptions = ["Apple", "Pear", "Orange"];
 const defaultCheckedList = ["Apple", "Orange"];
 
-class ListRoleAccess extends Component {
+export default class ListPrivilege extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -17,9 +19,18 @@ class ListRoleAccess extends Component {
       indeterminate: true,
       checkAll: false,
     };
+    this.privileges = {
+      entities: {},
+      result: []
+    };
     this.onChange = this.onChange.bind(this);
     this.onCheckAllChange = this.onCheckAllChange.bind(this);
   };
+
+  componentDidMount () {
+    const { dispatch } = this.props;
+    dispatch(PrivilegeAction.fetch());
+  }
 
   onChange (checkedList){
     this.setState({
@@ -33,12 +44,25 @@ class ListRoleAccess extends Component {
     this.setState({
       checkedList: e.target.checked ? plainOptions : [],
       indeterminate: false,
-      checkAll: e.target.checked,
+      checkAll: e.target.checked
     });
   };
   
   render() {
-    const { form } = this.props;
+    const { privileges, form } = this.props;
+
+    // Here reponse for cash collection to group of privilege
+    if (privileges.fetched) {
+      const privilegeList = { privileges: privileges.list };
+      const privilege = new schema.Entity("privileges");
+      const privilegeSchema = { privileges: [ privilege ] };
+      const normalizedData = normalize(privilegeList, privilegeSchema);
+      if ("result" in normalizedData) {
+        this.privileges.result = normalizedData["result"]["privileges"];
+        this.privileges.entities = normalizedData["entities"]["privileges"];
+      }
+    }
+
     return (
       <div className="main-role-access">
         <this.Row>
@@ -56,11 +80,31 @@ class ListRoleAccess extends Component {
             <this.saveButton className="mg-right save-button"/>
           </this.Col> 
         </this.Row>
+        { privileges.fetched ?
+          <this.Row>
+            <this.Col md="12">   
+              <this.Collapse accordion>
+                {
+                  this.privileges.result.map((value, index) => 
+                    <this.Panel 
+                      header={
+                        <this.Checkbox
+                          indeterminate={this.state.indeterminate}
+                          onChange={this.onCheckAllChange}
+                          checked={this.state.checkAll}
+                        >
+                          {this.privileges.entities[value].name.replace("-", " ")}
 
-        <this.Row>
-          <this.Col md="12">   
-            <this.Collapse accordion>
-              <this.Panel 
+                        </this.Checkbox>
+                      } 
+                      key={index}>
+                  
+                      <this.CheckboxGroup options={plainOptions} value={this.state.checkedList} onChange={this.onChange} />
+  
+                    </this.Panel> 
+                  )
+                }
+                {/* <this.Panel 
                 header={
                   <this.Checkbox
                     indeterminate={this.state.indeterminate}
@@ -71,7 +115,9 @@ class ListRoleAccess extends Component {
                   </this.Checkbox>
                 } 
                 key="1">
+                
                 <this.CheckboxGroup options={plainOptions} value={this.state.checkedList} onChange={this.onChange} />
+
               </this.Panel>
 
               <this.Panel 
@@ -90,14 +136,16 @@ class ListRoleAccess extends Component {
 
               <this.Panel header="This is panel header 3" key="3">
                 <p>{text}</p>
-              </this.Panel>
-            </this.Collapse>
-          </this.Col>
-        </this.Row>    
+              </this.Panel> */}
+              </this.Collapse>
+            </this.Col>
+          </this.Row>
+          :
+          ""
+        }   
       </div>
     );
   }
 }
 
-export default ListRoleAccess;
 

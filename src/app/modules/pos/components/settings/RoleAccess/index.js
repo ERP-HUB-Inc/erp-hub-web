@@ -1,68 +1,25 @@
 import React from "react";
 import columns from "./column";
-// import List from "../../List";
-import List from "./List";
-import FormCreate from "../../../containers/settings/PaymentMethod/FormCreate";
-import FormUpdate from "../../../containers/settings/PaymentMethod/FormUpdate";
-import ListRoleAccess from "../../../containers/settings/RoleAccess/ListRoleAccess";
-// import ListRoleAccess from "./ListRoleAccess";
+import List from "../../List";
+import FormCreate from "../../../containers/settings/RoleAccess/FormCreate";
+import FormUpdate from "../../../containers/settings/RoleAccess/FormUpdate";
+import PrivilegeList from "../../../containers/settings/RoleAccess/PrivilegeList";
 import Constant from "../../../constants/settings/roleAccess";
 import RoleAccessAction from "../../../action/settings/roleAccess";
+import RoleAccessService from "../../../services/settings/RoleAccessService";
 import "./index.css";
 
 export default class PaymentMethodList extends List {
   constructor(props) {
     super(props);
-
     this.columns = columns;
     this.fetchingProp = "roleAccess";
     this.addingProp = "roleAccessAdd";
     this.updatingProp = "roleAccessUpdate";
     this.showListRole = "showListRole";
-    this.Layout = "6";
+    this.service = RoleAccessService;
+    this.action = RoleAccessAction;
     this.RESET_CONSTANT = Constant.RESET_ROLE_ACCESS;
-  }
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    
-    this.setState({
-      ListRoles: <ListRoleAccess/>
-    });
-
-    dispatch(RoleAccessAction.fetch(this.pageSize));
-  }
-
-  onChange(pagination, filters, sorter) {
-    const { dispatch } = this.props;
-
-    super.onChange(pagination, filters, sorter);
-    
-    dispatch(RoleAccessAction.fetch(...this.filter));
-  }
-
-  onChangePagination(current, pageSize) {
-    const { dispatch } = this.props;
-
-    this.filter = [
-      pageSize,
-      (current - 1) * pageSize,
-    ];
-
-    dispatch(RoleAccessAction.fetch(...this.filter));
-
-    this.setState({ current});
-  }
-
-  onShowSizeChange(current, pageSize) {
-    const { dispatch } = this.props;
-
-    this.filter = [
-      pageSize,
-      current,
-    ];
-
-    dispatch(RoleAccessAction.fetch(...this.filter));
   }
 
   handleShowFormAdd() {
@@ -81,21 +38,44 @@ export default class PaymentMethodList extends List {
     });
   }
 
-  handleDelete() {
-    const { dispatch } = this.props;
-
-    dispatch(RoleAccessAction.archive(this.state.selectedListIds));
-
-    dispatch(RoleAccessAction.fetch(this.pageSize, this.state.current));
-    
-    this.setState({selectedRowKeys: []});
-
-    super.handleDelete();
-
-    this.Message.info(this.messageSuccess);
+  handleShowRecordDetail(rowData) {
+    console.log("Row Data:", rowData);
   }
 
   render() {
-    return super.render();
+    let fetchingProps = this.props[this.fetchingProp];
+    const addingProps = this.props[this.addingProp];
+    const updatingProps = this.props[this.updatingProp];
+
+    // Here is repsonse from add action and combinde response data to the list.
+    if (addingProps.response != null) {
+      fetchingProps.list = [addingProps.response.data, ...fetchingProps.list];
+      this.props.dispatch({type: this.RESET_CONSTANT});
+    }
+
+    // Here is repsonse from updating action and update response data to the list.
+    if (updatingProps.response != null) {
+      const updateIndex = this.Util.findArrayIndex(fetchingProps.list, "id", updatingProps.response.data.id);
+      fetchingProps.list.splice(updateIndex, 1, updatingProps.response.data);
+      this.props.dispatch({type: this.RESET_CONSTANT});
+    }
+
+    return (
+      <div style={{marginTop: "15px"}}>
+        { this.renderBreadCrumb()}
+        <this.Row className="main-row-role-access">
+          <this.Col md="8">
+            { this.renderTableList(fetchingProps) }
+          </this.Col>
+          <this.Col md="4">
+            { <PrivilegeList /> }
+          </this.Col>
+          
+          { this.state.modalConten }
+
+          { this.renderModalConfirmDelete() }
+        </this.Row>
+      </div>
+    );
   }
 }

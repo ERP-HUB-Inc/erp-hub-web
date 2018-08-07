@@ -1,14 +1,10 @@
 import React from "react";
 import Modal from "../../shares/Modal";
-import StoreLanguageAction from "../../../action/settings/storeLanguage";
-import { InputText } from "../../../../common/elements/ant-ui/InputText";
-import { Select } from "../../../../common/elements/ant-ui/Select";
-
+import RoleAccessAction from "../../../action/settings/roleAccess";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
     this.title = "Access Role";
-    this.addingPropReducer = "storeLanguageAdd";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -17,27 +13,42 @@ export default class Form extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.dispatch(StoreLanguageAction.add(values));
+        this.dispatch(RoleAccessAction.add(values));
       }
     });
   }
     
   handleCancel() {
-    this.dispatch(StoreLanguageAction.reset());
+    this.dispatch(RoleAccessAction.reset());
   }
   
   render() {
-    const { storeLanguageAdd, form } = this.props;
-    if (storeLanguageAdd.showForm) {
+    const { roleAccessAdd, locale, form } = this.props;
+
+    this.submitLoading = roleAccessAdd.adding;
+
+    if (roleAccessAdd.showForm) {
       this.content = (
         <div>
-          {storeLanguageAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <InputText form={form} name="name" label="Name" placeholder="Please input your name" required={true} min={3} />
-          <InputText form={form} type="number" name="code" placeholder="Code"  label="Code"/>
-          <Select
+          {roleAccessAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
+          <this.InputText
+            form={form}
+            name="name"
+            errorRequired={<this.Translate id="error_require_input_role_name"/>}
+            errorLenght={<this.Translate id="error_length_input_role_name"/>}
+            label={<this.Translate id="input_text_role_name" />}
+            placeholder={this.CATranslate("place_holder_role_name", locale)}
+            required={true} min={3} />
+
+          <this.InputText
+            form={form}
+            name="code"
+            label={<this.Translate id="input_text_role_code" />}
+            placeholder={this.CATranslate("place_holder_role_code", locale)} />
+
+          <this.Select
             name="status"
-            label="Status"
-            placeholder="Please select status"
+            label={<this.Translate id="input_text_status" />}
             dataSource={this.statusDataSource}
             defaultValue={1}
             form={form}/>
