@@ -48,6 +48,7 @@ export default class FormReciptTemplateCreate extends Modal {
           <this.UploadImg 
             name="upload" 
             label="Receipt Logo" 
+            required={ true }
             form={form} 
           />   
           <this.Select

@@ -69,7 +69,7 @@ export default class PicturesUpload extends Element {
        
         <this.FormItem label={this.props.label}>
           {
-            getFieldDecorator(this.props.name)
+            getFieldDecorator(this.props.name, { rules: this.props.rules } )
             (
               <Upload {...cardImgProps}>
                 {cardImgList.length >= this.props.length ? null : uploadButton}
