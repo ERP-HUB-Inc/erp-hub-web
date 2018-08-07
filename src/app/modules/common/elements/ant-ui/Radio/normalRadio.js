@@ -29,17 +29,20 @@ export class NormalRadio extends Element {
 
   render(){
     const { 
-      input,
-      placeholder,
       label
     } = this.props;
+    const { getFieldDecorator } = this.props.form;
     return (
       <div className="main-ant-wrapper">
         <this.FormItem label={ label }>
-          <RadioGroup 
-            options={ this.props.data } 
-            onChange={this.onChange1} 
-          />
+          {
+            getFieldDecorator(this.props.name, {rules: this.props.rules })(
+              <RadioGroup 
+                options={ this.props.data } 
+                onChange={this.onChange1} 
+              />
+            )
+          }
         </this.FormItem>
         <br />
       </div>

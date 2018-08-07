@@ -26,8 +26,9 @@ export class DatePic extends Element {
               <DatePicker
                 defaultValue={moment(" " + defaultValue , dateFormat)}
                 format={ dateFormat }
+                disabled = { this.props.disabled }
               />  
-              : <DatePicker />
+              : <DatePicker disabled = { this.props.disabled } />
           )
         }
       </this.FormItem>
@@ -37,6 +38,7 @@ export class DatePic extends Element {
 
 DatePic.defaultProps = {
   name: "name",
-  required: false
+  required: false,
+  disabled: false
 };
 

@@ -28,7 +28,8 @@ export class DatePickers extends Element {
         required = {this.props.required}  
         label={this.props.label}
         data={this.props.data}
-        defaultValue={ this.props.defaultValue }
+        defaultValue={this.props.defaultValue}
+        disabled={this.props.disabled}
         form={this.props.form}
       />
     );
@@ -37,7 +38,6 @@ export class DatePickers extends Element {
 
 DatePickers.defaultProps = {
   errorRequired: "Field required.",
-  required: true,
   message: "Please select Date!"
 };
 

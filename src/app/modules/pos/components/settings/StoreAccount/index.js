@@ -139,8 +139,8 @@ export default class StoreAccountList extends Element {
                   <div className="general">
                     <h6>Billing</h6>
                   </div>
-                  <this.DatePickers name="register_date" form={form} label="Register date"/>
-                  <this.DatePickers  name="expired_date" form={form} label="Expired date"/>
+                  <this.DatePickers name="register_date" form={form} disabled={ true } label="Register date"/>
+                  <this.DatePickers  name="expired_date" form={form} disabled={ true }  label="Expired date"/>
                   <div className="general">
                     <h6>Plan</h6>
                   </div>
@@ -150,8 +150,8 @@ export default class StoreAccountList extends Element {
                       label="Country"
                       name="countryId" 
                       type="radio"
-                      defaultValue={2}
-                      required={true}
+                      required={ true }
+                      // defaultValue={2}
                       form={form}
                     >
                       <this.RadioRegister title="Global" language="English" currency="USD" value="1"/>
@@ -159,7 +159,11 @@ export default class StoreAccountList extends Element {
                       <this.RadioRegister title="Myanmar" language="Burma" currency="MMX"  value="3" />
                     </this.RadioRegisterGroup> 
                   </this.FormGroup>
-                  <this.RadioButton data={ RadioData } name="radio"  form={form} />
+                  <this.RadioButton 
+                    data={ RadioData }
+                    name="radio"  
+                    required={ true }
+                    form={form} />
                 </div>
               </this.Col>
             </this.Row>
