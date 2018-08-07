@@ -366,9 +366,9 @@ const dataSource = {
         component: StoreLanguage
       },
       {
-        title: "OperationRecord",
+        title: "Operation Record",
         icon: "icon-language",
-        route: "/settings/operationRecord",
+        route: "/settings/operation-record",
         component: OperationRecord
       }
     ]
