@@ -14,7 +14,7 @@ class SignInStoreForm extends Component {
 
 function mapStateToProps(state) {
   return {
-    response: state.reducer.client.signinDomain
+    signinDomain: state.reducer.client.signinDomain
   };
 }
 

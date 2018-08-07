@@ -2,7 +2,22 @@ import React, { Component as RComponent } from "react";
 import { Translate, setActiveLanguage, getActiveLanguage } from "react-localize-redux";
 import { Field } from "redux-form";
 import { connect } from "react-redux";
-import { Util } from "../util";
+import {  
+  Container,
+  Col,
+  Row,
+  Dropdown, 
+  DropdownItem, 
+  DropdownToggle, 
+  DropdownMenu,
+  FormGroup,
+  Label,
+  FormText
+} from "reactstrap";
+import { 
+  NavLink,
+  Link 
+} from "react-router-dom";
 import 
 { 
   CTable,
@@ -40,22 +55,8 @@ import {
   Badges,
   AutoComplete
 } from "../elements/react-strap";
-import {  
-  Container,
-  Col,
-  Row,
-  Dropdown, 
-  DropdownItem, 
-  DropdownToggle, 
-  DropdownMenu,
-  FormGroup,
-  Label,
-  FormText
-} from "reactstrap";
-import { 
-  NavLink,
-  Link 
-} from "react-router-dom";
+import { Util } from "../util";
+import HttpCode from "../constants/error";
 import "./layout/styles/Style.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.css";
@@ -166,6 +167,9 @@ export default class Component extends RComponent {
 
     // Util function
     this.Util = new Util;
+
+    // HTTP CODE
+    this.HttpCode = HttpCode;
 
   }
 
