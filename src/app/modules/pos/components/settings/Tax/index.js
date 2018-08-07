@@ -4,35 +4,19 @@ import List from "../../List";
 import FormCreate from "../../../containers/settings/Tax/FormCreate";
 import FormUpdate from "../../../containers/settings/Tax/FormUpdate";
 import TaxAction from "../../../action/settings/tax";
+import TaxService from "../../../services/settings/TaxService";
 import Constant from "../../../constants/settings/tax";
 
-export default class TaxList extends List {
+export default class TaxList extends List { 
   constructor(props) {
     super(props);
     this.columns = columns;
     this.fetchingProp = "tax";
     this.addingProp = "taxAdd";
     this.updatingProp = "taxUpdate";
+    this.service = TaxService;
+    this.action = TaxAction;
     this.RESET_CONSTANT = Constant.RESET_TAX;
-  }
-  
-  componentDidMount() {
-    const { dispatch } = this.props;
-
-    dispatch(TaxAction.fetch(this.pageSize));
-  }
-
-  onChange(pagination, filters, sorter) {
-    const { dispatch } = this.props;
-
-    super.onChange(pagination, filters, sorter);
-
-    dispatch(TaxAction.fetch(...this.filter));
-  }
-
-  handleSubmit() {
-    const { dispatch, formAdd } = this.props;
-    dispatch(TaxAction.add(formAdd.values));
   }
 
   handleShowFormAdd() {
@@ -49,18 +33,6 @@ export default class TaxList extends List {
     this.setState({
       modalConten: <FormUpdate/>
     });
-  }
-
-  handleDelete() {
-    const { dispatch } = this.props;
-
-    dispatch(TaxAction.archive(this.state.selectedListIds));
-
-    this.Message.info(this.messageSuccess);
-
-    dispatch(TaxAction.fetch(this.pageSize, this.state.current));
-
-    this.setState({selectedRowKeys: []});
   }
 
   render() {

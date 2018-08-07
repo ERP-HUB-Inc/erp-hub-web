@@ -39,7 +39,6 @@ export class NormalRadio extends Element {
           <RadioGroup 
             options={ this.props.data } 
             onChange={this.onChange1} 
-            { ...input }
           />
         </this.FormItem>
         <br />

@@ -13,7 +13,7 @@ export default class InputNumbers extends Element {
               placeholder={ this.props.placeholder }
             />
           )
-        }
+        } 
       </this.FormItem>
     );
   }

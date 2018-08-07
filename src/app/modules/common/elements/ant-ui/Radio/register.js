@@ -8,6 +8,16 @@ const RadioGroup = Radio.Group;
 
 export class RadioRegisterGroup extends Element {
 
+  constructor(props){
+    super(props);
+    this.rules = [
+      {
+        required : this.props.required,
+        message: this.props.errorRequired
+      }
+    ];
+  }
+  
   onChange(e) {
     console.log(`radio checked:${e.target.value}`);
   }
@@ -18,10 +28,9 @@ export class RadioRegisterGroup extends Element {
       <div className="main-radio">
         <this.FormItem label={this.props.label}>
           {
-            getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.defaultValue})(
+            getFieldDecorator(this.props.name, {rules: this.rules , initialValue: this.props.defaultValue})(
               <RadioGroup 
                 onChange={this.onChange}
-                required={this.props.required}
               >
                 {this.props.children}
               </RadioGroup>
@@ -48,3 +57,8 @@ export class RadioRegister extends Element {
     );
   }
 }
+
+
+RadioRegisterGroup.defaultProps = {
+  errorRequired: "This Field is required"
+};

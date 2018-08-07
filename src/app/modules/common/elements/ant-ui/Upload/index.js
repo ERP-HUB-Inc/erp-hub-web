@@ -8,8 +8,8 @@ export class UploadImg extends Element {
     return (
       <PicturesUpload 
         name={ this.props.name }
-        type="file"
         form={this.props.form}
+        label={ this.props.label }
       />
     );
   }   

@@ -21,7 +21,12 @@ export default class InputText extends Element {
             }
           ],
           initialValue: this.props.data})
-          (<this.Input type={this.props.type} placeholder={this.props.placeholder} disabled= { this.props.disabled } onKeyDown={this.props.handleKeyDown}/>) 
+          (<this.Input type={this.props.type} 
+            value={ this.props.value }
+            placeholder={this.props.placeholder} 
+            disabled= { this.props.disabled } 
+            onKeyDown={this.props.handleKeyDown}
+          />) 
         }
         { this.props.notation !="" ?
           <label className="notation-textfield">{ this.props.notation }</label>
@@ -39,5 +44,3 @@ InputText.defaultProps = {
   required: false,
   disabled: false
 };
-
-// export default Form.create()(InputText);

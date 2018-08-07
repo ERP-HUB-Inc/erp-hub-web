@@ -4,6 +4,7 @@ import List from "../../List";
 import FormCreate from "../../../containers/settings/StoreLanguage/FormCreate";
 import FormUpdate from "../../../containers/settings/StoreLanguage/FormUpdate";
 import StoreLanguageAction from "../../../action/settings/storeLanguage";
+import StoreLanguageService from "../../../services/settings/PaymentMethodService";
 import Constant from "../../../constants/settings/storeLanguage";
 
 export default class StoreLanguageList extends List {
@@ -14,18 +15,9 @@ export default class StoreLanguageList extends List {
     this.fetchingProp = "storeLanguage";
     this.addingProp = "storeLanguageAdd"; //for change form add 
     this.updatingProp = "storeLanguageUpdate";
+    this.service = StoreLanguageService;
+    this.action = StoreLanguageAction;
     this.RESET_CONSTANT = Constant.RESET_STORE_LANGUAGE;
-  }
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(StoreLanguageAction.fetch(this.pageSize));
-  }
-
-  onChange(pagination, filters, sorter) {
-    const { dispatch } = this.props;
-    super.onChange(pagination, filters, sorter);
-    dispatch(StoreLanguageAction.fetch(...this.filter));
   }
 
   handleShowFormAdd() {
@@ -42,22 +34,6 @@ export default class StoreLanguageList extends List {
     this.setState({
       modalConten: <FormUpdate/>
     });
-  }
-
-  handleAdd() {
-    super.handleAdd();
-  }
-
-  handleDelete() {
-    const { dispatch } = this.props;
-
-    dispatch(StoreLanguageAction.archive(this.state.selectedListIds));
-
-    this.Message.info(this.messageSuccess);
-
-    dispatch(StoreLanguageAction.fetch(this.pageSize, this.state.current));
-
-    this.setState({selectedRowKeys: []});
   }
 
   render() {

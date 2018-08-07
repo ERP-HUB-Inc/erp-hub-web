@@ -5,7 +5,7 @@ import FormCreate from "../../../containers/settings/IncomeAndExpense/FormCreate
 import FormUpdate from "../../../containers/settings/IncomeAndExpense/FormUpdate";
 import Constant from "../../../constants/settings/incomeAndExpense";
 import IncomeEXpenseAction from "../../../action/settings/incomeAndExpense";
-// import "./index.css";
+import IncomeEXpenseService from "../../../services/settings/IncomeExpense";
 
 export default class IncomeAndExpenseList extends List {
   constructor(props) {
@@ -14,45 +14,10 @@ export default class IncomeAndExpenseList extends List {
     this.fetchingProp = "incomeAndExpense";
     this.addingProp = "incomeAndExpenseAdd";
     this.updatingProp = "incomeAndExpenseUpdate";
+    this.service = IncomeEXpenseService;
+    this.action = IncomeEXpenseAction;
     this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
-  }
 
-  componentDidMount() {
-    const { dispatch } = this.props;
-    
-    dispatch(IncomeEXpenseAction.fetch(this.pageSize));
-  }
-
-  onChange(pagination, filters, sorter) {
-    const { dispatch } = this.props;
-
-    super.onChange(pagination, filters, sorter);
-    
-    dispatch(IncomeEXpenseAction.fetch(...this.filter));
-  }
-
-  onChangePagination(current, pageSize) {
-    const { dispatch } = this.props;
-
-    this.filter = [
-      pageSize,
-      (current - 1) * pageSize,
-    ];
-
-    dispatch(IncomeEXpenseAction.fetch(...this.filter));
-
-    this.setState({ current});
-  }
-
-  onShowSizeChange(current, pageSize) {
-    const { dispatch } = this.props;
-
-    this.filter = [
-      pageSize,
-      current,
-    ];
-
-    dispatch(IncomeEXpenseAction.fetch(...this.filter));
   }
 
   handleShowFormAdd() {
@@ -69,20 +34,6 @@ export default class IncomeAndExpenseList extends List {
     this.setState({
       modalConten: <FormUpdate/>
     });
-  }
-
-  handleDelete() {
-    const { dispatch } = this.props;
-
-    dispatch(IncomeEXpenseAction.archive(this.state.selectedListIds));
-
-    dispatch(IncomeEXpenseAction.fetch(this.pageSize, this.state.current));
-    
-    this.setState({selectedRowKeys: []});
-
-    super.handleDelete();
-
-    this.Message.info(this.messageSuccess);
   }
 
   render() {

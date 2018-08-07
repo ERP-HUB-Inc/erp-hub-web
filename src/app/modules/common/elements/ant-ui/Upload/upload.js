@@ -3,70 +3,89 @@ import Element, { Form } from "../../common/Element";
 import "./index.css";
 import { Upload, Icon, Modal } from "antd";
 
+const uploadButton = (
+  <div>
+    <span className="icon-upload"></span>
+    <div className="ant-upload-text">
+      <div className="upload-extension-title">. JPG  . PNG . GIF</div>
+      <div className="upload-file-title">
+              You can also upload files by <br/>
+        <span>clicking here </span>
+      </div>
+    </div>
+  </div>
+);
+
 export default class PicturesUpload extends Element {
 
   constructor(props){
     super(props);
     this.state = {
-      previewImage: "",
-      fileList: [],
-      upload: false
+      cardPreviewImage: "",
+      cardPreviewVisible: false,
+      cardImgList: [],
     };
+    this.handleCardChange = this.handleCardChange.bind(this); 
   }
 
-  handleCancel () {
-    this.setState({ previewVisible: false });
-  }
-
-  handlePreview(file){
-    this.setState({
-      previewImage: file.url || file.thumbUrl,
-      previewVisible: false
-    });
-  }
-
-  handleChange({ fileList }) {
-    // alert(fileList);
-    // this.setState({ fileList });
+  handleCardChange({fileList}){
+    console.log(fileList);
+    
+    this.setState({ cardImgList: fileList });
   }
 
   render() {
-    const { input } = this.props;
-    const { previewVisible, previewImage, fileList } = this.state;
-    const uploadButton = (
-      <div>
-        <span className="icon-upload"></span>
-        <div className="ant-upload-text">
-          <div className="upload-extension-title">. JPG  . PNG . GIF</div>
-          <div className="upload-file-title">
-            You can also upload files by <br/>
-            <span>clicking here </span>
-          </div>
-        </div>
-      </div>
-    );
+    
+    const cardImgProps = {
+      action: "http://178.128.217.131:3000/api/employee/v1/upload/file",
+      onRemove: (file) => {
+        this.setState(({ cardImgList }) => {
+          const index = cardImgList.indexOf(file);
+          const newFileList = cardImgList.slice();
+          newFileList.splice(index, 1);
+          return {
+            cardImgList: newFileList,
+          };
+        });
+      },
+      beforeUpload: (file) => {
+        this.setState(({ cardImgList }) => ({
+          cardImgList: [...cardImgList, file],
+        }));
+        return false;
+      },
+      fileList: this.state.cardImgList,
+      onPreview: this.handleCardPreview,
+      onChange: this.handleCardChange,
+      accept: "image/*",
+      listType: "picture-card"
+    };
+
+    const {cardImgList, cardPreviewVisible, cardPreviewImage} = this.state;
+    const { getFieldDecorator } = this.props.form;
+
     return (
       <div className="clearfix main-upload">
+       
         <this.FormItem label={this.props.label}>
-          <Upload
-            action="//jsonplaceholder.typicode.com/posts/"
-            listType="picture-card"
-            onPreview={this.handlePreview}
-            onChange={this.handleChange}
-            showUploadList={true}
-          >
-            {fileList.length >= 3 ? null : uploadButton}
-          </Upload>
-          <Modal
-            visible={previewVisible}
-            footer={null}
-            onCancel={this.handleCancel}
-          >
-            <img alt="example" style={{ width: "100%" }} src={previewImage} />
+          {
+            getFieldDecorator(this.props.name)
+            (
+              <Upload {...cardImgProps}>
+                {cardImgList.length >= this.props.length ? null : uploadButton}
+              </Upload>
+            )
+          }
+          <Modal visible={cardPreviewVisible} footer={null}>
+            <img alt="example" style={{ width: "100%" }} src={cardPreviewImage} />
           </Modal>
         </this.FormItem>
+      
       </div>
     );
   }
 }
 
+PicturesUpload.defaultProps = { 
+  length : 1
+};

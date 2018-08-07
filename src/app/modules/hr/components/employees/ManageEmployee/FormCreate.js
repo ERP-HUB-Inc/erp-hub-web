@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal } from "../../shares/Modal/modal";
-import ManagementEmployeeAction from "../../../actions/employees/manageEmployee";
+import ManageEmployeeAction from "../../../actions/employees/manageEmployee";
 
 const gender = [
   {
@@ -16,23 +16,57 @@ const gender = [
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
+    this.state = {
+      disabled: false,
+      value: "123"
+    };
+
     this.title = "Manage Employee";
     this.addingPropReducer = "manageEmployeeAdd";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onChange = this.onChange.bind(this);
+
   }
+
+  onChange(checked){
+    this.setState({
+      disabled : checked == 1,
+    });
+    this.props.form.setFieldsValue({password: ""});
+  }
+
 
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
+      
+      // const formData = new FormData();
+      // formData.append("image",values.image.file);
+  
+      // this.dispatch(ManageEmployeeAction.add(formData));
+
+      // alert(JSON.stringify(values));
+
+      // console.log(values);
+
       if (!err) {
-        this.dispatch(ManagementEmployeeAction.add(values));
+        const formData = new FormData();
+        formData.append("image",values.image.file);
+        formData.append("firstname",values.firstname);
+        formData.append("firstname",values.lastname);
+        formData.append("gender",values.gender);
+
+        // console.log(JSON.stringify(formData));
+
+        this.dispatch(ManageEmployeeAction.add(values));
       }
+
     });
   }
       
   handleCancel() {
-    this.dispatch(ManagementEmployeeAction.reset());
+    this.dispatch(ManageEmployeeAction.reset());
   }
 
   render() {
@@ -74,14 +108,15 @@ export default class FormCreate extends Modal {
                     form={form}/>
                 </this.Col>
                 <this.Col md="6">
-                  <this.DatePickers
+                  <this.DatePickers 
                     name="dob" 
-                    form={form} 
+                    form={form}   
+                    required={ false }
                     label="Date of Birth"
                   />
                 </this.Col>
                 <this.Col md="12">
-                  <this.InputNumber
+                  <this.InputText
                     name="phonenumber" 
                     placeholder="Phone Number"
                     form={form} 
@@ -106,10 +141,9 @@ export default class FormCreate extends Modal {
                 </this.Col>
                 <this.Col md="12">
                   <this.UploadImg
-                    name="idcard" 
-                    placeholder="Identification Card"
+                    name="image"    
+                    label="Upload" 
                     form={form}   
-                    label="Identification Card" 
                   />
                 </this.Col>
               </this.Row>
@@ -119,7 +153,7 @@ export default class FormCreate extends Modal {
             <this.Row>
               <this.Col md="12">
                 <this.InputText
-                  name="username"
+                  name="userName"
                   label="User name"
                   placeholder="User name"
                   errorRequired="Please input your username"
@@ -133,11 +167,15 @@ export default class FormCreate extends Modal {
                   label="Password"
                   placeholder="Password"
                   errorRequired="Please input your password"
+                  disabled = { this.state.disabled }
+
+                  // value={ this.state.value }
                   form={form}/>
               </this.Col>
               <this.Col md="6">
                 <this.Switchs
                   label="Auto generate"
+                  onChange={ this.onChange }
                   form={form}
                 />
               </this.Col>
@@ -157,12 +195,14 @@ export default class FormCreate extends Modal {
               <this.Col md="6">
                 <this.DatePickers
                   label="Expired date"
+                  name="datepicker"
                   form={form}
                 />
               </this.Col> 
               <this.Col md="12">  
                 <this.InputTextArea
                   label="Address"
+                  name="expiredDate"
                   form={form}
                   min={ 20 }
                 />

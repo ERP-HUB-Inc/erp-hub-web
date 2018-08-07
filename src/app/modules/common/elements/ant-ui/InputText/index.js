@@ -22,7 +22,9 @@ export class InputText extends Element {
         min={this.props.min}
         max={this.props.max}
         handleKeyDown={this.props.handleKeyDown}
+        defaultValue={ this.props.defaultValue }
         disabled= {this.props.disabled}
+        value={ this.props.value }
       />
     );
   }   

@@ -15,16 +15,19 @@ export class DatePic extends Element {
   render(){
     const { 
       label,
+      defaultValue
     } = this.props;
     const { getFieldDecorator } = this.props.form;
     return (
       <this.FormItem label={ label }>
         { 
           getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.data})(
-            <DatePicker 
-              defaultValue={moment(" " + this.props.defaultValue  , dateFormat)}
-              format={ dateFormat }
-            />  
+            defaultValue != null ? 
+              <DatePicker
+                defaultValue={moment(" " + defaultValue , dateFormat)}
+                format={ dateFormat }
+              />  
+              : <DatePicker />
           )
         }
       </this.FormItem>

@@ -3,7 +3,9 @@ import columns from "./column";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/StoreLocation/FormCreate";
 import FormUpdate from "../../../containers/settings/StoreLocation/FormUpdate";
+import Constant from "../../../constants/settings/storeLocation";
 import StoreLocationAction from "../../../action/settings/storeLocation";
+import StoreLocationService from "../../../services/settings/StoreLocationService";
 
 export default class StoreLocationList extends List {
   constructor(props) {
@@ -13,17 +15,9 @@ export default class StoreLocationList extends List {
     this.fetchingProp = "storeLocation";
     this.addingProp = "storeLocationAdd";
     this.updatingProp = "storeLocationUpdate";
-  }
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(StoreLocationAction.fetch(this.pageSize));
-  }
-
-  onChange(pagination, filters, sorter) {
-    const { dispatch } = this.props;
-    super.onChange(pagination, filters, sorter);
-    dispatch(StoreLocationAction.fetch(...this.filter));
+    this.service = StoreLocationService;
+    this.action = StoreLocationAction;
+    this.RESET_CONSTANT = Constant.RESET_STORE_LOCATION;
   }
 
   handleShowFormAdd() {
@@ -40,22 +34,6 @@ export default class StoreLocationList extends List {
     this.setState({
       modalConten: <FormUpdate/>
     });
-  }
-
-  handleAdd() {
-    super.handleAdd();
-  }
-
-  handleDelete() {
-    const { dispatch } = this.props;
-
-    dispatch(StoreLocationAction.archive(this.state.selectedListIds));
-
-    this.Message.info(this.messageSuccess);
-
-    dispatch(StoreLocationAction.fetch(this.pageSize, this.state.current));
-
-    this.setState({selectedRowKeys: []});
   }
 
   render() {
