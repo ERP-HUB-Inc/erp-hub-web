@@ -5,7 +5,10 @@ export default class BaseService extends Service {
     super();
     this.data = {};
     this.header =  {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json" 
+    };
+    this.multipleformdata = {
+      "Content-Type": "multipart/form-data" 
     };
   }
 
@@ -37,7 +40,7 @@ export default class BaseService extends Service {
 
 
   archive(ids) {
-    return this.DELETE({ 
+    return this.DELETE({  
       url: `${this.baseUrl}/archive/${ids}`,
       data: this.data,
       headers: this.header
@@ -45,14 +48,18 @@ export default class BaseService extends Service {
   }
 
   add(data) {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    this.header["content-type"] = "multipart/form-data";
     return this.POST({
-      url: `${this.baseUrl}/create`,
+      // url: `${this.baseUrl}/create`,
+      url: `${this.baseUrl}/create`, 
       data: {
         ...data,
         isSystem: 0,
         isDefault: 0
       },
       headers: this.header
+      // headers: this.header
     });
   }
 

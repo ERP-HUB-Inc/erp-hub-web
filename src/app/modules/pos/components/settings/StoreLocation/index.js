@@ -3,6 +3,7 @@ import columns from "./column";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/StoreLocation/FormCreate";
 import FormUpdate from "../../../containers/settings/StoreLocation/FormUpdate";
+import Constant from "../../../constants/settings/storeLocation";
 import StoreLocationAction from "../../../action/settings/storeLocation";
 import StoreLocationService from "../../../services/settings/StoreLocationService";
 

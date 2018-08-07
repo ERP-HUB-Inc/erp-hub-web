@@ -3,6 +3,7 @@ import columns from "./column";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/Currency/FormCreate";
 import FormUpdate from "../../../containers/settings/Currency/FormUpdate";
+import Constant from "../../../constants/settings/currency";
 import CurrencyAction from "../../../action/settings/currency";
 import CurrencyService from "../../../services/settings/CurrencyService";
 

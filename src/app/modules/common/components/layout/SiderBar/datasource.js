@@ -44,6 +44,7 @@ import RoleAccess from "../../../../pos/containers/settings/RoleAccess";
 import IncomeAndExpense from "../../../../pos/containers/settings/IncomeAndExpense";
 import Currency from "../../../../pos/containers/settings/Currency";
 import StoreLanguage from "../../../../pos/containers/settings/StoreLanguage";
+import OperationRecord from "../../../../pos/containers/settings/OperationRecord";
 
 /*==============================END POS===================================*/
 
@@ -363,6 +364,12 @@ const dataSource = {
         icon: "icon-language",
         route: "/settings/language",
         component: StoreLanguage
+      },
+      {
+        title: "Operation Record",
+        icon: "icon-language",
+        route: "/settings/operation-record",
+        component: OperationRecord
       }
     ]
   }

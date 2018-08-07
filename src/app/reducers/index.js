@@ -15,6 +15,7 @@ import incomeAndExpense from "../modules/pos/reducers/settings/incomeAndExpense"
 import roleAccess from "../modules/pos/reducers/settings/roleAccess";
 import privilege from "../modules/pos/reducers/settings/privilege";
 import storeAccount from "../modules/pos/reducers/settings/storeAccount";
+import operationRecord from "../modules/pos/reducers/settings/operationRecord";
 // Employee
 import managementEmployee from "../modules/hr/reducers/employees/managementEmployee";
 
@@ -36,6 +37,7 @@ const reducer = combineReducers({
   roleAccess,
   privilege,
   storeAccount,
+  operationRecord,
   // Employee
   managementEmployee
 });

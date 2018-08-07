@@ -28,13 +28,15 @@ export default class Form extends Modal {
 
   onChange(checked){
     this.setState({
-      disabled : checked == 1  
+      disabled : checked == 1 
     });
+    this.props.form.setFieldsValue({password: ""});
   }
 
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
+      // this.dispatch(ManageEmployeeAction.add(values.image.file.name));
       if (!err) {
         const {manageEmployeeUpdate} = this.props;
         values["id"] = manageEmployeeUpdate.data.id;
@@ -131,7 +133,8 @@ export default class Form extends Modal {
                   </this.Col>
                   <this.Col md="12">
                     <this.UploadImg
-                      name="img" 
+                      name="image"    
+                      label="Upload" 
                       form={form}   
                     />
                   </this.Col>
@@ -156,6 +159,7 @@ export default class Form extends Modal {
                     label="Password"
                     placeholder="Password"
                     errorRequired="Please input your password"
+                    defaultValue={ this.state.defaultValue }
                     disabled = { this.state.disabled }
                     form={form}
                   />  

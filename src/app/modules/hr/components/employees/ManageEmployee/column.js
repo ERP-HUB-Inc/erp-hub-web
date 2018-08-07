@@ -1,21 +1,25 @@
 
+import moment from "moment";
 
 export default [{
   title: "Date",
   dataIndex:"createdAt",
   key: "createdAt",
+  render: createdAt => (
+    moment(" " + createdAt).format("YYYY/MM/DD")
+  ),
   sorter: true
 }, {
   title: "full Name",
   dataIndex: "firstName",
-  sorter: true,
-  render: firstName => `${firstName}`
+  dateIndex: "lastName",
+  key: "firstName",
+  sorter: true
 },
 {
   title: "Phone No",
   dataIndex: "phoneNumber",
-  key: "phoneNumber",
-  sorter: true
+  key: "phoneNumber"
 },
 {
   title: "Address",

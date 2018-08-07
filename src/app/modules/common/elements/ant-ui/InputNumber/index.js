@@ -25,14 +25,15 @@ export class InputNumber extends Element {
       <Input 
         name={this.props.name}
         type="number"
-        parse={ value => Number(value) }
+        // parse={ value => Number(value) }
         defaultValue={ this.props.defaultValue }
         placeholder={this.props.placeholder}
         label={this.props.label}
         data={this.props.data}
         required = {this.props.required}
         form={this.props.form}
-        rules = {this.rules}
+        type={ this.props.type }
+        // rules = {this.rules}
       />
     );
   }   

@@ -7,30 +7,29 @@ export class DatePickers extends Element {
     super(props);
     this.rules = [
       {
-        required: this.props.required,
-        message: this.props.errorRequired
+        type: "object",
       },
       {
-        max: this.props.max,
-        message: this.props.errorLenght
-      },
-      {
-        min: this.props.min,
-        message: this.props.errorLenght 
+        required: this.props.required
       }
+      // {
+      //   message: this.props.message
+      // }
     ];
   }
 
   render() {
     return (
       <DatePic
+        type={ this.props.type }
         label={ this.props.label }
         name={ this.props.name }
         rules={ this.rules }
         required = {this.props.required}  
         label={this.props.label}
         data={this.props.data}
-        defaultValue={ this.props.defaultValue }
+        defaultValue={this.props.defaultValue}
+        disabled={this.props.disabled}
         form={this.props.form}
       />
     );
@@ -39,6 +38,7 @@ export class DatePickers extends Element {
 
 DatePickers.defaultProps = {
   errorRequired: "Field required.",
+  message: "Please select Date!"
 };
 
 
