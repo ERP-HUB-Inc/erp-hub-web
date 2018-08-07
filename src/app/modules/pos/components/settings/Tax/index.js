@@ -18,7 +18,7 @@ export default class TaxList extends List {
     this.action = TaxAction;
     this.RESET_CONSTANT = Constant.RESET_TAX;
   }
-
+  
   handleShowFormAdd() {
     const { dispatch } = this.props;
     dispatch(TaxAction.showForm());

@@ -4,8 +4,9 @@ import List from "../../List";
 import FormCreate from "../../../containers/settings/IncomeAndExpense/FormCreate";
 import FormUpdate from "../../../containers/settings/IncomeAndExpense/FormUpdate";
 import Constant from "../../../constants/settings/incomeAndExpense";
-import IncomeEXpenseAction from "../../../action/settings/incomeAndExpense";
-import IncomeEXpenseService from "../../../services/settings/IncomeExpense";
+import IncomeExpenseAction from "../../../action/settings/incomeAndExpense";
+import IncomeExpenseService from "../../../services/settings/IncomeExpense";
+// import "./index.css";
 
 export default class IncomeAndExpenseList extends List {
   constructor(props) {
@@ -14,15 +15,14 @@ export default class IncomeAndExpenseList extends List {
     this.fetchingProp = "incomeAndExpense";
     this.addingProp = "incomeAndExpenseAdd";
     this.updatingProp = "incomeAndExpenseUpdate";
-    this.service = IncomeEXpenseService;
-    this.action = IncomeEXpenseAction;
+    this.service = IncomeExpenseService;
+    this.action = IncomeExpenseAction;
     this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
-
   }
 
   handleShowFormAdd() {
     const { dispatch } = this.props;
-    dispatch(IncomeEXpenseAction.showForm());
+    dispatch(IncomeExpenseAction.showForm());
     this.setState({
       modalConten: <FormCreate/>
     });
@@ -30,7 +30,7 @@ export default class IncomeAndExpenseList extends List {
 
   handleShowFormEdit(rowData) {
     const { dispatch } = this.props;
-    dispatch(IncomeEXpenseAction.showForm(rowData));
+    dispatch(IncomeExpenseAction.showForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });

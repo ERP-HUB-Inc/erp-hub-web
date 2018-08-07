@@ -117,7 +117,7 @@ export default {
     case PEDDING: {
       return {
         ...state,
-        adding: true,
+        updating: true,
         showForm: true
       };
     }

@@ -67,7 +67,7 @@ export default combineReducers({
       return {
         ...state,
         submiting: false,
-        error: action.payload.response.data.error
+        error: action.payload
       };
     }
     case Constant.CLIENT_SIGNIN_FULFILLED: {
@@ -75,7 +75,7 @@ export default combineReducers({
         ...state, 
         submiting: false,
         submited: true,
-        response: action.payload.data.data
+        response: action.payload
       };
     }
     case Constant.CLIENT_SIGNIN_RESET: {
@@ -103,7 +103,7 @@ export default combineReducers({
       return {
         ...state,
         submiting: false,
-        error: action.payload.response.data.error
+        error: action.payload
       };
     }
     case Constant.DOMAIN_SIGNIN_FULFILLED: {
@@ -111,7 +111,7 @@ export default combineReducers({
         ...state, 
         submiting: false,
         submited: true,
-        response: action.payload.data.data
+        response: action.payload
       };
     }
     case Constant.DOMAIN_SIGNIN_RESET: {

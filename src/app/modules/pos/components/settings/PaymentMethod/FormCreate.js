@@ -27,7 +27,10 @@ export default class FormCreate extends Modal {
   }
 
   render() {
+
     const {paymentMethodAdd, form, locale} = this.props;
+
+    this.submitLoading = paymentMethodAdd.adding;
 
     if (paymentMethodAdd.showForm) {
       this.content = (

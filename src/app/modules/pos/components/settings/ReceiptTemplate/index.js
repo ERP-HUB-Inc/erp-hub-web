@@ -5,7 +5,7 @@ import FormCreate from "../../../containers/settings/ReceiptTemplate/FormCreate"
 import FormUpdate from "../../../containers/settings/ReceiptTemplate/FormUpdate";
 import Constant from "../../../constants/settings/receiptTemplate";
 import ReceiptTemplateAction from "../../../action/settings/receiptTemplate";
-import ReceiptTemplateService from "../../../services/settings/ReceiptService";
+import ReceiptService from "../../../services/settings/ReceiptService";
 
 export default class ReceiptTemplateList extends List {
   constructor(props) {
@@ -14,7 +14,7 @@ export default class ReceiptTemplateList extends List {
     this.fetchingProp = "receipt";
     this.addingProp = "receiptAdd";
     this.updatingProp = "receiptUpdate";
-    this.service = ReceiptTemplateService;
+    this.service = ReceiptService;
     this.action = ReceiptTemplateAction;
     this.RESET_CONSTANT = Constant.RESET_RECEIPT;
   }
@@ -34,7 +34,6 @@ export default class ReceiptTemplateList extends List {
       modalConten: <FormUpdate/>
     });
   }
-
 
   render() {
     return super.render();

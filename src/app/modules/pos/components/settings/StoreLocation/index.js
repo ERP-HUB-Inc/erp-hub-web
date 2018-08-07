@@ -17,7 +17,6 @@ export default class StoreLocationList extends List {
     this.updatingProp = "storeLocationUpdate";
     this.service = StoreLocationService;
     this.action = StoreLocationAction;
-    this.RESET_CONSTANT = Constant.RESET_STORE_LOCATION;
   }
 
   handleShowFormAdd() {

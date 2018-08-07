@@ -17,7 +17,6 @@ export default class CurrencyList extends List {
     this.updatingProp = "currencyUpdate";
     this.service = CurrencyService;
     this.action = CurrencyAction;
-    this.RESET_CONSTANT = Constant.RESET_CURRENCY;
   }
 
   handleShowFormAdd() {

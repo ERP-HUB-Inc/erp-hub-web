@@ -19,8 +19,6 @@ export default class SignInStore extends Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const {dispatch} = this.props;
-        localStorage.removeItem(ConstantAuth.STORE_NAME);
-        localStorage.setItem(ConstantAuth.STORE_NAME, values.storeName);
         dispatch(ClientAction.signinDomain(values.storeName));
       }
     });
@@ -29,22 +27,54 @@ export default class SignInStore extends Component {
   handleKeyDown () {
     this.errorMessage = null;
     this.validateClassStatus = "";
-    localStorage.removeItem(ConstantAuth.STORE_NAME);
   }
 
   render() {
-    const {response, form} = this.props;
-    if (response.response != null) {
-      localStorage.setItem(ConstantAuth.STORE_ACCESS_TOKEN, JSON.stringify(response.response));
+    const {signinDomain, form} = this.props;
+
+    // API RESPONSE CORRECT: response: {data: {data: { accessToken: .... }}}
+    if (
+      signinDomain.response != null
+      && ("data" in signinDomain.response)
+      && ("data" in signinDomain.response["data"])
+      && signinDomain.response["data"]["data"] != null
+    ) {
+
+      localStorage.setItem(ConstantAuth.STORE_ACCESS_TOKEN, JSON.stringify(signinDomain.response["data"]["data"]));
+
       history.push("/signin");
-    } else if (response.error != null) {
-      if (response.error.code == 404) {
-        const {dispatch} = this.props;
-        this.errorMessage = "Store does not exist.";
-        this.validateClassStatus = "has-error";
-        dispatch(ClientAction.resetSignInDomain());
+
+    } else if (signinDomain.error != null) {
+
+      const {dispatch} = this.props;
+
+      const {error} = signinDomain;
+
+      this.errorMessage = "Something wrong.";
+
+      if ("response" in error 
+      && error["response"] != null
+      && "data" in error["response"]
+      ) {
+
+        const {data} = error["response"];
+
+        if (data.error.code == this.HttpCode.NOT_FOUND) {
+          this.errorMessage = "Store does not exist.";
+        } else if (data.error.code == this.HttpCode.EXPIRED) {
+          this.errorMessage = "Store now is expired.";
+        } else if (data.error.code == this.HttpCode.INTERNAL_SERVER_ERROR) {
+          this.errorMessage = "Please check your connection.";
+        }
+      } else if (error.message == this.HttpCode.NETWORK_ERROR) {
+        this.errorMessage = "Please check your connection.";
       }
+
+      this.validateClassStatus = "has-error";
+
+      dispatch(ClientAction.resetSignInDomain());
     }
+
     return (
       <div>
         <this.LoginLayout
@@ -73,7 +103,7 @@ export default class SignInStore extends Component {
                 this.errorMessage != null ? <div className="ant-form-explain">{this.errorMessage}</div> : "" 
               }
               <div className="main-signin">
-                <this.Button loading={response.submiting} htmlType="submit" type="info">SUBMIT</this.Button>
+                <this.Button loading={signinDomain.submiting} htmlType="submit" type="info">SUBMIT</this.Button>
               </div>
             </this.FormGroup>
           </this.Form>
