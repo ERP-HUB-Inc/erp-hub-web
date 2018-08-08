@@ -160,7 +160,7 @@ const dataSource = {
   },
   stocks: {
     icon: "icon-stock",
-	route: "stocks",
+	route: "stock",
     subItems: [
       {
         title: "Stock",
