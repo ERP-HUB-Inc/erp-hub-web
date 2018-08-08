@@ -9,6 +9,13 @@
     z-index: 1
 }
 
+#sidebar .line {
+	border-bottom: 1px solid #FFFFFF;
+    width: 35px;
+    margin: 0 auto;
+	display: none
+}
+
 #sidebar>ul {
     margin-bottom: 0;
     padding-top: 10px;

@@ -82,6 +82,7 @@ import { Translate } from "react-localize-redux";
 const dataSource = {
   transactions: {
     icon: "icon-list",
+	route: "transactions",
     subItems: [
       {
         title: <Translate id="text_sale_history" />,
@@ -105,6 +106,7 @@ const dataSource = {
   },
   products: {
     icon: "icon-items",
+	route: "products",
     subItems: [
       {
         title: "Manage Products",
@@ -158,6 +160,7 @@ const dataSource = {
   },
   stocks: {
     icon: "icon-stock",
+	route: "stocks",
     subItems: [
       {
         title: "Stock",
@@ -234,6 +237,7 @@ const dataSource = {
   // },
   employees: {
     icon: "icon-employee",
+	route: "employees",
     subItems: [
       {
         title: "Manage Employee",
@@ -257,6 +261,7 @@ const dataSource = {
   },
   reports: {
     icon: "icon-reports",
+	route: "reports",
     subItems: [
       {
         title: "Sale Report",
@@ -310,6 +315,7 @@ const dataSource = {
   },
   settings: {
     icon: "icon-settings",
+	route: "settings",
     subItems: [
       {
         title: "Store Account",

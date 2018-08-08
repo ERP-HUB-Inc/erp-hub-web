@@ -55,10 +55,16 @@ export default class SideBar extends React.Component {
     oldElement.classList.remove("hover");
   }
 
-  menuParentItem(key, title, icon) {
+  menuParentItem(key, route, title, icon) {
+	  
+	const currentPathArr = window.location.pathname.split("/");
+	
+	const classActive = route==currentPathArr[1] ? "active" : "";
+	
     return (
-      <li key={key} id={title} className="sidebar-menu-item" onMouseEnter={() => this.handleShow(title)}  onMouseLeave={() => this.handleHidden()}>
+      <li key={key} id={title} className={classActive + " sidebar-menu-item"} onMouseEnter={() => this.handleShow(title)}  onMouseLeave={() => this.handleHidden()}>
         <a href="javascript:;"><span className={icon}></span></a>
+		<div className="line"></div>
       </li>
     );
   }
@@ -80,9 +86,12 @@ export default class SideBar extends React.Component {
       <div>
         <div id="sidebar">
           <ul className="list-unstyled text-center">
-            <li className="active"><Link to="/"><span className="icon-home"></span></Link></li>
+            <li className={window.location.pathname=="/" ? "active" : ""}>
+				<Link to="/"><span className="icon-home"></span></Link>
+				<div className="line"></div>
+			</li>
             {
-              Object.keys(this.state.dataSource).map((parentKey, parentIndex) => this.menuParentItem(parentIndex, parentKey, this.state.dataSource[parentKey]["icon"]))
+              Object.keys(this.state.dataSource).map((parentKey, parentIndex) => this.menuParentItem(parentIndex, this.state.dataSource[parentKey]["route"],  parentKey, this.state.dataSource[parentKey]["icon"]))
             }
           </ul>
           <div id="sum-menu" className={this.state.classToggle} onMouseEnter={() => this.handleHoverOnSubMenu()} onMouseLeave={() => this.handleLeaveFromSubMenu()}>
