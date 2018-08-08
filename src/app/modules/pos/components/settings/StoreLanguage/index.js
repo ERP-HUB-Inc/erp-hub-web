@@ -31,7 +31,7 @@ export default class StoreLanguageList extends List {
   handleShowFormEdit(rowData) {
     const { dispatch } = this.props;
     dispatch(StoreLanguageAction.showForm(rowData));
-    this.setState({
+    this.setState({ 
       modalConten: <FormUpdate/>
     });
   }

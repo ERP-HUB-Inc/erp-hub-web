@@ -1,6 +1,7 @@
 import React from "react";
 import { Pagination } from "antd";
 import Component  from "../../common/components/Component";
+import FormSearch from "./shares/FormSearch/";
 import menuSource from "../../common/components/layout/SiderBar/datasource";
 import "./index.css";
 
@@ -259,6 +260,9 @@ export default class List extends Component {
         {/* ===============TABLE LIST============ */}   
 
         <div className="table-wrapper">
+            
+          <FormSearch />  
+
           {/* ===============ACTION BUTTON============ */}
           <div className="float-left">
             <this.Button type="info" className="mg-right" onClick={() => this.handleShowFormAdd()}>
@@ -319,3 +323,4 @@ export default class List extends Component {
     );
   }
 }
+

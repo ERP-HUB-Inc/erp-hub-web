@@ -3,6 +3,7 @@ import Element from "../../Component";
 import "./index.css";
 import StoreAccountAction from "../../../action/settings/storeAccount";
 import menuSource from "../../../../common/components/layout/SiderBar/datasource";
+import { json } from "graphlib";
 
 const currentPath = window.location.pathname;
 
@@ -43,7 +44,8 @@ export default class StoreAccountList extends Element {
   }
 
   componentDidMount(){
-    this.dispatch(StoreAccountAction.fetch("00000001-0001-2018-0001-00000001"));
+    let obj = JSON.parse([localStorage.getItem(["ACCESS_TOKEN"])]);
+    this.dispatch(StoreAccountAction.fetch(obj.clientId));
   }
 
   render() {

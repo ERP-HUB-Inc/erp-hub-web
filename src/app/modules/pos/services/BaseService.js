@@ -19,17 +19,19 @@ export default class BaseService extends Service {
     });
   }
 
-  
-
   lists(
     limit,
     offset,
     sortField,
-    sortOrder
+    sortOrder,
+    status,
+    type,
+    searchColumn
   ) {
+    let linkFilter = `&filter={"status": ${ status }, "type": ${ type } }&search={"column": ${ searchColumn }, "value": "kh"}`;
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
     return this.GET({ 
-      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}`,
+      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}` + linkFilter,  
       data: this.data,
       headers: this.header
     });

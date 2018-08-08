@@ -24,3 +24,4 @@ export * from "./Upload";
 export * from "./InputPassword";
 export * from "./Button/saveButton";
 export * from "./inputTextArea";
+export * from "./Button/searchButton";
