@@ -111,11 +111,20 @@ export default class SideBar extends React.Component {
 
   render() {
     const subMenuItemTitle = Object.keys(this.state.menuItems);
+
+    if (window.location.pathname == "/") {
+      const currentLi = document.getElementById("dashboardNav");
+      this.removeClass("active");
+      if (currentLi != null) {
+        currentLi.className += " active";
+      }
+    }
+
     return (
       <div>
         <div id="sidebar">
           <ul className="list-unstyled text-center">
-            <li className={window.location.pathname=="/" ? "active" : ""}>
+            <li id="dashboardNav" className={window.location.pathname == "/" ? "active sidebar-menu-item" : "sidebar-menu-item"}>
               <Link to="/"><span className="icon-home"></span></Link>
               <div className="line"></div>
             </li>
