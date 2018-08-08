@@ -113,4 +113,12 @@ export class Util {
     result = JSON.parse(result);
     return result.accessToken;
   }
+
+  groupRecordByColumnName(datas, column) {
+    return datas.map((value) => {
+      if (value["isParent"] == 1) {
+        return value;
+      }
+    } );
+  }
 }

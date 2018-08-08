@@ -50,7 +50,7 @@ export default class StoreAccountList extends Element {
 
   render() {
     const { form,storeAccount,response } = this.props;
-    console.log(response);
+  
     if(response.updated == true){
       this.Message.success("Success Updated.");
       this.dispatch(StoreAccountAction.reset());
@@ -58,8 +58,6 @@ export default class StoreAccountList extends Element {
 
     const languages = this.Util.renameObjectKey({ name: "name", id: "value" }, [storeAccount.language]);
     const currency = this.Util.renameObjectKey({ name: "name", id: "value" }, [storeAccount.currency]);
-
-    console.log("language",languages);
 
     return (
       <div>
@@ -73,9 +71,12 @@ export default class StoreAccountList extends Element {
             </li>
             {
               menuSource["settings"]["subItems"].map((value, index) =>
-                <li className={(currentPath==value["route"] ? "active" : "") + " fast-nav"} key={index}>
-                  <this.Link to={value["route"]}>{value["title"]}</this.Link>
-                </li>
+                "isFashNav" in value && value["isFashNav"] ?
+                  <li className={(currentPath==value["route"] ? "active" : "") + " fast-nav"} key={index}>
+                    <this.Link to={value["route"]}>{value["title"]}</this.Link>
+                  </li>
+                  :
+                  ""
               )
             }
           </ul>
@@ -92,7 +93,7 @@ export default class StoreAccountList extends Element {
                   </div>
                   <this.InputText name="businessName" data={ storeAccount.businessName }  label="Business Name" placeholder="Super Store"  form={form} required={true}/>
                   <this.InputText name="storeName"  data={ storeAccount.storeName } label="Private URL" notation=".storevein.com"  form={form} placeholder="Super Store"/>
-                  <this.InputText name="name" label="Country" notation=".storevein.com"  form={form} placeholder="Global"/>
+                  <this.InputText name="name" label="Country" form={form} placeholder="Global"/>
                   <this.Select name="status" dataSource={ languages } label="Language" placeholder="Please select status"  form={form} />
                   <this.Select name="status" dataSource={ currency } label="Default Currency" placeholder="Please select status"  form={form} />
                   <this.Select name="status" label="Timezone" placeholder="Please select status"  form={form} dataSource={statusDataSource} />
@@ -101,9 +102,9 @@ export default class StoreAccountList extends Element {
                     <h6>ACCOUNT</h6>
                   </div>
                   <this.InputText name="name" label="Email Address"  form={form} placeholder="Super Store"/>
-                  <this.InputText name="name" label="Exist Password"  form={form} notation=".storevein.com" placeholder="Super Store"/>
-                  <this.InputText name="name" label="New password"  form={form} notation=".storevein.com" placeholder="Super Store"/>
-                  <this.InputText name="name" label="Confirm password"  form={form} notation=".storevein.com" placeholder="Global"/>
+                  <this.InputText name="name" label="Exist Password"  form={form} placeholder="Super Store"/>
+                  <this.InputText name="name" label="New password"  form={form}  placeholder="Super Store"/>
+                  <this.InputText name="name" label="Confirm password"  form={form}  placeholder="Global"/>
                 </div>
               </this.Col>
 
@@ -124,8 +125,8 @@ export default class StoreAccountList extends Element {
                   <this.InputNumber data={ storeAccount.phoneNumber } name="phoneNumber" label="Phone number" form={form} placeholder="+855 12 345 678" />
                   <this.InputText data={ storeAccount.address } name="address" label="Address" form={form} placeholder=""/>
                   <this.InputText data={ storeAccount.street } name="street" label="Street" form={form} placeholder=""/>
-                  <this.InputText data={ storeAccount.city } name="city" label="City" form={form} notation=".storevein.com" placeholder="Global"/>
-                  <this.InputText data={ storeAccount.postCode } name="code" label="Post code"  form={form} notation=".storevein.com" placeholder="Global"/>
+                  <this.InputText data={ storeAccount.city } name="city" label="City" form={form} placeholder="Global"/>
+                  <this.InputText data={ storeAccount.postCode } name="code" label="Post code" form={form} placeholder="Global"/>
                   <div className="general">
                     <h6>Setting</h6>
                   </div>

@@ -22,7 +22,7 @@ export default class InputText extends Element {
           ],
           initialValue: this.props.data})
           (<this.Input type={this.props.type} 
-            value={ this.props.value }
+            // value={ this.props.value }
             placeholder={this.props.placeholder} 
             disabled= { this.props.disabled } 
             onKeyDown={this.props.handleKeyDown}

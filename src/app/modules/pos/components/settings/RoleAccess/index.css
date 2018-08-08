@@ -78,3 +78,7 @@
     top: 10px;
     width: 119px;
 }
+
+.ant-checkbox-wrapper {
+    text-transform: capitalize !important
+}
