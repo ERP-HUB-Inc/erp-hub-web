@@ -38,7 +38,7 @@ export default class Form extends Modal {
         <div>
           {languageUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
           <InputText form={form} data={languageUpdate.data.name}  name="name" label="Name" placeholder="Please input your name" required={true} min={3}/>
-          <InputText form={form} data={languageUpdate.data.code} type="number" name="code" placeholder="Code" label="Code"/>
+          <InputText form={form} data={languageUpdate.data.code}  name="code" placeholder="Code" label="Code"/>
           <Select
             name="status"
             label="Status"

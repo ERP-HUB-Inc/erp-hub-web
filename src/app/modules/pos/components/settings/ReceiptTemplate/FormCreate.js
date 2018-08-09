@@ -30,6 +30,9 @@ export default class FormReciptTemplateCreate extends Modal {
   
   render() {
     const { receiptAdd,form } = this.props;
+
+    this.submitLoading = receiptAdd.adding;
+    
     if (receiptAdd.showForm) {
       this.content = (
         <div>

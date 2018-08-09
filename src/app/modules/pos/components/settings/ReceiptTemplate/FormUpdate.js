@@ -31,7 +31,10 @@ export default class FormReciptTemplateUpdate extends Modal {
   }
   
   render() {
-    const { receiptUpdate,form } = this.props;
+    const { receiptUpdate, form } = this.props;
+
+    this.submitLoading = receiptUpdate.updating;
+    
     if (receiptUpdate.showForm) {
       this.content = (
         <div>

@@ -31,6 +31,9 @@ export default class FormUpdate extends Modal {
   
   render() {
     const { storeLocationUpdate, form } = this.props;
+
+    this.submitLoading = storeLocationUpdate.updating;
+    
     if (storeLocationUpdate.showForm) {
       this.content = (
         <div>

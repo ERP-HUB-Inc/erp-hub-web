@@ -29,6 +29,9 @@ export default class Form extends Modal {
   
   render() {
     const { operationRecordUpdate, form } = this.props;
+
+    this.submitLoading = operationRecordUpdate.updating;
+    
     if (operationRecordUpdate.showForm) {
       this.content = (
         <div className="main-operation-record">

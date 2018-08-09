@@ -29,6 +29,9 @@ export default class FormStoreLocationCreate extends Modal {
   
   render() {
     const { storeLocationAdd, form } = this.props;
+
+    this.submitLoading = storeLocationAdd.adding;
+
     if (storeLocationAdd.showForm) {
       this.content = (
         <div>
