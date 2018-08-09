@@ -2,6 +2,10 @@ import React from "react";
 import Modal from "../../shares/Modal";
 import ReceiptAction from "../../../action/settings/receiptTemplate";
 
+function checkValue(values){
+  return values == true ? 1 : 0;
+}
+
 export default class FormReciptTemplateCreate extends Modal {
   constructor(props) {
     super(props);
@@ -15,7 +19,10 @@ export default class FormReciptTemplateCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        alert(JSON.stringify(values));
+        values["isDefault"] = checkValue(values.isDefault);
+        values["isShowStoreName"] = checkValue(values.isShowStoreName);
+        values["isShowCustomerInfo"] = checkValue(values.isShowCustomerInfo);
+        values["isShowDevelopBy"] = checkValue(values.isShowDevelopBy);
         this.dispatch(ReceiptAction.add(values));
       }
     });
@@ -39,25 +46,65 @@ export default class FormReciptTemplateCreate extends Modal {
             errorRequired="Please input your name"
             max={100}
             form={form}/>
+          {/* <this.Select
+            name="status"
+            label="Receipt Type"
+            placeholder="Please select status"
+            dataSource={this.statusDataSource}
+            defaultValue={1}
+            form={form}/> */}
+          {/* <this.InputText
+            name="tax"
+            type="text"
+            label="Tax name on receipt"
+            placeholder="Tax name on receipt"
+            form={ form }
+          /> */}
           <thisInputNumber 
             type="number" 
             name="code" 
             placeholder="Code"  
             label="Code" 
             form={form} />
-          <this.UploadImg 
+
+          {/* <this.UploadImg 
             name="upload" 
             label="Receipt Logo" 
-            required={ true }
+            required={ false }
             form={form} 
-          />   
-          <this.Select
+          />    */}
+          
+          <this.Switchs
+            label="Defualt Template"
+            name="isDefault"
+            form={form}
+          />
+          <this.Switchs
+            label="Show Store Name"
+            name="isShowStoreName"
+            form={form}
+          />
+          {/* <this.Switchs
+            label="Show Barcode"
+            form={form}
+          /> */}
+          <this.Switchs
+            label="Show Customer Information"
+            name="isShowCustomerInfo"
+            form={form}
+          />
+          <this.Switchs
+            label="Show Develop By"
+            name="isShowDevelopBy"
+            form={form}
+          />
+          {/* <this.Select
             name="status"
             label="Status"
             placeholder="Please select status"
             dataSource={this.statusDataSource}
             defaultValue={1}
-            form={form}/>
+            form={form}/> */}
         </div>
       );
       return super.render();

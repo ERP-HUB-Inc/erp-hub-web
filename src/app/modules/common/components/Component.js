@@ -43,7 +43,8 @@ import
   UploadImg,
   saveButton,
   InputTextArea,
-  SearchButton
+  SearchButton,
+  Radios
 } from "../elements/ant-ui";
 import {
   InputRedux,
@@ -168,6 +169,7 @@ export default class Component extends RComponent {
     this.Tabs = Tabs;
     this.InputTextArea = InputTextArea;
     this.SearchButton = SearchButton;
+    this.Radios = Radios;
 
     // Util function
     this.Util = new Util;

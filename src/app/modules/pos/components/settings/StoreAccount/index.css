@@ -17,7 +17,7 @@
     background-color: #FFFFFF;
     border: 1px solid #CDCCCC;
     border-radius: 0;
-    margin-right: 3px;
+    margin-right: 3px;      
 }
 
 .main-radio-acc .ant-radio-button-wrapper {
@@ -77,4 +77,14 @@
 .btn-submit-center button {
     margin: auto !important;
     left: 50% !important;
+}
+
+
+
+.main-store-account .hide .main-ant-wrapper {
+    display: none !important;
+}
+
+.main-store-account .unhide .main-ant-wrapper {
+    display: block !important;
 }

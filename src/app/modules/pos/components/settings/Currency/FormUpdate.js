@@ -20,6 +20,7 @@ export default class Form extends Modal {
       if (!err) {
         const {currencyUpdate} = this.props;
         values["id"] = currencyUpdate.data.id;
+        values["value"] = Number(values.value);
         this.dispatch(CurrencyAction.update(values));
       }
     });

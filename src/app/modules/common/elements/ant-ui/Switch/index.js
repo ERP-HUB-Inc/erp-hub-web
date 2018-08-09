@@ -7,12 +7,13 @@ export class Switchs extends Element {
 
   constructor(props) {
     super(props);
-    const checked =  this.props.value == 1;
+    const checked =  this.props.checked == 1 ? true : false;
     this.state = {
       ...this.props,      
       checked
     };
     this.onChange = this.onChange.bind(this);
+    this.onSelect = this.onSelect.bind(this);
   }
 
   onChange(checked) {
@@ -24,12 +25,22 @@ export class Switchs extends Element {
     console.log(`switch to ${checked}`);
   }
 
+
   render(){
+    const { getFieldDecorator } = this.props.form;
     return(
       <div className="main-switch">
         <this.FormItem label={ this.props.label }>
-          <Switch defaultChecked {...this.state}  onChange={ this.onChange } />
+          {
+            getFieldDecorator(this.props.name,{ initialValue: this.props.checked })(
+              <Switch 
+                defaultChecked {...this.state}  
+                onChange={ this.onChange }
+              />
+            )
+          }
         </this.FormItem>
+        
       </div>
     );  
   }
