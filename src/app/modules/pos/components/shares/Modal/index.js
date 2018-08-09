@@ -21,6 +21,7 @@ export default class Modal extends Component {
         value: 0
       }
     ];
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   
