@@ -44,6 +44,7 @@ class Column extends List {
     super(props);
     return [
       this.columnCreatedAt,
+      this.columnNo,
       {
         title: "Name",
         dataIndex: "name",

@@ -38,12 +38,12 @@ export default class List extends Component {
     this.okText = "Yes"; // text button on alert of delete action
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
-
+    const test = 10;
     this.columnNo = {
       title: <this.Translate id="col_payment_method_no" />,
       dataIndex: "no",
       key: "no",
-      render: (value, record, index) => index + 1,
+      render: (value, record, index) => this.state.current,
       sorter: true
     };
     this.columnStatus = {

@@ -19,6 +19,10 @@ export default class PaymentMethodList extends List {
     this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD_DATA;
   }
 
+  renderColumn() {
+
+  }
+
   handleShowFormAdd() {
     const { dispatch } = this.props;
     dispatch(PaymentMethodAction.showForm());
