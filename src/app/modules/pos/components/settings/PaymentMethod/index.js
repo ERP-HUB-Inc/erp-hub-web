@@ -19,6 +19,10 @@ export default class PaymentMethodList extends List {
     this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD_DATA;
   }
 
+  renderColumn() {
+
+  }
+
   handleShowFormAdd() {
     const { dispatch } = this.props;
     dispatch(PaymentMethodAction.showForm());
@@ -45,6 +49,7 @@ class Column extends List {
     super(props);
     return [
       this.columnCreatedAt,
+      this.columnNo,
       {
         title: <this.Translate id="col_payment_method_name" />,
         dataIndex: "name",

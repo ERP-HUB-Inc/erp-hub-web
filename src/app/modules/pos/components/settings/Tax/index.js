@@ -1,5 +1,4 @@
 import React from "react";
-import columns from "./column";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/Tax/FormCreate";
 import FormUpdate from "../../../containers/settings/Tax/FormUpdate";
@@ -10,7 +9,7 @@ import Constant from "../../../constants/settings/tax";
 export default class TaxList extends List { 
   constructor(props) {
     super(props);
-    this.columns = columns;
+    this.columns = new Column();
     this.fetchingProp = "tax";
     this.addingProp = "taxAdd";
     this.updatingProp = "taxUpdate";
@@ -37,5 +36,32 @@ export default class TaxList extends List {
 
   render() {
     return super.render();
+  }
+}
+
+class Column extends List {
+  constructor(props) {
+    super(props);
+    return [
+      this.columnCreatedAt,
+      this.columnNo,
+      {
+        title: "Name",
+        dataIndex: "name",
+        sorter: true
+      },
+      {
+        title: "Rate",
+        dataIndex: "rate",
+        sorter: true
+      },
+      {
+        title: "label On Invoice",
+        dataIndex: "labelOnInvoice",
+        sorter: true
+      },
+      this.columnUpdatedAt,
+      this.columnStatus
+    ];
   }
 }

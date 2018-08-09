@@ -28,12 +28,15 @@ export default class Form extends Modal {
   
   render() {
     const { storeLanguageAdd, form } = this.props;
+
+    this.submitLoading = storeLanguageAdd.adding;
+
     if (storeLanguageAdd.showForm) {
       this.content = (
         <div>
           {storeLanguageAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <InputText form={form} name="name" label="Name" placeholder="Please input your name" required={true} min={3} />
-          <InputText form={form} type="number" name="code" placeholder="Code"  label="Code"/>
+          <InputText form={form} name="name" label="Name" placeholder="Please input your name" required={true} min={3} min={3} />
+          <InputText form={form} name="code" placeholder="Code"  label="Code"/>
           <Select
             name="status"
             label="Status"
