@@ -17,7 +17,8 @@ export default class List extends Component {
       deleting: false,
       modalSource: {},
       ListRoles: null,
-      modalConten: null // the content that show in modal content
+      modalConten: null, // the content that show in modal content,
+      columns: []
     };
     
     //access role
@@ -38,12 +39,11 @@ export default class List extends Component {
     this.okText = "Yes"; // text button on alert of delete action
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
-    const test = 10;
     this.columnNo = {
       title: <this.Translate id="col_payment_method_no" />,
       dataIndex: "no",
       key: "no",
-      render: (value, record, index) => this.state.current,
+      render: (value, record, index) => { console.log("Column No Render:"); return index + 1;},
       sorter: true
     };
     this.columnStatus = {
