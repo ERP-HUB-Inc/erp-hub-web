@@ -13,6 +13,15 @@ export default combineReducers({
     ];
     return reducer.request(state, action, constants);
   },
+  checkExist: (state = InitialState.request(), action) => {
+    const constants = [
+      Constant.REQUEST_CLIENT_PENDING,
+      Constant.REQUEST_CLIENT_REJECTED,
+      Constant.REQUEST_CLIENT_FULFILLED,
+      Constant.REQUEST_CLIENT_RESET
+    ];
+    return reducer.request(state, action, constants);
+  },
   register: (state = {step: 1, submiting: false, submited: false, response: null }, action) => {
     switch(action.type) {
     case Constant.REGISTER_CLIENT_STEP: {

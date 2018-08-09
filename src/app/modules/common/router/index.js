@@ -9,13 +9,13 @@ import offlineDB from "../containers/offline";
 import Home from "../containers/home";
 import Component from "../components/Component";
 import dataSource from "../components/layout/SiderBar/datasource";
-import AuthAction from "../actions/authentication";
-import ConstantAuth from "../constants/authentication";
+// import AuthAction from "../actions/authentication";
+// import ConstantAuth from "../constants/authentication";
 const { Content } = Layout;
 
 class Router extends Component {
   render() {
-    const {dispatch} = this.props;
+    // const {dispatch} = this.props;
     // dispatch(AuthAction.checkAuthentication(this.Util.getAccessToken(ConstantAuth.ACCESS_TOKEN)));
     return (
       <div>

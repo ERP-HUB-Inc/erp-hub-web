@@ -1,5 +1,5 @@
 export default {
-  request: (state, action, [PEDDING, REJECT, FULFILLED]) => {
+  request: (state, action, [PEDDING, REJECT, FULFILLED, RESET]) => {
     switch(action.type) {
     case PEDDING: {
       return {
@@ -21,6 +21,15 @@ export default {
         fetched: true,
         pagination: action.payload.data.pagination,
         list: action.payload.data.data
+      };
+    }
+    case RESET: {
+      return {
+        fetching: false,
+        fetched: false,
+        pagination: null,
+        list: [],
+        error: null
       };
     }
     default:
@@ -54,7 +63,7 @@ export default {
       return state;
     }
   },
-  add: (state, action, [PEDDING, REJECT, FULFILLED, SHOW_FORM, RESET]) => {
+  add: (state, action, [PEDDING, REJECT, FULFILLED, SHOW_FORM, RESET, RESET_DATA_ONLY]) => {
     switch(action.type) {
     case SHOW_FORM: {
       return {
@@ -81,7 +90,7 @@ export default {
       return {
         ...state,
         adding: false,
-        showForm: false,
+        showForm: true,
         added: true,
         response: action.payload.data
       };
@@ -90,6 +99,14 @@ export default {
       return {
         adding: false,
         showForm: false,
+        added: false,
+        response: null
+      };
+    }
+    case RESET_DATA_ONLY: {
+      return {
+        adding: false,
+        showForm: true,
         added: false,
         response: null
       };

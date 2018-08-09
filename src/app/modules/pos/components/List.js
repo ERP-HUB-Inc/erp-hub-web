@@ -39,6 +39,35 @@ export default class List extends Component {
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
 
+    this.columnStatus = {
+      title: <this.Translate id="col_payment_method_status" />,
+      dataIndex: "status",
+      key: "status",
+      render: value => {
+        return (
+          value === 1 ?
+            <this.Badge count={<this.Translate id="select_text_active" />} style={{ backgroundColor: "#0D62AF" }} />
+            :
+            <this.Badge count={<this.Translate id="select_text_deactive" />} style={{ backgroundColor: "#c72727" }} />
+        );
+      },
+      sorter: true
+    };
+    this.columnCreatedAt = {
+      title: <this.Translate id="col_payment_method_date" />,
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: value => this.Util.formatDate(value),
+      sorter: true
+    };
+    this.columnUpdatedAt = {
+      title: <this.Translate id="col_payment_method_update" />,
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      render: value => this.Util.formatDate(value),
+      sorter: true
+    };
+
     this.service = null;
     this.action = null;
 
@@ -291,13 +320,18 @@ export default class List extends Component {
     return (
       <div className="table-wrapper">
 
-        <FormSearch />
+        {/* <FormSearch /> */}
 
         { this.renderActionButton() }
 
-        <div className="float-right">
-          <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
-        </div>
+        { 
+          pagination.total > 0 ?
+            <div className="float-right">
+              <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
+            </div>
+            :
+            ""
+        }
 
         <this.clearFloating/>
 

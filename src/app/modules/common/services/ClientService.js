@@ -8,6 +8,7 @@ class ClientService extends BaseService {
   }
 
   findClientByColumn(option = {column: "", value: ""}) {
+    console.log("Option:", option);
     return this.GET(
       {
         url: `${this.baseUrl}/find/${option.column}/${option.value}`,

@@ -42,12 +42,15 @@ export default class FormCreate extends Modal {
             placeholder={this.CATranslate("input_placeholder_name", locale)}
             required={true}
             errorRequired={<this.Translate id="error_require_input_name" />}
+            errorLenght={<this.Translate id="error_payment_method_name_length" />}
+            min={3}
             max={100}
             form={form}/>
           <InputText
             name="description"
             label={<this.Translate id="input_text_description" />}
             placeholder={this.CATranslate("input_placeholder_description", locale)}
+            errorLenght={<this.Translate id="error_payment_method_description_length" />}
             max={255}
             form={form}/>
           <Select

@@ -28,7 +28,7 @@ export  class InputPassword extends Element {
   compareToFirstPassword (rule, value, callback) {
     const form = this.props.form;
     if (value && value !== form.getFieldValue("password")) {
-      callback("Two passwords that you enter is inconsistent!");
+      callback("Two passwords that you enter is inconsistent.");
     } else {
       callback();
     }
@@ -76,7 +76,7 @@ InputPassword.defaultProps = {
   min: 8,
   max: 255,
   checkConfirm: true,
-  errorRequired: "Please input your password!"
+  errorRequired: "Please input your password."
 };
 
 

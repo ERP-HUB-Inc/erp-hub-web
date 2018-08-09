@@ -25,26 +25,31 @@ export default class SideBar extends React.Component {
       const dataMenu = {};
       dataMenu[menu] = this.state.dataSource[menu];
 
-      const currentLi = document.getElementById(route);
-
-      this.removeClass("hover");
-
-      if (currentLi != null) {
-        currentLi.className += " " + "hover";
-      }
-
       this.setState({
         menuItems: dataMenu,
         isHoverOnSubMenu: true,
         classToggle: "show"
       });
     }
+
+    this.setCurrentHover(route);
+
   }
 
   removeClass(className) {
     const allParentLi = document.getElementsByClassName("sidebar-menu-item");
     for (var i=0; i < allParentLi.length; i++) {
       allParentLi[i].classList.remove(className);
+    }
+  }
+
+  setCurrentHover(element) {
+    const currentLi = document.getElementById(element);
+
+    this.removeClass("hover");
+
+    if (currentLi != null) {
+      currentLi.className += " " + "hover";
     }
   }
 
@@ -114,8 +119,8 @@ export default class SideBar extends React.Component {
 
     if (window.location.pathname == "/") {
       const currentLi = document.getElementById("dashboardNav");
-      this.removeClass("active");
       if (currentLi != null) {
+        this.removeClass("active");
         currentLi.className += " active";
       }
     }
@@ -124,7 +129,7 @@ export default class SideBar extends React.Component {
       <div>
         <div id="sidebar">
           <ul className="list-unstyled text-center">
-            <li id="dashboardNav" className={window.location.pathname == "/" ? "active sidebar-menu-item" : "sidebar-menu-item"}>
+            <li id="dashboardNav" className={window.location.pathname == "/" ? "active sidebar-menu-item" : "sidebar-menu-item"} onMouseEnter={() => this.handleShow("home", "dashboardNav")}  onMouseLeave={() => this.handleHidden()}>
               <Link to="/"><span className="icon-home"></span></Link>
               <div className="line"></div>
             </li>

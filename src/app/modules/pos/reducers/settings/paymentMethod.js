@@ -27,7 +27,8 @@ export default combineReducers({
       Constant.ADD_PAYMENT_METHOD_REJECTED,
       Constant.ADD_PAYMENT_METHOD_FULFILLED,
       Constant.SHOW_PAYMENT_METHOD_FORM,
-      Constant.RESET_PAYMENT_METHOD
+      Constant.RESET_PAYMENT_METHOD,
+      Constant.RESET_PAYMENT_METHOD_DATA
     ];
     return reducer.add(state, action, constants);
   },

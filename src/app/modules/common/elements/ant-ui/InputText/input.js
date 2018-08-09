@@ -17,6 +17,10 @@ export default class InputText extends Element {
               message: this.props.errorLenght
             },
             {
+              max: this.props.max,
+              message: this.props.errorLenght
+            },
+            {
               validator: this.props.validator
             }
           ],

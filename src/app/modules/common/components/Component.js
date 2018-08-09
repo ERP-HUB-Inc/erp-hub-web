@@ -53,7 +53,7 @@ import {
   SapleInput,
   Cards,
   ListSearch,
-  Badges,
+  // Badges,
   AutoComplete
 } from "../elements/react-strap";
 import { Util } from "../util";
@@ -73,7 +73,8 @@ import {
   message,
   Alert,
   Tooltip,
-  Tabs
+  Tabs,
+  Badge
 } from "antd";
 const Panel = Collapse.Panel;
 const { Option } = Select;
@@ -130,7 +131,7 @@ export default class Component extends RComponent {
     this.FormText = FormText;
     this.Cards = Cards;
     this.ListSearch = ListSearch;
-    this.Badges = Badges;
+    // this.Badges = Badges;
     this.AutoComplete = AutoComplete;
 
     //Ant
@@ -147,6 +148,7 @@ export default class Component extends RComponent {
     this.Collapse = Collapse;
     this.Panel = Panel;
     this.Tooltip = Tooltip;
+    this.Badge = Badge;
     this.Option = Option;
     this.Form = Form;
     this.FieldComponent = FieldComponent;
