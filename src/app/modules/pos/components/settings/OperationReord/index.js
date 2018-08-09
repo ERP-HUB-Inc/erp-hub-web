@@ -10,7 +10,7 @@ import OperatinRecordService from "../../../services/settings/OperationRecordSer
 export default class TaxList extends List {
   constructor(props) {
     super(props);
-    this.columns = new Column();;
+    this.columns = new Column();
     this.fetchingProp = "operationRecord";
     this.addingProp = "operationRecordAdd";
     this.updatingProp = "operationRecordUpdate";

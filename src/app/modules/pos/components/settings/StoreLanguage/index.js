@@ -47,12 +47,12 @@ class Column extends List {
       this.columnCreatedAt,
       this.columnNo,
       {
-        title: "Name",
+        title: <this.Translate id="col_language_name" />,
         dataIndex: "name",
         sorter: true
       },
       {
-        title: "Code",
+        title: <this.Translate id="col_language_code" />,
         dataIndex: "code",
         sorter: true
       },

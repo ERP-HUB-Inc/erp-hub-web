@@ -1,3 +1,4 @@
+
 import { initialize, addTranslation } from "react-localize-redux";
 import headers from "../languages/headers";
 import footers from "../languages/footers";
@@ -13,6 +14,8 @@ import storeAccount from "../../pos/languages/settings/storeAccount";
 import storeLocation from "../../pos/languages/settings/storeLocation";
 import tax from "../../pos/languages/settings/tax";
 import operationRecord from "../../pos/languages/settings/operationRecord";
+import language from "../../pos/languages/settings/language";
+import currency from "../../pos/languages/settings/currency";
 import error from "../elements/common/language/error";
 
 export function initLanguage() {
@@ -37,6 +40,8 @@ export function setTranslation() {
     ...storeAccount,
     ...storeLocation,
     ...tax,
-    ...operationRecord
+    ...operationRecord,
+    ...language,
+    ...currency
   });
 }

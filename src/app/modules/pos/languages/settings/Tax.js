@@ -6,7 +6,7 @@ export default {
   ],
   "col_tax_label_on_invoice": [
     "Label on Invoice",
-    "Label on Invoice",
+    "အမည်",
     "Label on Invoice"
   ],
   "col_tax_rate": [

@@ -45,17 +45,17 @@ class Column extends List {
       this.columnCreatedAt,
       this.columnNo,
       {
-        title: "Name",
+        title: <this.Translate id="col_currency_name" />,
         dataIndex: "name",
         sorter: true
       },
       {
-        title: "Symbol",
+        title: <this.Translate id="col_currency_symbol" />,
         dataIndex: "symbol",
         sorter: true
       },
       {
-        title: "Value",
+        title: <this.Translate id="col_currency_value" />,
         dataIndex: "value",
         sorter: true
       },

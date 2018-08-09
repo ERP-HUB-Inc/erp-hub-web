@@ -40,6 +40,7 @@ export default class FormReciptTemplateCreate extends Modal {
             placeholder="Please input your name"
             required={true}
             errorRequired="Please input your name"
+            min={3}
             max={100}
             form={form}/>
           {/* <this.Select

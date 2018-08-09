@@ -17,6 +17,7 @@ export default class Form extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        values["rate"] = Number(values.rate);
         this.dispatch(TaxAction.add(values));
       }
     });

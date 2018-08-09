@@ -1,7 +1,17 @@
 export default {
-  "col_payment_method": [
-    "Positions",
-    "តួនាទី",
-    "PosItion-Es"
+  "col_store_location_name": [
+    "Name",
+    "Name",
+    "Name"
+  ],
+  "col_store_location_code": [
+    "Name",
+    "Name",
+    "Name"
+  ],
+  "col_store_location_address": [
+    "Address",
+    "Address",
+    "Address"
   ]
 };

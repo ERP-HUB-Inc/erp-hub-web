@@ -1,4 +1,5 @@
 import React from "react";
+// import columns from "./column";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/Tax/FormCreate";
 import FormUpdate from "../../../containers/settings/Tax/FormUpdate";
@@ -39,6 +40,7 @@ export default class TaxList extends List {
   }
 }
 
+
 class Column extends List {
   constructor(props) {
     super(props);
@@ -46,21 +48,23 @@ class Column extends List {
       this.columnCreatedAt,
       this.columnNo,
       {
-        title: "Name",
+        title: <this.Translate id="col_tax_name" />,
         dataIndex: "name",
-        sorter: true
+        key: "name",
+        sorter: true,
       },
       {
-        title: "Rate",
-        dataIndex: "rate",
-        sorter: true
-      },
-      {
-        title: "label On Invoice",
+        title: <this.Translate id="col_tax_label_on_invoice" />,
         dataIndex: "labelOnInvoice",
+        key: "labelOnInvoice",
         sorter: true
       },
-      this.columnUpdatedAt,
+      { 
+        title: <this.Translate id="col_tax_rate" />,
+        dataIndex: "rate",
+        sorter: true,
+        render: (rate) => rate + "%"
+      },
       this.columnStatus
     ];
   }

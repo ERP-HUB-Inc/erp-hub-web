@@ -10,6 +10,7 @@ export default class Form extends Modal {
     this.title = "Tax";
     this.addingPropReducer = "taxUpdate";
     this.dispatch = this.props.dispatch;
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit() {
@@ -22,7 +23,9 @@ export default class Form extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const {taxUpdate} = this.props;
-        values["id"] = taxUpdate.data.id;
+        values["id"] = taxUpdate.data.id; 
+        values["rate"] = Number(values.rate);
+        values["status"] = 1;
         this.dispatch(TaxAction.update(values));
       }
     });

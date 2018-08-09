@@ -9,19 +9,9 @@ export default {
     "အမည်",
     "Name"
   ],
-  "col_receipt_template_recordfor":[
-    "Record For",
-    "Record For",
-    "Record For"
-  ],
-  "col_receipt_template_type":[
-    "Type",
-    "Type",
-    "Type"
-  ],
-  "col_receipt_template_amount":[
-    "Amount",
-    "Amount",
-    "Amount"
+  "col_receipt_template_store":[  
+    "Store",
+    "Store",
+    "Store"
   ]
 };

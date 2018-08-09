@@ -1,5 +1,5 @@
 import React from "react";
-import columns from "./column";
+// import columns from "./column";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/ReceiptTemplate/FormCreate";
 import FormUpdate from "../../../containers/settings/ReceiptTemplate/FormUpdate";
@@ -10,7 +10,7 @@ import ReceiptService from "../../../services/settings/ReceiptService";
 export default class ReceiptTemplateList extends List {
   constructor(props) {
     super(props);
-    this.columns = columns;
+    this.columns = new Column();
     this.fetchingProp = "receipt";
     this.addingProp = "receiptAdd";
     this.updatingProp = "receiptUpdate";
@@ -37,5 +37,29 @@ export default class ReceiptTemplateList extends List {
 
   render() {
     return super.render();
+  }
+}
+
+class Column extends List {
+  constructor(props) {
+    super(props);
+    return [
+      this.columnCreatedAt,
+      this.columnNo,
+      {
+        title: <this.Translate id="col_receipt_template_store" />,
+        dataIndex: "labelOnInvoice",
+        key: "labelOnInvoice",
+        sorter: true
+      },
+      {
+        title: <this.Translate id="col_receipt_template_name" />,
+        dataIndex: "name",
+        key: "name",
+        sorter: true,
+      },
+      this.columnUpdatedAt,
+      this.columnStatus
+    ];
   }
 }
