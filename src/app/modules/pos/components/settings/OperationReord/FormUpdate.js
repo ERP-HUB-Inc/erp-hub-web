@@ -34,10 +34,18 @@ export default class Form extends Modal {
         <div className="main-operation-record">
           {operationRecordUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
           <this.InputText form={form} name="name" data={ operationRecordUpdate.data.name }  label="Name" placeholder="Please input your name" required={true} min={ 3 } max={ 100 }/>
-          <this.DatePickers form={form} name="registerDate"  label="Record For" required={false } placeholder="Please input your name" />
+          <this.DatePickers 
+            type="date"
+            defaultValue= { `${ operationRecordUpdate.data.registerDate }` }
+            name="registerDate"  
+            label="Record For" 
+            required={false } 
+            placeholder="Please input your name" 
+            form={form} 
+          />
           <this.InputNumber 
             form={form} 
-            type="number" 
+            type="number"   
             data={ operationRecordUpdate.data.amount } 
             name="amount" 
             label="Amount ($)" 
@@ -48,7 +56,6 @@ export default class Form extends Modal {
           <this.FormGroup>
             <this.RadioRegisterGroup 
               name="type" 
-              type="radio"
               defaultValue={ `${ operationRecordUpdate.data.type }` }
               required={true}
               form={form}

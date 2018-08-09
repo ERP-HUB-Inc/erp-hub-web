@@ -1,25 +1,25 @@
 export default {
-  "col_receipt_template_date": [
+  "col_operation_record_date": [
     "Date",
     "Date",
     "Date"
   ],
-  "col_receipt_template_name":[
+  "col_operation_record_name":[
     "Name",
     "အမည်",
     "Name"
   ],
-  "col_receipt_template_recordfor":[
+  "col_operation_record_recordfor":[
     "Record For",
     "Record For",
     "Record For"
   ],
-  "col_receipt_template_type":[
+  "col_operation_record_type":[
     "Type",
     "Type",
     "Type"
   ],
-  "col_receipt_template_amount":[
+  "col_operation_record_amount":[
     "Amount",
     "Amount",
     "Amount"

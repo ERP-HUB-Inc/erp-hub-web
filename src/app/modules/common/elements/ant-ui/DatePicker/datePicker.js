@@ -21,11 +21,11 @@ export class DatePic extends Element {
     return (
       <this.FormItem label={ label }>
         { 
-          getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.data})(
+          getFieldDecorator(this.props.name, {rules: this.props.rules }, { initialValue: this.props.defaultValue })(
             defaultValue != null ? 
               <DatePicker
                 defaultValue={moment(" " + defaultValue , dateFormat)}
-                format={ dateFormat }
+                // format={ dateFormat }
                 disabled = { this.props.disabled }
               />  
               : <DatePicker disabled = { this.props.disabled } />

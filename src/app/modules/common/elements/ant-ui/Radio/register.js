@@ -21,8 +21,9 @@ export class RadioRegisterGroup extends Element {
   
   onChange(e) {
     console.log(`radio checked:${e.target.value}`);
-    const onChange = this.props.onChange;
-    onChange(e.target.value);
+    // const onChange = this.props.onChange;
+    // onChange(e.target.value);
+    // onChange();
   }
 
   render() {
