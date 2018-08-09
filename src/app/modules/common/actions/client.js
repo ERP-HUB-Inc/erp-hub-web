@@ -52,6 +52,13 @@ export default {
       });
     };
   },
+  resetRequest: () => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_CLIENT_RESET
+      });
+    };
+  },
   reset: () => {
     return dispatch => {
       return dispatch({

@@ -27,6 +27,7 @@ export default [
   {
     title: "Status",
     dataIndex: "status",
-    sorter: true
+    sorter: true,
+    render: (status) => status == 1 ? "Active" : "Deactive"
   }
 ];

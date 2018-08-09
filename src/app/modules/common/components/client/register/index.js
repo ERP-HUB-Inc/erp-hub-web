@@ -10,27 +10,37 @@ import "./index.css";
 class ClientRegister extends Component {
   constructor(props) {
     super(props);
+    this.errorMessageEmail = null;
+    this.values = null;
+    this.validateClassStatusEmail = "";
     this.handleSubmit = this.handleSubmit.bind(this);
     this.checkIsEmailAlreadyExist = this.checkIsEmailAlreadyExist.bind(this);
   }
+
+  handleKeyDown () {
+    this.errorMessageEmail = null;
+    this.validateClassStatusEmail = "";
+  }
+
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const {dispatch} = this.props;
-        dispatch(ClientAction.startRegister(values, 2));
+        this.values = values;
+        dispatch(ClientAction.findClientByColumn("email", values.email));
       }
     });
   }
 
   checkIsEmailAlreadyExist(rule, value, callback) {
     if (this.Util.isValidEmail(value)) {
-      setTimeout(function () {
+      setTimeout(() => {
         ClientService.findClientByColumn({column: "email", value})
-          .then(function (response) {
+          .then((response) => {
             callback("Email already exist.");
           })
-          .catch(function (error) {
+          .catch((error) => {
             callback();
           });
       }, 5000);
@@ -47,7 +57,16 @@ class ClientRegister extends Component {
       nextStepContent = <RegisterComplete/>;
     }
 
-    const { form } = this.props;
+    const { clientCheckExisting, dispatch, form } = this.props;
+
+    if (clientCheckExisting.list != null && clientCheckExisting.fetched) {
+      this.errorMessageEmail = "This email has already taken.";
+      this.validateClassStatusEmail = "has-error";
+      dispatch(ClientAction.resetRequest());
+    } else if (clientCheckExisting.list == null && clientCheckExisting.fetched){
+      dispatch(ClientAction.startRegister(this.values, 2));
+      dispatch(ClientAction.resetRequest());
+    }
 
     return (
       <div>
@@ -77,15 +96,20 @@ class ClientRegister extends Component {
                     <h6>Start Register with Us</h6>
                   </div>
                   <Form onSubmit={this.handleSubmit}>
-                    <this.InputEmail
-                      name="email"
-                      label="Email"
-                      placeholder="Email"
-                      required={true}
-                      form={form}
-                      initialValue="ppp@gmail.com"
-                      validator={this.checkIsEmailAlreadyExist}
-                    />
+                    <div className={this.validateClassStatusEmail}>
+                      <this.InputEmail
+                        name="email"
+                        label="Email"
+                        placeholder="Email"
+                        required={true}
+                        errorRequired="Please input your email."
+                        form={form}
+                        handleKeyDown={() => this.handleKeyDown()}
+                      />
+                      {
+                        this.errorMessageEmail != null ? <div className="ant-form-explain">{this.errorMessageEmail}</div> : "" 
+                      }
+                    </div>
                     <this.InputPassword
                       label="Password"
                       confirmLabel="Comfirm Password"
@@ -114,7 +138,7 @@ class ClientRegister extends Component {
                         <span className="have-acc">Have an account?</span> <span className="store-link">sign in </span>
                       </this.Link>
                       <div className="main-signin">
-                        <this.Button htmlType="submit" type="info">START</this.Button>
+                        <this.Button htmlType="submit" type="info" loading={clientCheckExisting.fetching}>START</this.Button>
                       </div>
                     </div>
                   </Form>

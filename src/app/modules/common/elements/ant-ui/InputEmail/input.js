@@ -33,7 +33,11 @@ export default class InputText extends Element {
             }
           ],initialValue: this.props.data})
           (
-            <this.Input type={this.props.type} placeholder={this.props.placeholder}/>
+            <this.Input
+              type={this.props.type}
+              placeholder={this.props.placeholder}
+              onKeyDown={this.props.handleKeyDown}
+            />
           )
         }
       </this.FormItem>

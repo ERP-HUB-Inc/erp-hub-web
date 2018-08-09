@@ -1,5 +1,4 @@
 import React from "react";
-import columns from "./column";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/PaymentMethod/FormCreate";
 import FormUpdate from "../../../containers/settings/PaymentMethod/FormUpdate";
@@ -11,13 +10,13 @@ import "./index.css";
 export default class PaymentMethodList extends List {
   constructor(props) {
     super(props);
-    this.columns = columns;
+    this.columns = new Column();
     this.fetchingProp = "paymentMethod";
     this.addingProp = "paymentMethodAdd";
     this.updatingProp = "paymentMethodUpdate";
     this.service = PaymentMethodService;
     this.action = PaymentMethodAction;
-    this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
+    this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD_DATA;
   }
 
   handleShowFormAdd() {
@@ -38,5 +37,28 @@ export default class PaymentMethodList extends List {
 
   render() {
     return super.render();
+  }
+}
+
+class Column extends List {
+  constructor(props) {
+    super(props);
+    return [
+      this.columnCreatedAt,
+      {
+        title: <this.Translate id="col_payment_method_name" />,
+        dataIndex: "name",
+        key: "name",
+        sorter: true,
+      },
+      {
+        title: <this.Translate id="col_payment_method_description" />,
+        dataIndex: "description",
+        key: "description",
+        sorter: true
+      },
+      this.columnUpdatedAt,
+      this.columnStatus
+    ];
   }
 }

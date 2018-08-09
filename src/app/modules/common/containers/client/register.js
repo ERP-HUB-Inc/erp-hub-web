@@ -13,7 +13,8 @@ class Register extends Component {
 
 function mapStateToProps(state) {
   return {
-    clientRegister: state.reducer.client.register
+    clientRegister: state.reducer.client.register,
+    clientCheckExisting: state.reducer.client.checkExist
   };
 }
  

@@ -37,11 +37,6 @@ class ClientRegister extends Component {
           clientRegister
         } = this.props;
         const registerData = {...clientRegister.response, ...values};// merge value from step one to current step
-        registerData["currencyName"] = "Dollar";
-        registerData["currencySymbol"] = "$";
-        registerData["currencyValue"] = 100;
-        registerData["languageKey"] = "en";
-        registerData["languageName"] = "English";
         dispatch(ClientAction.register(registerData, 3));
       }
     });
@@ -156,7 +151,6 @@ class ClientRegister extends Component {
                 <this.Col md="9">
                   <this.InputText
                     name="phoneNumber"
-                    type="number"
                     label="Phone Number"
                     placeholder="Phone Number"
                     form={form}

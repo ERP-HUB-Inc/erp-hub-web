@@ -12,8 +12,10 @@ export  class InputEmail extends Element {
         placeholder={this.props.placeholder}
         label={this.props.label}
         required={this.props.required}
+        errorRequired={this.props.errorRequired}
         validator={this.props.validator}
         initialValue={this.props.initialValue}
+        handleKeyDown={this.props.handleKeyDown}
         form={this.props.form}
         data={ this.props.data }
       />
