@@ -64,7 +64,7 @@ class Column extends List {
         title: <this.Translate id="col_operation_record_type" />,
         dataIndex: "type",
         sorter: true,
-        render : (type) => type == 0 ? "Income" : "Expense"
+        render : (type) => type === 0 ? "Income" : "Expense"
       },
       {
         title: <this.Translate id="col_operation_record_name" />,

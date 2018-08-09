@@ -32,8 +32,6 @@ export class InputNumber extends Element {
         data={this.props.data}
         required = {this.props.required}
         form={this.props.form}
-        type={ this.props.type }
-        // rules = {this.rules}
       />
     );
   }   

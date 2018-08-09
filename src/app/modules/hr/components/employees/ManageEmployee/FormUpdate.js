@@ -28,7 +28,7 @@ export default class Form extends Modal {
 
   onChange(checked){
     this.setState({
-      disabled : checked == 1 
+      disabled : checked === 1 
     });
     this.props.form.setFieldsValue({password: ""});
   }
@@ -93,7 +93,7 @@ export default class Form extends Modal {
                       label="Gender"
                       placeholder="Please select gender"
                       dataSource={ gender }
-                      defaultValue={ manageEmployeeUpdate.data.gender == 1 ? "Male" : "Female" }
+                      defaultValue={ manageEmployeeUpdate.data.gender === 1 ? "Male" : "Female" }
                       form={form}/>
                   </this.Col>
                   <this.Col md="6">

@@ -45,7 +45,6 @@ export default class Form extends Modal {
               name="type" 
               required={ true }
               type="radio"
-              required={true}
               form={form}
             >
               <this.RadioRegister title="INCOME"  value="0"/>

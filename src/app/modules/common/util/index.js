@@ -62,7 +62,7 @@ import _ from "lodash";
 
 export class Util {
   checkValueSwitch(values){
-    return values == true ? 1 : 0;
+    return values === true ? 1 : 0;
   }
   
   findArrayIndex(collection, prop, value) {
@@ -85,7 +85,7 @@ export class Util {
   }
 
   isValidEmail(email) {
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var re = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/;
     return re.test(email);
   }
 
@@ -97,7 +97,7 @@ export class Util {
     if (formValues != null && "values" in formValues) {
       const reduxFormValues = formValues.values;
       for (const prop in requiredField) {
-        if (reduxFormValues[prop] == null || reduxFormValues[prop] == "undefined") {
+        if (reduxFormValues[prop] === null || reduxFormValues[prop] === "undefined") {
           valid = true;
         } else {
           valid = false;
@@ -120,7 +120,7 @@ export class Util {
 
   groupRecordByColumnName(datas, column) {
     return datas.map((value) => {
-      if (value["isParent"] == 1) {
+      if (value["isParent"] === 1) {
         return value;
       }
     } );

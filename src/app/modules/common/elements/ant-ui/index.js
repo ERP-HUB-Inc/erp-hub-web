@@ -5,7 +5,6 @@ export * from "./Select";
 export * from "./DatePicker";
 export * from "./Button/actionButton";
 export * from "./Switch";
-export * from "./Input/animationInput";
 export * from "./Waiting";
 export * from "./Checkbox";
 export * from "./ListCollapse";

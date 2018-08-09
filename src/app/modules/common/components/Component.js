@@ -29,7 +29,6 @@ import
   Checkboxs,
   FieldComponent,
   TrashButton,
-  AnimationInput,
   Button,
   InputText,
   InputEmail,
@@ -141,7 +140,6 @@ export default class Component extends RComponent {
     this.Icon = Icon;
     this.ActionButton = ActionButton;
     this.Switchs = Switchs;
-    this.AnimationInput = AnimationInput;
     this.Waiting = Waiting;
     this.Checkboxs = Checkboxs;
     this.Checkbox = Checkbox;
@@ -172,7 +170,7 @@ export default class Component extends RComponent {
     this.Radios = Radios;
 
     // Util function
-    this.Util = new Util;
+    this.Util = new Util();
 
     // HTTP CODE
     this.HttpCode = HttpCode;
@@ -189,7 +187,6 @@ export default class Component extends RComponent {
 
   getCurrentIndexLanguage(state) {
     const currentLanguage = getActiveLanguage(state);
-    const languages = state.languages;
     for (var i=0; i<state.languages.length; i++) {
       if (state.languages[i].code ===currentLanguage.code) {
         return i;

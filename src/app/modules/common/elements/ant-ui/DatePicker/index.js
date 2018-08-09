@@ -25,8 +25,7 @@ export class DatePickers extends Element {
         label={ this.props.label }
         name={ this.props.name }
         rules={ this.rules }
-        required = {this.props.required}  
-        label={this.props.label}
+        required = {this.props.required}
         data={this.props.data}
         defaultValue={this.props.defaultValue}
         disabled={this.props.disabled}

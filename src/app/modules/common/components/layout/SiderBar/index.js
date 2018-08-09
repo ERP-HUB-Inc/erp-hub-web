@@ -49,7 +49,7 @@ export default class SideBar extends React.Component {
     this.removeClass("hover");
 
     if (currentLi != null) {
-      currentLi.className += " " + "hover";
+      currentLi.className = `${currentLi.className} hover`;; 
     }
   }
 
@@ -86,10 +86,10 @@ export default class SideBar extends React.Component {
 	  
     const currentPathArr = window.location.pathname.split("/");
 	
-    const classActive = route==currentPathArr[1] ? "active" : "";
+    const classActive = route === currentPathArr[1] ? "active" : "";
 
     if (currentLi != null) {
-      if (classActive != "") {
+      if (classActive !== "") {
         this.removeClass("active");
       }
       currentLi.className += " " + classActive;
@@ -97,7 +97,7 @@ export default class SideBar extends React.Component {
 	
     return (
       <li key={key} id={route} className="sidebar-menu-item" onMouseEnter={() => this.handleShow(title, route)}  onMouseLeave={() => this.handleHidden()}>
-        <a href="javascript:;"><span className={icon}></span></a>
+        <Link to="javascript:;"><span className={icon}></span></Link>
         <div className="line"></div>
       </li>
     );
@@ -117,7 +117,7 @@ export default class SideBar extends React.Component {
   render() {
     const subMenuItemTitle = Object.keys(this.state.menuItems);
 
-    if (window.location.pathname == "/") {
+    if (window.location.pathname === "/") {
       const currentLi = document.getElementById("dashboardNav");
       if (currentLi != null) {
         this.removeClass("active");
@@ -129,7 +129,7 @@ export default class SideBar extends React.Component {
       <div>
         <div id="sidebar">
           <ul className="list-unstyled text-center">
-            <li id="dashboardNav" className={window.location.pathname == "/" ? "active sidebar-menu-item" : "sidebar-menu-item"} onMouseEnter={() => this.handleShow("home", "dashboardNav")}  onMouseLeave={() => this.handleHidden()}>
+            <li id="dashboardNav" className={window.location.pathname === "/" ? "active sidebar-menu-item" : "sidebar-menu-item"} onMouseEnter={() => this.handleShow("home", "dashboardNav")}  onMouseLeave={() => this.handleHidden()}>
               <Link to="/"><span className="icon-home"></span></Link>
               <div className="line"></div>
             </li>
@@ -139,7 +139,7 @@ export default class SideBar extends React.Component {
           </ul>
           <div id="sum-menu" className={this.state.classToggle} onMouseEnter={() => this.handleHoverOnSubMenu()} onMouseLeave={() => this.handleLeaveFromSubMenu(this.state.menuItems[subMenuItemTitle]["route"])}>
             { 
-              this.state.classToggle == "show" 
+              this.state.classToggle === "show" 
                 ?  
                 <div>
                   <div className="title text-center text-uppercase">{subMenuItemTitle}</div>

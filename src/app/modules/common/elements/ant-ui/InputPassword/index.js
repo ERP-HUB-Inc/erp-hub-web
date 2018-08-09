@@ -1,7 +1,7 @@
 import React from "react";
 import Password from "./password";
 import Confirm from "./confirm";
-import Element, { Form } from "../../common/Element";
+import Element from "../../common/Element";
 import "./index.css";
 
 export  class InputPassword extends Element {

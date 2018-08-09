@@ -1,4 +1,4 @@
-import { normalize, schema } from "normalizr";
+// import { normalize, schema } from "normalizr";
 export default {
   request: (state, action, [PEDDING, REJECT, FULFILLED], schemas) => {
     switch(action.type) {

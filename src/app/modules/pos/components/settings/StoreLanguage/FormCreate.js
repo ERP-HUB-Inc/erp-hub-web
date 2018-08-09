@@ -33,7 +33,7 @@ export default class Form extends Modal {
       this.content = (
         <div>
           {storeLanguageAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <this.InputText form={form} name="name" label="Name" placeholder="Please input your name" required={true} min={3} min={3} />
+          <this.InputText form={form} name="name" label="Name" placeholder="Please input your name" required={true} min={3} max={100} />
           <this.InputText form={form} name="code" placeholder="Code"  label="Code"/>
           <this.Select
             name="status"

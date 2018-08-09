@@ -1,8 +1,8 @@
 import React from "react";
-import {  
-  Label,
-  FormGroup
-} from "reactstrap";
+// import {  
+//   Label,
+//   FormGroup
+// } from "reactstrap";
 import Element from "../../common/Element";
 // import "./index.css";
 import { Radio } from "antd";

@@ -1,10 +1,10 @@
 import React from "react";
-import {  
-  Label,
-  FormGroup
-} from "reactstrap";
+// import {  
+//   Label,
+//   FormGroup
+// } from "reactstrap";
 import moment from "moment";
-import Element, { Form } from "../../common/Element";
+import Element from "../../common/Element";
 import "./index.css";
 import { DatePicker } from "antd";
 

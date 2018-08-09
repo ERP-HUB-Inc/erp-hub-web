@@ -49,7 +49,6 @@ export default class StoreAccountList extends Element {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        alert("dd");
         values["id"] = obj.userId;
         values["status"] = "1";
         this.dispatch(StoreAccountAction.update(values));
@@ -61,15 +60,14 @@ export default class StoreAccountList extends Element {
   onSelect(e){
     // alert("dd");
     this.setState({
-      classChange: e == this.props.storeAccount.businessPlanId ? "unhide" : "hide"
+      classChange: e === this.props.storeAccount.businessPlanId ? "unhide" : "hide"
     });
   }
 
   onChange(e){
     this.setState({
-      classChange: e == this.props.storeAccount.businessPlanId ? "unhide" : "hide"
+      classChange: e === this.props.storeAccount.businessPlanId ? "unhide" : "hide"
     });
-    console.log("e",e);
   }
 
   componentDidMount(){
@@ -82,7 +80,7 @@ export default class StoreAccountList extends Element {
   render() {
     const { form,storeAccount,response,businessplan } = this.props;
 
-    if(response.updated == true){
+    if(response.updated === true){
       this.Message.success("Success Updated.");
       this.dispatch(StoreAccountAction.reset());
     }
@@ -103,7 +101,7 @@ export default class StoreAccountList extends Element {
             {
               menuSource["settings"]["subItems"].map((value, index) =>
                 "isFashNav" in value && value["isFashNav"] ?
-                  <li className={(currentPath==value["route"] ? "active" : "") + " fast-nav"} key={index}>
+                  <li className={(currentPath===value["route"] ? "active" : "") + " fast-nav"} key={index}>
                     <this.Link to={value["route"]}>{value["title"]}</this.Link>
                   </li>
                   :
@@ -204,8 +202,7 @@ export default class StoreAccountList extends Element {
                     <this.RadioButton 
                       name="paymentType"    
                       required={ true }
-                      form={form} 
-                      required={ true }
+                      form={form}
                     />
                   </div>
                 </div>
