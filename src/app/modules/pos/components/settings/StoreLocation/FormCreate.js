@@ -38,7 +38,6 @@ export default class FormStoreLocationCreate extends Modal {
           <this.Select
             name="status"
             label="Status"
-            placeholder="Please select status"
             dataSource={this.statusDataSource}
             defaultValue={1}
             form={form}/>

@@ -36,6 +36,12 @@ export default class Form extends Modal {
           <this.InputText form={form} name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
           <this.InputNumber form={form} type="number" name="rate" label="Rate" placeholder="Rate" />
           <this.InputText form={form} name="labelOnInvoice" label="Label On Invoice" placeholder="Label On Invoice" max={255}/>
+          <this.Select
+            name="status"
+            label="Status"
+            dataSource={this.statusDataSource}
+            defaultValue={1}
+            form={form}/>
         </div>
       );
       return super.render();
