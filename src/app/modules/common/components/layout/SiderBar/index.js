@@ -20,10 +20,19 @@ export default class SideBar extends React.Component {
     this.subMenuItem = this.subMenuItem.bind(this);
   }
 
-  handleShow(menu) {
+  handleShow(menu, route) {
     if (menu in this.state.dataSource) {
       const dataMenu = {};
       dataMenu[menu] = this.state.dataSource[menu];
+
+      const currentLi = document.getElementById(route);
+
+      this.removeClass("hover");
+
+      if (currentLi != null) {
+        currentLi.className += " " + "hover";
+      }
+
       this.setState({
         menuItems: dataMenu,
         isHoverOnSubMenu: true,
@@ -32,8 +41,17 @@ export default class SideBar extends React.Component {
     }
   }
 
+  removeClass(className) {
+    const allParentLi = document.getElementsByClassName("sidebar-menu-item");
+    for (var i=0; i < allParentLi.length; i++) {
+      allParentLi[i].classList.remove(className);
+    }
+  }
+
   handleHidden() {
-    this.setState({classToggle: "hidden"});
+    this.setState({
+      classToggle: "hidden",
+    });
   }
 
   handleHoverOnSubMenu() {
@@ -43,28 +61,39 @@ export default class SideBar extends React.Component {
     });
   }
 
-  handleLeaveFromSubMenu() {
+  handleLeaveFromSubMenu(route) {
+
+    const currentLi = document.getElementById(route);
+    
+    if (currentLi != null) {
+      currentLi.classList.remove("hover");
+    }
+
     this.setState({
       isHoverOnSubMenu: false,
       classToggle: "hidden"
     });
   }
 
-  removeClassCurrentlyHover() {
-    const oldElement = document.querySelectorAll(".sidebar-menu-item");
-    oldElement.classList.remove("hover");
-  }
-
   menuParentItem(key, route, title, icon) {
+
+    const currentLi = document.getElementById(route);
 	  
-	const currentPathArr = window.location.pathname.split("/");
+    const currentPathArr = window.location.pathname.split("/");
 	
-	const classActive = route==currentPathArr[1] ? "active" : "";
+    const classActive = route==currentPathArr[1] ? "active" : "";
+
+    if (currentLi != null) {
+      if (classActive != "") {
+        this.removeClass("active");
+      }
+      currentLi.className += " " + classActive;
+    }
 	
     return (
-      <li key={key} id={title} className={classActive + " sidebar-menu-item"} onMouseEnter={() => this.handleShow(title)}  onMouseLeave={() => this.handleHidden()}>
+      <li key={key} id={route} className="sidebar-menu-item" onMouseEnter={() => this.handleShow(title, route)}  onMouseLeave={() => this.handleHidden()}>
         <a href="javascript:;"><span className={icon}></span></a>
-		<div className="line"></div>
+        <div className="line"></div>
       </li>
     );
   }
@@ -82,19 +111,28 @@ export default class SideBar extends React.Component {
 
   render() {
     const subMenuItemTitle = Object.keys(this.state.menuItems);
+
+    if (window.location.pathname == "/") {
+      const currentLi = document.getElementById("dashboardNav");
+      this.removeClass("active");
+      if (currentLi != null) {
+        currentLi.className += " active";
+      }
+    }
+
     return (
       <div>
         <div id="sidebar">
           <ul className="list-unstyled text-center">
-            <li className={window.location.pathname=="/" ? "active" : ""}>
-				<Link to="/"><span className="icon-home"></span></Link>
-				<div className="line"></div>
-			</li>
+            <li id="dashboardNav" className={window.location.pathname == "/" ? "active sidebar-menu-item" : "sidebar-menu-item"}>
+              <Link to="/"><span className="icon-home"></span></Link>
+              <div className="line"></div>
+            </li>
             {
               Object.keys(this.state.dataSource).map((parentKey, parentIndex) => this.menuParentItem(parentIndex, this.state.dataSource[parentKey]["route"],  parentKey, this.state.dataSource[parentKey]["icon"]))
             }
           </ul>
-          <div id="sum-menu" className={this.state.classToggle} onMouseEnter={() => this.handleHoverOnSubMenu()} onMouseLeave={() => this.handleLeaveFromSubMenu()}>
+          <div id="sum-menu" className={this.state.classToggle} onMouseEnter={() => this.handleHoverOnSubMenu()} onMouseLeave={() => this.handleLeaveFromSubMenu(this.state.menuItems[subMenuItemTitle]["route"])}>
             { 
               this.state.classToggle == "show" 
                 ?  
