@@ -22,6 +22,8 @@ export class RadioButton extends Element {
         label={this.props.label}
         data = {this.props.data }
         rules= { this.rules }
+        required={ this.props.required }
+        rules={ this.props.rules }
         form={ this.props.form }
       />
     );

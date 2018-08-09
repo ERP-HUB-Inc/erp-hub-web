@@ -15,7 +15,8 @@ function mapStateToProps(state) {
   return {
     storeAccount: state.reducer.storeAccount.request.list,
     language: state.reducer.storeAccount.request.list,
-    response: state.reducer.storeAccount.update    
+    response: state.reducer.storeAccount.update,
+    businessplan: state.reducer.businessPlan.request.list
   };
 }
 

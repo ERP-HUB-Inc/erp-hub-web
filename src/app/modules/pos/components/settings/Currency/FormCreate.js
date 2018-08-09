@@ -18,10 +18,8 @@ export default class Form extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-
-        alert(values);
-
-        // this.dispatch(CurrencyAction.add(values));
+        values["value"] = Number(values.value);
+        this.dispatch(CurrencyAction.add(values));
       }
     });
   }

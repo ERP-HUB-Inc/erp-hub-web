@@ -8,7 +8,7 @@ import modal from "../../pos/languages/shares/modal";
 import incomeAndExpense from "../../pos/languages/settings/incomeAndExpense";
 import paymentMethod from "../../pos/languages/settings/paymentMethod";
 import receiptTemplate from "../../pos/languages/settings/receiptTemplate";
-import roleAccess from "../../pos/languages/settings/roleAccess";
+// import roleAccess from "../../pos/languages/settings/roleAccess";
 import storeAccount from "../../pos/languages/settings/storeAccount";
 import storeLocation from "../../pos/languages/settings/storeLocation";
 import tax from "../../pos/languages/settings/tax";
@@ -33,7 +33,6 @@ export function setTranslation() {
     ...incomeAndExpense,
     ...paymentMethod,
     ...receiptTemplate,
-    ...roleAccess,
     ...storeAccount,
     ...storeLocation,
     ...tax
