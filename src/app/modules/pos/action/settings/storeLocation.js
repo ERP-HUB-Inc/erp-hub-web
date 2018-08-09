@@ -30,7 +30,7 @@ export default{
   update: (data, id) => {
     return dispatch => {
       return dispatch({
-        type: Constant.UPDATE_TAX,
+        type: Constant.UPDATE_STORE_LOCATION,
         payload: LoctionService.update(data, id)
       });
     };

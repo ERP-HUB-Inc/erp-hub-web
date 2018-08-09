@@ -1,8 +1,6 @@
 import React from "react";
 import Modal from "../../shares/Modal";
 import StoreLanguageAction from "../../../action/settings/storeLanguage";
-import { InputText } from "../../../../common/elements/ant-ui/InputText";
-import { Select } from "../../../../common/elements/ant-ui/Select";
 
 export default class Form extends Modal {
   constructor(props) {
@@ -37,9 +35,9 @@ export default class Form extends Modal {
       this.content = (
         <div>
           {languageUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <InputText form={form} data={languageUpdate.data.name}  name="name" label="Name" placeholder="Please input your name" required={true} min={3}/>
-          <InputText form={form} data={languageUpdate.data.code} type="number" name="code" placeholder="Code" label="Code"/>
-          <Select
+          <this.InputText form={form} data={languageUpdate.data.name}  name="name" label="Name" placeholder="Please input your name" required={true} min={3}/>
+          <this.InputText form={form} data={languageUpdate.data.code}  name="code" placeholder="Code" label="Code"/>
+          <this.Select
             name="status"
             label="Status"
             placeholder="Please select status"

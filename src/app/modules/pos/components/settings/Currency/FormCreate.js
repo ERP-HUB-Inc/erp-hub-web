@@ -1,8 +1,5 @@
 import React from "react";
 import Modal from "../../shares/Modal";
-import { InputText } from "../../../../common/elements/ant-ui/InputText";
-import { InputNumber } from "../../../../common/elements/ant-ui/InputNumber";
-import { Select } from "../../../../common/elements/ant-ui/Select";
 import CurrencyAction from "../../../action/settings/currency";
 
 export default class Form extends Modal {
@@ -30,14 +27,17 @@ export default class Form extends Modal {
   
   render() {
     const { currencyAdd, form } = this.props;
+
+    this.submitLoading = currencyAdd.adding;
+    
     if (currencyAdd.showForm) {
       this.content = (
         <div> 
           {currencyAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <InputText form={form} name="name" label="Name" placeholder="Please input your name" required={true} min={ 3 } max={100}/>
-          <InputText form={form} type="text" name="symbol" placeholder="Symbol"  label="Symbol"/>
-          <InputNumber form={form} type="number" name="value" placeholder="Value"  label="Value"/>
-          <Select
+          <this.InputText form={form} name="name" label="Name" placeholder="Please input your name" required={true} min={ 3 } max={100}/>
+          <this.InputText form={form} type="text" name="symbol" placeholder="Symbol"  label="Symbol"/>
+          <this.InputNumber form={form} type="number" name="value" placeholder="Value"  label="Value"/>
+          <this.Select
             name="status"
             label="Status"
             placeholder="Please select status"

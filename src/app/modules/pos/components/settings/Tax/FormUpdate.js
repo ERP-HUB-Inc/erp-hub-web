@@ -8,14 +8,8 @@ export default class Form extends Modal {
   constructor(props) {
     super(props);
     this.title = "Tax";
-    this.addingPropReducer = "taxUpdate";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleSubmit() {
-    const { formUpdate } = this.props;
-    this.dispatch(TaxAction.update(formUpdate.values));
   }
 
   handleSubmit (e) {
@@ -37,6 +31,9 @@ export default class Form extends Modal {
   
   render() {
     const { taxUpdate, form } = this.props;
+
+    this.submitLoading = taxUpdate.updating;
+    
     if (taxUpdate.showForm) {
       this.content = (
         <div>
