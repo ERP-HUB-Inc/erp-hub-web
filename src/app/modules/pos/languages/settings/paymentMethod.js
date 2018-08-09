@@ -1,4 +1,9 @@
 export default {
+  "col_payment_method_no": [
+    "No",
+    "No",
+    "No"
+  ],
   "col_payment_method_date": [
     "Date",
     "Date",

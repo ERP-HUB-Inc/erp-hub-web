@@ -45,6 +45,7 @@ class Column extends List {
     super(props);
     return [
       this.columnCreatedAt,
+      this.columnNo,
       {
         title: <this.Translate id="col_payment_method_name" />,
         dataIndex: "name",

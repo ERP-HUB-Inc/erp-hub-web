@@ -39,6 +39,13 @@ export default class List extends Component {
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
 
+    this.columnNo = {
+      title: <this.Translate id="col_payment_method_no" />,
+      dataIndex: "no",
+      key: "no",
+      render: (value, record, index) => index + 1,
+      sorter: true
+    };
     this.columnStatus = {
       title: <this.Translate id="col_payment_method_status" />,
       dataIndex: "status",

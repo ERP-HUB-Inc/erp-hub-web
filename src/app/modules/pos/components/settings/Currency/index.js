@@ -1,16 +1,14 @@
 import React from "react";
-import columns from "./column";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/Currency/FormCreate";
 import FormUpdate from "../../../containers/settings/Currency/FormUpdate";
-import Constant from "../../../constants/settings/currency";
 import CurrencyAction from "../../../action/settings/currency";
 import CurrencyService from "../../../services/settings/CurrencyService";
 
 export default class CurrencyList extends List {
   constructor(props) {
     super(props);
-    this.columns = columns;
+    this.columns = new Column();
     this.title = "Currency";
     this.fetchingProp = "currency";
     this.addingProp = "currencyAdd";
@@ -37,5 +35,32 @@ export default class CurrencyList extends List {
 
   render() {
     return super.render();
+  }
+}
+
+class Column extends List {
+  constructor(props) {
+    super(props);
+    return [
+      this.columnCreatedAt,
+      this.columnNo,
+      {
+        title: "Name",
+        dataIndex: "name",
+        sorter: true
+      },
+      {
+        title: "Symbol",
+        dataIndex: "symbol",
+        sorter: true
+      },
+      {
+        title: "Value",
+        dataIndex: "value",
+        sorter: true
+      },
+      this.columnUpdatedAt,
+      this.columnStatus
+    ];
   }
 }

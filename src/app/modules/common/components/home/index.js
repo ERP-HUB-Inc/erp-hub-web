@@ -22,7 +22,7 @@ export default class Home extends Component {
   }
 
   render(){
-
+    const {form} = this.props;
     return(
       <div>
         <this.Row>
@@ -34,7 +34,7 @@ export default class Home extends Component {
                 </li>
                 <li style={{marginLeft: "15px"}}>
                   {/* <this.Switchs onChange={ this.toggleDashboard } /> */}
-                  <this.Switchs onChange={ this.toggleDashboard } />
+                  <this.Switchs name="switch" onChange={this.toggleDashboard} form={form} />
                 </li>
               </ul>
             </div>
