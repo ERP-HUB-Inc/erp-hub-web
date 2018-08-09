@@ -13,7 +13,6 @@ export class Switchs extends Element {
       checked
     };
     this.onChange = this.onChange.bind(this);
-    this.onSelect = this.onSelect.bind(this);
   }
 
   onChange(checked) {

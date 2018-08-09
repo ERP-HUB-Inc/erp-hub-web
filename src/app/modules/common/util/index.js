@@ -27,6 +27,10 @@ export function validation(rules) {
   return errors;
 }
 
+export function checkValueSwitch(values){
+  return values == true ? 1 : 0;
+}
+
 export function validate(rules) {
   var errors = {};
   var isError = false;
@@ -61,6 +65,10 @@ export function toDate(value) {
 }
 
 export class Util {
+  checkValueSwitch(values){
+    return values == true ? 1 : 0;
+  }
+  
   findArrayIndex(collection, prop, value) {
     return _.findIndex(collection, [prop, value]);
   }

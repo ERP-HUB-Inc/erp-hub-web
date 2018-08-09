@@ -2,10 +2,6 @@ import React from "react";
 import Modal from "../../shares/Modal";
 import ReceiptAction from "../../../action/settings/receiptTemplate";
 
-function checkValue(values){
-  return values == true ? 1 : 0;
-}
-
 export default class FormReciptTemplateUpdate extends Modal {
   constructor(props) {
     super(props);
@@ -20,12 +16,11 @@ export default class FormReciptTemplateUpdate extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values["id"] = this.props.receiptUpdate.data.id;
-        values["isDefault"] = checkValue(values.isDefault);
-        values["isShowStoreName"] = checkValue(values.isShowStoreName);
-        values["isShowCustomerInfo"] = checkValue(values.isShowCustomerInfo);
-        values["isShowDevelopBy"] = checkValue(values.isShowDevelopBy);
+        values["isDefault"] = this.Util.checkValueSwitch(values.isDefault);
+        values["isShowStoreName"] = this.Util.checkValueSwitch(values.isShowStoreName);
+        values["isShowCustomerInfo"] = this.Util.checkValueSwitch(values.isShowCustomerInfo);
+        values["isShowDevelopBy"] = this.Util.checkValueSwitch(values.isShowDevelopBy);
         values["status"] = 1;
-        // alert(JSON.stringify(values));
         this.dispatch(ReceiptAction.update(values));
       }
     });

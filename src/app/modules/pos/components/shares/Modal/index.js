@@ -22,6 +22,9 @@ export default class Modal extends Component {
       }
     ];
   }
+
+  
+
   handleSubmit() {
     console.log("submit modal");
   }
