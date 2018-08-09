@@ -1,5 +1,4 @@
 import React from "react";
-import columns from "./column";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/OperationRecord/FormCreate";
 import FormUpdate from "../../../containers/settings/OperationRecord/FormUpdate";
@@ -11,7 +10,7 @@ import OperatinRecordService from "../../../services/settings/OperationRecordSer
 export default class TaxList extends List {
   constructor(props) {
     super(props);
-    this.columns = columns;
+    this.columns = new Column();;
     this.fetchingProp = "operationRecord";
     this.addingProp = "operationRecordAdd";
     this.updatingProp = "operationRecordUpdate";
@@ -40,5 +39,40 @@ export default class TaxList extends List {
 
   render() {
     return super.render();
+  }
+}
+
+class Column extends List {
+  constructor(props) {
+    super(props);
+    return [
+      this.columnCreatedAt,
+      {
+        title: <this.Translate id="col_operation_record_name" />,
+        dataIndex: "name",
+        key: "name",
+        sorter: true,
+      },
+      {
+        title: <this.Translate id="col_operation_record_recordfor" />,
+        dataIndex: "registerDate",
+        key: "registerDate",
+        sorter: true,
+        render : registerDate => this.Util.formatDate(registerDate)
+      },
+      { 
+        title: <this.Translate id="col_operation_record_type" />,
+        dataIndex: "type",
+        sorter: true,
+        render : (type) => type == 0 ? "Income" : "Expense"
+      },
+      {
+        title: <this.Translate id="col_operation_record_name" />,
+        dataIndex: "amount",
+        sorter: true,
+        render : (amount) => "$ " + amount
+      },
+      this.columnStatus
+    ];
   }
 }

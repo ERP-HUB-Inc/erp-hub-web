@@ -12,6 +12,7 @@ import receiptTemplate from "../../pos/languages/settings/receiptTemplate";
 import storeAccount from "../../pos/languages/settings/storeAccount";
 import storeLocation from "../../pos/languages/settings/storeLocation";
 import tax from "../../pos/languages/settings/tax";
+import operationRecord from "../../pos/languages/settings/operationRecord";
 import error from "../elements/common/language/error";
 
 export function initLanguage() {
@@ -35,6 +36,7 @@ export function setTranslation() {
     ...receiptTemplate,
     ...storeAccount,
     ...storeLocation,
-    ...tax
+    ...tax,
+    ...operationRecord
   });
 }
