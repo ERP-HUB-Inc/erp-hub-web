@@ -1,37 +1,37 @@
 export default {
   "col_payment_method": [
     "Positions",
-    "តួនាទី",
-    "PosItion-Es"
+    "ရာထူး",
+    "តួនាទី"
   ],
   "input_text_role_name": [
     "Name",
-    "Name",
-    "Name"
+    "အမည်",
+    "ឈ្មោះ"
   ],
   "input_text_role_code": [
     "Code",
-    "Code",
-    "Code"
+    "ကုဒ်",
+    "លេខកូដ"
   ],
   "place_holder_role_name": [
     "Please input name",
-    "Name",
-    "Name"
+    "សូមបញ្ចូលឈ្មោះ",
+    "ကိုနာမတျောကိုနှစ်သက်သော"
   ],
   "place_holder_role_code": [
     "Code",
-    "Code",
-    "Code"
+    "ကုဒ်",
+    "លេខកូដ"
   ],
   "error_require_input_role_name": [
     "Name is required.",
-    "Name is required.",
-    "Name is required."
+    "အမည်လိုအပ်ပါသည်။",
+    "ឈ្មោះត្រូវបានទាមទារ។"
   ],
   "error_length_input_role_name": [
     "Name allow from 3 to 100 characters.",
-    "Name allow from 3 to 100 characters.",
-    "Name allow from 3 to 100 characters.",
+    "3 100 ဇာတ်ကောင်ကနေခွင့်ပြုပါအမည်ပြောပါ။",
+    "ឈ្មោះអនុញ្ញាតពី 3 ទៅ 100 តួអក្សរ។",
   ]
 };
