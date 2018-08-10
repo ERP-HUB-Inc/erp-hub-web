@@ -36,7 +36,7 @@ export default class MenuDropDown extends Component {
     return(
       <ul className="menu-left list-unstyled">
         <li>
-          <this.Link to="javascript:;" className="user-account">
+          <this.Link to="#" className="user-account">
             <this.Noteicon />
           </this.Link>
         </li>
@@ -48,7 +48,7 @@ export default class MenuDropDown extends Component {
         </li>
         <li>
           <Dropdown overlay={this.menu} trigger={["click"]}>
-            <this.Link to="javascript:;" className="ant-dropdown-link user-account">
+            <this.Link to="#" className="ant-dropdown-link user-account">
               <span className="icon-user icon-padding-right"></span>
               <span className="title-user"><this.Translate id="text_user_account"/></span> 
               <span className="icon-move-down icon-padding-left"></span>
@@ -57,7 +57,7 @@ export default class MenuDropDown extends Component {
         </li>
         <li>
           <Dropdown overlay={this.menuLanguage} trigger={["click"]}>
-            <this.Link  to="javascript:;" className="ant-dropdown-link user-account">
+            <this.Link  to="#" className="ant-dropdown-link user-account">
               <span className="icon-change icon-padding-right"></span>
               <span className="title-user">{this.props.currentLanguage.name}</span> 
               <span className="icon-move-down icon-padding-left"></span>

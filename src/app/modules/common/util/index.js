@@ -123,6 +123,7 @@ export class Util {
       if (value["isParent"] === 1) {
         return value;
       }
+      return null;
     } );
   }
 

@@ -28,6 +28,7 @@ class SelectElement extends Element {
           getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.defaultValue})(
             <this.Select
               placeholder={this.props.placeholder}
+              disabled={this.props.disabled}
               style={{ width: "100%" }}
             >
               {
