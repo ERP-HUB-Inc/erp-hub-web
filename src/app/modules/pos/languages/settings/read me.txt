@@ -1,0 +1,5 @@
+[
+    english,
+    myanmar,
+    khmer
+]
