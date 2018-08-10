@@ -327,7 +327,7 @@ export default class StoreAccountList extends Element {
                 
                 <this.FormGroup>
 
-                  <this.RadioRegisterGroup 
+                  <this.RadioBox 
                     className="main-radio-acc"
                     label=" "
                     name="businessPlanId" 
@@ -337,14 +337,15 @@ export default class StoreAccountList extends Element {
                     onSelect={this.onSelect}
                     onChange={this.onChange}
                   >
-                    { businessplan.map( businessplan => 
-                      <this.RadioRegister
+                    { businessplan.map( (businessplan, key) => 
+                      <this.Radio
+                        key={key}
                         title={`${businessplan.name}`}
                         language={`${ businessplan.description }`}
                         value={businessplan.id} /> 
                     ) 
                     }
-                  </this.RadioRegisterGroup> 
+                  </this.RadioBox> 
                 </this.FormGroup>
                       
                 <div className={`${this.state.classChange}`}>
@@ -353,10 +354,8 @@ export default class StoreAccountList extends Element {
                     required
                     form={form} />
                 </div>
-
-                <div className="btn-submit-center">
-                  <this.saveButton/>
-                </div>
+                
+                <this.saveButton/>
 
               </this.Col>
             </this.Row>

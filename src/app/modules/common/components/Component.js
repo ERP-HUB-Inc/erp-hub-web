@@ -35,8 +35,8 @@ import
   InputNumber,
   InputPassword,
   LoginLayout,
-  RadioRegisterGroup,
-  RadioRegister,
+  RadioBox,
+  Radio,
   DatePickers,
   RadioButton,
   UploadImg,
@@ -153,21 +153,21 @@ export default class Component extends RComponent {
     this.FieldComponent = FieldComponent;
     this.TrashButton = TrashButton;
     this.LoginLayout = LoginLayout;
-    this.RadioRegisterGroup = RadioRegisterGroup;
     this.InputText = InputText;
     this.InputNumber = InputNumber;
     this.InputPassword = InputPassword;
-    this.RadioRegister = RadioRegister;
+    this.RadioBox = RadioBox;
+    this.Radio = Radio;
+    this.RadioButton = RadioButton;
+    this.Radios = Radios;
     this.InputEmail = InputEmail;
     this.DatePickers = DatePickers;
-    this.RadioButton = RadioButton;
     this.UploadImg = UploadImg;
     this.saveButton = saveButton;
     this.TabPane = TabPane;
     this.Tabs = Tabs;
     this.InputTextArea = InputTextArea;
     this.SearchButton = SearchButton;
-    this.Radios = Radios;
 
     // Util function
     this.Util = new Util();
