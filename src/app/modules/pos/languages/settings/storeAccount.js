@@ -203,5 +203,28 @@ export default {
     "Manual"
   ],
 
+  "store_acc_pay_as_your_business_growth": [
+    "Pay as your business growth",
+    "Pay as your business growth",
+    "Pay as your business growth"
+  ],
+
+  "store_acc_pay_your_5_stores_package": [
+    "Pay on your 5 stores package",
+    "Pay on your 5 stores package",
+    "Pay on your 5 stores package"
+  ],
+
+  "store_acc_pay_your_10_stores_package": [
+    "Pay on your 10 stores package",
+    "Pay on your 10 stores package",
+    "Pay on your 10 stores package"
+  ],
+
+  "store_acc_pay_your_15_stores_package": [
+    "Pay on your 15 stores package",
+    "Pay on your 15 stores package",
+    "Pay on your 15 stores package"
+  ],
 };
   

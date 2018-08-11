@@ -32,10 +32,11 @@ export class Radio extends Element {
                 disabled={this.props.disabled}
                 onChange={this.onChange} 
               >
-                <this.Radio value={0}>Pay as your business growth</this.Radio>
+                {this.props.dataSource.map((row, index) => <this.Radio key={index} value={row.value}>{row.title}</this.Radio>)}
+                {/* <this.Radio value={0}>Pay as your business growth</this.Radio>
                 <this.Radio value={1}>Pay on your 5 stores package</this.Radio>
                 <this.Radio value={2}>Pay on your 10 stores package</this.Radio>
-                <this.Radio value={3}>Pay on your 15 stores package</this.Radio>
+                <this.Radio value={3}>Pay on your 15 stores package</this.Radio> */}
               </this.Radio.Group>
             )
           }
@@ -63,5 +64,6 @@ export class Radios extends Element {
 }
 
 Radio.defaultProps = {
-  errorRequired: "Pleace Select"
+  errorRequired: "Pleace Select",
+  dataSource: []
 };

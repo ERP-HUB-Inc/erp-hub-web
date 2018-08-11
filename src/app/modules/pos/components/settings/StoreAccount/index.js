@@ -34,6 +34,13 @@ export default class StoreAccountList extends Component {
       }
     ];
 
+    this.paymentTypes = [
+      {value: 0, title: <this.Translate id="store_acc_pay_as_your_business_growth" />},
+      {value: 1, title: <this.Translate id="store_acc_pay_your_5_stores_package" />},
+      {value: 2, title: <this.Translate id="store_acc_pay_your_10_stores_package" />},
+      {value: 3, title: <this.Translate id="store_acc_pay_your_15_stores_package" />}
+    ];
+
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onSelect = this.onSelect.bind(this);
@@ -50,7 +57,6 @@ export default class StoreAccountList extends Component {
         this.dispatch(StoreAccountAction.update(values));
       }
     });
-    
   }
 
   onSelect(e){
@@ -69,14 +75,7 @@ export default class StoreAccountList extends Component {
     this.dispatch(StoreAccountAction.fetch(this.client.clientId));  
     this.dispatch(fetchAllBusinessPlanSystem());
     this.onSelect();
-    // this.props.form.setFieldsValue({
-    //   registerDate: "2018-08-11",
-    // });
     // this.dispatch(StoreAccountAction.reset());
-  }
-
-  componentDidUpdate() {
-    console.log("Component Loaded");
   }
 
   render() {
@@ -349,18 +348,24 @@ export default class StoreAccountList extends Component {
 
                 <this.DatePickers
                   name="registerDate"
-                  defaultValue={storeAccount.registerDate}
+                  defaultValue={this.Util.formatDatePicker(storeAccount.registerDate)}
                   label={<this.Translate id="store_acc_register_date" />}
                   placeholder={this.CATranslate("store_acc_register_date", locale)}
-                  form={form} 
-                  disabled />
-                
-                <this.DatePickers
-                  name="expiredDate"
-                  label={<this.Translate id="store_acc_expired_date" />}
-                  placeholder={this.CATranslate("store_acc_expired_date", locale)}
                   form={form}
                   disabled />
+                {
+                  storeAccount.expiredDate !== null && storeAccount.expiredDate !== "undefined"
+                    ?
+                    <this.DatePickers
+                      name="expiredDate"
+                      defaultValue={this.Util.formatDatePicker(storeAccount.expiredDate)}
+                      label={<this.Translate id="store_acc_expired_date" />}
+                      placeholder={this.CATranslate("store_acc_expired_date", locale)}
+                      form={form}
+                      disabled />
+                    :
+                    ""
+                }
                 
                 <div className="general">
                   <h6>{<this.Translate id="store_acc_plan" />}</h6>
@@ -392,7 +397,8 @@ export default class StoreAccountList extends Component {
                       
                 <this.RadioButton 
                   name="paymentType"
-                  defaultValue={storeAccount.paymentType}  
+                  defaultValue={storeAccount.paymentType}
+                  dataSource={this.paymentTypes}
                   form={form}
                   disabled={true}
                   required/>
