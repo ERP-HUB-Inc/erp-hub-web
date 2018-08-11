@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import FormUpdate from "../../../components/employees/ManageEmployee/FormUpdate";
+import FormUpdate from "../../../components/customers/ManageCustomers/FormUpdate";
 
 class ManagementEmployeeForm extends React.Component {
   render() {
@@ -13,8 +13,8 @@ class ManagementEmployeeForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    manageEmployeeUpdate: state.reducer.managementEmployee.update,
-    initialValues: state.reducer.managementEmployee.update.data
+    manageCustomersUpdate: state.reducer.managementCustomers.update,
+    initialValues: state.reducer.managementCustomers.update.data
   };
 }
 

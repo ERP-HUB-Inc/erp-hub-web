@@ -1,5 +1,5 @@
 import React from "react";
-import CreateEmployee from "../../../components/employees/ManageEmployee/FormCreate";
+import CreateEmployee from "../../../components/customers/ManageCustomers/FormCreate";
 import { connect } from "react-redux";
 import { Form } from "antd";
 
@@ -14,7 +14,7 @@ class ManagementEmployeeForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    manageEmployeeAdd: state.reducer.managementEmployee.add
+    manageCustomersAdd: state.reducer.managementCustomers.add
   };
 }
 

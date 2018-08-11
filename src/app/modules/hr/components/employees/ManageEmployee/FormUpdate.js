@@ -167,6 +167,7 @@ export default class Form extends Modal {
                 <this.Col md="6">
                   <this.Switchs
                     label="Auto generate"
+                    name="autogenerate"
                     onChange={ this.onChange }
                     form={form}
                   />
@@ -175,12 +176,14 @@ export default class Form extends Modal {
                 <this.Col md="6">
                   <this.Switchs
                     label="Will be expired"
+                    name="expireds"
                     form={form}
                   />
                 </this.Col>
                 <this.Col md="6">
                   <this.Switchs
                     label="Must change password"
+                    name="mustchange"
                     form={form}
                   />
                 </this.Col>

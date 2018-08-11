@@ -4,7 +4,7 @@ class PaymentMethodService extends BaseService {
 
   constructor() {
     super();
-    this.module = "employee";
+    this.module = "customer";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 }
