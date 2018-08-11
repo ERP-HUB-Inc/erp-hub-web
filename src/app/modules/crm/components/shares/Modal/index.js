@@ -1,26 +1,31 @@
 import React from "react";
-import Component from "../../Component";
 import { Form } from "antd";
+import Component from "../../Component";
 import "./index.css";
 
-export class Modal extends Component {
+export default class Modal extends Component {
   constructor(props) {
     super(props);
     this.title = this.props.title;
     this.dispatch = this.props.dispatch;
     this.content = "";
+    this.submitLoading = false;
     this.requiredMessage = "Please input all required field.";
     this.statusDataSource = [
       {
-        name: "Active",
+        name: <this.Translate id="select_text_active" />,
         value: 1
       },
       {
-        name: "Deactive",
+        name: <this.Translate id="select_text_deactive" />,
         value: 0
       }
     ];
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  
+
   handleSubmit() {
     console.log("submit modal");
   }
@@ -39,11 +44,10 @@ export class Modal extends Component {
           {this.content}
           <div className="ant-modal-footer">
             <this.Button className="danger" onClick={() => this.handleCancel()}>
-              <span className="icon-cancel icon-padding-right"></span>CANCEL
-            </this.Button>
-            
-            <this.Button htmlType="submit" loading={false} className="info">
-              <span className="icon-save icon-padding-right"></span>SAVE
+              <span className="icon-cancel icon-padding-right"></span><this.Translate id="button_text_cancel" />
+            </this.Button>  
+            <this.Button htmlType="submit" loading={this.submitLoading} className="info">
+              <span className="icon-save icon-padding-right"></span><this.Translate id="button_text_save" />
             </this.Button>
           </div>
         </Form>

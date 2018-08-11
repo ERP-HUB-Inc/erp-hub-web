@@ -1,21 +1,26 @@
 import React from "react";
 import { Pagination } from "antd";
 import Component  from "../../common/components/Component";
+import FormSearch from "./shares/FormSearch/";
 import menuSource from "../../common/components/layout/SiderBar/datasource";
 import "./index.css";
 
 export default class List extends Component {
   constructor(props) {
     super(props);
-    this.state = {
+    this.state = {  
       layut: "12",
       current: 1,
       selectedRowKeys: [],
       selectedListIds: [],
       modalVisible: false,
+      deleting: false,
       modalSource: {},
       ListRoles: null,
-      modalConten: null // the content that show in modal content
+      modalConten: null, // the content that show in modal content,
+      columns: [],
+      columnsExpanded: [],
+      fetchingExtendTable:[]
     };
     
     //access role
@@ -23,8 +28,10 @@ export default class List extends Component {
     this.layout = "";
 
     this.columns = [],
+    this.columnsExpanded=[],
+
     this.filter = [],
-    this.module = "employees"; // This compare to parent key in datasource in sidebar when render breadcrump
+    this.module = "customers"; // This compare to parent key in datasource in sidebar when render breadcrump
     this.fetchingProp = ""; // prop of reducer of fetching record that get from map state to prop from container
     this.addingProp = ""; // prop of reducer of adding record that get from map state to prop from container
     this.updatingProp = ""; // prop of reducer of adding record that get from map state to prop from container
@@ -36,6 +43,48 @@ export default class List extends Component {
     this.okText = "Yes"; // text button on alert of delete action
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
+    this.columnNo = {
+      title: <this.Translate id="col_payment_method_no" />,
+      dataIndex: "no",
+      key: "no",
+      render: (value, record, index) => { console.log("Column No Render:"); return index + 1;},
+      sorter: true
+    };
+    this.columnStatus = {
+      title: <this.Translate id="col_payment_method_status" />,
+      dataIndex: "status",
+      key: "status",
+      render: value => {
+        return (
+          value === 1 ?
+            <this.Badge count={<this.Translate id="select_text_active" />} style={{ backgroundColor: "#0D62AF" }} />
+            :
+            <this.Badge count={<this.Translate id="select_text_deactive" />} style={{ backgroundColor: "#c72727" }} />
+        );
+      },
+      sorter: true
+    };
+    this.columnCreatedAt = {
+      title: <this.Translate id="col_payment_method_date" />,
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: value => this.Util.formatDate(value),
+      sorter: true
+    };
+    this.columnUpdatedAt = {
+      title: <this.Translate id="col_payment_method_update" />,
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      render: value => this.Util.formatDate(value),
+      sorter: true
+    };
+
+    this.service = null;
+    this.action = null;
+
+    this.actionFetchColumnExpend = null;
+    
+    this.expandedRowRender = null;
 
     this.onChange = this.onChange.bind(this); // handle when user change filter, access pagination
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
@@ -43,15 +92,14 @@ export default class List extends Component {
     this.onSelectChange = this.onSelectChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
-
-
+    this.expandedRender = this.expandedRender.bind(this);
 
     this.RESET_CONSTANT = "RESET";
   }
 
   /**
    * handle for tranform from ant sorting string to match with api
-   * api doesn't reconize descend or ascend just know only desc and asc
+   * api doesn"t reconize descend or ascend just know only desc and asc
    * @param {*} order 
    */
   sortOrder(order) {
@@ -70,7 +118,14 @@ export default class List extends Component {
     return values.map(value => value.id);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    if (this.action != null) {
+      const { dispatch } = this.props;
+      dispatch(this.action.fetch(this.pageSize));
+    }
+  }
+
+
 
   /**
    * when user change sort in each column
@@ -79,13 +134,16 @@ export default class List extends Component {
    * @param {*} sorter 
    */
   onChange(pagination, filters, sorter) {
-    this.filter = [
-      this.pageSize,
-      (pagination.current - 1) * this.pageSize,
-      sorter.field,
-      this.sortOrder(sorter.order)
-    ];
-    this.setState({current: pagination.current});
+    if (this.action != null) {
+      const { dispatch } = this.props;
+      this.filter = [
+        this.pageSize,
+        (pagination.current - 1) * this.pageSize,
+        sorter.field,
+        this.sortOrder(sorter.order)
+      ];
+      dispatch(this.action.fetch(...this.filter));
+    }
   }
 
   /**
@@ -94,7 +152,15 @@ export default class List extends Component {
    * @param {*} pageSize 
    */
   onChangePagination(current, pageSize) {
-    console.log(current, pageSize);
+    if (this.action != null) {
+      const { dispatch } = this.props;
+      this.filter = [
+        pageSize,
+        (current - 1) * pageSize,
+      ];
+      dispatch(this.action.fetch(...this.filter));
+      this.setState({ current });
+    }
   }
 
   /**
@@ -103,7 +169,15 @@ export default class List extends Component {
    * @param {*} pageSize 
    */
   onShowSizeChange(current, pageSize) {
-    console.log(current, pageSize);
+    if (this.action != null) {
+      const { dispatch } = this.props;
+      this.filter = [
+        pageSize,
+        (current - 1) * pageSize,
+      ];
+      dispatch(this.action.fetch(...this.filter));
+      this.setState({ current });
+    }
   }
 
   /**
@@ -134,6 +208,15 @@ export default class List extends Component {
     });
   }
 
+
+  /**
+   * 
+   * @param {*} dataRow data from each row of table
+   */
+  handleShowRecordDetail(dataRow) {
+
+  }
+
   /**
    * handle delete multi record
    * it will overide in child class
@@ -155,22 +238,185 @@ export default class List extends Component {
    * handle procedd delete
   */
   handleDelete() {
-    this.setState({modalVisible: false});
+    if (this.service != null) {
+      const { dispatch } = this.props;
+      this.setState({deleting: true});
+      this.service.archive(this.state.selectedListIds)
+        .then(response => {
+          dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
+          this.setState({
+            selectedRowKeys: [],
+            modalVisible: false,
+            deleting: false
+          });
+          this.Message.info(this.messageSuccess);
+        })
+        .catch(err => {
+          this.setState({deleting: false});
+        });
+    }
   }
 
-  render() {
-    // role access
-    // const showListRoles = this.props[this.showListRole];
-    // const Layout = this.props[this.Layout];
+  renderBreadCrumb() {
+    // get current path of breadcrum compare with url
+    const currentPath = window.location.pathname;
 
-    let fetchingProps = this.props[this.fetchingProp];
-    const addingProps = this.props[this.addingProp];
-    const updatingProps = this.props[this.updatingProp];
+    return (
+      <div className="breadcrumb">
+        <ul className="list-unstyled">
+          <li>
+            <this.Link to="/"><span className="icon-home"></span></this.Link>
+          </li>
+          <li className="fast-nav text-uppercase">
+            <this.Link to="/">{this.module}</this.Link>
+          </li>
+          {
+            menuSource[this.module]["subItems"].map((value, index) =>
+              "isFashNav" in value && value["isFashNav"] ? 
+                <li className={(currentPath==value["route"] ? "active" : "") + " fast-nav"} key={index}>
+                  <this.Link to={value["route"]}>{value["title"]}</this.Link>
+                </li>
+                :
+                ""
+            )
+          }
+        </ul>
+      </div>
+    );
+  }
+
+  renderActionButton() {
+    return (
+      <div className="float-left">
+        <this.Button type="info" className="mg-right" onClick={() => this.handleShowFormAdd()}>
+          <span className="icon-add icon-padding-right"></span>Add New
+        </this.Button>
+        <this.Button disabled={this.state.selectedRowKeys.length <= 0} type="danger" onClick={() => this.handleConfirm()}>
+          <span className="icon-delete icon-padding-right"></span>Delete
+        </this.Button>
+      </div> 
+    );
+  }
+
+  renderModalConfirmDelete() {
+    return (
+      <this.Modal
+        visible={this.state.modalVisible}
+        wrapClassName="confirm-delete"
+        footer={null}    
+      >
+        <div>
+          <span className="icon-help icon-padding-right"></span>
+          <span className="title">{this.confirmTitle}</span><br/>
+          <span>{this.confirmTextDelete}</span>
+
+        </div>
+        <div className="ant-modal-footer">
+          <this.Button className="danger" onClick={() => this.handleCancel()}>
+            <span className="icon-close icon-padding-right"></span>CANCEL
+          </this.Button>
+          <this.Button onClick={() => this.handleDelete()} loading={this.state.deleting} className="info">
+            <span className="icon-checked icon-padding-right"></span>YES
+          </this.Button>
+        </div>
+      </this.Modal>
+    );
+  }
+
+  fetchExpend(){
+    if(this.service !=null) {
+      this.service.detail("00000001-0001-2018-0001-00000002")
+        .then(response => {
+          setTimeout(() => {
+            this.setState({
+              fetchingExtendTable:[]
+            });
+          }, 1000);
+        }).catch(err => {
+          this.setState({fetchingExtendTable: null});
+        });
+    }
+    // console.log("service",this.service.detail("00000001-0001-2018-0001-00000002"));
+  }
+
+
+  expandedRender(fetchingProps){
+    // this.fetchExpend(fetchingProps);
+    console.log("fetchingExtendTable",this.state.fetchingExtendTable);
+    let fetchExtends = this.state.fetchingExtendTable;
+    return( 
+      <this.Table 
+        columns={ this.ColumnExpend } 
+        pagination={ false }
+        dataSource={ fetchExtends } 
+      />
+    );
+  }
+
+  renderTableList(fetchingProps) {
     const pagination = {
       total: fetchingProps.pagination.total,
       pageSize: fetchingProps.pagination.limit,
       current: this.state.current
     };
+
+    // handle for change select checkbox on table row
+    const rowSelection = {
+      selectedRowKeys: this.state.selectedRowKeys,
+      onChange: this.onSelectChange
+    };
+
+    return (
+      <div className="table-wrapper">
+
+        {/* <FormSearch /> */}
+
+        { this.renderActionButton() }
+
+        { 
+          pagination.total > 0 ?
+            <div className="float-right">
+              <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
+            </div>
+            :
+            ""
+        }
+
+        <this.clearFloating/> 
+
+        <this.Table 
+          rowSelection={rowSelection}
+          dataSource={fetchingProps.list}
+          columns={this.columns}
+          expandedRowRender = { 
+            this.expandedRender() 
+            // record => ({
+            //   record: this.expandedRowRender(record)
+            // })
+          }
+          pagination={false} 
+          onChange={this.onChange}
+          onRow={record =>({
+            onDoubleClick:(e) => this.handleShowFormEdit(record),
+            onClick: (e) => this.handleShowRecordDetail(record)
+          })}
+          loading={fetchingProps.fetching}
+        />
+
+      </div>
+    );
+  }
+
+  render() {
+
+    let fetchingProps = this.props[this.fetchingProp];
+    const addingProps = this.props[this.addingProp];
+    const updatingProps = this.props[this.updatingProp];
+
+    //props when fetching table 
+    // let fetchingPropFetchTable = this.props[this.fetchingPropFetchTable];
+
+    // console.log("fetchingPropFetchTable",fetchingPropFetchTable);
     
     // Here is repsonse from add action and combinde response data to the list.
     if (addingProps.response != null) {
@@ -185,97 +431,23 @@ export default class List extends Component {
       this.props.dispatch({type: this.RESET_CONSTANT});
     }
     
-    // handle for change select checkbox on table row
-    const rowSelection = {
-      selectedRowKeys: this.state.selectedRowKeys,
-      onChange: this.onSelectChange
-    };
-  
-    // get current path of breadcrum compare with url
-    const currentPath = window.location.pathname;
-    
     return (
       
       <div style={{marginTop: "15px"}}>
-        <div className="breadcrumb">
-          <ul className="list-unstyled">
-            <li>
-              <this.Link to="/"><span className="icon-home"></span></this.Link>
-            </li>
-            <li className="fast-nav text-uppercase">
-              <this.Link to="/">{this.module}</this.Link>
-            </li>
-            {
-              menuSource[this.module]["subItems"].map((value, index) =>
-                <li className={(currentPath==value["route"] ? "active" : "") + " fast-nav"} key={index}>
-                  <this.Link to={value["route"]}>{value["title"]}</this.Link>
-                </li>
-              )
-            }
-          </ul>
-        </div>
-        {/* ===============ENDACTION BUTTON====== */}
 
-        {/* ===============TABLE LIST============ */}   
+        { this.renderBreadCrumb()}
 
-        <div className="table-wrapper">
-          {/* ===============ACTION BUTTON============ */}
-          <div className="float-left">
-            <this.Button type="info" className="mg-right" onClick={() => this.handleShowFormAdd()}>
-              <span className="icon-add icon-padding-right"></span>Add New
-            </this.Button>
-            <this.Button disabled={this.state.selectedRowKeys.length <= 0} type="danger" onClick={() => this.handleConfirm()}>
-              <span className="icon-delete icon-padding-right"></span>Delete
-            </this.Button>
-          </div> 
+        { this.renderTableList(fetchingProps) }
 
-          <div className="float-right">
-            <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
-          </div>
-          <this.clearFloating/>
-          <this.Table 
-            rowSelection={rowSelection}
-            dataSource={fetchingProps.list}
-            columns={this.columns}
-            pagination={false} //
-            onChange={this.onChange}
-            onRow={record =>({
-              onDoubleClick:(e)=> this.handleShowFormEdit(record)
-            })}
-            loading={fetchingProps.fetching}
-          />
-        </div>
-        {/* ===============END TABLE LIST============ */}
-
-        {/* ===============DISPLAY MODAL POPUP============ */}
-        {
-          this.state.modalConten
-        }
-        {/* ===============END DISPLAY MODAL POPUP============ */}
+        { this.state.modalConten }
             
+        { this.renderModalConfirmDelete() }
 
-        <this.Modal
-          visible={this.state.modalVisible}
-          wrapClassName="confirm-delete"
-          footer={null}    
-        >
-          <div>
-            <span className="icon-help icon-padding-right"></span>
-            <span className="title">{this.confirmTitle}</span><br/>
-            <span>{this.confirmTextDelete}</span>
-
-          </div>
-          <div className="ant-modal-footer">
-            <this.Button className="danger" onClick={() => this.handleCancel()}>
-              <span className="icon-close icon-padding-right"></span>NO
-            </this.Button>
-            <this.Button onClick={() => this.handleDelete()} loading={false} className="info">
-              <span className="icon-checked icon-padding-right"></span>YES
-            </this.Button>
-          </div>
-        </this.Modal>
       </div>
       
     );
   }
 }
+
+
+

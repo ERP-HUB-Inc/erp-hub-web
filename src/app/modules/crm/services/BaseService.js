@@ -5,39 +5,41 @@ export default class BaseService extends Service {
     super();
     this.data = {};
     this.header =  {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`
+      "Content-Type": "application/json"
     };
   }
 
   detail(
     ids
   ){
-    return this.fetchData({ 
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    return this.GET({ 
       url: `${this.baseUrl}/detail/${ids}`,
       data: this.data,
       headers: this.header
     });
   }
 
-  
-
   lists(
     limit,
     offset,
     sortField,
-    sortOrder
+    sortOrder,
+    status,
+    type,
+    searchColumn
   ) {
-    return this.fetchData({ 
-      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}`,
+    let linkFilter = `&filter={"status": ${ status }, "type": ${ type } }&search={"column": ${ searchColumn }, "value": "kh"}`;
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    return this.GET({ 
+      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}` + linkFilter,  
       data: this.data,
       headers: this.header
     });
   }
 
-
   archive(ids) {
-    return this.deleteData({ 
+    return this.DELETE({ 
       url: `${this.baseUrl}/archive/${ids}`,
       data: this.data,
       headers: this.header
@@ -45,7 +47,7 @@ export default class BaseService extends Service {
   }
 
   add(data) {
-    return this.addData({
+    return this.POST({
       url: `${this.baseUrl}/create`,
       data: {
         ...data,
@@ -58,7 +60,7 @@ export default class BaseService extends Service {
 
   update(data) {
     const {id} = data;
-    return this.updateData({
+    return this.PUT({
       url: `${this.baseUrl}/update/${id}`,
       data: {
         ...data,

@@ -61,12 +61,9 @@ import TimeSheet from "../../../../hr/containers/employees/TimeSheet";
 /*==============================CRM===================================*/
 
 // CUSTOMER
-// import GroupCustomer from "../../../../crm/containers/customers/GroupCustomer";
-// import ManageCustomer from "../../../../crm/containers/customers/ManageCustomer";
-// import PurchaseHistory from "../../../../crm/containers/customers/PurchaseHistory";
-// import GroupCustomer from "../../../../crm/containers/employees/ManageEmployee";
-// import ManageCustomer from "../../../../crm/containers/employees/ManageEmployee";
-// import PurchaseHistory from "../../../../crm/containers/employees/ManageEmployee";
+import GroupCustomer from "../../../../crm/containers/customers/ManageCustomers";
+import ManageCustomer from "../../../../crm/containers/customers/ManageCustomers";
+import PurchaseHistory from "../../../../crm/containers/customers/ManageCustomers";
 
 /*==============================END CRM===================================*/
 
@@ -212,29 +209,30 @@ const dataSource = {
       }
     ]
   },
-  // customers: {
-  //   icon: "icon-customer",
-  //   subItems: [
-  //     {
-  //       title: "Group Customer",
-  //       icon: "icon-employee",
-  //       route: "/customers/group",
-  //       component: GroupCustomer
-  //     },
-  //     {
-  //       title: "Manage Customer",
-  //       icon: "icon-customer ",
-  //       route: "/customers/manage",
-  //       component: ManageCustomer
-  //     },
-  //     {
-  //       title: "Purchase History",
-  //       icon: "icon-time",
-  //       route: "/customers/history",
-  //       component: PurchaseHistory
-  //     }
-  //   ]
-  // },
+  customers: {
+    icon: "icon-customer",
+    route: "customers",
+    subItems: [
+      {
+        title: "Group Customer",
+        icon: "icon-employee",
+        route: "/customers/group",
+        component: GroupCustomer
+      },
+      {
+        title: "Manage Customer",
+        icon: "icon-customer ",
+        route: "/customers/manage",
+        component: ManageCustomer
+      },
+      {
+        title: "Purchase History",
+        icon: "icon-time",
+        route: "/customers/history",
+        component: PurchaseHistory
+      }
+    ]
+  },
   employees: {
     icon: "icon-employee",
     route: "employees",

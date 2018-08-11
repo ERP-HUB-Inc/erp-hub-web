@@ -16,12 +16,6 @@ export default {
       };
     }
     case FULFILLED: {
-      // const response = { [schemas.entityName]: action.payload.data.data };
-      // const entity = schemas.createEntity();
-      // const schema = schemas.defineSchema(entity);
-      // const normalizedData = schemas.makeNormalize(response, schema);
-      // list: normalizedData["entities"][schemas.entityName]
-      // console.log("Normalizr Data:", normalizedData);
       return {
         ...state, 
         fetching: false,
