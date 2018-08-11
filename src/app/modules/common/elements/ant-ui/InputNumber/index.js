@@ -14,8 +14,8 @@ export class InputNumber extends Element {
         message: this.props.errorRequired
       },
       {
-        max: this.props.max,
-        message: this.props.errorLenght
+        max: 2,
+        message: this.props.errorLength
       }
     ];
   }
@@ -40,6 +40,6 @@ export class InputNumber extends Element {
 Input.defaultProps = {
   max: 1,
   errorRequired: "Field required.",
-  errorLenght: "Over allow character lenght."
+  errorLength: "Over allow character lenght."
 };
 

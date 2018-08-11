@@ -20,10 +20,12 @@ export class RadioButton extends Element {
       <Radio 
         name={this.props.name}
         label={this.props.label}
-        data = {this.props.data }
-        rules= { this.rules }
-        required={ this.props.required }
-        form={ this.props.form }
+        data={this.props.data }
+        rules={this.rules}
+        required={this.props.required}
+        defaultValue={this.props.defaultValue}
+        disabled={this.props.disabled}
+        form={this.props.form}
       />
     );
   }   

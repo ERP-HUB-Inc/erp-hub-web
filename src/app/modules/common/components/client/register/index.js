@@ -116,8 +116,7 @@ class ClientRegister extends Component {
                       placeholder="Password"
                       confirmPlaceholder="Comfirm Password"
                       required={true}
-                      form={form}
-                    />
+                      form={form} />
                     <div>
                       <this.FormGroup>
                         <this.RadioRegisterGroup 

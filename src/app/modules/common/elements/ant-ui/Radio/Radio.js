@@ -27,8 +27,9 @@ export class Radio extends Element {
       <div className="main-ant-wrapper">
         <this.FormItem label={label}>
           {
-            getFieldDecorator(this.props.name, {rules: this.rules })(
-              <this.Radio.Group 
+            getFieldDecorator(this.props.name, {rules: this.rules, initialValue: this.props.defaultValue })(
+              <this.Radio.Group
+                disabled={this.props.disabled}
                 onChange={this.onChange} 
               >
                 <this.Radio value={0}>Pay as your business growth</this.Radio>

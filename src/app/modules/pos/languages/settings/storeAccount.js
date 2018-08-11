@@ -161,5 +161,47 @@ export default {
     "Plan"
   ],
 
+  "store_acc_error_sequence_start_no": [
+    "Start Sequence Number allow only 10 characters",
+    "Start Sequence Number allow only 10 characters",
+    "Start Sequence Number allow only 10 characters"
+  ],
+
+  "store_acc_error_confirm_pwd_not_match": [
+    "Two passwords that you enter is inconsistent.",
+    "Two passwords that you enter is inconsistent.",
+    "Two passwords that you enter is inconsistent."
+  ],
+
+  "store_acc_error_pwd_required": [
+    "Please input your password.",
+    "Please input your password.",
+    "Please input your password."
+  ],
+  
+  "store_acc_error_confirm_pwd_required": [
+    "Please confirm your password.",
+    "Please confirm your password.",
+    "Please confirm your password."
+  ],
+
+  "store_acc_error_current_pwd_not_match": [
+    "Current password is not match.",
+    "Current password is not match.",
+    "Current password is not match."
+  ],
+
+  "store_acc_type_of_generate_code_auto": [
+    "Auto",
+    "Auto",
+    "Auto"
+  ],
+
+  "store_acc_type_of_generate_code_manual": [
+    "Manual",
+    "Manual",
+    "Manual"
+  ],
+
 };
   

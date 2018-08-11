@@ -85,7 +85,7 @@ export default class SignInStore extends Component {
             <h6>Find Your store Name </h6>
           </div>
           <this.Form onSubmit={this.handleSubmit}>
-            <this.FormGroup className={this.validateClassStatus}>
+            <div className={this.validateClassStatus}>
               <this.InputText
                 name="storeName"
                 placeholder="Store name"
@@ -105,7 +105,7 @@ export default class SignInStore extends Component {
               <div className="main-signin">
                 <this.Button loading={signinDomain.submiting} htmlType="submit" type="info">SUBMIT</this.Button>
               </div>
-            </this.FormGroup>
+            </div>
           </this.Form>
         </this.LoginLayout>
       </div>

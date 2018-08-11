@@ -12,9 +12,6 @@ export class DatePickers extends Element {
       {
         required: this.props.required
       }
-      // {
-      //   message: this.props.message
-      // }
     ];
   }
 
