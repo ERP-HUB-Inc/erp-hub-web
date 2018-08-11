@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Form } from "antd";
 import List from "../../../components/settings/Tax";
 
 class Tax extends React.Component {

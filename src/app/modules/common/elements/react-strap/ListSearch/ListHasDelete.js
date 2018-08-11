@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import { Row,Col } from "reactstrap";
-import { Table } from "reactstrap";
-import { Badges } from "../Badges";
+// import { Row,Col } from "reactstrap";
+// import { Table } from "reactstrap";
+// import { Badges } from "../Badges";
 
 export class ListHasDelete extends Component {
   render() {
     return (
       <div className="search-list-table">
-        <Table>
+        {/* <Table>
           <tbody>
             <tr>
               <td scope="row">
@@ -53,7 +53,7 @@ export class ListHasDelete extends Component {
               </td>
             </tr>
           </tbody>
-        </Table>
+        </Table> */}
       </div>
     );
   }

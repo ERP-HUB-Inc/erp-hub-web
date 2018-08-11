@@ -3,6 +3,7 @@ import { Field, reduxForm } from "redux-form";
 import {
   Form as form,
   Input,
+  Radio,
   Checkbox,
   Select,
   InputNumber
@@ -27,6 +28,7 @@ export default class Element extends Component {
     this.InputNumber = InputNumber;
     this.FormItem = form.Item;
     this.Checkbox = Checkbox;
+    this.Radio = Radio;
     this.Select = Select;
     this.Option = Option;
 

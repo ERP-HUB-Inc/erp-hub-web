@@ -1,5 +1,5 @@
 import React from "react";
-import Element, { Form } from "../../common/Element";
+import Element from "../../common/Element";
 
 export default class Confirm extends Element {
   render() {

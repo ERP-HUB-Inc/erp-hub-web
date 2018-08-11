@@ -1,5 +1,5 @@
 import React from "react";
-import Element, { Form } from "../../common/Element";
+import Element from "../../common/Element";
 
 export default class InputText extends Element {
   render() {
@@ -24,15 +24,14 @@ export default class InputText extends Element {
               validator: this.props.validator
             }
           ],
-          initialValue: this.props.data})
-          (<this.Input type={this.props.type} 
+          initialValue: this.props.data})(<this.Input type={this.props.type} 
             // value={ this.props.value }
             placeholder={this.props.placeholder} 
             disabled= { this.props.disabled } 
             onKeyDown={this.props.handleKeyDown}
           />) 
         }
-        { this.props.notation !="" ?
+        { this.props.notation !=="" ?
           <label className="notation-textfield">{ this.props.notation }</label>
           : ""  
         }

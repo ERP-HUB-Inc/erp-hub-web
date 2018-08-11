@@ -5,9 +5,9 @@ export default {
     "Name"
   ],
   "col_store_location_code": [
-    "Name",
-    "Name",
-    "Name"
+    "Cdoe",
+    "Code",
+    "Code"
   ],
   "col_store_location_address": [
     "Address",

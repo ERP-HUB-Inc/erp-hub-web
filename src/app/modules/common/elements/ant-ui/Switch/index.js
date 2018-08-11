@@ -1,5 +1,5 @@
 import React from "react";
-import Element, { Form } from "../../common/Element";
+import Element from "../../common/Element";
 import "./index.css";
 import { Switch } from "antd";
 
@@ -7,7 +7,7 @@ export class Switchs extends Element {
 
   constructor(props) {
     super(props);
-    const checked =  this.props.checked == 1 ? true : false;
+    const checked =  this.props.checked === 1;
     this.state = {
       ...this.props,      
       checked
@@ -20,8 +20,6 @@ export class Switchs extends Element {
     const value  = checked ? 1 : 0;
     const onChange = this.props.onChange;
     onChange && onChange(value);
-    console.log(value);
-    console.log(`switch to ${checked}`);
   }
 
 

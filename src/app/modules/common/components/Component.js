@@ -29,15 +29,14 @@ import
   Checkboxs,
   FieldComponent,
   TrashButton,
-  AnimationInput,
   Button,
   InputText,
   InputEmail,
   InputNumber,
   InputPassword,
   LoginLayout,
-  RadioRegisterGroup,
-  RadioRegister,
+  RadioBox,
+  Radio,
   DatePickers,
   RadioButton,
   UploadImg,
@@ -141,7 +140,6 @@ export default class Component extends RComponent {
     this.Icon = Icon;
     this.ActionButton = ActionButton;
     this.Switchs = Switchs;
-    this.AnimationInput = AnimationInput;
     this.Waiting = Waiting;
     this.Checkboxs = Checkboxs;
     this.Checkbox = Checkbox;
@@ -155,24 +153,24 @@ export default class Component extends RComponent {
     this.FieldComponent = FieldComponent;
     this.TrashButton = TrashButton;
     this.LoginLayout = LoginLayout;
-    this.RadioRegisterGroup = RadioRegisterGroup;
     this.InputText = InputText;
     this.InputNumber = InputNumber;
     this.InputPassword = InputPassword;
-    this.RadioRegister = RadioRegister;
+    this.RadioBox = RadioBox;
+    this.Radio = Radio;
+    this.RadioButton = RadioButton;
+    this.Radios = Radios;
     this.InputEmail = InputEmail;
     this.DatePickers = DatePickers;
-    this.RadioButton = RadioButton;
     this.UploadImg = UploadImg;
     this.saveButton = saveButton;
     this.TabPane = TabPane;
     this.Tabs = Tabs;
     this.InputTextArea = InputTextArea;
     this.SearchButton = SearchButton;
-    this.Radios = Radios;
 
     // Util function
-    this.Util = new Util;
+    this.Util = new Util();
 
     // HTTP CODE
     this.HttpCode = HttpCode;
@@ -189,7 +187,6 @@ export default class Component extends RComponent {
 
   getCurrentIndexLanguage(state) {
     const currentLanguage = getActiveLanguage(state);
-    const languages = state.languages;
     for (var i=0; i<state.languages.length; i++) {
       if (state.languages[i].code ===currentLanguage.code) {
         return i;
@@ -199,6 +196,9 @@ export default class Component extends RComponent {
 
   CATranslate(key, state) {
     const currentIndex = this.getCurrentIndexLanguage(state);
+
+    if (state.translations[key] == null) return null;
+
     return state.translations[key][currentIndex];
   }
 }

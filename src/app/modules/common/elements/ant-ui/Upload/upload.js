@@ -1,7 +1,7 @@
 import React from "react";
-import Element, { Form } from "../../common/Element";
+import Element from "../../common/Element";
 import "./index.css";
-import { Upload, Icon, Modal } from "antd";
+import { Upload, Modal } from "antd";
 
 const uploadButton = (
   <div>
@@ -69,8 +69,7 @@ export default class PicturesUpload extends Element {
        
         <this.FormItem label={this.props.label}>
           {
-            getFieldDecorator(this.props.name, { rules: this.props.rules } )
-            (
+            getFieldDecorator(this.props.name, { rules: this.props.rules } )(
               <Upload {...cardImgProps}>
                 {cardImgList.length >= this.props.length ? null : uploadButton}
               </Upload>

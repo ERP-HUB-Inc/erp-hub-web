@@ -2,10 +2,6 @@ import React from "react";
 import Element from "../../common/Element";
 
 export default class InputText extends Element {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -31,8 +27,7 @@ export default class InputText extends Element {
             {
               validator: this.props.validator
             }
-          ],initialValue: this.props.data})
-          (
+          ],initialValue: this.props.data})(
             <this.Input
               type={this.props.type}
               placeholder={this.props.placeholder}

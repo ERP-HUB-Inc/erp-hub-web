@@ -1,7 +1,7 @@
 import React from "react";
 import { Pagination } from "antd";
 import Component  from "../../common/components/Component";
-import FormSearch from "./shares/FormSearch/";
+// import FormSearch from "./shares/FormSearch/";
 import menuSource from "../../common/components/layout/SiderBar/datasource";
 import "./index.css";
 
@@ -25,8 +25,8 @@ export default class List extends Component {
     this.showListRoles = "";
     this.layout = "";
 
-    this.columns = [],
-    this.filter = [],
+    this.columns = [];
+    this.filter = [];
     this.module = "settings"; // This compare to parent key in datasource in sidebar when render breadcrump
     this.fetchingProp = ""; // prop of reducer of fetching record that get from map state to prop from container
     this.addingProp = ""; // prop of reducer of adding record that get from map state to prop from container
@@ -39,13 +39,15 @@ export default class List extends Component {
     this.okText = "Yes"; // text button on alert of delete action
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
-    this.columnNo = {
-      title: <this.Translate id="col_payment_method_no" />,
-      dataIndex: "no",
-      key: "no",
-      render: (value, record, index) => { console.log("Column No Render:"); return index + 1;},
-      sorter: true
-    };
+    // this.columnNo = {
+    //   title: <this.Translate id="col_payment_method_no" />,
+    //   dataIndex: "no",
+    //   key: "no",
+    //   render: (value, record, index) => { console.log("Column No Render:"); return index + 1;},
+    //   sorter: true
+    // };
+    this.columnNo = {};
+    
     this.columnStatus = {
       title: <this.Translate id="col_payment_method_status" />,
       dataIndex: "status",
@@ -53,9 +55,9 @@ export default class List extends Component {
       render: value => {
         return (
           value === 1 ?
-            <this.Badge count={<this.Translate id="select_text_active" />} style={{ backgroundColor: "#0D62AF" }} />
+            <this.Badge status="success" text={<this.Translate id="select_text_active" />} />
             :
-            <this.Badge count={<this.Translate id="select_text_deactive" />} style={{ backgroundColor: "#c72727" }} />
+            <this.Badge status="error" text={<this.Translate id="select_text_deactive" />} />
         );
       },
       sorter: true
@@ -261,7 +263,7 @@ export default class List extends Component {
           {
             menuSource[this.module]["subItems"].map((value, index) =>
               "isFashNav" in value && value["isFashNav"] ? 
-                <li className={(currentPath==value["route"] ? "active" : "") + " fast-nav"} key={index}>
+                <li className={(currentPath === value["route"] ? "active" : "") + " fast-nav"} key={index}>
                   <this.Link to={value["route"]}>{value["title"]}</this.Link>
                 </li>
                 :

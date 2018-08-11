@@ -51,9 +51,9 @@ class ClientRegister extends Component {
 
   render() {
     let nextStepContent = "";
-    if (this.props.clientRegister.step == 2) {
+    if (this.props.clientRegister.step === 2) {
       nextStepContent = <ClientRegiserDetail/>;
-    } else if(this.props.clientRegister.step == 3) {
+    } else if(this.props.clientRegister.step === 3) {
       nextStepContent = <RegisterComplete/>;
     }
 
@@ -71,7 +71,7 @@ class ClientRegister extends Component {
     return (
       <div>
         { 
-          this.props.clientRegister.step == 1 ? 
+          this.props.clientRegister.step === 1 ? 
             <this.Row>
               <this.Col className="clear-padding wrap-client-login wrap-client-register">
                 <div className="wrap-blog-logo">

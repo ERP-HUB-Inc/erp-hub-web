@@ -59,14 +59,14 @@ export default class SignInStore extends Component {
 
         const {data} = error["response"];
 
-        if (data.error.code == this.HttpCode.NOT_FOUND) {
+        if (data.error.code === this.HttpCode.NOT_FOUND) {
           this.errorMessage = "Store does not exist.";
-        } else if (data.error.code == this.HttpCode.EXPIRED) {
+        } else if (data.error.code === this.HttpCode.EXPIRED) {
           this.errorMessage = "Store now is expired.";
-        } else if (data.error.code == this.HttpCode.INTERNAL_SERVER_ERROR) {
+        } else if (data.error.code === this.HttpCode.INTERNAL_SERVER_ERROR) {
           this.errorMessage = "Please check your connection.";
         }
-      } else if (error.message == this.HttpCode.NETWORK_ERROR) {
+      } else if (error.message === this.HttpCode.NETWORK_ERROR) {
         this.errorMessage = "Please check your connection.";
       }
 

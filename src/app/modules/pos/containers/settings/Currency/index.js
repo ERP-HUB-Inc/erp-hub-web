@@ -1,10 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { reduxForm } from "redux-form";
 import List from "../../../components/settings/Currency";
 
 class Currency extends React.Component {
-
   render() {
     return (
       <List {...this.props} />

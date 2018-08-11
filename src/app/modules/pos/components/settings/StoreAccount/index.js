@@ -5,7 +5,7 @@ import StoreAccountAction from "../../../action/settings/storeAccount";
 import { fetchAllBusinessPlanSystem } from "../../../../../modules/common/actions/businessPlan";
 import menuSource from "../../../../common/components/layout/SiderBar/datasource";
 
-let obj = JSON.parse([localStorage.getItem(["ACCESS_TOKEN"])]);
+let obj = JSON.parse(localStorage.getItem(["ACCESS_TOKEN"]));
 
 const currentPath = window.location.pathname;
 
@@ -49,7 +49,6 @@ export default class StoreAccountList extends Element {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        alert("dd");
         values["id"] = obj.userId;
         values["status"] = "1";
         this.dispatch(StoreAccountAction.update(values));
@@ -61,15 +60,14 @@ export default class StoreAccountList extends Element {
   onSelect(e){
     // alert("dd");
     this.setState({
-      classChange: e == this.props.storeAccount.businessPlanId ? "unhide" : "hide"
+      classChange: e === this.props.storeAccount.businessPlanId ? "unhide" : "hide"
     });
   }
 
   onChange(e){
     this.setState({
-      classChange: e == this.props.storeAccount.businessPlanId ? "unhide" : "hide"
+      classChange: e === this.props.storeAccount.businessPlanId ? "unhide" : "hide"
     });
-    console.log("e",e);
   }
 
   componentDidMount(){
@@ -80,9 +78,9 @@ export default class StoreAccountList extends Element {
   }
 
   render() {
-    const { form,storeAccount,response,businessplan } = this.props;
+    const { form, storeAccount, response, businessplan, locale } = this.props;
 
-    if(response.updated == true){
+    if(response.updated === true){
       this.Message.success("Success Updated.");
       this.dispatch(StoreAccountAction.reset());
     }
@@ -103,7 +101,7 @@ export default class StoreAccountList extends Element {
             {
               menuSource["settings"]["subItems"].map((value, index) =>
                 "isFashNav" in value && value["isFashNav"] ?
-                  <li className={(currentPath==value["route"] ? "active" : "") + " fast-nav"} key={index}>
+                  <li className={(currentPath===value["route"] ? "active" : "") + " fast-nav"} key={index}>
                     <this.Link to={value["route"]}>{value["title"]}</this.Link>
                   </li>
                   :
@@ -118,102 +116,249 @@ export default class StoreAccountList extends Element {
           
             <this.Row>
               <this.Col md="4">   
-                <div>
-                  <div className="general">
-                    <h6>General</h6>
-                  </div>
-                  <this.InputText name="businessName" data={ storeAccount.businessName }  label="Business Name" placeholder="Super Store"  form={form} required={true}/>
-                  <this.InputText name="storeName"  data={ storeAccount.storeName } label="Private URL" notation=".storevein.com"  form={form} placeholder="Super Store"/>
-                  <this.InputText name="name" label="Country" form={form} placeholder="Global"/>
-                  <this.Select name="status" dataSource={ languages } label="Language" placeholder="Please select status"  form={form} />
-                  <this.Select name="status" dataSource={ currency } label="Default Currency" placeholder="Please select status"  form={form} />
-                  {/* <this.Select name="status" label="Timezone" placeholder="Please select status"  form={form} dataSource={statusDataSource} /> */}
-                  <this.Select name="status" label="Default Tax" placeholder="Please select status"  form={form} dataSource={statusDataSource} />
-                  <div className="general">
-                    <h6>ACCOUNT</h6>
-                  </div>
-                  <this.InputText name="name" label="Email Address"  form={form} placeholder="Super Store"/>
-                  <this.InputText name="name" label="Exist Password"  form={form} placeholder="Super Store"/>
-                  <this.InputText name="name" label="New password"  form={form}  placeholder="Super Store"/>
-                  <this.InputText name="name" label="Confirm password"  form={form}  placeholder="Confirm password"/>
+                <div className="general">
+                  <h6><this.Translate id="store_acc_general" /></h6>
                 </div>
+
+                <this.InputText
+                  name="businessName"
+                  data={storeAccount.businessName}
+                  label={<this.Translate id="store_acc_business_name" />}
+                  placeholder={this.CATranslate("store_acc_business_name", locale)}
+                  form={form}
+                  required/>
+
+                <this.InputText
+                  name="storeName"
+                  data={storeAccount.storeName}
+                  label={<this.Translate id="store_acc_store_name" />}
+                  notation=".storevein.com"
+                  placeholder={this.CATranslate("store_acc_store_name", locale)}
+                  form={form}
+                  disabled/>
+
+                <this.InputText
+                  name="countryId"
+                  label={<this.Translate id="store_acc_country" />}
+                  placeholder={this.CATranslate("store_acc_country", locale)}
+                  form={form}/>
+
+                <this.Select
+                  name="languageId"
+                  dataSource={languages}
+                  label={<this.Translate id="store_acc_language" />}
+                  placeholder={this.CATranslate("store_acc_language", locale)}
+                  form={form} />
+
+                <this.Select
+                  name="currencyId"
+                  dataSource={currency}
+                  label={<this.Translate id="store_acc_currency" />}
+                  placeholder={this.CATranslate("store_acc_currency", locale)}
+                  form={form} disabled />
+
+                {/* <this.Select
+                    name="status"
+                    label="Timezone"
+                    placeholder="Please select status"
+                    form={form}
+                    dataSource={statusDataSource} /> */}
+
+                <this.Select
+                  name="taxId"
+                  label={<this.Translate id="store_acc_tax" />}
+                  placeholder={this.CATranslate("store_acc_tax", locale)}
+                  form={form}
+                  dataSource={statusDataSource} />
+
+                <div className="general">
+                  <h6>{<this.Translate id="store_acc_account" />}</h6>
+                </div>
+
+                <this.InputText
+                  name="email"
+                  label={<this.Translate id="store_acc_email" />}
+                  placeholder={this.CATranslate("store_acc_email", locale)}
+                  form={form}/>
+
+                <this.InputText
+                  name="currentPassword"
+                  label={<this.Translate id="store_acc_current_password" />}
+                  placeholder={this.CATranslate("store_acc_current_password", locale)}
+                  form={form}/>
+
+                <this.InputText
+                  name="password"
+                  label={<this.Translate id="store_acc_new_password" />}
+                  placeholder={this.CATranslate("store_acc_new_password", locale)}
+                  form={form}/>
+
+                <this.InputText
+                  name="name"
+                  label={<this.Translate id="store_acc_confirm_password" />}
+                  placeholder={this.CATranslate("store_acc_confirm_password", locale)}
+                  form={form}/>
+
               </this.Col>
 
               <this.Col md="4">  
-                <div>
-                  <div className="general">
-                    <h6>CONTACT</h6>
-                  </div>
-                  <this.Row>
-                    <this.Col md="6">
-                      <this.InputText data={ storeAccount.firstName } name="firstName" label="First name"  form={form} placeholder="Peter"/>
-                    </this.Col>
-                    <this.Col md="6">
-                      <this.InputText data={ storeAccount.lastName } name="lastName" label="Last name"  form={form} placeholder="John"/>
-                    </this.Col>
-                  </this.Row>
-                  <this.InputEmail data={ storeAccount.email } name="email" label="Email Address" form={form} placeholder="John"/>
-                  <this.InputNumber data={ storeAccount.phoneNumber } name="phoneNumber" label="Phone number" form={form} placeholder="+855 12 345 678" />
-                  <this.InputText data={ storeAccount.address } name="address" label="Address" form={form} placeholder="Address"/>
-                  <this.InputText data={ storeAccount.street } name="street" label="Street" form={form} placeholder="Street"/>
-                  <this.InputText data={ storeAccount.city } name="city" label="City" form={form} placeholder="City"/>
-                  <this.InputText data={ storeAccount.postCode } name="postCode" label="Post code" form={form} placeholder="Post code"/>
-                  <div className="general">
-                    <h6>Setting</h6>
-                  </div>
-                  {/* <this.Select name="status" label="Price tag format"  form={form}  dataSource={statusDataSource} /> */}
-
-                  <this.Select name="productGenerateCodeType" defaultValue={0} label="Auto generate product code"  form={form}  dataSource={AutoGenerateDataSource} />
-                  <this.InputText name="InputText" label="Start sequence number" form={form} />
-
-                  {/* <this.Select name="status" label="Display price"  form={form} placeholder="Tax Exclusive" dataSource={statusDataSource} /> */}
+                <div className="general">
+                  <h6>{<this.Translate id="store_acc_contact" />}</h6>
                 </div>
+                <this.Row>
+                  <this.Col md="6">
+                    <this.InputText
+                      data={storeAccount.firstName}
+                      name="firstName"
+                      label={<this.Translate id="store_acc_first_name" />}
+                      placeholder={this.CATranslate("store_acc_first_name", locale)}
+                      form={form}/>
+                  </this.Col>
+
+                  <this.Col md="6">
+                    <this.InputText
+                      data={storeAccount.lastName}
+                      name="lastName"
+                      label={<this.Translate id="store_acc_last_name" />}
+                      placeholder={this.CATranslate("store_acc_last_name", locale)}
+                      form={form}/>
+                  </this.Col>
+
+                </this.Row>
+
+                <this.InputEmail
+                  data={storeAccount.email}
+                  name="email"
+                  label={<this.Translate id="store_acc_email" />}
+                  placeholder={this.CATranslate("store_acc_email", locale)}
+                  form={form}/>
+
+                <this.InputNumber
+                  data={storeAccount.phoneNumber}
+                  name="phoneNumber"
+                  label={<this.Translate id="store_acc_phone_number" />}
+                  placeholder={this.CATranslate("store_acc_phone_number", locale)}
+                  form={form} />
+                  
+                <this.InputText
+                  data={storeAccount.address}
+                  name="address"
+                  label={<this.Translate id="store_acc_address" />}
+                  placeholder={this.CATranslate("store_acc_address", locale)}
+                  form={form}/>
+                  
+                <this.InputText
+                  data={storeAccount.street}
+                  name="street"
+                  label={<this.Translate id="store_acc_street" />}
+                  placeholder={this.CATranslate("store_acc_street", locale)}
+                  form={form}/>
+                  
+                <this.InputText
+                  data={storeAccount.city}
+                  name="city"
+                  label={<this.Translate id="store_acc_city" />}
+                  placeholder={this.CATranslate("store_acc_city", locale)}
+                  form={form}/>
+                  
+                <this.InputText
+                  data={storeAccount.postCode}
+                  name="postCode"
+                  label={<this.Translate id="store_acc_post_code" />}
+                  placeholder={this.CATranslate("store_acc_post_code", locale)}
+                  form={form}/>
+
+                <div className="general">
+                  <h6>{<this.Translate id="store_acc_setting" />}</h6>
+                </div>
+
+                {/* <this.Select
+                  name="status"
+                  label="Price tag format"
+                  form={form}
+                  dataSource={statusDataSource} /> */}
+
+                <this.Select
+                  name="productGenerateCodeType"
+                  defaultValue={0}
+                  dataSource={AutoGenerateDataSource}
+                  label={<this.Translate id="store_acc_auto_generate_pcode" />}
+                  placeholder={this.CATranslate("store_acc_auto_generate_pcode", locale)}
+                  form={form} />
+
+                <this.InputText
+                  name="InputText"
+                  label={<this.Translate id="store_acc_start_sequence_code" />}
+                  placeholder={this.CATranslate("store_acc_start_sequence_code", locale)}
+                  form={form} />
+
+                {/* <this.Select
+                  name="status"
+                  label="Display price" 
+                  form={form}
+                  placeholder="Tax
+                  Exclusive"
+                  dataSource={statusDataSource} /> */}
+
               </this.Col>
 
               <this.Col md="4">  
-                <div>
-                  <div className="general">
-                    <h6>Billing</h6>
-                  </div>
-                  <this.DatePickers name="register_date" form={form} disabled={ true } label="Register date"/>
-                  <this.DatePickers  name="expired_date" form={form} disabled={ true }  label="Expired date"/>
-                  <div className="general">
-                    <h6>Plan</h6>
-                  </div>
-                  <this.FormGroup>
-                    <this.RadioRegisterGroup 
-                      className="main-radio-acc"
-                      label=" "
-                      name="businessPlanId" 
-                      type="radio"
-                      // required={ true }
-                      defaultValue={`${ storeAccount.businessPlanId }`}
-                      form={form} 
-                      onSelect={ this.onSelect  }
-                      onChange={ this.onChange }
-                    >
-                      { businessplan.map( (businessplan,key) => 
-                        <this.RadioRegister title={`${ businessplan.name }`}  language={`${ businessplan.description }`}  value={ businessplan.id }/> 
-                      ) 
-                      }
-                      
-                    </this.RadioRegisterGroup> 
-                  </this.FormGroup>
-                      
-                  <div className={`${ this.state.classChange }`}>
-                    <this.RadioButton 
-                      name="paymentType"    
-                      required={ true }
-                      form={form} 
-                      required={ true }
-                    />
-                  </div>
+                <div className="general">
+                  <h6>{<this.Translate id="store_acc_billing" />}</h6>
                 </div>
+
+                <this.DatePickers
+                  name="register_date"
+                  label={<this.Translate id="store_acc_register_date" />}
+                  placeholder={this.CATranslate("store_acc_register_date", locale)}
+                  form={form}
+                  disabled />
+                
+                <this.DatePickers
+                  name="expired_date"
+                  label={<this.Translate id="store_acc_expired_date" />}
+                  placeholder={this.CATranslate("store_acc_expired_date", locale)}
+                  form={form}
+                  disabled />
+                
+                <div className="general">
+                  <h6>{<this.Translate id="store_acc_plan" />}</h6>
+                </div>
+                
+                <this.FormGroup>
+
+                  <this.RadioBox 
+                    className="main-radio-acc"
+                    label=" "
+                    name="businessPlanId" 
+                    type="radio"
+                    defaultValue={`${ storeAccount.businessPlanId }`}
+                    form={form} 
+                    onSelect={this.onSelect}
+                    onChange={this.onChange}
+                  >
+                    { businessplan.map( (businessplan, key) => 
+                      <this.Radio
+                        key={key}
+                        title={`${businessplan.name}`}
+                        language={`${ businessplan.description }`}
+                        value={businessplan.id} /> 
+                    ) 
+                    }
+                  </this.RadioBox> 
+                </this.FormGroup>
+                      
+                <div className={`${this.state.classChange}`}>
+                  <this.RadioButton 
+                    name="paymentType"    
+                    required
+                    form={form} />
+                </div>
+                
+                <this.saveButton/>
+
               </this.Col>
             </this.Row>
-          </div>
-          <div className="btn-submit-center">
-            <this.saveButton/>
           </div>
         </this.Form>
       </div>

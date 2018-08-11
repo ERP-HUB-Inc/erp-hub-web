@@ -1,13 +1,7 @@
 import React from "react";
 import Element from "../../common/Element";
-import { Radio } from "antd";
 import "./index.css";
-
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
-
-export class RadioRegisterGroup extends Element {
-
+export class RadioBox extends Element {
   constructor(props){
     super(props);
     this.rules = [
@@ -34,11 +28,11 @@ export class RadioRegisterGroup extends Element {
         <this.FormItem label={this.props.label}>
           {
             getFieldDecorator(this.props.name, {rules: this.rules , initialValue: this.props.defaultValue})(
-              <RadioGroup 
+              <this.Radio.Group 
                 onChange={this.onChange}
               >
                 {this.props.children}
-              </RadioGroup>
+              </this.Radio.Group>
             )
           }
         </this.FormItem>
@@ -47,24 +41,24 @@ export class RadioRegisterGroup extends Element {
   }
 }
 
-export class RadioRegister extends Element {
+export class Radio extends Element {
   render(){
     const { value, title, language, currency } = this.props;
     return(
-      <RadioButton value={ value }>
+      <this.Radio.Button value={ value }>
         <div className="radio-group">
           <div className="radio-title">{ title }</div>
           <div className="language">
             { language } <br/>
             { currency }</div>
         </div>
-      </RadioButton>
+      </this.Radio.Button>
     );
   }
 }
 
 
-RadioRegisterGroup.defaultProps = {
+RadioBox.defaultProps = {
   errorRequired: "This Field is required",
   className: "main-radio"
 };

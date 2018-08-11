@@ -3,9 +3,9 @@ import { Badge } from "reactstrap";
 
 export class Badges extends Component {
   render(){
-    const { title,className } = this.props;
+    const { title } = this.props;
     return(
-      <Badge className="">
+      <Badge>
         { title }
       </Badge>
     );

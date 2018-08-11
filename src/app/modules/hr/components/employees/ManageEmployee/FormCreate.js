@@ -31,7 +31,7 @@ export default class FormCreate extends Modal {
 
   onChange(checked){
     this.setState({
-      disabled : checked == 1,
+      disabled : checked === 1,
     });
     this.props.form.setFieldsValue({password: ""});
   }

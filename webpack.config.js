@@ -10,7 +10,7 @@ var SRC_DIR = path.resolve(__dirname, "src");
 module.exports = {
   entry: SRC_DIR + "/index.js",
   output: {
-    path: DIST_DIR + "/app",
+    path: DIST_DIR + "/",
     filename: "bundle.js",
     publicPath: "/"
   },

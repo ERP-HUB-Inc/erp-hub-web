@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import Element from "../../common/Element";
 import { Checkbox } from "antd";
 import "./index.css";

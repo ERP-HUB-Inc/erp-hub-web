@@ -4,10 +4,6 @@ import Component  from "../../../components/Component";
 import PrivilegeAction from "../../../action/settings/privilege";
 import "./index.css";
 
-const text = `
-  ddd
-`;
-
 const plainOptions = [{label: "Apple", value: 1}, {label: "Pear", value: 2},  {label: "Orange", value: 3}];
 const defaultCheckedList = ["Apple", "Orange"];
 

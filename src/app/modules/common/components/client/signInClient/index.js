@@ -60,18 +60,18 @@ export default class ClientSignIn extends Component {
 
         const {data} = error["response"];
 
-        if (data.error.code == this.HttpCode.NOT_FOUND) {
+        if (data.error.code === this.HttpCode.NOT_FOUND) {
           this.errorMessage = "User account not exist.";
-        } else if (data.error.code == this.HttpCode.DEACTIVE) {
+        } else if (data.error.code === this.HttpCode.DEACTIVE) {
           this.errorMessage = "Your account is now deactive.";
-        } else if (data.error.code == this.HttpCode.INVALID_USER_PASSWORD) {
+        } else if (data.error.code === this.HttpCode.INVALID_USER_PASSWORD) {
           this.errorMessage = "Invalid user name or password.";
-        } else if (data.error.code == this.HttpCode.NO_PERMISSION_ON_STORE) {
+        } else if (data.error.code === this.HttpCode.NO_PERMISSION_ON_STORE) {
           this.errorMessage = "Your account no permission to any store.";
-        } else if (data.error.code == this.HttpCode.INTERNAL_SERVER_ERROR) {
+        } else if (data.error.code === this.HttpCode.INTERNAL_SERVER_ERROR) {
           this.errorMessage = "Please check your connection.";
         }
-      } else if (error.message == this.HttpCode.NETWORK_ERROR) {
+      } else if (error.message === this.HttpCode.NETWORK_ERROR) {
         this.errorMessage = "Please check your connection.";
       }
 
