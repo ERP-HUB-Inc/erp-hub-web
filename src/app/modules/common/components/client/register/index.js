@@ -119,7 +119,7 @@ class ClientRegister extends Component {
                       form={form} />
                     <div>
                       <this.FormGroup>
-                        <this.RadioRegisterGroup 
+                        <this.RadioBox 
                           label="Country"
                           name="countryId" 
                           type="radio"
@@ -127,10 +127,10 @@ class ClientRegister extends Component {
                           required={true}
                           form={form}
                         >
-                          <this.RadioRegister title="Global" language="English" currency="USD" value="1"/>
-                          <this.RadioRegister title="Cambodia" language="Khmer" currency="KHR"  value="2" />
-                          <this.RadioRegister title="Myanmar" language="Burma" currency="MMX"  value="3" />
-                        </this.RadioRegisterGroup> 
+                          <this.Radio title="Global" language="English" currency="USD" value="1"/>
+                          <this.Radio title="Cambodia" language="Khmer" currency="KHR"  value="2" />
+                          <this.Radio title="Myanmar" language="Burma" currency="MMX"  value="3" />
+                        </this.RadioBox> 
                       </this.FormGroup>
 
                       <this.Link to="/signin">

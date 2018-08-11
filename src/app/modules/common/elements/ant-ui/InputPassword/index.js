@@ -13,8 +13,8 @@ export  class InputPassword extends Element {
     };
     this.validateClassStatusCurrentPWD = "";
     this.errorMessageCurrentPWD = "";
-
     this.isUserInputCurrentPWD = false;
+
     this.makePasswordToRequired = this.makePasswordToRequired.bind(this);
     this.validateToNextPassword = this.validateToNextPassword.bind(this);
     this.compareToFirstPassword = this.compareToFirstPassword.bind(this);
@@ -56,13 +56,17 @@ export  class InputPassword extends Element {
   }
 
   render() {
-    let { getFieldDecorator, required } = this.props.form;
+    const {getFieldDecorator} = this.props.form;
+    let {required} = this.props;
 
-    // CHECK IF USER INPUT CURRENT PASSWORD AND THEN MAKE PASSWORD REQUIRE
-    if (this.isUserInputCurrentPWD) {
-      required = true;
-    } else {
-      required = false;
+    // ALLOW IT PROCESS WHEN ONLY CURRENT PASSWORD DISPLAY
+    if (this.props.requiredCurrentPWD) {
+      // CHECK IF USER INPUT CURRENT PASSWORD AND THEN MAKE PASSWORD REQUIRE
+      if (this.isUserInputCurrentPWD) {
+        required = true;
+      } else {
+        required = false;
+      }
     }
 
     // HANDLE CHECK MESSAGE BACK FROM API WITH CURRENT PASSWORD CHECKING
@@ -82,17 +86,14 @@ export  class InputPassword extends Element {
                 placeholder={this.props.currentPWDPlaceholder}
                 label={this.props.currentPWDLabel}
                 required={this.props.required}
+                validateStatus={this.validateClassStatusCurrentPWD}
+                help={this.errorMessageCurrentPWD}
                 errorRequired={this.props.errorRequiredCurrentPWD}
+                isUserInputCurrentPWD={this.isUserInputCurrentPWD}
                 handleMakePasswordToRequired={this.makePasswordToRequired}
               />
               :
               ""
-          }
-          { 
-            this.errorMessageCurrentPWD !== null ? 
-              <div className="ant-form-explain">{this.errorMessageCurrentPWD}</div> 
-              : 
-              "" 
           }
         </div>
         <Password
