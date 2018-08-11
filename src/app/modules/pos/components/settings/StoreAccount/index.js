@@ -11,7 +11,7 @@ export default class StoreAccountList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      classChange: "",
+      classChange: "unhide",
       getstoreaccid: ""
     };
     
@@ -69,7 +69,14 @@ export default class StoreAccountList extends Component {
     this.dispatch(StoreAccountAction.fetch(this.client.clientId));  
     this.dispatch(fetchAllBusinessPlanSystem());
     this.onSelect();
+    // this.props.form.setFieldsValue({
+    //   registerDate: "2018-08-11",
+    // });
     // this.dispatch(StoreAccountAction.reset());
+  }
+
+  componentDidUpdate() {
+    console.log("Component Loaded");
   }
 
   render() {
@@ -383,14 +390,12 @@ export default class StoreAccountList extends Component {
                   </this.RadioBox> 
                 </this.FormGroup>
                       
-                <div className={`${this.state.classChange}`}>
-                  <this.RadioButton 
-                    name="paymentType"
-                    defaultValue={storeAccount.paymentType}  
-                    form={form}
-                    disabled={true}
-                    required/>
-                </div>
+                <this.RadioButton 
+                  name="paymentType"
+                  defaultValue={storeAccount.paymentType}  
+                  form={form}
+                  disabled={true}
+                  required/>
                 
                 <this.Button type="info" htmlType="submit" loading={storeAccountUpdate.updating}>
                   <span className="icon-save icon-padding-right"></span>Save
