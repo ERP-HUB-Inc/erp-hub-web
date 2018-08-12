@@ -1,4 +1,4 @@
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import Header from "../../components/layout/Header";
 
 function mapStateToProps(state) {
