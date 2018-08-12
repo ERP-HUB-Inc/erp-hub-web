@@ -18,6 +18,7 @@ export default class StoreAccountList extends Component {
     // ERROR CURRENT PASSWORD
     this.errorMessageCurrentPWD = "";
     this.validateClassStatusCurrentPWD = "";
+    this.isResetInputCurrentPWD = false;
 
     this.successMessage = "Success updated.";
 
@@ -106,7 +107,7 @@ export default class StoreAccountList extends Component {
         }
       }
 
-      this.validateClassStatusCurrentPWD = "has-error";
+      this.validateClassStatusCurrentPWD = "error";
 
       this.dispatch(StoreAccountAction.reset());
     }
