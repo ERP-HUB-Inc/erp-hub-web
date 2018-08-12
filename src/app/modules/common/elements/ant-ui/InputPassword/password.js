@@ -3,17 +3,16 @@ import Element from "../../common/Element";
 
 export default class Password extends Element {
   render() {
-    const { input } = this.props;
     return (
       <this.FormItem label={this.props.label}>
         {
           this.props.getFieldDecorator(this.props.name, {rules: [{
-            required: true, message: "Please input your password!",
+            required: this.props.required, message: this.props.errorRequired,
           }, {
             validator: this.props.validateToNextPassword,
           }]
           })(
-            <this.Input {...input} type={this.props.type} placeholder={this.props.placeholder}/>
+            <this.Input type="password" placeholder={this.props.placeholder}/>
           )
         }
       </this.FormItem>
@@ -23,6 +22,6 @@ export default class Password extends Element {
 
 Password.defaultProps = {
   name: "password",
-  type: "password",
+  errorRequired: "Please input your password.",
   required: true
 };

@@ -1,10 +1,7 @@
-import React,{ Component } from "react";
+import React from "react";
 import Modal from "../../shares/Modal";
 
 export default class FormSearch extends Modal {
-  constructor(props) {
-    super(props);
-  }
   render() {    
     const { form } = this.props;
     return(

@@ -1,7 +1,7 @@
 import React from "react";
 import { Pagination } from "antd";
 import Component  from "../../common/components/Component";
-import FormSearch from "./shares/FormSearch/";
+// import FormSearch from "./shares/FormSearch/";
 import menuSource from "../../common/components/layout/SiderBar/datasource";
 import "./index.css";
 
@@ -27,10 +27,10 @@ export default class List extends Component {
     this.showListRoles = "";
     this.layout = "";
 
-    this.columns = [],
-    this.columnsExpanded=[],
+    this.columns = [];
+    this.columnsExpanded=[];
 
-    this.filter = [],
+    this.filter = [];
     this.module = "customers"; // This compare to parent key in datasource in sidebar when render breadcrump
     this.fetchingProp = ""; // prop of reducer of fetching record that get from map state to prop from container
     this.addingProp = ""; // prop of reducer of adding record that get from map state to prop from container
@@ -273,7 +273,7 @@ export default class List extends Component {
           {
             menuSource[this.module]["subItems"].map((value, index) =>
               "isFashNav" in value && value["isFashNav"] ? 
-                <li className={(currentPath==value["route"] ? "active" : "") + " fast-nav"} key={index}>
+                <li className={(currentPath===value["route"] ? "active" : "") + " fast-nav"} key={index}>
                   <this.Link to={value["route"]}>{value["title"]}</this.Link>
                 </li>
                 :

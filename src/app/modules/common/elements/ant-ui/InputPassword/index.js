@@ -1,4 +1,5 @@
 import React from "react";
+import Current from "./current";
 import Password from "./password";
 import Confirm from "./confirm";
 import Element from "../../common/Element";
@@ -10,9 +11,24 @@ export  class InputPassword extends Element {
     this.state = {
       confirmDirty: false
     };
+    this.validateClassStatusCurrentPWD = "";
+    this.errorMessageCurrentPWD = "";
+
+    this.isUserInputCurrentPWD = false;
+    this.makePasswordToRequired = this.makePasswordToRequired.bind(this);
     this.validateToNextPassword = this.validateToNextPassword.bind(this);
     this.compareToFirstPassword = this.compareToFirstPassword.bind(this);
     this.handleConfirmBlur = this.handleConfirmBlur.bind(this);
+  }
+
+  makePasswordToRequired(e) {
+    const form = this.props.form;
+    if (e.target.value.trim().length > 0) {
+      this.isUserInputCurrentPWD = true;
+    } else {
+      this.isUserInputCurrentPWD = false;
+      form.resetFields([this.props.currentPWDName, "password", "confirm"]);
+    }
   }
 
   validateToNextPassword (rule, value, callback) {
@@ -28,7 +44,7 @@ export  class InputPassword extends Element {
   compareToFirstPassword (rule, value, callback) {
     const form = this.props.form;
     if (value && value !== form.getFieldValue("password")) {
-      callback("Two passwords that you enter is inconsistent.");
+      callback(this.props.messageIsMatchPassword);
     } else {
       callback();
     }
@@ -40,9 +56,45 @@ export  class InputPassword extends Element {
   }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
+    let { getFieldDecorator, required } = this.props.form;
+
+    // CHECK IF USER INPUT CURRENT PASSWORD AND THEN MAKE PASSWORD REQUIRE
+    if (this.isUserInputCurrentPWD) {
+      required = true;
+    } else {
+      required = false;
+    }
+
+    // HANDLE CHECK MESSAGE BACK FROM API WITH CURRENT PASSWORD CHECKING
+    this.validateClassStatusCurrentPWD = this.props.validateClassStatusCurrentPWD;
+    this.errorMessageCurrentPWD = this.props.errorMessageCurrentPWD;
+
     return (
       <div>
+        <div className={this.validateClassStatusCurrentPWD}>
+          {
+            this.props.requiredCurrentPWD ?
+              <Current
+                name={this.props.currentPWDName}
+                type="password"
+                getFieldDecorator={getFieldDecorator}
+                validateToNextPassword={this.validateToNextPassword}
+                placeholder={this.props.currentPWDPlaceholder}
+                label={this.props.currentPWDLabel}
+                required={this.props.required}
+                errorRequired={this.props.errorRequiredCurrentPWD}
+                handleMakePasswordToRequired={this.makePasswordToRequired}
+              />
+              :
+              ""
+          }
+          { 
+            this.errorMessageCurrentPWD !== null ? 
+              <div className="ant-form-explain">{this.errorMessageCurrentPWD}</div> 
+              : 
+              "" 
+          }
+        </div>
         <Password
           name="password"
           type="password"
@@ -50,7 +102,8 @@ export  class InputPassword extends Element {
           validateToNextPassword={this.validateToNextPassword}
           placeholder={this.props.placeholder}
           label={this.props.label}
-          required = {this.props.required}
+          required={required}
+          errorRequired={this.props.errorRequired}
         />
         { 
           this.props.checkConfirm ?
@@ -62,7 +115,8 @@ export  class InputPassword extends Element {
               handleConfirmBlur={this.handleConfirmBlur}
               placeholder={this.props.confirmPlaceholder}
               label={this.props.confirmLabel}
-              required = {this.props.required}
+              required={required}
+              errorRequired={this.props.errorRequiredConfirm}
             />
             :
             ""
@@ -76,7 +130,8 @@ InputPassword.defaultProps = {
   min: 8,
   max: 255,
   checkConfirm: true,
-  errorRequired: "Please input your password."
+  requiredCurrentPWD: false,
+  messageIsMatchPassword: "Two passwords that you enter is inconsistent."
 };
 
 

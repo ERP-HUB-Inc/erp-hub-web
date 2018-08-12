@@ -6,17 +6,16 @@ export default class Current extends Element {
     return (
       <this.FormItem label={this.props.label}>
         {
-          this.props.getFieldDecorator(this.props.name, {rules: [{
-            required: this.props.required, message: this.props.errorRequired,
-          },
-          {
-            validator: this.props.compareToFirstPassword,
-          }
-          ]})(
+          this.props.getFieldDecorator(this.props.name, {rules: [
+            {
+              required: this.props.required,
+              message: this.props.errorRequired
+            }]
+          })(
             <this.Input
               type="password"
               placeholder={this.props.placeholder}
-              onBlur={this.props.handleConfirmBlur} />
+              onChange={this.props.handleMakePasswordToRequired} />
           )
         }
       </this.FormItem>
@@ -26,6 +25,5 @@ export default class Current extends Element {
 
 Current.defaultProps = {
   name: "current",
-  errorRequired: "Please confirm your password.",
-  required: true
+  errorRequired: "Please input your current password."
 };

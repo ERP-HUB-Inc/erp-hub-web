@@ -6,7 +6,8 @@ import {
   Radio,
   Checkbox,
   Select,
-  InputNumber
+  InputNumber,
+  DatePicker
 } from "antd";
 import { FormGroup, Label } from "reactstrap";
 import { Translate, } from "react-localize-redux";
@@ -31,6 +32,7 @@ export default class Element extends Component {
     this.Radio = Radio;
     this.Select = Select;
     this.Option = Option;
+    this.DatePicker = DatePicker;
 
     //localization
     this.Translate = Translate;

@@ -161,5 +161,70 @@ export default {
     "Plan"
   ],
 
+  "store_acc_error_sequence_start_no": [
+    "Start Sequence Number allow only 10 characters",
+    "Start Sequence Number allow only 10 characters",
+    "Start Sequence Number allow only 10 characters"
+  ],
+
+  "store_acc_error_confirm_pwd_not_match": [
+    "Two passwords that you enter is inconsistent.",
+    "Two passwords that you enter is inconsistent.",
+    "Two passwords that you enter is inconsistent."
+  ],
+
+  "store_acc_error_pwd_required": [
+    "Please input your password.",
+    "Please input your password.",
+    "Please input your password."
+  ],
+  
+  "store_acc_error_confirm_pwd_required": [
+    "Please confirm your password.",
+    "Please confirm your password.",
+    "Please confirm your password."
+  ],
+
+  "store_acc_error_current_pwd_not_match": [
+    "Current password is not match.",
+    "Current password is not match.",
+    "Current password is not match."
+  ],
+
+  "store_acc_type_of_generate_code_auto": [
+    "Auto",
+    "Auto",
+    "Auto"
+  ],
+
+  "store_acc_type_of_generate_code_manual": [
+    "Manual",
+    "Manual",
+    "Manual"
+  ],
+
+  "store_acc_pay_as_your_business_growth": [
+    "Pay as your business growth",
+    "Pay as your business growth",
+    "Pay as your business growth"
+  ],
+
+  "store_acc_pay_your_5_stores_package": [
+    "Pay on your 5 stores package",
+    "Pay on your 5 stores package",
+    "Pay on your 5 stores package"
+  ],
+
+  "store_acc_pay_your_10_stores_package": [
+    "Pay on your 10 stores package",
+    "Pay on your 10 stores package",
+    "Pay on your 10 stores package"
+  ],
+
+  "store_acc_pay_your_15_stores_package": [
+    "Pay on your 15 stores package",
+    "Pay on your 15 stores package",
+    "Pay on your 15 stores package"
+  ],
 };
   

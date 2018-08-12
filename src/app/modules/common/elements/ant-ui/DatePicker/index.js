@@ -12,19 +12,16 @@ export class DatePickers extends Element {
       {
         required: this.props.required
       }
-      // {
-      //   message: this.props.message
-      // }
     ];
   }
 
   render() {
     return (
       <DatePic
-        type={ this.props.type }
-        label={ this.props.label }
-        name={ this.props.name }
-        rules={ this.rules }
+        type={this.props.type}
+        label={this.props.label}
+        name={this.props.name}
+        onChange={this.props.onChange}
         required = {this.props.required}
         data={this.props.data}
         defaultValue={this.props.defaultValue}

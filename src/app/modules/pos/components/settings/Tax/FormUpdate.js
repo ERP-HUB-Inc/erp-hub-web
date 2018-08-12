@@ -39,7 +39,7 @@ export default class Form extends Modal {
         <div>
           {taxUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
           <InputText form={form} data={ taxUpdate.data.name } name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
-          <InputNumber form={form} data={ taxUpdate.data.rate } type="number" name="rate" label="Rate" placeholder="Rate" />
+          <InputNumber form={form} data={ taxUpdate.data.rate } name="rate" label="Rate" placeholder="Rate" />
           <InputText form={form} data={ taxUpdate.data.labelOnInvoice } name="labelOnInvoice" label="Label On Invoice" placeholder="Label On Invoice" max={255}/>
           <this.Select
             name="status"

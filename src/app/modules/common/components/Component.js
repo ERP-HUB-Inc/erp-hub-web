@@ -40,7 +40,7 @@ import
   DatePickers,
   RadioButton,
   UploadImg,
-  saveButton,
+  // saveButton,
   InputTextArea,
   SearchButton,
   Radios
@@ -163,7 +163,7 @@ export default class Component extends RComponent {
     this.InputEmail = InputEmail;
     this.DatePickers = DatePickers;
     this.UploadImg = UploadImg;
-    this.saveButton = saveButton;
+    // this.saveButton = saveButton;
     this.TabPane = TabPane;
     this.Tabs = Tabs;
     this.InputTextArea = InputTextArea;

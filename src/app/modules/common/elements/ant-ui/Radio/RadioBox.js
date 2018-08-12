@@ -28,7 +28,8 @@ export class RadioBox extends Element {
         <this.FormItem label={this.props.label}>
           {
             getFieldDecorator(this.props.name, {rules: this.rules , initialValue: this.props.defaultValue})(
-              <this.Radio.Group 
+              <this.Radio.Group
+                disabled={this.props.disabled}
                 onChange={this.onChange}
               >
                 {this.props.children}
