@@ -1,58 +1,24 @@
 import React from "react";
-import columns from "./column";
 import List from "../../List";
 import FormCreate from "../../../containers/employees/ManageEmployee/FormCreate";
 import FormUpdate from "../../../containers/employees/ManageEmployee/FormUpdate";
 import Constant from "../../../constants/employees/managementEmployee";
 import ManageEmployeeAction from "../../../actions/employees/manageEmployee";
+import ManageEmployeeService from "../../../services/employees/manageEmployee";
 import "./index.css";
 
 export default class PaymentMethodList extends List {
   constructor(props) {
     super(props);
-    this.columns = columns;
+    this.columns = new Column();
     this.fetchingProp = "manageEmployee";
     this.addingProp = "manageEmployeeAdd";
     this.updatingProp = "manageEmployeeUpdate";
+
+    this.service = ManageEmployeeService;
+    this.action = ManageEmployeeAction;
+
     this.RESET_CONSTANT = Constant.RESET_MANAGEMENT_EMPLOYEE;
-  }
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    
-    dispatch(ManageEmployeeAction.fetch(this.pageSize));
-  }
-
-  onChange(pagination, filters, sorter) {
-    const { dispatch } = this.props;
-
-    super.onChange(pagination, filters, sorter);
-    
-    dispatch(ManageEmployeeAction.fetch(...this.filter));
-  }
-
-  onChangePagination(current, pageSize) {
-    const { dispatch } = this.props;
-
-    this.filter = [
-      pageSize,
-      (current - 1) * pageSize,
-    ];
-
-    dispatch(ManageEmployeeAction.fetch(...this.filter));
-
-    this.setState({ current});
-  }
-
-  onShowSizeChange(current, pageSize) {
-    const { dispatch } = this.props;
-
-    this.filter = [
-      pageSize,
-      current,
-    ];
-
-    dispatch(ManageEmployeeAction.fetch(...this.filter));
   }
 
   handleShowFormAdd() {
@@ -70,22 +36,41 @@ export default class PaymentMethodList extends List {
       modalConten: <FormUpdate/>
     });
   }
+}
 
-  handleDelete() {
-    const { dispatch } = this.props;
-
-    dispatch(ManageEmployeeAction.archive(this.state.selectedListIds));
-
-    dispatch(ManageEmployeeAction.fetch(this.pageSize, this.state.current));
-    
-    this.setState({selectedRowKeys: []});
-
-    super.handleDelete();
-
-    this.Message.info(this.messageSuccess);
-  }
-
-  render() {
-    return super.render();
+class Column extends List {
+  constructor(props) {
+    super(props);
+    return [
+      {
+        title: "Date",
+        dataIndex:"createdAt",
+        key: "createdAt", 
+        sorter: true
+      }, {
+        title: "full Name",
+        dataIndex: "firstName",
+        dateIndex: "lastName",
+        key: "firstName",
+        sorter: true
+      },
+      {
+        title: "Phone No",
+        dataIndex: "phoneNumber",
+        key: "phoneNumber"
+      },
+      {
+        title: "Address",
+        dataIndex: "address",
+        key: "address",
+        sorter: true
+      },
+      {
+        title: "Status",
+        dataIndex: "status",
+        key: "status",
+        sorter: true
+      }
+    ];
   }
 }
