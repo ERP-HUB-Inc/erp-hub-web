@@ -4,6 +4,7 @@ import Component  from "../../Component";
 import menuSource from "../../layout/SiderBar/datasource";
 import "./index.css";
 
+
 export default class List extends Component {
   constructor(props) {
     super(props);
@@ -16,15 +17,16 @@ export default class List extends Component {
       deleting: false,
       modalSource: {},
       ListRoles: null,
-      modalConten: null // the content that show in modal content
+      modalConten: null, // the content that show in modal content,
+      columns: []
     };
     
     //access role
     this.showListRoles = "";
     this.layout = "";
 
-    this.columns = [],
-    this.filter = [],
+    this.columns = [];
+    this.filter = [];
     this.module = "settings"; // This compare to parent key in datasource in sidebar when render breadcrump
     this.fetchingProp = ""; // prop of reducer of fetching record that get from map state to prop from container
     this.addingProp = ""; // prop of reducer of adding record that get from map state to prop from container
@@ -37,6 +39,43 @@ export default class List extends Component {
     this.okText = "Yes"; // text button on alert of delete action
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
+    // this.columnNo = {
+    //   title: <this.Translate id="col_payment_method_no" />,
+    //   dataIndex: "no",
+    //   key: "no",
+    //   render: (value, record, index) => { console.log("Column No Render:"); return index + 1;},
+    //   sorter: true
+    // };
+    this.columnNo = {};
+    
+    this.columnStatus = {
+      title: <this.Translate id="col_payment_method_status" />,
+      dataIndex: "status",
+      key: "status",
+      render: value => {
+        return (
+          value === 1 ?
+            <this.Badge status="success" text={<this.Translate id="select_text_active" />} />
+            :
+            <this.Badge status="error" text={<this.Translate id="select_text_deactive" />} />
+        );
+      },
+      sorter: true
+    };
+    this.columnCreatedAt = {
+      title: <this.Translate id="col_payment_method_date" />,
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: value => this.Util.formatDate(value),
+      sorter: true
+    };
+    this.columnUpdatedAt = {
+      title: <this.Translate id="col_payment_method_update" />,
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      render: value => this.Util.formatDate(value),
+      sorter: true
+    };
 
     this.service = null;
     this.action = null;
@@ -161,6 +200,14 @@ export default class List extends Component {
   }
 
   /**
+   * 
+   * @param {*} dataRow data from each row of table
+   */
+  handleShowRecordDetail(dataRow) {
+
+  }
+
+  /**
    * handle delete multi record
    * it will overide in child class
    */
@@ -187,10 +234,12 @@ export default class List extends Component {
       this.service.archive(this.state.selectedListIds)
         .then(response => {
           dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
-          this.setState({selectedRowKeys: []});
-          this.setState({modalVisible: false});
+          this.setState({
+            selectedRowKeys: [],
+            modalVisible: false,
+            deleting: false
+          });
           this.Message.info(this.messageSuccess);
-          this.setState({deleting: false});
         })
         .catch(err => {
           this.setState({deleting: false});
@@ -198,16 +247,125 @@ export default class List extends Component {
     }
   }
 
-  render() {
+  renderBreadCrumb() {
+    // get current path of breadcrum compare with url
+    const currentPath = window.location.pathname;
 
-    let fetchingProps = this.props[this.fetchingProp];
-    const addingProps = this.props[this.addingProp];
-    const updatingProps = this.props[this.updatingProp];
+    return (
+      <div className="breadcrumb">
+        <ul className="list-unstyled">
+          <li>
+            <this.Link to="/"><span className="icon-home"></span></this.Link>
+          </li>
+          <li className="fast-nav text-uppercase">
+            <this.Link to="/">{this.module}</this.Link>
+          </li>
+          {
+            menuSource[this.module]["subItems"].map((value, index) =>
+              "isFashNav" in value && value["isFashNav"] ? 
+                <li className={(currentPath === value["route"] ? "active" : "") + " fast-nav"} key={index}>
+                  <this.Link to={value["route"]}>{value["title"]}</this.Link>
+                </li>
+                :
+                ""
+            )
+          }
+        </ul>
+      </div>
+    );
+  }
+
+  renderActionButton() {
+    return (
+      <div className="float-left">
+        <this.Button type="info" className="mg-right" onClick={() => this.handleShowFormAdd()}>
+          <span className="icon-add icon-padding-right"></span>Add New
+        </this.Button>
+        <this.Button disabled={this.state.selectedRowKeys.length <= 0} type="danger" onClick={() => this.handleConfirm()}>
+          <span className="icon-delete icon-padding-right"></span>Delete
+        </this.Button>
+      </div> 
+    );
+  }
+
+  renderModalConfirmDelete() {
+    return (
+      <this.Modal
+        visible={this.state.modalVisible}
+        wrapClassName="confirm-delete"
+        footer={null}    
+      >
+        <div>
+          <span className="icon-help icon-padding-right"></span>
+          <span className="title">{this.confirmTitle}</span><br/>
+          <span>{this.confirmTextDelete}</span>
+
+        </div>
+        <div className="ant-modal-footer">
+          <this.Button className="danger" onClick={() => this.handleCancel()}>
+            <span className="icon-close icon-padding-right"></span>CANCEL
+          </this.Button>
+          <this.Button onClick={() => this.handleDelete()} loading={this.state.deleting} className="info">
+            <span className="icon-checked icon-padding-right"></span>YES
+          </this.Button>
+        </div>
+      </this.Modal>
+    );
+  }
+
+  renderTableList(fetchingProps) {
     const pagination = {
       total: fetchingProps.pagination.total,
       pageSize: fetchingProps.pagination.limit,
       current: this.state.current
     };
+
+    // handle for change select checkbox on table row
+    const rowSelection = {
+      selectedRowKeys: this.state.selectedRowKeys,
+      onChange: this.onSelectChange
+    };
+
+    return (
+      <div className="table-wrapper">
+
+        {/* <FormSearch /> */}
+
+        { this.renderActionButton() }
+
+        { 
+          pagination.total > 0 ?
+            <div className="float-right">
+              <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
+            </div>
+            :
+            ""
+        }
+
+        <this.clearFloating/>
+
+        <this.Table 
+          rowSelection={rowSelection}
+          dataSource={fetchingProps.list}
+          columns={this.columns}
+          pagination={false} //
+          onChange={this.onChange}
+          onRow={record =>({
+            onDoubleClick:(e) => this.handleShowFormEdit(record),
+            onClick: (e) => this.handleShowRecordDetail(record)
+          })}
+          loading={fetchingProps.fetching}
+        />
+
+      </div>
+    );
+  }
+
+  render() {
+
+    let fetchingProps = this.props[this.fetchingProp];
+    const addingProps = this.props[this.addingProp];
+    const updatingProps = this.props[this.updatingProp];
     
     // Here is repsonse from add action and combinde response data to the list.
     if (addingProps.response != null) {
@@ -222,96 +380,18 @@ export default class List extends Component {
       this.props.dispatch({type: this.RESET_CONSTANT});
     }
     
-    // handle for change select checkbox on table row
-    const rowSelection = {
-      selectedRowKeys: this.state.selectedRowKeys,
-      onChange: this.onSelectChange
-    };
-  
-    // get current path of breadcrum compare with url
-    const currentPath = window.location.pathname;
-    
     return (
       
       <div style={{marginTop: "15px"}}>
-        <div className="breadcrumb">
-          <ul className="list-unstyled">
-            <li>
-              <this.Link to="/"><span className="icon-home"></span></this.Link>
-            </li>
-            <li className="fast-nav text-uppercase">
-              <this.Link to="/">{this.module}</this.Link>
-            </li>
-            {
-              menuSource[this.module]["subItems"].map((value, index) =>
-                <li className={(currentPath==value["route"] ? "active" : "") + " fast-nav"} key={index}>
-                  <this.Link to={value["route"]}>{value["title"]}</this.Link>
-                </li>
-              )
-            }
-          </ul>
-        </div>
-        {/* ===============ENDACTION BUTTON====== */}
 
+        { this.renderBreadCrumb()}
 
-        {/* ===============TABLE LIST============ */}   
+        { this.renderTableList(fetchingProps) }
 
-        <div className="table-wrapper">
-          {/* ===============ACTION BUTTON============ */}
-          <div className="float-left">
-            <this.Button type="info" className="mg-right" onClick={() => this.handleShowFormAdd()}>
-              <span className="icon-add icon-padding-right"></span>Add New
-            </this.Button>
-            <this.Button disabled={this.state.selectedRowKeys.length <= 0} type="danger" onClick={() => this.handleConfirm()}>
-              <span className="icon-delete icon-padding-right"></span>Delete
-            </this.Button>
-          </div> 
-
-          <div className="float-right">
-            <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
-          </div>
-          <this.clearFloating/>
-          <this.Table 
-            rowSelection={rowSelection}
-            dataSource={fetchingProps.list}
-            columns={this.columns}
-            pagination={false} //
-            onChange={this.onChange}
-            onRow={record =>({
-              onDoubleClick:(e)=> this.handleShowFormEdit(record)
-            })}
-            loading={fetchingProps.fetching}
-          />
-        </div>
-        {/* ===============END TABLE LIST============ */}
-
-        {/* ===============DISPLAY MODAL POPUP============ */}
-        {
-          this.state.modalConten
-        }
-        {/* ===============END DISPLAY MODAL POPUP============ */}
+        { this.state.modalConten }
             
+        { this.renderModalConfirmDelete() }
 
-        <this.Modal
-          visible={this.state.modalVisible}
-          wrapClassName="confirm-delete"
-          footer={null}    
-        >
-          <div>
-            <span className="icon-help icon-padding-right"></span>
-            <span className="title">{this.confirmTitle}</span><br/>
-            <span>{this.confirmTextDelete}</span>
-
-          </div>
-          <div className="ant-modal-footer">
-            <this.Button className="danger" onClick={() => this.handleCancel()}>
-              <span className="icon-close icon-padding-right"></span>CANCEL
-            </this.Button>
-            <this.Button onClick={() => this.handleDelete()} loading={this.state.deleting} className="info">
-              <span className="icon-checked icon-padding-right"></span>YES
-            </this.Button>
-          </div>
-        </this.Modal>
       </div>
       
     );
