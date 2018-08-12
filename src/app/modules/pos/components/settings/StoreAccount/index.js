@@ -328,13 +328,13 @@ export default class StoreAccountList extends Component {
                   label={<this.Translate id="store_acc_start_sequence_code" />}
                   placeholder={this.CATranslate("store_acc_start_sequence_code", locale)}
                   data={storeAccount.productCodeSequenceStart}
-                  max={10}
+                  max={9999999999}
                   errorLength={<this.Translate id="store_acc_error_sequence_start_no" />}
                   form={form} />
 
                 {/* <this.Select
                   name="status"
-                  label="Display price" 
+                  label="Display price"
                   form={form}
                   placeholder="Tax
                   Exclusive"

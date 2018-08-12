@@ -23,8 +23,8 @@ export default class List extends Component {
     this.showListRoles = "";
     this.layout = "";
 
-    this.columns = [],
-    this.filter = [],
+    this.columns = [];
+    this.filter = [];
     this.module = "settings"; // This compare to parent key in datasource in sidebar when render breadcrump
     this.fetchingProp = ""; // prop of reducer of fetching record that get from map state to prop from container
     this.addingProp = ""; // prop of reducer of adding record that get from map state to prop from container
@@ -244,7 +244,7 @@ export default class List extends Component {
             </li>
             {
               menuSource[this.module]["subItems"].map((value, index) =>
-                <li className={(currentPath==value["route"] ? "active" : "") + " fast-nav"} key={index}>
+                <li className={(currentPath===value["route"] ? "active" : "") + " fast-nav"} key={index}>
                   <this.Link to={value["route"]}>{value["title"]}</this.Link>
                 </li>
               )
