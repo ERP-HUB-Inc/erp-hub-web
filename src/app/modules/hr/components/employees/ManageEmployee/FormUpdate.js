@@ -20,10 +20,21 @@ export default class Form extends Modal {
       disabled: false
     };
 
-    this.title = "Manage Method:Update";
+    this.title = "Manage Employee:Update";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.gender = [
+        {
+          name: "Male",
+          value: "1"
+        },
+        {
+          name: "Female",
+          value: "2"
+        }
+    ]
+
   }
 
   onChange(checked){
@@ -92,7 +103,7 @@ export default class Form extends Modal {
                       name="gender"
                       label="Gender"
                       placeholder="Please select gender"
-                      dataSource={ gender }
+                      dataSource={ this.gender }
                       defaultValue={ manageEmployeeUpdate.data.gender === 1 ? "Male" : "Female" }
                       form={form}/>
                   </this.Col>

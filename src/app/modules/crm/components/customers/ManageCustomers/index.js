@@ -17,12 +17,8 @@ export default class CustomerList extends List {
     this.updatingProp = "manageCustomersUpdate";
     this.service = CutomerService;
     this.action = CutomerAction;
-
     this.actionFetchColumnExpend = CutomerAction;
-
     this.RESET_CONSTANT = Constant.RESET_MANAGEMENT_CUTOMERS;
-
-
   }
 
   expandedRender(){

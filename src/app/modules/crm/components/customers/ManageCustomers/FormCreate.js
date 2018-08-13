@@ -32,7 +32,9 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.dispatch(ManagementEmployeeAction.add(values));
+        alert(JSON.stringify(values));
+
+        // this.dispatch(ManagementEmployeeAction.add(values));
       }
     });
   }
@@ -56,18 +58,18 @@ export default class FormCreate extends Modal {
   }
 
   remove(k){
-      const { form } = this.props;
-      // can use data-binding to get
-      const keys = form.getFieldValue("keys");    
-      // We need at least one passenger
-      if (keys.length === 0) {
-        return;
-      }
+    const { form } = this.props;
+    // can use data-binding to get
+    const keys = form.getFieldValue("keys");    
+    // We need at least one passenger
+    if (keys.length === 0) {
+      return;
+    }
 
-      // can use data-binding to set
-      form.setFieldsValue({
-        keys: keys.filter(key => key !== k),
-      });
+    // can use data-binding to set
+    form.setFieldsValue({
+      keys: keys.filter(key => key !== k),
+    });
   }
 
   render() {
@@ -84,33 +86,32 @@ export default class FormCreate extends Modal {
             <this.Col md="6">
               <this.InputText 
                 name={`name[${k}]`} 
-                label="Description" 
-                placeholder="Description"  
+                label="name" 
+                placeholder="name"  
                 required={false}
-               
                 form={ form } />
             </this.Col>
 
             <this.Col md="6">
-               <this.InputText
-                  name={`phonenumber[${k}]`}     
-                  label="Phone number"
-                  placeholder="Phone number"
-                  max={100}
-                  required={false}
+              <this.InputText
+                name={`phonenumber[${k}]`}     
+                label="Phone number"
+                placeholder="Phone number"
+                max={100}
+                required={false}
                  
-                  form={form}/> 
+                form={form}/> 
             </this.Col> 
 
             <this.Col md="12">    
-                  <this.InputTextArea
-                    name={`address[${k}]`}
-                    label="Address"
-                    placeholder="Address"
-                    max={100}
-                    required={false}
+              <this.InputTextArea
+                name={`address[${k}]`}
+                label="Address"
+                placeholder="Address"
+                max={100}
+                required={false}
                     
-                    form={form}/>
+                form={form}/>
             </this.Col>
 
 
@@ -125,7 +126,7 @@ export default class FormCreate extends Modal {
               onClick={() => this.remove(k)}
             />  
           ) : null}
-          </div>
+        </div>
       );
     });
 
@@ -167,7 +168,7 @@ export default class FormCreate extends Modal {
                 </this.Col>  
 
                 <this.Col md="12">
-                   <this.Select
+                  <this.Select
                     name="gender"
                     label="Customer"
                     placeholder="Please select customer"
@@ -252,7 +253,7 @@ export default class FormCreate extends Modal {
               </div>
 
             </this.TabPane>
-        </this.Tabs>
+          </this.Tabs>
         
         </div>
       );

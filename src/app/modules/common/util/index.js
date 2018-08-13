@@ -16,6 +16,14 @@ export class Util {
     });
   }
 
+  renameObjectKeys(obj, key, newKey){
+    if(_.includes(_.keys(obj), key)) {
+      obj[newKey] = _.clone(obj[key], true);
+      delete obj[key];
+    }
+    return obj;
+  }
+
   renameObjectKey (template, source) {
     return source.map((value1, key1) => {
       var renameResult = _.mapKeys(value1, function(value, key) {

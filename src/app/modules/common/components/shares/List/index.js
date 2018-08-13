@@ -347,7 +347,7 @@ export default class List extends Component {
             ""
         }
 
-        <this.clearFloating/>
+        <this.clearFloating/>        
 
         <this.Table 
           rowSelection={rowSelection}
@@ -374,6 +374,9 @@ export default class List extends Component {
     let fetchingProps = this.props[this.fetchingProp];
     const addingProps = this.props[this.addingProp];
     const updatingProps = this.props[this.updatingProp];
+
+
+    // console.log("fetchingProps",this.Util.renameObjectKeys(fetchingProps.list[0],"contacts","children"));
     
     // Here is repsonse from add action and combinde response data to the list.
     if (addingProps.response != null) {
