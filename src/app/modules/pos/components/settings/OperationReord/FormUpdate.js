@@ -6,8 +6,11 @@ export default class Form extends Modal {
   constructor(props) {
     super(props);
     this.title = "operation Record:Update";
-    this.addingPropReducer = "operationRecordUpdate";
     this.dispatch = this.props.dispatch;
+    this.operationTypes = [
+      {title: <this.Translate id="operation_record_income" />, value: this.Enum.OPERATION_TYPE.INCOME},
+      {title: <this.Translate id="operation_record_expense" />, value: this.Enum.OPERATION_TYPE.EXPENSE}
+    ];
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -37,9 +40,8 @@ export default class Form extends Modal {
         <div className="main-operation-record">
           {operationRecordUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
           <this.InputText form={form} name="name" data={ operationRecordUpdate.data.name }  label="Name" placeholder="Please input your name" required={true} min={ 3 } max={ 100 }/>
-          <this.DatePickers 
-            type="date"
-            defaultValue= { `${ operationRecordUpdate.data.registerDate }` }
+          <this.DatePickers
+            defaultValue={this.Util.formatDatePicker(operationRecordUpdate.data.registerDate)}
             name="registerDate"  
             label="Record For" 
             required={false } 
@@ -53,19 +55,26 @@ export default class Form extends Modal {
             name="amount" 
             label="Amount ($)" 
             placeholder="Amount" 
-            required = { true }
+            required
           />
           {/* <this.InputTextArea form={form} name="name" label="Description" placeholder="Description" required={true} max={100}/> */}
           <this.FormGroup>
-            <this.RadioRegisterGroup 
-              name="type" 
-              defaultValue={ `${ operationRecordUpdate.data.type }` }
+            <this.RadioBox  
+              class_main_radio="main-radio-acc"
+              name="type"
+              defaultValue={operationRecordUpdate.data.type}
               required={true}
+              type="radio"
               form={form}
             >
-              <this.RadioRegister title="INCOME"  value="0"/>
-              <this.RadioRegister title="Expense" value="1"/>
-            </this.RadioRegisterGroup> 
+              { this.operationTypes.map( (operationType, key) => 
+                <this.RadioChildBox
+                  key={key}
+                  title={operationType.title}
+                  value={operationType.value} /> 
+              ) 
+              }
+            </this.RadioBox> 
           </this.FormGroup>
           <this.Select
             name="status"

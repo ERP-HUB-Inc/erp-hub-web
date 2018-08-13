@@ -13,7 +13,7 @@ class StoreAccount extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    storeAccount: state.reducer.storeAccount.request.list,
+    storeAccount: state.reducer.storeAccount.request,
     storeAccountUpdate: state.reducer.storeAccount.update,
     language: state.reducer.storeAccount.request.list,
     response: state.reducer.storeAccount.update,

@@ -43,7 +43,7 @@ export class RadioBox extends Element {
   }
 }
 
-export class Radio extends Element {
+export class RadioChildBox extends Element {
   render(){
     const { value, title, language, currency } = this.props;
     return(

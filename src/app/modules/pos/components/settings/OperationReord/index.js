@@ -70,7 +70,7 @@ class Column extends List {
         title: <this.Translate id="col_operation_record_name" />,
         dataIndex: "amount",
         sorter: true,
-        render : (amount) => "$ " + amount
+        render : (amount) => this.formatCurrency(amount)
       },
       this.columnStatus
     ];

@@ -36,6 +36,7 @@ import
   InputPassword,
   LoginLayout,
   RadioBox,
+  RadioChildBox,
   RadioNormal,
   DatePickers,
   RadioButton,
@@ -57,6 +58,7 @@ import {
   AutoComplete
 } from "../elements/react-strap";
 import {Util} from "../util";
+import Enum from "../enums";
 import HttpCode from "../constants/error";
 import "./layout/styles/Style.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -74,7 +76,8 @@ import {
   Alert,
   Tooltip,
   Tabs,
-  Badge
+  Badge,
+  Spin
 } from "antd";
 const Panel = Collapse.Panel;
 const { Option } = Select;
@@ -157,6 +160,7 @@ export default class Component extends RComponent {
     this.InputNumber = InputNumber;
     this.InputPassword = InputPassword;
     this.RadioBox = RadioBox;
+    this.RadioChildBox = RadioChildBox;
     this.RadioNormal = RadioNormal;
     this.RadioButton = RadioButton;
     this.Radios = Radios;
@@ -164,6 +168,7 @@ export default class Component extends RComponent {
     this.DatePickers = DatePickers;
     this.UploadImg = UploadImg;
     this.Loading = Loading;
+    this.Spin = Spin;
     this.TabPane = TabPane;
     this.Tabs = Tabs;
     this.InputTextArea = InputTextArea;
@@ -171,6 +176,9 @@ export default class Component extends RComponent {
 
     // Util function
     this.Util = new Util();
+
+    // ENUM VALUE
+    this.Enum = Enum;
 
     // HTTP CODE
     this.HttpCode = HttpCode;

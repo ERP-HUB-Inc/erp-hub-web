@@ -1,6 +1,7 @@
 import React from "react";
 import { Pagination } from "antd";
 import Component  from "../../common/components/Component";
+import ConstantAuth from "../../common/constants/authentication";
 // import FormSearch from "./shares/FormSearch/";
 import menuSource from "../../common/components/layout/SiderBar/datasource";
 import "./index.css";
@@ -39,13 +40,6 @@ export default class List extends Component {
     this.okText = "Yes"; // text button on alert of delete action
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
-    // this.columnNo = {
-    //   title: <this.Translate id="col_payment_method_no" />,
-    //   dataIndex: "no",
-    //   key: "no",
-    //   render: (value, record, index) => { console.log("Column No Render:"); return index + 1;},
-    //   sorter: true
-    // };
     this.columnNo = {};
     
     this.columnStatus = {
@@ -66,14 +60,14 @@ export default class List extends Component {
       title: <this.Translate id="col_payment_method_date" />,
       dataIndex: "createdAt",
       key: "createdAt",
-      render: value => this.Util.formatDate(value),
+      render: value => this.formatDate(value),
       sorter: true
     };
     this.columnUpdatedAt = {
       title: <this.Translate id="col_payment_method_update" />,
       dataIndex: "updatedAt",
       key: "updatedAt",
-      render: value => this.Util.formatDate(value),
+      render: value => this.formatDate(value),
       sorter: true
     };
 
@@ -88,6 +82,15 @@ export default class List extends Component {
     this.handleConfirm = this.handleConfirm.bind(this);
 
     this.RESET_CONSTANT = "RESET";
+  }
+
+  formatDate(value) {
+    return this.Util.formatDate(value, this.Util.getSetting(ConstantAuth.ACCESS_TOKEN).dateFormat);
+  }
+
+  formatCurrency(value) {
+    const setting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
+    return this.Util.formatCurrency(value, setting.currency, setting.currencyPosition);
   }
 
   /**
