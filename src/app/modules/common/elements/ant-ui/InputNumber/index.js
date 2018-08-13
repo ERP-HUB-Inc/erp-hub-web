@@ -5,17 +5,12 @@ import "./index.css";
 
 
 export class InputNumber extends Element {
-
   constructor(props) {
     super(props);
     this.rules = [
       {
         required: this.props.required,
         message: this.props.errorRequired
-      },
-      {
-        max: 2,
-        message: this.props.errorLength
       }
     ];
   }
@@ -24,13 +19,12 @@ export class InputNumber extends Element {
     return (
       <Input 
         name={this.props.name}
-        type="number"
-        // parse={ value => Number(value) }
-        defaultValue={ this.props.defaultValue }
         placeholder={this.props.placeholder}
         label={this.props.label}
+        errorLength={this.props.errorLength}
+        max={this.props.max}
         data={this.props.data}
-        required = {this.props.required}
+        required={this.props.required}
         form={this.props.form}
       />
     );
@@ -38,8 +32,10 @@ export class InputNumber extends Element {
 }
 
 Input.defaultProps = {
-  max: 1,
-  errorRequired: "Field required.",
-  errorLength: "Over allow character lenght."
+  name: "name",
+  max: 9999999999,
+  errorLength: "The number allow maximum 9999 999 999.",
+  required: false,
+  errorRequired: "This field is required."
 };
 

@@ -2,15 +2,46 @@ import React from "react";
 import Element from "../../common/Element";
 
 export default class InputNumbers extends Element {
+  constructor(props) {
+    super(props);
+    this.state = {
+      validateStatus: "success",
+      errorMsg: null
+    };
+    this.validatePrimeNumber = this.validatePrimeNumber.bind(this);
+    this.handleNumberChange = this.handleNumberChange.bind(this);
+  }
+  handleNumberChange (value) {
+    this.validatePrimeNumber(value);
+  }
+
+  validatePrimeNumber(number) {
+    if (number > this.props.max) {
+      this.setState({
+        validateStatus: "error",
+        errorMsg: this.props.errorLength
+      });
+    } else {
+      this.setState({
+        validateStatus: "success",
+        errorMsg: null
+      });
+    }
+  }
+
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const {getFieldDecorator} = this.props.form;
     return (
-      <this.FormItem label={this.props.label}>
+      <this.FormItem
+        label={this.props.label}
+        validateStatus={this.state.validateStatus}
+        help={this.state.errorMsg}
+      >
         {
           getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.data})(
-            <this.Input
-              type={ this.props.type }
-              placeholder={ this.props.placeholder }
+            <this.InputNumber
+              placeholder={this.props.placeholder}
+              onChange={this.handleNumberChange}
             />
           )
         } 
@@ -19,8 +50,3 @@ export default class InputNumbers extends Element {
   }
 }
 
-InputNumbers.defaultProps = {
-  name: "name",
-  type: "number",
-  required: false
-};

@@ -13,7 +13,7 @@ class Headers extends Component {
   }
 
   switchLanguage(key) {
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
     dispatch(this.changeLanguage(key));
   }
   

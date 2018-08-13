@@ -162,9 +162,9 @@ export default {
   ],
 
   "store_acc_error_sequence_start_no": [
-    "Start Sequence Number allow only 10 characters",
-    "Start Sequence Number allow only 10 characters",
-    "Start Sequence Number allow only 10 characters"
+    "Start sequence number allow only maximum 9999999999.",
+    "Start sequence number allow only maximum 9999999999.",
+    "Start sequence number allow only maximum 9999999999."
   ],
 
   "store_acc_error_confirm_pwd_not_match": [
