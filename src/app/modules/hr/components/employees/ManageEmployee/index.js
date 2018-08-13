@@ -42,12 +42,8 @@ class Column extends List {
   constructor(props) {
     super(props);
     return [
+      this.columnCreatedAt,
       {
-        title: "Date",
-        dataIndex:"createdAt",
-        key: "createdAt", 
-        sorter: true
-      }, {
         title: "full Name",
         dataIndex: "firstName",
         dateIndex: "lastName",
@@ -65,12 +61,7 @@ class Column extends List {
         key: "address",
         sorter: true
       },
-      {
-        title: "Status",
-        dataIndex: "status",
-        key: "status",
-        sorter: true
-      }
+      this.columnStatus
     ];
   }
 }
