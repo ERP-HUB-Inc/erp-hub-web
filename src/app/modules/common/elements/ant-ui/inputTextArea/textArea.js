@@ -23,7 +23,7 @@ export default class TextAreas extends Element {
               validator: this.props.validator
             }
           ],
-          initialValue: this.props.data})(<TextArea rows={ this.props.rows }/>)
+          initialValue: this.props.data})(<TextArea placeholder={ this.props.placeholder } rows={ this.props.rows }/>)
         }
        
       </this.FormItem>

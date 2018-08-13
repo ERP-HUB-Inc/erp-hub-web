@@ -11,7 +11,7 @@ class Home extends Component {
     );
   }
 }
-
+                  
 function mapPropsToFields(props) {
   return {
     form: props.form

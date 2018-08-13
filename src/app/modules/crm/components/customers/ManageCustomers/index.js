@@ -21,9 +21,21 @@ export default class CustomerList extends List {
     this.actionFetchColumnExpend = CutomerAction;
 
     this.RESET_CONSTANT = Constant.RESET_MANAGEMENT_CUTOMERS;
+
+
+  }
+
+  expandedRender(){
+    return( 
+      <this.Table 
+        columns={ this.ColumnExpend } 
+        pagination={ false }
+      />
+    );
   }
 
   
+
   handleShowFormAdd() {
     const { dispatch } = this.props;
     dispatch(CutomerAction.showForm());
@@ -45,6 +57,8 @@ export default class CustomerList extends List {
   }
 
 }
+
+
 
 class ColumnExpend extends List {
   constructor(props) {
