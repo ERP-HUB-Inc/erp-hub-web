@@ -386,11 +386,10 @@ export default class StoreAccountList extends Component {
                     onChange={this.onChange}
                   >
                     { businessplan.map( (businessplan, key) => 
-                      <this.RadioNormal
+                      <this.RadioChildBox
                         key={key}
                         title={`${businessplan.name}`}
                         language={`${ businessplan.description }`}
-                        form={form}
                         value={businessplan.id} /> 
                     ) 
                     }

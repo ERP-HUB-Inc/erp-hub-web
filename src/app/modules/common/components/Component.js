@@ -36,6 +36,7 @@ import
   InputPassword,
   LoginLayout,
   RadioBox,
+  RadioChildBox,
   RadioNormal,
   DatePickers,
   RadioButton,
@@ -157,6 +158,7 @@ export default class Component extends RComponent {
     this.InputNumber = InputNumber;
     this.InputPassword = InputPassword;
     this.RadioBox = RadioBox;
+    this.RadioChildBox = RadioChildBox;
     this.RadioNormal = RadioNormal;
     this.RadioButton = RadioButton;
     this.Radios = Radios;
