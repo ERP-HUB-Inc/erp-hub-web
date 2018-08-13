@@ -35,6 +35,24 @@ export default {
     "Currency"
   ],
 
+  "store_acc_currency_position": [
+    "Currency Position",
+    "Currency Position",
+    "Currency Position"
+  ],
+
+  "store_acc_currency_position_before": [
+    "Before",
+    "Before",
+    "Before"
+  ],
+
+  "store_acc_currency_position_after": [
+    "After",
+    "After",
+    "After"
+  ],
+
   "store_acc_tax": [
     "Default Tax",
     "Default Tax",
@@ -225,6 +243,12 @@ export default {
     "Pay on your 15 stores package",
     "Pay on your 15 stores package",
     "Pay on your 15 stores package"
+  ],
+
+  "store_acc_date_format": [
+    "Date Format",
+    "Date Format",
+    "Date Format"
   ],
 };
   

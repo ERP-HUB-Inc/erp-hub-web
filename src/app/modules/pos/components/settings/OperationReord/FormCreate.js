@@ -7,10 +7,14 @@ export default class Form extends Modal {
   constructor(props) {
     super(props);
     this.title = "operation Record";
-    this.addingPropReducer = "operationRecordAdd";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.operationTypes = [
+      {title: <this.Translate id="operation_record_income" />, value: this.Enum.OPERATION_TYPE.INCOME},
+      {title: <this.Translate id="operation_record_expense" />, value: this.Enum.OPERATION_TYPE.EXPENSE}
+    ];
   } 
+
 
   handleSubmit (e) {
     e.preventDefault();
@@ -37,19 +41,25 @@ export default class Form extends Modal {
           {operationRecordAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
           <this.InputText form={form} name="name" label="Name" placeholder="Please input your name" required={true} min={ 3 } max={ 100 }/>
           <this.DatePickers form={form} name="registerDate" label="Record For" required={false } placeholder="Please input your name" />
-          <this.InputNumber form={form} name="amount" label="Amount ($)" placeholder="Amount" />
+          <this.InputNumber form={form} name="amount" label="Amount ($)" placeholder="Amount" required/>
           {/* <this.InputTextArea form={form} name="name" label="Description" placeholder="Description" required={true} max={100}/> */}
           <this.FormGroup>
-            <this.RadioRegisterGroup  
+            <this.RadioBox  
               class_main_radio="main-radio-acc"
-              name="type" 
-              required={ true }
+              name="type"
+              defaultValue={this.Enum.OPERATION_TYPE.INCOME}
+              required={true}
               type="radio"
               form={form}
             >
-              <this.RadioRegister title="INCOME"  value="0"/>
-              <this.RadioRegister title="Expense" value="1"/>
-            </this.RadioRegisterGroup> 
+              { this.operationTypes.map( (operationType, key) => 
+                <this.RadioChildBox
+                  key={key}
+                  title={operationType.title}
+                  value={operationType.value} /> 
+              ) 
+              }
+            </this.RadioBox> 
           </this.FormGroup>
           <this.Select
             name="status"

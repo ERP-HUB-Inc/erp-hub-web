@@ -38,12 +38,28 @@ export class Util {
     return result.accessToken;
   }
 
-  formatDate (value, format="MMM-Do-YYYY h:mm A") {
+  getSetting (key) {
+    if (!localStorage.getItem(key)) return null;
+    let result = localStorage.getItem(key);
+    result = JSON.parse(result);
+    return result.setting;
+  }
+
+  formatDate (value, format = "MMM-Do-YYYY h:mm A") {
+    format = format == null ? "MMM-Do-YYYY h:mm A" : format;
     return moment(value).format(format);
   }
 
   formatDatePicker (value, format="YYYY/MM/DD") {
     return moment(value, format);
+  }
+
+  listFormatDate () {
+    return [
+      {name: "MMM-Do-YYYY h:mm A", value: "MMM-Do-YYYY h:mm A"},
+      {name: "MMM Do YY", value: "MMM Do YY"},
+      {name: "YYYY/MM/DD", value: "YYYY/MM/DD"}
+    ];
   }
 
   isObjectEmpty (data) {
@@ -74,5 +90,31 @@ export class Util {
       domainStr: domain,
       protocolStr: protocol
     };
+  }
+
+  formatCurrency(n, currency = "$", position = 0) {
+    // 0: BEFORE, 1: AFTER
+    let result = n.toFixed(2).replace(/./g, function(c, i, a) {
+      return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+    });
+
+    if (position === 0) {
+      result = `${currency} ${result}`;
+    } else {
+      result = `${result} ${currency}`;
+    }
+
+    return result;
+  }
+  
+  formatCurrencyV2(n, currency) {
+    return currency + n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,");
+  }
+  
+  formatCurrencyV3(n, currency) {
+    return new Intl.NumberFormat("ru", {
+      style: "currency",
+      currency: currency
+    }).format(n);
   }
 }

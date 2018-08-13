@@ -11,4 +11,5 @@
 .main-operation-record .main-radio .radio-title {
     position: relative; 
     top: 8px;
+    text-transform: uppercase
 }

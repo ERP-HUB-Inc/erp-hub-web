@@ -23,11 +23,14 @@ class SelectElement extends Element {
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <this.FormItem label={this.props.label}>
+      <this.FormItem
+        label={this.props.label}
+        help={this.props.help}>
         {
           getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.defaultValue})(
             <this.Select
               placeholder={this.props.placeholder}
+              onChange={this.props.onChange}
               disabled={this.props.disabled}
               style={{ width: "100%" }}
             >
