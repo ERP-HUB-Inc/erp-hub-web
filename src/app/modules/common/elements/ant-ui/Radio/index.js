@@ -1,5 +1,5 @@
 import React from "react";
-import {Radio} from "./Radio";
+import {RadioNormal} from "./RadioNormal";
 import Element from "../../common/Element";
 
 export class RadioButton extends Element {
@@ -16,7 +16,7 @@ export class RadioButton extends Element {
 
   render() {
     return (
-      <Radio 
+      <RadioNormal 
         name={this.props.name}
         label={this.props.label}
         rules={this.rules}

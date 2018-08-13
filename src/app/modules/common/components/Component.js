@@ -36,11 +36,11 @@ import
   InputPassword,
   LoginLayout,
   RadioBox,
-  Radio,
+  RadioNormal,
   DatePickers,
   RadioButton,
   UploadImg,
-  // saveButton,
+  Loading,
   InputTextArea,
   SearchButton,
   Radios
@@ -56,7 +56,7 @@ import {
   // Badges,
   AutoComplete
 } from "../elements/react-strap";
-import { Util } from "../util";
+import {Util} from "../util";
 import HttpCode from "../constants/error";
 import "./layout/styles/Style.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -157,13 +157,13 @@ export default class Component extends RComponent {
     this.InputNumber = InputNumber;
     this.InputPassword = InputPassword;
     this.RadioBox = RadioBox;
-    this.Radio = Radio;
+    this.RadioNormal = RadioNormal;
     this.RadioButton = RadioButton;
     this.Radios = Radios;
     this.InputEmail = InputEmail;
     this.DatePickers = DatePickers;
     this.UploadImg = UploadImg;
-    // this.saveButton = saveButton;
+    this.Loading = Loading;
     this.TabPane = TabPane;
     this.Tabs = Tabs;
     this.InputTextArea = InputTextArea;

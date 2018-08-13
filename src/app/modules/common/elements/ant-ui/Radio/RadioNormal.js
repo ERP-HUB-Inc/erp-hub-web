@@ -1,7 +1,7 @@
 import React from "react";
 import Element from "../../common/Element";
 
-export class Radio extends Element {
+export class RadioNormal extends Element {
   constructor(props){
     super(props);
     this.rules = [
@@ -60,10 +60,9 @@ export class Radios extends Element {
       </div>
     );
   }
-
 }
 
-Radio.defaultProps = {
-  errorRequired: "Pleace Select",
+RadioNormal.defaultProps = {
+  name: "radio",
   dataSource: []
 };

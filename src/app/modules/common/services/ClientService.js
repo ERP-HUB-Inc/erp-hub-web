@@ -8,7 +8,6 @@ class ClientService extends BaseService {
   }
 
   findClientByColumn(option = {column: "", value: ""}) {
-    console.log("Option:", option);
     return this.GET(
       {
         url: `${this.baseUrl}/find/${option.column}/${option.value}`,
@@ -26,14 +25,14 @@ class ClientService extends BaseService {
     });
   }
 
-  signin(userName, password) {
+  signin(userName, password, storeName) {
     this.module = "auth";
     this.baseUrl = `${this.generateAPIUrl()}/${this.module}/${this.version}`;
     return this.POST({
       url: `${this.baseUrl}/login`,
       headers: {
         "Content-Type": "application/json",
-        "storeKey": `Bearer ${this.Util.getAccessToken(this.ConstantAuth.STORE_ACCESS_TOKEN)}`,
+        "storeName": storeName,
         "userName": userName,
         "password": password
       },

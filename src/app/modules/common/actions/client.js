@@ -29,11 +29,11 @@ export default {
       });
     };
   },
-  signin: (userName, password) => {
+  signin: (userName, password, storeName) => {
     return dispatch => {
       return dispatch({
         type: Constant.CLIENT_SIGNIN,
-        payload: ClientService.signin(userName, password)
+        payload: ClientService.signin(userName, password, storeName)
       });
     };
   },

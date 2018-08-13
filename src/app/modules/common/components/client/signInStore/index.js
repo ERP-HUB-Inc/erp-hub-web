@@ -8,10 +8,17 @@ import "./index.css";
 export default class SignInStore extends Component {
   constructor(props) {
     super(props);
+    this.storeName = "";
     this.errorMessage = null;
     this.validateClassStatus = "";
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
+  componentDidMount () {
+    if (localStorage.getItem(ConstantAuth.ACCESS_TOKEN)) {
+      history.push("/");
+    }
   }
 
   handleSubmit (e) {
@@ -19,6 +26,7 @@ export default class SignInStore extends Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const {dispatch} = this.props;
+        this.storeName = values.storeName;
         dispatch(ClientAction.signinDomain(values.storeName));
       }
     });
@@ -39,10 +47,8 @@ export default class SignInStore extends Component {
       && ("data" in signinDomain.response["data"])
       && signinDomain.response["data"]["data"] != null
     ) {
-
-      localStorage.setItem(ConstantAuth.STORE_ACCESS_TOKEN, JSON.stringify(signinDomain.response["data"]["data"]));
-
-      history.push("/signin");
+      const domainInfo = this.Util.getDomainInfo();
+      window.location.href = `${domainInfo.protocolStr}://${this.storeName}.${domainInfo.domainStr}/signin`;
 
     } else if (signinDomain.error != null) {
 

@@ -15,11 +15,21 @@ export default class ClientSignIn extends Component {
     this.storeName = "general";
   }
 
+  componentDidMount () {
+    if (localStorage.getItem(ConstantAuth.ACCESS_TOKEN)) {
+      history.push("/");
+    }
+
+    const domainInfo = this.Util.getDomainInfo();
+
+    this.dispatch(ClientAction.findClientByColumn("storeName", domainInfo.subStr));
+  }
+  
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.dispatch(ClientAction.signin(values.username, values.password));
+        this.dispatch(ClientAction.signin(values.username, values.password, this.Util.getDomainInfo().subStr));
       }
     });
   }
@@ -30,7 +40,7 @@ export default class ClientSignIn extends Component {
   }
 
   render() {
-    const { signinUser, signinDomain, form } = this.props; // form here get from ANT Form
+    const {signinUser, form, client} = this.props; // form here get from ANT Form
     
     if (
       signinUser.response != null
@@ -81,54 +91,69 @@ export default class ClientSignIn extends Component {
     }
 
     // GET CLIENT DOMAIN
-    if (signinDomain.submited && signinDomain.response != null) {
-      this.storeName = signinDomain.response.data.user.storeName;
+    this.storeName = this.Util.getDomainInfo().subStr;
+
+    if (client.fetching) {
+      return (
+        <this.LoginLayout>
+          <div className="text-center loading">
+            <this.Loading/>
+          </div>
+        </this.LoginLayout>
+      );
     }
 
     return (
       <this.LoginLayout>
-        <div className="storename text-uppercase">{this.storeName}</div>
-        <div className="store-email">
-          {this.storeName}<span className="store-email-url">.storevein.com</span>
-        </div>
-        <div className="main-field">
-          <this.Form onSubmit={this.handleSubmit}>
-            <this.FormGroup className={this.validateClassStatus}>
-              <this.InputText
-                name="username"
-                placeholder="User name"
-                type="text"
-                label="User Name"
-                errorRequired="Username is required."
-                required={true}
-                handleKeyDown={() => this.handleKeyDown()}
-                form={form}
-              />
-              {
-                this.errorMessage != null ? <div className="ant-form-explain">{this.errorMessage}</div> : "" 
-              }
-            </this.FormGroup>
-            <this.FormGroup>
-              <this.InputPassword
-                label="Password"
-                placeholder="Password"
-                required={true}
-                checkConfirm={false}
-                form={form}
-              />
-            </this.FormGroup>
-            <div className="signin-button">
-              <this.FormGroup>
-                <this.Link className="store-link" to="/register">
+        {
+          client.list != null ?
+            <div>
+              <div className="storename text-uppercase">{this.storeName}</div>
+              <div className="store-email">
+                {this.storeName}<span className="store-email-url">.storevein.com</span>
+              </div>
+              <div className="main-field">
+                <this.Form onSubmit={this.handleSubmit}>
+                  <this.FormGroup className={this.validateClassStatus}>
+                    <this.InputText
+                      name="username"
+                      placeholder="User name"
+                      type="text"
+                      label="User Name"
+                      errorRequired="Username is required."
+                      required={true}
+                      handleKeyDown={() => this.handleKeyDown()}
+                      form={form}
+                    />
+                    {
+                      this.errorMessage != null ? <div className="ant-form-explain">{this.errorMessage}</div> : "" 
+                    }
+                  </this.FormGroup>
+                  <this.FormGroup>
+                    <this.InputPassword
+                      label="Password"
+                      placeholder="Password"
+                      required={true}
+                      checkConfirm={false}
+                      form={form}
+                    />
+                  </this.FormGroup>
+                  <div className="signin-button">
+                    <this.FormGroup>
+                      <this.Link className="store-link" to="/register">
                   it's not my store
-                </this.Link>
-                <div className="main-signin">
-                  <this.Button loading={signinUser.submiting} htmlType="submit" type="info">Sign In</this.Button>
-                </div>
-              </this.FormGroup>
+                      </this.Link>
+                      <div className="main-signin">
+                        <this.Button loading={signinUser.submiting} htmlType="submit" type="info">Sign In</this.Button>
+                      </div>
+                    </this.FormGroup>
+                  </div>
+                </this.Form>
+              </div>
             </div>
-          </this.Form>
-        </div>
+            :
+            <div className="text-center">NOT FOUND CLIENT</div>
+        }
       </this.LoginLayout>
     );
   }

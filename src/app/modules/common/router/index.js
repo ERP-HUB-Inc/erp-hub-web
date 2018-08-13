@@ -16,7 +16,6 @@ const {Content} = Layout;
 
 class Router extends Component {
   render() {
-
     const accessToken = (new Util()).getAccessToken(Authentication.ACCESS_TOKEN);
 
     AuthService.checkAuthenticated(accessToken)

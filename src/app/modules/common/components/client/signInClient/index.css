@@ -45,3 +45,7 @@
 .wrap-client-login .store-email .store-email-url {
     color: #CDCCCC;
 }
+
+.loading {
+    position: relative !important
+}

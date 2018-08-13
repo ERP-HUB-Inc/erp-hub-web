@@ -23,4 +23,5 @@ export * from "./InputPassword";
 // export * from "./Button/saveButton";
 export * from "./inputTextArea";
 export * from "./Button/searchButton";
-export * from "./Radio/Radio";
+export * from "./Radio/RadioNormal";
+export * from "./Loading";

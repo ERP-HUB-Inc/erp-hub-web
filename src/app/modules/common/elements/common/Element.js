@@ -7,6 +7,8 @@ import {
   Checkbox,
   Select,
   InputNumber,
+  Spin,
+  Icon,
   DatePicker
 } from "antd";
 import { FormGroup, Label } from "reactstrap";
@@ -32,6 +34,8 @@ export default class Element extends Component {
     this.Radio = Radio;
     this.Select = Select;
     this.Option = Option;
+    this.Spin = Spin;
+    this.Icon = Icon;
     this.DatePicker = DatePicker;
 
     //localization

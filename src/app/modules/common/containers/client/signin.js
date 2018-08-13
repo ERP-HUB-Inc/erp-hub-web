@@ -15,7 +15,8 @@ class SignInClientForm extends Component {
 function mapStateToProps(state) {
   return {
     signinUser: state.reducer.client.signin,
-    signinDomain: state.reducer.client.signinDomain
+    signinDomain: state.reducer.client.signinDomain,
+    client: state.reducer.client.request
   };
 }
 
