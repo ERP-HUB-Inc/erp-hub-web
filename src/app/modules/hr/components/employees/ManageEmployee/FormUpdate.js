@@ -2,16 +2,6 @@ import React from "react";
 import { Modal } from "../../shares/Modal/modal";
 import ManageEmployeeAction from "../../../actions/employees/manageEmployee";
 
-const gender = [
-  {
-    name: "Male",
-    value: "1"
-  },
-  {
-    name: "Female",
-    value: "2"
-  }
-];
 
 export default class Form extends Modal {
   constructor(props) {
@@ -20,7 +10,7 @@ export default class Form extends Modal {
       disabled: false
     };
 
-    this.title = "Manage Method:Update";
+    this.title = "Manage Employee:Update";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -67,7 +57,7 @@ export default class Form extends Modal {
                 <this.Row>
                   <this.Col md="6">
                     <this.InputText
-                      name="firstName"
+                      name="firstname"
                       label="First name"
                       placeholder="First Name"
                       required={true}
@@ -78,7 +68,7 @@ export default class Form extends Modal {
                   </this.Col>
                   <this.Col md="6">
                     <this.InputText
-                      name="lastName"
+                      name="lastname"
                       label="Last Name"
                       placeholder="Please input your name"
                       required={true}
@@ -92,8 +82,8 @@ export default class Form extends Modal {
                       name="gender"
                       label="Gender"
                       placeholder="Please select gender"
-                      dataSource={ gender }
-                      defaultValue={ manageEmployeeUpdate.data.gender === 1 ? "Male" : "Female" }
+                      dataSource={ this.gender }
+                      defaultValue={ manageEmployeeUpdate.data.gender == this.Enum.GENDER.Male ? "Male" : "Female" }   
                       form={form}/>
                   </this.Col>
                   <this.Col md="6">
@@ -176,21 +166,21 @@ export default class Form extends Modal {
                 <this.Col md="6">
                   <this.Switchs
                     label="Will be expired"
-                    name="expireds"
+                    name="isPasswordExpired"
                     form={form}
                   />
                 </this.Col>
                 <this.Col md="6">
                   <this.Switchs
                     label="Must change password"
-                    name="mustchange"
+                    name="isMustChangePWNextLogin"
                     form={form}
                   />
                 </this.Col>
                 <this.Col md="6">
                   <this.DatePickers
                     label="Expired date"
-                    name="expired"
+                    name="passwordExpiredAt"
                     defaultValue={ manageEmployeeUpdate.data.dob }
                     form={form}
                   />
@@ -198,6 +188,7 @@ export default class Form extends Modal {
                 <this.Col md="12">  
                   <this.InputTextArea
                     label="Address"
+                    name="address"
                     form={form}
                     min={ 20 }
                   />

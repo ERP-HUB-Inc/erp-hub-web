@@ -1,14 +1,14 @@
 import React from "react";
 import { Pagination } from "antd";
-import Component  from "../../Component";
-import menuSource from "../../layout/SiderBar/datasource";
+import Component  from "../../common/components/Component";
+// import FormSearch from "./shares/FormSearch/";
+import menuSource from "../../common/components/layout/SiderBar/datasource";
 import "./index.css";
-
 
 export default class List extends Component {
   constructor(props) {
     super(props);
-    this.state = {
+    this.state = {  
       layut: "12",
       current: 1,
       selectedRowKeys: [],
@@ -18,18 +18,20 @@ export default class List extends Component {
       modalSource: {},
       ListRoles: null,
       modalConten: null, // the content that show in modal content,
-      columns: []
+      columns: [],
+      columnsExpanded: [],
+      fetchingExtendTable:[]
     };
     
     //access role
     this.showListRoles = "";
     this.layout = "";
 
-    this.isShowRowExpend = false;
-
     this.columns = [];
+    this.columnsExpanded=[];
+
     this.filter = [];
-    this.module = "settings"; // This compare to parent key in datasource in sidebar when render breadcrump
+    this.module = "customers"; // This compare to parent key in datasource in sidebar when render breadcrump
     this.fetchingProp = ""; // prop of reducer of fetching record that get from map state to prop from container
     this.addingProp = ""; // prop of reducer of adding record that get from map state to prop from container
     this.updatingProp = ""; // prop of reducer of adding record that get from map state to prop from container
@@ -41,15 +43,13 @@ export default class List extends Component {
     this.okText = "Yes"; // text button on alert of delete action
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
-    // this.columnNo = {
-    //   title: <this.Translate id="col_payment_method_no" />,
-    //   dataIndex: "no",
-    //   key: "no",
-    //   render: (value, record, index) => { console.log("Column No Render:"); return index + 1;},
-    //   sorter: true
-    // };
-    this.columnNo = {};
-    
+    this.columnNo = {
+      title: <this.Translate id="col_payment_method_no" />,
+      dataIndex: "no",
+      key: "no",
+      render: (value, record, index) => { console.log("Column No Render:"); return index + 1;},
+      sorter: true
+    };
     this.columnStatus = {
       title: <this.Translate id="col_payment_method_status" />,
       dataIndex: "status",
@@ -57,9 +57,9 @@ export default class List extends Component {
       render: value => {
         return (
           value === 1 ?
-            <this.Badge status="success" text={<this.Translate id="select_text_active" />} />
+            <this.Badge count={<this.Translate id="select_text_active" />} style={{ backgroundColor: "#0D62AF" }} />
             :
-            <this.Badge status="error" text={<this.Translate id="select_text_deactive" />} />
+            <this.Badge count={<this.Translate id="select_text_deactive" />} style={{ backgroundColor: "#c72727" }} />
         );
       },
       sorter: true
@@ -82,20 +82,24 @@ export default class List extends Component {
     this.service = null;
     this.action = null;
 
+    this.actionFetchColumnExpend = null;
+    
+    this.expandedRowRender = null;
+
     this.onChange = this.onChange.bind(this); // handle when user change filter, access pagination
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
     this.onChangePagination = this.onChangePagination.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
-    this.RESET_CONSTANT = "RESET";
-
     this.expandedRender = this.expandedRender.bind(this);
+
+    this.RESET_CONSTANT = "RESET";
   }
 
   /**
    * handle for tranform from ant sorting string to match with api
-   * api doesn't reconize descend or ascend just know only desc and asc
+   * api doesn"t reconize descend or ascend just know only desc and asc
    * @param {*} order 
    */
   sortOrder(order) {
@@ -120,6 +124,8 @@ export default class List extends Component {
       dispatch(this.action.fetch(this.pageSize));
     }
   }
+
+
 
   /**
    * when user change sort in each column
@@ -202,6 +208,7 @@ export default class List extends Component {
     });
   }
 
+
   /**
    * 
    * @param {*} dataRow data from each row of table
@@ -266,7 +273,7 @@ export default class List extends Component {
           {
             menuSource[this.module]["subItems"].map((value, index) =>
               "isFashNav" in value && value["isFashNav"] ? 
-                <li className={(currentPath === value["route"] ? "active" : "") + " fast-nav"} key={index}>
+                <li className={(currentPath===value["route"] ? "active" : "") + " fast-nav"} key={index}>
                   <this.Link to={value["route"]}>{value["title"]}</this.Link>
                 </li>
                 :
@@ -316,8 +323,34 @@ export default class List extends Component {
     );
   }
 
-  expandedRender(){
-    
+  fetchExpend(){
+    if(this.service !=null) {
+      this.service.detail("00000001-0001-2018-0001-00000002")
+        .then(response => {
+          setTimeout(() => {
+            this.setState({
+              fetchingExtendTable:[]
+            });
+          }, 1000);
+        }).catch(err => {
+          this.setState({fetchingExtendTable: null});
+        });
+    }
+    // console.log("service",this.service.detail("00000001-0001-2018-0001-00000002"));
+  }
+
+
+  expandedRender(fetchingProps){
+    // this.fetchExpend(fetchingProps);
+    console.log("fetchingExtendTable",this.state.fetchingExtendTable);
+    let fetchExtends = this.state.fetchingExtendTable;
+    return( 
+      <this.Table 
+        columns={ this.ColumnExpend } 
+        pagination={ false }
+        dataSource={ fetchExtends } 
+      />
+    );
   }
 
   renderTableList(fetchingProps) {
@@ -349,17 +382,20 @@ export default class List extends Component {
             ""
         }
 
-        <this.clearFloating/>        
+        <this.clearFloating/> 
 
         <this.Table 
           rowSelection={rowSelection}
           dataSource={fetchingProps.list}
           columns={this.columns}
-          pagination={false} // 
-          onChange={this.onChange}
           expandedRowRender = { 
-            this.expandedRender = this.isShowRowExpend  
+            this.expandedRender() 
+            // record => ({
+            //   record: this.expandedRowRender(record)
+            // })
           }
+          pagination={false} 
+          onChange={this.onChange}
           onRow={record =>({
             onDoubleClick:(e) => this.handleShowFormEdit(record),
             onClick: (e) => this.handleShowRecordDetail(record)
@@ -377,8 +413,10 @@ export default class List extends Component {
     const addingProps = this.props[this.addingProp];
     const updatingProps = this.props[this.updatingProp];
 
+    //props when fetching table 
+    // let fetchingPropFetchTable = this.props[this.fetchingPropFetchTable];
 
-    // console.log("fetchingProps",this.Util.renameObjectKeys(fetchingProps.list[0],"contacts","children"));
+    // console.log("fetchingPropFetchTable",fetchingPropFetchTable);
     
     // Here is repsonse from add action and combinde response data to the list.
     if (addingProps.response != null) {
@@ -410,3 +448,6 @@ export default class List extends Component {
     );
   }
 }
+
+
+

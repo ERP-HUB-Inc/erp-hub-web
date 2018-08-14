@@ -43,3 +43,11 @@
 .ant-modal-close-x {
     display: none
 }
+
+
+
+.btn-addcontact button {
+    border: none;
+    color: #57A600 !important;  
+    font-weight: bold;
+}

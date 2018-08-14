@@ -51,9 +51,28 @@ class Column extends List {
         sorter: true
       },
       {
-        title: "Phone No",
+        title: "Phone no",
         dataIndex: "phoneNumber",
-        key: "phoneNumber"
+        key: "phoneNumber",
+        sorter: true
+      },
+      {
+        title: "Id card",
+        dataIndex: "idCard",
+        key: "idCard"
+      },
+      {
+        title: "Date of birth",
+        dataIndex: "dob",
+        key: "dob",
+        sorter: true
+      },
+      {
+        title: "gender",
+        dataIndex: "gender",
+        key: "gender",
+        sorter: true,
+        render: (gender) => gender == this.Enum.GENDER.Male ? "Male" : "Female"
       },
       {
         title: "Address",

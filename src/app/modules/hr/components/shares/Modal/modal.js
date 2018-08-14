@@ -20,6 +20,16 @@ export class Modal extends Component {
         value: 0
       }
     ];
+    this.gender = [
+      {
+        name: "Male",
+        value: 0
+      },
+      {
+        name: "Female",
+        value: 1
+      }
+    ];
   }
   handleSubmit() {
     console.log("submit modal");

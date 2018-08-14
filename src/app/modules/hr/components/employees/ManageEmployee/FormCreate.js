@@ -2,17 +2,6 @@ import React from "react";
 import { Modal } from "../../shares/Modal/modal";
 import ManageEmployeeAction from "../../../actions/employees/manageEmployee";
 
-const gender = [
-  {
-    name: "Male",
-    value: "1"
-  },
-  {
-    name: "Female",
-    value: "2"
-  }
-];
-
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
@@ -26,7 +15,6 @@ export default class FormCreate extends Modal {
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
-
   }
 
   onChange(checked){
@@ -41,25 +29,11 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       
-      // const formData = new FormData();
-      // formData.append("image",values.image.file);
-  
-      // this.dispatch(ManageEmployeeAction.add(formData));
-
-      // alert(JSON.stringify(values));
-
-      // console.log(values);
 
       if (!err) {
-        const formData = new FormData();
-        formData.append("image",values.image.file);
-        formData.append("firstname",values.firstname);
-        formData.append("firstname",values.lastname);
-        formData.append("gender",values.gender);
-
-        // console.log(JSON.stringify(formData));
-
-        this.dispatch(ManageEmployeeAction.add(values));
+        values["isPasswordExpired"] = this.Util.checkValueSwitch(values.isPasswordExpired);
+        values["isMustChangePWNextLogin"] = this.Util.checkValueSwitch(values.isMustChangePWNextLogin);
+        this.dispatch(ManageEmployeeAction.add(values));   
       }
 
     });
@@ -104,7 +78,7 @@ export default class FormCreate extends Modal {
                     name="gender"
                     label="Gender"
                     placeholder="Please select gender"
-                    dataSource={ gender }
+                    dataSource={ this.gender }
                     form={form}/>
                 </this.Col>
                 <this.Col md="6">
@@ -117,7 +91,7 @@ export default class FormCreate extends Modal {
                 </this.Col>
                 <this.Col md="12">
                   <this.InputText
-                    name="phonenumber" 
+                    name="phoneNumber" 
                     placeholder="Phone Number"
                     form={form} 
                     label="Phone Number"
@@ -133,7 +107,7 @@ export default class FormCreate extends Modal {
                 </this.Col>
                 <this.Col md="12">
                   <this.InputNumber
-                    name="idcard" 
+                    name="idCard" 
                     placeholder="Identification Card"
                     form={form} 
                     label="Identification Card"
@@ -168,8 +142,6 @@ export default class FormCreate extends Modal {
                   placeholder="Password"
                   errorRequired="Please input your password"
                   disabled = { this.state.disabled }
-
-                  // value={ this.state.value }
                   form={form}/>
               </this.Col>
               <this.Col md="6">
@@ -184,28 +156,28 @@ export default class FormCreate extends Modal {
               <this.Col md="6">
                 <this.Switchs
                   label="Will be expired"
-                  name="expired"
+                  name="isPasswordExpired"
                   form={form}
                 />
               </this.Col>
               <this.Col md="6">
                 <this.Switchs
                   label="Must change password"
-                  name="mustchange"
+                  name="isMustChangePWNextLogin"
                   form={form}
                 />
               </this.Col>
               <this.Col md="6">
                 <this.DatePickers
                   label="Expired date"
-                  name="datepicker"
+                  name="passwordExpiredAt"
                   form={form}
                 />
               </this.Col> 
               <this.Col md="12">  
                 <this.InputTextArea
                   label="Address"
-                  name="expiredDate"
+                  name="address"
                   form={form}
                   min={ 20 }
                 />
