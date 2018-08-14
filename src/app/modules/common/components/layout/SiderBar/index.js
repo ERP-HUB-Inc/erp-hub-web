@@ -18,6 +18,7 @@ export default class SideBar extends React.Component {
     this.handleLeaveFromSubMenu = this.handleLeaveFromSubMenu.bind(this);
     this.menuParentItem = this.menuParentItem.bind(this);
     this.subMenuItem = this.subMenuItem.bind(this);
+    this.handleOnClickSubMenu = this.handleOnClickSubMenu.bind(this);
   }
 
   handleShow(menu, route) {
@@ -66,6 +67,14 @@ export default class SideBar extends React.Component {
     });
   }
 
+  handleOnClickSubMenu() {
+    this.removeClass("hover");
+
+    this.setState({
+      isHoverOnSubMenu: false,
+      classToggle: "hidden"
+    });
+  }
   handleLeaveFromSubMenu(route) {
 
     const currentLi = document.getElementById(route);
@@ -105,7 +114,7 @@ export default class SideBar extends React.Component {
 
   subMenuItem(key, route, title, icon) {
     return (
-      <li key={key}>
+      <li key={key} onClick={() => this.handleOnClickSubMenu()}>
         <Link to={ route }>
           <div className="icon item"><span className={icon}></span></div>
           <div className="item-text item">{title}</div>

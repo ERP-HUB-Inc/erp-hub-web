@@ -51,8 +51,8 @@ import OperationRecord from "../../../../pos/containers/settings/OperationRecord
 
 // EMPLOYEE
 import ManageEmployee from "../../../../hr/containers/employees/ManageEmployee";
-import Performance from "../../../../hr/containers/employees/Performance";
-import TimeSheet from "../../../../hr/containers/employees/TimeSheet";
+// import Performance from "../../../../hr/containers/employees/Performance";
+// import TimeSheet from "../../../../hr/containers/employees/TimeSheet";
 
 /*==============================END HR===================================*/
 
@@ -242,18 +242,18 @@ const dataSource = {
         route: "/employees/manage",
         component: ManageEmployee
       },
-      {
-        title: "Timesheets",
-        icon: "icon-timesheet",
-        route: "/employees/timesheet",
-        component: TimeSheet
-      },
-      {
-        title: "Performance",
-        icon: "icon-performance",
-        route: "/employees/performance",
-        component: Performance
-      }
+      // {
+      //   title: "Timesheets",
+      //   icon: "icon-timesheet",
+      //   route: "/employees/timesheet",
+      //   component: TimeSheet
+      // },
+      // {
+      //   title: "Performance",
+      //   icon: "icon-performance",
+      //   route: "/employees/performance",
+      //   component: Performance
+      // }
     ]
   },
   reports: {

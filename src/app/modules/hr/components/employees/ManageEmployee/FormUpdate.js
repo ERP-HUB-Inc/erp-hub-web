@@ -83,7 +83,7 @@ export default class Form extends Modal {
                       label="Gender"
                       placeholder="Please select gender"
                       dataSource={ this.gender }
-                      defaultValue={ manageEmployeeUpdate.data.gender == this.Enum.GENDER.Male ? "Male" : "Female" }   
+                      defaultValue={ manageEmployeeUpdate.data.gender === this.Enum.GENDER.Male ? "Male" : "Female" }   
                       form={form}/>
                   </this.Col>
                   <this.Col md="6">

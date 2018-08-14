@@ -72,7 +72,7 @@ class Column extends List {
         dataIndex: "gender",
         key: "gender",
         sorter: true,
-        render: (gender) => gender == this.Enum.GENDER.Male ? "Male" : "Female"
+        render: (gender) => gender === this.Enum.GENDER.Male ? "Male" : "Female"
       },
       {
         title: "Address",
