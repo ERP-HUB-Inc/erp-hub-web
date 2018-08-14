@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import List from "../../../components/settings/OperationReord";
+import List from "../../../components/settings/OperationRecord";
 
 class OperationRecord extends React.Component {
   render() {

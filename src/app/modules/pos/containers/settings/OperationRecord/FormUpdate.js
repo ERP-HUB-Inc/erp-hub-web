@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import FormUpdate from "../../../components/settings/OperationReord/FormUpdate";
+import FormUpdate from "../../../components/settings/OperationRecord/FormUpdate";
 
 class OperationRecordForm extends React.Component {
   render() {

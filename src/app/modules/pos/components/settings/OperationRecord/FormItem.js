@@ -56,12 +56,12 @@ export default class FormItem extends Modal {
             }
           </this.RadioBox> 
         </this.FormGroup>
-        <this.Select
+        {/* <this.Select
           name="status"
           label={<this.Translate id="text_status" />}
           dataSource={this.statusDataSource}
           defaultValue={formData.status}
-          form={form}/>
+          form={form}/> */}
       </div>
     );
   }
