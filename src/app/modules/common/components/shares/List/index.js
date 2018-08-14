@@ -25,6 +25,8 @@ export default class List extends Component {
     this.showListRoles = "";
     this.layout = "";
 
+    this.isShowRowExpend = false;
+
     this.columns = [];
     this.filter = [];
     this.module = "settings"; // This compare to parent key in datasource in sidebar when render breadcrump
@@ -356,7 +358,7 @@ export default class List extends Component {
           pagination={false} // 
           onChange={this.onChange}
           expandedRowRender = { 
-            this.expandedRender
+            this.expandedRender = this.isShowRowExpend  
           }
           onRow={record =>({
             onDoubleClick:(e) => this.handleShowFormEdit(record),

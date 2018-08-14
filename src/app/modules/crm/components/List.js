@@ -5,7 +5,7 @@ export default class List extends Lists {
   constructor(props){
     super(props);
     this.module = "customers";
-    this.showExpend = true;
+    this.isShowRowExpend = true;
   }
 
 }
