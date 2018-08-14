@@ -14,7 +14,8 @@ class CurrencyUpdateForm extends React.Component {
 function mapStateToProps(state) {
   return {
     currencyUpdate: state.reducer.currency.update,
-    initialValues: state.reducer.currency.update.data
+    initialValues: state.reducer.currency.update.data,
+    locale: state.locale
   };
 }
 

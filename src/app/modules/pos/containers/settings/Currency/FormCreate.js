@@ -13,7 +13,8 @@ class CurrencyForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    currencyAdd: state.reducer.currency.add
+    currencyAdd: state.reducer.currency.add,
+    locale: state.locale
   };
 }
 

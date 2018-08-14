@@ -43,7 +43,7 @@ export default class List extends Component {
     this.columnNo = {};
     
     this.columnStatus = {
-      title: <this.Translate id="col_payment_method_status" />,
+      title: <this.Translate id="text_status" />,
       dataIndex: "status",
       key: "status",
       render: value => {
@@ -57,14 +57,15 @@ export default class List extends Component {
       sorter: true
     };
     this.columnCreatedAt = {
-      title: <this.Translate id="col_payment_method_date" />,
+      title: <this.Translate id="text_created_at" />,
       dataIndex: "createdAt",
       key: "createdAt",
+      width: 150,
       render: value => this.formatDate(value),
       sorter: true
     };
     this.columnUpdatedAt = {
-      title: <this.Translate id="col_payment_method_update" />,
+      title: <this.Translate id="text_updated_at" />,
       dataIndex: "updatedAt",
       key: "updatedAt",
       render: value => this.formatDate(value),
@@ -85,7 +86,8 @@ export default class List extends Component {
   }
 
   formatDate(value) {
-    return this.Util.formatDate(value, this.Util.getSetting(ConstantAuth.ACCESS_TOKEN).dateFormat);
+    const setting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
+    return this.Util.formatDate(value, setting.dateFormat);
   }
 
   formatCurrency(value) {
@@ -326,7 +328,11 @@ export default class List extends Component {
     // handle for change select checkbox on table row
     const rowSelection = {
       selectedRowKeys: this.state.selectedRowKeys,
-      onChange: this.onSelectChange
+      onChange: this.onSelectChange,
+      getCheckboxProps: record => ({
+        disabled: "isSystem" in record && record["isSystem"] ? true : false, // Column configuration not to be checked
+        name: record.name,
+      })
     };
 
     return (

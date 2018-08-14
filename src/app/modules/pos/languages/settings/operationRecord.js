@@ -1,10 +1,4 @@
 export default {
-  "col_operation_record_date": [
-    "Date",
-    "Date",
-    "Date"
-  ],
-
   "col_operation_record_name":[
     "Name",
     "အမည်",
@@ -39,5 +33,29 @@ export default {
     "Expense",
     "Expense",
     "Expense"
+  ],
+
+  "input_operation_record_name": [
+    "Name",
+    "Name",
+    "Name"
+  ],
+
+  "input_operation_record_for": [
+    "Record For",
+    "Record For",
+    "Record For"
+  ],
+
+  "input_operation_record_amount": [
+    "Amount",
+    "Amount",
+    "Amount"
+  ],
+  
+  "error_operation_record_name_length": [
+    "Name allow from 3 to 100 character only.",
+    "Name allow from 3 to 100 character only.",
+    "Name allow from 3 to 100 character only."
   ]
 };

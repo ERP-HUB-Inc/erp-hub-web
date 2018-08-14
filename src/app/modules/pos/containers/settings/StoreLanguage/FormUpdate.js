@@ -14,7 +14,8 @@ class StoreLanguageForm extends React.Component {
 function mapStateToProps(state) {
   return {
     languageUpdate: state.reducer.storeLanguage.update,
-    initialValues: state.reducer.storeLanguage.update.data
+    initialValues: state.reducer.storeLanguage.update.data,
+    locale: state.locale
   };
 }
 

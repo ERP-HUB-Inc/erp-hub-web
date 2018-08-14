@@ -1,7 +1,8 @@
 import React from "react";
+import FormItem from "./FormItem";
 import Modal from "../../shares/Modal";
-import "./index.css"; 
 import operationRecordAction from "../../../action/settings/operationRecord";
+import "./index.css"; 
 
 export default class Form extends Modal {
   constructor(props) {
@@ -31,44 +32,15 @@ export default class Form extends Modal {
   }
   
   render() {
-    const { operationRecordAdd, form } = this.props;
+    const {operationRecordAdd, form, locale} = this.props;
 
     this.submitLoading = operationRecordAdd.adding;
+
+    this.validatorAddRecord(operationRecordAdd);
     
     if (operationRecordAdd.showForm) {
       this.content = (
-        <div className="main-operation-record">
-          {operationRecordAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <this.InputText form={form} name="name" label="Name" placeholder="Please input your name" required={true} min={ 3 } max={ 100 }/>
-          <this.DatePickers form={form} name="registerDate" label="Record For" required={false } placeholder="Please input your name" />
-          <this.InputNumber form={form} name="amount" label="Amount ($)" placeholder="Amount" required/>
-          {/* <this.InputTextArea form={form} name="name" label="Description" placeholder="Description" required={true} max={100}/> */}
-          <this.FormGroup>
-            <this.RadioBox  
-              class_main_radio="main-radio-acc"
-              name="type"
-              defaultValue={this.Enum.OPERATION_TYPE.INCOME}
-              required={true}
-              type="radio"
-              form={form}
-            >
-              { this.operationTypes.map( (operationType, key) => 
-                <this.RadioChildBox
-                  key={key}
-                  title={operationType.title}
-                  value={operationType.value} /> 
-              ) 
-              }
-            </this.RadioBox> 
-          </this.FormGroup>
-          <this.Select
-            name="status"
-            label="Status"
-            defaultValue={ 1 }
-            placeholder="Please select status"
-            dataSource={this.statusDataSource}
-            form={form}/>
-        </div>  
+        <FormItem form={form} locale={locale}/>
       );
       return super.render();
     } else {

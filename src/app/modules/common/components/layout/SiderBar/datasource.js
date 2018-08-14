@@ -41,7 +41,6 @@ import Tax from "../../../../pos/containers/settings/Tax";
 import ReceiptTemplate from "../../../../pos/containers/settings/ReceiptTemplate";
 import PaymentMethod from "../../../../pos/containers/settings/PaymentMethod";
 import RoleAccess from "../../../../pos/containers/settings/RoleAccess";
-import IncomeAndExpense from "../../../../pos/containers/settings/IncomeAndExpense";
 import Currency from "../../../../pos/containers/settings/Currency";
 import StoreLanguage from "../../../../pos/containers/settings/StoreLanguage";
 import OperationRecord from "../../../../pos/containers/settings/OperationRecord";
@@ -345,7 +344,7 @@ const dataSource = {
       },
       {
         title: "Tax",
-        icon: "icon-tax",
+        icon: "icon-taxes",
         route: "/settings/tax",
         component: Tax,
         isFashNav: true
@@ -356,13 +355,6 @@ const dataSource = {
         route: "/settings/role",
         component: RoleAccess,
         isFashNav: true
-      },
-      {
-        title: "Income & Expense",
-        icon: "icon-operation",
-        route: "/settings/income-expense",
-        component: IncomeAndExpense,
-        isFashNav: false
       },
       {
         title: "Currency",
@@ -380,7 +372,7 @@ const dataSource = {
       },
       {
         title: "Operation Record",
-        icon: "icon-language",
+        icon: "icon-operation",
         route: "/settings/operation-record",
         component: OperationRecord,
         isFashNav: true

@@ -1,4 +1,5 @@
 import React from "react";
+import FormItem from "./FormItem";
 import Modal from "../../shares/Modal";
 import ReceiptAction from "../../../action/settings/receiptTemplate";
 
@@ -29,87 +30,19 @@ export default class FormReciptTemplateCreate extends Modal {
   }
   
   render() {
-    const { receiptAdd,form } = this.props;
+    const {receiptAdd, form, locale} = this.props;
 
     this.submitLoading = receiptAdd.adding;
+
+    this.validatorAddRecord(receiptAdd);
     
     if (receiptAdd.showForm) {
       this.content = (
-        <div>
-          { receiptAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <this.InputText
-            name="name"
-            label="Name"
-            placeholder="Please input your name"
-            required={true}
-            errorRequired="Please input your name"
-            min={3}
-            max={100}
-            form={form}/>
-          {/* <this.Select
-            name="status"
-            label="Receipt Type"
-            placeholder="Please select status"
-            dataSource={this.statusDataSource}
-            defaultValue={1}
-            form={form}/> */}
-          {/* <this.InputText
-            name="tax"
-            type="text"
-            label="Tax name on receipt"
-            placeholder="Tax name on receipt"
-            form={ form }
-          /> */}
-          <thisInputNumber 
-            type="number" 
-            name="code" 
-            placeholder="Code"  
-            label="Code" 
-            form={form} />
-
-          {/* <this.UploadImg 
-            name="upload" 
-            label="Receipt Logo" 
-            required={ false }
-            form={form} 
-          />    */}
-          
-          <this.Switchs
-            label="Defualt Template"
-            name="isDefault"
-            form={form}
-          />
-          <this.Switchs
-            label="Show Store Name"
-            name="isShowStoreName"
-            form={form}
-          />
-          {/* <this.Switchs
-            label="Show Barcode"
-            form={form}
-          /> */}
-          <this.Switchs
-            label="Show Customer Information"
-            name="isShowCustomerInfo"
-            form={form}
-          />
-          <this.Switchs
-            label="Show Develop By"
-            name="isShowDevelopBy"
-            form={form}
-          />
-          {/* <this.Select
-            name="status"
-            label="Status"
-            placeholder="Please select status"
-            dataSource={this.statusDataSource}
-            defaultValue={1}
-            form={form}/> */}
-        </div>
+        <FormItem form={form} locale={locale}/>
       );
       return super.render();
     } else {
-      return (<div></div>);
+      return <div />;
     }
   }
 }

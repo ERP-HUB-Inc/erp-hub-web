@@ -47,12 +47,6 @@ class Column extends List {
       this.columnCreatedAt,
       this.columnNo,
       {
-        title: <this.Translate id="col_receipt_template_store" />,
-        dataIndex: "labelOnInvoice",
-        key: "labelOnInvoice",
-        sorter: true
-      },
-      {
         title: <this.Translate id="col_receipt_template_name" />,
         dataIndex: "name",
         key: "name",

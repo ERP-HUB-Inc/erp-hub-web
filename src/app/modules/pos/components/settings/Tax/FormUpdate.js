@@ -1,13 +1,12 @@
 import React from "react";
+import FormItem from "./FormItem";
 import Modal from "../../shares/Modal";
-import { InputText } from "../../../../common/elements/ant-ui/InputText";
-import { InputNumber } from "../../../../common/elements/ant-ui/InputNumber";
 import TaxAction from "../../../action/settings/tax";
 
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.title = "Tax";
+    this.title = <this.Translate id="update_tax_title" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -19,7 +18,6 @@ export default class Form extends Modal {
         const {taxUpdate} = this.props;
         values["id"] = taxUpdate.data.id; 
         values["rate"] = Number(values.rate);
-        values["status"] = 1;
         this.dispatch(TaxAction.update(values));
       }
     });
@@ -30,28 +28,19 @@ export default class Form extends Modal {
   }
   
   render() {
-    const { taxUpdate, form } = this.props;
+    const {taxUpdate, form, locale} = this.props;
 
     this.submitLoading = taxUpdate.updating;
+
+    this.validatorUpdateRecord(taxUpdate);
     
     if (taxUpdate.showForm) {
       this.content = (
-        <div>
-          {taxUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <InputText form={form} data={ taxUpdate.data.name } name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
-          <InputNumber form={form} data={ taxUpdate.data.rate } name="rate" label="Rate" placeholder="Rate" />
-          <InputText form={form} data={ taxUpdate.data.labelOnInvoice } name="labelOnInvoice" label="Label On Invoice" placeholder="Label On Invoice" max={255}/>
-          <this.Select
-            name="status"
-            label="Status"
-            dataSource={this.statusDataSource}
-            defaultValue={taxUpdate.data.status}
-            form={form}/>
-        </div>
+        <FormItem formData={taxUpdate.data} form={form} locale={locale} />
       );
       return super.render();
     } else {
-      return (<div></div>);
+      return <div />;
     }
   }
 }

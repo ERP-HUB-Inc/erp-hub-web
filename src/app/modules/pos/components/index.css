@@ -76,3 +76,7 @@
     position: relative;
     bottom: 5px
 }
+
+.ant-alert.ant-alert-error {
+    margin-bottom: 10px !important
+}

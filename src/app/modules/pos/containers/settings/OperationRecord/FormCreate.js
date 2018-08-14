@@ -13,7 +13,8 @@ class OperationRecordForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    operationRecordAdd: state.reducer.operationRecord.add
+    operationRecordAdd: state.reducer.operationRecord.add,
+    locale: state.locale
   };
 }
 

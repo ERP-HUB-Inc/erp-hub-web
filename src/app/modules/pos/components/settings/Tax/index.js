@@ -65,6 +65,7 @@ class Column extends List {
         sorter: true,
         render: (rate) => rate + "%"
       },
+      this.columnUpdatedAt,
       this.columnStatus
     ];
   }

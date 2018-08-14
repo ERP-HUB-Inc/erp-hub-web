@@ -3,13 +3,12 @@ import { initialize, addTranslation } from "react-localize-redux";
 import headers from "../languages/headers";
 import footers from "../languages/footers";
 import sidebar from "../languages/sidebar";
+import general from "../languages/general";
 import text from "../elements/common/language/text";
 import title from "../elements/common/language/title";
 import modal from "../../pos/languages/shares/modal";
-import incomeAndExpense from "../../pos/languages/settings/incomeAndExpense";
 import paymentMethod from "../../pos/languages/settings/paymentMethod";
 import receiptTemplate from "../../pos/languages/settings/receiptTemplate";
-// import roleAccess from "../../pos/languages/settings/roleAccess";
 import storeAccount from "../../pos/languages/settings/storeAccount";
 import storeLocation from "../../pos/languages/settings/storeLocation";
 import tax from "../../pos/languages/settings/tax";
@@ -17,14 +16,13 @@ import operationRecord from "../../pos/languages/settings/operationRecord";
 import language from "../../pos/languages/settings/language";
 import currency from "../../pos/languages/settings/currency";
 import error from "../elements/common/language/error";
-//customer 
 import managementCustomer from "../../crm/languages/customers/managementCustomer";
-// import managementCustomer from "../../crm/languages/customers/managementCustomer";
 
 export function initLanguage() {
   return initialize([
     { name: "English", code: "en" },
-    { name: "Myanmar", code: "my" }
+    { name: "Myanmar", code: "bm" },
+    { name: "Khmer", code: "km" }
   ]);
 }
 
@@ -35,9 +33,9 @@ export function setTranslation() {
     ...text,
     ...title,
     ...error,
+    ...general,
     ...sidebar,
     ...modal,
-    ...incomeAndExpense,
     ...paymentMethod,
     ...receiptTemplate,
     ...storeAccount,

@@ -35,7 +35,7 @@ Input.defaultProps = {
   name: "name",
   max: 9999999999,
   errorLength: "The number allow maximum 9999 999 999.",
-  required: false,
+  required: true,
   errorRequired: "This field is required."
 };
 

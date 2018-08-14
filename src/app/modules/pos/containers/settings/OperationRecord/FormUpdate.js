@@ -14,7 +14,8 @@ class OperationRecordForm extends React.Component {
 function mapStateToProps(state) {
   return {
     operationRecordUpdate: state.reducer.operationRecord.update,
-    initialValues: state.reducer.operationRecord.update.data
+    initialValues: state.reducer.operationRecord.update.data,
+    locale: state.locale
   };
 }
 

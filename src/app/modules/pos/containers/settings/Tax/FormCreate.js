@@ -13,7 +13,8 @@ class PaymentMethodForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    TaxAdd: state.reducer.tax.add
+    taxAdd: state.reducer.tax.add,
+    locale: state.locale
   };
 }
 

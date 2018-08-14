@@ -1,4 +1,5 @@
 import React from "react";
+import FormItem from "./FormItem";
 import Modal from "../../shares/Modal";
 import operationRecordAction from "../../../action/settings/operationRecord";
 
@@ -7,10 +8,6 @@ export default class Form extends Modal {
     super(props);
     this.title = "operation Record:Update";
     this.dispatch = this.props.dispatch;
-    this.operationTypes = [
-      {title: <this.Translate id="operation_record_income" />, value: this.Enum.OPERATION_TYPE.INCOME},
-      {title: <this.Translate id="operation_record_expense" />, value: this.Enum.OPERATION_TYPE.EXPENSE}
-    ];
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -31,59 +28,15 @@ export default class Form extends Modal {
   }
   
   render() {
-    const { operationRecordUpdate, form } = this.props;
+    const {operationRecordUpdate, form, locale} = this.props;
 
     this.submitLoading = operationRecordUpdate.updating;
+
+    this.validatorUpdateRecord(operationRecordUpdate);
     
     if (operationRecordUpdate.showForm) {
       this.content = (
-        <div className="main-operation-record">
-          {operationRecordUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <this.InputText form={form} name="name" data={ operationRecordUpdate.data.name }  label="Name" placeholder="Please input your name" required={true} min={ 3 } max={ 100 }/>
-          <this.DatePickers
-            defaultValue={this.Util.formatDatePicker(operationRecordUpdate.data.registerDate)}
-            name="registerDate"  
-            label="Record For" 
-            required={false } 
-            placeholder="Please input your name" 
-            form={form} 
-          />
-          <this.InputNumber 
-            form={form} 
-            type="number"   
-            data={ operationRecordUpdate.data.amount } 
-            name="amount" 
-            label="Amount ($)" 
-            placeholder="Amount" 
-            required
-          />
-          {/* <this.InputTextArea form={form} name="name" label="Description" placeholder="Description" required={true} max={100}/> */}
-          <this.FormGroup>
-            <this.RadioBox  
-              class_main_radio="main-radio-acc"
-              name="type"
-              defaultValue={operationRecordUpdate.data.type}
-              required={true}
-              type="radio"
-              form={form}
-            >
-              { this.operationTypes.map( (operationType, key) => 
-                <this.RadioChildBox
-                  key={key}
-                  title={operationType.title}
-                  value={operationType.value} /> 
-              ) 
-              }
-            </this.RadioBox> 
-          </this.FormGroup>
-          <this.Select
-            name="status"
-            label="Status"
-            placeholder="Please select status"
-            dataSource={this.statusDataSource}
-            defaultValue={operationRecordUpdate.data.status}
-            form={form}/>
-        </div>
+        <FormItem formData={operationRecordUpdate.data} form={form} locale={locale}/>
       );
       return super.render();
     } else {
