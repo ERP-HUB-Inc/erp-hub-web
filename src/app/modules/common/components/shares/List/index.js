@@ -1,6 +1,7 @@
 import React from "react";
-import { Pagination } from "antd";
+import {Pagination} from "antd";
 import Component  from "../../Component";
+import ConstantAuth from "../../../constants/authentication";
 import menuSource from "../../layout/SiderBar/datasource";
 import "./index.css";
 
@@ -41,17 +42,11 @@ export default class List extends Component {
     this.okText = "Yes"; // text button on alert of delete action
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
-    // this.columnNo = {
-    //   title: <this.Translate id="col_payment_method_no" />,
-    //   dataIndex: "no",
-    //   key: "no",
-    //   render: (value, record, index) => { console.log("Column No Render:"); return index + 1;},
-    //   sorter: true
-    // };
+
     this.columnNo = {};
     
     this.columnStatus = {
-      title: <this.Translate id="col_payment_method_status" />,
+      title: <this.Translate id="text_status" />,
       dataIndex: "status",
       key: "status",
       render: value => {
@@ -65,17 +60,18 @@ export default class List extends Component {
       sorter: true
     };
     this.columnCreatedAt = {
-      title: <this.Translate id="col_payment_method_date" />,
+      title: <this.Translate id="text_created_at" />,
       dataIndex: "createdAt",
       key: "createdAt",
-      render: value => this.Util.formatDate(value),
+      width: 200,
+      render: value => this.formatDate(value),
       sorter: true
     };
     this.columnUpdatedAt = {
-      title: <this.Translate id="col_payment_method_update" />,
+      title: <this.Translate id="text_updated_at" />,
       dataIndex: "updatedAt",
       key: "updatedAt",
-      render: value => this.Util.formatDate(value),
+      render: value => this.formatDate(value),
       sorter: true
     };
 
@@ -91,6 +87,16 @@ export default class List extends Component {
     this.RESET_CONSTANT = "RESET";
 
     this.expandedRender = this.expandedRender.bind(this);
+  }
+
+  formatDate(value) {
+    const setting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
+    return this.Util.formatDate(value, setting.dateFormat);
+  }
+ 
+  formatCurrency(value) {
+    const setting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
+    return this.Util.formatCurrency(value, setting.currency, setting.currencyPosition);
   }
 
   /**
@@ -330,7 +336,11 @@ export default class List extends Component {
     // handle for change select checkbox on table row
     const rowSelection = {
       selectedRowKeys: this.state.selectedRowKeys,
-      onChange: this.onSelectChange
+      onChange: this.onSelectChange,
+      getCheckboxProps: record => ({
+        disabled: "isSystem" in record && record["isSystem"] ? true : false, // Column configuration not to be checked
+        name: record.name,
+      })
     };
 
     return (
