@@ -3,11 +3,11 @@ import Constant from "../../constants/settings/storeLanguage";
 import LanguageService from "../../services/settings/StoreLanguage";
 
 export default {
-  fetch:(limit, offset, sortField, sortOrder) => {
+  fetch:(limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_STORE_LANGUAGE,
-        payload: LanguageService.lists(limit, offset, sortField, sortOrder)
+        payload: LanguageService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },

@@ -14,6 +14,7 @@ export default class TaxList extends List {
     this.fetchingProp = "tax";
     this.addingProp = "taxAdd";
     this.updatingProp = "taxUpdate";
+    this.columnFilterWithKey = ["name"];
     this.service = TaxService;
     this.action = TaxAction;
     this.RESET_CONSTANT = Constant.RESET_TAX;

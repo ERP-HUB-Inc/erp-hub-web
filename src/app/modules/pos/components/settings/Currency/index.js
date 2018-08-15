@@ -13,6 +13,7 @@ export default class CurrencyList extends List {
     this.fetchingProp = "currency";
     this.addingProp = "currencyAdd";
     this.updatingProp = "currencyUpdate";
+    this.columnFilterWithKey = ["name"];
     this.service = CurrencyService;
     this.action = CurrencyAction;
   }

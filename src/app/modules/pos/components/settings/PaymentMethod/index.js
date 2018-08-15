@@ -16,6 +16,7 @@ export default class PaymentMethodList extends List {
     this.updatingProp = "paymentMethodUpdate";
     this.service = PaymentMethodService;
     this.action = PaymentMethodAction;
+    this.columnFilterWithKey = ["name"];
     this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
   }
 

@@ -1,6 +1,7 @@
 export default {
   ACTIVE: 1,
   DEACTIVE: 0,
+  ALL_STATE: 2,
   IS_SYSTEM: 1,
   IS_DEFAULT: 1,
   CURRENCY_POSITION: {BEFORE: 0, AFTER: 1},

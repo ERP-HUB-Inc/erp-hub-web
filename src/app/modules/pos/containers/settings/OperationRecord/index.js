@@ -1,5 +1,6 @@
 import React from "react";
-import { connect } from "react-redux";
+import {Form} from "antd";
+import {connect} from "react-redux";
 import List from "../../../components/settings/OperationRecord";
 
 class OperationRecord extends React.Component {
@@ -18,4 +19,12 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(OperationRecord);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const operationRecord = Form.create(mapPropsToFields)(OperationRecord);
+
+export default connect(mapStateToProps)(operationRecord);

@@ -29,6 +29,12 @@ export default {
     "Deactive"
   ],
 
+  "select_text_all_status": [
+    "All Status",
+    "All Status",
+    "All Status"
+  ],
+
   "button_text_save": [
     "Save",
     "ကယ်ဆယ်",
@@ -39,6 +45,12 @@ export default {
     "Cancel",
     "ပြန်",
     "Cancel"
+  ],
+
+  "button_text_search": [
+    "Search",
+    "Search",
+    "Search"
   ]
 
 };

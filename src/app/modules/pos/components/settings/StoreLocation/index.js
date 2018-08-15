@@ -13,6 +13,7 @@ export default class StoreLocationList extends List {
     this.fetchingProp = "storeLocation";
     this.addingProp = "storeLocationAdd";
     this.updatingProp = "storeLocationUpdate";
+    this.columnFilterWithKey = ["name"];
     this.service = StoreLocationService;
     this.action = StoreLocationAction;
   }

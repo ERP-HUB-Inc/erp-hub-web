@@ -1,6 +1,6 @@
 import React from "react";
-import { connect } from "react-redux";
-import { Form } from "antd";
+import {connect} from "react-redux";
+import {Form} from "antd";
 import Component from "../../components/Component";
 import HomePage from "../../components/home";
 

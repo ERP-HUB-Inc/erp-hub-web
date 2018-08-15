@@ -14,6 +14,7 @@ export default class ReceiptTemplateList extends List {
     this.fetchingProp = "receipt";
     this.addingProp = "receiptAdd";
     this.updatingProp = "receiptUpdate";
+    this.columnFilterWithKey = ["name"];
     this.service = ReceiptService;
     this.action = ReceiptTemplateAction;
     this.RESET_CONSTANT = Constant.RESET_RECEIPT;

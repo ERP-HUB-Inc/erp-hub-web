@@ -1,5 +1,6 @@
 import React from "react";
-import { connect } from "react-redux";
+import {Form} from "antd";
+import {connect} from "react-redux";
 import List from "../../../components/settings/Tax";
 
 class Tax extends React.Component {
@@ -18,4 +19,12 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Tax);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const tax = Form.create(mapPropsToFields)(Tax);
+
+export default connect(mapStateToProps)(tax);
