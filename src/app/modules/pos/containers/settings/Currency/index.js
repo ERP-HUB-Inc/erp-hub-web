@@ -1,5 +1,6 @@
 import React from "react";
-import { connect } from "react-redux";
+import {Form} from "antd";
+import {connect} from "react-redux";
 import List from "../../../components/settings/Currency";
 
 class Currency extends React.Component {
@@ -18,4 +19,12 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Currency);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const currency = Form.create(mapPropsToFields)(Currency);
+
+export default connect(mapStateToProps)(currency);

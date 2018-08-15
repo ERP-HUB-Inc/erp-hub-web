@@ -3,7 +3,7 @@ import _ from "lodash";
 
 export class Util {
   checkValueSwitch (values){
-    return values === true ? 1 : 0;
+    return values ? 1 : 0;
   }
   
   findArrayIndex (collection, prop, value) {
@@ -51,6 +51,10 @@ export class Util {
     let result = localStorage.getItem(key);
     result = JSON.parse(result);
     return result.setting;
+  }
+
+  getCurrentDate () {
+    return moment();
   }
 
   formatDate (value, format = "MMM-Do-YYYY h:mm A") {

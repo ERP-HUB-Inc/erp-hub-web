@@ -2,6 +2,7 @@ import React from "react";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/Currency/FormCreate";
 import FormUpdate from "../../../containers/settings/Currency/FormUpdate";
+import Constant from "../../../constants/settings/currency";
 import CurrencyAction from "../../../action/settings/currency";
 import CurrencyService from "../../../services/settings/CurrencyService";
 
@@ -13,8 +14,10 @@ export default class CurrencyList extends List {
     this.fetchingProp = "currency";
     this.addingProp = "currencyAdd";
     this.updatingProp = "currencyUpdate";
+    this.columnFilterWithKey = ["name"];
     this.service = CurrencyService;
     this.action = CurrencyAction;
+    this.RESET_CONSTANT = Constant.RESET_CURRENCY;
   }
 
   handleShowFormAdd() {

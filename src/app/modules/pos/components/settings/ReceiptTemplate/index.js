@@ -1,5 +1,4 @@
 import React from "react";
-// import columns from "./column";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/ReceiptTemplate/FormCreate";
 import FormUpdate from "../../../containers/settings/ReceiptTemplate/FormUpdate";
@@ -14,6 +13,7 @@ export default class ReceiptTemplateList extends List {
     this.fetchingProp = "receipt";
     this.addingProp = "receiptAdd";
     this.updatingProp = "receiptUpdate";
+    this.columnFilterWithKey = ["name"];
     this.service = ReceiptService;
     this.action = ReceiptTemplateAction;
     this.RESET_CONSTANT = Constant.RESET_RECEIPT;
@@ -46,12 +46,6 @@ class Column extends List {
     return [
       this.columnCreatedAt,
       this.columnNo,
-      {
-        title: <this.Translate id="col_receipt_template_store" />,
-        dataIndex: "labelOnInvoice",
-        key: "labelOnInvoice",
-        sorter: true
-      },
       {
         title: <this.Translate id="col_receipt_template_name" />,
         dataIndex: "name",

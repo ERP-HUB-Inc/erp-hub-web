@@ -13,9 +13,9 @@ class ReceiptTemplateUpdate extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    formUpdate: state.form.formreceiptUpdate,
     receiptUpdate: state.reducer.receiptTemplate.update,
-    initialValues: state.reducer.receiptTemplate.update.data
+    initialValues: state.reducer.receiptTemplate.update.data,
+    locale: state.locale
   };
 }
 

@@ -1,7 +1,5 @@
 .main-layout {
     background-color: white;
-    /* height: 100%;
-    width: 100%; */
     padding: 10px;
 }
 
@@ -14,7 +12,8 @@
 /* settign account layout */
 .main-radio-acc .ant-radio-button-wrapper {
     height: 70px;
-    /* width: 141px;	 */
+    width: 30%;
+    padding-top: 6px;
     background-color: #FFFFFF;
     border: 1px solid #CDCCCC;
     border-radius: 0;

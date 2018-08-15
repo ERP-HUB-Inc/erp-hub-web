@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import FormCreate from "../../../components/settings/OperationReord/FormCreate";
+import FormCreate from "../../../components/settings/OperationRecord/FormCreate";
 
 class OperationRecordForm extends React.Component {
   render() {
@@ -13,7 +13,8 @@ class OperationRecordForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    operationRecordAdd: state.reducer.operationRecord.add
+    operationRecordAdd: state.reducer.operationRecord.add,
+    locale: state.locale
   };
 }
 

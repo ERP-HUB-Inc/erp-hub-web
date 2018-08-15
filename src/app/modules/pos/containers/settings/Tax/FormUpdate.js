@@ -14,7 +14,8 @@ class TaxForm extends React.Component {
 function mapStateToProps(state) {
   return {
     taxUpdate: state.reducer.tax.update,
-    initialValues: state.reducer.tax.update.data
+    initialValues: state.reducer.tax.update.data,
+    locale: state.locale
   };
 }
 

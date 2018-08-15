@@ -14,6 +14,7 @@ export default class TaxList extends List {
     this.fetchingProp = "operationRecord";
     this.addingProp = "operationRecordAdd";
     this.updatingProp = "operationRecordUpdate";
+    this.columnFilterWithKey = ["name"];
     this.service = OperatinRecordService;
     this.action = OperationRecordAction;
     this.RESET_CONSTANT = Constant.RESET_OPERATION_RECORD;
@@ -64,10 +65,10 @@ class Column extends List {
         title: <this.Translate id="col_operation_record_type" />,
         dataIndex: "type",
         sorter: true,
-        render : (type) => type === 0 ? "Income" : "Expense"
+        render : (type) => type === 0 ? <this.Translate id="operation_record_income" /> : <this.Translate id="operation_record_expense" />
       },
       {
-        title: <this.Translate id="col_operation_record_name" />,
+        title: <this.Translate id="input_operation_record_amount" />,
         dataIndex: "amount",
         sorter: true,
         render : (amount) => this.formatCurrency(amount)

@@ -1,13 +1,12 @@
 import React from "react";
+import FormItem from "./FormItem";
 import Modal from "../../shares/Modal";
-import { InputText } from "../../../../common/elements/ant-ui/InputText";
-import { Select } from "../../../../common/elements/ant-ui/Select";
 import PaymentMethodAction from "../../../action/settings/paymentMethod";
 
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.title = "Payment Method:Update";
+    this.title = <this.Translate id="update_payment_method_title" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -29,41 +28,19 @@ export default class Form extends Modal {
 
   render() {
 
-    const {paymentMethodUpdate, form} = this.props;
+    const {paymentMethodUpdate, form, locale} = this.props;
 
     this.submitLoading = paymentMethodUpdate.updating;
 
+    this.validatorUpdateRecord(paymentMethodUpdate);
+
     if (paymentMethodUpdate.showForm) {
       this.content = (
-        <div>
-          {paymentMethodUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <InputText
-            data={paymentMethodUpdate.data.name}
-            name="name"
-            label="Name"
-            placeholder="Please input your name"
-            required={true}
-            max={100}
-            form={form}/>
-          <InputText
-            data={paymentMethodUpdate.data.description}
-            name="description"
-            label="Description"
-            placeholder="Description"
-            max={255}
-            form={form}/>
-          <Select
-            name="status"
-            label="Status"
-            placeholder="Please select status"
-            dataSource={this.statusDataSource}
-            defaultValue={paymentMethodUpdate.data.status}
-            form={form}/>
-        </div>
+        <FormItem formData={paymentMethodUpdate.data} form={form} locale={locale}/>
       );
       return super.render();
     } else {
-      return (<div></div>);
+      return <div />;
     }
   }
 }

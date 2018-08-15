@@ -1,5 +1,6 @@
 import React from "react";
-import { connect } from "react-redux";
+import {Form} from "antd";
+import {connect} from "react-redux";
 import StoreLocationList from "../../../components/settings/StoreLocation";
 
 class StoreLocation extends React.Component {
@@ -18,4 +19,12 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(StoreLocation);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const storeLocation = Form.create(mapPropsToFields)(StoreLocation);
+
+export default connect(mapStateToProps)(storeLocation);

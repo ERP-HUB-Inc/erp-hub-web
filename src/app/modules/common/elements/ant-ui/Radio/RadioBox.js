@@ -31,7 +31,7 @@ export class RadioBox extends Element {
               <this.Radio.Group
                 disabled={this.props.disabled}
                 onChange={this.onChange}
-                style={{paddingTop: "5px"}}
+                style={{paddingTop: "5px", width: "100%"}}
               >
                 {this.props.children}
               </this.Radio.Group>

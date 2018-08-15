@@ -14,6 +14,7 @@ export default class StoreLanguageList extends List {
     this.fetchingProp = "storeLanguage";
     this.addingProp = "storeLanguageAdd"; //for change form add 
     this.updatingProp = "storeLanguageUpdate";
+    this.columnFilterWithKey = ["name"];
     this.service = StoreLanguageService;
     this.action = StoreLanguageAction;
     this.RESET_CONSTANT = Constant.RESET_STORE_LANGUAGE;

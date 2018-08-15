@@ -3,11 +3,11 @@ import Constant from "../../constants/settings/tax";
 import TaxService from "../../services/settings/TaxService";
 
 export default{
-  fetch:(limit, offset, sortField, sortOrder) => {
+  fetch:(limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_TAX,
-        payload: TaxService.lists(limit, offset, sortField, sortOrder)
+        payload: TaxService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },

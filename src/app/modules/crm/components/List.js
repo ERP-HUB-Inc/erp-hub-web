@@ -1,4 +1,3 @@
-import React from "react";
 import  Lists from "../../common/components/shares/List";
 
 export default class List extends Lists {

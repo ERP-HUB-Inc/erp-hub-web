@@ -1,4 +1,4 @@
-.table-wrapper {
+/* .table-wrapper {
     background-color: white;
     padding: 15px 15px
 }
@@ -51,8 +51,12 @@
 
 .breadcrumb ul li.fast-nav:last-child:after {
     content: ""
-}
+} */
 
 .ant-alert.ant-alert-no-icon {
     margin-bottom: 15px
+}
+
+.ant-modal-footer .ant-btn {
+    width: 110px
 }

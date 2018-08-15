@@ -25,14 +25,12 @@ export default class BaseService extends Service {
     offset,
     sortField,
     sortOrder,
-    status,
-    type,
-    searchColumn
+    filter, // {"column1": [value1, value2], "column2": [value1, value2]}
+    searchKey // {"column": ["columnname1", "columnname2"], "value": "hello"}
   ) {
-    let linkFilter = `&filter={"status": ${ status }, "type": ${ type } }&search={"column": ${ searchColumn }, "value": "kh"}`;
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
     return this.GET({ 
-      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}` + linkFilter,  
+      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}`,  
       data: this.data,
       headers: this.header
     });

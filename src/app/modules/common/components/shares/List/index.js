@@ -1,9 +1,9 @@
 import React from "react";
-import { Pagination } from "antd";
+import {Pagination} from "antd";
 import Component  from "../../Component";
+import ConstantAuth from "../../../constants/authentication";
 import menuSource from "../../layout/SiderBar/datasource";
 import "./index.css";
-
 
 export default class List extends Component {
   constructor(props) {
@@ -15,6 +15,7 @@ export default class List extends Component {
       selectedListIds: [],
       modalVisible: false,
       deleting: false,
+      isClickFilter: false,
       modalSource: {},
       ListRoles: null,
       modalConten: null, // the content that show in modal content,
@@ -25,8 +26,6 @@ export default class List extends Component {
     //access role
     this.showListRoles = "";
     this.layout = "";
-
-    this.isShowRowExpend = false;
 
     this.columns = [];
     this.filter = [];
@@ -42,17 +41,11 @@ export default class List extends Component {
     this.okText = "Yes"; // text button on alert of delete action
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
-    // this.columnNo = {
-    //   title: <this.Translate id="col_payment_method_no" />,
-    //   dataIndex: "no",
-    //   key: "no",
-    //   render: (value, record, index) => { console.log("Column No Render:"); return index + 1;},
-    //   sorter: true
-    // };
+
     this.columnNo = {};
     
     this.columnStatus = {
-      title: <this.Translate id="col_payment_method_status" />,
+      title: <this.Translate id="text_status" />,
       dataIndex: "status",
       key: "status",
       render: value => {
@@ -80,19 +73,27 @@ export default class List extends Component {
     };
 
     this.columnCreatedAt = {
-      title: <this.Translate id="col_payment_method_date" />,
+      title: <this.Translate id="text_created_at" />,
       dataIndex: "createdAt",
       key: "createdAt",
-      render: value => this.Util.formatDate(value),
+      width: 200,
+      render: value => this.formatDate(value),
       sorter: true
     };
     this.columnUpdatedAt = {
-      title: <this.Translate id="col_payment_method_update" />,
+      title: <this.Translate id="text_updated_at" />,
       dataIndex: "updatedAt",
       key: "updatedAt",
-      render: value => this.Util.formatDate(value),
+      render: value => this.formatDate(value),
       sorter: true
     };
+    this.statusList = [
+      {name: <this.Translate id="select_text_active"/>, value: this.Enum.ACTIVE},
+      {name: <this.Translate id="select_text_deactive"/>, value: this.Enum.DEACTIVE},
+      {name: <this.Translate id="select_text_all_status"/>, value: this.Enum.ALL_STATE}
+    ];
+
+    this.columnFilterWithKey = [];
 
     this.service = null;
     this.action = null;
@@ -103,9 +104,20 @@ export default class List extends Component {
     this.onSelectChange = this.onSelectChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
+    this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
     this.RESET_CONSTANT = "RESET";
 
     this.expandedRender = this.expandedRender.bind(this);
+  }
+
+  formatDate(value) {
+    const setting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
+    return this.Util.formatDate(value, setting.dateFormat);
+  }
+ 
+  formatCurrency(value) {
+    const setting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
+    return this.Util.formatCurrency(value, setting.currency, setting.currencyPosition);
   }
 
   /**
@@ -131,7 +143,7 @@ export default class List extends Component {
 
   componentDidMount() {
     if (this.action != null) {
-      const { dispatch } = this.props;
+      const {dispatch} = this.props;
       dispatch(this.action.fetch(this.pageSize));
     }
   }
@@ -179,7 +191,7 @@ export default class List extends Component {
    */
   onShowSizeChange(current, pageSize) {
     if (this.action != null) {
-      const { dispatch } = this.props;
+      const {dispatch} = this.props;
       this.filter = [
         pageSize,
         (current - 1) * pageSize,
@@ -265,6 +277,25 @@ export default class List extends Component {
     }
   }
 
+  /**
+   * handle when user want to filter record
+   */
+  handleSubmitFilter(e) {
+    if (this.action != null) {
+      e.preventDefault();
+      this.props.form.validateFieldsAndScroll((err, values) => {
+        if (!err) {
+          const {dispatch} = this.props;
+          const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
+          const filter = JSON.stringify({status});
+          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
+          dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
+          this.setState({isClickFilter: true});
+        }
+      });
+    }
+  }
+
   renderBreadCrumb() {
     // get current path of breadcrum compare with url
     const currentPath = window.location.pathname;
@@ -331,7 +362,42 @@ export default class List extends Component {
     );
   }
 
-  expandedRender(record,indent){
+  renderFilterRecord() {
+    const {form} = this.props;
+    const fetchingProps = this.props[this.fetchingProp];
+    return (
+      form == null ?
+        ""
+        :
+        <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
+          <this.Row className="main-search-layout">
+            <this.Col md="3">
+              <this.InputText
+                name="key"
+                label="Search"
+                placeholder="Search for code, name and address"
+                form={form}
+              />
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="status"
+                label={<this.Translate id="text_status" />}
+                placeholder="Please select status"
+                dataSource={this.statusList}
+                defaultValue={this.Enum.ALL_STATE}
+                form={form}
+              />
+            </this.Col>
+            <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+              <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+            </this.Button>
+          </this.Row>
+        </this.Form>
+    );
+  }
+
+  expandedRender(){
     
   }
 
@@ -345,15 +411,19 @@ export default class List extends Component {
     // handle for change select checkbox on table row
     const rowSelection = {
       selectedRowKeys: this.state.selectedRowKeys,
-      onChange: this.onSelectChange
+      onChange: this.onSelectChange,
+      getCheckboxProps: record => ({
+        disabled: "isSystem" in record && record["isSystem"] ? true : false, // Column configuration not to be checked
+        name: record.name,
+      })
     };
 
     return (
       <div className="table-wrapper">
 
-        {/* <FormSearch /> */}
+        {this.renderFilterRecord()}
 
-        { this.renderActionButton() }
+        {this.renderActionButton()}
 
         { 
           pagination.total > 0 ?
@@ -427,3 +497,4 @@ export default class List extends Component {
     );
   }
 }
+

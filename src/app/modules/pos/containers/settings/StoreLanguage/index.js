@@ -1,5 +1,6 @@
 import React from "react";
-import { connect } from "react-redux";
+import {Form} from "antd";
+import {connect} from "react-redux";
 import StoreLanguageList from "../../../components/settings/StoreLanguage";
 
 class StoreLanguage extends React.Component {
@@ -19,4 +20,12 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(StoreLanguage);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const storeLanguage = Form.create(mapPropsToFields)(StoreLanguage);
+
+export default connect(mapStateToProps)(storeLanguage);

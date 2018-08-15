@@ -1,11 +1,12 @@
 import React from "react";
+import FormItem from "./FormItem";
 import Modal from "../../shares/Modal";
 import TaxAction from "../../../action/settings/tax";
 
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.title = "Tax";
+    this.title = <this.Translate id="create_tax_title" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -25,24 +26,15 @@ export default class Form extends Modal {
   }
   
   render() {
-    const { TaxAdd, form } = this.props;
+    const {taxAdd, form, locale} = this.props;
 
-    this.submitLoading = TaxAdd.adding;
+    this.submitLoading = taxAdd.adding;
+
+    this.validatorAddRecord(taxAdd);
     
-    if (TaxAdd.showForm) {
+    if (taxAdd.showForm) {
       this.content = (
-        <div>
-          {TaxAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <this.InputText form={form} name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
-          <this.InputNumber form={form} type="number" name="rate" label="Rate" placeholder="Rate" />
-          <this.InputText form={form} name="labelOnInvoice" label="Label On Invoice" placeholder="Label On Invoice" max={255}/>
-          <this.Select
-            name="status"
-            label="Status"
-            dataSource={this.statusDataSource}
-            defaultValue={1}
-            form={form}/>
-        </div>
+        <FormItem form={form} locale={locale} />
       );
       return super.render();
     } else {

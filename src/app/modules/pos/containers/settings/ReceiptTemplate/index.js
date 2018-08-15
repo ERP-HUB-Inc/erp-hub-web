@@ -1,8 +1,9 @@
 import React from "react";
-import { connect } from "react-redux";
+import {Form} from "antd";
+import {connect} from "react-redux";
 import ReceiptTemplateList from "../../../components/settings/ReceiptTemplate";
 
-class PaymentMethod extends React.Component {
+class ReceiptTemplate extends React.Component {
   render() {
     return (
       <ReceiptTemplateList {...this.props} />
@@ -19,4 +20,12 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(PaymentMethod);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const receiptTemplate = Form.create(mapPropsToFields)(ReceiptTemplate);
+
+export default connect(mapStateToProps)(receiptTemplate);

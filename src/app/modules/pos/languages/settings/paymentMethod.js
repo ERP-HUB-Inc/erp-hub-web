@@ -4,11 +4,6 @@ export default {
     "No",
     "No"
   ],
-  "col_payment_method_date": [
-    "Date",
-    "Date",
-    "Date"
-  ],
   "col_payment_method_name": [
     "Name",
     "Name",
@@ -19,32 +14,27 @@ export default {
     "Description",
     "Description"
   ],
-  "col_payment_method_update": [
-    "Update",
-    "Update",
-    "Update"
-  ],
-  "col_payment_method_status": [
-    "Status",
-    "Status",
-    "Status"
-  ],
-  "create_title": [
+  "create_payment_method_title": [
     "Payment Method",
     "ငွေပေးချေစနစ်",
     "Payment Method"
   ],
-  "input_text_name": [
+  "update_payment_method_title": [
+    "Payment Method: Update",
+    "Payment Method: Update",
+    "Payment Method: Update",
+  ],
+  "input_payment_method_name": [
     "Name",
     "အမည်",
     "Name"
   ],
-  "input_text_description": [
+  "input_payment_method_description": [
     "Description",
     "ဖေါ်ပြချက်",
     "Description"
   ],
-  "input_text_status": [
+  "input_payment_method_status": [
     "Status",
     "ပြည်နယ်",
     "Status"

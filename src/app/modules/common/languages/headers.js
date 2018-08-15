@@ -1,11 +1,13 @@
 export default {
   "text_search_transaction": [
     "Search Transaction Invoice or help",
-    "ငွေသွင်းငွေထုတ်ပြေစာသို့မဟုတ်အကူအညီနဲ့ရှာရန်"
+    "ငွေသွင်းငွေထုတ်ပြေစာသို့မဟုတ်အကူအညီနဲ့ရှာရန်",
+    "Search Transaction Invoice or help"
   ],
   "text_back_office": [
     "Back office",
-    "နောက်ကျောရုံး"
+    "နောက်ကျောရုံး",
+    "Back office"
   ],
   "text_header": [
     "Header-En",
@@ -25,20 +27,21 @@ export default {
   "text_profile": [
     "Profile",
     "ပရိုဖိုင်းကို",
-    "Profile-Es"
+    "Profile",
   ],
   "text_help": [
     "Help",
     "ကူညီပါ",
-    "Profile-Es"
+    "Help"
   ],
   "text_user_account": [
     "User Account",
-    "သုံးစွဲသူအကောင့်"
+    "သုံးစွဲသူအကောင့်",
+    "User Account"
   ],
   "text_project_name": [
     "Store VEIN",
     "Store VEIN",
-    "Store VEIN-Es"
+    "Store VEIN"
   ]
 };

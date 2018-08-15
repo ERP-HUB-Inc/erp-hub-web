@@ -1,12 +1,12 @@
 import React from "react";
+import FormItem from "./FormItem";
 import Modal from "../../shares/Modal";
 import StoreLocationAction from "../../../action/settings/storeLocation";
 
 export default class FormStoreLocationCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = "Store Location";
-    this.addingPropReducer = "storeLocationAdd";
+    this.title = <this.Translate id="create_store_location_title" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -25,23 +25,15 @@ export default class FormStoreLocationCreate extends Modal {
   }
   
   render() {
-    const { storeLocationAdd, form } = this.props;
+    const {storeLocationAdd, form, locale} = this.props;
 
     this.submitLoading = storeLocationAdd.adding;
 
+    this.validatorAddRecord(storeLocationAdd);
+
     if (storeLocationAdd.showForm) {
       this.content = (
-        <div>
-          {storeLocationAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <this.InputText form={form} name="name" label="Name" placeholder="Please input your name" required={true} max={100}/>
-          <this.InputText form={form} name="address" placeholder="Address" label="Address"/>
-          <this.Select
-            name="status"
-            label="Status"
-            dataSource={this.statusDataSource}
-            defaultValue={1}
-            form={form}/>
-        </div>
+        <FormItem form={form} locale={locale} />
       );
       return super.render();
     } else {

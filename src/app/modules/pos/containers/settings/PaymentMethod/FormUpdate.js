@@ -1,6 +1,6 @@
 import React from "react";
-import { connect } from "react-redux";
-import { Form } from "antd";
+import {connect} from "react-redux";
+import {Form} from "antd";
 import FormUpdate from "../../../components/settings/PaymentMethod/FormUpdate";
 
 class PaymentMethodForm extends React.Component {
@@ -14,7 +14,8 @@ class PaymentMethodForm extends React.Component {
 function mapStateToProps(state) {
   return {
     paymentMethodUpdate: state.reducer.PaymentMethods.update,
-    initialValues: state.reducer.PaymentMethods.update.data
+    initialValues: state.reducer.PaymentMethods.update.data,
+    locale: state.locale
   };
 }
 

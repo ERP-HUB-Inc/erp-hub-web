@@ -2,11 +2,11 @@ import Constant from "../../constants/settings/paymentMethod";
 import PaymentMethodService from "../../services/settings/PaymentMethodService";
 
 export default {
-  fetch: (limit, offset, sortField, sortOrder) => {
+  fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PAYMENT_METHOD,
-        payload: PaymentMethodService.lists(limit, offset, sortField, sortOrder)
+        payload: PaymentMethodService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },

@@ -73,7 +73,7 @@ export default class ListPrivilege extends Component {
             </this.Form>
           </this.Col>
           <this.Col md="2">
-            <this.saveButton className="mg-right save-button"/>
+            {/* <this.saveButton className="mg-right save-button"/> */}
           </this.Col> 
         </this.Row>
         { privileges.fetched ?

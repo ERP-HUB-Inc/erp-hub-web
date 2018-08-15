@@ -2,11 +2,11 @@ import Constant from "../../constants/settings/receiptTemplate";
 import ReceiptService from "../../services/settings/ReceiptService";
 
 export default {
-  fetch: (limit, offset, sortField, sortOrder) => {
+  fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_RECEIPT,
-        payload: ReceiptService.lists(limit, offset, sortField, sortOrder)
+        payload: ReceiptService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },

@@ -70,3 +70,14 @@
     left: 2px;
     background-color: #FE6006
 }
+
+.ant-dropdown-menu-item .title {
+    position: relative;
+    bottom: 5px
+}
+
+.language-icon {
+    font-size: 20pt !important;
+    position: relative;
+    top: 2px
+}
