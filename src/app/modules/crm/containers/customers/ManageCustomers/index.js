@@ -16,8 +16,12 @@ function mapStateToProps(state) {
     manageCustomersAdd: state.reducer.managementCustomers.add,
     manageCustomersArchive: state.reducer.managementCustomers.archive,
     manageCustomersUpdate: state.reducer.managementCustomers.update,
-    manageFetchCustomer: state.reducer.managementCustomers.fetchExpendRender
+    manageFetchCustomer: state.reducer.managementCustomers.fetchExpendRender,
 
+    customerGroup: state.reducer.groupCustomers.request,
+    groupCustomersAdd: state.reducer.groupCustomers.add,
+    groupCustomersUpdate: state.reducer.groupCustomers.update
+    
   };
 }
 

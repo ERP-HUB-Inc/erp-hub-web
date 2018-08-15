@@ -18,6 +18,7 @@ export default class List extends Component {
       modalSource: {},
       ListRoles: null,
       modalConten: null, // the content that show in modal content,
+      modalContent1: null,
       columns: []
     };
     
@@ -64,6 +65,20 @@ export default class List extends Component {
       },
       sorter: true
     };
+
+    this.columnStatusExtend = {
+      dataIndex: "status",
+      key: "status",
+      render: value => {
+        return (
+          value === 1 ?
+            <this.Badge status="success" />
+            :
+            <this.Badge status="error" />
+        );
+      }
+    };
+
     this.columnCreatedAt = {
       title: <this.Translate id="col_payment_method_date" />,
       dataIndex: "createdAt",
@@ -316,7 +331,7 @@ export default class List extends Component {
     );
   }
 
-  expandedRender(){
+  expandedRender(record,indent){
     
   }
 
@@ -358,7 +373,7 @@ export default class List extends Component {
           pagination={false} // 
           onChange={this.onChange}
           expandedRowRender = { 
-            this.expandedRender = this.isShowRowExpend  
+            this.expandedRender  
           }
           onRow={record =>({
             onDoubleClick:(e) => this.handleShowFormEdit(record),
@@ -400,6 +415,8 @@ export default class List extends Component {
         { this.renderBreadCrumb()}
 
         { this.renderTableList(fetchingProps) }
+        
+        { this.state.modalContent1 }
 
         { this.state.modalConten }
             

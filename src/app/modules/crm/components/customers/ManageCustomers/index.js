@@ -18,19 +18,24 @@ export default class CustomerList extends List {
     this.service = CutomerService;
     this.action = CutomerAction;
     this.actionFetchColumnExpend = CutomerAction;
-    this.RESET_CONSTANT = Constant.RESET_MANAGEMENT_CUTOMERS;
+    this.RESET_CONSTANT = Constant.RESET_MANAGEMENT_CUSTOMERS;
   }
 
-  expandedRender(){
+  expandedRender(record,indent){
+    console.log("record",JSON.stringify(indent));    
     return( 
-      <this.Table 
-        columns={ this.ColumnExpend } 
-        pagination={ false }
-      />
+      <div className="sub-table">
+        <this.Table 
+          columns={ this.ColumnExpend } 
+          pagination={ false }
+          dataSource={ record.contacts }
+          showHeader = { false }
+          noDataContent="No Rows found"
+        />
+      </div>
     );
   }
 
-  
 
   handleShowFormAdd() {
     const { dispatch } = this.props;
@@ -62,7 +67,7 @@ class ColumnExpend extends List {
     return [
       {
         dataIndex: "firstName",
-        key: "firstName",
+        key: "firstName",           
         render: (text,row) => text + " " + row.lastName
       },
       {
@@ -88,7 +93,8 @@ class ColumnExpend extends List {
       {
         dataIndex: "status",
         key: "status",
-      }
+      },
+      this.columnStatusExtend
     ];
   }
 }

@@ -1,7 +1,9 @@
 import React from "react";
 import Modal from "../../shares/Modal";
 import ManagementEmployeeAction from "../../../actions/customers/manageCustomers";
-
+import GroupMangementEmployeeAction from "../../../actions/customers/groupCustomer";
+import CreateCustomerGroup from "../../../containers/customers/GroupCustomers/FormCreate";
+import Constant from "../../../constants/customers/groupCustomer";
 
 let uuid = 0;
 
@@ -14,27 +16,40 @@ export default class FormCreate extends Modal {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
-    this.customers =  [
-      {
-        name: "Male",
-        value: "1"
-      },
-      {
-        name: "Female",
-        value: "2"
-      }
-    ];
+    this.AddCustomerGroup = this.AddCustomerGroup.bind(this);
+
+    this.addingProp = "groupCustomersAdd";
+    this.updatingProp = "groupCustomersUpdate";
+
+  }
 
 
+  AddCustomerGroup(){
+    const { dispatch } = this.props;
+    dispatch(GroupMangementEmployeeAction.showForm());
+    this.modal1 = <CreateCustomerGroup/>;
   }
 
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        alert(JSON.stringify(values));
+        // values["contacts"] = 
 
-        // this.dispatch(ManagementEmployeeAction.add(values));
+        //   {
+        //     "name" : values.cont_name,
+        //     "address": values.const_address,
+        //     "phoneNumber": values.const_phoneNumber
+        //   }
+
+        // ;
+        // delete values["cont_name"];
+        // delete values["const_phoneNumber"];
+        // delete values["const_address"];
+        delete values["keys"];
+
+        console.log(JSON.stringify(values));    
+        this.dispatch(ManagementEmployeeAction.add(values));
       }
     });
   }
@@ -43,12 +58,17 @@ export default class FormCreate extends Modal {
     this.dispatch(ManagementEmployeeAction.reset());
   }
 
+  componentDidMount(){
+    const { dispatch } = this.props;
+    // this.add();
+    dispatch(GroupMangementEmployeeAction.fetch());
+  }
 
   add(){
     const { form } = this.props;
     // can use data-binding to get
     const keys = form.getFieldValue("keys");
-    const nextKeys = keys.concat(uuid);
+    const nextKeys = keys.concat(uuid);  
     uuid++;
     // can use data-binding to set
     // important! notify form to detect changes
@@ -74,7 +94,14 @@ export default class FormCreate extends Modal {
 
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    const {manageCustomersAdd, form} = this.props;
+    const {manageCustomersAdd, form, groupCustomers, groupCustomersAdd} = this.props;
+    // APPEND GROUP CUSTOMER TO LIST
+    if (groupCustomersAdd.response != null) {
+      groupCustomers.list = [groupCustomersAdd.response.data, ...groupCustomers.list];
+      this.props.dispatch({type: Constant.RESET_MANAGEMENT_GROUP_CUSTOMERS});
+    }
+    
+    const customer = this.Util.renameObjectKey({ name: "name", id: "value" }, groupCustomers.list);
 
     getFieldDecorator("keys", { initialValue: [] });
     const keys = getFieldValue("keys");
@@ -82,35 +109,33 @@ export default class FormCreate extends Modal {
       return (
         <div key={ k }>
           <this.Row>
-
+            <this.Col md="12">
+              <h6>Contact</h6>
+              <hr/>
+            </this.Col>
             <this.Col md="6">
               <this.InputText 
-                name={`name[${k}]`} 
+                name={`cont_name[${k}]`} 
                 label="name" 
                 placeholder="name"  
-                required={false}
                 form={ form } />
             </this.Col>
 
             <this.Col md="6">
               <this.InputText
-                name={`phonenumber[${k}]`}     
+                name={`const_phoneNumber[${k}]`}     
                 label="Phone number"
                 placeholder="Phone number"
                 max={100}
-                required={false}
-                 
                 form={form}/> 
             </this.Col> 
 
             <this.Col md="12">    
               <this.InputTextArea
-                name={`address[${k}]`}
+                name={`const_address[${k}]`}
                 label="Address"
                 placeholder="Address"
-                max={100}
-                required={false}
-                    
+                max={100}  
                 form={form}/>
             </this.Col>
 
@@ -118,7 +143,7 @@ export default class FormCreate extends Modal {
           </this.Row>
 
 
-          {keys.length > 0 ? (
+          {keys.length > 1 ? (
             <this.Icon
               className="dynamic-delete-button"
               type="minus-circle-o"
@@ -138,7 +163,7 @@ export default class FormCreate extends Modal {
               <this.Row>
                 <this.Col md="6">
                   <this.InputText
-                    name="firstname"
+                    name="firstName"
                     label="First name"
                     placeholder="First Name"
                     required={true}
@@ -148,7 +173,7 @@ export default class FormCreate extends Modal {
                 </this.Col>
                 <this.Col md="6">
                   <this.InputText
-                    name="lastname"
+                    name="lastName"
                     label="Last name"
                     placeholder="Last name"
                     required={true}
@@ -159,7 +184,7 @@ export default class FormCreate extends Modal {
 
                 <this.Col md="12">
                   <this.InputText
-                    name="phoneno"
+                    name="phoneNumber"
                     label="Phone number"
                     placeholder="Phone number"
                     errorRequired="Last Name"
@@ -169,10 +194,12 @@ export default class FormCreate extends Modal {
 
                 <this.Col md="12">
                   <this.Select
-                    name="gender"
+                    name="groupCustomerId"
                     label="Customer"
                     placeholder="Please select customer"
-                    dataSource={ this.customers }
+                    dataSource={ customer }
+                    showSearch={ true }
+                    addNew={this.AddCustomerGroup}
                     form={form}/>
                 </this.Col>  
 
@@ -215,7 +242,8 @@ export default class FormCreate extends Modal {
               </this.Row>
             </this.TabPane>
             <this.TabPane tab="Contact" key="2">
-              <this.Row>
+
+              {/* <this.Row>
                 <this.Col md="6">
                   <this.InputText
                     name="name"
@@ -242,19 +270,18 @@ export default class FormCreate extends Modal {
                     max={100}
                     form={form}/>
                 </this.Col>
-              </this.Row>
+              </this.Row> */}
 
               {formItems}
 
               <div className="btn-addcontact">
-                <this.Button type="dashed" onClick={ this.add } style={{ width: "60%" }}>
-                  <this.Icon type="plus" /> Add Contact
+                <this.Button onClick={ this.add } style={{ width: "60%" }}>
+                  <span className="icon-add"> </span> Add Contact
                 </this.Button>
               </div>
 
             </this.TabPane>
           </this.Tabs>
-        
         </div>
       );
       return super.render();

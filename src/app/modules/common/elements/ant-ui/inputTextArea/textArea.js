@@ -18,10 +18,10 @@ export default class TextAreas extends Element {
             {
               min: this.props.min,
               message: this.props.errorLenght
-            },
-            {
-              validator: this.props.validator
             }
+            // {
+            //   validator: this.props.validator
+            // }
           ],
           initialValue: this.props.data})(<TextArea placeholder={ this.props.placeholder } rows={ this.props.rows }/>)
         }

@@ -48,6 +48,15 @@ export default combineReducers({
       Constant.REQUEST_EXTEND_FETCH_CUSTOMERS_FULFILLED 
     ];
     return reducer.request(state, action, constants);
+  },
+
+  fetchCustomerGroup: (state = InitialState.request(), action) => {
+    const constants = [
+      Constant.REQUEST_MANAGEMENT_GROUP_CUSTOMERS_PENDING,
+      Constant.REQUEST_MANAGEMENT_GROUP_CUSTOMERS_REJECTED,
+      Constant.REQUEST_MANAGEMENT_GROUP_CUSTOMERS_FULFILLED 
+    ];
+    return reducer.request(state, action, constants);
   }
 
 });
