@@ -1,11 +1,10 @@
 import React from "react";
-// import columns from "./column";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/Tax/FormCreate";
 import FormUpdate from "../../../containers/settings/Tax/FormUpdate";
+import Constant from "../../../constants/settings/tax";
 import TaxAction from "../../../action/settings/tax";
 import TaxService from "../../../services/settings/TaxService";
-import Constant from "../../../constants/settings/tax";
 
 export default class TaxList extends List { 
   constructor(props) {

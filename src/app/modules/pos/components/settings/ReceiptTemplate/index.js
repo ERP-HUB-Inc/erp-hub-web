@@ -1,5 +1,4 @@
 import React from "react";
-// import columns from "./column";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/ReceiptTemplate/FormCreate";
 import FormUpdate from "../../../containers/settings/ReceiptTemplate/FormUpdate";

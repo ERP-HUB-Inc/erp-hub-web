@@ -2,6 +2,7 @@ import React from "react";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/StoreLocation/FormCreate";
 import FormUpdate from "../../../containers/settings/StoreLocation/FormUpdate";
+import Constant from "../../../constants/settings/storeLocation";
 import StoreLocationAction from "../../../action/settings/storeLocation";
 import StoreLocationService from "../../../services/settings/StoreLocationService";
 
@@ -16,6 +17,7 @@ export default class StoreLocationList extends List {
     this.columnFilterWithKey = ["name"];
     this.service = StoreLocationService;
     this.action = StoreLocationAction;
+    this.RESET_CONSTANT = Constant.RESET_STORE_LOCATION;
   }
 
   handleShowFormAdd() {

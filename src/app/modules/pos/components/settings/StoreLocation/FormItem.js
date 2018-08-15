@@ -30,7 +30,6 @@ export default class FormItem extends Modal {
           label={<this.Translate id="input_location_address" />}
           placeholder={this.CATranslate("input_location_address", locale)}
           form={form}
-          required={true}
           min={3}
           max={100}
           errorLenght={<this.Translate id="error_location_address_length" />} />
