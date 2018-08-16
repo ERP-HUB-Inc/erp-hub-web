@@ -30,15 +30,19 @@ export default class PicturesUpload extends Element {
 
   handleCardChange({fileList}){
     console.log(fileList);
-    
     this.setState({ cardImgList: fileList });
   }
 
   render() {
     
     const cardImgProps = {
+
       action: "http://178.128.217.131:3000/api/employee/v1/upload/file",
+      
       onRemove: (file) => {
+
+        alert("dd");
+
         this.setState(({ cardImgList }) => {
           const index = cardImgList.indexOf(file);
           const newFileList = cardImgList.slice();
@@ -49,6 +53,7 @@ export default class PicturesUpload extends Element {
         });
       },
       beforeUpload: (file) => {
+        alert("dd");
         this.setState(({ cardImgList }) => ({
           cardImgList: [...cardImgList, file],
         }));

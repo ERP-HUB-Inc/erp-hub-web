@@ -15,6 +15,7 @@ function mapStateToProps(state) {
   return {
     manageCustomersUpdate: state.reducer.managementCustomers.update,
     groupCustomers: state.reducer.groupCustomers.request,
+    groupCustomersAdd: state.reducer.groupCustomers.add,
     initialValues: state.reducer.managementCustomers.update.data
   };
 }

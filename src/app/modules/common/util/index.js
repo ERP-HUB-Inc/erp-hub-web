@@ -74,6 +74,10 @@ export class Util {
     ];
   }
 
+  formtTextError(value){
+    return value !="" && value !=null ? value : "-";
+  }
+
   isObjectEmpty (data) {
     return _.isEmpty(data);
   }

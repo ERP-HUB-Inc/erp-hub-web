@@ -10,24 +10,6 @@ export default {
       });
     };
   },
-
-  fetchGroup: () => {
-    return dispatch => {
-      return dispatch({
-        type: Constant.REQUEST_MANAGEMENT_GROUP_CUSTOMERS,
-        payload: managementEmployeeService.fetchGroup()
-      });
-    };
-  },
-
-  fetchExpend:(ids) => {
-    return dispatch => {
-      return dispatch({
-        type: Constant.REQUEST_EXTEND_FETCH_CUSTOMERS,
-        payload: managementEmployeeService.detail(ids)
-      });
-    };
-  },
   archive: (ids) => {
     return dispatch => {
       return dispatch({
