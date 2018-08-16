@@ -48,7 +48,7 @@ export default class Form extends Modal {
 
           <this.Select
             name="status"
-            label={<this.Translate id="input_text_status" />}
+            label={<this.Translate id="text_status" />}
             dataSource={this.statusDataSource}
             defaultValue={1}
             form={form}/>

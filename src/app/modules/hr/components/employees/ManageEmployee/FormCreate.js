@@ -106,7 +106,7 @@ export default class FormCreate extends Modal {
                   />
                 </this.Col>
                 <this.Col md="12">
-                  <this.InputNumber
+                  <this.InputText
                     name="idCard" 
                     placeholder="Identification Card"
                     form={form} 
@@ -172,14 +172,6 @@ export default class FormCreate extends Modal {
                   label="Expired date"
                   name="passwordExpiredAt"
                   form={form}
-                />
-              </this.Col> 
-              <this.Col md="12">  
-                <this.InputTextArea
-                  label="Address"
-                  name="address"
-                  form={form}
-                  min={ 20 }
                 />
               </this.Col> 
             </this.Row>

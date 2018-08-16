@@ -51,6 +51,12 @@ export default {
     "Search",
     "Search",
     "Search"
+  ],
+
+  "table_empty_data": [
+    "No record found",
+    "စံချိန်များမတွေ့ပါ",
+    "គ្មានទិន្នន័យ"
   ]
 
 };

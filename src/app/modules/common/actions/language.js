@@ -11,6 +11,7 @@ import paymentMethod from "../../pos/languages/settings/paymentMethod";
 import receiptTemplate from "../../pos/languages/settings/receiptTemplate";
 import storeAccount from "../../pos/languages/settings/storeAccount";
 import storeLocation from "../../pos/languages/settings/storeLocation";
+import roleAccess from "../../pos/languages/settings/roleAccess";
 import tax from "../../pos/languages/settings/tax";
 import operationRecord from "../../pos/languages/settings/operationRecord";
 import language from "../../pos/languages/settings/language";
@@ -22,8 +23,8 @@ import groupCustomer from "../../crm/languages/customers/groupCustomers";
 export function initLanguage() {
   return initialize([
     { name: "English", code: "en" },
-    { name: "Myanmar", code: "bm" },
-    { name: "Khmer", code: "km" }
+    { name: "မြန်မာ", code: "bm" },
+    { name: "ភាសារខ្មែរ", code: "km" }
   ]);
 }
 
@@ -37,6 +38,7 @@ export function setTranslation() {
     ...general,
     ...sidebar,
     ...modal,
+    ...roleAccess,
     ...paymentMethod,
     ...receiptTemplate,
     ...storeAccount,

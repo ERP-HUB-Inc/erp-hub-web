@@ -80,7 +80,7 @@ export default class ListPrivilege extends Component {
           <this.Row>
             <this.Col md="12">   
               <this.Collapse accordion>
-                {
+                {/* {
                   this.privileges.result.map((value, index) => 
                     <this.Panel 
                       header={
@@ -89,8 +89,9 @@ export default class ListPrivilege extends Component {
                           onChange={this.onCheckAllChange}
                           checked={this.state.checkAll}
                         >
-                          {this.privileges.entities[value].name.replace("-", " ")}
-
+                          <span className="text-uppercase">
+                            {this.privileges.entities[value].name.replace("-", " ")}
+                          </span>
                         </this.Checkbox>
                       } 
                       key={index}>
@@ -99,40 +100,52 @@ export default class ListPrivilege extends Component {
   
                     </this.Panel> 
                   )
-                }
-                {/* <this.Panel 
+                } */}
+                <this.Panel 
                   header={
-                    <this.Checkbox
-                      indeterminate={this.state.indeterminate}
-                      onChange={this.onCheckAllChange}
-                      checked={this.state.checkAll}
-                    >
-                    TRANSACTIONS
-                    </this.Checkbox>
-                  } 
+                    <div>
+                      <span>TRANSACTION</span>
+                      <this.Checkbox
+                        indeterminate={false}
+                        onChange={this.onCheckAllChange}
+                        checked={this.state.checkAll}
+                        className="groupCheckAccessRole"
+                      />
+                    </div>
+                  }
                   key="1">
-                
-                  <this.CheckboxGroup options={plainOptions} value={this.state.checkedList} onChange={this.onChange} />
-
+                  <this.Row>
+                    <this.Col md="4"><this.Checkbox value="A">Create</this.Checkbox></this.Col>
+                    <this.Col md="4"><this.Checkbox value="B">Update</this.Checkbox></this.Col>
+                    <this.Col md="4"><this.Checkbox value="C">View</this.Checkbox></this.Col>
+                    <this.Col md="4"><this.Checkbox value="C">Delete</this.Checkbox></this.Col>
+                    <this.Col md="4"><this.Checkbox value="C">Print</this.Checkbox></this.Col>
+                  </this.Row>
                 </this.Panel>
 
                 <this.Panel 
                   header={
-                    <this.Checkbox
-                      indeterminate={this.state.indeterminate}
-                      onChange={this.onCheckAllChange}
-                      checked={this.state.checkAll}
-                    >
-                    Check all
-                    </this.Checkbox>
-                  } 
+                    <div>
+                      <span>CUSTOMER</span>
+                      <this.Checkbox
+                        onChange={this.onCheckAllChange}
+                        className="groupCheckAccessRole"
+                      />
+                    </div>
+                  }
                   key="2">
-                  <p>{text}</p>
+                  <this.Checkbox
+                    indeterminate={false}
+                    onChange={this.onCheckAllChange}
+                    checked={this.state.checkAll}
+                    className="groupCheckAccessRole"
+                  />
+                  <this.Row>
+                    <this.Col md="4"><this.Checkbox value="A">Create</this.Checkbox></this.Col>
+                    <this.Col md="4"><this.Checkbox value="B">Update</this.Checkbox></this.Col>
+                    <this.Col md="4"><this.Checkbox value="C">View</this.Checkbox></this.Col>
+                  </this.Row>
                 </this.Panel>
-
-                <this.Panel header="This is panel header 3" key="3">
-                  <p>{text}</p>
-                </this.Panel> */}
               </this.Collapse>
             </this.Col>
           </this.Row>

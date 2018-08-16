@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'ca';
-  src:  url('fonts/ca.eot?t8s5un');
-  src:  url('fonts/ca.eot?t8s5un#iefix') format('embedded-opentype'),
-    url('fonts/ca.ttf?t8s5un') format('truetype'),
-    url('fonts/ca.woff?t8s5un') format('woff'),
-    url('fonts/ca.svg?t8s5un#ca') format('svg');
+  src:  url('fonts/ca.eot?b95ktr');
+  src:  url('fonts/ca.eot?b95ktr#iefix') format('embedded-opentype'),
+    url('fonts/ca.ttf?b95ktr') format('truetype'),
+    url('fonts/ca.woff?b95ktr') format('woff'),
+    url('fonts/ca.svg?b95ktr#ca') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,43 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-logout:before {
+  content: "\e9ac";
+}
+.icon-uk .path1:before {
+  content: "\e9a5";
+  color: rgb(65, 71, 155);
+}
+.icon-uk .path2:before {
+  content: "\e9a6";
+  margin-left: -1em;
+  color: rgb(245, 245, 245);
+}
+.icon-uk .path3:before {
+  content: "\e9a7";
+  margin-left: -1em;
+  color: rgb(255, 75, 85);
+}
+.icon-uk .path4:before {
+  content: "\e9a8";
+  margin-left: -1em;
+  color: rgb(255, 75, 85);
+}
+.icon-uk .path5:before {
+  content: "\e9a9";
+  margin-left: -1em;
+  color: rgb(255, 75, 85);
+}
+.icon-uk .path6:before {
+  content: "\e9aa";
+  margin-left: -1em;
+  color: rgb(255, 75, 85);
+}
+.icon-uk .path7:before {
+  content: "\e9ab";
+  margin-left: -1em;
+  color: rgb(255, 75, 85);
+}
 .icon-account:before {
   content: "\e900";
 }
