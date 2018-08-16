@@ -4,7 +4,6 @@ import Modal from "../../shares/Modal";
 import CustomerAction from "../../../actions/customers/manageCustomers";
 import GroupCustomerAction from "../../../actions/customers/groupCustomer";
 import CreateCustomerGroup from "../../../containers/customers/GroupCustomers/FormCreate";
-import Constant from "../../../constants/customers/groupCustomer";
 
 export default class FormCreate extends Modal {
   constructor(props) {
@@ -58,7 +57,7 @@ export default class FormCreate extends Modal {
         values["contacts"] = contacts;
         values["status"] = this.Enum.ACTIVE;
         console.log(values);
-        // this.dispatch(ManagementEmployeeAction.update(values));
+        this.dispatch(CustomerAction.update(values));
       }
     });
   }

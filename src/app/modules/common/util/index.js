@@ -75,7 +75,7 @@ export class Util {
   }
 
   formtTextError(value){
-    return value !="" && value !=null ? value : "-";
+    return value !=="" && value !== null ? value : "-";
   }
 
   isObjectEmpty (data) {

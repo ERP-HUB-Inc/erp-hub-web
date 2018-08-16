@@ -22,7 +22,6 @@ export default class CustomerList extends List {
   }
 
   expandedRender(record,indent){
-    console.log("record",JSON.stringify(indent));    
     return( 
       <div className="sub-table">
         <this.Table 

@@ -43,6 +43,8 @@ export default class FormCreate extends Modal {
               phoneNumber: listContacts.phoneNumber[index]
             };
           }
+
+          
         });
 
         values["contacts"] = contacts;

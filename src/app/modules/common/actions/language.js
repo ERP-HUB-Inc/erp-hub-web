@@ -16,7 +16,8 @@ import operationRecord from "../../pos/languages/settings/operationRecord";
 import language from "../../pos/languages/settings/language";
 import currency from "../../pos/languages/settings/currency";
 import error from "../elements/common/language/error";
-import managementCustomer from "../../crm/languages/customers/managementCustomer";
+import manageCustomer from "../../crm/languages/customers/manageCustomers";
+import groupCustomer from "../../crm/languages/customers/groupCustomers";
 
 export function initLanguage() {
   return initialize([
@@ -44,6 +45,7 @@ export function setTranslation() {
     ...operationRecord,
     ...language,
     ...currency,
-    ...managementCustomer
+    ...manageCustomer,
+    ...groupCustomer
   });
 }

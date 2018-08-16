@@ -70,3 +70,16 @@ tr.ant-table-expanded-row > td:first-child {
 .dynamic-delete-button {
     color: red;
 }
+
+
+.main-management-customer ul.ant-select-dropdown-menu li:first-child {
+    position: fixed;
+    margin-bottom: 12px;
+    color: #57A600 !important;
+    background: white;
+    z-index: 9;
+ }
+
+ .main-management-customer ul.ant-select-dropdown-menu li:nth-child(2) {
+    margin-top: 24px;
+ }
