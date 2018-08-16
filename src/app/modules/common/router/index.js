@@ -25,7 +25,8 @@ class Router extends Component {
         }
       })
       .catch(error => {
-        localStorage.removeItem(Authentication.ACCESS_TOKEN);
+        console.log("Error Check Authentication:", error);
+        // localStorage.removeItem(Authentication.ACCESS_TOKEN);
       });
 
     return (

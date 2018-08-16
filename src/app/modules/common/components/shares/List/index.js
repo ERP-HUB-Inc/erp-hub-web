@@ -413,7 +413,7 @@ export default class List extends Component {
         { 
           pagination.total > 0 ?
             <div className="float-right">
-              <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
+              <Pagination locale={{selectPrefixCls: "hello world"}} hideOnSinglePage showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
             </div>
             :
             ""
@@ -427,6 +427,7 @@ export default class List extends Component {
           columns={this.columns}
           pagination={false} // 
           onChange={this.onChange}
+          locale={{emptyText: <this.Translate id="table_empty_data"/>}}
           // expandedRowRender={this.expandedRender}
           onRow={record =>({
             onDoubleClick:(e) => this.handleShowFormEdit(record),

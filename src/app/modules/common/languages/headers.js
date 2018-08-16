@@ -22,22 +22,22 @@ export default {
   "text_logout": [
     "Logout",
     "ဆိုင်းအောက်",
-    "Logout-Es"
+    "ចាកចេញ"
   ],
   "text_profile": [
     "Profile",
     "ပရိုဖိုင်းကို",
-    "Profile",
+    "ទម្រង់"
   ],
   "text_help": [
     "Help",
     "ကူညီပါ",
-    "Help"
+    "ជំនួយ"
   ],
   "text_user_account": [
     "User Account",
     "သုံးစွဲသူအကောင့်",
-    "User Account"
+    "គណនីអ្នកប្រើប្រាស់"
   ],
   "text_project_name": [
     "Store VEIN",

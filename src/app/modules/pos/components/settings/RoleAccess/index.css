@@ -5,13 +5,17 @@
     padding: 33px 0px;
 }
 
+.ant-collapse-item {
+    position: relative;
+} 
+
 .main-role-access .ant-collapse > .ant-collapse-item > .ant-collapse-header .arrow{
     left: auto;
     right: 10px;
 }
 
 .main-role-access .ant-collapse > .ant-collapse-item > .ant-collapse-header {
-    padding: 12px 0 12px 18px !important;
+    padding: 12px 0 12px 40px !important;
     font-size: 9pt;
     color: #4D4F5C;
     font-weight: 500;
@@ -32,10 +36,18 @@
     font-weight: bold;
 }
 
+.ant-collapse-content > .ant-collapse-content-box {
+    padding-top: 1
+}
+
 .main-role-access .ant-collapse-header {
     border-bottom: 1px solid white;
     background-color: #FAFAFA !important;
 } 
+
+.ant-collapse-content > .ant-collapse-content-box {
+    padding: 16px
+}
 
 .main-role-access .ant-collapse-content {
     border-top: none !important;
@@ -46,25 +58,11 @@
     border-radius: 0;
 }
 
-/* checkbox color */
-.main-role-access .ant-checkbox-inner {
-    border: 1px solid #4D4F5C !important;
-}
-
 /* input text */
 .main-role-access input {
     border: none;
     width: 100%;
     padding-left: 50px;
-}
-
-.main-role-access .icon-search {
-    position: absolute;
-    font-size: 14pt;
-    top: 18px;
-    color: #9A9A9A !important;
-    z-index: 1;
-    left: 39px;
 }
 
 .main-role-access input {
@@ -81,4 +79,10 @@
 
 .ant-checkbox-wrapper {
     text-transform: capitalize !important
+}
+
+.groupCheckAccessRole {
+    position: absolute;
+    top: 10px;
+    left: 15px;
 }
