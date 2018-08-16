@@ -20,6 +20,8 @@ import operationRecord from "../modules/pos/reducers/settings/operationRecord";
 import managementEmployee from "../modules/hr/reducers/employees/managementEmployee";
 //customer 
 import managementCustomers from "../modules/crm/reducers/customers/managementCutomers";
+// groupcustomer
+import groupCustomers from "../modules/crm/reducers/customers/groupCustomers";
 
 const reducer = combineReducers({
   client,
@@ -42,7 +44,8 @@ const reducer = combineReducers({
   operationRecord,
   // Employee
   managementEmployee,
-  managementCustomers
+  managementCustomers,
+  groupCustomers
 });
 
 export default reducer;

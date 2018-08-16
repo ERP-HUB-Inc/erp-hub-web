@@ -9,6 +9,7 @@ export default class Modal extends Component {
     this.title = this.props.title;
     this.dispatch = this.props.dispatch;
     this.content = "";
+    this.modal1 = "";
     this.submitLoading = false;
     this.requiredMessage = "Please input all required field.";
     this.statusDataSource = [
@@ -34,24 +35,27 @@ export default class Modal extends Component {
 
   render() {
     return (
-      <this.Modal
-        title={this.title}
-        wrapClassName="vertical-center-modal"
-        visible={true}
-        footer={null}
-      >
-        <Form onSubmit={this.handleSubmit}> 
-          {this.content}
-          <div className="ant-modal-footer">
-            <this.Button className="danger" onClick={() => this.handleCancel()}>
-              <span className="icon-cancel icon-padding-right"></span><this.Translate id="button_text_cancel" />
-            </this.Button>  
-            <this.Button htmlType="submit" loading={this.submitLoading} className="info">
-              <span className="icon-save icon-padding-right"></span><this.Translate id="button_text_save" />
-            </this.Button>
-          </div>
-        </Form>
-      </this.Modal>
+      <div>
+        {this.modal1}
+        <this.Modal
+          title={this.title}
+          wrapClassName="vertical-center-modal"
+          visible={true}
+          footer={null}
+        >
+          <Form onSubmit={this.handleSubmit}> 
+            {this.content}
+            <div className="ant-modal-footer">
+              <this.Button className="danger" onClick={() => this.handleCancel()}>
+                <span className="icon-cancel icon-padding-right"></span><this.Translate id="button_text_cancel" />
+              </this.Button>  
+              <this.Button htmlType="submit" loading={this.submitLoading} className="info">
+                <span className="icon-save icon-padding-right"></span><this.Translate id="button_text_save" />
+              </this.Button>
+            </div>
+          </Form>
+        </this.Modal>
+      </div>
     );
   }
 }

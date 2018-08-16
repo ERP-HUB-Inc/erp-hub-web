@@ -41,13 +41,4 @@ export default combineReducers({
     return reducer.update(state, action, constants);
   },
 
-  fetchExpendRender: (state = InitialState.request(), action) => {
-    const constants = [
-      Constant.REQUEST_EXTEND_FETCH_CUSTOMERS_PENDING,
-      Constant.REQUEST_EXTEND_FETCH_CUSTOMERS_REJECTED,
-      Constant.REQUEST_EXTEND_FETCH_CUSTOMERS_FULFILLED 
-    ];
-    return reducer.request(state, action, constants);
-  }
-
 });

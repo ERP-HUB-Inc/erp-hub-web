@@ -10,14 +10,6 @@ export default {
       });
     };
   },
-  fetchExpend:(ids) => {
-    return dispatch => {
-      return dispatch({
-        type: Constant.REQUEST_EXTEND_FETCH_CUSTOMERS,
-        payload: managementEmployeeService.detail(ids)
-      });
-    };
-  },
   archive: (ids) => {
     return dispatch => {
       return dispatch({

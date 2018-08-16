@@ -35,3 +35,12 @@ tr:nth-child(odd) {
     font-size: 11pt;
     text-transform: uppercase;
 }
+
+.ant-table-tbody > tr:hover > td {
+    background: #95ddff1a !important;
+}
+
+
+/* .ant-table-row-expanded:after {
+    content: "v";
+}  */

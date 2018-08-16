@@ -18,19 +18,24 @@ export default class CustomerList extends List {
     this.service = CutomerService;
     this.action = CutomerAction;
     this.actionFetchColumnExpend = CutomerAction;
-    this.RESET_CONSTANT = Constant.RESET_MANAGEMENT_CUTOMERS;
+    this.RESET_CONSTANT = Constant.RESET_MANAGEMENT_CUSTOMERS;
   }
 
-  expandedRender(){
+  expandedRender(record,indent){
+    console.log("record",JSON.stringify(indent));    
     return( 
-      <this.Table 
-        columns={ this.ColumnExpend } 
-        pagination={ false }
-      />
+      <div className="sub-table">
+        <this.Table 
+          columns={ this.ColumnExpend } 
+          pagination={ false }
+          dataSource={ record.contacts }
+          showHeader = { false }
+          noDataContent="No Rows found"
+        />
+      </div>
     );
   }
 
-  
 
   handleShowFormAdd() {
     const { dispatch } = this.props;
@@ -60,35 +65,22 @@ class ColumnExpend extends List {
   constructor(props) {
     super(props);
     return [
+      this.columnCreatedAt,
       {
-        dataIndex: "firstName",
-        key: "firstName",
-        render: (text,row) => text + " " + row.lastName
-      },
-      {
-        dataIndex: "email",
-        key: "email",
+        dataIndex: "name",
+        key: "name"
       },
       {
         dataIndex: "phoneNumber",
         key: "phoneNumber"
       },
-      {
-        dataIndex: "description",
-        key: "description",
-      },
+     
       {
         dataIndex: "address",
         key: "address"
       },
-      {
-        dataIndex: "desc",
-        key: "desc",
-      },
-      {
-        dataIndex: "status",
-        key: "status",
-      }
+  
+      this.columnStatusExtend
     ];
   }
 }
@@ -108,31 +100,35 @@ class Column extends List {
         title: <this.Translate id="col_management_customer_email" />,
         dataIndex: "email",
         key: "email",
-        sorter: true
+        sorter: true,
+        render: (email) => this.Util.formtTextError(email)
       },
       {
         title: <this.Translate id="col_management_customer_phoneno" />,
         dataIndex: "phoneNumber",
         key: "phoneNumber",
-        sorter: true
+        sorter: true,
+        render: (phoneNumber) => this.Util.formtTextError(phoneNumber)
       },
       {
         title: <this.Translate id="col_management_customer_description" />,
         dataIndex: "description",
+        sorter: true,
         key: "description",
-        sorter: true
+        render: (description) => this.Util.formtTextError(description)
       },
       {
         title: <this.Translate id="col_management_customer_group_address" />,
         dataIndex: "address",
         key: "address",
-        sorter: true
+        sorter: true,
+        render: (address) => this.Util.formtTextError(address)
       },
       {
         title: <this.Translate id="col_management_customer_group_cutomer" />,
-        dataIndex: "desc",
-        key: "desc",
-        sorter: true
+        dataIndex: "groupCustomer",
+        key: "groupCustomer",
+        render: (groupCustomer) => groupCustomer !=null  ? groupCustomer.name : "-"
       },
       this.columnStatus
     ];

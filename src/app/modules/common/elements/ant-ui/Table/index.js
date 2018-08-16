@@ -16,6 +16,7 @@ export class CTable extends React.Component {
         onRow={this.props.onRow}
         scroll={this.props.scroll}
         locale={this.props.locale}
+        showHeader={this.props.showHeader}
       />
     );
   }

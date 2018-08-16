@@ -15,6 +15,10 @@ export default class BaseService {
     };
   }
 
+  setHeader() {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+  }
+
   generateAPIUrl() {
     let host = process.env.REACT_APP_API_HOST;
     if (process.env.REACT_APP_ENV === "DEV") {
