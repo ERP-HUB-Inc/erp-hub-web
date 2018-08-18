@@ -1,10 +1,10 @@
-import  Lists from "../../common/components/shares/List";
+import  Listiew from "../../common/components/shares/List";
 
-export default class List extends Lists {
+export default class List extends Listiew {
   constructor(props){
     super(props);
     this.module = "customers";
-    this.isShowRowExpend = true;
+    // this.isShowRowExpend = true;
   }
 
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import Modal from "../../shares/Modal";
+import Constant from "../../../constants/customers/groupCustomer";
 import GroupCustomerAction from "../../../actions/customers/groupCustomer";
 
 export default class FormCreate extends Modal {
@@ -9,6 +10,8 @@ export default class FormCreate extends Modal {
     this.addingPropReducer = "groupCustomersAdd";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
+    // this.RESET_CONSTANT = "";
+    this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
   }
 
   handleSubmit (e) {

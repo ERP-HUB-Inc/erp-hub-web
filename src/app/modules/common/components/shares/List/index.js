@@ -29,7 +29,7 @@ export default class List extends Component {
 
     this.columns = [];
     this.filter = [];
-    this.module = "settings"; // This compare to parent key in datasource in sidebar when render breadcrump
+    this.module = ""; // This compare to parent key in datasource in sidebar when render breadcrump
     this.fetchingProp = ""; // prop of reducer of fetching record that get from map state to prop from container
     this.addingProp = ""; // prop of reducer of adding record that get from map state to prop from container
     this.updatingProp = ""; // prop of reducer of adding record that get from map state to prop from container

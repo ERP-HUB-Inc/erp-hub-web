@@ -30,7 +30,9 @@ export default class FormCreate extends Modal {
         delete values["cont_name"];
         delete values["const_phoneNumber"];
         delete values["const_address"];
-
+        if(listContacts.name == null){
+          listContacts.name = [];
+        }
         const contacts = listContacts.name.map((name, index)=> {
           if (
             name != null &&

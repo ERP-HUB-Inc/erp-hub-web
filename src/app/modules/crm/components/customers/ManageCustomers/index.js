@@ -11,6 +11,7 @@ export default class CustomerList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
+    this.title = "Manage Customer";
     this.ColumnExpend = new ColumnExpend(); 
     this.fetchingProp = "manageCustomers";
     this.addingProp = "manageCustomersAdd";
