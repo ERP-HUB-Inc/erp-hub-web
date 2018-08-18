@@ -69,7 +69,8 @@ export default class FormCreate extends Modal {
       manageCustomersAdd,
       form,
       groupCustomers,
-      groupCustomersAdd
+      groupCustomersAdd,
+      locale
     } = this.props;
 
     // APPEND GROUP CUSTOMER TO LIST
@@ -85,6 +86,7 @@ export default class FormCreate extends Modal {
           dispatch={this.props.dispatch}
           groupCustomers={groupCustomers}
           addCustomerGroup={this.addCustomerGroup}
+          locale={locale}
         />
       );
       return super.render();

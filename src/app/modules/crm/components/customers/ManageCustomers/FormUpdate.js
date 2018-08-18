@@ -73,7 +73,7 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    const {manageCustomersUpdate, form, groupCustomers} = this.props;
+    const {manageCustomersUpdate, form, groupCustomers,locale} = this.props;
      
     if (manageCustomersUpdate.showForm) {
       this.content = (
@@ -83,6 +83,7 @@ export default class FormCreate extends Modal {
           formData={manageCustomersUpdate.data}
           groupCustomers={groupCustomers}
           addCustomerGroup={this.addCustomerGroup}
+          locale={locale}
         />
       );
       return super.render();

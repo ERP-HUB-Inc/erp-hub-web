@@ -7,17 +7,9 @@ import "./index.css";
 export default class FormItem extends Modal {
   constructor(props) {
     super(props);
-    this.languageCodes = [
-      {name: "en", value: "en"},
-      {name: "km", value: "km"},
-      {name: "bm", value: "bm"},
-    ];
-
     this.contactIndex = 0;
-
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
-
   }
   componentDidMount(){
     const {dispatch} = this.props;
@@ -83,9 +75,9 @@ export default class FormItem extends Modal {
                   name="firstName"
                   label={<this.Translate id="input_management_customer_first_name" />}
                   data={formData.firstName}
-                  // placeholder={this.CATranslate("input_management_customer_first_name", locale)}
+                  placeholder={this.CATranslate("input_management_customer_first_name",locale)}
                   required={true}
-                  errorRequired="Please input your name"
+                  errorRequired={<this.Translate id="input_error_management_customer_first_name_length" />}
                   max={100}
                   form={form}/>
               </this.Col>
@@ -95,9 +87,9 @@ export default class FormItem extends Modal {
                   name="lastName"
                   label={<this.Translate id="input_management_customer_last_name" />}
                   data={formData.lastName}
-                  // placeholder={this.CATranslate("input_management_customer_first_name", locale)}
+                  placeholder={this.CATranslate("input_management_customer_last_name", locale)}
                   required={true}
-                  errorRequired="Please input your last Name"
+                  errorRequired={<this.Translate id="input_management_customer_last_name_length" />}
                   max={100}
                   form={form}/>
               </this.Col>   
@@ -107,8 +99,7 @@ export default class FormItem extends Modal {
                   name="phoneNumber"
                   label={<this.Translate id="input_management_customer_phone_number" />}
                   data={formData.phoneNumber}
-                  placeholder="Phone number"
-                  
+                  placeholder={this.CATranslate("input_management_customer_phone_number", locale)}
                   max={100}
                   form={form}/>
               </this.Col>
@@ -130,7 +121,7 @@ export default class FormItem extends Modal {
                   name="company"
                   label={<this.Translate id="input_management_customer_company" />}
                   data={formData.company}
-                  placeholder="Company"
+                  placeholder={this.CATranslate("input_management_customer_company", locale)}
                   max={100}
                   form={form}/>
               </this.Col>  
@@ -140,7 +131,7 @@ export default class FormItem extends Modal {
                   name="email"
                   label={<this.Translate id="input_management_customer_email" />}
                   data={formData.email}
-                  placeholder="Email address"
+                  placeholder={this.CATranslate("input_management_customer_email", locale)}
                   max={100}
                   form={form}/>
               </this.Col>  
@@ -150,7 +141,7 @@ export default class FormItem extends Modal {
                   name="description"
                   label={<this.Translate id="input_management_customer_description" />}
                   data={formData.description}
-                  placeholder="Description"
+                  placeholder={this.CATranslate("input_management_customer_description", locale)}
                   max={100}
                   form={form}/>
               </this.Col>  
@@ -160,7 +151,7 @@ export default class FormItem extends Modal {
                   name="address"
                   label={<this.Translate id="input_management_customer_address" />}
                   data={formData.address}
-                  placeholder="Address"
+                  placeholder={this.CATranslate("input_management_customer_address", locale)}
                   max={100}
                   form={form}/>
               </this.Col>  
@@ -184,7 +175,7 @@ export default class FormItem extends Modal {
                         name={`cont_name[${index}]`} 
                         data={ contact.name }
                         label={<this.Translate id="input_management_contact_name" />} 
-                        placeholder="name"  
+                        placeholder={this.CATranslate("input_management_contact_name", locale)}  
                         form={ form } />
                     </this.Col>
     
@@ -193,7 +184,7 @@ export default class FormItem extends Modal {
                         name={`const_phoneNumber[${index}]`}     
                         data={contact.phoneNumber}
                         label={<this.Translate id="input_management_contact_phone_number" />} 
-                        placeholder="Phone number"
+                        placeholder={this.CATranslate("input_management_contact_phone_number", locale)}  
                         max={100}
                         form={form}/> 
                     </this.Col> 
@@ -203,7 +194,7 @@ export default class FormItem extends Modal {
                         name={`const_address[${index}]`}
                         data={contact.address}
                         label={<this.Translate id="input_management_contact_address" />} 
-                        placeholder="Address"
+                        placeholder={this.CATranslate("input_management_contact_address", locale)}  
                         max={100}  
                         form={form}/>
                     </this.Col>

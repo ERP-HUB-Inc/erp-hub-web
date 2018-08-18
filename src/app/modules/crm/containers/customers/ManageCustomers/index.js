@@ -21,7 +21,6 @@ function mapStateToProps(state) {
     customerGroup: state.reducer.groupCustomers.request,
     groupCustomersAdd: state.reducer.groupCustomers.add,
     groupCustomersUpdate: state.reducer.groupCustomers.update
-    
   };
 }
 

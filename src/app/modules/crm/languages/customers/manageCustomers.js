@@ -96,13 +96,13 @@ export default {
     "Address"
   ],
 
-  "error_management_custom_first_name_length": [
+  "input_error_management_customer_first_name_length": [
     "first Name allow from 3 to 255 character only.",
     "first Name allow from 3 to 255 character only.",
     "first Name allow from 3 to 255 character only."
   ],
 
-  "error_management_custom_last_name_length": [
+  "input_error_management_customer_last_name_length": [
     "last Name allow only maximum 99999.",
     "last Name allow only maximum 99999.",
     "last Name allow only maximum 99999."

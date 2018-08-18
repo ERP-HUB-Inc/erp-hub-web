@@ -44,38 +44,38 @@ class Column extends List {
     return [
       this.columnCreatedAt,
       {
-        title: "full Name",
+        title: <this.Translate id="col_hr_employee_full_name" />,
         dataIndex: "firstName",
         dateIndex: "lastName",
         key: "firstName",
         sorter: true
       },
       {
-        title: "Phone no",
+        title: <this.Translate id="col_hr_employee_phone_no" />,
         dataIndex: "phoneNumber",
         key: "phoneNumber",
         sorter: true
       },
       {
-        title: "Id card",
+        title: <this.Translate id="col_hr_employee_id_card" />,
         dataIndex: "idCard",
         key: "idCard"
       },
       {
-        title: "Date of birth",
+        title: <this.Translate id="col_hr_employee_dob" />,
         dataIndex: "dob",
         key: "dob",
         sorter: true
       },
       {
-        title: "gender",
+        title: <this.Translate id="col_hr_employee_gender" />,
         dataIndex: "gender",
         key: "gender",
         sorter: true,
         render: (gender) => gender === this.Enum.GENDER.Male ? "Male" : "Female"
       },
       {
-        title: "Address",
+        title: <this.Translate id="col_hr_employee_address" />,
         dataIndex: "address",
         key: "address",
         sorter: true
