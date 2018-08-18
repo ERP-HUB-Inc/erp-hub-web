@@ -1,7 +1,6 @@
 import React from "react";
 import Component from "../../Component";
 import Modal from "../../shares/Modal";
-import GroupCustomerAction from "../../../actions/customers/groupCustomer";
 import "./index.css";
 
 export default class FormItem extends Modal {

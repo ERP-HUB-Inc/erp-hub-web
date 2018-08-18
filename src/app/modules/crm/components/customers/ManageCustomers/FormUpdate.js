@@ -8,7 +8,7 @@ import CreateCustomerGroup from "../../../containers/customers/GroupCustomers/Fo
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = "Management Customer:update";
+    this.title = <this.Translate id="update_management_customer_title" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.addCustomerGroup = this.addCustomerGroup.bind(this);

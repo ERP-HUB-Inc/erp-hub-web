@@ -9,7 +9,7 @@ import Constant from "../../../constants/customers/groupCustomer";
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = "Management Customer";
+    this.title = <this.Translate id="create_management_customer_title" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.addCustomerGroup = this.addCustomerGroup.bind(this);

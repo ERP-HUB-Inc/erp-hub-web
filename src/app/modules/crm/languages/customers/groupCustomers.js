@@ -1,4 +1,14 @@
 export default {
+  "create_group_customer_title": [
+    "Group Customer",
+    "ငွေကြေးစနစ်",
+    "Group Customer"
+  ],
+  "update_group_customer_title": [
+    "Group Customer:update",
+    "ငွေကြေးစနစ်",
+    "Group Customer:update"
+  ],
   "col_group_customer_name": [
     "Name",
     "အမည်",

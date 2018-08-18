@@ -7,7 +7,7 @@ import GroupCustomerAction from "../../../actions/customers/groupCustomer";
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = "Group Customer:update";
+    this.title = <this.Translate id="update_group_customer_title" />;
     this.addingPropReducer = "groupCustomersUpdate";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
