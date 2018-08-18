@@ -34,11 +34,11 @@ export default combineReducers({
   },
   update: (state = InitialState.update(), action) => {
     const constants = [
-      Constant.UPDATE_MANAGEMENT_CUSTOMERS_PENDING,
-      Constant.UPDATE_MANAGEMENT_CUSTOMERS_REJECTED,
-      Constant.UPDATE_MANAGEMENT_CUSTOMERS_FULFILLED,
-      Constant.SHOW_MANAGEMENT_CUSTOMERS_FORM,
-      Constant.RESET_MANAGEMENT_CUSTOMERS
+      Constant.UPDATE_MANAGEMENT_GROUP_CUSTOMERS_PENDING,
+      Constant.UPDATE_MANAGEMENT_GROUP_CUSTOMERS_REJECTED,
+      Constant.UPDATE_MANAGEMENT_GROUP_CUSTOMERS_FULFILLED,
+      Constant.SHOW_MANAGEMENT_GROUP_CUSTOMERS_FORM,
+      Constant.RESET_MANAGEMENT_GROUP_CUSTOMERS
     ];
     return reducer.update(state, action, constants);
   },

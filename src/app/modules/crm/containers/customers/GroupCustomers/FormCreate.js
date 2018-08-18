@@ -13,7 +13,8 @@ class GroupEmployeeForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    groupCustomersAdd: state.reducer.groupCustomers.add
+    groupCustomersAdd: state.reducer.groupCustomers.add,
+    locale: state.locale
   };          
 }
 

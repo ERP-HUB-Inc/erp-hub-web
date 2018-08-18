@@ -1,50 +1,52 @@
 import React from "react";
-import FormItem from "./FormItem";
 import Modal from "../../shares/Modal";
-import CustomerAction from "../../../actions/customers/manageCustomers";
+import FormItem from "./FormItem";
+import Constant from "../../../constants/customers/groupCustomer";
+import GroupCustomerAction from "../../../actions/customers/groupCustomer";
 
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = "Management Customer:update";
+    this.title = "Group Customer:update";
+    this.addingPropReducer = "groupCustomersUpdate";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.addCustomerGroup = this.addCustomerGroup.bind(this);
+    this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
   }
 
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-
-        // this.dispatch(CustomerAction.update(values));
+        values["id"] = this.props.groupCustomersUpdate.data.id;
+        values["status"] = 1;
+        this.dispatch(GroupCustomerAction.update(values));
+        
       }
     });
   }
-      
+    
   handleCancel() {
-    this.dispatch(CustomerAction.reset());
-  }
-
-  addCustomerGroup(){
-    const {dispatch} = this.props;
-    dispatch(GroupCustomerAction.showForm());
-    this.modal1 = <CreateCustomerGroup/>;
+    this.dispatch(GroupCustomerAction.reset());
   }
 
   render() {
-    const {manageCustomersUpdate, form, groupCustomers,locale} = this.props;
-     
-    if (manageCustomersUpdate.showForm) {
+    const {groupCustomersUpdate, form, locale} = this.props;
+
+    if (groupCustomersUpdate.showForm) {
       this.content = (
-        <FormItem
-          form={form}
-          locale={locale}
-        />
+        <div>
+          {groupCustomersUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
+          <FormItem
+            form={form}
+            formData={groupCustomersUpdate.data}
+            locale={locale}
+          />
+        </div>
       );
       return super.render();
     } else {
-      return <div/>;
+      return (<div></div>);
     }
   }
 }

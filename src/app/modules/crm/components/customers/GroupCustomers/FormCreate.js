@@ -1,5 +1,6 @@
 import React from "react";
 import Modal from "../../shares/Modal";
+import FormItem from "./FormItem";
 import Constant from "../../../constants/customers/groupCustomer";
 import GroupCustomerAction from "../../../actions/customers/groupCustomer";
 
@@ -29,20 +30,16 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    const {groupCustomersAdd, form} = this.props;
+    const {groupCustomersAdd, form, locale} = this.props;
 
     if (groupCustomersAdd.showForm) {
       this.content = (
         <div>
           {groupCustomersAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <this.InputText
-            name="name"
-            label="Name"
-            placeholder="Please input your name"
-            required={true}
-            errorRequired="Please input your name"
-            max={100}
-            form={form}/>
+          <FormItem
+            form={form}
+            locale={locale}
+          />
         </div>
       );
       return super.render();
