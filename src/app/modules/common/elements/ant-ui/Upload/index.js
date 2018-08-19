@@ -22,6 +22,8 @@ export class UploadImg extends Element {
         form={this.props.form}
         label={ this.props.label }
         rules={ this.rules }
+        beforeUpload={ this.props.beforeUpload }
+        handleCardChange={ this.handleCardChange }
       />
     );
   }   

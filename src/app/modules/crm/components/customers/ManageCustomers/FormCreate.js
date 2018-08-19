@@ -9,7 +9,7 @@ import Constant from "../../../constants/customers/groupCustomer";
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = "Management Customer";
+    this.title = <this.Translate id="create_management_customer_title" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.addCustomerGroup = this.addCustomerGroup.bind(this);
@@ -30,7 +30,9 @@ export default class FormCreate extends Modal {
         delete values["cont_name"];
         delete values["const_phoneNumber"];
         delete values["const_address"];
-
+        if(listContacts.name == null){
+          listContacts.name = [];
+        }
         const contacts = listContacts.name.map((name, index)=> {
           if (
             name != null &&
@@ -43,9 +45,14 @@ export default class FormCreate extends Modal {
               phoneNumber: listContacts.phoneNumber[index]
             };
           }
+
+          
         });
 
-        values["contacts"] = contacts;
+        if(contacts !=="") {
+          values["contacts"] = contacts;
+        }
+
         delete values["keys"]; 
         this.dispatch(CustomerAction.add(values));
       }
@@ -67,7 +74,8 @@ export default class FormCreate extends Modal {
       manageCustomersAdd,
       form,
       groupCustomers,
-      groupCustomersAdd
+      groupCustomersAdd,
+      locale
     } = this.props;
 
     // APPEND GROUP CUSTOMER TO LIST
@@ -83,6 +91,7 @@ export default class FormCreate extends Modal {
           dispatch={this.props.dispatch}
           groupCustomers={groupCustomers}
           addCustomerGroup={this.addCustomerGroup}
+          locale={locale}
         />
       );
       return super.render();

@@ -16,7 +16,8 @@ function mapStateToProps(state) {
     manageCustomersUpdate: state.reducer.managementCustomers.update,
     groupCustomers: state.reducer.groupCustomers.request,
     groupCustomersAdd: state.reducer.groupCustomers.add,
-    initialValues: state.reducer.managementCustomers.update.data
+    initialValues: state.reducer.managementCustomers.update.data,
+    locale: state.locale
   };
 }
 

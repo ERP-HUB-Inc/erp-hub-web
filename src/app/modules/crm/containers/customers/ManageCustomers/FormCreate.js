@@ -16,9 +16,11 @@ function mapStateToProps(state) {
   return {
     manageCustomersAdd: state.reducer.managementCustomers.add,
     groupCustomersAdd: state.reducer.groupCustomers.add,
-    groupCustomers: state.reducer.groupCustomers.request
+    groupCustomers: state.reducer.groupCustomers.request,
+    locale: state.locale
   };
 }
+
 
 function mapPropsToFields(props) {
   return {

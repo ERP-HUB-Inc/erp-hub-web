@@ -14,7 +14,8 @@ class ManagementEmployeeForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    manageEmployeeAdd: state.reducer.managementEmployee.add
+    manageEmployeeAdd: state.reducer.managementEmployee.add,
+    locale: state.locale
   };
 }
 

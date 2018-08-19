@@ -1,15 +1,14 @@
 import React from "react";
 import Modal from "../../shares/Modal";
 import GroupCustomerAction from "../../../actions/customers/groupCustomer";
+import "./index.css";
 
 export default class FormItem extends Modal {
   constructor(props) {
     super(props);
     this.contactIndex = 0;
-
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
-
   }
   componentDidMount(){
     const {dispatch} = this.props;
@@ -44,8 +43,8 @@ export default class FormItem extends Modal {
     const {
       formData,
       form,
-      locale,
-      groupCustomers
+      groupCustomers,
+      locale
     } = this.props;
 
     const {
@@ -61,23 +60,23 @@ export default class FormItem extends Modal {
 
     const customer = this.Util.renameObjectKey({ name: "name", id: "value" }, groupCustomers.list);
 
-    getFieldDecorator("keys", {initialValue: this.props.formData.contacts});
+    getFieldDecorator("keys", {initialValue: formData.contacts});
 
     const keys = getFieldValue("keys");
     
     return (
-      <div className="customerBlog">
+      <div className="main-management-customer">
         <this.Tabs type="card">
           <this.TabPane tab="General" key="1">
             <this.Row>
               <this.Col md="6">
                 <this.InputText
                   name="firstName"
-                  label="First name"
+                  label={<this.Translate id="input_management_customer_first_name" />}
                   data={formData.firstName}
-                  placeholder="First Name"
+                  placeholder={this.CATranslate("input_management_customer_first_name",locale)}
                   required={true}
-                  errorRequired="Please input your name"
+                  errorRequired={<this.Translate id="input_error_management_customer_first_name_length" />}
                   max={100}
                   form={form}/>
               </this.Col>
@@ -85,11 +84,11 @@ export default class FormItem extends Modal {
               <this.Col md="6">
                 <this.InputText
                   name="lastName"
-                  label="Last name"
+                  label={<this.Translate id="input_management_customer_last_name" />}
                   data={formData.lastName}
-                  placeholder="Last name"
+                  placeholder={this.CATranslate("input_management_customer_last_name", locale)}
                   required={true}
-                  errorRequired="Last Name"
+                  errorRequired={<this.Translate id="input_management_customer_last_name_length" />}
                   max={100}
                   form={form}/>
               </this.Col>   
@@ -97,17 +96,17 @@ export default class FormItem extends Modal {
               <this.Col md="12">
                 <this.InputText
                   name="phoneNumber"
-                  label="Phone number"
+                  label={<this.Translate id="input_management_customer_phone_number" />}
                   data={formData.phoneNumber}
-                  placeholder="Phone number"
-                  errorRequired="Last Name"
+                  placeholder={this.CATranslate("input_management_customer_phone_number", locale)}
                   max={100}
                   form={form}/>
-              </this.Col>  
+              </this.Col>
+                
               <this.Col md="12">
-                <this.Select
+                <this.SelectSearch
                   name="groupCustomerId"
-                  label="Customer"
+                  label={<this.Translate id="input_management_customer_customer_group" />}
                   placeholder="Please select customer"
                   defaultValue={formData.groupCustomer !=null ? formData.groupCustomer.id : ""  }
                   dataSource={customer}
@@ -119,9 +118,9 @@ export default class FormItem extends Modal {
               <this.Col md="12">
                 <this.InputText   
                   name="company"
-                  label="Company"
+                  label={<this.Translate id="input_management_customer_company" />}
                   data={formData.company}
-                  placeholder="Company"
+                  placeholder={this.CATranslate("input_management_customer_company", locale)}
                   max={100}
                   form={form}/>
               </this.Col>  
@@ -129,9 +128,9 @@ export default class FormItem extends Modal {
               <this.Col md="12">
                 <this.InputText   
                   name="email"
-                  label="Email address"
+                  label={<this.Translate id="input_management_customer_email" />}
                   data={formData.email}
-                  placeholder="Email address"
+                  placeholder={this.CATranslate("input_management_customer_email", locale)}
                   max={100}
                   form={form}/>
               </this.Col>  
@@ -139,9 +138,9 @@ export default class FormItem extends Modal {
               <this.Col md="12">
                 <this.InputTextArea
                   name="description"
+                  label={<this.Translate id="input_management_customer_description" />}
                   data={formData.description}
-                  label="Description"
-                  placeholder="Description"
+                  placeholder={this.CATranslate("input_management_customer_description", locale)}
                   max={100}
                   form={form}/>
               </this.Col>  
@@ -149,9 +148,9 @@ export default class FormItem extends Modal {
               <this.Col md="12">
                 <this.InputTextArea
                   name="address"
+                  label={<this.Translate id="input_management_customer_address" />}
                   data={formData.address}
-                  label="Address"
-                  placeholder="Address"
+                  placeholder={this.CATranslate("input_management_customer_address", locale)}
                   max={100}
                   form={form}/>
               </this.Col>  
@@ -167,15 +166,15 @@ export default class FormItem extends Modal {
                 <div key={index}>
                   <this.Row>
                     <this.Col md="12">
-                      <h6>Contact {`${index + 1}`} </h6>
+                      <h6>{<this.Translate id="input_management_contact_number" />}  {`${index + 1}`} </h6>
                       <hr/>
                     </this.Col>
                     <this.Col md="6">
                       <this.InputText 
                         name={`cont_name[${index}]`} 
                         data={ contact.name }
-                        label="name" 
-                        placeholder="name"  
+                        label={<this.Translate id="input_management_contact_name" />} 
+                        placeholder={this.CATranslate("input_management_contact_name", locale)}  
                         form={ form } />
                     </this.Col>
     
@@ -183,8 +182,8 @@ export default class FormItem extends Modal {
                       <this.InputText
                         name={`const_phoneNumber[${index}]`}     
                         data={contact.phoneNumber}
-                        label="Phone number"
-                        placeholder="Phone number"
+                        label={<this.Translate id="input_management_contact_phone_number" />} 
+                        placeholder={this.CATranslate("input_management_contact_phone_number", locale)}  
                         max={100}
                         form={form}/> 
                     </this.Col> 
@@ -193,8 +192,8 @@ export default class FormItem extends Modal {
                       <this.InputTextArea
                         name={`const_address[${index}]`}
                         data={contact.address}
-                        label="Address"
-                        placeholder="Address"
+                        label={<this.Translate id="input_management_contact_address" />} 
+                        placeholder={this.CATranslate("input_management_contact_address", locale)}  
                         max={100}  
                         form={form}/>
                     </this.Col>

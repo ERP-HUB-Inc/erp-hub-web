@@ -60,9 +60,9 @@ import ManageEmployee from "../../../../hr/containers/employees/ManageEmployee";
 /*==============================CRM===================================*/
 
 // CUSTOMER
-import GroupCustomer from "../../../../crm/containers/customers/ManageCustomers";
+import GroupCustomer from "../../../../crm/containers/customers/GroupCustomers";
 import ManageCustomer from "../../../../crm/containers/customers/ManageCustomers";
-import PurchaseHistory from "../../../../crm/containers/customers/ManageCustomers";
+// import PurchaseHistory from "../../../../crm/containers/customers/ManageCustomers";
 
 /*==============================END CRM===================================*/
 
@@ -213,23 +213,23 @@ const dataSource = {
     route: "customers",
     subItems: [
       {
-        title: "Group Customer",
-        icon: "icon-employee",
-        route: "/customers/group",
-        component: GroupCustomer
-      },
-      {
         title: "Manage Customer",
         icon: "icon-customer ",
         route: "/customers/manage",
         component: ManageCustomer
       },
       {
-        title: "Purchase History",
-        icon: "icon-time",
-        route: "/customers/history",
-        component: PurchaseHistory
+        title: "Group Customer",
+        icon: "icon-employee",
+        route: "/customers/group",
+        component: GroupCustomer
       }
+      // {
+      //   title: "Purchase History",
+      //   icon: "icon-time",
+      //   route: "/customers/history",
+      //   component: PurchaseHistory
+      // }
     ]
   },
   employees: {
@@ -242,6 +242,7 @@ const dataSource = {
         route: "/employees/manage",
         component: ManageEmployee
       },
+      
       // {
       //   title: "Timesheets",
       //   icon: "icon-timesheet",

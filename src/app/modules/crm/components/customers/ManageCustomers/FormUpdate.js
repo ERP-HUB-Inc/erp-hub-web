@@ -4,12 +4,11 @@ import Modal from "../../shares/Modal";
 import CustomerAction from "../../../actions/customers/manageCustomers";
 import GroupCustomerAction from "../../../actions/customers/groupCustomer";
 import CreateCustomerGroup from "../../../containers/customers/GroupCustomers/FormCreate";
-import Constant from "../../../constants/customers/groupCustomer";
 
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = "Management Customer:update";
+    this.title = <this.Translate id="update_management_customer_title" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.addCustomerGroup = this.addCustomerGroup.bind(this);
@@ -53,12 +52,11 @@ export default class FormCreate extends Modal {
           }
         });
 
-
-
-        values["contacts"] = contacts;
+        if(contacts !=="") {
+          values["contacts"] = contacts;
+        }
         values["status"] = this.Enum.ACTIVE;
-        console.log(values);
-        // this.dispatch(ManagementEmployeeAction.update(values));
+        this.dispatch(CustomerAction.update(values));
       }
     });
   }
@@ -74,7 +72,7 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    const {manageCustomersUpdate, form, groupCustomers} = this.props;
+    const {manageCustomersUpdate, form, groupCustomers,locale} = this.props;
      
     if (manageCustomersUpdate.showForm) {
       this.content = (
@@ -84,6 +82,7 @@ export default class FormCreate extends Modal {
           formData={manageCustomersUpdate.data}
           groupCustomers={groupCustomers}
           addCustomerGroup={this.addCustomerGroup}
+          locale={locale}
         />
       );
       return super.render();

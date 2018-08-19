@@ -1,4 +1,5 @@
 import React from "react";
+import FormItem from "./FormItem";
 import { Modal } from "../../shares/Modal/modal";
 import ManageEmployeeAction from "../../../actions/employees/manageEmployee";
 
@@ -44,168 +45,13 @@ export default class Form extends Modal {
   }
 
   render() {
-    const {manageEmployeeUpdate, form} = this.props;
+    const {manageEmployeeUpdate, form, locale} = this.props;
 
     if (manageEmployeeUpdate.showForm) {
       this.content = (
         <div>
           {manageEmployeeUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <this.Tabs type="card">
-            <this.TabPane tab="General" key="1">
-              <div>
-                
-                <this.Row>
-                  <this.Col md="6">
-                    <this.InputText
-                      name="firstname"
-                      label="First name"
-                      placeholder="First Name"
-                      required={true}
-                      data={ manageEmployeeUpdate.data.firstName }
-                      errorRequired="Please input your name"
-                      max={100}
-                      form={form}/>
-                  </this.Col>
-                  <this.Col md="6">
-                    <this.InputText
-                      name="lastname"
-                      label="Last Name"
-                      placeholder="Please input your name"
-                      required={true}
-                      data={ manageEmployeeUpdate.data.lastName }
-                      errorRequired="Please input your name"
-                      max={100}
-                      form={form}/>
-                  </this.Col>
-                  <this.Col md="6"> 
-                    <this.Select
-                      name="gender"
-                      label="Gender"
-                      placeholder="Please select gender"
-                      dataSource={ this.gender }
-                      defaultValue={ manageEmployeeUpdate.data.gender === this.Enum.GENDER.Male ? "Male" : "Female" }   
-                      form={form}/>
-                  </this.Col>
-                  <this.Col md="6">
-                    <this.DatePickers
-                      name="dob" 
-                      form={form} 
-                      defaultValue={ manageEmployeeUpdate.data.dob }
-                      label="Date of Birth"
-                    />
-                  </this.Col>
-                  <this.Col md="12">
-                    <this.InputText
-                      name="phoneNumber" 
-                      placeholder="Phone Number"
-                      form={form} 
-                      data={ manageEmployeeUpdate.data.phoneNumber }
-                      label="Phone Number"
-                    />
-                  </this.Col>
-                  <this.Col md="12">
-                    <this.InputEmail
-                      name="email" 
-                      placeholder="Email Address"
-                      form={form} 
-                      data={ manageEmployeeUpdate.data.email }
-                      label="Email Address"
-                    />
-                  </this.Col>
-                  <this.Col md="12">
-                    <this.InputNumber
-                      name="idCard" 
-                      placeholder="Identification Card"
-                      form={form} 
-                      data={ manageEmployeeUpdate.data.idCard }
-                      label="Identification Card"
-                    />
-                  </this.Col>
-                  <this.Col md="12">
-                    <this.UploadImg
-                      name="image"    
-                      label="Upload" 
-                      form={form}   
-                    />
-                  </this.Col>
-                </this.Row>
-              </div>
-            </this.TabPane>
-            <this.TabPane tab="User Access" key="2">
-              <this.Row>
-                <this.Col md="12">
-                  <this.InputText
-                    name="userName"
-                    label="User name"
-                    placeholder="User name"
-                    errorRequired="Please input your username"
-                    max={100}
-                    form={form}/>
-                </this.Col>
-                <this.Col md="6">
-                  <this.InputText
-                    type="password"
-                    name="password"
-                    label="Password"
-                    placeholder="Password"
-                    errorRequired="Please input your password"
-                    defaultValue={ this.state.defaultValue }
-                    disabled = { this.state.disabled }
-                    form={form}
-                  />  
-                </this.Col>
-                <this.Col md="6">
-                  <this.Switchs
-                    label="Auto generate"
-                    name="autogenerate"
-                    onChange={ this.onChange }
-                    form={form}
-                  />
-                </this.Col>
-
-                <this.Col md="6">
-                  <this.Switchs
-                    label="Will be expired"
-                    name="isPasswordExpired"
-                    form={form}
-                  />
-                </this.Col>
-                <this.Col md="6">
-                  <this.Switchs
-                    label="Must change password"
-                    name="isMustChangePWNextLogin"
-                    form={form}
-                  />
-                </this.Col>
-                <this.Col md="6">
-                  <this.DatePickers
-                    label="Expired date"
-                    name="passwordExpiredAt"
-                    defaultValue={ manageEmployeeUpdate.data.dob }
-                    form={form}
-                  />
-                </this.Col> 
-                <this.Col md="12">  
-                  <this.InputTextArea
-                    label="Address"
-                    name="address"
-                    form={form}
-                    min={ 20 }
-                  />
-                </this.Col> 
-                <this.Col md="12">  
-                  <this.Select
-                    name="status"
-                    label="Status"
-                    placeholder="Please select status"
-                    dataSource={this.statusDataSource}
-                    defaultValue={manageEmployeeUpdate.data.status}
-                    form={form}/>
-                </this.Col>
-              </this.Row>
-            </this.TabPane>
-          </this.Tabs>
-
+          <FormItem formData={manageEmployeeUpdate.data} form={form} locale={locale}/>
         </div>
       );
       return super.render();

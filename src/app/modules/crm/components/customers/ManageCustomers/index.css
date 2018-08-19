@@ -70,36 +70,19 @@ customerBlog tr.ant-table-expanded-row > td:first-child {
     color: red;
 }
 
-.main-antselect label {
-    font-size: 10pt;
-    color: #9A9A9A;
-    }
-    
-customerBlog ul.ant-select-dropdown-menu li:first-child {
+
+.main-management-customer ul.ant-select-dropdown-menu li:first-child {
     position: fixed;
     margin-bottom: 12px;
     color: #57A600 !important;
     background: white;
     z-index: 9;
-}
+ }
 
-customerBlog ul.ant-select-dropdown-menu li:nth-child(2) {
+ .main-management-customer ul.ant-select-dropdown-menu li:nth-child(2) {
     margin-top: 24px;
-}
+ }
 
-customerBlog .main-antselect label {
-    font-size: 10pt;
-    color: #9A9A9A;
-}
-
-customerBlog ul.ant-select-dropdown-menu li:first-child {
-    position: fixed;
-    margin-bottom: 12px;
-    color: #57A600 !important;
-    background: white;
-    z-index: 9;
-}
-
-customerBlog ul.ant-select-dropdown-menu li:nth-child(2) {
-    margin-top: 24px;
-}
+ tr.ant-table-expanded-row td {
+     background-color: white;
+ }

@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import FormUpdate from "../../../components/customers/ManageCustomers/FormUpdate";
+import FormUpdate from "../../../components/customers/GroupCustomers/FormUpdate";
 
 class ManagementEmployeeForm extends React.Component {
   render() {
@@ -14,7 +14,8 @@ class ManagementEmployeeForm extends React.Component {
 function mapStateToProps(state) {
   return {
     groupCustomersUpdate: state.reducer.groupCustomers.update,
-    initialValues: state.reducer.managementCustomers.update.data
+    initialValues: state.reducer.groupCustomers.update.data,
+    locale: state.locale
   };
 }
 

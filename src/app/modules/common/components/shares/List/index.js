@@ -29,7 +29,7 @@ export default class List extends Component {
 
     this.columns = [];
     this.filter = [];
-    this.module = "settings"; // This compare to parent key in datasource in sidebar when render breadcrump
+    this.module = ""; // This compare to parent key in datasource in sidebar when render breadcrump
     this.fetchingProp = ""; // prop of reducer of fetching record that get from map state to prop from container
     this.addingProp = ""; // prop of reducer of adding record that get from map state to prop from container
     this.updatingProp = ""; // prop of reducer of adding record that get from map state to prop from container
@@ -65,9 +65,9 @@ export default class List extends Component {
       render: value => {
         return (
           value === 1 ?
-            <this.Badge status="success" />
+            <this.Badge text={<this.Translate id="select_text_active" />} status="success" />
             :
-            <this.Badge status="error" />
+            <this.Badge text={<this.Translate id="select_text_deactive"/>} status="error" />
         );
       }
     };
