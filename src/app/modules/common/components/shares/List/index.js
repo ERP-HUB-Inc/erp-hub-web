@@ -65,9 +65,9 @@ export default class List extends Component {
       render: value => {
         return (
           value === 1 ?
-            <this.Badge status="success" />
+            <this.Badge text={<this.Translate id="select_text_active" />} status="success" />
             :
-            <this.Badge status="error" />
+            <this.Badge text={<this.Translate id="select_text_deactive"/>} status="error" />
         );
       }
     };

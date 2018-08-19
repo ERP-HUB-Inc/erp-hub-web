@@ -60,7 +60,7 @@ export default class FormItem extends Modal {
 
     const customer = this.Util.renameObjectKey({ name: "name", id: "value" }, groupCustomers.list);
 
-    getFieldDecorator("keys", {initialValue: this.props.formData.contacts});
+    getFieldDecorator("keys", {initialValue: formData.contacts});
 
     const keys = getFieldValue("keys");
     

@@ -49,7 +49,10 @@ export default class FormCreate extends Modal {
           
         });
 
-        values["contacts"] = contacts;
+        if(contacts !=="") {
+          values["contacts"] = contacts;
+        }
+
         delete values["keys"]; 
         this.dispatch(CustomerAction.add(values));
       }

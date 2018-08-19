@@ -83,3 +83,7 @@ tr.ant-table-expanded-row > td:first-child {
  .main-management-customer ul.ant-select-dropdown-menu li:nth-child(2) {
     margin-top: 24px;
  }
+
+ tr.ant-table-expanded-row td {
+     background-color: white;
+ }

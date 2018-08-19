@@ -52,11 +52,10 @@ export default class FormCreate extends Modal {
           }
         });
 
-
-
-        values["contacts"] = contacts;
+        if(contacts !=="") {
+          values["contacts"] = contacts;
+        }
         values["status"] = this.Enum.ACTIVE;
-        console.log(values);
         this.dispatch(CustomerAction.update(values));
       }
     });

@@ -65,22 +65,34 @@ class ColumnExpend extends List {
   constructor(props) {
     super(props);
     return [
-      this.columnCreatedAt,
+      {
+        title: <this.Translate id="text_created_at" />,
+        dataIndex: "createdAt",  
+        key: "createdAt",
+        width: 250,
+        render: value => this.formatDate(value),
+        sorter: true
+      },
       {
         dataIndex: "name",
-        key: "name"
+        key: "name",
+        // colSpan:2
       },
       {
         dataIndex: "phoneNumber",
-        key: "phoneNumber"
+        key: "phoneNumber",
+        // colSpan:2
       },
-     
       {
         dataIndex: "address",
-        key: "address"
+        key: "address",
+        // colSpan:2
       },
-  
-      this.columnStatusExtend
+      {
+        dataIndex: "",
+        render: () => " " ,
+        colSpan:5
+      },
     ];
   }
 }
@@ -97,13 +109,6 @@ class Column extends List {
         render: (text,row) => text + " " + row.lastName
       },
       {
-        title: <this.Translate id="col_management_customer_email" />,
-        dataIndex: "email",
-        key: "email",
-        sorter: true,
-        render: (email) => this.Util.formtTextError(email)
-      },
-      {
         title: <this.Translate id="col_management_customer_phoneno" />,
         dataIndex: "phoneNumber",
         key: "phoneNumber",
@@ -111,18 +116,26 @@ class Column extends List {
         render: (phoneNumber) => this.Util.formtTextError(phoneNumber)
       },
       {
-        title: <this.Translate id="col_management_customer_description" />,
-        dataIndex: "description",
-        sorter: true,
-        key: "description",
-        render: (description) => this.Util.formtTextError(description)
-      },
-      {
         title: <this.Translate id="col_management_customer_group_address" />,
         dataIndex: "address",
         key: "address",
         sorter: true,
         render: (address) => this.Util.formtTextError(address)
+      },
+      {
+        title: <this.Translate id="col_management_customer_email" />,
+        dataIndex: "email",
+        key: "email",
+        sorter: true,
+        render: (email) => this.Util.formtTextError(email)
+      },
+     
+      {
+        title: <this.Translate id="col_management_customer_description" />,
+        dataIndex: "description",
+        sorter: true,
+        key: "description",
+        render: (description) => this.Util.formtTextError(description)
       },
       {
         title: <this.Translate id="col_management_customer_group_cutomer" />,

@@ -1,6 +1,5 @@
 import React from "react";
 import { Modal }  from "../../shares/Modal/modal";
-import {Util} from "../../../../common/util";
 
 export default class FormItem extends Modal {
   constructor(props) {
@@ -9,12 +8,13 @@ export default class FormItem extends Modal {
       disabled: false,
       value: "123"
     };
-    this.uploadImage = this.uploadImage.bind(this);
+    // this.uploadImage = this.uploadImage.bind(this);
+    this.handleCardChange = this.handleCardChange.bind(this);
   }
 
-  uploadImage(){
+  handleCardChange(){
     alert("upload");
-    let formData = new FormData();
+    // let formData = new FormData();
     // formData.append("file", document);
     // formData.append("name", name);
     // axios.post("http://178.128.217.131:3000/api/employee/v1/upload/file", formData)
@@ -27,7 +27,7 @@ export default class FormItem extends Modal {
   }
 
   render() {
-    const {formData, form, locale,manageEmployeeAdd} = this.props;
+    const { form, locale} = this.props;
     return (
       <div>
         <this.Tabs type="card">
@@ -97,7 +97,7 @@ export default class FormItem extends Modal {
                 </this.Col>
                 <this.Col md="12">
                   <this.UploadImg
-                  
+                    handleCardChange={ this.handleCardChange }
                     name="image"    
                     label={<this.Translate id="input_hr_employee_upload" />}
                     form={form}   

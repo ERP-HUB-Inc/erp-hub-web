@@ -23,6 +23,7 @@ export class UploadImg extends Element {
         label={ this.props.label }
         rules={ this.rules }
         beforeUpload={ this.props.beforeUpload }
+        handleCardChange={ this.handleCardChange }
       />
     );
   }   

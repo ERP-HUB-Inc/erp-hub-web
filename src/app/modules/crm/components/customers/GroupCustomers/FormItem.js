@@ -1,13 +1,8 @@
 import React from "react";
-import Component from "../../Component";
 import Modal from "../../shares/Modal";
 import "./index.css";
 
 export default class FormItem extends Modal {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const {formData, form, locale} = this.props;
     return (

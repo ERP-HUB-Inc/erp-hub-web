@@ -2,6 +2,7 @@ import React from "react";
 import Element from "../../common/Element";
 import "./index.css";
 import { Upload, Modal } from "antd";
+import axios from "axios";
 
 const uploadButton = (
   <div>
@@ -29,8 +30,25 @@ export default class PicturesUpload extends Element {
   }
 
   handleCardChange({fileList}){
-    console.log(fileList);
+    alert("handle change");
     this.setState({ cardImgList: fileList });
+    const handleCardChange =handleCardChange;
+    handleCardChange && handleCardChange({fileList});
+
+    let formData = new FormData();
+    axios.post("http://178.128.217.131:3000/api/employee/v1/upload/file", formData,{
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMDAwMDAwMS0wMDAxLTIwMTgtMDAwMS0wMDAwMDAwMSIsImlhdCI6MTUzNDI5Njk2M30.pmMNo0pASQmlYjwTn2NPDgBTTTUlXjUamYctOH89DAw"
+      }
+    })
+      .then(function (response) {
+        console.log("response",response);
+      })
+      .catch(function (error) {
+        alert(error);
+      });
+
   }
 
   render() {

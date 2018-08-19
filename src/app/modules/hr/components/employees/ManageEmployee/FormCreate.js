@@ -16,6 +16,7 @@ export default class FormCreate extends Modal {
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.handleCardChange = this.handleCardChange.bind(this);
   }
 
   onChange(checked){
@@ -23,6 +24,10 @@ export default class FormCreate extends Modal {
       disabled : checked === 1,
     });
     this.props.form.setFieldsValue({password: ""});
+  }
+
+  handleCardChange(){
+    alert("form create");
   }
 
 
