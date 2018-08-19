@@ -53,7 +53,7 @@ label {
     content: "";
 }
 
-.ant-form-item {
+.ant-form-horizontal .ant-form-item {
     margin-bottom: 10px !important
 }
 

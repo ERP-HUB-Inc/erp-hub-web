@@ -66,7 +66,7 @@ export default class FormItem extends Modal {
     const keys = getFieldValue("keys");
     
     return (
-      <div>
+      <div className="customerBlog">
         <this.Tabs type="card">
           <this.TabPane tab="General" key="1">
             <this.Row>

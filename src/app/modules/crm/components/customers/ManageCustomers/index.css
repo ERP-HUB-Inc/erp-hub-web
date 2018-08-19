@@ -44,29 +44,62 @@
     display: none
 }
 
-
-
-.btn-addcontact button,.btn-addcontact button:hover {
+.customerBlog .btn-addcontact button,
+customerBlog .btn-addcontact button:hover {
     border: none;
     color: #57A600 !important;  
     font-weight: bold;
     font-size: 17px;
 }
 
-.btn-addcontact span.icon-add {
+customerBlog .btn-addcontact span.icon-add {
     margin-left: -16px;          
 }
 
 
 /* extend subtable */
-.sub-table tr:nth-child(odd) {
+customerBlog .sub-table tr:nth-child(odd) {
     background-color: #FBFBFB;
 }
 
-tr.ant-table-expanded-row > td:first-child {
+customerBlog tr.ant-table-expanded-row > td:first-child {
     border-left: 2px solid #0D62AF !important;
 }    
 
 .dynamic-delete-button {
     color: red;
+}
+
+.main-antselect label {
+    font-size: 10pt;
+    color: #9A9A9A;
+    }
+    
+customerBlog ul.ant-select-dropdown-menu li:first-child {
+    position: fixed;
+    margin-bottom: 12px;
+    color: #57A600 !important;
+    background: white;
+    z-index: 9;
+}
+
+customerBlog ul.ant-select-dropdown-menu li:nth-child(2) {
+    margin-top: 24px;
+}
+
+customerBlog .main-antselect label {
+    font-size: 10pt;
+    color: #9A9A9A;
+}
+
+customerBlog ul.ant-select-dropdown-menu li:first-child {
+    position: fixed;
+    margin-bottom: 12px;
+    color: #57A600 !important;
+    background: white;
+    z-index: 9;
+}
+
+customerBlog ul.ant-select-dropdown-menu li:nth-child(2) {
+    margin-top: 24px;
 }

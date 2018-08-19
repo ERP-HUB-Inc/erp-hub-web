@@ -14,6 +14,7 @@ import receiptTemplate from "../modules/pos/reducers/settings/receiptTemplate";
 import incomeAndExpense from "../modules/pos/reducers/settings/incomeAndExpense";
 import roleAccess from "../modules/pos/reducers/settings/roleAccess";
 import privilege from "../modules/pos/reducers/settings/privilege";
+import rolePrivilege from "../modules/pos/reducers/settings/rolePrivilege";
 import storeAccount from "../modules/pos/reducers/settings/storeAccount";
 import operationRecord from "../modules/pos/reducers/settings/operationRecord";
 // Employee
@@ -39,6 +40,7 @@ const reducer = combineReducers({
   receiptTemplate,
   incomeAndExpense,
   roleAccess,
+  rolePrivilege,
   privilege,
   storeAccount,
   operationRecord,

@@ -9,7 +9,7 @@ export default class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      layut: "12",
+      // layut: "12",
       current: 1,
       selectedRowKeys: [],
       selectedListIds: [],
@@ -370,7 +370,7 @@ export default class List extends Component {
         ""
         :
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout">
+          <this.Row className="main-search-layout form-group">
             <this.Col md="3">
               <this.InputText
                 name="key"
@@ -428,7 +428,7 @@ export default class List extends Component {
         { 
           pagination.total > 0 ?
             <div className="float-right">
-              <Pagination locale={{selectPrefixCls: "hello world"}} hideOnSinglePage showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
+              <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
             </div>
             :
             ""

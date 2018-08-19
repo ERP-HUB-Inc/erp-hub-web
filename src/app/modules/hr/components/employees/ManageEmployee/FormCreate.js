@@ -95,6 +95,8 @@ export default class FormCreate extends Modal {
                     placeholder="Phone Number"
                     form={form} 
                     label="Phone Number"
+                    max={11}
+                    errorLenght="Phone number allow maximum 11 characters only."
                   />
                 </this.Col>
                 <this.Col md="12">

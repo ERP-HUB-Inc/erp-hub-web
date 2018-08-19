@@ -1,29 +1,32 @@
 import React from "react";
-import columns from "./column";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/RoleAccess/FormCreate";
 import FormUpdate from "../../../containers/settings/RoleAccess/FormUpdate";
 import PrivilegeList from "../../../containers/settings/RoleAccess/PrivilegeList";
 import Constant from "../../../constants/settings/roleAccess";
 import RoleAccessAction from "../../../action/settings/roleAccess";
+import RolePrivilegeAction from "../../../action/settings/rolePrivilege";
 import RoleAccessService from "../../../services/settings/RoleAccessService";
 import "./index.css";
 
 export default class PaymentMethodList extends List {
   constructor(props) {
     super(props);
-    this.columns = columns;
+    this.state = {
+      ...this.state,
+      roleId: null
+    };
+    this.columns = new Column();
     this.fetchingProp = "roleAccess";
     this.addingProp = "roleAccessAdd";
     this.updatingProp = "roleAccessUpdate";
-    this.showListRole = "showListRole";
     this.service = RoleAccessService;
     this.action = RoleAccessAction;
     this.RESET_CONSTANT = Constant.RESET_ROLE_ACCESS;
   }
 
   handleShowFormAdd() {
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
     dispatch(RoleAccessAction.showForm());
     this.setState({
       modalConten: <FormCreate/>
@@ -38,8 +41,44 @@ export default class PaymentMethodList extends List {
     });
   }
 
+  renderFilterRecord() {
+    const {form} = this.props;
+    const fetchingProps = this.props[this.fetchingProp];
+    return (
+      form == null ?
+        ""
+        :
+        <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
+          <this.Row className="main-search-layout form-group">
+            <this.Col md="4">
+              <this.InputText
+                name="key"
+                label="Search"
+                placeholder="Search for code, name and address"
+                form={form}
+              />
+            </this.Col>
+            <this.Col md="3">
+              <this.Select
+                name="status"
+                label={<this.Translate id="text_status" />}
+                placeholder="Please select status"
+                dataSource={this.statusList}
+                defaultValue={this.Enum.ALL_STATE}
+                form={form}
+              />
+            </this.Col>
+            <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+              <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+            </this.Button>
+          </this.Row>
+        </this.Form>
+    );
+  }
+
   handleShowRecordDetail(rowData) {
-    console.log("Row Data:", rowData);
+    const {dispatch} = this.props;
+    dispatch(RolePrivilegeAction.fetch(rowData.id));
   }
 
   render() {
@@ -68,7 +107,7 @@ export default class PaymentMethodList extends List {
             { this.renderTableList(fetchingProps) }
           </this.Col>
           <this.Col md="4">
-            { <PrivilegeList /> }
+            { <PrivilegeList rolePrivileges={this.props.rolePrivileges} /> }
           </this.Col>
           
           { this.state.modalConten }
@@ -77,5 +116,29 @@ export default class PaymentMethodList extends List {
         </this.Row>
       </div>
     );
+  }
+}
+
+class Column extends List {
+  constructor(props) {
+    super(props);
+    return [
+      this.columnCreatedAt,
+      this.columnNo,
+      {
+        title: <this.Translate id="col_role_name" />,
+        dataIndex: "name",
+        key: "name",
+        sorter: true,
+      },
+      {
+        title: <this.Translate id="col_role_code" />,
+        dataIndex: "code",
+        key: "code",
+        sorter: true
+      },
+      this.columnUpdatedAt,
+      this.columnStatus
+    ];
   }
 }

@@ -7,7 +7,7 @@ export class CTable extends React.Component {
     return (
       <Table
         rowSelection={this.props.rowSelection}
-        expandedRowRender={this.props.expandedRowRender}
+        // expandedRowRender={this.props.expandedRowRender}
         columns={this.props.columns}
         dataSource={this.props.dataSource}
         pagination={this.props.pagination}

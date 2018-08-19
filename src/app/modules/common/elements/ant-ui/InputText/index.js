@@ -6,7 +6,7 @@ import "./index.css";
 export class InputText extends Element {
   render() {
     return (
-      <Input 
+      <Input
         type={ this.props.type }
         name={this.props.name}
         placeholder={this.props.placeholder}
