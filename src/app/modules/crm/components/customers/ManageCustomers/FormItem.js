@@ -104,7 +104,7 @@ export default class FormItem extends Modal {
               </this.Col>
                 
               <this.Col md="12">
-                <this.Select
+                <this.SelectSearch
                   name="groupCustomerId"
                   label={<this.Translate id="input_management_customer_customer_group" />}
                   placeholder="Please select customer"

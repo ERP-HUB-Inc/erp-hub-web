@@ -44,7 +44,8 @@ import
   Loading,
   InputTextArea,
   SearchButton,
-  Radios
+  Radios,
+  SelectSearch
 } from "../elements/ant-ui";
 import {
   InputRedux,
@@ -173,6 +174,7 @@ export default class Component extends RComponent {
     this.Tabs = Tabs;
     this.InputTextArea = InputTextArea;
     this.SearchButton = SearchButton;
+    this.SelectSearch = SelectSearch;
 
     // Util function
     this.Util = new Util();

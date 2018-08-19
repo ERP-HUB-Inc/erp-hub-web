@@ -2,7 +2,7 @@ import React from "react";
 import Element from "../../common/Element";
 import "./index.css";
 
-export class Select extends Element {
+export class SelectSearch extends Element {
 
   constructor(props) {
     super(props);

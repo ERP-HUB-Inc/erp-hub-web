@@ -25,3 +25,4 @@ export * from "./inputTextArea";
 export * from "./Button/searchButton";
 export * from "./Radio/RadioNormal";
 export * from "./Loading";
+export * from "./Select/selectSearch";
