@@ -8,6 +8,7 @@ export default class ListPrivilege extends Component {
   constructor(props){
     super(props);
     this.state = {
+      isGrantingPrivilege: false,
       checkParentIdList: [],
       checkChildIdList: [],
       checkChildIdListV2: [], //[{parentId:1, child: []}]
@@ -28,18 +29,19 @@ export default class ListPrivilege extends Component {
   componentDidMount () {
     const {dispatch} = this.props;
     dispatch(PrivilegeAction.fetch());
-
-
   }
 
   handleSubmit () {
     const {dispatch,} = this.props;
     const roleId = this.props.rowData.id;
     const privileges = {privileges: this.state.checkChildIdList};
+
+    this.setState({isGrantingPrivilege: true});
+    setTimeout(function () {
+      this.setState({isGrantingPrivilege: false});
+    }.bind(this), 2000);
+
     dispatch(RolePrivilegeAction.assignPrivilege(roleId, privileges));
-    console.log("Role Id:", this.props.roleId);
-    console.log("Select List 1:", this.state.checkChildIdList);
-    console.log("Select List 2:", this.state.checkChildIdListV2);
   }
 
   handleSearchPrivilege (e) {
@@ -48,16 +50,11 @@ export default class ListPrivilege extends Component {
 
   compareTwoCollection (parentId) {
     const allPrivilegeCollection = this.privilegeCollection.find(value => value.id === parentId);
-    console.log("this.state.checkChildIdListV2:", this.state.checkChildIdListV2);
     const selectedPrivilegeCollection = this.state.checkChildIdListV2.find(value => value.parentId === parentId);
 
     if (selectedPrivilegeCollection == null || selectedPrivilegeCollection.child.length === 0) {
       return {indeterminate: false, checkAll: false};
     }
-
-    console.log("allPrivilegeCollection:", allPrivilegeCollection);
-    console.log("selectedPrivilegeCollection:", selectedPrivilegeCollection);
-    console.log("CheckChildIdList:", this.state.checkChildIdList);
     
     if (allPrivilegeCollection.child.length === selectedPrivilegeCollection.child.length) { // if existing length equal to user check mean user check all, so make checkbox all to checked
       return {indeterminate: false, checkAll: true};
@@ -114,10 +111,22 @@ export default class ListPrivilege extends Component {
           return {rolePrivilegeId: 0, privilegeId: value.id, value: 1};
         });
 
-      // remove child id from check child id
-      this.setState({
-        checkChildIdList: this.state.checkChildIdList.filter(value1 => !allChildIds.find(value2 => value1.privilegeId === value2.privilegeId))
+      // remove child id from check child id or update child privilege value
+      const checkChildIdList = [];
+      this.state.checkChildIdList.forEach(value => {
+        const existPrivilege = allChildIds.find(child => value.privilegeId === child.privilegeId);
+        if (this.Util.isObjectEmpty(existPrivilege) && value.rolePrivilegeId === 0) {
+          console.log("Not Existing In Database");
+        } else {
+
+          if (!this.Util.isObjectEmpty(existPrivilege)) {
+            value["value"] = 0;
+          }
+          checkChildIdList.push(value);
+        }
       });
+
+      this.setState({checkChildIdList});
 
       // For Check Box Group Detect State
       this.setState({
@@ -211,6 +220,8 @@ export default class ListPrivilege extends Component {
 
   componentWillReceiveProps(nextProps) {
 
+    let rolePrivilegesList = nextProps.rolePrivileges.list;
+
     this.setState({
       checkChildIdList: [],
       checkChildIdListV2: []
@@ -218,7 +229,8 @@ export default class ListPrivilege extends Component {
   
     const checkChildIdListV2 = [];
     const checkChildIdList = [];
-    nextProps.rolePrivileges.list.forEach(rolePrivilege => {
+
+    rolePrivilegesList.forEach(rolePrivilege => {
       const parentId = rolePrivilege.privilege.parentId;
       const privilegeId = rolePrivilege.privilegeId;
       const rolePrivilegeId = rolePrivilege.id;
@@ -333,7 +345,7 @@ export default class ListPrivilege extends Component {
   }
   
   render() {
-    const {privileges, form} = this.props;
+    const {privileges, rolePrivilegeUpdate, form} = this.props;
 
     // Here reponse for cash collection to group of privilege
     if (privileges.fetched) {
@@ -362,9 +374,8 @@ export default class ListPrivilege extends Component {
     return (
       <div className="main-role-access">
         <this.Row>
-          <this.Col md="12" style={{paddingBottom: 15}}>
-            <span style={{fontWeight: 500}}>Selected Role: </span>
-            {this.Util.isObjectEmpty(this.props.rowData) ? "None" : this.props.rowData.name}
+          <this.Col md="12" style={{paddingBottom: 15, fontWeight: 500, textAlign: "center"}}>
+            {this.Util.isObjectEmpty(this.props.rowData) ? "Please select role." : this.props.rowData.name}
           </this.Col>
           <this.Col md="8">
             <this.Form>
@@ -378,7 +389,7 @@ export default class ListPrivilege extends Component {
             </this.Form>
           </this.Col>
           <this.Col md="4">
-            <this.Button onClick={this.handleSubmit} htmlType="submit" loading={this.submitLoading} type="info float-right">
+            <this.Button onClick={this.handleSubmit} htmlType="submit" loading={this.state.isGrantingPrivilege} type="info float-right">
               <span className="icon-save icon-padding-right"></span><this.Translate id="button_text_save" />
             </this.Button>
           </this.Col> 

@@ -2,11 +2,11 @@ import Constant from "../../constants/settings/roleAccess";
 import RoleAccessService from "../../services/settings/RoleAccessService";
 
 export default {
-  fetch: (limit, offset, sortField, sortOrder) => {
+  fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_ROLE_ACCESS,
-        payload: RoleAccessService.lists(limit, offset, sortField, sortOrder)
+        payload: RoleAccessService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },
