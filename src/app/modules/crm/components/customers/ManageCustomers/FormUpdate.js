@@ -23,20 +23,24 @@ export default class FormCreate extends Modal {
         {
           name : values.cont_name,
           address: values.const_address,
-          phoneNumber: values.const_phoneNumber
+          phoneNumber: values.const_phoneNumber,
+          id: values.cont_id
         };
 
         delete values["cont_name"];
+        delete values["cont_id"];
         delete values["const_phoneNumber"];
         delete values["const_address"];
         delete values["keys"];
-
-        values["id"] = this.props.manageCustomersUpdate.data.id;
+          
+        let id = this.props.manageCustomersUpdate.data.id;
+        if(id !== null){
+          values["id"] = this.props.manageCustomersUpdate.data.id;
+        }
+       
         if(listContacts.name == null){
           listContacts.name = [];
         }
-
-        console.log("List Contact:", listContacts.name);
 
         const contacts = listContacts.name.map((name, index)=> {
           if (
@@ -46,6 +50,7 @@ export default class FormCreate extends Modal {
           ) {
             return {
               name: name,
+              id: listContacts.id[index],
               address: listContacts.address[index],
               phoneNumber: listContacts.phoneNumber[index]
             };
@@ -53,8 +58,9 @@ export default class FormCreate extends Modal {
         });
 
         if(contacts !=="") {
-          values["contacts"] = contacts;
+          values["listContact"] = contacts;
         }
+
         values["status"] = this.Enum.ACTIVE;
         this.dispatch(CustomerAction.update(values));
       }
@@ -73,7 +79,9 @@ export default class FormCreate extends Modal {
 
   render() {
     const {manageCustomersUpdate, form, groupCustomers,locale} = this.props;
-     
+
+    this.submitLoading = manageCustomersUpdate.updating;
+    
     if (manageCustomersUpdate.showForm) {
       this.content = (
         <FormItem

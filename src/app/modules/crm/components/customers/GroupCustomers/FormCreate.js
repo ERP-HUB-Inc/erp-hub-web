@@ -31,7 +31,7 @@ export default class FormCreate extends Modal {
 
   render() {
     const {groupCustomersAdd, form, locale} = this.props;
-
+    this.submitLoading = groupCustomersAdd.adding;
     if (groupCustomersAdd.showForm) {
       this.content = (
         <div>
