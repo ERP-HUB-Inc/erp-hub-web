@@ -56,11 +56,13 @@ export default {
     "သင်၏နာမကို input ကိုနှစ်သက်သော",
     "Please input your name"
   ],
+
   "error_payment_method_name_length": [
     "Name allow from 3 to 255 character only.",
     "Name allow from 3 to 255 character only.",
     "Name allow from 3 to 255 character only."
   ],
+  
   "error_payment_method_description_length": [
     "Description allow maximum 255 character.",
     "Description allow maximum 255 character.",

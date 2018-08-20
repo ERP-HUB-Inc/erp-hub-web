@@ -1,5 +1,6 @@
 import React from "react";
-import { connect } from "react-redux";
+import {Form} from "antd";
+import {connect} from "react-redux";
 import List from "../../../components/settings/RoleAccess";
 
 class RoleAccess extends React.Component {
@@ -16,9 +17,17 @@ function mapStateToProps(state) {
     roleAccessAdd: state.reducer.roleAccess.add,
     roleAccessArchive: state.reducer.roleAccess.archive,
     roleAccessUpdate: state.reducer.roleAccess.update,
-    showListRole: "showListRole",
-    ShowLayout: "6"
+    rolePrivileges: state.reducer.rolePrivilege.request
   };
 }
 
-export default connect(mapStateToProps)(RoleAccess);
+
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const roleAccess = Form.create(mapPropsToFields)(RoleAccess);
+
+export default connect(mapStateToProps)(roleAccess);

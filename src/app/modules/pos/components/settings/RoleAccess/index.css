@@ -1,13 +1,16 @@
 .main-row-role-access {
     margin-right: 0 !important;
     margin-left: 0 !important;
-    background-color: white;
-    padding: 33px 0px;
+    background-color: white
 }
 
 .ant-collapse-item {
     position: relative;
 } 
+
+.main-role-access .ant-input:hover {
+    border-left: 2px solid #BCBCCB !important
+}
 
 .main-role-access .ant-collapse > .ant-collapse-item > .ant-collapse-header .arrow{
     left: auto;
@@ -45,8 +48,10 @@
     background-color: #FAFAFA !important;
 } 
 
-.ant-collapse-content > .ant-collapse-content-box {
-    padding: 16px
+.main-role-access .ant-collapse-content > .ant-collapse-content-box {
+    padding-top: 0px;
+    padding-bottom: 10px;
+    padding-left: 40px
 }
 
 .main-role-access .ant-collapse-content {
@@ -68,7 +73,7 @@
 .main-role-access input {
     border-left: 2px solid #BCBCCB; 
     border-radius: 0;
-    height: 50px;
+    height: 40px;
 }
 
 .main-role-access button.save-button {
@@ -85,4 +90,26 @@
     position: absolute;
     top: 10px;
     left: 15px;
+}
+
+.childPrivilegeItem  {
+    padding-top: 10px
+}
+
+.main-row-role-access .table-wrapper {
+    padding-left: 0 !important;
+    padding-right: 0 !important
+}
+
+.main-role-access .icon-search {
+    position: absolute;
+    z-index: 9;
+    top: 10px;
+    left: 35px;
+    font-size: 15pt;
+    color: #BCBCCB
+}
+
+.main-role-access {
+    margin-top: 85px
 }
