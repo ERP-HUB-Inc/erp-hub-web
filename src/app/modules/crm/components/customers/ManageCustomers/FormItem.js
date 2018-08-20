@@ -9,6 +9,7 @@ export default class FormItem extends Modal {
     this.contactIndex = 0;
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
+    this.renderContact = this.renderContact.bind(this);
   }
   componentDidMount(){
     const {dispatch} = this.props;
@@ -19,7 +20,7 @@ export default class FormItem extends Modal {
     this.contactIndex = existContactIndex; 
     const {form} = this.props;
     const keys = form.getFieldValue("keys");
-    const nextContactKeys = keys.concat(this.contactIndex);  
+    const nextContactKeys = keys !== null ? keys.concat(this.contactIndex) : "";  
     this.contactIndex++;
     form.setFieldsValue({
       keys: nextContactKeys
@@ -28,6 +29,7 @@ export default class FormItem extends Modal {
 
   remove(contactIndex){
     const {form} = this.props;
+    
     const contactKeys = form.getFieldValue("keys");
     
     if (contactKeys.length === 0) {
@@ -35,8 +37,73 @@ export default class FormItem extends Modal {
     }
 
     form.setFieldsValue({
-      keys: contactKeys.filter(key => key !== contactIndex)
+      keys: contactKeys.filter((contact, index) => index !== contactIndex)
     });
+    
+  }
+
+  renderContact(keys, contacts) {
+    const {locale, form} = this.props;
+    if (contacts.length === 0) {
+      return <div/>;
+    }
+
+    return (
+      keys.map((contact, index) =>
+        <div key={index}>
+          <this.Row>
+            <this.Col md="12">
+              <h6>{<this.Translate id="input_management_contact_number" />}  {`${index + 1}`} </h6>
+              <hr/>
+            </this.Col>
+            <this.InputText 
+              name={`cont_id[${index}]`} 
+              type="hidden"
+              data={contacts.id !== null ? contacts.id : ""}
+              form={form} />
+            <this.Col md="6">
+              <this.InputText 
+                name={`cont_name[${index}]`} 
+                data={contacts.name}
+                label={<this.Translate id="input_management_contact_name" />} 
+                placeholder={this.CATranslate("input_management_contact_name", locale)}  
+                form={ form } />
+            </this.Col>
+
+            <this.Col md="6">
+              <this.InputText
+                name={`const_phoneNumber[${index}]`}     
+                data={contacts.phoneNumber}
+                label={<this.Translate id="input_management_contact_phone_number" />} 
+                placeholder={this.CATranslate("input_management_contact_phone_number", locale)}  
+                max={100}
+                form={form}/> 
+            </this.Col> 
+
+            <this.Col md="12">    
+              <this.InputTextArea
+                name={`const_address[${index}]`}
+                data={contacts.address}
+                label={<this.Translate id="input_management_contact_address" />} 
+                placeholder={this.CATranslate("input_management_contact_address", locale)}  
+                max={100}  
+                form={form}/>
+            </this.Col>
+          </this.Row>
+          {
+            keys.length > 1 ?
+              (<this.Icon
+                className="dynamic-delete-button"
+                type="minus-circle-o"
+                disabled={keys.length === 0 }
+                onClick={() => this.remove(index)} />
+              )
+              :
+              null
+          }
+        </div>
+      )
+    );
   }
   
   render() {
@@ -62,8 +129,22 @@ export default class FormItem extends Modal {
 
     getFieldDecorator("keys", {initialValue: formData.contacts});
 
-    const keys = getFieldValue("keys");
-    
+    let keys = getFieldValue("keys");
+    if(keys == null){
+      keys = [];
+    }
+
+
+    const keysLength = keys.length;
+    const contactLength = formData.contacts.length;
+
+    if (keysLength === contactLength) {
+      keys = formData.contacts;
+    }
+
+    console.log("Keys:", keys);
+    console.log("Contacts:", formData.contacts);
+
     return (
       <div className="main-management-customer">
         <this.Tabs type="card">
@@ -162,6 +243,7 @@ export default class FormItem extends Modal {
           <this.TabPane tab="Contact" key="2">
               
             {
+              // this.renderContact(keys, formData.contacts)
               keys.map((contact, index) =>
                 <div key={index}>
                   <this.Row>
@@ -169,6 +251,11 @@ export default class FormItem extends Modal {
                       <h6>{<this.Translate id="input_management_contact_number" />}  {`${index + 1}`} </h6>
                       <hr/>
                     </this.Col>
+                    <this.InputText 
+                      name={`cont_id[${index}]`} 
+                      type="hidden"
+                      data={ contact.id !== null ? contact.id : "" }
+                      form={ form } />
                     <this.Col md="6">
                       <this.InputText 
                         name={`cont_name[${index}]`} 
@@ -226,6 +313,7 @@ export default class FormItem extends Modal {
 
 FormItem.defaultProps = {
   formData: {
+    id: "",
     firstName: "",
     lastName: "",
     phoneNumber: "",

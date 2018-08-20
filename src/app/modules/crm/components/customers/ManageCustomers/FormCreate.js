@@ -55,6 +55,7 @@ export default class FormCreate extends Modal {
 
         delete values["keys"]; 
         this.dispatch(CustomerAction.add(values));
+        
       }
     });
   }
@@ -77,6 +78,8 @@ export default class FormCreate extends Modal {
       groupCustomersAdd,
       locale
     } = this.props;
+
+    this.submitLoading = manageCustomersAdd.adding;
 
     // APPEND GROUP CUSTOMER TO LIST
     if (groupCustomersAdd.response != null) {

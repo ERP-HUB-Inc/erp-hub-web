@@ -3,8 +3,8 @@ import List from "../../List";
 import FormCreate from "../../../containers/customers/ManageCustomers/FormCreate";
 import FormUpdate from "../../../containers/customers/ManageCustomers/FormUpdate";
 import Constant from "../../../constants/customers/managementCutomers";
-import CutomerAction from "../../../actions/customers/manageCustomers";
-import CutomerService from "../../../services/customers/manageCustomer";
+import CustomerAction from "../../../actions/customers/manageCustomers";
+import CustomerService from "../../../services/customers/manageCustomer";
 import "./index.css";
 
 export default class CustomerList extends List {
@@ -16,10 +16,18 @@ export default class CustomerList extends List {
     this.fetchingProp = "manageCustomers";
     this.addingProp = "manageCustomersAdd";
     this.updatingProp = "manageCustomersUpdate";
-    this.service = CutomerService;
-    this.action = CutomerAction;
-    this.actionFetchColumnExpend = CutomerAction;
+    this.service = CustomerService;
+    this.action = CustomerAction;
     this.RESET_CONSTANT = Constant.RESET_MANAGEMENT_CUSTOMERS;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const {manageCustomersUpdate} = nextProps;
+    if (manageCustomersUpdate.updated) {
+      const {dispatch} = this.props;
+      dispatch(CustomerAction.fetch(this.pageSize));
+      dispatch(CustomerAction.reset());
+    }
   }
 
   expandedRender(record,indent){
@@ -36,10 +44,9 @@ export default class CustomerList extends List {
     );
   }
 
-
   handleShowFormAdd() {
     const { dispatch } = this.props;
-    dispatch(CutomerAction.showForm());
+    dispatch(CustomerAction.showForm());
     this.setState({
       modalConten: <FormCreate/>
     });
@@ -47,7 +54,7 @@ export default class CustomerList extends List {
 
   handleShowFormEdit(rowData) {
     const { dispatch } = this.props;
-    dispatch(CutomerAction.showForm(rowData));
+    dispatch(CustomerAction.showForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });
@@ -58,8 +65,6 @@ export default class CustomerList extends List {
   }
 
 }
-
-
 
 class ColumnExpend extends List {
   constructor(props) {
@@ -75,18 +80,15 @@ class ColumnExpend extends List {
       },
       {
         dataIndex: "name",
-        key: "name",
-        // colSpan:2
+        key: "name"
       },
       {
         dataIndex: "phoneNumber",
-        key: "phoneNumber",
-        // colSpan:2
+        key: "phoneNumber"
       },
       {
         dataIndex: "address",
-        key: "address",
-        // colSpan:2
+        key: "address"
       },
       {
         dataIndex: "",
