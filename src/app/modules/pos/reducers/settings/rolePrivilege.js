@@ -11,6 +11,14 @@ export default combineReducers({
       Constant.REQUEST_ROLE_PRIVILEGE_FULFILLED
     ];
     return reducer.request(state, action, constants);
+  },
+  update: (state = InitialState.update(), action) => {
+    const constants = [
+      Constant.UPDATE_ROLE_PRIVILEGE_PENDING,
+      Constant.UPDATE_ROLE_PRIVILEGE_REJECTED,
+      Constant.UPDATE_ROLE_PRIVILEGE_FULFILLED
+    ];
+    return reducer.update(state, action, constants);
   }
 });
       

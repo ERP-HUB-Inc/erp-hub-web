@@ -14,7 +14,7 @@ export default class PaymentMethodList extends List {
     super(props);
     this.state = {
       ...this.state,
-      roleId: null
+      rowData: null
     };
     this.columns = new Column();
     this.fetchingProp = "roleAccess";
@@ -79,6 +79,7 @@ export default class PaymentMethodList extends List {
   handleShowRecordDetail(rowData) {
     const {dispatch} = this.props;
     dispatch(RolePrivilegeAction.fetch(rowData.id));
+    this.setState({rowData});
   }
 
   render() {
@@ -107,7 +108,7 @@ export default class PaymentMethodList extends List {
             { this.renderTableList(fetchingProps) }
           </this.Col>
           <this.Col md="4">
-            { <PrivilegeList rolePrivileges={this.props.rolePrivileges} /> }
+            { <PrivilegeList rolePrivileges={this.props.rolePrivileges} rowData={this.state.rowData}/> }
           </this.Col>
           
           { this.state.modalConten }

@@ -18,7 +18,6 @@ class RolePrivilegeService extends BaseService {
       headers: this.header
     });
   }
-
 }
 
 export default new RolePrivilegeService();

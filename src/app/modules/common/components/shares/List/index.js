@@ -164,6 +164,7 @@ export default class List extends Component {
         this.sortOrder(sorter.order)
       ];
       dispatch(this.action.fetch(...this.filter));
+      this.setState({isClickFilter: false});
     }
   }
 
@@ -180,7 +181,7 @@ export default class List extends Component {
         (current - 1) * pageSize,
       ];
       dispatch(this.action.fetch(...this.filter));
-      this.setState({ current });
+      this.setState({current, isClickFilter: false});
     }
   }
 
@@ -197,7 +198,7 @@ export default class List extends Component {
         (current - 1) * pageSize,
       ];
       dispatch(this.action.fetch(...this.filter));
-      this.setState({ current });
+      this.setState({current, isClickFilter: false});
     }
   }
 

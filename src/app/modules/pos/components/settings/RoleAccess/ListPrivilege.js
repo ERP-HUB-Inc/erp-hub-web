@@ -1,6 +1,7 @@
 import React from "react";
 import Component  from "../../../components/Component";
 import PrivilegeAction from "../../../action/settings/privilege";
+import RolePrivilegeAction from "../../../action/settings/rolePrivilege";
 import "./index.css";
 
 export default class ListPrivilege extends Component {
@@ -9,7 +10,8 @@ export default class ListPrivilege extends Component {
     this.state = {
       checkParentIdList: [],
       checkChildIdList: [],
-      checkChildIdListV2: [] //[{parentId:1, child: []}]
+      checkChildIdListV2: [], //[{parentId:1, child: []}]
+      searchPrivilegeKey: ""
     };
 
     this.privilegeCollection = [];
@@ -20,6 +22,7 @@ export default class ListPrivilege extends Component {
     this.onChangeChild = this.onChangeChild.bind(this);
     this.compareTwoCollection = this.compareTwoCollection.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSearchPrivilege = this.handleSearchPrivilege.bind(this);
   };
 
   componentDidMount () {
@@ -30,9 +33,17 @@ export default class ListPrivilege extends Component {
   }
 
   handleSubmit () {
+    const {dispatch,} = this.props;
+    const roleId = this.props.rowData.id;
+    const privileges = {privileges: this.state.checkChildIdList};
+    dispatch(RolePrivilegeAction.assignPrivilege(roleId, privileges));
     console.log("Role Id:", this.props.roleId);
     console.log("Select List 1:", this.state.checkChildIdList);
     console.log("Select List 2:", this.state.checkChildIdListV2);
+  }
+
+  handleSearchPrivilege (e) {
+    this.setState({searchPrivilegeKey: e.target.value.trim()});
   }
 
   compareTwoCollection (parentId) {
@@ -69,24 +80,26 @@ export default class ListPrivilege extends Component {
       this.state.checkParentIdList.push(e.target.value); // V1
 
       if (this.state.checkChildIdListV2.length === 0) { // case not select child
-        this.state.checkChildIdListV2.push({parentId: e.target.value, child: allChildIds});
+        this.setState({checkChildIdListV2: [{parentId: e.target.value, child: allChildIds}]});
       } else {
-        this.setState({
-          checkChildIdListV2: this.state.checkChildIdListV2.map(value => {
-            if (value["parentId"] === e.target.value) { // if the same parent existing in the list just only append array
-              value["child"] = allChildIds;
-              return value;
-            } else { // else push to new element
-              this.state.checkChildIdListV2.push({parentId: e.target.value, child: allChildIds});
-            }
-          })
+        const checkChildIdListV2 = this.state.checkChildIdListV2;
+        let isParentIdNotExist = true;
+        checkChildIdListV2.forEach((value, index) => {
+          if (value["parentId"] === e.target.value) {
+            isParentIdNotExist = false;
+            checkChildIdListV2[index]["child"] = allChildIds;
+          }
         });
+        
+        if (isParentIdNotExist) {
+          checkChildIdListV2.push({parentId: e.target.value, child: allChildIds});
+        }
+
+        this.setState({checkChildIdListV2});
       }
 
       // push mutiple elements to array list
       this.state.checkChildIdList.push.apply(this.state.checkChildIdList, allChildIds);
-
-      this.setState(this.state);
 
     } else {
       
@@ -106,7 +119,7 @@ export default class ListPrivilege extends Component {
         checkChildIdList: this.state.checkChildIdList.filter(value1 => !allChildIds.find(value2 => value1.privilegeId === value2.privilegeId))
       });
 
-      // V2
+      // For Check Box Group Detect State
       this.setState({
         checkChildIdListV2: this.state.checkChildIdListV2.map(value => {
           if (value["parentId"] === e.target.value) { // if the same parent just only append array
@@ -146,18 +159,23 @@ export default class ListPrivilege extends Component {
       }
 
       if (this.state.checkChildIdListV2.length === 0) { // case not select child
-        this.state.checkChildIdListV2.push({parentId, child: [e.target.value]});
+        this.setState({checkChildIdListV2: [{parentId, child: [e.target.value]}]});
       } else {
-        this.setState({
-          checkChildIdListV2: this.state.checkChildIdListV2.map(value => {
-            if (value["parentId"] === parentId) { // if the same parent just only append array
-              value["child"].push(e.target.value);
-              return value;
-            } else { // else push to new element
-              this.state.checkChildIdListV2.push({parentId, child: [e.target.value]});
-            }
-          })
+        const checkChildIdListV2 = this.state.checkChildIdListV2;
+        let isParentIdNotExist = true;
+        checkChildIdListV2.forEach((value, index) => {
+          if (value["parentId"] === parentId) {
+            isParentIdNotExist = false;
+            checkChildIdListV2[index]["child"].push(e.target.value);
+          }
         });
+
+        if (isParentIdNotExist) {
+          checkChildIdListV2.push({parentId, child: [e.target.value]});
+        }
+
+        this.setState({checkChildIdListV2});
+        
       }
       
     } else {
@@ -320,6 +338,14 @@ export default class ListPrivilege extends Component {
     // Here reponse for cash collection to group of privilege
     if (privileges.fetched) {
       this.privilegeCollection = privileges.list.filter((privilege) => {
+        if (this.state.searchPrivilegeKey != null) {
+          if (privilege["isParent"] && privilege.name.toLowerCase().indexOf(this.state.searchPrivilegeKey.toLowerCase()) !== -1) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+
         if (privilege["isParent"]) {
           return true;
         }
@@ -336,13 +362,18 @@ export default class ListPrivilege extends Component {
     return (
       <div className="main-role-access">
         <this.Row>
-          <this.Col md="8">   
+          <this.Col md="12" style={{paddingBottom: 15}}>
+            <span style={{fontWeight: 500}}>Selected Role: </span>
+            {this.Util.isObjectEmpty(this.props.rowData) ? "None" : this.props.rowData.name}
+          </this.Col>
+          <this.Col md="8">
             <this.Form>
               <span className="icon-search"></span>
               <this.InputText 
                 name="name" 
                 placeholder="Search Access Privillege" 
-                form={form} 
+                form={form}
+                handleKeyUp={this.handleSearchPrivilege}
               />
             </this.Form>
           </this.Col>
