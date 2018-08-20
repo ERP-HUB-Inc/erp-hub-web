@@ -8,26 +8,18 @@ export default class FormItem extends Modal {
       disabled: false,
       value: "123"
     };
-    // this.uploadImage = this.uploadImage.bind(this);
-    this.handleCardChange = this.handleCardChange.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
-  handleCardChange(){
-    alert("upload");
-    // let formData = new FormData();
-    // formData.append("file", document);
-    // formData.append("name", name);
-    // axios.post("http://178.128.217.131:3000/api/employee/v1/upload/file", formData)
-    //   .then(function (response) {
-    //     console.log(response);
-    //   })
-    //   .catch(function (error) {
-    //     alert(error);
-    //   });
+  onChange(checked){
+    this.setState({
+      disabled : checked === 1 
+    });
+    this.props.form.setFieldsValue({password: ""});
   }
 
   render() {
-    const { form, locale} = this.props;
+    const { form,locale,formData} = this.props;
     return (
       <div>
         <this.Tabs type="card">
@@ -39,6 +31,7 @@ export default class FormItem extends Modal {
                   <this.InputText
                     name="firstname"
                     label={<this.Translate id="input_hr_employee_first_name" />}
+                    data={formData.firstName}
                     placeholder={this.CATranslate("input_hr_employee_first_name", locale)}
                     required={true}
                     errorRequired={<this.Translate id="input_error_hr_employee_first_name" />}
@@ -49,6 +42,7 @@ export default class FormItem extends Modal {
                   <this.InputText
                     name="lastname"
                     label={<this.Translate id="input_hr_employee_last_name" />}
+                    data={formData.lastName}
                     placeholder={this.CATranslate("input_hr_employee_last_name", locale)}
                     required={true}
                     errorRequired={<this.Translate id="input_error_hr_employee_last_name" />}
@@ -66,6 +60,7 @@ export default class FormItem extends Modal {
                 <this.Col md="6">
                   <this.DatePickers 
                     name="dob" 
+                    initialValue={formData.dob}
                     form={form}   
                     required={ false }
                     label={<this.Translate id="input_hr_employee_dob" />}
@@ -74,6 +69,7 @@ export default class FormItem extends Modal {
                 <this.Col md="12">
                   <this.InputText
                     name="phoneNumber" 
+                    data={formData.phoneNumber}
                     placeholder={this.CATranslate("input_hr_employee_phone_no", locale)}
                     form={form} 
                     label={<this.Translate id="input_hr_employee_phone_no" />}
@@ -82,6 +78,7 @@ export default class FormItem extends Modal {
                 <this.Col md="12">
                   <this.InputEmail
                     name="email" 
+                    data={formData.email}
                     placeholder={this.CATranslate("input_hr_employee_email_address", locale)}
                     form={form} 
                     label={<this.Translate id="input_hr_employee_email_address" />}
@@ -90,19 +87,20 @@ export default class FormItem extends Modal {
                 <this.Col md="12">
                   <this.InputText
                     name="idCard" 
+                    data={formData.idCard}
                     placeholder={this.CATranslate("input_hr_employee_id_card", locale)}
                     form={form} 
                     label={<this.Translate id="input_hr_employee_id_card" />}
                   />
                 </this.Col>
-                <this.Col md="12">
+                {/* <this.Col md="12">
                   <this.UploadImg
                     handleCardChange={ this.handleCardChange }
                     name="image"    
                     label={<this.Translate id="input_hr_employee_upload" />}
                     form={form}   
                   />
-                </this.Col>
+                </this.Col> */}
               </this.Row>
             </div>
           </this.TabPane>
@@ -111,6 +109,7 @@ export default class FormItem extends Modal {
               <this.Col md="12">
                 <this.InputText
                   name="userName"
+                  data={formData.userName}
                   label={<this.Translate id="input_hr_employee_user_name" />}
                   placeholder={this.CATranslate("input_hr_user_name", locale)}
                   errorRequired={<this.Translate id="input_error_hr_employee_user_name" />}
@@ -121,6 +120,7 @@ export default class FormItem extends Modal {
                 <this.InputText
                   type="password"
                   name="password"
+                  data={formData.password}
                   label={<this.Translate id="input_hr_employee_user_password" />}
                   placeholder={this.CATranslate("input_hr_user_password", locale)}
                   errorRequired="Please input your password"
@@ -131,7 +131,7 @@ export default class FormItem extends Modal {
                 <this.Switchs
                   label={<this.Translate id="input_hr_employee_auto_generate" />}
                   name="autogenerate"
-                  onChange={ this.onChange }
+                  onChange={this.onChange}
                   form={form}
                 />
               </this.Col>
@@ -153,6 +153,7 @@ export default class FormItem extends Modal {
               <this.Col md="6">
                 <this.DatePickers
                   label={<this.Translate id="input_hr_employee_expired_date" />}
+                  defaultValue={formData.passwordExpiredAt}
                   name="passwordExpiredAt"
                   form={form}
                 />

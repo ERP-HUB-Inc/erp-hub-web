@@ -48,10 +48,7 @@ export default class BaseService extends Service {
   }
 
   add(data) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
-    this.header["content-type"] = "multipart/form-data";
     return this.POST({
-      // url: `${this.baseUrl}/create`,
       url: `${this.baseUrl}/create`, 
       data: {
         ...data,
@@ -59,7 +56,6 @@ export default class BaseService extends Service {
         isDefault: 0
       },
       headers: this.header
-      // headers: this.header
     });
   }
 
