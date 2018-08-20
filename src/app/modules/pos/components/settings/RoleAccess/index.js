@@ -20,6 +20,7 @@ export default class PaymentMethodList extends List {
     this.fetchingProp = "roleAccess";
     this.addingProp = "roleAccessAdd";
     this.updatingProp = "roleAccessUpdate";
+    this.columnFilterWithKey = ["name"];
     this.service = RoleAccessService;
     this.action = RoleAccessAction;
     this.RESET_CONSTANT = Constant.RESET_ROLE_ACCESS;
