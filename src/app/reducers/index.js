@@ -23,6 +23,7 @@ import managementEmployee from "../modules/hr/reducers/employees/managementEmplo
 import managementCustomers from "../modules/crm/reducers/customers/managementCutomers";
 // groupcustomer
 import groupCustomers from "../modules/crm/reducers/customers/groupCustomers";
+import productsUnit from "../modules/inventory/reducers/products/productsUnit";
 
 const reducer = combineReducers({
   client,
@@ -47,7 +48,8 @@ const reducer = combineReducers({
   // Employee
   managementEmployee,
   managementCustomers,
-  groupCustomers
+  groupCustomers,
+  productsUnit
 });
 
 export default reducer;

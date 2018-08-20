@@ -20,6 +20,7 @@ import error from "../elements/common/language/error";
 import manageCustomer from "../../crm/languages/customers/manageCustomers";
 import groupCustomer from "../../crm/languages/customers/groupCustomers";
 import employees from "../../hr/languages/employee";    
+import productUnit from "../../inventory/languages/products/productsUnit";
 
 export function initLanguage() {
   return initialize([
@@ -50,6 +51,7 @@ export function setTranslation() {
     ...currency,
     ...manageCustomer,
     ...groupCustomer,
-    ...employees
+    ...employees,
+    ...productUnit
   });
 }

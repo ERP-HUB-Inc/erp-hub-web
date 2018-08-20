@@ -31,9 +31,7 @@ export default class Form extends Modal {
       if (!err) {
         const {manageEmployeeUpdate} = this.props;
         values["id"] = manageEmployeeUpdate.data.id;
-        values["user"] = [{
-          password : values.password
-        }];
+        values["status"] = 1;
         console.log(values);
         this.dispatch(ManageEmployeeAction.update(values));
       }
@@ -51,7 +49,7 @@ export default class Form extends Modal {
       this.content = (
         <div>
           {manageEmployeeUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <FormItem formData={manageEmployeeUpdate.data} form={form} locale={locale}/>
+          <FormItem formData={manageEmployeeUpdate.data}  formData={manageEmployeeUpdate.data} form={form} locale={locale}/>
         </div>
       );
       return super.render();

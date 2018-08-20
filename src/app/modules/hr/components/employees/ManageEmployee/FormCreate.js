@@ -52,7 +52,7 @@ export default class FormCreate extends Modal {
   render() {
     const {manageEmployeeAdd, form, locale} = this.props;
     
-    // this.submitLoading = manageEmployeeAdd.adding;
+    this.submitLoading = manageEmployeeAdd.adding;
 
     // this.validatorAddRecord(manageEmployeeAdd);
 
