@@ -11,7 +11,7 @@ import Brand from "../../../../pos/containers/products/Brand";
 import ProductType from "../../../../pos/containers/products/ProductType";
 import ProductTag from "../../../../pos/containers/products/ProductTag";
 import PrintPriceTag from "../../../../pos/containers/products/PrintPriceTag";
-import ProductUnit from "../../../../pos/containers/products/ProductUnit";
+import ProductUnit from "../../../../inventory/containers/products/ProductsUnit";
 import PriceBook from "../../../../pos/containers/products/PriceBook";
 import Promotion from "../../../../pos/containers/products/Promotion";
 
