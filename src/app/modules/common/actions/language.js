@@ -21,6 +21,7 @@ import manageCustomer from "../../crm/languages/customers/manageCustomers";
 import groupCustomer from "../../crm/languages/customers/groupCustomers";
 import employees from "../../hr/languages/employee";    
 import productUnit from "../../inventory/languages/products/productsUnit";
+import brand from "../../inventory/languages/products/brand";
 
 export function initLanguage() {
   return initialize([
@@ -52,6 +53,7 @@ export function setTranslation() {
     ...manageCustomer,
     ...groupCustomer,
     ...employees,
-    ...productUnit
+    ...productUnit,
+    ...brand
   });
 }

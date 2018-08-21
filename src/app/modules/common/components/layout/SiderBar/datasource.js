@@ -7,7 +7,7 @@ import ReturnExchange from "../../../../pos/containers/transactions/ReturnExchan
 
 // PRODUCT
 import ManageProduct from "../../../../pos/containers/products/ManageProduct";
-import Brand from "../../../../pos/containers/products/Brand";
+import Brand from "../../../../inventory/containers/products/Brand";
 import ProductType from "../../../../pos/containers/products/ProductType";
 import ProductTag from "../../../../pos/containers/products/ProductTag";
 import PrintPriceTag from "../../../../pos/containers/products/PrintPriceTag";
