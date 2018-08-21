@@ -12,10 +12,11 @@ export default class CustomerList extends List {
     super(props);
     this.columns = new Column();
     this.title = "Manage Customer";
-    this.ColumnExpend = new ColumnExpend(); 
+    this.columnExpend = new ColumnExpend(); 
     this.fetchingProp = "manageCustomers";
     this.addingProp = "manageCustomersAdd";
     this.updatingProp = "manageCustomersUpdate";
+    this.isShowExpandable = true;
     this.service = CustomerService;
     this.action = CustomerAction;
     this.RESET_CONSTANT = Constant.RESET_MANAGEMENT_CUSTOMERS;
@@ -30,14 +31,12 @@ export default class CustomerList extends List {
     }
   }
 
-  expandedRender(record,indent){
+  expandedRender(record){
     return( 
       <div className="sub-table">
-        <this.Table 
-          columns={ this.ColumnExpend } 
-          pagination={ false }
-          dataSource={ record.contacts }
-          showHeader = { false }
+        <this.SubTable 
+          columns={this.columnExpend}
+          dataSource={record.contacts}
           noDataContent="No Rows found"
         />
       </div>
@@ -71,12 +70,10 @@ class ColumnExpend extends List {
     super(props);
     return [
       {
-        title: <this.Translate id="text_created_at" />,
         dataIndex: "createdAt",  
         key: "createdAt",
         width: 250,
         render: value => this.formatDate(value),
-        sorter: true
       },
       {
         dataIndex: "name",
@@ -131,18 +128,11 @@ class Column extends List {
         sorter: true,
         render: (email) => this.Util.formtTextError(email)
       },
-     
-      {
-        title: <this.Translate id="col_management_customer_description" />,
-        dataIndex: "description",
-        sorter: true,
-        key: "description",
-        render: (description) => this.Util.formtTextError(description)
-      },
       {
         title: <this.Translate id="col_management_customer_group_cutomer" />,
         dataIndex: "groupCustomer",
         key: "groupCustomer",
+        sorter: true,
         render: (groupCustomer) => groupCustomer !=null  ? groupCustomer.name : "-"
       },
       this.columnStatus

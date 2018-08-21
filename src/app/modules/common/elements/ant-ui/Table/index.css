@@ -40,7 +40,11 @@ tr:nth-child(odd) {
     background: #95ddff1a !important;
 }
 
+.ant-table-expanded-row>td {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
 
-/* .ant-table-row-expanded:after {
-    content: "v";
-}  */
+.sub-table .ant-table-content {
+    margin-top: 0;
+}

@@ -54,7 +54,7 @@ export default class FormItem extends Modal {
           <this.Row>
             <this.Col md="12">
               <h6>{<this.Translate id="input_management_contact_number" />}  {`${index + 1}`} </h6>
-              <hr/>
+              <hr className="line-contact"/>
             </this.Col>
             <this.InputText 
               name={`cont_id[${index}]`} 
@@ -142,9 +142,6 @@ export default class FormItem extends Modal {
       keys = formData.contacts;
     }
 
-    console.log("Keys:", keys);
-    console.log("Contacts:", formData.contacts);
-
     return (
       <div className="main-management-customer">
         <this.Tabs type="card">
@@ -184,15 +181,25 @@ export default class FormItem extends Modal {
                   form={form}/>
               </this.Col>
                 
-              <this.Col md="12">
+              {/* <this.Col md="12">
                 <this.SelectSearch
                   name="groupCustomerId"
                   label={<this.Translate id="input_management_customer_customer_group" />}
                   placeholder="Please select customer"
-                  defaultValue={formData.groupCustomer !=null ? formData.groupCustomer.id : ""  }
+                  defaultValue={formData.groupCustomerId}
                   dataSource={customer}
                   showSearch={true}
                   addNew={this.props.addCustomerGroup}
+                  form={form}/>
+              </this.Col>   */}
+
+              <this.Col md="12">
+                <this.Select
+                  name="groupCustomerId"
+                  label={<this.Translate id="input_management_customer_customer_group" />}
+                  placeholder="Please select customer"
+                  defaultValue={formData.groupCustomerId}
+                  dataSource={customer}
                   form={form}/>
               </this.Col>  
 
@@ -249,7 +256,7 @@ export default class FormItem extends Modal {
                   <this.Row>
                     <this.Col md="12">
                       <h6>{<this.Translate id="input_management_contact_number" />}  {`${index + 1}`} </h6>
-                      <hr/>
+                      <hr className="line-contact"/>
                     </this.Col>
                     <this.InputText 
                       name={`cont_id[${index}]`} 
@@ -301,7 +308,7 @@ export default class FormItem extends Modal {
             } 
             <div className="btn-addcontact">
               <this.Button onClick={() => this.add(keys.length)} style={{ width: "60%" }}>
-                <span className="icon-add"></span> Add Contact
+                <span className="icon-add"></span> <span>Add Contact</span>
               </this.Button>
             </div>
           </this.TabPane>

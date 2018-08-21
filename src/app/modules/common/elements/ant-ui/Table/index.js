@@ -1,5 +1,5 @@
 import React from "react";
-import { Table } from "antd";
+import {Table} from "antd";
 import "./index.css";
 
 export class CTable extends React.Component {
@@ -7,18 +7,47 @@ export class CTable extends React.Component {
     return (
       <Table
         rowSelection={this.props.rowSelection}
-        // expandedRowRender={this.props.expandedRowRender}
         columns={this.props.columns}
         dataSource={this.props.dataSource}
-        pagination={this.props.pagination}
+        pagination={false}
         loading={this.props.loading}  
         onChange={this.props.onChange}
         onRow={this.props.onRow}
-        scroll={this.props.scroll}
         locale={this.props.locale}
-        showHeader={this.props.showHeader}
       />
     );
   }
-
 }
+
+export class TableExpand extends React.Component {
+  render() {
+    return (
+      <Table
+        expandedRowRender={this.props.expandedRowRender}
+        rowSelection={this.props.rowSelection}
+        columns={this.props.columns}
+        dataSource={this.props.dataSource}
+        pagination={false}
+        loading={this.props.loading}  
+        onChange={this.props.onChange}
+        onRow={this.props.onRow}
+        locale={this.props.locale}
+      />
+    );
+  }
+}
+
+export class SubTable extends React.Component {
+  render() {
+    return (
+      <Table
+        columns={this.props.columns}
+        dataSource={this.props.dataSource}
+        pagination={false}
+        showHeader={false}
+        locale={this.props.locale}
+      />
+    );
+  }
+}
+

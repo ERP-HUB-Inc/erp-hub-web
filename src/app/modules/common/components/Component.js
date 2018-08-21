@@ -21,6 +21,8 @@ import {
 import 
 { 
   CTable,
+  TableExpand,
+  SubTable,
   Noteicon,
   Select,
   ActionButton,
@@ -55,7 +57,6 @@ import {
   SapleInput,
   Cards,
   ListSearch,
-  // Badges,
   AutoComplete
 } from "../elements/react-strap";
 import {Util} from "../util";
@@ -93,6 +94,8 @@ export default class Component extends RComponent {
 
     // Element Ant ui
     this.Table = CTable;
+    this.TableExpand = TableExpand;
+    this.SubTable = SubTable;
     this.Button = Button;
     this.Message = message;
     this.Alert = Alert;

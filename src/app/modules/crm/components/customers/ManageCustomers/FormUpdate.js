@@ -19,6 +19,8 @@ export default class FormCreate extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
 
+        console.log("Value:", values);
+
         const listContacts = 
         {
           name : values.cont_name,
@@ -78,7 +80,7 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    const {manageCustomersUpdate, form, groupCustomers,locale} = this.props;
+    const {manageCustomersUpdate, form, groupCustomers, locale} = this.props;
 
     this.submitLoading = manageCustomersUpdate.updating;
     
