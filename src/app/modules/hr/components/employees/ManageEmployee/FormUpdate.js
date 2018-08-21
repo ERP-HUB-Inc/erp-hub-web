@@ -27,12 +27,10 @@ export default class Form extends Modal {
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
-      // this.dispatch(ManageEmployeeAction.add(values.image.file.name));
       if (!err) {
         const {manageEmployeeUpdate} = this.props;
         values["id"] = manageEmployeeUpdate.data.id;
-        values["status"] = 1;
-        console.log(values);
+        values["status"] = this.Enum.ACTIVE;
         this.dispatch(ManageEmployeeAction.update(values));
       }
     });
@@ -49,7 +47,7 @@ export default class Form extends Modal {
       this.content = (
         <div>
           {manageEmployeeUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <FormItem formData={manageEmployeeUpdate.data}  formData={manageEmployeeUpdate.data} form={form} locale={locale}/>
+          <FormItem formData={manageEmployeeUpdate.data} form={form} locale={locale}/>
         </div>
       );
       return super.render();

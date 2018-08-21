@@ -18,20 +18,21 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-
         const listContacts = 
         {
-          name : values.cont_name,
-          address: values.const_address,
-          phoneNumber: values.const_phoneNumber,
-          id: values.cont_id
+          id: values.contactId,
+          name : values.contactName,
+          phoneNumber: values.contactNumber,
+          address: values.contactAddress,
+          status: values.status
         };
 
-        delete values["cont_name"];
-        delete values["cont_id"];
-        delete values["const_phoneNumber"];
-        delete values["const_address"];
+        delete values["contactId"];
+        delete values["contactName"];
+        delete values["contactNumber"];
+        delete values["contactAddress"];
         delete values["keys"];
+        delete values["status"];
           
         let id = this.props.manageCustomersUpdate.data.id;
         if(id !== null){
@@ -42,22 +43,25 @@ export default class FormCreate extends Modal {
           listContacts.name = [];
         }
 
-        const contacts = listContacts.name.map((name, index)=> {
+        const contacts = [];
+
+        listContacts.name.forEach((name, index) => {
           if (
-            name != null &&
-            listContacts.address[index] != null &&
+            name != null ||
+            listContacts.address[index] != null ||
             listContacts.phoneNumber[index] != null
           ) {
-            return {
-              name: name,
+            contacts.push({
               id: listContacts.id[index],
+              name: name,
               address: listContacts.address[index],
-              phoneNumber: listContacts.phoneNumber[index]
-            };
+              phoneNumber: listContacts.phoneNumber[index],
+              status: listContacts.status[index],
+            });
           }
         });
 
-        if(contacts !=="") {
+        if(contacts) {
           values["listContact"] = contacts;
         }
 
@@ -78,7 +82,7 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    const {manageCustomersUpdate, form, groupCustomers,locale} = this.props;
+    const {manageCustomersUpdate, form, groupCustomers, locale} = this.props;
 
     this.submitLoading = manageCustomersUpdate.updating;
     

@@ -9,7 +9,6 @@ export default class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // layut: "12",
       current: 1,
       selectedRowKeys: [],
       selectedListIds: [],
@@ -41,6 +40,7 @@ export default class List extends Component {
     this.okText = "Yes"; // text button on alert of delete action
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
+    this.isShowExpandable = false;
 
     this.columnNo = {};
     
@@ -105,9 +105,10 @@ export default class List extends Component {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
-    this.RESET_CONSTANT = "RESET";
-
+    this.renderTable = this.renderTable.bind(this);
     this.expandedRender = this.expandedRender.bind(this);
+
+    this.RESET_CONSTANT = "RESET";
   }
 
   formatDate(value) {
@@ -402,13 +403,7 @@ export default class List extends Component {
     
   }
 
-  renderTableList(fetchingProps) {
-    const pagination = {
-      total: fetchingProps.pagination.total,
-      pageSize: fetchingProps.pagination.limit,
-      current: this.state.current
-    };
-
+  renderTable(fetchingProps) {
     // handle for change select checkbox on table row
     const rowSelection = {
       selectedRowKeys: this.state.selectedRowKeys,
@@ -417,6 +412,44 @@ export default class List extends Component {
         disabled: "isSystem" in record && record["isSystem"] ? true : false, // Column configuration not to be checked
         name: record.name,
       })
+    };
+
+    return (
+      this.isShowExpandable ?
+        <this.TableExpand
+          dataSource={fetchingProps.list}
+          columns={this.columns}
+          onChange={this.onChange}
+          locale={{emptyText: <this.Translate id="table_empty_data"/>}}
+          expandedRowRender={this.expandedRender}
+          onRow={record =>({
+            onDoubleClick:() => this.handleShowFormEdit(record),
+            onClick: () => this.handleShowRecordDetail(record)
+          })}
+          rowSelection={rowSelection}
+          loading={fetchingProps.fetching}
+        />
+        :
+        <this.Table 
+          rowSelection={rowSelection}
+          dataSource={fetchingProps.list}
+          columns={this.columns}
+          onChange={this.onChange}
+          locale={{emptyText: <this.Translate id="table_empty_data"/>}}
+          onRow={record =>({
+            onDoubleClick:() => this.handleShowFormEdit(record),
+            onClick: () => this.handleShowRecordDetail(record)
+          })}
+          loading={fetchingProps.fetching}
+        />
+    );
+  }
+
+  renderTableList(fetchingProps) {
+    const pagination = {
+      total: fetchingProps.pagination.total,
+      pageSize: fetchingProps.pagination.limit,
+      current: this.state.current
     };
 
     return (
@@ -437,23 +470,7 @@ export default class List extends Component {
 
         <this.clearFloating/>        
 
-        <this.Table 
-          rowSelection={rowSelection}
-          dataSource={fetchingProps.list}
-          columns={this.columns}
-          pagination={false} // 
-          onChange={this.onChange}
-          locale={{emptyText: <this.Translate id="table_empty_data"/>}}
-          // expandedRowRender={this.expandedRender}
-          expandedRowRender = { 
-            this.expandedRender  
-          }
-          onRow={record =>({
-            onDoubleClick:(e) => this.handleShowFormEdit(record),
-            onClick: (e) => this.handleShowRecordDetail(record)
-          })}
-          loading={fetchingProps.fetching}
-        />
+        {this.renderTable(fetchingProps)}
 
       </div>
     );
@@ -464,9 +481,6 @@ export default class List extends Component {
     let fetchingProps = this.props[this.fetchingProp];
     const addingProps = this.props[this.addingProp];
     const updatingProps = this.props[this.updatingProp];
-
-
-    // console.log("fetchingProps",this.Util.renameObjectKeys(fetchingProps.list[0],"contacts","children"));
     
     // Here is repsonse from add action and combinde response data to the list.
     if (addingProps.response != null) {

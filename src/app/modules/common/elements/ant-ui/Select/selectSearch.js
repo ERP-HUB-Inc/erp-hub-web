@@ -31,8 +31,8 @@ class SelectElement extends Element {
             getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.defaultValue})(
               <div>
                 <this.Select
-                  defaultValue={this.props.defaultValue}
-                  showSearch = { this.props.showSearch }
+                  // defaultValue={this.props.defaultValue}
+                  // showSearch={this.props.showSearch}
                   placeholder={this.props.placeholder}
                   onChange={this.props.onChange}
                   disabled={this.props.disabled}

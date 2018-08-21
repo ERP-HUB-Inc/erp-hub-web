@@ -345,7 +345,7 @@ export default class ListPrivilege extends Component {
   }
   
   render() {
-    const {privileges, rolePrivilegeUpdate, form} = this.props;
+    const {privileges, form} = this.props;
 
     // Here reponse for cash collection to group of privilege
     if (privileges.fetched) {

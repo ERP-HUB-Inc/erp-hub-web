@@ -20,7 +20,6 @@ export * from "./InputNumber";
 export * from "./InputEmail";
 export * from "./Upload";
 export * from "./InputPassword";
-// export * from "./Button/saveButton";
 export * from "./inputTextArea";
 export * from "./Button/searchButton";
 export * from "./Radio/RadioNormal";

@@ -77,12 +77,42 @@ customerBlog tr.ant-table-expanded-row > td:first-child {
     color: #57A600 !important;
     background: white;
     z-index: 9;
- }
+}
 
- .main-management-customer ul.ant-select-dropdown-menu li:nth-child(2) {
-    margin-top: 24px;
- }
+.main-management-customer ul.ant-select-dropdown-menu li:nth-child(2) {
+margin-top: 24px;
+}
 
- tr.ant-table-expanded-row td {
-     background-color: white;
- }
+tr.ant-table-expanded-row td {
+    background-color: white;
+}
+
+.wrap-contact {
+    margin-bottom: 15px;
+}
+
+.wrap-contact h6 {
+    margin-bottom: 0
+}
+
+.btn-addcontact button,
+.btn-addcontact button:hover,
+.btn-removecontact button,
+.btn-removecontact button:hover {
+    border: none;
+    padding-left: 0;
+    height: 0;
+}
+
+.btn-addcontact button span {
+    color: #57A600
+}
+
+.btn-removecontact button span {
+    color: red
+}
+
+.line-contact {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

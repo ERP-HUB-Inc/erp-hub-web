@@ -1,5 +1,6 @@
 export default {
   ACTIVE: 1,
+  ARCHIVE: 3,
   DEACTIVE: 0,
   ALL_STATE: 2,
   IS_SYSTEM: 1,

@@ -17,7 +17,7 @@ export class InputNumber extends Element {
 
   render() {
     return (
-      <Input 
+      <Input
         name={this.props.name}
         placeholder={this.props.placeholder}
         label={this.props.label}
@@ -26,6 +26,7 @@ export class InputNumber extends Element {
         data={this.props.data}
         required={this.props.required}
         form={this.props.form}
+        className={this.props.className} 
       />
     );
   }   
