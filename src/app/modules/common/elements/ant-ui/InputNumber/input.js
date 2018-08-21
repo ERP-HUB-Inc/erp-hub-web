@@ -42,6 +42,7 @@ export default class InputNumbers extends Element {
             <this.InputNumber
               placeholder={this.props.placeholder}
               onChange={this.handleNumberChange}
+              className={this.props.className}
             />
           )
         } 

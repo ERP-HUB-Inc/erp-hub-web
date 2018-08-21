@@ -2,10 +2,14 @@ import React from "react";
 import Modal from "../../shares/Modal";
 import GroupCustomerAction from "../../../actions/customers/groupCustomer";
 import "./index.css";
+import FormContact from "./FormContact";
 
 export default class FormItem extends Modal {
   constructor(props) {
     super(props);
+    this.state = {
+      removeContactKeys: []
+    };
     this.contactIndex = 0;
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
@@ -16,14 +20,12 @@ export default class FormItem extends Modal {
     dispatch(GroupCustomerAction.fetch());
   }
 
-  add(existContactIndex){
-    this.contactIndex = existContactIndex; 
+  add(newContact){
     const {form} = this.props;
-    const keys = form.getFieldValue("keys");
-    const nextContactKeys = keys !== null ? keys.concat(this.contactIndex) : "";  
-    this.contactIndex++;
+    const contactKeys = form.getFieldValue("keys");
+    contactKeys.push(newContact);
     form.setFieldsValue({
-      keys: nextContactKeys
+      keys: contactKeys
     });
   }
 
@@ -32,14 +34,21 @@ export default class FormItem extends Modal {
     
     const contactKeys = form.getFieldValue("keys");
     
-    if (contactKeys.length === 0) {
-      return;
-    }
+    if (contactKeys.length > 0) {
+      const remainContactKeys = [];
+      contactKeys.forEach((contact, index) => {
+        if (index !== contactIndex) {
+          remainContactKeys.push(contact);
+        } else if (contact && contact.id) {
+          contact["status"] = this.Enum.ARCHIVE;
+          remainContactKeys.push(contact);
+        }
+      });
 
-    form.setFieldsValue({
-      keys: contactKeys.filter((contact, index) => index !== contactIndex)
-    });
-    
+      form.setFieldsValue({
+        keys: remainContactKeys
+      });
+    }
   }
 
   renderContact(keys, contacts) {
@@ -83,7 +92,7 @@ export default class FormItem extends Modal {
             <this.Col md="12">    
               <this.InputTextArea
                 name={`const_address[${index}]`}
-                data={contacts.address}
+                data={contacts.address + keys.length}
                 label={<this.Translate id="input_management_contact_address" />} 
                 placeholder={this.CATranslate("input_management_contact_address", locale)}  
                 max={100}  
@@ -91,7 +100,7 @@ export default class FormItem extends Modal {
             </this.Col>
           </this.Row>
           {
-            keys.length > 1 ?
+            keys.length > 0 ?
               (<this.Icon
                 className="dynamic-delete-button"
                 type="minus-circle-o"
@@ -133,7 +142,6 @@ export default class FormItem extends Modal {
     if(keys == null){
       keys = [];
     }
-
 
     const keysLength = keys.length;
     const contactLength = formData.contacts.length;
@@ -250,65 +258,21 @@ export default class FormItem extends Modal {
           <this.TabPane tab="Contact" key="2">
               
             {
-              // this.renderContact(keys, formData.contacts)
               keys.map((contact, index) =>
-                <div key={index}>
-                  <this.Row>
-                    <this.Col md="12">
-                      <h6>{<this.Translate id="input_management_contact_number" />}  {`${index + 1}`} </h6>
-                      <hr className="line-contact"/>
-                    </this.Col>
-                    <this.InputText 
-                      name={`cont_id[${index}]`} 
-                      type="hidden"
-                      data={ contact.id !== null ? contact.id : "" }
-                      form={ form } />
-                    <this.Col md="6">
-                      <this.InputText 
-                        name={`cont_name[${index}]`} 
-                        data={ contact.name }
-                        label={<this.Translate id="input_management_contact_name" />} 
-                        placeholder={this.CATranslate("input_management_contact_name", locale)}  
-                        form={ form } />
-                    </this.Col>
-    
-                    <this.Col md="6">
-                      <this.InputText
-                        name={`const_phoneNumber[${index}]`}     
-                        data={contact.phoneNumber}
-                        label={<this.Translate id="input_management_contact_phone_number" />} 
-                        placeholder={this.CATranslate("input_management_contact_phone_number", locale)}  
-                        max={100}
-                        form={form}/> 
-                    </this.Col> 
-    
-                    <this.Col md="12">    
-                      <this.InputTextArea
-                        name={`const_address[${index}]`}
-                        data={contact.address}
-                        label={<this.Translate id="input_management_contact_address" />} 
-                        placeholder={this.CATranslate("input_management_contact_address", locale)}  
-                        max={100}  
-                        form={form}/>
-                    </this.Col>
-                  </this.Row>
-                  {
-                    keys.length > 1 ?
-                      (<this.Icon
-                        className="dynamic-delete-button"
-                        type="minus-circle-o"
-                        disabled={keys.length === 0 }
-                        onClick={() => this.remove(index)} />
-                      )
-                      :
-                      null
-                  }
-                </div>
+                <FormContact
+                  key={index}
+                  totalKeys={keys}
+                  index={index}
+                  contact={contact}
+                  form={form}
+                  locale={locale}
+                  remove={() => this.remove(index)}
+                />
               )
             } 
             <div className="btn-addcontact">
-              <this.Button onClick={() => this.add(keys.length)} style={{ width: "60%" }}>
-                <span className="icon-add"></span> <span>Add Contact</span>
+              <this.Button onClick={() => this.add({id: "", status: this.Enum.ACTIVE})} style={{ width: "60%" }}>
+                <span className="icon-add"></span> <span>Add</span>
               </this.Button>
             </div>
           </this.TabPane>

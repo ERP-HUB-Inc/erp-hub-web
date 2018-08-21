@@ -32,7 +32,7 @@ export default class PicturesUpload extends Element {
   handleCardChange({fileList}){
     alert("handle change");
     this.setState({ cardImgList: fileList });
-    const handleCardChange =handleCardChange;
+    const handleCardChange=handleCardChange;
     handleCardChange && handleCardChange({fileList});
 
     let formData = new FormData();

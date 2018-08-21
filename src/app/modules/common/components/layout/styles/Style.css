@@ -465,3 +465,7 @@ li.ant-pagination-next .ant-pagination-item-link
     text-transform: capitalize;
 }
 
+.hidden {
+    display: none
+}
+
