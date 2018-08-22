@@ -1,4 +1,3 @@
-// import { normalize, schema } from "normalizr";
 export default {
   request: (state, action, [PEDDING, REJECT, FULFILLED], schemas) => {
     switch(action.type) {
@@ -16,12 +15,6 @@ export default {
       };
     }
     case FULFILLED: {
-      // const response = { [schemas.entityName]: action.payload.data.data };
-      // const entity = schemas.createEntity();
-      // const schema = schemas.defineSchema(entity);
-      // const normalizedData = schemas.makeNormalize(response, schema);
-      // list: normalizedData["entities"][schemas.entityName]
-      // console.log("Normalizr Data:", normalizedData);
       return {
         ...state, 
         fetching: false,
@@ -117,7 +110,7 @@ export default {
     case PEDDING: {
       return {
         ...state,
-        adding: true,
+        updating: true,
         showForm: true
       };
     }
@@ -126,7 +119,7 @@ export default {
         ...state,
         updating: false,
         showForm: true,
-        error: action.payload.response.data
+        error: action.payload.response
       };
     }
     case FULFILLED: {

@@ -33,6 +33,8 @@ export default class Form extends Modal {
   render() {
     const {productsTagUpdate, form, locale} = this.props;
 
+    this.submitLoading  = productsTagUpdate.updating;
+
     if (productsTagUpdate.showForm) {
       this.content = (
         <div>

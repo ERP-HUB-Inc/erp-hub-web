@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Form } from "antd";
 import FormUpdate from "../../../components/products/ProductsUnit/FormUpdate";
 
-class ManagementEmployeeForm extends React.Component {
+class ProductsUnitForm extends React.Component {
   render() {
     return (
       <FormUpdate {...this.props} />
@@ -25,6 +25,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const managementEmployeeForm = Form.create(mapPropsToFields)(ManagementEmployeeForm);
+const productsUnitForm = Form.create(mapPropsToFields)(ProductsUnitForm);
 
-export default connect(mapStateToProps)(managementEmployeeForm);
+export default connect(mapStateToProps)(productsUnitForm);

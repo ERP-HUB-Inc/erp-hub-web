@@ -2,11 +2,11 @@ import Constant from "../../constants/products/productsUnit";
 import productsUnitService from "../../services/products/productsUnit";
 
 export default {
-  fetch: (limit, offset, sortField, sortOrder) => {
+  fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PRODUCTS_UNIT,
-        payload: productsUnitService.lists(limit, offset, sortField, sortOrder)
+        payload: productsUnitService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },

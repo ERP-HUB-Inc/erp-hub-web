@@ -1,11 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
-import ManageEmployeeList from "../../../components/products/ProductsUnit";
+import {Form} from "antd";
+import ProductUnitList from "../../../components/products/ProductsUnit";
 
-class EmployeeManagement extends React.Component {
+class ProductsUnit extends React.Component {
   render() {
     return (
-      <ManageEmployeeList {...this.props} />
+      <ProductUnitList {...this.props} />
     );
   }
 }
@@ -19,4 +20,12 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(EmployeeManagement);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const productsUnit = Form.create(mapPropsToFields)(ProductsUnit);
+
+export default connect(mapStateToProps)(productsUnit);

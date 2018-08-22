@@ -5,15 +5,15 @@ import FormUpdate from "../../../containers/products/productsTag/FormUpdate";
 import Constant from "../../../constants/products/productsTag";
 import ProductsTagAction from "../../../actions/products/productsTag";
 import ProductsTagService from "../../../services/products/productsTag";
-import "./index.css";
 
-export default class PaymentMethodList extends List {
+export default class ProductsTagList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
     this.fetchingProp = "productsTag";
     this.addingProp = "productsTagAdd";
     this.updatingProp = "productsTagUpdate";
+    this.columnFilterWithKey = ["name"];
     this.service = ProductsTagService;
     this.action = ProductsTagAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCTS_TAG;
@@ -34,6 +34,11 @@ export default class PaymentMethodList extends List {
       modalConten: <FormUpdate/>
     });
   }
+
+  render() {
+    return super.render();
+  }
+
 }
 
 class Column extends List {

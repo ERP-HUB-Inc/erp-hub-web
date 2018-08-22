@@ -1,65 +1,32 @@
 import React from "react";
+import LanguageAction from "../../../../pos/action/settings/storeLanguage";
 import { Modal }  from "../../shares/Modal/modal";
 
 export default class FormItem extends Modal {
-  constructor(props){
-    super(props);
-    this.remove = this.remove.bind(this);
-    this.add = this.add.bind(this);
-    this.remove = this.remove.bind(this);
+ 
+  componentDidMount(){
+    const {dispatch} = this.props;
+    dispatch(LanguageAction.fetch());
   }
-
-  add(existContactIndex){
-    this.contactIndex = existContactIndex; 
-    const {form} = this.props;
-    const keys = form.getFieldValue("keys");
-    // keys.map((values) =>values.length);
-    const nextContactKeys = keys !== null || keys !== " " ? keys.concat(this.contactIndex) : "";  
-    this.contactIndex++;
-    form.setFieldsValue({
-      keys: nextContactKeys
-    });
-  }
-
-  remove(contactIndex){
-    const {form} = this.props;
-    const contactKeys = form.getFieldValue("keys");
-    if (contactKeys.length === 0) {
-      return;
-    }
-    form.setFieldsValue({
-      keys: contactKeys.filter((contact, index) => index !== contactIndex)
-    });
-  }
-
 
   render() {
-    const {form,locale,formData,productsType} = this.props;
+    const {form,locale,formData} = this.props;
     const {getFieldDecorator,getFieldValue} = this.props.form;
 
     getFieldDecorator("keys", {initialValue: formData });
 
     let keys = getFieldValue("keys");
-    if(keys == null || keys == ""){
+    if(keys === null || keys === ""){
       keys = [];
     }
+    keys = formData;
 
-    const keysLength = keys.length;
-    const productsLength = productsType.length;
-    let getKey = [];
-    if (keysLength === productsLength) {
-      keys = formData.map((values) => [] = values.productTypeDescriptions);
-      console.log("keys",keys);
-    }
+    // console.log("get values",keys);
 
-    // console.log("product types",JSON.stringify(formData[0].status));
-    // console.log("product",JSON.stringify(formData));
-    console.log("keys",JSON.stringify(keys) );
-
-    return (
+    return (  
       <div>
         <this.Tabs type="card">
-          <this.TabPane tab="General" key="1">
+          <this.TabPane tab={ <this.Translate id="tab_products_products_type_general" /> } key="1">
             <this.Row>
               <this.Col md="12">
                 <this.InputText
@@ -86,12 +53,11 @@ export default class FormItem extends Modal {
               </this.Col>
             </this.Row>
           </this.TabPane>
-          <this.TabPane tab="Language" key="2">
+          <this.TabPane tab={ <this.Translate id="tab_products_products_type_language" /> } key="2">
             { console.log("get keys",keys) }
             
             { 
-              keys.map((products, index) =>
-               
+              keys.map((language, index) =>
                 <div key={index}>
                   <this.Row>
                     <this.Col md="12">
@@ -99,22 +65,22 @@ export default class FormItem extends Modal {
                       <hr/>
                     </this.Col>
                     <this.InputText 
-                      name={`cont_id[${index}]`} 
+                      name={`languageId[${index}]`} 
                       type="hidden"
-                      data={ products.id !== null ? products.id : "" }
+                      data={ language.id !== null ? language.id : "" }
                       form={ form } />
                     <this.Col md="12">
                       <this.InputText 
-                        name={`cont_name[${index}]`} 
-                        data={ products.name }
+                        name={`languageName[${index}]`} 
+                        data={ language.name }
                         label={<this.Translate id="input_products_products_type_language_name" />} 
                         placeholder={this.CATranslate("input_products_products_type_language_name", locale)}  
                         form={ form } />
                     </this.Col>
                     <this.Col md="12">    
                       <this.InputTextArea
-                        name={`const_address[${index}]`}  
-                        data={products.address}
+                        name={`languageDescription[${index}]`}  
+                        data={language.description}
                         label={<this.Translate id="input_products_products_type_language_description" />} 
                         placeholder={this.CATranslate("input_products_products_type_language_description", locale)}  
                         max={100}  
@@ -132,17 +98,11 @@ export default class FormItem extends Modal {
                       :
                       null
                   }
-                </div>
-
+                </div>  
               )
               
-            } 
+            }  
           
-            <div className="btn-addcontact">
-              <this.Button onClick={() => this.add(keys.length)} style={{ width: "60%" }}>
-                <span className="icon-add"></span> <this.Translate id="button_add_products_products_language" />
-              </this.Button>
-            </div>
           </this.TabPane>
 
         </this.Tabs>

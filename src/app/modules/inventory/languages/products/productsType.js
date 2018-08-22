@@ -35,6 +35,19 @@ export default {
     "Description",
   ],  
 
+  "tab_products_products_type_general": [
+    "General",
+    "အမည်",
+    "General",
+  ],  
+
+  "tab_products_products_type_language": [
+    "Language",
+    "အမည်",
+    "Language",
+  ],  
+
+
   //language 
 
   "title_products_products_type_language": [
