@@ -10,11 +10,11 @@ export default class BaseService extends Service {
   }
 
   detail(
-    ids
+    id
   ){
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
     return this.GET({ 
-      url: `${this.baseUrl}/detail/${ids}`,
+      url: `${this.baseUrl}/detail/${id}`,
       data: this.data,
       headers: this.header
     });

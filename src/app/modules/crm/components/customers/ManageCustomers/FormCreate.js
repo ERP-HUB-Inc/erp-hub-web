@@ -62,6 +62,8 @@ export default class FormCreate extends Modal {
           values["contacts"] = contacts;
         }
 
+        console.log("Customers:", values);
+
         this.dispatch(CustomerAction.add(values));
         
       }

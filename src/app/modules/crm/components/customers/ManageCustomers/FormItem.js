@@ -21,8 +21,8 @@ export default class FormItem extends Modal {
   }
 
   add(newContact){
-    const {form} = this.props;
-    const contactKeys = form.getFieldValue("keys");
+    const {formData, form} = this.props;
+    const contactKeys = formData.contacts;
     contactKeys.push(newContact);
     form.setFieldsValue({
       keys: contactKeys
@@ -205,7 +205,7 @@ export default class FormItem extends Modal {
                 <this.Select
                   name="groupCustomerId"
                   label={<this.Translate id="input_management_customer_customer_group" />}
-                  placeholder="Please select customer"
+                  placeholder={this.CATranslate("select_customer_place_holder_group", locale)}
                   defaultValue={formData.groupCustomerId}
                   dataSource={customer}
                   form={form}/>
