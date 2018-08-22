@@ -25,6 +25,8 @@ import managementCustomers from "../modules/crm/reducers/customers/managementCut
 import groupCustomers from "../modules/crm/reducers/customers/groupCustomers";
 import productsUnit from "../modules/inventory/reducers/products/productsUnit";
 import brand from "../modules/inventory/reducers/products/brand";
+import productsType from "../modules/inventory/reducers/products/productsType";
+import productsTag from "../modules/inventory/reducers/products/productsTag";
 
 const reducer = combineReducers({
   client,
@@ -51,7 +53,9 @@ const reducer = combineReducers({
   managementCustomers,
   groupCustomers,
   productsUnit,
-  brand
+  brand,
+  productsType,
+  productsTag
 });
 
 export default reducer;

@@ -1,0 +1,45 @@
+import React from "react";
+import FormItem from "./FormItem";
+import { Modal } from "../../shares/Modal/modal";
+import ProductsTagAction from "../../../actions/products/productsTag";
+
+export default class FormCreate extends Modal {
+  constructor(props) {
+    super(props);
+    this.title = <this.Translate id="create_products_tag_title" />;
+    this.addingPropReducer = "productsTagAdd";
+    this.dispatch = this.props.dispatch;
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit (e) {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        this.dispatch(ProductsTagAction.add(values));   
+      }
+    });
+  }
+      
+  handleCancel() {
+    this.dispatch(ProductsTagAction.reset());
+  }
+
+  render() {
+    const {productsTagAdd, form, locale} = this.props;
+    
+    this.submitLoading = productsTagAdd.adding;
+
+    if (productsTagAdd.showForm) {
+      this.content = (
+        <div>
+          { productsTagAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" }
+          <FormItem form={form} locale={locale}/>
+        </div>
+      );
+      return super.render();
+    } else {
+      return (<div></div>);
+    }
+  }
+}

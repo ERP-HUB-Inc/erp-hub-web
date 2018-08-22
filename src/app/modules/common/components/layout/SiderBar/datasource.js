@@ -8,8 +8,8 @@ import ReturnExchange from "../../../../pos/containers/transactions/ReturnExchan
 // PRODUCT
 import ManageProduct from "../../../../pos/containers/products/ManageProduct";
 import Brand from "../../../../inventory/containers/products/Brand";
-import ProductType from "../../../../pos/containers/products/ProductType";
-import ProductTag from "../../../../pos/containers/products/ProductTag";
+import ProductType from "../../../../inventory/containers/products/ProductsType";
+import ProductTag from "../../../../inventory/containers/products/productsTag";
 import PrintPriceTag from "../../../../pos/containers/products/PrintPriceTag";
 import ProductUnit from "../../../../inventory/containers/products/ProductsUnit";
 import PriceBook from "../../../../pos/containers/products/PriceBook";
@@ -108,49 +108,57 @@ const dataSource = {
         title: "Manage Products",
         icon: "icon-time",
         route: "/products/return-exchange",
-        component: ManageProduct
+        component: ManageProduct,
+        isFashNav: true
       },
       {
         title: "Brands",
         icon: "icon-brand",
         route: "/products/brand",
-        component: Brand
+        component: Brand,
+        isFashNav: true
       },
       {
         title: "Product Types",
         icon: "icon-types",
         route: "/products/types",
-        component: ProductType
+        component: ProductType,
+        isFashNav: true
       },
       {
         title: "Product Tags",
         icon: "icon-tags",
         route: "/products/tags",
-        component: ProductTag
+        component: ProductTag,
+        isFashNav: true
       },
       {
         title: "Print Price Tags",
         icon: "icon-price-book",
         route: "/products/price-tags",
-        component: PrintPriceTag
+        component: PrintPriceTag,
+        isFashNav: true
       },
       {
         title: "Manage Units",
         icon: "icon-price-book",
         route: "/products/units",
-        component: ProductUnit
+        component: ProductUnit,
+        isFashNav: true
       },
       {
         title: "Price Books",
         icon: "icon-price-book",
         route: "/products/price-books",
-        component: PriceBook
+        component: PriceBook,
+        isFashNav: true
       },
       {
         title: "Promotions",
         icon: "icon-promotion",
         route: "/products/promotion",
-        component: Promotion
+        component: Promotion,
+        isFashNav: true
       }
     ]
   },

@@ -38,6 +38,16 @@ export default class BaseService extends Service {
     });
   }
 
+  listsLanguage(
+    languageId
+  ){
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    return this.GET({ 
+      url: `${this.baseUrl}/lists?languageId=en`,
+      data: this.data,
+      headers: this.header
+    });
+  }
 
   archive(ids) {
     return this.DELETE({  

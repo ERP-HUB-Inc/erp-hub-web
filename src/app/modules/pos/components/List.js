@@ -3,7 +3,6 @@ export default class List extends Listiew {
   constructor(props){
     super(props);
     this.module = "settings";
-    // this.isShowRowExpend = true;
   }
     
 }

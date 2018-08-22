@@ -301,7 +301,7 @@ export default class List extends Component {
   renderBreadCrumb() {
     // get current path of breadcrum compare with url
     const currentPath = window.location.pathname;
-
+    console.log("Current Module:", this.module);
     return (
       <div className="breadcrumb">
         <ul className="list-unstyled">
