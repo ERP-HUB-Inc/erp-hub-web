@@ -32,8 +32,8 @@ export default class PicturesUpload extends Element {
   handleCardChange({fileList}){
     alert("handle change");
     this.setState({ cardImgList: fileList });
-    const handleCardChange=handleCardChange;
-    handleCardChange && handleCardChange({fileList});
+    // const handleCardChange=handleCardChange;
+    // handleCardChange && handleCardChange({fileList});
 
     let formData = new FormData();
     axios.post("http://178.128.217.131:3000/api/employee/v1/upload/file", formData,{

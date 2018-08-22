@@ -30,6 +30,15 @@ export default {
       error: null
     };
   },
+  detail: (key="response") => {
+    return {
+      showForm: false,
+      fetching: false,
+      fetched: false,
+      data: null,
+      error: null
+    };
+  },
   add: (key="response") => {
     return {
       showForm: false,

@@ -13,7 +13,8 @@ class ManagementEmployeeForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    manageCustomersUpdate: state.reducer.managementCustomers.update,
+    customerUpdate: state.reducer.managementCustomers.update,
+    customerDetail: state.reducer.managementCustomers.detail,
     groupCustomers: state.reducer.groupCustomers.request,
     groupCustomersAdd: state.reducer.groupCustomers.add,
     initialValues: state.reducer.managementCustomers.update.data,

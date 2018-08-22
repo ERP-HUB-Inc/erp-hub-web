@@ -56,9 +56,9 @@ export default {
     "Phone number"
   ],
   "input_management_customer_customer_group": [
-    "Customer",
+    "Group",
     "အမည်",
-    "Customer"
+    "Group"
   ],
   "input_management_customer_company": [
     "Company",
@@ -87,7 +87,6 @@ export default {
     "Name"
   ],
 
-
   "input_management_contact_number": [
     "Contact",
     "အမည်",
@@ -104,6 +103,12 @@ export default {
     "Address",
     "အမည်",
     "Address"
+  ],
+
+  "select_customer_place_holder_group": [
+    "Please select group",
+    "Please select group",
+    "Please select group"
   ],
 
   "input_error_management_customer_first_name_length": [

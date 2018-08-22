@@ -40,5 +40,14 @@ export default combineReducers({
     ];
     return reducer.update(state, action, constants);
   },
+  detail: (state = InitialState.detail(), action) => {
+    const constants = [
+      Constant.DETAIL_CUSTOMERS_PENDING,
+      Constant.DETAIL_CUSTOMERS_REJECTED,
+      Constant.DETAIL_CUSTOMERS_FULFILLED,
+      Constant.RESET_DETAIL_CUSTOMERS
+    ];
+    return reducer.detail(state, action, constants);
+  },
 
 });

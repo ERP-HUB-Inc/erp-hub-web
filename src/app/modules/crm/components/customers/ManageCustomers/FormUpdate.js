@@ -34,9 +34,9 @@ export default class FormCreate extends Modal {
         delete values["keys"];
         delete values["status"];
           
-        let id = this.props.manageCustomersUpdate.data.id;
+        let id = this.props.customerDetail.data.id;
         if(id !== null){
-          values["id"] = this.props.manageCustomersUpdate.data.id;
+          values["id"] = this.props.customerDetail.data.id;
         }
        
         if(listContacts.name == null){
@@ -66,6 +66,7 @@ export default class FormCreate extends Modal {
         }
 
         values["status"] = this.Enum.ACTIVE;
+        
         this.dispatch(CustomerAction.update(values));
       }
     });
@@ -82,16 +83,16 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    const {manageCustomersUpdate, form, groupCustomers, locale} = this.props;
+    const {customerDetail, customerUpdate, form, groupCustomers, locale} = this.props;
 
-    this.submitLoading = manageCustomersUpdate.updating;
+    this.submitLoading = customerUpdate.updating;
     
-    if (manageCustomersUpdate.showForm) {
+    if (customerDetail.showForm && customerDetail.fetched) {
       this.content = (
         <FormItem
           form={form}
           dispatch={this.props.dispatch}
-          formData={manageCustomersUpdate.data}
+          formData={customerDetail.data}
           groupCustomers={groupCustomers}
           addCustomerGroup={this.addCustomerGroup}
           locale={locale}

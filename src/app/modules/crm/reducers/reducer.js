@@ -1,4 +1,5 @@
-// import { normalize, schema } from "normalizr";
+import InitialState from "../../common/reducers/initialState";
+
 export default {
   request: (state, action, [PEDDING, REJECT, FULFILLED], schemas) => {
     switch(action.type) {
@@ -111,7 +112,7 @@ export default {
     case PEDDING: {
       return {
         ...state,
-        adding: true,
+        updating: true,
         showForm: true
       };
     }
@@ -139,6 +140,39 @@ export default {
         updated: false,
         response: null
       };
+    }
+    default: 
+      return state;
+    }
+  },
+  detail: (state, action, [PEDDING, REJECT, FULFILLED, RESET]) => {
+    switch(action.type) {
+    case PEDDING: {
+      return {
+        ...state,
+        fetching: true,
+        showForm: false
+      };
+    }
+    case REJECT: {
+      return {
+        ...state,
+        fetching: false,
+        showForm: false,
+        error: action.payload.data
+      };
+    }
+    case FULFILLED: {
+      return {
+        ...state,
+        fetching: false,
+        showForm: true,
+        fetched: true,
+        data: action.payload.data.data
+      };
+    }
+    case RESET: {
+      return InitialState.detail();
     }
     default: 
       return state;

@@ -37,7 +37,7 @@ export default {
   reset: () => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET_MANAGEMENT_CUSTOMERS,
+        type: Constant.RESET_DETAIL_CUSTOMERS,
         payload: null
       });
     };
@@ -45,8 +45,8 @@ export default {
   showForm: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.SHOW_MANAGEMENT_CUSTOMERS_FORM,
-        payload: data
+        type: Constant.DETAIL_CUSTOMERS,
+        payload: managementEmployeeService.detail(data.id)
       });
     };
   }
