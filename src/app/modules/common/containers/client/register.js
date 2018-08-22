@@ -1,5 +1,6 @@
 import React from "react";
-import  { connect } from "react-redux";
+import  {connect} from "react-redux";
+import {Form} from "antd";
 import Component from "../../components/Component";
 import ClientRegister from "../../components/client/register";
 
@@ -18,4 +19,12 @@ function mapStateToProps(state) {
   };
 }
  
-export default connect (mapStateToProps)(Register);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const register = Form.create(mapPropsToFields)(Register);
+
+export default connect(mapStateToProps)(register);

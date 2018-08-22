@@ -21,7 +21,7 @@ export default class PaymentMethodList extends List {
   }
 
   handleShowFormAdd() {
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
     dispatch(PaymentMethodAction.showForm());
     this.setState({
       modalConten: <FormCreate/>
@@ -29,7 +29,7 @@ export default class PaymentMethodList extends List {
   }
 
   handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
     dispatch(PaymentMethodAction.showForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>

@@ -3,11 +3,11 @@ import managementEmployeeService from "../../services/groupCustomers/groupCustom
 
 export default {
 
-  fetch: (limit, offset, sortField, sortOrder) => {
+  fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_MANAGEMENT_GROUP_CUSTOMERS,
-        payload: managementEmployeeService.lists(limit, offset, sortField, sortOrder)
+        payload: managementEmployeeService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },

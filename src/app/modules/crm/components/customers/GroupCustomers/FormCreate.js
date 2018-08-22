@@ -8,10 +8,8 @@ export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
     this.title = <this.Translate id="create_group_customer_title" />;
-    this.addingPropReducer = "groupCustomersAdd";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
-    // this.RESET_CONSTANT = "";
     this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
   }
 
@@ -20,7 +18,6 @@ export default class FormCreate extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         this.dispatch(GroupCustomerAction.add(values));
-        
       }
     });
   }
@@ -31,7 +28,9 @@ export default class FormCreate extends Modal {
 
   render() {
     const {groupCustomersAdd, form, locale} = this.props;
+    
     this.submitLoading = groupCustomersAdd.adding;
+
     if (groupCustomersAdd.showForm) {
       this.content = (
         <div>

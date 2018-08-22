@@ -17,6 +17,7 @@ export default class CustomerList extends List {
     this.updatingProp = "groupCustomersUpdate";
     this.service = CutomerService;
     this.action = CutomerAction;
+    this.columnFilterWithKey = ["name"];
     this.RESET_CONSTANT = Constant.RESET_MANAGEMENT_GROUP_CUSTOMERS;
   }
 

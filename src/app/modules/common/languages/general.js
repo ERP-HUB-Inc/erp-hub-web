@@ -11,6 +11,18 @@ export default {
     "Date"
   ],
 
+  "text_add": [
+    "Add",
+    "Add",
+    "Add"
+  ],
+
+  "text_remove": [
+    "Remove",
+    "Remove",
+    "Remove"
+  ],
+
   "text_updated_at": [
     "Update",
     "Update",

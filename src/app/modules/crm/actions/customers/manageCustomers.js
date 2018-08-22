@@ -2,11 +2,11 @@ import Constant from "../../constants/customers/managementCutomers";
 import managementEmployeeService from "../../services/customers/manageCustomer";
 
 export default {
-  fetch: (limit, offset, sortField, sortOrder) => {
+  fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_MANAGEMENT_CUSTOMERS,
-        payload: managementEmployeeService.lists(limit, offset, sortField, sortOrder)
+        payload: managementEmployeeService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },
@@ -34,15 +34,23 @@ export default {
       });
     };
   },
-  reset: () => {
+  reset: (RESET_CONSTANT) => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET_DETAIL_CUSTOMERS,
+        type: RESET_CONSTANT,
         payload: null
       });
     };
   },
-  showForm: (data) => {
+  showForm: () => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.SHOW_MANAGEMENT_CUSTOMERS_FORM,
+        payload: null
+      });
+    };
+  },
+  requestAndShowForm: (data) => {
     return dispatch => {
       return dispatch({
         type: Constant.DETAIL_CUSTOMERS,

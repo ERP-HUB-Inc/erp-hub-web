@@ -4,7 +4,8 @@ import Modal from "../../shares/Modal";
 import CustomerAction from "../../../actions/customers/manageCustomers";
 import GroupCustomerAction from "../../../actions/customers/groupCustomer";
 import CreateCustomerGroup from "../../../containers/customers/GroupCustomers/FormCreate";
-import Constant from "../../../constants/customers/groupCustomer";
+import ConstantGroupCustomer from "../../../constants/customers/groupCustomer";
+import Constant from "../../../constants/customers/managementCutomers";
 
 export default class FormCreate extends Modal {
   constructor(props) {
@@ -62,8 +63,6 @@ export default class FormCreate extends Modal {
           values["contacts"] = contacts;
         }
 
-        console.log("Customers:", values);
-
         this.dispatch(CustomerAction.add(values));
         
       }
@@ -71,7 +70,7 @@ export default class FormCreate extends Modal {
   }
       
   handleCancel() {
-    this.dispatch(CustomerAction.reset());
+    this.dispatch(CustomerAction.reset(Constant.RESET_MANAGEMENT_CUSTOMERS));
   }
 
   addCustomerGroup(){
@@ -94,7 +93,7 @@ export default class FormCreate extends Modal {
     // APPEND GROUP CUSTOMER TO LIST
     if (groupCustomersAdd.response != null) {
       groupCustomers.list = [groupCustomersAdd.response.data, ...groupCustomers.list];
-      this.props.dispatch({type: Constant.RESET_MANAGEMENT_GROUP_CUSTOMERS});
+      this.props.dispatch({type: ConstantGroupCustomer.RESET_MANAGEMENT_GROUP_CUSTOMERS});
     }
 
     if (manageCustomersAdd.showForm) {

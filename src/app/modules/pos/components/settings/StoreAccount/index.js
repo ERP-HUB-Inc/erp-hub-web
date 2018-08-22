@@ -427,7 +427,6 @@ export default class StoreAccountList extends Component {
                     </div>
                   
                     <this.FormGroup>
-
                       <this.RadioBox 
                         className="main-radio-acc"
                         label=" "

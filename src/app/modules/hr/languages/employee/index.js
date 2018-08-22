@@ -1,15 +1,4 @@
 export default {
-  "text_add": [
-    "Add Employee-En",
-    "Add Employee-fr",
-    "Add Employee-es"
-  ],
-  "text_delete": [
-    "Delete Employe-En",
-    "Delete Employee-fr",
-    "Página de información"
-  ],
-
   "col_hr_employee_full_name": [
     "Full name",
     "အမည်",

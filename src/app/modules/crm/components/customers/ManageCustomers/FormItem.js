@@ -249,7 +249,16 @@ export default class FormItem extends Modal {
                   placeholder={this.CATranslate("input_management_customer_address", locale)}
                   max={100}
                   form={form}/>
-              </this.Col>  
+              </this.Col> 
+              
+              <this.Col md="12">
+                <this.Select
+                  name="state"
+                  label={<this.Translate id="text_status" />}
+                  dataSource={this.statusDataSource}
+                  defaultValue={formData.status}
+                  form={form}/>
+              </this.Col> 
 
             </this.Row>
           </this.TabPane>
@@ -259,20 +268,23 @@ export default class FormItem extends Modal {
               
             {
               keys.map((contact, index) =>
-                <FormContact
-                  key={index}
-                  totalKeys={keys}
-                  index={index}
-                  contact={contact}
-                  form={form}
-                  locale={locale}
-                  remove={() => this.remove(index)}
-                />
+                contact.isSystem === this.Enum.IS_SYSTEM ?
+                  ""
+                  :
+                  <FormContact
+                    key={index}
+                    totalKeys={keys}
+                    index={index}
+                    contact={contact}
+                    form={form}
+                    locale={locale}
+                    remove={() => this.remove(index)}
+                  />
               )
             } 
             <div className="btn-addcontact">
               <this.Button onClick={() => this.add({id: "", status: this.Enum.ACTIVE})} style={{ width: "60%" }}>
-                <span className="icon-add"></span> <span>Add</span>
+                <span className="icon-add"></span> <span><this.Translate id="text_add" /></span>
               </this.Button>
             </div>
           </this.TabPane>

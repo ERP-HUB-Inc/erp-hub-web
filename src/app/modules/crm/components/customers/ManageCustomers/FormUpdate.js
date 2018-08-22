@@ -4,6 +4,7 @@ import Modal from "../../shares/Modal";
 import CustomerAction from "../../../actions/customers/manageCustomers";
 import GroupCustomerAction from "../../../actions/customers/groupCustomer";
 import CreateCustomerGroup from "../../../containers/customers/GroupCustomers/FormCreate";
+import Constant from "../../../constants/customers/managementCutomers";
 
 export default class FormCreate extends Modal {
   constructor(props) {
@@ -65,7 +66,7 @@ export default class FormCreate extends Modal {
           values["listContact"] = contacts;
         }
 
-        values["status"] = this.Enum.ACTIVE;
+        values["status"] = values["state"];
         
         this.dispatch(CustomerAction.update(values));
       }
@@ -73,7 +74,7 @@ export default class FormCreate extends Modal {
   }
       
   handleCancel() {
-    this.dispatch(CustomerAction.reset());
+    this.dispatch(CustomerAction.reset(Constant.RESET_DETAIL_CUSTOMERS));
   }
 
   addCustomerGroup(){
