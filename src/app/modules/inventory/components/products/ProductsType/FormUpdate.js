@@ -33,12 +33,15 @@ export default class Form extends Modal {
   }
 
   render() {
-    const {productsTypeUpdate, form, locale, productsType} = this.props;
+    const {productsTypeUpdate, form, locale, productsType,storeLanguage,dispatch} = this.props;
+
+    this.submitLoading = productsTypeUpdate.updating;
+
     if (productsTypeUpdate.showForm) {
       this.content = (
         <div>
           {productsTypeUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <FormItem formData={productsType} productsType={productsType} form={form} locale={locale}/>
+          <FormItem formData={storeLanguage} dispatch={ dispatch } productsType={productsType} form={form} locale={locale}/>
         </div>
       );
       return super.render();

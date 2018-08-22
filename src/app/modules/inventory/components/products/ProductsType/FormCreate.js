@@ -16,8 +16,37 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log(values);
-        // this.dispatch(ProductsTypeAction.add(values));   
+        delete values["keys"];
+        // const listLangage = {
+        //   id: values.languageId,
+        //   name: values.languageName,
+        //   descripton : values.languageDescription
+        // };
+
+
+        // const languge = [];
+
+        // listLangage.id.forEach((name, index) => {
+        //   if (
+        //     listLangage.descripton[index] != null
+        //   ) {
+        //     languge.push({
+        //       languageId: listLangage.id[index],
+        //       name: listLangage.name[index],
+        //       descripton: listLangage.descripton[index]
+        //     });
+        //   }
+        // });
+
+        delete values["languageId"];
+        delete values["languageName"];
+        delete values["languageDescription"];
+
+        // values["productTypeDescriptions"] = languge;
+
+        // console.log("language",JSON.stringify(listLangage));
+        console.log("language values",values);
+        // this.dispatch(ProductsTypeAction.add(values)); 
       }
     });
   }
@@ -27,7 +56,7 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    const {productsTypeAdd, form, locale, productsType} = this.props;
+    const {productsTypeAdd,form,locale,storeLanguage,dispatch} = this.props;
     
     this.submitLoading = productsTypeAdd.adding;
 
@@ -35,7 +64,7 @@ export default class FormCreate extends Modal {
       this.content = (
         <div>
           { productsTypeAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" }
-          <FormItem form={form} formData={[]} productsType={[]} locale={locale}/>
+          <FormItem form={form} formData={storeLanguage} dispatch={ dispatch } productsType={[]} locale={locale}/>
         </div>
       );
       return super.render();

@@ -37,10 +37,10 @@ export default class TaxList extends List {
     });
   }
 
-
   render() {
     return super.render();
   }
+  
 }
 
 class Column extends List {
