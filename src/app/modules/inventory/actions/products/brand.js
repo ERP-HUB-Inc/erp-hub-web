@@ -2,11 +2,11 @@ import Constant from "../../constants/products/brand";
 import brandService from "../../services/products/brand";
 
 export default {
-  fetch: (limit, offset, sortField, sortOrder) => {
+  fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_BRAND,
-        payload: brandService.lists(limit, offset, sortField, sortOrder)
+        payload: brandService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },
