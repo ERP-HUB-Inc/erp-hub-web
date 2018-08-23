@@ -36,7 +36,7 @@ export default class CustomerList extends List {
 
   componentDidMount(){
     const {dispatch} = this.props;
-    dispatch(GroupCustomerAction.fetch());
+    dispatch(GroupCustomerAction.fetch(this.pageSize));
     super.componentDidMount();
   }
 
@@ -86,7 +86,7 @@ export default class CustomerList extends List {
           const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
           let filter = {status};
 
-          if (values.groupCustomerId != this.groupCustomerList.value) {
+          if ((values.groupCustomerId - this.groupCustomerList.value) !== 0) {
             filter["groupCustomerId"] = values.groupCustomerId;
           }
 
@@ -102,52 +102,54 @@ export default class CustomerList extends List {
 
   renderFilterRecord() {
     const {customerGroup, form} = this.props;
-    const fetchingProps = this.props[this.fetchingProp];
-    let groupCustomerList = this.Util.renameObjectKey({ name: "name", id: "value" }, customerGroup.list);
+    if (customerGroup) {
+      const fetchingProps = this.props[this.fetchingProp];
+      let groupCustomerList = this.Util.renameObjectKey({ name: "name", id: "value" }, customerGroup.list);
 
-    if (customerGroup.fetched) {
-      groupCustomerList.push(this.groupCustomerList);
-    }
+      if (customerGroup.fetched) {
+        groupCustomerList.push(this.groupCustomerList);
+      }
     
-    return (
-      form == null ?
-        ""
-        :
-        <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout form-group">
-            <this.Col md="3">
-              <this.InputText
-                name="key"
-                label="Search"
-                placeholder="Search for code, name and address"
-                form={form}
-              />
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="groupCustomerId"
-                label={<this.Translate id="input_management_customer_customer_group" />}
-                dataSource={groupCustomerList}
-                defaultValue={this.groupCustomerList.value}
-                form={form}
-              />
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="status"
-                label={<this.Translate id="text_status" />}
-                placeholder="Please select status"
-                dataSource={this.statusList}
-                defaultValue={this.Enum.ALL_STATE}
-                form={form}
-              />
-            </this.Col>
-            <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-              <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-            </this.Button>
-          </this.Row>
-        </this.Form>
-    );
+      return (
+        form == null ?
+          ""
+          :
+          <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
+            <this.Row className="main-search-layout form-group">
+              <this.Col md="3">
+                <this.InputText
+                  name="key"
+                  label="Search"
+                  placeholder="Search for code, name and address"
+                  form={form}
+                />
+              </this.Col>
+              <this.Col md="2">
+                <this.Select
+                  name="groupCustomerId"
+                  label={<this.Translate id="input_management_customer_customer_group" />}
+                  dataSource={groupCustomerList}
+                  defaultValue={this.groupCustomerList.value}
+                  form={form}
+                />
+              </this.Col>
+              <this.Col md="2">
+                <this.Select
+                  name="status"
+                  label={<this.Translate id="text_status" />}
+                  placeholder="Please select status"
+                  dataSource={this.statusList}
+                  defaultValue={this.Enum.ALL_STATE}
+                  form={form}
+                />
+              </this.Col>
+              <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+              </this.Button>
+            </this.Row>
+          </this.Form>
+      ); 
+    }
   }
 
   render() {

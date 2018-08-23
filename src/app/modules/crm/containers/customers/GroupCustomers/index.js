@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {Form} from "antd";
 import GroupCustomerList from "../../../components/customers/GroupCustomers";
 
-class ManagementCutomer extends React.Component {
+class GroupCustomer extends React.Component {
   render() {
     return (
       <GroupCustomerList {...this.props} />
@@ -19,12 +19,12 @@ function mapStateToProps(state) {
   };
 }
 
-function maPropsToFields(props) {
+function mapPropsToFields(props) {
   return {
     form: props.form
   };
 }
 
-const managementCutomer = Form.create(maPropsToFields)(ManagementCutomer);
+const groupCustomer = Form.create(mapPropsToFields)(GroupCustomer);
 
-export default connect(mapStateToProps)(managementCutomer);
+export default connect(mapStateToProps)(groupCustomer);

@@ -6,6 +6,7 @@ export class CTable extends React.Component {
   render() {
     return (
       <Table
+        rowKey={record => record.id}
         rowSelection={this.props.rowSelection}
         columns={this.props.columns}
         dataSource={this.props.dataSource}
@@ -23,6 +24,7 @@ export class TableExpand extends React.Component {
   render() {
     return (
       <Table
+        rowKey={record => record.id}
         expandedRowRender={this.props.expandedRowRender}
         rowSelection={this.props.rowSelection}
         columns={this.props.columns}
@@ -41,6 +43,7 @@ export class SubTable extends React.Component {
   render() {
     return (
       <Table
+        rowKey={record => record.id}
         columns={this.props.columns}
         dataSource={this.props.dataSource}
         pagination={false}

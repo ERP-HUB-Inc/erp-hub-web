@@ -1,12 +1,12 @@
 import React from "react";
-import Create from "../../../components/customers/GroupCustomers/FormCreate";
-import { connect } from "react-redux";
-import { Form } from "antd";
+import FormCreate from "../../../components/customers/GroupCustomers/FormCreate";
+import {connect} from "react-redux";
+import {Form} from "antd";
 
-class GroupEmployeeForm extends React.Component {
+class GroupCustomerCreate extends React.Component {
   render() {
     return (
-      <Create {...this.props} />
+      <FormCreate {...this.props} />
     );
   }
 }
@@ -24,6 +24,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const groupCustomerForm =  Form.create(mapPropsToFields)(GroupEmployeeForm);
+const groupCustomerCreate =  Form.create(mapPropsToFields)(GroupCustomerCreate);
 
-export default connect(mapStateToProps)(groupCustomerForm);
+export default connect(mapStateToProps)(groupCustomerCreate);

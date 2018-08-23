@@ -1,5 +1,7 @@
+import InitialState from "./initialState";
+
 export default {
-  request: (state, action, [PEDDING, REJECT, FULFILLED, RESET]) => {
+  request: (state, action, [PEDDING, REJECT, FULFILLED], schemas) => {
     switch(action.type) {
     case PEDDING: {
       return {
@@ -21,15 +23,6 @@ export default {
         fetched: true,
         pagination: action.payload.data.pagination,
         list: action.payload.data.data
-      };
-    }
-    case RESET: {
-      return {
-        fetching: false,
-        fetched: false,
-        pagination: null,
-        list: [],
-        error: null
       };
     }
     default:
@@ -63,7 +56,7 @@ export default {
       return state;
     }
   },
-  add: (state, action, [PEDDING, REJECT, FULFILLED, SHOW_FORM, RESET, RESET_DATA_ONLY]) => {
+  add: (state, action, [PEDDING, REJECT, FULFILLED, SHOW_FORM, RESET]) => {
     switch(action.type) {
     case SHOW_FORM: {
       return {
@@ -90,7 +83,7 @@ export default {
       return {
         ...state,
         adding: false,
-        showForm: true,
+        showForm: false,
         added: true,
         response: action.payload.data
       };
@@ -99,14 +92,6 @@ export default {
       return {
         adding: false,
         showForm: false,
-        added: false,
-        response: null
-      };
-    }
-    case RESET_DATA_ONLY: {
-      return {
-        adding: false,
-        showForm: true,
         added: false,
         response: null
       };
@@ -127,7 +112,7 @@ export default {
     case PEDDING: {
       return {
         ...state,
-        adding: true,
+        updating: true,
         showForm: true
       };
     }
@@ -136,7 +121,7 @@ export default {
         ...state,
         updating: false,
         showForm: true,
-        error: action.payload.response.data
+        error: action.payload.response
       };
     }
     case FULFILLED: {
@@ -155,6 +140,39 @@ export default {
         updated: false,
         response: null
       };
+    }
+    default: 
+      return state;
+    }
+  },
+  detail: (state, action, [PEDDING, REJECT, FULFILLED, RESET]) => {
+    switch(action.type) {
+    case PEDDING: {
+      return {
+        ...state,
+        fetching: true,
+        showForm: false
+      };
+    }
+    case REJECT: {
+      return {
+        ...state,
+        fetching: false,
+        showForm: false,
+        error: action.payload.data
+      };
+    }
+    case FULFILLED: {
+      return {
+        ...state,
+        fetching: false,
+        showForm: true,
+        fetched: true,
+        data: action.payload.data.data
+      };
+    }
+    case RESET: {
+      return InitialState.detail();
     }
     default: 
       return state;

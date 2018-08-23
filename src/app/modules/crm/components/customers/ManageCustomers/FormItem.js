@@ -21,9 +21,8 @@ export default class FormItem extends Modal {
   }
 
   add(newContact){
-    const {formData, form} = this.props;
-    const contactKeys = formData.contacts;
-    contactKeys.push(newContact);
+    const {form, formData} = this.props;
+    const contactKeys = formData.contacts.concat([newContact]);
     form.setFieldsValue({
       keys: contactKeys
     });
@@ -34,12 +33,12 @@ export default class FormItem extends Modal {
     
     const contactKeys = form.getFieldValue("keys");
     
-    if (contactKeys.length > 0) {
+    if (contactKeys.length > 1) {
       const remainContactKeys = [];
       contactKeys.forEach((contact, index) => {
         if (index !== contactIndex) {
           remainContactKeys.push(contact);
-        } else if (contact && contact.id) {
+        } else if (contact != null && contact.id !== "") {
           contact["status"] = this.Enum.ARCHIVE;
           remainContactKeys.push(contact);
         }

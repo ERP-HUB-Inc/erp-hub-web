@@ -470,7 +470,7 @@ export default class List extends Component {
    * @param {*} fetchingProps 
    */
   renderTableList(fetchingProps) {
-    const pagination = {
+    let pagination = {
       total: fetchingProps.pagination.total,
       pageSize: fetchingProps.pagination.limit,
       current: this.state.current

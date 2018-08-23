@@ -7,7 +7,7 @@ import CutomerAction from "../../../actions/customers/groupCustomer";
 import CutomerService from "../../../services/groupCustomers/groupCustomers";
 import "./index.css";
 
-export default class CustomerList extends List {
+export default class GroupCustomerList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
@@ -22,7 +22,7 @@ export default class CustomerList extends List {
   }
 
   handleShowFormAdd() {
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
     dispatch(CutomerAction.showForm());
     this.setState({
       modalConten: <FormCreate/>
