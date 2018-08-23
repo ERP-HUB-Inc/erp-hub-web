@@ -21,6 +21,8 @@ export default class List extends Component {
       modalContent1: null,
       columns: []
     };
+
+    this.hideActionButton = false;
     
     //access role
     this.showListRoles = "";
@@ -335,14 +337,15 @@ export default class List extends Component {
 
   renderActionButton() {
     return (
-      <div className="float-left">
-        <this.Button type="info" className="mg-right" onClick={() => this.handleShowFormAdd()}>
-          <span className="icon-add icon-padding-right"></span>Add New
-        </this.Button>
-        <this.Button disabled={this.state.selectedRowKeys.length <= 0} type="danger" onClick={() => this.handleConfirm()}>
-          <span className="icon-delete icon-padding-right"></span>Delete
-        </this.Button>
-      </div> 
+      this.hideActionButton ? "" :
+        <div className="float-left">
+          <this.Button type="info" className="mg-right" onClick={() => this.handleShowFormAdd()}>
+            <span className="icon-add icon-padding-right"></span>Add New
+          </this.Button>
+          <this.Button disabled={this.state.selectedRowKeys.length <= 0} type="danger" onClick={() => this.handleConfirm()}>
+            <span className="icon-delete icon-padding-right"></span>Delete
+          </this.Button>
+        </div> 
     );
   }
 

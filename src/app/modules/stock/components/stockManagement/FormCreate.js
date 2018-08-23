@@ -1,13 +1,13 @@
 import React from "react";
 import FormItem from "./FormItem";
 import { Modal } from "../shares/Modal/modal";
-import SupplierAction from "../../actions/supplier";
+import StockManagementAction from "../../actions/stockManagement";
 
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="create_stock_supplier_title" />;
-    this.addingPropReducer = "supplierAdd";
+    this.title = <this.Translate id="create_stock_stockManagement_title" />;
+    this.addingPropReducer = "brandAdd";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -16,24 +16,24 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.dispatch(SupplierAction.add(values));   
+        this.dispatch(StockManagementAction.add(values));   
       }
     });
   }
       
   handleCancel() {
-    this.dispatch(SupplierAction.reset());
+    this.dispatch(StockManagementAction.reset());
   }
 
   render() {
-    const {supplierAdd, form, locale} = this.props;
+    const {stockManagementAdd, form, locale} = this.props;
     
-    this.submitLoading = supplierAdd.adding;
+    this.submitLoading = stockManagementAdd.adding;
 
-    if (supplierAdd.showForm) {
+    if (stockManagementAdd.showForm) {
       this.content = (
         <div>
-          { supplierAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" }
+          { stockManagementAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" }
           <FormItem form={form} locale={locale}/>
         </div>
       );

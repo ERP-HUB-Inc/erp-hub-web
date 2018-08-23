@@ -17,6 +17,7 @@ export default class SupplierList extends List {
     this.service = SupplierService;
     this.columnFilterWithKey = ["name"];
     this.action = SupplierAction;
+    // this.module = "inventory";
     this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
   }
 

@@ -16,14 +16,14 @@ import PriceBook from "../../../../pos/containers/products/PriceBook";
 import Promotion from "../../../../pos/containers/products/Promotion";
 
 // STOCK CONTROL
-import Stock from "../../../../pos/containers/stock/StockControl";
+import Stock from "../../../../inventory/containers/stockManagement";
 import StockControl from "../../../../pos/containers/stock/StockControl";
 import ReOrderPoint from "../../../../pos/containers/stock/ReOrderPoint";
 import PurchaseOrder from "../../../../pos/containers/stock/PurchaseOrder";
 import StockReturn from "../../../../pos/containers/stock/StockReturn";
 import StockTransfer from "../../../../pos/containers/stock/StockTransfer";
 import StockAudit from "../../../../pos/containers/stock/StockAudit";
-import Supplier from "../../../../stock/containers/supplier";
+import Supplier from "../../../../inventory/containers/supplier";
 
 // REPORT
 import SaleReport from "../../../../pos/containers/reports/Sale";
