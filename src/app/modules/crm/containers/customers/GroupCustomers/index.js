@@ -1,5 +1,6 @@
 import React from "react";
-import { connect } from "react-redux";
+import {connect} from "react-redux";
+import {Form} from "antd";
 import GroupCustomerList from "../../../components/customers/GroupCustomers";
 
 class ManagementCutomer extends React.Component {
@@ -18,4 +19,12 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(ManagementCutomer);
+function maPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const managementCutomer = Form.create(maPropsToFields)(ManagementCutomer);
+
+export default connect(mapStateToProps)(managementCutomer);

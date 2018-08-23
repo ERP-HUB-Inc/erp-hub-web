@@ -13,6 +13,11 @@ class ClientRegister extends Component {
     this.errorMessageEmail = null;
     this.values = null;
     this.validateClassStatusEmail = "";
+    this.countries = [
+      {name: "Global", description: "language", currency: "USD"},
+      {name: "Cambodia", description: "Khmer", currency: "KHR"},
+      {name: "Myanmar", description: "Burma", currency: "MMX"}
+    ];
     this.handleSubmit = this.handleSubmit.bind(this);
     this.checkIsEmailAlreadyExist = this.checkIsEmailAlreadyExist.bind(this);
   }
@@ -96,20 +101,15 @@ class ClientRegister extends Component {
                     <h6>Start Register with Us</h6>
                   </div>
                   <Form onSubmit={this.handleSubmit}>
-                    <div className={this.validateClassStatusEmail}>
-                      <this.InputEmail
-                        name="email"
-                        label="Email"
-                        placeholder="Email"
-                        required={true}
-                        errorRequired="Please input your email."
-                        form={form}
-                        handleKeyDown={() => this.handleKeyDown()}
-                      />
-                      {
-                        this.errorMessageEmail != null ? <div className="ant-form-explain">{this.errorMessageEmail}</div> : "" 
-                      }
-                    </div>
+                    <this.InputEmail
+                      name="email"
+                      label="Email"
+                      placeholder="Email"
+                      required={true}
+                      errorRequired="Please input your email."
+                      form={form}
+                      handleKeyDown={() => this.handleKeyDown()}
+                    />
                     <this.InputPassword
                       label="Password"
                       confirmLabel="Comfirm Password"
@@ -120,6 +120,29 @@ class ClientRegister extends Component {
                     <div>
                       <this.FormGroup>
                         <this.RadioBox 
+                          className="main-radio-acc"
+                          label="Country"
+                          name="countryId"
+                          type="radio"
+                          defaultValue={0}
+                          form={form}
+                          onSelect={this.onSelect}
+                          onChange={this.onChange}
+                        >
+                          { this.countries.map( (country, key) => 
+                            <this.RadioChildBox
+                              key={key}
+                              title={country.name}
+                              language={country.description}
+                              currency={country.currency}
+                              value={key} /> 
+                          ) 
+                          }
+                        </this.RadioBox> 
+                      </this.FormGroup>
+
+                      {/* <this.FormGroup>
+                        <this.RadioBox 
                           label="Country"
                           name="countryId" 
                           type="radio"
@@ -127,11 +150,11 @@ class ClientRegister extends Component {
                           required={true}
                           form={form}
                         >
-                          <this.RadioNormal title="Global" language="English" currency="USD" value="1"/>
-                          <this.RadioNormal title="Cambodia" language="Khmer" currency="KHR"  value="2" />
-                          <this.RadioNormal title="Myanmar" language="Burma" currency="MMX"  value="3" />
+                          <this.RadioNormal title="Global" language="English" currency="USD" value="1" form={form} />
+                          <this.RadioNormal title="Cambodia" language="Khmer" currency="KHR"  value="2" form={form} />
+                          <this.RadioNormal title="Myanmar" language="Burma" currency="MMX"  value="3" form={form} />
                         </this.RadioBox> 
-                      </this.FormGroup>
+                      </this.FormGroup> */}
 
                       <this.Link to="/signin">
                         <span className="have-acc">Have an account?</span> <span className="store-link">sign in </span>

@@ -111,6 +111,8 @@ export default class List extends Component {
     this.RESET_CONSTANT = "RESET";
   }
 
+  /**===================================================================SHARE FUNCTION FOR CHILD CLASS============================================================**/
+
   formatDate(value) {
     const setting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
     return this.Util.formatDate(value, setting.dateFormat);
@@ -142,6 +144,9 @@ export default class List extends Component {
     return values.map(value => value.id);
   }
 
+  /**===================================================================#SHARE FUNCTION FOR CHILD CLASS============================================================**/
+
+  /**===================================================================EVENT CONTROL FOR CHILD CLASS============================================================**/
   componentDidMount() {
     if (this.action != null) {
       const {dispatch} = this.props;
@@ -298,10 +303,12 @@ export default class List extends Component {
     }
   }
 
+  /**===================================================================#EVENT CONTROL FOR CHILD CLASS============================================================**/
+
+  /**===================================================================LAYOUT CONTROL FOR CHILD CLASS============================================================**/
   renderBreadCrumb() {
     // get current path of breadcrum compare with url
     const currentPath = window.location.pathname;
-    console.log("Current Module:", this.module);
     return (
       <div className="breadcrumb">
         <ul className="list-unstyled">
@@ -339,6 +346,9 @@ export default class List extends Component {
     );
   }
 
+  /**
+   * modal alert to confirm delete
+   */
   renderModalConfirmDelete() {
     return (
       <this.Modal
@@ -364,6 +374,10 @@ export default class List extends Component {
     );
   }
 
+
+  /**
+   * render layout filter on the top of list
+   */
   renderFilterRecord() {
     const {form} = this.props;
     const fetchingProps = this.props[this.fetchingProp];
@@ -399,10 +413,16 @@ export default class List extends Component {
     );
   }
 
+  /**
+   * render sub table of the list
+   */
   expandedRender(){
     
   }
 
+  /**
+   * render datatale
+   */
   renderTable(fetchingProps) {
     // handle for change select checkbox on table row
     const rowSelection = {
@@ -445,6 +465,10 @@ export default class List extends Component {
     );
   }
 
+  /**
+   * include from render table to be as the list
+   * @param {*} fetchingProps 
+   */
   renderTableList(fetchingProps) {
     const pagination = {
       total: fetchingProps.pagination.total,
@@ -476,6 +500,11 @@ export default class List extends Component {
     );
   }
 
+  /**===================================================================#LAYOUT CONTROL FOR CHILD CLASS============================================================**/
+
+  /**
+   * bind all function and layout above to be display
+   */
   render() {
 
     let fetchingProps = this.props[this.fetchingProp];

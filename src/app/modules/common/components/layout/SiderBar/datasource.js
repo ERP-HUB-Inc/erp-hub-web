@@ -232,13 +232,15 @@ const dataSource = {
         title: "Manage Customer",
         icon: "icon-customer ",
         route: "/customers/manage",
-        component: ManageCustomer
+        component: ManageCustomer,
+        isFashNav: true
       },
       {
         title: "Group Customer",
         icon: "icon-employee",
         route: "/customers/group",
-        component: GroupCustomer
+        component: GroupCustomer,
+        isFashNav: true
       }
       // {
       //   title: "Purchase History",
