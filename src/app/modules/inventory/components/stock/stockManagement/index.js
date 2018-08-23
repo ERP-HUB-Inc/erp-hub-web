@@ -37,15 +37,25 @@ export default class PaymentMethodList extends List {
     });
   }
 
-  renderFilterRecord() {
-    return(
+  renderActionButton() {
+    return (
       <div>
         <this.Button type="info">
           <span className="icon-reload"></span> Reload
-        </this.Button>        
+        </this.Button> 
       </div>
     );
   }
+
+  // renderFilterRecord() {
+  //   return(
+  //     <div>
+  //       <this.Button type="info">
+  //         <span className="icon-reload"></span> Reload
+  //       </this.Button>        
+  //     </div>
+  //   );
+  // }
 
 }
 

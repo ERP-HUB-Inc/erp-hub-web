@@ -27,6 +27,7 @@ import productTag from "../../inventory/languages/products/productsTag";
 //stock
 import supplier from "../../inventory/languages/stock/supplier";
 import stockManagement from "../../inventory/languages/stock/stockManagement";
+import purchaseOrder from "../../inventory/languages/stock/purchaseOrder";
 
 export function initLanguage() {
   return initialize([
@@ -63,6 +64,7 @@ export function setTranslation() {
     ...productType,
     ...productTag,
     ...supplier,
-    ...stockManagement
+    ...stockManagement,
+    ...purchaseOrder
   });
 }

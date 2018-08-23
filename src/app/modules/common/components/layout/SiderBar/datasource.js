@@ -19,7 +19,7 @@ import Promotion from "../../../../pos/containers/products/Promotion";
 import Stock from "../../../../inventory/containers/stock/stockManagement";
 import StockControl from "../../../../pos/containers/stock/StockControl";
 import ReOrderPoint from "../../../../pos/containers/stock/ReOrderPoint";
-import PurchaseOrder from "../../../../pos/containers/stock/PurchaseOrder";
+import PurchaseOrder from "../../../../inventory/containers/stock/purchaseOrder";
 import StockReturn from "../../../../pos/containers/stock/StockReturn";
 import StockTransfer from "../../../../pos/containers/stock/StockTransfer";
 import StockAudit from "../../../../pos/containers/stock/StockAudit";
@@ -174,6 +174,13 @@ const dataSource = {
         isFashNav: true
       },
       {
+        title: "Purchase Orders",
+        icon: "icon-purchasing",
+        route: "/stock/purchase-order",
+        component: PurchaseOrder,
+        isFashNav: true
+      },
+      {
         title: "Stock",
         icon: "icon-stock",
         route: "/stock",
@@ -192,13 +199,6 @@ const dataSource = {
         icon: "icon-undo",
         route: "/stock/re-order-point",
         component: ReOrderPoint,
-        isFashNav: true
-      },
-      {
-        title: "Purchase Orders",
-        icon: "icon-purchasing",
-        route: "/stock/purchase-order",
-        component: PurchaseOrder,
         isFashNav: true
       },
       {
