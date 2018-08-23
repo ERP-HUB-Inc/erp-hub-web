@@ -16,14 +16,14 @@ import PriceBook from "../../../../pos/containers/products/PriceBook";
 import Promotion from "../../../../pos/containers/products/Promotion";
 
 // STOCK CONTROL
-import Stock from "../../../../pos/containers/stock/Stock";
+import Stock from "../../../../pos/containers/stock/StockControl";
 import StockControl from "../../../../pos/containers/stock/StockControl";
 import ReOrderPoint from "../../../../pos/containers/stock/ReOrderPoint";
 import PurchaseOrder from "../../../../pos/containers/stock/PurchaseOrder";
 import StockReturn from "../../../../pos/containers/stock/StockReturn";
 import StockTransfer from "../../../../pos/containers/stock/StockTransfer";
 import StockAudit from "../../../../pos/containers/stock/StockAudit";
-import Supplier from "../../../../pos/containers/stock/Supplier";
+import Supplier from "../../../../stock/containers/supplier";
 
 // REPORT
 import SaleReport from "../../../../pos/containers/reports/Sale";
@@ -167,52 +167,60 @@ const dataSource = {
     route: "stock",
     subItems: [
       {
+        title: "Supplier",
+        icon: "icon-sale-return",
+        route: "/stock/supplier",
+        component: Supplier,
+        isFashNav: true
+      },
+      {
         title: "Stock",
         icon: "icon-stock",
         route: "/stock",
-        component: Stock
+        component: Stock,
+        isFashNav: true
       },
       {
         title: "Stock Control",
         icon: "icon-barcode",
         route: "/stock/control",
-        component: StockControl
+        component: StockControl,
+        isFashNav: true
       },
       {
         title: "Re-Order Point",
         icon: "icon-undo",
         route: "/stock/re-order-point",
-        component: ReOrderPoint
+        component: ReOrderPoint,
+        isFashNav: true
       },
       {
         title: "Purchase Orders",
         icon: "icon-purchasing",
         route: "/stock/purchase-order",
-        component: PurchaseOrder
+        component: PurchaseOrder,
+        isFashNav: true
       },
       {
         title: "Stock Return",
         icon: "icon-sale-return",
         route: "/stock/return",
-        component: StockReturn
+        component: StockReturn,
+        isFashNav: true
       },
       {
         title: "Stock Transfer",
         icon: "icon-stock-transfer",
         route: "/stock/transfer",
-        component: StockTransfer
+        component: StockTransfer,
+        isFashNav: true
       },
       {
         title: "Stock Audit",
         icon: "icon-stock-audit",
         route: "/stock/return",
-        component: StockAudit
-      },
-      {
-        title: "Supplier",
-        icon: "icon-sale-return",
-        route: "/stock/supplier",
-        component: Supplier
+        component: StockAudit,
+        isFashNav: true
       }
     ]
   },
