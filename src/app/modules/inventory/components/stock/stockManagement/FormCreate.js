@@ -1,7 +1,7 @@
 import React from "react";
 import FormItem from "./FormItem";
-import { Modal } from "../shares/Modal/modal";
-import StockManagementAction from "../../actions/stockManagement";
+import { Modal } from "../../shares/Modal/modal";
+import StockManagementAction from "../../../actions/stock/stockManagement";
 
 export default class FormCreate extends Modal {
   constructor(props) {

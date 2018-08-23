@@ -1,19 +1,20 @@
 import React from "react";
-import CreateStockManagement from "../../components/stockManagement/FormCreate";
 import { connect } from "react-redux";
 import { Form } from "antd";
+import FormUpdate from "../../../components/stock/stockManagement/FormUpdate";
 
 class StockManagementForm extends React.Component {
   render() {
     return (
-      <CreateStockManagement {...this.props} />
+      <FormUpdate {...this.props} />
     );
   }
 }
 
 function mapStateToProps(state) {
   return {
-    stockManagementAdd: state.reducer.stockManagement.add,
+    stockManagementUpdate: state.reducer.stockManagement.update,
+    initialValues: state.reducer.stockManagement.update.data,
     locale: state.locale
   };
 }
@@ -24,6 +25,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const stockManagementForm =  Form.create(mapPropsToFields)(StockManagementForm);
+const stockManagementForm = Form.create(mapPropsToFields)(StockManagementForm);
 
 export default connect(mapStateToProps)(stockManagementForm);

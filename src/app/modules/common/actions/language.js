@@ -25,8 +25,8 @@ import brand from "../../inventory/languages/products/brand";
 import productType from "../../inventory/languages/products/productsType";
 import productTag from "../../inventory/languages/products/productsTag";
 //stock
-import supplier from "../../stock/languages/supplier";
-import stockManagement from "../../stock/languages/stockManagement";
+import supplier from "../../inventory/languages/stock/supplier";
+import stockManagement from "../../inventory/languages/stock/stockManagement";
 
 export function initLanguage() {
   return initialize([

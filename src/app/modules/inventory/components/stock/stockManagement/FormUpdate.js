@@ -1,7 +1,7 @@
 import React from "react";
 import FormItem from "./FormItem";
-import { Modal } from "../shares/Modal/modal";
-import SupplierAction from "../../actions/supplier";
+import { Modal } from "../../shares/Modal/modal";
+import StockManagementAction from "../../../actions/stock/stockManagement";
 
 export default class Form extends Modal {
   constructor(props) {
@@ -21,13 +21,13 @@ export default class Form extends Modal {
       if (!err) {
         values["id"] = this.props.supplierUpdate.data.id;
         values["status"] = this.Enum.ACTIVE;
-        this.dispatch(SupplierAction.update(values));
+        this.dispatch(StockManagementAction.update(values));
       }
     });
   }
     
   handleCancel() {
-    this.dispatch(SupplierAction.reset());
+    this.dispatch(StockManagementAction.reset());
   }
 
   render() {

@@ -60,7 +60,6 @@ const reducer = combineReducers({
   productsType,
   productsTag,
   supplier,
-
   stockManagement
 });
 

@@ -1,10 +1,10 @@
 import React from "react";
-import List from "../List";
-import FormCreate from "../../containers/stockManagement/FormCreate";
-import FormUpdate from "../../containers/stockManagement/FormUpdate";
-import Constant from "../../constants/stockManagement";
-import StockManagementAction from "../../actions/stockManagement";
-import StockManagementService from "../../services/stockManagement/StockManagementService";
+import List from "../../List";
+import FormCreate from "../../../containers/stock/stockManagement/FormCreate";
+import FormUpdate from "../../../containers/stock/stockManagement/FormUpdate";
+import Constant from "../../../constants/stock/stockManagement";
+import StockManagementAction from "../../../actions/stock/stockManagement";
+import StockManagementService from "../../../services/stock/StockManagementService";
 import "./index.css";
 
 export default class PaymentMethodList extends List {

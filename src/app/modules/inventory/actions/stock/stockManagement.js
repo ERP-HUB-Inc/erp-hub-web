@@ -1,5 +1,5 @@
-import Constant from "../../constants/stockManagement";
-import stockManagementService from "../../services/stockManagement/StockManagementService";
+import Constant from "../../constants/stock/stockManagement";
+import stockManagementService from "../../../stock/services/stockManagement";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {

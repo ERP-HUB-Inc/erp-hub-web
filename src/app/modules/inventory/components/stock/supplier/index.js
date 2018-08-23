@@ -1,10 +1,10 @@
 import React from "react";
-import List from "../List";
-import FormCreate from "../../containers/supplier/FormCreate";
-import FormUpdate from "../../containers/supplier/FormUpdate";
-import Constant from "../../constants/supplier";
-import SupplierAction from "../../actions/supplier";
-import SupplierService from "../../services/supplier";
+import List from "../../List";
+import FormCreate from "../../../containers/stock/supplier/FormCreate";
+import FormUpdate from "../../../containers/stock/supplier/FormUpdate";
+import Constant from "../../../constants/stock/supplier";
+import SupplierAction from "../../../actions/stock/supplier";
+import SupplierService from "../../../services/stock/SupplierService";
 import "./index.css";
 
 export default class SupplierList extends List {
