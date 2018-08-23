@@ -1,13 +1,13 @@
 import React from "react";
-import CreateEmployee from "../../../components/customers/ManageCustomers/FormCreate";
-import { connect } from "react-redux";
-import { Form } from "antd";
+import {connect} from "react-redux";
+import {Form} from "antd";
+import FormCreate from "../../../components/customers/ManageCustomers/FormCreate";
 
 
-class ManagementEmployeeForm extends React.Component {
+class CustomerCreate extends React.Component {
   render() {
     return (
-      <CreateEmployee {...this.props} />
+      <FormCreate {...this.props} />
     );
   }
 }
@@ -28,6 +28,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const managementEmployeeForm =  Form.create(mapPropsToFields)(ManagementEmployeeForm);
+const customerCreate =  Form.create(mapPropsToFields)(CustomerCreate);
 
-export default connect(mapStateToProps)(managementEmployeeForm);
+export default connect(mapStateToProps)(customerCreate);

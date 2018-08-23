@@ -17,6 +17,8 @@ export default class Form extends Modal {
       if (!err) {
         const {paymentMethodUpdate} = this.props;
         values["id"] = paymentMethodUpdate.data.id;
+        values["isSystem"] = paymentMethodUpdate.data.isSystem;
+        values["isDefault"] = paymentMethodUpdate.data.isDefault;
         this.dispatch(PaymentMethodAction.update(values));
       }
     });

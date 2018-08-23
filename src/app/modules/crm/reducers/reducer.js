@@ -1,7 +1,7 @@
 import InitialState from "../../common/reducers/initialState";
 
 export default {
-  request: (state, action, [PEDDING, REJECT, FULFILLED], schemas) => {
+  request: (state, action, [PEDDING, REJECT, FULFILLED]) => {
     switch(action.type) {
     case PEDDING: {
       return {

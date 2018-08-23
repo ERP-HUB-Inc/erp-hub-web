@@ -61,9 +61,7 @@ export default class BaseService extends Service {
     return this.PUT({
       url: `${this.baseUrl}/update/${id}`,
       data: {
-        ...data,
-        isSystem: 0,
-        isDefault: 0
+        ...data
       },
       headers: this.header
     });

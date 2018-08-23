@@ -1,7 +1,7 @@
-import Constant from "../../constants/settings/rolePrivilege";
 import {combineReducers} from "redux";
+import Constant from "../../constants/settings/rolePrivilege";
+import reducer from "../../../common/reducers/reducer";
 import InitialState from "../../../common/reducers/initialState";
-import reducer from "../reducer";
       
 export default combineReducers({
   request: (state = InitialState.request(), action) => {
