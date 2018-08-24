@@ -137,9 +137,10 @@ export default class FormItem extends Modal {
               </this.Col>
 
               <this.Col md="6">
-                <this.Switchs
-                  label={<this.Translate id="input_hr_employee_will_be_expired" />}
-                  name="isPasswordExpired"
+                <this.DatePickers
+                  label={<this.Translate id="input_hr_employee_expired_date" />}
+                  defaultValue={formData.passwordExpiredAt}
+                  name="passwordExpiredAt"
                   form={form}
                 />
               </this.Col>
@@ -151,10 +152,9 @@ export default class FormItem extends Modal {
                 />
               </this.Col>
               <this.Col md="6">
-                <this.DatePickers
-                  label={<this.Translate id="input_hr_employee_expired_date" />}
-                  defaultValue={formData.passwordExpiredAt}
-                  name="passwordExpiredAt"
+                <this.Switchs
+                  label={<this.Translate id="input_hr_employee_will_be_expired" />}
+                  name="isPasswordExpired"
                   form={form}
                 />
               </this.Col> 

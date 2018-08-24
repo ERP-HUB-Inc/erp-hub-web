@@ -83,7 +83,7 @@ export default class Lists extends List {
                   form={form}
                 />
               </this.Col>
-              <this.Col md="3">
+              <this.Col md="2">
                 <this.InputText
                   name="key"
                   label={<this.Translate id="input_stock_purchase_key" />}

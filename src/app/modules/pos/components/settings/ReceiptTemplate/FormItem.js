@@ -12,6 +12,7 @@ export default class FormItem extends Modal {
           placeholder={this.CATranslate("input_receipt_template_name", locale)}
           errorLenght={<this.Translate id="error_receipt_template_name_length" />}
           max={100}
+          min={4}
           data={formData.name}
           required={true}
           form={form}/>
