@@ -1,11 +1,11 @@
-import Constant from "../../constants/stock/purchaseOrder";
-import supplierService from "../../services/stock/PurchaseOrderService";
+import Constant from "../../constants/stock/stockTransfer";
+import supplierService from "../../services/stock/StockTransferService";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
-        type: Constant.REQUEST_PURCHASE_ORDER,
+        type: Constant.REQUEST_STOCK_TRANSFER,
         payload: supplierService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
@@ -13,7 +13,7 @@ export default {
   archive: (ids) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ARCHIVE_PURCHASE_ORDER,
+        type: Constant.ARCHIVE_STOCK_TRANSFER,
         payload: supplierService.archive(ids)
       });
     };
@@ -21,7 +21,7 @@ export default {
   add: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ADD_PURCHASE_ORDER,
+        type: Constant.ADD_STOCK_TRANSFER,
         payload: supplierService.add(data)
       });
     };
@@ -29,7 +29,7 @@ export default {
   update: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.UPDATE_PURCHASE_ORDER,
+        type: Constant.UPDATE_STOCK_TRANSFER,
         payload: supplierService.update(data)
       });
     };
@@ -37,7 +37,7 @@ export default {
   reset: () => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET_PURCHASE_ORDER,
+        type: Constant.RESET_STOCK_TRANSFER,
         payload: null
       });
     };
@@ -45,7 +45,7 @@ export default {
   showForm: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.SHOW_PURCHASE_ORDER_FORM,
+        type: Constant.SHOW_STOCK_TRANSFER_FORM,
         payload: data
       });
     };

@@ -5,7 +5,7 @@ export default {
     "Stock Management"
   ],
       
-  "create_stock_management_title": [
+  "updte_stock_management_title": [
     "Stock Management:Update",
     "ငွေကြေး",
     "Stock Management:Update"
@@ -15,12 +15,6 @@ export default {
     "Id",
     "အမည်",
     "Id",
-  ],
-
-  "col_stock_management_sold_by": [
-    "Sold By",
-    "အမည်",
-    "Sold By",
   ],
 
   "col_stock_management_sold_by": [
@@ -50,6 +44,12 @@ export default {
   "col_stock_management_notation": [
     "Notation",
     "အမည်",
-    "Notation",
+    "Notation"
+  ],
+
+  "Button_stock_management_reload": [
+    "Reload",
+    "အမည်",
+    "Reload"
   ]
 };

@@ -41,7 +41,7 @@ export default class PaymentMethodList extends List {
     return (
       <div>
         <this.Button type="info">
-          <span className="icon-reload"></span> Reload
+          <span className="icon-reload"></span> <this.Translate id="Button_stock_management_reload" />
         </this.Button> 
       </div>
     );

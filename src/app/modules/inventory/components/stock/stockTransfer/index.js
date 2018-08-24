@@ -1,29 +1,29 @@
 import React from "react";
 import List from "../../List";
-import FormCreate from "../../../containers/stock/purchaseOrder/FormCreate";
-import FormUpdate from "../../../containers/stock/purchaseOrder/FormUpdate";
-import Constant from "../../../constants/stock/purchaseOrder";
-import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
-import PurchaseOrderService from "../../../services/stock/PurchaseOrderService";
+import FormCreate from "../../../containers/stock/stockTransfer/FormCreate";
+import FormUpdate from "../../../containers/stock/stockTransfer/FormUpdate";
+import Constant from "../../../constants/stock/stockTransfer";
+import StockTransferAction from "../../../actions/stock/stockTransfer";
+import StockTransferService from "../../../services/stock/StockTransferService";
 import "./index.css";
 
 export default class Lists extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
-    this.fetchingProp = "purchaseOrder";
-    this.addingProp = "purchaseOrderAdd";
-    this.updatingProp = "purchaseOrderUpdate";
-    this.service = PurchaseOrderService;
+    this.fetchingProp = "stockTransfer";
+    this.addingProp = "stockTransferAdd";
+    this.updatingProp = "stockTransferUpdate";
+    this.service = StockTransferService;
     this.columnFilterWithKey = ["name"];
-    this.action = PurchaseOrderAction;
+    this.action = StockTransferAction;
     this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
     this.hideActionButton = true;
   }
 
   handleShowFormAdd() {
     const { dispatch } = this.props;
-    dispatch(PurchaseOrderAction.showForm());
+    dispatch(StockTransferAction.showForm());
     this.setState({
       modalConten: <FormCreate/>
     });
@@ -31,7 +31,7 @@ export default class Lists extends List {
 
   handleShowFormEdit(rowData) {
     const { dispatch } = this.props;
-    dispatch(PurchaseOrderAction.showForm(rowData));
+    dispatch(StockTransferAction.showForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });
@@ -41,7 +41,7 @@ export default class Lists extends List {
     return (
       <div>
         <this.Button type="info">
-          <span className="icon-export"></span> {<this.Translate id="button_search_stock_purchase_order_export_csv" />}
+          <span className="icon-export"></span> {<this.Translate id="button_search_stock_transfer_export_csv" />}
         </this.Button> 
       </div>
     );
@@ -59,7 +59,7 @@ export default class Lists extends List {
               <this.Col md="2">
                 <this.Select
                   name="status"
-                  label={<this.Translate id="text_status" />}
+                  label={<this.Translate id="select_search_stock_transfer_status" />}
                   placeholder="Please select status"
                   dataSource={this.statusList}
                   defaultValue={this.Enum.ALL_STATE}
@@ -69,7 +69,7 @@ export default class Lists extends List {
               <this.Col md="2">
                 <this.Select
                   name="status"
-                  label={<this.Translate id="select_stock_purchase_due_date" />}
+                  label={<this.Translate id="select_search_stock_transfer_brand" />}
                   placeholder="Please select status"
                   dataSource={this.statusList}
                   defaultValue={this.Enum.ALL_STATE}
@@ -77,23 +77,40 @@ export default class Lists extends List {
                 />
               </this.Col>
               <this.Col md="2">
-                <this.DatePickers
+                <this.Select
                   name="status"
-                  label={<this.Translate id="date_picker_purchase_supplier" />}
+                  label={<this.Translate id="select_search_stock_transfer_product_type" />}
+                  placeholder="Please select status"
+                  dataSource={this.statusList}
+                  defaultValue={this.Enum.ALL_STATE}
                   form={form}
                 />
               </this.Col>
-              <this.Col md="3">
-                <this.InputText
-                  name="key"
-                  label={<this.Translate id="input_stock_purchase_key" />}
-                  placeholder="Search for code, name and address"
+
+              <this.Col md="2">
+                <this.Select
+                  name="status"
+                  label={<this.Translate id="select_search_stock_transfer_supplier" />}
+                  placeholder="Please select status"
+                  dataSource={this.statusList}
+                  defaultValue={this.Enum.ALL_STATE}
+                  form={form}
+                />
+              </this.Col>
+
+              <this.Col md="2">
+                <this.Select
+                  name="status"
+                  label={<this.Translate id="select_search_stock_transfer_status" />}
+                  placeholder="Please select status"
+                  dataSource={this.statusList}
+                  defaultValue={this.Enum.ALL_STATE}
                   form={form}
                 />
               </this.Col>
 
               <this.Button htmlType="submit" type="info" >
-                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_search_stock_transfer" />
               </this.Button>
             </this.Row>
           </this.Form>
@@ -111,37 +128,37 @@ class Column extends List {
     return [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="col_stock_purchase_order_name" />,
+        title: <this.Translate id="col_stock_transfer_no" />,
         dataIndex: "name",
         key: "name",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_supplier" />,
+        title: <this.Translate id="col_stock_transfer_name" />,
         dataIndex: "description",
         key: "description",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_stock_location" />,
+        title: <this.Translate id="col_stock_transfer_form_location" />,
         dataIndex: "stockLocation",
         key: "stockLocation",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_due_date" />,
+        title: <this.Translate id="col_stock_transfer_to_location" />,
         dataIndex: "dueDate",
         key: "dueDate",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_shipping_fee" />,
+        title: <this.Translate id="col_stock_transfer_transfer_by" />,
         dataIndex: "shippingFee",
         key: "shippingFee",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_total" />,
+        title: <this.Translate id="col_stock_transfer_received_by" />,
         dataIndex: "total",
         key: "total",
         sorter: true

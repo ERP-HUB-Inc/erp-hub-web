@@ -11,6 +11,12 @@ export default {
     "Purchase Order:Update"
   ],
 
+  "button_search_stock_purchase_order_export_csv":[
+    "Export CSV",
+    "အမည်",
+    "Export CSV"
+  ],
+
   "col_stock_purchase_order_no": [
     "No",
     "အမည်",
