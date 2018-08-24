@@ -19,6 +19,12 @@ export default class Lists extends List {
     this.action = StockTransferAction;
     this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
     this.hideActionButton = true;
+    this.csvData =[
+      ["firstname", "lastname", "email"] ,
+      ["Ahmed", "Tomi" , "ah@smthing.co.com"] ,
+      ["Raed", "Labes" , "rl@smthing.co.com"] ,
+      ["Yezzi","Min l3b", "ymin@cocococo.com"]
+    ];
   }
 
   handleShowFormAdd() {

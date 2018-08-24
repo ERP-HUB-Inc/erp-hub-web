@@ -20,7 +20,7 @@ import Stock from "../../../../inventory/containers/stock/stockManagement";
 import StockControl from "../../../../pos/containers/stock/StockControl";
 import ReOrderPoint from "../../../../pos/containers/stock/ReOrderPoint";
 import PurchaseOrder from "../../../../inventory/containers/stock/purchaseOrder";
-import StockReturn from "../../../../pos/containers/stock/StockReturn";
+import StockReturn from "../../../../inventory/containers/stock/returnPurchase";
 import StockTransfer from "../../../../inventory/containers/stock/stockTransfer";
 import StockAudit from "../../../../pos/containers/stock/StockAudit";
 import Supplier from "../../../../inventory/containers/stock/supplier";
@@ -188,6 +188,13 @@ const dataSource = {
         isFashNav: true
       },
       {
+        title: "Stock Return",
+        icon: "icon-sale-return",
+        route: "/stock/return",
+        component: StockReturn,
+        isFashNav: true
+      },
+      {
         title: "Stock",
         icon: "icon-stock",
         route: "/stock",
@@ -206,13 +213,6 @@ const dataSource = {
         icon: "icon-undo",
         route: "/stock/re-order-point",
         component: ReOrderPoint,
-        isFashNav: true
-      },
-      {
-        title: "Stock Return",
-        icon: "icon-sale-return",
-        route: "/stock/return",
-        component: StockReturn,
         isFashNav: true
       },
       {

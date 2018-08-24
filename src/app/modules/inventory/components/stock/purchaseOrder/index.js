@@ -69,7 +69,7 @@ export default class Lists extends List {
               <this.Col md="2">
                 <this.Select
                   name="status"
-                  label={<this.Translate id="select_stock_purchase_due_date" />}
+                  label={<this.Translate id="select_picker_purchase_supplier" />}
                   placeholder="Please select status"
                   dataSource={this.statusList}
                   defaultValue={this.Enum.ALL_STATE}
@@ -79,7 +79,7 @@ export default class Lists extends List {
               <this.Col md="2">
                 <this.DatePickers
                   name="status"
-                  label={<this.Translate id="date_picker_purchase_supplier" />}
+                  label={<this.Translate id="datepicker_stock_purchase_due_date" />}
                   form={form}
                 />
               </this.Col>

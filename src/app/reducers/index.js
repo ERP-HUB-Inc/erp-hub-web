@@ -32,6 +32,8 @@ import supplier from "../modules/stock/reducers/supplier";
 import stockManagement from "../modules/stock/reducers/stockManagement";
 import purchaseOrder from "../modules/inventory/reducers/stock/purchaseOrder";
 import stockTransfer from "../modules/inventory/reducers/stock/stockTransfer";
+import returnPurchase from "../modules/inventory/reducers/stock/returnPurchase";
+import receivePurchase from "../modules/inventory/reducers/stock/receivePurchase";
 
 const reducer = combineReducers({
   client,
@@ -64,7 +66,9 @@ const reducer = combineReducers({
   supplier,
   stockManagement,
   purchaseOrder,
-  stockTransfer
+  stockTransfer,
+  returnPurchase,
+  receivePurchase
 });
 
 export default reducer;

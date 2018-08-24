@@ -59,13 +59,13 @@ export default {
     "Total"
   ],
 
-  "select_stock_purchase_due_date": [
+  "datepicker_stock_purchase_due_date": [
     "Due Date",
     "အမည်",
     "Due Date"
   ],
 
-  "date_picker_purchase_supplier": [
+  "select_picker_purchase_supplier": [
     "Supplier",
     "အမည်",
     "Supplier"
