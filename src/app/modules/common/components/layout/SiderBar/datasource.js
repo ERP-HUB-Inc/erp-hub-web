@@ -16,14 +16,14 @@ import PriceBook from "../../../../pos/containers/products/PriceBook";
 import Promotion from "../../../../pos/containers/products/Promotion";
 
 // STOCK CONTROL
-import Stock from "../../../../pos/containers/stock/StockControl";
+import Stock from "../../../../inventory/containers/stock/stockManagement";
 import StockControl from "../../../../pos/containers/stock/StockControl";
 import ReOrderPoint from "../../../../pos/containers/stock/ReOrderPoint";
-import PurchaseOrder from "../../../../pos/containers/stock/PurchaseOrder";
-import StockReturn from "../../../../pos/containers/stock/StockReturn";
-import StockTransfer from "../../../../pos/containers/stock/StockTransfer";
+import PurchaseOrder from "../../../../inventory/containers/stock/purchaseOrder";
+import StockReturn from "../../../../inventory/containers/stock/returnPurchase";
+import StockTransfer from "../../../../inventory/containers/stock/stockTransfer";
 import StockAudit from "../../../../pos/containers/stock/StockAudit";
-import Supplier from "../../../../stock/containers/supplier";
+import Supplier from "../../../../inventory/containers/stock/supplier";
 
 // REPORT
 import SaleReport from "../../../../pos/containers/reports/Sale";
@@ -174,6 +174,27 @@ const dataSource = {
         isFashNav: true
       },
       {
+        title: "Purchase Orders",
+        icon: "icon-purchasing",
+        route: "/stock/purchase-order",
+        component: PurchaseOrder,
+        isFashNav: true
+      },
+      {
+        title: "Stock Transfer",
+        icon: "icon-stock-transfer",
+        route: "/stock/transfer",
+        component: StockTransfer,
+        isFashNav: true
+      },
+      {
+        title: "Stock Return",
+        icon: "icon-sale-return",
+        route: "/stock/return",
+        component: StockReturn,
+        isFashNav: true
+      },
+      {
         title: "Stock",
         icon: "icon-stock",
         route: "/stock",
@@ -192,27 +213,6 @@ const dataSource = {
         icon: "icon-undo",
         route: "/stock/re-order-point",
         component: ReOrderPoint,
-        isFashNav: true
-      },
-      {
-        title: "Purchase Orders",
-        icon: "icon-purchasing",
-        route: "/stock/purchase-order",
-        component: PurchaseOrder,
-        isFashNav: true
-      },
-      {
-        title: "Stock Return",
-        icon: "icon-sale-return",
-        route: "/stock/return",
-        component: StockReturn,
-        isFashNav: true
-      },
-      {
-        title: "Stock Transfer",
-        icon: "icon-stock-transfer",
-        route: "/stock/transfer",
-        component: StockTransfer,
         isFashNav: true
       },
       {

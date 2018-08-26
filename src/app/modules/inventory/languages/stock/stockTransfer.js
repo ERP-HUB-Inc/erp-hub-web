@@ -1,0 +1,92 @@
+export default {
+  "create_stock_management_title": [
+    "Stock Management",
+    "ငွေကြေးစနစ်",
+    "Stock Management"
+  ],
+      
+  "update_stock_management_title": [
+    "Stock Management:Update",
+    "ငွေကြေး",
+    "Stock Management:Update"
+  ],
+
+  "select_search_stock_transfer_status": [
+    "Status",
+    "အမည်",
+    "Status",
+  ],
+
+  "select_search_stock_transfer_brand": [
+    "Brand",
+    "အမည်",
+    "Brand",
+  ],
+
+  "select_search_stock_transfer_product_type": [
+    "Product Type",
+    "အမည်",
+    "Product Type",
+  ],
+
+  "select_search_stock_transfer_supplier": [
+    "Supplier",
+    "အမည်",
+    "Supplier",
+  ],
+
+  "button_search_stock_transfer_export_csv": [
+    "Export CSV",
+    "အမည်",
+    "Export CSV",
+  ],
+
+  "button_search_stock_transfer": [
+    "Search",
+    "အမည်",
+    "Search",
+  ],
+
+  "col_stock_transfer_no": [
+    "No",
+    "အမည်",
+    "No",
+  ],
+
+  "col_stock_transfer_name": [
+    "Name",
+    "အမည်",
+    "Name",
+  ],
+
+  "col_stock_transfer_form_location": [
+    "From Location",
+    "အမည်",
+    "From Location",
+  ],
+
+  "col_stock_transfer_to_location": [
+    "To Location",
+    "အမည်",
+    "To Location",
+  ],
+
+  "col_stock_transfer_transfer_by": [
+    "Transfer By",
+    "အမည်",
+    "Transfer By",
+  ],
+
+  "col_stock_transfer_received_by": [
+    "Received By",
+    "အမည်",
+    "Received By",
+  ],
+
+  "col_stock_transfer_received_date": [
+    "Received Date",
+    "အမည်",
+    "Received Date",
+  ],
+
+};

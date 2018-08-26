@@ -1,12 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import {Form} from "antd";
-import BrandList from "../../components/supplier";
+import SupplierList from "../../components/supplier";
 
-class Brand extends React.Component {
+class Supplier extends React.Component {
   render() {
     return (
-      <BrandList {...this.props} />
+      <SupplierList {...this.props} />
     );
   }
 }
@@ -26,6 +26,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const supplier = Form.create(mapPropsToFields)(Brand);
+const supplier = Form.create(mapPropsToFields)(Supplier);
 
 export default connect(mapStateToProps)(supplier);

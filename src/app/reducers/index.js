@@ -29,6 +29,12 @@ import brand from "../modules/inventory/reducers/products/brand";
 import productsType from "../modules/inventory/reducers/products/productsType";
 import productsTag from "../modules/inventory/reducers/products/productsTag";
 import supplier from "../modules/stock/reducers/supplier";
+//stock
+import stockManagement from "../modules/stock/reducers/stockManagement";
+import purchaseOrder from "../modules/inventory/reducers/stock/purchaseOrder";
+import stockTransfer from "../modules/inventory/reducers/stock/stockTransfer";
+import returnPurchase from "../modules/inventory/reducers/stock/returnPurchase";
+import receivePurchase from "../modules/inventory/reducers/stock/receivePurchase";
 
 const reducer = combineReducers({
   client,
@@ -59,7 +65,12 @@ const reducer = combineReducers({
   brand,
   productsType,
   productsTag,
-  supplier
+  supplier,
+  stockManagement,
+  purchaseOrder,
+  stockTransfer,
+  returnPurchase,
+  receivePurchase
 });
 
 export default reducer;

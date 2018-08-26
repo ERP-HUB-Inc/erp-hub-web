@@ -26,7 +26,12 @@ import brand from "../../inventory/languages/products/brand";
 import productType from "../../inventory/languages/products/productsType";
 import productTag from "../../inventory/languages/products/productsTag";
 //stock
-import supplier from "../../stock/languages/supplier";
+import supplier from "../../inventory/languages/stock/supplier";
+import stockManagement from "../../inventory/languages/stock/stockManagement";
+import purchaseOrder from "../../inventory/languages/stock/purchaseOrder";
+import stockTransfer from "../../inventory/languages/stock/stockTransfer";
+import returnPurchase from "../../inventory/languages/stock/returnPurchase";
+import receivePurchase from "../../inventory/languages/stock/returnPurchase";
 
 export function initLanguage() {
   return initialize([
@@ -63,6 +68,11 @@ export function setTranslation() {
     ...brand,
     ...productType,
     ...productTag,
-    ...supplier
+    ...supplier,
+    ...stockManagement,
+    ...purchaseOrder,
+    ...stockTransfer,
+    ...returnPurchase,
+    ...receivePurchase
   });
 }

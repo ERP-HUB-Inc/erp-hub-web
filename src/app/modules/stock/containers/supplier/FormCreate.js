@@ -1,16 +1,16 @@
 import React from "react";
-import CreateProductsUnit from "../../components/supplier/FormCreate";
+import CreateSupplier from "../../components/supplier/FormCreate";
 import { connect } from "react-redux";
 import { Form } from "antd";
 
-class ProductUnitForm extends React.Component {
+class SupplierForm extends React.Component {
   render() {
     return (
-      <CreateProductsUnit {...this.props} />
+      <CreateSupplier {...this.props} />
     );
   }
 }
-
+  
 function mapStateToProps(state) {
   return {
     supplierAdd: state.reducer.supplier.add,
@@ -24,6 +24,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const supplierForm =  Form.create(mapPropsToFields)(ProductUnitForm);
+const supplierForm =  Form.create(mapPropsToFields)(SupplierForm);
 
 export default connect(mapStateToProps)(supplierForm);

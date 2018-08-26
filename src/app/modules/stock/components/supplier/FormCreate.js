@@ -1,13 +1,13 @@
 import React from "react";
 import FormItem from "./FormItem";
 import { Modal } from "../shares/Modal/modal";
-import BrandAction from "../../actions/supplier";
+import SupplierAction from "../../actions/supplier";
 
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
     this.title = <this.Translate id="create_stock_supplier_title" />;
-    this.addingPropReducer = "brandAdd";
+    this.addingPropReducer = "supplierAdd";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -16,13 +16,13 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.dispatch(BrandAction.add(values));   
+        this.dispatch(SupplierAction.add(values));   
       }
     });
   }
       
   handleCancel() {
-    this.dispatch(BrandAction.reset());
+    this.dispatch(SupplierAction.reset());
   }
 
   render() {

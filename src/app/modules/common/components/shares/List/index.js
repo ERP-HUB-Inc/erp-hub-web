@@ -21,6 +21,8 @@ export default class List extends Component {
       modalContent1: null,
       columns: []
     };
+
+    // this.hideActionButton = false;
     
     //access role
     this.showListRoles = "";

@@ -3,26 +3,26 @@ import List from "../List";
 import FormCreate from "../../containers/supplier/FormCreate";
 import FormUpdate from "../../containers/supplier/FormUpdate";
 import Constant from "../../constants/supplier";
-import BrandAction from "../../actions/supplier";
-import ProductsUnitService from "../../services/supplier";
+import SupplierAction from "../../actions/supplier";
+import SupplierService from "../../services/supplier";
 import "./index.css";
 
-export default class PaymentMethodList extends List {
+export default class SupplierList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
     this.fetchingProp = "supplier";
     this.addingProp = "supplierAdd";
     this.updatingProp = "supplierUpdate";
-    this.service = ProductsUnitService;
+    this.service = SupplierService;
     this.columnFilterWithKey = ["name"];
-    this.action = BrandAction;
+    this.action = SupplierAction;
     this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
   }
 
   handleShowFormAdd() {
     const { dispatch } = this.props;
-    dispatch(BrandAction.showForm());
+    dispatch(SupplierAction.showForm());
     this.setState({
       modalConten: <FormCreate/>
     });
@@ -30,7 +30,7 @@ export default class PaymentMethodList extends List {
 
   handleShowFormEdit(rowData) {
     const { dispatch } = this.props;
-    dispatch(BrandAction.showForm(rowData));
+    dispatch(SupplierAction.showForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });

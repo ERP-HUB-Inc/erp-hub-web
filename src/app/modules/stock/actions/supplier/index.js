@@ -1,12 +1,12 @@
 import Constant from "../../constants/supplier";
-import brandService from "../../services/supplier";
+import supplierService from "../../services/supplier";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_SUPPLIER,
-        payload: brandService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
+        payload: supplierService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },
@@ -14,7 +14,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ARCHIVE_SUPPLIER,
-        payload: brandService.archive(ids)
+        payload: supplierService.archive(ids)
       });
     };
   },
@@ -22,7 +22,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ADD_SUPPLIER,
-        payload: brandService.add(data)
+        payload: supplierService.add(data)
       });
     };
   },
@@ -30,7 +30,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_SUPPLIER,
-        payload: brandService.update(data)
+        payload: supplierService.update(data)
       });
     };
   },
