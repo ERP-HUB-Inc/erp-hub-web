@@ -3,14 +3,6 @@ import Element from "../../common/Element";
 import "./index.css";
 
 export class Select extends Element {
-
-  constructor(props) {
-    super(props);
-    this.rules = [
-      { required: this.props.required, message: this.props.errorRequired }
-    ];
-  }
-
   render() {
     const {getFieldDecorator} = this.props.form;
     return (
@@ -27,7 +19,7 @@ export class Select extends Element {
             >
               {
                 this.props.dataSource.map((value, index) =>
-                  <this.Option key={index} value={value.value}>{value.name}</this.Option>
+                  <this.Option key={index} value={value[this.props.valueKey]}>{value[this.props.nameKey]}</this.Option>
                 )
               }
             </this.Select>
@@ -38,39 +30,7 @@ export class Select extends Element {
   }   
 }
 
-
-class SelectElement extends Element {   
-  render() {
-    const { getFieldDecorator } = this.props.form;
-    return (
-      <div>
-        <this.FormItem
-          label={this.props.label}
-          help={this.props.help}>
-          {
-            getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.defaultValue})(
-              <div>
-                <this.Select
-                  // defaultValue={this.props.defaultValue}
-                  placeholder={this.props.placeholder}
-                  onChange={this.props.onChange}
-                  disabled={this.props.disabled}
-                >
-                  {
-                    this.props.dataSource.map((value, index) =>
-                      <this.Option key={index} value={value.value}>{value.name}</this.Option>
-                    )
-                  }
-                </this.Select>
-              </div>
-            )
-          }
-        </this.FormItem>
-      </div>
-    );
-  }
-}
-
-SelectElement.defaultProps = {
-  showSearch: false
+Select.defaultProps = {
+  valueKey: "value",
+  nameKey: "name"
 };

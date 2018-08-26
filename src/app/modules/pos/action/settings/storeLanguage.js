@@ -1,6 +1,6 @@
   
 import Constant from "../../constants/settings/storeLanguage";
-import LanguageService from "../../services/settings/StoreLanguage";
+import LanguageService from "../../services/settings/StoreLanguageService";
 
 export default {
   fetch:(limit, offset, sortField, sortOrder, filter, searchKey) => {

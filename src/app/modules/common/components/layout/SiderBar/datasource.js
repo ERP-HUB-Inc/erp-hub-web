@@ -6,7 +6,7 @@ import SaleOrder from "../../../../pos/containers/transactions/SaleOrder";
 import ReturnExchange from "../../../../pos/containers/transactions/ReturnExchange";
 
 // PRODUCT
-import ManageProduct from "../../../../pos/containers/products/ManageProduct";
+import ManageProduct from "../../../../inventory/containers/products/Product";
 import Brand from "../../../../inventory/containers/products/Brand";
 import ProductType from "../../../../inventory/containers/products/ProductsType";
 import ProductTag from "../../../../inventory/containers/products/productsTag";
@@ -107,7 +107,7 @@ const dataSource = {
       {
         title: "Manage Products",
         icon: "icon-time",
-        route: "/products/return-exchange",
+        route: "/products/manage",
         component: ManageProduct,
         isFashNav: true
       },

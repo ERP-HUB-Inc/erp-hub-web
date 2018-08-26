@@ -129,7 +129,7 @@ export default class FormItem extends Modal {
 
     // APPEND GROUP CUSTOMER TO LIST
     if (groupCustomers.response != null) {
-      // groupCustomers.list = [manageCustomersUpdate.response.data, ...groupCustomers.list];
+      // groupCustomers.list = [groupCustomers.response.data, ...groupCustomers.list];
       // this.props.dispatch({type: Constant.RESET_MANAGEMENT_GROUP_CUSTOMERS});
     }
 

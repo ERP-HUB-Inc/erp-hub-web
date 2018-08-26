@@ -89,8 +89,7 @@ export default class PicturesUpload extends Element {
 
     return (
       <div className="clearfix main-upload">
-       
-        <this.FormItem label={this.props.label}>
+        <this.FormItem label={this.props.label} className="wrap-upload">
           {
             getFieldDecorator(this.props.name, { rules: this.props.rules } )(
               <Upload {...cardImgProps}>
@@ -102,7 +101,6 @@ export default class PicturesUpload extends Element {
             <img alt="example" style={{ width: "100%" }} src={cardPreviewImage} />
           </Modal>
         </this.FormItem>
-      
       </div>
     );
   }

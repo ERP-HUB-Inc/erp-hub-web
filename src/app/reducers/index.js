@@ -23,6 +23,7 @@ import managementEmployee from "../modules/hr/reducers/employees/managementEmplo
 import managementCustomers from "../modules/crm/reducers/customers/managementCutomers";
 // groupcustomer
 import groupCustomers from "../modules/crm/reducers/customers/groupCustomers";
+import product from "../modules/inventory/reducers/products/product";
 import productsUnit from "../modules/inventory/reducers/products/productsUnit";
 import brand from "../modules/inventory/reducers/products/brand";
 import productsType from "../modules/inventory/reducers/products/productsType";
@@ -53,6 +54,7 @@ const reducer = combineReducers({
   managementEmployee,
   managementCustomers,
   groupCustomers,
+  product,
   productsUnit,
   brand,
   productsType,

@@ -42,6 +42,14 @@ export default {
       });
     };
   },
+  resetFetch: () => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_PRODUCTS_UNIT_RESET,
+        payload: null
+      });
+    };
+  },
   showForm: (data) => {
     return dispatch => {
       return dispatch({

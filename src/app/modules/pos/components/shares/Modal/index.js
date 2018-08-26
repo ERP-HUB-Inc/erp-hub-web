@@ -1,5 +1,5 @@
 import React from "react";
-import { Form } from "antd";
+import {Form} from "antd";
 import Component from "../../Component";
 import "./index.css";
 

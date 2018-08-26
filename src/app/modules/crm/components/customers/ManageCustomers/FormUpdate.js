@@ -28,8 +28,6 @@ export default class FormCreate extends Modal {
           status: values.status
         };
 
-        console.log("Contact:", listContacts);
-
         delete values["contactId"];
         delete values["contactName"];
         delete values["contactNumber"];

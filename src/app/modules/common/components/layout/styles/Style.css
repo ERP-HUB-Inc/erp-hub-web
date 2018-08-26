@@ -374,29 +374,6 @@ ul.react-autosuggest__suggestions-list li table {
     border-color: none;
 }
 
-/* .ant-table-pagination .ant-pagination-item,
-.ant-pagination-prev,
-.ant-pagination-next
-{
-    min-width: 20px !important;
-    height: 20px !important;
-    line-height: 20px !important;
-}
-
-ul.ant-pagination a.ant-pagination-item-link:after,
-li.ant-pagination-next .ant-pagination-item-link
-{
-    height: 20px !important;
-}  */
-
-/* error */
-.has-error .ant-input {
-    border: 1px solid #B90000;
-}
-
-.has-error .ant-form-explain {
-    color: #B90000;
-}
 
 /* collapse */
 .main-collapse .ant-collapse {
@@ -467,5 +444,23 @@ li.ant-pagination-next .ant-pagination-item-link
 
 .hidden {
     display: none
+}
+
+/* BUTTON ADD NEW ELEMENT */
+.btn-addcontact button,
+.btn-addcontact button:hover,
+.btn-removecontact button,
+.btn-removecontact button:hover {
+    border: none;
+    padding-left: 0;
+    height: 0;
+}
+
+.btn-addcontact button span {
+    color: #57A600
+}
+
+.btn-addcontact button span.icon-add {
+    font-weight: 600
 }
 

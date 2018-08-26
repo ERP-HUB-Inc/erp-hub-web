@@ -1,0 +1,92 @@
+.group-code-generate {
+    border-radius: 3px;
+    border: 1px solid #ecebeb;
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.group-code-generate .main-ant-wrapper {
+    display: inline-flex;
+    position: relative;
+    top: -5px
+}
+
+.group-code-generate .ant-form-item {
+    margin-bottom: 0 !important
+}
+
+.group-code-generate .ant-radio-group .ant-radio-wrapper {
+    padding: 2px 0px !important;
+}
+
+.group-code-generate .wrap-generate-code .ant-form-item-control {
+    line-height: normal
+}
+
+.ant-upload.ant-upload-select-picture-card {
+    width: 100%;
+    height: 180px
+}
+
+.vertical-center-modal .ant-modal {
+    top: 8px !important
+}
+
+.product-type .ant-radio-button-wrapper {
+    height: auto !important;
+    width: 32% !important;
+    min-height: 100px !important
+}
+
+.product-type #productTypeBox {
+    display: inline-flex
+}
+
+.product-type-content {
+    margin-top: 25px
+}
+
+.product-type-content .variant-item-row {
+    margin-left: 0;
+    margin-right: 0
+}
+
+.product-type-content .wrap-variant-action {
+    display: inline-flex
+}
+
+.product-type-content .wrap-variant-action .main-switch,
+.product-type-content .wrap-variant-action .delete-variant-item {
+    position: relative;
+    top: 20px
+}
+
+.product-type-content .delete-variant-item {
+    padding-left: 8px;
+    padding-right: 8px
+}
+
+.product-type-content .delete-variant-item {
+    margin-left: 10px
+}
+
+.product-type-content .delete-variant-item span {
+    font-size: 15pt
+}
+
+.product-type-content  .btn-add-product-compsite{
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 15pt;
+    position: relative;
+    top: 25px;
+    right: 20px
+}
+
+.create-product-column-left {
+    border-right: 1px solid #d9d9d9
+}
+
+#paymentType .ant-radio-wrapper {
+    font-size: 9pt
+}

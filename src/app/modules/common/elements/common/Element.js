@@ -9,7 +9,8 @@ import {
   InputNumber,
   Spin,
   Icon,
-  DatePicker
+  DatePicker,
+  Tag
 } from "antd";
 import { FormGroup, Label } from "reactstrap";
 import { Translate, } from "react-localize-redux";
@@ -36,6 +37,7 @@ export default class Element extends Component {
     this.Option = Option;
     this.Spin = Spin;
     this.Icon = Icon;
+    this.Tag = Tag;
     this.DatePicker = DatePicker;
 
     //localization

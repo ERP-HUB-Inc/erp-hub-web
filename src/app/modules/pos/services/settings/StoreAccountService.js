@@ -1,6 +1,6 @@
 import BaseService from "../BaseService";
 
-class UnitService extends BaseService {
+class StoreAccountService extends BaseService {
 
   constructor() {
     super();
@@ -10,4 +10,4 @@ class UnitService extends BaseService {
   }
 }
 
-export default new UnitService();
+export default new StoreAccountService();

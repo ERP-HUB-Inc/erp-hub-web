@@ -1,5 +1,6 @@
 import React from "react";
 import TextAreas from "./textArea";
+import "./index.css";
 import Element from "../../common/Element";
 
 export class InputTextArea extends Element {

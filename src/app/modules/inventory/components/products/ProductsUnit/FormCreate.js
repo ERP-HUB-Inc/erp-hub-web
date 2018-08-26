@@ -27,15 +27,12 @@ export default class FormCreate extends Modal {
 
   render() {
     const {productsUnitAdd, form, locale} = this.props;
-    
+    console.log("Product Unit Loading");
     this.submitLoading = productsUnitAdd.adding;
 
     if (productsUnitAdd.showForm) {
       this.content = (
-        <div>
-          { productsUnitAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" }
-          <FormItem form={form} locale={locale}/>
-        </div>
+        <FormItem form={form} locale={locale}/>
       );
       return super.render();
     } else {

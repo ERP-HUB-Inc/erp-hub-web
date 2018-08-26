@@ -3,7 +3,7 @@ import List from "../../List";
 import FormCreate from "../../../containers/settings/StoreLanguage/FormCreate";
 import FormUpdate from "../../../containers/settings/StoreLanguage/FormUpdate";
 import StoreLanguageAction from "../../../action/settings/storeLanguage";
-import StoreLanguageService from "../../../services/settings/StoreLanguage";
+import StoreLanguageService from "../../../services/settings/StoreLanguageService";
 import Constant from "../../../constants/settings/storeLanguage";
 
 export default class StoreLanguageList extends List {

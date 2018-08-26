@@ -26,7 +26,8 @@ export class Util {
 
   renameObjectKey (template, source) {
     return source.map((value1, key1) => {
-      var renameResult = _.mapKeys(value1, function(value, key) {
+      var renameResult = _.mapKeys(value1, (value, key) => {
+        console.log("Keys:", key);
         return template[key];
       });
       return renameResult;

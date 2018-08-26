@@ -1,0 +1,19 @@
+export default {
+  PRODUCT_STANDARD: 0,
+  PRODUCT_VARIANT: 1,
+  PRODUCT_COMPOSITE: 2,
+  SERIAL_TYPE: {
+    SERIAL: 0,
+    NON_INVENTORY: 1,
+    STANDARD: 2,
+    LICENSE: 3
+  },
+  TYPE_OF_PRODUCT: {
+    GOOD: 0,
+    RAW_MATERIAL: 1
+  },
+  PRODUCT_CODE_GENERATE_TYPE: {
+    AUTO: 0,
+    CUSTOM: 1
+  }
+};

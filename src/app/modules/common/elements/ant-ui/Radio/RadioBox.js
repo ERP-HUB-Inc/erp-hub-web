@@ -10,19 +10,10 @@ export class RadioBox extends Element {
         message: this.props.errorRequired
       }
     ];
-    this.onChange = this.onChange.bind(this);
-  }
-  
-  onChange(e) {
-    console.log(`radio checked:${e.target.value}`);
-    // const onChange = this.props.onChange;
-    // onChange(e.target.value);
-    // onChange();
   }
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    // const { onChange } = this.props.onChange;
     return (
       <div className={ this.props.className }>
         <this.FormItem label={this.props.label}>
@@ -30,7 +21,7 @@ export class RadioBox extends Element {
             getFieldDecorator(this.props.name, {rules: this.rules , initialValue: this.props.defaultValue})(
               <this.Radio.Group
                 disabled={this.props.disabled}
-                onChange={this.onChange}
+                onChange={this.props.onChange}
                 style={{paddingTop: "5px", width: "100%"}}
               >
                 {this.props.children}
@@ -51,8 +42,9 @@ export class RadioChildBox extends Element {
         <div className="radio-group">
           <div className="radio-title">{ title }</div>
           <div className="language">
-            { language } <br/>
-            { currency }</div>
+            {language} <br/>
+            {currency}
+          </div>
         </div>
       </this.Radio.Button>
     );

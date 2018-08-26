@@ -89,15 +89,15 @@ export default class StoreAccountList extends Component {
     this.exampleDateFormat= "Ex: " + this.Util.formatDate("2018-08-04", value);
   }
 
-  onSelect(e){
+  onSelect(value){
     this.setState({
-      classChange: e === this.props.storeAccount.businessPlanId ? "unhide" : "hide"
+      classChange: value === this.props.storeAccount.businessPlanId ? "unhide" : "hide"
     });
   }
 
-  onChange(e){
+  onChange(value){
     this.setState({
-      classChange: e === this.props.storeAccount.businessPlanId ? "unhide" : "hide"
+      classChange: value === this.props.storeAccount.businessPlanId ? "unhide" : "hide"
     });
   }
 
@@ -432,7 +432,7 @@ export default class StoreAccountList extends Component {
                         label=" "
                         name="businessPlanId" 
                         type="radio"
-                        defaultValue={`${ storeAccount.list.businessPlanId }`}
+                        defaultValue={storeAccount.list.businessPlanId}
                         form={form}
                         disabled={true}
                         onSelect={this.onSelect}
@@ -441,8 +441,8 @@ export default class StoreAccountList extends Component {
                         { businessplan.map( (businessplan, key) => 
                           <this.RadioChildBox
                             key={key}
-                            title={`${businessplan.name}`}
-                            language={`${ businessplan.description }`}
+                            title={businessplan.name}
+                            language={businessplan.description}
                             value={businessplan.id} /> 
                         ) 
                         }

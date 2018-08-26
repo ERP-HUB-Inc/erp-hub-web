@@ -1,6 +1,6 @@
   
 import Constant from "../../constants/settings/storeAccount";
-import StoreAccountService from "../../services/settings/StoreAccount";
+import StoreAccountService from "../../services/settings/StoreAccountService";
 
 export default{
   fetch:(ids) => {

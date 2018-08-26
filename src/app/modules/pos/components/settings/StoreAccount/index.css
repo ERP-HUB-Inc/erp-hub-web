@@ -15,7 +15,7 @@
     width: 30%;
     padding-top: 6px;
     background-color: #FFFFFF;
-    border: 1px solid #CDCCCC;
+    border: 2px solid #CDCCCC;
     border-radius: 0;
     margin-right: 3px;      
 }
@@ -33,12 +33,13 @@
 }
 
 .main-radio-acc .ant-radio-button-wrapper-checked {
-    box-shadow: -1px 0 0 0 #4D4F5C !important;
-    border-left: none !important;
+    box-shadow: 0 0 0 0 #4D4F5C !important;
+    /* border-left: none !important; */
 }
 
 .main-radio-acc .ant-radio-button-wrapper-checked {
-    border: 1px solid #4D4F5C;
+    border: 2px solid #093163;
+    box-shadow: 0 0 0 0 #4D4F5C !important
 }
 
 .main-radio-acc .radio-group {
@@ -56,6 +57,7 @@
     text-align: center;
     line-height: 12pt;
     color: #9A9A9A;
+    white-space: pre-line
 }
 
 
@@ -64,11 +66,6 @@
 }
 
 /* radio */
-
-.main-store-account .ant-radio-group .ant-radio-wrapper {
-    display: table !important;
-    padding: 7px 0px !important;
-}
 
 .btn-submit-center {
     margin-top: 20px;

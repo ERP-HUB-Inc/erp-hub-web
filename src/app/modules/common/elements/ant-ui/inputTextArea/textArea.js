@@ -8,7 +8,7 @@ export default class TextAreas extends Element {
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <this.FormItem label={this.props.label}>
+      <this.FormItem label={this.props.label} className="wrap-textarea">
         {
           getFieldDecorator(this.props.name, {rules: [
             {
@@ -19,9 +19,6 @@ export default class TextAreas extends Element {
               min: this.props.min,
               message: this.props.errorLenght
             }
-            // {
-            //   validator: this.props.validator
-            // }
           ],
           initialValue: this.props.data})(<TextArea placeholder={ this.props.placeholder } rows={ this.props.rows }/>)
         }
