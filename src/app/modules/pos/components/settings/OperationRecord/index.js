@@ -2,7 +2,6 @@ import React from "react";
 import List from "../../List";
 import FormCreate from "../../../containers/settings/OperationRecord/FormCreate";
 import FormUpdate from "../../../containers/settings/OperationRecord/FormUpdate";
-import TaxAction from "../../../action/settings/operationRecord";
 import Constant from "../../../constants/settings/operationRecord";
 import OperationRecordAction from "../../../action/settings/operationRecord";
 import OperatinRecordService from "../../../services/settings/OperationRecordService";
@@ -23,7 +22,7 @@ export default class TaxList extends List {
 
   handleShowFormAdd() {
     const { dispatch } = this.props;
-    dispatch(TaxAction.showForm());
+    dispatch(OperationRecordAction.showForm());
     this.setState({
       modalConten: <FormCreate />
     });
@@ -31,7 +30,7 @@ export default class TaxList extends List {
 
   handleShowFormEdit(rowData) {
     const { dispatch } = this.props;
-    dispatch(TaxAction.showForm(rowData));
+    dispatch(OperationRecordAction.showForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });

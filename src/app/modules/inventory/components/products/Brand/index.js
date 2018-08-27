@@ -7,7 +7,7 @@ import BrandAction from "../../../actions/products/brand";
 import ProductsUnitService from "../../../services/products/brand";
 import "./index.css";
 
-export default class PaymentMethodList extends List {
+export default class Lists extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
