@@ -3,27 +3,38 @@ import List from "../../List";
 import FormCreate from "../../../containers/stock/purchaseOrder/FormCreate";
 import FormUpdate from "../../../containers/stock/purchaseOrder/FormUpdate";
 import Constant from "../../../constants/stock/purchaseOrder";
-import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
-import PurchaseOrderService from "../../../services/stock/PurchaseOrderService";
+import PurchaseAction from "../../../actions/stock/purchaseOrder";
+import PurchaseService from "../../../services/stock/PurchaseOrderService";
+import Supplier from "../../../actions/stock/supplier";
 import "./index.css";
 
-export default class Lists extends List {
+export default class PurchaseOrderLists extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
     this.fetchingProp = "purchaseOrder";
     this.addingProp = "purchaseOrderAdd";
     this.updatingProp = "purchaseOrderUpdate";
-    this.service = PurchaseOrderService;
+    this.service = PurchaseService;
     this.columnFilterWithKey = ["name"];
-    this.action = PurchaseOrderAction;
+    this.action = PurchaseAction;
     this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
-    this.hideActionButton = true;
+  }
+
+  componentDidMount(){
+    const { dispatch } = this.props;
+    dispatch(Supplier.fetch());
+    super.componentDidMount();
+  }
+
+  componentWillReceiveProps(nextProps){
+    console.log("receive props",nextProps);
+    console.log("page size",this.pageSize);
   }
 
   handleShowFormAdd() {
     const { dispatch } = this.props;
-    dispatch(PurchaseOrderAction.showForm());
+    dispatch(PurchaseAction.showForm());
     this.setState({
       modalConten: <FormCreate/>
     });
@@ -31,7 +42,7 @@ export default class Lists extends List {
 
   handleShowFormEdit(rowData) {
     const { dispatch } = this.props;
-    dispatch(PurchaseOrderAction.showForm(rowData));
+    dispatch(PurchaseAction.showForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });
@@ -47,8 +58,35 @@ export default class Lists extends List {
     );
   }
 
+  handleSubmitFilter(e){
+    if (this.action != null) {
+      e.preventDefault();
+      this.props.form.validateFieldsAndScroll((err, values) => {
+        if (!err) {
+          const {dispatch} = this.props;
+          // const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
+      
+          // let filter = status;
+
+          let filter = values.supplierid;
+
+          console.log("filters",filter);
+
+          console.log("action value",this.action);
+
+          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
+          dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
+          this.setState({isClickFilter: true});
+
+        }
+      
+      }); 
+    } 
+  }
+
   renderFilterRecord() {
-    const {form} = this.props;
+    const {form,supplier} = this.props;
+
     return(
       <div>
         { form == null ?
@@ -68,17 +106,17 @@ export default class Lists extends List {
               </this.Col>
               <this.Col md="2">
                 <this.Select
-                  name="status"
+                  name="supplierid"
                   label={<this.Translate id="select_picker_purchase_supplier" />}
                   placeholder="Please select status"
-                  dataSource={this.statusList}
-                  defaultValue={this.Enum.ALL_STATE}
+                  dataSource={supplier.list}
+                  valueKey="id"
                   form={form}
                 />
               </this.Col>
               <this.Col md="2">
                 <this.DatePickers
-                  name="status"
+                  name="duedate"
                   label={<this.Translate id="datepicker_stock_purchase_due_date" />}
                   form={form}
                 />
@@ -87,7 +125,7 @@ export default class Lists extends List {
                 <this.InputText
                   name="key"
                   label={<this.Translate id="input_stock_purchase_key" />}
-                  placeholder="Search for code, name and address"
+                  placeholder="Search for Purchase Order"
                   form={form}
                 />
               </this.Col>
@@ -101,7 +139,6 @@ export default class Lists extends List {
       </div>
     );
   }
-
 
 }
 
@@ -130,8 +167,8 @@ class Column extends List {
       },
       {
         title: <this.Translate id="col_stock_purchase_order_due_date" />,
-        dataIndex: "dueDate",
-        key: "dueDate",
+        dataIndex: "deliveryDueDate",
+        key: "deliveryDueDate",
         sorter: true
       },
       {
@@ -142,8 +179,8 @@ class Column extends List {
       },
       {
         title: <this.Translate id="col_stock_purchase_order_total" />,
-        dataIndex: "total",
-        key: "total",
+        dataIndex: "requestTotal",
+        key: "requestTotal",
         sorter: true
       },
       this.columnStatus

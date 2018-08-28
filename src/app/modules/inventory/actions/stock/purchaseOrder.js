@@ -1,12 +1,12 @@
 import Constant from "../../constants/stock/purchaseOrder";
-import supplierService from "../../services/stock/PurchaseOrderService";
+import purchaseOrderService from "../../services/stock/PurchaseOrderService";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PURCHASE_ORDER,
-        payload: supplierService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
+        payload: purchaseOrderService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },
@@ -14,7 +14,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ARCHIVE_PURCHASE_ORDER,
-        payload: supplierService.archive(ids)
+        payload: purchaseOrderService.archive(ids)
       });
     };
   },
@@ -22,7 +22,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ADD_PURCHASE_ORDER,
-        payload: supplierService.add(data)
+        payload: purchaseOrderService.add(data)
       });
     };
   },
@@ -30,7 +30,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_PURCHASE_ORDER,
-        payload: supplierService.update(data)
+        payload: purchaseOrderService.update(data)
       });
     };
   },

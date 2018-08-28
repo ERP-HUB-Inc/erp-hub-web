@@ -16,7 +16,8 @@ function mapStateToProps(state) {
     purchaseOrder: state.reducer.purchaseOrder.request,
     purchaseOrderAdd: state.reducer.purchaseOrder.add,
     purchaseOrderArchive: state.reducer.purchaseOrder.archive,
-    purchaseOrderUpdate: state.reducer.purchaseOrder.update
+    purchaseOrderUpdate: state.reducer.purchaseOrder.update,
+    supplier: state.reducer.supplier.request
   };
 }
 
