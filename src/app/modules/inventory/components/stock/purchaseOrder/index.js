@@ -48,15 +48,15 @@ export default class PurchaseOrderLists extends List {
     });
   }
 
-  renderActionButton() {
-    return (
-      <div>
-        <this.Button type="info">
-          <span className="icon-export"></span> {<this.Translate id="button_search_stock_purchase_order_export_csv" />}
-        </this.Button> 
-      </div>
-    );
-  }
+  // renderActionButton() {
+  //   return (
+  //     <div>
+  //       <this.Button type="info">
+  //         <span className="icon-export"></span> {<this.Translate id="button_search_stock_purchase_order_export_csv" />}
+  //       </this.Button> 
+  //     </div>
+  //   );
+  // }
 
   handleSubmitFilter(e){
     if (this.action != null) {
@@ -71,7 +71,6 @@ export default class PurchaseOrderLists extends List {
           let filter = values.supplierid;
 
           console.log("filters",filter);
-
           console.log("action value",this.action);
 
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});

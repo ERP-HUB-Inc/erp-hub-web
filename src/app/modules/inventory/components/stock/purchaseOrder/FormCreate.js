@@ -1,13 +1,13 @@
 import React from "react";
 import FormItem from "./FormItem";
-import { Modal } from "../../shares/Modal/modal";
+import Modal from "../../../../common/components/shares/Modal";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
 
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
     this.title = <this.Translate id="create_stock_purchase_order_title" />;
-    this.addingPropReducer = "purchaseOrderAdd";
+    this.width = "80%";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }

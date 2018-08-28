@@ -1,11 +1,12 @@
 import React from "react";
 import FormItem from "./FormItem";
-import { Modal } from "../../shares/Modal/modal";
+import Modal from "../../../../common/components/shares/Modal";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
 
 export default class Form extends Modal {
   constructor(props) {
     super(props);
+    this.width = "80%";
     this.state = {
       disabled: false
     };
@@ -31,7 +32,7 @@ export default class Form extends Modal {
   }
 
   render() {
-    const {purchaseOrderUpdate, form, locale} = this.props;
+    const {purchaseOrderUpdate, form, locale,supplier,dispatch} = this.props;
 
     this.submitLoading = purchaseOrderUpdate.updating;
 
@@ -39,7 +40,7 @@ export default class Form extends Modal {
       this.content = (
         <div>
           {purchaseOrderUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <FormItem formData={purchaseOrderUpdate.data} form={form} locale={locale}/>
+          <FormItem formData={purchaseOrderUpdate.data} supplier={supplier} dispatch={dispatch} form={form} locale={locale}/>
         </div>
       );
       return super.render();

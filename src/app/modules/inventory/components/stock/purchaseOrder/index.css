@@ -1,45 +1,19 @@
-.vertical-center-modal {
-    text-align: center;
-    white-space: nowrap;
-  }
-  
-.vertical-center-modal:before {
-    content: '';
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-    width: 0;
+.main-searchs input {
+    width: 98%;
+    border: none;
+    height: 50px;
 }
 
-.vertical-center-modal .ant-modal {
-    display: inline-block;
-    vertical-align: middle;
-    top: 0;
-    text-align: left;
+.main-searchs .search-icon{
+    float: left;
+    position: relative;
+    font-size: 36pt;
 }
 
-.ant-modal-content {
-    border-radius: 0px;
-    box-shadow: 0 0 4px 0 rgba(0,0,0,0.5);
+.main-searchs .remove-search-icon {
+    float: right;
+    position: relative;
+    top: -49px;
+    font-size: 31px;
 }
 
-.ant-modal-header,
-.ant-modal-footer {
-    text-align: center
-}
-
-.ant-modal-footer,
-.ant-modal-header {
-    border: none
-}
-
-.ant-modal-title{
-    font-size: 12pt;
-    text-transform: uppercase;
-    color: #4D4F5C;
-    font-weight: 500    
-}
-
-.ant-modal-close-x {
-    display: none
-}
