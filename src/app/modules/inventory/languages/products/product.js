@@ -189,10 +189,22 @@ export default {
     "Supplier Price"
   ],
 
+  "input_product_supplier_price_placeholder": [
+    "0.00",
+    "0.00",
+    "0.00"
+  ],
+
   "input_product_shipping_fee": [
     "Shipping Fee",
     "Shipping Fee",
     "Shipping Fee"
+  ],
+
+  "input_product_shipping_fee_placeholder": [
+    "0.00",
+    "0.00",
+    "0.00"
   ],
 
   "input_product_cost": [
@@ -211,6 +223,13 @@ export default {
     "Markup",
     "Markup",
     "Markup"
+  ],
+
+
+  "input_product_mark_up_placeholder": [
+    "0.00",
+    "0.00",
+    "0.00",
   ],
 
   "input_product_price": [

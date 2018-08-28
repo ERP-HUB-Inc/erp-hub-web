@@ -37,6 +37,8 @@ export default class FormComposite extends Modal {
     this.handlePressEnterOnSearch = this.handlePressEnterOnSearch.bind(this);
     this.handleOnBlurSearch = this.handleOnBlurSearch.bind(this);
     this.handleOnFocusSearch = this.handleOnFocusSearch.bind(this);
+    this.handleOnSelectList = this.handleOnSelectList.bind(this);
+    this.handleOnMouseHoverSearchList = this.handleOnMouseHoverSearchList.bind(this);
   }
 
   handlePressEnterOnSearch() {
@@ -44,63 +46,31 @@ export default class FormComposite extends Modal {
   }
 
   handleOnBlurSearch() {
-    this.setState({visibleDropDown: false});
+    // this.setState({visibleDropDown: false});
+  }
+
+  handleOnMouseHoverSearchList() {
+    this.setState({visibleDropDown: true});
   }
 
   handleOnFocusSearch() {
     this.setState({visibleDropDown: true});
   }
 
+  handleOnSelectList(value) {
+    console.log("Product:", value);
+  }
+
   handleKeyDownOnProductSearch(event) {
     if (event.keyCode === 38) {
-      // console.log("Key Up");
+
     }
     else if (event.keyCode === 40) {
       
     } else if (event.target.value.trim().length > 0){
+
       clearTimeout(this.timer);
-      // this.setState({data: [
-      //   {
-      //     title: "Ant Design Title 1",
-      //   },
-      //   {
-      //     title: "Ant Design Title 2",
-      //   },
-      //   {
-      //     title: "Ant Design Title 3",
-      //   },
-      //   {
-      //     title: "Ant Design Title 4",
-      //   },
-      //   {
-      //     title: "Ant Design Title 4",
-      //   },
-      //   {
-      //     title: "Ant Design Title 4",
-      //   },
-      //   {
-      //     title: "Ant Design Title 4",
-      //   },
-      //   {
-      //     title: "Ant Design Title 4",
-      //   },
-      //   {
-      //     title: "Ant Design Title 4",
-      //   },
-      //   {
-      //     title: "Ant Design Title 4",
-      //   },
-      //   {
-      //     title: "Ant Design Title 4",
-      //   },
-      //   {
-      //     title: "Ant Design Title 4",
-      //   },
-      //   {
-      //     title: "Ant Design Title 4",
-      //   }
-      // ]});
-      
+    
       this.timer = setTimeout(function() {
         this.setState({data: [{
           title: "Ant Design Title 1",
@@ -144,12 +114,11 @@ export default class FormComposite extends Modal {
       }.bind(this), 1000);
 
     } else {
-      this.setState({data: []});
+      this.setState({
+        data: [],
+        visibleDropDown: false
+      });
     }
-  }
-
-  requestData() {
-    
   }
 
   componentDidMount() {
@@ -193,8 +162,9 @@ export default class FormComposite extends Modal {
                 itemLayout="horizontal"
                 dataSource={this.state.data}
                 className="list-search"
+                onMouseEnter={() => this.handleOnMouseHoverSearchList()}
                 renderItem={item => (
-                  <List.Item>
+                  <List.Item onClick={() => this.handleOnSelectList(item)}>
                     <List.Item.Meta
                       // avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
                       title={<a href="https://ant.design">{item.title}</a>}

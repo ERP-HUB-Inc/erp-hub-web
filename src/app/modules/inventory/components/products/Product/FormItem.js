@@ -282,7 +282,7 @@ export default class FormItem extends Modal {
                   <this.Switchs
                     name="isPublic"
                     label={<this.Translate id="input_product_is_publish" />}
-                    checked={formData.isAvialableSale}
+                    checked={formData.isPublic}
                     form={form}/>
                 </this.Col>
 
@@ -313,7 +313,7 @@ export default class FormItem extends Modal {
                     name="supplier_price"
                     label={<span><this.Translate id="input_product_supplier_price" /><span> ({currentUser.setting.currency})</span></span>}
                     data={formData.name}
-                    placeholder={this.CATranslate("input_product_supplier_price", locale)}
+                    placeholder={this.CATranslate("input_product_supplier_price_placeholder", locale)}
                     max={20}
                     form={form}/>
                 </this.Col>
@@ -323,7 +323,7 @@ export default class FormItem extends Modal {
                     name="shipping_fee"
                     label={<span><this.Translate id="input_product_shipping_fee" /><span> ({currentUser.setting.currency})</span></span>}
                     data={formData.name}
-                    placeholder={this.CATranslate("input_product_shipping_fee", locale)}
+                    placeholder={this.CATranslate("input_product_shipping_fee_placeholder", locale)}
                     max={20}
                     form={form}/>
                 </this.Col>
@@ -336,7 +336,7 @@ export default class FormItem extends Modal {
                     name="cost"
                     label={<span><this.Translate id="input_product_cost" /><span> ({currentUser.setting.currency})</span></span>}
                     data={formData.name}
-                    placeholder={this.CATranslate("input_product_cost", locale)}
+                    placeholder={this.CATranslate("input_product_cost_placeholder", locale)}
                     max={20}
                     form={form}/>
                 </this.Col>
@@ -346,7 +346,7 @@ export default class FormItem extends Modal {
                     name="markup"
                     label={<span><this.Translate id="input_product_mark_up" /><span> (%)</span></span>}
                     data={formData.name}
-                    placeholder={this.CATranslate("input_product_mark_up", locale)}
+                    placeholder={this.CATranslate("input_product_mark_up_placeholder", locale)}
                     max={20}
                     form={form}/>
                 </this.Col>
@@ -356,7 +356,7 @@ export default class FormItem extends Modal {
                     name="price"
                     label={<span><this.Translate id="input_product_price" /><span> ({currentUser.setting.currency})</span></span>}
                     data={formData.name}
-                    placeholder={this.CATranslate("input_product_price", locale)}
+                    placeholder={this.CATranslate("input_product_price_placeholder", locale)}
                     max={20}
                     form={form}/>
                 </this.Col>
@@ -492,7 +492,7 @@ FormItem.defaultProps = {
   formData: {
     name:"",
     description:"",
-    isAvialableSale: 0,
+    isAvialableSale: 1,
     isPublic: 0,
     status: 1
   }
