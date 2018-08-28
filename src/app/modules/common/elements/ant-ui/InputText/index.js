@@ -23,6 +23,9 @@ export class InputText extends Element {
         max={this.props.max}
         handleKeyDown={this.props.handleKeyDown}
         handleKeyUp={this.props.handleKeyUp}
+        handlePressEnter={this.props.handlePressEnter}
+        handleOnBlur={this.props.handleOnBlur}
+        handleOnFocus={this.props.handleOnFocus}
         disabled= {this.props.disabled}
       />
     );

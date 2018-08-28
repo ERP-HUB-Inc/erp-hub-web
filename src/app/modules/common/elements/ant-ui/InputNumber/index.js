@@ -24,7 +24,7 @@ export class InputNumber extends Element {
         errorLength={this.props.errorLength}
         max={this.props.max}
         data={this.props.data}
-        required={this.props.required}
+        rules={this.rules}
         form={this.props.form}
         className={this.props.className} 
       />

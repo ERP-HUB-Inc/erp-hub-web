@@ -29,9 +29,12 @@ export default class InputText extends Element {
           ],
           initialValue: this.props.data})(<this.Input type={this.props.type} 
             placeholder={this.props.placeholder} 
-            disabled= { this.props.disabled } 
+            disabled={this.props.disabled} 
             onKeyDown={this.props.handleKeyDown}
             onKeyUp={this.props.handleKeyUp}
+            onBlur={this.props.handleOnBlur}
+            onFocus={this.props.handleOnFocus}
+            onPressEnter={this.props.handlePressEnter}
           />) 
         }
         { this.props.notation !=="" ?

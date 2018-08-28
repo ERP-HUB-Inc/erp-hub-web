@@ -1,13 +1,12 @@
 import React from "react";
 import FormItem from "./FormItem";
-import { Modal } from "../../shares/Modal/modal";
-import BrandAction from "../../../actions/products/brand";
+import VariantAttributeAction from "../../../actions/products/variantAttribute";
+import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="create_products_brand_title" />;
-    this.addingPropReducer = "brandAdd";
+    this.title = <this.Translate id="create_variant_attribute_title" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -16,27 +15,27 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.dispatch(BrandAction.add(values));   
+        this.dispatch(VariantAttributeAction.add(values));   
       }
     });
   }
       
   handleCancel() {
-    this.dispatch(BrandAction.reset());
+    this.dispatch(VariantAttributeAction.reset());
   }
 
   render() {
-    const {brandAdd, form, locale} = this.props;
+    const {variantAttributeAdd, form, locale} = this.props;
     
-    this.submitLoading = brandAdd.adding;
+    this.submitLoading = variantAttributeAdd.adding;
 
-    if (brandAdd.showForm) {
+    if (variantAttributeAdd.showForm) {
       this.content = (
         <FormItem form={form} locale={locale}/>
       );
       return super.render();
     } else {
-      return (<div></div>);
+      return <div />;
     }
   }
 }

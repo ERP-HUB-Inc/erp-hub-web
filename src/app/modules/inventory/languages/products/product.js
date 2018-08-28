@@ -201,6 +201,12 @@ export default {
     "Cost",
   ],
 
+  "input_product_cost_placeholder": [
+    "0.00",
+    "0.00",
+    "0.00",
+  ],
+
   "input_product_mark_up": [
     "Markup",
     "Markup",
@@ -211,6 +217,12 @@ export default {
     "Price",
     "Price",
     "Price"
+  ],
+
+  "input_product_price_placeholder": [
+    "0.00",
+    "0.00",
+    "0.00"
   ],
 
   "input_product_upload_image": [

@@ -46,23 +46,4 @@ export default {
     "အမည်",
     "Please input your description"
   ],
-
-  // "input_products_brand_description": [
-  //   "Description",
-  //   "အမည်",
-  //   "Description"
-  // ],
-
-  // "input_error_products_brand_name": [
-  //   "Please input your unit name",
-  //   "အမည်",
-  //   "Please input your unit name"
-  // ],
-
-  // "input_error_products_brand_description": [
-  //   "Please input your description",
-  //   "အမည်",
-  //   "Please input your description"
-  // ],
-
 };

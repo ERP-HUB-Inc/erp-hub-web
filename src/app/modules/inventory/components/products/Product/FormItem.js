@@ -1,10 +1,12 @@
 import React from "react";
-import FormVariant from "./FormVariant";
 import FormComposite from "./FormComposite";
+import FormVariant from "./FormVariant";
 import Enum from "../../../enums";
+// import FormVariant from "../../../containers/products/Product/FormVariant";
 import BrandAction from "../../../actions/products/brand";
 import UnitAction from "../../../actions/products/productsUnit";
 import TagAction from "../../../actions/products/productsTag";
+import VariantAttributeAction from "../../../actions/products/variantAttribute";
 import TaxAction from "../../../../pos/action/settings/tax";
 import Modal from "../../../../common/components/shares/Modal";
 import "./index.css";
@@ -76,6 +78,7 @@ export default class FormItem extends Modal {
     dispatch(TaxAction.fetch(100));
     dispatch(BrandAction.fetch(100));
     dispatch(TagAction.fetch(100));
+    dispatch(VariantAttributeAction.fetch(100));
   }
 
   componentDidUpdate(prevProps) {
@@ -88,7 +91,6 @@ export default class FormItem extends Modal {
 
     if (brandAdd.added) {
       this.props.form.setFieldsValue({brandId: brandAdd.response.data.id});
-      console.log("Set Selected");
       dispatch(BrandAction.reset());
     }
 
@@ -105,9 +107,19 @@ export default class FormItem extends Modal {
 
   onChange(e) {
     const value = e.target.value;
-    const {form, locale} = this.props;
+    const {
+      form,
+      locale,
+      variantAttributes,
+      variantAttributeAdd
+    } = this.props;
     if (value === Enum.PRODUCT_VARIANT) {
-      this.productTypeContent = <FormVariant form={form} locale={locale} />;
+      this.productTypeContent = <FormVariant
+        form={form}
+        locale={locale}
+        variantAttributes={variantAttributes}
+        variantAttributeAdd={variantAttributeAdd}
+        handleAddVariantAttribute={this.props.handleAddVariantAttribute}/>;
     } else if (value === Enum.PRODUCT_COMPOSITE) {
       this.productTypeContent = <FormComposite form={form} locale={locale} />;
     } else {
@@ -134,7 +146,6 @@ export default class FormItem extends Modal {
     const currentUser = this.getCurrentUser();
 
     if (brandAdd.response != null) {
-      console.log("Append To List");
       brands.list = [brandAdd.response.data, ...brands.list];
     }
 

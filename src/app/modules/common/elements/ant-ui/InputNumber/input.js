@@ -1,7 +1,7 @@
 import React from "react";
 import Element from "../../common/Element";
 
-export default class InputNumbers extends Element {
+export default class InputNumber extends Element {
   constructor(props) {
     super(props);
     this.state = {
@@ -50,4 +50,8 @@ export default class InputNumbers extends Element {
     );
   }
 }
+
+InputNumber.defaultProps = {
+  data: 0.00
+};
 

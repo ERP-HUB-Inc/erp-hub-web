@@ -278,13 +278,13 @@ export default class ListPrivilege extends Component {
           });
         }
       }
-
-      this.setState({
-        checkChildIdList,
-        checkChildIdListV2
-      });
-
     });
+
+    this.setState({
+      checkChildIdList,
+      checkChildIdListV2
+    });
+
   }
 
   renderPanelPrivilege (parent) {
@@ -328,7 +328,7 @@ export default class ListPrivilege extends Component {
 
   renderSubPanelPrivilge (privilege) {
     const rolePrivilge = this.props.rolePrivileges.list.find(value => value.privilegeId === privilege["id"]);
-  
+    
     return (
       <this.Col md="6" className="childPrivilegeItem" key={privilege["id"]}>
         <this.Checkbox

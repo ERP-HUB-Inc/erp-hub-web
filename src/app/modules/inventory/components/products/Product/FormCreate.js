@@ -3,6 +3,8 @@ import FormItem from "./FormItem";
 import ProductAction from "../../../actions/products/product";
 import BrandAction from "../../../actions/products/brand";
 import FormCreateBrand from "../../../containers/products/Brand/FormCreate";
+import VariantAttributeAction from "../../../actions/products/variantAttribute";
+import FormCreateVariantAttribute from "../../../containers/products/VariantAttribute/FormCreate";
 import UnitAction from "../../../actions/products/productsUnit";
 import FormCreateUnit from "../../../containers/products/ProductsUnit/FormCreate";
 import TaxAction from "../../../../pos/action/settings/tax";
@@ -17,6 +19,7 @@ export default class FormCreate extends Modal {
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleAddBrand = this.handleAddBrand.bind(this);
+    this.handleAddVariantAttribute = this.handleAddVariantAttribute.bind(this);
     this.handleAddUnit = this.handleAddUnit.bind(this);
     this.handleAddTax = this.handleAddTax.bind(this);
   }
@@ -25,7 +28,8 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.dispatch(ProductAction.add(values));   
+        console.log("Product Submit Value:", values);
+        // this.dispatch(ProductAction.add(values));   
       }
     });
   }
@@ -37,6 +41,11 @@ export default class FormCreate extends Modal {
   handleAddBrand() {
     this.dispatch(BrandAction.showForm());
     this.modal1 = <FormCreateBrand />;
+  }
+
+  handleAddVariantAttribute() {
+    this.dispatch(VariantAttributeAction.showForm());
+    this.modal1 = <FormCreateVariantAttribute />;
   }
 
   handleAddUnit() {
@@ -61,7 +70,9 @@ export default class FormCreate extends Modal {
       taxAdd,
       brands,
       brandAdd,
-      tags
+      tags,
+      variantAttributes,
+      variantAttributeAdd
     } = this.props;
     
     this.submitLoading = productAdd.adding;
@@ -81,7 +92,10 @@ export default class FormCreate extends Modal {
           brands={brands}
           brandAdd={brandAdd}
           handleAddBrand={this.handleAddBrand}
-          tags={tags}/>
+          tags={tags}
+          variantAttributes={variantAttributes}
+          variantAttributeAdd={variantAttributeAdd}
+          handleAddVariantAttribute={this.handleAddVariantAttribute}/>
       );
       return super.render();
     } else {
@@ -89,3 +103,4 @@ export default class FormCreate extends Modal {
     }
   }
 }
+

@@ -22,6 +22,8 @@ function mapStateToProps(state) {
     brandAdd: state.reducer.brand.add,
     tags: state.reducer.productsTag.request,
     tagAdd: state.reducer.productsTag.add,
+    variantAttributes: state.reducer.variantAttribute.request,
+    variantAttributeAdd: state.reducer.variantAttribute.add,
     locale: state.locale
   };
 }

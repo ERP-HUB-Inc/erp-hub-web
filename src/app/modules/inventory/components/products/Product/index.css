@@ -48,7 +48,8 @@
 
 .product-type-content .variant-item-row {
     margin-left: 0;
-    margin-right: 0
+    margin-right: 0;
+    padding-left: 20px
 }
 
 .product-type-content .wrap-variant-action {
@@ -67,7 +68,8 @@
 }
 
 .product-type-content .delete-variant-item {
-    margin-left: 10px
+    margin-left: 10px;
+    top: 25px !important
 }
 
 .product-type-content .delete-variant-item span {
@@ -83,10 +85,45 @@
     right: 20px
 }
 
+.wrap-variant-item-row:first-child {
+    margin-top: 10px
+}
+
+.wrap-variant-item-row .btn-add-more-variant {
+    padding-left: 35px
+}
+
+.product-type-content .wrap-variant-item-row {
+    margin-bottom: 20px
+}
+
 .create-product-column-left {
     border-right: 1px solid #d9d9d9
 }
 
 #paymentType .ant-radio-wrapper {
     font-size: 9pt
+}
+
+.wrap-dropdown-search-product {
+    position: absolute;
+    z-index: 2;
+    top: 60px;
+}
+
+.wrap-dropdown-search-product .list-search {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    background: white;
+    max-height: 470px;
+    overflow-y: auto
+}
+
+.wrap-dropdown-search-product .list-search .ant-list-item {
+    padding: 5px 15px;
+    cursor: pointer
+}
+
+.wrap-dropdown-search-product .list-search .ant-list-item:hover, 
+.wrap-dropdown-search-product .list-search .ant-list-item.product-item-hover {
+    background: #e6f7ff
 }
