@@ -17,7 +17,6 @@ export default class SupplierList extends List {
     this.service = SupplierService;
     this.columnFilterWithKey = ["name"];
     this.action = SupplierAction;
-    // this.module = "inventory";
     this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
   }
 
@@ -64,7 +63,7 @@ class Column extends List {
       {
         title: <this.Translate id="col_stock_supplier_email" />,
         dataIndex: "email",
-        key: "phoneNumber",
+        key: "email",
         sorter: true
       },
       this.columnStatus

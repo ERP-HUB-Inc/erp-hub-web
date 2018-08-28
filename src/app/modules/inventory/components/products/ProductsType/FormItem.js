@@ -10,54 +10,45 @@ export default class FormItem extends Modal {
   }
 
   render() {
-    const {form,locale,formData} = this.props;
-    const {getFieldDecorator,getFieldValue} = this.props.form;
-
-    getFieldDecorator("keys", {initialValue: formData });
-
-    let keys = getFieldValue("keys");
-    if(keys === null || keys === ""){
-      keys = [];
-    }
-    keys = formData;
-
-    // console.log("get values",keys);
-
+    const {form,locale,formData,productsType} = this.props;
     return (  
       <div>
         <this.Tabs type="card">
           <this.TabPane tab={ <this.Translate id="tab_products_products_type_general" /> } key="1">
-            <this.Row>
-              <this.Col md="12">
-                <this.InputText
-                  name="name"
-                  label={<this.Translate id="input_products_products_type_name" />}
-                  data={formData.name}
-                  placeholder={this.CATranslate("input_products_products_type_name", locale)}
-                  required={true}
-                  errorRequired={<this.Translate id="input_error_products_products_type_name" />}
-                  max={100}
-                  min={3}
-                  form={form}/> 
-              </this.Col> 
-              <this.Col md="12">
-                <this.InputTextArea
-                  name="description"
-                  label={<this.Translate id="input_products_products_type_description" />}
-                  data={formData.description}
-                  placeholder={this.CATranslate("input_products_products_type_description", locale)}
-                  required={true}
-                  errorRequired={<this.Translate id="input_error_products_products_type_description" />}
-                  max={100}
-                  form={form}/>
-              </this.Col>
-            </this.Row>
+            {
+              productsType.data.productTypeDescriptions.map((data,index) =>
+                <this.Row key={ index }>
+                  <this.Col md="12">
+                    <this.InputText
+                      name="name"
+                      label={<this.Translate id="input_products_products_type_name" />}
+                      data={data.name}
+                      placeholder={this.CATranslate("input_products_products_type_name", locale)}
+                      required={true}
+                      errorRequired={<this.Translate id="input_error_products_products_type_name" />}
+                      max={100}
+                      min={3}
+                      form={form}/> 
+                  </this.Col> 
+                  <this.Col md="12">
+                    <this.InputTextArea
+                      name="description"
+                      label={<this.Translate id="input_products_products_type_description" />}
+                      data={data.description}
+                      placeholder={this.CATranslate("input_products_products_type_description", locale)}
+                      required={true}
+                      errorRequired={<this.Translate id="input_error_products_products_type_description" />}
+                      max={100}
+                      form={form}/>
+                  </this.Col>
+                </this.Row>
+              )  
+            }
           </this.TabPane>
           <this.TabPane tab={ <this.Translate id="tab_products_products_type_language" /> } key="2">
-            { console.log("get keys",keys) }
-            
+             
             { 
-              keys.map((language, index) =>
+              formData.map((language, index) =>
                 <div key={index}>
                   <this.Row>
                     <this.Col md="12">
@@ -87,7 +78,7 @@ export default class FormItem extends Modal {
                         form={form}/>
                     </this.Col>
                   </this.Row>
-                  {
+                  {/* {
                     keys.length > 1 ?
                       (<this.Icon
                         className="dynamic-delete-button"
@@ -97,7 +88,7 @@ export default class FormItem extends Modal {
                       )
                       :
                       null
-                  }
+                  } */}
                 </div>  
               )
               

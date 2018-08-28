@@ -298,6 +298,7 @@ export default class List extends Component {
           const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
           const filter = JSON.stringify({status});
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
+          console.log("searchKey",filter,searchKey);
           dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
           this.setState({isClickFilter: true});
         }

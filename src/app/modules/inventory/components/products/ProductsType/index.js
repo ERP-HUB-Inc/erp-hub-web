@@ -3,8 +3,8 @@ import List from "../../List";
 import FormCreate from "../../../containers/products/ProductsType/FormCreate";
 import FormUpdate from "../../../containers/products/ProductsType/FormUpdate";
 import Constant from "../../../constants/products/productsType";
-import productTypeService from "../../../actions/products/productsType";
-import ProductsUnitService from "../../../services/products/productsType";
+import ProductTypeService from "../../../services/products/productsType";
+import ProductTypeAction from "../../../actions/products/productsType";
 import "./index.css";
 
 export default class PaymentMethodList extends List {
@@ -15,14 +15,14 @@ export default class PaymentMethodList extends List {
     this.addingProp = "productsTypeAdd";
     this.updatingProp = "productsTypeUpdate";
     this.columnFilterWithKey = ["productTypeDescriptions"];
-    this.service = ProductsUnitService;
-    this.action = productTypeService;
+    this.service = ProductTypeService;
+    this.action = ProductTypeAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCTS_TYPE;
   }
 
   handleShowFormAdd() {
     const { dispatch } = this.props;
-    dispatch(productTypeService.showForm());
+    dispatch(ProductTypeAction.showForm());
     this.setState({
       modalConten: <FormCreate/>
     });
@@ -30,16 +30,15 @@ export default class PaymentMethodList extends List {
 
   handleShowFormEdit(rowData) {
     const { dispatch } = this.props;
-    dispatch(productTypeService.showForm(rowData));
+    dispatch(ProductTypeAction.showForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });
   }
 
-  // componentWillReceiveProps(){
-  //   const { dispatch } = this.props;
-  //   dispatch(ProductsTypeAction.fetch());
-  // }
+  render() {
+    return super.render();
+  }
   
 }
 

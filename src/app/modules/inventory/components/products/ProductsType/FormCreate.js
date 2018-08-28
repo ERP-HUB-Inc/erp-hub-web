@@ -17,36 +17,40 @@ export default class FormCreate extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         delete values["keys"];
-        // const listLangage = {
-        //   id: values.languageId,
-        //   name: values.languageName,
-        //   descripton : values.languageDescription
-        // };
+        const listLangage = {
+          id: values.languageId,
+          name: values.languageName,
+          descripton : values.languageDescription
+        };
 
+        if(listLangage.name == null){
+          listLangage.name = [];
+        }
 
-        // const languge = [];
+        const languge = [];
 
-        // listLangage.id.forEach((name, index) => {
-        //   if (
-        //     listLangage.descripton[index] != null
-        //   ) {
-        //     languge.push({
-        //       languageId: listLangage.id[index],
-        //       name: listLangage.name[index],
-        //       descripton: listLangage.descripton[index]
-        //     });
-        //   }
-        // });
+        listLangage.name.forEach((name, index) => {
+          if (
+            name != null
+          ) {
+            languge.push({
+              languageId: "en",
+              name: values.name,
+              descripton: values.description
+            });
+          }
+        });
 
+        delete values["name"];
+        delete values["description"];
         delete values["languageId"];
         delete values["languageName"];
         delete values["languageDescription"];
 
-        // values["productTypeDescriptions"] = languge;
+        values["productTypeDescriptions"] = languge;
 
-        // console.log("language",JSON.stringify(listLangage));
         console.log("language values",values);
-        // this.dispatch(ProductsTypeAction.add(values)); 
+        this.dispatch(ProductsTypeAction.add(values)); 
       }
     });
   }
