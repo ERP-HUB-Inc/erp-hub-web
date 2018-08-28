@@ -1,6 +1,6 @@
 import React from "react";
 import FormItem from "./FormItem";
-import { Modal } from "../../shares/Modal/modal";
+import Modal from "../../../../common/components/shares/Modal";
 import ReturnPurchaseAction from "../../../actions/stock/returnPurchase";
 
 export default class Form extends Modal {

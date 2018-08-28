@@ -26,7 +26,7 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    const {purchaseOrderAdd, form, locale} = this.props;
+    const {purchaseOrderAdd, form, locale,supplier,dispatch} = this.props;
     
     this.submitLoading = purchaseOrderAdd.adding;
 
@@ -34,7 +34,7 @@ export default class FormCreate extends Modal {
       this.content = (
         <div>
           { purchaseOrderAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" }
-          <FormItem form={form} locale={locale}/>
+          <FormItem form={form} supplier={supplier} dispatch={dispatch} locale={locale}/>
         </div>
       );
       return super.render();

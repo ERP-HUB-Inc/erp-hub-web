@@ -117,12 +117,6 @@ export default class FormItem extends Modal {
         <this.Row>
           <this.Col md="12"> 
             <div className="main-searchs">
-              
-              {/* <div className="main-placeholder-search">
-                <div className="search-product">Search Product</div>
-                <div>by product code name description type...</div>
-              </div> */}
-
               <div className="search-icon icon-add-product"></div>
               <this.InputText
                 name="searchproduct"
@@ -148,6 +142,7 @@ FormItem.defaultProps = {
   formData: {
     name:"",
     description:"",
-    status: 1
+    status: 1,
+    supplierid:""
   }
 };

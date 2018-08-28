@@ -1,5 +1,5 @@
 import React from "react";
-import List from "../../List";
+import List from "../List";
 import FormCreate from "../../../containers/stock/purchaseOrder/FormCreate";
 import FormUpdate from "../../../containers/stock/purchaseOrder/FormUpdate";
 import Constant from "../../../constants/stock/purchaseOrder";
@@ -27,10 +27,10 @@ export default class PurchaseOrderLists extends List {
     super.componentDidMount();
   }
 
-  componentWillReceiveProps(nextProps){
-    console.log("receive props",nextProps);
-    console.log("page size",this.pageSize);
-  }
+  // componentWillReceiveProps(nextProps){
+  //   console.log("receive props",nextProps);
+  //   console.log("page size",this.pageSize);
+  // }
 
   handleShowFormAdd() {
     const { dispatch } = this.props;
@@ -70,8 +70,8 @@ export default class PurchaseOrderLists extends List {
 
           let filter = values.supplierid;
 
-          console.log("filters",filter);
-          console.log("action value",this.action);
+          // console.log("filters",filter);
+          // console.log("action value",this.action);
 
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
           dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));

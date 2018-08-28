@@ -1,5 +1,5 @@
 import React from "react";
-import List from "../../List";
+import List from "../List";
 import FormCreate from "../../../containers/stock/stockTransfer/FormCreate";
 import FormUpdate from "../../../containers/stock/stockTransfer/FormUpdate";
 import Constant from "../../../constants/stock/stockTransfer";

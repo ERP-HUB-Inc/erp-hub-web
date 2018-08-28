@@ -14,7 +14,8 @@ class FormList extends React.Component {
 function mapStateToProps(state) {
   return {
     purchaseOrderAdd: state.reducer.purchaseOrder.add,
-    locale: state.locale
+    locale: state.locale,
+    supplier: state.reducer.supplier.request
   };
 }
 
