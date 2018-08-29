@@ -22,6 +22,15 @@ export default class BaseService extends Service {
     });
   }
 
+  findPurchaseOrderNumber(option = {column: "", value: ""}) {
+    return this.GET(
+      {
+        url: `${this.baseUrl}/inventery/${option.column}/${option.value}`,
+        data: {},
+        headers: this.header
+      }
+    );
+  }
   
 
   lists(
@@ -52,6 +61,7 @@ export default class BaseService extends Service {
   }
 
   archive(ids) {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
     return this.DELETE({  
       url: `${this.baseUrl}/archive/${ids}`,
       data: this.data,

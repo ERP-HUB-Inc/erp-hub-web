@@ -12,6 +12,14 @@ export default combineReducers({
     ];
     return reducer.request(state, action, constants);
   },
+  requestOrderNumber: (state = InitialState.request(), action) => {
+    const constants = [
+      Constant.REQUEST_PURCHASE_ORDER_NUMBER_PENDING,
+      Constant.REQUEST_PURCHASE_ORDER_NUMBER_REJECTED,
+      Constant.REQUEST_PURCHASE_ORDER_NUMBER_FULFILLED
+    ];
+    return reducer.request(state, action, constants);
+  },
   archive: (state = InitialState.archive(), action) => {
     const constants = [
       Constant.ARCHIVE_PURCHASE_ORDER_PENDING,

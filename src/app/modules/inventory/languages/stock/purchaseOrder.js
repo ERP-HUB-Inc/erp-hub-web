@@ -137,12 +137,6 @@ export default {
     "Price",
   ],
 
-  "col_stock_purchase_order_total": [
-    "Total",
-    "အမည်",
-    "Total",
-  ],
-
   "placeholder_table_purchase_order": [
     "No Purchase Order",
     "အမည်",

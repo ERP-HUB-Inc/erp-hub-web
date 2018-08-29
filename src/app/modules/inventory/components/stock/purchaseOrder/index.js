@@ -16,7 +16,11 @@ export default class PurchaseOrderLists extends List {
     this.addingProp = "purchaseOrderAdd";
     this.updatingProp = "purchaseOrderUpdate";
     this.service = PurchaseService;
-    this.columnFilterWithKey = ["name"];
+    this.columnFilterWithKey = [
+      "name",
+      "supplierId",
+      "deliveryDueDate"
+    ];
     this.action = PurchaseAction;
     this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
   }
@@ -26,11 +30,6 @@ export default class PurchaseOrderLists extends List {
     dispatch(Supplier.fetch());
     super.componentDidMount();
   }
-
-  // componentWillReceiveProps(nextProps){
-  //   console.log("receive props",nextProps);
-  //   console.log("page size",this.pageSize);
-  // }
 
   handleShowFormAdd() {
     const { dispatch } = this.props;
@@ -64,19 +63,12 @@ export default class PurchaseOrderLists extends List {
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           const {dispatch} = this.props;
-          // const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
-      
-          // let filter = status;
-
-          let filter = values.supplierid;
-
-          // console.log("filters",filter);
-          // console.log("action value",this.action);
-
+          const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
+          let filter = {status};
+          filter = JSON.stringify(filter);
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
           dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
           this.setState({isClickFilter: true});
-
         }
       
       }); 

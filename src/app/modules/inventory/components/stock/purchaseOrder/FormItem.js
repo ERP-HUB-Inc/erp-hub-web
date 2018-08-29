@@ -1,57 +1,171 @@
 import React from "react";
-import Supplier from "../../../actions/stock/supplier";
+import SupplierAction from "../../../actions/stock/supplier";
+import ProductsAction from "../../../actions/products/product";
+import LocationAction from "../../../../pos/action/settings/storeLocation";
+import PurchaseOrderService from "../../../services/stock/PurchaseOrderService";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormItem extends Modal {
   constructor(props) {
     super(props);
+    const {locale, form} = this.props;
     this.columns = [
       {
         title: <this.Translate id="col_stock_purchase_order_no" />,
-        dataIndex: "no",
-        key: "no"
+        dataIndex: "id",
+        key: "purchaseID",
+        render: (id) => 
+        {
+          return(
+            <div>
+              <this.InputText 
+                name={`purchaseID[${id}]`} 
+                type="hidden"
+                data={id}
+                required={true}
+                // placeholder={this.CATranslate("input_management_contact_name", locale)}  
+                form={ form } />
+              { id }
+            </div>
+          );
+        }
       },
       {
         title: <this.Translate id="col_stock_purchase_order_description" />,
-        dataIndex: "desc",
-        key: "desc"
+        dataIndex: "description",
+        key: "description",
+        render: (description) => 
+        {
+          return(
+            <div>
+              <this.InputText 
+                name={`purchaseDescription[${description}]`} 
+                type="hidden"
+                data={description}
+                required={true}  
+                form={ form } />
+              { description }
+            </div>
+          );
+        }
       },
       {
         title: <this.Translate id="col_stock_purchase_order_on_hand" />,
-        dataIndex: "composite_product_cost",
-        key: "composite_product_cost"
+        dataIndex: "key2",
+        key: "key2"
       },
       {
         title: <this.Translate id="col_stock_purchase_order_qty" />,
-        dataIndex: "composite_product_action",
-        key: "composite_product_action"
+        dataIndex: "requestQuantity",
+        key: "requestQuantity",
+        render: (requestQuantity) => 
+        {
+          return(
+            <div>
+              <this.InputText 
+                name={`purchaseQty[${requestQuantity}]`} 
+                type="text"
+                data={requestQuantity}
+                required={true}
+                form={ form } />
+              { requestQuantity }
+            </div>
+          );
+        }
       },
       {
         title: <this.Translate id="col_stock_purchase_order_price" />,
-        dataIndex: "composite_product_action",
-        key: "composite_product_action"
+        dataIndex: "price",
+        key: "price",
+        render: (price) => 
+        {
+          return(
+            <div>
+              <this.InputText 
+                name={`purchasePrice[${price}]`} 
+                type="text"
+                data={price}
+                required={true}
+                form={ form } />
+              { price }
+            </div>
+          );
+        }
       },
       {
         title: <this.Translate id="col_stock_purchase_order_total" />,
         dataIndex: "composite_product_action",
-        key: "composite_product_action"
+        key: "key5"
+      },
+      {
+        title:"Action",
+        key:"id",
+        render:(record) => 
+        {
+          return(
+            <div>
+              <this.Icon
+                className="dynamic-delete-button"
+                type="minus-circle-o"
+                onClick={() => this.removeRecord(record.key)}
+              />
+            </div>
+          );
+        }
       }
     ];
+
     this.remove = this.remove.bind(this);
+    this.orderNumber = this.orderNumber.bind(this);
+    this.removeRecord = this.removeRecord.bind(this);
+
   }
 
   remove(){
     alert("remove");
   }
 
+  removeRecord(key){
+   
+  }
+
+  productList(){
+    return(
+      this.props.product.list
+    );
+  }
+
+  //check ordernumber if exist
+  orderNumber(e){
+    setTimeout(() => {
+      e.preventDefault();
+      this.props.form.validateFieldsAndScroll((err, values) => {
+        PurchaseOrderService.add(values.number)
+          .then((response) => {
+            console.log("already exist");
+          })
+          .catch((error) => {
+            console.log("not exist");
+          });
+      });
+    }, 5000);
+  }
+
   componentDidMount(){
     const { dispatch } = this.props;
-    dispatch(Supplier.fetch());
+    dispatch(SupplierAction.fetch());
+    dispatch(ProductsAction.fetch(this.pageSize));
+    dispatch(LocationAction.fetch());
   }
 
   render() {
-    const { form,locale,formData,supplier } = this.props;
-    console.log("supplier",supplier);
+    const { form,locale,formData,supplier,product,storeLocation } = this.props;
+    const {
+      getFieldDecorator,
+      getFieldValue
+    } = this.props.form;
+    console.log("list products",product.list);
+
     return (
       <div>
         <this.Row>
@@ -62,33 +176,31 @@ export default class FormItem extends Modal {
               data={formData.name}
               placeholder={this.CATranslate("input_stock_purchase_order_name", locale)}
               required={true}
-              // errorRequired={<this.Translate id="input_error_stock_supplier_name" />}
               max={100}
               min={3}
               form={form}/> 
           </this.Col>
           <this.Col md="2">
             <this.DatePickers
-              name="duedate"
+              name="deliveryDueDate"
               data={formData.dueDate}
               label={<this.Translate id="date_picker_stock_purchase_due_date" />}
               form={form}
             />
           </this.Col>
           <this.Col md="2">
-            <this.InputNumber
-              name="orderNumber"
+            <this.InputText
+              name="number"
               label={<this.Translate id="input_stock_purchase_order_number" />}
-              data={formData.email}
+              handleKeyUp={this.orderNumber}
               placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
               form={form}/> 
           </this.Col>
           <this.Col md="2">
             <this.InputText
-              name="name"
+              name="invoiceNo"
               label={<this.Translate id="input_stock_purchase_invoice_no" />}
-              data={formData.name}
-              placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
+              placeholder={this.CATranslate("input_stock_purchase_invoice_no",locale)}
               max={100}
               min={3}
               form={form}/>
@@ -105,33 +217,35 @@ export default class FormItem extends Modal {
           </this.Col>
           <this.Col md="2">
             <this.Select
-              name="supplierid"
+              name="locationId"
               label={<this.Translate id="select_stock_purchase_delivery_to_location" />}
               placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
-              dataSource={supplier.list}
+              dataSource={storeLocation.list}
               valueKey="id"
               form={form}
             />
           </this.Col>
         </this.Row>
         <this.Row>
-          <this.Col md="12"> 
+          <this.Col md="12" className="search-height"> 
             <div className="main-searchs">
               <div className="search-icon icon-add-product"></div>
               <this.InputText
                 name="searchproduct"
                 placeholder="Search Product by product code,name,description"
                 form={form}/>
-              <div className="remove-search-icon icon-delete" onClick={this.remove}></div>
+              <div className="remove-search-icon icon-clear" onClick={this.remove}></div>
             </div>
           </this.Col>
           <this.Col md="12">
             <this.Table 
-              dataSource={[]}
+              dataSource={this.productList()}
               columns={this.columns}
               locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}} />
           </this.Col>
-          
+          {/* <div>
+            Total Amount: {  }
+          </div> */}
         </this.Row>
       </div>
     );

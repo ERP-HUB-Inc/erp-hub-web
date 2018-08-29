@@ -2,6 +2,14 @@ import Constant from "../../constants/stock/purchaseOrder";
 import purchaseOrderService from "../../services/stock/PurchaseOrderService";
 
 export default {
+  orderNumber: (column, value) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_PURCHASE_ORDER_NUMBER,
+        payload: purchaseOrderService.findPurchaseOrderNumber({column, value})
+      });
+    };
+  },
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({

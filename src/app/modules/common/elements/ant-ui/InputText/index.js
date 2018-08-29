@@ -26,6 +26,7 @@ export class InputText extends Element {
         handlePressEnter={this.props.handlePressEnter}
         handleOnBlur={this.props.handleOnBlur}
         handleOnFocus={this.props.handleOnFocus}
+        handlekeyPress={this.props.handlekeyPress}
         disabled= {this.props.disabled}
       />
     );
