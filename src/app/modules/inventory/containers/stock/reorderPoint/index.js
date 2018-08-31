@@ -16,7 +16,8 @@ function mapStateToProps(state) {
     reorderPoint: state.reducer.reorderPoint.request,
     reorderPointAdd: state.reducer.reorderPoint.add,
     reorderPointArchive: state.reducer.reorderPoint.archive,
-    reorderPointUpdate: state.reducer.reorderPoint.update
+    reorderPointUpdate: state.reducer.reorderPoint.update,
+    locale: state.locale
   };
 }
 

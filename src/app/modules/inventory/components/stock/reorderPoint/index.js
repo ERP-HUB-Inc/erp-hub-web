@@ -51,8 +51,20 @@ export default class SupplierList extends List {
     );
   }
 
+  renderActionButton(){
+    return(
+      <div>
+        <this.Link to="/stock/purchase-order">
+          <this.Button type="info">
+            <span className="icon-export"></span> {<this.Translate id="button_stock_reorder_purchase" />}
+          </this.Button> 
+        </this.Link>
+      </div>
+    );
+  }
+
   renderFilterRecord() {
-    const {form,supplier} = this.props;
+    const {form,supplier,locale} = this.props;
 
     return(
       <div className="reorder-point-form-search">
@@ -62,38 +74,32 @@ export default class SupplierList extends List {
           <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
             <this.Row className="main-search-layout form-group"> 
               <this.Col md="3">
-                <this.Select
-                  name="status"
-                  label="Store"
-                  placeholder="Please select status"
-                  dataSource={this.statusList}
-                  defaultValue={this.Enum.ALL_STATE}
-                  form={form}
+                <this.StoreLocation
+                  label={<this.Translate id="select_stock_reorder_point_store_location" />}
                 />
               </this.Col>
               <this.Col md="3">
                 <this.Brand 
-                  label="Brand"
+                  label={<this.Translate id="select_stock_reorder_point_brand" />}
                 />
               </this.Col>
               <this.Col md="3">
                 <this.ProductType
-                  label="Prodcut Type"
+                  label={<this.Translate id="select_stock_reorder_point_product_type" />}
                 />
               </this.Col>
               <this.Col md="3">
                 <this.Supplier
-                  label={<this.Translate id="col_stock_purchase_order_supplier" />}
+                  label={<this.Translate id="select_stock_reorder_point_supplier" />}
                 />
               </this.Col> 
-
             </this.Row>
             <this.Row>
               <this.Col md="3">
                 <this.Select
                   name="status"
-                  label="status"
-                  placeholder="Please select status"
+                  label={<this.Translate id="select_stock_reorder_point_status" />}
+                  placeholder={this.CATranslate("place_holder_stock_reorder_point_status", locale)}
                   dataSource={this.statusList}
                   defaultValue={this.Enum.ALL_STATE}
                   form={form}
@@ -102,23 +108,22 @@ export default class SupplierList extends List {
               <this.Col md="3">
                 <this.InputText
                   name="key"
-                  label="Tags"
+                  label={<this.Translate id="input_stock_reorder_point_tags" />}
                   placeholder="Search for Purchase Order"
                   form={form}
                 />
               </this.Col>
-
               <this.Col md="3">
                 <this.InputText
                   name="key"
-                  label="Product Key"
-                  placeholder="Search for Purchase Order"
+                  label={<this.Translate id="input_stock_reorder_point_product_key" />}
+                  placeholder={this.CATranslate("input_stock_reorder_point_product_key", locale)}
                   form={form}
                 />
               </this.Col>
               <this.Col md="2" className="reorder-point-button-search">
                 <this.Button htmlType="submit" type="info" >
-                  <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
                 </this.Button> 
               </this.Col>
 
@@ -130,6 +135,8 @@ export default class SupplierList extends List {
   }
 
 }
+
+
 
 class Column extends List {
   constructor(props) {

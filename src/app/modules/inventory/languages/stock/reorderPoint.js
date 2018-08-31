@@ -10,7 +10,80 @@ export default {
     "ငွေကြေး",
     "Supplier:Update"
   ],
+  //blcok search
+  "select_stock_reorder_point_store_location": [
+    "Store",
+    "အမည်",
+    "Store",
+  ],
 
+  "select_stock_reorder_point_brand": [
+    "Brand",
+    "အမည်",
+    "Brand",
+  ],
+
+  "select_stock_reorder_point_product_type": [
+    "Product Type",
+    "အမည်",
+    "Product Type",
+  ],
+
+  "select_stock_reorder_point_supplier": [
+    "Supplier",
+    "အမည်",
+    "Supplier"
+  ],
+
+  "select_stock_reorder_point_status": [
+    "Status",
+    "အမည်",
+    "Status"
+  ],
+
+  "place_holder_stock_reorder_point_status": [
+    "Please Select Status",
+    "အမည်",
+    "Please Select Status"
+  ],
+
+  "input_stock_reorder_point_tags": [
+    "Tags",
+    "အမည်",
+    "Tags"
+  ],
+
+  "input_stock_reorder_point_tags": [
+    "Tags",
+    "အမည်",
+    "Tags"
+  ],
+
+  "input_stock_reorder_point_tags": [
+    "Tags",
+    "အမည်",
+    "Tags"
+  ],
+
+  "input_stock_reorder_point_product_key": [
+    "Product Key",
+    "အမည်",
+    "Product Key"
+  ],
+
+  "button_stock_reorder_search": [
+    "Search",
+    "အမည်",
+    "Search"
+  ],
+
+  "button_stock_reorder_purchase": [
+    "Purchase",
+    "အမည်",
+    "Purchase"
+  ],
+
+  
   "col_stock_reorder_point_product_name": [
     "Product Name",
     "အမည်",
