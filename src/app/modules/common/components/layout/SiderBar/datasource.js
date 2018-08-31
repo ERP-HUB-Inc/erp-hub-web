@@ -18,8 +18,9 @@ import Promotion from "../../../../pos/containers/products/Promotion";
 // STOCK CONTROL
 import Stock from "../../../../inventory/containers/stock/stockManagement";
 import StockControl from "../../../../pos/containers/stock/StockControl";
-import ReOrderPoint from "../../../../pos/containers/stock/ReOrderPoint";
+import ReOrderPoint from "../../../../inventory/containers/stock/reorderPoint";
 import PurchaseOrder from "../../../../inventory/containers/stock/purchaseOrder";
+import ReceiveOrder from "../../../../inventory/containers/stock/receivePurchase";
 import StockReturn from "../../../../inventory/containers/stock/returnPurchase";
 import StockTransfer from "../../../../inventory/containers/stock/stockTransfer";
 import StockAudit from "../../../../pos/containers/stock/StockAudit";
@@ -181,6 +182,20 @@ const dataSource = {
         isFashNav: true
       },
       {
+        title: "Receive Orders",
+        icon: "icon-purchasing",
+        route: "/stock/purchase-receive",
+        component: ReceiveOrder,
+        isFashNav: true
+      },
+      {
+        title: "Re-Order Point",
+        icon: "icon-undo",
+        route: "/stock/re-order-point",
+        component: ReOrderPoint,
+        isFashNav: true
+      },
+      {
         title: "Stock Transfer",
         icon: "icon-stock-transfer",
         route: "/stock/transfer",
@@ -206,13 +221,6 @@ const dataSource = {
         icon: "icon-barcode",
         route: "/stock/control",
         component: StockControl,
-        isFashNav: true
-      },
-      {
-        title: "Re-Order Point",
-        icon: "icon-undo",
-        route: "/stock/re-order-point",
-        component: ReOrderPoint,
         isFashNav: true
       },
       {

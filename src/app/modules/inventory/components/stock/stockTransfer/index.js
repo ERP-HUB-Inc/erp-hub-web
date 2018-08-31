@@ -94,14 +94,7 @@ export default class Lists extends List {
               </this.Col>
 
               <this.Col md="2">
-                <this.Select
-                  name="status"
-                  label={<this.Translate id="select_search_stock_transfer_supplier" />}
-                  placeholder="Please select status"
-                  dataSource={this.statusList}
-                  defaultValue={this.Enum.ALL_STATE}
-                  form={form}
-                />
+                <this.Supplier />
               </this.Col>
 
               <this.Col md="2">

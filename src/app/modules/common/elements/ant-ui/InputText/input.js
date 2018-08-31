@@ -35,7 +35,6 @@ export default class InputText extends Element {
             onBlur={this.props.handleOnBlur}
             onFocus={this.props.handleOnFocus}
             onPressEnter={this.props.handlePressEnter}
-            onkeyPress={this.props.handlekeyPress}
           />) 
         }
         { this.props.notation !=="" ?

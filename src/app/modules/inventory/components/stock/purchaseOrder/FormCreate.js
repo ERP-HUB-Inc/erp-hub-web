@@ -27,6 +27,8 @@ export default class FormCreate extends Modal {
           price: values.purchasePrice
         };
 
+        console.log("List purchase",JSON.stringify(listPurchase));
+
         // delete values["purchaseId"];
         // delete values["purchaseQty"];
         // delete values["purchasePrice"];

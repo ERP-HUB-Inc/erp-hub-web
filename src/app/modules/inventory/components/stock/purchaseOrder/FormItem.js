@@ -3,7 +3,7 @@ import SupplierAction from "../../../actions/stock/supplier";
 import ProductsAction from "../../../actions/products/product";
 import LocationAction from "../../../../pos/action/settings/storeLocation";
 import PurchaseOrderService from "../../../services/stock/PurchaseOrderService";
-import Modal from "../../../../common/components/shares/Modal";
+import { Modal  } from "../../shares/Modal/modal";
 
 export default class FormItem extends Modal {
   constructor(props) {
@@ -22,8 +22,7 @@ export default class FormItem extends Modal {
                 name={`purchaseID[${id}]`} 
                 type="hidden"
                 data={id}
-                required={true}
-                // placeholder={this.CATranslate("input_management_contact_name", locale)}  
+                required={true}  
                 form={ form } />
               { id }
             </div>
@@ -206,24 +205,12 @@ export default class FormItem extends Modal {
               form={form}/>
           </this.Col>
           <this.Col md="2">
-            <this.Select
-              name="supplierid"
-              label={<this.Translate id="select_stock_purchase_order_from_supplier" />}
-              placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
-              dataSource={supplier.list}
-              valueKey="id"
-              form={form}
+            <this.Supplier 
+              label={<this.Translate id="input_stock_purchase_order_supplier" />}
             />
           </this.Col>
           <this.Col md="2">
-            <this.Select
-              name="locationId"
-              label={<this.Translate id="select_stock_purchase_delivery_to_location" />}
-              placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
-              dataSource={storeLocation.list}
-              valueKey="id"
-              form={form}
-            />
+            <this.StoreLocation />
           </this.Col>
         </this.Row>
         <this.Row>

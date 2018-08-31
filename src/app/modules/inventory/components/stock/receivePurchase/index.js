@@ -43,27 +43,27 @@ class Column extends List {
     return [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="col_stock_receivePurchase_name" />,
+        title: <this.Translate id="col_stock_receive_purchase_name" />,
         dataIndex: "name",
         key: "name",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_receivePurchase_description" />,
+        title: <this.Translate id="col_stock_receive_purchase_description" />,
         dataIndex: "description",
         key: "description",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_receivePurchase_phonenumber" />,
+        title: <this.Translate id="col_stock_receive_purchase_phonenumber" />,
         dataIndex: "phoneNumber",
         key: "phoneNumber",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_receivePurchase_email" />,
+        title: <this.Translate id="col_stock_receive_purchase_email" />,
         dataIndex: "email",
-        key: "phoneNumber",
+        key: "email",
         sorter: true
       },
       this.columnStatus

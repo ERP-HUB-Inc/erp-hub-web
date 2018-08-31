@@ -96,13 +96,8 @@ export default class PurchaseOrderLists extends List {
                 />
               </this.Col>
               <this.Col md="2">
-                <this.Select
-                  name="supplierid"
-                  label={<this.Translate id="select_picker_purchase_supplier" />}
-                  placeholder="Please select status"
-                  dataSource={supplier.list}
-                  valueKey="id"
-                  form={form}
+                <this.Supplier
+                  label={<this.Translate id="col_stock_purchase_order_supplier" />}
                 />
               </this.Col>
               <this.Col md="2">

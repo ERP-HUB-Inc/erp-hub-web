@@ -1,9 +1,13 @@
 import React from "react";
 import { Form } from "antd";
 import Component from "../../Component";
+import Supplier from "../Component/SupplierSelect";
+import StoreLocation from "../Component/StoreLocationSelect";
+import Brand from "../Component/Brand";
+import Modals from "../../../../common/components/shares/Modal";
 import "./index.css";
 
-export class Modal extends Component {
+export class Modal extends Modals {
   constructor(props) {
     super(props);
     this.title = this.props.title;
@@ -25,6 +29,9 @@ export class Modal extends Component {
       }
     ];
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.Supplier = Supplier;
+    this.StoreLocation = StoreLocation;
+    this.Brand = Brand;
   }
 
   handleSubmit() {
@@ -53,27 +60,4 @@ export class Modal extends Component {
     }
   }
 
-  render() {
-    return (
-      <this.Modal
-        title={this.title}
-        wrapClassName="vertical-center-modal"
-        visible={true}
-        footer={null}
-      >
-        <Form onSubmit={this.handleSubmit}>
-          <this.Alert style={{display: this.isRepsonseBackError}} message={this.requiredMessage} type="error" showIcon/>
-          {this.content}
-          <div className="ant-modal-footer">
-            <this.Button className="danger" onClick={() => this.handleCancel()}>
-              <span className="icon-cancel icon-padding-right"></span><this.Translate id="button_text_cancel" />
-            </this.Button>  
-            <this.Button htmlType="submit" loading={this.submitLoading} className="info">
-              <span className="icon-save icon-padding-right"></span><this.Translate id="button_text_save" />
-            </this.Button>
-          </div>
-        </Form>
-      </this.Modal>
-    );
-  }
 }

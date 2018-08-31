@@ -54,10 +54,10 @@ export default class MenuDropDown extends Component {
     const {currentUser} = JSON.parse(userInfo);
     // let userName = "";
     let fullName = "";
-    if (currentUser !== null && currentUser !== "undefined") {
-      // userName = currentUser.userName;
-      // fullName = currentUser.fullName;
-    }
+    // if (currentUser !== null && currentUser !== "undefined") {
+    //   // userName = currentUser.userName;
+    //   // fullName = currentUser.fullName;
+    // }
     return(
       <ul className="menu-left list-unstyled">
         <li>
