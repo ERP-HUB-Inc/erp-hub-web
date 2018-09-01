@@ -1,10 +1,10 @@
 import React from "react";
 import List from "../List";
-import FormCreate from "../../../containers/stock/reorderPoint/FormCreate";
-import FormUpdate from "../../../containers/stock/reorderPoint/FormUpdate";
+import FormCreate from "../../../containers/stock/purchaseOrder/FormCreate";
 import Constant from "../../../constants/stock/reorderPoint";
-import SupplierAction from "../../../actions/stock/reorderPoint";
-import SupplierService from "../../../services/stock/SupplierService";
+import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
+import ReorderPointAction from "../../../actions/stock/reorderPoint";
+import ReorderPointService from "../../../services/stock/ReorderPointService";
 import "./index.css";
 
 export default class SupplierList extends List {
@@ -16,26 +16,11 @@ export default class SupplierList extends List {
     this.fetchingProp = "reorderPoint";
     this.addingProp = "reorderPointAdd";
     this.updatingProp = "reorderPointUpdate";
-    this.service = SupplierService;
+    this.service = ReorderPointService;
     this.columnFilterWithKey = ["name"];
-    this.action = SupplierAction;
+    this.action = ReorderPointAction;
     this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
-  }
-
-  handleShowFormAdd() {
-    const { dispatch } = this.props;
-    dispatch(SupplierAction.showForm());
-    this.setState({
-      modalConten: <FormCreate/>
-    });
-  }
-
-  handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
-    dispatch(SupplierAction.showForm(rowData));
-    this.setState({
-      modalConten: <FormUpdate/>
-    });
+    this.purchase = this.purchase.bind(this);
   }
 
   expandedRender(record){
@@ -51,10 +36,18 @@ export default class SupplierList extends List {
     );
   }
 
+  purchase(){
+    const { dispatch } = this.props;
+    dispatch(PurchaseOrderAction.showForm());
+    this.setState({
+      modalConten: <FormCreate/>
+    });
+  }
+
   renderActionButton(){
     return(
       <div>
-        <this.Link to="/stock/purchase-order">
+        <this.Link to="#" onClick={this.purchase}>
           <this.Button type="info">
             <span className="icon-export"></span> {<this.Translate id="button_stock_reorder_purchase" />}
           </this.Button> 
@@ -64,7 +57,7 @@ export default class SupplierList extends List {
   }
 
   renderFilterRecord() {
-    const {form,supplier,locale} = this.props;
+    const {form,locale} = this.props;
 
     return(
       <div className="reorder-point-form-search">

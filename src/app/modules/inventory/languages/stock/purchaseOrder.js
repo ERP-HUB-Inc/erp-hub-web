@@ -100,6 +100,18 @@ export default {
     "အမည်",
     "Invoice No",
   ],
+  
+  "input_stock_purchase_order_supplier": [
+    "Order From Supplier",
+    "အမည်",
+    "Order From Supplier",
+  ],
+
+  "input_stock_purchase_order_delivery_to_location": [
+    "Delivery to Location",
+    "အမည်",
+    "Delivery to Location",
+  ],
 
   "select_stock_purchase_order_from_supplier": [
     "Other from Supplier",

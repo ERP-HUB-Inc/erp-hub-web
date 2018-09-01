@@ -210,7 +210,9 @@ export default class FormItem extends Modal {
             />
           </this.Col>
           <this.Col md="2">
-            <this.StoreLocation />
+            <this.StoreLocation 
+              label={<this.Translate id="input_stock_purchase_order_delivery_to_location" />}
+            />
           </this.Col>
         </this.Row>
         <this.Row>
