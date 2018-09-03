@@ -1,12 +1,12 @@
 import React from "react";
 import FormItem from "./FormItem";
-import { Modal } from "../../shares/Modal/modal";
+import Modal from "../../../../common/components/shares/Modal";
 import ReceivePurchaseAction from "../../../actions/stock/receivePurchase";
 
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="create_stock_supplier_title" />;
+    this.title = <this.Translate id="create_stock_receive_purchase_title" />;
     this.addingPropReducer = "receivePurchaseAdd";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -26,15 +26,16 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    const {supplierAdd, form, locale} = this.props;
+    const {receivePurchaseAdd,supplier,product,storeLocation,form,locale,dispatch} = this.props;
     
-    this.submitLoading = supplierAdd.adding;
+    
+    this.submitLoading = receivePurchaseAdd.adding;
 
-    if (supplierAdd.showForm) {
+    if (receivePurchaseAdd.showForm) {
       this.content = (
         <div>
-          { supplierAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" }
-          <FormItem form={form} locale={locale}/>
+          { receivePurchaseAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" }
+          <FormItem form={form} supplier={supplier} product={product} storeLocation={storeLocation} dispatch={dispatch} locale={locale}/>
         </div>
       );
       return super.render();

@@ -1,5 +1,5 @@
 import React from "react";
-import List from "../../List";
+import List from "../List";
 import FormCreate from "../../../containers/stock/returnPurchase/FormCreate";
 import FormUpdate from "../../../containers/stock/returnPurchase/FormUpdate";
 import Constant from "../../../constants/stock/returnPurchase";

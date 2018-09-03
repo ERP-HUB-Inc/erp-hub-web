@@ -52,3 +52,8 @@ tr:nth-child(odd) {
 .sub-table .ant-table-content {
     margin-top: 0;
 }
+
+
+.ant-table-footer {
+    text-align: right;
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import List from "../../List";
+import List from "../List";
 import FormCreate from "../../../containers/stock/stockTransfer/FormCreate";
 import FormUpdate from "../../../containers/stock/stockTransfer/FormUpdate";
 import Constant from "../../../constants/stock/stockTransfer";
@@ -19,11 +19,15 @@ export default class Lists extends List {
     this.action = StockTransferAction;
     this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
     this.hideActionButton = true;
-    this.csvData =[
-      ["firstname", "lastname", "email"] ,
-      ["Ahmed", "Tomi" , "ah@smthing.co.com"] ,
-      ["Raed", "Labes" , "rl@smthing.co.com"] ,
-      ["Yezzi","Min l3b", "ymin@cocococo.com"]
+    this.data = [
+      {firstname: "Ahmed", lastname: "Tomi" , email: "ah@smthing.co.com"},
+      {firstname:"Raed", lastname:"Labes" , email:"rl@smthing.co.com"} ,
+      {firstname:"Yezzi", lastname:"Min l3b", email:"ymin@cocococo.com"}
+    ];
+    this.headers = [
+      {label: "First Name", key: "firstname"},
+      {label: "Last Name", key: "lastname"},
+      {label: "Email", key: "email"},
     ];
   }
 
@@ -46,9 +50,11 @@ export default class Lists extends List {
   renderActionButton() {
     return (
       <div>
-        <this.Button type="info">
-          <span className="icon-export"></span> {<this.Translate id="button_search_stock_transfer_export_csv" />}
-        </this.Button> 
+        <div className="export-csv-button">
+          <this.CSVLink data={this.data} headers={this.headers}>
+            {<this.Translate id="button_search_stock_transfer_export_csv" />}
+          </this.CSVLink>
+        </div>
       </div>
     );
   }
@@ -92,18 +98,9 @@ export default class Lists extends List {
                   form={form}
                 />
               </this.Col>
-
               <this.Col md="2">
-                <this.Select
-                  name="status"
-                  label={<this.Translate id="select_search_stock_transfer_supplier" />}
-                  placeholder="Please select status"
-                  dataSource={this.statusList}
-                  defaultValue={this.Enum.ALL_STATE}
-                  form={form}
-                />
+                <this.Supplier />
               </this.Col>
-
               <this.Col md="2">
                 <this.Select
                   name="status"
@@ -114,7 +111,6 @@ export default class Lists extends List {
                   form={form}
                 />
               </this.Col>
-
               <this.Button htmlType="submit" type="info" >
                 <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_search_stock_transfer" />
               </this.Button>

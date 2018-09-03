@@ -2,6 +2,7 @@ import React, { Component as RComponent } from "react";
 import { Translate, setActiveLanguage, getActiveLanguage } from "react-localize-redux";
 import { Field } from "redux-form";
 import { connect } from "react-redux";
+import {CSVLink, CSVDownload} from "react-csv";
 import {  
   Container,
   Col,
@@ -186,6 +187,9 @@ export default class Component extends RComponent {
     this.SelectTag = SelectTag;
     this.Tag = TagButton;
     this.TagLabel = Tag;
+
+    this.CSVLink = CSVLink;
+    this.CSVDownload = CSVDownload;
 
     // Util function
     this.Util = new Util();

@@ -34,4 +34,4 @@ class ProductService extends BaseService {
   }
 }
 
-export default new ProductService();
+export default new ProductService(); 

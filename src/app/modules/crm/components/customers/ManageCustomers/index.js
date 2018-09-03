@@ -164,16 +164,17 @@ class ColumnExpend extends List {
     return [
       {
         dataIndex: "createdAt",  
-        key: "createdAt",
-        width: 250,
-        render: value => this.formatDate(value),
+        width: "250px",
+        render: () => {}
       },
       {
         dataIndex: "name",
+        width: "311px",
         key: "name"
       },
       {
         dataIndex: "phoneNumber",
+        width: "231px",
         key: "phoneNumber"
       },
       {
@@ -182,9 +183,16 @@ class ColumnExpend extends List {
       },
       {
         dataIndex: "",
-        render: () => " " ,
-        colSpan:5
+        render: () => {}
       },
+      {
+        dataIndex: "",
+        render: () => {}
+      },
+      {
+        dataIndex: "",
+        render: () => {}
+      }
     ];
   }
 }
