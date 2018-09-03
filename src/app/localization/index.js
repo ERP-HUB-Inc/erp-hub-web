@@ -10,5 +10,6 @@ export default class Localization {
     store.dispatch(setTranslation());
     store.dispatch(setActiveLanguage("en"));
     return store;
+
   }
 }

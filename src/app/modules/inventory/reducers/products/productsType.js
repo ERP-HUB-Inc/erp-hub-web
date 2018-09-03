@@ -1,6 +1,6 @@
-import reducer from "../reducer";
-import { combineReducers } from "redux";
+import {combineReducers} from "redux";
 import Constant from "../../constants/products/productsType";
+import reducer from "../../../common/reducers/reducer";
 import InitialState from "../../../common/reducers/initialState";
 
 export default combineReducers({
@@ -39,5 +39,14 @@ export default combineReducers({
       Constant.RESET_PRODUCTS_TYPE
     ];
     return reducer.update(state, action, constants);
+  },
+  detail: (state = InitialState.detail(), action) => {
+    const constants = [
+      Constant.DETAIL_PRODUCTS_TYPE_PENDING,
+      Constant.DETAIL_PRODUCTS_TYPE_REJECTED,
+      Constant.DETAIL_PRODUCTS_TYPE_FULFILLED,
+      Constant.RESET_DETAIL_PRODUCTS_TYPE
+    ];
+    return reducer.detail(state, action, constants);
   }
 });

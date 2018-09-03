@@ -1,9 +1,9 @@
 
-.ant-select-selection--multiple .ant-select-selection__choice {
+/* .ant-select-selection--multiple .ant-select-selection__choice {
     border: 1px solid #FFD627 !important;
     background: #FFD627 !important;
     color: #4D4F5C
-}
+} */
 
 .wrap-select-search ul.ant-select-dropdown-menu li.add-new-item {
     color: #57A600;
@@ -19,4 +19,8 @@
 
 .wrap-select-search ul.ant-select-dropdown-menu li:nth-child(2) {
     margin-top: 35px
+}
+
+.ant-select-selection-selected-value .not-for-selected {
+    display: none
 }

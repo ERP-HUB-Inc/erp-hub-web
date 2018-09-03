@@ -3,6 +3,7 @@
     border: 1px solid #ecebeb;
     margin-right: 0;
     margin-left: 0;
+    margin-bottom: 5px
 }
 
 .group-code-generate .main-ant-wrapper {
@@ -102,7 +103,7 @@
 }
 
 #paymentType .ant-radio-wrapper {
-    font-size: 9pt
+    /* font-size: 9pt */
 }
 
 .wrap-dropdown-search-product {
@@ -126,4 +127,17 @@
 .wrap-dropdown-search-product .list-search .ant-list-item:hover, 
 .wrap-dropdown-search-product .list-search .ant-list-item.product-item-hover {
     background: #e6f7ff
+}
+
+.product-type-content table tr td .ant-form-item {
+    margin-bottom: 0 !important
+}
+
+.product-type-content table tr td {
+    padding: 5px 16px !important;
+}
+
+.product-type-content table tr td .composite-product-code {
+    color: #d3cbcb;
+    padding-top: 2px
 }

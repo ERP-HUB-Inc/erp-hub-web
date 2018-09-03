@@ -30,11 +30,12 @@ export default class BaseService extends Service {
     sortField,
     sortOrder,
     filter, // {"column1": [value1, value2], "column2": [value1, value2]}
-    searchKey // {"column": ["columnname1", "columnname2"], "value": "hello"}
+    searchKey, // {"column": ["columnname1", "columnname2"], "value": "hello"}
+    languageId = "en"
   ) {
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
     return this.GET({ 
-      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}`,  
+      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&languageId=${languageId}`,  
       data: this.data,
       headers: this.header
     });
@@ -64,8 +65,7 @@ export default class BaseService extends Service {
       url: `${this.baseUrl}/create`, 
       data: {
         ...data,
-        isSystem: 0,
-        isDefault: 0
+        isSystem: 0
       },
       headers: this.header
     });
@@ -76,9 +76,7 @@ export default class BaseService extends Service {
     return this.PUT({
       url: `${this.baseUrl}/update/${id}`,
       data: {
-        ...data,
-        isSystem: 0,
-        isDefault: 0
+        ...data
       },
       headers: this.header
     });

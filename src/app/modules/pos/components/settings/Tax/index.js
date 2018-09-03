@@ -51,6 +51,11 @@ class Column extends List {
         title: <this.Translate id="col_tax_name" />,
         dataIndex: "name",
         key: "name",
+        render: (text, record, index) => {
+          return <div>
+            <span>{record.name}</span>{ record.id === this.getCurrentUser().setting.defaultTaxId  ? <this.TagLabel color="blue" style={{marginLeft: 10}}><this.Translate id="text_is_default" /></this.TagLabel> : "" }
+          </div>;
+        },
         sorter: true,
       },
       {

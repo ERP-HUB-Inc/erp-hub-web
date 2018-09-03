@@ -2,7 +2,9 @@ import React from "react";
 import Component from "../../Component";
 import "./index.css";
 import StoreAccountAction from "../../../action/settings/storeAccount";
-import { fetchAllBusinessPlanSystem } from "../../../../../modules/common/actions/businessPlan";
+import TaxAction from "../../../action/settings/tax";
+import LanguageAction from "../../../action/settings/storeLanguage";
+import {fetchAllBusinessPlanSystem} from "../../../../../modules/common/actions/businessPlan";
 import menuSource from "../../../../common/components/layout/SiderBar/datasource";
 
 const currentPath = window.location.pathname;
@@ -104,9 +106,11 @@ export default class StoreAccountList extends Component {
   componentDidMount(){
     this.dispatch(StoreAccountAction.fetch(this.client.clientId));  
     this.dispatch(fetchAllBusinessPlanSystem());
+    this.dispatch(TaxAction.fetch(100));
+    this.dispatch(LanguageAction.fetch(100));
     this.onSelect();
   }
-
+  
   render() {
     const {
       form,
@@ -114,6 +118,7 @@ export default class StoreAccountList extends Component {
       storeAccountUpdate,
       response,
       businessplan,
+      taxs,
       locale
     } = this.props;
 
@@ -140,9 +145,7 @@ export default class StoreAccountList extends Component {
       this.dispatch(StoreAccountAction.reset());
     }
 
-    const languages = this.Util.renameObjectKey({ name: "name", id: "value" }, [storeAccount.list.language]);
-    const currency = this.Util.renameObjectKey({ name: "name", id: "value" }, [storeAccount.list.currency]);
-    const tax = this.Util.renameObjectKey({ name: "name", id: "value" }, [storeAccount.list.tax]);
+    const currency = storeAccount.list.currency != null ? [storeAccount.list.currency] : [];
 
     return (
       <div>
@@ -208,8 +211,9 @@ export default class StoreAccountList extends Component {
 
                     <this.Select
                       name="languageId"
-                      dataSource={languages}
+                      dataSource={this.props.languages}
                       defaultValue={storeAccount.list.languageId}
+                      valueKey="id"
                       label={<this.Translate id="store_acc_language" />}
                       placeholder={this.CATranslate("store_acc_language", locale)}
                       form={form} />
@@ -218,6 +222,7 @@ export default class StoreAccountList extends Component {
                       name="currencyId"
                       dataSource={currency}
                       defaultValue={storeAccount.list.currencyId}
+                      valueKey="id"
                       label={<this.Translate id="store_acc_currency" />}
                       placeholder={this.CATranslate("store_acc_currency", locale)}
                       form={form} disabled />
@@ -239,8 +244,9 @@ export default class StoreAccountList extends Component {
 
                     <this.Select
                       name="taxId"
-                      dataSource={tax}
+                      dataSource={taxs}
                       defaultValue={storeAccount.list.taxId}
+                      valueKey="id"
                       label={<this.Translate id="store_acc_tax" />}
                       placeholder={this.CATranslate("store_acc_tax", locale)}
                       form={form} />

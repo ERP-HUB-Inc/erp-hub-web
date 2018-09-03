@@ -18,7 +18,7 @@ import { Translate, } from "react-localize-redux";
 export default class Element extends Component {
   constructor(props) {
     super(props);
-    const { Option } = Select;
+    const {Option, OptGroup} = Select;
 
     // redux-form
     this.Field = Field;
@@ -35,6 +35,7 @@ export default class Element extends Component {
     this.Radio = Radio;
     this.Select = Select;
     this.Option = Option;
+    this.OptGroup = OptGroup;
     this.Spin = Spin;
     this.Icon = Icon;
     this.Tag = Tag;

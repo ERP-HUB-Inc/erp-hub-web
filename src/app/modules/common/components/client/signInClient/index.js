@@ -24,24 +24,9 @@ export default class ClientSignIn extends Component {
 
     this.dispatch(ClientAction.findClientByColumn("storeName", domainInfo.subStr));
   }
-  
-  handleSubmit (e) {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        this.dispatch(ClientAction.signin(values.username, values.password, this.Util.getDomainInfo().subStr));
-      }
-    });
-  }
 
-  handleKeyDown () {
-    this.errorMessage = null;
-    this.validateClassStatus = "";
-  }
-
-  render() {
-    const {signinUser, form, client} = this.props; // form here get from ANT Form
-    
+  componentWillUpdate(nextProps) {
+    const {signinUser, dispatch} = nextProps;
     if (
       signinUser.response != null
       && ("data" in signinUser.response)
@@ -51,13 +36,16 @@ export default class ClientSignIn extends Component {
 
       localStorage.setItem(ConstantAuth.ACCESS_TOKEN, JSON.stringify(signinUser.response["data"]["data"]));
 
-      this.dispatch(ClientAction.reset());
+      const setting = signinUser.response["data"]["data"];
+      const languageCode = setting.setting.defaultLanguageCode;
+
+      dispatch(this.changeLanguage(languageCode));
+
+      dispatch(ClientAction.reset());
 
       history.push("/");
 
     } else if (signinUser.error != null) {
-
-      const {dispatch} = this.props;
 
       const {error} = signinUser;
 
@@ -89,7 +77,25 @@ export default class ClientSignIn extends Component {
 
       dispatch(ClientAction.reset());
     }
+  }
+  
+  handleSubmit (e) {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        this.dispatch(ClientAction.signin(values.username, values.password, this.Util.getDomainInfo().subStr));
+      }
+    });
+  }
 
+  handleKeyDown () {
+    this.errorMessage = null;
+    this.validateClassStatus = "";
+  }
+
+  render() {
+    const {signinUser, form, client} = this.props; // form here get from ANT Form
+    
     // GET CLIENT DOMAIN
     this.storeName = this.Util.getDomainInfo().subStr;
 

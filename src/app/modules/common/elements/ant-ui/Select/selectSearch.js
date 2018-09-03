@@ -3,6 +3,14 @@ import Element from "../../common/Element";
 import "./index.css";
 
 export class SelectSearch extends Element {
+  constructor(props) {
+    super(props);
+    this.rules = {rules: [{ required: this.props.required, message: this.props.errorRequired }]};
+
+    if (this.props.defaultValue) {
+      this.rules["initialValue"] = this.props.defaultValue;
+    }
+  }
   render() {
     const {getFieldDecorator} = this.props.form;
     return (
@@ -10,11 +18,9 @@ export class SelectSearch extends Element {
         label={this.props.label}
         help={this.props.help}>
         {
-          getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.defaultValue})(
+          getFieldDecorator(this.props.name, this.rules)(
             <this.Select
               placeholder={this.props.placeholder}
-              onChange={this.props.onChange}
-              onSelect={this.props.onSelect}
               disabled={this.props.disabled}
               notFoundContent={this.props.notFoundContent}
               style={{ width: "100%" }}
@@ -29,7 +35,9 @@ export class SelectSearch extends Element {
                     value={1}
                     className="add-new-item"
                     onClick={this.props.addNew}>
-                    <span className="icon-add"></span> {this.props.textAddNew}
+                    <div className="not-for-selected">
+                      <span className="icon-add"></span> {this.props.textAddNew}
+                    </div>
                   </this.Option>
                   : "" 
               }  
@@ -47,6 +55,8 @@ export class SelectSearch extends Element {
 }
 
 SelectSearch.defaultProps = {
+  required: false,
+  errorRequired: "Please select this field.",
   notFoundContent: "No item found",
   textAddNew: "Add New",
   valueKey: "value",

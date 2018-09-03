@@ -464,3 +464,13 @@ ul.react-autosuggest__suggestions-list li table {
     font-weight: 600
 }
 
+.btn-icon {
+    padding: 8px 8px;
+}
+
+.btn-icon span {
+    font-size: 14pt;
+    position: relative;
+    left: 2px;
+}
+

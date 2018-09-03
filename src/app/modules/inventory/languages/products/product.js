@@ -62,9 +62,9 @@ export default {
   ],
 
   "col_products_types": [
-    "Types",
-    "Types",
-    "Types"
+    "Type",
+    "Type",
+    "Type"
   ],
 
   // TAB
@@ -75,9 +75,9 @@ export default {
   ],
 
   "tab_language": [
-    "Language",
-    "Language",
-    "Language"
+    "Description",
+    "Description",
+    "Description"
   ],
 
   "tab_cost_log": [

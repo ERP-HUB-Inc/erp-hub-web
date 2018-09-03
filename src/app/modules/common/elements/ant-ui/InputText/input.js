@@ -1,4 +1,5 @@
 import React from "react";
+
 import Element from "../../common/Element";
 
 export default class InputText extends Element {
@@ -29,7 +30,8 @@ export default class InputText extends Element {
           ],
           initialValue: this.props.data})(<this.Input type={this.props.type} 
             placeholder={this.props.placeholder} 
-            disabled={this.props.disabled} 
+            disabled={this.props.disabled}
+            onChange={this.props.onChange}
             onKeyDown={this.props.handleKeyDown}
             onKeyUp={this.props.handleKeyUp}
             onBlur={this.props.handleOnBlur}
@@ -50,6 +52,7 @@ InputText.defaultProps = {
   name: "name",
   type: "text",
   max: 255,
+  isAutoFocus: false,
   required: false,
   disabled: false
 };

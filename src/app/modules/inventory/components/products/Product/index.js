@@ -1,5 +1,6 @@
 import React from "react";
 import List from "../../List";
+import Enum from "../../../enums";
 import FormCreate from "../../../containers/products/Product/FormCreate";
 import FormUpdate from "../../../containers/products/Product/FormUpdate";
 import Constant from "../../../constants/products/product";
@@ -12,13 +13,18 @@ export default class ProductList extends List {
     super(props);
     this.columns = new Column();
     this.fetchingProp = "products";
-    this.addingProp = "productAdd";
-    this.updatingProp = "productUpdate";
     this.service = ProductService;
     this.columnFilterWithKey = ["name"];
-    this.listScroll = {x: 1300};
     this.action = ProductAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCT;
+  }
+
+  componentWillUpdate(nextProps) {
+    const {productAdd, dispatch} = nextProps;
+    if (productAdd.added) {
+      dispatch(ProductAction.fetch(this.pageSize));
+      dispatch(ProductAction.reset());
+    }
   }
 
   handleShowFormAdd() {
@@ -42,65 +48,60 @@ class Column extends List {
   constructor(props) {
     super(props);
     return [
-      this.columnCreatedAt,
-      {
-        title: <this.Translate id="col_products_brand_name" />,
-        dataIndex: "name",
-        key: "name1",
-        sorter: true
-      },
       {
         title: <this.Translate id="col_products_name" />,
-        dataIndex: "name",
-        key: "name2",
+        key: "productName",
+        render: (text, record, index) => record.productDescriptions.length > 0 ?  record.productDescriptions[0].name : this.emptyCell,
+        width: 300,
         sorter: true
       },
       {
         title: <this.Translate id="col_products_tag" />,
-        dataIndex: "name",
-        key: "name30",
+        key: "productTag",
+        width: 200,
+        render: (text, record) => {
+          return record.tags.map((tag, index) => <this.TagLabel color="blue" style={{marginLeft: 10}} key={index}>{tag.tag}</this.TagLabel>);
+        },
         sorter: true
       },
       {
         title: <this.Translate id="col_products_type" />,
-        dataIndex: "name",
-        key: "name33",
+        key: "productType",
+        render: (text, record) => {
+          return record.productType.productTypeDescriptions.length > 0 ?  record.productType.productTypeDescriptions[0].name : this.emptyCell;
+        },
         sorter: true
       },
       {
         title: <this.Translate id="col_products_brand" />,
-        dataIndex: "name",
-        key: "name4",
-        sorter: true
-      },
-      {
-        title: <this.Translate id="col_products_supplier" />,
-        dataIndex: "name",
-        key: "name5",
+        key: "brand",
+        render: (text, record, index) => "brand" in record && record["brand"] !== null ? record.brand.name : this.emptyCell,
         sorter: true
       },
       {
         title: <this.Translate id="col_products_price" />,
-        dataIndex: "name",
-        key: "name6",
+        key: "price",
+        render: (text, record, index) => this.formatCurrency(record.price),
         sorter: true
       },
       {
         title: <this.Translate id="col_products_quantity" />,
-        dataIndex: "name",
-        key: "name7",
+        dataIndex: "quantity",
+        key: "quantity",
         sorter: true
       },
       {
         title: <this.Translate id="col_products_unit" />,
-        dataIndex: "name",
-        key: "name8",
+        dataIndex: "unit",
+        key: "unit",
+        render: unit => unit.name,
         sorter: true
       },
       {
         title: <this.Translate id="col_products_types" />,
-        dataIndex: "name",
-        key: "name9",
+        dataIndex: "type",
+        key: "type",
+        render: type => type === Enum.TYPE_OF_PRODUCT.GOOD ? <this.Translate id="input_product_good" /> : <this.Translate id="input_product_raw_material" />,
         sorter: true
       },
       this.columnStatus

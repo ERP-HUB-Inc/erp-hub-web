@@ -135,4 +135,20 @@ export class Util {
       currency: currency
     }).format(n);
   }
+
+  isJsonString(str) {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  clearObjProperty(data, props = []) {
+    props.forEach(prop => {
+      delete data[prop];
+    });
+  }
+
 }

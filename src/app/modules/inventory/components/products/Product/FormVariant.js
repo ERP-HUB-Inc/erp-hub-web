@@ -29,11 +29,9 @@ export default class FormVariant extends Modal {
 
     const variantAttributeSelected = this.state.variantAttributeSelected;
 
-    existingVariantAttributes.forEach((variantAttribute, variantAttributesKey) => {
-      variantAttributeSelected.push(this.props.form.getFieldValue(`attributeId[${variantAttributesKey}]`));
+    existingVariantAttributes.forEach((variantAttribute, key) => {
+      variantAttributeSelected.push(this.props.form.getFieldValue(`attributeId[${key}]`));
     });
-
-    console.log("VariantAttributeSelected:", variantAttributeSelected);
 
     existingVariantAttributes.push({variantList: []});
     this.setState({
@@ -76,15 +74,7 @@ export default class FormVariant extends Modal {
 
   renderVariantAttribute(variantAttributeKey, variantAttributesList) {
 
-    console.log("VariantAttributesList:", variantAttributesList);
-
     let defaultVariantAttribute = "";
-    
-    variantAttributesList = variantAttributesList.filter(value => !this.state.variantAttributeSelected.includes(value.id));
-
-    if (variantAttributesList.length > 0) {
-      defaultVariantAttribute = variantAttributesList[0].id;
-    }
 
     return (
       <this.SelectSearch
@@ -93,20 +83,18 @@ export default class FormVariant extends Modal {
         valueKey="id"
         dataSource={variantAttributesList}
         defaultValue={defaultVariantAttribute}
-        addNew={this.props.handleAddVariantAttribute}
+        addNew={() => this.props.handleAddVariantAttribute(variantAttributeKey)}
         form={this.props.form}/>
     );
   }
 
   render() {
-    const {variantAttributeAdd} = this.props;
+    const {currentUser, variantAttributeAdd} = this.props;
     let {variantAttributes} = this.props;
 
     if (variantAttributeAdd.added) {
       variantAttributes.list = [variantAttributeAdd.response.data, ...variantAttributes.list];
     }
-
-    console.log("VariantAttributes List", variantAttributes.list);
 
     return (
       <this.Row>
@@ -148,7 +136,7 @@ export default class FormVariant extends Modal {
                         <this.Col md="2">
                           <this.InputNumber
                             name={`variantProductCost[${variantAttributeKey}][${variantKey}]`}
-                            label={<this.Translate id="input_product_cost" />}
+                            label={<span><this.Translate id="input_product_cost" /><span> ({currentUser.setting.currency})</span></span>}
                             placeholder={this.CATranslate("input_product_cost_placeholder", this.props.locale)}
                             required={true}
                             form={this.props.form}/>
@@ -157,7 +145,7 @@ export default class FormVariant extends Modal {
                         <this.Col md="2">
                           <this.InputNumber
                             name={`variantProductPrice[${variantAttributeKey}][${variantKey}]`}
-                            label={<this.Translate id="input_product_price" />}
+                            label={<span><this.Translate id="input_product_price" /><span> ({currentUser.setting.currency})</span></span>}
                             placeholder={this.CATranslate("input_product_price_placeholder",  this.props.locale)}
                             required={true}
                             form={this.props.form}/>

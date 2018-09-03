@@ -43,6 +43,7 @@ export default class List extends Component {
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
     this.isShowExpandable = false;
+    this.emptyCell = "-";
 
     this.columnNo = {};
     
@@ -298,7 +299,6 @@ export default class List extends Component {
           const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
           const filter = JSON.stringify({status});
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
-          console.log("searchKey",filter,searchKey);
           dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
           this.setState({isClickFilter: true});
         }
@@ -436,7 +436,7 @@ export default class List extends Component {
         name: record.name,
       })
     };
-
+    
     return (
       this.isShowExpandable ?
         <this.TableExpand
@@ -463,6 +463,7 @@ export default class List extends Component {
             onDoubleClick:() => this.handleShowFormEdit(record),
             onClick: () => this.handleShowRecordDetail(record)
           })}
+          scroll={{ x: 900 }}
           loading={fetchingProps.fetching}
         />
     );
@@ -511,20 +512,24 @@ export default class List extends Component {
   render() {
 
     let fetchingProps = this.props[this.fetchingProp];
-    const addingProps = this.props[this.addingProp];
-    const updatingProps = this.props[this.updatingProp];
     
     // Here is repsonse from add action and combinde response data to the list.
-    if (addingProps.response != null) {
-      fetchingProps.list = [addingProps.response.data, ...fetchingProps.list];
-      this.props.dispatch({type: this.RESET_CONSTANT});
+    if (this.addingProp !== "") {
+      const addingProps = this.props[this.addingProp];
+      if (addingProps.response != null) {
+        fetchingProps.list = [addingProps.response.data, ...fetchingProps.list];
+        this.props.dispatch({type: this.RESET_CONSTANT});
+      }
     }
 
     // Here is repsonse from updating action and update response data to the list.
-    if (updatingProps.response != null) {
-      const updateIndex = this.Util.findArrayIndex(fetchingProps.list, "id", updatingProps.response.data.id);
-      fetchingProps.list.splice(updateIndex, 1, updatingProps.response.data);
-      this.props.dispatch({type: this.RESET_CONSTANT});
+    if (this.updatingProp !== "") {
+      const updatingProps = this.props[this.updatingProp];
+      if (updatingProps.response != null) {
+        const updateIndex = this.Util.findArrayIndex(fetchingProps.list, "id", updatingProps.response.data.id);
+        fetchingProps.list.splice(updateIndex, 1, updatingProps.response.data);
+        this.props.dispatch({type: this.RESET_CONSTANT});
+      }
     }
     
     return (

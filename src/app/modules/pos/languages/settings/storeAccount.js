@@ -126,9 +126,9 @@ export default {
   ],
 
   "store_acc_city": [
-    "Street",
-    "Street",
-    "Street"
+    "City",
+    "City",
+    "City"
   ],
 
   "store_acc_post_code": [

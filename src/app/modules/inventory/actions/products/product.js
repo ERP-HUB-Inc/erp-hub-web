@@ -10,6 +10,14 @@ export default {
       });
     };
   },
+  search: (limit, offset, sortField, sortOrder, filter, searchKey) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.SEARCH_PRODUCT,
+        payload: ProductService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
+      });
+    };
+  },
   archive: (ids) => {
     return dispatch => {
       return dispatch({
