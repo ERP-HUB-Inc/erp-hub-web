@@ -7,7 +7,7 @@ import ReorderPointAction from "../../../actions/stock/reorderPoint";
 import ReorderPointService from "../../../services/stock/ReorderPointService";
 import "./index.css";
 
-export default class SupplierList extends List {
+export default class ReorderPointList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
@@ -24,7 +24,6 @@ export default class SupplierList extends List {
   }
 
   expandedRender(record){
-    console.log("record",record.productVariantToProduct);
     return( 
       <div className="sub-table">
         <this.SubTable 
@@ -57,6 +56,7 @@ export default class SupplierList extends List {
   }
 
   renderFilterRecord() {
+
     const {form,locale} = this.props;
 
     return(
@@ -67,25 +67,36 @@ export default class SupplierList extends List {
           <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
             <this.Row className="main-search-layout form-group"> 
               <this.Col md="3">
-                <this.StoreLocation
+                {/* <this.StoreLocation
                   label={<this.Translate id="select_stock_reorder_point_store_location" />}
-                />
+                /> */}
               </this.Col>
               <this.Col md="3">
-                <this.Brand 
+                {/* <this.Brand 
                   label={<this.Translate id="select_stock_reorder_point_brand" />}
-                />
+                /> */}
+                
               </this.Col>
-              <this.Col md="3">
-                <this.ProductType
+              {/* <this.Col md="3">
+                <this.Select
+                  name="reorderPointid"
                   label={<this.Translate id="select_stock_reorder_point_product_type" />}
+                  placeholder={<this.Translate id="select_stock_reorder_point_product_type" />}
+                  dataSource={productsType.list}
+                  valueKey="id"
+                  form={form}
                 />
               </this.Col>
               <this.Col md="3">
-                <this.Supplier
-                  label={<this.Translate id="select_stock_reorder_point_supplier" />}
+                <this.Select
+                  name="supplierid"
+                  label={<this.Translate id="select_stock_purchase_order_from_supplier" />}
+                  placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
+                  dataSource={supplier.list}
+                  valueKey="id"
+                  form={form}
                 />
-              </this.Col> 
+              </this.Col>  */}
             </this.Row>
             <this.Row>
               <this.Col md="3">
@@ -169,8 +180,8 @@ class Column extends List {
       },
       {
         title: <this.Translate id="col_stock_reorder_point_qty" />,
-        dataIndex: "supplier",
-        key: "supplier",
+        dataIndex: "qty",
+        key: "qty",
         sorter: true
       },
       {

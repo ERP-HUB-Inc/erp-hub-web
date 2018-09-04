@@ -159,6 +159,70 @@ export default {
     "Place Select Status",
     "အမည်",
     "Place Select Status"
-  ]
+  ],
+
+  "button_stock_purchase_order_push_to_supplier": [
+    "Push to Supplier",
+    "အမည်",
+    "Push to Supplier"
+  ],
+
+  "button_stock_purchase_order_push_with_send_email": [
+    "Push with Send Email",
+    "အမည်",
+    "Push with Send Email"
+  ],
+
+  "button_stock_purchase_order_push": [
+    "Push",
+    "အမည်",
+    "Push"
+  ],
+
+  // purchase order send mail
+
+  "create_stock_purchase_order_send_mail_title": [
+    "Comfirm Purchase Order",
+    "ငွေကြေးစနစ်",
+    "Comfirm Purchase Order"
+  ],
+      
+  "update_stock_purchase_order_send_mail_update_title": [
+    "Purchase Order Send Mail:update",
+    "ငွေကြေးစနစ်",
+    "Purchase Order Send Mail:update"
+  ],
+
+  "button_stock_purchase_order_send_mail_comfirm_yes": [
+    "Yes",
+    "အမည်",
+    "Yes",
+  ],
+
+  
+  "button_stock_purchase_order_send_mail_comfirm_cancel": [
+    "Cancel",
+    "အမည်",
+    "Cancel",
+  ],
+
+  "title_stock_purchase_order_send_mail_comfirm_email": [
+    "Email",
+    "အမည်",
+    "Email",
+  ],
+
+  "text_stock_purchase_order_send_mail_comfirm_title": [
+    "Are you Sure ? you want to push to Supplier",
+    "အမည်",
+    "Are you Sure ? you want to push to Supplier",
+  ],
+
+
+  "input_stock_purchase_order_send_mail_email": [
+    "Email",
+    "အမည်",
+    "Email",
+  ],
 
 };

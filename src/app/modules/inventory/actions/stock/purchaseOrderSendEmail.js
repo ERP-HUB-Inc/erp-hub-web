@@ -1,11 +1,11 @@
-import Constant from "../../constants/stock/purchaseOrder";
+import Constant from "../../constants/stock/purchaseOrderSendEmail";
 import purchaseOrderService from "../../services/stock/PurchaseOrderService";
 
 export default {
   orderNumber: (column, value) => {
     return dispatch => {
       return dispatch({
-        type: Constant.REQUEST_PURCHASE_ORDER_NUMBER,
+        type: Constant.REQUEST_PURCHASE_ORDER_SEND_EMAIL_NUMBER,
         payload: purchaseOrderService.findPurchaseOrderNumber({column, value})
       });
     };
@@ -13,7 +13,7 @@ export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
-        type: Constant.REQUEST_PURCHASE_ORDER,
+        type: Constant.REQUEST_PURCHASE_ORDER_SEND_EMAIL,
         payload: purchaseOrderService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
@@ -21,7 +21,7 @@ export default {
   archive: (ids) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ARCHIVE_PURCHASE_ORDER,
+        type: Constant.ARCHIVE_PURCHASE_ORDER_SEND_EMAIL,
         payload: purchaseOrderService.archive(ids)
       });
     };
@@ -29,7 +29,7 @@ export default {
   add: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ADD_PURCHASE_ORDER,
+        type: Constant.ADD_PURCHASE_ORDER_SEND_EMAIL,
         payload: purchaseOrderService.add(data)
       });
     };
@@ -37,7 +37,7 @@ export default {
   update: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.UPDATE_PURCHASE_ORDER,
+        type: Constant.UPDATE_PURCHASE_ORDER_SEND_EMAIL,
         payload: purchaseOrderService.update(data)
       });
     };
@@ -45,7 +45,7 @@ export default {
   reset: () => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET_PURCHASE_ORDER,
+        type: Constant.RESET_SHOW_FORM_EMAIL_PURCHASE_ORDER,
         payload: null
       });
     };
@@ -53,24 +53,10 @@ export default {
   showForm: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.SHOW_PURCHASE_ORDER_FORM,
+        type: Constant.SHOW_EMAIL_FORM_PURCHASE_ORDER,
         payload: data
       });
     };
   },
-
-  ShowFormCreatePurchseOrderSendEmail: (data) => {
-    return dispatch => {
-      return dispatch({
-        type: Constant.RESET_SHOW_FORM_EMAIL_PURCHASE_ORDER,
-        payload: data
-      });
-    };
-  }
-
-
-
-
-
 };
 

@@ -13,12 +13,8 @@ export default class FormItem extends Modal {
   }
 
   render() {
-    const { form,locale,formData,supplier,product,storeLocation } = this.props;
-    const {
-      getFieldDecorator,
-      getFieldValue
-    } = this.props.form;
-  
+    const { form,locale,formData,supplier,storeLocation } = this.props;
+    
     return (
       <div>
         <this.Row>
@@ -31,7 +27,9 @@ export default class FormItem extends Modal {
               required={true}
               max={100}
               min={3}
-              form={form}/> 
+              form={form}
+              disabled
+            /> 
           </this.Col>
           <this.Col md="2">
             <this.InputText
@@ -39,7 +37,9 @@ export default class FormItem extends Modal {
               label={<this.Translate id="input_stock_purchase_order_number" />}
               handleKeyUp={this.orderNumber}
               placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
-              form={form}/> 
+              form={form}
+              disabled
+            /> 
           </this.Col>
           <this.Col md="2">
             <this.InputText
@@ -86,6 +86,7 @@ export default class FormItem extends Modal {
               data={formData.dueDate}
               label={<this.Translate id="date_picker_stock_purchase_due_date" />}
               form={form}
+              disabled
             />
           </this.Col>
         </this.Row>
@@ -93,6 +94,8 @@ export default class FormItem extends Modal {
     );
   }
 }
+
+
 
 FormItem.defaultProps = {
   formData: {

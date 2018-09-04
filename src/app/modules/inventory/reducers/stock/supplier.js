@@ -12,6 +12,14 @@ export default combineReducers({
     ];
     return reducer.request(state, action, constants);
   },
+  detail: (state = InitialState.detail(), action) => {
+    const constants = [
+      Constant.REQUEST_SUPPLIER_DETAIL_PENDING,
+      Constant.REQUEST_SUPPLIER_DETAIL_REJECTED,
+      Constant.REQUEST_SUPPLIER_DETAIL_FULFILLED
+    ];
+    return reducer.detail(state, action, constants);
+  },
   archive: (state = InitialState.archive(), action) => {
     const constants = [
       Constant.ARCHIVE_SUPPLIER_PENDING,

@@ -29,7 +29,8 @@ import brand from "../modules/inventory/reducers/products/brand";
 import productsType from "../modules/inventory/reducers/products/productsType";
 import productsTag from "../modules/inventory/reducers/products/productsTag";
 import variantAttribute from "../modules/inventory/reducers/products/variantAttribute";
-import supplier from "../modules/stock/reducers/supplier";
+// import supplier from "../modules/stock/reducers/supplier";
+import supplier from "../modules/inventory/reducers/stock/supplier";
 //stock
 import stockManagement from "../modules/stock/reducers/stockManagement";
 import purchaseOrder from "../modules/inventory/reducers/stock/purchaseOrder";
@@ -37,6 +38,7 @@ import stockTransfer from "../modules/inventory/reducers/stock/stockTransfer";
 import returnPurchase from "../modules/inventory/reducers/stock/returnPurchase";
 import receivePurchase from "../modules/inventory/reducers/stock/receivePurchase";
 import reorderPoint from "../modules/inventory/reducers/stock/reorderPoint";
+import purchaseOrderSendEmail from "../modules/inventory/reducers/stock/purchaseOrderSendEmail";
 
 const reducer = combineReducers({
   client,
@@ -75,7 +77,8 @@ const reducer = combineReducers({
   stockTransfer,
   returnPurchase,
   receivePurchase,
-  reorderPoint
+  reorderPoint,
+  purchaseOrderSendEmail
 });
 
 export default reducer;

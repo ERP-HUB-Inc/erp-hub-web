@@ -44,9 +44,10 @@ class Column extends List {
       this.columnCreatedAt,
       {
         title: <this.Translate id="col_stock_receive_purchase_name" />,
-        dataIndex: "name",
-        key: "name",
-        sorter: true
+        dataIndex: "brand",
+        key: "brand",
+        sorter: true,
+        render: (brand) => brand.name 
       },
       {
         title: <this.Translate id="col_stock_receive_purchase_description" />,
