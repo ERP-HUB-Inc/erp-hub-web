@@ -1,7 +1,8 @@
 import React from "react";
 import FormItem from "./FormItem";
-import { Modal } from "../../shares/Modal/modal";
 import ProductsTypeAction from "../../../actions/products/productsType";
+import Constant from "../../../constants/products/productsType";
+import Modal from "../../../../common/components/shares/Modal";
 
 export default class Form extends Modal {
   constructor(props) {
@@ -20,64 +21,60 @@ export default class Form extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        delete values["keys"];
-        const listLangage = {
-          id: values.languageId,
-          name: values.languageName,
-          descripton : values.languageDescription
-        };
+        const productTypeDescriptions = [];
 
-        if(listLangage.name == null){
-          listLangage.name = [];
-        }
-
-        const languge = [];
-
-        listLangage.name.forEach((name, index) => {
-          if (
-            name != null
-          ) {
-            languge.push({
-              languageId: "en",
-              name: values.name,
-              descripton: values.description
-            });
-          }
+        values.productTypeName.forEach((productTypeName, index) => {
+          productTypeDescriptions.push({
+            id: values.id[index],
+            languageId: values.language[index],
+            name: productTypeName,
+            description: values.productTypeDescription[index]
+          });
         });
 
-        delete values["name"];
-        delete values["description"];
-        delete values["languageId"];
-        delete values["languageName"];
-        delete values["languageDescription"];
+        delete values["keys"];
+        delete values["language"];
+        delete values["productTypeName"];
+        delete values["productTypeDescription"];
 
-        values["productTypeDescriptions"] = languge;
+        values["id"] = this.props.productsTypeDetail.data.id;
+        values["productTypeDescriptions"] = productTypeDescriptions;
+        console.log("ProductTypeDescriptions:", values);
 
-        console.log("language values",values);
         this.dispatch(ProductsTypeAction.update(values));
+
       }
     });
   }
     
   handleCancel() {
-    this.dispatch(ProductsTypeAction.reset());
+    this.dispatch(ProductsTypeAction.reset(Constant.RESET_DETAIL_PRODUCTS_TYPE));
   }
 
   render() {
-    const {productsTypeUpdate, form, locale,storeLanguage,dispatch} = this.props;
+    const {
+      productsTypeUpdate,
+      productsTypeDetail,
+      form,
+      locale,
+      storeLanguage,
+      dispatch
+    } = this.props;
 
     this.submitLoading = productsTypeUpdate.updating;
 
-    if (productsTypeUpdate.showForm) {
-      this.content = (
-        <div>
-          {productsTypeUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <FormItem formData={storeLanguage} dispatch={ dispatch } productsType={productsTypeUpdate} form={form} locale={locale}/>
-        </div>
-      );
+    if (productsTypeDetail.showForm) {
+      this.content = <FormItem
+        formData={productsTypeDetail.data}
+        languages={storeLanguage}
+        dispatch={dispatch}
+        productsType={productsTypeUpdate}
+        form={form}
+        locale={locale}/>;
+
       return super.render();
     } else {
-      return (<div></div>);
+      return <div/>;
     }
   }
 }

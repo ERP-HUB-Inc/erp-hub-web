@@ -10,11 +10,11 @@ export class SelectTag extends Element {
   }
 
   handleChange(value) {
-    console.log(`selected ${value}`);
+    console.log(`On Change ${value}`);
   }
     
   handleSelect(value) {
-    console.log(`On Select${value}`);
+    console.log(`On Select ${value}`);
   }
   render() {
     const {getFieldDecorator} = this.props.form;
@@ -28,11 +28,27 @@ export class SelectTag extends Element {
         label={this.props.label}
         help={this.props.help}>
         {
-          getFieldDecorator(this.props.name, {rules: [], initialValue: this.props.defaultValue})(
+          getFieldDecorator(this.props.name, {initialValue: this.props.defaultValue})(
             <this.Select
-              {...this.props}
-              onChange={this.handleChange}
-              onSelect={this.handleSelect}>
+              mode="tags"
+              placeholder={this.props.placeholder}
+              onChange={this.props.onChange}
+              onSelect={this.props.onSelect}
+              onDeselect={this.props.onDeselect}
+              notFoundContent={this.props.notFoundContent}>
+              {/* { 
+                this.props.addNew !=null ?
+                  <this.Option
+                    key={1}
+                    value={"1"}
+                    className="add-new-item"
+                    onClick={this.props.addNew}>
+                    <div className="not-for-selected">
+                      <span className="icon-add"></span> {this.props.textAddNew}
+                    </div>
+                  </this.Option>
+                  : "" 
+              } */}
               {children}
             </this.Select>
           )
@@ -44,5 +60,6 @@ export class SelectTag extends Element {
 
 SelectTag.defaultProps = {
   valueKey: "value",
-  nameKey: "name"
+  nameKey: "name",
+  textAddNew: "Add New"
 };

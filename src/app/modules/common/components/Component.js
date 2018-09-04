@@ -83,7 +83,8 @@ import {
   Tooltip,
   Tabs,
   Badge,
-  Spin
+  Spin,
+  Tag
 } from "antd";
 
 const Panel = Collapse.Panel;
@@ -185,6 +186,7 @@ export default class Component extends RComponent {
     this.SelectSearch = SelectSearch;
     this.SelectTag = SelectTag;
     this.Tag = TagButton;
+    this.TagLabel = Tag;
 
     this.CSVLink = CSVLink;
     this.CSVDownload = CSVDownload;

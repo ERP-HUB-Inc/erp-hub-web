@@ -17,6 +17,8 @@ export default class Form extends Modal {
       if (!err) {
         const {languageUpdate} = this.props;
         values["id"] = languageUpdate.data.id;
+        values["isSystem"] = languageUpdate.data.isSystem;
+        values["isDefault"] = languageUpdate.data.isDefault;
         this.dispatch(StoreLanguageAction.update(values));
       }
     });
@@ -34,9 +36,7 @@ export default class Form extends Modal {
     this.validatorUpdateRecord(languageUpdate);
 
     if (languageUpdate.showForm) {
-      this.content = (
-        <FormItem formData={languageUpdate.data} form={form} locale={locale} />
-      );
+      this.content = <FormItem formData={languageUpdate.data} form={form} locale={locale} />;
       return super.render();
     } else {
       return <div />;

@@ -12,8 +12,6 @@ export default class PaymentMethodList extends List {
     super(props);
     this.columns = new Column();
     this.fetchingProp = "productsType";
-    this.addingProp = "productsTypeAdd";
-    this.updatingProp = "productsTypeUpdate";
     this.columnFilterWithKey = ["productTypeDescriptions"];
     this.service = ProductTypeService;
     this.action = ProductTypeAction;
@@ -29,11 +27,21 @@ export default class PaymentMethodList extends List {
   }
 
   handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
-    dispatch(ProductTypeAction.showForm(rowData));
+    const {dispatch} = this.props;
+    dispatch(ProductTypeAction.requestAndShowForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });
+  }
+
+  componentWillUpdate(nextProps) {
+    const {productsTypeAdd, productsTypeUpdate} = nextProps;
+    if (productsTypeAdd.added || productsTypeUpdate.updated) {
+      const {dispatch} = this.props;
+      dispatch(ProductTypeAction.reset());
+      dispatch(ProductTypeAction.reset(Constant.RESET_DETAIL_PRODUCTS_TYPE));
+      dispatch(ProductTypeAction.fetch(this.pageSize));
+    }
   }
 
   render() {

@@ -1,103 +1,77 @@
 import React from "react";
 import LanguageAction from "../../../../pos/action/settings/storeLanguage";
-import { Modal }  from "../../shares/Modal/modal";
+import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormItem extends Modal {
+  constructor(props) {
+    super(props);
+    this.renderDescription = this.renderDescription.bind(this);
+  }
  
   componentDidMount(){
     const {dispatch} = this.props;
-    dispatch(LanguageAction.fetch());
+    dispatch(LanguageAction.fetch(100));
+  }
+
+  renderDescription(language, languagesIndex) {
+    const {locale, form, formData} = this.props;
+    let productTypeId = "",
+      productTypeName = "",
+      productTypeDescription = "";
+    
+    formData.productTypeDescriptions.forEach(productType => {
+      if (language.code === productType.languageId) {
+        productTypeId = productType.id;
+        productTypeName = productType.name;
+        productTypeDescription = productType.description;
+      }
+    });
+
+    return (
+      <this.TabPane tab={this.getLanguageIcon(language.code)} key={languagesIndex}>
+        <this.Row>
+          <this.InputText 
+            name={`language[${languagesIndex}]`} 
+            type="hidden"
+            data={language.code}
+            form={form} />
+          <this.InputText 
+            name={`id[${languagesIndex}]`} 
+            type="hidden"
+            data={productTypeId}
+            form={form} />
+          <this.Col md="12">
+            <this.InputText
+              name={`productTypeName[${languagesIndex}]`}
+              data={productTypeName}
+              label={<this.Translate id="input_product_name" />}
+              placeholder={this.CATranslate("input_product_name", locale)}
+              max={100}
+              form={form}/>
+          </this.Col>
+          <this.Col md="12">
+            <this.InputTextArea
+              name={`productTypeDescription[${languagesIndex}]`}
+              data={productTypeDescription}
+              label={<this.Translate id="input_product_description" />}
+              placeholder={this.CATranslate("input_product_description", locale)}
+              max={255}
+              form={form}/>
+          </this.Col>
+        </this.Row>
+      </this.TabPane>
+    );
   }
 
   render() {
-    const {form,locale,formData,productsType} = this.props;
-    return (  
-      <div>
-        <this.Tabs type="card">
-          <this.TabPane tab={ <this.Translate id="tab_products_products_type_general" /> } key="1">
-            {
-              productsType.data.productTypeDescriptions.map((data,index) =>
-                <this.Row key={ index }>
-                  <this.Col md="12">
-                    <this.InputText
-                      name="name"
-                      label={<this.Translate id="input_products_products_type_name" />}
-                      data={data.name}
-                      placeholder={this.CATranslate("input_products_products_type_name", locale)}
-                      required={true}
-                      errorRequired={<this.Translate id="input_error_products_products_type_name" />}
-                      max={100}
-                      min={3}
-                      form={form}/> 
-                  </this.Col> 
-                  <this.Col md="12">
-                    <this.InputTextArea
-                      name="description"
-                      label={<this.Translate id="input_products_products_type_description" />}
-                      data={data.description}
-                      placeholder={this.CATranslate("input_products_products_type_description", locale)}
-                      required={true}
-                      errorRequired={<this.Translate id="input_error_products_products_type_description" />}
-                      max={100}
-                      form={form}/>
-                  </this.Col>
-                </this.Row>
-              )  
-            }
-          </this.TabPane>
-          <this.TabPane tab={ <this.Translate id="tab_products_products_type_language" /> } key="2">
-             
-            { 
-              formData.map((language, index) =>
-                <div key={index}>
-                  <this.Row>
-                    <this.Col md="12">
-                      <h6>{<this.Translate id="title_products_products_type_language" />}  {`${index + 1}`} </h6>
-                      <hr/>
-                    </this.Col>
-                    <this.InputText 
-                      name={`languageId[${index}]`} 
-                      type="hidden"
-                      data={ language.id !== null ? language.id : "" }
-                      form={ form } />
-                    <this.Col md="12">
-                      <this.InputText 
-                        name={`languageName[${index}]`} 
-                        data={ language.name }
-                        label={<this.Translate id="input_products_products_type_language_name" />} 
-                        placeholder={this.CATranslate("input_products_products_type_language_name", locale)}  
-                        form={ form } />
-                    </this.Col>
-                    <this.Col md="12">    
-                      <this.InputTextArea
-                        name={`languageDescription[${index}]`}  
-                        data={language.description}
-                        label={<this.Translate id="input_products_products_type_language_description" />} 
-                        placeholder={this.CATranslate("input_products_products_type_language_description", locale)}  
-                        max={100}  
-                        form={form}/>
-                    </this.Col>
-                  </this.Row>
-                  {/* {
-                    keys.length > 1 ?
-                      (<this.Icon
-                        className="dynamic-delete-button"
-                        type="minus-circle-o"
-                        disabled={keys.length === 0 }
-                        onClick={() => this.remove(index)} />
-                      )
-                      :
-                      null
-                  } */}
-                </div>  
-              )
-              
-            }  
-          
-          </this.TabPane>
+    const {languages} = this.props;
 
-        </this.Tabs>
-      </div>
+    return (  
+      <this.Tabs type="card">
+        {
+          languages.map((language, languagesIndex) => this.renderDescription(language, languagesIndex))
+        }
+      </this.Tabs>
     );
   }
 }
@@ -106,8 +80,6 @@ FormItem.defaultProps = {
   formData: {
     name:"",
     description:"",
-    status: 1,
-    productsType:[],
-    formData:[]
+    productTypeDescriptions:[]
   }
 };

@@ -76,7 +76,7 @@ export default {
         ...state,
         adding: false,
         showForm: true,
-        error: action.payload.response.data
+        error: action.payload.response
       };
     }
     case FULFILLED: {

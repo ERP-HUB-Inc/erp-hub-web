@@ -1,5 +1,6 @@
 import React from "react";
-import { connect } from "react-redux";
+import {Form} from "antd";
+import {connect} from "react-redux";
 import ProductsTypeList from "../../../components/products/ProductsType";
 
 class ProductsType extends React.Component {
@@ -19,4 +20,12 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(ProductsType);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const productsType = Form.create(mapPropsToFields)(ProductsType);
+
+export default connect(mapStateToProps)(productsType);

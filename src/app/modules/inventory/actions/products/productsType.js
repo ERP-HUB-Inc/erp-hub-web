@@ -34,10 +34,10 @@ export default {
       });
     };
   },
-  reset: () => {
+  reset: (RESET_CONSTANT = Constant.RESET_PRODUCTS_TYPE) => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET_PRODUCTS_TYPE,
+        type: RESET_CONSTANT,
         payload: null
       });
     };
@@ -47,6 +47,14 @@ export default {
       return dispatch({
         type: Constant.SHOW_PRODUCTS_TYPE_FORM,
         payload: data
+      });
+    };
+  },
+  requestAndShowForm: (data) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.DETAIL_PRODUCTS_TYPE,
+        payload: productTypeService.detail(data.id)
       });
     };
   }

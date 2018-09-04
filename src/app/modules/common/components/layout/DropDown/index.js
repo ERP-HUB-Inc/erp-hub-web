@@ -50,14 +50,15 @@ export default class MenuDropDown extends Component {
   }
 
   render() {
-    const userInfo = localStorage.getItem(ConstantAuth.ACCESS_TOKEN);
-    const {currentUser} = JSON.parse(userInfo);
-    // let userName = "";
     let fullName = "";
-    // if (currentUser !== null && currentUser !== "undefined") {
-    //   // userName = currentUser.userName;
-    //   // fullName = currentUser.fullName;
-    // }
+    const userInfo = this.getCurrentUser();
+    if (userInfo !== null) {
+      const {currentUser} = userInfo;
+      if (currentUser !== null && currentUser !== "undefined") {
+        fullName = currentUser.fullName;
+      }
+    }
+
     return(
       <ul className="menu-left list-unstyled">
         <li>

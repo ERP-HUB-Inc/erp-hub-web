@@ -7,7 +7,10 @@ class FormSearch extends Component {
   render(){
     const { handleSubmit } = this.props;
     return(
-      <this.Form onSubmit={ handleSubmit }>
+      <this.Form
+        onSubmit={handleSubmit}
+        autoComplete="off"
+      >
         <span className="icon-search"></span>
         <input
           name="generalsearch"

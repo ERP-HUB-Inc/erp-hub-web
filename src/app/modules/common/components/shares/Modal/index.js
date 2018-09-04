@@ -1,6 +1,7 @@
 import React from "react";
 import {Form} from "antd";
 import Component from "../../Component";
+import ConstantAuth from "../../../constants/authentication";
 import "./index.css";
 
 export default class Modal extends Component {
@@ -19,13 +20,25 @@ export default class Modal extends Component {
     this.statusDataSource = [
       {
         name: <this.Translate id="select_text_active" />,
-        value: 1
+        value: this.Enum.ACTIVE
       },
       {
         name: <this.Translate id="select_text_deactive" />,
-        value: 0
+        value: this.Enum.DEACTIVE
       }
     ];
+
+    this.isDefaultDataSource = [
+      {
+        name: <this.Translate id="select_text_is_default_yes" />,
+        value: this.Enum.IS_DEFAULT
+      },
+      {
+        name: <this.Translate id="select_text_is_default_no" />,
+        value: this.Enum.NOT_DEFAULT
+      }
+    ];
+
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -35,6 +48,11 @@ export default class Modal extends Component {
     
   handleCancel() {
 
+  }
+
+  formatCurrency(value) {
+    const setting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
+    return this.Util.formatCurrency(value, setting.currency, setting.currencyPosition);
   }
 
   validatorAddRecord(responseAdd) {
@@ -86,7 +104,7 @@ export default class Modal extends Component {
           visible={true}
           footer={null}
         >
-          <Form onSubmit={this.handleSubmit}>
+          <Form autoComplete="off" onSubmit={this.handleSubmit}>
             <this.Alert style={{display: this.isRepsonseBackError}} message={this.requiredMessage} type="error" showIcon/>
             {this.content}
             <div className="ant-modal-footer">

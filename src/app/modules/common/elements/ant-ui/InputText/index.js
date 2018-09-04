@@ -12,6 +12,7 @@ export class InputText extends Element {
         placeholder={this.props.placeholder}
         label={this.props.label}
         help={this.props.help}
+        validateStatus={this.props.validateStatus}
         data={this.props.data}
         required={this.props.required}
         notation={this.props.notation}
@@ -21,12 +22,14 @@ export class InputText extends Element {
         form={this.props.form}
         min={this.props.min}
         max={this.props.max}
+        onChange={this.props.onChange}
         handleKeyDown={this.props.handleKeyDown}
         handleKeyUp={this.props.handleKeyUp}
         handlePressEnter={this.props.handlePressEnter}
         handleOnBlur={this.props.handleOnBlur}
         handleOnFocus={this.props.handleOnFocus}
         disabled= {this.props.disabled}
+        isAutoFocus={this.props.isAutoFocus}
       />
     );
   }   

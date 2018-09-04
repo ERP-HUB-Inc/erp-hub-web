@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal }  from "../../shares/Modal/modal";
+import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormItem extends Modal {
   render() {
@@ -30,6 +30,14 @@ export default class FormItem extends Modal {
               max={100}
               form={form}/>
           </this.Col>
+          <this.Col md="12">
+            <this.Select
+              name="isDefault"
+              label={<this.Translate id="text_is_default" />}
+              dataSource={this.isDefaultDataSource}
+              defaultValue={formData.isDefault}
+              form={form}/>
+          </this.Col>
         </this.Row>
       </div>
     );
@@ -40,6 +48,7 @@ FormItem.defaultProps = {
   formData: {
     name:"",
     multiple:"",
-    status: 1
+    status: 1,
+    isDefault: 0
   }
 };

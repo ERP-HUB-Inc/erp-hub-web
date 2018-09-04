@@ -65,7 +65,7 @@ body {
     font-family: Helvetica, sans-serif;
   }
   
-  .react-autosuggest__container {
+  /* .react-autosuggest__container {
     position: relative;
   }
   
@@ -121,7 +121,7 @@ body {
   
   .react-autosuggest__suggestion--highlighted {
     background-color: #ddd;
-  }
+  } */
   
   .footer {
     margin: 9px 20px;
@@ -131,14 +131,14 @@ body {
   
 
   /* spint waiting  */
-  .main-waiting .ant-spin {
+  /* .main-waiting .ant-spin {
     width: 100%;
     padding: 0;
-  }
+  } */
 
   /* Trash button */
-  .main-trash button {
+  /* .main-trash button {
     border: none;
     background-color: white !important;
     font-size: 20pt;
-  }
+  } */

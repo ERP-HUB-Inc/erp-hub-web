@@ -2,12 +2,13 @@ import React from "react";
 import FormComposite from "./FormComposite";
 import FormVariant from "./FormVariant";
 import Enum from "../../../enums";
-// import FormVariant from "../../../containers/products/Product/FormVariant";
 import BrandAction from "../../../actions/products/brand";
+import ProductTypeAction from "../../../actions/products/productsType";
 import UnitAction from "../../../actions/products/productsUnit";
 import TagAction from "../../../actions/products/productsTag";
 import VariantAttributeAction from "../../../actions/products/variantAttribute";
 import TaxAction from "../../../../pos/action/settings/tax";
+import LanguageAction from "../../../../pos/action/settings/storeLanguage";
 import Modal from "../../../../common/components/shares/Modal";
 import "./index.css";
 
@@ -15,12 +16,12 @@ export default class FormItem extends Modal {
   constructor(props) {
     super(props);
     this.state = {
-      unitList: []
+      productTypeIndex: 0, // for condition thre type starndard, variant, composite
+      productNameDefault: ""
     };
 
-    this.unitsList = [];
-
     this.productTypeContent = "";
+    
     this.productTypes = [
       {
         name: <this.Translate id="radio_box_product_standard" />,
@@ -70,21 +71,25 @@ export default class FormItem extends Modal {
     ];
 
     this.onChange = this.onChange.bind(this);
+    this.onChangeProductName = this.onChangeProductName.bind(this);
   }
 
   componentDidMount() {
     const {dispatch} = this.props;
+    dispatch(BrandAction.fetch(100));
+    dispatch(ProductTypeAction.fetch(100));
     dispatch(UnitAction.fetch(100));
     dispatch(TaxAction.fetch(100));
-    dispatch(BrandAction.fetch(100));
     dispatch(TagAction.fetch(100));
     dispatch(VariantAttributeAction.fetch(100));
+    dispatch(LanguageAction.fetch(100));
   }
 
   componentDidUpdate(prevProps) {
     const {
       dispatch,
       brandAdd,
+      productsTypeAdd,
       unitAdd,
       taxAdd
     } = this.props;
@@ -92,6 +97,11 @@ export default class FormItem extends Modal {
     if (brandAdd.added) {
       this.props.form.setFieldsValue({brandId: brandAdd.response.data.id});
       dispatch(BrandAction.reset());
+    }
+
+    if (productsTypeAdd.added) {
+      this.props.form.setFieldsValue({productTypeId: productsTypeAdd.response.data.id});
+      dispatch(ProductTypeAction.reset());
     }
 
     if (unitAdd.added) {
@@ -106,47 +116,114 @@ export default class FormItem extends Modal {
   }
 
   onChange(e) {
-    const value = e.target.value;
-    const {
-      form,
-      locale,
-      variantAttributes,
-      variantAttributeAdd
-    } = this.props;
-    if (value === Enum.PRODUCT_VARIANT) {
-      this.productTypeContent = <FormVariant
-        form={form}
-        locale={locale}
-        variantAttributes={variantAttributes}
-        variantAttributeAdd={variantAttributeAdd}
-        handleAddVariantAttribute={this.props.handleAddVariantAttribute}/>;
-    } else if (value === Enum.PRODUCT_COMPOSITE) {
-      this.productTypeContent = <FormComposite form={form} locale={locale} />;
-    } else {
-      this.productTypeContent = "";
-    }
+    this.setState({
+      productTypeIndex:  e.target.value
+    });
   }
+
+  renderDescription(language, languagesIndex) {
+    const {locale, form, formData} = this.props;
+    let productId = "",
+      productName = "",
+      productDescription = "";
+    
+    formData.productDescriptions.forEach(product => {
+      if (language.code === product.languageId) {
+        productId = product.id;
+        productName = product.name;
+        productDescription = product.description;
+      }
+    });
+
+    if (languagesIndex === 0) {
+      productName = this.state.productNameDefault;
+    }
+
+    return (
+      <this.TabPane tab={this.getLanguageIcon(language.code)} key={languagesIndex}>
+        <this.Row>
+          <this.InputText 
+            name={`language[${languagesIndex}]`} 
+            type="hidden"
+            data={language.code}
+            form={form} />
+          <this.InputText 
+            name={`id[${languagesIndex}]`} 
+            type="hidden"
+            data={productId}
+            form={form} />
+          <this.Col md="12">
+            <this.InputText
+              name={`productName[${languagesIndex}]`}
+              data={productName}
+              label={<this.Translate id="input_product_name" />}
+              placeholder={this.CATranslate("input_product_name", locale)}
+              max={100}
+              form={form}/>
+          </this.Col>
+          <this.Col md="12">
+            <this.InputTextArea
+              name={`productDescription[${languagesIndex}]`}
+              data={productDescription}
+              label={<this.Translate id="input_product_description" />}
+              placeholder={this.CATranslate("input_product_description", locale)}
+              max={255}
+              form={form}/>
+          </this.Col>
+        </this.Row>
+      </this.TabPane>
+    );
+  }
+
+  onChangeProductName(e) {
+    this.setState({
+      productNameDefault: e.target.value
+    });
+  }
+
   render() {
     const {
+      dispatch,
       form,
       locale,
+      languages,
       formData,
       unitAdd,
       taxAdd,
-      brandAdd
+      brandAdd,
+      productsTypeAdd,
+      productSearch,
+      variantAttributes,
+      variantAttributeAdd
     } = this.props;
 
     let {
       brands,
+      productsType,
       units,
       taxs,
       tags
     } = this.props;
 
+    let defaultUnit = {id: ""};
+
     const currentUser = this.getCurrentUser();
 
     if (brandAdd.response != null) {
       brands.list = [brandAdd.response.data, ...brands.list];
+      productsType.list.forEach((productTypeValue, productTypeIndex) => {
+        productsType.list[productTypeIndex].name = productTypeValue.productTypeDescriptions.length > 0 ? productTypeValue.productTypeDescriptions[0].name : "";
+      });
+    }
+
+    if (productsTypeAdd.response != null) {
+      productsType.list = [productsTypeAdd.response.data, ...productsType.list];
+    }
+
+    if (productsType.fetched) {
+      productsType.list.forEach((productTypeValue, productTypeIndex) => {
+        productsType.list[productTypeIndex].name = productTypeValue.productTypeDescriptions.length > 0 ? productTypeValue.productTypeDescriptions[0].name : "";
+      });
     }
 
     if (unitAdd.response != null) {
@@ -157,6 +234,16 @@ export default class FormItem extends Modal {
       taxs.list = [taxAdd.response.data, ...taxs.list];
     }
 
+    if (units.fetched) {
+      const findDefaultUnit = units.list.find(unitValue => unitValue.isDefault === this.Enum.IS_DEFAULT);
+
+      if (findDefaultUnit) {
+        defaultUnit = findDefaultUnit;
+      }
+
+      defaultUnit.id = this.props.formData.unitId ? this.props.formData.unitId : defaultUnit.id;
+    }
+
     return (
       <this.Tabs type="card">
         <this.TabPane tab={<this.Translate id="tab_general" />} key="1">
@@ -165,13 +252,14 @@ export default class FormItem extends Modal {
               <this.Row>
                 <this.Col md="4">
                   <this.InputText
-                    name="name"
+                    name="productNameDefault"
                     label={<this.Translate id="input_product_name" />}
-                    data={formData.name}
+                    data="Coca Cola"
                     placeholder={this.CATranslate("input_product_name", locale)}
-                    errorRequired={<this.Translate id="input_error_products_name" />}
+                    onChange={this.onChangeProductName}
                     max={100}
                     min={3}
+                    required={true}
                     form={form}/>
                 </this.Col>
 
@@ -179,24 +267,30 @@ export default class FormItem extends Modal {
                   <this.SelectSearch
                     name="brandId"
                     label={<this.Translate id="input_product_brand" />}
+                    placeholder={this.CATranslate("input_product_brand", locale)}
                     valueKey="id"
                     dataSource={brands.list}
+                    defaultValue={formData.brandId}
                     addNew={this.props.handleAddBrand}
+                    required={true}
                     form={form}/>
                 </this.Col>
 
                 <this.Col md="4">
-                  <this.Select
+                  <this.SelectSearch
                     name="productTypeId"
                     label={<this.Translate id="input_product_type" />}
-                    dataSource={this.statusDataSource}
-                    defaultValue={formData.status}
+                    placeholder={this.CATranslate("input_product_type", locale)}
+                    valueKey="id"
+                    dataSource={productsType.list}
+                    addNew={this.props.handleAddProductType}
+                    required={true}
                     form={form}/>
                 </this.Col>
 
                 <this.Col md="4">
                   <this.Select
-                    name="serialTypeId"
+                    name="serialType"
                     label={<this.Translate id="input_product_serial_type" />}
                     dataSource={this.serialTypes}
                     defaultValue={this.serialTypes[0].value}
@@ -224,7 +318,7 @@ export default class FormItem extends Modal {
                       <this.InputText
                         name="barcode"
                         label={<this.Translate id="input_product_code" />}
-                        data={formData.name}
+                        data="BC000012"
                         placeholder={this.CATranslate("input_product_code", locale)}
                         max={20}
                         form={form}/>
@@ -234,17 +328,19 @@ export default class FormItem extends Modal {
 
                 <this.Col md="4">
                   <this.SelectSearch
-                    name="unitId"
+                    name="defaultUnitId"
                     label={<this.Translate id="input_product_unit" />}
                     valueKey="id"
                     dataSource={units.list}
+                    defaultValue={defaultUnit.id}
                     addNew={this.props.handleAddUnit}
+                    required={true}
                     form={form}/>
                 </this.Col>  
 
                 <this.Col md="4">
                   <this.Select
-                    name="typeId"
+                    name="type"
                     label={<this.Translate id="input_product_kind" />}
                     dataSource={this.typesOfProduct}
                     defaultValue={this.typesOfProduct[0].value}
@@ -255,7 +351,7 @@ export default class FormItem extends Modal {
                   <this.InputNumber
                     name="reorderPoint"
                     label={<this.Translate id="input_product_re_order_point" />}
-                    data={formData.name}
+                    data={10}
                     placeholder={this.CATranslate("input_product_re_order_point", locale)}
                     form={form}/>
                 </this.Col>
@@ -266,6 +362,7 @@ export default class FormItem extends Modal {
                     label={<this.Translate id="input_product_tax" />}
                     valueKey="id"
                     dataSource={taxs.list}
+                    defaultValue={currentUser.setting.defaultTaxId}
                     addNew={this.props.handleAddTax}
                     form={form}/>
                 </this.Col>
@@ -288,12 +385,15 @@ export default class FormItem extends Modal {
 
                 <this.Col md="12">
                   <this.SelectTag
-                    name="tag"
+                    name="tagId"
                     label={<this.Translate id="input_product_tag" />}
                     placeholder={this.CATranslate("input_product_tag", locale)}
-                    mode="tags"
                     nameKey="tag"
                     dataSource={tags.list}
+                    defaultValue={[]}
+                    onChange={this.props.handleChangeTag}
+                    onSelect={this.props.handleSelectTag}
+                    onDeselect={this.props.handleDeselectTag}
                     style={{ width: "100%" }}
                     form={form} />
                 </this.Col>
@@ -310,9 +410,8 @@ export default class FormItem extends Modal {
 
                 <this.Col md="4">
                   <this.InputNumber
-                    name="supplier_price"
+                    name="factoryCost"
                     label={<span><this.Translate id="input_product_supplier_price" /><span> ({currentUser.setting.currency})</span></span>}
-                    data={formData.name}
                     placeholder={this.CATranslate("input_product_supplier_price_placeholder", locale)}
                     max={20}
                     form={form}/>
@@ -320,7 +419,7 @@ export default class FormItem extends Modal {
 
                 <this.Col md="4">
                   <this.InputNumber
-                    name="shipping_fee"
+                    name="shippingFee"
                     label={<span><this.Translate id="input_product_shipping_fee" /><span> ({currentUser.setting.currency})</span></span>}
                     data={formData.name}
                     placeholder={this.CATranslate("input_product_shipping_fee_placeholder", locale)}
@@ -335,9 +434,10 @@ export default class FormItem extends Modal {
                   <this.InputNumber
                     name="cost"
                     label={<span><this.Translate id="input_product_cost" /><span> ({currentUser.setting.currency})</span></span>}
-                    data={formData.name}
+                    data={100}
                     placeholder={this.CATranslate("input_product_cost_placeholder", locale)}
-                    max={20}
+                    max={99999999}
+                    required={true}
                     form={form}/>
                 </this.Col>
 
@@ -355,9 +455,10 @@ export default class FormItem extends Modal {
                   <this.InputNumber
                     name="price"
                     label={<span><this.Translate id="input_product_price" /><span> ({currentUser.setting.currency})</span></span>}
-                    data={formData.name}
+                    data={200}
                     placeholder={this.CATranslate("input_product_price_placeholder", locale)}
-                    max={20}
+                    max={99999999}
+                    required={true}
                     form={form}/>
                 </this.Col>
 
@@ -390,91 +491,33 @@ export default class FormItem extends Modal {
                 }
               </this.RadioBox>
               <div className="product-type-content">
-                {this.productTypeContent}
+                {
+                  this.state.productTypeIndex === Enum.PRODUCT_VARIANT ?
+                    <FormVariant
+                      currentUser={currentUser}
+                      dispatch={dispatch}
+                      form={form}
+                      locale={locale}
+                      variantAttributes={variantAttributes}
+                      variantAttributeAdd={variantAttributeAdd}
+                      handleAddVariantAttribute={this.props.handleAddVariantAttribute}/>
+                    :
+                    this.state.productTypeIndex === Enum.PRODUCT_COMPOSITE ?
+                      <FormComposite
+                        dispatch={dispatch}
+                        form={form}
+                        locale={locale}
+                        productSearch={productSearch} />
+                      :
+                      ""
+                }
               </div>
             </this.Col>
           </this.Row>
         </this.TabPane>
         <this.TabPane tab={<this.Translate id="tab_language" />} key="2">
           <this.Tabs type="card">
-            <this.TabPane tab={this.getLanguageIcon("en")} key="1">
-              <this.Row>
-                <this.Col md="6">
-                  <this.Row>
-                    <this.Col md="12">
-                      <this.InputText
-                        name="productName"
-                        label={<this.Translate id="input_product_name" />}
-                        data={formData.name}
-                        placeholder={this.CATranslate("input_product_name", locale)}
-                        max={20}
-                        form={form}/>
-                    </this.Col>
-                    <this.Col md="12">
-                      <this.InputTextArea
-                        name="description"
-                        label={<this.Translate id="input_product_description" />}
-                        data={formData.description}
-                        placeholder={this.CATranslate("input_product_description", locale)}
-                        max={255}
-                        form={form}/>
-                    </this.Col>
-                  </this.Row>
-                </this.Col>
-              </this.Row>
-            </this.TabPane>
-            <this.TabPane tab={this.getLanguageIcon("bm")} key="2">
-              <this.Row>
-                <this.Col md="6">
-                  <this.Row>
-                    <this.Col md="12">
-                      <this.InputText
-                        name="productName"
-                        label={<this.Translate id="input_product_name" />}
-                        data={formData.name}
-                        placeholder={this.CATranslate("input_product_name", locale)}
-                        max={20}
-                        form={form}/>
-                    </this.Col>
-                    <this.Col md="12">
-                      <this.InputTextArea
-                        name="description"
-                        label={<this.Translate id="input_product_description" />}
-                        data={formData.description}
-                        placeholder={this.CATranslate("input_product_description", locale)}
-                        max={255}
-                        form={form}/>
-                    </this.Col>
-                  </this.Row>
-                </this.Col>
-              </this.Row>
-            </this.TabPane>
-            <this.TabPane tab={this.getLanguageIcon("km")} key="3">
-              <this.Row>
-                <this.Col md="6">
-                  <this.Row>
-                    <this.Col md="12">
-                      <this.InputText
-                        name="productName"
-                        label={<this.Translate id="input_product_name" />}
-                        data={formData.name}
-                        placeholder={this.CATranslate("input_product_name", locale)}
-                        max={20}
-                        form={form}/>
-                    </this.Col>
-                    <this.Col md="12">
-                      <this.InputTextArea
-                        name="description"
-                        label={<this.Translate id="input_product_description" />}
-                        data={formData.description}
-                        placeholder={this.CATranslate("input_product_description", locale)}
-                        max={255}
-                        form={form}/>
-                    </this.Col>
-                  </this.Row>
-                </this.Col>
-              </this.Row>
-            </this.TabPane>
+            {languages.map((language, languagesIndex) => this.renderDescription(language, languagesIndex))}
           </this.Tabs>
         </this.TabPane>
         <this.TabPane tab={<this.Translate id="tab_cost_log" />} key="3">
@@ -492,6 +535,10 @@ FormItem.defaultProps = {
   formData: {
     name:"",
     description:"",
+    productDescriptions:[],
+    unitId: "",
+    brandId: "",
+    productTypeId: "",
     isAvialableSale: 1,
     isPublic: 0,
     status: 1

@@ -1,6 +1,6 @@
 import React from "react";
 import FormItem from "./FormItem";
-import { Modal } from "../../shares/Modal/modal";
+import Modal from "../../../../common/components/shares/Modal";
 import ProductsTypeAction from "../../../actions/products/productsType";
 
 export default class FormCreate extends Modal {
@@ -16,41 +16,27 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        delete values["keys"];
-        const listLangage = {
-          id: values.languageId,
-          name: values.languageName,
-          descripton : values.languageDescription
-        };
+        const productTypeDescriptions = [];
 
-        if(listLangage.name == null){
-          listLangage.name = [];
-        }
-
-        const languge = [];
-
-        listLangage.name.forEach((name, index) => {
-          if (
-            name != null
-          ) {
-            languge.push({
-              languageId: "en",
-              name: values.name,
-              descripton: values.description
-            });
-          }
+        values.productTypeName.forEach((productTypeName, index) => {
+          productTypeDescriptions.push({
+            languageId: values.language[index],
+            name: productTypeName,
+            description: values.productTypeDescription[index]
+          });
         });
 
-        delete values["name"];
-        delete values["description"];
-        delete values["languageId"];
-        delete values["languageName"];
-        delete values["languageDescription"];
+        this.Util.clearObjProperty(values, [
+          "keys",
+          "language",
+          "productTypeName",
+          "productTypeDescription"
+        ]);
 
-        values["productTypeDescriptions"] = languge;
+        values["productTypeDescriptions"] = productTypeDescriptions;
 
-        console.log("language values",values);
         this.dispatch(ProductsTypeAction.add(values)); 
+
       }
     });
   }
@@ -60,20 +46,20 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    const {productsTypeAdd,form,locale,storeLanguage,dispatch} = this.props;
+    const {productsTypeAdd, form,locale, storeLanguage, dispatch} = this.props;
     
     this.submitLoading = productsTypeAdd.adding;
 
     if (productsTypeAdd.showForm) {
-      this.content = (
-        <div>
-          { productsTypeAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" }
-          <FormItem form={form} formData={storeLanguage} dispatch={ dispatch } productsType={[]} locale={locale}/>
-        </div>
-      );
+      this.content = <FormItem
+        form={form}
+        languages={storeLanguage}
+        dispatch={dispatch}
+        productsType={[]}
+        locale={locale}/>;
       return super.render();
     } else {
-      return (<div></div>);
+      return <div/>;
     }
   }
 }

@@ -5,6 +5,12 @@ export default {
     "Status"
   ],
 
+  "text_is_default": [
+    "Default",
+    "Default",
+    "Default"
+  ],
+
   "text_created_at": [
     "Date",
     "Date",
@@ -45,6 +51,18 @@ export default {
     "All Status",
     "All Status",
     "All Status"
+  ],
+
+  "select_text_is_default_yes": [
+    "Yes",
+    "Yes",
+    "Yes",
+  ],
+
+  "select_text_is_default_no": [
+    "No",
+    "No",
+    "No",
   ],
 
   "button_text_save": [
