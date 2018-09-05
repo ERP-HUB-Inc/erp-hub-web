@@ -31,7 +31,7 @@ export class Switchs extends Element {
           {
             getFieldDecorator(this.props.name,{ initialValue: this.props.checked })(
               <Switch 
-                defaultChecked {...this.state}  
+                defaultChecked {...this.state}
                 onChange={ this.onChange }
               />
             )

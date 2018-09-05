@@ -21,6 +21,7 @@ export default class FormVariant extends Modal {
     this.handleAddVariantAttribute = this.handleAddVariantAttribute.bind(this);
     this.handleAddProductVariant = this.handleAddProductVariant.bind(this);
     this.handleRemoveVariant = this.handleRemoveVariant.bind(this);
+    this.handleOnDeactiveProductVariant = this.handleOnDeactiveProductVariant.bind(this);
   }
 
   appendVariantAttribute(existingArr, variantAttribute) {
@@ -131,6 +132,10 @@ export default class FormVariant extends Modal {
     this.setState(
       {variantAttributeList: existingVariantAttributes}
     );
+  }
+
+  handleOnDeactiveProductVariant(productVariantId) {
+    alert(productVariantId);
   }
 
   handleDelete() {
@@ -266,7 +271,8 @@ export default class FormVariant extends Modal {
                             <this.Switchs
                               name={`variantProductStatus[${variantAttributeKey}][${variantKey}]`}
                               checked={variant.status}
-                              form={this.props.form}/>
+                              form={this.props.form}
+                              onChange={() => this.handleOnDeactiveProductVariant(variant.id)}/>
                             <this.Button type="danger" className="delete-variant-item" onClick={() => this.handleRemoveVariant(variantAttributeKey, variantKey, variant.id)}>
                               <span className="icon-delete" style={{fontSize: "15pt"}}></span>
                             </this.Button>
