@@ -8,7 +8,7 @@ export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
     this.title = <this.Translate id="create_stock_purchase_order_send_mail_title" />;
-    this.confirmTextDelete = "Are You Want to Send Email?";
+    this.confirmTextAction = "Are You Want to Send Email?";
     this.width = "30%";
     this.addingPropReducer = "purchaseOrderSendEmailAdd";
     this.dispatch = this.props.dispatch;
@@ -27,8 +27,7 @@ export default class FormCreate extends Modal {
   
   handlePush(e){
     this.setState({modalVisible: true});
-    this.modalVisible = true;
-    this.renderModalConfirmDelete();
+    this.renderModalConfirmAction();
   }
 
   handleCancel() {
@@ -63,7 +62,7 @@ export default class FormCreate extends Modal {
         <div>
           { purchaseOrderSendEmailAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" }
           <FormItem form={form} dispatch={dispatch} supplierDetail={supplierDetail} locale={locale}/>
-          {this.renderModalConfirmDelete()}
+          {this.renderModalConfirmAction()}
         </div>
       );
       return super.render();
