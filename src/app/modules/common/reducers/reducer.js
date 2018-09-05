@@ -29,7 +29,7 @@ export default {
       return state;
     }
   },
-  archive: (state, action, [PEDDING, REJECT, FULFILLED]) => {
+  archive: (state, action, [PEDDING, REJECT, FULFILLED, RESET]) => {
     switch(action.type) {
     case PEDDING: {
       return {
@@ -41,7 +41,7 @@ export default {
       return {
         ...state,
         archiving: false,
-        error: action.payload.data
+        error: action.payload.response
       };
     }
     case FULFILLED: {
@@ -51,6 +51,9 @@ export default {
         archived: true,
         success: action.payload.data
       };
+    }
+    case RESET: {
+      return InitialState.archive();
     }
     default:
       return state;

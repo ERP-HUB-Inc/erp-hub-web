@@ -36,19 +36,6 @@ export class SelectTag extends Element {
               onSelect={this.props.onSelect}
               onDeselect={this.props.onDeselect}
               notFoundContent={this.props.notFoundContent}>
-              {/* { 
-                this.props.addNew !=null ?
-                  <this.Option
-                    key={1}
-                    value={"1"}
-                    className="add-new-item"
-                    onClick={this.props.addNew}>
-                    <div className="not-for-selected">
-                      <span className="icon-add"></span> {this.props.textAddNew}
-                    </div>
-                  </this.Option>
-                  : "" 
-              } */}
               {children}
             </this.Select>
           )

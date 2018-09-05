@@ -26,6 +26,14 @@ export default {
       });
     };
   },
+  archiveVariant: (id) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.ARCHIVE_VARIANT_PRODUCT,
+        payload: ProductService.archiveVariant(id)
+      });
+    };
+  },
   add: (data) => {
     return dispatch => {
       return dispatch({
@@ -42,10 +50,10 @@ export default {
       });
     };
   },
-  reset: () => {
+  reset: (RESET_CONSTANT = Constant.RESET_PRODUCT) => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET_PRODUCT,
+        type: RESET_CONSTANT,
         payload: null
       });
     };
@@ -55,6 +63,14 @@ export default {
       return dispatch({
         type: Constant.SHOW_PRODUCT_FORM,
         payload: data
+      });
+    };
+  },
+  requestAndShowForm: (data) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.DETAIL_PRODUCTS,
+        payload: ProductService.detail(data.id)
       });
     };
   }

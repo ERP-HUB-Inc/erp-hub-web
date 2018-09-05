@@ -30,7 +30,7 @@ export class RadioNormal extends Element {
             getFieldDecorator(this.props.name, {rules: this.rules, initialValue: this.props.defaultValue })(
               <this.Radio.Group
                 disabled={this.props.disabled}
-                onChange={this.onChange} 
+                onChange={this.props.onChange} 
               >
                 {this.props.dataSource.map((row, index) => <this.Radio key={index} value={row.value}>{row.title}</this.Radio>)}
               </this.Radio.Group>

@@ -40,6 +40,7 @@ export default class InputNumber extends Element {
         {
           getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.data})(
             <this.InputNumber
+              formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               placeholder={this.props.placeholder}
               onChange={this.handleNumberChange}
               className={this.props.className}

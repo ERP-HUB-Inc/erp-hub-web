@@ -1,4 +1,16 @@
 export default {
+  "text_no": [
+    "No",
+    "No",
+    "No"
+  ],
+
+  "text_yes": [
+    "Yes",
+    "Yes",
+    "Yes"
+  ],
+
   "text_status": [
     "Status",
     "Status",

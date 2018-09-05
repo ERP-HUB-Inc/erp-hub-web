@@ -20,7 +20,7 @@ export default class TextAreas extends Element {
               message: this.props.errorLenght
             }
           ],
-          initialValue: this.props.data})(<TextArea placeholder={ this.props.placeholder } rows={ this.props.rows }/>)
+          initialValue: this.props.data})(<TextArea placeholder={ this.props.placeholder } rows={ this.props.rows } onChange={this.props.onChange} />)
         }
        
       </this.FormItem>
