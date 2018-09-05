@@ -8,6 +8,7 @@ export default class FormItem extends Modal {
   constructor(props) {
     super(props);
     const {form} = this.props;
+    this.timer = null;
     this.ChangeSupplierEmailValue = this.ChangeSupplierEmailValue.bind(this);
     this.columns = [
       {
@@ -141,18 +142,30 @@ export default class FormItem extends Modal {
 
   //check ordernumber if exist
   orderNumber(e){
-    setTimeout(() => {
+    clearTimeout(this.timer);
+    this.timer  =  setTimeout(() => {
       e.preventDefault();
-      this.props.form.validateFieldsAndScroll((err, values) => {
-        PurchaseOrderService.add(values.number)
+      this.props.form.validateFields((err, values) => {
+
+        PurchaseOrderService.findPurchaseOrderNumber(values.number)
+
           .then((response) => {
             console.log("already exist");
           })
           .catch((error) => {
             console.log("not exist");
           });
+
+        // this.props.form.setFields({
+        //   number: {
+        //     value: values.number,
+        //     errors: [new Error("Po is already exist")],
+        //   },
+        // });
+        
       });
-    }, 5000);
+    }, 1000);
+
   }
 
   componentDidMount(){

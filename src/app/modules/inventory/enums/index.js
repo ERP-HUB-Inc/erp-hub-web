@@ -15,5 +15,25 @@ export default {
   PRODUCT_CODE_GENERATE_TYPE: {
     AUTO: 0,
     CUSTOM: 1
+  },
+
+  PO_STEP: {
+    DRAFT : 0,
+    PROCESS : 1,
+    RECEIVED : 2,
+    CANCEL : 3,
+    RETURN : 4,
+    PAID : 5
+  },
+
+  CLIENT_AUTO_NUMBER_TYPE: {
+    QUOTATION : 2,
+    INVOICE : 4,
+    RECEIPT : 6,
+    PURCHASE : 8,
+    TRANSFER : 10,
+    CUSTOMER : 12,
+    EMPLOYEE : 14
   }
+
 };

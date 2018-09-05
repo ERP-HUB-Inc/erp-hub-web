@@ -6,9 +6,9 @@ export default {
   ],
       
   "update_stock_receive_purchase_title": [
-    "receive order:Update",
+    "receive order",
     "ငွေကြေး",
-    "receive order:Update"
+    "receive order"
   ],
 
   "button_search_stock_receive_purchase_export_csv":[
@@ -39,6 +39,12 @@ export default {
     "Name",
     "အမည်",
     "Name",
+  ],
+
+  "col_stock_receive_purchase_invoice_no": [
+    "Invoice No",
+    "အမည်",
+    "Invoice No",
   ],
 
   "col_stock_receive_purchase_due_date": [
@@ -136,35 +142,12 @@ export default {
     "အမည်",
     "Email",
   ],
-
-  // "col_stock_receive_purchase_on_hand": [
-  //   "Stock on Hand",
-  //   "အမည်",
-  //   "Stock on Hand",
-  // ],
-
-  // "col_stock_receive_purchase_qty": [
-  //   "Quantity",
-  //   "အမည်",
-  //   "Quantity",
-  // ],
-
-  // "col_stock_receive_purchase_price": [
-  //   "Price",
-  //   "အမည်",
-  //   "Price",
-  // ],
-
-  // "placeholder_table_receive_purchase": [
-  //   "No receive purchase",
-  //   "အမည်",
-  //   "No receive purchase"
-  // ],
-
   "placeholder_table_receive_place_holder": [
     "Place Select Status",
     "အမည်",
     "Place Select Status"
   ]
+
+
 
 };

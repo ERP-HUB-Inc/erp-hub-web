@@ -13,7 +13,7 @@ import loginStore from "./client/loginStore";
 import ClientRegister from "./client/register";
 import ClientRegisterDetail from "./client/registerDetail";
 import ClientRegisterComplete from "./client/registerComplete";
-import ErrorHandler from "../components/ErrorHandle";
+// import ErrorHandler from "../components/ErrorHandle";
 
 export default class App extends React.Component {
   render() {
@@ -22,14 +22,16 @@ export default class App extends React.Component {
         <BrowserRouter> 
           <Switch>
             <Router history={history}>
-              <ErrorHandler>
+              {/* <ErrorHandler> */}
+              <div>
                 <Route path="/signin" component={ClientLogin} />
                 <Route path="/signin/store" component={loginStore} />
                 <Route path="/register" component={ClientRegister} />
                 <Route path="/register/detail" component={ClientRegisterDetail} />
                 <Route path="/signin-complete" component={ClientRegisterComplete} />
                 <PrivateRoute path="/" component={Application} loginComponent={ClientLogin} />
-              </ErrorHandler>
+              </div>
+              {/* </ErrorHandler> */}
             </Router>
           </Switch>
         </BrowserRouter> 

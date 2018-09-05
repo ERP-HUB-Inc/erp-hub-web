@@ -4,7 +4,7 @@ class SupplierService extends BaseService {
 
   constructor() {
     super();
-    this.module = "inventory/receive";
+    this.module = "inventory/purchase/receive";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 }
