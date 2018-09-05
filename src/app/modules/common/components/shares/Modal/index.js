@@ -17,13 +17,13 @@ export default class Modal extends Component {
     this.width = "";
     this.responseError = "";
     this.isRepsonseBackError = "none";
-    this.isRepsonseBackErrorOfDelete = "none";
+    this.isRepsonseBackErrorOfAction = "none";
     this.submitLoading = false;
-    this.deleteLoading = false;
+    this.submitConfirmActionLoading = false;
     this.submited = false;
     this.requiredMessage = "Error: Please make sure all data input correctly.";
-    this.deleteResponseMsg = "Not allow delete this record.";
-    this.confirmTextDelete = "Are you sure delete this record?";
+    this.actionConfirmResponseMsg = "Not allow delete this record.";
+    this.confirmTextAction = "Are you sure delete this record?";
     this.confirmTitle = "COMPLETED";
     this.statusDataSource = [
       {
@@ -48,18 +48,18 @@ export default class Modal extends Component {
     ];
 
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
+    this.handleSubmitConfirmAction = this.handleSubmitConfirmAction.bind(this);
   }
 
   handleSubmit() {
     
   }
 
-  handleDelete() {
+  handleSubmitConfirmAction() {
     this.setState({modalVisible: false});
   }
 
-  handleCancelDelete() {
+  handleCancelConfirmAction() {
     this.setState({modalVisible: false});
   }
     
@@ -90,25 +90,25 @@ export default class Modal extends Component {
     }
   }
 
-  renderModalConfirmDelete() {
+  renderModalConfirmAction() {
     return (
       <this.Modal
         visible={this.state.modalVisible}
         wrapClassName="confirm-delete"
         footer={null}    
       >
-        <this.Alert style={{display: this.isRepsonseBackErrorOfDelete}} message={this.deleteResponseMsg} type="error" showIcon/>
+        <this.Alert style={{display: this.isRepsonseBackErrorOfAction}} message={this.actionConfirmResponseMsg} type="error" showIcon/>
         <div>
           <span className="icon-help icon-padding-right"></span>
           <span className="title text-uppercase">{this.confirmTitle}</span><br/>
-          <span>{this.confirmTextDelete}</span>
+          <span>{this.confirmTextAction}</span>
 
         </div>
         <div className="ant-modal-footer">
-          <this.Button className="danger text-uppercase" onClick={() => this.handleCancelDelete()}>
+          <this.Button className="danger text-uppercase" onClick={() => this.handleCancelConfirmAction()}>
             <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_no" />
           </this.Button>
-          <this.Button onClick={() => this.handleDelete()} loading={this.deleteLoading} className="info text-uppercase">
+          <this.Button onClick={() => this.handleSubmitConfirmAction()} loading={this.submitConfirmActionLoading} className="info text-uppercase">
             <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes" />
           </this.Button>
         </div>

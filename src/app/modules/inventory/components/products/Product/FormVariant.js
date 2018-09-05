@@ -15,9 +15,9 @@ export default class FormVariant extends Modal {
       variantAttributeList: [],
       isNotYetLoadComponentDidUpdated: true,
     };
-    this.confirmTextDelete = <this.Translate id="text_delete_confirm_variant_product" />;
+    this.confirmTextAction = <this.Translate id="text_delete_confirm_variant_product" />;
     this.confirmTitle = <this.Translate id="delete_variant_warning" />;
-    this.deleteResponseMsg = <this.Translate id="text_not_allow_to_delete_product_has_quantity" />;
+    this.actionConfirmResponseMsg = <this.Translate id="text_not_allow_to_delete_product_has_quantity" />;
     this.handleAddVariantAttribute = this.handleAddVariantAttribute.bind(this);
     this.handleAddProductVariant = this.handleAddProductVariant.bind(this);
     this.handleRemoveVariant = this.handleRemoveVariant.bind(this);
@@ -134,11 +134,7 @@ export default class FormVariant extends Modal {
     );
   }
 
-  handleOnDeactiveProductVariant(productVariantId) {
-    alert(productVariantId);
-  }
-
-  handleDelete() {
+  handleSubmitConfirmAction() {
     this.props.dispatch(ProductAction.archiveVariant(this.state.productVariantToDelete.id));
   }
 
@@ -200,7 +196,7 @@ export default class FormVariant extends Modal {
       variantAttributes.list = [variantAttributeAdd.response.data, ...variantAttributes.list];
     }
 
-    this.deleteLoading = productVariantArchive.archiving;
+    this.submitConfirmActionLoading = productVariantArchive.archiving;
 
     return (
       <this.Row>
@@ -293,7 +289,7 @@ export default class FormVariant extends Modal {
             </this.Col>
           )
         }
-        {this.renderModalConfirmDelete()}
+        {this.renderModalConfirmAction()}
       </this.Row>
     );
   }

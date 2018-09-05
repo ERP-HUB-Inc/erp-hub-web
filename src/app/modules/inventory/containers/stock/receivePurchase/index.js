@@ -1,12 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import {Form} from "antd";
-import SupplierList from "../../../components/stock/receivePurchase";
+import ReceivePurhaseList from "../../../components/stock/receivePurchase";
 
-class Supplier extends React.Component {
+class ReceivePurhase extends React.Component {
   render() {
     return (
-      <SupplierList {...this.props} />
+      <ReceivePurhaseList {...this.props} />
     );
   }
 }
@@ -26,6 +26,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const receivePurchase = Form.create(mapPropsToFields)(Supplier);
+const receivePurchase = Form.create(mapPropsToFields)(ReceivePurhase);
 
 export default connect(mapStateToProps)(receivePurchase);

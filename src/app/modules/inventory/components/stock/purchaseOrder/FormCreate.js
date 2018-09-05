@@ -44,11 +44,7 @@ export default class FormCreate extends Modal {
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-
-        console.log("purchase nme:",JSON.stringify(values.purchaseName));
-        console.log("purchase order",values);
-        
+      if (!err) {      
         const listPurchase = 
         {
           purchaseId: values.purchaseId,

@@ -17,6 +17,7 @@ export default class ReceivePurchaseList extends List {
     this.service = ReceivePurchaseService;
     this.columnFilterWithKey = ["name"];
     this.action = ReceivePurchaseAction;
+    this.showExport = true;
     this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
   }
 
@@ -35,6 +36,9 @@ export default class ReceivePurchaseList extends List {
       modalConten: <FormUpdate/>
     });
   }
+
+  
+
 }
 
 class Column extends List {
@@ -44,27 +48,32 @@ class Column extends List {
       this.columnCreatedAt,
       {
         title: <this.Translate id="col_stock_receive_purchase_name" />,
-        dataIndex: "brand",
-        key: "brand",
-        sorter: true,
-        render: (brand) => brand.name 
-      },
-      {
-        title: <this.Translate id="col_stock_receive_purchase_description" />,
-        dataIndex: "description",
-        key: "description",
+        dataIndex: "name",
+        key: "name",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_receive_purchase_phonenumber" />,
-        dataIndex: "phoneNumber",
-        key: "phoneNumber",
+        title: <this.Translate id="col_stock_receive_purchase_invoice_no" />,
+        dataIndex: "invoiceNo",
+        key: "invoiceNo",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_receive_purchase_email" />,
-        dataIndex: "email",
-        key: "email",
+        title: <this.Translate id="col_stock_receive_purchase_due_date" />,
+        dataIndex: "deliveryDueDate",
+        key: "deliveryDueDate",
+        sorter: true
+      },
+      {
+        title: <this.Translate id="col_stock_receive_purchase_shipping_fee" />,
+        dataIndex: "shippingFee",
+        key: "shippingFee",
+        sorter: true
+      },
+      {
+        title: <this.Translate id="col_stock_receive_purchase_total" />,
+        dataIndex: "requestTotal",
+        key: "requestTotal",
         sorter: true
       },
       this.columnStatus

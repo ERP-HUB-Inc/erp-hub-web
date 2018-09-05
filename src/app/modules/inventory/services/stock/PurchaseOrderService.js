@@ -7,6 +7,8 @@ class Service extends BaseService {
     this.module = "inventory/purchase";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
+
+
 }
 
 export default new Service();

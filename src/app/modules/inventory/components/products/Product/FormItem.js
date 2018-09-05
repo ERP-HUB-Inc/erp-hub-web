@@ -543,7 +543,7 @@ export default class FormItem extends Modal {
                     title={productType.name}
                     language={productType.description}
                     value={productType.value}
-                    className={productType.value === productTypeBox ? "" : "disabled-click"} /> 
+                    className={productType.value === productTypeBox && formData.id != null ? "" : "disabled-click"} /> 
                 ) 
                 }
               </this.RadioBox>

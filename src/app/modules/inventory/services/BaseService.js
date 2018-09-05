@@ -23,11 +23,12 @@ export default class BaseService extends Service {
     });
   }
 
-  findPurchaseOrderNumber(option = {column: "", value: ""}) {
+  findPurchaseOrderNumber(ids) {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
     return this.GET(
       {
-        url: `${this.baseUrl}/inventery/${option.column}/${option.value}`,
-        data: {},
+        url: `${this.baseUrl}/${ids}`,
+        data: {},     
         headers: this.header
       }
     );
