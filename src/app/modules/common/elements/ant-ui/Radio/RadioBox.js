@@ -38,7 +38,7 @@ export class RadioChildBox extends Element {
   render(){
     const { value, title, language, currency } = this.props;
     return(
-      <this.Radio.Button value={ value }>
+      <this.Radio.Button value={ value } className={this.props.className}>
         <div className="radio-group">
           <div className="radio-title">{ title }</div>
           <div className="language">

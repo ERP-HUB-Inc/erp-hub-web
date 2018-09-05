@@ -63,12 +63,16 @@
     border-color: #093163 !important;
 }
 
-.main-store-account hide {
+.disabled-click {
+    opacity: 0.3
+}
+
+/* .main-store-account hide {
     display: none;
 }
 
 .main-store-account unhide {
     display: block;
-}
+} */
 
 

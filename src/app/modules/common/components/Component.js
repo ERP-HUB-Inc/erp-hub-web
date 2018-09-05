@@ -247,4 +247,13 @@ export default class Component extends RComponent {
     const currentUser = localStorage.getItem(ConstantAuth.ACCESS_TOKEN);
     return JSON.parse(currentUser);
   }
+
+  getCurrentLanguageCode() {
+    const currentSetting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
+    if (currentSetting != null) {
+      return currentSetting.defaultLanguageCode;
+    }
+
+    return "en";
+  }
 }

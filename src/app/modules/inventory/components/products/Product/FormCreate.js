@@ -50,6 +50,7 @@ export default class FormCreate extends Modal {
                 variantAttributeId 
               };
               
+              productVariant["id"] = values["variantProductId"][attributeIdIndex][productVariantIndex];
               productVariant["name"] = variantName;
               productVariant["barcode"] = values["variantProductCode"][attributeIdIndex][productVariantIndex];
               productVariant["cost"] = values["variantProductCost"][attributeIdIndex][productVariantIndex];
@@ -64,13 +65,21 @@ export default class FormCreate extends Modal {
         // PREPARE DATA FROM DESCRIPTION
         const productDescriptions = [];
 
-        values.productName.forEach((productName, index) => {
-          productDescriptions.push({
-            languageId: values.language[index],
-            name: productName,
-            description: values.productDescription[index]
+        if (values.productName) {
+          values.productName.forEach((productName, index) => {
+            productDescriptions.push({
+              languageId: values.language[index],
+              name: productName,
+              description: values.productDescription[index]
+            });
           });
-        });
+        } else {
+          productDescriptions.push({
+            languageId: this.getCurrentLanguageCode(),
+            name: values["productNameDefault"],
+            description: values["productDescriptionDefault"]
+          });
+        }
 
         this.Util.clearObjProperty(values, [
           "variantName",
@@ -80,12 +89,23 @@ export default class FormCreate extends Modal {
           "variantProductStatus",
           "productName",
           "language",
-          "productDescription"
+          "productDescription",
+          "productNameDefault",
+          "productDescriptionDefault"
         ]);
+
+        values["quantity"] = 0;
+        values["reorderPoint"] = values["reorderPoint"] === null ? 0 : values["reorderPoint"];
+        values["factoryCost"] = values["factoryCost"]  === null ? 0 : values["factoryCost"];
+        values["shippingFee"] = values["shippingFee"]  === null ? 0 : values["shippingFee"];
+        values["cost"] = values["cost"]  === null ? 0 : values["cost"];
+        values["markup"] = values["markup"]  === null ? 0 : values["markup"];
+        values["price"] = values["price"]  === null ? 0 : values["price"];
+        values["isAvialableSale"] = values["isAvialableSale"] ? 1 : 0;
+        values["isPublic"] = values["isPublic"] ? 1 : 0;
 
         values["productTagToProduct"] = this.state.tagList;
         values["productDescriptions"] = productDescriptions;
-        values["quantity"] = 0;
         values["productVariantToProduct"] = productVariantToProduct;
 
         console.log("Product Submit Value:", values);

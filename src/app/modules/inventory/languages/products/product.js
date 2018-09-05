@@ -189,6 +189,12 @@ export default {
     "Supplier Price"
   ],
 
+  "input_product_re_order_point_placeholder": [
+    "0.00",
+    "0.00",
+    "0.00"
+  ],
+
   "input_product_supplier_price_placeholder": [
     "0.00",
     "0.00",
@@ -296,6 +302,24 @@ export default {
     "Raw Material",
     "Raw Material",
     "Raw Material"
+  ],
+
+  "delete_variant_warning": [
+    "Warning",
+    "Warning",
+    "Warning"
+  ],
+
+  "text_delete_confirm_variant_product": [
+    "Are you sure delete this variant product?",
+    "Are you sure delete this variant product?",
+    "Are you sure delete this variant product?"
+  ],
+
+  "text_not_allow_to_delete_product_has_quantity": [
+    "Not allow delete product that has quantity.",
+    "Not allow delete product that has quantity.",
+    "Not allow delete product that has quantity."
   ],
 
   // RADIO BOX

@@ -28,6 +28,15 @@ export default combineReducers({
     ];
     return reducer.archive(state, action, constants);
   },
+  archiveVariant: (state = InitialState.archive(), action) => {
+    const constants = [
+      Constant.ARCHIVE_VARIANT_PRODUCT_PENDING,
+      Constant.ARCHIVE_VARIANT_PRODUCT_REJECTED,
+      Constant.ARCHIVE_VARIANT_PRODUCT_FULFILLED,
+      Constant.RESET_ARCHIVE_VARIANT_PRODUCT
+    ];
+    return reducer.archive(state, action, constants);
+  },
   add: (state = InitialState.add(), action) => {
     const constants = [
       Constant.ADD_PRODUCT_PENDING,
@@ -47,5 +56,14 @@ export default combineReducers({
       Constant.RESET_PRODUCT
     ];
     return reducer.update(state, action, constants);
+  },
+  detail: (state = InitialState.detail(), action) => {
+    const constants = [
+      Constant.DETAIL_PRODUCTS_PENDING,
+      Constant.DETAIL_PRODUCTS_REJECTED,
+      Constant.DETAIL_PRODUCTS_FULFILLED,
+      Constant.RESET_DETAIL_PRODUCTS
+    ];
+    return reducer.detail(state, action, constants);
   }
 });

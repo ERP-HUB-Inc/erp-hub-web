@@ -24,6 +24,7 @@ export class RadioButton extends Element {
         dataSource={this.props.dataSource}
         defaultValue={this.props.defaultValue}
         disabled={this.props.disabled}
+        onChange={this.props.onChange}
         form={this.props.form}
       />
     );

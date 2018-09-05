@@ -14,7 +14,21 @@ class ProductForm extends React.Component {
 function mapStateToProps(state) {
   return {
     productUpdate: state.reducer.product.update,
-    initialValues: state.reducer.product.update.data,
+    productDetail: state.reducer.product.detail,
+    productVariantArchive: state.reducer.product.archiveVariant,
+    productSearch: state.reducer.product.search,
+    brands: state.reducer.brand.request,
+    brandAdd: state.reducer.brand.add,
+    productsType: state.reducer.productsType.request,
+    productsTypeAdd: state.reducer.productsType.add,
+    units: state.reducer.productsUnit.request,
+    unitAdd: state.reducer.productsUnit.add,
+    taxs: state.reducer.tax.request,
+    taxAdd: state.reducer.tax.add,
+    tags: state.reducer.productsTag.request,
+    tagAdd: state.reducer.productsTag.add,
+    variantAttributes: state.reducer.variantAttribute.request,
+    variantAttributeAdd: state.reducer.variantAttribute.add,
     storeLanguage: state.reducer.storeLanguage.request.list,
     locale: state.locale
   };

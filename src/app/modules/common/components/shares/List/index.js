@@ -392,7 +392,7 @@ export default class List extends Component {
         </div>
         <div className="ant-modal-footer">
           <this.Button className="danger" onClick={() => this.handleCancel()}>
-            <span className="icon-close icon-padding-right"></span>CANCEL
+            <span className="icon-cancel icon-padding-right"></span>CANCEL
           </this.Button>
           <this.Button onClick={() => this.handleDelete()} loading={this.state.deleting} className="info">
             <span className="icon-checked icon-padding-right"></span>YES
@@ -488,7 +488,6 @@ export default class List extends Component {
             onDoubleClick:() => this.handleShowFormEdit(record),
             onClick: () => this.handleShowRecordDetail(record)
           })}
-          scroll={{ x: 900 }}
           loading={fetchingProps.fetching}
         />
     );

@@ -32,6 +32,15 @@ class ProductService extends BaseService {
       searchKey,
       languageId);
   }
+
+  archiveVariant(id) {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    return this.DELETE({  
+      url: `${this.baseUrl}/variant/archive/${id}`,
+      data: this.data,
+      headers: this.header
+    });
+  }
 }
 
 export default new ProductService(); 
