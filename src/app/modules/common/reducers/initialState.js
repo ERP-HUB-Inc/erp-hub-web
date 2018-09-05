@@ -37,8 +37,7 @@ export default {
       fetched: false,
       data: null,
       error: null,
-      [key]: [],
-      error: null
+      [key]: []
     };
   },
   add: (key="response") => {

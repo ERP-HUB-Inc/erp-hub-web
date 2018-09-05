@@ -41,6 +41,15 @@ class ProductService extends BaseService {
       headers: this.header
     });
   }
+
+  changeStatusProductVarait(id) {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    return this.PUT({  
+      url: `${this.baseUrl}/variant/update/${id}`,
+      data: this.data,
+      headers: this.header
+    });
+  }
 }
 
 export default new ProductService(); 

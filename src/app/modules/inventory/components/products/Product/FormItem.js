@@ -111,7 +111,7 @@ export default class FormItem extends Modal {
       productsTypeAdd,
       unitAdd,
       taxAdd,
-      tags
+      // tags
     } = this.props;
 
     if (brandAdd.added) {
@@ -543,7 +543,7 @@ export default class FormItem extends Modal {
                     title={productType.name}
                     language={productType.description}
                     value={productType.value}
-                    className={productType.value === productTypeBox && formData.id != null ? "" : "disabled-click"} /> 
+                    className={productType.value === productTypeBox || formData.id == null ? "" : "disabled-click"} /> 
                 ) 
                 }
               </this.RadioBox>

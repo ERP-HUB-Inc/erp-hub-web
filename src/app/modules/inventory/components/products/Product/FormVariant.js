@@ -14,6 +14,7 @@ export default class FormVariant extends Modal {
       },
       variantAttributeList: [],
       isNotYetLoadComponentDidUpdated: true,
+      changeStatusProductVariant: false
     };
     this.confirmTextAction = <this.Translate id="text_delete_confirm_variant_product" />;
     this.confirmTitle = <this.Translate id="delete_variant_warning" />;
@@ -104,6 +105,11 @@ export default class FormVariant extends Modal {
       this.props.form.setFieldsValue({attributeId: variantAttributeAdd.response.data.id});
       dispatch(VariantAttributeAction.reset());
     }
+  }
+
+  handleOnDeactiveProductVariant(productVariantId, variantAttributeKey, variantKey) {
+    this.props.form.setFieldsValue({[`variantProductStatus[${variantAttributeKey}][${variantKey}]`]: true});
+    // this.props.dispatch(ProductAction.changeProductVariantStatus(productVariantId));
   }
 
   handleAddVariantAttribute() {
@@ -264,11 +270,13 @@ export default class FormVariant extends Modal {
                           </this.Col>
                   
                           <this.Col md="2" className="wrap-variant-action">
-                            <this.Switchs
-                              name={`variantProductStatus[${variantAttributeKey}][${variantKey}]`}
-                              checked={variant.status}
-                              form={this.props.form}
-                              onChange={() => this.handleOnDeactiveProductVariant(variant.id)}/>
+                            <this.Tooltip placement="top" title="Not allow deactive item that quantity is in stock.">
+                              <this.Switchs
+                                name={`variantProductStatus[${variantAttributeKey}][${variantKey}]`}
+                                checked={variant.status}
+                                form={this.props.form}
+                                onChange={() => this.handleOnDeactiveProductVariant(variant.id, variantAttributeKey, variantKey)}/>
+                            </this.Tooltip>
                             <this.Button type="danger" className="delete-variant-item" onClick={() => this.handleRemoveVariant(variantAttributeKey, variantKey, variant.id)}>
                               <span className="icon-delete" style={{fontSize: "15pt"}}></span>
                             </this.Button>
