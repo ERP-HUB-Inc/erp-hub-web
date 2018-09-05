@@ -53,18 +53,6 @@ export default {
     "Tags"
   ],
 
-  "input_stock_reorder_point_tags": [
-    "Tags",
-    "အမည်",
-    "Tags"
-  ],
-
-  "input_stock_reorder_point_tags": [
-    "Tags",
-    "အမည်",
-    "Tags"
-  ],
-
   "input_stock_reorder_point_product_key": [
     "Product Key",
     "အမည်",

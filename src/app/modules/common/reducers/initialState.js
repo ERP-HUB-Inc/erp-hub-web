@@ -30,12 +30,14 @@ export default {
       error: null
     };
   },
-  detail: (key="response") => {
+  detail: (key="list") => {
     return {
       showForm: false,
       fetching: false,
       fetched: false,
       data: null,
+      error: null,
+      [key]: [],
       error: null
     };
   },

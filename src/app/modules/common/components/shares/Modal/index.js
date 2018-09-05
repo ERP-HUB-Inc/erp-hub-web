@@ -116,6 +116,24 @@ export default class Modal extends Component {
     );
   }
 
+  renderOtherAction(){
+    return <div/>;
+  }
+
+  renderCrudAction(){
+    return(
+      <div>
+        <this.Button className="danger" onClick={() => this.handleCancel()}>
+          <span className="icon-cancel icon-padding-right"></span><this.Translate id="button_text_cancel" />
+        </this.Button>  
+        <this.Button htmlType="submit" loading={this.submitLoading} className="info">
+          <span className="icon-save icon-padding-right"></span><this.Translate id="button_text_save" />
+        </this.Button>
+        {this.renderOtherAction()}
+      </div>
+    );
+  }
+
   render() {
     return (
       <div>
@@ -131,12 +149,7 @@ export default class Modal extends Component {
             <this.Alert style={{display: this.isRepsonseBackError}} message={this.requiredMessage} type="error" showIcon/>
             {this.content}
             <div className="ant-modal-footer">
-              <this.Button className="danger" onClick={() => this.handleCancel()}>
-                <span className="icon-cancel icon-padding-right"></span><this.Translate id="button_text_cancel" />
-              </this.Button>  
-              <this.Button htmlType="submit" loading={this.submitLoading} className="info">
-                <span className="icon-save icon-padding-right"></span><this.Translate id="button_text_save" />
-              </this.Button>
+              {this.renderCrudAction()}
             </div>
           </Form>
         </this.Modal>

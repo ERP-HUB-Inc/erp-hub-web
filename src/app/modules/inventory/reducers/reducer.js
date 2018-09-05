@@ -27,6 +27,34 @@ export default {
       return state;
     }
   },
+  detail: (state, action, [PEDDING, REJECT, FULFILLED], schemas) => {
+    switch(action.type) {
+    case PEDDING: {
+      return {
+        ...state,
+        fetching: true
+      };
+    }
+    case REJECT: {
+      return {
+        ...state,
+        fetching: false,
+        error: action.payload.data
+      };
+    }
+    case FULFILLED: {
+      return {
+        ...state, 
+        fetching: false,
+        fetched: true,
+        pagination: action.payload.data.pagination,
+        list: action.payload.data.data
+      };
+    }
+    default:
+      return state;
+    }
+  },
   archive: (state, action, [PEDDING, REJECT, FULFILLED]) => {
     switch(action.type) {
     case PEDDING: {

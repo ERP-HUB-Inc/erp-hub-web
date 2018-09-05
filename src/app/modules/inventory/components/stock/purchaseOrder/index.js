@@ -47,16 +47,6 @@ export default class PurchaseOrderLists extends List {
     });
   }
 
-  // renderActionButton() {
-  //   return (
-  //     <div>
-  //       <this.Button type="info">
-  //         <span className="icon-export"></span> {<this.Translate id="button_search_stock_purchase_order_export_csv" />}
-  //       </this.Button> 
-  //     </div>
-  //   );
-  // }
-
   handleSubmitFilter(e){
     if (this.action != null) {
       e.preventDefault();
@@ -77,7 +67,6 @@ export default class PurchaseOrderLists extends List {
 
   renderFilterRecord() {
     const {form,supplier} = this.props;
-
     return(
       <div>
         { form == null ?
@@ -96,9 +85,13 @@ export default class PurchaseOrderLists extends List {
                 />
               </this.Col>
               <this.Col md="2">
-                <this.Supplier
-                  label={<this.Translate id="col_stock_purchase_order_supplier" />}
-                />
+                <this.Select
+                  name="supplierid"
+                  label={<this.Translate id="select_stock_purchase_order_from_supplier" /> }
+                  placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
+                  dataSource={supplier.list}
+                  valueKey="id"
+                  form={form}/>
               </this.Col>
               <this.Col md="2">
                 <this.DatePickers

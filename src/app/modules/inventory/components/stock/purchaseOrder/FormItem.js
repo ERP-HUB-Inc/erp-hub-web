@@ -1,14 +1,14 @@
 import React from "react";
-import SupplierAction from "../../../actions/stock/supplier";
 import ProductsAction from "../../../actions/products/product";
-import LocationAction from "../../../../pos/action/settings/storeLocation";
+import SupplierAction from "../../../actions/stock/supplier";
 import PurchaseOrderService from "../../../services/stock/PurchaseOrderService";
-import { Modal  } from "../../shares/Modal/modal";
+import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormItem extends Modal {
   constructor(props) {
     super(props);
-    const {locale, form} = this.props;
+    const {form} = this.props;
+    this.ChangeSupplierEmailValue = this.ChangeSupplierEmailValue.bind(this);
     this.columns = [
       {
         title: <this.Translate id="col_stock_purchase_order_no" />,
@@ -128,6 +128,11 @@ export default class FormItem extends Modal {
    
   }
 
+  ChangeSupplierEmailValue(values){
+    console.log(".supplieri",values);
+    this.dispatch(SupplierAction.detail(values));
+  }
+
   productList(){
     return(
       this.props.product.list
@@ -152,18 +157,14 @@ export default class FormItem extends Modal {
 
   componentDidMount(){
     const { dispatch } = this.props;
-    dispatch(SupplierAction.fetch());
     dispatch(ProductsAction.fetch(this.pageSize));
-    dispatch(LocationAction.fetch());
   }
 
+
   render() {
-    const { form,locale,formData,supplier,product,storeLocation } = this.props;
-    const {
-      getFieldDecorator,
-      getFieldValue
-    } = this.props.form;
-    console.log("list products",product.list);
+    const { form,supplier,storeLocation,locale,formData,supplierDetail } = this.props;
+
+    console.log("supplierDetail",supplierDetail);
 
     return (
       <div>
@@ -205,13 +206,24 @@ export default class FormItem extends Modal {
               form={form}/>
           </this.Col>
           <this.Col md="2">
-            <this.Supplier 
-              label={<this.Translate id="input_stock_purchase_order_supplier" />}
+            <this.Select
+              name="supplierid"
+              label={<this.Translate id="select_stock_purchase_order_from_supplier" /> }
+              placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
+              dataSource={supplier.list}
+              valueKey="id"
+              form={form}
+              onChange={this.ChangeSupplierEmailValue}
             />
           </this.Col>
           <this.Col md="2">
-            <this.StoreLocation 
+            <this.Select
+              name="locationid"
               label={<this.Translate id="input_stock_purchase_order_delivery_to_location" />}
+              placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
+              dataSource={storeLocation.list}
+              valueKey="id"
+              form={form}
             />
           </this.Col>
         </this.Row>
@@ -232,9 +244,6 @@ export default class FormItem extends Modal {
               columns={this.columns}
               locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}} />
           </this.Col>
-          {/* <div>
-            Total Amount: {  }
-          </div> */}
         </this.Row>
       </div>
     );

@@ -1,0 +1,28 @@
+import React from "react";
+import { connect } from "react-redux";
+import {Form} from "antd";
+import PurchaseList from "../../../components/stock/purchaseOrder";
+
+class List extends React.Component {
+  render() {
+    return (
+      <PurchaseList {...this.props} />
+    );
+  }
+}
+
+function mapStateToProps(state) {
+  return {
+    purchaseOrder: state.reducer.purchaseOrder.request
+  };
+}
+
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const list = Form.create(mapPropsToFields)(List);
+
+export default connect(mapStateToProps)(list);

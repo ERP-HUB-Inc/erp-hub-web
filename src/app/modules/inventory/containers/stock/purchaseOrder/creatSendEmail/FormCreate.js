@@ -1,5 +1,5 @@
 import React from "react";
-import Create from "../../../components/stock/purchaseOrder/FormCreate";
+import Create from "../../../../components/stock/purchaseOrder/createSendEmail/FormCreate";
 import { connect } from "react-redux";
 import { Form } from "antd";
 
@@ -13,12 +13,9 @@ class FormList extends React.Component {
   
 function mapStateToProps(state) {
   return {
-    purchaseOrderAdd: state.reducer.purchaseOrder.add,
+    purchaseOrderSendEmailAdd: state.reducer.purchaseOrderSendEmail.add,
     locale: state.locale,
-    supplier: state.reducer.supplier.request,
-    product: state.reducer.product.request,
-    storeLocation: state.reducer.storeLocation.request,
-    supplierDetail: state.reducer.supplier.detail,
+    supplierDetail: state.reducer.supplier.detail
   };
 }
 

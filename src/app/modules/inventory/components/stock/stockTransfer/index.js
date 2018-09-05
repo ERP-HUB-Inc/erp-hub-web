@@ -18,17 +18,8 @@ export default class Lists extends List {
     this.columnFilterWithKey = ["name"];
     this.action = StockTransferAction;
     this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
+    this.showExport = true;
     this.hideActionButton = true;
-    this.data = [
-      {firstname: "Ahmed", lastname: "Tomi" , email: "ah@smthing.co.com"},
-      {firstname:"Raed", lastname:"Labes" , email:"rl@smthing.co.com"} ,
-      {firstname:"Yezzi", lastname:"Min l3b", email:"ymin@cocococo.com"}
-    ];
-    this.headers = [
-      {label: "First Name", key: "firstname"},
-      {label: "Last Name", key: "lastname"},
-      {label: "Email", key: "email"},
-    ];
   }
 
   handleShowFormAdd() {
@@ -47,20 +38,28 @@ export default class Lists extends List {
     });
   }
 
-  renderActionButton() {
-    return (
-      <div>
-        <div className="export-csv-button">
-          <this.CSVLink data={this.data} headers={this.headers}>
-            {<this.Translate id="button_search_stock_transfer_export_csv" />}
-          </this.CSVLink>
-        </div>
-      </div>
-    );
-  }
+
+
+  // exportCsv(){
+  //   const {dispatch,stockTransfer} = this.props;
+  //   return  stockTransfer.list;
+  // }
+
+  // renderActionButton() {
+  //   return (
+  //     <div>
+  //       <div className="export-csv-button">
+  //         <this.CSVLink data={this.exportCsv()} headers={this.columns}>
+  //           {<this.Translate id="button_search_stock_transfer_export_csv" />}
+  //         </this.CSVLink>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   renderFilterRecord() {
-    const {form} = this.props;
+    const {form,stockTransfer} = this.props;
+    console.log("stockTransfer",stockTransfer.list);
     return(
       <div>
         { form == null ?
@@ -99,7 +98,9 @@ export default class Lists extends List {
                 />
               </this.Col>
               <this.Col md="2">
-                <this.Supplier />
+                {/* <this.Supplier 
+                  label="Supplier"
+                /> */}
               </this.Col>
               <this.Col md="2">
                 <this.Select

@@ -19,14 +19,17 @@ export default class List extends Component {
       ListRoles: null,
       modalConten: null, // the content that show in modal content,
       modalContent1: null,
-      columns: []
+      columns: [],
+      showExport : true
     };
 
-    // this.hideActionButton = false;
+
     
     //access role
     this.showListRoles = "";
     this.layout = "";
+
+    this.showExport = false;
 
     this.columns = [];
     this.filter = [];
@@ -338,15 +341,37 @@ export default class List extends Component {
 
   renderActionButton() {
     return (
-      <div className="float-left">
-        <this.Button type="info" className="mg-right" onClick={() => this.handleShowFormAdd()}>
-          <span className="icon-add icon-padding-right"></span>Add New
-        </this.Button>
-        <this.Button disabled={this.state.selectedRowKeys.length <= 0} type="danger" onClick={() => this.handleConfirm()}>
-          <span className="icon-delete icon-padding-right"></span>Delete
-        </this.Button>
-      </div> 
+      <div>
+        {
+          this.showExport ?
+
+            <div className="export-csv-button">
+              <this.CSVLink data={this.exportCsv()} headers={this.columns}>
+                {<this.Translate id="button_search_stock_transfer_export_csv" />}
+              </this.CSVLink> 
+            </div>
+
+            : 
+            <div className="float-left">
+              <this.Button type="info" className="mg-right" onClick={() => this.handleShowFormAdd()}>
+                <span className="icon-add icon-padding-right"></span>Add New
+              </this.Button>
+              <this.Button disabled={this.state.selectedRowKeys.length <= 0} type="danger" onClick={() => this.handleConfirm()}>
+                <span className="icon-delete icon-padding-right"></span>Delete
+              </this.Button>
+            </div> 
+
+        }
+      </div>
+      
     );
+  }
+
+  
+
+  exportCsv(){
+    const fetchingProps = this.props[this.fetchingProp];
+    return  fetchingProps.list;
   }
 
   /**

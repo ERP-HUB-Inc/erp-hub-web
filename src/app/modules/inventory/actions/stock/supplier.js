@@ -10,6 +10,14 @@ export default {
       });
     };
   },
+  detail: (ids) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_SUPPLIER_DETAIL,
+        payload: supplierService.detail(ids)
+      });
+    };
+  },
   archive: (ids) => {
     return dispatch => {
       return dispatch({
