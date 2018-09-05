@@ -7,6 +7,9 @@ import "./index.css";
 export default class Modal extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      modalVisible: false
+    };
     this.title = this.props.title;
     this.dispatch = this.props.dispatch;
     this.content = "";
@@ -14,9 +17,14 @@ export default class Modal extends Component {
     this.width = "";
     this.responseError = "";
     this.isRepsonseBackError = "none";
+    this.isRepsonseBackErrorOfDelete = "none";
     this.submitLoading = false;
+    this.deleteLoading = false;
     this.submited = false;
     this.requiredMessage = "Error: Please make sure all data input correctly.";
+    this.deleteResponseMsg = "Not allow delete this record.";
+    this.confirmTextDelete = "Are you sure delete this record?";
+    this.confirmTitle = "COMPLETED";
     this.statusDataSource = [
       {
         name: <this.Translate id="select_text_active" />,
@@ -40,10 +48,19 @@ export default class Modal extends Component {
     ];
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   handleSubmit() {
     
+  }
+
+  handleDelete() {
+    this.setState({modalVisible: false});
+  }
+
+  handleCancelDelete() {
+    this.setState({modalVisible: false});
   }
     
   handleCancel() {
@@ -71,6 +88,32 @@ export default class Modal extends Component {
       && responseUpdate.error.data.error.code === 400) {
       this.isRepsonseBackError = "";
     }
+  }
+
+  renderModalConfirmDelete() {
+    return (
+      <this.Modal
+        visible={this.state.modalVisible}
+        wrapClassName="confirm-delete"
+        footer={null}    
+      >
+        <this.Alert style={{display: this.isRepsonseBackErrorOfDelete}} message={this.deleteResponseMsg} type="error" showIcon/>
+        <div>
+          <span className="icon-help icon-padding-right"></span>
+          <span className="title text-uppercase">{this.confirmTitle}</span><br/>
+          <span>{this.confirmTextDelete}</span>
+
+        </div>
+        <div className="ant-modal-footer">
+          <this.Button className="danger text-uppercase" onClick={() => this.handleCancelDelete()}>
+            <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_no" />
+          </this.Button>
+          <this.Button onClick={() => this.handleDelete()} loading={this.deleteLoading} className="info text-uppercase">
+            <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes" />
+          </this.Button>
+        </div>
+      </this.Modal>
+    );
   }
 
   render() {
