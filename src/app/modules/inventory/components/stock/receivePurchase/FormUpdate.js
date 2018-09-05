@@ -9,7 +9,7 @@ export default class Form extends Modal {
     this.state = {
       disabled: false
     };
-    // this.closeModal = this.closeModal;
+    this.confirmTextAction = "Are You Want to Receive ?";
     this.dispatch = this.props.dispatch;
     this.title = <this.Translate id="update_stock_receive_purchase_title" />;
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -19,19 +19,18 @@ export default class Form extends Modal {
 
   handleReceive(){
     this.setState({modalVisible: true});
-    this.renderModalConfirm();
+    this.renderModalConfirmAction();
   }
 
   handleSubmit (e) {
     e.preventDefault();
-    alert("dd");
-    // this.props.form.validateFieldsAndScroll((err, values) => {
-    //   if (!err) {
-    //     values["id"] = this.props.receivePurchaseUpdate.data.id;
-    //     values["status"] = this.Enum.ACTIVE;
-    //     this.dispatch(ReceivePurchaseAction.update(values));
-    //   }
-    // });
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        values["id"] = this.props.receivePurchaseUpdate.data.id;
+        values["status"] = this.Enum.ACTIVE;
+        this.dispatch(ReceivePurchaseAction.update(values));
+      }
+    });
   }
 
   renderCrudAction(){
@@ -61,6 +60,7 @@ export default class Form extends Modal {
         <div>
           {receivePurchaseUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
           <FormItem formData={receivePurchaseUpdate.data} storeLocation={storeLocation} receivePurchase={receivePurchase} supplier={supplier} dispatch={dispatch} form={form} locale={locale}/>
+          {this.renderModalConfirmAction()}
         </div>
       );
       return super.render();
