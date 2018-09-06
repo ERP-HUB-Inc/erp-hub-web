@@ -142,7 +142,7 @@ export default class FormItem extends Modal {
 
   onChange(e) {
     this.setState({
-      productTypeIndex:  e.target.value
+      productTypeIndex: e.target.value
     });
   }
 
@@ -284,10 +284,14 @@ export default class FormItem extends Modal {
     }
 
     let productTypeBox = Enum.PRODUCT_STANDARD;
-    if (formData.productVariantToProduct.length > 0 ) {
-      productTypeBox = Enum.PRODUCT_VARIANT;
-    } else if (formData.productPackageToProduct.length > 0) {
-      productTypeBox = Enum.PRODUCT_COMPOSITE;
+    if (formData.id != null) {
+      if (formData.productVariantToProduct.length > 0 ) {
+        productTypeBox = Enum.PRODUCT_VARIANT;
+      } else if (formData.productPackageToProduct.length > 0) {
+        productTypeBox = Enum.PRODUCT_COMPOSITE;
+      }
+    } else {
+      productTypeBox = this.state.productTypeIndex;
     }
 
     return (
@@ -566,6 +570,7 @@ export default class FormItem extends Modal {
                         dispatch={dispatch}
                         form={form}
                         locale={locale}
+                        productPackageToProduct={formData.productPackageToProduct}
                         productSearch={productSearch} />
                       :
                       ""

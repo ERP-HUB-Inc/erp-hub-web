@@ -22,10 +22,11 @@ export default class ProductList extends List {
   }
 
   componentWillUpdate(nextProps) {
-    const {productAdd, productUpdate,  dispatch} = nextProps;
+    const {productAdd, productUpdate, dispatch} = nextProps;
     if (productAdd.added || productUpdate.updated) {
       dispatch(ProductAction.fetch(this.pageSize));
       dispatch(ProductAction.reset());
+      dispatch(ProductAction.reset(Constant.RESET_DETAIL_PRODUCTS));
     }
   }
 

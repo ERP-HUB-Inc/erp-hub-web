@@ -57,3 +57,7 @@ tr:nth-child(odd) {
 .ant-table-footer {
     text-align: right;
 }
+
+.hidden {
+    display: none !important
+}

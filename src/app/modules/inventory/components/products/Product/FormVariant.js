@@ -22,7 +22,6 @@ export default class FormVariant extends Modal {
     this.handleAddVariantAttribute = this.handleAddVariantAttribute.bind(this);
     this.handleAddProductVariant = this.handleAddProductVariant.bind(this);
     this.handleRemoveVariant = this.handleRemoveVariant.bind(this);
-    this.handleOnDeactiveProductVariant = this.handleOnDeactiveProductVariant.bind(this);
   }
 
   appendVariantAttribute(existingArr, variantAttribute) {
@@ -34,6 +33,7 @@ export default class FormVariant extends Modal {
         barcode: variantAttribute.barcode,
         cost: variantAttribute.cost,
         price: variantAttribute.price,
+        quantity: variantAttribute.quantity,
         status: variantAttribute.status,
       }]});;
   }
@@ -107,11 +107,6 @@ export default class FormVariant extends Modal {
     }
   }
 
-  handleOnDeactiveProductVariant(productVariantId, variantAttributeKey, variantKey) {
-    this.props.form.setFieldsValue({[`variantProductStatus[${variantAttributeKey}][${variantKey}]`]: true});
-    // this.props.dispatch(ProductAction.changeProductVariantStatus(productVariantId));
-  }
-
   handleAddVariantAttribute() {
     const existingVariantAttributes = this.state.variantAttributeList;
 
@@ -131,13 +126,12 @@ export default class FormVariant extends Modal {
           barcode: "",
           cost: null,
           price: null,
+          quantity: 0,
           status: this.Enum.ACTIVE
         });
       }
     });
-    this.setState(
-      {variantAttributeList: existingVariantAttributes}
-    );
+    this.setState({variantAttributeList: existingVariantAttributes});
   }
 
   handleSubmitConfirmAction() {
@@ -270,13 +264,21 @@ export default class FormVariant extends Modal {
                           </this.Col>
                   
                           <this.Col md="2" className="wrap-variant-action">
-                            <this.Tooltip placement="top" title="Not allow deactive item that quantity is in stock.">
-                              <this.Switchs
-                                name={`variantProductStatus[${variantAttributeKey}][${variantKey}]`}
-                                checked={variant.status}
-                                form={this.props.form}
-                                onChange={() => this.handleOnDeactiveProductVariant(variant.id, variantAttributeKey, variantKey)}/>
-                            </this.Tooltip>
+                            {
+                              variant.quantity > 0 ?
+                                <this.Tooltip placement="top" title="Not allow deactive item that quantity is in stock.">
+                                  <this.Switchs
+                                    name={`variantProductStatus[${variantAttributeKey}][${variantKey}]`}
+                                    checked={variant.status}
+                                    form={this.props.form}
+                                    disabled={true}/>
+                                </this.Tooltip>
+                                :
+                                <this.Switchs
+                                  name={`variantProductStatus[${variantAttributeKey}][${variantKey}]`}
+                                  checked={variant.status}
+                                  form={this.props.form} />
+                            }
                             <this.Button type="danger" className="delete-variant-item" onClick={() => this.handleRemoveVariant(variantAttributeKey, variantKey, variant.id)}>
                               <span className="icon-delete" style={{fontSize: "15pt"}}></span>
                             </this.Button>
