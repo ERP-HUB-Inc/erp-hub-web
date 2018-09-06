@@ -35,6 +35,13 @@ export default class SupplierList extends List {
       modalConten: <FormUpdate/>
     });
   }
+
+  renderActionButton(){
+    return(
+      <div></div>
+    );
+  }
+
 }
 
 class Column extends List {
@@ -49,21 +56,27 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_return_purchase_description" />,
-        dataIndex: "description",
-        key: "description",
+        title: <this.Translate id="col_stock_return_invoice_no" />,
+        dataIndex: "invoiceNo",
+        key: "invoiceNo",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_return_purchase_phonenumber" />,
-        dataIndex: "phoneNumber",
-        key: "phoneNumber",
+        title: <this.Translate id="col_stock_return_due_date" />,
+        dataIndex: "deliveryDueDate",
+        key: "deliveryDueDate",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_return_purchase_email" />,
-        dataIndex: "email",
-        key: "phoneNumber",
+        title: <this.Translate id="col_stock_return_shipping_fee" />,
+        dataIndex: "shippingFee",
+        key: "shippingFee",
+        sorter: true
+      },
+      {
+        title: <this.Translate id="col_stock_return_total" />,
+        dataIndex: "returnTotal",
+        key: "returnTotal",
         sorter: true
       },
       this.columnStatus

@@ -17,22 +17,29 @@ export default {
     "Name",
   ],
 
-  "col_stock_return_purchase_description": [
-    "Description",
+  "col_stock_return_invoice_no": [
+    "Invoice No",
     "အမည်",
-    "Description",
+    "Invoice No",
   ],
 
-  "col_stock_return_purchase_phonenumber": [
-    "Phone Number",
+  "col_stock_return_due_date": [
+    "Due Date",
     "အမည်",
-    "Phone Number",
+    "Due Date",
   ],
 
-  "col_stock_return_purchase_email": [
-    "Email",
+  "col_stock_return_shipping_fee": [
+    "Shipping Fee",
     "အမည်",
-    "Email",
+    "Shipping Fee",
   ],
+
+  "col_stock_return_total": [
+    "Total",
+    "အမည်",
+    "Total",
+  ],
+
   
 };
