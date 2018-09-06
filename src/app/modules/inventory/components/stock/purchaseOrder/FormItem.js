@@ -9,6 +9,10 @@ export default class FormItem extends Modal {
     super(props);
     const {form} = this.props;
     this.timer = null;
+    this.state = {
+      productLists: this.productList()
+    };
+    // this.listProduct = this.productList();
     this.ChangeSupplierEmailValue = this.ChangeSupplierEmailValue.bind(this);
     this.columns = [
       {
@@ -100,14 +104,14 @@ export default class FormItem extends Modal {
       {
         title:"Action",
         key:"id",
-        render:(record) => 
+        render:(record,index) => 
         {
           return(
             <div>
-              <this.Icon
-                className="dynamic-delete-button"
+              <this.Button
+                className="dynamic-delete-button icon-delete"
                 type="minus-circle-o"
-                onClick={() => this.removeRecord(record.key)}
+                onClick={() => this.removeRecord(index.id)}
               />
             </div>
           );
@@ -118,6 +122,7 @@ export default class FormItem extends Modal {
     this.remove = this.remove.bind(this);
     this.orderNumber = this.orderNumber.bind(this);
     this.removeRecord = this.removeRecord.bind(this);
+    this.handleAdd = this.handleAdd.bind(this);
 
   }
 
@@ -125,15 +130,40 @@ export default class FormItem extends Modal {
     alert("remove");
   }
 
+  //remove row 
   removeRecord(key){
-   
+    const listProductSoruces = [...this.state.productLists];
+    this.setState({productLists:listProductSoruces.filter(item => item.id !== key)});   
+
   }
 
+  //add row
+  handleAdd(count){
+    const listProductSoruces = [...this.state.productLists];
+    const newData = {
+      clientId: count + 1,
+      createdAt :"2018-09-05T01:31:00.981Z",
+      description  : "dddd",
+      email : "sopha088@gmail.com",
+      id: count + 1,
+      name:"Book",
+      phoneNumber: "098765432",
+      status :1,
+      updatedAt : "2018-09-05T01:31:00.981Z"
+    };
+    // const getList = listProductSoruces.filter(item => item.id !== key);
+    // console.log(getList);
+    this.setState({
+      productLists: [...this.state.productLists, newData],
+    });
+
+  }
+  
   ChangeSupplierEmailValue(values){
     console.log(".supplieri",values);
     this.dispatch(SupplierAction.detail(values));
   }
-
+  
   productList(){
     return(
       this.props.product.list
@@ -178,7 +208,11 @@ export default class FormItem extends Modal {
     const { form,supplier,storeLocation,locale,formData,supplierDetail } = this.props;
 
     console.log("supplierDetail",supplierDetail);
+    console.log("Product Lists",this.state.productLists);
 
+    const { productLists } = this.state;
+    
+    let count = 1;
     return (
       <div>
         <this.Row>
@@ -252,8 +286,14 @@ export default class FormItem extends Modal {
             </div>
           </this.Col>
           <this.Col md="12">
+            <this.Button
+              onClick={() => this.handleAdd(count)}
+              type="primary"
+            >
+              Add a row
+            </this.Button>
             <this.Table 
-              dataSource={this.productList()}
+              dataSource={productLists}
               columns={this.columns}
               locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}} />
           </this.Col>
