@@ -32,7 +32,7 @@ export default combineReducers({
     const constants = [
       Constant.ADD_PURCHASE_ORDER_PENDING,
       Constant.ADD_PURCHASE_ORDER_REJECTED,
-      Constant.ADD_PURCHASE_ORDER_FULFILLED,
+      Constant.ADD_PURCHASE_ORDER_FULFILLED, 
       Constant.SHOW_PURCHASE_ORDER_FORM,
       Constant.RESET_PURCHASE_ORDER
     ];

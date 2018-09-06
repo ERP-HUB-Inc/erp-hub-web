@@ -2,6 +2,7 @@ import React from "react";
 import ProductsAction from "../../../actions/products/product";
 import SupplierAction from "../../../actions/stock/supplier";
 import PurchaseOrderService from "../../../services/stock/PurchaseOrderService";
+import StoreLoctionAction from "../../../../pos/action/settings/storeLocation";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormItem extends Modal {
@@ -12,22 +13,20 @@ export default class FormItem extends Modal {
     this.state = {
       productLists: this.productList()
     };
-    // this.listProduct = this.productList();
     this.ChangeSupplierEmailValue = this.ChangeSupplierEmailValue.bind(this);
     this.columns = [
       {
         title: <this.Translate id="col_stock_purchase_order_no" />,
         dataIndex: "id",
         key: "purchaseID",
-        render: (id) => 
+        render: (id,row,index) => 
         {
           return(
             <div>
               <this.InputText 
-                name={`purchaseID[${id}]`} 
+                name={`purchaseId[${index}]`} 
                 type="hidden"
                 data={id}
-                required={true}  
                 form={ form } />
               { id }
             </div>
@@ -46,7 +45,6 @@ export default class FormItem extends Modal {
                 name={`purchaseDescription[${description}]`} 
                 type="hidden"
                 data={description}
-                required={true}  
                 form={ form } />
               { description }
             </div>
@@ -62,12 +60,12 @@ export default class FormItem extends Modal {
         title: <this.Translate id="col_stock_purchase_order_qty" />,
         dataIndex: "requestQuantity",
         key: "requestQuantity",
-        render: (requestQuantity) => 
+        render: (requestQuantity,row,index) => 
         {
           return(
             <div>
               <this.InputText 
-                name={`purchaseQty[${requestQuantity}]`} 
+                name={`purchaseQty[${index}]`} 
                 type="text"
                 data={requestQuantity}
                 required={true}
@@ -81,12 +79,12 @@ export default class FormItem extends Modal {
         title: <this.Translate id="col_stock_purchase_order_price" />,
         dataIndex: "price",
         key: "price",
-        render: (price) => 
+        render: (price,row,index) => 
         {
           return(
             <div>
               <this.InputText 
-                name={`purchasePrice[${price}]`} 
+                name={`purchasePrice[${index}]`} 
                 type="text"
                 data={price}
                 required={true}
@@ -109,26 +107,26 @@ export default class FormItem extends Modal {
           return(
             <div>
               <this.Button
-                className="dynamic-delete-button icon-delete"
-                type="minus-circle-o"
+                className="danger"  
                 onClick={() => this.removeRecord(index.id)}
-              />
+              >
+                <span className="icon-delete"></span>
+              </this.Button>
             </div>
           );
         }
       }
     ];
 
-    this.remove = this.remove.bind(this);
     this.orderNumber = this.orderNumber.bind(this);
     this.removeRecord = this.removeRecord.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
 
   }
 
-  remove(){
-    alert("remove");
-  }
+  // componentDidMount(){
+  //   this.productList();
+  // }
 
   //remove row 
   removeRecord(key){
@@ -151,13 +149,13 @@ export default class FormItem extends Modal {
       status :1,
       updatedAt : "2018-09-05T01:31:00.981Z"
     };
-    // const getList = listProductSoruces.filter(item => item.id !== key);
-    // console.log(getList);
+
+  
     this.setState({
       productLists: [...this.state.productLists, newData],
     });
 
-  }
+  } 
   
   ChangeSupplierEmailValue(values){
     console.log(".supplieri",values);
@@ -200,7 +198,9 @@ export default class FormItem extends Modal {
 
   componentDidMount(){
     const { dispatch } = this.props;
-    dispatch(ProductsAction.fetch(this.pageSize));
+    dispatch(ProductsAction.fetch(10));
+    dispatch(SupplierAction.fetch(10));
+    dispatch(StoreLoctionAction.fetch(10));
   }
 
 
@@ -230,7 +230,8 @@ export default class FormItem extends Modal {
           <this.Col md="2">
             <this.DatePickers
               name="deliveryDueDate"
-              data={formData.dueDate}
+              dataSource={this.Util.listFormatDate()}
+              defaultValue={formData.dueDate} 
               label={<this.Translate id="date_picker_stock_purchase_due_date" />}
               form={form}
             />

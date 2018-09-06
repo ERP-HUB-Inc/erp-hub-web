@@ -9,18 +9,16 @@ import "./index.css";
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.state = {
-      modalVisible: false
-    };
     this.title = <this.Translate id="create_stock_purchase_order_title" />;
+    this.addingPropReducer = "purchaseOrderAdd";
     this.width = "80%";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
-
     this.pushToSupplier = this.pushToSupplier.bind(this);
     this.handlePushToSupplier = this.handlePushToSupplier.bind(this);
-
   }
+
+
 
   handlePushToSupplier(){
     this.dispatch(PurchaseOrderShowEmailAction.showForm());
@@ -52,32 +50,47 @@ export default class FormCreate extends Modal {
           price: values.purchasePrice
         };
         console.log("List purchase",JSON.stringify(listPurchase));
-        // delete values["purchaseId"];
-        // delete values["purchaseQty"];
-        // delete values["purchasePrice"];
+
+        delete values["purchaseId"];
+        delete values["purchaseQty"];
+        delete values["purchasePrice"];
+        delete values["purchaseDescription"];
+
         if(listPurchase.purchaseId == null){
           listPurchase.purchaseId = [];
         }
+
         const purchases = [];
+
         listPurchase.purchaseId.forEach((purchaseId, index) => {
           if (
-            purchaseId != null 
-            // listPurchase.requestQuantity[index] != null ||
-            // listPurchase.price[index] != null
+            purchaseId != null || 
+            listPurchase.requestQuantity[index] != null ||
+            listPurchase.price[index] != null
           ) {
             purchases.push({
-              productId: listPurchase.purchaseId[index]
-              // purchaseQty: listPurchase.requestQuantity[index],
-              // price: listPurchase.price[index]
+              productId: listPurchase.purchaseId[index],
+              requestQuantity: listPurchase.requestQuantity[index],
+              price: listPurchase.price[index]
             });
           }
         });
 
+        values["shippingFee"] = 0;
+        values["requestTotal"] = 105;
+        values["returnTotal"] = 0;
+        values["receiveTotal"] = 0;
+        values["step"] = 0;
+        values["type"] = 0;
+        values["status"] = 0;
+        // values["number"] = 67894;
+
         if(purchases) {
           values["purchaseOrderEntries"] = purchases;
-        }
+        } 
         console.log("get values",values);
-        // this.dispatch(PurchaseOrderAction.add(values));   
+        // console.log("purchase order Entries",values["purchaseOrderEntries"]);
+        this.dispatch(PurchaseOrderAction.add(values));   
       }
     });
   }

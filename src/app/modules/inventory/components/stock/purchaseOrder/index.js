@@ -5,7 +5,8 @@ import FormUpdate from "../../../containers/stock/purchaseOrder/FormUpdate";
 import Constant from "../../../constants/stock/purchaseOrder";
 import PurchaseAction from "../../../actions/stock/purchaseOrder";
 import PurchaseService from "../../../services/stock/PurchaseOrderService";
-import Supplier from "../../../actions/stock/supplier";
+// import Supplier from "../../../actions/stock/supplier";
+import ProductsAction from "../../../actions/products/product";
 import "./index.css";
 
 export default class PurchaseOrderLists extends List {
@@ -22,12 +23,13 @@ export default class PurchaseOrderLists extends List {
       "deliveryDueDate"
     ];
     this.action = PurchaseAction;
-    this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
+    this.RESET_CONSTANT = Constant.RESET_PURCHASE_ORDER;
   }
 
   componentDidMount(){
     const { dispatch } = this.props;
-    dispatch(Supplier.fetch());
+    // dispatch(Supplier.fetch());
+    // dispatch(ProductsAction.fetch());
     super.componentDidMount();
   }
 
