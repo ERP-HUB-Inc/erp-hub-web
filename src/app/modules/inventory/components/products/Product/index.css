@@ -110,18 +110,25 @@
     position: absolute;
     z-index: 2;
     top: 60px;
+    width: 100%
 }
 
 .wrap-dropdown-search-product .list-search {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     background: white;
     max-height: 470px;
+    margin-right: 5px;
     overflow-y: auto
 }
 
 .wrap-dropdown-search-product .list-search .ant-list-item {
     padding: 5px 15px;
     cursor: pointer
+}
+
+.is-validating.has-feedback .ant-form-item-children:after {
+    right: 60px;
+    font-size: 20px
 }
 
 .wrap-dropdown-search-product .list-search .ant-list-item:hover, 

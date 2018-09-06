@@ -6,7 +6,8 @@ export class CTable extends React.Component {
   render() {
     return (
       <Table
-        rowKey={record => record.id}
+        rowKey={record => record[this.props.rowKey]}
+        rowClassName={this.props.rowClassName}
         rowSelection={this.props.rowSelection}
         columns={this.props.columns}
         dataSource={this.props.dataSource}
@@ -20,6 +21,10 @@ export class CTable extends React.Component {
     );
   }
 }
+
+CTable.defaultProps = {
+  rowKey: "id"
+};
 
 export class TableExpand extends React.Component {
   render() {

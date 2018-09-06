@@ -57,6 +57,14 @@ export default combineReducers({
     ];
     return reducer.update(state, action, constants);
   },
+  updatePartial: (state = InitialState.update(), action) => {
+    const constants = [
+      Constant.UPDATE_PARTIAL_PRODUCT_PENDING,
+      Constant.UPDATE_PARTIAL_PRODUCT_REJECTED,
+      Constant.UPDATE_PARTIAL_PRODUCT_FULFILLED
+    ];
+    return reducer.update(state, action, constants);
+  },
   detail: (state = InitialState.detail(), action) => {
     const constants = [
       Constant.DETAIL_PRODUCTS_PENDING,

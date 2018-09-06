@@ -65,6 +65,21 @@ export default class Form extends Modal {
           });
         }
 
+        // PREPARE DATA FOR PACKAGE PRODUCT
+        const productPackageToProduct = [];
+        if ("productCompositeProductId" in values && "productCompositeMarkUp" in values) {
+          values["productCompositeProductId"].forEach((rawProductId, productCompositeProductIdIndex) => {
+            let packageProduct = {
+              rawProductId
+            };
+            packageProduct["id"] = values["productCompositeId"][productCompositeProductIdIndex];
+            packageProduct["quantity"] = values["productCompositeMarkUp"][productCompositeProductIdIndex];
+            packageProduct["status"] = values["productCompositeStatus"][productCompositeProductIdIndex];
+            productPackageToProduct.push(packageProduct);
+          });
+        }
+
+
         // PREPARE DATA FROM DESCRIPTION
         const productDescriptions = [];
 
@@ -94,23 +109,28 @@ export default class Form extends Modal {
           "language",
           "productDescription",
           "productNameDefault",
-          "productDescriptionDefault"
+          "productDescriptionDefault",
+          "productCompositeId",
+          "productCompositeProductId",
+          "productCompositeMarkUp",
+          "productCompositeStatus"
         ]);
 
         values["id"] = this.props.productDetail.data.id;
         values["quantity"] = 0;
-        values["reorderPoint"] = values["reorderPoint"] === null ? 0 : values["reorderPoint"];
-        values["factoryCost"] = values["factoryCost"]  === null ? 0 : values["factoryCost"];
-        values["shippingFee"] = values["shippingFee"]  === null ? 0 : values["shippingFee"];
-        values["cost"] = values["cost"]  === null ? 0 : values["cost"];
-        values["markup"] = values["markup"]  === null ? 0 : values["markup"];
-        values["price"] = values["price"]  === null ? 0 : values["price"];
+        values["reorderPoint"] = values["reorderPoint"] ? values["reorderPoint"] : 0;
+        values["factoryCost"] = values["factoryCost"] ? values["factoryCost"] : 0;
+        values["shippingFee"] = values["shippingFee"] ? values["shippingFee"] : 0;
+        values["cost"] = values["cost"] ? values["cost"] : 0;
+        values["markup"] = values["markup"] ? values["markup"] : 0;
+        values["price"] = values["price"] ? values["price"] : 0;
         values["isAvialableSale"] = values["isAvialableSale"] ? 1 : 0;
         values["isPublic"] = values["isPublic"] ? 1 : 0;
 
         values["productTagToProduct"] = this.state.tagList;
         values["productDescriptions"] = productDescriptions;
         values["productVariantToProduct"] = productVariantToProduct;
+        values["productPackageToProduct"] = productPackageToProduct;
 
         console.log("Product Submit Value:", values);
         this.dispatch(ProductAction.update(values));

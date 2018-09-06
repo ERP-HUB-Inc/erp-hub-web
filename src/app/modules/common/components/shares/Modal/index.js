@@ -117,7 +117,7 @@ export default class Modal extends Component {
   }
 
   renderOtherAction(){
-    return <div/>;
+
   }
 
   renderCrudAction(){
@@ -137,7 +137,9 @@ export default class Modal extends Component {
   render() {
     return (
       <div>
+        {/* FOR DISPLAY SUB MODAL */}
         {this.modal1}
+        
         <this.Modal
           title={this.title}
           width={this.width}

@@ -1,7 +1,7 @@
 import React from "react";
 import Element from "../../common/Element";
+import {Switch} from "antd";
 import "./index.css";
-import { Switch } from "antd";
 
 export class Switchs extends Element {
 
@@ -22,16 +22,15 @@ export class Switchs extends Element {
     onChange && onChange(value);
   }
 
-
   render(){
     const { getFieldDecorator } = this.props.form;
     return(
       <div className="main-switch">
         <this.FormItem label={ this.props.label }>
           {
-            getFieldDecorator(this.props.name,{ initialValue: this.props.checked })(
-              <Switch 
-                defaultChecked {...this.state}  
+            getFieldDecorator(this.props.name, { initialValue: this.props.checked })(
+              <Switch
+                defaultChecked {...this.state}
                 onChange={ this.onChange }
               />
             )

@@ -1,18 +1,20 @@
-import React, { Component } from "react";
-import { Tooltip, Button } from "antd";
+import React from "react";
+import {Tooltip} from "antd";
 import "./index.css"; 
 
-const text = <span>prompt text dd dff ddd</span>;
-const buttonWidth = 70;
 
-export class Tooltips extends Component {
+export class Tooltips extends React.Component {
   render(){
-    return(
-      <div className="main-tooltip" style={{ width: buttonWidth, marginLeft: (buttonWidth * 4) + 24 }}>
-        <Tooltip placement="rightTop" title={text}>
-          <Button>RT</Button>
-        </Tooltip>
-      </div>
+    return (
+      <Tooltip placement={this.props.placement} title={this.props.text}>
+        {this.props.children}
+      </Tooltip>
     );
   }
 }
+
+Tooltips.defaultProps = {
+  placement: "rightTop",
+  text: "Hello World"
+};
+

@@ -111,7 +111,7 @@ export default class FormItem extends Modal {
       productsTypeAdd,
       unitAdd,
       taxAdd,
-      tags
+      // tags
     } = this.props;
 
     if (brandAdd.added) {
@@ -142,7 +142,7 @@ export default class FormItem extends Modal {
 
   onChange(e) {
     this.setState({
-      productTypeIndex:  e.target.value
+      productTypeIndex: e.target.value
     });
   }
 
@@ -284,10 +284,14 @@ export default class FormItem extends Modal {
     }
 
     let productTypeBox = Enum.PRODUCT_STANDARD;
-    if (formData.productVariantToProduct.length > 0 ) {
-      productTypeBox = Enum.PRODUCT_VARIANT;
-    } else if (formData.productPackageToProduct.length > 0) {
-      productTypeBox = Enum.PRODUCT_COMPOSITE;
+    if (formData.id != null) {
+      if (formData.productVariantToProduct.length > 0 ) {
+        productTypeBox = Enum.PRODUCT_VARIANT;
+      } else if (formData.productPackageToProduct.length > 0) {
+        productTypeBox = Enum.PRODUCT_COMPOSITE;
+      }
+    } else {
+      productTypeBox = this.state.productTypeIndex;
     }
 
     return (
@@ -543,7 +547,7 @@ export default class FormItem extends Modal {
                     title={productType.name}
                     language={productType.description}
                     value={productType.value}
-                    className={productType.value === productTypeBox ? "" : "disabled-click"} /> 
+                    className={productType.value === productTypeBox || formData.id == null ? "" : "disabled-click"} /> 
                 ) 
                 }
               </this.RadioBox>
@@ -566,6 +570,7 @@ export default class FormItem extends Modal {
                         dispatch={dispatch}
                         form={form}
                         locale={locale}
+                        productPackageToProduct={formData.productPackageToProduct}
                         productSearch={productSearch} />
                       :
                       ""

@@ -50,6 +50,14 @@ export default {
       });
     };
   },
+  changeProductVariantStatus: (id) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.UPDATE_PRODUCT,
+        payload: ProductService.changeStatusProductVarait(id)
+      });
+    };
+  },
   reset: (RESET_CONSTANT = Constant.RESET_PRODUCT) => {
     return dispatch => {
       return dispatch({

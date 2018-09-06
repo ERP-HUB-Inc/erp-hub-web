@@ -14,6 +14,7 @@ export default class FormVariant extends Modal {
       },
       variantAttributeList: [],
       isNotYetLoadComponentDidUpdated: true,
+      changeStatusProductVariant: false
     };
     this.confirmTextAction = <this.Translate id="text_delete_confirm_variant_product" />;
     this.confirmTitle = <this.Translate id="delete_variant_warning" />;
@@ -32,6 +33,7 @@ export default class FormVariant extends Modal {
         barcode: variantAttribute.barcode,
         cost: variantAttribute.cost,
         price: variantAttribute.price,
+        quantity: variantAttribute.quantity,
         status: variantAttribute.status,
       }]});;
   }
@@ -124,13 +126,12 @@ export default class FormVariant extends Modal {
           barcode: "",
           cost: null,
           price: null,
+          quantity: 0,
           status: this.Enum.ACTIVE
         });
       }
     });
-    this.setState(
-      {variantAttributeList: existingVariantAttributes}
-    );
+    this.setState({variantAttributeList: existingVariantAttributes});
   }
 
   handleSubmitConfirmAction() {
@@ -263,10 +264,21 @@ export default class FormVariant extends Modal {
                           </this.Col>
                   
                           <this.Col md="2" className="wrap-variant-action">
-                            <this.Switchs
-                              name={`variantProductStatus[${variantAttributeKey}][${variantKey}]`}
-                              checked={variant.status}
-                              form={this.props.form}/>
+                            {
+                              variant.quantity > 0 ?
+                                <this.Tooltip placement="top" title="Not allow deactive item that quantity is in stock.">
+                                  <this.Switchs
+                                    name={`variantProductStatus[${variantAttributeKey}][${variantKey}]`}
+                                    checked={variant.status}
+                                    form={this.props.form}
+                                    disabled={true}/>
+                                </this.Tooltip>
+                                :
+                                <this.Switchs
+                                  name={`variantProductStatus[${variantAttributeKey}][${variantKey}]`}
+                                  checked={variant.status}
+                                  form={this.props.form} />
+                            }
                             <this.Button type="danger" className="delete-variant-item" onClick={() => this.handleRemoveVariant(variantAttributeKey, variantKey, variant.id)}>
                               <span className="icon-delete" style={{fontSize: "15pt"}}></span>
                             </this.Button>
