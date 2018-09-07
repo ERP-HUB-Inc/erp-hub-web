@@ -4,7 +4,7 @@ class StockManagementService extends BaseService {
 
   constructor() {
     super();
-    this.module = "inventory/supplier";
+    this.module = "inventory/product";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 }

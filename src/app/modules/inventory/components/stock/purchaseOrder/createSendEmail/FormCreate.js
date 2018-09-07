@@ -19,11 +19,12 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.dispatch(purchaseOrderSendEmailAction.add(values));   
+        // this.dispatch(purchaseOrderSendEmailAction.add(values));   
+        console.log("values",values);
+        console.log("form values",this.props.formvalue);
       }
     });
   }
-
   
   handlePush(e){
     this.setState({modalVisible: true});

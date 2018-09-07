@@ -32,10 +32,7 @@ export default class FormCreate extends Modal {
 
     if (reorderPointAdd.showForm) {
       this.content = (
-        <div>
-          { reorderPointAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" }
-          <FormItem form={form} locale={locale}/>
-        </div>
+        <FormItem form={form} locale={locale}/>
       );
       return super.render();
     } else {

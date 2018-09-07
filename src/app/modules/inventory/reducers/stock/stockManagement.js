@@ -1,6 +1,6 @@
 import reducer from "../reducer";
 import { combineReducers } from "redux";
-import Constant from "../../constants/supplier";
+import Constant from "../../constants/stock/stockManagement";
 import InitialState from "../../../common/reducers/initialState";
 
 export default combineReducers({

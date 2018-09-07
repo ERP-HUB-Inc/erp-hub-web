@@ -17,34 +17,53 @@ export default {
     "Id",
   ],
 
-  "col_stock_management_sold_by": [
-    "Sold By",
+  
+  "col_stock_management_product_name": [
+    "Product Name",
     "အမည်",
-    "Sold By",
+    "Product Name",
   ],
 
-  "col_stock_management_customer": [
-    "Customer",
+  "col_stock_management_product_tags": [
+    "Tags",
     "အမည်",
-    "Customer",
+    "Tags",
   ],
 
-  "col_stock_management_deposit": [
-    "Deposit",
+  "col_stock_management_product_types": [
+    "Product Types",
     "အမည်",
-    "Deposit",
+    "Product Types",
   ],
 
-  "col_stock_management_payment_method": [
-    "Payment Method",
+  "col_stock_management_brand": [
+    "Brand",
     "အမည်",
-    "Payment Method",
+    "Brand",
   ],
 
-  "col_stock_management_notation": [
-    "Notation",
+  "col_stock_management_supplier": [
+    "Supplier",
     "အမည်",
-    "Notation"
+    "Supplier",
+  ],
+
+  "col_stock_management_quantity": [
+    "Quantity",
+    "အမည်",
+    "Quantity",
+  ],
+
+  "col_stock_management_unit": [
+    "Unit",
+    "အမည်",
+    "Unit",
+  ],
+
+  "col_stock_management_types": [
+    "Type",
+    "အမည်",
+    "Type",
   ],
 
   "Button_stock_management_reload": [

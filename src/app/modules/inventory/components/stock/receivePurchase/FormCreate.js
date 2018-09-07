@@ -33,10 +33,7 @@ export default class FormCreate extends Modal {
 
     if (receivePurchaseAdd.showForm) {
       this.content = (
-        <div>
-          { receivePurchaseAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" }
-          <FormItem form={form} supplier={supplier} product={product} storeLocation={storeLocation} dispatch={dispatch} locale={locale}/>
-        </div>
+        <FormItem form={form} supplier={supplier} product={product} storeLocation={storeLocation} dispatch={dispatch} locale={locale}/>
       );
       return super.render();
     } else {

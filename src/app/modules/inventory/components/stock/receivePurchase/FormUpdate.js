@@ -58,7 +58,6 @@ export default class Form extends Modal {
     if (receivePurchaseUpdate.showForm) {
       this.content = (
         <div>
-          {receivePurchaseUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
           <FormItem formData={receivePurchaseUpdate.data} storeLocation={storeLocation} receivePurchase={receivePurchase} supplier={supplier} dispatch={dispatch} form={form} locale={locale}/>
           {this.renderModalConfirmAction()}
         </div>

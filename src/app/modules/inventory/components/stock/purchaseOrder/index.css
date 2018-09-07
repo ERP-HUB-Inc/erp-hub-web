@@ -25,3 +25,10 @@
 .btn-push-to-supplier {
     width: 153px !important;
 }
+
+.main-dropdown-search .total-amount {
+    text-align: right;
+    color: #9A9A9A;
+    font-size: 10pt;
+    margin-top: 14px;
+}
