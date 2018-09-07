@@ -52,7 +52,7 @@ export default class ProductList extends List {
         <this.SubTable 
           columns={this.columnExpend}
           dataSource={record.productVariantToProduct}
-          noDataContent="No Rows found"
+          locale={{emptyText: <this.Translate id="placeholder_table_variant_product" />}}
         />
       </div>
     );
@@ -116,19 +116,23 @@ class Column extends List {
       this.columnCreatedAt,
       {
         title: <this.Translate id="col_products_name" />,
-        key: "productName",
+        key: "productDescriptions",
         width: 250,
-        render: (text, record, index) => record.productDescriptions.length > 0 ?  record.productDescriptions[0].name : this.emptyCell,
-        sorter: true
+        render: (text, record, index) => {
+          const productName = record.productDescriptions.length > 0 ?  record.productDescriptions[0].name : this.emptyCell;
+          return <div>
+            <div>{productName}</div>
+            <div className="barcode-number text-uppercase"><this.Translate id="text_product_code"/>: {record.barcode}</div>
+          </div>;
+        }
       },
       {
         title: <this.Translate id="col_products_tag" />,
-        key: "productTag",
+        key: "tag",
         width: 150,
         render: (text, record) => {
           return record.tags.map((tag, index) => <this.TagLabel color="blue" style={{marginLeft: 10}} key={index}>{tag.tag}</this.TagLabel>);
-        },
-        sorter: true
+        }
       },
       {
         title: <this.Translate id="col_products_type" />,
@@ -136,8 +140,7 @@ class Column extends List {
         width: 200,
         render: (text, record) => {
           return record.productType.productTypeDescriptions.length > 0 ?  record.productType.productTypeDescriptions[0].name : this.emptyCell;
-        },
-        sorter: true
+        }
       },
       {
         title: <this.Translate id="col_products_brand" />,
@@ -165,8 +168,7 @@ class Column extends List {
         dataIndex: "unit",
         key: "unit",
         width: 150,
-        render: unit => unit.name,
-        sorter: true
+        render: unit => unit.name
       },
       {
         title: <this.Translate id="col_products_types" />,

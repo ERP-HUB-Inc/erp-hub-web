@@ -282,7 +282,7 @@ export default class List extends Component {
             modalVisible: false,
             deleting: false
           });
-          this.Message.info(this.messageSuccess);
+          // this.Message.info(this.messageSuccess);
         })
         .catch(err => {
           this.setState({deleting: false});

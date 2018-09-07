@@ -12,6 +12,22 @@ export default combineReducers({
     ];
     return reducer.request(state, action, constants);
   },
+  requestLog: (state = InitialState.request(), action) => {
+    const constants = [
+      Constant.REQUEST_PRODUCT_LOG_PENDING,
+      Constant.REQUEST_PRODUCT_LOG_REJECTED,
+      Constant.REQUEST_PRODUCT_LOG_FULFILLED
+    ];
+    return reducer.request(state, action, constants);
+  },
+  requestCostLog: (state = InitialState.request(), action) => {
+    const constants = [
+      Constant.REQUEST_PRODUCT_COST_LOG_PENDING,
+      Constant.REQUEST_PRODUCT_COST_LOG_REJECTED,
+      Constant.REQUEST_PRODUCT_COST_LOG_FULFILLED
+    ];
+    return reducer.request(state, action, constants);
+  },
   search: (state = InitialState.request(), action) => {
     const constants = [
       Constant.SEARCH_PRODUCT_PENDING,

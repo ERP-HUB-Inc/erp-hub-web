@@ -1,7 +1,10 @@
 import React from "react";
 import FormComposite from "./FormComposite";
 import FormVariant from "./FormVariant";
+import FormCostLog from "./FormCostLog";
+import FormProductLog from "./FormProductLog";
 import Enum from "../../../enums";
+import ProductAction from "../../../actions/products/product";
 import BrandAction from "../../../actions/products/brand";
 import ProductTypeAction from "../../../actions/products/productsType";
 import UnitAction from "../../../actions/products/productsUnit";
@@ -23,6 +26,9 @@ export default class FormItem extends Modal {
       productNameDefault: "",
       productDescriptionDefault: ""
     };
+
+    this.TAB_PRODUCT_COST_LOG = 3;
+    this.TAB_PRODUCT_LOG = 4;
 
     this.productTypeContent = "";
     
@@ -78,6 +84,8 @@ export default class FormItem extends Modal {
     this.onCangeIsAutoGenerateCode = this.onCangeIsAutoGenerateCode.bind(this);
     this.onChangeProductName = this.onChangeProductName.bind(this);
     this.onChangeDefaultDescription = this.onChangeDefaultDescription.bind(this);
+    this.onChangeTab = this.onChangeTab.bind(this);
+    this.LoadData = this.LoadData.bind(this);
   }
 
   componentDidMount() {
@@ -89,6 +97,16 @@ export default class FormItem extends Modal {
     dispatch(TagAction.fetch(100));
     dispatch(VariantAttributeAction.fetch(100));
     dispatch(LanguageAction.fetch(100));
+  }
+
+  LoadData() {
+    const {dispatch} = this.props;
+    dispatch(BrandAction.fetch(100));
+    dispatch(ProductTypeAction.fetch(100));
+    dispatch(UnitAction.fetch(100));
+    dispatch(TaxAction.fetch(100));
+    dispatch(TagAction.fetch(100));
+    dispatch(VariantAttributeAction.fetch(100));
   }
 
   componentWillUpdate(nextProps) {
@@ -140,6 +158,15 @@ export default class FormItem extends Modal {
     }
   }
 
+  onChangeTab(activeKey) {
+    const {dispatch, formData} = this.props;
+    if ((activeKey - this.TAB_PRODUCT_COST_LOG) === 0) {
+      dispatch(ProductAction.fetchCostLog(formData.id, 100));
+    } else if ((activeKey - this.TAB_PRODUCT_LOG) === 0) {
+      dispatch(ProductAction.fetchLog(formData.id, 100));
+    }
+  }
+
   onChange(e) {
     this.setState({
       productTypeIndex: e.target.value
@@ -171,7 +198,7 @@ export default class FormItem extends Modal {
 
     return (
       <this.TabPane tab={this.getLanguageIcon(language.code)} key={languagesIndex}>
-        <this.Row>
+        <this.Row className="wrapRowContentTab">
           <this.InputText 
             name={`language[${languagesIndex}]`} 
             type="hidden"
@@ -295,11 +322,12 @@ export default class FormItem extends Modal {
     }
 
     return (
-      <this.Tabs type="card">
+      <this.Tabs type="card" onChange={(activeKey) => this.onChangeTab(activeKey)}>
         <this.TabPane tab={<this.Translate id="tab_general" />} key="1">
           <this.Row>
             <this.Col md="6" className="create-product-column-left">
               <this.Row>
+                {/* <this.Button type="info" onClick={() => this.LoadData()}>LOAD</this.Button> */}
                 <this.Col md="4">
                   <this.InputText
                     name="productNameDefault"
@@ -580,16 +608,31 @@ export default class FormItem extends Modal {
           </this.Row>
         </this.TabPane>
         <this.TabPane tab={<this.Translate id="tab_language" />} key="2">
-          <this.Tabs type="card">
+          <this.Tabs type="card" style={{marginTop: "30px"}}>
             {languages.map((language, languagesIndex) => this.renderDescription(language, languagesIndex))}
           </this.Tabs>
         </this.TabPane>
-        <this.TabPane tab={<this.Translate id="tab_cost_log" />} key="3">
-
-        </this.TabPane>
-        <this.TabPane tab={<this.Translate id="tab_product_log" />} key="4">
-
-        </this.TabPane>
+        {
+          formData.id ?
+            <this.TabPane tab={<this.Translate id="tab_cost_log" />} key="3">
+              <this.Row className="wrapRowContentTab">
+                <FormCostLog productCostLog={this.props.productCostLog} />
+              </this.Row>
+            </this.TabPane>
+            :
+            ""
+        }
+        {
+          formData.id ?
+            <this.TabPane tab={<this.Translate id="tab_product_log" />} key="4">
+              <this.Row className="wrapRowContentTab">
+                <FormProductLog productLog={this.props.productLog}/>
+              </this.Row>
+            </this.TabPane>
+            :
+            ""
+        }
+        
       </this.Tabs>
     );
   }

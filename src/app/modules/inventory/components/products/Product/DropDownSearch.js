@@ -1,5 +1,4 @@
 import React from "react";
-import {List} from "antd";
 import $ from "jquery";
 import ProductAction from "../../../actions/products/product";
 import Modal from "../../../../common/components/shares/Modal";
@@ -22,6 +21,7 @@ export default class DropDownSearch extends Modal {
     this.handleOnSelectList = this.handleOnSelectList.bind(this);
     this.handleOnMouseHoverOnSearchList = this.handleOnMouseHoverOnSearchList.bind(this);
     this.handleOnMouseLeaveOnSearchList = this.handleOnMouseLeaveOnSearchList.bind(this);
+    this.renderSearchItem = this.renderSearchItem.bind(this);
   }
 
   componentDidMount() {
@@ -39,7 +39,11 @@ export default class DropDownSearch extends Modal {
   }
 
   handlePressEnterOnSearch() {
-    console.log("On Mouse Enter Now");
+    const currentActive = $(".ant-spin-container div.product-item-hover");
+    const productId = currentActive.attr("classid");
+    const product = this.props.productSearch.list.find(value => value.id === productId);
+    this.props.handlePressEnterOnSearch(product);
+    this.setState({visibleDropDown: false});
   }
 
   handleOnBlurSearch() {
@@ -102,13 +106,24 @@ export default class DropDownSearch extends Modal {
       this.timer = setTimeout(function() {
         const searchKey = JSON.stringify({column: ["name"], value});
 
-        this.props.dispatch(ProductAction.search(100, 0, "", "", "", searchKey));
+        this.props.dispatch(ProductAction.search(100, 0, "", "", this.props.filter, searchKey));
 
         this.setState({visibleDropDown: true});
 
-      }.bind(this), 500);
+      }.bind(this), 200);
 
     }
+  }
+
+  renderSearchItem(product) {
+    const {productDescriptions} = product;
+    const barcode = product.barcode;
+    return (
+      <this.List.Item.Meta
+        title={productDescriptions.length > 0 ? productDescriptions[0].name : ""}
+        description={<span className="text-uppercase"><this.Translate id="text_product_code"/>: {barcode}</span>}
+      />
+    );
   }
 
   render() {
@@ -140,19 +155,17 @@ export default class DropDownSearch extends Modal {
         <div className="wrap-dropdown-search-product">
           {
             this.state.visibleDropDown && this.props.productSearch.fetched?
-              <List
+              <this.List
                 itemLayout="horizontal"
+                locale={{emptyText: <this.Translate id="placeholder_product_list_search" />}}
                 dataSource={this.props.productSearch.list}
                 className="list-search"
                 onMouseEnter={this.handleOnMouseHoverOnSearchList}
                 onMouseLeave={this.handleOnMouseLeaveOnSearchList}
                 renderItem={product => (
-                  <List.Item onClick={() => this.handleOnSelectList(product)}>
-                    <List.Item.Meta
-                      title={product.productDescriptions.length > 0 ? product.productDescriptions[0].name : ""}
-                      description={product.productDescriptions.length > 0 ? product.productDescriptions[0].description : ""}
-                    />
-                  </List.Item>
+                  <this.List.Item onClick={() => this.handleOnSelectList(product)} classID={product.id}>
+                    {this.renderSearchItem(product)}
+                  </this.List.Item>
                 )}
               />
               :
@@ -163,3 +176,7 @@ export default class DropDownSearch extends Modal {
     );
   }
 }
+
+DropDownSearch.defaultProps = {
+  filter: ""
+};

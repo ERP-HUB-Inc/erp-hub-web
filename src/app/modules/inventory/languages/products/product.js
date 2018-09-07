@@ -67,6 +67,12 @@ export default {
     "Type"
   ],
 
+  "text_product_code": [
+    "Code",
+    "Code",
+    "Code"
+  ],
+
   // TAB
   "tab_general": [
     "General",
@@ -372,6 +378,18 @@ export default {
     "Add another variant"
   ],
 
+  "btn_product_clone": [
+    "Clone",
+    "Clone",
+    "Clone"
+  ],
+
+  "btn_product_print_label": [
+    "Print Label",
+    "Print Label",
+    "Print Label"
+  ],
+
   "col_composite_product": [
     "Product",
     "Product",
@@ -390,10 +408,71 @@ export default {
     "Cost"
   ],
 
+  "col_product_cost_log_po_number": [
+    "PO Number",
+    "PO Number",
+    "PO Number"
+  ],
+
+  "col_product_cost_log_user": [
+    "User",
+    "User",
+    "User"
+  ],
+
+  "col_product_cost_log_date": [
+    "Date",
+    "Date",
+    "Date"
+  ],
+
+  "col_product_cost_log_cost": [
+    "Cost",
+    "Cost",
+    "Cost"
+  ],
+
+  "col_product_log_name": [
+    "Name",
+    "Name",
+    "Name"
+  ],
+
+  "col_product_log_description": [
+    "Description",
+    "Description",
+    "Description"
+  ],
+
   "placeholder_table_composite_product": [
     "No composite product",
     "No composite product",
     "No composite product"
+  ],
+
+  "placeholder_table_product_cost_log": [
+    "No product cost log",
+    "No product cost log",
+    "No product cost log"
+  ],
+
+  "placeholder_table_product_log": [
+    "No product log",
+    "No product log",
+    "No product log"
+  ],
+
+  "placeholder_table_variant_product": [
+    "No variant product",
+    "No variant product",
+    "No variant product"
+  ],
+
+  
+  "placeholder_product_list_search": [
+    "No product found",
+    "No product found",
+    "No product found"
   ],
 
   "col_composite_action": [

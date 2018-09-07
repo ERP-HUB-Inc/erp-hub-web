@@ -1,5 +1,6 @@
 import React from "react";
 import DropDownSearch from "./DropDownSearch";
+import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormComposite extends Modal {
@@ -29,7 +30,7 @@ export default class FormComposite extends Modal {
         dataIndex: "markup",
         key: "composite_product_markup",
         width: 100,
-        render: (text, record, index) => <this.InputNumber name={`productCompositeMarkUp[${index}]`} form={this.props.form} data={record.markup}/>
+        render: (text, record, index) => <this.InputNumber name={`productCompositeMarkUp[${index}]`} form={this.props.form} isUnsign={true} data={record.markup}/>
       },
       {
         title: <this.Translate id="col_composite_product_cost" />,
@@ -50,6 +51,7 @@ export default class FormComposite extends Modal {
     ];
 
     this.handleOnSelectList = this.handleOnSelectList.bind(this);
+    this.handlePressEnterOnSearch = this.handlePressEnterOnSearch.bind(this);
     this.handleRemoveCompositeProduct = this.handleRemoveCompositeProduct.bind(this);
   }
 
@@ -111,7 +113,7 @@ export default class FormComposite extends Modal {
         productName,
         productCode,
         productCompositeProductId: value.id,
-        markup: 0,
+        markup: 1,
         cost,
         status: this.Enum.ACTIVE
       });
@@ -130,7 +132,7 @@ export default class FormComposite extends Modal {
           productName,
           productCode,
           productCompositeProductId: value.id,
-          markup: 0,
+          markup: 1,
           cost,
           status: this.Enum.ACTIVE
         });
@@ -140,61 +142,18 @@ export default class FormComposite extends Modal {
     this.setState({compositeList: existingCompositeList});
   }
 
+  handlePressEnterOnSearch(product) {
+    this.handleOnSelectList(product);
+  }
   
   render() {
     return (
       <this.Row>
-        {/* <this.Col md="12" className="search-height" style={{position: "relative"}}>
-          <div className="main-searchs">
-            <div className="search-icon icon-add-product"></div>
-            <this.InputText
-              name="searchProduct"
-              // label={<this.Translate id="input_product_search_product" />}
-              placeholder={this.CATranslate("input_product_search_product", this.props.locale)}
-              validateStatus={this.props.productSearch.fetching ? "validating" : ""}
-              handleKeyUp={this.handleKeyDownOnProductSearch}
-              handlePressEnter={this.handlePressEnterOnSearch}
-              handleOnBlur={this.handleOnBlurSearch}
-              handleOnFocus={this.handleOnFocusSearch}
-              form={this.props.form}/>
-            <div className="remove-search-icon icon-clear" onClick={this.remove}></div>
-          </div>
-          <this.Col md="4" className="hidden">
-            <this.Button type="info" className="btn-add-product-compsite">
-              <span className="icon-add"></span>
-            </this.Button>
-            <this.InputNumber
-              name="isFocusOnSearchCompositeProduct"
-              data={0}
-              form={this.props.form}/>
-          </this.Col>
-
-          <div className="wrap-dropdown-search-product">
-            {
-              this.state.visibleDropDown && this.props.productSearch.fetched?
-                <List
-                  itemLayout="horizontal"
-                  dataSource={this.props.productSearch.list}
-                  className="list-search"
-                  onMouseEnter={this.handleOnMouseHoverOnSearchList}
-                  onMouseLeave={this.handleOnMouseLeaveOnSearchList}
-                  renderItem={product => (
-                    <List.Item onClick={() => this.handleOnSelectList(product)}>
-                      <List.Item.Meta
-                        title={product.productDescriptions.length > 0 ? product.productDescriptions[0].name : ""}
-                        description={product.productDescriptions.length > 0 ? product.productDescriptions[0].description : ""}
-                      />
-                    </List.Item>
-                  )}
-                />
-                :
-                ""
-            }
-          </div>
-        </this.Col> */}
         <DropDownSearch
           productSearch={this.props.productSearch}
           handleOnSelectList={this.handleOnSelectList}
+          handlePressEnterOnSearch={this.handlePressEnterOnSearch}
+          filter={JSON.stringify({type: [Enum.TYPE_OF_PRODUCT.RAW_MATERIAL]})}
           dispatch={this.props.dispatch}
           locale={this.props.locale}
           form={this.props.form}/>

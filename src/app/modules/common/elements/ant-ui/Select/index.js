@@ -8,12 +8,14 @@ export class Select extends Element {
     return (
       <this.FormItem
         label={this.props.label}
-        help={this.props.help}>
+        help={this.props.help}
+        validateStatus={this.props.validateStatus}>
         {
           getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.defaultValue})(
             <this.Select
               placeholder={this.props.placeholder}
               onChange={this.props.onChange}
+              onFocus={this.props.handleOnFocus}
               disabled={this.props.disabled}
               style={{ width: "100%" }}
             >

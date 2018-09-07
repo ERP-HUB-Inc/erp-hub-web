@@ -33,6 +33,63 @@ class ProductService extends BaseService {
       languageId);
   }
 
+  searchForDrowDown(
+    limit,
+    offset,
+    sortField,
+    sortOrder,
+    filter,
+    searchKey
+  ) {
+    let languageId = "en";
+    const currentSetting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
+    
+    if (currentSetting != null && "defaultLanguageCode" in currentSetting) {
+      languageId = currentSetting.defaultLanguageCode;
+    }
+
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    return this.GET({ 
+      url: `${this.baseUrl}/lists/dropdown?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&languageId=${languageId}`,  
+      data: this.data,
+      headers: this.header
+    });
+  }
+
+  logList(
+    id,
+    limit,
+    offset,
+    sortField,
+    sortOrder,
+    filter,
+    searchKey
+  ) {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    return this.GET({ 
+      url: `${this.baseUrl}/log/${id}?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}`,  
+      data: this.data,
+      headers: this.header
+    });
+  }
+
+  costLogList(
+    id,
+    limit,
+    offset,
+    sortField,
+    sortOrder,
+    filter,
+    searchKey
+  ) {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    return this.GET({ 
+      url: `${this.baseUrl}/cost/log/${id}?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}`,  
+      data: this.data,
+      headers: this.header
+    });
+  }
+
   archiveVariant(id) {
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
     return this.DELETE({  

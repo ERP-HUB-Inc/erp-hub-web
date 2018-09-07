@@ -82,7 +82,7 @@
 }
 
 .table-wrapper .ant-btn {
-    width: 110px
+    min-width: 110px
 }
 
 .main-search-layout .ant-btn.info{

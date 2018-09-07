@@ -219,10 +219,25 @@ export default class Form extends Modal {
     }
   }
 
+  renderOtherAction() {
+    return (
+      <span>
+        <this.Button htmlType="submit" className="info btn-clone-product">
+          <span className="icon-add icon-padding-right"></span><this.Translate id="btn_product_clone" />
+        </this.Button>
+        <this.Button htmlType="submit" className="info">
+          <span className="icon-barcode icon-padding-right"></span><this.Translate id="btn_product_print_label" />
+        </this.Button>
+      </span>
+    );
+  }
+
   render() {
     const {
       productUpdate,
       productDetail,
+      productLog,
+      productCostLog,
       productVariantArchive,
       form,
       locale,
@@ -253,6 +268,8 @@ export default class Form extends Modal {
           locale={locale}
           dispatch={dispatch}
           formData={productDetail.data}
+          productLog={productLog}
+          productCostLog={productCostLog}
           productVariantArchive={productVariantArchive}
           brands={brands}
           brandAdd={brandAdd}

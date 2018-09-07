@@ -40,6 +40,14 @@ table tr td .list-code,
     color: #4D4F5C;
 }
 
+.ant-tabs-nav {
+    text-transform: uppercase
+}
+
+.ant-tabs-tab {
+    font-weight: 500
+}
+
 /* button */
 .mg-right {
     margin-right: 8px
@@ -64,7 +72,6 @@ label {
 
 /* format size */
 .font-size,
-.ant-table-body table tr th,
 .breadcrumb a,
 .main-collapse .ant-collapse-header .collapse-price
 {
@@ -179,7 +186,7 @@ html {
 
 /* auto complete */
 
-.react-autosuggest__container {
+/* .react-autosuggest__container {
     position: relative;
   }
   
@@ -261,7 +268,7 @@ html {
 .react-autosuggest__suggestions-container--open {
     width: 100% !important;
     border: none !important;
-}
+} */
 
 table tr td .list-product-name {
     width: 184px;

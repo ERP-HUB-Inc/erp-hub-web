@@ -53,6 +53,7 @@ export default class InputNumber extends Element {
 }
 
 InputNumber.defaultProps = {
-  data: 0.00
+  data: 0.00,
+  isUnsign: false
 };
 

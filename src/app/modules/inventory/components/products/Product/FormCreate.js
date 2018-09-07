@@ -39,7 +39,7 @@ export default class FormCreate extends Modal {
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err && this.props.form.getFieldValue("isFocusOnSearchCompositeProduct") === 0) {
+      if (!err) {
         // PREPARE DATA FOR VARIANT
         const productVariantToProduct = [];
         if ("attributeId" in values && "variantName" in values) {
@@ -78,6 +78,7 @@ export default class FormCreate extends Modal {
 
         // PREPARE DATA FROM DESCRIPTION
         const productDescriptions = [];
+    
         if (values.productName) {
           values.productName.forEach((productName, index) => {
             productDescriptions.push({
@@ -91,6 +92,20 @@ export default class FormCreate extends Modal {
             languageId: this.getCurrentLanguageCode(),
             name: values["productNameDefault"],
             description: values["productDescriptionDefault"]
+          });
+        }
+
+        // IF NOT ENOUGHT DESCRIPTION WITH LANGUAGE ACTIVE WE ADD DEFAULT DESCRIPTION DEFAULT FOR IT
+        if (productDescriptions.length > 0 && productDescriptions.length !== this.props.storeLanguage.length) {
+          this.props.storeLanguage.forEach(language => {
+            const findExistDescription = productDescriptions.find(value => value.languageId === language.code);
+            if(!findExistDescription) {
+              productDescriptions.push({
+                languageId: language.code,
+                name: "",
+                description: ""
+              });
+            }
           });
         }
 
@@ -127,7 +142,7 @@ export default class FormCreate extends Modal {
         values["productPackageToProduct"] = productPackageToProduct;
 
         console.log("Product Submit Value:", values);
-        this.dispatch(ProductAction.add(values));   
+        // this.dispatch(ProductAction.add(values));   
       }
     });
   }
@@ -168,6 +183,19 @@ export default class FormCreate extends Modal {
 
   handleChangeTag(value) {
     console.log("Tag Changes:", value);
+  }
+
+  renderOtherAction() {
+    return (
+      <span>
+        <this.Button htmlType="submit" className="info btn-clone-product">
+          <span className="icon-add icon-padding-right"></span><this.Translate id="btn_product_clone" />
+        </this.Button>
+        <this.Button htmlType="submit" className="info">
+          <span className="icon-barcode icon-padding-right"></span><this.Translate id="btn_product_print_label" />
+        </this.Button>
+      </span>
+    );
   }
 
   handleSelectTag(value) {
@@ -242,7 +270,7 @@ export default class FormCreate extends Modal {
       this.content = (
         <FormItem
           form={form}
-          languages={storeLanguage}
+          languages={storeLanguage.list}
           locale={locale}
           dispatch={dispatch}
           productVariantArchive={productVariantArchive}

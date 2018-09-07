@@ -84,7 +84,8 @@ import {
   Tabs,
   Badge,
   Spin,
-  Tag
+  Tag,
+  List
 } from "antd";
 
 const Panel = Collapse.Panel;
@@ -187,6 +188,7 @@ export default class Component extends RComponent {
     this.SelectTag = SelectTag;
     this.Tag = TagButton;
     this.TagLabel = Tag;
+    this.List = List;
 
     this.CSVLink = CSVLink;
     this.CSVDownload = CSVDownload;
@@ -199,6 +201,9 @@ export default class Component extends RComponent {
 
     // HTTP CODE
     this.HttpCode = HttpCode;
+
+    // OTHER
+    this.emptyText = "-";
 
   }
 

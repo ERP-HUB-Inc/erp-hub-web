@@ -10,11 +10,27 @@ export default {
       });
     };
   },
+  fetchLog: (id, limit, offset, sortField, sortOrder, filter, searchKey) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_PRODUCT_LOG,
+        payload: ProductService.logList(id, limit, offset, sortField, sortOrder, filter, searchKey)
+      });
+    };
+  },
+  fetchCostLog: (id, limit, offset, sortField, sortOrder, filter, searchKey) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_PRODUCT_COST_LOG,
+        payload: ProductService.costLogList(id, limit, offset, sortField, sortOrder, filter, searchKey)
+      });
+    };
+  },
   search: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.SEARCH_PRODUCT,
-        payload: ProductService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
+        payload: ProductService.searchForDrowDown(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },
