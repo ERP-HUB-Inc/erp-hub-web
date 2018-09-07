@@ -38,7 +38,7 @@ export default class Form extends Modal {
 
     if (purchaseOrderUpdate.showForm) {
       this.content = (
-        <FormItem form={form} supplier={supplier} product={product} storeLocation={storeLocation} productSearch={productSearch} dispatch={dispatch} locale={locale}/>
+        <FormItem form={form} formData={purchaseOrderUpdate.data} supplier={supplier} product={product} storeLocation={storeLocation} productSearch={productSearch} dispatch={dispatch} locale={locale}/>
       );
       return super.render();
     } else {

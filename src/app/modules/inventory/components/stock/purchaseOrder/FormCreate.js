@@ -1,4 +1,5 @@
 import React from "react";
+import Enum from "../../../enums";
 import FormItem from "./FormItem";
 import Modal from "../../../../common/components/shares/Modal";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
@@ -19,15 +20,15 @@ export default class FormCreate extends Modal {
   }
 
   handlePushToSupplier(){
-    this.dispatch(PurchaseOrderShowEmailAction.showForm());
+    const form = this.props.form.getFieldsValue();
+    this.dispatch(PurchaseOrderShowEmailAction.showForm(form));
     this.setState({modalVisible: false});
-    this.modal1 = <FormCreatePurchseOrderSendEmail />;
+    this.modal1 = <FormCreatePurchseOrderSendEmail formvalue={form}/>;
   }
 
   pushToSupplier(){
     this.handlePushToSupplier();
   }  
-
 
   renderOtherAction(){
     return(
@@ -37,7 +38,7 @@ export default class FormCreate extends Modal {
     );
   }
 
-  handleSubmit (e) {
+  handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {      
@@ -78,8 +79,8 @@ export default class FormCreate extends Modal {
         values["requestTotal"] = 105;
         values["returnTotal"] = 0;
         values["receiveTotal"] = 0;
-        values["step"] = 0;
-        values["type"] = 0;
+        values["step"] = Enum.CLIENT_AUTO_NUMBER_TYPE.PURCHASE;
+        values["type"] = Enum.CLIENT_AUTO_NUMBER_TYPE.PURCHASE;
         values["status"] = 0;
 
         if(purchases) {
@@ -87,7 +88,7 @@ export default class FormCreate extends Modal {
         } 
         console.log("get values",values);
         // console.log("purchase order Entries",values["purchaseOrderEntries"]);
-        this.dispatch(PurchaseOrderAction.add(values));   
+        this.dispatch(PurchaseOrderAction.add(values));     
       }
     });
   }
@@ -100,6 +101,8 @@ export default class FormCreate extends Modal {
     const {purchaseOrderAdd, form, locale, supplier, product, storeLocation, productSearch, dispatch} = this.props;
     
     this.submitLoading = purchaseOrderAdd.adding;
+
+    console.log("validation field values",this.props.form.validateFieldsAndScroll);
 
     if (purchaseOrderAdd.showForm) {
       this.content = (

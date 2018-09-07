@@ -243,18 +243,21 @@ export default class SearchPo extends Modal {
   render(){
     const { productLists } = this.state;
     return(
-      <div>
+      <div className="main-dropdown-search">
         <DropDownSearch
           productSearch={ this.props.dataSource }
           handleOnSelectList={this.handleOnSelectList}
           dispatch={this.props.dispatch}
           locale={this.props.locale}
           form={this.props.form}
-        />
+        />  
         <this.Table 
           dataSource={productLists}
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}} />
+        <div className="total-amount">
+          Total Amount: 
+        </div>
       </div>
     );
   }
