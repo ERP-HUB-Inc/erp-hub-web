@@ -138,6 +138,7 @@ export default class FormComposite extends Modal {
     }
 
     this.setState({compositeList: existingCompositeList});
+    
   }
 
   

@@ -18,8 +18,6 @@ export default class FormCreate extends Modal {
     this.handlePushToSupplier = this.handlePushToSupplier.bind(this);
   }
 
-
-
   handlePushToSupplier(){
     this.dispatch(PurchaseOrderShowEmailAction.showForm());
     this.setState({modalVisible: false});
@@ -83,7 +81,6 @@ export default class FormCreate extends Modal {
         values["step"] = 0;
         values["type"] = 0;
         values["status"] = 0;
-        // values["number"] = 67894;
 
         if(purchases) {
           values["purchaseOrderEntries"] = purchases;
@@ -100,16 +97,13 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    const {purchaseOrderAdd, form, locale,supplier,product,storeLocation,dispatch} = this.props;
+    const {purchaseOrderAdd, form, locale, supplier, product, storeLocation, productSearch, dispatch} = this.props;
     
     this.submitLoading = purchaseOrderAdd.adding;
 
     if (purchaseOrderAdd.showForm) {
       this.content = (
-        <div>
-          { purchaseOrderAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" }
-          <FormItem form={form} supplier={supplier} product={product} storeLocation={storeLocation} dispatch={dispatch} locale={locale}/>
-        </div>
+        <FormItem form={form} supplier={supplier} product={product} storeLocation={storeLocation} productSearch={productSearch} dispatch={dispatch} locale={locale}/>
       );
     
       return super.render();

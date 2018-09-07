@@ -193,7 +193,7 @@ const dataSource = {
         icon: "icon-undo",
         route: "/stock/re-order-point",
         component: ReOrderPoint,
-        isFashNav: true
+        isFashNav: false
       },
       {
         title: "Stock Transfer",
@@ -207,14 +207,14 @@ const dataSource = {
         icon: "icon-sale-return",
         route: "/stock/return",
         component: StockReturn,
-        isFashNav: true
+        isFashNav: false
       },
       {
         title: "Stock",
         icon: "icon-stock",
         route: "/stock",
         component: Stock,
-        isFashNav: true
+        isFashNav: false
       },
       {
         title: "Stock Control",
@@ -228,7 +228,7 @@ const dataSource = {
         icon: "icon-stock-audit",
         route: "/stock/return",
         component: StockAudit,
-        isFashNav: true
+        isFashNav: false
       }
     ]
   },

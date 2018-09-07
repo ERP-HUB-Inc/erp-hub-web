@@ -37,10 +37,7 @@ export default class Form extends Modal {
 
     if (returnPurchaseUpdate.showForm) {
       this.content = (
-        <div>
-          {returnPurchaseUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <FormItem formData={returnPurchaseUpdate.data} form={form} locale={locale}/>
-        </div>
+        <FormItem formData={returnPurchaseUpdate.data} form={form} locale={locale}/>
       );
       return super.render();
     } else {

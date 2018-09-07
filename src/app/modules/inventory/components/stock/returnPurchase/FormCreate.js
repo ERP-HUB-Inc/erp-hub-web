@@ -32,10 +32,7 @@ export default class FormCreate extends Modal {
 
     if (returnPurchaseAdd.showForm) {
       this.content = (
-        <div>
-          { returnPurchaseAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" }
-          <FormItem form={form} locale={locale}/>
-        </div>
+        <FormItem form={form} locale={locale}/>
       );
       return super.render();
     } else {

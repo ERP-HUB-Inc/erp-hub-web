@@ -37,10 +37,7 @@ export default class Form extends Modal {
 
     if (reorderPointUpdate.showForm) {
       this.content = (
-        <div>
-          {reorderPointUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <FormItem formData={reorderPointUpdate.data} form={form} locale={locale}/>
-        </div>
+        <FormItem formData={reorderPointUpdate.data} form={form} locale={locale}/>
       );
       return super.render();
     } else {
