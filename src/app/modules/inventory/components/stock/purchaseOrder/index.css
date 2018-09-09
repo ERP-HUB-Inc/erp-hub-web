@@ -1,27 +1,3 @@
-.main-searchs input {
-    width: 98%;
-    border: none;
-    height: 50px;
-}
-
-.main-searchs .search-icon{
-    float: left;
-    position: relative;
-    font-size: 36pt;
-}
-
-.main-searchs .remove-search-icon {
-    float: right;
-    position: relative;
-    top: -49px;
-    font-size: 31px;
-}
-
-.search-height {
-    height: 40px !important;
-}
-
-
 .btn-push-to-supplier {
     width: 153px !important;
 }

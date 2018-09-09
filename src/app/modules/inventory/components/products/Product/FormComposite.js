@@ -26,7 +26,7 @@ export default class FormComposite extends Modal {
         },
       },
       {
-        title: <this.Translate id="col_composite_product_markup" />,
+        title: <span><this.Translate id="col_composite_product_markup" />(%)</span>,
         dataIndex: "markup",
         key: "composite_product_markup",
         width: 100,

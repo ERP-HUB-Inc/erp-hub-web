@@ -43,16 +43,12 @@ export default class ReorderPointList extends List {
     });
   }
 
-  renderActionButton(){
-    return(
-      <div>
-        <this.Link to="#" onClick={this.purchase}>
-          <this.Button type="info">
-            <span className="icon-export"></span> {<this.Translate id="button_stock_reorder_purchase" />}
-          </this.Button> 
-        </this.Link>
-      </div>
-    );
+  buttonActionCollection() {
+    return [
+      <this.Button type="info" onClick={this.purchase}>
+        <span className="icon-export"></span> {<this.Translate id="button_stock_reorder_purchase" />}
+      </this.Button>
+    ];
   }
 
   renderFilterRecord() {

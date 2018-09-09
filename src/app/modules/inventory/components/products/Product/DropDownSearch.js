@@ -22,6 +22,7 @@ export default class DropDownSearch extends Modal {
     this.handleOnMouseHoverOnSearchList = this.handleOnMouseHoverOnSearchList.bind(this);
     this.handleOnMouseLeaveOnSearchList = this.handleOnMouseLeaveOnSearchList.bind(this);
     this.renderSearchItem = this.renderSearchItem.bind(this);
+    this.handleRemoveTextSearch = this.handleRemoveTextSearch.bind(this);
   }
 
   componentDidMount() {
@@ -115,6 +116,10 @@ export default class DropDownSearch extends Modal {
     }
   }
 
+  handleRemoveTextSearch() {
+    this.props.form.setFieldsValue({searchProduct: ""});
+  }
+
   renderSearchItem(product) {
     const {productDescriptions} = product;
     const barcode = product.barcode;
@@ -140,7 +145,7 @@ export default class DropDownSearch extends Modal {
             handleOnBlur={this.handleOnBlurSearch}
             handleOnFocus={this.handleOnFocusSearch}
             form={this.props.form}/>
-          <div className="remove-search-icon icon-clear" onClick={this.remove}></div>
+          <div className="remove-search-icon icon-clear" onClick={this.handleRemoveTextSearch}></div>
         </div>
         <this.Col md="4" className="hidden">
           <this.Button type="info" className="btn-add-product-compsite">

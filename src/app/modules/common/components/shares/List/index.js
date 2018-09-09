@@ -113,6 +113,7 @@ export default class List extends Component {
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
     this.renderTable = this.renderTable.bind(this);
     this.expandedRender = this.expandedRender.bind(this);
+    this.buttonActionCollection = this.buttonActionCollection.bind(this);
 
     this.RESET_CONSTANT = "RESET";
   }
@@ -339,35 +340,54 @@ export default class List extends Component {
     );
   }
 
-  renderActionButton() {
+  renderButtonAddNew() {
     return (
-      <div>
-        {
-          this.showExport ?
-
-            <div className="export-csv-button">
-              <this.CSVLink data={this.exportCsv()} headers={this.columns}>
-                {<this.Translate id="button_search_stock_transfer_export_csv" />}
-              </this.CSVLink> 
-            </div>
-
-            : 
-            <div className="float-left">
-              <this.Button type="info" className="mg-right" onClick={() => this.handleShowFormAdd()}>
-                <span className="icon-add icon-padding-right"></span>Add New
-              </this.Button>
-              <this.Button disabled={this.state.selectedRowKeys.length <= 0} type="danger" onClick={() => this.handleConfirm()}>
-                <span className="icon-delete icon-padding-right"></span>Delete
-              </this.Button>
-            </div> 
-
-        }
-      </div>
-      
+      <this.Button
+        type="info"
+        className="mg-right text-uppercase"
+        onClick={() => this.handleShowFormAdd()}>
+        <span className="icon-add icon-padding-right"></span><this.Translate id="text_add_new" />
+      </this.Button>
     );
   }
 
-  
+  renderButtonDelete() {
+    return (
+      <this.Button
+        disabled={this.state.selectedRowKeys.length <= 0}
+        type="danger"
+        className="text-uppercase"
+        onClick={() => this.handleConfirm()}>
+        <span className="icon-delete icon-padding-right"></span><this.Translate id="text_delete" />
+      </this.Button>
+    );
+  }
+
+  renderButtonExportCSV() {
+    return (
+      <this.CSVLink
+        data={this.exportCsv()}
+        headers={this.columns}>
+        <this.Button type="info">
+          <span className="icon-export icon-padding-right"></span>{<this.Translate id="button_search_stock_transfer_export_csv" />}
+        </this.Button>
+      </this.CSVLink>
+    );
+  }
+
+
+  buttonActionCollection() {
+    return [
+      this.renderButtonAddNew(),
+      this.renderButtonDelete()
+    ];
+  }
+  /**
+   * MAP ALL BUTTON ACTION FOR THE LIST
+   */
+  renderActionButton() {
+    return this.buttonActionCollection().map((buttonAction, buttonActionIndex) => <span key={buttonActionIndex}>{buttonAction}</span>);
+  }
 
   exportCsv(){
     const fetchingProps = this.props[this.fetchingProp];
@@ -391,11 +411,11 @@ export default class List extends Component {
 
         </div>
         <div className="ant-modal-footer">
-          <this.Button className="danger" onClick={() => this.handleCancel()}>
-            <span className="icon-cancel icon-padding-right"></span>CANCEL
+          <this.Button className="danger text-uppercase" onClick={() => this.handleCancel()}>
+            <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel"/>
           </this.Button>
-          <this.Button onClick={() => this.handleDelete()} loading={this.state.deleting} className="info">
-            <span className="icon-checked icon-padding-right"></span>YES
+          <this.Button onClick={() => this.handleDelete()} loading={this.state.deleting} className="info text-uppercase">
+            <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes"/>
           </this.Button>
         </div>
       </this.Modal>

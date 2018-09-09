@@ -14,7 +14,8 @@ export default class Modal extends Component {
     this.dispatch = this.props.dispatch;
     this.content = "";
     this.modal1 = "";
-    this.width = "";
+    this.width = "520px";
+    this.wrapClassName = "";
     this.responseError = "";
     this.isRepsonseBackError = "none";
     this.isRepsonseBackErrorOfAction = "none";
@@ -143,16 +144,12 @@ export default class Modal extends Component {
         <this.Modal
           title={this.title}
           width={this.width}
-          wrapClassName="vertical-center-modal"
+          wrapClassName={`vertical-center-modal ${this.wrapClassName}`}
           visible={true}
-          footer={null}
-        >
+          footer={this.renderCrudAction()}>
           <Form autoComplete="off" onSubmit={this.handleSubmit}>
             <this.Alert style={{display: this.isRepsonseBackError}} message={this.requiredMessage} type="error" showIcon/>
             {this.content}
-            <div className="ant-modal-footer">
-              {this.renderCrudAction()}
-            </div>
           </Form>
         </this.Modal>
       </div>

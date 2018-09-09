@@ -29,10 +29,6 @@
     height: 180px
 }
 
-.vertical-center-modal .ant-modal {
-    top: 8px !important
-}
-
 .product-type .ant-radio-button-wrapper {
     height: auto !important;
     width: 32% !important;
@@ -102,12 +98,42 @@
     border-right: 1px solid #d9d9d9
 }
 
+.main-searchs input {
+    width: 98%;
+    border: none;
+    height: 50px;
+}
+
+.main-searchs .search-icon{
+    float: left;
+    position: relative;
+    font-size: 36pt;
+}
+
+.main-searchs .remove-search-icon {
+    float: right;
+    position: relative;
+    top: -49px;
+    font-size: 30px;
+    cursor: pointer
+}
+
+.main-searchs .remove-search-icon, 
+.main-searchs .search-icon{
+    color: #d9d9d9
+}
+
+.search-height {
+    height: 40px !important;
+}
+
 
 .wrap-dropdown-search-product {
     position: absolute;
     z-index: 2;
     top: 55px;
-    width: 100%
+    width: 100%;
+    padding-right: 20px
 }
 
 .wrap-dropdown-search-product .list-search {
@@ -146,10 +172,6 @@
     padding-top: 2px
 }
 
-.btn-clone-product {
-    margin-left: 8px
-}
-
 .wrapRowContentTab {
     min-height: 830px;
     display: inherit !important
@@ -157,4 +179,62 @@
 
 .barcode-number {
     color: #9A9A9A
+}
+
+/* FLEX LAYOUT FOR BIG COMPONENT */
+.modal-product .ant-tabs-bar {
+    margin: 0 0 0 0 !important
+}
+
+.modal-product .ant-modal-body {
+    padding-right: 0
+}
+
+.modal-product .ant-modal-content {
+    flex-direction: column
+}
+
+.modal-product .ant-modal,
+.modal-product .ant-modal-content {
+    height: 100%
+}
+
+.modal-product .ant-modal-body {
+    flex-direction: row
+}
+
+.modal-product .ant-form,
+.modal-product .ant-tabs {
+    width: 100%
+}
+
+.modal-product .ant-tabs {
+    flex-direction: column
+}
+
+.modal-product .ant-tabs .ant-tabs-content {
+    flex-direction: row;
+    flex: 1
+}
+
+.modal-product .ant-tabs .ant-tabs-content .ant-tabs-tabpane:first-child{
+    height: 100%;
+    overflow: hidden auto;/*x:hidden y: auto*/
+    padding-right: 15px
+}
+
+.modal-product .ant-tabs .ant-tabs-content .ant-tabs-tabpane{
+    padding-top: 15px
+}
+
+.modal-product .ant-modal-footer {
+    background: #f7f7f7cc
+}
+
+.modal-product .ant-form,
+.modal-product .ant-modal-content,
+.modal-product .ant-modal-body,
+.modal-product .ant-tabs,
+.modal-product .ant-tabs .ant-tabs-content {
+    display: flex;
 }
