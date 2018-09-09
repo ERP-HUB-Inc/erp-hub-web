@@ -187,7 +187,8 @@
 }
 
 .modal-product .ant-modal-body {
-    padding-right: 0
+    padding-right: 0 !important;
+    padding-left: 0 !important
 }
 
 .modal-product .ant-modal-content {
@@ -203,13 +204,22 @@
     flex-direction: row
 }
 
+.modal-product .ant-form {
+    flex-direction: column
+}
+
 .modal-product .ant-form,
 .modal-product .ant-tabs {
     width: 100%
 }
 
 .modal-product .ant-tabs {
-    flex-direction: column
+    flex-direction: column;
+    padding-left: 15px
+}
+
+.modal-product .tab-item-language {
+    padding-left: 0 !important
 }
 
 .modal-product .ant-tabs .ant-tabs-content {
@@ -218,7 +228,6 @@
 }
 
 .modal-product .ant-tabs .ant-tabs-content .ant-tabs-tabpane:first-child{
-    height: 100%;
     overflow: hidden auto;/*x:hidden y: auto*/
     padding-right: 15px
 }

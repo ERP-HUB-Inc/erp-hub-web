@@ -1,7 +1,7 @@
 import React from "react";
 import FormItem from "./FormItem";
 import Modal from "../../../../common/components/shares/Modal";
-import ManageEmployeeAction from "../../../actions/products/productsUnit";
+import UnitAction from "../../../actions/products/productsUnit";
 
 export default class FormCreate extends Modal {
   constructor(props) {
@@ -16,27 +16,25 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.dispatch(ManageEmployeeAction.add(values));   
+        console.log("Unti Before Save", values);
+        this.dispatch(UnitAction.add(values));   
       }
     });
   }
       
   handleCancel() {
-    this.dispatch(ManageEmployeeAction.reset());
+    this.dispatch(UnitAction.reset());
   }
 
   render() {
     const {productsUnitAdd, form, locale} = this.props;
-    console.log("Product Unit Loading");
     this.submitLoading = productsUnitAdd.adding;
 
     if (productsUnitAdd.showForm) {
-      this.content = (
-        <FormItem form={form} locale={locale}/>
-      );
+      this.content = <FormItem form={form} locale={locale}/>;
       return super.render();
     } else {
-      return (<div></div>);
+      return <div/>;
     }
   }
 }

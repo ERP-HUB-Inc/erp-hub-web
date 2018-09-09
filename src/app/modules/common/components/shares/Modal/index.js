@@ -53,7 +53,6 @@ export default class Modal extends Component {
   }
 
   handleSubmit() {
-    
   }
 
   handleSubmitConfirmAction() {
@@ -123,7 +122,7 @@ export default class Modal extends Component {
 
   renderCrudAction(){
     return(
-      <div>
+      <div className="ant-modal-footer">
         <this.Button className="danger" onClick={() => this.handleCancel()}>
           <span className="icon-cancel icon-padding-right"></span><this.Translate id="button_text_cancel" />
         </this.Button>  
@@ -146,11 +145,16 @@ export default class Modal extends Component {
           width={this.width}
           wrapClassName={`vertical-center-modal ${this.wrapClassName}`}
           visible={true}
-          footer={this.renderCrudAction()}>
-          <Form autoComplete="off" onSubmit={this.handleSubmit}>
-            <this.Alert style={{display: this.isRepsonseBackError}} message={this.requiredMessage} type="error" showIcon/>
-            {this.content}
-          </Form>
+          footer={null}>
+            <Form autoComplete="off" onSubmit={this.handleSubmit}>
+              <this.Alert
+                style={{display: this.isRepsonseBackError}}
+                message={this.requiredMessage}
+                type="error"
+                showIcon/>
+              {this.content}
+              {this.renderCrudAction()}
+            </Form>
         </this.Modal>
       </div>
     );
