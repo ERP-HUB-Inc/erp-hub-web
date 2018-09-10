@@ -22,7 +22,8 @@ export default class FormCreate extends Modal {
       tagList: []
     };
     this.title = <this.Translate id="create_products_title" />;
-    this.width = "90%";
+    this.width = "100%";
+    this.wrapClassName = "modal-product";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleAddBrand = this.handleAddBrand.bind(this);
@@ -183,19 +184,6 @@ export default class FormCreate extends Modal {
 
   handleChangeTag(value) {
     console.log("Tag Changes:", value);
-  }
-
-  renderOtherAction() {
-    return (
-      <span>
-        <this.Button htmlType="submit" className="info btn-clone-product">
-          <span className="icon-add icon-padding-right"></span><this.Translate id="btn_product_clone" />
-        </this.Button>
-        <this.Button htmlType="submit" className="info">
-          <span className="icon-barcode icon-padding-right"></span><this.Translate id="btn_product_print_label" />
-        </this.Button>
-      </span>
-    );
   }
 
   handleSelectTag(value) {

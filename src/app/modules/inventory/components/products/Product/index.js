@@ -46,6 +46,27 @@ export default class ProductList extends List {
     });
   }
 
+  buttonActionCollection() {
+    return [
+      this.renderButtonAddNew(),
+      <this.Button
+        key={2}
+        disabled={this.state.selectedRowKeys.length <= 0 || this.state.selectedRowKeys.length > 1}
+        htmlType="submit"
+        className="info">
+        <span className="icon-add icon-padding-right"></span><this.Translate id="btn_product_clone" />
+      </this.Button>,
+      <this.Button
+        propKey="btn_product_print_label"
+        disabled={this.state.selectedRowKeys.length <= 0}
+        htmlType="submit"
+        className="info margin-left-8">
+        <span className="icon-barcode icon-padding-right"></span>
+        <this.Translate id="btn_product_print_label" />
+      </this.Button>
+    ];
+  }
+
   expandedRender(record){
     return( 
       <div className="sub-table">

@@ -9,6 +9,7 @@ export class InputText extends Element {
       <Input
         type={ this.props.type }
         name={this.props.name}
+        className={this.props.className}
         placeholder={this.props.placeholder}
         label={this.props.label}
         help={this.props.help}

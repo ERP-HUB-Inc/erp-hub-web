@@ -1,4 +1,10 @@
 export default {
+  "text_action": [
+    "Action",
+    "Action",
+    "Action"
+  ],
+
   "text_no": [
     "No",
     "No",
@@ -9,6 +15,12 @@ export default {
     "Yes",
     "Yes",
     "Yes"
+  ],
+
+  "text_cancel": [
+    "Cancel",
+    "Cancel",
+    "Cancel"
   ],
 
   "text_status": [
@@ -33,6 +45,18 @@ export default {
     "Add",
     "Add",
     "Add"
+  ],
+
+  "text_add_new": [
+    "Add New",
+    "Add New",
+    "Add New"
+  ],
+
+  "text_delete": [
+    "Delete",
+    "Delete",
+    "Delete"
   ],
 
   "text_remove": [

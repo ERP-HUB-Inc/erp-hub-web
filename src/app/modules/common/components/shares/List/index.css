@@ -53,10 +53,6 @@
     content: ""
 }
 
-.ant-modal-header {
-    padding-bottom: 0 !important
-}
-
 .ant-alert.ant-alert-no-icon {
     margin-bottom: 15px
 }

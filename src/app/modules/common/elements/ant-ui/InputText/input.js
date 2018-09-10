@@ -9,7 +9,8 @@ export default class InputText extends Element {
       <this.FormItem
         label={this.props.label}
         help={this.props.help}
-        validateStatus={this.props.validateStatus}>
+        validateStatus={this.props.validateStatus}
+        className={this.props.className}>
         {
           getFieldDecorator(this.props.name, {rules: [
             {

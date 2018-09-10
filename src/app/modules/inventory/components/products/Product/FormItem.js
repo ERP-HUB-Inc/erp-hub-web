@@ -182,6 +182,18 @@ export default class FormItem extends Modal {
     this.setState({isAutoGenerateCode: e.target.value});
   }
 
+  onChangeProductName(e) {
+    this.setState({
+      productNameDefault: e.target.value
+    });
+  }
+
+  onChangeDefaultDescription(e) {
+    this.setState({
+      productDescriptionDefault: e.target.value
+    });
+  }
+
   renderDescription(language, languagesIndex) {
     const {locale, form, formData} = this.props;
     let productId = "",
@@ -206,12 +218,12 @@ export default class FormItem extends Modal {
         <this.Row className="wrapRowContentTab">
           <this.InputText 
             name={`language[${languagesIndex}]`} 
-            type="hidden"
+            className="hidden"
             data={language.code}
             form={form} />
           <this.InputText 
             name={`id[${languagesIndex}]`} 
-            type="hidden"
+            className="hidden"
             data={productId}
             form={form} />
           <this.Col md="12">
@@ -237,18 +249,6 @@ export default class FormItem extends Modal {
         </this.Row>
       </this.TabPane>
     );
-  }
-
-  onChangeProductName(e) {
-    this.setState({
-      productNameDefault: e.target.value
-    });
-  }
-
-  onChangeDefaultDescription(e) {
-    this.setState({
-      productDescriptionDefault: e.target.value
-    });
   }
 
   render() {
@@ -613,7 +613,7 @@ export default class FormItem extends Modal {
           </this.Row>
         </this.TabPane>
         <this.TabPane tab={<this.Translate id="tab_language" />} key="2">
-          <this.Tabs type="card" style={{marginTop: "30px"}}>
+          <this.Tabs type="card" className="tab-item-language">
             {languages.map((language, languagesIndex) => this.renderDescription(language, languagesIndex))}
           </this.Tabs>
         </this.TabPane>
