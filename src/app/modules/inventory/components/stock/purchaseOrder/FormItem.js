@@ -37,6 +37,12 @@ export default class FormItem extends Modal {
 
           .then((response) => {
             console.log("already exist");
+            this.props.form.setFields({
+              number: {
+                value: values.number,
+                errors: [new Error("Po is already exist")],
+              },
+            });
           })
           .catch((error) => {
             console.log("not exist");
@@ -65,6 +71,8 @@ export default class FormItem extends Modal {
   render() {
     const { form, dispatch, supplier, storeLocation, locale, formData, supplierDetail, productSearch } = this.props;
 
+
+
     console.log("supplierDetail",supplierDetail);
   
     return (
@@ -82,13 +90,26 @@ export default class FormItem extends Modal {
               form={form}/> 
           </this.Col>
           <this.Col md="2">
-            <this.DatePickers
-              name="deliveryDueDate"
-              defaultValue={this.Util.formatDatePicker(formData.deliveryDueDate)}
-              label={<this.Translate id="date_picker_stock_purchase_due_date" />}
-              placeholder={this.CATranslate("date_picker_stock_purchase_due_date", locale)}
-              form={form}
-            />
+            { formData.deliveryDueDate == null ?
+
+              <this.DatePickers
+                name="deliveryDueDate"
+                defaultValue=""
+                label={<this.Translate id="date_picker_stock_purchase_due_date" />}
+                placeholder={this.CATranslate("date_picker_stock_purchase_due_date", locale)}
+                form={form}
+              />
+              :
+              <this.DatePickers
+                name="deliveryDueDate"
+                defaultValue={ this.Util.formatDatePicker(formData.deliveryDueDate) } 
+                label={<this.Translate id="date_picker_stock_purchase_due_date" />}
+                placeholder={this.CATranslate("date_picker_stock_purchase_due_date", locale)}
+                form={form}
+              />
+
+            }
+
           </this.Col>
           <this.Col md="2">
             <this.InputText
@@ -111,7 +132,7 @@ export default class FormItem extends Modal {
           </this.Col>
           <this.Col md="2">
             <this.Select
-              name="supplierid"
+              name="supplierId"
               label={<this.Translate id="select_stock_purchase_order_from_supplier" /> }
               placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
               defaultValue={formData.supplierId}
@@ -123,7 +144,7 @@ export default class FormItem extends Modal {
           </this.Col>
           <this.Col md="2">
             <this.Select
-              name="locationid"
+              name="locationId"
               label={<this.Translate id="input_stock_purchase_order_delivery_to_location" />}
               defaultValue={formData.locationId}
               placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
@@ -137,6 +158,7 @@ export default class FormItem extends Modal {
           <this.Col md="12">
             <SearchPo
               dataSource={productSearch}
+              purchaseOrderEntries={formData.purchaseOrderEntries}
               locale={locale}
               dispatch={dispatch}
               form={form}
@@ -154,6 +176,8 @@ FormItem.defaultProps = {
     description:"",
     status: 1,
     supplierid:"",
-    deliveryDueDate:""
-  }
+    purchaseOrderEntries: []
+  },
+  productUpdate:[],
+  productSearch: []
 };

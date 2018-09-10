@@ -27,7 +27,7 @@ export default class BaseService extends Service {
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
     return this.GET(
       {
-        url: `${this.baseUrl}/${ids}`,
+        url: `${this.baseUrl}/check/number/${ids}`,
         data: {},     
         headers: this.header
       }
@@ -85,6 +85,7 @@ export default class BaseService extends Service {
   }
 
   update(data) {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
     const {id} = data;
     return this.PUT({
       url: `${this.baseUrl}/update/${id}`,

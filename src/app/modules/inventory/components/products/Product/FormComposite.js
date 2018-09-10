@@ -58,6 +58,7 @@ export default class FormComposite extends Modal {
 
   componentDidUpdate() {
     const {productPackageToProduct} = this.props;
+    console.log("productPackageToProduct",productPackageToProduct);
     if (productPackageToProduct.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
       const existingCompositeList = this.state.compositeList;
 

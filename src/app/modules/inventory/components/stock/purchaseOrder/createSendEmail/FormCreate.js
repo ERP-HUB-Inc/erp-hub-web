@@ -1,7 +1,9 @@
 import React from "react";
+import Enum from "../../../../enums";
 import FormItem from "./FormItem";
 import Modal from "../../../../../common/components/shares/Modal";
 import purchaseOrderSendEmailAction from "../../../../actions/stock/purchaseOrderSendEmail";
+import PurchaseOrderAction from "../../../../actions/stock/purchaseOrder";
 import "./index.css";
 
 export default class FormCreate extends Modal {
@@ -20,8 +22,11 @@ export default class FormCreate extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         // this.dispatch(purchaseOrderSendEmailAction.add(values));   
+        values["step"] = Enum.PO_STEP.PROCESS;
         console.log("values",values);
         console.log("form values",this.props.formvalue);
+        // this.dispatch(PurchaseOrderAction.update());
+
       }
     });
   }

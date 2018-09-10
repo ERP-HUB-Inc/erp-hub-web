@@ -68,6 +68,9 @@ export default class FormVariant extends Modal {
     if (productVariantToProduct.length > 0 &&  this.state.isNotYetLoadComponentDidUpdated) {
       let existingVariantAttributes = this.state.variantAttributeList;
 
+
+      console.log("VariantAttributes",existingVariantAttributes);
+
       productVariantToProduct.forEach(variantAttribute => {
         if (variantAttribute.status !== this.Enum.ARCHIVE) {
           if (existingVariantAttributes.length === 0) {
@@ -99,6 +102,7 @@ export default class FormVariant extends Modal {
         variantAttributeList: existingVariantAttributes,
         isNotYetLoadComponentDidUpdated: false
       });
+     
     }
 
     if (variantAttributeAdd.added) {

@@ -97,7 +97,7 @@ export default class FormCreate extends Modal {
 
         // IF NOT ENOUGHT DESCRIPTION WITH LANGUAGE ACTIVE WE ADD DEFAULT DESCRIPTION DEFAULT FOR IT
         if (productDescriptions.length > 0 && productDescriptions.length !== this.props.storeLanguage.length) {
-          this.props.storeLanguage.forEach(language => {
+          this.props.storeLanguage.list.forEach(language => {
             const findExistDescription = productDescriptions.find(value => value.languageId === language.code);
             if(!findExistDescription) {
               productDescriptions.push({
@@ -142,7 +142,7 @@ export default class FormCreate extends Modal {
         values["productPackageToProduct"] = productPackageToProduct;
 
         console.log("Product Submit Value:", values);
-        // this.dispatch(ProductAction.add(values));   
+        this.dispatch(ProductAction.add(values));   
       }
     });
   }

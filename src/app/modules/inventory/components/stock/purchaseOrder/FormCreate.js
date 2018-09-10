@@ -1,6 +1,7 @@
 import React from "react";
 import Enum from "../../../enums";
 import FormItem from "./FormItem";
+import Constant from "../../../constants/stock/purchaseOrder";
 import Modal from "../../../../common/components/shares/Modal";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
 import PurchaseOrderShowEmailAction from "../../../actions/stock/purchaseOrderSendEmail";
@@ -30,13 +31,6 @@ export default class FormCreate extends Modal {
     this.handlePushToSupplier();
   }  
 
-  renderOtherAction(){
-    return(
-      <this.Button onClick={this.pushToSupplier} className="info btn-push-to-supplier">
-        <span className="icon-save "></span> <this.Translate id="button_stock_purchase_order_push_to_supplier" />
-      </this.Button>
-    );
-  }
 
   handleSubmit(e) {
     e.preventDefault();
@@ -51,6 +45,7 @@ export default class FormCreate extends Modal {
         console.log("List purchase",JSON.stringify(listPurchase));
 
         delete values["purchaseId"];
+        delete values["productId"];
         delete values["purchaseQty"];
         delete values["purchasePrice"];
         delete values["purchaseDescription"];
@@ -75,38 +70,59 @@ export default class FormCreate extends Modal {
           }
         });
 
+        values["deliveryDueDate"] =  "2018/11/29";
         values["shippingFee"] = 0;
         values["requestTotal"] = 105;
         values["returnTotal"] = 0;
         values["receiveTotal"] = 0;
-        values["step"] = Enum.CLIENT_AUTO_NUMBER_TYPE.PURCHASE;
-        values["type"] = Enum.CLIENT_AUTO_NUMBER_TYPE.PURCHASE;
-        values["status"] = 0;
+        values["step"] = Enum.PO_STEP.DRAFT;
+        values["type"] = Enum.CLIENT_AUTO_NUMBER_TYPE.QUOTATION;
+        values["status"] = 1;
 
         if(purchases) {
-          values["purchaseOrderEntries"] = purchases;
+          values["POEntries"] = purchases;
         } 
+
         console.log("get values",values);
         // console.log("purchase order Entries",values["purchaseOrderEntries"]);
-        this.dispatch(PurchaseOrderAction.add(values));     
+        this.dispatch(PurchaseOrderAction.add(values));   
+        this.dispatch(PurchaseOrderAction.fetch(10));
+
       }
     });
   }
       
   handleCancel() {
-    this.dispatch(PurchaseOrderAction.reset());
+    this.dispatch(PurchaseOrderAction.reset(Constant.RESET_PURCHASE_ORDER));
   }
 
   render() {
-    const {purchaseOrderAdd, form, locale, supplier, product, storeLocation, productSearch, dispatch} = this.props;
+    const {
+      purchaseOrderAdd, 
+      form, 
+      locale, 
+      supplier, 
+      product, 
+      storeLocation, 
+      productSearch, 
+      productUpdate,
+      dispatch
+    } = this.props;
     
     this.submitLoading = purchaseOrderAdd.adding;
 
-    console.log("validation field values",this.props.form.validateFieldsAndScroll);
-
     if (purchaseOrderAdd.showForm) {
       this.content = (
-        <FormItem form={form} supplier={supplier} product={product} storeLocation={storeLocation} productSearch={productSearch} dispatch={dispatch} locale={locale}/>
+        <FormItem 
+          form={form} 
+          supplier={supplier} 
+          product={product} 
+          storeLocation={storeLocation} 
+          productSearch={productSearch} 
+          productUpdate={productUpdate}
+          dispatch={dispatch} 
+          locale={locale}
+        />
       );
     
       return super.render();

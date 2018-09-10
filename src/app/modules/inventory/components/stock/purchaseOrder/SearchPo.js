@@ -10,7 +10,8 @@ export default class SearchPo extends Modal {
     this.state = {
       productLists: [],
       total:[],
-      totalAmount:[]
+      totalAmount:[],
+      isNotYetLoadComponentDidUpdated: true
     };
     this.form = this.props.form;
     this.columns = [
@@ -22,38 +23,26 @@ export default class SearchPo extends Modal {
         {
           return(
             <div>
-              <this.InputText 
-                name={`purchaseId[${index}]`} 
-                type="hidden" 
-                data={record.id}
-                form={ this.form } />
+              <this.InputText name={`purchaseId[${index}]`} type="hidden" data={record.id} form={ this.form } />
+              <this.InputText name={`productId[${index}]`} type="hidden" data={record.productId} form={ this.form } />
               { index + 1 }
             </div>
           );
         }
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_description" />,
-        dataIndex: "description",
-        key: "description",
+        title: <this.Translate id="col_stock_purchase_order_name" />,
+        dataIndex: "name",
+        key: "name",
         render: (text,record,index) => 
         {
           return(
             <div>
-              <this.InputText 
-                name={`purchaseDescription[${index}]`} 
-                type="hidden"
-                data={record.productNam}
-                form={ this.form } />
+              <this.InputText  name={`[${index}]`} type="hidden" data={record.productNam} form={ this.form } />
               { record.productName }
             </div>
           );
         }
-      },
-      {
-        title: <this.Translate id="col_stock_purchase_order_on_hand" />,
-        dataIndex: "key2",
-        key: "key2"
       },
       {
         title: <this.Translate id="col_stock_purchase_order_qty" />,
@@ -63,13 +52,8 @@ export default class SearchPo extends Modal {
         {
           return(
             <div>
-              <this.InputText 
-                name={`purchaseQty[${index}]`} 
-                type="text"
-                data={record.markup}
-                required={true}
-                min={1}
-                form={ this.form } />
+              <this.InputNumber
+                name={`purchaseQty[${index}]`}  data={record.quantiy} required={true} min={1} max={100} form={ this.form } />
             </div>
           );
         }
@@ -82,14 +66,7 @@ export default class SearchPo extends Modal {
         {
           return(
             <div>
-              <this.InputText 
-                name={`purchasePrice[${index}]`} 
-                type="text"
-                data={record.price}
-                handleKeyUp={() => this.handleChangePrice(index)}
-                required={true}
-                min={1}
-                form={ this.form } />
+              <this.InputNumber name={`purchasePrice[${index}]`} data={record.price} required={true} min={1} max={100} form={ this.form } />
             </div>
           );
         }
@@ -102,7 +79,6 @@ export default class SearchPo extends Modal {
           return(
             <div>
               {
-                // record.totalPrice
                 this.state.total
               }
             </div>
@@ -112,13 +88,13 @@ export default class SearchPo extends Modal {
       {
         title:"Action",
         key:"id",
-        render:(record,index) => 
+        render:(text,record,index) => 
         {
           return(
             <div>
               <this.Button
                 className="danger"  
-                onClick={() => this.removeRecord(index.id)}
+                onClick={() => this.removeRecord(record,index)}
               >
                 <span className="icon-delete"></span>
               </this.Button>
@@ -130,52 +106,34 @@ export default class SearchPo extends Modal {
 
     this.removeRecord = this.removeRecord.bind(this);
     this.handleOnSelectList = this.handleOnSelectList.bind(this);
-    // this.handleChangePrice = this.handleChangePrice.bind(this);
 
-  }
-
-
-  handleChangePrice(){
-    const total = this.state;
-    this.props.form.validateFields((err, values) => {
-      console.log("values handlechange price",values);
-
-      const MainTotal = {
-        price: values.purchasePrice,
-        quantiy: values.purchaseQty
-      };
-
-      const listTotal = [];
-
-      MainTotal.price.forEach((price, index) => {
-        listTotal.push({
-          price: MainTotal.price[index],
-          quantiy: MainTotal.quantiy[index],
-          Total:  MainTotal.price[index] * MainTotal.quantiy[index]
-        });
-       
-      });
-
-      this.setState({
-        total: listTotal.map(item => item.Total)
-      });
-      console.log("main total",listTotal);
-      console.log("total",listTotal.map(item => item.Total));
-
-    //   this.setState({
-    //     price: values.purchasePrice,
-    //     quantity: values.purchaseQty
-    //   });
-
-    });
-   
   }
 
 
   //remove row 
-  removeRecord(key){
-    const listProductSoruces = [...this.state.productLists];
-    this.setState({productLists:listProductSoruces.filter(item => item.id !== key)});   
+  removeRecord(record, index){
+    // const listProductSoruces = [...this.state.productLists];
+    // this.setState({productLists:listProductSoruces.filter(item => item.id !== key)});
+
+    console.log("record",record.id);
+
+    let existingProductList = this.state.productLists;
+    if (record.id === "") {
+      existingProductList.splice(index, 1);
+    } else {
+      existingProductList.forEach((product, productIndex) => {
+        if (product.id === record.id) {
+          existingProductList[productIndex]["status"] = this.Enum.ARCHIVE;
+        }
+        console.log("index",productIndex);
+      });
+    }
+
+    this.setState({
+      productLists: existingProductList
+    });   
+
+    console.log("remove reccord",existingProductList);
   }
 
 
@@ -185,9 +143,35 @@ export default class SearchPo extends Modal {
     );
   }
 
+  componentDidUpdate(){
+    const {purchaseOrderEntries} = this.props;
+
+    if (purchaseOrderEntries.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
+
+      const existingProductList = this.state.productLists;
+      
+      purchaseOrderEntries.forEach(purchaseOrderEntry => {
+        existingProductList.push({
+          id: purchaseOrderEntry.id,
+          productId: purchaseOrderEntry.productId,
+          quantiy: purchaseOrderEntry.requestQuantity, 
+          price: purchaseOrderEntry.price
+        }); 
+      }); 
+      
+      this.setState({
+        productLists: existingProductList,
+        isNotYetLoadComponentDidUpdated: false
+      });
+
+    }
+  
+  }
+
   handleOnSelectList(value) {
     console.log("values",value);
     const productName = value.productDescriptions.length > 0 ?  value.productDescriptions[0].name : "";
+    const productId = value.productDescriptions.length > 0 ?  value.productDescriptions[0].productId : "";
 
     const {id,productCode,quantity,price,cost} = value;
     const existingProductList = this.state.productLists;
@@ -202,18 +186,19 @@ export default class SearchPo extends Modal {
         price,
         productCode,
         productCompositeProductId: value.id,
+        productId,
         totalPrice: 0,
-        markup: 0,
+        quantiy: 0,
         cost,
         status: this.Enum.ACTIVE
       });
     } else {
       let isNotTheSameCompsite = true;
-      existingProductList.forEach((compsoite, compsoiteIndex) => {
-        if (compsoite.productCompositeProductId === value.id ) {
+      existingProductList.forEach((product, index) => {
+        if (product.productCompositeProductId === value.id ) {
           isNotTheSameCompsite = false;
-          existingProductList[compsoiteIndex]["markup"] += 1;
-          existingProductList[compsoiteIndex]["totalPrice"] += value.price;
+          existingProductList[index]["quantiy"] += 1;
+          existingProductList[index]["totalPrice"] += value.price;
         }
       });
 
@@ -225,8 +210,9 @@ export default class SearchPo extends Modal {
           price,
           productCode,
           productCompositeProductId: value.id,
+          productId,
           totalPrice: 0,
-          markup: 0,
+          quantiy: 0,
           cost,
           status: this.Enum.ACTIVE
         });
@@ -260,6 +246,6 @@ export default class SearchPo extends Modal {
         </div>
       </div>
     );
-  }
+  }   
        
 }

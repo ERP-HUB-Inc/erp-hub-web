@@ -5,7 +5,6 @@ import FormUpdate from "../../../containers/stock/purchaseOrder/FormUpdate";
 import Constant from "../../../constants/stock/purchaseOrder";
 import PurchaseAction from "../../../actions/stock/purchaseOrder";
 import PurchaseService from "../../../services/stock/PurchaseOrderService";
-// import Supplier from "../../../actions/stock/supplier";
 import ProductsAction from "../../../actions/products/product";
 import "./index.css";
 
@@ -43,7 +42,7 @@ export default class PurchaseOrderLists extends List {
 
   handleShowFormEdit(rowData) {
     const { dispatch } = this.props;
-    dispatch(PurchaseAction.showForm(rowData));
+    dispatch(PurchaseAction.detail(rowData));  
     this.setState({
       modalConten: <FormUpdate/>
     });
