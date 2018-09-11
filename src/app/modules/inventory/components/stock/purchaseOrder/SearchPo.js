@@ -113,12 +113,9 @@ export default class SearchPo extends Modal {
 
   //remove row 
   removeRecord(record, index){
-    // const listProductSoruces = [...this.state.productLists];
-    // this.setState({productLists:listProductSoruces.filter(item => item.id !== key)});
-
-    console.log("record",record.id);
 
     let existingProductList = this.state.productLists;
+
     if (record.id === "") {
       existingProductList.splice(index, 1);
     } else {
@@ -126,7 +123,6 @@ export default class SearchPo extends Modal {
         if (product.id === record.id) {
           existingProductList[productIndex]["status"] = this.Enum.ARCHIVE;
         }
-        console.log("index",productIndex);
       });
     }
 
@@ -134,7 +130,6 @@ export default class SearchPo extends Modal {
       productLists: existingProductList
     });   
 
-    console.log("remove reccord",existingProductList);
   }
 
 
@@ -151,16 +146,16 @@ export default class SearchPo extends Modal {
 
       const existingProductList = this.state.productLists;
 
-      console.log("productName",purchaseOrderEntries);
+      // console.log("productName",purchaseOrderEntries);
       
       purchaseOrderEntries.forEach(purchaseOrderEntry => {
         existingProductList.push({
           id: purchaseOrderEntry.id,
-          // productName: productName,
           productId: purchaseOrderEntry.productId,
           quantiy: purchaseOrderEntry.requestQuantity, 
           price: purchaseOrderEntry.price,
-          totalPrice: purchaseOrderEntry.requestQuantity * purchaseOrderEntry.price
+          totalPrice: purchaseOrderEntry.requestQuantity * purchaseOrderEntry.price,
+          status: purchaseOrderEntry.status
         }); 
       }); 
       
@@ -198,16 +193,16 @@ export default class SearchPo extends Modal {
         status: this.Enum.ACTIVE
       });
     } else {
-      let isNotTheSameCompsite = true;
+      let isNotTheSameProduct = true;
       existingProductList.forEach((product, index) => {
         if (product.productCompositeProductId === value.id ) {
-          isNotTheSameCompsite = false;
+          isNotTheSameProduct = false;
           existingProductList[index]["quantiy"] += 1;
           existingProductList[index]["totalPrice"] += value.price;
         }
       });
 
-      if (isNotTheSameCompsite) {
+      if (isNotTheSameProduct) {
         existingProductList.push({
           id,
           productName,
@@ -243,9 +238,10 @@ export default class SearchPo extends Modal {
           form={this.props.form}
         />  
         <this.Table 
+          rowClassName={record => record.status !== this.Enum.ACTIVE ? "hidden" : ""}
           dataSource={productLists}
           columns={this.columns}
-          locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}} />
+          locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}} /> 
         <div className="total-amount">
           Total Amount: 
         </div>

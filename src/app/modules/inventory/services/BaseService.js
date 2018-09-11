@@ -28,7 +28,7 @@ export default class BaseService extends Service {
     return this.GET(
       {
         url: `${this.baseUrl}/check/number/${ids}`,
-        data: {},     
+        data: this.data,     
         headers: this.header
       }
     );

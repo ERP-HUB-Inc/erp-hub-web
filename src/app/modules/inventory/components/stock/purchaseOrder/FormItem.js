@@ -2,6 +2,7 @@ import React from "react";
 import ProductsAction from "../../../actions/products/product";
 import SupplierAction from "../../../actions/stock/supplier";
 import PurchaseOrderService from "../../../services/stock/PurchaseOrderService";
+import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
 import StoreLoctionAction from "../../../../pos/action/settings/storeLocation";
 import SearchPo from "./SearchPo";
 import Modal from "../../../../common/components/shares/Modal";
@@ -26,38 +27,41 @@ export default class FormItem extends Modal {
     );
   }
 
-  //check ordernumber if exist
+  // check ordernumber if exist
+  // orderNumber(e){
+  //   clearTimeout(this.timer);
+  //   this.timer  =  setTimeout(() => {
+  //     e.preventDefault();
+  //     this.props.form.validateFields((err, values) => {
+
+  //       PurchaseOrderService.findPurchaseOrderNumber(values.number)
+
+  //         .then((response) => {
+  //           console.log("already exist");
+  //           this.props.form.setFields({
+  //             number: {
+  //               value: values.number,
+  //               errors: [new Error("Po is already exist")],
+  //             },
+  //           });
+  //         })
+  //         .catch((error) => {
+  //           console.log("not exist");
+  //         });
+        
+  //     });
+  //   }, 1000);
+
+  // }
+
   orderNumber(e){
     clearTimeout(this.timer);
     this.timer  =  setTimeout(() => {
       e.preventDefault();
       this.props.form.validateFields((err, values) => {
-
-        PurchaseOrderService.findPurchaseOrderNumber(values.number)
-
-          .then((response) => {
-            console.log("already exist");
-            this.props.form.setFields({
-              number: {
-                value: values.number,
-                errors: [new Error("Po is already exist")],
-              },
-            });
-          })
-          .catch((error) => {
-            console.log("not exist");
-          });
-
-        // this.props.form.setFields({
-        //   number: {
-        //     value: values.number,
-        //     errors: [new Error("Po is already exist")],
-        //   },
-        // });
-        
+        this.dispatch(PurchaseOrderAction.orderNumber(values.number));
       });
     }, 1000);
-
   }
 
   componentDidMount(){
