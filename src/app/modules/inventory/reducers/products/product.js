@@ -63,6 +63,16 @@ export default combineReducers({
     ];
     return reducer.add(state, action, constants);
   },
+  clone: (state = InitialState.add(), action) => {
+    const constants = [
+      Constant.CLONE_PRODUCT_PENDING,
+      Constant.CLONE_PRODUCT_REJECTED,
+      Constant.CLONE_PRODUCT_FULFILLED,
+      Constant.SHOW_PRODUCT_FORM,
+      Constant.RESET_PRODUCT
+    ];
+    return reducer.add(state, action, constants);
+  },
   update: (state = InitialState.update(), action) => {
     const constants = [
       Constant.UPDATE_PRODUCT_PENDING,
@@ -86,7 +96,8 @@ export default combineReducers({
       Constant.DETAIL_PRODUCTS_PENDING,
       Constant.DETAIL_PRODUCTS_REJECTED,
       Constant.DETAIL_PRODUCTS_FULFILLED,
-      Constant.RESET_DETAIL_PRODUCTS
+      Constant.RESET_DETAIL_PRODUCTS,
+      Constant.PARTIAL_RESET_DETAIL_PRODUCTS
     ];
     return reducer.detail(state, action, constants);
   }

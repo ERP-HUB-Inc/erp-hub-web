@@ -58,6 +58,14 @@ export default {
       });
     };
   },
+  clone: (data) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.CLONE_PRODUCT,
+        payload: ProductService.clone(data)
+      });
+    };
+  },
   update: (data) => {
     return dispatch => {
       return dispatch({

@@ -148,7 +148,7 @@ export default {
       return state;
     }
   },
-  detail: (state, action, [PEDDING, REJECT, FULFILLED, RESET]) => {
+  detail: (state, action, [PEDDING, REJECT, FULFILLED, FULL_RESET, PARTIAL_RESET]) => {
     switch(action.type) {
     case PEDDING: {
       return {
@@ -174,7 +174,13 @@ export default {
         data: action.payload.data.data
       };
     }
-    case RESET: {
+    case PARTIAL_RESET: {
+      return {
+        ...state,
+        fetched: false
+      };
+    }
+    case FULL_RESET: {
       return InitialState.detail();
     }
     default: 

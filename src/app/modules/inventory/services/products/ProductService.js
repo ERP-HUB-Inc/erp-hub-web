@@ -107,6 +107,15 @@ class ProductService extends BaseService {
       headers: this.header
     });
   }
+
+  clone(id) {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    return this.POST({
+      url: `${this.baseUrl}/clone/${id}`, 
+      data: this.data,
+      headers: this.header
+    });
+  }
 }
 
 export default new ProductService(); 

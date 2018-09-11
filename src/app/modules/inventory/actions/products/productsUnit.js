@@ -1,12 +1,12 @@
 import Constant from "../../constants/products/productsUnit";
-import productsUnitService from "../../services/products/productsUnit";
+import UnitService from "../../services/products/productsUnit";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PRODUCTS_UNIT,
-        payload: productsUnitService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
+        payload: UnitService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },
@@ -14,7 +14,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ARCHIVE_PRODUCTS_UNIT,
-        payload: productsUnitService.archive(ids)
+        payload: UnitService.archive(ids)
       });
     };
   },
@@ -22,7 +22,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ADD_PRODUCTS_UNIT,
-        payload: productsUnitService.add(data)
+        payload: UnitService.add(data)
       });
     };
   },
@@ -30,7 +30,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_PRODUCTS_UNIT,
-        payload: productsUnitService.update(data)
+        payload: UnitService.update(data)
       });
     };
   },

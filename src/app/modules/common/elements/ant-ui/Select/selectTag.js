@@ -20,8 +20,8 @@ export class SelectTag extends Element {
     const {getFieldDecorator} = this.props.form;
     const children = [];
     this.props.dataSource.forEach((value, index) => {
-      const obj = JSON.stringify(value);
-      children.push(<this.Option key={index} value={obj}>{value[this.props.nameKey]}</this.Option>);
+      // const obj = JSON.stringify(value);
+      children.push(<this.Option key={index} value={value[this.props.valueKey]}>{value[this.props.nameKey]}</this.Option>);
     });
     return (
       <this.FormItem

@@ -11,7 +11,12 @@ export class Select extends Element {
         help={this.props.help}
         validateStatus={this.props.validateStatus}>
         {
-          getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.defaultValue})(
+          getFieldDecorator(this.props.name, {rules: 
+              [
+                {required: this.props.required, message: this.props.errorRequired}
+              ],
+              initialValue: this.props.defaultValue
+            })(
             <this.Select
               placeholder={this.props.placeholder}
               onChange={this.props.onChange}
@@ -33,6 +38,8 @@ export class Select extends Element {
 }
 
 Select.defaultProps = {
+  required: false,
+  errorRequired: "Please select this field.",
   valueKey: "value",
   nameKey: "name"
 };
