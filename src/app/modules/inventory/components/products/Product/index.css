@@ -181,6 +181,10 @@
     color: #9A9A9A
 }
 
+.modal-product .wrapRowContentTab .ant-table-content {
+    margin-top: 0
+}
+
 /* FLEX LAYOUT FOR BIG COMPONENT */
 .modal-product .ant-tabs-bar {
     margin: 0 0 0 0 !important

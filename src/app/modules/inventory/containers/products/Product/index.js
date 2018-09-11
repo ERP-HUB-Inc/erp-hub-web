@@ -15,6 +15,7 @@ function mapStateToProps(state) {
   return {
     products: state.reducer.product.request,
     productAdd: state.reducer.product.add,
+    productClone: state.reducer.product.clone,
     productArchive: state.reducer.product.archive,
     productUpdate: state.reducer.product.update
   };

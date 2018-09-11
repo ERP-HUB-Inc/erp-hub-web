@@ -21,11 +21,15 @@ export default class Form extends Modal {
     super(props);
     this.state = {
       disabled: false,
+      isNotYetLoadComponentDidUpdated: true,
       tagList: []
     };
 
+    this.tagList = [];
+
     this.title = <this.Translate id="update_products_title" />;
-    this.width = "90%";
+    this.width = "100%";
+    this.wrapClassName = "modal-product";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleAddBrand = this.handleAddBrand.bind(this);
@@ -37,6 +41,42 @@ export default class Form extends Modal {
     this.handleSelectTag = this.handleSelectTag.bind(this);
     this.handleDeselectTag = this.handleDeselectTag.bind(this);
     this.handleAddProductType = this.handleAddProductType.bind(this);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    const {productDetail} = this.props;
+    if (productDetail.fetched) {
+      if (productDetail.data) {
+        const tagList = [];
+        productDetail.data.productTagToProduct.forEach(productTag => {
+          if (productTag.status === this.Enum.ACTIVE) {
+            tagList.push({
+              id: productTag.id,
+              tagId: productTag.tagId,
+              tag: "",
+              status: this.Enum.ACTIVE
+            });
+          }
+        });
+        this.setState({tagList});
+      }
+      this.dispatch(ProductAction.reset(Constant.PARTIAL_RESET_DETAIL_PRODUCTS));
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const {tagAdd} = nextProps;
+    if (tagAdd.added) {
+      const existTagList = this.state.tagList;
+      existTagList.push({
+        id: "",
+        tagId: tagAdd.response.data.id,
+        tag: tagAdd.response.data.tag,
+        status: this.Enum.ACTIVE
+      });
+      this.setState({tagList: existTagList});
+      this.dispatch(TagAction.reset());
+    }
   }
 
   handleSubmit (e) {
@@ -86,6 +126,7 @@ export default class Form extends Modal {
         if (values.productName) {
           values.productName.forEach((productName, index) => {
             productDescriptions.push({
+              id: values.id[index],
               languageId: values.language[index],
               name: productName,
               description: values.productDescription[index]
@@ -113,7 +154,8 @@ export default class Form extends Modal {
           "productCompositeId",
           "productCompositeProductId",
           "productCompositeMarkUp",
-          "productCompositeStatus"
+          "productCompositeStatus",
+          "tagId"
         ]);
 
         values["id"] = this.props.productDetail.data.id;
@@ -127,18 +169,23 @@ export default class Form extends Modal {
         values["isAvialableSale"] = values["isAvialableSale"] ? 1 : 0;
         values["isPublic"] = values["isPublic"] ? 1 : 0;
 
-        values["productTagToProduct"] = this.state.tagList;
-        values["productDescriptions"] = productDescriptions;
-        values["productVariantToProduct"] = productVariantToProduct;
-        values["productPackageToProduct"] = productPackageToProduct;
+        values["productTags"] = this.state.tagList;
+        values["descriptions"] = productDescriptions;
+        values["productVariants"] = productVariantToProduct;
+        values["productPackages"] = productPackageToProduct;
 
-        console.log("Product Submit Value:", values);
+        this.setState({
+          tagList: [],
+          isNotYetLoadComponentDidUpdated: true
+        });
+
         this.dispatch(ProductAction.update(values));
       }
     });
   }
       
   handleCancel() {
+    this.setState({isNotYetLoadComponentDidUpdated: true});
     this.dispatch(ProductAction.reset(Constant.RESET_DETAIL_PRODUCTS));
   }
 
@@ -173,49 +220,56 @@ export default class Form extends Modal {
   }
 
   handleChangeTag(value) {
-    console.log("Tag Changes:", value);
+    // console.log("Tag Changes:", value);
   }
 
   handleSelectTag(value) {
-    if (this.Util.isJsonString(value)) {
+    if (this.Util.isRecordId(value)) {
+      //value: In this the data of format is id of tag
       const existTagList = this.state.tagList;
-      const currentTag = JSON.parse(value);
+      let isNotTheSameTag = true;
+      existTagList.forEach((tagValue, tagIndex) => {
+        if (tagValue.tagId !== value && tagValue.status !== this.Enum.ACTIVE) {
+          isNotTheSameTag = false;
+          existTagList[tagIndex]["status"] = this.Enum.ACTIVE;          
+        }
+      });
 
-      const findExistingTag = existTagList.find(tagValue => tagValue.id === currentTag.id);
-      if (findExistingTag !== null) {
-        existTagList.push({id: currentTag.id, tag: currentTag.tag});
+      if (isNotTheSameTag) {
+        existTagList.push({
+          id: "",
+          tagId: value,
+          tag: "",
+          status: this.Enum.ACTIVE
+        });
       }
 
       this.setState({tagList: existTagList});
-
     } else {
       // ADD NEW TAG TO DB
+      // value: in this case is string only
       this.dispatch(TagAction.add({tag: value}));
     }
   }
 
   handleDeselectTag(value) {
     const existTagList = this.state.tagList;
-
-    if (this.Util.isJsonString(value)) {
-      const currentTag = JSON.parse(value);
-      this.setState({
-        tagList: existTagList.filter(tagValue => tagValue.id !== currentTag.id)
+    if (this.Util.isRecordId(value)) {
+      //value: In this the data of format is id of tag
+      const tagList = [];
+      existTagList.forEach(tagValue => {
+        if (tagValue.tagId === value) {
+          if (tagValue.id !== "") {
+            tagValue["status"] = this.Enum.ARCHIVE;
+            tagList.push(tagValue);
+          }
+        } else {
+          tagList.push(tagValue);
+        }
       });
+      this.setState({tagList: tagList});
     } else {
-      this.setState({
-        tagList: existTagList.filter(tagValue => tagValue.tag !== value)
-      });
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const {tagAdd} = nextProps;
-    if (tagAdd.added) {
-      const existTagList = this.state.tagList;
-      existTagList.push({id:tagAdd.response.data.id, tag: tagAdd.response.data.tag});
-      this.setState({tagList: existTagList});
-      this.dispatch(TagAction.reset());
+      this.setState({tagList: existTagList.filter(tagValue => tagValue.tag !== value)});
     }
   }
 

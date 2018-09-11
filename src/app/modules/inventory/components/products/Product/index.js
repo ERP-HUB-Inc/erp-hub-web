@@ -19,14 +19,26 @@ export default class ProductList extends List {
     this.columnFilterWithKey = ["name"];
     this.action = ProductAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCT;
+    this.handleClone = this.handleClone.bind(this);
   }
 
   componentWillUpdate(nextProps) {
-    const {productAdd, productUpdate, dispatch} = nextProps;
+    const {productAdd, productUpdate, productClone, dispatch} = nextProps;
     if (productAdd.added || productUpdate.updated) {
       dispatch(ProductAction.fetch(this.pageSize));
       dispatch(ProductAction.reset());
       dispatch(ProductAction.reset(Constant.RESET_DETAIL_PRODUCTS));
+    }
+
+    if (productClone.added) {
+      if (productClone.response.data) {
+        dispatch(ProductAction.requestAndShowForm(productClone.response.data));
+        dispatch(ProductAction.reset());
+        this.setState({
+          modalConten: <FormUpdate/>,
+          selectedRowKeys: []
+        });
+      }
     }
   }
 
@@ -46,6 +58,13 @@ export default class ProductList extends List {
     });
   }
 
+  handleClone() {
+    if (this.state.selectedListIds.length > 0) {
+      const {dispatch} = this.props;
+      dispatch(ProductAction.clone(this.state.selectedListIds[0]));
+    }
+  }
+
   buttonActionCollection() {
     return [
       this.renderButtonAddNew(),
@@ -53,7 +72,9 @@ export default class ProductList extends List {
         key={2}
         disabled={this.state.selectedRowKeys.length <= 0 || this.state.selectedRowKeys.length > 1}
         htmlType="submit"
-        className="info">
+        className="info"
+        loading={this.props.productClone.adding}
+        onClick={() => this.handleClone()}>
         <span className="icon-add icon-padding-right"></span><this.Translate id="btn_product_clone" />
       </this.Button>,
       <this.Button
@@ -65,6 +86,82 @@ export default class ProductList extends List {
         <this.Translate id="btn_product_print_label" />
       </this.Button>
     ];
+  }
+
+  handleSubmitFilter(e) {
+
+  }
+
+  renderFilterRecord() {
+    const {form} = this.props;
+    return (
+      form == null ?
+        ""
+        :
+        <this.Form onSubmit={this.handleSubmitFilter}>
+          <this.Row className="main-search-layout form-group">
+            <this.Col md="3">
+              <this.InputText
+                name="key"
+                label="Search"
+                placeholder="Search for brand, code and notation"
+                form={form}
+              />
+            </this.Col>
+            <this.Col md="3">
+              <this.InputText
+                name="tag"
+                label="Tags"
+                placeholder="Search for tags"
+                form={form}
+              />
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="locationId"
+                label="Store"
+                dataSource={[{value: 1, name: "All Stores"}]}
+                form={form}
+                defaultValue={1}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="brandId"
+                label="Brand"
+                dataSource={[{value: 1, name: "All Brands"}]}
+                form={form}
+                defaultValue={1}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="productTypeId"
+                label="Product Type"
+                dataSource={[{value: 1, name: "All Product Types"}]}
+                defaultValue={1}
+                form={form}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="supplierId"
+                label="Supplier"
+                dataSource={[{value: 1, name: "All Supplier"}]}
+                defaultValue={1}
+                form={form}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="statusId"
+                label="Status"
+                dataSource={[{value: 1, name: "All Status"}]}
+                defaultValue={1}
+                form={form}/>
+            </this.Col>
+            <this.Button htmlType="submit" type="info">
+              <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+            </this.Button>
+          </this.Row>
+        </this.Form>
+    ); 
   }
 
   expandedRender(record){
@@ -152,7 +249,7 @@ class Column extends List {
         key: "tag",
         width: 150,
         render: (text, record) => {
-          return record.tags.map((tag, index) => <this.TagLabel color="blue" style={{marginLeft: 10}} key={index}>{tag.tag}</this.TagLabel>);
+          return record.tags.map((tag, index) => `${tag.tag}${(index + 1) !== record.tags.length ? ', ' : ''}`);
         }
       },
       {

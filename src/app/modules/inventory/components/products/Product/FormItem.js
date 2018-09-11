@@ -475,7 +475,9 @@ export default class FormItem extends Modal {
                     label={<this.Translate id="input_product_tag" />}
                     placeholder={this.CATranslate("input_product_tag", locale)}
                     nameKey="tag"
+                    valueKey="id"
                     dataSource={tags.list}
+                    defaultValue={formData.productTagToProduct.map(productTag => productTag.tagId)}
                     onChange={this.props.handleChangeTag}
                     onSelect={this.props.handleSelectTag}
                     onDeselect={this.props.handleDeselectTag}
@@ -662,5 +664,6 @@ FormItem.defaultProps = {
     productPackageToProduct: [],
     productDescriptions:[],
     status: 1
-  }
+  },
+  tagList: []
 };

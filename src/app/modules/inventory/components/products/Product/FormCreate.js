@@ -98,7 +98,7 @@ export default class FormCreate extends Modal {
 
         // IF NOT ENOUGHT DESCRIPTION WITH LANGUAGE ACTIVE WE ADD DEFAULT DESCRIPTION DEFAULT FOR IT
         if (productDescriptions.length > 0 && productDescriptions.length !== this.props.storeLanguage.length) {
-          this.props.storeLanguage.forEach(language => {
+          this.props.storeLanguage.list.forEach(language => {
             const findExistDescription = productDescriptions.find(value => value.languageId === language.code);
             if(!findExistDescription) {
               productDescriptions.push({
@@ -124,7 +124,8 @@ export default class FormCreate extends Modal {
           "productCompositeId",
           "productCompositeProductId",
           "productCompositeMarkUp",
-          "productCompositeStatus"
+          "productCompositeStatus",
+          "tagId"
         ]);
 
         values["quantity"] = 0;
@@ -137,13 +138,15 @@ export default class FormCreate extends Modal {
         values["isAvialableSale"] = values["isAvialableSale"] ? 1 : 0;
         values["isPublic"] = values["isPublic"] ? 1 : 0;
 
-        values["productTagToProduct"] = this.state.tagList;
-        values["productDescriptions"] = productDescriptions;
-        values["productVariantToProduct"] = productVariantToProduct;
-        values["productPackageToProduct"] = productPackageToProduct;
+        values["productTags"] = this.state.tagList;
+        values["descriptions"] = productDescriptions;
+        values["productVariants"] = productVariantToProduct;
+        values["productPackages"] = productPackageToProduct;
 
-        console.log("Product Submit Value:", values);
-        // this.dispatch(ProductAction.add(values));   
+        this.dispatch(ProductAction.add(values));
+        
+        // RESET STATE
+        this.setState({tagList: []});
       }
     });
   }
@@ -162,7 +165,7 @@ export default class FormCreate extends Modal {
     this.modal1 = <FormCreateProductType />;
   }
 
-  handleAddVariantAttribute(key) { console.log("Current Key:", key);
+  handleAddVariantAttribute(key) {
     this.dispatch(VariantAttributeAction.showForm());
     this.modal1 = <FormCreateVariantAttribute />;
   }
@@ -183,34 +186,35 @@ export default class FormCreate extends Modal {
   }
 
   handleChangeTag(value) {
-    console.log("Tag Changes:", value);
+    // console.log("Tag Changes:", value);
   }
 
   handleSelectTag(value) {
-    if (this.Util.isJsonString(value)) {
+    if (this.Util.isRecordId(value)) {
+      //value: In this the data of format is id of tag
       const existTagList = this.state.tagList;
-      const currentTag = JSON.parse(value);
-
-      const findExistingTag = existTagList.find(tagValue => tagValue.id === currentTag.id);
+      const findExistingTag = existTagList.find(tagValue => tagValue.id === value);
       if (findExistingTag !== null) {
-        existTagList.push({id: currentTag.id, tag: currentTag.tag});
+        existTagList.push({
+          id: "",
+          tagId: value,
+          tag: "",
+          status: this.Enum.ACTIVE});
       }
-
       this.setState({tagList: existTagList});
-
     } else {
       // ADD NEW TAG TO DB
+      // value: in this case is string only
       this.dispatch(TagAction.add({tag: value}));
     }
   }
 
   handleDeselectTag(value) {
     const existTagList = this.state.tagList;
-
-    if (this.Util.isJsonString(value)) {
-      const currentTag = JSON.parse(value);
+    if (this.Util.isRecordId(value)) {
+      //value: In this the data of format is id of tag
       this.setState({
-        tagList: existTagList.filter(tagValue => tagValue.id !== currentTag.id)
+        tagList: existTagList.filter(tagValue => tagValue.tagId !== value)
       });
     } else {
       this.setState({
@@ -223,7 +227,7 @@ export default class FormCreate extends Modal {
     const {tagAdd} = nextProps;
     if (tagAdd.added) {
       const existTagList = this.state.tagList;
-      existTagList.push({id:tagAdd.response.data.id, tag: tagAdd.response.data.tag});
+      existTagList.push({id: tagAdd.response.data.id, tag: tagAdd.response.data.tag, status: this.Enum.ACTIVE});
       this.setState({tagList: existTagList});
       this.dispatch(TagAction.reset());
     }

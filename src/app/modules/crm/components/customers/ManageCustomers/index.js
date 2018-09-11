@@ -114,7 +114,7 @@ export default class CustomerList extends List {
         form == null ?
           ""
           :
-          <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
+          <this.Form onSubmit={this.handleSubmitFilter}>
             <this.Row className="main-search-layout form-group">
               <this.Col md="3">
                 <this.InputText

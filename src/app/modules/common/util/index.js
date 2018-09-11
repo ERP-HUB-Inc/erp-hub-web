@@ -151,4 +151,15 @@ export class Util {
     });
   }
 
+  isRecordId(value) {
+    let recordId = value.replace("-", "");
+    const conditonOne = value.length >= 36 || value.length.length <= 40;
+    const conditionTwo = Number.isInteger(parseInt(recordId, "0x"));
+    return conditonOne && conditionTwo;
+  }
+
+  isValidProp(value, path) {
+    return _.has(value, path);
+  }
+
 }
