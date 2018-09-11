@@ -13,7 +13,7 @@ export default class FormCreate extends Modal {
     super(props);
     this.title = <this.Translate id="create_stock_purchase_order_title" />;
     this.addingPropReducer = "purchaseOrderAdd";
-    this.width = "80%";
+    this.width = "65%";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.pushToSupplier = this.pushToSupplier.bind(this);
@@ -23,7 +23,6 @@ export default class FormCreate extends Modal {
   handlePushToSupplier(){
     const form = this.props.form.getFieldsValue();
     this.dispatch(PurchaseOrderShowEmailAction.showForm(form));
-    this.setState({modalVisible: false});
     this.modal1 = <FormCreatePurchseOrderSendEmail formvalue={form}/>;
   }
 
@@ -70,7 +69,6 @@ export default class FormCreate extends Modal {
           }
         });
 
-        values["deliveryDueDate"] =  "2018/11/29";
         values["shippingFee"] = 0;
         values["requestTotal"] = 105;
         values["returnTotal"] = 0;
@@ -84,7 +82,7 @@ export default class FormCreate extends Modal {
         } 
 
         console.log("get values",values);
-        // console.log("purchase order Entries",values["purchaseOrderEntries"]);
+      
         this.dispatch(PurchaseOrderAction.add(values));   
         this.dispatch(PurchaseOrderAction.fetch(10));
 

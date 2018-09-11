@@ -10,7 +10,7 @@ import FormCreatePurchseOrderSendEmail from "../../../containers/stock/purchaseO
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.width = "80%";
+    this.width = "65%";
     this.state = {
       disabled: false
     };
@@ -25,8 +25,7 @@ export default class Form extends Modal {
   handlePushToSupplier(){
     const form = this.props.form.getFieldsValue();
     this.dispatch(PurchaseOrderShowEmailAction.showForm(form));
-    this.setState({modalVisible: false});
-    this.modal1 = <FormCreatePurchseOrderSendEmail formvalue={form}/>;
+    this.modal1 = <FormCreatePurchseOrderSendEmail formvalue={form} id={this.props.purchaseOrderDetail.data.id} />;
   }
 
   pushToSupplier(){
@@ -101,7 +100,6 @@ export default class Form extends Modal {
 
         console.log("get values",values);
         // console.log("purchase order Entries",values["purchaseOrderEntries"]);
-        
         this.dispatch(PurchaseOrderAction.update(values));  
         this.dispatch(PurchaseOrderAction.fetch(10)); 
 

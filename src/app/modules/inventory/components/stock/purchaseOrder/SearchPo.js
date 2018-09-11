@@ -33,6 +33,7 @@ export default class SearchPo extends Modal {
       {
         title: <this.Translate id="col_stock_purchase_order_name" />,
         dataIndex: "name",
+        width: "418px",
         key: "name",
         render: (text,record,index) => 
         {
@@ -47,6 +48,7 @@ export default class SearchPo extends Modal {
       {
         title: <this.Translate id="col_stock_purchase_order_qty" />,
         dataIndex: "requestQuantity",
+        width: "200px",
         key: "requestQuantity",
         render: (text,record,index) => 
         {
@@ -61,6 +63,7 @@ export default class SearchPo extends Modal {
       {
         title: <this.Translate id="col_stock_purchase_order_price" />,  
         dataIndex: "price",
+        width: "200px",
         key: "price",
         render: (text,record,index) => 
         {
@@ -78,9 +81,7 @@ export default class SearchPo extends Modal {
         render: (text,record,index) => {
           return(
             <div>
-              {
-                this.state.total
-              }
+              { this.formatCurrency(record.totalPrice) }
             </div>
           );
         }
@@ -149,13 +150,17 @@ export default class SearchPo extends Modal {
     if (purchaseOrderEntries.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
 
       const existingProductList = this.state.productLists;
+
+      console.log("productName",purchaseOrderEntries);
       
       purchaseOrderEntries.forEach(purchaseOrderEntry => {
         existingProductList.push({
           id: purchaseOrderEntry.id,
+          // productName: productName,
           productId: purchaseOrderEntry.productId,
           quantiy: purchaseOrderEntry.requestQuantity, 
-          price: purchaseOrderEntry.price
+          price: purchaseOrderEntry.price,
+          totalPrice: purchaseOrderEntry.requestQuantity * purchaseOrderEntry.price
         }); 
       }); 
       

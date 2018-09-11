@@ -1,5 +1,6 @@
 import React from "react";
 import Enum from "../../../../enums";
+import Constant from "../../../../constants/stock/purchaseOrder";
 import FormItem from "./FormItem";
 import Modal from "../../../../../common/components/shares/Modal";
 import purchaseOrderSendEmailAction from "../../../../actions/stock/purchaseOrderSendEmail";
@@ -20,20 +21,72 @@ export default class FormCreate extends Modal {
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        // this.dispatch(purchaseOrderSendEmailAction.add(values));   
+
+      if (!err) {      
+        const listPurchase =  this.props.formvalue;
+
+        console.log("props purchase",listPurchase);
+
+        if(listPurchase.purchaseId == null){
+          listPurchase.purchaseId = [];
+        }
+
+        const purchases = [];
+
+        listPurchase.purchaseId.forEach((purchaseId, index) => {
+          if (
+            purchaseId != null || 
+            listPurchase.purchaseQty[index] != null ||
+            listPurchase.purchasePrice[index] != null
+          ) {
+            purchases.push({
+              id: listPurchase.purchaseId[index],
+              productId: listPurchase.productId[index],
+              requestQuantity: listPurchase.purchaseQty[index],
+              price: listPurchase.purchasePrice[index]
+            });
+          }
+        });
+
+
+        values = listPurchase;
+
+        values["id"] = this.props.id;
+        values["shippingFee"] = 0;
+        values["requestTotal"] = 105;
+        values["returnTotal"] = 0;
+        values["receiveTotal"] = 0;
+
         values["step"] = Enum.PO_STEP.PROCESS;
+        values["type"] = Enum.CLIENT_AUTO_NUMBER_TYPE.QUOTATION;
+        values["status"] = 1;
+
+        delete values["productId"];
+        delete values["purchaseId"];
+        delete values["purchasePrice"];
+        delete values["purchaseQty"];
+        delete values["requestQuantity"];
+        delete values["purchaseDescription"];
+        delete values["searchProduct"];
+        delete values["isFocusOnSearchCompositeProduct"];
+
+        if(purchases) {
+          values["POEntries"] = purchases;
+        } 
+
+        console.log("purchases",values["POEntries"]);
         console.log("values",values);
-        console.log("form values",this.props.formvalue);
-        // this.dispatch(PurchaseOrderAction.update());
+
+        this.dispatch(PurchaseOrderAction.update(values));
+        this.dispatch(PurchaseOrderAction.fetch(10));
 
       }
+      
     });
   }
   
   handlePush(e){
-    this.setState({modalVisible: true});
-    this.renderModalConfirmAction();
+    this.dispatch(PurchaseOrderAction.reset(Constant.RESET_PURCHASE_ORDER));
   }
 
   handleCancel() {

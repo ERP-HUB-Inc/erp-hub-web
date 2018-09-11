@@ -14,7 +14,7 @@ export default class FormItem extends Modal {
               label={<this.Translate id="input_stock_purchase_order_send_mail_email" />}
               data={supplierDetail.list.email}
               placeholder={this.CATranslate("input_stock_purchase_order_name", locale)}
-              required={true}
+              // required={true}
               max={100}
               min={3}
               form={form}/> 
