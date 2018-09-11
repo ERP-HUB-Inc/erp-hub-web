@@ -42,10 +42,10 @@ export default {
       });
     };
   },
-  reset: () => {
+  reset: (RESET_CONSTANT = Constant.RESET_PURCHASE_ORDER) => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET_PURCHASE_ORDER,
+        type: RESET_CONSTANT,
         payload: null
       });
     };
@@ -55,6 +55,15 @@ export default {
       return dispatch({
         type: Constant.SHOW_PURCHASE_ORDER_FORM,
         payload: data
+      });
+    };
+  },
+
+  detail:(data) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_PURCHASE_ORDER_DETAIL,
+        payload: purchaseOrderService.detail(data.id)
       });
     };
   },

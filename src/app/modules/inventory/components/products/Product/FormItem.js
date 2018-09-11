@@ -112,7 +112,12 @@ export default class FormItem extends Modal {
   componentWillUpdate(nextProps) {
     const {formData} = nextProps;
     if (formData.productDescriptions.length > 0 && this.state.isComponentNotYetLoadedWillUpdate) {
-      const currentLanguageDescription = formData.productDescriptions.find(value => value.languageId === this.getCurrentLanguageCode());
+      let currentLanguageDescription = formData.productDescriptions.find(value => value.languageId === this.getCurrentLanguageCode());
+      if (!currentLanguageDescription) {
+        currentLanguageDescription = {};
+        currentLanguageDescription["name"] = "";
+        currentLanguageDescription["description"] = "";
+      }
       this.setState({
         productNameDefault: currentLanguageDescription.name,
         productDescriptionDefault: currentLanguageDescription.description,

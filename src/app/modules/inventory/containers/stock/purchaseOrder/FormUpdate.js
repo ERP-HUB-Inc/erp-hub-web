@@ -14,6 +14,8 @@ class Forms extends React.Component {
 function mapStateToProps(state) {
   return {
     purchaseOrderUpdate: state.reducer.purchaseOrder.update,
+    purchaseOrderDetail: state.reducer.purchaseOrder.detail,  
+    productUpdate: state.reducer.purchaseOrder.update,
     initialValues: state.reducer.purchaseOrder.update.data,
     locale: state.locale,
     supplier: state.reducer.supplier.request,
