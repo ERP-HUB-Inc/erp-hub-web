@@ -143,15 +143,10 @@ export default class FormCreate extends Modal {
         values["productVariants"] = productVariantToProduct;
         values["productPackages"] = productPackageToProduct;
 
-<<<<<<< HEAD
         this.dispatch(ProductAction.add(values));
         
         // RESET STATE
         this.setState({tagList: []});
-=======
-        console.log("Product Submit Value:", values);
-        this.dispatch(ProductAction.add(values));   
->>>>>>> 57e8923aa7774e69f7d1ac21ee8250b7f146ea05
       }
     });
   }
