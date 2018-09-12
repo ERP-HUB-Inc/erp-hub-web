@@ -1,5 +1,6 @@
 import React from "react";
 import ProductsAction from "../../../actions/products/product";
+import Constant from "../../../constants/stock/purchaseOrder";
 import SupplierAction from "../../../actions/stock/supplier";
 import PurchaseOrderService from "../../../services/stock/PurchaseOrderService";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
@@ -14,10 +15,13 @@ export default class FormItem extends Modal {
     this.timer = null;
     this.ChangeSupplierEmailValue = this.ChangeSupplierEmailValue.bind(this);
     this.orderNumber = this.orderNumber.bind(this);
+
+    this.validateOrderNumber="";
+    this.errorMessageOrderNumber = "";
+
   }
 
   ChangeSupplierEmailValue(values){
-    console.log(".supplieri",values);
     this.dispatch(SupplierAction.detail(values));
   }
   
@@ -28,32 +32,6 @@ export default class FormItem extends Modal {
   }
 
   // check ordernumber if exist
-  // orderNumber(e){
-  //   clearTimeout(this.timer);
-  //   this.timer  =  setTimeout(() => {
-  //     e.preventDefault();
-  //     this.props.form.validateFields((err, values) => {
-
-  //       PurchaseOrderService.findPurchaseOrderNumber(values.number)
-
-  //         .then((response) => {
-  //           console.log("already exist");
-  //           this.props.form.setFields({
-  //             number: {
-  //               value: values.number,
-  //               errors: [new Error("Po is already exist")],
-  //             },
-  //           });
-  //         })
-  //         .catch((error) => {
-  //           console.log("not exist");
-  //         });
-        
-  //     });
-  //   }, 1000);
-
-  // }
-
   orderNumber(e){
     clearTimeout(this.timer);
     this.timer  =  setTimeout(() => {
@@ -73,12 +51,25 @@ export default class FormItem extends Modal {
 
 
   render() {
-    const { form, dispatch, supplier, storeLocation, locale, formData, supplierDetail, productSearch } = this.props;
+    const { form, dispatch, supplier, storeLocation, locale, formData, productSearch, purchaseOrderNumber } = this.props;
+    
 
+    let PurchseOrderNumber = purchaseOrderNumber;
 
+    if(PurchseOrderNumber == null || PurchseOrderNumber.error == null) { 
+      PurchseOrderNumber = [];
+    }
 
-    console.log("supplierDetail",supplierDetail);
-  
+    if(purchaseOrderNumber.error !== null ) { 
+      const {error} = purchaseOrderNumber.error.data;
+      if (error.code === this.HttpCode.PO_NUMBER_ALREADY_EXIST) {
+        this.errorMessageOrderNumber = "PO is already Exist";
+        this.validateOrderNumber = "error";
+        this.dispatch(PurchaseOrderAction.reset(Constant.RESET_REQUEST_PURCHASE_ORDER_NUMBER));
+        
+      }
+    }
+    
     return (
       <div>
         <this.Row>
@@ -122,7 +113,10 @@ export default class FormItem extends Modal {
               data={formData.number}
               handleKeyUp={this.orderNumber}
               placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
-              form={form}/> 
+              form={form}
+              help={this.errorMessageOrderNumber}
+              validateStatus={this.validateOrderNumber}
+            /> 
           </this.Col>
           <this.Col md="2">
             <this.InputText
@@ -183,5 +177,6 @@ FormItem.defaultProps = {
     purchaseOrderEntries: []
   },
   productUpdate:[],
-  productSearch: []
+  productSearch: [],
+  PurchseOrderNumber: []
 };

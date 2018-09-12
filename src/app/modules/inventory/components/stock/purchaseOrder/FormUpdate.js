@@ -33,11 +33,18 @@ export default class Form extends Modal {
   } 
 
   renderOtherAction(){
-    return(
-      <this.Button onClick={this.pushToSupplier} className="info btn-push-to-supplier">
-        <span className="icon-save "></span> <this.Translate id="button_stock_purchase_order_push_to_supplier" />
-      </this.Button>
-    );
+    const buttonPushToSupplier = this.props.buttonPushToSupplier;
+    console.log("buttonPushToSupplier",buttonPushToSupplier);
+    {
+      buttonPushToSupplier > 0 ?
+     
+        <this.Button onClick={this.pushToSupplier} className="info btn-push-to-supplier">
+          <span className="icon-save "></span> <this.Translate id="button_stock_purchase_order_push_to_supplier" />
+        </this.Button>
+      
+        : ""; 
+    }
+
   }
 
   handleSubmit (e) {
@@ -45,64 +52,50 @@ export default class Form extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       
       if (!err) { 
-
         values["id"] = this.props.purchaseOrderDetail.data.id;
-        const listPurchase = 
-        {
-          purchaseId: values.purchaseId,
-          productId: values.productId,
-          requestQuantity: values.purchaseQty,
-          price: values.purchasePrice
-        };
-        console.log("List purchase",JSON.stringify(listPurchase));
 
-        delete values["purchaseId"];
-        delete values[" "];
-        delete values["productId"];
-        delete values["purchaseQty"];
-        delete values["purchasePrice"];
-        delete values["purchaseDescription"];
+        // PREPARE PO ENTRIES
+        const POEntries = [];
 
-        if(listPurchase.purchaseId == null){
-          listPurchase.purchaseId = [];
+        if (values.purchaseQty) {
+          values.purchaseQty.forEach((purchaseQty, purchaseQtyIndex) => {
+            POEntries.push({
+              id: values.purchaseId[purchaseQtyIndex],
+              productId: values.productId[purchaseQtyIndex],
+              requestQuantity: values.purchaseQty[purchaseQtyIndex],
+              price: values.purchasePrice[purchaseQtyIndex],
+              status: values.statusId[purchaseQtyIndex],
+            });
+
+          });
         }
 
-        const purchases = [];
+        this.Util.clearObjProperty(values, [
+          "purchaseId",
+          "productId",
+          "purchaseQty",
+          "purchasePrice",
+          "purchaseDescription",
+          "totalAmount",
+          " "
+        ]);
 
-        listPurchase.purchaseId.forEach((purchaseId, index) => {
-          if (
-            purchaseId != null || 
-            listPurchase.requestQuantity[index] != null ||
-            listPurchase.price[index] != null
-          ) {
-            purchases.push({
-              id: listPurchase.purchaseId[index],
-              productId: listPurchase.productId[index],
-              requestQuantity: listPurchase.requestQuantity[index],
-              price: listPurchase.price[index]
-            });
-          }
-        });
+        // values["deliveryDueDate"] =  "2018/11/29";
+        values["shippingFee"] = this.props.purchaseOrderDetail.data.shippingFee;
+        values["requestTotal"] = this.props.purchaseOrderDetail.data.requestTotal;
+        // values["returnTotal"] = this.props.purchaseOrderDetail.data.returnTotal;
+        values["receiveTotal"] = this.props.purchaseOrderDetail.data.receiveTotal;
+        values["step"] = this.props.purchaseOrderDetail.data.step;
+        values["type"] = this.props.purchaseOrderDetail.data.type;
+        values["status"] = this.props.purchaseOrderDetail.data.status;
 
-        values["deliveryDueDate"] =  "2018/11/29";
-        values["shippingFee"] = 0;
-        values["requestTotal"] = 105;
-        values["returnTotal"] = 0;
-        values["receiveTotal"] = 0;
-        values["step"] = Enum.PO_STEP.DRAFT;
-        values["type"] = Enum.CLIENT_AUTO_NUMBER_TYPE.QUOTATION;
-        values["status"] = 1;
+        values["POEntries"] = POEntries;
 
-        if(purchases) {
-          values["POEntries"] = purchases;
-          
-        } 
 
-        console.log("get values",values);
-        // console.log("purchase order Entries",values["purchaseOrderEntries"]);
-        this.dispatch(PurchaseOrderAction.update(values));  
-        this.dispatch(PurchaseOrderAction.fetch(10)); 
 
+        console.log("Update Values:", values);
+
+        // this.dispatch(PurchaseOrderAction.update(values));
       }
       
     });
@@ -123,8 +116,10 @@ export default class Form extends Modal {
       storeLocation, 
       productSearch,
       productUpdate, 
+      purchaseOrderNumber,
       purchaseOrderDetail,
-      dispatch
+      dispatch,
+      buttonPushToSupplier
     } = this.props;
 
     this.submitLoading = purchaseOrderUpdate.updating;
@@ -139,9 +134,12 @@ export default class Form extends Modal {
           storeLocation={storeLocation} 
           productSearch={productSearch}
           productUpdate={productUpdate} 
+          purchaseOrderNumber={purchaseOrderNumber}
           dispatch={dispatch} 
+          buttonPushToSupplier={buttonPushToSupplier}
           locale={locale}
         />
+
       );
       return super.render();
     } else {

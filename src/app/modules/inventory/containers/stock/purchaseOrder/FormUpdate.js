@@ -21,7 +21,8 @@ function mapStateToProps(state) {
     supplier: state.reducer.supplier.request,
     product: state.reducer.product.request,
     productSearch: state.reducer.product.search,
-    storeLocation: state.reducer.storeLocation.request
+    storeLocation: state.reducer.storeLocation.request,
+    purchaseOrderNumber: state.reducer.purchaseOrder.requestOrderNumber
   };
 }
 
