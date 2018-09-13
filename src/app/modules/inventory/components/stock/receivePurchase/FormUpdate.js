@@ -1,5 +1,6 @@
 import React from "react";
 import FormItem from "./FormItem";
+import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
 import ReceivePurchaseAction from "../../../actions/stock/receivePurchase";
 
@@ -9,6 +10,7 @@ export default class Form extends Modal {
     this.state = {
       disabled: false
     };
+    this.width = "65%";
     this.confirmTextAction = "Are You Want to Receive ?";
     this.dispatch = this.props.dispatch;
     this.title = <this.Translate id="update_stock_receive_purchase_title" />;
@@ -22,14 +24,63 @@ export default class Form extends Modal {
     this.renderModalConfirmAction();
   }
 
-  handleSubmit (e) {
-    e.preventDefault();
+  handleSubmitConfirmAction() {
+    this.setState({modalVisible: false});
+    this.handleSubmit();
+  }
+
+  handleSubmit () {
+    // e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        values["id"] = this.props.receivePurchaseUpdate.data.id;
-        values["status"] = this.Enum.ACTIVE;
+
+      if (!err) { 
+        values["id"] = this.props.receivePurchaseDetail.data.id;
+
+        // PREPARE RECEIVED ENTRIES
+        const POEntries = [];
+
+        if (values.receiveQty) {
+          values.receiveQty.forEach((receiveQty, receiveQtyIndex) => {
+            POEntries.push({
+              id: values.receiveId[receiveQtyIndex],
+              productId: values.productId[receiveQtyIndex],
+              requestQuantity: values.qty[receiveQtyIndex],
+              receiveQuantity: values.receiveQty[receiveQtyIndex],
+              price: values.receivePrice[receiveQtyIndex],
+              status: values.statusId[receiveQtyIndex],
+            });
+
+          });
+        }
+
+        this.Util.clearObjProperty(values, [
+          "receiveId",
+          "productId",
+          "qty",
+          "receiveQty",
+          "receivePrice",
+          "receiveDescription",
+          "totalAmount"
+        ]);
+
+       
+        values["shippingFee"] = this.props.receivePurchaseDetail.data.shippingFee;
+        values["requestTotal"] = this.props.receivePurchaseDetail.data.requestTotal;
+        values["receiveTotal"] = this.props.receivePurchaseDetail.data.receiveTotal;
+        values["returnTotal"] = this.props.receivePurchaseDetail.data.returnTotal;
+        values["step"] = Enum.PO_STEP.RECEIVED;
+        values["type"] = this.props.receivePurchaseDetail.data.type;
+        values["status"] = this.props.receivePurchaseDetail.data.status;
+
+        values["POEntries"] = POEntries;
+
+        console.log("Update Values:", values);
+
         this.dispatch(ReceivePurchaseAction.update(values));
+        const filter = JSON.stringify({step: [Enum.PO_STEP.PROCESS]});
+        this.dispatch(ReceivePurchaseAction.fetch(this.pageSize, 0, "", "", filter));
       }
+
     });
   }
 
@@ -51,14 +102,31 @@ export default class Form extends Modal {
   }
 
   render() {
-    const {receivePurchaseUpdate,storeLocation,receivePurchase,supplier,dispatch, form, locale} = this.props;
-
+    const {
+      receivePurchaseUpdate,
+      receivePurchaseDetail,
+      storeLocation,
+      receivePurchase,
+      supplier,
+      dispatch, 
+      form, 
+      locale
+    } = this.props;
+    
     this.submitLoading = receivePurchaseUpdate.updating;
 
-    if (receivePurchaseUpdate.showForm) {
+    if (receivePurchaseDetail.showForm) {
       this.content = (
         <div>
-          <FormItem formData={receivePurchaseUpdate.data} storeLocation={storeLocation} receivePurchase={receivePurchase} supplier={supplier} dispatch={dispatch} form={form} locale={locale}/>
+          <FormItem 
+            formData={receivePurchaseDetail.data} 
+            storeLocation={storeLocation} 
+            receivePurchase={receivePurchase} 
+            supplier={supplier} 
+            dispatch={dispatch} 
+            form={form} 
+            locale={locale}
+          />
           {this.renderModalConfirmAction()}
         </div>
       );

@@ -1,6 +1,6 @@
-import reducer from "../reducer";
 import { combineReducers } from "redux";
 import Constant from "../../constants/stock/receivePurchase";
+import reducer from "../../../common/reducers/reducer";
 import InitialState from "../../../common/reducers/initialState";
 
 export default combineReducers({
@@ -29,6 +29,15 @@ export default combineReducers({
       Constant.RESET_RECEIVE_PURCHASE
     ];
     return reducer.add(state, action, constants);
+  },
+  detail: (state = InitialState.detail(), action) => {
+    const constants = [
+      Constant.RECEIVE_PURCHASE_ORDER_DETAIL_PENDING,
+      Constant.RECEIVE_PURCHASE_ORDER_DETAIL_REJECTED,
+      Constant.RECEIVE_PURCHASE_ORDER_DETAIL_FULFILLED, 
+      Constant.RESET_RECEIVE_PURCHASE
+    ];
+    return reducer.detail(state, action, constants);
   },
   update: (state = InitialState.update(), action) => {
     const constants = [

@@ -146,15 +146,15 @@ export default class Modal extends Component {
           wrapClassName={`vertical-center-modal ${this.wrapClassName}`}
           visible={true}
           footer={null}>
-            <Form autoComplete="off" onSubmit={this.handleSubmit}>
-              <this.Alert
-                style={{display: this.isRepsonseBackError}}
-                message={this.requiredMessage}
-                type="error"
-                showIcon/>
-              {this.content}
-              {this.renderCrudAction()}
-            </Form>
+          <Form autoComplete="off" onSubmit={this.handleSubmit}>
+            <this.Alert
+              style={{display: this.isRepsonseBackError}}
+              message={this.requiredMessage}
+              type="error"
+              showIcon/>
+            {this.content}
+            {this.renderCrudAction()}
+          </Form>
         </this.Modal>
       </div>
     );

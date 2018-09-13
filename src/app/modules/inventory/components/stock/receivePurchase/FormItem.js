@@ -3,14 +3,17 @@ import SupplierAction from "../../../actions/stock/supplier";
 // import ProductsAction from "../../../actions/products/product";
 import LocationAction from "../../../../pos/action/settings/storeLocation";
 import Modal from "../../../../common/components/shares/Modal";
+import ReceivePo from "./ReceivedPoList";
 
 export default class FormItem extends Modal {
+
   componentDidMount(){
     const { dispatch } = this.props;
     dispatch(SupplierAction.fetch());
     // dispatch(ProductsAction.fetch(this.pageSize));
     dispatch(LocationAction.fetch());
   }
+
 
   render() {
     const { form,locale,formData,storeLocation,supplier} = this.props;
@@ -35,7 +38,6 @@ export default class FormItem extends Modal {
               name="number"
               label={<this.Translate id="input_stock_purchase_order_number" />}
               data={formData.number}
-              handleKeyUp={this.orderNumber}
               placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
               form={form}
               disabled
@@ -68,7 +70,7 @@ export default class FormItem extends Modal {
               label={<this.Translate id="select_stock_receive_delivery_to_location" />}
               placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
               dataSource={storeLocation.list}
-              defaultValue={storeLocation.locationId}
+              defaultValue={formData.locationId}
               valueKey="id"
               form={form}
             />
@@ -80,6 +82,7 @@ export default class FormItem extends Modal {
               placeholder={this.CATranslate("input_stock_receive_shipping_fee",locale)}
               max={100}
               min={3}
+              dataSource={formData.shippingFee}
               form={form}/>
           </this.Col>
           
@@ -90,6 +93,14 @@ export default class FormItem extends Modal {
               label={<this.Translate id="date_picker_stock_purchase_due_date" />}
               form={form}
               disabled
+            />
+          </this.Col>          
+        </this.Row>
+        <this.Row>
+          <this.Col md="12">
+            <ReceivePo 
+              receivePurchaseDetail={formData.purchaseOrderEntries}
+              form={this.props.form}
             />
           </this.Col>
         </this.Row>

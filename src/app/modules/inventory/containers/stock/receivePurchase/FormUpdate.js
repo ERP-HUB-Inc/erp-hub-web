@@ -14,6 +14,7 @@ class SupplierForm extends React.Component {
 function mapStateToProps(state) {
   return {
     receivePurchaseUpdate: state.reducer.receivePurchase.update,
+    receivePurchaseDetail: state.reducer.receivePurchase.detail,
     storeLocation: state.reducer.storeLocation.request,
     receivePurchase: state.reducer.receivePurchase.request,
     supplier: state.reducer.supplier.request,
