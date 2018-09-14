@@ -1,6 +1,6 @@
-import reducer from "../reducer";
 import { combineReducers } from "redux";
 import Constant from "../../constants/stock/returnPurchase";
+import reducer from "../../../common/reducers/reducer";
 import InitialState from "../../../common/reducers/initialState";
     
 export default combineReducers({
@@ -29,6 +29,15 @@ export default combineReducers({
       Constant.RESET_RETURN_PURCHASE
     ];
     return reducer.add(state, action, constants);
+  },
+  detail: (state = InitialState.detail(), action) => {
+    const constants = [
+      Constant.REQUEST_RETURN_PURCHASE_DETAIL_PENDING,
+      Constant.REQUEST_RETURN_PURCHASE_DETAIL_REJECTED,
+      Constant.REQUEST_RETURN_PURCHASE_DETAIL_FULFILLED, 
+      Constant.RESET_RETURN_PURCHASE
+    ];
+    return reducer.detail(state, action, constants);
   },
   update: (state = InitialState.update(), action) => {
     const constants = [

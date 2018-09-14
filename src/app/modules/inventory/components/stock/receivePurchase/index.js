@@ -1,7 +1,6 @@
 import React from "react";
 import List from "../List";
 import Enum from "../../../enums";
-import FormCreate from "../../../containers/stock/receivePurchase/FormCreate";
 import FormUpdate from "../../../containers/stock/receivePurchase/FormUpdate";
 import Constant from "../../../constants/stock/receivePurchase";
 import ReceivePurchaseAction from "../../../actions/stock/receivePurchase";
@@ -26,14 +25,6 @@ export default class ReceivePurchaseList extends List {
     const {dispatch} = this.props;
     const filter = JSON.stringify({step: [Enum.PO_STEP.PROCESS]});
     dispatch(ReceivePurchaseAction.fetch(this.pageSize, 0, "", "", filter));
-  }
-
-  handleShowFormAdd() {
-    const { dispatch } = this.props;
-    dispatch(ReceivePurchaseAction.showForm());
-    this.setState({
-      modalConten: <FormCreate/>
-    });
   }
 
   handleShowFormEdit(rowData) {

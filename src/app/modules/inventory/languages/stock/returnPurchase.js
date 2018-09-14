@@ -6,9 +6,9 @@ export default {
   ],
       
   "update_stock_return_purchase_title": [
-    "Return Purchase:Update",
+    "Return Purchase",
     "ငွေကြေး",
-    "Return Purchase:Update"
+    "Return Purchase"
   ],
 
   "col_stock_return_purchase_name": [

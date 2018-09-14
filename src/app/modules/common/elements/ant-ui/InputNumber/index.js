@@ -11,9 +11,18 @@ export class InputNumber extends Element {
       {
         required: this.props.required,
         message: this.props.errorRequired
+        // validator: this.checkPrice
       }
     ];
   }
+
+  // checkPrice(rule, value, callback){
+  //   if (value > 0) {
+  //     callback();
+  //     return;
+  //   }
+  //   callback("Value should Grather than 0");
+  // }
 
   render() {
     return (

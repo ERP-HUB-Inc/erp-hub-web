@@ -30,7 +30,6 @@ export default class Form extends Modal {
   }
 
   handleSubmit () {
-    // e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
 
       if (!err) { 
@@ -74,7 +73,7 @@ export default class Form extends Modal {
 
         values["POEntries"] = POEntries;
 
-        console.log("Update Values:", values);
+        // console.log("Update Values:", values);
 
         this.dispatch(ReceivePurchaseAction.update(values));
         const filter = JSON.stringify({step: [Enum.PO_STEP.PROCESS]});
@@ -84,9 +83,10 @@ export default class Form extends Modal {
     });
   }
 
+  
   renderCrudAction(){
     return(
-      <div>
+      <div className="ant-modal-footer">
         <this.Button onClick={this.handleCancel} className="danger btn-push-to-supplier">
           <span className="icon-save "></span> Cancel
         </this.Button>
