@@ -1,0 +1,35 @@
+#print-price-tag .ant-form-item {
+    margin-bottom: 0 !important
+}
+
+#print-price-tag .main-ant-wrapper
+ {
+    line-height: 0
+}
+
+#print-price-tag .btn-print-label {
+    margin-top: 25px
+}
+
+#print-price-tag .ant-table-content {
+    margin-top: 0px !important
+}
+
+#print-price-tag .wrap-setting {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    position: absolute;
+    z-index: 999;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    padding: 10px 20px
+}
+
+#print-price-tag .search-height {
+    margin-bottom: 15px
+}
+
+.wrap-label-setting-button {
+    margin-bottom: 15px;
+    cursor: pointer
+}

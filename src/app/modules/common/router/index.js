@@ -30,26 +30,24 @@ class Router extends Component {
       });
 
     return (
-      <div>
-        <Layout>
-          <Headers />
-          <SideBar />
-          <Content className="layoutContent">
-            <Switch>
-              {
-                Object.keys(dataSource).map((key) => 
-                  dataSource[key]["subItems"].map(value =>
-                    <Route path={value["route"]} component={value["component"]} />
-                  )
+      <Layout>
+        <Headers />
+        <SideBar />
+        <Content className="layoutContent">
+          <Switch>
+            {
+              Object.keys(dataSource).map((key) => 
+                dataSource[key]["subItems"].map(value =>
+                  <Route path={value["route"]} component={value["component"]} />
                 )
-              }
-              <Route path="/offline" component={ offlineDB }></Route>
-              <Route path="/test-component" component={ UserList }></Route>
-              <Route path="/" component={Home}></Route>
-            </Switch>
-          </Content>
-        </Layout>
-      </div>
+              )
+            }
+            <Route path="/offline" component={ offlineDB }></Route>
+            <Route path="/test-component" component={ UserList }></Route>
+            <Route path="/" component={Home}></Route>
+          </Switch>
+        </Content>
+      </Layout>
     );
   }
 }

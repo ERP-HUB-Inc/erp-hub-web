@@ -10,7 +10,7 @@ import ManageProduct from "../../../../inventory/containers/products/Product";
 import Brand from "../../../../inventory/containers/products/Brand";
 import ProductType from "../../../../inventory/containers/products/ProductsType";
 import ProductTag from "../../../../inventory/containers/products/productsTag";
-import PrintPriceTag from "../../../../pos/containers/products/PrintPriceTag";
+import PrintPriceTag from "../../../../inventory/containers/products/PrintPriceTag";
 import ProductUnit from "../../../../inventory/containers/products/ProductsUnit";
 import PriceBook from "../../../../pos/containers/products/PriceBook";
 import Promotion from "../../../../pos/containers/products/Promotion";

@@ -571,7 +571,7 @@ export default class FormItem extends Modal {
                 className="main-radio-acc product-type"
                 name="productTypeBox"
                 type="radio"
-                defaultValue={productTypeBox}
+                defaultValue={formData.productOption}
                 disabled={formData.id != null}
                 form={form}
                 onSelect={this.onSelect}
@@ -656,6 +656,7 @@ FormItem.defaultProps = {
     isAutoGenerateCode: "",
     barcode: "",
     type: "",
+    productOption: Enum.STANDARD,
     reorderPoint: null,
     factoryCost: null,
     shippingFee: null,

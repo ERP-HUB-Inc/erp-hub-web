@@ -162,4 +162,8 @@ export class Util {
     return _.has(value, path);
   }
 
+  chuckCollection(value, numberOfRow) {
+    return _.chunk(value, numberOfRow);
+  }
+
 }

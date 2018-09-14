@@ -1,6 +1,7 @@
 .table-wrapper {
     background-color: white;
-    padding: 15px 15px
+    padding: 15px 15px;
+    height: 100%
 }
 
 .breadcrumb {
@@ -91,4 +92,10 @@
 
 .ant-form-inline .ant-form-item > .ant-form-item-control-wrapper {
     display: inline !important
+}
+
+.content-list {
+    height: 100%;
+    display: flex;
+    flex-direction: column
 }

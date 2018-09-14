@@ -13,6 +13,9 @@ export default class InputNumber extends Element {
   }
   handleNumberChange (value) {
     this.validatePrimeNumber(value);
+    if (this.props.onChange != null) {
+      this.props.onChange(value);
+    }
   }
 
   validatePrimeNumber(number) {
@@ -42,6 +45,8 @@ export default class InputNumber extends Element {
             <this.InputNumber
               formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               placeholder={this.props.placeholder}
+              disabled={this.props.disabled}
+              step={this.props.step}
               onChange={this.handleNumberChange}
               className={this.props.className}
             />

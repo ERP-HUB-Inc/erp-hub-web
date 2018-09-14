@@ -54,6 +54,7 @@ export default class List extends Component {
       title: <this.Translate id="text_status" />,
       dataIndex: "status",
       key: "status",
+      width: 150,
       render: value => {
         return (
           value === 1 ?
@@ -578,7 +579,7 @@ export default class List extends Component {
     
     return (
       
-      <div style={{marginTop: "15px"}}>
+      <div className="content-list">
 
         { this.renderBreadCrumb()}
 
