@@ -1,6 +1,5 @@
 import React from "react";
 import SupplierAction from "../../../actions/stock/supplier";
-// import ProductsAction from "../../../actions/products/product";
 import LocationAction from "../../../../pos/action/settings/storeLocation";
 import Modal from "../../../../common/components/shares/Modal";
 import ReceivePo from "./ReceivedPoList";
@@ -10,7 +9,6 @@ export default class FormItem extends Modal {
   componentDidMount(){
     const { dispatch } = this.props;
     dispatch(SupplierAction.fetch());
-    // dispatch(ProductsAction.fetch(this.pageSize));
     dispatch(LocationAction.fetch());
   }
 
@@ -21,27 +19,12 @@ export default class FormItem extends Modal {
       <div>
         <this.Row>
           <this.Col md="2">
-            <this.InputText
-              name="name"
-              label={<this.Translate id="input_stock_purchase_order_name" />}
-              data={formData.name}
-              placeholder={this.CATranslate("input_stock_purchase_order_name", locale)}
-              required={true}
-              max={100}
-              min={3}
-              form={form}
-              disabled
-            /> 
+            <label><this.Translate id="input_stock_purchase_order_name" /></label><br/>
+            <label><b>{formData.name}</b></label> 
           </this.Col>
           <this.Col md="2">
-            <this.InputText
-              name="number"
-              label={<this.Translate id="input_stock_purchase_order_number" />}
-              data={formData.number}
-              placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
-              form={form}
-              disabled
-            /> 
+            <label><this.Translate id="input_stock_purchase_order_number" /></label><br/>
+            <label><b>{formData.number}</b></label> 
           </this.Col>
           <this.Col md="2">
             <this.InputText
@@ -87,13 +70,8 @@ export default class FormItem extends Modal {
           </this.Col>
           
           <this.Col md="2">
-            <this.DatePickers
-              name="deliveryDueDate"
-              defaultValue={this.Util.formatDatePicker(formData.deliveryDueDate)}
-              label={<this.Translate id="date_picker_stock_purchase_due_date" />}
-              form={form}
-              disabled
-            />
+            <label><this.Translate id="date_picker_stock_purchase_due_date" /></label><br/>
+            <label><b>{formData.deliveryDueDate}</b></label> 
           </this.Col>          
         </this.Row>
         <this.Row>
