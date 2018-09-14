@@ -34,6 +34,6 @@ export default {
     TRANSFER : 10,
     CUSTOMER : 12,
     EMPLOYEE : 14
-  }
+  },
 
 };

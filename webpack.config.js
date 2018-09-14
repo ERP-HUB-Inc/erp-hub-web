@@ -4,7 +4,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 const webpack = require("webpack");
 const Dotenv = require("dotenv-webpack");
 
-var DIST_DIR = path.resolve(__dirname, "../../../nginx-1.14.0/pos");
+var DIST_DIR = path.resolve(__dirname, "dist");
 var SRC_DIR = path.resolve(__dirname, "src");
 
 module.exports = {

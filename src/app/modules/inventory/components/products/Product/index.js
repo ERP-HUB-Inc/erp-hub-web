@@ -1,16 +1,22 @@
 import React from "react";
 import List from "../../List";
 import Enum from "../../../enums";
+import history from "../../../../common/router/history";
 import FormCreate from "../../../containers/products/Product/FormCreate";
 import FormUpdate from "../../../containers/products/Product/FormUpdate";
 import Constant from "../../../constants/products/product";
 import ProductAction from "../../../actions/products/product";
+import PriceTagAction from "../../../actions/products/priceTag";
 import ProductService from "../../../services/products/ProductService";
 import "./index.css";
 
 export default class ProductList extends List {
   constructor(props) {
     super(props);
+    this.state = {
+      ...this.state,
+      dataSourceToPrint: []
+    };
     this.columns = new Column();
     this.columnExpend = new ColumnExpand(); 
     this.fetchingProp = "products";
@@ -20,6 +26,7 @@ export default class ProductList extends List {
     this.action = ProductAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCT;
     this.handleClone = this.handleClone.bind(this);
+    this.handleOnPrintLabel = this.handleOnPrintLabel.bind(this);
   }
 
   componentWillUpdate(nextProps) {
@@ -65,6 +72,13 @@ export default class ProductList extends List {
     }
   }
 
+  handleOnPrintLabel() {
+    const {dispatch} = this.props;
+    const productList = this.props.products.list.filter(product => this.state.dataSourceToPrint.includes(product.id));
+    dispatch(PriceTagAction.selectProductFromListToPrint(productList));
+    history.push("/products/price-tags");
+  }
+
   buttonActionCollection() {
     return [
       this.renderButtonAddNew(),
@@ -80,8 +94,8 @@ export default class ProductList extends List {
       <this.Button
         propKey="btn_product_print_label"
         disabled={this.state.selectedRowKeys.length <= 0}
-        htmlType="submit"
-        className="info margin-left-8">
+        className="info margin-left-8"
+        onClick={this.handleOnPrintLabel}>
         <span className="icon-barcode icon-padding-right"></span>
         <this.Translate id="btn_product_print_label" />
       </this.Button>
@@ -164,6 +178,11 @@ export default class ProductList extends List {
     ); 
   }
 
+  onSelectChange(selectedRowKeys, selectedRows) {
+    super.onSelectChange(selectedRowKeys, selectedRows);
+    this.setState({dataSourceToPrint: this.mapSelectedListIds(selectedRows)});
+  }
+
   expandedRender(record){
     return( 
       <div className="sub-table">
@@ -231,16 +250,19 @@ class Column extends List {
   constructor(props) {
     super(props);
     return [
-      this.columnCreatedAt,
       {
         title: <this.Translate id="col_products_name" />,
         key: "productDescriptions",
-        width: 250,
+        width: 300,
         render: (text, record, index) => {
           const productName = record.productDescriptions.length > 0 ?  record.productDescriptions[0].name : this.emptyCell;
           return <div>
             <div>{productName}</div>
             <div className="barcode-number text-uppercase"><this.Translate id="text_product_code"/>: {record.barcode}</div>
+            {
+              "brand" in record && record["brand"] !== null ? 
+                <div><span className="text-uppercase"><this.Translate id="col_products_brand"/></span>: {record.brand.name}</div> : ""
+            }
           </div>;
         }
       },
@@ -249,7 +271,7 @@ class Column extends List {
         key: "tag",
         width: 150,
         render: (text, record) => {
-          return record.tags.map((tag, index) => `${tag.tag}${(index + 1) !== record.tags.length ? ', ' : ''}`);
+          return record.tags.map((tag, index) => `${tag.tag}${(index + 1) !== record.tags.length ? ", " : ""}`);
         }
       },
       {
@@ -259,13 +281,6 @@ class Column extends List {
         render: (text, record) => {
           return record.productType.productTypeDescriptions.length > 0 ?  record.productType.productTypeDescriptions[0].name : this.emptyCell;
         }
-      },
-      {
-        title: <this.Translate id="col_products_brand" />,
-        key: "brand",
-        width: 150,
-        render: (text, record, index) => "brand" in record && record["brand"] !== null ? record.brand.name : this.emptyCell,
-        sorter: true
       },
       {
         title: <this.Translate id="col_products_price" />,

@@ -11,6 +11,12 @@ export default {
     "No"
   ],
 
+  "text_close": [
+    "Close",
+    "Close",
+    "Close"
+  ],
+
   "text_yes": [
     "Yes",
     "Yes",

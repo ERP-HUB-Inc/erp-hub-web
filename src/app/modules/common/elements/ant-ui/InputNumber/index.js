@@ -34,8 +34,11 @@ export class InputNumber extends Element {
         max={this.props.max}
         isUnsign={this.props.isUnsign}
         data={this.props.data}
+        step={this.props.step}
+        disabled={this.props.disabled}
         rules={this.rules}
         form={this.props.form}
+        onChange={this.props.onChange}
         className={this.props.className} 
       />
     );

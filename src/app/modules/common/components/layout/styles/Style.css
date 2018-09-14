@@ -10,6 +10,10 @@ body {
     background-color: #F7F7F7 !important;
 }
 
+#root {
+    height: 100%
+}
+
 h4.breadcrumb-title,
 table  tr td .current,
 table tr td .list-code,
@@ -149,6 +153,7 @@ html {
 
 .ant-layout-content, .ant-layout {
     background:#F7F7F7;
+    height: 100%
     
 }
 

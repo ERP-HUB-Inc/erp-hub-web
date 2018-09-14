@@ -24,6 +24,7 @@ import managementCustomers from "../modules/crm/reducers/customers/managementCut
 // groupcustomer
 import groupCustomers from "../modules/crm/reducers/customers/groupCustomers";
 import product from "../modules/inventory/reducers/products/product";
+import priceTag from "../modules/inventory/reducers/products/priceTag";
 import productsUnit from "../modules/inventory/reducers/products/productsUnit";
 import brand from "../modules/inventory/reducers/products/brand";
 import productsType from "../modules/inventory/reducers/products/productsType";
@@ -65,6 +66,7 @@ const reducer = combineReducers({
   managementCustomers,
   groupCustomers,
   product,
+  priceTag,
   productsUnit,
   brand,
   productsType,

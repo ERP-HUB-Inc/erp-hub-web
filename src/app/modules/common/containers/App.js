@@ -18,24 +18,22 @@ import ClientRegisterComplete from "./client/registerComplete";
 export default class App extends React.Component {
   render() {
     return (
-      <div>
-        <BrowserRouter> 
-          <Switch>
-            <Router history={history}>
-              {/* <ErrorHandler> */}
-              <div>
-                <Route path="/signin" component={ClientLogin} />
-                <Route path="/signin/store" component={loginStore} />
-                <Route path="/register" component={ClientRegister} />
-                <Route path="/register/detail" component={ClientRegisterDetail} />
-                <Route path="/signin-complete" component={ClientRegisterComplete} />
-                <PrivateRoute path="/" component={Application} loginComponent={ClientLogin} />
-              </div>
-              {/* </ErrorHandler> */}
-            </Router>
-          </Switch>
-        </BrowserRouter> 
-      </div>
+      <BrowserRouter> 
+        <Switch>
+          <Router history={history}>
+            {/* <ErrorHandler> */}
+            <div style={{height: "100%"}}>
+              <Route path="/signin" component={ClientLogin} />
+              <Route path="/signin/store" component={loginStore} />
+              <Route path="/register" component={ClientRegister} />
+              <Route path="/register/detail" component={ClientRegisterDetail} />
+              <Route path="/signin-complete" component={ClientRegisterComplete} />
+              <PrivateRoute path="/" component={Application} loginComponent={ClientLogin} />
+            </div>
+            {/* </ErrorHandler> */}
+          </Router>
+        </Switch>
+      </BrowserRouter> 
     );
   }
 }
