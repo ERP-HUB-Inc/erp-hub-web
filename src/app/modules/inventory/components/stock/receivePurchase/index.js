@@ -1,5 +1,6 @@
 import React from "react";
 import List from "../List";
+import Enum from "../../../enums";
 import FormCreate from "../../../containers/stock/receivePurchase/FormCreate";
 import FormUpdate from "../../../containers/stock/receivePurchase/FormUpdate";
 import Constant from "../../../constants/stock/receivePurchase";
@@ -18,7 +19,13 @@ export default class ReceivePurchaseList extends List {
     this.columnFilterWithKey = ["name"];
     this.action = ReceivePurchaseAction;
     this.showExport = true;
-    this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
+    this.RESET_CONSTANT = Constant.RESET_RECEIVE_PURCHASE;
+  }
+
+  componentDidMount() {
+    const {dispatch} = this.props;
+    const filter = JSON.stringify({step: [Enum.PO_STEP.PROCESS]});
+    dispatch(ReceivePurchaseAction.fetch(this.pageSize, 0, "", "", filter));
   }
 
   handleShowFormAdd() {
@@ -31,13 +38,18 @@ export default class ReceivePurchaseList extends List {
 
   handleShowFormEdit(rowData) {
     const { dispatch } = this.props;
-    dispatch(ReceivePurchaseAction.showForm(rowData));
+    dispatch(ReceivePurchaseAction.detail(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });
   }
 
-  
+  renderActionButton(){
+    return(
+      this.renderButtonExportCSV()    
+    );
+  }
+
 
 }
 
@@ -74,7 +86,8 @@ class Column extends List {
         title: <this.Translate id="col_stock_receive_purchase_total" />,
         dataIndex: "requestTotal",
         key: "requestTotal",
-        sorter: true
+        sorter: true, 
+        render: (requestTotal) => this.formatCurrency(requestTotal) 
       },
       this.columnStatus
     ];

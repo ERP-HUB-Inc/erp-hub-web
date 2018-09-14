@@ -4,6 +4,7 @@ import FormCreate from "../../../containers/stock/purchaseOrder/FormCreate";
 import FormUpdate from "../../../containers/stock/purchaseOrder/FormUpdate";
 import Constant from "../../../constants/stock/purchaseOrder";
 import PurchaseAction from "../../../actions/stock/purchaseOrder";
+import SupplierAction from "../../../actions/stock/supplier";
 import PurchaseService from "../../../services/stock/PurchaseOrderService";
 import ProductsAction from "../../../actions/products/product";
 import "./index.css";
@@ -16,21 +17,29 @@ export default class PurchaseOrderLists extends List {
     this.addingProp = "purchaseOrderAdd";
     this.updatingProp = "purchaseOrderUpdate";
     this.service = PurchaseService;
+
+    this.selectedListIds;
+
+    this.supplierList = {name: "All Supplier", value: 0};
     this.columnFilterWithKey = [
       "name",
+      "number",
+      "invoiceNo",
       "supplierId",
       "deliveryDueDate"
     ];
+
     this.action = PurchaseAction;
     this.RESET_CONSTANT = Constant.RESET_PURCHASE_ORDER;
   }
 
   componentDidMount(){
     const { dispatch } = this.props;
-    // dispatch(Supplier.fetch());
+    dispatch(SupplierAction.fetch());
     // dispatch(ProductsAction.fetch());
     super.componentDidMount();
   }
+
 
   handleShowFormAdd() {
     const { dispatch } = this.props;
@@ -48,6 +57,26 @@ export default class PurchaseOrderLists extends List {
     });
   }
 
+  handleDelete() {
+    PurchaseService.archive(this.state.selectedListIds)
+      .then(response => {
+        this.props.dispatch(PurchaseAction.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
+        this.setState({
+          selectedRowKeys: [],
+          modalVisible: false,
+          deleting: false
+        });
+      })
+      .catch(err => {
+        this.setState({deleting: false});
+        this.setState({
+          modalVisible: false,
+          deleting: false
+        });
+        this.Message.info("Can not delete purchse order but can return");
+      });
+  }
+
   handleSubmitFilter(e){
     if (this.action != null) {
       e.preventDefault();
@@ -56,7 +85,13 @@ export default class PurchaseOrderLists extends List {
           const {dispatch} = this.props;
           const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
           let filter = {status};
+
+          if (values.supplierId !== 0 || values.supplierId !== "") {
+            filter["supplierId"] = values.supplierId;
+          }
+    
           filter = JSON.stringify(filter);
+
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
           dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
           this.setState({isClickFilter: true});
@@ -68,56 +103,69 @@ export default class PurchaseOrderLists extends List {
 
   renderFilterRecord() {
     const {form,supplier} = this.props;
-    return(
-      <div>
-        { form == null ?
-          ""
-          :
-          <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
-            <this.Row className="main-search-layout form-group"> 
-              <this.Col md="2">
-                <this.Select
-                  name="status"
-                  label={<this.Translate id="text_status" />}
-                  placeholder="Please select status"
-                  dataSource={this.statusList}
-                  defaultValue={this.Enum.ALL_STATE}
-                  form={form}
-                />
-              </this.Col>
-              <this.Col md="2">
-                <this.Select
-                  name="supplierid"
-                  label={<this.Translate id="select_stock_purchase_order_from_supplier" /> }
-                  placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
-                  dataSource={supplier.list}
-                  valueKey="id"
-                  form={form}/>
-              </this.Col>
-              <this.Col md="2">
-                <this.DatePickers
-                  name="duedate"
-                  label={<this.Translate id="datepicker_stock_purchase_due_date" />}
-                  form={form}
-                />
-              </this.Col>
-              <this.Col md="2">
-                <this.InputText
-                  name="key"
-                  label={<this.Translate id="input_stock_purchase_key" />}
-                  placeholder="Search for Purchase Order"
-                  form={form}
-                />
-              </this.Col>
 
-              <this.Button htmlType="submit" type="info" >
-                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-              </this.Button>
-            </this.Row>
-          </this.Form>
-        }
-      </div>
-    );
+    if(supplier) {
+
+      const fetchingProps = this.props[this.fetchingProp];
+
+      let supplierList = this.Util.renameObjectKey({ name: "name", id: "value" }, supplier.list);
+     
+      if(supplier.fetched){
+        supplierList.push(this.supplierList);
+      }
+
+      return(
+        <div>
+          { form == null ?
+            ""
+            :
+            <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
+              <this.Row className="main-search-layout form-group"> 
+                <this.Col md="2">
+                  <this.Select
+                    name="status"
+                    label={<this.Translate id="text_status" />}
+                    placeholder="Please select status"
+                    dataSource={this.statusList}
+                    defaultValue={this.Enum.ALL_STATE}
+                    form={form}
+                  />
+                </this.Col>
+                <this.Col md="2">
+                  <this.Select
+                    name="supplierId"
+                    label={<this.Translate id="select_stock_purchase_order_from_supplier" /> }
+                    placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
+                    dataSource={supplierList}
+                    defaultValue={this.supplierList.value}
+                    form={form}/>
+                </this.Col>
+                <this.Col md="2">
+                  <this.DatePickers
+                    name="deliveryDueDate"
+                    label={<this.Translate id="datepicker_stock_purchase_due_date" />}
+                    form={form}
+                  />
+                </this.Col>
+                <this.Col md="2">
+                  <this.InputText
+                    name="key"
+                    label={<this.Translate id="input_stock_purchase_key" />}
+                    placeholder="Search for Purchase Order"
+                    form={form}
+                  />
+                </this.Col>
+
+                <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+                  <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+                </this.Button>
+              </this.Row>
+            </this.Form>
+          }
+        </div>
+      );
+
+    }
   }
 
 }

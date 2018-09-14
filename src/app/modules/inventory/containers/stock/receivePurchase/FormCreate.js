@@ -1,12 +1,12 @@
 import React from "react";
-import CreateSupplier from "../../../components/stock/receivePurchase/FormCreate";
+import Create from "../../../components/stock/receivePurchase/FormCreate";
 import { connect } from "react-redux";
 import { Form } from "antd";
 
 class SupplierForm extends React.Component {
   render() {
     return (
-      <CreateSupplier {...this.props} />
+      <Create {...this.props} />
     );
   }
 }

@@ -10,6 +10,7 @@ export default class InputNumber extends Element {
     };
     this.validatePrimeNumber = this.validatePrimeNumber.bind(this);
     this.handleNumberChange = this.handleNumberChange.bind(this);
+    this.errorMessage="";
   }
   handleNumberChange (value) {
     this.validatePrimeNumber(value);
@@ -49,6 +50,7 @@ export default class InputNumber extends Element {
               step={this.props.step}
               onChange={this.handleNumberChange}
               className={this.props.className}
+              help={this.errorMessage}
             />
           )
         } 

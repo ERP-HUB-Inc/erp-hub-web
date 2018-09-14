@@ -40,6 +40,16 @@ export default {
       [key]: []
     };
   },
+  orderNumber: (key="list") => {
+    return {
+      showForm: false,
+      fetching: false,
+      fetched: false,
+      data: null,
+      error: null,
+      [key]: []
+    };
+  },
   add: (key="response") => {
     return {
       showForm: false,

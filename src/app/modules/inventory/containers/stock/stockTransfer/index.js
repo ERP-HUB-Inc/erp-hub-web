@@ -16,7 +16,11 @@ function mapStateToProps(state) {
     stockTransfer: state.reducer.stockTransfer.request,
     stockTransferAdd: state.reducer.stockTransfer.add,
     stockTransferArchive: state.reducer.stockTransfer.archive,
-    stockTransferUpdate: state.reducer.stockTransfer.update
+    stockTransferUpdate: state.reducer.stockTransfer.update,
+    supplier: state.reducer.supplier.request,
+    storeLocation: state.reducer.storeLocation.request,
+    brand: state.reducer.brand.request,
+    productType: state.reducer.productsType.request
   };
 }
 

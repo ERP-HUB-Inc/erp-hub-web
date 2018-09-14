@@ -1,6 +1,6 @@
 import React from "react";
 import DropDownSearch from "../../../components/products/Product/DropDownSearch";
-import ProductsAction from "../../../actions/products/product";
+import ProductsAction from "../../../actions/products/product"; 
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class SearchPo extends Modal {
@@ -11,6 +11,7 @@ export default class SearchPo extends Modal {
       productLists: [],
       total:[],
       totalAmount:[],
+      calculateTotalAmount:[],
       isNotYetLoadComponentDidUpdated: true
     };
     this.form = this.props.form;
@@ -23,9 +24,11 @@ export default class SearchPo extends Modal {
         {
           return(
             <div>
+              { index + 1 }
               <this.InputText name={`purchaseId[${index}]`} type="hidden" data={record.id} form={ this.form } />
               <this.InputText name={`productId[${index}]`} type="hidden" data={record.productId} form={ this.form } />
-              { index + 1 }
+              <this.InputNumber name={`statusId[${index}]`} className="hidden" data={record.status} form={ this.form } />
+              <this.InputNumber name={`totalAmount[${index}]`} className="hidden" data={record.totalPrice} form={ this.form } />
             </div>
           );
         }
@@ -38,10 +41,7 @@ export default class SearchPo extends Modal {
         render: (text,record,index) => 
         {
           return(
-            <div>
-              <this.InputText  name={`[${index}]`} type="hidden" data={record.productNam} form={ this.form } />
-              { record.productName }
-            </div>
+            record.productName
           );
         }
       },
@@ -54,8 +54,7 @@ export default class SearchPo extends Modal {
         {
           return(
             <div>
-              <this.InputNumber
-                name={`purchaseQty[${index}]`}  data={record.quantiy} required={true} min={1} max={100} form={ this.form } />
+              <this.InputNumber name={`purchaseQty[${index}]`}  data={record.quantiy} required={true} min={1} max={100} form={ this.form } />
             </div>
           );
         }
@@ -93,6 +92,7 @@ export default class SearchPo extends Modal {
         {
           return(
             <div>
+
               <this.Button
                 className="danger"  
                 onClick={() => this.removeRecord(record,index)}
@@ -113,12 +113,9 @@ export default class SearchPo extends Modal {
 
   //remove row 
   removeRecord(record, index){
-    // const listProductSoruces = [...this.state.productLists];
-    // this.setState({productLists:listProductSoruces.filter(item => item.id !== key)});
-
-    console.log("record",record.id);
 
     let existingProductList = this.state.productLists;
+
     if (record.id === "") {
       existingProductList.splice(index, 1);
     } else {
@@ -126,15 +123,15 @@ export default class SearchPo extends Modal {
         if (product.id === record.id) {
           existingProductList[productIndex]["status"] = this.Enum.ARCHIVE;
         }
-        console.log("index",productIndex);
       });
     }
+
+    console.log("remove", existingProductList);
 
     this.setState({
       productLists: existingProductList
     });   
 
-    console.log("remove reccord",existingProductList);
   }
 
 
@@ -147,29 +144,43 @@ export default class SearchPo extends Modal {
   componentDidUpdate(){
     const {purchaseOrderEntries} = this.props;
 
+    console.log("purchaseOrderEntries",purchaseOrderEntries);
+
     if (purchaseOrderEntries.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
 
       const existingProductList = this.state.productLists;
-
-      console.log("productName",purchaseOrderEntries);
+      const totalAmountProductList =  [];
       
       purchaseOrderEntries.forEach(purchaseOrderEntry => {
         existingProductList.push({
           id: purchaseOrderEntry.id,
-          // productName: productName,
+          productName: purchaseOrderEntry.product.productDescriptions.name,
           productId: purchaseOrderEntry.productId,
           quantiy: purchaseOrderEntry.requestQuantity, 
           price: purchaseOrderEntry.price,
-          totalPrice: purchaseOrderEntry.requestQuantity * purchaseOrderEntry.price
+          totalPrice: purchaseOrderEntry.requestQuantity * purchaseOrderEntry.price,
+          status: purchaseOrderEntry.status
         }); 
+        const TotalValue = purchaseOrderEntry.requestQuantity * purchaseOrderEntry.price;
+
+        totalAmountProductList.push({
+          totalPrice: TotalValue
+        }); 
+        
       }); 
+
+      console.log("calculateTotalAmount",totalAmountProductList);
       
       this.setState({
         productLists: existingProductList,
+        calculateTotalAmount: totalAmountProductList,
         isNotYetLoadComponentDidUpdated: false
       });
 
+      console.log("existingProductList",existingProductList);
+
     }
+
   
   }
 
@@ -178,14 +189,16 @@ export default class SearchPo extends Modal {
     const productName = value.productDescriptions.length > 0 ?  value.productDescriptions[0].name : "";
     const productId = value.productDescriptions.length > 0 ?  value.productDescriptions[0].productId : "";
 
-    const {id,productCode,quantity,price,cost} = value;
+    const {productCode,quantity,price,cost} = value;
     const existingProductList = this.state.productLists;
 
     console.log("list all",existingProductList);
 
+    const CalculateTotalPrice = [];
+
     if (existingProductList.length === 0) {
       existingProductList.push({
-        id,
+        id: "",
         productName,
         quantity,
         price,
@@ -198,18 +211,23 @@ export default class SearchPo extends Modal {
         status: this.Enum.ACTIVE
       });
     } else {
-      let isNotTheSameCompsite = true;
+      let isNotTheSameProduct = true;
       existingProductList.forEach((product, index) => {
         if (product.productCompositeProductId === value.id ) {
-          isNotTheSameCompsite = false;
+          isNotTheSameProduct = false;
           existingProductList[index]["quantiy"] += 1;
           existingProductList[index]["totalPrice"] += value.price;
         }
+
+        CalculateTotalPrice.push({
+          totalPrice: existingProductList[index]["totalPrice"] += value.price
+        });
+
       });
 
-      if (isNotTheSameCompsite) {
+      if (isNotTheSameProduct) {
         existingProductList.push({
-          id,
+          id:"",
           productName,
           quantity,
           price,
@@ -221,18 +239,33 @@ export default class SearchPo extends Modal {
           cost,
           status: this.Enum.ACTIVE
         });
+        
       }
     }
 
-    this.setState({productLists: existingProductList});
+    this.setState({
+      productLists: existingProductList,
+      calculateTotalAmount: CalculateTotalPrice
+    });
+
+    console.log("CalculateTotalPrice",CalculateTotalPrice);
   }
 
   componentDidMount(){
     ProductsAction.fetch(10);
   }
 
+
   render(){
-    const { productLists } = this.state;
+    const { productLists,calculateTotalAmount } = this.state; 
+
+   
+    let Calvalue = calculateTotalAmount.forEach((value, index) => {
+      return value.totalPrice;
+    });
+
+    console.log("totalPrice",calculateTotalAmount);
+
     return(
       <div className="main-dropdown-search">
         <DropDownSearch
@@ -242,12 +275,15 @@ export default class SearchPo extends Modal {
           locale={this.props.locale}
           form={this.props.form}
         />  
-        <this.Table 
+        <this.Table
+          rowKey="productId"
+          rowClassName={record => record.status !== this.Enum.ACTIVE ? "hidden" : ""}
           dataSource={productLists}
           columns={this.columns}
-          locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}} />
+          locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
+        /> 
         <div className="total-amount">
-          Total Amount: 
+          Total Amount:  { Calvalue }
         </div>
       </div>
     );

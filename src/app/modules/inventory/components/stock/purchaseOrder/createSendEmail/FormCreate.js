@@ -12,7 +12,7 @@ export default class FormCreate extends Modal {
     super(props);
     this.title = <this.Translate id="create_stock_purchase_order_send_mail_title" />;
     this.confirmTextAction = "Are You Want to Send Email?";
-    this.width = "30%";
+    this.width = "40%";
     this.addingPropReducer = "purchaseOrderSendEmailAdd";
     this.dispatch = this.props.dispatch;
     this.handlePush = this.handlePush.bind(this);
@@ -77,8 +77,8 @@ export default class FormCreate extends Modal {
         console.log("purchases",values["POEntries"]);
         console.log("values",values);
 
-        this.dispatch(PurchaseOrderAction.update(values));
-        this.dispatch(PurchaseOrderAction.fetch(10));
+        // this.dispatch(PurchaseOrderAction.update(values));
+        // this.dispatch(PurchaseOrderAction.fetch(10));
 
       }
       

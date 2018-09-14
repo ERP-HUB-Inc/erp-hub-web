@@ -32,13 +32,9 @@ export default class PaymentMethodList extends List {
     );
   }
 
-  renderActionButton() {
-    return (
-      <div>
-        {/* <this.Button type="info">
-          <span className="icon-reload"></span> <this.Translate id="Button_stock_management_reload" />
-        </this.Button>  */}
-      </div>
+  renderActionButton(){
+    return(
+      <div></div>
     );
   }
 

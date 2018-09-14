@@ -23,6 +23,12 @@ export default {
     "Brand",
   ],
 
+  "select_search_stock_transfer_store": [
+    "Store",
+    "အမည်",
+    "Store",
+  ],
+
   "select_search_stock_transfer_product_type": [
     "Product Type",
     "အမည်",
@@ -33,6 +39,24 @@ export default {
     "Supplier",
     "အမည်",
     "Supplier",
+  ],
+
+  "select_search_stock_transfer_supplier": [
+    "Supplier",
+    "အမည်",
+    "Supplier",
+  ],
+
+  "input_search_stock_transfer_tag":[
+    "Tags",
+    "အမည်",
+    "Tags"
+  ],
+
+  "input_search_stock_transfer_key":[
+    "Product Key",
+    "အမည်",
+    "Product Key"
   ],
 
   "button_search_stock_transfer_export_csv": [
