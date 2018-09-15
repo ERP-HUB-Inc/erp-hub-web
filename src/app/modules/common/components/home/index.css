@@ -14,6 +14,9 @@
     margin-bottom: 0
 }
 
+.main-guide {
+    display: inline-block;
+}
 
 .main-guide-font-size,
 .main-guide .row ul li span.arrow,
@@ -27,6 +30,7 @@
     list-style-type: none;
     color: #0D62AF;
     margin-right: 27px;
+    text-align: center;
 }
 
 .main-guide .row ul li a{
@@ -48,17 +52,23 @@
 }
 
 .main-guide .row ul li a {
-    font-size: 73pt;
+    font-size: 50pt;
 }
 
 
 
-.main-guide-icon {
+.main-guide-icon,
+.main-icon-top,
+.main-icon-buttom
+{
     width: 100%;
     margin: 0 auto;
 }
 
-.main-guide-icon  ul {
+.main-guide-icon  ul,
+.main-icon-top,
+.main-icon-buttom
+{
     display: flex;
 }
 
@@ -73,7 +83,7 @@
 
 .main-guide .main-arrow-down ul
 {
-    margin-left: 441px;
+    margin-left: 448px;
 }
 
 .main-guide .main-arrow-down ul li {
@@ -81,28 +91,28 @@
 }
 
 .main-guide .main-arrow-down ul li:last-child {
-    margin-left: 246px;
+    margin-left: 225px;
 }   
 
 .main-icon-buttom ul {
-    margin-left: 403px;
+    margin-left: 394px;
 }
 
 .main-icon-buttom ul li {
-    margin-right: 69px !important;
+    margin-right: 90px !important;
 }
 
 .main-icon-buttom ul li:last-child {
-    margin-left: 275px;
+    margin-left: 225px;
 } 
 
 
 .main-icon-top ul {
-    margin-left: 361px;
+    margin-left: 388px;
 }
 
 .main-icon-top ul li:last-child {
-    margin-left: 303px;
+    margin-left: 289px;
 }
 
 .main-icon-top,
