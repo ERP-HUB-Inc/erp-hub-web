@@ -5,9 +5,9 @@ export default {
     "Management Customer"
   ],
   "update_management_customer_title": [
-    "Management Customer:update",
+    "Management Customer",
     "ငွေကြေးစနစ်",
-    "Management Customer:update"
+    "Management Customer"
   ],
   "col_management_customer_name": [
     "Customer Name",

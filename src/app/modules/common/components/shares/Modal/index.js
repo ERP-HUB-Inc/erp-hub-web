@@ -67,11 +67,6 @@ export default class Modal extends Component {
 
   }
 
-  formatCurrency(value) {
-    const setting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
-    return this.Util.formatCurrency(value, setting.currency, setting.currencyPosition);
-  }
-
   validatorAddRecord(responseAdd) {
     if (
       responseAdd.error != null 
@@ -95,8 +90,7 @@ export default class Modal extends Component {
       <this.Modal
         visible={this.state.modalVisible}
         wrapClassName="confirm-delete"
-        footer={null}    
-      >
+        footer={null}>
         <this.Alert style={{display: this.isRepsonseBackErrorOfAction}} message={this.actionConfirmResponseMsg} type="error" showIcon/>
         <div>
           <span className="icon-help icon-padding-right"></span>
@@ -156,6 +150,7 @@ export default class Modal extends Component {
           width={this.width}
           wrapClassName={`vertical-center-modal ${this.wrapClassName}`}
           visible={true}
+          onCancel={() => this.handleCancel()}
           footer={null}>
           <Form autoComplete="off" onSubmit={this.handleSubmit}>
             <this.Alert

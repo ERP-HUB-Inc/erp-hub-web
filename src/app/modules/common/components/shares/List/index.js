@@ -504,6 +504,7 @@ export default class List extends Component {
             onDoubleClick:() => this.handleShowFormEdit(record),
             onClick: () => this.handleShowRecordDetail(record)
           })}
+          scroll={{y: 300}}
           loading={fetchingProps.fetching}
         />
     );

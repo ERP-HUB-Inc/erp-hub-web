@@ -23,8 +23,7 @@ export default class Current extends Element {
       <this.FormItem
         label={this.props.label}
         validateStatus={this.validateStatus}
-        help={this.help}
-      >
+        help={this.help}>
         {
           this.props.getFieldDecorator(this.props.name, {rules: [
             {

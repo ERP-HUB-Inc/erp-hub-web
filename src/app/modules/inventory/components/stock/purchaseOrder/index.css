@@ -33,12 +33,16 @@
 #purchase-order-form .ant-table-footer .total-value {
     font-size: 10pt;
     padding-left: 15px;
-    width: 135px
+    width: 150px
 }
 
 #purchase-order-form .purchase-order-entry .ant-table-body table tbody tr td input {
     text-align: right;
     padding-right: 5px
+}
+
+#purchase-order-form .purchase-order-entry .ant-table-body table tbody tr td .totalPrice input {
+    padding-right: 0px
 }
 
 #purchase-order-form .purchase-order-entry .ant-table-body table tbody tr td .totalPrice input,

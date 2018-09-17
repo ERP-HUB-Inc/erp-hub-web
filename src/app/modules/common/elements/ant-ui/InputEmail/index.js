@@ -13,6 +13,7 @@ export  class InputEmail extends Element {
         label={this.props.label}
         required={this.props.required}
         errorRequired={this.props.errorRequired}
+        errorInvalid={this.props.errorInvalid}
         validator={this.props.validator}
         initialValue={this.props.initialValue}
         handleKeyDown={this.props.handleKeyDown}

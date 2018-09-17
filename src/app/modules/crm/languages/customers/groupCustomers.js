@@ -5,9 +5,9 @@ export default {
     "Group Customer"
   ],
   "update_group_customer_title": [
-    "Group Customer:update",
+    "Group Customer",
     "ငွေကြေးစနစ်",
-    "Group Customer:update"
+    "Group Customer"
   ],
   "col_group_customer_name": [
     "Name",

@@ -6,9 +6,9 @@ export default {
   ],
       
   "update_products_brand_title": [
-    "Brand:Update",
+    "Brand",
     "ငွေကြေး",
-    "Brand:Update"
+    "Brand"
   ],
 
   "col_products_brand_name": [

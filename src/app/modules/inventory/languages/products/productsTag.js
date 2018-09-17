@@ -6,9 +6,9 @@ export default {
   ],
       
   "update_products_tag_title": [
-    "Product Tag:Update",
+    "Product Tag",
     "ငွေကြေး",
-    "Product Tag:Update"
+    "Product Tag"
   ],
 
   "col_products_tag_name": [

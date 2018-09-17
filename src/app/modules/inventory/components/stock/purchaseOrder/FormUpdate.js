@@ -1,11 +1,9 @@
 import React from "react";
-import Enum from "../../../enums";
 import FormItem from "./FormItem";
 import Constant from "../../../constants/stock/purchaseOrder";
 import Modal from "../../../../common/components/shares/Modal";
-import PurchaseOrderShowEmailAction from "../../../actions/stock/purchaseOrderSendEmail";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
-import FormCreatePurchseOrderSendEmail from "../../../containers/stock/purchaseOrder/creatSendEmail/FormCreate";
+import FormCreatePurchseOrderSendEmail from "../../../containers/stock/purchaseOrder/ConfirmEmail/FormCreate";
 
 export default class Form extends Modal {
   constructor(props) {
@@ -20,31 +18,7 @@ export default class Form extends Modal {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.pushToSupplier = this.pushToSupplier.bind(this);
     this.handlePushToSupplier = this.handlePushToSupplier.bind(this);
-  }
-
-  handlePushToSupplier(){
-    const form = this.props.form.getFieldsValue();
-    this.dispatch(PurchaseOrderShowEmailAction.showForm(form));
-    this.modal1 = <FormCreatePurchseOrderSendEmail formvalue={form} id={this.props.purchaseOrderDetail.data.id} />;
-  }
-
-  pushToSupplier(){
-    this.handlePushToSupplier();
-  } 
-
-  renderOtherAction(){
-    const buttonPushToSupplier = this.props.buttonPushToSupplier;
-    console.log("buttonPushToSupplier",buttonPushToSupplier);
-    {
-      buttonPushToSupplier > 0 ?
-     
-        <this.Button onClick={this.pushToSupplier} className="info btn-push-to-supplier">
-          <span className="icon-save "></span> <this.Translate id="button_stock_purchase_order_push_to_supplier" />
-        </this.Button>
-      
-        : ""; 
-    }
-
+    this.prepareFormDataForUpdate = this.prepareFormDataForUpdate.bind(this);
   }
 
   handleSubmit (e) {
@@ -52,58 +26,76 @@ export default class Form extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       
       if (!err) { 
-        values["id"] = this.props.purchaseOrderDetail.data.id;
-
-        // PREPARE PO ENTRIES
-        const POEntries = [];
-
-        if (values.purchaseQty) {
-          values.purchaseQty.forEach((purchaseQty, purchaseQtyIndex) => {
-            POEntries.push({
-              id: values.purchaseId[purchaseQtyIndex],
-              productId: values.productId[purchaseQtyIndex],
-              requestQuantity: values.purchaseQty[purchaseQtyIndex],
-              price: values.purchasePrice[purchaseQtyIndex],
-              status: values.statusId[purchaseQtyIndex],
-            });
-
-          });
-        }
-
-        this.Util.clearObjProperty(values, [
-          "purchaseId",
-          "productId",
-          "purchaseQty",
-          "purchasePrice",
-          "purchaseDescription",
-          "totalAmount",
-          " "
-        ]);
-
-        // values["deliveryDueDate"] =  "2018/11/29";
-        values["shippingFee"] = this.props.purchaseOrderDetail.data.shippingFee;
-        values["requestTotal"] = this.props.purchaseOrderDetail.data.requestTotal;
-        // values["returnTotal"] = this.props.purchaseOrderDetail.data.returnTotal;
-        values["receiveTotal"] = this.props.purchaseOrderDetail.data.receiveTotal;
-        values["step"] = this.props.purchaseOrderDetail.data.step;
-        values["type"] = this.props.purchaseOrderDetail.data.type;
-        values["status"] = this.props.purchaseOrderDetail.data.status;
-
-        values["POEntries"] = POEntries;
-
-
-
-        console.log("Update Values:", values);
-
-        // this.dispatch(PurchaseOrderAction.update(values));
+        values = this.prepareFormDataForUpdate(values);
+        this.dispatch(PurchaseOrderAction.update(values)); 
       }
       
     });
   }
-    
-  handleCancel() {
-    this.dispatch(PurchaseOrderAction.reset(Constant.RESET_PURCHASE_ORDER));
 
+  prepareFormDataForUpdate(values) {
+    values["id"] = this.props.purchaseOrderDetail.data.id;
+
+    // PREPARE PO ENTRIES
+    const purchaseEntries = [];
+    if (values.purchaseQty) {
+      values.productId.forEach((productId, index) => {
+        purchaseEntries.push({
+          id: values.purchaseEntryId[index],
+          productId,
+          requestQuantity: parseInt(values.purchaseQty[index], 10),
+          price: parseFloat(values.purchasePrice[index]),
+          status: values.purchaseEntryStatus[index]
+        });
+      });
+    }
+
+    values["requestTotal"] = parseFloat(values["requestTotalValue"]);
+
+    this.Util.clearObjProperty(values, [
+      "productId",
+      "purchaseQty",
+      "purchasePrice",
+      "purchaseEntryStatus",
+      "totalPrice",
+      "totalAmount",
+      "totalPriceValue",
+      "requestTotalValue",
+      "searchProduct",
+      "isFocusOnSearchCompositeProduct"
+    ]);
+
+    values["shippingFee"] = this.props.purchaseOrderDetail.data.shippingFee;
+    values["receiveTotal"] = this.props.purchaseOrderDetail.data.receiveTotal;
+    values["returnTotal"] = this.props.purchaseOrderDetail.data.returnTotal;
+    values["step"] = this.props.purchaseOrderDetail.data.step;
+    values["type"] = this.props.purchaseOrderDetail.data.type;
+    values["status"] = this.props.purchaseOrderDetail.data.status;
+
+    values["POEntries"] = purchaseEntries;
+    return values;
+  }
+
+  handlePushToSupplier(){
+    const values = this.props.form.getFieldsValue();
+    this.dispatch(PurchaseOrderAction.showForm(null, Constant.SHOW_PUSH_PURCHASE_ORDER_TO_SUPPLIER_FORM));
+    this.modal1 = <FormCreatePurchseOrderSendEmail formvalue={this.prepareFormDataForUpdate(values)} />;
+  }
+
+  pushToSupplier(){
+    this.handlePushToSupplier();
+  } 
+
+  renderOtherAction(){
+    return (
+      <this.Button onClick={this.pushToSupplier} className="info btn-push-to-supplier">
+        <span className="icon-push-button"></span> <this.Translate id="button_stock_purchase_order_push_to_supplier" />
+      </this.Button>
+    );
+  }
+  
+  handleCancel() {
+    this.dispatch(PurchaseOrderAction.reset(Constant.REQUEST_PURCHASE_ORDER_DETAIL_FULL_RESET));
   }
 
   render() {
@@ -113,10 +105,10 @@ export default class Form extends Modal {
       locale, 
       supplier, 
       product, 
-      storeLocation, 
+      storeLocation,
       productSearch,
       productUpdate, 
-      purchaseOrderNumber,
+      requestOrderNumber,
       purchaseOrderDetail,
       dispatch,
       buttonPushToSupplier
@@ -134,16 +126,14 @@ export default class Form extends Modal {
           storeLocation={storeLocation} 
           productSearch={productSearch}
           productUpdate={productUpdate} 
-          purchaseOrderNumber={purchaseOrderNumber}
+          requestOrderNumber={requestOrderNumber}
           dispatch={dispatch} 
           buttonPushToSupplier={buttonPushToSupplier}
-          locale={locale}
-        />
-
+          locale={locale}/>
       );
       return super.render();
     } else {
-      return (<div></div>);
+      return <div/>;
     }
   }
 }

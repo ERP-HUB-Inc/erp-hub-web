@@ -6,9 +6,9 @@ export default {
   ],
 
   "update_store_location_title": [
-    "Location:Update",
-    "Location:Update",
-    "Location:Update"
+    "Location",
+    "Location",
+    "Location"
   ],
 
   "col_store_location_name": [

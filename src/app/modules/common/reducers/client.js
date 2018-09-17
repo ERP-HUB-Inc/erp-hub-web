@@ -1,5 +1,5 @@
 import reducer from "./reducer";
-import { combineReducers } from "redux";
+import {combineReducers} from "redux";
 import Constant from "../constants/client";
 import ConstantAuth from "../constants/authentication";
 import InitialState from "./initialState";

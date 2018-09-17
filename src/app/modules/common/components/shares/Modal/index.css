@@ -23,6 +23,10 @@
     box-shadow: 0 0 4px 0 rgba(0,0,0,0.5);
 }
 
+.confirm-delete .ant-modal-content .ant-modal-body {
+    padding-top: 15px !important
+}
+
 .ant-modal-header,
 .ant-modal-footer {
     text-align: center
@@ -41,7 +45,7 @@
 }
 
 .ant-modal-close-x {
-    display: none
+    /* display: none */
 }
 
 .ant-alert.ant-alert-no-icon {

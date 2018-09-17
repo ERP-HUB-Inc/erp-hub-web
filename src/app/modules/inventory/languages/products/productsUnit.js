@@ -6,9 +6,9 @@ export default {
   ],
   
   "update_products_unit_title": [
-    "Unit:Update",
+    "Unit",
     "ငွေကြေး",
-    "Unit:Update"
+    "Unit"
   ],
 
   "col_products_unit_name": [

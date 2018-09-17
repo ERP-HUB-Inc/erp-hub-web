@@ -6,9 +6,9 @@ export default {
   ],
 
   "update_tax_title": [
-    "Tax:Update",
-    "Tax:Update",
-    "Tax:Update"
+    "Tax",
+    "Tax",
+    "Tax"
   ],
 
   "col_tax_name": [

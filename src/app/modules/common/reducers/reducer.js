@@ -13,7 +13,7 @@ export default {
       return {
         ...state,
         fetching: false,
-        error: action.payload.data
+        error: action.payload
       };
     }
     case FULFILLED: {
@@ -24,6 +24,9 @@ export default {
         pagination: action.payload.data.pagination,
         list: action.payload.data.data
       };
+    }
+    case RESET: {
+      return InitialState.request();
     }
     default:
       return state;
@@ -174,14 +177,14 @@ export default {
         data: action.payload.data.data
       };
     }
+    case FULL_RESET: {
+      return InitialState.detail();
+    }
     case PARTIAL_RESET: {
       return {
         ...state,
         fetched: false
       };
-    }
-    case FULL_RESET: {
-      return InitialState.detail();
     }
     default: 
       return state;

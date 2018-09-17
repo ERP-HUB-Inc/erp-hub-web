@@ -1,12 +1,24 @@
 import React from "react";
 import Element from "../../common/Element";
-import { Checkbox } from "antd";
 import "./index.css";
 
 export class Checkboxs extends Element {
   render(){
+    const {getFieldDecorator} = this.props.form;
     return (
-      <Checkbox />
+      <this.FormItem>
+        {getFieldDecorator(this.props.name, {
+          valuePropName: "checked",
+          initialValue: this.props.defaultValue,
+        })(
+          <this.Checkbox onChange={this.props.onChange}>{this.props.label}</this.Checkbox>
+        )}
+      </this.FormItem>
     );
   }
-} 
+}
+
+Checkboxs.defaultProps = {
+  name: "checkbox",
+  defaultValue: false 
+};

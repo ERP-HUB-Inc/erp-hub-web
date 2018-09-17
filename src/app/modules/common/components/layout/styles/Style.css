@@ -19,6 +19,7 @@ table  tr td .current,
 table tr td .list-code,
 .main-input::placeholder,
 .ant-table-body table tr th,
+.ant-table-header table tr th,
 .ant-table-body-inner table tr th,
 .main-collapse .ant-collapse-header .specification,
 .main-collapse .ant-collapse-header i.arrow
@@ -26,7 +27,8 @@ table tr td .list-code,
     color: #9A9A9A !important;
 }
 
-.ant-table-body table tr th {
+.ant-table-body table tr th,
+.ant-table-header table tr th {
     text-transform: uppercase;
 }
 

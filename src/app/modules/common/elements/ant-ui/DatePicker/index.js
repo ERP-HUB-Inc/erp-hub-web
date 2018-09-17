@@ -1,41 +1,31 @@
 import React from "react";
-import { DatePic } from "./datePicker";
 import Element from "../../common/Element";
+import "./index.css";
 
 export class DatePickers extends Element {
-  constructor(props) {
-    super(props);
-    this.rules = [
-      {
-        type: "object",
-      },
-      {
-        required: this.props.required
-      }
-    ];
-  }
-
-  render() {
+  render(){
+    const {getFieldDecorator} = this.props.form;
     return (
-      <DatePic
-        type={this.props.type}
-        label={this.props.label}
-        name={this.props.name}
-        onChange={this.props.onChange}
-        required = {this.props.required}
-        data={this.props.data}
-        defaultValue={this.props.defaultValue}
-        disabled={this.props.disabled}
-        form={this.props.form}
-      />
+      <this.FormItem label={this.props.label}>
+        { 
+          getFieldDecorator(this.props.name, {rules: [{ type: "object", required: this.props.required, message: this.props.message }], initialValue: this.props.defaultValue})(
+            <this.DatePicker
+              format={this.props.dateFormat}
+              disabled={this.props.disabled}
+            />  
+          )
+        }
+      </this.FormItem>
     );
-  }   
+  }
 }
 
 DatePickers.defaultProps = {
+  name: "name",
+  dateFormat: "YYYY/MM/DD",
   errorRequired: "Field required.",
-  message: "Please select Date!"
+  message: "Please select date.",
+  required: false,
+  disabled: false
 };
-
-
 

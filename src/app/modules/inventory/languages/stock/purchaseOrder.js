@@ -12,9 +12,9 @@ export default {
   ],
       
   "update_stock_purchase_order_title": [
-    "Purchase Order:Update",
+    "Purchase Order",
     "ငွေကြေး",
-    "Purchase Order:Update"
+    "Purchase Order"
   ],
 
   "button_search_stock_purchase_order_export_csv":[
@@ -145,31 +145,31 @@ export default {
 
   "date_picker_stock_purchase_due_date": [
     "Due Date",
-    "အမည်",
+    "Due Date",
     "Due Date",
   ],
 
   "input_stock_purchase_order_number": [
     "Order Number",
-    "အမည်",
+    "Order Number",
     "Order Number",
   ],
 
   "input_stock_purchase_invoice_no": [
     "Invoice No",
-    "အမည်",
+    "Invoice No",
     "Invoice No",
   ],
   
   "input_stock_purchase_order_supplier": [
     "Order From Supplier",
-    "အမည်",
+    "Order From Supplier",
     "Order From Supplier",
   ],
 
   "input_stock_purchase_order_delivery_to_location": [
     "Delivery to Location",
-    "အမည်",
+    "Delivery to Location",
     "Delivery to Location",
   ],
 
@@ -181,19 +181,31 @@ export default {
 
   "select_stock_purchase_delivery_to_location": [
     "Delivery to Location",
-    "အမည်",
     "Delivery to Location",
+    "Delivery to Location",
+  ],
+
+  "select_stock_purchase_order_step": [
+    "Step",
+    "Step",
+    "Step"
+  ],
+
+  "select_stock_purchase_order_supplier": [
+    "All Supplier",
+    "All Supplier",
+    "All Supplier"
   ],
 
   "col_stock_purchase_order_description": [
     "Product description",
-    "အမည်",
+    "Product description",
     "Product description",
   ],
 
   "col_stock_purchase_order_on_hand": [
     "Stock on Hand",
-    "အမည်",
+    "Stock on Hand",
     "Stock on Hand",
   ],
 
@@ -236,25 +248,31 @@ export default {
 
   "placeholder_table_purchase_place_holder": [
     "Place Select Status",
-    "အမည်",
+    "Place Select Status",
     "Place Select Status"
   ],
 
   "button_stock_purchase_order_push_to_supplier": [
-    "Push to Supplier",
-    "အမည်",
-    "Push to Supplier"
+    "Push to supplier",
+    "Push to supplier",
+    "Push to supplier"
   ],
 
   "button_stock_purchase_order_push_with_send_email": [
-    "Push with Send Email",
-    "အမည်",
-    "Push with Send Email"
+    "Push with send email",
+    "Push with send email",
+    "Push with send email"
+  ],
+
+  "checkbox_stock_purchase_order_push_with_send_email": [
+    "Push to supplier and send email",
+    "Push to supplier and send email",
+    "Push to supplier and send email"
   ],
 
   "button_stock_purchase_order_push": [
     "Push",
-    "အမည်",
+    "Push",
     "Push"
   ],
 
@@ -262,46 +280,69 @@ export default {
 
   "create_stock_purchase_order_send_mail_title": [
     "Comfirm Purchase Order",
-    "ငွေကြေးစနစ်",
+    "Comfirm Purchase Order",
     "Comfirm Purchase Order"
   ],
       
   "update_stock_purchase_order_send_mail_update_title": [
-    "Purchase Order Send Mail:update",
-    "ငွေကြေးစနစ်",
-    "Purchase Order Send Mail:update"
+    "Purchase Order Send Mail",
+    "Purchase Order Send Mail",
+    "Purchase Order Send Mail"
   ],
 
   "button_stock_purchase_order_send_mail_comfirm_yes": [
     "Yes",
-    "အမည်",
+    "Yes",
     "Yes",
   ],
 
   
   "button_stock_purchase_order_send_mail_comfirm_cancel": [
     "Cancel",
-    "အမည်",
+    "Cancel",
     "Cancel",
   ],
 
   "title_stock_purchase_order_send_mail_comfirm_email": [
     "Email",
-    "အမည်",
+    "Email",
     "Email",
   ],
 
   "text_stock_purchase_order_send_mail_comfirm_title": [
-    "Are you Sure ? you want to push to Supplier",
-    "အမည်",
-    "Are you Sure ? you want to push to Supplier",
+    "Are you Sure? Do you want to push to supplier?",
+    "Are you Sure? Do you want to push to supplier?",
+    "Are you Sure? Do you want to push to supplier?",
   ],
 
+  "purchase_order_search_key_place_holder": [
+    "Search for purchase order",
+    "Search for purchase order",
+    "Search for purchase order"
+  ],
 
   "input_stock_purchase_order_send_mail_email": [
     "Email",
-    "အမည်",
     "Email",
+    "Email",
+  ],
+
+  "purchase_order_po_number_already_exist": [
+    "PO number is already exist",
+    "PO number is already exist",
+    "PO number is already exist",
+  ],
+
+  "purchase_order_confirm_push_to_supplier": [
+    "Do you want to send confirm email?",
+    "Do you want to send confirm email?",
+    "Do you want to send confirm email?"
+  ],
+
+  "error_supplier_email_not_valid": [
+    "Your email address is not valid !",
+    "Your email address is not valid !",
+    "Your email address is not valid !",
   ],
 
 };

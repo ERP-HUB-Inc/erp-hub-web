@@ -17,7 +17,9 @@ function mapStateToProps(state) {
     purchaseOrderAdd: state.reducer.purchaseOrder.add,
     purchaseOrderArchive: state.reducer.purchaseOrder.archive,
     purchaseOrderUpdate: state.reducer.purchaseOrder.update,
-    supplier: state.reducer.supplier.request
+    purchaseOrderPushToSupplier: state.reducer.purchaseOrder.pushToSupplier,
+    supplier: state.reducer.supplier.request,
+    locale: state.locale,
   };
 }
 
