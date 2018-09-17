@@ -200,14 +200,14 @@ const dataSource = {
         icon: "icon-stock-transfer",
         route: "/stock/transfer",
         component: StockTransfer,
-        isFashNav: true
+        isFashNav: false
       },
       {
         title: "Stock Return",
         icon: "icon-sale-return",
         route: "/stock/return",
         component: StockReturn,
-        isFashNav: false
+        isFashNav: true
       },
       {
         title: "Stock",

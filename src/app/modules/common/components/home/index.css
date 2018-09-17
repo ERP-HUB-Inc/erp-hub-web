@@ -13,3 +13,110 @@
 .dashboard ul li h4 {
     margin-bottom: 0
 }
+
+.main-guide {
+    display: inline-block;
+}
+
+.main-guide-font-size,
+.main-guide .row ul li span.arrow,
+.main-guide .row ul li span.arrow-down  
+{
+    font-size: 37pt;
+}
+
+.main-guide .row ul li {
+    float: left;
+    list-style-type: none;
+    color: #0D62AF;
+    margin-right: 27px;
+    text-align: center;
+}
+
+.main-guide .row ul li a{
+    color: #0D62AF;
+    text-decoration:  none;
+}
+
+.main-guide .row ul li span.arrow {
+    color: #BCBCCB;
+    position: relative;
+    top: 53px;
+}
+
+.main-guide .row ul li .grap-title {
+    color: #0D62AF;
+    margin-top: -27px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.main-guide .row ul li a {
+    font-size: 50pt;
+}
+
+
+
+.main-guide-icon,
+.main-icon-top,
+.main-icon-buttom
+{
+    width: 100%;
+    margin: 0 auto;
+}
+
+.main-guide-icon  ul,
+.main-icon-top,
+.main-icon-buttom
+{
+    display: flex;
+}
+
+.main-guide ul {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.main-guide .row ul li span.arrow-down {
+    color: #BCBCCB;
+}
+
+.main-guide .main-arrow-down ul
+{
+    margin-left: 448px;
+}
+
+.main-guide .main-arrow-down ul li {
+    margin-right: 147px;
+}
+
+.main-guide .main-arrow-down ul li:last-child {
+    margin-left: 225px;
+}   
+
+.main-icon-buttom ul {
+    margin-left: 394px;
+}
+
+.main-icon-buttom ul li {
+    margin-right: 90px !important;
+}
+
+.main-icon-buttom ul li:last-child {
+    margin-left: 225px;
+} 
+
+
+.main-icon-top ul {
+    margin-left: 388px;
+}
+
+.main-icon-top ul li:last-child {
+    margin-left: 289px;
+}
+
+.main-icon-top,
+.main-guide-icon
+{
+    margin-bottom: 35px;
+}

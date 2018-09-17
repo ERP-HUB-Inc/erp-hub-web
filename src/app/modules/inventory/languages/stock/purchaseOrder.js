@@ -209,6 +209,13 @@ export default {
     "Receive Quantity",
   ],
 
+  "col_stock_purchase_order_return_qty": [
+    "Return Quantity",
+    "အမည်",
+    "Return Quantity",
+  ],
+
+
   "col_stock_purchase_order_price": [
     "Price",
     "အမည်",

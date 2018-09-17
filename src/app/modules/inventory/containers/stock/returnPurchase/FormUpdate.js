@@ -15,7 +15,12 @@ function mapStateToProps(state) {
   return {
     returnPurchaseUpdate: state.reducer.returnPurchase.update,
     initialValues: state.reducer.returnPurchase.update.data,
-    locale: state.locale
+    locale: state.locale,
+    returnPurchaseDetail: state.reducer.returnPurchase.detail,
+
+    supplier: state.reducer.supplier.request,
+    product: state.reducer.product.request,
+    storeLocation: state.reducer.storeLocation.request
   };
 }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import List from "../List";
-import FormCreate from "../../../containers/stock/returnPurchase/FormCreate";
+import Enum from "../../../enums";
 import FormUpdate from "../../../containers/stock/returnPurchase/FormUpdate";
 import Constant from "../../../constants/stock/returnPurchase";
 import ReturnPurchaseAction from "../../../actions/stock/returnPurchase";
@@ -17,20 +17,19 @@ export default class SupplierList extends List {
     this.service = ReturnPurchaseService;
     this.columnFilterWithKey = ["name"];
     this.action = ReturnPurchaseAction;
-    this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
+    this.RESET_CONSTANT = Constant.RESET_RETURN_PURCHASE;
   }
 
-  handleShowFormAdd() {
-    const { dispatch } = this.props;
-    dispatch(ReturnPurchaseAction.showForm());
-    this.setState({
-      modalConten: <FormCreate/>
-    });
+
+  componentDidMount() {
+    const {dispatch} = this.props;
+    const filter = JSON.stringify({step: [Enum.PO_STEP.RECEIVED]});
+    dispatch(ReturnPurchaseAction.fetch(this.pageSize, 0, "", "", filter));
   }
 
   handleShowFormEdit(rowData) {
     const { dispatch } = this.props;
-    dispatch(ReturnPurchaseAction.showForm(rowData));
+    dispatch(ReturnPurchaseAction.detail(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });
@@ -77,7 +76,8 @@ class Column extends List {
         title: <this.Translate id="col_stock_return_total" />,
         dataIndex: "returnTotal",
         key: "returnTotal",
-        sorter: true
+        sorter: true,
+        render: (returnTotal) => this.formatCurrency(returnTotal) 
       },
       this.columnStatus
     ];
