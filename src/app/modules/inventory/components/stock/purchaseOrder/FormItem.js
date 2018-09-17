@@ -5,13 +5,12 @@ import SupplierAction from "../../../actions/stock/supplier";
 import PurchaseOrderService from "../../../services/stock/PurchaseOrderService";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
 import StoreLoctionAction from "../../../../pos/action/settings/storeLocation";
-import SearchPo from "./SearchPo";
+import SearchPo from "./SearchPO";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormItem extends Modal {
   constructor(props) {
     super(props);
-    const {form} = this.props;
     this.timer = null;
     this.ChangeSupplierEmailValue = this.ChangeSupplierEmailValue.bind(this);
     this.orderNumber = this.orderNumber.bind(this);
@@ -71,7 +70,7 @@ export default class FormItem extends Modal {
     }
     
     return (
-      <div>
+      <div id="purchase-order-form">
         <this.Row>
           <this.Col md="2">
             <this.InputText
@@ -81,7 +80,6 @@ export default class FormItem extends Modal {
               placeholder={this.CATranslate("input_stock_purchase_order_name", locale)}
               required={true}
               max={100}
-              min={3}
               form={form}/> 
           </this.Col>
           <this.Col md="2">
@@ -125,7 +123,6 @@ export default class FormItem extends Modal {
               data={formData.invoiceNo}
               placeholder={this.CATranslate("input_stock_purchase_invoice_no",locale)}
               max={100}
-              min={3}
               form={form}/>
           </this.Col>
           <this.Col md="2">
@@ -153,7 +150,7 @@ export default class FormItem extends Modal {
           </this.Col>
         </this.Row>
         <this.Row>
-          <this.Col md="12">
+          <this.Col md="12" className="purchase-order-entry">
             <SearchPo
               dataSource={productSearch}
               purchaseOrderEntries={formData.purchaseOrderEntries}

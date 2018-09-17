@@ -1,12 +1,12 @@
 import React from "react";
 import List from "../List";
+import Enum from "../../../enums";
 import FormCreate from "../../../containers/stock/purchaseOrder/FormCreate";
 import FormUpdate from "../../../containers/stock/purchaseOrder/FormUpdate";
 import Constant from "../../../constants/stock/purchaseOrder";
 import PurchaseAction from "../../../actions/stock/purchaseOrder";
 import SupplierAction from "../../../actions/stock/supplier";
 import PurchaseService from "../../../services/stock/PurchaseOrderService";
-import ProductsAction from "../../../actions/products/product";
 import "./index.css";
 
 export default class PurchaseOrderLists extends List {
@@ -14,13 +14,9 @@ export default class PurchaseOrderLists extends List {
     super(props);
     this.columns = new Column();
     this.fetchingProp = "purchaseOrder";
-    this.addingProp = "purchaseOrderAdd";
-    this.updatingProp = "purchaseOrderUpdate";
     this.service = PurchaseService;
 
-    this.selectedListIds;
-
-    this.supplierList = {name: "All Supplier", value: 0};
+    this.supplierList = [{name: "All Supplier", id: 0}];
     this.columnFilterWithKey = [
       "name",
       "number",
@@ -34,12 +30,18 @@ export default class PurchaseOrderLists extends List {
   }
 
   componentDidMount(){
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
     dispatch(SupplierAction.fetch());
-    // dispatch(ProductsAction.fetch());
     super.componentDidMount();
   }
 
+  componentWillUpdate(nextProps) {
+    const {purchaseOrderAdd, dispatch} = nextProps;
+    if (purchaseOrderAdd.added) {
+      dispatch(PurchaseAction.fetch(this.pageSize));
+      dispatch(PurchaseAction.reset());
+    }
+  }
 
   handleShowFormAdd() {
     const { dispatch } = this.props;
@@ -102,67 +104,59 @@ export default class PurchaseOrderLists extends List {
   }
 
   renderFilterRecord() {
-    const {form,supplier} = this.props;
+    const {form, supplier} = this.props;
 
     if(supplier) {
 
       const fetchingProps = this.props[this.fetchingProp];
 
-      let supplierList = this.Util.renameObjectKey({ name: "name", id: "value" }, supplier.list);
-     
-      if(supplier.fetched){
-        supplierList.push(this.supplierList);
-      }
-
       return(
-        <div>
-          { form == null ?
-            ""
-            :
-            <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
-              <this.Row className="main-search-layout form-group"> 
-                <this.Col md="2">
-                  <this.Select
-                    name="status"
-                    label={<this.Translate id="text_status" />}
-                    placeholder="Please select status"
-                    dataSource={this.statusList}
-                    defaultValue={this.Enum.ALL_STATE}
-                    form={form}
-                  />
-                </this.Col>
-                <this.Col md="2">
-                  <this.Select
-                    name="supplierId"
-                    label={<this.Translate id="select_stock_purchase_order_from_supplier" /> }
-                    placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
-                    dataSource={supplierList}
-                    defaultValue={this.supplierList.value}
-                    form={form}/>
-                </this.Col>
-                <this.Col md="2">
-                  <this.DatePickers
-                    name="deliveryDueDate"
-                    label={<this.Translate id="datepicker_stock_purchase_due_date" />}
-                    form={form}
-                  />
-                </this.Col>
-                <this.Col md="2">
-                  <this.InputText
-                    name="key"
-                    label={<this.Translate id="input_stock_purchase_key" />}
-                    placeholder="Search for Purchase Order"
-                    form={form}
-                  />
-                </this.Col>
+        form == null ?
+          ""
+          :
+          <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
+            <this.Row className="main-search-layout form-group"> 
+              <this.Col md="2">
+                <this.Select
+                  name="status"
+                  label={<this.Translate id="text_status" />}
+                  placeholder="Please select status"
+                  dataSource={this.statusList}
+                  defaultValue={this.Enum.ALL_STATE}
+                  form={form}
+                />
+              </this.Col>
+              <this.Col md="2">
+                <this.Select
+                  name="supplierId"
+                  label={<this.Translate id="select_stock_purchase_order_from_supplier" /> }
+                  placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
+                  dataSource={this.supplierList.concat(supplier.list)}
+                  defaultValue={this.supplierList[0].id}
+                  valueKey="id"
+                  form={form}/>
+              </this.Col>
+              <this.Col md="2">
+                <this.DatePickers
+                  name="deliveryDueDate"
+                  label={<this.Translate id="datepicker_stock_purchase_due_date" />}
+                  form={form}
+                />
+              </this.Col>
+              <this.Col md="2">
+                <this.InputText
+                  name="key"
+                  label={<this.Translate id="input_stock_purchase_key" />}
+                  placeholder="Search for Purchase Order"
+                  form={form}
+                />
+              </this.Col>
 
-                <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-                  <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-                </this.Button>
-              </this.Row>
-            </this.Form>
-          }
-        </div>
+              <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+              </this.Button>
+            </this.Row>
+          </this.Form>
       );
 
     }
@@ -173,13 +167,42 @@ export default class PurchaseOrderLists extends List {
 class Column extends List {
   constructor(props) {
     super(props);
+
+    this.PO_STEP_STR = {
+      [Enum.PO_STEP.DRAFT]: <this.Translate id="purchase_order_step_draff" />,
+      [Enum.PO_STEP.PROCESS]: <this.Translate id="purchase_order_step_process" />,
+      [Enum.PO_STEP.RECEIVED]: <this.Translate id="purchase_order_step_recieve" />,
+      [Enum.PO_STEP.CANCEL]: <this.Translate id="purchase_order_step_cancel" />,
+      [Enum.PO_STEP.RETURN]: <this.Translate id="purchase_order_step_return" />,
+      [Enum.PO_STEP.PAID]: <this.Translate id="purchase_order_step_paid" />,
+    };
+
     return [
       this.columnCreatedAt,
       {
         title: <this.Translate id="col_stock_purchase_order_name" />,
         dataIndex: "name",
         key: "name",
-        sorter: true
+        sorter: true,
+        render: (text, record, index) => {
+          return <div>
+            <div>{record.name}</div>
+            <div>{<this.Translate id="purchase_order_number_text"/>}: {record.number}</div>
+          </div>;
+        }
+      },
+      {
+        title: <this.Translate id="col_stock_purchase_order_reference" />,
+        dataIndex: "referenceId",
+        key: "referenceId",
+        sorter: true,
+        render: (text, record, index) => {
+          let referenceNo = "";
+          if ("reference" in record && record["reference"] != null) {
+            referenceNo = record["reference"]["number"];
+          }
+          return referenceNo;
+        }
       },
       {
         title: <this.Translate id="col_stock_purchase_order_supplier" />,
@@ -197,19 +220,30 @@ class Column extends List {
         title: <this.Translate id="col_stock_purchase_order_due_date" />,
         dataIndex: "deliveryDueDate",
         key: "deliveryDueDate",
-        sorter: true
+        sorter: true,
+        width: 140,
+        render: deliveryDueDate => this.formatDate(deliveryDueDate)
       },
       {
         title: <this.Translate id="col_stock_purchase_order_shipping_fee" />,
         dataIndex: "shippingFee",
         key: "shippingFee",
-        sorter: true
+        sorter: true,
+        render: shippingFee => this.formatCurrency(shippingFee)
       },
       {
         title: <this.Translate id="col_stock_purchase_order_total" />,
         dataIndex: "requestTotal",
         key: "requestTotal",
-        sorter: true
+        sorter: true,
+        render: requestTotal => this.formatCurrency(requestTotal)
+      },
+      {
+        title: <this.Translate id="col_stock_purchase_order_step" />,
+        dataIndex: "step",
+        key: "step",
+        sorter: true,
+        render: step => step in this.PO_STEP_STR ? <span className="text-uppercase">{this.PO_STEP_STR[step]}</span> : ""
       },
       this.columnStatus
     ];

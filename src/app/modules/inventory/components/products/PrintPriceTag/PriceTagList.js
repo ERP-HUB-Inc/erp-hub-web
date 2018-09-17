@@ -3,9 +3,6 @@ import JsBarcode from "jsbarcode";
 import List from "../../List";
 
 export default class ComponentToPrint extends List {
-  constructor(props) {
-    super(props);
-  }
   componentDidUpdate() {
     if (this.props.dataSource.length > 0) {
       this.props.dataSource.forEach(value => {
@@ -48,7 +45,7 @@ export default class ComponentToPrint extends List {
                       <tbody>
                         <tr>
                           <td colSpan="2" style={{background: "white", textAlign: "center"}}>
-                            <img id={`printbarcode${index + rowIndex}`} />
+                            <img id={`printbarcode${index + rowIndex}`} alt={`barcode${index + rowIndex}`}/>
                           </td>
                         </tr>
                         <tr>

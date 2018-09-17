@@ -19,15 +19,16 @@ export default class SearchPo extends Modal {
       {
         title: <this.Translate id="col_stock_purchase_order_no" />,
         dataIndex: "id",
-        key: "purchaseID",
-        render: (text,record,index) => 
-        {
-          return(
+        key: "no",
+        width: 50,
+        align: "center",
+        render: (text, record, index) => {
+          return (
             <div>
               { index + 1 }
-              <this.InputText name={`purchaseId[${index}]`} type="hidden" data={record.id} form={ this.form } />
+              <this.InputText name={`id[${index}]`} type="hidden" data={record.id} form={ this.form } />
               <this.InputText name={`productId[${index}]`} type="hidden" data={record.productId} form={ this.form } />
-              <this.InputNumber name={`statusId[${index}]`} className="hidden" data={record.status} form={ this.form } />
+              <this.InputNumber name={`purchaseEntryStatus[${index}]`} className="hidden" data={record.status} form={ this.form } />
               <this.InputNumber name={`totalAmount[${index}]`} className="hidden" data={record.totalPrice} form={ this.form } />
             </div>
           );
@@ -36,7 +37,6 @@ export default class SearchPo extends Modal {
       {
         title: <this.Translate id="col_stock_purchase_order_name" />,
         dataIndex: "name",
-        width: "418px",
         key: "name",
         render: (text,record,index) => 
         {
@@ -46,60 +46,78 @@ export default class SearchPo extends Modal {
         }
       },
       {
+        title: <this.Translate id="col_stock_purchase_order_on_hand" />,
+        dataIndex: "quantityOnHand",
+        width: 150,
+        align: "center",
+        key: "quantityOnHand"
+      },
+      {
         title: <this.Translate id="col_stock_purchase_order_qty" />,
         dataIndex: "requestQuantity",
-        width: "200px",
+        width: 150,
         key: "requestQuantity",
-        render: (text,record,index) => 
-        {
-          return(
-            <div>
-              <this.InputNumber name={`purchaseQty[${index}]`}  data={record.quantiy} required={true} min={1} max={100} form={ this.form } />
-            </div>
-          );
+        align: "right",
+        render: (text, record, index) => {
+          return <this.InputText
+            name={`purchaseQty[${index}]`}
+            data={`${record.quantity}`}
+            required={true}
+            min={1}
+            max={100}
+            handleKeyUp={(e) => this.handleOnChangeQuantity(e, index)}
+            form={this.form}
+          />;
         }
       },
       {
         title: <this.Translate id="col_stock_purchase_order_price" />,  
         dataIndex: "price",
-        width: "200px",
+        width: 150,
         key: "price",
-        render: (text,record,index) => 
-        {
-          return(
-            <div>
-              <this.InputNumber name={`purchasePrice[${index}]`} data={record.price} required={true} min={1} max={100} form={ this.form } />
-            </div>
-          );
+        align: "right",
+        render: (text, record, index) => {
+          return <this.InputText
+            name={`purchasePrice[${index}]`}
+            data={`${record.price}`}
+            required={true}
+            min={1}
+            max={100}
+            handleKeyUp={(e) => this.handleOnChangePrice(e, index)}
+            form={this.form} />;
         }
       },
       {
         title: <this.Translate id="col_stock_purchase_order_total" />,
-        dataIndex: "composite_product_action",
-        key: "key5",
-        render: (text,record,index) => {
-          return(
-            <div>
-              { this.formatCurrency(record.totalPrice) }
-            </div>
-          );
+        dataIndex: "totalPrice",
+        key: "totalPrice",
+        width: 150,
+        align: "right",
+        render: (text, record, index) => {
+          return <div>
+            <this.InputText
+              name={`totalPrice[${index}]`}
+              className="totalPrice"
+              data={this.formatCurrency(record.totalPrice)}
+              disabled={true}
+              form={this.form} />
+            <this.InputText name={`totalPriceValue[${index}]`} data={`${record.totalPrice}`} className="hidden"form={this.form} />
+          </div>;
         }
       },
       {
-        title:"Action",
-        key:"id",
-        render:(text,record,index) => 
-        {
-          return(
-            <div>
-
-              <this.Button
-                className="danger"  
-                onClick={() => this.removeRecord(record,index)}
-              >
-                <span className="icon-delete"></span>
-              </this.Button>
-            </div>
+        title: "Action",
+        key: "action",
+        width: 150,
+        align: "right",
+        render: (text, record, index) => {
+          return (
+            <this.Button
+              type="danger"
+              className="btn-icon"
+              onClick={() => this.removeRecord(record,index)}>
+              <span className="icon-delete icon-padding-right"></span>
+            </this.Button>
           );
         }
       }
@@ -107,15 +125,14 @@ export default class SearchPo extends Modal {
 
     this.removeRecord = this.removeRecord.bind(this);
     this.handleOnSelectList = this.handleOnSelectList.bind(this);
-
+    this.handleOnChangeQuantity = this.handleOnChangeQuantity.bind(this);
+    this.handleOnChangePrice = this.handleOnChangePrice.bind(this);
+    this.calculateTotalAmountEachRow = this.calculateTotalAmountEachRow.bind(this);
+    this.grandTotal = this.grandTotal.bind(this);
   }
 
-
-  //remove row 
   removeRecord(record, index){
-
     let existingProductList = this.state.productLists;
-
     if (record.id === "") {
       existingProductList.splice(index, 1);
     } else {
@@ -126,14 +143,11 @@ export default class SearchPo extends Modal {
       });
     }
 
-    console.log("remove", existingProductList);
-
     this.setState({
       productLists: existingProductList
     });   
 
   }
-
 
   productList(){
     return(
@@ -143,8 +157,6 @@ export default class SearchPo extends Modal {
 
   componentDidUpdate(){
     const {purchaseOrderEntries} = this.props;
-
-    console.log("purchaseOrderEntries",purchaseOrderEntries);
 
     if (purchaseOrderEntries.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
 
@@ -156,7 +168,7 @@ export default class SearchPo extends Modal {
           id: purchaseOrderEntry.id,
           productName: purchaseOrderEntry.product.productDescriptions.name,
           productId: purchaseOrderEntry.productId,
-          quantiy: purchaseOrderEntry.requestQuantity, 
+          quantity: purchaseOrderEntry.requestQuantity, 
           price: purchaseOrderEntry.price,
           totalPrice: purchaseOrderEntry.requestQuantity * purchaseOrderEntry.price,
           status: purchaseOrderEntry.status
@@ -168,8 +180,6 @@ export default class SearchPo extends Modal {
         }); 
         
       }); 
-
-      console.log("calculateTotalAmount",totalAmountProductList);
       
       this.setState({
         productLists: existingProductList,
@@ -177,36 +187,72 @@ export default class SearchPo extends Modal {
         isNotYetLoadComponentDidUpdated: false
       });
 
-      console.log("existingProductList",existingProductList);
-
+      this.grandTotal(existingProductList);
     }
 
   
   }
 
+  calculateTotalAmountEachRow(e, index) {
+    const quantity = this.props.form.getFieldValue(`purchaseQty[${index}]`);
+    const price = this.props.form.getFieldValue(`purchasePrice[${index}]`);
+    return quantity * price;
+  }
+
+  grandTotal(productList) {
+    let grandTotal = 0;
+    productList.forEach((product, index) => {
+      grandTotal += (product.quantity * product.price);
+    });
+    this.props.form.setFieldsValue({requestTotal: this.formatCurrency(grandTotal)});
+    this.props.form.setFieldsValue({requestTotalValue: `${grandTotal}`});
+  }
+
+  handleOnChangeQuantity(e, index) {
+    const existingProductList = this.state.productLists;
+    existingProductList.forEach((product, productIndex) => {
+      if (productIndex === index) {
+        existingProductList[productIndex]["quantity"] = e.target.value;
+      }
+    });
+    this.props.form.setFieldsValue({[`totalPrice[${index}]`]: this.formatCurrency(this.calculateTotalAmountEachRow(e, index))});
+
+    this.setState({productLists: existingProductList});
+    this.grandTotal(existingProductList);
+  }
+
+  handleOnChangePrice(e, index) {
+    const existingProductList = this.state.productLists;
+    existingProductList.forEach((product, productIndex) => {
+      if (productIndex === index) {
+        existingProductList[productIndex]["price"] = e.target.value;
+      }
+    });
+    this.props.form.setFieldsValue({[`totalPrice[${index}]`]: this.formatCurrency(this.calculateTotalAmountEachRow(e, index))});
+
+    this.setState({productLists: existingProductList});
+    this.grandTotal(existingProductList);
+  }
+
   handleOnSelectList(value) {
-    console.log("values",value);
     const productName = value.productDescriptions.length > 0 ?  value.productDescriptions[0].name : "";
     const productId = value.productDescriptions.length > 0 ?  value.productDescriptions[0].productId : "";
 
-    const {productCode,quantity,price,cost} = value;
+    const {productCode, quantity, price, cost} = value;
     const existingProductList = this.state.productLists;
-
-    console.log("list all",existingProductList);
-
-    const CalculateTotalPrice = [];
+    const initialQuantity = 1;
 
     if (existingProductList.length === 0) {
       existingProductList.push({
         id: "",
         productName,
-        quantity,
+        quantityOnHand: quantity,
         price,
         productCode,
         productCompositeProductId: value.id,
         productId,
-        totalPrice: 0,
-        quantiy: 0,
+        totalPrice: initialQuantity * price,
+        quantity: initialQuantity,
         cost,
         status: this.Enum.ACTIVE
       });
@@ -215,56 +261,39 @@ export default class SearchPo extends Modal {
       existingProductList.forEach((product, index) => {
         if (product.productCompositeProductId === value.id ) {
           isNotTheSameProduct = false;
-          existingProductList[index]["quantiy"] += 1;
-          existingProductList[index]["totalPrice"] += value.price;
+          existingProductList[index]["quantity"] += 1;
+          existingProductList[index]["totalPrice"] = existingProductList[index]["quantity"] * price;
         }
-
-        CalculateTotalPrice.push({
-          totalPrice: existingProductList[index]["totalPrice"] += value.price
-        });
-
       });
 
       if (isNotTheSameProduct) {
         existingProductList.push({
           id:"",
           productName,
-          quantity,
+          quantityOnHand: quantity,
           price,
           productCode,
           productCompositeProductId: value.id,
           productId,
-          totalPrice: 0,
-          quantiy: 0,
+          totalPrice: initialQuantity * price,
+          quantity: initialQuantity,
           cost,
           status: this.Enum.ACTIVE
         });
-        
       }
     }
 
-    this.setState({
-      productLists: existingProductList,
-      calculateTotalAmount: CalculateTotalPrice
-    });
+    this.setState({productLists: existingProductList});
 
-    console.log("CalculateTotalPrice",CalculateTotalPrice);
+    this.grandTotal(existingProductList);
   }
-
-  componentDidMount(){
-    ProductsAction.fetch(10);
-  }
-
 
   render(){
-    const { productLists,calculateTotalAmount } = this.state; 
+    const {productLists, calculateTotalAmount} = this.state; 
 
-   
     let Calvalue = calculateTotalAmount.forEach((value, index) => {
       return value.totalPrice;
     });
-
-    console.log("totalPrice",calculateTotalAmount);
 
     return(
       <div className="main-dropdown-search">
@@ -273,18 +302,22 @@ export default class SearchPo extends Modal {
           handleOnSelectList={this.handleOnSelectList}
           dispatch={this.props.dispatch}
           locale={this.props.locale}
-          form={this.props.form}
-        />  
+          form={this.props.form}/>  
         <this.Table
           rowKey="productId"
           rowClassName={record => record.status !== this.Enum.ACTIVE ? "hidden" : ""}
           dataSource={productLists}
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
-        /> 
-        <div className="total-amount">
-          Total Amount:  { Calvalue }
-        </div>
+          footer={() => <div className={`float-right ${productLists.length > 0 ? "" : "hidden"}`}>
+            <div className="total-title text-uppercase pull-left"><this.Translate id="purchase_order_footer" />: </div>
+            <div className="total-value pull-left">
+              <this.InputText name="requestTotal" disabled={true} className="grandTotal" form={this.props.form}/>
+              <this.InputText name="requestTotalValue" className="hidden" form={this.props.form}/>
+            </div>
+            <div className="pull-left" style={{width: 150}}></div>
+            <div style={{clear: "both"}}></div>
+          </div>}/> 
       </div>
     );
   }   

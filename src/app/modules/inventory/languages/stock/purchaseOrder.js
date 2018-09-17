@@ -1,4 +1,10 @@
 export default {
+  "purchase_order_number_text": [
+    "Number",
+    "Number",
+    "Number"
+  ],
+
   "create_stock_purchase_order_title": [
     "Purchase Order",
     "ငွေကြေးစနစ်",
@@ -53,10 +59,64 @@ export default {
     "Shipping Fee"
   ],
 
+  "col_stock_purchase_order_step": [
+    "Step",
+    "Step",
+    "Step"
+  ],
+
+  "col_stock_purchase_order_reference": [
+    "Reference",
+    "Reference",
+    "Reference"
+  ],
+
   "col_stock_purchase_order_total": [
     "Total",
     "အမည်",
     "Total"
+  ],
+
+  "purchase_order_step_draff": [
+    "Draff",
+    "Draff",
+    "Draff"
+  ],
+
+  "purchase_order_step_process": [
+    "Process",
+    "Process",
+    "Process"
+  ],
+
+  "purchase_order_step_process": [
+    "Process",
+    "Process",
+    "Process"
+  ],
+
+  "purchase_order_step_recieve": [
+    "Receive",
+    "Receive",
+    "Receive"
+  ],
+
+  "purchase_order_step_cancel": [
+    "Cancel",
+    "Cancel",
+    "Cancel"
+  ],
+
+  "purchase_order_step_return": [
+    "Return",
+    "Return",
+    "Return"
+  ],
+
+  "purchase_order_step_paid": [
+    "Paid",
+    "Paid",
+    "Paid"
   ],
 
   "datepicker_stock_purchase_due_date": [
@@ -114,9 +174,9 @@ export default {
   ],
 
   "select_stock_purchase_order_from_supplier": [
-    "Other from Supplier",
-    "အမည်",
-    "Other from Supplier",
+    "Supplier",
+    "Supplier",
+    "Supplier",
   ],
 
   "select_stock_purchase_delivery_to_location": [
@@ -155,10 +215,16 @@ export default {
     "Price",
   ],
 
+  "purchase_order_footer": [
+    "Total amount",
+    "Total amount",
+    "Total amount",
+  ],
+
   "placeholder_table_purchase_order": [
-    "No Purchase Order",
-    "အမည်",
-    "No Purchase Order"
+    "No purchase order item",
+    "No purchase order item",
+    "No purchase order item"
   ],
 
   "placeholder_table_purchase_place_holder": [
