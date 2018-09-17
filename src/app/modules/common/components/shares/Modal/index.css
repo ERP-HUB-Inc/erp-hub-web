@@ -61,11 +61,15 @@
 }
 
 .ant-modal-header {
-    padding: 10px 24px
-} 
+    padding: 35px 24px !important
+}
+
+.ant-modal-footer {
+    padding: 15px 16px !important
+}
 
 .ant-modal-body {
-    /* padding: 0 20px !important */
+    padding: 0 25px !important
 }
 
 .ant-modal-footer {

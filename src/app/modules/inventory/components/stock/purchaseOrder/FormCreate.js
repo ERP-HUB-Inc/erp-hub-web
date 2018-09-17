@@ -35,57 +35,44 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {      
-        const listPurchase = 
-        {
-          purchaseId: values.purchaseId,
-          requestQuantity: values.purchaseQty,
-          price: values.purchasePrice
-        };
-        console.log("List purchase",JSON.stringify(listPurchase));
-
-        delete values["purchaseId"];
-        delete values["productId"];
-        delete values["purchaseQty"];
-        delete values["purchasePrice"];
-        delete values["purchaseDescription"];
-
-        if(listPurchase.purchaseId == null){
-          listPurchase.purchaseId = [];
+        
+        const purchaseEntries = [];
+        if ("productId" in values) {
+          values.productId.forEach((productId, index) => {
+            purchaseEntries.push({
+              id: values.id[index],
+              productId,
+              requestQuantity: parseInt(values.purchaseQty[index]),
+              price: parseFloat(values.purchasePrice[index]),
+              status: values.purchaseEntryStatus[index]
+            });
+          });
         }
 
-        const purchases = [];
-
-        listPurchase.purchaseId.forEach((purchaseId, index) => {
-          if (
-            purchaseId != null || 
-            listPurchase.requestQuantity[index] != null ||
-            listPurchase.price[index] != null
-          ) {
-            purchases.push({
-              productId: listPurchase.purchaseId[index],
-              requestQuantity: listPurchase.requestQuantity[index],
-              price: listPurchase.price[index]
-            });
-          }
-        });
+        this.Util.clearObjProperty(values, [
+          "id",
+          "productId",
+          "purchaseQty",
+          "purchasePrice",
+          "purchaseEntryStatus",
+          "totalPrice",
+          "totalAmount",
+          "totalPriceValue"
+        ]);
 
         values["shippingFee"] = 0;
-        values["requestTotal"] = 105;
+        values["requestTotal"] = parseFloat(values["requestTotalValue"]);
         values["returnTotal"] = 0;
         values["receiveTotal"] = 0;
         values["step"] = Enum.PO_STEP.DRAFT;
-        values["type"] = Enum.CLIENT_AUTO_NUMBER_TYPE.QUOTATION;
-        values["status"] = 1;
+        values["type"] = Enum.CLIENT_AUTO_NUMBER_TYPE.PURCHASE;
+        values["status"] = this.Enum.ACTIVE;
 
-        if(purchases) {
-          values["POEntries"] = purchases;
-        } 
-
-        console.log("get values",values);
+        if(purchaseEntries) {
+          values["POEntries"] = purchaseEntries;
+        }
       
         this.dispatch(PurchaseOrderAction.add(values));   
-        this.dispatch(PurchaseOrderAction.fetch(10));
-
       }
     });
   }
@@ -127,7 +114,7 @@ export default class FormCreate extends Modal {
     
       return super.render();
     } else {
-      return (<div></div>);
+      return <div/>;
     }
   }
 }

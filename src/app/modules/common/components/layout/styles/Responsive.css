@@ -3,9 +3,8 @@
   ##Screen = 1281px to higher resolution desktops
 */
 
-@media (min-width: 1281px) {
-  
-    
+/* @media (min-width: 1280px) { */
+@media (min-width: 1371px) {
     
 }
   
@@ -14,8 +13,22 @@
 ##Screen = B/w 1025px to 1280px
 */
   
-@media (min-width: 1025px) and (max-width: 1280px) {
-    
+/* @media (min-width: 1025px) and (max-width: 1280px) { */
+@media (min-width: 1025px) and (max-width: 1370px) {
+  .ant-table-body table tr th {
+    font-size: 8pt
+  }
+
+  .ant-form label,
+  .ant-select,
+  .ant-select-dropdown,
+  .ant-calendar-picker-container,
+  .ant-calendar,
+  .ant-input,
+  .ant-btn.info,
+  .ant-btn.danger {
+    font-size: 8pt
+  }
 }
   
 /* 
@@ -24,8 +37,6 @@
 */
 
 @media (min-width: 768px) and (max-width: 1024px) {
-
-
 
 }
   

@@ -20,7 +20,7 @@ export default class CustomerList extends List {
     this.isShowExpandable = true;
     this.service = CustomerService;
     this.action = CustomerAction;
-    this.groupCustomerList = {name: "All Group", value: 0};
+    this.groupCustomerList = [{name: "All Group", id: 0}];
   
     this.columnFilterWithKey = [
       "firstName",
@@ -104,12 +104,6 @@ export default class CustomerList extends List {
     const {customerGroup, form} = this.props;
     if (customerGroup) {
       const fetchingProps = this.props[this.fetchingProp];
-      let groupCustomerList = this.Util.renameObjectKey({ name: "name", id: "value" }, customerGroup.list);
-
-      if (customerGroup.fetched) {
-        groupCustomerList.push(this.groupCustomerList);
-      }
-    
       return (
         form == null ?
           ""
@@ -128,8 +122,9 @@ export default class CustomerList extends List {
                 <this.Select
                   name="groupCustomerId"
                   label={<this.Translate id="input_management_customer_customer_group" />}
-                  dataSource={groupCustomerList}
-                  defaultValue={this.groupCustomerList.value}
+                  dataSource={this.groupCustomerList.concat(customerGroup.list)}
+                  defaultValue={this.groupCustomerList[0].id}
+                  valueKey="id"
                   form={form}
                 />
               </this.Col>

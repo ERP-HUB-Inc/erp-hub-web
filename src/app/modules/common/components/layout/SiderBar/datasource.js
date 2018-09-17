@@ -221,7 +221,7 @@ const dataSource = {
         icon: "icon-barcode",
         route: "/stock/control",
         component: StockControl,
-        isFashNav: true
+        isFashNav: false
       },
       {
         title: "Stock Audit",

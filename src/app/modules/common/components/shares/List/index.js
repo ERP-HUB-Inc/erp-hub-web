@@ -23,12 +23,6 @@ export default class List extends Component {
       showExport : true
     };
 
-
-    
-    //access role
-    this.showListRoles = "";
-    this.layout = "";
-
     this.showExport = false;
 
     this.columns = [];
@@ -54,7 +48,7 @@ export default class List extends Component {
       title: <this.Translate id="text_status" />,
       dataIndex: "status",
       key: "status",
-      width: 150,
+      width: 100,
       render: value => {
         return (
           value === 1 ?
@@ -83,7 +77,7 @@ export default class List extends Component {
       title: <this.Translate id="text_created_at" />,
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 200,
+      width: 140,
       render: value => this.formatDate(value),
       sorter: true
     };
@@ -91,6 +85,7 @@ export default class List extends Component {
       title: <this.Translate id="text_updated_at" />,
       dataIndex: "updatedAt",
       key: "updatedAt",
+      width: 150,
       render: value => this.formatDate(value),
       sorter: true
     };

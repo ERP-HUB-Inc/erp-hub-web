@@ -8,3 +8,54 @@
     font-size: 10pt;
     margin-top: 14px;
 }
+
+#purchase-order-form .purchase-order-entry {
+    min-height: 425px
+}
+
+#purchase-order-form .purchase-order-entry .main-dropdown-search {
+    border-top: 1px solid #EAEAEA;
+    padding-top: 5px
+}
+
+#purchase-order-form .ant-table-footer {
+    font-weight: 500;
+    color: #9A9A9A;
+    background: white;
+    padding-right: 8px
+}
+
+#purchase-order-form .ant-table-footer .total-title {
+    font-size: 9pt;
+    width: 150px
+}
+
+#purchase-order-form .ant-table-footer .total-value {
+    font-size: 10pt;
+    padding-left: 15px;
+    width: 135px
+}
+
+#purchase-order-form .purchase-order-entry .ant-table-body table tbody tr td input {
+    text-align: right;
+    padding-right: 5px
+}
+
+#purchase-order-form .purchase-order-entry .ant-table-body table tbody tr td .totalPrice input,
+#purchase-order-form .ant-table-footer .grandTotal input {
+    background-color: #faf9f900;
+    opacity: 1.5;
+    cursor: default;
+    color: #9A9A9A;
+    border: none;
+}
+
+#purchase-order-form .purchase-order-entry .grandTotal .ant-form-item-control {
+    line-height: 0;
+    top: -5px
+}
+
+#purchase-order-form .ant-table-footer .grandTotal input {
+    text-align: right;
+    padding-right: 0;
+}

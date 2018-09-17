@@ -15,8 +15,8 @@ export class Select extends Element {
               [
                 {required: this.props.required, message: this.props.errorRequired}
               ],
-              initialValue: this.props.defaultValue
-            })(
+          initialValue: this.props.defaultValue
+          })(
             <this.Select
               placeholder={this.props.placeholder}
               onChange={this.props.onChange}
