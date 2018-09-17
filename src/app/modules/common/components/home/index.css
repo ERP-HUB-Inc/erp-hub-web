@@ -120,3 +120,19 @@
 {
     margin-bottom: 35px;
 }
+
+
+@media only screen and (min-width: 1800px) {
+
+    .main-icon-top {
+        margin-left: 0 !important;
+    }
+
+    .main-icon-top,
+    .main-guide-icon
+    {
+        width: auto !important;
+        margin: none !important;
+    }           
+
+}
