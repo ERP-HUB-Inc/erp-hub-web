@@ -15,6 +15,7 @@ export default class ReceivedPo extends Modal {
       {
         title: <this.Translate id="col_stock_purchase_order_no" />,
         dataIndex: "id",
+        width: 50,
         key: "purchaseID",
         render: (text,record,index) => 
         {
@@ -32,7 +33,7 @@ export default class ReceivedPo extends Modal {
       {
         title: <this.Translate id="col_stock_purchase_order_name" />,
         dataIndex: "name",
-        width: "418px",
+        width: 300,
         key: "name",
         render: (text,record,index) => 
         {
@@ -44,14 +45,14 @@ export default class ReceivedPo extends Modal {
       {
         title: <this.Translate id="col_stock_purchase_order_qty" />,
         dataIndex: "requestQuantity",
-        width: "200px",
+        width: 150,
         key: "requestQuantity",
         render: (text,record,index) => 
         {
           return(
             <div>
               {record.quantity}
-              <this.InputNumber name={`qty[${index}]`} className="hidden" data={record.quantity} required={true} min={1} max={100} form={ this.form } />
+              <this.InputText name={`qty[${index}]`} type="hidden" className="hidden" data={record.quantity} required={true} min={1} max={100} form={ this.form } />
             </div>
           );
         }
@@ -59,7 +60,7 @@ export default class ReceivedPo extends Modal {
       {
         title: <this.Translate id="col_stock_purchase_order_receive_qty" />,
         dataIndex: "receiveQuantity",
-        width: "200px",
+        width: 300,
         key: "receiveQuantity",
         render: (text,record,index) => 
         {
@@ -70,8 +71,8 @@ export default class ReceivedPo extends Modal {
               required={true} 
               min={1} 
               max={100} 
-              form={ this.form } 
               handleKeyUp={(e) => this.handleOnChangeQuantity(e, index)}
+              form={ this.form } 
             />
           );
         }
@@ -79,7 +80,7 @@ export default class ReceivedPo extends Modal {
       {
         title: <this.Translate id="col_stock_purchase_order_price" />,  
         dataIndex: "price",
-        width: "200px",
+        width: 278,
         key: "price",
         render: (text,record,index) => 
         {
@@ -94,6 +95,7 @@ export default class ReceivedPo extends Modal {
       {
         title: <this.Translate id="col_stock_purchase_order_total" />,
         dataIndex: "composite_product_action",
+        width: 175,
         key: "key5",
         render: (text,record,index) => {
           return(
@@ -117,8 +119,6 @@ export default class ReceivedPo extends Modal {
 
       const existingProductList = this.state.productLists;
       
-      console.log("receivePurchaseDetails",receivePurchaseDetail);
-      
       receivePurchaseDetail.forEach(purchaseOrderEntry => {
         let productName = "";
         if (purchaseOrderEntry.product) {
@@ -135,8 +135,7 @@ export default class ReceivedPo extends Modal {
           receiveQuantity: purchaseOrderEntry.receiveQuantity,
           price: purchaseOrderEntry.price,
           totalPrice: purchaseOrderEntry.requestQuantity * purchaseOrderEntry.price,
-          status: purchaseOrderEntry.status,
-          purchaseEntryStatus: purchaseOrderEntry.status
+          status: purchaseOrderEntry.status
         }); 
        
       });
@@ -156,8 +155,6 @@ export default class ReceivedPo extends Modal {
   calculateTotalAmountEachRow(e, index) {
     const quantity = this.props.form.getFieldValue(`receiveQty[${index}]`);
     const price = this.props.form.getFieldValue(`receivePrice[${index}]`);
-    console.log("quantity",quantity);
-    console.log("quantity",quantity);
     return quantity * price;
   }
 
@@ -179,7 +176,7 @@ export default class ReceivedPo extends Modal {
   grandTotal(productList) {
     let grandTotal = 0;
     productList.forEach((product, index) => {
-      if (product.purchaseEntryStatus === this.Enum.ACTIVE) {
+      if (product.status === this.Enum.ACTIVE) {
         grandTotal += (product.quantity * product.price);
       }
     });
@@ -212,13 +209,13 @@ export default class ReceivedPo extends Modal {
           dataSource={productLists}
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
-          footer={() => <div className={`float-right ${productLists.length > 0 ? "" : "hidden"}`}>
-            <div className="total-title text-uppercase pull-left"><this.Translate id="purchase_order_footer" />: </div>
-            <div className="total-value pull-left">
+          footer={() => <div className={` ${productLists.length > 0 ? "" : "hidden"}`}>
+            <div className="total-purchase-right"><this.Translate id="purchase_order_footer" />: </div>
+            <div className="">
               <this.InputText name="requestTotal" disabled={true} className="grandTotal" form={this.props.form}/>
               <this.InputText name="requestTotalValue" className="hidden" form={this.props.form}/>
             </div>
-            <div className="pull-left" style={{width: 150}}></div>
+            <div className="" style={{width: 150}}></div>
             <div style={{clear: "both"}}></div>
           </div>}
         /> 

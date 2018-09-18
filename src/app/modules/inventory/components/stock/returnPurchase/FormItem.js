@@ -14,9 +14,9 @@ export default class FormItem extends Modal {
 
 
   render() {
-    const { form,locale,formData,storeLocation,supplier} = this.props;
+    const { form,formData,storeLocation,supplier} = this.props;
     return (
-      <div>
+      <div id="purchase-order-form">
         <this.Row>
           <this.Col md="2">
             <label><this.Translate id="input_stock_purchase_order_name" /> </label><br/>
@@ -64,7 +64,7 @@ export default class FormItem extends Modal {
           </this.Col>          
         </this.Row>
         <this.Row>
-          <this.Col md="12">
+          <this.Col md="12"  className="purchase-order-entry">
             <ReturnPoList
               returnPurchaseDetail={formData.purchaseOrderEntries}
               form={this.props.form} 

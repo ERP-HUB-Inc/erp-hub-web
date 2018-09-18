@@ -12,6 +12,7 @@ export default class Form extends Modal {
     };
     this.width = "65%";
     this.title = <this.Translate id="update_stock_return_purchase_title" />;
+    this.confirmTitle = "Do you Want to return purchase ?";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleReturn = this.handleReturn.bind(this);
@@ -32,9 +33,8 @@ export default class Form extends Modal {
             POEntries.push({
               id: values.receiveId[receiveQtyIndex],
               productId: values.productId[receiveQtyIndex],
-              requestQuantity: values.qty[receiveQtyIndex],
-              receiveQuantity: values.receiveQty[receiveQtyIndex],
-              returnQty: values.returnQty[receiveQtyIndex],
+              requestQuantity: parseInt(values.qty[receiveQtyIndex]),
+              receiveQuantity: parseInt(values.receiveQty[receiveQtyIndex]),
               price: values.receivePrice[receiveQtyIndex],
               status: values.statusId[receiveQtyIndex],
             });
@@ -58,8 +58,8 @@ export default class Form extends Modal {
         values["shippingFee"] = this.props.returnPurchaseDetail.data.shippingFee;
         values["requestTotal"] = this.props.returnPurchaseDetail.data.requestTotal;
         values["receiveTotal"] = this.props.returnPurchaseDetail.data.receiveTotal;
-        values["returnTotal"] = this.props.returnPurchaseDetail.data.returnTotal;
-        values["step"] = Enum.PO_STEP.RECEIVED;
+        values["returnTotal"] = parseFloat(values.requestTotalValue);
+        values["step"] = Enum.PO_STEP.RETURN;
         values["type"] = this.props.returnPurchaseDetail.data.type;
         values["status"] = this.props.returnPurchaseDetail.data.status;
 

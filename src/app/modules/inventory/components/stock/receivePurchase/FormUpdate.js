@@ -11,10 +11,11 @@ export default class Form extends Modal {
       disabled: false
     };
     this.width = "65%";
-    this.confirmTextAction = "Are You Want to Receive ?";
+    this.confirmTextAction = "Do you want to receive ?";
     this.confirmTitle = "Comfirm Receive order";
     this.dispatch = this.props.dispatch;
     this.title = <this.Translate id="update_stock_receive_purchase_title" />;
+    this.handleSubmitConfirmAction = this.handleSubmitConfirmAction.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleReceive = this.handleReceive.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
