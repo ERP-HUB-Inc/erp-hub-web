@@ -2,7 +2,7 @@
     padding-left: 0;
     margin-bottom: 0;
     padding-top: 20px;
-    padding-bottom: 20px
+    padding-bottom: 0px
 }
 
 .dashboard ul li {
@@ -41,18 +41,18 @@
 .main-guide .row ul li span.arrow {
     color: #BCBCCB;
     position: relative;
-    top: 53px;
+    top: 22px;
 }
 
 .main-guide .row ul li .grap-title {
     color: #0D62AF;
-    margin-top: -27px;
+    margin-top: -10px;
     font-weight: bold;
     text-align: center;
 }
 
 .main-guide .row ul li a {
-    font-size: 50pt;
+    font-size: 36pt;
 }
 
 
@@ -122,6 +122,16 @@
 }
 
 
+/* diagram */
+.main-diagram {
+    position: relative; 
+    /* height:40vh;
+    width:92vw */
+    width: 100%;
+    overflow-x: hidden;
+}
+
+
 @media only screen and (min-width: 1800px) {
 
     .main-icon-top {
@@ -136,3 +146,18 @@
     }           
 
 }
+
+
+@media only screen and (max-width: 1400px) {
+    .main-guide {
+        zoom: 80%;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .main-guide {
+        zoom: 50%;
+    }
+}
+
+
