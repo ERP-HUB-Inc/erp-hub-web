@@ -47,6 +47,10 @@ export default class FormCreate extends Modal {
               status: values.purchaseEntryStatus[index]
             });
           });
+        } else {
+          // HAVE NO PURCHASE ENTRY INCLUDE
+          this.Message.warning(this.CATranslate("error_purchase_order_no_entry", this.props.locale), 3);
+          return;
         }
 
         values["requestTotal"] = parseFloat(values["requestTotalValue"]);

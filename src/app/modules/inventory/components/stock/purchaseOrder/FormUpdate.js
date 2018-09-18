@@ -1,5 +1,6 @@
 import React from "react";
 import FormItem from "./FormItem";
+import Enum from "../../../enums";
 import Constant from "../../../constants/stock/purchaseOrder";
 import Modal from "../../../../common/components/shares/Modal";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
@@ -13,21 +14,29 @@ export default class Form extends Modal {
       disabled: false
     };
 
-    this.title = <this.Translate id="update_stock_purchase_order_title" />;
+    this.title = <div><this.Translate id="update_stock_purchase_order_title" /></div>;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.pushToSupplier = this.pushToSupplier.bind(this);
     this.handlePushToSupplier = this.handlePushToSupplier.bind(this);
     this.prepareFormDataForUpdate = this.prepareFormDataForUpdate.bind(this);
   }
 
   handleSubmit (e) {
     e.preventDefault();
+    if (this.props.purchaseOrderDetail.data.step !== Enum.PO_STEP.DRAFT) {
+      this.Message.error(this.CATranslate("error_purchase_order_update_warning", this.props.locale), 3);
+      return;
+    }
     this.props.form.validateFieldsAndScroll((err, values) => {
-      
-      if (!err) { 
+      if (!err) {
         values = this.prepareFormDataForUpdate(values);
-        this.dispatch(PurchaseOrderAction.update(values)); 
+
+        if (values["POEntries"].length > 0) {
+          this.dispatch(PurchaseOrderAction.update(values)); 
+        } else {
+          // HAVE NO PURCHASE ENTRY INCLUDE
+          this.Message.warning(this.CATranslate("error_purchase_order_no_entry", this.props.locale), 3);
+        }
       }
       
     });
@@ -77,20 +86,28 @@ export default class Form extends Modal {
   }
 
   handlePushToSupplier(){
-    const values = this.props.form.getFieldsValue();
-    this.dispatch(PurchaseOrderAction.showForm(null, Constant.SHOW_PUSH_PURCHASE_ORDER_TO_SUPPLIER_FORM));
-    this.modal1 = <FormCreatePurchseOrderSendEmail formvalue={this.prepareFormDataForUpdate(values)} />;
-  }
+    let values = this.props.form.getFieldsValue();
+    values = this.prepareFormDataForUpdate(values);
 
-  pushToSupplier(){
-    this.handlePushToSupplier();
-  } 
+    if (values["POEntries"].length > 0) {
+      this.dispatch(PurchaseOrderAction.showForm(null, Constant.SHOW_PUSH_PURCHASE_ORDER_TO_SUPPLIER_FORM));
+      this.modal1 = <FormCreatePurchseOrderSendEmail
+        formvalue={this.prepareFormDataForUpdate(values)}
+        purchaseOrderDetail={this.props.purchaseOrderDetail.data}/>;
+    } else {
+      // HAVE NO PURCHASE ENTRY INCLUDE
+      this.Message.warning(this.CATranslate("error_purchase_order_no_entry", this.props.locale), 3);
+    }
+  }
 
   renderOtherAction(){
     return (
-      <this.Button onClick={this.pushToSupplier} className="info btn-push-to-supplier">
-        <span className="icon-push-button"></span> <this.Translate id="button_stock_purchase_order_push_to_supplier" />
-      </this.Button>
+      this.props.purchaseOrderDetail.data.step === Enum.PO_STEP.DRAFT ?
+        <this.Button onClick={this.handlePushToSupplier} className="info btn-push-to-supplier">
+          <span className="icon-push-button"></span> <this.Translate id="button_stock_purchase_order_push_to_supplier" />
+        </this.Button>
+        :
+        ""
     );
   }
   
@@ -107,7 +124,6 @@ export default class Form extends Modal {
       product, 
       storeLocation,
       productSearch,
-      productUpdate, 
       requestOrderNumber,
       purchaseOrderDetail,
       dispatch,
@@ -125,7 +141,6 @@ export default class Form extends Modal {
           product={product} 
           storeLocation={storeLocation} 
           productSearch={productSearch}
-          productUpdate={productUpdate} 
           requestOrderNumber={requestOrderNumber}
           dispatch={dispatch} 
           buttonPushToSupplier={buttonPushToSupplier}

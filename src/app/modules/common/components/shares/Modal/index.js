@@ -96,7 +96,6 @@ export default class Modal extends Component {
           <span className="icon-help icon-padding-right"></span>
           <span className="title text-uppercase">{this.confirmTitle}</span><br/>
           <span>{this.confirmTextAction}</span>
-
         </div>
         <div className="ant-modal-footer">
           <this.Button className="danger text-uppercase" onClick={() => this.handleCancelConfirmAction()}>
@@ -128,7 +127,6 @@ export default class Modal extends Component {
     );
   }
 
-  // share function 
   formatDate(value) {
     const setting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
     return this.Util.formatDate(value, setting.dateFormat);

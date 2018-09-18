@@ -18,9 +18,12 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {      
-        values =  this.props.formvalue;
-        values["step"] = Enum.PO_STEP.PROCESS;
-        this.dispatch(PurchaseOrderAction.pushToSupplier(values));
+        let purchaseOrder =  this.props.formvalue;
+        purchaseOrder["step"] = Enum.PO_STEP.PROCESS;
+        if (values["isCheckToPushWithEmail"]) {
+          purchaseOrder["emailPushToSuplier"] = values["supplierEmail"];
+        }
+        this.dispatch(PurchaseOrderAction.pushToSupplier(purchaseOrder));
       }
     });
   }
@@ -49,7 +52,8 @@ export default class FormCreate extends Modal {
       form,
       locale,
       dispatch,
-      supplierDetail} = this.props;
+      supplierDetail,
+      purchaseOrderDetail} = this.props;
 
     this.submitLoading = purchaseOrderPushToSupplier.updating;
 
@@ -58,6 +62,7 @@ export default class FormCreate extends Modal {
         form={form}
         dispatch={dispatch}
         supplierDetail={supplierDetail}
+        purchaseOrderDetail={purchaseOrderDetail}
         locale={locale} />;
       return super.render();
     } else {
