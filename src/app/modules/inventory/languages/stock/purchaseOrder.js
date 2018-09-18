@@ -78,9 +78,9 @@ export default {
   ],
 
   "purchase_order_step_draff": [
-    "Draff",
-    "Draff",
-    "Draff"
+    "Draft",
+    "Draft",
+    "Draft"
   ],
 
   "purchase_order_step_process": [
@@ -344,5 +344,16 @@ export default {
     "Your email address is not valid !",
     "Your email address is not valid !",
   ],
+
+  "error_purchase_order_update_warning": [
+    "PO allow only update on draft PO!",
+    "PO allow only update on draft PO!",
+    "PO allow only update on draft PO!"
+  ],
+  "error_purchase_order_no_entry": [
+    "Please add product to purchase entry!",
+    "Please add product to purchase entry!",
+    "Please add product to purchase entry!"
+  ]
 
 };

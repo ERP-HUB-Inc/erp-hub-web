@@ -31,6 +31,7 @@ export default class PurchaseOrderLists extends List {
         dataIndex: "referenceId",
         key: "referenceId",
         sorter: true,
+        width: 130,
         render: (text, record, index) => {
           let referenceNo = "";
           if ("reference" in record && record["reference"] != null) {
@@ -44,6 +45,7 @@ export default class PurchaseOrderLists extends List {
         dataIndex: "supplier",
         key: "supplier",
         sorter: true,
+        width: 140,
         render: supplier => supplier ? supplier.name: ""
       },
       {
@@ -51,6 +53,7 @@ export default class PurchaseOrderLists extends List {
         dataIndex: "location",
         key: "location",
         sorter: true,
+        width: 140,
         render: location => location ? location.name: ""
       },
       {
@@ -58,7 +61,7 @@ export default class PurchaseOrderLists extends List {
         dataIndex: "deliveryDueDate",
         key: "deliveryDueDate",
         sorter: true,
-        width: 140,
+        width: 150,
         render: deliveryDueDate => this.formatDate(deliveryDueDate)
       },
       {
@@ -66,7 +69,8 @@ export default class PurchaseOrderLists extends List {
         dataIndex: "shippingFee",
         key: "shippingFee",
         sorter: true,
-        width: 120,
+        width: 130,
+        align: "right",
         render: shippingFee => this.formatCurrency(shippingFee)
       },
       {
@@ -74,8 +78,8 @@ export default class PurchaseOrderLists extends List {
         dataIndex: "requestTotal",
         key: "requestTotal",
         sorter: true,
-        width: 120,
-        align: "left",
+        width: 130,
+        align: "right",
         render: requestTotal => this.formatCurrency(requestTotal)
       },
       {
@@ -134,6 +138,7 @@ export default class PurchaseOrderLists extends List {
     if (purchaseOrderUpdate.updated) {
       dispatch(PurchaseAction.fetch(this.pageSize));
       dispatch(PurchaseAction.reset(Constant.REQUEST_PURCHASE_ORDER_DETAIL_FULL_RESET));
+      dispatch(PurchaseAction.reset());
     }
 
     if (purchaseOrderPushToSupplier.updated) {

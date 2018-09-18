@@ -177,7 +177,7 @@ const dataSource = {
       {
         title: "Purchase Orders",
         icon: "icon-purchasing",
-        route: "/stock/purchase-order",
+        route: "/stock/purchase/order",
         component: PurchaseOrder,
         isFashNav: true
       },

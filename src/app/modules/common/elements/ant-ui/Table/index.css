@@ -10,7 +10,8 @@
     border-bottom: none
 }
 
-.ant-table-body table tr th {
+.ant-table-body table tr th,
+.ant-table-header table tr th {
     background-color: #F7F7F7;
     font-size: 9pt
 }
@@ -21,7 +22,8 @@ tr:nth-child(odd) {
 
 .ant-table-body table tr td {
     color: #4D4F5C;
-    font-size: 8pt;
+    font-size: 8.6pt;
+    font-weight: 400;
 }
 
 .ant-table-tbody > tr > td {

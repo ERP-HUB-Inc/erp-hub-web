@@ -17,6 +17,7 @@ export  class InputEmail extends Element {
         validator={this.props.validator}
         initialValue={this.props.initialValue}
         handleKeyDown={this.props.handleKeyDown}
+        className={this.props.className}
         form={this.props.form}
         data={ this.props.data }
       />

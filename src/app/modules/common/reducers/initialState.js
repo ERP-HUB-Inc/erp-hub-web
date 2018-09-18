@@ -30,14 +30,13 @@ export default {
       error: null
     };
   },
-  detail: (key="list") => {
+  detail: () => {
     return {
       showForm: false,
       fetching: false,
       fetched: false,
       data: null,
-      error: null,
-      [key]: []
+      error: null
     };
   },
   orderNumber: (key="list") => {

@@ -1,5 +1,5 @@
 import React from "react";
-import SearchPo from "./SearchPo";
+import SearchPo from "./SearchPO";
 import Constant from "../../../constants/stock/purchaseOrder";
 import SupplierAction from "../../../actions/stock/supplier";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
@@ -10,7 +10,7 @@ export default class FormItem extends Modal {
   constructor(props) {
     super(props);
     this.timer = null;
-    this.changeSupplierEmailValue = this.changeSupplierEmailValue.bind(this);
+    this.changeSupplierForPO = this.changeSupplierForPO.bind(this);
     this.handleCheckPONumber = this.handleCheckPONumber.bind(this);
 
     this.validateOrderNumber = "";
@@ -18,7 +18,7 @@ export default class FormItem extends Modal {
 
   }
 
-  changeSupplierEmailValue(values){
+  changeSupplierForPO(values){
     this.dispatch(SupplierAction.detail(values));
   }
 
@@ -26,7 +26,9 @@ export default class FormItem extends Modal {
     this.validateOrderNumber = "";
     this.errorMessageOrderNumber = "";
     const PONumber = event.target.value;
+
     clearTimeout(this.timer);
+
     this.timer = setTimeout(() => {
       this.dispatch(PurchaseOrderAction.orderNumber(PONumber));
     }, 200);
@@ -34,8 +36,8 @@ export default class FormItem extends Modal {
 
   componentDidMount(){
     const {dispatch} = this.props;
-    dispatch(SupplierAction.fetch(10));
-    dispatch(StoreLoctionAction.fetch(10));
+    dispatch(SupplierAction.fetch(100));
+    dispatch(StoreLoctionAction.fetch(100));
   }
 
 
@@ -131,7 +133,7 @@ export default class FormItem extends Modal {
               valueKey="id"
               required={true}
               form={form}
-              onChange={this.changeSupplierEmailValue}
+              onChange={this.changeSupplierForPO}
             />
           </this.Col>
           <this.Col md="2">
@@ -166,12 +168,8 @@ export default class FormItem extends Modal {
 FormItem.defaultProps = {
   formData: {
     name:"",
-    description:"",
-    status: 1,
     supplierid:"",
     purchaseOrderEntries: []
   },
-  productUpdate:[],
-  productSearch: [],
-  PurchseOrderNumber: []
+  productSearch: []
 };

@@ -77,7 +77,7 @@ export default class List extends Component {
       title: <this.Translate id="text_created_at" />,
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 140,
+      width: 150,
       render: value => this.formatDate(value),
       sorter: true
     };
@@ -279,7 +279,6 @@ export default class List extends Component {
             modalVisible: false,
             deleting: false
           });
-          // this.Message.info(this.messageSuccess);
         })
         .catch(err => {
           this.setState({deleting: false});
@@ -398,13 +397,11 @@ export default class List extends Component {
       <this.Modal
         visible={this.state.modalVisible}
         wrapClassName="confirm-delete"
-        footer={null}    
-      >
+        footer={null}>
         <div>
           <span className="icon-help icon-padding-right"></span>
           <span className="title">{this.confirmTitle}</span><br/>
           <span>{this.confirmTextDelete}</span>
-
         </div>
         <div className="ant-modal-footer">
           <this.Button className="danger text-uppercase" onClick={() => this.handleCancel()}>
