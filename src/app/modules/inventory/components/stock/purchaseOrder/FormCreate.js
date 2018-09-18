@@ -42,7 +42,7 @@ export default class FormCreate extends Modal {
             purchaseEntries.push({
               id: values.purchaseEntryId[index],
               productId,
-              requestQuantity: parseInt(values.purchaseQty[index]),
+              requestQuantity: parseInt(values.purchaseQty[index], 10),
               price: parseFloat(values.purchasePrice[index]),
               status: values.purchaseEntryStatus[index]
             });

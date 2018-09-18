@@ -7,55 +7,55 @@ export default {
 
   "create_stock_purchase_order_title": [
     "Purchase Order",
-    "ငွေကြေးစနစ်",
+    "Purchase Order",
     "Purchase Order"
   ],
       
   "update_stock_purchase_order_title": [
     "Purchase Order",
-    "ငွေကြေး",
+    "Purchase Order",
     "Purchase Order"
   ],
 
   "button_search_stock_purchase_order_export_csv":[
     "Export CSV",
-    "အမည်",
+    "Export CSV",
     "Export CSV"
   ],
 
   "col_stock_purchase_order_no": [
     "No",
-    "အမည်",
+    "No",
     "No",
   ],
 
   "col_stock_purchase_order_supplier": [
     "Supplier",
-    "အမည်",
+    "Supplier",
     "Supplier",
   ],
 
   "col_stock_purchase_order_stock_location": [
-    "Stock Location",
-    "အမည်",
-    "Stock Location",
+    "Location",
+    "Location",
+    "Location",
   ],
 
   "col_stock_purchase_order_name": [
     "Name",
-    "အမည်",
+    "Name",
     "Name",
   ],
 
   "col_stock_purchase_order_due_date": [
     "Due Date",
-    "အမည်",
+    "Due Date",
     "Due Date",
   ],
   
   "col_stock_purchase_order_shipping_fee": [
     "Shipping Fee",
-    "အမည်",
+    "Shipping Fee",
     "Shipping Fee"
   ],
 
@@ -73,7 +73,7 @@ export default {
 
   "col_stock_purchase_order_total": [
     "Total",
-    "အမည်",
+    "Total",
     "Total"
   ],
 
@@ -81,12 +81,6 @@ export default {
     "Draff",
     "Draff",
     "Draff"
-  ],
-
-  "purchase_order_step_process": [
-    "Process",
-    "Process",
-    "Process"
   ],
 
   "purchase_order_step_process": [
@@ -121,25 +115,31 @@ export default {
 
   "datepicker_stock_purchase_due_date": [
     "Due Date",
-    "အမည်",
+    "Due Date",
     "Due Date"
   ],
 
   "select_picker_purchase_supplier": [
     "Supplier",
-    "အမည်",
+    "Supplier",
     "Supplier"
+  ],
+
+  "select_purchase_all_step": [
+    "All Step",
+    "All Step",
+    "All Step"
   ],
 
   "input_stock_purchase_key": [
     "Key",
-    "အမည်",
+    "Key",
     "Key"
   ],
 
   "input_stock_purchase_order_name": [
     "Name",
-    "အမည်",
+    "Name",
     "Name"
   ],
 

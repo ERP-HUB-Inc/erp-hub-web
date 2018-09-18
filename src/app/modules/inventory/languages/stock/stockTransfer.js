@@ -41,12 +41,6 @@ export default {
     "Supplier",
   ],
 
-  "select_search_stock_transfer_supplier": [
-    "Supplier",
-    "အမည်",
-    "Supplier",
-  ],
-
   "input_search_stock_transfer_tag":[
     "Tags",
     "အမည်",
