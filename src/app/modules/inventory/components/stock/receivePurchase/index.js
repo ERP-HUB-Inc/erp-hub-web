@@ -11,6 +11,14 @@ export default class ReceivePurchaseList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
+    this.ExportheadersCsv = [{label: "Date", key: "createdAt"},
+      {label: "Name", key: "name"},
+      {label: "Invoice No", key: "invoiceNo"},
+      {label: "Due Date", key: "deliveryDueDate"},
+      {label: "Shipping", key: "shippingFee"},
+      {label: "Total", key: "requestTotal"},
+      {label: "Status", key: "status"}
+    ];
     this.fetchingProp = "receivePurchase";
     this.addingProp = "receivePurchaseAdd";
     this.updatingProp = "receivePurchaseUpdate";
@@ -83,4 +91,5 @@ class Column extends List {
       this.columnStatus
     ];
   }
+  
 }

@@ -57,24 +57,6 @@ export default class Lists extends List {
   }
 
 
-
-  // exportCsv(){
-  //   const {dispatch,stockTransfer} = this.props;
-  //   return  stockTransfer.list;
-  // }
-
-  // renderActionButton() {
-  //   return (
-  //     <div>
-  //       <div className="export-csv-button">
-  //         <this.CSVLink data={this.exportCsv()} headers={this.columns}>
-  //           {<this.Translate id="button_search_stock_transfer_export_csv" />}
-  //         </this.CSVLink>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
   renderFilterRecord() {
     const { form, stockTransfer, storeLocation, brand, product } = this.props;
     console.log("stockTransfer",stockTransfer.list);
