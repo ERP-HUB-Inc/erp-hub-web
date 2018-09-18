@@ -1,5 +1,4 @@
 import React from "react";
-import _ from "lodash";
 import List from "../List";
 import Enum from "../../../enums";
 import FormCreate from "../../../containers/stock/purchaseOrder/FormCreate";
@@ -42,15 +41,17 @@ export default class PurchaseOrderLists extends List {
       },
       {
         title: <this.Translate id="col_stock_purchase_order_supplier" />,
-        dataIndex: "description",
-        key: "description",
-        sorter: true
+        dataIndex: "supplier",
+        key: "supplier",
+        sorter: true,
+        render: supplier => supplier ? supplier.name: ""
       },
       {
         title: <this.Translate id="col_stock_purchase_order_stock_location" />,
-        dataIndex: "stockLocation",
-        key: "stockLocation",
-        sorter: true
+        dataIndex: "location",
+        key: "location",
+        sorter: true,
+        render: location => location ? location.name: ""
       },
       {
         title: <this.Translate id="col_stock_purchase_order_due_date" />,
@@ -83,7 +84,7 @@ export default class PurchaseOrderLists extends List {
         key: "step",
         sorter: true,
         width: 100,
-        render: step => step in this.PO_STEP_STR ? <span className="text-uppercase">{this.PO_STEP_STR[step]}</span> : ""
+        render: step => step in this.PO_STEP_STR ? <this.Tag color={this.PO_STEP_STR[step].color} className="text-uppercase text-center po-step-tag">{this.PO_STEP_STR[step].name}</this.Tag> : ""
       },
       this.columnStatus
     ];
@@ -91,12 +92,12 @@ export default class PurchaseOrderLists extends List {
     this.service = PurchaseService;
 
     this.PO_STEP_STR = {
-      [Enum.PO_STEP.DRAFT]: <this.Translate id="purchase_order_step_draff" />,
-      [Enum.PO_STEP.PROCESS]: <this.Translate id="purchase_order_step_process" />,
-      [Enum.PO_STEP.RECEIVED]: <this.Translate id="purchase_order_step_recieve" />,
-      [Enum.PO_STEP.CANCEL]: <this.Translate id="purchase_order_step_cancel" />,
-      [Enum.PO_STEP.RETURN]: <this.Translate id="purchase_order_step_return" />,
-      [Enum.PO_STEP.PAID]: <this.Translate id="purchase_order_step_paid" />,
+      [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color: "#f50"},
+      [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="purchase_order_step_process" />, color: "#2db7f5"},
+      [Enum.PO_STEP.RECEIVED]: {name: <this.Translate id="purchase_order_step_recieve" />, color: "#87d068"},
+      [Enum.PO_STEP.CANCEL]: {name: <this.Translate id="purchase_order_step_cancel" />, color: "#108ee9"},
+      [Enum.PO_STEP.RETURN]: {name: <this.Translate id="purchase_order_step_return" />, color: "blue"},
+      [Enum.PO_STEP.PAID]: {name: <this.Translate id="purchase_order_step_paid" />, color: "green"},
     };
 
     this.supplierList = [{name: <this.Translate id="select_stock_purchase_order_supplier"/>, id: 0}];
@@ -115,7 +116,7 @@ export default class PurchaseOrderLists extends List {
   componentDidMount(){
     const {dispatch} = this.props;
     dispatch(SupplierAction.fetch());
-    super.componentDidMount();
+    dispatch(PurchaseAction.fetch(this.pageSize));
   }
 
   componentWillUpdate(nextProps) {
@@ -184,17 +185,25 @@ export default class PurchaseOrderLists extends List {
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           const {dispatch} = this.props;
-          const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
-          let filter = {status};
+          let filter = {};
+          let rangFilter = {};
+          if (values.step !== -1) {
+            filter["step"] = [values.step];
+          }
 
-          if (values.supplierId !== 0 || values.supplierId !== "") {
-            filter["supplierId"] = values.supplierId;
+          if (values.supplierId !== 0) {
+            filter["supplierId"] = [values.supplierId];
+          }
+
+          if (values.deliveryDueDate) {
+            values.deliveryDueDate = this.Util.formatDate(values.deliveryDueDate, "YYYY-MM-DD");
+            rangFilter = JSON.stringify({column: "deliveryDueDate", value: [values.deliveryDueDate, values.deliveryDueDate]});
           }
     
           filter = JSON.stringify(filter);
 
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
-          dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
+          dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
           this.setState({isClickFilter: true});
         }
       
@@ -206,8 +215,9 @@ export default class PurchaseOrderLists extends List {
     const {form, locale, supplier} = this.props;
 
     const POStepList = Object.keys(this.PO_STEP_STR).map((prop) => {
-      return {name: this.PO_STEP_STR[prop], value: prop};
+      return {name: this.PO_STEP_STR[prop].name, value: prop};
     });
+    POStepList.unshift({name: <this.Translate id="select_purchase_all_step"/>, value: -1});
 
     if(supplier) {
       const fetchingProps = this.props[this.fetchingProp];
