@@ -5,7 +5,7 @@ import SupplierAction from "../../../actions/stock/supplier";
 import PurchaseOrderService from "../../../services/stock/PurchaseOrderService";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
 import StoreLoctionAction from "../../../../pos/action/settings/storeLocation";
-import SearchPo from "./SearchPO";
+import SearchPo from "./SearchPo";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormItem extends Modal {
