@@ -25,6 +25,8 @@ export default class List extends Component {
 
     this.showExport = false;
 
+    this.ExportheadersCsv = [];
+
     this.columns = [];
     this.filter = [];
     this.module = ""; // This compare to parent key in datasource in sidebar when render breadcrump
@@ -362,7 +364,8 @@ export default class List extends Component {
     return (
       <this.CSVLink
         data={this.exportCsv()}
-        headers={this.columns}>
+        headers={this.ExportheadersCsv !=="" ? this.columns : this.ExportheadersCsv}
+      >
         <this.Button type="info">
           <span className="icon-export icon-padding-right"></span>{<this.Translate id="button_search_stock_transfer_export_csv" />}
         </this.Button>

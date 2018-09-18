@@ -12,6 +12,7 @@ export default class Form extends Modal {
     };
     this.width = "65%";
     this.confirmTextAction = "Are You Want to Receive ?";
+    this.confirmTitle = "Comfirm Receive order";
     this.dispatch = this.props.dispatch;
     this.title = <this.Translate id="update_stock_receive_purchase_title" />;
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -23,6 +24,8 @@ export default class Form extends Modal {
     this.setState({modalVisible: true});
     this.renderModalConfirmAction();
   }
+
+
 
   handleSubmitConfirmAction() {
     this.setState({modalVisible: false});
@@ -43,9 +46,9 @@ export default class Form extends Modal {
             POEntries.push({
               id: values.receiveId[receiveQtyIndex],
               productId: values.productId[receiveQtyIndex],
-              requestQuantity: values.qty[receiveQtyIndex],
-              receiveQuantity: values.receiveQty[receiveQtyIndex],
-              price: values.receivePrice[receiveQtyIndex],
+              requestQuantity: parseInt(values.qty[receiveQtyIndex]),
+              receiveQuantity: parseInt(values.receiveQty[receiveQtyIndex]),
+              price: parseFloat(values.receivePrice[receiveQtyIndex]),
               status: values.statusId[receiveQtyIndex],
             });
 
@@ -59,25 +62,26 @@ export default class Form extends Modal {
           "receiveQty",
           "receivePrice",
           "receiveDescription",
+          "totalPrice",
           "totalAmount"
         ]);
 
-       
-        values["shippingFee"] = this.props.receivePurchaseDetail.data.shippingFee;
-        values["requestTotal"] = this.props.receivePurchaseDetail.data.requestTotal;
-        values["receiveTotal"] = this.props.receivePurchaseDetail.data.receiveTotal;
+      
+        values["requestTotal"] = parseFloat(this.props.receivePurchaseDetail.data.requestTotal);
+        values["receiveTotal"] = parseFloat(values.requestTotalValue);
         values["returnTotal"] = this.props.receivePurchaseDetail.data.returnTotal;
         values["step"] = Enum.PO_STEP.RECEIVED;
         values["type"] = this.props.receivePurchaseDetail.data.type;
         values["status"] = this.props.receivePurchaseDetail.data.status;
-
+    
         values["POEntries"] = POEntries;
 
-        // console.log("Update Values:", values);
+        console.log("Update Values:", values);
 
         this.dispatch(ReceivePurchaseAction.update(values));
         const filter = JSON.stringify({step: [Enum.PO_STEP.PROCESS]});
         this.dispatch(ReceivePurchaseAction.fetch(this.pageSize, 0, "", "", filter));
+
       }
 
     });
