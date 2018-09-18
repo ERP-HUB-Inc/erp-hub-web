@@ -1,17 +1,12 @@
 import React from "react";
 import DropDownSearch from "../../../components/products/Product/DropDownSearch";
-import ProductsAction from "../../../actions/products/product"; 
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class SearchPo extends Modal {
   constructor(props){
     super(props);
-    this.state = {};
     this.state = {
       productLists: [],
-      total:[],
-      totalAmount:[],
-      calculateTotalAmount:[],
       isNotYetLoadComponentDidUpdated: true
     };
     this.form = this.props.form;
@@ -26,10 +21,10 @@ export default class SearchPo extends Modal {
           return (
             <div>
               { index + 1 }
-              <this.InputText name={`id[${index}]`} type="hidden" data={record.id} form={ this.form } />
-              <this.InputText name={`productId[${index}]`} type="hidden" data={record.productId} form={ this.form } />
-              <this.InputNumber name={`purchaseEntryStatus[${index}]`} className="hidden" data={record.status} form={ this.form } />
-              <this.InputNumber name={`totalAmount[${index}]`} className="hidden" data={record.totalPrice} form={ this.form } />
+              <this.InputText name={`purchaseEntryId[${index}]`} type="hidden" data={record.purchaseEntryId} form={this.form} />
+              <this.InputText name={`productId[${index}]`} type="hidden" data={record.productId} form={this.form} />
+              <this.InputNumber name={`purchaseEntryStatus[${index}]`} className="hidden" data={record.purchaseEntryStatus} form={this.form} />
+              <this.InputNumber name={`totalAmount[${index}]`} className="hidden" data={record.totalPrice} form={this.form} />
             </div>
           );
         }
@@ -38,7 +33,7 @@ export default class SearchPo extends Modal {
         title: <this.Translate id="col_stock_purchase_order_name" />,
         dataIndex: "name",
         key: "name",
-        render: (text,record,index) => 
+        render: (text, record, index) => 
         {
           return(
             record.productName
@@ -115,7 +110,7 @@ export default class SearchPo extends Modal {
             <this.Button
               type="danger"
               className="btn-icon"
-              onClick={() => this.removeRecord(record,index)}>
+              onClick={() => this.removeRecord(record, index)}>
               <span className="icon-delete icon-padding-right"></span>
             </this.Button>
           );
@@ -133,64 +128,52 @@ export default class SearchPo extends Modal {
 
   removeRecord(record, index){
     let existingProductList = this.state.productLists;
-    if (record.id === "") {
+    if (record.purchaseEntryId === "") {
       existingProductList.splice(index, 1);
     } else {
-      existingProductList.forEach((product, productIndex) => {
-        if (product.id === record.id) {
-          existingProductList[productIndex]["status"] = this.Enum.ARCHIVE;
-        }
-      });
+      existingProductList[index]["purchaseEntryStatus"] = this.Enum.ARCHIVE;
     }
 
     this.setState({
       productLists: existingProductList
-    });   
-
-  }
-
-  productList(){
-    return(
-      this.props.dataSource
-    );
+    });
+    
+    this.grandTotal(existingProductList);
   }
 
   componentDidUpdate(){
     const {purchaseOrderEntries} = this.props;
-
     if (purchaseOrderEntries.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
-
       const existingProductList = this.state.productLists;
-      const totalAmountProductList =  [];
       
       purchaseOrderEntries.forEach(purchaseOrderEntry => {
+        let productName = "";
+        let quantityOnHand = 0;
+        if (purchaseOrderEntry.product) {
+          if (purchaseOrderEntry.product.productDescriptions.length > 0) {
+            productName = purchaseOrderEntry.product.productDescriptions[0].name;
+          }
+          quantityOnHand = purchaseOrderEntry.product.quantity;
+        }
         existingProductList.push({
-          id: purchaseOrderEntry.id,
-          productName: purchaseOrderEntry.product.productDescriptions.name,
+          purchaseEntryId: purchaseOrderEntry.id,
+          productName,
           productId: purchaseOrderEntry.productId,
+          quantityOnHand,
           quantity: purchaseOrderEntry.requestQuantity, 
           price: purchaseOrderEntry.price,
           totalPrice: purchaseOrderEntry.requestQuantity * purchaseOrderEntry.price,
-          status: purchaseOrderEntry.status
+          purchaseEntryStatus: purchaseOrderEntry.status
         }); 
-        const TotalValue = purchaseOrderEntry.requestQuantity * purchaseOrderEntry.price;
-
-        totalAmountProductList.push({
-          totalPrice: TotalValue
-        }); 
-        
       }); 
       
       this.setState({
         productLists: existingProductList,
-        calculateTotalAmount: totalAmountProductList,
         isNotYetLoadComponentDidUpdated: false
       });
 
       this.grandTotal(existingProductList);
     }
-
-  
   }
 
   calculateTotalAmountEachRow(e, index) {
@@ -202,7 +185,9 @@ export default class SearchPo extends Modal {
   grandTotal(productList) {
     let grandTotal = 0;
     productList.forEach((product, index) => {
-      grandTotal += (product.quantity * product.price);
+      if (product.purchaseEntryStatus === this.Enum.ACTIVE) {
+        grandTotal += (product.quantity * product.price);
+      }
     });
     this.props.form.setFieldsValue({requestTotal: this.formatCurrency(grandTotal)});
     this.props.form.setFieldsValue({requestTotalValue: `${grandTotal}`});
@@ -236,30 +221,26 @@ export default class SearchPo extends Modal {
 
   handleOnSelectList(value) {
     const productName = value.productDescriptions.length > 0 ?  value.productDescriptions[0].name : "";
-    const productId = value.productDescriptions.length > 0 ?  value.productDescriptions[0].productId : "";
 
-    const {productCode, quantity, price, cost} = value;
+    const {quantity, price} = value;
     const existingProductList = this.state.productLists;
     const initialQuantity = 1;
 
     if (existingProductList.length === 0) {
       existingProductList.push({
-        id: "",
+        purchaseEntryId: "",
         productName,
         quantityOnHand: quantity,
-        price,
-        productCode,
-        productCompositeProductId: value.id,
-        productId,
-        totalPrice: initialQuantity * price,
         quantity: initialQuantity,
-        cost,
-        status: this.Enum.ACTIVE
+        price,
+        productId: value.id,
+        totalPrice: initialQuantity * price,
+        purchaseEntryStatus: this.Enum.ACTIVE
       });
     } else {
       let isNotTheSameProduct = true;
       existingProductList.forEach((product, index) => {
-        if (product.productCompositeProductId === value.id ) {
+        if (product.productId === value.id) {
           isNotTheSameProduct = false;
           existingProductList[index]["quantity"] += 1;
           existingProductList[index]["totalPrice"] = existingProductList[index]["quantity"] * price;
@@ -268,17 +249,14 @@ export default class SearchPo extends Modal {
 
       if (isNotTheSameProduct) {
         existingProductList.push({
-          id:"",
+          purchaseEntryId: "",
           productName,
           quantityOnHand: quantity,
           price,
-          productCode,
-          productCompositeProductId: value.id,
-          productId,
-          totalPrice: initialQuantity * price,
+          productId: value.id,
           quantity: initialQuantity,
-          cost,
-          status: this.Enum.ACTIVE
+          totalPrice: initialQuantity * price,
+          purchaseEntryStatus: this.Enum.ACTIVE
         });
       }
     }
@@ -289,11 +267,7 @@ export default class SearchPo extends Modal {
   }
 
   render(){
-    const {productLists, calculateTotalAmount} = this.state; 
-
-    let Calvalue = calculateTotalAmount.forEach((value, index) => {
-      return value.totalPrice;
-    });
+    const {productLists} = this.state; 
 
     return(
       <div className="main-dropdown-search">
@@ -305,7 +279,7 @@ export default class SearchPo extends Modal {
           form={this.props.form}/>  
         <this.Table
           rowKey="productId"
-          rowClassName={record => record.status !== this.Enum.ACTIVE ? "hidden" : ""}
+          rowClassName={record => record.purchaseEntryStatus === this.Enum.ACTIVE ? "" : "hidden"}
           dataSource={productLists}
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}

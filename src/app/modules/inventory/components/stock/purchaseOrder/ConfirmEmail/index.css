@@ -1,0 +1,12 @@
+.btn-push-with-send-mail {
+    width: 200px !important;
+}
+
+.wrap-confirm-purchase-order .ant-modal-content .ant-modal-header{
+    padding: 24px !important;
+}
+
+.wrap-confirm-purchase-order .ant-modal-title .icon-help {
+    position: relative;
+    top: 5px
+}

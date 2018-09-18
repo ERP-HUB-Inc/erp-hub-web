@@ -6,7 +6,7 @@ export default {
   ],
 
   "update_language_title": [
-    "Language:Update",
+    "Language",
     "ဘာသာစကား: Update ကို",
     "ភាសា: ធ្វើបច្ចុប្បន្នភាព"
   ],

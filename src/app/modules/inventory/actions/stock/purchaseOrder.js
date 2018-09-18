@@ -42,6 +42,14 @@ export default {
       });
     };
   },
+  pushToSupplier: (data) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.PUSH_PURCHASE_ORDER_TO_SUPPLIER,
+        payload: purchaseOrderService.update(data)
+      });
+    };
+  },
   reset: (RESET_CONSTANT = Constant.RESET_PURCHASE_ORDER) => {
     return dispatch => {
       return dispatch({
@@ -50,36 +58,22 @@ export default {
       });
     };
   },
-  showForm: (data) => {
+  showForm: (data, SHOW_PURCHASE_ORDER_FORM = Constant.SHOW_PURCHASE_ORDER_FORM) => {
     return dispatch => {
       return dispatch({
-        type: Constant.SHOW_PURCHASE_ORDER_FORM,
+        type: SHOW_PURCHASE_ORDER_FORM,
         payload: data
       });
     };
   },
 
-  detail:(data) => {
+  detail:(data, languageId) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PURCHASE_ORDER_DETAIL,
-        payload: purchaseOrderService.detail(data.id)
-      });
-    };
-  },
-
-  ShowFormCreatePurchseOrderSendEmail: (data) => {
-    return dispatch => {
-      return dispatch({
-        type: Constant.RESET_SHOW_FORM_EMAIL_PURCHASE_ORDER,
-        payload: data
+        payload: purchaseOrderService.detail(data.id, languageId)
       });
     };
   }
-
-
-
-
-
 };
 

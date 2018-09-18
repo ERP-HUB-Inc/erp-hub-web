@@ -135,37 +135,35 @@ export default class SideBar extends React.Component {
     }
 
     return (
-      <div>
-        <div id="sidebar">
-          <ul className="list-unstyled text-center">
-            <li id="dashboardNav" className={window.location.pathname === "/" ? "active sidebar-menu-item" : "sidebar-menu-item"} onMouseEnter={() => this.handleShow("home", "dashboardNav")}  onMouseLeave={() => this.handleHidden()}>
-              <Link to="/"><span className="icon-home"></span></Link>
-              <div className="line"></div>
-            </li>
-            {
-              Object.keys(this.state.dataSource).map((parentKey, parentIndex) => this.menuParentItem(parentIndex, this.state.dataSource[parentKey]["route"],  parentKey, this.state.dataSource[parentKey]["icon"]))
-            }
-          </ul>
-          <div id="sum-menu" className={this.state.classToggle} onMouseEnter={() => this.handleHoverOnSubMenu()} onMouseLeave={() => this.handleLeaveFromSubMenu(this.state.menuItems[subMenuItemTitle]["route"])}>
-            { 
-              this.state.classToggle === "show" 
-                ?  
-                <div>
-                  <div className="title text-center text-uppercase">{subMenuItemTitle}</div>
-                  <ul className="list-unstyled text-left text-uppercase">
-                    {
-                      this.state.menuItems[subMenuItemTitle]["subItems"].map((menu, key) => 
-                        this.subMenuItem(key, menu["route"], menu["title"], menu["icon"])
-                      )
-                    }
-                  </ul>
-                </div>
-                :
-                ""
-            }
-          </div>
-          <div id="version">V1.0.0</div>
+      <div id="sidebar">
+        <ul className="list-unstyled text-center">
+          <li id="dashboardNav" className={window.location.pathname === "/" ? "active sidebar-menu-item" : "sidebar-menu-item"} onMouseEnter={() => this.handleShow("home", "dashboardNav")}  onMouseLeave={() => this.handleHidden()}>
+            <Link to="/"><span className="icon-home"></span></Link>
+            <div className="line"></div>
+          </li>
+          {
+            Object.keys(this.state.dataSource).map((parentKey, parentIndex) => this.menuParentItem(parentIndex, this.state.dataSource[parentKey]["route"],  parentKey, this.state.dataSource[parentKey]["icon"]))
+          }
+        </ul>
+        <div id="sum-menu" className={this.state.classToggle} onMouseEnter={() => this.handleHoverOnSubMenu()} onMouseLeave={() => this.handleLeaveFromSubMenu(this.state.menuItems[subMenuItemTitle]["route"])}>
+          { 
+            this.state.classToggle === "show" 
+              ?  
+              <div>
+                <div className="title text-center text-uppercase">{subMenuItemTitle}</div>
+                <ul className="list-unstyled text-left text-uppercase">
+                  {
+                    this.state.menuItems[subMenuItemTitle]["subItems"].map((menu, key) => 
+                      this.subMenuItem(key, menu["route"], menu["title"], menu["icon"])
+                    )
+                  }
+                </ul>
+              </div>
+              :
+              ""
+          }
         </div>
+        <div id="version">V1.0.0</div>
       </div>
     );
   }

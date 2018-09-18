@@ -17,12 +17,12 @@ function mapStateToProps(state) {
     purchaseOrderDetail: state.reducer.purchaseOrder.detail,  
     productUpdate: state.reducer.purchaseOrder.update,
     initialValues: state.reducer.purchaseOrder.update.data,
-    locale: state.locale,
     supplier: state.reducer.supplier.request,
     product: state.reducer.product.request,
     productSearch: state.reducer.product.search,
     storeLocation: state.reducer.storeLocation.request,
-    purchaseOrderNumber: state.reducer.purchaseOrder.requestOrderNumber
+    requestOrderNumber: state.reducer.purchaseOrder.requestOrderNumber,
+    locale: state.locale
   };
 }
 

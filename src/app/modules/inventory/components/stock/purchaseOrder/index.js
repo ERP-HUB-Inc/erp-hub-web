@@ -1,4 +1,5 @@
 import React from "react";
+import _ from "lodash";
 import List from "../List";
 import Enum from "../../../enums";
 import FormCreate from "../../../containers/stock/purchaseOrder/FormCreate";
@@ -12,172 +13,7 @@ import "./index.css";
 export default class PurchaseOrderLists extends List {
   constructor(props) {
     super(props);
-    this.columns = new Column();
-    this.fetchingProp = "purchaseOrder";
-    this.service = PurchaseService;
-
-    this.supplierList = [{name: "All Supplier", id: 0}];
-    this.columnFilterWithKey = [
-      "name",
-      "number",
-      "invoiceNo",
-      "supplierId",
-      "deliveryDueDate"
-    ];
-
-    this.action = PurchaseAction;
-    this.RESET_CONSTANT = Constant.RESET_PURCHASE_ORDER;
-  }
-
-  componentDidMount(){
-    const {dispatch} = this.props;
-    dispatch(SupplierAction.fetch());
-    super.componentDidMount();
-  }
-
-  componentWillUpdate(nextProps) {
-    const {purchaseOrderAdd, dispatch} = nextProps;
-    if (purchaseOrderAdd.added) {
-      dispatch(PurchaseAction.fetch(this.pageSize));
-      dispatch(PurchaseAction.reset());
-    }
-  }
-
-  handleShowFormAdd() {
-    const { dispatch } = this.props;
-    dispatch(PurchaseAction.showForm());
-    this.setState({
-      modalConten: <FormCreate/>
-    });
-  }
-
-  handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
-    dispatch(PurchaseAction.detail(rowData));  
-    this.setState({
-      modalConten: <FormUpdate/>
-    });
-  }
-
-  handleDelete() {
-    PurchaseService.archive(this.state.selectedListIds)
-      .then(response => {
-        this.props.dispatch(PurchaseAction.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
-        this.setState({
-          selectedRowKeys: [],
-          modalVisible: false,
-          deleting: false
-        });
-      })
-      .catch(err => {
-        this.setState({deleting: false});
-        this.setState({
-          modalVisible: false,
-          deleting: false
-        });
-        this.Message.info("Can not delete purchse order but can return");
-      });
-  }
-
-  handleSubmitFilter(e){
-    if (this.action != null) {
-      e.preventDefault();
-      this.props.form.validateFieldsAndScroll((err, values) => {
-        if (!err) {
-          const {dispatch} = this.props;
-          const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
-          let filter = {status};
-
-          if (values.supplierId !== 0 || values.supplierId !== "") {
-            filter["supplierId"] = values.supplierId;
-          }
-    
-          filter = JSON.stringify(filter);
-
-          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
-          dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
-          this.setState({isClickFilter: true});
-        }
-      
-      }); 
-    } 
-  }
-
-  renderFilterRecord() {
-    const {form, supplier} = this.props;
-
-    if(supplier) {
-
-      const fetchingProps = this.props[this.fetchingProp];
-
-      return(
-        form == null ?
-          ""
-          :
-          <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
-            <this.Row className="main-search-layout form-group"> 
-              <this.Col md="2">
-                <this.Select
-                  name="status"
-                  label={<this.Translate id="text_status" />}
-                  placeholder="Please select status"
-                  dataSource={this.statusList}
-                  defaultValue={this.Enum.ALL_STATE}
-                  form={form}
-                />
-              </this.Col>
-              <this.Col md="2">
-                <this.Select
-                  name="supplierId"
-                  label={<this.Translate id="select_stock_purchase_order_from_supplier" /> }
-                  placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
-                  dataSource={this.supplierList.concat(supplier.list)}
-                  defaultValue={this.supplierList[0].id}
-                  valueKey="id"
-                  form={form}/>
-              </this.Col>
-              <this.Col md="2">
-                <this.DatePickers
-                  name="deliveryDueDate"
-                  label={<this.Translate id="datepicker_stock_purchase_due_date" />}
-                  form={form}
-                />
-              </this.Col>
-              <this.Col md="2">
-                <this.InputText
-                  name="key"
-                  label={<this.Translate id="input_stock_purchase_key" />}
-                  placeholder="Search for Purchase Order"
-                  form={form}
-                />
-              </this.Col>
-
-              <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-              </this.Button>
-            </this.Row>
-          </this.Form>
-      );
-
-    }
-  }
-
-}
-
-class Column extends List {
-  constructor(props) {
-    super(props);
-
-    this.PO_STEP_STR = {
-      [Enum.PO_STEP.DRAFT]: <this.Translate id="purchase_order_step_draff" />,
-      [Enum.PO_STEP.PROCESS]: <this.Translate id="purchase_order_step_process" />,
-      [Enum.PO_STEP.RECEIVED]: <this.Translate id="purchase_order_step_recieve" />,
-      [Enum.PO_STEP.CANCEL]: <this.Translate id="purchase_order_step_cancel" />,
-      [Enum.PO_STEP.RETURN]: <this.Translate id="purchase_order_step_return" />,
-      [Enum.PO_STEP.PAID]: <this.Translate id="purchase_order_step_paid" />,
-    };
-
-    return [
+    this.columns = [
       this.columnCreatedAt,
       {
         title: <this.Translate id="col_stock_purchase_order_name" />,
@@ -229,6 +65,7 @@ class Column extends List {
         dataIndex: "shippingFee",
         key: "shippingFee",
         sorter: true,
+        width: 120,
         render: shippingFee => this.formatCurrency(shippingFee)
       },
       {
@@ -236,6 +73,8 @@ class Column extends List {
         dataIndex: "requestTotal",
         key: "requestTotal",
         sorter: true,
+        width: 120,
+        align: "left",
         render: requestTotal => this.formatCurrency(requestTotal)
       },
       {
@@ -243,9 +82,184 @@ class Column extends List {
         dataIndex: "step",
         key: "step",
         sorter: true,
+        width: 100,
         render: step => step in this.PO_STEP_STR ? <span className="text-uppercase">{this.PO_STEP_STR[step]}</span> : ""
       },
       this.columnStatus
     ];
+    this.fetchingProp = "purchaseOrder";
+    this.service = PurchaseService;
+
+    this.PO_STEP_STR = {
+      [Enum.PO_STEP.DRAFT]: <this.Translate id="purchase_order_step_draff" />,
+      [Enum.PO_STEP.PROCESS]: <this.Translate id="purchase_order_step_process" />,
+      [Enum.PO_STEP.RECEIVED]: <this.Translate id="purchase_order_step_recieve" />,
+      [Enum.PO_STEP.CANCEL]: <this.Translate id="purchase_order_step_cancel" />,
+      [Enum.PO_STEP.RETURN]: <this.Translate id="purchase_order_step_return" />,
+      [Enum.PO_STEP.PAID]: <this.Translate id="purchase_order_step_paid" />,
+    };
+
+    this.supplierList = [{name: <this.Translate id="select_stock_purchase_order_supplier"/>, id: 0}];
+    this.columnFilterWithKey = [
+      "name",
+      "number",
+      "invoiceNo",
+      "supplierId",
+      "deliveryDueDate"
+    ];
+
+    this.action = PurchaseAction;
+    this.RESET_CONSTANT = Constant.RESET_PURCHASE_ORDER;
   }
+
+  componentDidMount(){
+    const {dispatch} = this.props;
+    dispatch(SupplierAction.fetch());
+    super.componentDidMount();
+  }
+
+  componentWillUpdate(nextProps) {
+    const {purchaseOrderAdd,
+      purchaseOrderUpdate,
+      purchaseOrderPushToSupplier,
+      dispatch
+    } = nextProps;
+
+    if (purchaseOrderAdd.added) {
+      dispatch(PurchaseAction.fetch(this.pageSize));
+      dispatch(PurchaseAction.reset());
+    }
+
+    if (purchaseOrderUpdate.updated) {
+      dispatch(PurchaseAction.fetch(this.pageSize));
+      dispatch(PurchaseAction.reset(Constant.REQUEST_PURCHASE_ORDER_DETAIL_FULL_RESET));
+    }
+
+    if (purchaseOrderPushToSupplier.updated) {
+      dispatch(PurchaseAction.fetch(this.pageSize));
+      dispatch(PurchaseAction.reset(Constant.PUSH_PURCHASE_ORDER_TO_SUPPLIER_RESET));
+      dispatch(PurchaseAction.reset(Constant.REQUEST_PURCHASE_ORDER_DETAIL_FULL_RESET));
+    }
+  }
+
+  handleShowFormAdd() {
+    const {dispatch} = this.props;
+    dispatch(PurchaseAction.showForm());
+    this.setState({
+      modalConten: <FormCreate/>
+    });
+  }
+
+  handleShowFormEdit(rowData) {
+    const {dispatch} = this.props;
+    dispatch(PurchaseAction.detail(rowData, this.getCurrentLanguageCode()));  
+    this.setState({
+      modalConten: <FormUpdate/>
+    });
+  }
+
+  handleDelete() {
+    PurchaseService.archive(this.state.selectedListIds)
+      .then(response => {
+        this.props.dispatch(PurchaseAction.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
+        this.setState({
+          selectedRowKeys: [],
+          modalVisible: false,
+          deleting: false
+        });
+      })
+      .catch(err => {
+        this.setState({deleting: false});
+        this.setState({
+          modalVisible: false,
+          deleting: false
+        });
+        this.Message.info("Can not delete purchse order but can return");
+      });
+  }
+
+  handleSubmitFilter(e){
+    if (this.action != null) {
+      e.preventDefault();
+      this.props.form.validateFieldsAndScroll((err, values) => {
+        if (!err) {
+          const {dispatch} = this.props;
+          const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
+          let filter = {status};
+
+          if (values.supplierId !== 0 || values.supplierId !== "") {
+            filter["supplierId"] = values.supplierId;
+          }
+    
+          filter = JSON.stringify(filter);
+
+          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
+          dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
+          this.setState({isClickFilter: true});
+        }
+      
+      }); 
+    } 
+  }
+
+  renderFilterRecord() {
+    const {form, locale, supplier} = this.props;
+
+    const POStepList = Object.keys(this.PO_STEP_STR).map((prop) => {
+      return {name: this.PO_STEP_STR[prop], value: prop};
+    });
+
+    if(supplier) {
+      const fetchingProps = this.props[this.fetchingProp];
+      return(
+        form == null ?
+          ""
+          :
+          <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
+            <this.Row className="main-search-layout form-group">
+              <this.Col md="2">
+                <this.InputText
+                  name="key"
+                  label={<this.Translate id="input_stock_purchase_key" />}
+                  placeholder={this.CATranslate("purchase_order_search_key_place_holder", locale)}
+                  form={form}
+                />
+              </this.Col>
+              <this.Col md="2">
+                <this.Select
+                  name="supplierId"
+                  label={<this.Translate id="select_stock_purchase_order_from_supplier" /> }
+                  placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
+                  dataSource={this.supplierList.concat(supplier.list)}
+                  defaultValue={this.supplierList[0].id}
+                  valueKey="id"
+                  form={form}/>
+              </this.Col>
+              <this.Col md="2">
+                <this.DatePickers
+                  name="deliveryDueDate"
+                  label={<this.Translate id="datepicker_stock_purchase_due_date" />}
+                  form={form}
+                />
+              </this.Col>
+              <this.Col md="2">
+                <this.Select
+                  name="step"
+                  label={<this.Translate id="select_stock_purchase_order_step" />}
+                  placeholder="Please select status"
+                  dataSource={POStepList}
+                  defaultValue={POStepList[0].value}
+                  form={form}
+                />
+              </this.Col>
+              <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+              </this.Button>
+            </this.Row>
+          </this.Form>
+      );
+
+    }
+  }
+
 }

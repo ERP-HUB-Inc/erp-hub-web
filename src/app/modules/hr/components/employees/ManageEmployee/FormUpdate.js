@@ -11,7 +11,7 @@ export default class Form extends Modal {
       disabled: false
     };
 
-    this.title = "Manage Employee:Update";
+    this.title = "Manage Employee";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onChange = this.onChange.bind(this);

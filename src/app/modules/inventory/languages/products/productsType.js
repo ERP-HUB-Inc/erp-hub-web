@@ -6,9 +6,9 @@ export default {
   ],
       
   "update_products_products_type_title": [
-    "Product Type:Update",
+    "Product Type",
     "ငွေကြေး",
-    "Product Type:Update"
+    "Product Type"
   ],
 
   "col_products_products_type_name": [

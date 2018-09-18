@@ -6,9 +6,9 @@ export default {
   ],
       
   "update_stock_reorder_point_title": [
-    "Supplier:Update",
+    "Supplier",
     "ငွေကြေး",
-    "Supplier:Update"
+    "Supplier"
   ],
   //blcok search
   "select_stock_reorder_point_store_location": [

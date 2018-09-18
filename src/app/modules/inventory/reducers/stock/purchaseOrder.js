@@ -12,14 +12,14 @@ export default combineReducers({
     ];
     return reducer.request(state, action, constants);
   },
-  requestOrderNumber: (state = InitialState.update(), action) => {
+  requestOrderNumber: (state = InitialState.request(), action) => {
     const constants = [
       Constant.REQUEST_PURCHASE_ORDER_NUMBER_PENDING,
       Constant.REQUEST_PURCHASE_ORDER_NUMBER_REJECTED,
       Constant.REQUEST_PURCHASE_ORDER_NUMBER_FULFILLED,
-      Constant.RESET_PURCHASE_ORDER
+      Constant.RESET_REQUEST_PURCHASE_ORDER_NUMBER
     ];
-    return reducer.update(state, action, constants);
+    return reducer.request(state, action, constants);
   },
   archive: (state = InitialState.archive(), action) => {
     const constants = [
@@ -43,8 +43,9 @@ export default combineReducers({
     const constants = [
       Constant.REQUEST_PURCHASE_ORDER_DETAIL_PENDING,
       Constant.REQUEST_PURCHASE_ORDER_DETAIL_REJECTED,
-      Constant.REQUEST_PURCHASE_ORDER_DETAIL_FULFILLED, 
-      Constant.RESET_PURCHASE_ORDER
+      Constant.REQUEST_PURCHASE_ORDER_DETAIL_FULFILLED,
+      Constant.REQUEST_PURCHASE_ORDER_DETAIL_FULL_RESET,
+      Constant.REQUEST_PURCHASE_ORDER_DETAIL_RESET
     ];
     return reducer.detail(state, action, constants);
   },
@@ -55,6 +56,16 @@ export default combineReducers({
       Constant.UPDATE_PURCHASE_ORDER_FULFILLED,
       Constant.SHOW_PURCHASE_ORDER_FORM,
       Constant.RESET_PURCHASE_ORDER
+    ];
+    return reducer.update(state, action, constants);
+  },
+  pushToSupplier: (state = InitialState.update(), action) => {
+    const constants = [
+      Constant.PUSH_PURCHASE_ORDER_TO_SUPPLIER_PENDING,
+      Constant.PUSH_PURCHASE_ORDER_TO_SUPPLIER_REJECTED,
+      Constant.PUSH_PURCHASE_ORDER_TO_SUPPLIER_FULFILLED,
+      Constant.SHOW_PUSH_PURCHASE_ORDER_TO_SUPPLIER_FORM,
+      Constant.PUSH_PURCHASE_ORDER_TO_SUPPLIER_RESET
     ];
     return reducer.update(state, action, constants);
   }

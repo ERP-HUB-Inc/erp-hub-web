@@ -6,9 +6,9 @@ export default {
   ],
       
   "update_products_title": [
-    "Product:Update",
-    "Product:Update",
-    "Product:Update"
+    "Product",
+    "Product",
+    "Product"
   ],
 
   //COLUMN

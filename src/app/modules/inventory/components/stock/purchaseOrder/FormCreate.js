@@ -5,7 +5,7 @@ import Constant from "../../../constants/stock/purchaseOrder";
 import Modal from "../../../../common/components/shares/Modal";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
 import PurchaseOrderShowEmailAction from "../../../actions/stock/purchaseOrderSendEmail";
-import FormCreatePurchseOrderSendEmail from "../../../containers/stock/purchaseOrder/creatSendEmail/FormCreate";
+import FormCreatePurchseOrderSendEmail from "../../../containers/stock/purchaseOrder/ConfirmEmail/FormCreate";
 import "./index.css";
 
 export default class FormCreate extends Modal {
@@ -40,7 +40,7 @@ export default class FormCreate extends Modal {
         if ("productId" in values) {
           values.productId.forEach((productId, index) => {
             purchaseEntries.push({
-              id: values.id[index],
+              id: values.purchaseEntryId[index],
               productId,
               requestQuantity: parseInt(values.purchaseQty[index]),
               price: parseFloat(values.purchasePrice[index]),
@@ -48,6 +48,8 @@ export default class FormCreate extends Modal {
             });
           });
         }
+
+        values["requestTotal"] = parseFloat(values["requestTotalValue"]);
 
         this.Util.clearObjProperty(values, [
           "id",
@@ -57,22 +59,22 @@ export default class FormCreate extends Modal {
           "purchaseEntryStatus",
           "totalPrice",
           "totalAmount",
-          "totalPriceValue"
+          "totalPriceValue",
+          "requestTotalValue",
+          "searchProduct",
+          "isFocusOnSearchCompositeProduct"
         ]);
 
         values["shippingFee"] = 0;
-        values["requestTotal"] = parseFloat(values["requestTotalValue"]);
         values["returnTotal"] = 0;
         values["receiveTotal"] = 0;
         values["step"] = Enum.PO_STEP.DRAFT;
         values["type"] = Enum.CLIENT_AUTO_NUMBER_TYPE.PURCHASE;
         values["status"] = this.Enum.ACTIVE;
 
-        if(purchaseEntries) {
-          values["POEntries"] = purchaseEntries;
-        }
+        values["POEntries"] = purchaseEntries;
       
-        this.dispatch(PurchaseOrderAction.add(values));   
+        this.dispatch(PurchaseOrderAction.add(values));
       }
     });
   }
@@ -91,7 +93,7 @@ export default class FormCreate extends Modal {
       storeLocation, 
       productSearch, 
       productUpdate,
-      purchaseOrderNumber,
+      requestOrderNumber,
       dispatch
     } = this.props;
     
@@ -106,7 +108,7 @@ export default class FormCreate extends Modal {
           storeLocation={storeLocation} 
           productSearch={productSearch} 
           productUpdate={productUpdate}
-          purchaseOrderNumber={purchaseOrderNumber}
+          requestOrderNumber={requestOrderNumber}
           dispatch={dispatch} 
           locale={locale}
         />

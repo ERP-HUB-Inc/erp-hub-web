@@ -6,9 +6,9 @@ export default {
   ],
       
   "update_stock_management_title": [
-    "Stock Management:Update",
+    "Stock Management",
     "ငွေကြေး",
-    "Stock Management:Update"
+    "Stock Management"
   ],
 
   "select_search_stock_transfer_status": [

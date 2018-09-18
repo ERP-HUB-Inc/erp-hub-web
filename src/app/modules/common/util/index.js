@@ -154,7 +154,7 @@ export class Util {
   isRecordId(value) {
     let recordId = value.replace("-", "");
     const conditonOne = value.length >= 36 || value.length.length <= 40;
-    const conditionTwo = Number.isInteger(parseInt(recordId, "0x"));
+    const conditionTwo = Number.isInteger(parseInt(recordId, 10));
     return conditonOne && conditionTwo;
   }
 

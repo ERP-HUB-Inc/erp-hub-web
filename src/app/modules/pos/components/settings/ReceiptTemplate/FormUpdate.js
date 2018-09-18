@@ -6,7 +6,7 @@ import ReceiptAction from "../../../action/settings/receiptTemplate";
 export default class FormReciptTemplateUpdate extends Modal {
   constructor(props) {
     super(props);
-    this.title = "Receipt Template:Update";
+    this.title = "Receipt Template";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }

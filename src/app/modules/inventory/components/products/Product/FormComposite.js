@@ -82,8 +82,6 @@ export default class FormComposite extends Modal {
     }
   }
 
-  
-
   handleRemoveCompositeProduct(record, index) {
     let existingCompositeList = this.state.compositeList;
     if (record.id === "") {

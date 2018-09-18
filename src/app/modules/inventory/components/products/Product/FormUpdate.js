@@ -43,7 +43,7 @@ export default class Form extends Modal {
     this.handleAddProductType = this.handleAddProductType.bind(this);
   }
 
-  componentWillUpdate(nextProps, nextState) {
+  componentWillUpdate() {
     const {productDetail} = this.props;
     if (productDetail.fetched) {
       if (productDetail.data) {

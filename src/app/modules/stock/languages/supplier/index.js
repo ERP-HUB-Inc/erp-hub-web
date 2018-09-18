@@ -6,9 +6,9 @@ export default {
   ],
       
   "update_stock_supplier_title": [
-    "Supplier:Update",
+    "Supplier",
     "ငွေကြေး",
-    "Supplier:Update"
+    "Supplier"
   ],
 
   "col_stock_supplier_name": [

@@ -6,7 +6,7 @@ import operationRecordAction from "../../../action/settings/operationRecord";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.title = "operation Record:Update";
+    this.title = "operation Record";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }

@@ -1,6 +1,6 @@
 import BaseService from "../BaseService";
 
-class Service extends BaseService {
+class StockTransferService extends BaseService {
 
   constructor() {
     super();
@@ -9,4 +9,4 @@ class Service extends BaseService {
   }
 }
 
-export default new Service();
+export default new StockTransferService();

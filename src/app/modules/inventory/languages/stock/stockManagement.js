@@ -6,9 +6,9 @@ export default {
   ],
       
   "updte_stock_management_title": [
-    "Stock Management:Update",
+    "Stock Management",
     "ငွေကြေး",
-    "Stock Management:Update"
+    "Stock Management"
   ],
 
   "col_stock_management_id": [
