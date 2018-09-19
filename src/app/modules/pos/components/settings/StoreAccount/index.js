@@ -1,11 +1,11 @@
 import React from "react";
-import Component from "../../Component";
-import "./index.css";
 import StoreAccountAction from "../../../action/settings/storeAccount";
 import TaxAction from "../../../action/settings/tax";
 import LanguageAction from "../../../action/settings/storeLanguage";
 import {fetchAllBusinessPlanSystem} from "../../../../../modules/common/actions/businessPlan";
+import Component from "../../../../common/components/Component";
 import menuSource from "../../../../common/components/layout/SiderBar/datasource";
+import "./index.css";
 
 const currentPath = window.location.pathname;
 

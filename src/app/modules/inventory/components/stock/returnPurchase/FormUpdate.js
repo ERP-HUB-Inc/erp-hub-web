@@ -33,8 +33,8 @@ export default class Form extends Modal {
             POEntries.push({
               id: values.receiveId[receiveQtyIndex],
               productId: values.productId[receiveQtyIndex],
-              requestQuantity: parseInt(values.qty[receiveQtyIndex]),
-              receiveQuantity: parseInt(values.receiveQty[receiveQtyIndex]),
+              requestQuantity: parseInt(values.qty[receiveQtyIndex], 10),
+              receiveQuantity: parseInt(values.receiveQty[receiveQtyIndex], 10),
               price: values.receivePrice[receiveQtyIndex],
               status: values.statusId[receiveQtyIndex],
             });

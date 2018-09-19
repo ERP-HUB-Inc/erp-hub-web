@@ -1,7 +1,7 @@
 import React from "react";
-import Component  from "../../../components/Component";
 import PrivilegeAction from "../../../action/settings/privilege";
 import RolePrivilegeAction from "../../../action/settings/rolePrivilege";
+import Component from "../../../../common/components/Component";
 import "./index.css";
 
 export default class ListPrivilege extends Component {

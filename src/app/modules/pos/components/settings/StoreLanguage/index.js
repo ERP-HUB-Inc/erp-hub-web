@@ -1,5 +1,5 @@
 import React from "react";
-import List from "../../List";
+import List from "../List";
 import FormCreate from "../../../containers/settings/StoreLanguage/FormCreate";
 import FormUpdate from "../../../containers/settings/StoreLanguage/FormUpdate";
 import StoreLanguageAction from "../../../action/settings/storeLanguage";
