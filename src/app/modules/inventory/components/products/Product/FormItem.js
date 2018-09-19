@@ -563,7 +563,6 @@ export default class FormItem extends Modal {
                     form={form}   
                   />
                 </this.Col>
-                
               </this.Row> 
             </this.Col>
             <this.Col md="6">

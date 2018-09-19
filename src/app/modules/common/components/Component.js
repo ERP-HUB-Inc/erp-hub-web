@@ -44,6 +44,7 @@ import
   DatePickers,
   RadioButton,
   UploadImg,
+  Image,
   Loading,
   InputTextArea,
   SearchButton,
@@ -178,6 +179,7 @@ export default class Component extends RComponent {
     this.InputEmail = InputEmail;
     this.DatePickers = DatePickers;
     this.UploadImg = UploadImg;
+    this.Image = Image;
     this.Loading = Loading;
     this.Spin = Spin;
     this.TabPane = TabPane;

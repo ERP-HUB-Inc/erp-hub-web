@@ -49,7 +49,9 @@ export default class PicturesUpload extends Element {
   }
 
   render() {
+    
     const cardImgProps = {
+
       action: "http://127.0.0.1:3000/api/employee/v1/upload/file",
       
       onRemove: (file) => {
@@ -68,7 +70,7 @@ export default class PicturesUpload extends Element {
         }));
         return false;
       },
-      // showUploadList: false,
+      showUploadList: false,
       onPreview: this.handleCardPreview,
       onChange: this.handleCardChange,
       accept: "image/*",
