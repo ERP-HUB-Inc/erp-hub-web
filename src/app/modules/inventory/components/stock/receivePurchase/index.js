@@ -60,12 +60,14 @@ class Column extends List {
       {
         title: <this.Translate id="col_stock_receive_purchase_name" />,
         dataIndex: "name",
+        width: 233,
         key: "name",
         sorter: true
       },
       {
         title: <this.Translate id="col_stock_receive_purchase_invoice_no" />,
         dataIndex: "invoiceNo",
+        width: 336,
         key: "invoiceNo",
         sorter: true
       },
@@ -73,11 +75,13 @@ class Column extends List {
         title: <this.Translate id="col_stock_receive_purchase_due_date" />,
         dataIndex: "deliveryDueDate",
         key: "deliveryDueDate",
+        width: 305,
         sorter: true
       },
       {
         title: <this.Translate id="col_stock_receive_purchase_shipping_fee" />,
         dataIndex: "shippingFee",
+        width: 358,
         key: "shippingFee",
         sorter: true
       },

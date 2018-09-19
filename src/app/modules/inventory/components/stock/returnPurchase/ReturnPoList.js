@@ -1,6 +1,7 @@
 import React from "react";
 import ProductsAction from "../../../actions/products/product"; 
 import Modal from "../../../../common/components/shares/Modal";
+import "./index.css";
 
 export default class ReceivedPo extends Modal {
   constructor(props){
@@ -50,8 +51,8 @@ export default class ReceivedPo extends Modal {
         {
           return(
             <div>
-              {record.quantiy}
-              <this.InputNumber name={`qty[${index}]`} className="hidden" data={record.quantiy} required={true} min={1} max={100} form={ this.form } />
+              {record.quantity}
+              <this.InputNumber name={`qty[${index}]`} className="hidden" data={record.quantity} required={true} min={1} max={100} form={ this.form } />
             </div>
           );
         }
@@ -79,9 +80,15 @@ export default class ReceivedPo extends Modal {
         render: (text,record,index) => 
         {
           return(
-            <div>
-              <this.InputNumber name={`returnQty[${index}]`}  data={record.returnQuantity} required={true} min={1} max={100} form={ this.form } />
-            </div>
+            <this.InputText 
+              name={`returnQty[${index}]`} 
+              data={record.returnQuantity} 
+              required={true} 
+              min={1} 
+              max={100} 
+              form={ this.form } 
+              handleKeyUp={(e) => this.handleOnChangeQuantity(e, index)}
+            />
           );
         }
       },
@@ -119,18 +126,27 @@ export default class ReceivedPo extends Modal {
   componentDidUpdate(){
     const {returnPurchaseDetail} = this.props;
 
-    if (returnPurchaseDetail.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
+    if(returnPurchaseDetail == null){
+      return;
+    }
+
+    if (returnPurchaseDetail.length  > 0 && this.state.isNotYetLoadComponentDidUpdated) {
 
       const existingProductList = this.state.productLists;
       
-      console.log("returnPurchaseDetails",returnPurchaseDetail);
-      
       returnPurchaseDetail.forEach(purchaseOrderEntry => {
+        let productName = "";
+        if (purchaseOrderEntry.product) {
+          if (purchaseOrderEntry.product.productDescriptions.length > 0) {
+            productName = purchaseOrderEntry.product.productDescriptions[0].name;
+          }
+        }
+
         existingProductList.push({
           id: purchaseOrderEntry.id,
-          // productName: purchaseOrderEntry.product.productDescriptions.name,
+          productName,
           productId: purchaseOrderEntry.productId,
-          quantiy: purchaseOrderEntry.requestQuantity, 
+          quantity: purchaseOrderEntry.requestQuantity, 
           receiveQuantity: purchaseOrderEntry.receiveQuantity,
           returnQuantity: purchaseOrderEntry.returnQuantity,
           price: purchaseOrderEntry.price,
@@ -145,9 +161,44 @@ export default class ReceivedPo extends Modal {
         isNotYetLoadComponentDidUpdated: false
       });
 
+      this.grandTotal(existingProductList); 
+
     }
   
   
+  }
+
+  calculateTotalAmountEachRow(e, index) {
+    const quantity = this.props.form.getFieldValue(`returnQty[${index}]`);
+    const price = this.props.form.getFieldValue(`receivePrice[${index}]`);
+    return quantity * price;
+  }
+
+
+  handleOnChangeQuantity(e, index) {
+    const existingProductList = this.state.productLists;
+    existingProductList.forEach((product, productIndex) => {
+      if (productIndex === index) {
+        existingProductList[productIndex]["quantity"] = e.target.value;
+      }
+    });
+    this.props.form.setFieldsValue({[`totalPrice[${index}]`]: this.formatCurrency(this.calculateTotalAmountEachRow(e, index))});
+
+    this.setState({productLists: existingProductList});
+    this.grandTotal(existingProductList);
+    
+  }
+
+  grandTotal(productList) {
+    let grandTotal = 0;
+    productList.forEach((product, index) => {
+      if (product.status === this.Enum.ACTIVE) {
+        grandTotal += (product.quantity * product.price);
+      }
+    });
+
+    this.props.form.setFieldsValue({requestTotal: this.formatCurrency(grandTotal)});
+    this.props.form.setFieldsValue({requestTotalValue: `${grandTotal}`});
   }
 
   productList(){
@@ -173,6 +224,15 @@ export default class ReceivedPo extends Modal {
           dataSource={productLists}
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
+          footer={() => <div className={` ${productLists.length > 0 ? "" : "hidden"}`}>
+            <div className="total-purchase-right"><this.Translate id="purchase_order_footer" />: </div>
+            <div className="">
+              <this.InputText name="requestTotal" disabled={true} className="grandTotal" form={this.props.form}/>
+              <this.InputText name="requestTotalValue" className="hidden" form={this.props.form}/>
+            </div>
+            <div className="" style={{width: 150}}></div>
+            <div style={{clear: "both"}}></div>
+          </div>}
         /> 
       </div>
     );
