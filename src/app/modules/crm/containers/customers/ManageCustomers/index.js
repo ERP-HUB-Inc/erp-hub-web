@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
-import ManageCustomersList from "../../../components/customers/ManageCustomers";
+import ManageCustomersList from "../../../components/customers/customer";
 
 class ManagementCutomer extends React.Component {
   render() {

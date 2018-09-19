@@ -90,13 +90,13 @@ const dataSource = {
       {
         title: <Translate id="text_sale_order" />,
         icon: "icon-pre-order",
-        route: "/transactions/sale-order",
+        route: "/transactions/saleorder",
         component: SaleOrder
       },
       {
         title: <Translate id="text_return_exchange" />,
         icon: "icon-sale-return",
-        route: "/transactions/return-exchange",
+        route: "/transactions/return/exchange",
         component: ReturnExchange
       }
     ]

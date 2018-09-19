@@ -6,7 +6,6 @@ import sidebar from "../languages/sidebar";
 import general from "../languages/general";
 import text from "../elements/common/language/text";
 import title from "../elements/common/language/title";
-import modal from "../../pos/languages/shares/modal";
 import paymentMethod from "../../pos/languages/settings/paymentMethod";
 import receiptTemplate from "../../pos/languages/settings/receiptTemplate";
 import storeAccount from "../../pos/languages/settings/storeAccount";
@@ -16,9 +15,12 @@ import tax from "../../pos/languages/settings/tax";
 import operationRecord from "../../pos/languages/settings/operationRecord";
 import language from "../../pos/languages/settings/language";
 import currency from "../../pos/languages/settings/currency";
+// TRANSACTION
+import sale from "../../pos/languages/transactions/sale";
+
 import error from "../elements/common/language/error";
-import manageCustomer from "../../crm/languages/customers/manageCustomers";
-import groupCustomer from "../../crm/languages/customers/groupCustomers";
+import manageCustomer from "../../crm/languages/customers/customer";
+import groupCustomer from "../../crm/languages/customers/group";
 import employees from "../../hr/languages/employee";
 import product from "../../inventory/languages/products/product"; 
 import productUnit from "../../inventory/languages/products/productsUnit";
@@ -52,7 +54,6 @@ export function setTranslation() {
     ...error,
     ...general,
     ...sidebar,
-    ...modal,
     ...roleAccess,
     ...paymentMethod,
     ...receiptTemplate,
@@ -62,6 +63,7 @@ export function setTranslation() {
     ...operationRecord,
     ...language,
     ...currency,
+    ...sale,
     ...manageCustomer,
     ...groupCustomer,
     ...employees,

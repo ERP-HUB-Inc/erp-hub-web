@@ -20,9 +20,9 @@ import operationRecord from "../modules/pos/reducers/settings/operationRecord";
 // Employee
 import managementEmployee from "../modules/hr/reducers/employees/managementEmployee";
 //customer 
-import managementCustomers from "../modules/crm/reducers/customers/managementCutomers";
+import managementCustomers from "../modules/crm/reducers/customers/customer";
 // groupcustomer
-import groupCustomers from "../modules/crm/reducers/customers/groupCustomers";
+import groupCustomers from "../modules/crm/reducers/customers/group";
 import product from "../modules/inventory/reducers/products/product";
 import priceTag from "../modules/inventory/reducers/products/priceTag";
 import productsUnit from "../modules/inventory/reducers/products/productsUnit";

@@ -1,6 +1,7 @@
 import React from "react";
 import $ from "jquery";
-import ProductAction from "../../../actions/products/product";
+import "./DropDownSearch.css";
+import CustomerAction from "../../../actions/customers/customer";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class DropDownSearch extends Modal {
@@ -14,7 +15,7 @@ export default class DropDownSearch extends Modal {
     this.scrollTop = 0;
     this.timer = null;
 
-    this.handleKeyDownOnProductSearch = this.handleKeyDownOnProductSearch.bind(this);
+    this.handleKeyDownOnSearch = this.handleKeyDownOnSearch.bind(this);
     this.handlePressEnterOnSearch = this.handlePressEnterOnSearch.bind(this);
     this.handleOnBlurSearch = this.handleOnBlurSearch.bind(this);
     this.handleOnFocusSearch = this.handleOnFocusSearch.bind(this);
@@ -41,9 +42,9 @@ export default class DropDownSearch extends Modal {
 
   handlePressEnterOnSearch() {
     const currentActive = $(".ant-spin-container div.search-item-hover");
-    const productId = currentActive.attr("classid");
-    const product = this.props.productSearch.list.find(value => value.id === productId);
-    this.props.handlePressEnterOnSearch(product);
+    const recordId = currentActive.attr("classid");
+    const result = this.props.productSearch.list.find(value => value.id === recordId);
+    this.props.handlePressEnterOnSearch(result);
     this.setState({visibleDropDown: false});
   }
 
@@ -51,11 +52,9 @@ export default class DropDownSearch extends Modal {
     if (!this.state.isMouseHoverOnSearchList) {
       this.setState({visibleDropDown: false});
     }
-    this.props.form.setFieldsValue({isFocusOnSearchCompositeProduct: 0});
   }
 
   handleOnFocusSearch() {
-    this.props.form.setFieldsValue({isFocusOnSearchCompositeProduct: 1});
     this.setState({visibleDropDown: true});
   }
 
@@ -72,7 +71,7 @@ export default class DropDownSearch extends Modal {
     this.setState({visibleDropDown: false});
   }
 
-  handleKeyDownOnProductSearch(event) {
+  handleKeyDownOnSearch(event) {
     const value = event.target.value.trim();
 
     if (event.keyCode === 38) {
@@ -85,7 +84,7 @@ export default class DropDownSearch extends Modal {
 
         if (this.scrollTop > 0) {
           this.scrollTop = this.scrollTop - 60;
-          $(".wrap-dropdown-search-product .list-search").scrollTop(this.scrollTop);
+          $(".wrap-dropdown-search-ca .list-search").scrollTop(this.scrollTop);
         }
       }
 
@@ -98,16 +97,16 @@ export default class DropDownSearch extends Modal {
         currentActive.next().addClass("search-item-hover");
 
         this.scrollTop = this.scrollTop + 60;
-        $(".wrap-dropdown-search-product .list-search").scrollTop(this.scrollTop);
+        $("..wrap-dropdown-search-ca .list-search").scrollTop(this.scrollTop);
       }
     } else {
 
       clearTimeout(this.timer);
     
       this.timer = setTimeout(function() {
-        const searchKey = JSON.stringify({column: ["name"], value});
+        const searchKey = JSON.stringify({column: ["firstName", "lastName", "phoneNumber"], value});
 
-        this.props.dispatch(ProductAction.search(100, 0, "", "", this.props.filter, searchKey));
+        this.props.dispatch(CustomerAction.fetch(100, 0, "", "", "", searchKey));
 
         this.setState({visibleDropDown: true});
 
@@ -117,17 +116,14 @@ export default class DropDownSearch extends Modal {
   }
 
   handleRemoveTextSearch() {
-    this.props.form.setFieldsValue({searchProduct: ""});
+    this.props.form.setFieldsValue({searchRecord: ""});
   }
 
-  renderSearchItem(product) {
-    const {productDescriptions} = product;
-    const barcode = product.barcode;
+  renderSearchItem(record) {
     return (
       <this.List.Item.Meta
-        title={productDescriptions.length > 0 ? productDescriptions[0].name : ""}
-        description={<span className="text-uppercase"><this.Translate id="text_product_code"/>: {barcode}</span>}
-      />
+        title={`${record.firstName} ${record.lastName}`}
+        description={<span className="text-uppercase">{record.phoneNumber}</span>} />
     );
   }
 
@@ -135,41 +131,31 @@ export default class DropDownSearch extends Modal {
     return (
       <this.Col md="12" className="search-height" style={{position: "relative"}}>
         <div className="main-searchs">
-          <div className="search-icon icon-add-product"></div>
+          <div className="search-icon icon-customer"></div>
           <this.InputText
-            name="searchProduct"
-            placeholder={this.CATranslate("input_product_search_product", this.props.locale)}
-            validateStatus={this.props.productSearch.fetching ? "validating" : ""}
-            handleKeyUp={this.handleKeyDownOnProductSearch}
+            name="searchRecord"
+            placeholder={this.CATranslate("input_search_customer", this.props.locale)}
+            validateStatus={this.props.customers.fetching ? "validating" : ""}
+            handleKeyUp={this.handleKeyDownOnSearch}
             handlePressEnter={this.handlePressEnterOnSearch}
             handleOnBlur={this.handleOnBlurSearch}
             handleOnFocus={this.handleOnFocusSearch}
             form={this.props.form}/>
           <div className="remove-search-icon icon-clear" onClick={this.handleRemoveTextSearch}></div>
         </div>
-        <this.Col md="4" className="hidden">
-          <this.Button type="info" className="btn-add-product-compsite">
-            <span className="icon-add"></span>
-          </this.Button>
-          <this.InputNumber
-            name="isFocusOnSearchCompositeProduct"
-            data={0}
-            form={this.props.form}/>
-        </this.Col>
-
-        <div className="wrap-dropdown-search-product">
+        <div className=".wrap-dropdown-search-ca">
           {
-            this.state.visibleDropDown && this.props.productSearch.fetched?
+            this.state.visibleDropDown && this.props.customers.fetched?
               <this.List
                 itemLayout="horizontal"
                 locale={{emptyText: <this.Translate id="placeholder_product_list_search" />}}
-                dataSource={this.props.productSearch.list}
+                dataSource={this.props.customers.list}
                 className="list-search"
                 onMouseEnter={this.handleOnMouseHoverOnSearchList}
                 onMouseLeave={this.handleOnMouseLeaveOnSearchList}
-                renderItem={product => (
-                  <this.List.Item onClick={() => this.handleOnSelectList(product)} classID={product.id}>
-                    {this.renderSearchItem(product)}
+                renderItem={recordItem => (
+                  <this.List.Item onClick={() => this.handleOnSelectList(recordItem)} classID={recordItem.id}>
+                    {this.renderSearchItem(recordItem)}
                   </this.List.Item>
                 )}
               />

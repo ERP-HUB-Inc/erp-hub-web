@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
-import FormCreate from "../../../components/customers/ManageCustomers/FormCreate";
+import FormCreate from "../../../components/customers/customer/FormCreate";
 
 
 class CustomerCreate extends React.Component {
