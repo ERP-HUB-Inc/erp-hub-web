@@ -1,15 +1,16 @@
 import React from "react";
 import FormItem from "./FormItem";
 import Modal from "../../shares/Modal";
-import CustomerAction from "../../../actions/customers/manageCustomers";
-import GroupCustomerAction from "../../../actions/customers/groupCustomer";
+import CustomerAction from "../../../actions/customers/customer";
+import GroupCustomerAction from "../../../actions/customers/group";
 import CreateCustomerGroup from "../../../containers/customers/GroupCustomers/FormCreate";
+import ConstantGroupCustomer from "../../../constants/customers/groupCustomer";
 import Constant from "../../../constants/customers/managementCutomers";
 
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="update_management_customer_title" />;
+    this.title = <this.Translate id="create_management_customer_title" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.addCustomerGroup = this.addCustomerGroup.bind(this);
@@ -19,6 +20,7 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        
         const listContacts = 
         {
           id: values.contactId,
@@ -34,12 +36,7 @@ export default class FormCreate extends Modal {
         delete values["contactAddress"];
         delete values["keys"];
         delete values["status"];
-          
-        let id = this.props.customerDetail.data.id;
-        if(id !== null){
-          values["id"] = this.props.customerDetail.data.id;
-        }
-       
+
         if(listContacts.name == null){
           listContacts.name = [];
         }
@@ -57,24 +54,22 @@ export default class FormCreate extends Modal {
               name: name,
               address: listContacts.address[index],
               phoneNumber: listContacts.phoneNumber[index],
-              status: listContacts.status[index],
+              status: listContacts.status[index]
             });
           }
         });
 
         if(contacts) {
-          values["listContact"] = contacts;
+          values["contacts"] = contacts;
         }
-
-        values["status"] = values["state"];
+        this.dispatch(CustomerAction.add(values));
         
-        this.dispatch(CustomerAction.update(values));
       }
     });
   }
       
   handleCancel() {
-    this.dispatch(CustomerAction.reset(Constant.RESET_DETAIL_CUSTOMERS));
+    this.dispatch(CustomerAction.reset(Constant.RESET_MANAGEMENT_CUSTOMERS));
   }
 
   addCustomerGroup(){
@@ -84,16 +79,27 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    const {customerDetail, customerUpdate, form, groupCustomers, locale} = this.props;
+    const {
+      manageCustomersAdd,
+      form,
+      groupCustomers,
+      groupCustomersAdd,
+      locale
+    } = this.props;
 
-    this.submitLoading = customerUpdate.updating;
-    
-    if (customerDetail.showForm && customerDetail.fetched) {
+    this.submitLoading = manageCustomersAdd.adding;
+
+    // APPEND GROUP CUSTOMER TO LIST
+    if (groupCustomersAdd.response != null) {
+      groupCustomers.list = [groupCustomersAdd.response.data, ...groupCustomers.list];
+      this.props.dispatch({type: ConstantGroupCustomer.RESET_MANAGEMENT_GROUP_CUSTOMERS});
+    }
+
+    if (manageCustomersAdd.showForm) {
       this.content = (
         <FormItem
           form={form}
           dispatch={this.props.dispatch}
-          formData={customerDetail.data}
           groupCustomers={groupCustomers}
           addCustomerGroup={this.addCustomerGroup}
           locale={locale}
@@ -101,7 +107,7 @@ export default class FormCreate extends Modal {
       );
       return super.render();
     } else {
-      return <div/>;
+      return (<div></div>);
     }
   }
 }

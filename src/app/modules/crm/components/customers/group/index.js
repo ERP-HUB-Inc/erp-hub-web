@@ -3,7 +3,7 @@ import List from "../../List";
 import FormCreate from "../../../containers/customers/GroupCustomers/FormCreate";
 import FormUpdate from "../../../containers/customers/GroupCustomers/FormUpdate";
 import Constant from "../../../constants/customers/groupCustomer";
-import CutomerAction from "../../../actions/customers/groupCustomer";
+import GroupCutomerAction from "../../../actions/customers/group";
 import CutomerService from "../../../services/groupCustomers/groupCustomers";
 import "./index.css";
 
@@ -16,22 +16,22 @@ export default class GroupCustomerList extends List {
     this.addingProp = "groupCustomersAdd";
     this.updatingProp = "groupCustomersUpdate";
     this.service = CutomerService;
-    this.action = CutomerAction;
+    this.action = GroupCutomerAction;
     this.columnFilterWithKey = ["name"];
     this.RESET_CONSTANT = Constant.RESET_MANAGEMENT_GROUP_CUSTOMERS;
   }
-
+  
   handleShowFormAdd() {
     const {dispatch} = this.props;
-    dispatch(CutomerAction.showForm());
+    dispatch(GroupCutomerAction.showForm());
     this.setState({
       modalConten: <FormCreate/>
     });
   }
 
   handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
-    dispatch(CutomerAction.showForm(rowData));
+    const {dispatch} = this.props;
+    dispatch(GroupCutomerAction.showForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });

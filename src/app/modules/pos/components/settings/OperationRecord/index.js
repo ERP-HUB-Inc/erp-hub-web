@@ -1,5 +1,5 @@
 import React from "react";
-import List from "../../List";
+import List from "../List";
 import FormCreate from "../../../containers/settings/OperationRecord/FormCreate";
 import FormUpdate from "../../../containers/settings/OperationRecord/FormUpdate";
 import Constant from "../../../constants/settings/operationRecord";

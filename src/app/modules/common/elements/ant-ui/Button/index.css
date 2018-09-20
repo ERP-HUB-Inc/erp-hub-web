@@ -35,6 +35,11 @@
     background-color: #b35959 !important
 }
 
+.ant-btn.info[disabled],
+.ant-btn.info[disabled]:hover {
+    background-color: #314c6f !important
+}
+
 .ant-btn:hover,
 .ant-btn:focus {
     color: white !important

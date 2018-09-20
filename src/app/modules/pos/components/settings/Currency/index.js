@@ -1,5 +1,5 @@
 import React from "react";
-import List from "../../List";
+import List from "../List";
 import FormCreate from "../../../containers/settings/Currency/FormCreate";
 import FormUpdate from "../../../containers/settings/Currency/FormUpdate";
 import Constant from "../../../constants/settings/currency";

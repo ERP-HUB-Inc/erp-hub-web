@@ -3,8 +3,8 @@ import List from "../../List";
 import FormCreate from "../../../containers/customers/ManageCustomers/FormCreate";
 import FormUpdate from "../../../containers/customers/ManageCustomers/FormUpdate";
 import Constant from "../../../constants/customers/managementCutomers";
-import CustomerAction from "../../../actions/customers/manageCustomers";
-import GroupCustomerAction from "../../../actions/customers/groupCustomer";
+import CustomerAction from "../../../actions/customers/customer";
+import GroupCustomerAction from "../../../actions/customers/group";
 import CustomerService from "../../../services/customers/manageCustomer";
 import "./index.css";
 

@@ -58,8 +58,7 @@ export default class Lists extends List {
 
 
   renderFilterRecord() {
-    const { form, stockTransfer, storeLocation, brand, product } = this.props;
-    console.log("stockTransfer",stockTransfer.list);
+    const {form} = this.props;
     return(
       <div>
         { form == null ?

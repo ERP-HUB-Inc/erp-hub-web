@@ -1,0 +1,30 @@
+.wrap-dropdown-search-ca {
+    position: absolute;
+    z-index: 2;
+    top: 55px;
+    width: 100%;
+    padding-right: 20px
+}
+
+.wrap-dropdown-search-ca .list-search {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    background: white;
+    max-height: 470px;
+    margin-right: 5px;
+    overflow-y: auto
+}
+
+.wrap-dropdown-search-ca .list-search .ant-list-item {
+    padding: 5px 15px;
+    cursor: pointer
+}
+
+.main-searchs .is-validating.has-feedback .ant-form-item-children:after {
+    right: 30px;
+    font-size: 20px
+}
+
+.wrap-dropdown-search-ca .list-search .ant-list-item:hover, 
+.wrap-dropdown-search-ca .list-search .ant-list-item.search-item-hover {
+    background: #e6f7ff
+}

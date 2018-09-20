@@ -1,7 +1,7 @@
 import React from "react";
 import FormItem from "./FormItem";
-import Modal from "../../shares/Modal";
 import CurrencyAction from "../../../action/settings/currency";
+import Modal from "../../../../common/components/shares/Modal";
 
 export default class Form extends Modal {
   constructor(props) {

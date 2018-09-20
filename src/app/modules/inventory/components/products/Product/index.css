@@ -157,7 +157,7 @@
 }
 
 .wrap-dropdown-search-product .list-search .ant-list-item:hover, 
-.wrap-dropdown-search-product .list-search .ant-list-item.product-item-hover {
+.wrap-dropdown-search-product .list-search .ant-list-item.search-item-hover {
     background: #e6f7ff
 }
 

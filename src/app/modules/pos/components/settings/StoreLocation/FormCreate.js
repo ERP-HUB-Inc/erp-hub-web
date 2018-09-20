@@ -1,7 +1,7 @@
 import React from "react";
 import FormItem from "./FormItem";
-import Modal from "../../shares/Modal";
 import StoreLocationAction from "../../../action/settings/storeLocation";
+import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormStoreLocationCreate extends Modal {
   constructor(props) {

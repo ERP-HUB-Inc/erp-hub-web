@@ -1,11 +1,28 @@
 import React from "react";
+import {Form} from "antd";
+import {connect} from "react-redux";
+import RetailSale from "../../../components/transactions/RetailSale";
 
-export default class SaleOrder extends React.Component {
+class RetailSaleForm extends React.Component {
   render() {
-    return (
-      <div>
-        Sale Order
-      </div>
-    );
+    return <RetailSale {...this.props} />;
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    customers: state.reducer.managementCustomers.request,
+    productSearch: state.reducer.product.search,
+    locale: state.locale
+  };
+}
+
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const retailSale = Form.create(mapPropsToFields)(RetailSaleForm);
+
+export default connect(mapStateToProps)(retailSale);

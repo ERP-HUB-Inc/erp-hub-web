@@ -2,12 +2,12 @@ import React from "react";
 import Modal from "../../shares/Modal";
 import FormItem from "./FormItem";
 import Constant from "../../../constants/customers/groupCustomer";
-import GroupCustomerAction from "../../../actions/customers/groupCustomer";
+import GroupCustomerAction from "../../../actions/customers/group";
 
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="update_group_customer_title" />;
+    this.title = <this.Translate id="create_group_customer_title" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
@@ -17,9 +17,7 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        values["id"] = this.props.groupCustomersUpdate.data.id;
-        this.dispatch(GroupCustomerAction.update(values));
-        
+        this.dispatch(GroupCustomerAction.add(values));
       }
     });
   }
@@ -29,17 +27,16 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    const {groupCustomersUpdate, form, locale} = this.props;
+    const {groupCustomersAdd, form, locale} = this.props;
+    
+    this.submitLoading = groupCustomersAdd.adding;
 
-    this.submitLoading = groupCustomersUpdate.updating;
-
-    if (groupCustomersUpdate.showForm) {
+    if (groupCustomersAdd.showForm) {
       this.content = (
         <div>
-          {groupCustomersUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
+          {groupCustomersAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
           <FormItem
             form={form}
-            formData={groupCustomersUpdate.data}
             locale={locale}
           />
         </div>

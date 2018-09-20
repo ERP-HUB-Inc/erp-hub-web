@@ -1,7 +1,7 @@
 import React from "react";
 import FormItem from "./FormItem";
-import Modal from "../../shares/Modal";
 import operationRecordAction from "../../../action/settings/operationRecord";
+import Modal from "../../../../common/components/shares/Modal";
 import "./index.css"; 
 
 export default class Form extends Modal {

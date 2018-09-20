@@ -153,7 +153,8 @@ export default class List extends Component {
 
   /**===================================================================EVENT CONTROL FOR CHILD CLASS============================================================**/
   componentDidMount() {
-    if (this.action != null) {
+    console.log("Did Mount");
+    if (this.action) {
       const {dispatch} = this.props;
       dispatch(this.action.fetch(this.pageSize));
     }
@@ -292,7 +293,7 @@ export default class List extends Component {
    * handle when user want to filter record
    */
   handleSubmitFilter(e) {
-    if (this.action != null) {
+    if (this.action) {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
@@ -572,18 +573,18 @@ export default class List extends Component {
     let fetchingProps = this.props[this.fetchingProp];
     
     // Here is repsonse from add action and combinde response data to the list.
-    if (this.addingProp !== "") {
+    if (this.addingProp) {
       const addingProps = this.props[this.addingProp];
-      if (addingProps.response != null) {
+      if (addingProps && addingProps.response) {
         fetchingProps.list = [addingProps.response.data, ...fetchingProps.list];
         this.props.dispatch({type: this.RESET_CONSTANT});
       }
     }
 
     // Here is repsonse from updating action and update response data to the list.
-    if (this.updatingProp !== "") {
+    if (this.updatingProp) {
       const updatingProps = this.props[this.updatingProp];
-      if (updatingProps.response != null) {
+      if (updatingProps && updatingProps.response) {
         const updateIndex = this.Util.findArrayIndex(fetchingProps.list, "id", updatingProps.response.data.id);
         fetchingProps.list.splice(updateIndex, 1, updatingProps.response.data);
         this.props.dispatch({type: this.RESET_CONSTANT});

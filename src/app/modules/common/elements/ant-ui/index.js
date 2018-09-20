@@ -21,6 +21,7 @@ export * from "./InputText";
 export * from "./InputNumber";
 export * from "./InputEmail";
 export * from "./Upload";
+export * from "./Image";
 export * from "./InputPassword";
 export * from "./inputTextArea";
 export * from "./Button/searchButton";

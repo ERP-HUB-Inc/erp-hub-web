@@ -44,6 +44,7 @@ import
   DatePickers,
   RadioButton,
   UploadImg,
+  Image,
   Loading,
   InputTextArea,
   SearchButton,
@@ -54,8 +55,8 @@ import
 } from "../elements/ant-ui";
 import {
   InputRedux,
-  Breadcrumb,
-  BreadcrumbLayout,
+  // Breadcrumb,
+  // BreadcrumbLayout,
   BreadcrumbTitle,
   SapleInput,
   Cards,
@@ -85,7 +86,8 @@ import {
   Badge,
   Spin,
   Tag,
-  List
+  List,
+  Breadcrumb 
 } from "antd";
 
 const Panel = Collapse.Panel;
@@ -136,9 +138,9 @@ export default class Component extends RComponent {
     this.DropdownMenu = DropdownMenu;
     this.NavLink = NavLink;
     this.Link = Link;
-    this.Breadcrumb = Breadcrumb;
+    // this.Breadcrumb = Breadcrumb;
     this.BreadcrumbTitle = BreadcrumbTitle;
-    this.BreadcrumbLayout = BreadcrumbLayout;
+    // this.BreadcrumbLayout = BreadcrumbLayout;
     this.SapleInput = SapleInput;
     this.FormGroup = FormGroup;
     this.Label = Label;
@@ -178,6 +180,7 @@ export default class Component extends RComponent {
     this.InputEmail = InputEmail;
     this.DatePickers = DatePickers;
     this.UploadImg = UploadImg;
+    this.Image = Image;
     this.Loading = Loading;
     this.Spin = Spin;
     this.TabPane = TabPane;
@@ -189,6 +192,7 @@ export default class Component extends RComponent {
     this.Tag = TagButton;
     this.TagLabel = Tag;
     this.List = List;
+    this.Breadcrumb  = Breadcrumb;
 
     this.CSVLink = CSVLink;
     this.CSVDownload = CSVDownload;

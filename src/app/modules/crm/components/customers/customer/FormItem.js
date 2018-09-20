@@ -1,6 +1,6 @@
 import React from "react";
 import Modal from "../../shares/Modal";
-import GroupCustomerAction from "../../../actions/customers/groupCustomer";
+import GroupCustomerAction from "../../../actions/customers/group";
 import "./index.css";
 import FormContact from "./FormContact";
 

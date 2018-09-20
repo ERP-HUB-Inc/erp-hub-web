@@ -25,7 +25,6 @@ export default class FormItem extends Modal {
         <this.Tabs type="card">
           <this.TabPane tab="General" key="1">
             <div>
-              {/* { manageEmployeeAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" } */}
               <this.Row>
                 <this.Col md="6">
                   <this.InputText

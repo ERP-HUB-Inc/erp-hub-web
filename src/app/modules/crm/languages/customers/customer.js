@@ -105,6 +105,12 @@ export default {
     "Address"
   ],
 
+  "input_search_customer": [
+    "Search Customer",
+    "Search Customer",
+    "Search Customer"
+  ],
+
   "select_customer_place_holder_group": [
     "Please select group",
     "Please select group",

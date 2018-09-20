@@ -12,7 +12,6 @@ export class UploadImg extends Element {
         message: this.props.errorRequired
       }
     ];
-
   }
 
   render() {
@@ -20,10 +19,10 @@ export class UploadImg extends Element {
       <PicturesUpload 
         name={ this.props.name }
         form={this.props.form}
-        label={ this.props.label }
-        rules={ this.rules }
-        beforeUpload={ this.props.beforeUpload }
-        handleCardChange={ this.handleCardChange }
+        label={this.props.label}
+        rules={this.rules}
+        beforeUpload={this.props.beforeUpload}
+        handleCardChange={this.handleCardChange}
       />
     );
   }   

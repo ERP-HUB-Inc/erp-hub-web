@@ -1,7 +1,7 @@
 import React from "react";
 import FormItem from "./FormItem";
-import Modal from "../../shares/Modal";
 import ReceiptAction from "../../../action/settings/receiptTemplate";
+import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormReciptTemplateUpdate extends Modal {
   constructor(props) {

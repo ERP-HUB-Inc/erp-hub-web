@@ -1,5 +1,5 @@
 import React from "react";
-import List from "../../List";
+import List from "../List";
 import FormCreate from "../../../containers/settings/ReceiptTemplate/FormCreate";
 import FormUpdate from "../../../containers/settings/ReceiptTemplate/FormUpdate";
 import Constant from "../../../constants/settings/receiptTemplate";
