@@ -1,5 +1,5 @@
 import React from "react";
-import SearchPo from "./SearchPO";
+import SearchPo from "./SearchPo";
 import Constant from "../../../constants/stock/purchaseOrder";
 import SupplierAction from "../../../actions/stock/supplier";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";

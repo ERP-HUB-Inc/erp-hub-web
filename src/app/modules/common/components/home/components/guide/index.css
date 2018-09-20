@@ -123,4 +123,61 @@
 }
 
 
+/* diagram */
+.main-diagram {
+    position: relative; 
+    width: 100%;
+    overflow-x: hidden;
+    background-color: white;
+    padding: 16px;
+}
+
+.main-doughnut-chart .doughnut-chart {
+    background-color: white;
+    padding: 10px;
+}
+
+.main-doughnut-chart > .row {
+    padding: 14px !important;
+}
+
+.main-doughnut-chart .doughnut-chart-left {
+    border-right: 7px solid #f7f7f7;
+}
+
+.main-doughnut-chart .doughnut-chart-right {
+    border-left: 7px solid #f7f7f7;
+}
+
+
+
+
+@media only screen and (min-width: 1800px) {
+
+    .main-icon-top {
+        margin-left: 0 !important;
+    }
+
+    .main-icon-top,
+    .main-guide-icon
+    {
+        width: auto !important;
+        margin: none !important;
+    }           
+
+}
+
+
+@media only screen and (max-width: 1400px) {
+    .main-guide {
+        zoom: 80%;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    .main-guide {
+        zoom: 50%;
+    }
+}
+
 

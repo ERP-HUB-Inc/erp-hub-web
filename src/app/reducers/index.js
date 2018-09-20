@@ -40,6 +40,11 @@ import returnPurchase from "../modules/inventory/reducers/stock/returnPurchase";
 import receivePurchase from "../modules/inventory/reducers/stock/receivePurchase";
 import reorderPoint from "../modules/inventory/reducers/stock/reorderPoint";
 import purchaseOrderSendEmail from "../modules/inventory/reducers/stock/purchaseOrderSendEmail";
+//report
+import saleReport from "../modules/pos/reducers/report/sale";
+import inventoryReport from "../modules/pos/reducers/report/inventory";
+import purchaseReport from "../modules/pos/reducers/report/purchase";
+import profitAndLostReport from "../modules/pos/reducers/report/profitAndLost";
 
 const reducer = combineReducers({
   client,
@@ -80,7 +85,13 @@ const reducer = combineReducers({
   returnPurchase,
   receivePurchase,
   reorderPoint,
-  purchaseOrderSendEmail
+  purchaseOrderSendEmail,
+  //sale report
+  saleReport,
+  inventoryReport,
+  purchaseReport,
+  profitAndLostReport
+  
 });
 
 export default reducer;

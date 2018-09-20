@@ -24,7 +24,7 @@ class Headers extends Component {
           <span className="icon-logo"></span>
         </div>
         <this.Row className="wrap-header clear-margin">
-          <this.Col md="2" className="header-left">
+          <this.Col xs="2" md="2" className="header-left">
             <div className="store-name">
               <div className="wrap-title">
                 <div className="title-user">
@@ -55,10 +55,10 @@ class Headers extends Component {
               </div>
             </div>
           </this.Col>
-          <this.Col md="3 main-search">
+          <this.Col xs="3" md="3 main-search">
             <SearchForm locale={this.props.locale}/>
           </this.Col>
-          <this.Col md="7" className="header-left">
+          <this.Col xs="7" md="7" className="header-left">
             <DropDown onSwitchLanguage={this.switchLanguage} localization={this.props.locale} currentLanguage={this.getCurrentLanguage(this.props.locale)}/>
           </this.Col>
         </this.Row>

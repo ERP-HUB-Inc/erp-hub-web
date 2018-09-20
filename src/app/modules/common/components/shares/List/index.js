@@ -515,12 +515,28 @@ export default class List extends Component {
    * include from render table to be as the list
    * @param {*} fetchingProps 
    */
-  renderTableList(fetchingProps) {
+  renderPagination(fetchingProps){
     let pagination = {
       total: fetchingProps.pagination.total,
       pageSize: fetchingProps.pagination.limit,
       current: this.state.current
     };
+    return( 
+      pagination.total > 0 ?
+        <div className="float-right">
+          <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
+        </div>
+        :
+        ""
+    );
+  }
+
+  renderTableList(fetchingProps) {
+    // let pagination = {
+    //   total: fetchingProps.pagination.total,
+    //   pageSize: fetchingProps.pagination.limit,
+    //   current: this.state.current
+    // };
 
     return (
       <div className="table-wrapper">
@@ -530,12 +546,13 @@ export default class List extends Component {
         {this.renderActionButton()}
 
         { 
-          pagination.total > 0 ?
-            <div className="float-right">
-              <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
-            </div>
-            :
-            ""
+          // pagination.total > 0 ?
+          // <div className="float-right">
+          //   <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
+          // </div>
+          this.renderPagination(fetchingProps)
+          // :
+          // ""
         }
 
         <this.clearFloating/>        

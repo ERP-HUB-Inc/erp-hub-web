@@ -291,49 +291,57 @@ const dataSource = {
         title: "Sale Report",
         icon: "icon-sale-report",
         route: "/reports/sale",
-        component: SaleReport
+        component: SaleReport,
+        isFashNav: true
       },
       {
         title: "Purchase Report",
         icon: "icon-purchasing",
         route: "/reports/purchase",
-        component: PurchaseReport
+        component: PurchaseReport,
+        isFashNav: true
       },
       {
         title: "Products Report",
         icon: "icon-items",
         route: "/reports/product",
-        component: ProductReport
+        component: ProductReport,
+        isFashNav: false
       },
       {
         title: "Inventory Report",
         icon: "icon-stock",
         route: "/reports/inventory",
-        component: InventoryReport
+        component: InventoryReport,
+        isFashNav: true
       },
       {
         title: "Payment Report",
         icon: "icon-payment-report",
         route: "/reports/payment",
-        component: PaymentReport
+        component: PaymentReport,
+        isFashNav: false
       },
       {
         title: "Profit & Lost Report",
         icon: "icon-sale-return",
         route: "/reports/profit-lost",
-        component: ProfitAndLostReport
+        component: ProfitAndLostReport,
+        isFashNav: true
       },
       {
         title: "Profit & Lost Report",
         icon: "icon-reports",
         route: "/reports/profit-lost",
-        component: ProfitAndLostReport
+        component: ProfitAndLostReport,
+        isFashNav: false
       },
       {
         title: "Tax Report",
         icon: "icon-tax-report",
         route: "/reports/tax",
-        component: TaxReport
+        component: TaxReport,
+        isFashNav: false
       }
     ]
   },
