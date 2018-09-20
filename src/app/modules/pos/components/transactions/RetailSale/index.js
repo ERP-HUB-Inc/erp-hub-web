@@ -1,5 +1,7 @@
 import React from "react";
 import VaraintProduct from "./VaraintProduct";
+import FormCreateCustomer from "../../../../crm/containers/customers/ManageCustomers/FormCreate";
+import CustomerAction from "../../../../crm/actions/customers/customer";
 import CustomerDropDownSearch from "../../../../crm/components/customers/customer/DropDownSearch";
 import ProductDropDownSearch from "../../../../inventory/components/products/Product/DropDownSearch";
 import Component from "../../../../common/components/Component";
@@ -10,6 +12,7 @@ export default class Retail extends Component {
     this.state = {
       showVariantProduct: false,
       variantProductList: [],
+      modalContent: null,
       categoryList: [
         {id: 1, name: "Drinks"},
         {id: 2, name: "Drinks"},
@@ -38,6 +41,7 @@ export default class Retail extends Component {
     this.handleOnSelectCategory = this.handleOnSelectCategory.bind(this);
     this.handleOnSelectProduct = this.handleOnSelectProduct.bind(this);
     this.handleCancelVariant = this.handleCancelVariant.bind(this);
+    this.handleOnAddNewCustomer = this.handleOnAddNewCustomer.bind(this);
   }
 
   handleOnSelectCategory(value) {
@@ -73,6 +77,13 @@ export default class Retail extends Component {
         variantProductList: value.options
       });
     }
+  }
+
+  handleOnAddNewCustomer() {
+    this.props.dispatch(CustomerAction.showForm());
+    this.setState({
+      modalContent: <FormCreateCustomer/>
+    });
   }
   render() {
     return (
@@ -117,12 +128,13 @@ export default class Retail extends Component {
               customers={this.props.customers}
               locale={this.props.locale}
               form={this.props.form}
-              dispatch={this.props.dispatch} />
-            <ProductDropDownSearch
+              dispatch={this.props.dispatch}
+              handleOnAddNewCustomer={this.handleOnAddNewCustomer}/>
+            {/* <ProductDropDownSearch
               productSearch={this.props.productSearch}
               locale={this.props.locale}
               form={this.props.form}
-              dispatch={this.props.dispatch} />
+              dispatch={this.props.dispatch} /> */}
           </this.Row>
         </this.Col>
         {
@@ -133,6 +145,7 @@ export default class Retail extends Component {
             :
             ""
         }
+        {this.state.modalContent}
       </this.Row>
     );
   }

@@ -8,8 +8,7 @@ export default combineReducers({
     const constants = [
       Constant.REQUEST_MANAGEMENT_GROUP_CUSTOMERS_PENDING,
       Constant.REQUEST_MANAGEMENT_GROUP_CUSTOMERS_REJECTED,
-      Constant.REQUEST_MANAGEMENT_GROUP_CUSTOMERS_FULFILLED,
-      Constant.SHOW_MANAGEMENT_GROUP_CUSTOMERS_FORM, 
+      Constant.REQUEST_MANAGEMENT_GROUP_CUSTOMERS_FULFILLED
     ];
     return reducer.request(state, action, constants);
   },

@@ -1,11 +1,11 @@
 import React from "react";
 import FormItem from "./FormItem";
-import Modal from "../../shares/Modal";
 import CustomerAction from "../../../actions/customers/customer";
 import GroupCustomerAction from "../../../actions/customers/group";
 import CreateCustomerGroup from "../../../containers/customers/GroupCustomers/FormCreate";
 import ConstantGroupCustomer from "../../../constants/customers/groupCustomer";
 import Constant from "../../../constants/customers/managementCutomers";
+import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormCreate extends Modal {
   constructor(props) {
@@ -13,7 +13,7 @@ export default class FormCreate extends Modal {
     this.title = <this.Translate id="create_management_customer_title" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.addCustomerGroup = this.addCustomerGroup.bind(this);
+    this.handleAddCustomerGroup = this.handleAddCustomerGroup.bind(this);
   }
 
   handleSubmit (e) {
@@ -71,8 +71,7 @@ export default class FormCreate extends Modal {
   handleCancel() {
     this.dispatch(CustomerAction.reset(Constant.RESET_MANAGEMENT_CUSTOMERS));
   }
-
-  addCustomerGroup(){
+  handleAddCustomerGroup(){
     const {dispatch} = this.props;
     dispatch(GroupCustomerAction.showForm());
     this.modal1 = <CreateCustomerGroup/>;
@@ -81,10 +80,8 @@ export default class FormCreate extends Modal {
   render() {
     const {
       manageCustomersAdd,
-      form,
       groupCustomers,
-      groupCustomersAdd,
-      locale
+      groupCustomersAdd
     } = this.props;
 
     this.submitLoading = manageCustomersAdd.adding;
@@ -98,16 +95,16 @@ export default class FormCreate extends Modal {
     if (manageCustomersAdd.showForm) {
       this.content = (
         <FormItem
-          form={form}
+          form={this.props.form}
+          locale={this.props.locale}
           dispatch={this.props.dispatch}
           groupCustomers={groupCustomers}
-          addCustomerGroup={this.addCustomerGroup}
-          locale={locale}
-        />
+          groupCustomersAdd={groupCustomersAdd}
+          handleAddCustomerGroup={this.handleAddCustomerGroup}/>
       );
       return super.render();
     } else {
-      return (<div></div>);
+      return <div/>;
     }
   }
 }

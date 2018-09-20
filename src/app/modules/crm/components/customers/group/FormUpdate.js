@@ -1,8 +1,8 @@
 import React from "react";
-import Modal from "../../shares/Modal";
 import FormItem from "./FormItem";
 import Constant from "../../../constants/customers/groupCustomer";
 import GroupCustomerAction from "../../../actions/customers/group";
+import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormCreate extends Modal {
   constructor(props) {

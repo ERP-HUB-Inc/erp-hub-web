@@ -134,6 +134,7 @@ export default class Form extends Modal {
           });
         } else {
           productDescriptions.push({
+            id: values["productDescriptionId"],
             languageId: this.getCurrentLanguageCode(),
             name: values["productNameDefault"],
             description: values["productDescriptionDefault"]
@@ -149,6 +150,7 @@ export default class Form extends Modal {
           "productName",
           "language",
           "productDescription",
+          "productDescriptionId",
           "productNameDefault",
           "productDescriptionDefault",
           "productCompositeId",

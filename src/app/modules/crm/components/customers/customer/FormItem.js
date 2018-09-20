@@ -1,8 +1,8 @@
 import React from "react";
-import Modal from "../../shares/Modal";
-import GroupCustomerAction from "../../../actions/customers/group";
-import "./index.css";
 import FormContact from "./FormContact";
+import GroupCustomerAction from "../../../actions/customers/group";
+import Modal from "../../../../common/components/shares/Modal";
+import "./index.css";
 
 export default class FormItem extends Modal {
   constructor(props) {
@@ -18,6 +18,13 @@ export default class FormItem extends Modal {
   componentDidMount(){
     const {dispatch} = this.props;
     dispatch(GroupCustomerAction.fetch());
+  }
+
+  componentDidUpdate() {
+    if (this.props.groupCustomersAdd.added) {
+      this.props.form.setFieldsValue({groupCustomerId: this.props.groupCustomersAdd.response.data.id});
+      this.props.dispatch(GroupCustomerAction.reset());
+    }
   }
 
   add(newContact){
@@ -119,6 +126,7 @@ export default class FormItem extends Modal {
       formData,
       form,
       groupCustomers,
+      groupCustomersAdd,
       locale
     } = this.props;
 
@@ -128,12 +136,9 @@ export default class FormItem extends Modal {
     } = this.props.form;
 
     // APPEND GROUP CUSTOMER TO LIST
-    if (groupCustomers.response != null) {
-      // groupCustomers.list = [groupCustomers.response.data, ...groupCustomers.list];
-      // this.props.dispatch({type: Constant.RESET_MANAGEMENT_GROUP_CUSTOMERS});
+    if (groupCustomersAdd.response != null) {
+      groupCustomers.list = [groupCustomersAdd.response.data, ...groupCustomers.list];
     }
-
-    const customer = this.Util.renameObjectKey({ name: "name", id: "value" }, groupCustomers.list);
 
     getFieldDecorator("keys", {initialValue: formData.contacts});
 
@@ -201,12 +206,14 @@ export default class FormItem extends Modal {
               </this.Col>   */}
 
               <this.Col md="12">
-                <this.Select
+                <this.SelectSearch
                   name="groupCustomerId"
                   label={<this.Translate id="input_management_customer_customer_group" />}
                   placeholder={this.CATranslate("select_customer_place_holder_group", locale)}
                   defaultValue={formData.groupCustomerId}
-                  dataSource={customer}
+                  dataSource={groupCustomers.list}
+                  valueKey="id"
+                  addNew={this.props.handleAddCustomerGroup}
                   form={form}/>
               </this.Col>  
 

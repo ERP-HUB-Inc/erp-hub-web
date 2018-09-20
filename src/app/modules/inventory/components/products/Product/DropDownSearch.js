@@ -125,9 +125,39 @@ export default class DropDownSearch extends Modal {
     const barcode = product.barcode;
     return (
       <this.List.Item.Meta
-        title={productDescriptions.length > 0 ? productDescriptions[0].name : ""}
-        description={<span className="text-uppercase"><this.Translate id="text_product_code"/>: {barcode}</span>}
-      />
+        avatar={<span className="icon-items"></span>}
+        title={
+          <this.Row>
+            <this.Col md="4">
+              {productDescriptions.length > 0 ? productDescriptions[0].name : ""}
+            </this.Col>
+          </this.Row>
+        }
+        description={
+          <this.Row className="wrap-description">
+            <this.Col md="4" className="text-uppercase">
+              <this.Translate id="text_product_code"/>: {barcode}
+            </this.Col>
+            <this.Col md="4">
+              <div className="center-description">
+                <div className="product-stock">Product In Stock</div>
+                <div className="product-stock-status">
+                  <div className="current-stock">
+                    <div className="title">Current</div>
+                    <div className="quantity">{product.quantity}</div>
+                  </div>
+                  <div className="other-stock">
+                    <div className="title">Other</div>
+                    <div className="quantity">20</div>
+                  </div>
+                </div>
+              </div>
+            </this.Col>
+            <this.Col md="4" className="right-description">
+              <div className="price">{this.Util.formatCurrency(product.price)}</div>
+            </this.Col>
+          </this.Row>
+        }/>
     );
   }
 
@@ -156,10 +186,10 @@ export default class DropDownSearch extends Modal {
             data={0}
             form={this.props.form}/>
         </this.Col>
-
-        <div className="wrap-dropdown-search-product">
-          {
-            this.state.visibleDropDown && this.props.productSearch.fetched?
+        {
+          this.state.visibleDropDown && this.props.productSearch.fetched?
+            <div className="wrap-dropdown-search-product">
+          
               <this.List
                 itemLayout="horizontal"
                 locale={{emptyText: <this.Translate id="placeholder_product_list_search" />}}
@@ -168,15 +198,15 @@ export default class DropDownSearch extends Modal {
                 onMouseEnter={this.handleOnMouseHoverOnSearchList}
                 onMouseLeave={this.handleOnMouseLeaveOnSearchList}
                 renderItem={product => (
-                  <this.List.Item onClick={() => this.handleOnSelectList(product)} classID={product.id}>
+                  <this.List.Item onClick={() => this.handleOnSelectList(product)} className="record-item-search" classID={product.id}>
                     {this.renderSearchItem(product)}
                   </this.List.Item>
                 )}
               />
-              :
-              ""
-          }
-        </div>
+            </div>
+            :
+            ""
+        }
       </this.Col>
     );
   }

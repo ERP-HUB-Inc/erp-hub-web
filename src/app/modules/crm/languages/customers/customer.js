@@ -1,12 +1,12 @@
 export default {
   "create_management_customer_title": [
     "Management Customer",
-    "ငွေကြေးစနစ်",
+    "Management Customer",
     "Management Customer"
   ],
   "update_management_customer_title": [
     "Management Customer",
-    "ငွေကြေးစနစ်",
+    "Management Customer",
     "Management Customer"
   ],
   "col_management_customer_name": [
@@ -30,9 +30,9 @@ export default {
     "Description",
   ],
   "col_management_customer_group_address": [
-    "address",
-    "address",
-    "address",
+    "Address",
+    "Address",
+    "Address",
   ],
   "col_management_customer_group_cutomer": [
     "Group Customer",
@@ -41,67 +41,67 @@ export default {
   ],
 
   "input_management_customer_first_name": [
-    "First name",
-    "အမည်",
-    "First name"
+    "First Name",
+    "First Name",
+    "First Name"
   ],
   "input_management_customer_last_name": [
-    "Last name",
-    "အမည်",
-    "Last name"
+    "Last Name",
+    "Last Name",
+    "Last Name"
   ],
   "input_management_customer_phone_number": [
-    "Phone number",
-    "အမည်",
-    "Phone number"
+    "Phone Number",
+    "Phone Number",
+    "Phone Number"
   ],
   "input_management_customer_customer_group": [
     "Group",
-    "အမည်",
+    "Group",
     "Group"
   ],
   "input_management_customer_company": [
     "Company",
-    "အမည်",
+    "Company",
     "Company"
   ],
   "input_management_customer_email": [
     "Email",
-    "အမည်",
+    "Email",
     "Email"
   ],
   "input_management_customer_description": [
     "Description",
-    "အမည်",
+    "Description",
     "Description"
   ],
   "input_management_customer_address": [
     "Address",
-    "အမည်",
+    "Address",
     "Address"
   ],
 
   "input_management_contact_name": [
     "Name",
-    "အမည်",
+    "Name",
     "Name"
   ],
 
   "input_management_contact_number": [
     "Contact",
-    "အမည်",
+    "Contact",
     "Contact"
   ],
 
   "input_management_contact_phone_number": [
     "Phone Number",
-    "အမည်",
+    "Phone Number",
     "Phone Number"
   ],
 
   "input_management_contact_address": [
     "Address",
-    "အမည်",
+    "Address",
     "Address"
   ],
 
@@ -128,5 +128,11 @@ export default {
     "last Name allow only maximum 99999.",
     "last Name allow only maximum 99999."
   ],
+
+  "text_add_new_customer": [
+    "Add new customer",
+    "Add new customer",
+    "Add new customer"
+  ]
 
 };

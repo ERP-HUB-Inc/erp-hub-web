@@ -68,9 +68,9 @@ export default {
   ],
 
   "text_product_code": [
-    "Code",
-    "Code",
-    "Code"
+    "SKU",
+    "SKU",
+    "SKU"
   ],
 
   // TAB

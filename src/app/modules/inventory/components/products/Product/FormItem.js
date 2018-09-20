@@ -22,7 +22,8 @@ export default class FormItem extends Modal {
       productTypeIndex: 0, // for condition thre type starndard, variant, composite
       isAutoGenerateCode: 0,
       isComponentNotYetUpdated: true,
-      isComponentNotYetLoadedWillUpdate: true, 
+      isComponentNotYetLoadedWillUpdate: true,
+      productDescriptionIdDefault: "",
       productNameDefault: "",
       productDescriptionDefault: ""
     };
@@ -115,10 +116,12 @@ export default class FormItem extends Modal {
       let currentLanguageDescription = formData.productDescriptions.find(value => value.languageId === this.getCurrentLanguageCode());
       if (!currentLanguageDescription) {
         currentLanguageDescription = {};
+        currentLanguageDescription["id"] = "";
         currentLanguageDescription["name"] = "";
         currentLanguageDescription["description"] = "";
       }
       this.setState({
+        productDescriptionIdDefault: currentLanguageDescription.id,
         productNameDefault: currentLanguageDescription.name,
         productDescriptionDefault: currentLanguageDescription.description,
         isComponentNotYetLoadedWillUpdate: false
@@ -196,19 +199,20 @@ export default class FormItem extends Modal {
 
   renderDescription(language, languagesIndex) {
     const {locale, form, formData} = this.props;
-    let productId = "",
+    let productDescriptionId = "",
       productName = "",
       productDescription = "";
     
-    formData.productDescriptions.forEach(product => {
-      if (language.code === product.languageId) {
-        productId = product.id;
-        productName = product.name;
-        productDescription = product.description;
+    formData.productDescriptions.forEach(productDescription => {
+      if (language.code === productDescription.languageId) {
+        productDescriptionId = productDescription.id;
+        productName = productDescription.name;
+        productDescription = productDescription.description;
       }
     });
 
     if (languagesIndex === 0) {
+      productDescriptionId = this.state.productDescriptionIdDefault;
       productName = this.state.productNameDefault;
       productDescription = this.state.productDescriptionDefault;
     }
@@ -224,7 +228,7 @@ export default class FormItem extends Modal {
           <this.InputText 
             name={`id[${languagesIndex}]`} 
             className="hidden"
-            data={productId}
+            data={productDescriptionId}
             form={form} />
           <this.Col md="12">
             <this.InputText
@@ -343,6 +347,11 @@ export default class FormItem extends Modal {
                     max={100}
                     min={3}
                     required={true}
+                    form={form}/>
+                  <this.InputText
+                    name="productDescriptionId"
+                    data={this.state.productDescriptionIdDefault}
+                    className="hidden"
                     form={form}/>
                 </this.Col>
 
@@ -568,7 +577,7 @@ export default class FormItem extends Modal {
             <this.Col md="6">
               <this.RadioBox 
                 className="main-radio-acc product-type"
-                name="productTypeBox"
+                name="productOption"
                 type="radio"
                 defaultValue={formData.productOption}
                 disabled={formData.id != null}

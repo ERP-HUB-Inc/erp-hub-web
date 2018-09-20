@@ -18,7 +18,7 @@ import ClientRegisterComplete from "./client/registerComplete";
 export default class App extends React.Component {
   render() {
     return (
-      <BrowserRouter> 
+      <BrowserRouter>
         <Switch>
           <Router history={history}>
             {/* <ErrorHandler> */}
@@ -33,7 +33,7 @@ export default class App extends React.Component {
             {/* </ErrorHandler> */}
           </Router>
         </Switch>
-      </BrowserRouter> 
+      </BrowserRouter>
     );
   }
 }

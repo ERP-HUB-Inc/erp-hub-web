@@ -1,8 +1,8 @@
 import React from "react";
 import $ from "jquery";
-import "./DropDownSearch.css";
 import CustomerAction from "../../../actions/customers/customer";
 import Modal from "../../../../common/components/shares/Modal";
+import "./DropDownSearch.css";
 
 export default class DropDownSearch extends Modal {
   constructor(props) {
@@ -67,7 +67,6 @@ export default class DropDownSearch extends Modal {
   }
 
   handleOnSelectList(value) {
-    this.props.handleOnSelectList(value);
     this.setState({visibleDropDown: false});
   }
 
@@ -97,7 +96,7 @@ export default class DropDownSearch extends Modal {
         currentActive.next().addClass("search-item-hover");
 
         this.scrollTop = this.scrollTop + 60;
-        $("..wrap-dropdown-search-ca .list-search").scrollTop(this.scrollTop);
+        $(".wrap-dropdown-search-ca .list-search").scrollTop(this.scrollTop);
       }
     } else {
 
@@ -121,9 +120,26 @@ export default class DropDownSearch extends Modal {
 
   renderSearchItem(record) {
     return (
-      <this.List.Item.Meta
-        title={`${record.firstName} ${record.lastName}`}
-        description={<span className="text-uppercase">{record.phoneNumber}</span>} />
+      record !== "new" ?
+        <this.List.Item onClick={() => this.handleOnSelectList(record)} className="record-item-search" classID={record.id}>
+          <this.List.Item.Meta
+            avatar={<span className="icon-person"></span>}
+            title={`${record.firstName} ${record.lastName}`}
+            description={
+              <div className="wrap-description">
+                <span className="text-uppercase">{record.phoneNumber}</span>
+                <div className="right-description">
+                  <div className="customer-code">A-0001</div>
+                  <this.Tag color="#FFD627" className="text-uppercase">{record.groupCustomer ? record.groupCustomer.name : "general" }</this.Tag>
+                </div>
+              </div>} />
+        </this.List.Item>
+        :
+        <this.List.Item onClick={this.props.handleOnAddNewCustomer} className="add-customer">
+          <this.List.Item.Meta
+            avatar={<span className="icon-add"></span>}
+            title={<this.Translate id="text_add_new_customer"/>} />
+        </this.List.Item>
     );
   }
 
@@ -131,7 +147,7 @@ export default class DropDownSearch extends Modal {
     return (
       <this.Col md="12" className="search-height" style={{position: "relative"}}>
         <div className="main-searchs">
-          <div className="search-icon icon-customer"></div>
+          <div className="search-icon icon-person"></div>
           <this.InputText
             name="searchRecord"
             placeholder={this.CATranslate("input_search_customer", this.props.locale)}
@@ -141,28 +157,26 @@ export default class DropDownSearch extends Modal {
             handleOnBlur={this.handleOnBlurSearch}
             handleOnFocus={this.handleOnFocusSearch}
             form={this.props.form}/>
-          <div className="remove-search-icon icon-clear" onClick={this.handleRemoveTextSearch}></div>
+          <div className="remove-search-icon icon-delete" onClick={this.handleRemoveTextSearch}></div>
         </div>
-        <div className=".wrap-dropdown-search-ca">
-          {
-            this.state.visibleDropDown && this.props.customers.fetched?
+        {
+          this.state.visibleDropDown && this.props.customers.fetched?
+            <div className="wrap-dropdown-search-ca">
               <this.List
                 itemLayout="horizontal"
                 locale={{emptyText: <this.Translate id="placeholder_product_list_search" />}}
-                dataSource={this.props.customers.list}
+                dataSource={this.props.customers.list.concat(["new"])}
                 className="list-search"
                 onMouseEnter={this.handleOnMouseHoverOnSearchList}
                 onMouseLeave={this.handleOnMouseLeaveOnSearchList}
-                renderItem={recordItem => (
-                  <this.List.Item onClick={() => this.handleOnSelectList(recordItem)} classID={recordItem.id}>
-                    {this.renderSearchItem(recordItem)}
-                  </this.List.Item>
-                )}
+                renderItem={recordItem => this.renderSearchItem(recordItem)}
               />
-              :
-              ""
-          }
-        </div>
+              
+          
+            </div>
+            :
+            ""
+        }
       </this.Col>
     );
   }
