@@ -1,8 +1,8 @@
 import React from "react";
 import Component from "../Component";
-import Diagram from "./Diagram";
-import Guide from "./Guide";
-import Board from "./Board";
+import Diagram from "../home/containers/diagram";
+import Guide from "../home/containers/guide";
+import Board from "../home/containers/Board";
 import "./index.css";
 
 export default class Home extends Component {
@@ -26,7 +26,7 @@ export default class Home extends Component {
     return(
       <div>
         <this.Row>
-          <this.Col md="12">
+          <this.Col xs="12" md="12">
             <div className="dashboard ">
               <ul>
                 <li>

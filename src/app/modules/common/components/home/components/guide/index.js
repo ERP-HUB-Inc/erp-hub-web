@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.css";
-import Component from "../Component";
+import Component from "../../../Component";
 
 export default class Duide extends Component {
   render() {
@@ -150,7 +150,6 @@ export default class Duide extends Component {
               </li>
             </ul>
           </div>
-          
         </this.Row>
       </div>
     );
