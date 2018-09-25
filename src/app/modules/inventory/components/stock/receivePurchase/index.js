@@ -19,6 +19,7 @@ export default class ReceivePurchaseList extends List {
       {label: "Total", key: "requestTotal"},
       {label: "Status", key: "status"}
     ];
+    this.exportCsvFileName = "receive_purchase.csv";  
     this.fetchingProp = "receivePurchase";
     this.addingProp = "receivePurchaseAdd";
     this.updatingProp = "receivePurchaseUpdate";
@@ -49,6 +50,65 @@ export default class ReceivePurchaseList extends List {
     );
   }
 
+  handleSubmitFilter(e){
+    if (this.action != null) {
+      e.preventDefault();
+      this.props.form.validateFieldsAndScroll((err, values) => {
+        if (!err) {
+          const {dispatch} = this.props;
+          let filter = {};
+          let rangFilter = {};
+
+          if (values.step !== -1) {
+            filter["step"] = [Enum.PO_STEP.PROCESS];
+          }
+      
+          if (values.deliveryDueDate) {
+            values.deliveryDueDate = this.Util.formatDate(values.deliveryDueDate, "YYYY-MM-DD");
+            rangFilter = JSON.stringify({column: "deliveryDueDate", value: [values.deliveryDueDate, values.deliveryDueDate]});
+          }
+    
+          filter = JSON.stringify(filter);
+
+          console.log("due date",values.deliveryDueDate);
+
+          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
+          dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
+          this.setState({isClickFilter: true});
+        }
+      
+      }); 
+    } 
+  }
+
+  renderFilterRecord() {
+    const {form, locale } = this.props;
+    const fetchingProps = this.props[this.fetchingProp];
+    return(
+      <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
+        <this.Row className="main-search-layout form-group">
+          <this.Col md="2">
+            <this.InputText
+              name="key"
+              label={<this.Translate id="input_stock_purchase_key" />}
+              placeholder={this.CATranslate("purchase_order_search_key_place_holder", locale)}
+              form={form}
+            />
+          </this.Col>
+          <this.Col md="2">
+            <this.DatePickers
+              name="deliveryDueDate"
+              label={<this.Translate id="datepicker_stock_purchase_due_date" />}
+              form={form}
+            />
+          </this.Col>
+          <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+            <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+          </this.Button>
+        </this.Row>
+      </this.Form>);
+
+  }
 
 }
 
@@ -91,8 +151,7 @@ class Column extends List {
         key: "requestTotal",
         sorter: true, 
         render: (requestTotal) => this.formatCurrency(requestTotal) 
-      },
-      this.columnStatus
+      }
     ];
   }
   

@@ -226,7 +226,7 @@ export default class ReceivedPo extends Modal {
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
           footer={() => <div className={` ${productLists.length > 0 ? "" : "hidden"}`}>
             <div className="total-purchase-right"><this.Translate id="purchase_order_footer" />: </div>
-            <div className="">
+            <div className="receive-purchase-total-amount">
               <this.InputText name="requestTotal" disabled={true} className="grandTotal" form={this.props.form}/>
               <this.InputText name="requestTotalValue" className="hidden" form={this.props.form}/>
             </div>

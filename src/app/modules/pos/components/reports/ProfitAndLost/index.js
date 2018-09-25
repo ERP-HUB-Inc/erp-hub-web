@@ -1,5 +1,6 @@
 import React from "react";
 import List from "../List";
+import {Doughnut} from "react-chartjs-2";
 import Constant from "../../../constants/report/profitAndLost";
 import ProfitAndLostReportAction from "../../../action/report/profitAndLostReport";
 import ProfitAndLostReportService from "../../../services/report/ProfitAndLostService";
@@ -16,12 +17,91 @@ export default class InventoryList extends List {
     this.action = ProfitAndLostReportAction;
     this.RESET_CONSTANT = Constant.RESET_PROFIT_AND_LOST;
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
+
+    this.doughnutData = 
+    {
+      labels: [
+        "Revenuse",
+        "Expense"
+      ],
+      datasets: [
+        {
+          data: [10,20],
+          backgroundColor: [
+            "#57A600",
+            "#B90000  "
+          ]
+        }
+      ],   
+    };
+
+    this.ColunsList = [
+      {
+        totalSale: "Total Sale",
+        OtherRevenuse: "0.00",
+      },
+      {
+        totalSale: "Other Revenuse",
+        OtherRevenuse: "0.00",
+      },
+      {
+        totalSale: "Sale Revenue",
+        OtherRevenuse: "0.00",
+      }
+    ];
+
   }
 
   renderTable(){
     return (  
-      <div>
-       profit-lost
+      <div className="main-profit-and-lost-report">
+        <this.Row>
+          <this.Col md="8">
+            <this.Table 
+              dataSource={this.ColunsList}
+              columns={this.columns}
+              // locale={{emptyText: ""}}
+              onChange={this.handleTableChange}
+              footer={() =>
+                <this.Row>
+                  <this.Col md="6" className="net-income">
+                    NET INCOME
+                  </this.Col>
+                  <this.Col md="6" className="price">
+                      0$.00
+                  </this.Col>
+                </this.Row>
+              }
+            />
+          </this.Col>
+          <this.Col md="4">
+            <div style={{position: "relative"}}>
+              <Doughnut
+                data={this.doughnutData}
+                option={
+                  {
+                    animation: {
+                      duration: 0, 
+                    },
+                    hover: {
+                      animationDuration: 0, 
+                    },
+                    legend: {
+                      position: "right",
+                      labels: {
+                        boxWidth: 10
+                      }
+                    },
+                    responsiveAnimationDuration: 0,
+                    responsive: false
+                  }
+                
+                }
+              
+              />
+            </div>
+          </this.Col>
+        </this.Row>
       </div>
     );
   }
@@ -53,37 +133,45 @@ export default class InventoryList extends List {
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
           <this.Row className="main-search-layout form-group"> 
 
-            <this.Col md="3" className="reorder-point-button-search">
+            <this.Col md="2" className="reorder-point-button-search">
               <this.Select
                 name="status"
                 placeholder={this.CATranslate("place_holder_stock_reorder_point_status", locale)}
                 dataSource={this.statusList}
-                label="Report Type"
+                label={<this.Translate id="input_inventory_report_type" />}
                 defaultValue={this.Enum.ALL_STATE}
                 form={form}
               />
             </this.Col>
-            <this.Col md="3" className="reorder-point-button-search">
+            <this.Col md="2" className="reorder-point-button-search">
               <this.DatePickers
                 name="datepicker"
-                label="Date"
-                form={form}
-              />
-            </this.Col>
-            <this.Col md="3" className="reorder-point-button-search">
-              <this.InputText
-                name="key"
-                label="Search For key"
-                placeholder="Search for brand, code and notation"
+                label={<this.Translate id="input_inventory_report_date" />}
                 form={form}
               />
             </this.Col>
 
-            <this.Col md="2" className="reorder-point-button-search">
+            <this.Col md="3" className="reorder-point-button-search">
+              <this.InputText
+                name="key"
+                placeholder={this.CATranslate("input_inventory_report_key", locale)}
+                label={<this.Translate id="input_inventory_report_label_key" />}
+                form={form}
+              />
+            </this.Col>
+            
+            <this.Col md="2" className="reorder-point-button-search report-button">
               <this.Button htmlType="submit" type="info" >
                 <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
               </this.Button> 
             </this.Col>
+
+            <this.Col md="12" className="reorder-point-button-search report-button">
+              <this.Button htmlType="submit" type="info" >
+                <span className="icon-export icon-padding-right text-uppercase"></span>{<this.Translate id="button_inventory_report_export_to_csv" />}
+              </this.Button> 
+            </this.Col>
+
 
           </this.Row>
         </this.Form>
@@ -100,44 +188,54 @@ class Column extends List {
     super(props);
     return [
       {
-        title: "",
-        dataIndex: "createdAt",
-        key: "createdAt",
-        width: 350,
-        className: "profitAndLost-report",
-        align: "center",
-        render: value => this.formatDate(value)
+        title: "REVENUS",
+        className: "revenuse-report",
+        children:[
+          {
+            dataIndex: "totalSale",
+            className: "profit-and-lost-column",
+            key: "totalSale",
+            render: (text, record, index) => {
+              if(index <=1){
+                return(
+                  <div>{record.totalSale}</div>
+                );
+              }
+            }
+          },
+          {
+            dataIndex: "OtherRevenuse",
+            align: "right",
+            className: "profit-and-lost-price",
+            key: "OtherRevenuse",
+            render: (text, record, index) => {
+              if(index <=1){
+                return(
+                  <div>{record.OtherRevenuse}</div>
+                );
+              }
+            }
+          }
+        ]
       },
       {
-        title: <this.Translate id="col_profitAndLost_report_revenuse" />,
-        dataIndex: "name",
-        align: "center",
-        key: "name"
+        title: "EXPENSE",
+        className: "expense-report",
+        children: [
+          {
+            dataIndex: "totalSale",
+            className: "profit-and-lost-column",
+            key: "totalSale",
+          },
+          {
+            dataIndex: "OtherRevenuse",
+            className: "profit-and-lost-price",
+            align: "right",
+            key: "OtherRevenuse",
+          }
+        ]
       },
-      {
-        title: <this.Translate id="col_profitAndLost_report_cost_of_good" />,
-        dataIndex: "description",
-        align: "center",
-        key: "description"
-      },
-      {
-        title: <this.Translate id="col_profitAndLost_report_gross_profit" />,
-        dataIndex: "stockLocation",
-        align: "center",
-        key: "stockLocation"
-      },
-      {
-        title: <this.Translate id="col_profitAndLost_report_margin" />,
-        dataIndex: "dueDate",
-        align: "center",
-        key: "dueDate"
-      },
-      {
-        title: <this.Translate id="col_profitAndLost_report_tax" />,
-        dataIndex: "shippingFee",
-        align: "center",
-        key: "shippingFee"
-      }
+     
     ];
   }
 }
