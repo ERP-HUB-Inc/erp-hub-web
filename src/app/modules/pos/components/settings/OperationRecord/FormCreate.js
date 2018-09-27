@@ -7,7 +7,7 @@ import "./index.css";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.title = "operation Record";
+    this.title = <this.Translate id="create_operation_record_title"/>;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.operationTypes = [
@@ -45,7 +45,7 @@ export default class Form extends Modal {
       );
       return super.render();
     } else {
-      return (<div></div>);
+      return <div/>;
     }
   }
 }

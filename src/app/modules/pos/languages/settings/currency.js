@@ -6,7 +6,7 @@ export default {
   ],
   "update_currency_title": [
     "Currency",
-    "ငွေကြေး: Update ကို",
+    "ငွေကြေး ကို",
     "រូបិយប័ណ្ណ: ធ្វើបច្ចុប្បន្នភាព"
   ],
   "col_currency_name": [

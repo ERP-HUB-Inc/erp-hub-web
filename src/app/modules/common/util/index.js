@@ -112,14 +112,14 @@ export class Util {
 
   formatCurrency(n, currency = "$", position = 0) {
     // 0: BEFORE, 1: AFTER
-    let result = n.toFixed(2).replace(/./g, function(c, i, a) {
+    let result = parseFloat(n).toFixed(2).replace(/./g, function(c, i, a) {
       return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
     });
 
     if (position === 0) {
-      result = `${currency} ${result}`;
+      result = `${currency}${result}`;
     } else {
-      result = `${result} ${currency}`;
+      result = `${result}${currency}`;
     }
 
     return result;
@@ -164,6 +164,34 @@ export class Util {
 
   chuckCollection(value, numberOfRow) {
     return _.chunk(value, numberOfRow);
+  }
+
+  getImage(image) {
+    return `${process.env.REACT_APP_RESOURCE_HOST}/${image}`;
+  }
+
+  toggleFullScreen(elem) {
+    if ((document.fullScreenElement !== undefined && document.fullScreenElement === null) || (document.msFullscreenElement !== undefined && document.msFullscreenElement === null) || (document.mozFullScreen !== undefined && !document.mozFullScreen) || (document.webkitIsFullScreen !== undefined && !document.webkitIsFullScreen)) {
+      if (elem.requestFullScreen) {
+        elem.requestFullScreen();
+      } else if (elem.mozRequestFullScreen) {
+        elem.mozRequestFullScreen();
+      } else if (elem.webkitRequestFullScreen) {
+        elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      }
+    } else {
+      if (document.cancelFullScreen) {
+        document.cancelFullScreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitCancelFullScreen) {
+        document.webkitCancelFullScreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
   }
 
 }

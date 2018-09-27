@@ -126,7 +126,7 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_management_quantity" />,
+        title: <this.Translate id="text_quantity" />,
         dataIndex: "quantity",
         key: "quantity",
         width: 150,

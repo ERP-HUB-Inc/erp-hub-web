@@ -208,12 +208,6 @@ export default {
     "Stock on Hand",
     "Stock on Hand",
   ],
-
-  "col_stock_purchase_order_qty": [
-    "Quantity",
-    "အမည်",
-    "Quantity",
-  ],
   
   "col_stock_purchase_order_receive_qty": [
     "Receive Quantity",
@@ -225,13 +219,6 @@ export default {
     "Return Quantity",
     "အမည်",
     "Return Quantity",
-  ],
-
-
-  "col_stock_purchase_order_price": [
-    "Price",
-    "အမည်",
-    "Price",
   ],
 
   "purchase_order_footer": [

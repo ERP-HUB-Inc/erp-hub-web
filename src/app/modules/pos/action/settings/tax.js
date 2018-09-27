@@ -11,6 +11,14 @@ export default{
       });
     };
   },
+  detail:(id) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.DETAIL_TAX,
+        payload: TaxService.detail(id)
+      });
+    };
+  },
   archive: (ids) => {
     return dispatch => {
       return dispatch({

@@ -13,7 +13,6 @@ class ReceiptTemplateForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    receiptFormAdd: state.form.formReceiptTemplate,
     receiptAdd: state.reducer.receiptTemplate.add,
     locale: state.locale
   };

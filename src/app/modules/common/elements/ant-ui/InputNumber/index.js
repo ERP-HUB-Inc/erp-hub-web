@@ -34,13 +34,20 @@ export class InputNumber extends Element {
         max={this.props.max}
         isUnsign={this.props.isUnsign}
         data={this.props.data}
+        formatter={this.props.formatter}
         step={this.props.step}
         disabled={this.props.disabled}
         rules={this.rules}
         form={this.props.form}
         onChange={this.props.onChange}
-        className={this.props.className} 
-      />
+        handleKeyDown={this.props.handleKeyDown}
+        handleKeyUp={this.props.handleKeyUp}
+        handlePressEnter={this.props.handlePressEnter}
+        handleOnBlur={this.props.handleOnBlur}
+        handleOnFocus={this.props.handleOnFocus}
+        className={this.props.className}
+        isAutoFocus={this.props.isAutoFocus}
+        isHideTool={this.props.isHideTool}/>
     );
   }   
 }

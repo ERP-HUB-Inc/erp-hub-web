@@ -106,9 +106,9 @@ export default {
   ],
 
   "input_search_customer": [
-    "Search Customer",
-    "Search Customer",
-    "Search Customer"
+    "Search customer",
+    "Search customer",
+    "Search customer"
   ],
 
   "select_customer_place_holder_group": [

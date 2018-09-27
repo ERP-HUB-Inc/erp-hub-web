@@ -33,7 +33,7 @@ class Router extends Component {
       <Layout>
         <Headers />
         <SideBar />
-        <Content className="layoutContent">
+        <Content className="layoutContent" id="center-container">
           <Switch>
             {
               Object.keys(dataSource).map((key) => 

@@ -1,0 +1,103 @@
+.pos-payment .sale-summary,
+.pos-payment .payment-tool {
+    margin-top: 60px
+}
+
+.pos-payment .sale-summary>.title {
+    border-bottom: 2px solid #093163;
+    padding-bottom: 5px;
+    width: 130px
+}
+
+.pos-payment .sale-summary>.title,
+.pos-payment .grand-total .grand-total-title{
+    letter-spacing: 1.5px;
+    color: #093163;
+    font-weight: 700
+}
+
+.pos-payment .sale-summary>.title,
+.pos-payment .grand-total .grand-total-title,
+.pos-payment .grand-total .grand-total-value {
+    font-size: 11.25pt
+}
+
+.pos-payment .sale-summary ul {
+    padding-top: 25px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ECECEC;
+    margin-bottom: 0
+
+}
+
+.pos-payment .sale-summary ul li {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px
+}
+
+.pos-payment .sale-summary ul li .title {
+    flex: 1
+}
+
+.pos-payment .sale-summary ul li .title,
+.pos-payment .sale-summary ul li .quantity,
+.pos-payment .sale-summary ul li .price,
+.pos-payment .sale-summary ul li .sub-total-title,
+.pos-payment .sale-summary ul li .sub-total-value {
+    font-size: 11.25pt;
+    color: #093163;
+    font-weight: 600
+}
+
+.pos-payment .sale-summary ul li .price {
+    padding-left: 15px
+}
+
+.pos-payment .grand-total .grand-total-value {
+    font-size: 13.5pt;
+    color: #093163
+}
+
+.pos-payment .wrap-payment-tool {
+    border-left: 1px solid #ECECEC
+}
+
+.pos-payment .payment-tool .title {
+    font-size: 25pt;
+    color: #093163
+}
+
+.pos-payment .payment-tool .amount-to-pay {
+    display: flex;
+    justify-content: space-between;
+    align-items: center
+}
+
+.pos-payment .payment-tool .amount-to-pay input {
+    text-align: right;
+    font-size: 25pt;
+    font-weight: 600;
+    height: 100%
+}
+
+.pos-payment .payment-tool .amount-to-pay .ant-form-item {
+    margin-bottom: 0 !important;
+    width: 180px
+}
+
+.pos-payment .payment-tool .action-button-to-pay{
+    margin-top: 35px
+}
+
+.pos-payment .payment-tool .action-button-to-pay button {
+    min-width: 30%;
+    font-size: 15pt;
+    height: auto;
+    letter-spacing: 2px;
+    padding-top: 8px;
+    padding-bottom: 8px
+}
+

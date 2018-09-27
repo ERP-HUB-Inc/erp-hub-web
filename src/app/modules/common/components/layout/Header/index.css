@@ -98,7 +98,11 @@
     }
 
     .wrap-header {
-        margin-left: 90px !important
+        margin-left: 90px !important;
+        position: fixed;
+        width: 100%;
+        z-index: 1;
+        background-color: white
     }
 
 

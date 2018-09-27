@@ -48,12 +48,6 @@ export default {
     "Supplier",
   ],
 
-  "col_stock_management_quantity": [
-    "Quantity",
-    "အမည်",
-    "Quantity",
-  ],
-
   "col_stock_management_unit": [
     "Unit",
     "အမည်",

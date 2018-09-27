@@ -1,6 +1,5 @@
 import { createLogger } from "redux-logger";
 import thunk from "redux-thunk";
-import { reducer as form } from "redux-form";
 import promise from "redux-promise-middleware";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { localeReducer as locale, } from "react-localize-redux";
@@ -12,8 +11,8 @@ const registerMiddleWare = [promise(), thunk];
 registerMiddleWare.push(createLogger());
 // }
 
-const middlewar = applyMiddleware(...registerMiddleWare);
+const middleware = applyMiddleware(...registerMiddleWare);
 
-const configureStore = () => createStore(combineReducers({ locale, reducer, form }), middlewar);
+const configureStore = () => createStore(combineReducers({ locale, reducer }), middleware);
 
 export default configureStore;

@@ -140,21 +140,26 @@ export default class DropDownSearch extends Modal {
             </this.Col>
             <this.Col md="4">
               <div className="center-description">
-                <div className="product-stock">Product In Stock</div>
+                <div className="product-stock">{<this.Translate id="text_product_in_stock"/>}</div>
                 <div className="product-stock-status">
                   <div className="current-stock">
-                    <div className="title">Current</div>
+                    <div className="title">{<this.Translate id="text_current"/>}</div>
                     <div className="quantity">{product.quantity}</div>
                   </div>
                   <div className="other-stock">
-                    <div className="title">Other</div>
+                    <div className="title">{<this.Translate id="text_other"/>}</div>
                     <div className="quantity">20</div>
                   </div>
                 </div>
               </div>
             </this.Col>
             <this.Col md="4" className="right-description">
-              <div className="price">{this.Util.formatCurrency(product.price)}</div>
+              {
+                product.productVariantToProduct.length > 0 ?
+                  <div className="variant">{product.productVariantToProduct.length} {<this.Translate id="text_variant"/>}{product.productVariantToProduct.length > 1 ? <this.Translate id="text_plural"/> : ""}</div>
+                  :
+                  <div className="price">{this.Util.formatCurrency(product.price)}</div>
+              }
             </this.Col>
           </this.Row>
         }/>
@@ -163,12 +168,13 @@ export default class DropDownSearch extends Modal {
 
   render() {
     return (
-      <this.Col md="12" className="search-height" style={{position: "relative"}}>
+      <this.Col md="12" className="search-dropdown-product search-height" style={{position: "relative"}}>
         <div className="main-searchs">
           <div className="search-icon icon-add-product"></div>
           <this.InputText
             name="searchProduct"
             placeholder={this.CATranslate("input_product_search_product", this.props.locale)}
+            className={this.props.className}
             validateStatus={this.props.productSearch.fetching ? "validating" : ""}
             handleKeyUp={this.handleKeyDownOnProductSearch}
             handlePressEnter={this.handlePressEnterOnSearch}

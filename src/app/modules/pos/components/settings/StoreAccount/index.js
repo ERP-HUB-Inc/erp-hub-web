@@ -22,6 +22,7 @@ export default class StoreAccountList extends Component {
     this.validateClassStatusCurrentPWD = "";
     this.isResetInputCurrentPWD = false;
     this.exampleDateFormat= "";
+    this.dispatch = this.props.dispatch;
 
     this.successMessage = "Success updated.";
 
@@ -179,7 +180,7 @@ export default class StoreAccountList extends Component {
               <div className="main-layout main-store-account">
             
                 <this.Row>
-                  <this.Col md="4">   
+                  <this.Col lg="4" md="6">   
                     <div className="general">
                       <h6><this.Translate id="store_acc_general" /></h6>
                     </div>
@@ -298,7 +299,7 @@ export default class StoreAccountList extends Component {
 
                   </this.Col>
 
-                  <this.Col md="4">  
+                  <this.Col lg="4" md="6">
                     <div className="general">
                       <h6>{<this.Translate id="store_acc_contact" />}</h6>
                     </div>
@@ -402,7 +403,7 @@ export default class StoreAccountList extends Component {
 
                   </this.Col>
 
-                  <this.Col md="4">  
+                  <this.Col lg="4" md="12">  
                     <div className="general">
                       <h6>{<this.Translate id="store_acc_billing" />}</h6>
                     </div>

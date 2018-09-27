@@ -283,14 +283,14 @@ class Column extends List {
         }
       },
       {
-        title: <this.Translate id="col_products_price" />,
+        title: <this.Translate id="text_price" />,
         key: "price",
         width: 150,
         render: (text, record, index) => this.formatCurrency(record.price),
         sorter: true
       },
       {
-        title: <this.Translate id="col_products_quantity" />,
+        title: <this.Translate id="text_quantity" />,
         dataIndex: "quantity",
         key: "quantity",
         width: 150,

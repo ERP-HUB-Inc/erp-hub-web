@@ -96,12 +96,6 @@ export default {
     "Supplier",
   ],
 
-  "col_stock_reorder_point_quantity": [
-    "Quantity",
-    "အမည်",
-    "Quantity",
-  ],
-
   "col_stock_reorder_point_qty": [
     "Re-order Quantity",
     "အမည်",

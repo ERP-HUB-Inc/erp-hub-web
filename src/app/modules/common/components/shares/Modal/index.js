@@ -22,6 +22,9 @@ export default class Modal extends Component {
     this.submitLoading = false;
     this.submitConfirmActionLoading = false;
     this.submited = false;
+    this.maskClosable = false;
+    this.mask = true;
+    this.style = {};
     this.requiredMessage = "Error: Please make sure all data input correctly.";
     this.actionConfirmResponseMsg = "Not allow delete this record.";
     this.confirmTextAction = "Are you sure delete this record?";
@@ -144,8 +147,12 @@ export default class Modal extends Component {
         {this.modal1}
         
         <this.Modal
+          style={this.style}
+          mask={this.mask}
+          maskClosable={this.maskClosable}
           title={this.title}
           width={this.width}
+          keyboard={true}
           wrapClassName={`vertical-center-modal ${this.wrapClassName}`}
           visible={true}
           onCancel={() => this.handleCancel()}

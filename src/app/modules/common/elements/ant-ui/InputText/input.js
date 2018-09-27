@@ -3,6 +3,11 @@ import React from "react";
 import Element from "../../common/Element";
 
 export default class InputText extends Element {
+  componentDidMount(){
+    if (this.props.isAutoFocus) {
+      this.nameInput.focus();
+    }
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -29,7 +34,8 @@ export default class InputText extends Element {
               validator: this.props.validator
             }
           ],
-          initialValue: this.props.data})(<this.Input type={this.props.type} 
+          initialValue: this.props.data})(<this.Input type={this.props.type}
+            ref={(input) => { this.nameInput = input; }}
             placeholder={this.props.placeholder} 
             disabled={this.props.disabled}
             onChange={this.props.onChange}

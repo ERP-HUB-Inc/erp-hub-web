@@ -21,6 +21,11 @@ export default {
     "Select",
     "Select",
     "Select"
+  ],
+
+  "text_about_discount": [
+    "This discount will be applied to all items",
+    "This discount will be applied to all items",
+    "This discount will be applied to all items"
   ]
-  
 };

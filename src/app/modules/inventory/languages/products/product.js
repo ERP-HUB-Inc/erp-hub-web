@@ -43,18 +43,6 @@ export default {
     "Supplier"
   ],
 
-  "col_products_price": [
-    "Price",
-    "Price",
-    "Price"
-  ],
-
-  "col_products_quantity": [
-    "Quantity",
-    "Quantity",
-    "Quantity"
-  ],
-
   "col_products_unit": [
     "Unit",
     "Unit",
@@ -244,12 +232,6 @@ export default {
     "0.00",
   ],
 
-  "input_product_price": [
-    "Price",
-    "Price",
-    "Price"
-  ],
-
   "input_product_price_placeholder": [
     "0.00",
     "0.00",
@@ -269,9 +251,9 @@ export default {
   ],
 
   "input_product_search_product": [
-    "Search Product",
-    "Search Product",
-    "Search Product"
+    "Search product",
+    "Search product",
+    "Search product"
   ],
 
   "input_product_serial": [
@@ -479,6 +461,30 @@ export default {
     "Action",
     "Action",
     "Action"
+  ],
+
+  "text_variant": [
+    "Variant",
+    "Variant",
+    "Variant"
+  ],
+
+  "text_product_in_stock": [
+    "Product In Stock",
+    "Product In Stock",
+    "Product In Stock"
+  ],
+
+  "text_current": [
+    "Current",
+    "Current",
+    "Current"
+  ],
+
+  "text_other": [
+    "Other",
+    "Other",
+    "Other"
   ],
 
   // ERROR

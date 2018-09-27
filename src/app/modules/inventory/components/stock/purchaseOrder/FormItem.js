@@ -1,5 +1,5 @@
 import React from "react";
-import SearchPo from "./SearchPo";
+import SearchPO from "./SearchPO";
 import Constant from "../../../constants/stock/purchaseOrder";
 import SupplierAction from "../../../actions/stock/supplier";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
@@ -151,7 +151,7 @@ export default class FormItem extends Modal {
         </this.Row>
         <this.Row>
           <this.Col md="12" className="purchase-order-entry">
-            <SearchPo
+            <SearchPO
               dataSource={productSearch}
               purchaseOrderEntries={formData.purchaseOrderEntries}
               locale={locale}

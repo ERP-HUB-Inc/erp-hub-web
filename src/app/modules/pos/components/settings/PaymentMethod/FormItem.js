@@ -12,6 +12,7 @@ export default class FormItem extends Modal {
           label={<this.Translate id="input_payment_method_name" />}
           placeholder={this.CATranslate("input_payment_method_name", locale)}
           required={true}
+          isAutoFocus={true}
           min={3}
           max={100}
           errorLenght={<this.Translate id="error_payment_method_name_length" />}

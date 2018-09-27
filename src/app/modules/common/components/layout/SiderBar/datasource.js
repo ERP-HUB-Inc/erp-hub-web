@@ -2,7 +2,7 @@
 
 // TRANSACTION
 import SaleHistory from "../../../../pos/containers/transactions/SaleHistory";
-import SaleOrder from "../../../../pos/containers/transactions/SaleOrder";
+import SaleOrder from "../../../../pos/containers/transactions/SaleWalkin";
 import ReturnExchange from "../../../../pos/containers/transactions/ReturnExchange";
 
 // PRODUCT
