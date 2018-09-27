@@ -52,7 +52,7 @@ export default class ReceivedPo extends Modal {
           return(
             <div>
               {record.quantity}
-              <this.InputText name={`qty[${index}]`} type="hidden" className="hidden" data={record.quantity} required={true} min={1} max={100} form={ this.form } />
+              <this.InputNumber name={`qty[${index}]`} type="hidden" className="hidden" data={record.quantity} required={true} min={1} max={100} form={ this.form } />
             </div>
           );
         }
@@ -115,6 +115,10 @@ export default class ReceivedPo extends Modal {
   componentDidUpdate(){
     const {receivePurchaseDetail} = this.props;
 
+    if(receivePurchaseDetail == null){
+      return;
+    }
+
     if (receivePurchaseDetail.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
 
       const existingProductList = this.state.productLists;
@@ -125,6 +129,7 @@ export default class ReceivedPo extends Modal {
           if (purchaseOrderEntry.product.productDescriptions.length > 0) {
             productName = purchaseOrderEntry.product.productDescriptions[0].name;
           }
+
         }
 
         existingProductList.push({
@@ -161,9 +166,10 @@ export default class ReceivedPo extends Modal {
 
   handleOnChangeQuantity(e, index) {
     const existingProductList = this.state.productLists;
+    console.log("existingProductList",existingProductList);
     existingProductList.forEach((product, productIndex) => {
       if (productIndex === index) {
-        existingProductList[productIndex]["quantity"] = e.target.value;
+        existingProductList[productIndex]["receiveQuantity"] = e.target.value;
       }
     });
     this.props.form.setFieldsValue({[`totalPrice[${index}]`]: this.formatCurrency(this.calculateTotalAmountEachRow(e, index))});
@@ -177,7 +183,7 @@ export default class ReceivedPo extends Modal {
     let grandTotal = 0;
     productList.forEach((product, index) => {
       if (product.status === this.Enum.ACTIVE) {
-        grandTotal += (product.quantity * product.price);
+        grandTotal += (product.receiveQuantity * product.price);
       }
     });
 

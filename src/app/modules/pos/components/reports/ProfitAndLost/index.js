@@ -86,18 +86,18 @@ export default class InventoryList extends List {
                     hover: {
                       animationDuration: 0, 
                     },
-                    legend: {
-                      position: "right",
-                      labels: {
-                        boxWidth: 10
-                      }
-                    },
                     responsiveAnimationDuration: 0,
                     responsive: false
                   }
                 
                 }
-              
+
+                legend= {
+                  {
+                    position: "bottom"
+                  }  
+                }
+
               />
             </div>
           </this.Col>

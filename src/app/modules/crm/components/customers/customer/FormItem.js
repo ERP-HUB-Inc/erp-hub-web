@@ -29,6 +29,7 @@ export default class FormItem extends Modal {
 
   add(newContact){
     const {form, formData} = this.props;
+    console.log("add new",newContact);
     const contactKeys = formData.contacts.concat([newContact]);
     form.setFieldsValue({
       keys: contactKeys

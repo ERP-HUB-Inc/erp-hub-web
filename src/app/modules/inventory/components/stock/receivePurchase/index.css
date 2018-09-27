@@ -1,3 +1,7 @@
 .receive-purchase-total-amount .ant-form-item-children {
     float: right;
 }
+
+.receive-purchase-form .main-dropdown-search {
+    border-top: none !important;
+}

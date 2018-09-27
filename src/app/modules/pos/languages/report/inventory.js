@@ -35,6 +35,12 @@ export default {
     "Brand"
   ],
 
+  "col_inventory_total_outlet": [
+    "TOTALS BY PRODUCT, OUTLET",
+    "TOTALS BY PRODUCT, OUTLET",
+    "TOTALS BY PRODUCT, OUTLET"
+  ],
+
   "col_inventory_report_supplier": [
     "Supplier",
     "Supplier",

@@ -16,7 +16,7 @@ export default class FormItem extends Modal {
   render() {
     const { form,locale,formData,storeLocation,supplier} = this.props;
     return (
-      <div id="purchase-order-form">
+      <div id="purchase-order-form" className="receive-purchase-form">
         <this.Row>
           <this.Col md="2">
             <label><this.Translate id="input_stock_purchase_order_name" /></label><br/>

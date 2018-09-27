@@ -262,7 +262,7 @@ class Column extends List {
        
       },
       {
-        title: "TOTALS BY PRODUCT, OUTLET",
+        title: <this.Translate id="col_inventory_total_outlet" />,
         className: "col-inventory-right",
         dataIndex: "shippingFee",
         children: [
