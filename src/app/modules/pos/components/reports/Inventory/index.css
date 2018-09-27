@@ -1,0 +1,21 @@
+.main-inventory-report .ant-table-footer .totals {
+    float: none !important;
+    margin-left: 46px;
+}
+
+.main-inventory-report .col-inventory-left {
+    background-color: #EBEBEB;
+}
+
+.main-inventory-report .col-inventory-right {
+    background-color: #D9D9D9;
+}
+
+.main-inventory-report .totals {
+    text-align: left;
+}
+
+
+.report-button button {
+    margin-right: 39px;
+}

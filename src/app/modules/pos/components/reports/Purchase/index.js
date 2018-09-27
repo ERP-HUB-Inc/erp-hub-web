@@ -16,6 +16,7 @@ export default class InventoryList extends List {
     this.action = PurchaseReportAction;
     this.RESET_CONSTANT = Constant.RESET_PURCHASE_REPORT;
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
+    this.supplierList = [{name: <this.Translate id="select_stock_purchase_order_supplier"/>, id: 0}];
   }
 
   renderTable(){
@@ -63,6 +64,18 @@ export default class InventoryList extends List {
                 form={form}
               />
             </this.Col>
+
+            {/* <this.Col md="2">
+              <this.Select
+                name="supplierId"
+                label={<this.Translate id="select_stock_purchase_order_from_supplier" /> }
+                placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
+                dataSource={this.supplierList.concat(supplier.list)}
+                defaultValue={this.supplierList[0].id}
+                valueKey="id"
+                form={form}/>
+            </this.Col> */}
+
             <this.Col md="3" className="reorder-point-button-search">
               <this.DatePickers
                 name="datepicker"
@@ -70,6 +83,7 @@ export default class InventoryList extends List {
                 form={form}
               />
             </this.Col>
+
             <this.Col md="3" className="reorder-point-button-search">
               <this.InputText
                 name="key"

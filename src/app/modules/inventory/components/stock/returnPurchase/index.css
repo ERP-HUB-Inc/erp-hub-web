@@ -1,5 +1,9 @@
 .total-purchase-right {
+    /* float: right;
+    position: relative;
+    left: -135px; */
     float: right;
     position: relative;
-    left: -135px;
+    left: -308px;
+    text-transform: uppercase!important;
 }

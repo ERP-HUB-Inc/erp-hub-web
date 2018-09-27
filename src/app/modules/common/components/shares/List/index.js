@@ -27,6 +27,8 @@ export default class List extends Component {
 
     this.ExportheadersCsv = [];
 
+    this.exportCsvFileName = "filename.csv";
+
     this.columns = [];
     this.filter = [];
     this.module = ""; // This compare to parent key in datasource in sidebar when render breadcrump
@@ -364,6 +366,7 @@ export default class List extends Component {
   renderButtonExportCSV() {
     return (
       <this.CSVLink
+        filename={this.exportCsvFileName}
         data={this.exportCsv()}
         headers={this.ExportheadersCsv !=="" ? this.columns : this.ExportheadersCsv}
       >

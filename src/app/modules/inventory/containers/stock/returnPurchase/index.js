@@ -16,7 +16,8 @@ function mapStateToProps(state) {
     returnPurchase: state.reducer.returnPurchase.request,
     returnPurchaseAdd: state.reducer.returnPurchase.add,
     returnPurchaseArchive: state.reducer.returnPurchase.archive,
-    returnPurchaseUpdate: state.reducer.returnPurchase.update
+    returnPurchaseUpdate: state.reducer.returnPurchase.update,
+    locale: state.locale
   };
 }
 

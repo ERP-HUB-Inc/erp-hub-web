@@ -38,6 +38,7 @@ import receivePurchase from "../../inventory/languages/stock/receivePurchase";
 import reorderPoint from "../../inventory/languages/stock/reorderPoint";
 //report 
 import saleReport from "../../pos/languages/report/sale";
+import inventoryReport from "../../pos/languages/report/inventory";
 
 export function initLanguage() {
   return initialize([
@@ -82,6 +83,7 @@ export function setTranslation() {
     ...returnPurchase,
     ...receivePurchase,
     ...reorderPoint,
-    ...saleReport
+    ...saleReport,
+    ...inventoryReport
   });
 }

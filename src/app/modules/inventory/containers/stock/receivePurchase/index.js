@@ -16,7 +16,9 @@ function mapStateToProps(state) {
     receivePurchase: state.reducer.receivePurchase.request,
     receivePurchaseAdd: state.reducer.receivePurchase.add,
     receivePurchaseArchive: state.reducer.receivePurchase.archive,
-    receivePurchaseUpdate: state.reducer.receivePurchase.update
+    receivePurchaseUpdate: state.reducer.receivePurchase.update,
+    supplier: state.reducer.supplier.request,
+    locale: state.locale
   };
 }
 
