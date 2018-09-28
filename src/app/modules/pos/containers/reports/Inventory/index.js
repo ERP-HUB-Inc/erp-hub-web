@@ -26,6 +26,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const storeAccount =  Form.create(mapPropsToFields)(Inventory);
+const inventoryReport =  Form.create(mapPropsToFields)(Inventory);
 
-export default connect(mapStateToProps)(storeAccount);
+export default connect(mapStateToProps)(inventoryReport);

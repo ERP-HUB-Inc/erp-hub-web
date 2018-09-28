@@ -146,7 +146,13 @@ export default {
     "Place Select Status",
     "အမည်",
     "Place Select Status"
-  ]
+  ],
+
+  "stock_receive_purchase_search_key_place_holder": [
+    "Search for receive purchase",
+    "Search for receive purchase",
+    "Search for receive purchase",
+  ],
 
 
 

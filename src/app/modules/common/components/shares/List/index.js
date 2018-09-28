@@ -368,9 +368,9 @@ export default class List extends Component {
       <this.CSVLink
         filename={this.exportCsvFileName}
         data={this.exportCsv()}
-        headers={this.ExportheadersCsv !=="" ? this.columns : this.ExportheadersCsv}
+        headers={this.ExportheadersCsv !==null ? this.ExportheadersCsv : this.columns }
       >
-        <this.Button type="info">
+        <this.Button type="info" disabled={this.exportCsv().length > 0 ? false : true }>
           <span className="icon-export icon-padding-right"></span>{<this.Translate id="button_search_stock_transfer_export_csv" />}
         </this.Button>
       </this.CSVLink>

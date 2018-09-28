@@ -16,8 +16,7 @@ export default class ReceivePurchaseList extends List {
       {label: "Invoice No", key: "invoiceNo"},
       {label: "Due Date", key: "deliveryDueDate"},
       {label: "Shipping", key: "shippingFee"},
-      {label: "Total", key: "requestTotal"},
-      {label: "Status", key: "status"}
+      {label: "Total", key: "receiveTotal"}
     ];
     this.exportCsvFileName = "receive_purchase.csv";  
     this.fetchingProp = "receivePurchase";
@@ -91,7 +90,7 @@ export default class ReceivePurchaseList extends List {
             <this.InputText
               name="key"
               label={<this.Translate id="input_stock_purchase_key" />}
-              placeholder={this.CATranslate("purchase_order_search_key_place_holder", locale)}
+              placeholder={this.CATranslate("stock_receive_purchase_search_key_place_holder", locale)}
               form={form}
             />
           </this.Col>
@@ -136,7 +135,10 @@ class Column extends List {
         dataIndex: "deliveryDueDate",
         key: "deliveryDueDate",
         width: 305,
-        sorter: true
+        sorter: true,
+        render: (text, record, index) => {
+          return(this.formatDate(record.deliveryDueDate));
+        }
       },
       {
         title: <this.Translate id="col_stock_receive_purchase_shipping_fee" />,
@@ -147,10 +149,10 @@ class Column extends List {
       },
       {
         title: <this.Translate id="col_stock_receive_purchase_total" />,
-        dataIndex: "requestTotal",
-        key: "requestTotal",
+        dataIndex: "receiveTotal",
+        key: "receiveTotal",
         sorter: true, 
-        render: (requestTotal) => this.formatCurrency(requestTotal) 
+        render: (receiveTotal) => this.formatCurrency(receiveTotal) 
       }
     ];
   }
