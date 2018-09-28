@@ -260,7 +260,7 @@ export default class FormVariant extends Modal {
                           <this.Col md="2">
                             <this.InputNumber
                               name={`variantProductPrice[${variantAttributeKey}][${variantKey}]`}
-                              label={<span><this.Translate id="input_product_price" /><span> ({currentUser.setting.currency})</span></span>}
+                              label={<span><this.Translate id="text_price" /><span> ({currentUser.setting.currency})</span></span>}
                               placeholder={this.CATranslate("input_product_price_placeholder",  this.props.locale)}
                               required={true}
                               data={variant.price}

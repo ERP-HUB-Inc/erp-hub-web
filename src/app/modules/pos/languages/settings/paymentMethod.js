@@ -20,9 +20,9 @@ export default {
     "Payment Method"
   ],
   "update_payment_method_title": [
-    "Payment Method: Update",
-    "Payment Method: Update",
-    "Payment Method: Update",
+    "Payment Method",
+    "Payment Method",
+    "Payment Method",
   ],
   "input_payment_method_name": [
     "Name",

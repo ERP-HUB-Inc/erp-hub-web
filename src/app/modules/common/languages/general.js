@@ -85,7 +85,7 @@ export default {
 
   "select_text_deactive": [
     "Deactive",
-    "ဖေါ်ပြချက်",
+    "Deactive",
     "Deactive"
   ],
 
@@ -109,13 +109,19 @@ export default {
 
   "button_text_save": [
     "Save",
-    "ကယ်ဆယ်",
+    "Save",
     "Save"
+  ],
+
+  "button_text_tender": [
+    "Tender",
+    "Tender",
+    "Tender"
   ],
   
   "button_text_cancel": [
     "Cancel",
-    "ပြန်",
+    "Cancel",
     "Cancel"
   ],
 
@@ -127,8 +133,79 @@ export default {
 
   "table_empty_data": [
     "No record found",
-    "စံချိန်များမတွေ့ပါ",
-    "គ្មានទិន្នន័យ"
-  ]
+    "No record found",
+    "No record found"
+  ],
 
+  "text_plural": [
+    "s",
+    "s",
+    "s"
+  ],
+
+  "text_cash": [
+    "Cash",
+    "Cash",
+    "Cash"
+  ],
+
+  "text_credit_card": [
+    "Credit Card",
+    "Credit Card",
+    "Credit Card"
+  ],
+
+  "text_all_category": [
+    "All Categories",
+    "All Categories",
+    "All Categories"
+  ],
+
+  "text_price": [
+    "Price",
+    "Price",
+    "Price"
+  ],
+
+  "text_quantity": [
+    "Quantity",
+    "Quantity",
+    "Quantity"
+  ],
+
+  "text_discount": [
+    "Discount",
+    "Discount",
+    "Discount"
+  ],
+
+  "text_sub_total": [
+    "Sub Total",
+    "Sub Total",
+    "Sub Total"
+  ],
+
+  "text_notation": [
+    "Notation",
+    "Notation",
+    "Notation"
+  ],
+
+  "text_tax": [
+    "Tax",
+    "Tax",
+    "Tax"
+  ],
+
+  "text_total": [
+    "Total",
+    "Total",
+    "Total"
+  ],
+
+  "text_add_notation": [
+    "Add product notation",
+    "Add product notation",
+    "Add product notation"
+  ]
 };

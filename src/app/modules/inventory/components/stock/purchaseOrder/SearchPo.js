@@ -66,7 +66,7 @@ export default class SearchPo extends Modal {
         }
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_price" />,  
+        title: <this.Translate id="text_price" />,  
         dataIndex: "price",
         width: 150,
         key: "price",

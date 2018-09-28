@@ -344,6 +344,7 @@ export default class FormItem extends Modal {
                     data={this.state.productNameDefault}
                     placeholder={this.CATranslate("input_product_name", locale)}
                     onChange={this.onChangeProductName}
+                    isAutoFocus={true}
                     max={100}
                     min={3}
                     required={true}
@@ -557,7 +558,7 @@ export default class FormItem extends Modal {
                 <this.Col md="4">
                   <this.InputNumber
                     name="price"
-                    label={<span><this.Translate id="input_product_price" /><span> ({currentUser.setting.currency})</span></span>}
+                    label={<span><this.Translate id="text_price" /><span> ({currentUser.setting.currency})</span></span>}
                     data={formData.price}
                     placeholder={this.CATranslate("input_product_price_placeholder", locale)}
                     max={99999999}

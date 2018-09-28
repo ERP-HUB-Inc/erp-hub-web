@@ -12,6 +12,13 @@ export default class InputNumber extends Element {
     this.handleNumberChange = this.handleNumberChange.bind(this);
     this.errorMessage="";
   }
+
+  componentDidMount(){
+    if (this.props.isAutoFocus) {
+      this.nameInput.focus();
+    }
+  }
+
   handleNumberChange (value) {
     this.validatePrimeNumber(value);
     if (this.props.onChange != null) {
@@ -33,6 +40,12 @@ export default class InputNumber extends Element {
     }
   }
 
+  parserValue(value) {
+    value = value.replace(/\$\s?|(,*)/g, "");
+    value = value.replace("%", "");
+    return value;
+  }
+
   render() {
     const {getFieldDecorator} = this.props.form;
     return (
@@ -44,12 +57,19 @@ export default class InputNumber extends Element {
         {
           getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.data})(
             <this.InputNumber
-              formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              ref={(input) => { this.nameInput = input; }}
+              formatter={value => `${value}`.replace(this.props.formatter, ",")}
+              parser={value => this.parserValue(value)}
               placeholder={this.props.placeholder}
               disabled={this.props.disabled}
               step={this.props.step}
               onChange={this.handleNumberChange}
-              className={this.props.className}
+              onKeyDown={this.props.handleKeyDown}
+              onKeyUp={this.props.handleKeyUp}
+              onBlur={this.props.handleOnBlur}
+              onFocus={this.props.handleOnFocus}
+              onPressEnter={this.props.handlePressEnter}
+              className={`${this.props.isHideTool ? "hide-input-number-tool" : "" } ${this.props.className}`}
               help={this.errorMessage}
             />
           )
@@ -61,6 +81,8 @@ export default class InputNumber extends Element {
 
 InputNumber.defaultProps = {
   data: 0.00,
-  isUnsign: false
+  formatter: /\B(?=(\d{3})+(?!\d))/g,
+  isUnsign: false,
+  isHideTool: false
 };
 

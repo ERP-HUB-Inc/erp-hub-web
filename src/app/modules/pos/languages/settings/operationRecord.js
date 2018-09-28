@@ -1,4 +1,10 @@
 export default {
+  "create_operation_record_title": [
+    "Operation Record",
+    "Operation Record",
+    "Operation Record"
+  ],
+
   "col_operation_record_name":[
     "Name",
     "အမည်",
@@ -7,19 +13,19 @@ export default {
 
   "col_operation_record_recordfor":[
     "Record For",
-    "သည်စံချိန်တင်",
+    "Record For",
     "កត់ត្រាសម្រាប់"
   ],
 
   "col_operation_record_type":[
     "Type",
-    "ပုံစံ",
+    "Type",
     "ប្រភេទ"
   ],
 
   "col_operation_record_amount":[
     "Amount",
-    "ငွေပမာဏ",
+    "Amount",
     "ចំនួន"
   ],
 

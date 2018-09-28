@@ -1,6 +1,7 @@
 .main-layout {
-    background-color: white;
-    padding: 10px;
+    background-color: #FFFFFF;
+    padding: 15px;
+    border-radius: 3px
 }
 
 .main-layout .general {

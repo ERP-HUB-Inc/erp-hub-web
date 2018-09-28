@@ -5,7 +5,9 @@
 
 /* @media (min-width: 1280px) { */
 @media (min-width: 1371px) {
-    
+  .pos-payment .ant-modal {
+    width: 54% !important
+  }
 }
   
 /* 
@@ -15,7 +17,7 @@
   
 /* @media (min-width: 1025px) and (max-width: 1280px) { */
 @media (min-width: 1025px) and (max-width: 1370px) {
-  .ant-table-body table tr th,
+  /* .ant-table-body table tr th,
   .ant-table-header table tr th {
     font-size: 8pt
   }
@@ -31,7 +33,7 @@
   .ant-list-item-meta-title,
   .ant-list-item-meta-description {
     font-size: 8pt
-  }
+  } */
 }
   
 /* 
@@ -40,7 +42,10 @@
 */
 
 @media (min-width: 768px) and (max-width: 1024px) {
-
+  .main-radio-acc .ant-radio-button-wrapper {
+    /* width: 100% !important;
+    margin-bottom: 15px !important */
+  }
 }
   
 /* 

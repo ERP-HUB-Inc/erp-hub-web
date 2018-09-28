@@ -150,6 +150,8 @@ export default class DropDownSearch extends Modal {
           <div className="search-icon icon-person"></div>
           <this.InputText
             name="searchRecord"
+            isAutoFocus={true}
+            className="ca-input-v1-icon-left ca-input-v1"
             placeholder={this.CATranslate("input_search_customer", this.props.locale)}
             validateStatus={this.props.customers.fetching ? "validating" : ""}
             handleKeyUp={this.handleKeyDownOnSearch}

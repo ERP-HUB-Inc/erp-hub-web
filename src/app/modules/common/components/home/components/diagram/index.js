@@ -77,7 +77,7 @@ export default class Diagram extends Component {
 
           
         </div>
-        <div class="main-doughnut-chart">
+        <div className="main-doughnut-chart">
           <this.Row>
             <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-left">
               <this.Row>

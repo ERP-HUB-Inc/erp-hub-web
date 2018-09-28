@@ -39,6 +39,14 @@ export default combineReducers ({
       Constant.RESET_TAX
     ];
     return reducer.update(state, action, constants);
+  },
+  detail: (state = InitialState.detail(), action) => {
+    const constants = [
+      Constant.DETAIL_TAX_PENDING,
+      Constant.DETAIL_TAX_REJECTED,
+      Constant.DETAIL_TAX_FULFILLED
+    ];
+    return reducer.detail(state, action, constants);
   }
 });
   
