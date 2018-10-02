@@ -24,7 +24,7 @@ export default class InventoryList extends List {
     this.fetchingProp = "profitAndLostReport";
     this.addingProp = "profitAndLostReportAdd";
     this.updatingProp = "profitAndLostReportUpdate";
-    this.columnFilterWithKey = ["type"];
+    this.columnFilterWithKey = ["createdAt"];
     this.reportType = [
       {name: <this.Translate id="select_profit_and_lost_operation_report_type" />, value: this.Enum.OPERATION_TYPE.INCOME},
       {name: <this.Translate id="select_profit_and_lost_sale_report_type" />, value: this.Enum.OPERATION_TYPE.EXPENSE}
@@ -44,10 +44,10 @@ export default class InventoryList extends List {
       ],
       datasets: [
         {
-          data: [10,20],
+          data: [3000,1000],
           backgroundColor: [
             "#57A600",
-            "#B90000  "
+            "#B90000"
           ]
         }
       ],   
@@ -61,41 +61,58 @@ export default class InventoryList extends List {
     const income = [];
     const expense = [];
     let netincome= [];
-    let total = 0;
+    let totalNetIncome= [];
+    let incomeType= 0;
+    let expenseType = 0;  
 
     if (Array.isArray(this.props.profitAndLostReport.list)) {
   
       this.props.profitAndLostReport.list.forEach(incomeExpense => {
-        total += incomeExpense.amount * incomeExpense.amount;
+  
         if (incomeExpense.type === this.Enum.OPERATION_TYPE.INCOME) {
           income.push(incomeExpense);
+          incomeType += incomeExpense.amount;
         } else if (incomeExpense.type === this.Enum.OPERATION_TYPE.EXPENSE) {
           expense.push(incomeExpense);
+          expenseType += incomeExpense.amount;
         }
 
       });
-      netincome = this.formatCurrency(total);
+
+      totalNetIncome = expenseType - incomeType;
+      netincome.push(this.formatCurrency(totalNetIncome));
+
     }
+
     return {
       income,
       expense,
-      netincome
+      netincome,
+      incomeType,
+      expenseType
     };
 
   }
 
   doughuntChat(){
-    const data = [];
-    if (Array.isArray(this.props.profitAndLostReport.list)) {
-      this.props.profitAndLostReport.list.forEach(doughuntdata => {
-        data.push({
-          data: [10,20]
-        });
-      });
-    }
-
-    console.log("data",data);
-    // return{data};
+    const incomeExpense = this.groupIncomeExpenseByType();
+    return(
+      {
+        labels: [
+          "Revenuse",
+          "Expense"
+        ],
+        datasets: [
+          {
+            data: [incomeExpense.incomeType,incomeExpense.expenseType],
+            backgroundColor: [
+              "#57A600",
+              "#B90000"
+            ]
+          }
+        ],   
+      }
+    );
 
   }
 
@@ -109,20 +126,36 @@ export default class InventoryList extends List {
             const {dispatch} = this.props;
             let filter = {};
             let rangFilter = {};
-  
-            if (values.deliveryDueDate) {
-              values.deliveryDueDate = this.Util.formatDate(values.deliveryDueDate, "YYYY-MM-DD");
-              rangFilter = JSON.stringify({column: "createdAt", value: [values.deliveryDueDate, values.deliveryDueDate]});
+          
+            if (values.createdAt) {
+              values.createdAt = this.Util.formatDate(values.createdAt, "YYYY-MM-DD");
+              rangFilter = JSON.stringify({column: "createdAt", value: [values.createdAt]});
             }
 
-            filter["status"] = [1,0]; 
+            
+            filter["type"] = [values.type]; 
+
+            if(values.type === ""){
+              filter["type"] = [1,0];
+            }
+
+           
 
             filter = JSON.stringify(filter);
 
-  
-            const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.type });
-            dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter,searchKey, rangFilter));
+            console.log("filter",filter);
+           
+
+            const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.createdAt });
+
+            console.log("search key",searchKey);
+
+            dispatch(this.action.fetch(filter,searchKey));
+
+            // dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter,searchKey, rangFilter));
+
             this.setState({isClickFilter: true});
+            
           }
         
         }); 
@@ -135,7 +168,7 @@ export default class InventoryList extends List {
 
   renderTable(){
     const incomeExpense = this.groupIncomeExpenseByType();
-    console.log("doughuntChat",this.doughuntChat());
+    console.log("expenseType",this.groupIncomeExpenseByType().expenseType);
     return (  
       <div className="main-profit-and-lost-report">
         <this.Row>
@@ -161,7 +194,7 @@ export default class InventoryList extends List {
           <this.Col md="4">
             <div style={{position: "relative"}}>
               <Doughnut
-                data={this.doughnutData}
+                data={this.doughuntChat()}
                 option={
                   {
                     animation: {
@@ -178,11 +211,16 @@ export default class InventoryList extends List {
 
                 legend= {
                   {
-                    position: "bottom"
+                    position: "none"
                   }  
                 }
 
               />
+              <div className="type">
+                <div>REVENUE&nbsp;<span className="type-value">{incomeExpense.incomeType}</span></div>
+                <div>EXPENSE&nbsp;&nbsp;<span className="type-value">{incomeExpense.expenseType}</span></div>
+              </div>
+
             </div>
           </this.Col>
         </this.Row>
@@ -208,7 +246,7 @@ export default class InventoryList extends List {
     return(
       <div>
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout form-group"> 
+          <this.Row className="main-search-layout profit-and-lose form-group"> 
 
             <this.Col md="2" className="reorder-point-button-search">
               <this.Select
@@ -216,13 +254,13 @@ export default class InventoryList extends List {
                 placeholder={this.CATranslate("place_holder_profit_and_lost_report_type", locale)}
                 dataSource={this.reportType}
                 label={<this.Translate id="input_inventory_report_type" />}
-                // defaultValue={-1}
+                defaultValue={[]}
                 form={form}
               />
             </this.Col>
             <this.Col md="2" className="reorder-point-button-search">
               <this.DatePickers
-                name="deliveryDueDate"
+                name="createdAt"
                 label={<this.Translate id="input_inventory_report_date" />}
                 form={form}
               />

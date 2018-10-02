@@ -3,11 +3,11 @@ import Constant from "../../constants/report/profitAndLost";
 import ProfitAndLostService from "../../services/report/ProfitAndLostService";
 
 export default{
-  fetch:(limit, offset, sortField, sortOrder, filter, searchKey) => {
+  fetch:(filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PROFIT_AND_LOST_REPORT,
-        payload: ProfitAndLostService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
+        payload: ProfitAndLostService.listsSearch(filter, searchKey)
       });
     };
   },
