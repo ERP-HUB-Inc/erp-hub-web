@@ -3,18 +3,18 @@ import Constant from "../../constants/report/profitAndLost";
 import ProfitAndLostService from "../../services/report/ProfitAndLostService";
 
 export default{
-  fetch:(limit, offset, sortField, sortOrder, filter, searchKey) => {
+  fetch:(filter, searchKey) => {
     return dispatch => {
       return dispatch({
-        type: Constant.REQUEST_PROFIT_AND_LOST,
-        payload: ProfitAndLostService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
+        type: Constant.REQUEST_PROFIT_AND_LOST_REPORT,
+        payload: ProfitAndLostService.listsSearch(filter, searchKey)
       });
     };
   },
   archive: (ids) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ARCHIVE_PROFIT_AND_LOST,
+        type: Constant.ARCHIVE_PROFIT_AND_LOST_REPORT,
         payload: ProfitAndLostService.archive(ids)
       });
     };
@@ -22,7 +22,7 @@ export default{
   add: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ADD_PROFIT_AND_LOST,
+        type: Constant.ADD_PROFIT_AND_LOST_REPORT,
         payload: ProfitAndLostService.add(data)
       });
     };
@@ -30,7 +30,7 @@ export default{
   update: (data, id) => {
     return dispatch => {
       return dispatch({
-        type: Constant.UPDATE_PROFIT_AND_LOST,
+        type: Constant.UPDATE_PROFIT_AND_LOST_REPORT,
         payload: ProfitAndLostService.update(data, id)
       });
     };
@@ -38,7 +38,7 @@ export default{
   reset: () => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET_PROFIT_AND_LOST,
+        type: Constant.RESET_PROFIT_AND_LOST_REPORT,
         payload: null
       });
     };
@@ -46,7 +46,7 @@ export default{
   showForm: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.SHOW_PROFIT_AND_LOST_FORM,
+        type: Constant.SHOW_PROFIT_AND_LOST_REPORT_FORM,
         payload: data
       });
     };

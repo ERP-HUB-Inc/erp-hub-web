@@ -60,8 +60,9 @@
 }
 
 #purchase-order-form .ant-table-footer .grandTotal input {
-    text-align: right;
-    padding-right: 0
+    text-align: left;
+    padding-right: 0;
+    margin-right: -42px;
 }
 
 .po-step-tag {

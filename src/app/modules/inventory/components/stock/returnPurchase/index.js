@@ -11,6 +11,14 @@ export default class SupplierList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
+    this.ExportheadersCsv = [{label: "Date", key: "createdAt"},
+      {label: "Name", key: "name"},
+      {label: "Invoice No", key: "invoiceNo"},
+      {label: "Due Date", key: "deliveryDueDate"},
+      {label: "Shipping", key: "shippingFee"},
+      {label: "Total", key: "returnTotal"}
+    ];
+    this.exportCsvFileName = "stock_return.csv"; 
     this.fetchingProp = "returnPurchase";
     this.addingProp = "returnPurchaseAdd";
     this.updatingProp = "returnPurchaseUpdate";
@@ -38,7 +46,7 @@ export default class SupplierList extends List {
 
   renderActionButton(){
     return(
-      <div></div>
+      this.renderButtonExportCSV()    
     );
   }
 
@@ -83,7 +91,7 @@ export default class SupplierList extends List {
             <this.InputText
               name="key"
               label={<this.Translate id="input_stock_purchase_key" />}
-              placeholder={this.CATranslate("purchase_order_search_key_place_holder", locale)}
+              placeholder={this.CATranslate("stock_purchase_search_key_place_holder", locale)}
               form={form}
             />
           </this.Col>
@@ -128,7 +136,10 @@ class Column extends List {
         dataIndex: "deliveryDueDate",
         key: "deliveryDueDate",
         width: 308,
-        sorter: true
+        sorter: true,
+        render: (text, record, index) => {
+          return(this.formatDate(record.deliveryDueDate));
+        }
       },
       {
         title: <this.Translate id="col_stock_return_shipping_fee" />,
@@ -143,8 +154,7 @@ class Column extends List {
         key: "returnTotal",
         sorter: true,
         render: (returnTotal) => this.formatCurrency(returnTotal) 
-      },
-      this.columnStatus
+      }
     ];
   }
 

@@ -7,12 +7,6 @@
     background-color: #FAFAFA;
 }
 
-.main-profit-and-lost-report .net-income, 
-.main-profit-and-lost-report .price 
-{
-    text-align: center;
-    font-size: 9pt;
-}
 
 .main-profit-and-lost-report .ant-table-footer {
     background-color: #EAEAEA;
@@ -40,8 +34,54 @@
     font-size: 10pt;
 }
 
-.main-profit-and-lost-report  tr td.profit-and-lost-price,
-.main-profit-and-lost-report  tr th {
-    border-right: 1px solid #EAEAEA !important;
+.main-search-layout.profit-and-lose button {
+    top: 37px !important;
 }
 
+
+.main-profit-and-lost-report .devide-main-profit-layout {
+    display: grid;
+    grid-template-columns: auto auto;
+    margin-bottom: 112px;
+}
+
+.main-profit-and-lost-report .net-income {
+    background-color: #EAEAEA;
+    height: 37px;
+    padding: 7px;
+    text-align: center;
+    font-size: 10pt;
+    color: #9A9A9A;
+}
+
+.main-profit-and-lost-report .ant-table-content {
+    margin-top: 0px;
+}
+
+
+.main-profit-and-lost-report .ant-table-wrapper {
+    border: 1px solid #EAEAEA !important;
+}
+
+.main-profit-and-lost-report .ant-table-thead > tr:not(:last-child) > th[colspan] {
+    border-bottom: 0;
+    border-radius: 0px;
+}
+
+.main-profit-and-lost-report .revenuse-report {
+    background-color: #FAFAFA !important;
+}
+
+.main-profit-and-lost-report .ant-table-body tr th {
+    background-color: #EAEAEA;
+}
+
+.main-profit-and-lost-report .type {
+    text-align: center;
+    color: #9A9A9A;
+    font-size: 10pt;
+}
+
+.main-profit-and-lost-report .type span.type-value {
+    margin-left: 47px;
+}

@@ -1,6 +1,7 @@
 .main-inventory-report .ant-table-footer .totals {
     float: none !important;
-    margin-left: 46px;
+    margin-left: 61px;
+    font-size: 9pt;
 }
 
 .main-inventory-report .col-inventory-left {

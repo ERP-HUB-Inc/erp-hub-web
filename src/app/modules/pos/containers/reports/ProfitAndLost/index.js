@@ -29,3 +29,4 @@ function mapPropsToFields(props) {
 const profitAndLost =  Form.create(mapPropsToFields)(ProfitAndLost);
 
 export default connect(mapStateToProps)(profitAndLost);
+

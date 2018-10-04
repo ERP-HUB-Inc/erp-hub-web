@@ -69,7 +69,6 @@ export default class Form extends Modal {
       "totalPrice",
       "totalAmount",
       "totalPriceValue",
-      "requestTotalValue",
       "searchProduct",
       "isFocusOnSearchCompositeProduct"
     ]);
@@ -82,6 +81,7 @@ export default class Form extends Modal {
     values["status"] = this.props.purchaseOrderDetail.data.status;
 
     values["POEntries"] = purchaseEntries;
+    console.log("values push to supplier",values);
     return values;
   }
 
@@ -101,6 +101,11 @@ export default class Form extends Modal {
   }
 
   renderOtherAction(){
+    
+    if(this.props.purchaseOrderDetail.data == null) {
+      return;
+    }
+
     return (
       this.props.purchaseOrderDetail.data.step === Enum.PO_STEP.DRAFT ?
         <this.Button onClick={this.handlePushToSupplier} className="info btn-push-to-supplier">

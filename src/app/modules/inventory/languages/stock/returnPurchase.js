@@ -41,5 +41,10 @@ export default {
     "Total",
   ],
 
+  "stock_purchase_search_key_place_holder": [
+    "Search for stock return",
+    "Search for stock return",
+    "Search for stock return",
+  ],
   
 };

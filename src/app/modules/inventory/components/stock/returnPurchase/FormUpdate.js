@@ -67,10 +67,10 @@ export default class Form extends Modal {
 
         console.log("Update Values:", values);
 
-        this.dispatch(ReturnPurchaseAction.update(values));
+        // this.dispatch(ReturnPurchaseAction.update(values));
 
-        const filter = JSON.stringify({step: [Enum.PO_STEP.RECEIVED]});
-        this.dispatch(ReturnPurchaseAction.fetch(this.pageSize, 0, "", "", filter));
+        // const filter = JSON.stringify({step: [Enum.PO_STEP.RECEIVED]});
+        // this.dispatch(ReturnPurchaseAction.fetch(this.pageSize, 0, "", "", filter));
 
       }
      
@@ -117,6 +117,8 @@ export default class Form extends Modal {
     } = this.props;
 
     this.submitLoading = returnPurchaseUpdate.updating;
+
+    console.log("returnPurchaseDetail.data",returnPurchaseDetail.data);
 
     if (returnPurchaseDetail.showForm) {
       this.content = (
