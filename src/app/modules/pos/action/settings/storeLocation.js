@@ -11,6 +11,14 @@ export default{
       });
     };
   },
+  fetchAllByStoreName:(storeName) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_STORE_LOCATION,
+        payload: LoctionService.findLocationByStoreName(storeName)
+      });
+    };
+  },
   archive: (ids) => {
     return dispatch => {
       return dispatch({

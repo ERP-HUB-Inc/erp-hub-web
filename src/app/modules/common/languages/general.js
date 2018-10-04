@@ -207,5 +207,71 @@ export default {
     "Add product notation",
     "Add product notation",
     "Add product notation"
+  ],
+
+  "text_no_tax": [
+    "No Tax",
+    "No Tax",
+    "No Tax"
+  ],
+
+  "text_item": [
+    "Item",
+    "Item",
+    "Item"
+  ],
+
+  "text_balance": [
+    "Balance",
+    "Balance",
+    "Balance"
+  ],
+
+  "text_pay": [
+    "Pay",
+    "Pay",
+    "Pay"
+  ],
+
+  "text_sale_summary": [
+    "Sale Summary",
+    "Sale Summary",
+    "Sale Summary"
+  ],
+
+  "text_change": [
+    "Change",
+    "Change",
+    "Change"
+  ],
+
+  "text_payment": [
+    "Payment",
+    "Payment",
+    "Payment"
+  ],
+
+  "text_received": [
+    "Received",
+    "Received",
+    "Received"
+  ],
+
+  "text_done": [
+    "Done",
+    "Done",
+    "Done"
+  ],
+
+  "text_give": [
+    "Give",
+    "Give",
+    "Give"
+  ],
+
+  "text_receipt": [
+    "Receipt",
+    "Receipt",
+    "Receipt"
   ]
 };

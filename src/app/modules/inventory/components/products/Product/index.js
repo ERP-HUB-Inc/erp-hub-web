@@ -259,10 +259,10 @@ class Column extends List {
           return <div>
             <div>{productName}</div>
             <div className="barcode-number text-uppercase"><this.Translate id="text_product_code"/>: {record.barcode}</div>
-            {
+            {/* {
               "brand" in record && record["brand"] !== null ? 
                 <div><span className="text-uppercase"><this.Translate id="col_products_brand"/></span>: {record.brand.name}</div> : ""
-            }
+            } */}
           </div>;
         }
       },
@@ -285,8 +285,9 @@ class Column extends List {
       {
         title: <this.Translate id="text_price" />,
         key: "price",
+        dataIndex: "price",
         width: 150,
-        render: (text, record, index) => this.formatCurrency(record.price),
+        render: price => this.formatCurrency(price),
         sorter: true
       },
       {

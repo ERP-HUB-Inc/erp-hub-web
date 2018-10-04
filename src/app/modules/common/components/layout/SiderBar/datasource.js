@@ -12,18 +12,18 @@ import ProductType from "../../../../inventory/containers/products/ProductsType"
 import ProductTag from "../../../../inventory/containers/products/productsTag";
 import PrintPriceTag from "../../../../inventory/containers/products/PrintPriceTag";
 import ProductUnit from "../../../../inventory/containers/products/ProductsUnit";
-import PriceBook from "../../../../pos/containers/products/PriceBook";
-import Promotion from "../../../../pos/containers/products/Promotion";
+// import PriceBook from "../../../../pos/containers/products/PriceBook";
+// import Promotion from "../../../../pos/containers/products/Promotion";
 
 // STOCK CONTROL
 import Stock from "../../../../inventory/containers/stock/stockManagement";
-import StockControl from "../../../../pos/containers/stock/StockControl";
-import ReOrderPoint from "../../../../inventory/containers/stock/reorderPoint";
+// import StockControl from "../../../../pos/containers/stock/StockControl";
+// import ReOrderPoint from "../../../../inventory/containers/stock/reorderPoint";
 import PurchaseOrder from "../../../../inventory/containers/stock/purchaseOrder";
 import ReceiveOrder from "../../../../inventory/containers/stock/receivePurchase";
 import StockReturn from "../../../../inventory/containers/stock/returnPurchase";
 import StockTransfer from "../../../../inventory/containers/stock/stockTransfer";
-import StockAudit from "../../../../pos/containers/stock/StockAudit";
+// import StockAudit from "../../../../pos/containers/stock/StockAudit";
 import Supplier from "../../../../inventory/containers/stock/supplier";
 
 // REPORT
@@ -147,20 +147,20 @@ const dataSource = {
         component: ProductUnit,
         isFashNav: true
       },
-      {
-        title: "Price Books",
-        icon: "icon-price-book",
-        route: "/products/price-books",
-        component: PriceBook,
-        isFashNav: true
-      },
-      {
-        title: "Promotions",
-        icon: "icon-promotion",
-        route: "/products/promotion",
-        component: Promotion,
-        isFashNav: true
-      }
+      // {
+      //   title: "Price Books",
+      //   icon: "icon-price-book",
+      //   route: "/products/price-books",
+      //   component: PriceBook,
+      //   isFashNav: true
+      // },
+      // {
+      //   title: "Promotions",
+      //   icon: "icon-promotion",
+      //   route: "/products/promotion",
+      //   component: Promotion,
+      //   isFashNav: true
+      // }
     ]
   },
   stocks: {
@@ -184,17 +184,17 @@ const dataSource = {
       {
         title: "Receive Orders",
         icon: "icon-purchasing",
-        route: "/stock/purchase-receive",
+        route: "/stock/purchase/receive",
         component: ReceiveOrder,
         isFashNav: true
       },
-      {
-        title: "Re-Order Point",
-        icon: "icon-undo",
-        route: "/stock/re-order-point",
-        component: ReOrderPoint,
-        isFashNav: false
-      },
+      // {
+      //   title: "Re-Order Point",
+      //   icon: "icon-undo",
+      //   route: "/stock/re-order-point",
+      //   component: ReOrderPoint,
+      //   isFashNav: false
+      // },
       {
         title: "Stock Transfer",
         icon: "icon-stock-transfer",
@@ -216,20 +216,20 @@ const dataSource = {
         component: Stock,
         isFashNav: false
       },
-      {
-        title: "Stock Control",
-        icon: "icon-barcode",
-        route: "/stock/control",
-        component: StockControl,
-        isFashNav: false
-      },
-      {
-        title: "Stock Audit",
-        icon: "icon-stock-audit",
-        route: "/stock/return",
-        component: StockAudit,
-        isFashNav: false
-      }
+      // {
+      //   title: "Stock Control",
+      //   icon: "icon-barcode",
+      //   route: "/stock/control",
+      //   component: StockControl,
+      //   isFashNav: false
+      // },
+      // {
+      //   title: "Stock Audit",
+      //   icon: "icon-stock-audit",
+      //   route: "/stock/return",
+      //   component: StockAudit,
+      //   isFashNav: false
+      // }
     ]
   },
   customers: {

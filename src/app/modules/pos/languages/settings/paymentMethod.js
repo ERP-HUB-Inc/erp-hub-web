@@ -51,6 +51,12 @@ export default {
     "Description"
   ],
 
+  "text_enable_on_pos": [
+    "Enable on POS",
+    "Enable on POS",
+    "Enable on POS"
+  ],
+
   "error_require_input_name": [
     "Please input your name",
     "သင်၏နာမကို input ကိုနှစ်သက်သော",

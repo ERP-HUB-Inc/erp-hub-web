@@ -4,5 +4,13 @@ export default {
     AMOUNT: 1,
     EACH_ITEM: 2
   },
-  PARK_RECEIPT: "PARK_RECEIPT"
+  PARK_RECEIPT: "PARK_RECEIPT",
+  TRANSACTION_TYPE: {
+    PRE_ORDER: 0,
+    INVOICE: 1,
+    RECEIPT: 2,
+    CREDIT_NOTE: 3,
+    RETURN: 4
+  },
+  PAYMENT_METHOD_AVIALE_ON_POS: 1
 };

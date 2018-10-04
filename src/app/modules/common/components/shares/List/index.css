@@ -90,7 +90,7 @@
 }
 
 .main-search-layout .ant-btn.info{
-    top: 25px
+    top: 38px
 }
 
 .ant-form-inline .ant-form-item {
@@ -101,8 +101,8 @@
     display: inline !important
 }
 
-.content-list {
+/* .content-list {
     height: 100%;
     display: flex;
     flex-direction: column
-}
+} */

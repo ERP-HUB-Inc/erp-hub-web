@@ -77,14 +77,15 @@ export default class PicturesUpload extends Element {
 
     const {cardImgList, cardPreviewVisible, cardPreviewImage} = this.state;
     const { getFieldDecorator } = this.props.form;
-
+    console.log("cardImgList:", cardImgList.length);
+    
     return (
       <div className="clearfix main-upload">
         <this.FormItem label={this.props.label} className="wrap-upload">
           {
             getFieldDecorator(this.props.name, { rules: this.props.rules } )(
               <Upload {...cardImgProps}>
-                {cardImgList.length >= this.props.length ? null : uploadButton}
+                {cardImgList.length > 1 ? null : uploadButton}
               </Upload>
             )
           }

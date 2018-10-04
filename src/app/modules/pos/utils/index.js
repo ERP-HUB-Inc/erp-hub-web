@@ -2,6 +2,7 @@ class Util {
   getSummaryTotalInOrder(orderList) {
     let summaryTotal = {
       subTotal: 0,
+      totalQuantity: 0,
       subTotalAfterDiscount: 0,
       discount: 0,
       tax: 0
@@ -12,6 +13,7 @@ class Util {
 
     orderList.forEach(value => {
       const totalAmount = this.getTotalAmount(value.quantity, value.price);
+      summaryTotal.totalQuantity += value.quantity;
       summaryTotal.subTotal += totalAmount;
       summaryTotal.subTotalAfterDiscount += this.getTotalAmountAfterDiscount(value.quantity, value.price, value.discount);
       summaryTotal.discount += this.getDiscountByRate(totalAmount, value.discount);

@@ -35,7 +35,6 @@ export default class BaseService extends Service {
     });
   }
 
-
   archive(ids) {
     return this.DELETE({ 
       url: `${this.baseUrl}/archive/${ids}`,
@@ -45,6 +44,8 @@ export default class BaseService extends Service {
   }
 
   add(data) {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    
     return this.POST({
       url: `${this.baseUrl}/create`,
       data: {

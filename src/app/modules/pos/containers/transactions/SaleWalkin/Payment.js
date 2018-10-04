@@ -12,7 +12,8 @@ class PaymentForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    locale: state.locale
+    locale: state.locale,
+    transaction: state.reducer.transaction.posPay
   };
 }
   

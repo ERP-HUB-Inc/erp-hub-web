@@ -97,6 +97,10 @@ html,
     border-radius: 3px
 }
 
+.ca-input-v1 {
+    border: none !important
+}
+
 .ca-input-v1 .ant-input, 
 .ca-input-v1 .ant-input-number-input {
     border: 1.5px solid #ECECEC;
@@ -113,11 +117,42 @@ html,
 .ca-input-v1 .ant-input-number-input:focus {
     border-color: #40a9ff;
     outline: 0;
-    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2) !important
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2) !important;
+    border-right-width: 1.5px !important
+}
+
+.has-error .ca-input-v1 .ant-input-number-input {
+    border: 1.5px solid #f5222d
+}
+
+.has-error .ca-input-v1 .ant-input-number-input:focus {
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2) !important;
+}
+
+.has-error .ant-form-explain {
+    margin-top: 5px
 }
 
 .ca-input-v1-icon-left .ant-input{
     padding-left: 45px !important
+}
+
+/* ==============LABEL=========== */
+.ant-form-item-label label {
+    margin-bottom: 0
+}
+
+/* ================CA PANEL============ */
+.ca-penel-v1 {
+    background-color: #FAFAFA;
+    box-shadow: 0 0 4px 0 rgba(0,0,0,0.3);
+    line-height: 26px
+}
+
+/* ============CA BUTTON =========== */
+.ca-button-v1 {
+    height: 43px;
+    font-size: 11.25pt !important
 }
 
 .notation-textfield {
@@ -142,8 +177,13 @@ color: #4D4F5C;
     background:#F7F7F7;
     margin-left: 90px;
     z-index: 0;
-    min-height: 280px;
-    height: 100%
+    margin-top: 70px;
+    height: 100%;
+    display: flex
+}
+
+.content-list {
+    width: 100%
 }
 
 .ant-layout {

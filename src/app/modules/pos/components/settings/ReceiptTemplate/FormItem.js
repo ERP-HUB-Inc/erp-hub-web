@@ -28,22 +28,19 @@ export default class FormItem extends Modal {
           name="isShowStoreName"
           label={<this.Translate id="input_receipt_template_is_store_name" />}
           checked={formData.isShowStoreName}
-          form={form}
-        />
+          form={form}/>
 
         <this.Switchs
           name="isShowCustomerInfo"
           label={<this.Translate id="input_receipt_template_is_customer_info" />}
           checked={formData.isShowCustomerInfo}
-          form={form}
-        />
+          form={form}/>
 
         <this.Switchs
           name="isShowDevelopBy"
           label={<this.Translate id="input_receipt_template_is_develop_by" />}
           checked={formData.isShowDevelopBy}
-          form={form}
-        />
+          form={form}/>
 
         <this.Select
           name="status"

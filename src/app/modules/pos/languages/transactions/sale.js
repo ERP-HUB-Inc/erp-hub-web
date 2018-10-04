@@ -27,5 +27,21 @@ export default {
     "This discount will be applied to all items",
     "This discount will be applied to all items",
     "This discount will be applied to all items"
+  ],
+
+  "input_search_product_placeholder": [
+    " or scanning barcode",
+    " or scanning barcode",
+    " or scanning barcode"
+  ],
+
+  "text_invalide_cash": [
+    "Cash not enought for your payment"
+  ],
+
+  "text_email_receipt": [
+    "Email Receipt",
+    "Email Receipt",
+    "Email Receipt"
   ]
 };
