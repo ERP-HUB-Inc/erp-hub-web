@@ -144,6 +144,7 @@ export default class Diagram extends Component {
           </this.Row>
           
         </div>
+        
       </div>
     );
   }
