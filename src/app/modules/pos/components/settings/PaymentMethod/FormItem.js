@@ -24,6 +24,11 @@ export default class FormItem extends Modal {
           placeholder={this.CATranslate("input_placeholder_description", locale)}
           max={255}
           form={form}/>
+        <this.Switchs
+          name="isEnableOnPOS"
+          label={<this.Translate id="text_enable_on_pos" />}
+          checked={formData.isEnableOnPOS}
+          form={form}/>
         <this.Select
           name="status"
           label={<this.Translate id="text_status" />}
@@ -39,6 +44,7 @@ FormItem.defaultProps = {
   formData: {
     name: "",
     description: "",
+    isEnableOnPOS: 0,
     status: 1
   }
 };

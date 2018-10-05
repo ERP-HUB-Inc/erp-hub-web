@@ -58,7 +58,10 @@ export default class DiscountSetup extends Modal {
   }
 
   handleOnSelectDiscount(value) {
-    this.setState({selectedDiscountType: value});
+    this.setState({
+      selectedDiscountType: value
+    });
+
     if (this.props.handleOnSelectDiscount) {
       this.props.handleOnSelectDiscount(value);
     }
@@ -101,7 +104,9 @@ export default class DiscountSetup extends Modal {
             }
             <this.InputNumber
               isAutoFocus={true}
+              isAutoSelect={true}
               isHideTool={true}
+              precision={0}
               name="discountValue"
               data={this.props.discountValue}
               className={`ca-input-v1 ${isPercentageDiscount ? "percentage-value-type" : "amount-value-type"}`}

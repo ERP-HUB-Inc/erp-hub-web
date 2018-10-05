@@ -8,9 +8,10 @@ export default class InputNumber extends Element {
       validateStatus: "success",
       errorMsg: null
     };
+    this.errorMessage="";
     this.validatePrimeNumber = this.validatePrimeNumber.bind(this);
     this.handleNumberChange = this.handleNumberChange.bind(this);
-    this.errorMessage="";
+    this.handleOnFocus = this.handleOnFocus.bind(this);
   }
 
   componentDidMount(){
@@ -40,6 +41,12 @@ export default class InputNumber extends Element {
     }
   }
 
+  handleOnFocus(event) {
+    if (this.props.isAutoSelect) {
+      event.target.select();
+    }
+  }
+
   parserValue(value) {
     value = value.replace(/\$\s?|(,*)/g, "");
     value = value.replace("%", "");
@@ -51,8 +58,8 @@ export default class InputNumber extends Element {
     return (
       <this.FormItem
         label={this.props.label}
-        validateStatus={this.state.validateStatus}
-        help={this.state.errorMsg}
+        validateStatus={this.props.validateStatus}
+        help={this.props.errorMsg}
       >
         {
           getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.data})(
@@ -63,11 +70,12 @@ export default class InputNumber extends Element {
               placeholder={this.props.placeholder}
               disabled={this.props.disabled}
               step={this.props.step}
+              precision={this.props.precision}
               onChange={this.handleNumberChange}
               onKeyDown={this.props.handleKeyDown}
               onKeyUp={this.props.handleKeyUp}
               onBlur={this.props.handleOnBlur}
-              onFocus={this.props.handleOnFocus}
+              onFocus={this.handleOnFocus}
               onPressEnter={this.props.handlePressEnter}
               className={`${this.props.isHideTool ? "hide-input-number-tool" : "" } ${this.props.className}`}
               help={this.errorMessage}

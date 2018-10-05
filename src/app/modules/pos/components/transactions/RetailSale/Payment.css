@@ -1,6 +1,11 @@
-.pos-payment .sale-summary,
-.pos-payment .payment-tool {
-    margin-top: 60px
+.pos-payment .sale-summary {
+    display: flex;
+    flex-direction: column
+}
+
+.pos-payment .sale-summary {
+    margin-top: 30px;
+    margin-bottom: 20px
 }
 
 .pos-payment .sale-summary>.title {
@@ -22,19 +27,51 @@
     font-size: 11.25pt
 }
 
+.pos-payment .sale-summary .list-order-summary {
+    display: flex;
+    flex-direction: column;
+    height: 100%
+}
+
+.pos-payment .sale-summary .list-order-summary ul {
+    height: 100%;
+    overflow: auto;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ECECEC;
+    border-radius: 3px
+}
+
+.pos-payment .sale-summary .list-order-summary li {
+    padding: 10px 0
+}
+
+.pos-payment .sale-summary .total-order-summary {
+    margin-bottom: 15px
+}
+
+.pos-payment .sale-summary .total-order-summary li,
+.pos-payment .sale-summary .grand-total li {
+    border-bottom: 1px solid #ECECEC
+}
+
+.pos-payment .sale-summary .total-order-summary li:last-child,
+.pos-payment .sale-summary .grand-total li:last-child {
+    border: none
+}
+
 .pos-payment .sale-summary ul {
-    padding-top: 25px;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-bottom: 15px;
+    padding: 5px 15px;
     border-bottom: 1px solid #ECECEC;
     margin-bottom: 0
-
 }
 
 .pos-payment .sale-summary ul li {
     display: flex;
     justify-content: space-between;
+    padding-top: 10px;
     padding-bottom: 10px
 }
 
@@ -49,7 +86,7 @@
 .pos-payment .sale-summary ul li .sub-total-value {
     font-size: 11.25pt;
     color: #093163;
-    font-weight: 600
+    font-weight: 400
 }
 
 .pos-payment .sale-summary ul li .price {
@@ -61,12 +98,27 @@
     color: #093163
 }
 
+.pos-payment .grand-total .wrap-grand-total-title {
+    display: flex
+}
+
+.pos-payment .grand-total .total-quantity {
+    margin-left: 10px;
+    font-size: 9pt;
+    color: #093163
+}
+
 .pos-payment .wrap-payment-tool {
     border-left: 1px solid #ECECEC
 }
 
 .pos-payment .payment-tool .title {
-    font-size: 25pt;
+    padding-right: 30px
+}
+
+.pos-payment .payment-tool .title,
+.pos-payment .confirm-payment .title {
+    font-size: 30pt;
     color: #093163
 }
 
@@ -85,19 +137,81 @@
 
 .pos-payment .payment-tool .amount-to-pay .ant-form-item {
     margin-bottom: 0 !important;
-    width: 180px
+    width: 250px
 }
 
-.pos-payment .payment-tool .action-button-to-pay{
-    margin-top: 35px
+.pos-payment .payment-tool .amount-to-pay .ant-form-explain {
+    position: absolute;
+    top: 100%;
+    margin-top: 5px
+}
+
+.pos-payment .payment-tool .action-button-to-pay {
+    margin-top: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: end
+}
+
+.pos-payment-paid .ant-modal-close-x {
+    display: none
 }
 
 .pos-payment .payment-tool .action-button-to-pay button {
     min-width: 30%;
-    font-size: 15pt;
+    font-size: 11.25pt;
     height: auto;
     letter-spacing: 2px;
     padding-top: 8px;
     padding-bottom: 8px
 }
 
+.pos-payment .wrap-payment-tool {
+    min-height: 700px;
+    padding-top: 60px
+}
+
+.pos-payment .ant-modal {
+    height: 700px
+}
+
+.pos-payment .ant-modal-body {
+    padding: 0 15px !important
+}
+
+.pos-payment .ant-modal-content,
+.pos-payment .ant-modal-body,
+.pos-payment .ant-form,
+.pos-payment .ant-form .row {
+    height: 100%
+}
+
+.pos-payment .confirm-payment {
+    max-width: 400px;
+    margin: 0 auto
+}
+
+.pos-payment .confirm-payment .title {
+    font-weight: 700;
+    margin-bottom: 50px
+}
+
+.pos-payment .confirm-payment .wrap-email-receipt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px
+}
+
+.pos-payment .confirm-payment .wrap-email-receipt .ant-form-item {
+    margin-bottom: 0 !important;
+    width: 100%
+}
+
+.pos-payment .confirm-payment .complete-action {
+    padding-top: 20px
+}
+
+.pos-payment .confirm-payment .complete-action button{
+    width: 100%
+}

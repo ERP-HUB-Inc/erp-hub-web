@@ -1,5 +1,6 @@
 #retail-sale {
     height: 100%;
+    width: 100%;
     overflow: hidden;
     margin-left: 0;
     margin-right: 0;
@@ -151,7 +152,7 @@
 }
 
 #retail-sale .product-order-list .product-order-item {
-    padding: 10px 15px;
+    padding: 0px 15px;
     cursor: pointer;
     border-bottom: 1px solid #ECECEC;
 }
@@ -161,7 +162,8 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    color: #093163
+    color: #093163;
+    padding: 10px 0
 }
 
 #retail-sale .product-order-list .product-order-item .description {
@@ -201,9 +203,10 @@
     margin-left: 25px
 }
 
-#retail-sale .product-order-list .product-order-item .price .strike-price {
+.price .strike-price {
     font-size: 9pt;
     font-weight: 400;
+    position: absolute;
     text-decoration: line-through
 }
 
@@ -237,7 +240,8 @@
 #retail-sale .product-order-list .product-order-item.expanded .product-order-item-detail{
     display: block;
     opacity: 1;
-    height: 140px
+    height: fit-content;
+    padding-bottom: 10px
 }
 
 #retail-sale .product-order-list .product-order-item-detail .detail-row-1 {
@@ -342,6 +346,18 @@
     letter-spacing: 2px;
     padding-top: 8px;
     padding-bottom: 8px
+}
+
+#retail-sale #wrap-payment .add-discount {
+    justify-content: end;
+    color: #57A600;
+    width: fit-content;
+    cursor: pointer
+}
+
+#retail-sale #wrap-payment .add-discount .icon-add {
+    font-weight: 600;
+    line-height: 1.5
 }
 
 .wrap-product-varaint .product-variant .variant-item {

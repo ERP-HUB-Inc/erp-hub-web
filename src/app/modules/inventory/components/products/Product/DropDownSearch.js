@@ -173,8 +173,9 @@ export default class DropDownSearch extends Modal {
           <div className="search-icon icon-add-product"></div>
           <this.InputText
             name="searchProduct"
-            placeholder={this.CATranslate("input_product_search_product", this.props.locale)}
+            placeholder={`${this.CATranslate("input_product_search_product", this.props.locale)}${this.props.placeholder}`}
             className={this.props.className}
+            isAutoFocus={this.props.isAutoFocus}
             validateStatus={this.props.productSearch.fetching ? "validating" : ""}
             handleKeyUp={this.handleKeyDownOnProductSearch}
             handlePressEnter={this.handlePressEnterOnSearch}

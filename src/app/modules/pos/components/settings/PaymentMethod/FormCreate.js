@@ -15,6 +15,7 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        values["isEnableOnPOS"] = this.Util.checkValueSwitch(values.isEnableOnPOS);
         this.dispatch(PaymentMethodAction.add(values));
         this.isRepsonseBackError = "none";
       }

@@ -61,11 +61,11 @@ export default class MenuDropDown extends Component {
 
     return(
       <ul className="menu-left list-unstyled">
-        <li>
+        {/* <li>
           <this.Link to="#" className="user-account">
             <this.Noteicon />
           </this.Link>
-        </li>
+        </li> */}
         <li>
           <Dropdown overlay={this.menuLanguage} trigger={["click"]}>
             <this.Link to="#" className="ant-dropdown-link user-account">

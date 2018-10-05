@@ -36,17 +36,20 @@ export class InputNumber extends Element {
         data={this.props.data}
         formatter={this.props.formatter}
         step={this.props.step}
+        precision={this.props.precision}
         disabled={this.props.disabled}
         rules={this.rules}
         form={this.props.form}
+        validateStatus={this.props.validateStatus}
+        errorMsg={this.props.errorMsg}
         onChange={this.props.onChange}
         handleKeyDown={this.props.handleKeyDown}
         handleKeyUp={this.props.handleKeyUp}
         handlePressEnter={this.props.handlePressEnter}
         handleOnBlur={this.props.handleOnBlur}
-        handleOnFocus={this.props.handleOnFocus}
         className={this.props.className}
         isAutoFocus={this.props.isAutoFocus}
+        isAutoSelect={this.props.isAutoSelect}
         isHideTool={this.props.isHideTool}/>
     );
   }   
@@ -55,6 +58,7 @@ export class InputNumber extends Element {
 Input.defaultProps = {
   name: "name",
   max: 9999999999,
+  precision: 2,
   errorLength: "The number allow maximum 9999 999 999.",
   required: true,
   errorRequired: "This field is required."

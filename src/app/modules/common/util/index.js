@@ -194,4 +194,23 @@ export class Util {
     }
   }
 
+  printElem(contentHtml)
+  {
+    var mywindow = window.open("", "PRINT", "height=400,width=600");
+
+    mywindow.document.write("<html><head><title>" + document.title  + "</title>");
+    mywindow.document.write("</head><body >");
+    mywindow.document.write(contentHtml);
+    mywindow.document.write("</body></html>");
+
+    mywindow.document.close();
+    mywindow.focus();
+
+    setTimeout(function() {
+      mywindow.print();
+      mywindow.close();
+    }, 250);
+
+    return true;
+  }
 }

@@ -19,6 +19,7 @@ export default class Form extends Modal {
         values["id"] = paymentMethodUpdate.data.id;
         values["isSystem"] = paymentMethodUpdate.data.isSystem;
         values["isDefault"] = paymentMethodUpdate.data.isDefault;
+        values["isEnableOnPOS"] = this.Util.checkValueSwitch(values.isEnableOnPOS);
         this.dispatch(PaymentMethodAction.update(values));
       }
     });
