@@ -7,9 +7,9 @@ import reducer from "../reducers";
 
 const registerMiddleWare = [promise(), thunk];
 
-// if (process.env.REACT_APP_ENV === "DEV") {
-registerMiddleWare.push(createLogger());
-// }
+if (process.env.REACT_APP_ENV === "DEV") {
+  registerMiddleWare.push(createLogger());
+}
 
 const middleware = applyMiddleware(...registerMiddleWare);
 

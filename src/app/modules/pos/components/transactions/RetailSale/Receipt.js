@@ -25,6 +25,12 @@ export default class Receipt extends Component {
         cashier = this.props.currentUser.currentUser.fullName;
       }
     }
+
+    const {
+      taxTitle,
+      countTax
+    } = this.props.summaryTax;
+
     return (
       <div style={{display: "none"}} id="pos-receipt-preview">
         <div style={{
@@ -34,7 +40,7 @@ export default class Receipt extends Component {
           fontFamily: "Arial"
         // display: "none"
         }}>
-          <table width="100%" style={{color: "rgb(142, 136, 136)", fontSize: "9pt", backgroundColor: "white", margin: "auto"}}>
+          <table width="100%" style={{color: "rgb(142, 136, 136)", fontSize: "8pt", backgroundColor: "white", margin: "auto"}}>
             <tbody><tr>
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>
                 <div style={{height: 100, width: 100, border: "1px solid rgb(142, 136, 136)", position: "relative", borderRadius: 100, margin: "auto", overflow: "hidden"}}>
@@ -59,7 +65,7 @@ export default class Receipt extends Component {
             </tr>
             <tr>
               <td colSpan={2} style={{paddingTop: 10}}>
-                <table width="100%" style={{fontSize: "9pt", color: "rgb(142, 136, 136)"}}>
+                <table width="100%" style={{fontSize: "8pt", color: "rgb(142, 136, 136)"}}>
                   <thead>
                     <tr>
                       <th style={{fontWeight: 500, width: 50, textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)"}}>QTY</th>
@@ -69,7 +75,7 @@ export default class Receipt extends Component {
                   </thead>
                   <tbody>
                     <tr>
-                      <td colSpan="3" style={{backgroundColor: "white", paddingBottom: 10}} />
+                      <td colSpan="3" style={{backgroundColor: "white"}} />
                     </tr>
                     {
                       this.props.productList.map((product, index) => 
@@ -81,14 +87,14 @@ export default class Receipt extends Component {
                       )
                     }
                     <tr>
-                      <td colSpan="3" style={{backgroundColor: "white", paddingTop: 10}} />
+                      <td colSpan="3" style={{backgroundColor: "white"}} />
                     </tr>
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td style={{backgroundColor: "white", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 10}} />
-                      <td style={{backgroundColor: "white", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 10}}>SUB TOTAL:</td>
-                      <td style={{backgroundColor: "white", textAlign: "right", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 10}}>{this.Util.formatCurrency(this.props.summaryTotal.subTotalAfterDiscount)}</td>
+                      <td style={{backgroundColor: "white", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 5}} />
+                      <td style={{backgroundColor: "white", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 5}}>SUB TOTAL:</td>
+                      <td style={{backgroundColor: "white", textAlign: "right", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 5}}>{this.Util.formatCurrency(this.props.summaryTotal.subTotalAfterDiscount)}</td>
                     </tr>
                     <tr>
                       <td style={{backgroundColor: "white"}} />
@@ -96,19 +102,38 @@ export default class Receipt extends Component {
                       <td style={{backgroundColor: "white", textAlign: "right"}}>{this.Util.formatCurrency(this.props.discountAmount)}</td>
                     </tr>
                     <tr>
-                      <td style={{backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)", paddingBottom: 10}} />
-                      <td style={{backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)", paddingBottom: 10}}>TAX {this.props.taxRate > 0 ? `(${this.props.taxRate}%)` : <this.Translate id="text_no_tax"/>}:</td>
-                      <td style={{backgroundColor: "white", textAlign: "right", borderBottom: "1px dashed rgb(212, 203, 203)", paddingBottom: 10}}>{this.Util.formatCurrency(this.props.taxAmount)}</td>
+                      <td style={{backgroundColor: "white"}} />
+                      <td style={{backgroundColor: "white"}}>
+                        TAX {taxTitle}:
+                      </td>
+                      <td style={{backgroundColor: "white", textAlign: "right"}}>{this.Util.formatCurrency(this.props.taxAmount)}</td>
                     </tr>
+                    {
+                      countTax > 1 ?
+                        this.props.productTaxList.map((productTax, productTaxIndex) =>
+                          productTax.totalTaxAmount > 0 ?
+                            <tr key={productTaxIndex}>
+                              <td style={{backgroundColor: "white"}} />
+                              <td style={{backgroundColor: "white", paddingLeft: 15}}>
+                                {productTax.name}:
+                              </td>
+                              <td style={{backgroundColor: "white", textAlign: "right"}}>{this.Util.formatCurrency(productTax.totalTaxAmount)}</td>
+                            </tr>
+                            :
+                            ""
+                        )
+                        :
+                        <tr></tr>
+                    }
                     <tr>
-                      <td colSpan={3} style={{paddingTop: 5, backgroundColor: "white"}} />
+                      <td colSpan={3} style={{backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)"}} ></td>
                     </tr>
                     {
                       this.props.customerPaymentList.map((customerPayment, customerPaymentIndex) => 
                         <tr key={customerPaymentIndex}>
-                          <td style={{backgroundColor: "white"}} />
-                          <td style={{backgroundColor: "white", textTransform: "uppercase"}}>{customerPayment.paymentMethodName}:</td>
-                          <td style={{backgroundColor: "white", textAlign: "right"}}>{this.Util.formatCurrency(customerPayment.tender)}</td>
+                          <td style={{backgroundColor: "white", paddingTop: customerPaymentIndex === 0 ? 5 : 0}} />
+                          <td style={{backgroundColor: "white", textTransform: "uppercase", paddingTop: customerPaymentIndex === 0 ? 5 : 0}}>{customerPayment.paymentMethodName}:</td>
+                          <td style={{backgroundColor: "white", textAlign: "right", paddingTop: customerPaymentIndex === 0 ? 5 : 0}}>{this.Util.formatCurrency(customerPayment.tender)}</td>
                         </tr>
                       )
                     }

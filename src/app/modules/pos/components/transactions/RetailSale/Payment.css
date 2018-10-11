@@ -52,6 +52,10 @@
     margin-bottom: 15px
 }
 
+.pos-payment .sale-summary .total-order-summary li.tax-item {
+    padding-left: 15px
+}
+
 .pos-payment .sale-summary .total-order-summary li,
 .pos-payment .sale-summary .grand-total li {
     border-bottom: 1px solid #ECECEC

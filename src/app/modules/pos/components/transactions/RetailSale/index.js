@@ -1,6 +1,7 @@
 import React from "react";
 import VaraintProduct from "./VaraintProduct";
 import DiscountSetup from "./DiscountSetup";
+import TaxSetting from "./TaxSetting";
 import Enum from "../../../enums";
 import TransactionAction from "../../../action/transaction/transaction";
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
@@ -8,8 +9,6 @@ import FormCreateCustomer from "../../../../crm/containers/customers/ManageCusto
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import ProductTypeAction from "../../../../inventory/actions/products/productsType";
 import ProductAction from "../../../../inventory/actions/products/product";
-import TaxAction from "../../../../pos/action/settings/tax";
-import ConstAuth from "../../../../common/constants/authentication";
 import CustomerDropDownSearch from "../../../../crm/components/customers/customer/DropDownSearch";
 import ProductDropDownSearch from "../../../../inventory/components/products/Product/DropDownSearch";
 import Util from "../../../../inventory/utils";
@@ -25,6 +24,7 @@ export default class Retail extends Component {
       variantProductList: [],
       modalContent: null,
       expandOrderItemRow: [],
+      productTaxList: [],
       categoryList: [
         {id: 0, name: <this.Translate id="text_all_category"/>},
       ],
@@ -70,34 +70,171 @@ export default class Retail extends Component {
     this.handleSetFullScreen = this.handleSetFullScreen.bind(this);
     this.handleOnMakePayment = this.handleOnMakePayment.bind(this);
     this.handleCancelMakePayment = this.handleCancelMakePayment.bind(this);
-    this.appendProductOrder = this.appendProductOrder.bind(this);
+    this.handleOnGetTaxList = this.handleOnGetTaxList.bind(this);
     this.handleOnRemoveProductFromOrderList = this.handleOnRemoveProductFromOrderList.bind(this);
     this.handleOnChangOrderField = this.handleOnChangOrderField.bind(this);
     this.handleOnSetupDiscount = this.handleOnSetupDiscount.bind(this);
+    this.handleOnOpenTaxSetting = this.handleOnOpenTaxSetting.bind(this);
+    this.handleCancelTaxSetting = this.handleCancelTaxSetting.bind(this);
     this.handleCancelDiscountSetup = this.handleCancelDiscountSetup.bind(this);
     this.handleOnResizeScreen = this.handleOnResizeScreen.bind(this);
     this.handleRemoveDiscount = this.handleRemoveDiscount.bind(this);
     this.handleGetDiscount = this.handleGetDiscount.bind(this);
     this.handleOnResetOrder = this.handleOnResetOrder.bind(this);
     this.handleOnSaveParkReceipt = this.handleOnSaveParkReceipt.bind(this);
-    this.handleOnRestoreParkReceipt = this.handleOnRestoreParkReceipt.bind(this);
+    this.handleOnRestoreReceipt = this.handleOnRestoreReceipt.bind(this);
   }
-
 
   componentDidMount() {
     this.props.dispatch(ProductTypeAction.fetch(18));
     this.props.dispatch(ProductAction.fetch(25));
     this.props.dispatch(PaymentMethodAction.fetch(100, "", "", "", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
-
-    // RESTRIEVE DEFAUL TAX
-    const setting = this.Util.getSetting(ConstAuth.ACCESS_TOKEN);
-    let taxId = "";
-    if (setting !== null) {
-      taxId = setting.defaultTaxId;
-    }
-    this.props.dispatch(TaxAction.detail(taxId));
-
     window.addEventListener("resize", this.handleOnResizeScreen);
+  }
+
+  getTaxDescription(tax) {
+    let name = "";
+    if ("tax" in tax && tax["tax"]) {
+      name = tax["tax"].name;
+    }
+    return name;
+  }
+
+  getTaxFromProduct(product) {
+    let taxId = 0;
+    let taxRate = 0;
+    let taxName = "";
+    if (product["productTaxes"] && product["productTaxes"].length > 0) {
+      taxId = product["productTaxes"][0].id;
+      taxRate = product["productTaxes"][0].rate;
+      taxName = this.getTaxDescription(product["productTaxes"][0]);
+    }
+    return {
+      id: taxId,
+      taxRate,
+      taxName
+    };
+  }
+
+  appendProductTaxList(productOrderList) {
+    const productTaxList = [];
+
+    if (productOrderList.length === 0) {
+      this.setState({productTaxList});
+    }
+
+    productOrderList.forEach(productOrder => {
+      const productTax = productOrder.taxDescription;
+      const totalTaxAmount = POSUtil.getTaxAmount(productOrder.newPrice * productOrder.quantity, productTax.taxRate);
+      if (productTaxList.length === 0) {
+        productTaxList.push({
+          name: productTax.taxName,
+          rate: productTax.taxRate,
+          totalTaxAmount
+        });
+      } else {
+        let isNotTheSame = true;
+        productTaxList.forEach((taxOfProduct, productTaxIndex) => {
+          if (taxOfProduct.rate === productTax.taxRate) {
+            isNotTheSame = false;
+            productTaxList[productTaxIndex]["totalTaxAmount"] += totalTaxAmount;
+          }
+        });
+        if (isNotTheSame) {
+          productTaxList.push({
+            name: productTax.taxName,
+            rate: productTax.taxRate,
+            totalTaxAmount
+          });
+        } else {
+          
+        }
+      }
+      this.setState({productTaxList});
+    });
+  }
+
+  getSummaryTax() {
+    let taxTotal = 0;
+    let taxTitle = <this.Translate id="text_no_tax"/>;
+    let countTax = 0;
+    this.state.productTaxList.forEach(productTax => {
+      taxTotal += productTax.totalTaxAmount;
+      countTax++;
+    });
+
+    if (countTax > 1) {
+      taxTitle = `${countTax} ${this.CATranslate("text_taxes", this.props.locale)}`;
+    } else if (countTax === 1) {
+      taxTitle = `${this.state.productTaxList[0].name}`;
+    }
+
+    return {
+      taxTitle,
+      taxTotal,
+      countTax
+    };
+  }
+
+  appendProductOrder(targetList, product) {
+    const tax = this.getTaxFromProduct(product);
+    targetList.push({
+      productId: product.id,
+      name: Util.getProductName(product),
+      barcode: product.barcode,
+      price: product.price,
+      newPrice: product.price,
+      quantity: this.state.initialOrderQuantity,
+      discount: this.state.initialOrderDiscount,
+      discountType: this.state.initialOrderDiscountType,
+      tax: tax.taxRate/100,
+      taxDescription: tax,
+      description: "",
+      options: []
+    });
+  }
+
+  getSummaryTotal() {
+    const summaryTotal = POSUtil.getSummaryTotalInOrder(this.state.productOrderList);
+    let discountAmount = 0;
+    let discountTypeStr = "";
+
+    const taxAmount = this.getSummaryTax().taxTotal;
+
+    if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+      discountTypeStr = ` (${this.state.discountValue.value}%)`;
+      discountAmount = POSUtil.getDiscountByRate(summaryTotal.subTotal + taxAmount, this.state.discountValue.value); // WE DISCOUNT AFTER TAX IF DIFFERENCE FROM EACH ITEM
+    } else if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.AMOUNT) {
+      discountAmount = this.state.discountValue.value;
+    } else {
+      discountAmount = summaryTotal.discount;
+    }
+
+    return {
+      summaryTotal,
+      taxAmount,
+      discountAmount,
+      discountTypeStr,
+      discountType: this.state.discountValue.type
+    };
+  }
+
+  saveReceipt(key) {
+    localStorage.setItem(key, JSON.stringify({
+      productOrderList: this.state.productOrderList,
+      discountValue: this.state.discountValue,
+      isDiscountHasAdded: this.state.isDiscountHasAdded
+    }));
+  }
+
+  restoreReceipt(key) {
+    let receipt = localStorage.getItem(key);
+    if (this.Util.isJsonString(receipt)) {
+      receipt = JSON.parse(receipt);
+      this.setState({
+        ...receipt
+      });
+    }
   }
 
   handleOnResetOrder() {
@@ -113,21 +250,6 @@ export default class Retail extends Component {
     this.setState({modalContent: null});
   }
 
-  appendProductOrder(targetList, product) {
-    targetList.push({
-      productId: product.id,
-      name: Util.getProductName(product),
-      barcode: product.barcode,
-      price: product.price,
-      quantity: this.state.initialOrderQuantity,
-      discount: this.state.initialOrderDiscount,
-      discountType: this.state.initialOrderDiscountType,
-      tax: this.state.initialTax,
-      description: "",
-      options: []
-    });
-  }
-
   handleOnSelectCategory(value) {
     let filter = "";
     if (value !== 0) {
@@ -138,19 +260,19 @@ export default class Retail extends Component {
     this.setState({selectedCategoryIds: [value]});
   }
 
+  handleCancelVariant() {
+    this.setState({
+      showVariantProduct: false,
+      variantProductList: []
+    });
+  }
+
   handleExpandOrderItem(expandOrderItemRow, productOrderIndex) {
     if (this.state.expandOrderItemRow.includes(expandOrderItemRow)) {
       this.setState({expandOrderItemRow: []});
     } else {
       this.setState({expandOrderItemRow: [expandOrderItemRow]});
     }
-  }
-
-  handleCancelVariant() {
-    this.setState({
-      showVariantProduct: false,
-      variantProductList: []
-    });
   }
 
   handleOnSelectProduct(product) {
@@ -170,6 +292,8 @@ export default class Retail extends Component {
       }
     }
 
+    this.appendProductTaxList(existingProductOrderList);
+
     this.setState({productOrderList: existingProductOrderList});
     // if (value.productVariantToProduct.length > 0) {
     //   this.setState({
@@ -187,15 +311,27 @@ export default class Retail extends Component {
       productOrderList,
       isDiscountHasAdded: productOrderList.length > 0 ? this.state.isDiscountHasAdded : false
     });
+
+    this.appendProductTaxList(productOrderList);
+  }
+
+  handleOnGetTaxList(productTaxList, taxRate) {
+    const productOrderList = this.state.productOrderList;
+    productOrderList.forEach((product, productIndex) => {
+      if (productOrderList[productIndex]["tax"] * 100 === taxRate) { //ex: taxRate=0.2
+        productOrderList[productIndex]["tax"] = 0;
+      }
+    });
+    this.setState({
+      productTaxList,
+      productOrderList
+    });
   }
 
   handleOnChangOrderField(event, proderOrderRowIndex, field = "quantity") {
     const value = parseFloat(event.target.value);
     let existingProductOrderList = this.state.productOrderList;
     existingProductOrderList[proderOrderRowIndex][field] = isNaN(value) ? 0 : value;
-    this.setState({
-      productOrderList: existingProductOrderList,
-    });
 
     if (field === "discount") {
       if (!isNaN(value) && value > 0) {
@@ -206,6 +342,7 @@ export default class Retail extends Component {
           }
         });
       } else {
+        existingProductOrderList[proderOrderRowIndex]["discount"] = 0;
         this.setState({
           isDiscountHasAdded: false,
           discountValue: {
@@ -214,7 +351,40 @@ export default class Retail extends Component {
           }
         });
       }
+      const price = POSUtil.getTotalAmountAfterDiscount(1, existingProductOrderList[proderOrderRowIndex]["price"], existingProductOrderList[proderOrderRowIndex]["discount"]);
+      existingProductOrderList[proderOrderRowIndex]["newPrice"] = price;
+      this.props.form.setFieldsValue({[`price[${proderOrderRowIndex}]`]: price});
     }
+
+    if (field === "newPrice") {
+      const newPrice = existingProductOrderList[proderOrderRowIndex]["newPrice"];
+      let price = existingProductOrderList[proderOrderRowIndex]["price"];
+      if (newPrice < price) { // DISCOUNT EVENT APPEAR
+        const discountAmount = price - newPrice;
+        const discount = POSUtil.getDiscountRateByAmount(price, discountAmount);
+        existingProductOrderList[proderOrderRowIndex]["discount"] = discount;
+        this.props.form.setFieldsValue({[`discount[${proderOrderRowIndex}]`]: discount});
+        this.setState({
+          isDiscountHasAdded: true,
+          discountValue: {
+            type: Enum.DISCOUNT_TYPE.EACH_ITEM
+          }
+        });
+      } else {
+        this.setState({
+          isDiscountHasAdded: false
+        });
+        existingProductOrderList[proderOrderRowIndex]["discount"] = 0;
+        this.props.form.setFieldsValue({[`discount[${proderOrderRowIndex}]`]: 0});
+      }
+    }
+
+    // UPDATE SUMMARY TAX LIST
+    this.appendProductTaxList(existingProductOrderList);
+
+    this.setState({
+      productOrderList: existingProductOrderList,
+    });
   }
 
   handleOnAddNewCustomer() {
@@ -246,6 +416,12 @@ export default class Retail extends Component {
     });
   }
 
+  handleCancelTaxSetting() {
+    this.setState({
+      modalContent: null
+    });
+  }
+
   handleOnMakePayment() {
     if (this.state.productOrderList.length > 0) {
       this.props.dispatch(TransactionAction.showForm());
@@ -253,14 +429,16 @@ export default class Retail extends Component {
         handleCancel={this.handleCancelMakePayment}
         productOrderList={this.state.productOrderList}
         paymentMethodList={this.props.paymentMethod}
+        productTaxList={this.state.productTaxList}
         handleOnResetOrder={this.handleOnResetOrder}
-        summaryTotal={this.getSummaryTotal()}/>
+        summaryTotal={this.getSummaryTotal()}
+        summaryTax={this.getSummaryTax()}/>
       });
     } else {
       // TO DO: alert message can make payment with empty list
     }
   }
-
+  
   handleGetDiscount(discountValue) {
     this.setState({
       discountValue
@@ -276,6 +454,16 @@ export default class Retail extends Component {
         discountType={this.state.discountValue.type}
         callBack={this.handleGetDiscount} />,
       isDiscountHasAdded: true
+    });
+  }
+
+  handleOnOpenTaxSetting() {
+    this.setState({
+      modalContent: <TaxSetting
+        handleCancel={this.handleCancelTaxSetting}
+        callBack={this.handleOnGetTaxList}
+        productOrderList={this.state.productTaxList}
+        form={this.props.form} />
     });
   }
 
@@ -301,52 +489,12 @@ export default class Retail extends Component {
   }
 
   handleOnSaveParkReceipt() {
-    localStorage.setItem(Enum.PARK_RECEIPT, JSON.stringify({
-      productOrderList: this.state.productOrderList,
-      discountValue: this.state.discountValue,
-      isDiscountHasAdded: this.state.isDiscountHasAdded
-    }));
+    this.saveReceipt(Enum.PARK_RECEIPT);
     this.handleOnResetOrder();
   }
 
-  handleOnRestoreParkReceipt() {
-    let parkReceipt = localStorage.getItem(Enum.PARK_RECEIPT);
-    if (this.Util.isJsonString(parkReceipt)) {
-      parkReceipt = JSON.parse(parkReceipt);
-      this.setState({
-        ...parkReceipt
-      });
-    }
-  }
-
-  getSummaryTotal() {
-    const summaryTotal = POSUtil.getSummaryTotalInOrder(this.state.productOrderList);
-    let taxRate = 0;
-    let discountAmount = 0;
-    let discountTypeStr = "";
-
-    if (this.props.tax.data) {
-      taxRate = this.props.tax.data.rate;
-    }
-    const taxAmount = POSUtil.getTaxAmount(summaryTotal.subTotal, taxRate);
-
-    if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-      discountTypeStr = ` (${this.state.discountValue.value}%)`;
-      discountAmount = POSUtil.getDiscountByRate(summaryTotal.subTotal + taxAmount, this.state.discountValue.value); // WE DISCOUNT AFTER TAX IF DIFFERENCE FROM EACH ITEM
-    } else if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.AMOUNT) {
-      discountAmount = this.state.discountValue.value;
-    } else {
-      discountAmount = summaryTotal.discount;
-    }
-
-    return {
-      summaryTotal,
-      taxRate,
-      discountAmount,
-      taxAmount,
-      discountTypeStr,
-      discountType: this.state.discountValue.type
-    };
+  handleOnRestoreReceipt(key) {
+    this.restoreReceipt(key);
   }
 
   renderProductList() {
@@ -380,23 +528,28 @@ export default class Retail extends Component {
   render() {
     const {
       summaryTotal,
-      taxRate,
       discountAmount,
       taxAmount,
       discountTypeStr
     } = this.getSummaryTotal();
+
+    const {
+      taxTitle,
+      taxTotal,
+      countTax
+    } = this.getSummaryTax();
 
     return (
       <this.Row className="main-layout main-store-account" id="retail-sale">
         <this.Col md="8" id="left-block">
           <this.Row className="wrap-receipt-type">
             <this.Col md="12" className="receipt-type">
-              <div className="pull-left current-receipt selected">
+              <div className="pull-left current-receipt selected" onClick={() => this.handleOnRestoreReceipt(Enum.CURRENT_RECEIPT)}>
                 <span className="icon-receipt icon-padding-right"></span><this.Translate id="current_receipt_type"/>
               </div>
               {
                 localStorage.getItem(Enum.PARK_RECEIPT) ?
-                  <div className="pull-left park-receipt" onClick={this.handleOnRestoreParkReceipt}>
+                  <div className="pull-left park-receipt" onClick={() => this.handleOnRestoreReceipt(Enum.PARK_RECEIPT)}>
                     <span className="icon-receipt icon-padding-right"></span><this.Translate id="park_receipt_type"/>
                   </div>
                   :
@@ -496,14 +649,14 @@ export default class Retail extends Component {
                       <this.InputNumber
                         name={`price[${productOrderIndex}]`}
                         label={<this.Translate id="text_price" />}
-                        data={productOrder.price}
-                        handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "price")}
+                        data={POSUtil.getTotalAmountAfterDiscount(1, productOrder.price, productOrder.discount)}
+                        handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "newPrice")}
                         className="ca-input-v1"
                         isAutoSelect={true}
                         isHideTool={true}
                         form={this.props.form}/>
                       <this.InputNumber
-                        name={`discound[${productOrderIndex}]`}
+                        name={`discount[${productOrderIndex}]`}
                         label={<span><this.Translate id="text_discount"/> (%)</span>}
                         data={productOrder.discount}
                         handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "discount")}
@@ -539,8 +692,6 @@ export default class Retail extends Component {
                     !this.state.isDiscountHasAdded && summaryTotal.discount <= 0 ?
                       <div className="sub-total add-discount" style={{justifyContent: "end"}} onClick={this.handleOnSetupDiscount}>
                         <span className="icon-add icon-padding-right"></span> <span><this.Translate id="text_add"/> <this.Translate id="text_discount"/></span>
-                        {/* <div className="sub-total-title text-uppercase" style={{letterSpacing: 1.5}}><this.Translate id="text_add"/></div>
-                        <div className="sub-total-value ca-link" style={{fontWeight: 600}} onClick={this.handleOnSetupDiscount}>{<this.Translate id="text_discount"/>}</div> */}
                       </div>
                       :
                       ""
@@ -574,8 +725,10 @@ export default class Retail extends Component {
                       ""
                   }
                   <div className="sub-total">
-                    <div className="sub-total-title"><this.Translate id="text_tax"/>{taxRate > 0 ? ` (${taxRate}%)` : <this.Translate id="text_no_tax"/>}</div>
-                    <div className="sub-total-value">{this.Util.formatCurrency(taxAmount)}</div>
+                    <div className="sub-total-title" onClick={countTax > 0 ? this.handleOnOpenTaxSetting : null}>
+                      <span className={`${countTax > 0 ? "ca-link" : ""}`}><this.Translate id="text_tax"/></span> {taxTitle}
+                    </div>
+                    <div className="sub-total-value">{this.Util.formatCurrency(taxTotal)}</div>
                   </div>
                 </this.Col>
                 <this.Col md="6" className="text-right">

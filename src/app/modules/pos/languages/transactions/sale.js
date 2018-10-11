@@ -43,5 +43,11 @@ export default {
     "Email Receipt",
     "Email Receipt",
     "Email Receipt"
+  ],
+
+  "text_remove_tax_from_sale": [
+    "Remove tax from sale",
+    "Remove tax from sale",
+    "Remove tax from sale"
   ]
 };

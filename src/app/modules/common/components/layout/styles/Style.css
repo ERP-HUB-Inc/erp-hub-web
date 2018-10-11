@@ -155,6 +155,16 @@ html,
     font-size: 11.25pt !important
 }
 
+.ca-icon-delete {
+    font-size: 18pt;
+    color: #093163;
+    cursor: pointer
+}
+
+.ca-icon-delete:hover {
+    color: #B90000
+}
+
 .notation-textfield {
 position: absolute !important;
 right: 0;

@@ -197,6 +197,12 @@ export default {
     "Tax"
   ],
 
+  "text_taxes": [
+    "Taxes",
+    "Taxes",
+    "Taxes"
+  ],
+
   "text_total": [
     "Total",
     "Total",
@@ -273,5 +279,11 @@ export default {
     "Receipt",
     "Receipt",
     "Receipt"
+  ],
+
+  "text_list": [
+    "List",
+    "List",
+    "List"
   ]
 };

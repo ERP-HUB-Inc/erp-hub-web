@@ -53,6 +53,10 @@ class Util {
     const result = totalAmount - this.getDiscountByRate(totalAmount, rate);
     return result < 0 ? 0 : result; 
   }
+  
+  getDiscountRateByAmount(oldPrice, discountAmount) {
+    return (discountAmount * 100) / oldPrice;
+  }
 
   getGrandTotal(value = 0, tax = 0, discount = 0) {
     const grandTotal = (value + tax) - discount;

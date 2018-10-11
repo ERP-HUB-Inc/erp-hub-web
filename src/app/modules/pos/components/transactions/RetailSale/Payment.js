@@ -1,4 +1,5 @@
 import React from "react";
+import * as jsPDF from "jspdf";
 import Receipt from "./Receipt";
 import Enum from "../../../enums";
 import TransactionAction from "../../../action/transaction/transaction";
@@ -22,6 +23,7 @@ export default class Payment extends Modal {
     this.currentUser = this.getCurrentUser();
     this.handleOnMakePaymentWithCash = this.handleOnMakePaymentWithCash.bind(this);
     this.handleOnCompletePayment = this.handleOnCompletePayment.bind(this);
+    this.handleOnSendMailReceipt = this.handleOnSendMailReceipt.bind(this);
   }
 
   renderCrudAction() {
@@ -69,6 +71,13 @@ export default class Payment extends Modal {
     }
 
     this.setState({customerPaymentList});
+  }
+
+  handleOnSendMailReceipt() {
+    const email = this.props.form.getFieldValue("email");
+    let element = document.getElementById("pos-receipt-preview").innerHTML;
+    element = `<html><head><title></title></head><body>${element}</body></html>`;
+    this.props.dispatch(TransactionAction.sendEmailReceipt(element, email));
   }
 
   handleOnCompletePayment() {
@@ -125,6 +134,8 @@ export default class Payment extends Modal {
         transactionEntries: this.props.productOrderList,
         transactionPaymentEntries: this.state.customerPaymentList
       };
+
+      // console.log("Payment Values:", dataValue);
       this.props.dispatch(TransactionAction.add(dataValue));
       this.setState({
         amountToPay
@@ -198,6 +209,11 @@ export default class Payment extends Modal {
       discountTypeStr
     } = this.props.summaryTotal;
 
+    const {
+      taxTitle,
+      countTax
+    } = this.props.summaryTax;
+
     const grandTotal = this.getGrandTotal();
     const changeAmount = this.getChangeAmount();
     const totalCustomerHasGiveMoney = this.totalCustomerPaymentList();
@@ -220,7 +236,9 @@ export default class Payment extends Modal {
                 customerPaymentList={this.state.customerPaymentList}
                 paymentMethodList={paymentMethodList}
                 productList={this.props.productOrderList}
+                productTaxList={this.props.productTaxList}
                 summaryTotal={summaryTotal}
+                summaryTax={this.props.summaryTax}
                 grandTotal={grandTotal}
                 changeAmount={changeAmount}
                 taxRate={taxRate}
@@ -283,12 +301,27 @@ export default class Payment extends Modal {
               }
               <li>
                 <div className="sub-total-title">
-                  <this.Translate id="text_tax"/> {taxRate > 0 ? `(${taxRate}%)` : <this.Translate id="text_no_tax"/>}
+                  <this.Translate id="text_tax"/> {taxTitle}
                 </div>
                 <div className="sub-total-value">
                   {this.Util.formatCurrency(taxAmount)}
                 </div>
               </li>
+              {
+                countTax > 1 ?
+                  this.props.productTaxList.map((productTax, productTaxIndex) => 
+                    <li key={productTaxIndex} className="tax-item">
+                      <div className="sub-total-title">
+                        {productTax.name}
+                      </div>
+                      <div className="sub-total-value">
+                        {this.Util.formatCurrency(productTax.totalTaxAmount)}
+                      </div>
+                    </li>
+                  )
+                  :
+                  ""
+              }
             </ul>
             <ul className="list-unstyled ca-penel-v1 grand-total">
               <li>
@@ -355,7 +388,7 @@ export default class Payment extends Modal {
                       className="ca-input-v1"
                       placeholder="Email address"
                       form={this.props.form}/>
-                    <this.Button type="info" className="margin-left-8 ca-button-v1 btn-send-email-receipt">
+                    <this.Button type="info" className="margin-left-8 ca-button-v1 btn-send-email-receipt" onClick={this.handleOnSendMailReceipt}>
                       <this.Translate id="text_email_receipt" />
                     </this.Button>
                   </div>

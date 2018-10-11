@@ -13,7 +13,6 @@ function mapStateToProps(state) {
   return {
     customers: state.reducer.managementCustomers.request,
     products: state.reducer.product.request,
-    tax: state.reducer.tax.detail,
     productsType: state.reducer.productsType.request,
     customerAdd: state.reducer.managementCustomers.add,
     productSearch: state.reducer.product.search,

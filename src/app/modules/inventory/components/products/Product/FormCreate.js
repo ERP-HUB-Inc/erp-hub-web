@@ -137,6 +137,7 @@ export default class FormCreate extends Modal {
         values["price"] = values["price"] ? values["price"] : 0;
         values["isAvialableSale"] = values["isAvialableSale"] ? 1 : 0;
         values["isPublic"] = values["isPublic"] ? 1 : 0;
+        values["taxes"] = [{taxId: values["taxId"]}];
         values["productTags"] = this.state.tagList;
         values["descriptions"] = productDescriptions;
         values["productVariants"] = productVariantToProduct;

@@ -10,6 +10,14 @@ export default {
       });
     };
   },
+  sendEmailReceipt: (template, email) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.SEND_MAIL_RECEIPT_TRANSACTION,
+        payload: TransactionService.sendMailReceipt(template, email)
+      });
+    };
+  },
   reset: () => {
     return dispatch => {
       return dispatch({
