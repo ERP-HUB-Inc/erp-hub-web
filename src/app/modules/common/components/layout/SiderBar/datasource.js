@@ -85,19 +85,22 @@ const dataSource = {
         title: <Translate id="text_sale_history" />,
         icon: "icon-time",
         route: "/transactions/sale-history",
-        component: SaleHistory
+        component: SaleHistory,
+        isFashNav: true
       },
       {
         title: <Translate id="text_sale_order" />,
         icon: "icon-pre-order",
         route: "/transactions/saleorder",
-        component: SaleOrder
+        component: SaleOrder,
+        isFashNav: true
       },
       {
         title: <Translate id="text_return_exchange" />,
         icon: "icon-sale-return",
         route: "/transactions/return/exchange",
-        component: ReturnExchange
+        component: ReturnExchange,
+        isFashNav: true
       }
     ]
   },

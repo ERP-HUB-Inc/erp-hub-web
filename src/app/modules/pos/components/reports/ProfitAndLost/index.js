@@ -125,7 +125,7 @@ export default class InventoryList extends List {
           if (!err) {
             const {dispatch} = this.props;
             let filter = {};
-            let rangFilter = {};
+            let rangFilter= {};
           
             if (values.createdAt) {
               values.createdAt = this.Util.formatDate(values.createdAt, "YYYY-MM-DD");
@@ -139,20 +139,11 @@ export default class InventoryList extends List {
               filter["type"] = [1,0];
             }
 
-           
-
             filter = JSON.stringify(filter);
-
-            console.log("filter",filter);
            
-
             const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.createdAt });
 
-            console.log("search key",searchKey);
-
             dispatch(this.action.fetch(filter,searchKey));
-
-            // dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter,searchKey, rangFilter));
 
             this.setState({isClickFilter: true});
             
