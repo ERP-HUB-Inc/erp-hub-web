@@ -62,7 +62,7 @@ const reducer = combineReducers({
   currency,
   storeLocation,
   storeLanguage,
-  PaymentMethods,
+  paymentMethods,
   receiptTemplate,
   incomeAndExpense,
   roleAccess,
@@ -97,7 +97,6 @@ const reducer = combineReducers({
   inventoryReport,
   purchaseReport,
   profitAndLostReport,
-
   saleHistory
   
 });

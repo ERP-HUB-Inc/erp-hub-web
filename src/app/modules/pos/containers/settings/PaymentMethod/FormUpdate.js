@@ -13,8 +13,8 @@ class PaymentMethodForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    paymentMethodUpdate: state.reducer.PaymentMethods.update,
-    initialValues: state.reducer.PaymentMethods.update.data,
+    paymentMethodUpdate: state.reducer.paymentMethods.update,
+    initialValues: state.reducer.paymentMethods.update.data,
     locale: state.locale
   };
 }

@@ -16,7 +16,7 @@ function mapStateToProps(state) {
     productsType: state.reducer.productsType.request,
     customerAdd: state.reducer.managementCustomers.add,
     productSearch: state.reducer.product.search,
-    paymentMethod: state.reducer.PaymentMethods.request,
+    paymentMethod: state.reducer.paymentMethods.request,
     locale: state.locale
   };
 }
