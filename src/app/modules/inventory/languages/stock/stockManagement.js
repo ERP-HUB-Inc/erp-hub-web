@@ -59,10 +59,4 @@ export default {
     "အမည်",
     "Type",
   ],
-
-  "Button_stock_management_reload": [
-    "Reload",
-    "အမည်",
-    "Reload"
-  ]
 };

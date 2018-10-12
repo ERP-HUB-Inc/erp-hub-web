@@ -3,7 +3,7 @@
 // TRANSACTION
 import SaleHistory from "../../../../pos/containers/transactions/SaleHistory";
 import SaleOrder from "../../../../pos/containers/transactions/SaleWalkin";
-import ReturnExchange from "../../../../pos/containers/transactions/ReturnExchange";
+// import ReturnExchange from "../../../../pos/containers/transactions/ReturnExchange";
 
 // PRODUCT
 import ManageProduct from "../../../../inventory/containers/products/Product";
@@ -95,13 +95,13 @@ const dataSource = {
         component: SaleOrder,
         isFashNav: true
       },
-      {
-        title: <Translate id="text_return_exchange" />,
-        icon: "icon-sale-return",
-        route: "/transactions/return/exchange",
-        component: ReturnExchange,
-        isFashNav: true
-      }
+      // {
+      //   title: <Translate id="text_return_exchange" />,
+      //   icon: "icon-sale-return",
+      //   route: "/transactions/return/exchange",
+      //   component: ReturnExchange,
+      //   isFashNav: true
+      // }
     ]
   },
   products: {

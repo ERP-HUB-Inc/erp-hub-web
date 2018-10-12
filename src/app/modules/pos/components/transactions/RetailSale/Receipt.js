@@ -55,22 +55,28 @@ export default class Receipt extends Component {
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>{address} {phoneNumber}</td>
             </tr>
             <tr>
-              <td style={{backgroundColor: "white", textAlign: "left", paddingTop: 30}}>Register No. {this.props.data.number}</td>
-              <td style={{backgroundColor: "white", textAlign: "right", paddingTop: 30}}>Date: {this.Util.formatDate(this.props.data.createdAt, "DD MMMM YYYY h:mm A")}</td>
+              <td style={{backgroundColor: "white", textAlign: "left", paddingTop: 30}}><this.Translate id="register_no"/>. {this.props.data.number}</td>
+              <td style={{backgroundColor: "white", textAlign: "right", paddingTop: 30}}><this.Translate id="text_date"/>: {this.Util.formatDate(this.props.data.createdAt, "DD MMMM YYYY h:mm A")}</td>
               {/* 12 June 2018 11:30 AM */}
             </tr>
             <tr>
-              <td style={{backgroundColor: "white", textAlign: "left"}}>Receipt No. {this.props.data.receiptNumber}</td>
-              <td style={{backgroundColor: "white", textAlign: "right"}}>Cashier: {cashier}</td>
+              <td style={{backgroundColor: "white", textAlign: "left"}}><this.Translate id="receipt_no"/>. {this.props.data.receiptNumber}</td>
+              <td style={{backgroundColor: "white", textAlign: "right"}}><this.Translate id="text_cashier"/>: {cashier}</td>
             </tr>
             <tr>
               <td colSpan={2} style={{paddingTop: 10}}>
                 <table width="100%" style={{fontSize: "8pt", color: "rgb(142, 136, 136)"}}>
                   <thead>
                     <tr>
-                      <th style={{fontWeight: 500, width: 50, textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)"}}>QTY</th>
-                      <th style={{fontWeight: 500, padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)", textAlign: "left"}}>DESC</th>
-                      <th style={{fontWeight: 500, width: 100, textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)"}}>AMOUNT</th>
+                      <th style={{fontWeight: 500, width: 50, textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)"}}>
+                        <this.Translate id="text_qty"/>
+                      </th>
+                      <th style={{fontWeight: 500, padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)", textAlign: "left"}}>
+                        <this.Translate id="text_desc"/>
+                      </th>
+                      <th style={{fontWeight: 500, width: 100, textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)"}}>
+                        <this.Translate id="text_amount"/>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -93,12 +99,12 @@ export default class Receipt extends Component {
                   <tfoot>
                     <tr>
                       <td style={{backgroundColor: "white", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 5}} />
-                      <td style={{backgroundColor: "white", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 5}}>SUB TOTAL:</td>
+                      <td style={{backgroundColor: "white", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 5, textDecoration: "uppercase"}}><this.Translate id="text_sub_total" />:</td>
                       <td style={{backgroundColor: "white", textAlign: "right", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 5}}>{this.Util.formatCurrency(this.props.summaryTotal.subTotalAfterDiscount)}</td>
                     </tr>
                     <tr>
                       <td style={{backgroundColor: "white"}} />
-                      <td style={{backgroundColor: "white"}}>DISCOUNT:</td>
+                      <td style={{backgroundColor: "white", textDecoration: "uppercase"}}><this.Translate id="text_discount"/>:</td>
                       <td style={{backgroundColor: "white", textAlign: "right"}}>{this.Util.formatCurrency(this.props.discountAmount)}</td>
                     </tr>
                     <tr>
@@ -139,7 +145,7 @@ export default class Receipt extends Component {
                     }
                     <tr>
                       <td style={{backgroundColor: "white"}} />
-                      <td style={{backgroundColor: "white"}}>CHANGE:</td>
+                      <td style={{backgroundColor: "white", textTransform: "uppercase"}}><this.Translate id="text_change"/>:</td>
                       <td style={{backgroundColor: "white", textAlign: "right"}}>{this.Util.formatCurrency(this.props.changeAmount)}</td>
                     </tr>
                   </tfoot>
@@ -147,7 +153,7 @@ export default class Receipt extends Component {
               </td>
             </tr>
             <tr>
-              <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", paddingTop: 60}}>THANK YOU FOR CHOOSING US !</td>
+              <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", paddingTop: 60, textTransform: "uppercase"}}><this.Translate id="text_thank_you_on_receipt"/></td>
             </tr>
             <tr>
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>
@@ -155,7 +161,7 @@ export default class Receipt extends Component {
               </td>
             </tr>
             <tr>
-              <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>YOUR FEEDBACK KEEPS US IMPROVING!</td>
+              <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}><this.Translate id="text_feedback_keep_on_receipt"/></td>
             </tr>
             <tr>
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>www.storevein.com</td>

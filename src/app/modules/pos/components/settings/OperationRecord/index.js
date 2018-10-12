@@ -67,7 +67,7 @@ class Column extends List {
         render : (type) => type === 0 ? <this.Translate id="operation_record_income" /> : <this.Translate id="operation_record_expense" />
       },
       {
-        title: <this.Translate id="input_operation_record_amount" />,
+        title: <this.Translate id="text_amount" />,
         dataIndex: "amount",
         sorter: true,
         render : (amount) => this.formatCurrency(amount)

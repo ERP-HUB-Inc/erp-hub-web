@@ -576,7 +576,7 @@ export default class FormItem extends Modal {
               </this.Row> 
             </this.Col>
             <this.Col md="6">
-              <this.RadioBox 
+              <this.RadioBox
                 className="main-radio-acc product-type"
                 name="productOption"
                 type="radio"
@@ -585,7 +585,7 @@ export default class FormItem extends Modal {
                 form={form}
                 onSelect={this.onSelect}
                 onChange={this.onChange}>
-                { this.productTypes.map( (productType, key) => 
+                { this.productTypes.map((productType, key) => 
                   <this.RadioChildBox
                     key={key}
                     title={productType.name}
@@ -665,7 +665,7 @@ FormItem.defaultProps = {
     isAutoGenerateCode: "",
     barcode: "",
     type: "",
-    productOption: Enum.STANDARD,
+    productOption: Enum.PRODUCT_STANDARD,
     reorderPoint: null,
     factoryCost: null,
     shippingFee: null,

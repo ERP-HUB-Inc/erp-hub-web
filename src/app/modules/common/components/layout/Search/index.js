@@ -1,9 +1,8 @@
 import React from "react";
-import { reduxForm } from "redux-form";
 import Component from "../../Component";
 import "./index.css";
 
-class FormSearch extends Component {
+export default class FormSearch extends Component {
   render(){
     const { handleSubmit } = this.props;
     return(
@@ -22,7 +21,3 @@ class FormSearch extends Component {
     );
   }
 }
-
-export default reduxForm({
-  form: "FormSearch"
-})(FormSearch);

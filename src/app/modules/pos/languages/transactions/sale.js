@@ -49,5 +49,66 @@ export default {
     "Remove tax from sale",
     "Remove tax from sale",
     "Remove tax from sale"
+  ],
+
+  "register_no": [
+    "Register No",
+    "Register No",
+    "Register No"
+  ],
+
+  "receipt_no": [
+    "Receipt No",
+    "Receipt No",
+    "Receipt No"
+  ],
+
+
+  "text_cashier": [
+    "Cashier",
+    "Cashier",
+    "Cashier"
+  ],
+
+  "text_date": [
+    "Date",
+    "Date",
+    "Date"
+  ],
+
+  "text_qty": [
+    "QTY",
+    "QTY",
+    "QTY"
+  ],
+
+  "text_desc": [
+    "DESC",
+    "DESC",
+    "DESC"
+  ],
+
+  "text_sub_total": [
+    "Sub Total",
+    "Sub Total",
+    "Sub Total"
+  ],
+
+  "text_change": [
+    "Change",
+    "Change",
+    "Change"
+  ],
+
+  "text_thank_you_on_receipt": [
+    "THANK YOU FOR CHOOSING US !",
+    "THANK YOU FOR CHOOSING US !",
+    "THANK YOU FOR CHOOSING US !"
+  ],
+
+  "text_feedback_keep_on_receipt": [
+    "YOUR FEEDBACK KEEPS US IMPROVING!",
+    "YOUR FEEDBACK KEEPS US IMPROVING!",
+    "YOUR FEEDBACK KEEPS US IMPROVING!"
   ]
 };

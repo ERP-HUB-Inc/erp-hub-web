@@ -1,5 +1,4 @@
 import { Component } from "react";
-import { Field, reduxForm } from "redux-form";
 import {
   Form as form,
   Input,
@@ -19,9 +18,6 @@ export default class Element extends Component {
   constructor(props) {
     super(props);
     const {Option, OptGroup} = Select;
-
-    // redux-form
-    this.Field = Field;
 
     //react-strap
     this.FormGroup = FormGroup;
@@ -46,7 +42,5 @@ export default class Element extends Component {
 
   }
 }
-
-export const ReduxForm = reduxForm;
 
 export const Form = form;

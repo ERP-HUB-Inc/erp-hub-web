@@ -24,7 +24,7 @@ export default class Home extends Component {
   render(){
     const {form} = this.props;
     return(
-      <div>
+      <div style={{width: "100%"}}>
         <this.Row>
           <this.Col xs="12" md="12">
             <div className="dashboard ">

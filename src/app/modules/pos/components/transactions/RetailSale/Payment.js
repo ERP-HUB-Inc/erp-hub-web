@@ -1,5 +1,4 @@
 import React from "react";
-import * as jsPDF from "jspdf";
 import Receipt from "./Receipt";
 import Enum from "../../../enums";
 import TransactionAction from "../../../action/transaction/transaction";

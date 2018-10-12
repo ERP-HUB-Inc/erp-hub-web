@@ -51,7 +51,6 @@ export default class TaxSetting extends Modal {
     const additionalTop = 30;
     const additionalSpace = 56;
     this.style = {top: (element.offsetTop/2) + additionalTop, left: (leftElement.offsetWidth + sideBarWidth + additionalSpace) - this.width};
-    console.log("Tax List:", this.state.productTaxList);
     this.content = (
       <div className="order-discount">
         <div className="title">

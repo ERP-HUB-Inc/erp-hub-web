@@ -1,6 +1,5 @@
 import React, { Component as RComponent } from "react";
 import { Translate, setActiveLanguage, getActiveLanguage } from "react-localize-redux";
-import { Field } from "redux-form";
 import { connect } from "react-redux";
 import {CSVLink, CSVDownload} from "react-csv";
 import {  
@@ -121,9 +120,7 @@ export default class Component extends RComponent {
 
     // Function
     this.changeLanguage = this.changeLanguage.bind(this);
-
-    // Redux Form
-    this.Field = Field;
+    
     // this.SynField = SynField;
     this.connect = connect;
 

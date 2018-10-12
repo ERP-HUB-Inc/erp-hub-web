@@ -125,11 +125,11 @@ export default class InventoryList extends List {
           if (!err) {
             const {dispatch} = this.props;
             let filter = {};
-            let rangFilter= {};
+            // let rangFilter= {};
           
             if (values.createdAt) {
               values.createdAt = this.Util.formatDate(values.createdAt, "YYYY-MM-DD");
-              rangFilter = JSON.stringify({column: "createdAt", value: [values.createdAt]});
+              // rangFilter = JSON.stringify({column: "createdAt", value: [values.createdAt]});
             }
 
             

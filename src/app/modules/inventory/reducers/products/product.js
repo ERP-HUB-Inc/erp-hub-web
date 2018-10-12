@@ -32,7 +32,8 @@ export default combineReducers({
     const constants = [
       Constant.SEARCH_PRODUCT_PENDING,
       Constant.SEARCH_PRODUCT_REJECTED,
-      Constant.SEARCH_PRODUCT_FULFILLED
+      Constant.SEARCH_PRODUCT_FULFILLED,
+      Constant.SEARCH_PRODUCT_RESET
     ];
     return reducer.request(state, action, constants);
   },

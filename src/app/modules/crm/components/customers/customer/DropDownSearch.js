@@ -1,6 +1,7 @@
 import React from "react";
 import $ from "jquery";
 import CustomerAction from "../../../actions/customers/customer";
+import Constant from "../../../constants/customers/managementCutomers";
 import Modal from "../../../../common/components/shares/Modal";
 import "./DropDownSearch.css";
 
@@ -99,18 +100,20 @@ export default class DropDownSearch extends Modal {
         $(".wrap-dropdown-search-ca .list-search").scrollTop(this.scrollTop);
       }
     } else {
-
-      clearTimeout(this.timer);
+      if (value) {
+        clearTimeout(this.timer);
     
-      this.timer = setTimeout(function() {
-        const searchKey = JSON.stringify({column: ["firstName", "lastName", "phoneNumber"], value});
+        this.timer = setTimeout(function() {
+          const searchKey = JSON.stringify({column: ["firstName", "lastName", "phoneNumber"], value});
 
-        this.props.dispatch(CustomerAction.fetch(100, 0, "", "", "", searchKey));
+          this.props.dispatch(CustomerAction.fetch(100, 0, "", "", "", searchKey));
 
-        this.setState({visibleDropDown: true});
+          this.setState({visibleDropDown: true});
 
-      }.bind(this), 200);
-
+        }.bind(this), 200);
+      } else {
+        this.props.dispatch(CustomerAction.reset(Constant.REQUEST_MANAGEMENT_CUSTOMERS_RESET));
+      }
     }
   }
 

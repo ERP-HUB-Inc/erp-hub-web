@@ -150,7 +150,7 @@ export default class InventoryList extends List {
     this.state.columnFilter[0].children.forEach(valuesCol => {  
     
       filters.name.forEach(valuesFil => {
-        if(valuesCol.key == valuesFil){
+        if(valuesCol.key === valuesFil){
           Valfilters.push({
             children:[
               {
@@ -175,7 +175,7 @@ export default class InventoryList extends List {
           // dataSource={this.props.saleReport.list}
           // columns={this.columns}    
           columns={this.state.columnFilter}
-          onChange={this.onChange}
+          // onChange={this.onChange}
           locale={{emptyText: <this.Translate id="table_empty_data"/>}}
           // loading={this.props.saleReport.fetching}
           onChange={this.handleTableChange}

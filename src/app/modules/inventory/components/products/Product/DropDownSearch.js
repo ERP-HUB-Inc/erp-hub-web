@@ -1,6 +1,7 @@
 import React from "react";
 import $ from "jquery";
 import ProductAction from "../../../actions/products/product";
+import Constant from "../../../constants/products/product";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class DropDownSearch extends Modal {
@@ -36,6 +37,10 @@ export default class DropDownSearch extends Modal {
     var element = document.getElementsByClassName("ant-list-item");
     if (element.length > 0) {
       element[0].classList.add("search-item-hover");
+
+      if (this.props.callBack && this.props.productSearch.fetched) {
+        this.props.callBack(this.props.productSearch.list);
+      }
     }
   }
 
@@ -50,6 +55,7 @@ export default class DropDownSearch extends Modal {
   handleOnBlurSearch() {
     if (!this.state.isMouseHoverOnSearchList) {
       this.setState({visibleDropDown: false});
+      this.props.dispatch(ProductAction.reset(Constant.SEARCH_PRODUCT_RESET));
     }
     this.props.form.setFieldsValue({isFocusOnSearchCompositeProduct: 0});
   }
@@ -102,17 +108,16 @@ export default class DropDownSearch extends Modal {
       }
     } else {
 
-      clearTimeout(this.timer);
-    
-      this.timer = setTimeout(function() {
-        const searchKey = JSON.stringify({column: ["name"], value});
-
-        this.props.dispatch(ProductAction.search(100, 0, "", "", this.props.filter, searchKey));
-
-        this.setState({visibleDropDown: true});
-
-      }.bind(this), 200);
-
+      if (value.length > 1) {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(function() {
+          const searchKey = JSON.stringify({column: ["name", "barcode"], value});
+          this.props.dispatch(ProductAction.search(100, 0, "", "", this.props.filter, searchKey));
+          this.setState({visibleDropDown: true});
+        }.bind(this), 200);
+      } else {
+        this.props.dispatch(ProductAction.reset(Constant.SEARCH_PRODUCT_RESET));
+      }
     }
   }
 
@@ -174,7 +179,7 @@ export default class DropDownSearch extends Modal {
           <this.InputText
             name="searchProduct"
             placeholder={`${this.CATranslate("input_product_search_product", this.props.locale)}${this.props.placeholder}`}
-            className={this.props.className}
+            className={`ca-input-v1-icon-left ${this.props.className}`}
             isAutoFocus={this.props.isAutoFocus}
             validateStatus={this.props.productSearch.fetching ? "validating" : ""}
             handleKeyUp={this.handleKeyDownOnProductSearch}

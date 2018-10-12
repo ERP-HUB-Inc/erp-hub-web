@@ -9,6 +9,7 @@ import FormCreateCustomer from "../../../../crm/containers/customers/ManageCusto
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import ProductTypeAction from "../../../../inventory/actions/products/productsType";
 import ProductAction from "../../../../inventory/actions/products/product";
+import ProductConstant from "../../../../inventory/constants/products/product";
 import CustomerDropDownSearch from "../../../../crm/components/customers/customer/DropDownSearch";
 import ProductDropDownSearch from "../../../../inventory/components/products/Product/DropDownSearch";
 import Util from "../../../../inventory/utils";
@@ -58,7 +59,8 @@ export default class Retail extends Component {
       initialOrderDiscountType: Enum.DISCOUNT_TYPE.PERCENTAGE,
       initialTax: 0,
       isDiscountHasAdded: false,
-      selectedCategoryIds: [0]
+      selectedCategoryIds: [0],
+      selectedReceiptType: Enum.CURRENT_RECEIPT
     };
 
     this.handleOnSelectCategory = this.handleOnSelectCategory.bind(this);
@@ -83,6 +85,7 @@ export default class Retail extends Component {
     this.handleOnResetOrder = this.handleOnResetOrder.bind(this);
     this.handleOnSaveParkReceipt = this.handleOnSaveParkReceipt.bind(this);
     this.handleOnRestoreReceipt = this.handleOnRestoreReceipt.bind(this);
+    this.handleOnAutoSelectProductAfterSearchResult = this.handleOnAutoSelectProductAfterSearchResult.bind(this);
   }
 
   componentDidMount() {
@@ -90,6 +93,7 @@ export default class Retail extends Component {
     this.props.dispatch(ProductAction.fetch(25));
     this.props.dispatch(PaymentMethodAction.fetch(100, "", "", "", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
     window.addEventListener("resize", this.handleOnResizeScreen);
+    this.restoreReceipt(Enum.CURRENT_RECEIPT);
   }
 
   getTaxDescription(tax) {
@@ -244,6 +248,8 @@ export default class Retail extends Component {
       discountValue: {type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: 0},
       isDiscountHasAdded: false,
     });
+
+    localStorage.removeItem(Enum.CURRENT_RECEIPT);
   }
 
   handleOnResizeScreen() {
@@ -295,6 +301,8 @@ export default class Retail extends Component {
     this.appendProductTaxList(existingProductOrderList);
 
     this.setState({productOrderList: existingProductOrderList});
+
+    this.saveReceipt(Enum.CURRENT_RECEIPT, existingProductOrderList);
     // if (value.productVariantToProduct.length > 0) {
     //   this.setState({
     //     showVariantProduct: true,
@@ -313,6 +321,8 @@ export default class Retail extends Component {
     });
 
     this.appendProductTaxList(productOrderList);
+
+    this.saveReceipt(Enum.CURRENT_RECEIPT);
   }
 
   handleOnGetTaxList(productTaxList, taxRate) {
@@ -402,6 +412,14 @@ export default class Retail extends Component {
       });
     } else {
       this.handleOnSelectProduct(value);
+    }
+  }
+
+  handleOnAutoSelectProductAfterSearchResult(productList) {
+    if (productList.length === 1) {
+      this.handleOnSelectProduct(productList[0]);
+      this.props.form.setFieldsValue({searchProduct: ""});
+      this.props.dispatch(ProductAction.reset(ProductConstant.SEARCH_PRODUCT_RESET));
     }
   }
 
@@ -495,6 +513,7 @@ export default class Retail extends Component {
 
   handleOnRestoreReceipt(key) {
     this.restoreReceipt(key);
+    this.setState({selectedReceiptType: key});
   }
 
   renderProductList() {
@@ -544,12 +563,12 @@ export default class Retail extends Component {
         <this.Col md="8" id="left-block">
           <this.Row className="wrap-receipt-type">
             <this.Col md="12" className="receipt-type">
-              <div className="pull-left current-receipt selected" onClick={() => this.handleOnRestoreReceipt(Enum.CURRENT_RECEIPT)}>
+              <div className={`pull-left current-receipt ${this.state.selectedReceiptType === Enum.CURRENT_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.CURRENT_RECEIPT)}>
                 <span className="icon-receipt icon-padding-right"></span><this.Translate id="current_receipt_type"/>
               </div>
               {
                 localStorage.getItem(Enum.PARK_RECEIPT) ?
-                  <div className="pull-left park-receipt" onClick={() => this.handleOnRestoreReceipt(Enum.PARK_RECEIPT)}>
+                  <div className={`pull-left park-receipt ${this.state.selectedReceiptType === Enum.PARK_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.PARK_RECEIPT)}>
                     <span className="icon-receipt icon-padding-right"></span><this.Translate id="park_receipt_type"/>
                   </div>
                   :
@@ -600,6 +619,7 @@ export default class Retail extends Component {
               placeholder={this.CATranslate("input_search_product_placeholder", this.props.locale)}
               productSearch={this.props.productSearch}
               handleOnSelectList={this.handleOnSelectProductSearchList}
+              callBack={this.handleOnAutoSelectProductAfterSearchResult}
               className="ca-input-v1-icon-left ca-input-v1"
               isAutoFocus={true}
               locale={this.props.locale}

@@ -1,5 +1,6 @@
 import React from "react";
-import DropDownSearch from "./DropDownSearch";
+// import DropDownSearch from "./DropDownSearch";
+import ProductDropDownSearch from "../../../../inventory/components/products/Product/DropDownSearch";
 import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
 
@@ -30,7 +31,7 @@ export default class FormComposite extends Modal {
         dataIndex: "markup",
         key: "composite_product_markup",
         width: 100,
-        render: (text, record, index) => <this.InputNumber name={`productCompositeMarkUp[${index}]`} form={this.props.form} isUnsign={true} data={record.markup}/>
+        render: (text, record, index) => <this.InputNumber name={`productCompositeMarkUp[${index}]`} form={this.props.form} precision={0} isUnsign={true} data={record.markup}/>
       },
       {
         title: <this.Translate id="col_composite_product_cost" />,
@@ -149,11 +150,11 @@ export default class FormComposite extends Modal {
   render() {
     return (
       <this.Row>
-        <DropDownSearch
+        <ProductDropDownSearch
           productSearch={this.props.productSearch}
           handleOnSelectList={this.handleOnSelectList}
           handlePressEnterOnSearch={this.handlePressEnterOnSearch}
-          filter={JSON.stringify({type: [Enum.TYPE_OF_PRODUCT.RAW_MATERIAL]})}
+          filter={JSON.stringify({type: [Enum.TYPE_OF_PRODUCT.RAW_MATERIAL]})}          
           dispatch={this.props.dispatch}
           locale={this.props.locale}
           form={this.props.form}/>

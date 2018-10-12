@@ -285,5 +285,11 @@ export default {
     "List",
     "List",
     "List"
+  ],
+
+  "text_amount": [
+    "Amount",
+    "Amount",
+    "Amount"
   ]
 };
