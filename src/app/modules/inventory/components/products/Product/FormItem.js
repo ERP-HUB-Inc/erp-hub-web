@@ -4,6 +4,7 @@ import FormVariant from "./FormVariant";
 import FormCostLog from "./FormCostLog";
 import FormProductLog from "./FormProductLog";
 import Enum from "../../../enums";
+import ConstantAuth from "../../../../common/constants/authentication";
 import ProductAction from "../../../actions/products/product";
 import BrandAction from "../../../actions/products/brand";
 import ProductTypeAction from "../../../actions/products/productsType";
@@ -87,6 +88,7 @@ export default class FormItem extends Modal {
     this.onChangeDefaultDescription = this.onChangeDefaultDescription.bind(this);
     this.onChangeTab = this.onChangeTab.bind(this);
     this.LoadData = this.LoadData.bind(this);
+    this.getProductImageFromCallBack = this.getProductImageFromCallBack.bind(this);
   }
 
   componentDidMount() {
@@ -165,6 +167,11 @@ export default class FormItem extends Modal {
       this.setState({isComponentNotYetUpdated: false});
     }
   }
+
+  getProductImageFromCallBack(value) {
+    console.log("Values:", value);
+    this.props.form.setFieldsValue({image: value});
+  } 
 
   onChangeTab(activeKey) {
     const {dispatch, formData} = this.props;
@@ -570,6 +577,14 @@ export default class FormItem extends Modal {
                   <this.UploadImg
                     name="image"    
                     label={<this.Translate id="input_hr_employee_upload" />}
+                    fileList={[{
+                      uid: "-1",
+                      name: "photo_2018-09-11_18-33-38.jpg",
+                      status: "done",
+                      url: "https://storeveinresource.sgp1.digitaloceanspaces.com/00000001-0001-2018-0001-000000000001/product/photo_2018-09-11_18-33-38.jpg"
+                    }]}
+                    endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}
+                    accessToken={this.Util.getAccessToken(ConstantAuth.ACCESS_TOKEN)}
                     form={form}   
                   />
                 </this.Col>

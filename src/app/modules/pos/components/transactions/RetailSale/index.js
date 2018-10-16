@@ -523,7 +523,7 @@ export default class Retail extends Component {
           <this.Col md="3" className="product-box" key={index}>
             <div onClick={() => this.handleOnSelectProduct(product)} className="product">
               <div className="image">
-                <img alt="" src={`${process.env.REACT_APP_RESOURCE_HOST}/${product.image}`} />
+                <img alt="" src={this.Util.getImageFromSpace(product.image)} />
               </div>
               <div className="name">
                 {

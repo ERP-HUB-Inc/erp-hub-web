@@ -1,6 +1,5 @@
 class Util {
   getProductName(product) {
-
     if (product === null)
       return "";
 

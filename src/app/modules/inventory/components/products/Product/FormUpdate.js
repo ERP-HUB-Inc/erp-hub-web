@@ -175,6 +175,7 @@ export default class Form extends Modal {
         values["descriptions"] = productDescriptions;
         values["productVariants"] = productVariantToProduct;
         values["productPackages"] = productPackageToProduct;
+        values["image"] = this.getImageFromUpload(values);
 
         this.setState({
           tagList: [],

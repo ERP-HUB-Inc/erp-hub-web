@@ -12,7 +12,7 @@ class PurchaseOrderService extends BaseService {
     ids,
     languageId = "en"
   ){
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.GET({ 
       url: `${this.baseUrl}/detail/${ids}?languageId=${languageId}`,
       data: this.data,

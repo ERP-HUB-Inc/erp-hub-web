@@ -8,7 +8,7 @@ class TransactionService extends BaseService {
   }
 
   sendMailReceipt(template, email) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     this.header["email"] = email;
     return this.POST({
       url: `${this.baseUrl}/send/mail/receipt`,

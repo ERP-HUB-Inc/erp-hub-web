@@ -30,7 +30,7 @@ export default class BaseService extends Service {
     sortField,
     sortOrder
   ) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.GET({ 
       url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}`,
       data: this.data,

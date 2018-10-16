@@ -1,7 +1,18 @@
 import moment from "moment";
 import _ from "lodash";
+import ConstantAuth from "../constants/authentication";
 
 export class Util {
+  getAPIURL() {
+    let host = process.env.REACT_APP_API_HOST;
+    if (process.env.REACT_APP_ENV === "DEV") {
+      host = process.env.REACT_APP_API_DEV_HOST;
+    }
+    const port = process.env.REACT_APP_API_PORT;
+    const rootPath = process.env.REACT_APP_API_ROOT;
+    const url = `${host}:${port}/${rootPath}`;
+    return url;
+  }
   checkValueSwitch (values){
     return values ? 1 : 0;
   }
@@ -40,16 +51,16 @@ export class Util {
   }
 
   
-  getAccessToken (key) {
-    if (!localStorage.getItem(key)) return null;
-    let result = localStorage.getItem(key);
+  getAccessToken () {
+    if (!localStorage.getItem(ConstantAuth.ACCESS_TOKEN)) return null;
+    let result = localStorage.getItem(ConstantAuth.ACCESS_TOKEN);
     result = JSON.parse(result);
     return result.accessToken;
   }
 
-  getSetting (key) {
-    if (!localStorage.getItem(key)) return null;
-    let result = localStorage.getItem(key);
+  getSetting () {
+    if (!localStorage.getItem(ConstantAuth.ACCESS_TOKEN)) return null;
+    let result = localStorage.getItem(ConstantAuth.ACCESS_TOKEN);
     result = JSON.parse(result);
     return result.setting;
   }
@@ -212,5 +223,13 @@ export class Util {
     }, 250);
 
     return true;
+  }
+
+  getProductImage(fileName) {
+    return `${process.env.REACT_APP_RESOURCE_HOST}/product/${fileName}`;
+  }
+
+  getImageFromSpace(image) {
+    return `${process.env.REACT_APP_RESOURCE_HOST}/${image}`;
   }
 }

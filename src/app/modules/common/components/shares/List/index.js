@@ -121,12 +121,12 @@ export default class List extends Component {
   /**===================================================================SHARE FUNCTION FOR CHILD CLASS============================================================**/
 
   formatDate(value) {
-    const setting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
+    const setting = this.Util.getSetting();
     return this.Util.formatDate(value, setting.dateFormat);
   }
  
   formatCurrency(value) {
-    const setting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
+    const setting = this.Util.getSetting();
     return this.Util.formatCurrency(value, setting.currency, setting.currencyPosition);
   }
 

@@ -16,7 +16,7 @@ export default class BaseService {
   }
 
   setHeader() {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
   }
 
   generateAPIUrl() {

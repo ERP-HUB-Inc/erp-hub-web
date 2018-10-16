@@ -23,6 +23,7 @@ export default class PicturesUpload extends Element {
     super(props);
     this.state = {
       cardPreviewImage: "",
+      isRemoveImage: false,
       cardPreviewVisible: false,
       cardImgList: [],
     };
@@ -30,22 +31,27 @@ export default class PicturesUpload extends Element {
   }
 
   handleCardChange(fileList){
-    this.setState({ cardImgList: fileList });
-    let formData = new FormData();
-    formData.append("image", fileList.file);
-    axios.post("http://127.0.0.1:3000/api/employee/v1/upload/file", formData, {
-      headers: {
-        "content-type": "multipart/form-data",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMDAwMDAwMS0wMDAxLTIwMTgtMDAwMS0wMDAwMDAwMDAwMDEiLCJpYXQiOjE1MzcyNjUyMzh9.DbHvcbLPFZgWW-usNV2j4iGJ87A9Hp1tPOmf7ZJouYg"
-      }
-    })
-      .then(function (response) {
-        console.log("response", response);
+    if (!this.state.isRemoveImage) {
+      const cardImgList = this.state.cardImgList;
+      cardImgList.push(fileList.file);
+      this.setState({cardImgList});
+      let formData = new FormData();
+      formData.append("image", fileList.file);
+      axios.post(this.props.endPoint, formData, {
+        headers: {
+          "content-type": "multipart/form-data",
+          "Authorization": `Bearer ${this.props.accessToken}`
+        }
       })
-      .catch(function (error) {
-        // alert(error);
-      });
-
+        .then(function (response) {
+          console.log("Upload Response:", response);
+        })
+        .catch(function (error) {
+          // alert(error);
+        });
+    } else {
+      this.setState({isRemoveImage: false});
+    }
   }
 
   render() {
@@ -53,13 +59,9 @@ export default class PicturesUpload extends Element {
       action: "http://127.0.0.1:3000/api/employee/v1/upload/file",
       
       onRemove: (file) => {
-        this.setState(({ cardImgList }) => {
-          const index = cardImgList.indexOf(file);
-          const newFileList = cardImgList.slice();
-          newFileList.splice(index, 1);
-          return {
-            cardImgList: newFileList,
-          };
+        this.setState({
+          cardImgList: [],
+          isRemoveImage: true
         });
       },
       beforeUpload: (file) => {
@@ -69,6 +71,7 @@ export default class PicturesUpload extends Element {
         return false;
       },
       // showUploadList: false,
+      defaultFileList: this.props.fileList,
       onPreview: this.handleCardPreview,
       onChange: this.handleCardChange,
       accept: "image/*",
@@ -77,7 +80,6 @@ export default class PicturesUpload extends Element {
 
     const {cardImgList, cardPreviewVisible, cardPreviewImage} = this.state;
     const { getFieldDecorator } = this.props.form;
-    console.log("cardImgList:", cardImgList.length);
     
     return (
       <div className="clearfix main-upload">
@@ -85,7 +87,7 @@ export default class PicturesUpload extends Element {
           {
             getFieldDecorator(this.props.name, { rules: this.props.rules } )(
               <Upload {...cardImgProps}>
-                {cardImgList.length > 1 ? null : uploadButton}
+                {cardImgList.length > 0 ? null : uploadButton}
               </Upload>
             )
           }

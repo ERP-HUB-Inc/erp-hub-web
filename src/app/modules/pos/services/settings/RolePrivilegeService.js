@@ -11,7 +11,7 @@ class RolePrivilegeService extends BaseService {
   lists(
     id
   ){
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.GET({ 
       url: `${this.baseUrl}/lists/${id}`,
       data: this.data,

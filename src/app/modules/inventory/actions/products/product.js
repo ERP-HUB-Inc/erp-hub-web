@@ -105,6 +105,14 @@ export default {
         payload: ProductService.detail(data.id)
       });
     };
+  },
+  uploadFile: (formData) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.UPLOAD_PRODUCT_IMAGE,
+        payload: ProductService.uploadFile(formData)
+      });
+    };
   }
 };
 

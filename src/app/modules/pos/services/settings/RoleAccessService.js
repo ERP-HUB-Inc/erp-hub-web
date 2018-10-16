@@ -12,7 +12,7 @@ class RoleAccessService extends BaseService {
     roleId,
     data
   ){
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.PUT({ 
       url: `${this.baseUrl}/privilege/grant/${roleId}`,
       data,

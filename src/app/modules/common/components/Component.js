@@ -255,11 +255,22 @@ export default class Component extends RComponent {
   }
 
   getCurrentLanguageCode() {
-    const currentSetting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
+    const currentSetting = this.Util.getSetting();
     if (currentSetting != null) {
       return currentSetting.defaultLanguageCode;
     }
-
     return "en";
+  }
+
+  getImageFromUpload(value) {
+    let image = "";
+
+    if (value === null) return image;
+
+    if ("image" in value && "file" in value["image"] && "name" in value["image"]["file"]) {
+      image = value["image"]["file"]["name"];
+    }
+    
+    return image;
   }
 }

@@ -18,7 +18,7 @@ class ProductService extends BaseService {
     searchKey // {"column": ["columnname1", "columnname2"], "value": "hello"}
   ) {
     let languageId = "en";
-    const currentSetting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
+    const currentSetting = this.Util.getSetting();
     
     if (currentSetting != null && "defaultLanguageCode" in currentSetting) {
       languageId = currentSetting.defaultLanguageCode;
@@ -42,13 +42,13 @@ class ProductService extends BaseService {
     searchKey
   ) {
     let languageId = "en";
-    const currentSetting = this.Util.getSetting(ConstantAuth.ACCESS_TOKEN);
+    const currentSetting = this.Util.getSetting();
     
     if (currentSetting != null && "defaultLanguageCode" in currentSetting) {
       languageId = currentSetting.defaultLanguageCode;
     }
 
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.GET({ 
       url: `${this.baseUrl}/lists/dropdown?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&languageId=${languageId}`,  
       data: this.data,
@@ -65,7 +65,7 @@ class ProductService extends BaseService {
     filter,
     searchKey
   ) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.GET({ 
       url: `${this.baseUrl}/log/${id}?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}`,  
       data: this.data,
@@ -82,7 +82,7 @@ class ProductService extends BaseService {
     filter,
     searchKey
   ) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.GET({ 
       url: `${this.baseUrl}/cost/log/${id}?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}`,  
       data: this.data,
@@ -91,7 +91,7 @@ class ProductService extends BaseService {
   }
 
   archiveVariant(id) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.DELETE({  
       url: `${this.baseUrl}/variant/archive/${id}`,
       data: this.data,
@@ -100,7 +100,7 @@ class ProductService extends BaseService {
   }
 
   changeStatusProductVarait(id) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.PUT({  
       url: `${this.baseUrl}/variant/update/${id}`,
       data: this.data,
@@ -109,7 +109,7 @@ class ProductService extends BaseService {
   }
 
   clone(id) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken(this.ConstantAuth.ACCESS_TOKEN)}`;
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.POST({
       url: `${this.baseUrl}/clone/${id}`, 
       data: this.data,

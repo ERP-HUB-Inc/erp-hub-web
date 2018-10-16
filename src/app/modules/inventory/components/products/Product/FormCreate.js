@@ -142,9 +142,10 @@ export default class FormCreate extends Modal {
         values["descriptions"] = productDescriptions;
         values["productVariants"] = productVariantToProduct;
         values["productPackages"] = productPackageToProduct;
-
+        values["image"] = this.getImageFromUpload(values);
+        // console.log("Values Product:", values);
         this.dispatch(ProductAction.add(values));
-        
+
         // RESET STATE
         this.setState({tagList: []});
       }
