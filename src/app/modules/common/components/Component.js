@@ -267,7 +267,12 @@ export default class Component extends RComponent {
 
     if (value === null) return image;
 
-    if ("image" in value && "file" in value["image"] && "name" in value["image"]["file"]) {
+    if ("image" in value &&
+      value["image"] &&
+      "file" in value["image"] &&
+      value["image"]["file"] && 
+      "name" in value["image"]["file"]
+    ) {
       image = value["image"]["file"]["name"];
     }
     

@@ -149,7 +149,7 @@ export default class StoreAccountList extends Component {
     const currency = storeAccount.list.currency != null ? [storeAccount.list.currency] : [];
 
     return (
-      <div>
+      <div style={{width: "100%"}}>
         <div className="breadcrumb">
           <ul className="list-unstyled">
             <li>
@@ -191,6 +191,7 @@ export default class StoreAccountList extends Component {
                       label={<this.Translate id="store_acc_business_name" />}
                       placeholder={this.CATranslate("store_acc_business_name", locale)}
                       form={form}
+                      isAutoFocus={true}
                       required/>
 
                     <this.InputText

@@ -50,19 +50,36 @@ export class Util {
     return re.test(email);
   }
 
-  
-  getAccessToken () {
+  getAuthSession () {
     if (!localStorage.getItem(ConstantAuth.ACCESS_TOKEN)) return null;
     let result = localStorage.getItem(ConstantAuth.ACCESS_TOKEN);
     result = JSON.parse(result);
-    return result.accessToken;
+    return result;
+  }
+
+  
+  getAccessToken () {
+    const result = this.getAuthSession();
+    if (result)
+      return result.accessToken;
+    else 
+      return null;
   }
 
   getSetting () {
-    if (!localStorage.getItem(ConstantAuth.ACCESS_TOKEN)) return null;
-    let result = localStorage.getItem(ConstantAuth.ACCESS_TOKEN);
-    result = JSON.parse(result);
-    return result.setting;
+    const result = this.getAuthSession();
+    if (result)
+      return result.setting;
+    else 
+      return null;
+  }
+
+  getClientId() {
+    const result = this.getAuthSession();
+    if (result)
+      return result.clientId;
+    else 
+      return null;
   }
 
   getCurrentDate () {
@@ -226,7 +243,32 @@ export class Util {
   }
 
   getProductImage(fileName) {
-    return `${process.env.REACT_APP_RESOURCE_HOST}/product/${fileName}`;
+    return {
+      url: `${process.env.REACT_APP_RESOURCE_HOST}/${this.getClientId()}/product/${fileName}`
+    };
+  }
+
+  testImage(url, callback, timeout) {
+    timeout = timeout || 5000;
+    var timedOut = false, timer;
+    var img = new Image();
+    img.onerror = img.onabort = () => {
+      if (!timedOut) {
+        clearTimeout(timer);
+        callback(url, "error");
+      }
+    };
+    img.onload = () => {
+      if (!timedOut) {
+        clearTimeout(timer);
+        callback(url, "success");
+      }
+    };
+    img.src = url;
+    timer = setTimeout(() => {
+      timedOut = true;
+      callback(url, "timeout");
+    }, timeout); 
   }
 
   getImageFromSpace(image) {

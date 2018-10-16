@@ -15,6 +15,7 @@ export default class FormItem extends Modal {
           min={4}
           data={formData.name}
           required={true}
+          isAutoFocus={true}
           form={form}/>
 
         {/* <this.UploadImg 

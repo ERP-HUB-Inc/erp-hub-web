@@ -1,7 +1,6 @@
 import React from "react";
 import {Pagination} from "antd";
 import Component  from "../../Component";
-import ConstantAuth from "../../../constants/authentication";
 import menuSource from "../../layout/SiderBar/datasource";
 import "./index.css";
 

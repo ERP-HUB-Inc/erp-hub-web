@@ -40,7 +40,7 @@ export default class Receipt extends Component {
           fontFamily: "Arial"
         // display: "none"
         }}>
-          <table width="100%" style={{color: "rgb(142, 136, 136)", fontSize: "8pt", backgroundColor: "white", margin: "auto"}}>
+          <table width="100%" style={{color: "rgb(142, 136, 136)", fontSize: "8pt", backgroundColor: "white", margin: "auto", width: "120mm", padding: 5}}>
             <tbody><tr>
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>
                 <div style={{height: 100, width: 100, border: "1px solid rgb(142, 136, 136)", position: "relative", borderRadius: 100, margin: "auto", overflow: "hidden"}}>
@@ -68,7 +68,7 @@ export default class Receipt extends Component {
                 <table width="100%" style={{fontSize: "8pt", color: "rgb(142, 136, 136)"}}>
                   <thead>
                     <tr>
-                      <th style={{fontWeight: 500, width: 50, textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)"}}>
+                      <th style={{fontWeight: 500, width: 40, textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)"}}>
                         <this.Translate id="text_qty"/>
                       </th>
                       <th style={{fontWeight: 500, padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)", textAlign: "left"}}>

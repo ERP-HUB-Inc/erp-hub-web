@@ -1,7 +1,6 @@
 import React from "react";
 import {Form} from "antd";
 import Component from "../../Component";
-import ConstantAuth from "../../../constants/authentication";
 import "./index.css";
 
 export default class Modal extends Component {

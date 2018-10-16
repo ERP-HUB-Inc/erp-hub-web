@@ -21,6 +21,7 @@ export default class FormItem extends Modal {
           placeholder={this.CATranslate("input_tax_name", locale)}
           form={form}
           required={true}
+          isAutoFocus={true}
           min={3}
           max={100}
           errorLenght={<this.Translate id="error_tax_name_length" />} />

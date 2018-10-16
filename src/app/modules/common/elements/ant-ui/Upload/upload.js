@@ -25,16 +25,58 @@ export default class PicturesUpload extends Element {
       cardPreviewImage: "",
       isRemoveImage: false,
       cardPreviewVisible: false,
-      cardImgList: [],
+      cardImgList: null,
+      fileList: []
     };
-    this.handleCardChange = this.handleCardChange.bind(this); 
+    this.handleCardChange = this.handleCardChange.bind(this);
+    this.initializeImage = this.initializeImage.bind(this);
+  }
+
+  initializeImage(status) {
+    if (status === "success") {
+      this.setState({
+        fileList: this.props.fileList,
+        cardImgList: this.props.fileList[0].name
+      });
+    } else if (status === "error") {
+      this.setState({
+        fileList: [],
+        cardImgList: null
+      });
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.fileList.length > 0) {
+      this.validImage(this.props.fileList[0].url, this.initializeImage);
+    }
+  }
+
+  validImage(url, callback, timeout) {
+    timeout = timeout || 5000;
+    var timedOut = false, timer;
+    var img = new Image();
+    img.onerror = img.onabort = () => {
+      if (!timedOut) {
+        clearTimeout(timer);
+        callback("error");
+      }
+    };
+    img.onload = () => {
+      if (!timedOut) {
+        clearTimeout(timer);
+        callback("success");
+      }
+    };
+    img.src = url;
+    timer = setTimeout(() => {
+      timedOut = true;
+      callback("timeout");
+    }, timeout); 
   }
 
   handleCardChange(fileList){
     if (!this.state.isRemoveImage) {
-      const cardImgList = this.state.cardImgList;
-      cardImgList.push(fileList.file);
-      this.setState({cardImgList});
       let formData = new FormData();
       formData.append("image", fileList.file);
       axios.post(this.props.endPoint, formData, {
@@ -43,35 +85,59 @@ export default class PicturesUpload extends Element {
           "Authorization": `Bearer ${this.props.accessToken}`
         }
       })
-        .then(function (response) {
-          console.log("Upload Response:", response);
+        .then((response) => {
+          this.setState({
+            cardImgList: response.data.key,
+            fileList: [{
+              uid: "-1",
+              name: fileList.file.name,
+              url: response.data.location
+            }]
+          });
         })
-        .catch(function (error) {
-          // alert(error);
+        .catch((error) => {
+          
         });
     } else {
-      this.setState({isRemoveImage: false});
+      this.setState({
+        isRemoveImage: false,
+        cardImgList: "image"
+      });
     }
   }
 
   render() {
     const cardImgProps = {
-      action: "http://127.0.0.1:3000/api/employee/v1/upload/file",
+      action: this.props.endPoint,
       
       onRemove: (file) => {
+        axios({
+          method: "DELETE",
+          url: this.props.endPointDelete,
+          data: {fileName: file.name} ,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${this.props.accessToken}`
+          }})
+          .then((response) => {
+            this.setState({
+              cardImgList: null,
+              isRemoveImage: false
+            });
+            this.props.form.setFieldsValue({[this.props.name]: null});
+          })
+          .catch((error) => {
+            
+          });
         this.setState({
-          cardImgList: [],
-          isRemoveImage: true
+          isRemoveImage: true,
+          fileList: []
         });
       },
       beforeUpload: (file) => {
-        this.setState(({ cardImgList }) => ({
-          cardImgList: [...cardImgList, file],
-        }));
         return false;
       },
-      // showUploadList: false,
-      defaultFileList: this.props.fileList,
+      fileList: this.state.fileList,
       onPreview: this.handleCardPreview,
       onChange: this.handleCardChange,
       accept: "image/*",
@@ -87,7 +153,7 @@ export default class PicturesUpload extends Element {
           {
             getFieldDecorator(this.props.name, { rules: this.props.rules } )(
               <Upload {...cardImgProps}>
-                {cardImgList.length > 0 ? null : uploadButton}
+                {cardImgList ? null : uploadButton}
               </Upload>
             )
           }

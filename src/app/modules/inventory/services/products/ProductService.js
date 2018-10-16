@@ -1,5 +1,4 @@
 import BaseService from "../BaseService";
-import ConstantAuth from "../../../common/constants/authentication";
 
 class ProductService extends BaseService {
 

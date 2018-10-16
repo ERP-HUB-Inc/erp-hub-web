@@ -23,6 +23,7 @@ export class UploadImg extends Element {
         rules={this.rules}
         fileList={this.props.fileList}
         endPoint={this.props.endPoint}
+        endPointDelete={this.props.endPointDelete}
         accessToken={this.props.accessToken}
         beforeUpload={this.props.beforeUpload}
         handleCardChange={this.handleCardChange}
