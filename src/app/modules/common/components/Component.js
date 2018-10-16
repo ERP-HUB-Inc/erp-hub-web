@@ -262,18 +262,18 @@ export default class Component extends RComponent {
     return "en";
   }
 
-  getImageFromUpload(value) {
+  getImageFromUpload(value, key = "image") {
     let image = "";
 
     if (value === null) return image;
 
-    if ("image" in value &&
-      value["image"] &&
-      "file" in value["image"] &&
-      value["image"]["file"] && 
-      "name" in value["image"]["file"]
+    if (key in value &&
+      value[key] &&
+      "file" in value[key] &&
+      value[key]["file"] && 
+      "name" in value[key]["file"]
     ) {
-      image = value["image"]["file"]["name"];
+      image = value[key]["file"]["name"];
     }
     
     return image;

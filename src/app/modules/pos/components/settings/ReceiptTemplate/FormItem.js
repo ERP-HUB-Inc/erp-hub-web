@@ -18,12 +18,20 @@ export default class FormItem extends Modal {
           isAutoFocus={true}
           form={form}/>
 
-        {/* <this.UploadImg 
-            name="upload" 
-            label="Receipt Logo" 
-            required={ false }
-            form={form} 
-          />    */}
+        <this.UploadImg 
+          name="logo" 
+          label={<this.Translate id="receipt_logo" />}
+          fileList={[{
+            uid: "-1",
+            name: formData.logo,
+            status: "done",
+            url: this.Util.getProductImage(formData.logo, "general").url
+          }]}
+          endPoint={`${this.Util.getAPIURL()}/file/v1/upload/general`}
+          endPointDelete={`${this.Util.getAPIURL()}/file/v1/general/delete`}
+          accessToken={this.Util.getAccessToken()}
+          required={false}
+          form={form} />
           
         <this.Switchs
           name="isShowStoreName"

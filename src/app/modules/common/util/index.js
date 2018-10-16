@@ -242,9 +242,9 @@ export class Util {
     return true;
   }
 
-  getProductImage(fileName) {
+  getProductImage(fileName, key="product") {
     return {
-      url: `${process.env.REACT_APP_RESOURCE_HOST}/${this.getClientId()}/product/${fileName}`
+      url: `${process.env.REACT_APP_RESOURCE_HOST}/${this.getClientId()}/${key}/${fileName}`
     };
   }
 

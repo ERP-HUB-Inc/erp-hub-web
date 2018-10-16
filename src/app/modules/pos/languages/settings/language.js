@@ -29,6 +29,12 @@ export default {
     "ឈ្មោះ"
   ],
 
+  "receipt_logo": [
+    "Receipt Logo",
+    "Receipt Logo",
+    "Receipt Logo"
+  ],
+
   "input_language_symbol": [
     "Symbol",
     "အထိမ်းအမှတ်",

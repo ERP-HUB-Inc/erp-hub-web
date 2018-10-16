@@ -220,6 +220,17 @@ color: #4D4F5C;
     display: none
 }
 
+/* INPUT UPLOAD */
+.main-upload .ant-upload-list-picture-card .ant-upload-list-item-thumbnail img {
+    position: absolute;
+    height: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    margin: auto
+}
+
 /* BUTTON ADD NEW ELEMENT */
 .btn-addcontact button,
 .btn-addcontact button:hover,
