@@ -5,7 +5,11 @@ export default class InputText extends Element {
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <this.FormItem label={this.props.label} className={this.props.className}>
+      <this.FormItem
+        label={this.props.label}
+        help={this.props.help}
+        validateStatus={this.props.validateStatus}
+        className={this.props.className}>
         {
           getFieldDecorator(this.props.name, {rules: [
             {

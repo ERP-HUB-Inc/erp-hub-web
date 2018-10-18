@@ -84,3 +84,7 @@
 .ant-modal-mask {
     background-color: rgba(0, 0, 0, 0.37) !important
 }
+
+.modal-fix-footer .ant-modal-footer {
+    background: #f7f7f7cc
+}

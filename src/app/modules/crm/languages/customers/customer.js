@@ -15,9 +15,9 @@ export default {
     "Customer Name"
   ],
   "col_management_customer_email": [
-    "email",
-    "email",
-    "email",
+    "Email",
+    "Email",
+    "Email",
   ],
   "col_management_customer_phoneno": [
     "Phone No",
@@ -133,6 +133,12 @@ export default {
     "Add new customer",
     "Add new customer",
     "Add new customer"
+  ],
+
+  "text_no_contact": [
+    "No contact",
+    "No contact",
+    "No contact"
   ]
 
 };

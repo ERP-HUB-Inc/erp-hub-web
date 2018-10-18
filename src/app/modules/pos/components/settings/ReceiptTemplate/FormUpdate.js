@@ -19,6 +19,7 @@ export default class FormReciptTemplateUpdate extends Modal {
         values["isShowStoreName"] = this.Util.checkValueSwitch(values.isShowStoreName);
         values["isShowCustomerInfo"] = this.Util.checkValueSwitch(values.isShowCustomerInfo);
         values["isShowDevelopBy"] = this.Util.checkValueSwitch(values.isShowDevelopBy);
+        values["isDefault"] = this.Util.checkValueSwitch(values.isDefault);
         values["logo"] = this.getImageFromUpload(values, "logo");
         this.dispatch(ReceiptAction.update(values));
       }

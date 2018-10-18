@@ -112,7 +112,7 @@ export default class ProductList extends List {
       form == null ?
         ""
         :
-        <this.Form onSubmit={this.handleSubmitFilter}>
+        <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
           <this.Row className="main-search-layout form-group">
             <this.Col md="3">
               <this.InputText
@@ -170,9 +170,11 @@ export default class ProductList extends List {
                 defaultValue={1}
                 form={form}/>
             </this.Col>
-            <this.Button htmlType="submit" type="info">
-              <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-            </this.Button>
+            <this.Col md="2" className="wrap-btn-search">
+              <this.Button htmlType="submit" type="info">
+                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+              </this.Button>
+            </this.Col>
           </this.Row>
         </this.Form>
     ); 

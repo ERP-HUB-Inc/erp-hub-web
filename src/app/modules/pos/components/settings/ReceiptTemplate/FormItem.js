@@ -25,12 +25,11 @@ export default class FormItem extends Modal {
             uid: "-1",
             name: formData.logo,
             status: "done",
-            url: this.Util.getProductImage(formData.logo, "general").url
+            url: this.Util.getProductImage(formData.logo, this.Enum.IMAGE_SPACE.GENERAL).url
           }]}
           endPoint={`${this.Util.getAPIURL()}/file/v1/upload/general`}
           endPointDelete={`${this.Util.getAPIURL()}/file/v1/general/delete`}
           accessToken={this.Util.getAccessToken()}
-          required={false}
           form={form} />
           
         <this.Switchs
@@ -51,6 +50,12 @@ export default class FormItem extends Modal {
           checked={formData.isShowDevelopBy}
           form={form}/>
 
+        <this.Switchs
+          name="isDefault"
+          label={<this.Translate id="text_is_default" />}
+          checked={formData.isDefault}
+          form={form}/>
+
         <this.Select
           name="status"
           label={<this.Translate id="text_status" />}
@@ -68,6 +73,7 @@ FormItem.defaultProps = {
     isShowStoreName: 0,
     isShowCustomerInfo: 0,
     isShowDevelopBy: 0,
+    isDefault: 0,
     status: 1
   }
 };

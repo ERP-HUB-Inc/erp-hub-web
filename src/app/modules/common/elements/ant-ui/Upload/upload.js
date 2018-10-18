@@ -86,7 +86,6 @@ export default class PicturesUpload extends Element {
         }
       })
         .then((response) => {
-          console.log("Response Back:", response);
           this.setState({
             cardImgList: response.data.key,
             fileList: [{

@@ -6,7 +6,7 @@ import Constant from "../../../constants/settings/operationRecord";
 import OperationRecordAction from "../../../action/settings/operationRecord";
 import OperatinRecordService from "../../../services/settings/OperationRecordService";
 
-export default class TaxList extends List {
+export default class OperationRecord extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();

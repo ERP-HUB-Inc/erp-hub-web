@@ -5,7 +5,7 @@ import TaxSetting from "./TaxSetting";
 import Enum from "../../../enums";
 import TransactionAction from "../../../action/transaction/transaction";
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
-import FormCreateCustomer from "../../../../crm/containers/customers/ManageCustomers/FormCreate";
+import FormCreateCustomer from "../../../../crm/containers/customers/customers/FormCreate";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import ProductTypeAction from "../../../../inventory/actions/products/productsType";
 import ProductAction from "../../../../inventory/actions/products/product";
@@ -28,29 +28,6 @@ export default class Retail extends Component {
       productTaxList: [],
       categoryList: [
         {id: 0, name: <this.Translate id="text_all_category"/>},
-      ],
-      productList: [
-        {id: 1, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/sting.PNG", options: [
-          {attribute: "Color", variant: [{name: "GOLD"}, {name: "WHITE"}, {name: "BLACK"}]},
-          {attribute: "Size", variant: [{name: "8G"}, {name: "12G"}, {name: "128G"}]}
-        ]},
-        {id: 2, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/barcase.PNG", options: []},
-        {id: 3, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/coca.PNG", options: []},
-        {id: 4, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/milk.PNG", options: []},
-        {id: 5, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/fanta.PNG", options: []},
-        {id: 6, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/carabav.PNG", options: []},
-        {id: 7, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/soda.PNG", options: []},
-        {id: 8, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/sting.PNG", options: []},
-        {id: 9, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/sting.PNG", options: []},
-        {id: 10, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/sting.PNG", options: []},
-        {id: 11, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/sting.PNG", options: []},
-        {id: 12, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/sting.PNG", options: []},
-        {id: 13, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/soda.PNG", options: []},
-        {id: 14, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/sting.PNG", options: []},
-        {id: 15, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/sting.PNG", options: []},
-        {id: 16, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/sting.PNG", options: []},
-        {id: 17, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/sting.PNG", options: []},
-        {id: 18, name: "Coca Cola 2 L Bottle", price: 1.75, image: "http://ca.localhost:3081/sting.PNG", options: []}
       ],
       productOrderList: [],
       discountValue: {type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: 0},
@@ -93,7 +70,8 @@ export default class Retail extends Component {
     this.props.dispatch(ProductAction.fetch(25));
     this.props.dispatch(PaymentMethodAction.fetch(100, "", "", "", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
     window.addEventListener("resize", this.handleOnResizeScreen);
-    this.restoreReceipt(Enum.CURRENT_RECEIPT);
+    // RESTORE CURRENT RECEIPT
+    //this.restoreReceipt(Enum.CURRENT_RECEIPT);
   }
 
   getTaxDescription(tax) {
@@ -226,6 +204,7 @@ export default class Retail extends Component {
   saveReceipt(key) {
     localStorage.setItem(key, JSON.stringify({
       productOrderList: this.state.productOrderList,
+      productTaxList: this.state.productTaxList,
       discountValue: this.state.discountValue,
       isDiscountHasAdded: this.state.isDiscountHasAdded
     }));
@@ -245,6 +224,7 @@ export default class Retail extends Component {
     this.setState({
       expandOrderItemRow: [],
       productOrderList: [],
+      productTaxList: [],
       discountValue: {type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: 0},
       isDiscountHasAdded: false,
     });
@@ -302,7 +282,7 @@ export default class Retail extends Component {
 
     this.setState({productOrderList: existingProductOrderList});
 
-    this.saveReceipt(Enum.CURRENT_RECEIPT, existingProductOrderList);
+    this.saveReceipt(Enum.CURRENT_RECEIPT);
     // if (value.productVariantToProduct.length > 0) {
     //   this.setState({
     //     showVariantProduct: true,
@@ -523,7 +503,7 @@ export default class Retail extends Component {
           <this.Col md="3" className="product-box" key={index}>
             <div onClick={() => this.handleOnSelectProduct(product)} className="product">
               <div className="image">
-                <img alt="" src={this.Util.getImageFromSpace(product.image)} />
+                <this.Image url={this.Util.getProductImage(product.image).url}/>
               </div>
               <div className="name">
                 {
@@ -620,6 +600,7 @@ export default class Retail extends Component {
               productSearch={this.props.productSearch}
               handleOnSelectList={this.handleOnSelectProductSearchList}
               callBack={this.handleOnAutoSelectProductAfterSearchResult}
+              handlePressEnterOnSearch={this.handleOnSelectProductSearchList}
               className="ca-input-v1-icon-left ca-input-v1"
               isAutoFocus={true}
               locale={this.props.locale}

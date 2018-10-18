@@ -39,6 +39,14 @@ export default combineReducers ({
       Constant.RESET_RECEIPT
     ];
     return reducer.update(state, action, constants);
+  },
+  detail: (state = InitialState.detail(), action) => {
+    const constants = [
+      Constant.DETAIL_RECEIPT_PENDING,
+      Constant.DETAIL_RECEIPT_REJECTED,
+      Constant.DETAIL_RECEIPT_FULFILLED
+    ];
+    return reducer.detail(state, action, constants);
   }
 });
   

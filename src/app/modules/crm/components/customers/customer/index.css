@@ -1,37 +1,51 @@
-/* .customerBlog .btn-addcontact button,
-customerBlog .btn-addcontact button:hover {
-    border: none;
-    color: #57A600 !important;  
-    font-weight: bold;
-    font-size: 17px;
-} */
-
-customerBlog .btn-addcontact span.icon-add {
-    margin-left: -16px;          
+.wrap-customer,
+.wrap-customer .ant-modal,
+.wrap-customer .ant-modal .ant-modal-content,
+.wrap-customer .ant-modal .ant-modal-body,
+.wrap-customer .ant-modal .ant-modal-body form,
+.wrap-customer .ant-modal .ant-modal-body form .ant-tabs,
+.wrap-customer .ant-modal .ant-modal-body form .ant-tabs-content,
+.wrap-customer .ant-modal .ant-modal-body form .ant-tabs-content .tabpanel {
+    height: 100%
 }
 
-
-/* extend subtable */
-customerBlog .sub-table tr:nth-child(odd) {
-    background-color: #FBFBFB;
+.wrap-customer .ant-modal .ant-modal-body,
+.wrap-customer .ant-modal .ant-modal-content,
+.wrap-customer .ant-modal .ant-modal-body form,
+.wrap-customer .ant-modal .ant-modal-body form .ant-tabs,
+.wrap-customer .ant-modal .ant-modal-body form .ant-tabs-content {
+    display: flex
 }
 
-customerBlog tr.ant-table-expanded-row > td:first-child {
-    border-left: 2px solid #0D62AF !important;
-}    
+.wrap-customer .ant-modal .ant-modal-content, 
+.wrap-customer .ant-modal .ant-modal-body,
+.wrap-customer .ant-modal .ant-modal-body form,
+.wrap-customer .ant-modal .ant-modal-body form .ant-tabs {
+    flex-direction: column
+}
+
+.wrap-customer .ant-modal .ant-modal-body form .ant-tabs {
+    padding-left: 15px
+}
+
+.wrap-customer .ant-modal .ant-modal-body {
+    padding-right: 0 !important;
+    padding-left: 0 !important
+}
+
+.wrap-customer .ant-modal .ant-modal-body form .ant-tabs .ant-tabs-bar {
+    margin-bottom: 0
+}
+
+.wrap-customer .ant-modal .ant-modal-body form .ant-tabs-content .ant-tabs-tabpane {
+    overflow: hidden auto;
+    padding-right: 10px;
+    padding-top: 10px
+}
 
 .dynamic-delete-button {
     color: red;
 }
-
-
-/* .main-management-customer ul.ant-select-dropdown-menu li:first-child {
-    position: fixed;
-    margin-bottom: 12px;
-    color: #57A600 !important;
-    background: white;
-    z-index: 9;
-} */
 
 tr.ant-table-expanded-row td {
     background-color: white;

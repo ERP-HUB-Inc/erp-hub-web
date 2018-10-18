@@ -1,7 +1,9 @@
 import React from "react";
 import Receipt from "./Receipt";
 import Enum from "../../../enums";
+import GeneralAction from "../../../../common/actions/general";
 import TransactionAction from "../../../action/transaction/transaction";
+import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
 import POSUtil from "../../../utils";
 import Modal from "../../../../common/components/shares/Modal";
 import "./Payment.css";
@@ -23,6 +25,19 @@ export default class Payment extends Modal {
     this.handleOnMakePaymentWithCash = this.handleOnMakePaymentWithCash.bind(this);
     this.handleOnCompletePayment = this.handleOnCompletePayment.bind(this);
     this.handleOnSendMailReceipt = this.handleOnSendMailReceipt.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.dispatch(ReceiptTemplateAction.default());
+  }
+
+  componentDidUpdate() {
+    if (this.props.mail.sent) {
+      this.Message.success(this.CATranslate("text_receipt_has_sent", this.props.locale));
+      this.props.form.setFieldsValue({email: ""});
+      document.getElementById("email").focus();
+      this.props.dispatch(GeneralAction.sendMailReset());
+    }
   }
 
   renderCrudAction() {
@@ -74,9 +89,13 @@ export default class Payment extends Modal {
 
   handleOnSendMailReceipt() {
     const email = this.props.form.getFieldValue("email");
-    let element = document.getElementById("pos-receipt-preview").innerHTML;
-    element = `<html><head><title></title></head><body>${element}</body></html>`;
-    this.props.dispatch(TransactionAction.sendEmailReceipt(element, email));
+    if (email) {
+      let element = document.getElementById("pos-receipt-preview").innerHTML;
+      element = `<html><head><title></title></head><body>${element}</body></html>`;
+      this.props.dispatch(TransactionAction.sendEmailReceipt(element, email));
+    } else {
+      document.getElementById("email").focus();
+    }
   }
 
   handleOnCompletePayment() {
@@ -231,6 +250,7 @@ export default class Payment extends Modal {
             this.props.transaction.response ?
               <Receipt
                 data={this.props.transaction.response.data}
+                receiptTemplate={this.props.receiptTemplate.data}
                 currentUser={this.currentUser}
                 customerPaymentList={this.state.customerPaymentList}
                 paymentMethodList={paymentMethodList}
@@ -362,14 +382,11 @@ export default class Payment extends Modal {
                         </this.Button> 
                       )
                     }
-                    {/* <this.Button type="info" onClick={this.handleOnMakePayment}>
-                      <this.Translate id="text_credit_card" />
-                    </this.Button> */}
                   </div>
                 </div>
                 :
-                <div className="text-center confirm-payment">
-                  <div className="title">
+                <div className="confirm-payment">
+                  <div className="text-center title">
                     {
                       changeAmount > 0 ?
                         <span>
@@ -382,12 +399,12 @@ export default class Payment extends Modal {
                     }
                   </div>
                   <div className="wrap-email-receipt">
-                    <this.InputText
+                    <this.InputEmail
                       name="email"
                       className="ca-input-v1"
-                      placeholder="Email address"
+                      placeholder={this.CATranslate("store_acc_email", this.props.locale)}
                       form={this.props.form}/>
-                    <this.Button type="info" className="margin-left-8 ca-button-v1 btn-send-email-receipt" onClick={this.handleOnSendMailReceipt}>
+                    <this.Button loading={this.props.mail.sending} type="info" className="margin-left-8 ca-button-v1 btn-send-email-receipt" onClick={this.handleOnSendMailReceipt}>
                       <this.Translate id="text_email_receipt" />
                     </this.Button>
                   </div>

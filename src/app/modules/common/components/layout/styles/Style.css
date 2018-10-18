@@ -121,7 +121,9 @@ html,
     border-right-width: 1.5px !important
 }
 
-.has-error .ca-input-v1 .ant-input-number-input {
+.ca-input-v1 .has-error .ant-input-number-input,
+.ca-input-v1 .has-error .ant-input
+ {
     border: 1.5px solid #f5222d
 }
 

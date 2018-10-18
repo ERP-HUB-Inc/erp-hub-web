@@ -13,7 +13,9 @@ class PaymentForm extends React.Component {
 function mapStateToProps(state) {
   return {
     locale: state.locale,
-    transaction: state.reducer.transaction.posPay
+    mail: state.reducer.mail.send,
+    transaction: state.reducer.transaction.posPay,
+    receiptTemplate: state.reducer.receiptTemplate.detail
   };
 }
   

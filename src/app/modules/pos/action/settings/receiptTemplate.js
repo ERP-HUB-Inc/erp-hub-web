@@ -1,5 +1,5 @@
 import Constant from "../../constants/settings/receiptTemplate";
-import ReceiptService from "../../services/settings/ReceiptService";
+import ReceiptService from "../../services/settings/ReceiptTemplateService";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
@@ -39,6 +39,14 @@ export default {
       return dispatch({
         type: Constant.RESET_RECEIPT,
         payload: null
+      });
+    };
+  },
+  default: () => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.DETAIL_RECEIPT,
+        payload: ReceiptService.default()
       });
     };
   },

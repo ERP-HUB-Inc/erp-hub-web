@@ -62,7 +62,7 @@ import ManageEmployee from "../../../../hr/containers/employees/ManageEmployee";
 
 // CUSTOMER
 import GroupCustomer from "../../../../crm/containers/customers/GroupCustomers";
-import ManageCustomer from "../../../../crm/containers/customers/ManageCustomers";
+import ManageCustomer from "../../../../crm/containers/customers/customers";
 // import PurchaseHistory from "../../../../crm/containers/customers/ManageCustomers";
 
 /*==============================END CRM===================================*/
@@ -369,7 +369,7 @@ const dataSource = {
       {
         title: "Receipt Template",
         icon: "icon-receipt",
-        route: "/settings/receipt-template",
+        route: "/settings/receipt/template",
         component: ReceiptTemplate,
         isFashNav: true
       },

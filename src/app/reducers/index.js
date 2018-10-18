@@ -5,6 +5,7 @@ import businessType from "../modules/common/reducers/businessType";
 import languageSystem from "../modules/common/reducers/language";
 import client from "../modules/common/reducers/client";
 import user from "../modules/common/reducers/user";
+import mail from "../modules/common/reducers/mail";
 import paymentMethods from "../modules/pos/reducers/settings/paymentMethod";
 import tax from "../modules/pos/reducers/settings/tax";
 import currency from "../modules/pos/reducers/settings/currency";
@@ -57,6 +58,7 @@ const reducer = combineReducers({
   businessPlan,
   businessType,
   // SETTING MODULE
+  mail,
   user,
   tax,
   currency,
