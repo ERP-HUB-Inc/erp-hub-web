@@ -1,5 +1,6 @@
 import React from "react";
 import FormItem from "./FormItem";
+import Constant from "../../../constants/products/product";
 import ProductAction from "../../../actions/products/product";
 import BrandAction from "../../../actions/products/brand";
 import FormCreateBrand from "../../../containers/products/Brand/FormCreate";
@@ -153,7 +154,7 @@ export default class FormCreate extends Modal {
   }
       
   handleCancel() {
-    this.dispatch(ProductAction.reset());
+    this.dispatch(ProductAction.reset(Constant.RESET_FORM_PRODUCT));
   }
 
   handleAddBrand() {

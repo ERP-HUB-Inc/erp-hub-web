@@ -8,10 +8,7 @@ import ProductAction from "../../../actions/products/product";
 import BrandAction from "../../../actions/products/brand";
 import ProductTypeAction from "../../../actions/products/productsType";
 import UnitAction from "../../../actions/products/productsUnit";
-import TagAction from "../../../actions/products/productsTag";
-import VariantAttributeAction from "../../../actions/products/variantAttribute";
 import TaxAction from "../../../../pos/action/settings/tax";
-import LanguageAction from "../../../../pos/action/settings/storeLanguage";
 import Modal from "../../../../common/components/shares/Modal";
 import "./index.css";
 
@@ -19,7 +16,14 @@ export default class FormItem extends Modal {
   constructor(props) {
     super(props);
     this.state = {
-      productTypeIndex: 0, // for condition thre type starndard, variant, composite
+      brands: [],
+      units: [],
+      taxs: [],
+      productsType: [],
+      languages: [],
+      variantAttributes: [],
+      tags: [],
+      productTypeIndex: 0, // for condition three type starndard, variant, composite
       isAutoGenerateCode: 0,
       isComponentNotYetUpdated: true,
       isComponentNotYetLoadedWillUpdate: true,
@@ -29,6 +33,7 @@ export default class FormItem extends Modal {
     };
 
     this.TAB_PRODUCT_COST_LOG = 3;
+
     this.TAB_PRODUCT_LOG = 4;
 
     this.productTypeContent = "";
@@ -86,35 +91,24 @@ export default class FormItem extends Modal {
     this.onChangeProductName = this.onChangeProductName.bind(this);
     this.onChangeDefaultDescription = this.onChangeDefaultDescription.bind(this);
     this.onChangeTab = this.onChangeTab.bind(this);
-    this.LoadData = this.LoadData.bind(this);
     this.getProductImageFromCallBack = this.getProductImageFromCallBack.bind(this);
   }
 
   componentDidMount() {
-    const {dispatch} = this.props;
-    dispatch(BrandAction.fetch(100));
-    dispatch(ProductTypeAction.fetch(100));
-    dispatch(UnitAction.fetch(100));
-    dispatch(TaxAction.fetch(100));
-    dispatch(TagAction.fetch(100));
-    dispatch(VariantAttributeAction.fetch(100));
-    dispatch(LanguageAction.fetch(100));
-  }
-
-  LoadData() {
-    const {dispatch} = this.props;
-    dispatch(BrandAction.fetch(100));
-    dispatch(ProductTypeAction.fetch(100));
-    dispatch(UnitAction.fetch(100));
-    dispatch(TaxAction.fetch(100));
-    dispatch(TagAction.fetch(100));
-    dispatch(VariantAttributeAction.fetch(100));
+    this.setState({
+      brands: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.BRAND)),
+      units: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT)),
+      taxs: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.TAX)),
+      productsType: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE)),
+      languages: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LANGUAGE)),
+      variantAttributes: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.VARIANT_ATTRIBUTE)),
+      tags: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.PRODUCT_TAG))
+    });
   }
 
   componentWillUpdate(nextProps) {
-    const {formData} = nextProps;
-    if (formData.productDescriptions.length > 0 && this.state.isComponentNotYetLoadedWillUpdate) {
-      let currentLanguageDescription = formData.productDescriptions.find(value => value.languageId === this.getCurrentLanguageCode());
+    if (nextProps.formData.productDescriptions.length > 0 && this.state.isComponentNotYetLoadedWillUpdate) {
+      let currentLanguageDescription = nextProps.formData.productDescriptions.find(value => value.languageId === this.getCurrentLanguageCode());
       if (!currentLanguageDescription) {
         currentLanguageDescription = {};
         currentLanguageDescription["id"] = "";
@@ -128,6 +122,23 @@ export default class FormItem extends Modal {
         isComponentNotYetLoadedWillUpdate: false
       });
     }
+
+    // APEND DATA WHEN ADD MORE IN SELECT LIST
+    if (nextProps.brandAdd.response) {
+      this.setState({brands: [nextProps.brandAdd.response.data, ...this.state.brands]});
+    }
+
+    if (nextProps.productsTypeAdd.response) {
+      this.setState({productsType: [nextProps.productsTypeAdd.response.data, ...this.state.productsType]});
+    }
+
+    if (nextProps.unitAdd.response) {
+      this.setState({units: [nextProps.unitAdd.response.data, ...this.state.units]});
+    }
+
+    if (nextProps.taxAdd.response) {
+      this.setState({taxs: [nextProps.taxAdd.response.data, ...this.state.taxs]});
+    }
   }
 
   componentDidUpdate() {
@@ -138,7 +149,6 @@ export default class FormItem extends Modal {
       productsTypeAdd,
       unitAdd,
       taxAdd,
-      // tags
     } = this.props;
 
     if (brandAdd.added) {
@@ -152,7 +162,7 @@ export default class FormItem extends Modal {
     }
 
     if (unitAdd.added) {
-      this.props.form.setFieldsValue({unitId: unitAdd.response.data.id});
+      this.props.form.setFieldsValue({defaultUnitId: unitAdd.response.data.id});
       dispatch(UnitAction.reset());
     }
 
@@ -162,13 +172,11 @@ export default class FormItem extends Modal {
     }
 
     if (formData.productTagToProduct.length > 0 && this.state.isComponentNotYetUpdated) {
-      // this.props.form.setFieldsValue({tagId: formData.productTagToProduct.map(value => value.productTagToTag.tag)});
       this.setState({isComponentNotYetUpdated: false});
     }
   }
 
   getProductImageFromCallBack(value) {
-    console.log("Values:", value);
     this.props.form.setFieldsValue({image: value});
   } 
 
@@ -266,57 +274,22 @@ export default class FormItem extends Modal {
       dispatch,
       form,
       locale,
-      languages,
       formData,
       productVariantArchive,
-      unitAdd,
-      taxAdd,
-      brandAdd,
-      productsTypeAdd,
       productSearch,
-      variantAttributes,
       variantAttributeAdd
-    } = this.props;
-
-    let {
-      brands,
-      productsType,
-      units,
-      taxs,
-      tags
     } = this.props;
 
     let defaultUnit = {id: ""};
 
     const currentUser = this.getCurrentUser();
+    
+    this.state.productsType.forEach((productTypeValue, productTypeIndex) => {
+      this.state.productsType[productTypeIndex].name = productTypeValue.productTypeDescriptions.length > 0 ? productTypeValue.productTypeDescriptions[0].name : "";
+    });
 
-    if (brandAdd.response != null) {
-      brands.list = [brandAdd.response.data, ...brands.list];
-      productsType.list.forEach((productTypeValue, productTypeIndex) => {
-        productsType.list[productTypeIndex].name = productTypeValue.productTypeDescriptions.length > 0 ? productTypeValue.productTypeDescriptions[0].name : "";
-      });
-    }
-
-    if (productsTypeAdd.response != null) {
-      productsType.list = [productsTypeAdd.response.data, ...productsType.list];
-    }
-
-    if (productsType.fetched) {
-      productsType.list.forEach((productTypeValue, productTypeIndex) => {
-        productsType.list[productTypeIndex].name = productTypeValue.productTypeDescriptions.length > 0 ? productTypeValue.productTypeDescriptions[0].name : "";
-      });
-    }
-
-    if (unitAdd.response != null) {
-      units.list = [unitAdd.response.data, ...units.list];
-    }
-  
-    if (taxAdd.added) {
-      taxs.list = [taxAdd.response.data, ...taxs.list];
-    }
-
-    if (units.fetched) {
-      const findDefaultUnit = units.list.find(unitValue => unitValue.isDefault === this.Enum.IS_DEFAULT);
+    if (this.state.units.length > 0) {
+      const findDefaultUnit = this.state.units.find(unitValue => unitValue.isDefault === this.Enum.IS_DEFAULT);
 
       if (findDefaultUnit) {
         defaultUnit = findDefaultUnit;
@@ -342,7 +315,6 @@ export default class FormItem extends Modal {
           <this.Row>
             <this.Col md="6" className="create-product-column-left">
               <this.Row>
-                {/* <this.Button type="info" onClick={() => this.LoadData()}>LOAD</this.Button> */}
                 <this.Col md="4">
                   <this.InputText
                     name="productNameDefault"
@@ -368,7 +340,7 @@ export default class FormItem extends Modal {
                     label={<this.Translate id="input_product_brand" />}
                     placeholder={this.CATranslate("input_product_brand", locale)}
                     valueKey="id"
-                    dataSource={brands.list}
+                    dataSource={this.state.brands}
                     defaultValue={formData.brandId}
                     addNew={this.props.handleAddBrand}
                     required={true}
@@ -381,7 +353,7 @@ export default class FormItem extends Modal {
                     label={<this.Translate id="input_product_type" />}
                     placeholder={this.CATranslate("input_product_type", locale)}
                     valueKey="id"
-                    dataSource={productsType.list}
+                    dataSource={this.state.productsType}
                     defaultValue={formData.productTypeId}
                     addNew={this.props.handleAddProductType}
                     required={true}
@@ -436,7 +408,7 @@ export default class FormItem extends Modal {
                     label={<this.Translate id="input_product_unit" />}
                     placeholder={this.CATranslate("input_product_unit", locale)}
                     valueKey="id"
-                    dataSource={units.list}
+                    dataSource={this.state.units}
                     defaultValue={formData.defaultUnitId}
                     addNew={this.props.handleAddUnit}
                     required={true}
@@ -468,7 +440,7 @@ export default class FormItem extends Modal {
                     name="taxId"
                     label={<this.Translate id="input_product_tax" />}
                     valueKey="id"
-                    dataSource={taxs.list}
+                    dataSource={this.state.taxs}
                     defaultValue={currentUser.setting.defaultTaxId}
                     addNew={this.props.handleAddTax}
                     form={form}/>
@@ -497,7 +469,7 @@ export default class FormItem extends Modal {
                     placeholder={this.CATranslate("input_product_tag", locale)}
                     nameKey="tag"
                     valueKey="id"
-                    dataSource={tags.list}
+                    dataSource={this.state.tags}
                     defaultValue={formData.productTagToProduct.map(productTag => productTag.tagId)}
                     onChange={this.props.handleChangeTag}
                     onSelect={this.props.handleSelectTag}
@@ -620,7 +592,7 @@ export default class FormItem extends Modal {
                       locale={locale}
                       productVariantArchive={productVariantArchive}
                       productVariantToProduct={formData.productVariantToProduct}
-                      variantAttributes={variantAttributes}
+                      variantAttributes={this.state.variantAttributes}
                       variantAttributeAdd={variantAttributeAdd}
                       handleAddVariantAttribute={this.props.handleAddVariantAttribute}/>
                     :
@@ -640,7 +612,7 @@ export default class FormItem extends Modal {
         </this.TabPane>
         <this.TabPane tab={<this.Translate id="tab_language" />} key="2">
           <this.Tabs type="card" className="tab-item-language">
-            {languages.map((language, languagesIndex) => this.renderDescription(language, languagesIndex))}
+            {this.state.languages.map((language, languagesIndex) => this.renderDescription(language, languagesIndex))}
           </this.Tabs>
         </this.TabPane>
         {

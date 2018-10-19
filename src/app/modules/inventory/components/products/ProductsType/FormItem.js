@@ -46,6 +46,7 @@ export default class FormItem extends Modal {
               data={productTypeName}
               label={<this.Translate id="input_product_name" />}
               placeholder={this.CATranslate("input_product_name", locale)}
+              isAutoFocus={true}
               max={100}
               form={form}/>
           </this.Col>

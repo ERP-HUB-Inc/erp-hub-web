@@ -233,6 +233,31 @@ color: #4D4F5C;
     margin: auto
 }
 
+/* WRAP SELECT*/
+.wrap-select-search ul.ant-select-dropdown-menu li.add-new-item {
+    color: #57A600;
+    position: absolute;
+    width: 100%;
+    background-color: white;
+    z-index: 9
+}
+
+.wrap-select-search ul.ant-select-dropdown-menu li span {
+    font-weight: bold
+}
+
+.wrap-select-search ul.ant-select-dropdown-menu li:nth-child(2) {
+    margin-top: 35px
+}
+
+.ant-select-selection-selected-value .not-for-selected {
+    display: none
+}
+
+.wrap-select-search .ant-select-dropdown-menu {
+    min-height: 35px
+}
+
 /* BUTTON ADD NEW ELEMENT */
 .btn-addcontact button,
 .btn-addcontact button:hover,

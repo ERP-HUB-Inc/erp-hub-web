@@ -17,7 +17,14 @@ function mapStateToProps(state) {
     productAdd: state.reducer.product.add,
     productClone: state.reducer.product.clone,
     productArchive: state.reducer.product.archive,
-    productUpdate: state.reducer.product.update
+    productUpdate: state.reducer.product.update,
+    brands: state.reducer.brand.request,
+    units: state.reducer.productsUnit.request,
+    taxs: state.reducer.tax.request,
+    tags: state.reducer.productsTag.request,
+    productsType: state.reducer.productsType.request,
+    storeLanguage: state.reducer.storeLanguage.request,
+    variantAttributes: state.reducer.variantAttribute.request
   };
 }
 
