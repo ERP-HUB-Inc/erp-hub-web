@@ -5,7 +5,7 @@ export default {
   fetch: (limit, offset, sortField, sortOrder) => {
     return dispatch => {
       return dispatch({
-        type: Constant.REQUEST__EMPLOYEE,
+        type: Constant.REQUEST_EMPLOYEE,
         payload: EmployeeService.lists(limit, offset, sortField, sortOrder)
       });
     };
@@ -13,7 +13,7 @@ export default {
   archive: (ids) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ARCHIVE__EMPLOYEE,
+        type: Constant.ARCHIVE_EMPLOYEE,
         payload: EmployeeService.archive(ids)
       });
     };
@@ -21,7 +21,7 @@ export default {
   add: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ADD__EMPLOYEE,
+        type: Constant.ADD_EMPLOYEE,
         payload: EmployeeService.add(data)
       });
     };
@@ -29,7 +29,7 @@ export default {
   update: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.UPDATE__EMPLOYEE,
+        type: Constant.UPDATE_EMPLOYEE,
         payload: EmployeeService.update(data)
       });
     };
@@ -37,7 +37,7 @@ export default {
   reset: () => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET__EMPLOYEE,
+        type: Constant.RESET_EMPLOYEE,
         payload: null
       });
     };
@@ -45,7 +45,7 @@ export default {
   showForm: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.SHOW__EMPLOYEE_FORM,
+        type: Constant.SHOW_EMPLOYEE_FORM,
         payload: data
       });
     };
@@ -53,7 +53,7 @@ export default {
   requestAndShowForm: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.DETAIL__EMPLOYEE,
+        type: Constant.DETAIL_EMPLOYEE,
         payload: EmployeeService.detail(data.id)
       });
     };
