@@ -11,10 +11,10 @@ class RetailSaleForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    customers: state.reducer.managementCustomers.request,
+    customers: state.reducer.customer.request,
     products: state.reducer.product.request,
     productsType: state.reducer.productsType.request,
-    customerAdd: state.reducer.managementCustomers.add,
+    customerAdd: state.reducer.customer.add,
     productSearch: state.reducer.product.search,
     paymentMethod: state.reducer.paymentMethods.request,
     locale: state.locale

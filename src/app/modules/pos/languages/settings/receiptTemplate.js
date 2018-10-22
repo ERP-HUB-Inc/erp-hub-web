@@ -1,4 +1,9 @@
 export default {
+  "text_receipt_template": [
+    "Receipt Template",
+    "Receipt Template",
+    "Receipt Template"
+  ],
   "col_receipt_template_date": [
     "Date",
     "Date",

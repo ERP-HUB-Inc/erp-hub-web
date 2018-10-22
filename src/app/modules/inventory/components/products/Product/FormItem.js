@@ -309,6 +309,13 @@ export default class FormItem extends Modal {
       productTypeBox = this.state.productTypeIndex;
     }
 
+    const image = {
+      uid: "-1",
+      name: formData.image,
+      status: "done",
+      url: this.Util.getProductImage(formData.image).url
+    };
+
     return (
       <this.Tabs type="card" onChange={(activeKey) => this.onChangeTab(activeKey)}>
         <this.TabPane tab={<this.Translate id="tab_general" />} key="1">
@@ -446,7 +453,7 @@ export default class FormItem extends Modal {
                     form={form}/>
                 </this.Col>
 
-                <this.Col md="4">
+                <this.Col md="4" style={{display: "flex", alignItems: "center", paddingTop: 20}}>
                   <this.Switchs
                     name="isAvialableSale"
                     label={<this.Translate id="input_product_is_avialable_sale" />}
@@ -454,7 +461,7 @@ export default class FormItem extends Modal {
                     form={form}/>
                 </this.Col>
 
-                <this.Col md="4">
+                <this.Col md="4" style={{display: "flex", alignItems: "center", paddingTop: 20}}>
                   <this.Switchs
                     name="isPublic"
                     label={<this.Translate id="input_product_is_publish" />}
@@ -548,17 +555,12 @@ export default class FormItem extends Modal {
                   <this.UploadImg
                     name="image"    
                     label={<this.Translate id="input_hr_employee_upload" />}
-                    fileList={[{
-                      uid: "-1",
-                      name: formData.image,
-                      status: "done",
-                      url: this.Util.getProductImage(formData.image).url
-                    }]}
+                    data={{file: image}}
+                    fileList={[image]}
                     endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}
                     endPointDelete={`${this.Util.getAPIURL()}/file/v1/product/delete`}
                     accessToken={this.Util.getAccessToken()}
-                    form={form}   
-                  />
+                    form={form}/>
                 </this.Col>
               </this.Row> 
             </this.Col>

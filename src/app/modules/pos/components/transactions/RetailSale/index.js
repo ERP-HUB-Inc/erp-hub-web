@@ -5,7 +5,7 @@ import TaxSetting from "./TaxSetting";
 import Enum from "../../../enums";
 import TransactionAction from "../../../action/transaction/transaction";
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
-import FormCreateCustomer from "../../../../crm/containers/customers/customers/FormCreate";
+import FormCreateCustomer from "../../../../crm/containers/customers/Customer/FormCreate";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import ProductTypeAction from "../../../../inventory/actions/products/productsType";
 import ProductAction from "../../../../inventory/actions/products/product";

@@ -41,14 +41,14 @@ export default class ProductList extends List {
     const {productAdd, productUpdate, productClone, dispatch} = nextProps;
     if (productAdd.added || productUpdate.updated) {
       dispatch(ProductAction.fetch(this.pageSize));
-      dispatch(ProductAction.reset());
+      dispatch(ProductAction.reset(Constant.RESET_FORM_PRODUCT));
       dispatch(ProductAction.reset(Constant.RESET_DETAIL_PRODUCTS));
     }
 
     if (productClone.added) {
       if (productClone.response.data) {
         dispatch(ProductAction.requestAndShowForm(productClone.response.data));
-        dispatch(ProductAction.reset());
+        dispatch(ProductAction.reset(Constant.RESET_FORM_PRODUCT));
         this.setState({
           modalConten: <FormUpdate/>,
           selectedRowKeys: []

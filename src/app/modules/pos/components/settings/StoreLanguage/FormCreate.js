@@ -30,19 +30,15 @@ export default class Form extends Modal {
   }
   
   render() {
-    const {storeLanguageAdd, form, locale} = this.props;
+    this.submitLoading = this.props.storeLanguageAdd.adding;
 
-    this.submitLoading = storeLanguageAdd.adding;
+    this.validatorAddRecord(this.props.storeLanguageAdd);
 
-    this.validatorAddRecord(storeLanguageAdd);
-
-    if (storeLanguageAdd.showForm) {
-      this.content = (
-        <FormItem form={form} locale={locale}/>
-      );
+    if (this.props.storeLanguageAdd.showForm) {
+      this.content = <FormItem form={this.props.form} locale={this.props.locale}/>;
       return super.render();
     } else {
-      return (<div></div>);
+      return <div/>;
     }
   }
 }

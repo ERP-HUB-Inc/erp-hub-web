@@ -1,7 +1,6 @@
-import reducer from "../reducer";
-import { combineReducers } from "redux";
-import Constant from "../../constants/employees/managementEmployee";
-// import PaymentMethodSchema from "../../schemas/settings/paymentMethod";
+import {combineReducers} from "redux";
+import Constant from "../../constants/employees/employee";
+import reducer from "../../../common/reducers/reducer";
 import InitialState from "../../../common/reducers/initialState";
 
 export default combineReducers({
@@ -40,5 +39,14 @@ export default combineReducers({
       Constant.RESET_MANAGEMENT_EMPLOYEE
     ];
     return reducer.update(state, action, constants);
-  }
+  },
+  detail: (state = InitialState.detail(), action) => {
+    const constants = [
+      Constant.DETAIL_MANAGEMENT_EMPLOYEE_PENDING,
+      Constant.DETAIL_MANAGEMENT_EMPLOYEE_REJECTED,
+      Constant.DETAIL_MANAGEMENT_EMPLOYEE_FULFILLED,
+      Constant.RESET_DETAIL_MANAGEMENT_EMPLOYEE
+    ];
+    return reducer.detail(state, action, constants);
+  },
 });

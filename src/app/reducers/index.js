@@ -19,10 +19,8 @@ import rolePrivilege from "../modules/pos/reducers/settings/rolePrivilege";
 import storeAccount from "../modules/pos/reducers/settings/storeAccount";
 import operationRecord from "../modules/pos/reducers/settings/operationRecord";
 // Employee
-import managementEmployee from "../modules/hr/reducers/employees/managementEmployee";
-//customer 
-import managementCustomers from "../modules/crm/reducers/customers/customer";
-// groupcustomer
+import employee from "../modules/hr/reducers/employees/employee";
+import customer from "../modules/crm/reducers/customers/customer";
 import groupCustomers from "../modules/crm/reducers/customers/group";
 import product from "../modules/inventory/reducers/products/product";
 import priceTag from "../modules/inventory/reducers/products/priceTag";
@@ -75,8 +73,8 @@ const reducer = combineReducers({
   //Transaction
   transaction,
   // Employee
-  managementEmployee,
-  managementCustomers,
+  employee,
+  customer,
   groupCustomers,
   product,
   priceTag,

@@ -51,7 +51,7 @@ import OperationRecord from "../../../../pos/containers/settings/OperationRecord
 /*==============================HR===================================*/
 
 // EMPLOYEE
-import ManageEmployee from "../../../../hr/containers/employees/ManageEmployee";
+import ManageEmployee from "../../../../hr/containers/employees/Employee";
 // import Performance from "../../../../hr/containers/employees/Performance";
 // import TimeSheet from "../../../../hr/containers/employees/TimeSheet";
 
@@ -61,8 +61,8 @@ import ManageEmployee from "../../../../hr/containers/employees/ManageEmployee";
 /*==============================CRM===================================*/
 
 // CUSTOMER
-import GroupCustomer from "../../../../crm/containers/customers/GroupCustomers";
-import ManageCustomer from "../../../../crm/containers/customers/customers";
+import GroupCustomer from "../../../../crm/containers/customers/Group";
+import ManageCustomer from "../../../../crm/containers/customers/Customer";
 // import PurchaseHistory from "../../../../crm/containers/customers/ManageCustomers";
 
 /*==============================END CRM===================================*/

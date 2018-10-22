@@ -1,20 +1,22 @@
 import React from "react";
+import CreateEmployee from "../../../components/employees/Employee/FormCreate";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import FormUpdate from "../../../components/employees/ManageEmployee/FormUpdate";
+
 
 class ManagementEmployeeForm extends React.Component {
   render() {
     return (
-      <FormUpdate {...this.props} />
+      <CreateEmployee {...this.props} />
     );
   }
 }
 
 function mapStateToProps(state) {
   return {
-    manageEmployeeUpdate: state.reducer.managementEmployee.update,
-    initialValues: state.reducer.managementEmployee.update.data,
+    manageEmployeeAdd: state.reducer.employee.add,
+    roles: state.reducer.roleAccess.request,
+    locations: state.reducer.storeLocation.request,
     locale: state.locale
   };
 }
@@ -25,6 +27,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const managementEmployeeForm = Form.create(mapPropsToFields)(ManagementEmployeeForm);
+const managementEmployeeForm =  Form.create(mapPropsToFields)(ManagementEmployeeForm);
 
 export default connect(mapStateToProps)(managementEmployeeForm);

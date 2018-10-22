@@ -24,7 +24,7 @@ function mapStateToProps(state) {
     unitAdd: state.reducer.productsUnit.add,
     // taxs: state.reducer.tax.request,
     taxAdd: state.reducer.tax.add,
-    // tags: state.reducer.productsTag.request,
+    tags: state.reducer.productsTag.request,
     tagAdd: state.reducer.productsTag.add,
     // variantAttributes: state.reducer.variantAttribute.request,
     variantAttributeAdd: state.reducer.variantAttribute.add,

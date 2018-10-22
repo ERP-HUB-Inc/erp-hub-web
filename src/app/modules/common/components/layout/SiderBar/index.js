@@ -12,6 +12,7 @@ export default class SideBar extends React.Component {
       menuItems: {},
       dataSource
     };
+    this.hasUpdated = false;
     this.handleShow = this.handleShow.bind(this);
     this.handleHidden = this.handleHidden.bind(this);
     this.handleHoverOnSubMenu = this.handleHoverOnSubMenu.bind(this);

@@ -6,8 +6,8 @@ import Modal from "../../../../common/components/shares/Modal";
 export default class FormReciptTemplateCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = "Receipt Template";
-    this.addingPropReducer = "receiptAdd";
+    this.title = <this.Translate id="text_receipt_template"/>;
+    this.wrapClassName = "modal-fix-footer";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
