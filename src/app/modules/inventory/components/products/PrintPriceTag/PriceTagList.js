@@ -64,7 +64,7 @@ export default class ComponentToPrint extends List {
     );
   }
   render() {
-    return (<table>
+    return (<table id="print-tag-content">
       <tbody>
         <tr>
           <td style={{background: "white", margin: "0 auto"}}>

@@ -1,10 +1,10 @@
 import React from "react";
 import List from "../../List";
-import FormCreate from "../../../containers/employees/ManageEmployee/FormCreate";
-import FormUpdate from "../../../containers/employees/ManageEmployee/FormUpdate";
-import Constant from "../../../constants/employees/managementEmployee";
-import ManageEmployeeAction from "../../../actions/employees/manageEmployee";
-import ManageEmployeeService from "../../../services/employees/manageEmployee";
+import FormCreate from "../../../containers/employees/Employee/FormCreate";
+import FormUpdate from "../../../containers/employees/Employee/FormUpdate";
+import Constant from "../../../constants/employees/employee";
+import EmployeeAction from "../../../actions/employees/employee";
+import EmployeeService from "../../../services/employees/EmployeeService";
 import "./index.css";
 
 export default class PaymentMethodList extends List {
@@ -14,16 +14,14 @@ export default class PaymentMethodList extends List {
     this.fetchingProp = "manageEmployee";
     this.addingProp = "manageEmployeeAdd";
     this.updatingProp = "manageEmployeeUpdate";
-
-    this.service = ManageEmployeeService;
-    this.action = ManageEmployeeAction;
-
-    this.RESET_CONSTANT = Constant.RESET_MANAGEMENT_EMPLOYEE;
+    this.service = EmployeeService;
+    this.action = EmployeeAction;
+    this.RESET_CONSTANT = Constant.RESET_EMPLOYEE;
   }
 
   handleShowFormAdd() {
     const { dispatch } = this.props;
-    dispatch(ManageEmployeeAction.showForm());
+    dispatch(EmployeeAction.showForm());
     this.setState({
       modalConten: <FormCreate/>
     });
@@ -31,7 +29,7 @@ export default class PaymentMethodList extends List {
 
   handleShowFormEdit(rowData) {
     const { dispatch } = this.props;
-    dispatch(ManageEmployeeAction.showForm(rowData));
+    dispatch(EmployeeAction.requestAndShowForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });
@@ -45,8 +43,9 @@ class Column extends List {
       this.columnCreatedAt,
       {
         title: <this.Translate id="col_hr_employee_full_name" />,
-        dataIndex: "firstName",
-        dateIndex: "lastName",
+        render: (text, record, index) => {
+          return <span className="text-capitalize">{record.firstName} {record.lastName}</span>;
+        },
         key: "firstName",
         sorter: true
       },
@@ -65,6 +64,7 @@ class Column extends List {
         title: <this.Translate id="col_hr_employee_dob" />,
         dataIndex: "dob",
         key: "dob",
+        render: value => this.Util.formDateDOB(value),
         sorter: true
       },
       {
@@ -72,7 +72,7 @@ class Column extends List {
         dataIndex: "gender",
         key: "gender",
         sorter: true,
-        render: (gender) => gender === this.Enum.GENDER.Male ? "Male" : "Female"
+        render: (gender) => gender === this.Enum.GENDER.MALE ? "Male" : "Female"
       },
       {
         title: <this.Translate id="col_hr_employee_address" />,

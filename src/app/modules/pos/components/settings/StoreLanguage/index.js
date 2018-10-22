@@ -20,6 +20,13 @@ export default class StoreLanguageList extends List {
     this.RESET_CONSTANT = Constant.RESET_STORE_LANGUAGE;
   }
 
+  componentWillUpdate(nextProps) {
+    if (nextProps.storeLanguageAdd.added) {
+      this.props.dispatch(StoreLanguageAction.fetch(5));
+      this.props.dispatch(StoreLanguageAction.reset(Constant.RESET_STORE_LANGUAGE));
+    }
+  }
+
   handleShowFormAdd() {
     const { dispatch } = this.props;
     dispatch(StoreLanguageAction.showForm());

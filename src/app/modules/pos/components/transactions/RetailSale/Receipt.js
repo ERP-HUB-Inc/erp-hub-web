@@ -193,3 +193,9 @@ export default class Receipt extends Component {
     );
   }
 }
+
+Receipt.defaultProps = {
+  receiptTemplate: {
+    logo: ""
+  }
+};

@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
-import FormCreate from "../../../components/customers/customer/FormCreate";
+import FormCreate from "../../../components/customers/Customer/FormCreate";
 
 
 class CustomerCreate extends React.Component {
@@ -14,7 +14,7 @@ class CustomerCreate extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    manageCustomersAdd: state.reducer.managementCustomers.add,
+    manageCustomersAdd: state.reducer.customer.add,
     groupCustomersAdd: state.reducer.groupCustomers.add,
     groupCustomers: state.reducer.groupCustomers.request,
     locale: state.locale

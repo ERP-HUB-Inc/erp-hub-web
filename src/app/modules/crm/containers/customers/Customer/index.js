@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
-import ManageCustomersList from "../../../components/customers/customer";
+import ManageCustomersList from "../../../components/customers/Customer";
 
 class ManagementCutomer extends React.Component {
   render() {
@@ -13,11 +13,11 @@ class ManagementCutomer extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    manageCustomers: state.reducer.managementCustomers.request,
-    manageCustomersAdd: state.reducer.managementCustomers.add,
-    manageCustomersArchive: state.reducer.managementCustomers.archive,
-    manageCustomersUpdate: state.reducer.managementCustomers.update,
-    manageFetchCustomer: state.reducer.managementCustomers.fetchExpendRender,
+    manageCustomers: state.reducer.customer.request,
+    manageCustomersAdd: state.reducer.customer.add,
+    manageCustomersArchive: state.reducer.customer.archive,
+    manageCustomersUpdate: state.reducer.customer.update,
+    manageFetchCustomer: state.reducer.customer.fetchExpendRender,
 
     customerGroup: state.reducer.groupCustomers.request,
     groupCustomersAdd: state.reducer.groupCustomers.add,

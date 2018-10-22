@@ -102,7 +102,7 @@ export default class PaymentMethodList extends List {
     }
 
     return (
-      <div style={{marginTop: "15px"}}>
+      <div style={{marginTop: "15px", width: "100%"}}>
         { this.renderBreadCrumb()}
         <this.Row className="main-row-role-access">
           <this.Col md="8">

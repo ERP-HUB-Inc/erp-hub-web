@@ -1,4 +1,9 @@
 export default {
+  "text_role": [
+    "Role",
+    "Role",
+    "Role"
+  ],
   "col_role_name": [
     "Name",
     "Name",

@@ -75,7 +75,7 @@ export default {
     "Description",
     "Description"
   ],
-  "input_management_customer_address": [
+  "text_address": [
     "Address",
     "Address",
     "Address"

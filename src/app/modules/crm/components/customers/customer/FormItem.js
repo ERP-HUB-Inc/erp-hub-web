@@ -79,8 +79,6 @@ export default class FormItem extends Modal {
       groupCustomers.list = [this.props.groupCustomersAdd.response.data, ...groupCustomers.list];
     }
 
-    console.log("Contacts:", this.state.contactList);
-
     return (
       <this.Tabs type="card">
         <this.TabPane tab="General" key="1">
@@ -165,9 +163,9 @@ export default class FormItem extends Modal {
             <this.Col md="12">
               <this.InputTextArea
                 name="address"
-                label={<this.Translate id="input_management_customer_address" />}
+                label={<this.Translate id="text_address" />}
                 data={formData.address}
-                placeholder={this.CATranslate("input_management_customer_address", this.props.locale)}
+                placeholder={this.CATranslate("text_address", this.props.locale)}
                 max={100}
                 form={this.props.form}/>
             </this.Col> 

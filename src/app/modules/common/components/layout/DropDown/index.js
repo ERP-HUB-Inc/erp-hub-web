@@ -28,19 +28,6 @@ export default class MenuDropDown extends Component {
       bm: this.getLanguageIcon("bm"),
       en: this.getLanguageIcon("en")
     };
-    
-    this.menuLanguage = (
-      <Menu>
-        {
-          this.props.localization.languages.map((local, key) => 
-            <Menu.Item key={ key } onClick={() => this.props.onSwitchLanguage(local.code)}>
-              {this.iconLanguages[local.code]}
-              <span className="title">{local.name}</span>
-            </Menu.Item>
-          )
-        }
-      </Menu>
-    );
   }
 
   handleLogOut() {
@@ -66,21 +53,38 @@ export default class MenuDropDown extends Component {
             <this.Noteicon />
           </this.Link>
         </li> */}
-        <li>
-          <Dropdown overlay={this.menuLanguage} trigger={["click"]}>
-            <this.Link to="#" className="ant-dropdown-link user-account">
-              {this.iconLanguages[this.props.currentLanguage.code]}
-              <span className="title-user">{this.props.currentLanguage.name}</span> 
-              <span className="icon-move-down icon-padding-left"></span>
-            </this.Link>
-          </Dropdown>
-        </li>
-        <li>
+        {
+          this.props.activeLanguages.length > 1 ?
+            <li>
+              <Dropdown
+                overlay={<Menu>
+                  {
+                    this.props.activeLanguages.map((local, key) => 
+                      <Menu.Item key={ key } onClick={() => this.props.onSwitchLanguage(local.code)}>
+                        {this.iconLanguages[local.code]}
+                        <span className="title">{local.name}</span>
+                      </Menu.Item>
+                    )
+                  }
+                </Menu>
+                }
+                trigger={["click"]}>
+                <this.Link to="#" className="ant-dropdown-link user-account">
+                  {this.iconLanguages[this.props.currentLanguage.code]}
+                  <span className="title-user">{this.props.currentLanguage.name}</span> 
+                  <span className="icon-move-down icon-padding-left"></span>
+                </this.Link>
+              </Dropdown>
+            </li>
+            :
+            ""
+        }
+        {/* <li>
           <a className="user-account">
             <span className="icon-help icon-padding-right"></span>
             <span className="title-user"><this.Translate id="text_help"/></span>
           </a>
-        </li>
+        </li> */}
         <li>
           <Dropdown overlay={this.menu} trigger={["click"]}>
             <this.Link to="#" className="ant-dropdown-link user-account">

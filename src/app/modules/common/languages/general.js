@@ -291,5 +291,23 @@ export default {
     "Amount",
     "Amount",
     "Amount"
+  ],
+
+  "text_general": [
+    "General",
+    "General",
+    "General"
+  ],
+
+  "text_locaton": [
+    "Location",
+    "Location",
+    "Location"
+  ],
+
+  "text_assign": [
+    "Assign",
+    "Assign",
+    "Assign"
   ]
 };
