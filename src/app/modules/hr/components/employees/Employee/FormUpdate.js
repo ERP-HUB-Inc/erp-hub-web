@@ -48,10 +48,9 @@ export default class Form extends Modal {
 
   render() {
     this.submitLoading = this.props.update.adding;
-
     if (this.props.detail.showForm) {
       this.content = <FormItem
-        formData={this.props.update.data}
+        formData={this.props.detail.data}
         roles={this.props.roles.list}
         locations={this.props.locations.list}
         callBack={this.getAccessLocation}

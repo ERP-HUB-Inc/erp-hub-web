@@ -1,5 +1,5 @@
 import Constant from "../../constants/customers/managementCutomers";
-import managementEmployeeService from "../../services/customers/manageCustomer";
+import managementEmployeeService from "../../services/customers/CustomerService";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {

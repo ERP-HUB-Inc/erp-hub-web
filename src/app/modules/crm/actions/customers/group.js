@@ -1,5 +1,5 @@
 import Constant from "../../constants/customers/groupCustomer";
-import managementEmployeeService from "../../services/groupCustomers/groupCustomers";
+import managementEmployeeService from "../../services/customers/GroupService";
 
 export default {
 

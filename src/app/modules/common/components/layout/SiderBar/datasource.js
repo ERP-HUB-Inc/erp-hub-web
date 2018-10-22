@@ -63,7 +63,7 @@ import ManageEmployee from "../../../../hr/containers/employees/Employee";
 // CUSTOMER
 import GroupCustomer from "../../../../crm/containers/customers/Group";
 import ManageCustomer from "../../../../crm/containers/customers/Customer";
-// import PurchaseHistory from "../../../../crm/containers/customers/ManageCustomers";
+// import PurchaseHistory from "../../../../crm/containers/customerCustomers";
 
 /*==============================END CRM===================================*/
 
@@ -242,7 +242,7 @@ const dataSource = {
       {
         title: "Manage Customer",
         icon: "icon-customer ",
-        route: "/customers/manage",
+        route: "/customer",
         component: ManageCustomer,
         isFashNav: true
       },
@@ -268,7 +268,7 @@ const dataSource = {
       {
         title: "Manage Employee",
         icon: "icon-employee",
-        route: "/employees/manage",
+        route: "/employee",
         component: ManageEmployee
       },
       

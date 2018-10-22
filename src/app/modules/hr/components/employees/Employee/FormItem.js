@@ -205,6 +205,7 @@ export default class FormItem extends Modal {
                 label={<this.Translate id="input_hr_employee_user_name" />}
                 placeholder={this.CATranslate("input_hr_employee_user_name", locale)}
                 errorRequired={<this.Translate id="input_error_hr_employee_user_name" />}
+                disabled={formData.account}
                 max={100}
                 form={form}/>
             </this.Col>
@@ -288,6 +289,7 @@ FormItem.defaultProps = {
     autogenerate: "",
     isPasswordExpired: "",
     passwordExpiredAt: (new Util()).getCurrentDate(),
-    status: 1
+    status: 1,
+    account: null
   }
 };

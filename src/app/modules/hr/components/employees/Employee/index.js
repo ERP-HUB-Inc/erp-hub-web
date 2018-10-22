@@ -7,7 +7,7 @@ import EmployeeAction from "../../../actions/employees/employee";
 import EmployeeService from "../../../services/employees/EmployeeService";
 import "./index.css";
 
-export default class PaymentMethodList extends List {
+export default class EmployeeList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();

@@ -10,7 +10,7 @@ import CustomerAction from "../../../../crm/actions/customers/customer";
 import ProductTypeAction from "../../../../inventory/actions/products/productsType";
 import ProductAction from "../../../../inventory/actions/products/product";
 import ProductConstant from "../../../../inventory/constants/products/product";
-import CustomerDropDownSearch from "../../../../crm/components/customers/customer/DropDownSearch";
+import CustomerDropDownSearch from "../../../../crm/components/customers/Customer/DropDownSearch";
 import ProductDropDownSearch from "../../../../inventory/components/products/Product/DropDownSearch";
 import Util from "../../../../inventory/utils";
 import POSUtil from "../../../utils";

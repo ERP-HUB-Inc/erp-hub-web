@@ -5,7 +5,7 @@ import FormUpdate from "../../../containers/customers/Customer/FormUpdate";
 import Constant from "../../../constants/customers/managementCutomers";
 import CustomerAction from "../../../actions/customers/customer";
 import GroupCustomerAction from "../../../actions/customers/group";
-import CustomerService from "../../../services/customers/manageCustomer";
+import CustomerService from "../../../services/customers/CustomerService";
 import "./index.css";
 
 export default class CustomerList extends List {
