@@ -309,5 +309,11 @@ export default {
     "Assign",
     "Assign",
     "Assign"
+  ],
+
+  "text_default": [
+    "Default",
+    "Default",
+    "Default"
   ]
 };

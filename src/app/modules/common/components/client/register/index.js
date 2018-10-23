@@ -108,6 +108,7 @@ class ClientRegister extends Component {
                       required={true}
                       errorRequired="Please input your email."
                       form={form}
+                      validator={this.checkIsEmailAlreadyExist}
                       handleKeyDown={() => this.handleKeyDown()}
                     />
                     <this.InputPassword

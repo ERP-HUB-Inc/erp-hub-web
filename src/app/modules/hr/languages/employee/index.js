@@ -101,9 +101,9 @@ export default {
   ], 
 
   "input_hr_employee_auto_generate": [
-    "Auto generate",
-    "အမည်",
-    "Auto generate"
+    "Auto Generate",
+    "Auto Generate",
+    "Auto Generate"
   ], 
 
   "input_hr_employee_will_be_expired": [
@@ -164,5 +164,11 @@ export default {
     "Location Access",
     "Location Access",
     "Location Access"
+  ],
+
+  "text_user_already_exist": [
+    "User already exist !",
+    "User already exist !",
+    "User already exist !"
   ]
 };

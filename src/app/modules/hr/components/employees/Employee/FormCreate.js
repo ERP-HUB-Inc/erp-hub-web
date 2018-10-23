@@ -1,27 +1,33 @@
 import React from "react";
 import FormItem from "./FormItem";
-import ManageEmployeeAction from "../../../actions/employees/employee";
+import EmployeeAction from "../../../actions/employees/employee";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
     this.state = {
-      locations: []
+      locations: [],
+      locationId: ""
     };
     this.wrapClassName = "modal-fix-footer";
     this.title = <this.Translate id="text_employee"/>;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getAccessLocation = this.getAccessLocation.bind(this);
+    this.getDefaultLocation = this.getDefaultLocation.bind(this);
   }
 
   handleCancel() {
-    this.dispatch(ManageEmployeeAction.reset());
+    this.dispatch(EmployeeAction.reset());
   }
 
   getAccessLocation(locations) {
     this.setState({locations});
+  }
+
+  getDefaultLocation(locationId) {
+    this.setState({locationId});
   }
 
   handleSubmit (e) {
@@ -32,8 +38,9 @@ export default class FormCreate extends Modal {
         values["isMustChangePWNextLogin"] = this.Util.checkValueSwitch(values.isMustChangePWNextLogin);
         values["photo"] = this.getImageFromUpload(values, "photo");
         values["status"] = this.Enum.ACTIVE;
+        values["locationId"] = this.state.locationId;
         values["locations"] = this.state.locations;
-        this.dispatch(ManageEmployeeAction.add(values));   
+        this.dispatch(EmployeeAction.add(values));   
       }
 
     });
@@ -47,6 +54,7 @@ export default class FormCreate extends Modal {
         roles={this.props.roles.list}
         locations={this.props.locations.list}
         callBack={this.getAccessLocation}
+        callBackDefaultLocation={this.getDefaultLocation}
         dispatch={this.props.dispatch}
         form={this.props.form}
         locale={this.props.locale}/>;

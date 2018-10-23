@@ -11,12 +11,18 @@ export default class EmployeeList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
-    this.fetchingProp = "manageEmployee";
-    this.addingProp = "manageEmployeeAdd";
-    this.updatingProp = "manageEmployeeUpdate";
+    this.fetchingProp = "list";
+    this.addingProp = "add";
+    this.updatingProp = "update";
     this.service = EmployeeService;
     this.action = EmployeeAction;
     this.RESET_CONSTANT = Constant.RESET_EMPLOYEE;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.update.updated) {
+      this.props.dispatch(EmployeeAction.reset(Constant.RESET_DETAIL_EMPLOYEE));
+    }
   }
 
   handleShowFormAdd() {
@@ -43,6 +49,7 @@ class Column extends List {
       this.columnCreatedAt,
       {
         title: <this.Translate id="col_hr_employee_full_name" />,
+        dataIndex: "firstName",
         render: (text, record, index) => {
           return <span className="text-capitalize">{record.firstName} {record.lastName}</span>;
         },
@@ -58,7 +65,8 @@ class Column extends List {
       {
         title: <this.Translate id="col_hr_employee_id_card" />,
         dataIndex: "idCard",
-        key: "idCard"
+        key: "idCard",
+        sorter: true
       },
       {
         title: <this.Translate id="col_hr_employee_dob" />,

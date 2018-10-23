@@ -12,10 +12,9 @@ class EmployeeManagement extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    manageEmployee: state.reducer.employee.request,
-    manageEmployeeAdd: state.reducer.employee.add,
-    manageEmployeeArchive: state.reducer.employee.archive,
-    manageEmployeeUpdate: state.reducer.employee.update
+    list: state.reducer.employee.request,
+    add: state.reducer.employee.add,
+    update: state.reducer.employee.update,
   };
 }
 

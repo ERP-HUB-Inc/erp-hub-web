@@ -34,10 +34,10 @@ export default {
       });
     };
   },
-  reset: () => {
+  reset: (RESET_CONSTANT = Constant.RESET_EMPLOYEE) => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET_EMPLOYEE,
+        type: RESET_CONSTANT,
         payload: null
       });
     };

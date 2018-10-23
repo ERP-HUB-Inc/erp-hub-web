@@ -3,6 +3,7 @@ import Enum from "../../../enums";
 import RoleAction from "../../../../pos/action/settings/roleAccess";
 import LocationAction from "../../../../pos/action/settings/storeLocation";
 import Modal from "../../../../common/components/shares/Modal";
+import UserService from "../../../../common/services/UserService";
 import {Util} from "../../../../common/util";
 
 export default class FormItem extends Modal {
@@ -10,8 +11,15 @@ export default class FormItem extends Modal {
     super(props);
     this.state = {
       assignLocation: [],
+      locations: [],
+      defaultLocation: {
+        checked: false,
+        locationId: ""
+      },
       disabled: false
     };
+    this.timer = null;
+    this.hasReceiveProps = false;
     this.gender = [
       {
         name: <this.Translate id="text_male"/>,
@@ -30,19 +38,34 @@ export default class FormItem extends Modal {
         render: value => <span className="text-capitalize">{value}</span>
       },
       {
+        title: <this.Translate id="text_default" />,
+        key: "default",
+        render: (text, record, index) => {
+          return <this.Checkbox
+            value={record.id}
+            disabled={!this.state.locations[index]["checked"]}
+            checked={this.state.defaultLocation.locationId === record.id && this.state.defaultLocation.checked && this.state.locations[index]["checked"]}
+            onChange={this.onChangeDefaultLocation}
+            form={this.props.form} />;
+        },
+      },
+      {
         title: <this.Translate id="text_assign" />,
         dataIndex: "assign",
         key: "assign",
         render: (text, record, index) => {
           return <this.Checkbox
             value={record.id}
-            onChange={this.onChangeAssign}
+            checked={record.checked}
+            onChange={(e) => this.onChangeAssign(e, index)}
             form={this.props.form}/>;
         },
-      },
+      }
     ];
     this.onChange = this.onChange.bind(this);
     this.onChangeAssign = this.onChangeAssign.bind(this);
+    this.onChangeDefaultLocation = this.onChangeDefaultLocation.bind(this);
+    this.checkIsUserAlreadyExist = this.checkIsUserAlreadyExist.bind(this);
   }
 
   componentDidMount() {
@@ -50,8 +73,64 @@ export default class FormItem extends Modal {
     this.props.dispatch(LocationAction.fetch(100));
   }
 
-  onChangeAssign(e) {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.locations.length > 0 && !this.hasReceiveProps) {
+      let locations = nextProps.locations;
+      const assignLocation = this.state.assignLocation;
+      locations.forEach((value, index) => {
+        let newValue = value;
+        if (nextProps.formData.account) {
+          const accessLocation = nextProps.formData.account.userAccessLocation.find(locationValue => locationValue.locationId === value.id);
+          if (accessLocation != null) {
+            newValue["checked"] = true;
+            assignLocation.push({
+              id: accessLocation.id,
+              locationId: value.id,
+              status: this.Enum.ACTIVE
+            });
+          }
+        }
+        locations[index] = newValue;
+      });
+
+      this.setState({
+        locations,
+        assignLocation,
+        defaultLocation: {
+          locationId: nextProps.formData.account ? nextProps.formData.account.locationId : "",
+          checked: nextProps.formData.account && nextProps.formData.account.locationId ? true : false
+        }
+      });
+
+      if (this.props.callBack) {
+        this.props.callBack(assignLocation);
+
+        if (nextProps.formData.account) {
+          this.props.callBackDefaultLocation(nextProps.formData.account.locationId);
+        }
+      }
+
+
+      this.hasReceiveProps = true;
+    }
+  }
+
+  checkIsUserAlreadyExist(rule, value, callback) {
+    clearTimeout(this.timer);
+    this.timer = setTimeout(function() {
+      UserService.findUserByUserName(value)
+        .then((response) => {
+          callback(this.CATranslate("text_user_already_exist", this.props.locale));
+        })
+        .catch((error) => {
+          callback();
+        });
+    }.bind(this), 300);
+  }
+
+  onChangeAssign(e, index) {
     const existLocation = this.state.assignLocation;
+    const locations = this.state.locations;
     if (e.target.checked) {
       if (existLocation.length === 0) {
         existLocation.push({
@@ -88,7 +167,75 @@ export default class FormItem extends Modal {
     if (this.props.callBack) {
       this.props.callBack(existLocation);
     }
-    this.setState({assignLocation: existLocation});
+
+    locations[index]["checked"] = e.target.checked;
+
+    this.setState({
+      assignLocation: existLocation,
+      locations
+    });
+
+    // NOW FOR ONLY CREATE FOR AUTO SELECT DEFAULT
+    let length = existLocation.length;
+    if (length === 1 && existLocation[0].status === this.Enum.ACTIVE) {
+      this.setState({
+        defaultLocation: {
+          locationId: existLocation[0].locationId,
+          checked: true
+        }
+      });
+
+      if (this.props.callBackDefaultLocation) {
+        this.props.callBackDefaultLocation(existLocation[0].locationId);
+      }
+    } else if (length === 0) {
+      this.setState({
+        defaultLocation: {
+          locationId: "",
+          checked: false
+        }
+      });
+    }
+
+    // TO DO: AUTO SELECT DEFAULT LOCATION FOR BOTH CREATE AND UPDATE
+    // let length = 0;
+    // existLocation.forEach((value, index) => {
+    //   if (value.status === this.Enum.ACTIVE) {
+    //     length++;
+    //   }
+    // });
+    // if (length === 1) {
+    //   this.setState({
+    //     defaultLocation: {
+    //       locationId: existLocation[0].locationId,
+    //       checked: true
+    //     }
+    //   });
+
+    //   if (this.props.callBackDefaultLocation) {
+    //     this.props.callBackDefaultLocation(existLocation.locationId);
+    //   }
+    // } else if (length === 0) {
+    //   this.setState({
+    //     defaultLocation: {
+    //       locationId: "",
+    //       checked: false
+    //     }
+    //   });
+    // }
+  }
+
+  onChangeDefaultLocation(e) {
+    this.setState({
+      defaultLocation: {
+        locationId: e.target.value,
+        checked: e.target.checked
+      }
+    });
+
+    if (this.props.callBackDefaultLocation) {
+      this.props.callBackDefaultLocation(e.target.value);
+    }
   }
 
   onChange(checked){
@@ -201,11 +348,12 @@ export default class FormItem extends Modal {
             <this.Col md="6">
               <this.InputText
                 name="userName"
-                data={formData.userName}
+                data={formData.account ? formData.account.userName : ""}
                 label={<this.Translate id="input_hr_employee_user_name" />}
                 placeholder={this.CATranslate("input_hr_employee_user_name", locale)}
                 errorRequired={<this.Translate id="input_error_hr_employee_user_name" />}
-                disabled={formData.account}
+                disabled={formData.account != null && formData.account.userName != null}
+                validator={formData.account && formData.account.userName ? null : this.checkIsUserAlreadyExist}
                 max={100}
                 form={form}/>
             </this.Col>
@@ -215,6 +363,7 @@ export default class FormItem extends Modal {
                 label={<this.Translate id="text_role" />}
                 placeholder={this.CATranslate("text_role", locale)}
                 valueKey="id"
+                defaultValue={formData.account && formData.account.roles.length > 0 ? formData.account.roles[0].roleId : (this.props.roles.length > 0 ? this.props.roles[0].id : "")}
                 dataSource={this.props.roles}
                 form={form}/>
             </this.Col>
@@ -247,12 +396,14 @@ export default class FormItem extends Modal {
               <this.Switchs
                 label={<this.Translate id="input_hr_employee_must_change_password" />}
                 name="isMustChangePWNextLogin"
+                checked={formData.account != null && formData.account.isMustChangePWNextLogin}
                 form={form}/>
             </this.Col>
             <this.Col md="6" className="wrap-switch">
               <this.Switchs
                 label={<this.Translate id="input_hr_employee_will_be_expired" />}
                 name="isPasswordExpired"
+                checked={formData.account != null && formData.account.isPasswordExpired}
                 form={form}
               />
             </this.Col> 
@@ -262,7 +413,7 @@ export default class FormItem extends Modal {
           <this.Row>
             <this.Col md="12">
               <this.Table
-                dataSource={this.props.locations}
+                dataSource={this.state.locations}
                 columns={this.columns}
                 locale={{emptyText: <this.Translate id="table_empty_data" />}} />
             </this.Col>
@@ -284,12 +435,17 @@ FormItem.defaultProps = {
     address: "",         
     idCard: "",
     photo: "",
-    userName: "",
     password: "",
     autogenerate: "",
     isPasswordExpired: "",
     passwordExpiredAt: (new Util()).getCurrentDate(),
     status: 1,
-    account: null
+    account: {
+      userName: null,
+      isMustChangePWNextLogin: false,
+      isPasswordExpired: false,
+      roles: [],
+      userAccessLocation: []
+    }
   }
 };
