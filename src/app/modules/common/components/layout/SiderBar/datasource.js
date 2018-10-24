@@ -21,6 +21,7 @@ import Stock from "../../../../inventory/containers/stock/stockManagement";
 // import ReOrderPoint from "../../../../inventory/containers/stock/reorderPoint";
 import PurchaseOrder from "../../../../inventory/containers/stock/purchaseOrder";
 import ReceiveOrder from "../../../../inventory/containers/stock/receivePurchase";
+import Print from "../../../../inventory/containers/stock/Report";
 import StockReturn from "../../../../inventory/containers/stock/returnPurchase";
 import StockTransfer from "../../../../inventory/containers/stock/stockTransfer";
 // import StockAudit from "../../../../pos/containers/stock/StockAudit";
@@ -189,6 +190,13 @@ const dataSource = {
         icon: "icon-purchasing",
         route: "/stock/purchase/receive",
         component: ReceiveOrder,
+        isFashNav: true
+      },
+      {
+        title: "Receive Orders",
+        icon: "icon-purchasing",
+        route: "/printreport",
+        component: Print,
         isFashNav: true
       },
       // {

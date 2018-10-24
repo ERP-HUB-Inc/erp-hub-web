@@ -13,6 +13,7 @@ import loginStore from "./client/loginStore";
 import ClientRegister from "./client/register";
 import ClientRegisterDetail from "./client/registerDetail";
 import ClientRegisterComplete from "./client/registerComplete";
+
 // import ErrorHandler from "../components/ErrorHandle";
 
 export default class App extends React.Component {
