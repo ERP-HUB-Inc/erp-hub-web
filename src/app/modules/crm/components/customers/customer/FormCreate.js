@@ -2,7 +2,7 @@ import React from "react";
 import FormItem from "./FormItem";
 import CustomerAction from "../../../actions/customers/customer";
 import GroupCustomerAction from "../../../actions/customers/group";
-import CreateCustomerGroup from "../../../containers/customers/GroupCustomers/FormCreate";
+import CreateCustomerGroup from "../../../containers/customers/Group/FormCreate";
 import ConstantGroupCustomer from "../../../constants/customers/groupCustomer";
 import Constant from "../../../constants/customers/managementCutomers";
 import Modal from "../../../../common/components/shares/Modal";
@@ -10,62 +10,30 @@ import Modal from "../../../../common/components/shares/Modal";
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
+    this.state = {
+      contact: []
+    };
     this.title = <this.Translate id="create_management_customer_title" />;
+    this.wrapClassName = "modal-fix-footer wrap-customer";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleAddCustomerGroup = this.handleAddCustomerGroup.bind(this);
+    this.getContactListCallBack = this.getContactListCallBack.bind(this);
   }
 
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        
-        const listContacts = 
-        {
-          id: values.contactId,
-          name : values.contactName,
-          phoneNumber: values.contactNumber,
-          address: values.contactAddress,
-          status: values.status
-        };
-
-        delete values["contactId"];
-        delete values["contactName"];
-        delete values["contactNumber"];
-        delete values["contactAddress"];
-        delete values["keys"];
-        delete values["status"];
-
-        if(listContacts.name == null){
-          listContacts.name = [];
-        }
-
-        const contacts = [];
-
-        listContacts.name.forEach((name, index) => {
-          if (
-            name != null ||
-            listContacts.address[index] != null ||
-            listContacts.phoneNumber[index] != null
-          ) {
-            contacts.push({
-              id: listContacts.id[index],
-              name: name,
-              address: listContacts.address[index],
-              phoneNumber: listContacts.phoneNumber[index],
-              status: listContacts.status[index]
-            });
-          }
-        });
-
-        if(contacts) {
-          values["contacts"] = contacts;
-        }
+        values["contacts"] = this.state.contact;
         this.dispatch(CustomerAction.add(values));
         
       }
     });
+  }
+
+  getContactListCallBack(contactList) {
+    this.setState({contact: contactList});
   }
       
   handleCancel() {
@@ -99,6 +67,7 @@ export default class FormCreate extends Modal {
           locale={this.props.locale}
           dispatch={this.props.dispatch}
           groupCustomers={groupCustomers}
+          callBack={this.getContactListCallBack}
           groupCustomersAdd={groupCustomersAdd}
           handleAddCustomerGroup={this.handleAddCustomerGroup}/>
       );

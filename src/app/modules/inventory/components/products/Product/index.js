@@ -5,8 +5,15 @@ import history from "../../../../common/router/history";
 import FormCreate from "../../../containers/products/Product/FormCreate";
 import FormUpdate from "../../../containers/products/Product/FormUpdate";
 import Constant from "../../../constants/products/product";
+import BrandAction from "../../../actions/products/brand";
+import ProductTypeAction from "../../../actions/products/productsType";
+import UnitAction from "../../../actions/products/productsUnit";
+import TaxAction from "../../../../pos/action/settings/tax";
+import LanguageAction from "../../../../pos/action/settings/storeLanguage";
 import ProductAction from "../../../actions/products/product";
 import PriceTagAction from "../../../actions/products/priceTag";
+import VariantAttributeAction from "../../../actions/products/variantAttribute";
+import ProductTagAction from "../../../actions/products/productsTag";
 import ProductService from "../../../services/products/ProductService";
 import "./index.css";
 
@@ -21,6 +28,7 @@ export default class ProductList extends List {
     this.columnExpend = new ColumnExpand(); 
     this.fetchingProp = "products";
     this.isShowExpandable = true;
+    this.componentHasUpdated = false;
     this.service = ProductService;
     this.columnFilterWithKey = ["name"];
     this.action = ProductAction;
@@ -33,19 +41,66 @@ export default class ProductList extends List {
     const {productAdd, productUpdate, productClone, dispatch} = nextProps;
     if (productAdd.added || productUpdate.updated) {
       dispatch(ProductAction.fetch(this.pageSize));
-      dispatch(ProductAction.reset());
+      dispatch(ProductAction.reset(Constant.RESET_FORM_PRODUCT));
       dispatch(ProductAction.reset(Constant.RESET_DETAIL_PRODUCTS));
     }
 
     if (productClone.added) {
       if (productClone.response.data) {
         dispatch(ProductAction.requestAndShowForm(productClone.response.data));
-        dispatch(ProductAction.reset());
+        dispatch(ProductAction.reset(Constant.RESET_FORM_PRODUCT));
         this.setState({
           modalConten: <FormUpdate/>,
           selectedRowKeys: []
         });
       }
+    }
+
+    // SAVE SETTING TO LOCALE STORAGE
+    if (nextProps.brands.fetched) {
+      localStorage.setItem(Enum.LOCAL_SCHEMA.BRAND, JSON.stringify(nextProps.brands.list));
+    }
+
+    if (nextProps.units.fetched) {
+      localStorage.setItem(Enum.LOCAL_SCHEMA.UNIT, JSON.stringify(nextProps.units.list));
+    }
+
+    if (nextProps.taxs.fetched) {
+      localStorage.setItem(Enum.LOCAL_SCHEMA.TAX, JSON.stringify(nextProps.taxs.list));
+    }
+
+    if (nextProps.productsType.fetched) {
+      localStorage.setItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE, JSON.stringify(nextProps.productsType.list));
+    }
+
+    if (nextProps.storeLanguage.fetched) {
+      localStorage.setItem(Enum.LOCAL_SCHEMA.LANGUAGE, JSON.stringify(nextProps.storeLanguage.list));
+    }
+
+    if (nextProps.variantAttributes.fetched) {
+      localStorage.setItem(Enum.LOCAL_SCHEMA.VARIANT_ATTRIBUTE, JSON.stringify(nextProps.variantAttributes.list));
+    }
+
+    if (nextProps.tags.fetched) {
+      localStorage.setItem(Enum.LOCAL_SCHEMA.PRODUCT_TAG, JSON.stringify(nextProps.tags.list));
+    }
+  }
+
+  componentDidMount() {
+    this.props.dispatch(ProductAction.reset()); // reset state to make 2: check condition again
+    super.componentDidMount();
+  }
+
+  componentDidUpdate() {
+    if (!this.componentHasUpdated && this.props.products.fetched) { // 2:
+      this.props.dispatch(BrandAction.fetch(100));
+      this.props.dispatch(ProductTypeAction.fetch(100));
+      this.props.dispatch(UnitAction.fetch(100));
+      this.props.dispatch(TaxAction.fetch(100));
+      this.props.dispatch(LanguageAction.fetch(10));
+      this.props.dispatch(VariantAttributeAction.fetch(100));
+      this.props.dispatch(ProductTagAction.fetch(100));
+      this.componentHasUpdated = true;
     }
   }
 
@@ -112,7 +167,7 @@ export default class ProductList extends List {
       form == null ?
         ""
         :
-        <this.Form onSubmit={this.handleSubmitFilter}>
+        <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
           <this.Row className="main-search-layout form-group">
             <this.Col md="3">
               <this.InputText
@@ -170,9 +225,11 @@ export default class ProductList extends List {
                 defaultValue={1}
                 form={form}/>
             </this.Col>
-            <this.Button htmlType="submit" type="info">
-              <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-            </this.Button>
+            <this.Col md="2" className="wrap-btn-search">
+              <this.Button htmlType="submit" type="info">
+                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+              </this.Button>
+            </this.Col>
           </this.Row>
         </this.Form>
     ); 

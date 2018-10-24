@@ -5,6 +5,7 @@ import businessType from "../modules/common/reducers/businessType";
 import languageSystem from "../modules/common/reducers/language";
 import client from "../modules/common/reducers/client";
 import user from "../modules/common/reducers/user";
+import mail from "../modules/common/reducers/mail";
 import paymentMethods from "../modules/pos/reducers/settings/paymentMethod";
 import tax from "../modules/pos/reducers/settings/tax";
 import currency from "../modules/pos/reducers/settings/currency";
@@ -18,10 +19,8 @@ import rolePrivilege from "../modules/pos/reducers/settings/rolePrivilege";
 import storeAccount from "../modules/pos/reducers/settings/storeAccount";
 import operationRecord from "../modules/pos/reducers/settings/operationRecord";
 // Employee
-import managementEmployee from "../modules/hr/reducers/employees/managementEmployee";
-//customer 
-import managementCustomers from "../modules/crm/reducers/customers/customer";
-// groupcustomer
+import employee from "../modules/hr/reducers/employees/employee";
+import customer from "../modules/crm/reducers/customers/customer";
 import groupCustomers from "../modules/crm/reducers/customers/group";
 import product from "../modules/inventory/reducers/products/product";
 import priceTag from "../modules/inventory/reducers/products/priceTag";
@@ -57,6 +56,7 @@ const reducer = combineReducers({
   businessPlan,
   businessType,
   // SETTING MODULE
+  mail,
   user,
   tax,
   currency,
@@ -73,8 +73,8 @@ const reducer = combineReducers({
   //Transaction
   transaction,
   // Employee
-  managementEmployee,
-  managementCustomers,
+  employee,
+  customer,
   groupCustomers,
   product,
   priceTag,

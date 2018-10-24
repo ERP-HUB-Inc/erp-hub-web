@@ -1,6 +1,5 @@
 import React from "react";
 import {Form, Slider, Icon} from "antd";
-import ReactToPrint from "react-to-print";
 import PriceTagList from "./PriceTagList";
 import DropDownSearch from "../Product/DropDownSearch";
 import List from "../../List";
@@ -37,26 +36,27 @@ export default class PrintPriceTag extends List {
       {
         title: "Product Name",
         dataIndex: "productDescriptions",
+        width: 200,
         key: "name",
         render: (text, record, index) => {
           return <this.InputText name={`name[${index}]`} data={record.productDescriptions.length > 0 ? record.productDescriptions[0].name : ""} form={this.props.form}/>;
         }
       },
       {
-        title: "Quantity In Store",
-        width: 150,
+        title: "QTY In Store",
+        width: 100,
         dataIndex: "qauntityInStore",
         key: "qauntityInStore"
       },
       {
         title: "Quantity",
-        width: 150,
+        width: 100,
         dataIndex: "quantity",
         key: "qauntity"
       },
       {
-        title: "Quantity label",
-        width: 150,
+        title: "QTY label",
+        width: 100,
         key: "quantityLabel",
         render: (text, record, index) => {
           return <div>
@@ -65,6 +65,8 @@ export default class PrintPriceTag extends List {
             <this.InputNumber
               disabled={this.state.typeOfPrintLabel !== this.TYPE_OF_PRINT.CUSTOM}
               data={record.quantity}
+              precision={0}
+              isAutoSelect={true}
               name={`numberOfPrint[${index}]`}
               placeholder="Number of print"
               form={this.props.form}/>
@@ -81,6 +83,8 @@ export default class PrintPriceTag extends List {
       },
     ];
     this.handleOnPrint = this.handleOnPrint.bind(this);
+    this.handleOnGeneratePriceTag = this.handleOnGeneratePriceTag.bind(this);
+    this.handleOnReset = this.handleOnReset.bind(this);
     this.onCangeTypeOfPrintLabel = this.onCangeTypeOfPrintLabel.bind(this);
     this.onChangePaddingLeft = this.onChangePaddingLeft.bind(this);
     this.onChangePaddingRight = this.onChangePaddingRight.bind(this);
@@ -106,7 +110,7 @@ export default class PrintPriceTag extends List {
     }
   }
 
-  handleOnPrint(e) {
+  handleOnGeneratePriceTag(e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
@@ -123,6 +127,24 @@ export default class PrintPriceTag extends List {
         }
         this.setState({dataSourceToPrint});
       }
+    });
+  }
+
+  handleOnPrint() {
+    const element = document.getElementById("print-tag-content");
+    if (element) {
+      this.Util.printElem(element.innerHTML);
+      this.setState({
+        dataSourceToPrint: [],
+        productList: []
+      });
+    }
+  }
+
+  handleOnReset() {
+    this.setState({
+      dataSourceToPrint: [],
+      productList: []
     });
   }
 
@@ -243,7 +265,7 @@ export default class PrintPriceTag extends List {
         <this.Col md="12" className="wrap-setting">
           <this.Row>
             <this.Col md="6">
-              <div>Width {this.state.widthOfLabel}</div>
+              <div>Width</div>
               <this.Row>
                 <this.Col md="9">
                   <Slider
@@ -261,9 +283,9 @@ export default class PrintPriceTag extends List {
                     style={{ marginLeft: 16 }}
                     form={this.props.form}
                     step={0.1}
+                    precision={0}
                     data={this.state.widthOfLabel}
-                    onChange={this.onChangeWidthOfLabel}
-                  />
+                    onChange={this.onChangeWidthOfLabel}/>
                 </this.Col>
               </this.Row>
               <div>Height</div>
@@ -275,8 +297,7 @@ export default class PrintPriceTag extends List {
                     defaultValue={this.state.heightOfLabel}
                     onChange={this.onChangeHeightOfLabel}
                     value={typeof this.state.heightOfLabel === "number" ? this.state.heightOfLabel : 0}
-                    step={0.5}
-                  />
+                    step={0.5}/>
                 </this.Col>
                 <this.Col md="3">
                   <this.InputNumber
@@ -286,7 +307,7 @@ export default class PrintPriceTag extends List {
                     step={0.5}
                     data={this.state.heightOfLabel}
                     onChange={this.onChangeHeightOfLabel}
-                  />
+                    precision={0} />
                 </this.Col>
               </this.Row>
               <div>Font size of label value</div>
@@ -309,7 +330,7 @@ export default class PrintPriceTag extends List {
                     step={1}
                     data={this.state.fontSizeOfValue}
                     onChange={this.onChangeFontSizeOfValue}
-                  />
+                    precision={0}/>
                 </this.Col>
               </this.Row>
               <div>Font size of product name</div>
@@ -321,8 +342,7 @@ export default class PrintPriceTag extends List {
                     defaultValue={this.state.fontSizeOfName}
                     onChange={this.onChangeFontSizeOfName}
                     value={typeof this.state.fontSizeOfName === "number" ? this.state.fontSizeOfName : 0}
-                    step={1}
-                  />
+                    step={1}/>
                 </this.Col>
                 <this.Col md="3">
                   <this.InputNumber
@@ -332,7 +352,7 @@ export default class PrintPriceTag extends List {
                     step={1}
                     data={this.state.fontSizeOfName}
                     onChange={this.onChangeFontSizeOfName}
-                  />
+                    precision={0}/>
                 </this.Col>
               </this.Row>
               <div>Font size of product price</div>
@@ -344,8 +364,7 @@ export default class PrintPriceTag extends List {
                     defaultValue={this.state.fontSizeOfPrice}
                     onChange={this.onChangeFontSizeOfPrice}
                     value={typeof this.state.fontSizeOfPrice === "number" ? this.state.fontSizeOfPrice : 0}
-                    step={1}
-                  />
+                    step={1} />
                 </this.Col>
                 <this.Col md="3">
                   <this.InputNumber
@@ -355,7 +374,7 @@ export default class PrintPriceTag extends List {
                     step={1}
                     data={this.state.fontSizeOfPrice}
                     onChange={this.onChangeFontSizeOfPrice}
-                  />
+                    precision={0}/>
                 </this.Col>
               </this.Row>
             </this.Col>
@@ -369,8 +388,7 @@ export default class PrintPriceTag extends List {
                     defaultValue={this.state.paddingLeft}
                     onChange={this.onChangePaddingLeft}
                     value={typeof this.state.paddingLeft === "number" ? this.state.paddingLeft : 0}
-                    step={0.5}
-                  />
+                    step={0.5}/>
                 </this.Col>
                 <this.Col md="3">
                   <this.InputNumber
@@ -380,7 +398,7 @@ export default class PrintPriceTag extends List {
                     step={0.5}
                     data={this.state.paddingLeft}
                     onChange={this.onChangePaddingLeft}
-                  />
+                    precision={0}/>
                 </this.Col>
               </this.Row>
               <div>Padding right</div>
@@ -392,8 +410,7 @@ export default class PrintPriceTag extends List {
                     defaultValue={this.state.paddingRight}
                     onChange={this.onChangePaddingRight}
                     value={typeof this.state.paddingRight === "number" ? this.state.paddingRight : 0}
-                    step={0.5}
-                  />
+                    step={0.5}/>
                 </this.Col>
                 <this.Col md="3">
                   <this.InputNumber
@@ -403,7 +420,7 @@ export default class PrintPriceTag extends List {
                     step={0.5}
                     data={this.state.paddingRight}
                     onChange={this.onChangePaddingRight}
-                  />
+                    precision={0}/>
                 </this.Col>
               </this.Row>
               <div>Padding top</div>
@@ -415,8 +432,7 @@ export default class PrintPriceTag extends List {
                     defaultValue={this.state.paddingTop}
                     onChange={this.onChangePaddingTop}
                     value={typeof this.state.paddingTop === "number" ? this.state.paddingTop : 0}
-                    step={0.5}
-                  />
+                    step={0.5}/>
                 </this.Col>
                 <this.Col md="3">
                   <this.InputNumber
@@ -426,7 +442,7 @@ export default class PrintPriceTag extends List {
                     step={0.5}
                     data={this.state.paddingTop}
                     onChange={this.onChangePaddingTop}
-                  />
+                    precision={0}/>
                 </this.Col>
               </this.Row>
               <div>Padding bottom</div>
@@ -438,8 +454,7 @@ export default class PrintPriceTag extends List {
                     defaultValue={this.state.paddingBottom}
                     onChange={this.onChangePaddingBottom}
                     value={typeof this.state.paddingBottom === "number" ? this.state.paddingBottom : 0}
-                    step={0.5}
-                  />
+                    step={0.5}/>
                 </this.Col>
                 <this.Col md="3">
                   <this.InputNumber
@@ -449,7 +464,7 @@ export default class PrintPriceTag extends List {
                     step={0.5}
                     data={this.state.paddingBottom}
                     onChange={this.onChangePaddingBottom}
-                  />
+                    precision={0}/>
                 </this.Col>
               </this.Row>
               <div>Number of column</div>
@@ -461,8 +476,7 @@ export default class PrintPriceTag extends List {
                     defaultValue={this.state.numberOfColumn}
                     onChange={this.onChangeLabelColumn}
                     value={typeof this.state.numberOfColumn === "number" ? this.state.numberOfColumn : 0}
-                    step={1}
-                  />
+                    step={1}/>
                 </this.Col>
                 <this.Col md="3">
                   <this.InputNumber
@@ -472,7 +486,7 @@ export default class PrintPriceTag extends List {
                     step={1}
                     data={this.state.numberOfColumn}
                     onChange={this.onChangeLabelColumn}
-                  />
+                    precision={0}/>
                 </this.Col>
               </this.Row>
             </this.Col>
@@ -483,16 +497,13 @@ export default class PrintPriceTag extends List {
             </this.Button>
             {
               this.state.dataSourceToPrint.length > 0 ?
-                <ReactToPrint
-                  trigger={() => <this.Button
-                    propKey="btn_product_print_label"
-                    className="info margin-left-8">
-                    <span className="icon-barcode icon-padding-right"></span>
-                    <this.Translate id="btn_product_print_label" />
-                  </this.Button>}
-                  content={() => this.componentRef}
-                  copyStyles={true}
-                  closeAfterPrint={true}/>
+                <this.Button
+                  propKey="btn_product_print_label"
+                  className="info margin-left-8"
+                  onClick={this.handleOnPrint}>
+                  <span className="icon-barcode icon-padding-right"></span>
+                  <this.Translate id="btn_product_print_label" />
+                </this.Button>
                 :
                 ""
             }
@@ -521,13 +532,12 @@ export default class PrintPriceTag extends List {
       </this.Row>
     );
   }
-
   render() {
     return (
-      <div style={{height: "100%", display: "flex", flexDirection: "column"}}>
+      <div style={{height: "100%", display: "flex", flexDirection: "column", width: "100%"}}>
         {this.renderBreadCrumb()}
         <div className="main-layout" style={{height: "100%", display: "flex", flexDirection: "column", padding: 0}}>
-          <Form autoComplete="off" onSubmit={this.handleOnPrint} style={{display: "flex", flexDirection: "column"}}>
+          <Form autoComplete="off" onSubmit={this.handleOnGeneratePriceTag} style={{display: "flex", flexDirection: "column"}}>
             <this.Row style={{height: "100%", marginLeft: 0}}>
               <this.Col md="6">
                 <div id="print-price-tag">
@@ -572,20 +582,18 @@ export default class PrintPriceTag extends List {
                     dataSource={this.state.productList}
                     columns={this.columns}
                     locale={{emptyText: <this.Translate id="placeholder_table_composite_product" />}} />
-                  <this.Button htmlType="submit" type="info" className="btn-print-label text-uppercase" onClick={this.handleOnPrint}>
+                  <this.Button htmlType="submit" type="info" className="btn-print-label text-uppercase" onClick={this.handleOnGeneratePriceTag}>
                     <span className="icon-print icon-padding-right text-uppercase"></span> Generate
                   </this.Button>
                   {
                     this.state.dataSourceToPrint.length > 0 ?
-                      <ReactToPrint
-                        trigger={() => <this.Button
-                          propKey="btn_product_print_label"
-                          className="info margin-left-8">
-                          <span className="icon-barcode icon-padding-right"></span>
-                          <this.Translate id="btn_product_print_label" />
-                        </this.Button>}
-                        content={() => this.componentRef}
-                        closeAfterPrint={true}/>
+                      <this.Button
+                        propKey="btn_product_print_label"
+                        className="info margin-left-8"
+                        onClick={this.handleOnPrint}>
+                        <span className="icon-barcode icon-padding-right"></span>
+                        <this.Translate id="btn_product_print_label" />
+                      </this.Button>
                       :
                       ""
                   }
@@ -593,7 +601,6 @@ export default class PrintPriceTag extends List {
               </this.Col>
               <this.Col md="6" style={{borderLeft: "1px solid #f7f7f7", overflow: "auto"}}>
                 <PriceTagList
-                  ref={el => (this.componentRef = el)}
                   dataSource={this.state.dataSourceToPrint}
                   widthOfLabel={this.state.widthOfLabel}
                   heightOfLabel={this.state.heightOfLabel}

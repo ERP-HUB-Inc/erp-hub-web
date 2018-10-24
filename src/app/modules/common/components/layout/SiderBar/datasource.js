@@ -51,7 +51,7 @@ import OperationRecord from "../../../../pos/containers/settings/OperationRecord
 /*==============================HR===================================*/
 
 // EMPLOYEE
-import ManageEmployee from "../../../../hr/containers/employees/ManageEmployee";
+import ManageEmployee from "../../../../hr/containers/employees/Employee";
 // import Performance from "../../../../hr/containers/employees/Performance";
 // import TimeSheet from "../../../../hr/containers/employees/TimeSheet";
 
@@ -61,9 +61,9 @@ import ManageEmployee from "../../../../hr/containers/employees/ManageEmployee";
 /*==============================CRM===================================*/
 
 // CUSTOMER
-import GroupCustomer from "../../../../crm/containers/customers/GroupCustomers";
-import ManageCustomer from "../../../../crm/containers/customers/ManageCustomers";
-// import PurchaseHistory from "../../../../crm/containers/customers/ManageCustomers";
+import GroupCustomer from "../../../../crm/containers/customers/Group";
+import ManageCustomer from "../../../../crm/containers/customers/Customer";
+// import PurchaseHistory from "../../../../crm/containers/customerCustomers";
 
 /*==============================END CRM===================================*/
 
@@ -242,7 +242,7 @@ const dataSource = {
       {
         title: "Manage Customer",
         icon: "icon-customer ",
-        route: "/customers/manage",
+        route: "/customer",
         component: ManageCustomer,
         isFashNav: true
       },
@@ -268,7 +268,7 @@ const dataSource = {
       {
         title: "Manage Employee",
         icon: "icon-employee",
-        route: "/employees/manage",
+        route: "/employee",
         component: ManageEmployee
       },
       
@@ -369,7 +369,7 @@ const dataSource = {
       {
         title: "Receipt Template",
         icon: "icon-receipt",
-        route: "/settings/receipt-template",
+        route: "/settings/receipt/template",
         component: ReceiptTemplate,
         isFashNav: true
       },

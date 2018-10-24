@@ -1,5 +1,6 @@
 import React from "react";
 import FormItem from "./FormItem";
+import Constant from "../../../constants/products/product";
 import ProductAction from "../../../actions/products/product";
 import BrandAction from "../../../actions/products/brand";
 import FormCreateBrand from "../../../containers/products/Brand/FormCreate";
@@ -11,7 +12,7 @@ import UnitAction from "../../../actions/products/productsUnit";
 import FormCreateUnit from "../../../containers/products/ProductsUnit/FormCreate";
 import TaxAction from "../../../../pos/action/settings/tax";
 import FormCreateTax from "../../../../pos/containers/settings/Tax/FormCreate";
-import TagAction from "../../../actions/products/productsTag";
+import ProductTagAction from "../../../actions/products/productsTag";
 import FormCreateTag from "../../../containers/products/productsTag/FormCreate";
 import Modal from "../../../../common/components/shares/Modal";
 
@@ -153,7 +154,7 @@ export default class FormCreate extends Modal {
   }
       
   handleCancel() {
-    this.dispatch(ProductAction.reset());
+    this.dispatch(ProductAction.reset(Constant.RESET_FORM_PRODUCT));
   }
 
   handleAddBrand() {
@@ -182,7 +183,7 @@ export default class FormCreate extends Modal {
   }
 
   handleAddTag() {
-    this.dispatch(TagAction.showForm());
+    this.dispatch(ProductTagAction.showForm());
     this.modal1 = <FormCreateTag />;
   }
 
@@ -206,7 +207,7 @@ export default class FormCreate extends Modal {
     } else {
       // ADD NEW TAG TO DB
       // value: in this case is string only
-      this.dispatch(TagAction.add({tag: value}));
+      this.dispatch(ProductTagAction.add({tag: value}));
     }
   }
 
@@ -230,7 +231,7 @@ export default class FormCreate extends Modal {
       const existTagList = this.state.tagList;
       existTagList.push({id: tagAdd.response.data.id, tag: tagAdd.response.data.tag, status: this.Enum.ACTIVE});
       this.setState({tagList: existTagList});
-      this.dispatch(TagAction.reset());
+      this.dispatch(ProductTagAction.reset());
     }
   }
 
@@ -241,13 +242,9 @@ export default class FormCreate extends Modal {
       dispatch,
       productVariantArchive,
       productAdd,
-      productsType,
       productsTypeAdd,
-      brands,
       brandAdd,
-      units,
       unitAdd,
-      taxs,
       taxAdd,
       tags,
       tagAdd,
@@ -267,16 +264,12 @@ export default class FormCreate extends Modal {
           locale={locale}
           dispatch={dispatch}
           productVariantArchive={productVariantArchive}
-          brands={brands}
           brandAdd={brandAdd}
           handleAddBrand={this.handleAddBrand}
-          productsType={productsType}
           productsTypeAdd={productsTypeAdd}
           handleAddProductType={this.handleAddProductType}
-          units={units}
           unitAdd={unitAdd}
           handleAddUnit={this.handleAddUnit}
-          taxs={taxs}
           taxAdd={taxAdd}
           handleAddTax={this.handleAddTax}
           tags={tags}

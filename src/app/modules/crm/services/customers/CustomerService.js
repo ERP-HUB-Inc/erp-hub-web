@@ -1,12 +1,12 @@
 import BaseService from "../BaseService";
 
-class ReceiptService extends BaseService {
+class CustomerService extends BaseService {
 
   constructor() {
     super();
-    this.module = "receipt-template";
+    this.module = "customer";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 }
 
-export default new ReceiptService();
+export default new CustomerService();

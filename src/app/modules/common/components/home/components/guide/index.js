@@ -61,7 +61,7 @@ export default class Duide extends Component {
                 <span className="icon-arrow-right arrow"></span>
               </li>
               <li>
-                <this.Link to="employees/manage">
+                <this.Link to="employee">
                   <span className="icon-employee"></span>
                 </this.Link>
                 <div className="grap-guide-title grap-title">2. EMPLOYEE</div>
@@ -88,7 +88,7 @@ export default class Duide extends Component {
                 <span className="icon-arrow-right arrow"></span>
               </li>
               <li>
-                <this.Link to="customers/manage">
+                <this.Link to="customer">
                   <span className="icon-customer"></span>
                 </this.Link>
                 <div className="grap-guide-title grap-title">5. CUSTOMERS</div>

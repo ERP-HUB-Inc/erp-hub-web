@@ -8,7 +8,8 @@ export default combineReducers({
     const constants = [
       Constant.REQUEST_PRODUCT_PENDING,
       Constant.REQUEST_PRODUCT_REJECTED,
-      Constant.REQUEST_PRODUCT_FULFILLED
+      Constant.REQUEST_PRODUCT_FULFILLED,
+      Constant.RESET_PRODUCT
     ];
     return reducer.request(state, action, constants);
   },
@@ -60,7 +61,7 @@ export default combineReducers({
       Constant.ADD_PRODUCT_REJECTED,
       Constant.ADD_PRODUCT_FULFILLED,
       Constant.SHOW_PRODUCT_FORM,
-      Constant.RESET_PRODUCT
+      Constant.RESET_FORM_PRODUCT
     ];
     return reducer.add(state, action, constants);
   },
@@ -70,7 +71,7 @@ export default combineReducers({
       Constant.CLONE_PRODUCT_REJECTED,
       Constant.CLONE_PRODUCT_FULFILLED,
       Constant.SHOW_PRODUCT_FORM,
-      Constant.RESET_PRODUCT
+      Constant.RESET_FORM_PRODUCT
     ];
     return reducer.add(state, action, constants);
   },
@@ -80,7 +81,7 @@ export default combineReducers({
       Constant.UPDATE_PRODUCT_REJECTED,
       Constant.UPDATE_PRODUCT_FULFILLED,
       Constant.SHOW_PRODUCT_FORM,
-      Constant.RESET_PRODUCT
+      Constant.RESET_FORM_PRODUCT
     ];
     return reducer.update(state, action, constants);
   },

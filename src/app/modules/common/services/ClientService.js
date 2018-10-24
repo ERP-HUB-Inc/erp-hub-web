@@ -25,7 +25,7 @@ class ClientService extends BaseService {
     });
   }
 
-  signin(userName, password, storeName, locationId) {
+  signin(userName, password, storeName) {
     this.module = "auth";
     this.baseUrl = `${this.generateAPIUrl()}/${this.module}/${this.version}`;
     return this.POST({
@@ -34,8 +34,7 @@ class ClientService extends BaseService {
         "Content-Type": "application/json",
         "storeName": storeName,
         "userName": userName,
-        "password": password,
-        "locationId": locationId
+        "password": password
       },
       data: {}
     });

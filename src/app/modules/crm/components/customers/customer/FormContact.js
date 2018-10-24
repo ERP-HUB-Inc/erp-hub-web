@@ -22,22 +22,13 @@ export default class FormContact extends Modal {
             <h6>{<this.Translate id="input_management_contact_number" />} </h6>
             <hr className="line-contact"/>
           </this.Col>
-          <this.InputText 
-            name={`contactId[${index}]`} 
-            type="hidden"
-            data={contact.id != null ? contact.id : "" }
-            form={form}/>
-          <this.InputNumber 
-            name={`status[${index}]`}
-            className="hidden"
-            data={contact.status}
-            form={form}/>
           <this.Col md="6">
             <this.InputText 
               name={`contactName[${index}]`} 
               data={contact.name}
               label={<this.Translate id="input_management_contact_name" />} 
               placeholder={this.CATranslate("input_management_contact_name", locale)}
+              handleKeyUp={(event) => this.props.handleOnChangContactField(event, index, "name")}
               required={true}
               form={form}/>
           </this.Col>
@@ -47,7 +38,8 @@ export default class FormContact extends Modal {
               name={`contactNumber[${index}]`}     
               data={contact.phoneNumber}
               label={<this.Translate id="input_management_contact_phone_number" />} 
-              placeholder={this.CATranslate("input_management_contact_phone_number", locale)}  
+              placeholder={this.CATranslate("input_management_contact_phone_number", locale)}
+              handleKeyUp={(event) => this.props.handleOnChangContactField(event, index, "phoneNumber")}
               max={100}
               required={true}
               form={form}/> 
@@ -58,7 +50,8 @@ export default class FormContact extends Modal {
               name={`contactAddress[${index}]`}
               data={contact.address}
               label={<this.Translate id="input_management_contact_address" />} 
-              placeholder={this.CATranslate("input_management_contact_address", locale)}  
+              placeholder={this.CATranslate("input_management_contact_address", locale)}
+              handleKeyUp={(event) => this.props.handleOnChangContactField(event, index, "address")}
               max={100}  
               form={form}/>
           </this.Col>

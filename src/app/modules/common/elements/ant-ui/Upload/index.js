@@ -21,6 +21,7 @@ export class UploadImg extends Element {
         form={this.props.form}
         label={this.props.label}
         rules={this.rules}
+        data={this.props.data}
         fileList={this.props.fileList}
         endPoint={this.props.endPoint}
         endPointDelete={this.props.endPointDelete}

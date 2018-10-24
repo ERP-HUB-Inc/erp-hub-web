@@ -35,5 +35,13 @@ export default {
     CUSTOMER : 12,
     EMPLOYEE : 14
   },
-
+  LOCAL_SCHEMA: {
+    BRAND: "BRAND",
+    UNIT: "UNIT",
+    TAX: "TAX",
+    PRODUCT_TYPE: "PRODUCT_TYPE",
+    LANGUAGE: "LANGUAGE",
+    VARIANT_ATTRIBUTE: "VARIANT_ATTRIBUTE",
+    PRODUCT_TAG: "PRODUCT_TAG"
+  }
 };

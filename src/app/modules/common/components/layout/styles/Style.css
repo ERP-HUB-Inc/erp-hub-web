@@ -39,6 +39,10 @@ html,
     margin-bottom: 0 !important
 }
 
+.ant-table-tbody tr td .ant-form-item-control {
+    line-height: 1 !important
+}
+
 
 /* tab */
 .ant-tabs.ant-tabs-card > 
@@ -121,7 +125,9 @@ html,
     border-right-width: 1.5px !important
 }
 
-.has-error .ca-input-v1 .ant-input-number-input {
+.ca-input-v1 .has-error .ant-input-number-input,
+.ca-input-v1 .has-error .ant-input
+ {
     border: 1.5px solid #f5222d
 }
 
@@ -223,12 +229,91 @@ color: #4D4F5C;
 /* INPUT UPLOAD */
 .main-upload .ant-upload-list-picture-card .ant-upload-list-item-thumbnail img {
     position: absolute;
-    height: auto;
+    max-width: 100%;
+    max-height: 100%;
     left: 0;
     right: 0;
     bottom: 0;
     top: 0;
     margin: auto
+}
+
+/* WRAP SELECT*/
+.wrap-select-search ul.ant-select-dropdown-menu li.add-new-item {
+    color: #57A600;
+    position: absolute;
+    width: 100%;
+    background-color: white;
+    z-index: 9
+}
+
+.wrap-select-search ul.ant-select-dropdown-menu li span {
+    font-weight: bold
+}
+
+.wrap-select-search ul.ant-select-dropdown-menu li:nth-child(2) {
+    margin-top: 35px
+}
+
+.ant-select-selection-selected-value .not-for-selected {
+    display: none
+}
+
+.wrap-select-search .ant-select-dropdown-menu {
+    min-height: 35px
+}
+
+/* MODAL */
+.modal-fix-footer,
+.modal-fix-footer .ant-modal,
+.modal-fix-footer .ant-modal .ant-modal-content,
+.modal-fix-footer .ant-modal .ant-modal-body,
+.modal-fix-footer .ant-modal .ant-modal-body form,
+.modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs,
+.modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs-content,
+.modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs-content .tabpanel {
+    height: 100%
+}
+
+.modal-fix-footer .ant-modal .ant-modal-body,
+.modal-fix-footer .ant-modal .ant-modal-content,
+.modal-fix-footer .ant-modal .ant-modal-body form,
+.modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs,
+.modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs-content {
+    display: flex
+}
+
+.modal-fix-footer .ant-modal .ant-modal-content, 
+.modal-fix-footer .ant-modal .ant-modal-body,
+.modal-fix-footer .ant-modal .ant-modal-body form,
+.modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs {
+    flex-direction: column
+}
+
+.modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs .ant-tabs-bar {
+    margin-bottom: 0
+}
+
+.modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs {
+    padding-left: 15px
+}
+
+.modal-fix-footer .ant-modal .ant-modal-body {
+    padding-right: 0 !important;
+    padding-left: 0 !important
+}
+
+.modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs-content .ant-tabs-tabpane {
+    overflow: hidden auto;
+    padding-right: 10px;
+    padding-top: 10px
+}
+
+/* SWITCH */
+.wrap-switch {
+    display: flex;
+    align-items: center;
+    padding-top: 25px
 }
 
 /* BUTTON ADD NEW ELEMENT */

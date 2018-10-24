@@ -9,5 +9,13 @@ export default {
   CURRENCY_POSITION: {BEFORE: 0, AFTER: 1},
   GENERATE_PRODUCT_CODE: {MANAUL: 0, AUTO: 1},
   OPERATION_TYPE: {INCOME: 0, EXPENSE: 1},
-  GENDER: { MALE: 0, FEMALE: 1 }
+  GENDER: {
+    MALE: 0,
+    FEMALE: 1
+  },
+  IMAGE_SPACE: {
+    GENERAL: "general",
+    EMPLOYEE: "employee",
+    PRODUCT: "product"
+  }
 };

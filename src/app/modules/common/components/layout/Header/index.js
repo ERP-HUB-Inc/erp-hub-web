@@ -3,21 +3,28 @@ import Component from "../../Component";
 import DropDown from "../DropDown";
 import { Layout } from "antd";
 import SearchForm from "../Search";
+import LanguageAction from "../../../../pos/action/settings/storeLanguage";
 import "./index.css";
 const { Header } = Layout;
 
 class Headers extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      languages: []
+    };
     this.switchLanguage = this.switchLanguage.bind(this);
   }
 
+  componentDidMount() {
+    this.props.dispatch(LanguageAction.fetch(5));
+  }
+
   switchLanguage(key) {
-    const {dispatch} = this.props;
-    dispatch(this.changeLanguage(key));
+    this.props.dispatch(this.changeLanguage(key));
   }
   
-  render() {
+  render() { 
     return (
       <Header className="header" style={{ background: "#fff" }}>
         <div className="store-logo">
@@ -59,7 +66,11 @@ class Headers extends Component {
             <SearchForm locale={this.props.locale}/>
           </this.Col>
           <this.Col xs="7" md="7" className="header-left">
-            <DropDown onSwitchLanguage={this.switchLanguage} localization={this.props.locale} currentLanguage={this.getCurrentLanguage(this.props.locale)}/>
+            <DropDown
+              onSwitchLanguage={this.switchLanguage}
+              localization={this.props.locale}
+              activeLanguages={this.props.reducer.storeLanguage.request.list}
+              currentLanguage={this.getCurrentLanguage(this.props.locale)}/>
           </this.Col>
         </this.Row>
       </Header>

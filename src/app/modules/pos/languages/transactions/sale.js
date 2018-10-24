@@ -110,5 +110,11 @@ export default {
     "YOUR FEEDBACK KEEPS US IMPROVING!",
     "YOUR FEEDBACK KEEPS US IMPROVING!",
     "YOUR FEEDBACK KEEPS US IMPROVING!"
+  ],
+
+  "text_receipt_has_sent": [
+    "Receipt has sent !",
+    "Receipt has sent !",
+    "Receipt has sent !"
   ]
 };

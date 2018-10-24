@@ -22,8 +22,6 @@ export default class BaseService extends Service {
     });
   }
 
-  
-
   lists(
     limit,
     offset,

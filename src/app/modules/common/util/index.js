@@ -86,13 +86,33 @@ export class Util {
     return moment();
   }
 
+  getInitialDateForDOB() {
+    return moment().subtract(18, "years");
+  }
+
   formatDate (value, format = "MMM-Do-YYYY h:mm A") {
     format = format == null ? "MMM-Do-YYYY h:mm A" : format;
     return moment(value).format(format);
   }
 
-  formatDatePicker (value, format="YYYY/MM/DD") {
-    return moment(value, format);
+  formDateDOB (value) {
+    const date = moment(value).format("MMM-Do-YYYY");
+    return date;
+  }
+
+  isValidDate(value) {
+    return value instanceof Date && !isNaN(value);
+  }
+
+  formatDatePicker (value, initialValue = null, format="YYYY/MM/DD") {
+    let date = moment(value, format);
+    if (!date._isValid) {
+      if (initialValue === null) {
+        initialValue = this.getCurrentDate();
+      }
+      date = moment(initialValue, format);
+    }
+    return date;
   }
 
   listFormatDate () {
@@ -248,26 +268,32 @@ export class Util {
     };
   }
 
-  testImage(url, callback, timeout) {
+  getGeneralImage(fileName) {
+    return {
+      url: `${process.env.REACT_APP_RESOURCE_HOST}/${fileName}`
+    };
+  }
+
+  validImage(url, callback, timeout) {
     timeout = timeout || 5000;
     var timedOut = false, timer;
     var img = new Image();
     img.onerror = img.onabort = () => {
       if (!timedOut) {
         clearTimeout(timer);
-        callback(url, "error");
+        callback("error");
       }
     };
     img.onload = () => {
       if (!timedOut) {
         clearTimeout(timer);
-        callback(url, "success");
+        callback("success");
       }
     };
     img.src = url;
     timer = setTimeout(() => {
       timedOut = true;
-      callback(url, "timeout");
+      callback("timeout");
     }, timeout); 
   }
 

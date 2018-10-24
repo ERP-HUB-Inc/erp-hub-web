@@ -197,7 +197,7 @@ export default class FormVariant extends Modal {
     let {variantAttributes, productVariantArchive} = this.props;
 
     if (variantAttributeAdd.added) {
-      variantAttributes.list = [variantAttributeAdd.response.data, ...variantAttributes.list];
+      variantAttributes = [variantAttributeAdd.response.data, ...variantAttributes];
     }
 
     this.submitConfirmActionLoading = productVariantArchive.archiving;
@@ -214,7 +214,7 @@ export default class FormVariant extends Modal {
             <this.Col md="12" key={variantAttributeKey} className="wrap-variant-item-row">
               <this.Row>
                 <this.Col md="3">
-                  {this.renderVariantAttribute(variantAttribute, variantAttributeKey, variantAttributes.list)}
+                  {this.renderVariantAttribute(variantAttribute, variantAttributeKey, variantAttributes)}
                 </this.Col>
                 {
                   "variantList" in variantAttribute ? 

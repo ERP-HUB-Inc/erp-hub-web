@@ -154,7 +154,6 @@ export default class List extends Component {
 
   /**===================================================================EVENT CONTROL FOR CHILD CLASS============================================================**/
   componentDidMount() {
-    console.log("Did Mount");
     if (this.action) {
       const {dispatch} = this.props;
       dispatch(this.action.fetch(this.pageSize));
@@ -322,7 +321,7 @@ export default class List extends Component {
             <this.Link to="/"><span className="icon-home"></span></this.Link>
           </li>
           <li className="fast-nav text-uppercase">
-            <this.Link to="/">{this.module}</this.Link>
+            <this.Link to="#">{this.module}</this.Link>
           </li>
           {
             menuSource[this.module]["subItems"].map((value, index) =>
@@ -452,9 +451,11 @@ export default class List extends Component {
                 form={form}
               />
             </this.Col>
-            <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-              <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-            </this.Button>
+            <this.Col md="2" className="wrap-btn-search">
+              <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+              </this.Button>
+            </this.Col>
           </this.Row>
         </this.Form>
     );
@@ -533,12 +534,6 @@ export default class List extends Component {
   }
 
   renderTableList(fetchingProps) {
-    // let pagination = {
-    //   total: fetchingProps.pagination.total,
-    //   pageSize: fetchingProps.pagination.limit,
-    //   current: this.state.current
-    // };
-
     return (
       <div className="table-wrapper">
 
@@ -546,15 +541,7 @@ export default class List extends Component {
 
         {this.renderActionButton()}
 
-        { 
-          // pagination.total > 0 ?
-          // <div className="float-right">
-          //   <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
-          // </div>
-          this.renderPagination(fetchingProps)
-          // :
-          // ""
-        }
+        {this.renderPagination(fetchingProps)}
 
         <this.clearFloating/>        
 

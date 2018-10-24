@@ -3,7 +3,6 @@ import Component from "../../Component";
 import history from "../../../router/history";
 import ConstantAuth from "../../../constants/authentication";
 import ClientAction from "../../../actions/client";
-import LocationAction from "../../../../pos/action/settings/storeLocation";
 import "./index.css";
 
 export default class ClientSignIn extends Component {
@@ -22,7 +21,6 @@ export default class ClientSignIn extends Component {
     }
     const domainInfo = this.Util.getDomainInfo();
     this.dispatch(ClientAction.findClientByColumn("storeName", domainInfo.subStr));
-    this.dispatch(LocationAction.fetchAllByStoreName(domainInfo.subStr));
   }
 
   componentWillUpdate(nextProps) {
@@ -83,7 +81,7 @@ export default class ClientSignIn extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.dispatch(ClientAction.signin(values.username, values.password, this.Util.getDomainInfo().subStr, values.locationId));
+        this.dispatch(ClientAction.signin(values.username, values.password, this.Util.getDomainInfo().subStr));
       }
     });
   }
@@ -140,17 +138,6 @@ export default class ClientSignIn extends Component {
                       placeholder="Password"
                       required={true}
                       checkConfirm={false}
-                      form={form} />
-                  </this.FormGroup>
-                  <this.FormGroup>
-                    <this.Select
-                      name="locationId"
-                      label="Location"
-                      placeholder="Location"
-                      required={true}
-                      dataSource={this.props.storeLocation.list}
-                      valueKey="id"
-                      defaultValue={this.props.storeLocation.list.length > 0 ? this.props.storeLocation.list[0].id : ""}
                       form={form} />
                   </this.FormGroup>
                   <div className="signin-button">

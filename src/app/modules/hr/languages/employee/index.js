@@ -1,4 +1,9 @@
 export default {
+  "text_employee": [
+    "Employee",
+    "Employee",
+    "Employee"
+  ],
   "col_hr_employee_full_name": [
     "Full name",
     "အမည်",
@@ -78,9 +83,9 @@ export default {
   ], 
 
   "input_hr_employee_upload": [
-    "Upload",
-    "အမည်",
-    "Upload"
+    "Photo",
+    "Photo",
+    "Photo"
   ], 
 
   "input_hr_employee_user_name": [
@@ -96,9 +101,9 @@ export default {
   ], 
 
   "input_hr_employee_auto_generate": [
-    "Auto generate",
-    "အမည်",
-    "Auto generate"
+    "Auto Generate",
+    "Auto Generate",
+    "Auto Generate"
   ], 
 
   "input_hr_employee_will_be_expired": [
@@ -120,9 +125,9 @@ export default {
   ], 
 
   "input_error_hr_employee_first_name": [
-    "Please input your last name",
-    "အမည်",
-    "Please input your name"
+    "Please input your first name",
+    "Please input your first name",
+    "Please input your first name"
   ], 
 
   "input_error_hr_employee_last_name": [
@@ -135,6 +140,35 @@ export default {
     "Please input your username",
     "အမည်",
     "Please input your username"
-  ], 
+  ],
 
+  "text_male": [
+    "Male",
+    "Male",
+    "Male"
+  ],
+
+  "text_female": [
+    "Female",
+    "Female",
+    "Female"
+  ],
+
+  "text_user_access": [
+    "User Access",
+    "User Access",
+    "User Access"
+  ],
+
+  "text_location_access": [
+    "Location Access",
+    "Location Access",
+    "Location Access"
+  ],
+
+  "text_user_already_exist": [
+    "User already exist !",
+    "User already exist !",
+    "User already exist !"
+  ]
 };

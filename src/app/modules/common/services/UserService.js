@@ -1,15 +1,21 @@
 import BaseService from "./BaseService";
 
 class UserService extends BaseService {
-  lists() {
-    return this.GET({ 
-	      url: `${this.baseUrl}/user/v1/lists`,
-	      method: "GET",
-	      data: {},
-	      headers: {
-	        "Content-Type": "application/json"
-	      }
-	    });
+  constructor() {
+    super();
+    this.module = "user";
+    this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+  }
+	
+  findUserByUserName(userName) {
+    this.setHeader();
+    return this.GET(
+      {
+        url: `${this.baseUrl}/find/user-name/${userName}`,
+        data: {},
+        headers: this.header
+      }
+    );
   }
 }
 

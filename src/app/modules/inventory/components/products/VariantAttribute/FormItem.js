@@ -14,6 +14,7 @@ export default class FormItem extends Modal {
               data={formData.name}
               placeholder={this.CATranslate("input_variant_attribute_name", locale)}
               required={true}
+              isAutoFocus={true}
               max={100}
               min={3}
               form={form}/> 

@@ -11,8 +11,9 @@ import {
   DatePicker,
   Tag
 } from "antd";
-import { FormGroup, Label } from "reactstrap";
-import { Translate, } from "react-localize-redux";
+import {Util} from "../../util";
+import {FormGroup, Label} from "reactstrap";
+import {Translate} from "react-localize-redux";
 
 export default class Element extends Component {
   constructor(props) {
@@ -39,6 +40,8 @@ export default class Element extends Component {
 
     //localization
     this.Translate = Translate;
+
+    this.Util = new Util();
 
   }
 }

@@ -75,30 +75,33 @@ export default class PicturesUpload extends Element {
     }, timeout); 
   }
 
-  handleCardChange(fileList){
+  handleCardChange({fileList, file}){
     if (!this.state.isRemoveImage) {
+      this.setState({
+        cardImgList: file.name,
+        fileList
+      });
       let formData = new FormData();
-      formData.append("image", fileList.file);
+      formData.append("image", file);
       axios.post(this.props.endPoint, formData, {
         headers: {
           "content-type": "multipart/form-data",
           "Authorization": `Bearer ${this.props.accessToken}`
         }
-      })
-        .then((response) => {
-          console.log("Response Back:", response);
-          this.setState({
-            cardImgList: response.data.key,
-            fileList: [{
-              uid: "-1",
-              name: fileList.file.name,
-              url: response.data.location
-            }]
-          });
-        })
-        .catch((error) => {
+      });
+      //.then((response) => {
+      // this.setState({
+      // cardImgList: response.data.key,
+      // fileList: [{
+      //   uid: "-1",
+      //   name: file.name,
+      //   url: response.data.location
+      // }]
+      // });
+      // })
+      // .catch((error) => {
           
-        });
+      // });
     } else {
       this.setState({
         isRemoveImage: false,
@@ -141,7 +144,7 @@ export default class PicturesUpload extends Element {
       fileList: this.state.fileList,
       onPreview: this.handleCardPreview,
       onChange: this.handleCardChange,
-      accept: "image/*",
+      // accept: "image/*",
       listType: "picture-card"
     };
 
@@ -152,7 +155,7 @@ export default class PicturesUpload extends Element {
       <div className="clearfix main-upload">
         <this.FormItem label={this.props.label} className="wrap-upload">
           {
-            getFieldDecorator(this.props.name, { rules: this.props.rules } )(
+            getFieldDecorator(this.props.name, { rules: this.props.rules, initialValue: this.props.data } )(
               <Upload {...cardImgProps}>
                 {cardImgList ? null : uploadButton}
               </Upload>

@@ -48,8 +48,10 @@ export default class DropDownSearch extends Modal {
     const currentActive = $(".ant-spin-container div.search-item-hover");
     const productId = currentActive.attr("classid");
     const product = this.props.productSearch.list.find(value => value.id === productId);
-    this.props.handlePressEnterOnSearch(product);
-    this.setState({visibleDropDown: false});
+    if (product) {
+      this.props.handlePressEnterOnSearch(product);
+      this.setState({visibleDropDown: false});
+    }
   }
 
   handleOnBlurSearch() {
@@ -80,6 +82,10 @@ export default class DropDownSearch extends Modal {
 
   handleKeyDownOnProductSearch(event) {
     const value = event.target.value.trim();
+
+    if (event.keyCode === 13) {
+      return;
+    }
 
     if (event.keyCode === 38) {
       const currentActive = $(".ant-spin-container div.search-item-hover");

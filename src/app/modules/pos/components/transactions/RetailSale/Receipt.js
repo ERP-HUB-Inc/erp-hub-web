@@ -2,11 +2,27 @@ import React from "react";
 import JsBarcode from "jsbarcode";
 import Component from "../../../../common/components/Component";
 export default class Receipt extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      logo: null
+    };
+    this.initializeImage = this.initializeImage.bind(this);
+  }
   componentDidMount() {
     JsBarcode("#receiptCarcode", this.props.data.receiptNumber, {
       height: 35,
       displayValue: false
     });
+    this.Util.validImage(this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url, this.initializeImage);
+  }
+
+  initializeImage(status) {
+    if (status === "success") {
+      this.setState({logo: this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url});
+    } else if (status === "error") {
+      this.setState({logo: null});
+    }
   }
 
   render() {
@@ -35,16 +51,21 @@ export default class Receipt extends Component {
       <div style={{display: "none"}} id="pos-receipt-preview">
         <div style={{
           padding: "15px 15px",
-          backgroundColor: "white",
+          backgroundColor: "#f5f2f2",
           margin: "0 auto",
           fontFamily: "Arial"
         // display: "none"
         }}>
-          <table width="100%" style={{color: "rgb(142, 136, 136)", fontSize: "8pt", backgroundColor: "white", margin: "auto", width: "120mm", padding: 5}}>
+          <table style={{color: "rgb(142, 136, 136)", fontSize: "8pt", backgroundColor: "white", margin: "auto", width: "120mm", padding: 5}}>
             <tbody><tr>
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>
-                <div style={{height: 100, width: 100, border: "1px solid rgb(142, 136, 136)", position: "relative", borderRadius: 100, margin: "auto", overflow: "hidden"}}>
-                  <img alt="" src="http://ca.localhost:3081/store-logo.PNG" style={{position: "absolute", left: 0, right: 0, bottom: 0, top: 0, margin: "auto"}} />
+                <div style={{width: 100, position: "relative", borderRadius: 100, margin: "auto", overflow: "hidden"}}>
+                  {
+                    this.state.logo ?
+                      <img alt="" src={this.state.logo} style={{position: "absolute", left: 0, right: 0, bottom: 0, top: 0, margin: "auto"}} />
+                      :
+                      ""
+                  }
                 </div>
               </td>
             </tr>
@@ -65,16 +86,16 @@ export default class Receipt extends Component {
             </tr>
             <tr>
               <td colSpan={2} style={{paddingTop: 10}}>
-                <table width="100%" style={{fontSize: "8pt", color: "rgb(142, 136, 136)"}}>
+                <table style={{fontSize: "8pt", color: "rgb(142, 136, 136)"}}>
                   <thead>
                     <tr>
-                      <th style={{fontWeight: 500, width: 40, textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)"}}>
+                      <th style={{fontWeight: 500, width: "10mm", textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)"}}>
                         <this.Translate id="text_qty"/>
                       </th>
-                      <th style={{fontWeight: 500, padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)", textAlign: "left"}}>
+                      <th style={{fontWeight: 500, width: "90mm", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)", textAlign: "left"}}>
                         <this.Translate id="text_desc"/>
                       </th>
-                      <th style={{fontWeight: 500, width: 100, textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)"}}>
+                      <th style={{fontWeight: 500, width: "20mm", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)"}}>
                         <this.Translate id="text_amount"/>
                       </th>
                     </tr>
@@ -172,3 +193,9 @@ export default class Receipt extends Component {
     );
   }
 }
+
+Receipt.defaultProps = {
+  receiptTemplate: {
+    logo: ""
+  }
+};

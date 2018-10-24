@@ -14,6 +14,7 @@ export class InputTextArea extends Element {
         errorLenght={this.props.errorLenght}
         errorRequired={this.props.errorRequired}
         validator={this.props.validator}
+        handleKeyUp={this.props.handleKeyUp}
         data={this.props.data}
         min={this.props.min}
         max={this.props.max}

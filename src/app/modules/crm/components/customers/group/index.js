@@ -1,10 +1,10 @@
 import React from "react";
 import List from "../../List";
-import FormCreate from "../../../containers/customers/GroupCustomers/FormCreate";
-import FormUpdate from "../../../containers/customers/GroupCustomers/FormUpdate";
+import FormCreate from "../../../containers/customers/Group/FormCreate";
+import FormUpdate from "../../../containers/customers/Group/FormUpdate";
 import Constant from "../../../constants/customers/groupCustomer";
 import GroupCutomerAction from "../../../actions/customers/group";
-import CutomerService from "../../../services/groupCustomers/groupCustomers";
+import CutomerService from "../../../services/customers/GroupService";
 import "./index.css";
 
 export default class GroupCustomerList extends List {

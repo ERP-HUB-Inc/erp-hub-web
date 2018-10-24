@@ -43,7 +43,7 @@ export default class Form extends Modal {
     this.handleAddProductType = this.handleAddProductType.bind(this);
   }
 
-  componentWillUpdate() {
+  componentDidUpdate() {
     const {productDetail} = this.props;
     if (productDetail.fetched) {
       if (productDetail.data) {
@@ -59,8 +59,8 @@ export default class Form extends Modal {
           }
         });
         this.setState({tagList});
+        this.dispatch(ProductAction.reset(Constant.PARTIAL_RESET_DETAIL_PRODUCTS));
       }
-      this.dispatch(ProductAction.reset(Constant.PARTIAL_RESET_DETAIL_PRODUCTS));
     }
   }
 
@@ -202,7 +202,7 @@ export default class Form extends Modal {
     this.modal1 = <FormCreateProductType />;
   }
 
-  handleAddVariantAttribute(key) { console.log("Current Key:", key);
+  handleAddVariantAttribute(key) {
     this.dispatch(VariantAttributeAction.showForm());
     this.modal1 = <FormCreateVariantAttribute />;
   }
@@ -262,7 +262,7 @@ export default class Form extends Modal {
       const tagList = [];
       existTagList.forEach(tagValue => {
         if (tagValue.tagId === value) {
-          if (tagValue.id !== "") {
+          if (tagValue.id) {
             tagValue["status"] = this.Enum.ARCHIVE;
             tagList.push(tagValue);
           }

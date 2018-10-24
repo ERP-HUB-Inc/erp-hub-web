@@ -30,8 +30,7 @@ export default class FormItem extends Modal {
           label={<this.Translate id="input_operation_record_for" />}
           placeholder={this.CATranslate("input_operation_record_for", locale)}
           defaultValue={this.Util.formatDatePicker(formData.registerDate)} 
-          form={form} 
-        />
+          form={form}/>
         <this.InputNumber
           data={formData.amount}
           name="amount"

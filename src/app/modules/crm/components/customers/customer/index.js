@@ -1,11 +1,11 @@
 import React from "react";
 import List from "../../List";
-import FormCreate from "../../../containers/customers/ManageCustomers/FormCreate";
-import FormUpdate from "../../../containers/customers/ManageCustomers/FormUpdate";
+import FormCreate from "../../../containers/customers/Customer/FormCreate";
+import FormUpdate from "../../../containers/customers/Customer/FormUpdate";
 import Constant from "../../../constants/customers/managementCutomers";
 import CustomerAction from "../../../actions/customers/customer";
 import GroupCustomerAction from "../../../actions/customers/group";
-import CustomerService from "../../../services/customers/manageCustomer";
+import CustomerService from "../../../services/customers/CustomerService";
 import "./index.css";
 
 export default class CustomerList extends List {
@@ -55,8 +55,7 @@ export default class CustomerList extends List {
         <this.SubTable 
           columns={this.columnExpend}
           dataSource={record.contacts}
-          noDataContent="No Rows found"
-        />
+          locale={{emptyText: <this.Translate id="text_no_contact" />}}/>
       </div>
     );
   }
@@ -108,7 +107,7 @@ export default class CustomerList extends List {
         form == null ?
           ""
           :
-          <this.Form onSubmit={this.handleSubmitFilter}>
+          <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
             <this.Row className="main-search-layout form-group">
               <this.Col md="3">
                 <this.InputText
@@ -138,9 +137,11 @@ export default class CustomerList extends List {
                   form={form}
                 />
               </this.Col>
-              <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-              </this.Button>
+              <this.Col md="2" className="wrap-btn-search">
+                <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+                  <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+                </this.Button>
+              </this.Col>
             </this.Row>
           </this.Form>
       ); 
@@ -229,7 +230,7 @@ class Column extends List {
         dataIndex: "groupCustomer",
         key: "groupCustomer",
         sorter: true,
-        render: (groupCustomer) => groupCustomer !=null  ? groupCustomer.name : "-"
+        render: (groupCustomer) => groupCustomer !=null  ? <span className="text-capitalize">{groupCustomer.name}</span> : "-"
       },
       this.columnStatus
     ];

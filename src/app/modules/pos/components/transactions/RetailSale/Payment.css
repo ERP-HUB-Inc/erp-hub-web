@@ -212,6 +212,10 @@
     width: 100%
 }
 
+.pos-payment .confirm-payment .wrap-email-receipt .ant-form-explain {
+    position: absolute
+}
+
 .pos-payment .confirm-payment .complete-action {
     padding-top: 20px
 }

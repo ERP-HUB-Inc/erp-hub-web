@@ -89,16 +89,21 @@
     min-width: 110px
 }
 
-.main-search-layout .ant-btn.info{
-    top: 38px
-}
-
 .ant-form-inline .ant-form-item {
     display: block !important
 }
 
 .ant-form-inline .ant-form-item > .ant-form-item-control-wrapper {
     display: inline !important
+}
+
+.wrap-btn-search {
+    display: flex;
+    align-items: center
+}
+
+.wrap-btn-search button {
+    margin-top: 25px   
 }
 
 /* .content-list {
