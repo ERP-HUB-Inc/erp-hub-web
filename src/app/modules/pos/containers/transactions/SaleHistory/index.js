@@ -11,9 +11,11 @@ class SaleHistoryList extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    saleHistory: state.reducer.saleHistory.request,
-    saleHistoryAdd: state.reducer.saleHistory.add,
-    saleHistoryUpdate: state.reducer.saleHistory.update,
+    list: state.reducer.transaction.request,
+    detail: state.reducer.transaction.detail,
+    storeLocation: state.reducer.storeLocation.request,
+    users: state.reducer.user.request,
+    receiptTemplate: state.reducer.receiptTemplate.detail,
     locale: state.locale
   };
 }

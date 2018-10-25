@@ -14,16 +14,6 @@ export default {
     "Description",
     "Description"
   ],
-  "create_payment_method_title": [
-    "Payment Method",
-    "ငွေပေးချေစနစ်",
-    "Payment Method"
-  ],
-  "update_payment_method_title": [
-    "Payment Method",
-    "Payment Method",
-    "Payment Method",
-  ],
   "input_payment_method_name": [
     "Name",
     "အမည်",

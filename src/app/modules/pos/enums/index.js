@@ -13,5 +13,11 @@ export default {
     CREDIT_NOTE: 3,
     RETURN: 4
   },
+  TRANSACTION_STATUS: {
+    OPEN: 0,
+    OVERDUE: 1,
+    PAID: 2,
+    PENDING: 3
+  },
   PAYMENT_METHOD_AVIALE_ON_POS: 1
 };

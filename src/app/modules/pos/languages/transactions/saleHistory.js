@@ -4,45 +4,11 @@ export default {
     "Date",
     "Date"
   ],
-  "col-sale-history-no": [
-    "No",
-    "No",
-    "No"
-  ],
+
   "col-sale-history-sold-by": [
     "Sold By",
     "Sold By",
     "Sold By"
-  ],
-  "col-sale-history-customer": [
-    "Customer",
-    "Customer",
-    "Customer"
-  ],
-  "col-sale-history-notation": [
-    "Notation",
-    "Notation",
-    "Notation"
-  ],
-  "col-sale-history-sub-total": [
-    "Sub-total",
-    "Sub-total",
-    "Sub-total"
-  ],
-  "col-sale-history-discount": [
-    "Discount",
-    "Discount",
-    "Discount"
-  ],
-  "col-sale-history-tax": [
-    "Tax",
-    "Tax",
-    "Tax"
-  ],
-  "col-sale-history-sale-total": [
-    "Sale Total",
-    "Sale Total",
-    "Sale Total"
   ],
 
   "input-sale-history-store": [
@@ -51,43 +17,13 @@ export default {
     "Store"
   ],
 
-  "place-holder-sale-history-store": [
-    "All Store",
-    "All Store",
-    "All Store"
-  ],
-
-  "input-sale-history-employee": [
-    "Employee",
-    "Employee",
-    "Employee"
-  ],
-
-  "place-holder-sale-history-employee": [
-    "All Employee",
-    "All Employee",
-    "All Employee"
-  ],
-
-  "input-sale-history-dates": [
-    "Dates",
-    "Dates",
-    "Dates"
-  ],
-
   "place-holder-sale-history-date": [
     "Range Dates",
     "Range Dates",
     "Range Dates"
   ],
 
-  "input-sale-history-customer": [
-    "Customer",
-    "Customer",
-    "Customer"
-  ],
-
-  "place-holder-sale-history-for-customer": [
+  "text_search_for_customer": [
     "Search for Customer",
     "Search for Customer",
     "Search for Customer"
@@ -99,10 +35,10 @@ export default {
     "Sale Number"
   ],
 
-  "place-holder-sale-history-for-sale-no": [
-    "Search For Sale No",
-    "Search For Sale No",
-    "Search For Sale No"
+  "text_search_for_sale_no": [
+    "Search for Sale No",
+    "Search for Sale No",
+    "Search for Sale No"
   ],
 
   "input-sale-history-serial-number": [
@@ -117,6 +53,22 @@ export default {
     "Product Serials"
   ],
 
+  "text_sale_history": [
+    "Sale History",
+    "Sale History",
+    "Sale History"
+  ],
 
+  "text_reprint_warning_1": [
+    "Please select any record for print !",
+    "Please select any record for print !",
+    "Please select any record for print !"
+  ],
+
+  "text_reprint_warning_2": [
+    "We are not allow you to print with multi record !",
+    "We are not allow you to print with multi record !",
+    "We are not allow you to print with multi record !"
+  ]
 };
       

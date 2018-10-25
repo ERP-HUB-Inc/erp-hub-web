@@ -95,6 +95,11 @@ export class Util {
     return moment(value).format(format);
   }
 
+  formatDateForMYSQL (value, format = "YYYY-MM-DD") {
+    format = format == null ? "YYYY-MM-DD" : format;
+    return moment(value).format(format);
+  }
+
   formDateDOB (value) {
     const date = moment(value).format("MMM-Do-YYYY");
     return date;
@@ -244,7 +249,16 @@ export class Util {
 
   printElem(contentHtml)
   {
-    var mywindow = window.open("", "PRINT", "height=400,width=600");
+    var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+    var dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+
+    var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth;
+    var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight;
+
+    var left = ((width / 2) - (width / 2)) + dualScreenLeft;
+    var top = ((height / 2) - (height / 2)) + dualScreenTop;
+
+    var mywindow = window.open("", "PRINT", `height=${height},width=${width},top=${top},${left}`);
 
     mywindow.document.write("<html><head><title>" + document.title  + "</title>");
     mywindow.document.write("</head><body >");
@@ -299,5 +313,13 @@ export class Util {
 
   getImageFromSpace(image) {
     return `${process.env.REACT_APP_RESOURCE_HOST}/${image}`;
+  }
+
+  isValidCollectionInObj(data, key) {
+    if (data && data[key] && Array.isArray(data[key])) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

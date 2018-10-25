@@ -63,7 +63,121 @@ class Util {
     return grandTotal < 0 ? 0 : grandTotal;
   }
 
+  appendCustomerPaymentList(customerPaymentList, giveAmount, paymentMethod, balance) {
+    if (customerPaymentList.length === 0) {
+      customerPaymentList.push({
+        tender: giveAmount,
+        balance,
+        change: 0,
+        paymentMethodName: paymentMethod.name,
+        paymentMethodId: paymentMethod.id
+      });
+    } else {
+      let isNotTheSame = true;
+      customerPaymentList.forEach((payment, index) => {
+        if (payment.paymentMethodId === paymentMethod.id) {
+          isNotTheSame = false;
+          customerPaymentList[index]["tender"] += giveAmount;
+        }
+      });
 
+      if (isNotTheSame) {
+        customerPaymentList.push({
+          tender: giveAmount,
+          balance,
+          change: 0,
+          paymentMethodName: paymentMethod.name,
+          paymentMethodId: paymentMethod.id
+        });
+      }
+    }
+
+    return customerPaymentList;
+  }
+
+  appendProductTaxList(productOrderList) {
+    const productTaxList = [];
+
+    if (productOrderList.length === 0) {
+      return productTaxList;
+    }
+
+    productOrderList.forEach(productOrder => {
+      const productTax = productOrder.taxDescription;
+      const totalTaxAmount = this.getTaxAmount(productOrder.newPrice * productOrder.quantity, productTax.taxRate);
+      if (productTaxList.length === 0) {
+        productTaxList.push({
+          name: productTax.taxName,
+          rate: productTax.taxRate,
+          totalTaxAmount
+        });
+      } else {
+        let isNotTheSame = true;
+        productTaxList.forEach((taxOfProduct, productTaxIndex) => {
+          if (taxOfProduct.rate === productTax.taxRate) {
+            isNotTheSame = false;
+            productTaxList[productTaxIndex]["totalTaxAmount"] += totalTaxAmount;
+          }
+        });
+        if (isNotTheSame) {
+          productTaxList.push({
+            name: productTax.taxName,
+            rate: productTax.taxRate,
+            totalTaxAmount
+          });
+        } else {
+          
+        }
+      }
+    });
+    return productTaxList;
+  }
+
+  getTaxDescription(tax) {
+    let name = "";
+    if ("tax" in tax && tax["tax"]) {
+      name = tax["tax"].name;
+    }
+    return name;
+  }
+
+  getTaxFromProduct(product) {
+    let taxId = 0;
+    let taxRate = 0;
+    let taxName = "";
+    if (product["productTaxes"] && product["productTaxes"].length > 0) {
+      taxId = product["productTaxes"][0].id;
+      taxRate = product["productTaxes"][0].rate;
+      taxName = this.getTaxDescription(product["productTaxes"][0]);
+    }
+    return {
+      id: taxId,
+      taxRate,
+      taxName
+    };
+  }
+
+  getSummaryTax(productTaxList, title, sufixTitle) {
+    let taxTotal = 0;
+    let taxTitle = title;
+    let countTax = 0;
+    productTaxList.forEach(productTax => {
+      taxTotal += productTax.totalTaxAmount;
+      countTax++;
+    });
+
+    if (countTax > 1) {
+      taxTitle = `${countTax} ${sufixTitle}`;
+    } else if (countTax === 1) {
+      taxTitle = `${productTaxList[0].name}`;
+    }
+
+    return {
+      taxTitle,
+      taxTotal,
+      countTax
+    };
+  }
 }
 
 export default new Util();

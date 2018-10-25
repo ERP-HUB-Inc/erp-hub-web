@@ -55,7 +55,7 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_management_customer" />,
+        title: <this.Translate id="text_customer" />,
         dataIndex: "phoneNumber",
         key: "phoneNumber",
         sorter: true
@@ -67,13 +67,13 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_management_payment_method" />,
+        title: <this.Translate id="text_payment_method" />,
         dataIndex: "email",
         key: "phoneNumber",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_management_notation" />,
+        title: <this.Translate id="text_notation" />,
         dataIndex: "email",
         key: "phoneNumber",
         sorter: true

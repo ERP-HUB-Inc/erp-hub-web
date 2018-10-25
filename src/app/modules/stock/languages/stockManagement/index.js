@@ -1,55 +1,37 @@
 export default {
   "create_stock_management_title": [
     "Stock Management",
-    "ငွေကြေးစနစ်",
+    "Stock Management",
     "Stock Management"
   ],
       
   "create_stock_management_title": [
     "Stock Management",
-    "ငွေကြေး",
+    "Stock Management",
     "Stock Management"
   ],
 
   "col_stock_management_id": [
     "Id",
-    "အမည်",
+    "Id",
     "Id",
   ],
 
   "col_stock_management_sold_by": [
     "Sold By",
-    "အမည်",
+    "Sold By",
     "Sold By",
   ],
 
   "col_stock_management_sold_by": [
     "Sold By",
-    "အမည်",
     "Sold By",
-  ],
-
-  "col_stock_management_customer": [
-    "Customer",
-    "အမည်",
-    "Customer",
+    "Sold By",
   ],
 
   "col_stock_management_deposit": [
     "Deposit",
-    "အမည်",
     "Deposit",
-  ],
-
-  "col_stock_management_payment_method": [
-    "Payment Method",
-    "အမည်",
-    "Payment Method",
-  ],
-
-  "col_stock_management_notation": [
-    "Notation",
-    "အမည်",
-    "Notation",
+    "Deposit",
   ]
 };

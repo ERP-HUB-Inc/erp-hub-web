@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
-import GroupCustomerList from "../../../components/customers/group";
+import GroupCustomerList from "../../../components/customers/Group";
 
 class GroupCustomer extends React.Component {
   render() {

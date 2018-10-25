@@ -1,6 +1,5 @@
 import React from "react";
 import Modal from "../../../../common/components/shares/Modal";
-import "./index.css";
 
 export default class FormItem extends Modal {
   render() {

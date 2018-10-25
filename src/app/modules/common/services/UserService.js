@@ -1,4 +1,4 @@
-import BaseService from "./BaseService";
+import BaseService from "../../pos/services/BaseService";
 
 class UserService extends BaseService {
   constructor() {
@@ -11,7 +11,7 @@ class UserService extends BaseService {
     this.setHeader();
     return this.GET(
       {
-        url: `${this.baseUrl}/find/user-name/${userName}`,
+        url: `${this.baseUrl}/find/username/${userName}`,
         data: {},
         headers: this.header
       }

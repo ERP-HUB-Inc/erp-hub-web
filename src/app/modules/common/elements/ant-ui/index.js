@@ -5,6 +5,7 @@ export * from "./Select";
 export * from "./Select/selectSearch";
 export * from "./Select/selectTag";
 export * from "./DatePicker";
+export * from "./DateRangePicker";
 export * from "./Button/actionButton";
 export * from "./Switch";
 export * from "./Waiting";

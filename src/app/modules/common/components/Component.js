@@ -41,6 +41,7 @@ import
   RadioChildBox,
   RadioNormal,
   DatePickers,
+  DateRangePicker,
   RadioButton,
   UploadImg,
   Image,
@@ -176,6 +177,7 @@ export default class Component extends RComponent {
     this.Radios = Radios;
     this.InputEmail = InputEmail;
     this.DatePickers = DatePickers;
+    this.DateRangePicker = DateRangePicker;
     this.UploadImg = UploadImg;
     this.Image = Image;
     this.Loading = Loading;

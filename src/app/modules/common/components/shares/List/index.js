@@ -22,6 +22,8 @@ export default class List extends Component {
       showExport : true
     };
 
+    this.rowSelection = true;
+
     this.showExport = false;
 
     this.ExportheadersCsv = [];
@@ -431,8 +433,8 @@ export default class List extends Component {
       form == null ?
         ""
         :
-        <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout form-group">
+        <this.Form onSubmit={this.handleSubmitFilter}>
+          <this.Row className="main-search-layout">
             <this.Col md="3">
               <this.InputText
                 name="key"
@@ -452,6 +454,9 @@ export default class List extends Component {
               />
             </this.Col>
             <this.Col md="2" className="wrap-btn-search">
+              <div class="ant-form-item-label" style={{visibility: "hidden"}}>
+                <label for="status" class="" title="">Filter</label>
+              </div>
               <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
                 <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
               </this.Button>
@@ -467,6 +472,7 @@ export default class List extends Component {
   expandedRender(){
     
   }
+
 
   /**
    * render datatale
@@ -499,7 +505,7 @@ export default class List extends Component {
         />
         :
         <this.Table 
-          rowSelection={rowSelection}
+          rowSelection={this.rowSelection ? rowSelection : null}
           dataSource={fetchingProps.list}
           columns={this.columns}
           onChange={this.onChange}
@@ -536,8 +542,6 @@ export default class List extends Component {
   renderTableList(fetchingProps) {
     return (
       <div className="table-wrapper">
-
-        {this.renderFilterRecord()}
 
         {this.renderActionButton()}
 
@@ -583,7 +587,11 @@ export default class List extends Component {
       
       <div className="content-list">
 
-        { this.renderBreadCrumb()}
+        { this.renderBreadCrumb() }
+        
+        <div className="wrap-filter">
+          { this.renderFilterRecord() }
+        </div>
 
         { this.renderTableList(fetchingProps) }
         

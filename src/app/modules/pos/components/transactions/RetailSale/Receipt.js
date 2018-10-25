@@ -54,7 +54,6 @@ export default class Receipt extends Component {
           backgroundColor: "#f5f2f2",
           margin: "0 auto",
           fontFamily: "Arial"
-        // display: "none"
         }}>
           <table style={{color: "rgb(142, 136, 136)", fontSize: "8pt", backgroundColor: "white", margin: "auto", width: "120mm", padding: 5}}>
             <tbody><tr>

@@ -201,7 +201,7 @@ export default class PurchaseOrderLists extends List {
           }
 
           if (values.deliveryDueDate) {
-            values.deliveryDueDate = this.Util.formatDate(values.deliveryDueDate, "YYYY-MM-DD");
+            values.deliveryDueDate = this.Util.formatDateForMYSQL(values.deliveryDueDate);
             rangFilter = JSON.stringify({column: "deliveryDueDate", value: [values.deliveryDueDate, values.deliveryDueDate]});
           }
     

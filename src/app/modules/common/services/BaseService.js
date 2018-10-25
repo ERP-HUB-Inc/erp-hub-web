@@ -15,6 +15,17 @@ export default class BaseService {
     };
   }
 
+  getLanguageId() {
+    let languageId = "en";
+    const currentSetting = this.Util.getSetting();
+    
+    if (currentSetting != null && "defaultLanguageCode" in currentSetting) {
+      languageId = currentSetting.defaultLanguageCode;
+    }
+
+    return languageId;
+  }
+
   setHeader() {
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
   }

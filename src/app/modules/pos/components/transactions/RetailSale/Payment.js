@@ -56,34 +56,7 @@ export default class Payment extends Modal {
   }
 
   appendCustomerPaymentList(customerPaymentList, giveAmount, paymentMethod, balance) {
-    if (customerPaymentList.length === 0) {
-      customerPaymentList.push({
-        tender: giveAmount,
-        balance,
-        change: 0,
-        paymentMethodName: paymentMethod.name,
-        paymentMethodId: paymentMethod.id
-      });
-    } else {
-      let isNotTheSame = true;
-      customerPaymentList.forEach((payment, index) => {
-        if (payment.paymentMethodId === paymentMethod.id) {
-          isNotTheSame = false;
-          customerPaymentList[index]["tender"] += giveAmount;
-        }
-      });
-
-      if (isNotTheSame) {
-        customerPaymentList.push({
-          tender: giveAmount,
-          balance,
-          change: 0,
-          paymentMethodName: paymentMethod.name,
-          paymentMethodId: paymentMethod.id
-        });
-      }
-    }
-
+    customerPaymentList = POSUtil.appendCustomerPaymentList(customerPaymentList, giveAmount, paymentMethod, balance);
     this.setState({customerPaymentList});
   }
 
@@ -223,7 +196,7 @@ export default class Payment extends Modal {
       taxRate,
       discountAmount,
       taxAmount,
-      discountType,
+      // discountType,
       discountTypeStr
     } = this.props.summaryTotal;
 
@@ -253,7 +226,7 @@ export default class Payment extends Modal {
                 receiptTemplate={this.props.receiptTemplate.data}
                 currentUser={this.currentUser}
                 customerPaymentList={this.state.customerPaymentList}
-                paymentMethodList={paymentMethodList}
+                // paymentMethodList={paymentMethodList}
                 productList={this.props.productOrderList}
                 productTaxList={this.props.productTaxList}
                 summaryTotal={summaryTotal}
@@ -262,8 +235,8 @@ export default class Payment extends Modal {
                 changeAmount={changeAmount}
                 taxRate={taxRate}
                 taxAmount={taxAmount}
-                discountType={discountType}
-                discountTypeStr={discountTypeStr}
+                // discountType={discountType}
+                // discountTypeStr={discountTypeStr}
                 discountAmount={discountAmount} />
               :
               ""

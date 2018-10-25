@@ -79,7 +79,7 @@ export default {
 
   "select_text_active": [
     "Active",
-    "အမည်",
+    "Active",
     "Active",
   ],
 
@@ -257,6 +257,12 @@ export default {
     "Payment"
   ],
 
+  "text_payment_method": [
+    "Payment Method",
+    "Payment Method",
+    "Payment Method"
+  ],
+
   "text_received": [
     "Received",
     "Received",
@@ -299,6 +305,12 @@ export default {
     "General"
   ],
 
+  "text_walkin": [
+    "Walk In",
+    "Walk In",
+    "Walk In"
+  ],
+
   "text_locaton": [
     "Location",
     "Location",
@@ -315,5 +327,47 @@ export default {
     "Default",
     "Default",
     "Default"
+  ],
+
+  "text_customer": [
+    "Customer",
+    "Customer",
+    "Customer"
+  ],
+
+  "text_sale_total": [
+    "Sale Total",
+    "Sale Total",
+    "Sale Total"
+  ],
+
+  "text_completed": [
+    "Completed",
+    "Completed",
+    "Completed"
+  ],
+
+  "text_type": [
+    "Type",
+    "Type",
+    "Type"
+  ],
+
+  "text_employee": [
+    "Employee",
+    "Employee",
+    "Employee"
+  ],
+
+  "text_all_employee": [
+    "All Employees",
+    "All Employees",
+    "All Employees"
+  ],
+
+  "text_all_store": [
+    "All Stores",
+    "All Stores",
+    "All Stores"
   ]
 };

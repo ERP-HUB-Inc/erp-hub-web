@@ -86,7 +86,7 @@ export default class CustomerList extends List {
           let filter = {status};
 
           if ((values.groupCustomerId - this.groupCustomerList.value) !== 0) {
-            filter["groupCustomerId"] = values.groupCustomerId;
+            filter["groupCustomerId"] = [values.groupCustomerId];
           }
 
           filter = JSON.stringify(filter);

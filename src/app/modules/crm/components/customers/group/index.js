@@ -5,7 +5,6 @@ import FormUpdate from "../../../containers/customers/Group/FormUpdate";
 import Constant from "../../../constants/customers/groupCustomer";
 import GroupCutomerAction from "../../../actions/customers/group";
 import CutomerService from "../../../services/customers/GroupService";
-import "./index.css";
 
 export default class GroupCustomerList extends List {
   constructor(props) {

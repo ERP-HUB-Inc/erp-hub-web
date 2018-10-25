@@ -239,7 +239,7 @@ export default class InventoryList extends List {
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
           <this.Row className="main-search-layout profit-and-lose form-group"> 
 
-            <this.Col md="2" className="reorder-point-button-search">
+            <this.Col md="2">
               <this.Select
                 name="type"
                 placeholder={this.CATranslate("place_holder_profit_and_lost_report_type", locale)}
@@ -249,7 +249,7 @@ export default class InventoryList extends List {
                 form={form}
               />
             </this.Col>
-            <this.Col md="2" className="reorder-point-button-search">
+            <this.Col md="2">
               <this.DatePickers
                 name="createdAt"
                 label={<this.Translate id="input_inventory_report_date" />}

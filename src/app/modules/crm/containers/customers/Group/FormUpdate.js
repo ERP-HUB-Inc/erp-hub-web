@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import FormUpdate from "../../../components/customers/group/FormUpdate";
+import FormUpdate from "../../../components/customers/Group/FormUpdate";
 
 class GroupCustomerUpdate extends React.Component {
   render() {

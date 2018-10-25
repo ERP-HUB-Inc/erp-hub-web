@@ -54,7 +54,7 @@ export default class InventoryList extends List {
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
           <this.Row className="main-search-layout form-group"> 
 
-            <this.Col md="3" className="reorder-point-button-search">
+            <this.Col md="3">
               <this.Select
                 name="status"
                 placeholder={this.CATranslate("place_holder_stock_reorder_point_status", locale)}
@@ -76,7 +76,7 @@ export default class InventoryList extends List {
                 form={form}/>
             </this.Col> */}
 
-            <this.Col md="3" className="reorder-point-button-search">
+            <this.Col md="3">
               <this.DatePickers
                 name="datepicker"
                 label="Date"
@@ -84,7 +84,7 @@ export default class InventoryList extends List {
               />
             </this.Col>
 
-            <this.Col md="3" className="reorder-point-button-search">
+            <this.Col md="3">
               <this.InputText
                 name="key"
                 label="Search For key"
@@ -93,7 +93,7 @@ export default class InventoryList extends List {
               />
             </this.Col>
 
-            <this.Col md="2" className="reorder-point-button-search">
+            <this.Col md="2">
               <this.Button htmlType="submit" type="info" >
                 <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
               </this.Button> 

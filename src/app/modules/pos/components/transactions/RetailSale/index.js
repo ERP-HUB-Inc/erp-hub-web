@@ -99,67 +99,11 @@ export default class Retail extends Component {
   }
 
   appendProductTaxList(productOrderList) {
-    const productTaxList = [];
-
-    if (productOrderList.length === 0) {
-      this.setState({productTaxList});
-    }
-
-    productOrderList.forEach(productOrder => {
-      const productTax = productOrder.taxDescription;
-      const totalTaxAmount = POSUtil.getTaxAmount(productOrder.newPrice * productOrder.quantity, productTax.taxRate);
-      if (productTaxList.length === 0) {
-        productTaxList.push({
-          name: productTax.taxName,
-          rate: productTax.taxRate,
-          totalTaxAmount
-        });
-      } else {
-        let isNotTheSame = true;
-        productTaxList.forEach((taxOfProduct, productTaxIndex) => {
-          if (taxOfProduct.rate === productTax.taxRate) {
-            isNotTheSame = false;
-            productTaxList[productTaxIndex]["totalTaxAmount"] += totalTaxAmount;
-          }
-        });
-        if (isNotTheSame) {
-          productTaxList.push({
-            name: productTax.taxName,
-            rate: productTax.taxRate,
-            totalTaxAmount
-          });
-        } else {
-          
-        }
-      }
-      this.setState({productTaxList});
-    });
-  }
-
-  getSummaryTax() {
-    let taxTotal = 0;
-    let taxTitle = <this.Translate id="text_no_tax"/>;
-    let countTax = 0;
-    this.state.productTaxList.forEach(productTax => {
-      taxTotal += productTax.totalTaxAmount;
-      countTax++;
-    });
-
-    if (countTax > 1) {
-      taxTitle = `${countTax} ${this.CATranslate("text_taxes", this.props.locale)}`;
-    } else if (countTax === 1) {
-      taxTitle = `${this.state.productTaxList[0].name}`;
-    }
-
-    return {
-      taxTitle,
-      taxTotal,
-      countTax
-    };
+    this.setState({productTaxList: POSUtil.appendProductTaxList(productOrderList)});
   }
 
   appendProductOrder(targetList, product) {
-    const tax = this.getTaxFromProduct(product);
+    const tax = POSUtil.getTaxFromProduct(product);
     targetList.push({
       productId: product.id,
       name: Util.getProductName(product),
@@ -181,7 +125,7 @@ export default class Retail extends Component {
     let discountAmount = 0;
     let discountTypeStr = "";
 
-    const taxAmount = this.getSummaryTax().taxTotal;
+    const taxAmount = POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale)).taxTotal;
 
     if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
       discountTypeStr = ` (${this.state.discountValue.value}%)`;
@@ -430,7 +374,7 @@ export default class Retail extends Component {
         productTaxList={this.state.productTaxList}
         handleOnResetOrder={this.handleOnResetOrder}
         summaryTotal={this.getSummaryTotal()}
-        summaryTax={this.getSummaryTax()}/>
+        summaryTax={POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale))}/>
       });
     } else {
       // TO DO: alert message can make payment with empty list
@@ -536,7 +480,7 @@ export default class Retail extends Component {
       taxTitle,
       taxTotal,
       countTax
-    } = this.getSummaryTax();
+    } = POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale));
 
     return (
       <this.Row className="main-layout main-store-account" id="retail-sale">

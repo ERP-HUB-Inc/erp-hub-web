@@ -46,8 +46,6 @@ import saleReport from "../modules/pos/reducers/report/sale";
 import inventoryReport from "../modules/pos/reducers/report/inventory";
 import purchaseReport from "../modules/pos/reducers/report/purchase";
 import profitAndLostReport from "../modules/pos/reducers/report/profitAndLost";
-//sale
-import saleHistory from "../modules/pos/reducers/transactions/saleHistory";
 
 const reducer = combineReducers({
   client,
@@ -70,8 +68,6 @@ const reducer = combineReducers({
   privilege,
   storeAccount,
   operationRecord,
-  //Transaction
-  transaction,
   // Employee
   employee,
   customer,
@@ -97,8 +93,7 @@ const reducer = combineReducers({
   inventoryReport,
   purchaseReport,
   profitAndLostReport,
-  saleHistory
-  
+  transaction
 });
 
 export default reducer;

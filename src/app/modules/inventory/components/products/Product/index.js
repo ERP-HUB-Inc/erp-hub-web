@@ -105,16 +105,14 @@ export default class ProductList extends List {
   }
 
   handleShowFormAdd() {
-    const {dispatch} = this.props;
-    dispatch(ProductAction.showForm());
+    this.props.dispatch(ProductAction.showForm());
     this.setState({
       modalConten: <FormCreate/>
     });
   }
 
   handleShowFormEdit(rowData) {
-    const {dispatch} = this.props;
-    dispatch(ProductAction.requestAndShowForm(rowData));
+    this.props.dispatch(ProductAction.requestAndShowForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });
@@ -122,15 +120,13 @@ export default class ProductList extends List {
 
   handleClone() {
     if (this.state.selectedListIds.length > 0) {
-      const {dispatch} = this.props;
-      dispatch(ProductAction.clone(this.state.selectedListIds[0]));
+      this.props.dispatch(ProductAction.clone(this.state.selectedListIds[0]));
     }
   }
 
   handleOnPrintLabel() {
-    const {dispatch} = this.props;
     const productList = this.props.products.list.filter(product => this.state.dataSourceToPrint.includes(product.id));
-    dispatch(PriceTagAction.selectProductFromListToPrint(productList));
+    this.props.dispatch(PriceTagAction.selectProductFromListToPrint(productList));
     history.push("/products/price-tags");
   }
 

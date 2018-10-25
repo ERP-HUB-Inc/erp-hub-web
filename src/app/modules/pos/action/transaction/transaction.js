@@ -3,11 +3,27 @@ import ConstantAuth from "../../../common/constants/authentication";
 import TransactionService from "../../services/transactions/TransactionService";
 
 export default {
+  fetch: (limit, offset, sortField, sortOrder, filter, searchKey, rangFilter) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_TRANSACTION,
+        payload: TransactionService.lists(limit, offset, sortField, sortOrder, filter, searchKey, rangFilter)
+      });
+    };
+  },
   add: (data) => {
     return dispatch => {
       return dispatch({
         type: Constant.ADD_TRANSACTION,
         payload: TransactionService.add(data)
+      });
+    };
+  },
+  detail: (data, languageId) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.DETAIL_TRANSACTION,
+        payload: TransactionService.detail(data.id, languageId)
       });
     };
   },
@@ -19,10 +35,10 @@ export default {
       });
     };
   },
-  reset: () => {
+  reset: (RESET_CONSTANT = Constant.RESET_TRANSACTION) => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET_TRANSACTION,
+        type: RESET_CONSTANT,
         payload: null
       });
     };

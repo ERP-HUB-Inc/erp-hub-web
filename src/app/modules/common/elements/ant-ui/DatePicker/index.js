@@ -10,7 +10,6 @@ export class DatePickers extends Element {
         { 
           getFieldDecorator(this.props.name, {rules: [{ type: "object", required: this.props.required, message: this.props.message }], initialValue: this.props.defaultValue})(
             <this.DatePicker
-              disabledDate={this.props.disabledDate}
               format={this.props.dateFormat}
               disabled={this.props.disabled}
             />  

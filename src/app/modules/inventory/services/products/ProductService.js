@@ -16,20 +16,13 @@ class ProductService extends BaseService {
     filter, // {"column1": [value1, value2], "column2": [value1, value2]}
     searchKey // {"column": ["columnname1", "columnname2"], "value": "hello"}
   ) {
-    let languageId = "en";
-    const currentSetting = this.Util.getSetting();
-    
-    if (currentSetting != null && "defaultLanguageCode" in currentSetting) {
-      languageId = currentSetting.defaultLanguageCode;
-    }
-
     return super.lists(limit,
       offset,
       sortField,
       sortOrder,
       filter,
       searchKey,
-      languageId);
+      this.getLanguageId());
   }
 
   searchForDrowDown(
@@ -40,12 +33,7 @@ class ProductService extends BaseService {
     filter,
     searchKey
   ) {
-    let languageId = "en";
-    const currentSetting = this.Util.getSetting();
-    
-    if (currentSetting != null && "defaultLanguageCode" in currentSetting) {
-      languageId = currentSetting.defaultLanguageCode;
-    }
+    const languageId = this.getLanguageId();
 
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.GET({ 

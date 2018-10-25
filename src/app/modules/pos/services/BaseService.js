@@ -9,12 +9,10 @@ export default class BaseService extends Service {
     };
   }
 
-  detail(
-    ids
-  ){
+  detail(ids){
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.GET({ 
-      url: `${this.baseUrl}/detail/${ids}`,
+      url: `${this.baseUrl}/detail/${ids}?languageId=${this.getLanguageId()}`,
       data: this.data,
       headers: this.header
     });
@@ -25,11 +23,12 @@ export default class BaseService extends Service {
     sortField,
     sortOrder,
     filter, // {"column1": [value1, value2], "column2": [value1, value2]}
-    searchKey // {"column": ["columnname1", "columnname2"], "value": "hello"}
+    searchKey, // {"column": ["columnname1", "columnname2"], "value": "hello"}
+    rangFilter
   ) {
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.GET({ 
-      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}`,  
+      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&rangFilter=${rangFilter}`,  
       data: this.data,
       headers: this.header
     });
