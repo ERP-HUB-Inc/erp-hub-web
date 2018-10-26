@@ -34,10 +34,6 @@ export default class PaymentMethodList extends List {
       modalConten: <FormUpdate/>
     });
   }
-
-  render() {
-    return super.render();
-  }
 }
 
 class Column extends List {

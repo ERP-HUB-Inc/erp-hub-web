@@ -35,10 +35,6 @@ export default class CurrencyList extends List {
       modalConten: <FormUpdate/>
     });
   }
-
-  render() {
-    return super.render();
-  }
 }
 
 class Column extends List {

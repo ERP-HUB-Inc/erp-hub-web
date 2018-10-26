@@ -42,10 +42,6 @@ export default class StoreLanguageList extends List {
       modalConten: <FormUpdate/>
     });
   }
-
-  render() {
-    return super.render();
-  }
 }
 
 class Column extends List {

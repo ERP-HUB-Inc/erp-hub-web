@@ -34,10 +34,6 @@ export default class TaxList extends List {
       modalConten: <FormUpdate/>
     });
   }
-
-  render() {
-    return super.render();
-  }
 }
 
 

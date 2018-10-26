@@ -35,10 +35,6 @@ export default class StoreLocationList extends List {
       modalConten: <FormUpdate/>
     });
   }
-
-  render() {
-    return super.render();
-  }
 }
 
 class Column extends List {

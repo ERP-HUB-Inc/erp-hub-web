@@ -454,8 +454,8 @@ export default class List extends Component {
               />
             </this.Col>
             <this.Col md="2" className="wrap-btn-search">
-              <div class="ant-form-item-label" style={{visibility: "hidden"}}>
-                <label for="status" class="" title="">Filter</label>
+              <div className="ant-form-item-label" style={{visibility: "hidden"}}>
+                <label htmlFor="status" className="" title="">Filter</label>
               </div>
               <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
                 <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />

@@ -35,11 +35,6 @@ export default class OperationRecord extends List {
       modalConten: <FormUpdate/>
     });
   }
-
-  render() {
-    return super.render();
-  }
-  
 }
 
 class Column extends List {

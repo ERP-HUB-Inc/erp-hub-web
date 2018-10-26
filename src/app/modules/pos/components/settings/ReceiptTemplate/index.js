@@ -11,8 +11,6 @@ export default class ReceiptTemplateList extends List {
     super(props);
     this.columns = new Column();
     this.fetchingProp = "receipt";
-    // this.addingProp = "receiptAdd";
-    // this.updatingProp = "receiptUpdate";
     this.columnFilterWithKey = ["name"];
     this.service = ReceiptService;
     this.action = ReceiptTemplateAction;
@@ -39,10 +37,6 @@ export default class ReceiptTemplateList extends List {
     this.setState({
       modalConten: <FormUpdate/>
     });
-  }
-
-  render() {
-    return super.render();
   }
 }
 
