@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import {Form} from "antd";
-import ReceivePurhaseList from "../../../components/stock/receivePurchase";
+import ReceivePurhaseList from "../../../components/stock/ReceivePurchase";
 
 class ReceivePurhase extends React.Component {
   render() {

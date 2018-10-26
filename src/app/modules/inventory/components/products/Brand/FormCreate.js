@@ -1,13 +1,12 @@
 import React from "react";
 import FormItem from "./FormItem";
-import { Modal } from "../../shares/Modal/modal";
 import BrandAction from "../../../actions/products/brand";
+import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
     this.title = <this.Translate id="create_products_brand_title" />;
-    this.addingPropReducer = "brandAdd";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }

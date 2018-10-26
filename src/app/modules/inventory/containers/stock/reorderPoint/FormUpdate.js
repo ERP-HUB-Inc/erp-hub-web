@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import FormUpdate from "../../../components/stock/reorderPoint/FormUpdate";
+import FormUpdate from "../../../components/stock/ReorderPoint/FormUpdate";
 
 class ReorderForm extends React.Component {
   render() {

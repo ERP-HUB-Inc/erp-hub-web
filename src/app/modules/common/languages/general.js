@@ -281,12 +281,6 @@ export default {
     "Give"
   ],
 
-  "text_receipt": [
-    "Receipt",
-    "Receipt",
-    "Receipt"
-  ],
-
   "text_list": [
     "List",
     "List",
@@ -369,5 +363,35 @@ export default {
     "All Stores",
     "All Stores",
     "All Stores"
+  ],
+
+  "text_receipt": [
+    "Receipt",
+    "Receipt",
+    "Receipt"
+  ],
+
+  "text_invoice": [
+    "Invoice",
+    "Invoice",
+    "Invoice"
+  ],
+
+  "text_pre_order": [
+    "Pre-Order",
+    "Pre-Order",
+    "Pre-Order"
+  ],
+
+  "text_credit_note": [
+    "Credit Note",
+    "Credit Note",
+    "Credit Note"
+  ],
+
+  "text_return": [
+    "Return",
+    "Return",
+    "Return"
   ]
 };

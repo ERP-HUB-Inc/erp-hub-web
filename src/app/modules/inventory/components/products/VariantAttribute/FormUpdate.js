@@ -1,7 +1,7 @@
 import React from "react";
 import FormItem from "./FormItem";
-import { Modal } from "../../shares/Modal/modal";
-import BrandAction from "../../../actions/products/brand";
+import VariantAttribute from "../../../actions/products/variantAttribute";
+import Modal from "../../../../common/components/shares/Modal";
 
 export default class Form extends Modal {
   constructor(props) {
@@ -21,13 +21,13 @@ export default class Form extends Modal {
       if (!err) {
         values["id"] = this.props.brandUpdate.data.id;
         values["status"] = this.Enum.ACTIVE;
-        this.dispatch(BrandAction.update(values));
+        this.dispatch(VariantAttribute.update(values));
       }
     });
   }
     
   handleCancel() {
-    this.dispatch(BrandAction.reset());
+    this.dispatch(VariantAttribute.reset());
   }
 
   render() {

@@ -5,7 +5,6 @@ import FormUpdate from "../../../containers/settings/PaymentMethod/FormUpdate";
 import Constant from "../../../constants/settings/paymentMethod";
 import PaymentMethodAction from "../../../action/settings/paymentMethod";
 import PaymentMethodService from "../../../services/settings/PaymentMethodService";
-import "./index.css";
 
 export default class PaymentMethodList extends List {
   constructor(props) {

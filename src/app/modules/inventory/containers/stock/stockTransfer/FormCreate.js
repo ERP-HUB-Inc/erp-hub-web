@@ -1,12 +1,12 @@
 import React from "react";
-import Create from "../../../components/stock/stockTransfer/FormCreate";
-import { connect } from "react-redux";
-import { Form } from "antd";
+import {connect} from "react-redux";
+import {Form} from "antd";
+import FormCreate from "../../../components/stock/StockTransfer/FormCreate";
 
-class FormList extends React.Component {
+class StockTransferForm extends React.Component {
   render() {
     return (
-      <Create {...this.props} />
+      <FormCreate {...this.props} />
     );
   }
 }
@@ -24,6 +24,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const formList =  Form.create(mapPropsToFields)(FormList);
+const stockTransferForm =  Form.create(mapPropsToFields)(StockTransferForm);
 
-export default connect(mapStateToProps)(formList);
+export default connect(mapStateToProps)(stockTransferForm);

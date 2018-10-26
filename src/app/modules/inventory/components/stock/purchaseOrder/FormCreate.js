@@ -5,7 +5,7 @@ import Constant from "../../../constants/stock/purchaseOrder";
 import Modal from "../../../../common/components/shares/Modal";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
 import PurchaseOrderShowEmailAction from "../../../actions/stock/purchaseOrderSendEmail";
-import FormCreatePurchseOrderSendEmail from "../../../containers/stock/purchaseOrder/ConfirmEmail/FormCreate";
+import FormCreatePurchseOrderSendEmail from "../../../containers/stock/PurchaseOrder/ConfirmEmail/FormCreate";
 import "./index.css";
 
 export default class FormCreate extends Modal {

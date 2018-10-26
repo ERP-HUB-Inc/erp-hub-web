@@ -1,5 +1,5 @@
 import React from "react";
-import Create from "../../../components/stock/reorderPoint/FormCreate";
+import Create from "../../../components/stock/ReorderPoint/FormCreate";
 import { connect } from "react-redux";
 import { Form } from "antd";
 

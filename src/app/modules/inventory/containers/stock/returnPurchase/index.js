@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import {Form} from "antd";
-import List from "../../../components/stock/returnPurchase";
+import List from "../../../components/stock/ReturnPurchase";
 
-class Supplier extends React.Component {
+class ReturnPurchase extends React.Component {
   render() {
     return (
       <List {...this.props} />
@@ -27,6 +27,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const returnPurchase = Form.create(mapPropsToFields)(Supplier);
+const returnPurchase = Form.create(mapPropsToFields)(ReturnPurchase);
 
 export default connect(mapStateToProps)(returnPurchase);

@@ -7,7 +7,7 @@
 
 .ant-table-placeholder{
     padding: 10px 16px !important;
-    border-bottom: none
+    border-bottom: none !important
 }
 
 .ant-table-body table tr th,
@@ -27,7 +27,7 @@ tr:nth-child(odd) {
 }
 
 .ant-table-tbody > tr > td {
-    border-bottom: none
+    border-bottom: none !important
 }
 
 .ant-table-tbody > tr > td {

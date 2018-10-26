@@ -1,7 +1,7 @@
 import React from "react";
-import { connect } from "react-redux";
-import { Form } from "antd";
-import FormUpdate from "../../../components/stock/returnPurchase/FormUpdate";
+import {connect} from "react-redux";
+import {Form} from "antd";
+import FormUpdate from "../../../components/stock/ReturnPurchase/FormUpdate";
 
 class ReturnPurchaseForm extends React.Component {
   render() {

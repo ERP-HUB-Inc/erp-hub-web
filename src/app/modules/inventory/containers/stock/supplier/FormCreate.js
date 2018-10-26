@@ -1,5 +1,5 @@
 import React from "react";
-import CreateSupplier from "../../../components/stock/supplier/FormCreate";
+import CreateSupplier from "../../../components/stock/Supplier/FormCreate";
 import { connect } from "react-redux";
 import { Form } from "antd";
 

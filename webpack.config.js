@@ -11,7 +11,9 @@ module.exports = {
   entry: SRC_DIR + "/index.js",
   output: {
     path: DIST_DIR + "/",
-    filename: "bundle.js",
+    // filename: "bundle.js",
+    filename: '[name].bundle.js',
+    chunkFilename: '[name].bundle.js',
     publicPath: "/"
   },
   node: {

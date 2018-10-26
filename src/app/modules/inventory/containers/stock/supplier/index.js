@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import {Form} from "antd";
-import SupplierList from "../../../components/stock/supplier";
+import SupplierList from "../../../components/stock/Supplier";
 
 class Supplier extends React.Component {
   render() {

@@ -41,7 +41,7 @@ class Report extends Component {
         </table>
 
         <table style={{ width: "100%", color: "#848181" }}>
-          <tr style={{ background: "white", width: "100%", color: "black", borderBottom: "1px solid #ecebeb", color: "rgb(132, 129, 129);" }}>
+          <tr style={{ background: "white", width: "100%", borderBottom: "1px solid #ecebeb", color: "rgb(132, 129, 129);" }}>
             <td style={{ padding: "8px" }}>No</td>
             <td>Product Description</td>
             <td>Price</td>

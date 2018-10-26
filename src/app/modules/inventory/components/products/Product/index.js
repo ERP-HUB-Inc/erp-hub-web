@@ -163,8 +163,8 @@ export default class ProductList extends List {
       form == null ?
         ""
         :
-        <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout form-group">
+        <this.Form onSubmit={this.handleSubmitFilter}>
+          <this.Row className="main-search-layout">
             <this.Col md="3">
               <this.InputText
                 name="key"

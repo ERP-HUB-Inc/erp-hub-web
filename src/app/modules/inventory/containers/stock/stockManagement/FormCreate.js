@@ -1,7 +1,7 @@
 import React from "react";
-import CreateStockManagement from "../../../components/stock/stockManagement/FormCreate";
-import { connect } from "react-redux";
-import { Form } from "antd";
+import {connect} from "react-redux";
+import {Form} from "antd";
+import CreateStockManagement from "../../../components/stock/StockManagement/FormCreate";
 
 class StockManagementForm extends React.Component {
   render() {

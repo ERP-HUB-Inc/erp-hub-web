@@ -17,12 +17,12 @@ export default class SaleHistoryList extends List {
     this.fetchingProp = "list";
     this.columnFilterWithKey = ["number", "firstName", "lastName", "company", "email", "phoneNumber", "address"];
     this.TRANSACTION_TYPE_STR = [
-      {value: -1, name: "All Sales"},
-      {value: Enum.TRANSACTION_TYPE.RECEIPT, name: "Receipt"},
-      {value: Enum.TRANSACTION_TYPE.INVOICE, name: "Invoice"},
-      {value: Enum.TRANSACTION_TYPE.PRE_ORDER, name: "Pre-Order"},
-      {value: Enum.TRANSACTION_TYPE.CREDIT_NOTE, name: "Credit Note"},
-      {value: Enum.TRANSACTION_TYPE.RETURN, name: "Return"}
+      {value: -1, name: <this.Translate id="text_all_sales"/>},
+      {value: Enum.TRANSACTION_TYPE.RECEIPT, name: <this.Translate id="text_receipt"/>},
+      {value: Enum.TRANSACTION_TYPE.INVOICE, name: <this.Translate id="text_invoice"/>},
+      {value: Enum.TRANSACTION_TYPE.PRE_ORDER, name: <this.Translate id="text_pre_order"/>},
+      {value: Enum.TRANSACTION_TYPE.CREDIT_NOTE, name: <this.Translate id="text_credit_note"/>},
+      {value: Enum.TRANSACTION_TYPE.RETURN, name: <this.Translate id="text_return"/>}
     ];
     this.action = TransactionAction;
     this.handleRePrint = this.handleRePrint.bind(this);

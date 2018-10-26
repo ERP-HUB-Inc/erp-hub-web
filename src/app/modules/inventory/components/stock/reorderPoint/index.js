@@ -1,6 +1,6 @@
 import React from "react";
 import List from "../List";
-import FormCreate from "../../../containers/stock/purchaseOrder/FormCreate";
+import FormCreate from "../../../containers/stock/PurchaseOrder/FormCreate";
 import Constant from "../../../constants/stock/reorderPoint";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
 import ReorderPointAction from "../../../actions/stock/reorderPoint";

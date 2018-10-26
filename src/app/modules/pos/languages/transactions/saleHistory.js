@@ -69,6 +69,12 @@ export default {
     "We are not allow you to print with multi record !",
     "We are not allow you to print with multi record !",
     "We are not allow you to print with multi record !"
+  ],
+
+  "text_all_sales": [
+    "All Sales",
+    "All Sales",
+    "All Sales"
   ]
 };
       

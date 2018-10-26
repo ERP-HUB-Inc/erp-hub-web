@@ -4,7 +4,6 @@ import {Route, Switch} from "react-router-dom";
 import {connect} from "react-redux";
 import SideBar from "../components/layout/SiderBar";
 import Headers from "../containers/layout/Header";
-import UserList from "../containers/client/signin";
 import offlineDB from "../containers/offline";
 import Home from "../containers/home";
 import Component from "../components/Component";
@@ -38,12 +37,13 @@ class Router extends Component {
             {
               Object.keys(dataSource).map((key) => 
                 dataSource[key]["subItems"].map(value =>
-                  <Route path={value["route"]} component={value["component"]} />
+                  <Route
+                    path={value["route"]}
+                    component={value["component"]} />
                 )
               )
             }
             <Route path="/offline" component={ offlineDB }></Route>
-            <Route path="/test-component" component={ UserList }></Route>
             <Route path="/" component={Home}></Route>
           </Switch>
         </Content>

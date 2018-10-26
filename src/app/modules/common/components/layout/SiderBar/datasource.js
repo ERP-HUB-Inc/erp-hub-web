@@ -16,16 +16,16 @@ import ProductUnit from "../../../../inventory/containers/products/ProductsUnit"
 // import Promotion from "../../../../pos/containers/products/Promotion";
 
 // STOCK CONTROL
-import Stock from "../../../../inventory/containers/stock/stockManagement";
+import Stock from "../../../../inventory/containers/stock/StockManagement";
 // import StockControl from "../../../../pos/containers/stock/StockControl";
-// import ReOrderPoint from "../../../../inventory/containers/stock/reorderPoint";
-import PurchaseOrder from "../../../../inventory/containers/stock/purchaseOrder";
-import ReceiveOrder from "../../../../inventory/containers/stock/receivePurchase";
+// import ReOrderPoint from "../../../../inventory/containers/stock/ReorderPoint";
+import PurchaseOrder from "../../../../inventory/containers/stock/PurchaseOrder";
+import ReceiveOrder from "../../../../inventory/containers/stock/ReceivePurchase";
 import Print from "../../../../inventory/containers/stock/Report";
-import StockReturn from "../../../../inventory/containers/stock/returnPurchase";
-import StockTransfer from "../../../../inventory/containers/stock/stockTransfer";
+import StockReturn from "../../../../inventory/containers/stock/ReturnPurchase";
+import StockTransfer from "../../../../inventory/containers/stock/StockTransfer";
 // import StockAudit from "../../../../pos/containers/stock/StockAudit";
-import Supplier from "../../../../inventory/containers/stock/supplier";
+import Supplier from "../../../../inventory/containers/stock/Supplier";
 
 // REPORT
 import SaleReport from "../../../../pos/containers/reports/Sale";

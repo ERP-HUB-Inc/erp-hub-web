@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import FormUpdate from "../../../components/stock/stockTransfer/FormUpdate";
+import FormUpdate from "../../../components/stock/StockTransfer/FormUpdate";
 
-class Forms extends React.Component {
+class StockTransferForm extends React.Component {
   render() {
     return (
       <FormUpdate {...this.props} />
@@ -25,6 +25,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const form = Form.create(mapPropsToFields)(Forms);
+const stockTransferForm = Form.create(mapPropsToFields)(StockTransferForm);
 
-export default connect(mapStateToProps)(form);
+export default connect(mapStateToProps)(stockTransferForm);

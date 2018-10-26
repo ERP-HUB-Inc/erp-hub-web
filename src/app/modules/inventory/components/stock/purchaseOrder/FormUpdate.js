@@ -4,7 +4,7 @@ import Enum from "../../../enums";
 import Constant from "../../../constants/stock/purchaseOrder";
 import Modal from "../../../../common/components/shares/Modal";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
-import FormCreatePurchseOrderSendEmail from "../../../containers/stock/purchaseOrder/ConfirmEmail/FormCreate";
+import FormCreatePurchseOrderSendEmail from "../../../containers/stock/PurchaseOrder/ConfirmEmail/FormCreate";
 
 export default class Form extends Modal {
   constructor(props) {

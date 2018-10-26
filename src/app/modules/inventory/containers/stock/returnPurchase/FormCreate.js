@@ -1,12 +1,12 @@
 import React from "react";
-import CreateSupplier from "../../../components/stock/returnPurchase/FormCreate";
-import { connect } from "react-redux";
-import { Form } from "antd";
+import {connect} from "react-redux";
+import {Form} from "antd";
+import FormCreate from "../../../components/stock/ReturnPurchase/FormCreate";
 
 class ReturnPurchaseForm extends React.Component {
   render() {
     return (
-      <CreateSupplier {...this.props} />
+      <FormCreate {...this.props} />
     );
   }
 }
