@@ -17,22 +17,10 @@ export default {
     "Brand Name",
   ],
 
-  "col_products_brand_description": [
-    "Description",
-    "အမည်",
-    "Description",
-  ],
-
   "input_products_brand_name": [
     "Name",
     "အမည်",
     "Name"
-  ],
-
-  "input_products_brand_description": [
-    "Description",
-    "အမည်",
-    "Description"
   ],
 
   "input_error_products_brand_name": [

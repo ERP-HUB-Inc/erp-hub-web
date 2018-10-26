@@ -49,7 +49,7 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="col_products_brand_description" />,
+        title: <this.Translate id="text_description" />,
         dataIndex: "description",
         key: "description",
         sorter: true

@@ -24,11 +24,6 @@ export default {
     "Phone No",
     "Phone No",
   ],
-  "col_management_customer_description": [
-    "Description",
-    "Description",
-    "Description",
-  ],
   "col_management_customer_group_address": [
     "Address",
     "Address",
@@ -69,11 +64,6 @@ export default {
     "Email",
     "Email",
     "Email"
-  ],
-  "input_management_customer_description": [
-    "Description",
-    "Description",
-    "Description"
   ],
   "text_address": [
     "Address",

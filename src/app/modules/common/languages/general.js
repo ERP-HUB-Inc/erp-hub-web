@@ -393,5 +393,35 @@ export default {
     "Return",
     "Return",
     "Return"
+  ],
+
+  "text_description": [
+    "Description",
+    "Description",
+    "Description"
+  ],
+
+  "text_name": [
+    "Name",
+    "Name",
+    "Name"
+  ],
+
+  "text_email": [
+    "Email",
+    "Email",
+    "Email"
+  ],
+
+  "text_phone_number": [
+    "Phone Number",
+    "Phone Number",
+    "Phone Number"
+  ],
+
+  "text_supplier": [
+    "Supplier",
+    "Supplier",
+    "Supplier"
   ]
 };

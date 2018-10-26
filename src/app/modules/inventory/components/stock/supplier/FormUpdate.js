@@ -10,7 +10,7 @@ export default class Form extends Modal {
       disabled: false
     };
 
-    this.title = <this.Translate id="update_stock_supplier_title" />;
+    this.title = <this.Translate id="text_supplier" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -20,7 +20,6 @@ export default class Form extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values["id"] = this.props.supplierUpdate.data.id;
-        values["status"] = this.Enum.ACTIVE;
         this.dispatch(SupplierAction.update(values));
       }
     });

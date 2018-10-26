@@ -6,8 +6,7 @@ import SupplierAction from "../../../actions/stock/supplier";
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="create_stock_supplier_title" />;
-    this.addingPropReducer = "supplierAdd";
+    this.title = <this.Translate id="text_supplier" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
