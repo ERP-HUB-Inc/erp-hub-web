@@ -1,7 +1,7 @@
 import React from "react";
 import $ from "jquery";
 import CustomerAction from "../../../actions/customers/customer";
-import Constant from "../../../constants/customers/managementCutomers";
+import Constant from "../../../constants/customers/customer";
 import Modal from "../../../../common/components/shares/Modal";
 import "./DropDownSearch.css";
 

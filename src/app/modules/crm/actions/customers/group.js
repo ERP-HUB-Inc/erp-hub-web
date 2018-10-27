@@ -1,4 +1,4 @@
-import Constant from "../../constants/customers/groupCustomer";
+import Constant from "../../constants/customers/group";
 import managementEmployeeService from "../../services/customers/GroupService";
 
 export default {

@@ -1,6 +1,6 @@
 import React from "react";
 import FormItem from "./FormItem";
-import Constant from "../../../constants/customers/groupCustomer";
+import Constant from "../../../constants/customers/group";
 import GroupCustomerAction from "../../../actions/customers/group";
 import Modal from "../../../../common/components/shares/Modal";
 

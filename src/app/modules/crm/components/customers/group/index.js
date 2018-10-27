@@ -2,7 +2,7 @@ import React from "react";
 import List from "../../List";
 import FormCreate from "../../../containers/customers/Group/FormCreate";
 import FormUpdate from "../../../containers/customers/Group/FormUpdate";
-import Constant from "../../../constants/customers/groupCustomer";
+import Constant from "../../../constants/customers/group";
 import GroupCutomerAction from "../../../actions/customers/group";
 import CutomerService from "../../../services/customers/GroupService";
 

@@ -3,8 +3,8 @@ import FormItem from "./FormItem";
 import CustomerAction from "../../../actions/customers/customer";
 import GroupCustomerAction from "../../../actions/customers/group";
 import CreateCustomerGroup from "../../../containers/customers/Group/FormCreate";
-import ConstantGroupCustomer from "../../../constants/customers/groupCustomer";
-import Constant from "../../../constants/customers/managementCutomers";
+import ConstantGroupCustomer from "../../../constants/customers/group";
+import Constant from "../../../constants/customers/customer";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormCreate extends Modal {

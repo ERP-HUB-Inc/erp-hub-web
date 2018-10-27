@@ -2,7 +2,7 @@ import React from "react";
 import List from "../../List";
 import FormCreate from "../../../containers/customers/Customer/FormCreate";
 import FormUpdate from "../../../containers/customers/Customer/FormUpdate";
-import Constant from "../../../constants/customers/managementCutomers";
+import Constant from "../../../constants/customers/customer";
 import CustomerAction from "../../../actions/customers/customer";
 import GroupCustomerAction from "../../../actions/customers/group";
 import CustomerService from "../../../services/customers/CustomerService";

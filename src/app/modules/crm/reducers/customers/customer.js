@@ -1,5 +1,5 @@
 import {combineReducers} from "redux";
-import Constant from "../../constants/customers/managementCutomers";
+import Constant from "../../constants/customers/customer";
 import reducer from "../../../common/reducers/reducer";
 import InitialState from "../../../common/reducers/initialState";
 
