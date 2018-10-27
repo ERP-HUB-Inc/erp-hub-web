@@ -1,7 +1,6 @@
 import React from "react";
 import {Form} from "antd";
 import Component from "../../Component";
-import "./index.css";
 
 export default class Modal extends Component {
   constructor(props) {
@@ -132,11 +131,6 @@ export default class Modal extends Component {
   formatDate(value) {
     const setting = this.Util.getSetting();
     return this.Util.formatDate(value, setting.dateFormat);
-  }
- 
-  formatCurrency(value) {
-    const setting = this.Util.getSetting();
-    return this.Util.formatCurrency(value, setting.currency, setting.currencyPosition);
   }
 
   render() {

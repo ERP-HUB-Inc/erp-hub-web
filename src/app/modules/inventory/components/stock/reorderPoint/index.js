@@ -86,7 +86,7 @@ export default class ReorderPointList extends List {
               <this.Col md="3">
                 <this.Select
                   name="supplierid"
-                  label={<this.Translate id="select_stock_purchase_order_from_supplier" />}
+                  label={<this.Translate id="text_supplier" />}
                   placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
                   dataSource={supplier.list}
                   valueKey="id"

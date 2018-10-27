@@ -2,7 +2,6 @@ import React from "react";
 import {Pagination} from "antd";
 import Component  from "../../Component";
 import menuSource from "../../layout/SiderBar/datasource";
-import "./index.css";
 
 export default class List extends Component {
   constructor(props) {
@@ -124,11 +123,6 @@ export default class List extends Component {
   formatDate(value) {
     const setting = this.Util.getSetting();
     return this.Util.formatDate(value, setting.dateFormat);
-  }
- 
-  formatCurrency(value) {
-    const setting = this.Util.getSetting();
-    return this.Util.formatCurrency(value, setting.currency, setting.currencyPosition);
   }
 
   /**

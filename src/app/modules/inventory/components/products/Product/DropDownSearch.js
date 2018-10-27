@@ -48,7 +48,7 @@ export default class DropDownSearch extends Modal {
     const currentActive = $(".ant-spin-container div.search-item-hover");
     const productId = currentActive.attr("classid");
     const product = this.props.productSearch.list.find(value => value.id === productId);
-    if (product) {
+    if (product && this.props.handlePressEnterOnSearch) {
       this.props.handlePressEnterOnSearch(product);
       this.setState({visibleDropDown: false});
     }
@@ -169,7 +169,7 @@ export default class DropDownSearch extends Modal {
                 product.productVariantToProduct.length > 0 ?
                   <div className="variant">{product.productVariantToProduct.length} {<this.Translate id="text_variant"/>}{product.productVariantToProduct.length > 1 ? <this.Translate id="text_plural"/> : ""}</div>
                   :
-                  <div className="price">{this.Util.formatCurrency(product.price)}</div>
+                  <div className="price">{this.formatCurrency(product.price)}</div>
               }
             </this.Col>
           </this.Row>
@@ -184,7 +184,7 @@ export default class DropDownSearch extends Modal {
           <div className="search-icon icon-add-product"></div>
           <this.InputText
             name="searchProduct"
-            placeholder={`${this.CATranslate("input_product_search_product", this.props.locale)}${this.props.placeholder}`}
+            placeholder={`${this.CATranslate("input_product_search_product", this.props.locale)}`}
             className={`ca-input-v1-icon-left ${this.props.className}`}
             isAutoFocus={this.props.isAutoFocus}
             validateStatus={this.props.productSearch.fetching ? "validating" : ""}

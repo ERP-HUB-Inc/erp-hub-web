@@ -59,7 +59,7 @@ export default class FormItem extends Modal {
           </this.Col>
           
           <this.Col md="2">
-            <label><this.Translate id="date_picker_stock_purchase_due_date" /></label><br/>
+            <label><this.Translate id="text_due_date" /></label><br/>
             <label><b>{this.formatDate(formData.deliveryDueDate)}</b></label>  
           </this.Col>          
         </this.Row>

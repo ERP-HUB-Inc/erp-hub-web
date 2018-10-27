@@ -1,6 +1,7 @@
 import React from "react";
 import DropDownSearch from "../../../components/products/Product/DropDownSearch";
 import Modal from "../../../../common/components/shares/Modal";
+import "./index.css";
 
 export default class SearchPo extends Modal {
   constructor(props){
@@ -12,7 +13,7 @@ export default class SearchPo extends Modal {
     this.form = this.props.form;
     this.columns = [
       {
-        title: <this.Translate id="col_stock_purchase_order_no" />,
+        title: <this.Translate id="text_no" />,
         dataIndex: "id",
         key: "no",
         width: 50,
@@ -30,7 +31,7 @@ export default class SearchPo extends Modal {
         }
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_name" />,
+        title: <this.Translate id="text_name" />,
         dataIndex: "name",
         key: "name",
         render: (text, record, index) => 
@@ -48,18 +49,18 @@ export default class SearchPo extends Modal {
         key: "quantityOnHand"
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_qty" />,
+        title: <this.Translate id="text_quantity" />,
         dataIndex: "requestQuantity",
         width: 150,
         key: "requestQuantity",
         align: "right",
         render: (text, record, index) => {
-          return <this.InputText
+          return <this.InputNumber
             name={`purchaseQty[${index}]`}
             data={`${record.quantity}`}
-            required={true}
-            min={1}
-            max={100}
+            isAutoSelect={true}
+            isHideTool={true}
+            precision={0}
             handleKeyUp={(e) => this.handleOnChangeQuantity(e, index)}
             form={this.form}
           />;
@@ -72,18 +73,17 @@ export default class SearchPo extends Modal {
         key: "price",
         align: "right",
         render: (text, record, index) => {
-          return <this.InputText
+          return <this.InputNumber
             name={`purchasePrice[${index}]`}
             data={`${record.price}`}
-            required={true}
-            min={1}
-            max={100}
+            isAutoSelect={true}
+            isHideTool={true}
             handleKeyUp={(e) => this.handleOnChangePrice(e, index)}
             form={this.form} />;
         }
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_total" />,
+        title: <this.Translate id="text_total" />,
         dataIndex: "totalPrice",
         key: "totalPrice",
         width: 150,
@@ -268,13 +268,14 @@ export default class SearchPo extends Modal {
 
   render(){
     const {productLists} = this.state; 
-
     return(
       <div className="main-dropdown-search">
         <DropDownSearch
           productSearch={ this.props.dataSource }
           handleOnSelectList={this.handleOnSelectList}
           dispatch={this.props.dispatch}
+          className="ca-input-v1 purchase-order"
+          isAutoFocus={true}
           locale={this.props.locale}
           form={this.props.form}/>  
         <this.Table
@@ -284,7 +285,7 @@ export default class SearchPo extends Modal {
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
           footer={() => <div className={`float-right ${productLists.length > 0 ? "" : "hidden"}`}>
-            <div className="total-title text-uppercase pull-left"><this.Translate id="purchase_order_footer" />: </div>
+            <div className="total-title text-uppercase pull-left"><this.Translate id="text_total_amount" />: </div>
             <div className="total-value pull-left">
               <this.InputText name="requestTotal" disabled={true} className="grandTotal" form={this.props.form}/>
               <this.InputText name="requestTotalValue" className="hidden" form={this.props.form}/>

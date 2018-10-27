@@ -145,7 +145,7 @@ export default class Payment extends Modal {
               {payment.paymentMethodName}
             </div>
             <div className="sub-total-value">
-              {this.Util.formatCurrency(payment.tender)}
+              {this.formatCurrency(payment.tender)}
             </div>
           </li>),
         changeAmount > 0 ?
@@ -154,7 +154,7 @@ export default class Payment extends Modal {
               <this.Translate id="text_change"/>
             </div>
             <div className="sub-total-value">
-              {this.Util.formatCurrency(changeAmount)}
+              {this.formatCurrency(changeAmount)}
             </div>
           </li>
           :
@@ -164,7 +164,7 @@ export default class Payment extends Modal {
             <this.Translate id="text_balance"/>
           </div>
           <div className="grand-total-value">
-            {this.Util.formatCurrency(balance)}
+            {this.formatCurrency(balance)}
           </div>
         </li>
       ];
@@ -254,13 +254,13 @@ export default class Payment extends Modal {
                         {
                           productOrder.discount > 0 ?
                             <div className="after-discount-price">
-                              {this.Util.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity,  productOrder.price, productOrder.discount))}
+                              {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity,  productOrder.price, productOrder.discount))}
                             </div>
                             :
                             ""
                         }
                         <div className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`}>
-                          {this.Util.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder.price))}
+                          {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder.price))}
                         </div>
                       </div>
                     </li>   
@@ -274,7 +274,7 @@ export default class Payment extends Modal {
                   <this.Translate id="text_sub_total" />
                 </div>
                 <div className="sub-total-value">
-                  {this.Util.formatCurrency(summaryTotal.subTotalAfterDiscount)}
+                  {this.formatCurrency(summaryTotal.subTotalAfterDiscount)}
                 </div>
               </li>
               {
@@ -285,7 +285,7 @@ export default class Payment extends Modal {
                       {discountTypeStr}
                     </div>
                     <div className="sub-total-value">
-                      {this.Util.formatCurrency(discountAmount)}
+                      {this.formatCurrency(discountAmount)}
                     </div>
                   </li>
                   :
@@ -296,7 +296,7 @@ export default class Payment extends Modal {
                   <this.Translate id="text_tax"/> {taxTitle}
                 </div>
                 <div className="sub-total-value">
-                  {this.Util.formatCurrency(taxAmount)}
+                  {this.formatCurrency(taxAmount)}
                 </div>
               </li>
               {
@@ -307,7 +307,7 @@ export default class Payment extends Modal {
                         {productTax.name}
                       </div>
                       <div className="sub-total-value">
-                        {this.Util.formatCurrency(productTax.totalTaxAmount)}
+                        {this.formatCurrency(productTax.totalTaxAmount)}
                       </div>
                     </li>
                   )
@@ -324,7 +324,7 @@ export default class Payment extends Modal {
                   <div className="total-quantity">{summaryTotal.totalQuantity} <this.Translate id="text_item"/>{summaryTotal.totalQuantity > 1 ? <this.Translate id="text_plural"/> : ""}</div>
                 </div>
                 <div className="grand-total-value">
-                  {this.Util.formatCurrency(grandTotal)}
+                  {this.formatCurrency(grandTotal)}
                 </div>
               </li>
               {this.renderMoneyExhangeAfterPay(balance, changeAmount).map(element => element)}
@@ -363,7 +363,7 @@ export default class Payment extends Modal {
                     {
                       changeAmount > 0 ?
                         <span>
-                          <this.Translate id="text_give"/> {this.Util.formatCurrency(changeAmount)} <this.Translate id="text_change"/>
+                          <this.Translate id="text_give"/> {this.formatCurrency(changeAmount)} <this.Translate id="text_change"/>
                         </span>
                         :
                         <span>

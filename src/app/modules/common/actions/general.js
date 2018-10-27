@@ -1,5 +1,5 @@
   
-import Constant from "../constants/authentication";
+import Constant from "../constants/email";
 
 export default {
   sendMailReset: () => {

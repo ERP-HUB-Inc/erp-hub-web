@@ -1,11 +1,14 @@
 import React from "react";
 import List from "../List";
+import POEmailTemplate from "./EmailTemplate/PO";
 import Enum from "../../../enums";
 import FormCreate from "../../../containers/stock/PurchaseOrder/FormCreate";
 import FormUpdate from "../../../containers/stock/PurchaseOrder/FormUpdate";
 import Constant from "../../../constants/stock/purchaseOrder";
 import PurchaseAction from "../../../actions/stock/purchaseOrder";
 import SupplierAction from "../../../actions/stock/supplier";
+import LocationAction from "../../../../pos/action/settings/storeLocation";
+import EmailAction from "../../../../common/actions/email";
 import PurchaseService from "../../../services/stock/PurchaseOrderService";
 import "./index.css";
 
@@ -15,14 +18,14 @@ export default class PurchaseOrderLists extends List {
     this.columns = [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="col_stock_purchase_order_name" />,
+        title: <this.Translate id="text_name" />,
         dataIndex: "name",
         key: "name",
         sorter: true,
         render: (text, record, index) => {
           return <div>
             <div>{record.name}</div>
-            <div>{<this.Translate id="purchase_order_number_text"/>}: {record.number}</div>
+            <div>{<this.Translate id="text_number"/>}: {record.number}</div>
           </div>;
         }
       },
@@ -41,7 +44,7 @@ export default class PurchaseOrderLists extends List {
         }
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_supplier" />,
+        title: <this.Translate id="text_supplier" />,
         dataIndex: "supplier",
         key: "supplier",
         sorter: true,
@@ -49,7 +52,7 @@ export default class PurchaseOrderLists extends List {
         render: supplier => supplier ? supplier.name: ""
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_stock_location" />,
+        title: <this.Translate id="text_location" />,
         dataIndex: "location",
         key: "location",
         sorter: true,
@@ -57,7 +60,7 @@ export default class PurchaseOrderLists extends List {
         render: location => location ? location.name: ""
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_due_date" />,
+        title: <this.Translate id="text_due_date" />,
         dataIndex: "deliveryDueDate",
         key: "deliveryDueDate",
         sorter: true,
@@ -74,7 +77,7 @@ export default class PurchaseOrderLists extends List {
         render: shippingFee => this.formatCurrency(shippingFee)
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_total" />,
+        title: <this.Translate id="text_total" />,
         dataIndex: "requestTotal",
         key: "requestTotal",
         sorter: true,
@@ -83,7 +86,7 @@ export default class PurchaseOrderLists extends List {
         render: requestTotal => this.formatCurrency(requestTotal)
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_step" />,
+        title: <this.Translate id="text_step" />,
         dataIndex: "step",
         key: "step",
         sorter: true,
@@ -94,17 +97,19 @@ export default class PurchaseOrderLists extends List {
     ];
     this.fetchingProp = "purchaseOrder";
     this.service = PurchaseService;
+    this.componentHasUpdated = false;
+    this.POEmailHasSend = false;
 
     this.PO_STEP_STR = {
       [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color: "#f50"},
       [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="purchase_order_step_process" />, color: "#2db7f5"},
       [Enum.PO_STEP.RECEIVED]: {name: <this.Translate id="purchase_order_step_recieve" />, color: "#87d068"},
-      [Enum.PO_STEP.CANCEL]: {name: <this.Translate id="purchase_order_step_cancel" />, color: "#108ee9"},
-      [Enum.PO_STEP.RETURN]: {name: <this.Translate id="purchase_order_step_return" />, color: "blue"},
+      [Enum.PO_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color: "#108ee9"},
+      [Enum.PO_STEP.RETURN]: {name: <this.Translate id="text_return" />, color: "blue"},
       [Enum.PO_STEP.PAID]: {name: <this.Translate id="purchase_order_step_paid" />, color: "green"},
     };
 
-    this.supplierList = [{name: <this.Translate id="select_stock_purchase_order_supplier"/>, id: 0}];
+    this.supplierList = [{name: <this.Translate id="text_all_supplier"/>, id: 0}];
     this.columnFilterWithKey = [
       "name",
       "number",
@@ -118,33 +123,58 @@ export default class PurchaseOrderLists extends List {
   }
 
   componentDidMount(){
-    const {dispatch} = this.props;
-    dispatch(SupplierAction.fetch());
-    dispatch(PurchaseAction.fetch(this.pageSize));
+    this.props.dispatch(SupplierAction.fetch());
+    this.props.dispatch(PurchaseAction.fetch(this.pageSize));
   }
 
   componentWillUpdate(nextProps) {
-    const {purchaseOrderAdd,
-      purchaseOrderUpdate,
-      purchaseOrderPushToSupplier,
-      dispatch
-    } = nextProps;
-
-    if (purchaseOrderAdd.added) {
-      dispatch(PurchaseAction.fetch(this.pageSize));
-      dispatch(PurchaseAction.reset());
+    if (nextProps.purchaseOrderAdd.added) {
+      nextProps.dispatch(PurchaseAction.fetch(this.pageSize));
+      nextProps.dispatch(PurchaseAction.reset());
     }
 
-    if (purchaseOrderUpdate.updated) {
-      dispatch(PurchaseAction.fetch(this.pageSize));
-      dispatch(PurchaseAction.reset(Constant.REQUEST_PURCHASE_ORDER_DETAIL_FULL_RESET));
-      dispatch(PurchaseAction.reset());
+    if (nextProps.purchaseOrderUpdate.updated) {
+      nextProps.dispatch(PurchaseAction.fetch(this.pageSize));
+      nextProps.dispatch(PurchaseAction.reset(Constant.REQUEST_PURCHASE_ORDER_DETAIL_FULL_RESET));
+      nextProps.dispatch(PurchaseAction.reset());
     }
 
-    if (purchaseOrderPushToSupplier.updated) {
-      dispatch(PurchaseAction.fetch(this.pageSize));
-      dispatch(PurchaseAction.reset(Constant.PUSH_PURCHASE_ORDER_TO_SUPPLIER_RESET));
-      dispatch(PurchaseAction.reset(Constant.REQUEST_PURCHASE_ORDER_DETAIL_FULL_RESET));
+    if (nextProps.purchaseOrderPushToSupplier.updated) {
+      this.setState({
+        modalConten: <POEmailTemplate/>
+      });
+      this.POEmailHasSend = false;
+      nextProps.dispatch(PurchaseAction.fetch(this.pageSize));
+      nextProps.dispatch(PurchaseAction.reset(Constant.PUSH_PURCHASE_ORDER_TO_SUPPLIER_RESET));
+      nextProps.dispatch(PurchaseAction.reset(Constant.REQUEST_PURCHASE_ORDER_DETAIL_FULL_RESET));
+    }
+
+    // GET CONTENT TO SEND EMAIL PO
+    let element = document.getElementById("po-email-template");
+    if (element && !this.POEmailHasSend) {
+      element = `<html><head><title></title></head><body>${element.innerHTML}</body></html>`;
+      nextProps.dispatch(EmailAction.send(element, "mornsophannamis@gmail.com", "Purchase Order"));
+      this.POEmailHasSend = true;
+      this.setState({
+        modalConten: null
+      });
+    }
+
+    // SAVE SETTING TO LOCALE STORAGE
+    if (nextProps.storeLocation.fetched) {
+      localStorage.setItem(Enum.LOCAL_SCHEMA.LOCATION, JSON.stringify(nextProps.storeLocation.list));
+    }
+
+    if (nextProps.supplier.fetched) {
+      localStorage.setItem(Enum.LOCAL_SCHEMA.SUPPLIER, JSON.stringify(nextProps.supplier.list));
+    }
+  }
+
+  componentDidUpdate() {
+    if (!this.componentHasUpdated && this.props.purchaseOrder.fetched) {
+      this.props.dispatch(LocationAction.fetch(100));
+      this.props.dispatch(SupplierAction.fetch(100));
+      this.componentHasUpdated = true;
     }
   }
 
@@ -222,7 +252,7 @@ export default class PurchaseOrderLists extends List {
     const POStepList = Object.keys(this.PO_STEP_STR).map((prop) => {
       return {name: this.PO_STEP_STR[prop].name, value: prop};
     });
-    POStepList.unshift({name: <this.Translate id="select_purchase_all_step"/>, value: -1});
+    POStepList.unshift({name: <this.Translate id="text_all_step"/>, value: -1});
 
     if(supplier) {
       const fetchingProps = this.props[this.fetchingProp];
@@ -230,8 +260,8 @@ export default class PurchaseOrderLists extends List {
         form == null ?
           ""
           :
-          <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
-            <this.Row className="main-search-layout form-group">
+          <this.Form onSubmit={this.handleSubmitFilter}>
+            <this.Row className="main-search-layout">
               <this.Col md="2">
                 <this.InputText
                   name="key"
@@ -243,7 +273,7 @@ export default class PurchaseOrderLists extends List {
               <this.Col md="2">
                 <this.Select
                   name="supplierId"
-                  label={<this.Translate id="select_stock_purchase_order_from_supplier" /> }
+                  label={<this.Translate id="text_supplier" /> }
                   placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
                   dataSource={this.supplierList.concat(supplier.list)}
                   defaultValue={this.supplierList[0].id}
@@ -253,23 +283,28 @@ export default class PurchaseOrderLists extends List {
               <this.Col md="2">
                 <this.DatePickers
                   name="deliveryDueDate"
-                  label={<this.Translate id="datepicker_stock_purchase_due_date" />}
+                  label={<this.Translate id="text_due_date" />}
                   form={form}
                 />
               </this.Col>
               <this.Col md="2">
                 <this.Select
                   name="step"
-                  label={<this.Translate id="select_stock_purchase_order_step" />}
+                  label={<this.Translate id="text_step" />}
                   placeholder="Please select status"
                   dataSource={POStepList}
                   defaultValue={POStepList[0].value}
                   form={form}
                 />
               </this.Col>
-              <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-              </this.Button>
+              <this.Col md="2" className="wrap-btn-search">
+                <div className="ant-form-item-label" style={{visibility: "hidden"}}>
+                  <label htmlFor="status" className="" title="">Filter</label>
+                </div>
+                <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+                  <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+                </this.Button>
+              </this.Col>
             </this.Row>
           </this.Form>
       );

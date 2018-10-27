@@ -1,5 +1,5 @@
 import React from "react";
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import {Form} from "antd";
 import PurchaseList from "../../../components/stock/PurchaseOrder";
 
@@ -19,6 +19,7 @@ function mapStateToProps(state) {
     purchaseOrderUpdate: state.reducer.purchaseOrder.update,
     purchaseOrderPushToSupplier: state.reducer.purchaseOrder.pushToSupplier,
     supplier: state.reducer.supplier.request,
+    storeLocation: state.reducer.storeLocation.request,
     locale: state.locale,
   };
 }

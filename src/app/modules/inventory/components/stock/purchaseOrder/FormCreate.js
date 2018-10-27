@@ -1,6 +1,6 @@
 import React from "react";
-import Enum from "../../../enums";
 import FormItem from "./FormItem";
+import Enum from "../../../enums";
 import Constant from "../../../constants/stock/purchaseOrder";
 import Modal from "../../../../common/components/shares/Modal";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
@@ -11,8 +11,7 @@ import "./index.css";
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="create_stock_purchase_order_title" />;
-    this.addingPropReducer = "purchaseOrderAdd";
+    this.title = <this.Translate id="text_po" />;
     this.width = "65%";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);

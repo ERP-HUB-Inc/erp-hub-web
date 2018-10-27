@@ -108,7 +108,7 @@ export default class Receipt extends Component {
                         <tr key={index}>
                           <td style={{textAlign: "center", backgroundColor: "white"}}>{product.quantity}</td>
                           <td style={{backgroundColor: "white"}}>{product.name}</td>
-                          <td style={{textAlign: "right", backgroundColor: "white"}}>{this.Util.formatCurrency(product.price)}</td>
+                          <td style={{textAlign: "right", backgroundColor: "white"}}>{this.formatCurrency(product.price)}</td>
                         </tr> 
                       )
                     }
@@ -120,19 +120,19 @@ export default class Receipt extends Component {
                     <tr>
                       <td style={{backgroundColor: "white", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 5}} />
                       <td style={{backgroundColor: "white", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 5, textDecoration: "uppercase"}}><this.Translate id="text_sub_total" />:</td>
-                      <td style={{backgroundColor: "white", textAlign: "right", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 5}}>{this.Util.formatCurrency(this.props.summaryTotal.subTotalAfterDiscount)}</td>
+                      <td style={{backgroundColor: "white", textAlign: "right", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 5}}>{this.formatCurrency(this.props.summaryTotal.subTotalAfterDiscount)}</td>
                     </tr>
                     <tr>
                       <td style={{backgroundColor: "white"}} />
                       <td style={{backgroundColor: "white", textDecoration: "uppercase"}}><this.Translate id="text_discount"/>:</td>
-                      <td style={{backgroundColor: "white", textAlign: "right"}}>{this.Util.formatCurrency(this.props.discountAmount)}</td>
+                      <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency(this.props.discountAmount)}</td>
                     </tr>
                     <tr>
                       <td style={{backgroundColor: "white"}} />
                       <td style={{backgroundColor: "white"}}>
                         TAX {taxTitle}:
                       </td>
-                      <td style={{backgroundColor: "white", textAlign: "right"}}>{this.Util.formatCurrency(this.props.taxAmount)}</td>
+                      <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency(this.props.taxAmount)}</td>
                     </tr>
                     {
                       countTax > 1 ?
@@ -143,7 +143,7 @@ export default class Receipt extends Component {
                               <td style={{backgroundColor: "white", paddingLeft: 15}}>
                                 {productTax.name}:
                               </td>
-                              <td style={{backgroundColor: "white", textAlign: "right"}}>{this.Util.formatCurrency(productTax.totalTaxAmount)}</td>
+                              <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency(productTax.totalTaxAmount)}</td>
                             </tr>
                             :
                             ""
@@ -159,14 +159,14 @@ export default class Receipt extends Component {
                         <tr key={customerPaymentIndex}>
                           <td style={{backgroundColor: "white", paddingTop: customerPaymentIndex === 0 ? 5 : 0}} />
                           <td style={{backgroundColor: "white", textTransform: "uppercase", paddingTop: customerPaymentIndex === 0 ? 5 : 0}}>{customerPayment.paymentMethodName}:</td>
-                          <td style={{backgroundColor: "white", textAlign: "right", paddingTop: customerPaymentIndex === 0 ? 5 : 0}}>{this.Util.formatCurrency(customerPayment.tender)}</td>
+                          <td style={{backgroundColor: "white", textAlign: "right", paddingTop: customerPaymentIndex === 0 ? 5 : 0}}>{this.formatCurrency(customerPayment.tender)}</td>
                         </tr>
                       )
                     }
                     <tr>
                       <td style={{backgroundColor: "white"}} />
                       <td style={{backgroundColor: "white", textTransform: "uppercase"}}><this.Translate id="text_change"/>:</td>
-                      <td style={{backgroundColor: "white", textAlign: "right"}}>{this.Util.formatCurrency(this.props.changeAmount)}</td>
+                      <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency(this.props.changeAmount)}</td>
                     </tr>
                   </tfoot>
                 </table>

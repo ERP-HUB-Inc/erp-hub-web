@@ -288,7 +288,7 @@ export default class FormItem extends Modal {
       this.state.productsType[productTypeIndex].name = productTypeValue.productTypeDescriptions.length > 0 ? productTypeValue.productTypeDescriptions[0].name : "";
     });
 
-    if (this.state.units.length > 0) {
+    if (Array.isArray(this.state.units) && this.state.units.length > 0) {
       const findDefaultUnit = this.state.units.find(unitValue => unitValue.isDefault === this.Enum.IS_DEFAULT);
 
       if (findDefaultUnit) {

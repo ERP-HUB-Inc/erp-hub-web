@@ -1,4 +1,4 @@
-import { combineReducers } from "redux";
+import {combineReducers} from "redux";
 import Constant from "../../constants/stock/returnPurchase";
 import reducer from "../../../common/reducers/reducer";
 import InitialState from "../../../common/reducers/initialState";

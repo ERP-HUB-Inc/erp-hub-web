@@ -6,7 +6,8 @@ export default class FormItem extends Modal {
     super(props);
     this.state = {
       isPushWithSendEmail: false,
-      isRequireEmail: false
+      isRequireEmail: false,
+      isAutoFocusEmail: false
     };
     this.handleOnChangeIsCheckPushToSupplierWithEmail = this.handleOnChangeIsCheckPushToSupplierWithEmail.bind(this);
   }
@@ -21,14 +22,21 @@ export default class FormItem extends Modal {
       } else if (supplierDetail.data) {
         supplierEmail = supplierDetail.data.email;
       }
-      this.setState({isRequireEmail: true});
+      this.setState({
+        isRequireEmail: true,
+        isAutoFocusEmail: true
+      });
       form.setFieldsValue({supplierEmail});
+    } else {
+      this.setState({
+        isRequireEmail: false,
+        isAutoFocusEmail: false
+      });
     }
   }
 
   render() {
     const {form, locale} = this.props;
-  
     return (
       <this.Row>
         <this.Col md="12">
@@ -41,9 +49,10 @@ export default class FormItem extends Modal {
         <this.Col md="12">
           <this.InputEmail
             name="supplierEmail"
-            label={<this.Translate id="input_stock_purchase_order_send_mail_email" />}
+            isAutoFocus={this.state.isAutoFocusEmail}
+            label={<this.Translate id="text_email" />}
             className={this.state.isPushWithSendEmail ? "" : "hidden"}
-            placeholder={this.CATranslate("input_stock_purchase_order_send_mail_email", locale)}
+            placeholder={this.CATranslate("text_email", locale)}
             errorInvalid={<this.Translate id="error_supplier_email_not_valid" />}
             required={this.state.isRequireEmail}
             max={100}

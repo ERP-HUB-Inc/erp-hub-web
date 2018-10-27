@@ -20,9 +20,6 @@ export default class FormCreate extends Modal {
       if (!err) {      
         let purchaseOrder =  this.props.formvalue;
         purchaseOrder["step"] = Enum.PO_STEP.PROCESS;
-        if (values["isCheckToPushWithEmail"]) {
-          purchaseOrder["emailPushToSuplier"] = values["supplierEmail"];
-        }
         this.dispatch(PurchaseOrderAction.pushToSupplier(purchaseOrder));
       }
     });

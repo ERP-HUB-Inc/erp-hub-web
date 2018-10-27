@@ -98,32 +98,6 @@
     border-right: 1px solid #d9d9d9
 }
 
-.main-searchs input {
-    width: 100%;
-    border: none;
-    height: 50px;
-}
-
-.main-searchs .search-icon{
-    position: absolute;
-    font-size: 30pt;
-    top: 10px;
-    z-index: 1
-}
-
-.main-searchs .remove-search-icon {
-    position: absolute;
-    right: 15px;
-    font-size: 30px;
-    cursor: pointer;
-    top: 10px
-}
-
-.main-searchs .remove-search-icon, 
-.main-searchs .search-icon{
-    color: #c1bebe
-}
-
 .wrap-dropdown-search-product {
     position: absolute;
     z-index: 2;

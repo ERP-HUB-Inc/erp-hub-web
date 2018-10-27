@@ -62,7 +62,7 @@ export default class TaxSetting extends Modal {
               this.state.productTaxList.map((tax, index) => 
                 <li key={index} style={styles.taxItem}>
                   <div className="item" style={{flex: "1"}}>{tax.name} ({tax.rate}%)</div>
-                  <div className="item" style={{marginRight: 10}}>{this.Util.formatCurrency(tax.totalTaxAmount)}</div>
+                  <div className="item" style={{marginRight: 10}}>{this.formatCurrency(tax.totalTaxAmount)}</div>
                   <div className="item" onClick={() => this.handleOnRemoveTaxFromSale(tax.rate)}>
                     <div className="ca-icon-delete">
                       <span className="icon-delete"></span>

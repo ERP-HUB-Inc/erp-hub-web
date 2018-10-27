@@ -1,10 +1,10 @@
 import React from "react";
+import {Offline} from "react-detect-offline";
 import {Layout} from "antd";
 import {Route, Switch} from "react-router-dom";
 import {connect} from "react-redux";
 import SideBar from "../components/layout/SiderBar";
 import Headers from "../containers/layout/Header";
-import offlineDB from "../containers/offline";
 import Home from "../containers/home";
 import Component from "../components/Component";
 import dataSource from "../components/layout/SiderBar/datasource";
@@ -30,6 +30,15 @@ class Router extends Component {
 
     return (
       <Layout>
+        <Offline>
+          <div id="offline">
+            <this.Alert
+              message="No connection"
+              description="You are currently offline, please connect to internet. Before continue your work."
+              type="warning"
+              showIcon/>
+          </div>
+        </Offline>
         <Headers />
         <SideBar />
         <Content className="layoutContent" id="center-container">
@@ -43,7 +52,6 @@ class Router extends Component {
                 )
               )
             }
-            <Route path="/offline" component={ offlineDB }></Route>
             <Route path="/" component={Home}></Route>
           </Switch>
         </Content>

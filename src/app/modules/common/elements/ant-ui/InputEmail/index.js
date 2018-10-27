@@ -20,6 +20,7 @@ export  class InputEmail extends Element {
         initialValue={this.props.initialValue}
         handleKeyDown={this.props.handleKeyDown}
         className={this.props.className}
+        isAutoFocus={this.props.isAutoFocus}
         form={this.props.form}
         data={ this.props.data }
       />

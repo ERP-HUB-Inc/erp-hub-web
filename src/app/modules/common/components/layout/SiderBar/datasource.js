@@ -1,70 +1,191 @@
 /*==============================POS===================================*/
+import React from "react";
+import { Translate } from "react-localize-redux";
+import Loadable from "react-loadable";
+import StartUp from "../../StartUp";
 
 // TRANSACTION
-import SaleHistory from "../../../../pos/containers/transactions/SaleHistory";
-import SaleOrder from "../../../../pos/containers/transactions/SaleWalkin";
-// import ReturnExchange from "../../../../pos/containers/transactions/ReturnExchange";
+const SaleHistory = Loadable({
+  loader: () => import("../../../../pos/containers/transactions/SaleHistory"),
+  loading: () => <StartUp />,
+});
+const SaleOrder = Loadable({
+  loader: () => import("../../../../pos/containers/transactions/SaleWalkin"),
+  loading: () => <StartUp />,
+});
 
 // PRODUCT
-import ManageProduct from "../../../../inventory/containers/products/Product";
-import Brand from "../../../../inventory/containers/products/Brand";
-import ProductType from "../../../../inventory/containers/products/ProductsType";
-import ProductTag from "../../../../inventory/containers/products/productsTag";
-import PrintPriceTag from "../../../../inventory/containers/products/PrintPriceTag";
-import ProductUnit from "../../../../inventory/containers/products/ProductsUnit";
-// import PriceBook from "../../../../pos/containers/products/PriceBook";
-// import Promotion from "../../../../pos/containers/products/Promotion";
+const ManageProduct = Loadable({
+  loader: () => import("../../../../inventory/containers/products/Product"),
+  loading: () => <StartUp />,
+});
+
+const Brand = Loadable({
+  loader: () => import("../../../../inventory/containers/products/Brand"),
+  loading: () => <StartUp />,
+});
+
+const ProductType = Loadable({
+  loader: () => import("../../../../inventory/containers/products/ProductsType"),
+  loading: () => <StartUp />,
+});
+
+const ProductTag = Loadable({
+  loader: () => import("../../../../inventory/containers/products/productsTag"),
+  loading: () => <StartUp />,
+});
+
+const PrintPriceTag = Loadable({
+  loader: () => import("../../../../inventory/containers/products/PrintPriceTag"),
+  loading: () => <StartUp />,
+});
+
+const ProductUnit = Loadable({
+  loader: () => import("../../../../inventory/containers/products/ProductsUnit"),
+  loading: () => <StartUp />,
+});
 
 // STOCK CONTROL
-import Stock from "../../../../inventory/containers/stock/StockManagement";
-// import StockControl from "../../../../pos/containers/stock/StockControl";
-// import ReOrderPoint from "../../../../inventory/containers/stock/ReorderPoint";
-import PurchaseOrder from "../../../../inventory/containers/stock/PurchaseOrder";
-import ReceiveOrder from "../../../../inventory/containers/stock/ReceivePurchase";
-import Print from "../../../../inventory/containers/stock/Report";
-import StockReturn from "../../../../inventory/containers/stock/ReturnPurchase";
-import StockTransfer from "../../../../inventory/containers/stock/StockTransfer";
-// import StockAudit from "../../../../pos/containers/stock/StockAudit";
-import Supplier from "../../../../inventory/containers/stock/Supplier";
+const Stock = Loadable({
+  loader: () => import("../../../../inventory/containers/stock/StockManagement"),
+  loading: () => <StartUp />,
+});
+
+const PurchaseOrder = Loadable({
+  loader: () => import("../../../../inventory/containers/stock/PurchaseOrder"),
+  loading: () => <StartUp />,
+});
+
+const ReceiveOrder = Loadable({
+  loader: () => import("../../../../inventory/containers/stock/ReceivePurchase"),
+  loading: () => <StartUp />,
+});
+
+const Print = Loadable({
+  loader: () => import("../../../../inventory/containers/stock/Report"),
+  loading: () => <StartUp />,
+});
+
+const StockReturn = Loadable({
+  loader: () => import("../../../../inventory/containers/stock/ReturnPurchase"),
+  loading: () => <StartUp />,
+});
+
+const StockTransfer = Loadable({
+  loader: () => import("../../../../inventory/containers/stock/StockTransfer"),
+  loading: () => <StartUp />,
+});
+
+const Supplier = Loadable({
+  loader: () => import("../../../../inventory/containers/stock/Supplier"),
+  loading: () => <StartUp />,
+});
 
 // REPORT
-import SaleReport from "../../../../pos/containers/reports/Sale";
-import PurchaseReport from "../../../../pos/containers/reports/Purchase";
-import ProductReport from "../../../../pos/containers/reports/Product";
-import InventoryReport from "../../../../pos/containers/reports/Inventory";
-import PaymentReport from "../../../../pos/containers/reports/Payment";
-import ProfitAndLostReport from "../../../../pos/containers/reports/ProfitAndLost";
-import TaxReport from "../../../../pos/containers/reports/Tax";
+const SaleReport = Loadable({
+  loader: () => import("../../../../pos/containers/reports/Sale"),
+  loading: () => <StartUp />,
+});
+
+const PurchaseReport = Loadable({
+  loader: () => import("../../../../pos/containers/reports/Purchase"),
+  loading: () => <StartUp />,
+});
+
+const ProductReport = Loadable({
+  loader: () => import("../../../../pos/containers/reports/Product"),
+  loading: () => <StartUp />,
+});
+
+const InventoryReport = Loadable({
+  loader: () => import("../../../../pos/containers/reports/Inventory"),
+  loading: () => <StartUp />,
+});
+
+const PaymentReport = Loadable({
+  loader: () => import("../../../../pos/containers/reports/Payment"),
+  loading: () => <StartUp />,
+});
+
+const ProfitAndLostReport = Loadable({
+  loader: () => import("../../../../pos/containers/reports/ProfitAndLost"),
+  loading: () => <StartUp />,
+});
+
+const TaxReport = Loadable({
+  loader: () => import("../../../../pos/containers/reports/Tax"),
+  loading: () => <StartUp />,
+});
 
 // SETTING
-import StoreAccount from "../../../../pos/containers/settings/StoreAccount";
-import StoreLocation from "../../../../pos/containers/settings/StoreLocation";
-import Tax from "../../../../pos/containers/settings/Tax";
-import ReceiptTemplate from "../../../../pos/containers/settings/ReceiptTemplate";
-import PaymentMethod from "../../../../pos/containers/settings/PaymentMethod";
-import RoleAccess from "../../../../pos/containers/settings/RoleAccess";
-import Currency from "../../../../pos/containers/settings/Currency";
-import StoreLanguage from "../../../../pos/containers/settings/StoreLanguage";
-import OperationRecord from "../../../../pos/containers/settings/OperationRecord";
+const StoreAccount = Loadable({
+  loader: () => import("../../../../pos/containers/settings/StoreAccount"),
+  loading: () => <StartUp />,
+});
+
+const StoreLocation = Loadable({
+  loader: () => import("../../../../pos/containers/settings/StoreLocation"),
+  loading: () => <StartUp />,
+});
+
+const Tax = Loadable({
+  loader: () => import("../../../../pos/containers/settings/Tax"),
+  loading: () => <StartUp />,
+});
+
+const ReceiptTemplate = Loadable({
+  loader: () => import("../../../../pos/containers/settings/ReceiptTemplate"),
+  loading: () => <StartUp />,
+});
+
+const PaymentMethod = Loadable({
+  loader: () => import("../../../../pos/containers/settings/PaymentMethod"),
+  loading: () => <StartUp />,
+});
+
+const RoleAccess = Loadable({
+  loader: () => import("../../../../pos/containers/settings/RoleAccess"),
+  loading: () => <StartUp />,
+});
+
+const Currency = Loadable({
+  loader: () => import("../../../../pos/containers/settings/Currency"),
+  loading: () => <StartUp />,
+});
+
+const StoreLanguage = Loadable({
+  loader: () => import("../../../../pos/containers/settings/StoreLanguage"),
+  loading: () => <StartUp />,
+});
+
+const OperationRecord = Loadable({
+  loader: () => import("../../../../pos/containers/settings/OperationRecord"),
+  loading: () => <StartUp />,
+});
 
 /*==============================END POS===================================*/
 
 /*==============================HR===================================*/
 
 // EMPLOYEE
-import ManageEmployee from "../../../../hr/containers/employees/Employee";
-// import Performance from "../../../../hr/containers/employees/Performance";
-// import TimeSheet from "../../../../hr/containers/employees/TimeSheet";
+const ManageEmployee = Loadable({
+  loader: () => import("../../../../hr/containers/employees/Employee"),
+  loading: () => <StartUp />,
+});
 
 /*==============================END HR===================================*/
-
 
 /*==============================CRM===================================*/
 
 // CUSTOMER
-import GroupCustomer from "../../../../crm/containers/customers/Group";
-import ManageCustomer from "../../../../crm/containers/customers/Customer";
-// import PurchaseHistory from "../../../../crm/containers/customerCustomers";
+const GroupCustomer = Loadable({
+  loader: () => import("../../../../crm/containers/customers/Group"),
+  loading: () => <StartUp />,
+});
+const ManageCustomer = Loadable({
+  loader: () => import("../../../../crm/containers/customers/Customer"),
+  loading: () => <StartUp />,
+});
 
 /*==============================END CRM===================================*/
 
@@ -73,9 +194,6 @@ import ManageCustomer from "../../../../crm/containers/customers/Customer";
 // SETTING
 
 /*==============================END COMMON===================================*/
-
-import React from "react";
-import { Translate } from "react-localize-redux";
 
 const dataSource = {
   transactions: {

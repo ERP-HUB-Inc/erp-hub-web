@@ -1,7 +1,20 @@
 import React from "react";
 import Element from "../../common/Element";
 
-export default class InputText extends Element {
+export default class InputEmail extends Element {
+
+  componentDidMount(){
+    if (this.props.isAutoFocus) {
+      this.nameInput.focus();
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.isAutoFocus) {
+      this.nameInput.focus();
+    }
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -33,6 +46,7 @@ export default class InputText extends Element {
             }
           ],initialValue: this.props.data})(
             <this.Input
+              ref={(input) => { this.nameInput = input; }}
               type={this.props.type}
               placeholder={this.props.placeholder}
               onKeyDown={this.props.handleKeyDown}
@@ -44,7 +58,7 @@ export default class InputText extends Element {
   }
 }
 
-InputText.defaultProps = {
+InputEmail.defaultProps = {
   name: "email",
   type: "text",
   required: false

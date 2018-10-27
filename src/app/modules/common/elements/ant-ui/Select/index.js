@@ -5,6 +5,10 @@ import "./index.css";
 export class Select extends Element {
   render() {
     const {getFieldDecorator} = this.props.form;
+    let dataSource = this.props.dataSource;
+    if (!Array.isArray(dataSource)) {
+      dataSource = [];
+    }
     return (
       <this.FormItem
         label={this.props.label}
@@ -25,7 +29,7 @@ export class Select extends Element {
               style={{ width: "100%" }}
             >
               {
-                this.props.dataSource.map((value, index) =>
+                dataSource.map((value, index) =>
                   <this.Option key={index} value={value[this.props.valueKey]}>{value[this.props.nameKey]}</this.Option>
                 )
               }

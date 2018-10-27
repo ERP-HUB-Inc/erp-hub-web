@@ -1,15 +1,14 @@
 import React from "react";
-import Component from "../../../../common/components/Component";
+import Component from "../../../../../common/components/Component";
 
-class Report extends Component {
-
+export default class PO extends Component {
   render() {
     const paddingLine = {padding: "15px 0", background: "white"};
     const styleHeader = {fontSize: "13px", background: "white"};
     const paddingHeader = {padding: "2px 0"};
     const lists = Array.from(Array(15).keys());
     return (
-      <div  id="po-email-template" style={{}}>
+      <div  id="po-email-template" style={{display: "none"}}>
         <table style={{width: "100%", backgroundColor: "whitesmoke"}}>
           <tbody>
             <tr>
@@ -31,14 +30,14 @@ class Report extends Component {
                       <td style={paddingLine} colSpan="7"></td>
                     </tr>
                     <tr>
-                      <td colSpan="3" style={{padding: "5px 10px", fontSize: "13px"}}>
-                        COMPANY
+                      <td bgcolor="#F7F7F7" colSpan="3" style={{padding: "5px 10px", fontSize: "13px"}}>
+                            COMPANY
                       </td>
                       <td colSpan="1" style={{backgroundColor: "white"}}>
-  
+      
                       </td>
-                      <td colSpan="3" style={{padding: "5px 10px", fontSize: "13px"}}>
-                        VENDOR
+                      <td bgcolor="#F7F7F7" colSpan="3" style={{padding: "5px 10px", fontSize: "13px"}}>
+                            VENDOR
                       </td>
                     </tr>
                     <tr style={styleHeader}>
@@ -105,6 +104,3 @@ class Report extends Component {
     );
   }
 }
-
-
-export default Report;

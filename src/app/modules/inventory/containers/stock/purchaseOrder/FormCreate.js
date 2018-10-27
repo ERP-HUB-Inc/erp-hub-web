@@ -14,13 +14,13 @@ class FormList extends React.Component {
 function mapStateToProps(state) {
   return {
     purchaseOrderAdd: state.reducer.purchaseOrder.add,
-    productUpdate: state.reducer.purchaseOrder.update, 
-    locale: state.locale,
+    productUpdate: state.reducer.purchaseOrder.update,
     supplier: state.reducer.supplier.request,
     productSearch: state.reducer.product.search,
     product: state.reducer.product.request,
     storeLocation: state.reducer.storeLocation.request,
-    requestOrderNumber: state.reducer.purchaseOrder.requestOrderNumber
+    requestOrderNumber: state.reducer.purchaseOrder.requestOrderNumber,
+    locale: state.locale,
   };
 }
 

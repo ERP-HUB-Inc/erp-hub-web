@@ -32,7 +32,7 @@ export default class FormItem extends Modal {
     ];
     this.columns = [
       {
-        title: <this.Translate id="text_locaton" />,
+        title: <this.Translate id="text_location" />,
         dataIndex: "name",
         key: "name",
         render: value => <span className="text-capitalize">{value}</span>

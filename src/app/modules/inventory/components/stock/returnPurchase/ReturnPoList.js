@@ -14,7 +14,7 @@ export default class ReceivedPo extends Modal {
     this.form = this.props.form;
     this.columns = [
       {
-        title: <this.Translate id="col_stock_purchase_order_no" />,
+        title: <this.Translate id="text_no" />,
         dataIndex: "id",
         key: "purchaseID",
         render: (text,record,index) => 
@@ -31,7 +31,7 @@ export default class ReceivedPo extends Modal {
         }
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_name" />,
+        title: <this.Translate id="text_name" />,
         dataIndex: "name",
         width: "418px",
         key: "name",
@@ -43,7 +43,7 @@ export default class ReceivedPo extends Modal {
         }
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_qty" />,
+        title: <this.Translate id="text_quantity" />,
         dataIndex: "requestQuantity",
         width: "200px",
         key: "requestQuantity",
@@ -108,7 +108,7 @@ export default class ReceivedPo extends Modal {
         }
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_total" />,
+        title: <this.Translate id="text_total" />,
         dataIndex: "composite_product_action",
         key: "key5",
         render: (text,record,index) => {
@@ -225,7 +225,7 @@ export default class ReceivedPo extends Modal {
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
           footer={() => <div className={` ${productLists.length > 0 ? "" : "hidden"}`}>
-            <div className="total-purchase-right"><this.Translate id="purchase_order_footer" />: </div>
+            <div className="total-purchase-right"><this.Translate id="text_total_amount" />: </div>
             <div className="receive-purchase-total-amount">
               <this.InputText name="requestTotal" disabled={true} className="grandTotal" form={this.props.form}/>
               <this.InputText name="requestTotalValue" className="hidden" form={this.props.form}/>

@@ -258,10 +258,21 @@ export default class Component extends RComponent {
 
   getCurrentLanguageCode() {
     const currentSetting = this.Util.getSetting();
-    if (currentSetting != null) {
+    if (currentSetting) {
       return currentSetting.defaultLanguageCode;
     }
     return "en";
+  }
+
+  formatCurrency(value) {
+    const currentSetting = this.Util.getSetting();
+    let currency = "";
+    let currencyPosition = 0;
+    if (currentSetting) {
+      currency = currentSetting.currency;
+      currencyPosition = currentSetting.currencyPosition;
+    }
+    return this.Util.formatCurrency(value, currency, currencyPosition);
   }
 
   getImageFromUpload(value, key = "image") {

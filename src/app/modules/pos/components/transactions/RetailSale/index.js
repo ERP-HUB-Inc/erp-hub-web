@@ -457,7 +457,7 @@ export default class Retail extends Component {
                     ""
                 }
               </div>
-              <div className="price">{this.Util.formatCurrency(product.price)}</div>
+              <div className="price">{this.formatCurrency(product.price)}</div>
             </div>
           </this.Col>
         )
@@ -567,13 +567,13 @@ export default class Retail extends Component {
                         {
                           productOrder.discount > 0 ?
                             <div className="after-discount-price">
-                              {this.Util.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity,  productOrder.price, productOrder.discount))}
+                              {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity,  productOrder.price, productOrder.discount))}
                             </div>
                             :
                             ""
                         }
                         <div className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`}>
-                          {this.Util.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder.price))}
+                          {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder.price))}
                         </div>
                       </div>
                     </div>
@@ -643,13 +643,13 @@ export default class Retail extends Component {
                   }
                   <div className="sub-total">
                     <div className="sub-total-title"><this.Translate id="text_sub_total"/></div>
-                    <div className="sub-total-value">{this.Util.formatCurrency(summaryTotal.subTotalAfterDiscount)}</div>
+                    <div className="sub-total-value">{this.formatCurrency(summaryTotal.subTotalAfterDiscount)}</div>
                   </div>
                   {
                     summaryTotal.discount > 0 ?
                       <div className="sub-total">
                         <div className="sub-total-title" style={{fontWeight: 600}}><this.Translate id="text_discount"/></div>
-                        <div className="sub-total-value">{this.Util.formatCurrency(discountAmount)}</div>
+                        <div className="sub-total-value">{this.formatCurrency(discountAmount)}</div>
                       </div>
                       :
                       ""
@@ -662,7 +662,7 @@ export default class Retail extends Component {
                           {discountTypeStr}
                         </div>
                         <div className="sub-total-value" style={{position: "relative"}}>
-                          {this.Util.formatCurrency(discountAmount)}
+                          {this.formatCurrency(discountAmount)}
                           <div className="delete remove-discount" onClick={this.handleRemoveDiscount}><span className="icon-delete"></span></div>
                         </div>
                       </div>
@@ -673,13 +673,13 @@ export default class Retail extends Component {
                     <div className="sub-total-title" onClick={countTax > 0 ? this.handleOnOpenTaxSetting : null}>
                       <span className={`${countTax > 0 ? "ca-link" : ""}`}><this.Translate id="text_tax"/></span> {taxTitle}
                     </div>
-                    <div className="sub-total-value">{this.Util.formatCurrency(taxTotal)}</div>
+                    <div className="sub-total-value">{this.formatCurrency(taxTotal)}</div>
                   </div>
                 </this.Col>
                 <this.Col md="6" className="text-right">
                   <div className="grand-total">
                     <div className="grand-total-title"><this.Translate id="text_total"/></div>
-                    <div className="grand-total-value">{this.Util.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount))}</div>
+                    <div className="grand-total-value">{this.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount))}</div>
                   </div>
                 </this.Col>
               </this.Row>

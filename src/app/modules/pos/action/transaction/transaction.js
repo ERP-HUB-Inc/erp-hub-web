@@ -1,5 +1,5 @@
 import Constant from "../../constants/transactions/transaction";
-import ConstantAuth from "../../../common/constants/authentication";
+import ConstantEmail from "../../../common/constants/email";
 import TransactionService from "../../services/transactions/TransactionService";
 
 export default {
@@ -30,7 +30,7 @@ export default {
   sendEmailReceipt: (template, email) => {
     return dispatch => {
       return dispatch({
-        type: ConstantAuth.SEND_MAIL,
+        type: ConstantEmail.SEND_MAIL,
         payload: TransactionService.sendMailReceipt(template, email)
       });
     };

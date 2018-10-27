@@ -97,7 +97,7 @@ export default class ReceivePurchaseList extends List {
           <this.Col md="2">
             <this.DatePickers
               name="deliveryDueDate"
-              label={<this.Translate id="datepicker_stock_purchase_due_date" />}
+              label={<this.Translate id="text_due_date" />}
               form={form}
             />
           </this.Col>

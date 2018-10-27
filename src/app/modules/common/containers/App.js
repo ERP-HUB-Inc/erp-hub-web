@@ -7,19 +7,22 @@ import {
   Switch
 } from "react-router-dom";
 import history from "../router/history";
-import Application from "../router";
 import StartUp from "../components/StartUp";
-import ClientRegisterDetail from "./client/registerDetail";
-import ClientRegisterComplete from "./client/registerComplete";
 
 export default class App extends React.Component {
   render() {
+
+    const Application = Loadable({
+      loader: () => import("../router"),
+      loading: () => <StartUp />,
+    });
+
     const PrivateRoute = Loadable({
       loader: () => import("../router/privateRouter"),
       loading: () => <StartUp />,
     });
 
-    const ClientLogin = Loadable({
+    const UserLogin = Loadable({
       loader: () => import("./client/signin"),
       loading: () => <StartUp />,
     });
@@ -34,19 +37,29 @@ export default class App extends React.Component {
       loading: () => <StartUp />,
     });
 
+    const ClientRegisterDetail = Loadable({
+      loader: () => import("./client/registerDetail"),
+      loading: () => <StartUp />,
+    });
+
+    const ClientRegisterComplete = Loadable({
+      loader: () => import("./client/registerComplete"),
+      loading: () => <StartUp />,
+    });
+
     return (
       <BrowserRouter>
         <Switch>
           <Router history={history}>
             <div style={{height: "100%"}}>
-              <Route path="/signin" component={ClientLogin} />
+              <Route path="/signin" component={UserLogin} />
               <Route path="/signin/store" component={LoginStore} />
               <Route path="/register" component={ClientRegister} />
               <Route path="/register/detail" component={ClientRegisterDetail} />
               <Route path="/signin-complete" component={ClientRegisterComplete} />
               <PrivateRoute
                 path="/"
-                component={Application} loginComponent={ClientLogin} />
+                component={Application} loginComponent={UserLogin} />
             </div>
           </Router>
         </Switch>

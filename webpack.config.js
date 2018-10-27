@@ -11,10 +11,13 @@ module.exports = {
   entry: SRC_DIR + "/index.js",
   output: {
     path: DIST_DIR + "/",
-    // filename: "bundle.js",
-    filename: '[name].bundle.js',
-    chunkFilename: '[name].bundle.js',
+    filename: "[name].bundle.js",
     publicPath: "/"
+  },
+  optimization: {
+    splitChunks: {
+      chunks: "all"
+    }
   },
   node: {
     fs: "empty"
@@ -25,7 +28,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: "POS",
       favicon: "./public/favicon.ico",
-      template: "./public/index.html"
+      template: "./public/index.html",
+      chunksSortMode: "none"
     })
   ],
   module: {

@@ -14,7 +14,7 @@ export default class Form extends Modal {
       disabled: false
     };
 
-    this.title = <div><this.Translate id="update_stock_purchase_order_title" /></div>;
+    this.title = <this.Translate id="text_po" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handlePushToSupplier = this.handlePushToSupplier.bind(this);
@@ -81,7 +81,6 @@ export default class Form extends Modal {
     values["status"] = this.props.purchaseOrderDetail.data.status;
 
     values["POEntries"] = purchaseEntries;
-    console.log("values push to supplier",values);
     return values;
   }
 

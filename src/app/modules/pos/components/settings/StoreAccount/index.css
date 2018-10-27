@@ -1,14 +1,3 @@
-.main-layout {
-    background-color: #FFFFFF;
-    padding: 15px;
-    border-radius: 3px
-}
-
-.main-layout .general {
-    border-bottom: 1px solid #ECECEC;
-    text-transform: uppercase
-}
-
 
 /* settign account layout */
 .main-radio-acc .ant-radio-button-wrapper {

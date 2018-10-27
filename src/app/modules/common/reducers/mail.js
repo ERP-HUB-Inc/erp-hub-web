@@ -1,5 +1,5 @@
 import {combineReducers} from "redux";
-import Constant from "../constants/authentication";
+import Constant from "../constants/email";
 
 export default combineReducers({
   send: (state = {sending: false, sent: false, response: null, error: null}, action) => {

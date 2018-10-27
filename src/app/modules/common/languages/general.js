@@ -281,6 +281,24 @@ export default {
     "Give"
   ],
 
+  "text_step": [
+    "Step",
+    "Step",
+    "Step"
+  ],
+
+  "text_all_step": [
+    "All Step",
+    "All Step",
+    "All Step"
+  ],
+
+  "text_number": [
+    "Number",
+    "Number",
+    "Number"
+  ],
+
   "text_list": [
     "List",
     "List",
@@ -291,6 +309,12 @@ export default {
     "Amount",
     "Amount",
     "Amount"
+  ],
+
+  "text_total_amount": [
+    "Total Amount",
+    "Total amount",
+    "Total amount"
   ],
 
   "text_general": [
@@ -305,7 +329,7 @@ export default {
     "Walk In"
   ],
 
-  "text_locaton": [
+  "text_location": [
     "Location",
     "Location",
     "Location"
@@ -423,5 +447,17 @@ export default {
     "Supplier",
     "Supplier",
     "Supplier"
-  ]
+  ],
+
+  "text_all_supplier": [
+    "All Supplier",
+    "All Supplier",
+    "All Supplier"
+  ],
+
+  "text_due_date": [
+    "Due Date",
+    "Due Date",
+    "Due Date"
+  ],
 };
