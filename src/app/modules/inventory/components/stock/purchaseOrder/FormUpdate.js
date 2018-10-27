@@ -9,7 +9,7 @@ import FormCreatePurchseOrderSendEmail from "../../../containers/stock/PurchaseO
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.width = "65%";
+    this.width = "70%";
     this.state = {
       disabled: false
     };

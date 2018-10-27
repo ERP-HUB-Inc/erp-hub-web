@@ -652,5 +652,13 @@ color: #4D4F5C;
     left: 0;
     right: 0;
     margin: auto;
-    width: 300px
+    width: 320px
+}
+
+#offline .ant-alert-with-description {
+    padding: 15px 15px 15px 45px
+}
+
+#offline .ant-alert-with-description .ant-alert-icon {
+    left: 10px
 }

@@ -1,6 +1,6 @@
-import React, { Component as RComponent } from "react";
-import { Translate, setActiveLanguage, getActiveLanguage } from "react-localize-redux";
-import { connect } from "react-redux";
+import React from "react";
+import {Translate, setActiveLanguage, getActiveLanguage} from "react-localize-redux";
+import {connect} from "react-redux";
 import {CSVLink, CSVDownload} from "react-csv";
 import {  
   Container,
@@ -14,10 +14,7 @@ import {
   Label,
   FormText
 } from "reactstrap";
-import { 
-  NavLink,
-  Link 
-} from "react-router-dom";
+import {NavLink, Link} from "react-router-dom";
 import 
 { 
   CTable,
@@ -29,7 +26,6 @@ import
   Switchs,
   Waiting,
   Checkboxs,
-  FieldComponent,
   TrashButton,
   Button,
   InputText,
@@ -53,16 +49,7 @@ import
   SelectTag,
   TagButton
 } from "../elements/ant-ui";
-import {
-  InputRedux,
-  // Breadcrumb,
-  // BreadcrumbLayout,
-  BreadcrumbTitle,
-  SapleInput,
-  Cards,
-  ListSearch,
-  AutoComplete
-} from "../elements/react-strap";
+import {BreadcrumbTitle, Cards} from "../elements/react-strap";
 import {Util} from "../util";
 import Enum from "../enums";
 import HttpCode from "../constants/error";
@@ -97,7 +84,7 @@ const TabPane = Tabs.TabPane;
 
 const CheckboxGroup = Checkbox.Group;
 
-export default class Component extends RComponent {
+export default class Component extends React.Component {
   constructor(props) {
     super(props);
 
@@ -129,24 +116,17 @@ export default class Component extends RComponent {
     this.Container = Container;
     this.Col = Col;
     this.Row = Row;
-    this.InputRedux = InputRedux;
     this.Dropdown = Dropdown;
     this.DropdownItem = DropdownItem;
     this.DropdownToggle = DropdownToggle;
     this.DropdownMenu = DropdownMenu;
     this.NavLink = NavLink;
     this.Link = Link;
-    // this.Breadcrumb = Breadcrumb;
     this.BreadcrumbTitle = BreadcrumbTitle;
-    // this.BreadcrumbLayout = BreadcrumbLayout;
-    this.SapleInput = SapleInput;
     this.FormGroup = FormGroup;
     this.Label = Label;
     this.FormText = FormText;
     this.Cards = Cards;
-    this.ListSearch = ListSearch;
-    // this.Badges = Badges;
-    this.AutoComplete = AutoComplete;
 
     //Ant
     this.Layout = Layout;
@@ -164,7 +144,6 @@ export default class Component extends RComponent {
     this.Badge = Badge;
     this.Option = Option;
     this.Form = Form;
-    this.FieldComponent = FieldComponent;
     this.TrashButton = TrashButton;
     this.LoginLayout = LoginLayout;
     this.InputText = InputText;

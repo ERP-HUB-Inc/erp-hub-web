@@ -12,7 +12,7 @@ export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
     this.title = <this.Translate id="text_po" />;
-    this.width = "65%";
+    this.width = "70%";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.pushToSupplier = this.pushToSupplier.bind(this);

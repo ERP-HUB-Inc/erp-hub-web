@@ -31,7 +31,7 @@ tr:nth-child(odd) {
 }
 
 .ant-table-tbody > tr > td {
-    padding: 10px 10px !important
+    padding: 8px 10px !important
 }
 
 .ant-table-thead > tr > th {

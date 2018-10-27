@@ -21,13 +21,14 @@ export default class PurchaseOrderLists extends List {
         title: <this.Translate id="text_name" />,
         dataIndex: "name",
         key: "name",
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_number" />,
+        dataIndex: "number",
+        key: "number",
         sorter: true,
-        render: (text, record, index) => {
-          return <div>
-            <div>{record.name}</div>
-            <div>{<this.Translate id="text_number"/>}: {record.number}</div>
-          </div>;
-        }
+        width: 130
       },
       {
         title: <this.Translate id="col_stock_purchase_order_reference" />,
