@@ -125,6 +125,7 @@ export default class ClientSignIn extends Component {
                       type="text"
                       label="User Name"
                       errorRequired="Username is required."
+                      isAutoFocus={true}
                       required={true}
                       handleKeyDown={() => this.handleKeyDown()}
                       form={form} />

@@ -7,14 +7,11 @@ import ReceivePurchaseAction from "../../../actions/stock/receivePurchase";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.state = {
-      disabled: false
-    };
-    this.width = "65%";
-    this.confirmTextAction = "Do you want to receive ?";
-    this.confirmTitle = "Comfirm Receive order";
+    this.width = "70%";
+    this.confirmTextAction = <this.Translate id="text_confirm_receive"/>;
+    this.confirmTitle = <this.Translate id="text_confirm_receive_title"/>;
     this.dispatch = this.props.dispatch;
-    this.title = <this.Translate id="update_stock_receive_purchase_title" />;
+    this.title = <this.Translate id="text_receive_order" />;
     this.handleSubmitConfirmAction = this.handleSubmitConfirmAction.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleReceive = this.handleReceive.bind(this);
@@ -25,8 +22,6 @@ export default class Form extends Modal {
     this.setState({modalVisible: true});
     this.renderModalConfirmAction();
   }
-
-
 
   handleSubmitConfirmAction() {
     this.setState({modalVisible: false});
@@ -93,10 +88,10 @@ export default class Form extends Modal {
     return(
       <div className="ant-modal-footer">
         <this.Button onClick={this.handleCancel} className="danger btn-push-to-supplier">
-          <span className="icon-save "></span> Cancel
+          <span className="icon-save "></span> <this.Translate id="text_cancel"/>
         </this.Button>
         <this.Button onClick={this.handleReceive} className="info btn-push-to-supplier">
-          <span className="icon-save "></span> Receive
+          <span className="icon-save "></span> <this.Translate id="text_receive"/>
         </this.Button>
       </div>
     );

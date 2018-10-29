@@ -90,7 +90,13 @@ export class Util {
     return moment().subtract(18, "years");
   }
 
-  formatDate (value, format = "MMM-Do-YYYY h:mm A") {
+  
+  formatDate (value, format = "YYYY-MM-DD") {
+    format = format == null ? "YYYY-MM-DD" : format;
+    return moment(value).format(format);
+  }
+
+  formatDateTime (value, format = "MMM-Do-YYYY h:mm A") {
     format = format == null ? "MMM-Do-YYYY h:mm A" : format;
     return moment(value).format(format);
   }
@@ -321,5 +327,14 @@ export class Util {
     } else {
       return false;
     }
+  }
+
+  getDBFromLocalStorageById(schemaName, id) {
+    let data = localStorage.getItem(schemaName);
+    data = JSON.parse(data);
+    if (Array.isArray(data)) {
+      data = data.find(value => value.id === id);
+    }
+    return data;
   }
 }

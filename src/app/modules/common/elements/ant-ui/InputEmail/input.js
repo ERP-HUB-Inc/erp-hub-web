@@ -2,7 +2,10 @@ import React from "react";
 import Element from "../../common/Element";
 
 export default class InputEmail extends Element {
-
+  constructor(props) {
+    super(props);
+    this.handleOnFocus = this.handleOnFocus.bind(this);
+  }
   componentDidMount(){
     if (this.props.isAutoFocus) {
       this.nameInput.focus();
@@ -12,6 +15,12 @@ export default class InputEmail extends Element {
   componentDidUpdate() {
     if (this.props.isAutoFocus) {
       this.nameInput.focus();
+    }
+  }
+
+  handleOnFocus(event) {
+    if (this.props.isAutoSelect) {
+      event.target.select();
     }
   }
 
@@ -50,7 +59,7 @@ export default class InputEmail extends Element {
               type={this.props.type}
               placeholder={this.props.placeholder}
               onKeyDown={this.props.handleKeyDown}
-            />
+              onFocus={this.handleOnFocus}/>
           )
         }
       </this.FormItem>

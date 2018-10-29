@@ -5,9 +5,7 @@
 
 /* @media (min-width: 1280px) { */
 @media (min-width: 1371px) {
-  .pos-payment .ant-modal {
-    width: 54% !important
-  }
+  
 }
   
 /* 
@@ -30,9 +28,7 @@
 }
 
 @media (max-height: 700px) {
-  .pos-payment .ant-modal {
-    height: 100% !important
-  }
+  
 }
   
 /* 

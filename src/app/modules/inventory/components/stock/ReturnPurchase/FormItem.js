@@ -54,7 +54,7 @@ export default class FormItem extends Modal {
             />
           </this.Col>
           <this.Col md="2">
-            <label><this.Translate id="input_stock_receive_shipping_fee" /></label><br/>
+            <label><this.Translate id="text_shipping_fee" /></label><br/>
             <label><b>{formData.shippingFee}</b></label>  
           </this.Col>
           

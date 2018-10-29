@@ -15,6 +15,11 @@ import "./index.css";
 export default class PurchaseOrderLists extends List {
   constructor(props) {
     super(props);
+    this.state = {
+      ...this.state,
+      dataForSendMail: null,
+      emailForPushToSupplier: null
+    };
     this.columns = [
       this.columnCreatedAt,
       {
@@ -65,7 +70,7 @@ export default class PurchaseOrderLists extends List {
         dataIndex: "deliveryDueDate",
         key: "deliveryDueDate",
         sorter: true,
-        width: 150,
+        width: 180,
         render: deliveryDueDate => this.formatDate(deliveryDueDate)
       },
       {
@@ -121,6 +126,8 @@ export default class PurchaseOrderLists extends List {
 
     this.action = PurchaseAction;
     this.RESET_CONSTANT = Constant.RESET_PURCHASE_ORDER;
+    this.getEmailPushToSupplier = this.getEmailPushToSupplier.bind(this);
+    this.getEmailDataForSend = this.getEmailDataForSend.bind(this);
   }
 
   componentDidMount(){
@@ -142,7 +149,8 @@ export default class PurchaseOrderLists extends List {
 
     if (nextProps.purchaseOrderPushToSupplier.updated) {
       this.setState({
-        modalConten: <POEmailTemplate/>
+        modalConten: <POEmailTemplate
+          data={this.state.dataForSendMail}/>
       });
       this.POEmailHasSend = false;
       nextProps.dispatch(PurchaseAction.fetch(this.pageSize));
@@ -152,9 +160,9 @@ export default class PurchaseOrderLists extends List {
 
     // GET CONTENT TO SEND EMAIL PO
     let element = document.getElementById("po-email-template");
-    if (element && !this.POEmailHasSend) {
+    if (element && !this.POEmailHasSend && this.state.emailForPushToSupplier) {
       element = `<html><head><title></title></head><body>${element.innerHTML}</body></html>`;
-      nextProps.dispatch(EmailAction.send(element, "mornsophannamis@gmail.com", "Purchase Order"));
+      nextProps.dispatch(EmailAction.send(element, this.state.emailForPushToSupplier, "Purchase Order"));
       this.POEmailHasSend = true;
       this.setState({
         modalConten: null
@@ -179,6 +187,14 @@ export default class PurchaseOrderLists extends List {
     }
   }
 
+  getEmailPushToSupplier(emailForPushToSupplier) {
+    this.setState({emailForPushToSupplier});
+  }
+
+  getEmailDataForSend(dataForSendMail) {
+    this.setState({dataForSendMail});
+  }
+
   handleShowFormAdd() {
     const {dispatch} = this.props;
     dispatch(PurchaseAction.showForm());
@@ -191,7 +207,9 @@ export default class PurchaseOrderLists extends List {
     const {dispatch} = this.props;
     dispatch(PurchaseAction.detail(rowData, this.getCurrentLanguageCode()));  
     this.setState({
-      modalConten: <FormUpdate/>
+      modalConten: <FormUpdate
+        callBackGetEmail={this.getEmailPushToSupplier}
+        callBackGetEmailData={this.getEmailDataForSend}/>
     });
   }
 

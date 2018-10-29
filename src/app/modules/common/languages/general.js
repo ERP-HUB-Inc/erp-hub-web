@@ -11,6 +11,12 @@ export default {
     "No"
   ],
 
+  "text_key": [
+    "Key",
+    "Key",
+    "Key"
+  ],
+
   "text_close": [
     "Close",
     "Close",
@@ -460,4 +466,22 @@ export default {
     "Due Date",
     "Due Date"
   ],
+
+  "text_invoice_no": [
+    "Invoice No",
+    "Invoice No",
+    "Invoice No"
+  ],
+
+  "text_shipping_fee": [
+    "Shipping Fee",
+    "Shipping Fee",
+    "Shipping Fee"
+  ],
+
+  "text_receive": [
+    "Receive",
+    "Receive",
+    "Receive"
+  ]
 };

@@ -15,18 +15,18 @@ export default class FormItem extends Modal {
   handleOnChangeIsCheckPushToSupplierWithEmail(event) {
     this.setState({isPushWithSendEmail: event.target.checked});
     if (event.target.checked) {
-      const {form, supplierDetail, purchaseOrderDetail} = this.props;
+      const {purchaseOrderDetail} = this.props;
       let supplierEmail = "";
       if (purchaseOrderDetail && purchaseOrderDetail.supplier && purchaseOrderDetail.supplier.email) {
         supplierEmail = purchaseOrderDetail.supplier.email;
-      } else if (supplierDetail.data) {
-        supplierEmail = supplierDetail.data.email;
+      } else if (this.props.supplierDetail) {
+        supplierEmail = this.props.supplierDetail.email;
       }
       this.setState({
         isRequireEmail: true,
         isAutoFocusEmail: true
       });
-      form.setFieldsValue({supplierEmail});
+      this.props.form.setFieldsValue({supplierEmail});
     } else {
       this.setState({
         isRequireEmail: false,
@@ -36,7 +36,6 @@ export default class FormItem extends Modal {
   }
 
   render() {
-    const {form, locale} = this.props;
     return (
       <this.Row>
         <this.Col md="12">
@@ -44,19 +43,20 @@ export default class FormItem extends Modal {
             name="isCheckToPushWithEmail" 
             label={<this.Translate id="checkbox_stock_purchase_order_push_with_send_email"/>}
             onChange={this.handleOnChangeIsCheckPushToSupplierWithEmail}
-            form={form}/>
+            form={this.props.form}/>
         </this.Col>
         <this.Col md="12">
           <this.InputEmail
             name="supplierEmail"
             isAutoFocus={this.state.isAutoFocusEmail}
+            isAutoSelect={true}
             label={<this.Translate id="text_email" />}
             className={this.state.isPushWithSendEmail ? "" : "hidden"}
-            placeholder={this.CATranslate("text_email", locale)}
+            placeholder={this.CATranslate("text_email", this.props.locale)}
             errorInvalid={<this.Translate id="error_supplier_email_not_valid" />}
             required={this.state.isRequireEmail}
             max={100}
-            form={form}/>
+            form={this.props.form}/>
         </this.Col>
       </this.Row>
     );

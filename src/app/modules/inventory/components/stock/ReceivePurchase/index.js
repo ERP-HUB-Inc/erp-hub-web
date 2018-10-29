@@ -29,11 +29,6 @@ export default class ReceivePurchaseList extends List {
     this.RESET_CONSTANT = Constant.RESET_RECEIVE_PURCHASE;
   }
 
-  componentDidMount() {
-    const {dispatch} = this.props;
-    const filter = JSON.stringify({step: [Enum.PO_STEP.PROCESS]});
-    dispatch(ReceivePurchaseAction.fetch(this.pageSize, 0, "", "", filter));
-  }
 
   handleShowFormEdit(rowData) {
     const { dispatch } = this.props;
@@ -68,8 +63,6 @@ export default class ReceivePurchaseList extends List {
           }
     
           filter = JSON.stringify(filter);
-
-          console.log("due date",values.deliveryDueDate);
 
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
           dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
@@ -117,42 +110,42 @@ class Column extends List {
     return [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="col_stock_receive_purchase_name" />,
+        title: <this.Translate id="text_name" />,
         dataIndex: "name",
-        width: 233,
         key: "name",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_receive_purchase_invoice_no" />,
+        title: <this.Translate id="text_invoice_no" />,
         dataIndex: "invoiceNo",
-        width: 336,
+        width: 120,
         key: "invoiceNo",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_receive_purchase_due_date" />,
+        title: <this.Translate id="text_due_date" />,
         dataIndex: "deliveryDueDate",
         key: "deliveryDueDate",
-        width: 305,
+        width: 180,
         sorter: true,
-        render: (text, record, index) => {
-          return(this.formatDate(record.deliveryDueDate));
-        }
+        render: deliveryDueDate => this.formatDate(deliveryDueDate)
       },
       {
-        title: <this.Translate id="col_stock_receive_purchase_shipping_fee" />,
+        title: <this.Translate id="text_shipping_fee" />,
         dataIndex: "shippingFee",
-        width: 358,
+        width: 120,
         key: "shippingFee",
+        render: shippingFee => this.formatCurrency(shippingFee),
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_receive_purchase_total" />,
+        title: <this.Translate id="text_total" />,
         dataIndex: "receiveTotal",
+        width: 100,
         key: "receiveTotal",
+        align: "right",
         sorter: true, 
-        render: (receiveTotal) => this.formatCurrency(receiveTotal) 
+        render: receiveTotal => this.formatCurrency(receiveTotal) 
       }
     ];
   }

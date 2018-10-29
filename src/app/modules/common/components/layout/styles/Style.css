@@ -1,7 +1,7 @@
 
 
 @import "Responsive.css";
-@import "Color.scss";
+/* @import "Color.scss"; */
 @import "Element.css";
 @import "Font.css";
 
@@ -65,6 +65,37 @@ html,
 
 .ant-table-tbody tr td .ant-form-item-control {
     line-height: 1 !important
+}
+
+.ant-table-footer {
+    font-weight: 500;
+    color: #9A9A9A;
+    background: white !important;
+    padding-right: 8px
+}
+
+.ant-table-footer .total-title {
+    font-size: 9pt;
+    width: 150px
+}
+
+.ant-table-footer .total-value {
+    font-size: 10pt;
+    padding-left: 15px;
+    width: 150px
+}
+
+.ant-table-footer .grandTotal input {
+    background-color: #faf9f900;
+    opacity: 1.5;
+    cursor: default;
+    color: #9A9A9A;
+    border: none;
+}
+
+.ant-table-footer .grandTotal input {
+    text-align: right;
+    padding-right: 0
 }
 
 /* BREADCRUMB */
@@ -645,7 +676,7 @@ color: #4D4F5C;
 }
 
 #offline {
-    position: absolute;
+    position: fixed;
     z-index: 11;
     border-radius: 3px;
     top: 10px;

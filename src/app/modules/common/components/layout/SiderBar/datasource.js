@@ -310,13 +310,6 @@ const dataSource = {
         component: ReceiveOrder,
         isFashNav: true
       },
-      {
-        title: "Receive Orders",
-        icon: "icon-purchasing",
-        route: "/printreport",
-        component: Print,
-        isFashNav: true
-      },
       // {
       //   title: "Re-Order Point",
       //   icon: "icon-undo",

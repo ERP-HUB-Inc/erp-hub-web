@@ -5,25 +5,22 @@ import Modal from "../../../../common/components/shares/Modal";
 import ReceivePo from "./ReceivedPoList";
 
 export default class FormItem extends Modal {
-
   componentDidMount(){
-    const { dispatch } = this.props;
-    dispatch(SupplierAction.fetch());
-    dispatch(LocationAction.fetch());
+    this.props.dispatch(SupplierAction.fetch());
+    this.props.dispatch(LocationAction.fetch());
   }
 
-
   render() {
-    const { form,locale,formData,storeLocation,supplier} = this.props;
+    const {formData} = this.props;
     return (
       <div id="purchase-order-form" className="receive-purchase-form">
         <this.Row>
           <this.Col md="2">
-            <label><this.Translate id="input_stock_purchase_order_name" /></label><br/>
+            <label><this.Translate id="text_name" /></label><br/>
             <label><b>{formData.name}</b></label> 
           </this.Col>
           <this.Col md="2">
-            <label><this.Translate id="input_stock_purchase_order_number" /></label><br/>
+            <label><this.Translate id="text_number" /></label><br/>
             <label><b>{formData.number}</b></label> 
           </this.Col>
           <this.Col md="2">
@@ -31,42 +28,40 @@ export default class FormItem extends Modal {
               name="invoiceNo"
               label={<this.Translate id="input_stock_purchase_invoice_no" />}
               data={formData.invoiceNo}
-              placeholder={this.CATranslate("input_stock_purchase_invoice_no",locale)}
+              placeholder={this.CATranslate("input_stock_purchase_invoice_no", this.props.locale)}
               max={100}
               min={3}
-              form={form}/>
+              form={this.props.form}/>
           </this.Col>
           <this.Col md="2">
             <this.Select
               name="supplierid"
               label={<this.Translate id="select_stock_receive_purchase_from_supplier" />}
               placeholder={<this.Translate id="select_stock_receive_purchase_from_supplier" />}
-              dataSource={supplier.list}
+              dataSource={this.props.supplier.list}
               defaultValue={formData.supplierId}
               valueKey="id"
-              form={form}
-            />
+              form={this.props.form}/>
           </this.Col>
           <this.Col md="2">
             <this.Select
               name="locationId"
               label={<this.Translate id="select_stock_receive_delivery_to_location" />}
               placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
-              dataSource={storeLocation.list}
+              dataSource={this.props.storeLocation.list}
               defaultValue={formData.locationId}
               valueKey="id"
-              form={form}
-            />
+              form={this.props.form}/>
           </this.Col>
           <this.Col md="2">
             <this.InputNumber
               name="shippingFee"
-              label={<this.Translate id="input_stock_receive_shipping_fee" />}
+              label={<this.Translate id="text_shipping_fee" />}
               data={formData.shippingFee}
-              placeholder={this.CATranslate("input_stock_receive_shipping_fee",locale)}
+              placeholder={this.CATranslate("text_shipping_fee", this.props.locale)}
               max={100}
               min={3}
-              form={form}/>
+              form={this.props.form}/>
           </this.Col>
           
           <this.Col md="2">
@@ -78,8 +73,7 @@ export default class FormItem extends Modal {
           <this.Col md="12" className="purchase-order-entry">
             <ReceivePo 
               receivePurchaseDetail={formData.purchaseOrderEntries}
-              form={this.props.form}
-            />
+              form={this.props.form}/>
           </this.Col>
         </this.Row>
       </div>

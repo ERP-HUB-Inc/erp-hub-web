@@ -20,6 +20,7 @@ export default class FormCreate extends Modal {
       if (!err) {      
         let purchaseOrder =  this.props.formvalue;
         purchaseOrder["step"] = Enum.PO_STEP.PROCESS;
+        this.props.callBackGetEmail(values.supplierEmail);
         this.dispatch(PurchaseOrderAction.pushToSupplier(purchaseOrder));
       }
     });
@@ -46,21 +47,17 @@ export default class FormCreate extends Modal {
   render() {
     const {
       purchaseOrderPushToSupplier,
-      form,
-      locale,
-      dispatch,
-      supplierDetail,
       purchaseOrderDetail} = this.props;
 
     this.submitLoading = purchaseOrderPushToSupplier.updating;
 
     if (purchaseOrderPushToSupplier.showForm) {
       this.content = <FormItem
-        form={form}
-        dispatch={dispatch}
-        supplierDetail={supplierDetail}
+        form={this.props.form}
+        dispatch={this.props.dispatch}
+        supplierDetail={this.props.supplier}
         purchaseOrderDetail={purchaseOrderDetail}
-        locale={locale} />;
+        locale={this.props.locale} />;
       return super.render();
     } else {
       return <div/>;

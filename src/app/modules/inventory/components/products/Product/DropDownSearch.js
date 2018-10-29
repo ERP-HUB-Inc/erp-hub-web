@@ -3,6 +3,7 @@ import $ from "jquery";
 import ProductAction from "../../../actions/products/product";
 import Constant from "../../../constants/products/product";
 import Modal from "../../../../common/components/shares/Modal";
+import "./DropDownSearch.css";
 
 export default class DropDownSearch extends Modal {
   constructor(props) {

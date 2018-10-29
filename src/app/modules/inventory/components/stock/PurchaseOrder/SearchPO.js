@@ -1,4 +1,5 @@
 import React from "react";
+import Util from "../../../utils";
 import DropDownSearch from "../../../components/products/Product/DropDownSearch";
 import Modal from "../../../../common/components/shares/Modal";
 import "./index.css";
@@ -24,6 +25,7 @@ export default class SearchPo extends Modal {
               { index + 1 }
               <this.InputText name={`purchaseEntryId[${index}]`} type="hidden" data={record.purchaseEntryId} form={this.form} />
               <this.InputText name={`productId[${index}]`} type="hidden" data={record.productId} form={this.form} />
+              <this.InputText name={`productName[${index}]`} type="hidden" data={record.productName} form={this.form} />
               <this.InputNumber name={`purchaseEntryStatus[${index}]`} className="hidden" data={record.purchaseEntryStatus} form={this.form} />
               <this.InputNumber name={`totalAmount[${index}]`} className="hidden" data={record.totalPrice} form={this.form} />
             </div>
@@ -150,9 +152,7 @@ export default class SearchPo extends Modal {
         let productName = "";
         let quantityOnHand = 0;
         if (purchaseOrderEntry.product) {
-          if (purchaseOrderEntry.product.productDescriptions.length > 0) {
-            productName = purchaseOrderEntry.product.productDescriptions[0].name;
-          }
+          productName = Util.getProductName(purchaseOrderEntry.product);
           quantityOnHand = purchaseOrderEntry.product.quantity;
         }
         existingProductList.push({

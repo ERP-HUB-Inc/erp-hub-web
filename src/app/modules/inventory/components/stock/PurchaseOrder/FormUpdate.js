@@ -52,6 +52,7 @@ export default class Form extends Modal {
         purchaseEntries.push({
           id: values.purchaseEntryId[index],
           productId,
+          productName: values.productName[index],
           requestQuantity: parseInt(values.purchaseQty[index], 10),
           price: parseFloat(values.purchasePrice[index]),
           status: values.purchaseEntryStatus[index]
@@ -63,6 +64,7 @@ export default class Form extends Modal {
 
     this.Util.clearObjProperty(values, [
       "productId",
+      "productName",
       "purchaseQty",
       "purchasePrice",
       "purchaseEntryStatus",
@@ -87,12 +89,25 @@ export default class Form extends Modal {
   handlePushToSupplier(){
     let values = this.props.form.getFieldsValue();
     values = this.prepareFormDataForUpdate(values);
-
+    
     if (values["POEntries"].length > 0) {
+      const supplier = this.Util.getDBFromLocalStorageById(Enum.LOCAL_SCHEMA.SUPPLIER, values["supplierId"]);
       this.dispatch(PurchaseOrderAction.showForm(null, Constant.SHOW_PUSH_PURCHASE_ORDER_TO_SUPPLIER_FORM));
       this.modal1 = <FormCreatePurchseOrderSendEmail
-        formvalue={this.prepareFormDataForUpdate(values)}
-        purchaseOrderDetail={this.props.purchaseOrderDetail.data}/>;
+        formvalue={values}
+        purchaseOrderDetail={this.props.purchaseOrderDetail.data}
+        supplier={supplier}
+        callBackGetEmail={this.props.callBackGetEmail}/>;
+      
+      // APPEND MORE DATA FOR EMAIL PO
+      values["number"] = this.props.purchaseOrderDetail.data.number;
+      values["number"] = this.props.purchaseOrderDetail.data.number;
+      values["supplier"] = supplier;
+      values["location"] = this.Util.getDBFromLocalStorageById(Enum.LOCAL_SCHEMA.LOCATION, values["locationId"]);
+      values["employee"] = this.props.purchaseOrderDetail.data.user;
+      if (this.props.callBackGetEmailData) {
+        this.props.callBackGetEmailData(values);
+      }
     } else {
       // HAVE NO PURCHASE ENTRY INCLUDE
       this.Message.warning(this.CATranslate("error_purchase_order_no_entry", this.props.locale), 3);

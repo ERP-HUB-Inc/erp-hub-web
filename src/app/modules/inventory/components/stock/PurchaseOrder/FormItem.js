@@ -2,7 +2,6 @@ import React from "react";
 import SearchPO from "./SearchPO";
 import Enum from "../../../enums";
 import Constant from "../../../constants/stock/purchaseOrder";
-import SupplierAction from "../../../actions/stock/supplier";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
 import Modal from "../../../../common/components/shares/Modal";
 
@@ -14,15 +13,10 @@ export default class FormItem extends Modal {
       suppliers: []
     };
     this.timer = null;
-    this.changeSupplierForPO = this.changeSupplierForPO.bind(this);
     this.handleCheckPONumber = this.handleCheckPONumber.bind(this);
     this.validateOrderNumber = "";
     this.errorMessageOrderNumber = "";
 
-  }
-
-  changeSupplierForPO(values){
-    this.dispatch(SupplierAction.detail(values));
   }
 
   handleCheckPONumber(event){
@@ -41,7 +35,6 @@ export default class FormItem extends Modal {
       suppliers: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.SUPPLIER))
     });
   }
-
 
   render() {
     const {
@@ -140,9 +133,7 @@ export default class FormItem extends Modal {
                 dataSource={this.state.suppliers}
                 valueKey="id"
                 required={true}
-                form={form}
-                onChange={this.changeSupplierForPO}
-              />
+                form={form}/>
             </this.Col>
             <this.Col md="2">
               <this.Select

@@ -8,6 +8,7 @@ export default class InputText extends Element {
       this.nameInput.focus();
     }
   }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
