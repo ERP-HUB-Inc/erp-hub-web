@@ -1,5 +1,5 @@
 import React from "react";
-import ReceivePO from "./ReceivedPoList";
+import ReceivePO from "./ReceivedPOList";
 import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
 import "./index.css";
