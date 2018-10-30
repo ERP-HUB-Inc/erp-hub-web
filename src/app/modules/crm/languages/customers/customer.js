@@ -55,7 +55,7 @@ export default {
     "Group",
     "Group"
   ],
-  "input_management_customer_company": [
+  "text_company": [
     "Company",
     "Company",
     "Company"

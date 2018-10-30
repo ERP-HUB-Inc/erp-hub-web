@@ -61,11 +61,6 @@ const ReceiveOrder = Loadable({
   loading: () => <StartUp />,
 });
 
-const Print = Loadable({
-  loader: () => import("../../../../inventory/containers/stock/Report"),
-  loading: () => <StartUp />,
-});
-
 const StockReturn = Loadable({
   loader: () => import("../../../../inventory/containers/stock/ReturnPurchase"),
   loading: () => <StartUp />,

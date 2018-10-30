@@ -11,6 +11,18 @@ export default {
     "No"
   ],
 
+  "text_title": [
+    "Title",
+    "Title",
+    "Title"
+  ],
+
+  "text_logo": [
+    "Logo",
+    "Logo",
+    "Logo"
+  ],
+
   "text_key": [
     "Key",
     "Key",
@@ -483,5 +495,11 @@ export default {
     "Receive",
     "Receive",
     "Receive"
+  ],
+
+  "text_receiver": [
+    "Receiver",
+    "Receiver",
+    "Receiver"
   ]
 };

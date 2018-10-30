@@ -30,14 +30,15 @@ export default class ReceivedPo extends Modal {
         }
       },
       {
-        title: <this.Translate id="text_name" />,
+        title: <this.Translate id="text_product_name" />,
         dataIndex: "productName",
         key: "productName"
       },
       {
         title: <this.Translate id="text_quantity" />,
         dataIndex: "requestQuantity",
-        width: 100,
+        width: 150,
+        align: "center",
         key: "requestQuantity",
         render: (text, record, index) => 
         {
@@ -52,14 +53,19 @@ export default class ReceivedPo extends Modal {
       {
         title: <this.Translate id="col_stock_purchase_order_receive_qty" />,
         dataIndex: "receiveQuantity",
-        width: 100,
+        width: 150,
         key: "receiveQuantity",
+        align: "right",
         render: (text, record, index) => 
         {
           return (
-            <this.InputText
+            <this.InputNumber
               name={`receiveQty[${index}]`}  
               data={record.receiveQuantity}
+              className="text-right"
+              precision={0}
+              isHideTool={true}
+              isAutoSelect={true}
               handleKeyUp={(e) => this.handleOnChangeQuantity(e, index)}
               form={this.form} />
           );
@@ -70,6 +76,7 @@ export default class ReceivedPo extends Modal {
         dataIndex: "price",
         width: 100,
         key: "price",
+        align: "right",
         render: (text, record, index) => 
         {
           return(
@@ -170,18 +177,15 @@ export default class ReceivedPo extends Modal {
     this.props.form.setFieldsValue({requestTotalValue: `${grandTotal}`});
   }
 
-
   productList(){
     return(
       this.props.dataSource
     );
   }
 
-
   componentDidMount(){
     ProductsAction.fetch(10);
   }
-
 
   render(){
     const { productLists } = this.state; 
@@ -189,19 +193,17 @@ export default class ReceivedPo extends Modal {
     return(
       <div className="main-dropdown-search">
         <this.Table
-          rowKey="receivedId"
+          rowKey="id"
           rowClassName={record => record.status !== this.Enum.ACTIVE ? "hidden" : ""}
           dataSource={productLists}
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
-          footer={() => <div className={` ${productLists.length > 0 ? "" : "hidden"}`}>
+          footer={() => <div className={`pull-right ${productLists.length > 0 ? "" : "hidden"}`}>
             <div className="total-title text-uppercase pull-left"><this.Translate id="text_total_amount" />: </div>
-            <div className="total-value pull-left">
-              <this.InputText name="requestTotal" disabled={true} className="grandTotal" form={this.props.form}/>
+            <div className="total-value pull-left" style={{width: 100}}>
+              <this.InputText name="requestTotal" disabled={true} className="ca-input-no-border grandTotal" form={this.props.form}/>
               <this.InputText name="requestTotalValue" className="hidden" form={this.props.form}/>
             </div>
-            <div className="" style={{width: 150}}></div>
-            <div style={{clear: "both"}}></div>
           </div>}
         /> 
       </div>

@@ -22,10 +22,6 @@
     padding-right: 0
 }
 
-#purchase-order-form .purchase-order-entry .ant-table-body table tbody tr td input {
-    text-align: right;
-    padding-right: 5px
-}
 
 #purchase-order-form .purchase-order-entry .ant-table-body table tbody tr td .totalPrice input {
     padding-right: 0px
@@ -37,11 +33,6 @@
     cursor: default;
     color: #9A9A9A;
     border: none;
-}
-
-#purchase-order-form .purchase-order-entry .grandTotal .ant-form-item-control {
-    line-height: 0;
-    top: -5px
 }
 
 #purchase-order-form .wrap-po-filter-create {

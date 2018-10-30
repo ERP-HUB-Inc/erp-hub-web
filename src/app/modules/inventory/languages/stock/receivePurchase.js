@@ -23,12 +23,6 @@ export default {
     "Delivery to Location"
   ],
 
-  "col_stock_receive_purchase_description": [
-    "Product Description",
-    "Product Description",
-    "Product Description"
-  ],
-
   "stock_receive_purchase_search_key_place_holder": [
     "Search for receive purchase",
     "Search for receive purchase",

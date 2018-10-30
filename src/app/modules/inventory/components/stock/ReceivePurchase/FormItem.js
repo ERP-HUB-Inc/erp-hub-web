@@ -1,44 +1,66 @@
 import React from "react";
-import SupplierAction from "../../../actions/stock/supplier";
-import LocationAction from "../../../../pos/action/settings/storeLocation";
-import Modal from "../../../../common/components/shares/Modal";
 import ReceivePo from "./ReceivedPoList";
+import Enum from "../../../enums";
+import Modal from "../../../../common/components/shares/Modal";
+import "./index.css";
+
 
 export default class FormItem extends Modal {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ...this.state,
+      locations: [],
+      suppliers: []
+    };
+  }
   componentDidMount(){
-    this.props.dispatch(SupplierAction.fetch());
-    this.props.dispatch(LocationAction.fetch());
+    this.setState({
+      locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION)),
+      suppliers: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.SUPPLIER))
+    });
   }
 
   render() {
     const {formData} = this.props;
     return (
-      <div id="purchase-order-form" className="receive-purchase-form">
-        <this.Row>
+      <div id="purchase-receive-form">
+        <this.Row className="ca-penel-v1 wrap-poreceive-filter">
           <this.Col md="2">
-            <label><this.Translate id="text_name" /></label><br/>
-            <label><b>{formData.name}</b></label> 
+            <this.InputText
+              name="name"
+              label={<this.Translate id="text_name" />}
+              data={formData.name}
+              disabled={true}
+              className="ca-input-no-border ca-clear-padding"
+              form={this.props.form}/>
           </this.Col>
           <this.Col md="2">
-            <label><this.Translate id="text_number" /></label><br/>
-            <label><b>{formData.number}</b></label> 
+            <this.InputText
+              name="number"
+              label={<this.Translate id="text_number" />}
+              data={formData.number}
+              disabled={true}
+              className="ca-input-no-border ca-clear-padding"
+              form={this.props.form}/>
           </this.Col>
           <this.Col md="2">
             <this.InputText
               name="invoiceNo"
-              label={<this.Translate id="input_stock_purchase_invoice_no" />}
+              label={<this.Translate id="text_supplier_invoice" />}
               data={formData.invoiceNo}
-              placeholder={this.CATranslate("input_stock_purchase_invoice_no", this.props.locale)}
+              placeholder={this.CATranslate("text_supplier_invoice", this.props.locale)}
               max={100}
               min={3}
+              isAutoFocus={true}
               form={this.props.form}/>
           </this.Col>
           <this.Col md="2">
             <this.Select
-              name="supplierid"
+              name="supplierId"
               label={<this.Translate id="select_stock_receive_purchase_from_supplier" />}
               placeholder={<this.Translate id="select_stock_receive_purchase_from_supplier" />}
-              dataSource={this.props.supplier.list}
+              dataSource={this.state.suppliers}
               defaultValue={formData.supplierId}
               valueKey="id"
               form={this.props.form}/>
@@ -48,7 +70,7 @@ export default class FormItem extends Modal {
               name="locationId"
               label={<this.Translate id="select_stock_receive_delivery_to_location" />}
               placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
-              dataSource={this.props.storeLocation.list}
+              dataSource={this.state.locations}
               defaultValue={formData.locationId}
               valueKey="id"
               form={this.props.form}/>
@@ -61,12 +83,18 @@ export default class FormItem extends Modal {
               placeholder={this.CATranslate("text_shipping_fee", this.props.locale)}
               max={100}
               min={3}
+              isAutoSelect={true}
               form={this.props.form}/>
           </this.Col>
           
-          <this.Col md="2">
-            <label><this.Translate id="text_due_date" /></label><br/>
-            <label><b>{this.formatDate(formData.deliveryDueDate)}</b></label> 
+          <this.Col md="2" className="wrap-due-date">
+            <this.InputText
+              name="deliveryDueDate"
+              label={<this.Translate id="text_due_date" />}
+              data={this.Util.formatDate(formData.deliveryDueDate)}
+              disabled={true}
+              className="ca-input-no-border ca-clear-padding"
+              form={this.props.form}/>
           </this.Col>          
         </this.Row>
         <this.Row>

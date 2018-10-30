@@ -14,7 +14,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PURCHASE_ORDER,
-        payload: purchaseOrderService.lists(limit, offset, sortField, sortOrder, filter, searchKey, null, rangFilter)
+        payload: purchaseOrderService.lists(limit, offset, sortField, sortOrder, filter, searchKey, rangFilter)
       });
     };
   },

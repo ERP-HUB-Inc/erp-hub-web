@@ -27,7 +27,7 @@ export default class FormItem extends Modal {
             <label><b>{formData.number}</b></label>  
           </this.Col>
           <this.Col md="2">
-            <label><this.Translate id="input_stock_purchase_invoice_no" /></label><br/>
+            <label><this.Translate id="text_supplier_invoice" /></label><br/>
             <label><b>{formData.invoiceNo}</b></label>  
           </this.Col>
           <this.Col md="2">

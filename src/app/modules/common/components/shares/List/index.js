@@ -44,7 +44,7 @@ export default class List extends Component {
     this.cancelText = "No"; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
     this.isShowExpandable = false;
-    this.emptyCell = "-";
+    this.emptyCell = "N/A";
 
     this.columnNo = {};
     
@@ -81,7 +81,7 @@ export default class List extends Component {
       title: <this.Translate id="text_created_at" />,
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 180,
+      width: 160,
       render: value => this.formatDate(value),
       sorter: true
     };
@@ -89,7 +89,7 @@ export default class List extends Component {
       title: <this.Translate id="text_updated_at" />,
       dataIndex: "updatedAt",
       key: "updatedAt",
-      width: 180,
+      width: 160,
       render: value => this.formatDate(value),
       sorter: true
     };

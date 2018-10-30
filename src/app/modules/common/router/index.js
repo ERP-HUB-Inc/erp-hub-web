@@ -33,7 +33,7 @@ class Router extends Component {
         <Offline>
           <div id="offline">
             <this.Alert
-              message="No connection"
+              message="No internet connection"
               description="You are currently offline, please connect to internet. Before continue your work."
               type="warning"
               showIcon/>

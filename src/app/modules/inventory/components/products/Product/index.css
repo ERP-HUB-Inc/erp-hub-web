@@ -24,11 +24,6 @@
     line-height: normal
 }
 
-.ant-upload.ant-upload-select-picture-card {
-    width: 100%;
-    height: 180px
-}
-
 .product-type .ant-radio-button-wrapper {
     height: auto !important;
     width: 32% !important;

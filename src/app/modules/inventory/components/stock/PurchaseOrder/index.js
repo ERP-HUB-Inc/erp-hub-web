@@ -42,7 +42,7 @@ export default class PurchaseOrderLists extends List {
         sorter: true,
         width: 130,
         render: (text, record, index) => {
-          let referenceNo = "";
+          let referenceNo = this.emptyText;
           if ("reference" in record && record["reference"] != null) {
             referenceNo = record["reference"]["number"];
           }
@@ -50,12 +50,20 @@ export default class PurchaseOrderLists extends List {
         }
       },
       {
-        title: <this.Translate id="text_supplier" />,
-        dataIndex: "supplier",
-        key: "supplier",
+        title: <this.Translate id="text_receiver"/>,
+        dataIndex: "receiver",
+        key: "receiverId",
         sorter: true,
         width: 140,
-        render: supplier => supplier ? supplier.name: ""
+        render: receiver => receiver ? receiver.fullName: this.emptyText
+      },
+      {
+        title: <this.Translate id="text_supplier" />,
+        dataIndex: "supplier",
+        key: "supplierId",
+        sorter: true,
+        width: 140,
+        render: supplier => supplier ? supplier.name: this.emptyText
       },
       {
         title: <this.Translate id="text_location" />,
@@ -63,7 +71,7 @@ export default class PurchaseOrderLists extends List {
         key: "location",
         sorter: true,
         width: 140,
-        render: location => location ? location.name: ""
+        render: location => location ? location.name: this.emptyText
       },
       {
         title: <this.Translate id="text_due_date" />,
@@ -131,8 +139,8 @@ export default class PurchaseOrderLists extends List {
   }
 
   componentDidMount(){
-    this.props.dispatch(SupplierAction.fetch());
-    this.props.dispatch(PurchaseAction.fetch(this.pageSize));
+    super.componentDidMount();
+    this.props.dispatch(SupplierAction.fetch(100));
   }
 
   componentWillUpdate(nextProps) {
@@ -182,7 +190,6 @@ export default class PurchaseOrderLists extends List {
   componentDidUpdate() {
     if (!this.componentHasUpdated && this.props.purchaseOrder.fetched) {
       this.props.dispatch(LocationAction.fetch(100));
-      this.props.dispatch(SupplierAction.fetch(100));
       this.componentHasUpdated = true;
     }
   }
@@ -238,7 +245,6 @@ export default class PurchaseOrderLists extends List {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
-          const {dispatch} = this.props;
           let filter = {};
           let rangFilter = {};
           if (values.step !== -1) {
@@ -257,7 +263,7 @@ export default class PurchaseOrderLists extends List {
           filter = JSON.stringify(filter);
 
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
-          dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
+          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
           this.setState({isClickFilter: true});
         }
       
@@ -266,69 +272,64 @@ export default class PurchaseOrderLists extends List {
   }
 
   renderFilterRecord() {
-    const {form, locale, supplier} = this.props;
+    const {form, locale} = this.props;
 
     const POStepList = Object.keys(this.PO_STEP_STR).map((prop) => {
       return {name: this.PO_STEP_STR[prop].name, value: prop};
     });
     POStepList.unshift({name: <this.Translate id="text_all_step"/>, value: -1});
 
-    if(supplier) {
-      const fetchingProps = this.props[this.fetchingProp];
-      return(
-        form == null ?
-          ""
-          :
-          <this.Form onSubmit={this.handleSubmitFilter}>
-            <this.Row className="main-search-layout">
-              <this.Col md="2">
-                <this.InputText
-                  name="key"
-                  label={<this.Translate id="input_stock_purchase_key" />}
-                  placeholder={this.CATranslate("purchase_order_search_key_place_holder", locale)}
-                  form={form}
-                />
-              </this.Col>
-              <this.Col md="2">
-                <this.Select
-                  name="supplierId"
-                  label={<this.Translate id="text_supplier" /> }
-                  placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
-                  dataSource={this.supplierList.concat(supplier.list)}
-                  defaultValue={this.supplierList[0].id}
-                  valueKey="id"
-                  form={form}/>
-              </this.Col>
-              <this.Col md="2">
-                <this.DatePickers
-                  name="deliveryDueDate"
-                  label={<this.Translate id="text_due_date" />}
-                  form={form}
-                />
-              </this.Col>
-              <this.Col md="2">
-                <this.Select
-                  name="step"
-                  label={<this.Translate id="text_step" />}
-                  placeholder="Please select status"
-                  dataSource={POStepList}
-                  defaultValue={POStepList[0].value}
-                  form={form}
-                />
-              </this.Col>
-              <this.Col md="2" className="wrap-btn-search">
-                <div className="ant-form-item-label" style={{visibility: "hidden"}}>
-                  <label htmlFor="status" className="" title="">Filter</label>
-                </div>
-                <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-                  <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-                </this.Button>
-              </this.Col>
-            </this.Row>
-          </this.Form>
-      );
-
-    }
+    const fetchingProps = this.props[this.fetchingProp];
+    return (
+      form == null ?
+        ""
+        :
+        <this.Form onSubmit={this.handleSubmitFilter}>
+          <this.Row className="main-search-layout">
+            <this.Col md="2">
+              <this.InputText
+                name="key"
+                label={<this.Translate id="input_stock_purchase_key" />}
+                placeholder={this.CATranslate("purchase_order_search_key_place_holder", locale)}
+                isAutoFocus={true}
+                form={form}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="supplierId"
+                label={<this.Translate id="text_supplier" /> }
+                dataSource={this.supplierList.concat(this.props.supplier.list)}
+                defaultValue={this.supplierList[0].id}
+                valueKey="id"
+                form={form}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.DatePickers
+                name="deliveryDueDate"
+                label={<this.Translate id="text_due_date" />}
+                form={form}
+              />
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="step"
+                label={<this.Translate id="text_step" />}
+                dataSource={POStepList}
+                defaultValue={POStepList[0].value}
+                form={form}
+              />
+            </this.Col>
+            <this.Col md="2" className="wrap-btn-search">
+              <div className="ant-form-item-label" style={{visibility: "hidden"}}>
+                <label htmlFor="status" className="" title="">Filter</label>
+              </div>
+              <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+              </this.Button>
+            </this.Col>
+          </this.Row>
+        </this.Form>
+    );
   }
 
 }

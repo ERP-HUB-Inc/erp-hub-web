@@ -11,12 +11,16 @@ export default {
     "Product"
   ],
 
-  //COLUMN
-
-  "col_products_name": [
+  "text_product_name": [
     "Product Name",
     "Product Name",
     "Product Name"
+  ],
+
+  "text_product_description": [
+    "Product Description",
+    "Product Description",
+    "Product Description"
   ],
 
   "col_products_tag": [

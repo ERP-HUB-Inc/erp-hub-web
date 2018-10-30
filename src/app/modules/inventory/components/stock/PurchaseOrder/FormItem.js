@@ -79,8 +79,20 @@ export default class FormItem extends Modal {
                 placeholder={this.CATranslate("text_name", locale)}
                 errorRequired={<this.Translate id="error_enter_po_name" />}
                 required={true}
+                isAutoFocus={true}
                 max={100}
                 form={form}/> 
+            </this.Col>
+            <this.Col md="2">
+              <this.InputText
+                name="number"
+                label={<this.Translate id="input_stock_purchase_order_number" />}
+                data={formData.number}
+                handleKeyUp={this.handleCheckPONumber}
+                validateStatus={this.props.requestOrderNumber.fetching ? "validating" : this.validateOrderNumber}
+                placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
+                form={form}
+                help={this.errorMessageOrderNumber}/> 
             </this.Col>
             <this.Col md="2">
               { formData.deliveryDueDate == null ?
@@ -104,26 +116,6 @@ export default class FormItem extends Modal {
 
             </this.Col>
             <this.Col md="2">
-              <this.InputText
-                name="number"
-                label={<this.Translate id="input_stock_purchase_order_number" />}
-                data={formData.number}
-                handleKeyUp={this.handleCheckPONumber}
-                validateStatus={this.props.requestOrderNumber.fetching ? "validating" : this.validateOrderNumber}
-                placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
-                form={form}
-                help={this.errorMessageOrderNumber}/> 
-            </this.Col>
-            <this.Col md="2">
-              <this.InputText
-                name="invoiceNo"
-                label={<this.Translate id="input_stock_purchase_invoice_no" />}
-                data={formData.invoiceNo}
-                placeholder={this.CATranslate("input_stock_purchase_invoice_no",locale)}
-                max={100}
-                form={form}/>
-            </this.Col>
-            <this.Col md="2">
               <this.Select
                 name="supplierId"
                 label={<this.Translate id="text_supplier" /> }
@@ -133,6 +125,15 @@ export default class FormItem extends Modal {
                 dataSource={this.state.suppliers}
                 valueKey="id"
                 required={true}
+                form={form}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.InputText
+                name="invoiceNo"
+                label={<this.Translate id="text_supplier_invoice" />}
+                data={formData.invoiceNo}
+                placeholder={this.CATranslate("text_supplier_invoice",locale)}
+                max={100}
                 form={form}/>
             </this.Col>
             <this.Col md="2">

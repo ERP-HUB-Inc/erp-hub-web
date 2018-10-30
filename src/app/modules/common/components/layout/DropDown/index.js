@@ -1,7 +1,6 @@
 import React from "react";
 import Component from "../../Component";
 import history from "../../../router/history";
-import ConstantAuth from "../../../constants/authentication";
 import "./index.css";
 import "./index.scss";
 import { Menu, Dropdown } from "antd";
@@ -31,9 +30,7 @@ export default class MenuDropDown extends Component {
   }
 
   handleLogOut() {
-    localStorage.removeItem(ConstantAuth.ACCESS_TOKEN);
-    localStorage.removeItem(ConstantAuth.STORE_ACCESS_TOKEN);
-    history.push("/signin");
+    this.Util.logout(history);
   }
 
   render() {

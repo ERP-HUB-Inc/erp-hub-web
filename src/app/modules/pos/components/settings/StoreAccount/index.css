@@ -1,55 +1,5 @@
 
 /* settign account layout */
-.main-radio-acc .ant-radio-button-wrapper {
-    height: 70px;
-    width: 30%;
-    padding-top: 6px;
-    background-color: #FFFFFF;
-    border: 2px solid #CDCCCC;
-    border-radius: 3px !important;
-    margin-right: 3px;      
-}
-
-.main-radio-acc .ant-radio-button-wrapper {
-    margin-right: 16px;
-}
-
-.main-radio-acc .ant-radio-button-wrapper:last-child {
-    margin-right: 0px;
-}
-
-.main-radio-acc .ant-radio-button-wrapper-checked::before {
-    background-color: none !important;
-}
-
-.main-radio-acc .ant-radio-button-wrapper-checked {
-    box-shadow: 0 0 0 0 #4D4F5C !important
-}
-
-.main-radio-acc .ant-radio-button-wrapper-checked {
-    border: 2px solid #093163;
-    box-shadow: 0 0 0 0 #4D4F5C !important
-}
-
-.main-radio-acc .radio-group {
-    text-align: center;
-}
-
-.main-radio-acc .radio-title {
-    color: #4D4F5C;
-    font-size: 11pt;
-    font-weight: 500;
-}
-
-.main-radio-acc .language {
-    font-size: 8pt;
-    text-align: center;
-    line-height: 12pt;
-    color: #9A9A9A;
-    white-space: pre-line
-}
-
-
 .main-ant-wrapper .ant-radio-wrapper {
     margin-right: 25px !important;
 }
