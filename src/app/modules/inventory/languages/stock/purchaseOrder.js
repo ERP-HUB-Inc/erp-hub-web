@@ -95,12 +95,6 @@ export default {
     "Paid"
   ],
 
-  "input_stock_purchase_key": [
-    "Key",
-    "Key",
-    "Key"
-  ],
-
   "input_stock_purchase_order_number": [
     "Order Number",
     "Order Number",

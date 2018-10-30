@@ -1,5 +1,5 @@
 import React from "react";
-import ReceivePo from "./ReceivedPoList";
+import ReceivePO from "./ReceivedPoList";
 import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
 import "./index.css";
@@ -14,6 +14,7 @@ export default class FormItem extends Modal {
       suppliers: []
     };
   }
+  
   componentDidMount(){
     this.setState({
       locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION)),
@@ -25,30 +26,28 @@ export default class FormItem extends Modal {
     const {formData} = this.props;
     return (
       <div id="purchase-receive-form">
-        <this.Row className="ca-penel-v1 wrap-poreceive-filter">
+        <this.Row className="ca-penel-v1 wrap-po-filter">
           <this.Col md="2">
             <this.InputText
               name="name"
               label={<this.Translate id="text_name" />}
-              data={formData.name}
+              data={this.props.formData.name}
               disabled={true}
-              className="ca-input-no-border ca-clear-padding"
               form={this.props.form}/>
           </this.Col>
           <this.Col md="2">
             <this.InputText
               name="number"
               label={<this.Translate id="text_number" />}
-              data={formData.number}
+              data={this.props.formData.number}
               disabled={true}
-              className="ca-input-no-border ca-clear-padding"
               form={this.props.form}/>
           </this.Col>
           <this.Col md="2">
             <this.InputText
               name="invoiceNo"
               label={<this.Translate id="text_supplier_invoice" />}
-              data={formData.invoiceNo}
+              data={this.props.formData.invoiceNo}
               placeholder={this.CATranslate("text_supplier_invoice", this.props.locale)}
               max={100}
               min={3}
@@ -59,7 +58,6 @@ export default class FormItem extends Modal {
             <this.Select
               name="supplierId"
               label={<this.Translate id="select_stock_receive_purchase_from_supplier" />}
-              placeholder={<this.Translate id="select_stock_receive_purchase_from_supplier" />}
               dataSource={this.state.suppliers}
               defaultValue={formData.supplierId}
               valueKey="id"
@@ -69,7 +67,6 @@ export default class FormItem extends Modal {
             <this.Select
               name="locationId"
               label={<this.Translate id="select_stock_receive_delivery_to_location" />}
-              placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
               dataSource={this.state.locations}
               defaultValue={formData.locationId}
               valueKey="id"
@@ -79,27 +76,25 @@ export default class FormItem extends Modal {
             <this.InputNumber
               name="shippingFee"
               label={<this.Translate id="text_shipping_fee" />}
-              data={formData.shippingFee}
+              data={this.props.formData.shippingFee}
               placeholder={this.CATranslate("text_shipping_fee", this.props.locale)}
               max={100}
               min={3}
               isAutoSelect={true}
               form={this.props.form}/>
           </this.Col>
-          
           <this.Col md="2" className="wrap-due-date">
             <this.InputText
               name="deliveryDueDate"
               label={<this.Translate id="text_due_date" />}
               data={this.Util.formatDate(formData.deliveryDueDate)}
               disabled={true}
-              className="ca-input-no-border ca-clear-padding"
               form={this.props.form}/>
           </this.Col>          
         </this.Row>
         <this.Row>
           <this.Col md="12" className="purchase-order-entry">
-            <ReceivePo 
+            <ReceivePO 
               receivePurchaseDetail={formData.purchaseOrderEntries}
               form={this.props.form}/>
           </this.Col>

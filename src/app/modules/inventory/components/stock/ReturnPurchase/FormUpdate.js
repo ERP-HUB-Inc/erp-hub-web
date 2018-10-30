@@ -3,15 +3,13 @@ import FormItem from "./FormItem";
 import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
 import ReturnPurchaseAction from "../../../actions/stock/returnPurchase";
+import "../ReceivePurchase/index.css";
 
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.state = {
-      disabled: false
-    };
-    this.width = "65%";
-    this.title = <this.Translate id="update_stock_return_purchase_title" />;
+    this.wrapClassName = "wrap-modal-po";
+    this.title = <this.Translate id="text_return_purchase" />;
     this.confirmTitle = "Do you Want to return purchase ?";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);

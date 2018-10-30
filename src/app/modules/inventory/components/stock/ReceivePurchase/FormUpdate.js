@@ -7,7 +7,7 @@ import ReceivePurchaseAction from "../../../actions/stock/receivePurchase";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.width = "70%";
+    this.wrapClassName = "wrap-modal-po";
     this.confirmTextAction = <this.Translate id="text_confirm_receive"/>;
     this.confirmTitle = <this.Translate id="text_confirm_receive_title"/>;
     this.dispatch = this.props.dispatch;

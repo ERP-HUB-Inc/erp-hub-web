@@ -17,7 +17,64 @@ export default class ReceivePurchaseList extends List {
       suppliers: []
     };
     this.supplierList = [{name: <this.Translate id="text_all_supplier"/>, id: 0}];
-    this.columns = new Column();
+    this.columns = [
+      this.columnCreatedAt,
+      {
+        title: <this.Translate id="text_name" />,
+        dataIndex: "name",
+        key: "name",
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_supplier" />,
+        dataIndex: "supplier",
+        key: "supplierId",
+        sorter: true,
+        width: 140,
+        render: supplier => supplier ? supplier.name: this.emptyText
+      },
+      {
+        title: <this.Translate id="text_invoice_no" />,
+        dataIndex: "invoiceNo",
+        width: 120,
+        key: "invoiceNo",
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_due_date" />,
+        dataIndex: "deliveryDueDate",
+        key: "deliveryDueDate",
+        width: 160,
+        sorter: true,
+        render: deliveryDueDate => this.formatDate(deliveryDueDate)
+      },
+      {
+        title: <this.Translate id="text_shipping_fee" />,
+        dataIndex: "shippingFee",
+        width: 130,
+        align: "right",
+        key: "shippingFee",
+        render: shippingFee => this.formatCurrency(shippingFee),
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_total" />,
+        dataIndex: "receiveTotal",
+        width: 130,
+        key: "receiveTotal",
+        align: "right",
+        sorter: true, 
+        render: receiveTotal => this.formatCurrency(receiveTotal) 
+      },
+      {
+        title: <this.Translate id="text_action" />,
+        dataIndex: "id",
+        key: "action",
+        align: "center",
+        width: 100,
+        render: id => <this.Tag onClick={() => this.handleShowFormEdit({id})} color="#87d068" className="text-uppercase text-center po-step-tag"><this.Translate id="text_receive"/></this.Tag>
+      }
+    ];
     this.ExportheadersCsv = [{label: "Date", key: "createdAt"},
       {label: "Name", key: "name"},
       {label: "Invoice No", key: "invoiceNo"},
@@ -108,12 +165,12 @@ export default class ReceivePurchaseList extends List {
     const {form, locale } = this.props;
     const fetchingProps = this.props[this.fetchingProp];
     return(
-      <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
+      <this.Form onSubmit={this.handleSubmitFilter}>
         <this.Row className="main-search-layout form-group">
           <this.Col md="2">
             <this.InputText
               name="key"
-              label={<this.Translate id="input_stock_purchase_key" />}
+              label={<this.Translate id="text_key" />}
               placeholder={this.CATranslate("stock_receive_purchase_search_key_place_holder", locale)}
               isAutoFocus={true}
               form={form}/>
@@ -147,61 +204,4 @@ export default class ReceivePurchaseList extends List {
 
   }
 
-}
-
-class Column extends List {
-  constructor(props) {
-    super(props);
-    return [
-      this.columnCreatedAt,
-      {
-        title: <this.Translate id="text_name" />,
-        dataIndex: "name",
-        key: "name",
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_supplier" />,
-        dataIndex: "supplier",
-        key: "supplierId",
-        sorter: true,
-        width: 140,
-        render: supplier => supplier ? supplier.name: this.emptyText
-      },
-      {
-        title: <this.Translate id="text_invoice_no" />,
-        dataIndex: "invoiceNo",
-        width: 120,
-        key: "invoiceNo",
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_due_date" />,
-        dataIndex: "deliveryDueDate",
-        key: "deliveryDueDate",
-        width: 160,
-        sorter: true,
-        render: deliveryDueDate => this.formatDate(deliveryDueDate)
-      },
-      {
-        title: <this.Translate id="text_shipping_fee" />,
-        dataIndex: "shippingFee",
-        width: 130,
-        align: "right",
-        key: "shippingFee",
-        render: shippingFee => this.formatCurrency(shippingFee),
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_total" />,
-        dataIndex: "receiveTotal",
-        width: 130,
-        key: "receiveTotal",
-        align: "right",
-        sorter: true, 
-        render: receiveTotal => this.formatCurrency(receiveTotal) 
-      }
-    ];
-  }
-  
 }

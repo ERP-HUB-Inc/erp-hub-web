@@ -15,6 +15,7 @@ export default class ReceivedPo extends Modal {
         title: <this.Translate id="text_no" />,
         dataIndex: "no",
         width: 40,
+        align: "center",
         key: "no",
         render: (text, record, index) => 
         {
@@ -55,7 +56,7 @@ export default class ReceivedPo extends Modal {
         dataIndex: "receiveQuantity",
         width: 150,
         key: "receiveQuantity",
-        align: "right",
+        align: "center",
         render: (text, record, index) => 
         {
           return (
@@ -187,19 +188,20 @@ export default class ReceivedPo extends Modal {
     ProductsAction.fetch(10);
   }
 
-  render(){
-    const { productLists } = this.state; 
+  render() {
 
     return(
       <div className="main-dropdown-search">
         <this.Table
           rowKey="id"
           rowClassName={record => record.status !== this.Enum.ACTIVE ? "hidden" : ""}
-          dataSource={productLists}
+          dataSource={this.state.productLists}
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
-          footer={() => <div className={`pull-right ${productLists.length > 0 ? "" : "hidden"}`}>
-            <div className="total-title text-uppercase pull-left"><this.Translate id="text_total_amount" />: </div>
+          footer={() => <div className={`pull-right ${this.state.productLists.length > 0 ? "" : "hidden"}`}>
+            <div className="total-title text-uppercase pull-left">
+              <this.Translate id="text_total_amount" />:
+            </div>
             <div className="total-value pull-left" style={{width: 100}}>
               <this.InputText name="requestTotal" disabled={true} className="ca-input-no-border grandTotal" form={this.props.form}/>
               <this.InputText name="requestTotalValue" className="hidden" form={this.props.form}/>

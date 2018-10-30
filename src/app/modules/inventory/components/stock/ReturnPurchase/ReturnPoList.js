@@ -1,12 +1,10 @@
 import React from "react";
-import ProductsAction from "../../../actions/products/product"; 
 import Modal from "../../../../common/components/shares/Modal";
 import "./index.css";
 
-export default class ReceivedPo extends Modal {
+export default class ReceivedPO extends Modal {
   constructor(props){
     super(props);
-    this.state = {};
     this.state = {
       productLists: [],
       isNotYetLoadComponentDidUpdated: true
@@ -15,77 +13,62 @@ export default class ReceivedPo extends Modal {
     this.columns = [
       {
         title: <this.Translate id="text_no" />,
-        dataIndex: "id",
-        key: "purchaseID",
-        render: (text,record,index) => 
+        dataIndex: "no",
+        width: 40,
+        align: "center",
+        key: "no",
+        render: (text, record, index) => 
         {
           return(
             <div>
-              { index + 1 }
-              <this.InputText name={`receiveId[${index}]`} type="hidden" data={record.id} form={ this.form } />
-              <this.InputText name={`productId[${index}]`} type="hidden" data={record.productId} form={ this.form } />
-              <this.InputNumber name={`statusId[${index}]`} className="hidden" data={record.status} form={ this.form } />
-              <this.InputNumber name={`totalAmount[${index}]`} className="hidden" data={record.totalPrice} form={ this.form } />
+              {index + 1}
+              <this.InputText name={`receiveId[${index}]`} type="hidden" data={record.id} form={this.form} />
+              <this.InputText name={`productId[${index}]`} type="hidden" data={record.productId} form={this.form} />
+              <this.InputNumber name={`statusId[${index}]`} className="hidden" data={record.status} form={this.form} />
+              <this.InputNumber name={`totalAmount[${index}]`} className="hidden" data={record.totalPrice} form={this.form} />
+              <this.InputNumber name={`receiveQty[${index}]`} className="hidden" data={record.receiveQuantity} form={this.form} />
+              <this.InputNumber name={`qty[${index}]`} className="hidden" data={record.quantity} form={this.form} />
+              <this.InputNumber name={`receivePrice[${index}]`} className="hidden" data={record.price} form={this.form} />
             </div>
           );
         }
       },
       {
         title: <this.Translate id="text_name" />,
-        dataIndex: "name",
-        width: "418px",
-        key: "name",
-        render: (text,record,index) => 
-        {
-          return(
-            record.productName
-          );
-        }
+        dataIndex: "productName",
+        key: "productName"
       },
       {
         title: <this.Translate id="text_quantity" />,
-        dataIndex: "requestQuantity",
-        width: "200px",
-        key: "requestQuantity",
-        render: (text,record,index) => 
-        {
-          return(
-            <div>
-              {record.quantity}
-              <this.InputNumber name={`qty[${index}]`} className="hidden" data={record.quantity} required={true} min={1} max={100} form={ this.form } />
-            </div>
-          );
-        }
+        dataIndex: "quantity",
+        width: 150,
+        align: "center",
+        key: "quantity"
       },
       {
         title: <this.Translate id="col_stock_purchase_order_receive_qty" />,
         dataIndex: "receiveQuantity",
-        width: "200px",
-        key: "receiveQuantity",
-        render: (text,record,index) => 
-        {
-          return(
-            <div>
-              { record.receiveQuantity }
-              <this.InputNumber name={`receiveQty[${index}]`} className="hidden" data={record.receiveQuantity} required={true} min={1} max={100} form={ this.form } />
-            </div>
-          );
-        }
+        width: 150,
+        align: "center",
+        key: "receiveQuantity"
       },
       {
         title: <this.Translate id="col_stock_purchase_order_return_qty" />,
         dataIndex: "returnQty",
-        width: "200px",
+        width: 150,
+        align: "center",
         key: "returnQty",
-        render: (text,record,index) => 
+        render: (text, record, index) => 
         {
-          return(
-            <this.InputText 
-              name={`returnQty[${index}]`} 
+          return (
+            <this.InputNumber
+              name={`returnQty[${index}]`}
+              className="text-right"
               data={record.returnQuantity} 
-              required={true} 
-              min={1} 
-              max={100} 
+              required={true}
+              isHideTool={true}
+              isAutoSelect={true}
+              precision={0}
               form={ this.form } 
               handleKeyUp={(e) => this.handleOnChangeQuantity(e, index)}
             />
@@ -95,27 +78,18 @@ export default class ReceivedPo extends Modal {
       {
         title: <this.Translate id="text_price" />,  
         dataIndex: "price",
-        width: "200px",
+        width: 100,
+        align: "right",
         key: "price",
-        render: (text,record,index) => 
-        {
-          return(
-            <div>
-              {record.price}
-              <this.InputNumber name={`receivePrice[${index}]`} className="hidden" data={record.price} required={true} min={1} max={100} form={ this.form } />
-            </div>
-          );
-        }
+        render: price => this.formatCurrency(price)
       },
       {
         title: <this.Translate id="text_total" />,
-        dataIndex: "composite_product_action",
-        key: "key5",
-        render: (text,record,index) => {
-          return(
-            this.formatCurrency(record.totalPrice) 
-          );
-        }
+        dataIndex: "totalPrice",
+        width: 100,
+        align: "right",
+        key: "totalPrice",
+        render: totalPrice => this.formatCurrency(totalPrice)
       }
     ];
 
@@ -162,10 +136,7 @@ export default class ReceivedPo extends Modal {
       });
 
       this.grandTotal(existingProductList); 
-
     }
-  
-  
   }
 
   calculateTotalAmountEachRow(e, index) {
@@ -183,7 +154,6 @@ export default class ReceivedPo extends Modal {
       }
     });
     this.props.form.setFieldsValue({[`totalPrice[${index}]`]: this.formatCurrency(this.calculateTotalAmountEachRow(e, index))});
-
     this.setState({productLists: existingProductList});
     this.grandTotal(existingProductList);
     
@@ -191,7 +161,7 @@ export default class ReceivedPo extends Modal {
 
   grandTotal(productList) {
     let grandTotal = 0;
-    productList.forEach((product, index) => {
+    productList.forEach(product => {
       if (product.status === this.Enum.ACTIVE) {
         grandTotal += (product.quantity * product.price);
       }
@@ -201,39 +171,23 @@ export default class ReceivedPo extends Modal {
     this.props.form.setFieldsValue({requestTotalValue: `${grandTotal}`});
   }
 
-  productList(){
-    return(
-      this.props.dataSource
-    );
-  }
-
-
-  componentDidMount(){
-    ProductsAction.fetch(10);
-  }
-
-
-  render(){
-    const { productLists } = this.state; 
-
-    return(
+  render() {
+    return (
       <div className="main-dropdown-search">
         <this.Table
           rowKey="returnpoId"
           rowClassName={record => record.status !== this.Enum.ACTIVE ? "hidden" : ""}
-          dataSource={productLists}
+          dataSource={this.state.productLists}
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
-          footer={() => <div className={` ${productLists.length > 0 ? "" : "hidden"}`}>
-            <div className="total-purchase-right"><this.Translate id="text_total_amount" />: </div>
-            <div className="receive-purchase-total-amount">
-              <this.InputText name="requestTotal" disabled={true} className="grandTotal" form={this.props.form}/>
+          footer={() => <div className={`pull-right ${this.state.productLists.length > 0 ? "" : "hidden"}`}>
+            <div className="total-title text-uppercase pull-left">
+              <this.Translate id="text_total_amount" />: </div>
+            <div className="total-value pull-left" style={{width: 100}}>
+              <this.InputText name="requestTotal" disabled={true} className="ca-input-no-border grandTotal" form={this.props.form}/>
               <this.InputText name="requestTotalValue" className="hidden" form={this.props.form}/>
             </div>
-            <div className="" style={{width: 150}}></div>
-            <div style={{clear: "both"}}></div>
-          </div>}
-        /> 
+          </div>}/>
       </div>
     );
   }   

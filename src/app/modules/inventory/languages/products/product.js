@@ -199,12 +199,6 @@ export default {
     "0.00"
   ],
 
-  "input_product_shipping_fee": [
-    "Shipping Fee",
-    "Shipping Fee",
-    "Shipping Fee"
-  ],
-
   "input_product_shipping_fee_placeholder": [
     "0.00",
     "0.00",

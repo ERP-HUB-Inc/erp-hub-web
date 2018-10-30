@@ -24,7 +24,7 @@ export default class PO extends Component {
                       <td colSpan="3" style={{textAlign: "left"}}>
                         <img
                           src={this.Util.getProductImage(logo, "general").url}
-                          alt=""/>
+                          alt="" style={{width: "70px"}}/>
                       </td>
                       <td colSpan="1"></td>
                       <td colSpan="3" style={{ fontSize: "30px", fontWeight: "600",  position: "relative", overflow: "hidden" }}>
