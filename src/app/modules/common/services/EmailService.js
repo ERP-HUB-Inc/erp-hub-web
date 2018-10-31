@@ -8,13 +8,22 @@ class EmailService extends BaseService {
   }
 	
   send(content, email, subJect) {
+    let from = "";
+    let fromEmail = "";
+    const currentSetting = this.Util.getSetting();
+    if (currentSetting) {
+      from = currentSetting.storeName;
+      fromEmail = currentSetting.email;
+    }
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     this.header["email"] = email;
     return this.POST({
       url: `${this.baseUrl}/send`,
       data: {
         content,
-        subJect
+        subJect,
+        from,
+        fromEmail
       },
       headers: this.header
     });

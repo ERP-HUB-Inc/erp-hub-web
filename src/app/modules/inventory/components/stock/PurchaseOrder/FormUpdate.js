@@ -75,6 +75,8 @@ export default class Form extends Modal {
       "isFocusOnSearchCompositeProduct"
     ]);
 
+    values["deliveryDueDate"] = this.Util.formatDateForMYSQL(values.deliveryDueDate);
+    values["referenceId"] = this.props.purchaseOrderDetail.data.referenceId;
     values["shippingFee"] = this.props.purchaseOrderDetail.data.shippingFee;
     values["receiveTotal"] = this.props.purchaseOrderDetail.data.receiveTotal;
     values["returnTotal"] = this.props.purchaseOrderDetail.data.returnTotal;
@@ -101,7 +103,7 @@ export default class Form extends Modal {
       
       // APPEND MORE DATA FOR EMAIL PO
       values["number"] = this.props.purchaseOrderDetail.data.number;
-      values["number"] = this.props.purchaseOrderDetail.data.number;
+      values["referenceNumber"] = this.props.purchaseOrderDetail.data.reference ? this.props.purchaseOrderDetail.data.reference.number : null;
       values["supplier"] = supplier;
       values["location"] = this.Util.getDBFromLocalStorageById(Enum.LOCAL_SCHEMA.LOCATION, values["locationId"]);
       values["employee"] = this.props.purchaseOrderDetail.data.user;

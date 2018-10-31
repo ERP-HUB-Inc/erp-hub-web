@@ -143,9 +143,6 @@ export default class ClientSignIn extends Component {
                   </this.FormGroup>
                   <div className="signin-button">
                     <this.FormGroup>
-                      <this.Link className="store-link" to="/register">
-                      it's not my store
-                      </this.Link>
                       <div className="main-signin">
                         <this.Button loading={signinUser.submiting} htmlType="submit" type="info">Sign In</this.Button>
                       </div>

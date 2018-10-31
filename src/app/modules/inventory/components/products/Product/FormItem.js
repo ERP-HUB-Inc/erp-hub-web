@@ -509,7 +509,7 @@ export default class FormItem extends Modal {
                 <this.Col md="4">
                   <this.InputNumber
                     name="shippingFee"
-                    label={<span><this.Translate id="input_product_shipping_fee" /><span> ({currentUser.setting.currency})</span></span>}
+                    label={<span><this.Translate id="text_shipping_fee" /><span> ({currentUser.setting.currency})</span></span>}
                     data={formData.shippingFee === 0 ? null : formData.shippingFee}
                     placeholder={this.CATranslate("input_product_shipping_fee_placeholder", locale)}
                     max={99999999}

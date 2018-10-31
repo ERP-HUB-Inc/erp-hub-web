@@ -7,30 +7,23 @@ import ReceivePurchaseAction from "../../../actions/stock/receivePurchase";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.width = "70%";
+    this.wrapClassName = "wrap-modal-po";
     this.confirmTextAction = <this.Translate id="text_confirm_receive"/>;
     this.confirmTitle = <this.Translate id="text_confirm_receive_title"/>;
     this.dispatch = this.props.dispatch;
     this.title = <this.Translate id="text_receive_order" />;
-    this.handleSubmitConfirmAction = this.handleSubmitConfirmAction.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleReceive = this.handleReceive.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
   }
 
-  handleReceive(){
-    this.setState({modalVisible: true});
-    this.renderModalConfirmAction();
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.receivePurchaseUpdate.updated) {
+      this.setState({modalVisible: false});
+      this.props.dispatch(ReceivePurchaseAction.reset());
+    }
   }
 
   handleSubmitConfirmAction() {
-    this.setState({modalVisible: false});
-    this.handleSubmit();
-  }
-
-  handleSubmit () {
     this.props.form.validateFieldsAndScroll((err, values) => {
-
       if (!err) { 
         values["id"] = this.props.receivePurchaseDetail.data.id;
 
@@ -62,7 +55,8 @@ export default class Form extends Modal {
           "totalAmount"
         ]);
 
-      
+        
+        values["referenceId"] = this.props.receivePurchaseDetail.data.referenceId;
         values["requestTotal"] = parseFloat(this.props.receivePurchaseDetail.data.requestTotal);
         values["receiveTotal"] = parseFloat(values.requestTotalValue);
         values["returnTotal"] = this.props.receivePurchaseDetail.data.returnTotal;
@@ -72,25 +66,26 @@ export default class Form extends Modal {
     
         values["POEntries"] = POEntries;
 
-        console.log("Update Values:", values);
-
         this.dispatch(ReceivePurchaseAction.update(values));
-        const filter = JSON.stringify({step: [Enum.PO_STEP.PROCESS]});
-        this.dispatch(ReceivePurchaseAction.fetch(this.pageSize, 0, "", "", filter));
-
+        // const filter = JSON.stringify({step: [Enum.PO_STEP.PROCESS]});
+        // this.dispatch(ReceivePurchaseAction.fetch(this.pageSize, 0, "", "", filter));
       }
-
     });
   }
 
-  
+  handleSubmit (e) {
+    e.preventDefault();
+    this.setState({modalVisible: true});
+    this.renderModalConfirmAction();
+  }
+
   renderCrudAction(){
     return(
       <div className="ant-modal-footer">
         <this.Button onClick={this.handleCancel} className="danger btn-push-to-supplier">
           <span className="icon-save "></span> <this.Translate id="text_cancel"/>
         </this.Button>
-        <this.Button onClick={this.handleReceive} className="info btn-push-to-supplier">
+        <this.Button htmlType="submit" className="info btn-push-to-supplier">
           <span className="icon-save "></span> <this.Translate id="text_receive"/>
         </this.Button>
       </div>
@@ -98,6 +93,7 @@ export default class Form extends Modal {
   }
 
   handleCancel() {
+    this.setState({modalVisible: false});
     this.dispatch(ReceivePurchaseAction.reset());
   }
 
@@ -113,7 +109,7 @@ export default class Form extends Modal {
       locale
     } = this.props;
     
-    this.submitLoading = receivePurchaseUpdate.updating;
+    this.submitConfirmActionLoading = receivePurchaseUpdate.updating;
 
     if (receivePurchaseDetail.showForm) {
       this.content = (
@@ -125,8 +121,7 @@ export default class Form extends Modal {
             supplier={supplier} 
             dispatch={dispatch} 
             form={form} 
-            locale={locale}
-          />
+            locale={locale}/>
           {this.renderModalConfirmAction()}
         </div>
       );

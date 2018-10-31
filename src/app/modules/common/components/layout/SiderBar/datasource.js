@@ -61,20 +61,15 @@ const ReceiveOrder = Loadable({
   loading: () => <StartUp />,
 });
 
-const Print = Loadable({
-  loader: () => import("../../../../inventory/containers/stock/Report"),
-  loading: () => <StartUp />,
-});
-
 const StockReturn = Loadable({
   loader: () => import("../../../../inventory/containers/stock/ReturnPurchase"),
   loading: () => <StartUp />,
 });
 
-const StockTransfer = Loadable({
-  loader: () => import("../../../../inventory/containers/stock/StockTransfer"),
-  loading: () => <StartUp />,
-});
+// const StockTransfer = Loadable({
+//   loader: () => import("../../../../inventory/containers/stock/StockTransfer"),
+//   loading: () => <StartUp />,
+// });
 
 const Supplier = Loadable({
   loader: () => import("../../../../inventory/containers/stock/Supplier"),
@@ -323,13 +318,13 @@ const dataSource = {
       //   component: ReOrderPoint,
       //   isFashNav: false
       // },
-      {
-        title: "Stock Transfer",
-        icon: "icon-stock-transfer",
-        route: "/stock/transfer",
-        component: StockTransfer,
-        isFashNav: false
-      },
+      // {
+      //   title: "Stock Transfer",
+      //   icon: "icon-stock-transfer",
+      //   route: "/stock/transfer",
+      //   component: StockTransfer,
+      //   isFashNav: false
+      // },
       {
         title: "Stock Return",
         icon: "icon-sale-return",

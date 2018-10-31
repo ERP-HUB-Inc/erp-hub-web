@@ -42,9 +42,9 @@ export default class BaseService extends Service {
     sortOrder,
     filter, // {"column1": [value1, value2], "column2": [value1, value2]}
     searchKey, // {"column": ["columnname1", "columnname2"], "value": "hello"}
-    languageId = "en",
     rangFilter// {"column": "createdAtt", "value": [1, 100]}
   ) {
+    const languageId = this.getLanguageId();
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.GET({ 
       url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${languageId}`,  

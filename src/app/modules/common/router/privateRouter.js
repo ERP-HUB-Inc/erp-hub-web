@@ -11,8 +11,21 @@ const PrivateRoute = ({component: AdminComponent, ...rest }) => (
 );
 
 function renderPageAuth () {
+  const no_restrict_route = [
+    "/register"
+  ];
+
   const domainInfo = (new Util()).getDomainInfo();
-  return domainInfo.subStr === Authentication.SECURE_SUBDOMAIN
+
+  const isAccessSecureSubDomain = domainInfo.subStr === Authentication.SECURE_SUBDOMAIN;
+
+  if (isAccessSecureSubDomain) {
+    if (no_restrict_route.find(value => value === window.location.pathname)) {
+      return <Redirect to="/register" />;
+    }
+  }
+
+  return isAccessSecureSubDomain
     ? <Redirect to="/signin/store" /> : <Redirect to="/signin" />;
 }
 

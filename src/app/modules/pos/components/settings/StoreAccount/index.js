@@ -1,4 +1,5 @@
 import React from "react";
+import history from "../../../../common/router/history";
 import StoreAccountAction from "../../../action/settings/storeAccount";
 import TaxAction from "../../../action/settings/tax";
 import LanguageAction from "../../../action/settings/storeLanguage";
@@ -82,6 +83,7 @@ export default class StoreAccountList extends Component {
       if (!err) {
         values["id"] = this.client.clientId;
         values["userId"] = this.client.userId;
+        values["logo"] = this.getImageFromUpload(values, "logo");
         values["status"] = "1";
         this.dispatch(StoreAccountAction.update(values));
       }
@@ -125,6 +127,7 @@ export default class StoreAccountList extends Component {
 
     if(response.updated === true){
       this.Message.success(this.successMessage);
+      this.Util.logout(history);
       this.dispatch(StoreAccountAction.reset());
     }
 
@@ -193,6 +196,20 @@ export default class StoreAccountList extends Component {
                       form={form}
                       isAutoFocus={true}
                       required/>
+
+                    <this.UploadImg 
+                      name="logo" 
+                      label={<this.Translate id="text_logo" />}
+                      fileList={[{
+                        uid: "-1",
+                        name: storeAccount.list.logo,
+                        status: "done",
+                        url: this.Util.getProductImage(storeAccount.list.logo, this.Enum.IMAGE_SPACE.GENERAL).url
+                      }]}
+                      endPoint={`${this.Util.getAPIURL()}/file/v1/upload/general`}
+                      endPointDelete={`${this.Util.getAPIURL()}/file/v1/general/delete`}
+                      accessToken={this.Util.getAccessToken()}
+                      form={form} />
 
                     <this.InputText
                       name="storeName"

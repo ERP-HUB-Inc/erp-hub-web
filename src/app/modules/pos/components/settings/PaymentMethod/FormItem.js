@@ -4,6 +4,7 @@ import Modal from "../../../../common/components/shares/Modal";
 export default class FormItem extends Modal {
   render() {
     const {formData, form, locale} = this.props;
+    console.log("Data:", formData.isEnableOnPOS);
     return (
       <div>
         <this.InputText

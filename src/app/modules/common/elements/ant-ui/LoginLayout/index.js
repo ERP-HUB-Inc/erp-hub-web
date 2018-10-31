@@ -22,7 +22,7 @@ export class LoginLayout extends React.Component {
               </div>
             </div>
             <div className="blog-login">
-              <div className="wrap-help"><span className="icon-help icon-padding-right"></span><span className="help">Help</span></div>
+              {/* <div className="wrap-help"><span className="icon-help icon-padding-right"></span><span className="help">Help</span></div> */}
               <div className="header text-right">
                 <div className="title"><strong>store</strong>Vein</div>
                 <div className="back-office">Backoffice</div>

@@ -33,7 +33,7 @@ export default class SearchPo extends Modal {
         }
       },
       {
-        title: <this.Translate id="text_name" />,
+        title: <this.Translate id="text_product_name" />,
         dataIndex: "name",
         key: "name",
         render: (text, record, index) => 
@@ -60,6 +60,7 @@ export default class SearchPo extends Modal {
           return <this.InputNumber
             name={`purchaseQty[${index}]`}
             data={`${record.quantity}`}
+            className="text-right"
             isAutoSelect={true}
             isHideTool={true}
             precision={0}
@@ -78,6 +79,7 @@ export default class SearchPo extends Modal {
           return <this.InputNumber
             name={`purchasePrice[${index}]`}
             data={`${record.price}`}
+            className="text-right"
             isAutoSelect={true}
             isHideTool={true}
             handleKeyUp={(e) => this.handleOnChangePrice(e, index)}
@@ -94,7 +96,7 @@ export default class SearchPo extends Modal {
           return <div>
             <this.InputText
               name={`totalPrice[${index}]`}
-              className="totalPrice"
+              className="totalPrice text-right"
               data={this.formatCurrency(record.totalPrice)}
               disabled={true}
               form={this.form} />
@@ -220,7 +222,7 @@ export default class SearchPo extends Modal {
   }
 
   handleOnSelectList(value) {
-    const productName = value.productDescriptions.length > 0 ?  value.productDescriptions[0].name : "";
+    const productName = Util.getProductName(value);;
 
     const {quantity, price} = value;
     const existingProductList = this.state.productLists;
@@ -287,7 +289,7 @@ export default class SearchPo extends Modal {
           footer={() => <div className={`float-right ${productLists.length > 0 ? "" : "hidden"}`}>
             <div className="total-title text-uppercase pull-left"><this.Translate id="text_total_amount" />: </div>
             <div className="total-value pull-left">
-              <this.InputText name="requestTotal" disabled={true} className="grandTotal" form={this.props.form}/>
+              <this.InputText name="requestTotal" disabled={true} className="ca-input-no-border grandTotal" form={this.props.form}/>
               <this.InputText name="requestTotalValue" className="hidden" form={this.props.form}/>
             </div>
             <div className="pull-left" style={{width: 150}}></div>

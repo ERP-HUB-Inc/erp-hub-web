@@ -1,12 +1,12 @@
 import Constant from "../../constants/stock/receivePurchase";
-import receivePurchaseService from "../../services/stock/ReceivePurchaseService";
+import ReceivePurchaseService from "../../services/stock/ReceivePurchaseService";
 
 export default {
-  fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
+  fetch: (limit, offset, sortField, sortOrder, filter, searchKey, rangFilter) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_RECEIVE_PURCHASE,
-        payload: receivePurchaseService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
+        payload: ReceivePurchaseService.lists(limit, offset, sortField, sortOrder, filter, searchKey, rangFilter)
       });
     };
   },
@@ -14,7 +14,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ARCHIVE_RECEIVE_PURCHASE,
-        payload: receivePurchaseService.archive(ids)
+        payload: ReceivePurchaseService.archive(ids)
       });
     };
   },
@@ -22,7 +22,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ADD_RECEIVE_PURCHASE,
-        payload: receivePurchaseService.add(data)
+        payload: ReceivePurchaseService.add(data)
       });
     };
   },
@@ -30,7 +30,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_RECEIVE_PURCHASE,
-        payload: receivePurchaseService.update(data)
+        payload: ReceivePurchaseService.update(data)
       });
     };
   },
@@ -46,7 +46,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.RECEIVE_PURCHASE_ORDER_DETAIL,
-        payload: receivePurchaseService.detail(data.id)
+        payload: ReceivePurchaseService.detail(data.id)
       });
     };
   },

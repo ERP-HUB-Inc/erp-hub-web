@@ -1,0 +1,8 @@
+.wrap-po-filter  {
+    margin-left: 0;
+    margin-right: 0
+}
+
+#purchase-receive-form .wrap-due-date .ant-form-item {
+    margin-bottom: 0 !important
+}

@@ -304,7 +304,7 @@ class Column extends List {
     super(props);
     return [
       {
-        title: <this.Translate id="col_products_name" />,
+        title: <this.Translate id="text_product_name" />,
         key: "productDescriptions",
         width: 300,
         render: (text, record, index) => {

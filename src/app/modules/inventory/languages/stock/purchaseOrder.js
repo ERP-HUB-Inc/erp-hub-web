@@ -5,6 +5,54 @@ export default {
     "Purchase Order"
   ],
 
+  "text_diliver_date": [
+    "Delivery Date",
+    "Delivery Date",
+    "Delivery Date"
+  ],
+
+  "text_order_qty": [
+    "Order QTY",
+    "Order QTY",
+    "Order QTY"
+  ],
+
+  "text_receive_qty": [
+    "Received QTY",
+    "Received QTY",
+    "Received QTY"
+  ],
+
+  "text_order_amount": [
+    "Order Amount",
+    "Order Amount",
+    "Order Amount"
+  ],
+
+  "text_receive_amount": [
+    "Received Amount",
+    "Received Amount",
+    "Received Amount"
+  ],
+
+  "text_po_no": [
+    "Po No",
+    "Po No",
+    "Po No"
+  ],
+
+  "text_ref_po_no": [
+    "Ref. Po No",
+    "Ref. Po No",
+    "Ref. Po No"
+  ],
+
+  "text_receive_location": [
+    "Receive Location",
+    "Receive Location",
+    "Receive Location"
+  ],
+
   "button_search_stock_purchase_order_export_csv":[
     "Export CSV",
     "Export CSV",
@@ -47,22 +95,16 @@ export default {
     "Paid"
   ],
 
-  "input_stock_purchase_key": [
-    "Key",
-    "Key",
-    "Key"
-  ],
-
   "input_stock_purchase_order_number": [
     "Order Number",
     "Order Number",
     "Order Number",
   ],
 
-  "input_stock_purchase_invoice_no": [
-    "Invoice No",
-    "Invoice No",
-    "Invoice No",
+  "text_supplier_invoice": [
+    "Supplier Invoice No",
+    "Supplier Invoice No",
+    "Supplier Invoice No"
   ],
   
   "input_stock_purchase_order_supplier": [
@@ -75,12 +117,6 @@ export default {
     "Delivery to Location",
     "Delivery to Location",
     "Delivery to Location",
-  ],
-
-  "col_stock_purchase_order_description": [
-    "Product description",
-    "Product description",
-    "Product description",
   ],
 
   "col_stock_purchase_order_on_hand": [

@@ -1,82 +1,103 @@
 import React from "react";
-import SupplierAction from "../../../actions/stock/supplier";
-import LocationAction from "../../../../pos/action/settings/storeLocation";
+import ReturnPoList from "./ReturnPOList";
+import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
-import ReturnPoList from "./ReturnPoList";
 
 export default class FormItem extends Modal {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      ...this.state,
+      locations: [],
+      suppliers: []
+    };
+  }
   componentDidMount(){
-    const { dispatch } = this.props;
-    dispatch(SupplierAction.fetch());
-    dispatch(LocationAction.fetch());
+    this.setState({
+      locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION)),
+      suppliers: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.SUPPLIER))
+    });
   }
 
-
   render() {
-    const { form,formData,storeLocation,supplier} = this.props;
+    const {form, formData} = this.props;
     return (
-      <div id="purchase-order-form" className="receive-purchase-form">
-        <this.Row>
+      <div id="return-order-form">
+        <this.Row className="ca-penel-v1 wrap-po-filter">
           <this.Col md="2">
-            <label><this.Translate id="input_stock_purchase_order_name" /> </label><br/>
-            <label><b>{formData.name}</b></label>  
+            <this.InputText
+              name="name"
+              label={<this.Translate id="text_name" />}
+              data={formData.name}
+              disabled={true}
+              form={this.props.form}/>
           </this.Col>
           <this.Col md="2">
-            <label><this.Translate id="input_stock_purchase_order_number" /></label><br/>
-            <label><b>{formData.number}</b></label>  
+            <this.InputText
+              name="number"
+              label={<this.Translate id="text_number" />}
+              data={formData.number}
+              disabled={true}
+              form={this.props.form}/>
           </this.Col>
           <this.Col md="2">
-            <label><this.Translate id="input_stock_purchase_invoice_no" /></label><br/>
-            <label><b>{formData.invoiceNo}</b></label>  
+            <this.InputText
+              name="invoiceNo"
+              label={<this.Translate id="text_supplier_invoice" />}
+              data={formData.invoiceNo}
+              disabled={true}
+              form={this.props.form}/>
           </this.Col>
           <this.Col md="2">
             <this.Select
-              name="supplierid"
+              name="supplierId"
               label={<this.Translate id="select_stock_receive_purchase_from_supplier" />}
               placeholder={<this.Translate id="select_stock_receive_purchase_from_supplier" />}
-              dataSource={supplier.list}
+              dataSource={this.state.suppliers}
               defaultValue={formData.supplierId}
               valueKey="id"
               form={form}
-              disabled
-            />
+              disabled/>
           </this.Col>
           <this.Col md="2">
             <this.Select
               name="locationId"
               label={<this.Translate id="select_stock_receive_delivery_to_location" />}
               placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
-              dataSource={storeLocation.list}
+              dataSource={this.state.locations}
               defaultValue={formData.locationId}
               valueKey="id"
-              form={form}
-            />
+              form={form}/>
           </this.Col>
           <this.Col md="2">
-            <label><this.Translate id="text_shipping_fee" /></label><br/>
-            <label><b>{formData.shippingFee}</b></label>  
+            <this.InputNumber
+              name="shippingFee"
+              label={<this.Translate id="text_shipping_fee" />}
+              data={formData.shippingFee}
+              disabled={true}
+              form={this.props.form}/>
           </this.Col>
-          
           <this.Col md="2">
-            <label><this.Translate id="text_due_date" /></label><br/>
-            <label><b>{this.formatDate(formData.deliveryDueDate)}</b></label>  
+            <this.InputText
+              name="deliveryDueDate"
+              label={<this.Translate id="text_due_date" />}
+              data={this.Util.formatDate(formData.deliveryDueDate)}
+              disabled={true}
+              form={this.props.form}/>
           </this.Col>          
         </this.Row>
         <this.Row>
-          <this.Col md="12"  className="purchase-order-entry">
+          <this.Col md="12" className="purchase-order-entry">
             <ReturnPoList
               returnPurchaseDetail={formData.purchaseOrderEntries}
-              form={this.props.form} 
-            />
+              form={this.props.form} />
           </this.Col>
         </this.Row>
       </div>
     );
   }
 }
-
-
 
 FormItem.defaultProps = {
   formData: {

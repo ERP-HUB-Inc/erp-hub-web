@@ -2,11 +2,11 @@ import Constant from "../../constants/stock/returnPurchase";
 import returnPurchaseService from "../../services/stock/ReturnPurchaseService";
 
 export default {
-  fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
+  fetch: (limit, offset, sortField, sortOrder, filter, searchKey, rangFilter) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_RETURN_PURCHASE,
-        payload: returnPurchaseService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
+        payload: returnPurchaseService.lists(limit, offset, sortField, sortOrder, filter, searchKey, rangFilter)
       });
     };
   },

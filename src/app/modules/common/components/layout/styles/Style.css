@@ -85,17 +85,15 @@ html,
     width: 150px
 }
 
-.ant-table-footer .grandTotal input {
-    background-color: #faf9f900;
-    opacity: 1.5;
-    cursor: default;
-    color: #9A9A9A;
-    border: none;
-}
 
 .ant-table-footer .grandTotal input {
     text-align: right;
     padding-right: 0
+}
+
+.ant-table-footer .grandTotal .ant-form-item-control {
+    line-height: 0;
+    top: -5px
 }
 
 /* BREADCRUMB */
@@ -306,6 +304,76 @@ html,
 
 .ca-input-v1-icon-left .ant-input{
     padding-left: 60px !important
+}
+
+.ant-input-number.text-right input,
+.ant-form-item.text-right input {
+    text-align: right;
+    padding-right: 5px
+}
+
+.ca-input-no-border input{
+    background-color: #faf9f900;
+    opacity: 1.5;
+    cursor: default;
+    color: #9A9A9A;
+    border: none;
+}
+
+.ca-clear-padding input {
+    padding-left: 0 !important;
+    padding-right: 0 !important
+}
+
+
+/* RADIO */
+.main-radio-acc .ant-radio-button-wrapper {
+    height: 70px;
+    width: 30%;
+    padding-top: 6px;
+    background-color: #FFFFFF;
+    border: 2px solid #CDCCCC;
+    border-radius: 3px !important;
+    margin-right: 3px;      
+}
+
+.main-radio-acc .ant-radio-button-wrapper {
+    margin-right: 16px;
+}
+
+.main-radio-acc .ant-radio-button-wrapper:last-child {
+    margin-right: 0px;
+}
+
+.main-radio-acc .ant-radio-button-wrapper-checked::before {
+    background-color: none !important;
+}
+
+.main-radio-acc .ant-radio-button-wrapper-checked {
+    box-shadow: 0 0 0 0 #4D4F5C !important
+}
+
+.main-radio-acc .ant-radio-button-wrapper-checked {
+    border: 2px solid #093163;
+    box-shadow: 0 0 0 0 #4D4F5C !important
+}
+
+.main-radio-acc .radio-group {
+    text-align: center;
+}
+
+.main-radio-acc .radio-title {
+    color: #4D4F5C;
+    font-size: 11pt;
+    font-weight: 500;
+}
+
+.main-radio-acc .language {
+    font-size: 8pt;
+    text-align: center;
+    line-height: 12pt;
+    color: #9A9A9A;
+    white-space: pre-line
 }
 
 
@@ -556,9 +624,12 @@ color: #4D4F5C;
 }
 
 .ant-modal-close-x {
-    /* display: none */
     font-size: 25pt
 }
+
+.confirm-delete .ant-modal-close-x {
+    display: none
+} 
 
 .ant-alert.ant-alert-no-icon {
     margin-bottom: 15px
@@ -664,6 +735,12 @@ color: #4D4F5C;
     background-color: #ffffff !important;
     margin-bottom: 1rem;
     padding: 5px 15px 15px 15px
+}
+
+/* UPLOAD IMAGE */
+.ant-upload.ant-upload-select-picture-card {
+    width: 100%;
+    height: 180px
 }
 
 /* DATERANGE PICKER */

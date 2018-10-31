@@ -13,6 +13,12 @@ export class Util {
     const url = `${host}:${port}/${rootPath}`;
     return url;
   }
+
+  logout(history) {
+    localStorage.removeItem(ConstantAuth.ACCESS_TOKEN);
+    localStorage.removeItem(ConstantAuth.STORE_ACCESS_TOKEN);
+    history.push("/signin");
+  }
   checkValueSwitch (values){
     return values ? 1 : 0;
   }

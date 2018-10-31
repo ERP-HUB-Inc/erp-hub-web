@@ -11,12 +11,16 @@ export default {
     "Product"
   ],
 
-  //COLUMN
-
-  "col_products_name": [
+  "text_product_name": [
     "Product Name",
     "Product Name",
     "Product Name"
+  ],
+
+  "text_product_description": [
+    "Product Description",
+    "Product Description",
+    "Product Description"
   ],
 
   "col_products_tag": [
@@ -193,12 +197,6 @@ export default {
     "0.00",
     "0.00",
     "0.00"
-  ],
-
-  "input_product_shipping_fee": [
-    "Shipping Fee",
-    "Shipping Fee",
-    "Shipping Fee"
   ],
 
   "input_product_shipping_fee_placeholder": [

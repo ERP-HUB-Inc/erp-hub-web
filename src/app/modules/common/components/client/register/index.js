@@ -92,7 +92,10 @@ class ClientRegister extends Component {
                   </div>
                 </div>
                 <div className="blog-register">
-                  <div className="wrap-help"><span className="icon-help icon-padding-right"></span><span className="help">Help</span></div>
+                  {/* <div className="wrap-help">
+                    <span className="icon-help icon-padding-right"></span>
+                    <span className="help">Help</span>
+                  </div> */}
                   <div className="header text-right">
                     <div className="title"><strong>store</strong>Vein</div>
                     <div className="back-office">Backoffice</div>
@@ -106,11 +109,11 @@ class ClientRegister extends Component {
                       label="Email"
                       placeholder="Email"
                       required={true}
+                      isAutoFocus={true}
                       errorRequired="Please input your email."
                       form={form}
                       validator={this.checkIsEmailAlreadyExist}
-                      handleKeyDown={() => this.handleKeyDown()}
-                    />
+                      handleKeyDown={this.handleKeyDown}/>
                     <this.InputPassword
                       label="Password"
                       confirmLabel="Comfirm Password"

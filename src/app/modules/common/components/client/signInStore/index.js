@@ -85,8 +85,7 @@ export default class SignInStore extends Component {
       <div>
         <this.LoginLayout
           classBlogLogin="clear-padding wrap-client-login wrap-client-sign-in-store"
-          clasBlogLogo="wrap-blog-signin-logo wrap-blog-logo"
-        >
+          clasBlogLogo="wrap-blog-signin-logo wrap-blog-logo">
           <div className="title">
             <h6>Find Your store Name </h6>
           </div>
@@ -98,16 +97,13 @@ export default class SignInStore extends Component {
                 type="text"
                 label="Store Name"
                 notation=".storevien.com"
-                className="ant-input"
                 required={true}
+                isAutoFocus={true}
                 errorRequired="Please enter your store address."
                 validateClassStatus={this.validateClassStatus}
-                handleKeyDown={() => this.handleKeyDown()}
-                form={form}
-              />
-              {
-                this.errorMessage != null ? <div className="ant-form-explain">{this.errorMessage}</div> : "" 
-              }
+                handleKeyDown={this.handleKeyDown}
+                form={form}/>
+              {this.errorMessage != null ? <div className="ant-form-explain">{this.errorMessage}</div> : "" }
               <div className="main-signin">
                 <this.Button loading={signinDomain.submiting} htmlType="submit" type="info">SUBMIT</this.Button>
               </div>

@@ -14,7 +14,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PURCHASE_ORDER,
-        payload: purchaseOrderService.lists(limit, offset, sortField, sortOrder, filter, searchKey, null, rangFilter)
+        payload: purchaseOrderService.lists(limit, offset, sortField, sortOrder, filter, searchKey, rangFilter)
       });
     };
   },
@@ -67,11 +67,11 @@ export default {
     };
   },
 
-  detail:(data, languageId) => {
+  detail:(data) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PURCHASE_ORDER_DETAIL,
-        payload: purchaseOrderService.detail(data.id, languageId)
+        payload: purchaseOrderService.detail(data.id)
       });
     };
   }

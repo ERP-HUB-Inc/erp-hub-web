@@ -133,9 +133,9 @@ export default class FormItem extends Modal {
             <this.Col md="12">
               <this.InputText   
                 name="company"
-                label={<this.Translate id="input_management_customer_company" />}
+                label={<this.Translate id="text_company" />}
                 data={formData.company}
-                placeholder={this.CATranslate("input_management_customer_company", this.props.locale)}
+                placeholder={this.CATranslate("text_company", this.props.locale)}
                 max={100}
                 form={this.props.form}/>
             </this.Col>  

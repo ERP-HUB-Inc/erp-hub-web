@@ -5,7 +5,7 @@ export class Image extends Element {
   constructor(props) {
     super(props);
     this.state = {
-      image: this.Util.getGeneralImage("no-image.png").url
+      image: this.Util.getGeneralImage("storeVein/no-image.png").url
     };
     this.mounted = false;
     this.initializeImage = this.initializeImage.bind(this);
