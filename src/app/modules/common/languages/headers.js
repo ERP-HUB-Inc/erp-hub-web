@@ -29,6 +29,11 @@ export default {
     "ပရိုဖိုင်းကို",
     "ទម្រង់"
   ],
+  "text_tutorial": [
+    "Tutorial",
+    "Tutorial",
+    "ការបង្រៀន"
+  ],
   "text_help": [
     "Help",
     "ကူညီပါ",

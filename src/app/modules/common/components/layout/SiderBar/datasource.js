@@ -187,6 +187,12 @@ const ManageCustomer = Loadable({
   loading: () => <StartUp />,
 });
 
+const Profile = Loadable({
+  loader: () => import("../../../containers/user/Profile"),
+  loading: () => <StartUp />,
+});
+
+
 /*==============================END CRM===================================*/
 
 
@@ -203,7 +209,7 @@ const dataSource = {
       {
         title: <Translate id="text_sale_history" />,
         icon: "icon-time",
-        route: "/transactions/salehistory",
+        route: "/transactions/salehistory", 
         component: SaleHistory,
         isFashNav: true
       },
@@ -390,6 +396,10 @@ const dataSource = {
         route: "/employee",
         component: ManageEmployee
       },
+      {
+        route: "/profile",
+        component: Profile
+      }
       
       // {
       //   title: "Timesheets",

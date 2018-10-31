@@ -13,8 +13,16 @@ export default class MenuDropDown extends Component {
     this.menu = (
       <Menu>
         <Menu.Item>
-          <span className="icon-user icon-padding-right"></span>
-          <span className="title"><this.Translate id="text_profile"/></span>
+          <this.Link to="/profile">
+            <span className="icon-user icon-padding-right"></span>
+            <span className="title"><this.Translate id="text_profile"/></span>
+          </this.Link>
+        </Menu.Item>
+        <Menu.Item>
+          <a href="https://www.youtube.com/channel/UCGJCcdpmRoE9T0m52DsQGVg/playlists" target="_blank" rel="noopener noreferrer">  
+            <span className="icon-help icon-padding-right"></span>
+            <span className="title"><this.Translate id="text_tutorial"/></span>
+          </a>
         </Menu.Item>
         <Menu.Item onClick={() => this.handleLogOut()}>
           <span className="icon-logout icon-padding-right"></span>

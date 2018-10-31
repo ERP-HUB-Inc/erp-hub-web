@@ -9,6 +9,7 @@ export default class Board extends Component {
           price={this.props.total}
           icon={this.props.icon}
           totalText={this.props.title}
+          to={this.props.to}
           route={this.props.route}
         />
       </this.Col>

@@ -79,7 +79,7 @@ export default class Duide extends Component {
                 <span className="icon-arrow-right arrow"></span>
               </li>
               <li>
-                <this.Link to="stock/purchase-order">
+                <this.Link to="stock/purchase/order">
                   <span className="icon-purchasing"></span>
                 </this.Link>
                 <div className="grap-guide-title grap-title">4. PURCHASING</div>
@@ -97,7 +97,7 @@ export default class Duide extends Component {
                 <span className="icon-arrow-right arrow"></span>
               </li>
               <li>
-                <this.Link to="transactions/sale-history">
+                <this.Link to="transactions/saleorder">
                   <span className="icon-sale"></span>
                 </this.Link>
                 <div className="grap-guide-title grap-title">6. SALE</div>
@@ -143,7 +143,7 @@ export default class Duide extends Component {
                 <div className="grap-guide-title grap-title">4.2. STOCK</div>
               </li>
               <li>
-                <this.Link to="dd">
+                <this.Link to="#">
                   <span className="icon-sale-return"></span>
                 </this.Link>
                 <div className="grap-guide-title grap-title">6.2 SALE RETURN</div>

@@ -44,3 +44,7 @@ export class Cards extends Component {
     );
   }
 }
+
+Cards.defaultProps = {
+  to: "#"
+};
