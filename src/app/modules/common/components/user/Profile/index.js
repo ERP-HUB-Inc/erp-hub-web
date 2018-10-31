@@ -20,7 +20,7 @@ export default class Profile extends Component {
   }
   componentDidMount(){
     this.getAccessToken();
-    this.props.dispatch(EmployeeProfileAction.detail("00000001-0002-2018-0001-000000000002"));
+    this.props.dispatch(EmployeeProfileAction.detail(this.getAccessToken()));
   }
 
   getAccessToken () {
@@ -34,6 +34,9 @@ export default class Profile extends Component {
   render() {
     const {form, locale, userProfile } = this.props;
     let getuserProfile = [];
+    if(userProfile == ""){
+      return;
+    }
     if(userProfile.data !== null && userProfile.data !== ""){
       getuserProfile = userProfile.data;
     }
