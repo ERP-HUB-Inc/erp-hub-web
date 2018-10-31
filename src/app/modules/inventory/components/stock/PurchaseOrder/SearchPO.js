@@ -222,7 +222,7 @@ export default class SearchPo extends Modal {
   }
 
   handleOnSelectList(value) {
-    const productName = value.productDescriptions.length > 0 ?  value.productDescriptions[0].name : "";
+    const productName = Util.getProductName(value);;
 
     const {quantity, price} = value;
     const existingProductList = this.state.productLists;

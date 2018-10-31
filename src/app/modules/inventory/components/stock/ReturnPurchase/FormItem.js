@@ -43,15 +43,15 @@ export default class FormItem extends Modal {
           </this.Col>
           <this.Col md="2">
             <this.InputText
-              name="invoice"
+              name="invoiceNo"
               label={<this.Translate id="text_supplier_invoice" />}
-              data={formData.number}
+              data={formData.invoiceNo}
               disabled={true}
               form={this.props.form}/>
           </this.Col>
           <this.Col md="2">
             <this.Select
-              name="supplierid"
+              name="supplierId"
               label={<this.Translate id="select_stock_receive_purchase_from_supplier" />}
               placeholder={<this.Translate id="select_stock_receive_purchase_from_supplier" />}
               dataSource={this.state.suppliers}
@@ -72,9 +72,9 @@ export default class FormItem extends Modal {
           </this.Col>
           <this.Col md="2">
             <this.InputNumber
-              name="shipping_fee"
+              name="shippingFee"
               label={<this.Translate id="text_shipping_fee" />}
-              data={this.formatCurrency(formData.shippingFee)}
+              data={formData.shippingFee}
               disabled={true}
               form={this.props.form}/>
           </this.Col>

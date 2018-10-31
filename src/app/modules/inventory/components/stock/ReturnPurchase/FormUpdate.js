@@ -10,7 +10,8 @@ export default class Form extends Modal {
     super(props);
     this.wrapClassName = "wrap-modal-po";
     this.title = <this.Translate id="text_return_purchase" />;
-    this.confirmTitle = "Do you Want to return purchase ?";
+    this.confirmTextAction = <this.Translate id="text_confirm_return_po"/>;
+    this.confirmTitle = <this.Translate id="text_confirm_return_po_title"/>;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleReturn = this.handleReturn.bind(this);
@@ -21,61 +22,59 @@ export default class Form extends Modal {
   handleSubmit () {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) { 
-        values["id"] = this.props.returnPurchaseDetail.data.id;
-
         // PREPARE RECEIVED ENTRIES
         const POEntries = [];
 
-        if (values.receiveQty) {
-          values.receiveQty.forEach((receiveQty, receiveQtyIndex) => {
+        if (values.returnQuantity) {
+          values.returnQuantity.forEach((returnQuantity, index) => {
             POEntries.push({
-              id: values.receiveId[receiveQtyIndex],
-              productId: values.productId[receiveQtyIndex],
-              requestQuantity: parseInt(values.qty[receiveQtyIndex], 10),
-              receiveQuantity: parseInt(values.receiveQty[receiveQtyIndex], 10),
-              price: values.receivePrice[receiveQtyIndex],
-              status: values.statusId[receiveQtyIndex],
+              id: values.purchaseOrderEntryId[index],
+              productId: values.productId[index],
+              returnQuantity,
+              price: values.price[index]
             });
 
           });
         }
 
         this.Util.clearObjProperty(values, [
-          "receiveId",
+          "purchaseOrderEntryId",
           "productId",
-          "qty",
-          "receiveQty",
-          "receivePrice",
-          "receiveDescription",
-          "returnQty",
-          "statusId",
-          "totalAmount"
+          "price",
+          "returnQuantity"
         ]);
 
-       
-        values["shippingFee"] = this.props.returnPurchaseDetail.data.shippingFee;
-        values["requestTotal"] = this.props.returnPurchaseDetail.data.requestTotal;
-        values["receiveTotal"] = this.props.returnPurchaseDetail.data.receiveTotal;
-        values["returnTotal"] = parseFloat(values.requestTotalValue);
+        values["id"] = this.props.returnPurchaseDetail.data.id;
+        values["referenceId"] = this.props.returnPurchaseDetail.data.referenceId;
+        values["shippingFee"] = 0;
+        values["requestTotal"] = 0;
+        values["receiveTotal"] = 0;
+        values["returnTotal"] = parseFloat(values.returnTotalValue);
         values["step"] = Enum.PO_STEP.RETURN;
         values["type"] = this.props.returnPurchaseDetail.data.type;
         values["status"] = this.props.returnPurchaseDetail.data.status;
 
         values["POEntries"] = POEntries;
 
-        console.log("Update Values:", values);
-
-        // this.dispatch(ReturnPurchaseAction.update(values));
-
-        // const filter = JSON.stringify({step: [Enum.PO_STEP.RECEIVED]});
-        // this.dispatch(ReturnPurchaseAction.fetch(this.pageSize, 0, "", "", filter));
-
+        this.dispatch(ReturnPurchaseAction.update(values));
       }
      
     });
   }
 
   handleReturn(){
+    let tractReturnQTYInputOrNot = 0;
+    const values = this.props.form.getFieldsValue();
+    if (values.returnQuantity && Array.isArray(values.returnQuantity)) {
+      values.returnQuantity.forEach(returnQuantity => {
+        tractReturnQTYInputOrNot += returnQuantity;
+      });
+    }
+    if (!(tractReturnQTYInputOrNot > 0)) {
+      this.Message.warning(this.CATranslate("text_warning_no_item_return", this.props.locale));
+      return;
+    }
+
     this.setState({modalVisible: true});
     this.renderModalConfirmAction();
   }
@@ -89,10 +88,10 @@ export default class Form extends Modal {
     return(
       <div className="ant-modal-footer">
         <this.Button onClick={this.handleCancel} className="danger btn-push-to-supplier">
-          <span className="icon-save "></span> Cancel
+          <span className="icon-cancel"></span> <this.Translate id="text_cancel"/>
         </this.Button>
         <this.Button onClick={this.handleReturn} className="info btn-push-to-supplier">
-          <span className="icon-save "></span> Return
+          <span className="icon-stock-return"></span> <this.Translate id="text_return"/>
         </this.Button>
       </div>
     );
@@ -114,9 +113,7 @@ export default class Form extends Modal {
       dispatch
     } = this.props;
 
-    this.submitLoading = returnPurchaseUpdate.updating;
-
-    console.log("returnPurchaseDetail.data",returnPurchaseDetail.data);
+    this.submitConfirmActionLoading = returnPurchaseUpdate.updating;
 
     if (returnPurchaseDetail.showForm) {
       this.content = (
@@ -128,8 +125,7 @@ export default class Form extends Modal {
             storeLocation={storeLocation}
             form={form} 
             dispatch={dispatch}
-            locale={locale}
-          />
+            locale={locale}/>
           {this.renderModalConfirmAction()}
         </div>
       );

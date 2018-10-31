@@ -85,7 +85,7 @@ export default class ReceivePurchaseList extends List {
     this.exportCsvFileName = "receive_purchase.csv";  
     this.fetchingProp = "receivePurchase";
     this.service = ReceivePurchaseService;
-    this.columnFilterWithKey = ["name"];
+    this.columnFilterWithKey = ["name", "number", "invoiceNo", "shippingFee", "requestTotal", "returnTotal", "receiveTotal"];
     this.action = ReceivePurchaseAction;
     this.showExport = true;
     this.componentHasUpdated = false;
@@ -166,7 +166,7 @@ export default class ReceivePurchaseList extends List {
     const fetchingProps = this.props[this.fetchingProp];
     return(
       <this.Form onSubmit={this.handleSubmitFilter}>
-        <this.Row className="main-search-layout form-group">
+        <this.Row className="main-search-layout">
           <this.Col md="2">
             <this.InputText
               name="key"

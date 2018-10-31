@@ -10,5 +10,23 @@ export default {
     "Search for stock return",
     "Search for stock return",
   ],
+
+  "text_confirm_return_po": [
+    "Do you want to return ?",
+    "Do you want to return ?",
+    "Do you want to return ?"
+  ],
+
+  "text_confirm_return_po_title": [
+    "Confirm Return Order",
+    "Confirm Return Order",
+    "Confirm Return Order"
+  ],
+
+  "text_warning_no_item_return": [
+    "You don't have return any product. Please input quantity to return.",
+    "You don't have return any product. Please input quantity to return.",
+    "You don't have return any product. Please input quantity to return."
+  ]
   
 };

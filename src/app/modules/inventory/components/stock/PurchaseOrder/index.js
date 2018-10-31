@@ -124,13 +124,7 @@ export default class PurchaseOrderLists extends List {
     };
 
     this.supplierList = [{name: <this.Translate id="text_all_supplier"/>, id: 0}];
-    this.columnFilterWithKey = [
-      "name",
-      "number",
-      "invoiceNo",
-      "supplierId",
-      "deliveryDueDate"
-    ];
+    this.columnFilterWithKey = ["name", "number", "invoiceNo", "shippingFee", "requestTotal", "returnTotal", "receiveTotal"];
 
     this.action = PurchaseAction;
     this.RESET_CONSTANT = Constant.RESET_PURCHASE_ORDER;
@@ -212,7 +206,7 @@ export default class PurchaseOrderLists extends List {
 
   handleShowFormEdit(rowData) {
     const {dispatch} = this.props;
-    dispatch(PurchaseAction.detail(rowData, this.getCurrentLanguageCode()));  
+    dispatch(PurchaseAction.detail(rowData));  
     this.setState({
       modalConten: <FormUpdate
         callBackGetEmail={this.getEmailPushToSupplier}
@@ -289,7 +283,7 @@ export default class PurchaseOrderLists extends List {
             <this.Col md="2">
               <this.InputText
                 name="key"
-                label={<this.Translate id="input_stock_purchase_key" />}
+                label={<this.Translate id="text_key" />}
                 placeholder={this.CATranslate("purchase_order_search_key_place_holder", locale)}
                 isAutoFocus={true}
                 form={form}/>

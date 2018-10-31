@@ -67,11 +67,11 @@ export default {
     };
   },
 
-  detail:(data, languageId) => {
+  detail:(data) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PURCHASE_ORDER_DETAIL,
-        payload: purchaseOrderService.detail(data.id, languageId)
+        payload: purchaseOrderService.detail(data.id)
       });
     };
   }

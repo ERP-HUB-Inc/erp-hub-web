@@ -1,5 +1,5 @@
 import React from "react";
-import ProductsAction from "../../../actions/products/product"; 
+import Util from "../../../utils";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class ReceivedPo extends Modal {
@@ -66,7 +66,8 @@ export default class ReceivedPo extends Modal {
               className="text-right"
               precision={0}
               isHideTool={true}
-              isAutoSelect={true}
+              isAutoFocus={index === 0}
+              isAutoSelect={index === 0}
               handleKeyUp={(e) => this.handleOnChangeQuantity(e, index)}
               form={this.form} />
           );
@@ -105,29 +106,13 @@ export default class ReceivedPo extends Modal {
   }
 
 
-  componentDidUpdate(){
-    const {receivePurchaseDetail} = this.props;
-
-    if(receivePurchaseDetail == null){
-      return;
-    }
-
-    if (receivePurchaseDetail.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
-
+  componentDidUpdate() {
+    if (this.props.receivePurchaseDetail.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
       const existingProductList = this.state.productLists;
-      
-      receivePurchaseDetail.forEach(purchaseOrderEntry => {
-        let productName = "";
-        if (purchaseOrderEntry.product) {
-          if (purchaseOrderEntry.product.productDescriptions.length > 0) {
-            productName = purchaseOrderEntry.product.productDescriptions[0].name;
-          }
-
-        }
-
-        existingProductList.push({
+      this.props.receivePurchaseDetail.forEach(purchaseOrderEntry => {
+        this.state.productLists.push({
           id: purchaseOrderEntry.id,
-          productName,
+          productName: Util.getProductName(purchaseOrderEntry.product),
           productId: purchaseOrderEntry.productId,
           quantity: purchaseOrderEntry.requestQuantity, 
           receiveQuantity: purchaseOrderEntry.receiveQuantity,
@@ -135,13 +120,13 @@ export default class ReceivedPo extends Modal {
           totalPrice: purchaseOrderEntry.requestQuantity * purchaseOrderEntry.price,
           status: purchaseOrderEntry.status
         }); 
-       
       });
       
       this.setState({
         productLists: existingProductList,
         isNotYetLoadComponentDidUpdated: false
       });
+      
       this.grandTotal(existingProductList);
     }
   }
@@ -154,11 +139,7 @@ export default class ReceivedPo extends Modal {
 
   handleOnChangeQuantity(e, index) {
     const existingProductList = this.state.productLists;
-    existingProductList.forEach((product, productIndex) => {
-      if (productIndex === index) {
-        existingProductList[productIndex]["receiveQuantity"] = e.target.value;
-      }
-    });
+    existingProductList[index]["receiveQuantity"] = e.target.value;
     this.props.form.setFieldsValue({[`totalPrice[${index}]`]: this.formatCurrency(this.calculateTotalAmountEachRow(e, index))});
 
     this.setState({productLists: existingProductList});
@@ -168,7 +149,7 @@ export default class ReceivedPo extends Modal {
 
   grandTotal(productList) {
     let grandTotal = 0;
-    productList.forEach((product, index) => {
+    productList.forEach(product => {
       if (product.status === this.Enum.ACTIVE) {
         grandTotal += (product.receiveQuantity * product.price);
       }
@@ -178,23 +159,11 @@ export default class ReceivedPo extends Modal {
     this.props.form.setFieldsValue({requestTotalValue: `${grandTotal}`});
   }
 
-  productList(){
-    return(
-      this.props.dataSource
-    );
-  }
-
-  componentDidMount(){
-    ProductsAction.fetch(10);
-  }
-
   render() {
-
     return(
       <div className="main-dropdown-search">
         <this.Table
           rowKey="id"
-          rowClassName={record => record.status !== this.Enum.ACTIVE ? "hidden" : ""}
           dataSource={this.state.productLists}
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}

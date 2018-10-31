@@ -82,10 +82,8 @@ export default class ReturnPurchaseList extends List {
     this.componentHasUpdated = false;
     this.exportCsvFileName = "stock_return.csv"; 
     this.fetchingProp = "returnPurchase";
-    this.addingProp = "returnPurchaseAdd";
-    this.updatingProp = "returnPurchaseUpdate";
     this.service = ReturnPurchaseService;
-    this.columnFilterWithKey = ["name"];
+    this.columnFilterWithKey = ["name", "number", "invoiceNo", "shippingFee", "requestTotal", "returnTotal", "receiveTotal"];
     this.action = ReturnPurchaseAction;
     this.RESET_CONSTANT = Constant.RESET_RETURN_PURCHASE;
   }
@@ -135,12 +133,11 @@ export default class ReturnPurchaseList extends List {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
-          const {dispatch} = this.props;
           let filter = {};
           let rangFilter = {};
 
-          if (values.step !== -1) {
-            filter["step"] = [Enum.PO_STEP.RETURN];
+          if (values.supplierId !== 0) {
+            filter["supplierId"] = [values.supplierId];
           }
       
           if (values.deliveryDueDate) {
@@ -150,10 +147,8 @@ export default class ReturnPurchaseList extends List {
     
           filter = JSON.stringify(filter);
 
-          console.log("due date",values.deliveryDueDate);
-
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
-          dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
+          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
           this.setState({isClickFilter: true});
         }
       
@@ -166,12 +161,13 @@ export default class ReturnPurchaseList extends List {
     const fetchingProps = this.props[this.fetchingProp];
     return (
       <this.Form onSubmit={this.handleSubmitFilter}>
-        <this.Row className="main-search-layout form-group">
+        <this.Row className="main-search-layout">
           <this.Col md="2">
             <this.InputText
               name="key"
               label={<this.Translate id="text_key" />}
               placeholder={this.CATranslate("stock_purchase_search_key_place_holder", locale)}
+              isAutoFocus={true}
               form={form}/>
           </this.Col>
           <this.Col md="2">
