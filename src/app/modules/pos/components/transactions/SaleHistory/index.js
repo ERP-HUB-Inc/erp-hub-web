@@ -270,9 +270,6 @@ export default class SaleHistoryList extends List {
       setDefaultDate : [moment(getCurrentDate, "YYYY-MM-DD"), moment(getCurrentDate, "YYYY-MM-DD")]
     });
 
-    // let getCurrentDate = new Date().toISOString().slice(0,10); 
-    
-    // this.props.form.validateFieldsAndScroll((err, values) => {
 
     let rangFilter = "";
     let filter = "";
@@ -284,15 +281,11 @@ export default class SaleHistoryList extends List {
         this.Util.formatDateForMYSQL(getCurrentDate)
       ]});
 
+
     let searchKey = "";
 
     this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
     this.setState({isClickFilter: true});
-
-    
-    // });
-
-   
 
   }
 

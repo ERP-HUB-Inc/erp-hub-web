@@ -254,8 +254,6 @@ export default class FormItem extends Modal {
       url: this.Util.getProductImage(formData.photo, this.Enum.IMAGE_SPACE.EMPLOYEE).url
     };
 
-    console.log("role",formData.account.roles[0].roleId);
-
     return (
       <this.Tabs type="card">
         <this.TabPane tab={<this.Translate id="text_general"/>} key="1">
