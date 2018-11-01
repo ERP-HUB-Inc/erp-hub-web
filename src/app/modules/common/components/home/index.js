@@ -10,19 +10,53 @@ export default class Home extends Component {
   constructor() {
     super();
     this.toggleDashboard = this.toggleDashboard.bind(this);
+    this.getDate = this.getDate.bind(this);
+    this.hasDidUpdate = false;
     this.state = {
-      isShowDiagram: true
+      isShowDiagram: null
     };
   }	
 
-  toggleDashboard() {
+  toggleDashboard(checked) {
     this.setState({
-      isShowDiagram: this.state.isShowDiagram ? false : true
+      isShowDiagram: checked === 0
     });
+  
+    localStorage.setItem("defaultDashboardSetting", JSON.stringify(checked));
+  }
+
+  getDate(){
+    var today = new Date();
+    var gettoday = today.getDate();
+    return gettoday;
+  }
+
+  componentWillUpdate() {
+    if(!this.hasDidUpdate){
+      console.log("will update");
+      this.hasDidUpdate = true;
+      let getDefaultSetting = localStorage.getItem("defaultDashboardSetting");
+      if(getDefaultSetting) {
+        this.setState({
+          isShowDiagram: getDefaultSetting == 0
+        });
+  
+      } else {
+        this.setState({
+          isShowDiagram: false
+        });
+      }
+
+      this.setState({
+        isShowDiagram: true
+      });
+    }
+    
   }
 
   render(){
     const {form} = this.props;
+    console.log("IsShow digram:", this.state.isShowDiagram);
     return(
       <div style={{width: "100%"}}>
         <this.Row>
@@ -33,8 +67,10 @@ export default class Home extends Component {
                   <this.BreadcrumbTitle title="Dashboad" />
                 </li>
                 <li style={{marginLeft: "15px"}}>
-                  {/* <this.Switchs onChange={ this.toggleDashboard } /> */}
-                  <this.Switchs name="switch" onChange={this.toggleDashboard} form={form} />
+                  {
+                    <this.Switchs name="switch" checked={this.state.isShowDiagram ? 1 : 0} onChange={this.toggleDashboard} form={form} />
+                      
+                  }
                 </li>
               </ul>
             </div>
@@ -42,9 +78,9 @@ export default class Home extends Component {
           </this.Col>
         </this.Row>
         <this.Row>
-          <Board total="0.00" icon="icon-dollar" title="Today's Sale" route="read"/>
+          <Board total="0.00" icon="icon-dollar" title="Today's Sale" route="read" to="transactions/salehistory?salehistory=1" />
           <Board total="0.00" icon="icon-list" title="Today's Transaction" route="read"/>
-          <Board total="0.00" icon="icon-stock" title="Today's Product Sold" route="read"/>
+          <Board total="0.00" icon="icon-stock" title="Today's Product Sold" route="read" to="products/manage"/>
           <Board total="0" icon="icon-customer" title="Total Customers" route="read"/>
         </this.Row>
 

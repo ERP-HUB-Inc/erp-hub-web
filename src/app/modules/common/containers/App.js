@@ -11,7 +11,6 @@ import StartUp from "../components/StartUp";
 
 export default class App extends React.Component {
   render() {
-
     const Application = Loadable({
       loader: () => import("../router"),
       loading: () => <StartUp />,

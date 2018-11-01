@@ -22,6 +22,18 @@ export default class BaseService extends Service {
     });
   }
 
+  profile(
+    id
+  ){
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    return this.GET({ 
+      url: `${this.baseUrl}/profile/${id}`,
+      data: this.data,
+      headers: this.header
+    });
+  }
+
+
   lists(
     limit,
     offset,

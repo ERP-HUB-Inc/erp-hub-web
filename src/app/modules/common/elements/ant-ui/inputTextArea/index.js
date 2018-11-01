@@ -18,6 +18,7 @@ export class InputTextArea extends Element {
         data={this.props.data}
         min={this.props.min}
         max={this.props.max}
+        disabled={this.props.disabled}
         onChange={this.props.handleOnChange}
       />
     );

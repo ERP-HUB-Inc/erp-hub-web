@@ -50,6 +50,14 @@ export default {
       });
     };
   },
+  detail: (id) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.DETAIL_EMPLOYEE,
+        payload:  EmployeeService.profile(id)
+      });
+    };
+  },
   requestAndShowForm: (data) => {
     return dispatch => {
       return dispatch({

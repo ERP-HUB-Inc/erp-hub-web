@@ -8,10 +8,13 @@ import TransactionAction from "../../../action/transaction/transaction";
 import LocationAction from "../../../action/settings/storeLocation";
 import UserAction from "../../../../common/actions/users";
 import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
-
+import moment from "moment";
 export default class SaleHistoryList extends List {
   constructor(props) {
     super(props);
+    this.state = {
+      setDefaultDate: []
+    };
     this.columns = new Column();
     this.title = <this.Translate id="text_sale_history"/>;
     this.fetchingProp = "list";
@@ -40,7 +43,12 @@ export default class SaleHistoryList extends List {
     super.componentDidMount();
     this.props.dispatch(LocationAction.fetch(100));
     this.props.dispatch(UserAction.fetch(100));
-  }
+
+    if(this.Util.getParameterByName("salehistory") == 1) {
+      this.handleSubmitCurrentSearchFilter();
+    }
+
+  }  
 
   componentDidUpdate() {
     const element = document.getElementById("pos-receipt-preview");
@@ -74,6 +82,7 @@ export default class SaleHistoryList extends List {
         modalConten: null
       });
     }
+
   }
 
   getCurrentUserForRePrintReceipt(data) {
@@ -177,7 +186,9 @@ export default class SaleHistoryList extends List {
     );
   }
 
+  
   renderFilterRecord() {
+
     return(
       <this.Form onSubmit={this.handleSubmitFilter}>
         <this.Row className="main-search-layout">
@@ -198,6 +209,7 @@ export default class SaleHistoryList extends List {
           <this.Col md="2">
             <this.DateRangePicker
               name="createdAt"
+              defaultValue={this.state.setDefaultDate}
               label={<this.Translate id="input_inventory_report_date" />}
               form={this.props.form}/>
           </this.Col>
@@ -206,7 +218,6 @@ export default class SaleHistoryList extends List {
               name="type"
               placeholder={this.CATranslate("text_type", this.props.locale)}
               dataSource={this.TRANSACTION_TYPE_STR}
-              defaultValue={-1}
               label={<this.Translate id="text_type" />}
               form={this.props.form}/>
           </this.Col>
@@ -240,6 +251,34 @@ export default class SaleHistoryList extends List {
     );
   }
 
+  handleSubmitCurrentSearchFilter(){
+
+    let getCurrentDate = new Date().toISOString().slice(0,10); 
+    
+    this.setState({
+      setDefaultDate : [this.Util.formatDatePicker(getCurrentDate),this.Util.formatDatePicker(getCurrentDate)]
+    });
+
+
+    let rangFilter = "";
+    let filter = "";
+
+    rangFilter = JSON.stringify({
+      column: "registerDate",
+      value: [
+        this.Util.formatDateForMYSQL(getCurrentDate),
+        this.Util.formatDateForMYSQL(getCurrentDate)
+      ]});
+
+
+    let searchKey = "";
+
+    this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
+    this.setState({isClickFilter: true});
+
+  }
+
+
   handleSubmitFilter(e) {
     if (this.action != null) {
       e.preventDefault();
@@ -270,7 +309,9 @@ export default class SaleHistoryList extends List {
                 this.Util.formatDateForMYSQL(values.createdAt[0]),
                 this.Util.formatDateForMYSQL(values.createdAt[1])
               ]});
+
           }
+          
 
           filter = JSON.stringify(filter);
 

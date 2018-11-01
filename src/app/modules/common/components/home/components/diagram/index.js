@@ -8,17 +8,18 @@ export default class Diagram extends Component {
     super(props);
     this.chartData = 
       {
-        labels: ["January", "February", "March", "April", "May", "June", "July", "Aquest", "September", "November", "December"],
-        datasets: [{
-          label: "Products sold",
-          backgroundColor: "rgba(32, 162, 219, 0.1)",
-          data: [0, 10, 5, 2, 20, 30, 45, 81, 30, 32, 34, 88],
-        },
-        {
-          label: "Total views",
-          backgroundColor: "rgba(196, 93, 105, 0.1)",
-          data: [0, 10, 35, 24, 20, 30, 45, 12, 81, 30, 32, 34],
-        },
+        labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday","Sunday"],
+        datasets: [
+          {
+            label: "Income",
+            backgroundColor: "rgba(197, 239, 247, 1)",
+            data: [0, 10, 5, 2, 20, 30, 45],
+          },
+          {
+            label: "Expense",
+            backgroundColor: "rgba(255, 148, 120, 1)",
+            data: [0, 10, 35, 24, 20, 30, 45],
+          },
         ]
       };
 
@@ -48,8 +49,6 @@ export default class Diagram extends Component {
     ];
 
   }
-
-
 
   
   render() {
@@ -82,7 +81,7 @@ export default class Diagram extends Component {
             <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-left">
               <this.Row>
                 <this.Col md="8">
-                  Title
+                  Expense
                 </this.Col>
                 <this.Col md="4">
                   <this.Select
@@ -113,7 +112,7 @@ export default class Diagram extends Component {
             <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-right">
               <this.Row>
                 <this.Col md="8">
-                  Title
+                  Income
                 </this.Col>
                 <this.Col md="4">
                   <this.Select
