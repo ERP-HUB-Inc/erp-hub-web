@@ -34,14 +34,8 @@ export default class SearchPo extends Modal {
       },
       {
         title: <this.Translate id="text_product_name" />,
-        dataIndex: "name",
-        key: "name",
-        render: (text, record, index) => 
-        {
-          return(
-            record.productName
-          );
-        }
+        dataIndex: "productName",
+        key: "productName"
       },
       {
         title: <this.Translate id="col_stock_purchase_order_on_hand" />,
@@ -63,6 +57,7 @@ export default class SearchPo extends Modal {
             className="text-right"
             isAutoSelect={true}
             isHideTool={true}
+            required={true}
             precision={0}
             handleKeyUp={(e) => this.handleOnChangeQuantity(e, index)}
             form={this.form}
@@ -82,6 +77,8 @@ export default class SearchPo extends Modal {
             className="text-right"
             isAutoSelect={true}
             isHideTool={true}
+            required={true}
+            errorRequired={<this.Translate id="error_price_require"/>}
             handleKeyUp={(e) => this.handleOnChangePrice(e, index)}
             form={this.form} />;
         }
@@ -224,7 +221,7 @@ export default class SearchPo extends Modal {
   handleOnSelectList(value) {
     const productName = Util.getProductName(value);;
 
-    const {quantity, price} = value;
+    const {quantity} = value;
     const existingProductList = this.state.productLists;
     const initialQuantity = 1;
 
@@ -234,9 +231,9 @@ export default class SearchPo extends Modal {
         productName,
         quantityOnHand: quantity,
         quantity: initialQuantity,
-        price,
+        price: 0,
         productId: value.id,
-        totalPrice: initialQuantity * price,
+        totalPrice: 0,
         purchaseEntryStatus: this.Enum.ACTIVE
       });
     } else {
@@ -245,7 +242,7 @@ export default class SearchPo extends Modal {
         if (product.productId === value.id) {
           isNotTheSameProduct = false;
           existingProductList[index]["quantity"] += 1;
-          existingProductList[index]["totalPrice"] = existingProductList[index]["quantity"] * price;
+          existingProductList[index]["totalPrice"] = existingProductList[index]["quantity"] * existingProductList[index]["price"];
         }
       });
 
@@ -254,10 +251,10 @@ export default class SearchPo extends Modal {
           purchaseEntryId: "",
           productName,
           quantityOnHand: quantity,
-          price,
+          price: 0,
           productId: value.id,
           quantity: initialQuantity,
-          totalPrice: initialQuantity * price,
+          totalPrice: 0,
           purchaseEntryStatus: this.Enum.ACTIVE
         });
       }
@@ -277,7 +274,6 @@ export default class SearchPo extends Modal {
           handleOnSelectList={this.handleOnSelectList}
           dispatch={this.props.dispatch}
           className="ca-input-v1 purchase-order"
-          isAutoFocus={true}
           locale={this.props.locale}
           form={this.props.form}/>  
         <this.Table

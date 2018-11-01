@@ -23,6 +23,12 @@ export default {
     "Confirm Return Order"
   ],
 
+  "text_return_warning": [
+    "Return can not greater than receive",
+    "Return can not greater than receive",
+    "Return can not greater than receive"
+  ],
+
   "text_warning_no_item_return": [
     "You don't have return any product. Please input quantity to return.",
     "You don't have return any product. Please input quantity to return.",

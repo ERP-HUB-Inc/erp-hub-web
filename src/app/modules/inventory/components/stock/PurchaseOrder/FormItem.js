@@ -26,7 +26,7 @@ export default class FormItem extends Modal {
     clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       this.dispatch(PurchaseOrderAction.orderNumber(PONumber));
-    }, 200);
+    }, 500);
   }
 
   componentDidMount(){

@@ -25,6 +25,8 @@ export default class ReceivedPO extends Modal {
               {index+1}
               <this.InputText name={`purchaseOrderEntryId[${index}]`} type="hidden" data={record.purchaseOrderEntryId} form={this.form} />
               <this.InputText name={`productId[${index}]`} type="hidden" data={record.productId} form={this.form} />
+              <this.InputText name={`productName[${index}]`} type="hidden" data={record.productName} form={this.form} />
+              <this.InputNumber name={`receiveQuantity[${index}]`} className="hidden" data={record.receiveQuantity} form={this.form} />
               <this.InputNumber name={`price[${index}]`} className="hidden" data={record.price} form={this.form} />
             </div>
           );
@@ -60,7 +62,8 @@ export default class ReceivedPO extends Modal {
             <this.InputNumber
               name={`returnQuantity[${index}]`}
               className="text-right"
-              data={record.returnQuantity} 
+              data={record.returnQuantity}
+              compare={{value: record.receiveQuantity, message: <this.Translate id="text_return_warning"/>}}
               required={true}
               isHideTool={true}
               isAutoFocus={index === 0}

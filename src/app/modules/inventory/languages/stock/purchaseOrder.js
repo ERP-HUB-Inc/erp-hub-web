@@ -239,4 +239,10 @@ export default {
     "Select dilivery to location"
   ],
 
+  "error_price_require": [
+    "Price require",
+    "Price require",
+    "Price require"
+  ],
+
 };

@@ -106,7 +106,7 @@ export default class FormItem extends Modal {
 
 FormItem.defaultProps = {
   formData: {
-    name:"",
+    name:"PPPPPPPP",
     description:"",
     status: 1,
     receivePurchaseid:""
