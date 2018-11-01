@@ -44,23 +44,11 @@ export default class SaleHistoryList extends List {
     this.props.dispatch(LocationAction.fetch(100));
     this.props.dispatch(UserAction.fetch(100));
 
-    if(this.getParameterByName("salehistory") == 1) {
+    if(this.Util.getParameterByName("salehistory") == 1) {
       this.handleSubmitCurrentSearchFilter();
     }
 
-  }
-
-  getParameterByName(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-      results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return "";
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-  }
-
-  
+  }  
 
   componentDidUpdate() {
     const element = document.getElementById("pos-receipt-preview");
@@ -264,10 +252,11 @@ export default class SaleHistoryList extends List {
   }
 
   handleSubmitCurrentSearchFilter(){
-    console.log("set field");
+
     let getCurrentDate = new Date().toISOString().slice(0,10); 
+    
     this.setState({
-      setDefaultDate : [moment(getCurrentDate, "YYYY-MM-DD"), moment(getCurrentDate, "YYYY-MM-DD")]
+      setDefaultDate : [this.Util.formatDatePicker(getCurrentDate),this.Util.formatDatePicker(getCurrentDate)]
     });
 
 
