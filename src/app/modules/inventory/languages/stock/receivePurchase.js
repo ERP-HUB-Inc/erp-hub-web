@@ -39,5 +39,11 @@ export default {
     "Comfirm Receive Order",
     "Comfirm Receive Order",
     "Comfirm Receive Order"
+  ],
+
+  "text_receive_qty_warning": [
+    "Receive can not greater than request",
+    "Receive can not greater than request",
+    "Receive can not greater than request"
   ]
 };

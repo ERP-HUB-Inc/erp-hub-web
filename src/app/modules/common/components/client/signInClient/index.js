@@ -1,9 +1,9 @@
 import React from "react";
+import ParentLayout from "../ParentLayout";
 import Component from "../../Component";
 import history from "../../../router/history";
 import ConstantAuth from "../../../constants/authentication";
 import ClientAction from "../../../actions/client";
-import "./index.css";
 
 export default class ClientSignIn extends Component {
   constructor(props) {
@@ -99,16 +99,16 @@ export default class ClientSignIn extends Component {
 
     if (client.fetching) {
       return (
-        <this.LoginLayout>
+        <ParentLayout>
           <div className="text-center loading">
             <this.Loading/>
           </div>
-        </this.LoginLayout>
+        </ParentLayout>
       );
     }
 
     return (
-      <this.LoginLayout>
+      <ParentLayout>
         {
           client.list ?
             <div>
@@ -118,7 +118,7 @@ export default class ClientSignIn extends Component {
               </div>
               <div className="main-field">
                 <this.Form onSubmit={this.handleSubmit}>
-                  <this.FormGroup className={this.validateClassStatus}>
+                  <div className={this.validateClassStatus}>
                     <this.InputText
                       name="username"
                       placeholder="User name"
@@ -129,10 +129,8 @@ export default class ClientSignIn extends Component {
                       required={true}
                       handleKeyDown={() => this.handleKeyDown()}
                       form={form} />
-                    {
-                      this.errorMessage != null ? <div className="ant-form-explain">{this.errorMessage}</div> : "" 
-                    }
-                  </this.FormGroup>
+                    {this.errorMessage != null ? <div className="ant-form-explain">{this.errorMessage}</div> : ""}
+                  </div>
                   <this.FormGroup>
                     <this.InputPassword
                       label="Password"
@@ -141,12 +139,9 @@ export default class ClientSignIn extends Component {
                       checkConfirm={false}
                       form={form} />
                   </this.FormGroup>
-                  <div className="signin-button">
-                    <this.FormGroup>
-                      <div className="main-signin">
-                        <this.Button loading={signinUser.submiting} htmlType="submit" type="info">Sign In</this.Button>
-                      </div>
-                    </this.FormGroup>
+                 
+                  <div className="main-signin">
+                    <this.Button loading={signinUser.submiting} htmlType="submit" type="info">Sign In</this.Button>
                   </div>
                 </this.Form>
               </div>
@@ -164,7 +159,7 @@ export default class ClientSignIn extends Component {
               </div>
             </div>
         }
-      </this.LoginLayout>
+      </ParentLayout>
     );
   }
 }

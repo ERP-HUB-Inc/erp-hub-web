@@ -52,7 +52,7 @@ export default class App extends React.Component {
           <Router history={history}>
             <div style={{height: "100%"}}>
               <Route path="/signin" component={UserLogin} />
-              <Route path="/signin/store" component={LoginStore} />
+              <Route path="/store" component={LoginStore} />
               <Route path="/register" component={ClientRegister} />
               <Route path="/register/detail" component={ClientRegisterDetail} />
               <Route path="/signin-complete" component={ClientRegisterComplete} />

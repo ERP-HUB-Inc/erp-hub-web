@@ -6,8 +6,7 @@ import ProductsTypeAction from "../../../actions/products/productsType";
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="create_products_products_type_title" />;
-    this.addingPropReducer = "productsTypeAdd";
+    this.title = <this.Translate id="text_product_type" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }

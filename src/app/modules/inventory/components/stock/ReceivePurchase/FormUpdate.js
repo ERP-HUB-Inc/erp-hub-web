@@ -64,8 +64,12 @@ export default class Form extends Modal {
 
   handleSubmit (e) {
     e.preventDefault();
-    this.setState({modalVisible: true});
-    this.renderModalConfirmAction();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        this.setState({modalVisible: true});
+        this.renderModalConfirmAction();
+      }
+    });
   }
 
   renderCrudAction(){

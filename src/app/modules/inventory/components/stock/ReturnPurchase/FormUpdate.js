@@ -75,7 +75,7 @@ export default class Form extends Modal {
       return;
     }
 
-    this.props.form.validateFieldsAndScroll((err, values) => {
+    this.props.form.validateFieldsAndScroll(err => {
       if (!err) {
         this.setState({modalVisible: true});
         this.renderModalConfirmAction();

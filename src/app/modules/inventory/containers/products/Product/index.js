@@ -24,6 +24,7 @@ function mapStateToProps(state) {
     tags: state.reducer.productsTag.request,
     productsType: state.reducer.productsType.request,
     storeLanguage: state.reducer.storeLanguage.request,
+    locations: state.reducer.storeLocation.request,
     variantAttributes: state.reducer.variantAttribute.request
   };
 }

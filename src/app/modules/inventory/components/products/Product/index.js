@@ -1,5 +1,6 @@
 import React from "react";
 import List from "../../List";
+import Util from "../../../utils";
 import Enum from "../../../enums";
 import history from "../../../../common/router/history";
 import FormCreate from "../../../containers/products/Product/FormCreate";
@@ -10,6 +11,7 @@ import ProductTypeAction from "../../../actions/products/productsType";
 import UnitAction from "../../../actions/products/productsUnit";
 import TaxAction from "../../../../pos/action/settings/tax";
 import LanguageAction from "../../../../pos/action/settings/storeLanguage";
+import LocationAction from "../../../../pos/action/settings/storeLocation";
 import ProductAction from "../../../actions/products/product";
 import PriceTagAction from "../../../actions/products/priceTag";
 import VariantAttributeAction from "../../../actions/products/variantAttribute";
@@ -24,13 +26,16 @@ export default class ProductList extends List {
       ...this.state,
       dataSourceToPrint: []
     };
+    this.brandList = [{name: <this.Translate id="text_all_brand"/>, id: 0}];
+    this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
+    this.productTypeList = [{productTypeDescriptions: {name: <this.Translate id="text_all_product_type"/>}, id: 0}];
     this.columns = new Column();
     this.columnExpend = new ColumnExpand(); 
     this.fetchingProp = "products";
     this.isShowExpandable = true;
     this.componentHasUpdated = false;
     this.service = ProductService;
-    this.columnFilterWithKey = ["name"];
+    this.columnFilterWithKey = ["name", "barcode"];
     this.action = ProductAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCT;
     this.handleClone = this.handleClone.bind(this);
@@ -87,14 +92,15 @@ export default class ProductList extends List {
   }
 
   componentDidMount() {
+    this.props.dispatch(ProductTypeAction.fetch(100));
+    this.props.dispatch(BrandAction.fetch(100));
+    this.props.dispatch(LocationAction.fetch(100));
     this.props.dispatch(ProductAction.reset()); // reset state to make 2: check condition again
     super.componentDidMount();
   }
 
   componentDidUpdate() {
     if (!this.componentHasUpdated && this.props.products.fetched) { // 2:
-      this.props.dispatch(BrandAction.fetch(100));
-      this.props.dispatch(ProductTypeAction.fetch(100));
       this.props.dispatch(UnitAction.fetch(100));
       this.props.dispatch(TaxAction.fetch(100));
       this.props.dispatch(LanguageAction.fetch(10));
@@ -153,8 +159,35 @@ export default class ProductList extends List {
     ];
   }
 
-  handleSubmitFilter(e) {
+  handleSubmitFilter(e){
+    if (this.action != null) {
+      e.preventDefault();
+      this.props.form.validateFieldsAndScroll((err, values) => {
+        if (!err) {
+          let filter = {};
+          let locationId = "";
+          if (values.locationId !== 0) {
+            locationId = values.locationId;
+          }
 
+          if (values.brandId !== 0) {
+            filter["brandId"] = [values.brandId];
+          }
+
+          if (values.productTypeId !== 0) {
+            filter["productTypeId"] = [values.productTypeId];
+          }
+
+          filter["status"] = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
+    
+          filter = JSON.stringify(filter);
+
+          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
+          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, locationId));
+          this.setState({isClickFilter: true});
+        }
+      }); 
+    } 
   }
 
   renderFilterRecord() {
@@ -168,57 +201,48 @@ export default class ProductList extends List {
             <this.Col md="3">
               <this.InputText
                 name="key"
-                label="Search"
+                label={<this.Translate id="text_search"/>}
                 placeholder="Search for brand, code and notation"
-                form={form}
-              />
-            </this.Col>
-            <this.Col md="3">
-              <this.InputText
-                name="tag"
-                label="Tags"
-                placeholder="Search for tags"
                 form={form}
               />
             </this.Col>
             <this.Col md="2">
               <this.Select
                 name="locationId"
-                label="Store"
-                dataSource={[{value: 1, name: "All Stores"}]}
+                label={<this.Translate id="text_store"/>}
+                dataSource={this.locationList.concat(this.props.locations.list)}
+                valueKey="id"
+                nameKey="name"
                 form={form}
-                defaultValue={1}/>
+                defaultValue={this.locationList[0].id}/>
             </this.Col>
             <this.Col md="2">
               <this.Select
                 name="brandId"
-                label="Brand"
-                dataSource={[{value: 1, name: "All Brands"}]}
+                label={<this.Translate id="text_brand"/>}
+                dataSource={this.brandList.concat(this.props.brands.list)}
+                valueKey="id"
+                nameKey="name"
                 form={form}
-                defaultValue={1}/>
+                defaultValue={this.brandList[0].id}/>
             </this.Col>
             <this.Col md="2">
               <this.Select
                 name="productTypeId"
-                label="Product Type"
-                dataSource={[{value: 1, name: "All Product Types"}]}
-                defaultValue={1}
+                label={<this.Translate id="text_product_type"/>}
+                dataSource={this.productTypeList.concat(this.props.productsType.list)}
+                defaultValue={this.productTypeList[0].id}
+                valueKey="id"
+                nestedName="productTypeDescriptions"
+                nameKey="name"
                 form={form}/>
             </this.Col>
             <this.Col md="2">
               <this.Select
-                name="supplierId"
-                label="Supplier"
-                dataSource={[{value: 1, name: "All Supplier"}]}
-                defaultValue={1}
-                form={form}/>
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="statusId"
-                label="Status"
-                dataSource={[{value: 1, name: "All Status"}]}
-                defaultValue={1}
+                name="status"
+                label={<this.Translate id="text_status" />}
+                dataSource={this.statusList}
+                defaultValue={this.Enum.ALL_STATE}
                 form={form}/>
             </this.Col>
             <this.Col md="2" className="wrap-btn-search">
@@ -302,22 +326,26 @@ class ColumnExpand extends List {
 class Column extends List {
   constructor(props) {
     super(props);
+    this.colorStockStatus = ["#4cb64c", "#f3a638"];
     return [
       {
         title: <this.Translate id="text_product_name" />,
         key: "productDescriptions",
-        width: 300,
-        render: (text, record, index) => {
-          const productName = record.productDescriptions.length > 0 ?  record.productDescriptions[0].name : this.emptyCell;
+        render: (text, record) => {
+          const productName = Util.getProductName(record);
           return <div>
-            <div>{productName}</div>
-            <div className="barcode-number text-uppercase"><this.Translate id="text_product_code"/>: {record.barcode}</div>
-            {/* {
-              "brand" in record && record["brand"] !== null ? 
-                <div><span className="text-uppercase"><this.Translate id="col_products_brand"/></span>: {record.brand.name}</div> : ""
-            } */}
+            <div>{productName ? productName: this.emptyCell}</div>
+            {/* <div className="barcode-number text-uppercase"><this.Translate id="text_product_code"/>: {record.barcode}</div> */}
           </div>;
         }
+      },
+      {
+        title: <this.Translate id="text_product_code" />,
+        dataIndex: "barcode",
+        key: "barcode",
+        width: 100,
+        render: barcode => barcode ? barcode : this.emptyCell,
+        sorter: true
       },
       {
         title: <this.Translate id="col_products_tag" />,
@@ -336,10 +364,21 @@ class Column extends List {
         }
       },
       {
+        title: <this.Translate id="text_brand" />,
+        dataIndex: "brandId",
+        key: "brand",
+        width: 100,
+        render: (text, record) => {
+          return Util.getProductBrand(record, this.emptyCell);
+        },
+        sorter: true
+      },
+      {
         title: <this.Translate id="text_price" />,
         key: "price",
         dataIndex: "price",
         width: 150,
+        align: "center",
         render: price => this.formatCurrency(price),
         sorter: true
       },
@@ -347,21 +386,31 @@ class Column extends List {
         title: <this.Translate id="text_quantity" />,
         dataIndex: "quantity",
         key: "quantity",
-        width: 150,
+        width: 130,
+        align: "center",
+        render: (text, record) => {
+          let quantity = record.quantity;
+          let colorIndex = 0;
+          if ("productLocations" in record) {
+            quantity = Util.getProductQTYLocation(record["productLocations"]);
+          }
+          colorIndex = quantity > 0 ? 0 : 1;
+          return <this.Tag color={this.colorStockStatus[colorIndex]} className="text-center label-stock-status">{quantity}</this.Tag>;
+        },
         sorter: true
       },
       {
         title: <this.Translate id="col_products_unit" />,
         dataIndex: "unit",
         key: "unit",
-        width: 150,
+        width: 100,
         render: unit => unit.name
       },
       {
         title: <this.Translate id="col_products_types" />,
         dataIndex: "type",
         key: "type",
-        width: 150,
+        width: 100,
         render: type => type === Enum.TYPE_OF_PRODUCT.GOOD ? <this.Translate id="input_product_good" /> : <this.Translate id="input_product_raw_material" />,
         sorter: true
       },

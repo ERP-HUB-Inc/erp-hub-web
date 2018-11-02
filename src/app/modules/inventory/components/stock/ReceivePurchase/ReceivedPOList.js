@@ -54,8 +54,10 @@ export default class ReceivedPo extends Modal {
               name={`receiveQuantity[${index}]`}  
               data={record.receiveQuantity}
               className="text-right"
+              compare={{value: record.requestQuantity, message: <this.Translate id="text_receive_qty_warning"/>}}
               precision={0}
               isHideTool={true}
+              required={true}
               isAutoFocus={index === 0}
               isAutoSelect={true}
               handleKeyUp={(e) => this.handleOnChangeQuantity(e, index)}

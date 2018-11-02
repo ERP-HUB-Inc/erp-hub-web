@@ -1,0 +1,134 @@
+/* CLIENT INDEX CSS */
+.wrap-client-login {
+    margin: auto;
+    position: absolute;
+    top: 0 ;
+    bottom: 0;
+    left: 0 ;
+    right: 0;
+    min-height: 500px;
+    height: fit-content
+}
+
+.inner-client-login {
+    box-shadow: 0 0 4px 0 rgba(0,0,0,0.5);
+    background-color: white
+}
+
+.wrap-client-login label {
+    font-size: 10pt;
+    color: #2C2C2C;
+}
+
+.wrap-client-login input::placeholder {
+    color:#bfbfbf;
+}
+
+.wrap-client-login .ant-form-item {
+    margin-bottom: 0px !important;
+}
+
+.wrap-client-login span.have-acc {
+    color: #4D4F5C;
+    font-size: 10pt;
+}
+
+.wrap-client-login a:hover {
+    text-decoration: none !important;
+}
+
+.blog-login .wrap-help {
+    position: relative;
+    top: 15px;
+    color: #9A9A9A;
+}
+
+.wrap-help .help {
+    position: relative;
+    top: -6px;
+}
+
+.wrap-client-login .wrap-blog-logo {
+    background-color: #093163;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.wrap-client-login .blog-logo .icon-logo {
+    color: white;
+}
+
+.wrap-client-login .blog-logo .icon-logo {
+    font-size: 60pt
+}
+
+.wrap-client-login .blog-logo .inner-logo .text {
+    color: #FFD627
+}
+
+.blog-login .header,
+.blog-logo .inner-logo .text {
+    font-size: 18pt
+}
+
+.header .title{
+    color: #4F2B0B;
+    font-size: 24pt
+}
+
+.header .back-office {
+    color: #9B9B9B;
+    font-size: 10pt;
+}
+
+.wrap-client-login .blog-login .wrap-login {
+    margin-top: 20px;
+}
+
+.wrap-client-login .blog-login .wrap-login .your-store-name {
+    margin-bottom: 25px;
+}
+
+.wrap-client-login .blog-login .wrap-login .store-name{
+    color: #4D4F5C;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.wrap-client-login .blog-login .wrap-login .store-url {
+    color: #9B9B9B;
+    font-size: 10pt
+}
+
+.wrap-client-login .blog-login .wrap-login .wrap-help {
+    margin-top: 20px;
+}
+
+.wrap-client-login .blog-login .wrap-login button {
+    width: 150px;
+}
+
+.wrap-client-login .blog-login .wrap-login .help {
+    font-size: 12pt;
+    position: relative;
+    bottom: 5px 
+}
+
+.wrap-client-login .blog-login .wrap-login .help,
+.wrap-client-login .blog-login .wrap-login .icon-help {
+    color: #9A9A9A;
+    font-weight: 500
+}
+
+.clear-padding {
+    padding: 0
+}
+
+.clear-padding-l {
+    padding-left: 0 !important;
+}
+
+.clear-padding-r {
+    padding-right: 0 !important;
+} 

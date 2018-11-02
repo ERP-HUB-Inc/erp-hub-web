@@ -20,6 +20,7 @@ export class InputNumber extends Element {
   checkPrice(rule, value, callback) {
     if (parseFloat(value) <= 0 && this.props.required) {
       callback(this.props.errorRequired);
+      return;
     } else {
       if (this.props.compare) {
         if (parseFloat(value) > this.props.compare.value) {
@@ -27,7 +28,6 @@ export class InputNumber extends Element {
           return;
         }
       }
-
       callback();
     }
   }
@@ -64,12 +64,12 @@ export class InputNumber extends Element {
   }   
 }
 
-Input.defaultProps = {
+InputNumber.defaultProps = {
   name: "name",
   max: 9999999999,
   precision: 2,
   errorLength: "The number allow maximum 9999 999 999.",
-  required: true,
+  required: false,
   errorRequired: "Field required"
 };
 

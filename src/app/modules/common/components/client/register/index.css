@@ -1,22 +1,6 @@
-.blog-register {
-    margin-left: 257px;
-    padding: 20px 25px;
-    width: 377px !important;
+
+.blog-login .main-signin {
+    margin-top: 15px
 }
 
-.wrap-client-register {
-    min-height: 500px !important;
-    height: fit-content;
-    width: 632px !important;
-}
-
-.wrap-client-register .wrap-blog-logo {
-    height: 500px !important;
-}
-
-.blog-register .wrap-help {
-    position: relative !important;
-    top: 15px !important;
-    color: #9A9A9A !important;
-}
 

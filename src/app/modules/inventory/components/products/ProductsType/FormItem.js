@@ -44,8 +44,8 @@ export default class FormItem extends Modal {
             <this.InputText
               name={`productTypeName[${languagesIndex}]`}
               data={productTypeName}
-              label={<this.Translate id="input_product_name" />}
-              placeholder={this.CATranslate("input_product_name", locale)}
+              label={<this.Translate id="text_name" />}
+              placeholder={this.CATranslate("text_name", locale)}
               isAutoFocus={true}
               max={100}
               form={form}/>
@@ -54,8 +54,8 @@ export default class FormItem extends Modal {
             <this.InputTextArea
               name={`productTypeDescription[${languagesIndex}]`}
               data={productTypeDescription}
-              label={<this.Translate id="input_product_description" />}
-              placeholder={this.CATranslate("input_product_description", locale)}
+              label={<this.Translate id="text_description" />}
+              placeholder={this.CATranslate("text_description", locale)}
               max={255}
               form={form}/>
           </this.Col>
@@ -69,9 +69,7 @@ export default class FormItem extends Modal {
 
     return (  
       <this.Tabs type="card">
-        {
-          languages.map((language, languagesIndex) => this.renderDescription(language, languagesIndex))
-        }
+        {languages.map((language, languagesIndex) => this.renderDescription(language, languagesIndex))}
       </this.Tabs>
     );
   }
