@@ -3,6 +3,8 @@ import Component from "../Component";
 import Diagram from "../home/containers/diagram";
 import Guide from "../home/containers/guide";
 import Board from "../home/containers/Board";
+import CountUp from "react-countup";
+import CardAction from "../../../common/actions/home";
 import "./index.css";
 
 export default class Home extends Component {
@@ -10,7 +12,6 @@ export default class Home extends Component {
   constructor() {
     super();
     this.toggleDashboard = this.toggleDashboard.bind(this);
-    this.getDate = this.getDate.bind(this);
     this.hasDidUpdate = false;
     this.state = {
       isShowDiagram: null
@@ -25,12 +26,6 @@ export default class Home extends Component {
     localStorage.setItem("defaultDashboardSetting", JSON.stringify(checked));
   }
 
-  getDate(){
-    var today = new Date();
-    var gettoday = today.getDate();
-    return gettoday;
-  }
-
   componentWillUpdate() {
     if(!this.hasDidUpdate){
       console.log("will update");
@@ -38,7 +33,7 @@ export default class Home extends Component {
       let getDefaultSetting = localStorage.getItem("defaultDashboardSetting");
       if(getDefaultSetting) {
         this.setState({
-          isShowDiagram: getDefaultSetting == 0
+          isShowDiagram: getDefaultSetting === 0
         });
   
       } else {
@@ -54,6 +49,10 @@ export default class Home extends Component {
     
   }
 
+  componentDidMount(){
+    this.props.dispatch(CardAction.fetchDashboardCard());
+  }
+
   render(){
     const {form} = this.props;
     console.log("IsShow digram:", this.state.isShowDiagram);
@@ -64,12 +63,11 @@ export default class Home extends Component {
             <div className="dashboard ">
               <ul>
                 <li>
-                  <this.BreadcrumbTitle title="Dashboad" />
+                   <this.BreadcrumbTitle title= {this.CATranslate("home_page_dashboard", this.props.locale)} />
                 </li>
                 <li style={{marginLeft: "15px"}}>
                   {
                     <this.Switchs name="switch" checked={this.state.isShowDiagram ? 1 : 0} onChange={this.toggleDashboard} form={form} />
-                      
                   }
                 </li>
               </ul>
@@ -78,10 +76,10 @@ export default class Home extends Component {
           </this.Col>
         </this.Row>
         <this.Row>
-          <Board total="0.00" icon="icon-dollar" title="Today's Sale" route="read" to="transactions/salehistory?salehistory=1" />
-          <Board total="0.00" icon="icon-list" title="Today's Transaction" route="read"/>
-          <Board total="0.00" icon="icon-stock" title="Today's Product Sold" route="read" to="products/manage"/>
-          <Board total="0" icon="icon-customer" title="Total Customers" route="read"/>
+          <Board total={<CountUp start={0} end={1200}  decimal="," />} icon="icon-dollar" title={<this.Translate id="home_page_title_today_is_sale"/>} readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>} route="read" to="transactions/salehistory?salehistory=1" />
+          <Board total="0.00" icon="icon-list" title={<this.Translate id="home_page_title_today_is_transaction"/>} readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>} route="read"/>
+          <Board total="0.00" icon="icon-stock" title={<this.Translate id="home_page_title_today_is_product_sold"/>} readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>} route="read" to="products/manage"/>
+          <Board total="0" icon="icon-customer" title={<this.Translate id="home_page_total_customer"/>} readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>} route="read"/>
         </this.Row>
 
         <this.Row>

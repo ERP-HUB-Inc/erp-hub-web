@@ -13,25 +13,25 @@ export default class Duide extends Component {
                 <this.Link to="products/types">
                   <span className="icon-types"></span>
                 </this.Link>
-                <div className="grap-guide-title grap-title">3.1. TYPES</div>
+                <div className="grap-guide-title grap-title">3.1. <this.Translate id="home_page_guide_types"/></div>
               </li>
               <li>
                 <this.Link to="products/brand">
                   <span className="icon-brand"></span>
                 </this.Link>
-                <div className="grap-guide-title grap-title">3.2. BRAND</div>
+                <div className="grap-guide-title grap-title">3.2. <this.Translate id="home_page_guide_brand"/></div>
               </li>
               <li>
                 <this.Link to="stock/supplier">
                   <span className="icon-purchasing"></span>
                 </this.Link>
-                <div className="grap-guide-title grap-title">4.1 SUPPLIERS</div>
+                <div className="grap-guide-title grap-title">4.1 <this.Translate id="home_page_guide_suppliers"/></div>
               </li>
               <li>
                 <this.Link to="#">
                   <span className="icon-pre-order"></span>
                 </this.Link>
-                <div className="grap-guide-title grap-title">6.1 PRE-ORDER</div>
+                <div className="grap-guide-title grap-title">6.1 <this.Translate id="home_page_guide_pre_order"/></div>
               </li>
             </ul>
           </div>
@@ -49,13 +49,14 @@ export default class Duide extends Component {
               </li>
             </ul>
           </div>
+
           <div className="main-guide-icon">
             <ul>
               <li>
                 <this.Link to="settings/account">
                   <span className="icon-settings"></span>
                 </this.Link>
-                <div className="grap-guide-title grap-title">1.SETTING UP</div>
+                <div className="grap-guide-title grap-title">1. <this.Translate id="home_page_guide_setting_up"/></div>
               </li>
               <li>
                 <span className="icon-arrow-right arrow"></span>
@@ -64,7 +65,7 @@ export default class Duide extends Component {
                 <this.Link to="employee">
                   <span className="icon-employee"></span>
                 </this.Link>
-                <div className="grap-guide-title grap-title">2. EMPLOYEE</div>
+                <div className="grap-guide-title grap-title">2. <this.Translate id="home_page_guide_employee"/></div>
               </li>
               <li>
                 <span className="icon-arrow-right arrow"></span>
@@ -73,7 +74,7 @@ export default class Duide extends Component {
                 <this.Link to="products/manage">
                   <span className="icon-add-product"></span>
                 </this.Link>
-                <div className="grap-guide-title grap-title">3. PRODUCTS</div>
+                <div className="grap-guide-title grap-title">3. <this.Translate id="home_page_guide_products"/></div>
               </li>
               <li>
                 <span className="icon-arrow-right arrow"></span>
@@ -82,7 +83,7 @@ export default class Duide extends Component {
                 <this.Link to="stock/purchase/order">
                   <span className="icon-purchasing"></span>
                 </this.Link>
-                <div className="grap-guide-title grap-title">4. PURCHASING</div>
+                <div className="grap-guide-title grap-title">4. <this.Translate id="home_page_guide_purchasing"/></div>
               </li>
               <li>
                 <span className="icon-arrow-right arrow"></span>
@@ -91,7 +92,7 @@ export default class Duide extends Component {
                 <this.Link to="customer">
                   <span className="icon-customer"></span>
                 </this.Link>
-                <div className="grap-guide-title grap-title">5. CUSTOMERS</div>
+                <div className="grap-guide-title grap-title">5. <this.Translate id="home_page_guide_customers"/></div>
               </li>
               <li>
                 <span className="icon-arrow-right arrow"></span>
@@ -100,7 +101,7 @@ export default class Duide extends Component {
                 <this.Link to="transactions/saleorder">
                   <span className="icon-sale"></span>
                 </this.Link>
-                <div className="grap-guide-title grap-title">6. SALE</div>
+                <div className="grap-guide-title grap-title">6. <this.Translate id="home_page_guide_sale"/></div>
               </li>
               <li>
                 <span className="icon-arrow-right arrow"></span>
@@ -109,7 +110,7 @@ export default class Duide extends Component {
                 <this.Link to="reports/sale">
                   <span className="icon-reports"></span>
                 </this.Link>
-                <div className="grap-guide-title grap-title">7. REPORTS</div>
+                <div className="grap-guide-title grap-title">7. <this.Translate id="home_page_guide_reports"/></div>
               </li>
             </ul>
           </div>
@@ -134,19 +135,19 @@ export default class Duide extends Component {
                 <this.Link to="products/manage">
                   <span className="icon-add-product"></span>
                 </this.Link>
-                <div className="grap-guide-title grap-title">3.3. ADD PRODUCT</div>
+                <div className="grap-guide-title grap-title">3.3. <this.Translate id="home_page_guide_add_products"/></div>
               </li>
               <li>
                 <this.Link to="stock">
                   <span className="icon-stock"></span>
                 </this.Link>
-                <div className="grap-guide-title grap-title">4.2. STOCK</div>
+                <div className="grap-guide-title grap-title">4.2. <this.Translate id="home_page_guide_stock"/></div>
               </li>
               <li>
                 <this.Link to="#">
                   <span className="icon-sale-return"></span>
                 </this.Link>
-                <div className="grap-guide-title grap-title">6.2 SALE RETURN</div>
+                <div className="grap-guide-title grap-title">6.2 <this.Translate id="home_page_guide_sale_return"/></div>
               </li>
             </ul>
           </div>

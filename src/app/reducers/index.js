@@ -46,6 +46,8 @@ import saleReport from "../modules/pos/reducers/report/sale";
 import inventoryReport from "../modules/pos/reducers/report/inventory";
 import purchaseReport from "../modules/pos/reducers/report/purchase";
 import profitAndLostReport from "../modules/pos/reducers/report/profitAndLost";
+//home page
+import homePage from "../modules/common/reducers/home";
 
 const reducer = combineReducers({
   client,
@@ -93,7 +95,10 @@ const reducer = combineReducers({
   inventoryReport,
   purchaseReport,
   profitAndLostReport,
-  transaction
+  transaction,
+
+  homePage
+
 });
 
 export default reducer;
