@@ -12,7 +12,8 @@ export class Cards extends Component {
       icon,
       totalText,
       price,
-      to
+      to,
+      readMoreTitle
     } = this.props;
     return(
       <div className="wrap-card">   
@@ -36,7 +37,7 @@ export class Cards extends Component {
           </CardBody>
           <CardFooter className="text-muted">
             <Link to={ `/${ to }` }> 
-                Read More
+               { readMoreTitle }
             </Link>
           </CardFooter>
         </Card>

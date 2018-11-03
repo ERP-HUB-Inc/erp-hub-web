@@ -13,7 +13,9 @@ class Diagram extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    locale: state.locale
+    locale: state.locale,
+    GraphChat: state.reducer.homePage.listGraph,
+    PipeChat: state.reducer.homePage.listPipe
   };
 }
 

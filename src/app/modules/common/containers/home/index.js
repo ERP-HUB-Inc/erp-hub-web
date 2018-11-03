@@ -11,6 +11,15 @@ class Home extends Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    GraphChat: state.reducer.homePage.listGraph,
+    PieChat: state.reducer.homePage.listChat,
+    CardDashboard: state.reducer.listCardDashboard,
+    locale: state.locale
+  };
+}
                   
 function mapPropsToFields(props) {
   return {
@@ -18,6 +27,7 @@ function mapPropsToFields(props) {
   };
 }
 
-const home =  Form.create(mapPropsToFields)(Home);
 
-export default connect()(home);
+const home = Form.create(mapPropsToFields)(Home);
+
+export default connect(mapStateToProps)(home);

@@ -42,6 +42,8 @@ import inventoryReport from "../../pos/languages/report/inventory";
 import profitAndLostReport from "../../pos/languages/report/profitAndLost";
 //transaction
 import saleHistory from "../../pos/languages/transactions/saleHistory";
+// home page
+import homePage from "../../common/languages/home";
 
 export function initLanguage() {
   return initialize([
@@ -89,6 +91,7 @@ export function setTranslation() {
     ...saleReport,
     ...inventoryReport,
     ...profitAndLostReport,
-    ...saleHistory
+    ...saleHistory,
+    ...homePage
   });
 }

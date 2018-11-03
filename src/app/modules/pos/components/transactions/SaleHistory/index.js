@@ -8,7 +8,7 @@ import TransactionAction from "../../../action/transaction/transaction";
 import LocationAction from "../../../action/settings/storeLocation";
 import UserAction from "../../../../common/actions/users";
 import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
-import moment from "moment";
+
 export default class SaleHistoryList extends List {
   constructor(props) {
     super(props);
@@ -44,7 +44,7 @@ export default class SaleHistoryList extends List {
     this.props.dispatch(LocationAction.fetch(100));
     this.props.dispatch(UserAction.fetch(100));
 
-    if(this.Util.getParameterByName("salehistory") == 1) {
+    if(this.Util.getParameterByName("salehistory") === 1) {
       this.handleSubmitCurrentSearchFilter();
     }
 
