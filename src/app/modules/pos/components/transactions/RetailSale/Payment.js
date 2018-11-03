@@ -62,12 +62,15 @@ export default class Payment extends Modal {
 
   handleOnSendMailReceipt() {
     const email = this.props.form.getFieldValue("email");
-    if (email) {
-      let element = document.getElementById("pos-receipt-preview").innerHTML;
+    let element = document.getElementById("pos-receipt-preview");
+    if (email && element) {
       element = `<html><head><title></title></head><body>${element}</body></html>`;
       this.props.dispatch(TransactionAction.sendEmailReceipt(element, email));
     } else {
-      document.getElementById("email").focus();
+      element = document.getElementById("email");
+      if (element) {
+        element.focus();
+      }
     }
   }
 

@@ -1,5 +1,6 @@
 import React from "react";
 import List from "../../List";
+import Util from "../../../utils";
 import FormCreate from "../../../containers/products/ProductsType/FormCreate";
 import FormUpdate from "../../../containers/products/ProductsType/FormUpdate";
 import Constant from "../../../constants/products/productsType";
@@ -56,18 +57,18 @@ class Column extends List {
     return [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="col_products_products_type_name" />,
+        title: <this.Translate id="text_name" />,
         dataIndex: "productTypeDescriptions",
-        key: "productTypeDescriptions",
+        key: "name",
         sorter: true,
-        render: (productTypeDescriptions) => productTypeDescriptions.map((result) => result.name )
+        render: productTypeDescriptions => Util.getProductTypeDescription(productTypeDescriptions)
       },
       {
-        title: <this.Translate id="col_products_products_type_description" />,
+        title: <this.Translate id="text_description" />,
         dataIndex: "productTypeDescriptions",
         key: "description",
         sorter: true,
-        render: (productTypeDescriptions) => productTypeDescriptions.map((result) => result.description  )
+        render: productTypeDescriptions => Util.getProductTypeDescription(productTypeDescriptions, "description")
       },
       this.columnStatus
     ];

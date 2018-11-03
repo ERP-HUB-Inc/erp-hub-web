@@ -67,6 +67,7 @@ export default class List extends Component {
     this.columnStatusExtend = {
       dataIndex: "status",
       key: "status",
+      width: 100,
       render: value => {
         return (
           value === 1 ?
@@ -293,11 +294,10 @@ export default class List extends Component {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
-          const {dispatch} = this.props;
           const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
           const filter = JSON.stringify({status});
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
-          dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
+          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
           this.setState({isClickFilter: true});
         }
       });
@@ -434,18 +434,15 @@ export default class List extends Component {
                 name="key"
                 label="Search"
                 placeholder="Search for code, name and address"
-                form={form}
-              />
+                form={form}/>
             </this.Col>
             <this.Col md="2">
               <this.Select
                 name="status"
                 label={<this.Translate id="text_status" />}
-                placeholder="Please select status"
                 dataSource={this.statusList}
                 defaultValue={this.Enum.ALL_STATE}
-                form={form}
-              />
+                form={form}/>
             </this.Col>
             <this.Col md="2" className="wrap-btn-search">
               <div className="ant-form-item-label" style={{visibility: "hidden"}}>

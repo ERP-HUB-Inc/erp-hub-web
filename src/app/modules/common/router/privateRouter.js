@@ -26,7 +26,7 @@ function renderPageAuth () {
   }
 
   return isAccessSecureSubDomain
-    ? <Redirect to="/signin/store" /> : <Redirect to="/signin" />;
+    ? <Redirect to="/store" /> : <Redirect to="/signin" />;
 }
 
 export default PrivateRoute;

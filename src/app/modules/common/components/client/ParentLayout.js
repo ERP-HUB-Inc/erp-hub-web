@@ -1,15 +1,14 @@
 import React from "react";
-import { Col,Row } from "reactstrap";
-import "./main.css";
+import Component from "../Component";
+import "./index.css";
 
-export class LoginLayout extends React.Component {
+export default class ParentLayout extends Component {
   render() {
-    const { clasBlogLogo, classBlogLogin } = this.props;
     return (
-      <Row>
-        <Col className={ classBlogLogin }>
-          <Col className="clear-padding wrap-client-login">
-            <div className={ clasBlogLogo }>
+      <this.Row>
+        <this.Col sm="12" className={this.props.classBlogLogin}>
+          <this.Col sm="12" className="clear-padding inner-client-login">
+            <div className={this.props.clasBlogLogo}>
               <div className="blog-logo text-center">
                 <div className="inner-logo">
                   <div className="logo">
@@ -29,15 +28,15 @@ export class LoginLayout extends React.Component {
               </div>
               { this.props.children }
             </div>
-          </Col>
-        </Col>
-      </Row>
+          </this.Col>
+        </this.Col>
+      </this.Row>
     );
   }
 
 }
 
-LoginLayout.defaultProps = {
+ParentLayout.defaultProps = {
   clasBlogLogo: "wrap-blog-logo",
   classBlogLogin: "clear-padding wrap-client-login"
 };

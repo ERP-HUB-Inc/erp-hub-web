@@ -1,4 +1,5 @@
 import React from "react";
+import ParentLayout from "../ParentLayout";
 import Component from "../../Component";
 import history from "../../../router/history";
 import ClientAction from "../../../actions/client";
@@ -82,35 +83,33 @@ export default class SignInStore extends Component {
     }
 
     return (
-      <div>
-        <this.LoginLayout
-          classBlogLogin="clear-padding wrap-client-login wrap-client-sign-in-store"
-          clasBlogLogo="wrap-blog-signin-logo wrap-blog-logo">
-          <div className="title">
-            <h6>Find Your store Name </h6>
-          </div>
-          <this.Form onSubmit={this.handleSubmit}>
-            <div className={this.validateClassStatus}>
-              <this.InputText
-                name="storeName"
-                placeholder="Store name"
-                type="text"
-                label="Store Name"
-                notation=".storevien.com"
-                required={true}
-                isAutoFocus={true}
-                errorRequired="Please enter your store address."
-                validateClassStatus={this.validateClassStatus}
-                handleKeyDown={this.handleKeyDown}
-                form={form}/>
-              {this.errorMessage != null ? <div className="ant-form-explain">{this.errorMessage}</div> : "" }
-              <div className="main-signin">
-                <this.Button loading={signinDomain.submiting} htmlType="submit" type="info">SUBMIT</this.Button>
-              </div>
+      <ParentLayout
+        classBlogLogin="clear-padding wrap-client-login wrap-client-sign-in-store"
+        clasBlogLogo="wrap-blog-logo">
+        <div className="title">
+          <h6>Find Your store Name </h6>
+        </div>
+        <this.Form onSubmit={this.handleSubmit}>
+          <div className={this.validateClassStatus}>
+            <this.InputText
+              name="storeName"
+              placeholder="Store name"
+              type="text"
+              label="Store Name"
+              notation=".storevien.com"
+              required={true}
+              isAutoFocus={true}
+              errorRequired="Please enter your store address."
+              validateClassStatus={this.validateClassStatus}
+              handleKeyDown={this.handleKeyDown}
+              form={form}/>
+            {this.errorMessage != null ? <div className="ant-form-explain">{this.errorMessage}</div> : "" }
+            <div className="main-signin" style={{marginTop: 15}}>
+              <this.Button loading={signinDomain.submiting} htmlType="submit" type="info">SUBMIT</this.Button>
             </div>
-          </this.Form>
-        </this.LoginLayout>
-      </div>
+          </div>
+        </this.Form>
+      </ParentLayout>
     );
   }
 }

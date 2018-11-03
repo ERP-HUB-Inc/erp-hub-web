@@ -30,53 +30,46 @@ export default class Form extends Modal {
         // PREPARE RECEIVED ENTRIES
         const POEntries = [];
 
-        if (values.receiveQty) {
-          values.receiveQty.forEach((receiveQty, receiveQtyIndex) => {
+        if (values.receiveQuantity) {
+          values.receiveQuantity.forEach((receiveQuantity, index) => {
             POEntries.push({
-              id: values.receiveId[receiveQtyIndex],
-              productId: values.productId[receiveQtyIndex],
-              requestQuantity: parseInt(values.qty[receiveQtyIndex], 10),
-              receiveQuantity: parseInt(values.receiveQty[receiveQtyIndex], 10),
-              price: parseFloat(values.receivePrice[receiveQtyIndex]),
-              status: values.statusId[receiveQtyIndex],
+              id: values.purchaseOrderEntryId[index],
+              productId: values.productId[index],
+              receiveQuantity: parseInt(receiveQuantity, 10)
             });
-
           });
         }
 
         this.Util.clearObjProperty(values, [
-          "receiveId",
+          "purchaseOrderEntryId",
           "productId",
-          "qty",
-          "receiveQty",
-          "receivePrice",
-          "receiveDescription",
-          "totalPrice",
-          "totalAmount"
+          "receiveQuantity",
+          "price"
         ]);
 
         
         values["referenceId"] = this.props.receivePurchaseDetail.data.referenceId;
-        values["requestTotal"] = parseFloat(this.props.receivePurchaseDetail.data.requestTotal);
-        values["receiveTotal"] = parseFloat(values.requestTotalValue);
+        values["requestTotal"] = this.props.receivePurchaseDetail.data.requestTotal;
+        values["receiveTotal"] = parseFloat(values.receiveTotalValue);
         values["returnTotal"] = this.props.receivePurchaseDetail.data.returnTotal;
         values["step"] = Enum.PO_STEP.RECEIVED;
         values["type"] = this.props.receivePurchaseDetail.data.type;
         values["status"] = this.props.receivePurchaseDetail.data.status;
-    
         values["POEntries"] = POEntries;
 
         this.dispatch(ReceivePurchaseAction.update(values));
-        // const filter = JSON.stringify({step: [Enum.PO_STEP.PROCESS]});
-        // this.dispatch(ReceivePurchaseAction.fetch(this.pageSize, 0, "", "", filter));
       }
     });
   }
 
   handleSubmit (e) {
     e.preventDefault();
-    this.setState({modalVisible: true});
-    this.renderModalConfirmAction();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        this.setState({modalVisible: true});
+        this.renderModalConfirmAction();
+      }
+    });
   }
 
   renderCrudAction(){

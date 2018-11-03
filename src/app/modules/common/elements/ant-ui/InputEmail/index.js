@@ -23,8 +23,7 @@ export  class InputEmail extends Element {
         isAutoFocus={this.props.isAutoFocus}
         isAutoSelect={this.props.isAutoSelect}
         form={this.props.form}
-        data={ this.props.data }
-      />
+        data={this.props.data}/>
     );
   }   
 }

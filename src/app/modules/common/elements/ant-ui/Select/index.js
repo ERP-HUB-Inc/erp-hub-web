@@ -3,6 +3,19 @@ import Element from "../../common/Element";
 import "./index.css";
 
 export class Select extends Element {
+  constructor(props) {
+    super(props);
+    this.getName = this.getName.bind(this);
+  }
+  getName(value) {
+    if (this.props.nestedName && this.props.nestedName in value && value[this.props.nestedName]) {
+      if (Array.isArray(value[this.props.nestedName]) && value[this.props.nestedName].length > 0) {
+        value[this.props.nestedName] = value[this.props.nestedName][0];
+      }
+      return value[this.props.nestedName][this.props.nameKey];
+    }
+    return value[this.props.nameKey];
+  }
   render() {
     const {getFieldDecorator} = this.props.form;
     let dataSource = this.props.dataSource;
@@ -26,11 +39,12 @@ export class Select extends Element {
               onChange={this.props.onChange}
               onFocus={this.props.handleOnFocus}
               disabled={this.props.disabled}
-              style={{ width: "100%" }}
-            >
+              style={{ width: "100%" }}>
               {
                 dataSource.map((value, index) =>
-                  <this.Option key={index} value={value[this.props.valueKey]}>{value[this.props.nameKey]}</this.Option>
+                  <this.Option key={index} value={value[this.props.valueKey]}>
+                    {this.getName(value)}
+                  </this.Option>
                 )
               }
             </this.Select>
@@ -45,5 +59,6 @@ Select.defaultProps = {
   required: false,
   errorRequired: "Please select this field.",
   valueKey: "value",
-  nameKey: "name"
+  nameKey: "name",
+  nestedName: null
 };

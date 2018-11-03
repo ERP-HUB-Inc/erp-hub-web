@@ -1,4 +1,5 @@
-.wrap-client-login {
+
+/*.wrap-client-login {
     box-shadow: 0 0 4px 0 rgba(0,0,0,0.5);
     margin: auto !important;
     position: absolute !important;
@@ -16,11 +17,6 @@
 
 .wrap-client-login input::placeholder {
     color:#bfbfbf !important;
-}
-
-.header.text-right {
-    position: relative;
-    top: -25px;
 }
 
 .wrap-client-login .ant-form-item {
@@ -148,3 +144,4 @@
 .clear-padding-r {
     padding-right: 0 !important;
 } 
+*/

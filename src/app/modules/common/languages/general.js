@@ -275,6 +275,18 @@ export default {
     "Payment"
   ],
 
+  "text_search": [
+    "Search",
+    "Search",
+    "Search"
+  ],
+
+  "text_store": [
+    "Store",
+    "Store",
+    "Store"
+  ],
+
   "text_payment_method": [
     "Payment Method",
     "Payment Method",

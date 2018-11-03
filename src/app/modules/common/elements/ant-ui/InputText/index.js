@@ -38,7 +38,7 @@ export class InputText extends Element {
 
 Input.defaultProps = {
   max: 255,
-  errorRequired: "Field required.",
+  errorRequired: "Field required",
   errorLenght: "Over allow character lenght.",
   type: "text"
 };

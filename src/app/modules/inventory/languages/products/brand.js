@@ -1,37 +1,25 @@
 export default {
-  "create_products_brand_title": [
+  "text_brand": [
     "Brand",
-    "ငွေကြေးစနစ်",
-    "Brand"
-  ],
-      
-  "update_products_brand_title": [
     "Brand",
-    "ငွေကြေး",
     "Brand"
   ],
 
-  "col_products_brand_name": [
-    "Brand Name",
-    "အမည်",
-    "Brand Name",
-  ],
-
-  "input_products_brand_name": [
-    "Name",
-    "အမည်",
-    "Name"
+  "text_all_brand": [
+    "All Brand",
+    "All Brand",
+    "All Brand"
   ],
 
   "input_error_products_brand_name": [
     "Please input your unit name",
-    "အမည်",
+    "Please input your unit name",
     "Please input your unit name"
   ],
 
   "input_error_products_brand_description": [
     "Please input your description",
-    "အမည်",
+    "Please input your unit name",
     "Please input your description"
   ],
 

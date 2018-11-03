@@ -14,7 +14,8 @@ class ProductService extends BaseService {
     sortField,
     sortOrder,
     filter, // {"column1": [value1, value2], "column2": [value1, value2]}
-    searchKey // {"column": ["columnname1", "columnname2"], "value": "hello"}
+    searchKey, // {"column": ["columnname1", "columnname2"], "value": "hello"}
+    locationId
   ) {
     return super.lists(limit,
       offset,
@@ -22,7 +23,8 @@ class ProductService extends BaseService {
       sortOrder,
       filter,
       searchKey,
-      this.getLanguageId());
+      "",
+      locationId);
   }
 
   searchForDrowDown(

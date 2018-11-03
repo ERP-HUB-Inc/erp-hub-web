@@ -404,7 +404,7 @@ export default class FormItem extends Modal {
                         placeholder={this.CATranslate("input_product_code", locale)}
                         max={20}
                         form={form}
-                        disabled={formData.id != null || this.state.isAutoGenerateCode === this.Enum.GENERATE_PRODUCT_CODE.AUTO} />
+                        disabled={formData.id != null && this.state.isAutoGenerateCode === this.Enum.GENERATE_PRODUCT_CODE.AUTO} />
                     </this.Col>
                   </this.Row>
                 </this.Col>

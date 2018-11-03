@@ -6,18 +6,10 @@ const Dotenv = require("dotenv-webpack");
 
 var DIST_DIR = path.resolve(__dirname, "dist");
 var SRC_DIR = path.resolve(__dirname, "src");
-const production = false;
 
 
 module.exports = {
-  // entry: SRC_DIR + "/index.js",
-  entry: production
-    ? SRC_DIR + "/index.js"
-    : [
-      "webpack-dev-server/client?http://0.0.0.0:3000",
-      "webpack/hot/only-dev-server",
-      SRC_DIR + "/index.js",
-    ],
+  entry: SRC_DIR + "/index.js",
   output: {
     path: DIST_DIR + "/",
     filename: "[name].bundle.js",

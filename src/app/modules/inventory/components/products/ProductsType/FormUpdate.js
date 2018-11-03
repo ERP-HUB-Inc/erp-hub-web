@@ -7,11 +7,7 @@ import Modal from "../../../../common/components/shares/Modal";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.state = {
-      disabled: false
-    };
-
-    this.title = <this.Translate id="update_products_products_type_title" />;
+    this.title = <this.Translate id="text_product_type" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
 

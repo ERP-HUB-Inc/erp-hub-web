@@ -6,6 +6,10 @@
     margin-bottom: 5px
 }
 
+.label-stock-status {
+    font-weight: 600
+}
+
 .group-code-generate .main-ant-wrapper {
     display: inline-flex;
     position: relative;
@@ -117,7 +121,8 @@
 }
 
 .barcode-number {
-    color: #9A9A9A
+    color: #9A9A9A;
+    font-size: 7pt
 }
 
 .modal-product .wrapRowContentTab .ant-table-content {
