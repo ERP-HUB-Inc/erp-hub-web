@@ -7,7 +7,9 @@
     left: 0 ;
     right: 0;
     min-height: 500px;
-    height: fit-content
+    height: fit-content;
+    margin-top: 15px;
+    margin-bottom: 15px
 }
 
 .inner-client-login {

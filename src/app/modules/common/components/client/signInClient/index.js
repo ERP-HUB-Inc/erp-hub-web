@@ -23,8 +23,8 @@ export default class ClientSignIn extends Component {
     this.dispatch(ClientAction.findClientByColumn("storeName", domainInfo.subStr));
   }
 
-  componentWillUpdate(nextProps) {
-    const {signinUser, dispatch} = nextProps;
+  componentDidUpdate() {
+    const {signinUser, dispatch} = this.props;
     if (
       signinUser.response != null
       && ("data" in signinUser.response)

@@ -14,6 +14,7 @@ class RegisterDetail extends Component {
 function mapStateToProps(state) {
   return {
     clientRegister: state.reducer.client.register,
+    add: state.reducer.client.add,
     currencies: state.reducer.currencySystem.request,
     languages: state.reducer.languageSystem.request,
     businessPlans: state.reducer.businessPlan.request,
