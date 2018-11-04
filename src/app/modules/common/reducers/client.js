@@ -53,16 +53,19 @@ export default combineReducers({
         response: action.payload.data
       };
     }
-    case Constant.RESET_REGISTER_CLIENT: {
-      return {
-        submiting: false,
-        submited: false,
-        response: null
-      };
-    }
     default: 
       return state;
     }
+  },
+  add: (state = InitialState.add(), action) => {
+    const constants = [
+      Constant.REGISTER_CLIENT_PENDING,
+      Constant.REGISTER_CLIENT_REJECTED,
+      Constant.REGISTER_CLIENT_FULFILLED,
+      null,
+      Constant.RESET_REGISTER_CLIENT
+    ];
+    return reducer.add(state, action, constants);
   },
   signin: (state = {submiting: false, submited: false, error: null, response: null}, action) => {
     switch(action.type) {

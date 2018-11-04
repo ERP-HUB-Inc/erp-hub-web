@@ -4,6 +4,13 @@ import Component from "../../Component";
 import "./index.css";
 
 export default class RegisterComplete extends Component {
+  componentDidMount() {
+    setTimeout(this.leaveToLandingPage(), 8000);
+  }
+
+  leaveToLandingPage() {
+    window.location = "http://www.storevein.com";
+  }
   render() {
     const {clientRegister} = this.props;
     return (

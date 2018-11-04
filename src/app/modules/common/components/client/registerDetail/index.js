@@ -2,6 +2,7 @@ import React from "react";
 import { Form } from "antd";
 import Component from "../../Component";
 import ParentLayout from "../ParentLayout";
+import Constant from "../../../constants/client";
 import ClientAction from "../../../actions/client";
 import { fetchAllLanguageSystem } from "../../../actions/actionLanguage";
 import { fetchAllCurrencySystem } from "../../../actions/currency";
@@ -12,25 +13,64 @@ import "./index.css";
 class ClientRegister extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      errorStoreName: {},
+      errorCurrency: {}
+    };
     this.timeZones = [
       {name: "(GMT+07:00) Asia/Bangkok", value: "Asia/Bangkok"},
       {name: "(UTC+6:30) Asia/Rangoon", value: "Asia/Rangoon"}
     ];
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleBack = this.handleBack.bind(this);
+    this.handleChangeStoreName = this.handleChangeStoreName.bind(this);
   }
 
   componentDidMount() {
-    const {dispatch} = this.props;
-    dispatch(fetchAllLanguageSystem());
-    dispatch(fetchAllCurrencySystem());
-    dispatch(fetchAllBusinessPlanSystem());
-    dispatch(fetchAllBusinessTypeSystem());
+    this.props.dispatch(fetchAllLanguageSystem());
+    this.props.dispatch(fetchAllCurrencySystem());
+    this.props.dispatch(fetchAllBusinessPlanSystem());
+    this.props.dispatch(fetchAllBusinessTypeSystem());
+  }
+
+  componentDidUpdate() {
+    if (this.props.add.error) {
+      const {error} = this.props.add;
+      if (error
+      && "data" in error 
+      && error["data"]
+      && "error" in error["data"]
+      ) {
+        if (error["data"]["error"].code === this.HttpCode.STORE_NAME_EXIST) {
+          this.setState({
+            errorStoreName: {
+              help: "Store name already exist",
+              validateStatus: "error"
+            }
+          });
+        }
+
+        if (error["data"]["error"].code === this.HttpCode.CURRENCY_NOT_FOUND) {
+          this.setState({
+            errorCurrency: {
+              help: "Please select currency",
+              validateStatus: "error"
+            }
+          });
+        }
+      }
+      this.props.dispatch(ClientAction.reset(Constant.RESET_REGISTER_CLIENT));
+    }
+  }
+
+  handleChangeStoreName() {
+    this.setState({
+      errorStoreName: {}
+    });
   }
 
   handleBack() {
-    const {dispatch, clientRegister} = this.props;
-    dispatch(ClientAction.startRegister(clientRegister.response, 1));
+    this.props.dispatch(ClientAction.startRegister(this.props.clientRegister.response, 1));
   }
 
   handleSubmit (e) {
@@ -38,11 +78,10 @@ class ClientRegister extends Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const {
-          dispatch,
           clientRegister
         } = this.props;
         const registerData = {...clientRegister.response, ...values};// merge value from step one to current step
-        dispatch(ClientAction.register(registerData, 3));
+        this.props.dispatch(ClientAction.register(registerData, 3));
       }
     });
   }
@@ -63,7 +102,8 @@ class ClientRegister extends Component {
     }
 
     return (
-      <ParentLayout>
+      <ParentLayout
+        classBlogLogin="wrap-client-login-auto-height">
         <Form onSubmit={this.handleSubmit}>
           <this.InputText
             name="businessName"
@@ -81,6 +121,8 @@ class ClientRegister extends Component {
             placeholder="Domain Name"
             errorRequired="Domain is required"
             form={this.props.form}
+            {...this.state.errorStoreName}
+            handleKeyDown={this.handleChangeStoreName}
             max={100}
             required={true}/>
           <this.Select 
@@ -170,7 +212,7 @@ class ClientRegister extends Component {
             nameKey="name"
             placeholder="Please select language"
             form={this.props.form} />
-          <this.Button htmlType="submit" className="main-signin" type="info">LET'S GO</this.Button>
+          <this.Button loading={this.props.add.adding} htmlType="submit" className="main-signin" type="info">LET'S GO</this.Button>
           {/* <this.Button style={{marginRight: "15px"}} className="main-signin" type="info" onClick={() => this.handleBack()}>BACK</this.Button> */}
         </Form>
       </ParentLayout>

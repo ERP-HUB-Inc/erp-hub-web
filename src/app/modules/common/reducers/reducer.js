@@ -99,7 +99,8 @@ export default {
         adding: false,
         showForm: false,
         added: false,
-        response: null
+        response: null,
+        error: null
       };
     }
     default: 

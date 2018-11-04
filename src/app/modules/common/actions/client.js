@@ -59,10 +59,10 @@ export default {
       });
     };
   },
-  reset: () => {
+  reset: (CONSTANT_RESET = Constant.CLIENT_SIGNIN_RESET) => {
     return dispatch => {
       return dispatch({
-        type: Constant.CLIENT_SIGNIN_RESET
+        type: CONSTANT_RESET
       });
     };
   }

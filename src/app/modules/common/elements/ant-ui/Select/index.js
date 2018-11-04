@@ -43,7 +43,7 @@ export class Select extends Element {
               {
                 dataSource.map((value, index) =>
                   <this.Option key={index} value={value[this.props.valueKey]}>
-                    {this.getName(value)}
+                    {value[this.props.nameKey]}
                   </this.Option>
                 )
               }

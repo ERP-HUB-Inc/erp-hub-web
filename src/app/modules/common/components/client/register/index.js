@@ -12,10 +12,9 @@ class ClientRegister extends Component {
   constructor(props) {
     super(props);
     this.values = null;
+    this.validateStatus = {};
     this.componentHadUpdated = false;
-    this.errorMessageEmail = null;
     this.nextStepContent = null;
-    this.validateClassStatusEmail = "";
     this.countries = [
       {name: "Global", description: "Language", currency: "USD", code: "global"},
       {name: "Cambodia", description: "Khmer", currency: "KHR", code: "cam"},
@@ -30,8 +29,8 @@ class ClientRegister extends Component {
     const {clientCheckExisting} = this.props;
     if (clientCheckExisting.fetched) {
       if (clientCheckExisting.list != null && clientCheckExisting.fetched) {
-        this.errorMessageEmail = "This email has already taken";
-        this.validateClassStatusEmail = "error";
+        this.validateStatus["help"] = "This email has already taken";
+        this.validateStatus["validateStatus"] = "error";
         this.props.dispatch(ClientAction.resetRequest());
       } else if (clientCheckExisting.list == null && clientCheckExisting.fetched){
         this.props.dispatch(ClientAction.startRegister(this.values, 2));
@@ -41,8 +40,7 @@ class ClientRegister extends Component {
   }
 
   handleKeyDown () {
-    this.errorMessageEmail = null;
-    this.validateClassStatusEmail = "";
+    this.validateStatus = {};
   }
 
   handleSubmit (e) {
@@ -60,7 +58,7 @@ class ClientRegister extends Component {
       setTimeout(() => {
         ClientService.findClientByColumn({column: "email", value})
           .then((response) => {
-            callback("Email already exist.");
+            callback("Email already exist");
           })
           .catch((error) => {
             callback();
@@ -72,8 +70,6 @@ class ClientRegister extends Component {
   }
 
   render() {
-    const {clientCheckExisting, form} = this.props;
-
     if (this.props.clientRegister.step === 2) {
       this.nextStepContent = <ClientRegiserDetail/>;
     } else if(this.props.clientRegister.step === 3) {
@@ -94,10 +90,8 @@ class ClientRegister extends Component {
               required={true}
               isAutoFocus={true}
               errorRequired="Please input your email"
-              help={this.errorMessageEmail}
-              validateStatus={this.validateClassStatusEmail}
-              form={form}
-              validator={this.checkIsEmailAlreadyExist}
+              {...this.validateStatus}
+              form={this.props.form}
               handleKeyDown={this.handleKeyDown}/>
             <this.InputPassword
               label="Password"
@@ -105,7 +99,7 @@ class ClientRegister extends Component {
               placeholder="Password"
               confirmPlaceholder="Comfirm Password"
               required={true}
-              form={form} />
+              form={this.props.form} />
             <div>
                 
               <this.RadioBox 
@@ -114,7 +108,7 @@ class ClientRegister extends Component {
                 name="countryId"
                 type="radio"
                 defaultValue="global"
-                form={form}
+                form={this.props.form}
                 onSelect={this.onSelect}
                 onChange={this.onChange}>
                 { this.countries.map( (country, key) => 
@@ -147,7 +141,7 @@ class ClientRegister extends Component {
                 <span className="have-acc">Have an account?</span> <span className="store-link">sign in </span>
               </this.Link>
               <div className="main-signin">
-                <this.Button htmlType="submit" type="info" loading={clientCheckExisting.fetching}>START</this.Button>
+                <this.Button htmlType="submit" type="info" loading={this.props.clientCheckExisting.fetching}>START</this.Button>
               </div>
             </div>
           </this.Form>
