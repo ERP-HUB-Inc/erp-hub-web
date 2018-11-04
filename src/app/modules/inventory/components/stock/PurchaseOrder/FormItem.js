@@ -66,6 +66,8 @@ export default class FormItem extends Modal {
         locationId = defaultLocation.id;
       }
     }
+
+    console.log("Location Id:", locationId);
     
     return (
       <this.Row id="purchase-order-form">

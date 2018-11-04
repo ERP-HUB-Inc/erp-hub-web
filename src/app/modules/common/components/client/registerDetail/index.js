@@ -78,11 +78,10 @@ class ClientRegister extends Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const {
-          dispatch,
           clientRegister
         } = this.props;
         const registerData = {...clientRegister.response, ...values};// merge value from step one to current step
-        dispatch(ClientAction.register(registerData, 3));
+        this.props.dispatch(ClientAction.register(registerData, 3));
       }
     });
   }
@@ -103,7 +102,8 @@ class ClientRegister extends Component {
     }
 
     return (
-      <ParentLayout>
+      <ParentLayout
+        classBlogLogin="wrap-client-login-auto-height">
         <Form onSubmit={this.handleSubmit}>
           <this.InputText
             name="businessName"

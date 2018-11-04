@@ -29,7 +29,6 @@ export default class FormCreate extends Modal {
     this.handlePushToSupplier();
   }  
 
-
   handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -77,6 +76,8 @@ export default class FormCreate extends Modal {
         values["status"] = this.Enum.ACTIVE;
 
         values["POEntries"] = purchaseEntries;
+
+        console.log("Value for PO Create:", values);
       
         this.dispatch(PurchaseOrderAction.add(values));
       }
