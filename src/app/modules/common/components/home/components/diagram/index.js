@@ -20,8 +20,8 @@ export default class Diagram extends Component {
   groupIncomeExpenseType(){
     const income = [];
     const expense = [];
-    if (Array.isArray(this.props.PipeChat.list)) {
-      this.props.PipeChat.list.forEach(incomeExpense => {
+    if (Array.isArray(this.props.pipeChat.list)) {
+      this.props.pipeChat.list.forEach(incomeExpense => {
         if (incomeExpense.type === this.Enum.OPERATION_TYPE.INCOME) {
           income.push(incomeExpense);
         } else if (incomeExpense.type === this.Enum.OPERATION_TYPE.EXPENSE) {
@@ -41,11 +41,11 @@ export default class Diagram extends Component {
   }
 
   render() {
-    const { GraphChat, PipeChat } = this.props;
+    const { graphChat, pipeChat } = this.props;
     const incomeExpense = this.groupIncomeExpenseType();
-    console.log("expense",incomeExpense.expense[0]);
+  
     return (
-      PipeChat.fetching ? 
+      pipeChat.fetching ? 
         <div className="text-center">
           <this.Spin/>
         </div> 
@@ -53,7 +53,7 @@ export default class Diagram extends Component {
       <div>
         <div className="main-diagram">
           <Line
-            data={ GraphChat.list }
+            data={ graphChat.list }
             option={
               {
                 animation: {
@@ -70,7 +70,6 @@ export default class Diagram extends Component {
             width={1700}
           />
 
-          
         </div>
         <div className="main-doughnut-chart">
           <this.Row>
@@ -91,7 +90,7 @@ export default class Diagram extends Component {
               </this.Row>
             
               <Doughnut
-                data={incomeExpense.expense[0]}
+                data={incomeExpense.expense[0] ? incomeExpense.expense[0] : [] }
                 option={
                   {
                     position: "left",
@@ -115,7 +114,7 @@ export default class Diagram extends Component {
               </this.Row>
              
               <Doughnut
-                data={incomeExpense.income[0]}
+                data={incomeExpense.income[0] ? incomeExpense.income[0] : [] }
                 option={
                   {
                     position: "left",

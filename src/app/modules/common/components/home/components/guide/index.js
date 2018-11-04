@@ -129,9 +129,9 @@ export default class Duide extends Component {
             </ul>
           </div>
 
-          <div className="main-icon-buttom">
+          <div className="main-icon-top">
             <ul>
-              <li>
+              <li style={{ marginRight: "93px" }}>
                 <this.Link to="products/manage">
                   <span className="icon-add-product"></span>
                 </this.Link>

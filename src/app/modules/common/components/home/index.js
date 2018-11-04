@@ -28,7 +28,6 @@ export default class Home extends Component {
 
   componentWillUpdate() {
     if(!this.hasDidUpdate){
-      console.log("will update");
       this.hasDidUpdate = true;
       let getDefaultSetting = localStorage.getItem("defaultDashboardSetting");
       if(getDefaultSetting) {
@@ -54,8 +53,10 @@ export default class Home extends Component {
   }
 
   render(){
-    const {form} = this.props;
-    console.log("IsShow digram:", this.state.isShowDiagram);
+    const { form,cardDashboard } = this.props;
+
+    const readmore = ["transactions/salehistory?salehistory=1","#","products/manage","#"];
+
     return(
       <div style={{width: "100%"}}>
         <this.Row>
@@ -76,10 +77,11 @@ export default class Home extends Component {
           </this.Col>
         </this.Row>
         <this.Row>
-          <Board total={<CountUp start={0} end={1200}  decimal="," />} icon="icon-dollar" title={<this.Translate id="home_page_title_today_is_sale"/>} readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>} route="read" to="transactions/salehistory?salehistory=1" />
-          <Board total="0.00" icon="icon-list" title={<this.Translate id="home_page_title_today_is_transaction"/>} readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>} route="read"/>
-          <Board total="0.00" icon="icon-stock" title={<this.Translate id="home_page_title_today_is_product_sold"/>} readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>} route="read" to="products/manage"/>
-          <Board total="0" icon="icon-customer" title={<this.Translate id="home_page_total_customer"/>} readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>} route="read"/>
+          {
+            cardDashboard.list.map((value,index) =>
+              <Board key={ index } total={<CountUp start={0} end={value.value} decimal="," />} icon="icon-dollar" title={value.title} readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>} route="read" to={readmore[index] }/>
+            )
+          }
         </this.Row>
 
         <this.Row>
@@ -89,6 +91,7 @@ export default class Home extends Component {
             }
           </this.Col>
         </this.Row>
+
       </div> 
     );
   }
