@@ -165,7 +165,7 @@ export default class ProductList extends List {
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           let filter = {};
-          let locationId = "";
+          let locationId = 0;
           if (values.locationId !== 0) {
             locationId = values.locationId;
           }

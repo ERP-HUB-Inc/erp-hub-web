@@ -3,6 +3,7 @@ import history from "../../../../common/router/history";
 import StoreAccountAction from "../../../action/settings/storeAccount";
 import TaxAction from "../../../action/settings/tax";
 import LanguageAction from "../../../action/settings/storeLanguage";
+import DeviceAction from "../../../action/settings/device";
 import {fetchAllBusinessPlanSystem} from "../../../../../modules/common/actions/businessPlan";
 import Component from "../../../../common/components/Component";
 import menuSource from "../../../../common/components/layout/SiderBar/datasource";
@@ -70,6 +71,7 @@ export default class StoreAccountList extends Component {
       }
     ];
 
+    this.handleOnCopyDeviceNumber = this.handleOnCopyDeviceNumber.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onSelect = this.onSelect.bind(this);
@@ -88,6 +90,21 @@ export default class StoreAccountList extends Component {
         this.dispatch(StoreAccountAction.update(values));
       }
     });
+  }
+
+  handleOnCopyDeviceNumber(id, status) {
+    if (status !== this.Enum.ACTIVE) {
+      this.Message.warning(this.CATranslate("text_not_available", this.props.locale));
+      return;
+    }
+    const div = document.getElementById(id);
+    const el = document.createElement("textarea");
+    el.value = div.innerHTML;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    document.body.removeChild(el);
+    this.Message.success(this.CATranslate("text_copy", this.props.locale));
   }
 
   handleChangeDateFormat(value) {
@@ -111,6 +128,7 @@ export default class StoreAccountList extends Component {
     this.dispatch(fetchAllBusinessPlanSystem());
     this.dispatch(TaxAction.fetch(100));
     this.dispatch(LanguageAction.fetch(100));
+    this.dispatch(DeviceAction.fetch(100));
     this.onSelect();
   }
   
@@ -382,7 +400,7 @@ export default class StoreAccountList extends Component {
                       name="postCode"
                       label={<this.Translate id="store_acc_post_code" />}
                       placeholder={this.CATranslate("store_acc_post_code", locale)}
-                      form={form}/>
+                      form={form} />
 
                     <div className="general">
                       <h6>{<this.Translate id="store_acc_setting" />}</h6>
@@ -418,6 +436,61 @@ export default class StoreAccountList extends Component {
                     placeholder="Tax
                     Exclusive"
                     dataSource={statusDataSource} /> */}
+
+                    <div className="general">
+                      <h6>Device</h6>
+                    </div>
+                    
+                    <this.InputNumber
+                      data={storeAccount.list.numberOfDevice}
+                      name="deviceNumber"
+                      precision={0}
+                      label={<this.Translate id="number_of_device" />}
+                      placeholder={this.CATranslate("number_of_device", locale)}
+                      disabled={true}
+                      form={form} />
+
+                    <this.Table 
+                      dataSource={this.props.devices.list}
+                      columns={[
+                        {
+                          title: <this.Translate id="text_name" />,
+                          dataIndex: "name",
+                          key: "name"
+                        },
+                        {
+                          title: <this.Translate id="text_number" />,
+                          dataIndex: "code",
+                          key: "code",
+                          render: (text, record, index) => {
+                            return <div id={`device-${index}`}>{record.code}</div>;
+                          }
+                        },
+                        {
+                          title: <this.Translate id="text_status" />,
+                          dataIndex: "status",
+                          key: "status",
+                          width: 120,
+                          render: status => {
+                            return (
+                              status === this.Enum.ACTIVE ?
+                                <this.Badge text={<this.Translate id="text_available" />} status="success" />
+                                :
+                                <this.Badge text={<this.Translate id="text_not_available"/>} status="error" />
+                            );
+                          }
+                        },
+                        {
+                          title: <this.Translate id="text_action" />,
+                          key: "action",
+                          width: 50,
+                          render: (text, record, index) => {
+                            return <this.Button type="info" onClick={() => this.handleOnCopyDeviceNumber(`device-${index}`, record.status)}>{<this.Translate id="copy_device_number"/>}</this.Button>;
+                          }
+                        }
+                      ]}
+                      locale={{emptyText: <this.Translate id="table_empty_data"/>}}
+                      loading={false} />
 
                   </this.Col>
 
@@ -483,7 +556,7 @@ export default class StoreAccountList extends Component {
                       required/>
                   
                     <this.Button type="info" htmlType="submit" loading={storeAccountUpdate.updating}>
-                      <span className="icon-save icon-padding-right"></span>Save
+                      <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
                     </this.Button>
                   </this.Col>
                 </this.Row>

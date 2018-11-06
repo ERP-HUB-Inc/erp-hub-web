@@ -492,8 +492,7 @@ export default class List extends Component {
             onClick: () => this.handleShowRecordDetail(record)
           })}
           rowSelection={rowSelection}
-          loading={fetchingProps.fetching}
-        />
+          loading={fetchingProps.fetching} />
         :
         <this.Table 
           rowSelection={this.rowSelection ? rowSelection : null}
@@ -505,8 +504,7 @@ export default class List extends Component {
             onDoubleClick:() => this.handleShowFormEdit(record),
             onClick: () => this.handleShowRecordDetail(record)
           })}
-          loading={fetchingProps.fetching}
-        />
+          loading={fetchingProps.fetching} />
     );
   }
 

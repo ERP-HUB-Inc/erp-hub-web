@@ -31,6 +31,11 @@ export default class App extends React.Component {
       loading: () => <StartUp />,
     });
 
+    const RegisterDevice = Loadable({
+      loader: () => import("./client/registerDevice"),
+      loading: () => <StartUp />,
+    });
+
     const ClientRegister = Loadable({
       loader: () => import("./client/register"),
       loading: () => <StartUp />,
@@ -53,6 +58,7 @@ export default class App extends React.Component {
             <div style={{height: "100%"}}>
               <Route path="/signin" component={UserLogin} />
               <Route path="/store" component={LoginStore} />
+              <Route path="/device" component={RegisterDevice} />
               <Route path="/register" component={ClientRegister} />
               <Route path="/register/detail" component={ClientRegisterDetail} />
               <Route path="/signin-complete" component={ClientRegisterComplete} />

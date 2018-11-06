@@ -11,6 +11,18 @@ export default {
     "Business Name"
   ],
 
+  "number_of_device": [
+    "Number of Device",
+    "Number of Device",
+    "Number of Device"
+  ],
+
+  "copy_device_number": [
+    "Copy",
+    "Copy",
+    "Copy"
+  ],
+
   "store_acc_store_name": [
     "Private URL",
     "Private URL",

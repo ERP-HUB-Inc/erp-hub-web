@@ -145,7 +145,8 @@ export default {
         updating: false,
         showForm: false,
         updated: false,
-        response: null
+        response: null,
+        error: null
       };
     }
     default: 

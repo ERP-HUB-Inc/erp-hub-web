@@ -34,7 +34,8 @@ class ClientService extends BaseService {
         "Content-Type": "application/json",
         "storeName": storeName,
         "userName": userName,
-        "password": password
+        "password": password,
+        "deviceNumber": localStorage.getItem(this.ConstantAuth.ACCESS_DEVICE)
       },
       data: {}
     });

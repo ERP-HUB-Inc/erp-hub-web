@@ -167,6 +167,12 @@ export default {
     "Cash"
   ],
 
+  "text_copy": [
+    "Copy !",
+    "Copy !",
+    "Copy !"
+  ],
+
   "text_credit_card": [
     "Credit Card",
     "Credit Card",
@@ -285,6 +291,12 @@ export default {
     "Store",
     "Store",
     "Store"
+  ],
+
+  "text_save": [
+    "Save",
+    "Save",
+    "Save"
   ],
 
   "text_payment_method": [
@@ -513,5 +525,17 @@ export default {
     "Receiver",
     "Receiver",
     "Receiver"
+  ],
+
+  "text_available": [
+    "Available",
+    "Available",
+    "Available"
+  ],
+
+  "text_not_available": [
+    "Not Available",
+    "Not Available",
+    "Not Available"
   ]
 };
