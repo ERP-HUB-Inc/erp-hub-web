@@ -537,5 +537,11 @@ export default {
     "Not Available",
     "Not Available",
     "Not Available"
+  ],
+
+  "text_renew": [
+    "Re-New",
+    "Re-New",
+    "Re-New"
   ]
 };

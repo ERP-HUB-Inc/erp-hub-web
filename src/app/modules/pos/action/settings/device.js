@@ -19,6 +19,14 @@ export default {
       });
     };
   },
+  renew: (id) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.RENEW_DEVICE,
+        payload: DeviceService.renew(id)
+      });
+    };
+  },
   reset: (CONSTANT_RESET = Constant.RESET_UPDATE) => {
     return dispatch => {
       return dispatch({

@@ -16,6 +16,14 @@ class DeviceService extends BaseService {
       headers: this.header
     });
   }
+
+  renew(id) {
+    return this.PUT({
+      url: `${this.baseUrl}/renew/${id}`,
+      data: {},
+      headers: this.header
+    });
+  }
 }
 
 export default new DeviceService();
