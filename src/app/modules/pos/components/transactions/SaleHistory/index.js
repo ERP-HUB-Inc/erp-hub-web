@@ -44,7 +44,7 @@ export default class SaleHistoryList extends List {
     this.props.dispatch(LocationAction.fetch(100));
     this.props.dispatch(UserAction.fetch(100));
 
-    if(this.Util.getParameterByName("salehistory") === 1) {
+    if(parseInt(this.Util.getParameterByName("salehistory"),10) === 1) {
       this.handleSubmitCurrentSearchFilter();
     }
 
@@ -254,7 +254,7 @@ export default class SaleHistoryList extends List {
   handleSubmitCurrentSearchFilter(){
 
     let getCurrentDate = new Date().toISOString().slice(0,10); 
-    
+
     this.setState({
       setDefaultDate : [this.Util.formatDatePicker(getCurrentDate),this.Util.formatDatePicker(getCurrentDate)]
     });

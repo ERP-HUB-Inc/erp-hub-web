@@ -12,11 +12,12 @@ export class DateRangePicker extends Element {
           getFieldDecorator(this.props.name, {rules: [{ type: "array" }], initialValue: this.props.defaultValue})(
             <DatePicker.RangePicker
               ranges={{ 
-                Today: [moment(), moment()],
                 "Last Week": [moment().subtract(1, "week").startOf("isoWeek"), moment().subtract(1, "week").endOf("isoWeek")],
                 "This Week": [moment().startOf("isoWeek"), moment().endOf("isoWeek")],
+                "Before Last Month":  [moment().subtract(1, "months").startOf("month")],
                 "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")],
-                "This Month": [moment().startOf("month"), moment().endOf("month")] 
+                "This Month": [moment().startOf("month"), moment().endOf("month")],
+                Today: [moment(), moment()]
               }}
               format={this.props.dateFormat}
               onChange={this.props.onChange}

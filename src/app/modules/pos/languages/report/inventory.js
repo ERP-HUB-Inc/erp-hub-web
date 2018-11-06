@@ -72,6 +72,18 @@ export default {
     "Date"
   ],
 
+  "input_inventory_report_week": [
+    "Weeks",
+    "Weeks",
+    "Weeks"
+  ],
+
+  "input_inventory_report_date_rank": [
+    "Date Rank",
+    "Date Rank",
+    "Date Rank"
+  ],
+
   "input_inventory_report_type": [
     "Report Type",
     "Report Type",

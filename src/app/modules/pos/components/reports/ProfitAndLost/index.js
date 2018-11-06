@@ -125,26 +125,31 @@ export default class InventoryList extends List {
           if (!err) {
             const {dispatch} = this.props;
             let filter = {};
-            // let rangFilter= {};
-          
-            if (values.createdAt) {
-              values.createdAt = this.Util.formatDate(values.createdAt, "YYYY-MM-DD");
-              // rangFilter = JSON.stringify({column: "createdAt", value: [values.createdAt]});
-            }
-
-            
+        
             filter["type"] = [values.type]; 
 
             if(values.type === ""){
               filter["type"] = [1,0];
             }
 
+            let rangFilter = "";
+            if (values.createdAt) {
+              rangFilter = JSON.stringify({
+                column: "createdAt",
+                value: [
+                  this.Util.formatDateForMYSQL(values.createdAt[0]),
+                  this.Util.formatDateForMYSQL(values.createdAt[1])
+                ]});
+  
+            }
+
             filter = JSON.stringify(filter);
            
-            const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.createdAt });
+            const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: rangFilter });
 
-            dispatch(this.action.fetch(filter,searchKey));
+            console.log("searchKey",rangFilter);
 
+            dispatch(this.action.fetch(filter,searchKey,rangFilter));
             this.setState({isClickFilter: true});
             
           }
@@ -159,7 +164,6 @@ export default class InventoryList extends List {
 
   renderTable(){
     const incomeExpense = this.groupIncomeExpenseByType();
-    console.log("expenseType",this.groupIncomeExpenseByType().expenseType);
     return (  
       <div className="main-profit-and-lost-report">
         <this.Row>
@@ -234,6 +238,7 @@ export default class InventoryList extends List {
   renderFilterRecord() {
 
     const {form,locale} = this.props;
+
     return(
       <div>
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
@@ -250,9 +255,9 @@ export default class InventoryList extends List {
               />
             </this.Col>
             <this.Col md="2">
-              <this.DatePickers
+              <this.DateRangePicker
                 name="createdAt"
-                label={<this.Translate id="input_inventory_report_date" />}
+                label={<this.Translate id="input_inventory_report_date_rank" />}
                 form={form}
               />
             </this.Col>

@@ -129,9 +129,9 @@ export default class Duide extends Component {
             </ul>
           </div>
 
-          <div className="main-icon-top">
+          <div className="main-icon-top" >
             <ul>
-              <li style={{ marginRight: "93px" }}>
+              <li style={{ marginRight: "101px" }}>
                 <this.Link to="products/manage">
                   <span className="icon-add-product"></span>
                 </this.Link>
@@ -143,7 +143,7 @@ export default class Duide extends Component {
                 </this.Link>
                 <div className="grap-guide-title grap-title">4.2. <this.Translate id="home_page_guide_stock"/></div>
               </li>
-              <li>
+              <li style={{ marginLeft: "26%" }}>
                 <this.Link to="#">
                   <span className="icon-sale-return"></span>
                 </this.Link>

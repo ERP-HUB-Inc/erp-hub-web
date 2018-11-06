@@ -3,7 +3,7 @@ import Component from "../Component";
 import Diagram from "../home/containers/diagram";
 import Guide from "../home/containers/guide";
 import Board from "../home/containers/Board";
-import CountUp from "react-countup";
+// import CountUp from "react-countup";
 import CardAction from "../../../common/actions/home";
 import "./index.css";
 
@@ -55,7 +55,8 @@ export default class Home extends Component {
   render(){
     const { form,cardDashboard } = this.props;
 
-    const readmore = ["transactions/salehistory?salehistory=1","#","products/manage","#"];
+    const readmore = ["transactions/salehistory?salehistory=1","#","#","customer"];
+    const icon = ["icon-dollar","icon-list","icon-stock","icon-customer"];
 
     return(
       <div style={{width: "100%"}}>
@@ -79,7 +80,8 @@ export default class Home extends Component {
         <this.Row>
           {
             cardDashboard.list.map((value,index) =>
-              <Board key={ index } total={<CountUp start={0} end={value.value} decimal="," />} icon="icon-dollar" title={value.title} readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>} route="read" to={readmore[index] }/>
+              <Board key={ index } total={ index > 0 ? value.value : this.formatCurrency(value.value) } icon={ icon[index] } title={value.title} readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>} route="read" to={readmore[index] }/>
+              // <Board key={ index } total={<CountUp start={0} end={160527.012} decimal="," />} icon="icon-dollar" title={value.title} readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>} route="read" to={readmore[index] }/>
             )
           }
         </this.Row>
