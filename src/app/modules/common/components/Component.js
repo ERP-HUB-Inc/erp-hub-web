@@ -47,7 +47,9 @@ import
   Radios,
   SelectSearch,
   SelectTag,
-  TagButton
+  TagButton,
+  MonthsPicker,
+  WeekPickers
 } from "../elements/ant-ui";
 import {BreadcrumbTitle, Cards} from "../elements/react-strap";
 import {Util} from "../util";
@@ -171,6 +173,8 @@ export default class Component extends React.Component {
     this.TagLabel = Tag;
     this.List = List;
     this.Breadcrumb  = Breadcrumb;
+    this.MonthPicker = MonthsPicker;
+    this.WeekPickers = WeekPickers;
 
     this.CSVLink = CSVLink;
     this.CSVDownload = CSVDownload;

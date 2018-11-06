@@ -56,14 +56,21 @@ export default class Diagram extends Component {
             data={ graphChat.list }
             option={
               {
-                animation: {
-                  duration: 0, // general animation time
-                },
-                hover: {
-                  animationDuration: 0, // duration of animations when hovering an item
-                },
-                responsiveAnimationDuration: 0,
-                responsive: true
+                scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero:true
+                      }
+                  }]
+              },
+              animation: {
+                duration: 0, // general animation time
+              },
+              hover: {
+                animationDuration: 0, // duration of animations when hovering an item
+              },
+              responsiveAnimationDuration: 0,
+              responsive: true
               }
             }
             height={500}
