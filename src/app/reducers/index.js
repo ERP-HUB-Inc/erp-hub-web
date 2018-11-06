@@ -9,6 +9,7 @@ import mail from "../modules/common/reducers/mail";
 import paymentMethods from "../modules/pos/reducers/settings/paymentMethod";
 import tax from "../modules/pos/reducers/settings/tax";
 import currency from "../modules/pos/reducers/settings/currency";
+import device from "../modules/pos/reducers/settings/device";
 import storeLocation from "../modules/pos/reducers/settings/storeLocation";
 import storeLanguage from "../modules/pos/reducers/settings/storeLanguage";
 import receiptTemplate from "../modules/pos/reducers/settings/receiptTemplate";
@@ -60,6 +61,7 @@ const reducer = combineReducers({
   user,
   tax,
   currency,
+  device,
   storeLocation,
   storeLanguage,
   paymentMethods,

@@ -1,28 +1,28 @@
 import React from "react";
 import {Route, Redirect} from "react-router-dom";
-import Authentication from "../constants/authentication";
+import Constant from "../constants/authentication";
 import {Util} from "../util";
 const PrivateRoute = ({component: AdminComponent, ...rest }) => (
   <Route {...rest} render={props => (
-    localStorage.getItem(Authentication.ACCESS_TOKEN)
+    localStorage.getItem(Constant.ACCESS_TOKEN)
       ? <AdminComponent {...props} />
       : renderPageAuth()
   )} />
 );
 
 function renderPageAuth () {
-  const no_restrict_route = [
-    "/register"
-  ];
-
   const domainInfo = (new Util()).getDomainInfo();
 
-  const isAccessSecureSubDomain = domainInfo.subStr === Authentication.SECURE_SUBDOMAIN;
+  const isAccessSecureSubDomain = domainInfo.subStr === Constant.SECURE_SUBDOMAIN;
 
   if (isAccessSecureSubDomain) {
-    if (no_restrict_route.find(value => value === window.location.pathname)) {
+    if ("/register" === window.location.pathname) {
       return <Redirect to="/register" />;
     }
+  }
+
+  if (!isAccessSecureSubDomain && !localStorage.getItem(Constant.ACCESS_DEVICE)) {
+    return <Redirect to="/device" />;
   }
 
   return isAccessSecureSubDomain

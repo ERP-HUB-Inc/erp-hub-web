@@ -13,7 +13,8 @@ class AuthService extends BaseService {
         url: `${this.baseUrl}/check/authenticated`,
         data: {},
         headers: {
-          "accessToken": accessToken
+          "accessToken": accessToken,
+          "deviceNumber": localStorage.getItem(this.ConstantAuth.ACCESS_DEVICE)
         }
       }
     );
