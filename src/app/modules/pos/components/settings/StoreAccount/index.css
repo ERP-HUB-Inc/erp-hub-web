@@ -24,3 +24,8 @@
 .main-store-account .unhide .main-ant-wrapper {
     display: block !important;
 }
+
+.main-store-account .btn-action-device button {
+    font-size: 8pt;
+    height: 25px
+}

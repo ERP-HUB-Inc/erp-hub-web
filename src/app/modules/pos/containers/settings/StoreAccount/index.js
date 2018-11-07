@@ -14,6 +14,7 @@ class StoreAccount extends React.Component {
 function mapStateToProps(state) {
   return {
     devices: state.reducer.device.request,
+    renew: state.reducer.device.renew,
     storeAccount: state.reducer.storeAccount.request,
     storeAccountUpdate: state.reducer.storeAccount.update,
     languages: state.reducer.storeLanguage.request.list,

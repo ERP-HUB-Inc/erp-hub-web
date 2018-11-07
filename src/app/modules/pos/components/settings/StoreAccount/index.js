@@ -5,6 +5,7 @@ import TaxAction from "../../../action/settings/tax";
 import LanguageAction from "../../../action/settings/storeLanguage";
 import DeviceAction from "../../../action/settings/device";
 import {fetchAllBusinessPlanSystem} from "../../../../../modules/common/actions/businessPlan";
+import ConstantDevice from "../../../constants/settings/device";
 import Component from "../../../../common/components/Component";
 import menuSource from "../../../../common/components/layout/SiderBar/datasource";
 import "./index.css";
@@ -24,6 +25,7 @@ export default class StoreAccountList extends Component {
     this.validateClassStatusCurrentPWD = "";
     this.isResetInputCurrentPWD = false;
     this.exampleDateFormat= "";
+    this.renewButtonIndex = null;
     this.dispatch = this.props.dispatch;
 
     this.successMessage = "Success updated.";
@@ -71,12 +73,20 @@ export default class StoreAccountList extends Component {
       }
     ];
 
+    this.handleOnReNewDeviceNumber = this.handleOnReNewDeviceNumber.bind(this);
     this.handleOnCopyDeviceNumber = this.handleOnCopyDeviceNumber.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.handleChangeDateFormat = this.handleChangeDateFormat.bind(this);
 
+  }
+
+  componentDidUpdate() {
+    if (this.props.renew.updated) {
+      this.dispatch(DeviceAction.reset(ConstantDevice.RESET_RENEW_DEVICE));
+      window.location.reload();
+    }
   }
 
   handleSubmit(e){
@@ -105,6 +115,11 @@ export default class StoreAccountList extends Component {
     document.execCommand("copy");
     document.body.removeChild(el);
     this.Message.success(this.CATranslate("text_copy", this.props.locale));
+  }
+
+  handleOnReNewDeviceNumber(id, index) {
+    this.renewButtonIndex = index;
+    this.dispatch(DeviceAction.renew(id));
   }
 
   handleChangeDateFormat(value) {
@@ -483,9 +498,14 @@ export default class StoreAccountList extends Component {
                         {
                           title: <this.Translate id="text_action" />,
                           key: "action",
+                          align: "center",
                           width: 50,
                           render: (text, record, index) => {
-                            return <this.Button type="info" onClick={() => this.handleOnCopyDeviceNumber(`device-${index}`, record.status)}>{<this.Translate id="copy_device_number"/>}</this.Button>;
+                            return <div className="btn-action-device">{(record.status === this.Enum.ACTIVE ?
+                              <this.Button type="info" onClick={() => this.handleOnCopyDeviceNumber(`device-${index}`, record.status)}>{<this.Translate id="copy_device_number"/>}</this.Button>
+                              :
+                              <this.Button loading={this.props.renew.updating && this.renewButtonIndex === index} type="info" onClick={() => this.handleOnReNewDeviceNumber(record.id, index)}>{<this.Translate id="text_renew"/>}</this.Button>)
+                            }</div>;
                           }
                         }
                       ]}

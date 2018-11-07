@@ -22,6 +22,16 @@ export default combineReducers({
       Constant.RESET_UPDATE
     ];
     return reducer.update(state, action, constants);
+  },
+  renew: (state = InitialState.update(), action) => {
+    const constants = [
+      Constant.RENEW_DEVICE_PENDING,
+      Constant.RENEW_DEVICE_REJECTED,
+      Constant.RENEW_DEVICE_FULFILLED,
+      null,
+      Constant.RESET_RENEW_DEVICE
+    ];
+    return reducer.update(state, action, constants);
   }
 });
     
