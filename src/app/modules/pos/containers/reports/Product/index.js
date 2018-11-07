@@ -1,11 +1,32 @@
 import React from "react";
+import { Form } from "antd";
+import { connect } from "react-redux";
+import List from "../../../components/reports/Product";
 
-export default class Product extends React.Component {
+class Product extends React.Component {
   render() {
     return (
-      <div>
-        Product
-      </div>
+      <List {...this.props} />
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    purchaseReport: state.reducer.purchaseReport.request,
+    purchaseReportAdd: state.reducer.purchaseReport.add,
+    purchaseReportUpdate: state.reducer.purchaseReport.update,
+    supplier: state.reducer.supplier.request,
+    locale: state.locale,
+  };
+}
+
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const product =  Form.create(mapPropsToFields)(Product);
+
+export default connect(mapStateToProps)(product);

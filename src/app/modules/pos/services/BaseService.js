@@ -36,11 +36,11 @@ export default class BaseService extends Service {
 
   listsSearch(
     filter, // {"column1": [value1, value2], "column2": [value1, value2]}
-    searchKey // {"column": ["columnname1", "columnname2"], "value": "hello"}
+    rangFilter // {"column": ["columnname1", "columnname2"], "value": "hello"}
   ) {
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.GET({ 
-      url: `${this.baseUrl}/lists?filter=${filter}&search=${searchKey}`,  
+      url: `${this.baseUrl}/lists?filter=${filter}&rangFilter=${rangFilter}`,  
       data: this.data,
       headers: this.header
     });

@@ -433,7 +433,7 @@ const dataSource = {
         icon: "icon-items",
         route: "/reports/product",
         component: ProductReport,
-        isFashNav: false
+        isFashNav: true
       },
       {
         title: "Inventory Report",
@@ -455,13 +455,6 @@ const dataSource = {
         route: "/reports/profit-lost",
         component: ProfitAndLostReport,
         isFashNav: true
-      },
-      {
-        title: "Profit & Lost Report",
-        icon: "icon-reports",
-        route: "/reports/profit-lost",
-        component: ProfitAndLostReport,
-        isFashNav: false
       },
       {
         title: "Tax Report",

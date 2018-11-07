@@ -15,10 +15,11 @@ export default class InventoryList extends List {
     };
 
     this.columns = new Column();
-    this.ExportheadersCsv = [{label: "Date", key: "createdAt"},
+    this.ExportheadersCsv = [
+      {label: "Date", key: "createdAt"},
       {label: "Name", key: "name"},
       {label: "Amount", key: "amount"},
-      {label: "Type", key: "type"}
+      {label: "Type", key: "type"},
     ];
     this.exportCsvFileName = "profit_and_lost_report.csv"; 
     this.fetchingProp = "profitAndLostReport";
@@ -26,8 +27,8 @@ export default class InventoryList extends List {
     this.updatingProp = "profitAndLostReportUpdate";
     this.columnFilterWithKey = ["createdAt"];
     this.reportType = [
-      {name: <this.Translate id="select_profit_and_lost_operation_report_type" />, value: this.Enum.OPERATION_TYPE.INCOME},
-      {name: <this.Translate id="select_profit_and_lost_sale_report_type" />, value: this.Enum.OPERATION_TYPE.EXPENSE}
+      { value: this.Enum.OPERATION_TYPE.INCOME,name: <this.Translate id="select_profit_and_lost_operation_report_type" />},
+      { value: this.Enum.OPERATION_TYPE.EXPENSE,name: <this.Translate id="select_profit_and_lost_sale_report_type" />}
     ];
 
     this.service = ProfitAndLostReportService;
@@ -93,6 +94,21 @@ export default class InventoryList extends List {
     };
 
   }
+  
+
+  exportCsv(){
+    const { profitAndLostReport } = this.props;
+    let getIncomeExpenseValue = [];
+    if (profitAndLostReport.list) {
+      profitAndLostReport.list.forEach(incomeExpense => {
+        if(incomeExpense.type === this.Enum.OPERATION_TYPE.INCOME || incomeExpense.type === this.Enum.OPERATION_TYPE.EXPENSE){
+          getIncomeExpenseValue.push(incomeExpense);
+        }
+      });
+    }
+
+    return getIncomeExpenseValue;
+  }
 
   doughuntChat(){
     const incomeExpense = this.groupIncomeExpenseByType();
@@ -124,18 +140,15 @@ export default class InventoryList extends List {
         this.props.form.validateFieldsAndScroll((err, values) => {
           if (!err) {
             const {dispatch} = this.props;
+
             let filter = {};
+
+            filter["type"] = [values.reportType];
         
-            filter["type"] = [values.type]; 
-
-            if(values.type === ""){
-              filter["type"] = [1,0];
-            }
-
             let rangFilter = "";
             if (values.createdAt) {
               rangFilter = JSON.stringify({
-                column: "createdAt",
+                column: "registerDate",
                 value: [
                   this.Util.formatDateForMYSQL(values.createdAt[0]),
                   this.Util.formatDateForMYSQL(values.createdAt[1])
@@ -144,12 +157,9 @@ export default class InventoryList extends List {
             }
 
             filter = JSON.stringify(filter);
-           
-            const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: rangFilter });
+          
+            dispatch(this.action.fetch(filter,rangFilter));
 
-            console.log("searchKey",searchKey);
-
-            dispatch(this.action.fetch(rangFilter));
             this.setState({isClickFilter: true});
             
           }
@@ -158,7 +168,6 @@ export default class InventoryList extends List {
       } 
     }); 
   }
-
 
 
 
@@ -223,6 +232,20 @@ export default class InventoryList extends List {
     );
   }
 
+  renderButtonExportCSV(){
+    return(
+      <this.CSVLink
+        filename={this.exportCsvFileName}
+        data={this.exportCsv()}
+        headers={this.ExportheadersCsv}
+      >
+        <this.Button type="info">
+          <span className="icon-export icon-padding-right"></span>{<this.Translate id="button_search_stock_transfer_export_csv" />}
+        </this.Button>
+      </this.CSVLink>
+    );
+  }
+
   renderActionButton(){
     return(
       <div className="reorder-point-button-search report-button">
@@ -246,11 +269,10 @@ export default class InventoryList extends List {
 
             <this.Col md="2">
               <this.Select
-                name="type"
+                name="reportType"
                 placeholder={this.CATranslate("place_holder_profit_and_lost_report_type", locale)}
                 dataSource={this.reportType}
                 label={<this.Translate id="input_inventory_report_type" />}
-                defaultValue={[]}
                 form={form}
               />
             </this.Col>
@@ -262,7 +284,10 @@ export default class InventoryList extends List {
               />
             </this.Col>
             
-            <this.Col md="2" className="reorder-point-button-search report-button">
+            <this.Col md="2" className="reorder-point-button-search report-button wrap-btn-search">
+              <div className="ant-form-item-label" style={{visibility: "hidden"}}>
+                <label htmlFor="status" className="" title=""></label>
+              </div>
               <this.Button htmlType="submit" type="info" >
                 <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
               </this.Button> 
