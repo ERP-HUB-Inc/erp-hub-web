@@ -11,6 +11,7 @@ export class SelectSearch extends Element {
       this.rules["initialValue"] = this.props.defaultValue;
     }
   }
+
   render() {
     const {getFieldDecorator} = this.props.form;
     return (
@@ -43,7 +44,7 @@ export class SelectSearch extends Element {
               }  
               {
                 this.props.dataSource.map((value, index) =>
-                  <this.Option key={index} value={value[this.props.valueKey]}>{value[this.props.nameKey]}</this.Option>
+                  <this.Option key={index} value={value[this.props.valueKey]}>{this.getName(value)}</this.Option>
                 )
               }
             </this.Select>
@@ -60,5 +61,6 @@ SelectSearch.defaultProps = {
   notFoundContent: "No item found",
   textAddNew: "Add New",
   valueKey: "value",
-  nameKey: "name"
+  nameKey: "name",
+  nestedName: null
 };
