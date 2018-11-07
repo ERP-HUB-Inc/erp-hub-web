@@ -7,7 +7,17 @@ export class Select extends Element {
     super(props);
     this.getName = this.getName.bind(this);
   }
-
+  getName(value) {
+    if (this.props.nestedName &&
+      this.props.nestedName in value &&
+      value[this.props.nestedName]) {
+      if (Array.isArray(value[this.props.nestedName]) && value[this.props.nestedName].length > 0) {
+        value[this.props.nestedName] = value[this.props.nestedName][0];
+      }
+      return value[this.props.nestedName][this.props.nameKey];
+    }
+    return value[this.props.nameKey];
+  }
   render() {
     const {getFieldDecorator} = this.props.form;
     let dataSource = this.props.dataSource;

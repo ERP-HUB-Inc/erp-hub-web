@@ -9,14 +9,16 @@ export default class ComponentToPrint extends List {
         const numberOfLabel = Array.from(Array(value["numberOfPrint"]).keys());
         const numberOfRows = this.Util.chuckCollection(numberOfLabel, this.props.numberOfColumn);
         numberOfRows.forEach((row, rowIndex) => {
-          row.forEach((rowValue, index) => {
-            JsBarcode("#printbarcode" + (index + rowIndex), value["barcode"], {
-              font: "monospace",
-              width: this.props.widthOfLabel,
-              height: this.props.heightOfLabel,
-              fontSize: this.props.fontSizeOfValue
+          if (value["barcode"]) {
+            row.forEach((rowValue, index) => {
+              JsBarcode("#printbarcode" + (index + rowIndex), value["barcode"], {
+                font: "monospace",
+                width: this.props.widthOfLabel,
+                height: this.props.heightOfLabel,
+                fontSize: this.props.fontSizeOfValue
+              });
             });
-          });
+          }
         });
       });
     }

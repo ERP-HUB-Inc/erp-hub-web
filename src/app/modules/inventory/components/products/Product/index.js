@@ -266,8 +266,7 @@ export default class ProductList extends List {
         <this.SubTable 
           columns={this.columnExpend}
           dataSource={record.productVariantToProduct}
-          locale={{emptyText: <this.Translate id="placeholder_table_variant_product" />}}
-        />
+          locale={{emptyText: <this.Translate id="placeholder_table_variant_product" />}}/>
       </div>
     );
   }
@@ -326,7 +325,7 @@ class ColumnExpand extends List {
 class Column extends List {
   constructor(props) {
     super(props);
-    this.colorStockStatus = ["#4cb64c", "#f3a638"];
+    this.colorStockStatus = ["#4cb64c", "#f3a638", "#c72727"];
     return [
       {
         title: <this.Translate id="text_product_name" />,
@@ -394,7 +393,13 @@ class Column extends List {
           if ("productLocations" in record) {
             quantity = Util.getProductQTYLocation(record["productLocations"]);
           }
-          colorIndex = quantity > 0 ? 0 : 1;
+          
+          if (quantity === 0) {
+            colorIndex = 1;
+          } else if (quantity < 0) {
+            colorIndex = 2;
+          }
+
           return <this.Tag color={this.colorStockStatus[colorIndex]} className="text-center label-stock-status">{quantity}</this.Tag>;
         },
         sorter: true

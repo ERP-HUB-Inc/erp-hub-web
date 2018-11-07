@@ -75,7 +75,7 @@ export default class PrintPriceTag extends List {
       },
       {
         title: "Action",
-        width: 100,
+        width: 80,
         key: "action",
         render: (text, record, index) => <this.Button type="danger" className="btn-icon" onClick={() => this.handleRemoveProductList(index)}>
           <span className="icon-delete icon-padding-right"></span>
@@ -164,7 +164,7 @@ export default class PrintPriceTag extends List {
     existingProductList.forEach((productList, index) => {
       if (e.target.value === this.TYPE_OF_PRINT.ALL_QTY) {
         this.props.form.setFieldsValue({[`numberOfPrint[${index}]`]: productList.quantity});
-      } else if(e.target.value === this.TYPE_OF_PRINT.QTY_IN_STOCK && productList.productLocations.length > 0) {
+      } else if(e.target.value === this.TYPE_OF_PRINT.QTY_IN_STOCK && productList.productLocations && productList.productLocations.length > 0) {
         let quantity = 0;
         productList.productLocations.forEach(productLocation => {
           quantity += productLocation.quantity;

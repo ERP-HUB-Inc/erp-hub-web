@@ -197,8 +197,7 @@ export default class FormItem extends Modal {
                   handleOnChangContactField={this.handleOnChangContactField}
                   form={this.props.form}
                   locale={this.props.locale}
-                  remove={() => this.remove(contact, index)}
-                />
+                  remove={() => this.remove(contact, index)}/>
             )
           } 
           <div className="btn-addcontact">
