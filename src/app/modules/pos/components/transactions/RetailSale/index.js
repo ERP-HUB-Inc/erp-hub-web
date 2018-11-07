@@ -3,6 +3,7 @@ import VaraintProduct from "./VaraintProduct";
 import DiscountSetup from "./DiscountSetup";
 import TaxSetting from "./TaxSetting";
 import Enum from "../../../enums";
+import InventoryEnum from "../../../../inventory/enums";
 import TransactionAction from "../../../action/transaction/transaction";
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
 import FormCreateCustomer from "../../../../crm/containers/customers/Customer/FormCreate";
@@ -449,6 +450,12 @@ export default class Retail extends Component {
               <div className="image">
                 <this.Image url={this.Util.getProductImage(product.image).url}/>
               </div>
+              {
+                product.quantity <= 0 && product.type !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY ?
+                  <div className="out-of-stock">Out of stock</div>
+                  : ""
+              }
+
               <div className="name">
                 {
                   product.productDescriptions.length > 0 ?

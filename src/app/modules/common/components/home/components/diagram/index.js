@@ -50,42 +50,42 @@ export default class Diagram extends Component {
           <this.Spin/>
         </div> 
         :
-      <div>
-        <div className="main-diagram">
-          <Line
-            data={ graphChat.list }
-            option={
-              {
-                scales: {
-                  yAxes: [{
+        <div>
+          <div className="main-diagram">
+            <Line
+              data={ graphChat.list }
+              option={
+                {
+                  scales: {
+                    yAxes: [{
                       ticks: {
-                          beginAtZero:true
+                        beginAtZero:true
                       }
-                  }]
-              },
-              animation: {
-                duration: 0, // general animation time
-              },
-              hover: {
-                animationDuration: 0, // duration of animations when hovering an item
-              },
-              responsiveAnimationDuration: 0,
-              responsive: true
+                    }]
+                  },
+                  animation: {
+                    duration: 0, // general animation time
+                  },
+                  hover: {
+                    animationDuration: 0, // duration of animations when hovering an item
+                  },
+                  responsiveAnimationDuration: 0,
+                  responsive: true
+                }
               }
-            }
-            height={500}
-            width={1700}
-          />
+              height={500}
+              width={1700}
+            />
 
-        </div>
-        <div className="main-doughnut-chart">
-          <this.Row>
-            <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-left">
-              <this.Row>
-                <this.Col md="8">
-                  <this.Translate id="home_page_graph_expense" />
-                </this.Col>
-                {/* <this.Col md="4">
+          </div>
+          <div className="main-doughnut-chart">
+            <this.Row>
+              <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-left">
+                <this.Row>
+                  <this.Col md="8">
+                    <this.Translate id="home_page_graph_expense" />
+                  </this.Col>
+                  {/* <this.Col md="4">
                   <this.Select
                     name="status"
                     placeholder={this.CATranslate("place_holder_stock_reorder_point_status", locale)}
@@ -94,55 +94,55 @@ export default class Diagram extends Component {
                     form={form}
                   />
                 </this.Col> */}
-              </this.Row>
+                </this.Row>
             
-              <Doughnut
-                data={incomeExpense.expense[0] ? incomeExpense.expense[0] : [] }
-                option={
-                  {
-                    position: "left",
-                    animation: {
-                      duration: 0, 
-                    },
-                    hover: {
-                      animationDuration: 0, 
-                    },
-                    responsiveAnimationDuration: 0,
-                    responsive: true
+                <Doughnut
+                  data={incomeExpense.expense[0] ? incomeExpense.expense[0] : [] }
+                  option={
+                    {
+                      position: "left",
+                      animation: {
+                        duration: 0, 
+                      },
+                      hover: {
+                        animationDuration: 0, 
+                      },
+                      responsiveAnimationDuration: 0,
+                      responsive: true
+                    }
                   }
-                }
-              />
-            </this.Col>
-            <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-right">
-              <this.Row>
-                <this.Col md="8">
-                  <this.Translate id="home_page_graph_income" />
-                </this.Col>
-              </this.Row>
+                />
+              </this.Col>
+              <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-right">
+                <this.Row>
+                  <this.Col md="8">
+                    <this.Translate id="home_page_graph_income" />
+                  </this.Col>
+                </this.Row>
              
-              <Doughnut
-                data={incomeExpense.income[0] ? incomeExpense.income[0] : [] }
-                option={
-                  {
-                    position: "left",
-                    animation: {
-                      duration: 0, 
-                    },
-                    hover: {
-                      animationDuration: 0, 
-                    },
-                    responsiveAnimationDuration: 0,
-                    responsive: true
+                <Doughnut
+                  data={incomeExpense.income[0] ? incomeExpense.income[0] : [] }
+                  option={
+                    {
+                      position: "left",
+                      animation: {
+                        duration: 0, 
+                      },
+                      hover: {
+                        animationDuration: 0, 
+                      },
+                      responsiveAnimationDuration: 0,
+                      responsive: true
+                    }
                   }
-                }
-              />
+                />
              
-            </this.Col>
+              </this.Col>
 
-          </this.Row>
-        </div>
+            </this.Row>
+          </div>
         
-      </div>
+        </div>
     );
   }
 }

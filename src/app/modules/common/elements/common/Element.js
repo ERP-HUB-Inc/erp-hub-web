@@ -44,6 +44,19 @@ export default class Element extends Component {
     this.Util = new Util();
 
   }
+
+  getName(value) {
+    if (this.props.nestedName && this.props.nestedName in value && value[this.props.nestedName]) {
+      if (Array.isArray(value[this.props.nestedName]) && value[this.props.nestedName].length > 0) {
+        value[this.props.nestedName] = value[this.props.nestedName][0];
+      }
+      return value[this.props.nestedName][this.props.nameKey];
+    }
+    return value[this.props.nameKey];
+  }
+  
 }
+
+
 
 export const Form = form;

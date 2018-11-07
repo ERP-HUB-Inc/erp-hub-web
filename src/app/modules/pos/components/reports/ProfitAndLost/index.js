@@ -147,9 +147,9 @@ export default class InventoryList extends List {
            
             const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: rangFilter });
 
-            console.log("searchKey",rangFilter);
+            console.log("searchKey",searchKey);
 
-            dispatch(this.action.fetch(filter,searchKey,rangFilter));
+            dispatch(this.action.fetch(rangFilter));
             this.setState({isClickFilter: true});
             
           }
@@ -257,7 +257,7 @@ export default class InventoryList extends List {
             <this.Col md="2">
               <this.DateRangePicker
                 name="createdAt"
-                label={<this.Translate id="input_inventory_report_date_rank" />}
+                label={<this.Translate id="input_inventory_report_date_range" />}
                 form={form}
               />
             </this.Col>

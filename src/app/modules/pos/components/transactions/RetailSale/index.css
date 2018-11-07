@@ -361,6 +361,19 @@
     line-height: 1.5
 }
 
+#retail-sale .product-box .out-of-stock {
+    position: absolute;
+    right: 0;
+    left: 35px;
+    top: 66px;
+    color: red;
+    text-transform: uppercase;
+    width: 230px;
+    background-color: white;
+    opacity: 0.5;
+    font-weight: bold;
+} 
+
 .wrap-product-varaint .product-variant .variant-item {
     height: 100px;
     line-height: 100px;

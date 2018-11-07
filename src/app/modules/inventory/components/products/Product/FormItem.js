@@ -363,6 +363,8 @@ export default class FormItem extends Modal {
                     dataSource={this.state.productsType}
                     defaultValue={formData.productTypeId}
                     addNew={this.props.handleAddProductType}
+                    nestedName="productTypeDescriptions"
+                    nameKey="name"
                     required={true}
                     form={form}/>
                 </this.Col>
