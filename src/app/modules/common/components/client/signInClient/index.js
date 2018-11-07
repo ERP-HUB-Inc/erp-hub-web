@@ -66,6 +66,8 @@ export default class ClientSignIn extends Component {
           this.errorMessage = "Your account no permission to any store.";
         } else if (data.error.code === this.HttpCode.DEVICE_NOT_FOUND) {
           this.errorMessage = "You are not yet register device.";
+          localStorage.removeItem(ConstantAuth.ACCESS_DEVICE);
+          history.push("/device");
         } else if (data.error.code === this.HttpCode.INTERNAL_SERVER_ERROR) {
           this.errorMessage = "Please check your connection.";
         }

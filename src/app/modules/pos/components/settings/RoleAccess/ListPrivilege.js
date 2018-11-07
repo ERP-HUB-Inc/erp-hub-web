@@ -34,7 +34,7 @@ export default class ListPrivilege extends Component {
   handleSubmit () {
     const {dispatch,} = this.props;
     const roleId = this.props.rowData.id;
-    const privileges = {privileges: this.state.checkChildIdList};
+    const privileges = {privileges: this.state.checkChildIdList}; console.log("Previlege:", this.state.checkChildIdList);
 
     this.setState({isGrantingPrivilege: true});
     setTimeout(function () {

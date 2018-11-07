@@ -8,7 +8,9 @@ export class Select extends Element {
     this.getName = this.getName.bind(this);
   }
   getName(value) {
-    if (this.props.nestedName && this.props.nestedName in value && value[this.props.nestedName]) {
+    if (this.props.nestedName &&
+      this.props.nestedName in value &&
+      value[this.props.nestedName]) {
       if (Array.isArray(value[this.props.nestedName]) && value[this.props.nestedName].length > 0) {
         value[this.props.nestedName] = value[this.props.nestedName][0];
       }
