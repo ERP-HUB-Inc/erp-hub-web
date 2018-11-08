@@ -4,6 +4,12 @@ import Modal from "../../../../common/components/shares/Modal";
 export default class FormItem extends Modal {
   render() {
     const {formData, form, locale} = this.props;
+    const image = {
+      uid: "-1",
+      name: formData.logo,
+      status: "done",
+      url: this.Util.getProductImage(formData.logo, this.Enum.IMAGE_SPACE.GENERAL).url
+    };
     return (
       <div>
         <this.InputText
@@ -21,12 +27,8 @@ export default class FormItem extends Modal {
         <this.UploadImg 
           name="logo" 
           label={<this.Translate id="receipt_logo" />}
-          fileList={[{
-            uid: "-1",
-            name: formData.logo,
-            status: "done",
-            url: this.Util.getProductImage(formData.logo, this.Enum.IMAGE_SPACE.GENERAL).url
-          }]}
+          data={{file: image}}
+          fileList={[image]}
           endPoint={`${this.Util.getAPIURL()}/file/v1/upload/general`}
           endPointDelete={`${this.Util.getAPIURL()}/file/v1/general/delete`}
           accessToken={this.Util.getAccessToken()}

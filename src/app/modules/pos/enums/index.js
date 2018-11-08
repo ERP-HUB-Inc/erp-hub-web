@@ -19,5 +19,9 @@ export default {
     PAID: 2,
     PENDING: 3
   },
-  PAYMENT_METHOD_AVIALE_ON_POS: 1
+  PAYMENT_METHOD_AVIALE_ON_POS: 1,
+  OPEN_SALE_REGISTRATION_STATUS: {
+    OPEN: 1,
+    CLOSED: 0
+  }
 };

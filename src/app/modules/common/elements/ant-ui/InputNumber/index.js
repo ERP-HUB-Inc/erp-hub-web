@@ -11,14 +11,18 @@ export class InputNumber extends Element {
     this.rules = [
       {
         required: this.props.required,
-        message: this.props.errorRequired,
+        // message: this.props.errorRequired,
         validator: this.checkPrice
       }
     ];
   }
 
   checkPrice(rule, value, callback) {
-    if (parseFloat(value) <= 0 && this.props.required) {
+    let dataValue = value;
+    if (value === null || value === "") {
+      dataValue = 0;
+    }
+    if (parseFloat(dataValue) <= 0 && this.props.required) {
       callback(this.props.errorRequired);
       return;
     } else {

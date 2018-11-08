@@ -56,4 +56,10 @@ export default {
     "Name allow from 3 to 100 character only.",
     "Name allow from 3 to 100 character only."
   ],
+
+  "warning_not_select_role": [
+    "Please select role first",
+    "Please select role first",
+    "Please select role first"
+  ]
 };

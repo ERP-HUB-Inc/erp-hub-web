@@ -543,5 +543,29 @@ export default {
     "Re-New",
     "Re-New",
     "Re-New"
+  ],
+
+  "text_print": [
+    "Print",
+    "Print",
+    "Print"
+  ],
+
+  "text_expected": [
+    "Expected",
+    "Expected",
+    "Expected"
+  ],
+
+  "text_count": [
+    "Count",
+    "Count",
+    "Count"
+  ],
+
+  "text_difference": [
+    "Difference",
+    "Difference",
+    "Difference"
   ]
 };

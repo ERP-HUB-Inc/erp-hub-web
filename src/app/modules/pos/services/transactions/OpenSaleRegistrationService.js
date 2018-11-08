@@ -1,0 +1,46 @@
+import BaseService from "../BaseService";
+
+class OpenSaleRegistrationService extends BaseService {
+  constructor() {
+    super();
+    this.module = "pos/opensale/registration";
+    this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+  }
+  last() {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    return this.GET({ 
+      url: `${this.baseUrl}/lists/last`,  
+      data: this.data,
+      headers: this.header
+    });
+  }
+
+  open(open, description) {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    const setting = this.Util.getSetting();
+    if (setting) {
+      this.header["deviceNumber"] = setting["deviceNumber"];
+    }
+    return this.POST({
+      url: `${this.baseUrl}/open`,
+      data: {
+        open,
+        description
+      },
+      headers: this.header
+    });
+  }
+
+  close(data) {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    return this.POST({
+      url: `${this.baseUrl}/close/${data.id}`,
+      data: {
+        ...data
+      },
+      headers: this.header
+    });
+  }
+}
+
+export default new OpenSaleRegistrationService();

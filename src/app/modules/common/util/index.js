@@ -88,6 +88,14 @@ export class Util {
       return null;
   }
 
+  getDeviceNumber() {
+    const result = this.getSetting();
+    if (result)
+      return result.deviceNumber;
+    else 
+      return null;
+  }
+
   getCurrentDate () {
     return moment();
   }
@@ -97,13 +105,13 @@ export class Util {
   }
 
   
-  formatDate (value, format = "YYYY-MM-DD") {
-    format = format == null ? "YYYY-MM-DD" : format;
+  formatDate (value, format = "DD MMMM YYYY") {
+    format = format === null || format === "" ? "DD MMMM YYYY" : format;
     return moment(value).format(format);
   }
 
-  formatDateTime (value, format = "MMM-Do-YYYY h:mm A") {
-    format = format == null ? "MMM-Do-YYYY h:mm A" : format;
+  formatDateTime (value, format = "DD MMMM YYYY h:mm A") {
+    format = format == null ? "DD MMMM YYYY h:mm A" : format;
     return moment(value).format(format);
   }
 

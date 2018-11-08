@@ -32,16 +32,20 @@ export default class ListPrivilege extends Component {
   }
 
   handleSubmit () {
-    const {dispatch,} = this.props;
-    const roleId = this.props.rowData.id;
-    const privileges = {privileges: this.state.checkChildIdList}; console.log("Previlege:", this.state.checkChildIdList);
+    const {dispatch} = this.props;
+    if (this.props.rowData) {
+      const roleId = this.props.rowData.id;
+      const privileges = {privileges: this.state.checkChildIdList};
 
-    this.setState({isGrantingPrivilege: true});
-    setTimeout(function () {
-      this.setState({isGrantingPrivilege: false});
-    }.bind(this), 2000);
+      this.setState({isGrantingPrivilege: true});
+      setTimeout(function () {
+        this.setState({isGrantingPrivilege: false});
+      }.bind(this), 2000);
 
-    dispatch(RolePrivilegeAction.assignPrivilege(roleId, privileges));
+      dispatch(RolePrivilegeAction.assignPrivilege(roleId, privileges));
+    } else {
+      this.Message.warning(this.CATranslate("warning_not_select_role", this.props.locale));
+    }
   }
 
   handleSearchPrivilege (e) {

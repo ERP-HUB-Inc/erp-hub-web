@@ -12,6 +12,12 @@ export default class InputEmail extends Element {
     }
   }
 
+  componentDidUpdate() {
+    if (this.props.isAutoFocus && this.props.didUpdateMakeAutoFocus) {
+      this.nameInput.focus();
+    }
+  }
+
   handleOnFocus(event) {
     if (this.props.isAutoSelect) {
       event.target.select();

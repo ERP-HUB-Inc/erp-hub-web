@@ -21,6 +21,7 @@ export  class InputEmail extends Element {
         handleKeyDown={this.props.handleKeyDown}
         className={this.props.className}
         isAutoFocus={this.props.isAutoFocus}
+        didUpdateMakeAutoFocus={this.props.didUpdateMakeAutoFocus}
         isAutoSelect={this.props.isAutoSelect}
         form={this.props.form}
         data={this.props.data}/>

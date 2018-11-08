@@ -13,6 +13,7 @@ export default class SaleHistoryList extends List {
   constructor(props) {
     super(props);
     this.state = {
+      ...this.state,
       setDefaultDate: []
     };
     this.columns = new Column();
@@ -168,7 +169,7 @@ export default class SaleHistoryList extends List {
   handleRePrint() {
     const selectLength = this.state.selectedListIds.length;
 
-    if (selectLength === 0) {
+    if (selectLength === 0 && this.state.selectedListIds) {
       this.Message.error(this.CATranslate("text_reprint_warning_1", this.props.locale));
     } else if (selectLength > 1) {
       this.Message.error(this.CATranslate("text_reprint_warning_2", this.props.locale));
@@ -181,7 +182,7 @@ export default class SaleHistoryList extends List {
   renderActionButton(){
     return(
       <this.Button type="info" loading={this.props.detail.fetching} onClick={this.handleRePrint}>
-        <span className="icon-print icon-padding-right text-uppercase"></span>Print
+        <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print"/>
       </this.Button>
     );
   }
@@ -306,8 +307,8 @@ export default class SaleHistoryList extends List {
             rangFilter = JSON.stringify({
               column: "registerDate",
               value: [
-                this.Util.formatDateForMYSQL(values.createdAt[0]),
-                this.Util.formatDateForMYSQL(values.createdAt[1])
+                this.Util.formatDateForMYSQL(values.createdAt[0]) + " 00:00:00",
+                this.Util.formatDateForMYSQL(values.createdAt[1]) + " 23:59:59"
               ]});
 
           }
@@ -334,7 +335,14 @@ class Column extends List {
   constructor(props) {
     super(props);
     return [
-      this.columnCreatedAt,
+      {
+        title: <this.Translate id="text_created_at" />,
+        dataIndex: "registerDate",
+        key: "createdAt",
+        width: 180,
+        render: registerDate => this.Util.formatDateTime(registerDate),
+        sorter: true
+      },
       {
         title: <this.Translate id="text_no" />,
         dataIndex: "number",

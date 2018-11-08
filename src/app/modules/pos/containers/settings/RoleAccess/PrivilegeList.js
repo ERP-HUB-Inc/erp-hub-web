@@ -14,7 +14,8 @@ class PrivilegeList extends React.Component {
 function mapStateToProps(state) {
   return {
     privileges: state.reducer.privilege.request,
-    rolePrivileges: state.reducer.rolePrivilege.request
+    rolePrivileges: state.reducer.rolePrivilege.request,
+    locale: state.locale
   };
 }
 
