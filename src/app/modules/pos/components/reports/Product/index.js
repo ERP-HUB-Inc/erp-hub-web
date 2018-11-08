@@ -5,7 +5,7 @@ import PurchaseReportAction from "../../../action/report/purchaseReport";
 import PurchaseReportService from "../../../services/report/PurchaseService";
 import "./index.css";
 
-export default class InventoryList extends List {
+export default class ProductList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
@@ -28,13 +28,15 @@ export default class InventoryList extends List {
               // dataSource={incomeExpense.income}
               columns= { this.columns }
               locale={{emptyText: <this.Translate id="table_empty_data"/>}}
-              footer={() => 
-                <div className="float-right">
-                  <div className="totals">
-                    TOTALS
-                  </div>
-                </div>
-              }
+
+              // footer={() => 
+              //   <div className="float-right">
+              //     <div className="totals">
+              //       TOTALS
+              //     </div>
+              //   </div>
+              // }
+
             />
           </this.Col>
         </this.Row>
@@ -68,35 +70,14 @@ export default class InventoryList extends List {
       <div>
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
           <this.Row className="main-search-layout form-group"> 
-
-            <this.Col md="3">
-              <this.Select
-                name="status"
-                placeholder={this.CATranslate("place_holder_stock_reorder_point_status", locale)}
-                dataSource={this.statusList}
-                label="Report Type"
-                defaultValue={this.Enum.ALL_STATE}
-                form={form}
-              />
-            </this.Col>
-
-            <this.Col md="3">
-              <this.DatePickers
-                name="datepicker"
-                label="Date"
-                form={form}
-              />
-            </this.Col>
-
             <this.Col md="3">
               <this.InputText
                 name="key"
-                label="Search For key"
+                label={<this.Translate id="text_search"/>}
                 placeholder="Search for brand, code and notation"
                 form={form}
               />
             </this.Col>
-
             <this.Col md="2" className="wrap-btn-search">
               <div className="ant-form-item-label" style={{visibility: "hidden"}}>
                 <label htmlFor="status" className="" title=""></label>
@@ -121,72 +102,51 @@ class Column extends List {
     super(props);
     return [
       {
-        title: "",
-        dataIndex: "createdAt",
-        key: "createdAt",
-        className: "purchase-report",
-        align: "center",
-        render: value => this.formatDate(value)
+        title: <this.Translate id="text_product_name" />,
+        dataIndex: "productDescriptions",
+        key: "productDescriptions"
       },
       {
-        title: <this.Translate id="text_name" />,
-        dataIndex: "name",
-        key: "name",
-        sorter: true
+        title: <this.Translate id="text_product_code" />,
+        dataIndex: "barcode",
+        align: "center",
+        key: "barcode"
       },
       {
-        title: <this.Translate id="text_number" />,
-        dataIndex: "number",
+        title: <this.Translate id="col_products_type" />,
+        dataIndex: "productType",
         align: "center",
-        key: "number"
+        key: "productType"
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_reference" />,
-        dataIndex: "referenceId",
+        title: <this.Translate id="text_brand" />,
+        dataIndex: "brandId",
         align: "center",
-        key: "referenceId"
+        key: "brandId"
       },
       {
-        title: <this.Translate id="text_receiver" />,
-        dataIndex: "text_receiver",
+        title: <this.Translate id="text_price" />,
+        dataIndex: "price",
         align: "center",
-        key: "text_receiver"
+        key: "price"
       },
       {
-        title: <this.Translate id="text_supplier" />,
-        dataIndex: "supplier",
+        title: <this.Translate id="text_quantity" />,
+        dataIndex: "quantity",
         align: "center",
-        key: "supplier"
+        key: "quantity"
       },
       {
-        title: <this.Translate id="text_location" />,
-        dataIndex: "location",
+        title: <this.Translate id="col_products_unit" />,
+        dataIndex: "unit",
         align: "center",
-        key: "location"
+        key: "unit"
       },
       {
-        title: <this.Translate id="text_due_date" />,
-        dataIndex: "deliveryDueDate",
+        title: <this.Translate id="col_products_types" />,
+        dataIndex: "type",
         align: "center",
-        key: "deliveryDueDate"
-      },
-      {
-        title: <this.Translate id="text_step" />,
-        dataIndex: "text_step",
-        align: "center",
-        key: "text_step"
-      },
-      {
-        title: <this.Translate id="col_stock_purchase_order_shipping_fee" />,
-        dataIndex: "shippingFee",
-        align: "center",
-        key: "shippingFee"
-      },
-      {
-        title: <this.Translate id="text_total" />,
-        dataIndex: "requestTotal",
-        align: "center",
-        key: "requestTotal"
+        key: "type"
       }
     ];
   }

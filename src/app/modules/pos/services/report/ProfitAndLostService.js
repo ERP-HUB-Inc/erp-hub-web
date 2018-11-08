@@ -4,7 +4,7 @@ class CurrencyService extends BaseService {
 
   constructor() {
     super();
-    this.module = "income/expense/all";
+    this.module = "income/expense";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 }

@@ -316,11 +316,14 @@ export default class SaleHistoryList extends List {
 
           filter = JSON.stringify(filter);
 
+          console.log("filter",filter);
+
           let searchKey = "";
 
           if (values.customer) {
             searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.customer});
           }
+
 
           this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
           this.setState({isClickFilter: true});
