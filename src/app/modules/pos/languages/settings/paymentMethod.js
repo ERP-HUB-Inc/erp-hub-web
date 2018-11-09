@@ -4,20 +4,10 @@ export default {
     "No",
     "No"
   ],
-  "col_payment_method_name": [
-    "Name",
-    "Name",
-    "Name"
-  ],
   "col_payment_method_description": [
     "Description",
     "Description",
     "Description"
-  ],
-  "input_payment_method_name": [
-    "Name",
-    "အမည်",
-    "Name"
   ],
   "input_payment_method_description": [
     "Description",

@@ -23,12 +23,6 @@ export default {
     "Number in unit",
   ],
 
-  "input_products_unit_name": [
-    "Name",
-    "အမည်",
-    "Name"
-  ],
-
   "input_products_number_in_unit": [
     "Number in a unit",
     "အမည်",

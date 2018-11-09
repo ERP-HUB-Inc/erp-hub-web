@@ -5,12 +5,6 @@ export default {
     "Operation Record"
   ],
 
-  "col_operation_record_name":[
-    "Name",
-    "အမည်",
-    "Name"
-  ],
-
   "col_operation_record_recordfor":[
     "Record For",
     "Record For",
@@ -39,12 +33,6 @@ export default {
     "Expense",
     "သုံးငှေ",
     "ចំណាយ"
-  ],
-
-  "input_operation_record_name": [
-    "Name",
-    "အမည်",
-    "ឈ្មោះ"
   ],
 
   "input_operation_record_for": [

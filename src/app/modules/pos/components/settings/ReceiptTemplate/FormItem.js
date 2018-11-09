@@ -14,8 +14,8 @@ export default class FormItem extends Modal {
       <div>
         <this.InputText
           name="name"
-          label={<this.Translate id="input_receipt_template_name" />}
-          placeholder={this.CATranslate("input_receipt_template_name", locale)}
+          label={<this.Translate id="text_name" />}
+          placeholder={this.CATranslate("text_name", locale)}
           errorLenght={<this.Translate id="error_receipt_template_name_length" />}
           max={100}
           min={4}

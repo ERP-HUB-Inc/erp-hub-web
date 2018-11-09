@@ -26,11 +26,11 @@ export default {
       });
     };
   },
-  close: (data) => {
+  close: (id, data) => {
     return dispatch => {
       return dispatch({
         type: Constant.CLOSE_SALE_REGISTRATION,
-        payload: OpenSaleRegistrationService.close(data)
+        payload: OpenSaleRegistrationService.close(id, data)
       });
     };
   }

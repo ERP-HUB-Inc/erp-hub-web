@@ -156,7 +156,7 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_transfer_name" />,
+        title: <this.Translate id="text_description" />,
         dataIndex: "description",
         key: "description",
         sorter: true

@@ -11,22 +11,10 @@ export default {
     "ភាសា: ធ្វើបច្ចុប្បន្នភាព"
   ],
 
-  "col_language_name": [
-    "Name",
-    "အမည်",
-    "ឈ្មោះ"
-  ],
-
   "col_language_code": [
     "Code",
     "ကုဒ်",
     "កូដ"
-  ],
-
-  "input_language_name": [
-    "Name",
-    "အမည်",
-    "ឈ្មោះ"
   ],
 
   "receipt_logo": [

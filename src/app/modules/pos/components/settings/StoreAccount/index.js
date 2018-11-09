@@ -183,6 +183,16 @@ export default class StoreAccountList extends Component {
     }
 
     const currency = storeAccount.list.currency != null ? [storeAccount.list.currency] : [];
+    
+    let image = {};
+    if (storeAccount.list) {
+      image = {
+        uid: "-1",
+        name: storeAccount.list.logo,
+        status: "done",
+        url: this.Util.getProductImage(storeAccount.list.logo, this.Enum.IMAGE_SPACE.GENERAL).url
+      };
+    }
 
     return (
       <div style={{width: "100%"}}>
@@ -233,12 +243,8 @@ export default class StoreAccountList extends Component {
                     <this.UploadImg 
                       name="logo" 
                       label={<this.Translate id="text_logo" />}
-                      fileList={[{
-                        uid: "-1",
-                        name: storeAccount.list.logo,
-                        status: "done",
-                        url: this.Util.getProductImage(storeAccount.list.logo, this.Enum.IMAGE_SPACE.GENERAL).url
-                      }]}
+                      data={{file: image}}
+                      fileList={[image]}
                       endPoint={`${this.Util.getAPIURL()}/file/v1/upload/general`}
                       endPointDelete={`${this.Util.getAPIURL()}/file/v1/general/delete`}
                       accessToken={this.Util.getAccessToken()}

@@ -11,12 +11,6 @@ export default {
     "Tax"
   ],
 
-  "col_tax_name": [
-    "Name",
-    "Name",
-    "Name"
-  ],
-
   "col_tax_label_on_invoice": [
     "Label on Invoice",
     "အမည်",
@@ -27,12 +21,6 @@ export default {
     "Rate",
     "Rate",
     "Rate"
-  ],
-
-  "input_tax_name": [
-    "Name",
-    "Name",
-    "Name"
   ],
 
   "input_tax_rate": [

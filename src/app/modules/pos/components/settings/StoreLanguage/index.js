@@ -51,7 +51,7 @@ class Column extends List {
       this.columnCreatedAt,
       this.columnNo,
       {
-        title: <this.Translate id="col_language_name" />,
+        title: <this.Translate id="text_name" />,
         dataIndex: "name",
         render: (text, record, index) => {
           return <div>

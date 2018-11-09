@@ -290,7 +290,7 @@ export default class SearchPo extends Modal {
             </div>
             <div className="pull-left" style={{width: 150}}></div>
             <div style={{clear: "both"}}></div>
-          </div>}/> 
+          </div>} /> 
       </div>
     );
   }   

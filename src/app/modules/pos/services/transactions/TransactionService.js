@@ -7,6 +7,15 @@ class TransactionService extends BaseService {
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 
+  todaySaleSummary() {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    return this.GET({ 
+      url: `${this.baseUrl}/today/summary`,  
+      data: this.data,
+      headers: this.header
+    });
+  }
+
   sendMailReceipt(template, email) {
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     this.header["email"] = email;

@@ -207,6 +207,11 @@ export default class Retail extends Component {
   }
 
   handleOnSelectProduct(product) {
+    if (product.quantity <= 0) {
+      this.Message.error(`${Util.getProductName(product)}: ${this.CATranslate("text_out_of_stock", this.props.locale)}`);
+      return;
+    }
+
     const existingProductOrderList = this.state.productOrderList;
     if (existingProductOrderList.length === 0) {
       this.appendProductOrder(existingProductOrderList, product);
@@ -452,8 +457,9 @@ export default class Retail extends Component {
               </div>
               {
                 product.quantity <= 0 && product.type !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY ?
-                  <div className="out-of-stock">Out of stock</div>
-                  : ""
+                  <div className="out-of-stock"><this.Translate id="text_out_of_stock" /></div>
+                  : 
+                  ""
               }
 
               <div className="name">

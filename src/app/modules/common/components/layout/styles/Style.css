@@ -69,9 +69,12 @@ html,
 
 .ant-table-footer {
     font-weight: 500;
+    padding: 0 0 !important;
     color: #9A9A9A;
     background: white !important;
-    padding-right: 8px
+    padding-right: 8px;
+    display: flex;
+    justify-content: flex-end
 }
 
 .ant-table-footer .total-title {
@@ -94,6 +97,11 @@ html,
 .ant-table-footer .grandTotal .ant-form-item-control {
     line-height: 0;
     top: -5px
+}
+
+.ant-table-footer .wrap-table-footer {
+    padding: 5px 10px;
+    background-color: #F7F7F7
 }
 
 /* BREADCRUMB */

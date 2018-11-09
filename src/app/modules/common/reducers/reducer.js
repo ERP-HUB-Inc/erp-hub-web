@@ -1,7 +1,7 @@
 import InitialState from "./initialState";
 
 export default {
-  request: (state, action, [PEDDING, REJECT, FULFILLED, RESET]) => {
+  request: (state, action, [PEDDING, REJECT, FULFILLED, RESET, RESET_PARTIAL]) => {
     switch(action.type) {
     case PEDDING: {
       return {
@@ -23,6 +23,12 @@ export default {
         fetched: true,
         pagination: action.payload.data.pagination,
         list: action.payload.data.data
+      };
+    }
+    case RESET_PARTIAL: {
+      return {
+        ...state, 
+        fetched: false,
       };
     }
     case RESET: {

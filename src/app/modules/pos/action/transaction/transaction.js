@@ -11,6 +11,14 @@ export default {
       });
     };
   },
+  todaySaleSummary: () => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_TODAY_SALE_SUMMARY,
+        payload: TransactionService.todaySaleSummary()
+      });
+    };
+  },
   add: (data) => {
     return dispatch => {
       return dispatch({

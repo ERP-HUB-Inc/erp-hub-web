@@ -9,11 +9,6 @@ export default {
     "ငွေကြေး ကို",
     "រូបិយប័ណ្ណ: ធ្វើបច្ចុប្បន្នភាព"
   ],
-  "col_currency_name": [
-    "Name",
-    "အမည်",
-    "ឈ្មោះ"
-  ],
 
   "col_currency_symbol": [
     "Symbol",
@@ -27,11 +22,6 @@ export default {
     "តម្លៃ"
   ],
 
-  "input_tax_name": [
-    "Name",
-    "အမည်",
-    "ឈ្មោះ"
-  ],
 
   "input_tax_symbol": [
     "Symbol",

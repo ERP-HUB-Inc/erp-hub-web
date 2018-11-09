@@ -12,6 +12,14 @@ export default combineReducers({
     ];
     return reducer.request(state, action, constants);
   },
+  todaySaleSummary: (state = InitialState.request(), action) => {
+    const constants = [
+      Constant.REQUEST_TODAY_SALE_SUMMARY_PENDING,
+      Constant.REQUEST_TODAY_SALE_SUMMARY_REJECTED,
+      Constant.REQUEST_TODAY_SALE_SUMMARY_FULFILLED
+    ];
+    return reducer.request(state, action, constants);
+  },
   detail: (state = InitialState.detail(), action) => {
     const constants = [
       Constant.DETAIL_TRANSACTION_PENDING,

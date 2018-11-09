@@ -10,18 +10,6 @@ export default {
     "Date"
   ],
 
-  "col_receipt_template_name":[
-    "Name",
-    "အမည်",
-    "Name"
-  ],
-
-  "input_receipt_template_name": [
-    "Name",
-    "Name",
-    "Name"
-  ],
-
   "input_receipt_template_is_default": [
     "Default Template",
     "Default Template",

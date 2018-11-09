@@ -4,14 +4,13 @@ import Modal from "../../../../common/components/shares/Modal";
 export default class FormItem extends Modal {
   render() {
     const {formData, form, locale} = this.props;
-    console.log("Data:", formData.isEnableOnPOS);
     return (
       <div>
         <this.InputText
           data={formData.name}
           name="name"
-          label={<this.Translate id="input_payment_method_name" />}
-          placeholder={this.CATranslate("input_payment_method_name", locale)}
+          label={<this.Translate id="text_name" />}
+          placeholder={this.CATranslate("text_name", locale)}
           required={true}
           isAutoFocus={true}
           min={3}

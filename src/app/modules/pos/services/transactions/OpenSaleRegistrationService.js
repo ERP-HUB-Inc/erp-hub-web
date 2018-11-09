@@ -31,10 +31,10 @@ class OpenSaleRegistrationService extends BaseService {
     });
   }
 
-  close(data) {
+  close(id, data) {
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
-    return this.POST({
-      url: `${this.baseUrl}/close/${data.id}`,
+    return this.PUT({
+      url: `${this.baseUrl}/close/${id}`,
       data: {
         ...data
       },

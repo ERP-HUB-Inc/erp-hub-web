@@ -71,12 +71,6 @@ export default {
     "No",
   ],
 
-  "col_stock_transfer_name": [
-    "Name",
-    "အမည်",
-    "Name",
-  ],
-
   "col_stock_transfer_form_location": [
     "From Location",
     "အမည်",

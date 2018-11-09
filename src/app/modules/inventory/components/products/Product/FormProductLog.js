@@ -18,7 +18,7 @@ export default class FormProductLog extends Modal {
         render: user => user !== null ? user.userName : this.emptyText
       },
       {
-        title: <this.Translate id="col_product_log_name" />,
+        title: <this.Translate id="text_name" />,
         dataIndex: "name",
         key: "name"
       },

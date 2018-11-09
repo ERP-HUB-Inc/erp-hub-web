@@ -34,10 +34,10 @@ export default {
       });
     };
   },
-  reset: () => {
+  reset: (RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD) => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET_PAYMENT_METHOD,
+        type: RESET_CONSTANT,
         payload: null
       });
     };

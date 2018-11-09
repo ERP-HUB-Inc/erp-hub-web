@@ -64,8 +64,7 @@ export default class ProductList extends List {
   }
 
   renderFilterRecord() {
-
-    const {form,locale} = this.props;
+    const {form} = this.props;
     return(
       <div>
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>

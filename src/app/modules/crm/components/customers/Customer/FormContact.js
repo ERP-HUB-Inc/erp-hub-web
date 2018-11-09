@@ -26,8 +26,8 @@ export default class FormContact extends Modal {
               <this.InputText 
                 name={`contactName[${index}]`} 
                 data={contact.name}
-                label={<this.Translate id="input_management_contact_name" />} 
-                placeholder={this.CATranslate("input_management_contact_name", locale)}
+                label={<this.Translate id="text_name" />} 
+                placeholder={this.CATranslate("text_name", locale)}
                 handleKeyUp={(event) => this.props.handleOnChangContactField(event, index, "name")}
                 required={true}
                 form={form}/>

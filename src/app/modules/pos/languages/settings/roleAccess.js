@@ -4,21 +4,10 @@ export default {
     "Role",
     "Role"
   ],
-  "col_role_name": [
-    "Name",
-    "Name",
-    "Name"
-  ],
   "col_role_code": [
     "Code",
     "Code",
     "Code"
-  ],
-
-  "input_text_role_name": [
-    "Name",
-    "အမည်",
-    "ឈ្មោះ"
   ],
 
   "input_text_role_code": [

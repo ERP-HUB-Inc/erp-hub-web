@@ -9,8 +9,8 @@ export default class FormItem extends Modal {
         <this.InputText
           data={formData.name}
           name="name"
-          label={<this.Translate id="input_text_role_name" />}
-          placeholder={this.CATranslate("input_text_role_name", locale)}
+          label={<this.Translate id="text_name" />}
+          placeholder={this.CATranslate("text_name", locale)}
           required={true}
           min={3}
           max={100}

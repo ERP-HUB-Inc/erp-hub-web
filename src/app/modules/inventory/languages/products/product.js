@@ -23,6 +23,12 @@ export default {
     "Product Description"
   ],
 
+  "text_out_of_stock": [
+    "Out of stock",
+    "Out of stock",
+    "Out of stock"
+  ],
+
   "col_products_tag": [
     "Tags",
     "Tags",
@@ -410,12 +416,6 @@ export default {
     "Cost",
     "Cost",
     "Cost"
-  ],
-
-  "col_product_log_name": [
-    "Name",
-    "Name",
-    "Name"
   ],
 
   "col_product_log_description": [

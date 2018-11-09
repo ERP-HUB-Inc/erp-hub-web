@@ -221,7 +221,7 @@ const dataSource = {
       },
       {
         title: "Open / Close",
-        icon: "icon-pre-order",
+        icon: "icon-currency",
         route: "/transactions/saleregister",
         component: OpenSaleRegistration,
         isFashNav: true

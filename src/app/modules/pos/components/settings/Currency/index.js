@@ -44,7 +44,7 @@ class Column extends List {
       this.columnCreatedAt,
       this.columnNo,
       {
-        title: <this.Translate id="col_currency_name" />,
+        title: <this.Translate id="text_name" />,
         dataIndex: "name",
         sorter: true
       },

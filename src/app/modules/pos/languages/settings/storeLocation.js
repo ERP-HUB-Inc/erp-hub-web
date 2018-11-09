@@ -11,12 +11,6 @@ export default {
     "Location"
   ],
 
-  "col_store_location_name": [
-    "Name",
-    "Name",
-    "Name"
-  ],
-
   "col_store_location_code": [
     "Cdoe",
     "Code",
@@ -27,12 +21,6 @@ export default {
     "Address",
     "Address",
     "Address"
-  ],
-
-  "input_location_name": [
-    "Name",
-    "Name",
-    "Name"
   ],
 
   "input_location_address": [

@@ -1,14 +1,26 @@
 import React from "react";
 import List from "../List";
 import Enum from "../../../enums";
-import FormCreate from "../../../containers/settings/Currency/FormCreate";
+import FormOpen from "../../../containers/transactions/OpenSaleRegistration/FormOpen";
 import Constant from "../../../constants/transactions/openSaleRegisration";
 import OpenSaleRegistrationAction from "../../../action/transaction/openSalaRegisration";
+import TransactionAction from "../../../action/transaction/transaction";
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
+import ConstantPaymentMethod from "../../../../pos/constants/settings/paymentMethod";
 
 export default class OpenSaleRegistrationList extends List {
   constructor(props) {
     super(props);
+    this.state = {
+      ...this.state,
+      summaryList: [],
+      totalSummary: {
+        expected: 0,
+        count: 0,
+        difference: 0
+      }
+    };
+    this.colorDifferenceStatus = ["#4cb64c", "#c72727"];
     const currentUser = this.Util.getSetting();
     let currency = "";
     if (currentUser) {
@@ -26,9 +38,7 @@ export default class OpenSaleRegistrationList extends List {
         key: "expected",
         width: 150,
         align: "right",
-        render: (text, record) => {
-          return this.formatCurrency(0);
-        }
+        render: expected => this.Util.formatCurrency(expected, "")
       },
       {
         title: <span><this.Translate id="text_count" /> ({currency})</span>,
@@ -37,15 +47,19 @@ export default class OpenSaleRegistrationList extends List {
         width: 150,
         align: "right",
         render: (text, record, index) => {
-          return <this.InputNumber
-            name={`count[${index}]`}  
-            data={record.count}
-            className="text-right"
-            isHideTool={true}
-            isAutoFocus={index === 0}
-            isAutoSelect={true}
-            handleKeyUp={(e) => this.handleOnChangeQuantity(e, index)}
-            form={this.props.form} />;
+          return this.isOpenSaleRegistrationClosed() ?
+            this.Util.formatCurrency(record.count)
+            :
+            <this.InputNumber
+              name={`count[${index}]`}  
+              data={record.count}
+              className="text-right"
+              isHideTool={true}
+              isAutoFocus={index === 0}
+              isAutoSelect={true}
+              required={index === 0}
+              handleKeyUp={(e) => this.handleOnChangeCount(e, index)}
+              form={this.props.form} />;
         }
       },
       {
@@ -55,24 +69,134 @@ export default class OpenSaleRegistrationList extends List {
         width: 150,
         align: "right",
         render: (text, record) => {
-          return this.formatCurrency(0);
+          let colorIndex = 0;
+          if (record.difference < 0) {
+            colorIndex = 1;
+          }
+          return <this.Tag color={this.colorDifferenceStatus[colorIndex]} style={{marginRight: 0}} className="text-center label-stock-status">{this.Util.formatCurrency(record.difference, "")}</this.Tag>;
         }
       }
     ];
-    this.rowSelection = false;
+    this.hasDidUpdate = false;
     this.fetchingProp = "paymentMethodList";
     this.action = OpenSaleRegistrationAction;
     this.RESET_CONSTANT = Constant.RESET_OPEN_SALE_REGISTRATION;
-    this.handleOnChangeQuantity = this.handleOnChangeQuantity.bind(this);
+    this.handleOnChangeCount = this.handleOnChangeCount.bind(this);
+    this.handleCloseTodaySale = this.handleCloseTodaySale.bind(this);
+  }
+
+  componentDidUpdate() {
+    if (!this.hasDidUpdate &&
+      this.props.paymentMethodList.fetched &&
+      this.props.openSaleRegistration.fetched) {
+    
+      const summaryList = [];
+      if (this.isValidOpenSaleRegistrationList()) {
+        this.props.paymentMethodList.list.forEach(value => {
+          let expected = 0;
+          let count = 0;
+          if (value.isSystem === this.Enum.IS_SYSTEM) {
+            expected = this.props.openSaleRegistration.list[0].open;
+          }
+
+          // IF OPEN SALE REGISTRATION HAS CLOSED
+          if (Array.isArray(this.props.openSaleRegistration.list[0].openSaleRegistrationEntries)) {
+            this.props.openSaleRegistration.list[0].openSaleRegistrationEntries.forEach(openSaleRegistration => {
+              if (openSaleRegistration.paymentMethodId === value.id) {
+                count = openSaleRegistration.count;
+              }
+            });
+          // ELSE OPEN SALE REGISTRATION IS OPENING
+          } else if (this.props.todaySaleSummary.list && Array.isArray(this.props.todaySaleSummary.list)) {
+            this.props.todaySaleSummary.list.forEach(todaySaleSummary => {
+              if (value.id === todaySaleSummary.paymentMethodId) {
+                expected += todaySaleSummary.amount;
+              }
+            });
+          }
+
+          summaryList.push({
+            paymentMethodId: value.id,
+            name: value.name,
+            expected: expected,
+            count,
+            difference: this.parseValueToDiffernece(expected * (-1))
+          });
+        });
+      }
+
+      this.calculateTotalSummary(summaryList);
+      this.setState({summaryList});
+      this.hasDidUpdate = true;
+    }
   }
 
   componentDidMount() {
     this.props.dispatch(this.action.last());
+    this.props.dispatch(TransactionAction.todaySaleSummary());
+
+    this.props.dispatch(PaymentMethodAction.reset(ConstantPaymentMethod.RESET_PARTIAL_PAYMENT_METHOD));
     this.props.dispatch(PaymentMethodAction.fetch(100, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
   }
 
-  handleOnChangeQuantity(e, index) {
+  calculateTotalSummary(summaryList) {
+    if (Array.isArray(summaryList)) {
+      let expected = 0, count = 0, difference = 0;
+      summaryList.forEach(value => {
+        expected += value.expected;
+        count += value.count;
+        difference += value.difference;
+      });
+      this.setState({
+        totalSummary: {
+          expected,
+          count,
+          difference
+        }
+      });
+    }
+  }
 
+  parseValueToDiffernece(value) {
+    return value === -0 ? 0 : value;
+  }
+
+  isValidOpenSaleRegistrationList() {
+    return Array.isArray(this.props.openSaleRegistration.list) &&
+    this.props.openSaleRegistration.list.length > 0;
+  }
+
+  isOpenSaleRegistrationClosed() {
+    return this.isValidOpenSaleRegistrationList() &&
+    this.props.openSaleRegistration.list[0].status === Enum.OPEN_SALE_REGISTRATION_STATUS.CLOSED;
+  }
+
+  handleCloseTodaySale() {
+    if (this.state.summaryList && this.state.summaryList.length > 0) {
+      const data = {};
+      if (this.props.openSaleRegistration.list && this.props.openSaleRegistration.list.length > 0) {
+        const id = this.props.openSaleRegistration.list[0].id;
+        data["expected"] = this.state.totalSummary.expected;
+        data["count"] = this.state.totalSummary.count;
+        data["entries"] = this.state.summaryList;
+        this.props.dispatch(OpenSaleRegistrationAction.close(id, data));
+      }
+    }
+  }
+
+  handleOnChangeCount(e, index) {
+    const summaryList = this.state.summaryList;
+    let value = e.target.value;
+    if (value === "" || value === null) {
+      value = 0;
+    }
+    value = parseFloat(value);
+    summaryList[index]["count"] = value;
+    const difference = parseFloat(value) - summaryList[index]["expected"];
+    summaryList[index]["difference"] = this.parseValueToDiffernece(difference);
+
+    this.calculateTotalSummary(summaryList);
+    this.setState({summaryList});
   }
 
   renderPagination(fetchingProps) {}
@@ -84,9 +208,12 @@ export default class OpenSaleRegistrationList extends List {
     }
     return data ?
       <this.Row>
+        <this.Col md="12">
+          <h4 style={{paddingBottom: 5, borderBottom: "1px solid #ccc7c7"}}>Last Sale Registration Summary</h4>
+        </this.Col>
         <this.Col md="3">
           <div>
-            Store
+            <this.Translate id="text_store"/>:
           </div>
           <div>
             {data.location.name}
@@ -94,7 +221,7 @@ export default class OpenSaleRegistrationList extends List {
         </this.Col>
         <this.Col md="3">
           <div>
-            Register
+            <this.Translate id="text_register" />:
           </div>
           <div>
             {data.device.code}
@@ -102,7 +229,7 @@ export default class OpenSaleRegistrationList extends List {
         </this.Col>
         <this.Col md="3">
           <div>
-            Open time
+            <this.Translate id="text_open_time" />:
           </div>
           <div>
             {this.Util.formatDateTime(data.createdAt)}
@@ -113,7 +240,7 @@ export default class OpenSaleRegistrationList extends List {
             data.status === Enum.OPEN_SALE_REGISTRATION_STATUS.CLOSED ?
               <div>
                 <div>
-                  Close time
+                  <this.Translate id="text_close_time" />:
                 </div>
                 <div>
                   {this.Util.formatDateTime(data.updatedAt)}
@@ -128,18 +255,63 @@ export default class OpenSaleRegistrationList extends List {
       "";
   }
 
-  renderActionButton() {
-    return(
-      <this.Button type="info">
-        <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print"/>
-      </this.Button>
-    );
+  buttonActionCollection() {
+    let isOpenedRegister = false;
+    if (this.isOpenSaleRegistrationClosed()) {
+      isOpenedRegister = true;
+    }
+    return [
+      isOpenedRegister ?
+        <div>
+          <this.Button type="info">
+            <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print"/>
+          </this.Button>
+          <this.Button loading={this.props.close.updating} type="info" className="margin-left-8" onClick={this.handleCloseTodaySale}>
+            <span className="icon-add icon-padding-right text-uppercase"></span><this.Translate id="text_open_register"/>
+          </this.Button>
+        </div>
+        :
+        ""
+    ];
   }
 
-  handleShowFormAdd() {
-    this.props.dispatch(OpenSaleRegistrationAction.showForm());
-    this.setState({
-      modalConten: <FormCreate/>
-    });
+  renderTable() {
+    return (
+      <div>
+        <this.Table
+          rowKey="paymentMethodId"
+          dataSource={this.state.summaryList}
+          columns={this.columns}
+          locale={{emptyText: <this.Translate id="table_empty_data"/>}}
+          loading={this.props.paymentMethodList.fetching}
+          footer={() => <div className="wrap-table-footer">
+            <div className="text-uppercase pull-left">
+              <this.Translate id="text_total" />:
+            </div>
+            <div className="item pull-left" style={{width: 150}}>
+              {this.Util.formatCurrency(this.state.totalSummary.expected, "")}
+            </div>
+            <div className="item pull-left" style={{width: 150}}>
+              {this.Util.formatCurrency(this.state.totalSummary.count, "")}
+            </div>
+            <div className="item pull-left" style={{width: 150}}>
+              <this.Tag color={this.colorDifferenceStatus[this.state.totalSummary.difference < 0 ? 1 : 0]} className="text-center label-stock-status" style={{marginRight: 0}}>
+                {this.Util.formatCurrency(this.state.totalSummary.difference, "")}
+              </this.Tag>
+            </div>
+            <div style={{clear: "both"}}></div>
+          </div>} />
+        {
+          !this.isOpenSaleRegistrationClosed() ?
+            <div style={{marginTop: 15}}>
+              <this.Button loading={this.props.close.updating} type="info" className="pull-right" onClick={this.handleCloseTodaySale}>
+                <span className="icon-completed icon-padding-right text-uppercase"></span>
+                <this.Translate id="text_close_register"/>
+              </this.Button>
+            </div>
+            :
+            ""
+        }
+      </div>);
   }
 }

@@ -1,12 +1,18 @@
 import React from "react";
-import FormItem from "./FormItem";
-import CurrencyAction from "../../../action/settings/currency";
+import OpenSalaRegisrationAction from "../../../action/transaction/openSalaRegisration";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="create_currency_title" />;
+    this.title = <div>
+      <div style={{marginBottom: 15}}>
+        <img src="https://storeveinresource.sgp1.digitaloceanspaces.com/storeVein/register-closed-cac5b6cc7c.svg" alt=""/>
+      </div>
+      <div>
+        <this.Translate id="text_register_closed" />
+      </div>
+    </div>;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -15,29 +21,44 @@ export default class Form extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-
+        this.props.dispatch(OpenSalaRegisrationAction.open(values["open"], values["description"]));
       } 
     });
   }
     
   handleCancel() {
-    this.dispatch(CurrencyAction.reset());
+    this.dispatch(OpenSalaRegisrationAction.reset());
+  }
+
+  renderCrudAction(){
+    return(
+      <div className="ant-modal-footer">
+        <this.Button htmlType="submit" loading={this.submitLoading} className="info">
+          <span className="icon-save icon-padding-right"></span>Open Sale Registration
+        </this.Button>
+      </div>
+    );
   }
   
   render() {
-    const {currencyAdd, form, locale} = this.props;
-
-    this.submitLoading = currencyAdd.adding;
-
-    this.validatorAddRecord(currencyAdd);
+    this.submitLoading = this.props.open.updating;
     
-    if (currencyAdd.showForm) {
-      this.content = (
-        <FormItem form={form} locale={locale}/>
-      );
-      return super.render();
-    } else {
-      return (<div></div>);
-    }
+    this.content = (
+      <div>
+        <this.InputNumber
+          name="open"
+          label="Open Cash"
+          placeholder="Open Cash"
+          required={true}
+          isAutoFocus={true}
+          form={this.props.form}/>
+        <this.InputTextArea
+          name="description"
+          label={<this.Translate id="text_description" />}
+          max={255}
+          form={this.props.form}/>
+      </div>
+    );
+    return super.render();
   }
 }

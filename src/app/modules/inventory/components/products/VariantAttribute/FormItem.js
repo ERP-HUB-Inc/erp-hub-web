@@ -10,9 +10,9 @@ export default class FormItem extends Modal {
           <this.Col md="12">
             <this.InputText
               name="name"
-              label={<this.Translate id="input_variant_attribute_name" />}
+              label={<this.Translate id="text_name" />}
               data={formData.name}
-              placeholder={this.CATranslate("input_variant_attribute_name", locale)}
+              placeholder={this.CATranslate("text_name", locale)}
               required={true}
               isAutoFocus={true}
               max={100}

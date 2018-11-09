@@ -184,7 +184,7 @@ export default class FormVariant extends Modal {
     return (
       <this.SelectSearch
         name={`attributeId[${variantAttributeKey}]`}
-        label={<this.Translate id="input_variant_attribute_name" />}
+        label={<this.Translate id="text_name" />}
         valueKey="id"
         dataSource={variantAttributesList}
         defaultValue={variantAttribute.variantAttributeId}

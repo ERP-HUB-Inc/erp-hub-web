@@ -8,7 +8,9 @@ export default combineReducers({
     const constants = [
       Constant.REQUEST_PAYMENT_METHOD_PENDING,
       Constant.REQUEST_PAYMENT_METHOD_REJECTED,
-      Constant.REQUEST_PAYMENT_METHOD_FULFILLED
+      Constant.REQUEST_PAYMENT_METHOD_FULFILLED,
+      null,
+      Constant.RESET_PARTIAL_PAYMENT_METHOD
     ];
     return reducer.request(state, action, constants);
   },

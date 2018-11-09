@@ -71,12 +71,6 @@ export default {
     "Address"
   ],
 
-  "input_management_contact_name": [
-    "Name",
-    "Name",
-    "Name"
-  ],
-
   "input_management_contact_number": [
     "Contact",
     "Contact",

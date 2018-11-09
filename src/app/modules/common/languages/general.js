@@ -567,5 +567,41 @@ export default {
     "Difference",
     "Difference",
     "Difference"
+  ],
+
+  "text_close_register": [
+    "Close Register",
+    "Close Register",
+    "Close Register"
+  ],
+
+  "text_register": [
+    "Register",
+    "Register",
+    "Register"
+  ],
+
+  "text_open_time": [
+    "Open Time",
+    "Open Time",
+    "Open Time"
+  ],
+
+  "text_close_time": [
+    "Close Time",
+    "Close Time",
+    "Close Time"
+  ],
+
+  "text_open_register": [
+    "Open Register",
+    "Open Register",
+    "Open Register"
+  ],
+
+  "text_register_closed": [
+    "Register closed",
+    "Register closed",
+    "Register closed"
   ]
 };

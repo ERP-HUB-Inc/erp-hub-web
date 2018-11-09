@@ -4,10 +4,4 @@ export default {
     "Variant Attribute",
     "Variant Attribute",
   ],
-
-  "input_variant_attribute_name": [
-    "Name",
-    "Name",
-    "Name"
-  ]
 };

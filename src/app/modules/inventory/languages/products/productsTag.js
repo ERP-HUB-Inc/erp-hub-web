@@ -22,12 +22,6 @@ export default {
     "အမည်",
     "Description",
   ],
-  
-  "input_products_tag_name": [
-    "Name",
-    "အမည်",
-    "Name"
-  ],
 
   "input_products_tag_description": [
     "Description",
