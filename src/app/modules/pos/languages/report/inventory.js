@@ -84,6 +84,12 @@ export default {
     "Date Range"
   ],
 
+  "errpr_input_inventory_report_date_range": [
+    "Date Range is required",
+    "Date Range is required",
+    "Date Range is required"
+  ],
+
   "input_inventory_report_type": [
     "Report Type",
     "Report Type",

@@ -56,13 +56,6 @@ export default class Diagram extends Component {
               data={ graphChat.list }
               option={
                 {
-                  scales: {
-                    yAxes: [{
-                      ticks: {
-                        beginAtZero:true
-                      }
-                    }]
-                  },
                   animation: {
                     duration: 0, // general animation time
                   },
@@ -85,22 +78,13 @@ export default class Diagram extends Component {
                   <this.Col md="8">
                     <this.Translate id="home_page_graph_expense" />
                   </this.Col>
-                  {/* <this.Col md="4">
-                  <this.Select
-                    name="status"
-                    placeholder={this.CATranslate("place_holder_stock_reorder_point_status", locale)}
-                    dataSource={this.statusList}
-                    defaultValue={this.Enum.ALL_STATE}
-                    form={form}
-                  />
-                </this.Col> */}
                 </this.Row>
             
                 <Doughnut
                   data={incomeExpense.expense[0] ? incomeExpense.expense[0] : [] }
                   option={
                     {
-                      position: "left",
+                      
                       animation: {
                         duration: 0, 
                       },
@@ -124,7 +108,7 @@ export default class Diagram extends Component {
                   data={incomeExpense.income[0] ? incomeExpense.income[0] : [] }
                   option={
                     {
-                      position: "left",
+              
                       animation: {
                         duration: 0, 
                       },

@@ -65,7 +65,7 @@ export default class Home extends Component {
             <div className="dashboard ">
               <ul>
                 <li>
-                   <this.BreadcrumbTitle title= {this.CATranslate("home_page_dashboard", this.props.locale)} />
+                  <this.BreadcrumbTitle title= {this.CATranslate("home_page_dashboard", this.props.locale)} />
                 </li>
                 <li style={{marginLeft: "15px"}}>
                   {

@@ -20,6 +20,7 @@ export default class InventoryList extends List {
       {label: "Name", key: "name"},
       {label: "Amount", key: "amount"},
       {label: "Type", key: "type"},
+      {label: "Expense"}
     ];
     this.exportCsvFileName = "profit_and_lost_report.csv"; 
     this.fetchingProp = "profitAndLostReport";
@@ -57,6 +58,9 @@ export default class InventoryList extends List {
 
   }
 
+  componentDidMount(){
+    
+  }
 
   groupIncomeExpenseByType() {
     const income = [];
@@ -65,6 +69,7 @@ export default class InventoryList extends List {
     let totalNetIncome= [];
     let incomeType= 0;
     let expenseType = 0;  
+    
 
     if (Array.isArray(this.props.profitAndLostReport.list)) {
   
@@ -273,6 +278,7 @@ export default class InventoryList extends List {
                 placeholder={this.CATranslate("place_holder_profit_and_lost_report_type", locale)}
                 dataSource={this.reportType}
                 label={<this.Translate id="input_inventory_report_type" />}
+                required={true}
                 form={form}
               />
             </this.Col>
@@ -280,6 +286,8 @@ export default class InventoryList extends List {
               <this.DateRangePicker
                 name="createdAt"
                 label={<this.Translate id="input_inventory_report_date_range" />}
+                required={true}
+                errorRequired={<this.Translate id="errpr_input_inventory_report_date_range" />}
                 form={form}
               />
             </this.Col>

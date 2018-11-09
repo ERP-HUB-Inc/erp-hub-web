@@ -9,6 +9,14 @@ export default class InventoryList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
+    this.ExportheadersCsv = [
+      {label: "Date", key: "date"},
+      {label: "Revenue", key: "revenue"},
+      {label: "Cost", key: "cost"},
+      {label: "Profile", key: "profit"},
+      {label: "Margin", key: "margin"}
+    ];
+    this.exportCsvFileName = "sale_report.csv";
     this.fetchingProp = "saleReport";
     this.addingProp = "saleReportAdd";
     this.updatingProp = "saleReportUpdate";
@@ -16,40 +24,88 @@ export default class InventoryList extends List {
     this.action = SaleReportAction;
     this.RESET_CONSTANT = Constant.RESET_SALE_REPORT;
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
+    this.exportCsv = this.exportCsv.bind(this);
+  }
+
+  componentDidMount(){}
+
+  exportCsv(){
+    const { saleReport } = this.props;
+    return saleReport.list;
   }
 
   renderTable(){
-    let i = 1;
+    const { saleReport } = this.props;
     return (  
       <div className="main-table-sale-report">
         <this.Table 
-          dataSource={this.props.saleReport.list}
+          dataSource={saleReport.list}
           columns={this.columns}
           onChange={this.onChange}
           locale={{emptyText: <this.Translate id="table_empty_data"/>}}
           loading={this.props.saleReport.fetching}
-          rowClassName={ 
-            (record,index) =>  index === i + 2 ? "class-index" : "" 
-          }
         />
       </div>
-      
     );
-   
   }
+
 
   handleSubmitFilter(e){
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        console.log("values",values);
-      }
+      if (this.action != null) {
+        e.preventDefault();
+        this.props.form.validateFieldsAndScroll((err, values) => {
+          if (!err) {
+            const {dispatch} = this.props;
+
+            let filter = {};
+
+            filter["type"] = [values.reportType];
+        
+            let rangFilter = "";
+            if (values.createdAt) {
+              rangFilter = JSON.stringify({
+                column: "registerDate",
+                value: [
+                  this.Util.formatDateForMYSQL(values.createdAt[0]),
+                  this.Util.formatDateForMYSQL(values.createdAt[1])
+                ]});
+  
+            }
+
+            filter = JSON.stringify(filter);
+          
+            dispatch(this.action.fetch(filter,rangFilter));
+
+            this.setState({isClickFilter: true});
+            
+          }
+        
+        }); 
+      } 
     }); 
+  }
+
+  renderButtonExportCSV(){
+    return(
+      <this.CSVLink
+        filename={this.exportCsvFileName}
+        data={this.exportCsv()}
+        headers={this.ExportheadersCsv}
+      >
+        <this.Button type="info">
+          <span className="icon-export icon-padding-right"></span>{<this.Translate id="button_search_stock_transfer_export_csv" />}
+        </this.Button>
+      </this.CSVLink>
+    );
   }
 
   renderActionButton(){
     return(
-      <div></div>
+      <div>
+        { this.renderButtonExportCSV() }  
+      </div>
     );
   }
 
@@ -59,40 +115,32 @@ export default class InventoryList extends List {
 
   renderFilterRecord() {
 
-    const {form,locale} = this.props;
+    const {form} = this.props;
     return(
       <div>
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
           <this.Row className="main-search-layout form-group"> 
 
             <this.Col md="3">
-              <this.Select
-                name="status"
-                placeholder={this.CATranslate("place_holder_stock_reorder_point_status", locale)}
-                dataSource={this.statusList}
-                label="Report Type"
-                defaultValue={this.Enum.ALL_STATE}
+              <this.DateRangePicker
+                name="createdAt"
+                label={<this.Translate id="input_inventory_report_date_range" />}
+                errorRequired={<this.Translate id="errpr_input_inventory_report_date_range" />}
+                required={true}
                 form={form}
               />
             </this.Col>
-            <this.Col md="3">
-              <this.DatePickers
-                name="datepicker"
-                label="Date"
-                form={form}
-              />
-            </this.Col>
-            <this.Col md="3">
+            {/* <this.Col md="3">
               <this.InputText
                 name="key"
                 label="Search For key"
                 placeholder="Search for brand, code and notation"
                 form={form}
               />
-            </this.Col>
+            </this.Col> */}
 
             <this.Col md="2">
-              <this.Button htmlType="submit" type="info" >
+              <this.Button htmlType="submit" type="info" className="wrap-report-btn-search">
                 <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
               </this.Button> 
             </this.Col>
@@ -112,9 +160,9 @@ class Column extends List {
     super(props);
     return [
       {
-        title: "",
-        dataIndex: "createdAt",
-        key: "createdAt",
+        title: "Date",
+        dataIndex: "date",
+        key: "date",
         width: 350,
         className: "sale-report",
         align: "center",
@@ -122,33 +170,31 @@ class Column extends List {
       },
       {
         title: <this.Translate id="col_sale_report_revenuse" />,
-        dataIndex: "name",
+        dataIndex: "revenue",
         align: "center",
-        key: "name"
+        key: "revenue",
+        
       },
       {
         title: <this.Translate id="col_sale_report_cost_of_good" />,
-        dataIndex: "description",
+        dataIndex: "cost",
         align: "center",
-        key: "description"
+        key: "cost",
+        render: value => this.formatCurrency(value)
       },
       {
         title: <this.Translate id="col_sale_report_gross_profit" />,
-        dataIndex: "stockLocation",
+        dataIndex: "profit",
         align: "center",
-        key: "stockLocation"
+        key: "profit",
+        render: value => this.formatCurrency(value)
       },
       {
         title: <this.Translate id="col_sale_report_margin" />,
-        dataIndex: "dueDate",
+        dataIndex: "margin",
         align: "center",
-        key: "dueDate"
-      },
-      {
-        title: <this.Translate id="col_sale_report_tax" />,
-        dataIndex: "shippingFee",
-        align: "center",
-        key: "shippingFee"
+        key: "margin",
+        render: value => value + "%"
       }
     ];
   }

@@ -1,7 +1,11 @@
-.main-table-sale-report table tr th.sale-report {
+.wrap-report-btn-search {
+    margin-top: 28px;
+}
+
+/* .main-table-sale-report table tr th.sale-report {
     background-color: white;
     border: none;
-}
+} */
 
 
 .main-table-sale-report tr:nth-child(odd) {
@@ -18,9 +22,9 @@
     background-color: red !important;
 }
 
-.main-table-sale-report .ant-table-tbody > tr.ant-table-row:nth-child(1)   { 
+/* .main-table-sale-report .ant-table-tbody > tr.ant-table-row:nth-child(1)   { 
     background-color: #EAEAEA ;
-}
+} */
 
 .main-table-sale-report .ant-table-content {
     border-top: none ;
