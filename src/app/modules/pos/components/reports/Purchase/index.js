@@ -17,15 +17,23 @@ export default class InventoryList extends List {
     this.RESET_CONSTANT = Constant.RESET_PURCHASE_REPORT;
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
     this.supplierList = [{name: <this.Translate id="text_all_supplier"/>, id: 0}];
+    
+    this.purchaseReport = this.purchaseReport.bind(this);
+  }
+
+  purchaseReport(){
+    const {purchaseReport} = this.props;
+    return purchaseReport.list;
   }
 
   renderTable(){
+    const purchaseReport = this.purchaseReport();
     return (  
       <div className="main-purchase">
         <this.Row>
           <this.Col md="12">
             <this.Table 
-              // dataSource={incomeExpense.income}
+              dataSource={ purchaseReport }
               columns= { this.columns }
               locale={{emptyText: <this.Translate id="table_empty_data"/>}}
               footer={() => 

@@ -3,11 +3,11 @@ import Constant from "../../constants/report/sale";
 import SaleReportService from "../../services/report/SaleService";
 
 export default{
-  fetch:(limit, offset, sortField, sortOrder, filter, searchKey) => {
+  fetch:(filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_SALE_REPORT,
-        payload: SaleReportService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
+        payload: SaleReportService.listsSearch(filter, searchKey)
       });
     };
   },

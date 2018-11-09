@@ -9,7 +9,13 @@ export class DateRangePicker extends Element {
     return (
       <this.FormItem label={this.props.label}>
         { 
-          getFieldDecorator(this.props.name, {rules: [{ type: "array" }], initialValue: this.props.defaultValue})(
+          getFieldDecorator(this.props.name, {rules: [
+            {
+              required: this.props.required,
+              message: this.props.errorRequired
+            },
+            { type: "array" }
+          ], initialValue: this.props.defaultValue})(
             <DatePicker.RangePicker
               ranges={{ 
                 "Last Week": [moment().subtract(1, "week").startOf("isoWeek"), moment().subtract(1, "week").endOf("isoWeek")],
@@ -31,6 +37,7 @@ export class DateRangePicker extends Element {
 
 DateRangePicker.defaultProps = {
   name: "name",
-  dateFormat: "YYYY/MM/DD"
+  dateFormat: "YYYY/MM/DD",
+  required: false
 };
 

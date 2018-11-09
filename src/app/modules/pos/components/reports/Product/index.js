@@ -47,9 +47,37 @@ export default class ProductList extends List {
   handleSubmitFilter(e){
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        console.log("values",values);
-      }
+      if (this.action != null) {
+        e.preventDefault();
+        this.props.form.validateFieldsAndScroll((err, values) => {
+          if (!err) {
+            const {dispatch} = this.props;
+
+            let filter = {};
+
+            filter["type"] = [values.reportType];
+        
+            let rangFilter = "";
+            if (values.createdAt) {
+              rangFilter = JSON.stringify({
+                column: "registerDate",
+                value: [
+                  this.Util.formatDateForMYSQL(values.createdAt[0]),
+                  this.Util.formatDateForMYSQL(values.createdAt[1])
+                ]});
+  
+            }
+
+            filter = JSON.stringify(filter);
+          
+            dispatch(this.action.fetch(filter,rangFilter));
+
+            this.setState({isClickFilter: true});
+            
+          }
+        
+        }); 
+      } 
     }); 
   }
 
@@ -65,7 +93,7 @@ export default class ProductList extends List {
 
   renderFilterRecord() {
 
-    const {form,locale} = this.props;
+    const {form} = this.props;
     return(
       <div>
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>

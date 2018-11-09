@@ -315,8 +315,6 @@ export default class SaleHistoryList extends List {
 
           filter = JSON.stringify(filter);
 
-          console.log("filter",filter);
-
           let searchKey = "";
 
           if (values.customer) {

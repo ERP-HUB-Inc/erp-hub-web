@@ -1,5 +1,5 @@
 export default {
-
+  
   "col_profit_and_lost_revenus": [
     "Revenus",
     "Revenus",
