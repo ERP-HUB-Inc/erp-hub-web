@@ -36,7 +36,7 @@ export default class ReceivePurchaseList extends List {
       {
         title: <this.Translate id="text_invoice_no" />,
         dataIndex: "invoiceNo",
-        width: 120,
+        width: 130,
         key: "invoiceNo",
         sorter: true
       },
@@ -44,7 +44,7 @@ export default class ReceivePurchaseList extends List {
         title: <this.Translate id="text_due_date" />,
         dataIndex: "deliveryDueDate",
         key: "deliveryDueDate",
-        width: 160,
+        width: 180,
         sorter: true,
         render: deliveryDueDate => this.formatDate(deliveryDueDate)
       },

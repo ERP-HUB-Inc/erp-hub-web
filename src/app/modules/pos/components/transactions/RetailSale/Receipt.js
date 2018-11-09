@@ -75,7 +75,7 @@ export default class Receipt extends Component {
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>{address} {phoneNumber}</td>
             </tr>
             <tr>
-              <td style={{backgroundColor: "white", textAlign: "left", paddingTop: 30}}><this.Translate id="register_no"/>. {this.props.data.number}</td>
+              <td style={{backgroundColor: "white", textAlign: "left", paddingTop: 30}}><this.Translate id="register_no"/>. {this.Util.getDeviceNumber()}</td>
               <td style={{backgroundColor: "white", textAlign: "right", paddingTop: 30}}><this.Translate id="text_date"/>: {this.Util.formatDate(this.props.data.createdAt, "DD MMMM YYYY h:mm A")}</td>
               {/* 12 June 2018 11:30 AM */}
             </tr>

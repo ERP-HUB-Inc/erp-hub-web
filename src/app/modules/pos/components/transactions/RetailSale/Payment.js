@@ -64,7 +64,7 @@ export default class Payment extends Modal {
     const email = this.props.form.getFieldValue("email");
     let element = document.getElementById("pos-receipt-preview");
     if (email && element) {
-      element = `<html><head><title></title></head><body>${element}</body></html>`;
+      element = `<html><head><title></title></head><body>${element.innerHTML}</body></html>`;
       this.props.dispatch(TransactionAction.sendEmailReceipt(element, email));
     } else {
       element = document.getElementById("email");
@@ -118,7 +118,8 @@ export default class Payment extends Modal {
       } = this.props.summaryTotal;
 
       const dataValue = {
-        paymentMethodId: paymentMethod.id,
+        // paymentMethodId: paymentMethod.id,
+        deviceNumber: this.Util.getDeviceNumber(),
         exchangeRate: 0,
         deposit: 0,
         discount: discountAmount,

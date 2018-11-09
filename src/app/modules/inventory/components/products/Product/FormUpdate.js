@@ -161,7 +161,6 @@ export default class Form extends Modal {
         ]);
 
         values["id"] = this.props.productDetail.data.id;
-        values["quantity"] = 0;
         values["reorderPoint"] = values["reorderPoint"] ? values["reorderPoint"] : 0;
         values["factoryCost"] = values["factoryCost"] ? values["factoryCost"] : 0;
         values["shippingFee"] = values["shippingFee"] ? values["shippingFee"] : 0;

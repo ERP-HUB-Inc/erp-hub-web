@@ -33,6 +33,7 @@ import variantAttribute from "../modules/inventory/reducers/products/variantAttr
 // import supplier from "../modules/stock/reducers/supplier";
 // transaction
 import transaction from "../modules/pos/reducers/transactions/transaction";
+import openSaleRegistration from "../modules/pos/reducers/transactions/openSaleRegistration";
 import supplier from "../modules/inventory/reducers/stock/supplier";
 //stock 
 import stockManagement from "../modules/inventory/reducers/stock/stockManagement";
@@ -98,6 +99,7 @@ const reducer = combineReducers({
   purchaseReport,
   profitAndLostReport,
   transaction,
+  openSaleRegistration,
 
   homePage
 

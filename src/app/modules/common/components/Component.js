@@ -260,7 +260,7 @@ export default class Component extends React.Component {
 
   getImageFromUpload(value, key = "image") {
     let image = "";
-
+    
     if (value === null) return image;
 
     if (key in value &&

@@ -13,6 +13,10 @@ const SaleOrder = Loadable({
   loader: () => import("../../../../pos/containers/transactions/SaleWalkin"),
   loading: () => <StartUp />,
 });
+const OpenSaleRegistration = Loadable({
+  loader: () => import("../../../../pos/containers/transactions/OpenSaleRegistration"),
+  loading: () => <StartUp />,
+});
 
 // PRODUCT
 const ManageProduct = Loadable({
@@ -213,6 +217,13 @@ const dataSource = {
         icon: "icon-pre-order",
         route: "/transactions/saleorder",
         component: SaleOrder,
+        isFashNav: true
+      },
+      {
+        title: "Open / Close",
+        icon: "icon-pre-order",
+        route: "/transactions/saleregister",
+        component: OpenSaleRegistration,
         isFashNav: true
       },
       // {

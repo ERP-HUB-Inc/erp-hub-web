@@ -50,6 +50,7 @@ export default class FormItem extends Modal {
             name="supplierEmail"
             isAutoFocus={this.state.isAutoFocusEmail}
             isAutoSelect={true}
+            didUpdateMakeAutoFocus={true}
             label={<this.Translate id="text_email" />}
             className={this.state.isPushWithSendEmail ? "" : "hidden"}
             placeholder={this.CATranslate("text_email", this.props.locale)}

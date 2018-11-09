@@ -82,7 +82,7 @@ export default class List extends Component {
       title: <this.Translate id="text_created_at" />,
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 160,
+      width: 180,
       render: value => this.formatDate(value),
       sorter: true
     };
@@ -90,7 +90,7 @@ export default class List extends Component {
       title: <this.Translate id="text_updated_at" />,
       dataIndex: "updatedAt",
       key: "updatedAt",
-      width: 160,
+      width: 180,
       render: value => this.formatDate(value),
       sorter: true
     };
@@ -362,8 +362,7 @@ export default class List extends Component {
       <this.CSVLink
         filename={this.exportCsvFileName}
         data={this.exportCsv()}
-        headers={this.ExportheadersCsv !==null ? this.ExportheadersCsv : this.columns }
-      >
+        headers={this.ExportheadersCsv !==null ? this.ExportheadersCsv : this.columns }>
         <this.Button type="info" disabled={this.exportCsv().length > 0 ? false : true }>
           <span className="icon-export icon-padding-right"></span>{<this.Translate id="button_search_stock_transfer_export_csv" />}
         </this.Button>
@@ -512,7 +511,7 @@ export default class List extends Component {
    * include from render table to be as the list
    * @param {*} fetchingProps 
    */
-  renderPagination(fetchingProps){
+  renderPagination(fetchingProps) {
     let pagination = {
       total: fetchingProps.pagination.total,
       pageSize: fetchingProps.pagination.limit,

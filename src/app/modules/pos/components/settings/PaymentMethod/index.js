@@ -54,7 +54,6 @@ class Column extends List {
         key: "description",
         sorter: true
       },
-      this.columnUpdatedAt,
       this.columnStatus
     ];
   }

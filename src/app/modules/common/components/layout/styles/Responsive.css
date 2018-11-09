@@ -81,6 +81,10 @@
     padding-right: 15px !important
   }
 
+  .inner-client-login {
+    width: 100%
+  }
+
   .inner-client-login  .blog-login {
     padding: 20px 15px;
     min-height: 225px

@@ -30,12 +30,9 @@ tr:nth-child(odd) {
     border-bottom: none !important
 }
 
-.ant-table-tbody > tr > td {
-    padding: 8px 10px !important
-}
-
+.ant-table-tbody > tr > td,
 .ant-table-thead > tr > th {
-    padding: 8px 10px !important;
+    padding: 8px 15px !important
 }
 
 .ant-table-body table tr th,
