@@ -17,6 +17,8 @@ function mapStateToProps(state) {
     customerAdd: state.reducer.customer.add,
     productSearch: state.reducer.product.search,
     paymentMethod: state.reducer.paymentMethods.request,
+    openSaleRegistration: state.reducer.openSaleRegistration.request,
+    open: state.reducer.openSaleRegistration.open,
     locale: state.locale
   };
 }

@@ -13,6 +13,8 @@ import ProductAction from "../../../../inventory/actions/products/product";
 import ProductConstant from "../../../../inventory/constants/products/product";
 import CustomerDropDownSearch from "../../../../crm/components/customers/Customer/DropDownSearch";
 import ProductDropDownSearch from "../../../../inventory/components/products/Product/DropDownSearch";
+import FormOpenSaleRegistration from "../../../containers/transactions/OpenSaleRegistration/FormOpen";
+import OpenSaleRegistrationAction from "../../../action/transaction/openSalaRegisration";
 import Util from "../../../../inventory/utils";
 import POSUtil from "../../../utils";
 import Component from "../../../../common/components/Component";
@@ -40,6 +42,7 @@ export default class Retail extends Component {
       selectedCategoryIds: [0],
       selectedReceiptType: Enum.CURRENT_RECEIPT
     };
+    this.hasDidUpdate = false;
 
     this.handleOnSelectCategory = this.handleOnSelectCategory.bind(this);
     this.handleOnSelectProduct = this.handleOnSelectProduct.bind(this);
@@ -66,13 +69,34 @@ export default class Retail extends Component {
     this.handleOnAutoSelectProductAfterSearchResult = this.handleOnAutoSelectProductAfterSearchResult.bind(this);
   }
 
+  componentDidUpdate() {
+    if (!this.hasDidUpdate &&
+      this.props.openSaleRegistration.fetched &&
+      this.props.open.showForm) {
+      if (this.isOpenSaleRegistrationClosed()) {
+        this.setState({
+          modalContent: <FormOpenSaleRegistration/>
+        });
+      }
+      this.hasDidUpdate = true;
+    }
+  }
+
   componentDidMount() {
     this.props.dispatch(ProductTypeAction.fetch(18));
     this.props.dispatch(ProductAction.fetch(25));
     this.props.dispatch(PaymentMethodAction.fetch(100, "", "", "", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
     window.addEventListener("resize", this.handleOnResizeScreen);
+    this.props.dispatch(OpenSaleRegistrationAction.showForm());
+    this.props.dispatch(OpenSaleRegistrationAction.last());
     // RESTORE CURRENT RECEIPT
     //this.restoreReceipt(Enum.CURRENT_RECEIPT);
+  }
+
+  isOpenSaleRegistrationClosed() {
+    return Array.isArray(this.props.openSaleRegistration.list) &&
+    this.props.openSaleRegistration.list.length > 0 &&
+    this.props.openSaleRegistration.list[0].status === Enum.OPEN_SALE_REGISTRATION_STATUS.CLOSED;
   }
 
   getTaxDescription(tax) {
@@ -165,6 +189,17 @@ export default class Retail extends Component {
     }
   }
 
+  openFormSaleRegisration() {
+    if (this.isOpenSaleRegistrationClosed()) {
+      this.props.dispatch(OpenSaleRegistrationAction.showForm());
+      this.setState({
+        modalContent: <FormOpenSaleRegistration/>
+      });
+      return true;
+    }
+    return false;
+  }
+
   handleOnResetOrder() {
     this.setState({
       expandOrderItemRow: [],
@@ -182,6 +217,10 @@ export default class Retail extends Component {
   }
 
   handleOnSelectCategory(value) {
+    if (this.openFormSaleRegisration()) {
+      return;
+    }
+
     let filter = "";
     if (value !== 0) {
       filter = JSON.stringify({productTypeId: [value]});
@@ -207,6 +246,11 @@ export default class Retail extends Component {
   }
 
   handleOnSelectProduct(product) {
+
+    if (this.openFormSaleRegisration()) {
+      return;
+    }
+
     if (product.quantity <= 0) {
       this.Message.error(`${Util.getProductName(product)}: ${this.CATranslate("text_out_of_stock", this.props.locale)}`);
       return;
@@ -335,6 +379,10 @@ export default class Retail extends Component {
   }
 
   handleOnSelectProductSearchList(value) {
+    if (this.openFormSaleRegisration()) {
+      return;
+    }
+    
     if (value.productVariantToProduct.length > 0) {
       this.setState({
         showVariantProduct: true,
@@ -346,6 +394,10 @@ export default class Retail extends Component {
   }
 
   handleOnAutoSelectProductAfterSearchResult(productList) {
+    if (this.openFormSaleRegisration()) {
+      return;
+    }
+
     if (productList.length === 1) {
       this.handleOnSelectProduct(productList[0]);
       this.props.form.setFieldsValue({searchProduct: ""});
@@ -371,6 +423,10 @@ export default class Retail extends Component {
   }
 
   handleOnMakePayment() {
+    if (this.openFormSaleRegisration()) {
+      return;
+    }
+    
     if (this.state.productOrderList.length > 0) {
       this.props.dispatch(TransactionAction.showForm());
       this.setState({modalContent: <PaymentForm

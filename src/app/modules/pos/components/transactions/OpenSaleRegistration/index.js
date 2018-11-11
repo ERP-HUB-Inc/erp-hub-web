@@ -120,7 +120,7 @@ export default class OpenSaleRegistrationList extends List {
           summaryList.push({
             paymentMethodId: value.id,
             name: value.name,
-            expected: expected,
+            expected,
             count,
             difference: this.parseValueToDiffernece(count - expected)
           });
