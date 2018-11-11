@@ -45,6 +45,17 @@ export default class DropDownSearch extends Modal {
     }
   }
 
+  summaryProductLocationQTY(product) {
+    let quantity = 0;
+    if (product && product.productLocations && Array.isArray(product.productLocations)) {
+      product.productLocations.forEach(value => {
+        quantity += value.quantity;
+      });
+    }
+
+    return quantity;
+  }
+
   handlePressEnterOnSearch() {
     const currentActive = $(".ant-spin-container div.search-item-hover");
     const productId = currentActive.attr("classid");
@@ -137,7 +148,10 @@ export default class DropDownSearch extends Modal {
     const barcode = product.barcode;
     return (
       <this.List.Item.Meta
-        avatar={<span className="icon-items"></span>}
+        avatar={
+          // <span className="icon-items"></span>
+          <this.Image url={this.Util.getProductImage(product.image).url}/>
+        }
         title={
           <this.Row>
             <this.Col md="4">
@@ -160,7 +174,7 @@ export default class DropDownSearch extends Modal {
                   </div>
                   <div className="other-stock">
                     <div className="title">{<this.Translate id="text_other"/>}</div>
-                    <div className="quantity">20</div>
+                    <div className="quantity">{this.summaryProductLocationQTY(product)}</div>
                   </div>
                 </div>
               </div>

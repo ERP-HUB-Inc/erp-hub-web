@@ -2,7 +2,7 @@
     position: absolute;
     z-index: 2;
     top: 48px;
-    width: 100%;
+    width: 94%;
     padding-right: 0px
 }
 
@@ -50,6 +50,12 @@
     padding: 5px 15px;
     border: none !important;
     cursor: pointer
+}
+
+.ant-list-item-meta-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 3px
 }
 
 .wrap-dropdown-search-product .record-item-search .ant-list-item-meta-avatar {
