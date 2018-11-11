@@ -142,7 +142,7 @@ export default class OpenSaleRegistrationList extends List {
         }
       });
       this.loadData();
-      this.props.dispatch(OpenSaleRegistrationAction.reset(Constant.RESET_ADD_OPEN_SALE_REGISTRATION));
+      this.props.dispatch(OpenSaleRegistrationAction.reset(Constant.RESET_OPEN_SALE_REGISTRATION));
       this.hasDidUpdate = false;
     }
   }

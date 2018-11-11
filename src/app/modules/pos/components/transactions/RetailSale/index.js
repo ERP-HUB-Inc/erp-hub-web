@@ -9,6 +9,7 @@ import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
 import FormCreateCustomer from "../../../../crm/containers/customers/Customer/FormCreate";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import ProductTypeAction from "../../../../inventory/actions/products/productsType";
+import ConstantOpenRegistrationSale from "../../../constants/transactions/openSaleRegisration";
 import ProductAction from "../../../../inventory/actions/products/product";
 import ProductConstant from "../../../../inventory/constants/products/product";
 import CustomerDropDownSearch from "../../../../crm/components/customers/Customer/DropDownSearch";
@@ -79,6 +80,11 @@ export default class Retail extends Component {
         });
       }
       this.hasDidUpdate = true;
+    }
+
+    if (this.props.open.added) {
+      this.props.dispatch(OpenSaleRegistrationAction.last());
+      this.props.dispatch(OpenSaleRegistrationAction.reset(ConstantOpenRegistrationSale.RESET_OPEN_SALE_REGISTRATION));
     }
   }
 
