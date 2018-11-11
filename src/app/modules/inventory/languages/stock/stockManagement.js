@@ -1,28 +1,4 @@
 export default {
-  "create_stock_management_title": [
-    "Stock Management",
-    "ငွေကြေးစနစ်",
-    "Stock Management"
-  ],
-      
-  "updte_stock_management_title": [
-    "Stock Management",
-    "ငွေကြေး",
-    "Stock Management"
-  ],
-
-  "col_stock_management_id": [
-    "Id",
-    "အမည်",
-    "Id",
-  ],
-
-  
-  "col_stock_management_product_name": [
-    "Product Name",
-    "အမည်",
-    "Product Name",
-  ],
 
   "col_stock_management_product_tags": [
     "Tags",
@@ -34,12 +10,6 @@ export default {
     "Product Types",
     "အမည်",
     "Product Types",
-  ],
-
-  "col_stock_management_brand": [
-    "Brand",
-    "အမည်",
-    "Brand",
   ],
 
   "col_stock_management_supplier": [

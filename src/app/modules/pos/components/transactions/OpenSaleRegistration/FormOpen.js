@@ -33,7 +33,7 @@ export default class Form extends Modal {
   renderCrudAction(){
     return(
       <div className="ant-modal-footer">
-        <this.Button htmlType="submit" loading={this.submitLoading} className="info">
+        <this.Button htmlType="submit" loading={this.props.open.adding} className="info">
           <span className="icon-save icon-padding-right"></span>Open Sale Registration
         </this.Button>
       </div>
@@ -41,24 +41,27 @@ export default class Form extends Modal {
   }
   
   render() {
-    this.submitLoading = this.props.open.updating;
-    
-    this.content = (
-      <div>
-        <this.InputNumber
-          name="open"
-          label="Open Cash"
-          placeholder="Open Cash"
-          required={true}
-          isAutoFocus={true}
-          form={this.props.form}/>
-        <this.InputTextArea
-          name="description"
-          label={<this.Translate id="text_description" />}
-          max={255}
-          form={this.props.form}/>
-      </div>
-    );
-    return super.render();
+    if (this.props.open.showForm) {
+      this.content = (
+        <div>
+          <this.InputNumber
+            name="open"
+            label="Open Cash"
+            placeholder="Open Cash"
+            required={true}
+            isAutoFocus={true}
+            isAutoSelect={true}
+            form={this.props.form}/>
+          <this.InputTextArea
+            name="description"
+            label={<this.Translate id="text_description" />}
+            max={255}
+            form={this.props.form}/>
+        </div>
+      );
+      return super.render();
+    } else {
+      return <div/>;
+    }
   }
 }

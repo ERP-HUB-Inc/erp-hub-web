@@ -248,8 +248,8 @@ export default class FormItem extends Modal {
             <this.InputText
               name={`productName[${languagesIndex}]`}
               data={productName}
-              label={<this.Translate id="input_product_name" />}
-              placeholder={this.CATranslate("input_product_name", locale)}
+              label={<this.Translate id="text_product_name" />}
+              placeholder={this.CATranslate("text_product_name", locale)}
               onChange={languagesIndex === 0 ? this.onChangeProductName : null}
               max={100}
               form={form}/>
@@ -325,9 +325,9 @@ export default class FormItem extends Modal {
                 <this.Col md="4">
                   <this.InputText
                     name="productNameDefault"
-                    label={<this.Translate id="input_product_name" />}
+                    label={<this.Translate id="text_product_name" />}
                     data={this.state.productNameDefault}
-                    placeholder={this.CATranslate("input_product_name", locale)}
+                    placeholder={this.CATranslate("text_product_name", locale)}
                     onChange={this.onChangeProductName}
                     isAutoFocus={true}
                     max={100}

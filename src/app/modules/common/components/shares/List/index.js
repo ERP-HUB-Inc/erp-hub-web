@@ -416,6 +416,29 @@ export default class List extends Component {
   }
 
 
+  renderFilterGeneralKey() {
+    return (
+      <this.Col md="3">
+        <this.InputText
+          name="key"
+          label="Search"
+          placeholder="Search for code, name and address"
+          form={this.props.form}/>
+      </this.Col>
+    );
+  }
+
+  renderFilterStatus() {
+    return (
+      <this.Col md="2">
+        <this.Select
+          name="status"
+          label={<this.Translate id="text_status" />}
+          dataSource={this.statusList}
+          defaultValue={this.Enum.ALL_STATE}
+          form={this.props.form}/>
+      </this.Col>);
+  }
   /**
    * render layout filter on the top of list
    */
@@ -428,21 +451,8 @@ export default class List extends Component {
         :
         <this.Form onSubmit={this.handleSubmitFilter}>
           <this.Row className="main-search-layout">
-            <this.Col md="3">
-              <this.InputText
-                name="key"
-                label="Search"
-                placeholder="Search for code, name and address"
-                form={form}/>
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="status"
-                label={<this.Translate id="text_status" />}
-                dataSource={this.statusList}
-                defaultValue={this.Enum.ALL_STATE}
-                form={form}/>
-            </this.Col>
+            {this.renderFilterGeneralKey()}
+            {this.renderFilterStatus()}
             <this.Col md="2" className="wrap-btn-search">
               <div className="ant-form-item-label" style={{visibility: "hidden"}}>
                 <label htmlFor="status" className="" title="">Filter</label>

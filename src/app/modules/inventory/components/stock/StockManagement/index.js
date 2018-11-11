@@ -94,7 +94,7 @@ class Column extends List {
     return [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="col_stock_management_product_name" />,
+        title: <this.Translate id="text_product_name" />,
         key: "productName",
         width: 250,
         render: (text, record, index) => record.productDescriptions.length > 0 ?  record.productDescriptions[0].name : this.emptyCell,
@@ -119,7 +119,7 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_management_brand" />,
+        title: <this.Translate id="text_brand" />,
         key: "brand",
         width: 150,
         render: (text, record, index) => "brand" in record && record["brand"] !== null ? record.brand.name : this.emptyCell,

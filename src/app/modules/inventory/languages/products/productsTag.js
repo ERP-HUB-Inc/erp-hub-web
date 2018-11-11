@@ -1,43 +1,43 @@
 export default {
   "create_products_tag_title": [
     "Product Tag",
-    "ငွေကြေးစနစ်",
-    "Brand"
+    "Product Tag",
+    "Product Tag"
   ],
       
   "update_products_tag_title": [
     "Product Tag",
-    "ငွေကြေး",
+    "Product Tag",
     "Product Tag"
   ],
 
   "col_products_tag_name": [
     "Tag Name",
-    "အမည်",
+    "Tag Name",
     "Tag Name",
   ],
 
-  "col_products_tag_description": [
-    "Description",
-    "အမည်",
-    "Description",
+  "text_qty_in_stock": [
+    "QTY In Store",
+    "QTY In Store",
+    "QTY In Store"
   ],
 
-  "input_products_tag_description": [
-    "Description",
-    "အမည်",
-    "Description"
+  "text_qty_label": [
+    "QTY label",
+    "QTY label",
+    "QTY label"
   ],
 
   "input_error_products_tag_name": [
     "Please input your name",
-    "အမည်",
+    "Please input your name",
     "Please input your name"
   ],
   
   "input_error_products_tag_description": [
     "Please input your description",
-    "အမည်",
+    "Please input your description",
     "Please input your description"
   ],
 };

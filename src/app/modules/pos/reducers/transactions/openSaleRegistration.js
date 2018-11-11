@@ -17,7 +17,9 @@ export default combineReducers({
     const constants = [
       Constant.OPEN_SALE_REGISTRATION_PENDING,
       Constant.OPEN_SALE_REGISTRATION_REJECTED,
-      Constant.OPEN_SALE_REGISTRATION_FULFILLED
+      Constant.OPEN_SALE_REGISTRATION_FULFILLED,
+      Constant.SHOW_OPEN_SALE_REGISTRATION_FORM,
+      Constant.RESET_OPEN_SALE_REGISTRATION
     ];
     return reducer.add(state, action, constants);
   },
@@ -25,7 +27,9 @@ export default combineReducers({
     const constants = [
       Constant.CLOSE_SALE_REGISTRATION_PENDING,
       Constant.CLOSE_SALE_REGISTRATION_REJECTED,
-      Constant.CLOSE_SALE_REGISTRATION_FULFILLED
+      Constant.CLOSE_SALE_REGISTRATION_FULFILLED,
+      null,
+      Constant.RESET_OPEN_SALE_REGISTRATION
     ];
     return reducer.update(state, action, constants);
   }

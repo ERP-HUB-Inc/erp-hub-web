@@ -97,12 +97,6 @@ export default {
   ],
 
   // INPUT
-  "input_product_name": [
-    "Product Name",
-    "Product Name",
-    "Product Name"
-  ],
-
   "input_product_brand": [
     "Product Brand",
     "Product Brand",

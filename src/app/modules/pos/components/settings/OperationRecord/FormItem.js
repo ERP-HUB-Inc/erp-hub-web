@@ -37,6 +37,7 @@ export default class FormItem extends Modal {
           label={<this.Translate id="input_operation_record_amount" />}
           placeholder={this.CATranslate("input_operation_record_amount", locale)}
           required={true}
+          isAutoSelect={true}
           form={form}/>
         <this.FormGroup style={{width: "100%"}}>
           <this.RadioBox  
@@ -45,8 +46,7 @@ export default class FormItem extends Modal {
             defaultValue={formData.type}
             required={true}
             type="radio"
-            form={form}
-          >
+            form={form}>
             { this.operationTypes.map( (operationType, key) => 
               <this.RadioChildBox
                 key={key}
@@ -56,12 +56,6 @@ export default class FormItem extends Modal {
             }
           </this.RadioBox> 
         </this.FormGroup>
-        {/* <this.Select
-          name="status"
-          label={<this.Translate id="text_status" />}
-          dataSource={this.statusDataSource}
-          defaultValue={formData.status}
-          form={form}/> */}
       </div>
     );
   }

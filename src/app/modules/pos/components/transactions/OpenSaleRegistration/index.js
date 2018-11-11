@@ -48,7 +48,7 @@ export default class OpenSaleRegistrationList extends List {
         align: "right",
         render: (text, record, index) => {
           return this.isOpenSaleRegistrationClosed() ?
-            this.Util.formatCurrency(record.count)
+            this.Util.formatCurrency(record.count, "")
             :
             <this.InputNumber
               name={`count[${index}]`}  
@@ -83,6 +83,7 @@ export default class OpenSaleRegistrationList extends List {
     this.RESET_CONSTANT = Constant.RESET_OPEN_SALE_REGISTRATION;
     this.handleOnChangeCount = this.handleOnChangeCount.bind(this);
     this.handleCloseTodaySale = this.handleCloseTodaySale.bind(this);
+    this.handleShowFormAdd = this.handleShowFormAdd.bind(this);
   }
 
   componentDidUpdate() {
@@ -100,9 +101,10 @@ export default class OpenSaleRegistrationList extends List {
           }
 
           // IF OPEN SALE REGISTRATION HAS CLOSED
-          if (Array.isArray(this.props.openSaleRegistration.list[0].openSaleRegistrationEntries)) {
+          if (this.isOpenSaleRegistrationClosed()) {
             this.props.openSaleRegistration.list[0].openSaleRegistrationEntries.forEach(openSaleRegistration => {
               if (openSaleRegistration.paymentMethodId === value.id) {
+                expected = openSaleRegistration.expected;
                 count = openSaleRegistration.count;
               }
             });
@@ -120,7 +122,7 @@ export default class OpenSaleRegistrationList extends List {
             name: value.name,
             expected: expected,
             count,
-            difference: this.parseValueToDiffernece(expected * (-1))
+            difference: this.parseValueToDiffernece(count - expected)
           });
         });
       }
@@ -129,12 +131,29 @@ export default class OpenSaleRegistrationList extends List {
       this.setState({summaryList});
       this.hasDidUpdate = true;
     }
+
+    if (this.props.open.added || this.props.close.updated) {
+      this.setState({
+        summaryList: [],
+        totalSummary: {
+          expected: 0,
+          count: 0,
+          difference: 0
+        }
+      });
+      this.loadData();
+      this.props.dispatch(OpenSaleRegistrationAction.reset(Constant.RESET_ADD_OPEN_SALE_REGISTRATION));
+      this.hasDidUpdate = false;
+    }
   }
 
   componentDidMount() {
+    this.loadData();
+  }
+
+  loadData() {
     this.props.dispatch(this.action.last());
     this.props.dispatch(TransactionAction.todaySaleSummary());
-
     this.props.dispatch(PaymentMethodAction.reset(ConstantPaymentMethod.RESET_PARTIAL_PAYMENT_METHOD));
     this.props.dispatch(PaymentMethodAction.fetch(100, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
   }
@@ -171,17 +190,23 @@ export default class OpenSaleRegistrationList extends List {
     this.props.openSaleRegistration.list[0].status === Enum.OPEN_SALE_REGISTRATION_STATUS.CLOSED;
   }
 
-  handleCloseTodaySale() {
-    if (this.state.summaryList && this.state.summaryList.length > 0) {
-      const data = {};
-      if (this.props.openSaleRegistration.list && this.props.openSaleRegistration.list.length > 0) {
-        const id = this.props.openSaleRegistration.list[0].id;
-        data["expected"] = this.state.totalSummary.expected;
-        data["count"] = this.state.totalSummary.count;
-        data["entries"] = this.state.summaryList;
-        this.props.dispatch(OpenSaleRegistrationAction.close(id, data));
+  handleCloseTodaySale(e) {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll(err => {
+      if (!err) {
+        if (this.state.summaryList && this.state.summaryList.length > 0) {
+          const data = {};
+          if (this.props.openSaleRegistration.list && this.props.openSaleRegistration.list.length > 0) {
+            const id = this.props.openSaleRegistration.list[0].id;
+            data["expected"] = this.state.totalSummary.expected;
+            data["count"] = this.state.totalSummary.count;
+            data["entries"] = this.state.summaryList;
+            console.log("Entries:", data);
+            this.props.dispatch(OpenSaleRegistrationAction.close(id, data));
+          }
+        } 
       }
-    }
+    });
   }
 
   handleOnChangeCount(e, index) {
@@ -199,6 +224,13 @@ export default class OpenSaleRegistrationList extends List {
     this.setState({summaryList});
   }
 
+  handleShowFormAdd() {
+    this.props.dispatch(OpenSaleRegistrationAction.showForm());
+    this.setState({
+      modalConten: <FormOpen/>
+    });
+  }
+
   renderPagination(fetchingProps) {}
 
   renderFilterRecord () {
@@ -209,7 +241,7 @@ export default class OpenSaleRegistrationList extends List {
     return data ?
       <this.Row>
         <this.Col md="12">
-          <h4 style={{paddingBottom: 5, borderBottom: "1px solid #ccc7c7"}}>Last Sale Registration Summary</h4>
+          <h4 style={{paddingBottom: 5, borderBottom: "1px solid #ccc7c7"}}><this.Translate id="text_title_open_sale" /></h4>
         </this.Col>
         <this.Col md="3">
           <div>
@@ -264,9 +296,9 @@ export default class OpenSaleRegistrationList extends List {
       isOpenedRegister ?
         <div>
           <this.Button type="info">
-            <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print"/>
+            <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print_summary"/>
           </this.Button>
-          <this.Button loading={this.props.close.updating} type="info" className="margin-left-8" onClick={this.handleCloseTodaySale}>
+          <this.Button loading={this.props.close.updating} type="info" className="margin-left-8" onClick={this.handleShowFormAdd}>
             <span className="icon-add icon-padding-right text-uppercase"></span><this.Translate id="text_open_register"/>
           </this.Button>
         </div>
@@ -277,7 +309,7 @@ export default class OpenSaleRegistrationList extends List {
 
   renderTable() {
     return (
-      <div>
+      <this.Form onSubmit={this.handleCloseTodaySale}>
         <this.Table
           rowKey="paymentMethodId"
           dataSource={this.state.summaryList}
@@ -304,7 +336,7 @@ export default class OpenSaleRegistrationList extends List {
         {
           !this.isOpenSaleRegistrationClosed() ?
             <div style={{marginTop: 15}}>
-              <this.Button loading={this.props.close.updating} type="info" className="pull-right" onClick={this.handleCloseTodaySale}>
+              <this.Button htmlType="submit" loading={this.props.close.updating} type="info" className="pull-right">
                 <span className="icon-completed icon-padding-right text-uppercase"></span>
                 <this.Translate id="text_close_register"/>
               </this.Button>
@@ -312,6 +344,6 @@ export default class OpenSaleRegistrationList extends List {
             :
             ""
         }
-      </div>);
+      </this.Form>);
   }
 }

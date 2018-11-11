@@ -1,34 +1,4 @@
-export default {
-  "create_stock_management_title": [
-    "Stock Management",
-    "ငွေကြေးစနစ်",
-    "Stock Management"
-  ],
-      
-  "update_stock_management_title": [
-    "Stock Management",
-    "ငွေကြေး",
-    "Stock Management"
-  ],
-
-  "select_search_stock_transfer_status": [
-    "Status",
-    "အမည်",
-    "Status",
-  ],
-
-  "select_search_stock_transfer_brand": [
-    "Brand",
-    "အမည်",
-    "Brand",
-  ],
-
-  "select_search_stock_transfer_store": [
-    "Store",
-    "အမည်",
-    "Store",
-  ],
-
+export default {    
   "select_search_stock_transfer_product_type": [
     "Product Type",
     "အမည်",

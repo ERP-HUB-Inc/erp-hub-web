@@ -33,5 +33,21 @@ export default {
         payload: OpenSaleRegistrationService.close(id, data)
       });
     };
+  },
+  reset: (RESET_CONSTANT = Constant.RESET_OPEN_SALE_REGISTRATION) => {
+    return dispatch => {
+      return dispatch({
+        type: RESET_CONSTANT,
+        payload: null
+      });
+    };
+  },
+  showForm: () => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.SHOW_OPEN_SALE_REGISTRATION_FORM,
+        payload: null
+      });
+    };
   }
 };

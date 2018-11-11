@@ -71,13 +71,6 @@ export default {
     "Purchase"
   ],
 
-  
-  "col_stock_reorder_point_product_name": [
-    "Product Name",
-    "အမည်",
-    "Product Name",
-  ],
-
   "col_stock_reorder_point_product_type": [
     "Product Type",
     "အမည်",

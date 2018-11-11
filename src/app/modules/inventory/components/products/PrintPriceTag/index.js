@@ -2,6 +2,7 @@ import React from "react";
 import {Form, Slider, Icon} from "antd";
 import PriceTagList from "./PriceTagList";
 import DropDownSearch from "../Product/DropDownSearch";
+import Util from "../../../utils";
 import List from "../../List";
 import PriceTagAction from "../../../actions/products/priceTag";
 import "./index.css";
@@ -34,28 +35,28 @@ export default class PrintPriceTag extends List {
     };
     this.columns = [
       {
-        title: "Product Name",
+        title: <this.Translate id="text_product_name" />,
         dataIndex: "productDescriptions",
         width: 200,
         key: "name",
         render: (text, record, index) => {
-          return <this.InputText name={`name[${index}]`} data={record.productDescriptions.length > 0 ? record.productDescriptions[0].name : ""} form={this.props.form}/>;
+          return <this.InputText name={`name[${index}]`} data={ Util.getProductName(record)} form={this.props.form}/>;
         }
       },
       {
-        title: "QTY In Store",
-        width: 100,
+        title: <this.Translate id="text_qty_in_stock" />,
+        width: 120,
         dataIndex: "qauntityInStore",
         key: "qauntityInStore"
       },
       {
-        title: "Quantity",
+        title: <this.Translate id="text_quantity" />,
         width: 100,
         dataIndex: "quantity",
         key: "qauntity"
       },
       {
-        title: "QTY label",
+        title: <this.Translate id="text_qty_label" />,
         width: 100,
         key: "quantityLabel",
         render: (text, record, index) => {
@@ -74,7 +75,7 @@ export default class PrintPriceTag extends List {
         }
       },
       {
-        title: "Action",
+        title: <this.Translate id="text_action" />,
         width: 80,
         key: "action",
         render: (text, record, index) => <this.Button type="danger" className="btn-icon" onClick={() => this.handleRemoveProductList(index)}>

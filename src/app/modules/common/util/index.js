@@ -184,6 +184,11 @@ export class Util {
   }
 
   formatCurrency(n, currency = "$", position = 0) {
+    let unsigne = "";
+    if (n < 0) {
+      n = Math.abs(n);
+      unsigne = "-";
+    }
     // 0: BEFORE, 1: AFTER
     let result = parseFloat(n).toFixed(2).replace(/./g, function(c, i, a) {
       return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
@@ -195,7 +200,7 @@ export class Util {
       result = `${result}${currency}`;
     }
 
-    return result;
+    return `${unsigne}${result}`;
   }
   
   formatCurrencyV2(n, currency) {

@@ -69,7 +69,7 @@ export default class Lists extends List {
               <this.Col md="2">
                 <this.Select
                   name="status"
-                  label={<this.Translate id="select_search_stock_transfer_store" />}
+                  label={<this.Translate id="text_store" />}
                   placeholder="Please select status"
                   dataSource={this.props.storeLocation.list}
                   valueKey="id"
@@ -79,7 +79,7 @@ export default class Lists extends List {
               <this.Col md="2">
                 <this.Select
                   name="status"
-                  label={<this.Translate id="select_search_stock_transfer_brand" />}
+                  label={<this.Translate id="text_status" />}
                   placeholder="Please select status"
                   dataSource={this.props.brand.list}
                   valueKey="id"
@@ -108,7 +108,7 @@ export default class Lists extends List {
               <this.Col md="2">
                 <this.Select
                   name="status"
-                  label={<this.Translate id="select_search_stock_transfer_status" />}
+                  label={<this.Translate id="text_status" />}
                   placeholder="Please select status"
                   dataSource={this.statusList}
                   defaultValue={this.Enum.ALL_STATE}

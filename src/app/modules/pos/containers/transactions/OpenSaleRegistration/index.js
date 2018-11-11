@@ -12,6 +12,7 @@ class OpenSaleRegistrationList extends React.Component {
 function mapStateToProps(state) {
   return {
     openSaleRegistration: state.reducer.openSaleRegistration.request,
+    open: state.reducer.openSaleRegistration.open,
     close: state.reducer.openSaleRegistration.close,
     todaySaleSummary: state.reducer.transaction.todaySaleSummary,
     paymentMethodList: state.reducer.paymentMethods.request,

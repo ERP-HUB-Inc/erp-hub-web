@@ -63,6 +63,11 @@ export default {
     "Receipt No"
   ],
 
+  "text_title_open_sale": [
+    "Last Sale Registration Summary",
+    "Last Sale Registration Summary",
+    "Last Sale Registration Summary"
+  ],
 
   "text_cashier": [
     "Cashier",

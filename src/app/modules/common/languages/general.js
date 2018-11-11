@@ -551,6 +551,12 @@ export default {
     "Print"
   ],
 
+  "text_print_summary": [
+    "Print Summary",
+    "Print Summary",
+    "Print Summary"
+  ],
+
   "text_expected": [
     "Expected",
     "Expected",
