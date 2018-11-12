@@ -1,6 +1,7 @@
 .main-purchase .totals {
-    margin-right: 366px;
+    margin-right: 258px;
     font-size: 10pt;
+    float: left;
 }
 
 .main-purchase .ant-table-footer {

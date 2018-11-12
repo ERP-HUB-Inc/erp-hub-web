@@ -1,45 +1,164 @@
 import React from "react";
 import List from "../List";
 import Constant from "../../../constants/report/purchase";
-import PurchaseReportAction from "../../../action/report/purchaseReport";
-import PurchaseReportService from "../../../services/report/PurchaseService";
+import Enum from "../../../../inventory/enums";
+import PurchaseReportAction from "../../../../inventory/actions/stock/purchaseOrder";
+import SupplierAction from "../../../../inventory/actions/stock/supplier";
+import PurchaseReportService from "../../../../inventory/services/stock/PurchaseOrderService";
 import "./index.css";
 
 export default class InventoryList extends List {
   constructor(props) {
     super(props);
-    this.columns = new Column();
     this.fetchingProp = "purchaseReport";
     this.addingProp = "purchaseReportAdd";
     this.updatingProp = "purchaseReportUpdate";
     this.service = PurchaseReportService;
     this.action = PurchaseReportAction;
     this.RESET_CONSTANT = Constant.RESET_PURCHASE_REPORT;
+    this.columns = this.columns = [
+      this.columnCreatedAt,
+      {
+        title: <this.Translate id="text_name" />,
+        dataIndex: "name",
+        key: "name"
+      },
+      {
+        title: <this.Translate id="text_number" />,
+        dataIndex: "number",
+        key: "number",
+        width: 130
+      },
+      {
+        title: <this.Translate id="col_stock_purchase_order_reference" />,
+        dataIndex: "referenceId",
+        key: "referenceId",
+        width: 130,
+        render: (text, record, index) => {
+          let referenceNo = this.emptyText;
+          if ("reference" in record && record["reference"] != null) {
+            referenceNo = record["reference"]["number"];
+          }
+          return referenceNo;
+        }
+      },
+      {
+        title: <this.Translate id="text_receiver"/>,
+        dataIndex: "receiver",
+        key: "receiverId",
+        width: 140,
+        render: receiver => receiver ? receiver.fullName: this.emptyText
+      },
+      {
+        title: <this.Translate id="text_supplier" />,
+        dataIndex: "supplier",
+        key: "supplierId",
+        width: 140,
+        render: supplier => supplier ? supplier.name: this.emptyText
+      },
+      {
+        title: <this.Translate id="text_location" />,
+        dataIndex: "location",
+        key: "location",
+        width: 140,
+        render: location => location ? location.name: this.emptyText
+      },
+      {
+        title: <this.Translate id="text_due_date" />,
+        dataIndex: "deliveryDueDate",
+        key: "deliveryDueDate",
+        width: 180,
+        render: deliveryDueDate => this.formatDate(deliveryDueDate)
+      },
+      {
+        title: <this.Translate id="text_step" />,
+        dataIndex: "step",
+        key: "step",
+        width: 100,
+        render: step => step in this.PO_STEP_STR ? this.PO_STEP_STR[step].name : ""
+      },
+      {
+        title: <this.Translate id="col_stock_purchase_order_shipping_fee" />,
+        dataIndex: "shippingFee",
+        key: "shippingFee",
+        width: 130,
+        align: "right",
+        render: shippingFee => this.formatCurrency(shippingFee)
+      },
+      {
+        title: <this.Translate id="text_total" />,
+        dataIndex: "requestTotal",
+        key: "requestTotal",
+        width: 130,
+        align: "right",
+        render: requestTotal => this.formatCurrency(requestTotal)
+      }
+    ];
+  
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
+    this.columnFilterWithKey = ["name", "number", "invoiceNo", "shippingFee", "requestTotal", "returnTotal", "receiveTotal"];
     this.supplierList = [{name: <this.Translate id="text_all_supplier"/>, id: 0}];
-    
-    this.purchaseReport = this.purchaseReport.bind(this);
+    this.PO_STEP_STR = {
+      [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color: "#f50"},
+      [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="purchase_order_step_process" />, color: "#2db7f5"},
+      [Enum.PO_STEP.RECEIVED]: {name: <this.Translate id="purchase_order_step_recieve" />, color: "#87d068"},
+      [Enum.PO_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color: "#108ee9"},
+      [Enum.PO_STEP.RETURN]: {name: <this.Translate id="text_return" />, color: "blue"},
+      [Enum.PO_STEP.PAID]: {name: <this.Translate id="purchase_order_step_paid" />, color: "green"},
+    };
+    this.ExportheadersCsv = [
+      {label: "Date", key: "createdAt"},
+      {label: this.CATranslate("text_name", this.props.locale) , key: "name"},
+      {label: this.CATranslate("text_number", this.props.locale), key: "number"}
+    ];
+    this.summaryPurchaseReprot = this.summaryPurchaseReprot.bind(this);
   }
 
-  purchaseReport(){
+  componentDidMount(){
+    super.componentDidMount();
+    this.props.dispatch(SupplierAction.fetch(100));
+  }
+
+  summaryPurchaseReprot(){
     const {purchaseReport} = this.props;
-    return purchaseReport.list;
+    
+    let total = [];
+    let totalShippingFee = [];
+    let totalSummary = 0;
+    let totalSummaryShippingFee = 0;
+
+    if (Array.isArray(purchaseReport.list)) {
+      purchaseReport.list.forEach(poReport => {
+        totalSummary += poReport.requestTotal;
+        totalSummaryShippingFee += poReport.shippingFee;
+      });
+      total.push(totalSummary);
+      totalShippingFee.push(totalSummaryShippingFee);
+    }
+
+    return { total,totalShippingFee };
+
   }
 
   renderTable(){
-    const purchaseReport = this.purchaseReport();
     return (  
       <div className="main-purchase">
         <this.Row>
           <this.Col md="12">
             <this.Table 
-              dataSource={ purchaseReport }
+              dataSource={ this.props.purchaseReport.list }
               columns= { this.columns }
               locale={{emptyText: <this.Translate id="table_empty_data"/>}}
               footer={() => 
-                <div className="float-right">
-                  <div className="totals">
-                    TOTALS
+                <div className="wrap-table-footer" style={{minWidth: 347}} >
+                  <div className="text-uppercase pull-left">
+                    <this.Translate id="text_total" />:
+                  </div>
+                  <div className="item pull-left" style={{minWidth: 157,textAlign: "right" }}>
+                    {this.formatCurrency(this.summaryPurchaseReprot().totalShippingFee)}
+                  </div>
+                  <div className="item pull-left" style={{minWidth: 124}}>
+                    { this.formatCurrency(this.summaryPurchaseReprot().total)}
                   </div>
                 </div>
               }
@@ -51,17 +170,54 @@ export default class InventoryList extends List {
   }
 
   handleSubmitFilter(e){
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        console.log("values",values);
-      }
-    }); 
+    if (this.action != null) {
+      e.preventDefault();
+      this.props.form.validateFieldsAndScroll((err, values) => {
+        if (!err) {
+          let filter = {};
+          let rangFilter = {};
+          if (values.step !== -1) {
+            filter["step"] = [values.step];
+          }
+
+          if (values.supplierId !== 0) {
+            filter["supplierId"] = [values.supplierId];
+          }
+
+          if (values.deliveryDueDate) {
+            values.deliveryDueDate = this.Util.formatDateForMYSQL(values.deliveryDueDate);
+            rangFilter = JSON.stringify({column: "deliveryDueDate", value: [values.deliveryDueDate, values.deliveryDueDate]});
+          }
+    
+          filter = JSON.stringify(filter);
+
+          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
+          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
+          this.setState({isClickFilter: true});
+        }
+      
+      }); 
+    } 
+  }
+
+  exportCsv(){
+    const { purchaseReport } = this.props;
+    if(purchaseReport.list){
+      return purchaseReport.list;
+    }
   }
 
   renderActionButton(){
     return(
-      <div></div>
+      <this.CSVLink
+        filename={this.exportCsvFileName}
+        data={this.exportCsv()}
+        headers={this.ExportheadersCsv}
+      >
+        <this.Button type="info">
+          <span className="icon-export icon-padding-right"></span>{<this.Translate id="button_search_stock_transfer_export_csv" />}
+        </this.Button>
+      </this.CSVLink>
     );
   }
 
@@ -72,39 +228,49 @@ export default class InventoryList extends List {
   renderFilterRecord() {
 
     const {form,locale} = this.props;
+    const POStepList = Object.keys(this.PO_STEP_STR).map((prop) => {
+      return {name: this.PO_STEP_STR[prop].name, value: prop};
+    });
+    POStepList.unshift({name: <this.Translate id="text_all_step"/>, value: -1});
+
     return(
+     
       <div>
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
           <this.Row className="main-search-layout form-group"> 
-
-            <this.Col md="3">
-              <this.Select
-                name="status"
-                placeholder={this.CATranslate("place_holder_stock_reorder_point_status", locale)}
-                dataSource={this.statusList}
-                label="Report Type"
-                defaultValue={this.Enum.ALL_STATE}
-                form={form}
-              />
-            </this.Col>
-
-            <this.Col md="3">
-              <this.DatePickers
-                name="datepicker"
-                label="Date"
-                form={form}
-              />
-            </this.Col>
-
-            <this.Col md="3">
+            <this.Col md="2">
               <this.InputText
                 name="key"
-                label="Search For key"
-                placeholder="Search for brand, code and notation"
+                label={<this.Translate id="text_key" />}
+                placeholder={this.CATranslate("purchase_order_search_key_place_holder", locale)}
+                isAutoFocus={true}
+                form={form}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="supplierId"
+                label={<this.Translate id="text_supplier" /> }
+                dataSource={this.supplierList.concat(this.props.supplier.list)}
+                defaultValue={this.supplierList[0].id}
+                valueKey="id"
+                form={form}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.DatePickers
+                name="deliveryDueDate"
+                label={<this.Translate id="text_due_date" />}
                 form={form}
               />
             </this.Col>
-
+            <this.Col md="2">
+              <this.Select
+                name="step"
+                label={<this.Translate id="text_step" />}
+                dataSource={POStepList}
+                defaultValue={POStepList[0].value}
+                form={form}
+              />
+            </this.Col>
             <this.Col md="2" className="wrap-btn-search">
               <div className="ant-form-item-label" style={{visibility: "hidden"}}>
                 <label htmlFor="status" className="" title=""></label>
@@ -121,81 +287,4 @@ export default class InventoryList extends List {
 
   }
 
-}
-
-
-class Column extends List {
-  constructor(props) {
-    super(props);
-    return [
-      {
-        title: "",
-        dataIndex: "createdAt",
-        key: "createdAt",
-        className: "purchase-report",
-        align: "center",
-        render: value => this.formatDate(value)
-      },
-      {
-        title: <this.Translate id="text_name" />,
-        dataIndex: "name",
-        key: "name",
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_number" />,
-        dataIndex: "number",
-        align: "center",
-        key: "number"
-      },
-      {
-        title: <this.Translate id="col_stock_purchase_order_reference" />,
-        dataIndex: "referenceId",
-        align: "center",
-        key: "referenceId"
-      },
-      {
-        title: <this.Translate id="text_receiver" />,
-        dataIndex: "text_receiver",
-        align: "center",
-        key: "text_receiver"
-      },
-      {
-        title: <this.Translate id="text_supplier" />,
-        dataIndex: "supplier",
-        align: "center",
-        key: "supplier"
-      },
-      {
-        title: <this.Translate id="text_location" />,
-        dataIndex: "location",
-        align: "center",
-        key: "location"
-      },
-      {
-        title: <this.Translate id="text_due_date" />,
-        dataIndex: "deliveryDueDate",
-        align: "center",
-        key: "deliveryDueDate"
-      },
-      {
-        title: <this.Translate id="text_step" />,
-        dataIndex: "text_step",
-        align: "center",
-        key: "text_step"
-      },
-      {
-        title: <this.Translate id="col_stock_purchase_order_shipping_fee" />,
-        dataIndex: "shippingFee",
-        align: "center",
-        key: "shippingFee"
-      },
-      {
-        title: <this.Translate id="text_total" />,
-        dataIndex: "requestTotal",
-        align: "center",
-        key: "requestTotal"
-      }
-    ];
-  }
 }

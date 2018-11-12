@@ -71,6 +71,24 @@ export default {
     "SKU"
   ],
 
+  "text_product_cost": [
+    "Cost",
+    "Cost",
+    "Cost"
+  ],
+
+  "text_product_total_cost": [
+    "Total Cost",
+    "Total Cost",
+    "Total Cost"
+  ],
+
+  "text_product_total_price": [
+    "Total Price",
+    "Total Price",
+    "Total Price"
+  ],
+
   // TAB
   "tab_general": [
     "General",

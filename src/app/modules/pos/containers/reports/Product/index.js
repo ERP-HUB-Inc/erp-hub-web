@@ -13,10 +13,13 @@ class Product extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    purchaseReport: state.reducer.purchaseReport.request,
-    purchaseReportAdd: state.reducer.purchaseReport.add,
-    purchaseReportUpdate: state.reducer.purchaseReport.update,
+    productReport: state.reducer.product.request,
+    productReportAdd: state.reducer.product.add,
+    productReportUpdate: state.reducer.product.update,
     supplier: state.reducer.supplier.request,
+    locations: state.reducer.storeLocation.request,
+    brands: state.reducer.brand.request,
+    productsType: state.reducer.productsType.request,
     locale: state.locale,
   };
 }
