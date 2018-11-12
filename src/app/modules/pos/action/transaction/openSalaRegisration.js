@@ -34,7 +34,7 @@ export default {
       });
     };
   },
-  reset: (RESET_CONSTANT = Constant.RESET_OPEN_SALE_REGISTRATION) => {
+  reset: (RESET_CONSTANT = Constant.RESET_REQUEST_OPEN_SALE_REGISTRATION) => {
     return dispatch => {
       return dispatch({
         type: RESET_CONSTANT,

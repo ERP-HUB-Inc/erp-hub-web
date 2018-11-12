@@ -78,7 +78,7 @@ export default class PurchaseOrderLists extends List {
         dataIndex: "deliveryDueDate",
         key: "deliveryDueDate",
         sorter: true,
-        width: 180,
+        // width: 180,
         render: deliveryDueDate => this.formatDate(deliveryDueDate)
       },
       {
@@ -86,7 +86,7 @@ export default class PurchaseOrderLists extends List {
         dataIndex: "shippingFee",
         key: "shippingFee",
         sorter: true,
-        width: 130,
+        width: 150,
         align: "right",
         render: shippingFee => this.formatCurrency(shippingFee)
       },

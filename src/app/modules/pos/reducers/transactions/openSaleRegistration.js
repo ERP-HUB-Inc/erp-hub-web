@@ -9,7 +9,8 @@ export default combineReducers({
     const constants = [
       Constant.REQUEST_OPEN_SALE_REGISTRATION_PENDING,
       Constant.REQUEST_OPEN_SALE_REGISTRATION_REJECTED,
-      Constant.REQUEST_OPEN_SALE_REGISTRATION_FULFILLED
+      Constant.REQUEST_OPEN_SALE_REGISTRATION_FULFILLED,
+      Constant.RESET_REQUEST_OPEN_SALE_REGISTRATION
     ];
     return reducer.request(state, action, constants);
   },

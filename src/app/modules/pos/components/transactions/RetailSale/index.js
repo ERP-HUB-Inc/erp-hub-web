@@ -99,11 +99,20 @@ export default class Retail extends Component {
     //this.restoreReceipt(Enum.CURRENT_RECEIPT);
   }
 
-  isOpenSaleRegistrationClosed() {
+  isValidOpenSaleRegistrationList() {
     return Array.isArray(this.props.openSaleRegistration.list) &&
-    this.props.openSaleRegistration.list.length > 0 &&
-    this.props.openSaleRegistration.list[0].status === Enum.OPEN_SALE_REGISTRATION_STATUS.CLOSED;
+    this.props.openSaleRegistration.list.length > 0;
   }
+
+  isOpenSaleRegistrationClosed() {
+    if (this.isValidOpenSaleRegistrationList()) {
+      return this.props.openSaleRegistration.list[0].status === Enum.OPEN_SALE_REGISTRATION_STATUS.CLOSED;
+    } else {
+      console.log("Open sale registration has closed");
+      return true; // has no record so set true to be allow to open sale
+    }
+  }
+  
 
   getTaxDescription(tax) {
     let name = "";

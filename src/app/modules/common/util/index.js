@@ -110,8 +110,8 @@ export class Util {
     return moment(value).format(format);
   }
 
-  formatDateTime (value, format = "DD MMMM YYYY h:mm A") {
-    format = format == null ? "DD MMMM YYYY h:mm A" : format;
+  formatDateTime (value, format = "DD MMMM YYYY h:mm:ss A") {
+    format = format == null ? "DD MMMM YYYY h:mm:ss A" : format;
     return moment(value).format(format);
   }
 

@@ -1,4 +1,5 @@
 import React from "react";
+import Constant from "../../../constants/transactions/openSaleRegisration";
 import OpenSalaRegisrationAction from "../../../action/transaction/openSalaRegisration";
 import Modal from "../../../../common/components/shares/Modal";
 
@@ -27,7 +28,7 @@ export default class Form extends Modal {
   }
     
   handleCancel() {
-    this.dispatch(OpenSalaRegisrationAction.reset());
+    this.dispatch(OpenSalaRegisrationAction.reset(Constant.RESET_OPEN_SALE_REGISTRATION));
   }
 
   renderCrudAction(){
