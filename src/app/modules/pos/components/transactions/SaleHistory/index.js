@@ -340,7 +340,6 @@ class Column extends List {
         title: <this.Translate id="text_created_at" />,
         dataIndex: "registerDate",
         key: "createdAt",
-        width: 190,
         render: registerDate => this.Util.formatDateTime(registerDate),
         sorter: true
       },

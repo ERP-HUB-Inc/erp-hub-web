@@ -1,4 +1,5 @@
 import React from "react";
+import PrintSummary from "./PrintSummary";
 import List from "../List";
 import Enum from "../../../enums";
 import FormOpen from "../../../containers/transactions/OpenSaleRegistration/FormOpen";
@@ -78,9 +79,11 @@ export default class OpenSaleRegistrationList extends List {
       }
     ];
     this.hasDidUpdate = false;
+    this.isReadyToPrint = false;
     this.fetchingProp = "paymentMethodList";
     this.action = OpenSaleRegistrationAction;
     this.RESET_CONSTANT = Constant.RESET_OPEN_SALE_REGISTRATION;
+    this.handlePrintSummary = this.handlePrintSummary.bind(this);
     this.handleOnChangeCount = this.handleOnChangeCount.bind(this);
     this.handleCloseTodaySale = this.handleCloseTodaySale.bind(this);
     this.handleShowFormAdd = this.handleShowFormAdd.bind(this);
@@ -145,6 +148,13 @@ export default class OpenSaleRegistrationList extends List {
       this.props.dispatch(OpenSaleRegistrationAction.reset(Constant.RESET_OPEN_SALE_REGISTRATION));
       this.hasDidUpdate = false;
     }
+
+    // CHECK IS READY TO PRINT
+    const element = document.getElementById("print-sale-summary");
+    if (this.isReadyToPrint && element) {
+      this.Util.printElem(element.innerHTML);
+      this.isReadyToPrint = false;
+    }
   }
 
   componentDidMount() {
@@ -186,8 +196,12 @@ export default class OpenSaleRegistrationList extends List {
   }
 
   isOpenSaleRegistrationClosed() {
-    return this.isValidOpenSaleRegistrationList() &&
-    this.props.openSaleRegistration.list[0].status === Enum.OPEN_SALE_REGISTRATION_STATUS.CLOSED;
+    if (this.isValidOpenSaleRegistrationList()) {
+      return this.props.openSaleRegistration.list[0].status === Enum.OPEN_SALE_REGISTRATION_STATUS.CLOSED;
+    } else {
+      console.log("Open sale registration has closed");
+      return true; // has no record so set true to be allow to open sale
+    }
   }
 
   handleCloseTodaySale(e) {
@@ -231,11 +245,25 @@ export default class OpenSaleRegistrationList extends List {
     });
   }
 
+  handlePrintSummary() {
+    let dataHeader = {};
+    if (this.isValidOpenSaleRegistrationList()) {
+      dataHeader = this.props.openSaleRegistration.list[0];
+    }
+    this.setState({
+      modalConten: <PrintSummary
+        dataHeader={dataHeader}
+        summaryList={this.state.summaryList}
+        totalSummary={this.state.totalSummary} />
+    });
+    this.isReadyToPrint = true;
+  }
+
   renderPagination(fetchingProps) {}
 
   renderFilterRecord () {
     let data = null;
-    if (this.props.openSaleRegistration.list.length > 0) {
+    if (this.isValidOpenSaleRegistrationList()) {
       data = this.props.openSaleRegistration.list[0];
     }
     return data ?
@@ -295,8 +323,9 @@ export default class OpenSaleRegistrationList extends List {
     return [
       isOpenedRegister ?
         <div>
-          <this.Button type="info">
-            <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print_summary"/>
+          <this.Button type="info" onClick={this.handlePrintSummary}>
+            <span className="icon-print icon-padding-right text-uppercase"></span>
+            <this.Translate id="text_print_summary"/>
           </this.Button>
           <this.Button loading={this.props.close.updating} type="info" className="margin-left-8" onClick={this.handleShowFormAdd}>
             <span className="icon-add icon-padding-right text-uppercase"></span><this.Translate id="text_open_register"/>

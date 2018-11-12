@@ -557,6 +557,12 @@ export default {
     "Print Summary"
   ],
 
+  "text_current_user": [
+    "Current User",
+    "Current User",
+    "Current User"
+  ],
+
   "text_expected": [
     "Expected",
     "Expected",
