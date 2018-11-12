@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import PrintSummary from "./PrintSummary";
 import List from "../List";
 import Enum from "../../../enums";
@@ -79,6 +80,7 @@ export default class OpenSaleRegistrationList extends List {
       }
     ];
     this.hasDidUpdate = false;
+    this.hasDidLoadSaleSummary = false;
     this.isReadyToPrint = false;
     this.fetchingProp = "paymentMethodList";
     this.action = OpenSaleRegistrationAction;
@@ -90,10 +92,20 @@ export default class OpenSaleRegistrationList extends List {
   }
 
   componentDidUpdate() {
+    // HAS LOADED DATA OF LAST OPEN SALE REGISTER
+    if (!this.hasDidLoadSaleSummary &&
+      this.props.openSaleRegistration.fetched &&
+      this.isValidOpenSaleRegistrationList()) {
+      const lastOpenSaleRegisterDate = this.props.openSaleRegistration.list[0].createdAt;
+      this.props.dispatch(TransactionAction.todaySaleSummary(moment(lastOpenSaleRegisterDate).format("YYYY-MM-DD H:mm:ss")));
+      this.hasDidLoadSaleSummary = true;
+    }
+
     if (!this.hasDidUpdate &&
       this.props.paymentMethodList.fetched &&
-      this.props.openSaleRegistration.fetched) {
-    
+      this.props.openSaleRegistration.fetched &&
+      this.props.todaySaleSummary.fetched) {
+
       const summaryList = [];
       if (this.isValidOpenSaleRegistrationList()) {
         this.props.paymentMethodList.list.forEach(value => {
@@ -144,9 +156,16 @@ export default class OpenSaleRegistrationList extends List {
           difference: 0
         }
       });
-      this.loadData();
+
+      // RESET OLD DATA
       this.props.dispatch(OpenSaleRegistrationAction.reset(Constant.RESET_OPEN_SALE_REGISTRATION));
+      this.props.dispatch(OpenSaleRegistrationAction.reset());
+      this.props.dispatch(TransactionAction.reset());
+
+      // LOAD NEW DATA
+      this.loadData();
       this.hasDidUpdate = false;
+      this.hasDidLoadSaleSummary = false;
     }
 
     // CHECK IS READY TO PRINT
@@ -163,7 +182,6 @@ export default class OpenSaleRegistrationList extends List {
 
   loadData() {
     this.props.dispatch(this.action.last());
-    this.props.dispatch(TransactionAction.todaySaleSummary());
     this.props.dispatch(PaymentMethodAction.reset(ConstantPaymentMethod.RESET_PARTIAL_PAYMENT_METHOD));
     this.props.dispatch(PaymentMethodAction.fetch(100, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
   }

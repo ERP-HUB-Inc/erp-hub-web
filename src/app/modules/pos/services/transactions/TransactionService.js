@@ -7,10 +7,10 @@ class TransactionService extends BaseService {
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 
-  todaySaleSummary() {
+  todaySaleSummary(lastOpenSaleRegisterDate) {
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.GET({ 
-      url: `${this.baseUrl}/today/summary`,  
+      url: `${this.baseUrl}/today/summary?lastOpenSaleRegisterDate=${lastOpenSaleRegisterDate}`,  
       data: this.data,
       headers: this.header
     });

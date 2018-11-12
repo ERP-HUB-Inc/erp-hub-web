@@ -82,7 +82,7 @@ export default class List extends Component {
       title: <this.Translate id="text_created_at" />,
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 200,
+      width: 180,
       render: value => this.formatDate(value),
       sorter: true
     };

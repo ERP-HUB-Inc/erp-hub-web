@@ -16,7 +16,8 @@ export default combineReducers({
     const constants = [
       Constant.REQUEST_TODAY_SALE_SUMMARY_PENDING,
       Constant.REQUEST_TODAY_SALE_SUMMARY_REJECTED,
-      Constant.REQUEST_TODAY_SALE_SUMMARY_FULFILLED
+      Constant.REQUEST_TODAY_SALE_SUMMARY_FULFILLED,
+      Constant.RESET_TRANSACTION
     ];
     return reducer.request(state, action, constants);
   },

@@ -11,11 +11,11 @@ export default {
       });
     };
   },
-  todaySaleSummary: () => {
+  todaySaleSummary: (lastOpenSaleRegisterDate) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_TODAY_SALE_SUMMARY,
-        payload: TransactionService.todaySaleSummary()
+        payload: TransactionService.todaySaleSummary(lastOpenSaleRegisterDate)
       });
     };
   },

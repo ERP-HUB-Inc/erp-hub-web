@@ -45,7 +45,6 @@ class Column extends List {
     super(props);
     return [
       this.columnCreatedAt,
-      this.columnNo,
       {
         title: <this.Translate id="text_name" />,
         dataIndex: "name",
@@ -57,7 +56,6 @@ class Column extends List {
         },
         sorter: true,
       },
-      this.columnUpdatedAt,
       this.columnStatus
     ];
   }
