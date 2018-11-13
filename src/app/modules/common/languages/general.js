@@ -251,6 +251,12 @@ export default {
     "Item"
   ],
 
+  "text_items": [
+    "Items",
+    "Items",
+    "Items"
+  ],
+
   "text_balance": [
     "Balance",
     "Balance",

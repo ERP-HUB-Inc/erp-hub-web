@@ -58,6 +58,14 @@ export default class ReceivePurchaseList extends List {
         sorter: true
       },
       {
+        title: <this.Translate id="text_items" />,
+        dataIndex: "purchaseOrderEntries",
+        key: "purchaseOrderEntries",
+        width: 100,
+        align: "center",
+        render: purchaseOrderEntries => this.Util.sumBy(purchaseOrderEntries, "requestQuantity")
+      },
+      {
         title: <this.Translate id="text_total" />,
         dataIndex: "receiveTotal",
         width: 130,
