@@ -41,7 +41,9 @@ export default class Retail extends Component {
       initialTax: 0,
       isDiscountHasAdded: false,
       selectedCategoryIds: [0],
-      selectedReceiptType: Enum.CURRENT_RECEIPT
+      selectedReceiptType: Enum.CURRENT_RECEIPT,
+      textFullScreen: <this.Translate id="text_full_screen" />,
+      iconFullScreen: "icon-full-screen"
     };
     this.hasDidUpdate = false;
 
@@ -499,8 +501,16 @@ export default class Retail extends Component {
     const element = document.getElementById("center-container");
     const body = document.getElementsByTagName("BODY")[0];
     if (element.classList.contains("full-screen")) {
+      this.setState({
+        iconFullScreen: "icon-full-screen",
+        textFullScreen: <this.Translate id="text_full_screen" />
+      });
       element.classList.remove("full-screen");
     } else {
+      this.setState({
+        iconFullScreen: "icon-exit-full-screen",
+        textFullScreen: <this.Translate id="text_exit_full_screen" />
+      });
       element.classList.add("full-screen");
     }
     this.Util.toggleFullScreen(body);
@@ -576,13 +586,13 @@ export default class Retail extends Component {
               {
                 localStorage.getItem(Enum.PARK_RECEIPT) ?
                   <div className={`pull-left park-receipt ${this.state.selectedReceiptType === Enum.PARK_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.PARK_RECEIPT)}>
-                    <span className="icon-receipt icon-padding-right"></span><this.Translate id="park_receipt_type"/>
+                    <span className="icon-reports icon-padding-right"></span><this.Translate id="park_receipt_type"/>
                   </div>
                   :
                   ""
               }
               <div className="pull-left park-receipt" onClick={this.handleSetFullScreen}>
-                <span className="icon-receipt icon-padding-right"></span>Full Sreen
+                <span className={`${this.state.iconFullScreen} icon-padding-right`}></span>{this.state.textFullScreen}
               </div>
             </this.Col>
           </this.Row>

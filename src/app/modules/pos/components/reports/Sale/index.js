@@ -1,6 +1,6 @@
 import React from "react";
 import List from "../List";
-import ReactFileReader from "react-file-reader";
+// import ReactFileReader from "react-file-reader";
 import Constant from "../../../constants/report/sale";
 import SaleReportAction from "../../../action/report/saleReport";
 import SaleReportService from "../../../services/report/SaleService";
