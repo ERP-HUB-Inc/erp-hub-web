@@ -19,6 +19,7 @@ export default class Payment extends Modal {
       validateStatus: "",
       errorMsg: ""
     };
+    this.paymentMethodSelectedIndex = null;
     this.wrapClassName = "pos-payment";
     this.width = "70%";
     this.currentUser = this.getCurrentUser();
@@ -40,7 +41,31 @@ export default class Payment extends Modal {
     }
   }
 
-  renderCrudAction() {
+  calculateBalance(grandTotal, amountToPay) {
+    const balance = grandTotal - amountToPay;
+    return balance < 0 ? 0 : Math.abs(balance);
+  }
+
+  getGrandTotal() {
+    const {
+      summaryTotal,
+      discountAmount,
+      taxAmount
+    } = this.props.summaryTotal;
+    return  POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
+  }
+
+  getGrandTotalWithOutDiscount() {
+    const {
+      summaryTotal,
+      taxAmount
+    } = this.props.summaryTotal;
+    return  POSUtil.getGrandTotalWithOutDiscount(summaryTotal.subTotal, taxAmount);
+  }
+
+  getChangeAmount() {
+    const totalCustomerHasGiveMoney = this.totalCustomerPaymentList();
+    return totalCustomerHasGiveMoney - this.getGrandTotal();
   }
 
   handleCancel() {
@@ -90,7 +115,7 @@ export default class Payment extends Modal {
     }
   }
 
-  handleOnMakePaymentWithCash(paymentMethod) {
+  handleOnMakePaymentWithCash(paymentMethod, paymentMethodIndex) {
     this.wrapClassName += " pos-payment-paid";
     let amountToPay = this.props.form.getFieldValue("amountToPay"); // AMOUNT FROM INPUT OF CASHEIR
     amountToPay = parseFloat(amountToPay);
@@ -112,25 +137,25 @@ export default class Payment extends Modal {
       document.getElementById("amountToPay").focus();
 
     } else {
+      this.paymentMethodSelectedIndex = paymentMethodIndex;
+
       const {
         summaryTotal,
         discountAmount,
       } = this.props.summaryTotal;
 
       const dataValue = {
-        // paymentMethodId: paymentMethod.id,
         deviceNumber: this.Util.getDeviceNumber(),
         exchangeRate: 0,
         deposit: 0,
         discount: discountAmount,
-        total: grandTotal,
+        total: this.getGrandTotalWithOutDiscount(),
         totalExcludeTax: summaryTotal.subTotalAfterDiscount,
         type: Enum.TRANSACTION_TYPE.RECEIPT,
         transactionEntries: this.props.productOrderList,
         transactionPaymentEntries: this.state.customerPaymentList
       };
 
-      // console.log("Payment Values:", dataValue);
       this.props.dispatch(TransactionAction.add(dataValue));
       this.setState({
         amountToPay
@@ -175,23 +200,7 @@ export default class Payment extends Modal {
     }
   }
 
-  calculateBalance(grandTotal, amountToPay) {
-    const balance = grandTotal - amountToPay;
-    return balance < 0 ? 0 : Math.abs(balance);
-  }
-
-  getGrandTotal() {
-    const {
-      summaryTotal,
-      discountAmount,
-      taxAmount
-    } = this.props.summaryTotal;
-    return  POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
-  }
-
-  getChangeAmount() {
-    const totalCustomerHasGiveMoney = this.totalCustomerPaymentList();
-    return totalCustomerHasGiveMoney - this.getGrandTotal();
+  renderCrudAction() {
   }
 
   render() {
@@ -200,7 +209,6 @@ export default class Payment extends Modal {
       taxRate,
       discountAmount,
       taxAmount,
-      // discountType,
       discountTypeStr
     } = this.props.summaryTotal;
 
@@ -230,7 +238,6 @@ export default class Payment extends Modal {
                 receiptTemplate={this.props.receiptTemplate.data}
                 currentUser={this.currentUser}
                 customerPaymentList={this.state.customerPaymentList}
-                // paymentMethodList={paymentMethodList}
                 productList={this.props.productOrderList}
                 productTaxList={this.props.productTaxList}
                 summaryTotal={summaryTotal}
@@ -239,8 +246,6 @@ export default class Payment extends Modal {
                 changeAmount={changeAmount}
                 taxRate={taxRate}
                 taxAmount={taxAmount}
-                // discountType={discountType}
-                // discountTypeStr={discountTypeStr}
                 discountAmount={discountAmount} />
               :
               ""
@@ -281,20 +286,6 @@ export default class Payment extends Modal {
                   {this.formatCurrency(summaryTotal.subTotalAfterDiscount)}
                 </div>
               </li>
-              {
-                discountAmount > 0 ?
-                  <li>
-                    <div className="sub-total-title">
-                      <this.Translate id="text_discount"/>
-                      {discountTypeStr}
-                    </div>
-                    <div className="sub-total-value">
-                      {this.formatCurrency(discountAmount)}
-                    </div>
-                  </li>
-                  :
-                  ""
-              }
               <li>
                 <div className="sub-total-title">
                   <this.Translate id="text_tax"/> {taxTitle}
@@ -318,6 +309,20 @@ export default class Payment extends Modal {
                   :
                   ""
               }
+              {
+                discountAmount > 0 ?
+                  <li>
+                    <div className="sub-total-title">
+                      <this.Translate id="text_discount"/>
+                      {discountTypeStr}
+                    </div>
+                    <div className="sub-total-value">
+                      {this.formatCurrency(discountAmount)}
+                    </div>
+                  </li>
+                  :
+                  ""
+              }
             </ul>
             <ul className="list-unstyled ca-penel-v1 grand-total">
               <li>
@@ -336,7 +341,7 @@ export default class Payment extends Modal {
           </this.Col>
           <this.Col md="7" className="wrap-payment-tool">
             {
-              this.totalCustomerPaymentList() < grandTotal ?
+              this.totalCustomerPaymentList() < grandTotal && !this.props.transaction.paid ?
                 <div className="payment-tool">
                   <div className="amount-to-pay">
                     <div className="title"><this.Translate id="text_pay"/></div>
@@ -354,7 +359,12 @@ export default class Payment extends Modal {
                   <div className="action-button-to-pay">
                     {
                       paymentMethodList.map((paymentMethod, paymentMethodIndex) =>
-                        <this.Button key={paymentMethodIndex} type="info" className="mg-right" onClick={() => this.handleOnMakePaymentWithCash(paymentMethod)}>
+                        <this.Button
+                          key={paymentMethodIndex}
+                          loading={this.paymentMethodSelectedIndex === paymentMethodIndex && this.props.transaction.paying} 
+                          type="info"
+                          className="mg-right"
+                          onClick={() => this.handleOnMakePaymentWithCash(paymentMethod, paymentMethodIndex)}>
                           {paymentMethod.name}
                         </this.Button> 
                       )

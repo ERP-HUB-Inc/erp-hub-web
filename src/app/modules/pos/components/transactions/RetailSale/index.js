@@ -108,7 +108,6 @@ export default class Retail extends Component {
     if (this.isValidOpenSaleRegistrationList()) {
       return this.props.openSaleRegistration.list[0].status === Enum.OPEN_SALE_REGISTRATION_STATUS.CLOSED;
     } else {
-      console.log("Open sale registration has closed");
       return true; // has no record so set true to be allow to open sale
     }
   }
@@ -725,6 +724,8 @@ export default class Retail extends Component {
                       :
                       ""
                   }
+                  
+                  {/* SUB TOTAL ROW */}
                   <div className="sub-total">
                     <div className="sub-total-title"><this.Translate id="text_sub_total"/></div>
                     <div className="sub-total-value">{this.formatCurrency(summaryTotal.subTotalAfterDiscount)}</div>
@@ -738,6 +739,18 @@ export default class Retail extends Component {
                       :
                       ""
                   }
+                  {/* END SUB TOTAL ROW */}
+
+                  {/* TAX ROW */}
+                  <div className="sub-total">
+                    <div className="sub-total-title" onClick={countTax > 0 ? this.handleOnOpenTaxSetting : null}>
+                      <span className={`${countTax > 0 ? "ca-link" : ""}`}><this.Translate id="text_tax"/></span> {taxTitle}
+                    </div>
+                    <div className="sub-total-value">{this.formatCurrency(taxTotal)}</div>
+                  </div>
+                  {/*END TAX ROW */}
+
+                  {/* DISCOUNT ROW */}
                   {
                     this.state.isDiscountHasAdded && summaryTotal.discount <= 0?
                       <div className="sub-total">
@@ -753,12 +766,7 @@ export default class Retail extends Component {
                       :
                       ""
                   }
-                  <div className="sub-total">
-                    <div className="sub-total-title" onClick={countTax > 0 ? this.handleOnOpenTaxSetting : null}>
-                      <span className={`${countTax > 0 ? "ca-link" : ""}`}><this.Translate id="text_tax"/></span> {taxTitle}
-                    </div>
-                    <div className="sub-total-value">{this.formatCurrency(taxTotal)}</div>
-                  </div>
+                  {/*END DISCOUNT ROW */}
                 </this.Col>
                 <this.Col md="6" className="text-right">
                   <div className="grand-total">

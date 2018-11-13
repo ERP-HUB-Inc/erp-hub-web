@@ -124,15 +124,15 @@ export default class Receipt extends Component {
                     </tr>
                     <tr>
                       <td style={{backgroundColor: "white"}} />
-                      <td style={{backgroundColor: "white", textDecoration: "uppercase"}}><this.Translate id="text_discount"/>:</td>
-                      <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency(this.props.discountAmount)}</td>
+                      <td style={{backgroundColor: "white"}}>
+                        <span className="text-uppercase"><this.Translate id="text_tax" /></span> {taxTitle}:
+                      </td>
+                      <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency(this.props.taxAmount)}</td>
                     </tr>
                     <tr>
                       <td style={{backgroundColor: "white"}} />
-                      <td style={{backgroundColor: "white"}}>
-                        TAX {taxTitle}:
-                      </td>
-                      <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency(this.props.taxAmount)}</td>
+                      <td style={{backgroundColor: "white", textDecoration: "uppercase"}}><this.Translate id="text_discount"/>:</td>
+                      <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency(this.props.discountAmount)}</td>
                     </tr>
                     {
                       countTax > 1 ?

@@ -32,7 +32,7 @@ export default class ReturnPurchaseList extends List {
         title: <this.Translate id="text_invoice_no" />,
         dataIndex: "invoiceNo",
         key: "invoiceNo",
-        width: 120,
+        width: 150,
         sorter: true
       },
       {
@@ -47,7 +47,7 @@ export default class ReturnPurchaseList extends List {
         title: <this.Translate id="text_shipping_fee" />,
         dataIndex: "shippingFee",
         key: "shippingFee",
-        width: 130,
+        width: 150,
         align: "right",
         sorter: true,
         render: shippingFee => this.formatCurrency(shippingFee)

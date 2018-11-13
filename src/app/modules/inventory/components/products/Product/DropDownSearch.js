@@ -181,8 +181,8 @@ export default class DropDownSearch extends Modal {
             </this.Col>
             <this.Col md="4" className="right-description">
               {
-                product.productVariantToProduct.length > 0 ?
-                  <div className="variant">{product.productVariantToProduct.length} {<this.Translate id="text_variant"/>}{product.productVariantToProduct.length > 1 ? <this.Translate id="text_plural"/> : ""}</div>
+                product.productVariant.length > 0 ?
+                  <div className="variant">{product.productVariant.length} {<this.Translate id="text_variant"/>}{product.productVariant.length > 1 ? <this.Translate id="text_plural"/> : ""}</div>
                   :
                   <div className="price">{this.formatCurrency(product.price)}</div>
               }

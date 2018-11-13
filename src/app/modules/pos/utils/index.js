@@ -63,6 +63,11 @@ class Util {
     return grandTotal < 0 ? 0 : grandTotal;
   }
 
+  getGrandTotalWithOutDiscount(value = 0, tax = 0) {
+    const grandTotal = value + tax;
+    return grandTotal < 0 ? 0 : grandTotal;
+  }
+
   appendCustomerPaymentList(customerPaymentList, giveAmount, paymentMethod, balance) {
     if (customerPaymentList.length === 0) {
       customerPaymentList.push({

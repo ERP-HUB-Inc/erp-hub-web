@@ -287,7 +287,8 @@
 }
 
 #retail-sale #right-block #search-information {
-    flex: none
+    flex: none;
+    margin-top: 30px
 }
 
 #retail-sale #right-block .product-order-list {
