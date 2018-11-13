@@ -28,7 +28,7 @@ export default class ListPrivilege extends Component {
 
   componentDidMount () {
     const {dispatch} = this.props;
-    dispatch(PrivilegeAction.fetch());
+    dispatch(PrivilegeAction.fetch(200));
   }
 
   handleSubmit () {
