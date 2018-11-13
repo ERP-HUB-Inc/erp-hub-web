@@ -1,5 +1,6 @@
 import React from "react";
 import List from "../List";
+import ReactFileReader from "react-file-reader";
 import Constant from "../../../constants/report/sale";
 import SaleReportAction from "../../../action/report/saleReport";
 import SaleReportService from "../../../services/report/SaleService";
@@ -8,6 +9,9 @@ import "./index.css";
 export default class InventoryList extends List {
   constructor(props) {
     super(props);
+    this.state = {
+      csvData: ""
+    };
     this.columns = new Column();
     this.ExportheadersCsv = [
       {label: "Date", key: "date"},
@@ -25,6 +29,7 @@ export default class InventoryList extends List {
     this.RESET_CONSTANT = Constant.RESET_SALE_REPORT;
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
     this.exportCsv = this.exportCsv.bind(this);
+    this.handleFilesUploadCsv = this.handleFilesUploadCsv.bind(this);
   }
 
   componentDidMount(){}
@@ -32,6 +37,18 @@ export default class InventoryList extends List {
   exportCsv(){
     const { saleReport } = this.props;
     return saleReport.list;
+  }
+
+  handleFilesUploadCsv(files){
+    let reader = new FileReader();
+    reader.onload = () => {
+      // Use reader.result
+      this.setState({
+        csvData: reader.result
+      });
+    };
+    reader.readAsText(files[0]);
+    console.log("file",files);
   }
 
   renderTable(){
@@ -116,6 +133,10 @@ export default class InventoryList extends List {
   renderFilterRecord() {
 
     const {form} = this.props;
+    const {csvData} = this.state;
+
+    console.log("csvData",csvData);
+
     return(
       <div>
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
@@ -130,6 +151,12 @@ export default class InventoryList extends List {
                 form={form}
               />
             </this.Col>
+            {/* <this.Col md="3">
+              <ReactFileReader handleFiles={this.handleFilesUploadCsv} fileTypes={".csv"}>
+                <button className='btn'>Upload</button>
+              </ReactFileReader>
+              {this.state.csvData}
+            </this.Col> */}
             {/* <this.Col md="3">
               <this.InputText
                 name="key"
