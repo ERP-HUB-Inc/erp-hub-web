@@ -10,26 +10,16 @@ export default class TaxList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
-    this.fetchingProp = "tax";
-    this.addingProp = "taxAdd";
-    this.updatingProp = "taxUpdate";
+    this.formCreate = <FormCreate/>;
+    this.formUpdate = <FormUpdate/>;
     this.columnFilterWithKey = ["name"];
     this.service = TaxService;
     this.action = TaxAction;
     this.RESET_CONSTANT = Constant.RESET_TAX;
   }
-  
-  handleShowFormAdd() {
-    const { dispatch } = this.props;
-    dispatch(TaxAction.showForm());
-    this.setState({
-      modalConten: <FormCreate />
-    });
-  }
 
   handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
-    dispatch(TaxAction.showForm(rowData));
+    this.props.dispatch(TaxAction.showForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });

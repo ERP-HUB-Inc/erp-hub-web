@@ -2,6 +2,8 @@ import React from "react";
 import {Pagination} from "antd";
 import Component  from "../../Component";
 import menuSource from "../../layout/SiderBar/datasource";
+import BaseService from "../../../services/BaseService";
+import PrivilegeService from "../../../services/PrivilegeService";
 
 export default class List extends Component {
   constructor(props) {
@@ -22,88 +24,37 @@ export default class List extends Component {
     };
 
     this.rowSelection = true;
-
     this.showExport = false;
-
     this.ExportheadersCsv = [];
-
     this.exportCsvFileName = "filename.csv";
 
     this.columns = [];
     this.filter = [];
     this.module = ""; // This compare to parent key in datasource in sidebar when render breadcrump
-    this.fetchingProp = ""; // prop of reducer of fetching record that get from map state to prop from container
-    this.addingProp = ""; // prop of reducer of adding record that get from map state to prop from container
-    this.updatingProp = ""; // prop of reducer of adding record that get from map state to prop from container
+    this.fetchingProp = "list"; // prop of reducer of fetching record that get from map state to prop from container
+    this.addingProp = "add"; // prop of reducer of adding record that get from map state to prop from container
+    this.updatingProp = "update"; // prop of reducer of adding record that get from map state to prop from container
 
     this.pageSize = 10; // default limit record display in table list
-    this.confirmTextDelete = "Are you sure delete this record?";
+    this.confirmTextDelete = <this.Translate id="text_confirm_delete" />;
     this.requiredMessage = "Please input all required field."; // require message display on modal popup
     this.confirmTitle = "COMPLETED";
-    this.okText = "Yes"; // text button on alert of delete action
-    this.cancelText = "No"; // text button on alert of delete action
+    this.okText = <this.Translate id="text_yes" />; // text button on alert of delete action
+    this.cancelText = <this.Translate id="text_no" />; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
+    this.messageNoPermissionKey = "text_no_permission";
     this.isShowExpandable = false;
     this.emptyCell = "N/A";
-
-    this.columnNo = {};
-    
-    this.columnStatus = {
-      title: <this.Translate id="text_status" />,
-      dataIndex: "status",
-      key: "status",
-      width: 100,
-      render: value => {
-        return (
-          value === 1 ?
-            <this.Badge status="success" text={<this.Translate id="select_text_active" />} />
-            :
-            <this.Badge status="error" text={<this.Translate id="select_text_deactive" />} />
-        );
-      },
-      sorter: true
-    };
-
-    this.columnStatusExtend = {
-      dataIndex: "status",
-      key: "status",
-      width: 100,
-      render: value => {
-        return (
-          value === 1 ?
-            <this.Badge text={<this.Translate id="select_text_active" />} status="success" />
-            :
-            <this.Badge text={<this.Translate id="select_text_deactive"/>} status="error" />
-        );
-      }
-    };
-
-    this.columnCreatedAt = {
-      title: <this.Translate id="text_created_at" />,
-      dataIndex: "createdAt",
-      key: "createdAt",
-      width: 180,
-      render: value => this.formatDate(value),
-      sorter: true
-    };
-    this.columnUpdatedAt = {
-      title: <this.Translate id="text_updated_at" />,
-      dataIndex: "updatedAt",
-      key: "updatedAt",
-      width: 180,
-      render: value => this.formatDate(value),
-      sorter: true
-    };
-    this.statusList = [
-      {name: <this.Translate id="select_text_active"/>, value: this.Enum.ACTIVE},
-      {name: <this.Translate id="select_text_deactive"/>, value: this.Enum.DEACTIVE},
-      {name: <this.Translate id="select_text_all_status"/>, value: this.Enum.ALL_STATE}
-    ];
-
     this.columnFilterWithKey = [];
-
-    this.service = null;
+    this.service = new BaseService();
     this.action = null;
+    this.PrivilegeService = PrivilegeService;
+    this.initializeDefaultColumn();
+    this.columnNo = {};
+
+    //FOR PERMISSION CHECKING OPERATION
+    this.formCreate = null;
+    this.formUpdate = null;
 
     this.onChange = this.onChange.bind(this); // handle when user change filter, access pagination
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
@@ -115,6 +66,7 @@ export default class List extends Component {
     this.renderTable = this.renderTable.bind(this);
     this.expandedRender = this.expandedRender.bind(this);
     this.buttonActionCollection = this.buttonActionCollection.bind(this);
+    this.handleShowFormAdd = this.handleShowFormAdd.bind(this);
 
     this.RESET_CONSTANT = "RESET";
   }
@@ -200,13 +152,12 @@ export default class List extends Component {
    * @param {*} pageSize 
    */
   onShowSizeChange(current, pageSize) {
-    if (this.action != null) {
-      const {dispatch} = this.props;
+    if (this.action) {
       this.filter = [
         pageSize,
         (current - 1) * pageSize,
       ];
-      dispatch(this.action.fetch(...this.filter));
+      this.props.dispatch(this.action.fetch(...this.filter));
       this.setState({current, isClickFilter: false});
     }
   }
@@ -227,7 +178,21 @@ export default class List extends Component {
    * just handle for show create form only
    * it will overide in child class
    */
-  handleShowFormAdd() {}
+
+  handleShowFormAdd() {
+    if (this.action && this.formCreate) {
+      this.PrivilegeService.checkPermission(this.service.createRoute)
+        .then(response => {
+          this.props.dispatch(this.action.showForm());
+          this.setState({
+            modalConten: this.formCreate
+          });
+        })
+        .catch(error => {
+          this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
+        });
+    }
+  }
 
   /**
    * just handle for show user click on single row and display form edit
@@ -254,6 +219,8 @@ export default class List extends Component {
   handleConfirm() {
     if (this.state.selectedRowKeys.length > 0) {
       this.setState({modalVisible: true});
+    } else {
+      this.Message.warning(this.CATranslate("text_warning_select_row_to_delete", this.props.locale));
     }
   }
 
@@ -268,12 +235,11 @@ export default class List extends Component {
    * handle procedd delete
   */
   handleDelete() {
-    if (this.service != null) {
-      const { dispatch } = this.props;
+    if (this.service) {
       this.setState({deleting: true});
       this.service.archive(this.state.selectedListIds)
         .then(response => {
-          dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
+          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
           this.setState({
             selectedRowKeys: [],
             modalVisible: false,
@@ -307,6 +273,60 @@ export default class List extends Component {
   /**===================================================================#EVENT CONTROL FOR CHILD CLASS============================================================**/
 
   /**===================================================================LAYOUT CONTROL FOR CHILD CLASS============================================================**/
+  
+  initializeDefaultColumn() {
+    this.columnStatus = {
+      title: <this.Translate id="text_status" />,
+      dataIndex: "status",
+      key: "status",
+      width: 100,
+      render: value => {
+        return (
+          value === 1 ?
+            <this.Badge status="success" text={<this.Translate id="select_text_active" />} />
+            :
+            <this.Badge status="error" text={<this.Translate id="select_text_deactive" />} />
+        );
+      },
+      sorter: true
+    };
+
+    this.columnStatusExtend = {
+      dataIndex: "status",
+      key: "status",
+      width: 100,
+      render: value => {
+        return (
+          value === 1 ?
+            <this.Badge text={<this.Translate id="select_text_active" />} status="success" />
+            :
+            <this.Badge text={<this.Translate id="select_text_deactive"/>} status="error" />
+        );
+      }
+    };
+
+    this.columnCreatedAt = {
+      title: <this.Translate id="text_created_at" />,
+      dataIndex: "createdAt",
+      key: "createdAt",
+      width: 180,
+      render: value => this.formatDate(value),
+      sorter: true
+    };
+    this.columnUpdatedAt = {
+      title: <this.Translate id="text_updated_at" />,
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      width: 180,
+      render: value => this.formatDate(value),
+      sorter: true
+    };
+    this.statusList = [
+      {name: <this.Translate id="select_text_active"/>, value: this.Enum.ACTIVE},
+      {name: <this.Translate id="select_text_deactive"/>, value: this.Enum.DEACTIVE},
+      {name: <this.Translate id="select_text_all_status"/>, value: this.Enum.ALL_STATE}
+    ];
+  }
   renderBreadCrumb() {
     // get current path of breadcrum compare with url
     const currentPath = window.location.pathname;
@@ -339,8 +359,9 @@ export default class List extends Component {
       <this.Button
         type="info"
         className="mg-right text-uppercase"
-        onClick={() => this.handleShowFormAdd()}>
-        <span className="icon-add icon-padding-right"></span><this.Translate id="text_add_new" />
+        onClick={this.handleShowFormAdd}>
+        <span className="icon-add icon-padding-right"></span>
+        <this.Translate id="text_add_new" />
       </this.Button>
     );
   }
@@ -348,11 +369,11 @@ export default class List extends Component {
   renderButtonDelete() {
     return (
       <this.Button
-        disabled={this.state.selectedRowKeys.length <= 0}
         type="danger"
         className="text-uppercase"
-        onClick={() => this.handleConfirm()}>
-        <span className="icon-delete icon-padding-right"></span><this.Translate id="text_delete" />
+        onClick={this.handleConfirm}>
+        <span className="icon-delete icon-padding-right"></span>
+        <this.Translate id="text_delete" />
       </this.Button>
     );
   }
@@ -364,7 +385,8 @@ export default class List extends Component {
         data={this.exportCsv()}
         headers={this.ExportheadersCsv !==null ? this.ExportheadersCsv : this.columns }>
         <this.Button type="info" disabled={this.exportCsv().length > 0 ? false : true }>
-          <span className="icon-export icon-padding-right"></span>{<this.Translate id="button_search_stock_transfer_export_csv" />}
+          <span className="icon-export icon-padding-right"></span>
+          <this.Translate id="text_export_csv" />
         </this.Button>
       </this.CSVLink>
     );
@@ -404,10 +426,10 @@ export default class List extends Component {
           <span>{this.confirmTextDelete}</span>
         </div>
         <div className="ant-modal-footer">
-          <this.Button className="danger text-uppercase" onClick={() => this.handleCancel()}>
+          <this.Button className="danger text-uppercase" onClick={this.handleCancel}>
             <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel"/>
           </this.Button>
-          <this.Button onClick={() => this.handleDelete()} loading={this.state.deleting} className="info text-uppercase">
+          <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info text-uppercase">
             <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes"/>
           </this.Button>
         </div>

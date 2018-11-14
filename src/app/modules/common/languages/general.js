@@ -197,6 +197,24 @@ export default {
     "Quantity"
   ],
 
+  "text_no_permission": [
+    "No permission to permform this operation",
+    "No permission to permform this operation",
+    "No permission to permform this operation"
+  ],
+
+  "text_warning_select_row_to_delete": [
+    "Please select rows to perform delete operation",
+    "Please select rows to perform delete operation",
+    "Please select rows to perform delete operation"
+  ],
+
+  "text_confirm_delete": [
+    "Are you sure delete this record ?",
+    "Are you sure delete this record ?",
+    "Are you sure delete this record ?"
+  ],
+
   "text_discount": [
     "Discount",
     "Discount",

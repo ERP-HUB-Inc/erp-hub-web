@@ -56,7 +56,7 @@ export default class ProductList extends List {
     const getAllProductReport = [];
     if (Array.isArray(productReport.list)) {
       productReport.list.forEach(productReport => {
-        const productName = Util.getProductName(productReport.productDescriptions);
+        // const productName = Util.getProductName(productReport.productDescriptions);
         // console.log("productReport.productDescriptions",productReport.productDescriptions);
         getAllProductReport.push({
           // productDescriptions : productName ? productReport.name : this.emptyCell ,
@@ -143,7 +143,7 @@ export default class ProductList extends List {
         headers={this.ExportheadersCsv}
       >
         <this.Button type="info">
-          <span className="icon-export icon-padding-right"></span>{<this.Translate id="button_search_stock_transfer_export_csv" />}
+          <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
         </this.Button>
       </this.CSVLink>
     );

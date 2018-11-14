@@ -23,9 +23,9 @@ export default {
     "Product Key"
   ],
 
-  "button_search_stock_transfer_export_csv": [
+  "text_export_csv": [
     "Export CSV",
-    "အမည်",
+    "Export CSV",
     "Export CSV",
   ],
 

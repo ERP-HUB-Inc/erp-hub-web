@@ -10,27 +10,15 @@ export default class CurrencyList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
-    this.title = "Currency";
-    this.fetchingProp = "currency";
-    this.addingProp = "currencyAdd";
-    this.updatingProp = "currencyUpdate";
+    this.formCreate = <FormCreate/>;
+    this.formUpdate = <FormUpdate/>;
     this.columnFilterWithKey = ["name"];
     this.service = CurrencyService;
     this.action = CurrencyAction;
     this.RESET_CONSTANT = Constant.RESET_CURRENCY;
   }
-
-  handleShowFormAdd() {
-    const { dispatch } = this.props;
-    dispatch(CurrencyAction.showForm());
-    this.setState({
-      modalConten: <FormCreate/>
-    });
-  }
-
   handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
-    dispatch(CurrencyAction.showForm(rowData));
+    this.props.dispatch(CurrencyAction.showForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });
@@ -42,7 +30,6 @@ class Column extends List {
     super(props);
     return [
       this.columnCreatedAt,
-      this.columnNo,
       {
         title: <this.Translate id="text_name" />,
         dataIndex: "name",
@@ -58,7 +45,6 @@ class Column extends List {
         dataIndex: "value",
         sorter: true
       },
-      this.columnUpdatedAt,
       this.columnStatus
     ];
   }

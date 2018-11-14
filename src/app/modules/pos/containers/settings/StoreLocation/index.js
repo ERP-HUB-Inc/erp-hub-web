@@ -13,9 +13,10 @@ class StoreLocation extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    storeLocation: state.reducer.storeLocation.request,
-    storeLocationAdd: state.reducer.storeLocation.add,
-    storeLocationUpdate: state.reducer.storeLocation.update
+    list: state.reducer.storeLocation.request,
+    add: state.reducer.storeLocation.add,
+    update: state.reducer.storeLocation.update,
+    locale: state.locale
   };
 }
 

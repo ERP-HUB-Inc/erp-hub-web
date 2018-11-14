@@ -10,7 +10,7 @@ export default class BaseService extends Service {
   }
 
   detail(ids){
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.GET({ 
       url: `${this.baseUrl}/detail/${ids}?languageId=${this.getLanguageId()}`,
       data: this.data,
@@ -26,7 +26,7 @@ export default class BaseService extends Service {
     searchKey, // {"column": ["columnname1", "columnname2"], "value": "hello"}
     rangFilter
   ) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.GET({ 
       url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&rangFilter=${rangFilter}`,  
       data: this.data,
@@ -38,7 +38,7 @@ export default class BaseService extends Service {
     filter, // {"column1": [value1, value2], "column2": [value1, value2]}
     rangFilter // {"column": ["columnname1", "columnname2"], "value": "hello"}
   ) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.GET({ 
       url: `${this.baseUrl}/lists?filter=${filter}&rangFilter=${rangFilter}`,  
       data: this.data,
@@ -56,7 +56,7 @@ export default class BaseService extends Service {
   }
 
   add(data) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.POST({
       url: `${this.baseUrl}/create`,
       data: {
@@ -69,9 +69,8 @@ export default class BaseService extends Service {
   }
 
   update(data) {
-    const {id} = data;
     return this.PUT({
-      url: `${this.baseUrl}/update/${id}`,
+      url: `${this.baseUrl}/update/${data.id}`,
       data: {
         ...data
       },

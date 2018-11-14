@@ -10,7 +10,8 @@ export default class ReceiptTemplateList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
-    this.fetchingProp = "receipt";
+    this.formCreate = <FormCreate/>;
+    this.formUpdate = <FormUpdate/>;
     this.columnFilterWithKey = ["name"];
     this.service = ReceiptService;
     this.action = ReceiptTemplateAction;
@@ -18,18 +19,10 @@ export default class ReceiptTemplateList extends List {
   }
 
   componentWillUpdate(nextProps) {
-    const {receiptAdd, receiptUpdate} = nextProps;
-    if (receiptAdd.added || receiptUpdate.updated) {
+    if (nextProps.add.added || nextProps.update.updated) {
       this.props.dispatch(ReceiptTemplateAction.fetch(this.pageSize));
       this.props.dispatch(ReceiptTemplateAction.reset());
     }
-  }
-
-  handleShowFormAdd() {
-    this.props.dispatch(ReceiptTemplateAction.showForm());
-    this.setState({
-      modalConten: <FormCreate/>
-    });
   }
 
   handleShowFormEdit(rowData) {
