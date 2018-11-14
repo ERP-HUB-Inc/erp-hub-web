@@ -229,7 +229,8 @@ export default class Retail extends Component {
   }
 
   handleOnResizeScreen() {
-    this.setState({modalContent: null});
+    // TO DO: Disable temparary on modal popup Discount and Tax On Sale POS
+    // this.setState({modalContent: null});
   }
 
   handleOnSelectCategory(value) {
