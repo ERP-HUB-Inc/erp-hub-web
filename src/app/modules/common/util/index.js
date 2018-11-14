@@ -366,5 +366,9 @@ export class Util {
     if (!results[2]) return "";
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   }
+
+  sumBy(collection, key) {
+    return _.sumBy(collection, key);
+  }
   
 }

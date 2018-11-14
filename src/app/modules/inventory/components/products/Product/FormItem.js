@@ -300,7 +300,7 @@ export default class FormItem extends Modal {
 
     let productTypeBox = Enum.PRODUCT_STANDARD;
     if (formData.id != null) {
-      if (formData.productVariantToProduct.length > 0 ) {
+      if (formData.productVariant.length > 0 ) {
         productTypeBox = Enum.PRODUCT_VARIANT;
       } else if (formData.productPackageToProduct.length > 0) {
         productTypeBox = Enum.PRODUCT_COMPOSITE;
@@ -666,7 +666,7 @@ FormItem.defaultProps = {
     isAvialableSale: 1,
     isPublic: 0,
     productTagToProduct: [],
-    productVariantToProduct: [],
+    productVariant: [],
     productPackageToProduct: [],
     productDescriptions:[],
     status: 1

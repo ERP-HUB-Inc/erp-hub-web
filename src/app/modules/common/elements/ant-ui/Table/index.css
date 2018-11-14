@@ -13,7 +13,7 @@
 .ant-table-body table tr th,
 .ant-table-header table tr th {
     background-color: #F7F7F7;
-    font-size: 10.5pt
+    font-size: 10pt
 }
 
 tr:nth-child(odd) {
@@ -22,7 +22,7 @@ tr:nth-child(odd) {
 
 .ant-table-body table tr td {
     color: #4D4F5C;
-    font-size: 10.5pt;
+    font-size: 10pt;
     font-weight: 400;
 }
 

@@ -36,7 +36,7 @@ export default class ReceivePurchaseList extends List {
       {
         title: <this.Translate id="text_invoice_no" />,
         dataIndex: "invoiceNo",
-        width: 130,
+        width: 150,
         key: "invoiceNo",
         sorter: true
       },
@@ -51,11 +51,19 @@ export default class ReceivePurchaseList extends List {
       {
         title: <this.Translate id="text_shipping_fee" />,
         dataIndex: "shippingFee",
-        width: 130,
+        width: 150,
         align: "right",
         key: "shippingFee",
         render: shippingFee => this.formatCurrency(shippingFee),
         sorter: true
+      },
+      {
+        title: <this.Translate id="text_items" />,
+        dataIndex: "purchaseOrderEntries",
+        key: "purchaseOrderEntries",
+        width: 100,
+        align: "center",
+        render: purchaseOrderEntries => this.Util.sumBy(purchaseOrderEntries, "requestQuantity")
       },
       {
         title: <this.Translate id="text_total" />,

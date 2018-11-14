@@ -251,6 +251,12 @@ export default {
     "Item"
   ],
 
+  "text_items": [
+    "Items",
+    "Items",
+    "Items"
+  ],
+
   "text_balance": [
     "Balance",
     "Balance",
@@ -561,6 +567,18 @@ export default {
     "Current User",
     "Current User",
     "Current User"
+  ],
+
+  "text_full_screen": [
+    "Full Screen",
+    "Full Screen",
+    "Full Screen"
+  ],
+
+  "text_exit_full_screen": [
+    "Exit Full Screen",
+    "Exit Full Screen",
+    "Exit Full Screen"
   ],
 
   "text_expected": [
