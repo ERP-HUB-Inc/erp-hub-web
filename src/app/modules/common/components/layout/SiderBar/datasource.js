@@ -451,7 +451,7 @@ const dataSource = {
         icon: "icon-stock",
         route: "/reports/inventory",
         component: InventoryReport,
-        isFashNav: true
+        isFashNav: false
       },
       {
         title: "Payment Report",
