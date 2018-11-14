@@ -254,9 +254,17 @@ export default class InventoryList extends List {
 
   renderActionButton(){
     return(
-      <div className="reorder-point-button-search report-button">
-        { this.renderButtonExportCSV }
-      </div> 
+      <div className="btn-profit-and-lost">
+        <this.CSVLink
+          filename={this.exportCsvFileName}
+          data={this.exportCsv()}
+          headers={this.ExportheadersCsv}
+        >
+          <this.Button type="info">
+            <span className="icon-export icon-padding-right"></span>{<this.Translate id="button_search_stock_transfer_export_csv" />}
+          </this.Button>
+        </this.CSVLink>
+      </div>
     );
   }
 

@@ -14,13 +14,14 @@ export default class InventoryList extends List {
     };
     this.columns = new Column();
     this.ExportheadersCsv = [
-      {label: "Date", key: "date"},
-      {label: "Revenue", key: "revenue"},
-      {label: "Cost", key: "cost"},
-      {label: "Profile", key: "profit"},
-      {label: "Margin", key: "margin"}
+      {label: this.CATranslate("text_created_at", this.props.locale), key: "date"},
+      {label: this.CATranslate("col_sale_report_revenuse", this.props.locale), key: "revenue"},
+      {label: this.CATranslate("col_sale_report_cost_of_good", this.props.locale), key: "cost"},
+      {label: this.CATranslate("col_sale_report_gross_profit", this.props.locale), key: "profit"},
+      {label: this.CATranslate("col_sale_report_margin", this.props.locale), key: "margin"},
     ];
-    this.exportCsvFileName = "sale_report.csv";
+    this.exportCsvFileName = "sale_report.csv"; 
+
     this.fetchingProp = "saleReport";
     this.addingProp = "saleReportAdd";
     this.updatingProp = "saleReportUpdate";
@@ -36,9 +37,22 @@ export default class InventoryList extends List {
 
   exportCsv(){
     const { saleReport } = this.props;
-    return saleReport.list;
+    let getSaleReport = [];
+    if(saleReport.list){
+      saleReport.list.forEach(saleReport => {
+        getSaleReport.push({
+          date: this.formatDate(saleReport.date),
+          revenue: saleReport.revenue,
+          cost: this.formatCurrency(saleReport.cost),
+          profit: this.formatCurrency(saleReport.profit),
+          margin: saleReport.profit + "%"
+        });
+      });
+    }
+    return getSaleReport;
   }
 
+  //read file for import
   handleFilesUploadCsv(files){
     let reader = new FileReader();
     reader.onload = () => {
@@ -48,7 +62,6 @@ export default class InventoryList extends List {
       });
     };
     reader.readAsText(files[0]);
-    console.log("file",files);
   }
 
   renderTable(){
@@ -104,7 +117,8 @@ export default class InventoryList extends List {
     }); 
   }
 
-  renderButtonExportCSV(){
+
+  renderActionButton(){
     return(
       <this.CSVLink
         filename={this.exportCsvFileName}
@@ -118,25 +132,12 @@ export default class InventoryList extends List {
     );
   }
 
-  renderActionButton(){
-    return(
-      <div>
-        { this.renderButtonExportCSV() }  
-      </div>
-    );
-  }
-
   renderPagination(){
     return(<div></div>);
   }
 
   renderFilterRecord() {
-
     const {form} = this.props;
-    const {csvData} = this.state;
-
-    console.log("csvData",csvData);
-
     return(
       <div>
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
@@ -150,27 +151,11 @@ export default class InventoryList extends List {
                 form={form}
               />
             </this.Col>
-            {/* <this.Col md="3">
-              <ReactFileReader handleFiles={this.handleFilesUploadCsv} fileTypes={".csv"}>
-                <button className='btn'>Upload</button>
-              </ReactFileReader>
-              {this.state.csvData}
-            </this.Col> */}
-            {/* <this.Col md="3">
-              <this.InputText
-                name="key"
-                label="Search For key"
-                placeholder="Search for brand, code and notation"
-                form={form}
-              />
-            </this.Col> */}
-
             <this.Col md="2">
               <this.Button htmlType="submit" type="info" className="wrap-report-btn-search">
                 <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
               </this.Button> 
             </this.Col>
-
           </this.Row>
         </this.Form>
       </div>
@@ -179,7 +164,6 @@ export default class InventoryList extends List {
   }
 
 }
-
 
 class Column extends List {
   constructor(props) {

@@ -116,7 +116,7 @@ export default class InventoryList extends List {
       [Enum.PO_STEP.PAID]: {name: <this.Translate id="purchase_order_step_paid" />, color: "green"},
     };
     this.ExportheadersCsv = [
-      {label: "Date", key: "createdAt"},
+      {label: this.CATranslate("text_created_at", this.props.locale), key: "createdAt"},
       {label: this.CATranslate("text_name", this.props.locale) , key: "name"},
       {label: this.CATranslate("text_number", this.props.locale), key: "number"},
       {label: this.CATranslate("text_reference", this.props.locale), key: "number"},
@@ -235,11 +235,12 @@ export default class InventoryList extends List {
       purchaseReport.list.forEach(poReport => {
         totalSummary += poReport.requestTotal;
         totalSummaryShippingFee += poReport.shippingFee;
+
         getpurchaseReport.push({
-          createdAt: poReport.createdAt,
+          createdAt: this.formatDate(poReport.createdAt),
           name: poReport.name,
           number: poReport.number,
-          referenceId: poReport.referenceId,
+          referenceId: poReport.reference !=null ? poReport.reference.number : this.emptyText,
           receiverId: poReport.receiver ? poReport.receiver.fullName: this.emptyText,
           supplier: poReport.supplier.name,
           location: poReport.location.name,
@@ -247,12 +248,15 @@ export default class InventoryList extends List {
           step: poReport.step in this.PO_STEP_STR_EXCEL ? this.PO_STEP_STR_EXCEL[poReport.step].name : "",
           shippingFee: this.formatCurrency(poReport.shippingFee),
           requestTotal: this.formatCurrency(poReport.requestTotal),
-          totalSummary: totalSummary,
-          totalSummaryShippingFee: totalSummaryShippingFee
+
+          totalSummary: this.formatCurrency(totalSummary),
+          totalSummaryShippingFee: this.formatCurrency(totalSummaryShippingFee)
         });
 
       });
+    
     }
+
     return getpurchaseReport;
   }
 

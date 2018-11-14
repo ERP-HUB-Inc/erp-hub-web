@@ -6,7 +6,6 @@ import ProductReportService from "../../../../inventory/services/products/Produc
 import ProductTypeAction from "../../../../inventory/actions/products/productsType";
 import BrandAction from "../../../../inventory/actions/products/brand";
 import LocationAction from "../../../../pos/action/settings/storeLocation";
-import Util from "../../../../inventory/utils";
 import Enum from "../../../../inventory/enums";
 import "./index.css";
 
@@ -27,7 +26,6 @@ export default class ProductList extends List {
     this.RESET_CONSTANT = Constant.RESET_PURCHASE_REPORT;
 
     this.ExportheadersCsv = [
-      {label: "Date", key: "createdAt"},
       {label: this.CATranslate("text_product_name", this.props.locale) , key: "productDescriptions"},
       {label: this.CATranslate("text_product_code", this.props.locale), key: "barcode"},
       {label: this.CATranslate("col_products_type", this.props.locale), key: "productType"},
@@ -59,7 +57,7 @@ export default class ProductList extends List {
         // const productName = Util.getProductName(productReport.productDescriptions);
         // console.log("productReport.productDescriptions",productReport.productDescriptions);
         getAllProductReport.push({
-          // productDescriptions : productName ? productReport.name : this.emptyCell ,
+          productDescriptions: productReport.productDescriptions ? productReport.productDescriptions[0].name : this.emptyCell,
           barcode: productReport.barcode ? productReport.barcode : this.emptyCell,
           productType: productReport.productType.productTypeDescriptions.length > 0 ?  productReport.productType.productTypeDescriptions[0].name : this.emptyCell ,
           type: productReport.type === Enum.TYPE_OF_PRODUCT.GOOD ? this.CATranslate("input_product_good", this.props.locale) : this.CATranslate("input_product_raw_material", this.props.locale) ,
@@ -123,15 +121,12 @@ export default class ProductList extends List {
           this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, locationId));
           this.setState({isClickFilter: true});
 
-          console.log("filter",filter);
-
         }
       }); 
     } 
   }
 
   exportCsv(){
-    // this.getProduct();
     return(this.getProduct());
   }
 
@@ -221,13 +216,6 @@ class Column extends List {
         title: <this.Translate id="text_product_name" />,
         dataIndex: "productDescriptions",
         key: "productDescriptions",
-        render: (text, record) => {
-          const productName = Util.getProductName(record);
-          console.log("record product",record);
-          return <div>
-            <div>{productName ? productName: this.emptyCell}</div>
-          </div>;
-        }
       },
       {
         title: <this.Translate id="text_product_code" />,
@@ -258,8 +246,7 @@ class Column extends List {
       {
         title: <this.Translate id="text_product_cost" />,
         dataIndex: "cost",
-        // align: "center",
-        render: cost => this.formatCurrency(cost)
+        key: "cost"
       },
       {
         title: <this.Translate id="text_product_total_cost" />,
@@ -280,7 +267,6 @@ class Column extends List {
         dataIndex: "totalPrice",
         align: "right",
         key: "totalPrice",
-    
       }
     ];
   }
