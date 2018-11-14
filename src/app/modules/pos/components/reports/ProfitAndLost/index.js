@@ -22,6 +22,7 @@ export default class InventoryList extends List {
       {label: "Type", key: "type"},
       {label: "Expense"}
     ];
+
     this.exportCsvFileName = "profit_and_lost_report.csv"; 
     this.fetchingProp = "profitAndLostReport";
     this.addingProp = "profitAndLostReportAdd";
@@ -254,7 +255,7 @@ export default class InventoryList extends List {
   renderActionButton(){
     return(
       <div className="reorder-point-button-search report-button">
-        { this.renderButtonExportCSV() }  
+        { this.renderButtonExportCSV }
       </div> 
     );
   }

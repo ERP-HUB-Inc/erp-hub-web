@@ -98,6 +98,15 @@ export default class InventoryList extends List {
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
     this.columnFilterWithKey = ["name", "number", "invoiceNo", "shippingFee", "requestTotal", "returnTotal", "receiveTotal"];
     this.supplierList = [{name: <this.Translate id="text_all_supplier"/>, id: 0}];
+    this.PO_STEP_STR_EXCEL = {
+      [Enum.PO_STEP.DRAFT]: {name: this.CATranslate("purchase_order_step_draff", this.props.locale), color: "#f50"},
+      [Enum.PO_STEP.PROCESS]: {name: this.CATranslate("purchase_order_step_process", this.props.locale), color: "#2db7f5"},
+      [Enum.PO_STEP.RECEIVED]: {name: this.CATranslate("purchase_order_step_recieve", this.props.locale), color: "#87d068"},
+      [Enum.PO_STEP.CANCEL]: {name: this.CATranslate("text_cancel", this.props.locale), color: "#108ee9"},
+      [Enum.PO_STEP.RETURN]: {name: this.CATranslate("text_return", this.props.locale), color: "blue"},
+      [Enum.PO_STEP.PAID]: {name: this.CATranslate("purchase_order_step_paid", this.props.locale), color: "green"},
+    };
+
     this.PO_STEP_STR = {
       [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color: "#f50"},
       [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="purchase_order_step_process" />, color: "#2db7f5"},
@@ -109,8 +118,18 @@ export default class InventoryList extends List {
     this.ExportheadersCsv = [
       {label: "Date", key: "createdAt"},
       {label: this.CATranslate("text_name", this.props.locale) , key: "name"},
-      {label: this.CATranslate("text_number", this.props.locale), key: "number"}
+      {label: this.CATranslate("text_number", this.props.locale), key: "number"},
+      {label: this.CATranslate("col_stock_purchase_order_reference", this.props.locale), key: "number"},
+      {label: this.CATranslate("text_receiver", this.props.locale), key: "receiverId"},
+      {label: this.CATranslate("text_supplier", this.props.locale), key: "supplier"},
+      {label: this.CATranslate("text_location", this.props.locale), key: "location"},
+      {label: this.CATranslate("text_due_date", this.props.locale), key: "deliveryDueDate"},
+      {label: this.CATranslate("text_step", this.props.locale), key: "step"},
+      {label: this.CATranslate("col_stock_purchase_order_shipping_fee", this.props.locale), key: "shippingFee"},
+      {label: this.CATranslate("text_total", this.props.locale), key: "requestTotal"},
     ];
+    this.exportCsvFileName = "purchase_report.csv"; 
+    
     this.summaryPurchaseReprot = this.summaryPurchaseReprot.bind(this);
   }
 
@@ -142,30 +161,35 @@ export default class InventoryList extends List {
 
   renderTable(){
     return (  
-      <div className="main-purchase">
-        <this.Row>
-          <this.Col md="12">
-            <this.Table 
-              dataSource={ this.props.purchaseReport.list }
-              columns= { this.columns }
-              locale={{emptyText: <this.Translate id="table_empty_data"/>}}
-              footer={() => 
-                <div className="wrap-table-footer" style={{minWidth: 347}} >
-                  <div className="text-uppercase pull-left">
-                    <this.Translate id="text_total" />:
+      this.props.purchaseReport.fetching ? 
+        <div className="text-center">
+          <this.Spin/>
+        </div> 
+        :
+        <div className="main-purchase">
+          <this.Row>
+            <this.Col md="12">
+              <this.Table 
+                dataSource={ this.props.purchaseReport.list }
+                columns= { this.columns }
+                locale={{emptyText: <this.Translate id="table_empty_data"/>}}
+                footer={() => 
+                  <div className="wrap-table-footer" style={{minWidth: 347}} >
+                    <div className="text-uppercase pull-left">
+                      <this.Translate id="text_total" />:
+                    </div>
+                    <div className="item pull-left" style={{minWidth: 157,textAlign: "right" }}>
+                      {this.formatCurrency(this.summaryPurchaseReprot().totalShippingFee)}
+                    </div>
+                    <div className="item pull-left" style={{minWidth: 124}}>
+                      { this.formatCurrency(this.summaryPurchaseReprot().total)}
+                    </div>
                   </div>
-                  <div className="item pull-left" style={{minWidth: 157,textAlign: "right" }}>
-                    {this.formatCurrency(this.summaryPurchaseReprot().totalShippingFee)}
-                  </div>
-                  <div className="item pull-left" style={{minWidth: 124}}>
-                    { this.formatCurrency(this.summaryPurchaseReprot().total)}
-                  </div>
-                </div>
-              }
-            />
-          </this.Col>
-        </this.Row>
-      </div>
+                }
+              />
+            </this.Col>
+          </this.Row>
+        </div>
     );
   }
 
@@ -202,9 +226,34 @@ export default class InventoryList extends List {
 
   exportCsv(){
     const { purchaseReport } = this.props;
+
+    let getpurchaseReport = [];
+    let totalSummary = 0;
+    let totalSummaryShippingFee = 0;
+
     if(purchaseReport.list){
-      return purchaseReport.list;
+      purchaseReport.list.forEach(poReport => {
+        totalSummary += poReport.requestTotal;
+        totalSummaryShippingFee += poReport.shippingFee;
+        getpurchaseReport.push({
+          createdAt: poReport.createdAt,
+          name: poReport.name,
+          number: poReport.number,
+          referenceId: poReport.referenceId,
+          receiverId: poReport.receiver ? poReport.receiver.fullName: this.emptyText,
+          supplier: poReport.supplier.name,
+          location: poReport.location.name,
+          deliveryDueDate: this.formatDate(poReport.deliveryDueDate),
+          step: poReport.step in this.PO_STEP_STR_EXCEL ? this.PO_STEP_STR_EXCEL[poReport.step].name : "",
+          shippingFee: this.formatCurrency(poReport.shippingFee),
+          requestTotal: this.formatCurrency(poReport.requestTotal),
+          totalSummary: totalSummary,
+          totalSummaryShippingFee: totalSummaryShippingFee
+        });
+
+      });
     }
+    return getpurchaseReport;
   }
 
   renderActionButton(){

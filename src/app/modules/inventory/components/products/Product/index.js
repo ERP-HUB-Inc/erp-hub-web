@@ -185,6 +185,7 @@ export default class ProductList extends List {
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
           this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, locationId));
           this.setState({isClickFilter: true});
+          console.log("filter",filter);
         }
       }); 
     } 

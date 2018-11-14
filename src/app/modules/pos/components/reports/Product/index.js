@@ -22,6 +22,7 @@ export default class ProductList extends List {
     this.addingProp = "productReportAdd";
     this.updatingProp = "productReportUpdate";
     this.service = ProductReportService;
+    this.columnFilterWithKey = ["name", "barcode"];
     this.action = ProductReportAction;
     this.RESET_CONSTANT = Constant.RESET_PURCHASE_REPORT;
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
@@ -58,17 +59,23 @@ export default class ProductList extends List {
 
   renderTable(){
     return (  
-      <div className="main-purchase">
-        <this.Row>
-          <this.Col md="12">
-            <this.Table 
-              dataSource={ this.getProduct() }
-              columns= { this.columns }
-              locale={{emptyText: <this.Translate id="table_empty_data"/>}}
-            />
-          </this.Col>
-        </this.Row>
-      </div>
+      this.props.productReport.fetching ? 
+        <div className="text-center">
+          <this.Spin/>
+        </div> 
+        :
+        <div className="main-purchase">
+          <this.Row>
+            <this.Col md="12">
+              <this.Table 
+                dataSource={ this.getProduct() }
+                columns= { this.columns }
+                locale={{emptyText: <this.Translate id="table_empty_data"/>}}
+              />
+            </this.Col>
+          </this.Row>
+        </div>
+      
     );
   }
 
@@ -91,13 +98,16 @@ export default class ProductList extends List {
             filter["productTypeId"] = [values.productTypeId];
           }
 
-          filter["status"] = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
+          filter["status"] =  [this.Enum.ACTIVE, this.Enum.DEACTIVE];
     
           filter = JSON.stringify(filter);
 
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
           this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, locationId));
           this.setState({isClickFilter: true});
+
+          console.log("filter",filter);
+
         }
       }); 
     } 
@@ -115,7 +125,7 @@ export default class ProductList extends List {
       <div>
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
           <this.Row className="main-search-layout form-group"> 
-            <this.Col md="2">
+            <this.Col md="3">
               <this.InputText
                 name="key"
                 label={<this.Translate id="text_search"/>}
@@ -154,7 +164,6 @@ export default class ProductList extends List {
                 nameKey="name"
                 form={form}/>
             </this.Col>
-
             <this.Col md="2" className="wrap-btn-search">
               <div className="ant-form-item-label" style={{visibility: "hidden"}}>
                 <label htmlFor="status" className="" title=""></label>
@@ -218,27 +227,27 @@ class Column extends List {
       {
         title: <this.Translate id="text_product_cost" />,
         dataIndex: "cost",
-        align: "center",
+        // align: "center",
         render: cost => this.formatCurrency(cost)
       },
       {
         title: <this.Translate id="text_product_total_cost" />,
         dataIndex: "totalCost",
-        align: "center",
+        align: "right",
         key: "totalCost",
         render: totalCost => this.formatCurrency(totalCost)
       },
       {
         title: <this.Translate id="text_price" />,
         dataIndex: "price",
-        align: "center",
+        align: "right",
         key: "price",
         render: price => this.formatCurrency(price)
       },
       {
         title: <this.Translate id="text_product_total_price" />,
         dataIndex: "totalPrice",
-        align: "center",
+        align: "right",
         key: "totalPrice",
         render: totalPrice => this.formatCurrency(totalPrice)
       }
