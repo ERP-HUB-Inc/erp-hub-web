@@ -53,19 +53,7 @@ export default {
     "Receive Location"
   ],
 
-  "button_search_stock_purchase_order_export_csv":[
-    "Export CSV",
-    "Export CSV",
-    "Export CSV"
-  ],
-
-  "col_stock_purchase_order_shipping_fee": [
-    "Shipping Fee",
-    "Shipping Fee",
-    "Shipping Fee"
-  ],
-
-  "col_stock_purchase_order_reference": [
+  "text_reference": [
     "Reference",
     "Reference",
     "Reference"
@@ -81,12 +69,6 @@ export default {
     "Process",
     "Process",
     "Process"
-  ],
-
-  "purchase_order_step_recieve": [
-    "Receive",
-    "Receive",
-    "Receive"
   ],
 
   "purchase_order_step_paid": [

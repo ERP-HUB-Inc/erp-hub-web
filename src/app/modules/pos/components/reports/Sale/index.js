@@ -14,7 +14,7 @@ export default class InventoryList extends List {
     };
     this.columns = new Column();
     this.ExportheadersCsv = [
-      {label: this.CATranslate("col-sale-history-date", this.props.locale), key: "date"},
+      {label: this.CATranslate("text_created_at", this.props.locale), key: "date"},
       {label: this.CATranslate("col_sale_report_revenuse", this.props.locale), key: "revenue"},
       {label: this.CATranslate("col_sale_report_cost_of_good", this.props.locale), key: "cost"},
       {label: this.CATranslate("col_sale_report_gross_profit", this.props.locale), key: "profit"},

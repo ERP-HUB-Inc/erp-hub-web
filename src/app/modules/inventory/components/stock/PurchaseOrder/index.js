@@ -36,7 +36,7 @@ export default class PurchaseOrderLists extends List {
         width: 130
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_reference" />,
+        title: <this.Translate id="text_reference" />,
         dataIndex: "referenceId",
         key: "referenceId",
         sorter: true,
@@ -82,7 +82,7 @@ export default class PurchaseOrderLists extends List {
         render: deliveryDueDate => this.formatDate(deliveryDueDate)
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_shipping_fee" />,
+        title: <this.Translate id="text_shipping_fee" />,
         dataIndex: "shippingFee",
         key: "shippingFee",
         sorter: true,
@@ -125,7 +125,7 @@ export default class PurchaseOrderLists extends List {
     this.PO_STEP_STR = {
       [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color: "#f50"},
       [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="purchase_order_step_process" />, color: "#2db7f5"},
-      [Enum.PO_STEP.RECEIVED]: {name: <this.Translate id="purchase_order_step_recieve" />, color: "#87d068"},
+      [Enum.PO_STEP.RECEIVED]: {name: <this.Translate id="text_receive" />, color: "#87d068"},
       [Enum.PO_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color: "#108ee9"},
       [Enum.PO_STEP.RETURN]: {name: <this.Translate id="text_return" />, color: "blue"},
       [Enum.PO_STEP.PAID]: {name: <this.Translate id="purchase_order_step_paid" />, color: "green"},

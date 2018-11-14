@@ -1,9 +1,4 @@
 export default {
-  "col-sale-history-date": [
-    "Date",
-    "Date",
-    "Date"
-  ],
 
   "col-sale-history-sold-by": [
     "Sold By",

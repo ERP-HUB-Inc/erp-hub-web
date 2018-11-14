@@ -168,9 +168,9 @@ export default {
   ],
 
   "text_copy": [
-    "Copy !",
-    "Copy !",
-    "Copy !"
+    "Copied !",
+    "Copied !",
+    "Copied !"
   ],
 
   "text_credit_card": [

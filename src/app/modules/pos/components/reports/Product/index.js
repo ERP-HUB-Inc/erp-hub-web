@@ -34,7 +34,7 @@ export default class ProductList extends List {
       {label: this.CATranslate("text_product_cost", this.props.locale), key: "cost"},
       {label: this.CATranslate("text_product_total_cost", this.props.locale), key: "totalCost"},
       {label: this.CATranslate("text_price", this.props.locale), key: "price"},
-      {label: this.CATranslate("text_product_total_price", this.props.locale), key: "totalPrice"}
+      {label: this.CATranslate("text_total_price", this.props.locale), key: "totalPrice"}
     ];
     this.exportCsvFileName = "product_report.csv"; 
 
@@ -261,7 +261,7 @@ class Column extends List {
     
       },
       {
-        title: <this.Translate id="text_product_total_price" />,
+        title: <this.Translate id="text_total_price" />,
         dataIndex: "totalPrice",
         align: "right",
         key: "totalPrice",
