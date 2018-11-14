@@ -30,7 +30,7 @@ export default class InventoryList extends List {
         width: 130
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_reference" />,
+        title: <this.Translate id="text_reference" />,
         dataIndex: "referenceId",
         key: "referenceId",
         width: 130,
@@ -78,7 +78,7 @@ export default class InventoryList extends List {
         render: step => step in this.PO_STEP_STR ? this.PO_STEP_STR[step].name : ""
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_shipping_fee" />,
+        title: <this.Translate id="text_shipping_fee" />,
         dataIndex: "shippingFee",
         key: "shippingFee",
         width: 130,
@@ -101,7 +101,7 @@ export default class InventoryList extends List {
     this.PO_STEP_STR_EXCEL = {
       [Enum.PO_STEP.DRAFT]: {name: this.CATranslate("purchase_order_step_draff", this.props.locale), color: "#f50"},
       [Enum.PO_STEP.PROCESS]: {name: this.CATranslate("purchase_order_step_process", this.props.locale), color: "#2db7f5"},
-      [Enum.PO_STEP.RECEIVED]: {name: this.CATranslate("purchase_order_step_recieve", this.props.locale), color: "#87d068"},
+      [Enum.PO_STEP.RECEIVED]: {name: this.CATranslate("text_receive", this.props.locale), color: "#87d068"},
       [Enum.PO_STEP.CANCEL]: {name: this.CATranslate("text_cancel", this.props.locale), color: "#108ee9"},
       [Enum.PO_STEP.RETURN]: {name: this.CATranslate("text_return", this.props.locale), color: "blue"},
       [Enum.PO_STEP.PAID]: {name: this.CATranslate("purchase_order_step_paid", this.props.locale), color: "green"},
@@ -110,7 +110,7 @@ export default class InventoryList extends List {
     this.PO_STEP_STR = {
       [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color: "#f50"},
       [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="purchase_order_step_process" />, color: "#2db7f5"},
-      [Enum.PO_STEP.RECEIVED]: {name: <this.Translate id="purchase_order_step_recieve" />, color: "#87d068"},
+      [Enum.PO_STEP.RECEIVED]: {name: <this.Translate id="text_receive" />, color: "#87d068"},
       [Enum.PO_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color: "#108ee9"},
       [Enum.PO_STEP.RETURN]: {name: <this.Translate id="text_return" />, color: "blue"},
       [Enum.PO_STEP.PAID]: {name: <this.Translate id="purchase_order_step_paid" />, color: "green"},
@@ -119,13 +119,13 @@ export default class InventoryList extends List {
       {label: "Date", key: "createdAt"},
       {label: this.CATranslate("text_name", this.props.locale) , key: "name"},
       {label: this.CATranslate("text_number", this.props.locale), key: "number"},
-      {label: this.CATranslate("col_stock_purchase_order_reference", this.props.locale), key: "number"},
+      {label: this.CATranslate("text_reference", this.props.locale), key: "number"},
       {label: this.CATranslate("text_receiver", this.props.locale), key: "receiverId"},
       {label: this.CATranslate("text_supplier", this.props.locale), key: "supplier"},
       {label: this.CATranslate("text_location", this.props.locale), key: "location"},
       {label: this.CATranslate("text_due_date", this.props.locale), key: "deliveryDueDate"},
       {label: this.CATranslate("text_step", this.props.locale), key: "step"},
-      {label: this.CATranslate("col_stock_purchase_order_shipping_fee", this.props.locale), key: "shippingFee"},
+      {label: this.CATranslate("text_shipping_fee", this.props.locale), key: "shippingFee"},
       {label: this.CATranslate("text_total", this.props.locale), key: "requestTotal"},
     ];
     this.exportCsvFileName = "purchase_report.csv"; 

@@ -83,7 +83,7 @@ export default {
     "Total Cost"
   ],
 
-  "text_product_total_price": [
+  "text_total_price": [
     "Total Price",
     "Total Price",
     "Total Price"
