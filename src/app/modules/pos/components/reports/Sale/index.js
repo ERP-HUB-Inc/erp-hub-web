@@ -147,7 +147,6 @@ export default class InventoryList extends List {
                 name="createdAt"
                 label={<this.Translate id="input_inventory_report_date_range" />}
                 errorRequired={<this.Translate id="errpr_input_inventory_report_date_range" />}
-                required={true}
                 form={form}
               />
             </this.Col>

@@ -22,8 +22,24 @@ export default class ProductList extends List {
     this.addingProp = "productReportAdd";
     this.updatingProp = "productReportUpdate";
     this.service = ProductReportService;
+    this.columnFilterWithKey = ["name", "barcode"];
     this.action = ProductReportAction;
     this.RESET_CONSTANT = Constant.RESET_PURCHASE_REPORT;
+
+    this.ExportheadersCsv = [
+      {label: "Date", key: "createdAt"},
+      {label: this.CATranslate("text_product_name", this.props.locale) , key: "productDescriptions"},
+      {label: this.CATranslate("text_product_code", this.props.locale), key: "barcode"},
+      {label: this.CATranslate("col_products_type", this.props.locale), key: "productType"},
+      {label: this.CATranslate("col_products_types", this.props.locale), key: "type"},
+      {label: this.CATranslate("text_quantity", this.props.locale), key: "quantity"},
+      {label: this.CATranslate("text_product_cost", this.props.locale), key: "cost"},
+      {label: this.CATranslate("text_product_total_cost", this.props.locale), key: "totalCost"},
+      {label: this.CATranslate("text_price", this.props.locale), key: "price"},
+      {label: this.CATranslate("text_product_total_price", this.props.locale), key: "totalPrice"}
+    ];
+    this.exportCsvFileName = "product_report.csv"; 
+
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
     this.getProduct = this.getProduct.bind(this);
   }
@@ -40,16 +56,18 @@ export default class ProductList extends List {
     const getAllProductReport = [];
     if (Array.isArray(productReport.list)) {
       productReport.list.forEach(productReport => {
+        const productName = Util.getProductName(productReport.productDescriptions);
+        // console.log("productReport.productDescriptions",productReport.productDescriptions);
         getAllProductReport.push({
-          productDescriptions : productReport.productDescriptions,
-          barcode: productReport.barcode,
-          productType: productReport.productType,
-          type: productReport.type,
+          // productDescriptions : productName ? productReport.name : this.emptyCell ,
+          barcode: productReport.barcode ? productReport.barcode : this.emptyCell,
+          productType: productReport.productType.productTypeDescriptions.length > 0 ?  productReport.productType.productTypeDescriptions[0].name : this.emptyCell ,
+          type: productReport.type === Enum.TYPE_OF_PRODUCT.GOOD ? this.CATranslate("input_product_good", this.props.locale) : this.CATranslate("input_product_raw_material", this.props.locale) ,
           quantity: productReport.quantity,
-          cost: productReport.cost,
-          totalPrice: productReport.quantity * productReport.price,
-          totalCost: productReport.cost * productReport.quantity,
-          price: productReport.price
+          cost: this.formatCurrency(productReport.cost),
+          totalPrice: this.formatCurrency(productReport.quantity * productReport.price),
+          totalCost: this.formatCurrency(productReport.cost * productReport.quantity),
+          price: this.formatCurrency(productReport.price)
         });
       });
       return getAllProductReport;
@@ -58,17 +76,23 @@ export default class ProductList extends List {
 
   renderTable(){
     return (  
-      <div className="main-purchase">
-        <this.Row>
-          <this.Col md="12">
-            <this.Table 
-              dataSource={ this.getProduct() }
-              columns= { this.columns }
-              locale={{emptyText: <this.Translate id="table_empty_data"/>}}
-            />
-          </this.Col>
-        </this.Row>
-      </div>
+      this.props.productReport.fetching ? 
+        <div className="text-center">
+          <this.Spin/>
+        </div> 
+        :
+        <div className="main-purchase">
+          <this.Row>
+            <this.Col md="12">
+              <this.Table 
+                dataSource={ this.getProduct() }
+                columns= { this.columns }
+                locale={{emptyText: <this.Translate id="table_empty_data"/>}}
+              />
+            </this.Col>
+          </this.Row>
+        </div>
+      
     );
   }
 
@@ -91,21 +115,37 @@ export default class ProductList extends List {
             filter["productTypeId"] = [values.productTypeId];
           }
 
-          filter["status"] = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
+          filter["status"] =  [this.Enum.ACTIVE, this.Enum.DEACTIVE];
     
           filter = JSON.stringify(filter);
 
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
           this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, locationId));
           this.setState({isClickFilter: true});
+
+          console.log("filter",filter);
+
         }
       }); 
     } 
   }
 
+  exportCsv(){
+    // this.getProduct();
+    return(this.getProduct());
+  }
+
   renderActionButton(){
     return(
-      <div></div>
+      <this.CSVLink
+        filename={this.exportCsvFileName}
+        data={this.exportCsv()}
+        headers={this.ExportheadersCsv}
+      >
+        <this.Button type="info">
+          <span className="icon-export icon-padding-right"></span>{<this.Translate id="button_search_stock_transfer_export_csv" />}
+        </this.Button>
+      </this.CSVLink>
     );
   }
 
@@ -115,7 +155,7 @@ export default class ProductList extends List {
       <div>
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
           <this.Row className="main-search-layout form-group"> 
-            <this.Col md="2">
+            <this.Col md="3">
               <this.InputText
                 name="key"
                 label={<this.Translate id="text_search"/>}
@@ -154,7 +194,6 @@ export default class ProductList extends List {
                 nameKey="name"
                 form={form}/>
             </this.Col>
-
             <this.Col md="2" className="wrap-btn-search">
               <div className="ant-form-item-label" style={{visibility: "hidden"}}>
                 <label htmlFor="status" className="" title=""></label>
@@ -180,9 +219,11 @@ class Column extends List {
     return [
       {
         title: <this.Translate id="text_product_name" />,
+        dataIndex: "productDescriptions",
         key: "productDescriptions",
         render: (text, record) => {
           const productName = Util.getProductName(record);
+          console.log("record product",record);
           return <div>
             <div>{productName ? productName: this.emptyCell}</div>
           </div>;
@@ -192,22 +233,21 @@ class Column extends List {
         title: <this.Translate id="text_product_code" />,
         dataIndex: "barcode",
         align: "center",
-        key: "barcode",
-        render: barcode => barcode ? barcode : this.emptyCell
+        key: "barcode"
+    
       },
       {
         title: <this.Translate id="col_products_type" />,
         dataIndex: "productType",
-        render: (text, record) => {
-          return record.productType.productTypeDescriptions.length > 0 ?  record.productType.productTypeDescriptions[0].name : this.emptyCell;
-        }
+        key: "productType"
+    
       },
       {
         title: <this.Translate id="col_products_types" />,
         dataIndex: "type",
         align: "center",
-        key: "type",
-        render: type => type === Enum.TYPE_OF_PRODUCT.GOOD ? <this.Translate id="input_product_good" /> : <this.Translate id="input_product_raw_material" />
+        key: "type"
+  
       },
       {
         title: <this.Translate id="text_quantity" />,
@@ -218,29 +258,29 @@ class Column extends List {
       {
         title: <this.Translate id="text_product_cost" />,
         dataIndex: "cost",
-        align: "center",
+        // align: "center",
         render: cost => this.formatCurrency(cost)
       },
       {
         title: <this.Translate id="text_product_total_cost" />,
         dataIndex: "totalCost",
-        align: "center",
+        align: "right",
         key: "totalCost",
-        render: totalCost => this.formatCurrency(totalCost)
+  
       },
       {
         title: <this.Translate id="text_price" />,
         dataIndex: "price",
-        align: "center",
+        align: "right",
         key: "price",
-        render: price => this.formatCurrency(price)
+    
       },
       {
         title: <this.Translate id="text_product_total_price" />,
         dataIndex: "totalPrice",
-        align: "center",
+        align: "right",
         key: "totalPrice",
-        render: totalPrice => this.formatCurrency(totalPrice)
+    
       }
     ];
   }
