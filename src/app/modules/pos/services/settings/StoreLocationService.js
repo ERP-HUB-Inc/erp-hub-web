@@ -6,17 +6,7 @@ class StoreLocationService extends BaseService {
     super();
     this.module = "location";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
-  }
-
-  findLocationByStoreName(storeName) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
-    return this.GET(
-      {
-        url: `${this.baseUrl}/lists/storename/${storeName}`,
-        data: {},
-        headers: this.header
-      }
-    );
+    this.initializeRoute();
   }
 }
 

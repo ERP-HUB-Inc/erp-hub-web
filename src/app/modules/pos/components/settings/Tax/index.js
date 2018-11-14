@@ -17,13 +17,6 @@ export default class TaxList extends List {
     this.action = TaxAction;
     this.RESET_CONSTANT = Constant.RESET_TAX;
   }
-
-  handleShowFormEdit(rowData) {
-    this.props.dispatch(TaxAction.showForm(rowData));
-    this.setState({
-      modalConten: <FormUpdate/>
-    });
-  }
 }
 
 

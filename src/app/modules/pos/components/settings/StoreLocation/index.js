@@ -17,13 +17,6 @@ export default class StoreLocationList extends List {
     this.action = StoreLocationAction;
     this.RESET_CONSTANT = Constant.RESET_STORE_LOCATION;
   }
-
-  handleShowFormEdit(rowData) {
-    this.props.dispatch(StoreLocationAction.showForm(rowData));
-    this.setState({
-      modalConten: <FormUpdate/>
-    });
-  }
 }
 
 class Column extends List {

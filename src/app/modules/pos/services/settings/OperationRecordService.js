@@ -6,6 +6,7 @@ class OperationRecordService extends BaseService {
     super();
     this.module = "income/expense";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 }
 

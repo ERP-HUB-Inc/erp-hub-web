@@ -54,8 +54,6 @@ export default class ProductList extends List {
     const getAllProductReport = [];
     if (Array.isArray(productReport.list)) {
       productReport.list.forEach(productReport => {
-        // const productName = Util.getProductName(productReport.productDescriptions);
-        // console.log("productReport.productDescriptions",productReport.productDescriptions);
         getAllProductReport.push({
           productDescriptions: productReport.productDescriptions ? productReport.productDescriptions[0].name : this.emptyCell,
           barcode: productReport.barcode ? productReport.barcode : this.emptyCell,

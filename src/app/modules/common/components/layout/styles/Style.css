@@ -106,7 +106,6 @@ html,
 
 /* BREADCRUMB */
 .table-wrapper {
-    background-color: white;
     padding: 15px 15px;
     height: 100%;
     margin-bottom: 15px
@@ -120,8 +119,8 @@ html,
 }
 
 .breadcrumb {
-    border-radius: 3px;
-    padding: 10px 15px;
+    border-radius: 3px !important;
+    padding: 10px 15px !important;
     background-color: #ffffff !important;
     flex: none
 }
@@ -520,7 +519,6 @@ color: #4D4F5C;
     color: #57A600;
     position: absolute;
     width: 100%;
-    background-color: white;
     z-index: 9
 }
 
@@ -778,4 +776,20 @@ color: #4D4F5C;
 
 #offline .ant-alert-with-description .ant-alert-icon {
     left: 10px
+}
+
+#wrap-no-permission {
+    height: 100%;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column
+}
+
+
+/*SHARE TOGETHER*/
+.wrap-select-search ul.ant-select-dropdown-menu li.add-new-item,
+#wrap-no-permission,
+.table-wrapper {
+    background-color: white
 }

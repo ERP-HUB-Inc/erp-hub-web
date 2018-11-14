@@ -1,9 +1,12 @@
 import React from "react";
 import {Pagination} from "antd";
+import NoPermission from "./NoPermission";
+import StartUp from "../../StartUp";
 import Component  from "../../Component";
 import menuSource from "../../layout/SiderBar/datasource";
 import BaseService from "../../../services/BaseService";
-import PrivilegeService from "../../../services/PrivilegeService";
+import PrivilegeAction from "../../../../pos/action/settings/privilege";
+import PrivilegeService from "../../../../pos/services/settings/PrivilegeService";
 
 export default class List extends Component {
   constructor(props) {
@@ -47,6 +50,7 @@ export default class List extends Component {
     this.emptyCell = "N/A";
     this.columnFilterWithKey = [];
     this.service = new BaseService();
+    this.service.initializeRoute();
     this.action = null;
     this.PrivilegeService = PrivilegeService;
     this.initializeDefaultColumn();
@@ -103,9 +107,10 @@ export default class List extends Component {
 
   /**===================================================================EVENT CONTROL FOR CHILD CLASS============================================================**/
   componentDidMount() {
+    this.props.dispatch(PrivilegeAction.reset());
+    this.props.dispatch(PrivilegeAction.checkPermission(this.service.listRoute));
     if (this.action) {
-      const {dispatch} = this.props;
-      dispatch(this.action.fetch(this.pageSize));
+      this.props.dispatch(this.action.fetch(this.pageSize));
     }
   }
 
@@ -198,18 +203,19 @@ export default class List extends Component {
    * just handle for show user click on single row and display form edit
    * it will overide in child class
    */
-  handleShowFormEdit(modalSource) {
-    this.setState({
-      modalSource
-    });
-  }
-
-  /**
-   * 
-   * @param {*} dataRow data from each row of table
-   */
-  handleShowRecordDetail(dataRow) {
-
+  handleShowFormEdit(rowData) {
+    if (this.action && this.formUpdate) {
+      this.PrivilegeService.checkPermission(this.service.updateRoute)
+        .then(response => {
+          this.props.dispatch(this.action.showForm(rowData));
+          this.setState({
+            modalConten: this.formUpdate
+          });
+        })
+        .catch(error => {
+          this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
+        });
+    }
   }
 
   /**
@@ -217,18 +223,17 @@ export default class List extends Component {
    * it will overide in child class
    */
   handleConfirm() {
-    if (this.state.selectedRowKeys.length > 0) {
-      this.setState({modalVisible: true});
-    } else {
-      this.Message.warning(this.CATranslate("text_warning_select_row_to_delete", this.props.locale));
-    }
-  }
-
-  /**
-   * handle cancel confirm delete
-  */
-  handleCancel() {
-    this.setState({modalVisible: false});
+    this.PrivilegeService.checkPermission(this.service.archiveRoute)
+      .then(response => {
+        if (this.state.selectedRowKeys.length > 0) {
+          this.setState({modalVisible: true});
+        } else {
+          this.Message.warning(this.CATranslate("text_warning_select_row_to_delete", this.props.locale));
+        }
+      })
+      .catch(error => {
+        this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
+      });
   }
 
   /**
@@ -250,6 +255,21 @@ export default class List extends Component {
           this.setState({deleting: false});
         });
     }
+  }
+
+  /**
+   * 
+   * @param {*} dataRow data from each row of table
+   */
+  handleShowRecordDetail(dataRow) {
+
+  }
+
+  /**
+   * handle cancel confirm delete
+  */
+  handleCancel() {
+    this.setState({modalVisible: false});
   }
 
   /**
@@ -539,7 +559,7 @@ export default class List extends Component {
     );
   }
 
-  /**
+  /**statusList
    * include from render table to be as the list
    * @param {*} fetchingProps 
    */
@@ -602,6 +622,9 @@ export default class List extends Component {
         this.props.dispatch({type: this.RESET_CONSTANT});
       }
     }
+
+    const isNoPermission = this.props.checkPermission && this.props.checkPermission.error;
+    const isCheckingPermission = this.props.checkPermission && this.props.checkPermission.checking;
     
     return (
       
@@ -609,18 +632,27 @@ export default class List extends Component {
 
         { this.renderBreadCrumb() }
         
-        <div className="wrap-filter">
-          { this.renderFilterRecord() }
-        </div>
+        {
+          isCheckingPermission ?
+            <StartUp/>
+            :
+            isNoPermission ?
+              <NoPermission />
+              :
+              <div style={{height: "100%"}}>
+                <div className="wrap-filter">
+                  { this.renderFilterRecord() }
+                </div>
 
-        { this.renderTableList(fetchingProps) }
+                { this.renderTableList(fetchingProps) }
         
-        { this.state.modalContent1 }
+                { this.state.modalContent1 }
 
-        { this.state.modalConten }
+                { this.state.modalConten }
             
-        { this.renderModalConfirmDelete() }
-
+                { this.renderModalConfirmDelete() }
+              </div>
+        }
       </div>
       
     );

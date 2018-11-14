@@ -13,9 +13,12 @@ export default class BaseService {
     this.header = {
       "Content-Type": "application/json"
     };
+  }
+
+  initializeRoute() {
     this.createRoute = `${this.module}/create`;
     this.updateRoute = `${this.module}/update`;
-    this.listRoute = `${this.module}/list`;
+    this.listRoute = `${this.module}/lists`;
     this.detailRoute = `${this.module}/detail`;
     this.archiveRoute = `${this.module}/archive`;
   }

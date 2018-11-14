@@ -17,12 +17,6 @@ export default class CurrencyList extends List {
     this.action = CurrencyAction;
     this.RESET_CONSTANT = Constant.RESET_CURRENCY;
   }
-  handleShowFormEdit(rowData) {
-    this.props.dispatch(CurrencyAction.showForm(rowData));
-    this.setState({
-      modalConten: <FormUpdate/>
-    });
-  }
 }
 
 class Column extends List {

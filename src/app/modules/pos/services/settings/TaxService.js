@@ -6,6 +6,7 @@ class TaxService extends BaseService {
     super();
     this.module = "tax";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 }
 

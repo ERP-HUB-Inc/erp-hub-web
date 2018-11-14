@@ -16,6 +16,7 @@ function mapStateToProps(state) {
     list: state.reducer.storeLocation.request,
     add: state.reducer.storeLocation.add,
     update: state.reducer.storeLocation.update,
+    checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale
   };
 }

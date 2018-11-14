@@ -24,13 +24,6 @@ export default class StoreLanguageList extends List {
       this.props.dispatch(StoreLanguageAction.reset(Constant.RESET_STORE_LANGUAGE));
     }
   }
-
-  handleShowFormEdit(rowData) {
-    this.props.dispatch(StoreLanguageAction.showForm(rowData));
-    this.setState({ 
-      modalConten: <FormUpdate/>
-    });
-  }
 }
 
 class Column extends List {

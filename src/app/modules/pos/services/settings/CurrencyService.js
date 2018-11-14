@@ -6,6 +6,7 @@ class CurrencyService extends BaseService {
     super();
     this.module = "currency";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 }
 

@@ -24,13 +24,6 @@ export default class ReceiptTemplateList extends List {
       this.props.dispatch(ReceiptTemplateAction.reset());
     }
   }
-
-  handleShowFormEdit(rowData) {
-    this.props.dispatch(ReceiptTemplateAction.showForm(rowData));
-    this.setState({
-      modalConten: <FormUpdate/>
-    });
-  }
 }
 
 class Column extends List {

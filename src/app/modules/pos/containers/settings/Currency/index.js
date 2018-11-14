@@ -16,6 +16,7 @@ function mapStateToProps(state) {
     list: state.reducer.currency.request,
     add: state.reducer.currency.add,
     update: state.reducer.currency.update,
+    checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale
   };
 }

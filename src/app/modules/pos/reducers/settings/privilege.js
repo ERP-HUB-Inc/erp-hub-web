@@ -11,6 +11,41 @@ export default combineReducers({
       Constant.REQUEST_PRIVILEGE_FULFILLED
     ];
     return reducer.request(state, action, constants);
+  },
+  checkPermission: (state = {checking: false, checked: false, response: null, error: null}, action) => {
+    switch(action.type) {
+    case Constant.CHECK_PERMISSION_PENDING: {
+      return {
+        ...state,
+        checking: true
+      };
+    }
+    case Constant.CHECK_PERMISSION_REJECTED: {
+      return {
+        ...state,
+        checking: false,
+        error: action.payload.response.data
+      };
+    }
+    case Constant.CHECK_PERMISSION_FULFILLED: {
+      return {
+        ...state,
+        checking: false,
+        checked: true,
+        response: action.payload.data
+      };
+    }
+    case Constant.RESET_CHECK_PERMISSION: {
+      return {
+        checking: false,
+        checked: false,
+        error: null,
+        response: null
+      };
+    }
+    default: 
+      return state;
+    }
   }
 });
       

@@ -17,14 +17,6 @@ export default class OperationRecord extends List {
     this.action = OperationRecordAction;
     this.RESET_CONSTANT = Constant.RESET_OPERATION_RECORD;
   }
-  
-  handleShowFormEdit(rowData) {
-    this.props.dispatch(OperationRecordAction.showForm(rowData));
-    this.setState({
-      modalConten: <FormUpdate/>
-    });
-  }
-
   renderFilterStatus() {
     
   }

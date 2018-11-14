@@ -651,5 +651,17 @@ export default {
     "Register closed",
     "Register closed",
     "Register closed"
+  ],
+
+  "text_no_permission_title": [
+    "You don't have permission to view this module",
+    "You don't have permission to view this module",
+    "You don't have permission to view this module"
+  ],
+
+  "text_no_permission_detail": [
+    "This is because of admin don't allow you to access it. Please contact admin, if you really want to access it.",
+    "This is because of admin don't allow you to access it. Please contact admin, if you really want to access it.",
+    "This is because of admin don't allow you to access it. Please contact admin, if you really want to access it."
   ]
 };

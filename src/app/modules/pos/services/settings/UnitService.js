@@ -5,6 +5,7 @@ class UnitService extends BaseService {
     super();
     this.module = "unit";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 
 }

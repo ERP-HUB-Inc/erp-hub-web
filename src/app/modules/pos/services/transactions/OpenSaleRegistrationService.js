@@ -5,9 +5,15 @@ class OpenSaleRegistrationService extends BaseService {
     super();
     this.module = "pos/opensale/registration";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
+
+  initializeRoute() {
+    super.initializeRoute();
+  }
+
   last() {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.GET({ 
       url: `${this.baseUrl}/lists/last`,  
       data: this.data,
@@ -16,7 +22,7 @@ class OpenSaleRegistrationService extends BaseService {
   }
 
   open(open, description) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     const setting = this.Util.getSetting();
     if (setting) {
       this.header["deviceNumber"] = setting["deviceNumber"];
@@ -32,7 +38,7 @@ class OpenSaleRegistrationService extends BaseService {
   }
 
   close(id, data) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.PUT({
       url: `${this.baseUrl}/close/${id}`,
       data: {

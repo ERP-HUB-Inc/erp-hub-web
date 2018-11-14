@@ -17,13 +17,6 @@ export default class PaymentMethodList extends List {
     this.columnFilterWithKey = ["name"];
     this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
   }
-
-  handleShowFormEdit(rowData) {
-    this.props.dispatch(PaymentMethodAction.showForm(rowData));
-    this.setState({
-      modalConten: <FormUpdate/>
-    });
-  }
 }
 
 class Column extends List {
