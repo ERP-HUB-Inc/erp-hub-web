@@ -17,6 +17,7 @@ import PriceTagAction from "../../../actions/products/priceTag";
 import VariantAttributeAction from "../../../actions/products/variantAttribute";
 import ProductTagAction from "../../../actions/products/productsTag";
 import ProductService from "../../../services/products/ProductService";
+import PrivilegeAction from "../../../../pos/action/settings/privilege";
 import "./index.css";
 
 export default class ProductList extends List {
@@ -30,6 +31,8 @@ export default class ProductList extends List {
     this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
     this.productTypeList = [{productTypeDescriptions: {name: <this.Translate id="text_all_product_type"/>}, id: 0}];
     this.columns = new Column();
+    this.formCreate = <FormCreate/>;
+    this.callBackOnShowEditForm = this.showFormEdit;
     this.columnExpend = new ColumnExpand(); 
     this.fetchingProp = "products";
     this.isShowExpandable = true;
@@ -92,6 +95,8 @@ export default class ProductList extends List {
   }
 
   componentDidMount() {
+    this.props.dispatch(PrivilegeAction.reset());
+    this.props.dispatch(PrivilegeAction.checkPermission(this.service.listRoute));
     this.props.dispatch(ProductTypeAction.fetch(100));
     this.props.dispatch(BrandAction.fetch(100));
     this.props.dispatch(LocationAction.fetch(100));
@@ -110,14 +115,7 @@ export default class ProductList extends List {
     }
   }
 
-  handleShowFormAdd() {
-    this.props.dispatch(ProductAction.showForm());
-    this.setState({
-      modalConten: <FormCreate/>
-    });
-  }
-
-  handleShowFormEdit(rowData) {
+  showFormEdit(rowData) {
     this.props.dispatch(ProductAction.requestAndShowForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>

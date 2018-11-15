@@ -6,6 +6,7 @@ class ProductService extends BaseService {
     super();
     this.module = "inventory/product";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 
   lists(
@@ -36,8 +37,7 @@ class ProductService extends BaseService {
     searchKey
   ) {
     const languageId = this.getLanguageId();
-
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.GET({ 
       url: `${this.baseUrl}/lists/dropdown?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&languageId=${languageId}`,  
       data: this.data,
@@ -54,7 +54,7 @@ class ProductService extends BaseService {
     filter,
     searchKey
   ) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.GET({ 
       url: `${this.baseUrl}/log/${id}?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}`,  
       data: this.data,
@@ -71,7 +71,7 @@ class ProductService extends BaseService {
     filter,
     searchKey
   ) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.GET({ 
       url: `${this.baseUrl}/cost/log/${id}?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}`,  
       data: this.data,
@@ -80,7 +80,7 @@ class ProductService extends BaseService {
   }
 
   archiveVariant(id) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.DELETE({  
       url: `${this.baseUrl}/variant/archive/${id}`,
       data: this.data,
@@ -89,7 +89,7 @@ class ProductService extends BaseService {
   }
 
   changeStatusProductVarait(id) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.PUT({  
       url: `${this.baseUrl}/variant/update/${id}`,
       data: this.data,
@@ -98,7 +98,7 @@ class ProductService extends BaseService {
   }
 
   clone(id) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.POST({
       url: `${this.baseUrl}/clone/${id}`, 
       data: this.data,

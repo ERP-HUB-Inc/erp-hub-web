@@ -1,12 +1,12 @@
 import Constant from "../../constants/products/productsType";
-import productTypeService from "../../services/products/productsType";
+import ProductsTypeService from "../../services/products/ProductsTypeService";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PRODUCTS_TYPE,
-        payload: productTypeService.listsLanguage(limit, offset, sortField, sortOrder)
+        payload: ProductsTypeService.listsLanguage(limit, offset, sortField, sortOrder)
       });
     };
   },
@@ -14,7 +14,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ARCHIVE_PRODUCTS_TYPE,
-        payload: productTypeService.archive(ids)
+        payload: ProductsTypeService.archive(ids)
       });
     };
   },
@@ -22,7 +22,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ADD_PRODUCTS_TYPE,
-        payload: productTypeService.add(data)
+        payload: ProductsTypeService.add(data)
       });
     };
   },
@@ -30,7 +30,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_PRODUCTS_TYPE,
-        payload: productTypeService.update(data)
+        payload: ProductsTypeService.update(data)
       });
     };
   },
@@ -54,7 +54,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.DETAIL_PRODUCTS_TYPE,
-        payload: productTypeService.detail(data.id)
+        payload: ProductsTypeService.detail(data.id)
       });
     };
   }

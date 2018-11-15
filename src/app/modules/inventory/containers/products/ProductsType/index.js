@@ -13,10 +13,11 @@ class ProductsType extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    productsType: state.reducer.productsType.request,
-    productsTypeAdd: state.reducer.productsType.add,
-    productsTypeArchive: state.reducer.productsType.archive,
-    productsTypeUpdate: state.reducer.productsType.update
+    list: state.reducer.productsType.request,
+    add: state.reducer.productsType.add,
+    update: state.reducer.productsType.update,
+    checkPermission: state.reducer.privilege.checkPermission,
+    locale: state.locale
   };
 }
 

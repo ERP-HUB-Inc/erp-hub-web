@@ -13,10 +13,11 @@ class ProductsUnit extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    productsUnit: state.reducer.productsUnit.request,
-    productsUnitAdd: state.reducer.productsUnit.add,
-    productsUnitArchive: state.reducer.productsUnit.archive,
-    productsUnitUpdate: state.reducer.productsUnit.update
+    list: state.reducer.productsUnit.request,
+    add: state.reducer.productsUnit.add,
+    update: state.reducer.productsUnit.update,
+    checkPermission: state.reducer.privilege.checkPermission,
+    locale: state.locale
   };
 }
 

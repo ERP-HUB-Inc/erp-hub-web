@@ -11,7 +11,7 @@ export default class Form extends Modal {
       disabled: false
     };
 
-    this.title = <this.Translate id="update_products_unit_title" />;
+    this.title = <this.Translate id="text_unit" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }

@@ -13,10 +13,11 @@ class EmployeeManagement extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    productsTag: state.reducer.productsTag.request,
-    productsTagAdd: state.reducer.productsTag.add,
-    productsTagArchive: state.reducer.productsTag.archive,
-    productsTagUpdate: state.reducer.productsTag.update
+    list: state.reducer.productsTag.request,
+    add: state.reducer.productsTag.add,
+    update: state.reducer.productsTag.update,
+    checkPermission: state.reducer.privilege.checkPermission,
+    locale: state.locale
   };
 }
 

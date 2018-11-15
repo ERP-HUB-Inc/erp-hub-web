@@ -1,12 +1,12 @@
 import BaseService from "../BaseService";
 
-class PaymentMethodService extends BaseService {
+class ProductsTypeService extends BaseService {
 
   constructor() {
     super();
-    this.module = "inventory/tag";
+    this.module = "inventory/product/type";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 }
 
-export default new PaymentMethodService();
+export default new ProductsTypeService();

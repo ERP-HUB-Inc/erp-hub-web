@@ -3,6 +3,10 @@ import JsBarcode from "jsbarcode";
 import List from "../../List";
 
 export default class ComponentToPrint extends List {
+  componentDidMount() {
+
+  }
+  
   componentDidUpdate() {
     if (this.props.dataSource.length > 0) {
       this.props.dataSource.forEach(value => {
@@ -23,8 +27,6 @@ export default class ComponentToPrint extends List {
       });
     }
   }
-
-
 
   renderRow(rowValue) {
     const numberOfLabel = Array.from(Array(rowValue["numberOfPrint"]).keys());

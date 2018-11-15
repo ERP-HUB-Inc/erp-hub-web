@@ -1,12 +1,12 @@
 import Constant from "../../constants/products/productsTag";
-import brandService from "../../services/products/productsTag";
+import ProductsTagService from "../../services/products/ProductsTagService";
 
 export default {
   fetch: (limit, offset, sortField,  sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PRODUCTS_TAG,
-        payload: brandService.lists(limit, offset, sortField,  sortOrder, filter, searchKey)
+        payload: ProductsTagService.lists(limit, offset, sortField,  sortOrder, filter, searchKey)
       });
     };
   },
@@ -14,7 +14,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ARCHIVE_PRODUCTS_TAG,
-        payload: brandService.archive(ids)
+        payload: ProductsTagService.archive(ids)
       });
     };
   },
@@ -22,7 +22,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ADD_PRODUCTS_TAG,
-        payload: brandService.add(data)
+        payload: ProductsTagService.add(data)
       });
     };
   },
@@ -30,7 +30,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_PRODUCTS_TAG,
-        payload: brandService.update(data)
+        payload: ProductsTagService.update(data)
       });
     };
   },

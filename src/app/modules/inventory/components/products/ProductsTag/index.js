@@ -4,41 +4,19 @@ import FormCreate from "../../../containers/products/productsTag/FormCreate";
 import FormUpdate from "../../../containers/products/productsTag/FormUpdate";
 import Constant from "../../../constants/products/productsTag";
 import ProductsTagAction from "../../../actions/products/productsTag";
-import ProductsTagService from "../../../services/products/productsTag";
+import ProductsTagService from "../../../services/products/ProductsTagService";
 
 export default class ProductsTagList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
-    this.fetchingProp = "productsTag";
-    this.addingProp = "productsTagAdd";
-    this.updatingProp = "productsTagUpdate";
+    this.formCreate = <FormCreate/>;
+    this.formUpdate = <FormUpdate/>;
     this.columnFilterWithKey = ["name"];
     this.service = ProductsTagService;
     this.action = ProductsTagAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCTS_TAG;
   }
-
-  handleShowFormAdd() {
-    const { dispatch } = this.props;
-    dispatch(ProductsTagAction.showForm());
-    this.setState({
-      modalConten: <FormCreate/>
-    });
-  }
-
-  handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
-    dispatch(ProductsTagAction.showForm(rowData));
-    this.setState({
-      modalConten: <FormUpdate/>
-    });
-  }
-
-  render() {
-    return super.render();
-  }
-
 }
 
 class Column extends List {
@@ -47,7 +25,7 @@ class Column extends List {
     return [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="col_products_tag_name" />,
+        title: <this.Translate id="text_name" />,
         dataIndex: "tag",
         key: "tag",
         sorter: true
