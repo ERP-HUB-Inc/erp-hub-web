@@ -53,6 +53,17 @@ export default {
     "Type"
   ],
 
+  "col_inventory_report_name": [
+    "Name",
+    "Name",
+    "Name"
+  ],
+
+  "place_holder_inventory_report_all_report": [
+    "All Report",
+    "All Report",
+    "All Report"
+  ],
   
   "col_inventory_report_tag": [
     "Tag",

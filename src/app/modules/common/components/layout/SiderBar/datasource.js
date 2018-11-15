@@ -191,6 +191,11 @@ const Profile = Loadable({
   loading: () => <StartUp />,
 });
 
+const SendMail = Loadable({
+  loader: () => import("../../../../pos/components/transactions/OpenSaleRegistration/sendMail"),
+  loading: () => <StartUp />,
+});
+
 
 /*==============================END CRM===================================*/
 
@@ -405,6 +410,10 @@ const dataSource = {
       {
         route: "/profile",
         component: Profile
+      },
+      {
+        route: "/sendmail",
+        component: SendMail
       }
       
       // {

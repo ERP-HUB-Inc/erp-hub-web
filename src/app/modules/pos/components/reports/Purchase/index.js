@@ -226,16 +226,11 @@ export default class InventoryList extends List {
 
   exportCsv(){
     const { purchaseReport } = this.props;
-
     let getpurchaseReport = [];
-    let totalSummary = 0;
-    let totalSummaryShippingFee = 0;
-
+  
     if(purchaseReport.list){
       purchaseReport.list.forEach(poReport => {
-        totalSummary += poReport.requestTotal;
-        totalSummaryShippingFee += poReport.shippingFee;
-
+      
         getpurchaseReport.push({
           createdAt: this.formatDate(poReport.createdAt),
           name: poReport.name,
@@ -248,15 +243,25 @@ export default class InventoryList extends List {
           step: poReport.step in this.PO_STEP_STR_EXCEL ? this.PO_STEP_STR_EXCEL[poReport.step].name : "",
           shippingFee: this.formatCurrency(poReport.shippingFee),
           requestTotal: this.formatCurrency(poReport.requestTotal),
-
-          totalSummary: this.formatCurrency(totalSummary),
-          totalSummaryShippingFee: this.formatCurrency(totalSummaryShippingFee)
         });
 
       });
-    
-    }
 
+      getpurchaseReport.push({
+        createdAt: "",
+        name: "",
+        number: "",
+        referenceId: "",
+        receiverId: "",
+        supplier: "",
+        location: "",
+        deliveryDueDate: "",
+        step: "Total",
+        shippingFee: this.formatCurrency(this.summaryPurchaseReprot().totalShippingFee),
+        requestTotal: this.formatCurrency(this.summaryPurchaseReprot().total)
+      });
+      
+    }
     return getpurchaseReport;
   }
 
