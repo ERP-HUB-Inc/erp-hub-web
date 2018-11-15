@@ -10,32 +10,13 @@ export default class OperationRecord extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
-    this.fetchingProp = "operationRecord";
-    this.addingProp = "operationRecordAdd";
-    this.updatingProp = "operationRecordUpdate";
+    this.formCreate = <FormCreate/>;
+    this.formUpdate = <FormUpdate/>;
     this.columnFilterWithKey = ["name"];
     this.service = OperatinRecordService;
     this.action = OperationRecordAction;
     this.RESET_CONSTANT = Constant.RESET_OPERATION_RECORD;
   }
-  
-
-  handleShowFormAdd() {
-    const { dispatch } = this.props;
-    dispatch(OperationRecordAction.showForm());
-    this.setState({
-      modalConten: <FormCreate />
-    });
-  }
-
-  handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
-    dispatch(OperationRecordAction.showForm(rowData));
-    this.setState({
-      modalConten: <FormUpdate/>
-    });
-  }
-
   renderFilterStatus() {
     
   }

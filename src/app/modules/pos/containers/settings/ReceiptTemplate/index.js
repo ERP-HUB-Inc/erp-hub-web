@@ -13,10 +13,11 @@ class ReceiptTemplate extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    receipt: state.reducer.receiptTemplate.request,
-    receiptAdd: state.reducer.receiptTemplate.add,
-    receiptArchive: state.reducer.receiptTemplate.archive,
-    receiptUpdate: state.reducer.receiptTemplate.update
+    list: state.reducer.receiptTemplate.request,
+    add: state.reducer.receiptTemplate.add,
+    update: state.reducer.receiptTemplate.update,
+    checkPermission: state.reducer.privilege.checkPermission,
+    locale: state.locale
   };
 }
 

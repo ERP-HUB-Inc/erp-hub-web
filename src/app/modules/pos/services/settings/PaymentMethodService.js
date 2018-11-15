@@ -6,6 +6,7 @@ class PaymentMethodService extends BaseService {
     super();
     this.module = "payment-method";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 }
 

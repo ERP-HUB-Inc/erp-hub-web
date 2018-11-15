@@ -10,10 +10,8 @@ export default class StoreLanguageList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
-    this.title = "Language";
-    this.fetchingProp = "storeLanguage";
-    this.addingProp = "storeLanguageAdd"; //for change form add 
-    this.updatingProp = "storeLanguageUpdate";
+    this.formCreate = <FormCreate/>;
+    this.formUpdate = <FormUpdate/>;
     this.columnFilterWithKey = ["name"];
     this.service = StoreLanguageService;
     this.action = StoreLanguageAction;
@@ -21,26 +19,10 @@ export default class StoreLanguageList extends List {
   }
 
   componentWillUpdate(nextProps) {
-    if (nextProps.storeLanguageAdd.added) {
+    if (nextProps.add.added) {
       this.props.dispatch(StoreLanguageAction.fetch(5));
       this.props.dispatch(StoreLanguageAction.reset(Constant.RESET_STORE_LANGUAGE));
     }
-  }
-
-  handleShowFormAdd() {
-    const { dispatch } = this.props;
-    dispatch(StoreLanguageAction.showForm());
-    this.setState({
-      modalConten: <FormCreate />
-    });
-  }
-
-  handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
-    dispatch(StoreLanguageAction.showForm(rowData));
-    this.setState({ 
-      modalConten: <FormUpdate/>
-    });
   }
 }
 

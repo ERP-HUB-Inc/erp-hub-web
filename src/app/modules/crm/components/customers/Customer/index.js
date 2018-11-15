@@ -12,15 +12,13 @@ export default class CustomerList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
-    this.title = <this.Translate id="create_management_customer_title" />;
+    this.formCreate = <FormCreate/>;
+    this.callBackOnShowEditForm = this.showFormEdit;
     this.columnExpend = new ColumnExpend(); 
-    this.fetchingProp = "manageCustomers";
-    this.addingProp = "manageCustomersAdd";
-    this.updatingProp = "manageCustomersUpdate";
     this.isShowExpandable = true;
     this.service = CustomerService;
     this.action = CustomerAction;
-    this.groupCustomerList = [{name: "All Group", id: 0}];
+    this.groupCustomerList = [{name: <this.Translate id="text_all_group" />, id: 0}];
   
     this.columnFilterWithKey = [
       "firstName",
@@ -35,17 +33,14 @@ export default class CustomerList extends List {
   }
 
   componentDidMount(){
-    const {dispatch} = this.props;
-    dispatch(GroupCustomerAction.fetch(this.pageSize));
+    this.props.dispatch(GroupCustomerAction.fetch(this.pageSize));
     super.componentDidMount();
   }
 
   componentWillReceiveProps(nextProps) {
-    const {manageCustomersUpdate} = nextProps;
-    if (manageCustomersUpdate.updated) {
-      const {dispatch} = this.props;
-      dispatch(CustomerAction.fetch(this.pageSize));
-      dispatch(CustomerAction.reset(Constant.RESET_DETAIL_CUSTOMERS));
+    if (nextProps.update.updated) {
+      this.props.dispatch(CustomerAction.fetch(this.pageSize));
+      this.props.dispatch(CustomerAction.reset(Constant.RESET_DETAIL_CUSTOMERS));
     }
   }
 
@@ -60,19 +55,10 @@ export default class CustomerList extends List {
     );
   }
 
-  handleShowFormAdd() {
-    const { dispatch } = this.props;
-    dispatch(CustomerAction.showForm());
+  showFormEdit(rowData) {
+    this.props.dispatch(CustomerAction.requestAndShowForm(rowData));
     this.setState({
-      modalConten: <FormCreate/>
-    });
-  }
-
-  handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
-    dispatch(CustomerAction.requestAndShowForm(rowData));
-    this.setState({
-      modalConten: <FormUpdate/>
+      modalConten: <FormUpdate />
     });
   }
 

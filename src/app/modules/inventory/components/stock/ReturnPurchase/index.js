@@ -87,6 +87,7 @@ export default class ReturnPurchaseList extends List {
       {label: "Shipping", key: "shippingFee"},
       {label: "Total", key: "returnTotal"}
     ];
+    this.callBackOnShowEditForm = this.showFormEdit;
     this.componentHasUpdated = false;
     this.exportCsvFileName = "stock_return.csv"; 
     this.fetchingProp = "returnPurchase";
@@ -124,7 +125,7 @@ export default class ReturnPurchaseList extends List {
     }
   }
 
-  handleShowFormEdit(rowData) {
+  showFormEdit(rowData) {
     this.props.dispatch(ReturnPurchaseAction.detail(rowData));
     this.setState({
       modalConten: <FormUpdate/>

@@ -15,6 +15,7 @@ function mapStateToProps(state) {
   return {
     variantAttributes: state.reducer.variantAttribute.request,
     variantAttributeAdd: state.reducer.variantAttribute.add,
+    checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale
   };
 }

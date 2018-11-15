@@ -21,6 +21,7 @@ function mapStateToProps(state) {
     taxs: state.reducer.tax.request.list,
     response: state.reducer.storeAccount.update,
     businessplan: state.reducer.businessPlan.request.list,
+    checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale
   };
 }

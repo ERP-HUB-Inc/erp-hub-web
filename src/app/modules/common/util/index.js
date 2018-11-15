@@ -80,6 +80,17 @@ export class Util {
       return null;
   }
 
+  getCurrentUser() {
+    const result = this.getAuthSession();
+    if (result)
+      return result.currentUser;
+    else 
+      return {
+        fullName: "",
+        userName: ""
+      };
+  }
+
   getClientId() {
     const result = this.getAuthSession();
     if (result)
@@ -369,6 +380,14 @@ export class Util {
 
   sumBy(collection, key) {
     return _.sumBy(collection, key);
+  }
+
+  isNoPermissionProp(props) {
+    return props.checkPermission && props.checkPermission.error;
+  }
+
+  isCheckingPermission(props) {
+    return props.checkPermission && props.checkPermission.checking;
   }
   
 }

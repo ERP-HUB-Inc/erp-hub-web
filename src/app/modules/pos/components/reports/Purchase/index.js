@@ -272,8 +272,8 @@ export default class InventoryList extends List {
         data={this.exportCsv()}
         headers={this.ExportheadersCsv}
       >
-        <this.Button type="info" disable={true}>
-          <span className="icon-export icon-padding-right"></span>{<this.Translate id="button_search_stock_transfer_export_csv" />}
+        <this.Button type="info">
+          <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
         </this.Button>
       </this.CSVLink>
     );

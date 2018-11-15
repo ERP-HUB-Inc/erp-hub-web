@@ -13,9 +13,11 @@ class Tax extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    tax: state.reducer.tax.request,
-    taxAdd: state.reducer.tax.add,
-    taxUpdate: state.reducer.tax.update
+    list: state.reducer.tax.request,
+    add: state.reducer.tax.add,
+    update: state.reducer.tax.update,
+    checkPermission: state.reducer.privilege.checkPermission,
+    locale: state.locale
   };
 }
 

@@ -6,6 +6,7 @@ class StoreLanguageService extends BaseService {
     super();
     this.module = "language";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 }
 

@@ -243,7 +243,7 @@
     display: block;
     opacity: 1;
     height: fit-content;
-    padding-bottom: 10px
+    margin-bottom: 10px
 }
 
 #retail-sale .product-order-list .product-order-item-detail .detail-row-1 {
@@ -286,9 +286,17 @@
     padding-right: 0
 }
 
+#retail-sale #right-block #wrap-cashier {
+    margin-bottom: 6px;
+    display: flex
+}
+
+#retail-sale #right-block #wrap-cashier .current-cashier {
+    padding-left: 5px
+}
+
 #retail-sale #right-block #search-information {
-    flex: none;
-    margin-top: 30px
+    flex: none
 }
 
 #retail-sale #right-block .product-order-list {
@@ -297,7 +305,7 @@
     margin-top: 10px;
     border: 1.5px solid #ECECEC;
     border-radius: 3px;
-    margin-bottom: 5px
+    margin-bottom: 10px
 }
 
 #retail-sale #wrap-payment .payment {
@@ -327,7 +335,8 @@
 }
 
 #retail-sale #wrap-payment .payment .grand-total .grand-total-title, 
-#retail-sale #wrap-payment .payment .grand-total .grand-total-value {
+#retail-sale #wrap-payment .payment .grand-total .grand-total-value,
+#retail-sale #right-block #wrap-cashier {
     color: #093163;
     font-weight: 500
 }
@@ -393,9 +402,9 @@
     margin-bottom: 10px
 }
 
-.wrap-order-discount {
+/* .wrap-order-discount {
     text-align: left
-}
+} */
 
 .wrap-order-discount .ant-modal-close-x {
     display: none
@@ -498,7 +507,7 @@
 }
 
 .wrap-order-discount .order-discount .arrow-right{
-    right: 0;
+    /* right: 0;
     top: 50%;
     margin-right: -6px;
     margin-top: -6px;
@@ -510,7 +519,7 @@
     height: 12px;
     width: 12px;
     background-color: #FFF;
-    transform: rotate(45deg)
+    transform: rotate(45deg) */
 }
 
 .wrap-order-discount button {

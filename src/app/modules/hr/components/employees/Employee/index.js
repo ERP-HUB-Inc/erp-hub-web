@@ -11,9 +11,8 @@ export default class EmployeeList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
-    this.fetchingProp = "list";
-    this.addingProp = "add";
-    this.updatingProp = "update";
+    this.formCreate = <FormCreate/>;
+    this.callBackOnShowEditForm = this.showFormEdit;
     this.service = EmployeeService;
     this.action = EmployeeAction;
     this.RESET_CONSTANT = Constant.RESET_EMPLOYEE;
@@ -25,17 +24,9 @@ export default class EmployeeList extends List {
     }
   }
 
-  handleShowFormAdd() {
-    const { dispatch } = this.props;
-    dispatch(EmployeeAction.showForm());
-    this.setState({
-      modalConten: <FormCreate/>
-    });
-  }
 
-  handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
-    dispatch(EmployeeAction.requestAndShowForm(rowData));
+  showFormEdit(rowData) {
+    this.props.dispatch(EmployeeAction.requestAndShowForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });

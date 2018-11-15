@@ -71,11 +71,9 @@ export default class DropDownSearch extends Modal {
       this.setState({visibleDropDown: false});
       this.props.dispatch(ProductAction.reset(Constant.SEARCH_PRODUCT_RESET));
     }
-    this.props.form.setFieldsValue({isFocusOnSearchCompositeProduct: 0});
   }
 
   handleOnFocusSearch() {
-    this.props.form.setFieldsValue({isFocusOnSearchCompositeProduct: 1});
     this.setState({visibleDropDown: true});
   }
 

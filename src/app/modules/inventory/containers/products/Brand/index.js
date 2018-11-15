@@ -13,10 +13,11 @@ class Brand extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    brand: state.reducer.brand.request,
-    brandAdd: state.reducer.brand.add,
-    brandArchive: state.reducer.brand.archive,
-    brandUpdate: state.reducer.brand.update
+    list: state.reducer.brand.request,
+    add: state.reducer.brand.add,
+    update: state.reducer.brand.update,
+    checkPermission: state.reducer.privilege.checkPermission,
+    locale: state.locale
   };
 }
 

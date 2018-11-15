@@ -5,10 +5,11 @@ class TransactionService extends BaseService {
     super();
     this.module = "pos/transaction";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 
   todaySaleSummary(lastOpenSaleRegisterDate) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.GET({ 
       url: `${this.baseUrl}/today/summary?lastOpenSaleRegisterDate=${lastOpenSaleRegisterDate}`,  
       data: this.data,
@@ -17,7 +18,7 @@ class TransactionService extends BaseService {
   }
 
   sendMailReceipt(template, email) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     this.header["email"] = email;
     return this.POST({
       url: `${this.baseUrl}/send/mail/receipt`,

@@ -90,6 +90,7 @@ export default class ReceivePurchaseList extends List {
       {label: "Shipping", key: "shippingFee"},
       {label: "Total", key: "receiveTotal"}
     ];
+    this.callBackOnShowEditForm = this.showFormEdit;
     this.exportCsvFileName = "receive_purchase.csv";  
     this.fetchingProp = "receivePurchase";
     this.service = ReceivePurchaseService;
@@ -127,9 +128,8 @@ export default class ReceivePurchaseList extends List {
     }
   }
 
-  handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
-    dispatch(ReceivePurchaseAction.detail(rowData));
+  showFormEdit(rowData) {
+    this.props.dispatch(ReceivePurchaseAction.detail(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });

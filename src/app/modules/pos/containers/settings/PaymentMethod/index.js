@@ -13,10 +13,11 @@ class PaymentMethod extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    paymentMethod: state.reducer.paymentMethods.request,
-    paymentMethodAdd: state.reducer.paymentMethods.add,
-    paymentMethodArchive: state.reducer.paymentMethods.archive,
-    paymentMethodUpdate: state.reducer.paymentMethods.update
+    list: state.reducer.paymentMethods.request,
+    add: state.reducer.paymentMethods.add,
+    update: state.reducer.paymentMethods.update,
+    checkPermission: state.reducer.privilege.checkPermission,
+    locale: state.locale
   };
 }
 

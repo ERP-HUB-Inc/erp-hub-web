@@ -5,35 +5,17 @@ import FormUpdate from "../../../containers/stock/Supplier/FormUpdate";
 import Constant from "../../../constants/stock/supplier";
 import SupplierAction from "../../../actions/stock/supplier";
 import SupplierService from "../../../services/stock/SupplierService";
-import "./index.css";
 
 export default class SupplierList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
-    this.fetchingProp = "supplier";
-    this.addingProp = "supplierAdd";
-    this.updatingProp = "supplierUpdate";
+    this.formCreate = <FormCreate/>;
+    this.formUpdate = <FormUpdate/>;
     this.service = SupplierService;
     this.columnFilterWithKey = ["name"];
     this.action = SupplierAction;
     this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
-  }
-
-  handleShowFormAdd() {
-    const { dispatch } = this.props;
-    dispatch(SupplierAction.showForm());
-    this.setState({
-      modalConten: <FormCreate/>
-    });
-  }
-
-  handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
-    dispatch(SupplierAction.showForm(rowData));
-    this.setState({
-      modalConten: <FormUpdate/>
-    });
   }
 }
 

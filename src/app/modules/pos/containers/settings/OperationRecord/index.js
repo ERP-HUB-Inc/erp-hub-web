@@ -13,9 +13,11 @@ class OperationRecord extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    operationRecord: state.reducer.operationRecord.request,
-    operationRecordAdd: state.reducer.operationRecord.add,
-    operationRecordUpdate: state.reducer.operationRecord.update
+    list: state.reducer.operationRecord.request,
+    add: state.reducer.operationRecord.add,
+    update: state.reducer.operationRecord.update,
+    checkPermission: state.reducer.privilege.checkPermission,
+    locale: state.locale
   };
 }
 

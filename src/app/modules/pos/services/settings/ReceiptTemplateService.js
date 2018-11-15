@@ -6,10 +6,11 @@ class ReceiptTemplateService extends BaseService {
     super();
     this.module = "receipt-template";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 
   default() {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.GET({ 
       url: `${this.baseUrl}/default`,
       data: this.data,

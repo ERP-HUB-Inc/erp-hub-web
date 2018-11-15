@@ -10,30 +10,12 @@ export default class StoreLocationList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
-    this.title = "Store Location";
-    this.fetchingProp = "storeLocation";
-    this.addingProp = "storeLocationAdd";
-    this.updatingProp = "storeLocationUpdate";
+    this.formCreate = <FormCreate/>;
+    this.formUpdate = <FormUpdate/>;
     this.columnFilterWithKey = ["name"];
     this.service = StoreLocationService;
     this.action = StoreLocationAction;
     this.RESET_CONSTANT = Constant.RESET_STORE_LOCATION;
-  }
-
-  handleShowFormAdd() {
-    const { dispatch } = this.props;
-    dispatch(StoreLocationAction.showForm());
-    this.setState({
-      modalConten: <FormCreate />
-    });
-  }
-
-  handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
-    dispatch(StoreLocationAction.showForm(rowData));
-    this.setState({
-      modalConten: <FormUpdate/>
-    });
   }
 }
 

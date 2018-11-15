@@ -197,6 +197,24 @@ export default {
     "Quantity"
   ],
 
+  "text_no_permission": [
+    "No permission to permform this operation",
+    "No permission to permform this operation",
+    "No permission to permform this operation"
+  ],
+
+  "text_warning_select_row_to_delete": [
+    "Please select rows to perform delete operation",
+    "Please select rows to perform delete operation",
+    "Please select rows to perform delete operation"
+  ],
+
+  "text_confirm_delete": [
+    "Are you sure delete this record ?",
+    "Are you sure delete this record ?",
+    "Are you sure delete this record ?"
+  ],
+
   "text_discount": [
     "Discount",
     "Discount",
@@ -633,5 +651,17 @@ export default {
     "Register closed",
     "Register closed",
     "Register closed"
+  ],
+
+  "text_no_permission_title": [
+    "You don't have permission to view this module",
+    "You don't have permission to view this module",
+    "You don't have permission to view this module"
+  ],
+
+  "text_no_permission_detail": [
+    "This is because of admin don't allow you to access it. Please contact admin, if you really want to access it.",
+    "This is because of admin don't allow you to access it. Please contact admin, if you really want to access it.",
+    "This is because of admin don't allow you to access it. Please contact admin, if you really want to access it."
   ]
 };

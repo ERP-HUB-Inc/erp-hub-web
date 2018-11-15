@@ -6,6 +6,7 @@ class SupplierService extends BaseService {
     super();
     this.module = "inventory/supplier";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 }
 

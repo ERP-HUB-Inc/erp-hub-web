@@ -15,6 +15,14 @@ export default class BaseService {
     };
   }
 
+  initializeRoute() {
+    this.createRoute = `${this.module}/create`;
+    this.updateRoute = `${this.module}/update`;
+    this.listRoute = `${this.module}/lists`;
+    this.detailRoute = `${this.module}/detail`;
+    this.archiveRoute = `${this.module}/archive`;
+  }
+
   getLanguageId() {
     let languageId = "en";
     const currentSetting = this.Util.getSetting();

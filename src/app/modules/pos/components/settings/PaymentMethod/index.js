@@ -10,29 +10,12 @@ export default class PaymentMethodList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
-    this.fetchingProp = "paymentMethod";
-    this.addingProp = "paymentMethodAdd";
-    this.updatingProp = "paymentMethodUpdate";
+    this.formCreate = <FormCreate/>;
+    this.formUpdate = <FormUpdate/>;
     this.service = PaymentMethodService;
     this.action = PaymentMethodAction;
     this.columnFilterWithKey = ["name"];
     this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
-  }
-
-  handleShowFormAdd() {
-    const {dispatch} = this.props;
-    dispatch(PaymentMethodAction.showForm());
-    this.setState({
-      modalConten: <FormCreate/>
-    });
-  }
-
-  handleShowFormEdit(rowData) {
-    const {dispatch} = this.props;
-    dispatch(PaymentMethodAction.showForm(rowData));
-    this.setState({
-      modalConten: <FormUpdate/>
-    });
   }
 }
 

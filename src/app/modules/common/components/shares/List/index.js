@@ -1,7 +1,12 @@
 import React from "react";
 import {Pagination} from "antd";
+import NoPermission from "./NoPermission";
+import StartUp from "../../StartUp";
 import Component  from "../../Component";
 import menuSource from "../../layout/SiderBar/datasource";
+import BaseService from "../../../services/BaseService";
+import PrivilegeAction from "../../../../pos/action/settings/privilege";
+import PrivilegeService from "../../../../pos/services/settings/PrivilegeService";
 
 export default class List extends Component {
   constructor(props) {
@@ -22,32 +27,277 @@ export default class List extends Component {
     };
 
     this.rowSelection = true;
-
     this.showExport = false;
-
     this.ExportheadersCsv = [];
-
     this.exportCsvFileName = "filename.csv";
 
     this.columns = [];
     this.filter = [];
     this.module = ""; // This compare to parent key in datasource in sidebar when render breadcrump
-    this.fetchingProp = ""; // prop of reducer of fetching record that get from map state to prop from container
-    this.addingProp = ""; // prop of reducer of adding record that get from map state to prop from container
-    this.updatingProp = ""; // prop of reducer of adding record that get from map state to prop from container
+    this.fetchingProp = "list"; // prop of reducer of fetching record that get from map state to prop from container
+    this.addingProp = "add"; // prop of reducer of adding record that get from map state to prop from container
+    this.updatingProp = "update"; // prop of reducer of adding record that get from map state to prop from container
 
     this.pageSize = 10; // default limit record display in table list
-    this.confirmTextDelete = "Are you sure delete this record?";
+    this.confirmTextDelete = <this.Translate id="text_confirm_delete" />;
     this.requiredMessage = "Please input all required field."; // require message display on modal popup
     this.confirmTitle = "COMPLETED";
-    this.okText = "Yes"; // text button on alert of delete action
-    this.cancelText = "No"; // text button on alert of delete action
+    this.okText = <this.Translate id="text_yes" />; // text button on alert of delete action
+    this.cancelText = <this.Translate id="text_no" />; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
+    this.messageNoPermissionKey = "text_no_permission";
     this.isShowExpandable = false;
     this.emptyCell = "N/A";
-
+    this.columnFilterWithKey = [];
+    this.service = new BaseService();
+    this.action = null;
+    this.PrivilegeService = PrivilegeService;
+    this.initializeDefaultColumn();
     this.columnNo = {};
-    
+
+    //FOR PERMISSION CHECKING OPERATION
+    this.formCreate = null;
+    this.formUpdate = null;
+    this.callBackOnShowEditForm = null;
+
+    this.onChange = this.onChange.bind(this); // handle when user change filter, access pagination
+    this.onShowSizeChange = this.onShowSizeChange.bind(this);
+    this.onChangePagination = this.onChangePagination.bind(this);
+    this.onSelectChange = this.onSelectChange.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleConfirm = this.handleConfirm.bind(this);
+    this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
+    this.renderTable = this.renderTable.bind(this);
+    this.expandedRender = this.expandedRender.bind(this);
+    this.buttonActionCollection = this.buttonActionCollection.bind(this);
+    this.handleShowFormAdd = this.handleShowFormAdd.bind(this);
+
+    this.RESET_CONSTANT = "RESET";
+  }
+
+  /**===================================================================SHARE FUNCTION FOR CHILD CLASS============================================================**/
+
+  formatDate(value) {
+    const setting = this.Util.getSetting();
+    return this.Util.formatDate(value, setting.dateFormat);
+  }
+
+  /**
+   * handle for tranform from ant sorting string to match with api
+   * api doesn't reconize descend or ascend just know only desc and asc
+   * @param {*} order 
+   */
+  sortOrder(order) {
+    if (order === "descend") {
+      return "DESC";
+    } else {
+      return "ASC";
+    }
+  }
+
+  /**
+  * convert to array object to collection id of record for multiple delete ex: [1, 2, 3]
+  * @param {*} values 
+  */
+  mapSelectedListIds(values) {
+    return values.map(value => value.id);
+  }
+
+  /**===================================================================#SHARE FUNCTION FOR CHILD CLASS============================================================**/
+
+  /**===================================================================EVENT CONTROL FOR CHILD CLASS============================================================**/
+  componentDidMount() {
+    this.props.dispatch(PrivilegeAction.reset());
+    this.props.dispatch(PrivilegeAction.checkPermission(this.service.listRoute));
+    if (this.action) {
+      this.props.dispatch(this.action.fetch(this.pageSize));
+    }
+  }
+
+  /**
+   * when user change sort in each column
+   * @param {*} pagination 
+   * @param {*} filters 
+   * @param {*} sorter 
+   */
+  onChange(pagination, filters, sorter) {
+    if (this.action != null) {
+      const { dispatch } = this.props;
+      this.filter = [
+        this.pageSize,
+        (pagination.current - 1) * this.pageSize,
+        sorter.field,
+        this.sortOrder(sorter.order)
+      ];
+      dispatch(this.action.fetch(...this.filter));
+      this.setState({isClickFilter: false});
+    }
+  }
+
+  /**
+   * when user change pagination
+   * @param {*} current: current page number of pagination 
+   * @param {*} pageSize 
+   */
+  onChangePagination(current, pageSize) {
+    if (this.action != null) {
+      this.filter = [
+        pageSize,
+        (current - 1) * pageSize,
+      ];
+      this.props.dispatch(this.action.fetch(...this.filter));
+      this.setState({current, isClickFilter: false});
+    }
+  }
+
+  /**
+   * when user change size of row
+   * @param {*} current 
+   * @param {*} pageSize 
+   */
+  onShowSizeChange(current, pageSize) {
+    if (this.action) {
+      this.filter = [
+        pageSize,
+        (current - 1) * pageSize,
+      ];
+      this.props.dispatch(this.action.fetch(...this.filter));
+      this.setState({current, isClickFilter: false});
+    }
+  }
+
+  /**
+   * when user select check box
+   * @param {*} selectedRowKeys 
+   * @param {*} selectedRows 
+   */
+  onSelectChange(selectedRowKeys, selectedRows) {
+    this.setState({
+      selectedListIds: this.mapSelectedListIds(selectedRows),
+      selectedRowKeys
+    });
+  }
+
+  /**
+   * just handle for show create form only
+   * it will overide in child class
+   */
+
+  handleShowFormAdd() {
+    if (this.action && this.formCreate) {
+      this.PrivilegeService.checkPermission(this.service.createRoute)
+        .then(response => {
+          this.props.dispatch(this.action.showForm());
+          this.setState({
+            modalConten: this.formCreate
+          });
+        })
+        .catch(error => {
+          this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
+        });
+    }
+  }
+
+  /**
+   * just handle for show user click on single row and display form edit
+   * it will overide in child class
+   */
+  handleShowFormEdit(rowData) {
+    if (this.action) {
+      this.PrivilegeService.checkPermission(this.service.updateRoute)
+        .then(response => {
+          if (this.callBackOnShowEditForm) {
+            this.callBackOnShowEditForm(rowData);
+          } else {
+            this.props.dispatch(this.action.showForm(rowData));
+            this.setState({
+              modalConten: this.formUpdate
+            });
+          }
+        })
+        .catch(error => {
+          this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
+        });
+    }
+  }
+
+  /**
+   * handle delete multi record
+   * it will overide in child class
+   */
+  handleConfirm() {
+    this.PrivilegeService.checkPermission(this.service.archiveRoute)
+      .then(response => {
+        if (this.state.selectedRowKeys.length > 0) {
+          this.setState({modalVisible: true});
+        } else {
+          this.Message.warning(this.CATranslate("text_warning_select_row_to_delete", this.props.locale));
+        }
+      })
+      .catch(error => {
+        this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
+      });
+  }
+
+  /**
+   * handle procedd delete
+  */
+  handleDelete() {
+    if (this.service) {
+      this.setState({deleting: true});
+      this.service.archive(this.state.selectedListIds)
+        .then(response => {
+          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
+          this.setState({
+            selectedRowKeys: [],
+            modalVisible: false,
+            deleting: false
+          });
+        })
+        .catch(err => {
+          this.setState({deleting: false});
+        });
+    }
+  }
+
+  /**
+   * 
+   * @param {*} dataRow data from each row of table
+   */
+  handleShowRecordDetail(dataRow) {
+
+  }
+
+  /**
+   * handle cancel confirm delete
+  */
+  handleCancel() {
+    this.setState({modalVisible: false});
+  }
+
+  /**
+   * handle when user want to filter record
+   */
+  handleSubmitFilter(e) {
+    if (this.action) {
+      e.preventDefault();
+      this.props.form.validateFieldsAndScroll((err, values) => {
+        if (!err) {
+          const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
+          const filter = JSON.stringify({status});
+          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
+          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
+          this.setState({isClickFilter: true});
+        }
+      });
+    }
+  }
+
+  /**===================================================================#EVENT CONTROL FOR CHILD CLASS============================================================**/
+
+  /**===================================================================LAYOUT CONTROL FOR CHILD CLASS============================================================**/
+  
+  initializeDefaultColumn() {
     this.columnStatus = {
       title: <this.Translate id="text_status" />,
       dataIndex: "status",
@@ -99,214 +349,7 @@ export default class List extends Component {
       {name: <this.Translate id="select_text_deactive"/>, value: this.Enum.DEACTIVE},
       {name: <this.Translate id="select_text_all_status"/>, value: this.Enum.ALL_STATE}
     ];
-
-    this.columnFilterWithKey = [];
-
-    this.service = null;
-    this.action = null;
-
-    this.onChange = this.onChange.bind(this); // handle when user change filter, access pagination
-    this.onShowSizeChange = this.onShowSizeChange.bind(this);
-    this.onChangePagination = this.onChangePagination.bind(this);
-    this.onSelectChange = this.onSelectChange.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleConfirm = this.handleConfirm.bind(this);
-    this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
-    this.renderTable = this.renderTable.bind(this);
-    this.expandedRender = this.expandedRender.bind(this);
-    this.buttonActionCollection = this.buttonActionCollection.bind(this);
-
-    this.RESET_CONSTANT = "RESET";
   }
-
-  /**===================================================================SHARE FUNCTION FOR CHILD CLASS============================================================**/
-
-  formatDate(value) {
-    const setting = this.Util.getSetting();
-    return this.Util.formatDate(value, setting.dateFormat);
-  }
-
-  /**
-   * handle for tranform from ant sorting string to match with api
-   * api doesn't reconize descend or ascend just know only desc and asc
-   * @param {*} order 
-   */
-  sortOrder(order) {
-    if (order === "descend") {
-      return "DESC";
-    } else {
-      return "ASC";
-    }
-  }
-
-  /**
-  * convert to array object to collection id of record for multiple delete ex: [1, 2, 3]
-  * @param {*} values 
-  */
-  mapSelectedListIds(values) {
-    return values.map(value => value.id);
-  }
-
-  /**===================================================================#SHARE FUNCTION FOR CHILD CLASS============================================================**/
-
-  /**===================================================================EVENT CONTROL FOR CHILD CLASS============================================================**/
-  componentDidMount() {
-    if (this.action) {
-      const {dispatch} = this.props;
-      dispatch(this.action.fetch(this.pageSize));
-    }
-  }
-
-  /**
-   * when user change sort in each column
-   * @param {*} pagination 
-   * @param {*} filters 
-   * @param {*} sorter 
-   */
-  onChange(pagination, filters, sorter) {
-    if (this.action != null) {
-      const { dispatch } = this.props;
-      this.filter = [
-        this.pageSize,
-        (pagination.current - 1) * this.pageSize,
-        sorter.field,
-        this.sortOrder(sorter.order)
-      ];
-      dispatch(this.action.fetch(...this.filter));
-      this.setState({isClickFilter: false});
-    }
-  }
-
-  /**
-   * when user change pagination
-   * @param {*} current: current page number of pagination 
-   * @param {*} pageSize 
-   */
-  onChangePagination(current, pageSize) {
-    if (this.action != null) {
-      const { dispatch } = this.props;
-      this.filter = [
-        pageSize,
-        (current - 1) * pageSize,
-      ];
-      dispatch(this.action.fetch(...this.filter));
-      this.setState({current, isClickFilter: false});
-    }
-  }
-
-  /**
-   * when user change size of row
-   * @param {*} current 
-   * @param {*} pageSize 
-   */
-  onShowSizeChange(current, pageSize) {
-    if (this.action != null) {
-      const {dispatch} = this.props;
-      this.filter = [
-        pageSize,
-        (current - 1) * pageSize,
-      ];
-      dispatch(this.action.fetch(...this.filter));
-      this.setState({current, isClickFilter: false});
-    }
-  }
-
-  /**
-   * when user select check box
-   * @param {*} selectedRowKeys 
-   * @param {*} selectedRows 
-   */
-  onSelectChange(selectedRowKeys, selectedRows) {
-    this.setState({
-      selectedListIds: this.mapSelectedListIds(selectedRows),
-      selectedRowKeys
-    });
-  }
-
-  /**
-   * just handle for show create form only
-   * it will overide in child class
-   */
-  handleShowFormAdd() {}
-
-  /**
-   * just handle for show user click on single row and display form edit
-   * it will overide in child class
-   */
-  handleShowFormEdit(modalSource) {
-    this.setState({
-      modalSource
-    });
-  }
-
-  /**
-   * 
-   * @param {*} dataRow data from each row of table
-   */
-  handleShowRecordDetail(dataRow) {
-
-  }
-
-  /**
-   * handle delete multi record
-   * it will overide in child class
-   */
-  handleConfirm() {
-    if (this.state.selectedRowKeys.length > 0) {
-      this.setState({modalVisible: true});
-    }
-  }
-
-  /**
-   * handle cancel confirm delete
-  */
-  handleCancel() {
-    this.setState({modalVisible: false});
-  }
-
-  /**
-   * handle procedd delete
-  */
-  handleDelete() {
-    if (this.service != null) {
-      const { dispatch } = this.props;
-      this.setState({deleting: true});
-      this.service.archive(this.state.selectedListIds)
-        .then(response => {
-          dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
-          this.setState({
-            selectedRowKeys: [],
-            modalVisible: false,
-            deleting: false
-          });
-        })
-        .catch(err => {
-          this.setState({deleting: false});
-        });
-    }
-  }
-
-  /**
-   * handle when user want to filter record
-   */
-  handleSubmitFilter(e) {
-    if (this.action) {
-      e.preventDefault();
-      this.props.form.validateFieldsAndScroll((err, values) => {
-        if (!err) {
-          const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
-          const filter = JSON.stringify({status});
-          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
-          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
-          this.setState({isClickFilter: true});
-        }
-      });
-    }
-  }
-
-  /**===================================================================#EVENT CONTROL FOR CHILD CLASS============================================================**/
-
-  /**===================================================================LAYOUT CONTROL FOR CHILD CLASS============================================================**/
   renderBreadCrumb() {
     // get current path of breadcrum compare with url
     const currentPath = window.location.pathname;
@@ -339,8 +382,9 @@ export default class List extends Component {
       <this.Button
         type="info"
         className="mg-right text-uppercase"
-        onClick={() => this.handleShowFormAdd()}>
-        <span className="icon-add icon-padding-right"></span><this.Translate id="text_add_new" />
+        onClick={this.handleShowFormAdd}>
+        <span className="icon-add icon-padding-right"></span>
+        <this.Translate id="text_add_new" />
       </this.Button>
     );
   }
@@ -348,11 +392,11 @@ export default class List extends Component {
   renderButtonDelete() {
     return (
       <this.Button
-        disabled={this.state.selectedRowKeys.length <= 0}
         type="danger"
         className="text-uppercase"
-        onClick={() => this.handleConfirm()}>
-        <span className="icon-delete icon-padding-right"></span><this.Translate id="text_delete" />
+        onClick={this.handleConfirm}>
+        <span className="icon-delete icon-padding-right"></span>
+        <this.Translate id="text_delete" />
       </this.Button>
     );
   }
@@ -364,7 +408,8 @@ export default class List extends Component {
         data={this.exportCsv()}
         headers={this.ExportheadersCsv !==null ? this.ExportheadersCsv : this.columns }>
         <this.Button type="info" disabled={this.exportCsv().length > 0 ? false : true }>
-          <span className="icon-export icon-padding-right"></span>{<this.Translate id="button_search_stock_transfer_export_csv" />}
+          <span className="icon-export icon-padding-right"></span>
+          <this.Translate id="text_export_csv" />
         </this.Button>
       </this.CSVLink>
     );
@@ -404,10 +449,10 @@ export default class List extends Component {
           <span>{this.confirmTextDelete}</span>
         </div>
         <div className="ant-modal-footer">
-          <this.Button className="danger text-uppercase" onClick={() => this.handleCancel()}>
+          <this.Button className="danger text-uppercase" onClick={this.handleCancel}>
             <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel"/>
           </this.Button>
-          <this.Button onClick={() => this.handleDelete()} loading={this.state.deleting} className="info text-uppercase">
+          <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info text-uppercase">
             <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes"/>
           </this.Button>
         </div>
@@ -517,7 +562,7 @@ export default class List extends Component {
     );
   }
 
-  /**
+  /**statusList
    * include from render table to be as the list
    * @param {*} fetchingProps 
    */
@@ -587,18 +632,27 @@ export default class List extends Component {
 
         { this.renderBreadCrumb() }
         
-        <div className="wrap-filter">
-          { this.renderFilterRecord() }
-        </div>
+        {
+          this.Util.isCheckingPermission(this.props) ?
+            <StartUp/>
+            :
+            this.Util.isNoPermissionProp(this.props) ?
+              <NoPermission />
+              :
+              <div style={{height: "100%"}}>
+                <div className="wrap-filter">
+                  { this.renderFilterRecord() }
+                </div>
 
-        { this.renderTableList(fetchingProps) }
+                { this.renderTableList(fetchingProps) }
         
-        { this.state.modalContent1 }
+                { this.state.modalContent1 }
 
-        { this.state.modalConten }
+                { this.state.modalConten }
             
-        { this.renderModalConfirmDelete() }
-
+                { this.renderModalConfirmDelete() }
+              </div>
+        }
       </div>
       
     );

@@ -23,9 +23,9 @@ export default class FormItem extends Modal {
           <this.Col md="12">
             <this.InputNumber
               name="multiple"
-              label={<this.Translate id="input_products_number_in_unit" />}
+              label={<this.Translate id="text_number_in_unit" />}
               data={formData.multiple}
-              placeholder={this.CATranslate("input_products_number_in_unit", locale)}
+              placeholder={this.CATranslate("text_number_in_unit", locale)}
               required={true}
               errorRequired={<this.Translate id="input_error_products_in_unit" />}
               max={100}

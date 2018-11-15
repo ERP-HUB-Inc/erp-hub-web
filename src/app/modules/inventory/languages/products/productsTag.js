@@ -11,12 +11,6 @@ export default {
     "Product Tag"
   ],
 
-  "col_products_tag_name": [
-    "Tag Name",
-    "Tag Name",
-    "Tag Name",
-  ],
-
   "text_qty_in_stock": [
     "QTY In Store",
     "QTY In Store",

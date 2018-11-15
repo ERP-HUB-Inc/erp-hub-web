@@ -6,6 +6,7 @@ class GroupCustomerService extends BaseService {
     super();
     this.module = "group/customer";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 }
 

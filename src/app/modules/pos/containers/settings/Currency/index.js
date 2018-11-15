@@ -13,9 +13,11 @@ class Currency extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    currency: state.reducer.currency.request,
-    currencyAdd: state.reducer.currency.add,
-    currencyUpdate: state.reducer.currency.update
+    list: state.reducer.currency.request,
+    add: state.reducer.currency.add,
+    update: state.reducer.currency.update,
+    checkPermission: state.reducer.privilege.checkPermission,
+    locale: state.locale
   };
 }
 

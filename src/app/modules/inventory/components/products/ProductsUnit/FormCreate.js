@@ -6,8 +6,7 @@ import UnitAction from "../../../actions/products/productsUnit";
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="create_products_unit_title" />;
-    this.addingPropReducer = "productsUnitAdd";
+    this.title = <this.Translate id="text_unit" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -16,7 +15,6 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log("Unti Before Save", values);
         this.dispatch(UnitAction.add(values));   
       }
     });

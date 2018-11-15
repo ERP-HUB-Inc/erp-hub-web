@@ -117,6 +117,9 @@ export default class PurchaseOrderLists extends List {
       },
       this.columnStatus
     ];
+    this.formCreate = <FormCreate/>;
+    this.callBackOnShowEditForm = this.showFormEdit;
+    this.callBackOnDeleteRecord = 
     this.fetchingProp = "purchaseOrder";
     this.service = PurchaseService;
     this.componentHasUpdated = false;
@@ -204,17 +207,8 @@ export default class PurchaseOrderLists extends List {
     this.setState({dataForSendMail});
   }
 
-  handleShowFormAdd() {
-    const {dispatch} = this.props;
-    dispatch(PurchaseAction.showForm());
-    this.setState({
-      modalConten: <FormCreate/>
-    });
-  }
-
-  handleShowFormEdit(rowData) {
-    const {dispatch} = this.props;
-    dispatch(PurchaseAction.detail(rowData));  
+  showFormEdit(rowData) {
+    this.props.dispatch(PurchaseAction.detail(rowData));  
     this.setState({
       modalConten: <FormUpdate
         callBackGetEmail={this.getEmailPushToSupplier}
@@ -223,6 +217,7 @@ export default class PurchaseOrderLists extends List {
   }
 
   handleDelete() {
+    this.setState({deleting: true});
     PurchaseService.archive(this.state.selectedListIds)
       .then(response => {
         this.props.dispatch(PurchaseAction.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
@@ -233,12 +228,12 @@ export default class PurchaseOrderLists extends List {
         });
       })
       .catch(err => {
+        this.Message.error(this.CATranslate("error_warning_delete_po", this.props.locale));
         this.setState({deleting: false});
         this.setState({
           modalVisible: false,
           deleting: false
         });
-        this.Message.info("Can not delete purchse order but can return");
       });
   }
 

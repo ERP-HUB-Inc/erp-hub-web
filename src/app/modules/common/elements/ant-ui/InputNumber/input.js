@@ -78,8 +78,7 @@ export default class InputNumber extends Element {
               onFocus={this.handleOnFocus}
               onPressEnter={this.props.handlePressEnter}
               className={`${this.props.isHideTool ? "hide-input-number-tool" : "" } ${this.props.className}`}
-              help={this.errorMessage}
-            />
+              help={this.errorMessage} />
           )
         } 
       </this.FormItem>
