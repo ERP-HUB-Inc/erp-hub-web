@@ -91,6 +91,8 @@ export default class Retail extends Component {
   }
 
   componentDidMount() {
+    this.handleSetFullScreen();
+
     this.props.dispatch(ProductTypeAction.fetch(18));
     this.props.dispatch(ProductAction.fetch(25));
     this.props.dispatch(PaymentMethodAction.fetch(100, "", "", "", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
@@ -114,7 +116,6 @@ export default class Retail extends Component {
     }
   }
   
-
   getTaxDescription(tax) {
     let name = "";
     if ("tax" in tax && tax["tax"]) {
@@ -500,7 +501,7 @@ export default class Retail extends Component {
 
   handleSetFullScreen() {
     const element = document.getElementById("center-container");
-    const body = document.getElementsByTagName("BODY")[0];
+    // const body = document.getElementsByTagName("BODY")[0];
     if (element.classList.contains("full-screen")) {
       this.setState({
         iconFullScreen: "icon-full-screen",
@@ -514,7 +515,7 @@ export default class Retail extends Component {
       });
       element.classList.add("full-screen");
     }
-    this.Util.toggleFullScreen(body);
+    // this.Util.toggleFullScreen(body);
   }
 
   handleOnSaveParkReceipt() {
@@ -627,6 +628,14 @@ export default class Retail extends Component {
         </this.Col>
         <this.Col md="4" id="right-block">
           <this.Row id="search-information">
+            <this.Col md="12" id="wrap-cashier">
+              <div>
+                <this.Translate id="text_cashier" />: 
+              </div>
+              <div className="current-cashier text-uppercase">
+                {this.Util.getCurrentUser().fullName}
+              </div>
+            </this.Col>
             <CustomerDropDownSearch
               customers={this.props.customers}
               locale={this.props.locale}

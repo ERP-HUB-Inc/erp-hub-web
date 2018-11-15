@@ -80,6 +80,17 @@ export class Util {
       return null;
   }
 
+  getCurrentUser() {
+    const result = this.getAuthSession();
+    if (result)
+      return result.currentUser;
+    else 
+      return {
+        fullName: "",
+        userName: ""
+      };
+  }
+
   getClientId() {
     const result = this.getAuthSession();
     if (result)

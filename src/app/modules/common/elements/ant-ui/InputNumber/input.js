@@ -70,7 +70,6 @@ export default class InputNumber extends Element {
               placeholder={this.props.placeholder}
               disabled={this.props.disabled}
               step={this.props.step}
-              inputmode="numeric"
               precision={this.props.precision}
               onChange={this.handleNumberChange}
               onKeyDown={this.props.handleKeyDown}

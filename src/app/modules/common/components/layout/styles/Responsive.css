@@ -96,6 +96,20 @@ and (-webkit-min-device-pixel-ratio: 1.5) {
   #retail-sale .product-order-list .product-order-item-detail {
     padding: 0 !important
   }
+
+  #retail-sale #wrap-payment .payment .col-md-6 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important
+  }
+
+  #retail-sale #wrap-payment .payment .grand-total .grand-total-title {
+    float: left
+  }
+
+  #retail-sale #wrap-payment .payment .grand-total .grand-total-value {
+    float: right;
+    font-size: 12pt !important
+  }
 }
 
 /* 
@@ -115,6 +129,7 @@ and (orientation: portrait) {
     overflow-x: hidden;
     position: absolute;
     top: 100%;
+    margin-top: 25px;
     left: 0;
   }
 }

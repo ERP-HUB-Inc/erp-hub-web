@@ -18,7 +18,7 @@ html,
 /* MAIN LAYOUT */
 .main-layout {
     background-color: #FFFFFF;
-    padding: 15px;
+    padding: 8px 15px;
     border-radius: 3px
 }
 
@@ -718,7 +718,7 @@ color: #4D4F5C;
 }
 
 .full-screen {
-    position: fixed;
+    /* position: fixed; */
     width: 100%;
     left: 0;
     right: 0;
@@ -726,6 +726,10 @@ color: #4D4F5C;
     bottom: 0;
     margin: auto;
     z-index: 5;
+}
+
+.full-screen.ant-layout-content {
+    padding: 0px
 }
 
 .ca-link {

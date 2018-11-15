@@ -45,12 +45,12 @@ export default class TaxSetting extends Modal {
     this.props.handleCancel();
   }
   render() {
-    const element = document.getElementById("wrap-payment");
-    const leftElement = document.getElementById("left-block");
-    const sideBarWidth = document.getElementById("sidebar").offsetWidth;
-    const additionalTop = 30;
-    const additionalSpace = 56;
-    this.style = {top: (element.offsetTop/2) + additionalTop, left: (leftElement.offsetWidth + sideBarWidth + additionalSpace) - this.width};
+    // const element = document.getElementById("wrap-payment");
+    // const leftElement = document.getElementById("left-block");
+    // const sideBarWidth = document.getElementById("sidebar").offsetWidth;
+    // const additionalTop = 30;
+    // const additionalSpace = 56;
+    // this.style = {top: (element.offsetTop/2) + additionalTop, left: (leftElement.offsetWidth + sideBarWidth + additionalSpace) - this.width};
     this.content = (
       <div className="order-discount">
         <div className="title">

@@ -41,7 +41,7 @@ export default class ClientSignIn extends Component {
 
       dispatch(ClientAction.reset());
 
-      history.push("/");
+      history.push("/transactions/saleorder");
 
     } else if (signinUser.error != null) {
 
