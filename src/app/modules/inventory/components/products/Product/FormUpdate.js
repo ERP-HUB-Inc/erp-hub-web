@@ -13,7 +13,7 @@ import FormCreateUnit from "../../../containers/products/ProductsUnit/FormCreate
 import TaxAction from "../../../../pos/action/settings/tax";
 import FormCreateTax from "../../../../pos/containers/settings/Tax/FormCreate";
 import TagAction from "../../../actions/products/productsTag";
-import FormCreateTag from "../../../containers/products/productsTag/FormCreate";
+import FormCreateTag from "../../../containers/products/ProductsTag/FormCreate";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class Form extends Modal {

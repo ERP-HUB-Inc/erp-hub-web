@@ -19,6 +19,7 @@ function mapStateToProps(state) {
     paymentMethod: state.reducer.paymentMethods.request,
     openSaleRegistration: state.reducer.openSaleRegistration.request,
     open: state.reducer.openSaleRegistration.open,
+    checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale
   };
 }

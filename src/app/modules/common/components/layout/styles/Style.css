@@ -311,7 +311,7 @@ html,
 }
 
 .ca-input-v1-icon-left .ant-input{
-    padding-left: 60px !important
+    padding-left: 35px !important
 }
 
 .ant-input-number.text-right input,
@@ -784,6 +784,7 @@ color: #4D4F5C;
 
 #wrap-no-permission {
     height: 100%;
+    width: 100%;
     text-align: center;
     justify-content: center;
     display: flex;
