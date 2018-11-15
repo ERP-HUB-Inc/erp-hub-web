@@ -381,5 +381,13 @@ export class Util {
   sumBy(collection, key) {
     return _.sumBy(collection, key);
   }
+
+  isNoPermissionProp(props) {
+    return props.checkPermission && props.checkPermission.error;
+  }
+
+  isCheckingPermission(props) {
+    return props.checkPermission && props.checkPermission.checking;
+  }
   
 }

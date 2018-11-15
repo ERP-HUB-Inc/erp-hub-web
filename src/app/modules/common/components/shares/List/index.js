@@ -50,7 +50,6 @@ export default class List extends Component {
     this.emptyCell = "N/A";
     this.columnFilterWithKey = [];
     this.service = new BaseService();
-    this.service.initializeRoute();
     this.action = null;
     this.PrivilegeService = PrivilegeService;
     this.initializeDefaultColumn();
@@ -622,9 +621,6 @@ export default class List extends Component {
         this.props.dispatch({type: this.RESET_CONSTANT});
       }
     }
-
-    const isNoPermission = this.props.checkPermission && this.props.checkPermission.error;
-    const isCheckingPermission = this.props.checkPermission && this.props.checkPermission.checking;
     
     return (
       
@@ -633,10 +629,10 @@ export default class List extends Component {
         { this.renderBreadCrumb() }
         
         {
-          isCheckingPermission ?
+          this.Util.isCheckingPermission(this.props) ?
             <StartUp/>
             :
-            isNoPermission ?
+            this.Util.isNoPermissionProp(this.props) ?
               <NoPermission />
               :
               <div style={{height: "100%"}}>
