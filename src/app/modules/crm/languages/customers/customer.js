@@ -123,6 +123,12 @@ export default {
     "No contact",
     "No contact",
     "No contact"
+  ],
+
+  "text_all_group": [
+    "All Group",
+    "All Group",
+    "All Group"
   ]
 
 };

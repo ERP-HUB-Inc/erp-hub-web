@@ -13,9 +13,11 @@ class GroupCustomer extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    customerGroup: state.reducer.groupCustomers.request,
-    groupCustomersAdd: state.reducer.groupCustomers.add,
-    groupCustomersUpdate: state.reducer.groupCustomers.update
+    list: state.reducer.groupCustomers.request,
+    add: state.reducer.groupCustomers.add,
+    update: state.reducer.groupCustomers.update,
+    checkPermission: state.reducer.privilege.checkPermission,
+    locale: state.locale
   };
 }
 

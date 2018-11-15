@@ -12,7 +12,6 @@ export default class EmployeeList extends List {
     super(props);
     this.columns = new Column();
     this.formCreate = <FormCreate/>;
-    this.formUpdate = <FormUpdate/>;
     this.callBackOnShowEditForm = this.showFormEdit;
     this.service = EmployeeService;
     this.action = EmployeeAction;

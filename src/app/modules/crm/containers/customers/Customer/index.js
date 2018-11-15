@@ -13,15 +13,16 @@ class ManagementCutomer extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    manageCustomers: state.reducer.customer.request,
-    manageCustomersAdd: state.reducer.customer.add,
-    manageCustomersArchive: state.reducer.customer.archive,
-    manageCustomersUpdate: state.reducer.customer.update,
-    manageFetchCustomer: state.reducer.customer.fetchExpendRender,
+    list: state.reducer.customer.request,
+    add: state.reducer.customer.add,
+    update: state.reducer.customer.update,
 
     customerGroup: state.reducer.groupCustomers.request,
     groupCustomersAdd: state.reducer.groupCustomers.add,
-    groupCustomersUpdate: state.reducer.groupCustomers.update
+    groupCustomersUpdate: state.reducer.groupCustomers.update,
+    
+    checkPermission: state.reducer.privilege.checkPermission,
+    locale: state.locale
   };
 }
 

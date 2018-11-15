@@ -10,27 +10,16 @@ export default class GroupCustomerList extends List {
   constructor(props) {
     super(props);
     this.columns = new Column();
-    this.title = "Group Customer";
-    this.fetchingProp = "customerGroup";
-    this.addingProp = "groupCustomersAdd";
-    this.updatingProp = "groupCustomersUpdate";
+    this.formCreate = <FormCreate/>;
+    this.callBackOnShowEditForm = this.showFormEdit;
     this.service = CutomerService;
     this.action = GroupCutomerAction;
     this.columnFilterWithKey = ["name"];
     this.RESET_CONSTANT = Constant.RESET_MANAGEMENT_GROUP_CUSTOMERS;
   }
-  
-  handleShowFormAdd() {
-    const {dispatch} = this.props;
-    dispatch(GroupCutomerAction.showForm());
-    this.setState({
-      modalConten: <FormCreate/>
-    });
-  }
 
-  handleShowFormEdit(rowData) {
-    const {dispatch} = this.props;
-    dispatch(GroupCutomerAction.showForm(rowData));
+  showFormEdit(rowData) {
+    this.props.dispatch(GroupCutomerAction.showForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });

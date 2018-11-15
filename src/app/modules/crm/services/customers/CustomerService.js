@@ -6,6 +6,7 @@ class CustomerService extends BaseService {
     super();
     this.module = "customer";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 }
 

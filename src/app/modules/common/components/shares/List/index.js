@@ -203,7 +203,7 @@ export default class List extends Component {
    * it will overide in child class
    */
   handleShowFormEdit(rowData) {
-    if (this.action && this.formUpdate) {
+    if (this.action) {
       this.PrivilegeService.checkPermission(this.service.updateRoute)
         .then(response => {
           if (this.callBackOnShowEditForm) {
