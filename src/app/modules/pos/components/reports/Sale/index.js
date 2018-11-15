@@ -10,7 +10,8 @@ export default class InventoryList extends List {
   constructor(props) {
     super(props);
     this.state = {
-      csvData: ""
+      csvData: "",
+      setDefaultDate:  []
     };
     this.columns = new Column();
     this.ExportheadersCsv = [
@@ -18,7 +19,7 @@ export default class InventoryList extends List {
       {label: this.CATranslate("col_sale_report_revenuse", this.props.locale), key: "revenue"},
       {label: this.CATranslate("col_sale_report_cost_of_good", this.props.locale), key: "cost"},
       {label: this.CATranslate("col_sale_report_gross_profit", this.props.locale), key: "profit"},
-      {label: this.CATranslate("col_sale_report_margin", this.props.locale), key: "margin"},
+      {label: this.CATranslate("col_sale_report_margin", this.props.locale), key: "margin"}
     ];
     this.exportCsvFileName = "sale_report.csv"; 
 
@@ -33,7 +34,9 @@ export default class InventoryList extends List {
     this.handleFilesUploadCsv = this.handleFilesUploadCsv.bind(this);
   }
 
-  componentDidMount(){}
+  componentDidMount(){
+    this.loadFilter();
+  }
 
   exportCsv(){
     const { saleReport } = this.props;
@@ -117,6 +120,34 @@ export default class InventoryList extends List {
     }); 
   }
 
+  loadFilter(){
+    let getCurrentDate = new Date().toISOString().slice(0,10); 
+
+    this.setState({
+      setDefaultDate : [this.Util.formatDatePicker(getCurrentDate),this.Util.formatDatePicker(getCurrentDate)]
+    });
+
+    const {dispatch} = this.props;
+
+    let filter = {};
+
+    filter["type"] = [0,1];
+
+    let rangFilter = "";
+   
+    rangFilter = JSON.stringify({
+      column: "registerDate",
+      value: [
+        this.Util.formatDateForMYSQL(getCurrentDate),
+        this.Util.formatDateForMYSQL(getCurrentDate)
+      ]});
+
+    filter = JSON.stringify(filter);
+    dispatch(this.action.fetch(filter,rangFilter));
+    this.setState({isClickFilter: true});
+
+  }
+
 
   renderActionButton(){
     return(
@@ -147,6 +178,7 @@ export default class InventoryList extends List {
               <this.DateRangePicker
                 name="createdAt"
                 label={<this.Translate id="input_inventory_report_date_range" />}
+                defaultValue={this.state.setDefaultDate}
                 errorRequired={<this.Translate id="errpr_input_inventory_report_date_range" />}
                 form={form}
               />
