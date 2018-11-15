@@ -35,7 +35,7 @@ const ProductType = Loadable({
 });
 
 const ProductTag = Loadable({
-  loader: () => import("../../../../inventory/containers/products/productsTag"),
+  loader: () => import("../../../../inventory/containers/products/ProductsTag"),
   loading: () => <StartUp />,
 });
 
@@ -50,10 +50,10 @@ const ProductUnit = Loadable({
 });
 
 // STOCK CONTROL
-const Stock = Loadable({
-  loader: () => import("../../../../inventory/containers/stock/StockManagement"),
-  loading: () => <StartUp />,
-});
+// const Stock = Loadable({
+//   loader: () => import("../../../../inventory/containers/stock/StockManagement"),
+//   loading: () => <StartUp />,
+// });
 
 const PurchaseOrder = Loadable({
   loader: () => import("../../../../inventory/containers/stock/PurchaseOrder"),
@@ -343,13 +343,13 @@ const dataSource = {
         component: StockReturn,
         isFashNav: true
       },
-      {
-        title: "Stock",
-        icon: "icon-stock",
-        route: "/stock",
-        component: Stock,
-        isFashNav: false
-      },
+      // {
+      //   title: "Stock",
+      //   icon: "icon-stock",
+      //   route: "/stock",
+      //   component: Stock,
+      //   isFashNav: false
+      // },
       // {
       //   title: "Stock Control",
       //   icon: "icon-barcode",

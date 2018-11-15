@@ -13,10 +13,11 @@ class Supplier extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    supplier: state.reducer.supplier.request,
-    supplierAdd: state.reducer.supplier.add,
-    supplierArchive: state.reducer.supplier.archive,
-    supplierUpdate: state.reducer.supplier.update
+    list: state.reducer.supplier.request,
+    add: state.reducer.supplier.add,
+    update: state.reducer.supplier.update,
+    checkPermission: state.reducer.privilege.checkPermission,
+    locale: state.locale
   };
 }
 

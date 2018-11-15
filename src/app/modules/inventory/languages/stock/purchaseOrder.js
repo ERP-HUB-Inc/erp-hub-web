@@ -221,6 +221,12 @@ export default {
     "Select dilivery to location"
   ],
 
+  "error_warning_delete_po": [
+    "Sorry, we allow to delete only draff PO.",
+    "Sorry, we allow to delete only draff PO.",
+    "Sorry, we allow to delete only draff PO."
+  ],
+
   "error_price_require": [
     "Price require",
     "Price require",

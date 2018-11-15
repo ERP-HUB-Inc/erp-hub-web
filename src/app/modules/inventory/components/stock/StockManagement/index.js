@@ -1,10 +1,9 @@
 import React from "react";
-import Enum from "../../../enums";
 import List from "../List";
+import Enum from "../../../enums";
 import Constant from "../../../constants/stock/stockManagement";
 import StockManagementAction from "../../../actions/stock/stockManagement";
 import StockManagementService from "../../../services/stock/StockManagementService";
-import "./index.css";
 
 export default class PaymentMethodList extends List {
   constructor(props) {

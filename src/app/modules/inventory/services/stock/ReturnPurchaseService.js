@@ -6,13 +6,13 @@ class ReturnPurchaseService extends BaseService {
     super();
     this.module = "inventory/purchase/return";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 
   detail(id){
-    const languageId = this.getLanguageId();
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/detail/${id}?languageId=${languageId}`,
+      url: `${this.baseUrl}/detail/${id}?languageId=${this.getLanguageId()}`,
       data: this.data,
       headers: this.header
     });
