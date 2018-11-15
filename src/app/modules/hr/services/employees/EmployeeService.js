@@ -6,6 +6,7 @@ class EmployeeService extends BaseService {
     super();
     this.module = "employee";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 }
 

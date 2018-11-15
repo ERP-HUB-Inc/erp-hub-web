@@ -58,6 +58,7 @@ export default class List extends Component {
     //FOR PERMISSION CHECKING OPERATION
     this.formCreate = null;
     this.formUpdate = null;
+    this.callBackOnShowEditForm = null;
 
     this.onChange = this.onChange.bind(this); // handle when user change filter, access pagination
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
@@ -140,12 +141,11 @@ export default class List extends Component {
    */
   onChangePagination(current, pageSize) {
     if (this.action != null) {
-      const { dispatch } = this.props;
       this.filter = [
         pageSize,
         (current - 1) * pageSize,
       ];
-      dispatch(this.action.fetch(...this.filter));
+      this.props.dispatch(this.action.fetch(...this.filter));
       this.setState({current, isClickFilter: false});
     }
   }
@@ -206,10 +206,14 @@ export default class List extends Component {
     if (this.action && this.formUpdate) {
       this.PrivilegeService.checkPermission(this.service.updateRoute)
         .then(response => {
-          this.props.dispatch(this.action.showForm(rowData));
-          this.setState({
-            modalConten: this.formUpdate
-          });
+          if (this.callBackOnShowEditForm) {
+            this.callBackOnShowEditForm(rowData);
+          } else {
+            this.props.dispatch(this.action.showForm(rowData));
+            this.setState({
+              modalConten: this.formUpdate
+            });
+          }
         })
         .catch(error => {
           this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
