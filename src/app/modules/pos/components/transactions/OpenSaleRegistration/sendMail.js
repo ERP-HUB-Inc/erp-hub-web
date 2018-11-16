@@ -15,7 +15,7 @@ export default class PrintSummary extends Component {
             </tr>
             <tr>
               <td style={{ borderBottom: "3px solid rgba(0, 0, 0, 0.65)", textAlign: "center" }}>
-                <img src="https://im-cdn.com/assets/images/online-store/online-store-header.51d264eff63b.png" style={{ height: "222px",width: "632px" }} />
+                <img alt="" src="https://im-cdn.com/assets/images/online-store/online-store-header.51d264eff63b.png" style={{ height: "222px",width: "632px" }} />
               </td>
             </tr>
             <tr style={{ color: "rgb(104, 104, 104)" }}>
@@ -31,10 +31,10 @@ export default class PrintSummary extends Component {
                   </div>
                   <div style={{ lineHeight: "11px" }}>      
                     <p>
-                      <strong>Email/username: <a href="#">sopha088@gmail.com</a></strong> 
+                      <strong>Email/username: <a href="https:gmail.com">sopha088@gmail.com</a></strong> 
                     </p>
                     <p>
-                      <strong>Sign-in page: <a href="#">https://phanna.vendhq.com/signin</a></strong>
+                      <strong>Sign-in page: <a href="https://phanna.vendhq.com/signin">https://phanna.vendhq.com/signin</a></strong>
                     </p>
                   </div>
                 </div>

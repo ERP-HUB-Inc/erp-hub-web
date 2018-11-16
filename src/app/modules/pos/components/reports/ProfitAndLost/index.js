@@ -58,11 +58,26 @@ export default class InventoryList extends List {
       this.props.profitAndLostReport.list.forEach(incomeExpense => {
   
         if (incomeExpense.type === this.Enum.OPERATION_TYPE.INCOME) {
-          income.push(incomeExpense);
+
+          income.push({
+            name:  incomeExpense.name,
+            amount: incomeExpense.amount,
+            type: incomeExpense.type,
+            isSale: incomeExpense.isSale 
+          });
+
           incomeType += incomeExpense.amount;
         } else if (incomeExpense.type === this.Enum.OPERATION_TYPE.EXPENSE) {
-          expense.push(incomeExpense);
+
+          expense.push({
+            name: incomeExpense.name,
+            amount: incomeExpense.amount,
+            type: incomeExpense.type,
+            isSale: incomeExpense.isSale
+          });
+
           expenseType += incomeExpense.amount;
+
         }
         
 
@@ -88,6 +103,14 @@ export default class InventoryList extends List {
     const { profitAndLostReport } = this.props;
     let getIncomeExpenseValue = [];
     if (profitAndLostReport.list) {
+
+      // getIncomeExpenseValue.push({
+      //   createdAt: "Operation",
+      //   name:  "",
+      //   amount: "",
+      //   type: ""
+      // });
+      
       profitAndLostReport.list.forEach(profitReport => {
         if(profitReport.type === this.Enum.OPERATION_TYPE.INCOME || profitReport.type === this.Enum.OPERATION_TYPE.EXPENSE){
           getIncomeExpenseValue.push({
@@ -107,6 +130,7 @@ export default class InventoryList extends List {
       });
 
     }
+
     return getIncomeExpenseValue;
   }
 
@@ -143,7 +167,9 @@ export default class InventoryList extends List {
 
     let filter = {};
 
+    filter["isSale"] = [this.Enum.OPERATION_TYPE.NONE_SALE];
     filter["type"] = [this.Enum.OPERATION_TYPE.INCOME,this.Enum.OPERATION_TYPE.EXPENSE];
+
 
     let rangFilter = "";
    
@@ -173,10 +199,15 @@ export default class InventoryList extends List {
             filter["type"] = [values.reportType];
 
             if(values.reportType === 2){
+              filter["isSale"] = [this.Enum.OPERATION_TYPE.NONE_SALE];
               filter["type"] = [this.Enum.OPERATION_TYPE.INCOME,this.Enum.OPERATION_TYPE.EXPENSE];
             }
 
-          
+            if(values.reportType === this.Enum.OPERATION_TYPE.EXPENSE){
+              filter["isSale"] = [this.Enum.OPERATION_TYPE.SALE];
+              filter["type"] = [this.Enum.OPERATION_TYPE.INCOME,this.Enum.OPERATION_TYPE.EXPENSE];
+            }
+
             let rangFilter = "";
             if (values.createdAt) {
               rangFilter = JSON.stringify({
@@ -189,9 +220,6 @@ export default class InventoryList extends List {
             }
 
             filter = JSON.stringify(filter);
-
-            console.log("filter",filter);
-            console.log("date",rangFilter);
           
             dispatch(this.action.fetch(filter,rangFilter));
 
@@ -203,8 +231,6 @@ export default class InventoryList extends List {
       } 
     }); 
   }
-
-
 
   renderTable(){
     const incomeExpense = this.groupIncomeExpenseByType();
@@ -267,20 +293,6 @@ export default class InventoryList extends List {
     );
   }
 
-  renderButtonExportCSV(){
-    return(
-      <this.CSVLink
-        filename={this.exportCsvFileName}
-        data={this.exportCsv()}
-        headers={this.ExportheadersCsv}
-      >
-        <this.Button type="info">
-          <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
-        </this.Button>
-      </this.CSVLink>
-    );
-  }
-
   renderActionButton(){
     return(
       <div className="btn-profit-and-lost">
@@ -290,7 +302,7 @@ export default class InventoryList extends List {
           headers={this.ExportheadersCsv}
         >
           <this.Button type="info">
-            <span className="icon-export icon-padding-right"></span>{<this.Translate id="button_search_stock_transfer_export_csv" />}
+            <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
           </this.Button>
         </this.CSVLink>
       </div>
