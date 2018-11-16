@@ -412,7 +412,7 @@ export default class Retail extends Component {
       return;
     }
     
-    if (value.productVariantToProduct.length > 0) {
+    if (value.productVariantToProduct && value.productVariantToProduct.length > 0) {
       this.setState({
         showVariantProduct: true,
         variantProductList: this.state.productList[0].options

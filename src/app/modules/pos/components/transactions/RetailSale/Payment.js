@@ -341,7 +341,8 @@ export default class Payment extends Modal {
           </this.Col>
           <this.Col md="7" className="wrap-payment-tool">
             {
-              this.totalCustomerPaymentList() < grandTotal && !this.props.transaction.paid ?
+              // this.totalCustomerPaymentList() < grandTotal && !this.props.transaction.paid ?
+              !this.props.transaction.paid ?
                 <div className="payment-tool">
                   <div className="amount-to-pay">
                     <div className="title"><this.Translate id="text_pay"/></div>
