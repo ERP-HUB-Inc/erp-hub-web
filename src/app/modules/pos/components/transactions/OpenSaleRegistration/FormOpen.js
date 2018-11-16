@@ -11,7 +11,7 @@ export default class Form extends Modal {
         <img src="https://storeveinresource.sgp1.digitaloceanspaces.com/storeVein/register-closed-cac5b6cc7c.svg" alt=""/>
       </div>
       <div>
-        <this.Translate id="text_register_closed" />
+        <this.Translate id="text_open_cash" />
       </div>
     </div>;
     this.dispatch = this.props.dispatch;
@@ -35,7 +35,7 @@ export default class Form extends Modal {
     return(
       <div className="ant-modal-footer">
         <this.Button htmlType="submit" loading={this.props.open.adding} className="info">
-          <span className="icon-save icon-padding-right"></span>Open Sale Registration
+          <span className="icon-save icon-padding-right"></span><this.Translate id="text_open_sale_register" />
         </this.Button>
       </div>
     );

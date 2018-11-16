@@ -20,6 +20,7 @@ import FormOpenSaleRegistration from "../../../containers/transactions/OpenSaleR
 import OpenSaleRegistrationAction from "../../../action/transaction/openSalaRegisration";
 import NoPermission from "../../../../common/components/shares/List/NoPermission";
 import StartUp from "../../../../common/components/StartUp";
+import history from "../../../../common/router/history";
 import Util from "../../../../inventory/utils";
 import POSUtil from "../../../utils";
 import Component from "../../../../common/components/Component";
@@ -59,6 +60,8 @@ export default class Retail extends Component {
     this.handleOnSelectProductSearchList = this.handleOnSelectProductSearchList.bind(this);
     this.handleExpandOrderItem = this.handleExpandOrderItem.bind(this);
     this.handleSetFullScreen = this.handleSetFullScreen.bind(this);
+    this.handleLinkSaleHistory = this.handleLinkSaleHistory.bind(this);
+    this.handleLinkCloseShift = this.handleLinkCloseShift.bind(this);
     this.handleOnMakePayment = this.handleOnMakePayment.bind(this);
     this.handleCancelMakePayment = this.handleCancelMakePayment.bind(this);
     this.handleOnGetTaxList = this.handleOnGetTaxList.bind(this);
@@ -99,7 +102,7 @@ export default class Retail extends Component {
     this.props.dispatch(PrivilegeAction.reset());
     this.props.dispatch(PrivilegeAction.checkPermission(this.service.createRoute));
 
-    // this.handleSetFullScreen();
+    this.handleSetFullScreen();
 
     this.props.dispatch(ProductTypeAction.fetch(18));
     this.props.dispatch(ProductAction.fetch(25));
@@ -526,6 +529,18 @@ export default class Retail extends Component {
     // this.Util.toggleFullScreen(body);
   }
 
+  handleLinkSaleHistory() {
+    this.handleSetFullScreen();
+
+    history.push("/transactions/salehistory");
+  }
+
+  handleLinkCloseShift() {
+    this.handleSetFullScreen();
+
+    history.push("/transactions/saleregister");
+  }
+
   handleOnSaveParkReceipt() {
     this.saveReceipt(Enum.PARK_RECEIPT);
     this.handleOnResetOrder();
@@ -611,8 +626,11 @@ export default class Retail extends Component {
                       :
                       ""
                   }
-                  <div className="pull-left park-receipt" onClick={this.handleSetFullScreen}>
+                  <div className="pull-left park-receipt" onClick={this.handleLinkSaleHistory}>
                     <span className="icon-time icon-padding-right"></span><this.Translate id="text_sale_history" />
+                  </div>
+                  <div className="pull-left park-receipt" onClick={this.handleLinkCloseShift}>
+                    <span className="icon-currency icon-padding-right"></span><this.Translate id="text_close_shift" />
                   </div>
                   {/* <div className="pull-left park-receipt" onClick={this.handleSetFullScreen}>
                     <span className={`${this.state.iconFullScreen} icon-padding-right`}></span>{this.state.textFullScreen}
