@@ -269,8 +269,8 @@ export default class SaleHistoryList extends List {
     rangFilter = JSON.stringify({
       column: "registerDate",
       value: [
-        this.Util.formatDateForMYSQL(getCurrentDate),
-        this.Util.formatDateForMYSQL(getCurrentDate)
+        this.Util.formatDateForMYSQL(getCurrentDate) + " 00:00:00",
+        this.Util.formatDateForMYSQL(getCurrentDate) + " 23:59:59"
       ]});
 
 
