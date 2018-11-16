@@ -301,7 +301,7 @@
 
 #retail-sale #right-block .product-order-list {
     height: 100%;
-    overflow: hidden auto;
+    overflow: hidden scroll;
     margin-top: 10px;
     border: 1.5px solid #ECECEC;
     border-radius: 3px;

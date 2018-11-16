@@ -612,8 +612,11 @@ export default class Retail extends Component {
                       ""
                   }
                   <div className="pull-left park-receipt" onClick={this.handleSetFullScreen}>
-                    <span className={`${this.state.iconFullScreen} icon-padding-right`}></span>{this.state.textFullScreen}
+                    <span className="icon-time icon-padding-right"></span><this.Translate id="text_sale_history" />
                   </div>
+                  {/* <div className="pull-left park-receipt" onClick={this.handleSetFullScreen}>
+                    <span className={`${this.state.iconFullScreen} icon-padding-right`}></span>{this.state.textFullScreen}
+                  </div> */}
                 </this.Col>
               </this.Row>
               <this.Row className="wrap-category">
