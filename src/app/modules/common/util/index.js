@@ -389,5 +389,16 @@ export class Util {
   isCheckingPermission(props) {
     return props.checkPermission && props.checkPermission.checking;
   }
+
+  groupByTheSameValue(collection,key,calculate){
+    return(
+      _(collection)
+        .groupBy(key)
+        .map((objs, key) => ({
+          key: key,
+          calculate: _.sumBy(objs, calculate) }))
+        .value()
+    );
+  }
   
 }

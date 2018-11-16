@@ -43,7 +43,9 @@ export default class Diagram extends Component {
   render() {
     const { graphChat, pipeChat } = this.props;
     const incomeExpense = this.groupIncomeExpenseType();
-  
+
+    console.log("expense diagram",incomeExpense.expense[0] ? incomeExpense.expense[0] : [] );
+
     return (
       pipeChat.fetching ? 
         <div className="text-center">
@@ -63,10 +65,11 @@ export default class Diagram extends Component {
                     animationDuration: 0, // duration of animations when hovering an item
                   },
                   responsiveAnimationDuration: 0,
-                  responsive: true
+                  responsive: true,
                 }
               }
-              height={500}
+              legend= {{position: "top" }}
+              height={520}
               width={1700}
             />
 
@@ -84,7 +87,6 @@ export default class Diagram extends Component {
                   data={incomeExpense.expense[0] ? incomeExpense.expense[0] : [] }
                   option={
                     {
-                      
                       animation: {
                         duration: 0, 
                       },
@@ -94,7 +96,9 @@ export default class Diagram extends Component {
                       responsiveAnimationDuration: 0,
                       responsive: true
                     }
+                   
                   }
+                  legend= {{position: "left" }}
                 />
               </this.Col>
               <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-right">
@@ -108,7 +112,6 @@ export default class Diagram extends Component {
                   data={incomeExpense.income[0] ? incomeExpense.income[0] : [] }
                   option={
                     {
-              
                       animation: {
                         duration: 0, 
                       },
@@ -119,6 +122,7 @@ export default class Diagram extends Component {
                       responsive: true
                     }
                   }
+                  legend= {{position: "left" }}
                 />
              
               </this.Col>
