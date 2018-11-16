@@ -61,17 +61,14 @@ export default class FormVariant extends Modal {
 
   componentDidUpdate() {
     const {
-      productVariantToProduct,
+      productVariant,
       dispatch,
       variantAttributeAdd
     } = this.props;
-    if (productVariantToProduct.length > 0 &&  this.state.isNotYetLoadComponentDidUpdated) {
+    if (productVariant && productVariant.length > 0 &&  this.state.isNotYetLoadComponentDidUpdated) {
       let existingVariantAttributes = this.state.variantAttributeList;
 
-
-      console.log("VariantAttributes",existingVariantAttributes);
-
-      productVariantToProduct.forEach(variantAttribute => {
+      productVariant.forEach(variantAttribute => {
         if (variantAttribute.status !== this.Enum.ARCHIVE) {
           if (existingVariantAttributes.length === 0) {
             this.appendVariantAttribute(existingVariantAttributes, variantAttribute);
