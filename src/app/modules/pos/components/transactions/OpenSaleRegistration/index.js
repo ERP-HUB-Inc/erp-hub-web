@@ -177,6 +177,7 @@ export default class OpenSaleRegistrationList extends List {
   }
 
   componentDidMount() {
+    super.componentDidMount();
     this.loadData();
   }
 

@@ -15,7 +15,7 @@ export default class BaseService extends Service {
   detail(
     ids
   ){
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.GET({ 
       url: `${this.baseUrl}/detail/${ids}`,
       data: this.data,
@@ -24,7 +24,7 @@ export default class BaseService extends Service {
   }
 
   findPurchaseOrderNumber(ids) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.GET(
       {
         url: `${this.baseUrl}/check/number/${ids}`,
@@ -46,18 +46,19 @@ export default class BaseService extends Service {
     locationId
   ) {
     const languageId = this.getLanguageId();
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.GET({ 
       url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${languageId}&locationId=${locationId}`,  
       data: this.data,
       headers: this.header
     });
   }
+
   listsLanguage(
     limit,
     languageId
   ){
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.GET({ 
       url: `${this.baseUrl}/lists?languageId=en&limit=${limit}`,
       data: this.data,
@@ -66,7 +67,7 @@ export default class BaseService extends Service {
   }
 
   archive(ids) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.DELETE({  
       url: `${this.baseUrl}/archive/${ids}`,
       data: this.data,
@@ -75,7 +76,7 @@ export default class BaseService extends Service {
   }
 
   add(data) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.POST({
       url: `${this.baseUrl}/create`, 
       data: {
@@ -87,7 +88,7 @@ export default class BaseService extends Service {
   }
 
   update(data) {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     const {id} = data;
     return this.PUT({
       url: `${this.baseUrl}/update/${id}`,

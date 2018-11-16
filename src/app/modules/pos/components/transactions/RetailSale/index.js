@@ -5,6 +5,8 @@ import TaxSetting from "./TaxSetting";
 import Enum from "../../../enums";
 import InventoryEnum from "../../../../inventory/enums";
 import TransactionAction from "../../../action/transaction/transaction";
+import PrivilegeAction from "../../../action/settings/privilege";
+import TransactionService from "../../../services/transactions/TransactionService";
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
 import FormCreateCustomer from "../../../../crm/containers/customers/Customer/FormCreate";
 import CustomerAction from "../../../../crm/actions/customers/customer";
@@ -16,6 +18,9 @@ import CustomerDropDownSearch from "../../../../crm/components/customers/Custome
 import ProductDropDownSearch from "../../../../inventory/components/products/Product/DropDownSearch";
 import FormOpenSaleRegistration from "../../../containers/transactions/OpenSaleRegistration/FormOpen";
 import OpenSaleRegistrationAction from "../../../action/transaction/openSalaRegisration";
+import NoPermission from "../../../../common/components/shares/List/NoPermission";
+import StartUp from "../../../../common/components/StartUp";
+import history from "../../../../common/router/history";
 import Util from "../../../../inventory/utils";
 import POSUtil from "../../../utils";
 import Component from "../../../../common/components/Component";
@@ -46,6 +51,7 @@ export default class Retail extends Component {
       iconFullScreen: "icon-full-screen"
     };
     this.hasDidUpdate = false;
+    this.service = TransactionService;
 
     this.handleOnSelectCategory = this.handleOnSelectCategory.bind(this);
     this.handleOnSelectProduct = this.handleOnSelectProduct.bind(this);
@@ -54,6 +60,8 @@ export default class Retail extends Component {
     this.handleOnSelectProductSearchList = this.handleOnSelectProductSearchList.bind(this);
     this.handleExpandOrderItem = this.handleExpandOrderItem.bind(this);
     this.handleSetFullScreen = this.handleSetFullScreen.bind(this);
+    this.handleLinkSaleHistory = this.handleLinkSaleHistory.bind(this);
+    this.handleLinkCloseShift = this.handleLinkCloseShift.bind(this);
     this.handleOnMakePayment = this.handleOnMakePayment.bind(this);
     this.handleCancelMakePayment = this.handleCancelMakePayment.bind(this);
     this.handleOnGetTaxList = this.handleOnGetTaxList.bind(this);
@@ -91,6 +99,9 @@ export default class Retail extends Component {
   }
 
   componentDidMount() {
+    this.props.dispatch(PrivilegeAction.reset());
+    this.props.dispatch(PrivilegeAction.checkPermission(this.service.createRoute));
+
     this.handleSetFullScreen();
 
     this.props.dispatch(ProductTypeAction.fetch(18));
@@ -518,6 +529,18 @@ export default class Retail extends Component {
     // this.Util.toggleFullScreen(body);
   }
 
+  handleLinkSaleHistory() {
+    this.handleSetFullScreen();
+
+    history.push("/transactions/salehistory");
+  }
+
+  handleLinkCloseShift() {
+    this.handleSetFullScreen();
+
+    history.push("/transactions/saleregister");
+  }
+
   handleOnSaveParkReceipt() {
     this.saveReceipt(Enum.PARK_RECEIPT);
     this.handleOnResetOrder();
@@ -578,244 +601,260 @@ export default class Retail extends Component {
     } = POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale));
 
     return (
-      <this.Row className="main-layout main-store-account" id="retail-sale">
-        <this.Col md="8" id="left-block">
-          <this.Row className="wrap-receipt-type">
-            <this.Col md="12" className="receipt-type">
-              <div className={`pull-left current-receipt ${this.state.selectedReceiptType === Enum.CURRENT_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.CURRENT_RECEIPT)}>
-                <span className="icon-receipt icon-padding-right"></span><this.Translate id="current_receipt_type"/>
-              </div>
-              {
-                localStorage.getItem(Enum.PARK_RECEIPT) ?
-                  <div className={`pull-left park-receipt ${this.state.selectedReceiptType === Enum.PARK_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.PARK_RECEIPT)}>
-                    <span className="icon-reports icon-padding-right"></span><this.Translate id="park_receipt_type"/>
+      this.Util.isCheckingPermission(this.props) ?
+        <this.Row className="main-layout main-store-account" id="retail-sale">
+          <StartUp />
+        </this.Row>
+        :
+        this.Util.isNoPermissionProp(this.props) ?
+          <this.Row className="main-layout main-store-account" id="retail-sale">
+            <NoPermission />
+          </this.Row>
+          :
+          <this.Row className="main-layout main-store-account" id="retail-sale">
+            <this.Col md="8" id="left-block">
+              <this.Row className="wrap-receipt-type">
+                <this.Col md="12" className="receipt-type">
+                  <div className={`pull-left current-receipt ${this.state.selectedReceiptType === Enum.CURRENT_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.CURRENT_RECEIPT)}>
+                    <span className="icon-receipt icon-padding-right"></span><this.Translate id="current_receipt_type"/>
                   </div>
-                  :
-                  ""
-              }
-              <div className="pull-left park-receipt" onClick={this.handleSetFullScreen}>
-                <span className={`${this.state.iconFullScreen} icon-padding-right`}></span>{this.state.textFullScreen}
-              </div>
-            </this.Col>
-          </this.Row>
-          <this.Row className="wrap-category">
-            {
-              this.props.productsType.fetching ?
-                <this.Spin style={{position: "absolute", left: 0, right: 0, paddingTop: 15}}/>
-                :
-                this.state.categoryList.concat(this.props.productsType.list).map((category, index) =>
-                  <this.Col md="3" className="category-box" key={index}>
-                    <div onClick={() => this.handleOnSelectCategory(category.id)} className={`category ${this.state.selectedCategoryIds.includes(category.id)? "selected": "" }`}>
-                      {
-                        "productTypeDescriptions" in category && category["productTypeDescriptions"].length > 0 ?
-                          category["productTypeDescriptions"][0].name
-                          :
-                          category.name
-                      }
-                    </div>
-                  </this.Col>
-                )
-            }
-          </this.Row>
-          <this.Row className="wrap-product-box-list">
-            {
-              this.props.products.fetching ?
-                <this.Spin style={{position: "absolute", left: 0, right: 0, paddingTop: 15}}/>
-                :
-                this.renderProductList()
-            }
-          </this.Row>
-        </this.Col>
-        <this.Col md="4" id="right-block">
-          <this.Row id="search-information">
-            <this.Col md="12" id="wrap-cashier">
-              <div>
-                <this.Translate id="text_cashier" />: 
-              </div>
-              <div className="current-cashier text-uppercase">
-                {this.Util.getCurrentUser().fullName}
-              </div>
-            </this.Col>
-            <CustomerDropDownSearch
-              customers={this.props.customers}
-              locale={this.props.locale}
-              form={this.props.form}
-              dispatch={this.props.dispatch}
-              handleOnAddNewCustomer={this.handleOnAddNewCustomer}/>
-            <ProductDropDownSearch
-              placeholder={this.CATranslate("input_search_product_placeholder", this.props.locale)}
-              productSearch={this.props.productSearch}
-              handleOnSelectList={this.handleOnSelectProductSearchList}
-              callBack={this.handleOnAutoSelectProductAfterSearchResult}
-              handlePressEnterOnSearch={this.handleOnSelectProductSearchList}
-              className="ca-input-v1-icon-left ca-input-v1"
-              isAutoFocus={true}
-              locale={this.props.locale}
-              form={this.props.form}
-              dispatch={this.props.dispatch} />
-          </this.Row>
-          <div className="product-order-list">
-            {
-              this.state.productOrderList.map((productOrder, productOrderIndex) => 
-                <div className={`product-order-item ${this.state.expandOrderItemRow.includes(productOrder.productId) ? "expanded" : ""}`} key={productOrderIndex}>
-                  <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                    <div className="item" onClick={() => this.handleExpandOrderItem(productOrder.productId, productOrderIndex)}>
-                      <div className={`epxand-icon ${this.state.expandOrderItemRow.includes(productOrder.productId) ? "icon-move-down" : "icon-next"}`}></div>
-                      <div className="description">
-                        <div className="name">{productOrder.name}</div>
-                        <div className="barcode-number">{<this.Translate id="text_product_code"/>}: {productOrder.barcode}</div>
+                  {
+                    localStorage.getItem(Enum.PARK_RECEIPT) ?
+                      <div className={`pull-left park-receipt ${this.state.selectedReceiptType === Enum.PARK_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.PARK_RECEIPT)}>
+                        <span className="icon-reports icon-padding-right"></span><this.Translate id="park_receipt_type"/>
                       </div>
-                      <div className="quantity">{productOrder.quantity}x</div>
-                      <div className="price">
-                        {
-                          productOrder.discount > 0 ?
-                            <div className="after-discount-price">
-                              {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity,  productOrder.price, productOrder.discount))}
-                            </div>
-                            :
-                            ""
-                        }
-                        <div className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`}>
-                          {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder.price))}
+                      :
+                      ""
+                  }
+                  <div className="pull-left park-receipt" onClick={this.handleLinkSaleHistory}>
+                    <span className="icon-time icon-padding-right"></span><this.Translate id="text_sale_history" />
+                  </div>
+                  <div className="pull-left park-receipt" onClick={this.handleLinkCloseShift}>
+                    <span className="icon-currency icon-padding-right"></span><this.Translate id="text_close_shift" />
+                  </div>
+                  {/* <div className="pull-left park-receipt" onClick={this.handleSetFullScreen}>
+                    <span className={`${this.state.iconFullScreen} icon-padding-right`}></span>{this.state.textFullScreen}
+                  </div> */}
+                </this.Col>
+              </this.Row>
+              <this.Row className="wrap-category">
+                {
+                  this.props.productsType.fetching ?
+                    <this.Spin style={{position: "absolute", left: 0, right: 0, paddingTop: 15}}/>
+                    :
+                    this.state.categoryList.concat(this.props.productsType.list).map((category, index) =>
+                      <this.Col md="3" className="category-box" key={index}>
+                        <div onClick={() => this.handleOnSelectCategory(category.id)} className={`category ${this.state.selectedCategoryIds.includes(category.id)? "selected": "" }`}>
+                          {
+                            "productTypeDescriptions" in category && category["productTypeDescriptions"].length > 0 ?
+                              category["productTypeDescriptions"][0].name
+                              :
+                              category.name
+                          }
                         </div>
-                      </div>
-                    </div>
-                    <div className="delete" onClick={() => this.handleOnRemoveProductFromOrderList(productOrder)}><span className="icon-delete"></span></div>
+                      </this.Col>
+                    )
+                }
+              </this.Row>
+              <this.Row className="wrap-product-box-list">
+                {
+                  this.props.products.fetching ?
+                    <this.Spin style={{position: "absolute", left: 0, right: 0, paddingTop: 15}}/>
+                    :
+                    this.renderProductList()
+                }
+              </this.Row>
+            </this.Col>
+            <this.Col md="4" id="right-block">
+              <this.Row id="search-information">
+                <this.Col md="12" id="wrap-cashier">
+                  <div>
+                    <this.Translate id="text_cashier" />: 
                   </div>
-                  <div className="product-order-item-detail">
-                    <div className="detail-row-1">
-                      <this.InputNumber
-                        name={`quantity[${productOrderIndex}]`}
-                        label={<this.Translate id="text_quantity"/> }
-                        data={productOrder.quantity}
-                        handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "quantity")}
-                        className="ca-input-v1 order-quantity"
-                        isHideTool={true}
-                        precision={0}
-                        isAutoSelect={true}
-                        form={this.props.form}/>
-                      <this.InputNumber
-                        name={`price[${productOrderIndex}]`}
-                        label={<this.Translate id="text_price" />}
-                        data={POSUtil.getTotalAmountAfterDiscount(1, productOrder.price, productOrder.discount)}
-                        handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "newPrice")}
-                        className="ca-input-v1"
-                        isAutoSelect={true}
-                        isHideTool={true}
-                        form={this.props.form}/>
-                      <this.InputNumber
-                        name={`discount[${productOrderIndex}]`}
-                        label={<span><this.Translate id="text_discount"/> (%)</span>}
-                        data={productOrder.discount}
-                        handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "discount")}
-                        className="ca-input-v1"
-                        precision={0}
-                        isAutoSelect={true}
-                        isHideTool={true}
-                        form={this.props.form} />
-                      {/* <div className="detail-inventory">
+                  <div className="current-cashier text-uppercase">
+                    {this.Util.getCurrentUser().fullName}
+                  </div>
+                </this.Col>
+                <CustomerDropDownSearch
+                  customers={this.props.customers}
+                  locale={this.props.locale}
+                  form={this.props.form}
+                  dispatch={this.props.dispatch}
+                  handleOnAddNewCustomer={this.handleOnAddNewCustomer}/>
+                <ProductDropDownSearch
+                  placeholder={this.CATranslate("input_search_product_placeholder", this.props.locale)}
+                  productSearch={this.props.productSearch}
+                  handleOnSelectList={this.handleOnSelectProductSearchList}
+                  callBack={this.handleOnAutoSelectProductAfterSearchResult}
+                  handlePressEnterOnSearch={this.handleOnSelectProductSearchList}
+                  className="ca-input-v1-icon-left ca-input-v1"
+                  isAutoFocus={true}
+                  locale={this.props.locale}
+                  form={this.props.form}
+                  dispatch={this.props.dispatch} />
+              </this.Row>
+              <div className="product-order-list">
+                {
+                  this.state.productOrderList.map((productOrder, productOrderIndex) => 
+                    <div className={`product-order-item ${this.state.expandOrderItemRow.includes(productOrder.productId) ? "expanded" : ""}`} key={productOrderIndex}>
+                      <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                        <div className="item" onClick={() => this.handleExpandOrderItem(productOrder.productId, productOrderIndex)}>
+                          <div className={`epxand-icon ${this.state.expandOrderItemRow.includes(productOrder.productId) ? "icon-move-down" : "icon-next"}`}></div>
+                          <div className="description">
+                            <div className="name">{productOrder.name}</div>
+                            <div className="barcode-number">{<this.Translate id="text_product_code"/>}: {productOrder.barcode}</div>
+                          </div>
+                          <div className="quantity">{productOrder.quantity}x</div>
+                          <div className="price">
+                            {
+                              productOrder.discount > 0 ?
+                                <div className="after-discount-price">
+                                  {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity,  productOrder.price, productOrder.discount))}
+                                </div>
+                                :
+                                ""
+                            }
+                            <div className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`}>
+                              {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder.price))}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="delete" onClick={() => this.handleOnRemoveProductFromOrderList(productOrder)}><span className="icon-delete"></span></div>
+                      </div>
+                      <div className="product-order-item-detail">
+                        <div className="detail-row-1">
+                          <this.InputNumber
+                            name={`quantity[${productOrderIndex}]`}
+                            label={<this.Translate id="text_quantity"/> }
+                            data={productOrder.quantity}
+                            handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "quantity")}
+                            className="ca-input-v1 order-quantity"
+                            isHideTool={true}
+                            precision={0}
+                            isAutoSelect={true}
+                            form={this.props.form}/>
+                          <this.InputNumber
+                            name={`price[${productOrderIndex}]`}
+                            label={<this.Translate id="text_price" />}
+                            data={POSUtil.getTotalAmountAfterDiscount(1, productOrder.price, productOrder.discount)}
+                            handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "newPrice")}
+                            className="ca-input-v1"
+                            isAutoSelect={true}
+                            isHideTool={true}
+                            form={this.props.form}/>
+                          <this.InputNumber
+                            name={`discount[${productOrderIndex}]`}
+                            label={<span><this.Translate id="text_discount"/> (%)</span>}
+                            data={productOrder.discount}
+                            handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "discount")}
+                            className="ca-input-v1"
+                            precision={0}
+                            isAutoSelect={true}
+                            isHideTool={true}
+                            form={this.props.form} />
+                          {/* <div className="detail-inventory">
                         <span className="icon-help icon-padding-right"></span>Show Inventories & Details
                       </div> */}
-                    </div>
-                    <div className="detail-row-2">
-                      <this.InputText
-                        name={`description[${productOrderIndex}]`}
-                        label={<this.Translate id="text_notation"/>}
-                        data={productOrder.description}
-                        className="ca-input-v1"
-                        handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "description")}
-                        placeholder={this.CATranslate("text_add_notation", this.props.locale)}
-                        form={this.props.form}/>
-                    </div>
-                  </div>
-                </div>
-              )
-            }
-          </div>
-          <div id="wrap-payment">
-            <this.Col md="12">
-              <this.Row className="payment">
-                <this.Col md="6" className="text-left">
-                  {
-                    !this.state.isDiscountHasAdded && summaryTotal.discount <= 0 ?
-                      <div className="sub-total add-discount" style={{justifyContent: "end"}} onClick={this.handleOnSetupDiscount}>
-                        <span className="icon-add icon-padding-right"></span> <span><this.Translate id="text_add"/> <this.Translate id="text_discount"/></span>
+                        </div>
+                        <div className="detail-row-2">
+                          <this.InputText
+                            name={`description[${productOrderIndex}]`}
+                            label={<this.Translate id="text_notation"/>}
+                            data={productOrder.description}
+                            className="ca-input-v1"
+                            handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "description")}
+                            placeholder={this.CATranslate("text_add_notation", this.props.locale)}
+                            form={this.props.form}/>
+                        </div>
                       </div>
-                      :
-                      ""
-                  }
+                    </div>
+                  )
+                }
+              </div>
+              <div id="wrap-payment">
+                <this.Col md="12">
+                  <this.Row className="payment">
+                    <this.Col md="6" className="text-left">
+                      {
+                        !this.state.isDiscountHasAdded && summaryTotal.discount <= 0 ?
+                          <div className="sub-total add-discount" style={{justifyContent: "end"}} onClick={this.handleOnSetupDiscount}>
+                            <span className="icon-add icon-padding-right"></span> <span><this.Translate id="text_add"/> <this.Translate id="text_discount"/></span>
+                          </div>
+                          :
+                          ""
+                      }
                   
-                  {/* SUB TOTAL ROW */}
-                  <div className="sub-total">
-                    <div className="sub-total-title"><this.Translate id="text_sub_total"/></div>
-                    <div className="sub-total-value">{this.formatCurrency(summaryTotal.subTotalAfterDiscount)}</div>
-                  </div>
-                  {
-                    summaryTotal.discount > 0 ?
+                      {/* SUB TOTAL ROW */}
                       <div className="sub-total">
-                        <div className="sub-total-title" style={{fontWeight: 600}}><this.Translate id="text_discount"/></div>
-                        <div className="sub-total-value">{this.formatCurrency(discountAmount)}</div>
+                        <div className="sub-total-title"><this.Translate id="text_sub_total"/></div>
+                        <div className="sub-total-value">{this.formatCurrency(summaryTotal.subTotalAfterDiscount)}</div>
                       </div>
-                      :
-                      ""
-                  }
-                  {/* END SUB TOTAL ROW */}
+                      {
+                        summaryTotal.discount > 0 ?
+                          <div className="sub-total">
+                            <div className="sub-total-title" style={{fontWeight: 600}}><this.Translate id="text_discount"/></div>
+                            <div className="sub-total-value">{this.formatCurrency(discountAmount)}</div>
+                          </div>
+                          :
+                          ""
+                      }
+                      {/* END SUB TOTAL ROW */}
 
-                  {/* TAX ROW */}
-                  <div className="sub-total">
-                    <div className="sub-total-title" onClick={countTax > 0 ? this.handleOnOpenTaxSetting : null}>
-                      <span className={`${countTax > 0 ? "ca-link" : ""}`}><this.Translate id="text_tax"/></span> {taxTitle}
-                    </div>
-                    <div className="sub-total-value">{this.formatCurrency(taxTotal)}</div>
-                  </div>
-                  {/*END TAX ROW */}
-
-                  {/* DISCOUNT ROW */}
-                  {
-                    this.state.isDiscountHasAdded && summaryTotal.discount <= 0?
+                      {/* TAX ROW */}
                       <div className="sub-total">
-                        <div className="ca-link sub-total-title" style={{fontWeight: 600}} onClick={this.handleOnSetupDiscount}>
-                          <this.Translate id="text_discount"/>
-                          {discountTypeStr}
+                        <div className="sub-total-title" onClick={countTax > 0 ? this.handleOnOpenTaxSetting : null}>
+                          <span className={`${countTax > 0 ? "ca-link" : ""}`}><this.Translate id="text_tax"/></span> {taxTitle}
                         </div>
-                        <div className="sub-total-value" style={{position: "relative"}}>
-                          {this.formatCurrency(discountAmount)}
-                          <div className="delete remove-discount" onClick={this.handleRemoveDiscount}><span className="icon-delete"></span></div>
-                        </div>
+                        <div className="sub-total-value">{this.formatCurrency(taxTotal)}</div>
                       </div>
-                      :
-                      ""
-                  }
-                  {/*END DISCOUNT ROW */}
+                      {/*END TAX ROW */}
+
+                      {/* DISCOUNT ROW */}
+                      {
+                        this.state.isDiscountHasAdded && summaryTotal.discount <= 0?
+                          <div className="sub-total">
+                            <div className="ca-link sub-total-title" style={{fontWeight: 600}} onClick={this.handleOnSetupDiscount}>
+                              <this.Translate id="text_discount"/>
+                              {discountTypeStr}
+                            </div>
+                            <div className="sub-total-value" style={{position: "relative"}}>
+                              {this.formatCurrency(discountAmount)}
+                              <div className="delete remove-discount" onClick={this.handleRemoveDiscount}><span className="icon-delete"></span></div>
+                            </div>
+                          </div>
+                          :
+                          ""
+                      }
+                      {/*END DISCOUNT ROW */}
+                    </this.Col>
+                    <this.Col md="6" className="text-right">
+                      <div className="grand-total">
+                        <div className="grand-total-title"><this.Translate id="text_total"/></div>
+                        <div className="grand-total-value">{this.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount))}</div>
+                      </div>
+                    </this.Col>
+                  </this.Row>
+                  <this.Row className="payment-action">
+                    <this.Button type="info" className="mg-right" onClick={this.handleOnSaveParkReceipt}>
+                      <span className="icon-save icon-padding-right"></span><this.Translate id="button_text_save" />
+                    </this.Button>
+                    <this.Button type="info" onClick={this.handleOnMakePayment}>
+                      <span className="icon-checked icon-padding-right"></span><this.Translate id="button_text_tender" />
+                    </this.Button>
+                  </this.Row>
                 </this.Col>
-                <this.Col md="6" className="text-right">
-                  <div className="grand-total">
-                    <div className="grand-total-title"><this.Translate id="text_total"/></div>
-                    <div className="grand-total-value">{this.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount))}</div>
-                  </div>
-                </this.Col>
-              </this.Row>
-              <this.Row className="payment-action">
-                <this.Button type="info" className="mg-right" onClick={this.handleOnSaveParkReceipt}>
-                  <span className="icon-save icon-padding-right"></span><this.Translate id="button_text_save" />
-                </this.Button>
-                <this.Button type="info" onClick={this.handleOnMakePayment}>
-                  <span className="icon-checked icon-padding-right"></span><this.Translate id="button_text_tender" />
-                </this.Button>
-              </this.Row>
+              </div>
             </this.Col>
-          </div>
-        </this.Col>
-        {
-          this.state.showVariantProduct ?
-            <VaraintProduct
-              dataSource={this.state.variantProductList}
-              handleCancel={this.handleCancelVariant}/>
-            :
-            ""
-        }
-        {this.state.modalContent}
-      </this.Row>
+            {
+              this.state.showVariantProduct ?
+                <VaraintProduct
+                  dataSource={this.state.variantProductList}
+                  handleCancel={this.handleCancelVariant}/>
+                :
+                ""
+            }
+            {this.state.modalContent}
+          </this.Row>
     );
   }
 }

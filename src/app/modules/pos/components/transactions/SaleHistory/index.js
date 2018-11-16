@@ -5,6 +5,7 @@ import Enum from "../../../enums";
 import POSUtil from "../../../utils";
 import Constant from "../../../constants/transactions/transaction";
 import TransactionAction from "../../../action/transaction/transaction";
+import TransactionService from "../../../services/transactions/TransactionService";
 import LocationAction from "../../../action/settings/storeLocation";
 import UserAction from "../../../../common/actions/users";
 import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
@@ -29,6 +30,7 @@ export default class SaleHistoryList extends List {
       {value: Enum.TRANSACTION_TYPE.RETURN, name: <this.Translate id="text_return"/>}
     ];
     this.action = TransactionAction;
+    this.service = TransactionService;
     this.handleRePrint = this.handleRePrint.bind(this);
     this.employeeList = [{
       id: "",
@@ -45,7 +47,7 @@ export default class SaleHistoryList extends List {
     this.props.dispatch(LocationAction.fetch(100));
     this.props.dispatch(UserAction.fetch(100));
 
-    if(parseInt(this.Util.getParameterByName("salehistory"),10) === 1) {
+    if(parseInt(this.Util.getParameterByName("salehistory"), 10) === 1) {
       this.handleSubmitCurrentSearchFilter();
     }
 

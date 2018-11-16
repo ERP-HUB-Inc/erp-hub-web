@@ -4,7 +4,7 @@ class VariantAttributeService extends BaseService {
 
   constructor() {
     super();
-    this.module = "inventory/variant/attribute";
+    this.module = "inventory/attribute";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 }

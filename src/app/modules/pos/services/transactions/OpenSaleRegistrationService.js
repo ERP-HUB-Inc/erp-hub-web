@@ -10,7 +10,9 @@ class OpenSaleRegistrationService extends BaseService {
 
   initializeRoute() {
     super.initializeRoute();
+    this.listRoute = `${this.module}/lists/last`;
   }
+
 
   last() {
     this.setHeader();

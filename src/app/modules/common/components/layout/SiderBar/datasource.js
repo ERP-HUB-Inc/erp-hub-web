@@ -225,7 +225,7 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: "Open / Close",
+        title: "Close Shift",
         icon: "icon-currency",
         route: "/transactions/saleregister",
         component: OpenSaleRegistration,

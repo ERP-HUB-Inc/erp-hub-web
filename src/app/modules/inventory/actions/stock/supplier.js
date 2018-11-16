@@ -1,12 +1,12 @@
 import Constant from "../../constants/stock/supplier";
-import supplierService from "../../services/stock/SupplierService";
+import SupplierService from "../../services/stock/SupplierService";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_SUPPLIER,
-        payload: supplierService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
+        payload: SupplierService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },
@@ -14,7 +14,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_SUPPLIER_DETAIL,
-        payload: supplierService.detail(ids)
+        payload: SupplierService.detail(ids)
       });
     };
   },
@@ -22,7 +22,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ARCHIVE_SUPPLIER,
-        payload: supplierService.archive(ids)
+        payload: SupplierService.archive(ids)
       });
     };
   },
@@ -30,7 +30,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ADD_SUPPLIER,
-        payload: supplierService.add(data)
+        payload: SupplierService.add(data)
       });
     };
   },
@@ -38,7 +38,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_SUPPLIER,
-        payload: supplierService.update(data)
+        payload: SupplierService.update(data)
       });
     };
   },

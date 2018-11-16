@@ -121,5 +121,11 @@ export default {
     "Receipt has sent !",
     "Receipt has sent !",
     "Receipt has sent !"
+  ],
+
+  "text_open_sale_register": [
+    "Open Sale Registration",
+    "Open Sale Registration",
+    "Open Sale Registration"
   ]
 };

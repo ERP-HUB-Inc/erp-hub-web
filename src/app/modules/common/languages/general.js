@@ -653,6 +653,18 @@ export default {
     "Register closed"
   ],
 
+  "text_open_cash": [
+    "Open Cash",
+    "Open Cash",
+    "Open Cash"
+  ],
+
+  "text_close_shift": [
+    "Close Shift",
+    "Close Shift",
+    "Close Shift"
+  ],
+
   "text_no_permission_title": [
     "You don't have permission to view this module",
     "You don't have permission to view this module",
