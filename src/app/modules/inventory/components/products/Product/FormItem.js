@@ -595,7 +595,7 @@ export default class FormItem extends Modal {
                       form={form}
                       locale={locale}
                       productVariantArchive={productVariantArchive}
-                      productVariantToProduct={formData.productVariantToProduct}
+                      productVariant={formData.productVariant}
                       variantAttributes={this.state.variantAttributes}
                       variantAttributeAdd={variantAttributeAdd}
                       handleAddVariantAttribute={this.props.handleAddVariantAttribute}/>

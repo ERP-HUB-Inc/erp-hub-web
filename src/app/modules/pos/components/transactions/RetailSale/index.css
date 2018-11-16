@@ -115,7 +115,8 @@
 
 #retail-sale .product-box .product .image {
     height: 82px;
-    margin-bottom: 22px
+    margin-bottom: 22px;
+    overflow: hidden
 }
 
 #retail-sale .product-box .product .image img {
