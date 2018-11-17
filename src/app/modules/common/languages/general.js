@@ -59,6 +59,18 @@ export default {
     "Default"
   ],
 
+  "text_system": [
+    "System",
+    "System",
+    "System"
+  ],
+
+  "text_user": [
+    "User",
+    "User",
+    "User"
+  ],
+
   "text_created_at": [
     "Date",
     "Date",

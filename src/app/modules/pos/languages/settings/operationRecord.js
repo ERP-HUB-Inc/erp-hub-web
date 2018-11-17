@@ -51,5 +51,11 @@ export default {
     "Name allow from 3 to 100 character only.",
     "သာ 3 ရေ 100 မှဇာတ်ကောင်ကနေခွင့်ပြုပါအမည်ပြောပါ။",
     "ឈ្មោះអនុញ្ញាតតែពី 3 ទៅ 100 តួប៉ុណ្ណោះ។"
+  ],
+
+  "text_warning_delete_system_record": [
+    "We don't allow to delete record generate by system",
+    "We don't allow to delete record generate by system",
+    "We don't allow to delete record generate by system"
   ]
 };

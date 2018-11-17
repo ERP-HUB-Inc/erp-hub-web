@@ -222,11 +222,7 @@ export default class List extends Component {
     }
   }
 
-  /**
-   * handle delete multi record
-   * it will overide in child class
-   */
-  handleConfirm() {
+  checkIsAllowDeleteRecordOrNot() {
     if (this.state.selectedListIds &&
       this.state.selectedListIds.length > 0 &&
       this.props[this.fetchingProp]
@@ -240,9 +236,17 @@ export default class List extends Component {
           this.Message.warning(this.CATranslate("text_warning_delete_default_record", this.props.locale));
         }
       });
-      if (isHasDefaultRecord) {
-        return;
-      }
+      return isHasDefaultRecord;
+    }
+  }
+
+  /**
+   * handle delete multi record
+   * it will overide in child class
+   */
+  handleConfirm() {
+    if (this.checkIsAllowDeleteRecordOrNot()) {
+      return;
     }
 
     this.PrivilegeService.checkPermission(this.service.archiveRoute)

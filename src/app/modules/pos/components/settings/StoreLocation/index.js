@@ -45,7 +45,6 @@ class Column extends List {
         dataIndex: "address",
         sorter: true
       },
-      this.columnUpdatedAt,
       this.columnStatus
     ];
   }
