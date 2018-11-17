@@ -119,8 +119,7 @@ export default class ClientSignIn extends Component {
     return (
       <ParentLayout>
         {
-          // client.list ?
-          true?
+          client.list ?
             <div>
               <div className="storename text-uppercase">{this.storeName}</div>
               <div className="store-email">

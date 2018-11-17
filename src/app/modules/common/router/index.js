@@ -18,15 +18,15 @@ class Router extends Component {
   render() {
     const accessToken = (new Util()).getAccessToken(Authentication.ACCESS_TOKEN);
 
-    // AuthService.checkAuthenticated(accessToken)
-    //   .then(response => {
-    //     if (response.data === false) {
-    //       localStorage.removeItem(Authentication.ACCESS_TOKEN);
-    //       history.push("/signin");
-    //     }
-    //   })
-    //   .catch(error => {
-    //   });
+    AuthService.checkAuthenticated(accessToken)
+      .then(response => {
+        if (response.data === false) {
+          localStorage.removeItem(Authentication.ACCESS_TOKEN);
+          history.push("/signin");
+        }
+      })
+      .catch(error => {
+      });
 
     return (
       <Layout>

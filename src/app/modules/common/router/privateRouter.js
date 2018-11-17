@@ -13,8 +13,6 @@ const PrivateRoute = ({component: AdminComponent, ...rest }) => (
 function renderPageAuth () {
   const domainInfo = (new Util()).getDomainInfo();
 
-  domainInfo.subStr = "ca";
-
   const isAccessSecureSubDomain = domainInfo.subStr === Constant.SECURE_SUBDOMAIN;
 
   if (isAccessSecureSubDomain) {
@@ -23,9 +21,9 @@ function renderPageAuth () {
     }
   }
 
-  // if (!isAccessSecureSubDomain && !localStorage.getItem(Constant.ACCESS_DEVICE)) {
-  //   return <Redirect to="/device" />;
-  // }
+  if (!isAccessSecureSubDomain && !localStorage.getItem(Constant.ACCESS_DEVICE)) {
+    return <Redirect to="/device" />;
+  }
 
   return isAccessSecureSubDomain
     ? <Redirect to="/store" /> : <Redirect to="/signin" />;

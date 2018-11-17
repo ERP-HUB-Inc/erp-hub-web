@@ -32,11 +32,10 @@ class ClientService extends BaseService {
       url: `${this.baseUrl}/login`,
       headers: {
         "Content-Type": "application/json",
-        "storeName": "ca",
+        "storeName": storeName,
         "userName": userName,
         "password": password,
-        "deviceNumber": "353310"
-        // "deviceNumber": localStorage.getItem(this.ConstantAuth.ACCESS_DEVICE)
+        "deviceNumber": localStorage.getItem(this.ConstantAuth.ACCESS_DEVICE)
       },
       data: {}
     });
