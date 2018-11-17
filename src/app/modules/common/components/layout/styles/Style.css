@@ -765,17 +765,26 @@ color: #4D4F5C;
 
 #offline {
     position: fixed;
-    z-index: 11;
-    border-radius: 3px;
-    top: 10px;
-    left: 0;
+    overflow: auto;
+    top: 0;
     right: 0;
-    margin: auto;
-    width: 320px
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.37)
 }
 
 #offline .ant-alert-with-description {
-    padding: 15px 15px 15px 45px
+    width: 320px;
+    height: 120px;
+    position: absolute;
+    z-index: 11;
+    border-radius: 3px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto
 }
 
 #offline .ant-alert-with-description .ant-alert-icon {
