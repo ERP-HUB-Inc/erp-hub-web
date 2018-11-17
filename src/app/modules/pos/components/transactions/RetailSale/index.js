@@ -607,8 +607,9 @@ export default class Retail extends Component {
           </this.Col>
         )
         :
-        <div style={{color: "#9A9A9A", margin: "0 auto"}}>
-          <this.Translate id="placeholder_product_list_search" />
+        <div style={{display: "flex", alignItems: "center", margin: "0 auto"}}>
+          {/* <this.Translate id="placeholder_product_list_search" /> */}
+          <img src={`${this.Util.getGeneralImage("storeVein/no-product-found.png").url}`} style={{width: 150}}  alt=""/>
         </div>
     );
   }
@@ -667,7 +668,8 @@ export default class Retail extends Component {
               <this.Row className="wrap-category">
                 {
                   this.props.productsType.fetching ?
-                    <this.Spin style={{position: "absolute", left: 0, right: 0, paddingTop: 15}}/>
+                    // <this.Spin style={{position: "absolute", left: 0, right: 0, paddingTop: 15}}/>
+                    <StartUp />
                     :
                     this.state.categoryList.concat(this.props.productsType.list).map((category, index) =>
                       <this.Col md="3" className="category-box" key={index}>
@@ -686,7 +688,8 @@ export default class Retail extends Component {
               <this.Row className="wrap-product-box-list">
                 {
                   this.props.products.fetching ?
-                    <this.Spin style={{position: "absolute", left: 0, right: 0, paddingTop: 15}}/>
+                    // <this.Spin style={{position: "absolute", left: 0, right: 0, paddingTop: 15}}/>
+                    <StartUp />
                     :
                     this.renderProductList()
                 }

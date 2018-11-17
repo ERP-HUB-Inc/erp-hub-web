@@ -327,7 +327,7 @@ export default class List extends Component {
       title: <this.Translate id="text_status" />,
       dataIndex: "status",
       key: "status",
-      width: 100,
+      width: 120,
       render: value => {
         return (
           value === 1 ?

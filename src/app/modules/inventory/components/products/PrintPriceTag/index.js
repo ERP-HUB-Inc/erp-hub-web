@@ -47,7 +47,7 @@ export default class PrintPriceTag extends List {
       },
       {
         title: <this.Translate id="text_qty_in_stock" />,
-        width: 120,
+        width: 140,
         dataIndex: "qauntityInStore",
         key: "qauntityInStore"
       },
@@ -59,7 +59,7 @@ export default class PrintPriceTag extends List {
       },
       {
         title: <this.Translate id="text_qty_label" />,
-        width: 100,
+        width: 120,
         key: "quantityLabel",
         render: (text, record, index) => {
           return <div>
@@ -78,7 +78,7 @@ export default class PrintPriceTag extends List {
       },
       {
         title: <this.Translate id="text_action" />,
-        width: 80,
+        width: 100,
         key: "action",
         render: (text, record, index) => <this.Button type="danger" className="btn-icon" onClick={() => this.handleRemoveProductList(index)}>
           <span className="icon-delete icon-padding-right"></span>

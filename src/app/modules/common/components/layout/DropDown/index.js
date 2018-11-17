@@ -52,7 +52,7 @@ export default class MenuDropDown extends Component {
     }
 
     return(
-      <ul className="menu-left list-unstyled">
+      <ul className="menu-right list-unstyled">
         {/* <li>
           <this.Link to="#" className="user-account">
             <this.Noteicon />

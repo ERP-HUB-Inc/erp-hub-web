@@ -30,6 +30,8 @@
 #sidebar>ul li.hover {
     background-color: white;
     margin-left: 5px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
     -webkit-transition: margin-left 0.1s;
     -khtml-transition: margin-left 0.1s;
     -moz-transition: margin-left 0.1s;
@@ -62,6 +64,8 @@
 #sidebar #sum-menu {
     width: 214px;
     height: 488px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
     position: absolute;
     box-shadow: 2px 2px 3px -2px rgba(0,0,0,.15);
     top: 71px;

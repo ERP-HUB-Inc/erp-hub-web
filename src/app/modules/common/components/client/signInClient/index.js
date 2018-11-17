@@ -44,7 +44,6 @@ export default class ClientSignIn extends Component {
       if (setting &&
         setting.currentUser &&
         setting.currentUser.roleCode === this.Enum.CASHIER_ROLE) {
-        console.log("Hello World");
         history.push("/transactions/saleorder");
       } else {
         history.push("/");
@@ -120,7 +119,8 @@ export default class ClientSignIn extends Component {
     return (
       <ParentLayout>
         {
-          client.list ?
+          // client.list ?
+          true?
             <div>
               <div className="storename text-uppercase">{this.storeName}</div>
               <div className="store-email">
