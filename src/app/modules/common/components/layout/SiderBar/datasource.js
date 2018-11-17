@@ -96,25 +96,25 @@ const ProductReport = Loadable({
   loading: () => <StartUp />,
 });
 
-const InventoryReport = Loadable({
-  loader: () => import("../../../../pos/containers/reports/Inventory"),
-  loading: () => <StartUp />,
-});
+// const InventoryReport = Loadable({
+//   loader: () => import("../../../../pos/containers/reports/Inventory"),
+//   loading: () => <StartUp />,
+// });
 
-const PaymentReport = Loadable({
-  loader: () => import("../../../../pos/containers/reports/Payment"),
-  loading: () => <StartUp />,
-});
+// const PaymentReport = Loadable({
+//   loader: () => import("../../../../pos/containers/reports/Payment"),
+//   loading: () => <StartUp />,
+// });
 
 const ProfitAndLostReport = Loadable({
   loader: () => import("../../../../pos/containers/reports/ProfitAndLost"),
   loading: () => <StartUp />,
 });
 
-const TaxReport = Loadable({
-  loader: () => import("../../../../pos/containers/reports/Tax"),
-  loading: () => <StartUp />,
-});
+// const TaxReport = Loadable({
+//   loader: () => import("../../../../pos/containers/reports/Tax"),
+//   loading: () => <StartUp />,
+// });
 
 // SETTING
 const StoreAccount = Loadable({
@@ -455,20 +455,20 @@ const dataSource = {
         component: ProductReport,
         isFashNav: true
       },
-      {
-        title: "Inventory Report",
-        icon: "icon-stock",
-        route: "/reports/inventory",
-        component: InventoryReport,
-        isFashNav: false
-      },
-      {
-        title: "Payment Report",
-        icon: "icon-payment-report",
-        route: "/reports/payment",
-        component: PaymentReport,
-        isFashNav: false
-      },
+      // {
+      //   title: "Inventory Report",
+      //   icon: "icon-stock",
+      //   route: "/reports/inventory",
+      //   component: InventoryReport,
+      //   isFashNav: false
+      // },
+      // {
+      //   title: "Payment Report",
+      //   icon: "icon-payment-report",
+      //   route: "/reports/payment",
+      //   component: PaymentReport,
+      //   isFashNav: false
+      // },
       {
         title: "Profit & Lost Report",
         icon: "icon-sale-return",
@@ -476,13 +476,13 @@ const dataSource = {
         component: ProfitAndLostReport,
         isFashNav: true
       },
-      {
-        title: "Tax Report",
-        icon: "icon-tax-report",
-        route: "/reports/tax",
-        component: TaxReport,
-        isFashNav: false
-      }
+      // {
+      //   title: "Tax Report",
+      //   icon: "icon-tax-report",
+      //   route: "/reports/tax",
+      //   component: TaxReport,
+      //   isFashNav: false
+      // }
     ]
   },
   settings: {

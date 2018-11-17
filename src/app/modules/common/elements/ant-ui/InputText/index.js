@@ -30,7 +30,8 @@ export class InputText extends Element {
         handleOnBlur={this.props.handleOnBlur}
         handleOnFocus={this.props.handleOnFocus}
         disabled= {this.props.disabled}
-        isAutoFocus={this.props.isAutoFocus}/>
+        isAutoFocus={this.props.isAutoFocus}
+        didUpdateMakeAutoFocus={this.props.didUpdateMakeAutoFocus}/>
     );
   }   
 }

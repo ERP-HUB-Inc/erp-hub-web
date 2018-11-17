@@ -25,6 +25,8 @@ export default class FormItem extends Modal {
       tags: [],
       productTypeIndex: 0, // for condition three type starndard, variant, composite
       isAutoGenerateCode: 0,
+      isRequireInputBarcode: true,
+      isSetFocusBarcode: false,
       isComponentNotYetUpdated: true,
       isComponentNotYetLoadedWillUpdate: true,
       productDescriptionIdDefault: "",
@@ -196,7 +198,20 @@ export default class FormItem extends Modal {
   }
 
   onCangeIsAutoGenerateCode(e) {
-    this.setState({isAutoGenerateCode: e.target.value});
+    if (e.target.value === this.Enum.GENERATE_PRODUCT_CODE.AUTO) {
+      this.props.form.setFieldsValue({
+        barcode: ""
+      });
+    } else {
+      this.setState({
+        isSetFocusBarcode: true
+      });
+    }
+
+    this.setState({
+      isAutoGenerateCode: e.target.value,
+      isRequireInputBarcode: e.target.value === this.Enum.GENERATE_PRODUCT_CODE.MANAUL
+    });
   }
 
   onChangeProductName(e) {
@@ -384,7 +399,7 @@ export default class FormItem extends Modal {
                     <this.Col md="6" className="wrap-generate-code">
                       <this.RadioButton 
                         name="isAutoGenerateCode"
-                        defaultValue={formData.isAutoGenerateCode === "" ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : formData.isAutoGenerateCode}
+                        defaultValue={formData.isAutoGenerateCode === this.Enum.GENERATE_PRODUCT_CODE.MANAUL ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO}
                         disabled={formData.id != null}
                         onChange={this.onCangeIsAutoGenerateCode}
                         dataSource={[
@@ -404,9 +419,12 @@ export default class FormItem extends Modal {
                         label={<this.Translate id="input_product_code" />}
                         data={formData.barcode}
                         placeholder={this.CATranslate("input_product_code", locale)}
+                        required={this.state.isRequireInputBarcode}
+                        isAutoFocus={this.state.isSetFocusBarcode}
+                        didUpdateMakeAutoFocus={this.state.isSetFocusBarcode}
                         max={20}
                         form={form}
-                        disabled={formData.id != null && this.state.isAutoGenerateCode === this.Enum.GENERATE_PRODUCT_CODE.AUTO} />
+                        disabled={(formData.id != null && formData.isAutoGenerateCode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateCode === this.Enum.GENERATE_PRODUCT_CODE.AUTO} />
                     </this.Col>
                   </this.Row>
                 </this.Col>
@@ -653,7 +671,7 @@ FormItem.defaultProps = {
     brandId: "",
     productTypeId: "",
     serialType: "",
-    isAutoGenerateCode: "",
+    isAutoGenerateCode: 0,
     barcode: "",
     type: "",
     productOption: Enum.PRODUCT_STANDARD,

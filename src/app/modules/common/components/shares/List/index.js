@@ -38,7 +38,7 @@ export default class List extends Component {
     this.addingProp = "add"; // prop of reducer of adding record that get from map state to prop from container
     this.updatingProp = "update"; // prop of reducer of adding record that get from map state to prop from container
 
-    this.pageSize = 10; // default limit record display in table list
+    this.pageSize = 20; // default limit record display in table list
     this.confirmTextDelete = <this.Translate id="text_confirm_delete" />;
     this.requiredMessage = "Please input all required field."; // require message display on modal popup
     this.confirmTitle = "COMPLETED";
@@ -570,7 +570,8 @@ export default class List extends Component {
     let pagination = {
       total: fetchingProps.pagination.total,
       pageSize: fetchingProps.pagination.limit,
-      current: this.state.current
+      current: this.state.current,
+      pageSizeOptions: ["20", "50", "80", "100"]
     };
     return( 
       pagination.total > 0 ?

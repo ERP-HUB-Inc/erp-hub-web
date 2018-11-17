@@ -111,6 +111,10 @@ and (-webkit-min-device-pixel-ratio: 1.5) {
     font-size: 12pt !important
   }
 
+  .wrap-client-login-auto-height {
+    height: auto !important
+  }
+
   /* TO MAKE PRODUCT LIST SALE POS SCROLLALE */
   #retail-sale #right-block .product-order-list {
       overflow-y: scroll
@@ -177,6 +181,10 @@ and (orientation: portrait) {
 
   .main-radio-acc .ant-radio-button-wrapper {
     width: 100% !important
+  }
+
+  .wrap-client-login-auto-height {
+    height: auto !important
   }
 }
   

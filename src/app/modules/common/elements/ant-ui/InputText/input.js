@@ -9,6 +9,12 @@ export default class InputText extends Element {
     }
   }
 
+  componentDidUpdate() {
+    if (this.props.isAutoFocus && this.props.didUpdateMakeAutoFocus) {
+      this.nameInput.focus();
+    }
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
