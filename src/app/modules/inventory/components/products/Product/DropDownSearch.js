@@ -71,6 +71,10 @@ export default class DropDownSearch extends Modal {
       this.setState({visibleDropDown: false});
       this.props.dispatch(ProductAction.reset(Constant.SEARCH_PRODUCT_RESET));
     }
+
+    if (this.props.handleOnBlur) {
+      this.props.handleOnBlur();
+    }
   }
 
   handleOnFocusSearch() {
@@ -200,6 +204,7 @@ export default class DropDownSearch extends Modal {
             placeholder={`${this.CATranslate("input_product_search_product", this.props.locale)}`}
             className={`ca-input-v1-icon-left ${this.props.className}`}
             isAutoFocus={this.props.isAutoFocus}
+            didUpdateMakeAutoFocus={this.props.didUpdateMakeAutoFocus}
             validateStatus={this.props.productSearch.fetching ? "validating" : ""}
             handleKeyUp={this.handleKeyDownOnProductSearch}
             handlePressEnter={this.handlePressEnterOnSearch}

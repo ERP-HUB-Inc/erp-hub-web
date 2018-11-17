@@ -9,7 +9,6 @@ export default {
   CURRENCY_POSITION: {BEFORE: 0, AFTER: 1},
   GENERATE_PRODUCT_CODE: {MANAUL: 0, AUTO: 1},
   OPERATION_TYPE: {INCOME: 1, EXPENSE: 0, SALE: 1, NONE_SALE: 0},
-
   OPERATION_SALE: {},
   GENDER: {
     MALE: 0,
@@ -19,5 +18,6 @@ export default {
     GENERAL: "general",
     EMPLOYEE: "employee",
     PRODUCT: "product"
-  }
+  },
+  CASHIER_ROLE: "R0003"
 };

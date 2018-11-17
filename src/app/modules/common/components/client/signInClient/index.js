@@ -41,8 +41,14 @@ export default class ClientSignIn extends Component {
 
       dispatch(ClientAction.reset());
 
-      history.push("/");
-
+      if (setting &&
+        setting.currentUser &&
+        setting.currentUser.roleCode === this.Enum.CASHIER_ROLE) {
+        console.log("Hello World");
+        history.push("/transactions/saleorder");
+      } else {
+        history.push("/");
+      }
     } else if (signinUser.error != null) {
 
       const {error} = signinUser;
