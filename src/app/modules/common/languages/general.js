@@ -215,6 +215,12 @@ export default {
     "Are you sure delete this record ?"
   ],
 
+  "text_warning_delete_default_record": [
+    "We don't allow you to delete default record",
+    "We don't allow you to delete default record",
+    "We don't allow you to delete default record"
+  ],
+
   "text_discount": [
     "Discount",
     "Discount",

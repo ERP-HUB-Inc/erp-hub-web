@@ -64,6 +64,7 @@ export default class List extends Component {
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
     this.onChangePagination = this.onChangePagination.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
@@ -226,6 +227,24 @@ export default class List extends Component {
    * it will overide in child class
    */
   handleConfirm() {
+    if (this.state.selectedListIds &&
+      this.state.selectedListIds.length > 0 &&
+      this.props[this.fetchingProp]
+    ) {
+      let isHasDefaultRecord = false;
+      this.state.selectedListIds.forEach(selectedId => {
+        const result = this.props[this.fetchingProp].list.find(record => record.id === selectedId);
+
+        if (result && result.isDefault === this.Enum.IS_DEFAULT) {
+          isHasDefaultRecord = true;
+          this.Message.warning(this.CATranslate("text_warning_delete_default_record", this.props.locale));
+        }
+      });
+      if (isHasDefaultRecord) {
+        return;
+      }
+    }
+
     this.PrivilegeService.checkPermission(this.service.archiveRoute)
       .then(response => {
         if (this.state.selectedRowKeys.length > 0) {
@@ -272,7 +291,9 @@ export default class List extends Component {
    * handle cancel confirm delete
   */
   handleCancel() {
-    this.setState({modalVisible: false});
+    this.setState({
+      modalVisible: false
+    });
   }
 
   /**
@@ -528,7 +549,7 @@ export default class List extends Component {
       selectedRowKeys: this.state.selectedRowKeys,
       onChange: this.onSelectChange,
       getCheckboxProps: record => ({
-        disabled: "isSystem" in record && record["isSystem"] ? true : false, // Column configuration not to be checked
+        // disabled: "isSystem" in record && record["isSystem"] ? true : false, // Column configuration not to be checked
         name: record.name,
       })
     };
