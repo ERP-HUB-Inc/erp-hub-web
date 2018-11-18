@@ -6,7 +6,7 @@ import ProfitAndLostReportAction from "../../../action/report/profitAndLostRepor
 import ProfitAndLostReportService from "../../../services/report/ProfitAndLostService";
 import "./index.css";
 
-export default class InventoryList extends List {
+export default class ProfitAndLostList extends List {
   constructor(props) {
     super(props);
     this.state = {
@@ -54,7 +54,7 @@ export default class InventoryList extends List {
     let expenseType = 0;  
     
     if (Array.isArray(this.props.profitAndLostReport.list)) {
-  
+
       this.props.profitAndLostReport.list.forEach(incomeExpense => {
   
         if (incomeExpense.type === this.Enum.OPERATION_TYPE.INCOME) {
@@ -68,12 +68,15 @@ export default class InventoryList extends List {
 
           incomeType += incomeExpense.amount;
         } else if (incomeExpense.type === this.Enum.OPERATION_TYPE.EXPENSE) {
-
+          let incomeCollection = [incomeExpense];
+          console.log("list",this.Util.groupByTheSameValue(incomeCollection,"name","amount"));
+          
           expense.push({
             name: incomeExpense.name,
             amount: incomeExpense.amount,
             type: incomeExpense.type,
             isSale: incomeExpense.isSale
+
           });
 
           expenseType += incomeExpense.amount;
@@ -176,8 +179,8 @@ export default class InventoryList extends List {
     rangFilter = JSON.stringify({
       column: "registerDate",
       value: [
-        this.Util.formatDateForMYSQL(getCurrentDate),
-        this.Util.formatDateForMYSQL(getCurrentDate)
+        this.Util.formatDateForMYSQL(getCurrentDate) + " 00:00:00",
+        this.Util.formatDateForMYSQL(getCurrentDate) + " 23:59:59"
       ]});
 
     filter = JSON.stringify(filter);
@@ -213,8 +216,8 @@ export default class InventoryList extends List {
               rangFilter = JSON.stringify({
                 column: "registerDate",
                 value: [
-                  this.Util.formatDateForMYSQL(values.createdAt[0]),
-                  this.Util.formatDateForMYSQL(values.createdAt[1])
+                  this.Util.formatDateForMYSQL(values.createdAt[0]) + " 00:00:00",
+                  this.Util.formatDateForMYSQL(values.createdAt[1]) + " 23:59:59"
                 ]});
   
             }

@@ -44,8 +44,6 @@ export default class Diagram extends Component {
     const { graphChat, pipeChat } = this.props;
     const incomeExpense = this.groupIncomeExpenseType();
 
-    console.log("expense diagram",incomeExpense.expense[0] ? incomeExpense.expense[0] : [] );
-
     return (
       pipeChat.fetching ? 
         <div className="text-center">

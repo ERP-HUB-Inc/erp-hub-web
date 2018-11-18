@@ -390,12 +390,13 @@ export class Util {
     return props.checkPermission && props.checkPermission.checking;
   }
 
-  groupByTheSameValue(collection,key,calculate){
+  groupByTheSameValue(collection, key, calculate , typeCondition){
     return(
       _(collection)
+        .filter(value => value["type"] === typeCondition)
         .groupBy(key)
-        .map((objs, key) => ({
-          key: key,
+        .map((objs, index) => ({
+          key: index,
           calculate: _.sumBy(objs, calculate) }))
         .value()
     );

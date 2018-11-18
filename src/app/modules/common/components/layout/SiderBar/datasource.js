@@ -152,6 +152,11 @@ const Currency = Loadable({
   loading: () => <StartUp />,
 });
 
+const CurrencyExchange = Loadable({
+  loader: () => import("../../../../pos/containers/settings/CurrencyExchange"),
+  loading: () => <StartUp />,
+});
+
 const StoreLanguage = Loadable({
   loader: () => import("../../../../pos/containers/settings/StoreLanguage"),
   loading: () => <StartUp />,
@@ -537,6 +542,13 @@ const dataSource = {
         route: "/settings/currency",
         component: Currency,
         isFashNav: false
+      },
+      {
+        title: "Currency Exchange",
+        icon: "icon-currency",
+        route: "/settings/currency-exchange",
+        component: CurrencyExchange,
+        isFashNav: true
       },
       {
         title: "Language",
