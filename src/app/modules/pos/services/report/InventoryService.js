@@ -1,12 +1,12 @@
 import BaseService from "../BaseService";
 
-class CurrencyService extends BaseService {
-
+class InventoryService extends BaseService {
   constructor() {
     super();
     this.module = "inventory/purchase";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 }
 
-export default new CurrencyService();
+export default new InventoryService();

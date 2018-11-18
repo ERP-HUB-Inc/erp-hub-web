@@ -1,8 +1,7 @@
 import React from "react";
 import List from "../List";
-// import ReactFileReader from "react-file-reader";
 import Constant from "../../../constants/report/sale";
-import SaleReportAction from "../../../action/report/saleReport";
+import SaleReportAction from "../../../action/report/sale";
 import SaleReportService from "../../../services/report/SaleService";
 import "./index.css";
 
@@ -24,8 +23,6 @@ export default class InventoryList extends List {
     this.exportCsvFileName = "sale_report.csv"; 
 
     this.fetchingProp = "saleReport";
-    this.addingProp = "saleReportAdd";
-    this.updatingProp = "saleReportUpdate";
     this.service = SaleReportService;
     this.action = SaleReportAction;
     this.RESET_CONSTANT = Constant.RESET_SALE_REPORT;
@@ -35,6 +32,7 @@ export default class InventoryList extends List {
   }
 
   componentDidMount(){
+    super.componentDidMount();
     this.loadFilter();
   }
 
@@ -76,8 +74,7 @@ export default class InventoryList extends List {
           columns={this.columns}
           onChange={this.onChange}
           locale={{emptyText: <this.Translate id="table_empty_data"/>}}
-          loading={this.props.saleReport.fetching}
-        />
+          loading={this.props.saleReport.fetching} />
       </div>
     );
   }
@@ -127,11 +124,9 @@ export default class InventoryList extends List {
       setDefaultDate : [this.Util.formatDatePicker(getCurrentDate),this.Util.formatDatePicker(getCurrentDate)]
     });
 
-    const {dispatch} = this.props;
-
     let filter = {};
 
-    filter["type"] = [0,1];
+    filter["type"] = [0, 1];
 
     let rangFilter = "";
    
@@ -143,7 +138,7 @@ export default class InventoryList extends List {
       ]});
 
     filter = JSON.stringify(filter);
-    dispatch(this.action.fetch(filter,rangFilter));
+    this.props.dispatch(this.action.fetch(filter,rangFilter));
     this.setState({isClickFilter: true});
 
   }
@@ -154,8 +149,7 @@ export default class InventoryList extends List {
       <this.CSVLink
         filename={this.exportCsvFileName}
         data={this.exportCsv()}
-        headers={this.ExportheadersCsv}
-      >
+        headers={this.ExportheadersCsv}>
         <this.Button type="info">
           <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
         </this.Button>
@@ -163,25 +157,20 @@ export default class InventoryList extends List {
     );
   }
 
-  renderPagination(){
-    return(<div></div>);
-  }
+  renderPagination(){}
 
   renderFilterRecord() {
-    const {form} = this.props;
     return(
       <div>
-        <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout form-group"> 
-
+        <this.Form onSubmit={this.handleSubmitFilter}>
+          <this.Row className="main-search-layout"> 
             <this.Col md="3">
               <this.DateRangePicker
                 name="createdAt"
-                label={<this.Translate id="input_inventory_report_date_range" />}
+                label={<this.Translate id="text_date_range" />}
                 defaultValue={this.state.setDefaultDate}
-                errorRequired={<this.Translate id="errpr_input_inventory_report_date_range" />}
-                form={form}
-              />
+                errorRequired={<this.Translate id="errpr_text_date_range" />}
+                form={this.props.form}/>
             </this.Col>
             <this.Col md="2">
               <this.Button htmlType="submit" type="info" className="wrap-report-btn-search">

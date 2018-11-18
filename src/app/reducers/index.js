@@ -46,6 +46,7 @@ import purchaseOrderSendEmail from "../modules/inventory/reducers/stock/purchase
 //report
 import saleReport from "../modules/pos/reducers/report/sale";
 import inventoryReport from "../modules/pos/reducers/report/inventory";
+import productReport from "../modules/pos/reducers/report/product";
 import purchaseReport from "../modules/pos/reducers/report/purchase";
 import profitAndLostReport from "../modules/pos/reducers/report/profitAndLost";
 //home page
@@ -97,6 +98,7 @@ const reducer = combineReducers({
   saleReport,
   inventoryReport,
   purchaseReport,
+  productReport,
   profitAndLostReport,
   transaction,
   openSaleRegistration,

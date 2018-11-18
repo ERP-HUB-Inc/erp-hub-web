@@ -13,10 +13,9 @@ class Purchase extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    purchaseReport: state.reducer.purchaseOrder.request,
-    purchaseReportAdd: state.reducer.purchaseOrder.add,
-    purchaseReportUpdate: state.reducer.purchaseOrder.update,
+    purchaseReport: state.reducer.purchaseReport.request,
     supplier: state.reducer.supplier.request,
+    checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale,
   };
 }

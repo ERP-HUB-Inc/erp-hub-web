@@ -8,7 +8,7 @@ class GraphService extends BaseService {
   }
 
   lists() {
-    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    this.setHeader();
     return this.GET({ 
       url: `${this.baseUrl}/lists`,  
       data: this.data,

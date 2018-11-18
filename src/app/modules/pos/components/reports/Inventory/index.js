@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 import List from "../List";
 import Constant from "../../../constants/report/inventory";
-import InventoryReportAction from "../../../action/report/inventoryReport";
+import InventoryReportAction from "../../../action/report/inventory";
 import InventoryReportService from "../../../services/report/InventoryService";
 import "./index.css";
 
@@ -20,38 +20,38 @@ export default class InventoryList extends List {
         className: "col-inventory-left",
         children: [
           {
-            title: <this.Translate id="col_inventory_report_product_name" />,
+            title: <this.Translate id="text_product" />,
             dataIndex: "name",
             sorter: true,
             align: "center",
             key: "name"
           },
           {
-            title: <this.Translate id="col_inventory_report_sku" />,
+            title: <this.Translate id="text_product_code" />,
             dataIndex: "sku",
             align: "center",
             key: "sku"
           },
           {
-            title: <this.Translate id="col_inventory_report_supplier_code" />,
+            title: <this.Translate id="text_supplier_code" />,
             dataIndex: "supplier_code",
             align: "center",
             key: "supplier_code"
           },
           {
-            title: <this.Translate id="col_inventory_report_brand" />,
+            title: <this.Translate id="text_brand" />,
             dataIndex: "report_brand",
             align: "center",
             key: "report_brand"
           },
           {
-            title: <this.Translate id="col_inventory_report_supplier" />,
+            title: <this.Translate id="text_supplier" />,
             dataIndex: "report_supplier",
             align: "center",
             key: "report_supplier"
           },
           {
-            title: <this.Translate id="col_inventory_report_type" />,
+            title: <this.Translate id="text_type" />,
             dataIndex: "report_type",
             align: "center",
             key: "report_type"
@@ -103,13 +103,13 @@ export default class InventoryList extends List {
         dataIndex: "shippingFee",
         children: [
           {
-            title: <this.Translate id="col_inventory_report_supplier" />,
+            title: <this.Translate id="text_supplier" />,
             dataIndex: "shippingFee",
             align: "center",
             key: "shippingFee"
           },
           {
-            title: <this.Translate id="col_inventory_report_type" />,
+            title: <this.Translate id="text_type" />,
             dataIndex: "shippingFee",
             align: "center",
             key: "shippingFee"
@@ -125,10 +125,7 @@ export default class InventoryList extends List {
       
     ];
 
-    // this.columns = this.state.columnFilter;
     this.fetchingProp = "inventoryReport";
-    this.addingProp = "inventoryReportAdd";
-    this.updatingProp = "inventoryReportUpdate";
     this.service = InventoryReportService;
     this.action = InventoryReportAction;
     this.RESET_CONSTANT = Constant.RESET_INVENTORY_REPORT;
@@ -198,36 +195,30 @@ export default class InventoryList extends List {
   }
 
   renderPagination(){
-    return(<div></div>);
+    return <div/>;
   }
 
   renderFilterRecord() {
-
-    const {form,locale} = this.props;
     return(
       <div>
-        <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout form-group"> 
-
+        <this.Form onSubmit={this.handleSubmitFilter}>
+          <this.Row className="main-search-layout"> 
             <this.Col md="3">
               <this.Select
                 name="status"
-                placeholder={this.CATranslate("place_holder_stock_reorder_point_status", locale)}
+                placeholder={this.CATranslate("text_status", this.props.locale)}
                 dataSource={this.statusList}
-                label="Report Type"
+                label={<this.Translate id="input_inventory_report_type" />}
                 defaultValue={this.Enum.ALL_STATE}
-                form={form}
-              />
+                form={this.props.form}/>
             </this.Col>
             <this.Col md="3">
               <this.DatePickers
                 name="datepicker"
-                label="Date"
+                label={<this.Translate id="text_date" />}
                 disabledDate={this.disabledDate}
-                form={form}
-              />
+                form={this.props.form}/>
             </this.Col>
-            
             <this.Col md="3" className="reorder-point-button-search report-button">
 
               {/* <this.Button htmlType="submit" type="info" >
@@ -266,31 +257,31 @@ class Column extends List {
             key: "name"
           },
           {
-            title: <this.Translate id="col_inventory_report_sku" />,
+            title: <this.Translate id="text_product_code" />,
             dataIndex: "sku",
             align: "center",
             key: "sku"
           },
           {
-            title: <this.Translate id="col_inventory_report_supplier_code" />,
+            title: <this.Translate id="text_supplier_code" />,
             dataIndex: "supplier_code",
             align: "center",
             key: "supplier_code"
           },
           {
-            title: <this.Translate id="col_inventory_report_brand" />,
+            title: <this.Translate id="text_brand" />,
             dataIndex: "report_brand",
             align: "center",
             key: "report_brand"
           },
           {
-            title: <this.Translate id="col_inventory_report_supplier" />,
+            title: <this.Translate id="text_supplier" />,
             dataIndex: "report_supplier",
             align: "center",
             key: "report_supplier"
           },
           {
-            title: <this.Translate id="col_inventory_report_type" />,
+            title: <this.Translate id="text_type" />,
             dataIndex: "report_type",
             align: "center",
             key: "report_type"
@@ -342,13 +333,13 @@ class Column extends List {
         dataIndex: "shippingFee",
         children: [
           {
-            title: <this.Translate id="col_inventory_report_supplier" />,
+            title: <this.Translate id="text_supplier" />,
             dataIndex: "shippingFee",
             align: "center",
             key: "shippingFee"
           },
           {
-            title: <this.Translate id="col_inventory_report_type" />,
+            title: <this.Translate id="text_type" />,
             dataIndex: "shippingFee",
             align: "center",
             key: "shippingFee"

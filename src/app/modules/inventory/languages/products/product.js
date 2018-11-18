@@ -1,11 +1,5 @@
 export default {
-  "create_products_title": [
-    "Product",
-    "Product",
-    "Product"
-  ],
-      
-  "update_products_title": [
+  "text_product": [
     "Product",
     "Product",
     "Product"

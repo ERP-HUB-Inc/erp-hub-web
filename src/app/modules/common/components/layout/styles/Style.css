@@ -107,8 +107,8 @@ html,
 /* BREADCRUMB */
 .table-wrapper {
     padding: 15px 15px;
-    height: 100%;
-    margin-bottom: 15px
+    min-height: 100%;
+    margin-bottom: 15px;
     /* overflow: auto */
 }
 

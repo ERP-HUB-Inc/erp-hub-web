@@ -1,8 +1,8 @@
 import React from "react";
 import List from "../List";
 import Constant from "../../../constants/report/purchase";
-import ProductReportAction from "../../../../inventory/actions/products/product";
-import ProductReportService from "../../../../inventory/services/products/ProductService";
+import ProductReportAction from "../../../action/report/product";
+import ProductReportService from "../../../services/report/ProductService";
 import ProductTypeAction from "../../../../inventory/actions/products/productsType";
 import BrandAction from "../../../../inventory/actions/products/brand";
 import LocationAction from "../../../../pos/action/settings/storeLocation";
@@ -18,8 +18,6 @@ export default class ProductList extends List {
     this.productTypeList = [{productTypeDescriptions: {name: <this.Translate id="text_all_product_type"/>}, id: 0}];
     this.columnFilterWithKey = ["name", "barcode"];
     this.fetchingProp = "productReport";
-    this.addingProp = "productReportAdd";
-    this.updatingProp = "productReportUpdate";
     this.service = ProductReportService;
     this.columnFilterWithKey = ["name", "barcode"];
     this.action = ProductReportAction;
@@ -37,16 +35,15 @@ export default class ProductList extends List {
       {label: this.CATranslate("text_total_price", this.props.locale), key: "totalPrice"}
     ];
     this.exportCsvFileName = "product_report.csv"; 
-
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
     this.getProduct = this.getProduct.bind(this);
   }
 
   componentDidMount() {
+    super.componentDidMount();
     this.props.dispatch(ProductTypeAction.fetch(100));
     this.props.dispatch(BrandAction.fetch(100));
     this.props.dispatch(LocationAction.fetch(100));
-    super.componentDidMount();
   }
 
   getProduct(){
@@ -146,8 +143,8 @@ export default class ProductList extends List {
     const {form} = this.props;
     return(
       <div>
-        <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout form-group"> 
+        <this.Form onSubmit={this.handleSubmitFilter}>
+          <this.Row className="main-search-layout"> 
             <this.Col md="3">
               <this.InputText
                 name="key"

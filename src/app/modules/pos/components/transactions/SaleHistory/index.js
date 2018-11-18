@@ -213,7 +213,7 @@ export default class SaleHistoryList extends List {
             <this.DateRangePicker
               name="createdAt"
               defaultValue={this.state.setDefaultDate}
-              label={<this.Translate id="input_inventory_report_date" />}
+              label={<this.Translate id="text_date" />}
               form={this.props.form}/>
           </this.Col>
           <this.Col md="2">

@@ -5,58 +5,16 @@ export default {
     "General"
   ],
 
-  "col_inventory_report_product_name": [
-    "Product",
-    "Product",
-    "Product"
-  ],
-
-  "col_inventory_report_outlet": [
-    "Outlet",
-    "Outlet",
-    "Outlet"
-  ],
-
-  "col_inventory_report_sku": [
-    "SKU",
-    "SKU",
-    "SKU"
-  ],
-
-  "col_inventory_report_supplier_code": [
+  "text_supplier_code": [
     "Supplier Code",
     "Supplier Code",
     "Supplier Code"
-  ],
-
-  "col_inventory_report_brand": [
-    "Brand",
-    "Brand",
-    "Brand"
   ],
 
   "col_inventory_total_outlet": [
     "TOTALS BY PRODUCT, OUTLET",
     "TOTALS BY PRODUCT, OUTLET",
     "TOTALS BY PRODUCT, OUTLET"
-  ],
-
-  "col_inventory_report_supplier": [
-    "Supplier",
-    "Supplier",
-    "Supplier"
-  ],
-
-  "col_inventory_report_type": [
-    "Type",
-    "Type",
-    "Type"
-  ],
-
-  "col_inventory_report_name": [
-    "Name",
-    "Name",
-    "Name"
   ],
 
   "place_holder_inventory_report_all_report": [
@@ -77,25 +35,19 @@ export default {
     "Export To Csv"
   ],
 
-  "input_inventory_report_date": [
-    "Date",
-    "Date",
-    "Date"
-  ],
-
   "input_inventory_report_week": [
     "Weeks",
     "Weeks",
     "Weeks"
   ],
 
-  "input_inventory_report_date_range": [
+  "text_date_range": [
     "Date Range",
     "Date Range",
     "Date Range"
   ],
 
-  "errpr_input_inventory_report_date_range": [
+  "errpr_text_date_range": [
     "Date Range is required",
     "Date Range is required",
     "Date Range is required"

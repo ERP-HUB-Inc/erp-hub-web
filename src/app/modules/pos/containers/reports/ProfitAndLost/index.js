@@ -14,9 +14,8 @@ class ProfitAndLost extends React.Component {
 function mapStateToProps(state) {
   return {
     profitAndLostReport: state.reducer.profitAndLostReport.request,
-    locale: state.locale,
-    profitAndLostReportAdd: state.reducer.profitAndLostReport.add,
-    profitAndLostReportUpdate: state.reducer.profitAndLostReport.update
+    checkPermission: state.reducer.privilege.checkPermission,
+    locale: state.locale
   };
 }
 
