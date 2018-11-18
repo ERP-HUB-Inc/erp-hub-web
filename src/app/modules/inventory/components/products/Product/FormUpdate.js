@@ -27,7 +27,7 @@ export default class Form extends Modal {
 
     this.tagList = [];
 
-    this.title = <this.Translate id="update_products_title" />;
+    this.title = <this.Translate id="text_product" />;
     this.width = "100%";
     this.wrapClassName = "modal-product";
     this.dispatch = this.props.dispatch;

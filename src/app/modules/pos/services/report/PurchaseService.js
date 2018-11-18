@@ -4,8 +4,9 @@ class PurchaseService extends BaseService {
 
   constructor() {
     super();
-    this.module = "inventory/purchase";
+    this.module = "report/inventory/purchase";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 }
 

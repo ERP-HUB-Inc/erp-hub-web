@@ -1,13 +1,12 @@
 import BaseService from "../BaseService";
 
-class ProfitAndLostService extends BaseService {
-
+class ProductService extends BaseService {
   constructor() {
     super();
-    this.module = "report/profit/lose";
+    this.module = "report/inventory/product";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
     this.initializeRoute();
   }
 }
 
-export default new ProfitAndLostService();
+export default new ProductService();

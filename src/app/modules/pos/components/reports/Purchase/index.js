@@ -2,17 +2,15 @@ import React from "react";
 import List from "../List";
 import Constant from "../../../constants/report/purchase";
 import Enum from "../../../../inventory/enums";
-import PurchaseReportAction from "../../../../inventory/actions/stock/purchaseOrder";
+import PurchaseReportAction from "../../../action/report/purchaseOrder";
 import SupplierAction from "../../../../inventory/actions/stock/supplier";
-import PurchaseReportService from "../../../../inventory/services/stock/PurchaseOrderService";
+import PurchaseReportService from "../../../services/report/PurchaseService";
 import "./index.css";
 
 export default class PurchaseList extends List {
   constructor(props) {
     super(props);
     this.fetchingProp = "purchaseReport";
-    this.addingProp = "purchaseReportAdd";
-    this.updatingProp = "purchaseReportUpdate";
     this.service = PurchaseReportService;
     this.action = PurchaseReportAction;
     this.RESET_CONSTANT = Constant.RESET_PURCHASE_REPORT;
@@ -140,7 +138,6 @@ export default class PurchaseList extends List {
 
   summaryPurchaseReprot(){
     const {purchaseReport} = this.props;
-    
     let total = [];
     let totalShippingFee = [];
     let totalSummary = 0;
@@ -155,7 +152,7 @@ export default class PurchaseList extends List {
       totalShippingFee.push(totalSummaryShippingFee);
     }
 
-    return { total,totalShippingFee };
+    return {total, totalShippingFee};
 
   }
 
@@ -170,8 +167,8 @@ export default class PurchaseList extends List {
           <this.Row>
             <this.Col md="12">
               <this.Table 
-                dataSource={ this.props.purchaseReport.list }
-                columns= { this.columns }
+                dataSource={this.props.purchaseReport.list}
+                columns= {this.columns}
                 locale={{emptyText: <this.Translate id="table_empty_data"/>}}
                 footer={() => 
                   <div className="wrap-table-footer" style={{minWidth: 347}} >
@@ -182,7 +179,7 @@ export default class PurchaseList extends List {
                       {this.formatCurrency(this.summaryPurchaseReprot().totalShippingFee)}
                     </div>
                     <div className="item pull-left" style={{minWidth: 124}}>
-                      { this.formatCurrency(this.summaryPurchaseReprot().total)}
+                      {this.formatCurrency(this.summaryPurchaseReprot().total)}
                     </div>
                   </div>
                 }
@@ -279,13 +276,10 @@ export default class PurchaseList extends List {
     );
   }
 
-  renderPagination(){
-    return(<div></div>);
-  }
+  renderPagination() {}
 
   renderFilterRecord() {
-
-    const {form,locale} = this.props;
+    const {form, locale} = this.props;
     const POStepList = Object.keys(this.PO_STEP_STR).map((prop) => {
       return {name: this.PO_STEP_STR[prop].name, value: prop};
     });
@@ -294,8 +288,8 @@ export default class PurchaseList extends List {
     return(
      
       <div>
-        <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout form-group"> 
+        <this.Form onSubmit={this.handleSubmitFilter}>
+          <this.Row className="main-search-layout"> 
             <this.Col md="2">
               <this.InputText
                 name="key"

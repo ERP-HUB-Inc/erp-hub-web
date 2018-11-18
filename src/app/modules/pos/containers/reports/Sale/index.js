@@ -14,9 +14,8 @@ class Sale extends React.Component {
 function mapStateToProps(state) {
   return {
     saleReport: state.reducer.saleReport.request,
-    locale: state.locale,
-    saleReportAdd: state.reducer.saleReport.add,
-    saleReportUpdate: state.reducer.saleReport.update
+    checkPermission: state.reducer.privilege.checkPermission,
+    locale: state.locale
   };
 }
 

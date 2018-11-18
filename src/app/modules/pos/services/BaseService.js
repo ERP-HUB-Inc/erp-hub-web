@@ -28,7 +28,7 @@ export default class BaseService extends Service {
   ) {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&rangFilter=${rangFilter}`,  
+      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&rangFilter=${rangFilter}&languageId=${this.getLanguageId()}`,  
       data: this.data,
       headers: this.header
     });

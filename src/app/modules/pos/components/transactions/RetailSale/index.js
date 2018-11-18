@@ -539,6 +539,7 @@ export default class Retail extends Component {
 
   handleSetFullScreen() {
     const element = document.getElementById("center-container");
+
     // const body = document.getElementsByTagName("BODY")[0];
     if (element.classList.contains("full-screen")) {
       this.setState({
@@ -547,6 +548,13 @@ export default class Retail extends Component {
       });
       element.classList.remove("full-screen");
     } else {
+      const rootElement = document.getElementById("root");
+      if (rootElement) {
+        if (rootElement.classList.contains("mini-sidebar")) {
+          rootElement.classList.remove("mini-sidebar");
+        }
+      }
+
       this.setState({
         iconFullScreen: "icon-exit-full-screen",
         textFullScreen: <this.Translate id="text_exit_full_screen" />

@@ -11,34 +11,6 @@ export default combineReducers({
       Constant.REQUEST_SALE_REPORT_FULFILLED
     ];
     return reducer.request(state, action, constants);
-  },
-  archive: (state = InitialState.archive(), action) => {
-    const constants = [
-      Constant.ARCHIVE_SALE_REPORT_PENDING,
-      Constant.ARCHIVE_SALE_REPORT_REJECTED,
-      Constant.ARCHIVE_SALE_REPORT_FULFILLED
-    ];
-    return reducer.archive(state, action, constants);
-  },
-  add: (state = InitialState.add(), action) => {
-    const constants = [
-      Constant.ADD_SALE_REPORT_PENDING,
-      Constant.ADD_SALE_REPORT_REJECTED,
-      Constant.ADD_SALE_REPORT_FULFILLED,
-      Constant.SHOW_SALE_REPORT_FORM,
-      Constant.RESET_SALE_REPORT
-    ];
-    return reducer.add(state, action, constants);
-  },
-  update: (state = InitialState.update(), action) => {
-    const constants = [
-      Constant.UPDATE_SALE_REPORT_PENDING,
-      Constant.UPDATE_SALE_REPORT_REJECTED,
-      Constant.UPDATE_SALE_REPORT_FULFILLED,
-      Constant.SHOW_SALE_REPORT_FORM,
-      Constant.RESET_SALE_REPORT
-    ];
-    return reducer.update(state, action, constants);
   }
 });
       

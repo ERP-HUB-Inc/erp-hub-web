@@ -22,7 +22,7 @@ export default class FormCreate extends Modal {
     this.state = {
       tagList: []
     };
-    this.title = <this.Translate id="create_products_title" />;
+    this.title = <this.Translate id="text_product" />;
     this.width = "100%";
     this.wrapClassName = "modal-product";
     this.dispatch = this.props.dispatch;

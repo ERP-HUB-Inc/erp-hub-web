@@ -3,7 +3,7 @@ import BaseService from "./BaseService";
 class HomeService extends BaseService {
   constructor() {
     super();
-    this.module = "income/expense/pipe";
+    this.module = "report/income/expense/pipe";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 

@@ -45,10 +45,9 @@ export default class BaseService extends Service {
     rangFilter,// {"column": "createdAtt", "value": [1, 100]}
     locationId
   ) {
-    const languageId = this.getLanguageId();
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${languageId}&locationId=${locationId}`,  
+      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}`,  
       data: this.data,
       headers: this.header
     });

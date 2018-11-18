@@ -2,7 +2,7 @@ import React from "react";
 import List from "../List";
 import {Doughnut} from "react-chartjs-2";
 import Constant from "../../../constants/report/profitAndLost";
-import ProfitAndLostReportAction from "../../../action/report/profitAndLostReport";
+import ProfitAndLostReportAction from "../../../action/report/profitAndLost";
 import ProfitAndLostReportService from "../../../services/report/ProfitAndLostService";
 import "./index.css";
 
@@ -10,6 +10,7 @@ export default class ProfitAndLostList extends List {
   constructor(props) {
     super(props);
     this.state = {
+      ...this.state,
       listProfitAndLost: [],
       isNotYetLoadComponentDidUpdated: true,
       setDefaultDate:  []
@@ -18,15 +19,13 @@ export default class ProfitAndLostList extends List {
     this.columns = new Column();
     this.ExportheadersCsv = [
       {label: this.CATranslate("text_date", this.props.locale), key: "createdAt"},
-      {label: this.CATranslate("col_inventory_report_name", this.props.locale), key: "name"},
+      {label: this.CATranslate("text_name", this.props.locale), key: "name"},
       {label: this.CATranslate("col_operation_record_amount", this.props.locale), key: "amount"},
-      {label: this.CATranslate("col_inventory_report_type", this.props.locale), key: "type"}
+      {label: this.CATranslate("text_type", this.props.locale), key: "type"}
     ];
 
     this.exportCsvFileName = "profit_and_lost_report.csv"; 
     this.fetchingProp = "profitAndLostReport";
-    this.addingProp = "profitAndLostReportAdd";
-    this.updatingProp = "profitAndLostReportUpdate";
     this.columnFilterWithKey = ["createdAt"];
     this.reportType = [
       { value: 2 ,name: <this.Translate id="select_profit_and_lost_operation_report_type" />},
@@ -35,13 +34,14 @@ export default class ProfitAndLostList extends List {
 
     this.service = ProfitAndLostReportService;
     this.action = ProfitAndLostReportAction;
-    this.RESET_CONSTANT = Constant.RESET_PROFIT_AND_LOST;
+    this.RESET_CONSTANT = Constant.RESET_PROFIT_AND_LOST_REPORT;
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
     this.groupIncomeExpenseByType = this.groupIncomeExpenseByType.bind(this);
 
   }
 
   componentDidMount(){
+    super.componentDidMount();
     this.loadFilter();
   }
 
@@ -106,13 +106,6 @@ export default class ProfitAndLostList extends List {
     const { profitAndLostReport } = this.props;
     let getIncomeExpenseValue = [];
     if (profitAndLostReport.list) {
-
-      // getIncomeExpenseValue.push({
-      //   createdAt: "Operation",
-      //   name:  "",
-      //   amount: "",
-      //   type: ""
-      // });
       
       profitAndLostReport.list.forEach(profitReport => {
         if(profitReport.type === this.Enum.OPERATION_TYPE.INCOME || profitReport.type === this.Enum.OPERATION_TYPE.EXPENSE){
@@ -322,10 +315,10 @@ export default class ProfitAndLostList extends List {
 
     return(
       <div>
-        <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout profit-and-lose form-group"> 
+        <this.Form onSubmit={this.handleSubmitFilter}>
+          <this.Row className="main-search-layout profit-and-lose"> 
 
-            <this.Col md="2">
+            <this.Col md="3">
               <this.Select
                 name="reportType"
                 placeholder={this.CATranslate("place_holder_profit_and_lost_report_type", locale)}
@@ -333,18 +326,16 @@ export default class ProfitAndLostList extends List {
                 label={<this.Translate id="input_inventory_report_type" />}
                 defaultValue={2}
                 required={true}
-                form={form}
-              />
+                form={form}/>
             </this.Col>
-            <this.Col md="2">
+            <this.Col md="3">
               <this.DateRangePicker
                 name="createdAt"
-                label={<this.Translate id="input_inventory_report_date_range" />}
+                label={<this.Translate id="text_date_range" />}
                 defaultValue={this.state.setDefaultDate}
                 required={true}
-                errorRequired={<this.Translate id="errpr_input_inventory_report_date_range" />}
-                form={form}
-              />
+                errorRequired={<this.Translate id="errpr_text_date_range" />}
+                form={form}/>
             </this.Col>
             
             <this.Col md="2" className="reorder-point-button-search report-button wrap-btn-search">
