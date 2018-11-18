@@ -7,7 +7,7 @@ import SupplierAction from "../../../../inventory/actions/stock/supplier";
 import PurchaseReportService from "../../../../inventory/services/stock/PurchaseOrderService";
 import "./index.css";
 
-export default class InventoryList extends List {
+export default class PurchaseList extends List {
   constructor(props) {
     super(props);
     this.fetchingProp = "purchaseReport";

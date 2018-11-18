@@ -6,7 +6,7 @@ import SaleReportAction from "../../../action/report/saleReport";
 import SaleReportService from "../../../services/report/SaleService";
 import "./index.css";
 
-export default class InventoryList extends List {
+export default class SaleList extends List {
   constructor(props) {
     super(props);
     this.state = {
