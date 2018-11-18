@@ -71,6 +71,7 @@ export default class InventoryList extends List {
       <div className="main-table-sale-report">
         <this.Table 
           dataSource={saleReport.list}
+          rowKey="date"
           columns={this.columns}
           onChange={this.onChange}
           locale={{emptyText: <this.Translate id="table_empty_data"/>}}

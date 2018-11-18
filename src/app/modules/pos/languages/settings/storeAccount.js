@@ -41,10 +41,22 @@ export default {
     "Language"
   ],
 
-  "store_acc_currency": [
-    "Currency",
-    "Currency",
-    "Currency"
+  "to_currency": [
+    "To Currency",
+    "To Currency",
+    "To Currency"
+  ],
+
+  "default_currency": [
+    "Default Currency",
+    "Default Currency",
+    "Default Currency"
+  ],
+
+  "currency_exchange": [
+    "Currency Exchange",
+    "Currency Exchange",
+    "Currency Exchange"
   ],
 
   "store_acc_currency_position": [

@@ -9,6 +9,7 @@ import mail from "../modules/common/reducers/mail";
 import paymentMethods from "../modules/pos/reducers/settings/paymentMethod";
 import tax from "../modules/pos/reducers/settings/tax";
 import currency from "../modules/pos/reducers/settings/currency";
+import currencyExchange from "../modules/pos/reducers/settings/currencyExchange";
 import device from "../modules/pos/reducers/settings/device";
 import storeLocation from "../modules/pos/reducers/settings/storeLocation";
 import storeLanguage from "../modules/pos/reducers/settings/storeLanguage";
@@ -63,6 +64,7 @@ const reducer = combineReducers({
   user,
   tax,
   currency,
+  currencyExchange,
   device,
   storeLocation,
   storeLanguage,
