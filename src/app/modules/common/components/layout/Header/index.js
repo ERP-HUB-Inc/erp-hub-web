@@ -18,6 +18,19 @@ class Headers extends Component {
 
   componentDidMount() {
     this.props.dispatch(LanguageAction.fetch(5));
+    const element = document.getElementById("mobile-logo");
+    if (element) {
+      element.addEventListener("click", () => {
+        const rootElement = document.getElementById("root");
+        if (rootElement) {
+          if (rootElement.classList.contains("mini-sidebar")) {
+            rootElement.classList.remove("mini-sidebar");
+          } else {
+            rootElement.classList.add("mini-sidebar");
+          }
+        }
+      });
+    }
   }
 
   switchLanguage(key) {
@@ -26,13 +39,14 @@ class Headers extends Component {
   
   render() { 
     return (
-      <Header className="header" style={{ background: "#fff" }}>
+      <Header id="top-header" className="header" style={{ background: "#fff" }}>
         <div className="store-logo">
           <span className="icon-logo"></span>
         </div>
-        <this.Row className="wrap-header clear-margin">
-          <this.Col xs="2" md="2" className="header-left">
+        <this.Row className="wrap-header">
+          <div className="header-left">
             <div className="store-name">
+              <img src={`${this.Util.getGeneralImage("storeVein/storevein.png").url}`} id="mobile-logo" alt=""/>
               <div className="wrap-title">
                 <div className="title-user">
                   {/* <span className="icon-storevein-backend">
@@ -61,17 +75,17 @@ class Headers extends Component {
                 <div className="back-office">{<this.Translate id="text_back_office"/>}</div>
               </div>
             </div>
-          </this.Col>
-          <this.Col xs="3" md="3 main-search">
+          </div>
+          <div className="main-search">
             <SearchForm locale={this.props.locale}/>
-          </this.Col>
-          <this.Col xs="7" md="7" className="header-left">
+          </div>
+          <div className="header-right">
             <DropDown
               onSwitchLanguage={this.switchLanguage}
               localization={this.props.locale}
               activeLanguages={this.props.reducer.storeLanguage.request.list}
               currentLanguage={this.getCurrentLanguage(this.props.locale)}/>
-          </this.Col>
+          </div>
         </this.Row>
       </Header>
     );

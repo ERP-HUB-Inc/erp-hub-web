@@ -1,6 +1,7 @@
 .main-search {
     height: 70px;
     display: table;
+    margin-right: auto
 }
 
 .main-search form {
@@ -11,6 +12,10 @@
 .main-search input::placeholder {
     font-size: 10pt;
     color: #BCBCCB
+}
+
+.main-search .form-control:focus {
+    box-shadow: none
 }
 
 .main-search .icon-search {
@@ -28,9 +33,11 @@
 
 .header-left .store-name {
     display: table-cell;
-    vertical-align: middle
+    vertical-align: middle;
+    padding: 0 15px
 }
 
 .header-left .store-name .wrap-title {
     border-right: 1px solid #ECECEC;
+    padding-right: 15px
 }

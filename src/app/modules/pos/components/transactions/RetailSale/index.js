@@ -31,6 +31,7 @@ export default class Retail extends Component {
     super(props);
     this.state = {
       showVariantProduct: false,
+      isSetFocusOnSearchProduct: false,
       variantProductList: [],
       modalContent: null,
       expandOrderItemRow: [],
@@ -60,6 +61,8 @@ export default class Retail extends Component {
     this.handleOnSelectProductSearchList = this.handleOnSelectProductSearchList.bind(this);
     this.handleExpandOrderItem = this.handleExpandOrderItem.bind(this);
     this.handleSetFullScreen = this.handleSetFullScreen.bind(this);
+    this.addEventKeyDownAndCaptureValueToInputSearchProduct = this.addEventKeyDownAndCaptureValueToInputSearchProduct.bind(this);
+    this.getValueFromUserTypeKeyboard = this.getValueFromUserTypeKeyboard.bind(this);
     this.handleLinkSaleHistory = this.handleLinkSaleHistory.bind(this);
     this.handleLinkCloseShift = this.handleLinkCloseShift.bind(this);
     this.handleOnMakePayment = this.handleOnMakePayment.bind(this);
@@ -77,6 +80,7 @@ export default class Retail extends Component {
     this.handleOnResetOrder = this.handleOnResetOrder.bind(this);
     this.handleOnSaveParkReceipt = this.handleOnSaveParkReceipt.bind(this);
     this.handleOnRestoreReceipt = this.handleOnRestoreReceipt.bind(this);
+    this.handleOnBlurSearchProduct = this.handleOnBlurSearchProduct.bind(this);
     this.handleOnAutoSelectProductAfterSearchResult = this.handleOnAutoSelectProductAfterSearchResult.bind(this);
   }
 
@@ -103,6 +107,7 @@ export default class Retail extends Component {
     this.props.dispatch(PrivilegeAction.checkPermission(this.service.createRoute));
 
     this.handleSetFullScreen();
+    this.addEventKeyDownAndCaptureValueToInputSearchProduct();
 
     this.props.dispatch(ProductTypeAction.fetch(18));
     this.props.dispatch(ProductAction.fetch(25));
@@ -114,6 +119,22 @@ export default class Retail extends Component {
     //this.restoreReceipt(Enum.CURRENT_RECEIPT);
   }
 
+  getValueFromUserTypeKeyboard(event) {
+    // const existingValue = this.props.form.getFieldValue("searchProduct");
+    // if (event.keyCode !== 8) {
+    // let userInput = String.fromCharCode(event.keyCode);
+    // if (existingValue) {
+    // userInput = existingValue + userInput;
+    // }
+    // this.props.form.setFieldsValue({searchProduct: String.fromCharCode(event.keyCode)});
+    this.setState({
+      isSetFocusOnSearchProduct: true
+    });
+    // }
+  }
+  addEventKeyDownAndCaptureValueToInputSearchProduct() {
+    document.addEventListener("keydown", this.getValueFromUserTypeKeyboard);
+  }
   isValidOpenSaleRegistrationList() {
     return Array.isArray(this.props.openSaleRegistration.list) &&
     this.props.openSaleRegistration.list.length > 0;
@@ -226,6 +247,12 @@ export default class Retail extends Component {
       return true;
     }
     return false;
+  }
+
+  handleOnBlurSearchProduct() {
+    this.setState({
+      isSetFocusOnSearchProduct: false
+    });
   }
 
   handleOnResetOrder() {
@@ -580,8 +607,9 @@ export default class Retail extends Component {
           </this.Col>
         )
         :
-        <div style={{color: "#9A9A9A", margin: "0 auto"}}>
-          <this.Translate id="placeholder_product_list_search" />
+        <div style={{display: "flex", alignItems: "center", margin: "0 auto"}}>
+          {/* <this.Translate id="placeholder_product_list_search" /> */}
+          <img src={`${this.Util.getGeneralImage("storeVein/no-product-found.png").url}`} style={{width: 150}}  alt=""/>
         </div>
     );
   }
@@ -640,7 +668,8 @@ export default class Retail extends Component {
               <this.Row className="wrap-category">
                 {
                   this.props.productsType.fetching ?
-                    <this.Spin style={{position: "absolute", left: 0, right: 0, paddingTop: 15}}/>
+                    // <this.Spin style={{position: "absolute", left: 0, right: 0, paddingTop: 15}}/>
+                    <StartUp />
                     :
                     this.state.categoryList.concat(this.props.productsType.list).map((category, index) =>
                       <this.Col md="3" className="category-box" key={index}>
@@ -659,7 +688,8 @@ export default class Retail extends Component {
               <this.Row className="wrap-product-box-list">
                 {
                   this.props.products.fetching ?
-                    <this.Spin style={{position: "absolute", left: 0, right: 0, paddingTop: 15}}/>
+                    // <this.Spin style={{position: "absolute", left: 0, right: 0, paddingTop: 15}}/>
+                    <StartUp />
                     :
                     this.renderProductList()
                 }
@@ -687,8 +717,10 @@ export default class Retail extends Component {
                   handleOnSelectList={this.handleOnSelectProductSearchList}
                   callBack={this.handleOnAutoSelectProductAfterSearchResult}
                   handlePressEnterOnSearch={this.handleOnSelectProductSearchList}
+                  handleOnBlur={this.handleOnBlurSearchProduct}
                   className="ca-input-v1-icon-left ca-input-v1"
-                  isAutoFocus={true}
+                  isAutoFocus={true || this.state.isSetFocusOnSearchProduct}
+                  didUpdateMakeAutoFocus={this.state.isSetFocusOnSearchProduct}
                   locale={this.props.locale}
                   form={this.props.form}
                   dispatch={this.props.dispatch} />

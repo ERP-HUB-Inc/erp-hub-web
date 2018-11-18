@@ -67,13 +67,54 @@ and (-webkit-min-device-pixel-ratio: 1.5) {
     text-align: center
   }
 
+  .mini-sidebar #sidebar {
+    display: block !important
+  }
+
+  .mini-sidebar #center-container {
+    margin-left: 70px !important;
+    -webkit-transition: margin-left .1s;
+    -khtml-transition: margin-left .1s;
+    -moz-transition: margin-left .1s;
+    -ms-transition: margin-left .1s;
+    transition: margin-left .1s;
+  }
+
   #sidebar {
-    display: none
+    width: 70px !important
+  }
+
+  #sidebar,
+  .wrap-title,
+  .store-logo {
+    display: none !important
+  }
+
+  .store-name #mobile-logo {
+    display: block !important
   }
 
   .ant-layout-content {
     margin-left: 0 !important;
-    margin-top: 62px
+    -webkit-transition: margin-left .1s;
+    -khtml-transition: margin-left .1s;
+    -moz-transition: margin-left .1s;
+    -ms-transition: margin-left .1s;
+    transition: margin-left .1s;
+    transition: margin-left .1s
+  }
+
+  .wrap-header {
+    margin-left: 0 !important
+  }
+
+  .main-search {
+    visibility: hidden
+  }
+
+  .wrap-filter .main-search-layout [class^="col-"]{
+    padding-left: 8px;
+    padding-right: 8px
   }
 
   .wrap-card .card .card-body {
@@ -111,9 +152,18 @@ and (-webkit-min-device-pixel-ratio: 1.5) {
     font-size: 12pt !important
   }
 
+  .wrap-client-login-auto-height {
+    height: auto !important
+  }
+
+  /* PRODUCT FORM */
+  .modal-product .ant-tabs .ant-tabs-content .ant-tabs-tabpane:first-child {
+    overflow-y: scroll !important
+  }
+
   /* TO MAKE PRODUCT LIST SALE POS SCROLLALE */
   #retail-sale #right-block .product-order-list {
-      overflow-y: scroll
+    overflow-y: scroll
   }
 }
 
@@ -177,6 +227,10 @@ and (orientation: portrait) {
 
   .main-radio-acc .ant-radio-button-wrapper {
     width: 100% !important
+  }
+
+  .wrap-client-login-auto-height {
+    height: auto !important
   }
 }
   

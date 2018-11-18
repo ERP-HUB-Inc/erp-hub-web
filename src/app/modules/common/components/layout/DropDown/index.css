@@ -1,26 +1,26 @@
-.menu-left {
+.menu-right {
     margin: 0;
     display: table-cell;
     vertical-align: middle;
     text-align: right
 }
 
-.menu-left li {
+.menu-right li {
     padding: 0 15px;
     display: inline-block
 }
 
-.menu-left .user-account,
+.menu-right .user-account,
 .ant-dropdown-menu li a {
     text-decoration: none
 }
 
-.menu-left .user-account {
+.menu-right .user-account {
     color: #9A9A9A !important
 }
 
-.menu-left .user-account .title,
-.menu-left .user-account .icon-move-down {
+.menu-right .user-account .title,
+.menu-right .user-account .icon-move-down {
     position: relative;
     top: -5px;
 

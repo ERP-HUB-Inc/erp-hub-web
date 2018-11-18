@@ -38,7 +38,7 @@ export default class List extends Component {
     this.addingProp = "add"; // prop of reducer of adding record that get from map state to prop from container
     this.updatingProp = "update"; // prop of reducer of adding record that get from map state to prop from container
 
-    this.pageSize = 10; // default limit record display in table list
+    this.pageSize = 20; // default limit record display in table list
     this.confirmTextDelete = <this.Translate id="text_confirm_delete" />;
     this.requiredMessage = "Please input all required field."; // require message display on modal popup
     this.confirmTitle = "COMPLETED";
@@ -64,6 +64,7 @@ export default class List extends Component {
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
     this.onChangePagination = this.onChangePagination.bind(this);
     this.onSelectChange = this.onSelectChange.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleConfirm = this.handleConfirm.bind(this);
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
@@ -221,11 +222,33 @@ export default class List extends Component {
     }
   }
 
+  checkIsAllowDeleteRecordOrNot() {
+    if (this.state.selectedListIds &&
+      this.state.selectedListIds.length > 0 &&
+      this.props[this.fetchingProp]
+    ) {
+      let isHasDefaultRecord = false;
+      this.state.selectedListIds.forEach(selectedId => {
+        const result = this.props[this.fetchingProp].list.find(record => record.id === selectedId);
+
+        if (result && result.isDefault === this.Enum.IS_DEFAULT) {
+          isHasDefaultRecord = true;
+          this.Message.warning(this.CATranslate("text_warning_delete_default_record", this.props.locale));
+        }
+      });
+      return isHasDefaultRecord;
+    }
+  }
+
   /**
    * handle delete multi record
    * it will overide in child class
    */
   handleConfirm() {
+    if (this.checkIsAllowDeleteRecordOrNot()) {
+      return;
+    }
+
     this.PrivilegeService.checkPermission(this.service.archiveRoute)
       .then(response => {
         if (this.state.selectedRowKeys.length > 0) {
@@ -272,7 +295,9 @@ export default class List extends Component {
    * handle cancel confirm delete
   */
   handleCancel() {
-    this.setState({modalVisible: false});
+    this.setState({
+      modalVisible: false
+    });
   }
 
   /**
@@ -302,7 +327,7 @@ export default class List extends Component {
       title: <this.Translate id="text_status" />,
       dataIndex: "status",
       key: "status",
-      width: 100,
+      width: 120,
       render: value => {
         return (
           value === 1 ?
@@ -528,7 +553,7 @@ export default class List extends Component {
       selectedRowKeys: this.state.selectedRowKeys,
       onChange: this.onSelectChange,
       getCheckboxProps: record => ({
-        disabled: "isSystem" in record && record["isSystem"] ? true : false, // Column configuration not to be checked
+        // disabled: "isSystem" in record && record["isSystem"] ? true : false, // Column configuration not to be checked
         name: record.name,
       })
     };
@@ -570,7 +595,8 @@ export default class List extends Component {
     let pagination = {
       total: fetchingProps.pagination.total,
       pageSize: fetchingProps.pagination.limit,
-      current: this.state.current
+      current: this.state.current,
+      pageSizeOptions: ["20", "50", "80", "100"]
     };
     return( 
       pagination.total > 0 ?

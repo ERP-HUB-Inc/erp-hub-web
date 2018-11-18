@@ -47,7 +47,6 @@ class Column extends List {
         dataIndex: "code",
         sorter: true
       },
-      this.columnUpdatedAt,
       this.columnStatus
     ];
   }

@@ -122,6 +122,7 @@ html,
     border-radius: 3px !important;
     padding: 10px 15px !important;
     background-color: #ffffff !important;
+    margin-top: 8px;
     flex: none
 }
 
@@ -134,6 +135,10 @@ html,
     padding-right: 10px;
     padding-left: 10px;
     position: relative
+}
+
+.breadcrumb ul li:first-child {
+    padding-left: 0px
 }
 
 .breadcrumb ul li a {
@@ -465,7 +470,7 @@ color: #4D4F5C;
     background:#F7F7F7;
     margin-left: 90px;
     z-index: 0;
-    margin-top: 70px;
+    margin-top: 62px;
     display: flex;
     height: 100%
 }
@@ -745,7 +750,8 @@ color: #4D4F5C;
 .wrap-filter {
     background-color: #ffffff !important;
     margin-bottom: 1rem;
-    padding: 5px 15px 15px 15px
+    padding: 5px 15px 15px 15px;
+    border-radius: 3px
 }
 
 /* UPLOAD IMAGE */
@@ -765,17 +771,26 @@ color: #4D4F5C;
 
 #offline {
     position: fixed;
-    z-index: 11;
-    border-radius: 3px;
-    top: 10px;
-    left: 0;
+    overflow: auto;
+    top: 0;
     right: 0;
-    margin: auto;
-    width: 320px
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.37)
 }
 
 #offline .ant-alert-with-description {
-    padding: 15px 15px 15px 45px
+    width: 320px;
+    height: 120px;
+    position: absolute;
+    z-index: 11;
+    border-radius: 3px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto
 }
 
 #offline .ant-alert-with-description .ant-alert-icon {

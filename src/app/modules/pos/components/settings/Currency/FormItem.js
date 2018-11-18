@@ -29,6 +29,8 @@ export default class FormItem extends Modal {
           name="value"
           label={<this.Translate id="input_tax_value" />}
           placeholder={this.CATranslate("input_tax_value", locale)}
+          precision="6"
+          isAutoSelect={true}
           form={form}/>
         <this.Select
           name="status"

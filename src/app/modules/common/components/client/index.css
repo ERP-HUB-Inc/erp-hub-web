@@ -8,10 +8,6 @@
     margin-bottom: 15px
 }
 
-.wrap-client-login-auto-height {
-    height: auto !important
-}
-
 .inner-client-login {
     box-shadow: 0 0 4px 0 rgba(0,0,0,0.5);
     background-color: white

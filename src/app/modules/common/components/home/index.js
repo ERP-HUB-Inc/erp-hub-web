@@ -53,7 +53,7 @@ export default class Home extends Component {
   }
 
   render(){
-    const { form,cardDashboard } = this.props;
+    const {form, cardDashboard} = this.props;
 
     const readmore = ["transactions/salehistory?salehistory=1","#","#","customer"];
     const icon = ["icon-dollar","icon-list","icon-stock","icon-customer"];

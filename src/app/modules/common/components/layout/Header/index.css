@@ -12,6 +12,11 @@
         font-size: 18pt;
     }
 
+    .store-name #mobile-logo {
+        display: none;
+        width: 140px
+    }
+
     .header .user-account .title-user {
         position: relative;
         top: -5px;
@@ -30,7 +35,8 @@
     }
 
     .ant-layout-header,
-    .header-left {
+    .header-left,
+    .header-right {
         height: 70px;
     }
 
@@ -71,8 +77,12 @@
         padding: 0px !important;
     }
 
-    .header .header-left {
-        display: table;
+    .header .header-left,
+    .header .header-right {
+        display: table
+    }
+
+    .header .header-right {
         padding-right: 15px
     }
 
@@ -99,7 +109,7 @@
     }
 
     .wrap-header {
-        margin-left: 90px !important;
+        margin-left: 90px;
         background-color: white
     }
 

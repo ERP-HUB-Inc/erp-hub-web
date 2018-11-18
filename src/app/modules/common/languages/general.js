@@ -59,6 +59,18 @@ export default {
     "Default"
   ],
 
+  "text_system": [
+    "System",
+    "System",
+    "System"
+  ],
+
+  "text_user": [
+    "User",
+    "User",
+    "User"
+  ],
+
   "text_created_at": [
     "Date",
     "Date",
@@ -213,6 +225,12 @@ export default {
     "Are you sure delete this record ?",
     "Are you sure delete this record ?",
     "Are you sure delete this record ?"
+  ],
+
+  "text_warning_delete_default_record": [
+    "We don't allow you to delete default record",
+    "We don't allow you to delete default record",
+    "We don't allow you to delete default record"
   ],
 
   "text_discount": [

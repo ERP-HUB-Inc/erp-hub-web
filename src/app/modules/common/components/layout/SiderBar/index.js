@@ -15,11 +15,26 @@ export default class SideBar extends React.Component {
     this.hasUpdated = false;
     this.handleShow = this.handleShow.bind(this);
     this.handleHidden = this.handleHidden.bind(this);
+    this.handleHiddenWhenClickOther = this.handleHiddenWhenClickOther.bind(this);
     this.handleHoverOnSubMenu = this.handleHoverOnSubMenu.bind(this);
     this.handleLeaveFromSubMenu = this.handleLeaveFromSubMenu.bind(this);
     this.menuParentItem = this.menuParentItem.bind(this);
     this.subMenuItem = this.subMenuItem.bind(this);
     this.handleOnClickSubMenu = this.handleOnClickSubMenu.bind(this);
+  }
+
+  componentDidMount() {
+    const element = document.getElementById("center-container");
+    const elementTopHeader = document.getElementById("top-header");
+    if (element) {
+      element.addEventListener("click", this.handleHiddenWhenClickOther);
+      element.addEventListener("mouseenter", this.handleHiddenWhenClickOther);
+    }
+
+    if (elementTopHeader) {
+      elementTopHeader.addEventListener("click", this.handleHiddenWhenClickOther);
+      elementTopHeader.addEventListener("mouseenter", this.handleHiddenWhenClickOther);
+    }
   }
 
   handleShow(menu, route) {
@@ -35,7 +50,6 @@ export default class SideBar extends React.Component {
     }
 
     this.setCurrentHover(route);
-
   }
 
   removeClass(className) {
@@ -61,6 +75,11 @@ export default class SideBar extends React.Component {
     });
   }
 
+  handleHiddenWhenClickOther() {
+    this.handleHidden();
+    this.removeClass("hover");
+  }
+
   handleHoverOnSubMenu() {
     this.setState({
       isHoverOnSubMenu: true,
@@ -70,7 +89,6 @@ export default class SideBar extends React.Component {
 
   handleOnClickSubMenu() {
     this.removeClass("hover");
-
     this.setState({
       isHoverOnSubMenu: false,
       classToggle: "hidden"

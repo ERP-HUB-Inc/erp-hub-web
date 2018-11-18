@@ -27,7 +27,12 @@ class Column extends List {
       {
         title: <this.Translate id="text_name" />,
         dataIndex: "name",
-        sorter: true
+        sorter: true,
+        render: (text, record) => {
+          return <div>
+            <span>{record.name}</span>{ record.isDefault === this.Enum.IS_DEFAULT  ? <this.TagLabel color="blue" style={{marginLeft: 10}}><this.Translate id="text_is_default" /></this.TagLabel> : "" }
+          </div>;
+        },
       },
       {
         title: <this.Translate id="col_currency_symbol" />,

@@ -355,7 +355,7 @@ class Column extends List {
         title: <this.Translate id="col-sale-history-sold-by" />,
         dataIndex: "userId",
         key: "userId",
-        render: (text, record, index) => {
+        render: (text, record) => {
           return record.user ? record.user.userName : this.emptyCell;
         },
         sorter: true
