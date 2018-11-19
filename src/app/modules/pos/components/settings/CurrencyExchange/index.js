@@ -22,7 +22,33 @@ export default class CurrencyExchangeList extends List {
     return(<div></div>);
   }
 
+  renderButtonDelete(){}
+
+  handleShowFormEdit(){}
+
+  renderTable(){
+    return (
+      this.props.list.fetching ? 
+        <div className="text-center">
+          <this.Spin/>
+        </div> 
+        :
+        <div>
+          <this.Row>
+            <this.Col md="12">
+              <this.Table 
+                dataSource={this.props.list.list}
+                columns= {this.columns}
+                locale={{emptyText: <this.Translate id="table_empty_data"/>}}
+              />
+            </this.Col>
+          </this.Row>
+        </div>
+    );
+  }
 }
+
+
 
 class Column extends List {
   constructor(props) {

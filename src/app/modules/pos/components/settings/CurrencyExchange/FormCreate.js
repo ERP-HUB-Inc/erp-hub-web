@@ -15,7 +15,23 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        let getvalues = 0;
         values["value"] = Number(values.value);
+
+        //default values
+        if(values["checkedSwitch"] === 0){
+          getvalues = values["value"] / 1; 
+        }else if(values["checkedSwitch"] === 1){
+          getvalues = 1 / values["value"] ; 
+        }
+        
+        this.Util.clearObjProperty(values, [
+          "checkedSwitch",
+          "switch",
+          "valuehidden"
+        ]);
+
+        values["value"] = Number(getvalues);
         this.dispatch(CurrencyExchangeAction.add(values));
       }
     });

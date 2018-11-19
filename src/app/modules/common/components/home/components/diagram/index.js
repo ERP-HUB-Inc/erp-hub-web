@@ -63,11 +63,11 @@ export default class Diagram extends Component {
                     animationDuration: 0, // duration of animations when hovering an item
                   },
                   responsiveAnimationDuration: 0,
-                  responsive: true,
+                  responsive: true
                 }
               }
               legend= {{position: "top" }}
-              height={520}
+              height={505}
               width={1700}
             />
 
