@@ -63,7 +63,7 @@ export default class FormItem extends Modal {
           <div>
            
             <this.Select
-              name="currencyId"
+              name="basedCurrencyId"
               label={<this.Translate id="based_currency"/>}
               dataSource={this.getCurrency().defaultCurrency}
               valueKey="id"
@@ -76,7 +76,7 @@ export default class FormItem extends Modal {
           : 
           <div>
             <this.Select
-              name="basedCurrencyId"
+              name="currencyId"
               label={<this.Translate id="to_currency"/>}
               valueKey="id"
               required={true}
@@ -108,7 +108,7 @@ export default class FormItem extends Modal {
         { switchLanguage ?
           <div>
             <this.Select
-              name="basedCurrencyId"
+              name="currencyId"
               label={<this.Translate id="to_currency"/>}
               valueKey="id"
               required={true}
@@ -119,7 +119,7 @@ export default class FormItem extends Modal {
           </div> 
           : 
           <this.Select
-            name="currencyId"
+            name="basedCurrencyId"
             label={<this.Translate id="based_currency"/>}
             dataSource={this.getCurrency().defaultCurrency}
             valueKey="id"
@@ -146,7 +146,6 @@ export default class FormItem extends Modal {
 FormItem.defaultProps = {
   formData: {
     name: "",
-    symbol: "",
     value: 0,
     status: 1
   }

@@ -68,8 +68,6 @@ export default class ProfitAndLostList extends List {
 
           incomeType += incomeExpense.amount;
         } else if (incomeExpense.type === this.Enum.OPERATION_TYPE.EXPENSE) {
-          let incomeCollection = [incomeExpense];
-          console.log("list",this.Util.groupByTheSameValue(incomeCollection,"name","amount"));
           
           expense.push({
             name: incomeExpense.name,
@@ -126,7 +124,7 @@ export default class ProfitAndLostList extends List {
       });
 
     }
-    console.log("export csv values",getIncomeExpenseValue);
+
     return getIncomeExpenseValue;
   }
 
@@ -215,12 +213,10 @@ export default class ProfitAndLostList extends List {
   
             }
 
-            filter = JSON.stringify(filter);
-          
+            filter = JSON.stringify(filter);  
             dispatch(this.action.fetch(filter,rangFilter));
-
             this.setState({isClickFilter: true});
-            
+        
           }
         
         }); 
@@ -328,7 +324,6 @@ export default class ProfitAndLostList extends List {
                   dataSource={this.reportType}
                   label={<this.Translate id="input_inventory_report_type" />}
                   defaultValue={2}
-                  required={true}
                   form={form}/>
               </this.Col>
               <this.Col md="3">
@@ -336,7 +331,6 @@ export default class ProfitAndLostList extends List {
                   name="createdAt"
                   label={<this.Translate id="text_date_range" />}
                   defaultValue={this.state.setDefaultDate}
-                  required={true}
                   errorRequired={<this.Translate id="errpr_text_date_range" />}
                   form={form}/>
               </this.Col>

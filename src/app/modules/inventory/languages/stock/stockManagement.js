@@ -2,31 +2,31 @@ export default {
 
   "col_stock_management_product_tags": [
     "Tags",
-    "အမည်",
+    "Tags",
     "Tags",
   ],
 
   "col_stock_management_product_types": [
     "Product Types",
-    "အမည်",
+    "Product Types",
     "Product Types",
   ],
 
   "col_stock_management_supplier": [
     "Supplier",
-    "အမည်",
+    "Supplier",
     "Supplier",
   ],
 
   "col_stock_management_unit": [
     "Unit",
-    "အမည်",
+    "Unit",
     "Unit",
   ],
 
   "col_stock_management_types": [
     "Type",
-    "အမည်",
+    "Type",
     "Type",
   ],
 };

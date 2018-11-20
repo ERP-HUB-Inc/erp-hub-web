@@ -33,6 +33,7 @@ export default class FormCreate extends Modal {
 
         values["value"] = Number(getvalues);
         this.dispatch(CurrencyExchangeAction.add(values));
+        this.dispatch(CurrencyExchangeAction.fetch());
       }
     });
   }
