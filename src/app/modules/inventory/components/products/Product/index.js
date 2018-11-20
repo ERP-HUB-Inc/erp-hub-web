@@ -183,7 +183,6 @@ export default class ProductList extends List {
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
           this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, locationId));
           this.setState({isClickFilter: true});
-          console.log("filter",filter);
         }
       }); 
     } 
@@ -191,6 +190,7 @@ export default class ProductList extends List {
 
   renderFilterRecord() {
     const {form} = this.props;
+    const fetchingProps = this.props[this.fetchingProp];
     return (
       form == null ?
         ""
@@ -245,7 +245,7 @@ export default class ProductList extends List {
                 form={form}/>
             </this.Col>
             <this.Col md="2" className="wrap-btn-search">
-              <this.Button htmlType="submit" type="info">
+              <this.Button htmlType="submit" type="info"  loading={this.state.isClickFilter && fetchingProps.fetching}>
                 <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
               </this.Button>
             </this.Col>

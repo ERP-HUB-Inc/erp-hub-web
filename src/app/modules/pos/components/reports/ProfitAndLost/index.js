@@ -126,7 +126,7 @@ export default class ProfitAndLostList extends List {
       });
 
     }
-
+    console.log("export csv values",getIncomeExpenseValue);
     return getIncomeExpenseValue;
   }
 
@@ -310,46 +310,49 @@ export default class ProfitAndLostList extends List {
   }
 
   renderFilterRecord() {
-
     const {form,locale} = this.props;
+    const fetchingProps = this.props[this.fetchingProp];
 
     return(
-      <div>
-        <this.Form onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout profit-and-lose"> 
+      form == null ?
+        ""
+        :
+        <div>
+          <this.Form onSubmit={this.handleSubmitFilter}>
+            <this.Row className="main-search-layout profit-and-lose"> 
 
-            <this.Col md="3">
-              <this.Select
-                name="reportType"
-                placeholder={this.CATranslate("place_holder_profit_and_lost_report_type", locale)}
-                dataSource={this.reportType}
-                label={<this.Translate id="input_inventory_report_type" />}
-                defaultValue={2}
-                required={true}
-                form={form}/>
-            </this.Col>
-            <this.Col md="3">
-              <this.DateRangePicker
-                name="createdAt"
-                label={<this.Translate id="text_date_range" />}
-                defaultValue={this.state.setDefaultDate}
-                required={true}
-                errorRequired={<this.Translate id="errpr_text_date_range" />}
-                form={form}/>
-            </this.Col>
+              <this.Col md="3">
+                <this.Select
+                  name="reportType"
+                  placeholder={this.CATranslate("place_holder_profit_and_lost_report_type", locale)}
+                  dataSource={this.reportType}
+                  label={<this.Translate id="input_inventory_report_type" />}
+                  defaultValue={2}
+                  required={true}
+                  form={form}/>
+              </this.Col>
+              <this.Col md="3">
+                <this.DateRangePicker
+                  name="createdAt"
+                  label={<this.Translate id="text_date_range" />}
+                  defaultValue={this.state.setDefaultDate}
+                  required={true}
+                  errorRequired={<this.Translate id="errpr_text_date_range" />}
+                  form={form}/>
+              </this.Col>
             
-            <this.Col md="2" className="reorder-point-button-search report-button wrap-btn-search">
-              <div className="ant-form-item-label" style={{visibility: "hidden"}}>
-                <label htmlFor="status" className="" title=""></label>
-              </div>
-              <this.Button htmlType="submit" type="info" >
-                <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
-              </this.Button> 
-            </this.Col>
+              <this.Col md="2" className="reorder-point-button-search report-button wrap-btn-search">
+                <div className="ant-form-item-label" style={{visibility: "hidden"}}>
+                  <label htmlFor="status" className="" title=""></label>
+                </div>
+                <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
+                </this.Button> 
+              </this.Col>
             
-          </this.Row>
-        </this.Form>
-      </div>
+            </this.Row>
+          </this.Form>
+        </div>
     );
 
   }

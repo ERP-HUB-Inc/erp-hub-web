@@ -199,40 +199,44 @@ export default class InventoryList extends List {
   }
 
   renderFilterRecord() {
+    const fetchingProps = this.props[this.fetchingProp];
     return(
-      <div>
-        <this.Form onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout"> 
-            <this.Col md="3">
-              <this.Select
-                name="status"
-                placeholder={this.CATranslate("text_status", this.props.locale)}
-                dataSource={this.statusList}
-                label={<this.Translate id="input_inventory_report_type" />}
-                defaultValue={this.Enum.ALL_STATE}
-                form={this.props.form}/>
-            </this.Col>
-            <this.Col md="3">
-              <this.DatePickers
-                name="datepicker"
-                label={<this.Translate id="text_date" />}
-                disabledDate={this.disabledDate}
-                form={this.props.form}/>
-            </this.Col>
-            <this.Col md="3" className="reorder-point-button-search report-button">
+      this.props.form == null ?
+        ""
+        :
+        <div>
+          <this.Form onSubmit={this.handleSubmitFilter}>
+            <this.Row className="main-search-layout"> 
+              <this.Col md="3">
+                <this.Select
+                  name="status"
+                  placeholder={this.CATranslate("text_status", this.props.locale)}
+                  dataSource={this.statusList}
+                  label={<this.Translate id="input_inventory_report_type" />}
+                  defaultValue={this.Enum.ALL_STATE}
+                  form={this.props.form}/>
+              </this.Col>
+              <this.Col md="3">
+                <this.DatePickers
+                  name="datepicker"
+                  label={<this.Translate id="text_date" />}
+                  disabledDate={this.disabledDate}
+                  form={this.props.form}/>
+              </this.Col>
+              <this.Col md="3" className="reorder-point-button-search report-button">
 
-              {/* <this.Button htmlType="submit" type="info" >
+                {/* <this.Button htmlType="submit" type="info" >
                 <span className="icon-export icon-padding-right text-uppercase"></span>{<this.Translate id="button_inventory_report_export_to_csv" />}
               </this.Button>  */}
 
-              <this.Button htmlType="submit" type="info" >
-                <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
-              </this.Button> 
-            </this.Col>
+                <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching} className="wrap-report-btn-search">
+                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
+                </this.Button> 
+              </this.Col>
 
-          </this.Row>
-        </this.Form>
-      </div>
+            </this.Row>
+          </this.Form>
+        </div>
     );
 
   }
