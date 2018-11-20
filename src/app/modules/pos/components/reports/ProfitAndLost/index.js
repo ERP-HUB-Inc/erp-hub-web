@@ -297,7 +297,7 @@ export default class ProfitAndLostList extends List {
           data={this.exportCsv()}
           headers={this.ExportheadersCsv}
         >
-          <this.Button type="info">
+          <this.Button type="info" disabled={ this.props.profitAndLostReport.list.length > 0 ? false : true }>
             <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
           </this.Button>
         </this.CSVLink>
