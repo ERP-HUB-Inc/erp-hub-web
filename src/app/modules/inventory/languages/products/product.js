@@ -491,6 +491,18 @@ export default {
     "Other"
   ],
 
+  "text_attribute": [
+    "Attribute",
+    "Attribute",
+    "Attribute"
+  ],
+
+  "text_attribute_example": [
+    "(e.g. Size)",
+    "(e.g. Size)",
+    "(e.g. Size)"
+  ],
+
   // ERROR
   "input_error_products_name": [
     "Product name allow only 100 charactor only.",

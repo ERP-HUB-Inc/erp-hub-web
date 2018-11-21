@@ -7,47 +7,109 @@ export default class FormVariant extends Modal {
   constructor(props) {
     super(props);
     this.state = {
+      attributeValue: [],
       productVariantToDelete: {
         id: "",
         variantAttributeKey: null,
         productVariantKey: null
       },
+      variantAttributes: [],
       variantAttributeList: [],
+      productVariantList: [],
+      addAttributeRowIndex: 0,
       isNotYetLoadComponentDidUpdated: true,
       changeStatusProductVariant: false
     };
+    this.columns = [
+      {
+        title: <this.Translate id="input_product_variant_name" />,
+        dataIndex: "name",
+        key: "name"
+      },
+      {
+        title: <this.Translate id="text_product_code" />,
+        dataIndex: "barcode",
+        key: "barcode",
+        width: 120,
+        render: (text, record, index) => {
+          return <this.InputText
+            name={`variantProductCode[${index}]`}
+            placeholder={this.CATranslate("text_product_code", this.props.locale)}
+            data={record.barcode}
+            form={this.props.form}/>;
+        }
+      },
+      {
+        title: <this.Translate id="input_product_cost" />,
+        dataIndex: "cost",
+        key: "cost",
+        align: "right",
+        width: 120,
+        render: (text, record, index) => {
+          return <this.InputNumber
+            name={`variantProductCost[${index}]`}
+            className="text-right"
+            isAutoSelect={true}
+            isHideTool={true}
+            data={record.barcode}
+            form={this.props.form}/>;
+        }
+      },
+      {
+        title: <this.Translate id="text_price" />,
+        dataIndex: "price",
+        key: "price",
+        align: "right",
+        width: 120,
+        render: (text, record, index) => {
+          return <this.InputNumber
+            name={`variantProductPrice[${index}]`}
+            className="text-right"
+            isAutoSelect={true}
+            isHideTool={true}
+            data={record.price}
+            form={this.props.form}/>;
+        }
+      },
+      {
+        title: <this.Translate id="text_action" />,
+        dataIndex: "action",
+        key: "action",
+        align: "center",
+        width: 50,
+        render: (text, record, index) => {
+          return <div className="wrap-variant-action">
+            <this.Switchs
+              name={`variantProductStatus[${index}]`}
+              checked={record.status}
+              form={this.props.form} />
+            <this.Button type="danger" className="delete-variant-item" onClick={() => this.handleRemoveProductVariant(index, 1, record.id)}>
+              <span className="icon-delete" style={{fontSize: "15pt"}}></span>
+            </this.Button>
+          </div>;
+        }
+      }
+    ];
     this.confirmTextAction = <this.Translate id="text_delete_confirm_variant_product" />;
     this.confirmTitle = <this.Translate id="delete_variant_warning" />;
+    this.handleOnChangeAttribute = this.handleOnChangeAttribute.bind(this);
     this.actionConfirmResponseMsg = <this.Translate id="text_not_allow_to_delete_product_has_quantity" />;
+    this.handleKeyDownAttributeValue = this.handleKeyDownAttributeValue.bind(this);
+    this.handleOnRemoveLozengeItem = this.handleOnRemoveLozengeItem.bind(this);
     this.handleAddVariantAttribute = this.handleAddVariantAttribute.bind(this);
     this.handleAddProductVariant = this.handleAddProductVariant.bind(this);
-    this.handleRemoveVariant = this.handleRemoveVariant.bind(this);
-  }
-
-  appendVariantAttribute(existingArr, variantAttribute) {
-    existingArr.push({
-      variantAttributeId: variantAttribute.variantAttributeId,
-      variantList: [{
-        id: variantAttribute.id,
-        name: variantAttribute.name,
-        barcode: variantAttribute.barcode,
-        cost: variantAttribute.cost,
-        price: variantAttribute.price,
-        quantity: variantAttribute.quantity,
-        status: variantAttribute.status,
-      }]});;
+    this.handleRemoveProductVariant = this.handleRemoveProductVariant.bind(this);
+    this.handleCallBackAddAttribute = this.handleCallBackAddAttribute.bind(this);
+    this.handleDeleteProductAttribute = this.handleDeleteProductAttribute.bind(this);
   }
 
   componentWillUpdate(nextProps) {
-    const {
-      productVariantArchive,
-      dispatch,
-    } = nextProps;
+    const {productVariantArchive} = nextProps;
 
     if (productVariantArchive.archived) {
       const {id, variantAttributeKey, productVariantKey} = this.state.productVariantToDelete;
       this.deleteVariantThatExistInSystem(variantAttributeKey, productVariantKey, id);
-      dispatch(ProductAction.reset(Constant.RESET_ARCHIVE_VARIANT_PRODUCT));
+      this.props.dispatch(ProductAction.reset(Constant.RESET_ARCHIVE_VARIANT_PRODUCT));
       this.isRepsonseBackErrorOfDelete = "none";
       this.setState({modalVisible: false});
     } else if (
@@ -56,6 +118,10 @@ export default class FormVariant extends Modal {
       "error" in productVariantArchive["error"]["data"]
     ) {
       this.isRepsonseBackErrorOfDelete = "";
+    }
+
+    if (nextProps.variantAttributeAdd.added) {
+      this.setState({variantAttributes: [nextProps.variantAttributeAdd.response.data, ...this.state.variantAttributes]});
     }
   }
 
@@ -103,17 +169,133 @@ export default class FormVariant extends Modal {
     }
 
     if (variantAttributeAdd.added) {
-      this.props.form.setFieldsValue({attributeId: variantAttributeAdd.response.data.id});
+      this.props.form.setFieldsValue({[`attributeId[${this.state.addAttributeRowIndex}]`]: variantAttributeAdd.response.data.id});
       dispatch(VariantAttributeAction.reset());
+      document.getElementById(`lozenge-item${this.state.addAttributeRowIndex}`).focus();
     }
+  }
+
+  componentDidMount() {
+    this.setState({variantAttributes: this.props.variantAttributes});
+  }
+
+  generateProductVariant(collection) {
+    let productVariantList = [];
+
+    if (collection.length > 0 ) {
+      let name = "";
+      collection[0].attributeValue.forEach((value1, index1) => {
+        name = `${value1}`;
+        if (collection.length > 1) {
+          collection[1].attributeValue.forEach((value2, index2) => {
+            name = `${value1} / ${value2}`;
+            if (collection.length > 2) {
+              collection[2].attributeValue.forEach((value3, index3) => {
+                name = `${value1} / ${value2} / ${value3}`;
+                productVariantList.push(this.appendProductVariant({name, index: index3}));
+              });
+            } else {
+              productVariantList.push(this.appendProductVariant({name, index: index2}));
+            }
+          });
+        } else {
+          productVariantList.push(this.appendProductVariant({name, index: index1}));
+        }
+      });
+    }
+    return productVariantList;
+  }
+
+  appendProductVariant(variantAttribute = {}) {
+    return {
+      id: variantAttribute.id,
+      name: variantAttribute.name,
+      barcode: variantAttribute.barcode,
+      cost: variantAttribute.cost,
+      price: variantAttribute.price,
+      quantity: variantAttribute.quantity,
+      status: variantAttribute.status,
+    };
+  }
+
+  appendVariantAttribute(existingArr, variantAttribute) {
+    existingArr.push({
+      variantAttributeId: variantAttribute.variantAttributeId,
+      variantList: [{
+        id: variantAttribute.id,
+        name: variantAttribute.name,
+        barcode: variantAttribute.barcode,
+        cost: variantAttribute.cost,
+        price: variantAttribute.price,
+        quantity: variantAttribute.quantity,
+        status: variantAttribute.status,
+      }]});;
+  }
+
+  handleCallBackAddAttribute(index) {
+    this.setState({addAttributeRowIndex: index});
+  }
+
+  handleDeleteProductAttribute(index) {
+    const variantAttributeList = this.state.variantAttributeList;
+    variantAttributeList.splice(index, 1);
+    this.setState({
+      variantAttributeList,
+      productVariantList: this.generateProductVariant(variantAttributeList)
+    });
+  }
+
+  handleOnChangeAttribute(index) {
+    document.getElementById(`lozenge-item${index}`).focus();
+  }
+
+  handleKeyDownAttributeValue(event, index) {
+    if (event.target.value && (event.keyCode === 188 || event.keyCode === 13)) {
+      const variantAttributeList = this.state.variantAttributeList;
+      let notExistYet = true;
+      variantAttributeList[index]["attributeValue"].forEach(attributeValue => {
+        if (attributeValue === event.target.value) {
+          notExistYet = false;
+        }
+      });
+
+      if (notExistYet) {
+        variantAttributeList[index]["attributeValue"].push(event.target.value);
+      }
+
+      document.getElementById(`lozenge-item${index}`).value = "";
+
+      this.setState({
+        variantAttributeList,
+        productVariantList: this.generateProductVariant(variantAttributeList)
+      });
+    }
+  }
+
+  handleOnRemoveLozengeItem(index, inputIndex) {
+    const variantAttributeList = this.state.variantAttributeList;
+    variantAttributeList[inputIndex]["attributeValue"].splice(index, 1);
+    this.setState({
+      variantAttributeList,
+      productVariantList: this.generateProductVariant(variantAttributeList)
+    });
+    document.getElementById(`lozenge-item${inputIndex}`).focus();
   }
 
   handleAddVariantAttribute() {
     const existingVariantAttributes = this.state.variantAttributeList;
 
-    existingVariantAttributes.push({variantAttributeId: "", variantList: []});
+    existingVariantAttributes.push({
+      variantAttributeId: "",
+      variantList: [],
+      attributeValue: []
+    });
 
-    this.setState({variantAttributeList: existingVariantAttributes});
+    this.setState({
+      variantAttributeList: existingVariantAttributes
+    });
+
+    // console.log("Variant Attribute:", this.state.variantAttributeList);
   }
 
   handleAddProductVariant(variantAttributeKey) {
@@ -139,18 +321,20 @@ export default class FormVariant extends Modal {
     this.props.dispatch(ProductAction.archiveVariant(this.state.productVariantToDelete.id));
   }
 
-  handleRemoveVariant(variantAttributeKey, productVariantKey, id) {
-    if (id !== "") {
+  handleRemoveProductVariant(productVariantRow, productVariantKey, id) {
+    if (false) {
       this.setState({
         modalVisible: true,
         productVariantToDelete: {
           id,
-          variantAttributeKey,
+          variantAttributeKey: productVariantRow,
           productVariantKey
         }
       });
     } else {
-      this.deleteVariantThatNotExistingInSystem(variantAttributeKey, productVariantKey);
+      const productVariantList = this.state.productVariantList;
+      productVariantList.splice(productVariantRow, 1);
+      this.setState({productVariantList});
     }
   }
 
@@ -165,141 +349,86 @@ export default class FormVariant extends Modal {
     }
     this.setState({variantAttributeList: existingVariantAttributes});
   }
-  deleteVariantThatNotExistingInSystem(variantAttributeKey, productVariantKey) {
-    const existingVariantAttributes = this.state.variantAttributeList;
-    if ("variantList" in existingVariantAttributes[variantAttributeKey]) {
-      existingVariantAttributes[variantAttributeKey]["variantList"].forEach((variantList, variantListKey) => {
-        if (variantListKey === productVariantKey && variantList.id === "") {
-          existingVariantAttributes[variantAttributeKey]["variantList"].splice(productVariantKey, 1);
-        }
-      });
-    }
-    this.setState({variantAttributeList: existingVariantAttributes});
-  }
 
-  renderVariantAttribute(variantAttribute, variantAttributeKey, variantAttributesList) {
+  renderVariantAttribute(variantAttribute, variantAttributeKey) {
     return (
       <this.SelectSearch
         name={`attributeId[${variantAttributeKey}]`}
-        label={<this.Translate id="text_name" />}
+        label={variantAttributeKey === 0 ? <span><this.Translate id="text_attribute" /> <this.Translate id="text_attribute_example" /></span> : ""}
+        placeholder="Select attribute"
         valueKey="id"
-        dataSource={variantAttributesList}
+        dataSource={this.state.variantAttributes}
         defaultValue={variantAttribute.variantAttributeId}
-        addNew={() => this.props.handleAddVariantAttribute(variantAttributeKey)}
+        onChange={() => this.handleOnChangeAttribute(variantAttributeKey)}
+        addNew={() => this.props.handleAddVariantAttribute(variantAttributeKey, this.handleCallBackAddAttribute)}
         form={this.props.form}/>
     );
   }
   render() {
-    const {currentUser, variantAttributeAdd} = this.props;
-    let {variantAttributes, productVariantArchive} = this.props;
-
-    if (variantAttributeAdd.added) {
-      variantAttributes = [variantAttributeAdd.response.data, ...variantAttributes];
-    }
-
-    this.submitConfirmActionLoading = productVariantArchive.archiving;
-
+    this.submitConfirmActionLoading = this.props.productVariantArchive.archiving;
     return (
       <this.Row>
-        <this.Col md="12" className="btn-addcontact">
-          <this.Button onClick={this.handleAddVariantAttribute}>
-            <span className="icon-add"></span> <span><this.Translate id="btn_product_add_another_attribute" /></span>
-          </this.Button>
-        </this.Col>
         {
           this.state.variantAttributeList.map((variantAttribute, variantAttributeKey) =>
             <this.Col md="12" key={variantAttributeKey} className="wrap-variant-item-row">
               <this.Row>
                 <this.Col md="3">
-                  {this.renderVariantAttribute(variantAttribute, variantAttributeKey, variantAttributes)}
+                  {this.renderVariantAttribute(variantAttribute, variantAttributeKey)}
                 </this.Col>
-                {
-                  "variantList" in variantAttribute ? 
-                    variantAttribute.variantList.map((variant, variantKey) =>
-                      variant.status !== this.Enum.ARCHIVE ?
-                        <this.Row className="variant-item-row" key={variantKey}>
-                          <this.InputText
-                            name={`variantProductId[${variantAttributeKey}][${variantKey}]`}
-                            type="hidden"
-                            data={variant.id}
-                            form={this.props.form}/>
-                          <this.Col md="3">
-                            <this.InputText
-                              name={`variantName[${variantAttributeKey}][${variantKey}]`}
-                              label={<this.Translate id="input_product_variant_name" />}
-                              placeholder={this.CATranslate("input_product_variant_name", this.props.locale)}
-                              data={variant.name}
-                              max={20}
-                              required={true}
-                              form={this.props.form}/>
-                          </this.Col>
-                          <this.Col md="3">
-                            <this.InputText
-                              name={`variantProductCode[${variantAttributeKey}][${variantKey}]`}
-                              label={<this.Translate id="input_product_code" />}
-                              placeholder={this.CATranslate("input_product_code", this.props.locale)}
-                              data={variant.barcode}
-                              max={20}
-                              required={true}
-                              form={this.props.form}/>
-                          </this.Col>
-                  
-                          <this.Col md="2">
-                            <this.InputNumber
-                              name={`variantProductCost[${variantAttributeKey}][${variantKey}]`}
-                              label={<span><this.Translate id="input_product_cost" /><span> ({currentUser.setting.currency})</span></span>}
-                              placeholder={this.CATranslate("input_product_cost_placeholder", this.props.locale)}
-                              required={true}
-                              data={variant.cost}
-                              form={this.props.form}/>
-                          </this.Col>
-                  
-                          <this.Col md="2">
-                            <this.InputNumber
-                              name={`variantProductPrice[${variantAttributeKey}][${variantKey}]`}
-                              label={<span><this.Translate id="text_price" /><span> ({currentUser.setting.currency})</span></span>}
-                              placeholder={this.CATranslate("input_product_price_placeholder",  this.props.locale)}
-                              required={true}
-                              data={variant.price}
-                              form={this.props.form}/>
-                          </this.Col>
-                  
-                          <this.Col md="2" className="wrap-variant-action">
-                            {
-                              variant.quantity > 0 ?
-                                <this.Tooltip placement="top" title="Not allow deactive item that quantity is in stock.">
-                                  <this.Switchs
-                                    name={`variantProductStatus[${variantAttributeKey}][${variantKey}]`}
-                                    checked={variant.status}
-                                    form={this.props.form}
-                                    disabled={true}/>
-                                </this.Tooltip>
-                                :
-                                <this.Switchs
-                                  name={`variantProductStatus[${variantAttributeKey}][${variantKey}]`}
-                                  checked={variant.status}
-                                  form={this.props.form} />
-                            }
-                            <this.Button type="danger" className="delete-variant-item" onClick={() => this.handleRemoveVariant(variantAttributeKey, variantKey, variant.id)}>
-                              <span className="icon-delete" style={{fontSize: "15pt"}}></span>
-                            </this.Button>
-                          </this.Col>
-                        </this.Row>
-                        :
-                        ""
-                    )
-                    :
-                    ""
-                }
-                <this.Col md="12" className="btn-add-more-variant btn-addcontact">
-                  <this.Button onClick={() => this.handleAddProductVariant(variantAttributeKey)}>
-                    <span className="icon-add"></span> <span><this.Translate id="btn_product_add_another_variant" /></span>
-                  </this.Button>
+                <this.Col md="9">
+                  {
+                    variantAttributeKey === 0 ?
+                      <div className="ant-form-item-label">
+                        <label htmlFor="lozenge-item[0]">
+                          <span>Value (e.g. Small, Medium, Large)</span>
+                        </label>
+                      </div>
+                      :
+                      ""
+                  }
+                  <div style={{display: "flex"}}>
+                    <div className="wrap-lozenge-group-input ant-input">
+                      {
+                        variantAttribute.attributeValue.map((attributeValue, attributeValueIndex) => 
+                          <div key={attributeValueIndex} className="lozenge-item">
+                            {attributeValue}
+                            <span className="icon-delete" onClick={() => this.handleOnRemoveLozengeItem(attributeValueIndex, variantAttributeKey)}></span>
+                          </div>
+                        )
+                      }
+                      <input
+                        type="text"
+                        name="attbributeVvalue"
+                        id={`lozenge-item${variantAttributeKey}`}
+                        className="ant-input lozenge-group-input"
+                        onKeyDown={(e) =>this.handleKeyDownAttributeValue(e, variantAttributeKey)}/>
+                    </div>
+                    <this.Button type="danger" onClick={() => this.handleDeleteProductAttribute(variantAttributeKey)} className="btn-delete-attribute">
+                      <span className="icon-delete" style={{fontSize: "15pt"}}></span>
+                    </this.Button>
+                  </div>
                 </this.Col>
               </this.Row>
             </this.Col>
           )
         }
+        {
+          this.state.variantAttributeList.length < 3 ?
+            <this.Col md="12" className="btn-addcontact">
+              <this.Button onClick={this.handleAddVariantAttribute}>
+                <span className="icon-add"></span> <span><this.Translate id="btn_product_add_another_attribute" /></span>
+              </this.Button>
+            </this.Col>
+            :
+            ""
+        }
+        <this.Col md="12">
+          <this.Table
+            rowKey="name"
+            dataSource={this.state.productVariantList}
+            columns={this.columns}
+            locale={{emptyText: <this.Translate id="placeholder_table_variant_product" />}} />
+        </this.Col>
         {this.renderModalConfirmAction()}
       </this.Row>
     );

@@ -45,7 +45,18 @@ class Util {
     }
   }
 
+  cartesian(data) {
+    const f = (a, b) => [].concat(...a.map(d => b.map(e => [].concat(d, e))));
+    const recurse = (a,b, ...c) => (b? recurse(f(a, b),...c): a);
+    return recurse.apply(this, data);
+  }
 
+  generateProductVariant(collection) {
+    const values = collection.map(row => row.attributeValue);
+    const results = this.cartesian(values).map(row => row.join(" / "));
+
+    return results;
+  }
 }
 
 export default new Util();

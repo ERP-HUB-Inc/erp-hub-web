@@ -167,9 +167,12 @@ export default class FormCreate extends Modal {
     this.modal1 = <FormCreateProductType />;
   }
 
-  handleAddVariantAttribute(key) {
+  handleAddVariantAttribute(index, callBack) {
     this.dispatch(VariantAttributeAction.showForm());
     this.modal1 = <FormCreateVariantAttribute />;
+    if (callBack) {
+      callBack(index);
+    }
   }
 
   handleAddUnit() {
