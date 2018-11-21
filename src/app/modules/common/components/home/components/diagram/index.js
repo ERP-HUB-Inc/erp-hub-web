@@ -7,6 +7,7 @@ import "./index.css";
 export default class Diagram extends Component {
   constructor(props) {
     super(props);
+   
     this.statusList = [
       {name: <this.Translate id="select_text_active"/>, value: this.Enum.ACTIVE},
       {name: <this.Translate id="select_text_deactive"/>, value: this.Enum.DEACTIVE},
@@ -45,7 +46,7 @@ export default class Diagram extends Component {
     const incomeExpense = this.groupIncomeExpenseType();
 
     return (
-      pipeChat.fetching ? 
+      graphChat.fetching ? 
         <div className="text-center">
           <this.Spin/>
         </div> 
@@ -63,71 +64,77 @@ export default class Diagram extends Component {
                     animationDuration: 0, // duration of animations when hovering an item
                   },
                   responsiveAnimationDuration: 0,
-                  responsive: true,
+                  responsive: true
                 }
               }
               legend= {{position: "top" }}
-              height={520}
+              height={505}
               width={1700}
             />
 
           </div>
-          <div className="main-doughnut-chart">
-            <this.Row>
-              <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-left">
+          {
+            pipeChat.fetching ? 
+              <div className="text-center">
+                <this.Spin/>
+              </div> 
+              :
+              <div className="main-doughnut-chart">
                 <this.Row>
-                  <this.Col md="8">
-                    <this.Translate id="home_page_graph_expense" />
-                  </this.Col>
-                </this.Row>
+                  <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-left">
+                    <this.Row>
+                      <this.Col md="8">
+                        <this.Translate id="home_page_graph_expense" />
+                      </this.Col>
+                    </this.Row>
             
-                <Doughnut
-                  data={incomeExpense.expense[0] ? incomeExpense.expense[0] : [] }
-                  option={
-                    {
-                      animation: {
-                        duration: 0, 
-                      },
-                      hover: {
-                        animationDuration: 0, 
-                      },
-                      responsiveAnimationDuration: 0,
-                      responsive: true
-                    }
+                    <Doughnut
+                      data={incomeExpense.expense[0] ? incomeExpense.expense[0] : [] }
+                      option={
+                        {
+                          animation: {
+                            duration: 0, 
+                          },
+                          hover: {
+                            animationDuration: 0, 
+                          },
+                          responsiveAnimationDuration: 0,
+                          responsive: true
+                        }
                    
-                  }
-                  legend= {{position: "left" }}
-                />
-              </this.Col>
-              <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-right">
-                <this.Row>
-                  <this.Col md="8">
-                    <this.Translate id="home_page_graph_income" />
+                      }
+                      legend= {{position: "left" }}
+                    />
                   </this.Col>
-                </this.Row>
+                  <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-right">
+                    <this.Row>
+                      <this.Col md="8">
+                        <this.Translate id="home_page_graph_income" />
+                      </this.Col>
+                    </this.Row>
              
-                <Doughnut
-                  data={incomeExpense.income[0] ? incomeExpense.income[0] : [] }
-                  option={
-                    {
-                      animation: {
-                        duration: 0, 
-                      },
-                      hover: {
-                        animationDuration: 0, 
-                      },
-                      responsiveAnimationDuration: 0,
-                      responsive: true
-                    }
-                  }
-                  legend= {{position: "left" }}
-                />
+                    <Doughnut
+                      data={incomeExpense.income[0] ? incomeExpense.income[0] : [] }
+                      option={
+                        {
+                          animation: {
+                            duration: 0, 
+                          },
+                          hover: {
+                            animationDuration: 0, 
+                          },
+                          responsiveAnimationDuration: 0,
+                          responsive: true
+                        }
+                      }
+                      legend= {{position: "left" }}
+                    />
              
-              </this.Col>
+                  </this.Col>
 
-            </this.Row>
-          </div>
-        
+                </this.Row>
+              </div>
+          }
         </div>
     );
   }

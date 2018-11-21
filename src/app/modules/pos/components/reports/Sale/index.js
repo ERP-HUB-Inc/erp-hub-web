@@ -99,8 +99,8 @@ export default class SaleList extends List {
               rangFilter = JSON.stringify({
                 column: "registerDate",
                 value: [
-                  this.Util.formatDateForMYSQL(values.createdAt[0]),
-                  this.Util.formatDateForMYSQL(values.createdAt[1])
+                  this.Util.formatDateForMYSQL(values.createdAt[0]) + " 00:00:00",
+                  this.Util.formatDateForMYSQL(values.createdAt[1]) + " 23:59:59"
                 ]});
   
             }
@@ -134,8 +134,8 @@ export default class SaleList extends List {
     rangFilter = JSON.stringify({
       column: "registerDate",
       value: [
-        this.Util.formatDateForMYSQL(getCurrentDate),
-        this.Util.formatDateForMYSQL(getCurrentDate)
+        this.Util.formatDateForMYSQL(getCurrentDate) + " 00:00:00",
+        this.Util.formatDateForMYSQL(getCurrentDate) + " 23:59:59"
       ]});
 
     filter = JSON.stringify(filter);
@@ -151,7 +151,7 @@ export default class SaleList extends List {
         filename={this.exportCsvFileName}
         data={this.exportCsv()}
         headers={this.ExportheadersCsv}>
-        <this.Button type="info">
+        <this.Button type="info" disabled={ this.props.saleReport.list.length > 0 ? false : true }>
           <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
         </this.Button>
       </this.CSVLink>
@@ -161,26 +161,30 @@ export default class SaleList extends List {
   renderPagination(){}
 
   renderFilterRecord() {
+    const fetchingProps = this.props[this.fetchingProp];
     return(
-      <div>
-        <this.Form onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout"> 
-            <this.Col md="3">
-              <this.DateRangePicker
-                name="createdAt"
-                label={<this.Translate id="text_date_range" />}
-                defaultValue={this.state.setDefaultDate}
-                errorRequired={<this.Translate id="errpr_text_date_range" />}
-                form={this.props.form}/>
-            </this.Col>
-            <this.Col md="2">
-              <this.Button htmlType="submit" type="info" className="wrap-report-btn-search">
-                <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
-              </this.Button> 
-            </this.Col>
-          </this.Row>
-        </this.Form>
-      </div>
+      this.props.form == null ?
+        ""
+        :
+        <div>
+          <this.Form onSubmit={this.handleSubmitFilter}>
+            <this.Row className="main-search-layout"> 
+              <this.Col md="3">
+                <this.DateRangePicker
+                  name="createdAt"
+                  label={<this.Translate id="text_date_range" />}
+                  defaultValue={this.state.setDefaultDate}
+                  errorRequired={<this.Translate id="errpr_text_date_range" />}
+                  form={this.props.form}/>
+              </this.Col>
+              <this.Col md="2">
+                <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching} className="wrap-report-btn-search">
+                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
+                </this.Button> 
+              </this.Col>
+            </this.Row>
+          </this.Form>
+        </div>
     );
 
   }

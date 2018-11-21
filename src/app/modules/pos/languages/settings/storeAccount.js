@@ -47,10 +47,16 @@ export default {
     "To Currency"
   ],
 
-  "default_currency": [
-    "Default Currency",
-    "Default Currency",
-    "Default Currency"
+  "switch_currency": [
+    "Switch Currency",
+    "Switch Currency",
+    "Switch Currency"
+  ],
+
+  "based_currency": [
+    "Based Currency",
+    "Based Currency",
+    "Based Currency"
   ],
 
   "currency_exchange": [

@@ -132,7 +132,7 @@ export default class ProductList extends List {
         data={this.exportCsv()}
         headers={this.ExportheadersCsv}
       >
-        <this.Button type="info">
+        <this.Button type="info" disabled={ this.props.productReport.list.length > 0 ? false : true }>
           <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
         </this.Button>
       </this.CSVLink>
@@ -141,61 +141,65 @@ export default class ProductList extends List {
 
   renderFilterRecord() {
     const {form} = this.props;
+    const fetchingProps = this.props[this.fetchingProp];
     return(
-      <div>
-        <this.Form onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout"> 
-            <this.Col md="3">
-              <this.InputText
-                name="key"
-                label={<this.Translate id="text_search"/>}
-                placeholder="Search for brand, code and notation"
-                form={form}
-              />
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="locationId"
-                label={<this.Translate id="text_store"/>}
-                dataSource={this.locationList.concat(this.props.locations.list)}
-                valueKey="id"
-                nameKey="name"
-                form={form}
-                defaultValue={this.locationList[0].id}/>
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="brandId"
-                label={<this.Translate id="text_brand"/>}
-                dataSource={this.brandList.concat(this.props.brands.list)}
-                valueKey="id"
-                nameKey="name"
-                form={form}
-                defaultValue={this.brandList[0].id}/>
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="productTypeId"
-                label={<this.Translate id="text_product_type"/>}
-                dataSource={this.productTypeList.concat(this.props.productsType.list)}
-                defaultValue={this.productTypeList[0].id}
-                valueKey="id"
-                nestedName="productTypeDescriptions"
-                nameKey="name"
-                form={form}/>
-            </this.Col>
-            <this.Col md="2" className="wrap-btn-search">
-              <div className="ant-form-item-label" style={{visibility: "hidden"}}>
-                <label htmlFor="status" className="" title=""></label>
-              </div>
-              <this.Button htmlType="submit" type="info" >
-                <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
-              </this.Button> 
-            </this.Col>
+      form == null ?
+        ""
+        :
+        <div>
+          <this.Form onSubmit={this.handleSubmitFilter}>
+            <this.Row className="main-search-layout"> 
+              <this.Col md="3">
+                <this.InputText
+                  name="key"
+                  label={<this.Translate id="text_search"/>}
+                  placeholder="Search for brand, code and notation"
+                  form={form}
+                />
+              </this.Col>
+              <this.Col md="2">
+                <this.Select
+                  name="locationId"
+                  label={<this.Translate id="text_store"/>}
+                  dataSource={this.locationList.concat(this.props.locations.list)}
+                  valueKey="id"
+                  nameKey="name"
+                  form={form}
+                  defaultValue={this.locationList[0].id}/>
+              </this.Col>
+              <this.Col md="2">
+                <this.Select
+                  name="brandId"
+                  label={<this.Translate id="text_brand"/>}
+                  dataSource={this.brandList.concat(this.props.brands.list)}
+                  valueKey="id"
+                  nameKey="name"
+                  form={form}
+                  defaultValue={this.brandList[0].id}/>
+              </this.Col>
+              <this.Col md="2">
+                <this.Select
+                  name="productTypeId"
+                  label={<this.Translate id="text_product_type"/>}
+                  dataSource={this.productTypeList.concat(this.props.productsType.list)}
+                  defaultValue={this.productTypeList[0].id}
+                  valueKey="id"
+                  nestedName="productTypeDescriptions"
+                  nameKey="name"
+                  form={form}/>
+              </this.Col>
+              <this.Col md="2" className="wrap-btn-search">
+                <div className="ant-form-item-label" style={{visibility: "hidden"}}>
+                  <label htmlFor="status" className="" title=""></label>
+                </div>
+                <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
+                </this.Button> 
+              </this.Col>
 
-          </this.Row>
-        </this.Form>
-      </div>
+            </this.Row>
+          </this.Form>
+        </div>
     );
 
   }

@@ -12,6 +12,7 @@ export default class EmployeeList extends List {
     super(props);
     this.columns = new Column();
     this.formCreate = <FormCreate/>;
+    this.columnFilterWithKey = ["name"];
     this.callBackOnShowEditForm = this.showFormEdit;
     this.service = EmployeeService;
     this.action = EmployeeAction;
@@ -24,14 +25,21 @@ export default class EmployeeList extends List {
     }
   }
 
-
   showFormEdit(rowData) {
     this.props.dispatch(EmployeeAction.requestAndShowForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });
   }
+
+  render() {
+    return super.render();
+  }
+
+
 }
+
+
 
 class Column extends List {
   constructor(props) {

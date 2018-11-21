@@ -39,6 +39,7 @@ export default combineReducers({
     ];
     return reducer.detail(state, action, constants);
   },
+
   update: (state = InitialState.update(), action) => {
     const constants = [
       Constant.UPDATE_RETURN_PURCHASE_PENDING,

@@ -85,6 +85,7 @@ export default class ReturnPurchaseList extends List {
       {label: "Invoice No", key: "invoiceNo"},
       {label: "Due Date", key: "deliveryDueDate"},
       {label: "Shipping", key: "shippingFee"},
+      {label: "Item", key: "purchaseOrderEntries"},
       {label: "Total", key: "returnTotal"}
     ];
     this.callBackOnShowEditForm = this.showFormEdit;
@@ -132,7 +133,6 @@ export default class ReturnPurchaseList extends List {
     });
   }
   
-
   renderActionButton(){
     return this.renderButtonExportCSV();
   }

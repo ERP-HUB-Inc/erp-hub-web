@@ -191,66 +191,69 @@ export default class SaleHistoryList extends List {
 
   
   renderFilterRecord() {
-
+    const fetchingProps = this.props[this.fetchingProp];
     return(
-      <this.Form onSubmit={this.handleSubmitFilter}>
-        <this.Row className="main-search-layout">
-          <this.Col md="2">
-            <this.InputText
-              name="number"
-              placeholder={this.CATranslate("text_search_for_sale_no", this.props.locale)}
-              label={<this.Translate id="input-sale-history-sale-number" />}
-              form={this.props.form}/>
-          </this.Col>
-          <this.Col md="2">
-            <this.InputText
-              name="customer"
-              placeholder={this.CATranslate("text_search_for_customer", this.props.locale)}
-              label={<this.Translate id="text_customer" />}
-              form={this.props.form}/>
-          </this.Col>
-          <this.Col md="2">
-            <this.DateRangePicker
-              name="createdAt"
-              defaultValue={this.state.setDefaultDate}
-              label={<this.Translate id="text_date" />}
-              form={this.props.form}/>
-          </this.Col>
-          <this.Col md="2">
-            <this.Select
-              name="type"
-              placeholder={this.CATranslate("text_type", this.props.locale)}
-              dataSource={this.TRANSACTION_TYPE_STR}
-              label={<this.Translate id="text_type" />}
-              form={this.props.form}/>
-          </this.Col>
-          <this.Col md="2">
-            <this.Select
-              name="locationId"
-              dataSource={this.storeList.concat(this.props.storeLocation.list)}
-              defaultValue=""
-              valueKey="id"
-              label={<this.Translate id="input-sale-history-store" />}
-              form={this.props.form}/>
-          </this.Col>
-          <this.Col md="2">
-            <this.Select
-              name="userId"
-              dataSource={this.employeeList.concat(this.props.users.list)}
-              defaultValue=""
-              valueKey="id"
-              nameKey="fullName"
-              label={<this.Translate id="text_employee" />}
-              form={this.props.form}/>
-          </this.Col>
-          <this.Col md="2" className="wrap-btn-search">
-            <this.Button htmlType="submit" type="info" >
-              <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
-            </this.Button> 
-          </this.Col>
+      this.props.form == null ?
+        ""
+        :
+        <this.Form onSubmit={this.handleSubmitFilter}>
+          <this.Row className="main-search-layout">
+            <this.Col md="2">
+              <this.InputText
+                name="number"
+                placeholder={this.CATranslate("text_search_for_sale_no", this.props.locale)}
+                label={<this.Translate id="input-sale-history-sale-number" />}
+                form={this.props.form}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.InputText
+                name="customer"
+                placeholder={this.CATranslate("text_search_for_customer", this.props.locale)}
+                label={<this.Translate id="text_customer" />}
+                form={this.props.form}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.DateRangePicker
+                name="createdAt"
+                defaultValue={this.state.setDefaultDate}
+                label={<this.Translate id="text_date" />}
+                form={this.props.form}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="type"
+                placeholder={this.CATranslate("text_type", this.props.locale)}
+                dataSource={this.TRANSACTION_TYPE_STR}
+                label={<this.Translate id="text_type" />}
+                form={this.props.form}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="locationId"
+                dataSource={this.storeList.concat(this.props.storeLocation.list)}
+                defaultValue=""
+                valueKey="id"
+                label={<this.Translate id="input-sale-history-store" />}
+                form={this.props.form}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="userId"
+                dataSource={this.employeeList.concat(this.props.users.list)}
+                defaultValue=""
+                valueKey="id"
+                nameKey="fullName"
+                label={<this.Translate id="text_employee" />}
+                form={this.props.form}/>
+            </this.Col>
+            <this.Col md="2" className="wrap-btn-search">
+              <this.Button htmlType="submit" type="info"  loading={this.state.isClickFilter && fetchingProps.fetching}>
+                <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
+              </this.Button> 
+            </this.Col>
             
-        </this.Row>
-      </this.Form>
+          </this.Row>
+        </this.Form>
     );
   }
 

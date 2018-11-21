@@ -269,7 +269,7 @@ export default class PurchaseList extends List {
         data={this.exportCsv()}
         headers={this.ExportheadersCsv}
       >
-        <this.Button type="info">
+        <this.Button type="info" disabled={ this.props.purchaseReport.list.length > 0 ? false : true }>
           <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
         </this.Button>
       </this.CSVLink>
@@ -280,61 +280,64 @@ export default class PurchaseList extends List {
 
   renderFilterRecord() {
     const {form, locale} = this.props;
+    const fetchingProps = this.props[this.fetchingProp];
     const POStepList = Object.keys(this.PO_STEP_STR).map((prop) => {
       return {name: this.PO_STEP_STR[prop].name, value: prop};
     });
     POStepList.unshift({name: <this.Translate id="text_all_step"/>, value: -1});
-
+   
     return(
-     
-      <div>
-        <this.Form onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout"> 
-            <this.Col md="2">
-              <this.InputText
-                name="key"
-                label={<this.Translate id="text_key" />}
-                placeholder={this.CATranslate("purchase_order_search_key_place_holder", locale)}
-                isAutoFocus={true}
-                form={form}/>
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="supplierId"
-                label={<this.Translate id="text_supplier" /> }
-                dataSource={this.supplierList.concat(this.props.supplier.list)}
-                defaultValue={this.supplierList[0].id}
-                valueKey="id"
-                form={form}/>
-            </this.Col>
-            <this.Col md="2">
-              <this.DatePickers
-                name="deliveryDueDate"
-                label={<this.Translate id="text_due_date" />}
-                form={form}
-              />
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="step"
-                label={<this.Translate id="text_step" />}
-                dataSource={POStepList}
-                defaultValue={POStepList[0].value}
-                form={form}
-              />
-            </this.Col>
-            <this.Col md="2" className="wrap-btn-search">
-              <div className="ant-form-item-label" style={{visibility: "hidden"}}>
-                <label htmlFor="status" className="" title=""></label>
-              </div>
-              <this.Button htmlType="submit" type="info" >
-                <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
-              </this.Button> 
-            </this.Col>
+      form == null ?
+        ""
+        :
+        <div>
+          <this.Form onSubmit={this.handleSubmitFilter}>
+            <this.Row className="main-search-layout"> 
+              <this.Col md="2">
+                <this.InputText
+                  name="key"
+                  label={<this.Translate id="text_key" />}
+                  placeholder={this.CATranslate("purchase_order_search_key_place_holder", locale)}
+                  isAutoFocus={true}
+                  form={form}/>
+              </this.Col>
+              <this.Col md="2">
+                <this.Select
+                  name="supplierId"
+                  label={<this.Translate id="text_supplier" /> }
+                  dataSource={this.supplierList.concat(this.props.supplier.list)}
+                  defaultValue={this.supplierList[0].id}
+                  valueKey="id"
+                  form={form}/>
+              </this.Col>
+              <this.Col md="2">
+                <this.DatePickers
+                  name="deliveryDueDate"
+                  label={<this.Translate id="text_due_date" />}
+                  form={form}
+                />
+              </this.Col>
+              <this.Col md="2">
+                <this.Select
+                  name="step"
+                  label={<this.Translate id="text_step" />}
+                  dataSource={POStepList}
+                  defaultValue={POStepList[0].value}
+                  form={form}
+                />
+              </this.Col>
+              <this.Col md="2" className="wrap-btn-search">
+                <div className="ant-form-item-label" style={{visibility: "hidden"}}>
+                  <label htmlFor="status" className="" title=""></label>
+                </div>
+                <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
+                </this.Button> 
+              </this.Col>
 
-          </this.Row>
-        </this.Form>
-      </div>
+            </this.Row>
+          </this.Form>
+        </div>
     );
 
   }
