@@ -41,7 +41,6 @@ export default class ProfitAndLostList extends List {
   }
 
   componentDidMount(){
-    super.componentDidMount();
     this.loadFilter();
   }
 
@@ -103,6 +102,13 @@ export default class ProfitAndLostList extends List {
   exportCsv(){
     const { profitAndLostReport } = this.props;
     let getIncomeExpenseValue = [];
+    let form = this.props.form;
+    if(form.getFieldValue("reportType") === 2){
+      this.exportCsvFileName = "Operation-profit-and-lost-report.csv";
+    }else if(form.getFieldValue("reportType") === this.Enum.OPERATION_TYPE.EXPENSE){
+      this.exportCsvFileName = "Sale-profit-and-lost-report.csv";
+    }
+
     if (profitAndLostReport.list) {
       
       profitAndLostReport.list.forEach(profitReport => {
@@ -111,13 +117,13 @@ export default class ProfitAndLostList extends List {
             createdAt: profitReport.createdAt,
             name: profitReport.name,
             amount: this.formatCurrency(profitReport.amount),
-            type: profitReport.type === this.Enum.OPERATION_TYPE.INCOME ? "Revenus" : "Expense"
+            type: profitReport.type === this.Enum.OPERATION_TYPE.INCOME ?  this.CATranslate("col_profit_and_lost_revenus", this.props.locale) : this.CATranslate("col_profit_and_lost_expense", this.props.locale)
           });
         }
       });
 
       getIncomeExpenseValue.push({
-        createdAt: "Net Income",
+        createdAt: this.CATranslate("col_profit_and_lost_net_income", this.props.locale),
         name:  this.groupIncomeExpenseByType().netincome,
         amount: "",
         type: ""
@@ -176,6 +182,7 @@ export default class ProfitAndLostList extends List {
 
     filter = JSON.stringify(filter);
     dispatch(this.action.fetch(filter,rangFilter));
+    console.log("filter",filter);
     this.setState({isClickFilter: true});
 
   }
