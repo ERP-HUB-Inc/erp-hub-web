@@ -15,11 +15,6 @@ export default class FormReciptTemplateCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        values["isDefault"] = this.Util.checkValueSwitch(values.isDefault);
-        values["isShowStoreName"] = this.Util.checkValueSwitch(values.isShowStoreName);
-        values["isShowCustomerInfo"] = this.Util.checkValueSwitch(values.isShowCustomerInfo);
-        values["isShowDevelopBy"] = this.Util.checkValueSwitch(values.isShowDevelopBy);
-        values["isDefault"] = this.Util.checkValueSwitch(values.isDefault);
         values["logo"] = this.getImageFromUpload(values, "logo");
         this.dispatch(ReceiptAction.add(values));
       }

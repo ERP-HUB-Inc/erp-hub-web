@@ -63,6 +63,9 @@ export class Util {
     return result;
   }
 
+  getBaseUrl(){
+    return window.location.href;
+  }
   
   getAccessToken () {
     const result = this.getAuthSession();

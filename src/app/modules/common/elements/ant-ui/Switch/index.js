@@ -16,6 +16,9 @@ export class Switchs extends Element {
   }
 
   onChange(checked) {
+    this.props.form.setFieldsValue({
+      [this.props.name]: this.Util.checkValueSwitch(checked)
+    });
     this.setState({checked});
     const value  = checked ? 1 : 0;
     const onChange = this.props.onChange;

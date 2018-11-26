@@ -103,6 +103,7 @@ export default class ProfitAndLostList extends List {
     const { profitAndLostReport } = this.props;
     let getIncomeExpenseValue = [];
     let form = this.props.form;
+    
     if(form.getFieldValue("reportType") === 2){
       this.exportCsvFileName = "Operation-profit-and-lost-report.csv";
     }else if(form.getFieldValue("reportType") === this.Enum.OPERATION_TYPE.EXPENSE){

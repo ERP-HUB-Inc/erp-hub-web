@@ -103,7 +103,7 @@ export default class FormItem extends Modal {
                 data={formData.lastName}
                 placeholder={this.CATranslate("input_management_customer_last_name", this.props.locale)}
                 required={true}
-                errorRequired={<this.Translate id="input_management_customer_last_name_length" />}
+                errorRequired={<this.Translate id="input_error_management_customer_last_name_length" />}
                 max={100}
                 form={this.props.form}/>
             </this.Col>   
@@ -123,7 +123,7 @@ export default class FormItem extends Modal {
                 name="groupCustomerId"
                 label={<this.Translate id="input_management_customer_customer_group" />}
                 placeholder={this.CATranslate("select_customer_place_holder_group", this.props.locale)}
-                defaultValue={formData.groupCustomerId}
+                defaultValue={formData.groupCustomer ? formData.groupCustomer.id : []}
                 dataSource={groupCustomers.list}
                 valueKey="id"
                 addNew={this.props.handleAddCustomerGroup}

@@ -30,12 +30,6 @@ class Column extends List {
         key: "tag",
         sorter: true
       },
-      {
-        title: <this.Translate id="text_description" />,
-        dataIndex: "description",
-        key: "description",
-        sorter: true
-      },
       this.columnStatus
     ];
   }
