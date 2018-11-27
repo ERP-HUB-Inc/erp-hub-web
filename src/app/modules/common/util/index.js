@@ -64,7 +64,7 @@ export class Util {
   }
 
   getBaseUrl(){
-    return window.location.href;
+    return window.location.origin;
   }
   
   getAccessToken () {

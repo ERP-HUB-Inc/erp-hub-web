@@ -87,7 +87,6 @@ export default class Diagram extends Component {
                         <this.Translate id="home_page_graph_income" />
                       </this.Col>
                     </this.Row>
-                    {/* { console.log("get pie",incomeExpense.income[1] && incomeExpense.income[1].labels  ? "null" : "not null"  ) } */}
                     {
                       incomeExpense.income[0] && incomeExpense.income[0].labels.length > 0 ?
                         <Doughnut
