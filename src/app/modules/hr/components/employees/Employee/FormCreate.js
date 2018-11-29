@@ -38,6 +38,9 @@ export default class FormCreate extends Modal {
         values["status"] = this.Enum.ACTIVE;
         values["locationId"] = this.state.locationId;
         values["locations"] = this.state.locations;
+        if(values["autogenerate"] === undefined){
+          values["autogenerate"] = 1;
+        }
         this.dispatch(EmployeeAction.add(values));   
       }
 

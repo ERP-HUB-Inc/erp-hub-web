@@ -12,7 +12,7 @@ export default class ProductsTagList extends List {
     this.columns = new Column();
     this.formCreate = <FormCreate/>;
     this.formUpdate = <FormUpdate/>;
-    this.columnFilterWithKey = ["name"];
+    this.columnFilterWithKey = ["tag"];
     this.service = ProductsTagService;
     this.action = ProductsTagAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCTS_TAG;

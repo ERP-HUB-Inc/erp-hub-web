@@ -235,14 +235,15 @@ export default class StoreAccountList extends Component {
             this.Util.isNoPermissionProp(this.props) ?
               <NoPermission />
               :
-              <this.Form onSubmit={this.handleSubmit}>
-                <div className="main-layout main-store-account">
+              
+              <div className="main-layout main-store-account">
+                <this.Form onSubmit={this.handleSubmit}>
                   <this.Row>
                     <this.Col md="12"> 
                       <this.Tabs type="card">
                         <this.TabPane tab={<this.Translate id="store_acc_general" />} key="1">
                           <this.Row>
-                            <this.Col lg="6" md="6"> 
+                            <this.Col lg="4" md="4"> 
                               <this.InputText
                                 name="businessName"
                                 data={storeAccount.list.businessName}
@@ -276,8 +277,7 @@ export default class StoreAccountList extends Component {
                                 placeholder={this.CATranslate("store_acc_country", locale)}
                                 disabled
                                 form={form}/>
-                            </this.Col>
-                            <this.Col lg="6" md="6">
+
                               <this.Select
                                 name="languageId"
                                 dataSource={this.props.languages}
@@ -303,6 +303,7 @@ export default class StoreAccountList extends Component {
                                 label={<this.Translate id="store_acc_currency_position" />}
                                 placeholder={this.CATranslate("store_acc_currency_position", locale)}
                                 form={form} />
+
                               <this.Select
                                 name="taxId"
                                 dataSource={taxs}
@@ -311,7 +312,9 @@ export default class StoreAccountList extends Component {
                                 label={<this.Translate id="store_acc_tax" />}
                                 placeholder={this.CATranslate("store_acc_tax", locale)}
                                 form={form} />
-                    
+
+                            </this.Col>
+                            <this.Col lg="4" md="4"> 
                               <this.Select
                                 name="dateFormat"
                                 dataSource={this.Util.listFormatDate()}
@@ -326,7 +329,7 @@ export default class StoreAccountList extends Component {
                         </this.TabPane>
                         <this.TabPane tab={<this.Translate id="store_acc_account" />} key="2">
                           <this.Row>
-                            <this.Col lg="6" md="6"> 
+                            <this.Col lg="4" md="4"> 
                               <this.InputEmail
                                 data={storeAccount.list.email}
                                 name="userName"
@@ -361,64 +364,56 @@ export default class StoreAccountList extends Component {
                         </this.TabPane>
                         <this.TabPane tab={<this.Translate id="store_acc_contact" />} key="3">
                           <this.Row>
-                            <this.Col md="6">
+                            <this.Col lg="4" md="4"> 
                               <this.InputText
                                 data={storeAccount.list.firstName}
                                 name="firstName"
                                 label={<this.Translate id="store_acc_first_name" />}
                                 placeholder={this.CATranslate("store_acc_first_name", locale)}
                                 form={form}/>
-                            </this.Col>
-
-                            <this.Col md="6">
+                           
                               <this.InputText
                                 data={storeAccount.list.lastName}
                                 name="lastName"
                                 label={<this.Translate id="store_acc_last_name" />}
                                 placeholder={this.CATranslate("store_acc_last_name", locale)}
                                 form={form}/>
-                            </this.Col>
-                            <this.Col md="6">
+                           
                               <this.InputEmail
                                 data={storeAccount.list.email}
                                 name="email"
                                 label={<this.Translate id="store_acc_email" />}
                                 placeholder={this.CATranslate("store_acc_email", locale)}
                                 form={form}/>
-                            </this.Col>
-                            <this.Col md="6">
+                           
                               <this.InputText
                                 data={storeAccount.list.phoneNumber}
                                 name="phoneNumber"
                                 label={<this.Translate id="store_acc_phone_number" />}
                                 placeholder={this.CATranslate("store_acc_phone_number", locale)}
                                 form={form} />
-                            </this.Col>
-                            <this.Col md="6">
+                            
                               <this.InputText
                                 data={storeAccount.list.address}
                                 name="address"
                                 label={<this.Translate id="store_acc_address" />}
                                 placeholder={this.CATranslate("store_acc_address", locale)}
                                 form={form}/>
-                            </this.Col>
-                            <this.Col md="6">
+                          
                               <this.InputText
                                 data={storeAccount.list.street}
                                 name="street"
                                 label={<this.Translate id="store_acc_street" />}
                                 placeholder={this.CATranslate("store_acc_street", locale)}
                                 form={form}/>
-                            </this.Col>
-                            <this.Col md="6">
+                            
                               <this.InputText
                                 data={storeAccount.list.city}
                                 name="city"
                                 label={<this.Translate id="store_acc_city" />}
                                 placeholder={this.CATranslate("store_acc_city", locale)}
                                 form={form}/>
-                            </this.Col>
-                            <this.Col md="6">
+                          
                               <this.InputText
                                 data={storeAccount.list.postCode}
                                 name="postCode"
@@ -430,7 +425,7 @@ export default class StoreAccountList extends Component {
                         </this.TabPane>
                         <this.TabPane tab={<this.Translate id="store_acc_setting" />} key="4">
                           <this.Row>
-                            <this.Col lg="6" md="6"> 
+                            <this.Col lg="4" md="4"> 
                               <this.Select
                                 name="productGenerateCodeType"
                                 defaultValue={storeAccount.list.productGenerateCodeType}
@@ -452,7 +447,7 @@ export default class StoreAccountList extends Component {
                         </this.TabPane>
                         <this.TabPane tab="Device" key="5">
                           <this.Row>
-                            <this.Col lg="6" md="6"> 
+                            <this.Col lg="4" md="4"> 
                               <this.InputNumber
                                 data={storeAccount.list.numberOfDevice}
                                 name="deviceNumber"
@@ -512,7 +507,7 @@ export default class StoreAccountList extends Component {
                         </this.TabPane>
                         <this.TabPane tab={<this.Translate id="store_acc_billing" />} key="6">
                           <this.Row>
-                            <this.Col lg="6" md="6"> 
+                            <this.Col lg="4" md="4"> 
                               <this.DatePickers
                                 name="registerDate"
                                 defaultValue={this.Util.formatDatePicker(storeAccount.list.registerDate)}
@@ -533,12 +528,11 @@ export default class StoreAccountList extends Component {
                                   :
                                   ""
                               }
-                            </this.Col> 
-                          </this.Row>
-                        </this.TabPane>
-                        <this.TabPane tab={<this.Translate id="store_acc_plan" />} key="7">
-                          <this.Row>
-                            <this.Col lg="6" md="6"> 
+
+                              <div class="general">
+                                <h6><this.Translate id="store_acc_plan" /></h6>
+                              </div>
+
                               <this.FormGroup>
                                 <this.RadioBox 
                                   className="main-radio-acc"
@@ -569,9 +563,11 @@ export default class StoreAccountList extends Component {
                                 form={form}
                                 disabled={true}
                                 required/>
-                            </this.Col>
-                          </this.Row> 
+
+                            </this.Col> 
+                          </this.Row>
                         </this.TabPane>
+    
                       </this.Tabs>
                       
                     </this.Col> 
@@ -580,8 +576,9 @@ export default class StoreAccountList extends Component {
                   <this.Button type="info" htmlType="submit" loading={storeAccountUpdate.updating}>
                     <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
                   </this.Button>
-                </div>
-              </this.Form>
+                </this.Form>
+              </div>
+              
         }
       </div>
     );

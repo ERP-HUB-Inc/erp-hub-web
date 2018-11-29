@@ -2,19 +2,19 @@ import React from "react";
 import List from "../List";
 import FormCreate from "../../../containers/settings/RoleAccess/FormCreate";
 import FormUpdate from "../../../containers/settings/RoleAccess/FormUpdate";
-import PrivilegeList from "../../../containers/settings/RoleAccess/PrivilegeList";
 import Constant from "../../../constants/settings/roleAccess";
 import RoleAccessAction from "../../../action/settings/roleAccess";
 import RolePrivilegeAction from "../../../action/settings/rolePrivilege";
 import RoleAccessService from "../../../services/settings/RoleAccessService";
+import StartUp from "../../../../common/components/StartUp";
+import NoPermission from "../../../../common/components/shares/List/NoPermission";
 import "./index.css";
 
 export default class PaymentMethodList extends List {
   constructor(props) {
     super(props);
     this.state = {
-      ...this.state,
-      rowData: null
+      ...this.state
     };
     this.columns = new Column();
     this.fetchingProp = "roleAccess";
@@ -104,21 +104,24 @@ export default class PaymentMethodList extends List {
     }
 
     return (
-      <div style={{marginTop: "15px", width: "100%"}}>
-        { this.renderBreadCrumb()}
-        <this.Row className="main-row-role-access">
-          <this.Col md="8">
-            { this.renderTableList(fetchingProps) }
-          </this.Col>
-          <this.Col md="4">
-            { <PrivilegeList rolePrivileges={this.props.rolePrivileges} rowData={this.state.rowData}/> }
-          </this.Col>
+      this.Util.isCheckingPermission(this.props) ?
+        <StartUp />
+        :
+        this.Util.isNoPermissionProp(this.props) ?
+          <NoPermission />
+          :
+          <div style={{marginTop: "15px", width: "100%"}}>
+            { this.renderBreadCrumb()}
+            <this.Row className="main-row-role-access">
+              <this.Col md="12">
+                { this.renderTableList(fetchingProps) }
+              </this.Col>
           
-          { this.state.modalConten }
+              { this.state.modalConten }
 
-          { this.renderModalConfirmDelete() }
-        </this.Row>
-      </div>
+              { this.renderModalConfirmDelete() }
+            </this.Row>
+          </div>
     );
   }
 }

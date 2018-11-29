@@ -29,3 +29,11 @@
     font-size: 8pt;
     height: 25px
 }
+
+.main-layout.main-store-account {
+    min-height: 100%;
+}
+
+.main-layout.main-store-account .main-upload .ant-upload-list-picture-card .ant-upload-list-item {
+   height: 153px !important; 
+}

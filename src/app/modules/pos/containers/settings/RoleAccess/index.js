@@ -17,7 +17,7 @@ function mapStateToProps(state) {
     roleAccessAdd: state.reducer.roleAccess.add,
     roleAccessArchive: state.reducer.roleAccess.archive,
     roleAccessUpdate: state.reducer.roleAccess.update,
-    rolePrivileges: state.reducer.rolePrivilege.request,
+    // rolePrivileges: state.reducer.rolePrivilege.request,
     locale: state.locale
   };
 }

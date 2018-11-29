@@ -67,6 +67,6 @@ InputText.defaultProps = {
   type: "text",
   max: 255,
   isAutoFocus: false,
-  required: false,
+  // required: false,
   disabled: false
 };

@@ -110,6 +110,7 @@
     color: #BCBCCB
 }
 
-.main-role-access {
-    margin-top: 50px
+.main-role-access .ant-collapse {
+    height: 500px;
+    overflow-y: scroll;
 }

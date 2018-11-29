@@ -16,7 +16,8 @@ export default class FormItem extends Modal {
         checked: false,
         locationId: ""
       },
-      disabled: false
+      disabled: true,
+      requiredPassword: false
     };
     this.timer = null;
     this.hasReceiveProps = false;
@@ -240,7 +241,8 @@ export default class FormItem extends Modal {
 
   onChange(checked){
     this.setState({
-      disabled : checked === 1 
+      disabled : checked === 1 ,
+      requiredPassword: checked === 1 ? false : true
     });
     this.props.form.setFieldsValue({password: ""});
   }
@@ -374,6 +376,7 @@ export default class FormItem extends Modal {
                 data={formData.password}
                 label={<this.Translate id="input_hr_employee_user_password" />}
                 placeholder={this.CATranslate("input_hr_employee_user_password", locale)}
+                required={this.state.requiredPassword}
                 disabled={this.state.disabled}
                 form={form}/>
             </this.Col>
@@ -385,7 +388,7 @@ export default class FormItem extends Modal {
                 form={form}/>
             </this.Col>
 
-            <this.Col md="6">
+            {/* <this.Col md="6">
               <this.DatePickers
                 label={<this.Translate id="input_hr_employee_expired_date" />}
                 defaultValue={this.Util.formatDatePicker(formData.passwordExpiredAt)}
@@ -406,7 +409,7 @@ export default class FormItem extends Modal {
                 checked={formData.account != null && formData.account.isPasswordExpired}
                 form={form}
               />
-            </this.Col> 
+            </this.Col>  */}
           </this.Row>
         </this.TabPane>
         <this.TabPane tab={<this.Translate id="text_location_access"/>} key="3">
