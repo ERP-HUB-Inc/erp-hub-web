@@ -21,7 +21,6 @@ export default class FormItem extends Modal {
       taxs: [],
       productsType: [],
       languages: [],
-      variantAttributes: [],
       tags: [],
       productTypeIndex: 0, // for condition three type starndard, variant, composite
       isAutoGenerateCode: 0,
@@ -103,7 +102,6 @@ export default class FormItem extends Modal {
       taxs: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.TAX)),
       productsType: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE)),
       languages: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LANGUAGE)),
-      variantAttributes: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.VARIANT_ATTRIBUTE)),
       tags: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.PRODUCT_TAG))
     });
   }
@@ -173,7 +171,7 @@ export default class FormItem extends Modal {
       dispatch(TaxAction.reset());
     }
 
-    if (formData.productTagToProduct.length > 0 && this.state.isComponentNotYetUpdated) {
+    if (formData.tags.length > 0 && this.state.isComponentNotYetUpdated) {
       this.setState({isComponentNotYetUpdated: false});
     }
   }
@@ -290,7 +288,6 @@ export default class FormItem extends Modal {
       form,
       locale,
       formData,
-      productVariantArchive,
       productSearch,
       variantAttributeAdd
     } = this.props;
@@ -314,12 +311,8 @@ export default class FormItem extends Modal {
     }
 
     let productTypeBox = Enum.PRODUCT_STANDARD;
-    if (formData.id != null) {
-      if (formData.productVariant.length > 0 ) {
-        productTypeBox = Enum.PRODUCT_VARIANT;
-      } else if (formData.productPackageToProduct.length > 0) {
-        productTypeBox = Enum.PRODUCT_COMPOSITE;
-      }
+    if (formData.id) {
+      productTypeBox = formData.productOption;
     } else {
       productTypeBox = this.state.productTypeIndex;
     }
@@ -497,7 +490,7 @@ export default class FormItem extends Modal {
                     nameKey="tag"
                     valueKey="id"
                     dataSource={this.state.tags}
-                    defaultValue={formData.productTagToProduct.map(productTag => productTag.tagId)}
+                    defaultValue={formData.tags.map(productTag => productTag.tagId)}
                     onChange={this.props.handleChangeTag}
                     onSelect={this.props.handleSelectTag}
                     onDeselect={this.props.handleDeselectTag}
@@ -612,9 +605,14 @@ export default class FormItem extends Modal {
                       dispatch={dispatch}
                       form={form}
                       locale={locale}
-                      productVariantArchive={productVariantArchive}
-                      productVariant={formData.productVariant}
-                      variantAttributes={this.state.variantAttributes}
+                      formData={formData}
+                      productVariantArchive={this.props.productVariantArchive}
+                      productVariantCheckStatus={this.props.productVariantCheckStatus}
+                      callBackGetProductAttribute={this.props.callBackGetProductAttribute}
+                      callBackGetProductVariant={this.props.callBackGetProductVariant}
+                      productVariants={formData.productVariants}
+                      productAttributes={formData.productAttributes}
+                      variantAttributes={this.props.variantAttributes}
                       variantAttributeAdd={variantAttributeAdd}
                       handleAddVariantAttribute={this.props.handleAddVariantAttribute}/>
                     :
@@ -683,8 +681,9 @@ FormItem.defaultProps = {
     price: null,
     isAvialableSale: 1,
     isPublic: 0,
-    productTagToProduct: [],
-    productVariant: [],
+    tags: [],
+    productVariants: [],
+    productAttributes: [],
     productPackageToProduct: [],
     productDescriptions:[],
     status: 1

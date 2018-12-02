@@ -8,7 +8,9 @@ export default combineReducers({
     const constants = [
       Constant.REQUEST_VARIANT_ATTRIBUTE_PENDING,
       Constant.REQUEST_VARIANT_ATTRIBUTE_REJECTED,
-      Constant.REQUEST_VARIANT_ATTRIBUTE_FULFILLED
+      Constant.REQUEST_VARIANT_ATTRIBUTE_FULFILLED,
+      null,
+      Constant.RESET_REQUEST_VARIANT_ATTRIBUTE
     ];
     return reducer.request(state, action, constants);
   },

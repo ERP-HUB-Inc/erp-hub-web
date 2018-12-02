@@ -16,6 +16,10 @@
     top: -5px
 }
 
+.standard-product-row .ant-table-row-expand-icon-cell .ant-table-row-expand-icon {
+    display: none
+}
+
 .group-code-generate .ant-form-item {
     margin-bottom: 0 !important
 }

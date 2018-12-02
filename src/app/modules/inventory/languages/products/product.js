@@ -514,5 +514,9 @@ export default {
     "Product description allow only 255 charactor only.",
     "Product description allow only 255 charactor only.",
     "Product description allow only 255 charactor only."
+  ],
+
+  "delete_product_variant_warning": [
+    "We don't allow you to delete product variant that has quantity in stock."
   ]
 };

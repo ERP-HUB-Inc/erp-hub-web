@@ -78,7 +78,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_PRODUCT,
-        payload: ProductService.changeStatusProductVarait(id)
+        payload: ProductService.changeProductVariantStatus(id)
       });
     };
   },
@@ -102,7 +102,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.DETAIL_PRODUCTS,
-        payload: ProductService.detail(data.id)
+        payload: ProductService.detail(data.id, data.productOption)
       });
     };
   },

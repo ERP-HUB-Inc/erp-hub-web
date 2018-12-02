@@ -20,6 +20,18 @@ tr:nth-child(odd) {
     background-color: #faf9f9;
 }
 
+.ant-table-expanded-row .ant-table table tbody tr:nth-child(odd) {
+    background-color: rgb(255, 255, 255)
+}
+
+.ant-table-expanded-row .ant-table table tbody tr td {
+    border-top: 0.5px solid #EAEAEA !important
+}
+
+.ant-table-expanded-row  td:last-child {
+    padding-right: 0 !important
+}
+
 .ant-table-body table tr td {
     color: #4D4F5C;
     font-size: 10pt;

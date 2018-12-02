@@ -16,12 +16,13 @@ export default class FormItem extends Modal {
           name="name"
           label={<this.Translate id="text_name" />}
           placeholder={this.CATranslate("text_name", locale)}
-          errorLenght={<this.Translate id="error_receipt_template_name_length" />}
           max={100}
           min={4}
           data={formData.name}
           required={true}
           isAutoFocus={true}
+          errorRequired={<this.Translate id="error_require_name" />}
+          errorLenght={<this.Translate id="error_receipt_template_name_length" />}
           form={form}/>
 
         <this.UploadImg 

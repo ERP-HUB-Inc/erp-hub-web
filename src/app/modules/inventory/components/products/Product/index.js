@@ -14,7 +14,6 @@ import LanguageAction from "../../../../pos/action/settings/storeLanguage";
 import LocationAction from "../../../../pos/action/settings/storeLocation";
 import ProductAction from "../../../actions/products/product";
 import PriceTagAction from "../../../actions/products/priceTag";
-import VariantAttributeAction from "../../../actions/products/variantAttribute";
 import ProductTagAction from "../../../actions/products/productsTag";
 import ProductService from "../../../services/products/ProductService";
 import PrivilegeAction from "../../../../pos/action/settings/privilege";
@@ -36,6 +35,7 @@ export default class ProductList extends List {
     this.columnExpend = new ColumnExpand(); 
     this.fetchingProp = "products";
     this.isShowExpandable = true;
+    this.rowClassName = record => record.productOption === Enum.PRODUCT_STANDARD ? "standard-product-row" : "";
     this.componentHasUpdated = false;
     this.service = ProductService;
     this.columnFilterWithKey = ["name", "barcode"];
@@ -85,10 +85,6 @@ export default class ProductList extends List {
       localStorage.setItem(Enum.LOCAL_SCHEMA.LANGUAGE, JSON.stringify(nextProps.storeLanguage.list));
     }
 
-    if (nextProps.variantAttributes.fetched) {
-      localStorage.setItem(Enum.LOCAL_SCHEMA.VARIANT_ATTRIBUTE, JSON.stringify(nextProps.variantAttributes.list));
-    }
-
     if (nextProps.tags.fetched) {
       localStorage.setItem(Enum.LOCAL_SCHEMA.PRODUCT_TAG, JSON.stringify(nextProps.tags.list));
     }
@@ -109,7 +105,6 @@ export default class ProductList extends List {
       this.props.dispatch(UnitAction.fetch(100));
       this.props.dispatch(TaxAction.fetch(100));
       this.props.dispatch(LanguageAction.fetch(10));
-      this.props.dispatch(VariantAttributeAction.fetch(100));
       this.props.dispatch(ProductTagAction.fetch(100));
       this.componentHasUpdated = true;
     }
@@ -264,7 +259,7 @@ export default class ProductList extends List {
       <div className="sub-table">
         <this.SubTable 
           columns={this.columnExpend}
-          dataSource={record.productVariantToProduct}
+          dataSource={record.productVariants}
           locale={{emptyText: <this.Translate id="placeholder_table_variant_product" />}}/>
       </div>
     );
@@ -276,45 +271,69 @@ class ColumnExpand extends List {
     super(props);
     return [
       {
-        dataIndex: "",
-        render: () => {}
+        dataIndex: "blank1",
+        key: "blank1",
+        width: 50,
+        render: () => {},
       },
       {
         dataIndex: "name",
         key: "name"
       },
       {
-        dataIndex: "",
+        dataIndex: "barcode",
+        key: "barcode",
+        width: 100,
+        render: barcode => barcode ? barcode : this.emptyCell
+      },
+      {
+        dataIndex: "tag",
+        key: "tag",
+        width: 150,
+        render: () => {},
+      },
+      {
+        dataIndex: "productType",
+        key: "productType",
+        width: 200,
         render: () => {}
       },
       {
-        dataIndex: "",
-        render: () => {}
-      },
-      {
-        dataIndex: "",
+        dataIndex: "brandId",
+        key: "brandId",
+        width: 100,
         render: () => {}
       },
       {
         dataIndex: "price",
         key: "price",
+        width: 150,
+        align: "center",
         render: price => this.formatCurrency(price)
       },
       {
         dataIndex: "quantity",
         key: "quantity",
+        width: 130,
+        align: "center",
         render: quantity => quantity === null ? 0 : quantity
       },
       {
-        dataIndex: "",
+        dataIndex: "unit",
+        key: "unit",
+        width: 100,
         render: () => {}
       },
       {
-        dataIndex: "",
+        dataIndex: "type",
+        key: "type",
+        width: 130,
         render: () => {}
       },
       {
-        dataIndex: "",
+        dataIndex: "status",
+        key: "status",
+        width: 120,
         render: () => {}
       }
     ];
@@ -414,7 +433,7 @@ class Column extends List {
         title: <this.Translate id="col_products_types" />,
         dataIndex: "type",
         key: "type",
-        width: 100,
+        width: 130,
         render: type => type === Enum.TYPE_OF_PRODUCT.GOOD ? <this.Translate id="input_product_good" /> : <this.Translate id="input_product_raw_material" />,
         sorter: true
       },

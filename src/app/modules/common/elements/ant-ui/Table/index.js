@@ -17,8 +17,7 @@ export class CTable extends React.Component {
         onRow={this.props.onRow}
         locale={this.props.locale}
         scroll={this.props.scroll}
-        footer={this.props.footer}
-      />
+        footer={this.props.footer}/>
     );
   }
 }
@@ -32,6 +31,7 @@ export class TableExpand extends React.Component {
     return (
       <Table
         rowKey={record => record.id}
+        rowClassName={this.props.rowClassName}
         expandedRowRender={this.props.expandedRowRender}
         rowSelection={this.props.rowSelection}
         columns={this.props.columns}
@@ -40,8 +40,7 @@ export class TableExpand extends React.Component {
         loading={this.props.loading}  
         onChange={this.props.onChange}
         onRow={this.props.onRow}
-        locale={this.props.locale}
-      />
+        locale={this.props.locale}/>
     );
   }
 }
@@ -51,12 +50,12 @@ export class SubTable extends React.Component {
     return (
       <Table
         rowKey={record => record.id}
+        rowClassName={this.props.rowClassName}
         columns={this.props.columns}
         dataSource={this.props.dataSource}
         pagination={false}
         showHeader={false}
-        locale={this.props.locale}
-      />
+        locale={this.props.locale}/>
     );
   }
 }

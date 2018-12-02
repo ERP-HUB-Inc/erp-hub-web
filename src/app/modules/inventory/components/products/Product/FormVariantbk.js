@@ -1,8 +1,6 @@
 import React from "react";
-import _ from "lodash";
 import ProductAction from "../../../actions/products/product";
-import ProductVariantAction from "../../../actions/products/productVariant";
-import ConstantAttribute from "../../../constants/products/variantAttribute";
+import Constant from "../../../constants/products/product";
 import VariantAttributeAction from "../../../actions/products/variantAttribute";
 import Modal from "../../../../common/components/shares/Modal";
 export default class FormVariant extends Modal {
@@ -11,44 +9,46 @@ export default class FormVariant extends Modal {
     this.state = {
       productVariantToDelete: {
         id: "",
-        productVariantRow: null
+        variantAttributeKey: null,
+        productVariantKey: null
       },
       variantAttributes: [],
       variantAttributeList: [
         // {id: "00000001-0001-2018-957149-000000000001", productAttributeId: "0001", status: 1, attributeValue: [{id: "001", name: "RED"}, {id: "002", name: "BLACK"}]},
-        // {id: "00000001-0001-2018-957149-000000000002", productAttributeId: "0003", status: 1, attributeValue: [{id: "003", name: "16G"}, {id: "004", name: "32G"}]}
+        // {id: "00000001-0001-2018-957149-000000000002", productAttributeId: "0003", status: 1, attributeValue: [{id: "003", name: "16G"}, {id: "004", name: "32G"}]},
+        // {id: "00000001-0001-2018-957149-000000000003", productAttributeId: "0004", status: 1, attributeValue: [{id: "005", name: "MAX"}]}
       ],
       productVariantList: [
         // {
         //   id: "0001",
-        //   name: "RED/16G",
+        //   name: "RED/16G/MAX",
         //   barcode: "",
         //   cost: 0,
-        //   price: 1200,
+        //   price: 0,
         //   status: 1,
         // },
         // {
         //   id: "0002",
-        //   name: "BLACK/16G",
+        //   name: "BLACK/16G/MAX",
         //   barcode: "",
         //   cost: 0,
-        //   price: 1200,
+        //   price: 0,
         //   status: 1,
         // },
         // {
         //   id: "0003",
-        //   name: "RED/32G",
+        //   name: "RED/32G/MAX",
         //   barcode: "",
         //   cost: 0,
-        //   price: 1200,
+        //   price: 0,
         //   status: 1,
         // },
         // {
         //   id: "0001",
-        //   name: "BLACK/32G",
+        //   name: "BLACK/32G/MAX",
         //   barcode: "",
         //   cost: 0,
-        //   price: 1200,
+        //   price: 0,
         //   status: 1,
         // }
       ],
@@ -84,8 +84,9 @@ export default class FormVariant extends Modal {
           return <this.InputNumber
             name={`variantProductCost[${index}]`}
             className="text-right"
-            disabled={true}
-            data={record.cost}
+            isAutoSelect={true}
+            isHideTool={true}
+            data={record.barcode}
             form={this.props.form}/>;
         }
       },
@@ -117,11 +118,7 @@ export default class FormVariant extends Modal {
               name={`variantProductStatus[${index}]`}
               checked={record.status}
               form={this.props.form} />
-            <this.Button
-              loading={index === this.state.productVariantToDelete.productVariantRow && this.props.productVariantCheckStatus.fetching}
-              type="danger"
-              className="delete-variant-item"
-              onClick={() => this.handleRemoveProductVariant(index, record.id)}>
+            <this.Button type="danger" className="delete-variant-item" onClick={() => this.handleRemoveProductVariant(index, 1, record.id)}>
               <span className="icon-delete" style={{fontSize: "15pt"}}></span>
             </this.Button>
           </div>;
@@ -142,41 +139,37 @@ export default class FormVariant extends Modal {
   }
 
   componentWillUpdate(nextProps) {
-    const {productVariantCheckStatus} = nextProps;
+    const {productVariantArchive} = nextProps;
 
-    if (productVariantCheckStatus.fetched) {
-      const {productVariantRow} = this.state.productVariantToDelete;
-      this.deleteVariantThatExistInSystem(productVariantRow);
-      this.props.dispatch(ProductVariantAction.reset());
+    if (productVariantArchive.archived) {
+      const {id, variantAttributeKey, productVariantKey} = this.state.productVariantToDelete;
+      this.deleteVariantThatExistInSystem(variantAttributeKey, productVariantKey, id);
+      this.props.dispatch(ProductAction.reset(Constant.RESET_ARCHIVE_VARIANT_PRODUCT));
+      this.isRepsonseBackErrorOfDelete = "none";
       this.setState({modalVisible: false});
-    } else if (productVariantCheckStatus["error"]) {
-      this.Message.warning(this.CATranslate("delete_product_variant_warning", this.props.locale));
-      this.props.dispatch(ProductVariantAction.reset());
+    } else if (
+      productVariantArchive["error"] !== null &&
+      "data" in productVariantArchive["error"] &&
+      "error" in productVariantArchive["error"]["data"]
+    ) {
+      this.isRepsonseBackErrorOfDelete = "";
     }
 
     if (nextProps.variantAttributeAdd.added) {
       this.setState({variantAttributes: [nextProps.variantAttributeAdd.response.data, ...this.state.variantAttributes]});
     }
-
   }
 
   componentDidUpdate() {
     const {
-      productVariants,
-      productAttributes,
+      productVariant,
       dispatch,
       variantAttributeAdd
     } = this.props;
-    if (productVariants && productAttributes &&  this.state.isNotYetLoadComponentDidUpdated) {
+    if (productVariant && productVariant.length > 0 &&  this.state.isNotYetLoadComponentDidUpdated) {
       this.setState({
-        variantAttributeList: productAttributes,
-        productVariantList: productVariants,
         isNotYetLoadComponentDidUpdated: false
       });
-
-      if (this.props.callBackGetProductVariant) {
-        this.props.callBackGetProductVariant(productVariants);
-      }
     }
 
     if (variantAttributeAdd.added) {
@@ -184,18 +177,27 @@ export default class FormVariant extends Modal {
       dispatch(VariantAttributeAction.reset());
       document.getElementById(`lozenge-item${this.state.addAttributeRowIndex}`).focus();
     }
-
-    if (this.props.variantAttributes.fetched) {
-      this.setState({variantAttributes: this.props.variantAttributes.list});
-      if (this.props.callBackGetProductAttribute) {
-        this.props.callBackGetProductAttribute(this.props.variantAttributes.list);
-      }
-      this.props.dispatch(VariantAttributeAction.reset(ConstantAttribute.RESET_REQUEST_VARIANT_ATTRIBUTE));
-    }
   }
 
   componentDidMount() {
-    this.props.dispatch(VariantAttributeAction.fetch(100));
+    this.setState({variantAttributes: this.props.variantAttributes});
+  }
+
+  calculateTotalProductVariant(collection) {
+    let totalProductVariant = 0;
+    if (collection.length > 0) {
+      totalProductVariant = collection[0]["attributeValue"].length;
+    }
+
+    if (collection.length > 1) {
+      totalProductVariant *= collection[1]["attributeValue"].length;
+    }
+
+    if (collection.length > 2) {
+      totalProductVariant *= collection[2]["attributeValue"].length;
+    }
+
+    return totalProductVariant;
   }
 
   createTempValueForVariant() {
@@ -203,86 +205,96 @@ export default class FormVariant extends Modal {
   }
 
   generateProductVariant(collection, index) {
-    let existingProductVariantList = this.state.productVariantList;
-    let productVariantList = [];
-    // let isUpdateProduct = this.props.formData.id != null;
+    const existingProductVariantList = this.state.productVariantList;
+    const productVariantList = [];
+    let isNewProduct = true;
     const initialStartLoop = [0, 0, 0];
 
     if (collection.length > 0) {
-      // if (isUpdateProduct) {
-      //   initialStartLoop[index] = collection[index]["attributeValues"].length - 1;
-      // }
-      initialStartLoop[index] = collection[index]["attributeValues"].length - 1;
+      if (!isNewProduct) {
+        initialStartLoop[index] = collection[index]["attributeValue"].length - 1;
+      }
 
       let name = "";
       
-      // LOOP 1
-      const lengthi1 = collection[0].attributeValues.length;
-      for (let i1 = initialStartLoop[0]; i1 < lengthi1; i1++) {
-        const value1 = collection[0].attributeValues[i1];
+      // collection[0].attributeValue.forEach((value1, index1) => {
+      //   name = `${value1.name}`;
+      //   if (collection.length > 1 && collection[1].attributeValue.length > 0) {
+      //     collection[1].attributeValue.forEach((value2, index2) => {
+      //       name = `${value1.name} / ${value2.name}`;
+      //       if (collection.length > 2 && collection[2].attributeValue.length > 0) {
+      //         collection[2].attributeValue.forEach((value3, index3) => {
+      //           name = `${value1.name} / ${value2.name} / ${value3.name}`;
+      //           productVariantList.push(this.appendProductVariant({id: "", name, temp: [value1.tempPAVId, value2.tempPAVId, value3.tempPAVId], index: index3}));
+      //         });
+      //       } else {
+      //         productVariantList.push(this.appendProductVariant({id: "", name, temp: [value1.tempPAVId, value2.tempPAVId], index: index2}));
+      //       }
+      //     });
+      //   } else {
+      //     productVariantList.push(this.appendProductVariant({id: "", name, temp: [value1.tempPAVId], index: index1}));
+      //   }
+      // });
+      
+      let i1 = initialStartLoop[0];
+      let i2 = initialStartLoop[1];
+      let i3 = initialStartLoop[2];
+
+      const lengthi1 = collection[0].attributeValue.length;
+
+      for (let j = 0; j < this.calculateTotalProductVariant(collection); j++) {
+
+        // LOOP 1
+        if (i1 === lengthi1) { // RESET
+          i1 = initialStartLoop[0];
+          i2++;
+        }
+
+        console.log("Hello World:", i1);
+        const value1 = collection[0].attributeValue[i1];
         name = `${value1.name}`;
 
         // LOOP 2
-        if (collection.length > 1 && collection[1].attributeValues.length > 0) {
-          const lengthi2 = collection[1].attributeValues.length;
-          for (let i2 = initialStartLoop[1]; i2 < lengthi2; i2++) {
-            const value2 = collection[1].attributeValues[i2];
+        if (collection.length > 1 && collection[1].attributeValue.length > 0) {
+          const lengthi2 = collection[1].attributeValue.length;
+
+          if (i2 < lengthi2) {
+            const value2 = collection[1].attributeValue[i2];
             name = `${value1.name} / ${value2.name}`;
-
-            // LOOP 3
-            if (collection.length > 2 && collection[2].attributeValues.length > 0) {
-              const lengthi3 = collection[2].attributeValues.length;
-              for (let i3 = initialStartLoop[2]; i3 < lengthi3; i3++) {
-                const value3 = collection[2].attributeValues[i3];
-                name = `${value1.name} / ${value2.name} / ${value3.name}`;
-                productVariantList.push(this.appendProductVariant({id: "", name, temp: [value1.tempPAVId, value2.tempPAVId, value3.tempPAVId], sortField1: value3.name, sortField2: i2}));
-              }
-            } else {
-              productVariantList.push(this.appendProductVariant({id: "", name, temp: [value1.tempPAVId, value2.tempPAVId], sortField1: i2}));
-            }
           }
-        } else {
-          productVariantList.push(this.appendProductVariant({id: "", name, temp: [value1.tempPAVId]}));
+
+          // for (i2 = initialStartLoop[1]; i2 < lengthi2; i2++) {
+          //   const value2 = collection[1].attributeValue[i2];
+          //   name = `${value1.name} / ${value2.name}`;
+
+          //   // LOOP 3
+          //   if (collection.length > 2 && collection[2].attributeValue.length > 0) {
+          //     const lengthi3 = collection[2].attributeValue.length;
+          //     for (let i3 = initialStartLoop[2]; i3 < lengthi3; i3++) {
+          //       const value3 = collection[2].attributeValue[i3];
+          //       name = `${value1.name} / ${value2.name} / ${value3.name}`;
+          //       productVariantList.push(this.appendProductVariant({id: "", name, temp: [value1.tempPAVId, value2.tempPAVId, value3.tempPAVId]}));
+          //     }
+          //   } else {
+          //     productVariantList.push(this.appendProductVariant({id: "", name, temp: [value1.tempPAVId, value2.tempPAVId]}));
+          //   }
+          // }
         }
+
+        i1++;
+
+        productVariantList.push(this.appendProductVariant({id: "", name, temp: [value1.tempPAVId]}));
       }
 
-      productVariantList = _.sortBy(productVariantList, ["sortField1", "sortField2"]);
     }
 
-    // IN CASE ADD NEW PRODUCT
-    // if (!isUpdateProduct) {
-    //   return productVariantList;
-    // }
+    console.log("ProductVariantList:", productVariantList);
 
-    // IN CASE UPDATE PRODUCT: INSERT IT TO GROUP PRODUCT VARIANT
-    if (index === 0) {
-      productVariantList.forEach((productVariant, productVariantIndex) => {
-        const insertAtIndex = collection[index]["attributeValues"].length * (productVariantIndex + 1); //(3 * 1) - 1 = 2 EX: [1, 2, INSERT HERE]
-        existingProductVariantList.splice(insertAtIndex - 1, 0, productVariant);
-        this.props.form.setFieldsValue({[`variantProductCode[${insertAtIndex - 1}]`]: ""});
-        this.props.form.setFieldsValue({[`variantProductPrice[${insertAtIndex - 1}]`]: 0.00});
-        this.props.form.setFieldsValue({[`variantProductCost[${insertAtIndex - 1}]`]: 0.00});
-      });
-    } else {
-
-      if (collection.length > 1 && index === 1 && collection[1].attributeValues.length === 1) {
-        // CLONE NAME OF PRODUCT VARIANT FROM NEW UPDATE NAME
-        existingProductVariantList.forEach((existProductVariant, existProductVariantIndex) => {
-          existingProductVariantList[existProductVariantIndex]["name"] = productVariantList[existProductVariantIndex]["name"];
-        });
-      } else if (collection.length > 2 && index === 2 && collection[2].attributeValues.length === 1) {
-        // CLONE NAME OF PRODUCT VARIANT FROM NEW UPDATE NAME
-        existingProductVariantList.forEach((existProductVariant, existProductVariantIndex) => {
-          existingProductVariantList[existProductVariantIndex]["name"] = productVariantList[existProductVariantIndex]["name"];
-        });
-      } else {
-        existingProductVariantList = existingProductVariantList.concat(productVariantList);
-      }
+    if (isNewProduct) {
+      return productVariantList;
     }
 
-    // console.log("ExistingProductVariantList:", existingProductVariantList);
-
-    return existingProductVariantList;
+    return existingProductVariantList.concat(productVariantList);
   }
 
   appendProductVariant(variantAttribute = {}) {
@@ -294,9 +306,7 @@ export default class FormVariant extends Modal {
       price: variantAttribute.price,
       quantity: variantAttribute.quantity,
       status: this.Enum.ACTIVE,
-      tempPVId: variantAttribute.temp,
-      sortField1: variantAttribute.sortField1,
-      sortField2: variantAttribute.sortField2
+      tempPVId: variantAttribute.temp
     };
   }
 
@@ -323,13 +333,13 @@ export default class FormVariant extends Modal {
     }
     this.setState({
       variantAttributeList,
-      // productVariantList: this.generateProductVariant(variantAttributeList)
+      productVariantList: this.generateProductVariant(variantAttributeList)
     });
   }
 
   handleOnChangeAttribute(index, value) {
     const variantAttributeList = this.state.variantAttributeList;
-    variantAttributeList[index]["attributeId"] = value;
+    variantAttributeList[index]["productAttributeId"] = value;
     this.setState({variantAttributeList});
     document.getElementById(`lozenge-item${index}`).focus();
   }
@@ -338,14 +348,14 @@ export default class FormVariant extends Modal {
     if (event.target.value && (event.keyCode === 188 || event.keyCode === 13)) {
       const variantAttributeList = this.state.variantAttributeList;
       let notExistYet = true;
-      variantAttributeList[index]["attributeValues"].forEach(attributeValue => {
+      variantAttributeList[index]["attributeValue"].forEach(attributeValue => {
         if (attributeValue.name === event.target.value) {
           notExistYet = false;
         }
       });
 
       if (notExistYet) {
-        variantAttributeList[index]["attributeValues"].push(this.appendAttributeValue({id: "", name: event.target.value, value: ""}));
+        variantAttributeList[index]["attributeValue"].push(this.appendAttributeValue({id: "", name: event.target.value, value: ""}));
       }
 
       document.getElementById(`lozenge-item${index}`).value = "";
@@ -365,10 +375,10 @@ export default class FormVariant extends Modal {
 
   handleOnRemoveLozengeItem(index, inputIndex) {
     const variantAttributeList = this.state.variantAttributeList;
-    if (variantAttributeList[inputIndex]["attributeValues"][index]["id"] === "") {
-      variantAttributeList[inputIndex]["attributeValues"].splice(index, 1);
+    if (variantAttributeList[inputIndex]["attributeValue"][index]["id"] === "") {
+      variantAttributeList[inputIndex]["attributeValue"].splice(index, 1);
     } else {
-      variantAttributeList[inputIndex]["attributeValues"][index]["status"] = this.Enum.ARCHIVE;
+      variantAttributeList[inputIndex]["attributeValue"][index]["status"] = this.Enum.ARCHIVE;
     }
 
     this.setState({
@@ -383,9 +393,9 @@ export default class FormVariant extends Modal {
 
     existingVariantAttributes.push({
       id: "",
-      attributeId: "",
+      productAttributeId: "",
       status: this.Enum.ACTIVE,
-      attributeValues: []
+      attributeValue: []
     });
 
     this.setState({
@@ -420,15 +430,16 @@ export default class FormVariant extends Modal {
     this.props.dispatch(ProductAction.archiveVariant(this.state.productVariantToDelete.id));
   }
 
-  handleRemoveProductVariant(productVariantRow, id) {
-    if (id !== "") {
+  handleRemoveProductVariant(productVariantRow, productVariantKey, id) {
+    if (false) {
       this.setState({
+        modalVisible: true,
         productVariantToDelete: {
           id,
-          productVariantRow
+          variantAttributeKey: productVariantRow,
+          productVariantKey
         }
       });
-      this.props.dispatch(ProductVariantAction.checkIsAvailableForArchive(id));
     } else {
       const productVariantList = this.state.productVariantList;
       productVariantList.splice(productVariantRow, 1);
@@ -436,11 +447,16 @@ export default class FormVariant extends Modal {
     }
   }
 
-  deleteVariantThatExistInSystem(productVariantRow) {
-    const existingProductVariantList = this.state.productVariantList;
-    existingProductVariantList[productVariantRow]["status"] = this.Enum.ARCHIVE;
-    console.log("Product Variant After Delete:", existingProductVariantList);
-    this.setState({productVariantList: existingProductVariantList});
+  deleteVariantThatExistInSystem(variantAttributeKey, productVariantKey, id) {
+    const existingVariantAttributes = this.state.variantAttributeList;
+    if ("variantList" in existingVariantAttributes[variantAttributeKey]) {
+      existingVariantAttributes[variantAttributeKey]["variantList"].forEach((variantList, variantListKey) => {
+        if (variantListKey === productVariantKey && variantList.id === id) {
+          existingVariantAttributes[variantAttributeKey]["variantList"][variantListKey]["status"] = this.Enum.ARCHIVE;
+        }
+      });
+    }
+    this.setState({variantAttributeList: existingVariantAttributes});
   }
 
   renderVariantAttribute(variantAttribute, variantAttributeKey) {
@@ -451,7 +467,7 @@ export default class FormVariant extends Modal {
         placeholder="Select attribute"
         valueKey="id"
         dataSource={this.state.variantAttributes}
-        defaultValue={variantAttribute.attributeId}
+        defaultValue={variantAttribute.productAttributeId}
         onChange={(value) => this.handleOnChangeAttribute(variantAttributeKey, value)}
         addNew={() => this.props.handleAddProductAttribute(variantAttributeKey, this.handleCallBackAddAttribute)}
         form={this.props.form}/>
@@ -482,15 +498,12 @@ export default class FormVariant extends Modal {
                   <div style={{display: "flex"}}>
                     <div className="wrap-lozenge-group-input ant-input">
                       {
-                        variantAttribute.attributeValues ?
-                          variantAttribute.attributeValues.map((attributeValue, attributeValueIndex) =>
-                            <div key={attributeValueIndex} className="lozenge-item">
-                              {attributeValue.name}
-                              <span className="icon-delete" onClick={() => this.handleOnRemoveLozengeItem(attributeValueIndex, variantAttributeKey)}></span>
-                            </div>
-                          )
-                          :
-                          ""
+                        variantAttribute.attributeValue.map((attributeValue, attributeValueIndex) => 
+                          <div key={attributeValueIndex} className="lozenge-item">
+                            {attributeValue.name}
+                            <span className="icon-delete" onClick={() => this.handleOnRemoveLozengeItem(attributeValueIndex, variantAttributeKey)}></span>
+                          </div>
+                        )
                       }
                       <input
                         type="text"
@@ -521,7 +534,6 @@ export default class FormVariant extends Modal {
         <this.Col md="12">
           <this.Table
             rowKey="name"
-            rowClassName={record => record.status === this.Enum.ACTIVE ? "" : "hidden"}
             dataSource={this.state.productVariantList}
             columns={this.columns}
             locale={{emptyText: <this.Translate id="placeholder_table_variant_product" />}} />

@@ -16,17 +16,21 @@ import ProductTagAction from "../../../actions/products/productsTag";
 import FormCreateTag from "../../../containers/products/ProductsTag/FormCreate";
 import Modal from "../../../../common/components/shares/Modal";
 
-export default class FormCreate extends Modal {
+export default class Form extends Modal {
   constructor(props) {
     super(props);
     this.state = {
-      tagList: []
+      tagList: [],
+      productAttributes: [],
+      productVariants: []
     };
     this.title = <this.Translate id="text_product" />;
     this.width = "100%";
     this.wrapClassName = "modal-product";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCallBackGetProductAttribute = this.handleCallBackGetProductAttribute.bind(this);
+    this.handleCallBackGetProductVariant = this.handleCallBackGetProductVariant.bind(this);
     this.handleAddBrand = this.handleAddBrand.bind(this);
     this.handleAddVariantAttribute = this.handleAddVariantAttribute.bind(this);
     this.handleAddUnit = this.handleAddUnit.bind(this);
@@ -38,32 +42,20 @@ export default class FormCreate extends Modal {
     this.handleAddProductType = this.handleAddProductType.bind(this);
   }
 
+  handleCallBackGetProductAttribute(productAttributes) {
+    console.log("ProductAttributes:", productAttributes);
+    this.setState({productAttributes});
+  }
+
+  handleCallBackGetProductVariant(productVariants) {
+    console.log("ProductVariantList:", productVariants);
+    this.setState({productVariants});
+  }
+
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        // PREPARE DATA FOR VARIANT
-        const productVariantToProduct = [];
-        if ("attributeId" in values && "variantName" in values) {
-          values["attributeId"].forEach((variantAttributeId, attributeIdIndex) => {
-            // RESTRIEVE ALL PRODUCT VARIANT
-            values["variantName"][attributeIdIndex].forEach((variantName, productVariantIndex) => {
-              let productVariant = {
-                variantAttributeId 
-              };
-              
-              productVariant["id"] = values["variantProductId"][attributeIdIndex][productVariantIndex];
-              productVariant["name"] = variantName;
-              productVariant["barcode"] = values["variantProductCode"][attributeIdIndex][productVariantIndex];
-              productVariant["cost"] = values["variantProductCost"][attributeIdIndex][productVariantIndex];
-              productVariant["price"] = values["variantProductPrice"][attributeIdIndex][productVariantIndex];
-              productVariant["status"] = values["variantProductStatus"][attributeIdIndex][productVariantIndex];
-              productVariantToProduct.push(productVariant);
-            });
-
-          });
-        }
-
         // PREPARE DATA FOR PACKAGE PRODUCT
         const productPackageToProduct = [];
         if ("productCompositeProductId" in values && "productCompositeMarkUp" in values) {
@@ -112,11 +104,6 @@ export default class FormCreate extends Modal {
         }
 
         this.Util.clearObjProperty(values, [
-          "variantName",
-          "variantProductCode",
-          "variantProductCost",
-          "variantProductPrice",
-          "variantProductStatus",
           "productName",
           "language",
           "productDescription",
@@ -141,11 +128,12 @@ export default class FormCreate extends Modal {
         values["taxes"] = [{taxId: values["taxId"]}];
         values["productTags"] = this.state.tagList;
         values["descriptions"] = productDescriptions;
-        values["productVariants"] = productVariantToProduct;
+        values["productAttributes"] = this.state.productAttributes;
+        values["productVariants"] = this.state.productVariants;
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
-        // console.log("Values Product:", values);
-        this.dispatch(ProductAction.add(values));
+        console.log("Values Product:", values);
+        // this.dispatch(ProductAction.add(values));
 
         // RESET STATE
         this.setState({tagList: []});
@@ -267,6 +255,7 @@ export default class FormCreate extends Modal {
           locale={locale}
           dispatch={dispatch}
           productVariantArchive={productVariantArchive}
+          productVariantCheckStatus={this.props.productVariantCheckStatus}
           brandAdd={brandAdd}
           handleAddBrand={this.handleAddBrand}
           productsTypeAdd={productsTypeAdd}
@@ -277,6 +266,8 @@ export default class FormCreate extends Modal {
           handleAddTax={this.handleAddTax}
           tags={tags}
           tagAdd={tagAdd}
+          callBackGetProductAttribute={this.handleCallBackGetProductAttribute}
+          callBackGetProductVariant={this.handleCallBackGetProductVariant}
           handleChangeTag={this.handleChangeTag}
           handleSelectTag={this.handleSelectTag}
           handleDeselectTag={this.handleDeselectTag}

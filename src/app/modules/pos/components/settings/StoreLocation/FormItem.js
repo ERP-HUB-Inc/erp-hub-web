@@ -2,14 +2,6 @@ import React from "react";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormItem extends Modal {
-  constructor(props) {
-    super(props);
-    this.languageCodes = [
-      {name: "en", value: "en"},
-      {name: "km", value: "km"},
-      {name: "bm", value: "bm"},
-    ];
-  }
   render() {
     const {formData, form, locale} = this.props;
     return (
@@ -24,6 +16,7 @@ export default class FormItem extends Modal {
           isAutoFocus={true}
           min={3}
           max={100}
+          errorRequired={<this.Translate id="error_require_name" />}
           errorLenght={<this.Translate id="error_location_name_length" />} />
         <this.InputText
           data={formData.address}
