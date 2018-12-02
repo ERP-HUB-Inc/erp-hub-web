@@ -288,7 +288,7 @@ export default class SearchPo extends Modal {
               <this.InputText name="requestTotal" disabled={true} className="ca-input-no-border grandTotal" form={this.props.form}/>
               <this.InputText name="requestTotalValue" className="hidden" form={this.props.form}/>
             </div>
-            <div className="pull-left" style={{width: 150}}></div>
+            <div className="pull-left" style={{width: 164}}></div>
             <div style={{clear: "both"}}></div>
           </div>} /> 
       </div>

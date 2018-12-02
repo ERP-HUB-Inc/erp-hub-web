@@ -25,7 +25,21 @@
     border-left: 7px solid #f7f7f7;
 }
 
+.main-doughnut-chart .no-pie-chart-image img{
+    height: 88%;
+    left: 0;
+    right: 0;
+    top: 45px;
+    bottom: 0;
+    width: 100%;
+    position: absolute;
+}
 
+.main-doughnut-chart .no-pie-chart-image .text-chart-no-data {
+    text-align: center;
+    margin-top: 157px;
+    font-weight: 500;
+}
 
 
 

@@ -12,7 +12,7 @@ export default class ProductsTagList extends List {
     this.columns = new Column();
     this.formCreate = <FormCreate/>;
     this.formUpdate = <FormUpdate/>;
-    this.columnFilterWithKey = ["name"];
+    this.columnFilterWithKey = ["tag"];
     this.service = ProductsTagService;
     this.action = ProductsTagAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCTS_TAG;
@@ -28,12 +28,6 @@ class Column extends List {
         title: <this.Translate id="text_name" />,
         dataIndex: "tag",
         key: "tag",
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_description" />,
-        dataIndex: "description",
-        key: "description",
         sorter: true
       },
       this.columnStatus

@@ -16,10 +16,6 @@ export default class FormReciptTemplateUpdate extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values["id"] = this.props.receiptUpdate.data.id;
-        values["isShowStoreName"] = this.Util.checkValueSwitch(values.isShowStoreName);
-        values["isShowCustomerInfo"] = this.Util.checkValueSwitch(values.isShowCustomerInfo);
-        values["isShowDevelopBy"] = this.Util.checkValueSwitch(values.isShowDevelopBy);
-        values["isDefault"] = this.Util.checkValueSwitch(values.isDefault);
         values["logo"] = this.getImageFromUpload(values, "logo");
         this.dispatch(ReceiptAction.update(values));
       }

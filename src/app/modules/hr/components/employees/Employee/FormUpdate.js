@@ -10,7 +10,8 @@ export default class Form extends Modal {
     this.state = {
       disabled: false,
       locations: [],
-      locationId: ""
+      locationId: "",
+      requiredPassword: false
     };
 
     this.wrapClassName = "modal-fix-footer";

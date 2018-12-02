@@ -65,6 +65,12 @@ export default {
     "Currency Exchange"
   ],
 
+  "store_acc_currency": [
+    "Currency",
+    "Currency",
+    "Currency"
+  ],
+
   "store_acc_currency_position": [
     "Currency Position",
     "Currency Position",

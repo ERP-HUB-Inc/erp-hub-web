@@ -6,6 +6,7 @@ export default class Form extends Modal {
   constructor(props) {
     super(props);
     this.title = "Access Role";
+    this.width = "70%";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -24,13 +25,13 @@ export default class Form extends Modal {
   }
   
   render() {
-    const {roleAccessAdd, locale, form} = this.props;
+    const {roleAccessAdd, rolePrivileges, locale, form} = this.props;
 
     this.submitLoading = roleAccessAdd.adding;
 
     if (roleAccessAdd.showForm) {
       this.content = (
-        <FormItem form={form} locale={locale}/>
+        <FormItem form={form} rolePrivileges={rolePrivileges} locale={locale} />
       );
       return super.render();
     } else {

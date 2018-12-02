@@ -235,372 +235,350 @@ export default class StoreAccountList extends Component {
             this.Util.isNoPermissionProp(this.props) ?
               <NoPermission />
               :
-              <this.Form onSubmit={this.handleSubmit}>
-                <div className="main-layout main-store-account">
-            
+              
+              <div className="main-layout main-store-account">
+                <this.Form onSubmit={this.handleSubmit}>
                   <this.Row>
-                    <this.Col lg="4" md="6">   
-                      <div className="general">
-                        <h6><this.Translate id="store_acc_general" /></h6>
-                      </div>
-
-                      <this.InputText
-                        name="businessName"
-                        data={storeAccount.list.businessName}
-                        label={<this.Translate id="store_acc_business_name" />}
-                        placeholder={this.CATranslate("store_acc_business_name", locale)}
-                        form={form}
-                        isAutoFocus={true}
-                        required/>
-
-                      <this.UploadImg 
-                        name="logo" 
-                        label={<this.Translate id="text_logo" />}
-                        data={{file: image}}
-                        fileList={[image]}
-                        endPoint={`${this.Util.getAPIURL()}/file/v1/upload/general`}
-                        endPointDelete={`${this.Util.getAPIURL()}/file/v1/general/delete`}
-                        accessToken={this.Util.getAccessToken()}
-                        form={form} />
-
-                      <this.InputText
-                        name="storeName"
-                        data={storeAccount.list.storeName}
-                        label={<this.Translate id="store_acc_store_name" />}
-                        notation=".storevein.com"
-                        placeholder={this.CATranslate("store_acc_store_name", locale)}
-                        form={form}
-                        disabled/>
+                    <this.Col md="12"> 
+                      <this.Tabs type="card">
+                        <this.TabPane tab={<this.Translate id="store_acc_general" />} key="1">
+                          <this.Row>
+                            <this.Col lg="4" md="4"> 
+                              <this.InputText
+                                name="businessName"
+                                data={storeAccount.list.businessName}
+                                label={<this.Translate id="store_acc_business_name" />}
+                                placeholder={this.CATranslate("store_acc_business_name", locale)}
+                                form={form}
+                                isAutoFocus={true}
+                                required/>
+                              <this.UploadImg 
+                                name="logo" 
+                                label={<this.Translate id="text_logo" />}
+                                data={{file: image}}
+                                fileList={[image]}
+                                endPoint={`${this.Util.getAPIURL()}/file/v1/upload/general`}
+                                endPointDelete={`${this.Util.getAPIURL()}/file/v1/general/delete`}
+                                accessToken={this.Util.getAccessToken()}
+                                form={form} />
+                              <this.InputText
+                                name="storeName"
+                                data={storeAccount.list.storeName}
+                                label={<this.Translate id="store_acc_store_name" />}
+                                notation=".storevein.com"
+                                placeholder={this.CATranslate("store_acc_store_name", locale)}
+                                form={form}
+                                disabled/>
                   
-                      <this.InputText
-                        name="countryId"
-                        data={storeAccount.list.country != null ? storeAccount.list.country.name : ""}
-                        label={<this.Translate id="store_acc_country" />}
-                        placeholder={this.CATranslate("store_acc_country", locale)}
-                        disabled
-                        form={form}/>
+                              <this.InputText
+                                name="countryId"
+                                data={storeAccount.list.country != null ? storeAccount.list.country.name : ""}
+                                label={<this.Translate id="store_acc_country" />}
+                                placeholder={this.CATranslate("store_acc_country", locale)}
+                                disabled
+                                form={form}/>
 
-                      <this.Select
-                        name="languageId"
-                        dataSource={this.props.languages}
-                        defaultValue={storeAccount.list.languageId}
-                        valueKey="id"
-                        label={<this.Translate id="store_acc_language" />}
-                        placeholder={this.CATranslate("store_acc_language", locale)}
-                        form={form} />
+                              <this.Select
+                                name="languageId"
+                                dataSource={this.props.languages}
+                                defaultValue={storeAccount.list.languageId}
+                                valueKey="id"
+                                label={<this.Translate id="store_acc_language" />}
+                                placeholder={this.CATranslate("store_acc_language", locale)}
+                                form={form} />
 
-                      <this.Select
-                        name="currencyId"
-                        dataSource={currency}
-                        defaultValue={storeAccount.list.currencyId}
-                        valueKey="id"
-                        label={<this.Translate id="store_acc_currency" />}
-                        placeholder={this.CATranslate("store_acc_currency", locale)}
-                        form={form} disabled />
+                              <this.Select
+                                name="currencyId"
+                                dataSource={currency}
+                                defaultValue={storeAccount.list.currencyId}
+                                valueKey="id"
+                                label={<this.Translate id="store_acc_currency" />}
+                                placeholder={this.CATranslate("store_acc_currency", locale)}
+                                form={form} disabled />
 
-                      <this.Select
-                        name="currencyPosition"
-                        dataSource={this.currencyPositions}
-                        defaultValue={storeAccount.list.currencyPosition}
-                        label={<this.Translate id="store_acc_currency_position" />}
-                        placeholder={this.CATranslate("store_acc_currency_position", locale)}
-                        form={form} />
+                              <this.Select
+                                name="currencyPosition"
+                                dataSource={this.currencyPositions}
+                                defaultValue={storeAccount.list.currencyPosition}
+                                label={<this.Translate id="store_acc_currency_position" />}
+                                placeholder={this.CATranslate("store_acc_currency_position", locale)}
+                                form={form} />
 
-                      {/* <this.Select
-                      name="status"
-                      label="Timezone"
-                      placeholder="Please select status"
-                      form={form}
-                      dataSource={statusDataSource} /> */}
+                              <this.Select
+                                name="taxId"
+                                dataSource={taxs}
+                                defaultValue={storeAccount.list.taxId}
+                                valueKey="id"
+                                label={<this.Translate id="store_acc_tax" />}
+                                placeholder={this.CATranslate("store_acc_tax", locale)}
+                                form={form} />
 
-                      <this.Select
-                        name="taxId"
-                        dataSource={taxs}
-                        defaultValue={storeAccount.list.taxId}
-                        valueKey="id"
-                        label={<this.Translate id="store_acc_tax" />}
-                        placeholder={this.CATranslate("store_acc_tax", locale)}
-                        form={form} />
+                            </this.Col>
+                            <this.Col lg="4" md="4"> 
+                              <this.Select
+                                name="dateFormat"
+                                dataSource={this.Util.listFormatDate()}
+                                defaultValue={storeAccount.list.dateFormat}
+                                help={`${this.exampleDateFormat}`}
+                                onChange={this.handleChangeDateFormat}
+                                label={<this.Translate id="store_acc_date_format" />}
+                                placeholder={this.CATranslate("store_acc_date_format", locale)}
+                                form={form} />
+                            </this.Col>
+                          </this.Row>
+                        </this.TabPane>
+                        <this.TabPane tab={<this.Translate id="store_acc_account" />} key="2">
+                          <this.Row>
+                            <this.Col lg="4" md="4"> 
+                              <this.InputEmail
+                                data={storeAccount.list.email}
+                                name="userName"
+                                label={<this.Translate id="store_acc_email" />}
+                                placeholder={this.CATranslate("store_acc_email", locale)}
+                                form={form}/>
+
+                              <this.InputPassword
+                                // CURRENT PWD
+                                currentPWDName="currentPassword"
+                                currentPWDLabel={<this.Translate id="store_acc_current_password" />}
+                                currentPWDPlaceholder={this.CATranslate("store_acc_current_password", locale)}
                     
-                      <this.Select
-                        name="dateFormat"
-                        dataSource={this.Util.listFormatDate()}
-                        defaultValue={storeAccount.list.dateFormat}
-                        help={`${this.exampleDateFormat}`}
-                        onChange={this.handleChangeDateFormat}
-                        label={<this.Translate id="store_acc_date_format" />}
-                        placeholder={this.CATranslate("store_acc_date_format", locale)}
-                        form={form} />
-
-
-                      <div className="general">
-                        <h6>{<this.Translate id="store_acc_account" />}</h6>
-                      </div>
-
-                      <this.InputEmail
-                        data={storeAccount.list.email}
-                        name="userName"
-                        label={<this.Translate id="store_acc_email" />}
-                        placeholder={this.CATranslate("store_acc_email", locale)}
-                        form={form}/>
-
-                      <this.InputPassword
-                        // CURRENT PWD
-                        currentPWDName="currentPassword"
-                        currentPWDLabel={<this.Translate id="store_acc_current_password" />}
-                        currentPWDPlaceholder={this.CATranslate("store_acc_current_password", locale)}
+                                // PWD
+                                label={<this.Translate id="store_acc_new_password" />}
+                                placeholder={this.CATranslate("store_acc_new_password", locale)}
                     
-                        // PWD
-                        label={<this.Translate id="store_acc_new_password" />}
-                        placeholder={this.CATranslate("store_acc_new_password", locale)}
-                    
-                        // CONFIRM PWD
-                        confirmLabel={<this.Translate id="store_acc_confirm_password" />}
-                        confirmPlaceholder={this.CATranslate("store_acc_confirm_password", locale)}
+                                // CONFIRM PWD
+                                confirmLabel={<this.Translate id="store_acc_confirm_password" />}
+                                confirmPlaceholder={this.CATranslate("store_acc_confirm_password", locale)}
 
-                        messageIsMatchPassword={<this.Translate id="store_acc_error_confirm_pwd_not_match" />}
-                        required={false}
-                        requiredCurrentPWD={true}
-                        errorRequired={<this.Translate id="store_acc_error_pwd_required" />}
-                        errorRequiredConfirm={<this.Translate id="store_acc_error_confirm_pwd_required" />}
-                        errorMessageCurrentPWD={this.errorMessageCurrentPWD}
-                        validateClassStatusCurrentPWD={this.validateClassStatusCurrentPWD}
-                        form={form} />
+                                messageIsMatchPassword={<this.Translate id="store_acc_error_confirm_pwd_not_match" />}
+                                required={false}
+                                requiredCurrentPWD={true}
+                                errorRequired={<this.Translate id="store_acc_error_pwd_required" />}
+                                errorRequiredConfirm={<this.Translate id="store_acc_error_confirm_pwd_required" />}
+                                errorMessageCurrentPWD={this.errorMessageCurrentPWD}
+                                validateClassStatusCurrentPWD={this.validateClassStatusCurrentPWD}
+                                form={form} />
+                            </this.Col>
+                          </this.Row>
+                        </this.TabPane>
+                        <this.TabPane tab={<this.Translate id="store_acc_contact" />} key="3">
+                          <this.Row>
+                            <this.Col lg="4" md="4"> 
+                              <this.InputText
+                                data={storeAccount.list.firstName}
+                                name="firstName"
+                                label={<this.Translate id="store_acc_first_name" />}
+                                placeholder={this.CATranslate("store_acc_first_name", locale)}
+                                form={form}/>
+                           
+                              <this.InputText
+                                data={storeAccount.list.lastName}
+                                name="lastName"
+                                label={<this.Translate id="store_acc_last_name" />}
+                                placeholder={this.CATranslate("store_acc_last_name", locale)}
+                                form={form}/>
+                           
+                              <this.InputEmail
+                                data={storeAccount.list.email}
+                                name="email"
+                                label={<this.Translate id="store_acc_email" />}
+                                placeholder={this.CATranslate("store_acc_email", locale)}
+                                form={form}/>
+                           
+                              <this.InputText
+                                data={storeAccount.list.phoneNumber}
+                                name="phoneNumber"
+                                label={<this.Translate id="store_acc_phone_number" />}
+                                placeholder={this.CATranslate("store_acc_phone_number", locale)}
+                                form={form} />
+                            
+                              <this.InputText
+                                data={storeAccount.list.address}
+                                name="address"
+                                label={<this.Translate id="store_acc_address" />}
+                                placeholder={this.CATranslate("store_acc_address", locale)}
+                                form={form}/>
+                          
+                              <this.InputText
+                                data={storeAccount.list.street}
+                                name="street"
+                                label={<this.Translate id="store_acc_street" />}
+                                placeholder={this.CATranslate("store_acc_street", locale)}
+                                form={form}/>
+                            
+                              <this.InputText
+                                data={storeAccount.list.city}
+                                name="city"
+                                label={<this.Translate id="store_acc_city" />}
+                                placeholder={this.CATranslate("store_acc_city", locale)}
+                                form={form}/>
+                          
+                              <this.InputText
+                                data={storeAccount.list.postCode}
+                                name="postCode"
+                                label={<this.Translate id="store_acc_post_code" />}
+                                placeholder={this.CATranslate("store_acc_post_code", locale)}
+                                form={form} />
+                            </this.Col>
+                          </this.Row>
+                        </this.TabPane>
+                        <this.TabPane tab={<this.Translate id="store_acc_setting" />} key="4">
+                          <this.Row>
+                            <this.Col lg="4" md="4"> 
+                              <this.Select
+                                name="productGenerateCodeType"
+                                defaultValue={storeAccount.list.productGenerateCodeType}
+                                dataSource={this.autoGenerateDataSource}
+                                label={<this.Translate id="store_acc_auto_generate_pcode" />}
+                                placeholder={this.CATranslate("store_acc_auto_generate_pcode", locale)}
+                                form={form} />
 
-                    </this.Col>
-
-                    <this.Col lg="4" md="6">
-                      <div className="general">
-                        <h6>{<this.Translate id="store_acc_contact" />}</h6>
-                      </div>
-                      <this.Row>
-                        <this.Col md="6">
-                          <this.InputText
-                            data={storeAccount.list.firstName}
-                            name="firstName"
-                            label={<this.Translate id="store_acc_first_name" />}
-                            placeholder={this.CATranslate("store_acc_first_name", locale)}
-                            form={form}/>
-                        </this.Col>
-
-                        <this.Col md="6">
-                          <this.InputText
-                            data={storeAccount.list.lastName}
-                            name="lastName"
-                            label={<this.Translate id="store_acc_last_name" />}
-                            placeholder={this.CATranslate("store_acc_last_name", locale)}
-                            form={form}/>
-                        </this.Col>
-
-                      </this.Row>
-
-                      <this.InputEmail
-                        data={storeAccount.list.email}
-                        name="email"
-                        label={<this.Translate id="store_acc_email" />}
-                        placeholder={this.CATranslate("store_acc_email", locale)}
-                        form={form}/>
-
-                      <this.InputText
-                        data={storeAccount.list.phoneNumber}
-                        name="phoneNumber"
-                        label={<this.Translate id="store_acc_phone_number" />}
-                        placeholder={this.CATranslate("store_acc_phone_number", locale)}
-                        form={form} />
-                    
-                      <this.InputText
-                        data={storeAccount.list.address}
-                        name="address"
-                        label={<this.Translate id="store_acc_address" />}
-                        placeholder={this.CATranslate("store_acc_address", locale)}
-                        form={form}/>
-                    
-                      <this.InputText
-                        data={storeAccount.list.street}
-                        name="street"
-                        label={<this.Translate id="store_acc_street" />}
-                        placeholder={this.CATranslate("store_acc_street", locale)}
-                        form={form}/>
-                    
-                      <this.InputText
-                        data={storeAccount.list.city}
-                        name="city"
-                        label={<this.Translate id="store_acc_city" />}
-                        placeholder={this.CATranslate("store_acc_city", locale)}
-                        form={form}/>
-                    
-                      <this.InputText
-                        data={storeAccount.list.postCode}
-                        name="postCode"
-                        label={<this.Translate id="store_acc_post_code" />}
-                        placeholder={this.CATranslate("store_acc_post_code", locale)}
-                        form={form} />
-
-                      <div className="general">
-                        <h6>{<this.Translate id="store_acc_setting" />}</h6>
-                      </div>
-
-                      {/* <this.Select
-                    name="status"
-                    label="Price tag format"
-                    form={form}
-                    dataSource={statusDataSource} /> */}
-
-                      <this.Select
-                        name="productGenerateCodeType"
-                        defaultValue={storeAccount.list.productGenerateCodeType}
-                        dataSource={this.autoGenerateDataSource}
-                        label={<this.Translate id="store_acc_auto_generate_pcode" />}
-                        placeholder={this.CATranslate("store_acc_auto_generate_pcode", locale)}
-                        form={form} />
-
-                      <this.InputNumber
-                        name="productCodeSequenceStart"
-                        label={<this.Translate id="store_acc_start_sequence_code" />}
-                        placeholder={this.CATranslate("store_acc_start_sequence_code", locale)}
-                        data={storeAccount.list.productCodeSequenceStart}
-                        max={9999999999}
-                        errorLength={<this.Translate id="store_acc_error_sequence_start_no" />}
-                        form={form} />
-
-                      {/* <this.Select
-                    name="status"
-                    label="Display price"
-                    form={form}
-                    placeholder="Tax
-                    Exclusive"
-                    dataSource={statusDataSource} /> */}
-
-                      <div className="general">
-                        <h6>Device</h6>
-                      </div>
-                    
-                      <this.InputNumber
-                        data={storeAccount.list.numberOfDevice}
-                        name="deviceNumber"
-                        precision={0}
-                        label={<this.Translate id="number_of_device" />}
-                        placeholder={this.CATranslate("number_of_device", locale)}
-                        disabled={true}
-                        form={form} />
-
-                      <this.Table 
-                        dataSource={this.props.devices.list}
-                        columns={[
-                          {
-                            title: <this.Translate id="text_name" />,
-                            dataIndex: "name",
-                            key: "name"
-                          },
-                          {
-                            title: <this.Translate id="text_number" />,
-                            dataIndex: "code",
-                            key: "code",
-                            render: (text, record, index) => {
-                              return <div id={`device-${index}`}>{record.code}</div>;
-                            }
-                          },
-                          {
-                            title: <this.Translate id="text_status" />,
-                            dataIndex: "status",
-                            key: "status",
-                            width: 120,
-                            render: status => {
-                              return (
-                                status === this.Enum.ACTIVE ?
-                                  <this.Badge text={<this.Translate id="text_available" />} status="success" />
+                              <this.InputNumber
+                                name="productCodeSequenceStart"
+                                label={<this.Translate id="store_acc_start_sequence_code" />}
+                                placeholder={this.CATranslate("store_acc_start_sequence_code", locale)}
+                                data={storeAccount.list.productCodeSequenceStart}
+                                max={9999999999}
+                                errorLength={<this.Translate id="store_acc_error_sequence_start_no" />}
+                                form={form} />
+                            </this.Col> 
+                          </this.Row>
+                        </this.TabPane>
+                        <this.TabPane tab="Device" key="5">
+                          <this.Row>
+                            <this.Col lg="4" md="4"> 
+                              <this.InputNumber
+                                data={storeAccount.list.numberOfDevice}
+                                name="deviceNumber"
+                                precision={0}
+                                label={<this.Translate id="number_of_device" />}
+                                placeholder={this.CATranslate("number_of_device", locale)}
+                                disabled={true}
+                                form={form} />
+                              <this.Table 
+                                dataSource={this.props.devices.list}
+                                columns={[
+                                  {
+                                    title: <this.Translate id="text_name" />,
+                                    dataIndex: "name",
+                                    key: "name"
+                                  },
+                                  {
+                                    title: <this.Translate id="text_number" />,
+                                    dataIndex: "code",
+                                    key: "code",
+                                    render: (text, record, index) => {
+                                      return <div id={`device-${index}`}>{record.code}</div>;
+                                    }
+                                  },
+                                  {
+                                    title: <this.Translate id="text_status" />,
+                                    dataIndex: "status",
+                                    key: "status",
+                                    width: 120,
+                                    render: status => {
+                                      return (
+                                        status === this.Enum.ACTIVE ?
+                                          <this.Badge text={<this.Translate id="text_available" />} status="success" />
+                                          :
+                                          <this.Badge text={<this.Translate id="text_not_available"/>} status="error" />
+                                      );
+                                    }
+                                  },
+                                  {
+                                    title: <this.Translate id="text_action" />,
+                                    key: "action",
+                                    align: "center",
+                                    width: 50,
+                                    render: (text, record, index) => {
+                                      return <div className="btn-action-device">{(record.status === this.Enum.ACTIVE ?
+                                        <this.Button type="info" onClick={() => this.handleOnCopyDeviceNumber(`device-${index}`, record.status)}>{<this.Translate id="copy_device_number"/>}</this.Button>
+                                        :
+                                        <this.Button loading={this.props.renew.updating && this.renewButtonIndex === index} type="info" onClick={() => this.handleOnReNewDeviceNumber(record.id, index)}>{<this.Translate id="text_renew"/>}</this.Button>)
+                                      }</div>;
+                                    }
+                                  }
+                                ]}
+                                locale={{emptyText: <this.Translate id="table_empty_data"/>}}
+                                loading={false} />
+                            </this.Col> 
+                          </this.Row>
+                        </this.TabPane>
+                        <this.TabPane tab={<this.Translate id="store_acc_billing" />} key="6">
+                          <this.Row>
+                            <this.Col lg="4" md="4"> 
+                              <this.DatePickers
+                                name="registerDate"
+                                defaultValue={this.Util.formatDatePicker(storeAccount.list.registerDate)}
+                                label={<this.Translate id="store_acc_register_date" />}
+                                placeholder={this.CATranslate("store_acc_register_date", locale)}
+                                form={form}
+                                disabled />
+                              {
+                                storeAccount.list.expiredDate !== null && storeAccount.list.expiredDate !== "undefined"
+                                  ?
+                                  <this.DatePickers
+                                    name="expiredDate"
+                                    defaultValue={this.Util.formatDatePicker(storeAccount.list.expiredDate)}
+                                    label={<this.Translate id="store_acc_expired_date" />}
+                                    placeholder={this.CATranslate("store_acc_expired_date", locale)}
+                                    form={form}
+                                    disabled />
                                   :
-                                  <this.Badge text={<this.Translate id="text_not_available"/>} status="error" />
-                              );
-                            }
-                          },
-                          {
-                            title: <this.Translate id="text_action" />,
-                            key: "action",
-                            align: "center",
-                            width: 50,
-                            render: (text, record, index) => {
-                              return <div className="btn-action-device">{(record.status === this.Enum.ACTIVE ?
-                                <this.Button type="info" onClick={() => this.handleOnCopyDeviceNumber(`device-${index}`, record.status)}>{<this.Translate id="copy_device_number"/>}</this.Button>
-                                :
-                                <this.Button loading={this.props.renew.updating && this.renewButtonIndex === index} type="info" onClick={() => this.handleOnReNewDeviceNumber(record.id, index)}>{<this.Translate id="text_renew"/>}</this.Button>)
-                              }</div>;
-                            }
-                          }
-                        ]}
-                        locale={{emptyText: <this.Translate id="table_empty_data"/>}}
-                        loading={false} />
+                                  ""
+                              }
 
-                    </this.Col>
+                              <div class="general">
+                                <h6><this.Translate id="store_acc_plan" /></h6>
+                              </div>
 
-                    <this.Col lg="4" md="12">  
-                      <div className="general">
-                        <h6>{<this.Translate id="store_acc_billing" />}</h6>
-                      </div>
+                              <this.FormGroup>
+                                <this.RadioBox 
+                                  className="main-radio-acc"
+                                  label=" "
+                                  name="businessPlanId" 
+                                  type="radio"
+                                  defaultValue={storeAccount.list.businessPlanId}
+                                  form={form}
+                                  disabled={true}
+                                  onSelect={this.onSelect}
+                                  onChange={this.onChange}
+                                >
+                                  { businessplan.map( (businessplan, key) => 
+                                    <this.RadioChildBox
+                                      key={key}
+                                      title={businessplan.name}
+                                      language={businessplan.description}
+                                      value={businessplan.id} /> 
+                                  ) 
+                                  }
+                                </this.RadioBox> 
+                              </this.FormGroup>
+                          
+                              <this.RadioButton 
+                                name="paymentType"
+                                defaultValue={storeAccount.list.paymentType}
+                                dataSource={this.paymentTypes}
+                                form={form}
+                                disabled={true}
+                                required/>
 
-                      <this.DatePickers
-                        name="registerDate"
-                        defaultValue={this.Util.formatDatePicker(storeAccount.list.registerDate)}
-                        label={<this.Translate id="store_acc_register_date" />}
-                        placeholder={this.CATranslate("store_acc_register_date", locale)}
-                        form={form}
-                        disabled />
-                      {
-                        storeAccount.list.expiredDate !== null && storeAccount.list.expiredDate !== "undefined"
-                          ?
-                          <this.DatePickers
-                            name="expiredDate"
-                            defaultValue={this.Util.formatDatePicker(storeAccount.list.expiredDate)}
-                            label={<this.Translate id="store_acc_expired_date" />}
-                            placeholder={this.CATranslate("store_acc_expired_date", locale)}
-                            form={form}
-                            disabled />
-                          :
-                          ""
-                      }
-                  
-                      <div className="general">
-                        <h6>{<this.Translate id="store_acc_plan" />}</h6>
-                      </div>
-                  
-                      <this.FormGroup>
-                        <this.RadioBox 
-                          className="main-radio-acc"
-                          label=" "
-                          name="businessPlanId" 
-                          type="radio"
-                          defaultValue={storeAccount.list.businessPlanId}
-                          form={form}
-                          disabled={true}
-                          onSelect={this.onSelect}
-                          onChange={this.onChange}
-                        >
-                          { businessplan.map( (businessplan, key) => 
-                            <this.RadioChildBox
-                              key={key}
-                              title={businessplan.name}
-                              language={businessplan.description}
-                              value={businessplan.id} /> 
-                          ) 
-                          }
-                        </this.RadioBox> 
-                      </this.FormGroup>
-                        
-                      <this.RadioButton 
-                        name="paymentType"
-                        defaultValue={storeAccount.list.paymentType}
-                        dataSource={this.paymentTypes}
-                        form={form}
-                        disabled={true}
-                        required/>
-                  
-                      <this.Button type="info" htmlType="submit" loading={storeAccountUpdate.updating}>
-                        <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
-                      </this.Button>
-                    </this.Col>
+                            </this.Col> 
+                          </this.Row>
+                        </this.TabPane>
+    
+                      </this.Tabs>
+                      
+                    </this.Col> 
+                              
                   </this.Row>
-                </div>
-              </this.Form>
+                  <this.Button type="info" htmlType="submit" loading={storeAccountUpdate.updating}>
+                    <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
+                  </this.Button>
+                </this.Form>
+              </div>
+              
         }
       </div>
     );

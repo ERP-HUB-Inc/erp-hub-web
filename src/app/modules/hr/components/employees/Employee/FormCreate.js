@@ -34,12 +34,13 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        values["isPasswordExpired"] = this.Util.checkValueSwitch(values.isPasswordExpired);
-        values["isMustChangePWNextLogin"] = this.Util.checkValueSwitch(values.isMustChangePWNextLogin);
         values["photo"] = this.getImageFromUpload(values, "photo");
         values["status"] = this.Enum.ACTIVE;
         values["locationId"] = this.state.locationId;
         values["locations"] = this.state.locations;
+        if(values["autogenerate"] === undefined){
+          values["autogenerate"] = 1;
+        }
         this.dispatch(EmployeeAction.add(values));   
       }
 

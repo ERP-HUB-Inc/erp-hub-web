@@ -377,10 +377,10 @@ export default class ListPrivilege extends Component {
 
     return (
       <div className="main-role-access">
-        <this.Row>
-          <this.Col md="12" style={{paddingBottom: 15, fontWeight: 500, textAlign: "center"}}>
+        <this.Row className="scroll-role">
+          {/* <this.Col md="12" style={{paddingBottom: 15, fontWeight: 500, textAlign: "center"}}>
             {this.Util.isObjectEmpty(this.props.rowData) ? "Please select role." : this.props.rowData.name}
-          </this.Col>
+          </this.Col> */}
           <this.Col md="8">
             <this.Form>
               <span className="icon-search"></span>
@@ -409,7 +409,9 @@ export default class ListPrivilege extends Component {
             </this.Col>
           </this.Row>
           :
-          ""
+          <div className="text-center">
+            <this.Spin/>
+          </div> 
         }   
       </div>
     );

@@ -128,7 +128,7 @@ export default class Retail extends Component {
     // }
     // this.props.form.setFieldsValue({searchProduct: String.fromCharCode(event.keyCode)});
     this.setState({
-      isSetFocusOnSearchProduct: true
+      isSetFocusOnSearchProduct: this.isOpenSaleRegistrationClosed() ? false : true
     });
     // }
   }
@@ -512,9 +512,12 @@ export default class Retail extends Component {
         form={this.props.form}
         discountValue={this.state.discountValue.value}
         discountType={this.state.discountValue.type}
-        callBack={this.handleGetDiscount} />,
+        callBack={this.handleGetDiscount} 
+      />,
+      isSetFocusOnSearchProduct: false,
       isDiscountHasAdded: true
     });
+    console.log("handleDiscount");
   }
 
   handleOnOpenTaxSetting() {

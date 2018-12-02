@@ -85,3 +85,12 @@
 .btn-profit-and-lost {
     margin-bottom: 12px;
 }
+
+.main-profit-and-lost-report .no-pie-chart-image img {
+    height: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    position: absolute;
+}

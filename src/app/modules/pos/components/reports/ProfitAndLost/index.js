@@ -103,6 +103,7 @@ export default class ProfitAndLostList extends List {
     const { profitAndLostReport } = this.props;
     let getIncomeExpenseValue = [];
     let form = this.props.form;
+    
     if(form.getFieldValue("reportType") === 2){
       this.exportCsvFileName = "Operation-profit-and-lost-report.csv";
     }else if(form.getFieldValue("reportType") === this.Enum.OPERATION_TYPE.EXPENSE){
@@ -182,7 +183,6 @@ export default class ProfitAndLostList extends List {
 
     filter = JSON.stringify(filter);
     dispatch(this.action.fetch(filter,rangFilter));
-    console.log("filter",filter);
     this.setState({isClickFilter: true});
 
   }
@@ -240,11 +240,13 @@ export default class ProfitAndLostList extends List {
 
             <this.Table 
               dataSource={incomeExpense.income}
+              rowKey="incomeId"
               columns={new Column(<this.Translate id="col_profit_and_lost_revenus" />)}
               onChange={this.handleTableChange}
             />
             <this.Table 
               dataSource={incomeExpense.expense}
+              rowKey="expenseId"
               columns={new Column(<this.Translate id="col_profit_and_lost_expense" />,"revenuse-report")}
               onChange={this.handleTableChange}
             />
@@ -256,36 +258,43 @@ export default class ProfitAndLostList extends List {
             </div>
           </this.Col>
           <this.Col md="4">
-            <div style={{position: "relative"}}>
-              <Doughnut
-                data={this.doughuntChat()}
-                option={
-                  {
-                    animation: {
-                      duration: 0, 
-                    },
-                    hover: {
-                      animationDuration: 0, 
-                    },
-                    responsiveAnimationDuration: 0,
-                    responsive: false
-                  }
+            {
+              this.doughuntChat().datasets[0].data[0] > 0 || this.doughuntChat().datasets[0].data[1] > 0 ? 
+                <div style={{position: "relative"}}>
+                  <Doughnut
+                    data={this.doughuntChat()}
+                    option={
+                      {
+                        animation: {
+                          duration: 0, 
+                        },
+                        hover: {
+                          animationDuration: 0, 
+                        },
+                        responsiveAnimationDuration: 0,
+                        responsive: false
+                      }
                 
-                }
+                    }
 
-                legend= {
-                  {
-                    position: "none"
-                  }  
-                }
-
-              />
-              <div className="type">
-                <div><this.Translate id="col_profit_and_lost_revenus" />&nbsp;<span className="type-value">{incomeExpense.incomeType}</span></div>
-                <div><this.Translate id="col_profit_and_lost_expense" />&nbsp;&nbsp;<span className="type-value">{incomeExpense.expenseType}</span></div>
-              </div>
-
-            </div>
+                    legend= {
+                      {
+                        position: "none"
+                      }  
+                    }
+                  />
+                  
+                  <div className="type">
+                    <div><this.Translate id="col_profit_and_lost_revenus" />&nbsp;<span className="type-value">{incomeExpense.incomeType}</span></div>
+                    <div><this.Translate id="col_profit_and_lost_expense" />&nbsp;&nbsp;<span className="type-value">{incomeExpense.expenseType}</span></div>
+                  </div>
+                    
+                </div>                
+                :
+                <div className="no-pie-chart-image">
+                  <img src={`${this.Util.getBaseUrl()}/blank_pipe-01.svg`} alt="no-chart-data" />
+                </div>  
+            }
           </this.Col>
         </this.Row>
       </div>
