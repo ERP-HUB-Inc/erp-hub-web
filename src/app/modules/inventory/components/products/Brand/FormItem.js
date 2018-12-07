@@ -10,14 +10,14 @@ export default class FormItem extends Modal {
           <this.Col md="12">
             <this.InputText
               name="name"
-              label={<this.Translate id="text_name" />}
               data={formData.name}
+              label={<this.Translate id="text_name" />}
               placeholder={this.CATranslate("text_name", locale)}
+              errorRequired={<this.Translate id="error_require_name" />}
               required={true}
               isAutoFocus={true}
-              errorRequired={<this.Translate id="input_error_products_brand_name" />}
               max={100}
-              min={3}
+              min={0}
               form={form}/> 
           </this.Col>
           <this.Col md="12">
@@ -26,9 +26,8 @@ export default class FormItem extends Modal {
               label={<this.Translate id="text_description" />}
               data={formData.description}
               placeholder={this.CATranslate("text_description", locale)}
-              required={true}
-              errorRequired={<this.Translate id="input_error_products_brand_description" />}
-              max={100}
+              max={255}
+              min={0}
               form={form}/>
           </this.Col>
         </this.Row>

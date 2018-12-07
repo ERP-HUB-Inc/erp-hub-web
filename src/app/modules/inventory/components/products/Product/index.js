@@ -330,12 +330,7 @@ class ColumnExpand extends List {
         width: 130,
         render: () => {}
       },
-      {
-        dataIndex: "status",
-        key: "status",
-        width: 120,
-        render: () => {}
-      }
+      this.columnStatus
     ];
   }
 }

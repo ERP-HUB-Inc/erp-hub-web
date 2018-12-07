@@ -11,6 +11,7 @@
 .main-doughnut-chart .doughnut-chart {
     background-color: white;
     padding: 10px;
+    min-height: 450px
 }
 
 .main-doughnut-chart > .row {
@@ -29,7 +30,7 @@
     height: 88%;
     left: 0;
     right: 0;
-    top: 45px;
+    top: 30px;
     bottom: 0;
     width: 100%;
     position: absolute;

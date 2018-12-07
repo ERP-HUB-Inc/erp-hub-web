@@ -23,7 +23,8 @@ export default class Form extends Modal {
       isNotYetLoadComponentDidUpdated: true,
       tagList: [],
       productAttributes: [],
-      productVariants: []
+      productVariants: [],
+      productArchiveVariants: []
     };
 
     this.tagList = [];
@@ -35,6 +36,7 @@ export default class Form extends Modal {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCallBackGetProductAttribute = this.handleCallBackGetProductAttribute.bind(this);
     this.handleCallBackGetProductVariant = this.handleCallBackGetProductVariant.bind(this);
+    this.handleCallBackGetArchiveProductVariant = this.handleCallBackGetArchiveProductVariant.bind(this);
     this.handleAddBrand = this.handleAddBrand.bind(this);
     this.handleAddVariantAttribute = this.handleAddVariantAttribute.bind(this);
     this.handleAddUnit = this.handleAddUnit.bind(this);
@@ -83,17 +85,24 @@ export default class Form extends Modal {
   }
 
   handleCallBackGetProductAttribute(productAttributes) {
-    console.log("ProductAttributes:", productAttributes);
     this.setState({productAttributes});
   }
 
   handleCallBackGetProductVariant(productVariants) {
-    console.log("ProductVariantList:", productVariants);
     this.setState({productVariants});
+  }
+
+  handleCallBackGetArchiveProductVariant(productArchiveVariants) {
+    this.setState({productArchiveVariants});
   }
 
   handleSubmit (e) {
     e.preventDefault();
+
+    if (this.props.form.getFieldValue("isFocusOnVariantInput") === 1) {
+      return;
+    }
+
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         // PREPARE DATA FOR PACKAGE PRODUCT
@@ -109,7 +118,6 @@ export default class Form extends Modal {
             productPackageToProduct.push(packageProduct);
           });
         }
-
 
         // PREPARE DATA FROM DESCRIPTION
         const productDescriptions = [];
@@ -133,11 +141,11 @@ export default class Form extends Modal {
         }
 
         this.Util.clearObjProperty(values, [
-          "variantName",
           "variantProductCode",
           "variantProductCost",
           "variantProductPrice",
           "variantProductStatus",
+          "attributeId",
           "productName",
           "language",
           "productDescription",
@@ -161,8 +169,8 @@ export default class Form extends Modal {
         values["taxes"] = [{taxId: values["taxId"]}];
         values["productTags"] = this.state.tagList;
         values["descriptions"] = productDescriptions;
-        values["productAttributes"] = this.state.productAttributes;
-        values["productVariants"] = this.state.productVariants;
+        values["attributes"] = this.state.productAttributes;
+        values["variantProducts"] = this.state.productArchiveVariants.concat(this.state.productVariants);
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
 
@@ -173,7 +181,7 @@ export default class Form extends Modal {
 
         console.log("Value for update:", values);
 
-        // this.dispatch(ProductAction.update(values));
+        this.dispatch(ProductAction.update(values));
       }
     });
   }
@@ -309,6 +317,8 @@ export default class Form extends Modal {
           productCostLog={productCostLog}
           productVariantArchive={this.props.productVariantArchive}
           productVariantCheckStatus={this.props.productVariantCheckStatus}
+          productAttributeCheckStatus={this.props.productAttributeCheckStatus}
+          productAttributeValueCheckStatus={this.props.productAttributeValueCheckStatus}
           brands={brands}
           brandAdd={brandAdd}
           handleAddBrand={this.handleAddBrand}
@@ -325,6 +335,7 @@ export default class Form extends Modal {
           tagAdd={tagAdd}
           callBackGetProductAttribute={this.handleCallBackGetProductAttribute}
           callBackGetProductVariant={this.handleCallBackGetProductVariant}
+          handleCallBackGetArchiveProductVariant={this.handleCallBackGetArchiveProductVariant}
           handleChangeTag={this.handleChangeTag}
           handleSelectTag={this.handleSelectTag}
           handleDeselectTag={this.handleDeselectTag}

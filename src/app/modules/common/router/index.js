@@ -1,5 +1,5 @@
 import React from "react";
-import {Offline} from "react-detect-offline";
+// import {Offline} from "react-detect-offline";
 import {Layout} from "antd";
 import {Route, Switch} from "react-router-dom";
 import {connect} from "react-redux";
@@ -30,7 +30,7 @@ class Router extends Component {
 
     return (
       <Layout>
-        <Offline>
+        {/* <Offline>
           <div id="offline">
             <this.Alert
               message="No internet connection"
@@ -38,7 +38,7 @@ class Router extends Component {
               type="warning"
               showIcon/>
           </div>
-        </Offline>
+        </Offline> */}
         <Headers />
         <SideBar />
         <Content className="layoutContent" id="center-container">

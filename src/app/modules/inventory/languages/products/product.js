@@ -504,19 +504,76 @@ export default {
   ],
 
   // ERROR
+
+  "error_require_product_name": [
+    "Enter product name",
+    "Enter product name",
+    "Enter product name"
+  ],
+
+  "error_require_brand": [
+    "Choose product brand",
+    "Choose product brand",
+    "Choose product brand"
+  ],
+
+  "error_require_type": [
+    "Choose product type",
+    "Choose product type",
+    "Choose product type"
+  ],
+
+  "error_require_unit": [
+    "Choose unit",
+    "Choose unit",
+    "Choose unit"
+  ],
+
+  "error_require_price": [
+    "Enter price",
+    "Enter price",
+    "Enter price"
+  ],
+
+  "error_require_sku": [
+    "Enter product code",
+    "Enter product code",
+    "Enter product code"
+  ],
+
   "input_error_products_name": [
-    "Product name allow only 100 charactor only.",
-    "Product name allow only 100 charactor only.",
-    "Product name allow only 100 charactor only."
+    "Product name allow only 255 charactor only",
+    "Product name allow only 255 charactor only",
+    "Product name allow only 255 charactor only"
   ],
 
   "input_error_products_description": [
-    "Product description allow only 255 charactor only.",
-    "Product description allow only 255 charactor only.",
-    "Product description allow only 255 charactor only."
+    "Product description allow only 255 charactor only",
+    "Product description allow only 255 charactor only",
+    "Product description allow only 255 charactor only"
+  ],
+
+  "deactive_product_variant_warning": [
+    "We are not allow to deactive product variant that has quantity in stock",
+    "We are not allow to deactive product variant that has quantity in stock",
+    "We are not allow to deactive product variant that has quantity in stock"
   ],
 
   "delete_product_variant_warning": [
+    "We don't allow you to delete product variant that has quantity in stock.",
+    "We don't allow you to delete product variant that has quantity in stock.",
     "We don't allow you to delete product variant that has quantity in stock."
+  ],
+
+  "delete_attribute_warning": [
+    "We don't allow you to delete attribute that link to product variant that has quantity in stock.",
+    "We don't allow you to delete attribute that link to product variant that has quantity in stock.",
+    "We don't allow you to delete attribute that link to product variant that has quantity in stock.",
+  ],
+
+  "delete_attribute_value_warning": [
+    "We don't allow you to delete attribute value that link to product variant that has quantity in stock.",
+    "We don't allow you to delete attribute value that link to product variant that has quantity in stock.",
+    "We don't allow you to delete attribute value that link to product variant that has quantity in stock.",
   ]
 };

@@ -10,6 +10,22 @@ export default {
       });
     };
   },
+  checkIsAvailableArchiveAttributeValue: (id) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.CHECK_PRODUCT_ATTRIBUTE_VALUE,
+        payload: ProductVariantService.checkIsAvailableArchiveAttributeValue(id)
+      });
+    };
+  },
+  checkIsAvailableArchiveAttribute: (id) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.CHECK_PRODUCT_ATTRIBUTE,
+        payload: ProductVariantService.checkIsAvailableArchiveAttribute(id)
+      });
+    };
+  },
   reset: (RESET_CONSTANT = Constant.RESET_PRODUCT_VARIANT) => {
     return dispatch => {
       return dispatch({

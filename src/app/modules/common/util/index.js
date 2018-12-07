@@ -404,5 +404,10 @@ export class Util {
         .value()
     );
   }
+
+  copyArrayObj(arg) {
+    arg = JSON.stringify(arg);
+    return JSON.parse(arg);
+  }
   
 }

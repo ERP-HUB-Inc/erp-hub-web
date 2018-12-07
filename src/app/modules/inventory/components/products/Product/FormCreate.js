@@ -54,6 +54,10 @@ export default class Form extends Modal {
 
   handleSubmit (e) {
     e.preventDefault();
+    if (this.props.form.getFieldValue("isFocusOnVariantInput") === 1) {
+      return;
+    }
+
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         // PREPARE DATA FOR PACKAGE PRODUCT
@@ -126,12 +130,11 @@ export default class Form extends Modal {
         values["taxes"] = [{taxId: values["taxId"]}];
         values["productTags"] = this.state.tagList;
         values["descriptions"] = productDescriptions;
-        values["productAttributes"] = this.state.productAttributes;
-        values["productVariants"] = this.state.productVariants;
+        values["attributes"] = this.state.productAttributes;
+        values["variantProducts"] = this.state.productVariants;
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
-        console.log("Values Product:", values);
-        // this.dispatch(ProductAction.add(values));
+        this.dispatch(ProductAction.add(values));
 
         // RESET STATE
         this.setState({tagList: []});
@@ -254,6 +257,8 @@ export default class Form extends Modal {
           dispatch={dispatch}
           productVariantArchive={productVariantArchive}
           productVariantCheckStatus={this.props.productVariantCheckStatus}
+          productAttributeCheckStatus={this.props.productAttributeCheckStatus}
+          productAttributeValueCheckStatus={this.props.productAttributeValueCheckStatus}
           brandAdd={brandAdd}
           handleAddBrand={this.handleAddBrand}
           productsTypeAdd={productsTypeAdd}

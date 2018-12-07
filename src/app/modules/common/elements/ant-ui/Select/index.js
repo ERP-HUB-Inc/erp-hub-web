@@ -59,7 +59,7 @@ export class Select extends Element {
 
 Select.defaultProps = {
   required: false,
-  errorRequired: "Please select this field.",
+  errorRequired: "Please select this field",
   valueKey: "value",
   nameKey: "name",
   nestedName: null

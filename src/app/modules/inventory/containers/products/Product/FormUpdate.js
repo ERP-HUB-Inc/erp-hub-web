@@ -19,6 +19,8 @@ function mapStateToProps(state) {
     productCostLog: state.reducer.product.requestCostLog,
     productVariantArchive: state.reducer.product.archiveVariant,
     productVariantCheckStatus: state.reducer.productVariant.checkStatus,
+    productAttributeCheckStatus: state.reducer.productVariant.checkStatusAttribute,
+    productAttributeValueCheckStatus: state.reducer.productVariant.checkStatusAttributeValue,
     productSearch: state.reducer.product.search,
     brands: state.reducer.brand.request,
     brandAdd: state.reducer.brand.add,
