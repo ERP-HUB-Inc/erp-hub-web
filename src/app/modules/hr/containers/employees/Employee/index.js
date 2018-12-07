@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Form } from "antd";
 import ManageEmployeeList from "../../../components/employees/Employee";
 
 class EmployeeManagement extends React.Component {
@@ -20,4 +21,12 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(EmployeeManagement);
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const employeeManagement =  Form.create(mapPropsToFields)(EmployeeManagement);
+
+export default connect(mapStateToProps)(employeeManagement);

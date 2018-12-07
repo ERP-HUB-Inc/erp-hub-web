@@ -12,7 +12,7 @@ export default class EmployeeList extends List {
     super(props);
     this.columns = new Column();
     this.formCreate = <FormCreate/>;
-    this.columnFilterWithKey = ["name"];
+    this.columnFilterWithKey = ["firstName","phoneNumber"];
     this.callBackOnShowEditForm = this.showFormEdit;
     this.service = EmployeeService;
     this.action = EmployeeAction;
@@ -32,13 +32,7 @@ export default class EmployeeList extends List {
     });
   }
 
-  render() {
-    return super.render();
-  }
-
-
 }
-
 
 
 class Column extends List {
