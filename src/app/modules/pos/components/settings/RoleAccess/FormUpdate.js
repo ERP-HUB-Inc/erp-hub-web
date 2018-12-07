@@ -38,31 +38,33 @@ export default class Form extends Modal {
 
     if (roleAccessUpdate.showForm) {
       this.content = (
-        <this.Row>
-          <this.Col md="12"> 
+        <div id="scroll-layout">
+          <this.Row>
+            <this.Col md="12"> 
 
-            <this.Tabs type="card">
-              <this.TabPane tab="Create Role" key="1" style={{ height:"500px" }}>
-                <this.Row>
-                  <this.Col lg="12" md="12"> 
-                    <FormItem formData={roleAccessUpdate.data} form={form} locale={locale} />
-                  </this.Col> 
-                </this.Row>
-              </this.TabPane>
+              <this.Tabs type="card">
+                <this.TabPane tab="Create Role" key="1" style={{ height:"500px" }}>
+                  <this.Row>
+                    <this.Col lg="12" md="12"> 
+                      <FormItem formData={roleAccessUpdate.data} form={form} locale={locale} />
+                    </this.Col> 
+                  </this.Row>
+                </this.TabPane>
                 
-              <this.TabPane tab="Role Access" key="2" style={{ height:"500px" }}>
+                <this.TabPane tab="Role Access" key="2" style={{ height:"500px" }}>
                 
-                <this.Row>  
-                  <this.Col lg="12" md="12"> 
-                    { <PrivilegeList rolePrivileges={this.props.rolePrivileges} rowData={this.state.rowData}/> }
-                  </this.Col> 
-                </this.Row>
+                  <this.Row>  
+                    <this.Col lg="12" md="12"> 
+                      { <PrivilegeList rolePrivileges={this.props.rolePrivileges} rowData={this.state.rowData}/> }
+                    </this.Col> 
+                  </this.Row>
           
-              </this.TabPane>
-            </this.Tabs>
+                </this.TabPane>
+              </this.Tabs>
 
-          </this.Col>
-        </this.Row>
+            </this.Col>
+          </this.Row>
+        </div>
       );
       return super.render();
     } else {

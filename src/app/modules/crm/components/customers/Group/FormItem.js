@@ -5,7 +5,7 @@ export default class FormItem extends Modal {
   render() {
     const {formData, form, locale} = this.props;
     return (
-      <div>
+      <div id="scroll-layout">
         <this.Col md="12">
           <this.InputText
             name="name"
