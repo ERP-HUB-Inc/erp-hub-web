@@ -31,8 +31,7 @@ export default class Retail extends Component {
     super(props);
     this.state = {
       showVariantProduct: false,
-      // isSetFocusOnSearchProduct: false,
-      testChange: false,
+      isSetFocusOnSearchProduct: false,
       variantProductList: [],
       modalContent: null,
       expandOrderItemRow: [],
@@ -52,7 +51,6 @@ export default class Retail extends Component {
       textFullScreen: <this.Translate id="text_full_screen" />,
       iconFullScreen: "icon-full-screen"
     };
-    this.isSetFocusOnSearchProduct = false;
     this.hasDidUpdate = false;
     this.service = TransactionService;
 
@@ -84,18 +82,12 @@ export default class Retail extends Component {
     this.handleOnRestoreReceipt = this.handleOnRestoreReceipt.bind(this);
     this.handleOnBlurSearchProduct = this.handleOnBlurSearchProduct.bind(this);
     this.handleOnAutoSelectProductAfterSearchResult = this.handleOnAutoSelectProductAfterSearchResult.bind(this);
-    this.handleOnChangOrderFieldBlur = this.handleOnChangOrderFieldBlur.bind(this);
   }
 
   componentDidUpdate() {
     if (!this.hasDidUpdate &&
       this.props.openSaleRegistration.fetched &&
       this.props.open.showForm) {
-        
-      if(!this.isOpenSaleRegistrationClosed() && this.isSetFocusOnSearchProduct){
-        this.isSetFocusOnSearchProduct = true;
-      }
-
       if (this.isOpenSaleRegistrationClosed()) {
         this.setState({
           modalContent: <FormOpenSaleRegistration/>
@@ -111,12 +103,9 @@ export default class Retail extends Component {
   }
 
   componentDidMount() {
-
-    this.isSetFocusOnSearchProduct = true;
-
     this.props.dispatch(PrivilegeAction.reset());
     this.props.dispatch(PrivilegeAction.checkPermission(this.service.createRoute));
-    
+
     this.handleSetFullScreen();
     this.addEventKeyDownAndCaptureValueToInputSearchProduct();
 
@@ -126,9 +115,6 @@ export default class Retail extends Component {
     window.addEventListener("resize", this.handleOnResizeScreen);
     this.props.dispatch(OpenSaleRegistrationAction.showForm());
     this.props.dispatch(OpenSaleRegistrationAction.last());
-
-
-    
     // RESTORE CURRENT RECEIPT
     //this.restoreReceipt(Enum.CURRENT_RECEIPT);
   }
@@ -141,25 +127,11 @@ export default class Retail extends Component {
     // userInput = existingValue + userInput;
     // }
     // this.props.form.setFieldsValue({searchProduct: String.fromCharCode(event.keyCode)});
-    // this.setState({
-    //   isSetFocusOnSearchProduct: !this.isOpenSaleRegistrationClosed() 
-    // });
-
-    // this.isSetFocusOnSearchProduct = !this.isOpenSaleRegistrationClosed();
-    // this.isSetFocusOnSearchProduct = true;
-
-  
-    // if(this.isSetFocusOnSearchProduct){
-    //   this.isSetFocusOnSearchProduct = true;
+    this.setState({
+      isSetFocusOnSearchProduct: this.isOpenSaleRegistrationClosed() ? false : true
+    });
     // }
-
-    if(event.key === "Escape"){
-      this.isSetFocusOnSearchProduct = true;
-    }
-    
   }
-  
-
   addEventKeyDownAndCaptureValueToInputSearchProduct() {
     document.addEventListener("keydown", this.getValueFromUserTypeKeyboard);
   }
@@ -278,7 +250,9 @@ export default class Retail extends Component {
   }
 
   handleOnBlurSearchProduct() {
-    this.isSetFocusOnSearchProduct = false;
+    this.setState({
+      isSetFocusOnSearchProduct: false
+    });
   }
 
   handleOnResetOrder() {
@@ -320,7 +294,6 @@ export default class Retail extends Component {
   }
 
   handleExpandOrderItem(expandOrderItemRow, productOrderIndex) {
-    this.handleonSearchfails();
     if (this.state.expandOrderItemRow.includes(expandOrderItemRow)) {
       this.setState({expandOrderItemRow: []});
     } else {
@@ -395,16 +368,7 @@ export default class Retail extends Component {
     });
   }
 
-  handleOnChangOrderFieldBlur(){
-    this.isSetFocusOnSearchProduct = true;
-  }
-
-  handleonSearchfails(){
-    this.isSetFocusOnSearchProduct = false;
-  }
-
   handleOnChangOrderField(event, proderOrderRowIndex, field = "quantity") {
-    this.handleonSearchfails();
     const value = parseFloat(event.target.value);
     let existingProductOrderList = this.state.productOrderList;
     existingProductOrderList[proderOrderRowIndex][field] = isNaN(value) ? 0 : value;
@@ -515,8 +479,6 @@ export default class Retail extends Component {
   }
 
   handleOnMakePayment() {
-    this.handleonSearchfails();
-    console.log("handle on change field");
     if (this.openFormSaleRegisration()) {
       return;
     }
@@ -552,10 +514,10 @@ export default class Retail extends Component {
         discountType={this.state.discountValue.type}
         callBack={this.handleGetDiscount} 
       />,
-      isDiscountHasAdded: true,
-      
+      isSetFocusOnSearchProduct: false,
+      isDiscountHasAdded: true
     });
-    this.isSetFocusOnSearchProduct = false;
+    console.log("handleDiscount");
   }
 
   handleOnOpenTaxSetting() {
@@ -760,7 +722,6 @@ export default class Retail extends Component {
                   form={this.props.form}
                   dispatch={this.props.dispatch}
                   handleOnAddNewCustomer={this.handleOnAddNewCustomer}/>
-               
                 <ProductDropDownSearch
                   placeholder={this.CATranslate("input_search_product_placeholder", this.props.locale)}
                   productSearch={this.props.productSearch}
@@ -769,8 +730,8 @@ export default class Retail extends Component {
                   handlePressEnterOnSearch={this.handleOnSelectProductSearchList}
                   handleOnBlur={this.handleOnBlurSearchProduct}
                   className="ca-input-v1-icon-left ca-input-v1"
-                  isAutoFocus={true || this.isSetFocusOnSearchProduct}
-                  didUpdateMakeAutoFocus={this.isSetFocusOnSearchProduct}
+                  isAutoFocus={true || this.state.isSetFocusOnSearchProduct}
+                  didUpdateMakeAutoFocus={this.state.isSetFocusOnSearchProduct}
                   locale={this.props.locale}
                   form={this.props.form}
                   dispatch={this.props.dispatch} />
@@ -810,7 +771,6 @@ export default class Retail extends Component {
                             label={<this.Translate id="text_quantity"/> }
                             data={productOrder.quantity}
                             handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "quantity")}
-                            handleOnBlur={this.handleOnChangOrderFieldBlur}
                             className="ca-input-v1 order-quantity"
                             isHideTool={true}
                             precision={0}
@@ -821,7 +781,6 @@ export default class Retail extends Component {
                             label={<this.Translate id="text_price" />}
                             data={POSUtil.getTotalAmountAfterDiscount(1, productOrder.price, productOrder.discount)}
                             handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "newPrice")}
-                            handleOnBlur={this.handleOnChangOrderFieldBlur}
                             className="ca-input-v1"
                             isAutoSelect={true}
                             isHideTool={true}
@@ -831,7 +790,6 @@ export default class Retail extends Component {
                             label={<span><this.Translate id="text_discount"/> (%)</span>}
                             data={productOrder.discount}
                             handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "discount")}
-                            handleOnBlur={this.handleOnChangOrderFieldBlur}
                             className="ca-input-v1"
                             precision={0}
                             isAutoSelect={true}

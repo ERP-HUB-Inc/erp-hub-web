@@ -313,7 +313,9 @@
     background-color: #FAFAFA;
     box-shadow: 0 0 4px 0 rgba(0,0,0,0.3);
     padding: 15px 5px;
-    line-height: 26px
+    line-height: 26px;
+    overflow-y: hidden;
+    overflow-x: auto;
 }
 
 #retail-sale #wrap-payment .payment .sub-total{

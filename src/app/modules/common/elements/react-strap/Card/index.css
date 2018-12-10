@@ -20,7 +20,7 @@
 
 .wrap-card .card .card-body{
     height: 110px;
-    display: table;
+    display: inherit;
     padding: 10px 15px
 }
 
@@ -33,8 +33,6 @@
 .card-body .card-text .wrap-content{
     display: flex;
     line-height: 25px;
-    /* width: 200px;
-    margin: 0 auto */
 }
 
 .wrap-card [class^="icon-"] {
@@ -47,7 +45,9 @@
 
 .wrap-card .card {
     border-radius: 3px;
-    padding: 0px
+    padding: 0px;
+    overflow-y: hidden;
+    overflow-x: auto;
 }
 
 .wrap-card .card .block-text {
@@ -83,4 +83,13 @@
 
 .wrap-card .card-footer a:hover {
     text-decoration: none;
+}
+
+@media only screen and (max-width: 800px) {
+    .wrap-card .card .card-body {
+        margin: 0 auto !important;
+    }
+    .card-body .card-text .wrap-content {
+        margin-top: 18px;
+    }
 }

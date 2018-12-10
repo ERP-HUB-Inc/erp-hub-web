@@ -48,7 +48,7 @@ export default class FormItem extends Modal {
     const {formData, form, locale} = this.props;
     const { switchLanguage } = this.state;
     return (
-      <div>
+      <div id="scroll-layout">
         <div style={{ display: "none" }}>
           <this.InputNumber
             type="hidden"

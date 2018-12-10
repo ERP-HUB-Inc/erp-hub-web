@@ -106,6 +106,8 @@ export default class SaleList extends List {
             }
 
             filter = JSON.stringify(filter);
+
+            console.log("rangFilter",rangFilter);
           
             dispatch(this.action.fetch(filter,rangFilter));
 

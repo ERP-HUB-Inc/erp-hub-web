@@ -43,7 +43,6 @@ export default class Diagram extends Component {
 
   render() {
     const { graphChat, pipeChat } = this.props;
-    console.log("list pie chart",pipeChat.list[0]);
     const incomeExpense = this.groupIncomeExpenseType();
     return (
       graphChat.fetching ? 

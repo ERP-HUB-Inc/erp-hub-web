@@ -27,19 +27,36 @@
 }
 
 .main-doughnut-chart .no-pie-chart-image img{
-    height: 88%;
+    height: 300px;
     left: 0;
     right: 0;
     top: 30px;
     bottom: 0;
     width: 100%;
     position: absolute;
+    background-color: white;
 }
 
 .main-doughnut-chart .no-pie-chart-image .text-chart-no-data {
     text-align: center;
     margin-top: 157px;
     font-weight: 500;
+}
+
+@media only screen and (max-width: 800px) {
+    .main-doughnut-chart .no-pie-chart-image img {
+        position: inherit;
+        top: 0px;
+    }
+
+    .main-doughnut-chart .doughnut-chart-left {
+        margin-bottom: 12px;
+    }
+
+    .main-doughnut-chart .doughnut-chart-right {
+        border-left: none;
+    }
+
 }
 
 

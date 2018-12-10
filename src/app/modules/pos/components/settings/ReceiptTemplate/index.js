@@ -24,6 +24,7 @@ export default class ReceiptTemplateList extends List {
       this.props.dispatch(ReceiptTemplateAction.reset());
     }
   }
+
 }
 
 class Column extends List {

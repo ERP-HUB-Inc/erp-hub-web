@@ -9,6 +9,7 @@ export default class FormItem extends Modal {
   }
  
   componentDidMount(){
+    super.componentDidMount();
     const {dispatch} = this.props;
     dispatch(LanguageAction.fetch(100));
   }
@@ -29,37 +30,39 @@ export default class FormItem extends Modal {
 
     return (
       <this.TabPane tab={this.getLanguageIcon(language.code)} key={languagesIndex}>
-        <this.Row>
-          <this.InputText 
-            name={`language[${languagesIndex}]`} 
-            type="hidden"
-            data={language.code}
-            form={form} />
-          <this.InputText 
-            name={`id[${languagesIndex}]`} 
-            type="hidden"
-            data={productTypeId}
-            form={form} />
-          <this.Col md="12">
-            <this.InputText
-              name={`productTypeName[${languagesIndex}]`}
-              data={productTypeName}
-              label={<this.Translate id="text_name" />}
-              placeholder={this.CATranslate("text_name", locale)}
-              isAutoFocus={true}
-              max={100}
-              form={form}/>
-          </this.Col>
-          <this.Col md="12">
-            <this.InputTextArea
-              name={`productTypeDescription[${languagesIndex}]`}
-              data={productTypeDescription}
-              label={<this.Translate id="text_description" />}
-              placeholder={this.CATranslate("text_description", locale)}
-              max={255}
-              form={form}/>
-          </this.Col>
-        </this.Row>
+        <div id="scroll-layout">
+          <this.Row>
+            <this.InputText 
+              name={`language[${languagesIndex}]`} 
+              type="hidden"
+              data={language.code}
+              form={form} />
+            <this.InputText 
+              name={`id[${languagesIndex}]`} 
+              type="hidden"
+              data={productTypeId}
+              form={form} />
+            <this.Col md="12">
+              <this.InputText
+                name={`productTypeName[${languagesIndex}]`}
+                data={productTypeName}
+                label={<this.Translate id="text_name" />}
+                placeholder={this.CATranslate("text_name", locale)}
+                isAutoFocus={true}
+                max={100}
+                form={form}/>
+            </this.Col>
+            <this.Col md="12">
+              <this.InputTextArea
+                name={`productTypeDescription[${languagesIndex}]`}
+                data={productTypeDescription}
+                label={<this.Translate id="text_description" />}
+                placeholder={this.CATranslate("text_description", locale)}
+                max={255}
+                form={form}/>
+            </this.Col>
+          </this.Row>
+        </div>
       </this.TabPane>
     );
   }

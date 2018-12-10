@@ -198,7 +198,10 @@ export default class List extends Component {
         .catch(error => {
           this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
         });
+
+    
     }
+
   }
 
   /**
@@ -408,8 +411,10 @@ export default class List extends Component {
     return (
       <this.Button
         type="info"
+        id="btnAdd"
         className="mg-right text-uppercase"
-        onClick={this.handleShowFormAdd}>
+        onClick={this.handleShowFormAdd}
+      >
         <span className="icon-add icon-padding-right"></span>
         <this.Translate id="text_add_new" />
       </this.Button>
@@ -658,6 +663,8 @@ export default class List extends Component {
     return (
       
       <div className="content-list">
+
+        {/* <div id="btnAdd">btnAdd</div> */}
 
         { this.renderBreadCrumb() }
         
