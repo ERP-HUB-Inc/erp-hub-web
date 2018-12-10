@@ -27,12 +27,10 @@ export default class ListPrivilege extends Component {
   };
 
   componentDidMount () {
-    const {dispatch} = this.props;
-    dispatch(PrivilegeAction.fetch(200));
+    this.props.dispatch(PrivilegeAction.fetch(200));
   }
 
   handleSubmit () {
-    const {dispatch} = this.props;
     if (this.props.rowData) {
       const roleId = this.props.rowData.id;
       const privileges = {privileges: this.state.checkChildIdList};
@@ -42,7 +40,7 @@ export default class ListPrivilege extends Component {
         this.setState({isGrantingPrivilege: false});
       }.bind(this), 2000);
 
-      dispatch(RolePrivilegeAction.assignPrivilege(roleId, privileges));
+      this.props.dispatch(RolePrivilegeAction.assignPrivilege(roleId, privileges));
     } else {
       this.Message.warning(this.CATranslate("warning_not_select_role", this.props.locale));
     }

@@ -107,7 +107,7 @@ export default class Diagram extends Component {
                         />      
                         : 
                         <div className="no-pie-chart-image">
-                          <img src={`${this.Util.getBaseUrl()}/blank_pipe-01.svg`} alt="no-chart-data"  />
+                          <img src={this.Util.getGeneralImage("storeVein/blank_pipe-01.svg").url} alt="no-chart-data"  />
                         </div>
                     }
                   </this.Col>
@@ -138,7 +138,7 @@ export default class Diagram extends Component {
                         /> 
                         : 
                         <div className="no-pie-chart-image">
-                          <img src={`${this.Util.getBaseUrl()}/blank_pipe-01.svg`} alt="no-chart-data" />
+                          <img src={this.Util.getGeneralImage("storeVein/blank_pipe-01.svg").url} alt="no-chart-data" />
                         </div>  
                     }
                   </this.Col>

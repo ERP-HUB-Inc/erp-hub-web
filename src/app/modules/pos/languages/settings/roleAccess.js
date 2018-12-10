@@ -4,6 +4,13 @@ export default {
     "Role",
     "Role"
   ],
+
+  "text_access_role": [
+    "Access Role",
+    "Access Role",
+    "Access Role"
+  ],
+
   "col_role_code": [
     "Code",
     "Code",

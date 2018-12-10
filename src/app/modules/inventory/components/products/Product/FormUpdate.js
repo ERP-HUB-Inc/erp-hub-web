@@ -24,7 +24,8 @@ export default class Form extends Modal {
       tagList: [],
       productAttributes: [],
       productVariants: [],
-      productArchiveVariants: []
+      productArchiveVariants: [],
+      productArchiveAttributes: []
     };
 
     this.tagList = [];
@@ -37,6 +38,7 @@ export default class Form extends Modal {
     this.handleCallBackGetProductAttribute = this.handleCallBackGetProductAttribute.bind(this);
     this.handleCallBackGetProductVariant = this.handleCallBackGetProductVariant.bind(this);
     this.handleCallBackGetArchiveProductVariant = this.handleCallBackGetArchiveProductVariant.bind(this);
+    this.handleCallBackGetArchiveProductAttributes = this.handleCallBackGetArchiveProductAttributes.bind(this);
     this.handleAddBrand = this.handleAddBrand.bind(this);
     this.handleAddVariantAttribute = this.handleAddVariantAttribute.bind(this);
     this.handleAddUnit = this.handleAddUnit.bind(this);
@@ -94,6 +96,10 @@ export default class Form extends Modal {
 
   handleCallBackGetArchiveProductVariant(productArchiveVariants) {
     this.setState({productArchiveVariants});
+  }
+
+  handleCallBackGetArchiveProductAttributes(productArchiveAttributes) {
+    this.setState({productArchiveAttributes});
   }
 
   handleSubmit (e) {
@@ -169,7 +175,7 @@ export default class Form extends Modal {
         values["taxes"] = [{taxId: values["taxId"]}];
         values["productTags"] = this.state.tagList;
         values["descriptions"] = productDescriptions;
-        values["attributes"] = this.state.productAttributes;
+        values["attributes"] = this.state.productArchiveAttributes.concat(this.state.productAttributes);
         values["variantProducts"] = this.state.productArchiveVariants.concat(this.state.productVariants);
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
@@ -178,8 +184,6 @@ export default class Form extends Modal {
           tagList: [],
           isNotYetLoadComponentDidUpdated: true
         });
-
-        console.log("Value for update:", values);
 
         this.dispatch(ProductAction.update(values));
       }
@@ -336,6 +340,7 @@ export default class Form extends Modal {
           callBackGetProductAttribute={this.handleCallBackGetProductAttribute}
           callBackGetProductVariant={this.handleCallBackGetProductVariant}
           handleCallBackGetArchiveProductVariant={this.handleCallBackGetArchiveProductVariant}
+          handleCallBackGetArchiveProductAttributes={this.handleCallBackGetArchiveProductAttributes}
           handleChangeTag={this.handleChangeTag}
           handleSelectTag={this.handleSelectTag}
           handleDeselectTag={this.handleDeselectTag}

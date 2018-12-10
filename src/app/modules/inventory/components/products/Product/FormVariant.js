@@ -17,10 +17,12 @@ export default class FormVariant extends Modal {
         attributeRow: null,
         attributeValueIndex: null
       },
+      attributeRowToDelete: 0,
       variantAttributes: [],
       variantAttributeList: [],
       productVariantList: [],
       productVariantArchiveList: [],
+      productAttributeArchiveList: [],
       addAttributeRowIndex: 0,
       isNotYetLoadComponentDidUpdated: true
     };
@@ -40,7 +42,6 @@ export default class FormVariant extends Modal {
             name={`variantProductCode[${index}]`}
             placeholder={this.CATranslate("text_product_code", this.props.locale)}
             data={record.barcode}
-            isAutoSelect={true}
             handleKeyUp={(e) => this.handleOnChangeBarcode(e, index)}
             form={this.props.form}/>;
         }
@@ -72,6 +73,8 @@ export default class FormVariant extends Modal {
             className="text-right"
             isAutoSelect={true}
             isHideTool={true}
+            required={true}
+            errorRequired={<this.Translate id="error_require_price" />}
             data={record.price}
             handleKeyUp={(e) => this.handleOnChangePrice(e, index)}
             form={this.props.form}/>;
@@ -147,8 +150,8 @@ export default class FormVariant extends Modal {
       const variantAttributeList = this.state.variantAttributeList;
 
       const {attributeRow, attributeValueIndex} = this.state.productAttributeToDelete;
-      const tempProductVariant = []; // USE FOR RELOAD BACK WHEN DELETE ATTRIBUTE VALUE AT INDEX 0
       variantAttributeList[attributeRow]["attributeValues"][attributeValueIndex]["status"] = this.Enum.ARCHIVE;
+      const tempProductVariant = []; // USE FOR RELOAD BACK WHEN DELETE ATTRIBUTE VALUE AT INDEX 0
       const productVariantToDelete = [];
 
       for (var i = 0; i < productVariantList.length; i++) {
@@ -161,7 +164,10 @@ export default class FormVariant extends Modal {
         
         if (isArchive) {
           productVariantList[i]["status"] = this.Enum.ARCHIVE;
-          productVariantArchiveList.push(productVariantList[i]);
+          productVariantArchiveList.push(this.Util.copyObj(productVariantList[i]));
+
+          // REMOVE PRODUCT ATTRIBUTE VALUE FROM COLUMN IN PRODUCT VARIANT
+          productVariantList[i]["productAttributeValueId"] = productVariantList[i]["productAttributeValueId"].includes(`${productAttributeValueId},`) ? productVariantList[i]["productAttributeValueId"].replace(`${productAttributeValueId},`, "") : productVariantList[i]["productAttributeValueId"].replace(`,${productAttributeValueId}`, "");
           tempProductVariant.push(productVariantList[i]);
           productVariantToDelete.push(i);
         }
@@ -215,9 +221,109 @@ export default class FormVariant extends Modal {
       this.props.dispatch(ProductVariantAction.reset());
     }
 
-    // PRODUCT ATTRIBUTE VALUE
+    // PRODUCT ATTRIBUTE
     if (productAttributeCheckStatus.fetched) {
       // TO DO: Remove data from front end
+      const productAttributeId = productAttributeCheckStatus.list ? productAttributeCheckStatus.list.id : "";
+      const archiveAttribute = this.state.variantAttributeList.find(value => value.id === productAttributeId);
+      let productVariantList = this.state.productVariantList;
+      const variantAttributeList = this.state.variantAttributeList;
+      const productAttributeArchiveList = this.state.productAttributeArchiveList;
+      const productVariantArchiveList = this.state.productVariantArchiveList;
+      const {attributeRow} = this.state.productAttributeToDelete;
+
+      // START CHECK ARCHIVE ATTRIBUTE
+      if (archiveAttribute) {
+
+        archiveAttribute.status = this.Enum.ARCHIVE; // when change value here it will affect to variantAttributeList at index: (pointer reference)
+        
+        // START LOOP
+        archiveAttribute["attributeValues"].forEach((attributeValue, attributeValueIndex) => {
+
+          archiveAttribute["attributeValues"][attributeValueIndex]["status"] = this.Enum.ARCHIVE;
+          const tempProductVariant = []; // USE FOR RELOAD BACK WHEN DELETE ATTRIBUTE VALUE AT INDEX 0
+          const productVariantToDelete = [];
+
+          this.state.productVariantList.forEach((productVariant, productVariantIndex) => {
+            let isArchive = false;
+            // We check two condition like this bcus sometimes product mix attribute value that has just new created with existing in system
+            if (productVariant["productAttributeValueId"] && productVariant["productAttributeValueId"].includes(attributeValue.id)) {
+              isArchive = true;
+            } else if (productVariant["tempPVId"] && productVariant["tempPVId"].includes(attributeValue.id)) {
+              isArchive = true;
+            }
+
+            if (isArchive) {
+              this.state.productVariantList[productVariantIndex]["status"] = this.Enum.ARCHIVE; // Only just change here it will affect to product variant collection
+              productVariantArchiveList.push(productVariant);
+
+              productVariant["productAttributeValueId"] = productVariant["productAttributeValueId"].includes(`${attributeValue.id},`) ? productVariant["productAttributeValueId"].replace(`${attributeValue.id},`, "") : productVariant["productAttributeValueId"].replace(`,${attributeValue.id}`, "");
+              tempProductVariant.push(productVariant);
+              productVariantToDelete.push(productVariantIndex);
+            }
+          });
+
+          // REMOVE PRODUCT VARIANT FRO THE COLLECTION
+          for (var j = productVariantToDelete.length - 1; j >= 0; j--) {
+            this.state.productVariantList.splice(productVariantToDelete[j], 1);
+          }
+
+          // CHECK IF PRODUCT VARIANT HAS ALL REMOVE FROM THE COLLECTION, SO WE NEED TO RESET DATA BACK
+          if (this.countProductVariant(this.state.productVariantList) === 0) {
+
+            const newProductVariantList = this.generateProductVariant(
+              this.variantAttributeListForGenerateVariantV2(this.state.variantAttributeList),
+              attributeRow,
+              false
+            );
+
+            if (newProductVariantList.length === tempProductVariant.length) {
+              // START LOOP
+              newProductVariantList.forEach((productVariant, productVariantIndex) => {
+                tempProductVariant[productVariantIndex]["name"] = productVariant.name;
+                tempProductVariant[productVariantIndex]["status"] = this.Enum.ACTIVE;
+                
+                // REMOVE PRODUCT VARIANT ACTIVE FROM ARCHIVE LIST
+                productVariantArchiveList.forEach((productVariantArchive, productVariantArchiveIndex) => {
+                  if (productVariantArchive.status === this.Enum.ACTIVE) {
+                    productVariantArchiveList.splice(productVariantArchiveIndex, 1);
+                  }
+                });
+              });
+              // END LOOP
+              
+              // RESET BACK TO PRODUCT VARIANT
+              if (tempProductVariant.length > 0) {
+                productVariantList = tempProductVariant;
+              } 
+            }
+          }
+          // END CONDITION
+
+        });
+        // END LOOP
+
+        // BACK UP ATTRIBUTE ARCHIVE LIST FOR PRI
+        productAttributeArchiveList.push(archiveAttribute);
+
+        // DELETE ATTRIBUTE ARCHIVE AWAY FROM THE LIST
+        variantAttributeList.splice(attributeRow, 1);
+      }
+      // END CHECK ARCHIVE ATTRIBUTE
+
+      // WHEN WE REMOVE OUT OF PRODUCT VARIANT WE NEED RELOAD BACK FROM THE FIRST PRODUCT VARIANT: (tempProductVariant)
+      if (this.state.productVariantList.length === 0) {
+        this.setState({
+          productVariantList
+        });
+      }
+
+      this.props.dispatch(ProductVariantAction.reset());
+
+      if (this.props.callBackGetProductVariant) {
+        this.props.callBackGetProductVariant(productVariantList);
+      }
+
     } else if (productAttributeValueCheckStatus["error"]) {
       this.Message.warning(this.CATranslate("delete_attribute_value_warning", this.props.locale));
       this.props.dispatch(ProductVariantAction.reset());
@@ -256,6 +362,10 @@ export default class FormVariant extends Modal {
 
       if (this.props.handleCallBackGetArchiveProductVariant) {
         this.props.handleCallBackGetArchiveProductVariant(this.state.productVariantArchiveList);
+      }
+
+      if (this.props.handleCallBackGetArchiveProductAttributes) {
+        this.props.handleCallBackGetArchiveProductAttributes(this.state.productAttributeArchiveList);
       }
     }
 
@@ -313,6 +423,16 @@ export default class FormVariant extends Modal {
     let count = 0;
     productVariantList.forEach(productVariant => {
       if (productVariant.status === this.Enum.ACTIVE) {
+        count++;
+      }
+    });
+    return count;
+  }
+
+  countProductAttribute(productAttributes) {
+    let count = 0;
+    productAttributes.forEach(productAttribute => {
+      if (productAttribute.status === this.Enum.ACTIVE) {
         count++;
       }
     });
@@ -716,13 +836,25 @@ export default class FormVariant extends Modal {
 
   handleDeleteProductAttribute(index) {
     const variantAttributeList = this.state.variantAttributeList;
+    let productVariantList = this.state.productVariantList;
     if (variantAttributeList[index]["id"] === "") {
       variantAttributeList.splice(index, 1);
+      productVariantList = this.generateProductVariant(
+        this.variantAttributeListForGenerateVariantV2(variantAttributeList),
+        index,
+        this.countProductVariantThatHasId(this.state.productVariantList) > 0
+      );
     } else {
-      variantAttributeList[index]["status"] = this.Enum.ARCHIVE;
+      this.props.dispatch(ProductVariantAction.checkIsAvailableArchiveAttribute(variantAttributeList[index]["id"]));
     }
+
     this.setState({
-      variantAttributeList
+      variantAttributeList,
+      productVariantList,
+      productAttributeToDelete: {
+        attributeRow: index
+      },
+      attributeRowToDelete: index
     });
   }
 
@@ -736,7 +868,6 @@ export default class FormVariant extends Modal {
   handleKeyDownAttributeValue(event, index) {
     const variantAttributeList = this.state.variantAttributeList;
     const variantAttributeLength = variantAttributeList.length;
-
     if (variantAttributeLength <= 0 || index > variantAttributeLength) {
       return;
     }
@@ -855,7 +986,7 @@ export default class FormVariant extends Modal {
 
   handleAddProductAttribute() {
     const existingVariantAttributes = this.state.variantAttributeList;
-
+    
     existingVariantAttributes.push({
       id: "",
       attributeId: "",
@@ -933,14 +1064,14 @@ export default class FormVariant extends Modal {
         dataSource={this.state.variantAttributes}
         defaultValue={variantAttribute.attributeId}
         onChange={(value) => this.handleOnChangeAttribute(variantAttributeKey, value)}
-        addNew={() => this.props.handleAddProductAttribute(variantAttributeKey, this.handleCallBackAddAttribute)}
+        addNew={() => this.props.handleAddVariantAttribute(variantAttributeKey, this.handleCallBackAddAttribute)}
         form={this.props.form}/>
     );
   }
-  render() {
-    console.log("Product Variant:", this.state.productVariantList);
 
+  render() {
     this.submitConfirmActionLoading = this.props.productVariantArchive.archiving;
+    const attributeLength = this.countProductAttribute(this.state.variantAttributeList);
     return (
       <this.Row>
         <this.InputNumber
@@ -950,58 +1081,61 @@ export default class FormVariant extends Modal {
           data={0} />
         {
           this.state.variantAttributeList.map((variantAttribute, variantAttributeKey) =>
-            <this.Col md="12" key={variantAttributeKey} className="wrap-variant-item-row">
-              <this.Row>
-                <this.Col md="3">
-                  {this.renderVariantAttribute(variantAttribute, variantAttributeKey)}
-                </this.Col>
-                <this.Col md="9">
-                  {
-                    variantAttributeKey === 0 ?
-                      <div className="ant-form-item-label">
-                        <label htmlFor="lozenge-item[0]">
-                          <span>Value (e.g. Small, Medium, Large)</span>
-                        </label>
+            variantAttribute.status === this.Enum.ACTIVE ?
+              <this.Col md="12" key={variantAttributeKey} className="wrap-variant-item-row">
+                <this.Row>
+                  <this.Col md="3">
+                    {this.renderVariantAttribute(variantAttribute, variantAttributeKey)}
+                  </this.Col>
+                  <this.Col md="9">
+                    {
+                      variantAttributeKey === 0 ?
+                        <div className="ant-form-item-label">
+                          <label htmlFor="lozenge-item[0]">
+                            <span>Value (e.g. Small, Medium, Large)</span>
+                          </label>
+                        </div>
+                        :
+                        ""
+                    }
+                    <div style={{display: "flex"}}>
+                      <div className="wrap-lozenge-group-input ant-input">
+                        {
+                          variantAttribute.attributeValues ?
+                            variantAttribute.attributeValues.map((attributeValue, attributeValueIndex) =>
+                              attributeValue.status === this.Enum.ACTIVE ?
+                                <div key={attributeValueIndex} className="lozenge-item">
+                                  {attributeValue.name}
+                                  <span className="icon-delete" onClick={() => this.handleOnRemoveLozengeItem(attributeValueIndex, variantAttributeKey)}></span>
+                                </div>
+                                :
+                                ""
+                            )
+                            :
+                            ""
+                        }
+                        <input
+                          type="text"
+                          name="attbributeVvalue"
+                          id={`lozenge-item${variantAttributeKey}`}
+                          className="ant-input lozenge-group-input"
+                          onKeyDown={(e) =>this.handleKeyDownAttributeValue(e, variantAttributeKey)}
+                          onFocus={this.handleFocusOnAttributeValue}
+                          onBlur={this.handleOnFocusOutAttributeValue}/>
                       </div>
-                      :
-                      ""
-                  }
-                  <div style={{display: "flex"}}>
-                    <div className="wrap-lozenge-group-input ant-input">
-                      {
-                        variantAttribute.attributeValues ?
-                          variantAttribute.attributeValues.map((attributeValue, attributeValueIndex) =>
-                            attributeValue.status === this.Enum.ACTIVE ?
-                              <div key={attributeValueIndex} className="lozenge-item">
-                                {attributeValue.name}
-                                <span className="icon-delete" onClick={() => this.handleOnRemoveLozengeItem(attributeValueIndex, variantAttributeKey)}></span>
-                              </div>
-                              :
-                              ""
-                          )
-                          :
-                          ""
-                      }
-                      <input
-                        type="text"
-                        name="attbributeVvalue"
-                        id={`lozenge-item${variantAttributeKey}`}
-                        className="ant-input lozenge-group-input"
-                        onKeyDown={(e) =>this.handleKeyDownAttributeValue(e, variantAttributeKey)}
-                        onFocus={this.handleFocusOnAttributeValue}
-                        onBlur={this.handleOnFocusOutAttributeValue}/>
+                      <this.Button type="danger" loading={this.state.attributeRowToDelete === variantAttributeKey && this.props.productAttributeCheckStatus.fetching} onClick={() => this.handleDeleteProductAttribute(variantAttributeKey)} className="btn-delete-attribute">
+                        <span className="icon-delete" style={{fontSize: "15pt"}}></span>
+                      </this.Button>
                     </div>
-                    <this.Button type="danger" onClick={() => this.handleDeleteProductAttribute(variantAttributeKey)} className="btn-delete-attribute">
-                      <span className="icon-delete" style={{fontSize: "15pt"}}></span>
-                    </this.Button>
-                  </div>
-                </this.Col>
-              </this.Row>
-            </this.Col>
+                  </this.Col>
+                </this.Row>
+              </this.Col>
+              :
+              ""
           )
         }
         {
-          this.state.variantAttributeList.length < 3 ?
+          attributeLength < 3 || attributeLength === 0 ?
             <this.Col md="12" className="btn-addcontact">
               <this.Button onClick={this.handleAddProductAttribute}>
                 <span className="icon-add"></span> <span><this.Translate id="btn_product_add_another_attribute" /></span>

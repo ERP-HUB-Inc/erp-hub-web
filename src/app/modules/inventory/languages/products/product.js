@@ -503,6 +503,12 @@ export default {
     "(e.g. Size)"
   ],
 
+  "text_general_seach_product": [
+    "Search for brand, code and notation",
+    "Search for brand, code and notation",
+    "Search for brand, code and notation"
+  ],
+
   // ERROR
 
   "error_require_product_name": [

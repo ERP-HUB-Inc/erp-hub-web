@@ -34,6 +34,7 @@ export default class ProductList extends List {
     this.callBackOnShowEditForm = this.showFormEdit;
     this.columnExpend = new ColumnExpand(); 
     this.fetchingProp = "products";
+    this.placeHolderForGeneralSearch = "text_general_seach_product";
     this.isShowExpandable = true;
     this.rowClassName = record => record.productOption === Enum.PRODUCT_STANDARD ? "standard-product-row" : "";
     this.componentHasUpdated = false;

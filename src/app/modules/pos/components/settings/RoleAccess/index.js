@@ -144,7 +144,6 @@ class Column extends List {
         key: "code",
         sorter: true
       },
-      this.columnUpdatedAt,
       this.columnStatus
     ];
   }

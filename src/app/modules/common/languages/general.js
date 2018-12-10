@@ -329,6 +329,12 @@ export default {
     "Search"
   ],
 
+  "place_holder_general_search": [
+    "General",
+    "General",
+    "General"
+  ],
+
   "text_store": [
     "Store",
     "Store",

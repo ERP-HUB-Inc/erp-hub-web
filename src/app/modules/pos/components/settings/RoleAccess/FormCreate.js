@@ -5,8 +5,8 @@ import Modal from "../../../../common/components/shares/Modal";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.title = "Access Role";
-    this.width = "70%";
+    this.title = <this.Translate id="text_access_role" />;
+    this.width = "50%";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }

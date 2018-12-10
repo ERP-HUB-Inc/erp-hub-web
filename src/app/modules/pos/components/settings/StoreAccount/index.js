@@ -313,8 +313,6 @@ export default class StoreAccountList extends Component {
                                 placeholder={this.CATranslate("store_acc_tax", locale)}
                                 form={form} />
 
-                            </this.Col>
-                            <this.Col lg="4" md="4"> 
                               <this.Select
                                 name="dateFormat"
                                 dataSource={this.Util.listFormatDate()}
@@ -324,6 +322,7 @@ export default class StoreAccountList extends Component {
                                 label={<this.Translate id="store_acc_date_format" />}
                                 placeholder={this.CATranslate("store_acc_date_format", locale)}
                                 form={form} />
+
                             </this.Col>
                           </this.Row>
                         </this.TabPane>
@@ -529,7 +528,7 @@ export default class StoreAccountList extends Component {
                                   ""
                               }
 
-                              <div class="general">
+                              <div className="general">
                                 <h6><this.Translate id="store_acc_plan" /></h6>
                               </div>
 

@@ -620,6 +620,7 @@ export default class FormItem extends Modal {
                       callBackGetProductAttribute={this.props.callBackGetProductAttribute}
                       callBackGetProductVariant={this.props.callBackGetProductVariant}
                       handleCallBackGetArchiveProductVariant={this.props.handleCallBackGetArchiveProductVariant}
+                      handleCallBackGetArchiveProductAttributes={this.props.handleCallBackGetArchiveProductAttributes}
                       productVariants={formData.productVariants}
                       productAttributes={formData.productAttributes}
                       variantAttributes={this.props.variantAttributes}

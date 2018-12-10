@@ -409,5 +409,10 @@ export class Util {
     arg = JSON.stringify(arg);
     return JSON.parse(arg);
   }
+
+  copyObj(arg) {
+    arg = JSON.stringify(arg);
+    return JSON.parse(arg);
+  }
   
 }
