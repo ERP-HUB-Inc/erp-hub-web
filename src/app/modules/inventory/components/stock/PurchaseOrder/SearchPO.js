@@ -4,6 +4,8 @@ import Util from "../../../utils";
 import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/VariantProduct";
 import DropDownSearch from "../../../components/products/Product/DropDownSearch";
 import ProductVariantAction from "../../../actions/products/productVariant";
+import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
+import PurchaseOrderConstant from "../../../constants/stock/purchaseOrder";
 import ProductVariantConstant from "../../../constants/products/productVariant";
 import Modal from "../../../../common/components/shares/Modal";
 import "./index.css";
@@ -33,6 +35,7 @@ export default class SearchPo extends Modal {
               <this.InputText name={`purchaseEntryId[${index}]`} type="hidden" data={record.purchaseEntryId} form={this.form} />
               <this.InputText name={`productVariantId[${index}]`} type="hidden" data={record.productVariantId} form={this.form} />
               <this.InputText name={`productName[${index}]`} type="hidden" data={record.productName} form={this.form} />
+              <this.InputText name={`variantName[${index}]`} type="hidden" data={record.variantName} form={this.form} />
               <this.InputNumber name={`purchaseEntryStatus[${index}]`} className="hidden" data={record.purchaseEntryStatus} form={this.form} />
               <this.InputNumber name={`totalAmount[${index}]`} className="hidden" data={record.totalPrice} form={this.form} />
             </div>
@@ -196,6 +199,8 @@ export default class SearchPo extends Modal {
       });
 
       this.grandTotal(existingProductList);
+
+      this.props.dispatch(PurchaseOrderAction.reset(PurchaseOrderConstant.RESET_REQUEST_PURCHASE_ORDER));
     }
 
     if (this.props.productVariant.fetched) {
@@ -277,7 +282,7 @@ export default class SearchPo extends Modal {
           handleCancel={this.handleCancelVariantProduct}/>
       });
       return;
-    } else {
+    } else if (productVariant && productVariant.length > 0) {
       productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
       productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
     }

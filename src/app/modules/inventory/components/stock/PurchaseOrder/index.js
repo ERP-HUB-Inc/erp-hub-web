@@ -126,12 +126,12 @@ export default class PurchaseOrderLists extends List {
     this.POEmailHasSend = false;
 
     this.PO_STEP_STR = {
-      [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color: "#f50"},
-      [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="purchase_order_step_process" />, color: "#2db7f5"},
-      [Enum.PO_STEP.RECEIVED]: {name: <this.Translate id="text_receive" />, color: "#87d068"},
-      [Enum.PO_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color: "#108ee9"},
-      [Enum.PO_STEP.RETURN]: {name: <this.Translate id="text_return" />, color: "blue"},
-      [Enum.PO_STEP.PAID]: {name: <this.Translate id="purchase_order_step_paid" />, color: "green"},
+      [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color: this.Enum.PO_STEP_COLOR.DRAFT},
+      [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="purchase_order_step_process" />, color:  this.Enum.PO_STEP_COLOR.PROCESS},
+      [Enum.PO_STEP.RECEIVED]: {name: <this.Translate id="text_receive" />, color:  this.Enum.PO_STEP_COLOR.RECEIVE},
+      [Enum.PO_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color:  this.Enum.PO_STEP_COLOR.CANCEL},
+      [Enum.PO_STEP.RETURN]: {name: <this.Translate id="text_return" />, color:  this.Enum.PO_STEP_COLOR.RETURN},
+      [Enum.PO_STEP.PAID]: {name: <this.Translate id="purchase_order_step_paid" />, color:  this.Enum.PO_STEP_COLOR.PAID}
     };
 
     this.supplierList = [{name: <this.Translate id="text_all_supplier"/>, id: 0}];

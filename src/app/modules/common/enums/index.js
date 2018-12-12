@@ -19,5 +19,13 @@ export default {
     EMPLOYEE: "employee",
     PRODUCT: "product"
   },
-  CASHIER_ROLE: "R0003"
+  CASHIER_ROLE: "R0003",
+  PO_STEP_COLOR: {
+    DRAFT: "#f50",
+    PROCESS: "#2db7f5",
+    RECEIVE: "#87d068",
+    CANCEL: "#108ee9",
+    RETURN: "blue",
+    PAID: "green"
+  }
 };
