@@ -12,6 +12,7 @@ export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
     this.title = <this.Translate id="text_po" />;
+    this.wrapClassName = "wrap-modal-po";
     this.width = "70%";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,14 +33,14 @@ export default class FormCreate extends Modal {
   handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {      
-        
+      if (!err) {
         const purchaseEntries = [];
-        if ("productId" in values) {
-          values.productId.forEach((productId, index) => {
+        if ("productVariantId" in values) {
+          values.productVariantId.forEach((productVariantId, index) => {
             purchaseEntries.push({
               id: values.purchaseEntryId[index],
-              productId,
+              productVariantId,
+              unitId: values.unitId[index],
               requestQuantity: parseInt(values.purchaseQty[index], 10),
               price: parseFloat(values.purchasePrice[index]),
               status: values.purchaseEntryStatus[index]
@@ -55,7 +56,7 @@ export default class FormCreate extends Modal {
 
         this.Util.clearObjProperty(values, [
           "id",
-          "productId",
+          "productVariantId",
           "purchaseQty",
           "purchasePrice",
           "purchaseEntryStatus",
@@ -64,6 +65,8 @@ export default class FormCreate extends Modal {
           "totalPriceValue",
           "requestTotalValue",
           "searchProduct",
+          "purchaseEntryId",
+          "productName",
           "isFocusOnSearchCompositeProduct"
         ]);
 
@@ -76,8 +79,6 @@ export default class FormCreate extends Modal {
         values["status"] = this.Enum.ACTIVE;
 
         values["POEntries"] = purchaseEntries;
-
-        console.log("Value for PO Create:", values);
       
         this.dispatch(PurchaseOrderAction.add(values));
       }
@@ -105,19 +106,18 @@ export default class FormCreate extends Modal {
     this.submitLoading = purchaseOrderAdd.adding;
 
     if (purchaseOrderAdd.showForm) {
-      this.content = (
+      this.content = 
         <FormItem 
           form={form} 
           supplier={supplier} 
-          product={product} 
+          product={product}
           storeLocation={storeLocation} 
           productSearch={productSearch} 
           productUpdate={productUpdate}
+          productVariant={this.props.productVariant}
           requestOrderNumber={requestOrderNumber}
           dispatch={dispatch} 
-          locale={locale}
-        />
-      );
+          locale={locale} />;
     
       return super.render();
     } else {

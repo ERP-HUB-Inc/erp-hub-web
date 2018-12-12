@@ -28,6 +28,15 @@ class ProductService extends BaseService {
       locationId);
   }
 
+  attributes(id) {
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/attributes/${id}`,  
+      data: this.data,
+      headers: this.header
+    });
+  }
+
   searchForDrowDown(
     limit,
     offset,

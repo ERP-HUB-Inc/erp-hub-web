@@ -10,6 +10,14 @@ export default {
       });
     };
   },
+  fetchAttributes: (id) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_PRODUCT_ATTRIBUTES,
+        payload: ProductService.attributes(id)
+      });
+    };
+  },
   fetchLog: (id, limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({

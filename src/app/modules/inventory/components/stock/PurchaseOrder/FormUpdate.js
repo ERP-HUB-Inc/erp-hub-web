@@ -48,11 +48,12 @@ export default class Form extends Modal {
     // PREPARE PO ENTRIES
     const purchaseEntries = [];
     if (values.purchaseQty) {
-      values.productId.forEach((productId, index) => {
+      values.productVariantId.forEach((productVariantId, index) => {
         purchaseEntries.push({
           id: values.purchaseEntryId[index],
-          productId,
+          productVariantId,
           productName: values.productName[index],
+          unitId: values.unitId[index],
           requestQuantity: parseInt(values.purchaseQty[index], 10),
           price: parseFloat(values.purchasePrice[index]),
           status: values.purchaseEntryStatus[index]
@@ -63,7 +64,9 @@ export default class Form extends Modal {
     values["requestTotal"] = parseFloat(values["requestTotalValue"]);
 
     this.Util.clearObjProperty(values, [
-      "productId",
+      "productVariantId",
+      "purchaseEntryId",
+      "unitId",
       "productName",
       "purchaseQty",
       "purchasePrice",
@@ -159,7 +162,8 @@ export default class Form extends Modal {
           form={form} 
           formData={purchaseOrderDetail.data} 
           supplier={supplier} 
-          product={product} 
+          product={product}
+          productVariant={this.props.productVariant}
           storeLocation={storeLocation} 
           productSearch={productSearch}
           requestOrderNumber={requestOrderNumber}

@@ -2,6 +2,14 @@ import Constant from "../../constants/products/productVariant";
 import ProductVariantService from "../../services/products/ProductVariantService";
 
 export default {
+  fetchByAttributeValue: (attributeValueId) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_PRODUCT_VARIANT,
+        payload: ProductVariantService.fetchByAttributeValue(attributeValueId)
+      });
+    };
+  },
   checkIsAvailableForArchive: (id) => {
     return dispatch => {
       return dispatch({

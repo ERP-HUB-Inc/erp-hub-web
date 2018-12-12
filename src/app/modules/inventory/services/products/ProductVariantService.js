@@ -9,6 +9,15 @@ class ProductVariantService extends BaseService {
     this.initializeRoute();
   }
 
+  fetchByAttributeValue(attributeValue){
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/attribitevalue/${attributeValue}`,
+      data: this.data,
+      headers: this.header
+    });
+  }
+
   checkIsAvailableForArchive(id){
     this.setHeader();
     return this.GET({ 

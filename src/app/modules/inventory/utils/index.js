@@ -14,6 +14,16 @@ class Util {
     }
   }
 
+  getProductId(product) {
+    let productId = "";
+
+    if (product && product.productVariants) {
+      productId = product.productVariants.id;
+    }
+
+    return productId;
+  }
+
   getProductBrand(product, emptyVaue = "") {
     if (!product) return emptyVaue;
     
@@ -22,6 +32,16 @@ class Util {
     }
 
     return emptyVaue;
+  }
+
+  getProductAttributeName(productAttribute) {
+    let name = "";
+    
+    if (productAttribute && productAttribute.attribute) {
+      name = productAttribute.attribute.name;
+    }
+
+    return name;
   }
 
   getProductQTYLocation(productLocations) {

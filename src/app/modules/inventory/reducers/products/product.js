@@ -13,6 +13,14 @@ export default combineReducers({
     ];
     return reducer.request(state, action, constants);
   },
+  requestAttributes: (state = InitialState.request(), action) => {
+    const constants = [
+      Constant.REQUEST_PRODUCT_ATTRIBUTES_PENDING,
+      Constant.REQUEST_PRODUCT_ATTRIBUTES_REJECTED,
+      Constant.REQUEST_PRODUCT_ATTRIBUTES_FULFILLED
+    ];
+    return reducer.request(state, action, constants);
+  },
   requestLog: (state = InitialState.request(), action) => {
     const constants = [
       Constant.REQUEST_PRODUCT_LOG_PENDING,

@@ -2,6 +2,7 @@ import React from "react";
 import $ from "jquery";
 import ProductAction from "../../../actions/products/product";
 import Constant from "../../../constants/products/product";
+import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
 import "./DropDownSearch.css";
 
@@ -90,7 +91,7 @@ export default class DropDownSearch extends Modal {
   }
 
   handleOnSelectList(value) {
-    this.props.handleOnSelectList(value);
+    this.props.handleOnSelectList(value, value.productVariants);
     this.setState({visibleDropDown: false});
   }
 
@@ -181,14 +182,19 @@ export default class DropDownSearch extends Modal {
                 </div>
               </div>
             </this.Col>
-            <this.Col md="4" className="right-description">
-              {
-                product.productVariant.length > 0 ?
-                  <div className="variant">{product.productVariant.length} {<this.Translate id="text_variant"/>}{product.productVariant.length > 1 ? <this.Translate id="text_plural"/> : ""}</div>
-                  :
-                  <div className="price">{this.formatCurrency(product.price)}</div>
-              }
-            </this.Col>
+            {
+              product.productOption === Enum.PRODUCT_VARIANT ?
+                <this.Col md="4" className="right-description">
+                  {
+                    product.productVariants.length > 0 ?
+                      <div className="variant">{product.productVariants.length} {<this.Translate id="text_variant"/>}{product.productVariants.length > 1 ? <this.Translate id="text_plural"/> : ""}</div>
+                      :
+                      <div className="price">{this.formatCurrency(product.price)}</div>
+                  }
+                </this.Col>
+                :
+                ""
+            }
           </this.Row>
         }/>
     );

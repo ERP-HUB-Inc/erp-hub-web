@@ -66,8 +66,6 @@ export default class FormItem extends Modal {
         locationId = defaultLocation.id;
       }
     }
-
-    console.log("Location Id:", locationId);
     
     return (
       <div id="scroll-layout">
@@ -157,11 +155,11 @@ export default class FormItem extends Modal {
           <this.Col md="12" className="purchase-order-entry">
             <SearchPO
               dataSource={productSearch}
+              productVariant={this.props.productVariant}
               purchaseOrderEntries={formData.purchaseOrderEntries}
               locale={locale}
               dispatch={dispatch}
-              form={form}
-            />
+              form={form} />
           </this.Col>
         </this.Row>
       </div>
