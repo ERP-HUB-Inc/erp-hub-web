@@ -67,4 +67,27 @@
     opacity: 0.3
 }
 
+.confirm-delete.confirm-receive-po-partial  .ant-modal {
+    width: 476px !important;
+}
+
+.confirm-receive-po .ant-radio-button-wrapper {
+    width: 50% !important;
+    padding-left: 5px;
+    padding-right: 5px
+}
+
+.confirm-receive-po .radio-group {
+    position: relative;
+    top: 25px
+}
+
+.confirm-receive-po .radio-group .language {
+    font-size: 10pt
+}
+
+.confirm-receive-po .ant-form-item {
+    margin-bottom: 0 !important
+}
+
 

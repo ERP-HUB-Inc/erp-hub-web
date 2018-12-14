@@ -509,6 +509,12 @@ export default {
     "Return"
   ],
 
+  "text_returned": [
+    "Returned",
+    "Returned",
+    "Returned"
+  ],
+
   "text_description": [
     "Description",
     "Description",

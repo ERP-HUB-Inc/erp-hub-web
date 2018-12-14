@@ -30,6 +30,11 @@ class Column extends List {
         dataIndex: "name",
         key: "name",
         sorter: true,
+        render: (text, record, index) => {
+          return <div>
+            <span>{record.name}</span>{ record.isDefault === this.Enum.IS_DEFAULT  ? <this.TagLabel color="blue" style={{marginLeft: 10}}><this.Translate id="text_is_default" /></this.TagLabel> : "" }
+          </div>;
+        },
       },
       {
         title: <this.Translate id="col_payment_method_description" />,

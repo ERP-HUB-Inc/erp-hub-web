@@ -1,7 +1,7 @@
 import React from "react";
 import Util from "../../../utils";
+import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
-
 export default class ReceivedPo extends Modal {
   constructor(props){
     super(props);
@@ -23,7 +23,7 @@ export default class ReceivedPo extends Modal {
             <div>
               {index + 1}
               <this.InputText name={`purchaseOrderEntryId[${index}]`} className="hidden" data={record.purchaseOrderEntryId} form={this.form} />
-              <this.InputText name={`productId[${index}]`} className="hidden" data={record.productId} form={this.form} />
+              <this.InputText name={`productVariantId[${index}]`} className="hidden" data={record.productVariantId} form={this.form} />
               <this.InputNumber name={`price[${index}]`} className="hidden" data={record.price} form={ this.form } />
             </div>
           );
@@ -32,7 +32,13 @@ export default class ReceivedPo extends Modal {
       {
         title: <this.Translate id="text_product_name" />,
         dataIndex: "productName",
-        key: "productName"
+        key: "productName",
+        render: (text, record) => {
+          return <div>
+            <div>{record.productName}</div>
+            <div className="variant-name">{record.variantName}</div>
+          </div>;
+        }
       },
       {
         title: <this.Translate id="text_quantity" />,
@@ -76,7 +82,7 @@ export default class ReceivedPo extends Modal {
       {
         title: <this.Translate id="text_total" />,
         dataIndex: "totalPrice",
-        width: 100,
+        width: 120,
         align: "right",
         key: "totalPrice",
         render: totalPrice => this.formatCurrency(totalPrice) 
@@ -92,10 +98,19 @@ export default class ReceivedPo extends Modal {
     if (this.props.receivePurchaseDetail.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
       const existingProductList = this.state.productLists;
       this.props.receivePurchaseDetail.forEach(purchaseOrderEntry => {
+        let productName = "";
+        let variantName = "";
+        
+        if (purchaseOrderEntry.productVariant) {
+          productName = Util.getProductName(purchaseOrderEntry.productVariant.product);
+          variantName = purchaseOrderEntry.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? purchaseOrderEntry.productVariant.name : "";
+        }
+
         this.state.productLists.push({
           purchaseOrderEntryId: purchaseOrderEntry.id,
-          productName: Util.getProductName(purchaseOrderEntry.product),
-          productId: purchaseOrderEntry.productId,
+          productName,
+          variantName,
+          productVariantId: purchaseOrderEntry.productVariantId,
           requestQuantity: purchaseOrderEntry.requestQuantity, 
           receiveQuantity: purchaseOrderEntry.receiveQuantity,
           price: purchaseOrderEntry.price,
@@ -118,13 +133,25 @@ export default class ReceivedPo extends Modal {
     return quantity * price;
   }
 
+  calculateAllRequestQuantity() {
+    return this.Util.sumBy(this.state.productLists, "requestQuantity");
+  }
+
+  calculateAllReceiveQuantity(productLists) {
+    return this.Util.sumBy(productLists, "receiveQuantity");
+  }
+
   handleOnChangeQuantity(e, index) {
     const existingProductList = this.state.productLists;
-    existingProductList[index]["receiveQuantity"] = e.target.value;
+    existingProductList[index]["receiveQuantity"] = parseInt(e.target.value, 10);
     existingProductList[index]["totalPrice"] = this.calculateTotalAmountEachRow(e, index);
 
     this.setState({productLists: existingProductList});
     this.grandTotal(existingProductList);
+
+    if (this.props.handleGetCallBackIsPartialReceive) {
+      this.props.handleGetCallBackIsPartialReceive(this.calculateAllReceiveQuantity(existingProductList) < this.calculateAllRequestQuantity());
+    }
     
   }
 
@@ -146,11 +173,11 @@ export default class ReceivedPo extends Modal {
           dataSource={this.state.productLists}
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
-          footer={() => <div className={`pull-right ${this.state.productLists.length > 0 ? "" : "hidden"}`}>
-            <div className="total-title text-uppercase pull-left">
+          footer={() => <div className={`${this.state.productLists.length > 0 ? "" : "hidden"}`} style={{display: "flex"}}>
+            <div className="total-title text-uppercase" style={{width: "auto", display: "flex"}}>
               <this.Translate id="text_total_amount" />:
             </div>
-            <div className="total-value pull-left" style={{width: 100}}>
+            <div className="total-value" style={{width: 128, display: "flex", alignItems: "center", paddingRight: 5}}>
               <this.InputText name="receiveTotal" disabled={true} className="ca-input-no-border grandTotal" form={this.props.form}/>
               <this.InputText name="receiveTotalValue" className="hidden" form={this.props.form}/>
             </div>

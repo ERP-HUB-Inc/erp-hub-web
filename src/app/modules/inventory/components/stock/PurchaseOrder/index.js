@@ -96,7 +96,17 @@ export default class PurchaseOrderLists extends List {
         key: "purchaseOrderEntries",
         width: 100,
         align: "center",
-        render: purchaseOrderEntries => this.Util.sumBy(purchaseOrderEntries, "requestQuantity")
+        render: (text, record) => {
+          let key = "requestQuantity";
+
+          if (record.step === Enum.PO_STEP.RECEIVED) {
+            key = "receiveQuantity";
+          } else if (record.step === Enum.PO_STEP.RETURN) {
+            key = "returnQuantity";
+          }
+
+          return this.Util.sumBy(record.purchaseOrderEntries, key);
+        }
       },
       {
         title: <this.Translate id="text_total" />,
@@ -105,7 +115,15 @@ export default class PurchaseOrderLists extends List {
         sorter: true,
         width: 130,
         align: "right",
-        render: requestTotal => this.formatCurrency(requestTotal)
+        render: (text, record) => {
+          let key = "requestTotal";
+          if (record.step === Enum.PO_STEP.RECEIVED) {
+            key = "receiveTotal";
+          } else if (record.step === Enum.PO_STEP.RETURN) {
+            key = "returnTotal";
+          }
+          return this.formatCurrency(record[key]);
+        }
       },
       {
         title: <this.Translate id="text_step" />,
@@ -130,7 +148,7 @@ export default class PurchaseOrderLists extends List {
       [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="purchase_order_step_process" />, color:  this.Enum.PO_STEP_COLOR.PROCESS},
       [Enum.PO_STEP.RECEIVED]: {name: <this.Translate id="text_receive" />, color:  this.Enum.PO_STEP_COLOR.RECEIVE},
       [Enum.PO_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color:  this.Enum.PO_STEP_COLOR.CANCEL},
-      [Enum.PO_STEP.RETURN]: {name: <this.Translate id="text_return" />, color:  this.Enum.PO_STEP_COLOR.RETURN},
+      [Enum.PO_STEP.RETURN]: {name: <this.Translate id="text_returned" />, color:  this.Enum.PO_STEP_COLOR.RETURN},
       [Enum.PO_STEP.PAID]: {name: <this.Translate id="purchase_order_step_paid" />, color:  this.Enum.PO_STEP_COLOR.PAID}
     };
 

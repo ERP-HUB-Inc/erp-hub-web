@@ -9,10 +9,8 @@ import FormCreatePurchseOrderSendEmail from "../../../containers/stock/PurchaseO
 export default class Form extends Modal {
   constructor(props) {
     super(props);
+    this.wrapClassName = "wrap-modal-po";
     this.width = "70%";
-    this.state = {
-      disabled: false
-    };
     this.PO_STEP_STR = {
       [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color: this.Enum.PO_STEP_COLOR.DRAFT},
       [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="purchase_order_step_process" />, color:  this.Enum.PO_STEP_COLOR.PROCESS},

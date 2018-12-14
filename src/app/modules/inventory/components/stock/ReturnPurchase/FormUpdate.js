@@ -29,7 +29,7 @@ export default class Form extends Modal {
           values.returnQuantity.forEach((returnQuantity, index) => {
             POEntries.push({
               id: values.purchaseOrderEntryId[index],
-              productId: values.productId[index],
+              productVariantId: values.productVariantId[index],
               returnQuantity,
               price: values.price[index]
             });
@@ -39,7 +39,7 @@ export default class Form extends Modal {
 
         this.Util.clearObjProperty(values, [
           "purchaseOrderEntryId",
-          "productId",
+          "productVariantId",
           "price",
           "returnQuantity"
         ]);

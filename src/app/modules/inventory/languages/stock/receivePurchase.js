@@ -5,6 +5,18 @@ export default {
     "Receive Order"
   ],
 
+  "text_receive_whole_po": [
+    "Receive and close this PO",
+    "Receive and close this PO",
+    "Receive and close this PO"
+  ],
+
+  "text_receive_partial_po": [
+    "Receive and create new partial",
+    "Receive and create new partial",
+    "Receive and create new partial"
+  ],
+
   "button_search_stock_receive_purchase_export_csv":[
     "Export CSV",
     "Export CSV",

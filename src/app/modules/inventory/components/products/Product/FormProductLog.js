@@ -1,4 +1,6 @@
 import React from "react";
+import Enum from "../../../enums";
+import ProductAction from "../../../actions/products/product";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormProductLog extends Modal {
@@ -9,7 +11,13 @@ export default class FormProductLog extends Modal {
         title: <this.Translate id="col_product_cost_log_date" />,
         dataIndex: "createdAt",
         width: 200,
-        key: "createdAt"
+        key: "createdAt",
+        render: createdAt => this.formatDate(createdAt)
+      },
+      {
+        title: <this.Translate id="col_product_log_description" />,
+        dataIndex: "description",
+        key: "description"
       },
       {
         title: <this.Translate id="col_product_cost_log_user" />,
@@ -17,28 +25,40 @@ export default class FormProductLog extends Modal {
         key: "user",
         render: user => user !== null ? user.userName : this.emptyText
       },
-      {
-        title: <this.Translate id="text_name" />,
-        dataIndex: "name",
-        key: "name"
-      },
-      {
-        title: <this.Translate id="col_product_log_description" />,
-        dataIndex: "description",
-        key: "description"
-      }
     ];
+    this.handleOnChange = this.handleOnChange.bind(this);
   }
+
+  handleOnChange(productVariantId) {
+    this.props.dispatch(ProductAction.fetchLog(productVariantId, 100));
+  }
+
   render() {
-    const {productLog} = this.props; 
     return (
-      <this.Col md="12">
-        <this.Table
-          dataSource={productLog.list}
-          columns={this.columns}
-          loading={productLog.fetching}
-          locale={{emptyText: <this.Translate id="placeholder_table_product_log" />}} />
-      </this.Col>
+      <this.Row className="wrapRowContentTab">
+        {
+          this.props.formData.productOption === Enum.PRODUCT_VARIANT ?
+            <this.Col md="4">
+              <this.Select
+                name="id"
+                label={<this.Translate id="text_product_variant" />}
+                valueKey="id"
+                dataSource={this.props.formData.productVariants}
+                defaultValue={this.props.formData.productVariants.length > 0 ? this.props.formData.productVariants[0].id : ""}
+                onChange={this.handleOnChange}
+                form={this.props.form}/>
+            </this.Col>
+            :
+            ""
+        }
+        <this.Col md="12">
+          <this.Table
+            dataSource={this.props.productLog.list}
+            columns={this.columns}
+            loading={this.props.productLog.fetching}
+            locale={{emptyText: <this.Translate id="placeholder_table_product_log" />}} />
+        </this.Col>
+      </this.Row>
     );
   }
 }

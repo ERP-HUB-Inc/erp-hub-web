@@ -96,6 +96,7 @@ export default class FormItem extends Modal {
           <this.Col md="12" className="purchase-order-entry">
             <ReceivePO 
               receivePurchaseDetail={formData.purchaseOrderEntries}
+              handleGetCallBackIsPartialReceive={this.props.handleGetCallBackIsPartialReceive}
               form={this.props.form}/>
           </this.Col>
         </this.Row>

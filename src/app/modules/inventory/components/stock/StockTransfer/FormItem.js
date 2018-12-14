@@ -14,7 +14,7 @@ export default class FormItem extends Modal {
               data={formData.name}
               placeholder={this.CATranslate("input_stock_supplier_name", locale)}
               required={true}
-              errorRequired={<this.Translate id="input_error_stock_supplier_name" />}
+              errorRequired={<this.Translate id="error_require_supplier" />}
               max={100}
               min={3}
               form={form}/> 
@@ -45,8 +45,6 @@ export default class FormItem extends Modal {
               label={<this.Translate id="input_stock_supplier_description" />}
               data={formData.description}
               placeholder={this.CATranslate("input_stock_supplier_description", locale)}
-              required={true}
-              errorRequired={<this.Translate id="input_error_stock_supplier_description" />}
               max={100}
               form={form}/>
           </this.Col>

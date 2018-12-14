@@ -93,6 +93,7 @@ export default class DropDownSearch extends Modal {
   handleOnSelectList(value) {
     this.props.handleOnSelectList(value, value.productVariants);
     this.setState({visibleDropDown: false});
+    this.props.dispatch(ProductAction.reset(Constant.SEARCH_PRODUCT_RESET));
   }
 
   handleKeyDownOnProductSearch(event) {

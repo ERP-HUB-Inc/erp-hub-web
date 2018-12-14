@@ -473,6 +473,12 @@ export default {
     "Variant"
   ],
 
+  "text_product_variant": [
+    "Product Variant",
+    "Product Variant",
+    "Product Variant"
+  ],
+
   "text_product_in_stock": [
     "Product In Stock",
     "Product In Stock",
@@ -557,6 +563,12 @@ export default {
     "Product description allow only 255 charactor only",
     "Product description allow only 255 charactor only",
     "Product description allow only 255 charactor only"
+  ],
+
+  "error_product_not_found": [
+    "Product not found",
+    "Product not found",
+    "Product not found"
   ],
 
   "deactive_product_variant_warning": [

@@ -542,8 +542,7 @@ export default class StoreAccountList extends Component {
                                   form={form}
                                   disabled={true}
                                   onSelect={this.onSelect}
-                                  onChange={this.onChange}
-                                >
+                                  onChange={this.onChange}>
                                   { businessplan.map( (businessplan, key) => 
                                     <this.RadioChildBox
                                       key={key}

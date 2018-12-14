@@ -69,12 +69,16 @@ html,
 
 .ant-table-footer {
     font-weight: 500;
-    padding: 0 0 !important;
+    /* padding: 0 0 !important; */
     color: #9A9A9A;
     background: white !important;
     padding-right: 8px;
     display: flex;
     justify-content: flex-end
+}
+
+.ant-table-footer .ant-form-horizontal .ant-form-item {
+    margin-bottom: 0 !important
 }
 
 .ant-table-footer .total-title {

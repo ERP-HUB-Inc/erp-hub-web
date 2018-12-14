@@ -37,7 +37,8 @@ export default combineReducers({
       Constant.ADD_PURCHASE_ORDER_REJECTED,
       Constant.ADD_PURCHASE_ORDER_FULFILLED, 
       Constant.SHOW_PURCHASE_ORDER_FORM,
-      Constant.RESET_PURCHASE_ORDER
+      Constant.RESET_PURCHASE_ORDER,
+      Constant.RESET_ADD_PURCHASE_ORDER
     ];
     return reducer.add(state, action, constants);
   },

@@ -58,16 +58,16 @@ export default class ReturnPurchaseList extends List {
         key: "purchaseOrderEntries",
         width: 100,
         align: "center",
-        render: purchaseOrderEntries => this.Util.sumBy(purchaseOrderEntries, "requestQuantity")
+        render: purchaseOrderEntries => this.Util.sumBy(purchaseOrderEntries, "receiveQuantity")
       },
       {
         title: <this.Translate id="text_total" />,
-        dataIndex: "returnTotal",
-        key: "returnTotal",
+        dataIndex: "receiveTotal",
+        key: "receiveTotal",
         width: 130,
         align: "right",
         sorter: true,
-        render: returnTotal => this.formatCurrency(returnTotal) 
+        render: receiveTotal => this.formatCurrency(receiveTotal) 
       },
       {
         title: <this.Translate id="text_action" />,

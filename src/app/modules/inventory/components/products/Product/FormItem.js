@@ -182,10 +182,11 @@ export default class FormItem extends Modal {
 
   onChangeTab(activeKey) {
     const {dispatch, formData} = this.props;
+    const productVariantId = formData.productVariants.length > 0 ? formData.productVariants[0].id : "";
     if ((activeKey - this.TAB_PRODUCT_COST_LOG) === 0) {
-      dispatch(ProductAction.fetchCostLog(formData.id, 100));
+      dispatch(ProductAction.fetchCostLog(productVariantId, 100));
     } else if ((activeKey - this.TAB_PRODUCT_LOG) === 0) {
-      dispatch(ProductAction.fetchLog(formData.id, 100));
+      dispatch(ProductAction.fetchLog(productVariantId, 100));
     }
   }
 
@@ -462,10 +463,10 @@ export default class FormItem extends Modal {
                 </this.Col>
 
                 <this.Col md="4">
-                  <this.SelectSearch
-                    name="taxId"
+                  <this.Select
+                    name="productVariantId"
                     label={<this.Translate id="input_product_tax" />}
-                    valueKey="id"
+                    valueKey="productVariantId"
                     dataSource={this.state.taxs}
                     defaultValue={currentUser.setting.defaultTaxId}
                     addNew={this.props.handleAddTax}
@@ -649,9 +650,11 @@ export default class FormItem extends Modal {
         {
           formData.id ?
             <this.TabPane tab={<this.Translate id="tab_cost_log" />} key="3">
-              <this.Row className="wrapRowContentTab">
-                <FormCostLog productCostLog={this.props.productCostLog} />
-              </this.Row>
+              <FormCostLog
+                productCostLog={this.props.productCostLog}
+                formData={formData}
+                dispatch={this.props.dispatch}
+                form={this.props.form} />
             </this.TabPane>
             :
             ""
@@ -659,9 +662,11 @@ export default class FormItem extends Modal {
         {
           formData.id ?
             <this.TabPane tab={<this.Translate id="tab_product_log" />} key="4">
-              <this.Row className="wrapRowContentTab">
-                <FormProductLog productLog={this.props.productLog}/>
-              </this.Row>
+              <FormProductLog
+                productLog={this.props.productLog}
+                formData={formData}
+                dispatch={this.props.dispatch}
+                form={this.props.form} />
             </this.TabPane>
             :
             ""
