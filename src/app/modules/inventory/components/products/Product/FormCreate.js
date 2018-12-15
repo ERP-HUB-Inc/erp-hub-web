@@ -43,12 +43,10 @@ export default class Form extends Modal {
   }
 
   handleCallBackGetProductAttribute(productAttributes) {
-    console.log("ProductAttributes:", productAttributes);
     this.setState({productAttributes});
   }
 
   handleCallBackGetProductVariant(productVariants) {
-    console.log("ProductVariantList:", productVariants);
     this.setState({productVariants});
   }
 
@@ -134,6 +132,7 @@ export default class Form extends Modal {
         values["variantProducts"] = this.state.productVariants;
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
+
         this.dispatch(ProductAction.add(values));
 
         // RESET STATE

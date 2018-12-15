@@ -331,7 +331,7 @@ export default class StoreAccountList extends Component {
                             <this.Col lg="4" md="4"> 
                               <this.InputEmail
                                 data={storeAccount.list.email}
-                                name="userName"
+                                name="email"
                                 label={<this.Translate id="store_acc_email" />}
                                 placeholder={this.CATranslate("store_acc_email", locale)}
                                 form={form}/>
@@ -475,7 +475,7 @@ export default class StoreAccountList extends Component {
                                     title: <this.Translate id="text_status" />,
                                     dataIndex: "status",
                                     key: "status",
-                                    width: 120,
+                                    width: 130,
                                     render: status => {
                                       return (
                                         status === this.Enum.ACTIVE ?
