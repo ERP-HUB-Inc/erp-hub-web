@@ -112,8 +112,6 @@ export default class Retail extends Component {
 
   componentDidMount() {
 
-    this.isSetFocusOnSearchProduct = true;
-
     this.props.dispatch(PrivilegeAction.reset());
     this.props.dispatch(PrivilegeAction.checkPermission(this.service.createRoute));
     

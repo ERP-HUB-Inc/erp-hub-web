@@ -5,6 +5,10 @@ import Modal from "../../../../common/components/shares/Modal";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
+    this.state = {
+      ...this.state,
+      rolePrivileges: []
+    };
     this.title = "Access Role";
     this.width = "70%";
     this.dispatch = this.props.dispatch;
@@ -15,6 +19,9 @@ export default class Form extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        this.Util.clearObjProperty(values, [
+          "search_name_privillege"
+        ]);
         this.dispatch(RoleAccessAction.add(values));
       }
     });
@@ -31,7 +38,14 @@ export default class Form extends Modal {
 
     if (roleAccessAdd.showForm) {
       this.content = (
-        <FormItem form={form} rolePrivileges={rolePrivileges} locale={locale} />
+        <FormItem 
+          form={form} 
+          rolePrivileges={rolePrivileges} 
+          privileges={this.props.privileges}
+          rowData={this.props.rowData}
+          dispatch={this.props.dispatch}
+          locale={locale} 
+        />
       );
       return super.render();
     } else {

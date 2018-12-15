@@ -15,6 +15,7 @@ function mapStateToProps(state) {
   return {
     privileges: state.reducer.privilege.request,
     rolePrivileges: state.reducer.rolePrivilege.request,
+    rowData: state.reducer.roleAccess.update.data,
     locale: state.locale
   };
 }

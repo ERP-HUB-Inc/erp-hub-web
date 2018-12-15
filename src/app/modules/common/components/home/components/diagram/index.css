@@ -11,14 +11,11 @@
 .main-doughnut-chart .doughnut-chart {
     background-color: white;
     padding: 10px;
+    border-bottom: 1px solid white;
 }
 
 .main-doughnut-chart > .row {
     padding: 14px !important;
-}
-
-.main-doughnut-chart .doughnut-chart-left {
-    border-right: 7px solid #f7f7f7;
 }
 
 .main-doughnut-chart .doughnut-chart-right {
@@ -42,6 +39,12 @@
     font-weight: 500;
 }
 
+@media only screen and (max-width: 900px) { 
+    .main-diagram canvas {
+        height: 265px !important;
+    }
+}
+
 @media only screen and (max-width: 800px) {
     .main-doughnut-chart .no-pie-chart-image img {
         position: inherit;
@@ -56,8 +59,9 @@
         border-left: none;
     }
 
+    /* pie chart */
+    .main-doughnut-chart .no-pie-chart-image img {
+        height: 250px !important;
+    }
+
 }
-
-
-
-

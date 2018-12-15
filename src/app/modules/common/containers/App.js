@@ -10,7 +10,9 @@ import history from "../router/history";
 import StartUp from "../components/StartUp";
 import PrintSummary from "../../pos/components/transactions/OpenSaleRegistration/PrintSummary";
 
+
 export default class App extends React.Component {
+
   render() {
     const Application = Loadable({
       loader: () => import("../router"),

@@ -8,10 +8,6 @@
     position: relative;
 } 
 
-.main-role-access .ant-input:hover {
-    border-left: 2px solid #BCBCCB !important
-}
-
 .main-role-access .ant-collapse > .ant-collapse-item > .ant-collapse-header .arrow{
     left: auto;
     right: 10px;
@@ -65,15 +61,16 @@
 
 /* input text */
 .main-role-access input {
-    border: none;
     width: 100%;
     padding-left: 50px;
+    border: 1.5px solid #ECECEC;
+    padding: 10px;
+    padding-left: 53px !important;
 }
 
 .main-role-access input {
-    border-left: 2px solid #BCBCCB; 
     border-radius: 0;
-    height: 40px;
+    height: auto;
 }
 
 .main-role-access button.save-button {
