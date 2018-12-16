@@ -1,5 +1,6 @@
 import React from "react";
 import PrivilegeAction from "../../../action/settings/privilege";
+import RolePrivilegeAction from "../../../action/settings/rolePrivilege";
 import Component from "../../../../common/components/Component";
 import "./index.css";
 
@@ -23,33 +24,34 @@ export default class ListPrivilege extends Component {
     this.compareTwoCollection = this.compareTwoCollection.bind(this);
     this.handleSearchPrivilege = this.handleSearchPrivilege.bind(this);
     this.handleRemoveTextSearch = this.handleRemoveTextSearch.bind(this);
-
+    this.checkPrivileageChange = this.checkPrivileageChange.bind(this);
   };
 
   componentDidMount () {
-    this.props.dispatch(PrivilegeAction.fetch(200));
+    const {dispatch} = this.props;
+    dispatch(PrivilegeAction.fetch(200));
   }
 
+  
+
   // handleSubmit () {
-  //   const {dispatch} = this.props;
+  // const {dispatch} = this.props;
 
-  //   if (this.props.rowData) {
-  //     const roleId = this.props.rowData.id;
-  //     const privileges = {privileges: this.state.checkChildIdList};
+  // if (this.props.rowData) {
+  //   const roleId = this.props.rowData.id;
+  //   const privileges = {privileges: this.state.checkChildIdList};
 
-  //     this.setState({isGrantingPrivilege: true});
-  //     setTimeout(function () {
-  //       this.setState({isGrantingPrivilege: false});
-  //     }.bind(this), 2000);
+  //   this.setState({isGrantingPrivilege: true});
+  //   setTimeout(function () {
+  //     this.setState({isGrantingPrivilege: false});
+  //   }.bind(this), 2000);
       
+  //   dispatch(RolePrivilegeAction.assignPrivilege(roleId, privileges));
 
-  //     this.props.values =  privileges;
+  // } else {
+  //   this.Message.warning(this.CATranslate("warning_not_select_role", this.props.locale));
+  // }
 
-  //     dispatch(RolePrivilegeAction.assignPrivilege(roleId, privileges));
-
-  //   } else {
-  //     this.Message.warning(this.CATranslate("warning_not_select_role", this.props.locale));
-  //   }
   // }
 
   handleSearchPrivilege (e) {
@@ -148,16 +150,15 @@ export default class ListPrivilege extends Component {
         })
       });
 
-
-      if (this.props.handleCallBackGetPrivilegeList) {
-        this.props.handleCallBackGetPrivilegeList(this.state.checkChildIdList);
-      }
+      console.log("on change all change",this.state.checkChildIdList);
+      this.props.form.setFieldsValue({text_privileges: this.state.checkChildIdList});
 
     }
   };
 
   handleRemoveTextSearch() {
-    this.props.form.setFieldsValue({search_name_privillege: ""});
+    this.props.form.setFieldsValue({name: ""});
+    this.privilegeCollectionMap();
   }
 
 
@@ -235,15 +236,10 @@ export default class ListPrivilege extends Component {
         })
       });
     }
-
-    if (this.props.handleCallBackGetPrivilegeList) {
-      this.props.handleCallBackGetPrivilegeList(this.state.checkChildIdList);
-    }
   }
 
-  componentWillReceiveProps(nextProps) {
 
-    console.log("nextProps",nextProps);
+  componentWillReceiveProps(nextProps) {
 
     let rolePrivilegesList = nextProps.rolePrivileges.list;
 
@@ -310,10 +306,13 @@ export default class ListPrivilege extends Component {
       checkChildIdListV2
     });
 
-    if (this.props.handleCallBackGetPrivilegeList) {
-      this.props.handleCallBackGetPrivilegeList(this.state.checkChildIdList);
-    }
+    console.log("checkChildIdList",this.state.checkChildIdList);
 
+  }
+
+  checkPrivileageChange(){
+    console.log("checkChildIdList on change",this.state.checkChildIdList);
+    this.props.form.setFieldsValue({text_privileges: this.state.checkChildIdList});
   }
 
   renderPanelPrivilege (parent) {
@@ -330,6 +329,7 @@ export default class ListPrivilege extends Component {
             <this.Checkbox // 1 THIS THE SAME IT SHOW WHEN COLAPSE CLOSE
               indeterminate={resultCompare["indeterminate"]}
               checked={resultCompare["checkAll"]}
+              onChange={this.checkPrivileageChange}
               className="groupCheckAccessRole"
             />
           </div>
@@ -357,7 +357,6 @@ export default class ListPrivilege extends Component {
 
   renderSubPanelPrivilge (privilege) {
     const rolePrivilge = this.props.rolePrivileges.list.find(value => value.privilegeId === privilege["id"]);
-    
     return (
       <this.Col md="6" className="childPrivilegeItem" key={privilege["id"]}>
         <this.Checkbox
@@ -372,10 +371,9 @@ export default class ListPrivilege extends Component {
       </this.Col>
     );
   }
-  
-  render() {
-    const {privileges, form} = this.props;
 
+  searchPrivilege(){
+    const {privileges} = this.props;
     // Here reponse for cash collection to group of privilege
     if (privileges.fetched) {
       this.privilegeCollection = privileges.list.filter((privilege) => {
@@ -399,7 +397,15 @@ export default class ListPrivilege extends Component {
       });
 
     }
+  }
 
+  privilegeCollectionMap(){
+    return this.privilegeCollection.map(parent => this.renderPanelPrivilege(parent));
+  }
+  
+  render() {
+    const {privileges, form} = this.props;
+    this.searchPrivilege();
     return (
       <div className="main-role-access">
         <this.Row className="scroll-role">
@@ -408,7 +414,7 @@ export default class ListPrivilege extends Component {
               <this.Form>
                 <span className="icon-search"></span>
                 <this.InputText 
-                  name="search_name_privillege" 
+                  name="name" 
                   placeholder="Search Access Privillege" 
                   form={form}
                   handleKeyUp={this.handleSearchPrivilege}
@@ -418,21 +424,26 @@ export default class ListPrivilege extends Component {
             </div>
           </this.Col>
         </this.Row>
+        {/* <this.InputText
+          name="check_privilege"
+          form={form}
+        /> */}
+        { this.props.form.getFieldDecorator("text_privileges",<input/>) }
         { privileges.fetched ?
           <this.Row>
             <this.Col md="12">   
               <this.Collapse>
-                {
-                  this.privilegeCollection.map(parent => this.renderPanelPrivilege(parent))
-                }
+                { this.privilegeCollectionMap() }
               </this.Collapse>
             </this.Col>
+
           </this.Row>
           :
           <div className="text-center">
             <this.Spin/>
           </div> 
         }   
+        
       </div>
     );
   }
