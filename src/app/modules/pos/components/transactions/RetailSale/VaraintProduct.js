@@ -21,7 +21,7 @@ export default class VariantProduct extends Modal {
 
   componentDidMount() {
     super.componentDidMount();
-    this.props.dispatch(ProductAction.fetchAttributes(this.props.productId));
+    this.props.dispatch(ProductAction.fetchAttributes(this.props.product.id));
   }
 
   renderCrudAction() {
@@ -140,7 +140,7 @@ export default class VariantProduct extends Modal {
         {
           this.props.productAttributes.fetched ?
             <this.Col md="12" className="variant-breadcrumb">
-              <div className="ant-modal-title">{Util.getProductName(this.props.dataSource)}</div>
+              <div className="ant-modal-title">{Util.getProductName(this.props.product)}</div>
               <this.Breadcrumb separator=">">
                 { this.props.productAttributes.list.map((attribute, attributeIndex) => this.renderBreadCrumb(attribute, attributeIndex)) }
               </this.Breadcrumb>
@@ -161,5 +161,5 @@ export default class VariantProduct extends Modal {
 }
 
 VariantProduct.defaultProps = {
-  dataSource: []
+  product: []
 };

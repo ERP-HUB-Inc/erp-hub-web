@@ -277,8 +277,7 @@ export default class SearchPo extends Modal {
       this.setState({
         selectedProduct: product,
         modalVariant: <VariantProduct
-          dataSource={product}
-          productId={product.id}
+          product={product}
           handleCancel={this.handleCancelVariantProduct}/>
       });
       return;

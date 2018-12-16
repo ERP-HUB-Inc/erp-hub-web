@@ -110,7 +110,7 @@ class Util {
     productOrderList.forEach(productOrder => {
       const productTax = productOrder.taxDescription;
       const totalTaxAmount = this.getTaxAmount(productOrder.newPrice * productOrder.quantity, productTax.taxRate);
-      if (productTaxList.length === 0) {
+      if (productTaxList.length === 0 && productTax.taxRate > 0) {
         productTaxList.push({
           name: productTax.taxName,
           rate: productTax.taxRate,
@@ -124,7 +124,7 @@ class Util {
             productTaxList[productTaxIndex]["totalTaxAmount"] += totalTaxAmount;
           }
         });
-        if (isNotTheSame) {
+        if (isNotTheSame && productTax.taxRate > 0) {
           productTaxList.push({
             name: productTax.taxName,
             rate: productTax.taxRate,
