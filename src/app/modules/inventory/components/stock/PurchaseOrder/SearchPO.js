@@ -1,6 +1,12 @@
 import React from "react";
+import Enum from "../../../enums";
 import Util from "../../../utils";
+import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/VariantProduct";
 import DropDownSearch from "../../../components/products/Product/DropDownSearch";
+import ProductVariantAction from "../../../actions/products/productVariant";
+import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
+import PurchaseOrderConstant from "../../../constants/stock/purchaseOrder";
+import ProductVariantConstant from "../../../constants/products/productVariant";
 import Modal from "../../../../common/components/shares/Modal";
 import "./index.css";
 
@@ -8,7 +14,10 @@ export default class SearchPo extends Modal {
   constructor(props){
     super(props);
     this.state = {
+      selectedProduct: null,
+      units: [],
       productLists: [],
+      modalVariant: null,
       isNotYetLoadComponentDidUpdated: true
     };
     this.form = this.props.form;
@@ -24,8 +33,9 @@ export default class SearchPo extends Modal {
             <div>
               { index + 1 }
               <this.InputText name={`purchaseEntryId[${index}]`} type="hidden" data={record.purchaseEntryId} form={this.form} />
-              <this.InputText name={`productId[${index}]`} type="hidden" data={record.productId} form={this.form} />
+              <this.InputText name={`productVariantId[${index}]`} type="hidden" data={record.productVariantId} form={this.form} />
               <this.InputText name={`productName[${index}]`} type="hidden" data={record.productName} form={this.form} />
+              <this.InputText name={`variantName[${index}]`} type="hidden" data={record.variantName} form={this.form} />
               <this.InputNumber name={`purchaseEntryStatus[${index}]`} className="hidden" data={record.purchaseEntryStatus} form={this.form} />
               <this.InputNumber name={`totalAmount[${index}]`} className="hidden" data={record.totalPrice} form={this.form} />
             </div>
@@ -35,7 +45,13 @@ export default class SearchPo extends Modal {
       {
         title: <this.Translate id="text_product_name" />,
         dataIndex: "productName",
-        key: "productName"
+        key: "productName",
+        render: (text, record) => {
+          return <div>
+            <div>{record.productName}</div>
+            <div className="variant-name">{record.variantName}</div>
+          </div>;
+        }
       },
       {
         title: <this.Translate id="col_stock_purchase_order_on_hand" />,
@@ -43,6 +59,21 @@ export default class SearchPo extends Modal {
         width: 150,
         align: "center",
         key: "quantityOnHand"
+      },
+      {
+        title: <this.Translate id="text_unit" />,
+        dataIndex: "unit",
+        width: 150,
+        key: "unit",
+        align: "center",
+        render: (text, record, index) => {
+          return <this.Select
+            name={`unitId[${index}]`}
+            valueKey="id"
+            dataSource={this.state.units}
+            defaultValue={record.unitId}
+            form={this.form} />;
+        }
       },
       {
         title: <this.Translate id="text_quantity" />,
@@ -123,23 +154,13 @@ export default class SearchPo extends Modal {
     this.handleOnSelectList = this.handleOnSelectList.bind(this);
     this.handleOnChangeQuantity = this.handleOnChangeQuantity.bind(this);
     this.handleOnChangePrice = this.handleOnChangePrice.bind(this);
+    this.handleCancelVariantProduct = this.handleCancelVariantProduct.bind(this);
     this.calculateTotalAmountEachRow = this.calculateTotalAmountEachRow.bind(this);
     this.grandTotal = this.grandTotal.bind(this);
   }
 
-  removeRecord(record, index){
-    let existingProductList = this.state.productLists;
-    if (record.purchaseEntryId === "") {
-      existingProductList.splice(index, 1);
-    } else {
-      existingProductList[index]["purchaseEntryStatus"] = this.Enum.ARCHIVE;
-    }
-
-    this.setState({
-      productLists: existingProductList
-    });
-    
-    this.grandTotal(existingProductList);
+  componentDidMount() {
+    this.setState({units: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT))});
   }
 
   componentDidUpdate(){
@@ -149,15 +170,21 @@ export default class SearchPo extends Modal {
       
       purchaseOrderEntries.forEach(purchaseOrderEntry => {
         let productName = "";
+        let variantName = "";
         let quantityOnHand = 0;
-        if (purchaseOrderEntry.product) {
-          productName = Util.getProductName(purchaseOrderEntry.product);
-          quantityOnHand = purchaseOrderEntry.product.quantity;
+        
+        if (purchaseOrderEntry.productVariant) {
+          productName = Util.getProductName(purchaseOrderEntry.productVariant.product);
+          variantName = purchaseOrderEntry.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? purchaseOrderEntry.productVariant.name : "";
+          quantityOnHand = purchaseOrderEntry.productVariant.quantity;
         }
+
         existingProductList.push({
           purchaseEntryId: purchaseOrderEntry.id,
           productName,
-          productId: purchaseOrderEntry.productId,
+          variantName,
+          unitId: purchaseOrderEntry.unitId,
+          productVariantId: purchaseOrderEntry.productVariantId,
           quantityOnHand,
           quantity: purchaseOrderEntry.requestQuantity, 
           price: purchaseOrderEntry.price,
@@ -172,6 +199,13 @@ export default class SearchPo extends Modal {
       });
 
       this.grandTotal(existingProductList);
+
+      this.props.dispatch(PurchaseOrderAction.reset(PurchaseOrderConstant.RESET_REQUEST_PURCHASE_ORDER));
+    }
+
+    if (this.props.productVariant.fetched) {
+      this.handleOnSelectList(this.state.selectedProduct, [this.props.productVariant.list], false); // SET IT AS ARRAY TO MAKE IT MATCH ALL CONDITION BOTH STANDARD AND VARIANT
+      this.props.dispatch(ProductVariantAction.reset(ProductVariantConstant.RESET_PRODUCT_VARIANT));
     }
   }
 
@@ -190,6 +224,25 @@ export default class SearchPo extends Modal {
     });
     this.props.form.setFieldsValue({requestTotal: this.formatCurrency(grandTotal)});
     this.props.form.setFieldsValue({requestTotalValue: `${grandTotal}`});
+  }
+
+  removeRecord(record, index){
+    let existingProductList = this.state.productLists;
+    if (record.purchaseEntryId === "") {
+      existingProductList.splice(index, 1);
+    } else {
+      existingProductList[index]["purchaseEntryStatus"] = this.Enum.ARCHIVE;
+    }
+
+    this.setState({
+      productLists: existingProductList
+    });
+    
+    this.grandTotal(existingProductList);
+  }
+
+  handleCancelVariantProduct() {
+    this.setState({modalVariant: null});
   }
 
   handleOnChangeQuantity(e, index) {
@@ -218,10 +271,25 @@ export default class SearchPo extends Modal {
     this.grandTotal(existingProductList);
   }
 
-  handleOnSelectList(value) {
-    const productName = Util.getProductName(value);;
+  handleOnSelectList(product, productVariant, isRequestVariantForm = true) {
+    let isProductVariant = product.productOption === Enum.PRODUCT_VARIANT;
+    if (isProductVariant && isRequestVariantForm) {
+      this.setState({
+        selectedProduct: product,
+        modalVariant: <VariantProduct
+          dataSource={product}
+          productId={product.id}
+          handleCancel={this.handleCancelVariantProduct}/>
+      });
+      return;
+    } else if (productVariant && productVariant.length > 0) {
+      productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
+      productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
+    }
 
-    const {quantity} = value;
+    const productName = Util.getProductName(product);
+
+    const {quantity} = productVariant;
     const existingProductList = this.state.productLists;
     const initialQuantity = 1;
 
@@ -229,17 +297,21 @@ export default class SearchPo extends Modal {
       existingProductList.push({
         purchaseEntryId: "",
         productName,
+        unitId: product.defaultUnitId,
+        variantName: productVariant.name,
         quantityOnHand: quantity,
         quantity: initialQuantity,
         price: 0,
-        productId: value.id,
+        productVariantId: productVariant.id,
         totalPrice: 0,
         purchaseEntryStatus: this.Enum.ACTIVE
       });
     } else {
+
       let isNotTheSameProduct = true;
+
       existingProductList.forEach((product, index) => {
-        if (product.productId === value.id) {
+        if (product.productVariantId === productVariant.id) {
           isNotTheSameProduct = false;
           existingProductList[index]["quantity"] += 1;
           existingProductList[index]["totalPrice"] = existingProductList[index]["quantity"] * existingProductList[index]["price"];
@@ -250,9 +322,11 @@ export default class SearchPo extends Modal {
         existingProductList.push({
           purchaseEntryId: "",
           productName,
+          variantName: productVariant.name,
+          unitId: product.defaultUnitId,
           quantityOnHand: quantity,
           price: 0,
-          productId: value.id,
+          productVariantId: productVariant.id,
           quantity: initialQuantity,
           totalPrice: 0,
           purchaseEntryStatus: this.Enum.ACTIVE
@@ -277,9 +351,10 @@ export default class SearchPo extends Modal {
           locale={this.props.locale}
           form={this.props.form}/>  
         <this.Table
-          rowKey="productId"
+          rowKey="productVariantId"
           rowClassName={record => record.purchaseEntryStatus === this.Enum.ACTIVE ? "" : "hidden"}
           dataSource={productLists}
+          loading={this.props.productVariant.fetching}
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
           footer={() => <div className={`float-right ${productLists.length > 0 ? "" : "hidden"}`}>
@@ -288,9 +363,10 @@ export default class SearchPo extends Modal {
               <this.InputText name="requestTotal" disabled={true} className="ca-input-no-border grandTotal" form={this.props.form}/>
               <this.InputText name="requestTotalValue" className="hidden" form={this.props.form}/>
             </div>
-            <div className="pull-left" style={{width: 164}}></div>
+            <div className="pull-left" style={{width: 154}}></div>
             <div style={{clear: "both"}}></div>
-          </div>} /> 
+          </div>} />
+        {this.state.modalVariant}
       </div>
     );
   }   

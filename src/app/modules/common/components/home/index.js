@@ -23,7 +23,7 @@ export default class Home extends Component {
   componentWillUpdate() {
     if(!this.hasDidUpdate){
       let getDefaultSetting = localStorage.getItem("defaultDashboardSetting");
-      if(parseInt(getDefaultSetting) === 1) {
+      if(parseInt(getDefaultSetting, 10) === 1) {
         this.isShowDiagram  = true;
       } else {
         this.isShowDiagram  = false;

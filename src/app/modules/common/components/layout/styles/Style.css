@@ -69,12 +69,16 @@ html,
 
 .ant-table-footer {
     font-weight: 500;
-    padding: 0 0 !important;
+    /* padding: 0 0 !important; */
     color: #9A9A9A;
     background: white !important;
     padding-right: 8px;
     display: flex;
     justify-content: flex-end
+}
+
+.ant-table-footer .ant-form-horizontal .ant-form-item {
+    margin-bottom: 0 !important
 }
 
 .ant-table-footer .total-title {
@@ -277,6 +281,37 @@ html,
     border-radius: 3px
 }
 
+.wrap-lozenge-group-input {
+    padding: 3px 5px
+}
+
+.lozenge-group-input {
+    border: none;
+    height: 25px
+}
+
+.lozenge-group-input:focus {
+    border: none;
+    box-shadow: none
+}
+
+.wrap-lozenge-group-input {
+    display: flex;
+    margin-top: 5px
+}
+
+.wrap-lozenge-group-input .lozenge-item {
+    background-color: #fafafa;
+    border: 1px solid #e8e8e8;
+    border-radius: 2px;
+    padding: 0 10px 0 10px;
+    margin-right: 4px
+}
+
+.lozenge-item .icon-delete{
+    cursor: pointer
+}
+
 .ca-input-v1 {
     border: none !important
 }
@@ -312,7 +347,7 @@ html,
 }
 
 .has-error .ant-form-explain {
-    margin-top: 5px
+    /* margin-top: 5px */
 }
 
 .ca-input-v1-icon-left .ant-input{

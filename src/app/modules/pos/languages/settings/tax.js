@@ -52,4 +52,10 @@ export default {
     "Tax rate number allow only maximum 99999.",
     "Tax rate allow only maximum 99999."
   ],
+
+  "error_require_rate": [
+    "Enter rate",
+    "Enter rate",
+    "Enter rate"
+  ]
 };

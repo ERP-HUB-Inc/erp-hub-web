@@ -13,11 +13,10 @@ export default class FormItem extends Modal {
               label={<this.Translate id="text_name" />}
               data={formData.name}
               placeholder={this.CATranslate("text_name", this.props.locale)}
-              errorRequired={<this.Translate id="input_error_stock_supplier_name" />}
+              errorRequired={<this.Translate id="error_require_name" />}
               required={true}
               isAutoFocus={true}
               max={100}
-              min={3}
               form={this.props.form}/> 
           </this.Col>
           <this.Col md="12">
@@ -28,7 +27,6 @@ export default class FormItem extends Modal {
               placeholder={this.CATranslate("text_phone_number", this.props.locale)}
               errorRequired={<this.Translate id="input_error_stock_supplier_phone_number" />}
               max={100}
-              min={3}
               form={this.props.form}/> 
           </this.Col>
           <this.Col md="12">
@@ -46,8 +44,6 @@ export default class FormItem extends Modal {
               label={<this.Translate id="text_description" />}
               data={formData.description}
               placeholder={this.CATranslate("text_description", this.props.locale)}
-              required={true}
-              errorRequired={<this.Translate id="input_error_stock_supplier_description" />}
               max={100}
               form={this.props.form}/>
           </this.Col>

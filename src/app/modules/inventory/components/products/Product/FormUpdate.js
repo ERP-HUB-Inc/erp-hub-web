@@ -20,9 +20,12 @@ export default class Form extends Modal {
   constructor(props) {
     super(props);
     this.state = {
-      disabled: false,
       isNotYetLoadComponentDidUpdated: true,
-      tagList: []
+      tagList: [],
+      productAttributes: [],
+      productVariants: [],
+      productArchiveVariants: [],
+      productArchiveAttributes: []
     };
 
     this.tagList = [];
@@ -32,6 +35,10 @@ export default class Form extends Modal {
     this.wrapClassName = "modal-product";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCallBackGetProductAttribute = this.handleCallBackGetProductAttribute.bind(this);
+    this.handleCallBackGetProductVariant = this.handleCallBackGetProductVariant.bind(this);
+    this.handleCallBackGetArchiveProductVariant = this.handleCallBackGetArchiveProductVariant.bind(this);
+    this.handleCallBackGetArchiveProductAttributes = this.handleCallBackGetArchiveProductAttributes.bind(this);
     this.handleAddBrand = this.handleAddBrand.bind(this);
     this.handleAddVariantAttribute = this.handleAddVariantAttribute.bind(this);
     this.handleAddUnit = this.handleAddUnit.bind(this);
@@ -48,7 +55,7 @@ export default class Form extends Modal {
     if (productDetail.fetched) {
       if (productDetail.data) {
         const tagList = [];
-        productDetail.data.productTagToProduct.forEach(productTag => {
+        productDetail.data.tags.forEach(productTag => {
           if (productTag.status === this.Enum.ACTIVE) {
             tagList.push({
               id: productTag.id,
@@ -79,32 +86,31 @@ export default class Form extends Modal {
     }
   }
 
+  handleCallBackGetProductAttribute(productAttributes) {
+    this.setState({productAttributes});
+  }
+
+  handleCallBackGetProductVariant(productVariants) {
+    this.setState({productVariants});
+  }
+
+  handleCallBackGetArchiveProductVariant(productArchiveVariants) {
+    this.setState({productArchiveVariants});
+  }
+
+  handleCallBackGetArchiveProductAttributes(productArchiveAttributes) {
+    this.setState({productArchiveAttributes});
+  }
+
   handleSubmit (e) {
     e.preventDefault();
+
+    if (this.props.form.getFieldValue("isFocusOnVariantInput") === 1) {
+      return;
+    }
+
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        // PREPARE DATA FOR VARIANT
-        const productVariantToProduct = [];
-        if ("attributeId" in values && "variantName" in values) {
-          values["attributeId"].forEach((variantAttributeId, attributeIdIndex) => {
-            // RESTRIEVE ALL PRODUCT VARIANT
-            values["variantName"][attributeIdIndex].forEach((variantName, productVariantIndex) => {
-              let productVariant = {
-                variantAttributeId 
-              };
-              
-              productVariant["id"] = values["variantProductId"][attributeIdIndex][productVariantIndex];
-              productVariant["name"] = variantName;
-              productVariant["barcode"] = values["variantProductCode"][attributeIdIndex][productVariantIndex];
-              productVariant["cost"] = values["variantProductCost"][attributeIdIndex][productVariantIndex];
-              productVariant["price"] = values["variantProductPrice"][attributeIdIndex][productVariantIndex];
-              productVariant["status"] = values["variantProductStatus"][attributeIdIndex][productVariantIndex];
-              productVariantToProduct.push(productVariant);
-            });
-
-          });
-        }
-
         // PREPARE DATA FOR PACKAGE PRODUCT
         const productPackageToProduct = [];
         if ("productCompositeProductId" in values && "productCompositeMarkUp" in values) {
@@ -118,7 +124,6 @@ export default class Form extends Modal {
             productPackageToProduct.push(packageProduct);
           });
         }
-
 
         // PREPARE DATA FROM DESCRIPTION
         const productDescriptions = [];
@@ -142,11 +147,11 @@ export default class Form extends Modal {
         }
 
         this.Util.clearObjProperty(values, [
-          "variantName",
           "variantProductCode",
           "variantProductCost",
           "variantProductPrice",
           "variantProductStatus",
+          "attributeId",
           "productName",
           "language",
           "productDescription",
@@ -170,7 +175,8 @@ export default class Form extends Modal {
         values["taxes"] = [{taxId: values["taxId"]}];
         values["productTags"] = this.state.tagList;
         values["descriptions"] = productDescriptions;
-        values["productVariants"] = productVariantToProduct;
+        values["attributes"] = this.state.productArchiveAttributes.concat(this.state.productAttributes);
+        values["variantProducts"] = this.state.productArchiveVariants.concat(this.state.productVariants);
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
 
@@ -178,6 +184,8 @@ export default class Form extends Modal {
           tagList: [],
           isNotYetLoadComponentDidUpdated: true
         });
+
+        console.log("Values Update:", values);
 
         this.dispatch(ProductAction.update(values));
       }
@@ -199,9 +207,12 @@ export default class Form extends Modal {
     this.modal1 = <FormCreateProductType />;
   }
 
-  handleAddVariantAttribute(key) {
+  handleAddVariantAttribute(index, callBack) {
     this.dispatch(VariantAttributeAction.showForm());
     this.modal1 = <FormCreateVariantAttribute />;
+    if (callBack) {
+      callBack(index);
+    }
   }
 
   handleAddUnit() {
@@ -279,7 +290,6 @@ export default class Form extends Modal {
       productDetail,
       productLog,
       productCostLog,
-      productVariantArchive,
       form,
       locale,
       dispatch,
@@ -311,7 +321,10 @@ export default class Form extends Modal {
           formData={productDetail.data}
           productLog={productLog}
           productCostLog={productCostLog}
-          productVariantArchive={productVariantArchive}
+          productVariantArchive={this.props.productVariantArchive}
+          productVariantCheckStatus={this.props.productVariantCheckStatus}
+          productAttributeCheckStatus={this.props.productAttributeCheckStatus}
+          productAttributeValueCheckStatus={this.props.productAttributeValueCheckStatus}
           brands={brands}
           brandAdd={brandAdd}
           handleAddBrand={this.handleAddBrand}
@@ -326,6 +339,10 @@ export default class Form extends Modal {
           handleAddTax={this.handleAddTax}
           tags={tags}
           tagAdd={tagAdd}
+          callBackGetProductAttribute={this.handleCallBackGetProductAttribute}
+          callBackGetProductVariant={this.handleCallBackGetProductVariant}
+          handleCallBackGetArchiveProductVariant={this.handleCallBackGetArchiveProductVariant}
+          handleCallBackGetArchiveProductAttributes={this.handleCallBackGetArchiveProductAttributes}
           handleChangeTag={this.handleChangeTag}
           handleSelectTag={this.handleSelectTag}
           handleDeselectTag={this.handleDeselectTag}

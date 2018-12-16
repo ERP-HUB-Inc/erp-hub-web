@@ -42,6 +42,7 @@ export class InputNumber extends Element {
         name={this.props.name}
         placeholder={this.props.placeholder}
         label={this.props.label}
+        errorRequired={this.props.errorRequired}
         errorLength={this.props.errorLength}
         max={this.props.max}
         isUnsign={this.props.isUnsign}

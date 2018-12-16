@@ -12,8 +12,8 @@ export default class Form extends Modal {
       ...this.state,
       rolePrivileges: []
     };
-    this.title = "Access Role";
-    this.width = "70%";
+    this.title = <this.Translate id="text_access_role" />;
+    this.width = "50%";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCallBackGetPrivilegeList = this.handleCallBackGetPrivilegeList.bind(this);

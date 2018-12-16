@@ -28,6 +28,15 @@ class ProductService extends BaseService {
       locationId);
   }
 
+  attributes(id) {
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/attributes/${id}`,  
+      data: this.data,
+      headers: this.header
+    });
+  }
+
   searchForDrowDown(
     limit,
     offset,
@@ -88,7 +97,7 @@ class ProductService extends BaseService {
     });
   }
 
-  changeStatusProductVarait(id) {
+  changeProductVariantStatus(id) {
     this.setHeader();
     return this.PUT({  
       url: `${this.baseUrl}/variant/update/${id}`,
@@ -101,6 +110,18 @@ class ProductService extends BaseService {
     this.setHeader();
     return this.POST({
       url: `${this.baseUrl}/clone/${id}`, 
+      data: this.data,
+      headers: this.header
+    });
+  }
+
+  detail(
+    id,
+    productOption
+  ){
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/detail/${id}?productOption=${productOption}`,
       data: this.data,
       headers: this.header
     });

@@ -404,5 +404,31 @@ export class Util {
         .value()
     );
   }
+
+  copyArrayObj(arg) {
+    arg = JSON.stringify(arg);
+    return JSON.parse(arg);
+  }
+
+  copyObj(arg) {
+    arg = JSON.stringify(arg);
+    return JSON.parse(arg);
+  }
+
+  getErrorCodeFromState(error) {
+    let code;
+    
+    if (
+      error &&
+      "data" in error &&
+      error["data"] &&
+      "error" in error["data"] &&
+      error["data"]["error"]
+    ) {
+      code = error["data"]["error"]["code"];
+    }
+
+    return code;
+  }
   
 }

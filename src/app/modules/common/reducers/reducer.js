@@ -68,7 +68,7 @@ export default {
       return state;
     }
   },
-  add: (state, action, [PEDDING, REJECT, FULFILLED, SHOW_FORM, RESET]) => {
+  add: (state, action, [PEDDING, REJECT, FULFILLED, SHOW_FORM, RESET, RESET_PARTIAL]) => {
     switch(action.type) {
     case SHOW_FORM: {
       return {
@@ -98,6 +98,14 @@ export default {
         showForm: false,
         added: true,
         response: action.payload.data
+      };
+    }
+    case RESET_PARTIAL: {
+      return {
+        ...state,
+        added: false,
+        response: null,
+        error: null
       };
     }
     case RESET: {

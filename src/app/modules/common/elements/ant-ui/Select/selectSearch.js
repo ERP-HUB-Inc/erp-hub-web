@@ -27,6 +27,7 @@ export class SelectSearch extends Element {
               style={{ width: "100%" }}
               optionFilterProp="children"
               dropdownClassName="wrap-select-search"
+              onChange={this.props.onChange}
               filterOption={(value, option) => option.props.children.toString().toLowerCase().indexOf(value.toLowerCase()) >= 0}
               showSearch>
               { 

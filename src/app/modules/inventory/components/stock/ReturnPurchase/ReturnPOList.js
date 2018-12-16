@@ -1,5 +1,6 @@
 import React from "react";
 import Util from "../../../utils";
+import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
 import "./index.css";
 
@@ -24,7 +25,7 @@ export default class ReceivedPO extends Modal {
             <div>
               {index+1}
               <this.InputText name={`purchaseOrderEntryId[${index}]`} type="hidden" data={record.purchaseOrderEntryId} form={this.form} />
-              <this.InputText name={`productId[${index}]`} type="hidden" data={record.productId} form={this.form} />
+              <this.InputText name={`productVariantId[${index}]`} type="hidden" data={record.productVariantId} form={this.form} />
               <this.InputText name={`productName[${index}]`} type="hidden" data={record.productName} form={this.form} />
               <this.InputNumber name={`receiveQuantity[${index}]`} className="hidden" data={record.receiveQuantity} form={this.form} />
               <this.InputNumber name={`price[${index}]`} className="hidden" data={record.price} form={this.form} />
@@ -35,7 +36,13 @@ export default class ReceivedPO extends Modal {
       {
         title: <this.Translate id="text_name" />,
         dataIndex: "productName",
-        key: "productName"
+        key: "productName",
+        render: (text, record) => {
+          return <div>
+            <div>{record.productName}</div>
+            <div className="variant-name">{record.variantName}</div>
+          </div>;
+        }
       },
       {
         title: <this.Translate id="text_quantity" />,
@@ -97,10 +104,19 @@ export default class ReceivedPO extends Modal {
     if (this.props.returnPurchaseDetail.length  > 0 && this.state.isNotYetLoadComponentDidUpdated) {
       const existingProductList = this.state.productLists;
       this.props.returnPurchaseDetail.forEach(purchaseOrderEntry => {
+        let productName = "";
+        let variantName = "";
+        
+        if (purchaseOrderEntry.productVariant) {
+          productName = Util.getProductName(purchaseOrderEntry.productVariant.product);
+          variantName = purchaseOrderEntry.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? purchaseOrderEntry.productVariant.name : "";
+        }
+
         existingProductList.push({
           purchaseOrderEntryId: purchaseOrderEntry.id,
-          productName: Util.getProductName(purchaseOrderEntry.product),
-          productId: purchaseOrderEntry.productId,
+          productName,
+          variantName,
+          productVariantId: purchaseOrderEntry.productVariantId,
           requestQuantity: purchaseOrderEntry.requestQuantity, 
           receiveQuantity: purchaseOrderEntry.receiveQuantity,
           returnQuantity: 0,

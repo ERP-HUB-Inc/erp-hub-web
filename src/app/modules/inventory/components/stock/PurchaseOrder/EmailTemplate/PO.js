@@ -83,7 +83,10 @@ export default class PO extends Component {
                       this.props.data.POEntries.map((value, key) => 
                         <tr style={{fontSize: "13px", background: "white"}} key={key}>
                           <td style={{padding: "5px"}}>{key + 1}</td>
-                          <td style={{padding: "5px"}}>{value.productName}</td>
+                          <td style={{padding: "5px"}}>
+                            <div>{value.productName}</div>
+                            <div style={{fontSize: "7.5pt", marginTop: "2px"}}>{value.variantName}</div>
+                          </td>
                           <td style={{padding: "5px"}}>{this.formatCurrency(value.price)}</td>
                           <td style={{padding: "5px"}}>{value.requestQuantity}</td>
                           <td style={{padding: "5px"}}>{value.receiveQuantity ? value.receiveQuantity : 0}</td>

@@ -15,6 +15,7 @@ export default class FormItem extends Modal {
           isAutoFocus={true}
           min={3}
           max={100}
+          errorRequired={<this.Translate id="error_require_name" />}
           errorLenght={<this.Translate id="error_tax_name_length" />}
           form={form}/>
         <this.InputText

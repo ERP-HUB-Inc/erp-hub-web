@@ -29,6 +29,12 @@ export default {
     "Address"
   ],
 
+  "error_location_not_found": [
+    "Location not found",
+    "Location not found",
+    "Location not found"
+  ],
+
   "error_location_name_length": [
     "Name allow from 3 to 100 character only.",
     "Name allow from 3 to 100 character only.",

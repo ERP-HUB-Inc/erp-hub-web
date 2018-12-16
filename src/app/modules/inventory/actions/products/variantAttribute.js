@@ -34,10 +34,10 @@ export default {
       });
     };
   },
-  reset: () => {
+  reset: (CONSTANT_RESET = Constant.RESET_VARIANT_ATTRIBUTE) => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET_VARIANT_ATTRIBUTE,
+        type: CONSTANT_RESET,
         payload: null
       });
     };

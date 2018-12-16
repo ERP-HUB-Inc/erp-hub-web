@@ -313,8 +313,6 @@ export default class StoreAccountList extends Component {
                                 placeholder={this.CATranslate("store_acc_tax", locale)}
                                 form={form} />
 
-                            </this.Col>
-                            <this.Col lg="4" md="4"> 
                               <this.Select
                                 name="dateFormat"
                                 dataSource={this.Util.listFormatDate()}
@@ -324,6 +322,7 @@ export default class StoreAccountList extends Component {
                                 label={<this.Translate id="store_acc_date_format" />}
                                 placeholder={this.CATranslate("store_acc_date_format", locale)}
                                 form={form} />
+
                             </this.Col>
                           </this.Row>
                         </this.TabPane>
@@ -332,7 +331,7 @@ export default class StoreAccountList extends Component {
                             <this.Col lg="4" md="4"> 
                               <this.InputEmail
                                 data={storeAccount.list.email}
-                                name="userName"
+                                name="email"
                                 label={<this.Translate id="store_acc_email" />}
                                 placeholder={this.CATranslate("store_acc_email", locale)}
                                 form={form}/>
@@ -476,7 +475,7 @@ export default class StoreAccountList extends Component {
                                     title: <this.Translate id="text_status" />,
                                     dataIndex: "status",
                                     key: "status",
-                                    width: 120,
+                                    width: 130,
                                     render: status => {
                                       return (
                                         status === this.Enum.ACTIVE ?
@@ -529,7 +528,7 @@ export default class StoreAccountList extends Component {
                                   ""
                               }
 
-                              <div class="general">
+                              <div className="general">
                                 <h6><this.Translate id="store_acc_plan" /></h6>
                               </div>
 
@@ -543,8 +542,7 @@ export default class StoreAccountList extends Component {
                                   form={form}
                                   disabled={true}
                                   onSelect={this.onSelect}
-                                  onChange={this.onChange}
-                                >
+                                  onChange={this.onChange}>
                                   { businessplan.map( (businessplan, key) => 
                                     <this.RadioChildBox
                                       key={key}

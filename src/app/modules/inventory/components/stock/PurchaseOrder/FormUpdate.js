@@ -9,16 +9,28 @@ import FormCreatePurchseOrderSendEmail from "../../../containers/stock/PurchaseO
 export default class Form extends Modal {
   constructor(props) {
     super(props);
+    this.wrapClassName = "wrap-modal-po";
     this.width = "70%";
-    this.state = {
-      disabled: false
+    this.PO_STEP_STR = {
+      [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color: this.Enum.PO_STEP_COLOR.DRAFT},
+      [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="purchase_order_step_process" />, color:  this.Enum.PO_STEP_COLOR.PROCESS},
+      [Enum.PO_STEP.RECEIVED]: {name: <this.Translate id="text_receive" />, color:  this.Enum.PO_STEP_COLOR.RECEIVE},
+      [Enum.PO_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color:  this.Enum.PO_STEP_COLOR.CANCEL},
+      [Enum.PO_STEP.RETURN]: {name: <this.Translate id="text_return" />, color:  this.Enum.PO_STEP_COLOR.RETURN},
+      [Enum.PO_STEP.PAID]: {name: <this.Translate id="purchase_order_step_paid" />, color:  this.Enum.PO_STEP_COLOR.PAID}
     };
-
     this.title = <this.Translate id="text_po" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handlePushToSupplier = this.handlePushToSupplier.bind(this);
     this.prepareFormDataForUpdate = this.prepareFormDataForUpdate.bind(this);
+  }
+
+  componentDidUpdate() {
+    if (this.props.purchaseOrderDetail.fetched) {
+      const step = this.props.purchaseOrderDetail.data.step;
+      this.title = <div><this.Translate id="text_po" /> {step in this.PO_STEP_STR ? <this.Tag color={this.PO_STEP_STR[step].color} className="text-uppercase text-center po-step-tag">{this.PO_STEP_STR[step].name}</this.Tag> : ""}</div>;
+    }
   }
 
   handleSubmit (e) {
@@ -48,11 +60,13 @@ export default class Form extends Modal {
     // PREPARE PO ENTRIES
     const purchaseEntries = [];
     if (values.purchaseQty) {
-      values.productId.forEach((productId, index) => {
+      values.productVariantId.forEach((productVariantId, index) => {
         purchaseEntries.push({
           id: values.purchaseEntryId[index],
-          productId,
+          productVariantId,
           productName: values.productName[index],
+          variantName: values.variantName[index],
+          unitId: values.unitId[index],
           requestQuantity: parseInt(values.purchaseQty[index], 10),
           price: parseFloat(values.purchasePrice[index]),
           status: values.purchaseEntryStatus[index]
@@ -63,8 +77,11 @@ export default class Form extends Modal {
     values["requestTotal"] = parseFloat(values["requestTotalValue"]);
 
     this.Util.clearObjProperty(values, [
-      "productId",
+      "productVariantId",
+      "purchaseEntryId",
+      "unitId",
       "productName",
+      "variantName",
       "purchaseQty",
       "purchasePrice",
       "purchaseEntryStatus",
@@ -85,6 +102,7 @@ export default class Form extends Modal {
     values["status"] = this.props.purchaseOrderDetail.data.status;
 
     values["POEntries"] = purchaseEntries;
+
     return values;
   }
 
@@ -159,7 +177,8 @@ export default class Form extends Modal {
           form={form} 
           formData={purchaseOrderDetail.data} 
           supplier={supplier} 
-          product={product} 
+          product={product}
+          productVariant={this.props.productVariant}
           storeLocation={storeLocation} 
           productSearch={productSearch}
           requestOrderNumber={requestOrderNumber}

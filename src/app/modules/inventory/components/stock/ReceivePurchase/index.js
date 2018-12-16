@@ -67,12 +67,12 @@ export default class ReceivePurchaseList extends List {
       },
       {
         title: <this.Translate id="text_total" />,
-        dataIndex: "receiveTotal",
+        dataIndex: "requestTotal",
         width: 130,
-        key: "receiveTotal",
+        key: "requestTotal",
         align: "right",
         sorter: true, 
-        render: receiveTotal => this.formatCurrency(receiveTotal) 
+        render: requestTotal => this.formatCurrency(requestTotal) 
       },
       {
         title: <this.Translate id="text_action" />,

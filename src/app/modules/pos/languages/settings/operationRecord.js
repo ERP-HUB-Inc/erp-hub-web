@@ -57,5 +57,11 @@ export default {
     "We don't allow to delete record generate by system",
     "We don't allow to delete record generate by system",
     "We don't allow to delete record generate by system"
+  ],
+
+  "error_require_amount": [
+    "Enter amount",
+    "Enter amount",
+    "Enter amount"
   ]
 };

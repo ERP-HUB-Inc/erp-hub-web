@@ -8,7 +8,9 @@ export default combineReducers({
     const constants = [
       Constant.REQUEST_PURCHASE_ORDER_PENDING,
       Constant.REQUEST_PURCHASE_ORDER_REJECTED,
-      Constant.REQUEST_PURCHASE_ORDER_FULFILLED
+      Constant.REQUEST_PURCHASE_ORDER_FULFILLED,
+      null,
+      Constant.RESET_REQUEST_PURCHASE_ORDER
     ];
     return reducer.request(state, action, constants);
   },
@@ -35,7 +37,8 @@ export default combineReducers({
       Constant.ADD_PURCHASE_ORDER_REJECTED,
       Constant.ADD_PURCHASE_ORDER_FULFILLED, 
       Constant.SHOW_PURCHASE_ORDER_FORM,
-      Constant.RESET_PURCHASE_ORDER
+      Constant.RESET_PURCHASE_ORDER,
+      Constant.RESET_ADD_PURCHASE_ORDER
     ];
     return reducer.add(state, action, constants);
   },

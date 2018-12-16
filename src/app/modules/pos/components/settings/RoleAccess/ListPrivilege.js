@@ -22,11 +22,12 @@ export default class ListPrivilege extends Component {
     this.onChangeChild = this.onChangeChild.bind(this);
     this.compareTwoCollection = this.compareTwoCollection.bind(this);
     this.handleSearchPrivilege = this.handleSearchPrivilege.bind(this);
+    this.handleRemoveTextSearch = this.handleRemoveTextSearch.bind(this);
+
   };
 
   componentDidMount () {
-    const {dispatch} = this.props;
-    dispatch(PrivilegeAction.fetch(200));
+    this.props.dispatch(PrivilegeAction.fetch(200));
   }
 
   // handleSubmit () {
@@ -154,6 +155,10 @@ export default class ListPrivilege extends Component {
 
     }
   };
+
+  handleRemoveTextSearch() {
+    this.props.form.setFieldsValue({search_name_privillege: ""});
+  }
 
 
   onChangeChild (e, parentId) {

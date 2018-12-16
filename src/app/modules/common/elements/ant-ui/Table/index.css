@@ -12,12 +12,24 @@
 
 .ant-table-body table tr th,
 .ant-table-header table tr th {
-    background-color: #F7F7F7;
+    background-color: #ffffff;
     font-size: 10pt
 }
 
 tr:nth-child(odd) {
     background-color: #faf9f9;
+}
+
+.ant-table-expanded-row .ant-table table tbody tr:nth-child(odd) {
+    background-color: rgb(255, 255, 255)
+}
+
+.ant-table-expanded-row .ant-table table tbody tr td {
+    border-top: 0.5px solid #EAEAEA !important
+}
+
+.ant-table-expanded-row  td:last-child {
+    padding-right: 0 !important
 }
 
 .ant-table-body table tr td {

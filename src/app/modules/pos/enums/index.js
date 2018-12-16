@@ -23,5 +23,6 @@ export default {
   OPEN_SALE_REGISTRATION_STATUS: {
     OPEN: 1,
     CLOSED: 0
-  }
+  },
+  LOCATION_NOT_FOUND: 619
 };

@@ -329,6 +329,12 @@ export default {
     "Search"
   ],
 
+  "place_holder_general_search": [
+    "General",
+    "General",
+    "General"
+  ],
+
   "text_store": [
     "Store",
     "Store",
@@ -501,6 +507,12 @@ export default {
     "Return",
     "Return",
     "Return"
+  ],
+
+  "text_returned": [
+    "Returned",
+    "Returned",
+    "Returned"
   ],
 
   "text_description": [
@@ -693,5 +705,9 @@ export default {
     "This is because of admin don't allow you to access it. Please contact admin, if you really want to access it.",
     "This is because of admin don't allow you to access it. Please contact admin, if you really want to access it.",
     "This is because of admin don't allow you to access it. Please contact admin, if you really want to access it."
-  ]
+  ],
+
+  "error_require_name": [
+    "Enter name"
+  ],
 };

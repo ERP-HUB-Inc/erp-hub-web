@@ -32,6 +32,7 @@
 
 .main-layout.main-store-account {
     min-height: 100%;
+    padding-top: 15px
 }
 
 .main-layout.main-store-account .main-upload .ant-upload-list-picture-card .ant-upload-list-item {

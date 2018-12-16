@@ -66,8 +66,6 @@ export default class FormItem extends Modal {
         locationId = defaultLocation.id;
       }
     }
-
-    console.log("Location Id:", locationId);
     
     return (
       <div id="scroll-layout">
@@ -80,7 +78,7 @@ export default class FormItem extends Modal {
                   label={<this.Translate id="text_name" />}
                   data={formData.name}
                   placeholder={this.CATranslate("text_name", locale)}
-                  errorRequired={<this.Translate id="error_enter_po_name" />}
+                  errorRequired={<this.Translate id="error_require_name" />}
                   required={true}
                   isAutoFocus={true}
                   max={100}
@@ -92,10 +90,11 @@ export default class FormItem extends Modal {
                   label={<this.Translate id="input_stock_purchase_order_number" />}
                   data={formData.number}
                   handleKeyUp={this.handleCheckPONumber}
-                  validateStatus={this.props.requestOrderNumber.fetching ? "validating" : this.validateOrderNumber}
+                  // validateStatus={this.props.requestOrderNumber.fetching ? "validating" : this.validateOrderNumber}
+                  // help={this.errorMessageOrderNumber}
                   placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
-                  form={form}
-                  help={this.errorMessageOrderNumber}/> 
+                  errorRequired={<this.Translate id="error_require_po_number" />}
+                  form={form} /> 
               </this.Col>
               <this.Col md="2">
                 { formData.deliveryDueDate == null ?
@@ -123,7 +122,7 @@ export default class FormItem extends Modal {
                   name="supplierId"
                   label={<this.Translate id="text_supplier" /> }
                   placeholder={this.CATranslate("text_supplier", locale)}
-                  errorRequired={<this.Translate id="error_select_supplier" />}
+                  errorRequired={<this.Translate id="error_require_supplier" />}
                   defaultValue={formData.supplierId}
                   dataSource={this.state.suppliers}
                   valueKey="id"
@@ -157,11 +156,11 @@ export default class FormItem extends Modal {
           <this.Col md="12" className="purchase-order-entry">
             <SearchPO
               dataSource={productSearch}
+              productVariant={this.props.productVariant}
               purchaseOrderEntries={formData.purchaseOrderEntries}
               locale={locale}
               dispatch={dispatch}
-              form={form}
-            />
+              form={form} />
           </this.Col>
         </this.Row>
       </div>

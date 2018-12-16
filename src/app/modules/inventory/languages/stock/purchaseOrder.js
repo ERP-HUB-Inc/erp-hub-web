@@ -155,6 +155,12 @@ export default {
     "Comfirm purchase order"
   ],
 
+  "text_confirm_receive_partial": [
+    "You have not marked all products as received. Do you want to create a new partial order for the items you are missing, or close this order?",
+    "You have not marked all products as received. Do you want to create a new partial order for the items you are missing, or close this order?",
+    "You have not marked all products as received. Do you want to create a new partial order for the items you are missing, or close this order?",
+  ],
+
   "text_stock_purchase_order_send_mail_comfirm_title": [
     "Are you Sure? Do you want to push to supplier?",
     "Are you Sure? Do you want to push to supplier?",
@@ -179,6 +185,18 @@ export default {
     "Do you want to send confirm email?"
   ],
 
+  "error_require_po_number": [
+    "Enter PO number",
+    "Enter PO number",
+    "Enter PO number"
+  ],
+
+  "error_po_number_empty": [
+    "PO Number not allow empty",
+    "PO Number not allow empty",
+    "PO Number not allow empty"
+  ],
+
   "error_supplier_email_not_valid": [
     "Your email address is not valid",
     "Your email address is not valid",
@@ -197,24 +215,12 @@ export default {
     "Please add product to purchase entry"
   ],
 
-  "error_enter_po_name": [
-    "Enter purchase order name",
-    "Enter purchase order name",
-    "Enter purchase order name",
-  ],
-
   "error_select_due_date": [
     "Select due date",
     "Select due date",
     "Select due date"
   ],
   
-  "error_select_supplier": [
-    "Select supplier",
-    "Select supplier",
-    "Select supplier"
-  ],
-
   "error_select_delivery_location": [
     "Select dilivery to location",
     "Select dilivery to location",

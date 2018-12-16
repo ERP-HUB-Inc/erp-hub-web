@@ -46,7 +46,9 @@ export default class List extends Component {
     this.cancelText = <this.Translate id="text_no" />; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
     this.messageNoPermissionKey = "text_no_permission";
+    this.placeHolderForGeneralSearch = "place_holder_general_search";
     this.isShowExpandable = false;
+    this.rowClassName = null;
     this.emptyCell = "N/A";
     this.columnFilterWithKey = [];
     this.service = new BaseService();
@@ -496,8 +498,8 @@ export default class List extends Component {
       <this.Col md="3">
         <this.InputText
           name="key"
-          label="Search"
-          placeholder="Search for code, name and address"
+          label={<this.Translate id="text_search" />}
+          placeholder={this.CATranslate(this.placeHolderForGeneralSearch, this.props.locale)}
           form={this.props.form}/>
       </this.Col>
     );
@@ -568,6 +570,7 @@ export default class List extends Component {
         <this.TableExpand
           dataSource={fetchingProps.list}
           columns={this.columns}
+          rowClassName={this.rowClassName}
           onChange={this.onChange}
           locale={{emptyText: <this.Translate id="table_empty_data"/>}}
           expandedRowRender={this.expandedRender}

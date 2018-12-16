@@ -17,7 +17,6 @@ export default class Modal extends Component {
     this.wrapClassName = "";
     this.responseError = "";
     this.isRepsonseBackError = "none";
-    this.isRepsonseBackErrorOfAction = "none";
     this.submitLoading = false;
     this.submitConfirmActionLoading = false;
     this.submited = false;
@@ -118,7 +117,6 @@ export default class Modal extends Component {
         visible={this.state.modalVisible}
         wrapClassName="confirm-delete"
         footer={null}>
-        <this.Alert style={{display: this.isRepsonseBackErrorOfAction}} message={this.actionConfirmResponseMsg} type="error" showIcon/>
         <div>
           <span className="icon-help icon-padding-right"></span>
           <span className="title text-uppercase">{this.confirmTitle}</span><br/>

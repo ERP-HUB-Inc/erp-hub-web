@@ -6,17 +6,43 @@ import Modal from "../../../../common/components/shares/Modal";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
 import PurchaseOrderShowEmailAction from "../../../actions/stock/purchaseOrderSendEmail";
 import FormCreatePurchseOrderSendEmail from "../../../containers/stock/PurchaseOrder/ConfirmEmail/FormCreate";
+import EnumSetting from "../../../../pos/enums";
 import "./index.css";
 
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
     this.title = <this.Translate id="text_po" />;
+    this.wrapClassName = "wrap-modal-po";
     this.width = "70%";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.pushToSupplier = this.pushToSupplier.bind(this);
     this.handlePushToSupplier = this.handlePushToSupplier.bind(this);
+  }
+
+  componentDidUpdate() {
+    if (this.props.purchaseOrderAdd.error) {
+      const errorCode = this.Util.getErrorCodeFromState(this.props.purchaseOrderAdd.error);
+      let message = "Something wrong, Please contact system provider";
+
+      if (errorCode === Enum.PO_NUMBER_NOT_ALLOW_EMPTY) {
+        message = this.CATranslate("error_po_number_empty", this.props.locale);
+      } else if (errorCode === EnumSetting.LOCATION_NOT_FOUND) {
+        message = this.CATranslate("error_location_not_found", this.props.locale);
+      } else if (errorCode === Enum.SUPPLIER_NOT_FOUND) {
+        message = this.CATranslate("error_supplier_not_found", this.props.locale);
+      } else if (errorCode === Enum.PO_NUMBER_ALREADY_EXIST) {
+        message = this.CATranslate("purchase_order_po_number_already_exist", this.props.locale);
+      } else if (errorCode === Enum.PRODUCT_NOT_FOUND) {
+        message = this.CATranslate("error_product_not_found", this.props.locale);
+      } else if (errorCode === Enum.PRODUCT_UNIT_NOT_FOUND) {
+        message = this.CATranslate("error_unit_not_found", this.props.locale);
+      }
+
+      this.Message.error(message);
+      this.props.dispatch(PurchaseOrderAction.reset(Constant.RESET_ADD_PURCHASE_ORDER));
+    }
   }
 
   handlePushToSupplier(){
@@ -32,14 +58,14 @@ export default class FormCreate extends Modal {
   handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {      
-        
+      if (!err) {
         const purchaseEntries = [];
-        if ("productId" in values) {
-          values.productId.forEach((productId, index) => {
+        if ("productVariantId" in values) {
+          values.productVariantId.forEach((productVariantId, index) => {
             purchaseEntries.push({
               id: values.purchaseEntryId[index],
-              productId,
+              productVariantId,
+              unitId: values.unitId[index],
               requestQuantity: parseInt(values.purchaseQty[index], 10),
               price: parseFloat(values.purchasePrice[index]),
               status: values.purchaseEntryStatus[index]
@@ -55,7 +81,7 @@ export default class FormCreate extends Modal {
 
         this.Util.clearObjProperty(values, [
           "id",
-          "productId",
+          "productVariantId",
           "purchaseQty",
           "purchasePrice",
           "purchaseEntryStatus",
@@ -64,6 +90,8 @@ export default class FormCreate extends Modal {
           "totalPriceValue",
           "requestTotalValue",
           "searchProduct",
+          "purchaseEntryId",
+          "productName",
           "isFocusOnSearchCompositeProduct"
         ]);
 
@@ -76,8 +104,6 @@ export default class FormCreate extends Modal {
         values["status"] = this.Enum.ACTIVE;
 
         values["POEntries"] = purchaseEntries;
-
-        console.log("Value for PO Create:", values);
       
         this.dispatch(PurchaseOrderAction.add(values));
       }
@@ -105,19 +131,18 @@ export default class FormCreate extends Modal {
     this.submitLoading = purchaseOrderAdd.adding;
 
     if (purchaseOrderAdd.showForm) {
-      this.content = (
+      this.content = 
         <FormItem 
           form={form} 
           supplier={supplier} 
-          product={product} 
+          product={product}
           storeLocation={storeLocation} 
           productSearch={productSearch} 
           productUpdate={productUpdate}
+          productVariant={this.props.productVariant}
           requestOrderNumber={requestOrderNumber}
           dispatch={dispatch} 
-          locale={locale}
-        />
-      );
+          locale={locale} />;
     
       return super.render();
     } else {

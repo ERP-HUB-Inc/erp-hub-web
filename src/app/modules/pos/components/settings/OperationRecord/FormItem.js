@@ -23,6 +23,7 @@ export default class FormItem extends Modal {
           isAutoFocus={true}
           min={3}
           max={100}
+          errorRequired={<this.Translate id="error_require_name" />}
           errorLenght={<this.Translate id="error_operation_record_name_length" />}
           form={form}/>
         <this.DatePickers
@@ -38,6 +39,7 @@ export default class FormItem extends Modal {
           placeholder={this.CATranslate("input_operation_record_amount", locale)}
           required={true}
           isAutoSelect={true}
+          errorRequired={<this.Translate id="error_require_amount" />}
           form={form}/>
         <this.FormGroup style={{width: "100%"}}>
           <this.RadioBox  

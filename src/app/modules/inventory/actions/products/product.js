@@ -10,6 +10,14 @@ export default {
       });
     };
   },
+  fetchAttributes: (id) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_PRODUCT_ATTRIBUTES,
+        payload: ProductService.attributes(id)
+      });
+    };
+  },
   fetchLog: (id, limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
@@ -78,7 +86,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_PRODUCT,
-        payload: ProductService.changeStatusProductVarait(id)
+        payload: ProductService.changeProductVariantStatus(id)
       });
     };
   },
@@ -102,7 +110,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.DETAIL_PRODUCTS,
-        payload: ProductService.detail(data.id)
+        payload: ProductService.detail(data.id, data.productOption)
       });
     };
   },

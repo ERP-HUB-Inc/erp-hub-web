@@ -16,7 +16,6 @@ export default {
     AUTO: 0,
     CUSTOM: 1
   },
-
   PO_STEP: {
     DRAFT : 0,
     PROCESS : 1,
@@ -25,7 +24,6 @@ export default {
     RETURN : 4,
     PAID : 5
   },
-
   CLIENT_AUTO_NUMBER_TYPE: {
     QUOTATION : 2,
     INVOICE : 4,
@@ -45,5 +43,12 @@ export default {
     PRODUCT_TAG: "PRODUCT_TAG",
     LOCATION: "LOCATION",
     SUPPLIER: "SUPPLIER"
-  }
+  },
+  PO_FORBIDEN_STEP_PROCESS: 610,
+  PO_NUMBER_ALREADY_EXIST: 611,
+  PO_NUMBER_NOT_ALLOW_EMPTY: 612,
+  PO_NOT_FOUND: 621,
+  PRODUCT_NOT_FOUND: 609,
+  PRODUCT_UNIT_NOT_FOUND: 617,
+  SUPPLIER_NOT_FOUND: 620
 };
