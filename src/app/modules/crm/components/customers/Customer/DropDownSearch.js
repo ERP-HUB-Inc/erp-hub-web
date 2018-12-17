@@ -10,7 +10,8 @@ export default class DropDownSearch extends Modal {
     super(props);
     this.state = {
       visibleDropDown: false,
-      isMouseHoverOnSearchList: false
+      isMouseHoverOnSearchList: false,
+      isSetFocusSearchInput: false
     };
 
     this.scrollTop = 0;
@@ -53,6 +54,8 @@ export default class DropDownSearch extends Modal {
     if (!this.state.isMouseHoverOnSearchList) {
       this.setState({visibleDropDown: false});
     }
+
+    this.setState({isSetFocusSearchInput: false});
   }
 
   handleOnFocusSearch() {
@@ -119,6 +122,7 @@ export default class DropDownSearch extends Modal {
 
   handleRemoveTextSearch() {
     this.props.form.setFieldsValue({searchRecord: ""});
+    this.setState({isSetFocusSearchInput: true});
   }
 
   renderSearchItem(record) {
@@ -153,7 +157,8 @@ export default class DropDownSearch extends Modal {
           <div className="search-icon icon-person"></div>
           <this.InputText
             name="searchRecord"
-            isAutoFocus={this.props.isAutoFocus}
+            isAutoFocus={this.props.isAutoFocus || true}
+            didUpdateMakeAutoFocus={this.state.isSetFocusSearchInput}
             className="ca-input-v1-icon-left ca-input-v1"
             placeholder={this.CATranslate("input_search_customer", this.props.locale)}
             validateStatus={this.props.customers.fetching ? "validating" : ""}

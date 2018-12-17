@@ -329,13 +329,6 @@ export default class StoreAccountList extends Component {
                         <this.TabPane tab={<this.Translate id="store_acc_account" />} key="2">
                           <this.Row>
                             <this.Col lg="4" md="4"> 
-                              <this.InputEmail
-                                data={storeAccount.list.email}
-                                name="email"
-                                label={<this.Translate id="store_acc_email" />}
-                                placeholder={this.CATranslate("store_acc_email", locale)}
-                                form={form}/>
-
                               <this.InputPassword
                                 // CURRENT PWD
                                 currentPWDName="currentPassword"

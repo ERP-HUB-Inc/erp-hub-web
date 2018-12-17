@@ -106,8 +106,6 @@ export default class SaleList extends List {
             }
 
             filter = JSON.stringify(filter);
-
-            console.log("rangFilter",rangFilter);
           
             dispatch(this.action.fetch(filter,rangFilter));
 
@@ -204,14 +202,14 @@ class Column extends List {
         width: 350,
         className: "sale-report",
         align: "center",
-        render: value => this.formatDate(value)
+        render: value => this.Util.formatDate(value)
       },
       {
         title: <this.Translate id="col_sale_report_revenuse" />,
         dataIndex: "revenue",
         align: "center",
         key: "revenue",
-        
+        render: value => this.formatCurrency(value)
       },
       {
         title: <this.Translate id="col_sale_report_cost_of_good" />,

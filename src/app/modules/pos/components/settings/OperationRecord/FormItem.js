@@ -19,12 +19,11 @@ export default class FormItem extends Modal {
           name="name"
           label={<this.Translate id="text_name" />}
           placeholder={this.CATranslate("text_name", locale)}
-          required={true}
-          isAutoFocus={true}
-          min={3}
-          max={100}
           errorRequired={<this.Translate id="error_require_name" />}
           errorLenght={<this.Translate id="error_operation_record_name_length" />}
+          required={true}
+          isAutoFocus={true}
+          max={100}
           form={form}/>
         <this.DatePickers
           name="registerDate"  
