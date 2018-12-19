@@ -119,8 +119,8 @@ export class Util {
   }
 
   
-  formatDate (value, format = "DD MMMM YYYY") {
-    format = format === null || format === "" ? "DD MMMM YYYY" : format;
+  formatDate (value, format = "DD-MMM-YYYY") {
+    format = format === null || format === "" ? "DD MMM YYYY" : format;
     return moment(value).format(format);
   }
 

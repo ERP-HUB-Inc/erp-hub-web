@@ -20,6 +20,12 @@ export default class InputNumber extends Element {
     }
   }
 
+  componentDidUpdate() {
+    if (this.props.isAutoFocus && this.props.didUpdateMakeAutoFocus) {
+      this.nameInput.focus();
+    }
+  }
+
   handleNumberChange (value) {
     this.validatePrimeNumber(value);
     if (this.props.onChange != null) {

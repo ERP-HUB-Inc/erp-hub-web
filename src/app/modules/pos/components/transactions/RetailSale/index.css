@@ -35,6 +35,10 @@
     box-shadow: 0 0 4px 0 rgba(0,0,0,0.3)
 }
 
+#retail-sale #left-block .wrap-product-box-list .start-up{
+    position: relative
+}
+
 #retail-sale .wrap-receipt-type {
     flex: none
 }

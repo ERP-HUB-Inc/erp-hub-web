@@ -1,5 +1,4 @@
 import React from "react";
-import VaraintProduct from "./VaraintProduct";
 import DiscountSetup from "./DiscountSetup";
 import TaxSetting from "./TaxSetting";
 import Enum from "../../../enums";
@@ -11,9 +10,11 @@ import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
 import FormCreateCustomer from "../../../../crm/containers/customers/Customer/FormCreate";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import ProductTypeAction from "../../../../inventory/actions/products/productsType";
+import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import ConstantOpenRegistrationSale from "../../../constants/transactions/openSaleRegisration";
 import ProductAction from "../../../../inventory/actions/products/product";
 import ProductConstant from "../../../../inventory/constants/products/product";
+import ProductVariantConstant from "../../../../inventory/constants/products/productVariant";
 import CustomerDropDownSearch from "../../../../crm/components/customers/Customer/DropDownSearch";
 import ProductDropDownSearch from "../../../../inventory/components/products/Product/DropDownSearch";
 import FormOpenSaleRegistration from "../../../containers/transactions/OpenSaleRegistration/FormOpen";
@@ -25,16 +26,14 @@ import Util from "../../../../inventory/utils";
 import POSUtil from "../../../utils";
 import Component from "../../../../common/components/Component";
 import PaymentForm from "../../../containers/transactions/SaleWalkin/Payment";
+import VaraintProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
 import "./index.css";
 export default class Retail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showVariantProduct: false,
-      // isSetFocusOnSearchProduct: false,
-      testChange: false,
-      variantProductList: [],
       modalContent: null,
+      expandRowOrderIndex: null,
       expandOrderItemRow: [],
       productTaxList: [],
       categoryList: [
@@ -58,7 +57,7 @@ export default class Retail extends Component {
 
     this.handleOnSelectCategory = this.handleOnSelectCategory.bind(this);
     this.handleOnSelectProduct = this.handleOnSelectProduct.bind(this);
-    this.handleCancelVariant = this.handleCancelVariant.bind(this);
+    this.handleCancelVariantProduct = this.handleCancelVariantProduct.bind(this);
     this.handleOnAddNewCustomer = this.handleOnAddNewCustomer.bind(this);
     this.handleOnSelectProductSearchList = this.handleOnSelectProductSearchList.bind(this);
     this.handleExpandOrderItem = this.handleExpandOrderItem.bind(this);
@@ -108,6 +107,11 @@ export default class Retail extends Component {
       this.props.dispatch(OpenSaleRegistrationAction.last());
       this.props.dispatch(OpenSaleRegistrationAction.reset(ConstantOpenRegistrationSale.RESET_OPEN_SALE_REGISTRATION));
     }
+
+    if (this.props.productVariant.fetched) {
+      this.handleOnSelectProduct(this.state.selectedProduct, this.props.productVariant.list, false);// false: cause don't show popup variant product
+      this.props.dispatch(ProductVariantAction.reset(ProductVariantConstant.RESET_PRODUCT_VARIANT));
+    }
   }
 
   componentDidMount() {
@@ -125,8 +129,6 @@ export default class Retail extends Component {
     this.props.dispatch(OpenSaleRegistrationAction.showForm());
     this.props.dispatch(OpenSaleRegistrationAction.last());
 
-
-    
     // RESTORE CURRENT RECEIPT
     //this.restoreReceipt(Enum.CURRENT_RECEIPT);
   }
@@ -156,8 +158,6 @@ export default class Retail extends Component {
     }
     
   }
-  
-
   addEventKeyDownAndCaptureValueToInputSearchProduct() {
     document.addEventListener("keydown", this.getValueFromUserTypeKeyboard);
   }
@@ -202,14 +202,15 @@ export default class Retail extends Component {
     this.setState({productTaxList: POSUtil.appendProductTaxList(productOrderList)});
   }
 
-  appendProductOrder(targetList, product) {
+  appendProductOrder(targetList, product, productVariant) {
     const tax = POSUtil.getTaxFromProduct(product);
     targetList.push({
-      productId: product.id,
+      productVariantId: productVariant.id,
       name: Util.getProductName(product),
-      barcode: product.barcode,
-      price: product.price,
-      newPrice: product.price,
+      variantName: productVariant.name,
+      barcode: productVariant.barcode,
+      price: productVariant.price,
+      newPrice: productVariant.price,
       quantity: this.state.initialOrderQuantity,
       discount: this.state.initialOrderDiscount,
       discountType: this.state.initialOrderDiscountType,
@@ -310,46 +311,62 @@ export default class Retail extends Component {
     this.setState({selectedCategoryIds: [value]});
   }
 
-  handleCancelVariant() {
-    this.setState({
-      showVariantProduct: false,
-      variantProductList: []
-    });
+  handleCancelVariantProduct() {
+    this.setState({modalContent: null});
   }
 
   handleExpandOrderItem(expandOrderItemRow, productOrderIndex) {
     this.handleonSearchfails();
     if (this.state.expandOrderItemRow.includes(expandOrderItemRow)) {
-      this.setState({expandOrderItemRow: []});
+      this.setState({
+        expandOrderItemRow: [],
+        expandRowOrderIndex: productOrderIndex
+      });
     } else {
-      this.setState({expandOrderItemRow: [expandOrderItemRow]});
+      this.setState({
+        expandOrderItemRow: [expandOrderItemRow],
+        expandRowOrderIndex: productOrderIndex
+      });
     }
   }
 
-  handleOnSelectProduct(product) {
+  handleOnSelectProduct(product, productVariant, isRequestVariantForm = true) {
 
+    // POPUP INPUT CASH REQUIRE IF YOU NOT YET OPEN
     if (this.openFormSaleRegisration()) {
       return;
     }
 
-    if (product.quantity <= 0) {
-      this.Message.error(`${Util.getProductName(product)}: ${this.CATranslate("text_out_of_stock", this.props.locale)}`);
+    if (product.quantity <= 0 || (productVariant && productVariant.quantity <= 0)) {
+      let varinatName = productVariant ? `(${productVariant.name})` : "";
+      this.Message.error(`${Util.getProductName(product)}${varinatName}: ${this.CATranslate("text_out_of_stock", this.props.locale)}`);
+      return;
+    }
+
+    let isProductVariant = product.productOption === InventoryEnum.PRODUCT_VARIANT;
+    if (isProductVariant && isRequestVariantForm) {
+      this.setState({
+        selectedProduct: product,
+        modalContent: <VaraintProduct
+          product={product}
+          handleCancel={this.handleCancelVariantProduct} />
+      });
       return;
     }
 
     const existingProductOrderList = this.state.productOrderList;
     if (existingProductOrderList.length === 0) {
-      this.appendProductOrder(existingProductOrderList, product);
+      this.appendProductOrder(existingProductOrderList, product, productVariant);
     } else {
       let isNotTheSame = true;
       existingProductOrderList.forEach((productOrder, productOrderIndex) => {
-        if (productOrder.productId === product.id) {
+        if (productOrder.productVariantId === productVariant.id) {
           isNotTheSame = false;
           existingProductOrderList[productOrderIndex]["quantity"] += this.state.initialOrderQuantity;
         }
       });
       if (isNotTheSame) {
-        this.appendProductOrder(existingProductOrderList, product);
+        this.appendProductOrder(existingProductOrderList, product, productVariant);
       }
     }
 
@@ -358,18 +375,10 @@ export default class Retail extends Component {
     this.setState({productOrderList: existingProductOrderList});
 
     this.saveReceipt(Enum.CURRENT_RECEIPT);
-    // if (value.productVariantToProduct.length > 0) {
-    //   this.setState({
-    //     showVariantProduct: true,
-    //     variantProductList: value.productVariantToProduct
-    //   });
-    // } else {
-      
-    // }
   }
 
-  handleOnRemoveProductFromOrderList(product) {
-    const productOrderList = this.state.productOrderList.filter(productOrder => productOrder.productId !== product.productId);
+  handleOnRemoveProductFromOrderList(productVariant) {
+    const productOrderList = this.state.productOrderList.filter(productOrder => productOrder.productVariantId !== productVariant.productVariantId);
     this.setState({
       productOrderList,
       isDiscountHasAdded: productOrderList.length > 0 ? this.state.isDiscountHasAdded : false
@@ -394,7 +403,8 @@ export default class Retail extends Component {
   }
 
   handleOnChangOrderFieldBlur(){
-    this.isSetFocusOnSearchProduct = true;
+    // this.isSetFocusOnSearchProduct = true;
+    this.setState({expandRowOrderIndex: null});
   }
 
   handleonSearchfails(){
@@ -468,18 +478,15 @@ export default class Retail extends Component {
     });
   }
 
-  handleOnSelectProductSearchList(value) {
+  handleOnSelectProductSearchList(product) {
     if (this.openFormSaleRegisration()) {
       return;
     }
     
-    if (value.productVariantToProduct && value.productVariantToProduct.length > 0) {
-      this.setState({
-        showVariantProduct: true,
-        variantProductList: this.state.productList[0].options
-      });
+    if (product.productVariants && product.productVariants.length > 0) {
+      // TO DO: Show Variant Product POPUP
     } else {
-      this.handleOnSelectProduct(value);
+      this.handleOnSelectProduct(product);
     }
   }
 
@@ -514,7 +521,6 @@ export default class Retail extends Component {
 
   handleOnMakePayment() {
     this.handleonSearchfails();
-    console.log("handle on change field");
     if (this.openFormSaleRegisration()) {
       return;
     }
@@ -548,10 +554,8 @@ export default class Retail extends Component {
         form={this.props.form}
         discountValue={this.state.discountValue.value}
         discountType={this.state.discountValue.type}
-        callBack={this.handleGetDiscount} 
-      />,
+        callBack={this.handleGetDiscount} />,
       isDiscountHasAdded: true,
-      
     });
     this.isSetFocusOnSearchProduct = false;
   }
@@ -655,7 +659,6 @@ export default class Retail extends Component {
         )
         :
         <div style={{display: "flex", alignItems: "center", margin: "0 auto"}}>
-          {/* <this.Translate id="placeholder_product_list_search" /> */}
           <img src={`${this.Util.getGeneralImage("storeVein/no-product-found.png").url}`} style={{width: 150}}  alt=""/>
         </div>
     );
@@ -715,7 +718,6 @@ export default class Retail extends Component {
               <this.Row className="wrap-category">
                 {
                   this.props.productsType.fetching ?
-                    // <this.Spin style={{position: "absolute", left: 0, right: 0, paddingTop: 15}}/>
                     <StartUp />
                     :
                     this.state.categoryList.concat(this.props.productsType.list).map((category, index) =>
@@ -735,7 +737,6 @@ export default class Retail extends Component {
               <this.Row className="wrap-product-box-list">
                 {
                   this.props.products.fetching ?
-                    // <this.Spin style={{position: "absolute", left: 0, right: 0, paddingTop: 15}}/>
                     <StartUp />
                     :
                     this.renderProductList()
@@ -776,15 +777,22 @@ export default class Retail extends Component {
               <div className="product-order-list">
                 {
                   this.state.productOrderList.map((productOrder, productOrderIndex) => 
-                    <div className={`product-order-item ${this.state.expandOrderItemRow.includes(productOrder.productId) ? "expanded" : ""}`} key={productOrderIndex}>
+                    <div className={`product-order-item ${this.state.expandOrderItemRow.includes(productOrder.productVariantId) ? "expanded" : ""}`} key={productOrderIndex}>
                       <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                        <div className="item" onClick={() => this.handleExpandOrderItem(productOrder.productId, productOrderIndex)}>
-                          <div className={`epxand-icon ${this.state.expandOrderItemRow.includes(productOrder.productId) ? "icon-move-down" : "icon-next"}`}></div>
+                        <div className="item" onClick={() => this.handleExpandOrderItem(productOrder.productVariantId, productOrderIndex)}>
+                          <div className={`epxand-icon ${this.state.expandOrderItemRow.includes(productOrder.productVariantId) ? "icon-move-down" : "icon-next"}`}></div>
                           <div className="description">
                             <div className="name">{productOrder.name}</div>
-                            <div className="barcode-number">{<this.Translate id="text_product_code"/>}: {productOrder.barcode}</div>
+                            {/* <div className="barcode-number">
+                              {<this.Translate id="text_product_code"/>}: {productOrder.barcode}
+                            </div> */}
+                            <div className="barcode-number">
+                              {productOrder.variantName}
+                            </div>
                           </div>
-                          <div className="quantity">{productOrder.quantity}x</div>
+                          <div className="quantity">
+                            {productOrder.quantity}x
+                          </div>
                           <div className="price">
                             {
                               productOrder.discount > 0 ?
@@ -813,6 +821,8 @@ export default class Retail extends Component {
                             isHideTool={true}
                             precision={0}
                             isAutoSelect={true}
+                            isAutoFocus={true}
+                            didUpdateMakeAutoFocus={this.state.expandRowOrderIndex === productOrderIndex}
                             form={this.props.form}/>
                           <this.InputNumber
                             name={`price[${productOrderIndex}]`}
@@ -928,14 +938,6 @@ export default class Retail extends Component {
                 </this.Col>
               </div>
             </this.Col>
-            {
-              this.state.showVariantProduct ?
-                <VaraintProduct
-                  dataSource={this.state.variantProductList}
-                  handleCancel={this.handleCancelVariant}/>
-                :
-                ""
-            }
             {this.state.modalContent}
           </this.Row>
     );
