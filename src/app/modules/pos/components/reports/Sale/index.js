@@ -46,7 +46,7 @@ export default class SaleList extends List {
           revenue: saleReport.revenue,
           cost: this.formatCurrency(saleReport.cost),
           profit: this.formatCurrency(saleReport.profit),
-          margin: saleReport.profit + "%"
+          margin: saleReport.margin + "%"
         });
       });
     }
