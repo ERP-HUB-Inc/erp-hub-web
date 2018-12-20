@@ -230,7 +230,7 @@ class Column extends List {
         dataIndex: "margin",
         align: "center",
         key: "margin",
-        render: value => value + "%"
+        render: value => this.Util.formatPercentage(value)
       }
     ];
   }

@@ -14,6 +14,7 @@ export default class Modal extends Component {
     this.content = "";
     this.modal1 = "";
     this.width = "520px";
+    this.height = "";
     this.wrapClassName = "";
     this.responseError = "";
     this.isRepsonseBackError = "none";
@@ -165,10 +166,12 @@ export default class Modal extends Component {
         
         <this.Modal
           style={this.style}
+          bodyStyle={this.bodyStyle}
           mask={this.mask}
           maskClosable={this.maskClosable}
           title={this.title}
           width={this.width}
+          height={this.height}
           keyboard={true}
           wrapClassName={`vertical-center-modal ${this.wrapClassName}`}
           visible={true}

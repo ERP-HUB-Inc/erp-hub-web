@@ -176,10 +176,6 @@
     padding-top: 60px
 }
 
-.pos-payment .ant-modal {
-    height: 700px
-}
-
 .pos-payment .ant-modal-body {
     padding: 0 15px !important
 }

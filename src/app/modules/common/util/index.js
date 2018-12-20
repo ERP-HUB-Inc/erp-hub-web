@@ -197,6 +197,28 @@ export class Util {
     };
   }
 
+  formatPercentage(n, position = 0) {
+    let percentage = "%";
+
+    let unsigne = "";
+    if (n < 0) {
+      n = Math.abs(n);
+      unsigne = "-";
+    }
+    // 0: BEFORE, 1: AFTER
+    let result = parseFloat(n).toFixed(2).replace(/./g, function(c, i, a) {
+      return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+    });
+
+    if (position === 0) {
+      result = `${percentage}${result}`;
+    } else {
+      result = `${result}${percentage}`;
+    }
+
+    return `${unsigne}${result}`;
+  }
+
   formatCurrency(n, currency = "$", position = 0) {
     let unsigne = "";
     if (n < 0) {

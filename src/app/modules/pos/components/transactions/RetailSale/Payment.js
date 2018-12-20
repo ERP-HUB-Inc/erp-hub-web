@@ -21,7 +21,8 @@ export default class Payment extends Modal {
     };
     this.paymentMethodSelectedIndex = null;
     this.wrapClassName = "pos-payment";
-    this.width = "70%";
+    this.width = window.innerWidth < 1000 ? window.innerWidth : 1000;
+    this.height = window.innerHeight < 700 ? window.innerHeight : 700;
     this.currentUser = this.getCurrentUser();
     this.handleOnMakePaymentWithCash = this.handleOnMakePaymentWithCash.bind(this);
     this.handleOnCompletePayment = this.handleOnCompletePayment.bind(this);
@@ -39,6 +40,15 @@ export default class Payment extends Modal {
       document.getElementById("email").focus();
       this.props.dispatch(GeneralAction.sendMailReset());
     }
+  }
+  
+  handleSubmit (e) { // Here use only for protected from refresh page when hit enter while focus input payment
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        
+      }
+    });
   }
 
   calculateBalance(grandTotal, amountToPay) {
@@ -116,7 +126,7 @@ export default class Payment extends Modal {
   }
 
   handleOnMakePaymentWithCash(paymentMethod, paymentMethodIndex) {
-    this.wrapClassName += " pos-payment-paid";
+    this.wrapClassName += " pos-payment-paid"; //hidden close modal
     let amountToPay = this.props.form.getFieldValue("amountToPay"); // AMOUNT FROM INPUT OF CASHEIR
     amountToPay = parseFloat(amountToPay);
 
@@ -361,6 +371,7 @@ export default class Payment extends Modal {
                     {
                       paymentMethodList.map((paymentMethod, paymentMethodIndex) =>
                         <this.Button
+                          htmlType="submit"
                           key={paymentMethodIndex}
                           loading={this.paymentMethodSelectedIndex === paymentMethodIndex && this.props.transaction.paying} 
                           type="info"

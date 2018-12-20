@@ -45,13 +45,13 @@ export default class Receipt extends Component {
     const {
       taxTitle,
       countTax
-    } = this.props.summaryTax;
+    } = this.props.summaryTax; console.log("LOGO:", this.state.logo);
 
     return (
       <div style={{display: "none"}} id="pos-receipt-preview">
         <div style={{
           padding: "15px 15px",
-          backgroundColor: "#f5f2f2",
+          // backgroundColor: "#f5f2f2",
           margin: "0 auto",
           fontFamily: "Arial"
         }}>
