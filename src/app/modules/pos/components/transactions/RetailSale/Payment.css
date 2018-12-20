@@ -154,7 +154,7 @@
     margin-top: 50px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: end
+    justify-content: center 
 }
 
 .pos-payment-paid .ant-modal-close-x {
@@ -162,9 +162,9 @@
 }
 
 .pos-payment .payment-tool .action-button-to-pay button {
-    min-width: 30%;
+    /* min-width: 30%; */
     font-size: 11.25pt;
-    height: auto;
+    height: 70px;
     margin-bottom: 10px;
     letter-spacing: 2px;
     padding-top: 8px;

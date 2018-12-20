@@ -396,19 +396,19 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="text_discount" />,
-        dataIndex: "discount",
-        key: "discount",
-        render: discount => this.formatCurrency(discount),
-        sorter: true
-      },
-      {
         title: <this.Translate id="text_tax" />,
         dataIndex: "tax",
         key: "tax",
         render: (text, record, index) => {
           return this.formatCurrency(record.total - record.totalExcludeTax);
         },
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_discount" />,
+        dataIndex: "discount",
+        key: "discount",
+        render: discount => this.formatCurrency(discount),
         sorter: true
       },
       {

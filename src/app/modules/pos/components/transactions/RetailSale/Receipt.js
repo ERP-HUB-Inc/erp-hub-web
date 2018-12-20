@@ -1,6 +1,7 @@
 import React from "react";
 import JsBarcode from "jsbarcode";
 import Component from "../../../../common/components/Component";
+import "./Receipt.css";
 export default class Receipt extends Component {
   constructor(props) {
     super(props);
@@ -45,7 +46,7 @@ export default class Receipt extends Component {
     const {
       taxTitle,
       countTax
-    } = this.props.summaryTax; console.log("LOGO:", this.state.logo);
+    } = this.props.summaryTax;
 
     return (
       <div style={{display: "none"}} id="pos-receipt-preview">
@@ -58,10 +59,10 @@ export default class Receipt extends Component {
           <table style={{color: "rgb(142, 136, 136)", fontSize: "8pt", backgroundColor: "white", margin: "auto", width: "120mm", padding: 5}}>
             <tbody><tr>
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>
-                <div style={{width: 100, position: "relative", borderRadius: 100, margin: "auto", overflow: "hidden"}}>
+                <div style={{width: 100, position: "relative", margin: "auto"}}>
                   {
                     this.state.logo ?
-                      <img alt="" src={this.state.logo} style={{position: "absolute", left: 0, right: 0, bottom: 0, top: 0, margin: "auto"}} />
+                      <img alt="" src={this.state.logo} />
                       :
                       ""
                   }

@@ -1,0 +1,6 @@
+@media print{
+    img{
+         display: inline;
+         visibility: visible;
+    }
+}

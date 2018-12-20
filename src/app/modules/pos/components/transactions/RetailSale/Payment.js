@@ -41,7 +41,7 @@ export default class Payment extends Modal {
       this.props.dispatch(GeneralAction.sendMailReset());
     }
   }
-  
+
   handleSubmit (e) { // Here use only for protected from refresh page when hit enter while focus input payment
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -125,7 +125,7 @@ export default class Payment extends Modal {
     }
   }
 
-  handleOnMakePaymentWithCash(paymentMethod, paymentMethodIndex) {
+  handleOnMakePaymentWithCash(paymentMethod, paymentMethodIndex) { console.log("PaymentMethodIndex:", paymentMethodIndex);
     this.wrapClassName += " pos-payment-paid"; //hidden close modal
     let amountToPay = this.props.form.getFieldValue("amountToPay"); // AMOUNT FROM INPUT OF CASHEIR
     amountToPay = parseFloat(amountToPay);
@@ -235,7 +235,7 @@ export default class Payment extends Modal {
     
     let paymentMethodList = [];
     if (this.props.paymentMethodList) {
-      paymentMethodList = this.props.paymentMethodList.list;
+      paymentMethodList = this.Util.chuckCollection(this.props.paymentMethodList.list, 2);
     }
 
     if (this.props.transaction.showForm) {
@@ -369,16 +369,19 @@ export default class Payment extends Modal {
                   </div>
                   <div className="action-button-to-pay">
                     {
-                      paymentMethodList.map((paymentMethod, paymentMethodIndex) =>
-                        <this.Button
-                          htmlType="submit"
-                          key={paymentMethodIndex}
-                          loading={this.paymentMethodSelectedIndex === paymentMethodIndex && this.props.transaction.paying} 
-                          type="info"
-                          className="mg-right"
-                          onClick={() => this.handleOnMakePaymentWithCash(paymentMethod, paymentMethodIndex)}>
-                          {paymentMethod.name}
-                        </this.Button> 
+                      paymentMethodList.map((paymentMethodListChild, index1) =>
+                        paymentMethodListChild.map((paymentMethod, index2) => 
+                          <this.Button
+                            htmlType="submit"
+                            key={parseInt(`${index1}${index2}`, 10)} // duplicate key index of loop
+                            loading={this.paymentMethodSelectedIndex === parseInt(`${index1}${index2}`, 10) && this.props.transaction.paying} 
+                            type="info"
+                            className={index2 === 0 && paymentMethodListChild.length > 1 ? "mg-right" : ""}
+                            width={`${(100/paymentMethodListChild.length)-1}%`}
+                            onClick={() => this.handleOnMakePaymentWithCash(paymentMethod, parseInt(`${index1}${index2}`, 10))}>
+                            {paymentMethod.name}
+                          </this.Button>
+                        ) 
                       )
                     }
                   </div>

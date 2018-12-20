@@ -11,8 +11,8 @@ export class Button extends React.Component {
         loading={this.props.loading}
         className={this.props.type + " " + this.props.className}
         id={this.props.id}
-        htmlType={this.props.htmlType}
-        style={this.style}>
+        style={{width: this.props.width}}
+        htmlType={this.props.htmlType}>
         {this.props.children}
       </AntButton>
     );
