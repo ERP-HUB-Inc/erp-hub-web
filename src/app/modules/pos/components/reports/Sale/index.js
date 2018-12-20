@@ -199,7 +199,7 @@ class Column extends List {
         title: "Date",
         dataIndex: "date",
         key: "date",
-        width: 350,
+        width: 200,
         className: "sale-report",
         align: "center",
         render: value => this.Util.formatDate(value)

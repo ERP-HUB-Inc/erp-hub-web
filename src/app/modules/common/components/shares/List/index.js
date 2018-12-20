@@ -313,8 +313,12 @@ export default class List extends Component {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
-          const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
-          const filter = JSON.stringify({status});
+          let filter = {};
+          if (values.status) {
+            const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
+            filter["status"] = JSON.stringify({status});
+          }
+
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
           this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
           this.setState({isClickFilter: true});

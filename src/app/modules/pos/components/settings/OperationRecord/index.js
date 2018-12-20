@@ -73,8 +73,17 @@ class Column extends List {
         title: <this.Translate id="col_operation_record_type" />,
         dataIndex: "type",
         width: 100,
+        align: "center",
         sorter: true,
-        render : type => type === this.Enum.OPERATION_TYPE.INCOME ? <this.Translate id="operation_record_income" /> : <this.Translate id="operation_record_expense" />
+        render: (text, record) => {
+          let colorIndex = 0;
+          let type = <this.Translate id="operation_record_income" />;
+          if (record.type === this.Enum.OPERATION_TYPE.EXPENSE) {
+            colorIndex = 1;
+            type = <this.Translate id="operation_record_expense" />;
+          }
+          return <this.Tag color={this.colorOperationType[colorIndex]} style={{marginRight: 0}} className="text-center label-stock-status">{type}</this.Tag>;
+        }
       },
       {
         title: <this.Translate id="text_amount" />,
@@ -82,13 +91,7 @@ class Column extends List {
         width: 150,
         align: "right",
         sorter: true,
-        render: (text, record) => {
-          let colorIndex = 0;
-          if (record.type === this.Enum.OPERATION_TYPE.EXPENSE) {
-            colorIndex = 1;
-          }
-          return <this.Tag color={this.colorOperationType[colorIndex]} style={{marginRight: 0}} className="text-center label-stock-status">{this.Util.formatCurrency(record.amount, "")}</this.Tag>;
-        }
+        render: amount => this.Util.formatCurrency(amount, "")
       }
     ];
   }

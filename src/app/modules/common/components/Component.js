@@ -248,6 +248,7 @@ export default class Component extends React.Component {
   }
 
   formatCurrency(value) {
+    let temp = value;
     const currentSetting = this.Util.getSetting();
     let currency = "";
     let currencyPosition = 0;
@@ -255,7 +256,9 @@ export default class Component extends React.Component {
       currency = currentSetting.currency;
       currencyPosition = currentSetting.currencyPosition;
     }
-    return this.Util.formatCurrency(value, currency, currencyPosition);
+
+    temp = this.Util.formatCurrency(Math.abs(temp), currency, currencyPosition);
+    return value < 0 ? `(${temp})` : temp;
   }
 
   getImageFromUpload(value, key = "image") {

@@ -25,7 +25,8 @@
     display: none;
 }
 
-.main-profit-and-lost-report tr:nth-child(odd) {
+.main-profit-and-lost-report tr:nth-child(odd),
+.main-profit-and-lost-report tr:nth-child(even) {
     background-color: white !important;
 }
 
@@ -37,8 +38,28 @@
 
 .main-profit-and-lost-report .devide-main-profit-layout {
     display: grid;
-    grid-template-columns: auto auto;
-    margin-bottom: 112px;
+    grid-template-columns: auto auto
+}
+
+.main-profit-and-lost-report .devide-main-profit-layout .ant-table-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.main-profit-and-lost-report .devide-main-profit-layout .ant-table-placeholder,
+.main-profit-and-lost-report .ant-table-wrapper {
+    min-height: 340px
+}
+
+.main-profit-and-lost-report .devide-main-profit-layout .ant-table table tr th {
+    font-size: 10.5pt;
+    text-transform: uppercase;
+    color: #4D4F5C !important
+}
+
+.main-profit-and-lost-report .devide-main-profit-layout .ant-table {
+    background-color: #eaeaea
 }
 
 .main-profit-and-lost-report .net-income {
@@ -46,8 +67,8 @@
     height: 37px;
     padding: 7px;
     text-align: center;
-    font-size: 10pt;
-    color: #9A9A9A;
+    font-size: 10.5pt;
+    color: #4D4F5C;
 }
 
 .main-profit-and-lost-report .ant-table-content {
@@ -56,7 +77,11 @@
 
 
 .main-profit-and-lost-report .ant-table-wrapper {
-    border: 1px solid #EAEAEA !important;
+    border-right: 1px solid #EAEAEA !important
+}
+
+.main-profit-and-lost-report .ant-table-wrapper:first-child {
+    border-left: 1px solid #EAEAEA !important
 }
 
 .main-profit-and-lost-report .ant-table-thead > tr:not(:last-child) > th[colspan] {
@@ -75,11 +100,11 @@
 .main-profit-and-lost-report .type {
     text-align: center;
     color: #9A9A9A;
-    font-size: 10pt;
-}
-
-.main-profit-and-lost-report .type span.type-value {
-    margin-left: 47px;
+    font-size: 10.5pt;
+    display: flex;
+    margin-top: 50px;
+    flex-direction: column;
+    justify-content: flex-end
 }
 
 .btn-profit-and-lost {

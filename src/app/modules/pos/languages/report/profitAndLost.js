@@ -1,9 +1,9 @@
 export default {
   
   "col_profit_and_lost_revenus": [
-    "Revenus",
-    "Revenus",
-    "Revenus"
+    "Revenue",
+    "Revenue",
+    "Revenue"
   ],
 
   "col_profit_and_lost_expense": [
@@ -18,23 +18,35 @@ export default {
     "Net Income"
   ],
 
-  "place_holder_profit_and_lost_report_type": [
+  "sale_report_type": [
     "Pleace Select Report Type",
     "Pleace Select Report Type",
     "Pleace Select Report Type"
   ],
 
   "select_profit_and_lost_operation_report_type": [
-    "Operation Profit And Lost",
-    "Operation Profit And Lost",
-    "Operation Profit And Lost"
+    "Operation Profit and Lost",
+    "Operation Profit and Lost",
+    "Operation Profit and Lost"
   ],
 
   "select_profit_and_lost_sale_report_type": [
-    "Sale Profit And Lost",
-    "Sale Profit And Lost",
-    "Sale Profit And Lost"
+    "Sale Profit and Lost",
+    "Sale Profit and Lost",
+    "Sale Profit and Lost"
   ],
+
+  "no_peration_revenue": [
+    "No operation revenue",
+    "No operation revenue",
+    "No operation revenue"
+  ],
+
+  "no_peration_expense": [
+    "No operation expense",
+    "No operation expense",
+    "No operation expense"
+  ]
 
 };
     

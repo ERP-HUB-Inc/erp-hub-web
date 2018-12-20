@@ -27,9 +27,13 @@ export default class ProfitAndLostList extends List {
     this.exportCsvFileName = "profit_and_lost_report.csv"; 
     this.fetchingProp = "profitAndLostReport";
     this.columnFilterWithKey = ["createdAt"];
-    this.reportType = [
-      { value: 2 ,name: <this.Translate id="select_profit_and_lost_operation_report_type" />},
-      { value: this.Enum.OPERATION_TYPE.EXPENSE,name: <this.Translate id="select_profit_and_lost_sale_report_type" />}
+    this.reportType = {
+      SALE_PROFIT: 0,
+      OPERATION_PROFIT: 1
+    };
+    this.reportTypeList = [
+      { value: this.reportType.OPERATION_PROFIT, name: <this.Translate id="select_profit_and_lost_operation_report_type" />},
+      { value: this.reportType.SALE_PROFIT, name: <this.Translate id="select_profit_and_lost_sale_report_type" />}
     ];
 
     this.service = ProfitAndLostReportService;
@@ -48,46 +52,43 @@ export default class ProfitAndLostList extends List {
     const income = [];
     const expense = [];
     let netincome= [];
-    let totalNetIncome= [];
     let incomeType= 0;
     let expenseType = 0;  
     
     if (Array.isArray(this.props.profitAndLostReport.list)) {
 
-      this.props.profitAndLostReport.list.forEach(incomeExpense => {
-  
-        if (incomeExpense.type === this.Enum.OPERATION_TYPE.INCOME) {
+      this.props.profitAndLostReport.list.forEach(operationRecord => {
+        if ([this.Enum.OPERATION_TYPE.INCOME, this.Enum.OPERATION_TYPE.SALE_INCOME].includes(operationRecord.type)) {
+          const existingAtIndex = income.findIndex(value => value.name === operationRecord.name);
+          if (existingAtIndex === -1) {
+            income.push({
+              name:  operationRecord.name,
+              amount: operationRecord.amount,
+              type: operationRecord.type,
+              isSale: operationRecord.isSale 
+            });
+          } else {
+            income[existingAtIndex]["amount"] += operationRecord.amount;
+          }
 
-          income.push({
-            name:  incomeExpense.name,
-            amount: incomeExpense.amount,
-            type: incomeExpense.type,
-            isSale: incomeExpense.isSale 
-          });
-
-          incomeType += incomeExpense.amount;
-        } else if (incomeExpense.type === this.Enum.OPERATION_TYPE.EXPENSE) {
-          
-          expense.push({
-            name: incomeExpense.name,
-            amount: incomeExpense.amount,
-            type: incomeExpense.type,
-            isSale: incomeExpense.isSale
-
-          });
-
-          expenseType += incomeExpense.amount;
-
+          incomeType += operationRecord.amount;
+        } else if ([this.Enum.OPERATION_TYPE.EXPENSE, this.Enum.OPERATION_TYPE.COGS].includes(operationRecord.type)) {
+          const existingAtIndex = expense.findIndex(value => value.name === operationRecord.name);
+          if (existingAtIndex === -1) {
+            expense.push({
+              name: operationRecord.name,
+              amount: operationRecord.amount,
+              type: operationRecord.type,
+              isSale: operationRecord.isSale
+            });
+          } else {
+            expense[existingAtIndex]["amount"] += operationRecord.amount;
+          }
+          expenseType += operationRecord.amount;
         }
-        
-
       });
-
-      totalNetIncome = incomeType - expenseType;
-      netincome.push(this.formatCurrency(totalNetIncome));
-
+      netincome = this.formatCurrency(incomeType - expenseType);
     }
-
     return {
       income,
       expense,
@@ -100,13 +101,13 @@ export default class ProfitAndLostList extends List {
   
 
   exportCsv(){
-    const { profitAndLostReport } = this.props;
+    const {profitAndLostReport} = this.props;
     let getIncomeExpenseValue = [];
     let form = this.props.form;
     
-    if(form.getFieldValue("reportType") === 2){
+    if(form.getFieldValue("reportType") === this.reportType.OPERATION_TYPE){
       this.exportCsvFileName = "Operation-profit-and-lost-report.csv";
-    }else if(form.getFieldValue("reportType") === this.Enum.OPERATION_TYPE.EXPENSE){
+    }else if(form.getFieldValue("reportType") === this.reportType.OPERATION_PROFIT){
       this.exportCsvFileName = "Sale-profit-and-lost-report.csv";
     }
 
@@ -194,19 +195,16 @@ export default class ProfitAndLostList extends List {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
           if (!err) {
-            const {dispatch} = this.props;
-
             let filter = {};
-            filter["type"] = [values.reportType];
 
-            if(values.reportType === 2){
-              filter["isSale"] = [this.Enum.OPERATION_TYPE.NONE_SALE];
-              filter["type"] = [this.Enum.OPERATION_TYPE.INCOME,this.Enum.OPERATION_TYPE.EXPENSE];
+            if(values.reportType === this.reportType.OPERATION_PROFIT){
+              filter["isSale"] = [this.Enum.IS_SALE_RECORD.NO];
+              filter["type"] = [this.Enum.OPERATION_TYPE.INCOME, this.Enum.OPERATION_TYPE.EXPENSE];
             }
 
-            if(values.reportType === this.Enum.OPERATION_TYPE.EXPENSE){
-              filter["isSale"] = [this.Enum.OPERATION_TYPE.SALE];
-              filter["type"] = [this.Enum.OPERATION_TYPE.INCOME,this.Enum.OPERATION_TYPE.EXPENSE];
+            if(values.reportType === this.reportType.SALE_PROFIT){
+              filter["isSale"] = [this.Enum.IS_SALE_RECORD.YES];
+              filter["type"] = [this.Enum.OPERATION_TYPE.SALE_INCOME, this.Enum.OPERATION_TYPE.COGS];
             }
 
             let rangFilter = "";
@@ -221,7 +219,7 @@ export default class ProfitAndLostList extends List {
             }
 
             filter = JSON.stringify(filter);  
-            dispatch(this.action.fetch(filter,rangFilter));
+            this.props.dispatch(this.action.fetch(filter,rangFilter));
             this.setState({isClickFilter: true});
         
           }
@@ -237,20 +235,19 @@ export default class ProfitAndLostList extends List {
       <div className="main-profit-and-lost-report">
         <this.Row>
           <this.Col md="8" className="devide-main-profit-layout">
-
             <this.Table 
               dataSource={incomeExpense.income}
               rowKey="incomeId"
+              locale={{emptyText: <this.Translate id="no_peration_revenue" />}}
               columns={new Column(<this.Translate id="col_profit_and_lost_revenus" />)}
-              onChange={this.handleTableChange}
-            />
+              onChange={this.handleTableChange}/>
             <this.Table 
               dataSource={incomeExpense.expense}
               rowKey="expenseId"
+              locale={{emptyText: <this.Translate id="no_peration_expense" />}}
               columns={new Column(<this.Translate id="col_profit_and_lost_expense" />,"revenuse-report")}
-              onChange={this.handleTableChange}
-            />
-            <div className="net-income">
+              onChange={this.handleTableChange}/>
+            <div className="net-income text-uppercase">
               <this.Translate id="col_profit_and_lost_net_income" />
             </div>
             <div className="net-income">
@@ -263,6 +260,7 @@ export default class ProfitAndLostList extends List {
                 <div style={{position: "relative"}}>
                   <Doughnut
                     data={this.doughuntChat()}
+                    borderWidth={[20]}
                     option={
                       {
                         animation: {
@@ -272,27 +270,38 @@ export default class ProfitAndLostList extends List {
                           animationDuration: 0, 
                         },
                         responsiveAnimationDuration: 0,
-                        responsive: false
+                        responsive: false,
                       }
-                
                     }
-
                     legend= {
                       {
                         position: "none"
                       }  
-                    }
-                  />
+                    }/>
                   
                   <div className="type">
-                    <div><this.Translate id="col_profit_and_lost_revenus" />&nbsp;<span className="type-value">{incomeExpense.incomeType}</span></div>
-                    <div><this.Translate id="col_profit_and_lost_expense" />&nbsp;&nbsp;<span className="type-value">{incomeExpense.expenseType}</span></div>
+                    <div className="text-uppercase" style={{display: "flex", justifyContent: "space-around"}}>
+                      <div style={{textAlign: "left"}}>
+                        <this.Translate id="col_profit_and_lost_revenus" />
+                      </div>
+                      <div className="type-value">
+                        {this.formatCurrency(incomeExpense.incomeType)}
+                      </div>
+                    </div>
+                    <div className="text-uppercase" style={{display: "flex", justifyContent: "space-around", marginTop: 10}}>
+                      <div style={{textAlign: "left"}}>
+                        <this.Translate id="col_profit_and_lost_expense" />
+                      </div>
+                      <div className="type-value">
+                        {this.formatCurrency(incomeExpense.expenseType)}
+                      </div>
+                    </div>
                   </div>
                     
                 </div>                
                 :
                 <div className="no-pie-chart-image">
-                  <img src={`${this.Util.getBaseUrl()}/blank_pipe-01.svg`} alt="no-chart-data" />
+                  <img src={this.Util.getGeneralImage("storeVein/blank_pipe-01.svg").url} alt="no-chart-data" />
                 </div>  
             }
           </this.Col>
@@ -317,16 +326,12 @@ export default class ProfitAndLostList extends List {
     );
   }
 
-  renderPagination(){
-    return(<div></div>);
-  }
+  renderPagination() {}
 
   renderFilterRecord() {
-    const {form,locale} = this.props;
     const fetchingProps = this.props[this.fetchingProp];
-
     return(
-      form == null ?
+      this.props.form == null ?
         ""
         :
         <div>
@@ -336,11 +341,11 @@ export default class ProfitAndLostList extends List {
               <this.Col md="3">
                 <this.Select
                   name="reportType"
-                  placeholder={this.CATranslate("place_holder_profit_and_lost_report_type", locale)}
-                  dataSource={this.reportType}
+                  placeholder={this.CATranslate("sale_report_type", this.props.locale)}
+                  dataSource={this.reportTypeList}
                   label={<this.Translate id="input_inventory_report_type" />}
-                  defaultValue={2}
-                  form={form}/>
+                  defaultValue={this.reportType.OPERATION_PROFIT}
+                  form={this.props.form}/>
               </this.Col>
               <this.Col md="3">
                 <this.DateRangePicker
@@ -348,7 +353,7 @@ export default class ProfitAndLostList extends List {
                   label={<this.Translate id="text_date_range" />}
                   defaultValue={this.state.setDefaultDate}
                   errorRequired={<this.Translate id="errpr_text_date_range" />}
-                  form={form}/>
+                  form={this.props.form}/>
               </this.Col>
             
               <this.Col md="2" className="reorder-point-button-search report-button wrap-btn-search">
@@ -368,7 +373,6 @@ export default class ProfitAndLostList extends List {
   }
 
 }
-
 
 class Column extends List {
   constructor(title =  <this.Translate id="col_profit_and_lost_revenus" />,className) {

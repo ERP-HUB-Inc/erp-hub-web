@@ -37,7 +37,7 @@ export class DateRangePicker extends Element {
 
 DateRangePicker.defaultProps = {
   name: "name",
-  dateFormat: "YYYY/MM/DD",
+  dateFormat: "DD MMM YYYY",
   required: false
 };
 
