@@ -50,7 +50,6 @@ export default class FormItem extends Modal {
               data={this.props.formData.invoiceNo}
               placeholder={this.CATranslate("text_supplier_invoice", this.props.locale)}
               max={100}
-              min={3}
               isAutoFocus={true}
               form={this.props.form}/>
           </this.Col>

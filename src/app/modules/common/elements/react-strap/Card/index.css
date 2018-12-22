@@ -6,6 +6,10 @@
     color: #9A9A9A;
 }
 
+.wrap-card .card-footer a {
+    letter-spacing: 0.4px
+}
+
 .wrap-card {
     margin-bottom: 10px
 }
@@ -25,14 +29,15 @@
 }
 
 .card-body .card-text {
-    display: table-cell;
-    vertical-align: middle
-
+    /* display: table-cell;
+    vertical-align: middle */
+    display: flex
 }
 
 .card-body .card-text .wrap-content{
     display: flex;
     line-height: 25px;
+    align-items: center
 }
 
 .wrap-card [class^="icon-"] {
@@ -68,6 +73,7 @@
 .wrap-card .total
 {
     font-size: 11pt;
+    letter-spacing: 0.4px
 }
 
 .wrap-card .price {
@@ -83,6 +89,7 @@
 
 .wrap-card .card-footer a:hover {
     text-decoration: none;
+    color: #0d62af
 }
 
 @media only screen and (max-width: 800px) {

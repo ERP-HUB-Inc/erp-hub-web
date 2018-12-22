@@ -28,6 +28,14 @@ class Router extends Component {
       .catch(error => {
       });
 
+    const FadeInTransition = {
+      transitionName: "example",
+      transitionAppear: false,
+      transitionEnterTimeout: 500,
+      transitionEnter: true,
+      transitionLeave: false
+    };
+
     return (
       <Layout>
         {/* <Offline>
@@ -47,6 +55,8 @@ class Router extends Component {
               Object.keys(dataSource).map((key) => 
                 dataSource[key]["subItems"].map(value =>
                   <Route
+                    async
+                    transition={FadeInTransition}
                     path={value["route"]}
                     component={value["component"]} />
                 )

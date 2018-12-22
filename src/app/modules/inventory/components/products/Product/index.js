@@ -406,6 +406,8 @@ class Column extends List {
           let colorIndex = 0;
           if ("productLocations" in record) {
             quantity = Util.getProductQTYLocation(record["productLocations"]);
+          } else if ("productVariants" in record) {
+            quantity = Util.getProductQTYLocation(record["productVariants"]);
           }
           
           if (quantity === 0) {

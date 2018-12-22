@@ -1,6 +1,6 @@
 import React from "react";
 import GraphAction from "../../../../../common/actions/home";
-import {Line,Doughnut} from "react-chartjs-2";
+import {Line, Doughnut} from "react-chartjs-2";
 import Component from "../../../Component";
 import "./index.css";
 
@@ -13,9 +13,7 @@ export default class Diagram extends Component {
       {name: <this.Translate id="select_text_deactive"/>, value: this.Enum.DEACTIVE},
       {name: <this.Translate id="select_text_all_status"/>, value: this.Enum.ALL_STATE}
     ];
-
     this.groupIncomeExpenseType = this.groupIncomeExpenseType.bind(this);
-
   }
 
   groupIncomeExpenseType(){
@@ -53,24 +51,19 @@ export default class Diagram extends Component {
         <div>
           <div className="main-diagram">
             <Line
-              data={ graphChat.list }
+              data={graphChat.list}
+              borderColor="red"
               option={
                 {
-                  animation: {
-                    duration: 0, // general animation time
-                  },
-                  hover: {
-                    animationDuration: 0, // duration of animations when hovering an item
-                  },
+                  animation: {duration: 0},
+                  hover: {animationDuration: 0},
                   responsiveAnimationDuration: 0,
                   responsive: true
                 }
               }
-              legend= {{position: "top" }}
+              legend= {{position: "top"}}
               height={505}
-              width={1700}
-            />
-
+              width={1700} />
           </div>
           {
             pipeChat.fetching ? 
@@ -81,11 +74,9 @@ export default class Diagram extends Component {
               <div className="main-doughnut-chart">
                 <this.Row>
                   <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-left">
-                    <this.Row>
-                      <this.Col md="8">
-                        <this.Translate id="home_page_graph_income" />
-                      </this.Col>
-                    </this.Row>
+                    <div className="title-pie-chart">
+                      <this.Translate id="home_page_graph_income" />
+                    </div>
                     {
                       incomeExpense.income[0] && incomeExpense.income[0].labels.length > 0 ?
                         <Doughnut
@@ -111,11 +102,9 @@ export default class Diagram extends Component {
                     }
                   </this.Col>
                   <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-right">
-                    <this.Row>
-                      <this.Col md="8">
-                        <this.Translate id="home_page_graph_expense" />
-                      </this.Col>
-                    </this.Row>
+                    <div className="title-pie-chart">
+                      <this.Translate id="home_page_graph_expense" />
+                    </div>
                     {
                       incomeExpense.expense[0] && incomeExpense.expense[0].labels.length > 0 ?
                         <Doughnut
@@ -136,7 +125,7 @@ export default class Diagram extends Component {
                           legend= {{position: "left" }}
                         /> 
                         : 
-                        <div className="no-pie-chart-image">
+                        <div className="no-pie-chart-image text-center">
                           <img src={this.Util.getGeneralImage("storeVein/blank_pipe-01.svg").url} alt="no-chart-data" />
                         </div>  
                     }

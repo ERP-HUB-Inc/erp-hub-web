@@ -18,6 +18,12 @@ export default {
     "Net Income"
   ],
 
+  "no_operation": [
+    "No operation",
+    "No operation",
+    "No operation"
+  ],
+
   "sale_report_type": [
     "Pleace Select Report Type",
     "Pleace Select Report Type",

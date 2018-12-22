@@ -11,6 +11,7 @@ import {
   DatePicker,
   Tag
 } from "antd";
+import {Doughnut, Line} from "react-chartjs-2";
 import {Util} from "../../util";
 import {FormGroup, Label} from "reactstrap";
 import {Translate} from "react-localize-redux";
@@ -42,6 +43,9 @@ export default class Element extends Component {
     this.Translate = Translate;
 
     this.Util = new Util();
+
+    this.Doughnut = Doughnut;
+    this.Line = Line;
 
   }
 

@@ -12,6 +12,8 @@ export default class Form extends Modal {
       isReceivePartial: false,
       selectedReceiveType: 0
     };
+    this.width = window.innerWidth < 1200 ? window.innerWidth : 1200;
+    this.height = window.innerHeight < 800 ? window.innerHeight : 800;
     this.wrapClassName = "wrap-modal-po";
     this.confirmTextAction = <this.Translate id="text_confirm_receive"/>;
     this.confirmTitle = <this.Translate id="text_confirm_receive_title"/>;

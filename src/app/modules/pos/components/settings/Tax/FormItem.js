@@ -20,19 +20,17 @@ export default class FormItem extends Modal {
           label={<this.Translate id="text_name" />}
           placeholder={this.CATranslate("text_name", locale)}
           form={form}
+          errorRequired={<this.Translate id="error_require_name" />}
+          errorLenght={<this.Translate id="error_tax_name_length" />}
           required={true}
           isAutoFocus={true}
-          min={3}
-          max={100}
-          errorRequired={<this.Translate id="error_require_name" />}
-          errorLenght={<this.Translate id="error_tax_name_length" />} />
+          max={100} />
         <this.InputNumber
           data={formData.rate}
           name="rate"
           label={<this.Translate id="input_tax_rate" />}
           placeholder={this.CATranslate("input_tax_rate", locale)}
           form={form}
-          required={true}
           max={99999}
           errorRequired={<this.Translate id="error_require_rate" />}
           errorLength={<this.Translate id="error_tax_rate_length" />} />

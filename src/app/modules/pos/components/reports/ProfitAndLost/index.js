@@ -1,6 +1,5 @@
 import React from "react";
 import List from "../List";
-import {Doughnut} from "react-chartjs-2";
 import Constant from "../../../constants/report/profitAndLost";
 import ProfitAndLostReportAction from "../../../action/report/profitAndLost";
 import ProfitAndLostReportService from "../../../services/report/ProfitAndLostService";
@@ -13,7 +12,7 @@ export default class ProfitAndLostList extends List {
       ...this.state,
       listProfitAndLost: [],
       isNotYetLoadComponentDidUpdated: true,
-      setDefaultDate:  []
+      setDefaultDate: []
     };
 
     this.columns = new Column();
@@ -41,7 +40,6 @@ export default class ProfitAndLostList extends List {
     this.RESET_CONSTANT = Constant.RESET_PROFIT_AND_LOST_REPORT;
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
     this.groupIncomeExpenseByType = this.groupIncomeExpenseByType.bind(this);
-
   }
 
   componentDidMount(){
@@ -52,6 +50,7 @@ export default class ProfitAndLostList extends List {
     const income = [];
     const expense = [];
     let netincome= [];
+    let noOperationType = 0; // For deafult data when have record occure(blank pie chart)
     let incomeType= 0;
     let expenseType = 0;  
     
@@ -85,6 +84,8 @@ export default class ProfitAndLostList extends List {
             expense[existingAtIndex]["amount"] += operationRecord.amount;
           }
           expenseType += operationRecord.amount;
+        } else if (operationRecord.type === this.Enum.OPERATION_TYPE.NO_OPERATION) {
+          noOperationType = 0.0001;
         }
       });
       netincome = this.formatCurrency(incomeType - expenseType);
@@ -94,7 +95,8 @@ export default class ProfitAndLostList extends List {
       expense,
       netincome,
       incomeType,
-      expenseType
+      expenseType,
+      noOperationType
     };
 
   }
@@ -142,14 +144,16 @@ export default class ProfitAndLostList extends List {
       {
         labels: [
           this.CATranslate("col_profit_and_lost_revenus", this.props.locale),
-          this.CATranslate("col_profit_and_lost_expense", this.props.locale)
+          this.CATranslate("col_profit_and_lost_expense", this.props.locale),
+          this.CATranslate("no_operation", this.props.locale)
         ],
         datasets: [
           {
-            data: [incomeExpense.incomeType,incomeExpense.expenseType],
+            data: [incomeExpense.incomeType, incomeExpense.expenseType, incomeExpense.noOperationType],
             backgroundColor: [
               "#57A600",
-              "#B90000"
+              "#B90000",
+              "#F9F9F9"
             ]
           }
         ],   
@@ -229,6 +233,33 @@ export default class ProfitAndLostList extends List {
     }); 
   }
 
+  renderSummaryOnPieChar(incomeExpense) {
+    return <div className="type">
+      <div className="text-uppercase" style={{display: "flex", justifyContent: "space-between"}}>
+        <div style={{textAlign: "left", display: "flex", alignItems: "center"}}>
+          <div style={{width: 10, height: 10, marginRight: 5, backgroundColor: "#57A600"}}></div>
+          <div>
+            <this.Translate id="col_profit_and_lost_revenus" />
+          </div>
+        </div>
+        <div className="type-value">
+          {this.formatCurrency(incomeExpense.incomeType)}
+        </div>
+      </div>
+      <div className="text-uppercase" style={{display: "flex", justifyContent: "space-between", marginTop: 10}}>
+        <div style={{textAlign: "left", display: "flex", alignItems: "center"}}>
+          <div style={{width: 10, height: 10, marginRight: 5, backgroundColor: "#B90000"}}></div>
+          <div>
+            <this.Translate id="col_profit_and_lost_expense" />
+          </div>
+        </div>
+        <div className="type-value">
+          {this.formatCurrency(incomeExpense.expenseType)}
+        </div>
+      </div>
+    </div>;
+  }
+
   renderTable(){
     const incomeExpense = this.groupIncomeExpenseByType();
     return (  
@@ -256,53 +287,11 @@ export default class ProfitAndLostList extends List {
           </this.Col>
           <this.Col md="4">
             {
-              this.doughuntChat().datasets[0].data[0] > 0 || this.doughuntChat().datasets[0].data[1] > 0 ? 
-                <div style={{position: "relative"}}>
-                  <Doughnut
-                    data={this.doughuntChat()}
-                    borderWidth={[20]}
-                    option={
-                      {
-                        animation: {
-                          duration: 0, 
-                        },
-                        hover: {
-                          animationDuration: 0, 
-                        },
-                        responsiveAnimationDuration: 0,
-                        responsive: false,
-                      }
-                    }
-                    legend= {
-                      {
-                        position: "none"
-                      }  
-                    }/>
+              <div style={{position: "relative"}}>
+                <this.Doughnut dataSource={this.doughuntChat()} />
+                {this.renderSummaryOnPieChar(incomeExpense)}
                   
-                  <div className="type">
-                    <div className="text-uppercase" style={{display: "flex", justifyContent: "space-around"}}>
-                      <div style={{textAlign: "left"}}>
-                        <this.Translate id="col_profit_and_lost_revenus" />
-                      </div>
-                      <div className="type-value">
-                        {this.formatCurrency(incomeExpense.incomeType)}
-                      </div>
-                    </div>
-                    <div className="text-uppercase" style={{display: "flex", justifyContent: "space-around", marginTop: 10}}>
-                      <div style={{textAlign: "left"}}>
-                        <this.Translate id="col_profit_and_lost_expense" />
-                      </div>
-                      <div className="type-value">
-                        {this.formatCurrency(incomeExpense.expenseType)}
-                      </div>
-                    </div>
-                  </div>
-                    
-                </div>                
-                :
-                <div className="no-pie-chart-image">
-                  <img src={this.Util.getGeneralImage("storeVein/blank_pipe-01.svg").url} alt="no-chart-data" />
-                </div>  
+              </div>                
             }
           </this.Col>
         </this.Row>

@@ -3,10 +3,6 @@
 ##Screen = B/w start from 768px
 */
 @media (min-width: 768px) {
-  .wrap-modal-po .ant-modal {
-    width: 1200px !important
-  }
-
   .wrap-client-login {
     width: 632px !important
   }

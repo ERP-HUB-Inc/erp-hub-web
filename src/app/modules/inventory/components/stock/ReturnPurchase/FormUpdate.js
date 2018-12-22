@@ -9,6 +9,8 @@ export default class Form extends Modal {
   constructor(props) {
     super(props);
     this.wrapClassName = "wrap-modal-po";
+    this.width = window.innerWidth < 1200 ? window.innerWidth : 1200;
+    this.height = window.innerHeight < 800 ? window.innerHeight : 800;
     this.title = <this.Translate id="text_return_purchase" />;
     this.confirmTextAction = <this.Translate id="text_confirm_return_po"/>;
     this.confirmTitle = <this.Translate id="text_confirm_return_po_title"/>;

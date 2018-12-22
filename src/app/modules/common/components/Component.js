@@ -49,7 +49,9 @@ import
   SelectTag,
   TagButton,
   MonthsPicker,
-  WeekPickers
+  WeekPickers,
+  Doughnut,
+  Line
 } from "../elements/ant-ui";
 import {BreadcrumbTitle, Cards} from "../elements/react-strap";
 import {Util} from "../util";
@@ -178,6 +180,9 @@ export default class Component extends React.Component {
 
     this.CSVLink = CSVLink;
     this.CSVDownload = CSVDownload;
+
+    this.Doughnut = Doughnut;
+    this.Line = Line;
 
     // Util function
     this.Util = new Util();

@@ -31,4 +31,6 @@ export * from "./Loading";
 export * from "./TagButton";
 export * from "./WeekPicker";
 export * from "./MonthPicker";
+export * from "./Doughnut";
+export * from "./Line";
 
