@@ -5,33 +5,31 @@ export default class FormItem extends Modal {
   render() {
     const { form,locale,formData } = this.props;
     return (
-      <div id="scroll-layout">
-        <this.Row>
-          <this.Col md="12">
-            <this.InputText
-              name="name"
-              data={formData.name}
-              label={<this.Translate id="text_name" />}
-              placeholder={this.CATranslate("text_name", locale)}
-              errorRequired={<this.Translate id="error_require_name" />}
-              required={true}
-              isAutoFocus={true}
-              max={100}
-              min={0}
-              form={form}/> 
-          </this.Col>
-          <this.Col md="12">
-            <this.InputTextArea
-              name="description"
-              label={<this.Translate id="text_description" />}
-              data={formData.description}
-              placeholder={this.CATranslate("text_description", locale)}
-              max={255}
-              min={0}
-              form={form}/>
-          </this.Col>
-        </this.Row>
-      </div>
+      <this.Row>
+        <this.Col md="12">
+          <this.InputText
+            name="name"
+            data={formData.name}
+            label={<this.Translate id="text_name" />}
+            placeholder={this.CATranslate("text_name", locale)}
+            errorRequired={<this.Translate id="error_require_name" />}
+            required={true}
+            isAutoFocus={true}
+            max={100}
+            min={0}
+            form={form}/> 
+        </this.Col>
+        <this.Col md="12">
+          <this.InputTextArea
+            name="description"
+            label={<this.Translate id="text_description" />}
+            data={formData.description}
+            placeholder={this.CATranslate("text_description", locale)}
+            max={255}
+            min={0}
+            form={form}/>
+        </this.Col>
+      </this.Row>
     );
   }
 }

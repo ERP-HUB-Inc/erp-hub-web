@@ -68,102 +68,100 @@ export default class FormItem extends Modal {
     }
     
     return (
-      <div id="scroll-layout">
-        <this.Row id="purchase-order-form">
-          <this.Col md="12">
-            <this.Row className="ca-penel-v1 wrap-po-filter-create">
-              <this.Col md="2">
-                <this.InputText
-                  name="name"
-                  label={<this.Translate id="text_name" />}
-                  data={formData.name}
-                  placeholder={this.CATranslate("text_name", locale)}
-                  errorRequired={<this.Translate id="error_require_name" />}
+      <this.Row id="purchase-order-form">
+        <this.Col md="12">
+          <this.Row className="ca-penel-v1 wrap-po-filter-create">
+            <this.Col md="2">
+              <this.InputText
+                name="name"
+                label={<this.Translate id="text_name" />}
+                data={formData.name}
+                placeholder={this.CATranslate("text_name", locale)}
+                errorRequired={<this.Translate id="error_require_name" />}
+                required={true}
+                isAutoFocus={true}
+                max={100}
+                form={form}/> 
+            </this.Col>
+            <this.Col md="2">
+              <this.InputText
+                name="number"
+                label={<this.Translate id="input_stock_purchase_order_number" />}
+                data={formData.number}
+                handleKeyUp={this.handleCheckPONumber}
+                // validateStatus={this.props.requestOrderNumber.fetching ? "validating" : this.validateOrderNumber}
+                // help={this.errorMessageOrderNumber}
+                placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
+                errorRequired={<this.Translate id="error_require_po_number" />}
+                form={form} /> 
+            </this.Col>
+            <this.Col md="2">
+              { formData.deliveryDueDate == null ?
+                <this.DatePickers
+                  name="deliveryDueDate"
+                  label={<this.Translate id="text_due_date" />}
+                  placeholder={this.CATranslate("text_due_date", locale)}
+                  errorRequired={<this.Translate id="error_select_due_date" />}
                   required={true}
-                  isAutoFocus={true}
-                  max={100}
-                  form={form}/> 
-              </this.Col>
-              <this.Col md="2">
-                <this.InputText
-                  name="number"
-                  label={<this.Translate id="input_stock_purchase_order_number" />}
-                  data={formData.number}
-                  handleKeyUp={this.handleCheckPONumber}
-                  // validateStatus={this.props.requestOrderNumber.fetching ? "validating" : this.validateOrderNumber}
-                  // help={this.errorMessageOrderNumber}
-                  placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
-                  errorRequired={<this.Translate id="error_require_po_number" />}
-                  form={form} /> 
-              </this.Col>
-              <this.Col md="2">
-                { formData.deliveryDueDate == null ?
-                  <this.DatePickers
-                    name="deliveryDueDate"
-                    label={<this.Translate id="text_due_date" />}
-                    placeholder={this.CATranslate("text_due_date", locale)}
-                    errorRequired={<this.Translate id="error_select_due_date" />}
-                    required={true}
-                    form={form}/>
-                  :
-                  <this.DatePickers
-                    name="deliveryDueDate"
-                    defaultValue={this.Util.formatDatePicker(formData.deliveryDueDate)} 
-                    label={<this.Translate id="text_due_date" />}
-                    placeholder={this.CATranslate("text_due_date", locale)}
-                    errorRequired={<this.Translate id="error_select_due_date" />}
-                    required={true}
-                    form={form}/>
-                }
+                  form={form}/>
+                :
+                <this.DatePickers
+                  name="deliveryDueDate"
+                  defaultValue={this.Util.formatDatePicker(formData.deliveryDueDate)} 
+                  label={<this.Translate id="text_due_date" />}
+                  placeholder={this.CATranslate("text_due_date", locale)}
+                  errorRequired={<this.Translate id="error_select_due_date" />}
+                  required={true}
+                  form={form}/>
+              }
 
-              </this.Col>
-              <this.Col md="2">
-                <this.Select
-                  name="supplierId"
-                  label={<this.Translate id="text_supplier" /> }
-                  placeholder={this.CATranslate("text_supplier", locale)}
-                  errorRequired={<this.Translate id="error_require_supplier" />}
-                  defaultValue={formData.supplierId}
-                  dataSource={this.state.suppliers}
-                  valueKey="id"
-                  required={true}
-                  form={form}/>
-              </this.Col>
-              <this.Col md="2">
-                <this.InputText
-                  name="invoiceNo"
-                  label={<this.Translate id="text_supplier_invoice" />}
-                  data={formData.invoiceNo}
-                  placeholder={this.CATranslate("text_supplier_invoice",locale)}
-                  max={100}
-                  form={form}/>
-              </this.Col>
-              <this.Col md="2">
-                <this.Select
-                  name="locationId"
-                  label={<this.Translate id="text_delivery_to_location" />}
-                  placeholder={this.CATranslate("text_delivery_to_location", locale)}
-                  errorRequired={<this.Translate id="error_select_delivery_location" />}
-                  defaultValue={locationId}
-                  dataSource={this.state.locations}
-                  valueKey="id"
-                  required={true}
-                  form={form}
-                />
-              </this.Col>
-            </this.Row>
-          </this.Col>
-          <this.Col md="12" className="purchase-order-entry">
-            <SearchPO
-              dataSource={productSearch}
-              productVariant={this.props.productVariant}
-              purchaseOrderEntries={formData.purchaseOrderEntries}
-              locale={locale}
-              dispatch={dispatch}
-              form={form} />
-          </this.Col>
-        </this.Row>
-      </div>
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="supplierId"
+                label={<this.Translate id="text_supplier" /> }
+                placeholder={this.CATranslate("text_supplier", locale)}
+                errorRequired={<this.Translate id="error_require_supplier" />}
+                defaultValue={formData.supplierId}
+                dataSource={this.state.suppliers}
+                valueKey="id"
+                required={true}
+                form={form}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.InputText
+                name="invoiceNo"
+                label={<this.Translate id="text_supplier_invoice" />}
+                data={formData.invoiceNo}
+                placeholder={this.CATranslate("text_supplier_invoice",locale)}
+                max={100}
+                form={form}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="locationId"
+                label={<this.Translate id="text_delivery_to_location" />}
+                placeholder={this.CATranslate("text_delivery_to_location", locale)}
+                errorRequired={<this.Translate id="error_select_delivery_location" />}
+                defaultValue={locationId}
+                dataSource={this.state.locations}
+                valueKey="id"
+                required={true}
+                form={form}
+              />
+            </this.Col>
+          </this.Row>
+        </this.Col>
+        <this.Col md="12" className="purchase-order-entry">
+          <SearchPO
+            dataSource={productSearch}
+            productVariant={this.props.productVariant}
+            purchaseOrderEntries={formData.purchaseOrderEntries}
+            locale={locale}
+            dispatch={dispatch}
+            form={form} />
+        </this.Col>
+      </this.Row>
     );
   }
 }

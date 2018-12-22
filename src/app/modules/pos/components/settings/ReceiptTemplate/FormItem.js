@@ -11,69 +11,67 @@ export default class FormItem extends Modal {
       url: this.Util.getProductImage(formData.logo, this.Enum.IMAGE_SPACE.GENERAL).url
     };
     return (
-      <div id="scroll-layout">
-        <this.Row>
-          <this.Col md="12">
-            <this.InputText
-              name="name"
-              label={<this.Translate id="text_name" />}
-              placeholder={this.CATranslate("text_name", locale)}
-              errorLenght={<this.Translate id="error_receipt_template_name_length" />}
-              max={100}
-              data={formData.name}
-              required={true}
-              isAutoFocus={true}
-              form={form}/>
-          </this.Col>
-          <this.Col md="12">
-            <this.UploadImg 
-              name="logo" 
-              label={<this.Translate id="receipt_logo" />}
-              data={{file: image}}
-              fileList={[image]}
-              endPoint={`${this.Util.getAPIURL()}/file/v1/upload/general`}
-              endPointDelete={`${this.Util.getAPIURL()}/file/v1/general/delete`}
-              accessToken={this.Util.getAccessToken()}
-              form={form} />
-          </this.Col>
-          <this.Col md="12">
-            <this.Switchs
-              name="isShowStoreName"
-              label={<this.Translate id="input_receipt_template_is_store_name" />}
-              checked={formData.isShowStoreName}
-              form={form}/>
-          </this.Col>
-          <this.Col md="12">
-            <this.Switchs
-              name="isShowCustomerInfo"
-              label={<this.Translate id="input_receipt_template_is_customer_info" />}
-              checked={formData.isShowCustomerInfo}
-              form={form}/>
-          </this.Col>
-          <this.Col md="12">
-            <this.Switchs
-              name="isShowDevelopBy"
-              label={<this.Translate id="input_receipt_template_is_develop_by" />}
-              checked={formData.isShowDevelopBy}
-              form={form}/>
-          </this.Col>
-          <this.Col md="12">
-            <this.Switchs
-              name="isDefault"
-              label={<this.Translate id="text_is_default" />}
-              checked={formData.isDefault}
-              form={form}/>
-          </this.Col>
-          <this.Col md="12">
-            <this.Select
-              name="status"
-              label={<this.Translate id="text_status" />}
-              dataSource={this.statusDataSource}
-              defaultValue={formData.status}
-              form={form}/>
-          </this.Col>
-        </this.Row>
-      </div>
+      <this.Row>
+        <this.Col md="12">
+          <this.InputText
+            name="name"
+            label={<this.Translate id="text_name" />}
+            placeholder={this.CATranslate("text_name", locale)}
+            errorLenght={<this.Translate id="error_receipt_template_name_length" />}
+            max={100}
+            data={formData.name}
+            required={true}
+            isAutoFocus={true}
+            form={form}/>
+        </this.Col>
+        <this.Col md="12">
+          <this.UploadImg 
+            name="logo" 
+            label={<this.Translate id="receipt_logo" />}
+            data={{file: image}}
+            fileList={[image]}
+            endPoint={`${this.Util.getAPIURL()}/file/v1/upload/general`}
+            endPointDelete={`${this.Util.getAPIURL()}/file/v1/general/delete`}
+            accessToken={this.Util.getAccessToken()}
+            form={form} />
+        </this.Col>
+        <this.Col md="12">
+          <this.Switchs
+            name="isShowStoreName"
+            label={<this.Translate id="input_receipt_template_is_store_name" />}
+            checked={formData.isShowStoreName}
+            form={form}/>
+        </this.Col>
+        <this.Col md="12">
+          <this.Switchs
+            name="isShowCustomerInfo"
+            label={<this.Translate id="input_receipt_template_is_customer_info" />}
+            checked={formData.isShowCustomerInfo}
+            form={form}/>
+        </this.Col>
+        <this.Col md="12">
+          <this.Switchs
+            name="isShowDevelopBy"
+            label={<this.Translate id="input_receipt_template_is_develop_by" />}
+            checked={formData.isShowDevelopBy}
+            form={form}/>
+        </this.Col>
+        <this.Col md="12">
+          <this.Switchs
+            name="isDefault"
+            label={<this.Translate id="text_is_default" />}
+            checked={formData.isDefault}
+            form={form}/>
+        </this.Col>
+        <this.Col md="12">
+          <this.Select
+            name="status"
+            label={<this.Translate id="text_status" />}
+            dataSource={this.statusDataSource}
+            defaultValue={formData.status}
+            form={form}/>
+        </this.Col>
+      </this.Row>
     );
   }
 }

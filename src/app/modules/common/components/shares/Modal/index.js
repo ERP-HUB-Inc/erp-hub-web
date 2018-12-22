@@ -14,7 +14,7 @@ export default class Modal extends Component {
     this.content = "";
     this.modal1 = "";
     this.width = "520px";
-    this.height = "";
+    // this.height = "";
     this.wrapClassName = "";
     this.responseError = "";
     this.isRepsonseBackError = "none";
@@ -53,30 +53,6 @@ export default class Modal extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleSubmitConfirmAction = this.handleSubmitConfirmAction.bind(this);
-  }
-
-  componentDidMount(){
-    let classModalName = document.querySelector(".ant-modal-content");
-    let scrollLayoutElement = document.querySelector("#scroll-layout");
-    //if have tab 
-    let classTab =  document.querySelector(".ant-tabs-tabpane"); 
-
-    if(window.screen.availHeight < 900 && scrollLayoutElement){
-
-      if(classModalName){
-        classModalName.style.height= window.innerHeight + "px";
-      }
-
-      if(scrollLayoutElement){
-        scrollLayoutElement.classList.add("scroll");
-        if(classTab){
-          scrollLayoutElement.style.height = window.innerHeight - 240 + "px";
-        }else{
-          scrollLayoutElement.style.height = window.innerHeight - 180 + "px";
-        }
-      }
-      
-    }
   }
 
   handleSubmit() {

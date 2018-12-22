@@ -215,6 +215,11 @@ export default class PurchaseOrderLists extends List {
       this.props.dispatch(LocationAction.fetch(100));
       this.componentHasUpdated = true;
     }
+
+    if (this.props.purchaseOrderDetail.fetched) {
+      this.setState({loadingPopup: false});
+      this.props.dispatch(PurchaseAction.reset(Constant.REQUEST_PURCHASE_ORDER_DETAIL_RESET));
+    }
   }
 
   getEmailPushToSupplier(emailForPushToSupplier) {
@@ -228,6 +233,7 @@ export default class PurchaseOrderLists extends List {
   showFormEdit(rowData) {
     this.props.dispatch(PurchaseAction.detail(rowData));  
     this.setState({
+      loadingPopup: true,
       modalConten: <FormUpdate
         callBackGetEmail={this.getEmailPushToSupplier}
         callBackGetEmailData={this.getEmailDataForSend}/>
