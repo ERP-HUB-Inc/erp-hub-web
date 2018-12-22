@@ -109,11 +109,19 @@ export default class ProductList extends List {
       this.props.dispatch(ProductTagAction.fetch(100));
       this.componentHasUpdated = true;
     }
+
+    if (this.props.productDetail.fetched) {
+      this.setState({
+        loadingPopup: false
+      });
+      this.props.dispatch(ProductAction.reset(Constant.PARTIAL_RESET_DETAIL_PRODUCTS));
+    }
   }
 
   showFormEdit(rowData) {
     this.props.dispatch(ProductAction.requestAndShowForm(rowData));
     this.setState({
+      loadingPopup: true,
       modalConten: <FormUpdate/>
     });
   }

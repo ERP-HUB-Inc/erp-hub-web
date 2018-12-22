@@ -23,7 +23,8 @@ export default class List extends Component {
       modalConten: null, // the content that show in modal content,
       modalContent1: null,
       columns: [],
-      showExport : true
+      showExport : true,
+      loadingPopup: false
     };
 
     this.rowSelection = true;
@@ -188,11 +189,13 @@ export default class List extends Component {
 
   handleShowFormAdd() {
     if (this.action && this.formCreate) {
+      this.setState({loadingPopup: true});
       this.PrivilegeService.checkPermission(this.service.createRoute)
         .then(response => {
           this.props.dispatch(this.action.showForm());
           this.setState({
-            modalConten: this.formCreate
+            modalConten: this.formCreate,
+            loadingPopup: false
           });
         })
         .catch(error => {
@@ -583,7 +586,7 @@ export default class List extends Component {
             onClick: () => this.handleShowRecordDetail(record)
           })}
           rowSelection={rowSelection}
-          loading={fetchingProps.fetching} />
+          loading={fetchingProps.fetching || this.state.loadingPopup} />
         :
         <this.Table 
           rowSelection={this.rowSelection ? rowSelection : null}
@@ -595,7 +598,7 @@ export default class List extends Component {
             onDoubleClick:() => this.handleShowFormEdit(record),
             onClick: () => this.handleShowRecordDetail(record)
           })}
-          loading={fetchingProps.fetching} />
+          loading={fetchingProps.fetching || this.state.loadingPopup} />
     );
   }
 
