@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import history from "../router/history";
 import StartUp from "../components/StartUp";
+// import SendMail from "../../pos/components/transactions/OpenSaleRegistration/sendMail";
 
 
 export default class App extends React.Component {
@@ -58,6 +59,7 @@ export default class App extends React.Component {
         <Switch>
           <Router history={history}>
             <div style={{height: "100%"}}>
+              {/* <Route path="/send-mail" component={SendMail} /> */}
               <Route path="/signin" component={UserLogin} />
               <Route path="/store" component={LoginStore} />
               <Route path="/device" component={RegisterDevice} />
