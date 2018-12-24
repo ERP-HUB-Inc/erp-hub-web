@@ -114,6 +114,7 @@ export default class StoreAccountList extends Component {
             values["userId"] = this.client.userId;
             values["logo"] = this.getImageFromUpload(values, "logo");
             values["status"] = this.Enum.ACTIVE;
+            console.log("PPPPPP:", values);
             this.dispatch(StoreAccountAction.update(values));
           }
         });
@@ -481,7 +482,6 @@ export default class StoreAccountList extends Component {
                                   {
                                     title: <this.Translate id="text_action" />,
                                     key: "action",
-                                    align: "center",
                                     width: 50,
                                     render: (text, record, index) => {
                                       return <div className="btn-action-device">{(record.status === this.Enum.ACTIVE ?
@@ -569,7 +569,6 @@ export default class StoreAccountList extends Component {
                   </this.Button>
                 </this.Form>
               </div>
-              
         }
       </div>
     );
