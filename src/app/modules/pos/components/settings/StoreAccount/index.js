@@ -114,7 +114,6 @@ export default class StoreAccountList extends Component {
             values["userId"] = this.client.userId;
             values["logo"] = this.getImageFromUpload(values, "logo");
             values["status"] = this.Enum.ACTIVE;
-            console.log("PPPPPP:", values);
             this.dispatch(StoreAccountAction.update(values));
           }
         });
@@ -440,7 +439,7 @@ export default class StoreAccountList extends Component {
                         </this.TabPane>
                         <this.TabPane tab="Device" key="5">
                           <this.Row>
-                            <this.Col lg="4" md="4"> 
+                            <this.Col lg="4" md="4" style={{marginBottom: 20}}> 
                               <this.InputNumber
                                 data={storeAccount.list.numberOfDevice}
                                 name="deviceNumber"
@@ -452,11 +451,6 @@ export default class StoreAccountList extends Component {
                               <this.Table 
                                 dataSource={this.props.devices.list}
                                 columns={[
-                                  {
-                                    title: <this.Translate id="text_name" />,
-                                    dataIndex: "name",
-                                    key: "name"
-                                  },
                                   {
                                     title: <this.Translate id="text_number" />,
                                     dataIndex: "code",
@@ -485,9 +479,9 @@ export default class StoreAccountList extends Component {
                                     width: 50,
                                     render: (text, record, index) => {
                                       return <div className="btn-action-device">{(record.status === this.Enum.ACTIVE ?
-                                        <this.Button type="info" onClick={() => this.handleOnCopyDeviceNumber(`device-${index}`, record.status)}>{<this.Translate id="copy_device_number"/>}</this.Button>
+                                        <this.Button style={{width: 70}} type="info" onClick={() => this.handleOnCopyDeviceNumber(`device-${index}`, record.status)}>{<this.Translate id="copy_device_number"/>}</this.Button>
                                         :
-                                        <this.Button loading={this.props.renew.updating && this.renewButtonIndex === index} type="info" onClick={() => this.handleOnReNewDeviceNumber(record.id, index)}>{<this.Translate id="text_renew"/>}</this.Button>)
+                                        <this.Button style={{width: 70}} loading={this.props.renew.updating && this.renewButtonIndex === index} type="info" onClick={() => this.handleOnReNewDeviceNumber(record.id, index)}>{<this.Translate id="text_renew"/>}</this.Button>)
                                       }</div>;
                                     }
                                   }

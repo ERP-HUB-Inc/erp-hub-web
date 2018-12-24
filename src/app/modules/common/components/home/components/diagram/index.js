@@ -96,7 +96,7 @@ export default class Diagram extends Component {
                           legend= {{position: "left" }}
                         />      
                         : 
-                        <div className="no-pie-chart-image">
+                        <div className="no-pie-chart-image text-center">
                           <img src={this.Util.getGeneralImage("storeVein/blank_pipe-01.svg").url} alt="no-chart-data"  />
                         </div>
                     }
