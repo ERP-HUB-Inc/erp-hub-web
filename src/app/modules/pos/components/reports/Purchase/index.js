@@ -73,7 +73,8 @@ export default class PurchaseList extends List {
         dataIndex: "step",
         key: "step",
         width: 100,
-        render: step => step in this.PO_STEP_STR ? this.PO_STEP_STR[step].name : ""
+        // render: step => step in this.PO_STEP_STR ? this.PO_STEP_STR[step].name : ""
+        render: step => step in this.PO_STEP_STR ? <this.Tag color={this.PO_STEP_STR[step].color} className="text-uppercase text-center po-step-tag">{this.PO_STEP_STR[step].name}</this.Tag> : ""
       },
       {
         title: <this.Translate id="text_shipping_fee" />,
@@ -96,23 +97,15 @@ export default class PurchaseList extends List {
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
     this.columnFilterWithKey = ["name", "number", "invoiceNo", "shippingFee", "requestTotal", "returnTotal", "receiveTotal"];
     this.supplierList = [{name: <this.Translate id="text_all_supplier"/>, id: 0}];
-    this.PO_STEP_STR_EXCEL = {
-      [Enum.PO_STEP.DRAFT]: {name: this.CATranslate("purchase_order_step_draff", this.props.locale), color: "#f50"},
-      [Enum.PO_STEP.PROCESS]: {name: this.CATranslate("purchase_order_step_process", this.props.locale), color: "#2db7f5"},
-      [Enum.PO_STEP.RECEIVED]: {name: this.CATranslate("text_receive", this.props.locale), color: "#87d068"},
-      [Enum.PO_STEP.CANCEL]: {name: this.CATranslate("text_cancel", this.props.locale), color: "#108ee9"},
-      [Enum.PO_STEP.RETURN]: {name: this.CATranslate("text_return", this.props.locale), color: "blue"},
-      [Enum.PO_STEP.PAID]: {name: this.CATranslate("purchase_order_step_paid", this.props.locale), color: "green"},
+    this.PO_STEP_STR = {
+      [Enum.PO_STEP.DRAFT]: {name: this.CATranslate("purchase_order_step_draff", this.props.locale), color: this.Enum.PO_STEP_COLOR.DRAFT},
+      [Enum.PO_STEP.PROCESS]: {name: this.CATranslate("purchase_order_step_process", this.props.locale), color: this.Enum.PO_STEP_COLOR.PROCESS},
+      [Enum.PO_STEP.RECEIVED]: {name: this.CATranslate("text_receive", this.props.locale), color: this.Enum.PO_STEP_COLOR.RECEIVE},
+      [Enum.PO_STEP.CANCEL]: {name: this.CATranslate("text_cancel", this.props.locale), color: this.Enum.PO_STEP_COLOR.CANCEL},
+      [Enum.PO_STEP.RETURN]: {name: this.CATranslate("text_return", this.props.locale), color: this.Enum.PO_STEP_COLOR.RETURN},
+      [Enum.PO_STEP.PAID]: {name: this.CATranslate("purchase_order_step_paid", this.props.locale), color: this.Enum.PO_STEP_COLOR.PAID},
     };
 
-    this.PO_STEP_STR = {
-      [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color: "#f50"},
-      [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="purchase_order_step_process" />, color: "#2db7f5"},
-      [Enum.PO_STEP.RECEIVED]: {name: <this.Translate id="text_receive" />, color: "#87d068"},
-      [Enum.PO_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color: "#108ee9"},
-      [Enum.PO_STEP.RETURN]: {name: <this.Translate id="text_return" />, color: "blue"},
-      [Enum.PO_STEP.PAID]: {name: <this.Translate id="purchase_order_step_paid" />, color: "green"},
-    };
     this.ExportheadersCsv = [
       {label: this.CATranslate("text_created_at", this.props.locale), key: "createdAt"},
       {label: this.CATranslate("text_name", this.props.locale) , key: "name"},
@@ -237,7 +230,7 @@ export default class PurchaseList extends List {
           supplier: poReport.supplier.name,
           location: poReport.location.name,
           deliveryDueDate: this.formatDate(poReport.deliveryDueDate),
-          step: poReport.step in this.PO_STEP_STR_EXCEL ? this.PO_STEP_STR_EXCEL[poReport.step].name : "",
+          step: poReport.step in this.PO_STEP_STR ? this.PO_STEP_STR[poReport.step].name : "",
           shippingFee: this.formatCurrency(poReport.shippingFee),
           requestTotal: this.formatCurrency(poReport.requestTotal),
         });

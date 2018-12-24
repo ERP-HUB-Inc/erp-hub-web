@@ -5,4 +5,5 @@
 
 .main-purchase .ant-table-footer {
     border-top: none;
+    padding-right: 0 !important
 }

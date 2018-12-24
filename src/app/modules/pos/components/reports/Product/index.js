@@ -6,6 +6,7 @@ import ProductReportService from "../../../services/report/ProductService";
 import ProductTypeAction from "../../../../inventory/actions/products/productsType";
 import BrandAction from "../../../../inventory/actions/products/brand";
 import LocationAction from "../../../../pos/action/settings/storeLocation";
+import InventoryUtil from "../../../../inventory/utils"; 
 import Enum from "../../../../inventory/enums";
 import "./index.css";
 
@@ -17,9 +18,7 @@ export default class ProductList extends List {
     this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
     this.productTypeList = [{productTypeDescriptions: {name: <this.Translate id="text_all_product_type"/>}, id: 0}];
     this.columnFilterWithKey = ["name", "barcode"];
-    this.fetchingProp = "productReport";
     this.service = ProductReportService;
-    this.columnFilterWithKey = ["name", "barcode"];
     this.action = ProductReportAction;
     this.RESET_CONSTANT = Constant.RESET_PURCHASE_REPORT;
 
@@ -47,10 +46,9 @@ export default class ProductList extends List {
   }
 
   getProduct(){
-    const {productReport} = this.props;
     const getAllProductReport = [];
-    if (Array.isArray(productReport.list)) {
-      productReport.list.forEach(productReport => {
+    if (Array.isArray(this.props.list.list)) {
+      this.props.list.list.forEach(productReport => {
         getAllProductReport.push({
           productDescriptions: productReport.productDescriptions ? productReport.productDescriptions[0].name : this.emptyCell,
           barcode: productReport.barcode ? productReport.barcode : this.emptyCell,
@@ -65,28 +63,6 @@ export default class ProductList extends List {
       });
       return getAllProductReport;
     }
-  }
-
-  renderTable(){
-    return (  
-      this.props.productReport.fetching ? 
-        <div className="text-center">
-          <this.Spin/>
-        </div> 
-        :
-        <div className="main-purchase">
-          <this.Row>
-            <this.Col md="12">
-              <this.Table 
-                dataSource={ this.getProduct() }
-                columns= { this.columns }
-                locale={{emptyText: <this.Translate id="table_empty_data"/>}}
-              />
-            </this.Col>
-          </this.Row>
-        </div>
-      
-    );
   }
 
   handleSubmitFilter(e){
@@ -122,7 +98,7 @@ export default class ProductList extends List {
   }
 
   exportCsv(){
-    return(this.getProduct());
+    return this.getProduct();
   }
 
   renderActionButton(){
@@ -130,9 +106,8 @@ export default class ProductList extends List {
       <this.CSVLink
         filename={this.exportCsvFileName}
         data={this.exportCsv()}
-        headers={this.ExportheadersCsv}
-      >
-        <this.Button type="info" disabled={ this.props.productReport.list.length > 0 ? false : true }>
+        headers={this.ExportheadersCsv}>
+        <this.Button type="info" disabled={ this.props.list.list.length > 0 ? false : true }>
           <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
         </this.Button>
       </this.CSVLink>
@@ -213,28 +188,30 @@ class Column extends List {
     return [
       {
         title: <this.Translate id="text_product_name" />,
-        dataIndex: "productDescriptions",
-        key: "productDescriptions",
+        dataIndex: "name",
+        key: "name",
+        render: (text, record) => {
+          return InventoryUtil.getProductName(record);
+        }
       },
       {
         title: <this.Translate id="text_product_code" />,
         dataIndex: "barcode",
         align: "center",
         key: "barcode"
-    
       },
       {
         title: <this.Translate id="col_products_type" />,
         dataIndex: "productType",
-        key: "productType"
-    
+        key: "productType",
+        render: productType => InventoryUtil.getProductTypeDescription(productType.productTypeDescriptions, "name")
       },
       {
         title: <this.Translate id="col_products_types" />,
         dataIndex: "type",
         align: "center",
-        key: "type"
-  
+        key: "type",
+        render: type => type === Enum.TYPE_OF_PRODUCT.GOOD ? <this.Translate id="input_product_good"/> : <this.Translate id="input_product_raw_material"/>
       },
       {
         title: <this.Translate id="text_quantity" />,
@@ -245,27 +222,33 @@ class Column extends List {
       {
         title: <this.Translate id="text_product_cost" />,
         dataIndex: "cost",
-        key: "cost"
+        key: "cost",
+        render: cost => this.formatCurrency(cost)
       },
       {
         title: <this.Translate id="text_product_total_cost" />,
         dataIndex: "totalCost",
         align: "right",
         key: "totalCost",
-  
+        render: (text, record) => {
+          return this.formatCurrency(record.cost * record.quantity);
+        }
       },
       {
         title: <this.Translate id="text_price" />,
         dataIndex: "price",
         align: "right",
         key: "price",
-    
+        render: price => this.formatCurrency(price)
       },
       {
         title: <this.Translate id="text_total_price" />,
         dataIndex: "totalPrice",
         align: "right",
         key: "totalPrice",
+        render: (text, record) => {
+          return this.formatCurrency(record.price * record.quantity);
+        }
       }
     ];
   }

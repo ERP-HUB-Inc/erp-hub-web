@@ -378,11 +378,10 @@ class Column extends List {
       },
       {
         title: <this.Translate id="col_products_type" />,
+        dataIndex: "productType",
         key: "productType",
         width: 200,
-        render: (text, record) => {
-          return record.productType.productTypeDescriptions.length > 0 ?  record.productType.productTypeDescriptions[0].name : this.emptyCell;
-        }
+        render: productType => Util.getProductTypeDescription(productType.productTypeDescriptions, "name")
       },
       {
         title: <this.Translate id="text_brand" />,

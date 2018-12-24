@@ -16,7 +16,6 @@ export default class FormItem extends Modal {
               required={true}
               isAutoFocus={true}
               max={100}
-              min={3}
               form={form}/> 
           </this.Col>
         </this.Row>

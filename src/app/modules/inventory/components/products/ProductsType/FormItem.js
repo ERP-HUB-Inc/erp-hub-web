@@ -9,9 +9,7 @@ export default class FormItem extends Modal {
   }
  
   componentDidMount(){
-    super.componentDidMount();
-    const {dispatch} = this.props;
-    dispatch(LanguageAction.fetch(100));
+    this.props.dispatch(LanguageAction.fetch(100));
   }
 
   renderDescription(language, languagesIndex) {

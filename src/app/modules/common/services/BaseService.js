@@ -40,10 +40,11 @@ export default class BaseService {
 
   generateAPIUrl() {
     let host = process.env.REACT_APP_API_HOST;
+    let port = process.env.REACT_APP_API_PROD_PORT;
     if (process.env.REACT_APP_ENV === "DEV") {
       host = process.env.REACT_APP_API_DEV_HOST;
+      port = process.env.REACT_APP_API_PORT;
     }
-    const port = process.env.REACT_APP_API_PORT;
     const rootPath = process.env.REACT_APP_API_ROOT;
     const url = `${host}:${port}/${rootPath}`;
     return url;
