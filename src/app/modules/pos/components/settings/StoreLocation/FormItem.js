@@ -11,13 +11,12 @@ export default class FormItem extends Modal {
           name="name"
           label={<this.Translate id="text_name" />}
           placeholder={this.CATranslate("text_name", locale)}
-          form={form}
+          errorRequired={<this.Translate id="error_require_name" />}
+          errorLenght={<this.Translate id="error_location_name_length" />}
           required={true}
           isAutoFocus={true}
-          min={3}
-          max={100}
-          errorRequired={<this.Translate id="error_require_name" />}
-          errorLenght={<this.Translate id="error_location_name_length" />} />
+          form={form}
+          max={100} />
         <this.InputText
           data={formData.address}
           name="address"

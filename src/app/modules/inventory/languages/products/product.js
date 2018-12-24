@@ -510,9 +510,9 @@ export default {
   ],
 
   "text_general_seach_product": [
-    "Search for brand, code and notation",
-    "Search for brand, code and notation",
-    "Search for brand, code and notation"
+    "Search for brand, SKU and notation",
+    "Search for brand, SKU and notation",
+    "Search for brand, SKU and notation"
   ],
 
   // ERROR

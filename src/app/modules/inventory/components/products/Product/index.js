@@ -35,6 +35,7 @@ export default class ProductList extends List {
     this.columnExpend = new ColumnExpand(); 
     this.fetchingProp = "products";
     this.placeHolderForGeneralSearch = "text_general_seach_product";
+    this.placeHolderForGeneralSearch = "text_general_seach_product";
     this.isShowExpandable = true;
     this.rowClassName = record => record.productOption === Enum.PRODUCT_STANDARD ? "standard-product-row" : "";
     this.componentHasUpdated = false;
@@ -201,14 +202,7 @@ export default class ProductList extends List {
         :
         <this.Form onSubmit={this.handleSubmitFilter}>
           <this.Row className="main-search-layout">
-            <this.Col md="3">
-              <this.InputText
-                name="key"
-                label={<this.Translate id="text_search"/>}
-                placeholder="Search for brand, code and notation"
-                form={form}
-              />
-            </this.Col>
+            {this.renderFilterGeneralKey()}
             <this.Col md="2">
               <this.Select
                 name="locationId"

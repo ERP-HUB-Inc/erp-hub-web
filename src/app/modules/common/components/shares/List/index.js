@@ -56,6 +56,7 @@ export default class List extends Component {
     this.action = null;
     this.PrivilegeService = PrivilegeService;
     this.initializeDefaultColumn();
+    this.pageSizeOptions = ["20", "50", "80", "100"];
     this.columnNo = {};
 
     //FOR PERMISSION CHECKING OPERATION
@@ -611,7 +612,7 @@ export default class List extends Component {
       total: fetchingProps.pagination.total,
       pageSize: fetchingProps.pagination.limit,
       current: this.state.current,
-      pageSizeOptions: ["20", "50", "80", "100"]
+      pageSizeOptions: this.pageSizeOptions
     };
     return( 
       pagination.total > 0 ?

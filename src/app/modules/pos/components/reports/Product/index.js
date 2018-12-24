@@ -18,6 +18,9 @@ export default class ProductList extends List {
     this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
     this.productTypeList = [{productTypeDescriptions: {name: <this.Translate id="text_all_product_type"/>}, id: 0}];
     this.columnFilterWithKey = ["name", "barcode"];
+    this.pageSize = 50;
+    this.pageSizeOptions = ["50", "100", "150", "200"];
+    this.placeHolderForGeneralSearch = "text_general_seach_product";
     this.service = ProductReportService;
     this.action = ProductReportAction;
     this.RESET_CONSTANT = Constant.RESET_PURCHASE_REPORT;
@@ -52,7 +55,6 @@ export default class ProductList extends List {
         getAllProductReport.push({
           productDescriptions: productReport.productDescriptions ? productReport.productDescriptions[0].name : this.emptyCell,
           barcode: productReport.barcode ? productReport.barcode : this.emptyCell,
-          productType: productReport.productType.productTypeDescriptions.length > 0 ?  productReport.productType.productTypeDescriptions[0].name : this.emptyCell ,
           type: productReport.type === Enum.TYPE_OF_PRODUCT.GOOD ? this.CATranslate("input_product_good", this.props.locale) : this.CATranslate("input_product_raw_material", this.props.locale) ,
           quantity: productReport.quantity,
           cost: this.formatCurrency(productReport.cost),
@@ -71,17 +73,11 @@ export default class ProductList extends List {
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           let filter = {};
-          let locationId = 0;
+          
+          let locationId = "";
+
           if (values.locationId !== 0) {
             locationId = values.locationId;
-          }
-
-          if (values.brandId !== 0) {
-            filter["brandId"] = [values.brandId];
-          }
-
-          if (values.productTypeId !== 0) {
-            filter["productTypeId"] = [values.productTypeId];
           }
 
           filter["status"] =  [this.Enum.ACTIVE, this.Enum.DEACTIVE];
@@ -89,7 +85,9 @@ export default class ProductList extends List {
           filter = JSON.stringify(filter);
 
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
+
           this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, locationId));
+          
           this.setState({isClickFilter: true});
 
         }
@@ -124,14 +122,7 @@ export default class ProductList extends List {
         <div>
           <this.Form onSubmit={this.handleSubmitFilter}>
             <this.Row className="main-search-layout"> 
-              <this.Col md="3">
-                <this.InputText
-                  name="key"
-                  label={<this.Translate id="text_search"/>}
-                  placeholder="Search for brand, code and notation"
-                  form={form}
-                />
-              </this.Col>
+              {this.renderFilterGeneralKey()}
               <this.Col md="2">
                 <this.Select
                   name="locationId"
@@ -141,27 +132,6 @@ export default class ProductList extends List {
                   nameKey="name"
                   form={form}
                   defaultValue={this.locationList[0].id}/>
-              </this.Col>
-              <this.Col md="2">
-                <this.Select
-                  name="brandId"
-                  label={<this.Translate id="text_brand"/>}
-                  dataSource={this.brandList.concat(this.props.brands.list)}
-                  valueKey="id"
-                  nameKey="name"
-                  form={form}
-                  defaultValue={this.brandList[0].id}/>
-              </this.Col>
-              <this.Col md="2">
-                <this.Select
-                  name="productTypeId"
-                  label={<this.Translate id="text_product_type"/>}
-                  dataSource={this.productTypeList.concat(this.props.productsType.list)}
-                  defaultValue={this.productTypeList[0].id}
-                  valueKey="id"
-                  nestedName="productTypeDescriptions"
-                  nameKey="name"
-                  form={form}/>
               </this.Col>
               <this.Col md="2" className="wrap-btn-search">
                 <div className="ant-form-item-label" style={{visibility: "hidden"}}>
@@ -185,13 +155,20 @@ export default class ProductList extends List {
 class Column extends List {
   constructor(props) {
     super(props);
+    
+    this.colorStockStatus = ["#4cb64c", "#f3a638", "#c72727"];
+
     return [
       {
         title: <this.Translate id="text_product_name" />,
         dataIndex: "name",
         key: "name",
         render: (text, record) => {
-          return InventoryUtil.getProductName(record);
+          let variantName = "";
+          if (record.product.productOption === Enum.PRODUCT_VARIANT) {
+            variantName = ` / ${record.name}`;
+          }
+          return InventoryUtil.getProductName(record.product) + variantName;
         }
       },
       {
@@ -201,23 +178,34 @@ class Column extends List {
         key: "barcode"
       },
       {
-        title: <this.Translate id="col_products_type" />,
-        dataIndex: "productType",
-        key: "productType",
-        render: productType => InventoryUtil.getProductTypeDescription(productType.productTypeDescriptions, "name")
-      },
-      {
         title: <this.Translate id="col_products_types" />,
-        dataIndex: "type",
+        dataIndex: "product",
         align: "center",
-        key: "type",
-        render: type => type === Enum.TYPE_OF_PRODUCT.GOOD ? <this.Translate id="input_product_good"/> : <this.Translate id="input_product_raw_material"/>
+        key: "product",
+        render: product => product.type === Enum.TYPE_OF_PRODUCT.GOOD ? <this.Translate id="input_product_good"/> : <this.Translate id="input_product_raw_material"/>
       },
       {
         title: <this.Translate id="text_quantity" />,
         dataIndex: "quantity",
         align: "center",
-        key: "quantity"
+        key: "quantity",
+        render: (text, record) => {
+          let quantity = record.quantity;
+          let colorIndex = 0;
+          if ("productLocations" in record) {
+            quantity = InventoryUtil.getProductQTYLocation(record["productLocations"]);
+          } else if ("productVariants" in record) {
+            quantity = InventoryUtil.getProductQTYLocation(record["productVariants"]);
+          }
+          
+          if (quantity === 0) {
+            colorIndex = 1;
+          } else if (quantity < 0) {
+            colorIndex = 2;
+          }
+
+          return <this.Tag color={this.colorStockStatus[colorIndex]} className="text-center label-stock-status">{quantity}</this.Tag>;
+        }
       },
       {
         title: <this.Translate id="text_product_cost" />,

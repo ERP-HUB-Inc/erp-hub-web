@@ -24,11 +24,12 @@ export default class BaseService extends Service {
     sortOrder,
     filter, // {"column1": [value1, value2], "column2": [value1, value2]}
     searchKey, // {"column": ["columnname1", "columnname2"], "value": "hello"}
-    rangFilter
+    rangFilter,// {"column": "createdAtt", "value": [1, 100]}
+    locationId
   ) {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&rangFilter=${rangFilter}&languageId=${this.getLanguageId()}`,  
+      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}`,  
       data: this.data,
       headers: this.header
     });
