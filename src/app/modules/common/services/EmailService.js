@@ -12,7 +12,7 @@ class EmailService extends BaseService {
     let fromEmail = "";
     const currentSetting = this.Util.getSetting();
     if (currentSetting) {
-      from = currentSetting.storeName;
+      from = currentSetting.businessName;
       fromEmail = currentSetting.email;
     }
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;

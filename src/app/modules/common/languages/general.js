@@ -708,6 +708,8 @@ export default {
   ],
 
   "error_require_name": [
+    "Enter name",
+    "Enter name",
     "Enter name"
   ],
 };

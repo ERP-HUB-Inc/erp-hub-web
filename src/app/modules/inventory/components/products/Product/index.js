@@ -403,14 +403,9 @@ class Column extends List {
         width: 130,
         align: "center",
         render: (text, record) => {
-          let quantity = record.quantity;
-          let colorIndex = 0;
-          if ("productLocations" in record) {
-            quantity = Util.getProductQTYLocation(record["productLocations"]);
-          } else if ("productVariants" in record) {
-            quantity = Util.getProductQTYLocation(record["productVariants"]);
-          }
+          let quantity = this.getQTY(record);
           
+          let colorIndex = 0;
           if (quantity === 0) {
             colorIndex = 1;
           } else if (quantity < 0) {
@@ -426,7 +421,17 @@ class Column extends List {
         dataIndex: "unit",
         key: "unit",
         width: 100,
-        render: unit => unit.name
+        render: (text, record) => {
+          let quantity = this.getQTY(record);
+          return <div>
+            <div>
+              {record.unit.name}
+            </div>
+            <div className="unit-value">
+              {quantity/record.unit.multiple} {record.unit.name}
+            </div>
+          </div>;
+        }
       },
       {
         title: <this.Translate id="col_products_types" />,
@@ -438,5 +443,16 @@ class Column extends List {
       },
       this.columnStatus
     ];
+  }
+
+  getQTY(record) {
+    let quantity = record.quantity;
+    if ("productLocations" in record) {
+      quantity = Util.getProductQTYLocation(record["productLocations"]);
+    } else if ("productVariants" in record) {
+      quantity = Util.getProductQTYLocation(record["productVariants"]);
+    }
+
+    return quantity;
   }
 }

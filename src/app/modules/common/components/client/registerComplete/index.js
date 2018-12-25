@@ -39,7 +39,7 @@ export default class RegisterComplete extends Component {
           </ul>
           <ul className="main-register-complete">
             <li>Phone Number:</li>
-            <li><b>{clientRegister.response.data.storeName}</b></li>
+            <li><b>{clientRegister.response.data.phoneNumber}</b></li>
           </ul>
           <this.clearFloating />
           <div className="main-register-success">

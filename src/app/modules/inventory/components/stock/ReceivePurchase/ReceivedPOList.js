@@ -6,6 +6,7 @@ export default class ReceivedPo extends Modal {
   constructor(props){
     super(props);
     this.state = {
+      units: [],
       productLists: [],
       isNotYetLoadComponentDidUpdated: true
     };
@@ -38,6 +39,22 @@ export default class ReceivedPo extends Modal {
             <div>{record.productName}</div>
             <div className="variant-name">{record.variantName}</div>
           </div>;
+        }
+      },
+      {
+        title: <this.Translate id="text_unit" />,
+        dataIndex: "unit",
+        width: 150,
+        key: "unit",
+        align: "center",
+        render: (text, record, index) => {
+          return <this.Select
+            name={`unitId[${index}]`}
+            valueKey="id"
+            dataSource={this.state.units}
+            defaultValue={record.unitId}
+            form={this.form}
+            disabled={true} />;
         }
       },
       {
@@ -94,6 +111,10 @@ export default class ReceivedPo extends Modal {
     this.calculateTotalAmountEachRow = this.calculateTotalAmountEachRow.bind(this);
   }
 
+  componentDidMount() {
+    this.setState({units: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT))});
+  }
+
   componentDidUpdate() {
     if (this.props.receivePurchaseDetail.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
       const existingProductList = this.state.productLists;
@@ -108,6 +129,7 @@ export default class ReceivedPo extends Modal {
 
         this.state.productLists.push({
           purchaseOrderEntryId: purchaseOrderEntry.id,
+          unitId: purchaseOrderEntry.unitId,
           productName,
           variantName,
           productVariantId: purchaseOrderEntry.productVariantId,

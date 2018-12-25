@@ -53,6 +53,12 @@ export default combineReducers({
         response: action.payload.data
       };
     }
+    case Constant.RESET_REGISTER_CLIENT: {
+      return {
+        ...state,
+        submited: false
+      };
+    }
     default: 
       return state;
     }

@@ -11,6 +11,10 @@ import "./index.css";
 class ClientRegister extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      ...this.state,
+      isCompletedRegister: false
+    };
     this.values = null;
     this.validateStatus = {};
     this.componentHadUpdated = false;
@@ -71,9 +75,9 @@ class ClientRegister extends Component {
 
   render() {
     if (this.props.clientRegister.step === 2) {
-      this.nextStepContent = <ClientRegiserDetail/>;
+      this.nextStepContent = <ClientRegiserDetail />;
     } else if(this.props.clientRegister.step === 3) {
-      this.nextStepContent = <RegisterComplete/>;
+      this.nextStepContent = <RegisterComplete />;
     }
 
     return (

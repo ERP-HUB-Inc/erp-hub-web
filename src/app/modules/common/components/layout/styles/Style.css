@@ -841,6 +841,11 @@ color: #4D4F5C;
     flex-direction: column
 }
 
+.unit-value {
+    font-size: 8pt;
+    font-weight: 500;
+    color: #9A9A9A
+}
 
 /*SHARE TOGETHER*/
 .wrap-select-search ul.ant-select-dropdown-menu li.add-new-item,

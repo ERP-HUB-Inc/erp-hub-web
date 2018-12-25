@@ -1,5 +1,6 @@
 .main-search {
     height: 70px;
+    width: 250px;
     display: table;
     margin-right: auto
 }

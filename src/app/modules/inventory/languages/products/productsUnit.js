@@ -17,12 +17,6 @@ export default {
     "Unit not found"
   ],
 
-  "input_error_products_unit_name": [
-    "Please input your unit name",
-    "Please input your unit name",
-    "Please input your unit name"
-  ], 
-
   "input_error_products_in_unit": [
     "Please input your number in a unit",
     "Please input your number in a unit",

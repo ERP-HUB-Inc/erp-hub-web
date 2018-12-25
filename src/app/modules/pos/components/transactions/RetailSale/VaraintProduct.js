@@ -20,7 +20,6 @@ export default class VariantProduct extends Modal {
   }
 
   componentDidMount() {
-    super.componentDidMount();
     this.props.dispatch(ProductAction.fetchAttributes(this.props.product.id));
   }
 

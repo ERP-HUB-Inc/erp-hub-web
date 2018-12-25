@@ -187,6 +187,7 @@ class Column extends List {
       {
         title: <this.Translate id="text_quantity" />,
         dataIndex: "quantity",
+        width: 150,
         align: "center",
         key: "quantity",
         render: (text, record) => {
@@ -210,12 +211,15 @@ class Column extends List {
       {
         title: <this.Translate id="text_product_cost" />,
         dataIndex: "cost",
+        width: 150,
+        align: "right",
         key: "cost",
         render: cost => this.formatCurrency(cost)
       },
       {
         title: <this.Translate id="text_product_total_cost" />,
         dataIndex: "totalCost",
+        width: 150,
         align: "right",
         key: "totalCost",
         render: (text, record) => {
@@ -225,6 +229,7 @@ class Column extends List {
       {
         title: <this.Translate id="text_price" />,
         dataIndex: "price",
+        width: 150,
         align: "right",
         key: "price",
         render: price => this.formatCurrency(price)
@@ -232,6 +237,7 @@ class Column extends List {
       {
         title: <this.Translate id="text_total_price" />,
         dataIndex: "totalPrice",
+        width: 150,
         align: "right",
         key: "totalPrice",
         render: (text, record) => {
