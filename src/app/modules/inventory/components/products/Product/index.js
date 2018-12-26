@@ -369,10 +369,10 @@ class Column extends List {
       },
       {
         title: <this.Translate id="text_product_code" />,
-        dataIndex: "barcode",
-        key: "barcode",
+        dataIndex: "productVariants",
+        key: "productVariants",
         width: 100,
-        render: barcode => barcode ? barcode : this.emptyCell,
+        render:productVariants => productVariants.length > 0 ? productVariants[0].barcode : this.emptyCell,
         sorter: true
       },
       {
@@ -402,11 +402,11 @@ class Column extends List {
       },
       {
         title: <this.Translate id="text_price" />,
-        key: "price",
-        dataIndex: "price",
+        key: "productVariants",
+        dataIndex: "productVariants",
         width: 150,
         align: "center",
-        render: price => this.formatCurrency(price),
+        render: productVariants => productVariants.length > 0 ? this.formatCurrency(productVariants[0].price) : this.formatCurrency(0),
         sorter: true
       },
       {

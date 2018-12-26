@@ -27,13 +27,13 @@ export default class Receipt extends Component {
   }
 
   render() {
-    let storeName = "";
+    let businessName = "";
     let address = "";
     let phoneNumber = "";
     let cashier = "";
     if (this.props.currentUser) {
       if (this.props.currentUser.setting) {
-        storeName = this.props.currentUser.setting.storeName;
+        businessName = this.props.currentUser.setting.businessName;
         address = this.props.currentUser.setting.address;
         phoneNumber = this.props.currentUser.setting.phoneNumber;
       }
@@ -70,7 +70,7 @@ export default class Receipt extends Component {
               </td>
             </tr>
             <tr>
-              <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", fontSize: "30pt"}}>{storeName}</td>
+              <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", fontSize: "30pt"}}>{businessName}</td>
             </tr>
             <tr>
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>{address} {phoneNumber}</td>

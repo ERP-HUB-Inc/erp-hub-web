@@ -337,10 +337,12 @@ export default class Retail extends Component {
       return;
     }
 
-    if (product.quantity <= 0 || (productVariant && productVariant.quantity <= 0)) {
-      let varinatName = productVariant ? `(${productVariant.name})` : "";
-      this.Message.error(`${Util.getProductName(product)}${varinatName}: ${this.CATranslate("text_out_of_stock", this.props.locale)}`);
-      return;
+    if (product.serialType !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY) {
+      if (product.quantity <= 0 || (productVariant && productVariant.quantity <= 0)) {
+        let varinatName = productVariant ? `(${productVariant.name})` : "";
+        this.Message.error(`${Util.getProductName(product)}${varinatName}: ${this.CATranslate("text_out_of_stock", this.props.locale)}`);
+        return;
+      }
     }
 
     let isProductVariant = product.productOption === InventoryEnum.PRODUCT_VARIANT;
@@ -352,6 +354,9 @@ export default class Retail extends Component {
           handleCancel={this.handleCancelVariantProduct} />
       });
       return;
+    } else if (productVariant && productVariant.length > 0) {
+      productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
+      productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
     }
 
     const existingProductOrderList = this.state.productOrderList;
@@ -634,12 +639,12 @@ export default class Retail extends Component {
       this.props.products.list.length > 0 ?
         this.props.products.list.map((product, index) =>
           <this.Col md="3" className="product-box" key={index}>
-            <div onClick={() => this.handleOnSelectProduct(product)} className="product">
+            <div onClick={() => this.handleOnSelectProduct(product, product.productVariants)} className="product">
               <div className="image">
                 <this.Image url={this.Util.getProductImage(product.image).url}/>
               </div>
               {
-                product.quantity <= 0 && product.type !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY ?
+                product.quantity <= 0 && product.serialType !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY ?
                   <div className="out-of-stock"><this.Translate id="text_out_of_stock" /></div>
                   : 
                   ""
