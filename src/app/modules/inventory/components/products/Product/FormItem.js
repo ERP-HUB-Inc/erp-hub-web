@@ -489,7 +489,7 @@ export default class FormItem extends Modal {
                     form={form}/>
                 </this.Col>
 
-                <this.Col md="12">
+                {/* <this.Col md="12">
                   <this.SelectTag
                     name="tagId"
                     label={<this.Translate id="input_product_tag" />}
@@ -503,7 +503,7 @@ export default class FormItem extends Modal {
                     onDeselect={this.props.handleDeselectTag}
                     style={{ width: "100%" }}
                     form={form} />
-                </this.Col>
+                </this.Col> */}
 
                 <this.Col md="12">
                   <this.InputTextArea

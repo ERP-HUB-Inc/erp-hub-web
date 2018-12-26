@@ -66,6 +66,19 @@ export default class ProductList extends List {
       }
     }
 
+    // WHEN CREATE NEW SAVE SETTING TO LOCALE STORAGE
+    if (nextProps.brandsAdd.added) {
+      localStorage.setItem(Enum.LOCAL_SCHEMA.BRAND, JSON.stringify(nextProps.brands.list.push(nextProps.brandsAdd.response.data)));
+    }
+
+    if (nextProps.productsTypeAdd.added) {
+      localStorage.setItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE, JSON.stringify(nextProps.productsType.list.push(nextProps.productsTypeAdd.response.data)));
+    }
+
+    if (nextProps.unitsAdd.added) {
+      localStorage.setItem(Enum.LOCAL_SCHEMA.UNIT, JSON.stringify(nextProps.units.list.push(nextProps.unitsAdd.response.data)));
+    }
+
     // SAVE SETTING TO LOCALE STORAGE
     if (nextProps.brands.fetched) {
       localStorage.setItem(Enum.LOCAL_SCHEMA.BRAND, JSON.stringify(nextProps.brands.list));
@@ -243,7 +256,7 @@ export default class ProductList extends List {
                 form={form}/>
             </this.Col>
             <this.Col md="2" className="wrap-btn-search">
-              <this.Button htmlType="submit" type="info"  loading={this.state.isClickFilter && fetchingProps.fetching}>
+              <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
                 <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
               </this.Button>
             </this.Col>
