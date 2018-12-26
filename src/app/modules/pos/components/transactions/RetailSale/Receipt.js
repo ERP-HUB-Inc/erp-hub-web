@@ -59,7 +59,7 @@ export default class Receipt extends Component {
           <table style={{color: "rgb(142, 136, 136)", fontSize: "8pt", backgroundColor: "white", margin: "auto", width: "120mm", padding: 5}}>
             <tbody><tr>
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>
-                <div style={{width: 100, position: "relative", margin: "auto"}}>
+                <div style={{width: 100, position: "relative", margin: "0 auto"}}>
                   {
                     this.state.logo ?
                       <img alt="" src={this.state.logo} />

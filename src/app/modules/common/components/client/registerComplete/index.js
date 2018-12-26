@@ -45,6 +45,7 @@ export default class RegisterComplete extends Component {
           <div className="main-register-success">
             <this.Button type="info">THANKS</this.Button>
           </div>
+          {this.props.mailTemplate}
         </ParentLayout>
         :
         ""

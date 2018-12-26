@@ -8,8 +8,8 @@ class EmailService extends BaseService {
   }
 	
   send(content, email, subJect) {
-    let from = "";
-    let fromEmail = "";
+    let from = process.env.REACT_APP_SEND_FROM_LABEL;
+    let fromEmail = process.env.REACT_APP_SEND_FROM_EMAIL;
     const currentSetting = this.Util.getSetting();
     if (currentSetting) {
       from = currentSetting.businessName;

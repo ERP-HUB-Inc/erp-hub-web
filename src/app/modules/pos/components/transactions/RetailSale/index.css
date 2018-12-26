@@ -161,7 +161,7 @@
 }
 
 #retail-sale .product-order-list .product-order-item {
-    padding: 0px 15px;
+    padding: 5px 15px;
     cursor: pointer;
     border-bottom: 1px solid #ECECEC;
 }

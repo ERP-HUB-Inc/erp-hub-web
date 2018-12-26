@@ -19,6 +19,17 @@ class AuthService extends BaseService {
       }
     );
   }
+
+  logout() {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    return this.POST(
+      {
+        url: `${this.baseUrl}/logout`,
+        data: {},
+        headers: this.header
+      }
+    );
+  }
 }
   
 export default new AuthService();

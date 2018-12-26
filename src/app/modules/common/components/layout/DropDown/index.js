@@ -1,9 +1,11 @@
 import React from "react";
+import { Menu, Dropdown } from "antd";
 import Component from "../../Component";
 import history from "../../../router/history";
+import AuthService from "../../../services/AuthService";
 import "./index.css";
 import "./index.scss";
-import { Menu, Dropdown } from "antd";
+
 
 export default class MenuDropDown extends Component {
   constructor(props) {
@@ -38,6 +40,7 @@ export default class MenuDropDown extends Component {
   }
 
   handleLogOut() {
+    AuthService.logout();
     this.Util.logout(history);
   }
 

@@ -5,7 +5,9 @@ import Component from "../../Component";
 import ClientAction from "../../../actions/client";
 import ClientRegiserDetail from "../../../containers/client/registerDetail";
 import RegisterComplete from "../../../containers/client/registerComplete";
+import ConfirmRegisterEmail from "../registerComplete/ConfirmRegister";
 import ClientService from "../../../services/ClientService";
+import EmailAction from "../../../actions/email";
 import "./index.css";
 
 class ClientRegister extends Component {
@@ -13,7 +15,7 @@ class ClientRegister extends Component {
     super(props);
     this.state = {
       ...this.state,
-      isCompletedRegister: false
+      isNotYetCompletedRegister: true
     };
     this.values = null;
     this.validateStatus = {};
@@ -40,6 +42,14 @@ class ClientRegister extends Component {
         this.props.dispatch(ClientAction.startRegister(this.values, 2));
         this.props.dispatch(ClientAction.resetRequest());
       }
+    }
+
+    let element = document.getElementById("confirm-register-client");
+
+    if (this.props.clientRegister.submited && this.state.isNotYetCompletedRegister && element) {
+      element = `<html><head><title></title></head><body>${element.innerHTML}</body></html>`;
+      this.props.dispatch(EmailAction.send(`<html><head><title></title></head><body>${element}</body></html>`, "mornsophannamis@gmail.com", "Confirm Register"));
+      this.setState({isNotYetCompletedRegister: false});
     }
   }
 
@@ -77,7 +87,7 @@ class ClientRegister extends Component {
     if (this.props.clientRegister.step === 2) {
       this.nextStepContent = <ClientRegiserDetail />;
     } else if(this.props.clientRegister.step === 3) {
-      this.nextStepContent = <RegisterComplete />;
+      this.nextStepContent = <RegisterComplete mailTemplate={<ConfirmRegisterEmail data={this.props.clientRegister.response}/>} />;
     }
 
     return (
