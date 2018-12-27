@@ -47,8 +47,12 @@ class ClientRegister extends Component {
     let element = document.getElementById("confirm-register-client");
 
     if (this.props.clientRegister.submited && this.state.isNotYetCompletedRegister && element) {
+      let email = "mornsophannamis@gmail.com";
+      if (this.props.clientRegister.response && this.props.clientRegister.response.data) {
+        email = this.props.clientRegister.response.data.email;
+      }
       element = `<html><head><title></title></head><body>${element.innerHTML}</body></html>`;
-      this.props.dispatch(EmailAction.send(`<html><head><title></title></head><body>${element}</body></html>`, "mornsophannamis@gmail.com", "Confirm Register"));
+      this.props.dispatch(EmailAction.send(`<html><head><title></title></head><body>${element}</body></html>`, email, "Confirm Register"));
       this.setState({isNotYetCompletedRegister: false});
     }
   }

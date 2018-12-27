@@ -29,10 +29,10 @@ export default class ConfirmRegister extends Component {
                   </div>
                   <div style={{ lineHeight: "11px" }}>      
                     <p>
-                      <strong>Username: <a href="http://storevein.com">sopha088@gmail.com</a></strong> 
+                      <strong>Username: <a href="http://storevein.com">{this.props.data.data.email}</a></strong> 
                     </p>
                     <p>
-                      <strong>Sign-in page: <a href={`http://${this.props.data.data.storeName}storevein.com`}>https://{this.props.data.data.storeName}.storevein.com/signin</a></strong>
+                      <strong>Sign-in page: <a href={`http://${this.props.data.data.storeName}.storevein.com`}>http://{this.props.data.data.storeName}.storevein.com/signin</a></strong>
                     </p>
                   </div>
                   {
