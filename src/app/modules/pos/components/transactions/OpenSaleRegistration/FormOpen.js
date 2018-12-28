@@ -47,8 +47,9 @@ export default class Form extends Modal {
         <div>
           <this.InputNumber
             name="open"
-            label="Open Cash"
-            placeholder="Open Cash"
+            label={<this.Translate id="open_cash" />}
+            placeholder={this.CATranslate("open_cash", this.props.locale)}
+            errorRequired={<this.Translate id="error_require_cash" />}
             required={true}
             isAutoFocus={true}
             isAutoSelect={true}

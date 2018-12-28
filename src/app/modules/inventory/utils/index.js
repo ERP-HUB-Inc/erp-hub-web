@@ -65,6 +65,38 @@ class Util {
     }
   }
 
+  countProductQTYCurrentLocation(product, currentLocationId) {
+    let quantity = 0;
+    if (product.productVariants && Array.isArray(product.productVariants)) {
+      product.productVariants.forEach(productVariant => { console.log("ProductVariant:", product.productVariants);
+        if (productVariant && Array.isArray(productVariant.productLocations)) {
+          productVariant.productLocations.forEach(productLocation => {
+            if (productLocation.locationId === currentLocationId) {
+              quantity += productLocation.quantity;
+            }
+          });
+        }
+      });
+    }
+    return quantity;
+  }
+
+  countProductQTYOtherLocation(product, currentLocationId) {
+    let quantity = 0;
+    if (product.productVariants && Array.isArray(product.productVariants)) {
+      product.productVariants.forEach(productVariant => {
+        if (productVariant && Array.isArray(productVariant.productLocations)) {
+          productVariant.productLocations.forEach(productLocation => {
+            if (productLocation.locationId !== currentLocationId) {
+              quantity += productLocation.quantity;
+            }
+          });
+        }
+      });
+    }
+    return quantity;
+  }
+
   cartesian(data) {
     const f = (a, b) => [].concat(...a.map(d => b.map(e => [].concat(d, e))));
     const recurse = (a,b, ...c) => (b? recurse(f(a, b),...c): a);

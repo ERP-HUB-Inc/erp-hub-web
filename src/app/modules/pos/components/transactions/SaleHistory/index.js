@@ -8,6 +8,8 @@ import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
 import LocationAction from "../../../action/settings/storeLocation";
 import UserAction from "../../../../common/actions/users";
+import InventoryUtil from "../../../../inventory/utils";
+import InventoryEnum from "../../../../inventory/enums";
 import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
 
 export default class SaleHistoryList extends List {
@@ -139,11 +141,13 @@ export default class SaleHistoryList extends List {
     let productOrderList = [];
     if (this.Util.isValidCollectionInObj(data, "transactionEntries")) {
       data.transactionEntries.forEach(transactionEntry => {
-        if (transactionEntry.product && this.Util.isValidCollectionInObj(transactionEntry.product, "productDescriptions")) {
-          const tax = POSUtil.getTaxFromProduct(transactionEntry.product);
+        if (transactionEntry.productVariant && transactionEntry.productVariant.product) {
+          const productVariant = transactionEntry.productVariant;
+          const tax = POSUtil.getTaxFromProduct(productVariant.product);
           productOrderList.push({
             quantity: transactionEntry.quantity,
-            name: transactionEntry.product.productDescriptions.length > 0 ? transactionEntry.product.productDescriptions[0].name : "",
+            name: InventoryUtil.getProductName(productVariant.product),
+            variantName: productVariant.product.productOption === InventoryEnum.PRODUCT_VARIANT ? productVariant.name : "",
             tax: tax.taxRate/100,
             taxDescription: tax,
             price: transactionEntry.price,

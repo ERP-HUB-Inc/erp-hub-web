@@ -6,7 +6,7 @@ import Modal from "../../../../common/components/shares/Modal";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.title = "operation Record";
+    this.title = <this.Translate id="create_operation_record_title"/>;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -36,9 +36,7 @@ export default class Form extends Modal {
     this.validatorUpdateRecord(operationRecordUpdate);
     
     if (operationRecordUpdate.showForm) {
-      this.content = (
-        <FormItem formData={operationRecordUpdate.data} form={form} locale={locale}/>
-      );
+      this.content = <FormItem formData={operationRecordUpdate.data} form={form} locale={locale}/>;
       return super.render();
     } else {
       return (<div></div>);

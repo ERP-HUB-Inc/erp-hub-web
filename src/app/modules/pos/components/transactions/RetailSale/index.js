@@ -365,7 +365,7 @@ export default class Retail extends Component {
     } else {
       let isNotTheSame = true;
       existingProductOrderList.forEach((productOrder, productOrderIndex) => {
-        if (productOrder.productVariantId === productVariant.id) {
+        if (productVariant && productOrder.productVariantId === productVariant.id) {
           isNotTheSame = false;
           existingProductOrderList[productOrderIndex]["quantity"] += this.state.initialOrderQuantity;
         }
@@ -483,7 +483,7 @@ export default class Retail extends Component {
     });
   }
 
-  handleOnSelectProductSearchList(product) {
+  handleOnSelectProductSearchList(product, productVariants) {
     if (this.openFormSaleRegisration()) {
       return;
     }
@@ -491,7 +491,7 @@ export default class Retail extends Component {
     if (product.productVariants && product.productVariants.length > 0) {
       // TO DO: Show Variant Product POPUP
     } else {
-      this.handleOnSelectProduct(product);
+      this.handleOnSelectProduct(product, productVariants);
     }
   }
 
@@ -501,7 +501,7 @@ export default class Retail extends Component {
     }
 
     if (productList.length === 1) {
-      this.handleOnSelectProduct(productList[0]);
+      this.handleOnSelectProduct(productList[0], productList[0].productVariants);
       this.props.form.setFieldsValue({searchProduct: ""});
       this.props.dispatch(ProductAction.reset(ProductConstant.SEARCH_PRODUCT_RESET));
     }
@@ -772,6 +772,7 @@ export default class Retail extends Component {
                   callBack={this.handleOnAutoSelectProductAfterSearchResult}
                   handlePressEnterOnSearch={this.handleOnSelectProductSearchList}
                   handleOnBlur={this.handleOnBlurSearchProduct}
+                  searchFor={1}
                   className="ca-input-v1-icon-left ca-input-v1"
                   isAutoFocus={true || this.isSetFocusOnSearchProduct}
                   didUpdateMakeAutoFocus={this.isSetFocusOnSearchProduct}

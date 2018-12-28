@@ -213,6 +213,10 @@ export default class List extends Component {
    * it will overide in child class
    */
   handleShowFormEdit(rowData) {
+    if (this.checkIsAllowEditRecordOrNot(rowData)) {
+      return;
+    }
+
     if (this.action) {
       this.PrivilegeService.checkPermission(this.service.updateRoute)
         .then(response => {
@@ -229,6 +233,15 @@ export default class List extends Component {
           this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
         });
     }
+  }
+
+  checkIsAllowEditRecordOrNot(rowData) {
+    let isHasDefaultRecord = false;
+    if (rowData && rowData.isSystem === this.Enum.IS_SYSTEM) {
+      isHasDefaultRecord = true;
+      this.Message.warning(this.CATranslate("text_warning_edit_system_record", this.props.locale));
+    }
+    return isHasDefaultRecord;
   }
 
   checkIsAllowDeleteRecordOrNot() {

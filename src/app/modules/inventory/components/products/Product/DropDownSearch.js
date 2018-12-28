@@ -3,6 +3,7 @@ import $ from "jquery";
 import ProductAction from "../../../actions/products/product";
 import Constant from "../../../constants/products/product";
 import Enum from "../../../enums";
+import Util from "../../../utils";
 import Modal from "../../../../common/components/shares/Modal";
 import "./DropDownSearch.css";
 
@@ -47,17 +48,6 @@ export default class DropDownSearch extends Modal {
     }
   }
 
-  summaryProductLocationQTY(product) {
-    let quantity = 0;
-    if (product && product.productLocations && Array.isArray(product.productLocations)) {
-      product.productLocations.forEach(value => {
-        quantity += value.quantity;
-      });
-    }
-
-    return quantity;
-  }
-
   handlePressEnterOnSearch() {
     const currentActive = $(".ant-spin-container div.search-item-hover");
     const productId = currentActive.attr("classid");
@@ -83,6 +73,10 @@ export default class DropDownSearch extends Modal {
 
   handleOnFocusSearch() {
     this.setState({visibleDropDown: true});
+
+    if (this.props.handleOnFocusSearch) {
+      this.props.handleOnFocusSearch();
+    }
   }
 
   handleOnMouseHoverOnSearchList() {
@@ -137,7 +131,7 @@ export default class DropDownSearch extends Modal {
         clearTimeout(this.timer);
         this.timer = setTimeout(function() {
           const searchKey = JSON.stringify({column: ["name", "barcode"], value});
-          this.props.dispatch(ProductAction.search(100, 0, "", "", this.props.filter, searchKey));
+          this.props.dispatch(ProductAction.search(100, 0, "", "", this.props.filter, searchKey, this.props.searchFor));
           this.setState({visibleDropDown: true});
         }.bind(this), 200);
       } else {
@@ -153,7 +147,7 @@ export default class DropDownSearch extends Modal {
 
   renderSearchItem(product) {
     const {productDescriptions} = product;
-    const barcode = product.barcode;
+    const barcode = product.productVariants.length > 0 ? product.productVariants[0].barcode : "";
     return (
       <this.List.Item.Meta
         avatar={
@@ -178,11 +172,11 @@ export default class DropDownSearch extends Modal {
                 <div className="product-stock-status">
                   <div className="current-stock">
                     <div className="title">{<this.Translate id="text_current"/>}</div>
-                    <div className="quantity">{product.quantity}</div>
+                    <div className="quantity">{Util.countProductQTYCurrentLocation(product, this.Util.getLocationId())}</div>
                   </div>
                   <div className="other-stock">
                     <div className="title">{<this.Translate id="text_other"/>}</div>
-                    <div className="quantity">{this.summaryProductLocationQTY(product)}</div>
+                    <div className="quantity">{Util.countProductQTYOtherLocation(product, this.Util.getLocationId())}</div>
                   </div>
                 </div>
               </div>
@@ -260,5 +254,6 @@ export default class DropDownSearch extends Modal {
 }
 
 DropDownSearch.defaultProps = {
-  filter: ""
+  filter: "",
+  searchFor: 0
 };

@@ -426,6 +426,10 @@ html,
 
 
 /* SEARCH INPUT*/
+.main-searchs {
+    position: relative
+}
+
 .main-searchs input {
     width: 100%;
     border: none;
@@ -443,10 +447,10 @@ html,
 
 .main-searchs .remove-search-icon {
     position: absolute;
-    right: 15px;
+    right: 10px;
     font-size: 30px;
     cursor: pointer;
-    top: 10px
+    top: 8px
 }
 
 .main-searchs .remove-search-icon, 
@@ -465,6 +469,20 @@ html,
     box-shadow: 0 0 4px 0 rgba(0,0,0,0.3);
     line-height: 26px;
     padding: 5px
+}
+
+/* =========== CA BOX=========== */
+.ca-box {
+    background-color: white;
+    cursor: pointer;
+    border: 1.5px solid #ECECEC;
+    border-radius: 3px;
+}
+
+.ca-box:hover, .ca-box.active {
+    border: 1.5px solid #0D62AF;
+    box-shadow: 0 0 3px 2px rgba(0,138,232,.35);
+    border-color: #008ae8;
 }
 
 /* ============CA BUTTON =========== */

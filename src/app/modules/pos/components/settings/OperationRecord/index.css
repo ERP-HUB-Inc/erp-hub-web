@@ -3,35 +3,20 @@
     padding-bottom: 6px
 }
 
-.main-operation-record .main-radio .ant-radio-button-wrapper{
-    height: 50px !important;
-    width: 228px !important;
+.wrap-income-exp-box {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px
 }
 
-.main-operation-record .main-radio .radio-title {
-    position: relative; 
-    top: 8px;
-    text-transform: uppercase
+.wrap-income-exp-box .ca-box {
+    width: 49%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center
 }
 
-.main-radio .ant-radio-button-wrapper {
-    width: 48% !important;
-    padding-top: 18px
-}
-
-.main-radio .ant-radio-button-wrapper-checked{
-    border-top: 1px solid #4D4F5C !important;
-    border-right: 1px solid #4D4F5C !important;
-    border-bottom: 1px solid #4D4F5C !important
-}
-
-.main-radio .ant-radio-button-wrapper:hover {
-    border-top: 1px solid #4D4F5C !important;
-    border-right: 1px solid #4D4F5C !important;
-    border-bottom: 1px solid #4D4F5C !important;
-    border-left: 2px solid #4D4F5C !important
-}
-
-.main-radio .ant-radio-button-wrapper{
-    border-radius: 3px !important
+.wrap-income-exp-box .ca-box:first-child {
+    margin-right: 10px
 }

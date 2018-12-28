@@ -17,6 +17,7 @@ export default class FormReciptTemplateUpdate extends Modal {
       if (!err) {
         values["id"] = this.props.receiptUpdate.data.id;
         values["logo"] = this.getImageFromUpload(values, "logo");
+        values["isDefault"] = this.Util.checkValueSwitch(values.isDefault);
         this.dispatch(ReceiptAction.update(values));
       }
     });

@@ -60,6 +60,7 @@ export class InputNumber extends Element {
         handleKeyDown={this.props.handleKeyDown}
         handleKeyUp={this.props.handleKeyUp}
         handlePressEnter={this.props.handlePressEnter}
+        handleOnFocus={this.props.handleOnFocus}
         handleOnBlur={this.props.handleOnBlur}
         className={this.props.className}
         didUpdateMakeAutoFocus={this.props.didUpdateMakeAutoFocus}

@@ -103,6 +103,14 @@ export class Util {
       return null;
   }
 
+  getLocationId() {
+    const result = this.getAuthSession();
+    if (result)
+      return result.locationId;
+    else 
+      return null;
+  }
+
   getDeviceNumber() {
     const result = this.getSetting();
     if (result)

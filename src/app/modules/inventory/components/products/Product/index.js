@@ -2,7 +2,7 @@ import React from "react";
 import List from "../../List";
 import Util from "../../../utils";
 import Enum from "../../../enums";
-import history from "../../../../common/router/history";
+// import history from "../../../../common/router/history";
 import FormCreate from "../../../containers/products/Product/FormCreate";
 import FormUpdate from "../../../containers/products/Product/FormUpdate";
 import Constant from "../../../constants/products/product";
@@ -13,7 +13,7 @@ import TaxAction from "../../../../pos/action/settings/tax";
 import LanguageAction from "../../../../pos/action/settings/storeLanguage";
 import LocationAction from "../../../../pos/action/settings/storeLocation";
 import ProductAction from "../../../actions/products/product";
-import PriceTagAction from "../../../actions/products/priceTag";
+// import PriceTagAction from "../../../actions/products/priceTag";
 import ProductTagAction from "../../../actions/products/productsTag";
 import ProductService from "../../../services/products/ProductService";
 import PrivilegeAction from "../../../../pos/action/settings/privilege";
@@ -35,7 +35,6 @@ export default class ProductList extends List {
     this.columnExpend = new ColumnExpand(); 
     this.fetchingProp = "products";
     this.placeHolderForGeneralSearch = "text_general_seach_product";
-    this.placeHolderForGeneralSearch = "text_general_seach_product";
     this.isShowExpandable = true;
     this.rowClassName = record => record.productOption === Enum.PRODUCT_STANDARD ? "standard-product-row" : "";
     this.componentHasUpdated = false;
@@ -44,7 +43,7 @@ export default class ProductList extends List {
     this.action = ProductAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCT;
     this.handleClone = this.handleClone.bind(this);
-    this.handleOnPrintLabel = this.handleOnPrintLabel.bind(this);
+    // this.handleOnPrintLabel = this.handleOnPrintLabel.bind(this);
   }
 
   componentWillUpdate(nextProps) {
@@ -146,11 +145,11 @@ export default class ProductList extends List {
     }
   }
 
-  handleOnPrintLabel() {
-    const productList = this.props.products.list.filter(product => this.state.dataSourceToPrint.includes(product.id));
-    this.props.dispatch(PriceTagAction.selectProductFromListToPrint(productList));
-    history.push("/products/price-tags");
-  }
+  // handleOnPrintLabel() {
+  //   const productList = this.props.products.list.filter(product => this.state.dataSourceToPrint.includes(product.id));
+  //   this.props.dispatch(PriceTagAction.selectProductFromListToPrint(productList));
+  //   history.push("/products/price-tags");
+  // }
 
   buttonActionCollection() {
     return [
@@ -164,14 +163,14 @@ export default class ProductList extends List {
         onClick={() => this.handleClone()}>
         <span className="icon-add icon-padding-right"></span><this.Translate id="btn_product_clone" />
       </this.Button>,
-      <this.Button
-        propKey="btn_product_print_label"
-        disabled={this.state.selectedRowKeys.length <= 0}
-        className="info margin-left-8"
-        onClick={this.handleOnPrintLabel}>
-        <span className="icon-barcode icon-padding-right"></span>
-        <this.Translate id="btn_product_print_label" />
-      </this.Button>
+      // <this.Button
+      //   propKey="btn_product_print_label"
+      //   disabled={this.state.selectedRowKeys.length <= 0}
+      //   className="info margin-left-8"
+      //   onClick={this.handleOnPrintLabel}>
+      //   <span className="icon-barcode icon-padding-right"></span>
+      //   <this.Translate id="btn_product_print_label" />
+      // </this.Button>
     ];
   }
 
@@ -369,10 +368,10 @@ class Column extends List {
       },
       {
         title: <this.Translate id="text_product_code" />,
-        dataIndex: "productVariants",
-        key: "productVariants",
+        dataIndex: "barcode",
+        key: "barcode",
         width: 100,
-        render:productVariants => productVariants.length > 0 ? productVariants[0].barcode : this.emptyCell,
+        render: (text, record) => record.productVariants.length > 0 ? record.productVariants[0].barcode : this.emptyCell,
         sorter: true
       },
       {

@@ -31,5 +31,6 @@
 
 .wrap-label-setting-button {
     margin-bottom: 15px;
-    cursor: pointer
+    cursor: pointer;
+    width: fit-content
 }

@@ -370,7 +370,17 @@ export default class FormVariant extends Modal {
     }
 
     if (variantAttributeAdd.added) {
+      const variantAttributeList = this.state.variantAttributeList;
+      if (this.state.addAttributeRowIndex > variantAttributeList.length - 1) {
+        variantAttributeList.push(variantAttributeAdd.response.data.id);
+      } else {
+        variantAttributeList[this.state.addAttributeRowIndex]["attributeId"] = variantAttributeAdd.response.data.id;
+      }
+
+      this.setState({variantAttributeList});
+
       this.props.form.setFieldsValue({[`attributeId[${this.state.addAttributeRowIndex}]`]: variantAttributeAdd.response.data.id});
+      
       dispatch(VariantAttributeAction.reset());
       document.getElementById(`lozenge-item${this.state.addAttributeRowIndex}`).focus();
     }

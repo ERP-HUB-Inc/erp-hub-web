@@ -233,6 +233,12 @@ export default {
     "We don't allow you to delete default record"
   ],
 
+  "text_warning_edit_system_record": [
+    "We don't allow you to edit system record",
+    "We don't allow you to edit system record",
+    "We don't allow you to edit system record"
+  ],
+
   "text_discount": [
     "Discount",
     "Discount",

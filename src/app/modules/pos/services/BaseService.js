@@ -61,9 +61,7 @@ export default class BaseService extends Service {
     return this.POST({
       url: `${this.baseUrl}/create`,
       data: {
-        ...data,
-        isSystem: 0,
-        isDefault: 0
+        ...data
       },
       headers: this.header
     });

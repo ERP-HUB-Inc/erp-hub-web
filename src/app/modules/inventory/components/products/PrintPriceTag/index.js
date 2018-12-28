@@ -2,9 +2,13 @@ import React from "react";
 import {Form, Slider, Icon} from "antd";
 import PriceTagList from "./PriceTagList";
 import DropDownSearch from "../Product/DropDownSearch";
+import Enum from "../../../enums";
 import Util from "../../../utils";
 import List from "../../List";
-import PriceTagAction from "../../../actions/products/priceTag";
+// import PriceTagAction from "../../../actions/products/priceTag";
+import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/VariantProduct";
+import ProductVariantAction from "../../../actions/products/productVariant";
+import ProductVariantConstant from "../../../constants/products/productVariant";
 import NoPermission from "../../../../common/components/shares/List/NoPermission";
 import StartUp from "../../../../common/components/StartUp";
 import "./index.css";
@@ -16,7 +20,8 @@ export default class PrintPriceTag extends List {
       ...this.state,
       dataSourceToPrint: [],
       productList: [],
-      typeOfPrintLabel:1,
+      typeOfPrintLabel: 1,
+      modalVariant: null,
       numberOfColumn: !localStorage.getItem("numberOfColumn") ? 4 : parseFloat(localStorage.getItem("numberOfColumn")),
       paddingLeft: !localStorage.getItem("paddingLeft") ? 5 : parseFloat(localStorage.getItem("paddingLeft")),
       paddingRight: !localStorage.getItem("paddingRight") ? 5 : parseFloat(localStorage.getItem("paddingRight")),
@@ -28,6 +33,8 @@ export default class PrintPriceTag extends List {
       fontSizeOfName: !localStorage.getItem("fontSizeOfName") ? 12 : parseFloat(localStorage.getItem("fontSizeOfName")),
       fontSizeOfPrice: !localStorage.getItem("fontSizeOfPrice") ? 12 : parseFloat(localStorage.getItem("fontSizeOfPrice")),
       isShowLabelSetting: false,
+      isAutoFocusInputNumberToPrint: false,
+      isFocusSearchInput: false,
       iconType: "down"
     };
     this.TYPE_OF_PRINT = {
@@ -42,19 +49,25 @@ export default class PrintPriceTag extends List {
         width: 200,
         key: "name",
         render: (text, record, index) => {
-          return <this.InputText name={`name[${index}]`} data={ Util.getProductName(record)} form={this.props.form}/>;
+          let variantName = "";
+          if (record.productOption === Enum.PRODUCT_VARIANT) {
+            variantName = ` / ${record.variantName}`;
+          }
+          return <this.InputText name={`name[${index}]`} data={record.productName + variantName} form={this.props.form}/>;
         }
       },
       {
         title: <this.Translate id="text_qty_in_stock" />,
         width: 140,
         dataIndex: "qauntityInStore",
+        align: "center",
         key: "qauntityInStore"
       },
       {
         title: <this.Translate id="text_quantity" />,
         width: 100,
         dataIndex: "quantity",
+        align: "center",
         key: "qauntity"
       },
       {
@@ -67,10 +80,13 @@ export default class PrintPriceTag extends List {
             <this.InputNumber name={`price[${index}]`} data={record.price} className="hidden" form={this.props.form}/>
             <this.InputNumber
               disabled={this.state.typeOfPrintLabel !== this.TYPE_OF_PRINT.CUSTOM}
-              data={record.quantity}
+              data={record.qauntityInStore}
               precision={0}
               isAutoSelect={true}
+              isAutoFocus={true}
+              didUpdateMakeAutoFocus={this.state.isAutoFocusInputNumberToPrint && index === 0}
               name={`numberOfPrint[${index}]`}
+              handleOnFocus={this.handleFocusInputNumberToPrint}
               placeholder="Number of print"
               form={this.props.form}/>
           </div>;
@@ -78,13 +94,17 @@ export default class PrintPriceTag extends List {
       },
       {
         title: <this.Translate id="text_action" />,
-        width: 100,
+        width: 80,
+        align: "center",
         key: "action",
         render: (text, record, index) => <this.Button type="danger" className="btn-icon" onClick={() => this.handleRemoveProductList(index)}>
           <span className="icon-delete icon-padding-right"></span>
         </this.Button>
       },
     ];
+
+    this.handleOnFocusSearch = this.handleOnFocusSearch.bind(this);
+    this.handleFocusInputNumberToPrint = this.handleFocusInputNumberToPrint.bind(this);
     this.handleOnPrint = this.handleOnPrint.bind(this);
     this.handleOnGeneratePriceTag = this.handleOnGeneratePriceTag.bind(this);
     this.handleOnReset = this.handleOnReset.bind(this);
@@ -104,13 +124,31 @@ export default class PrintPriceTag extends List {
     this.handleOnSelectList = this.handleOnSelectList.bind(this);
     this.handlePressEnterOnSearch = this.handlePressEnterOnSearch.bind(this);
     this.handleRemoveProductList = this.handleRemoveProductList.bind(this);
+    this.handleCancelVariantProduct = this.handleCancelVariantProduct.bind(this);
+    this.handleHiddenSettingWhenClickOther = this.handleHiddenSettingWhenClickOther.bind(this);
   }
 
   componentDidMount() {
     super.componentDidMount();
-    if (this.props.selectProductToPrint.passedTo) {
-      this.setState({productList: this.props.selectProductToPrint.selectedProduct});
-      this.props.dispatch(PriceTagAction.resetSelectProductFromListToPrint());
+
+    const element = document.getElementById("center-container");
+    if (element) {
+      element.addEventListener("click", this.handleHiddenSettingWhenClickOther);
+    }
+    // if (this.props.selectProductToPrint.passedTo) {
+    //   this.setState({productList: this.props.selectProductToPrint.selectedProduct});
+    //   this.props.dispatch(PriceTagAction.resetSelectProductFromListToPrint());
+    // }
+  }
+
+  handleHiddenSettingWhenClickOther() {
+    this.setState({isShowLabelSetting: false});
+  }
+
+  componentDidUpdate() {
+    if (this.props.productVariant.fetched) {
+      this.handleOnSelectList(this.state.selectedProduct, [this.props.productVariant.list], false); // SET IT AS ARRAY TO MAKE IT MATCH ALL CONDITION BOTH STANDARD AND VARIANT
+      this.props.dispatch(ProductVariantAction.reset(ProductVariantConstant.RESET_PRODUCT_VARIANT));
     }
   }
 
@@ -132,6 +170,10 @@ export default class PrintPriceTag extends List {
         this.setState({dataSourceToPrint});
       }
     });
+  }
+
+  handleFocusInputNumberToPrint() {
+    this.setState({isAutoFocusInputNumberToPrint: false});
   }
 
   handleOnPrint() {
@@ -165,15 +207,16 @@ export default class PrintPriceTag extends List {
     this.setState({
       typeOfPrintLabel: e.target.value
     });
-    existingProductList.forEach((productList, index) => {
+    existingProductList.forEach((product, index) => {
       if (e.target.value === this.TYPE_OF_PRINT.ALL_QTY) {
-        this.props.form.setFieldsValue({[`numberOfPrint[${index}]`]: productList.quantity});
-      } else if(e.target.value === this.TYPE_OF_PRINT.QTY_IN_STOCK && productList.productLocations && productList.productLocations.length > 0) {
-        let quantity = 0;
-        productList.productLocations.forEach(productLocation => {
-          quantity += productLocation.quantity;
-        });
-        this.props.form.setFieldsValue({[`numberOfPrint[${index}]`]: quantity});
+        this.props.form.setFieldsValue({[`numberOfPrint[${index}]`]: product.quantity});
+        this.setState({isAutoFocusInputNumberToPrint: false});
+      } else if(e.target.value === this.TYPE_OF_PRINT.QTY_IN_STOCK) {
+        this.setState({isAutoFocusInputNumberToPrint: false});
+        this.props.form.setFieldsValue({[`numberOfPrint[${index}]`]: Util.countProductQTYCurrentLocation(product, this.Util.getLocationId())});
+      } else {
+        this.setState({isAutoFocusInputNumberToPrint: true});
+        this.props.form.setFieldsValue({[`numberOfPrint[${index}]`]: 0});
       }
     });
   }
@@ -218,25 +261,67 @@ export default class PrintPriceTag extends List {
     this.changeStateSetting("numberOfColumn", value);
   }
 
-  handleOnSelectList(value) {
+  handleCancelVariantProduct() {
+    this.setState({modalVariant: null});
+  }
+
+  handleOnSelectList(product, productVariant, isRequestVariantForm = true) {
+    let isProductVariant = product.productOption === Enum.PRODUCT_VARIANT;
+    if (isProductVariant && isRequestVariantForm) {
+      this.setState({
+        selectedProduct: product,
+        modalVariant: <VariantProduct
+          product={product}
+          handleCancel={this.handleCancelVariantProduct}/>
+      });
+      return;
+    } else if (productVariant && productVariant.length > 0) {
+      productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
+      productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
+    }
+
+    const productName = Util.getProductName(product);
+    const {quantity} = productVariant;
+
     const existingProductList = this.state.productList;
+
     if (existingProductList.length === 0) {
-      existingProductList.push(value);
+      existingProductList.push({
+        id: productVariant.id,
+        barcode: productVariant.barcode,
+        price: productVariant.price,
+        productName,
+        variantName: productVariant.name,
+        qauntityInStore: Util.countProductQTYCurrentLocation(product, this.Util.getLocationId()),
+        quantity,
+        productVariants: product.productVariants,
+        productOption: product.productOption
+      });
     } else {
       let isNotTheSame = true;
       existingProductList.forEach(data => {
-        if (data.barcode === value.barcode) {
+        if (data.barcode === productVariant.barcode) {
           isNotTheSame = false;
-          // existingProductList[index]["quantity"] += 1;
         }
       });
 
       if (isNotTheSame) {
-        existingProductList.push(value);
+        existingProductList.push({
+          id: productVariant.id,
+          barcode: productVariant.barcode,
+          price: productVariant.price,
+          productName,
+          variantName: productVariant.name,
+          qauntityInStore: Util.countProductQTYCurrentLocation(product, this.Util.getLocationId()),
+          quantity,
+          productVariants: product.productVariants,
+          productOption: product.productOption
+        });
       }
     }
 
-    this.setState({productList: existingProductList});
+    this.props.form.setFieldsValue({searchProduct: ""});
+    this.setState({productList: existingProductList, isFocusSearchInput: true});
   }
 
   handleRemoveProductList(index) {
@@ -247,6 +332,10 @@ export default class PrintPriceTag extends List {
 
   handlePressEnterOnSearch(product) {
     this.handleOnSelectList(product);
+  }
+
+  handleOnFocusSearch() {
+    this.setState({isFocusSearchInput: false});
   }
 
   handleOnClickLabelSetting() {
@@ -262,6 +351,7 @@ export default class PrintPriceTag extends List {
       });
     }
   }
+
 
   renderLabelSetting() {
     return (
@@ -585,14 +675,18 @@ export default class PrintPriceTag extends List {
                             productSearch={this.props.productSearch}
                             handleOnSelectList={this.handleOnSelectList}
                             handlePressEnterOnSearch={this.handlePressEnterOnSearch}
+                            handleOnFocusSearch={this.handleOnFocusSearch}
                             dispatch={this.props.dispatch}
+                            isAutoFocus={true}
+                            didUpdateMakeAutoFocus={this.state.isFocusSearchInput}
+                            className="ca-input-v1 print-price-tag"
                             locale={this.props.locale}
                             form={this.props.form}/>
                         </this.Row>
                         <this.Table
                           dataSource={this.state.productList}
                           columns={this.columns}
-                          locale={{emptyText: <this.Translate id="placeholder_table_composite_product" />}} />
+                          locale={{emptyText: <this.Translate id="table_empty_data"/>}} />
                         <this.Button htmlType="submit" type="info" className="btn-print-label text-uppercase" onClick={this.handleOnGeneratePriceTag}>
                           <span className="icon-print icon-padding-right text-uppercase"></span> Generate
                         </this.Button>
@@ -626,6 +720,7 @@ export default class PrintPriceTag extends List {
                     </this.Col>
                   </this.Row>
                 </Form>
+                {this.state.modalVariant}
               </div>
         }
       </div>

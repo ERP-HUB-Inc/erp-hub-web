@@ -26,7 +26,7 @@ export default class Receipt extends Component {
     }
   }
 
-  render() {
+  render() { console.log("Receipt Template:", this.props.receiptTemplate);
     let businessName = "";
     let address = "";
     let phoneNumber = "";
@@ -59,10 +59,10 @@ export default class Receipt extends Component {
           <table style={{color: "rgb(142, 136, 136)", fontSize: "8pt", backgroundColor: "white", margin: "auto", width: "120mm", padding: 5}}>
             <tbody><tr>
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>
-                <div style={{width: 100, position: "relative", margin: "0 auto"}}>
+                <div style={{position: "relative", margin: "0 auto"}}>
                   {
                     this.state.logo ?
-                      <img alt="" src={this.state.logo} />
+                      <img style={{width: 100}} alt="" src={this.state.logo} />
                       :
                       ""
                   }
@@ -70,7 +70,7 @@ export default class Receipt extends Component {
               </td>
             </tr>
             <tr>
-              <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", fontSize: "30pt"}}>{businessName}</td>
+              <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", fontSize: "16pt"}}>{businessName}</td>
             </tr>
             <tr>
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>{address} {phoneNumber}</td>
@@ -108,7 +108,15 @@ export default class Receipt extends Component {
                       this.props.productList.map((product, index) => 
                         <tr key={index}>
                           <td style={{textAlign: "center", backgroundColor: "white"}}>{product.quantity}</td>
-                          <td style={{backgroundColor: "white"}}>{product.name}</td>
+                          <td style={{backgroundColor: "white"}}>
+                            <div>{product.name}</div>
+                            {
+                              product.variantName ?
+                                <div style={{fontSize: "7pt", marginTop: "2px"}}>{product.variantName}</div>
+                                :
+                                ""
+                            }
+                          </td>
                           <td style={{textAlign: "right", backgroundColor: "white"}}>{this.formatCurrency(product.price)}</td>
                         </tr> 
                       )
@@ -142,7 +150,7 @@ export default class Receipt extends Component {
                             <tr key={productTaxIndex}>
                               <td style={{backgroundColor: "white"}} />
                               <td style={{backgroundColor: "white", paddingLeft: 15}}>
-                                {productTax.name}:
+                                {productTax.name}
                               </td>
                               <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency(productTax.totalTaxAmount)}</td>
                             </tr>

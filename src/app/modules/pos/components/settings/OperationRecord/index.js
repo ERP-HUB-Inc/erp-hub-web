@@ -65,8 +65,12 @@ class Column extends List {
         key: "isSystem",
         width: 160,
         sorter: true,
-        render: isSystem => {
-          return isSystem === this.Enum.IS_SYSTEM  ? <this.TagLabel color="blue" style={{marginLeft: 10}}><this.Translate id="text_system" /></this.TagLabel> : <this.TagLabel color="blue" style={{marginLeft: 10}}><this.Translate id="text_user" /></this.TagLabel>;
+        render: (text, record) => {
+          let generatedBy = <this.Translate id="text_system" />;
+          if (record.isSystem !== this.Enum.IS_SYSTEM && record.user) {
+            generatedBy = record.user.fullName;
+          }
+          return <this.TagLabel color="blue" style={{marginLeft: 10}}>{generatedBy}</this.TagLabel>;
         }
       },
       { 
@@ -78,7 +82,7 @@ class Column extends List {
         render: (text, record) => {
           let colorIndex = 0;
           let type = <this.Translate id="operation_record_income" />;
-          if (record.type === this.Enum.OPERATION_TYPE.EXPENSE) {
+          if (record.type === this.Enum.OPERATION_TYPE.EXPENSE || record.type === this.Enum.OPERATION_TYPE.COGS) {
             colorIndex = 1;
             type = <this.Translate id="operation_record_expense" />;
           }

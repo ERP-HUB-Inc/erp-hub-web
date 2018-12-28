@@ -17,6 +17,18 @@ export default {
     "Varaint Product"
   ],
 
+  "open_cash": [
+    "Open Cash",
+    "Open Cash",
+    "Open Cash"
+  ],
+
+  "error_require_cash": [
+    "Enter cash",
+    "Enter cash",
+    "Enter cash"
+  ],
+
   "variant_product_select_text": [
     "Select",
     "Select",

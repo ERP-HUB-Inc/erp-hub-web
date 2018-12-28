@@ -15,6 +15,7 @@ function mapStateToProps(state) {
   return {
     selectProductToPrint: state.reducer.priceTag.selectProductToPrint,
     productSearch: state.reducer.product.search,
+    productVariant: state.reducer.productVariant.request,
     checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale
   };

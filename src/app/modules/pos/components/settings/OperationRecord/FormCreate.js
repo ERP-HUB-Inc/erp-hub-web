@@ -22,7 +22,6 @@ export default class Form extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values["amount"] = Number(values.amount);
-        values["isSystem"] = this.Enum.IS_SYSTEM;
         values["status"] = this.Enum.ACTIVE;
         this.dispatch(operationRecordAction.add(values));
       }

@@ -51,6 +51,10 @@ export default class InputNumber extends Element {
     if (this.props.isAutoSelect) {
       event.target.select();
     }
+
+    if (this.props.handleOnFocus) {
+      this.props.handleOnFocus();
+    }
   }
 
   parserValue(value) {
