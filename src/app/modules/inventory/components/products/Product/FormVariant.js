@@ -47,7 +47,7 @@ export default class FormVariant extends Modal {
         }
       },
       {
-        title: <this.Translate id="input_product_cost" />,
+        title: <this.Translate id="text_cost" />,
         dataIndex: "cost",
         key: "cost",
         align: "right",

@@ -935,7 +935,7 @@ export default class Retail extends Component {
                   </this.Row>
                   <this.Row className="payment-action">
                     <this.Button type="info" className="mg-right" onClick={this.handleOnSaveParkReceipt}>
-                      <span className="icon-save icon-padding-right"></span><this.Translate id="button_text_save" />
+                      <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
                     </this.Button>
                     <this.Button type="info" onClick={this.handleOnMakePayment}>
                       <span className="icon-checked icon-padding-right"></span><this.Translate id="button_text_tender" />

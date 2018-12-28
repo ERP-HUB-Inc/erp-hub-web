@@ -17,12 +17,6 @@ export default {
     "Receive and create new partial"
   ],
 
-  "button_search_stock_receive_purchase_export_csv":[
-    "Export CSV",
-    "Export CSV",
-    "Export CSV"
-  ],
-
   "select_stock_receive_purchase_from_supplier": [
     "Order from Supplier",
     "Order from Supplier",

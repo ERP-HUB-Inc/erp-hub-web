@@ -87,12 +87,6 @@ export default {
     "Cashier"
   ],
 
-  "text_date": [
-    "Date",
-    "Date",
-    "Date"
-  ],
-
   "text_qty": [
     "QTY",
     "QTY",

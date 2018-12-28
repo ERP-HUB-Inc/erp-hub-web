@@ -224,13 +224,8 @@ export default class InventoryList extends List {
                   form={this.props.form}/>
               </this.Col>
               <this.Col md="3" className="reorder-point-button-search report-button">
-
-                {/* <this.Button htmlType="submit" type="info" >
-                <span className="icon-export icon-padding-right text-uppercase"></span>{<this.Translate id="button_inventory_report_export_to_csv" />}
-              </this.Button>  */}
-
                 <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching} className="wrap-report-btn-search">
-                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
+                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
                 </this.Button> 
               </this.Col>
 

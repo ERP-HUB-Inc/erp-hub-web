@@ -34,7 +34,7 @@ export default class FormCreate extends Modal {
     return(
       <div className="ant-modal-footer">
         <this.Button className="danger" onClick={() => this.handleCancel()}>
-          <span className="icon-cancel icon-padding-right"></span><this.Translate id="button_text_cancel" />
+          <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel" />
         </this.Button>  
         <this.Button htmlType="submit" loading={this.submitLoading} className="info" onClick={this.handlePush}>
           <span className="icon-push-button icon-padding-right"></span> <this.Translate id="button_stock_purchase_order_push" />

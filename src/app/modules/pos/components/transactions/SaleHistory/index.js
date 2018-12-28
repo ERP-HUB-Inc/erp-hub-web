@@ -252,7 +252,7 @@ export default class SaleHistoryList extends List {
             </this.Col>
             <this.Col md="2" className="wrap-btn-search">
               <this.Button htmlType="submit" type="info"  loading={this.state.isClickFilter && fetchingProps.fetching}>
-                <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
+                <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
               </this.Button> 
             </this.Col>
             
@@ -346,7 +346,7 @@ class Column extends List {
     super(props);
     return [
       {
-        title: <this.Translate id="text_created_at" />,
+        title: <this.Translate id="text_date" />,
         dataIndex: "registerDate",
         key: "createdAt",
         render: registerDate => this.Util.formatDateTime(registerDate),

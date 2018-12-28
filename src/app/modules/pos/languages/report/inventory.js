@@ -29,11 +29,6 @@ export default {
     "Tag"
   ],
 
-  "button_inventory_report_export_to_csv": [
-    "Export To Csv",
-    "Export To Csv",
-    "Export To Csv"
-  ],
 
   "input_inventory_report_week": [
     "Weeks",

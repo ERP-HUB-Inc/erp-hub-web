@@ -41,7 +41,7 @@ export default class FormItem extends Modal {
         <this.Col md="12">
           <this.Checkboxs
             name="isCheckToPushWithEmail" 
-            label={<this.Translate id="checkbox_stock_purchase_order_push_with_send_email"/>}
+            label={<this.Translate id="text_push_po_with_email"/>}
             onChange={this.handleOnChangeIsCheckPushToSupplierWithEmail}
             form={this.props.form}/>
         </this.Col>

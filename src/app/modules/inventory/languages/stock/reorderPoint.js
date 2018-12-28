@@ -59,11 +59,6 @@ export default {
     "Product Key"
   ],
 
-  "button_stock_reorder_search": [
-    "Search",
-    "Search",
-    "Search"
-  ],
 
   "button_stock_reorder_purchase": [
     "Purchase",

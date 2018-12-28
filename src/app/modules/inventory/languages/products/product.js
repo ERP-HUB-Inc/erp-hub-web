@@ -65,12 +65,6 @@ export default {
     "SKU"
   ],
 
-  "text_product_cost": [
-    "Cost",
-    "Cost",
-    "Cost"
-  ],
-
   "text_product_total_cost": [
     "Total Cost",
     "Total Cost",
@@ -217,13 +211,7 @@ export default {
     "0.00"
   ],
 
-  "input_product_cost": [
-    "Cost",
-    "Cost",
-    "Cost",
-  ],
-
-  "input_product_cost_placeholder": [
+  "text_cost_placeholder": [
     "0.00",
     "0.00",
     "0.00",
@@ -382,22 +370,10 @@ export default {
     "Print Label"
   ],
 
-  "col_composite_product": [
-    "Product",
-    "Product",
-    "Product"
-  ],
-
   "col_composite_product_markup": [
     "Markup",
     "Markup",
     "Markup"
-  ],
-
-  "col_composite_product_cost": [
-    "Cost",
-    "Cost",
-    "Cost"
   ],
 
   "col_product_cost_log_po_number": [
@@ -412,17 +388,6 @@ export default {
     "User"
   ],
 
-  "col_product_cost_log_date": [
-    "Date",
-    "Date",
-    "Date"
-  ],
-
-  "col_product_cost_log_cost": [
-    "Cost",
-    "Cost",
-    "Cost"
-  ],
 
   "col_product_log_description": [
     "Description",
@@ -459,12 +424,6 @@ export default {
     "No product found",
     "No product found",
     "No product found"
-  ],
-
-  "col_composite_action": [
-    "Action",
-    "Action",
-    "Action"
   ],
 
   "text_variant": [

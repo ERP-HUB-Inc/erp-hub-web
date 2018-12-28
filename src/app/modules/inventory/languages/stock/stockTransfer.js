@@ -29,12 +29,6 @@ export default {
     "Export CSV",
   ],
 
-  "button_search_stock_transfer": [
-    "Search",
-    "အမည်",
-    "Search",
-  ],
-
   "col_stock_transfer_no": [
     "No",
     "No",

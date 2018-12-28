@@ -380,7 +380,7 @@ export default class List extends Component {
     };
 
     this.columnCreatedAt = {
-      title: <this.Translate id="text_created_at" />,
+      title: <this.Translate id="text_date" />,
       dataIndex: "createdAt",
       key: "createdAt",
       width: 180,

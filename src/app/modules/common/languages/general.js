@@ -71,7 +71,7 @@ export default {
     "User"
   ],
 
-  "text_created_at": [
+  "text_date": [
     "Date",
     "Date",
     "Date"
@@ -137,22 +137,16 @@ export default {
     "No",
   ],
 
-  "button_text_save": [
-    "Save",
-    "Save",
-    "Save"
-  ],
-
   "button_text_tender": [
     "Tender",
     "Tender",
     "Tender"
   ],
-  
-  "button_text_cancel": [
-    "Cancel",
-    "Cancel",
-    "Cancel"
+
+  "text_cost": [
+    "Cost",
+    "Cost",
+    "Cost"
   ],
 
   "button_text_search": [

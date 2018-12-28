@@ -13,7 +13,7 @@ export default class FormComposite extends Modal {
     };
     this.columns = [
       {
-        title: <this.Translate id="col_composite_product" />,
+        title: <this.Translate id="text_product" />,
         dataIndex: "name",
         key: "product_composite",
         render: (text, record, index) => {
@@ -41,7 +41,7 @@ export default class FormComposite extends Modal {
         render: (text, record, index) => this.formatCurrency(record.cost),
       },
       {
-        title: <this.Translate id="col_composite_action" />,
+        title: <this.Translate id="text_action" />,
         dataIndex: "composite_product_action",
         key: "composite_product_action",
         width: 100,

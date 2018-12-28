@@ -123,7 +123,7 @@ export default class ReorderPointList extends List {
               </this.Col>
               <this.Col md="2">
                 <this.Button htmlType="submit" type="info" >
-                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
+                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
                 </this.Button> 
               </this.Col>
 

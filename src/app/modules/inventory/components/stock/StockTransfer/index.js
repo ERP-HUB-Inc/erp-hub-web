@@ -132,7 +132,7 @@ export default class Lists extends List {
                 />
               </this.Col>
               <this.Button htmlType="submit" type="info" >
-                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_search_stock_transfer" />
+                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="text_search" />
               </this.Button>
             </this.Row>
           </this.Form>

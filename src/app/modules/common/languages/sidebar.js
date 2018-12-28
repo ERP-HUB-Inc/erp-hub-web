@@ -1,22 +1,22 @@
 export default {
   "text_transaction": [
     "Transactions",
-    "Transactions -FR",
-    "Transactions -ES",
+    "Transactions",
+    "Transactions",
   ],
   "text_sale_history": [
     "Sale History",
-    "Sale History -FR",
-    "Sale History _ES"
+    "ប្រវត្តិលក់",
+    "Sale History"
   ],
   "text_sale_order": [
     "Sale Order",
-    "Sale Order -FR",
-    "Sale Order _ES"
+    "Sale Order",
+    "Sale Order"
   ],
   "text_return_exchange": [
     "Return & Exchange",
-    "Return & Exchange -FR",
-    "Return & Exchange -ES",
+    "Return & Exchange",
+    "Return & Exchange",
   ]
 };

@@ -47,7 +47,7 @@ export default class DiscountSetup extends Modal {
     return(
       <div className="ant-modal-footer">
         <this.Button type="danger" onClick={() => this.handleCancel()}>
-          <span className="icon-cancel icon-padding-right"></span><this.Translate id="button_text_cancel" />
+          <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel" />
         </this.Button>  
         <this.Button htmlType="submit" type="info">
           <span className="icon-add icon-padding-right"></span><this.Translate id="text_add" />

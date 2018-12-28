@@ -107,7 +107,7 @@ export default class PurchaseList extends List {
     };
 
     this.ExportheadersCsv = [
-      {label: this.CATranslate("text_created_at", this.props.locale), key: "createdAt"},
+      {label: this.CATranslate("text_date", this.props.locale), key: "createdAt"},
       {label: this.CATranslate("text_name", this.props.locale) , key: "name"},
       {label: this.CATranslate("text_number", this.props.locale), key: "number"},
       {label: this.CATranslate("text_reference", this.props.locale), key: "number"},
@@ -324,7 +324,7 @@ export default class PurchaseList extends List {
                   <label htmlFor="status" className="" title=""></label>
                 </div>
                 <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
+                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
                 </this.Button> 
               </this.Col>
 

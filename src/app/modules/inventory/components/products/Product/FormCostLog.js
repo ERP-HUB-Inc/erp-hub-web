@@ -27,7 +27,7 @@ export default class FormCostLog extends Modal {
         render: purchaseOrder => purchaseOrder !== null ? purchaseOrder.number : this.emptyText
       },
       {
-        title: <this.Translate id="col_product_cost_log_cost" />,
+        title: <this.Translate id="text_cost" />,
         dataIndex: "cost",
         key: "cost",
         render: cost => this.formatCurrency(cost)

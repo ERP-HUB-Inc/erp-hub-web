@@ -4,11 +4,7 @@ export default {
     "Receipt Template",
     "Receipt Template"
   ],
-  "col_receipt_template_date": [
-    "Date",
-    "Date",
-    "Date"
-  ],
+
 
   "input_receipt_template_is_default": [
     "Default Template",

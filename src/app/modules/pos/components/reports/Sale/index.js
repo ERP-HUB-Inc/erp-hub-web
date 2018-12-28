@@ -14,7 +14,7 @@ export default class SaleList extends List {
     };
     this.columns = new Column();
     this.ExportheadersCsv = [
-      {label: this.CATranslate("text_created_at", this.props.locale), key: "date"},
+      {label: this.CATranslate("text_date", this.props.locale), key: "date"},
       {label: this.CATranslate("col_sale_report_revenuse", this.props.locale), key: "revenue"},
       {label: this.CATranslate("col_sale_report_cost_of_good", this.props.locale), key: "cost"},
       {label: this.CATranslate("col_sale_report_gross_profit", this.props.locale), key: "profit"},
@@ -179,7 +179,7 @@ export default class SaleList extends List {
               </this.Col>
               <this.Col md="2">
                 <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching} className="wrap-report-btn-search">
-                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="button_stock_reorder_search" />}
+                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
                 </this.Button> 
               </this.Col>
             </this.Row>

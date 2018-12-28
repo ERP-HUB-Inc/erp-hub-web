@@ -137,7 +137,7 @@ export default {
     "Push with send email"
   ],
 
-  "checkbox_stock_purchase_order_push_with_send_email": [
+  "text_push_po_with_email": [
     "Push to supplier and send email",
     "Push to supplier and send email",
     "Push to supplier and send email"
