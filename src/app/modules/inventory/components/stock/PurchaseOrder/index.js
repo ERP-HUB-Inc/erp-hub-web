@@ -220,6 +220,10 @@ export default class PurchaseOrderLists extends List {
       this.setState({loadingPopup: false});
       this.props.dispatch(PurchaseAction.reset(Constant.REQUEST_PURCHASE_ORDER_DETAIL_RESET));
     }
+
+    if (this.props.mail.sent) {
+      this.props.dispatch(EmailAction.reset());
+    }
   }
 
   getEmailPushToSupplier(emailForPushToSupplier) {

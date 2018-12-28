@@ -41,7 +41,7 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="col_store_location_address" />,
+        title: <this.Translate id="text_address" />,
         dataIndex: "address",
         sorter: true
       },

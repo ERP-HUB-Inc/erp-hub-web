@@ -19,7 +19,7 @@ export default class ProfitAndLostList extends List {
     this.ExportheadersCsv = [
       {label: this.CATranslate("text_date", this.props.locale), key: "createdAt"},
       {label: this.CATranslate("text_name", this.props.locale), key: "name"},
-      {label: this.CATranslate("col_operation_record_amount", this.props.locale), key: "amount"},
+      {label: this.CATranslate("text_amount", this.props.locale), key: "amount"},
       {label: this.CATranslate("text_type", this.props.locale), key: "type"}
     ];
 

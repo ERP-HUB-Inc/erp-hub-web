@@ -14,21 +14,6 @@ export default {
     "Customer Name",
     "Customer Name"
   ],
-  "col_management_customer_email": [
-    "Email",
-    "Email",
-    "Email",
-  ],
-  "col_management_customer_phoneno": [
-    "Phone No",
-    "Phone No",
-    "Phone No",
-  ],
-  "col_management_customer_group_address": [
-    "Address",
-    "Address",
-    "Address",
-  ],
   "col_management_customer_group_cutomer": [
     "Group Customer",
     "Group Customer",
@@ -60,11 +45,7 @@ export default {
     "Company",
     "Company"
   ],
-  "input_management_customer_email": [
-    "Email",
-    "Email",
-    "Email"
-  ],
+
   "text_address": [
     "Address",
     "Address",
@@ -81,12 +62,6 @@ export default {
     "Phone Number",
     "Phone Number",
     "Phone Number"
-  ],
-
-  "input_management_contact_address": [
-    "Address",
-    "Address",
-    "Address"
   ],
 
   "input_search_customer": [

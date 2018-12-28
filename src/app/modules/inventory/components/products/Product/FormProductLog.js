@@ -15,7 +15,7 @@ export default class FormProductLog extends Modal {
         render: createdAt => this.formatDate(createdAt)
       },
       {
-        title: <this.Translate id="col_product_log_description" />,
+        title: <this.Translate id="text_description" />,
         dataIndex: "description",
         key: "description"
       },

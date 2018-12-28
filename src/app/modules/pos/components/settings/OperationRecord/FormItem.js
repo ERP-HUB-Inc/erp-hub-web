@@ -49,8 +49,8 @@ export default class FormItem extends Modal {
         <this.InputNumber
           data={formData.amount}
           name="amount"
-          label={<this.Translate id="input_operation_record_amount" />}
-          placeholder={this.CATranslate("input_operation_record_amount", locale)}
+          label={<this.Translate id="text_amount" />}
+          placeholder={this.CATranslate("text_amount", locale)}
           required={true}
           isAutoSelect={true}
           errorRequired={<this.Translate id="error_require_amount" />}

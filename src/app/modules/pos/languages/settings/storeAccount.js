@@ -149,12 +149,6 @@ export default {
     "Phone Number"
   ],
 
-  "store_acc_address": [
-    "Address",
-    "Address",
-    "Address"
-  ],
-
   "store_acc_street": [
     "Street",
     "Street",

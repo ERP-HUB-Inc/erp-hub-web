@@ -17,18 +17,6 @@ export default {
     "Code"
   ],
 
-  "col_store_location_address": [
-    "Address",
-    "Address",
-    "Address"
-  ],
-
-  "input_location_address": [
-    "Address",
-    "Address",
-    "Address"
-  ],
-
   "error_location_not_found": [
     "Location not found",
     "Location not found",

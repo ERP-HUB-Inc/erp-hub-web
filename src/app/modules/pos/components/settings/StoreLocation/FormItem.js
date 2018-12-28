@@ -20,8 +20,8 @@ export default class FormItem extends Modal {
         <this.InputText
           data={formData.address}
           name="address"
-          label={<this.Translate id="input_location_address" />}
-          placeholder={this.CATranslate("input_location_address", locale)}
+          label={<this.Translate id="text_address" />}
+          placeholder={this.CATranslate("text_address", locale)}
           form={form}
           min={3}
           max={100}

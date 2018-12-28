@@ -50,7 +50,7 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="col_hr_employee_phone_no" />,
+        title: <this.Translate id="text_phone_number" />,
         dataIndex: "phoneNumber",
         key: "phoneNumber",
         sorter: true
@@ -76,7 +76,7 @@ class Column extends List {
         render: (gender) => gender === this.Enum.GENDER.MALE ? "Male" : "Female"
       },
       {
-        title: <this.Translate id="col_hr_employee_address" />,
+        title: <this.Translate id="text_address" />,
         dataIndex: "address",
         key: "address",
         sorter: true

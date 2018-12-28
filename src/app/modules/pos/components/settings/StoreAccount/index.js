@@ -388,8 +388,8 @@ export default class StoreAccountList extends Component {
                               <this.InputText
                                 data={storeAccount.list.address}
                                 name="address"
-                                label={<this.Translate id="store_acc_address" />}
-                                placeholder={this.CATranslate("store_acc_address", locale)}
+                                label={<this.Translate id="text_address" />}
+                                placeholder={this.CATranslate("text_address", locale)}
                                 form={form}/>
                           
                               <this.InputText

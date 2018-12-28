@@ -10,16 +10,16 @@ export default {
     "Full name",
   ],
 
-  "col_hr_employee_phone_no": [
-    "Phone no",
-    "အမည်",
-    "Full name",
+  "text_phone_number": [
+    "Phone No",
+    "Phone No",
+    "Phone No"
   ],
 
   "col_hr_employee_id_card": [
     "Id card",
-    "အမည်",
     "Id card",
+    "Id card"
   ],
 
   "col_hr_employee_dob": [
@@ -32,12 +32,6 @@ export default {
     "Gender",
     "အမည်",
     "Gender",
-  ],
-
-  "col_hr_employee_address": [
-    "Address",
-    "အမည်",
-    "Address",
   ],
 
   "input_hr_employee_first_name": [
@@ -62,12 +56,6 @@ export default {
     "Date of Birth",
     "အမည်",
     "Date of Birth"
-  ],
-
-  "input_hr_employee_phone_no": [
-    "Phone Number",
-    "အမည်",
-    "Phone Number"
   ],
 
   "input_hr_employee_email_address": [

@@ -20,6 +20,7 @@ function mapStateToProps(state) {
     purchaseOrderUpdate: state.reducer.purchaseOrder.update,
     purchaseOrderPushToSupplier: state.reducer.purchaseOrder.pushToSupplier,
     supplier: state.reducer.supplier.request,
+    mail: state.reducer.mail.send,
     storeLocation: state.reducer.storeLocation.request,
     checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale

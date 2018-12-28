@@ -84,7 +84,7 @@ export default {
     "General"
   ],
 
-  "tab_language": [
+  "text_description": [
     "Description",
     "Description",
     "Description"
@@ -179,12 +179,6 @@ export default {
     "Tag",
     "Tag",
     "Tag"
-  ],
-
-  "input_product_description": [
-    "Description",
-    "Description",
-    "Description"
   ],
 
   "input_product_supplier_price": [
@@ -386,13 +380,6 @@ export default {
     "User",
     "User",
     "User"
-  ],
-
-
-  "col_product_log_description": [
-    "Description",
-    "Description",
-    "Description"
   ],
 
   "placeholder_table_composite_product": [

@@ -88,7 +88,7 @@ export default class FormItem extends Modal {
                 name="number"
                 label={<this.Translate id="input_stock_purchase_order_number" />}
                 data={formData.number}
-                handleKeyUp={this.handleCheckPONumber}
+                // handleKeyUp={this.handleCheckPONumber}
                 // validateStatus={this.props.requestOrderNumber.fetching ? "validating" : this.validateOrderNumber}
                 // help={this.errorMessageOrderNumber}
                 placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}

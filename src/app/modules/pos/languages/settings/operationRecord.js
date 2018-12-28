@@ -17,12 +17,6 @@ export default {
     "ប្រភេទ"
   ],
 
-  "col_operation_record_amount":[
-    "Amount",
-    "Amount",
-    "ចំនួន"
-  ],
-
   "operation_record_income": [
     "Income",
     "ဝငျငှေ",
@@ -39,12 +33,6 @@ export default {
     "Record For",
     "သည်စံချိန်တင်",
     "កត់ត្រាសម្រាប់"
-  ],
-
-  "input_operation_record_amount": [
-    "Amount",
-    "ငွေပမာဏ",
-    "ចំនួន"
   ],
   
   "error_operation_record_name_length": [

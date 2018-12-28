@@ -4,31 +4,10 @@ export default {
     "No",
     "No"
   ],
-  "col_payment_method_description": [
-    "Description",
-    "Description",
-    "Description"
-  ],
-  "input_payment_method_description": [
-    "Description",
-    "ဖေါ်ပြချက်",
-    "Description"
-  ],
-  "input_payment_method_status": [
-    "Status",
-    "ပြည်နယ်",
-    "Status"
-  ],
-
   "input_placeholder_name": [
     "Please input your name",
     "သင်၏နာမကို input ကိုနှစ်သက်သော",
     "Please input your name"
-  ],
-  "input_placeholder_description": [
-    "Description",
-    "ဖေါ်ပြချက်",
-    "Description"
   ],
 
   "text_enable_on_pos": [

@@ -272,8 +272,8 @@ export default class FormItem extends Modal {
             <this.InputTextArea
               name={`productDescription[${languagesIndex}]`}
               data={productDescription}
-              label={<this.Translate id="input_product_description" />}
-              placeholder={this.CATranslate("input_product_description", locale)}
+              label={<this.Translate id="text_description" />}
+              placeholder={this.CATranslate("text_description", locale)}
               onChange={languagesIndex === 0 ? this.onChangeDefaultDescription : null}
               max={255}
               form={form}/>
@@ -508,9 +508,9 @@ export default class FormItem extends Modal {
                 <this.Col md="12">
                   <this.InputTextArea
                     name="productDescriptionDefault"
-                    label={<this.Translate id="input_product_description" />}
+                    label={<this.Translate id="text_description" />}
                     data={this.state.productDescriptionDefault}
-                    placeholder={this.CATranslate("input_product_description", locale)}
+                    placeholder={this.CATranslate("text_description", locale)}
                     handleOnChange={this.onChangeDefaultDescription}
                     max={255}
                     form={form}/>
@@ -642,7 +642,7 @@ export default class FormItem extends Modal {
             </this.Col>
           </this.Row>
         </this.TabPane>
-        <this.TabPane tab={<this.Translate id="tab_language" />} key="2">
+        <this.TabPane tab={<this.Translate id="text_description" />} key="2">
           <this.Tabs type="card" className="tab-item-language">
             {this.state.languages.map((language, languagesIndex) => this.renderDescription(language, languagesIndex))}
           </this.Tabs>

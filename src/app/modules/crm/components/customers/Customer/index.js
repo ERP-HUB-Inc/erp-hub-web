@@ -194,21 +194,21 @@ class Column extends List {
         render: (text,row) => text + " " + row.lastName
       },
       {
-        title: <this.Translate id="col_management_customer_phoneno" />,
+        title: <this.Translate id="text_phone_number" />,
         dataIndex: "phoneNumber",
         key: "phoneNumber",
         sorter: true,
         render: (phoneNumber) => this.Util.formtTextError(phoneNumber)
       },
       {
-        title: <this.Translate id="col_management_customer_group_address" />,
+        title: <this.Translate id="text_address" />,
         dataIndex: "address",
         key: "address",
         sorter: true,
         render: (address) => this.Util.formtTextError(address)
       },
       {
-        title: <this.Translate id="col_management_customer_email" />,
+        title: <this.Translate id="text_email" />,
         dataIndex: "email",
         key: "email",
         sorter: true,

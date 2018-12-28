@@ -94,9 +94,9 @@ export default class Profile extends Component {
                         <this.InputText
                           name="phoneNumber" 
                           data={getuserProfile.phoneNumber}
-                          placeholder={this.CATranslate("input_hr_employee_phone_no", locale)}
+                          placeholder={this.CATranslate("text_phone_number", locale)}
                           form={form} 
-                          label={<this.Translate id="input_hr_employee_phone_no" />}
+                          label={<this.Translate id="text_phone_number" />}
                           disabled/>
                         <this.InputText
                           name="email" 

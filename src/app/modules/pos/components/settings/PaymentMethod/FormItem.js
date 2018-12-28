@@ -20,8 +20,8 @@ export default class FormItem extends Modal {
         <this.InputText
           data={formData.description}
           name="description"
-          label={<this.Translate id="input_payment_method_description" />}
-          placeholder={this.CATranslate("input_placeholder_description", locale)}
+          label={<this.Translate id="text_description" />}
+          placeholder={this.CATranslate("text_description", locale)}
           max={255}
           form={form}/>
         <this.Switchs

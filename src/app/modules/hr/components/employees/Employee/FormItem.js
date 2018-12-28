@@ -303,9 +303,9 @@ export default class FormItem extends Modal {
               <this.InputText
                 name="phoneNumber" 
                 data={formData.phoneNumber}
-                placeholder={this.CATranslate("input_hr_employee_phone_no", locale)}
+                placeholder={this.CATranslate("text_phone_number", locale)}
                 form={form} 
-                label={<this.Translate id="input_hr_employee_phone_no" />}/>
+                label={<this.Translate id="text_phone_number" />}/>
             </this.Col>
             <this.Col md="12">
               <this.InputEmail

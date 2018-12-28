@@ -9,5 +9,13 @@ export default {
         payload: EmailService.send(content, email, subject)
       });
     };
-  }
+  },
+  reset: () => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.SEND_MAIL_RESET,
+        payload: null
+      });
+    };
+  },
 };
