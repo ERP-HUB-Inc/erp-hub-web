@@ -57,6 +57,10 @@ export class Util {
     return re.test(email);
   }
 
+  setAuthSession(data) {
+    localStorage.setItem(ConstantAuth.ACCESS_TOKEN, JSON.stringify(data));
+  }
+
   getAuthSession () {
     if (!localStorage.getItem(ConstantAuth.ACCESS_TOKEN)) return null;
     let result = localStorage.getItem(ConstantAuth.ACCESS_TOKEN);

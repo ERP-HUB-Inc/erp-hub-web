@@ -24,7 +24,7 @@ export default class ClientSignIn extends Component {
   }
 
   componentDidUpdate() {
-    const {signinUser, dispatch} = this.props;
+    const {signinUser} = this.props;
     if (
       signinUser.response != null
       && ("data" in signinUser.response)
@@ -37,9 +37,9 @@ export default class ClientSignIn extends Component {
       const setting = signinUser.response["data"]["data"];
       const languageCode = setting.setting.defaultLanguageCode;
 
-      dispatch(this.changeLanguage(languageCode));
+      this.props.dispatch(this.changeLanguage(languageCode));
 
-      dispatch(ClientAction.reset());
+      this.props.dispatch(ClientAction.reset());
 
       if (setting &&
         setting.currentUser &&
@@ -82,7 +82,7 @@ export default class ClientSignIn extends Component {
 
       this.validateClassStatus = "has-error";
 
-      dispatch(ClientAction.reset());
+      this.props.dispatch(ClientAction.reset());
     }
   }
   

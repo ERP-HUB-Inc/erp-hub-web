@@ -31,10 +31,21 @@ class Headers extends Component {
         }
       });
     }
+
+    // switch language
+    const setting = this.Util.getSetting();
+    if (setting) {
+      this.props.dispatch(this.changeLanguage(setting.defaultLanguageCode));
+    }
   }
 
   switchLanguage(key) {
-    this.props.dispatch(this.changeLanguage(key));
+    const accessToken = this.Util.getAuthSession();
+    accessToken["setting"]["defaultLanguageCode"] = key;
+    this.Util.setAuthSession(accessToken);
+    window.location.reload();
+    
+    // this.props.dispatch(this.changeLanguage(key));
   }
   
   render() { 
