@@ -36,7 +36,7 @@ export default combineReducers({
       Constant.UPDATE_EMPLOYEE_REJECTED,
       Constant.UPDATE_EMPLOYEE_FULFILLED,
       Constant.SHOW_EMPLOYEE_FORM,
-      Constant.RESET_EMPLOYEE
+      Constant.RESET_UPDATE_EMPLOYEE
     ];
     return reducer.update(state, action, constants);
   },
@@ -45,7 +45,8 @@ export default combineReducers({
       Constant.DETAIL_EMPLOYEE_PENDING,
       Constant.DETAIL_EMPLOYEE_REJECTED,
       Constant.DETAIL_EMPLOYEE_FULFILLED,
-      Constant.RESET_DETAIL_EMPLOYEE
+      Constant.RESET_DETAIL_EMPLOYEE,
+      Constant.PARTIAL_RESET_DETAIL_EMPLOYEE
     ];
     return reducer.detail(state, action, constants);
   },

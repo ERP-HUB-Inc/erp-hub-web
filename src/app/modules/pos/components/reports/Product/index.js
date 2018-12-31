@@ -209,7 +209,7 @@ class Column extends List {
         }
       },
       {
-        title: <this.Translate id="text_product_cost" />,
+        title: <this.Translate id="text_cost" />,
         dataIndex: "cost",
         width: 150,
         align: "right",

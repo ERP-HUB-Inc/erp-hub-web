@@ -16,7 +16,7 @@ export default class FormItem extends Modal {
         checked: false,
         locationId: ""
       },
-      disabled: true,
+      disabled: false,
       requiredPassword: false
     };
     this.timer = null;

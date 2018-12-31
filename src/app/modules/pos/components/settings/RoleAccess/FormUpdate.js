@@ -1,6 +1,5 @@
 import React from "react";
 import FormItem from "./FormItem";
-import PrivilegeList from "../../../containers/settings/RoleAccess/PrivilegeList";
 import RolePrivilegeAction from "../../../action/settings/rolePrivilege";
 import RoleAccessAction from "../../../action/settings/roleAccess";
 import Modal from "../../../../common/components/shares/Modal";
@@ -13,7 +12,7 @@ export default class Form extends Modal {
       rolePrivileges: []
     };
     this.title = <this.Translate id="text_access_role" />;
-    this.width = "50%";
+    this.wrapClassName = "modal-fix-footer";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCallBackGetPrivilegeList = this.handleCallBackGetPrivilegeList.bind(this);
@@ -49,37 +48,17 @@ export default class Form extends Modal {
     this.submitLoading = roleAccessUpdate.updating;
 
     if (roleAccessUpdate.showForm) {
-      this.content = (
-        <this.Tabs type="card">
-          <this.TabPane tab="Create Role" key="1" style={{ height:"500px" }}> 
-            <FormItem
-              formData={roleAccessUpdate.data}
-              handleCallBackGetPrivilegeList={this.handleCallBackGetPrivilegeList}
-              form={form}
-              locale={locale} />
-          </this.TabPane>
-          <this.TabPane tab="Role Access" key="2" style={{ height:"500px" }}>
-            <this.Row>  
-              <this.Col lg="12" md="12"> 
-                { 
-                  <PrivilegeList 
-                    rolePrivileges={this.props.rolePrivileges}
-                    handleCallBackGetPrivilegeList={this.props.handleCallBackGetPrivilegeList}
-                    formvalue={this.props.formvalue} 
-                    privileges={this.props.privileges}
-                    rowData={this.props.rowData}  
-                    form ={this.props.form}
-                    dispatch={this.props.dispatch}
-                  /> }
-              </this.Col> 
-            </this.Row>
-          </this.TabPane>
-        </this.Tabs>
-
-      );
+      this.content = <FormItem
+        privileges={this.props.privileges}
+        rolePrivileges={this.props.rolePrivileges}
+        formData={roleAccessUpdate.data}
+        handleCallBackGetPrivilegeList={this.handleCallBackGetPrivilegeList}
+        form={form}
+        locale={locale}
+        dispatch={this.props.dispatch} />;
       return super.render();
     } else {
-      return (<div></div>);
+      return <div/>;
     }
   }
 }

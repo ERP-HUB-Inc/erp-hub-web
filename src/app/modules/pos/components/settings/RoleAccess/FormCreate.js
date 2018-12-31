@@ -9,8 +9,8 @@ export default class Form extends Modal {
       ...this.state,
       rolePrivileges: []
     };
-    this.title = "Access Role";
-    this.width = "70%";
+    this.title = <this.Translate id="text_access_role" />;
+    this.wrapClassName = "modal-fix-footer";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -19,9 +19,7 @@ export default class Form extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.Util.clearObjProperty(values, [
-          "search_name_privillege"
-        ]);
+        this.Util.clearObjProperty(values, ["search_name_privillege"]);
         this.dispatch(RoleAccessAction.add(values));
       }
     });
@@ -37,16 +35,13 @@ export default class Form extends Modal {
     this.submitLoading = roleAccessAdd.adding;
 
     if (roleAccessAdd.showForm) {
-      this.content = (
-        <FormItem 
-          form={form} 
-          rolePrivileges={rolePrivileges} 
-          privileges={this.props.privileges}
-          rowData={this.props.rowData}
-          dispatch={this.props.dispatch}
-          locale={locale} 
-        />
-      );
+      this.content = <FormItem 
+        form={form} 
+        rolePrivileges={rolePrivileges} 
+        privileges={this.props.privileges}
+        rowData={this.props.rowData}
+        dispatch={this.props.dispatch}
+        locale={locale}/>;
       return super.render();
     } else {
       return (<div></div>);

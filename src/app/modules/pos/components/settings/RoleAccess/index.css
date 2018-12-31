@@ -65,7 +65,7 @@
     padding-left: 50px;
     border: 1.5px solid #ECECEC;
     padding: 10px;
-    padding-left: 53px !important;
+    padding-left: 35px !important;
 }
 
 .main-role-access input {
@@ -99,15 +99,8 @@
 }
 
 .main-role-access .icon-search {
-    position: absolute;
-    z-index: 9;
-    top: 10px;
-    left: 35px;
-    font-size: 15pt;
-    color: #BCBCCB
+    top: 12px;
+    left: 10px;
+    font-size: 17pt
 }
 
-.main-role-access .ant-collapse {
-    height: 500px;
-    overflow-y: scroll;
-}

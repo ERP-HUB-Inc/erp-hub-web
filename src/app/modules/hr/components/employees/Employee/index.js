@@ -21,13 +21,24 @@ export default class EmployeeList extends List {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.update.updated) {
+      this.props.dispatch(EmployeeAction.reset(Constant.RESET_UPDATE_EMPLOYEE));
       this.props.dispatch(EmployeeAction.reset(Constant.RESET_DETAIL_EMPLOYEE));
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.detail.fetched) {
+      this.setState({
+        loadingPopup: false
+      });
+      this.props.dispatch(EmployeeAction.reset(Constant.PARTIAL_RESET_DETAIL_EMPLOYEE));
     }
   }
 
   showFormEdit(rowData) {
     this.props.dispatch(EmployeeAction.requestAndShowForm(rowData));
     this.setState({
+      loadingPopup: true,
       modalConten: <FormUpdate/>
     });
   }

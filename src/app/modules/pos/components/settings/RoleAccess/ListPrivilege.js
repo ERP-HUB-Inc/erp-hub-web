@@ -243,8 +243,6 @@ export default class ListPrivilege extends Component {
 
   componentWillReceiveProps(nextProps) {
 
-    console.log("nextProps",nextProps);
-
     let rolePrivilegesList = nextProps.rolePrivileges.list;
 
     this.setState({
@@ -406,13 +404,12 @@ export default class ListPrivilege extends Component {
           <this.Col md="12" className="search-dropdown-product search-height">
             <div className="main-searchs">
               <this.Form>
-                <span className="icon-search"></span>
+                <span className="search-icon icon-search"></span>
                 <this.InputText 
                   name="search_name_privillege" 
-                  placeholder="Search Access Privillege" 
+                  placeholder="Search access privillege" 
                   form={form}
-                  handleKeyUp={this.handleSearchPrivilege}
-                />  
+                  handleKeyUp={this.handleSearchPrivilege}/>  
                 <div className="remove-search-icon icon-clear" onClick={this.handleRemoveTextSearch}></div>
               </this.Form>
             </div>
@@ -422,9 +419,7 @@ export default class ListPrivilege extends Component {
           <this.Row>
             <this.Col md="12">   
               <this.Collapse>
-                {
-                  this.privilegeCollection.map(parent => this.renderPanelPrivilege(parent))
-                }
+                {this.privilegeCollection.map(parent => this.renderPanelPrivilege(parent))}
               </this.Collapse>
             </this.Col>
           </this.Row>
