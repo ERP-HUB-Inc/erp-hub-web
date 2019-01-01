@@ -4,6 +4,7 @@ import FormVariant from "./FormVariant";
 import FormCostLog from "./FormCostLog";
 import FormProductLog from "./FormProductLog";
 import Enum from "../../../enums";
+import Util from "../../../utils";
 import ProductAction from "../../../actions/products/product";
 import BrandAction from "../../../actions/products/brand";
 import ProductTypeAction from "../../../actions/products/productsType";
@@ -30,7 +31,8 @@ export default class FormItem extends Modal {
       isComponentNotYetLoadedWillUpdate: true,
       productDescriptionIdDefault: "",
       productNameDefault: "",
-      productDescriptionDefault: ""
+      productDescriptionDefault: "",
+      productOptionClassDisabled: ""
     };
 
     this.TAB_PRODUCT_COST_LOG = 3;
@@ -93,6 +95,7 @@ export default class FormItem extends Modal {
     this.onChangeDefaultDescription = this.onChangeDefaultDescription.bind(this);
     this.onChangeTab = this.onChangeTab.bind(this);
     this.getProductImageFromCallBack = this.getProductImageFromCallBack.bind(this);
+    this.handleChangeType = this.handleChangeType.bind(this);
   }
 
   componentDidMount() {
@@ -217,6 +220,14 @@ export default class FormItem extends Modal {
     this.setState({
       productNameDefault: e.target.value
     });
+  }
+
+  handleChangeType(value) {
+    if (value === Enum.TYPE_OF_PRODUCT.RAW_MATERIAL) {
+      this.setState({productOptionClassDisabled: "disabled-click"});
+    } else {
+      this.setState({productOptionClassDisabled: ""});
+    }
   }
 
   onChangeDefaultDescription(e) {
@@ -415,7 +426,7 @@ export default class FormItem extends Modal {
                       <this.InputText
                         name="barcode"
                         label={<this.Translate id="input_product_code" />}
-                        data={formData.barcode}
+                        data={Util.getProductBarcode(formData)}
                         placeholder={this.CATranslate("input_product_code", locale)}
                         required={this.state.isRequireInputBarcode}
                         errorRequired={<this.Translate id="error_require_sku" />}
@@ -449,6 +460,7 @@ export default class FormItem extends Modal {
                     dataSource={this.typesOfProduct}
                     defaultValue={formData.type !== "" ? formData.type : this.typesOfProduct[0].value}
                     disabled={formData.id != null}
+                    onChange={this.handleChangeType}
                     form={form}/>
                 </this.Col>
 
@@ -468,7 +480,7 @@ export default class FormItem extends Modal {
                     label={<this.Translate id="input_product_tax" />}
                     valueKey="id"
                     dataSource={this.state.taxs}
-                    defaultValue={currentUser.setting.defaultTaxId}
+                    defaultValue={formData.id !== null && formData.productTaxes.length > 0 ? formData.productTaxes[0].taxId : currentUser.setting.defaultTaxId}
                     addNew={this.props.handleAddTax}
                     form={form}/>
                 </this.Col>
@@ -591,7 +603,7 @@ export default class FormItem extends Modal {
                 name="productOption"
                 type="radio"
                 defaultValue={formData.productOption}
-                disabled={formData.id != null}
+                disabled={formData.id != null || this.state.productOptionClassDisabled !== ""}
                 form={form}
                 onSelect={this.onSelect}
                 onChange={this.onChange}>
@@ -601,7 +613,7 @@ export default class FormItem extends Modal {
                     title={productType.name}
                     language={productType.description}
                     value={productType.value}
-                    className={productType.value === productTypeBox || formData.id == null ? "" : "disabled-click"} /> 
+                    className={productType.value === productTypeBox || formData.id == null ? productType.value !== Enum.PRODUCT_STANDARD ? this.state.productOptionClassDisabled : "" : "disabled-click"} /> 
                 ) 
                 }
               </this.RadioBox>
@@ -702,6 +714,7 @@ FormItem.defaultProps = {
     productAttributes: [],
     productPackageToProduct: [],
     productDescriptions:[],
+    productTaxes: [],
     status: 1
   },
   tagList: []

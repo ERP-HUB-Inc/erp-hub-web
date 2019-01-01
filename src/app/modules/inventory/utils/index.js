@@ -24,6 +24,10 @@ class Util {
     return productId;
   }
 
+  getProductBarcode(product) {
+    return product && product.productVariants.length > 0 ? product.productVariants[0].barcode : "";
+  }
+
   getProductBrand(product, emptyVaue = "") {
     if (!product) return emptyVaue;
     

@@ -77,9 +77,14 @@
         padding: 0px !important;
     }
 
+    .header .header-left {
+        padding-left: 15px
+    }
+
     .header .header-left,
     .header .header-right {
-        display: table
+        display: flex;
+        align-items: center
     }
 
     .header .header-right {
@@ -110,7 +115,9 @@
 
     .wrap-header {
         margin-left: 90px;
-        background-color: white
+        background-color: white;
+        display: flex;
+        justify-content: space-between
     }
 
 

@@ -185,8 +185,6 @@ export default class Form extends Modal {
           isNotYetLoadComponentDidUpdated: true
         });
 
-        console.log("Values Update:", values);
-
         this.dispatch(ProductAction.update(values));
       }
     });

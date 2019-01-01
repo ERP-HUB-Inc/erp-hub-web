@@ -393,19 +393,6 @@ html,
     margin-right: 0px;
 }
 
-.main-radio-acc .ant-radio-button-wrapper-checked::before {
-    background-color: none !important;
-}
-
-.main-radio-acc .ant-radio-button-wrapper-checked {
-    box-shadow: 0 0 0 0 #4D4F5C !important
-}
-
-.main-radio-acc .ant-radio-button-wrapper-checked {
-    border: 2px solid #093163;
-    box-shadow: 0 0 0 0 #4D4F5C !important
-}
-
 .main-radio-acc .radio-group {
     text-align: center;
 }
@@ -479,9 +466,12 @@ html,
     border-radius: 3px;
 }
 
-.ca-box:hover, .ca-box.active {
+.ca-box:hover,
+.ca-box.active,
+.main-radio-acc .ant-radio-button-wrapper:hover,
+.main-radio-acc .ant-radio-button-wrapper-checked {
     border: 1.5px solid #0D62AF;
-    box-shadow: 0 0 3px 2px rgba(0,138,232,.35);
+    box-shadow: 0 0 3px 2px rgba(0,138,232,.35) !important;
     border-color: #008ae8;
 }
 

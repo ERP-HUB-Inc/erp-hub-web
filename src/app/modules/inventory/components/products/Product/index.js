@@ -371,7 +371,7 @@ class Column extends List {
         dataIndex: "barcode",
         key: "barcode",
         width: 100,
-        render: (text, record) => record.productVariants.length > 0 ? record.productVariants[0].barcode : this.emptyCell,
+        render: (text, record) => Util.getProductBarcode(record),
         sorter: true
       },
       {

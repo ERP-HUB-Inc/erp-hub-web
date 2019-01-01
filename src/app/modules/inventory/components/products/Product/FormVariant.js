@@ -341,7 +341,7 @@ export default class FormVariant extends Modal {
       productAttributes,
       dispatch,
       variantAttributeAdd
-    } = this.props;
+    } = this.props; 
     if (productVariants && productAttributes &&  this.state.isNotYetLoadComponentDidUpdated) {
 
       productAttributes = _.sortBy(productAttributes, ["createdAt"]);
