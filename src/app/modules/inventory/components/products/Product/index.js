@@ -387,7 +387,7 @@ class Column extends List {
         dataIndex: "productType",
         key: "productType",
         width: 200,
-        render: productType => Util.getProductTypeDescription(productType.productTypeDescriptions, "name")
+        render: productType => productType ? Util.getProductTypeDescription(productType.productTypeDescriptions, "name") : ""
       },
       {
         title: <this.Translate id="text_brand" />,

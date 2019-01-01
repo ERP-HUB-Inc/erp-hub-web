@@ -17,6 +17,14 @@ export default class OperationRecord extends List {
     this.action = OperationRecordAction;
     this.RESET_CONSTANT = Constant.RESET_OPERATION_RECORD;
   }
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.add.added) {
+      nextProps.dispatch(OperationRecordAction.fetch(this.pageSize));
+      this.props.dispatch(OperationRecordAction.reset(Constant.RESET_OPERATION_RECORD));
+    }
+  }
+
   renderFilterStatus() {}
 
   checkIsAllowDeleteRecordOrNot() {

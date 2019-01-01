@@ -17,7 +17,8 @@ export default class SaleHistoryList extends List {
     super(props);
     this.state = {
       ...this.state,
-      setDefaultDate: []
+      setDefaultDate: [],
+      reprintReceiptContent: null
     };
     this.columns = new Column();
     this.title = <this.Translate id="text_sale_history"/>;
@@ -62,7 +63,7 @@ export default class SaleHistoryList extends List {
       const productOrderList = this.getProductOrderList(this.props.detail.data);
       const productTaxList = this.getProductTaxList(productOrderList);
       this.setState({
-        modalConten: <div style={{display: "none"}} id="reprint-receipt"><Receipt
+        reprintReceiptContent: <div style={{display: "none"}} id="reprint-receipt"><Receipt
           data={this.props.detail.data}
           receiptTemplate={this.props.receiptTemplate.data}
           currentUser={this.getCurrentUserForRePrintReceipt(this.props.detail.data)}
@@ -84,7 +85,7 @@ export default class SaleHistoryList extends List {
 
       this.setState({
         selectedRowKeys: [],
-        modalConten: null
+        reprintReceiptContent: null
       });
     }
 
@@ -257,6 +258,7 @@ export default class SaleHistoryList extends List {
             </this.Col>
             
           </this.Row>
+          {this.state.reprintReceiptContent}
         </this.Form>
     );
   }

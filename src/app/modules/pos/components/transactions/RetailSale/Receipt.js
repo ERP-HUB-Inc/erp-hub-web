@@ -26,7 +26,7 @@ export default class Receipt extends Component {
     }
   }
 
-  render() { console.log("Receipt Template:", this.props.receiptTemplate);
+  render() {
     let businessName = "";
     let address = "";
     let phoneNumber = "";

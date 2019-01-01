@@ -28,10 +28,9 @@ export default class ProductList extends List {
     this.ExportheadersCsv = [
       {label: this.CATranslate("text_product_name", this.props.locale) , key: "productDescriptions"},
       {label: this.CATranslate("text_product_code", this.props.locale), key: "barcode"},
-      {label: this.CATranslate("col_products_type", this.props.locale), key: "productType"},
       {label: this.CATranslate("col_products_types", this.props.locale), key: "type"},
       {label: this.CATranslate("text_quantity", this.props.locale), key: "quantity"},
-      {label: this.CATranslate("text_product_cost", this.props.locale), key: "cost"},
+      {label: this.CATranslate("text_cost", this.props.locale), key: "cost"},
       {label: this.CATranslate("text_product_total_cost", this.props.locale), key: "totalCost"},
       {label: this.CATranslate("text_price", this.props.locale), key: "price"},
       {label: this.CATranslate("text_total_price", this.props.locale), key: "totalPrice"}
@@ -52,8 +51,13 @@ export default class ProductList extends List {
     const getAllProductReport = [];
     if (Array.isArray(this.props.list.list)) {
       this.props.list.list.forEach(productReport => {
+        let variantName = "";
+        if (productReport.product.productOption === Enum.PRODUCT_VARIANT) {
+          variantName = `(${productReport.name})`;
+        }
+
         getAllProductReport.push({
-          productDescriptions: productReport.productDescriptions ? productReport.productDescriptions[0].name : this.emptyCell,
+          productDescriptions: `${InventoryUtil.getProductName(productReport.product)} ${variantName}`,
           barcode: productReport.barcode ? productReport.barcode : this.emptyCell,
           type: productReport.type === Enum.TYPE_OF_PRODUCT.GOOD ? this.CATranslate("input_product_good", this.props.locale) : this.CATranslate("input_product_raw_material", this.props.locale) ,
           quantity: productReport.quantity,
