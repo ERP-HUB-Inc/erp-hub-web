@@ -20,6 +20,6 @@ export class Line extends Element {
         position: this.props.legendPosition
       }}
       height={this.props.height}
-      width={this.props.width} />;
+      width={this.props.width}/>;
   }
 }

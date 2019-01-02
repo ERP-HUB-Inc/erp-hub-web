@@ -6,7 +6,7 @@ import Modal from "../../../../common/components/shares/Modal";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="update_currency_title" />;
+    this.title = <this.Translate id="text_currency" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -18,6 +18,9 @@ export default class Form extends Modal {
         const {currencyUpdate} = this.props;
         values["id"] = currencyUpdate.data.id;
         values["value"] = Number(values.value);
+        values["isDefault"] = currencyUpdate.data.isDefault;
+        values["isSystem"] = currencyUpdate.data.isSystem;
+        values["isForBilling"] = currencyUpdate.data.isForBilling;
         this.dispatch(CurrencyAction.update(values));
       }
     });

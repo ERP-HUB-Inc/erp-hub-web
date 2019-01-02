@@ -17,6 +17,8 @@ export default class CurrencyList extends List {
     this.action = CurrencyAction;
     this.RESET_CONSTANT = Constant.RESET_CURRENCY;
   }
+
+  checkIsAllowEditRecordOrNot(rowData) {}
 }
 
 class Column extends List {
@@ -35,12 +37,12 @@ class Column extends List {
         },
       },
       {
-        title: <this.Translate id="col_currency_symbol" />,
+        title: <this.Translate id="text_symbol" />,
         dataIndex: "symbol",
         sorter: true
       },
       {
-        title: <this.Translate id="col_currency_value" />,
+        title: <this.Translate id="text_value" />,
         dataIndex: "value",
         sorter: true
       },

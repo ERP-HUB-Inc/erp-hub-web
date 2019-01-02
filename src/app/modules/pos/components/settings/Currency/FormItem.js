@@ -21,15 +21,15 @@ export default class FormItem extends Modal {
         <this.InputText
           data={formData.symbol}
           name="symbol"
-          label={<this.Translate id="input_tax_symbol" />}
-          placeholder={this.CATranslate("input_tax_symbol", locale)}
+          label={<this.Translate id="text_symbol" />}
+          placeholder={this.CATranslate("text_symbol", locale)}
           max={255}
           form={form}/>
         <this.InputNumber
           data={formData.value}
           name="value"
-          label={<this.Translate id="input_tax_value" />}
-          placeholder={this.CATranslate("input_tax_value", locale)}
+          label={<this.Translate id="text_value" />}
+          placeholder={this.CATranslate("text_value", locale)}
           precision="6"
           isAutoSelect={true}
           form={form}/>

@@ -1,35 +1,17 @@
 export default {
-  "create_currency_title": [
-    "Currency",
-    "ငွေကြေးစနစ်",
-    "រូបិយប័ណ្ណ"
-  ],
-  "update_currency_title": [
+  "text_currency": [
     "Currency",
     "ငွေကြေး ကို",
-    "រូបិយប័ណ្ណ: ធ្វើបច្ចុប្បន្នភាព"
+    "រូបិយប័ណ្ណ"
   ],
 
-  "col_currency_symbol": [
+  "text_symbol": [
     "Symbol",
     "အထိမ်းအမှတ်",
     "និមិត្តសញ្ញា"
   ],
 
-  "col_currency_value": [
-    "Value",
-    "အဘိုး",
-    "តម្លៃ"
-  ],
-
-
-  "input_tax_symbol": [
-    "Symbol",
-    "အထိမ်းအမှတ်",
-    "និមិត្តសញ្ញា"
-  ],
-
-  "input_tax_value": [
+  "text_value": [
     "Value",
     "အဘိုး",
     "តម្លៃ"

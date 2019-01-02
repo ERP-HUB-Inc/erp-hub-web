@@ -18,34 +18,18 @@ export default class CurrencyExchangeList extends List {
     this.RESET_CONSTANT = Constant.RESET_CURRENCY_EXCHANGE;
   }
 
-  renderFilterStatus() {
-    return(<div></div>);
+  componentWillUpdate(nextProps) {
+    if (nextProps.add.added) {
+      nextProps.dispatch(CurrencyExchangeAction.fetch(this.pageSize));
+      this.props.dispatch(CurrencyExchangeAction.reset(Constant.RESET_CURRENCY_EXCHANGE));
+    }
   }
+
+  renderFilterStatus() {}
 
   renderButtonDelete(){}
 
   handleShowFormEdit(){}
-
-  renderTable(){
-    return (
-      this.props.list.fetching ? 
-        <div className="text-center">
-          <this.Spin/>
-        </div> 
-        :
-        <div>
-          <this.Row>
-            <this.Col md="12">
-              <this.Table 
-                dataSource={this.props.list.list}
-                columns= {this.columns}
-                locale={{emptyText: <this.Translate id="table_empty_data"/>}}
-              />
-            </this.Col>
-          </this.Row>
-        </div>
-    );
-  }
 }
 
 
@@ -57,15 +41,41 @@ class Column extends List {
       this.columnCreatedAt,
       {
         title: <this.Translate id="text_name" />,
-        dataIndex: "currency",
+        dataIndex: "name",
         sorter: true,
-        render: currency => currency ? currency.name : this.emptyText
+        render: (text, record) => {
+          let baseCurrencyName = "";
+          let toCurrencyName = "";
+
+          if (record.baseCurrency) {
+            baseCurrencyName = record.baseCurrency.name;
+          }
+
+          if (record.currency) {
+            toCurrencyName = record.currency.name ;
+          }
+
+          return <div><span><b>{baseCurrencyName}</b></span> To <span><b>{toCurrencyName}</b></span></div>;
+        }
       },
       {
-        title: <this.Translate id="col_currency_value" />,
+        title: <this.Translate id="text_value" />,
         dataIndex: "value",
         sorter: true,
-        render: value => value
+        render: (text, record) => {
+          let symbolBaseCurrency = "";
+          let toCurrencySymbol = "";
+
+          if (record.baseCurrency) {
+            symbolBaseCurrency = record.baseCurrency.symbol;
+          }
+
+          if (record.currency) {
+            toCurrencySymbol = record.currency.symbol;
+          }
+
+          return `${this.Util.formatCurrency(1, symbolBaseCurrency)} = ${this.Util.formatCurrency(record.value, toCurrencySymbol)}`;
+        }
       },
     ];
   }
