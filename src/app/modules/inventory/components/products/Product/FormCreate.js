@@ -254,6 +254,7 @@ export default class Form extends Modal {
           languages={storeLanguage.list}
           locale={locale}
           dispatch={dispatch}
+          switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
           productVariantArchive={productVariantArchive}
           productVariantCheckStatus={this.props.productVariantCheckStatus}
           productAttributeCheckStatus={this.props.productAttributeCheckStatus}

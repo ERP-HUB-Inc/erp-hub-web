@@ -14,6 +14,7 @@ class ProductForm extends React.Component {
 function mapStateToProps(state) {
   return {
     productAdd: state.reducer.product.add,
+    switchAutoGenerateSKU: state.reducer.product.switchTypeOfGenerateSKU,
     productVariantArchive: state.reducer.product.archiveVariant,
     productVariantCheckStatus: state.reducer.productVariant.checkStatus,
     productAttributeCheckStatus: state.reducer.productVariant.checkStatusAttribute,

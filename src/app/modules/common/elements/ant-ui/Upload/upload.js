@@ -75,7 +75,7 @@ export default class PicturesUpload extends Element {
     }, timeout); 
   }
 
-  handleCardChange({fileList, file}){
+  handleCardChange({fileList, file}){ console.log("Content File:", file);
     if (!this.state.isRemoveImage) {
       this.setState({
         cardImgList: file.name,

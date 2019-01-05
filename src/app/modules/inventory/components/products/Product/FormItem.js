@@ -197,6 +197,16 @@ export default class FormItem extends Modal {
     this.setState({
       productTypeIndex: e.target.value
     });
+
+    if (e.target.value === Enum.PRODUCT_VARIANT) {
+      this.setState({
+        isAutoGenerateCode: this.Enum.GENERATE_PRODUCT_CODE.AUTO
+      });
+    } else {
+      this.setState({
+        isAutoGenerateCode: this.props.form.getFieldValue("isAutoGenerateCode")
+      });
+    }
   }
 
   onCangeIsAutoGenerateCode(e) {
@@ -214,6 +224,8 @@ export default class FormItem extends Modal {
       isAutoGenerateCode: e.target.value,
       isRequireInputBarcode: e.target.value === this.Enum.GENERATE_PRODUCT_CODE.MANAUL
     });
+
+    this.props.dispatch(ProductAction.switchTypeOfGenerateSKU(e.target.value));
   }
 
   onChangeProductName(e) {
@@ -422,20 +434,28 @@ export default class FormItem extends Modal {
                         ]}
                         form={form}/>
                     </this.Col>
-                    <this.Col md="6">
-                      <this.InputText
-                        name="barcode"
-                        label={<this.Translate id="input_product_code" />}
-                        data={Util.getProductBarcode(formData)}
-                        placeholder={this.CATranslate("input_product_code", locale)}
-                        required={this.state.isRequireInputBarcode}
-                        errorRequired={<this.Translate id="error_require_sku" />}
-                        isAutoFocus={this.state.isSetFocusBarcode}
-                        didUpdateMakeAutoFocus={this.state.isSetFocusBarcode}
-                        max={20}
-                        form={form}
-                        disabled={(formData.id != null && formData.isAutoGenerateCode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateCode === this.Enum.GENERATE_PRODUCT_CODE.AUTO} />
-                    </this.Col>
+                    {
+                      this.state.productTypeIndex === Enum.PRODUCT_VARIANT || formData.productOption === Enum.PRODUCT_VARIANT ?
+                        ""
+                        :
+                        <this.Col md="6">
+                          <this.InputText
+                            name="barcode"
+                            label={<this.Translate id="text_product_code" />}
+                            data={Util.getProductBarcode(formData)}
+                            placeholder={this.CATranslate("text_product_code", locale)}
+                            required={this.state.isRequireInputBarcode}
+                            errorRequired={<this.Translate id="error_require_sku" />}
+                            isAutoFocus={this.state.isSetFocusBarcode}
+                            didUpdateMakeAutoFocus={this.state.isSetFocusBarcode}
+                            max={20}
+                            form={form}
+                            disabled={
+                              (formData.id != null && formData.isAutoGenerateCode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || 
+                          this.state.isAutoGenerateCode === this.Enum.GENERATE_PRODUCT_CODE.AUTO
+                            } />
+                        </this.Col>
+                    }
                   </this.Row>
                 </this.Col>
 
@@ -580,7 +600,6 @@ export default class FormItem extends Modal {
                     placeholder={this.CATranslate("input_product_price_placeholder", locale)}
                     errorRequired={<this.Translate id="error_require_price" />}
                     max={99999999}
-                    required={true}
                     form={form}/>
                 </this.Col>
 
@@ -626,6 +645,7 @@ export default class FormItem extends Modal {
                       form={form}
                       locale={locale}
                       formData={formData}
+                      switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
                       productVariantArchive={this.props.productVariantArchive}
                       productVariantCheckStatus={this.props.productVariantCheckStatus}
                       productAttributeCheckStatus={this.props.productAttributeCheckStatus}

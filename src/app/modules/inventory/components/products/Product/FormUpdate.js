@@ -319,6 +319,7 @@ export default class Form extends Modal {
           formData={productDetail.data}
           productLog={productLog}
           productCostLog={productCostLog}
+          switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
           productVariantArchive={this.props.productVariantArchive}
           productVariantCheckStatus={this.props.productVariantCheckStatus}
           productAttributeCheckStatus={this.props.productAttributeCheckStatus}

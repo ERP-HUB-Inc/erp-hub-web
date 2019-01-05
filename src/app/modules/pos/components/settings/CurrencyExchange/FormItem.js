@@ -24,7 +24,7 @@ export default class FormItem extends Modal {
   }
 
   render() {
-    const {formData, form, locale} = this.props;
+    const {form, locale} = this.props;
     const { switchCurrency } = this.state;
     let defaultCurrencyId = "";
     let listCurrency = [];

@@ -110,5 +110,23 @@ export default combineReducers({
       Constant.PARTIAL_RESET_DETAIL_PRODUCTS
     ];
     return reducer.detail(state, action, constants);
-  }
+  },
+  switchTypeOfGenerateSKU: (state = {switched: false, value: null}, action) => {
+    switch(action.type) {
+    case Constant.SWITCH_TYPE_OF_GENERATE_SKU: {
+      return {
+        switched: true,
+        value: action.payload
+      };
+    }
+    case Constant.RESET_SWITCH_TYPE_OF_GENERATE_SKU: {
+      return {
+        switched: false,
+        value: null
+      };
+    }
+    default: 
+      return state;
+    }
+  },
 });

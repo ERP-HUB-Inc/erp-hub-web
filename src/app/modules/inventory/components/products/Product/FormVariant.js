@@ -1,6 +1,7 @@
 import React from "react";
 import _ from "lodash";
 import ProductAction from "../../../actions/products/product";
+import Constant from "../../../constants/products/product";
 import ProductVariantAction from "../../../actions/products/productVariant";
 import ConstantAttribute from "../../../constants/products/variantAttribute";
 import VariantAttributeAction from "../../../actions/products/variantAttribute";
@@ -37,11 +38,12 @@ export default class FormVariant extends Modal {
         dataIndex: "barcode",
         key: "barcode",
         width: 120,
-        render: (text, record, index) => {
+        render: (text, record, index) => { console.log("KKKKKKKK:", record);
           return <this.InputText
             name={`variantProductCode[${index}]`}
             placeholder={this.CATranslate("text_product_code", this.props.locale)}
             data={record.barcode}
+            disabled={record.isAutoGenerateCode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
             handleKeyUp={(e) => this.handleOnChangeBarcode(e, index)}
             form={this.props.form}/>;
         }
@@ -341,7 +343,8 @@ export default class FormVariant extends Modal {
       productAttributes,
       dispatch,
       variantAttributeAdd
-    } = this.props; 
+    } = this.props;
+
     if (productVariants && productAttributes &&  this.state.isNotYetLoadComponentDidUpdated) {
 
       productAttributes = _.sortBy(productAttributes, ["createdAt"]);
@@ -383,6 +386,16 @@ export default class FormVariant extends Modal {
       
       dispatch(VariantAttributeAction.reset());
       document.getElementById(`lozenge-item${this.state.addAttributeRowIndex}`).focus();
+    }
+
+    if (this.props.switchAutoGenerateSKU.switched) {
+      const productVariantList = this.state.productVariantList;
+      const isAutoGenerateCode = this.props.switchAutoGenerateSKU.value;
+      productVariantList.forEach((productVariant, index) => {
+        productVariantList[index]["isAutoGenerateCode"] = isAutoGenerateCode;
+      });
+      this.setState({productVariantList});
+      this.props.dispatch(ProductAction.reset(Constant.RESET_SWITCH_TYPE_OF_GENERATE_SKU));
     }
 
     if (this.props.variantAttributes.fetched) {
@@ -513,6 +526,17 @@ export default class FormVariant extends Modal {
     return Math.floor(1000 + Math.random() * 9000);
   }
 
+  productVariantDataField(name) {
+    return {
+      id: "",
+      name,
+      price: this.props.form.getFieldValue("price") ? this.props.form.getFieldValue("price") : 0,
+      isAutoGenerateCode: this.props.form.getFieldValue("isAutoGenerateCode"),
+      barcode: "",
+      cost: 0
+    };
+  }
+
   generateProductVariant(collection, index, isNotDeleteRequest = true) {
     let existingProductVariantList = this.state.productVariantList;
     let productVariantList = [];
@@ -550,11 +574,7 @@ export default class FormVariant extends Modal {
               name = `${value1.name} / ${value2.name} / ${value3.name}`;
   
               productVariantList.push(this.appendProductVariant({
-                id: "",
-                name,
-                barcode: "",
-                price: 0,
-                cost: 0,
+                ...this.productVariantDataField(name),
                 temp: [
                   value1.tempPAVId ? value1.tempPAVId : value1.id,
                   value2.tempPAVId ? value2.tempPAVId : value2.id,
@@ -584,11 +604,7 @@ export default class FormVariant extends Modal {
             name = `${value1.name} / ${value3.name}`;
   
             productVariantList.push(this.appendProductVariant({
-              id: "",
-              name,
-              barcode: "",
-              price: 0,
-              cost: 0,
+              ...this.productVariantDataField(name),
               temp: [
                 value1.tempPAVId ? value1.tempPAVId : value1.id,
                 value3.tempPAVId ? value3.tempPAVId : value3.id
@@ -615,11 +631,7 @@ export default class FormVariant extends Modal {
             name = `${value2.name} / ${value3.name}`;
   
             productVariantList.push(this.appendProductVariant({
-              id: "",
-              name,
-              barcode: "",
-              price: 0,
-              cost: 0,
+              ...this.productVariantDataField(name),
               temp: [
                 value2.tempPAVId ? value2.tempPAVId : value2.id,
                 value3.tempPAVId ? value3.tempPAVId : value3.id
@@ -640,11 +652,7 @@ export default class FormVariant extends Modal {
           const value2 = collection[1].attributeValues[i2];
           name = `${value2.name}`;
           productVariantList.push(this.appendProductVariant({
-            id: "",
-            name,
-            barcode: "",
-            price: 0,
-            cost: 0,
+            ...this.productVariantDataField(name),
             temp: [
               value2.tempPAVId ? value2.tempPAVId : value2.id
             ]
@@ -662,11 +670,7 @@ export default class FormVariant extends Modal {
           name = `${value3.name}`;
 
           productVariantList.push(this.appendProductVariant({
-            id: "",
-            name,
-            barcode: "",
-            price: 0,
-            cost: 0,
+            ...this.productVariantDataField(name),
             temp: [
               value3.tempPAVId ? value3.tempPAVId : value3.id
             ]
@@ -692,11 +696,7 @@ export default class FormVariant extends Modal {
                   const value3 = collection[2].attributeValues[i3];
                   name = `${value1.name} / ${value2.name} / ${value3.name}`;
                   productVariantList.push(this.appendProductVariant({
-                    id: "",
-                    name,
-                    barcode: "",
-                    price: 0,
-                    cost: 0,
+                    ...this.productVariantDataField(name),
                     temp: [
                       value1.tempPAVId ? value1.tempPAVId : value1.id,
                       value2.tempPAVId ? value2.tempPAVId : value2.id,
@@ -708,11 +708,7 @@ export default class FormVariant extends Modal {
                 }
               } else {
                 productVariantList.push(this.appendProductVariant({
-                  id: "",
-                  name,
-                  barcode: "",
-                  price: 0,
-                  cost: 0,
+                  ...this.productVariantDataField(name),
                   temp: [
                     value1.tempPAVId ? value1.tempPAVId : value1.id,
                     value2.tempPAVId ? value2.tempPAVId : value2.id
@@ -723,10 +719,7 @@ export default class FormVariant extends Modal {
             }
           } else {
             productVariantList.push(this.appendProductVariant({
-              id: "",
-              name,
-              price: 0,
-              cost: 0,
+              ...this.productVariantDataField(name),
               temp: [
                 value1.tempPAVId ? value1.tempPAVId : value1.id
               ]
@@ -812,6 +805,7 @@ export default class FormVariant extends Modal {
       id: variantAttribute.id,
       name: variantAttribute.name,
       barcode: variantAttribute.barcode,
+      isAutoGenerateCode: variantAttribute.isAutoGenerateCode,
       cost: variantAttribute.cost,
       price: variantAttribute.price,
       quantity: variantAttribute.quantity,
@@ -1079,7 +1073,7 @@ export default class FormVariant extends Modal {
     );
   }
 
-  render() {
+  render() { console.log("ProductVariantList:", this.state.productVariantList);
     this.submitConfirmActionLoading = this.props.productVariantArchive.archiving;
     const attributeLength = this.countProductAttribute(this.state.variantAttributeList);
     return (

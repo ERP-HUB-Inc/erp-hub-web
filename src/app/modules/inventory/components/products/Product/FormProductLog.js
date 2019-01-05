@@ -8,7 +8,7 @@ export default class FormProductLog extends Modal {
     super(props);
     this.columns = [
       {
-        title: <this.Translate id="col_product_cost_log_date" />,
+        title: <this.Translate id="text_date" />,
         dataIndex: "createdAt",
         width: 200,
         key: "createdAt",

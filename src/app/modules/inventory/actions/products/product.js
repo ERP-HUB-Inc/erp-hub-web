@@ -121,6 +121,14 @@ export default {
         payload: ProductService.uploadFile(formData)
       });
     };
+  },
+  switchTypeOfGenerateSKU: (value) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.SWITCH_TYPE_OF_GENERATE_SKU,
+        payload: value
+      });
+    };
   }
 };
 

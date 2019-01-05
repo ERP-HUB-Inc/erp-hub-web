@@ -123,7 +123,7 @@ export default class Retail extends Component {
     this.addEventKeyDownAndCaptureValueToInputSearchProduct();
 
     this.props.dispatch(ProductTypeAction.fetch(18));
-    this.props.dispatch(ProductAction.fetch(25, "", "createdAt", "ASC", JSON.stringify({isAvialableSale: [Enum.PRODUCT_AVIALABLE_ON_SALE]})));
+    this.props.dispatch(ProductAction.fetch(25, "", "", "", JSON.stringify({isAvialableSale: [Enum.PRODUCT_AVIALABLE_ON_SALE]})));
     this.props.dispatch(PaymentMethodAction.fetch(100, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
     window.addEventListener("resize", this.handleOnResizeScreen);
     this.props.dispatch(OpenSaleRegistrationAction.showForm());

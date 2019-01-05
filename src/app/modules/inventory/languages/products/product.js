@@ -122,15 +122,15 @@ export default {
   ],
 
   "input_product_enter_custom_code": [
-    "Enter custom product code",
-    "Enter custom product code",
-    "Enter custom product code"
+    "Enter custom product SKU",
+    "Enter custom product SKU",
+    "Enter custom product SKU"
   ],
 
   "input_product_auto_generate_code": [
-    "Automatiacally generate",
-    "Automatiacally generate",
-    "Automatiacally generate"
+    "Automatiacally generate SKU",
+    "Automatiacally generate SKU",
+    "Automatiacally generate SKU"
   ],
 
   "input_product_is_avialable_sale": [
