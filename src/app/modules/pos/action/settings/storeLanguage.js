@@ -6,7 +6,7 @@ export default {
   fetch:(limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
-        type: Constant.REQUEST_STORE_LANGUAGE,
+        type: Constant.REQUEST_LANGUAGE,
         payload: LanguageService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
@@ -14,7 +14,7 @@ export default {
   archive: (ids) => {
     return dispatch => {
       return dispatch({
-        type:  Constant.ARCHIVE_STORE_LANGUAGE,
+        type:  Constant.ARCHIVE_LANGUAGE,
         payload: LanguageService.archive(ids)
       });
     };
@@ -22,7 +22,7 @@ export default {
   add: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ADD_STORE_LANGUAGE,
+        type: Constant.ADD_LANGUAGE,
         payload: LanguageService.add(data)
       });
     };
@@ -30,15 +30,15 @@ export default {
   update: (data, id) => {
     return dispatch => {
       return dispatch({
-        type: Constant.UPDATE_STORE_LANGUAGE,
+        type: Constant.UPDATE_LANGUAGE,
         payload: LanguageService.update(data, id)
       });
     };
   },
-  reset: () => {
+  reset: (RESET_CONSTANT = Constant.RESET_LANGUAGE) => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET_STORE_LANGUAGE,
+        type: RESET_CONSTANT,
         payload: null
       });
     };
@@ -46,7 +46,7 @@ export default {
   showForm: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.SHOW_STORE_LANGUAGE_FORM,
+        type: Constant.SHOW_LANGUAGE_FORM,
         payload: data
       });
     };

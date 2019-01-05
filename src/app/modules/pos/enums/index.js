@@ -25,5 +25,6 @@ export default {
     OPEN: 1,
     CLOSED: 0
   },
-  LOCATION_NOT_FOUND: 619
+  LOCATION_NOT_FOUND: 619,
+  LANGUAGE_ALREADY_EXIST: 603
 };

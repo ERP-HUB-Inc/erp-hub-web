@@ -1,7 +1,9 @@
 import React from "react";
 import FormItem from "./FormItem";
-import StoreLanguageAction from "../../../action/settings/storeLanguage";
+import LanguageAction from "../../../action/settings/storeLanguage";
+import Constant from "../../../constants/settings/storeLanguage";
 import Modal from "../../../../common/components/shares/Modal";
+import Enum from "../../../enums";
 
 export default class Form extends Modal {
   constructor(props) {
@@ -16,17 +18,24 @@ export default class Form extends Modal {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidUpdate() {
+    if (this.props.storeLanguageAdd.error && this.Util.getErrorCodeFromState(this.props.storeLanguageAdd.error) === Enum.LANGUAGE_ALREADY_EXIST) {
+      this.Message.error(this.CATranslate("language_exist", this.props.locale));
+      this.props.dispatch(LanguageAction.reset(Constant.RESET_LANGUAGE_ADD));
+    }
+  }
+
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.dispatch(StoreLanguageAction.add(values));
+        this.dispatch(LanguageAction.add(values));
       }
     });
   }
     
   handleCancel() {
-    this.dispatch(StoreLanguageAction.reset());
+    this.dispatch(LanguageAction.reset());
   }
   
   render() {

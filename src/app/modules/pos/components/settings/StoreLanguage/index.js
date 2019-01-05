@@ -15,13 +15,13 @@ export default class StoreLanguageList extends List {
     this.columnFilterWithKey = ["name"];
     this.service = StoreLanguageService;
     this.action = StoreLanguageAction;
-    this.RESET_CONSTANT = Constant.RESET_STORE_LANGUAGE;
+    this.RESET_CONSTANT = Constant.RESET_LANGUAGE;
   }
 
   componentWillUpdate(nextProps) {
     if (nextProps.add.added) {
       this.props.dispatch(StoreLanguageAction.fetch(5));
-      this.props.dispatch(StoreLanguageAction.reset(Constant.RESET_STORE_LANGUAGE));
+      this.props.dispatch(StoreLanguageAction.reset(Constant.RESET_LANGUAGE));
     }
   }
 }

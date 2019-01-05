@@ -23,16 +23,10 @@ export default {
     "Receipt Logo"
   ],
 
-  "input_language_symbol": [
-    "Symbol",
-    "အထိမ်းအမှတ်",
-    "និមិត្តសញ្ញា"
-  ],
-
-  "input_language_value": [
-    "Value",
-    "အဘိုး",
-    "តម្លៃ"
+  "language_exist": [
+    "Language already exist",
+    "Language already exist",
+    "Language already exist"
   ],
 
   "error_language_name_length": [

@@ -712,4 +712,10 @@ export default {
     "Enter name",
     "Enter name"
   ],
+
+  "error_require_description": [
+    "Enter description",
+    "Enter description",
+    "Enter description"
+  ],
 };
