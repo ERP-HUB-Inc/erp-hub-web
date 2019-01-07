@@ -10,8 +10,8 @@ export default class Form extends Modal {
   constructor(props) {
     super(props);
     this.wrapClassName = "wrap-modal-po";
-    this.width = window.innerWidth < 1200 ? window.innerWidth : 1200;
-    this.height = window.innerHeight < 800 ? window.innerHeight : 800;
+    this.width = window.innerWidth < 1400 ? window.innerWidth : 1400;
+    // this.height = window.innerHeight < 800 ? "100%" : 800;
     this.PO_STEP_STR = {
       [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color: this.Enum.PO_STEP_COLOR.DRAFT},
       [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="purchase_order_step_process" />, color:  this.Enum.PO_STEP_COLOR.PROCESS},

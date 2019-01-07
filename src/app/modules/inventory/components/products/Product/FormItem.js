@@ -24,7 +24,7 @@ export default class FormItem extends Modal {
       languages: [],
       tags: [],
       productTypeIndex: 0, // for condition three type starndard, variant, composite
-      isAutoGenerateCode: 0,
+      isAutoGenerateBarcode: 0,
       isRequireInputBarcode: true,
       isSetFocusBarcode: false,
       isComponentNotYetUpdated: true,
@@ -200,11 +200,11 @@ export default class FormItem extends Modal {
 
     if (e.target.value === Enum.PRODUCT_VARIANT) {
       this.setState({
-        isAutoGenerateCode: this.Enum.GENERATE_PRODUCT_CODE.AUTO
+        isAutoGenerateBarcode: this.Enum.GENERATE_PRODUCT_CODE.AUTO
       });
     } else {
       this.setState({
-        isAutoGenerateCode: this.props.form.getFieldValue("isAutoGenerateCode")
+        isAutoGenerateBarcode: this.props.form.getFieldValue("isAutoGenerateBarcode")
       });
     }
   }
@@ -221,7 +221,7 @@ export default class FormItem extends Modal {
     }
 
     this.setState({
-      isAutoGenerateCode: e.target.value,
+      isAutoGenerateBarcode: e.target.value,
       isRequireInputBarcode: e.target.value === this.Enum.GENERATE_PRODUCT_CODE.MANAUL
     });
 
@@ -357,10 +357,10 @@ export default class FormItem extends Modal {
                 <this.Col md="4">
                   <this.InputText
                     name="productNameDefault"
-                    label={<this.Translate id="text_product_name" />}
+                    label={<this.Translate id="text_name" />}
                     data={this.state.productNameDefault}
-                    placeholder={this.CATranslate("text_product_name", locale)}
-                    errorRequired={<this.Translate id="error_require_product_name" />}
+                    placeholder={this.CATranslate("text_name", locale)}
+                    errorRequired={<this.Translate id="error_require_name" />}
                     errorLenght={<this.Translate id="input_error_products_name" />}
                     onChange={this.onChangeProductName}
                     isAutoFocus={true}
@@ -419,8 +419,8 @@ export default class FormItem extends Modal {
                   <this.Row className="group-code-generate">
                     <this.Col md="6" className="wrap-generate-code">
                       <this.RadioButton 
-                        name="isAutoGenerateCode"
-                        defaultValue={formData.isAutoGenerateCode === this.Enum.GENERATE_PRODUCT_CODE.MANAUL ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO}
+                        name="isAutoGenerateBarcode"
+                        defaultValue={formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.MANAUL ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO}
                         disabled={formData.id != null}
                         onChange={this.onCangeIsAutoGenerateCode}
                         dataSource={[
@@ -451,8 +451,8 @@ export default class FormItem extends Modal {
                             max={20}
                             form={form}
                             disabled={
-                              (formData.id != null && formData.isAutoGenerateCode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || 
-                          this.state.isAutoGenerateCode === this.Enum.GENERATE_PRODUCT_CODE.AUTO
+                              (formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || 
+                          this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO
                             } />
                         </this.Col>
                     }
@@ -596,7 +596,7 @@ export default class FormItem extends Modal {
                   <this.InputNumber
                     name="price"
                     label={<span><this.Translate id="text_price" /><span> ({currentUser.setting.currency})</span></span>}
-                    data={formData.price}
+                    data={Util.getProductPrice(formData)}
                     placeholder={this.CATranslate("input_product_price_placeholder", locale)}
                     errorRequired={<this.Translate id="error_require_price" />}
                     max={99999999}
@@ -717,7 +717,7 @@ FormItem.defaultProps = {
     brandId: "",
     productTypeId: "",
     serialType: "",
-    isAutoGenerateCode: 0,
+    isAutoGenerateBarcode: 0,
     barcode: "",
     type: "",
     productOption: Enum.PRODUCT_STANDARD,

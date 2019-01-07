@@ -401,11 +401,11 @@ class Column extends List {
       },
       {
         title: <this.Translate id="text_price" />,
-        key: "productVariants",
-        dataIndex: "productVariants",
+        key: "price",
+        dataIndex: "price",
         width: 150,
         align: "center",
-        render: productVariants => productVariants.length > 0 ? this.formatCurrency(productVariants[0].price) : this.formatCurrency(0),
+        render: (text, record) => this.formatCurrency(Util.getProductPrice(record)),
         sorter: true
       },
       {

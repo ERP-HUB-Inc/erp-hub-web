@@ -43,7 +43,7 @@ export default class FormVariant extends Modal {
             name={`variantProductCode[${index}]`}
             placeholder={this.CATranslate("text_product_code", this.props.locale)}
             data={record.barcode}
-            disabled={record.isAutoGenerateCode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
+            disabled={record.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
             handleKeyUp={(e) => this.handleOnChangeBarcode(e, index)}
             form={this.props.form}/>;
         }
@@ -390,9 +390,9 @@ export default class FormVariant extends Modal {
 
     if (this.props.switchAutoGenerateSKU.switched) {
       const productVariantList = this.state.productVariantList;
-      const isAutoGenerateCode = this.props.switchAutoGenerateSKU.value;
+      const isAutoGenerateBarcode = this.props.switchAutoGenerateSKU.value;
       productVariantList.forEach((productVariant, index) => {
-        productVariantList[index]["isAutoGenerateCode"] = isAutoGenerateCode;
+        productVariantList[index]["isAutoGenerateBarcode"] = isAutoGenerateBarcode;
       });
       this.setState({productVariantList});
       this.props.dispatch(ProductAction.reset(Constant.RESET_SWITCH_TYPE_OF_GENERATE_SKU));
@@ -531,7 +531,7 @@ export default class FormVariant extends Modal {
       id: "",
       name,
       price: this.props.form.getFieldValue("price") ? this.props.form.getFieldValue("price") : 0,
-      isAutoGenerateCode: this.props.form.getFieldValue("isAutoGenerateCode"),
+      isAutoGenerateBarcode: this.props.form.getFieldValue("isAutoGenerateBarcode"),
       barcode: "",
       cost: 0
     };
@@ -805,7 +805,7 @@ export default class FormVariant extends Modal {
       id: variantAttribute.id,
       name: variantAttribute.name,
       barcode: variantAttribute.barcode,
-      isAutoGenerateCode: variantAttribute.isAutoGenerateCode,
+      isAutoGenerateBarcode: variantAttribute.isAutoGenerateBarcode,
       cost: variantAttribute.cost,
       price: variantAttribute.price,
       quantity: variantAttribute.quantity,

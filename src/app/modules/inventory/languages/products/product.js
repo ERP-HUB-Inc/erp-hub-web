@@ -463,12 +463,6 @@ export default {
 
   // ERROR
 
-  "error_require_product_name": [
-    "Enter product name",
-    "Enter product name",
-    "Enter product name"
-  ],
-
   "error_require_brand": [
     "Choose product brand",
     "Choose product brand",

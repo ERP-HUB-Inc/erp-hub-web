@@ -255,14 +255,6 @@ export class Util {
   formatCurrencyV2(n, currency) {
     return currency + n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,");
   }
-  
-  formatCurrencyV3(n, currency) {
-    return new Intl.NumberFormat("ru", {
-      style: "currency",
-      currency: currency
-    }).format(n);
-  }
-
   isJsonString(str) {
     try {
       JSON.parse(str);

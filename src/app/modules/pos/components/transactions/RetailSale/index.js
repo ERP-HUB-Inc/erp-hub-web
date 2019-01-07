@@ -658,7 +658,7 @@ export default class Retail extends Component {
                     ""
                 }
               </div>
-              <div className="price">{this.formatCurrency(product.price)}</div>
+              <div className="price">{this.formatCurrency(Util.getProductPrice(product))}</div>
             </div>
           </this.Col>
         )

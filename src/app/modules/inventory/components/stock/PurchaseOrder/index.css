@@ -18,10 +18,6 @@
     margin-top: 2px
 }
 
-#purchase-order-form .purchase-order-entry {
-    min-height: 425px
-}
-
 .ant-form-horizontal .purchase-order {
     margin-bottom: 0px !important
 }
