@@ -10,16 +10,26 @@ export default class Form extends Modal {
       rolePrivileges: []
     };
     this.title = <this.Translate id="text_access_role" />;
+    this.style = {height: 550};
     this.wrapClassName = "modal-fix-footer";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCallBackGetPrivilegeList = this.handleCallBackGetPrivilegeList.bind(this);
+  }
+
+  handleCallBackGetPrivilegeList(rolePrivileges) {
+    this.setState({rolePrivileges});
   }
 
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+
         this.Util.clearObjProperty(values, ["search_name_privillege"]);
+
+        values["privileges"] = this.state.rolePrivileges;
+
         this.dispatch(RoleAccessAction.add(values));
       }
     });
@@ -30,21 +40,22 @@ export default class Form extends Modal {
   }
   
   render() {
-    const {roleAccessAdd, rolePrivileges, locale, form} = this.props;
+    const {roleAccessAdd, locale, form} = this.props;
 
     this.submitLoading = roleAccessAdd.adding;
 
     if (roleAccessAdd.showForm) {
       this.content = <FormItem 
         form={form} 
-        rolePrivileges={rolePrivileges} 
+        rolePrivileges={this.props.rolePrivileges} 
         privileges={this.props.privileges}
+        handleCallBackGetPrivilegeList={this.handleCallBackGetPrivilegeList}
         rowData={this.props.rowData}
         dispatch={this.props.dispatch}
         locale={locale}/>;
       return super.render();
     } else {
-      return (<div></div>);
+      return <div/>;
     }
   }
 }

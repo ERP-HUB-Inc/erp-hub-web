@@ -270,13 +270,13 @@ export default class StoreAccountList extends Component {
                                 form={form}
                                 disabled/>
                   
-                              <this.InputText
+                              {/* <this.InputText
                                 name="countryId"
                                 data={storeAccount.list.country != null ? storeAccount.list.country.name : ""}
                                 label={<this.Translate id="store_acc_country" />}
                                 placeholder={this.CATranslate("store_acc_country", locale)}
                                 disabled
-                                form={form}/>
+                                form={form}/> */}
 
                               <this.Select
                                 name="languageId"
@@ -328,7 +328,14 @@ export default class StoreAccountList extends Component {
                         </this.TabPane>
                         <this.TabPane tab={<this.Translate id="store_acc_account" />} key="2">
                           <this.Row>
-                            <this.Col lg="4" md="4"> 
+                            <this.Col lg="4" md="4">
+                              <this.InputText
+                                data={storeAccount.list.users && storeAccount.list.users.length > 0 ? storeAccount.list.users[0]["userName"] : ""}
+                                name="userName"
+                                label={<this.Translate id="text_user_name" />}
+                                disabled={true}
+                                form={form}/>
+
                               <this.InputPassword
                                 // CURRENT PWD
                                 currentPWDName="currentPassword"

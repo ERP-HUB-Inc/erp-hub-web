@@ -1,5 +1,7 @@
 import React from "react";
 import PrivilegeAction from "../../../action/settings/privilege";
+import RolePrivilegeAction from "../../../action/settings/rolePrivilege";
+import ConstantRolePrivilege from "../../../constants/settings/rolePrivilege";
 import Component from "../../../../common/components/Component";
 import "./index.css";
 
@@ -23,34 +25,95 @@ export default class ListPrivilege extends Component {
     this.compareTwoCollection = this.compareTwoCollection.bind(this);
     this.handleSearchPrivilege = this.handleSearchPrivilege.bind(this);
     this.handleRemoveTextSearch = this.handleRemoveTextSearch.bind(this);
-
   };
 
   componentDidMount () {
     this.props.dispatch(PrivilegeAction.fetch(200));
   }
 
-  // handleSubmit () {
-  //   const {dispatch} = this.props;
+  componentWillReceiveProps(nextProps) {
 
-  //   if (this.props.rowData) {
-  //     const roleId = this.props.rowData.id;
-  //     const privileges = {privileges: this.state.checkChildIdList};
+    if (nextProps.rolePrivileges.fetched) {
+      let rolePrivilegesList = nextProps.rolePrivileges.list;
 
-  //     this.setState({isGrantingPrivilege: true});
-  //     setTimeout(function () {
-  //       this.setState({isGrantingPrivilege: false});
-  //     }.bind(this), 2000);
-      
+      this.setState({
+        checkChildIdList: [],
+        checkChildIdListV2: [],
+        checkParentIdList: []
+      });
+  
+      const checkChildIdListV2 = [];
+      const checkChildIdList = [];
+      const checkParentIdList = [];
 
-  //     this.props.values =  privileges;
+      rolePrivilegesList.forEach(rolePrivilege => {
+        const parentId = rolePrivilege.privilege.parentId;
+        const privilegeId = rolePrivilege.privilegeId;
+        const rolePrivilegeId = rolePrivilege.id;
 
-  //     dispatch(RolePrivilegeAction.assignPrivilege(roleId, privileges));
+        // append parent list
+        if (!checkParentIdList.find(checkParentId => checkParentId === rolePrivilege.privilege.parentId)) {
+          checkParentIdList.push(rolePrivilege.privilege.parentId);
+        }
 
-  //   } else {
-  //     this.Message.warning(this.CATranslate("warning_not_select_role", this.props.locale));
-  //   }
-  // }
+        // For Child Check List
+        checkChildIdList.push({
+          rolePrivilegeId,
+          privilegeId,
+          value: 1
+        });
+
+        // checkChildIdListV2: use for validation is all checked or some checked
+        if (checkChildIdListV2.length === 0) {
+          checkChildIdListV2.push({
+            parentId,
+            child: [{
+              rolePrivilegeId,
+              privilegeId,
+              value: 1
+            }]
+          });
+        } else {
+          let parentNotExist = true;
+          checkChildIdListV2.forEach((value, index) => {
+            if (value.parentId === parentId) {
+              parentNotExist = false;
+              checkChildIdListV2[index]["child"].push(
+                {
+                  rolePrivilegeId,
+                  privilegeId,
+                  value: 1
+                }
+              );
+            } 
+          });
+
+          if (parentNotExist) {
+            checkChildIdListV2.push({
+              parentId,
+              child: [{
+                rolePrivilegeId,
+                privilegeId,
+                value: 1
+              }]
+            });
+          }
+        }
+      });
+
+      this.setState({
+        checkChildIdList,
+        checkChildIdListV2,
+        checkParentIdList
+      });
+
+      if (this.props.handleCallBackGetPrivilegeList) {
+        this.props.handleCallBackGetPrivilegeList(this.state.checkChildIdList);
+      }
+
+      this.props.dispatch(RolePrivilegeAction.reset(ConstantRolePrivilege.RESET_REQUEST_ROLE_PRIVILEGE_PARTIAL));
+    }
+  }
 
   handleSearchPrivilege (e) {
     this.setState({searchPrivilegeKey: e.target.value.trim()});
@@ -88,7 +151,9 @@ export default class ListPrivilege extends Component {
         this.setState({checkChildIdListV2: [{parentId: e.target.value, child: allChildIds}]});
       } else {
         const checkChildIdListV2 = this.state.checkChildIdListV2;
+
         let isParentIdNotExist = true;
+
         checkChildIdListV2.forEach((value, index) => {
           if (value["parentId"] === e.target.value) {
             isParentIdNotExist = false;
@@ -104,10 +169,23 @@ export default class ListPrivilege extends Component {
       }
 
       // push mutiple elements to array list
-      this.state.checkChildIdList.push.apply(this.state.checkChildIdList, allChildIds);
+      const checkChildIdList = this.state.checkChildIdList;
+      allChildIds.forEach(childPrivilege => {
+        const searchResult = checkChildIdList.find(checkChildId => checkChildId.privilegeId === childPrivilege.privilegeId);
+        if (!searchResult) {
+          checkChildIdList.push(childPrivilege);
+        } else if(searchResult) {
+          searchResult["value"] = 1;// it affect to state because it reference address
+        }
+      });
+
+      this.setState({checkChildIdList});
+
+      if (this.props.handleCallBackGetPrivilegeList) {
+        this.props.handleCallBackGetPrivilegeList(checkChildIdList);
+      }
 
     } else {
-      
       // remove parent id from check parent id
       this.setState({
         checkParentIdList: this.state.checkParentIdList.filter(value => value !== e.target.value)
@@ -121,23 +199,30 @@ export default class ListPrivilege extends Component {
 
       // remove child id from check child id or update child privilege value
       const checkChildIdList = [];
-      this.state.checkChildIdList.forEach(value => {
+      const checkChildIdForRemove = [];
+      this.state.checkChildIdList.forEach((value, valueIndex) => {
+
         const existPrivilege = allChildIds.find(child => value.privilegeId === child.privilegeId);
-        if (this.Util.isObjectEmpty(existPrivilege) && value.rolePrivilegeId === 0) {
-          console.log("Not Existing In Database");
+        if (value.rolePrivilegeId === 0) {
+          checkChildIdForRemove.push(valueIndex);
         } else {
 
           if (!this.Util.isObjectEmpty(existPrivilege)) {
             value["value"] = 0;
           }
+
           checkChildIdList.push(value);
         }
       });
 
-      this.setState({checkChildIdList});
+      // Remove checked child list that not existing in DB
+      for (let j = checkChildIdForRemove.length - 1; j >= 0; j--) {
+        checkChildIdList.splice(checkChildIdForRemove[j], 1);
+      }
 
       // For Check Box Group Detect State
       this.setState({
+        checkChildIdList,
         checkChildIdListV2: this.state.checkChildIdListV2.map(value => {
           if (value["parentId"] === e.target.value) { // if the same parent just only append array
             value["child"] = [];
@@ -150,7 +235,7 @@ export default class ListPrivilege extends Component {
 
 
       if (this.props.handleCallBackGetPrivilegeList) {
-        this.props.handleCallBackGetPrivilegeList(this.state.checkChildIdList);
+        this.props.handleCallBackGetPrivilegeList(checkChildIdList);
       }
 
     }
@@ -164,12 +249,12 @@ export default class ListPrivilege extends Component {
   onChangeChild (e, parentId) {
     if (e.target.checked) {
       const {privilegeId} = e.target.value;
+      const checkChildIdList = this.state.checkChildIdList;
 
-      if (this.state.checkChildIdList.length === 0) {
+      if (checkChildIdList.length === 0) {
         e.target.value["value"] = 1;
-        this.setState({checkChildIdList: [e.target.value]});
+        checkChildIdList.push(e.target.value);
       } else {
-        const checkChildIdList = this.state.checkChildIdList;
         let isPrivilegeNotExist = true;
         checkChildIdList.forEach((value, index) => {
           if (value.privilegeId === privilegeId) {
@@ -182,8 +267,12 @@ export default class ListPrivilege extends Component {
           e.target.value["value"] = 1;
           checkChildIdList.push(e.target.value);
         }
+      }
 
-        this.setState({checkChildIdList});
+      this.setState({checkChildIdList});
+
+      if (this.props.handleCallBackGetPrivilegeList) {
+        this.props.handleCallBackGetPrivilegeList(checkChildIdList);
       }
 
       if (this.state.checkChildIdListV2.length === 0) { // case not select child
@@ -234,88 +323,16 @@ export default class ListPrivilege extends Component {
           }
         })
       });
-    }
 
-    if (this.props.handleCallBackGetPrivilegeList) {
-      this.props.handleCallBackGetPrivilegeList(this.state.checkChildIdList);
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-
-    let rolePrivilegesList = nextProps.rolePrivileges.list;
-
-    this.setState({
-      checkChildIdList: [],
-      checkChildIdListV2: []
-    });
-  
-    const checkChildIdListV2 = [];
-    const checkChildIdList = [];
-
-    rolePrivilegesList.forEach(rolePrivilege => {
-      const parentId = rolePrivilege.privilege.parentId;
-      const privilegeId = rolePrivilege.privilegeId;
-      const rolePrivilegeId = rolePrivilege.id;
-
-      // For Child Check List
-      checkChildIdList.push({
-        rolePrivilegeId,
-        privilegeId,
-        value: 1
-      });
-
-      // checkChildIdListV2: use for validation is all checked or some checked
-      if (checkChildIdListV2.length === 0) {
-        checkChildIdListV2.push({
-          parentId,
-          child: [{
-            rolePrivilegeId,
-            privilegeId,
-            value: 1
-          }]
-        });
-      } else {
-        let parentNotExist = true;
-        checkChildIdListV2.forEach((value, index) => {
-          if (value.parentId === parentId) {
-            parentNotExist = false;
-            checkChildIdListV2[index]["child"].push(
-              {
-                rolePrivilegeId,
-                privilegeId,
-                value: 1
-              }
-            );
-          } 
-        });
-
-        if (parentNotExist) {
-          checkChildIdListV2.push({
-            parentId,
-            child: [{
-              rolePrivilegeId,
-              privilegeId,
-              value: 1
-            }]
-          });
-        }
+      if (this.props.handleCallBackGetPrivilegeList) {
+        this.props.handleCallBackGetPrivilegeList(checkChildIdList);
       }
-    });
 
-    this.setState({
-      checkChildIdList,
-      checkChildIdListV2
-    });
-
-    if (this.props.handleCallBackGetPrivilegeList) {
-      this.props.handleCallBackGetPrivilegeList(this.state.checkChildIdList);
     }
-
   }
 
   renderPanelPrivilege (parent) {
-
+    
     const resultCompare = this.compareTwoCollection(parent.id);
 
     return (
@@ -328,8 +345,7 @@ export default class ListPrivilege extends Component {
             <this.Checkbox // 1 THIS THE SAME IT SHOW WHEN COLAPSE CLOSE
               indeterminate={resultCompare["indeterminate"]}
               checked={resultCompare["checkAll"]}
-              className="groupCheckAccessRole"
-            />
+              className="groupCheckAccessRole"/>
           </div>
         }
         key={parent.id}
@@ -341,8 +357,7 @@ export default class ListPrivilege extends Component {
             checked={resultCompare["checkAll"]}
             value={parent.id}
             onChange={this.onCheckAllChange}
-            className="groupCheckAccessRole"
-          />
+            className="groupCheckAccessRole"/>
           {
             parent.child.map(privilege => 
               this.renderSubPanelPrivilge(privilege)
@@ -403,15 +418,13 @@ export default class ListPrivilege extends Component {
         <this.Row className="scroll-role">
           <this.Col md="12" className="search-dropdown-product search-height">
             <div className="main-searchs">
-              <this.Form>
-                <span className="search-icon icon-search"></span>
-                <this.InputText 
-                  name="search_name_privillege" 
-                  placeholder="Search access privillege" 
-                  form={form}
-                  handleKeyUp={this.handleSearchPrivilege}/>  
-                <div className="remove-search-icon icon-clear" onClick={this.handleRemoveTextSearch}></div>
-              </this.Form>
+              <span className="search-icon icon-search"></span>
+              <this.InputText 
+                name="search_name_privillege" 
+                placeholder="Search access privillege" 
+                form={form}
+                handleKeyUp={this.handleSearchPrivilege}/>  
+              <div className="remove-search-icon icon-clear" onClick={this.handleRemoveTextSearch}></div>
             </div>
           </this.Col>
         </this.Row>

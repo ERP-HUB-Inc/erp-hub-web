@@ -19,6 +19,15 @@ export default {
         payload: RoleAccessService.assignPrivilege(roleId, data)
       });
     };
-  }
+  },
+
+  reset: (RESET_CONSTANT = Constant.RESET_ROLE_PRIVILEGE) => {
+    return dispatch => {
+      return dispatch({
+        type: RESET_CONSTANT,
+        payload: null
+      });
+    };
+  },
 };
 

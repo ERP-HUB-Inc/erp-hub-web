@@ -1,6 +1,6 @@
 import React from "react";
 import Modal from "../../../../common/components/shares/Modal";
-import PrivilegeList from "../../../containers/settings/RoleAccess/PrivilegeList";
+import PrivilegeList from "../../../components/settings/RoleAccess/ListPrivilege";
 
 export default class FormItem extends Modal {
   render() {
@@ -17,6 +17,7 @@ export default class FormItem extends Modal {
                 placeholder={this.CATranslate("text_name", locale)}
                 errorLenght={<this.Translate id="error_role_name_length" />}
                 required={true}
+                isAutoFocus={true}
                 max={100}
                 form={form}/>
               <this.InputText
@@ -25,6 +26,7 @@ export default class FormItem extends Modal {
                 label={<this.Translate id="place_holder_role_code" />}
                 placeholder={this.CATranslate("place_holder_role_code", locale)}
                 max={255}
+                disabled={formData.isDefault === this.Enum.IS_DEFAULT}
                 form={form}/>
               <this.Select
                 name="status"
@@ -37,7 +39,7 @@ export default class FormItem extends Modal {
         </this.TabPane>
         <this.TabPane tab="privilege" key="2">
           <this.Row>  
-            <this.Col lg="12" md="12"> 
+            <this.Col lg="12" md="12">
               { 
                 <PrivilegeList 
                   rolePrivileges={this.props.rolePrivileges}

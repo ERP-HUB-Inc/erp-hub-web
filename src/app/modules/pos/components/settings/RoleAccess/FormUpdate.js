@@ -1,6 +1,5 @@
 import React from "react";
 import FormItem from "./FormItem";
-import RolePrivilegeAction from "../../../action/settings/rolePrivilege";
 import RoleAccessAction from "../../../action/settings/roleAccess";
 import Modal from "../../../../common/components/shares/Modal";
 
@@ -12,6 +11,7 @@ export default class Form extends Modal {
       rolePrivileges: []
     };
     this.title = <this.Translate id="text_access_role" />;
+    this.style = {height: 550};
     this.wrapClassName = "modal-fix-footer";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -31,9 +31,10 @@ export default class Form extends Modal {
         this.Util.clearObjProperty(values, [
           "search_name_privillege"
         ]);
-        const privileges = {privileges: this.state.rolePrivileges};
+
+        values["privileges"] = this.state.rolePrivileges;
+        // console.log("Privilege:", values["privileges"]);
         this.dispatch(RoleAccessAction.update(values));
-        this.dispatch(RolePrivilegeAction.assignPrivilege(roleAccessUpdate.data.id,privileges));
       }
     });
   }

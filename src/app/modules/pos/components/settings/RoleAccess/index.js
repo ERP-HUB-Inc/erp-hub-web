@@ -27,16 +27,14 @@ export default class PaymentMethodList extends List {
   }
 
   handleShowFormAdd() {
-    const {dispatch} = this.props;
-    dispatch(RoleAccessAction.showForm());
+    this.props.dispatch(RoleAccessAction.showForm());
     this.setState({
       modalConten: <FormCreate/>
     });
   }
 
   handleShowFormEdit(rowData) {
-    const { dispatch } = this.props;
-    dispatch(RoleAccessAction.showForm(rowData));
+    this.props.dispatch(RoleAccessAction.showForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });
@@ -112,7 +110,7 @@ export default class PaymentMethodList extends List {
           :
           <div style={{marginTop: "15px", width: "100%"}}>
             { this.renderBreadCrumb()}
-            <this.Row className="main-row-role-access">
+            <this.Row className="main-row-role-access" style={{height: "100%"}}>
               <this.Col md="12">
                 { this.renderTableList(fetchingProps) }
               </this.Col>

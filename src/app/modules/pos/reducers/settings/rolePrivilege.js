@@ -8,7 +8,9 @@ export default combineReducers({
     const constants = [
       Constant.REQUEST_ROLE_PRIVILEGE_PENDING,
       Constant.REQUEST_ROLE_PRIVILEGE_REJECTED,
-      Constant.REQUEST_ROLE_PRIVILEGE_FULFILLED
+      Constant.REQUEST_ROLE_PRIVILEGE_FULFILLED,
+      null,
+      Constant.RESET_REQUEST_ROLE_PRIVILEGE_PARTIAL
     ];
     return reducer.request(state, action, constants);
   },

@@ -107,6 +107,12 @@ export default {
     "Default Tax"
   ],
 
+  "text_user_name": [
+    "User Name",
+    "User Name",
+    "User Name"
+  ],
+
   "store_acc_account": [
     "Account",
     "Account",
