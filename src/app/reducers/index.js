@@ -14,7 +14,6 @@ import device from "../modules/pos/reducers/settings/device";
 import storeLocation from "../modules/pos/reducers/settings/storeLocation";
 import storeLanguage from "../modules/pos/reducers/settings/storeLanguage";
 import receiptTemplate from "../modules/pos/reducers/settings/receiptTemplate";
-import incomeAndExpense from "../modules/pos/reducers/settings/incomeAndExpense";
 import privilege from "../modules/pos/reducers/settings/privilege";
 import roleAccess from "../modules/pos/reducers/settings/roleAccess";
 import rolePrivilege from "../modules/pos/reducers/settings/rolePrivilege";
@@ -71,7 +70,6 @@ const reducer = combineReducers({
   storeLanguage,
   paymentMethods,
   receiptTemplate,
-  incomeAndExpense,
   roleAccess,
   rolePrivilege,
   privilege,

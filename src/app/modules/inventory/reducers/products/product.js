@@ -69,7 +69,8 @@ export default combineReducers({
       Constant.ADD_PRODUCT_REJECTED,
       Constant.ADD_PRODUCT_FULFILLED,
       Constant.SHOW_PRODUCT_FORM,
-      Constant.RESET_FORM_PRODUCT
+      Constant.RESET_FORM_PRODUCT,
+      Constant.RESET_ADD_PRODUCT
     ];
     return reducer.add(state, action, constants);
   },

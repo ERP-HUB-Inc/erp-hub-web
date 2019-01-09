@@ -129,6 +129,21 @@ export default class ProductList extends List {
       });
       this.props.dispatch(ProductAction.reset(Constant.PARTIAL_RESET_DETAIL_PRODUCTS));
     }
+
+    if (this.props.productAdd.error) {
+      const errorCode = this.Util.getErrorCodeFromState(this.props.productAdd.error);
+      if (errorCode === this.Enum.TAX_NOT_FOUND) {
+        this.CATranslate("error_tax_not_found", this.props.locale);
+      } else if (errorCode === this.Enum.BRAND_NOT_FOUND) {
+        this.CATranslate("error_brand_not_found", this.props.locale);
+      } else if (errorCode === this.Enum.PRODUCT_TYPE_NOT_FOUND) {
+        this.CATranslate("error_product_type_not_found", this.props.locale);
+      } else if (errorCode === this.Enum.PRODUCT_UNIT_NOT_FOUND) {
+        this.CATranslate("error_unit_not_found", this.props.locale);
+      }
+
+      this.props.dispatch(ProductAction.reset(Constant.RESET_ADD_PRODUCT));
+    }
   }
 
   showFormEdit(rowData) {

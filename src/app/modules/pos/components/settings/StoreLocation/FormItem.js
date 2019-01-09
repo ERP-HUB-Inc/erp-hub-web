@@ -23,9 +23,15 @@ export default class FormItem extends Modal {
           label={<this.Translate id="text_address" />}
           placeholder={this.CATranslate("text_address", locale)}
           form={form}
-          min={3}
           max={100}
           errorLenght={<this.Translate id="error_location_address_length" />} />
+        <this.Select
+          name="receiptTemplateId"
+          label={<this.Translate id="text_receipt_template" />}
+          dataSource={this.props.receiptTemplates}
+          defaultValue={formData.id ? formData.receiptTemplateId : this.props.receiptTemplates.length > 0 ? this.props.receiptTemplates[0].id : ""}
+          valueKey="id"
+          form={form}/>
         <this.Select
           name="status"
           label={<this.Translate id="text_status" />}

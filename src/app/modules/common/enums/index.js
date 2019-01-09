@@ -33,5 +33,9 @@ export default {
     CANCEL: "#108ee9",
     RETURN: "blue",
     PAID: "green"
-  }
+  },
+  TAX_NOT_FOUND: 622,
+  BRAND_NOT_FOUND: 614,
+  PRODUCT_TYPE_NOT_FOUND: 615,
+  PRODUCT_UNIT_NOT_FOUND: 617
 };

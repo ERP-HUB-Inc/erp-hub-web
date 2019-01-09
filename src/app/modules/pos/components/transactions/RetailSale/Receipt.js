@@ -3,27 +3,11 @@ import JsBarcode from "jsbarcode";
 import Component from "../../../../common/components/Component";
 import "./Receipt.css";
 export default class Receipt extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      logo: null
-    };
-    this.initializeImage = this.initializeImage.bind(this);
-  }
   componentDidMount() {
     JsBarcode("#receiptCarcode", this.props.data.receiptNumber, {
       height: 35,
       displayValue: false
     });
-    this.Util.validImage(this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url, this.initializeImage);
-  }
-
-  initializeImage(status) {
-    if (status === "success") {
-      this.setState({logo: this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url});
-    } else if (status === "error") {
-      this.setState({logo: null});
-    }
   }
 
   render() {
@@ -61,10 +45,7 @@ export default class Receipt extends Component {
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>
                 <div style={{position: "relative", margin: "0 auto"}}>
                   {
-                    this.state.logo ?
-                      <img style={{width: 100}} alt="" src={this.state.logo} />
-                      :
-                      ""
+                    <img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} /> 
                   }
                 </div>
               </td>

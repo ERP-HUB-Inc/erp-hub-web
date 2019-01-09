@@ -491,11 +491,11 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: "Store Location",
+        title: "Location",
         icon: "icon-store",
         route: "/settings/location",
         component: StoreLocation,
-        isFashNav: false
+        isFashNav: true
       },
       {
         title: "Receipt Template",

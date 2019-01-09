@@ -1,6 +1,7 @@
 import React from "react";
 import FormItem from "./FormItem";
-import StoreLocationAction from "../../../action/settings/storeLocation";
+import LocationAction from "../../../action/settings/storeLocation";
+import ReceiptTemplate from "../../../action/settings/receiptTemplate";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormUpdate extends Modal {
@@ -11,19 +12,25 @@ export default class FormUpdate extends Modal {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount() {
+    this.props.dispatch(ReceiptTemplate.fetch(100));
+  }
+
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const {storeLocationUpdate} = this.props;
         values["id"] = storeLocationUpdate.data.id;
-        this.dispatch(StoreLocationAction.update(values));
+        values["isDefault"] = storeLocationUpdate.data.isDefault;
+        values["isSystem"] = storeLocationUpdate.data.isSystem;
+        this.dispatch(LocationAction.update(values));
       }
     });
   }
     
   handleCancel() {
-    this.dispatch(StoreLocationAction.reset());
+    this.dispatch(LocationAction.reset());
   }
   
   render() {
@@ -34,9 +41,11 @@ export default class FormUpdate extends Modal {
     this.validatorUpdateRecord(storeLocationUpdate);
     
     if (storeLocationUpdate.showForm) {
-      this.content = (
-        <FormItem formData={storeLocationUpdate.data} form={form} locale={locale} />
-      );
+      this.content = <FormItem
+        formData={storeLocationUpdate.data}
+        form={form}
+        locale={locale}
+        receiptTemplates={this.props.receiptTemplates.list}/>;
       return super.render();
     } else {
       return (<div></div>);

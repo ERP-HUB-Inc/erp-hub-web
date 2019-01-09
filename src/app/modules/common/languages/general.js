@@ -718,4 +718,28 @@ export default {
     "Enter description",
     "Enter description"
   ],
+
+  "error_tax_not_found": [
+    "Tax do not exist",
+    "Tax do not exist",
+    "Tax do not exist"
+  ],
+
+  "error_brand_not_found": [
+    "Brand do not exist",
+    "Brand do not exist",
+    "Brand do not exist"
+  ],
+
+  "error_unit_not_found": [
+    "Unit do not exist",
+    "Unit do not exist",
+    "Unit do not exist"
+  ],
+
+  "error_product_type_not_found": [
+    "Product type do not exist",
+    "Product type do not exist",
+    "Product type do not exist"
+  ]
 };

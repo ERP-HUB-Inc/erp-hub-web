@@ -21,7 +21,7 @@ export default class OperationRecord extends List {
   componentWillUpdate(nextProps) {
     if (nextProps.add.added) {
       nextProps.dispatch(OperationRecordAction.fetch(this.pageSize));
-      this.props.dispatch(OperationRecordAction.reset(Constant.RESET_OPERATION_RECORD));
+      this.props.dispatch(OperationRecordAction.reset());
     }
   }
 

@@ -49,6 +49,7 @@ export default class SaleHistoryList extends List {
     super.componentDidMount();
     this.props.dispatch(LocationAction.fetch(100));
     this.props.dispatch(UserAction.fetch(100));
+    this.props.dispatch(ReceiptTemplateAction.default());
 
     if(parseInt(this.Util.getParameterByName("salehistory"), 10) === 1) {
       this.handleSubmitCurrentSearchFilter();
@@ -182,7 +183,6 @@ export default class SaleHistoryList extends List {
       this.Message.error(this.CATranslate("text_reprint_warning_2", this.props.locale));
     } else {
       this.props.dispatch(TransactionAction.detail({id: this.state.selectedListIds[0]}));
-      this.props.dispatch(ReceiptTemplateAction.default());
     }
   }
 

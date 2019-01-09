@@ -597,6 +597,7 @@ export default class FormItem extends Modal {
                     name="price"
                     label={<span><this.Translate id="text_price" /><span> ({currentUser.setting.currency})</span></span>}
                     data={Util.getProductPrice(formData)}
+                    isAutoSelect={true}
                     placeholder={this.CATranslate("input_product_price_placeholder", locale)}
                     errorRequired={<this.Translate id="error_require_price" />}
                     max={99999999}
