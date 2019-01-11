@@ -201,11 +201,9 @@ export default class List extends Component {
         })
         .catch(error => {
           this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
+          this.setState({loadingPopup: false});
         });
-
-    
     }
-
   }
 
   /**

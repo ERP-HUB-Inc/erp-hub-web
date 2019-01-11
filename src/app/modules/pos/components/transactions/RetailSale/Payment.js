@@ -125,7 +125,7 @@ export default class Payment extends Modal {
     }
   }
 
-  handleOnMakePaymentWithCash(paymentMethod, paymentMethodIndex) { console.log("PaymentMethodIndex:", paymentMethodIndex);
+  handleOnMakePaymentWithCash(paymentMethod, paymentMethodIndex) {
     this.wrapClassName += " pos-payment-paid"; //hidden close modal
     let amountToPay = this.props.form.getFieldValue("amountToPay"); // AMOUNT FROM INPUT OF CASHEIR
     amountToPay = parseFloat(amountToPay);

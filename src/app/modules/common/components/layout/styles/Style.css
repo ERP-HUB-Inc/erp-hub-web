@@ -633,8 +633,7 @@ color: #4D4F5C;
 }
 
 .vertical-center-modal {
-    text-align: center;
-    white-space: nowrap;
+    text-align: center
   }
   
 .vertical-center-modal:before {

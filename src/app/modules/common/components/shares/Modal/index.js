@@ -111,9 +111,7 @@ export default class Modal extends Component {
     );
   }
 
-  renderOtherAction(){
-
-  }
+  renderOtherAction(){}
 
   renderCrudAction(){
     return(

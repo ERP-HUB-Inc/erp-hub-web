@@ -1,0 +1,7 @@
+.ant-modal-close-x {
+    display: none !important
+}
+
+.wrap-warning-create-location .ant-modal-body {
+    padding: 15px 25px !important
+}
