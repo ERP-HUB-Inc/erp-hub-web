@@ -115,7 +115,7 @@ export default class DropDownSearch extends Modal {
 
         }.bind(this), 200);
       } else {
-        this.props.dispatch(CustomerAction.reset(Constant.REQUEST_MANAGEMENT_CUSTOMERS_RESET));
+        this.props.dispatch(CustomerAction.reset(Constant.REQUEST_CUSTOMERS_RESET));
       }
     }
   }

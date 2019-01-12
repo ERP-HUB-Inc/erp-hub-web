@@ -6,13 +6,11 @@ export default class Board extends Component {
     return (
       <this.Col xs={this.props.gridxs} lg={this.props.gridLg} md={this.props.gridMd} sm={this.props.gridSm}>
         <this.Cards
-          price={this.props.total}
+          contentValue={this.props.contentValue}
           icon={this.props.icon}
-          totalText={this.props.title}
+          contentText={this.props.title}
           to={this.props.to}
-          route={this.props.route}
-          readMoreTitle={this.props.readMoreTitle}
-        />
+          readMoreTitle={this.props.readMoreTitle}/>
       </this.Col>
     );
   }

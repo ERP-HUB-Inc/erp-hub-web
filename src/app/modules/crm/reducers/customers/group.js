@@ -6,17 +6,17 @@ import InitialState from "../../../common/reducers/initialState";
 export default combineReducers({
   request: (state = InitialState.request(), action) => {
     const constants = [
-      Constant.REQUEST_MANAGEMENT_GROUP_CUSTOMERS_PENDING,
-      Constant.REQUEST_MANAGEMENT_GROUP_CUSTOMERS_REJECTED,
-      Constant.REQUEST_MANAGEMENT_GROUP_CUSTOMERS_FULFILLED
+      Constant.REQUEST_GROUP_CUSTOMERS_PENDING,
+      Constant.REQUEST_GROUP_CUSTOMERS_REJECTED,
+      Constant.REQUEST_GROUP_CUSTOMERS_FULFILLED
     ];
     return reducer.request(state, action, constants);
   },
   archive: (state = InitialState.archive(), action) => {
     const constants = [
-      Constant.ARCHIVE_MANAGEMENT_CUSTOMERS_PENDING,
-      Constant.ARCHIVE_MANAGEMENT_CUSTOMERS_REJECTED,
-      Constant.ARCHIVE_MANAGEMENT_CUSTOMERS_FULFILLED
+      Constant.ARCHIVE_CUSTOMERS_PENDING,
+      Constant.ARCHIVE_CUSTOMERS_REJECTED,
+      Constant.ARCHIVE_CUSTOMERS_FULFILLED
     ];
     return reducer.archive(state, action, constants);
   },

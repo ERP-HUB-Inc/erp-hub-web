@@ -1,20 +1,13 @@
-import React, { Component } from "react";
+import React from "react";
 import { Card, 
   CardFooter, 
   CardBody,
 } from "reactstrap";
+import {Link} from "react-router-dom";
 import "./index.css"; 
-import { Link } from "react-router-dom";
 
-export class Cards extends Component {
+export class Cards extends React.Component {
   render(){
-    const { 
-      icon,
-      totalText,
-      price,
-      to,
-      readMoreTitle
-    } = this.props;
     return(
       <div className="wrap-card">   
         <Card>
@@ -22,22 +15,22 @@ export class Cards extends Component {
             <div className="card-text">
               <div className="wrap-content">
                 <div className="block-icon">
-                  <span className={icon}></span>
+                  <span className={this.props.icon}></span>
                 </div>
                 <div className="block-text">
                   <div className="total">
-                    { totalText }
+                    {this.props.contentText}
                   </div>
                   <div className="price">
-                    { price }
+                    {this.props.contentValue}
                   </div>
                 </div>
               </div>
             </div>
           </CardBody>
           <CardFooter className="text-muted">
-            <Link to={ `/${ to }` }> 
-               { readMoreTitle }
+            <Link to={`/${this.props.to}`}> 
+              {this.props.readMoreTitle}
             </Link>
           </CardFooter>
         </Card>

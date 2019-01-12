@@ -49,7 +49,7 @@ export default class List extends Component {
     this.messageNoPermissionKey = "text_no_permission";
     this.placeHolderForGeneralSearch = "place_holder_general_search";
     this.isShowExpandable = false;
-    this.rowClassName = null;
+    this.rowClassName = record => record ? "" : "";
     this.emptyCell = "N/A";
     this.columnFilterWithKey = [];
     this.service = new BaseService();

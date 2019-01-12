@@ -14,8 +14,9 @@ export default class CustomerList extends List {
     this.columns = new Column();
     this.formCreate = <FormCreate/>;
     this.callBackOnShowEditForm = this.showFormEdit;
-    this.columnExpend = new ColumnExpend(); 
+    this.columnExpend = new ColumnExpend();
     this.isShowExpandable = true;
+    this.rowClassName = record => record && record.contacts && record.contacts.length === 0 ? "standard-product-row" : "";
     this.service = CustomerService;
     this.action = CustomerAction;
     this.groupCustomerList = [{name: <this.Translate id="text_all_group" />, id: 0}];
@@ -44,6 +45,13 @@ export default class CustomerList extends List {
     }
   }
 
+  componentDidUpdate() {
+    if (this.props.detail.fetched) {
+      this.setState({loadingPopup: false});
+      this.props.dispatch(CustomerAction.reset(Constant.RESET_DETAIL_PARTIAL_CUSTOMERS));
+    }
+  }
+
   expandedRender(record){
     return( 
       <div className="sub-table">
@@ -58,6 +66,7 @@ export default class CustomerList extends List {
   showFormEdit(rowData) {
     this.props.dispatch(CustomerAction.requestAndShowForm(rowData));
     this.setState({
+      loadingPopup: true,
       modalConten: <FormUpdate />
     });
   }
@@ -106,7 +115,7 @@ export default class CustomerList extends List {
               <this.Col md="2">
                 <this.Select
                   name="groupCustomerId"
-                  label={<this.Translate id="input_management_customer_customer_group" />}
+                  label={<this.Translate id="text_group" />}
                   dataSource={this.groupCustomerList.concat(customerGroup.list)}
                   defaultValue={this.groupCustomerList[0].id}
                   valueKey="id"
@@ -136,11 +145,6 @@ export default class CustomerList extends List {
       ); 
     }
   }
-
-  render() {
-    return super.render();
-  }
-
 }
 
 class ColumnExpend extends List {
@@ -148,19 +152,25 @@ class ColumnExpend extends List {
     super(props);
     return [
       {
+        dataIndex: "blank1",
+        key: "blank1",
+        width: 50,
+        render: () => {},
+      },
+      {
         dataIndex: "createdAt",  
-        width: "250px",
+        width: 155,
         render: () => {}
       },
       {
         dataIndex: "name",
-        width: "311px",
-        key: "name"
+        key: "name",
+        width: 200
       },
       {
         dataIndex: "phoneNumber",
-        width: "231px",
-        key: "phoneNumber"
+        key: "phoneNumber",
+        width: 150
       },
       {
         dataIndex: "address",
@@ -188,16 +198,18 @@ class Column extends List {
     return [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="col_management_customer_name" />,
+        title: <this.Translate id="text_name" />,
         dataIndex: "firstName",
         sorter: true,
-        render: (text,row) => text + " " + row.lastName
+        width: 200,
+        render: (text, row) => text + " " + row.lastName
       },
       {
         title: <this.Translate id="text_phone_number" />,
         dataIndex: "phoneNumber",
         key: "phoneNumber",
         sorter: true,
+        width: 150,
         render: (phoneNumber) => this.Util.formtTextError(phoneNumber)
       },
       {
@@ -215,7 +227,7 @@ class Column extends List {
         render: (email) => this.Util.formtTextError(email)
       },
       {
-        title: <this.Translate id="col_management_customer_group_cutomer" />,
+        title: <this.Translate id="text_group" />,
         dataIndex: "groupCustomer",
         key: "groupCustomer",
         sorter: true,

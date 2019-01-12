@@ -1,12 +1,12 @@
 import Constant from "../../constants/customers/customer";
-import managementEmployeeService from "../../services/customers/CustomerService";
+import CustomerService from "../../services/customers/CustomerService";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
-        type: Constant.REQUEST_MANAGEMENT_CUSTOMERS,
-        payload: managementEmployeeService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
+        type: Constant.REQUEST_CUSTOMERS,
+        payload: CustomerService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },
@@ -14,7 +14,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ARCHIVE_MANAGEMENT_CUSTOMERS,
-        payload: managementEmployeeService.archive(ids)
+        payload: CustomerService.archive(ids)
       });
     };
   },
@@ -22,7 +22,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ADD_MANAGEMENT_CUSTOMERS,
-        payload: managementEmployeeService.add(data)
+        payload: CustomerService.add(data)
       });
     };
   },
@@ -30,7 +30,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_MANAGEMENT_CUSTOMERS,
-        payload: managementEmployeeService.update(data)
+        payload: CustomerService.update(data)
       });
     };
   },
@@ -45,7 +45,7 @@ export default {
   showForm: () => {
     return dispatch => {
       return dispatch({
-        type: Constant.SHOW_MANAGEMENT_CUSTOMERS_FORM,
+        type: Constant.SHOW_CUSTOMERS_FORM,
         payload: null
       });
     };
@@ -54,7 +54,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.DETAIL_CUSTOMERS,
-        payload: managementEmployeeService.detail(data.id)
+        payload: CustomerService.detail(data.id)
       });
     };
   }

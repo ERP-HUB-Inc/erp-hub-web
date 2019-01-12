@@ -12,7 +12,7 @@ export default class FormCreate extends Modal {
     this.state = {
       contact: []
     };
-    this.title = <this.Translate id="update_management_customer_title" />;
+    this.title = <this.Translate id="text_customer" />;
     this.wrapClassName = "modal-fix-footer wrap-customer";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -40,15 +40,14 @@ export default class FormCreate extends Modal {
   }
 
   handleAddCustomerGroup(){
-    const {dispatch} = this.props;
-    dispatch(GroupCustomerAction.showForm());
+    this.props.dispatch(GroupCustomerAction.showForm());
     this.modal1 = <CreateCustomerGroup/>;
   }
 
   render() {
     this.submitLoading = this.props.customerUpdate.updating;
     
-    if (this.props.customerDetail.showForm && this.props.customerDetail.fetched) {
+    if (this.props.customerDetail.showForm) {
       this.content = (
         <FormItem
           form={this.props.form}

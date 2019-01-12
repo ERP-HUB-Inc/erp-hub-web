@@ -86,12 +86,12 @@ export default class FormItem extends Modal {
             <this.Col md="6">
               <this.InputText
                 name="firstName"
-                label={<this.Translate id="input_management_customer_first_name" />}
+                label={<this.Translate id="text_first_name" />}
                 data={formData.firstName}
-                placeholder={this.CATranslate("input_management_customer_first_name",this.props.locale)}
+                placeholder={this.CATranslate("text_first_name",this.props.locale)}
                 required={true}
                 isAutoFocus={true}
-                errorRequired={<this.Translate id="input_error_management_customer_first_name_length" />}
+                errorRequired={<this.Translate id="error_required_first_name" />}
                 max={100}
                 form={this.props.form}/>
             </this.Col>
@@ -99,11 +99,11 @@ export default class FormItem extends Modal {
             <this.Col md="6">
               <this.InputText
                 name="lastName"
-                label={<this.Translate id="input_management_customer_last_name" />}
+                label={<this.Translate id="text_last_name" />}
                 data={formData.lastName}
-                placeholder={this.CATranslate("input_management_customer_last_name", this.props.locale)}
+                placeholder={this.CATranslate("text_last_name", this.props.locale)}
                 required={true}
-                errorRequired={<this.Translate id="input_error_management_customer_last_name_length" />}
+                errorRequired={<this.Translate id="error_required_last_name" />}
                 max={100}
                 form={this.props.form}/>
             </this.Col>   
@@ -111,9 +111,9 @@ export default class FormItem extends Modal {
             <this.Col md="12">
               <this.InputText
                 name="phoneNumber"
-                label={<this.Translate id="input_management_customer_phone_number" />}
+                label={<this.Translate id="text_phone_number" />}
                 data={formData.phoneNumber}
-                placeholder={this.CATranslate("input_management_customer_phone_number", this.props.locale)}
+                placeholder={this.CATranslate("text_phone_number", this.props.locale)}
                 max={100}
                 form={this.props.form}/>
             </this.Col>
@@ -121,7 +121,7 @@ export default class FormItem extends Modal {
             <this.Col md="12">
               <this.SelectSearch
                 name="groupCustomerId"
-                label={<this.Translate id="input_management_customer_customer_group" />}
+                label={<this.Translate id="text_group" />}
                 placeholder={this.CATranslate("select_customer_place_holder_group", this.props.locale)}
                 defaultValue={formData.groupCustomer ? formData.groupCustomer.id : []}
                 dataSource={groupCustomers.list}
@@ -141,7 +141,7 @@ export default class FormItem extends Modal {
             </this.Col>  
 
             <this.Col md="12">
-              <this.InputText   
+              <this.InputEmail   
                 name="email"
                 label={<this.Translate id="text_email" />}
                 data={formData.email}
@@ -150,7 +150,7 @@ export default class FormItem extends Modal {
                 form={this.props.form}/>
             </this.Col>  
 
-            <this.Col md="12">
+            {/* <this.Col md="12">
               <this.InputTextArea
                 name="description"
                 label={<this.Translate id="text_description" />}
@@ -158,7 +158,7 @@ export default class FormItem extends Modal {
                 placeholder={this.CATranslate("text_description", this.props.locale)}
                 max={100}
                 form={this.props.form}/>
-            </this.Col>  
+            </this.Col>   */}
 
             <this.Col md="12">
               <this.InputTextArea

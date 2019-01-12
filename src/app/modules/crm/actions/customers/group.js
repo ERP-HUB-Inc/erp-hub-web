@@ -6,7 +6,7 @@ export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
-        type: Constant.REQUEST_MANAGEMENT_GROUP_CUSTOMERS,
+        type: Constant.REQUEST_GROUP_CUSTOMERS,
         payload: managementEmployeeService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };

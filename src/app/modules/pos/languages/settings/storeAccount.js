@@ -143,7 +143,7 @@ export default {
     "Confirm Password"
   ],
 
-  "store_acc_contact": [
+  "text_contact": [
     "Contact",
     "Contact",
     "Contact"

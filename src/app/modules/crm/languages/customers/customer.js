@@ -1,41 +1,23 @@
 export default {
-  "create_management_customer_title": [
-    "Management Customer",
-    "Management Customer",
-    "Management Customer"
-  ],
-  "update_management_customer_title": [
-    "Management Customer",
-    "Management Customer",
-    "Management Customer"
-  ],
-  "col_management_customer_name": [
-    "Customer Name",
-    "Customer Name",
-    "Customer Name"
-  ],
-  "col_management_customer_group_cutomer": [
-    "Group Customer",
-    "Group Customer",
-    "Group Customer",
+  "text_customer": [
+    "Customer",
+    "Customer",
+    "Customer"
   ],
 
-  "input_management_customer_first_name": [
+  "text_first_name": [
     "First Name",
     "First Name",
     "First Name"
   ],
-  "input_management_customer_last_name": [
+
+  "text_last_name": [
     "Last Name",
     "Last Name",
     "Last Name"
   ],
-  "input_management_customer_phone_number": [
-    "Phone Number",
-    "Phone Number",
-    "Phone Number"
-  ],
-  "input_management_customer_customer_group": [
+
+  "text_group": [
     "Group",
     "Group",
     "Group"
@@ -52,18 +34,6 @@ export default {
     "Address"
   ],
 
-  "input_management_contact_number": [
-    "Contact",
-    "Contact",
-    "Contact"
-  ],
-
-  "input_management_contact_phone_number": [
-    "Phone Number",
-    "Phone Number",
-    "Phone Number"
-  ],
-
   "input_search_customer": [
     "Search customer",
     "Search customer",
@@ -76,16 +46,16 @@ export default {
     "Please select group"
   ],
 
-  "input_error_management_customer_first_name_length": [
-    "first Name allow from 3 to 255 character only.",
-    "first Name allow from 3 to 255 character only.",
-    "first Name allow from 3 to 255 character only."
+  "error_required_first_name": [
+    "Enter first name",
+    "Enter first name",
+    "Enter first name"
   ],
 
-  "input_error_management_customer_last_name_length": [
-    "last Name allow only maximum 99999.",
-    "last Name allow only maximum 99999.",
-    "last Name allow only maximum 99999."
+  "error_required_last_name": [
+    "Enter last name",
+    "Enter last name",
+    "Enter last name"
   ],
 
   "text_add_new_customer": [

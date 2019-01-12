@@ -42,16 +42,6 @@ export class Util {
     return obj;
   }
 
-  renameObjectKey (template, source) {
-    return source.map((value1, key1) => {
-      var renameResult = _.mapKeys(value1, (value, key) => {
-        console.log("Keys:", key);
-        return template[key];
-      });
-      return renameResult;
-    });
-  }
-
   isValidEmail (email) {
     var re = /^\w+([-]?\w+)*@\w+([-]?\w+)*(\.\w{2,3})+$/;
     return re.test(email);

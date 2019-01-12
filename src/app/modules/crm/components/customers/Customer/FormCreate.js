@@ -13,7 +13,7 @@ export default class FormCreate extends Modal {
     this.state = {
       contact: []
     };
-    this.title = <this.Translate id="create_management_customer_title" />;
+    this.title = <this.Translate id="text_customer" />;
     this.wrapClassName = "modal-fix-footer wrap-customer";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);

@@ -22,3 +22,7 @@ tr.ant-table-expanded-row td {
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
+.standard-product-row .ant-table-row-expand-icon-cell .ant-table-row-expand-icon {
+    display: none
+}

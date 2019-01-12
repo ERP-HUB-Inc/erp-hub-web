@@ -375,14 +375,14 @@ const dataSource = {
     route: "customers",
     subItems: [
       {
-        title: "Manage Customer",
+        title: "Customer",
         icon: "icon-customer ",
         route: "/customer",
         component: ManageCustomer,
         isFashNav: true
       },
       {
-        title: "Group Customer",
+        title: "Group",
         icon: "icon-employee",
         route: "/customers/group",
         component: GroupCustomer,

@@ -5,5 +5,4 @@ export default class List extends Listiew {
     super(props);
     this.module = "customers";
   }
-
 }

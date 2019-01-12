@@ -19,7 +19,7 @@ export default class FormContact extends Modal {
         <div className={className}>
           <this.Row key={index}>
             <this.Col md="12">
-              <h6>{<this.Translate id="input_management_contact_number" />} </h6>
+              <h6>{<this.Translate id="text_contact" />} </h6>
               <hr className="line-contact"/>
             </this.Col>
             <this.Col md="6">
@@ -37,8 +37,8 @@ export default class FormContact extends Modal {
               <this.InputText
                 name={`contactNumber[${index}]`}     
                 data={contact.phoneNumber}
-                label={<this.Translate id="input_management_contact_phone_number" />} 
-                placeholder={this.CATranslate("input_management_contact_phone_number", locale)}
+                label={<this.Translate id="text_phone_number" />} 
+                placeholder={this.CATranslate("text_phone_number", locale)}
                 handleKeyUp={(event) => this.props.handleOnChangContactField(event, index, "phoneNumber")}
                 max={100}
                 required={true}

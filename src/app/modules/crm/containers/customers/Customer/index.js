@@ -1,12 +1,12 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
-import ManageCustomersList from "../../../components/customers/Customer";
+import CustomersList from "../../../components/customers/Customer";
 
 class ManagementCutomer extends React.Component {
   render() {
     return (
-      <ManageCustomersList {...this.props} />
+      <CustomersList {...this.props} />
     );
   }
 }
@@ -16,6 +16,7 @@ function mapStateToProps(state) {
     list: state.reducer.customer.request,
     add: state.reducer.customer.add,
     update: state.reducer.customer.update,
+    detail: state.reducer.customer.detail,
 
     customerGroup: state.reducer.groupCustomers.request,
     groupCustomersAdd: state.reducer.groupCustomers.add,
