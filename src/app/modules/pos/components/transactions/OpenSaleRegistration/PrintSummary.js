@@ -52,6 +52,9 @@ export default class PrintSummary extends Component {
                       <th style={{borderBottom: "1px solid rgb(212, 203, 203)", backgroundColor: "white", width: 150, textAlign: "right", paddingBottom: 5}}>
                         <this.Translate id="text_count" />
                       </th>
+                      <th style={{borderBottom: "1px solid rgb(212, 203, 203)", backgroundColor: "white", width: 150, textAlign: "right", paddingBottom: 5}}>
+                        <this.Translate id="text_difference" />
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -67,6 +70,9 @@ export default class PrintSummary extends Component {
                           <td style={{textAlign: "right", backgroundColor: "white"}}>
                             {this.formatCurrency(value.count, "")}
                           </td>
+                          <td style={{textAlign: "right", backgroundColor: "white"}}>
+                            {this.formatCurrency(value.count - value.expected, "")}
+                          </td>
                         </tr>
                       )
                     }
@@ -81,6 +87,9 @@ export default class PrintSummary extends Component {
                       </td>
                       <td style={{borderBottom: "1px solid white", borderTop: "1px solid rgb(212, 203, 203)", textAlign: "right", fontWeight: 500, backgroundColor: "white"}}>
                         {this.formatCurrency(this.props.totalSummary.count, "")}
+                      </td>
+                      <td style={{borderBottom: "1px solid white", borderTop: "1px solid rgb(212, 203, 203)", textAlign: "right", fontWeight: 500, backgroundColor: "white"}}>
+                        {this.formatCurrency(this.props.totalSummary.difference, "")}
                       </td>
                     </tr>
                   </tfoot>

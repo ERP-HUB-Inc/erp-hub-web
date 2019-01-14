@@ -113,7 +113,9 @@ export default class List extends Component {
   /**===================================================================EVENT CONTROL FOR CHILD CLASS============================================================**/
   componentDidMount() {
     this.props.dispatch(PrivilegeAction.reset());
-    this.props.dispatch(PrivilegeAction.checkPermission(this.service.listRoute));
+    if (this.service.listRoute) {
+      this.props.dispatch(PrivilegeAction.checkPermission(this.service.listRoute));
+    }
     if (this.action) {
       this.props.dispatch(this.action.fetch(this.pageSize));
     }

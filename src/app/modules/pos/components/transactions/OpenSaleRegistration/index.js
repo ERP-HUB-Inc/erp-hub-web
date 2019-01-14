@@ -218,7 +218,6 @@ export default class OpenSaleRegistrationList extends List {
     if (this.isValidOpenSaleRegistrationList()) {
       return this.props.openSaleRegistration.list[0].status === Enum.OPEN_SALE_REGISTRATION_STATUS.CLOSED;
     } else {
-      console.log("Open sale registration has closed");
       return true; // has no record so set true to be allow to open sale
     }
   }
@@ -234,7 +233,6 @@ export default class OpenSaleRegistrationList extends List {
             data["expected"] = this.state.totalSummary.expected;
             data["count"] = this.state.totalSummary.count;
             data["entries"] = this.state.summaryList;
-            console.log("Entries:", data);
             this.props.dispatch(OpenSaleRegistrationAction.close(id, data));
           }
         } 
