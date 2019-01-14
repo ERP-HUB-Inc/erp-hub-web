@@ -474,9 +474,15 @@ class Column extends List {
 
   getQTY(record) {
     let quantity = record.quantity;
-    if ("productLocations" in record) {
-      quantity = Util.getProductQTYLocation(record["productLocations"]);
-    } else if ("productVariants" in record) {
+    let isNotFilterByLocation = true;
+    record["productVariants"].forEach(productVariant => {
+      if ("productLocations" in productVariant) {
+        isNotFilterByLocation = false;
+        quantity = Util.getProductQTYLocation(productVariant["productLocations"]);
+      }
+    });
+
+    if (isNotFilterByLocation) {
       quantity = Util.getProductQTYLocation(record["productVariants"]);
     }
 

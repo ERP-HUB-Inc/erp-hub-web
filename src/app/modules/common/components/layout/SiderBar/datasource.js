@@ -375,7 +375,7 @@ const dataSource = {
     route: "customers",
     subItems: [
       {
-        title: "Customer",
+        title: "Manage Customer",
         icon: "icon-customer ",
         route: "/customer",
         component: ManageCustomer,

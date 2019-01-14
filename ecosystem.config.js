@@ -1,11 +1,11 @@
 // Target server hostname or IP address
-const TARGET_SERVER_HOST = process.env.TARGET_SERVER_HOST ? process.env.TARGET_SERVER_HOST.trim() : '';
+const TARGET_SERVER_HOST = process.env.TARGET_SERVER_HOST ? process.env.TARGET_SERVER_HOST.trim() : "";
 // Target server username
-const TARGET_SERVER_USER = process.env.TARGET_SERVER_USER ? process.env.TARGET_SERVER_USER.trim() : '';
+const TARGET_SERVER_USER = process.env.TARGET_SERVER_USER ? process.env.TARGET_SERVER_USER.trim() : "";
 // Target server application path
 const TARGET_SERVER_APP_PATH = `/home/${TARGET_SERVER_USER}/app`;
 // Your repository
-const REPO = 'https://gitlab.com/casolution/internals/pos.git';
+const REPO = "https://gitlab.com/casolution/internals/pos.git";
 
 module.exports = {
   /**
@@ -14,13 +14,13 @@ module.exports = {
    */
   apps: [
     {
-      name: 'testApp',
-      script: 'publish.js',
+      name: "testApp",
+      script: "publish.js",
       env: {
-        NODE_ENV: 'development'
+        NODE_ENV: "development"
       },
       env_production: {
-        NODE_ENV: 'production',
+        NODE_ENV: "production",
         PORT: 3000
       }
     }
@@ -34,13 +34,13 @@ module.exports = {
     production: {
       user: TARGET_SERVER_USER,
       host: TARGET_SERVER_HOST,
-      ref: 'origin/master',
+      ref: "origin/master",
       repo: REPO,
-      ssh_options: 'StrictHostKeyChecking=no',
+      ssh_options: "StrictHostKeyChecking=no",
       path: TARGET_SERVER_APP_PATH,
-      'post-deploy': 'npm install --production'
-        + ' && pm2 startOrRestart ecosystem.config.js --env=production'
-        + ' && pm2 save'
+      "post-deploy": "npm install --production"
+        + " && pm2 startOrRestart ecosystem.config.js --env=production"
+        + " && pm2 save"
     }
   }
 };

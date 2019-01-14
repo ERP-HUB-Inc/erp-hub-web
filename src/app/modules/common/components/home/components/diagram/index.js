@@ -1,7 +1,6 @@
 import React from "react";
 import GraphAction from "../../../../../common/actions/home";
-// import {Line, Doughnut} from "react-chartjs-2";
-import {Line} from "react-chartjs-2";
+import {Line, Doughnut} from "react-chartjs-2";
 import Component from "../../../Component";
 import "./index.css";
 
@@ -59,7 +58,7 @@ export default class Diagram extends Component {
   }
 
   render() {
-    // const incomeExpense = this.groupIncomeExpenseType();
+    const incomeExpense = this.groupIncomeExpenseType();
     let graphChatDataSource = this.props.graphChat.list;
     if (graphChatDataSource.length === 0) {
       graphChatDataSource = this.state.defaultGraphChatDataSource;
@@ -101,7 +100,7 @@ export default class Diagram extends Component {
             height={505}
             width={1700} />
         </div>
-        {/* <div className="main-doughnut-chart">
+        <div className="main-doughnut-chart">
           <this.Row>
             <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-left">
               <div className="title-pie-chart">
@@ -162,7 +161,7 @@ export default class Diagram extends Component {
             </this.Col>
 
           </this.Row>
-        </div> */}
+        </div>
       </div>
     );
   }

@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import history from "../router/history";
 import StartUp from "../components/StartUp";
+import ErrorBoundary from "../components/ErrorHandle";
 
 
 export default class App extends React.Component {
@@ -55,21 +56,23 @@ export default class App extends React.Component {
 
     return (
       <BrowserRouter>
-        <Switch>
-          <Router history={history}>
-            <div style={{height: "100%"}}>
-              <Route path="/signin" component={UserLogin} />
-              <Route path="/store" component={LoginStore} />
-              <Route path="/device" component={RegisterDevice} />
-              <Route path="/register" component={ClientRegister} />
-              <Route path="/register/detail" component={ClientRegisterDetail} />
-              <Route path="/signin-complete" component={ClientRegisterComplete} />
-              <PrivateRoute
-                path="/"
-                component={Application} loginComponent={UserLogin} />
-            </div>
-          </Router>
-        </Switch>
+        <ErrorBoundary>
+          <Switch>
+            <Router history={history}>
+              <div style={{height: "100%"}}>
+                <Route path="/signin" component={UserLogin} />
+                <Route path="/store" component={LoginStore} />
+                <Route path="/device" component={RegisterDevice} />
+                <Route path="/register" component={ClientRegister} />
+                <Route path="/register/detail" component={ClientRegisterDetail} />
+                <Route path="/signin-complete" component={ClientRegisterComplete} />
+                <PrivateRoute
+                  path="/"
+                  component={Application} loginComponent={UserLogin} />
+              </div>
+            </Router>
+          </Switch>
+        </ErrorBoundary>
       </BrowserRouter>
     );
   }
