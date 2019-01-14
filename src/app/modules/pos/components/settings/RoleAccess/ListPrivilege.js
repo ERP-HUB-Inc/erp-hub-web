@@ -60,7 +60,8 @@ export default class ListPrivilege extends Component {
         checkChildIdList.push({
           rolePrivilegeId,
           privilegeId,
-          value: 1
+          value: 1,
+          isHasUpdated: false
         });
 
         // checkChildIdListV2: use for validation is all checked or some checked
@@ -124,13 +125,22 @@ export default class ListPrivilege extends Component {
     const selectedPrivilegeCollection = this.state.checkChildIdListV2.find(value => value.parentId === parentId);
 
     if (selectedPrivilegeCollection == null || selectedPrivilegeCollection.child.length === 0) {
-      return {indeterminate: false, checkAll: false};
+      return {
+        indeterminate: false,
+        checkAll: false
+      };
     }
     
     if (allPrivilegeCollection.child.length === selectedPrivilegeCollection.child.length) { // if existing length equal to user check mean user check all, so make checkbox all to checked
-      return {indeterminate: false, checkAll: true};
+      return {
+        indeterminate: false,
+        checkAll: true
+      };
     } else { // here user only checked some not all checkbox
-      return {indeterminate: true, checkAll: false};
+      return {
+        indeterminate: true,
+        checkAll: false
+      };
     }
 
   }
@@ -142,7 +152,7 @@ export default class ListPrivilege extends Component {
 
       // get all child ids of parent to add to checked list
       const allChildIds = privileges.list.filter(value => value["parentId"] === e.target.value).map(value => {
-        return {rolePrivilegeId: 0, privilegeId: value.id, value: 1};
+        return {rolePrivilegeId: 0, privilegeId: value.id, value: 1, isHasUpdated: true};
       });
 
       this.state.checkParentIdList.push(e.target.value); // V1
@@ -208,7 +218,8 @@ export default class ListPrivilege extends Component {
         } else {
 
           if (!this.Util.isObjectEmpty(existPrivilege)) {
-            value["value"] = 0;
+            value["value"] = 0;//For change status in DB
+            value["isHasUpdated"] = true;
           }
 
           checkChildIdList.push(value);
@@ -253,6 +264,7 @@ export default class ListPrivilege extends Component {
 
       if (checkChildIdList.length === 0) {
         e.target.value["value"] = 1;
+        e.target.value["isHasUpdated"] = true;
         checkChildIdList.push(e.target.value);
       } else {
         let isPrivilegeNotExist = true;
@@ -260,11 +272,13 @@ export default class ListPrivilege extends Component {
           if (value.privilegeId === privilegeId) {
             isPrivilegeNotExist = false;
             checkChildIdList[index]["value"] = 1;
+            checkChildIdList[index]["isHasUpdated"] = true;
           }
         });
 
         if (isPrivilegeNotExist) {
           e.target.value["value"] = 1;
+          e.target.value["isHasUpdated"] = true;
           checkChildIdList.push(e.target.value);
         }
       }
@@ -307,6 +321,7 @@ export default class ListPrivilege extends Component {
       ).map(value => {
         if (value.privilegeId === e.target.value.privilegeId) { // update value to = 0 to update value in database
           value["value"] = 0;
+          value["isHasUpdated"] = true;
         }
         return value;
       });

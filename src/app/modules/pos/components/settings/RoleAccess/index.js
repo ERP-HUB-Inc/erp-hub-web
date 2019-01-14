@@ -49,24 +49,8 @@ export default class PaymentMethodList extends List {
         :
         <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
           <this.Row className="main-search-layout form-group">
-            <this.Col md="4">
-              <this.InputText
-                name="key"
-                label="Search"
-                placeholder="Search for code, name and address"
-                form={form}
-              />
-            </this.Col>
-            <this.Col md="3">
-              <this.Select
-                name="status"
-                label={<this.Translate id="text_status" />}
-                placeholder="Please select status"
-                dataSource={this.statusList}
-                defaultValue={this.Enum.ALL_STATE}
-                form={form}
-              />
-            </this.Col>
+            {this.renderFilterGeneralKey()}
+            {this.renderFilterStatus()}
             <this.Col md="2" className="wrap-btn-search">
               <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
                 <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
@@ -78,8 +62,7 @@ export default class PaymentMethodList extends List {
   }
 
   handleShowRecordDetail(rowData) {
-    const {dispatch} = this.props;
-    dispatch(RolePrivilegeAction.fetch(rowData.id));
+    this.props.dispatch(RolePrivilegeAction.fetch(rowData.id));
     this.setState({rowData});
   }
 
