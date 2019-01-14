@@ -382,7 +382,7 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: "Group",
+        title: "Group Customer",
         icon: "icon-employee",
         route: "/customers/group",
         component: GroupCustomer,

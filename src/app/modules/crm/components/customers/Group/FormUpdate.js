@@ -7,7 +7,7 @@ import Modal from "../../../../common/components/shares/Modal";
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="update_group_customer_title" />;
+    this.title = <this.Translate id="text_group_customer" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;

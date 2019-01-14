@@ -14,7 +14,7 @@ export default class FormItem extends Modal {
             placeholder={this.CATranslate("text_name", locale)}
             required={true}
             isAutoFocus={true}
-            errorRequired={<this.Translate id="input_error_group_customer_name" />}
+            errorRequired={<this.Translate id="error_required_name" />}
             max={100}
             form={form}/>
         </this.Col> 
