@@ -1,12 +1,12 @@
 import Constant from "../../constants/stock/stockTransfer";
-import supplierService from "../../services/stock/StockTransferService";
+import StockTransferService from "../../services/stock/StockTransferService";
 
 export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_STOCK_TRANSFER,
-        payload: supplierService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
+        payload: StockTransferService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },
@@ -14,7 +14,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ARCHIVE_STOCK_TRANSFER,
-        payload: supplierService.archive(ids)
+        payload: StockTransferService.archive(ids)
       });
     };
   },
@@ -22,7 +22,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ADD_STOCK_TRANSFER,
-        payload: supplierService.add(data)
+        payload: StockTransferService.add(data)
       });
     };
   },
@@ -30,7 +30,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_STOCK_TRANSFER,
-        payload: supplierService.update(data)
+        payload: StockTransferService.update(data)
       });
     };
   },

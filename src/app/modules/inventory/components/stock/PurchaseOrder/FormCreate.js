@@ -119,11 +119,9 @@ export default class FormCreate extends Modal {
       purchaseOrderAdd, 
       form, 
       locale, 
-      supplier, 
-      product, 
+      supplier,
       storeLocation, 
       productSearch, 
-      productUpdate,
       requestOrderNumber,
       dispatch
     } = this.props;
@@ -134,11 +132,9 @@ export default class FormCreate extends Modal {
       this.content = 
         <FormItem 
           form={form} 
-          supplier={supplier} 
-          product={product}
+          supplier={supplier}
           storeLocation={storeLocation} 
           productSearch={productSearch} 
-          productUpdate={productUpdate}
           productVariant={this.props.productVariant}
           requestOrderNumber={requestOrderNumber}
           dispatch={dispatch} 

@@ -4,8 +4,9 @@ class StockTransferService extends BaseService {
 
   constructor() {
     super();
-    this.module = "inventory/supplier";
+    this.module = "inventory/stock/transfer";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 }
 

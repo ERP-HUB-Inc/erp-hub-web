@@ -8,7 +8,9 @@ export default combineReducers({
     const constants = [
       Constant.REQUEST_STOCK_TRANSFER_PENDING,
       Constant.REQUEST_STOCK_TRANSFER_REJECTED,
-      Constant.REQUEST_STOCK_TRANSFER_FULFILLED
+      Constant.REQUEST_STOCK_TRANSFER_FULFILLED,
+      null,
+      Constant.RESET_REQUEST_STOCK_TRANSFER
     ];
     return reducer.request(state, action, constants);
   },

@@ -34,6 +34,10 @@ export default {
     RETURN: "blue",
     PAID: "green"
   },
+  STOCK_TRANSFER_STEP_COLOR: {
+    TRANSFER: "#2db7f5",
+    RECEIVED: "#87d068"
+  },
   TAX_NOT_FOUND: 622,
   BRAND_NOT_FOUND: 614,
   PRODUCT_TYPE_NOT_FOUND: 615,

@@ -314,7 +314,7 @@ export default class PurchaseOrderLists extends List {
             <this.Col md="2">
               <this.InputText
                 name="key"
-                label={<this.Translate id="text_key" />}
+                label={<this.Translate id="purchase_order_search_key_place_holder" />}
                 placeholder={this.CATranslate("purchase_order_search_key_place_holder", locale)}
                 isAutoFocus={true}
                 form={form}/>

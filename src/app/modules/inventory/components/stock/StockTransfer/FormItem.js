@@ -1,55 +1,119 @@
 import React from "react";
+import FormEntry from "./FormEntry";
+import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormItem extends Modal {
+  constructor(props) {
+    super(props);
+    this.state = {
+      locations: []
+    };
+  }
+
+  componentDidMount(){
+    this.setState({
+      locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION)),
+      suppliers: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.SUPPLIER))
+    });
+  }
+
   render() {
-    const { form,locale,formData } = this.props;
+    const {
+      form,
+      dispatch,
+      locale,
+      formData,
+      productSearch
+    } = this.props;
+
+    let locationId = formData.locationId;
+    if (!locationId && Array.isArray(this.state.locations)) {
+      const defaultLocation = this.state.locations.find(location => location.isDefault === this.Enum.IS_DEFAULT);
+      if (defaultLocation) {
+        locationId = defaultLocation.id;
+      }
+    }
+    
     return (
-      <div>
-        <this.Row>
-          <this.Col md="6">
-            <this.InputText
-              name="name"
-              label={<this.Translate id="input_stock_supplier_name" />}
-              data={formData.name}
-              placeholder={this.CATranslate("input_stock_supplier_name", locale)}
-              required={true}
-              errorRequired={<this.Translate id="error_require_supplier" />}
-              max={100}
-              min={3}
-              form={form}/> 
-          </this.Col>
-          <this.Col md="6">
-            <this.InputText
-              name="phoneNumber"
-              label={<this.Translate id="input_stock_supplier_phone_number" />}
-              data={formData.phoneNumber}
-              placeholder={this.CATranslate("input_stock_supplier_phone_number", locale)}
-              errorRequired={<this.Translate id="input_error_stock_supplier_phone_number" />}
-              max={100}
-              min={3}
-              form={form}/> 
-          </this.Col>
-          <this.Col md="12">
-            <this.InputEmail
-              name="email"
-              label={<this.Translate id="input_stock_supplier_email" />}
-              data={formData.email}
-              placeholder={this.CATranslate("input_stock_supplier_email", locale)}
-              errorRequired={<this.Translate id="input_error_stock_supplier_phone_number" />}
-              form={form}/> 
-          </this.Col>
-          <this.Col md="12">
-            <this.InputTextArea
-              name="description"
-              label={<this.Translate id="input_stock_supplier_description" />}
-              data={formData.description}
-              placeholder={this.CATranslate("input_stock_supplier_description", locale)}
-              max={100}
-              form={form}/>
-          </this.Col>
-        </this.Row>
-      </div>
+      <this.Row id="purchase-order-form">
+        <this.Col md="12">
+          <this.Row className="ca-penel-v1 wrap-po-filter-create">
+            <this.Col md="3">
+              <this.InputText
+                name="name"
+                label={<this.Translate id="text_name" />}
+                data={formData.name}
+                placeholder={this.CATranslate("text_name", locale)}
+                errorRequired={<this.Translate id="error_require_name" />}
+                required={true}
+                isAutoFocus={true}
+                max={100}
+                form={form}/> 
+            </this.Col>
+            <this.Col md="2">
+              { formData.deliveryDueDate == null ?
+                <this.DatePickers
+                  name="deliveryDueDate"
+                  label={<this.Translate id="text_due_date" />}
+                  placeholder={this.CATranslate("text_due_date", locale)}
+                  errorRequired={<this.Translate id="error_select_due_date" />}
+                  required={true}
+                  form={form}/>
+                :
+                <this.DatePickers
+                  name="deliveryDueDate"
+                  defaultValue={this.Util.formatDatePicker(formData.deliveryDueDate)} 
+                  label={<this.Translate id="text_due_date" />}
+                  placeholder={this.CATranslate("text_due_date", locale)}
+                  errorRequired={<this.Translate id="error_select_due_date" />}
+                  required={true}
+                  form={form}/>
+              }
+
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="fromLocationId"
+                label={<this.Translate id="text_from_location" /> }
+                placeholder={this.CATranslate("text_from_location", locale)}
+                defaultValue={formData.supplierId}
+                dataSource={this.state.locations}
+                valueKey="id"
+                required={true}
+                form={form}/>
+            </this.Col>
+            <this.Col md="2">
+              <this.Select
+                name="toLocationId"
+                label={<this.Translate id="text_to_location" />}
+                placeholder={this.CATranslate("text_to_location", locale)}
+                defaultValue={locationId}
+                dataSource={this.state.locations}
+                valueKey="id"
+                form={form}/>
+            </this.Col>
+            <this.Col md="3">
+              <this.InputText
+                name="description"
+                label={<this.Translate id="text_description" />}
+                data={formData.name}
+                placeholder={this.CATranslate("text_description", locale)}
+                max={255}
+                form={form}/> 
+            </this.Col>
+          </this.Row>
+        </this.Col>
+        <this.Col md="12" className="purchase-order-entry">
+          <FormEntry
+            dataSource={productSearch}
+            productVariant={this.props.productVariant}
+            stockTransferEntries={formData.stockTransferEntries}
+            locale={locale}
+            dispatch={dispatch}
+            form={form} />
+        </this.Col>
+      </this.Row>
     );
   }
 }
@@ -57,7 +121,8 @@ export default class FormItem extends Modal {
 FormItem.defaultProps = {
   formData: {
     name:"",
-    description:"",
-    status: 1
-  }
+    supplierid:"",
+    stockTransferEntries: []
+  },
+  productSearch: []
 };

@@ -1,56 +1,55 @@
-export default {    
-  "select_search_stock_transfer_supplier": [
-    "Supplier",
-    "Supplier",
-    "Supplier",
+export default {
+  "text_stock_transfer": [
+    "Stock Transfer",
+    "Stock Transfer",
+    "Stock Transfer"
   ],
-
-  "input_search_stock_transfer_tag":[
-    "Tags",
-    "Tags",
-    "Tags"
-  ],
-
-  "input_search_stock_transfer_key":[
-    "Product Key",
-    "Product Key",
-    "Product Key"
-  ],
-
+  
   "text_export_csv": [
     "Export CSV",
     "Export CSV",
     "Export CSV",
   ],
 
-  "col_stock_transfer_form_location": [
+  "text_from_location": [
     "From Location",
     "From Location",
     "From Location",
   ],
 
-  "col_stock_transfer_to_location": [
+  "text_to_location": [
     "To Location",
     "To Location",
     "To Location",
   ],
 
-  "col_stock_transfer_transfer_by": [
+  "text_transfer_by": [
     "Transfer By",
     "Transfer By",
     "Transfer By",
   ],
 
-  "col_stock_transfer_received_by": [
+  "text_receive_by": [
     "Received By",
     "Received By",
     "Received By",
   ],
 
-  "col_stock_transfer_received_date": [
-    "Received Date",
-    "Received Date",
-    "Received Date",
+  "stock_transfer_search_key_place_holder": [
+    "Search for stock transfer",
+    "Search for stock transfer",
+    "Search for stock transfer"
   ],
 
+  "placeholder_table_stock_transfer": [
+    "No stock transfer item",
+    "No stock transfer item",
+    "No stock transfer item"
+  ],
+
+  "text_transfered": [
+    "Transfered",
+    "Transfered",
+    "Transfered"
+  ]
 };

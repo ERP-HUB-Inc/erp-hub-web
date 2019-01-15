@@ -13,14 +13,14 @@ class List extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    stockTransfer: state.reducer.stockTransfer.request,
-    stockTransferAdd: state.reducer.stockTransfer.add,
-    stockTransferArchive: state.reducer.stockTransfer.archive,
-    stockTransferUpdate: state.reducer.stockTransfer.update,
+    list: state.reducer.stockTransfer.request,
+    add: state.reducer.stockTransfer.add,
+    update: state.reducer.stockTransfer.update,
     supplier: state.reducer.supplier.request,
     storeLocation: state.reducer.storeLocation.request,
     brand: state.reducer.brand.request,
-    productType: state.reducer.productsType.request
+    productType: state.reducer.productsType.request,
+    locale: state.locale
   };
 }
 

@@ -24,6 +24,10 @@ export default {
     RETURN : 4,
     PAID : 5
   },
+  STOCK_STRANSFER_STEP: {
+    TRANSFER : 0,
+    RECEIVED : 1
+  },
   CLIENT_AUTO_NUMBER_TYPE: {
     QUOTATION : 2,
     INVOICE : 4,

@@ -6,11 +6,7 @@ import StockTransferAction from "../../../actions/stock/stockTransfer";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.state = {
-      disabled: false
-    };
-
-    this.title = <this.Translate id="update_stock_purchase_order_title" />;
+    this.title = <this.Translate id="text_stock_transfer" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }

@@ -14,7 +14,7 @@ export default class Form extends Modal {
     };
     this.width = window.innerWidth < 1400 ? window.innerWidth : 1400;
     // this.height = window.innerHeight < 800 ? "100%" : 800;
-    this.wrapClassName = "wrap-modal-po";
+    this.wrapClassName = `${this.wrapClassName} wrap-modal-po modal-po-full-screen`;
     this.confirmTextAction = <this.Translate id="text_confirm_receive"/>;
     this.confirmTitle = <this.Translate id="text_confirm_receive_title"/>;
     this.dispatch = this.props.dispatch;

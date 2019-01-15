@@ -159,8 +159,7 @@ export default class Form extends Modal {
       purchaseOrderUpdate, 
       form, 
       locale, 
-      supplier, 
-      product, 
+      supplier,
       storeLocation,
       productSearch,
       requestOrderNumber,
@@ -176,8 +175,7 @@ export default class Form extends Modal {
         <FormItem 
           form={form} 
           formData={purchaseOrderDetail.data} 
-          supplier={supplier} 
-          product={product}
+          supplier={supplier}
           productVariant={this.props.productVariant}
           storeLocation={storeLocation} 
           productSearch={productSearch}

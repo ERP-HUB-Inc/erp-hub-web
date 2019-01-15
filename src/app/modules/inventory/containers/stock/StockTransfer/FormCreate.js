@@ -14,6 +14,9 @@ class StockTransferForm extends React.Component {
 function mapStateToProps(state) {
   return {
     stockTransferAdd: state.reducer.stockTransfer.add,
+    productVariant: state.reducer.productVariant.request,
+    productSearch: state.reducer.product.search,
+    storeLocation: state.reducer.storeLocation.request,
     locale: state.locale
   };
 }

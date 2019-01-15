@@ -1,12 +1,12 @@
 import React from "react";
-import Create from "../../../components/stock/PurchaseOrder/FormCreate";
-import { connect } from "react-redux";
-import { Form } from "antd";
+import {connect} from "react-redux";
+import {Form} from "antd";
+import FormCreate from "../../../components/stock/PurchaseOrder/FormCreate";
 
 class FormList extends React.Component {
   render() {
     return (
-      <Create {...this.props} />
+      <FormCreate {...this.props} />
     );
   }
 }
@@ -14,10 +14,8 @@ class FormList extends React.Component {
 function mapStateToProps(state) {
   return {
     purchaseOrderAdd: state.reducer.purchaseOrder.add,
-    productUpdate: state.reducer.purchaseOrder.update,
     supplier: state.reducer.supplier.request,
     productSearch: state.reducer.product.search,
-    product: state.reducer.product.request,
     productVariant: state.reducer.productVariant.request,
     storeLocation: state.reducer.storeLocation.request,
     requestOrderNumber: state.reducer.purchaseOrder.requestOrderNumber,
