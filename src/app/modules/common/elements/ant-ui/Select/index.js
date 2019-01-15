@@ -24,18 +24,28 @@ export class Select extends Element {
     if (!Array.isArray(dataSource)) {
       dataSource = [];
     }
+
+    const options = {
+      rules: [
+        {
+          required: this.props.required,
+          message: this.props.errorRequired}
+      ]
+    };
+
+    if (this.props.defaultValue) {
+      options["initialValue"] = this.props.defaultValue;
+    } else if (!this.props.placeholder) {
+      options["initialValue"] = this.props.defaultValue;
+    }
+
     return (
       <this.FormItem
         label={this.props.label}
         help={this.props.help}
         validateStatus={this.props.validateStatus}>
         {
-          getFieldDecorator(this.props.name, {rules: 
-              [
-                {required: this.props.required, message: this.props.errorRequired}
-              ],
-          initialValue: this.props.defaultValue
-          })(
+          getFieldDecorator(this.props.name, options)(
             <this.Select
               placeholder={this.props.placeholder}
               onChange={this.props.onChange}

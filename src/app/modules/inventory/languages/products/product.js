@@ -29,13 +29,6 @@ export default {
     "Tags"
   ],
 
-  "col_products_type": [
-    "Product Type",
-    "Product Type",
-    "Product Type"
-  ],
-
-
   "col_products_supplier": [
     "Supplier",
     "Supplier",
@@ -104,7 +97,7 @@ export default {
     "Product Brand"
   ],
 
-  "input_product_type": [
+  "text_product_type": [
     "Product Type",
     "Product Type",
     "Product Type"
@@ -140,7 +133,7 @@ export default {
     "Sell on e-Commerce"
   ],
 
-  "input_product_serial_type": [
+  "text_serial_type": [
     "Serial Type",
     "Serial Type",
     "Serial Type"
@@ -498,6 +491,12 @@ export default {
     "Product description allow only 255 charactor only",
     "Product description allow only 255 charactor only",
     "Product description allow only 255 charactor only"
+  ],
+
+  "error_require_serial_type": [
+    "Choose serial type",
+    "Choose serial type",
+    "Choose serial type"
   ],
 
   "error_product_not_found": [

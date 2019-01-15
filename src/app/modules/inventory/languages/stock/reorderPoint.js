@@ -23,12 +23,6 @@ export default {
     "Brand",
   ],
 
-  "select_stock_reorder_point_product_type": [
-    "Product Type",
-    "Product Type",
-    "Product Type",
-  ],
-
   "select_stock_reorder_point_supplier": [
     "Supplier",
     "Supplier",
@@ -64,12 +58,6 @@ export default {
     "Purchase",
     "Purchase",
     "Purchase"
-  ],
-
-  "col_stock_reorder_point_product_type": [
-    "Product Type",
-    "Product Type",
-    "Product Type",
   ],
 
   "col_stock_reorder_point_brand": [

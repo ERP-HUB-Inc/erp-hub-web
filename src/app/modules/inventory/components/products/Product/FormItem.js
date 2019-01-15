@@ -72,10 +72,10 @@ export default class FormItem extends Modal {
         name: <this.Translate id="input_product_standard" />,
         value: Enum.SERIAL_TYPE.STANDARD
       },
-      {
-        name: <this.Translate id="input_product_license" />,
-        value: Enum.SERIAL_TYPE.LICENSE
-      }
+      // {
+      //   name: <this.Translate id="input_product_license" />,
+      //   value: Enum.SERIAL_TYPE.LICENSE
+      // }
     ];
 
     this.typesOfProduct = [
@@ -392,8 +392,8 @@ export default class FormItem extends Modal {
                 <this.Col md="4">
                   <this.SelectSearch
                     name="productTypeId"
-                    label={<this.Translate id="input_product_type" />}
-                    placeholder={this.CATranslate("input_product_type", locale)}
+                    label={<this.Translate id="text_product_type" />}
+                    placeholder={this.CATranslate("text_product_type", locale)}
                     errorRequired={<this.Translate id="error_require_type" />}
                     valueKey="id"
                     dataSource={this.state.productsType}
@@ -408,10 +408,20 @@ export default class FormItem extends Modal {
                 <this.Col md="4">
                   <this.Select
                     name="serialType"
-                    label={<this.Translate id="input_product_serial_type" />}
+                    label={
+                      <span>
+                        <this.Translate id="text_serial_type" />&nbsp;
+                        <this.Tooltip title="Do you want your product calculate stock or not?">
+                          <this.Icon type="question-circle-o" />
+                        </this.Tooltip>
+                      </span>
+                    }
+                    placeholder={this.CATranslate("text_serial_type", locale)}
                     dataSource={this.serialTypes}
-                    defaultValue={formData.serialType !== "" ? formData.serialType : this.serialTypes[0].value}
+                    defaultValue={formData.serialType}
+                    errorRequired={<this.Translate id="error_require_serial_type" />}
                     disabled={formData.id != null}
+                    required={true}
                     form={form}/>
                 </this.Col>
 

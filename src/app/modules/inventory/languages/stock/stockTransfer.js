@@ -1,10 +1,4 @@
 export default {    
-  "select_search_stock_transfer_product_type": [
-    "Product Type",
-    "Product Type",
-    "Product Type",
-  ],
-
   "select_search_stock_transfer_supplier": [
     "Supplier",
     "Supplier",
@@ -27,12 +21,6 @@ export default {
     "Export CSV",
     "Export CSV",
     "Export CSV",
-  ],
-
-  "col_stock_transfer_no": [
-    "No",
-    "No",
-    "No",
   ],
 
   "col_stock_transfer_form_location": [

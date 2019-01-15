@@ -89,7 +89,7 @@ export default class Lists extends List {
               <this.Col md="2">
                 <this.Select
                   name="status"
-                  label={<this.Translate id="select_search_stock_transfer_product_type" />}
+                  label={<this.Translate id="text_product_type" />}
                   placeholder="Please select status"
                   dataSource={this.props.productType.list}
                   valueKey="id"
@@ -99,7 +99,7 @@ export default class Lists extends List {
               <this.Col md="2">
                 <this.Select
                   name="supplierId"
-                  label={<this.Translate id="select_search_stock_transfer_supplier" /> }
+                  label={<this.Translate id="text_supplier" /> }
                   dataSource={this.props.supplier.list}  
                   valueKey="id"
                   placeholder={<this.Translate id="placeholder_table_purchase_place_holder" />}
@@ -150,7 +150,7 @@ class Column extends List {
     return [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="col_stock_transfer_no" />,
+        title: <this.Translate id="text_no" />,
         dataIndex: "name",
         key: "name",
         sorter: true

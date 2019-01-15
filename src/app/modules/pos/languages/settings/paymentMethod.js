@@ -1,9 +1,4 @@
 export default {
-  "col_payment_method_no": [
-    "No",
-    "No",
-    "No"
-  ],
   "input_placeholder_name": [
     "Please input your name",
     "သင်၏နာမကို input ကိုနှစ်သက်သော",

@@ -150,7 +150,7 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_reorder_point_product_type" />,
+        title: <this.Translate id="text_product_type" />,
         dataIndex: "proType",
         key: "proType",
         sorter: true
