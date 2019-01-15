@@ -78,5 +78,16 @@
 }
 
 .modal-po-full-screen .ant-modal-body form #purchase-order-form {
-    overflow: auto
+    padding-right: 25px;
+    padding-left: 25px
+}
+
+.modal-po-full-screen .ant-modal-footer{
+    background: #f7f7f7cc;
+    z-index: 99
+}
+
+.modal-po-full-screen .ant-modal-body {
+    padding-left: 0 !important;
+    padding-right: 0 !important
 }

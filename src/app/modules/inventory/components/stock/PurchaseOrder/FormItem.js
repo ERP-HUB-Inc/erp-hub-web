@@ -131,9 +131,9 @@ export default class FormItem extends Modal {
             <this.Col md="2">
               <this.InputText
                 name="invoiceNo"
-                label={<this.Translate id="text_supplier_invoice" />}
+                label={<this.Translate id="text_invoice_no" />}
                 data={formData.invoiceNo}
-                placeholder={this.CATranslate("text_supplier_invoice",locale)}
+                placeholder={this.CATranslate("text_invoice_no",locale)}
                 max={100}
                 form={form}/>
             </this.Col>
@@ -146,7 +146,6 @@ export default class FormItem extends Modal {
                 defaultValue={locationId}
                 dataSource={this.state.locations}
                 valueKey="id"
-                required={true}
                 form={form}
               />
             </this.Col>
