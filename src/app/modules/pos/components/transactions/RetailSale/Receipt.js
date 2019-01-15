@@ -44,15 +44,18 @@ export default class Receipt extends Component {
             <tbody><tr>
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>
                 <div style={{position: "relative", margin: "0 auto"}}>
-                  {
-                    <img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} /> 
-                  }
+                  {<img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} />}
                 </div>
               </td>
             </tr>
-            <tr>
-              <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", fontSize: "16pt"}}>{businessName}</td>
-            </tr>
+            {
+              this.props.receiptTemplate.isShowStoreName ?
+                <tr>
+                  <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", fontSize: "16pt"}}>{businessName}</td>
+                </tr>
+                :
+                <tr></tr>
+            }
             <tr>
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>{address} {phoneNumber}</td>
             </tr>
@@ -173,9 +176,14 @@ export default class Receipt extends Component {
             <tr>
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}><this.Translate id="text_feedback_keep_on_receipt"/></td>
             </tr>
-            <tr>
-              <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>www.storevein.com</td>
-            </tr>
+            {
+              this.props.receiptTemplate.isShowDevelopBy ?
+                <tr>
+                  <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>www.storevein.com</td>
+                </tr>
+                :
+                <tr></tr>
+            }
             </tbody></table>
         </div>
       </div>

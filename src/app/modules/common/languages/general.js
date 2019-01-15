@@ -203,6 +203,12 @@ export default {
     "Quantity"
   ],
 
+  "text_all_quantity": [
+    "All Quantity",
+    "All Quantity",
+    "All Quantity"
+  ],
+
   "text_no_permission": [
     "No permission to permform this operation",
     "No permission to permform this operation",

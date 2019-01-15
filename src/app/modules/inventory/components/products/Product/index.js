@@ -444,6 +444,26 @@ class Column extends List {
         sorter: true
       },
       {
+        title: <this.Translate id="text_all_quantity" />,
+        dataIndex: "quantity",
+        key: "quantity",
+        width: 150,
+        align: "center",
+        render: (text, record) => {
+          let quantity = this.getAllQTY(record);
+          
+          let colorIndex = 0;
+          if (quantity === 0) {
+            colorIndex = 1;
+          } else if (quantity < 0) {
+            colorIndex = 2;
+          }
+
+          return <this.Tag color={this.colorStockStatus[colorIndex]} className="text-center label-stock-status">{quantity}</this.Tag>;
+        },
+        sorter: true
+      },
+      {
         title: <this.Translate id="col_products_unit" />,
         dataIndex: "unit",
         key: "unit",
@@ -486,6 +506,10 @@ class Column extends List {
       quantity = Util.getProductQTYLocation(record["productVariants"]);
     }
 
-    return quantity;
+    return quantity < 0 ? 0 : quantity;
+  }
+
+  getAllQTY(record) {
+    return Util.getProductQTYLocation(record["productVariants"]);
   }
 }

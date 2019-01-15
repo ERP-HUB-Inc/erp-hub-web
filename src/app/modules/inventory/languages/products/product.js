@@ -30,16 +30,11 @@ export default {
   ],
 
   "col_products_type": [
-    "Product Types",
-    "Product Types",
-    "Product Types"
+    "Product Type",
+    "Product Type",
+    "Product Type"
   ],
 
-  "col_products_brand": [
-    "Brand",
-    "Brand",
-    "Brand"
-  ],
 
   "col_products_supplier": [
     "Supplier",

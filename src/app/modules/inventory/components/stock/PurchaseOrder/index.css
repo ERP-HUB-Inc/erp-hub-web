@@ -52,3 +52,31 @@
     width: 66px;
     font-size: 8pt
 }
+
+.modal-po-full-screen .ant-modal,
+.modal-po-full-screen .ant-modal .ant-modal-content,
+.modal-po-full-screen .ant-modal-body,
+.modal-po-full-screen .ant-modal-body form,
+.modal-po-full-screen .ant-modal-body form #purchase-order-form,
+.modal-po-full-screen .ant-modal-body form #purchase-order-form .purchase-order-entry
+{
+    height: 100%;
+}
+
+.modal-po-full-screen .ant-modal .ant-modal-content,
+.modal-po-full-screen .ant-modal-body,
+.modal-po-full-screen .ant-modal-body form,
+.modal-po-full-screen .ant-modal-body form #purchase-order-form,
+.modal-po-full-screen .ant-modal-body form #purchase-order-form > .col-md-12 {
+    display: flex
+}
+
+.modal-po-full-screen .ant-modal .ant-modal-content,
+.modal-po-full-screen .ant-modal-body form,
+.modal-po-full-screen .ant-modal-body form #purchase-order-form > .col-md-12 {
+    flex-direction: column
+}
+
+.modal-po-full-screen .ant-modal-body form #purchase-order-form {
+    overflow: auto
+}

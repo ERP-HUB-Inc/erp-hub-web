@@ -13,9 +13,8 @@ export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
     this.title = <this.Translate id="text_po" />;
-    this.wrapClassName = "wrap-modal-po";
+    this.wrapClassName = `${this.wrapClassName} wrap-modal-po ${ window.innerHeight < 700 ? "modal-po-full-screen" : ""}`;
     this.width = window.innerWidth < 1400 ? window.innerWidth : 1400;
-    // this.height = window.innerHeight < 800 ? window.innerHeight : 800;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.pushToSupplier = this.pushToSupplier.bind(this);
