@@ -16,6 +16,7 @@ function mapStateToProps(state) {
     list: state.reducer.stockTransfer.request,
     add: state.reducer.stockTransfer.add,
     update: state.reducer.stockTransfer.update,
+    detail: state.reducer.stockTransfer.detail,
     supplier: state.reducer.supplier.request,
     storeLocation: state.reducer.storeLocation.request,
     brand: state.reducer.brand.request,

@@ -341,6 +341,8 @@ export default class Retail extends Component {
       if (product.quantity <= 0 || (productVariant && productVariant.quantity <= 0)) {
         let varinatName = productVariant ? `(${productVariant.name})` : "";
         this.Message.error(`${Util.getProductName(product)}${varinatName}: ${this.CATranslate("text_out_of_stock", this.props.locale)}`);
+        this.props.form.setFieldsValue({searchProduct: ""});
+        document.getElementById("searchProduct").focus();
         return;
       }
     }
@@ -380,6 +382,9 @@ export default class Retail extends Component {
     this.setState({productOrderList: existingProductOrderList});
 
     this.saveReceipt(Enum.CURRENT_RECEIPT);
+
+    this.props.form.setFieldsValue({searchProduct: ""});
+    document.getElementById("searchProduct").focus();
   }
 
   handleOnRemoveProductFromOrderList(productVariant) {

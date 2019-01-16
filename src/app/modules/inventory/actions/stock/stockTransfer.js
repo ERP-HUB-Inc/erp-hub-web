@@ -34,10 +34,10 @@ export default {
       });
     };
   },
-  reset: () => {
+  reset: (RESET_CONSTANT = Constant.RESET_STOCK_TRANSFER) => {
     return dispatch => {
       return dispatch({
-        type: Constant.RESET_STOCK_TRANSFER,
+        type: RESET_CONSTANT,
         payload: null
       });
     };
@@ -47,6 +47,14 @@ export default {
       return dispatch({
         type: Constant.SHOW_STOCK_TRANSFER_FORM,
         payload: data
+      });
+    };
+  },
+  detail:(data) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_STOCK_TRANSFER_DETAIL,
+        payload: StockTransferService.detail(data.id)
       });
     };
   }

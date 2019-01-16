@@ -51,5 +51,17 @@ export default {
     "Transfered",
     "Transfered",
     "Transfered"
+  ],
+
+  "error_require_location": [
+    "Choose location",
+    "Choose location",
+    "Choose location"
+  ],
+
+  "text_transfer_qty_warning": [
+    "Invalid quantity for transfer",
+    "Invalid quantity for transfer",
+    "Invalid quantity for transfer"
   ]
 };

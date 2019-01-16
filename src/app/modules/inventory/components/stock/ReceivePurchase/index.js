@@ -80,7 +80,14 @@ export default class ReceivePurchaseList extends List {
         key: "action",
         align: "center",
         width: 100,
-        render: id => <this.Tag onClick={() => this.handleShowFormEdit({id})} color="#87d068" className="text-uppercase text-center po-step-tag"><this.Translate id="text_receive"/></this.Tag>
+        render: id => <this.Button
+          type="info"
+          id="btnAdd"
+          className="mg-right text-uppercase"
+          onClick={() => this.handleShowFormEdit({id})}>
+          <span className="icon-completed icon-padding-right"></span>
+          <this.Translate id="text_receive"/>
+        </this.Button>
       }
     ];
     this.ExportheadersCsv = [{label: "Date", key: "createdAt"},
@@ -178,7 +185,7 @@ export default class ReceivePurchaseList extends List {
           <this.Col md="2">
             <this.InputText
               name="key"
-              label={<this.Translate id="text_key" />}
+              label={<this.Translate id="stock_receive_purchase_search_key_place_holder" />}
               placeholder={this.CATranslate("stock_receive_purchase_search_key_place_holder", locale)}
               isAutoFocus={true}
               form={form}/>

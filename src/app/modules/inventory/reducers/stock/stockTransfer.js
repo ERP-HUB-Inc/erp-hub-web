@@ -41,5 +41,15 @@ export default combineReducers({
       Constant.RESET_STOCK_TRANSFER
     ];
     return reducer.update(state, action, constants);
-  }
+  },
+  detail: (state = InitialState.detail(), action) => {
+    const constants = [
+      Constant.REQUEST_STOCK_TRANSFER_DETAIL_PENDING,
+      Constant.REQUEST_STOCK_TRANSFER_DETAIL_REJECTED,
+      Constant.REQUEST_STOCK_TRANSFER_DETAIL_FULFILLED,
+      Constant.REQUEST_STOCK_TRANSFER_DETAIL_FULL_RESET,
+      Constant.REQUEST_STOCK_TRANSFER_DETAIL_RESET
+    ];
+    return reducer.detail(state, action, constants);
+  },
 });

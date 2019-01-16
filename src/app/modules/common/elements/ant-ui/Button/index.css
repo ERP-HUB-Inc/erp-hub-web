@@ -1,5 +1,6 @@
 .ant-btn.info,
-.ant-btn.danger {
+.ant-btn.danger,
+.ant-btn.receive {
     color: #FFFFFF !important;
     text-transform: uppercase;
     font-size: 10pt;
@@ -16,6 +17,10 @@
     background-color: #B90000
 }
 
+.ant-btn.receive {
+    background-color: #87d068
+}
+
 .ant-btn.info:hover,
 .ant-btn.info:focus,
 .ant-btn.info:active,
@@ -28,6 +33,13 @@
 .ant-btn.danger:active,
 .ant-btn.danger.active {
     background: #c72727 !important
+}
+
+.ant-btn.receive:hover,
+.ant-btn.receive:focus,
+.ant-btn.receive:active,
+.ant-btn.receive.active {
+    background: #8cde69 !important
 }
 
 .ant-btn.danger[disabled],

@@ -76,7 +76,7 @@ class Util {
   countProductQTYCurrentLocation(product, currentLocationId) {
     let quantity = 0;
     if (this.isValidProductVariant(product)) {
-      product.productVariants.forEach(productVariant => { console.log("ProductVariant:", product.productVariants);
+      product.productVariants.forEach(productVariant => {
         if (productVariant && Array.isArray(productVariant.productLocations)) {
           productVariant.productLocations.forEach(productLocation => {
             if (productLocation.locationId === currentLocationId) {

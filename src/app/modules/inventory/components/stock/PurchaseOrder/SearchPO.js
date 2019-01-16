@@ -91,8 +91,7 @@ export default class SearchPo extends Modal {
             required={true}
             precision={0}
             handleKeyUp={(e) => this.handleOnChangeQuantity(e, index)}
-            form={this.form}
-          />;
+            form={this.form} />;
         }
       },
       {

@@ -146,8 +146,7 @@ export default class FormItem extends Modal {
                 defaultValue={locationId}
                 dataSource={this.state.locations}
                 valueKey="id"
-                form={form}
-              />
+                form={form}/>
             </this.Col>
           </this.Row>
         </this.Col>

@@ -13,8 +13,7 @@ export default class FormItem extends Modal {
 
   componentDidMount(){
     this.setState({
-      locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION)),
-      suppliers: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.SUPPLIER))
+      locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION))
     });
   }
 
@@ -27,7 +26,7 @@ export default class FormItem extends Modal {
       productSearch
     } = this.props;
 
-    let locationId = formData.locationId;
+    let locationId = formData.fromLocationId;
     if (!locationId && Array.isArray(this.state.locations)) {
       const defaultLocation = this.state.locations.find(location => location.isDefault === this.Enum.IS_DEFAULT);
       if (defaultLocation) {
@@ -77,7 +76,7 @@ export default class FormItem extends Modal {
                 name="fromLocationId"
                 label={<this.Translate id="text_from_location" /> }
                 placeholder={this.CATranslate("text_from_location", locale)}
-                defaultValue={formData.supplierId}
+                defaultValue={locationId}
                 dataSource={this.state.locations}
                 valueKey="id"
                 required={true}
@@ -88,16 +87,18 @@ export default class FormItem extends Modal {
                 name="toLocationId"
                 label={<this.Translate id="text_to_location" />}
                 placeholder={this.CATranslate("text_to_location", locale)}
-                defaultValue={locationId}
+                errorRequired={<this.Translate id="error_require_location" />}
                 dataSource={this.state.locations}
+                defaultValue={formData.toLocationId}
                 valueKey="id"
+                required={true}
                 form={form}/>
             </this.Col>
             <this.Col md="3">
               <this.InputText
                 name="description"
                 label={<this.Translate id="text_description" />}
-                data={formData.name}
+                data={formData.description}
                 placeholder={this.CATranslate("text_description", locale)}
                 max={255}
                 form={form}/> 
@@ -121,7 +122,7 @@ export default class FormItem extends Modal {
 FormItem.defaultProps = {
   formData: {
     name:"",
-    supplierid:"",
+    toLocationId: "",
     stockTransferEntries: []
   },
   productSearch: []

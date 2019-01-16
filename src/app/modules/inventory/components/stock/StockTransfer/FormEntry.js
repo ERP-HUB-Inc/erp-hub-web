@@ -72,6 +72,27 @@ export default class FormEntry extends Modal {
             valueKey="id"
             dataSource={this.state.units}
             defaultValue={record.unitId}
+            disabled={true}
+            form={this.form} />;
+        }
+      },
+      {
+        title: <this.Translate id="text_quantity" />,
+        dataIndex: "transferQuantity",
+        width: 200,
+        key: "transferQuantity",
+        align: "right",
+        render: (text, record, index) => {
+          return <this.InputNumber
+            name={`transferQuantity[${index}]`}
+            data={`${record.transferQuantity}`}
+            className="text-right"
+            compare={{value: record.quantityOnHand, message: <this.Translate id="text_transfer_qty_warning"/>}}
+            isAutoSelect={true}
+            isHideTool={true}
+            required={true}
+            handleKeyUp={(e) => this.handleOnChangeQuantity(e, index)}
+            precision={0}
             form={this.form} />;
         }
       },
@@ -94,6 +115,7 @@ export default class FormEntry extends Modal {
     ];
 
     this.removeRecord = this.removeRecord.bind(this);
+    this.handleOnChangeQuantity = this.handleOnChangeQuantity.bind(this);
     this.handleOnSelectList = this.handleOnSelectList.bind(this);
     this.handleCancelVariantProduct = this.handleCancelVariantProduct.bind(this);
   }
@@ -102,12 +124,11 @@ export default class FormEntry extends Modal {
     this.setState({units: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT))});
   }
 
-  componentDidUpdate(){
-    const {stockTransferEntries} = this.props;
-    if (stockTransferEntries.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
+  componentDidUpdate() {
+    if (this.props.stockTransferEntries.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
       const existingProductList = this.state.productLists;
       
-      stockTransferEntries.forEach(transferEntry => {
+      this.props.stockTransferEntries.forEach(transferEntry => {
         let productName = "";
         let variantName = "";
         let quantityOnHand = 0;
@@ -125,7 +146,7 @@ export default class FormEntry extends Modal {
           unitId: transferEntry.unitId,
           productVariantId: transferEntry.productVariantId,
           quantityOnHand,
-          quantity: transferEntry.requestQuantity,
+          transferQuantity: transferEntry.transferQuantity,
           transferEntryStatus: transferEntry.status
         }); 
       }); 
@@ -146,7 +167,7 @@ export default class FormEntry extends Modal {
 
   removeRecord(record, index){
     let existingProductList = this.state.productLists;
-    if (record.purchaseEntryId === "") {
+    if (record.transferEntryId === "") {
       existingProductList.splice(index, 1);
     } else {
       existingProductList[index]["transferEntryStatus"] = this.Enum.ARCHIVE;
@@ -161,6 +182,12 @@ export default class FormEntry extends Modal {
     this.setState({modalVariant: null});
   }
 
+  handleOnChangeQuantity(e, index) {
+    const existingProductList = this.state.productLists;
+    existingProductList[index]["transferQuantity"] = parseInt(e.target.value, 10);
+    this.setState({productLists: existingProductList});
+  }
+
   handleOnSelectList(product, productVariant, isRequestVariantForm = true) {
     let isProductVariant = product.productOption === Enum.PRODUCT_VARIANT;
     if (isProductVariant && isRequestVariantForm) {
@@ -171,7 +198,7 @@ export default class FormEntry extends Modal {
           handleCancel={this.handleCancelVariantProduct}/>
       });
       return;
-    } else if (productVariant && productVariant.length > 0) {
+    } else if (productVariant && productVariant.length > 0) { // Difference from product variant
       productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
       productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
     }
@@ -184,15 +211,13 @@ export default class FormEntry extends Modal {
 
     if (existingProductList.length === 0) {
       existingProductList.push({
-        purchaseEntryId: "",
+        transferEntryId: "",
         productName,
         unitId: product.defaultUnitId,
         variantName: productVariant.name,
         quantityOnHand: quantity,
-        quantity: initialQuantity,
-        price: 0,
+        transferQuantity: initialQuantity,
         productVariantId: productVariant.id,
-        totalPrice: 0,
         transferEntryStatus: this.Enum.ACTIVE
       });
     } else {
@@ -202,36 +227,34 @@ export default class FormEntry extends Modal {
       existingProductList.forEach((product, index) => {
         if (product.productVariantId === productVariant.id) {
           isNotTheSameProduct = false;
-          existingProductList[index]["quantity"] += 1;
-          existingProductList[index]["totalPrice"] = existingProductList[index]["quantity"] * existingProductList[index]["price"];
+          existingProductList[index]["transferQuantity"] += 1;
         }
       });
 
       if (isNotTheSameProduct) {
         existingProductList.push({
-          purchaseEntryId: "",
+          transferEntryId: "",
           productName,
           variantName: productVariant.name,
           unitId: product.defaultUnitId,
           quantityOnHand: quantity,
-          price: 0,
           productVariantId: productVariant.id,
-          quantity: initialQuantity,
-          totalPrice: 0,
-          purchaseEntryStatus: this.Enum.ACTIVE
+          transferQuantity: initialQuantity,
+          transferEntryStatus: this.Enum.ACTIVE
         });
       }
     }
 
     this.setState({productLists: existingProductList});
+    this.props.form.setFieldsValue({searchProduct: ""});
+    document.getElementById("searchProduct").focus();
   }
 
   render(){
-    const {productLists} = this.state; 
     return(
       <div className="main-dropdown-search">
         <DropDownSearch
-          productSearch={ this.props.dataSource }
+          productSearch={this.props.dataSource}
           handleOnSelectList={this.handleOnSelectList}
           dispatch={this.props.dispatch}
           className="ca-input-v1 purchase-order"
@@ -239,8 +262,8 @@ export default class FormEntry extends Modal {
           form={this.props.form}/>  
         <this.Table
           rowKey="productVariantId"
-          rowClassName={record => record.purchaseEntryStatus === this.Enum.ACTIVE ? "" : "hidden"}
-          dataSource={productLists}
+          rowClassName={record => record.transferEntryStatus === this.Enum.ACTIVE ? "" : "hidden"}
+          dataSource={this.state.productLists}
           loading={this.props.productVariant.fetching}
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_stock_transfer" />}} />

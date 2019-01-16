@@ -46,16 +46,15 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const purchaseEntries = [];
+        const transferEntries = [];
         if ("productVariantId" in values) {
           values.productVariantId.forEach((productVariantId, index) => {
-            purchaseEntries.push({
-              id: values.purchaseEntryId[index],
+            transferEntries.push({
+              id: values.transferEntryId[index],
               productVariantId,
               unitId: values.unitId[index],
-              requestQuantity: parseInt(values.purchaseQty[index], 10),
-              price: parseFloat(values.purchasePrice[index]),
-              status: values.purchaseEntryStatus[index]
+              transferQuantity: parseInt(values.transferQuantity[index], 10),
+              status: values.transferEntryStatus[index]
             });
           });
         } else {
@@ -64,33 +63,22 @@ export default class FormCreate extends Modal {
           return;
         }
 
-        values["requestTotal"] = parseFloat(values["requestTotalValue"]);
-
         this.Util.clearObjProperty(values, [
           "id",
           "productVariantId",
-          "purchaseQty",
-          "purchasePrice",
-          "purchaseEntryStatus",
-          "totalPrice",
-          "totalAmount",
-          "totalPriceValue",
-          "requestTotalValue",
+          "transferEntryId",
+          "transferEntryStatus",
+          "transferQuantity",
           "searchProduct",
-          "purchaseEntryId",
           "productName",
-          "isFocusOnSearchCompositeProduct"
+          "variantName",
+          "isFocusOnSearchCompositeProduct",
+          "unitId"
         ]);
 
-        values["shippingFee"] = 0;
-        values["returnTotal"] = 0;
-        values["receiveTotal"] = 0;
         values["deliveryDueDate"] = this.Util.formatDateForMYSQL(values.deliveryDueDate);
-        values["step"] = Enum.PO_STEP.DRAFT;
-        values["type"] = Enum.CLIENT_AUTO_NUMBER_TYPE.PURCHASE;
-        values["status"] = this.Enum.ACTIVE;
 
-        values["transferEntries"] = purchaseEntries;
+        values["transferEntries"] = transferEntries;
       
         this.dispatch(StockTransferAction.add(values));
 
@@ -107,7 +95,6 @@ export default class FormCreate extends Modal {
       stockTransferAdd, 
       form, 
       locale, 
-      supplier,
       storeLocation, 
       productSearch,
       dispatch
@@ -119,7 +106,6 @@ export default class FormCreate extends Modal {
       this.content = 
         <FormItem 
           form={form} 
-          supplier={supplier}
           storeLocation={storeLocation} 
           productSearch={productSearch} 
           productVariant={this.props.productVariant}

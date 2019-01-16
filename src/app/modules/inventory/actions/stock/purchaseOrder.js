@@ -1,12 +1,12 @@
 import Constant from "../../constants/stock/purchaseOrder";
-import purchaseOrderService from "../../services/stock/PurchaseOrderService";
+import PurchaseOrderService from "../../services/stock/PurchaseOrderService";
 
 export default {
   orderNumber: (ids) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PURCHASE_ORDER_NUMBER,
-        payload: purchaseOrderService.findPurchaseOrderNumber(ids)
+        payload: PurchaseOrderService.findPurchaseOrderNumber(ids)
       });
     };
   },
@@ -14,7 +14,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PURCHASE_ORDER,
-        payload: purchaseOrderService.lists(limit, offset, sortField, sortOrder, filter, searchKey, rangFilter)
+        payload: PurchaseOrderService.lists(limit, offset, sortField, sortOrder, filter, searchKey, rangFilter)
       });
     };
   },
@@ -22,7 +22,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ARCHIVE_PURCHASE_ORDER,
-        payload: purchaseOrderService.archive(ids)
+        payload: PurchaseOrderService.archive(ids)
       });
     };
   },
@@ -30,7 +30,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.ADD_PURCHASE_ORDER,
-        payload: purchaseOrderService.add(data)
+        payload: PurchaseOrderService.add(data)
       });
     };
   },
@@ -38,7 +38,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_PURCHASE_ORDER,
-        payload: purchaseOrderService.update(data)
+        payload: PurchaseOrderService.update(data)
       });
     };
   },
@@ -46,7 +46,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.PUSH_PURCHASE_ORDER_TO_SUPPLIER,
-        payload: purchaseOrderService.update(data)
+        payload: PurchaseOrderService.update(data)
       });
     };
   },
@@ -71,7 +71,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PURCHASE_ORDER_DETAIL,
-        payload: purchaseOrderService.detail(data.id)
+        payload: PurchaseOrderService.detail(data.id)
       });
     };
   }

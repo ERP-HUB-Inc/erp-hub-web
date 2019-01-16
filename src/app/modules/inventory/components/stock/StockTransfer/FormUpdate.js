@@ -1,12 +1,16 @@
 import React from "react";
 import FormItem from "./FormItem";
+import Constant from "../../../constants/stock/stockTransfer";
 import Modal from "../../../../common/components/shares/Modal";
 import StockTransferAction from "../../../actions/stock/stockTransfer";
+import "./index.css";
 
 export default class Form extends Modal {
   constructor(props) {
     super(props);
     this.title = <this.Translate id="text_stock_transfer" />;
+    this.wrapClassName = `${this.wrapClassName} wrap-modal-po modal-po-full-screen`;
+    this.width = window.innerWidth < 1400 ? window.innerWidth : 1400;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -14,33 +18,88 @@ export default class Form extends Modal {
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        values["id"] = this.props.stockTransferUpdate.data.id;
-        values["status"] = this.Enum.ACTIVE;
+      if (!err) { 
+        values["id"] = this.props.detail.data.id;
+
+        const transferEntries = [];
+        if ("productVariantId" in values) {
+          values.productVariantId.forEach((productVariantId, index) => {
+            transferEntries.push({
+              id: values.transferEntryId[index],
+              productVariantId,
+              unitId: values.unitId[index],
+              transferQuantity: parseInt(values.transferQuantity[index], 10),
+              status: values.transferEntryStatus[index]
+            });
+          });
+        } else {
+          // HAVE NO PURCHASE ENTRY INCLUDE
+          this.Message.warning(this.CATranslate("error_purchase_order_no_entry", this.props.locale), 3);
+          return;
+        }
+
+        this.Util.clearObjProperty(values, [
+          "productVariantId",
+          "transferEntryId",
+          "transferEntryStatus",
+          "transferQuantity",
+          "searchProduct",
+          "productName",
+          "variantName",
+          "isFocusOnSearchCompositeProduct",
+          "unitId"
+        ]);
+
+        values["deliveryDueDate"] = this.Util.formatDateForMYSQL(values.deliveryDueDate);
+
+        values["transferEntries"] = transferEntries;
+
+        console.log("Values:", values);
+
         this.dispatch(StockTransferAction.update(values));
+
       }
     });
   }
-    
+  
   handleCancel() {
-    this.dispatch(StockTransferAction.reset());
+    this.dispatch(StockTransferAction.reset(Constant.REQUEST_STOCK_TRANSFER_DETAIL_FULL_RESET));
   }
 
+  renderCrudAction(){
+    return(
+      <div className="ant-modal-footer">
+        <this.Button className="danger" onClick={() => this.handleCancel()}>
+          <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel" />
+        </this.Button>  
+        <this.Button htmlType="submit" loading={this.submitLoading} className="info">
+          <span className="icon-arrow-down icon-padding-right"></span><this.Translate id="text_receive" />
+        </this.Button>
+      </div>
+    );
+  }
   render() {
-    const {stockTransferUpdate, form, locale} = this.props;
+    const {
+      detail,
+      update,
+      form,
+      locale
+    } = this.props;
 
-    this.submitLoading = stockTransferUpdate.updating;
+    this.submitLoading = update.updating;
 
-    if (stockTransferUpdate.showForm) {
-      this.content = (
-        <div>
-          {stockTransferUpdate.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : ""}
-          <FormItem formData={stockTransferUpdate.data} form={form} locale={locale}/>
-        </div>
-      );
+    if (detail.showForm) {
+      this.content = <FormItem
+        formData={detail.data}
+        storeLocation={this.props.storeLocation} 
+        productSearch={this.props.productSearch}
+        productVariant={this.props.productVariant}
+        form={form}
+        dispatch={this.props.dispatch}
+        locale={locale} />;
       return super.render();
     } else {
-      return (<div></div>);
+      return <div/>;
     }
   }
 }

@@ -64,6 +64,8 @@ export default class List extends Component {
     this.formUpdate = null;
     this.callBackOnShowEditForm = null;
 
+    this.tapedTwice = false;
+
     this.onChange = this.onChange.bind(this); // handle when user change filter, access pagination
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
     this.onChangePagination = this.onChangePagination.bind(this);
@@ -434,8 +436,7 @@ export default class List extends Component {
         type="info"
         id="btnAdd"
         className="mg-right text-uppercase"
-        onClick={this.handleShowFormAdd}
-      >
+        onClick={this.handleShowFormAdd}>
         <span className="icon-add icon-padding-right"></span>
         <this.Translate id="text_add_new" />
       </this.Button>
@@ -567,8 +568,17 @@ export default class List extends Component {
   /**
    * render sub table of the list
    */
-  expandedRender(){
-    
+  expandedRender(){}
+
+  tapHandler(event) {
+    if(!this.tapedTwice) {
+      this.tapedTwice = true;
+      setTimeout( () => { this.tapedTwice = false; }, 300 );
+      return false;
+    }
+    event.preventDefault();
+    //action on double tap goes below
+    alert("You tapped me Twice !!!");
   }
 
 
@@ -610,7 +620,7 @@ export default class List extends Component {
           locale={{emptyText: <this.Translate id="table_empty_data"/>}}
           onRow={record =>({
             onDoubleClick:() => this.handleShowFormEdit(record),
-            onClick: () => this.handleShowRecordDetail(record)
+            onClick: (event) => this.tapHandler(event)
           })}
           loading={fetchingProps.fetching || this.state.loadingPopup} />
     );
@@ -666,7 +676,9 @@ export default class List extends Component {
     if (this.addingProp) {
       const addingProps = this.props[this.addingProp];
       if (addingProps && addingProps.response) {
-        fetchingProps.list = [addingProps.response.data, ...fetchingProps.list];
+        if (addingProps.response.data) {
+          fetchingProps.list = [addingProps.response.data, ...fetchingProps.list];
+        }
         this.props.dispatch({type: this.RESET_CONSTANT});
       }
     }
@@ -675,8 +687,10 @@ export default class List extends Component {
     if (this.updatingProp) {
       const updatingProps = this.props[this.updatingProp];
       if (updatingProps && updatingProps.response) {
-        const updateIndex = this.Util.findArrayIndex(fetchingProps.list, "id", updatingProps.response.data.id);
-        fetchingProps.list.splice(updateIndex, 1, updatingProps.response.data);
+        if (updatingProps.response.data) {
+          const updateIndex = this.Util.findArrayIndex(fetchingProps.list, "id", updatingProps.response.data.id);
+          fetchingProps.list.splice(updateIndex, 1, updatingProps.response.data);
+        }
         this.props.dispatch({type: this.RESET_CONSTANT});
       }
     }

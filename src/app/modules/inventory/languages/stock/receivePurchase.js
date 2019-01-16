@@ -48,8 +48,8 @@ export default {
   ],
 
   "text_receive_qty_warning": [
-    "Receive can not greater than request",
-    "Receive can not greater than request",
-    "Receive can not greater than request"
+    "Receive QTY can not greater than request",
+    "Receive QTY can not greater than request",
+    "Receive QTY can not greater than request"
   ]
 };

@@ -132,8 +132,7 @@ export default class PurchaseOrderLists extends List {
         sorter: true,
         width: 100,
         render: step => step in this.PO_STEP_STR ? <this.Tag color={this.PO_STEP_STR[step].color} className="text-uppercase text-center po-step-tag">{this.PO_STEP_STR[step].name}</this.Tag> : ""
-      },
-      this.columnStatus
+      }
     ];
     this.formCreate = <FormCreate/>;
     this.callBackOnShowEditForm = this.showFormEdit;

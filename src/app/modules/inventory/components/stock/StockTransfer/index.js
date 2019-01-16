@@ -70,7 +70,21 @@ export default class Lists extends List {
         width: 100,
         render: step => step in this.STOCK_STRANSFER_STEP_STR ? <this.Tag color={this.STOCK_STRANSFER_STEP_STR[step].color} className="text-uppercase text-center po-step-tag">{this.STOCK_STRANSFER_STEP_STR[step].name}</this.Tag> : ""
       },
-      this.columnStatus
+      {
+        title: <this.Translate id="text_action" />,
+        dataIndex: "id",
+        key: "action",
+        align: "center",
+        width: 100,
+        render: id => <this.Button
+          type="info"
+          id="btnAdd"
+          className="mg-right text-uppercase"
+          onClick={() => this.handleShowFormEdit({id})}>
+          <span className="icon-arrow-down icon-padding-right"></span>
+          <this.Translate id="text_receive"/>
+        </this.Button>
+      }
     ];
     this.STOCK_STRANSFER_STEP_STR = {
       [Enum.STOCK_STRANSFER_STEP.TRANSFER]: {name: <this.Translate id="text_transfered" />, color: this.Enum.STOCK_TRANSFER_STEP_COLOR.TRANSFER},
@@ -80,14 +94,14 @@ export default class Lists extends List {
     this.columnFilterWithKey = ["name"];
     this.action = StockTransferAction;
     this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
-    this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
-
+    this.RESET_CONSTANT = Constant.RESET_STOCK_TRANSFER;
   }
 
   handleShowFormEdit(rowData) {
-    this.props.dispatch(StockTransferAction.showForm(rowData));
+    this.props.dispatch(StockTransferAction.detail(rowData));
     this.setState({
-      modalConten: <FormUpdate/>
+      loadingPopup: true,
+      modalConten: <FormUpdate />
     });
   }
 
@@ -98,12 +112,32 @@ export default class Lists extends List {
     ];
   }
 
+  componentWillUpdate(nextProps) {
+
+    if (nextProps.update.updated) {
+      nextProps.dispatch(StockTransferAction.fetch(this.pageSize));
+      nextProps.dispatch(StockTransferAction.reset(Constant.REQUEST_STOCK_TRANSFER_DETAIL_FULL_RESET));
+      nextProps.dispatch(StockTransferAction.reset());
+    } 
+    
+    if (nextProps.add.added) {
+      nextProps.dispatch(StockTransferAction.fetch(this.pageSize));
+      nextProps.dispatch(StockTransferAction.reset());
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.detail.fetched) {
+      this.setState({loadingPopup: false});
+      this.props.dispatch(StockTransferAction.reset(Constant.REQUEST_STOCK_TRANSFER_DETAIL_RESET));
+    }
+  }
+
   componentDidMount() {
     super.componentDidMount();
     this.props.dispatch(SupplierAction.fetch(100));
     this.props.dispatch(StoreLoctionAction.fetch(100));
   }
-
 
   renderFilterRecord() {
     const {form} = this.props;
@@ -131,15 +165,6 @@ export default class Lists extends List {
                   nameKey="name"
                   form={form}
                   defaultValue={this.locationList[0].id}/>
-              </this.Col>
-              <this.Col md="2">
-                <this.Select
-                  name="status"
-                  label={<this.Translate id="text_status" />}
-                  dataSource={this.statusList}
-                  defaultValue={this.Enum.ALL_STATE}
-                  form={form}
-                />
               </this.Col>
               <this.Col md="2" className="wrap-btn-search">
                 <div className="ant-form-item-label" style={{visibility: "hidden"}}>
