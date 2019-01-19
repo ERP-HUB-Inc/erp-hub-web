@@ -256,7 +256,6 @@ export default class ListPrivilege extends Component {
     this.props.form.setFieldsValue({search_name_privillege: ""});
   }
 
-
   onChangeChild (e, parentId) {
     if (e.target.checked) {
       const {privilegeId} = e.target.value;

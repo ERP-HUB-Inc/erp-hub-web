@@ -35,6 +35,7 @@ export default class PaymentMethodList extends List {
 
   handleShowFormEdit(rowData) {
     this.props.dispatch(RoleAccessAction.showForm(rowData));
+    this.props.dispatch(RolePrivilegeAction.fetch(rowData.id));
     this.setState({
       modalConten: <FormUpdate/>
     });
@@ -59,11 +60,6 @@ export default class PaymentMethodList extends List {
           </this.Row>
         </this.Form>
     );
-  }
-
-  handleShowRecordDetail(rowData) {
-    this.props.dispatch(RolePrivilegeAction.fetch(rowData.id));
-    this.setState({rowData});
   }
 
   render() {

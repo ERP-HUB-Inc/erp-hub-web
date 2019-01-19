@@ -15,7 +15,6 @@ function mapStateToProps(state) {
   return {
     roleAccessUpdate: state.reducer.roleAccess.update,
     rolePrivileges: state.reducer.rolePrivilege.request,
-    initialValues: state.reducer.roleAccess.update.data,
 
     privileges: state.reducer.privilege.request,
     rowData: state.reducer.roleAccess.update.data,

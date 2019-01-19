@@ -33,7 +33,6 @@ export default class Form extends Modal {
         ]);
 
         values["privileges"] = this.state.rolePrivileges;
-        console.log("Privilege:", values["privileges"]);
         this.dispatch(RoleAccessAction.update(values));
       }
     });
@@ -45,7 +44,6 @@ export default class Form extends Modal {
   
   render() {
     const {roleAccessUpdate, locale, form} = this.props;
-
     this.submitLoading = roleAccessUpdate.updating;
 
     if (roleAccessUpdate.showForm) {
