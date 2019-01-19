@@ -27,18 +27,37 @@ export default class PaymentMethodList extends List {
   }
 
   handleShowFormAdd() {
-    this.props.dispatch(RoleAccessAction.showForm());
-    this.setState({
-      modalConten: <FormCreate/>
-    });
+    this.setState({loadingPopup: true});
+    this.PrivilegeService.checkPermission(this.service.createRoute)
+      .then(response => {
+        this.props.dispatch(RoleAccessAction.showForm());
+        this.setState({
+          loadingPopup: false,
+          modalConten: <FormCreate/>
+        });
+      })
+      .catch(error => {
+        this.setState({loadingPopup: false});
+        this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
+      });
   }
 
   handleShowFormEdit(rowData) {
-    this.props.dispatch(RoleAccessAction.showForm(rowData));
-    this.props.dispatch(RolePrivilegeAction.fetch(rowData.id));
-    this.setState({
-      modalConten: <FormUpdate/>
-    });
+    this.setState({loadingPopup: true});
+    this.PrivilegeService.checkPermission(this.service.updateRoute)
+      .then(response => {
+        this.props.dispatch(RoleAccessAction.showForm(rowData));
+        this.props.dispatch(RolePrivilegeAction.fetch(rowData.id));
+        this.setState({
+          loadingPopup: false,
+          modalConten: <FormUpdate/>
+        });
+      })
+      .catch(error => {
+        console.log("No permission");
+        this.setState({loadingPopup: false});
+        this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
+      });
   }
 
   renderFilterRecord() {

@@ -6,6 +6,7 @@ class RoleAccessService extends BaseService {
     super();
     this.module = "role";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.initializeRoute();
   }
 
   assignPrivilege(

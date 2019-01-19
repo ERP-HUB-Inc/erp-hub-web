@@ -1,4 +1,7 @@
 import React from "react";
+import {
+  isMobile
+} from "react-device-detect";
 import {Pagination} from "antd";
 import NoPermission from "./NoPermission";
 import StartUp from "../../StartUp";
@@ -24,7 +27,9 @@ export default class List extends Component {
       modalContent1: null,
       columns: [],
       showExport : true,
-      loadingPopup: false
+      loadingPopup: false,
+      isRequestDelete: false,
+      isRequestAdd: false
     };
 
     this.rowSelection = true;
@@ -195,7 +200,9 @@ export default class List extends Component {
 
   handleShowFormAdd() {
     if (this.action && this.formCreate) {
-      this.setState({loadingPopup: true});
+      this.setState({
+        loadingPopup: true
+      });
       this.PrivilegeService.checkPermission(this.service.createRoute)
         .then(response => {
           this.props.dispatch(this.action.showForm());
@@ -274,15 +281,22 @@ export default class List extends Component {
       return;
     }
 
+    this.setState({isRequestDelete: true});
+
     this.PrivilegeService.checkPermission(this.service.archiveRoute)
       .then(response => {
         if (this.state.selectedRowKeys.length > 0) {
-          this.setState({modalVisible: true});
+          this.setState({
+            modalVisible: true,
+            isRequestDelete: false
+          });
         } else {
+          this.setState({isRequestDelete: false});
           this.Message.warning(this.CATranslate("text_warning_select_row_to_delete", this.props.locale));
         }
       })
       .catch(error => {
+        this.setState({isRequestDelete: false});
         this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
       });
   }
@@ -437,6 +451,7 @@ export default class List extends Component {
         type="info"
         id="btnAdd"
         className="mg-right text-uppercase"
+        disabled={this.state.loadingPopup}
         onClick={this.handleShowFormAdd}>
         <span className="icon-add icon-padding-right"></span>
         <this.Translate id="text_add_new" />
@@ -449,6 +464,7 @@ export default class List extends Component {
       <this.Button
         type="danger"
         className="text-uppercase"
+        disabled={this.state.isRequestDelete}
         onClick={this.handleConfirm}>
         <span className="icon-delete icon-padding-right"></span>
         <this.Translate id="text_delete" />
@@ -572,6 +588,11 @@ export default class List extends Component {
   expandedRender(){}
 
   handleOnTapHandler(event, record) {
+
+    if (!isMobile) {
+      return;
+    }
+
     if(!this.tapedTwice) {
       this.tapedTwice = true;
       setTimeout( () => { this.tapedTwice = false; }, 300 );
@@ -608,7 +629,7 @@ export default class List extends Component {
           expandedRowRender={this.expandedRender}
           onRow={record =>({
             onDoubleClick:() => this.handleShowFormEdit(record),
-            onClick: () => this.handleShowRecordDetail(record)
+            onClick: () => this.handleOnTapHandler(record)
           })}
           rowSelection={rowSelection}
           loading={fetchingProps.fetching || this.state.loadingPopup} />
