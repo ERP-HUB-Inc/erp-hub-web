@@ -1,10 +1,8 @@
 import React from "react";
 import FormItem from "./FormItem";
-import Enum from "../../../enums";
 import Constant from "../../../constants/stock/stockTransfer";
 import Modal from "../../../../common/components/shares/Modal";
 import StockTransferAction from "../../../actions/stock/stockTransfer";
-import EnumSetting from "../../../../pos/enums";
 import "./index.css";
 
 export default class FormCreate extends Modal {
@@ -15,31 +13,6 @@ export default class FormCreate extends Modal {
     this.width = window.innerWidth < 1400 ? window.innerWidth : 1400;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentDidUpdate() {
-    if (this.props.stockTransferAdd.error) {
-      const errorCode = this.Util.getErrorCodeFromState(this.props.stockTransferAdd.error);
-      let message = "Something wrong, Please contact system provider";
-
-      if (errorCode === Enum.PO_NUMBER_NOT_ALLOW_EMPTY) {
-        message = this.CATranslate("error_po_number_empty", this.props.locale);
-      } else if (errorCode === EnumSetting.LOCATION_NOT_FOUND) {
-        message = this.CATranslate("error_location_not_found", this.props.locale);
-      } else if (errorCode === Enum.SUPPLIER_NOT_FOUND) {
-        message = this.CATranslate("error_supplier_not_found", this.props.locale);
-      } else if (errorCode === Enum.PO_NUMBER_ALREADY_EXIST) {
-        message = this.CATranslate("purchase_order_po_number_already_exist", this.props.locale);
-      } else if (errorCode === Enum.PRODUCT_NOT_FOUND) {
-        message = this.CATranslate("error_product_not_found", this.props.locale);
-      } else if (errorCode === Enum.PRODUCT_UNIT_NOT_FOUND) {
-        message = this.CATranslate("error_unit_not_found", this.props.locale);
-      }
-
-      this.Message.error(message);
-
-      this.props.dispatch(StockTransferAction.reset(Constant.RESET_ADD_STOCK_TRANSFER));
-    }
   }
 
   handleSubmit(e) {
@@ -87,17 +60,12 @@ export default class FormCreate extends Modal {
   }
       
   handleCancel() {
-    this.dispatch(StockTransferAction.reset(Constant.RESET_PURCHASE_ORDER));
+    this.dispatch(StockTransferAction.reset(Constant.RESET_ADD_STOCK_TRANSFER));
   }
 
   render() {
     const {
-      stockTransferAdd, 
-      form, 
-      locale, 
-      storeLocation, 
-      productSearch,
-      dispatch
+      stockTransferAdd
     } = this.props;
     
     this.submitLoading = stockTransferAdd.adding;
@@ -105,12 +73,13 @@ export default class FormCreate extends Modal {
     if (stockTransferAdd.showForm) {
       this.content = 
         <FormItem 
-          form={form} 
-          storeLocation={storeLocation} 
-          productSearch={productSearch} 
+          form={this.props.form} 
+          storeLocation={this.props.location}
+          accessLocation={this.props.accessLocation}
+          productSearch={this.props.productSearch} 
           productVariant={this.props.productVariant}
-          dispatch={dispatch} 
-          locale={locale} />;
+          dispatch={this.props.dispatch} 
+          locale={this.props.locale} />;
     
       return super.render();
     } else {

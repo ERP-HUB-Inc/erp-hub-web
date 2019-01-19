@@ -1,6 +1,6 @@
 import React from "react";
 import Enum from "../../../enums";
-import LocationAction from "../../../action/settings/storeLocation";
+import LocationAction from "../../../action/settings/location";
 import Modal from "../../../../common/components/shares/Modal";
 import "./index.css";
 

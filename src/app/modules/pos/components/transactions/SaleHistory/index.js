@@ -6,7 +6,7 @@ import POSUtil from "../../../utils";
 import Constant from "../../../constants/transactions/transaction";
 import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
-import LocationAction from "../../../action/settings/storeLocation";
+import LocationAction from "../../../action/settings/location";
 import UserAction from "../../../../common/actions/users";
 import InventoryUtil from "../../../../inventory/utils";
 import InventoryEnum from "../../../../inventory/enums";

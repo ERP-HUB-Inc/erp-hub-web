@@ -75,6 +75,11 @@ const StockTransfer = Loadable({
   loading: () => <StartUp />,
 });
 
+const ReceiveStockTransfer = Loadable({
+  loader: () => import("../../../../inventory/containers/stock/ReceiveStockTransfer"),
+  loading: () => <StartUp />,
+});
+
 const Supplier = Loadable({
   loader: () => import("../../../../inventory/containers/stock/Supplier"),
   loading: () => <StartUp />,
@@ -324,28 +329,35 @@ const dataSource = {
         icon: "icon-purchasing",
         route: "/stock/purchase/receive",
         component: ReceiveOrder,
-        isFashNav: true
+        isFashNav: false
       },
       {
-      //   title: "Re-Order Point",
-      //   icon: "icon-undo",
-      //   route: "/stock/re-order-point",
-      //   component: ReOrderPoint,
-      //   isFashNav: false
-      // },
-      // {
-        title: "Stock Transfer",
+        title: "Return Order",
+        icon: "icon-sale-return",
+        route: "/stock/return",
+        component: StockReturn,
+        isFashNav: false
+      },
+      {
+        //   title: "Re-Order Point",
+        //   icon: "icon-undo",
+        //   route: "/stock/re-order-point",
+        //   component: ReOrderPoint,
+        //   isFashNav: false
+        // },
+        // {
+        title: "Transfer",
         icon: "icon-stock-transfer",
         route: "/stock/transfer",
         component: StockTransfer,
         isFashNav: true
       },
       {
-        title: "Stock Return",
-        icon: "icon-sale-return",
-        route: "/stock/return",
-        component: StockReturn,
-        isFashNav: true
+        title: "Receive Transfer",
+        icon: "icon-stock-transfer",
+        route: "/stock/receive/transfer",
+        component: ReceiveStockTransfer,
+        isFashNav: false
       },
       // {
       //   title: "Stock",

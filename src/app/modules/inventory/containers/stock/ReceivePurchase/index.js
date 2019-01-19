@@ -18,7 +18,7 @@ function mapStateToProps(state) {
     receivePurchaseArchive: state.reducer.receivePurchase.archive,
     receivePurchaseUpdate: state.reducer.receivePurchase.update,
     supplier: state.reducer.supplier.request,
-    storeLocation: state.reducer.storeLocation.request,
+    storeLocation: state.reducer.location.request,
     checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale
   };

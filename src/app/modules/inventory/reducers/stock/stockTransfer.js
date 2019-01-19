@@ -28,7 +28,8 @@ export default combineReducers({
       Constant.ADD_STOCK_TRANSFER_REJECTED,
       Constant.ADD_STOCK_TRANSFER_FULFILLED,
       Constant.SHOW_STOCK_TRANSFER_FORM,
-      Constant.RESET_STOCK_TRANSFER
+      Constant.RESET_ADD_STOCK_TRANSFER,
+      Constant.RESET_ADD_PARTIAL_STOCK_TRANSFER
     ];
     return reducer.add(state, action, constants);
   },
@@ -38,7 +39,8 @@ export default combineReducers({
       Constant.UPDATE_STOCK_TRANSFER_REJECTED,
       Constant.UPDATE_STOCK_TRANSFER_FULFILLED,
       Constant.SHOW_STOCK_TRANSFER_FORM,
-      Constant.RESET_STOCK_TRANSFER
+      Constant.RESET_UPDATE_STOCK_TRANSFER,
+      Constant.RESET_UPDATE_PARTIAL_STOCK_TRANSFER
     ];
     return reducer.update(state, action, constants);
   },
@@ -52,4 +54,24 @@ export default combineReducers({
     ];
     return reducer.detail(state, action, constants);
   },
+  approve: (state = InitialState.update(), action) => {
+    const constants = [
+      Constant.APPROVE_STOCK_TRANSFER_PENDING,
+      Constant.APPROVE_STOCK_TRANSFER_REJECTED,
+      Constant.APPROVE_STOCK_TRANSFER_FULFILLED,
+      null,
+      Constant.RESET_APPROVE_STOCK_TRANSFER
+    ];
+    return reducer.update(state, action, constants);
+  },
+  cancel: (state = InitialState.update(), action) => {
+    const constants = [
+      Constant.CANCEL_STOCK_TRANSFER_PENDING,
+      Constant.CANCEL_STOCK_TRANSFER_REJECTED,
+      Constant.CANCEL_STOCK_TRANSFER_FULFILLED,
+      null,
+      Constant.RESET_CANCEL_STOCK_TRANSFER
+    ];
+    return reducer.update(state, action, constants);
+  }
 });

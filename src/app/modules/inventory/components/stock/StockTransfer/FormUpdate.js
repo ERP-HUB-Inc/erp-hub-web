@@ -1,5 +1,6 @@
 import React from "react";
 import FormItem from "./FormItem";
+import Enum from "../../../enums";
 import Constant from "../../../constants/stock/stockTransfer";
 import Modal from "../../../../common/components/shares/Modal";
 import StockTransferAction from "../../../actions/stock/stockTransfer";
@@ -20,6 +21,11 @@ export default class Form extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) { 
         values["id"] = this.props.detail.data.id;
+
+        if (this.props.detail.data.step !== Enum.STOCK_STRANSFER_STEP.PROCESS) {
+          this.Message.error(this.CATranslate("error_invalid_step_for_update_stock_transfer", this.props.locale));
+          return;
+        }
 
         const transferEntries = [];
         if ("productVariantId" in values) {
@@ -54,9 +60,11 @@ export default class Form extends Modal {
 
         values["transferEntries"] = transferEntries;
 
-        console.log("Values:", values);
-
-        this.dispatch(StockTransferAction.update(values));
+        if (this.props.isAcceptRequest) {
+          this.dispatch(StockTransferAction.approve(values));
+        } else {
+          this.dispatch(StockTransferAction.update(values));
+        }
 
       }
     });
@@ -71,32 +79,39 @@ export default class Form extends Modal {
       <div className="ant-modal-footer">
         <this.Button className="danger" onClick={() => this.handleCancel()}>
           <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel" />
-        </this.Button>  
-        <this.Button htmlType="submit" loading={this.submitLoading} className="info">
-          <span className="icon-arrow-down icon-padding-right"></span><this.Translate id="text_receive" />
         </this.Button>
+        {
+          this.props.isAcceptRequest ?
+            <this.Button htmlType="submit" loading={this.submitLoading} className="info">
+              <span className="icon-arrow-down icon-padding-right"></span><this.Translate id="text_receive" />
+            </this.Button>
+            :
+            <this.Button htmlType="submit" loading={this.submitLoading} className="info">
+              <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
+            </this.Button>
+        }
       </div>
     );
   }
   render() {
     const {
       detail,
-      update,
-      form,
-      locale
+      update
     } = this.props;
 
-    this.submitLoading = update.updating;
+    this.submitLoading = update.updating || this.props.approve.updating;
 
     if (detail.showForm) {
       this.content = <FormItem
         formData={detail.data}
         storeLocation={this.props.storeLocation} 
+        accessLocation={this.props.accessLocation}
         productSearch={this.props.productSearch}
         productVariant={this.props.productVariant}
-        form={form}
+        form={this.props.form}
         dispatch={this.props.dispatch}
-        locale={locale} />;
+        locale={this.props.locale}
+        isAcceptRequest={this.props.isAcceptRequest}/>;
       return super.render();
     } else {
       return <div/>;

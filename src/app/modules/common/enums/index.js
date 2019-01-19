@@ -35,8 +35,9 @@ export default {
     PAID: "green"
   },
   STOCK_TRANSFER_STEP_COLOR: {
-    TRANSFER: "#2db7f5",
-    RECEIVED: "#87d068"
+    PROCESS: "#2db7f5",
+    RECEIVED: "#87d068",
+    CANCEL: "#108ee9"
   },
   TAX_NOT_FOUND: 622,
   BRAND_NOT_FOUND: 614,

@@ -86,7 +86,7 @@ export default class BaseService extends Service {
     });
   }
 
-  update(data) {
+  update(data) { console.log("Stock Approve:", data);
     this.setHeader();
     const {id} = data;
     return this.PUT({

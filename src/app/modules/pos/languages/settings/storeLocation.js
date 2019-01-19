@@ -5,7 +5,7 @@ export default {
     "Location"
   ],
 
-  "update_store_location_title": [
+  "UPDATE_LOCATION_title": [
     "Location",
     "Location",
     "Location"

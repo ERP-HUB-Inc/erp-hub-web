@@ -13,7 +13,7 @@ class TaxForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    storeLocationUpdate: state.reducer.storeLocation.update,
+    storeLocationUpdate: state.reducer.location.update,
     receiptTemplates: state.reducer.receiptTemplate.request,
     locale: state.locale
   };

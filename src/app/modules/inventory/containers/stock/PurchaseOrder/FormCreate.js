@@ -17,7 +17,7 @@ function mapStateToProps(state) {
     supplier: state.reducer.supplier.request,
     productSearch: state.reducer.product.search,
     productVariant: state.reducer.productVariant.request,
-    storeLocation: state.reducer.storeLocation.request,
+    storeLocation: state.reducer.location.request,
     requestOrderNumber: state.reducer.purchaseOrder.requestOrderNumber,
     locale: state.locale,
   };

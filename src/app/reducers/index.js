@@ -11,7 +11,7 @@ import tax from "../modules/pos/reducers/settings/tax";
 import currency from "../modules/pos/reducers/settings/currency";
 import currencyExchange from "../modules/pos/reducers/settings/currencyExchange";
 import device from "../modules/pos/reducers/settings/device";
-import storeLocation from "../modules/pos/reducers/settings/storeLocation";
+import location from "../modules/pos/reducers/settings/location";
 import storeLanguage from "../modules/pos/reducers/settings/storeLanguage";
 import receiptTemplate from "../modules/pos/reducers/settings/receiptTemplate";
 import privilege from "../modules/pos/reducers/settings/privilege";
@@ -66,7 +66,7 @@ const reducer = combineReducers({
   currency,
   currencyExchange,
   device,
-  storeLocation,
+  location,
   storeLanguage,
   paymentMethods,
   receiptTemplate,

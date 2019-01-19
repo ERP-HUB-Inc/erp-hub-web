@@ -13,7 +13,7 @@ class WarningForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    storeLocationAdd: state.reducer.storeLocation.add,
+    storeLocationAdd: state.reducer.location.add,
     locale: state.locale
   };
 }

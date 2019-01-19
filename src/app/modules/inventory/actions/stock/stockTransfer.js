@@ -1,12 +1,21 @@
 import Constant from "../../constants/stock/stockTransfer";
 import StockTransferService from "../../services/stock/StockTransferService";
+import ApproveTransferService from "../../services/stock/ApproveTransferService";
 
 export default {
-  fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
+  fetch: (limit, offset, sortField, sortOrder, filter, searchKey, rangFilter) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_STOCK_TRANSFER,
-        payload: StockTransferService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
+        payload: StockTransferService.lists(limit, offset, sortField, sortOrder, filter, searchKey, rangFilter)
+      });
+    };
+  },
+  fetchReceive: (limit, offset, sortField, sortOrder, filter, searchKey, rangFilter) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_STOCK_TRANSFER,
+        payload: StockTransferService.listsReceive(limit, offset, sortField, sortOrder, filter, searchKey, rangFilter)
       });
     };
   },
@@ -57,6 +66,22 @@ export default {
         payload: StockTransferService.detail(data.id)
       });
     };
-  }
+  },
+  approve: (data) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.APPROVE_STOCK_TRANSFER,
+        payload: ApproveTransferService.update(data)
+      });
+    };
+  },
+  cancel: (data) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.CANCEL_STOCK_TRANSFER,
+        payload: StockTransferService.cancle(data)
+      });
+    };
+  },
 };
 

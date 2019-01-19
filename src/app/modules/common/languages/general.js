@@ -47,6 +47,12 @@ export default {
     "Cancel"
   ],
 
+  "text_canceled": [
+    "Canceled",
+    "Canceled",
+    "Canceled"
+  ],
+
   "text_status": [
     "Status",
     "Status",

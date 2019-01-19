@@ -15,7 +15,7 @@ function mapStateToProps(state) {
   return {
     receivePurchaseUpdate: state.reducer.receivePurchase.update,
     receivePurchaseDetail: state.reducer.receivePurchase.detail,
-    storeLocation: state.reducer.storeLocation.request,
+    storeLocation: state.reducer.location.request,
     receivePurchase: state.reducer.receivePurchase.request,
     supplier: state.reducer.supplier.request,
     initialValues: state.reducer.receivePurchase.update.data,

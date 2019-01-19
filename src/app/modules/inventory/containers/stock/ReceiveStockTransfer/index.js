@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import {Form} from "antd";
-import Lists from "../../../components/stock/StockTransfer";
+import Lists from "../../../components/stock/ReceiveStockTransfer";
 
 class List extends React.Component {
   render() {
@@ -18,7 +18,8 @@ function mapStateToProps(state) {
     update: state.reducer.stockTransfer.update,
     detail: state.reducer.stockTransfer.detail,
     cancel: state.reducer.stockTransfer.cancel,
-    storeLocation: state.reducer.location.request,
+    approve: state.reducer.stockTransfer.approve,
+    accessLocation: state.reducer.location.requestAccessLocation,
     locale: state.locale
   };
 }

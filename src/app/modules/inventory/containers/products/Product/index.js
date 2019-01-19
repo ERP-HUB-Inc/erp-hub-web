@@ -28,7 +28,7 @@ function mapStateToProps(state) {
     productsType: state.reducer.productsType.request,
     productsTypeAdd: state.reducer.productsType.add,
     storeLanguage: state.reducer.storeLanguage.request,
-    locations: state.reducer.storeLocation.request,
+    locations: state.reducer.location.request,
     variantAttributes: state.reducer.variantAttribute.request,
     checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale

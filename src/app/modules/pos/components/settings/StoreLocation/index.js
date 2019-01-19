@@ -5,7 +5,7 @@ import FormWarning from "../../../containers/settings/StoreLocation/FormWarning"
 import FormCreate from "../../../containers/settings/StoreLocation/FormCreate";
 import FormUpdate from "../../../containers/settings/StoreLocation/FormUpdate";
 import Constant from "../../../constants/settings/storeLocation";
-import LocationAction from "../../../action/settings/storeLocation";
+import LocationAction from "../../../action/settings/location";
 import LocationService from "../../../services/settings/StoreLocationService";
 
 export default class LocationList extends List {

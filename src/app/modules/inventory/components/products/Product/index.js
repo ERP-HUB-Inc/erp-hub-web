@@ -11,7 +11,7 @@ import ProductTypeAction from "../../../actions/products/productsType";
 import UnitAction from "../../../actions/products/productsUnit";
 import TaxAction from "../../../../pos/action/settings/tax";
 import LanguageAction from "../../../../pos/action/settings/storeLanguage";
-import LocationAction from "../../../../pos/action/settings/storeLocation";
+import LocationAction from "../../../../pos/action/settings/location";
 import ProductAction from "../../../actions/products/product";
 // import PriceTagAction from "../../../actions/products/priceTag";
 import ProductTagAction from "../../../actions/products/productsTag";

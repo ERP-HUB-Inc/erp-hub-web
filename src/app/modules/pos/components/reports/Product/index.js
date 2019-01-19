@@ -5,7 +5,7 @@ import ProductReportAction from "../../../action/report/product";
 import ProductReportService from "../../../services/report/ProductService";
 import ProductTypeAction from "../../../../inventory/actions/products/productsType";
 import BrandAction from "../../../../inventory/actions/products/brand";
-import LocationAction from "../../../../pos/action/settings/storeLocation";
+import LocationAction from "../../../../pos/action/settings/location";
 import InventoryUtil from "../../../../inventory/utils"; 
 import Enum from "../../../../inventory/enums";
 import "./index.css";

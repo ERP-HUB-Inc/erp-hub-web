@@ -15,7 +15,7 @@ function mapStateToProps(state) {
   return {
     list: state.reducer.productReport.request,
     supplier: state.reducer.supplier.request,
-    locations: state.reducer.storeLocation.request,
+    locations: state.reducer.location.request,
     brands: state.reducer.brand.request,
     productsType: state.reducer.productsType.request,
     checkPermission: state.reducer.privilege.checkPermission,

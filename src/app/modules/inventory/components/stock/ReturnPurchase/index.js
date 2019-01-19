@@ -3,7 +3,7 @@ import List from "../List";
 import Enum from "../../../enums";
 import FormUpdate from "../../../containers/stock/ReturnPurchase/FormUpdate";
 import Constant from "../../../constants/stock/returnPurchase";
-import LocationAction from "../../../../pos/action/settings/storeLocation";
+import LocationAction from "../../../../pos/action/settings/location";
 import SupplierAction from "../../../actions/stock/supplier";
 import ReturnPurchaseAction from "../../../actions/stock/returnPurchase";
 import ReturnPurchaseService from "../../../services/stock/ReturnPurchaseService";

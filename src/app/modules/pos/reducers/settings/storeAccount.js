@@ -22,9 +22,9 @@ export default combineReducers({
   },
   add: (state = InitialState.add(), action) => {
     const constants = [
-      Constant.ADD_STORE_ACCOUNT_PENDING,
-      Constant.ADD_STORE_ACCOUNT_REJECTED,
-      Constant.ADD_STORE_ACCOUNT_FULFILLED,
+      Constant.ADD_ACCOUNT_PENDING,
+      Constant.ADD_ACCOUNT_REJECTED,
+      Constant.ADD_ACCOUNT_FULFILLED,
       Constant.SHOW_STORE_ACCOUNT_FORM,
       Constant.RESET_STORE_ACCOUNT
     ];

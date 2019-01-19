@@ -99,7 +99,7 @@ export default class PurchaseList extends List {
     this.supplierList = [{name: <this.Translate id="text_all_supplier"/>, id: 0}];
     this.PO_STEP_STR = {
       [Enum.PO_STEP.DRAFT]: {name: this.CATranslate("purchase_order_step_draff", this.props.locale), color: this.Enum.PO_STEP_COLOR.DRAFT},
-      [Enum.PO_STEP.PROCESS]: {name: this.CATranslate("purchase_order_step_process", this.props.locale), color: this.Enum.PO_STEP_COLOR.PROCESS},
+      [Enum.PO_STEP.PROCESS]: {name: this.CATranslate("text_process", this.props.locale), color: this.Enum.PO_STEP_COLOR.PROCESS},
       [Enum.PO_STEP.RECEIVED]: {name: this.CATranslate("text_receive", this.props.locale), color: this.Enum.PO_STEP_COLOR.RECEIVE},
       [Enum.PO_STEP.CANCEL]: {name: this.CATranslate("text_cancel", this.props.locale), color: this.Enum.PO_STEP_COLOR.CANCEL},
       [Enum.PO_STEP.RETURN]: {name: this.CATranslate("text_return", this.props.locale), color: this.Enum.PO_STEP_COLOR.RETURN},

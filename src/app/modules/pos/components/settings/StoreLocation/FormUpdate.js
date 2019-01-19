@@ -1,13 +1,13 @@
 import React from "react";
 import FormItem from "./FormItem";
-import LocationAction from "../../../action/settings/storeLocation";
+import LocationAction from "../../../action/settings/location";
 import ReceiptTemplate from "../../../action/settings/receiptTemplate";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormUpdate extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="update_store_location_title" />;
+    this.title = <this.Translate id="UPDATE_LOCATION_title" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }

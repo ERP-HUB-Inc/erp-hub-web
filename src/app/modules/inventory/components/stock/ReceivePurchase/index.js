@@ -5,7 +5,7 @@ import FormUpdate from "../../../containers/stock/ReceivePurchase/FormUpdate";
 import Constant from "../../../constants/stock/receivePurchase";
 import ReceivePurchaseAction from "../../../actions/stock/receivePurchase";
 import SupplierAction from "../../../actions/stock/supplier";
-import LocationAction from "../../../../pos/action/settings/storeLocation";
+import LocationAction from "../../../../pos/action/settings/location";
 import ReceivePurchaseService from "../../../services/stock/ReceivePurchaseService";
 import "./index.css";
 

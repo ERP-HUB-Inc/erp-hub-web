@@ -21,13 +21,13 @@ export default class ConfirmRegister extends Component {
                 <div style={{ fontWeight: "bold", textAlign: "left", color: "#686868" }}>
                   <h3 style={{ lineHeight:"58px", fontSize: "25px", fontWeight: "bold" }}>Hi {this.props.data.data.firstName} {this.props.data.data.lastName},</h3>
                 </div> 
-                <div style={{ fontSize:"15px",lineHeight: "13px" }}>
+                <div style={{ fontSize:"15px"}}>
                   <div style={{ marginBottom: "28px" }}>
                     <p style={{ paddingBottom: "13px" }}>Welcome to storeVein — we’re glad to have you on board! </p>
                     <p>Here’s your login info so you can explore how storeVein has helped you</p> 
                     <p>retailers just like you save time, boost profitability, and better run their businesses:</p> 
                   </div>
-                  <div style={{ lineHeight: "11px" }}>      
+                  <div>      
                     <p>
                       <strong>Username: <a href="http://storevein.com">{this.props.data.data.email}</a></strong> 
                     </p>

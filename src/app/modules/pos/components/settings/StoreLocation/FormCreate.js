@@ -1,6 +1,6 @@
 import React from "react";
 import FormItem from "./FormItem";
-import LocationAction from "../../../action/settings/storeLocation";
+import LocationAction from "../../../action/settings/location";
 import ReceiptTemplate from "../../../action/settings/receiptTemplate";
 import Modal from "../../../../common/components/shares/Modal";
 

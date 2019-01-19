@@ -121,7 +121,7 @@ export default {
       return state;
     }
   },
-  update: (state, action, [PEDDING, REJECT, FULFILLED, SHOW_FORM, RESET]) => {
+  update: (state, action, [PEDDING, REJECT, FULFILLED, SHOW_FORM, RESET, RESET_PARTIAL]) => {
     switch(action.type) {
     case SHOW_FORM: {
       return {
@@ -158,6 +158,14 @@ export default {
       return {
         updating: false,
         showForm: false,
+        updated: false,
+        response: null,
+        error: null
+      };
+    }
+    case RESET_PARTIAL: {
+      return {
+        ...state,
         updated: false,
         response: null,
         error: null

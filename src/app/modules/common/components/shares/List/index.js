@@ -55,6 +55,7 @@ export default class List extends Component {
     this.service = new BaseService();
     this.action = null;
     this.PrivilegeService = PrivilegeService;
+    this.PrivilegeAction = PrivilegeAction;
     this.initializeDefaultColumn();
     this.pageSizeOptions = ["20", "50", "80", "100"];
     this.columnNo = {};
@@ -570,7 +571,7 @@ export default class List extends Component {
    */
   expandedRender(){}
 
-  tapHandler(event) {
+  handleOnTapHandler(event, record) {
     if(!this.tapedTwice) {
       this.tapedTwice = true;
       setTimeout( () => { this.tapedTwice = false; }, 300 );
@@ -578,7 +579,7 @@ export default class List extends Component {
     }
     event.preventDefault();
     //action on double tap goes below
-    alert("You tapped me Twice !!!");
+    this.handleShowFormEdit(record);
   }
 
 
@@ -620,7 +621,7 @@ export default class List extends Component {
           locale={{emptyText: <this.Translate id="table_empty_data"/>}}
           onRow={record =>({
             onDoubleClick:() => this.handleShowFormEdit(record),
-            onClick: (event) => this.tapHandler(event)
+            onClick: (event) => this.handleOnTapHandler(event, record)
           })}
           loading={fetchingProps.fetching || this.state.loadingPopup} />
     );
@@ -698,8 +699,6 @@ export default class List extends Component {
     return (
       
       <div className="content-list">
-
-        {/* <div id="btnAdd">btnAdd</div> */}
 
         { this.renderBreadCrumb() }
         

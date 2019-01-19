@@ -63,5 +63,53 @@ export default {
     "Invalid quantity for transfer",
     "Invalid quantity for transfer",
     "Invalid quantity for transfer"
+  ],
+
+  "text_transfer_number_exist": [
+    "Transfer number already exist",
+    "Transfer number already exist",
+    "Transfer number already exist"
+  ],
+
+  "error_the_same_location": [
+    "Can not transfer to the same location",
+    "Can not transfer to the same location",
+    "Can not transfer to the same location"
+  ],
+
+  "error_invalid_step_for_cancel": [
+    "You can cancel only in the process step",
+    "You can cancel only in the process step",
+    "You can cancel only in the process step"
+  ],
+
+  "error_receive_invalid_step": [
+    "You can receive only in the process step",
+    "You can receive only in the process step",
+    "You can receive only in the process step"
+  ],
+
+  "error_invalid_step_for_update_stock_transfer": [
+    "You can update stock transfer only in process step",
+    "You can update stock transfer only in process step",
+    "You can update stock transfer only in process step"
+  ],
+
+  "error_transfer_not_found": [
+    "Stock transfer not found",
+    "Stock transfer not found",
+    "Stock transfer not found"
+  ],
+
+  "error_unit_not_found": [
+    "Unit not found",
+    "Unit not found",
+    "Unit not found"
+  ],
+
+  "invalid_location_for_receive": [
+    "You can not receive to location that you has created stock transfer",
+    "You can not receive to location that you has created stock transfer",
+    "You can not receive to location that you has created stock transfer"
   ]
 };

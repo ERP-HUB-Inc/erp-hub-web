@@ -2,6 +2,7 @@ import React from "react";
 import FormEntry from "./FormEntry";
 import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
+import LoctionAction from "../../../../pos/action/settings/location";
 
 export default class FormItem extends Modal {
   constructor(props) {
@@ -9,12 +10,27 @@ export default class FormItem extends Modal {
     this.state = {
       locations: []
     };
+    this.handleOnChangeFromLocation = this.handleOnChangeFromLocation.bind(this);
+    this.handleOnChangeToLocation = this.handleOnChangeToLocation.bind(this);
   }
 
   componentDidMount(){
+    this.props.dispatch(LoctionAction.fetchLocationAccess(100));
     this.setState({
       locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION))
     });
+  }
+
+  handleOnChangeFromLocation(value) {
+    if (value === this.props.form.getFieldValue("toLocationId")) {
+      this.Message.error(this.CATranslate("error_the_same_location", this.props.locale));
+    }
+  }
+
+  handleOnChangeToLocation(value) {
+    if (value === this.props.form.getFieldValue("fromLocationId")) {
+      this.Message.error(this.CATranslate("error_the_same_location", this.props.locale));
+    }
   }
 
   render() {
@@ -46,6 +62,7 @@ export default class FormItem extends Modal {
                 placeholder={this.CATranslate("text_name", locale)}
                 errorRequired={<this.Translate id="error_require_name" />}
                 required={true}
+                disabled={this.props.isAcceptRequest}
                 isAutoFocus={true}
                 max={100}
                 form={form}/> 
@@ -58,6 +75,7 @@ export default class FormItem extends Modal {
                   placeholder={this.CATranslate("text_due_date", locale)}
                   errorRequired={<this.Translate id="error_select_due_date" />}
                   required={true}
+                  disabled={this.props.isAcceptRequest}
                   form={form}/>
                 :
                 <this.DatePickers
@@ -67,6 +85,7 @@ export default class FormItem extends Modal {
                   placeholder={this.CATranslate("text_due_date", locale)}
                   errorRequired={<this.Translate id="error_select_due_date" />}
                   required={true}
+                  disabled={this.props.isAcceptRequest}
                   form={form}/>
               }
 
@@ -77,9 +96,11 @@ export default class FormItem extends Modal {
                 label={<this.Translate id="text_from_location" /> }
                 placeholder={this.CATranslate("text_from_location", locale)}
                 defaultValue={locationId}
-                dataSource={this.state.locations}
+                onChange={this.handleOnChangeFromLocation}
+                dataSource={this.props.accessLocation.list}
                 valueKey="id"
                 required={true}
+                disabled={this.props.isAcceptRequest}
                 form={form}/>
             </this.Col>
             <this.Col md="2">
@@ -90,8 +111,10 @@ export default class FormItem extends Modal {
                 errorRequired={<this.Translate id="error_require_location" />}
                 dataSource={this.state.locations}
                 defaultValue={formData.toLocationId}
+                onChange={this.handleOnChangeToLocation}
                 valueKey="id"
                 required={true}
+                disabled={this.props.isAcceptRequest}
                 form={form}/>
             </this.Col>
             <this.Col md="3">
@@ -101,6 +124,7 @@ export default class FormItem extends Modal {
                 data={formData.description}
                 placeholder={this.CATranslate("text_description", locale)}
                 max={255}
+                disabled={this.props.isAcceptRequest}
                 form={form}/> 
             </this.Col>
           </this.Row>

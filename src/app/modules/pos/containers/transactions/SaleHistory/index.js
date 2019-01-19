@@ -13,7 +13,7 @@ function mapStateToProps(state) {
   return {
     list: state.reducer.transaction.request,
     detail: state.reducer.transaction.detail,
-    storeLocation: state.reducer.storeLocation.request,
+    storeLocation: state.reducer.location.request,
     users: state.reducer.user.request,
     receiptTemplate: state.reducer.receiptTemplate.detail,
     checkPermission: state.reducer.privilege.checkPermission,

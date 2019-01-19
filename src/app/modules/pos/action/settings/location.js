@@ -6,15 +6,23 @@ export default{
   fetch:(limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
-        type: Constant.REQUEST_STORE_LOCATION,
+        type: Constant.REQUEST_LOCATION,
         payload: LoctionService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
+      });
+    };
+  },
+  fetchLocationAccess:(limit, offset, sortField, sortOrder, filter, searchKey) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_LOCATION_ACCESS,
+        payload: LoctionService.listsLocationAccess(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
   },
   fetchAllByStoreName:(storeName) => {
     return dispatch => {
       return dispatch({
-        type: Constant.REQUEST_STORE_LOCATION,
+        type: Constant.REQUEST_LOCATION,
         payload: LoctionService.findLocationByStoreName(storeName)
       });
     };
@@ -22,7 +30,7 @@ export default{
   archive: (ids) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ARCHIVE_STORE_LOCATION,
+        type: Constant.ARCHIVE_LOCATION,
         payload: LoctionService.archive(ids)
       });
     };
@@ -30,7 +38,7 @@ export default{
   add: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ADD_STORE_LOCATION,
+        type: Constant.ADD_LOCATION,
         payload: LoctionService.add(data)
       });
     };
@@ -38,7 +46,7 @@ export default{
   update: (data, id) => {
     return dispatch => {
       return dispatch({
-        type: Constant.UPDATE_STORE_LOCATION,
+        type: Constant.UPDATE_LOCATION,
         payload: LoctionService.update(data, id)
       });
     };

@@ -22,7 +22,7 @@ export default{
   add: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ADD_STORE_ACCOUNT,
+        type: Constant.ADD_ACCOUNT,
         payload: StoreAccountService.add(data)
       });
     };

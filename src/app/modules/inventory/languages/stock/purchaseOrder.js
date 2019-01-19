@@ -65,7 +65,7 @@ export default {
     "Draft"
   ],
 
-  "purchase_order_step_process": [
+  "text_process": [
     "Process",
     "Process",
     "Process"
