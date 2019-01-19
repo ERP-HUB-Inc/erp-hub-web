@@ -228,6 +228,8 @@ export default class List extends Component {
     }
 
     if (this.action) {
+      this.setState({loadingPopup: true});
+
       this.PrivilegeService.checkPermission(this.service.updateRoute)
         .then(response => {
           if (this.callBackOnShowEditForm) {
@@ -238,8 +240,12 @@ export default class List extends Component {
               modalConten: this.formUpdate
             });
           }
+          this.setState({loadingPopup: false});
         })
         .catch(error => {
+          this.setState({
+            loadingPopup: false
+          });
           this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
         });
     }

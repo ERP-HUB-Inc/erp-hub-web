@@ -20,44 +20,17 @@ export default class PaymentMethodList extends List {
     this.fetchingProp = "roleAccess";
     this.addingProp = "roleAccessAdd";
     this.updatingProp = "roleAccessUpdate";
+    this.callBackOnShowEditForm = this.showFormEdit;
     this.columnFilterWithKey = ["name"];
     this.service = RoleAccessService;
     this.action = RoleAccessAction;
     this.RESET_CONSTANT = Constant.RESET_ROLE_ACCESS;
   }
 
-  handleShowFormAdd() {
-    this.setState({loadingPopup: true});
-    this.PrivilegeService.checkPermission(this.service.createRoute)
-      .then(response => {
-        this.props.dispatch(RoleAccessAction.showForm());
-        this.setState({
-          loadingPopup: false,
-          modalConten: <FormCreate/>
-        });
-      })
-      .catch(error => {
-        this.setState({loadingPopup: false});
-        this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
-      });
-  }
-
-  handleShowFormEdit(rowData) {
-    this.setState({loadingPopup: true});
-    this.PrivilegeService.checkPermission(this.service.updateRoute)
-      .then(response => {
-        this.props.dispatch(RoleAccessAction.showForm(rowData));
-        this.props.dispatch(RolePrivilegeAction.fetch(rowData.id));
-        this.setState({
-          loadingPopup: false,
-          modalConten: <FormUpdate/>
-        });
-      })
-      .catch(error => {
-        console.log("No permission");
-        this.setState({loadingPopup: false});
-        this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
-      });
+  showFormEdit(rowData) {
+    this.props.dispatch(RoleAccessAction.showForm(rowData));
+    this.props.dispatch(RolePrivilegeAction.fetch(rowData.id));
+    this.setState({modalConten: <FormUpdate/>});
   }
 
   renderFilterRecord() {

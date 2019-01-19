@@ -16,7 +16,8 @@ export default class Lists extends List {
       ...this.state,
       setDefaultDate: []
     };
-    this.formCreate = <FormCreate/>;
+    this.formCreate = <FormCreate />;
+    this.formUpdate = <FormUpdate />;
     this.columns = [
       this.columnCreatedAt,
       {
@@ -107,18 +108,18 @@ export default class Lists extends List {
       [Enum.STOCK_STRANSFER_STEP.CANCEL]: {name: <this.Translate id="text_canceled" />, color:  this.Enum.STOCK_TRANSFER_STEP_COLOR.CANCEL}
     };
     this.service = StockTransferService;
-    this.columnFilterWithKey = ["name", "description", "number"];
     this.action = StockTransferAction;
+    this.callBackOnShowEditForm = this.showFormEdit;
+    this.columnFilterWithKey = ["name", "description", "number"];
     this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
     this.RESET_CONSTANT = Constant.RESET_STOCK_TRANSFER;
     this.handleShowFormAccept = this.handleShowFormAccept.bind(this);
     this.handleCancelTransfer = this.handleCancelTransfer.bind(this);
   }
 
-  handleShowFormEdit(rowData) {
+  showFormEdit(rowData) {
     this.props.dispatch(StockTransferAction.detail(rowData));
     this.setState({
-      loadingPopup: true,
       modalConten: <FormUpdate />
     });
   }
@@ -309,7 +310,7 @@ export default class Lists extends List {
                 <div className="ant-form-item-label" style={{visibility: "hidden"}}>
                   <label htmlFor="status" className="" title="">Filter</label>
                 </div>
-                <this.Button htmlType="submit" type="info" loading={this.props.list.fetching}>
+                <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && this.props.list.fetching}>
                   <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="text_search" />
                 </this.Button>
               </this.Col>
