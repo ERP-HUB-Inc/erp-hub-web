@@ -486,7 +486,7 @@ export default class FormItem extends Modal {
                 <this.Col md="4">
                   <this.Select
                     name="type"
-                    label={<this.Translate id="input_product_kind" />}
+                    label={<this.Translate id="text_type" />}
                     dataSource={this.typesOfProduct}
                     defaultValue={formData.type !== "" ? formData.type : this.typesOfProduct[0].value}
                     disabled={formData.id != null}

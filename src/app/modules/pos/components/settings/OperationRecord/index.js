@@ -82,7 +82,7 @@ class Column extends List {
         }
       },
       { 
-        title: <this.Translate id="col_operation_record_type" />,
+        title: <this.Translate id="text_type" />,
         dataIndex: "type",
         width: 100,
         align: "center",
@@ -92,7 +92,7 @@ class Column extends List {
           let type = <this.Translate id="operation_record_income" />;
           if (record.type === this.Enum.OPERATION_TYPE.EXPENSE || record.type === this.Enum.OPERATION_TYPE.COGS) {
             colorIndex = 1;
-            type = <this.Translate id="operation_record_expense" />;
+            type = <this.Translate id="text_expense" />;
           }
           return <this.Tag color={this.colorOperationType[colorIndex]} style={{marginRight: 0}} className="text-center label-stock-status">{type}</this.Tag>;
         }

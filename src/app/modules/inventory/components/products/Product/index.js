@@ -481,7 +481,7 @@ class Column extends List {
         }
       },
       {
-        title: <this.Translate id="col_products_types" />,
+        title: <this.Translate id="text_type" />,
         dataIndex: "type",
         key: "type",
         width: 130,

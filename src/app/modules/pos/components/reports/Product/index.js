@@ -28,7 +28,7 @@ export default class ProductList extends List {
     this.ExportheadersCsv = [
       {label: this.CATranslate("text_product_name", this.props.locale) , key: "productDescriptions"},
       {label: this.CATranslate("text_product_code", this.props.locale), key: "barcode"},
-      {label: this.CATranslate("col_products_types", this.props.locale), key: "type"},
+      {label: this.CATranslate("text_type", this.props.locale), key: "type"},
       {label: this.CATranslate("text_quantity", this.props.locale), key: "quantity"},
       {label: this.CATranslate("text_cost", this.props.locale), key: "cost"},
       {label: this.CATranslate("text_product_total_cost", this.props.locale), key: "totalCost"},
@@ -182,7 +182,7 @@ class Column extends List {
         key: "barcode"
       },
       {
-        title: <this.Translate id="col_products_types" />,
+        title: <this.Translate id="text_type" />,
         dataIndex: "product",
         align: "center",
         key: "product",

@@ -41,12 +41,6 @@ export default {
     "Unit"
   ],
 
-  "col_products_types": [
-    "Type",
-    "Type",
-    "Type"
-  ],
-
   "text_product_code": [
     "SKU",
     "SKU",
@@ -149,12 +143,6 @@ export default {
     "Re-Order Point",
     "Re-Order Point",
     "Re-Order Point"
-  ],
-
-  "input_product_kind": [
-    "Type",
-    "Type",
-    "Type"
   ],
 
   "input_product_tax": [

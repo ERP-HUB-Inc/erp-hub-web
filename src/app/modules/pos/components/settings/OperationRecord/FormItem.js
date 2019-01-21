@@ -10,7 +10,7 @@ export default class FormItem extends Modal {
       type: this.Enum.OPERATION_TYPE.EXPENSE
     };
     this.operationTypes = [
-      {title: <this.Translate id="operation_record_expense" />, value: this.Enum.OPERATION_TYPE.EXPENSE},
+      {title: <this.Translate id="text_expense" />, value: this.Enum.OPERATION_TYPE.EXPENSE},
       {title: <this.Translate id="operation_record_income" />, value: this.Enum.OPERATION_TYPE.INCOME}
     ];
     this.handleSelectType = this.handleSelectType.bind(this);

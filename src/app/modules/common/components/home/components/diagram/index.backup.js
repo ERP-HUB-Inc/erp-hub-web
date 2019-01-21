@@ -132,7 +132,7 @@ export default class Diagram extends Component {
             </this.Col>
             <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-right">
               <div className="title-pie-chart">
-                <this.Translate id="home_page_graph_expense" />
+                <this.Translate id="text_expense" />
               </div>
               {
                 incomeExpense.expense.length > 0 && incomeExpense.expense[0] && incomeExpense.expense[0].labels.length > 0 ?

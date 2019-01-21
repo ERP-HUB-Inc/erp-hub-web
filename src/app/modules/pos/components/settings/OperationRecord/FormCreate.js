@@ -12,7 +12,7 @@ export default class Form extends Modal {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.operationTypes = [
       {title: <this.Translate id="operation_record_income" />, value: this.Enum.OPERATION_TYPE.INCOME},
-      {title: <this.Translate id="operation_record_expense" />, value: this.Enum.OPERATION_TYPE.EXPENSE}
+      {title: <this.Translate id="text_expense" />, value: this.Enum.OPERATION_TYPE.EXPENSE}
     ];
   } 
 

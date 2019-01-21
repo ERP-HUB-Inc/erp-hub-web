@@ -11,22 +11,10 @@ export default {
     "កត់ត្រាសម្រាប់"
   ],
 
-  "col_operation_record_type":[
-    "Type",
-    "Type",
-    "ប្រភេទ"
-  ],
-
   "operation_record_income": [
     "Income",
     "ဝငျငှေ",
     "ចំណូល"
-  ],
-
-  "operation_record_expense": [
-    "Expense",
-    "သုံးငှေ",
-    "ចំណាយ"
   ],
 
   "input_operation_record_for": [

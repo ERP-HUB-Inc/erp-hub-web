@@ -1,17 +1,4 @@
 export default {
-  
-  "col_profit_and_lost_revenus": [
-    "Revenue",
-    "Revenue",
-    "Revenue"
-  ],
-
-  "col_profit_and_lost_expense": [
-    "Expense",
-    "Expense",
-    "Expense"
-  ],
-
   "col_profit_and_lost_net_income": [
     "Net Income",
     "Net Income",

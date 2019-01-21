@@ -29,7 +29,7 @@ export default {
     "Income",
     "Income"
   ],
-  "home_page_graph_expense": [
+  "text_expense": [
     "Expense",
     "Expense",
     "Expense"

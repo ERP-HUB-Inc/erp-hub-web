@@ -121,7 +121,7 @@ export default class ProfitAndLostList extends List {
             createdAt: profitReport.createdAt,
             name: profitReport.name,
             amount: this.formatCurrency(profitReport.amount),
-            type: profitReport.type === this.Enum.OPERATION_TYPE.INCOME ?  this.CATranslate("col_profit_and_lost_revenus", this.props.locale) : this.CATranslate("col_profit_and_lost_expense", this.props.locale)
+            type: profitReport.type === this.Enum.OPERATION_TYPE.INCOME ?  this.CATranslate("text_revenue", this.props.locale) : this.CATranslate("text_expense", this.props.locale)
           });
         }
       });
@@ -143,8 +143,8 @@ export default class ProfitAndLostList extends List {
     return(
       {
         labels: [
-          this.CATranslate("col_profit_and_lost_revenus", this.props.locale),
-          this.CATranslate("col_profit_and_lost_expense", this.props.locale),
+          this.CATranslate("text_revenue", this.props.locale),
+          this.CATranslate("text_expense", this.props.locale),
           this.CATranslate("no_operation", this.props.locale)
         ],
         datasets: [
@@ -239,7 +239,7 @@ export default class ProfitAndLostList extends List {
         <div style={{textAlign: "left", display: "flex", alignItems: "center"}}>
           <div style={{width: 10, height: 10, marginRight: 5, backgroundColor: "#57A600"}}></div>
           <div>
-            <this.Translate id="col_profit_and_lost_revenus" />
+            <this.Translate id="text_revenue" />
           </div>
         </div>
         <div className="type-value">
@@ -250,7 +250,7 @@ export default class ProfitAndLostList extends List {
         <div style={{textAlign: "left", display: "flex", alignItems: "center"}}>
           <div style={{width: 10, height: 10, marginRight: 5, backgroundColor: "#B90000"}}></div>
           <div>
-            <this.Translate id="col_profit_and_lost_expense" />
+            <this.Translate id="text_expense" />
           </div>
         </div>
         <div className="type-value">
@@ -270,13 +270,13 @@ export default class ProfitAndLostList extends List {
               dataSource={incomeExpense.income}
               rowKey="incomeId"
               locale={{emptyText: <this.Translate id="no_peration_revenue" />}}
-              columns={new Column(<this.Translate id="col_profit_and_lost_revenus" />)}
+              columns={new Column(<this.Translate id="text_revenue" />)}
               onChange={this.handleTableChange}/>
             <this.Table 
               dataSource={incomeExpense.expense}
               rowKey="expenseId"
               locale={{emptyText: <this.Translate id="no_peration_expense" />}}
-              columns={new Column(<this.Translate id="col_profit_and_lost_expense" />,"revenuse-report")}
+              columns={new Column(<this.Translate id="text_expense" />,"revenuse-report")}
               onChange={this.handleTableChange}/>
             <div className="net-income text-uppercase">
               <this.Translate id="col_profit_and_lost_net_income" />
@@ -364,7 +364,7 @@ export default class ProfitAndLostList extends List {
 }
 
 class Column extends List {
-  constructor(title =  <this.Translate id="col_profit_and_lost_revenus" />,className) {
+  constructor(title =  <this.Translate id="text_revenue" />,className) {
     super();
     return [
       {

@@ -22,11 +22,5 @@ export default {
     "Unit",
     "Unit",
     "Unit",
-  ],
-
-  "col_stock_management_types": [
-    "Type",
-    "Type",
-    "Type",
-  ],
+  ]
 };

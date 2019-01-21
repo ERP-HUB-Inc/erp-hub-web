@@ -54,9 +54,9 @@ export default class Home extends Component {
 
     if (Array.isArray(this.props.saleReport.list) && this.props.saleReport.list.length > 0) {
       const saleReport = this.props.saleReport.list[0];
-      pieDataSource["columns"].push(["Revenue", saleReport.revenue]);
-      pieDataSource["columns"].push(["Cost", saleReport.cost]);
-      pieDataSource["columns"].push(["Profit", saleReport.profit]);
+      pieDataSource["columns"].push([this.CATranslate("text_revenue", this.props.locale), saleReport.revenue]);
+      pieDataSource["columns"].push([this.CATranslate("text_cost", this.props.locale), saleReport.cost]);
+      pieDataSource["columns"].push([this.CATranslate("text_gross_profit", this.props.locale), saleReport.profit]);
     } else {
     }
 

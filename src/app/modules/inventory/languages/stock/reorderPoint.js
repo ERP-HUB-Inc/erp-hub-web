@@ -84,12 +84,6 @@ export default {
     "Unit"
   ],
 
-  "col_stock_reorder_point_type": [
-    "Type",
-    "Type",
-    "Type"
-  ],
-
   "input_error_stock_reorder_point_name": [
     "Please input your reorder_point name",
     "Please input your reorder_point name",
