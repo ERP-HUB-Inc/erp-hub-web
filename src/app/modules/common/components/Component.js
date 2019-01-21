@@ -51,7 +51,8 @@ import
   MonthsPicker,
   WeekPickers,
   Doughnut,
-  Line
+  Line,
+  C3Chart
 } from "../elements/ant-ui";
 import {BreadcrumbTitle, Cards} from "../elements/react-strap";
 import {Util} from "../util";
@@ -183,6 +184,7 @@ export default class Component extends React.Component {
 
     this.Doughnut = Doughnut;
     this.Line = Line;
+    this.C3Chart = C3Chart;
 
     // Util function
     this.Util = new Util();

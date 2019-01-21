@@ -5,7 +5,6 @@ import Diagram from "../home/containers/diagram";
 import Guide from "../home/containers/guide";
 import Board from "../home/containers/Board";
 import CardAction from "../../../common/actions/home";
-import {C3Chart} from "../../elements/ant-ui/C3Chart";
 import "./index.css";
 
 export default class Home extends Component {
@@ -140,7 +139,7 @@ export default class Home extends Component {
             <div className="dashboard-report-title">
               <this.Translate id="text_today_sale_summary" />
             </div>
-            <C3Chart
+            <this.C3Chart
               data={pieDataSource}
               legend={{
                 position: "bottom"
@@ -164,7 +163,6 @@ export default class Home extends Component {
             <Guide/>
           </div>
         </this.Col>
-        <this.clearFloating />
       </this.Row>
     );
   }

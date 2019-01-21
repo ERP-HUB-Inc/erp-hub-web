@@ -1,56 +1,56 @@
 import React, { Component } from "react";
-import moment from "moment";
-import groupBy from "lodash/groupBy";
-import { Tag } from "antd";
+// import moment from "moment";
+// import groupBy from "lodash/groupBy";
+// import { Tag } from "antd";
 
-const data = [{
-  id: "000000001",
-  avatar: "https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png",
-  title: "dd",
-  datetime: "2017-08-09",
-  type: "test1",
-}, {
-  id: "000000002",
-  avatar: "https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png",
-  title: "dd",
-  datetime: "2017-08-09",
-  type: "test1",
-},];
+// const data = [{
+//   id: "000000001",
+//   avatar: "https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png",
+//   title: "dd",
+//   datetime: "2017-08-09",
+//   type: "test1",
+// }, {
+//   id: "000000002",
+//   avatar: "https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png",
+//   title: "dd",
+//   datetime: "2017-08-09",
+//   type: "test1",
+// },];
 
-function onItemClick(item, tabProps) {
-  console.log(item, tabProps);
-}
+// function onItemClick(item, tabProps) {
+//   console.log(item, tabProps);
+// }
 
-function onClear(tabTitle) {
-  console.log(tabTitle);
-}
+// function onClear(tabTitle) {
+//   console.log(tabTitle);
+// }
 
-function getNoticeData(notices) {
-  if (notices.length === 0) {
-    return {};
-  }
-  const newNotices = notices.map((notice) => {
-    const newNotice = { ...notice };
-    if (newNotice.datetime) {
-      newNotice.datetime = moment(notice.datetime).fromNow();
-    }
-    // transform id to item key
-    if (newNotice.id) {
-      newNotice.key = newNotice.id;
-    }
-    if (newNotice.extra && newNotice.status) {
-      const color = ({
-        todo: "",
-        processing: "blue",
-        urgent: "red",
-        doing: "gold",
-      })[newNotice.status];
-      newNotice.extra = <Tag color={color} style={{ marginRight: 0 }}>{newNotice.extra}</Tag>;
-    }
-    return newNotice;
-  });
-  return groupBy(newNotices, "type");
-}
+// function getNoticeData(notices) {
+//   if (notices.length === 0) {
+//     return {};
+//   }
+//   const newNotices = notices.map((notice) => {
+//     const newNotice = { ...notice };
+//     if (newNotice.datetime) {
+//       newNotice.datetime = moment(notice.datetime).fromNow();
+//     }
+//     // transform id to item key
+//     if (newNotice.id) {
+//       newNotice.key = newNotice.id;
+//     }
+//     if (newNotice.extra && newNotice.status) {
+//       const color = ({
+//         todo: "",
+//         processing: "blue",
+//         urgent: "red",
+//         doing: "gold",
+//       })[newNotice.status];
+//       newNotice.extra = <Tag color={color} style={{ marginRight: 0 }}>{newNotice.extra}</Tag>;
+//     }
+//     return newNotice;
+//   });
+//   return groupBy(newNotices, "type");
+// }
 
 // const noticeData = getNoticeData(data);
 
