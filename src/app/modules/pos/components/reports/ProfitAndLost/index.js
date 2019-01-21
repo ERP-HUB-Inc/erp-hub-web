@@ -12,7 +12,15 @@ export default class ProfitAndLostList extends List {
       ...this.state,
       listProfitAndLost: [],
       isNotYetLoadComponentDidUpdated: true,
-      setDefaultDate: []
+      setDefaultDate: [],
+      pieDataSource: {
+        columns: [],
+        type: "donut",
+        colors: {
+          Revenue: "rgb(76, 182, 76)",
+          Expense: "#B90000"
+        }
+      }
     };
 
     this.columns = new Column();
@@ -46,6 +54,31 @@ export default class ProfitAndLostList extends List {
     this.loadFilter();
   }
 
+  componentDidUpdate() {
+    if (this.props.profitAndLostReport.fetched) {
+      const pieDataSource = this.state.pieDataSource;
+
+      if (this.props.profitAndLostReport.list.length > 0) {
+        const incomeExpense = this.groupIncomeExpenseByType();
+        pieDataSource["columns"].push([this.CATranslate("text_revenue", this.props.locale), incomeExpense.incomeType]);
+        pieDataSource["columns"].push([this.CATranslate("text_expense", this.props.locale), incomeExpense.expenseType]);
+        pieDataSource["unload"] = [this.CATranslate("text_revenue", this.props.locale), this.CATranslate("text_expense", this.props.locale)];
+        this.setState({pieDataSource});
+      } else {
+        pieDataSource["unload"] = [this.CATranslate("text_revenue", this.props.locale), this.CATranslate("text_expense", this.props.locale)];
+        this.setState({
+          pieDataSource: {
+            columns: [[this.CATranslate("text_empty", this.props.locale), 0.0001]],
+            type: "donut",
+            colors: {
+              Empty: "#f9f9f9"
+            }}
+        });
+      }
+      this.props.dispatch(ProfitAndLostReportAction.reset());
+    }
+  }
+
   groupIncomeExpenseByType() {
     const income = [];
     const expense = [];
@@ -61,7 +94,8 @@ export default class ProfitAndLostList extends List {
           const existingAtIndex = income.findIndex(value => value.name === operationRecord.name);
           if (existingAtIndex === -1) {
             income.push({
-              name:  operationRecord.name,
+              id: operationRecord.id,
+              name: operationRecord.name,
               amount: operationRecord.amount,
               type: operationRecord.type,
               isSale: operationRecord.isSale 
@@ -75,6 +109,7 @@ export default class ProfitAndLostList extends List {
           const existingAtIndex = expense.findIndex(value => value.name === operationRecord.name);
           if (existingAtIndex === -1) {
             expense.push({
+              id: operationRecord.id,
               name: operationRecord.name,
               amount: operationRecord.amount,
               type: operationRecord.type,
@@ -100,7 +135,6 @@ export default class ProfitAndLostList extends List {
     };
 
   }
-  
 
   exportCsv(){
     const {profitAndLostReport} = this.props;
@@ -201,7 +235,6 @@ export default class ProfitAndLostList extends List {
             filter = JSON.stringify(filter);  
             this.props.dispatch(this.action.fetch(filter,rangFilter));
             this.setState({isClickFilter: true});
-        
           }
         
         }); 
@@ -238,37 +271,17 @@ export default class ProfitAndLostList extends List {
 
   renderTable(){
     const incomeExpense = this.groupIncomeExpenseByType();
-
-    let pieDataSource = {
-      columns: [],
-      type: "donut",
-      colors: {
-        Revenue: "rgb(76, 182, 76)",
-        Expense: "#B90000",
-        Empty: "#F9F9F9"
-      }
-    };
-
-    if (incomeExpense && incomeExpense.incomeType + incomeExpense.expenseType) {
-      pieDataSource["columns"].push([this.CATranslate("text_revenue", this.props.locale), incomeExpense.incomeType]);
-      pieDataSource["columns"].push([ this.CATranslate("text_expense", this.props.locale), incomeExpense.expenseType]);
-    } else {
-      pieDataSource["columns"].push(["Empty", 0.0001]);
-    }
-
     return (  
       <div className="main-profit-and-lost-report">
         <this.Row>
           <this.Col md="8" className="devide-main-profit-layout">
             <this.Table 
               dataSource={incomeExpense.income}
-              rowKey="incomeId"
               locale={{emptyText: <this.Translate id="no_peration_revenue" />}}
               columns={new Column(<this.Translate id="text_revenue" />)}
               onChange={this.handleTableChange}/>
             <this.Table 
               dataSource={incomeExpense.expense}
-              rowKey="expenseId"
               locale={{emptyText: <this.Translate id="no_peration_expense" />}}
               columns={new Column(<this.Translate id="text_expense" />,"revenuse-report")}
               onChange={this.handleTableChange}/>
@@ -281,7 +294,7 @@ export default class ProfitAndLostList extends List {
           </this.Col>
           <this.Col md="4">
             <this.C3Chart
-              data={pieDataSource}
+              data={this.state.pieDataSource}
               legend={{
                 show: false
               }}
@@ -307,8 +320,7 @@ export default class ProfitAndLostList extends List {
         <this.CSVLink
           filename={this.exportCsvFileName}
           data={this.exportCsv()}
-          headers={this.ExportheadersCsv}
-        >
+          headers={this.ExportheadersCsv}>
           <this.Button type="info" disabled={ this.props.profitAndLostReport.list.length > 0 ? false : true }>
             <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
           </this.Button>

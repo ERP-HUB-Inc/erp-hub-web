@@ -33,7 +33,10 @@ C3Chart.defaultProps = {
   },
   title: "Summary Report",
   size: {
-    height: 260
+    height: 300
+  },
+  chart: {
+
   },
   tooltip: {
     format: {

@@ -8,7 +8,9 @@ export default combineReducers({
     const constants = [
       Constant.REQUEST_PROFIT_AND_LOST_REPORT_PENDING,
       Constant.REQUEST_PROFIT_AND_LOST_REPORT_REJECTED,
-      Constant.REQUEST_PROFIT_AND_LOST_REPORT_FULFILLED
+      Constant.REQUEST_PROFIT_AND_LOST_REPORT_FULFILLED,
+      null,
+      Constant.RESET_PROFIT_AND_LOST_REPORT
     ];
     return reducer.request(state, action, constants);
   }

@@ -45,6 +45,12 @@ export default {
     "Income and Expense",
     "Income and Expense",
     "Income and Expense"
+  ],
+
+  "text_empty": [
+    "Empty",
+    "Empty",
+    "Empty"
   ]
 
 };

@@ -145,7 +145,9 @@ export default class Home extends Component {
                 position: "bottom"
               }}
               title={this.CATranslate("text_summary_report", this.props.locale)}
-              size={{}}
+              size={{
+                height: 345
+              }}
               tooltip={{
                 format: {
                   value: value => {

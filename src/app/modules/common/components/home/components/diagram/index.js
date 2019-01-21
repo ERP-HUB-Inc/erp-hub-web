@@ -113,15 +113,7 @@ export default class Diagram extends Component {
         </div>
         <Line
           data={graphChatDataSource}
-          options={
-            {
-              animation: {duration: 5},
-              hover: {animationDuration: 0},
-              responsiveAnimationDuration: 0,
-              responsive: true
-            }
-          }
-          height={85} />
+          height={120} />
       </div>
     );
   }
