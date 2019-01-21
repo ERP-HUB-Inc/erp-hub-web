@@ -5,7 +5,7 @@ import Component from "../../../Component";
 export default class Duide extends Component {
   render() {
     return (
-      <div className="main-guide">
+      <div  className="main-guide">
         <this.Row>
           <div className="main-icon-top">
             <ul>

@@ -4,10 +4,15 @@
     width: 100%;
     overflow-x: hidden;
     background-color: white;
-    height: auto !important;
-    padding: 16px;
+    height: 398px;
+    margin-bottom: 15px
 }
 
+.main-diagram canvas {
+    padding-left: 10px;
+    padding-right: 10px
+}
+/* 
 .main-doughnut-chart .doughnut-chart {
     background-color: white;
     padding: 10px;
@@ -40,16 +45,16 @@
     text-align: center;
     margin-top: 157px;
     font-weight: 500;
-}
+} */
 
 @media only screen and (max-width: 900px) { 
-    .main-diagram canvas {
+    /* .main-diagram canvas {
         height: 265px !important;
-    }
+    } */
 }
 
 @media only screen and (max-width: 800px) {
-    .main-doughnut-chart .no-pie-chart-image img {
+    /* .main-doughnut-chart .no-pie-chart-image img {
         position: inherit;
         top: 0px;
     }
@@ -62,9 +67,14 @@
         border-left: none;
     }
 
-    /* pie chart */
     .main-doughnut-chart .no-pie-chart-image img {
         height: 250px !important;
-    }
+    } */
 
+}
+
+.wrap-header-diagram {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import List from "../List";
-import FormCreate from "../../../containers/settings/RoleAccess/FormCreate";
+// import FormCreate from "../../../containers/settings/RoleAccess/FormCreate";
 import FormUpdate from "../../../containers/settings/RoleAccess/FormUpdate";
 import Constant from "../../../constants/settings/roleAccess";
 import RoleAccessAction from "../../../action/settings/roleAccess";

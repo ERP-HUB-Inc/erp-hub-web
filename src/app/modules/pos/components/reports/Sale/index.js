@@ -15,10 +15,10 @@ export default class SaleList extends List {
     this.columns = new Column();
     this.ExportheadersCsv = [
       {label: this.CATranslate("text_date", this.props.locale), key: "date"},
-      {label: this.CATranslate("col_sale_report_revenuse", this.props.locale), key: "revenue"},
-      {label: this.CATranslate("col_sale_report_cost_of_good", this.props.locale), key: "cost"},
-      {label: this.CATranslate("col_sale_report_gross_profit", this.props.locale), key: "profit"},
-      {label: this.CATranslate("col_sale_report_margin", this.props.locale), key: "margin"}
+      {label: this.CATranslate("text_revenue", this.props.locale), key: "revenue"},
+      {label: this.CATranslate("text_cost_of_good", this.props.locale), key: "cost"},
+      {label: this.CATranslate("text_cost_of_good", this.props.locale), key: "profit"},
+      {label: this.CATranslate("text_margin", this.props.locale), key: "margin"}
     ];
     this.exportCsvFileName = "sale_report.csv"; 
 
@@ -119,7 +119,7 @@ export default class SaleList extends List {
   }
 
   loadFilter(){
-    let getCurrentDate = new Date().toISOString().slice(0,10); 
+    let getCurrentDate = new Date().toISOString().slice(0, 10);
 
     this.setState({
       setDefaultDate : [this.Util.formatDatePicker(getCurrentDate),this.Util.formatDatePicker(getCurrentDate)]
@@ -139,7 +139,7 @@ export default class SaleList extends List {
       ]});
 
     filter = JSON.stringify(filter);
-    this.props.dispatch(this.action.fetch(filter,rangFilter));
+    this.props.dispatch(this.action.fetch(filter, rangFilter));
     this.setState({isClickFilter: true});
 
   }
@@ -205,28 +205,28 @@ class Column extends List {
         render: value => this.Util.formatDate(value)
       },
       {
-        title: <this.Translate id="col_sale_report_revenuse" />,
+        title: <this.Translate id="text_revenue" />,
         dataIndex: "revenue",
         align: "center",
         key: "revenue",
         render: value => this.formatCurrency(value)
       },
       {
-        title: <this.Translate id="col_sale_report_cost_of_good" />,
+        title: <this.Translate id="text_cost_of_good" />,
         dataIndex: "cost",
         align: "center",
         key: "cost",
         render: value => this.formatCurrency(value)
       },
       {
-        title: <this.Translate id="col_sale_report_gross_profit" />,
+        title: <this.Translate id="text_gross_profit" />,
         dataIndex: "profit",
         align: "center",
         key: "profit",
         render: value => this.formatCurrency(value)
       },
       {
-        title: <this.Translate id="col_sale_report_margin" />,
+        title: <this.Translate id="text_margin" />,
         dataIndex: "margin",
         align: "center",
         key: "margin",

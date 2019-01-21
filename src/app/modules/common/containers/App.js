@@ -22,7 +22,7 @@ export default class App extends React.Component {
       console.log("HHHHHHHHHHH:", "Connected");
     });
 
-    client.connection.on('failed', () => {
+    client.connection.on("failed", () => {
       console.log("HHHHHHHHHHH:", "Failed");
     });
   }

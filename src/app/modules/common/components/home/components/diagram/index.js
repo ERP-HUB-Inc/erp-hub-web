@@ -1,6 +1,7 @@
 import React from "react";
 import GraphAction from "../../../../../common/actions/home";
-import {Line, Doughnut} from "react-chartjs-2";
+import SaleReportAction from "../../../../../pos/action/report/sale";
+import {Line} from "react-chartjs-2";
 import Component from "../../../Component";
 import "./index.css";
 
@@ -15,12 +16,14 @@ export default class Diagram extends Component {
             {
               borderColor: "#398BF7",
               borderWidth: 2.5,
-              label: "Income"
+              label: "Income",
+              data: []
             },
             {
               borderColor: "#06D79C",
               borderWidth: 2,
-              label: "Expense"
+              label: "Expense",
+              data: []
             }
           ],
           labels: []
@@ -55,113 +58,70 @@ export default class Diagram extends Component {
   componentDidMount(){
     this.props.dispatch(GraphAction.fetchGraph());
     this.props.dispatch(GraphAction.fetchPipe());
+    this.loadTodaySaleSummary();
+  }
+
+  loadTodaySaleSummary() {
+    let getCurrentDate = new Date().toISOString().slice(0, 10);
+
+    let filter = {};
+    let rangFilter = {};
+
+    rangFilter = JSON.stringify({
+      column: "registerDate",
+      value: [
+        this.Util.formatDateForMYSQL(getCurrentDate) + " 00:00:00",
+        this.Util.formatDateForMYSQL(getCurrentDate) + " 23:59:59"
+      ]});
+
+    filter["type"] = [0, 1];
+    
+    filter = JSON.stringify(filter);
+      
+    this.props.dispatch(SaleReportAction.fetch(filter, rangFilter));
   }
 
   render() {
-    const incomeExpense = this.groupIncomeExpenseType();
     let graphChatDataSource = this.props.graphChat.list;
     if (graphChatDataSource.length === 0) {
       graphChatDataSource = this.state.defaultGraphChatDataSource;
     }
     
     return (
-      
-      <div>
-        <div className="main-diagram">
-          {
-            this.props.graphChat.fetching ?
-              <div style={{
-                position: "absolute",
-                width: 100,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                top: 0,
-                margin: "auto",
-                height: 50
-              }}>
-                <this.Spin />
-              </div>
-              :
-              ""
-          }
-          <Line
-            data={graphChatDataSource}
-            borderColor="red"
-            option={
-              {
-                animation: {duration: 0},
-                hover: {animationDuration: 0},
-                responsiveAnimationDuration: 0,
-                responsive: true
-              }
+      <div className="main-diagram">
+        {
+          this.props.graphChat.fetching ?
+            <div style={{
+              position: "absolute",
+              width: 100,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              top: 0,
+              margin: "auto",
+              height: 50
+            }}>
+              <this.Spin />
+            </div>
+            :
+            ""
+        }
+        <div className="wrap-header-diagram">
+          <div className="dashboard-report-title">
+            <this.Translate id="text_weekly_operation" />
+          </div>
+        </div>
+        <Line
+          data={graphChatDataSource}
+          options={
+            {
+              animation: {duration: 5},
+              hover: {animationDuration: 0},
+              responsiveAnimationDuration: 0,
+              responsive: true
             }
-            legend= {{position: "top"}}
-            height={505}
-            width={1700} />
-        </div>
-        <div className="main-doughnut-chart">
-          <this.Row>
-            <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-left">
-              <div className="title-pie-chart">
-                <this.Translate id="home_page_graph_income" />
-              </div>
-              {
-                incomeExpense.income.length > 0 && incomeExpense.income[0] && incomeExpense.income[0].labels.length > 0 ?
-                  <Doughnut
-                    data={incomeExpense.income[0] ? incomeExpense.income[0] : [] }
-                    option={
-                      {
-                        animation: {
-                          duration: 0, 
-                        },
-                        hover: {
-                          animationDuration: 0, 
-                        },
-                        responsiveAnimationDuration: 0,
-                        responsive: true
-                      }
-                    }
-                    legend= {{position: "left" }}
-                  />      
-                  : 
-                  <div className="no-pie-chart-image text-center">
-                    <img src={this.Util.getGeneralImage("storeVein/blank_pipe-01.svg").url} alt="no-chart-data"  />
-                  </div>
-              }
-            </this.Col>
-            <this.Col md="6" xs="12" className="doughnut-chart doughnut-chart-right">
-              <div className="title-pie-chart">
-                <this.Translate id="home_page_graph_expense" />
-              </div>
-              {
-                incomeExpense.expense.length > 0 && incomeExpense.expense[0] && incomeExpense.expense[0].labels.length > 0 ?
-                  <Doughnut
-                    data={incomeExpense.expense[0] ? incomeExpense.expense[0] : [] }
-                    option={
-                      {
-                        animation: {
-                          duration: 0, 
-                        },
-                        hover: {
-                          animationDuration: 0,
-                        },
-                        responsiveAnimationDuration: 0,
-                        responsive: true
-                      }
-                   
-                    }
-                    legend= {{position: "left" }}
-                  /> 
-                  : 
-                  <div className="no-pie-chart-image text-center">
-                    <img src={this.Util.getGeneralImage("storeVein/blank_pipe-01.svg").url} alt="no-chart-data" />
-                  </div>  
-              }
-            </this.Col>
-
-          </this.Row>
-        </div>
+          }
+          height={85} />
       </div>
     );
   }

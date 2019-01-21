@@ -5,6 +5,7 @@ import Diagram from "../home/containers/diagram";
 import Guide from "../home/containers/guide";
 import Board from "../home/containers/Board";
 import CardAction from "../../../common/actions/home";
+import {C3Chart} from "../../elements/ant-ui/C3Chart";
 import "./index.css";
 
 export default class Home extends Component {
@@ -40,91 +41,131 @@ export default class Home extends Component {
     return this.props.cardDashboard.list.length > 0 ? this.props.cardDashboard.list[index].value : 0;
   }
 
-  render(){
+  render() {
+
+    let pieDataSource = {
+      columns: [],
+      type: "donut",
+      colors: {
+        Revenue: "#1e88e5",
+        Cost: "#26c6da",
+        Profit: "rgb(116, 90, 242)"
+      }
+    };
+
+    if (Array.isArray(this.props.saleReport.list) && this.props.saleReport.list.length > 0) {
+      const saleReport = this.props.saleReport.list[0];
+      pieDataSource["columns"].push(["Revenue", saleReport.revenue]);
+      pieDataSource["columns"].push(["Cost", saleReport.cost]);
+      pieDataSource["columns"].push(["Profit", saleReport.profit]);
+    } else {
+    }
 
     return(
-      <div style={{width: "100%"}}>
-        <this.Row>
-          <this.Col xs="12" md="12">
-            <div className="dashboard ">
-              <ul>
-                <li>
-                  <this.BreadcrumbTitle title= {this.CATranslate("home_page_dashboard", this.props.locale)} />
-                </li>
-                <li style={{marginLeft: "15px"}}>
-                  {<this.Switchs name="switch" checked={1} onChange={this.toggleDashboard} form={this.props.form} />}
-                </li>
-              </ul>
-            </div>
-          </this.Col>
-        </this.Row>
-        <this.Row>
-          {/* {
-            cardDashboard.list.map((value,index) =>
-              <Board key={ index } total={ index > 0 ? value.value : this.formatCurrency(value.value) } icon={ icon[index] } title={value.title} readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>} route="read" to={readmore[index] }/>
-            ) 
-          } */}
-          <Board
-            contentValue={
-              <CountUp
-                start={0}
-                end={this.getValueFromDashboardList()}
-                duration={5}
-                separator=","
-                decimals={2}
-                decimal="." />
-            }
-            icon="icon-dollar" title="Today's Sale"
-            readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
-            to="transactions/salehistory?salehistory=1" />
-
-          <Board
-            contentValue={
-              <CountUp
-                start={0}
-                end={this.getValueFromDashboardList(1)}
-                duration={5}
-                separator="" />
-            }
-            icon="icon-list" title="Today's Transaction"
-            readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
-            route="read"
-            to="transactions/salehistory?salehistory=1" />
-
-          <Board contentValue={
+      <this.Row style={{alignContent: "flex-start"}}>
+        <this.Col md="12">
+          <div className="dashboard ">
+            <ul>
+              <li>
+                <this.BreadcrumbTitle title= {this.CATranslate("home_page_dashboard", this.props.locale)} />
+              </li>
+              <li style={{marginLeft: "15px"}}>
+                {<this.Switchs name="switch" checked={1} onChange={this.toggleDashboard} form={this.props.form} />}
+              </li>
+            </ul>
+          </div>
+        </this.Col>
+        <Board
+          contentValue={
             <CountUp
               start={0}
-              end={this.getValueFromDashboardList(2)}
+              end={this.getValueFromDashboardList()}
+              duration={5}
+              separator=","
+              decimals={2}
+              decimal="." />
+          }
+          icon="icon-dollar" title="Today's Sale"
+          readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
+          to="transactions/salehistory?salehistory=1" />
+
+        <Board
+          contentValue={
+            <CountUp
+              start={0}
+              end={this.getValueFromDashboardList(1)}
               duration={5}
               separator="" />
           }
-          icon="icon-stock" title="Today's Product Sold"
+          icon="icon-list" title="Today's Transaction"
           readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
           route="read"
-          to="#" />
+          to="transactions/salehistory?salehistory=1" />
 
-          <Board
-            contentValue={
-              <CountUp
-                start={0}
-                end={this.getValueFromDashboardList(3)}
-                duration={5}
-                separator="" />
-            }
-            icon="icon-customer"
-            title="Total Customers"
-            readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
-            route="read"
-            to="customer" />
-        </this.Row>
-        <this.Row>
-          <this.Col md="12">
+        <Board contentValue={
+          <CountUp
+            start={0}
+            end={this.getValueFromDashboardList(2)}
+            duration={5}
+            separator="" />
+        }
+        icon="icon-stock" title="Today's Product Sold"
+        readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
+        route="read"
+        to="#" />
+
+        <Board
+          contentValue={
+            <CountUp
+              start={0}
+              end={this.getValueFromDashboardList(3)}
+              duration={5}
+              separator="" />
+          }
+          icon="icon-customer"
+          title="Total Customers"
+          readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
+          route="read"
+          to="customer" />
+        {/* <this.Col md="12">
             {
               this.isShowDiagram ? <Diagram/> : <Guide/>
             }
-          </this.Col>
-        </this.Row>
-      </div> 
+          </this.Col> */}
+        <this.Col md="8">
+          <Diagram/>
+        </this.Col>
+        <this.Col md="4">
+          <div className="dash-wrap-report">
+            <div className="dashboard-report-title">
+              <this.Translate id="text_today_sale_summary" />
+            </div>
+            <C3Chart
+              data={pieDataSource}
+              legend={{
+                position: "bottom"
+              }}
+              title={this.CATranslate("text_summary_report", this.props.locale)}
+              size={{}}
+              tooltip={{
+                format: {
+                  value: value => {
+                    return this.formatCurrency(value);
+                  }
+                }
+              }}/>
+          </div>
+        </this.Col>
+        <this.Col md="12">
+          <div className="text-center dash-wrap-guide">
+            <div className="dashboard-report-title text-left">
+              <this.Translate id="text_user_guides" />
+            </div>
+            <Guide/>
+          </div>
+        </this.Col>
+        <this.clearFloating />
+      </this.Row>
     );
   }
 }

@@ -4,9 +4,9 @@ import {Layout} from "antd";
 import {Route, Switch} from "react-router-dom";
 import {connect} from "react-redux";
 import history from "./history";
+import Home from "../containers/home";
 import SideBar from "../components/layout/SiderBar";
 import Headers from "../containers/layout/Header";
-import Home from "../containers/home";
 import Component from "../components/Component";
 import dataSource from "../components/layout/SiderBar/datasource";
 import AuthService from "../services/AuthService";
@@ -28,14 +28,6 @@ class Router extends Component {
       .catch(error => {
       });
 
-    const FadeInTransition = {
-      transitionName: "example",
-      transitionAppear: false,
-      transitionEnterTimeout: 500,
-      transitionEnter: true,
-      transitionLeave: false
-    };
-
     return (
       <Layout>
         <Offline>
@@ -56,7 +48,6 @@ class Router extends Component {
                 dataSource[key]["subItems"].map(value =>
                   <Route
                     async
-                    transition={FadeInTransition}
                     path={value["route"]}
                     component={value["component"]} />
                 )

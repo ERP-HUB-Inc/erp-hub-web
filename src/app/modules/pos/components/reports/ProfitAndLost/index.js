@@ -151,8 +151,8 @@ export default class ProfitAndLostList extends List {
           {
             data: [incomeExpense.incomeType, incomeExpense.expenseType, incomeExpense.noOperationType],
             backgroundColor: [
-              "#57A600",
-              "#B90000",
+              "rgb(116, 90, 242)",
+              "rgb(38, 198, 218)",
               "#F9F9F9"
             ]
           }

@@ -15,5 +15,36 @@
     margin-bottom: 0
 }
 
+.dashboard-report-title {
+    color: #9A9A9A;
+    font-weight: 500 
+}
+
+.dash-wrap-guide,
+.dash-wrap-report{
+    padding: 15px
+}
+
+
+.c3 text {
+    font-size: 10.5pt;
+    font-weight: 500;
+    fill: #9A9A9A
+}
+
+.dash-wrap-report {
+    margin-bottom: 20px;
+    height: 398px
+}
+
+.dash-wrap-report,
+.dash-wrap-guide {
+    background-color: white
+}
+
+.dash-wrap-guide {
+    margin-bottom: 15px
+}
+
 
 

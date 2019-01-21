@@ -1,4 +1,5 @@
 module.exports = {
+    "parser": "babel-eslint",
     "parserOptions": {
         "ecmaVersion": 6,
         "sourceType": "module",
@@ -6,7 +7,8 @@ module.exports = {
             "jsx": true,
             "modules": true,
             "experimentalObjectRestSpread": true
-        }
+        },
+        "allowImportExportEverywhere": true
     },
     "plugins": [
         "react"

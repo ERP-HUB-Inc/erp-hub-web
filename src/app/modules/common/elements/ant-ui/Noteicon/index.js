@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import NoticeIcon from "ant-design-pro/lib/NoticeIcon";
 import moment from "moment";
 import groupBy from "lodash/groupBy";
 import { Tag } from "antd";
@@ -53,37 +52,38 @@ function getNoticeData(notices) {
   return groupBy(newNotices, "type");
 }
 
-const noticeData = getNoticeData(data);
+// const noticeData = getNoticeData(data);
 
 export class Noteicon extends Component {
   render(){
     return(
-      <NoticeIcon
-        className="icon-bell"
-        count={5}
-        onItemClick={onItemClick}
-        onClear={onClear}
-        popupAlign={{ offset: [20, -16] }}
-      >
-        <NoticeIcon.Tab
-          list={noticeData["test1"]}
-          title="test1"
-          emptyText="test1"
-          emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
-        />
-        <NoticeIcon.Tab
-          list={noticeData["test2"]}
-          title="Test2"
-          emptyText="Test2"
-          emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
-        />
-        <NoticeIcon.Tab
-          list={noticeData["test3"]}
-          title="Test3"
-          emptyText="Test3"
-          emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
-        />
-      </NoticeIcon>
+      // <NoticeIcon
+      //   className="icon-bell"
+      //   count={5}
+      //   onItemClick={onItemClick}
+      //   onClear={onClear}
+      //   popupAlign={{ offset: [20, -16] }}
+      // >
+      //   <NoticeIcon.Tab
+      //     list={noticeData["test1"]}
+      //     title="test1"
+      //     emptyText="test1"
+      //     emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
+      //   />
+      //   <NoticeIcon.Tab
+      //     list={noticeData["test2"]}
+      //     title="Test2"
+      //     emptyText="Test2"
+      //     emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
+      //   />
+      //   <NoticeIcon.Tab
+      //     list={noticeData["test3"]}
+      //     title="Test3"
+      //     emptyText="Test3"
+      //     emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
+      //   />
+      // </NoticeIcon>
+      <h2>removed</h2>
     );
   }
 }

@@ -15,6 +15,7 @@ class Home extends Component {
 function mapStateToProps(state) {
   return {
     graphChat: state.reducer.homePage.listGraph,
+    saleReport: state.reducer.saleReport.request,
     pipeChat: state.reducer.homePage.listChat,
     cardDashboard: state.reducer.homePage.listCardDashboard,
     locale: state.locale

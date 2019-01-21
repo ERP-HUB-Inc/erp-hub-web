@@ -34,7 +34,11 @@ export default {
     "Expense",
     "Expense"
   ],
-  //guide
+  "text_user_guides": [
+    "User Guides",
+    "User Guides",
+    "User Guides"
+  ],
   "home_page_guide_types": [
     "types",
     "types",
@@ -96,19 +100,37 @@ export default {
     "add product"
   ],
   "home_page_guide_stock": [
-    "stock",
-    "stock",
-    "stock"
+    "Stock",
+    "Stock",
+    "Stock"
   ],
   "home_page_guide_sale_return": [
-    "sale return",
-    "sale return",
-    "sale return"
+    "Sale return",
+    "Sale return",
+    "Sale return"
   ],
 
   "home_page_dashboard_read_more": [
     "Read More",
     "Read More",
     "Read More"
+  ],
+
+  "text_today_sale_summary": [
+    "Today Sale Summary",
+    "Today Sale Summary",
+    "Today Sale Summary",
+  ],
+
+  "text_weekly_operation": [
+    "Weekly Operation Report",
+    "Weekly Operation Report",
+    "Weekly Operation Report"
+  ],
+
+  "text_summary_report": [
+    "Summary Report",
+    "Summary Report",
+    "Summary Report"
   ]
 };
