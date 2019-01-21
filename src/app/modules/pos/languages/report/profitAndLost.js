@@ -39,6 +39,12 @@ export default {
     "No operation expense",
     "No operation expense",
     "No operation expense"
+  ],
+
+  "text_income_expense": [
+    "Income and Expense",
+    "Income and Expense",
+    "Income and Expense"
   ]
 
 };

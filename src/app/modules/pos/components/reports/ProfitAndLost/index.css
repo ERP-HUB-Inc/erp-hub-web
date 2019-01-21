@@ -49,7 +49,7 @@
 
 .main-profit-and-lost-report .devide-main-profit-layout .ant-table-placeholder,
 .main-profit-and-lost-report .ant-table-wrapper {
-    min-height: 340px
+    min-height: 312px
 }
 
 .main-profit-and-lost-report .devide-main-profit-layout .ant-table table tr th {
@@ -108,7 +108,7 @@
     font-weight: 500;
     width: 300px;
     margin: 0 auto;
-    margin-top: 50px
+    margin-top: 20px
 }
 
 .btn-profit-and-lost {

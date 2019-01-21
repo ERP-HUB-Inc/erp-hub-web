@@ -138,30 +138,6 @@ export default class ProfitAndLostList extends List {
     return getIncomeExpenseValue;
   }
 
-  doughuntChat(){
-    const incomeExpense = this.groupIncomeExpenseByType();
-    return(
-      {
-        labels: [
-          this.CATranslate("text_revenue", this.props.locale),
-          this.CATranslate("text_expense", this.props.locale),
-          this.CATranslate("no_operation", this.props.locale)
-        ],
-        datasets: [
-          {
-            data: [incomeExpense.incomeType, incomeExpense.expenseType, incomeExpense.noOperationType],
-            backgroundColor: [
-              "rgb(116, 90, 242)",
-              "rgb(38, 198, 218)",
-              "#F9F9F9"
-            ]
-          }
-        ],   
-      }
-    );
-
-  }
-
   loadFilter(){
     let getCurrentDate = new Date().toISOString().slice(0,10); 
 
@@ -262,6 +238,24 @@ export default class ProfitAndLostList extends List {
 
   renderTable(){
     const incomeExpense = this.groupIncomeExpenseByType();
+
+    let pieDataSource = {
+      columns: [],
+      type: "donut",
+      colors: {
+        Revenue: "rgb(76, 182, 76)",
+        Expense: "#B90000",
+        Empty: "#F9F9F9"
+      }
+    };
+
+    if (incomeExpense && incomeExpense.incomeType + incomeExpense.expenseType) {
+      pieDataSource["columns"].push([this.CATranslate("text_revenue", this.props.locale), incomeExpense.incomeType]);
+      pieDataSource["columns"].push([ this.CATranslate("text_expense", this.props.locale), incomeExpense.expenseType]);
+    } else {
+      pieDataSource["columns"].push(["Empty", 0.0001]);
+    }
+
     return (  
       <div className="main-profit-and-lost-report">
         <this.Row>
@@ -286,13 +280,21 @@ export default class ProfitAndLostList extends List {
             </div>
           </this.Col>
           <this.Col md="4">
-            {
-              <div style={{position: "relative"}}>
-                <this.Doughnut dataSource={this.doughuntChat()} />
-                {this.renderSummaryOnPieChar(incomeExpense)}
-                  
-              </div>                
-            }
+            <this.C3Chart
+              data={pieDataSource}
+              legend={{
+                show: false
+              }}
+              title={this.CATranslate("text_income_expense", this.props.locale)}
+              size={{}}
+              tooltip={{
+                format: {
+                  value: value => {
+                    return this.formatCurrency(value);
+                  }
+                }
+              }}/>
+            {this.renderSummaryOnPieChar(incomeExpense)}
           </this.Col>
         </this.Row>
       </div>
