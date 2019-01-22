@@ -58,6 +58,8 @@ export default class Home extends Component {
       pieDataSource["columns"].push([this.CATranslate("text_cost", this.props.locale), saleReport.cost]);
       pieDataSource["columns"].push([this.CATranslate("text_gross_profit", this.props.locale), saleReport.profit]);
     } else {
+      pieDataSource["columns"].push([this.CATranslate("text_empty", this.props.locale), 0.0001]);
+      pieDataSource["colors"]["Empty"]="#f9f9f9";
     }
 
     return(

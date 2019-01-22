@@ -1,4 +1,7 @@
 import React from "react";
+import {
+  isMobile
+} from "react-device-detect";
 import history from "../../../../common/router/history";
 import StoreAccountAction from "../../../action/settings/storeAccount";
 import TaxAction from "../../../action/settings/tax";
@@ -24,6 +27,7 @@ export default class StoreAccountList extends Component {
       classChange: "unhide",
       getstoreaccid: "",
     };
+    this.module = "settings";
     
     // ERROR CURRENT PASSWORD
     this.errorMessageCurrentPWD = "";
@@ -158,6 +162,30 @@ export default class StoreAccountList extends Component {
       classChange: value === this.props.storeAccount.businessPlanId ? "unhide" : "hide"
     });
   }
+
+  renderMiniBreadCrumb() {
+    // get current path of breadcrum compare with url
+    const currentPath = window.location.pathname;
+    return (
+      <div className="breadcrumb">
+        <ul className="list-unstyled">
+          <li>
+            <this.Link to="/"><span className="icon-home"></span></this.Link>
+          </li>
+          {
+            menuSource[this.module]["subItems"].map((value, index) =>
+              currentPath === value["route"] ? 
+                <li className="fast-nav text-uppercase" key={index}>
+                  <this.Link to={value["route"]}>{value["title"]}</this.Link>
+                </li>
+                :
+                ""
+            )
+          }
+        </ul>
+      </div>
+    );
+  }
   
   render() {
     const {
@@ -208,26 +236,31 @@ export default class StoreAccountList extends Component {
 
     return (
       <div style={{width: "100%"}}>
-        <div className="breadcrumb">
-          <ul className="list-unstyled">
-            <li>
-              <this.Link to="/"><span className="icon-home"></span></this.Link>
-            </li>
-            <li className="fast-nav text-uppercase">
-              <this.Link to="/">SETTINGS</this.Link>
-            </li>
-            {
-              menuSource["settings"]["subItems"].map((value, index) =>
-                "isFashNav" in value && value["isFashNav"] ?
-                  <li className={(currentPath===value["route"] ? "active" : "") + " fast-nav"} key={index}>
-                    <this.Link to={value["route"]}>{value["title"]}</this.Link>
-                  </li>
-                  :
-                  ""
-              )
-            }
-          </ul>
-        </div>
+        {
+          isMobile ?
+            this.renderMiniBreadCrumb()
+            :
+            <div className="breadcrumb">
+              <ul className="list-unstyled">
+                <li>
+                  <this.Link to="/"><span className="icon-home"></span></this.Link>
+                </li>
+                <li className="fast-nav text-uppercase">
+                  <this.Link to="/">{this.module}</this.Link>
+                </li>
+                {
+                  menuSource["settings"]["subItems"].map((value, index) =>
+                    "isFashNav" in value && value["isFashNav"] ?
+                      <li className={(currentPath===value["route"] ? "active" : "") + " fast-nav"} key={index}>
+                        <this.Link to={value["route"]}>{value["title"]}</this.Link>
+                      </li>
+                      :
+                      ""
+                  )
+                }
+              </ul>
+            </div>
+        }
         {
           this.Util.isCheckingPermission(this.props) ?
             <StartUp />

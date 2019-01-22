@@ -112,6 +112,23 @@ export default class Retail extends Component {
       this.handleOnSelectProduct(this.state.selectedProduct, this.props.productVariant.list, false);// false: cause don't show popup variant product
       this.props.dispatch(ProductVariantAction.reset(ProductVariantConstant.RESET_PRODUCT_VARIANT));
     }
+
+    if (this.props.posPay.error) {
+      let errorCode = this.Util.getErrorCodeFromState(this.props.posPay.error);
+      let message = "Something went wrong";
+      if (errorCode === Enum.LOCATION_NOT_FOUND) {
+        message = this.CATranslate("error_location_not_found", this.props.locale);
+      } else if (errorCode === InventoryEnum.PRODUCT_NOT_FOUND) {
+        message = this.CATranslate("error_product_not_found", this.props.locale);
+      } else if (errorCode === InventoryEnum.PRODUCT_QTY_NOT_ENOUGHT) {
+        message = this.CATranslate("text_qty_not_enought_for_sale", this.props.locale);
+      } else if (errorCode === Enum.SERIAL_NUMBER_REQUIRE) {
+        message = this.CATranslate("error_serial_number_require", this.props.locale);
+      }
+
+      this.Message.error(message);
+      this.props.dispatch(TransactionAction.reset());
+    }
   }
 
   componentDidMount() {

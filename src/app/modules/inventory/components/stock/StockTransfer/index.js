@@ -182,6 +182,8 @@ export default class Lists extends List {
       errorResponse = this.props.update.error;
     } else if (this.props.cancel.error) {
       errorResponse = this.props.cancel.error;
+    } else if (this.props.approve.error) {
+      errorResponse = this.props.approve.error;
     }
 
     if (errorResponse) {
@@ -214,6 +216,7 @@ export default class Lists extends List {
       this.props.dispatch(StockTransferAction.reset(Constant.RESET_ADD_PARTIAL_STOCK_TRANSFER));
       this.props.dispatch(StockTransferAction.reset(Constant.RESET_UPDATE_PARTIAL_STOCK_TRANSFER));
       this.props.dispatch(StockTransferAction.reset(Constant.RESET_CANCEL_STOCK_TRANSFER));
+      this.props.dispatch(StockTransferAction.reset(Constant.RESET_APPROVE_STOCK_TRANSFER));
     }
   }
 

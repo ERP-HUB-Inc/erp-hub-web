@@ -18,6 +18,7 @@ function mapStateToProps(state) {
     update: state.reducer.stockTransfer.update,
     detail: state.reducer.stockTransfer.detail,
     cancel: state.reducer.stockTransfer.cancel,
+    approve: state.reducer.stockTransfer.approve,
     storeLocation: state.reducer.location.request,
     locale: state.locale
   };

@@ -133,5 +133,17 @@ export default {
     "Open Sale Registration",
     "Open Sale Registration",
     "Open Sale Registration"
+  ],
+
+  "text_qty_not_enought_for_sale": [
+    "Quantity not enought for sale",
+    "Quantity not enought for sale",
+    "Quantity not enought for sale"
+  ],
+
+  "error_serial_number_require": [
+    "Serial number required",
+    "Serial number required",
+    "Serial number required"
   ]
 };

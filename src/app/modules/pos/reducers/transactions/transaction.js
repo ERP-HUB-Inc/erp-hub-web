@@ -62,9 +62,10 @@ export default combineReducers({
     }
     case Constant.RESET_TRANSACTION: {
       return {
-        adding: false,
-        showForm: false,
-        added: false,
+        ...state,
+        paying: false,
+        paid: false,
+        error: null,
         response: null
       };
     }

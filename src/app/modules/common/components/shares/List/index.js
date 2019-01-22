@@ -71,6 +71,7 @@ export default class List extends Component {
     this.callBackOnShowEditForm = null;
 
     this.tapedTwice = false;
+    this.isMobile = isMobile;
 
     this.onChange = this.onChange.bind(this); // handle when user change filter, access pagination
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
@@ -354,10 +355,12 @@ export default class List extends Component {
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           let filter = {};
-          if (values.status) {
+          if (values.status != null) {
             const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
-            filter["status"] = JSON.stringify({status});
+            filter["status"] = status;
           }
+
+          filter = JSON.stringify(filter);
 
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
           this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
@@ -440,6 +443,30 @@ export default class List extends Component {
             menuSource[this.module]["subItems"].map((value, index) =>
               "isFashNav" in value && value["isFashNav"] ? 
                 <li className={(currentPath === value["route"] ? "active" : "") + " fast-nav"} key={index}>
+                  <this.Link to={value["route"]}>{value["title"]}</this.Link>
+                </li>
+                :
+                ""
+            )
+          }
+        </ul>
+      </div>
+    );
+  }
+
+  renderMiniBreadCrumb() {
+    // get current path of breadcrum compare with url
+    const currentPath = window.location.pathname;
+    return (
+      <div className="breadcrumb">
+        <ul className="list-unstyled">
+          <li>
+            <this.Link to="/"><span className="icon-home"></span></this.Link>
+          </li>
+          {
+            menuSource[this.module]["subItems"].map((value, index) =>
+              currentPath === value["route"] ? 
+                <li className="fast-nav text-uppercase" key={index}>
                   <this.Link to={value["route"]}>{value["title"]}</this.Link>
                 </li>
                 :
@@ -595,7 +622,7 @@ export default class List extends Component {
 
   handleOnTapHandler(event, record) {
 
-    if (!isMobile) {
+    if (!this.isMobile) {
       return;
     }
 
@@ -727,7 +754,12 @@ export default class List extends Component {
       
       <div className="content-list">
 
-        { this.renderBreadCrumb() }
+        {
+          this.isMobile ?
+            this.renderMiniBreadCrumb()
+            :
+            this.renderBreadCrumb()
+        }
         
         {
           this.Util.isCheckingPermission(this.props) ?

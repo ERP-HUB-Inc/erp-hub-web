@@ -16,6 +16,7 @@ function mapStateToProps(state) {
     productsType: state.reducer.productsType.request,
     productVariant: state.reducer.productVariant.request,
     customerAdd: state.reducer.customer.add,
+    posPay: state.reducer.transaction.posPay,
     productSearch: state.reducer.product.search,
     paymentMethod: state.reducer.paymentMethods.request,
     openSaleRegistration: state.reducer.openSaleRegistration.request,
