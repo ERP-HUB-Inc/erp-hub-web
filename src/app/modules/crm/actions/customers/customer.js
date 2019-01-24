@@ -13,7 +13,7 @@ export default {
   archive: (ids) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ARCHIVE_MANAGEMENT_CUSTOMERS,
+        type: Constant.ARCHIVE_CUSTOMERS,
         payload: CustomerService.archive(ids)
       });
     };
@@ -21,7 +21,7 @@ export default {
   add: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ADD_MANAGEMENT_CUSTOMERS,
+        type: Constant.ADD_CUSTOMERS,
         payload: CustomerService.add(data)
       });
     };
@@ -29,12 +29,12 @@ export default {
   update: (data) => {
     return dispatch => {
       return dispatch({
-        type: Constant.UPDATE_MANAGEMENT_CUSTOMERS,
+        type: Constant.UPDATE_CUSTOMERS,
         payload: CustomerService.update(data)
       });
     };
   },
-  reset: (RESET_CONSTANT) => {
+  reset: (RESET_CONSTANT=Constant.RESET_CUSTOMERS) => {
     return dispatch => {
       return dispatch({
         type: RESET_CONSTANT,

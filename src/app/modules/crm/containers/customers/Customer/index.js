@@ -20,7 +20,6 @@ function mapStateToProps(state) {
 
     customerGroup: state.reducer.groupCustomers.request,
     groupCustomersAdd: state.reducer.groupCustomers.add,
-    groupCustomersUpdate: state.reducer.groupCustomers.update,
     
     checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale

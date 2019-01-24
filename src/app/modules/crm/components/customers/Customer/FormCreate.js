@@ -27,7 +27,6 @@ export default class FormCreate extends Modal {
       if (!err) {
         values["contacts"] = this.state.contact;
         this.dispatch(CustomerAction.add(values));
-        
       }
     });
   }
@@ -37,7 +36,7 @@ export default class FormCreate extends Modal {
   }
       
   handleCancel() {
-    this.dispatch(CustomerAction.reset(Constant.RESET_MANAGEMENT_CUSTOMERS));
+    this.dispatch(CustomerAction.reset(Constant.RESET_CUSTOMERS));
   }
   handleAddCustomerGroup(){
     const {dispatch} = this.props;
@@ -47,12 +46,12 @@ export default class FormCreate extends Modal {
 
   render() {
     const {
-      manageCustomersAdd,
+      add,
       groupCustomers,
       groupCustomersAdd
     } = this.props;
 
-    this.submitLoading = manageCustomersAdd.adding;
+    this.submitLoading = add.adding;
 
     // APPEND GROUP CUSTOMER TO LIST
     if (groupCustomersAdd.response != null) {
@@ -60,7 +59,7 @@ export default class FormCreate extends Modal {
       this.props.dispatch({type: ConstantGroupCustomer.RESET_MANAGEMENT_GROUP_CUSTOMERS});
     }
 
-    if (manageCustomersAdd.showForm) {
+    if (add.showForm) {
       this.content = (
         <FormItem
           form={this.props.form}

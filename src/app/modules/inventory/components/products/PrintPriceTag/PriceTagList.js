@@ -1,6 +1,8 @@
 import React from "react";
 import JsBarcode from "jsbarcode";
+import QRCode from "qrcode";
 import List from "../../List";
+import Enum from ".././../../enums";
 
 export default class ComponentToPrint extends List {
   componentDidMount() {
@@ -15,12 +17,25 @@ export default class ComponentToPrint extends List {
         numberOfRows.forEach((row, rowIndex) => {
           if (value["barcode"]) {
             row.forEach((rowValue, index) => {
-              JsBarcode("#printbarcode" + (index + rowIndex), value["barcode"], {
-                font: "monospace",
-                width: this.props.widthOfLabel,
-                height: this.props.heightOfLabel,
-                fontSize: this.props.fontSizeOfValue
-              });
+              if (this.props.isGenerateQR === Enum.TYPE_OF_PRINT.QR) {
+                QRCode.toDataURL(value["barcode"])
+                  .then(url => {
+                    const imageElement = document.getElementById(`printbarcode${index}${rowIndex}`);
+                    if (imageElement) {
+                      imageElement.src = url;
+                    }
+                  })
+                  .catch(err => {
+                    console.error(err);
+                  });
+              } else {
+                JsBarcode(`#printbarcode${index}${rowIndex}`, value["barcode"], {
+                  font: "monospace",
+                  width: this.props.widthOfLabel,
+                  height: this.props.heightOfLabel,
+                  fontSize: this.props.fontSizeOfValue
+                });
+              }
             });
           }
         });
@@ -49,13 +64,25 @@ export default class ComponentToPrint extends List {
                       <tbody>
                         <tr>
                           <td colSpan="2" style={{background: "white", textAlign: "center"}}>
-                            <img id={`printbarcode${index + rowIndex}`} alt={`barcode${index + rowIndex}`}/>
+                            {
+                              this.props.isGenerateQR === Enum.TYPE_OF_PRINT.QR ?
+                                <img style={{width: this.props.widthOfLabel * 10, height: this.props.heightOfLabel * 10}} id={`printbarcode${index}${rowIndex}`} alt={`barcode${index}${rowIndex}`}/>
+                                :
+                                <img id={`printbarcode${index}${rowIndex}`} alt={`barcode${index}${rowIndex}`}/>
+                            }
                           </td>
                         </tr>
-                        <tr>
-                          <td style={{padding: "0 10px", fontSize: this.props.fontSizeOfName}}>{rowValue.name}</td>
-                          <td style={{textAlign: "right", padding: "0 10px", fontSize: this.props.fontSizeOfPrice}}>{rowValue.price}</td>
-                        </tr>
+                        {
+                          this.props.isGenerateQR === Enum.TYPE_OF_PRINT.QR ?
+                            <tr>
+                              <td colSpan="2" style={{textAlign: "center", padding: "0 10px", fontSize: this.props.fontSizeOfPrice}}>{rowValue.price}</td>
+                            </tr>
+                            :
+                            <tr>
+                              <td style={{padding: "0 10px", fontSize: this.props.fontSizeOfName}}>{rowValue.name}</td>
+                              <td style={{textAlign: "right", padding: "0 10px", fontSize: this.props.fontSizeOfPrice}}>{rowValue.price}</td>
+                            </tr>
+                        }
                       </tbody>
                     </table>
                   </td>

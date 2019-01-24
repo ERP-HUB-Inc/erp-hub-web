@@ -31,12 +31,7 @@ export default class FormCreate extends Modal {
     this.submitLoading = productsTagAdd.adding;
 
     if (productsTagAdd.showForm) {
-      this.content = (
-        <div>
-          { productsTagAdd.error != null ? <this.Alert message={this.requiredMessage} type="error" /> : "" }
-          <FormItem form={form} locale={locale}/>
-        </div>
-      );
+      this.content = <FormItem form={form} locale={locale}/>;
       return super.render();
     } else {
       return (<div></div>);

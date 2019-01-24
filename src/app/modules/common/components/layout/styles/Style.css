@@ -411,6 +411,26 @@ html,
     white-space: pre-line
 }
 
+/* BOX SELECT */
+.wrap-income-exp-box {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px
+}
+
+.wrap-income-exp-box .ca-box {
+    width: 49%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.wrap-income-exp-box .ca-box:first-child {
+    margin-right: 10px
+}
+
+
 
 /* SEARCH INPUT*/
 .main-searchs {

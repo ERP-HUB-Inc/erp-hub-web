@@ -74,6 +74,12 @@ export default {
     "All Group",
     "All Group",
     "All Group"
+  ],
+
+  "error_exist_customer": [
+    "Customer already exist",
+    "Customer already exist",
+    "Customer already exist"
   ]
 
 };

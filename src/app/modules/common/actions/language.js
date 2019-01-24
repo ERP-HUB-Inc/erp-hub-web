@@ -22,7 +22,8 @@ import error from "../elements/common/language/error";
 import manageCustomer from "../../crm/languages/customers/customer";
 import groupCustomer from "../../crm/languages/customers/group";
 import employees from "../../hr/languages/employee";
-import product from "../../inventory/languages/products/product"; 
+import product from "../../inventory/languages/products/product";
+import priceTag from "../../inventory/languages/products/priceTag"; 
 import productUnit from "../../inventory/languages/products/productsUnit";
 import brand from "../../inventory/languages/products/brand";
 import productType from "../../inventory/languages/products/productsType";
@@ -76,6 +77,7 @@ export function setTranslation() {
     ...groupCustomer,
     ...employees,
     ...product,
+    ...priceTag,
     ...productUnit,
     ...brand,
     ...productType,

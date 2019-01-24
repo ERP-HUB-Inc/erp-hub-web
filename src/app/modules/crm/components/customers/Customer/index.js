@@ -6,6 +6,7 @@ import Constant from "../../../constants/customers/customer";
 import CustomerAction from "../../../actions/customers/customer";
 import GroupCustomerAction from "../../../actions/customers/group";
 import CustomerService from "../../../services/customers/CustomerService";
+import Enum from "../../../enum";
 import "./index.css";
 
 export default class CustomerList extends List {
@@ -30,7 +31,7 @@ export default class CustomerList extends List {
       "phoneNumber",
       "name"
     ];
-    this.RESET_CONSTANT = Constant.RESET_MANAGEMENT_CUSTOMERS;
+    this.RESET_CONSTANT = Constant.RESET_CUSTOMERS;
   }
 
   componentDidMount(){
@@ -49,6 +50,23 @@ export default class CustomerList extends List {
     if (this.props.detail.fetched) {
       this.setState({loadingPopup: false});
       this.props.dispatch(CustomerAction.reset(Constant.RESET_DETAIL_PARTIAL_CUSTOMERS));
+    }
+
+    let errorCode = "";
+    if (this.props.add.error) {
+      errorCode = this.Util.getErrorCodeFromState(this.props.add.error);
+    } else if (this.props.update.error) {
+      errorCode = this.Util.getErrorCodeFromState(this.props.update.error);
+    }
+
+    if (errorCode) {
+      let message = "Something went wrong";
+      if (errorCode === Enum.CUSTOMER_EXIST) {
+        message = this.CATranslate("error_exist_customer", this.props.locale);
+      }
+
+      this.Message.error(message);
+      this.props.dispatch(CustomerAction.reset(Constant.RESET_ADD_CUSTOMERS));
     }
   }
 

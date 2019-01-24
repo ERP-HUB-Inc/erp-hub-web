@@ -114,7 +114,7 @@ export default class FormItem extends Modal {
                 onChange={this.handleOnChangeToLocation}
                 valueKey="id"
                 required={true}
-                disabled={this.props.isAcceptRequest}
+                // disabled={this.props.isAcceptRequest}
                 form={form}/>
             </this.Col>
             <this.Col md="3">
@@ -124,7 +124,7 @@ export default class FormItem extends Modal {
                 data={formData.description}
                 placeholder={this.CATranslate("text_description", locale)}
                 max={255}
-                disabled={this.props.isAcceptRequest}
+                // disabled={this.props.isAcceptRequest}
                 form={form}/> 
             </this.Col>
           </this.Row>

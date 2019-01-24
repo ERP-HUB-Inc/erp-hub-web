@@ -14,7 +14,7 @@ class CustomerCreate extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    manageCustomersAdd: state.reducer.customer.add,
+    add: state.reducer.customer.add,
     groupCustomersAdd: state.reducer.groupCustomers.add,
     groupCustomers: state.reducer.groupCustomers.request,
     locale: state.locale

@@ -27,7 +27,8 @@ export default combineReducers({
       Constant.ADD_CUSTOMERS_REJECTED,
       Constant.ADD_CUSTOMERS_FULFILLED,
       Constant.SHOW_CUSTOMERS_FORM,
-      Constant.RESET_MANAGEMENT_CUSTOMERS
+      Constant.RESET_CUSTOMERS,
+      Constant.RESET_ADD_CUSTOMERS
     ];
     return reducer.add(state, action, constants);
   },
@@ -37,7 +38,7 @@ export default combineReducers({
       Constant.UPDATE_CUSTOMERS_REJECTED,
       Constant.UPDATE_CUSTOMERS_FULFILLED,
       Constant.SHOW_CUSTOMERS_FORM,
-      Constant.RESET_MANAGEMENT_CUSTOMERS
+      Constant.RESET_CUSTOMERS
     ];
     return reducer.update(state, action, constants);
   },

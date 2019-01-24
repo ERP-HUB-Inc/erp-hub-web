@@ -24,6 +24,10 @@ export default {
     RETURN : 4,
     PAID : 5
   },
+  TYPE_OF_PRINT: {
+    BARCODE: 1,
+    QR: 2
+  },
   STOCK_STRANSFER_STEP: {
     PROCESS : 1,
     RECEIVED : 2,

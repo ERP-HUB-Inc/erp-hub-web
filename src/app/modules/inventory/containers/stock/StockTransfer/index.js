@@ -20,6 +20,7 @@ function mapStateToProps(state) {
     cancel: state.reducer.stockTransfer.cancel,
     approve: state.reducer.stockTransfer.approve,
     storeLocation: state.reducer.location.request,
+    checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale
   };
 }
