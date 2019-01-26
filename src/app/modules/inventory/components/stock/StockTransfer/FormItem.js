@@ -8,10 +8,12 @@ export default class FormItem extends Modal {
   constructor(props) {
     super(props);
     this.state = {
-      locations: []
+      locations: [],
+      fromLocationId: ""
     };
     this.handleOnChangeFromLocation = this.handleOnChangeFromLocation.bind(this);
     this.handleOnChangeToLocation = this.handleOnChangeToLocation.bind(this);
+    this.callBackGetProductListFromEntry = this.callBackGetProductListFromEntry.bind(this);
   }
 
   componentDidMount(){
@@ -25,6 +27,7 @@ export default class FormItem extends Modal {
     if (value === this.props.form.getFieldValue("toLocationId")) {
       this.Message.error(this.CATranslate("error_the_same_location", this.props.locale));
     }
+    this.setState({fromLocationId: value});
   }
 
   handleOnChangeToLocation(value) {
@@ -33,6 +36,9 @@ export default class FormItem extends Modal {
     }
   }
 
+  callBackGetProductListFromEntry(productLists) {
+    this.setState({productLists});
+  }
   render() {
     const {
       form,
@@ -44,7 +50,7 @@ export default class FormItem extends Modal {
 
     let locationId = formData.fromLocationId;
     if (!locationId && Array.isArray(this.state.locations)) {
-      const defaultLocation = this.state.locations.find(location => location.isDefault === this.Enum.IS_DEFAULT);
+      const defaultLocation = this.state.locations.find(location => location.id === this.Util.getLocationId());
       if (defaultLocation) {
         locationId = defaultLocation.id;
       }
@@ -134,6 +140,7 @@ export default class FormItem extends Modal {
             dataSource={productSearch}
             productVariant={this.props.productVariant}
             stockTransferEntries={formData.stockTransferEntries}
+            fromLocationId={this.state.fromLocationId}
             locale={locale}
             dispatch={dispatch}
             form={form} />

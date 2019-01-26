@@ -12,7 +12,7 @@
     padding-left: 10px;
     padding-right: 10px
 }
-/* 
+ 
 .main-doughnut-chart .doughnut-chart {
     background-color: white;
     padding: 10px;
@@ -45,7 +45,7 @@
     text-align: center;
     margin-top: 157px;
     font-weight: 500;
-} */
+} 
 
 @media only screen and (max-width: 900px) { 
     .main-diagram canvas {

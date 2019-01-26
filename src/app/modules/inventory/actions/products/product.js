@@ -2,7 +2,7 @@ import Constant from "../../constants/products/product";
 import ProductService from "../../services/products/ProductService";
 
 export default {
-  fetch: (limit, offset, sortField, sortOrder, filter, searchKey, locationId) => {
+  fetch: (limit, offset, sortField, sortOrder, filter, searchKey, locationId) => { console.log("LocationID:", locationId);
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PRODUCT,

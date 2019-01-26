@@ -140,7 +140,7 @@ export default class Retail extends Component {
     this.addEventKeyDownAndCaptureValueToInputSearchProduct();
 
     this.props.dispatch(ProductTypeAction.fetch(18));
-    this.props.dispatch(ProductAction.fetch(25, "", "", "", JSON.stringify({isAvialableSale: [Enum.PRODUCT_AVIALABLE_ON_SALE]})));
+    this.props.dispatch(ProductAction.fetch(25, "", "", "", JSON.stringify({isAvialableSale: [Enum.PRODUCT_AVIALABLE_ON_SALE]}), "", this.Util.getLocationId()));
     this.props.dispatch(PaymentMethodAction.fetch(100, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
     window.addEventListener("resize", this.handleOnResizeScreen);
     this.props.dispatch(OpenSaleRegistrationAction.showForm());
@@ -324,7 +324,7 @@ export default class Retail extends Component {
       filter = JSON.stringify({productTypeId: [value]});
     }
 
-    this.props.dispatch(ProductAction.fetch(25, "", "", "", filter));
+    this.props.dispatch(ProductAction.fetch(25, "", "", "", filter, "", this.Util.getLocationId()));
     this.setState({selectedCategoryIds: [value]});
   }
 
@@ -666,7 +666,7 @@ export default class Retail extends Component {
                 <this.Image url={this.Util.getProductImage(product.image).url}/>
               </div>
               {
-                product.quantity <= 0 && product.serialType !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY ?
+                Util.countProductQTYCurrentLocation(product, this.Util.getLocationId()) <= 0 && product.serialType !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY ?
                   <div className="out-of-stock"><this.Translate id="text_out_of_stock" /></div>
                   : 
                   ""

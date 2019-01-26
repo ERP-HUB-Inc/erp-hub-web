@@ -212,7 +212,7 @@ export default class DropDownSearch extends Modal {
             didUpdateMakeAutoFocus={this.props.didUpdateMakeAutoFocus || this.state.isSetFocusSearchInput}
             validateStatus={this.props.productSearch.fetching ? "validating" : ""}
             handleKeyUp={this.handleKeyDownOnProductSearch}
-            handlePressEnter={this.handlePressEnterOnSearch}
+            // handlePressEnter={this.handlePressEnterOnSearch}
             handleOnBlur={this.handleOnBlurSearch}
             handleOnFocus={this.handleOnFocusSearch}
             form={this.props.form}/>

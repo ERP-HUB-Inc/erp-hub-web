@@ -54,7 +54,7 @@ export default class SearchPo extends Modal {
         }
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_on_hand" />,
+        title: <this.Translate id="text_stock_on_hand" />,
         dataIndex: "quantityOnHand",
         width: 150,
         align: "center",

@@ -101,7 +101,7 @@ export default {
     "Delivery to Location",
   ],
 
-  "col_stock_purchase_order_on_hand": [
+  "text_stock_on_hand": [
     "Stock on Hand",
     "Stock on Hand",
     "Stock on Hand",

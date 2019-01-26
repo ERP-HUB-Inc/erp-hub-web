@@ -54,11 +54,25 @@ export default class FormEntry extends Modal {
         }
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_on_hand" />,
+        title: <this.Translate id="text_all_quantity" />,
+        dataIndex: "allQuantity",
+        width: 150,
+        align: "center",
+        key: "allQuantity",
+      },
+      {
+        title: <this.Translate id="text_stock_on_hand" />,
         dataIndex: "quantityOnHand",
         width: 150,
         align: "center",
-        key: "quantityOnHand"
+        key: "quantityOnHand",
+        render: (text, product, index) => {
+          const quantityOnHand = this.countQuantityOnHand(product);
+          return <div>
+            <this.InputNumber name={`quantityOnHand[${index}]`} className="hidden" data={quantityOnHand} form={this.form} />
+            {quantityOnHand}
+          </div>;
+        }
       },
       {
         title: <this.Translate id="text_unit" />,
@@ -82,12 +96,13 @@ export default class FormEntry extends Modal {
         width: 200,
         key: "transferQuantity",
         align: "right",
-        render: (text, record, index) => {
+        render: (text, product, index) => {
+          const quantityOnHand = this.countQuantityOnHand(product);
           return <this.InputNumber
             name={`transferQuantity[${index}]`}
-            data={`${record.transferQuantity}`}
+            data={`${product.transferQuantity}`}
             className="text-right"
-            compare={{value: record.quantityOnHand, message: <this.Translate id="text_transfer_qty_warning"/>}}
+            compare={{value: quantityOnHand, message: <this.Translate id="text_transfer_qty_warning"/>}}
             isAutoSelect={true}
             isHideTool={true}
             required={true}
@@ -132,11 +147,13 @@ export default class FormEntry extends Modal {
         let productName = "";
         let variantName = "";
         let quantityOnHand = 0;
+        let allQuantity = 0;
         
         if (transferEntry.productVariant) {
           productName = Util.getProductName(transferEntry.productVariant.product);
           variantName = transferEntry.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? transferEntry.productVariant.name : "";
           quantityOnHand = transferEntry.productVariant.quantity;
+          allQuantity = transferEntry.productVariant.quantity;
         }
 
         existingProductList.push({
@@ -146,6 +163,7 @@ export default class FormEntry extends Modal {
           unitId: transferEntry.unitId,
           productVariantId: transferEntry.productVariantId,
           quantityOnHand,
+          allQuantity,
           transferQuantity: transferEntry.transferQuantity,
           transferEntryStatus: transferEntry.status
         }); 
@@ -163,6 +181,16 @@ export default class FormEntry extends Modal {
       this.handleOnSelectList(this.state.selectedProduct, [this.props.productVariant.list], false); // SET IT AS ARRAY TO MAKE IT MATCH ALL CONDITION BOTH STANDARD AND VARIANT
       this.props.dispatch(ProductVariantAction.reset(ProductVariantConstant.RESET_PRODUCT_VARIANT));
     }
+  }
+
+  countQuantityOnHand(product) {
+    let fromLocationId = "";
+    if (this.props.fromLocationId) {
+      fromLocationId = this.props.fromLocationId;
+    } else {
+      fromLocationId = this.Util.getLocationId();
+    }
+    return Util.countProductQTYCurrentLocation(product, fromLocationId);
   }
 
   removeRecord(record, index){
@@ -189,6 +217,7 @@ export default class FormEntry extends Modal {
   }
 
   handleOnSelectList(product, productVariant, isRequestVariantForm = true) {
+    const productVariantForCalculateQTY = productVariant;
     let isProductVariant = product.productOption === Enum.PRODUCT_VARIANT;
     if (isProductVariant && isRequestVariantForm) {
       this.setState({
@@ -215,7 +244,8 @@ export default class FormEntry extends Modal {
         productName,
         unitId: product.defaultUnitId,
         variantName: productVariant.name,
-        quantityOnHand: quantity,
+        allQuantity: quantity,
+        productVariants: productVariantForCalculateQTY,
         transferQuantity: initialQuantity,
         productVariantId: productVariant.id,
         transferEntryStatus: this.Enum.ACTIVE
@@ -237,7 +267,8 @@ export default class FormEntry extends Modal {
           productName,
           variantName: productVariant.name,
           unitId: product.defaultUnitId,
-          quantityOnHand: quantity,
+          allQuantity: quantity,
+          productVariants: productVariantForCalculateQTY,
           productVariantId: productVariant.id,
           transferQuantity: initialQuantity,
           transferEntryStatus: this.Enum.ACTIVE

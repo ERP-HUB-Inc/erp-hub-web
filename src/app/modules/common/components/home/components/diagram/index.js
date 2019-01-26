@@ -115,13 +115,13 @@ export default class Diagram extends Component {
           data={graphChatDataSource}
           options={
             {
-              animation: {duration: 0},
-              hover: {animationDuration: 0},
-              responsiveAnimationDuration: 0,
-              responsive: true
+              scales: {
+                yAxes: [{
+                  stacked: true
+                }]
+              }
             }
-          }
-          height={120} />
+          }/>
       </div>
     );
   }
