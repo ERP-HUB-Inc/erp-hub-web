@@ -149,7 +149,7 @@ export default class Home extends Component {
             <div className="dashboard-report-title">
               <this.Translate id="text_today_sale_summary" />
             </div>
-            <this.C3Chart
+            {/* <this.C3Chart
               data={pieDataSource}
               legend={{
                 position: "bottom"
@@ -164,7 +164,7 @@ export default class Home extends Component {
                     return this.formatCurrency(value);
                   }
                 }
-              }}/>
+              }}/> */}
           </div>
         </this.Col>
         <this.Col md="12">
