@@ -56,18 +56,6 @@ export default class Home extends Component {
       pieDataSource["colors"]["Revenue"] = "#1e88e5";
       pieDataSource["colors"]["Cost"] = "#26c6da";
       pieDataSource["colors"]["Profit"] = "rgb(116, 90, 242)";
-      pieDataSource["unload"] = [
-        this.CATranslate("text_empty", this.props.locale)
-      ];
-    } else {
-      pieDataSource["unload"] = [
-        this.CATranslate("text_revenue", this.props.locale),
-        this.CATranslate("text_cost", this.props.locale),
-        this.CATranslate("text_gross_profit", this.props.locale),
-      ];
-      pieDataSource["columns"].push([this.CATranslate("text_empty", this.props.locale), 0.0001]);
-      pieDataSource["colors"] = {};
-      pieDataSource["colors"]["Empty"]="#f9f9f9";
     }
 
     return(

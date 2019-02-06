@@ -24,7 +24,7 @@
 #retail-sale .wrap-category {
     overflow: auto;
     margin-bottom: 15px;
-    height: 194px;
+    max-height: 130px;
     flex: none
 }
 

@@ -30,7 +30,7 @@ export default class FormComposite extends Modal {
         title: <span><this.Translate id="col_composite_product_markup" />(%)</span>,
         dataIndex: "markup",
         key: "composite_product_markup",
-        width: 100,
+        width: 120,
         render: (text, record, index) => <this.InputNumber name={`productCompositeMarkUp[${index}]`} form={this.props.form} precision={0} isUnsign={true} data={record.markup}/>
       },
       {

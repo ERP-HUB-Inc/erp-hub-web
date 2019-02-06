@@ -19,6 +19,7 @@ class Headers extends Component {
   componentDidMount() {
     this.props.dispatch(LanguageAction.fetch(5));
     const element = document.getElementById("mobile-logo");
+    const centerElement = document.getElementById("center-container");
     if (element) {
       element.addEventListener("click", () => {
         const rootElement = document.getElementById("root");
@@ -32,10 +33,32 @@ class Headers extends Component {
       });
     }
 
+    if (centerElement) {
+      centerElement.addEventListener("click", () => {
+        const rootElement = document.getElementById("root");
+        if (rootElement) {
+          if (rootElement.classList.contains("mini-sidebar")) {
+            rootElement.classList.remove("mini-sidebar");
+          }
+        }
+      });
+    }
+
     // switch language
     const setting = this.Util.getSetting();
     if (setting) {
       this.props.dispatch(this.changeLanguage(setting.defaultLanguageCode));
+    }
+  }
+
+  handleToggleMiniSideBar()  {
+    const rootElement = document.getElementById("root");
+    if (rootElement) {
+      if (rootElement.classList.contains("mini-sidebar")) {
+        rootElement.classList.remove("mini-sidebar");
+      } else {
+        rootElement.classList.add("mini-sidebar");
+      }
     }
   }
 

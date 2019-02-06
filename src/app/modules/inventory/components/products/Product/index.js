@@ -299,6 +299,7 @@ export default class ProductList extends List {
 class ColumnExpand extends List {
   constructor(props) {
     super(props);
+    this.colorStockStatus = ["#4cb64c", "#f3a638"];
     return [
       {
         dataIndex: "blank1",
@@ -346,7 +347,57 @@ class ColumnExpand extends List {
         key: "quantity",
         width: 130,
         align: "center",
-        render: quantity => quantity === null ? 0 : quantity
+        render: (text, record) => {
+          const virtaulProduct = {
+            productVariants: [
+              {
+                ...record,
+                productLocations: record.productLocations
+              }
+            ]
+          };
+          let quantity = this.getQTY(virtaulProduct);
+          
+          let colorIndex = 0;
+          if (quantity === 0) {
+            colorIndex = 1;
+          } else if (quantity < 0) {
+            colorIndex = 1;
+          }
+
+          return <this.Tag color={this.colorStockStatus[colorIndex]} className="text-center label-stock-status">{quantity}</this.Tag>;
+        },
+      },
+      {
+        dataIndex: "all_quantity",
+        key: "all_quantity",
+        width: 150,
+        align: "center",
+        render: (text, record) => {
+          const virtaulProduct = {
+            productVariants: [
+              {
+                ...record,
+                productLocations: record.productLocations
+              }
+            ]
+          };
+
+          let quantity = this.getAllQTY(virtaulProduct);
+          
+          let colorIndex = 0;
+          if (quantity === 0) {
+            colorIndex = 1;
+          } else if (quantity < 0) {
+            colorIndex = 2;
+          }
+
+          if (quantity <= record.reorderPoint) {
+            colorIndex = 1;
+          }
+
+          return <this.Tag color={this.colorStockStatus[colorIndex]} className="text-center label-stock-status">{quantity}</this.Tag>;
+        }
       },
       {
         dataIndex: "unit",
@@ -363,12 +414,33 @@ class ColumnExpand extends List {
       this.columnStatus
     ];
   }
+
+  getQTY(record) {
+    let quantity = record.quantity;
+    let isNotFilterByLocation = true;
+    record["productVariants"].forEach(productVariant => {
+      if ("productLocations" in productVariant && productVariant["productLocations"]) {
+        isNotFilterByLocation = false;
+        quantity = Util.getProductQTYLocation(productVariant["productLocations"]);
+      }
+    });
+
+    if (isNotFilterByLocation) {
+      quantity = Util.getProductQTYLocation(record["productVariants"]);
+    }
+
+    return quantity < 0 ? 0 : quantity;
+  }
+
+  getAllQTY(record) {
+    return Util.getProductQTYLocation(record["productVariants"]);
+  }
 }
 
 class Column extends List {
   constructor(props) {
     super(props);
-    this.colorStockStatus = ["#4cb64c", "#f3a638", "#c72727"];
+    this.colorStockStatus = ["#4cb64c", "#f3a638"];
     return [
       {
         title: <this.Translate id="text_product_name" />,
@@ -436,7 +508,7 @@ class Column extends List {
           if (quantity === 0) {
             colorIndex = 1;
           } else if (quantity < 0) {
-            colorIndex = 2;
+            colorIndex = 1;
           }
 
           return <this.Tag color={this.colorStockStatus[colorIndex]} className="text-center label-stock-status">{quantity}</this.Tag>;
@@ -445,8 +517,8 @@ class Column extends List {
       },
       {
         title: <this.Translate id="text_all_quantity" />,
-        dataIndex: "quantity",
-        key: "quantity",
+        dataIndex: "all_quantity",
+        key: "all_quantity",
         width: 150,
         align: "center",
         render: (text, record) => {
@@ -456,7 +528,11 @@ class Column extends List {
           if (quantity === 0) {
             colorIndex = 1;
           } else if (quantity < 0) {
-            colorIndex = 2;
+            colorIndex = 1;
+          }
+
+          if (quantity <= record.reorderPoint) {
+            colorIndex = 1;
           }
 
           return <this.Tag color={this.colorStockStatus[colorIndex]} className="text-center label-stock-status">{quantity}</this.Tag>;
@@ -493,12 +569,12 @@ class Column extends List {
   }
 
   getQTY(record) {
-    let quantity = record.quantity;
+    let quantity = 0;
     let isNotFilterByLocation = true;
     record["productVariants"].forEach(productVariant => {
       if ("productLocations" in productVariant) {
         isNotFilterByLocation = false;
-        quantity = Util.getProductQTYLocation(productVariant["productLocations"]);
+        quantity += Util.getProductQTYLocation(productVariant["productLocations"]);
       }
     });
 

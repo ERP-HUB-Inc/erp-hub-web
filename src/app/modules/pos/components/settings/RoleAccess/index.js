@@ -1,4 +1,7 @@
 import React from "react";
+import {
+  isMobile
+} from "react-device-detect";
 import List from "../List";
 // import FormCreate from "../../../containers/settings/RoleAccess/FormCreate";
 import FormUpdate from "../../../containers/settings/RoleAccess/FormUpdate";
@@ -6,6 +9,7 @@ import Constant from "../../../constants/settings/roleAccess";
 import RoleAccessAction from "../../../action/settings/roleAccess";
 import RolePrivilegeAction from "../../../action/settings/rolePrivilege";
 import RoleAccessService from "../../../services/settings/RoleAccessService";
+import menuSource from "../../../../common/components/layout/SiderBar/datasource";
 import StartUp from "../../../../common/components/StartUp";
 import NoPermission from "../../../../common/components/shares/List/NoPermission";
 import "./index.css";
@@ -54,6 +58,30 @@ export default class PaymentMethodList extends List {
     );
   }
 
+  renderMiniBreadCrumb() {
+    // get current path of breadcrum compare with url
+    const currentPath = window.location.pathname;
+    return (
+      <div className="breadcrumb">
+        <ul className="list-unstyled">
+          <li>
+            <this.Link to="/"><span className="icon-home"></span></this.Link>
+          </li>
+          {
+            menuSource[this.module]["subItems"].map((value, index) =>
+              currentPath === value["route"] ? 
+                <li className="fast-nav text-uppercase" key={index}>
+                  <this.Link to={value["route"]}>{value["title"]}</this.Link>
+                </li>
+                :
+                ""
+            )
+          }
+        </ul>
+      </div>
+    );
+  }
+
   render() {
     let fetchingProps = this.props[this.fetchingProp];
     const addingProps = this.props[this.addingProp];
@@ -80,7 +108,11 @@ export default class PaymentMethodList extends List {
           <NoPermission />
           :
           <div style={{marginTop: "15px", width: "100%"}}>
-            { this.renderBreadCrumb()}
+            { isMobile ?
+              this.renderMiniBreadCrumb()
+              :
+              this.renderBreadCrumb()
+            }
             <this.Row className="main-row-role-access" style={{height: "100%"}}>
               <this.Col md="12">
                 { this.renderTableList(fetchingProps) }

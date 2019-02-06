@@ -38,7 +38,7 @@ export default class FormVariant extends Modal {
         dataIndex: "barcode",
         key: "barcode",
         width: 120,
-        render: (text, record, index) => { console.log("KKKKKKKK:", record);
+        render: (text, record, index) => {
           return <this.InputText
             name={`variantProductCode[${index}]`}
             placeholder={this.CATranslate("text_product_code", this.props.locale)}
@@ -87,7 +87,7 @@ export default class FormVariant extends Modal {
         dataIndex: "action",
         key: "action",
         align: "center",
-        width: 50,
+        width: 80,
         render: (text, record, index) => {
           return <div className="wrap-variant-action">
             <this.Switchs
@@ -1073,7 +1073,7 @@ export default class FormVariant extends Modal {
     );
   }
 
-  render() { console.log("ProductVariantList:", this.state.productVariantList);
+  render() {
     this.submitConfirmActionLoading = this.props.productVariantArchive.archiving;
     const attributeLength = this.countProductAttribute(this.state.variantAttributeList);
     return (

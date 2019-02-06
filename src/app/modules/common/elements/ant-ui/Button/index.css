@@ -1,6 +1,7 @@
 .ant-btn.info,
 .ant-btn.danger,
-.ant-btn.receive {
+.ant-btn.receive,
+.wrap-button-action .action-button-right .anticon {
     color: #FFFFFF !important;
     text-transform: uppercase;
     font-size: 10pt;

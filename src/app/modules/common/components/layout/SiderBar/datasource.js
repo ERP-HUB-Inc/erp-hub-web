@@ -325,14 +325,14 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: "Receive Orders",
+        title: "Receive PO",
         icon: "icon-purchasing",
         route: "/stock/purchase/receive",
         component: ReceiveOrder,
         isFashNav: false
       },
       {
-        title: "Return Order",
+        title: "Return PO",
         icon: "icon-sale-return",
         route: "/stock/return",
         component: StockReturn,
@@ -346,7 +346,7 @@ const dataSource = {
         //   isFashNav: false
         // },
         // {
-        title: "Transfer",
+        title: "Stock Transfer",
         icon: "icon-stock-transfer",
         route: "/stock/transfer",
         component: StockTransfer,

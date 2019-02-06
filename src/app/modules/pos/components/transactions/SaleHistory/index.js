@@ -314,7 +314,7 @@ export default class SaleHistoryList extends List {
           }
           
           let rangFilter = "";
-          if (values.createdAt) {
+          if (values.createdAt && values.createdAt.length > 0) {
             rangFilter = JSON.stringify({
               column: "registerDate",
               value: [

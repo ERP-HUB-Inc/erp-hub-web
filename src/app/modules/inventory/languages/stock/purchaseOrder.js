@@ -107,7 +107,7 @@ export default {
     "Stock on Hand",
   ],
   
-  "col_stock_purchase_order_receive_qty": [
+  "text_receive_quantity": [
     "Receive Quantity",
     "Receive Quantity",
     "Receive Quantity",

@@ -90,7 +90,15 @@ export default class PurchaseList extends List {
         key: "requestTotal",
         width: 130,
         align: "right",
-        render: requestTotal => this.formatCurrency(requestTotal)
+        render: (text, record) => {
+          let key = "requestTotal";
+          if (record.step === Enum.PO_STEP.RECEIVED) {
+            key = "receiveTotal";
+          } else if (record.step === Enum.PO_STEP.RETURN) {
+            key = "returnTotal";
+          }
+          return this.formatCurrency(record[key]);
+        }
       }
     ];
   
@@ -100,7 +108,7 @@ export default class PurchaseList extends List {
     this.PO_STEP_STR = {
       [Enum.PO_STEP.DRAFT]: {name: this.CATranslate("purchase_order_step_draff", this.props.locale), color: this.Enum.PO_STEP_COLOR.DRAFT},
       [Enum.PO_STEP.PROCESS]: {name: this.CATranslate("text_process", this.props.locale), color: this.Enum.PO_STEP_COLOR.PROCESS},
-      [Enum.PO_STEP.RECEIVED]: {name: this.CATranslate("text_receive", this.props.locale), color: this.Enum.PO_STEP_COLOR.RECEIVE},
+      [Enum.PO_STEP.RECEIVED]: {name: this.CATranslate("text_received", this.props.locale), color: this.Enum.PO_STEP_COLOR.RECEIVE},
       [Enum.PO_STEP.CANCEL]: {name: this.CATranslate("text_cancel", this.props.locale), color: this.Enum.PO_STEP_COLOR.CANCEL},
       [Enum.PO_STEP.RETURN]: {name: this.CATranslate("text_return", this.props.locale), color: this.Enum.PO_STEP_COLOR.RETURN},
       [Enum.PO_STEP.PAID]: {name: this.CATranslate("purchase_order_step_paid", this.props.locale), color: this.Enum.PO_STEP_COLOR.PAID},
@@ -138,7 +146,13 @@ export default class PurchaseList extends List {
 
     if (Array.isArray(purchaseReport.list)) {
       purchaseReport.list.forEach(poReport => {
-        totalSummary += poReport.requestTotal;
+        if (poReport.step === Enum.PO_STEP.RECEIVED) {
+          totalSummary += poReport.receiveTotal;
+        } else if (poReport.step === Enum.PO_STEP.RETURN) {
+          totalSummary += poReport.returnTotal;
+        } else {
+          totalSummary += poReport.requestTotal;
+        }
         totalSummaryShippingFee += poReport.shippingFee;
       });
       total.push(totalSummary);
@@ -151,35 +165,29 @@ export default class PurchaseList extends List {
 
   renderTable(){
     return (  
-      this.props.purchaseReport.fetching ? 
-        <div className="text-center">
-          <this.Spin/>
-        </div> 
-        :
-        <div className="main-purchase">
-          <this.Row>
-            <this.Col md="12">
-              <this.Table 
-                dataSource={this.props.purchaseReport.list}
-                columns= {this.columns}
-                locale={{emptyText: <this.Translate id="table_empty_data"/>}}
-                footer={() => 
-                  <div className="wrap-table-footer" style={{minWidth: 347}} >
-                    <div className="text-uppercase pull-left">
-                      <this.Translate id="text_total" />:
-                    </div>
-                    <div className="item pull-left" style={{minWidth: 157,textAlign: "right" }}>
-                      {this.formatCurrency(this.summaryPurchaseReprot().totalShippingFee)}
-                    </div>
-                    <div className="item pull-left" style={{minWidth: 124}}>
-                      {this.formatCurrency(this.summaryPurchaseReprot().total)}
-                    </div>
-                  </div>
-                }
-              />
-            </this.Col>
-          </this.Row>
-        </div>
+      <this.Row className="main-purchase">
+        <this.Col md="12">
+          <this.Table 
+            dataSource={this.props.purchaseReport.list}
+            columns= {this.columns}
+            loading={this.props.purchaseReport.fetching}
+            locale={{emptyText: <this.Translate id="table_empty_data"/>}}
+            footer={() => 
+              <div className="wrap-table-footer" style={{minWidth: 347}} >
+                <div className="text-uppercase pull-left">
+                  <this.Translate id="text_total" />:
+                </div>
+                <div className="item pull-left" style={{minWidth: 157,textAlign: "right" }}>
+                  {this.formatCurrency(this.summaryPurchaseReprot().totalShippingFee)}
+                </div>
+                <div className="item pull-left" style={{minWidth: 124}}>
+                  {this.formatCurrency(this.summaryPurchaseReprot().total)}
+                </div>
+              </div>
+            }
+          />
+        </this.Col>
+      </this.Row>
     );
   }
 
@@ -200,7 +208,7 @@ export default class PurchaseList extends List {
 
           if (values.deliveryDueDate) {
             values.deliveryDueDate = this.Util.formatDateForMYSQL(values.deliveryDueDate);
-            rangFilter = JSON.stringify({column: "deliveryDueDate", value: [values.deliveryDueDate, values.deliveryDueDate]});
+            rangFilter = JSON.stringify({column: "deliveryDueDate", value: [values.deliveryDueDate  + " 00:00:00", values.deliveryDueDate + " 23:59:59"]});
           }
     
           filter = JSON.stringify(filter);

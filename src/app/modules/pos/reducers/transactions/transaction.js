@@ -69,6 +69,15 @@ export default combineReducers({
         response: null
       };
     }
+    case Constant.RESET_ERROR_TRANSACTION: {
+      return {
+        showForm: true,
+        paying: false,
+        paid: false,
+        error: null,
+        response: null
+      };
+    }
     default: 
       return state;
     }

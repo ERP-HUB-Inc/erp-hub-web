@@ -126,7 +126,6 @@ export default class Payment extends Modal {
   }
 
   handleOnMakePaymentWithCash(paymentMethod, paymentMethodIndex) {
-    this.wrapClassName += " pos-payment-paid"; //hidden close modal
     let amountToPay = this.props.form.getFieldValue("amountToPay"); // AMOUNT FROM INPUT OF CASHEIR
     amountToPay = parseFloat(amountToPay);
 
@@ -236,6 +235,10 @@ export default class Payment extends Modal {
     let paymentMethodList = [];
     if (this.props.paymentMethodList) {
       paymentMethodList = this.Util.chuckCollection(this.props.paymentMethodList.list, 2);
+    }
+
+    if (this.props.transaction.paid) {
+      this.wrapClassName += " pos-payment-paid"; //hidden close modal
     }
 
     if (this.props.transaction.showForm) {
