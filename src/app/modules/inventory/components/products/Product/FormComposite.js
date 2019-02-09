@@ -1,13 +1,14 @@
 import React from "react";
-// import DropDownSearch from "./DropDownSearch";
 import ProductDropDownSearch from "../../../../inventory/components/products/Product/DropDownSearch";
 import Enum from "../../../enums";
+import Util from "../../../utils";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormComposite extends Modal {
   constructor(props) {
     super(props);
     this.state = {
+      didUpdateMakeAutoFocus: false,
       isNotYetLoadComponentDidUpdated: true,
       compositeList: [],
     };
@@ -52,8 +53,11 @@ export default class FormComposite extends Modal {
     ];
 
     this.handleOnSelectList = this.handleOnSelectList.bind(this);
-    this.handlePressEnterOnSearch = this.handlePressEnterOnSearch.bind(this);
     this.handleRemoveCompositeProduct = this.handleRemoveCompositeProduct.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({didUpdateMakeAutoFocus: true});
   }
 
 
@@ -101,8 +105,14 @@ export default class FormComposite extends Modal {
   }
 
   handleOnSelectList(value) {
-    const productName = value.productDescriptions.length > 0 ?  value.productDescriptions[0].name : "";
-    const {productCode, cost} = value;
+    const {productCode, cost, quantity} = value.productVariants[0];
+    if (quantity <= 0) {
+      this.Message.error(this.CATranslate("text_out_of_stock", this.props.locale));
+      this.props.form.setFieldsValue({searchProduct: ""});
+      return;
+    }
+
+    const productName = Util.getProductName(value);
 
     const existingCompositeList = this.state.compositeList;
 
@@ -139,12 +149,12 @@ export default class FormComposite extends Modal {
       }
     }
 
-    this.setState({compositeList: existingCompositeList});
+    this.props.form.setFieldsValue({searchProduct: ""});
+    this.setState({
+      compositeList: existingCompositeList,
+      didUpdateMakeAutoFocus: true
+    });
     
-  }
-
-  handlePressEnterOnSearch(product) {
-    this.handleOnSelectList(product);
   }
   
   render() {
@@ -153,7 +163,10 @@ export default class FormComposite extends Modal {
         <ProductDropDownSearch
           productSearch={this.props.productSearch}
           handleOnSelectList={this.handleOnSelectList}
-          handlePressEnterOnSearch={this.handlePressEnterOnSearch}
+          isAutoFocus={true}
+          didUpdateMakeAutoFocus={this.state.didUpdateMakeAutoFocus}
+          handleOnFocusSearch={() => this.setState({didUpdateMakeAutoFocus: false})}
+          className="ca-input-v1"
           filter={JSON.stringify({type: [Enum.TYPE_OF_PRODUCT.RAW_MATERIAL]})}          
           dispatch={this.props.dispatch}
           locale={this.props.locale}

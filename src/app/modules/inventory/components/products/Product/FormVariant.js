@@ -1096,7 +1096,7 @@ export default class FormVariant extends Modal {
                       variantAttributeKey === 0 ?
                         <div className="ant-form-item-label">
                           <label htmlFor="lozenge-item[0]">
-                            <span>Value (e.g. Small, Medium, Large)</span>
+                            <span><this.Translate id="label_attrib_value" /></span>
                           </label>
                         </div>
                         :

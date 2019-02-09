@@ -163,6 +163,12 @@ export default {
     "Supplier Price"
   ],
 
+  "label_attrib_value": [
+    "Value (e.g. Small, Medium, Large)",
+    "Value (e.g. Small, Medium, Large)",
+    "Value (e.g. Small, Medium, Large)"
+  ],
+
   "input_product_re_order_point_placeholder": [
     "0.00",
     "0.00",
