@@ -2,12 +2,12 @@ import React from "react";
 import Element from "../../common/Element";
 
 export class Image extends Element {
+  mounted = false;
   constructor(props) {
     super(props);
     this.state = {
       image: this.Util.getGeneralImage("storeVein/no-image.png").url
     };
-    this.mounted = false;
     this.initializeImage = this.initializeImage.bind(this);
   }
 
