@@ -167,10 +167,10 @@ export default {
     "Are you Sure? Do you want to push to supplier?",
   ],
 
-  "purchase_order_search_key_place_holder": [
-    "Search for purchase order",
-    "Search for purchase order",
-    "Search for purchase order"
+  "text_po_general_search": [
+    "Name/Number",
+    "Name/Number",
+    "Name/Number"
   ],
 
   "purchase_order_po_number_already_exist": [

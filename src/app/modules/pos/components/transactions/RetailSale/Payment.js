@@ -40,6 +40,13 @@ export default class Payment extends Modal {
       document.getElementById("email").focus();
       this.props.dispatch(GeneralAction.sendMailReset());
     }
+
+    if (this.props.transaction.paid) {
+      const element = document.getElementById("pos-receipt-preview");
+      if (element) {
+        this.Util.printElemV2(element.innerHTML);
+      }
+    }
   }
 
   handleSubmit (e) { // Here use only for protected from refresh page when hit enter while focus input payment
@@ -110,10 +117,10 @@ export default class Payment extends Modal {
   }
 
   handleOnCompletePayment() {
-    if (this.props.transaction.paid) {
+    if (this.props.transaction.paid && this.state.isNotYetPaid) {
       const element = document.getElementById("pos-receipt-preview");
       if (element) {
-        this.Util.printElem(element.innerHTML);
+        // this.Util.printElemV2(element.innerHTML);
         this.props.dispatch(TransactionAction.reset());
         this.setState({
           isNotYetPaid: false,

@@ -86,7 +86,7 @@ export default class ClientSignIn extends Component {
     }
   }
   
-  handleSubmit (e) {
+  handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {

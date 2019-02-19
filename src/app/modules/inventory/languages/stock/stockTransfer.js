@@ -41,10 +41,10 @@ export default {
     "Received By",
   ],
 
-  "stock_transfer_search_key_place_holder": [
-    "Search for stock transfer",
-    "Search for stock transfer",
-    "Search for stock transfer"
+  "text_stock_transfer_general_search": [
+    "Name/Number/Description",
+    "Name/Number/Description",
+    "Name/Number/Description"
   ],
 
   "placeholder_table_stock_transfer": [

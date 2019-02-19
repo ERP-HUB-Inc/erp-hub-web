@@ -29,10 +29,10 @@ export default {
     "Delivery to Location"
   ],
 
-  "stock_receive_purchase_search_key_place_holder": [
-    "Search for receive purchase",
-    "Search for receive purchase",
-    "Search for receive purchase",
+  "text_po_receive_general_search": [
+    "Name/Invoice No",
+    "Name/Invoice No",
+    "Name/Invoice No"
   ],
 
   "text_confirm_receive": [

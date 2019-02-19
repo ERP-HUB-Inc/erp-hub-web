@@ -174,7 +174,7 @@ export default class SaleHistoryList extends List {
   getTaxAmount(data) {
     return data.total - data.totalExcludeTax;
   }
-  handleRePrint() {
+  handleRePrint = async () => {
     const selectLength = this.state.selectedListIds.length;
 
     if (selectLength === 0 && this.state.selectedListIds) {

@@ -87,7 +87,7 @@ export default class SideBar extends React.Component {
     });
   }
 
-  handleOnClickSubMenu() {
+  handleOnClickSubMenu = async () => {
     this.removeClass("hover");
     this.setState({
       isHoverOnSubMenu: false,

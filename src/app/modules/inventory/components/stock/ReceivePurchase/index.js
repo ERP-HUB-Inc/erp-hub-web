@@ -185,8 +185,8 @@ export default class ReceivePurchaseList extends List {
           <this.Col md="2">
             <this.InputText
               name="key"
-              label={<this.Translate id="stock_receive_purchase_search_key_place_holder" />}
-              placeholder={this.CATranslate("stock_receive_purchase_search_key_place_holder", locale)}
+              label={<this.Translate id="text_search" />}
+              placeholder={this.CATranslate("text_po_receive_general_search", locale)}
               isAutoFocus={true}
               form={form}/>
           </this.Col>

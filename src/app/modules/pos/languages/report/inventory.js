@@ -29,7 +29,6 @@ export default {
     "Tag"
   ],
 
-
   "input_inventory_report_week": [
     "Weeks",
     "Weeks",

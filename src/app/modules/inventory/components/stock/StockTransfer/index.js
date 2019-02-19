@@ -251,11 +251,11 @@ export default class Lists extends List {
           :
           <this.Form onSubmit={this.handleSubmitFilter}>
             <this.Row className="main-search-layout">
-              <this.Col md="2">
+              <this.Col md="3">
                 <this.InputText
                   name="key"
-                  label={<this.Translate id="stock_transfer_search_key_place_holder" />}
-                  placeholder={this.CATranslate("stock_transfer_search_key_place_holder", this.props.locale)}
+                  label={<this.Translate id="text_search" />}
+                  placeholder={this.CATranslate("text_po_return_general_search", this.props.locale)}
                   isAutoFocus={true}
                   form={form}/>
               </this.Col>

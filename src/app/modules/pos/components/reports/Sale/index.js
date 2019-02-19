@@ -9,6 +9,7 @@ export default class SaleList extends List {
   constructor(props) {
     super(props);
     this.state = {
+      ...this.state,
       csvData: "",
       setDefaultDate:  []
     };

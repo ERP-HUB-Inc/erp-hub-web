@@ -49,6 +49,7 @@ export default class List extends Component {
     this.pageSize = 20; // default limit record display in table list
     this.confirmTextDelete = <this.Translate id="text_confirm_delete" />;
     this.requiredMessage = "Please input all required field."; // require message display on modal popup
+    this.generalSearchLabel = "text_search";
     this.confirmTitle = "COMPLETED";
     this.okText = <this.Translate id="text_yes" />; // text button on alert of delete action
     this.cancelText = <this.Translate id="text_no" />; // text button on alert of delete action
@@ -582,7 +583,7 @@ export default class List extends Component {
       <this.Col md="3">
         <this.InputText
           name="key"
-          label={<this.Translate id="text_search" />}
+          label={<this.Translate id={this.generalSearchLabel}/>}
           placeholder={this.CATranslate(this.placeHolderForGeneralSearch, this.props.locale)}
           form={this.props.form}/>
       </this.Col>

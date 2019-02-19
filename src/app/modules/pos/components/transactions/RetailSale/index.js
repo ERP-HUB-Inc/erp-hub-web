@@ -221,6 +221,11 @@ export default class Retail extends Component {
   }
 
   appendProductOrder(targetList, product, productVariant) {
+    if (!productVariant) {
+      this.Message.error(this.CATranslate("error_product_not_found", this.props.locale));
+      return;
+    }
+
     const tax = POSUtil.getTaxFromProduct(product);
     targetList.push({
       productVariantId: productVariant.id,
@@ -390,6 +395,7 @@ export default class Retail extends Component {
           existingProductOrderList[productOrderIndex]["quantity"] += this.state.initialOrderQuantity;
         }
       });
+
       if (isNotTheSame) {
         this.appendProductOrder(existingProductOrderList, product, productVariant);
       }

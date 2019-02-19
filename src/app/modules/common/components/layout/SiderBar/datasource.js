@@ -325,14 +325,14 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: "Receive PO",
+        title: "Receive Purchase",
         icon: "icon-purchasing",
         route: "/stock/purchase/receive",
         component: ReceiveOrder,
         isFashNav: false
       },
       {
-        title: "Return PO",
+        title: "Return Purchase",
         icon: "icon-sale-return",
         route: "/stock/return",
         component: StockReturn,

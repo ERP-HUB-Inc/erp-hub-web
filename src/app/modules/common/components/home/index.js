@@ -116,7 +116,7 @@ export default class Home extends Component {
             <CountUp
               start={0}
               end={this.getValueFromDashboardList(3)}
-              duration={5}
+              duration={2}
               separator="" />
           }
           icon="icon-customer"
