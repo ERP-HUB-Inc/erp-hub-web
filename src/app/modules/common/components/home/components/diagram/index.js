@@ -34,6 +34,28 @@ export default class Diagram extends Component {
       {name: <this.Translate id="select_text_deactive"/>, value: this.Enum.DEACTIVE},
       {name: <this.Translate id="select_text_all_status"/>, value: this.Enum.ALL_STATE}
     ];
+    this.lineChartOptions  =  {
+      low: 0,
+      showArea: true
+    };
+    this.lineChartData = {
+      labels: [1, 2, 3, 4, 5, 6, 7, 8],
+      series: [
+        [5, 9, 7, 8, 5, 3, 5, 4]
+      ]
+    };
+    this.biPolarLineChartOptions = {
+      high: 3,
+      low: -3,
+      showArea: true,
+      showLine: false,
+      showPoint: false,
+      axisX: {
+        showLabel: false,
+        showGrid: false
+      }
+    };
+
     this.groupIncomeExpenseType = this.groupIncomeExpenseType.bind(this);
   }
 
@@ -86,6 +108,8 @@ export default class Diagram extends Component {
     if (graphChatDataSource.length === 0) {
       graphChatDataSource = this.state.defaultGraphChatDataSource;
     }
+
+    console.log("graphChatDataSource=",graphChatDataSource);
     
     return (
       <div className="main-diagram">
@@ -113,15 +137,10 @@ export default class Diagram extends Component {
         </div>
         <Line
           data={graphChatDataSource}
-          options={
-            {
-              scales: {
-                yAxes: [{
-                  stacked: true
-                }]
-              }
-            }
-          }/>
+          width={1200}
+          height={348}
+          options={{ maintainAspectRatio: false ,responsive:false }}
+        />
       </div>
     );
   }

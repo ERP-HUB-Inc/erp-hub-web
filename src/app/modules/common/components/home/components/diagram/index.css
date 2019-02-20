@@ -1,16 +1,12 @@
 /* diagram */
 .main-diagram {
-    position: relative; 
-    width: 100%;
-    overflow-x: hidden;
     background-color: white;
-    height: 398px;
-    margin-bottom: 15px
 }
 
 .main-diagram canvas {
-    padding-left: 10px;
-    padding-right: 10px
+    display: block;
+    height: 348px;
+    max-width: 100% !important;
 }
  
 .main-doughnut-chart .doughnut-chart {
@@ -77,4 +73,10 @@
     padding: 15px;
     display: flex;
     justify-content: space-between
+}
+
+@media (max-width: 1600px) {
+    /* .main-diagram canvas {
+        height: 45vh !important;
+    } */
 }
