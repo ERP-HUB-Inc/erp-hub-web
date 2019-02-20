@@ -3,7 +3,7 @@ import {
   isMobile
 } from "react-device-detect";
 import List from "../List";
-// import FormCreate from "../../../containers/settings/RoleAccess/FormCreate";
+import FormCreate from "../../../containers/settings/RoleAccess/FormCreate";
 import FormUpdate from "../../../containers/settings/RoleAccess/FormUpdate";
 import Constant from "../../../constants/settings/roleAccess";
 import RoleAccessAction from "../../../action/settings/roleAccess";
@@ -14,13 +14,15 @@ import StartUp from "../../../../common/components/StartUp";
 import NoPermission from "../../../../common/components/shares/List/NoPermission";
 import "./index.css";
 
-export default class PaymentMethodList extends List {
+export default class RoleAccessList extends List {
   constructor(props) {
     super(props);
     this.state = {
       ...this.state
     };
     this.columns = new Column();
+    this.formCreate = <FormCreate/>;
+    this.formUpdate = <FormUpdate/>;
     this.fetchingProp = "roleAccess";
     this.addingProp = "roleAccessAdd";
     this.updatingProp = "roleAccessUpdate";

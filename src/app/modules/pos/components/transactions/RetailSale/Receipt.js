@@ -3,7 +3,6 @@ import JsBarcode from "jsbarcode";
 import Component from "../../../../common/components/Component";
 import "./Receipt.css";
 import { PaperSize } from "../../settings/ReceiptTemplate/PaperSize";
-import Enum from "../../../enums";
 export default class Receipt extends Component {
   componentDidMount() {
     JsBarcode("#receiptCarcode", this.props.data.receiptNumber, {
@@ -34,7 +33,7 @@ export default class Receipt extends Component {
       countTax
     } = this.props.summaryTax;
 
-    const paperSize = PaperSize.find(paperValue => paperValue.code === Enum.PAPER_SIZE.MINI_THERMAL);
+    const paperSize = PaperSize.find(paperValue => paperValue.code === this.props.receiptTemplate.paperSize);
 
     return (
       <div style={{display: "none"}} id="pos-receipt-preview">
