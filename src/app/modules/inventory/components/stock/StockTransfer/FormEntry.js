@@ -146,13 +146,11 @@ export default class FormEntry extends Modal {
       this.props.stockTransferEntries.forEach(transferEntry => {
         let productName = "";
         let variantName = "";
-        let quantityOnHand = 0;
         let allQuantity = 0;
         
         if (transferEntry.productVariant) {
           productName = Util.getProductName(transferEntry.productVariant.product);
           variantName = transferEntry.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? transferEntry.productVariant.name : "";
-          quantityOnHand = transferEntry.productVariant.quantity;
           allQuantity = transferEntry.productVariant.quantity;
         }
 
@@ -162,7 +160,7 @@ export default class FormEntry extends Modal {
           variantName,
           unitId: transferEntry.unitId,
           productVariantId: transferEntry.productVariantId,
-          quantityOnHand,
+          productVariants: [transferEntry.productVariant],// convert it to collection product variant to support with function in util
           allQuantity,
           transferQuantity: transferEntry.transferQuantity,
           transferEntryStatus: transferEntry.status

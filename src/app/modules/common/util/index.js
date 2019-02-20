@@ -332,6 +332,35 @@ export class Util {
     return true;
   }
 
+  printElemV2(contentHtml)
+  {
+    var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+    var dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+
+    var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth;
+    var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight;
+
+    var left = ((width / 2) - (width / 2)) + dualScreenLeft;
+    var top = ((height / 2) - (height / 2)) + dualScreenTop;
+
+    var mywindow = window.open("", "PRINT", `height=${210},width=${580},top=${top},left=${left}`);
+
+    mywindow.document.write("<html><head><title>" + document.title  + "</title>");
+    mywindow.document.write("</head><body >");
+    mywindow.document.write(contentHtml);
+    mywindow.document.write("</body></html>");
+
+    mywindow.document.close();
+    mywindow.focus();
+
+    setTimeout(function() {
+      mywindow.print();
+      mywindow.close();
+    }, 250);
+
+    return true;
+  }
+
   getProductImage(fileName, key="product") {
     return {
       url: `${process.env.REACT_APP_RESOURCE_HOST}/${this.getClientId()}/${key}/${fileName}`

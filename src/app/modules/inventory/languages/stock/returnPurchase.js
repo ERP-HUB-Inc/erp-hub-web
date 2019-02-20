@@ -5,10 +5,10 @@ export default {
     "Return Purchase"
   ],
 
-  "stock_purchase_search_key_place_holder": [
-    "Search for stock return",
-    "Search for stock return",
-    "Search for stock return",
+  "text_po_return_general_search": [
+    "Name/Invoice No",
+    "Name/Invoice No",
+    "Name/Invoice No"
   ],
 
   "text_confirm_return_po": [

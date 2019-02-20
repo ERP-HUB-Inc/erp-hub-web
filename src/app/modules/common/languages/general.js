@@ -209,6 +209,12 @@ export default {
     "Quantity"
   ],
 
+  "text_transfer_quantity": [
+    "Transfer Quantity",
+    "Transfer Quantity",
+    "Transfer Quantity"
+  ],
+
   "text_all_quantity": [
     "All Quantity",
     "All Quantity",

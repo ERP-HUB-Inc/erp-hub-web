@@ -37,9 +37,9 @@ export default class ReturnPurchaseList extends List {
       },
       {
         title: <this.Translate id="text_due_date" />,
-        dataIndex: "deliveryDueDate",
-        key: "deliveryDueDate",
-        width: 160,
+        dataIndex: "due_date",
+        key: "due_date",
+        width: 180,
         sorter: true,
         render: deliveryDueDate => this.formatDate(deliveryDueDate)
       },
@@ -174,8 +174,8 @@ export default class ReturnPurchaseList extends List {
           <this.Col md="2">
             <this.InputText
               name="key"
-              label={<this.Translate id="text_key" />}
-              placeholder={this.CATranslate("stock_purchase_search_key_place_holder", locale)}
+              label={<this.Translate id="text_search" />}
+              placeholder={this.CATranslate("text_po_return_general_search", locale)}
               isAutoFocus={true}
               form={form}/>
           </this.Col>

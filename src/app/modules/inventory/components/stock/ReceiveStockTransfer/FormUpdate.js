@@ -1,15 +1,13 @@
 import React from "react";
 import FormItem from "./FormItem";
-import Enum from "../../../enums";
 import Constant from "../../../constants/stock/stockTransfer";
 import Modal from "../../../../common/components/shares/Modal";
 import StockTransferAction from "../../../actions/stock/stockTransfer";
-import "./index.css";
 
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="text_stock_transfer" />;
+    this.title = <this.Translate id="text_receive_stock_transfer" />;
     this.wrapClassName = `${this.wrapClassName} wrap-modal-po modal-po-full-screen`;
     this.width = window.innerWidth < 1400 ? window.innerWidth : 1400;
     this.dispatch = this.props.dispatch;
@@ -21,38 +19,24 @@ export default class Form extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) { 
         values["id"] = this.props.detail.data.id;
-
-        if (this.props.detail.data.step !== Enum.STOCK_STRANSFER_STEP.PROCESS) {
-          this.Message.error(this.CATranslate("error_invalid_step_for_update_stock_transfer", this.props.locale));
-          return;
-        }
-
         const transferEntries = [];
-        if ("productVariantId" in values) {
-          values.productVariantId.forEach((productVariantId, index) => {
+        if ("transferEntryId" in values) {
+          values.transferEntryId.forEach((transferEntryId, index) => {
             transferEntries.push({
-              id: values.transferEntryId[index],
-              productVariantId,
+              id: transferEntryId,
               unitId: values.unitId[index],
-              transferQuantity: parseInt(values.transferQuantity[index], 10),
-              status: values.transferEntryStatus[index]
+              receiveQuantity: parseInt(values.receiveQuantity[index], 10)
             });
           });
         } else {
-          // HAVE NO PURCHASE ENTRY INCLUDE
-          this.Message.warning(this.CATranslate("error_purchase_order_no_entry", this.props.locale), 3);
           return;
         }
 
         this.Util.clearObjProperty(values, [
-          "productVariantId",
           "transferEntryId",
-          "transferEntryStatus",
-          "transferQuantity",
-          "searchProduct",
+          "receiveQuantity",
           "productName",
           "variantName",
-          "isFocusOnSearchCompositeProduct",
           "unitId"
         ]);
 
@@ -60,7 +44,7 @@ export default class Form extends Modal {
 
         values["transferEntries"] = transferEntries;
 
-        this.dispatch(StockTransferAction.update(values));
+        this.dispatch(StockTransferAction.approve(values));
       }
     });
   }
@@ -76,26 +60,19 @@ export default class Form extends Modal {
           <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel" />
         </this.Button>
         <this.Button htmlType="submit" loading={this.submitLoading} className="info">
-          <span className="icon-arrow-down icon-padding-right"></span><this.Translate id="text_save" />
+          <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
         </this.Button>
       </div>
     );
   }
   render() {
-    const {
-      detail,
-      update
-    } = this.props;
+    this.submitLoading = this.props.approve.updating;
 
-    this.submitLoading = update.updating;
-
-    if (detail.showForm) {
+    if (this.props.detail.showForm) {
       this.content = <FormItem
-        formData={detail.data}
-        storeLocation={this.props.storeLocation} 
-        accessLocation={this.props.accessLocation}
-        productSearch={this.props.productSearch}
-        productVariant={this.props.productVariant}
+        formData={this.props.detail.data}
+        location={this.props.location}
+        unit={this.props.unit}
         form={this.props.form}
         dispatch={this.props.dispatch}
         locale={this.props.locale}/>;

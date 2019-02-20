@@ -176,6 +176,10 @@ export default class OpenSaleRegistrationList extends List {
     }
   }
 
+  componentWillUnmount() {
+    this.props.dispatch(OpenSaleRegistrationAction.reset());
+  }
+
   componentDidMount() {
     super.componentDidMount();
     this.loadData();

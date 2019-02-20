@@ -24,6 +24,12 @@ export default {
     "Show Develop By"
   ],
 
+  "text_paper_size": [
+    "Paper Size",
+    "Paper Size",
+    "Paper Size"
+  ],
+
   "error_receipt_template_name_length": [
     "Name allow from 3 to 100 character only.",
     "Name allow from 3 to 100 character only.",

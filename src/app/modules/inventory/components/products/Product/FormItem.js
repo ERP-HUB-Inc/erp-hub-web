@@ -627,7 +627,7 @@ export default class FormItem extends Modal {
                 </this.Col>
               </this.Row> 
             </this.Col>
-            <this.Col md="6">
+            <this.Col md="6" className="create-product-column-right">
               <this.RadioBox
                 className="main-radio-acc product-type"
                 name="productOption"

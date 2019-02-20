@@ -4,6 +4,12 @@ export default {
     "Stock Transfer",
     "Stock Transfer"
   ],
+
+  "text_receive_stock_transfer": [
+    "Receive Stock Transfer",
+    "Receive Stock Transfer",
+    "Receive Stock Transfer"
+  ],
   
   "text_export_csv": [
     "Export CSV",
@@ -35,10 +41,10 @@ export default {
     "Received By",
   ],
 
-  "stock_transfer_search_key_place_holder": [
-    "Search for stock transfer",
-    "Search for stock transfer",
-    "Search for stock transfer"
+  "text_stock_transfer_general_search": [
+    "Name/Number/Description",
+    "Name/Number/Description",
+    "Name/Number/Description"
   ],
 
   "placeholder_table_stock_transfer": [
@@ -90,9 +96,9 @@ export default {
   ],
 
   "error_invalid_step_for_update_stock_transfer": [
-    "You can update stock transfer only in process step",
-    "You can update stock transfer only in process step",
-    "You can update stock transfer only in process step"
+    "You can update stock transfer only in process step. Refresh your list to know record status",
+    "You can update stock transfer only in process step. Refresh your list to know record status",
+    "You can update stock transfer only in process step. Refresh your list to know record status"
   ],
 
   "error_transfer_not_found": [

@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
-import FormUpdate from "../../../components/stock/StockTransfer/FormUpdate";
+import FormUpdate from "../../../components/stock/ReceiveStockTransfer/FormUpdate";
 
 class StockTransferForm extends React.Component {
   render() {
@@ -14,11 +14,9 @@ class StockTransferForm extends React.Component {
 function mapStateToProps(state) {
   return {
     detail: state.reducer.stockTransfer.detail,
-    update: state.reducer.stockTransfer.update,
-    productVariant: state.reducer.productVariant.request,
-    productSearch: state.reducer.product.search,
-    storeLocation: state.reducer.location.request,
-    accessLocation: state.reducer.location.requestAccessLocation,
+    approve: state.reducer.stockTransfer.approve,
+    location: state.reducer.location.request,
+    unit: state.reducer.productsUnit.request,
     locale: state.locale
   };
 }

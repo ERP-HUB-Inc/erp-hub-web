@@ -2,6 +2,8 @@ import React from "react";
 import JsBarcode from "jsbarcode";
 import Component from "../../../../common/components/Component";
 import "./Receipt.css";
+import { PaperSize } from "../../settings/ReceiptTemplate/PaperSize";
+import Enum from "../../../enums";
 export default class Receipt extends Component {
   componentDidMount() {
     JsBarcode("#receiptCarcode", this.props.data.receiptNumber, {
@@ -32,15 +34,17 @@ export default class Receipt extends Component {
       countTax
     } = this.props.summaryTax;
 
+    const paperSize = PaperSize.find(paperValue => paperValue.code === Enum.PAPER_SIZE.MINI_THERMAL);
+
     return (
       <div style={{display: "none"}} id="pos-receipt-preview">
         <div style={{
-          padding: "15px 15px",
+          // padding: "15px 15px",
           // backgroundColor: "#f5f2f2",
           margin: "0 auto",
           fontFamily: "Arial"
         }}>
-          <table style={{color: "rgb(142, 136, 136)", fontSize: "8pt", backgroundColor: "white", margin: "auto", width: "120mm", padding: 5}}>
+          <table style={{color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white", margin: "auto", /*width: "120mm",*/ width: paperSize.setting.width, padding: 5}}>
             <tbody><tr>
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>
                 <div style={{position: "relative", margin: "0 auto"}}>
@@ -51,7 +55,7 @@ export default class Receipt extends Component {
             {
               this.props.receiptTemplate.isShowStoreName ?
                 <tr>
-                  <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", fontSize: "16pt"}}>{businessName}</td>
+                  <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", fontSize: paperSize.setting.storeNameFontSize}}>{businessName}</td>
                 </tr>
                 :
                 <tr></tr>
@@ -60,9 +64,8 @@ export default class Receipt extends Component {
               <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>{address} {phoneNumber}</td>
             </tr>
             <tr>
-              <td style={{backgroundColor: "white", textAlign: "left", paddingTop: 30}}><this.Translate id="register_no"/>. {this.Util.getDeviceNumber()}</td>
-              <td style={{backgroundColor: "white", textAlign: "right", paddingTop: 30}}><this.Translate id="text_date"/>: {this.Util.formatDate(this.props.data.createdAt, "DD MMMM YYYY h:mm A")}</td>
-              {/* 12 June 2018 11:30 AM */}
+              <td style={{backgroundColor: "white", textAlign: "left", paddingTop: 30, paddingRight: 0}}><this.Translate id="register_no"/>. {this.Util.getDeviceNumber()}</td>
+              <td style={{backgroundColor: "white", textAlign: "right", paddingTop: 30}}><this.Translate id="text_date"/>: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
             </tr>
             <tr>
               <td style={{backgroundColor: "white", textAlign: "left"}}><this.Translate id="receipt_no"/>. {this.props.data.receiptNumber}</td>
@@ -70,16 +73,16 @@ export default class Receipt extends Component {
             </tr>
             <tr>
               <td colSpan={2} style={{paddingTop: 10}}>
-                <table style={{fontSize: "8pt", color: "rgb(142, 136, 136)"}}>
+                <table style={{fontSize: paperSize.setting.dataFontSize, color: paperSize.setting.color}}>
                   <thead>
                     <tr>
-                      <th style={{fontWeight: 500, width: "10mm", textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)"}}>
+                      <th style={{fontWeight: 500, width: "10mm", textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color}}>
                         <this.Translate id="text_qty"/>
                       </th>
-                      <th style={{fontWeight: 500, width: "90mm", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)", textAlign: "left"}}>
+                      <th style={{fontWeight: 500, width: "90mm", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color, textAlign: "left"}}>
                         <this.Translate id="text_desc"/>
                       </th>
-                      <th style={{fontWeight: 500, width: "20mm", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)"}}>
+                      <th style={{fontWeight: 500, width: "20mm", textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color}}>
                         <this.Translate id="text_amount"/>
                       </th>
                     </tr>
@@ -96,7 +99,7 @@ export default class Receipt extends Component {
                             <div>{product.name}</div>
                             {
                               product.variantName ?
-                                <div style={{fontSize: "7pt", marginTop: "2px"}}>{product.variantName}</div>
+                                <div style={{fontSize: paperSize.setting.subDataFontSize, marginTop: "2px"}}>{product.variantName}</div>
                                 :
                                 ""
                             }
@@ -111,9 +114,9 @@ export default class Receipt extends Component {
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td style={{backgroundColor: "white", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 5}} />
-                      <td style={{backgroundColor: "white", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 5, textDecoration: "uppercase"}}><this.Translate id="text_sub_total" />:</td>
-                      <td style={{backgroundColor: "white", textAlign: "right", borderTop: "1px dashed rgb(212, 203, 203)", paddingTop: 5}}>{this.formatCurrency(this.props.summaryTotal.subTotalAfterDiscount)}</td>
+                      <td style={{backgroundColor: "white", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5}} />
+                      <td style={{backgroundColor: "white", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5, textDecoration: "uppercase"}}><this.Translate id="text_sub_total" />:</td>
+                      <td style={{backgroundColor: "white", textAlign: "right", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5}}>{this.formatCurrency(this.props.summaryTotal.subTotalAfterDiscount)}</td>
                     </tr>
                     <tr>
                       <td style={{backgroundColor: "white"}} />
@@ -145,7 +148,7 @@ export default class Receipt extends Component {
                         <tr></tr>
                     }
                     <tr>
-                      <td colSpan={3} style={{backgroundColor: "white", borderBottom: "1px dashed rgb(212, 203, 203)"}} ></td>
+                      <td colSpan={3} style={{backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color}} ></td>
                     </tr>
                     {
                       this.props.customerPaymentList.map((customerPayment, customerPaymentIndex) => 

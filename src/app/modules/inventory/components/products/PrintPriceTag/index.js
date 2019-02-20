@@ -274,6 +274,11 @@ export default class PrintPriceTag extends List {
   }
 
   handleOnSelectList(product, productVariant, isRequestVariantForm = true) {
+
+    if (!productVariant) {
+      this.Message.error(this.CATranslate("product_not_found", this.props.locale));
+    }
+
     let isProductVariant = product.productOption === Enum.PRODUCT_VARIANT;
     if (isProductVariant && isRequestVariantForm) {
       this.setState({

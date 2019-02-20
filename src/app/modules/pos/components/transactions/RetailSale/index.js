@@ -6,6 +6,7 @@ import InventoryEnum from "../../../../inventory/enums";
 import TransactionAction from "../../../action/transaction/transaction";
 import PrivilegeAction from "../../../action/settings/privilege";
 import TransactionService from "../../../services/transactions/TransactionService";
+import Constant from "../../../constants/transactions/transaction";
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
 import FormCreateCustomer from "../../../../crm/containers/customers/Customer/FormCreate";
 import CustomerAction from "../../../../crm/actions/customers/customer";
@@ -127,7 +128,7 @@ export default class Retail extends Component {
       }
 
       this.Message.error(message);
-      this.props.dispatch(TransactionAction.reset());
+      this.props.dispatch(TransactionAction.reset(Constant.RESET_ERROR_TRANSACTION));
     }
   }
 
@@ -220,6 +221,11 @@ export default class Retail extends Component {
   }
 
   appendProductOrder(targetList, product, productVariant) {
+    if (!productVariant) {
+      this.Message.error(this.CATranslate("error_product_not_found", this.props.locale));
+      return;
+    }
+
     const tax = POSUtil.getTaxFromProduct(product);
     targetList.push({
       productVariantId: productVariant.id,
@@ -389,6 +395,7 @@ export default class Retail extends Component {
           existingProductOrderList[productOrderIndex]["quantity"] += this.state.initialOrderQuantity;
         }
       });
+
       if (isNotTheSame) {
         this.appendProductOrder(existingProductOrderList, product, productVariant);
       }

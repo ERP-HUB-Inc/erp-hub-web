@@ -1,6 +1,7 @@
 import React from "react";
 import {
-  isMobile
+  isMobile,
+  isMobileOnly
 } from "react-device-detect";
 import {Pagination} from "antd";
 import NoPermission from "./NoPermission";
@@ -29,7 +30,8 @@ export default class List extends Component {
       showExport : true,
       loadingPopup: false,
       isRequestDelete: false,
-      isRequestAdd: false
+      isRequestAdd: false,
+      isShowFilter: !isMobileOnly //default show filter on difference from mobile
     };
 
     this.rowSelection = true;
@@ -47,6 +49,7 @@ export default class List extends Component {
     this.pageSize = 20; // default limit record display in table list
     this.confirmTextDelete = <this.Translate id="text_confirm_delete" />;
     this.requiredMessage = "Please input all required field."; // require message display on modal popup
+    this.generalSearchLabel = "text_search";
     this.confirmTitle = "COMPLETED";
     this.okText = <this.Translate id="text_yes" />; // text button on alert of delete action
     this.cancelText = <this.Translate id="text_no" />; // text button on alert of delete action
@@ -72,6 +75,7 @@ export default class List extends Component {
 
     this.tapedTwice = false;
     this.isMobile = isMobile;
+    this.isMobileOnly = isMobileOnly;
 
     this.onChange = this.onChange.bind(this); // handle when user change filter, access pagination
     this.onShowSizeChange = this.onShowSizeChange.bind(this);
@@ -85,6 +89,7 @@ export default class List extends Component {
     this.expandedRender = this.expandedRender.bind(this);
     this.buttonActionCollection = this.buttonActionCollection.bind(this);
     this.handleShowFormAdd = this.handleShowFormAdd.bind(this);
+    this.handleOnToggleFilter = this.handleOnToggleFilter.bind(this);
 
     this.RESET_CONSTANT = "RESET";
   }
@@ -370,6 +375,14 @@ export default class List extends Component {
     }
   }
 
+  handleOnToggleFilter() {
+    if (this.state.isShowFilter) {
+      this.setState({isShowFilter: false});
+    } else {
+      this.setState({isShowFilter: true});
+    }
+  }
+
   /**===================================================================#EVENT CONTROL FOR CHILD CLASS============================================================**/
 
   /**===================================================================LAYOUT CONTROL FOR CHILD CLASS============================================================**/
@@ -570,7 +583,7 @@ export default class List extends Component {
       <this.Col md="3">
         <this.InputText
           name="key"
-          label={<this.Translate id="text_search" />}
+          label={<this.Translate id={this.generalSearchLabel}/>}
           placeholder={this.CATranslate(this.placeHolderForGeneralSearch, this.props.locale)}
           form={this.props.form}/>
       </this.Col>
@@ -662,7 +675,7 @@ export default class List extends Component {
           expandedRowRender={this.expandedRender}
           onRow={record =>({
             onDoubleClick:() => this.handleShowFormEdit(record),
-            onClick: () => this.handleOnTapHandler(record)
+            onClick: (event) => this.handleOnTapHandler(event, record)
           })}
           rowSelection={rowSelection}
           loading={fetchingProps.fetching || this.state.loadingPopup} />
@@ -685,7 +698,7 @@ export default class List extends Component {
    * include from render table to be as the list
    * @param {*} fetchingProps 
    */
-  renderPagination(fetchingProps) {
+  renderPagination(fetchingProps, classsName = "float-right") {
     let pagination = {
       total: fetchingProps.pagination.total,
       pageSize: fetchingProps.pagination.limit,
@@ -694,7 +707,7 @@ export default class List extends Component {
     };
     return( 
       pagination.total > 0 ?
-        <div className="float-right">
+        <div className={classsName}>
           <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
         </div>
         :
@@ -706,13 +719,42 @@ export default class List extends Component {
     return (
       <div className="table-wrapper">
 
-        {this.renderActionButton()}
+        {
+          this.isMobileOnly ?
+            <div className="wrap-button-action">
+              <div className="action-button-left">
+                {this.renderActionButton()}
+              </div>
+              <div className="action-button-right">
+                <this.Button
+                  type="info"
+                  disabled={this.state.loadingPopup}
+                  onClick={this.handleOnToggleFilter}>
+                  <span className="anticon anticon-filter"></span>
+                </this.Button>
+              </div>
+            </div>
+            :
+            this.renderActionButton()
+        }
 
-        {this.renderPagination(fetchingProps)}
+        {
+          this.isMobileOnly ?
+            ""
+            :
+            this.renderPagination(fetchingProps)
+        }
 
         <this.clearFloating/>        
 
         {this.renderTable(fetchingProps)}
+
+        {
+          this.isMobileOnly ?
+            this.renderPagination(fetchingProps, "text-center mobile-pagination")
+            :
+            ""
+        }
 
       </div>
     );
@@ -769,7 +811,7 @@ export default class List extends Component {
               <NoPermission />
               :
               <div style={{height: "100%"}}>
-                <div className="wrap-filter">
+                <div className="wrap-filter" style={{ display: `${this.state.isShowFilter ? "" : "none"}`}}>
                   { this.renderFilterRecord() }
                 </div>
 

@@ -65,9 +65,9 @@ export default class ReceivedPo extends Modal {
         key: "requestQuantity"
       },
       {
-        title: <this.Translate id="col_stock_purchase_order_receive_qty" />,
+        title: <this.Translate id="text_receive_quantity" />,
         dataIndex: "receiveQuantity",
-        width: 150,
+        width: 160,
         key: "receiveQuantity",
         align: "center",
         render: (text, record, index) => 

@@ -50,6 +50,7 @@ export default class InputNumber extends Element {
   handleOnFocus(event) {
     if (this.props.isAutoSelect) {
       event.target.select();
+      event.target.setSelectionRange(0, 9999);
     }
 
     if (this.props.handleOnFocus) {

@@ -273,7 +273,7 @@ html,
 }
 
 .ant-form-horizontal .ant-form-item {
-    margin-bottom: 10px !important
+    margin-bottom: 10px
 }
 
 /*==================INPUT=============*/
@@ -647,7 +647,8 @@ color: #4D4F5C;
 }
 
 .modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs-content .ant-tabs-tabpane {
-    overflow: hidden auto;
+    overflow-x: hidden;
+    overflow-y: scroll;
     padding-right: 10px;
     padding-top: 10px
 }

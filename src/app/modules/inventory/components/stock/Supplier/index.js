@@ -13,7 +13,8 @@ export default class SupplierList extends List {
     this.formCreate = <FormCreate/>;
     this.formUpdate = <FormUpdate/>;
     this.service = SupplierService;
-    this.columnFilterWithKey = ["name"];
+    this.placeHolderForGeneralSearch = "general_search";
+    this.columnFilterWithKey = ["name", "phoneNumber", "email", "description"];
     this.action = SupplierAction;
     this.RESET_CONSTANT = Constant.RESET_SUPPLIER;
   }

@@ -1,8 +1,6 @@
 import React from "react";
 import FormEntry from "./FormEntry";
-import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
-import LoctionAction from "../../../../pos/action/settings/location";
 
 export default class FormItem extends Modal {
   constructor(props) {
@@ -14,13 +12,6 @@ export default class FormItem extends Modal {
     this.handleOnChangeFromLocation = this.handleOnChangeFromLocation.bind(this);
     this.handleOnChangeToLocation = this.handleOnChangeToLocation.bind(this);
     this.callBackGetProductListFromEntry = this.callBackGetProductListFromEntry.bind(this);
-  }
-
-  componentDidMount(){
-    this.props.dispatch(LoctionAction.fetchLocationAccess(100));
-    this.setState({
-      locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION))
-    });
   }
 
   handleOnChangeFromLocation(value) {
@@ -66,31 +57,17 @@ export default class FormItem extends Modal {
                 label={<this.Translate id="text_name" />}
                 data={formData.name}
                 placeholder={this.CATranslate("text_name", locale)}
-                errorRequired={<this.Translate id="error_require_name" />}
-                required={true}
-                isAutoFocus={true}
-                max={100}
+                disabled={true}
                 form={form}/> 
             </this.Col>
             <this.Col md="2">
-              { formData.deliveryDueDate == null ?
-                <this.DatePickers
-                  name="deliveryDueDate"
-                  label={<this.Translate id="text_due_date" />}
-                  placeholder={this.CATranslate("text_due_date", locale)}
-                  errorRequired={<this.Translate id="error_select_due_date" />}
-                  required={true}
-                  form={form}/>
-                :
-                <this.DatePickers
-                  name="deliveryDueDate"
-                  defaultValue={this.Util.formatDatePicker(formData.deliveryDueDate)} 
-                  label={<this.Translate id="text_due_date" />}
-                  placeholder={this.CATranslate("text_due_date", locale)}
-                  errorRequired={<this.Translate id="error_select_due_date" />}
-                  required={true}
-                  form={form}/>
-              }
+              <this.DatePickers
+                name="deliveryDueDate"
+                defaultValue={this.Util.formatDatePicker(formData.deliveryDueDate)} 
+                label={<this.Translate id="text_due_date" />}
+                placeholder={this.CATranslate("text_due_date", locale)}
+                disabled={true}
+                form={form}/>
 
             </this.Col>
             <this.Col md="2">
@@ -100,9 +77,9 @@ export default class FormItem extends Modal {
                 placeholder={this.CATranslate("text_from_location", locale)}
                 defaultValue={locationId}
                 onChange={this.handleOnChangeFromLocation}
-                dataSource={this.props.accessLocation.list}
+                dataSource={this.props.location.list}
                 valueKey="id"
-                required={true}
+                disabled={true}
                 form={form}/>
             </this.Col>
             <this.Col md="2">
@@ -111,11 +88,11 @@ export default class FormItem extends Modal {
                 label={<this.Translate id="text_to_location" />}
                 placeholder={this.CATranslate("text_to_location", locale)}
                 errorRequired={<this.Translate id="error_require_location" />}
-                dataSource={this.props.storeLocation.list}
+                dataSource={this.props.location.list}
                 defaultValue={formData.toLocationId}
                 onChange={this.handleOnChangeToLocation}
                 valueKey="id"
-                required={true}
+                disabled={true}
                 form={form}/>
             </this.Col>
             <this.Col md="3">
@@ -124,7 +101,7 @@ export default class FormItem extends Modal {
                 label={<this.Translate id="text_description" />}
                 data={formData.description}
                 placeholder={this.CATranslate("text_description", locale)}
-                max={255}
+                disabled={true}
                 form={form}/> 
             </this.Col>
           </this.Row>
@@ -135,6 +112,7 @@ export default class FormItem extends Modal {
             productVariant={this.props.productVariant}
             stockTransferEntries={formData.stockTransferEntries}
             fromLocationId={this.state.fromLocationId}
+            unit={this.props.unit}
             locale={locale}
             dispatch={dispatch}
             form={form} />

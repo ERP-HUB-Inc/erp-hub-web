@@ -1,5 +1,7 @@
 import React from "react";
 import Modal from "../../../../common/components/shares/Modal";
+import Enum from "../../../enums";
+import { PaperSize } from "./PaperSize";
 
 export default class FormItem extends Modal {
   render() {
@@ -35,6 +37,15 @@ export default class FormItem extends Modal {
             endPointDelete={`${this.Util.getAPIURL()}/file/v1/general/delete`}
             accessToken={this.Util.getAccessToken()}
             form={form} />
+        </this.Col>
+        <this.Col md="12">
+          <this.Select
+            name="paperSize"
+            label={<this.Translate id="text_paper_size" />}
+            dataSource={PaperSize}
+            valueKey="code"
+            defaultValue={formData.paperSize}
+            form={form}/>
         </this.Col>
         <this.Col md="12">
           <this.Switchs
@@ -80,6 +91,7 @@ export default class FormItem extends Modal {
 FormItem.defaultProps = {
   formData: {
     name: "",
+    paperSize: Enum.PAPER_SIZE.THERMAL,
     isShowStoreName: 0,
     isShowCustomerInfo: 0,
     isShowDevelopBy: 0,

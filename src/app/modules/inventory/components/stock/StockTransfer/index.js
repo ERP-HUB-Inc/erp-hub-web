@@ -81,24 +81,14 @@ export default class Lists extends List {
         align: "center",
         width: 100,
         render: (text, record) => {
-          return this.Util.getLocationId() === record.fromLocationId ?
-            <this.Button
-              type="danger"
-              id="btnAdd"
-              className="mg-right text-uppercase"
-              onClick={() => this.handleCancelTransfer(record)}>
-              <span className="icon-undo icon-padding-right"></span>
-              <this.Translate id="text_cancel"/>
-            </this.Button>
-            :
-            <this.Button
-              type="info"
-              id="btnAdd"
-              className="mg-right text-uppercase"
-              onClick={() => this.handleShowFormAccept(record)}>
-              <span className="icon-arrow-down icon-padding-right"></span>
-              <this.Translate id="text_receive"/>
-            </this.Button>;
+          return <this.Button
+            type="danger"
+            id="btnAdd"
+            className="mg-right text-uppercase"
+            onClick={() => this.handleCancelTransfer(record)}>
+            <span className="icon-undo icon-padding-right"></span>
+            <this.Translate id="text_cancel"/>
+          </this.Button>;
         }
       }
     ];
@@ -113,7 +103,6 @@ export default class Lists extends List {
     this.columnFilterWithKey = ["name", "description", "number"];
     this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
     this.RESET_CONSTANT = Constant.RESET_STOCK_TRANSFER;
-    this.handleShowFormAccept = this.handleShowFormAccept.bind(this);
     this.handleCancelTransfer = this.handleCancelTransfer.bind(this);
   }
 
@@ -132,18 +121,6 @@ export default class Lists extends List {
     } else {
       this.setState({loadingPopup: true});
       this.props.dispatch(StockTransferAction.cancel(rowData));
-    }
-  }
-
-  handleShowFormAccept(rowData) {
-    if (rowData.step === Enum.STOCK_STRANSFER_STEP.RECEIVED) {
-      this.Message.error(this.CATranslate("error_receive_invalid_step", this.props.locale));
-    } else {
-      this.props.dispatch(StockTransferAction.detail(rowData));
-      this.setState({
-        loadingPopup: true,
-        modalConten: <FormUpdate isAcceptRequest={true}/>
-      });
     }
   }
 
@@ -182,8 +159,6 @@ export default class Lists extends List {
       errorResponse = this.props.update.error;
     } else if (this.props.cancel.error) {
       errorResponse = this.props.cancel.error;
-    } else if (this.props.approve.error) {
-      errorResponse = this.props.approve.error;
     }
 
     if (errorResponse) {
@@ -241,7 +216,7 @@ export default class Lists extends List {
             filter["fromLocationId"] = [values.locationId];
           }
 
-          if (values.createdAt) {
+          if (values.createdAt && values.createdAt.length > 0) {
             rangFilter = JSON.stringify({
               column: "createdAt",
               value: [
@@ -276,11 +251,11 @@ export default class Lists extends List {
           :
           <this.Form onSubmit={this.handleSubmitFilter}>
             <this.Row className="main-search-layout">
-              <this.Col md="2">
+              <this.Col md="3">
                 <this.InputText
                   name="key"
-                  label={<this.Translate id="stock_transfer_search_key_place_holder" />}
-                  placeholder={this.CATranslate("stock_transfer_search_key_place_holder", this.props.locale)}
+                  label={<this.Translate id="text_search" />}
+                  placeholder={this.CATranslate("text_po_return_general_search", this.props.locale)}
                   isAutoFocus={true}
                   form={form}/>
               </this.Col>
