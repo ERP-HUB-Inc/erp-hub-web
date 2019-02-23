@@ -24,8 +24,12 @@
 #retail-sale .wrap-category {
     overflow: auto;
     margin-bottom: 15px;
-    max-height: 130px;
+    height: 68px;
     flex: none
+}
+
+.wrap-dropdown-search-product {
+    width: 390px
 }
 
 #retail-sale #left-block .wrap-category,
@@ -93,9 +97,10 @@
 }
 
 #retail-sale .product {
-    height: 150px;
+    height: 160px;
     padding: 5px
 }
+
 
 #retail-sale .category-box,
 #retail-sale .product-box,
@@ -120,22 +125,24 @@
 }
 
 #retail-sale .product-box .product .image {
-    height: 82px;
-    margin-bottom: 22px;
+    /* height: 82px; */
+    /* margin-bottom: 22px; */
+    margin-bottom: 10px;
     overflow: hidden
 }
 
 #retail-sale .product-box .product .image img {
-    height: 100%
+    height: 100%;
+    border-radius: 3px
 }
 
 #retail-sale .product-box .product .name {
-    font-size: 8pt;
+    font-size: 10pt;
     color: #4D4F5C
 }
 
 #retail-sale .product-box .product .price {
-    font-size: 10pt;
+    font-size: 12pt;
     font-weight: 500
 }
 
@@ -234,7 +241,8 @@
     display: none;
     justify-content: space-around;
     align-items: center;
-    padding: 0 25px;
+    /* padding: 0 25px; */
+    padding: 0 0;
     margin-top: 5px;
     height: 0;
     opacity: 0;
@@ -278,7 +286,8 @@
 
 #retail-sale #left-block {
     display: flex;
-    flex-direction: column
+    flex-direction: column;
+    height: 100%
 }
 
 #retail-sale #left-block .wrap-product-box-list {
@@ -290,6 +299,7 @@
 #retail-sale #right-block {
     flex-direction: column;
     display: flex;
+    height: 100%;
     padding-right: 0
 }
 
@@ -337,8 +347,14 @@
     margin-left: 5px
 }
 
-#retail-sale #wrap-payment .payment .sub-total-title{
+#retail-sale #wrap-payment .payment .sub-total-title {
     font-size: 11pt;
+    font-weight: 500;
+    color: #4D4F5C
+}
+
+#retail-sale #wrap-payment .payment .sub-total-value {
+    font-size: 14pt;
     font-weight: 500;
     color: #4D4F5C
 }

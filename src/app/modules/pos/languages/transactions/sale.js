@@ -141,6 +141,12 @@ export default {
     "Quantity not enought for sale"
   ],
 
+  "text_search_and_scan_barcode": [
+    "Search product | Scan barcode",
+    "Search product | Scan barcode",
+    "Search product | Scan barcode"
+  ],
+
   "error_serial_number_require": [
     "Serial number required",
     "Serial number required",

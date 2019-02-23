@@ -206,7 +206,7 @@ export default class DropDownSearch extends Modal {
           <div className="search-icon icon-add-product"></div>
           <this.InputText
             name="searchProduct"
-            placeholder={`${this.CATranslate("input_product_search_product", this.props.locale)}`}
+            placeholder={`${this.props.placeholder ? this.props.placeholder : this.CATranslate("input_product_search_product", this.props.locale)}`}
             className={`ca-input-v1-icon-left ${this.props.className}`}
             isAutoFocus={this.props.isAutoFocus}
             didUpdateMakeAutoFocus={this.props.didUpdateMakeAutoFocus || this.state.isSetFocusSearchInput}

@@ -1,11 +1,12 @@
 .pos-payment .sale-summary {
     display: flex;
-    flex-direction: column
+    flex-direction: column;
+    height: 100%
 }
 
 .pos-payment .sale-summary {
-    margin-top: 30px;
-    margin-bottom: 20px
+    padding-top: 30px;
+    padding-bottom: 20px
 }
 
 .pos-payment .sale-summary>.title {
