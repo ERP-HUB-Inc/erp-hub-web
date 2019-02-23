@@ -52,7 +52,7 @@ export default class ProductList extends List {
     if (Array.isArray(this.props.list.list)) {
       this.props.list.list.forEach(productReport => {
         let variantName = "";
-        if (productReport.product.productOption === Enum.PRODUCT_VARIANT) {
+        if (productReport.product && productReport.product.productOption === Enum.PRODUCT_VARIANT) {
           variantName = `(${productReport.name})`;
         }
 
@@ -169,7 +169,7 @@ class Column extends List {
         key: "name",
         render: (text, record) => {
           let variantName = "";
-          if (record.product.productOption === Enum.PRODUCT_VARIANT) {
+          if (record.product && record.product.productOption === Enum.PRODUCT_VARIANT) {
             variantName = ` / ${record.name}`;
           }
           return InventoryUtil.getProductName(record.product) + variantName;
@@ -186,7 +186,7 @@ class Column extends List {
         dataIndex: "product",
         align: "center",
         key: "product",
-        render: product => product.type === Enum.TYPE_OF_PRODUCT.GOOD ? <this.Translate id="input_product_good"/> : <this.Translate id="input_product_raw_material"/>
+        render: product => product && product.type === Enum.TYPE_OF_PRODUCT.GOOD ? <this.Translate id="input_product_good"/> : <this.Translate id="input_product_raw_material"/>
       },
       {
         title: <this.Translate id="text_quantity" />,
