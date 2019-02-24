@@ -151,51 +151,76 @@ export default class DropDownSearch extends Modal {
     return (
       <this.List.Item.Meta
         avatar={
-          // <span className="icon-items"></span>
           <this.Image url={this.Util.getProductImage(product.image).url}/>
         }
-        title={
-          <this.Row>
-            <this.Col md="4">
-              {productDescriptions.length > 0 ? productDescriptions[0].name : ""}
-            </this.Col>
-          </this.Row>
-        }
+        title={productDescriptions.length > 0 ? productDescriptions[0].name : ""}
         description={
-          <this.Row className="wrap-description">
-            <this.Col md="4" className="text-uppercase">
+          <div>
+            <div className="wrap-description">
               <this.Translate id="text_product_code"/>: {barcode}
-            </this.Col>
-            <this.Col md="4">
-              <div className="center-description">
-                <div className="product-stock">{<this.Translate id="text_product_in_stock"/>}</div>
-                <div className="product-stock-status">
-                  <div className="current-stock">
-                    <div className="title">{<this.Translate id="text_current"/>}</div>
-                    <div className="quantity">{Util.countProductQTYCurrentLocation(product, this.Util.getLocationId())}</div>
-                  </div>
-                  <div className="other-stock">
-                    <div className="title">{<this.Translate id="text_other"/>}</div>
-                    <div className="quantity">{Util.countProductQTYOtherLocation(product, this.Util.getLocationId())}</div>
-                  </div>
-                </div>
-              </div>
-            </this.Col>
+            </div>
             {
               product.productOption === Enum.PRODUCT_VARIANT ?
-                <this.Col md="4" className="right-description">
-                  {
-                    product.productVariants.length > 0 ?
-                      <div className="variant">{product.productVariants.length} {<this.Translate id="text_variant"/>}{product.productVariants.length > 1 ? <this.Translate id="text_plural"/> : ""}</div>
-                      :
-                      <div className="price">{this.formatCurrency(product.price)}</div>
-                  }
-                </this.Col>
+              
+                product.productVariants.length > 0 ?
+                  <div className="variant">{product.productVariants.length} {<this.Translate id="text_variant"/>}{product.productVariants.length > 1 ? <this.Translate id="text_plural"/> : ""}</div>
+                  :
+                  <div className="price">{this.formatCurrency(product.price)}</div>
+                  
                 :
-                ""
+                <div className="product-stock">
+                  <div>
+                    <this.Translate id="text_current_stock"/>: {Util.countProductQTYCurrentLocation(product, this.Util.getLocationId())}
+                  </div>
+                  <div style={{marginLeft: 10}}>
+                    <this.Translate id="text_other"/>: {Util.countProductQTYOtherLocation(product, this.Util.getLocationId())}
+                  </div>
+                </div>
             }
-          </this.Row>
-        }/>
+          </div>
+        }
+        // title={
+        //   <this.Row>
+        //     <this.Col md="4">
+        //       {productDescriptions.length > 0 ? productDescriptions[0].name : ""}
+        //     </this.Col>
+        //   </this.Row>
+        // }
+        // description={
+        //   <this.Row className="wrap-description">
+        //     <this.Col md="4" className="text-uppercase">
+        //       <this.Translate id="text_product_code"/>: {barcode}
+        //     </this.Col>
+        //     <this.Col md="4">
+        //       <div className="center-description">
+        //         <div className="product-stock">{<this.Translate id="text_product_in_stock"/>}</div>
+        //         <div className="product-stock-status">
+        //           <div className="current-stock">
+        //             <div className="title">{<this.Translate id="text_current"/>}</div>
+        //             <div className="quantity">{Util.countProductQTYCurrentLocation(product, this.Util.getLocationId())}</div>
+        //           </div>
+        //           <div className="other-stock">
+        //             <div className="title">{<this.Translate id="text_other"/>}</div>
+        //             <div className="quantity">{Util.countProductQTYOtherLocation(product, this.Util.getLocationId())}</div>
+        //           </div>
+        //         </div>
+        //       </div>
+        //     </this.Col>
+        //     {
+        //       product.productOption === Enum.PRODUCT_VARIANT ?
+        //         <this.Col md="4" className="right-description">
+        //           {
+        //             product.productVariants.length > 0 ?
+        //               <div className="variant">{product.productVariants.length} {<this.Translate id="text_variant"/>}{product.productVariants.length > 1 ? <this.Translate id="text_plural"/> : ""}</div>
+        //               :
+        //               <div className="price">{this.formatCurrency(product.price)}</div>
+        //           }
+        //         </this.Col>
+        //         :
+        //         ""
+        //     }
+        //   </this.Row>}
+      />
     );
   }
 

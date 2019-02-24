@@ -413,6 +413,18 @@ export default {
     "Product In Stock"
   ],
 
+  "text_current_stock": [
+    "Current Stock",
+    "Current Stock",
+    "Current Stock",
+  ],
+
+  "text_stock": [
+    "Stock",
+    "Stock",
+    "Stock"
+  ],
+
   "text_current": [
     "Current",
     "Current",

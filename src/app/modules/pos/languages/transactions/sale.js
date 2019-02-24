@@ -76,9 +76,9 @@ export default {
   ],
 
   "text_title_open_sale": [
-    "Last Sale Registration Summary",
-    "Last Sale Registration Summary",
-    "Last Sale Registration Summary"
+    "Last sale registration summary",
+    "Last sale registration summary",
+    "Last sale registration summary"
   ],
 
   "text_cashier": [

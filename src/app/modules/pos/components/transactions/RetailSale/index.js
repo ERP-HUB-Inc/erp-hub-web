@@ -517,8 +517,18 @@ export default class Retail extends Component {
       return;
     }
     
-    if (product.productVariants && product.productVariants.length > 0) {
-      // TO DO: Show Variant Product POPUP
+    if (
+      product.productOption === InventoryEnum.PRODUCT_VARIANT &&
+      product.productVariants &&
+      product.productVariants.length > 0
+    ) {
+      this.setState({
+        selectedProduct: product,
+        modalContent: <VaraintProduct
+          product={product}
+          handleCancel={this.handleCancelVariantProduct} />
+      });
+      return;
     } else {
       this.handleOnSelectProduct(product, productVariants);
     }
@@ -674,7 +684,7 @@ export default class Retail extends Component {
 
     const numberOfItemRow = Math.ceil(countProduct / numberOfColumn);
 
-    let productWidth = (screenWidth/numberOfColumn) - 5;
+    let productWidth = (screenWidth/numberOfColumn) - 4;
     let productHeight = productWidth;
 
     if ((numberOfItemRow * productHeight) > itemPanelHeight) { // calculate total height of all row of item list
