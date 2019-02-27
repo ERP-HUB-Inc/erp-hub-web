@@ -21,17 +21,7 @@ export default combineReducers({
     ];
     return reducer.archive(state, action, constants);
   },
-  add: (state = InitialState.add(), action) => {
-    const constants = [
-      Constant.ADD_STOCK_ADJUSTMENT_APPROVE_PENDING,
-      Constant.ADD_STOCK_ADJUSTMENT_APPROVE_REJECTED,
-      Constant.ADD_STOCK_ADJUSTMENT_APPROVE_FULFILLED, 
-      Constant.SHOW_STOCK_ADJUSTMENT_APPROVE_FORM,
-      Constant.RESET_STOCK_ADJUSTMENT_APPROVE,
-      Constant.RESET_ADD_STOCK_ADJUSTMENT_APPROVE
-    ];
-    return reducer.add(state, action, constants);
-  },
+
   detail: (state = InitialState.detail(), action) => {
     const constants = [
       Constant.REQUEST_STOCK_ADJUSTMENT_APPROVE_DETAIL_PENDING,

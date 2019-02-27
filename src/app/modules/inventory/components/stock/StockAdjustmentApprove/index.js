@@ -1,7 +1,6 @@
 import React from "react";
 import List from "../List";
 import Enum from "../../../enums";
-import FormCreate from "../../../containers/stock/StockAdjustmentApprove/FormCreate";
 import FormUpdate from "../../../containers/stock/StockAdjustmentApprove/FormUpdate";
 import Constant from "../../../constants/stock/stockAdjustmentApprove";
 import StockAdjustmentApproveAction from "../../../actions/stock/stockAdjustmentApprove";
@@ -39,7 +38,6 @@ export default class StockAdjustmentApprovetLists extends List {
         render: step => step in this.ADJUSTMENT_STEP ? <this.Tag color={this.ADJUSTMENT_STEP[step].color} className="text-uppercase text-center po-step-tag">{this.ADJUSTMENT_STEP[step].name}</this.Tag> : ""
       }
     ];
-    this.formCreate = <FormCreate/>;
     this.formUpdate = <FormUpdate />;
     this.fetchingProp = "stockAdjustmentApprove";
     this.service = StockAdjustmentApproveService;

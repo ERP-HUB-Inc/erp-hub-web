@@ -73,7 +73,6 @@ export default class Form extends Modal {
         <FormItem 
           form={form} 
           formData={stockAdjustmentApproveUpdate.data} 
-          storeLocation={storeLocation}
           accessLocation={this.props.accessLocation} 
           dispatch={dispatch} 
           locale={locale}
