@@ -52,13 +52,6 @@ export default class StockAdjustmentApprovetLists extends List {
     this.RESET_CONSTANT = Constant.RESET_STOCK_REQUEST;
   }
 
-  componentDidUpdate() {
-    if (this.props.stockAdjustmentApproveDetail.fetched) {
-      this.setState({loadingPopup: false});
-      this.props.dispatch(StockAdjustmentApproveAction.reset(Constant.RESET_ADD_STOCK_ADJUSTMENT_REQUEST));
-    }
-  }
-
   showFormEdit(rowData) {
     this.props.dispatch(StockAdjustmentApproveAction.detail(rowData));  
     this.setState({
