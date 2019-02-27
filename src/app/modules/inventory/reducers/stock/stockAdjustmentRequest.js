@@ -37,6 +37,7 @@ export default combineReducers({
       Constant.REQUEST_STOCK_ADJUSTMENT_REQUEST_DETAIL_PENDING,
       Constant.REQUEST_STOCK_ADJUSTMENT_REQUEST_DETAIL_REJECTED,
       Constant.REQUEST_STOCK_ADJUSTMENT_REQUEST_DETAIL_FULFILLED,
+      Constant.RESET_STOCK_ADJUSTMENT_FULL_RESET,
       Constant.REQUEST_STOCK_ADJUSTMENT_REQUEST_DETAIL_RESET
     ];
     return reducer.detail(state, action, constants);

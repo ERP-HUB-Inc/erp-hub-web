@@ -11,7 +11,7 @@ export default class FormItem extends Modal {
       locations: [],
       locationId: ""
     };
-    this.handleOnChangeFromLocation = this.handleOnChangeFromLocation.bind(this);
+    this.handleOnChangeLocation = this.handleOnChangeLocation.bind(this);
   }
 
   componentDidMount(){
@@ -21,10 +21,10 @@ export default class FormItem extends Modal {
     });
   }
 
-  handleOnChangeFromLocation(value) {
-    if (value === this.props.form.getFieldValue("locationId")) {
-      this.Message.error(this.CATranslate("error_the_same_location", this.props.locale));
-    }
+  handleOnChangeLocation(value) {
+    // if (value === this.props.form.getFieldValue("toLocationId")) {
+    //   this.Message.error(this.CATranslate("error_the_same_location", this.props.locale));
+    // }
     this.setState({locationId: value});
   }
 
@@ -37,7 +37,7 @@ export default class FormItem extends Modal {
       productSearch
     } = this.props;
 
-    let locationId = formData.locationId;
+    let locationId = parseFloat(formData.locationId);
     if (!locationId && Array.isArray(this.state.locations)) {
       const defaultLocation = this.state.locations.find(location => location.isDefault === this.Enum.IS_DEFAULT);
       if (defaultLocation) {
@@ -51,22 +51,22 @@ export default class FormItem extends Modal {
           <this.Row className="ca-penel-v1 wrap-po-filter-create">
             <this.Col md="4">
               <this.InputText
-                name="name"
+                name="title"
                 label={<this.Translate id="col_stock_adjustment_request_title" />}
-                data={formData.name}
+                data={formData.title}
                 placeholder={this.CATranslate("col_stock_adjustment_request_title", locale)}
                 errorRequired={<this.Translate id="error_require_name" />}
                 required={true}
                 isAutoFocus={true}
-                max={100}
+                max={255}
                 form={form}/> 
             </this.Col>
             <this.Col md="4">
               <this.InputText
                 name="reason"
-                label={<this.Translate id="col_stock_adjustment_request_reason" />}
-                data={formData.invoiceNo}
-                placeholder={this.CATranslate("col_stock_adjustment_request_reason",locale)}
+                label={<this.Translate id="text_reason" />}
+                data={formData.reason}
+                placeholder={this.CATranslate("text_reason",locale)}
                 required={true}
                 max={100}
                 form={form}/>
@@ -74,11 +74,11 @@ export default class FormItem extends Modal {
             <this.Col md="4">
               <this.Select
                 name="locationId"
-                label={<this.Translate id="text_delivery_to_location" /> }
-                placeholder={this.CATranslate("text_delivery_to_location", locale)}
+                label={<this.Translate id="text_location" /> }
+                placeholder={this.CATranslate("text_location", locale)}
                 defaultValue={locationId}
-                onChange={this.handleOnChangeFromLocation}
-                dataSource={this.props.accessLocation.list}
+                dataSource={this.state.locations}
+                onChange={this.handleOnChangeLocation}
                 valueKey="id"
                 required={true}
                 form={form}/>
@@ -89,7 +89,8 @@ export default class FormItem extends Modal {
           <SearchAdjustment
             dataSource={productSearch}
             productVariant={this.props.productVariant}
-            stockAdjustmentRequest={formData.purchaseOrderEntries}
+            locationId={this.state.locationId}
+            stockAdjustmentRequest={formData.stockAdjustmentEntries}
             locale={locale}
             dispatch={dispatch}
             form={form} />
@@ -102,7 +103,7 @@ export default class FormItem extends Modal {
 FormItem.defaultProps = {
   formData: {
     name:"",
-    purchaseOrderEntries: [],
+    stockAdjustmentEntries: [],
     locationId: ""
   },
   productSearch: []

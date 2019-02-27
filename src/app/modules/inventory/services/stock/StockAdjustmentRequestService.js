@@ -4,7 +4,7 @@ class StockAdjustmentRequestService extends BaseService {
 
   constructor() {
     super();
-    this.module = "inventory/purchase";
+    this.module = "inventory/stock/adjustment";
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
     this.initializeRoute();
   }

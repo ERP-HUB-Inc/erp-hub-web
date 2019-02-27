@@ -18,14 +18,6 @@ export default {
       });
     };
   },
-  add: (data) => {
-    return dispatch => {
-      return dispatch({
-        type: Constant.ADD_STOCK_ADJUSTMENT_APPROVE,
-        payload: StockAdjustmentApproveService.add(data)
-      });
-    };
-  },
   update: (data) => {
     return dispatch => {
       return dispatch({

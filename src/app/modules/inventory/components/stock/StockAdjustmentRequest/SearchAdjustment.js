@@ -6,7 +6,7 @@ import DropDownSearch from "../../../components/products/Product/DropDownSearch"
 import ProductVariantAction from "../../../actions/products/productVariant";
 import ProductVariantConstant from "../../../constants/products/productVariant";
 import Modal from "../../../../common/components/shares/Modal";
-import "./index.css";
+import "../PurchaseOrder/index.css";
 
 export default class SearchAdjustmentRequest extends Modal {
   constructor(props){
@@ -51,41 +51,67 @@ export default class SearchAdjustmentRequest extends Modal {
         }
       },
       {
-        title: <this.Translate id="col_stock_adjustment_request_current_qty" />,
+        title: <this.Translate id="text_current_qty" />,
         dataIndex: "currentQty",
         width: 250,
         align: "center",
-        key: "currentQty"
+        key: "currentQty",
+        render: (text, product, index) => {
+          const currentQty = this.countCurrentQty(product);
+          return <div>
+            <this.InputNumber name={`currentQty[${index}]`} className="hidden" type="hidden" data={currentQty} form={this.form} />
+            {currentQty}
+          </div>;
+        }
       },
       {
-        title: <this.Translate id="col_stock_adjustment_request_adjust" />,
-        dataIndex: "adjust",
+        title: <this.Translate id="text_unit" />,
+        dataIndex: "unit",
+        width: 150,
+        key: "unit",
+        align: "center",
+        render: (text, record, index) => {
+          return <this.Select
+            required={true}
+            name={`unitId[${index}]`}
+            valueKey="id"
+            dataSource={this.state.units}
+            defaultValue={record.unitId}
+            form={this.form} />;
+        }
+      },
+      {
+        title: <this.Translate id="text_adjust" />,
+        dataIndex: "adjustQuantity",
         width: 150,
         align: "center",
-        key: "adjust",
+        key: "adjustQuantity",
         render: (text, record, index) => {
           return <this.InputNumber
-            name={`adjust[${index}]`}
+            name={`adjustQuantity[${index}]`}
             className="text-right"
             isAutoSelect={true}
             isHideTool={true}
             required={true}
             precision={0}
+            data={record.adjustQuantity}
             handleKeyUp={(e) => this.handleOnChangeAdjust(e, index)}
             form={this.form} />;
         }
       },
       {
-        title: <this.Translate id="col_stock_adjustment_request_different" />,
+        title: <this.Translate id="text_difference" />,
         dataIndex: "different",
         width: 150,
         align: "center",
         key: "different",
         render: (text, record, index) => {
-          return <this.InputNumber
+       
+          return  <this.InputNumber
             name={`different[${index}]`}
-            precision={null}
-            disabled={true}
+            data={String(record.different)}
+            precision={0}
+            className="ca-input-no-border"
             form={this.form} />;
         }
       },
@@ -130,21 +156,23 @@ export default class SearchAdjustmentRequest extends Modal {
         if (stockAdjustmentRequest.productVariant) {
           productName = Util.getProductName(stockAdjustmentRequest.productVariant.product);
           variantName = stockAdjustmentRequest.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? stockAdjustmentRequest.productVariant.name : "";
-          currentQty = stockAdjustmentRequest.productVariant.quantity;
+          currentQty = stockAdjustmentRequest.currentQuantity;
         }
 
-        existingProductList.push({
-          stockAdjustmentRequestId: stockAdjustmentRequest.id,
-          productName,
-          variantName,
-          unitId: stockAdjustmentRequest.unitId,
-          productVariantId: stockAdjustmentRequest.productVariantId,
-          currentQty,
-          quantity: stockAdjustmentRequest.requestQuantity, 
-          price: stockAdjustmentRequest.price,
-          totalPrice: stockAdjustmentRequest.requestQuantity * stockAdjustmentRequest.price,
-          stockAdjustmentRequestStatus: stockAdjustmentRequest.status
-        }); 
+        if(stockAdjustmentRequest.status !== this.Enum.ARCHIVE){
+          existingProductList.push({
+            stockAdjustmentRequestId: stockAdjustmentRequest.id,
+            productName,
+            variantName,
+            unitId: stockAdjustmentRequest.unitId,
+            productVariantId: stockAdjustmentRequest.productVariantId,
+            currentQty,
+            productVariants: [stockAdjustmentRequest.productVariant],
+            adjustQuantity: stockAdjustmentRequest.adjustQuantity,
+            different: stockAdjustmentRequest.adjustQuantity - currentQty,
+            stockAdjustmentRequestStatus: stockAdjustmentRequest.productVariant.product.status
+          }); 
+        }
       }); 
       
       this.setState({
@@ -160,6 +188,15 @@ export default class SearchAdjustmentRequest extends Modal {
     }
   }
 
+  countCurrentQty(product) {
+    let locationId = "";
+    if (this.props.locationId) {
+      locationId = this.props.locationId;
+    } else {
+      locationId = this.Util.getLocationId();
+    }
+    return Util.countProductQTYCurrentLocation(product, locationId);
+  }
 
   removeRecord(record, index){
     let existingProductList = this.state.productLists;
@@ -183,15 +220,18 @@ export default class SearchAdjustmentRequest extends Modal {
   handleOnChangeAdjust(e,index){
     let different  = "";
     const existingProductList = this.state.productLists;
+    console.log("this.state.productLists",this.state.productLists);
     existingProductList.forEach((product, productIndex) => {
       if (productIndex === index) {
-        different =  existingProductList[productIndex]["currentQty"] - e.target.value;
+        let currentQty = this.props.form.getFieldValue(`currentQty[${index}]`);
+        different = e.target.value - currentQty;
       }
     });
     this.props.form.setFieldsValue({[`different[${index}]`]: different });
   }
 
   handleOnSelectList(product, productVariant, isRequestVariantForm = true) {
+    const productVariantForCalculateQTY = productVariant;
     let isProductVariant = product.productOption === Enum.PRODUCT_VARIANT;
     if (isProductVariant && isRequestVariantForm) {
       this.setState({
@@ -203,14 +243,15 @@ export default class SearchAdjustmentRequest extends Modal {
       return;
     } else if (productVariant && productVariant.length > 0) {
       productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
-      productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
+      if(productVariant){
+        productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
+      }
     }
 
     const productName = Util.getProductName(product);
 
-    const {quantity} = productVariant;
+    const {quantity} = productVariant ? productVariant : [];
     const existingProductList = this.state.productLists;
-    const initialQuantity = 1;
 
     if (existingProductList.length === 0) {
       existingProductList.push({
@@ -219,8 +260,7 @@ export default class SearchAdjustmentRequest extends Modal {
         unitId: product.defaultUnitId,
         variantName: productVariant.name,
         currentQty: quantity,
-        quantity: initialQuantity,
-        price: 0,
+        productVariants: productVariantForCalculateQTY,
         productVariantId: productVariant.id,
         stockAdjustmentRequestStatus: this.Enum.ACTIVE
       });
@@ -231,7 +271,6 @@ export default class SearchAdjustmentRequest extends Modal {
       existingProductList.forEach((product, index) => {
         if (product.productVariantId === productVariant.id) {
           isNotTheSameProduct = false;
-          existingProductList[index]["quantity"] += 1;
         }
       });
 
@@ -241,10 +280,8 @@ export default class SearchAdjustmentRequest extends Modal {
           productName,
           variantName: productVariant.name,
           unitId: product.defaultUnitId,
-          currentQty: quantity,
-          price: 0,
+          productVariants: productVariantForCalculateQTY,
           productVariantId: productVariant.id,
-          quantity: initialQuantity,
           stockAdjustmentRequestStatus: this.Enum.ACTIVE
         });
       }
@@ -270,7 +307,7 @@ export default class SearchAdjustmentRequest extends Modal {
           dataSource={productLists}
           loading={this.props.productVariant.fetching}
           columns={this.columns}
-          locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
+          locale={{emptyText: <this.Translate id="placeholder_table_stock_adjustment" />}}
         />
         {this.state.modalVariant}
       </div>

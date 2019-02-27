@@ -8,6 +8,7 @@ export default class FormItem extends Modal {
     super(props);
     this.state = {
       locations: [],
+      unit: [],
       locationId: ""
     };
     this.form = this.props.form;
@@ -42,7 +43,23 @@ export default class FormItem extends Modal {
         }
       },
       {
-        title: <this.Translate id="col_stock_adjustment_request_current_qty" />,
+        title: <this.Translate id="text_unit" />,
+        dataIndex: "unit",
+        width: 150,
+        key: "unit",
+        align: "center",
+        render: (text, record, index) => {
+          return <this.Select
+            name={`unitId[${index}]`}
+            valueKey="id"
+            dataSource={this.state.units}
+            defaultValue={record.unitId}
+            disabled={true}
+            form={this.form} />;
+        }
+      },
+      {
+        title: <this.Translate id="text_current_qty" />,
         dataIndex: "currentQty",
         width: 250,
         align: "center",
@@ -66,7 +83,8 @@ export default class FormItem extends Modal {
   componentDidMount(){
     this.props.dispatch(LocationAction.fetchLocationAccess(100));
     this.setState({
-      locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION))
+      locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION)),
+      units: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT))
     });
   }
 
@@ -116,9 +134,9 @@ export default class FormItem extends Modal {
             <this.Col md="4">
               <this.InputText
                 name="reason"
-                label={<this.Translate id="col_stock_adjustment_request_reason" />}
+                label={<this.Translate id="text_reason" />}
                 data={formData.invoiceNo}
-                placeholder={this.CATranslate("col_stock_adjustment_request_reason",locale)}
+                placeholder={this.CATranslate("text_reason",locale)}
                 required={true}
                 max={100}
                 disabled={true}
@@ -128,8 +146,8 @@ export default class FormItem extends Modal {
             <this.Col md="4">
               <this.Select
                 name="locationId"
-                label={<this.Translate id="text_delivery_to_location" /> }
-                placeholder={this.CATranslate("text_delivery_to_location", locale)}
+                label={<this.Translate id="text_location" /> }
+                placeholder={this.CATranslate("text_location", locale)}
                 defaultValue={locationId}
                 dataSource={this.props.accessLocation.list}
                 valueKey="id"

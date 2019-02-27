@@ -14,53 +14,78 @@ export default {
     "Who Request",
     "Who Request"
   ],
-  "col_stock_adjustment_request_reason": [
+  "text_reason": [
     "Reason",
     "Reason",
     "Reason"
   ],
 
-  "col_stock_adjustment_request_adjust": [
+  "text_adjust": [
     "Adjust",
     "Adjust",
     "Adjust"
   ],
 
-  "col_stock_adjustment_request_different": [
-    "Different",
-    "Different",
-    "Different"
-  ],
-
-  "col_stock_adjustment_request_current_qty": [
+  "text_current_qty": [
     "Current Quantity",
     "Current Quantity",
     "Current Quantity"
   ],
 
-  "stock_adjustment_request_step_request": [
-    "Request",
-    "Request",
-    "Request"
+  "text_request": [
+    "Requested",
+    "Requested",
+    "Requested"
   ],
 
-  "stock_adjustment_request_step_approve": [
-    "Approve",
-    "Approve",
-    "Approve"
+  "text_location": [
+    "Location",
+    "Location",
+    "Location"
   ],
 
-  "stock_adjustment_request_step_reject": [
+  "text_approve": [
+    "Approved",
+    "Approved",
+    "Approved"
+  ],
+
+  "text_reject": [
     "Reject",
     "Reject",
     "Reject"
   ],
 
-  "stock_adjustment_request_step_complete": [
-    "Complete",
-    "Complete",
-    "Complete"
+  "text_complete": [
+    "Completed",
+    "Completed",
+    "Completed"
+  ],
+
+  "placeholder_table_stock_adjustment" : [
+    "No stock adjustment Item",
+    "No stock adjustment Item",
+    "No stock adjustment Item"
+  ],
+
+  "error_stock_adjustment_no_entry": [
+    "Please add product to stock adjustment",
+    "Please add product to stock adjustment",
+    "Please add product to stock adjustment"
+  ],
+
+  "error_warning_delete_adjustment" : [
+    "Sorry, we allow to delete only request step",
+    "Sorry, we allow to delete only request step",
+    "Sorry, we allow to delete only request step"
+  ],
+
+  "error_warning_edit_adjustment" : [
+    "Sorry, we not allow edit when stock adjustment already complete",
+    "Sorry, we not allow edit when stock adjustment already complete",
+    "Sorry, we not allow edit when stock adjustment already complete"
   ]
+
   
 
 };

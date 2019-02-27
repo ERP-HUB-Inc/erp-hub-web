@@ -1,12 +1,11 @@
 import React from "react";
 import List from "../List";
 import Enum from "../../../enums";
-import FormCreate from "../../../containers/stock/StockAdjustmentApprove/FormCreate";
 import FormUpdate from "../../../containers/stock/StockAdjustmentApprove/FormUpdate";
 import Constant from "../../../constants/stock/stockAdjustmentApprove";
 import StockAdjustmentApproveAction from "../../../actions/stock/stockAdjustmentApprove";
 import StockAdjustmentApproveService from "../../../services/stock/StockAdjustmentApproveService";
-import "./index.css";
+import "../PurchaseOrder/index.css";
 
 export default class StockAdjustmentApprovetLists extends List {
   constructor(props) {
@@ -25,7 +24,7 @@ export default class StockAdjustmentApprovetLists extends List {
         key: "number"
       },
       {
-        title: <this.Translate id="col_stock_adjustment_request_reason" />,
+        title: <this.Translate id="text_reason" />,
         dataIndex: "reason",
         key: "reason",
         width: 130
@@ -39,13 +38,12 @@ export default class StockAdjustmentApprovetLists extends List {
         render: step => step in this.ADJUSTMENT_STEP ? <this.Tag color={this.ADJUSTMENT_STEP[step].color} className="text-uppercase text-center po-step-tag">{this.ADJUSTMENT_STEP[step].name}</this.Tag> : ""
       }
     ];
-    this.formCreate = <FormCreate/>;
     this.formUpdate = <FormUpdate />;
     this.fetchingProp = "stockAdjustmentApprove";
     this.service = StockAdjustmentApproveService;
     this.ADJUSTMENT_STEP = {
-      [Enum.STOCK_ADJUST_STEP.REQUEST]: {name: <this.Translate id="stock_adjustment_request_step_request" />, color:  this.Enum.STOCK_ADJUST_COLOR.REQUEST},
-      [Enum.STOCK_ADJUST_STEP.COMPLETE]: {name: <this.Translate id="stock_adjustment_request_step_complete" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
+      [Enum.STOCK_ADJUST_STEP.REQUEST]: {name: <this.Translate id="text_request" />, color:  this.Enum.STOCK_ADJUST_COLOR.REQUEST},
+      [Enum.STOCK_ADJUST_STEP.COMPLETE]: {name: <this.Translate id="text_complete" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
     };
     this.columnFilterWithKey = ["name"];
     this.action = StockAdjustmentApproveAction;

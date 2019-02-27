@@ -1,3 +1,7 @@
+.ant-form.ant-form-horizontal {
+    width: 100% !important;
+}
+
 .btn-push-to-supplier {
     width: 153px !important;
 }
@@ -53,6 +57,12 @@
     font-size: 8pt
 }
 
+.adjustment-step-tag { 
+    min-width: 73px;
+    width: 73px;
+    font-size: 8pt
+}
+
 .modal-po-full-screen .ant-modal,
 .modal-po-full-screen .ant-modal .ant-modal-content,
 .modal-po-full-screen .ant-modal-body,
@@ -90,4 +100,15 @@
 .modal-po-full-screen .ant-modal-body {
     padding-left: 0 !important;
     padding-right: 0 !important
+}
+
+/* input number no border */
+
+.ca-input-no-border {
+    border: none;
+    background: none;
+}
+
+.ca-input-no-border input {
+    text-align: center;
 }

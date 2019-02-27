@@ -12,13 +12,12 @@ export default class Form extends Modal {
     this.width = window.innerWidth < 1400 ? window.innerWidth : 1400;
     this.ADJUSTMENT_STEP_STR = {
       [Enum.STOCK_ADJUST_STEP.REQUEST]: {name: <this.Translate id="stock_adjustment_request_step_request" />, color:  this.Enum.STOCK_ADJUST_COLOR.REQUEST},
-      [Enum.STOCK_ADJUST_STEP.COMPLETE]: {name: <this.Translate id="stock_adjustment_request_step_complete" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
+      [Enum.STOCK_ADJUST_STEP.COMPLETE]: {name: <this.Translate id="text_complete" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
     };
 
     this.title = <this.Translate id="text_stock_adjustment_approve" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.prepareFormDataForUpdate = this.prepareFormDataForUpdate.bind(this);
   }
 
   renderCrudAction(){
@@ -62,7 +61,6 @@ export default class Form extends Modal {
       stockAdjustmentApproveUpdate, 
       form, 
       locale, 
-      storeLocation,
       dispatch
     } = this.props;
 
@@ -73,7 +71,6 @@ export default class Form extends Modal {
         <FormItem 
           form={form} 
           formData={stockAdjustmentApproveUpdate.data} 
-          storeLocation={storeLocation}
           accessLocation={this.props.accessLocation} 
           dispatch={dispatch} 
           locale={locale}
