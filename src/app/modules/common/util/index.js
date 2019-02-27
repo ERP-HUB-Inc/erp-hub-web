@@ -476,5 +476,9 @@ export class Util {
 
     return code;
   }
+
+  processImageOnFlightCropCenter(imageURL, size = {width: 100, height: 100}) {
+    return `${process.env.REACT_APP_IMAGE_FLIGHT_HOST}/OptionKey_OptionValue - g_Center, w_${size.width}, h_${size.height}/${imageURL}`;
+  }
   
 }

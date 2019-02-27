@@ -24,6 +24,19 @@
   .wrap-client-login .wrap-blog-logo {
     width: 257px !important
   }
+
+  /* MAKE FIX POS RIGHT HAND SIDE */
+  #retail-sale #right-block {
+    width:400px;
+    max-width: none;
+    flex: none
+  }
+
+  #retail-sale #left-block {
+    flex-grow: 1;
+    flex: 1;
+    max-width: none
+  }
 }
 
 /* ----------- iPad Pro ----------- */

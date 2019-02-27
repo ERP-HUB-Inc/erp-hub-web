@@ -22,7 +22,7 @@ export default class Payment extends Modal {
     this.paymentMethodSelectedIndex = null;
     this.wrapClassName = "pos-payment";
     this.width = window.innerWidth < 1000 ? window.innerWidth : 1000;
-    this.height = window.innerHeight < 700 ? window.innerHeight : 700;
+    this.height = window.innerHeight < 700 ? window.innerHeight - 10 : 700;
     this.currentUser = this.getCurrentUser();
     this.handleOnMakePaymentWithCash = this.handleOnMakePaymentWithCash.bind(this);
     this.handleOnCompletePayment = this.handleOnCompletePayment.bind(this);

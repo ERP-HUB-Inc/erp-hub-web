@@ -76,9 +76,9 @@ export default {
   ],
 
   "text_title_open_sale": [
-    "Last Sale Registration Summary",
-    "Last Sale Registration Summary",
-    "Last Sale Registration Summary"
+    "Last sale registration summary",
+    "Last sale registration summary",
+    "Last sale registration summary"
   ],
 
   "text_cashier": [
@@ -139,6 +139,12 @@ export default {
     "Quantity not enought for sale",
     "Quantity not enought for sale",
     "Quantity not enought for sale"
+  ],
+
+  "text_search_and_scan_barcode": [
+    "Search product | Scan barcode",
+    "Search product | Scan barcode",
+    "Search product | Scan barcode"
   ],
 
   "error_serial_number_require": [

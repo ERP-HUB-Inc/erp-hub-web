@@ -517,8 +517,18 @@ export default class Retail extends Component {
       return;
     }
     
-    if (product.productVariants && product.productVariants.length > 0) {
-      // TO DO: Show Variant Product POPUP
+    if (
+      product.productOption === InventoryEnum.PRODUCT_VARIANT &&
+      product.productVariants &&
+      product.productVariants.length > 0
+    ) {
+      this.setState({
+        selectedProduct: product,
+        modalContent: <VaraintProduct
+          product={product}
+          handleCancel={this.handleCancelVariantProduct} />
+      });
+      return;
     } else {
       this.handleOnSelectProduct(product, productVariants);
     }
@@ -664,13 +674,33 @@ export default class Retail extends Component {
   }
 
   renderProductList() {
+    const countProduct = this.props.products.list.length;
+    const numberOfColumn = 5;
+    const scrollWidth = 20;
+    const categoryPanelHeight = 68;
+    const headerHeight = 50;
+    const itemPanelHeight = window.innerHeight - (headerHeight + categoryPanelHeight);
+    const screenWidth = window.innerWidth - 420;
+
+    const numberOfItemRow = Math.ceil(countProduct / numberOfColumn);
+
+    let productWidth = (screenWidth/numberOfColumn) - 4;
+    let productHeight = productWidth;
+
+    if ((numberOfItemRow * productHeight) > itemPanelHeight) { // calculate total height of all row of item list
+      productWidth = productHeight = productWidth - (scrollWidth / 5); // we take the whole width of scroll and provide the left for item list
+    }
+
+    const imageHeight = productWidth - 70;
+    const imageWidth = productWidth - 25;
+
     return (
-      this.props.products.list.length > 0 ?
+      countProduct > 0 ?
         this.props.products.list.map((product, index) =>
-          <this.Col md="3" className="product-box" key={index}>
-            <div onClick={() => this.handleOnSelectProduct(product, product.productVariants)} className="product">
-              <div className="image">
-                <this.Image url={this.Util.getProductImage(product.image).url}/>
+          <this.Col style={{width: productWidth, maxWidth: "none", flex: "none"}} md="3" className="product-box" key={index}>
+            <div onClick={() => this.handleOnSelectProduct(product, product.productVariants)} className="product" style={{height: productWidth}}>
+              <div className="image" style={{maxHeight: imageHeight}}>
+                <this.Image style={{maxHeight: imageHeight}} url={this.Util.processImageOnFlightCropCenter(this.Util.getProductImage(product.image).url, {height: imageHeight, width: imageWidth})}/>
               </div>
               {
                 Util.countProductQTYCurrentLocation(product, this.Util.getLocationId()) <= 0 && product.serialType !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY ?
@@ -692,7 +722,7 @@ export default class Retail extends Component {
           </this.Col>
         )
         :
-        <div style={{display: "flex", alignItems: "center", margin: "0 auto"}}>
+        <div style={{display: "flex", alignItems: "center", margin: "0 auto", height: "100%"}}>
           <img src={`${this.Util.getGeneralImage("storeVein/no-product-found.png").url}`} style={{width: 150}}  alt=""/>
         </div>
     );
@@ -795,7 +825,7 @@ export default class Retail extends Component {
                   handleOnAddNewCustomer={this.handleOnAddNewCustomer}/>
                
                 <ProductDropDownSearch
-                  placeholder={this.CATranslate("input_search_product_placeholder", this.props.locale)}
+                  placeholder={this.CATranslate("text_search_and_scan_barcode", this.props.locale)}
                   productSearch={this.props.productSearch}
                   handleOnSelectList={this.handleOnSelectProductSearchList}
                   callBack={this.handleOnAutoSelectProductAfterSearchResult}
@@ -902,10 +932,12 @@ export default class Retail extends Component {
               <div id="wrap-payment">
                 <this.Col md="12">
                   <this.Row className="payment">
-                    <this.Col md="6" className="text-left">
+                    <this.Col md="12" className="text-left">
                       {
                         !this.state.isDiscountHasAdded && summaryTotal.discount <= 0 ?
-                          <div className="sub-total add-discount" style={{justifyContent: "end"}} onClick={this.handleOnSetupDiscount}>
+                          <div className="su
+                          
+                          b-total add-discount" style={{justifyContent: "end"}} onClick={this.handleOnSetupDiscount}>
                             <span className="icon-add icon-padding-right"></span> <span><this.Translate id="text_add"/> <this.Translate id="text_discount"/></span>
                           </div>
                           :
@@ -941,21 +973,29 @@ export default class Retail extends Component {
                       {
                         this.state.isDiscountHasAdded && summaryTotal.discount <= 0?
                           <div className="sub-total">
-                            <div className="ca-link sub-total-title" style={{fontWeight: 600}} onClick={this.handleOnSetupDiscount}>
+                            <div className="ca-link sub-total-title" style={{fontWeight: 600, position: "relative"}} onClick={this.handleOnSetupDiscount}>
+                              <div className="delete remove-discount" onClick={this.handleRemoveDiscount}><span className="icon-delete"></span></div>
                               <this.Translate id="text_discount"/>
                               {discountTypeStr}
                             </div>
                             <div className="sub-total-value" style={{position: "relative"}}>
                               {this.formatCurrency(discountAmount)}
-                              <div className="delete remove-discount" onClick={this.handleRemoveDiscount}><span className="icon-delete"></span></div>
                             </div>
                           </div>
                           :
                           ""
                       }
                       {/*END DISCOUNT ROW */}
+                      <div className="sub-total">
+                        <div className="sub-total-title">
+                          <this.Translate id="text_total"/>
+                        </div>
+                        <div className="sub-total-value">
+                          {this.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount))}
+                        </div>
+                      </div>
                     </this.Col>
-                    <this.Col md="6" className="text-right">
+                    <this.Col md="6" className="text-right" style={{display: "none"}}>
                       <div className="grand-total">
                         <div className="grand-total-title"><this.Translate id="text_total"/></div>
                         <div className="grand-total-value">{this.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount))}</div>

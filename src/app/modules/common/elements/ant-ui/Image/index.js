@@ -14,7 +14,12 @@ export class Image extends Element {
   componentDidMount() {
     this.mounted = true;
     if (this.mounted) {
-      this.Util.validImage(this.props.url, this.initializeImage);
+      let imageUrl = this.props.url;
+      const findIndex = imageUrl.search(process.env.REACT_APP_RESOURCE_HOST);
+      if (findIndex !== 0) {
+        imageUrl = imageUrl.substring(findIndex, imageUrl.lenght);
+      }
+      this.Util.validImage(imageUrl, this.initializeImage);
     }
   }
 
@@ -29,6 +34,6 @@ export class Image extends Element {
   }
   
   render() {
-    return <img alt="PPP" src={this.state.image} />;
+    return <img alt="PPP" src={this.state.image} style={this.props.style}/>;
   }
 }
