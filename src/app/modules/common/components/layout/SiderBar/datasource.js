@@ -85,6 +85,16 @@ const Supplier = Loadable({
   loading: () => <StartUp />,
 });
 
+const StockAdjustmentRequest = Loadable({
+  loader: () => import("../../../../inventory/containers/stock/StockAdjustmentRequest"),
+  loading: () => <StartUp />,
+});
+
+const StockAdjustmentApprove = Loadable({
+  loader: () => import("../../../../inventory/containers/stock/StockAdjustmentApprove"),
+  loading: () => <StartUp />,
+});
+
 // REPORT
 const SaleReport = Loadable({
   loader: () => import("../../../../pos/containers/reports/Sale"),
@@ -353,12 +363,27 @@ const dataSource = {
         isFashNav: true
       },
       {
+        title: "Adjustment Request",
+        icon: "icon-stock-transfer",
+        route: "/stock/adjustment/request",
+        component: StockAdjustmentRequest,
+        isFashNav: true
+      },
+      {
+        title: "Adjustment Approve",
+        icon: "icon-stock-transfer",
+        route: "/stock/adjustment/approve",
+        component: StockAdjustmentApprove,
+        isFashNav: true
+      },
+      {
         title: "Receive Transfer",
         icon: "icon-stock-transfer",
         route: "/stock/receive/transfer",
         component: ReceiveStockTransfer,
         isFashNav: false
-      },
+      }
+     
       // {
       //   title: "Stock",
       //   icon: "icon-stock",
