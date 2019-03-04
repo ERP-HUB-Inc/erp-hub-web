@@ -34,6 +34,11 @@ export default {
     RETURN: "blue",
     PAID: "green"
   },
+  STOCK_ADJUST_COLOR: {
+    REQUEST: "blue",
+    COMPLETE: "green",
+    REJECT: "#f50"
+  },
   STOCK_TRANSFER_STEP_COLOR: {
     PROCESS: "#2db7f5",
     RECEIVED: "#87d068",
