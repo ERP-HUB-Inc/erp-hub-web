@@ -1,5 +1,5 @@
 export default {
-  "create_operation_record_title": [
+  "operation_record_title": [
     "Operation Record",
     "Operation Record",
     "Operation Record"

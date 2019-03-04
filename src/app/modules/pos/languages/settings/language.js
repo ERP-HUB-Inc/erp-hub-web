@@ -5,12 +5,6 @@ export default {
     "ភាសា"
   ],
 
-  "update_language_title": [
-    "Language",
-    "ဘာသာစကား ကို",
-    "ភាសា: ធ្វើបច្ចុប្បន្នភាព"
-  ],
-
   "col_language_code": [
     "Code",
     "ကုဒ်",

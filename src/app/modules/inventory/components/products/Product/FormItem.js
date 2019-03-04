@@ -378,8 +378,8 @@ export default class FormItem extends Modal {
                 <this.Col md="4">
                   <this.SelectSearch
                     name="brandId"
-                    label={<this.Translate id="input_product_brand" />}
-                    placeholder={this.CATranslate("input_product_brand", locale)}
+                    label={<this.Translate id="text_brand" />}
+                    placeholder={this.CATranslate("text_brand", locale)}
                     errorRequired={<this.Translate id="error_require_brand" />}
                     valueKey="id"
                     dataSource={this.state.brands}

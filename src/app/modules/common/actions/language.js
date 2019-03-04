@@ -48,9 +48,9 @@ import homePage from "../../common/languages/home";
 
 export function initLanguage() {
   return initialize([
-    { name: "English", code: "en" },
+    {name: "English", code: "en"},
+    {name: "ភាសារខ្មែរ", code: "km"},
     { name: "မြန်မာ", code: "bm" },
-    { name: "ភាសារខ្មែរ", code: "km" }
   ]);
 }
 

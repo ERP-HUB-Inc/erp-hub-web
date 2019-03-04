@@ -85,22 +85,10 @@ export default {
   ],
 
   // INPUT
-  "input_product_brand": [
-    "Product Brand",
-    "Product Brand",
-    "Product Brand"
-  ],
-
-  "text_product_type": [
-    "Product Type",
-    "Product Type",
-    "Product Type"
-  ],
-
-  "input_product_code": [
-    "Product Code",
-    "Product Code",
-    "Product Code"
+  "text_brand": [
+    "Brand",
+    "Brand",
+    "Brand"
   ],
 
   "input_product_enter_custom_code": [
