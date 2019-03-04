@@ -6,8 +6,8 @@ export default {
   ],
 
   "text_all_product_type": [
-    "All Product Type",
-    "All Product Type",
-    "All Product Type"
+    "All Categories",
+    "All Categories",
+    "All Categories"
   ]
 };

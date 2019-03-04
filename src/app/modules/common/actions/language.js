@@ -34,6 +34,8 @@ import supplier from "../../inventory/languages/stock/supplier";
 import stockManagement from "../../inventory/languages/stock/stockManagement";
 import purchaseOrder from "../../inventory/languages/stock/purchaseOrder";
 import stockTransfer from "../../inventory/languages/stock/stockTransfer";
+import stockAdjustmentRequest from "../../inventory/languages/stock/stockAdjustmentRequest";
+import stockAdjustmentApprove from "../../inventory/languages/stock/stockAdjustmentApprove";
 import returnPurchase from "../../inventory/languages/stock/returnPurchase";
 import receivePurchase from "../../inventory/languages/stock/receivePurchase";
 import reorderPoint from "../../inventory/languages/stock/reorderPoint";
@@ -87,6 +89,8 @@ export function setTranslation() {
     ...stockManagement,
     ...purchaseOrder,
     ...stockTransfer,
+    ...stockAdjustmentRequest,
+    ...stockAdjustmentApprove,
     ...returnPurchase,
     ...receivePurchase,
     ...reorderPoint,

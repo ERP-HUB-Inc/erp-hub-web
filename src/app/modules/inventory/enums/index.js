@@ -24,6 +24,10 @@ export default {
     RETURN : 4,
     PAID : 5
   },
+  STOCK_ADJUST_STEP: {
+    REQUEST : 0,
+    COMPLETE : 1
+  },
   TYPE_OF_PRINT: {
     BARCODE: 1,
     QR: 2

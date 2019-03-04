@@ -1,0 +1,93 @@
+.btn-push-to-supplier {
+    width: 153px !important;
+}
+
+.main-dropdown-search .total-amount {
+    text-align: right;
+    color: #9A9A9A;
+    font-size: 10pt;
+    margin-top: 14px;
+}
+
+#purchase-order-form  .main-searchs .remove-search-icon {
+    top: 8px
+}
+
+.variant-name {
+    font-size: 7.5pt;
+    margin-top: 2px
+}
+
+.ant-form-horizontal .purchase-order {
+    margin-bottom: 0px !important
+}
+
+#purchase-order-form .purchase-order-entry .search-dropdown-product{
+    padding-left: 0;
+    padding-right: 0
+}
+
+
+#purchase-order-form .purchase-order-entry .ant-table-body table tbody tr td .totalPrice input {
+    padding-right: 0px
+}
+
+#purchase-order-form .purchase-order-entry .ant-table-body table tbody tr td .totalPrice input {
+    background-color: #faf9f900;
+    opacity: 1.5;
+    cursor: default;
+    color: #9A9A9A;
+    border: none;
+}
+
+#purchase-order-form .wrap-po-filter-create {
+    margin-top: 2px;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 15px
+}
+
+.po-step-tag {
+    min-width: 60px;
+    width: 66px;
+    font-size: 8pt
+}
+
+.modal-po-full-screen .ant-modal,
+.modal-po-full-screen .ant-modal .ant-modal-content,
+.modal-po-full-screen .ant-modal-body,
+.modal-po-full-screen .ant-modal-body form,
+.modal-po-full-screen .ant-modal-body form #purchase-order-form,
+.modal-po-full-screen .ant-modal-body form #purchase-order-form .purchase-order-entry
+{
+    height: 100%;
+}
+
+.modal-po-full-screen .ant-modal .ant-modal-content,
+.modal-po-full-screen .ant-modal-body,
+.modal-po-full-screen .ant-modal-body form,
+.modal-po-full-screen .ant-modal-body form #purchase-order-form,
+.modal-po-full-screen .ant-modal-body form #purchase-order-form > .col-md-12 {
+    display: flex
+}
+
+.modal-po-full-screen .ant-modal .ant-modal-content,
+.modal-po-full-screen .ant-modal-body form,
+.modal-po-full-screen .ant-modal-body form #purchase-order-form > .col-md-12 {
+    flex-direction: column
+}
+
+.modal-po-full-screen .ant-modal-body form #purchase-order-form {
+    padding-right: 25px;
+    padding-left: 25px
+}
+
+.modal-po-full-screen .ant-modal-footer{
+    background: #f7f7f7cc;
+    z-index: 99
+}
+
+.modal-po-full-screen .ant-modal-body {
+    padding-left: 0 !important;
+    padding-right: 0 !important
+}

@@ -40,6 +40,8 @@ import supplier from "../modules/inventory/reducers/stock/supplier";
 import stockManagement from "../modules/inventory/reducers/stock/stockManagement";
 import purchaseOrder from "../modules/inventory/reducers/stock/purchaseOrder";
 import stockTransfer from "../modules/inventory/reducers/stock/stockTransfer";
+import stockAdjustmentRequest from "../modules/inventory/reducers/stock/stockAdjustmentRequest";
+import stockAdjustmentApprove from "../modules/inventory/reducers/stock/stockAdjustmentApprove";
 import returnPurchase from "../modules/inventory/reducers/stock/returnPurchase";
 import receivePurchase from "../modules/inventory/reducers/stock/receivePurchase";
 import reorderPoint from "../modules/inventory/reducers/stock/reorderPoint";
@@ -92,6 +94,8 @@ const reducer = combineReducers({
   stockManagement,
   purchaseOrder,
   stockTransfer,
+  stockAdjustmentRequest,
+  stockAdjustmentApprove,
   returnPurchase,
   receivePurchase,
   reorderPoint,
