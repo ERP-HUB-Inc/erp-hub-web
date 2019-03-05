@@ -935,9 +935,7 @@ export default class Retail extends Component {
                     <this.Col md="12" className="text-left">
                       {
                         !this.state.isDiscountHasAdded && summaryTotal.discount <= 0 ?
-                          <div className="su
-                          
-                          b-total add-discount" style={{justifyContent: "end"}} onClick={this.handleOnSetupDiscount}>
+                          <div className="sub-total add-discount" style={{justifyContent: "end"}} onClick={this.handleOnSetupDiscount}>
                             <span className="icon-add icon-padding-right"></span> <span><this.Translate id="text_add"/> <this.Translate id="text_discount"/></span>
                           </div>
                           :

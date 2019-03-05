@@ -27,7 +27,7 @@ export default class FormItem extends Modal {
           errorLenght={<this.Translate id="error_language_name_length" />} />
         <this.Select
           name="code"
-          label={<this.Translate id="col_language_code" />}
+          label={<this.Translate id="text_code" />}
           dataSource={this.languageCodes}
           defaultValue={formData.code}
           form={form} />

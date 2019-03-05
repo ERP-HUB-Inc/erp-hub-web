@@ -1,10 +1,4 @@
 export default {
-  "store_acc_general": [
-    "General",
-    "General",
-    "General"
-  ],
-
   "text_supplier_code": [
     "Supplier Code",
     "Supplier Code",

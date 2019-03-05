@@ -60,12 +60,6 @@ export default {
   ],
 
   // TAB
-  "tab_general": [
-    "General",
-    "General",
-    "General"
-  ],
-
   "text_description": [
     "Description",
     "Description",
@@ -119,12 +113,6 @@ export default {
     "Serial Type",
     "Serial Type",
     "Serial Type"
-  ],
-
-  "input_product_unit": [
-    "Unit",
-    "Unit",
-    "Unit"
   ],
 
   "input_product_re_order_point": [
@@ -521,5 +509,11 @@ export default {
     "We don't allow you to delete attribute value that link to product variant that has quantity in stock.",
     "We don't allow you to delete attribute value that link to product variant that has quantity in stock.",
     "We don't allow you to delete attribute value that link to product variant that has quantity in stock.",
-  ]
+  ],
+  
+  "error_require_variant": [
+    "You need to have variant collection",
+    "You need to have variant collection",
+    "You need to have variant collection"
+  ],
 };

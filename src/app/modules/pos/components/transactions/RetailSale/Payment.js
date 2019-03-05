@@ -414,7 +414,7 @@ export default class Payment extends Modal {
                     <this.InputEmail
                       name="email"
                       className="ca-input-v1"
-                      placeholder={this.CATranslate("store_acc_email", this.props.locale)}
+                      placeholder={this.CATranslate("text_email", this.props.locale)}
                       form={this.props.form}/>
                     <this.Button loading={this.props.mail.sending} type="info" className="margin-left-8 ca-button-v1 btn-send-email-receipt" onClick={this.handleOnSendMailReceipt}>
                       <this.Translate id="text_email_receipt" />

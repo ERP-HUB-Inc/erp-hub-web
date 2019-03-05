@@ -1,10 +1,4 @@
 export default {
-  "store_acc_general": [
-    "General",
-    "General",
-    "General"
-  ],
-
   "store_acc_business_name": [
     "Business Name",
     "Business Name",
@@ -29,13 +23,13 @@ export default {
     "Private URL"
   ],
 
-  "store_acc_country": [
+  "text_country": [
     "Country",
     "Country",
     "Country"
   ],
 
-  "store_acc_language": [
+  "text_language": [
     "Language",
     "Language",
     "Language"
@@ -77,31 +71,26 @@ export default {
     "Currency Exchange"
   ],
 
-  "store_acc_currency": [
-    "Currency",
-    "Currency",
-    "Currency"
-  ],
 
-  "store_acc_currency_position": [
+  "text_currency_position": [
     "Currency Position",
     "Currency Position",
     "Currency Position"
   ],
 
-  "store_acc_currency_position_before": [
+  "text_before": [
     "Before",
     "Before",
     "Before"
   ],
 
-  "store_acc_currency_position_after": [
+  "text_after": [
     "After",
     "After",
     "After"
   ],
 
-  "store_acc_tax": [
+  "text_default_tax": [
     "Default Tax",
     "Default Tax",
     "Default Tax"
@@ -113,31 +102,25 @@ export default {
     "User Name"
   ],
 
-  "store_acc_account": [
+  "text_account": [
     "Account",
     "Account",
     "Account"
   ],
 
-  "store_acc_email": [
-    "Email Address",
-    "Email Address",
-    "Email Address"
-  ],
-
-  "store_acc_current_password": [
+  "text_current_password": [
     "Current Password",
     "Current Password",
     "Current Password"
   ],
 
-  "store_acc_new_password": [
+  "text_new_password": [
     "New Password",
     "New Password",
     "New Password"
   ],
 
-  "store_acc_confirm_password": [
+  "text_confirm_password": [
     "Confirm Password",
     "Confirm Password",
     "Confirm Password"
@@ -149,121 +132,103 @@ export default {
     "Contact"
   ],
 
-  "store_acc_first_name": [
-    "First Name",
-    "First Name",
-    "First Name"
-  ],
-
-  "store_acc_last_name": [
-    "Last Name",
-    "Last Name",
-    "Last Name"
-  ],
-
-  "store_acc_phone_number": [
-    "Phone Number",
-    "Phone Number",
-    "Phone Number"
-  ],
-
-  "store_acc_street": [
+  "text_street": [
     "Street",
     "Street",
     "Street"
   ],
 
-  "store_acc_city": [
+  "text_city": [
     "City",
     "City",
     "City"
   ],
 
-  "store_acc_post_code": [
+  "text_post_code": [
     "Post Code",
     "Post Code",
     "Post Code"
   ],
 
-  "store_acc_setting": [
+  "text_setting": [
     "Setting",
     "Setting",
     "Setting"
   ],
 
-  "store_acc_auto_generate_pcode": [
+  "text_auto_generate_pcode": [
     "Auto Generate Product Code",
     "Auto Generate Product Code",
     "Auto Generate Product Code"
   ],
 
-  "store_acc_start_sequence_code": [
+  "text_start_sequence_code": [
     "Start Sequence Number",
     "Start Sequence Number",
     "Start Sequence Number"
   ],
 
-  "store_acc_billing": [
+  "text_billing": [
     "Billing",
     "Billing",
     "Billing"
   ],
 
-  "store_acc_register_date": [
+  "text_register_date": [
     "Register Date",
     "Register Date",
     "Register Date"
   ],
 
-  "store_acc_expired_date": [
+  "text_expired_date": [
     "Expired Date",
     "Expired Date",
     "Expired Date"
   ],
 
-  "store_acc_plan": [
+  "text_plan": [
     "Plan",
     "Plan",
     "Plan"
   ],
 
   "store_acc_error_sequence_start_no": [
-    "Start sequence number allow only maximum 9999999999.",
-    "Start sequence number allow only maximum 9999999999.",
-    "Start sequence number allow only maximum 9999999999."
+    "Start sequence number allow only maximum 9999999999",
+    "Start sequence number allow only maximum 9999999999",
+    "Start sequence number allow only maximum 9999999999"
   ],
 
   "store_acc_error_confirm_pwd_not_match": [
-    "Two passwords that you enter is inconsistent.",
-    "Two passwords that you enter is inconsistent.",
-    "Two passwords that you enter is inconsistent."
+    "Two passwords that you enter is inconsistent",
+    "Two passwords that you enter is inconsistent",
+    "Two passwords that you enter is inconsistent"
   ],
 
   "store_acc_error_pwd_required": [
-    "Please input your password.",
-    "Please input your password.",
-    "Please input your password."
+    "Please input your password",
+    "Please input your password",
+    "Please input your password"
   ],
   
   "store_acc_error_confirm_pwd_required": [
-    "Please confirm your password.",
-    "Please confirm your password.",
-    "Please confirm your password."
+    "Please confirm your password",
+    "Please confirm your password",
+    "Please confirm your password"
   ],
 
   "store_acc_error_current_pwd_not_match": [
-    "Current password is not match.",
-    "Current password is not match.",
-    "Current password is not match."
+    "Current password is not match",
+    "Current password is not match",
+    "Current password is not match"
   ],
 
-  "store_acc_type_of_generate_code_auto": [
+  "text_auto": [
     "Auto",
     "Auto",
     "Auto"
   ],
 
-  "store_acc_type_of_generate_code_manual": [
+  "text_manaul": [
     "Manual",
     "Manual",
     "Manual"

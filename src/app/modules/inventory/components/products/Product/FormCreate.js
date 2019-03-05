@@ -1,6 +1,7 @@
 import React from "react";
 import FormItem from "./FormItem";
 import Constant from "../../../constants/products/product";
+import Enum from "../../../enums";
 import ProductAction from "../../../actions/products/product";
 import BrandAction from "../../../actions/products/brand";
 import FormCreateBrand from "../../../containers/products/Brand/FormCreate";
@@ -58,6 +59,14 @@ export default class Form extends Modal {
 
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+
+        if (
+          values.productOption === Enum.PRODUCT_VARIANT &&
+          this.state.productVariants.length === 0
+        ) {
+          this.Message.error(this.CATranslate("error_require_variant", this.props.locale));
+          return;
+        }
         // PREPARE DATA FOR PACKAGE PRODUCT
         const productPackageToProduct = [];
         if ("productCompositeProductId" in values && "productCompositeMarkUp" in values) {

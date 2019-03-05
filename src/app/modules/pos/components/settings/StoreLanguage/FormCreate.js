@@ -8,7 +8,7 @@ import Enum from "../../../enums";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="create_language_title" />;
+    this.title = <this.Translate id="text_language" />;
     this.languageCodes = [
       {name: "en", value: "en"},
       {name: "km", value: "km"},

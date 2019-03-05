@@ -30,7 +30,7 @@ export default {
     "Paper Size"
   ],
 
-  "error_receipt_template_name_length": [
+  "error_name_length": [
     "Name allow from 3 to 100 character only",
     "Name allow from 3 to 100 character only",
     "Name allow from 3 to 100 character only"

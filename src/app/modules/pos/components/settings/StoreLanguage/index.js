@@ -43,7 +43,7 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="col_language_code" />,
+        title: <this.Translate id="text_code" />,
         dataIndex: "code",
         sorter: true
       },
