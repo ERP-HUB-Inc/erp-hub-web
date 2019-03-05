@@ -6,8 +6,8 @@ export default {
   ],
   "col_hr_employee_full_name": [
     "Full name",
-    "အမည်",
     "Full name",
+    "Full name"
   ],
 
   "text_phone_number": [
