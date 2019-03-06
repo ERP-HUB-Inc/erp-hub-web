@@ -108,7 +108,6 @@ export default class Payment extends Modal {
     const email = this.props.form.getFieldValue("email");
     let element = document.getElementById("pos-receipt-preview");
     if (email && element) {
-      console.log("Send Mail");
       element = `<html><head><title></title></head><body>${element.innerHTML}</body></html>`;
       this.props.dispatch(TransactionAction.sendEmailReceipt(element, email));
     } else {
