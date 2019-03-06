@@ -62,7 +62,6 @@ export default class Form extends Modal {
       stockAdjustmentApproveUpdate, 
       form, 
       locale, 
-      storeLocation,
       dispatch
     } = this.props;
 

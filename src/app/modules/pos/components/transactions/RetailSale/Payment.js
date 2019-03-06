@@ -15,6 +15,7 @@ export default class Payment extends Modal {
       ...this.state,
       customerPaymentList: [],
       amountToPay: 0,
+      isAlreadyAutoPrint: false,
       isNotYetPaid: true,
       validateStatus: "",
       errorMsg: ""
@@ -41,10 +42,11 @@ export default class Payment extends Modal {
       this.props.dispatch(GeneralAction.sendMailReset());
     }
 
-    if (this.props.transaction.paid) {
+    if (this.props.transaction.paid && !this.state.isAlreadyAutoPrint) {
       const element = document.getElementById("pos-receipt-preview");
       if (element) {
         this.Util.printElemV2(element.innerHTML);
+        this.setState({isAlreadyAutoPrint: true});
       }
     }
   }
@@ -106,6 +108,7 @@ export default class Payment extends Modal {
     const email = this.props.form.getFieldValue("email");
     let element = document.getElementById("pos-receipt-preview");
     if (email && element) {
+      console.log("Send Mail");
       element = `<html><head><title></title></head><body>${element.innerHTML}</body></html>`;
       this.props.dispatch(TransactionAction.sendEmailReceipt(element, email));
     } else {

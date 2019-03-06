@@ -72,7 +72,7 @@ export default class Receipt extends Component {
             </tr>
             <tr>
               <td colSpan={2} style={{paddingTop: 10}}>
-                <table style={{fontSize: paperSize.setting.dataFontSize, color: paperSize.setting.color}}>
+                <table style={{fontSize: paperSize.setting.dataFontSize, color: paperSize.setting.color, margin: "0 auto"}}>
                   <thead>
                     <tr>
                       <th style={{fontWeight: 500, width: "10mm", textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color}}>
