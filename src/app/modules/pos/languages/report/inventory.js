@@ -10,12 +10,6 @@ export default {
     "TOTALS BY PRODUCT, OUTLET",
     "TOTALS BY PRODUCT, OUTLET"
   ],
-
-  "place_holder_inventory_report_all_report": [
-    "All Report",
-    "All Report",
-    "All Report"
-  ],
   
   "col_inventory_report_tag": [
     "Tag",

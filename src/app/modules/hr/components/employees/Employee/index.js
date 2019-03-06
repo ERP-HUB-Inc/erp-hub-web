@@ -52,7 +52,7 @@ class Column extends List {
     return [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="col_hr_employee_full_name" />,
+        title: <this.Translate id="text_full_name" />,
         dataIndex: "firstName",
         render: (text, record, index) => {
           return <span className="text-capitalize">{record.firstName} {record.lastName}</span>;
@@ -67,20 +67,20 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="col_hr_employee_id_card" />,
+        title: <this.Translate id="text_id_card" />,
         dataIndex: "idCard",
         key: "idCard",
         sorter: true
       },
       {
-        title: <this.Translate id="col_hr_employee_dob" />,
+        title: <this.Translate id="text_date_of_birth" />,
         dataIndex: "dob",
         key: "dob",
         render: value => this.Util.formDateDOB(value),
         sorter: true
       },
       {
-        title: <this.Translate id="col_hr_employee_gender" />,
+        title: <this.Translate id="text_gender" />,
         dataIndex: "gender",
         key: "gender",
         sorter: true,

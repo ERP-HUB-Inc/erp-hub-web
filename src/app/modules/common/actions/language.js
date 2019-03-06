@@ -1,7 +1,6 @@
 
 import { initialize, addTranslation } from "react-localize-redux";
 import headers from "../languages/headers";
-import footers from "../languages/footers";
 import sidebar from "../languages/sidebar";
 import general from "../languages/general";
 import text from "../elements/common/language/text";
@@ -59,7 +58,6 @@ export function initLanguage() {
 export function setTranslation() {
   return addTranslation({
     ...headers,
-    ...footers,
     ...text,
     ...title,
     ...error,

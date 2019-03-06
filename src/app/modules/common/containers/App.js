@@ -6,7 +6,6 @@ import {
   Router,
   Switch
 } from "react-router-dom";
-// import * as Ably from "ably/browser/static/ably-commonjs.js";
 import history from "../router/history";
 import StartUp from "../components/StartUp";
 import ErrorBoundary from "../components/ErrorHandle";
@@ -14,23 +13,13 @@ import ErrorBoundary from "../components/ErrorHandle";
 
 export default class App extends React.Component {
 
-  // constructor(props) {
-  //   super(props);
-  // basic auth with an API key
-  // const client = new Ably.Realtime("keC0MQ.xJD4Cg:O9tVww4bPpSK6lsZ");
-  // client.connection.on("connected", () => {
-  //   console.log("HHHHHHHHHHH:", "Connected");
-  // });
+  componentDidMount() {
+    const channel = window.Ably.channels.get("ca.setting.paymentmethod");
 
-  // client.connection.on("failed", () => {
-  //   console.log("HHHHHHHHHHH:", "Failed");
-  // });
-
-  // const channel = client.channels.get("ca.setting");
-  // channel.subscribe((message) => {
-  //   console.log("Response");
-  // });
-  // }
+    channel.subscribe("update", function(message) {
+      // alert("Something update");
+    });
+  }
 
   render() {
     const Application = Loadable({

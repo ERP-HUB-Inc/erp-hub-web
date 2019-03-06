@@ -617,7 +617,7 @@ export default class FormItem extends Modal {
                 <this.Col md="12">
                   <this.UploadImg
                     name="image"    
-                    label={<this.Translate id="input_hr_employee_upload" />}
+                    label={<this.Translate id="text_photo" />}
                     data={{file: image}}
                     fileList={[image]}
                     endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}

@@ -60,26 +60,26 @@ export default class Profile extends Component {
                       <this.Col md="6">
                         <this.InputText
                           name="firstName"
-                          label={<this.Translate id="input_hr_employee_first_name" />}
+                          label={<this.Translate id="text_first_name" />}
                           data={getuserProfile.firstName}
-                          placeholder={this.CATranslate("input_hr_employee_first_name", locale)}
+                          placeholder={this.CATranslate("text_first_name", locale)}
                           max={100}
                           form={form}
                           disabled
                         />
                         <this.InputText
                           name="lastName"
-                          label={<this.Translate id="input_hr_employee_last_name" />}
+                          label={<this.Translate id="text_last_name" />}
                           data={getuserProfile.lastName}
-                          placeholder={this.CATranslate("input_hr_employee_last_name", locale)}
-                          errorRequired={<this.Translate id="input_error_hr_employee_last_name" />}
+                          placeholder={this.CATranslate("text_last_name", locale)}
+                          errorRequired={<this.Translate id="error_require_last_name" />}
                           max={100}
                           form={form}
                           disabled />
                         <this.Select
                           name="gender"
-                          label={<this.Translate id="input_hr_employee_gender" />}
-                          placeholder={this.CATranslate("input_hr_employee_gender", locale)}
+                          label={<this.Translate id="text_gender" />}
+                          placeholder={this.CATranslate("text_gender", locale)}
                           dataSource={this.gender}
                           defaultValue={getuserProfile.gender}
                           form={form}
@@ -87,7 +87,7 @@ export default class Profile extends Component {
                         <this.DatePickers
                           name="dob"
                           defaultValue={this.Util.formatDatePicker(getuserProfile.dob, this.Util.getInitialDateForDOB())}
-                          label={<this.Translate id="input_hr_employee_dob" />}
+                          label={<this.Translate id="text_date_of_birth" />}
                           form={form}
                           disabled
                         />
@@ -101,16 +101,16 @@ export default class Profile extends Component {
                         <this.InputText
                           name="email" 
                           data={getuserProfile.email}
-                          placeholder={this.CATranslate("input_hr_employee_email_address", locale)}
+                          placeholder={this.CATranslate("text_email_address", locale)}
                           form={form} 
-                          label={<this.Translate id="input_hr_employee_email_address" />}
+                          label={<this.Translate id="text_email_address" />}
                           disabled/>
                         <this.InputText
                           name="idCard" 
                           data={getuserProfile.idCard}
-                          placeholder={this.CATranslate("input_hr_employee_id_card", locale)}
+                          placeholder={this.CATranslate("text_id_card", locale)}
                           form={form} 
-                          label={<this.Translate id="input_hr_employee_id_card" />}
+                          label={<this.Translate id="text_id_card" />}
                           disabled/>
                         <this.InputTextArea
                           name="address"
@@ -141,14 +141,14 @@ export default class Profile extends Component {
                         <this.InputText
                           name="userName"
                           data={getuserProfile.account ? getuserProfile.account.userName : "" }
-                          label={<this.Translate id="input_hr_employee_user_name" />}
-                          placeholder={this.CATranslate("input_hr_employee_user_name", locale)}       
+                          label={<this.Translate id="text_user_name" />}
+                          placeholder={this.CATranslate("text_user_name", locale)}       
                           form={form}
                           disabled
                         />
         
                         <this.DatePickers
-                          label={<this.Translate id="input_hr_employee_expired_date" />}
+                          label={<this.Translate id="text_expired_date" />}
                           defaultValue={this.Util.formatDatePicker(getuserProfile.passwordExpiredAt)}
                           name="passwordExpiredAt"
                           form={form}

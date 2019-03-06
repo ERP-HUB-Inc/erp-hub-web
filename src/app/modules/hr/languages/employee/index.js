@@ -4,7 +4,7 @@ export default {
     "Employee",
     "Employee"
   ],
-  "col_hr_employee_full_name": [
+  "text_full_name": [
     "Full name",
     "Full name",
     "Full name"
@@ -16,118 +16,89 @@ export default {
     "Phone No"
   ],
 
-  "col_hr_employee_id_card": [
+  "text_id_card": [
     "Id card",
     "Id card",
     "Id card"
   ],
 
-  "col_hr_employee_dob": [
-    "Date of birth",
-    "အမည်",
-    "Date of birth",
-  ],
-
-  "col_hr_employee_gender": [
+  "text_gender": [
     "Gender",
-    "အမည်",
+    "Gender",
     "Gender",
   ],
 
-  "input_hr_employee_first_name": [
-    "First Name",
-    "အမည်",
-    "First Name"
-  ],
-
-  "input_hr_employee_last_name": [
-    "Last Name",
-    "အမည်",
-    "Last Name"
-  ],
-  
-  "input_hr_employee_gender": [
-    "Gender",
-    "အမည်",
-    "Gender"
-  ],
-
-  "input_hr_employee_dob": [
+  "text_date_of_birth": [
     "Date of Birth",
-    "အမည်",
+    "Date of Birth",
     "Date of Birth"
   ],
 
-  "input_hr_employee_email_address": [
+  "text_email_address": [
     "Email Address",
-    "အမည်",
+    "Email Address",
     "Email Address"
   ],  
 
-  "input_hr_employee_id_card": [
-    "Identification Card",
-    "အမည်",
-    "Identification Card"
-  ], 
 
-  "input_hr_employee_upload": [
+  "text_photo": [
     "Photo",
     "Photo",
     "Photo"
   ], 
 
-  "input_hr_employee_user_name": [
+  "text_user_name": [
     "User Name",
-    "အမည်",
+    "User Name",
     "User Name"
   ], 
 
-  "input_hr_employee_user_password": [
+  "text_password": [
     "Password",
-    "အမည်",
+    "Password",
     "Password"
   ], 
 
-  "input_hr_employee_auto_generate": [
+  "text_auto_generate": [
     "Auto Generate",
     "Auto Generate",
     "Auto Generate"
   ], 
 
-  "input_hr_employee_will_be_expired": [
-    "Will be expired",
-    "အမည်",
-    "Will be expired"
+  "text_will_expired": [
+    "Will be Expired",
+    "Will be Expired",
+    "Will be Expired"
   ], 
   
-  "input_hr_employee_must_change_password": [
+  "text_must_change_password": [
     "Must Change Password",
-    "အမည်",
+    "Must Change Password",
     "Must Change Password"
   ], 
 
-  "input_hr_employee_expired_date": [
-    "Expired date",
-    "အမည်",
-    "Expired date"
+  "text_expired_date": [
+    "Expired Date",
+    "Expired Date",
+    "Expired Date"
   ], 
 
-  "input_error_hr_employee_first_name": [
-    "Please input your first name",
-    "Please input your first name",
-    "Please input your first name"
+  "error_require_first_name": [
+    "Please input first name",
+    "Please input first name",
+    "Please input first name"
   ], 
 
-  "input_error_hr_employee_last_name": [
-    "Please input your last name",
-    "အမည်",
-    "Please input your last name"
+  "error_require_last_name": [
+    "Please input last name",
+    "Please input last name",
+    "Please input last name"
   ], 
 
-  "input_error_hr_employee_user_name": [
-    "Please input your username",
-    "အမည်",
-    "Please input your username"
+  "error_require_user_name": [
+    "Please input user name",
+    "Please input user name",
+    "Please input user name"
   ],
 
   "text_male": [
