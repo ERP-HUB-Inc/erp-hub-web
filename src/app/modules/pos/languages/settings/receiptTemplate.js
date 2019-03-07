@@ -6,7 +6,7 @@ export default {
   ],
 
 
-  "input_receipt_template_is_store_name": [
+  "text_show_store_name": [
     "Show Store Name",
     "Show Store Name",
     "Show Store Name"
@@ -30,10 +30,10 @@ export default {
     "Paper Size"
   ],
 
-  "error_receipt_template_name_length": [
-    "Name allow from 3 to 100 character only.",
-    "Name allow from 3 to 100 character only.",
-    "Name allow from 3 to 100 character only."
+  "error_name_length": [
+    "Name allow from 3 to 100 character only",
+    "Name allow from 3 to 100 character only",
+    "Name allow from 3 to 100 character only"
   ]
 
 };

@@ -1,7 +1,6 @@
 
 import { initialize, addTranslation } from "react-localize-redux";
 import headers from "../languages/headers";
-import footers from "../languages/footers";
 import sidebar from "../languages/sidebar";
 import general from "../languages/general";
 import text from "../elements/common/language/text";
@@ -50,16 +49,15 @@ import homePage from "../../common/languages/home";
 
 export function initLanguage() {
   return initialize([
-    { name: "English", code: "en" },
+    {name: "English", code: "en"},
+    {name: "ភាសារខ្មែរ", code: "km"},
     { name: "မြန်မာ", code: "bm" },
-    { name: "ភាសារខ្មែរ", code: "km" }
   ]);
 }
 
 export function setTranslation() {
   return addTranslation({
     ...headers,
-    ...footers,
     ...text,
     ...title,
     ...error,

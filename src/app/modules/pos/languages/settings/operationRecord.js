@@ -1,5 +1,5 @@
 export default {
-  "create_operation_record_title": [
+  "operation_record_title": [
     "Operation Record",
     "Operation Record",
     "Operation Record"
@@ -7,26 +7,26 @@ export default {
 
   "col_operation_record_recordfor":[
     "Record For",
-    "Record For",
-    "កត់ត្រាសម្រាប់"
+    "កត់ត្រាសម្រាប់",
+    "Record For"
   ],
 
   "operation_record_income": [
     "Income",
-    "ဝငျငှေ",
-    "ចំណូល"
+    "ចំណូល",
+    "ဝငျငှေ"
   ],
 
   "input_operation_record_for": [
     "Record For",
-    "သည်စံချိန်တင်",
-    "កត់ត្រាសម្រាប់"
+    "កត់ត្រាសម្រាប់",
+    "သည်စံချိန်တင်"
   ],
   
   "error_operation_record_name_length": [
-    "Name allow from 3 to 100 character only.",
-    "သာ 3 ရေ 100 မှဇာတ်ကောင်ကနေခွင့်ပြုပါအမည်ပြောပါ။",
-    "ឈ្មោះអនុញ្ញាតតែពី 3 ទៅ 100 តួប៉ុណ្ណោះ។"
+    "Name allow from 3 to 100 character only",
+    "ឈ្មោះអនុញ្ញាតតែពី 3 ទៅ 100 តួប៉ុណ្ណោះ",
+    "သာ 3 ရေ 100 မှဇာတ်ကောင်ကနေခွင့်ပြုပါအမည်ပြောပါ"
   ],
 
   "text_warning_delete_system_record": [

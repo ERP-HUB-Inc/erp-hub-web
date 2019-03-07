@@ -15,7 +15,7 @@ export default class FormItem extends Modal {
                 name="name"
                 label={<this.Translate id="text_name" />}
                 placeholder={this.CATranslate("text_name", locale)}
-                errorLenght={<this.Translate id="error_role_name_length" />}
+                errorLenght={<this.Translate id="error_name_length" />}
                 required={true}
                 isAutoFocus={true}
                 max={100}
@@ -23,8 +23,8 @@ export default class FormItem extends Modal {
               <this.InputText
                 data={formData.code}
                 name="code"
-                label={<this.Translate id="place_holder_role_code" />}
-                placeholder={this.CATranslate("place_holder_role_code", locale)}
+                label={<this.Translate id="text_code" />}
+                placeholder={this.CATranslate("text_code", locale)}
                 max={255}
                 disabled={formData.isDefault === this.Enum.IS_DEFAULT}
                 form={form}/>

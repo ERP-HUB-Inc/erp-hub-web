@@ -20,7 +20,7 @@ export default class FormItem extends Modal {
             label={<this.Translate id="text_name" />}
             placeholder={this.CATranslate("text_name", locale)}
             errorRequired={<this.Translate id="error_require_name" />}
-            errorLenght={<this.Translate id="error_receipt_template_name_length" />}
+            errorLenght={<this.Translate id="error_name_length" />}
             max={100}
             data={formData.name}
             required={true}
@@ -50,7 +50,7 @@ export default class FormItem extends Modal {
         <this.Col md="12">
           <this.Switchs
             name="isShowStoreName"
-            label={<this.Translate id="input_receipt_template_is_store_name" />}
+            label={<this.Translate id="text_show_store_name" />}
             checked={formData.isShowStoreName}
             form={form}/>
         </this.Col>

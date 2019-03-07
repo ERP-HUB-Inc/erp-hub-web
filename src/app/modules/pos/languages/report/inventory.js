@@ -1,10 +1,4 @@
 export default {
-  "store_acc_general": [
-    "General",
-    "General",
-    "General"
-  ],
-
   "text_supplier_code": [
     "Supplier Code",
     "Supplier Code",
@@ -15,12 +9,6 @@ export default {
     "TOTALS BY PRODUCT, OUTLET",
     "TOTALS BY PRODUCT, OUTLET",
     "TOTALS BY PRODUCT, OUTLET"
-  ],
-
-  "place_holder_inventory_report_all_report": [
-    "All Report",
-    "All Report",
-    "All Report"
   ],
   
   "col_inventory_report_tag": [

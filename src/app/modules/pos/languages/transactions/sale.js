@@ -48,6 +48,8 @@ export default {
   ],
 
   "text_invalide_cash": [
+    "Cash not enought for your payment",
+    "Cash not enought for your payment",
     "Cash not enought for your payment"
   ],
 

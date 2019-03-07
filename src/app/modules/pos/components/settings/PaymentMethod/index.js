@@ -1,5 +1,4 @@
 import React from "react";
-import * as Ably from "ably/browser/static/ably-commonjs.js";
 import List from "../List";
 import FormCreate from "../../../containers/settings/PaymentMethod/FormCreate";
 import FormUpdate from "../../../containers/settings/PaymentMethod/FormUpdate";
@@ -17,41 +16,7 @@ export default class PaymentMethodList extends List {
     this.action = PaymentMethodAction;
     this.columnFilterWithKey = ["name"];
     this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
-    this.handleSumitMessage = this.handleSumitMessage.bind(this);
   }
-
-  handleSumitMessage() {
-    const client = new Ably.Realtime({key: "keC0MQ.3Aw0TQ:5I9_irvlIoGdpws9"});
-
-    client.connection.on("connected", () => {
-      console.log("HHHHHHHHHHH:", "Connected");
-    });
-
-    client.connection.on("failed", () => {
-      console.log("HHHHHHHHHHH:", "Failed");
-    });
-
-    const channel = client.channels.get("ca.setting.paymentmethod");
-
-    channel.subscribe("action", function(message) {
-      console.log("Response Message", message);
-    });
-    channel.publish("action", "boom!");
-  }
-
-  // buttonActionCollection() {
-  //   return [
-  //     <this.Button
-  //       type="info"
-  //       id="btnAdd"
-  //       className="mg-right text-uppercase"
-  //       disabled={this.state.loadingPopup}
-  //       onClick={this.handleSumitMessage}>
-  //       <span className="icon-add icon-padding-right"></span>
-  //       PUSH MESSAGE
-  //     </this.Button>
-  //   ];
-  // }
 }
 
 class Column extends List {

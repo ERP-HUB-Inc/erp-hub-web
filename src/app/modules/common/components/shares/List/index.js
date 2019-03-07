@@ -55,7 +55,7 @@ export default class List extends Component {
     this.cancelText = <this.Translate id="text_no" />; // text button on alert of delete action
     this.messageSuccess = "Success"; // message display after delete action
     this.messageNoPermissionKey = "text_no_permission";
-    this.placeHolderForGeneralSearch = "place_holder_general_search";
+    this.placeHolderForGeneralSearch = "text_general";
     this.isShowExpandable = false;
     this.rowClassName = record => record ? "" : "";
     this.emptyCell = "N/A";

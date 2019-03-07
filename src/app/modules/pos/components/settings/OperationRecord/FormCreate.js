@@ -7,7 +7,7 @@ import "./index.css";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="create_operation_record_title"/>;
+    this.title = <this.Translate id="operation_record_title"/>;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.operationTypes = [

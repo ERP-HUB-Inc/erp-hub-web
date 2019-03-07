@@ -39,8 +39,8 @@ export default class ProfitAndLostList extends List {
       OPERATION_PROFIT: 1
     };
     this.reportTypeList = [
-      { value: this.reportType.OPERATION_PROFIT, name: <this.Translate id="select_profit_and_lost_operation_report_type" />},
-      { value: this.reportType.SALE_PROFIT, name: <this.Translate id="select_profit_and_lost_sale_report_type" />}
+      { value: this.reportType.OPERATION_PROFIT, name: <this.Translate id="text_operation_profit_and_lost" />},
+      { value: this.reportType.SALE_PROFIT, name: <this.Translate id="text_sale_profit_and_lost" />}
     ];
 
     this.service = ProfitAndLostReportService;
@@ -161,7 +161,7 @@ export default class ProfitAndLostList extends List {
       });
 
       getIncomeExpenseValue.push({
-        createdAt: this.CATranslate("col_profit_and_lost_net_income", this.props.locale),
+        createdAt: this.CATranslate("text_net_income", this.props.locale),
         name:  this.groupIncomeExpenseByType().netincome,
         amount: "",
         type: ""
@@ -286,7 +286,7 @@ export default class ProfitAndLostList extends List {
               columns={new Column(<this.Translate id="text_expense" />,"revenuse-report")}
               onChange={this.handleTableChange}/>
             <div className="net-income text-uppercase">
-              <this.Translate id="col_profit_and_lost_net_income" />
+              <this.Translate id="text_net_income" />
             </div>
             <div className="net-income">
               {incomeExpense.netincome}

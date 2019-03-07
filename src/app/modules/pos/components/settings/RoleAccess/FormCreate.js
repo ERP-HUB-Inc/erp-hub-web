@@ -9,7 +9,7 @@ export default class Form extends Modal {
       ...this.state,
       rolePrivileges: []
     };
-    this.title = <this.Translate id="text_access_role" />;
+    this.title = <this.Translate id="text_role" />;
     this.style = {height: 550};
     this.wrapClassName = "modal-fix-footer";
     this.dispatch = this.props.dispatch;

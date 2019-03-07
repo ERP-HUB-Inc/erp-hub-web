@@ -282,7 +282,7 @@ export default class SearchPo extends Modal {
       return;
     } else if (productVariant && productVariant.length > 0) {
       productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
-      productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
+      productVariant.name = isProductVariant && productVariant ? productVariant.name : ""; // Remove product variant name away from label table
     }
 
     const productName = Util.getProductName(product);

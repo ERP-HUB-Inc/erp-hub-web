@@ -60,12 +60,6 @@ export default {
   ],
 
   // TAB
-  "tab_general": [
-    "General",
-    "General",
-    "General"
-  ],
-
   "text_description": [
     "Description",
     "Description",
@@ -85,22 +79,10 @@ export default {
   ],
 
   // INPUT
-  "input_product_brand": [
-    "Product Brand",
-    "Product Brand",
-    "Product Brand"
-  ],
-
-  "text_product_type": [
-    "Product Type",
-    "Product Type",
-    "Product Type"
-  ],
-
-  "input_product_code": [
-    "Product Code",
-    "Product Code",
-    "Product Code"
+  "text_brand": [
+    "Brand",
+    "Brand",
+    "Brand"
   ],
 
   "input_product_enter_custom_code": [
@@ -131,12 +113,6 @@ export default {
     "Serial Type",
     "Serial Type",
     "Serial Type"
-  ],
-
-  "input_product_unit": [
-    "Unit",
-    "Unit",
-    "Unit"
   ],
 
   "input_product_re_order_point": [
@@ -533,5 +509,11 @@ export default {
     "We don't allow you to delete attribute value that link to product variant that has quantity in stock.",
     "We don't allow you to delete attribute value that link to product variant that has quantity in stock.",
     "We don't allow you to delete attribute value that link to product variant that has quantity in stock.",
-  ]
+  ],
+  
+  "error_require_variant": [
+    "You need to have variant collection",
+    "You need to have variant collection",
+    "You need to have variant collection"
+  ],
 };

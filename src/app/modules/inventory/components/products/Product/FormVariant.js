@@ -544,7 +544,7 @@ export default class FormVariant extends Modal {
     const initialStartLoop = [0, 0, 0];
 
     if (collection.length > 0) {
-      if (isUpdateProduct) {
+      if (isUpdateProduct && collection[index]) {
         initialStartLoop[index] = collection[index]["attributeValues"].length - 1;
       }
 

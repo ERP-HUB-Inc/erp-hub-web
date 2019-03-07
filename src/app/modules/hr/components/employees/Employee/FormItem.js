@@ -263,31 +263,31 @@ export default class FormItem extends Modal {
             <this.Col md="6">
               <this.InputText
                 name="firstName"
-                label={<this.Translate id="input_hr_employee_first_name" />}
+                label={<this.Translate id="text_first_name" />}
                 data={formData.firstName}
-                placeholder={this.CATranslate("input_hr_employee_first_name", locale)}
+                placeholder={this.CATranslate("text_first_name", locale)}
                 required={true}
                 isAutoFocus={true}
-                errorRequired={<this.Translate id="input_error_hr_employee_first_name" />}
+                errorRequired={<this.Translate id="error_require_first_name" />}
                 max={100}
                 form={form}/>
             </this.Col>
             <this.Col md="6">
               <this.InputText
                 name="lastName"
-                label={<this.Translate id="input_hr_employee_last_name" />}
+                label={<this.Translate id="text_last_name" />}
                 data={formData.lastName}
-                placeholder={this.CATranslate("input_hr_employee_last_name", locale)}
+                placeholder={this.CATranslate("text_last_name", locale)}
                 required={true}
-                errorRequired={<this.Translate id="input_error_hr_employee_last_name" />}
+                errorRequired={<this.Translate id="error_require_last_name" />}
                 max={100}
                 form={form}/>
             </this.Col>
             <this.Col md="6">
               <this.Select
                 name="gender"
-                label={<this.Translate id="input_hr_employee_gender" />}
-                placeholder={this.CATranslate("input_hr_employee_gender", locale)}
+                label={<this.Translate id="text_gender" />}
+                placeholder={this.CATranslate("text_gender", locale)}
                 dataSource={this.gender}
                 defaultValue={formData.gender}
                 form={form}/>
@@ -296,7 +296,7 @@ export default class FormItem extends Modal {
               <this.DatePickers
                 name="dob"
                 defaultValue={this.Util.formatDatePicker(formData.dob, this.Util.getInitialDateForDOB())}
-                label={<this.Translate id="input_hr_employee_dob" />}
+                label={<this.Translate id="text_date_of_birth" />}
                 form={form}/>
             </this.Col>
             <this.Col md="12">
@@ -311,17 +311,17 @@ export default class FormItem extends Modal {
               <this.InputEmail
                 name="email" 
                 data={formData.email}
-                placeholder={this.CATranslate("input_hr_employee_email_address", locale)}
+                placeholder={this.CATranslate("text_email_address", locale)}
                 form={form} 
-                label={<this.Translate id="input_hr_employee_email_address" />}/>
+                label={<this.Translate id="text_email_address" />}/>
             </this.Col>
             <this.Col md="12">
               <this.InputText
                 name="idCard" 
                 data={formData.idCard}
-                placeholder={this.CATranslate("input_hr_employee_id_card", locale)}
+                placeholder={this.CATranslate("text_id_card", locale)}
                 form={form} 
-                label={<this.Translate id="input_hr_employee_id_card" />}/>
+                label={<this.Translate id="text_id_card" />}/>
             </this.Col>
             <this.Col md="12">
               <this.InputTextArea
@@ -337,7 +337,7 @@ export default class FormItem extends Modal {
                 name="photo"
                 data={{file: image}}
                 fileList={[image]}    
-                label={<this.Translate id="input_hr_employee_upload" />}
+                label={<this.Translate id="text_photo" />}
                 endPoint={`${this.Util.getAPIURL()}/file/v1/upload/employee`}
                 endPointDelete={`${this.Util.getAPIURL()}/file/v1/employee/delete`}
                 accessToken={this.Util.getAccessToken()}
@@ -351,9 +351,9 @@ export default class FormItem extends Modal {
               <this.InputText
                 name="userName"
                 data={formData.account ? formData.account.userName : ""}
-                label={<this.Translate id="input_hr_employee_user_name" />}
-                placeholder={this.CATranslate("input_hr_employee_user_name", locale)}
-                errorRequired={<this.Translate id="input_error_hr_employee_user_name" />}
+                label={<this.Translate id="text_user_name" />}
+                placeholder={this.CATranslate("text_user_name", locale)}
+                errorRequired={<this.Translate id="error_require_user_name" />}
                 disabled={formData.account != null && formData.account.userName != null}
                 validator={formData.account && formData.account.userName ? null : this.checkIsUserAlreadyExist}
                 max={100}
@@ -374,15 +374,15 @@ export default class FormItem extends Modal {
                 type="password"
                 name="password"
                 data={formData.password}
-                label={<this.Translate id="input_hr_employee_user_password" />}
-                placeholder={this.CATranslate("input_hr_employee_user_password", locale)}
+                label={<this.Translate id="text_password" />}
+                placeholder={this.CATranslate("text_password", locale)}
                 required={this.state.requiredPassword}
                 disabled={this.state.disabled}
                 form={form}/>
             </this.Col>
             <this.Col md="6" className="wrap-switch">
               <this.Switchs
-                label={<this.Translate id="input_hr_employee_auto_generate" />}
+                label={<this.Translate id="text_auto_generate" />}
                 name="autogenerate"
                 onChange={this.onChange}
                 form={form}/>
@@ -390,21 +390,21 @@ export default class FormItem extends Modal {
 
             {/* <this.Col md="6">
               <this.DatePickers
-                label={<this.Translate id="input_hr_employee_expired_date" />}
+                label={<this.Translate id="text_expired_date" />}
                 defaultValue={this.Util.formatDatePicker(formData.passwordExpiredAt)}
                 name="passwordExpiredAt"
                 form={form}/>
             </this.Col>
             <this.Col md="6" className="wrap-switch">
               <this.Switchs
-                label={<this.Translate id="input_hr_employee_must_change_password" />}
+                label={<this.Translate id="text_must_change_password" />}
                 name="isMustChangePWNextLogin"
                 checked={formData.account != null && formData.account.isMustChangePWNextLogin}
                 form={form}/>
             </this.Col>
             <this.Col md="6" className="wrap-switch">
               <this.Switchs
-                label={<this.Translate id="input_hr_employee_will_be_expired" />}
+                label={<this.Translate id="text_will_expired" />}
                 name="isPasswordExpired"
                 checked={formData.account != null && formData.account.isPasswordExpired}
                 form={form}

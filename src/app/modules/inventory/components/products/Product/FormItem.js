@@ -350,7 +350,7 @@ export default class FormItem extends Modal {
 
     return (
       <this.Tabs type="card" onChange={(activeKey) => this.onChangeTab(activeKey)}>
-        <this.TabPane tab={<this.Translate id="tab_general" />} key="1">
+        <this.TabPane tab={<this.Translate id="text_general" />} key="1">
           <this.Row>
             <this.Col md="6" className="create-product-column-left">
               <this.Row>
@@ -378,8 +378,8 @@ export default class FormItem extends Modal {
                 <this.Col md="4">
                   <this.SelectSearch
                     name="brandId"
-                    label={<this.Translate id="input_product_brand" />}
-                    placeholder={this.CATranslate("input_product_brand", locale)}
+                    label={<this.Translate id="text_brand" />}
+                    placeholder={this.CATranslate("text_brand", locale)}
                     errorRequired={<this.Translate id="error_require_brand" />}
                     valueKey="id"
                     dataSource={this.state.brands}
@@ -472,8 +472,8 @@ export default class FormItem extends Modal {
                 <this.Col md="4">
                   <this.SelectSearch
                     name="defaultUnitId"
-                    label={<this.Translate id="input_product_unit" />}
-                    placeholder={this.CATranslate("input_product_unit", locale)}
+                    label={<this.Translate id="text_unit" />}
+                    placeholder={this.CATranslate("text_unit", locale)}
                     errorRequired={<this.Translate id="error_require_unit" />}
                     valueKey="id"
                     dataSource={this.state.units}
@@ -617,7 +617,7 @@ export default class FormItem extends Modal {
                 <this.Col md="12">
                   <this.UploadImg
                     name="image"    
-                    label={<this.Translate id="input_hr_employee_upload" />}
+                    label={<this.Translate id="text_photo" />}
                     data={{file: image}}
                     fileList={[image]}
                     endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}

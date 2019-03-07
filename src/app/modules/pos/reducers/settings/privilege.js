@@ -24,7 +24,7 @@ export default combineReducers({
       return {
         ...state,
         checking: false,
-        error: action.payload.response.data
+        error: action.payload.response
       };
     }
     case Constant.CHECK_PERMISSION_FULFILLED: {

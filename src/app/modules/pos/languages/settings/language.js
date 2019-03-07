@@ -1,20 +1,8 @@
 export default {
-  "create_language_title": [
+  "text_language": [
     "Language",
+    "ភាសា",
     "ဘာသာစကား",
-    "ភាសា"
-  ],
-
-  "update_language_title": [
-    "Language",
-    "ဘာသာစကား ကို",
-    "ភាសា: ធ្វើបច្ចុប្បន្នភាព"
-  ],
-
-  "col_language_code": [
-    "Code",
-    "ကုဒ်",
-    "កូដ"
   ],
 
   "receipt_logo": [
@@ -31,8 +19,8 @@ export default {
 
   "error_language_name_length": [
     "Name allow from 3 to 100 character only.",
-    "သာ 3 ရေ 100 မှဇာတ်ကောင်ကနေခွင့်ပြုပါအမည်ပြောပါ။",
-    "ឈ្មោះអនុញ្ញាតតែពី 3 ទៅ 100 តួប៉ុណ្ណោះ។"
+    "ឈ្មោះអនុញ្ញាតតែពី 3 ទៅ 100 តួប៉ុណ្ណោះ។",
+    "သာ 3 ရေ 100 မှဇာတ်ကောင်ကနေခွင့်ပြုပါအမည်ပြောပါ။"
   ]
 };
   

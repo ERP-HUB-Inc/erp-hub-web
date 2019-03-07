@@ -1,5 +1,6 @@
 import moment from "moment";
 import _ from "lodash";
+import Enum from "../enums";
 import ConstantAuth from "../constants/authentication";
 
 export class Util {
@@ -432,7 +433,7 @@ export class Util {
   }
 
   isNoPermissionProp(props) {
-    return props.checkPermission && props.checkPermission.error;
+    return props.checkPermission && this.getErrorCodeFromState(props.checkPermission.error) === Enum.NO_PERMISSON;
   }
 
   isCheckingPermission(props) {

@@ -18,11 +18,6 @@ export default {
     "Margin",
     "Margin",
     "Margin"
-  ],  
-  "col_sale_report_tax": [
-    "Tax",
-    "Tax",
-    "Tax"
-  ],  
+  ]
 };
   
