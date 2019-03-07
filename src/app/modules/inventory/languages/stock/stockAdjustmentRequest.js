@@ -4,16 +4,13 @@ export default {
     "Adjustment Request",
     "Adjustment Request"
   ],
-  "col_stock_adjustment_request_title": [
-    "Title",
-    "Title",
-    "Title"
-  ],
-  "col_stock_adjustment_request_who_request": [
+
+  "text_who_request": [
     "Who Request",
     "Who Request",
     "Who Request"
   ],
+
   "text_reason": [
     "Reason",
     "Reason",

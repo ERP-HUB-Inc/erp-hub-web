@@ -120,9 +120,9 @@ export default class FormItem extends Modal {
             <this.Col md="4">
               <this.InputText
                 name="name"
-                label={<this.Translate id="col_stock_adjustment_request_title" />}
+                label={<this.Translate id="text_title" />}
                 data={formData.name}
-                placeholder={this.CATranslate("col_stock_adjustment_request_title", locale)}
+                placeholder={this.CATranslate("text_title", locale)}
                 errorRequired={<this.Translate id="error_require_name" />}
                 required={true}
                 isAutoFocus={true}

@@ -14,14 +14,14 @@ export default class StockAdjustmentRequestLists extends List {
     this.columns = [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="col_stock_adjustment_request_title" />,
+        title: <this.Translate id="text_title" />,
         dataIndex: "title",
         key: "title",
         width: 700,
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_adjustment_request_who_request" />,
+        title: <this.Translate id="text_who_request" />,
         dataIndex: "user",
         key: "user",
         render: user => user ? user.fullName : this.emptyText

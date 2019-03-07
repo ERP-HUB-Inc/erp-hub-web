@@ -13,13 +13,13 @@ export default class StockAdjustmentApprovetLists extends List {
     this.columns = [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="col_stock_adjustment_request_title" />,
+        title: <this.Translate id="text_title" />,
         dataIndex: "name",
         key: "name",
         sorter: true
       },
       {
-        title: <this.Translate id="col_stock_adjustment_request_who_request" />,
+        title: <this.Translate id="text_who_request" />,
         dataIndex: "number",
         key: "number"
       },
