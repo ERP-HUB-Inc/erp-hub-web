@@ -15,7 +15,7 @@ export default class Form extends Modal {
       [Enum.STOCK_ADJUST_STEP.COMPLETE]: {name: <this.Translate id="text_complete" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
     };
 
-    this.title = <this.Translate id="text_stock_adjustment_approve" />;
+    this.title = <this.Translate id="text_stock_adjustment_approve" />;  
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -33,23 +33,46 @@ export default class Form extends Modal {
     );
   }
 
-  componentDidUpdate() {
-    if (this.props.stockAdjustmentApproveUpdate.fetched) {
-      const step = this.props.stockAdjustmentApproveUpdate.data.step;
-      this.title = <div><this.Translate id="text_stock_adjustment_request" /> 
-        {step in this.ADJUSTMENT_STEP_STR ? <this.Tag color={this.ADJUSTMENT_STEP_STR[step].color} 
-          className="text-uppercase text-center po-step-tag">{this.ADJUSTMENT_STEP_STR[step].name}</this.Tag> : ""}
-      </div>;
-    }
-  }
-
   handleSubmit (e) {
     e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      values["id"] = this.props.stockAdjustmentApproveDetail.data.id;
+      const stockAdjustmentEntries = [];
+      if("stockApproveId" in values){
+        values.productVariantId.forEach((productVariantId, index) => {
+          stockAdjustmentEntries.push({
+            id: values.stockApproveId[index],
+            currentQuantity: parseInt(values.currentQty[index], 10),
+            productVariantId,
+            unitId: values.unitId[index],
+            adjustQuantity: values.adjustQuantity[index],
+            isApprove: values.isApprove[index]
+          });
+        });
+      }
 
-  }
+      this.Util.clearObjProperty(values, [
+        "productVariantId",
+        "stockAdjustmentRequestId",
+        "stockAdjustmentRequestStatus",
+        "variantName",
+        "isFocusOnSearchCompositeProduct",
+        "adjust",
+        "currentQty",
+        "different",
+        "searchProduct",
+        "productName",
+        "unitId",
+        "adjustQuantity",
+        "isApprove",
+        "stockApproveId"
+      ]);
 
-  prepareFormDataForUpdate(values) {
-  
+      values["entries"] =  stockAdjustmentEntries;
+      values["step"] = Enum.STOCK_ADJUST_STEP.COMPLETE;
+      values["locationId"] = parseFloat(values.locationId);
+      this.dispatch(StockAdjustmentAction.update(values));
+    }); 
   }
   
   handleCancel() {
@@ -58,19 +81,19 @@ export default class Form extends Modal {
 
   render() {
     const {
-      stockAdjustmentApproveUpdate, 
+      stockAdjustmentApproveDetail,
       form, 
       locale, 
       dispatch
     } = this.props;
 
-    this.submitLoading = stockAdjustmentApproveUpdate.updating;
+    this.submitLoading = this.props.stockAdjustmentApproveUpdate.updating;
 
-    if (stockAdjustmentApproveUpdate.showForm) {
+    if (stockAdjustmentApproveDetail.showForm) {
       this.content = (
         <FormItem 
           form={form} 
-          formData={stockAdjustmentApproveUpdate.data} 
+          formData={stockAdjustmentApproveDetail.data} 
           accessLocation={this.props.accessLocation} 
           dispatch={dispatch} 
           locale={locale}

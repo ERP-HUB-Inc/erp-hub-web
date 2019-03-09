@@ -21,8 +21,8 @@ export default class FormItem extends Modal {
     });
   }
 
-  handleOnChangeLocation(locationId) {
-    this.setState({locationId});
+  handleOnChangeLocation(value) {
+    this.setState({locationId: value});
   }
 
   render() {

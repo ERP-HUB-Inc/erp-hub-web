@@ -220,7 +220,6 @@ export default class SearchAdjustmentRequest extends Modal {
   handleOnChangeAdjust(e,index){
     let different  = "";
     const existingProductList = this.state.productLists;
-    console.log("this.state.productLists",this.state.productLists);
     existingProductList.forEach((product, productIndex) => {
       if (productIndex === index) {
         let currentQty = this.props.form.getFieldValue(`currentQty[${index}]`);
@@ -249,7 +248,7 @@ export default class SearchAdjustmentRequest extends Modal {
     }
 
     const productName = Util.getProductName(product);
-
+    const adjustQuantity = 0;
     const {quantity} = productVariant ? productVariant : [];
     const existingProductList = this.state.productLists;
 
@@ -261,6 +260,7 @@ export default class SearchAdjustmentRequest extends Modal {
         variantName: productVariant.name,
         currentQty: quantity,
         productVariants: productVariantForCalculateQTY,
+        different: adjustQuantity - quantity,
         productVariantId: productVariant.id,
         stockAdjustmentRequestStatus: this.Enum.ACTIVE
       });
@@ -279,9 +279,11 @@ export default class SearchAdjustmentRequest extends Modal {
           stockAdjustmentRequestId: "",
           productName,
           variantName: productVariant.name,
+          currentQty: quantity,
           unitId: product.defaultUnitId,
           productVariants: productVariantForCalculateQTY,
           productVariantId: productVariant.id,
+          different: adjustQuantity - quantity,
           stockAdjustmentRequestStatus: this.Enum.ACTIVE
         });
       }

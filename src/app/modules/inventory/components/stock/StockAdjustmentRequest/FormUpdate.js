@@ -28,7 +28,7 @@ export default class Form extends Modal {
       const step = this.props.stockAdjustmentRequestDetail.data.step;
       this.title = <div><this.Translate id="text_stock_adjustment_request" />&nbsp;
         {step in this.ADJUSTMENT_STEP_STR ? <this.Tag color={this.ADJUSTMENT_STEP_STR[step].color} 
-          className="text-uppercase text-center po-step-tag">{this.ADJUSTMENT_STEP_STR[step].name}</this.Tag> : ""}
+          className="text-uppercase text-center adjustment-step-tag">{this.ADJUSTMENT_STEP_STR[step].name}</this.Tag> : ""}
       </div>;
     }
   }
@@ -105,7 +105,7 @@ export default class Form extends Modal {
       dispatch
     } = this.props;
 
-    this.submitLoading = stockAdjustmentRequestDetail.updating;
+    this.submitLoading = this.props.stockAdjustmentRequestUpdate.updating;
 
     if (stockAdjustmentRequestDetail.showForm) {
       this.content = (
