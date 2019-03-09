@@ -105,7 +105,7 @@ export default class Form extends Modal {
       dispatch
     } = this.props;
 
-    this.submitLoading = stockAdjustmentRequestDetail.updating;
+    this.submitLoading = this.props.stockAdjustmentRequestUpdate.updating;
 
     if (stockAdjustmentRequestDetail.showForm) {
       this.content = (
