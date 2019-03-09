@@ -14,41 +14,76 @@ export default class StockAdjustmentApprovetLists extends List {
       this.columnCreatedAt,
       {
         title: <this.Translate id="col_stock_adjustment_request_title" />,
-        dataIndex: "name",
-        key: "name",
+        dataIndex: "title",
+        key: "title",
+        width: 500,
         sorter: true
       },
       {
         title: <this.Translate id="col_stock_adjustment_request_who_request" />,
-        dataIndex: "number",
-        key: "number"
+        dataIndex: "user",
+        key: "user",
+        render: user => user ? user.fullName : this.emptyText
       },
       {
         title: <this.Translate id="text_reason" />,
         dataIndex: "reason",
         key: "reason",
-        width: 130
+        width: 300
+      },
+      {
+        title: <this.Translate id="text_location" />,
+        dataIndex: "location",
+        key: "location",
+        sorter: true,
+        width: 140,
+        render: location => location ? location.name: this.emptyText
       },
       {
         title: <this.Translate id="text_step" />,
         dataIndex: "step",
         key: "step",
         sorter: true,
+        width: 150,
+        render: step => step in this.ADJUSTMENT_STEP ? <this.Tag color={this.ADJUSTMENT_STEP[step].color} className="text-uppercase text-center adjustment-step-tag">{this.ADJUSTMENT_STEP[step].name}</this.Tag> : ""
+      },
+      {
+        title: <this.Translate id="text_action" />,
+        dataIndex: "id",
+        key: "action",
+        align: "center",
         width: 100,
-        render: step => step in this.ADJUSTMENT_STEP ? <this.Tag color={this.ADJUSTMENT_STEP[step].color} className="text-uppercase text-center po-step-tag">{this.ADJUSTMENT_STEP[step].name}</this.Tag> : ""
+        render: (text, record) => {
+          return <this.Button
+            type="info"
+            id="btnAdd"
+            className="mg-right text-uppercase"
+            onClick={() => this.handleApprove(record)}
+          >
+            <span className="icon-padding-right"></span>
+            <this.Translate id="text_approve"/>
+          </this.Button>;
+        }
       }
     ];
-    this.formUpdate = <FormUpdate />;
+    this.callBackOnShowEditForm = this.showFormEdit;
     this.fetchingProp = "stockAdjustmentApprove";
     this.service = StockAdjustmentApproveService;
     this.ADJUSTMENT_STEP = {
       [Enum.STOCK_ADJUST_STEP.REQUEST]: {name: <this.Translate id="text_request" />, color:  this.Enum.STOCK_ADJUST_COLOR.REQUEST},
       [Enum.STOCK_ADJUST_STEP.COMPLETE]: {name: <this.Translate id="text_complete" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
     };
-    this.columnFilterWithKey = ["name"];
+    this.columnFilterWithKey = ["title"];
     this.action = StockAdjustmentApproveAction;
     this.RESET_CONSTANT = Constant.RESET_STOCK_REQUEST;
+    this.handleApprove = this.handleApprove.bind(this);
   }
+
+  handleApprove(rowData){
+    this.showFormEdit(rowData);
+  }
+
+  renderActionButton(){}
 
   showFormEdit(rowData) {
     this.props.dispatch(StockAdjustmentApproveAction.detail(rowData));  
@@ -57,48 +92,38 @@ export default class StockAdjustmentApprovetLists extends List {
     });
   }
 
-  handleDelete() {
-    this.setState({deleting: true});
-    StockAdjustmentApproveService.archive(this.state.selectedListIds)
-      .then(response => {
-        this.props.dispatch(StockAdjustmentApproveAction.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
-        this.setState({
-          selectedRowKeys: [],
-          modalVisible: false,
-          deleting: false
-        });
-      })
-      .catch(err => {
-        this.Message.error(this.CATranslate("error_warning_delete_po", this.props.locale));
-        this.setState({deleting: false});
-        this.setState({
-          modalVisible: false,
-          deleting: false
-        });
-      });
-  }
-
   handleSubmitFilter(e){
     if (this.action != null) {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
-      
+        if (!err) {
+          // let filter = {};
+          let rangFilter = {};
+
+          if (values.date) {
+            values.date = this.Util.formatDateForMYSQL(values.date);
+            rangFilter = JSON.stringify({column: "createdAt", value: [values.date, values.date]});
+          }
+
+          // filter = JSON.stringify(filter);
+          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
+          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", searchKey, rangFilter));
+          this.setState({isClickFilter: true});
+        }
+        
       }); 
     } 
   }
 
-  renderActionButton() {
-   
+  componentWillUpdate(nextProps){
+    if (nextProps.stockAdjustmentApproveUpdate.updated) {
+      nextProps.dispatch(StockAdjustmentApproveAction.fetch(this.pageSize));
+      nextProps.dispatch(StockAdjustmentApproveAction.reset(Constant.RESET_STOCK_ADJUSTMENT_APPROVE));
+    }
   }
 
   renderFilterRecord() {
     const {form, locale} = this.props;
-
-    const AdjustmentStepList = Object.keys(this.ADJUSTMENT_STEP).map((prop) => {
-      return {name: this.ADJUSTMENT_STEP[prop].name, value: prop};
-    });
-    AdjustmentStepList.unshift({name: <this.Translate id="text_all_step"/>, value: -1});
-
     const fetchingProps = this.props[this.fetchingProp];
     return (
       form == null ?
@@ -113,15 +138,6 @@ export default class StockAdjustmentApprovetLists extends List {
                 placeholder={this.CATranslate("text_search", locale)}
                 isAutoFocus={true}
                 form={form}/>
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="step"
-                label={<this.Translate id="text_step" />}
-                dataSource={AdjustmentStepList}
-                defaultValue={AdjustmentStepList[0].value}
-                form={form}
-              />
             </this.Col>
             <this.Col md="2" className="wrap-btn-search">
               <div className="ant-form-item-label" style={{visibility: "hidden"}}>

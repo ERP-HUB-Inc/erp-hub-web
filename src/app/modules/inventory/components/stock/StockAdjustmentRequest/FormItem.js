@@ -22,9 +22,6 @@ export default class FormItem extends Modal {
   }
 
   handleOnChangeLocation(value) {
-    // if (value === this.props.form.getFieldValue("toLocationId")) {
-    //   this.Message.error(this.CATranslate("error_the_same_location", this.props.locale));
-    // }
     this.setState({locationId: value});
   }
 

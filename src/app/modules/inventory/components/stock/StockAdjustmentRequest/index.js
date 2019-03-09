@@ -17,7 +17,7 @@ export default class StockAdjustmentRequestLists extends List {
         title: <this.Translate id="col_stock_adjustment_request_title" />,
         dataIndex: "title",
         key: "title",
-        width: 700,
+        width: 500,
         sorter: true
       },
       {
@@ -25,6 +25,12 @@ export default class StockAdjustmentRequestLists extends List {
         dataIndex: "user",
         key: "user",
         render: user => user ? user.fullName : this.emptyText
+      },
+      {
+        title: <this.Translate id="text_reason" />,
+        dataIndex: "reason",
+        key: "reason",
+        width: 300
       },
       {
         title: <this.Translate id="text_reason" />,
