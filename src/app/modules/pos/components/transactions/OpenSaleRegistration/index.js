@@ -59,6 +59,7 @@ export default class OpenSaleRegistrationList extends List {
               isHideTool={true}
               isAutoFocus={index === 0}
               isAutoSelect={true}
+              disabled={record.expected <= 0}
               required={index === 0}
               handleKeyUp={(e) => this.handleOnChangeCount(e, index)}
               form={this.props.form} />;

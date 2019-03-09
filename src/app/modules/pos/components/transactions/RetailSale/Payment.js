@@ -51,6 +51,10 @@ export default class Payment extends Modal {
     }
   }
 
+  componentWillUnmount() {
+    this.setState({isAlreadyAutoPrint: false});
+  }
+
   handleSubmit (e) { // Here use only for protected from refresh page when hit enter while focus input payment
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
