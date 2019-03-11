@@ -207,7 +207,7 @@ export default class SaleHistoryList extends List {
               <this.InputText
                 name="number"
                 placeholder={this.CATranslate("text_search_for_sale_no", this.props.locale)}
-                label={<this.Translate id="input-sale-history-sale-number" />}
+                label={<this.Translate id="text_search_for_sale_no" />}
                 form={this.props.form}/>
             </this.Col>
             <this.Col md="2">

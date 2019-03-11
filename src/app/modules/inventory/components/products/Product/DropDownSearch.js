@@ -163,7 +163,7 @@ export default class DropDownSearch extends Modal {
               product.productOption === Enum.PRODUCT_VARIANT ?
               
                 product.productVariants.length > 0 ?
-                  <div className="variant">{product.productVariants.length} {<this.Translate id="text_variant"/>}{product.productVariants.length > 1 ? <this.Translate id="text_plural"/> : ""}</div>
+                  <div className="variant">{product.productVariants.length} {product.productVariants.length > 1 ? <this.Translate id="text_variants"/> : <this.Translate id="text_variant"/>}</div>
                   :
                   <div className="price">{this.formatCurrency(product.price)}</div>
                   
@@ -211,7 +211,7 @@ export default class DropDownSearch extends Modal {
         //         <this.Col md="4" className="right-description">
         //           {
         //             product.productVariants.length > 0 ?
-        //               <div className="variant">{product.productVariants.length} {<this.Translate id="text_variant"/>}{product.productVariants.length > 1 ? <this.Translate id="text_plural"/> : ""}</div>
+        //               <div className="variant">{product.productVariants.length} {product.productVariants.length > 1 ? <this.Translate id="text_variants"/> : <this.Translate id="text_variant"/>}</div>
         //               :
         //               <div className="price">{this.formatCurrency(product.price)}</div>
         //           }

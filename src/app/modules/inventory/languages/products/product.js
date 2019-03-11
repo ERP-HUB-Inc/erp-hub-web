@@ -377,6 +377,12 @@ export default {
     "Variant"
   ],
 
+  "text_variants": [
+    "Variants",
+    "Variants",
+    "Variants"
+  ],
+
   "text_product_variant": [
     "Product Variant",
     "Product Variant",

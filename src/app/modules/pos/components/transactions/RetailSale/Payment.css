@@ -95,7 +95,8 @@
 }
 
 .pos-payment .sale-summary ul li .price {
-    padding-left: 15px
+    padding-left: 15px;
+    position: relative
 }
 
 .pos-payment .grand-total .grand-total-value {

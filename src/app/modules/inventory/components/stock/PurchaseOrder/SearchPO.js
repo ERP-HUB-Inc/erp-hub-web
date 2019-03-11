@@ -270,7 +270,7 @@ export default class SearchPo extends Modal {
     this.grandTotal(existingProductList);
   }
 
-  handleOnSelectList(product, productVariant, isRequestVariantForm = true) {
+  async handleOnSelectList(product, productVariant, isRequestVariantForm = true) {
     let isProductVariant = product.productOption === Enum.PRODUCT_VARIANT;
     if (isProductVariant && isRequestVariantForm) {
       this.setState({
@@ -310,8 +310,14 @@ export default class SearchPo extends Modal {
 
       existingProductList.forEach((product, index) => {
         if (product.productVariantId === productVariant.id) {
+          if (product.purchaseEntryStatus === this.Enum.ARCHIVE) {
+            existingProductList[index]["purchaseEntryStatus"] = this.Enum.ACTIVE;
+            existingProductList[index]["quantity"] = 1;
+          } else {
+            existingProductList[index]["quantity"] += 1;
+          }
+
           isNotTheSameProduct = false;
-          existingProductList[index]["quantity"] += 1;
           existingProductList[index]["totalPrice"] = existingProductList[index]["quantity"] * existingProductList[index]["price"];
         }
       });
@@ -332,13 +338,18 @@ export default class SearchPo extends Modal {
       }
     }
 
+    console.log("ExistingProductList:", existingProductList);
+
     this.setState({productLists: existingProductList});
+
+    this.props.form.setFieldsValue({searchProduct: ""});
+    document.getElementById("searchProduct").focus();
 
     this.grandTotal(existingProductList);
   }
 
   render(){
-    const {productLists} = this.state; 
+    const {productLists} = this.state; console.log("ProductLists:", productLists);
     return(
       <div className="main-dropdown-search">
         <DropDownSearch

@@ -461,11 +461,12 @@ export default class Retail extends Component {
         });
       } else {
         existingProductOrderList[proderOrderRowIndex]["discount"] = 0;
+        const isDiscountHasAdded = existingProductOrderList.filter(productOrderList => parseFloat(productOrderList.discount) > 0 ).length > 0;
         this.setState({
-          isDiscountHasAdded: false,
+          isDiscountHasAdded,
           discountValue: {
-            type: Enum.DISCOUNT_TYPE.PERCENTAGE,
-            value: 0
+            type: isDiscountHasAdded ? Enum.DISCOUNT_TYPE.EACH_ITEM : Enum.DISCOUNT_TYPE.PERCENTAGE,
+            value: isDiscountHasAdded ? this.state.discountValue.value : 0
           }
         });
       }

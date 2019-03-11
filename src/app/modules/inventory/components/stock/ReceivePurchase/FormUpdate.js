@@ -134,6 +134,11 @@ export default class Form extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        if (values.receiveQuantity.filter(valueReceiveQuantity => valueReceiveQuantity > 0).length <= 0) {
+          this.Message.warning(this.CATranslate("text_receive_qty_not_apply", this.props.locale));
+          return;
+        }
+        
         this.setState({modalVisible: true});
         this.renderModalConfirmAction();
       }

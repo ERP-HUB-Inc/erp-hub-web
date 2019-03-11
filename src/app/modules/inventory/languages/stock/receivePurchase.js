@@ -51,5 +51,11 @@ export default {
     "Receive QTY can not greater than request",
     "Receive QTY can not greater than request",
     "Receive QTY can not greater than request"
+  ],
+
+  "text_receive_qty_not_apply": [
+    "Please apply value to receive quantity",
+    "Please apply value to receive quantity",
+    "Please apply value to receive quantity"
   ]
 };

@@ -12,6 +12,8 @@ export default class StoreLanguageList extends List {
     this.columns = new Column();
     this.formCreate = <FormCreate/>;
     this.formUpdate = <FormUpdate/>;
+    this.generalSearchLabel = "text_name";
+    this.placeHolderForGeneralSearch = "text_name";
     this.columnFilterWithKey = ["name"];
     this.service = StoreLanguageService;
     this.action = StoreLanguageAction;

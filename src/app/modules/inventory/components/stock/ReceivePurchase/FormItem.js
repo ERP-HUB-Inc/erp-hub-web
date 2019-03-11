@@ -28,7 +28,7 @@ export default class FormItem extends Modal {
       <this.Row id="purchase-order-form">
         <this.Col md="12">
           <this.Row className="ca-penel-v1 wrap-po-filter">
-            <this.Col md="2">
+            <this.Col md="4">
               <this.InputText
                 name="name"
                 label={<this.Translate id="text_name" />}

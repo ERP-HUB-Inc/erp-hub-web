@@ -322,7 +322,7 @@ const dataSource = {
     subItems: [
       {
         title: "Supplier",
-        icon: "icon-sale-return",
+        icon: "icon-customer",
         route: "/stock/supplier",
         component: Supplier,
         isFashNav: true
@@ -336,7 +336,7 @@ const dataSource = {
       },
       {
         title: "Receive Purchase",
-        icon: "icon-purchasing",
+        icon: "icon-import",
         route: "/stock/purchase/receive",
         component: ReceiveOrder,
         isFashNav: false
@@ -363,27 +363,27 @@ const dataSource = {
         isFashNav: true
       },
       {
+        title: "Receive Transfer",
+        icon: "icon-import",
+        route: "/stock/receive/transfer",
+        component: ReceiveStockTransfer,
+        isFashNav: false
+      },
+      {
         title: "Adjustment Request",
-        icon: "icon-stock-transfer",
+        icon: "icon-stock-audit",
         route: "/stock/adjustment/request",
         component: StockAdjustmentRequest,
         isFashNav: true
       },
       {
         title: "Adjustment Approve",
-        icon: "icon-stock-transfer",
+        icon: "icon-import",
         route: "/stock/adjustment/approve",
         component: StockAdjustmentApprove,
         isFashNav: true
       },
-      {
-        title: "Receive Transfer",
-        icon: "icon-stock-transfer",
-        route: "/stock/receive/transfer",
-        component: ReceiveStockTransfer,
-        isFashNav: false
-      }
-     
+      
       // {
       //   title: "Stock",
       //   icon: "icon-stock",
@@ -571,7 +571,7 @@ const dataSource = {
       },
       {
         title: "Currency Exchange",
-        icon: "icon-currency",
+        icon: "icon-operation",
         route: "/settings/currency-exchange",
         component: CurrencyExchange,
         isFashNav: true

@@ -11,6 +11,8 @@ export default class GroupCustomerList extends List {
     super(props);
     this.columns = new Column();
     this.formCreate = <FormCreate/>;
+    this.generalSearchLabel = "text_name";
+    this.placeHolderForGeneralSearch = "text_name";
     this.callBackOnShowEditForm = this.showFormEdit;
     this.service = CutomerService;
     this.action = GroupCutomerAction;

@@ -356,7 +356,7 @@ export default class Payment extends Modal {
                   <div className="text-uppercase grand-total-title">
                     <this.Translate id="text_total"/>
                   </div>
-                  <div className="total-quantity">{summaryTotal.totalQuantity} <this.Translate id="text_item"/>{summaryTotal.totalQuantity > 1 ? <this.Translate id="text_plural"/> : ""}</div>
+                  <div className="total-quantity">{summaryTotal.totalQuantity} {summaryTotal.totalQuantity > 1 ? <this.Translate id="text_items"/> : <this.Translate id="text_item"/>}</div>
                 </div>
                 <div className="grand-total-value">
                   {this.formatCurrency(grandTotal)}
