@@ -12,6 +12,8 @@ export default class OperationRecord extends List {
     this.columns = new Column();
     this.formCreate = <FormCreate/>;
     this.formUpdate = <FormUpdate/>;
+    this.generalSearchLabel = "text_description";
+    this.placeHolderForGeneralSearch = "text_description";
     this.columnFilterWithKey = ["name"];
     this.service = OperatinRecordService;
     this.action = OperationRecordAction;

@@ -216,13 +216,15 @@
 }
 
 #retail-sale .product-order-list .product-order-item .price {
-    margin-left: 25px
+    margin-left: 25px;
+    position: relative
 }
 
 .price .strike-price {
-    font-size: 9pt;
+    font-size: 8.5pt;
     font-weight: 400;
     position: absolute;
+    top: 15px;
     text-decoration: line-through
 }
 

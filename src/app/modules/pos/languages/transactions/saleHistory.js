@@ -24,16 +24,10 @@ export default {
     "Search for Customer"
   ],
 
-  "input-sale-history-sale-number": [
-    "Sale Number",
-    "Sale Number",
-    "Sale Number"
-  ],
-
   "text_search_for_sale_no": [
-    "Search for Sale No",
-    "Search for Sale No",
-    "Search for Sale No"
+    "Receipt/Invoice No",
+    "Receipt/Invoice No",
+    "Receipt/Invoice No"
   ],
 
   "input-sale-history-serial-number": [

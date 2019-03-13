@@ -3,14 +3,13 @@ import FormItem from "./FormItem";
 import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
 import ReturnPurchaseAction from "../../../actions/stock/returnPurchase";
-import "../ReceivePurchase/index.css";
+import "../PurchaseOrder/index.css";
 
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.wrapClassName = "wrap-modal-po";
+    this.wrapClassName = `${this.wrapClassName} wrap-modal-po  modal-po-full-screen`;
     this.width = window.innerWidth < 1400 ? window.innerWidth : 1400;
-    // this.height = window.innerHeight < 800 ? "100%" : 800;
     this.title = <this.Translate id="text_return_purchase" />;
     this.confirmTextAction = <this.Translate id="text_confirm_return_po"/>;
     this.confirmTitle = <this.Translate id="text_confirm_return_po_title"/>;

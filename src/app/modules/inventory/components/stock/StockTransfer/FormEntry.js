@@ -254,8 +254,14 @@ export default class FormEntry extends Modal {
 
       existingProductList.forEach((product, index) => {
         if (product.productVariantId === productVariant.id) {
+          if (product.transferEntryStatus === this.Enum.ARCHIVE) {
+            existingProductList[index]["transferEntryStatus"] = this.Enum.ACTIVE;
+            existingProductList[index]["quantity"] = 1;
+          } else {
+            existingProductList[index]["quantity"] += 1;
+          }
+
           isNotTheSameProduct = false;
-          existingProductList[index]["transferQuantity"] += 1;
         }
       });
 
