@@ -60,7 +60,7 @@ export default class SearchAdjustmentRequest extends Modal {
         render: (text, product, index) => {
           const currentQty = this.countCurrentQty(product);
           return <div>
-            <this.InputNumber name={`currentQty[${index}]`} precision={0} data={currentQty} form={this.form} />
+            <this.InputNumber className="hidden" type="hidden" name={`currentQty[${index}]`} precision={0} data={currentQty} form={this.form} />
             {currentQty}  
           </div>;
         }
