@@ -9,7 +9,8 @@ export default class FormItem extends Modal {
     super(props);
     this.state = {
       locations: [],
-      locationId: ""
+      locationId: "",
+      handleOnChangeLocation: false
     };
     this.handleOnChangeLocation = this.handleOnChangeLocation.bind(this);
   }
@@ -22,7 +23,9 @@ export default class FormItem extends Modal {
   }
 
   handleOnChangeLocation(value) {
-    this.setState({locationId: value});
+    this.setState({
+      locationId: value
+    });
   }
 
   render() {

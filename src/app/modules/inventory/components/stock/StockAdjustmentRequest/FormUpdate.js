@@ -46,6 +46,10 @@ export default class Form extends Modal {
     );
   }
 
+  handleOnChangeLocation(value){
+    this.setState({locationId: value});
+  }
+
   handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -85,8 +89,7 @@ export default class Form extends Modal {
         values["locationId"] = parseFloat(values.locationId);
         values["entries"] = stockAdjustmentEntries;
         this.setState({isClickFilter: true});
-        this.dispatch(StockAdjustmentRequestAction.update(values));
-        
+        this.dispatch(StockAdjustmentRequestAction.update(values));        
       }
     });
   }
@@ -114,6 +117,7 @@ export default class Form extends Modal {
           formData={stockAdjustmentRequestDetail.data} 
           productVariant={this.props.productVariant}
           accessLocation={this.props.accessLocation} 
+          locationId={this.state.locationId}  
           productSearch={productSearch}
           dispatch={dispatch} 
           locale={locale}
