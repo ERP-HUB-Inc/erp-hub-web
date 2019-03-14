@@ -239,7 +239,7 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: "Close Shift",
+        title: <Translate id="text_close_shift" />,
         icon: "icon-currency",
         route: "/transactions/saleregister",
         component: OpenSaleRegistration,
@@ -259,7 +259,7 @@ const dataSource = {
     route: "products",
     subItems: [
       {
-        title: "Manage Products",
+        title: <Translate id="text_manage_product" />,
         icon: "icon-time",
         route: "/products/manage",
         component: ManageProduct,
@@ -273,28 +273,28 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: "Product Types",
+        title: <Translate id="text_product_type" />,
         icon: "icon-types",
         route: "/products/types",
         component: ProductType,
         isFashNav: true
       },
       {
-        title: "Product Tags",
+        title: <Translate id="text_product_tags" />,
         icon: "icon-tags",
         route: "/products/tags",
         component: ProductTag,
         isFashNav: true
       },
       {
-        title: "Print Price Tags",
+        title: <Translate id="text_print_price_tags" />,
         icon: "icon-price-book",
         route: "/products/price-tags",
         component: PrintPriceTag,
         isFashNav: true
       },
       {
-        title: "Manage Units",
+        title: <Translate id="text_manage_unit" />,
         icon: "icon-price-book",
         route: "/products/units",
         component: ProductUnit,
@@ -321,28 +321,28 @@ const dataSource = {
     route: "stock",
     subItems: [
       {
-        title: "Supplier",
+        title: <Translate id="text_supplier" />,
         icon: "icon-customer",
         route: "/stock/supplier",
         component: Supplier,
         isFashNav: true
       },
       {
-        title: "Purchase Orders",
+        title: <Translate id="text_purchase_order" />,
         icon: "icon-purchasing",
         route: "/stock/purchase/order",
         component: PurchaseOrder,
         isFashNav: true
       },
       {
-        title: "Receive Purchase",
+        title: <Translate id="text_receive_purchase" />,
         icon: "icon-import",
         route: "/stock/purchase/receive",
         component: ReceiveOrder,
         isFashNav: false
       },
       {
-        title: "Return Purchase",
+        title: <Translate id="text_return_purchase" />,
         icon: "icon-sale-return",
         route: "/stock/return",
         component: StockReturn,
@@ -356,28 +356,28 @@ const dataSource = {
         //   isFashNav: false
         // },
         // {
-        title: "Stock Transfer",
+        title: <Translate id="text_stock_transfer" />,
         icon: "icon-stock-transfer",
         route: "/stock/transfer",
         component: StockTransfer,
         isFashNav: true
       },
       {
-        title: "Receive Transfer",
+        title: <Translate id="text_receive_transfer" />,
         icon: "icon-import",
         route: "/stock/receive/transfer",
         component: ReceiveStockTransfer,
         isFashNav: false
       },
       {
-        title: "Adjustment Request",
+        title: <Translate id="text_adjustment_request" />,
         icon: "icon-stock-audit",
         route: "/stock/adjustment/request",
         component: StockAdjustmentRequest,
         isFashNav: true
       },
       {
-        title: "Adjustment Approve",
+        title: <Translate id="text_adjustment_approve" />,
         icon: "icon-import",
         route: "/stock/adjustment/approve",
         component: StockAdjustmentApprove,
@@ -412,14 +412,14 @@ const dataSource = {
     route: "customers",
     subItems: [
       {
-        title: "Manage Customer",
+        title: <Translate id="text_manage_customer" />,
         icon: "icon-customer ",
         route: "/customer",
         component: ManageCustomer,
         isFashNav: true
       },
       {
-        title: "Group Customer",
+        title: <Translate id="text_group_customer" />,
         icon: "icon-employee",
         route: "/customers/group",
         component: GroupCustomer,
@@ -438,7 +438,7 @@ const dataSource = {
     route: "employees",
     subItems: [
       {
-        title: "Manage Employee",
+        title: <Translate id="text_manage_employee" />,
         icon: "icon-employee",
         route: "/employee",
         component: ManageEmployee
@@ -466,21 +466,21 @@ const dataSource = {
     route: "reports",
     subItems: [
       {
-        title: "Sale Report",
+        title: <Translate id="text_sale_report" />,
         icon: "icon-sale-report",
         route: "/reports/sale",
         component: SaleReport,
         isFashNav: true
       },
       {
-        title: "Purchase Report",
+        title: <Translate id="text_sale_report" />,
         icon: "icon-purchasing",
         route: "/reports/purchase",
         component: PurchaseReport,
         isFashNav: true
       },
       {
-        title: "Products Report",
+        title: <Translate id="text_purchase_report" />,
         icon: "icon-items",
         route: "/reports/product",
         component: ProductReport,
@@ -501,7 +501,7 @@ const dataSource = {
       //   isFashNav: false
       // },
       {
-        title: "Profit & Lost Report",
+        title: <Translate id="text_profit_and_lost_report" />,
         icon: "icon-sale-return",
         route: "/reports/profit-lost",
         component: ProfitAndLostReport,
@@ -521,70 +521,70 @@ const dataSource = {
     route: "settings",
     subItems: [
       {
-        title: "Store Account",
+        title: <Translate id="text_store_account" />,
         icon: "icon-account",
         route: "/settings/account",
         component: StoreAccount,
         isFashNav: true
       },
       {
-        title: "Location",
+        title: <Translate id="text_location" />,
         icon: "icon-store",
         route: "/settings/location",
         component: StoreLocation,
         isFashNav: true
       },
       {
-        title: "Receipt Template",
+        title: <Translate id="text_receipt_template" />,
         icon: "icon-receipt",
         route: "/settings/receipt/template",
         component: ReceiptTemplate,
         isFashNav: true
       },
       {
-        title: "Payment Method",
+        title: <Translate id="text_payment_method" />,
         icon: "icon-payment-method",
         route: "/settings/payment-method",
         component: PaymentMethod,
         isFashNav: false
       },
       {
-        title: "Tax",
+        title: <Translate id="text_tax" />,
         icon: "icon-taxes",
         route: "/settings/tax",
         component: Tax,
         isFashNav: true
       },
       {
-        title: "Role Access",
+        title: <Translate id="text_role_access" />,
         icon: "icon-role",
         route: "/settings/role",
         component: RoleAccess,
         isFashNav: true
       },
       {
-        title: "Currency",
+        title: <Translate id="text_currency" />,
         icon: "icon-currency",
         route: "/settings/currency",
         component: Currency,
         isFashNav: false
       },
       {
-        title: "Currency Exchange",
+        title: <Translate id="currency_exchange" />,
         icon: "icon-operation",
         route: "/settings/currency-exchange",
         component: CurrencyExchange,
         isFashNav: true
       },
       {
-        title: "Language",
+        title: <Translate id="text_language" />,
         icon: "icon-language",
         route: "/settings/language",
         component: StoreLanguage,
         isFashNav: false
       },
       {
-        title: "Operation Record",
+        title: <Translate id="operation_record_title" />,
         icon: "icon-operation",
         route: "/settings/operation-record",
         component: OperationRecord,

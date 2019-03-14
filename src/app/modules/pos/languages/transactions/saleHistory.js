@@ -42,12 +42,6 @@ export default {
     "Product Serials"
   ],
 
-  "text_sale_history": [
-    "Sale History",
-    "Sale History",
-    "Sale History"
-  ],
-
   "text_reprint_warning_1": [
     "Please select any record for print !",
     "Please select any record for print !",

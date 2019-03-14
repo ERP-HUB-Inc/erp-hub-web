@@ -1,20 +1,9 @@
 export default {
-  "text_search_transaction": [
-    "Search Transaction Invoice or help",
-    "Search Transaction Invoice or help",
-    "Search Transaction Invoice or help"
-  ],
 
   "text_back_office": [
     "Back office",
     "Back office",
     "Back office"
-  ],
-
-  "text_header": [
-    "Header-En",
-    "Header-Fr",
-    "Header-Es"
   ],
 
   "text_login": [
