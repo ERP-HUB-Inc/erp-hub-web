@@ -7,6 +7,7 @@ import ProductVariantAction from "../../../actions/products/productVariant";
 import ProductVariantConstant from "../../../constants/products/productVariant";
 import Modal from "../../../../common/components/shares/Modal";
 import "../PurchaseOrder/index.css";
+import "./index.css";
 
 export default class SearchAdjustmentRequest extends Modal {
   constructor(props){

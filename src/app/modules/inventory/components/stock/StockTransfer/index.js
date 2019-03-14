@@ -92,6 +92,7 @@ export default class Lists extends List {
         }
       }
     ];
+    this.rowSelection = false;
     this.STOCK_STRANSFER_STEP_STR = {
       [Enum.STOCK_STRANSFER_STEP.PROCESS]: {name: <this.Translate id="text_process" />, color: this.Enum.STOCK_TRANSFER_STEP_COLOR.PROCESS},
       [Enum.STOCK_STRANSFER_STEP.RECEIVED]: {name: <this.Translate id="text_received" />, color:  this.Enum.STOCK_TRANSFER_STEP_COLOR.RECEIVED},

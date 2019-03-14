@@ -261,7 +261,7 @@ export default class SearchPo extends Modal {
     const existingProductList = this.state.productLists;
     existingProductList.forEach((product, productIndex) => {
       if (productIndex === index) {
-        existingProductList[productIndex]["price"] = e.target.value;
+        existingProductList[productIndex]["price"] = parseFloat(e.target.value);
       }
     });
     this.props.form.setFieldsValue({[`totalPrice[${index}]`]: this.formatCurrency(this.calculateTotalAmountEachRow(e, index))});

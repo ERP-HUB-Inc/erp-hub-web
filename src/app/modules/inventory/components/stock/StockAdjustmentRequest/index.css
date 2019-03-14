@@ -1,0 +1,10 @@
+/* input number no border */
+
+.ca-input-no-border {
+    border: none;
+    background: none;
+}
+
+.ca-input-no-border input {
+    text-align: center;
+}

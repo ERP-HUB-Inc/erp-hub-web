@@ -74,6 +74,7 @@ export default class StockAdjustmentApprovetLists extends List {
       [Enum.STOCK_ADJUST_STEP.COMPLETE]: {name: <this.Translate id="text_complete" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
     };
     this.columnFilterWithKey = ["title"];
+    this.rowSelection = false;
     this.action = StockAdjustmentApproveAction;
     this.RESET_CONSTANT = Constant.RESET_STOCK_REQUEST;
     this.handleApprove = this.handleApprove.bind(this);
@@ -119,6 +120,28 @@ export default class StockAdjustmentApprovetLists extends List {
     if (nextProps.stockAdjustmentApproveUpdate.updated) {
       nextProps.dispatch(StockAdjustmentApproveAction.fetch(this.pageSize));
       nextProps.dispatch(StockAdjustmentApproveAction.reset(Constant.RESET_STOCK_ADJUSTMENT_APPROVE));
+    }
+  }
+
+  componentDidUpdate(){
+    let errorResponse = null;
+    if (this.props.stockAdjustmentApproveUpdate.error) {
+      errorResponse = this.props.stockAdjustmentApproveUpdate.error;
+    } else if (this.props.stockAdjustmentApproveUpdate.error) {
+      errorResponse = this.props.stockAdjustmentApproveUpdate.error;
+    } 
+    if (errorResponse) {
+      let errorCode = this.Util.getErrorCodeFromState(errorResponse);
+      let message = "Something wrong, Please contact system provider";
+      if (errorCode === Enum.LOCATION_NOT_FOUND) {
+        message = this.CATranslate("error_location_not_found", this.props.locale);
+      } else if (errorCode === Enum.PRODUCT_NOT_FOUND) {
+        message = this.CATranslate("error_product_not_found", this.props.locale);
+      } else if (errorCode === Enum.PRODUCT_UNIT_NOT_FOUND) {
+        message = this.CATranslate("error_unit_not_found", this.props.locale);
+      } 
+      this.props.dispatch(StockAdjustmentApproveAction.reset());
+      this.Message.error(message);
     }
   }
 
