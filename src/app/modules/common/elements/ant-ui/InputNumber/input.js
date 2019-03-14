@@ -77,7 +77,7 @@ export default class InputNumber extends Element {
             <this.InputNumber
               ref={(input) => { this.nameInput = input; }}
               // formatter={value => `${value}`.replace(this.props.formatter, ",")}
-              // parser={value => this.parserValue(value)}
+              // parser={value => parseInt(value)}
               placeholder={this.props.placeholder}
               disabled={this.props.disabled}
               step={this.props.step}

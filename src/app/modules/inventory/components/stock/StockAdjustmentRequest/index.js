@@ -33,12 +33,6 @@ export default class StockAdjustmentRequestLists extends List {
         width: 300
       },
       {
-        title: <this.Translate id="text_reason" />,
-        dataIndex: "reason",
-        key: "reason",
-        width: 300
-      },
-      {
         title: <this.Translate id="text_step" />,
         dataIndex: "step",
         key: "step",

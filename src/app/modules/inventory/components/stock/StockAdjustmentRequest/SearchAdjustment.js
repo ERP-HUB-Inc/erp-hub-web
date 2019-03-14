@@ -16,6 +16,7 @@ export default class SearchAdjustmentRequest extends Modal {
       units: [],
       productLists: [],
       modalVariant: null,
+      locationId: "",
       isNotYetLoadComponentDidUpdated: true
     };
     this.form = this.props.form;
@@ -59,8 +60,8 @@ export default class SearchAdjustmentRequest extends Modal {
         render: (text, product, index) => {
           const currentQty = this.countCurrentQty(product);
           return <div>
-            <this.InputNumber name={`currentQty[${index}]`} className="hidden" type="hidden" data={currentQty} form={this.form} />
-            {currentQty}
+            <this.InputNumber className="hidden" type="hidden" name={`currentQty[${index}]`} precision={0} data={currentQty} form={this.form} />
+            {currentQty}  
           </div>;
         }
       },
@@ -90,9 +91,7 @@ export default class SearchAdjustmentRequest extends Modal {
           return <this.InputNumber
             name={`adjustQuantity[${index}]`}
             className="text-right"
-            isAutoSelect={true}
             isHideTool={true}
-            required={true}
             precision={0}
             data={record.adjustQuantity}
             handleKeyUp={(e) => this.handleOnChangeAdjust(e, index)}
@@ -105,14 +104,13 @@ export default class SearchAdjustmentRequest extends Modal {
         width: 150,
         align: "center",
         key: "different",
-        render: (text, record, index) => {
-       
-          return  <this.InputNumber
-            name={`different[${index}]`}
-            data={String(record.different)}
-            precision={0}
-            className="ca-input-no-border"
-            form={this.form} />;
+        render: (text, product, index) => {
+          const currentQty =  this.countCurrentQty(product);
+          const different = this.calculateDifferent(currentQty,index); 
+          return <div>
+            <this.InputNumber className="hidden" name={`different[${index}]`} precision={0} data={String(different)} form={this.form} />
+            {different}  
+          </div>;
         }
       },
       {
@@ -143,11 +141,11 @@ export default class SearchAdjustmentRequest extends Modal {
     this.setState({units: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT))});
   }
 
-  componentDidUpdate(){
-    const {stockAdjustmentRequest} = this.props;
+  componentDidUpdate(){   
+   
+    const {stockAdjustmentRequest} = this.props; 
     if (stockAdjustmentRequest.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
       const existingProductList = this.state.productLists;
-      
       stockAdjustmentRequest.forEach(stockAdjustmentRequest => {
         let productName = "";
         let variantName = "";
@@ -173,13 +171,12 @@ export default class SearchAdjustmentRequest extends Modal {
             stockAdjustmentRequestStatus: stockAdjustmentRequest.productVariant.product.status
           }); 
         }
-      }); 
+      });
       
       this.setState({
         productLists: existingProductList,
         isNotYetLoadComponentDidUpdated: false
       });
-
     }
 
     if (this.props.productVariant.fetched) {
@@ -194,8 +191,35 @@ export default class SearchAdjustmentRequest extends Modal {
       locationId = this.props.locationId;
     } else {
       locationId = this.Util.getLocationId();
-    }
+    }  
     return Util.countProductQTYCurrentLocation(product, locationId);
+  }
+
+  calculateDifferent(currentValues,index){
+    let getCurrent = 0;
+    let adjustQuantity = this.props.form.getFieldValue(`adjustQuantity[${index}]`);
+    if(currentValues > 0){
+      getCurrent = currentValues;
+    }
+    let different = (adjustQuantity - getCurrent);
+
+    return different;
+  }
+
+  handleOnChangeAdjust(e,index){
+    let different  = "";
+    let getCurrent = 0;
+    const existingProductList = this.state.productLists;
+    existingProductList.forEach((product, productIndex) => {
+      if (productIndex === index) {
+        let currentQty = this.props.form.getFieldValue(`currentQty[${index}]`);
+        if(currentQty > 0){
+          getCurrent = currentQty;
+        }
+        different = e.target.value - getCurrent;
+      }
+    });
+    this.props.form.setFieldsValue({[`different[${index}]`]: different });
   }
 
   removeRecord(record, index){
@@ -204,6 +228,7 @@ export default class SearchAdjustmentRequest extends Modal {
       existingProductList.splice(index, 1);
     } else {
       existingProductList[index]["stockAdjustmentRequestStatus"] = this.Enum.ARCHIVE;
+
     }
 
     this.setState({
@@ -214,19 +239,6 @@ export default class SearchAdjustmentRequest extends Modal {
 
   handleCancelVariantProduct() {
     this.setState({modalVariant: null});
-  }
-
-
-  handleOnChangeAdjust(e,index){
-    let different  = "";
-    const existingProductList = this.state.productLists;
-    existingProductList.forEach((product, productIndex) => {
-      if (productIndex === index) {
-        let currentQty = this.props.form.getFieldValue(`currentQty[${index}]`);
-        different = e.target.value - currentQty;
-      }
-    });
-    this.props.form.setFieldsValue({[`different[${index}]`]: different });
   }
 
   handleOnSelectList(product, productVariant, isRequestVariantForm = true) {
@@ -249,7 +261,7 @@ export default class SearchAdjustmentRequest extends Modal {
 
     const productName = Util.getProductName(product);
     const adjustQuantity = 0;
-    const {quantity} = productVariant ? productVariant : [];
+    const {quantity} = productVariant;
     const existingProductList = this.state.productLists;
 
     if (existingProductList.length === 0) {
@@ -264,13 +276,13 @@ export default class SearchAdjustmentRequest extends Modal {
         productVariantId: productVariant.id,
         stockAdjustmentRequestStatus: this.Enum.ACTIVE
       });
+
     } else {
-
       let isNotTheSameProduct = true;
-
       existingProductList.forEach((product, index) => {
         if (product.productVariantId === productVariant.id) {
           isNotTheSameProduct = false;
+          // set adjustment value
         }
       });
 
@@ -288,7 +300,6 @@ export default class SearchAdjustmentRequest extends Modal {
         });
       }
     }
-
     this.setState({productLists: existingProductList});
   }
 

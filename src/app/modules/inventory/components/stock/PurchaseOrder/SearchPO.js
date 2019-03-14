@@ -261,7 +261,7 @@ export default class SearchPo extends Modal {
     const existingProductList = this.state.productLists;
     existingProductList.forEach((product, productIndex) => {
       if (productIndex === index) {
-        existingProductList[productIndex]["price"] = e.target.value;
+        existingProductList[productIndex]["price"] = parseFloat(e.target.value);
       }
     });
     this.props.form.setFieldsValue({[`totalPrice[${index}]`]: this.formatCurrency(this.calculateTotalAmountEachRow(e, index))});
@@ -338,8 +338,6 @@ export default class SearchPo extends Modal {
       }
     }
 
-    console.log("ExistingProductList:", existingProductList);
-
     this.setState({productLists: existingProductList});
 
     this.props.form.setFieldsValue({searchProduct: ""});
@@ -349,7 +347,7 @@ export default class SearchPo extends Modal {
   }
 
   render(){
-    const {productLists} = this.state; console.log("ProductLists:", productLists);
+    const {productLists} = this.state;
     return(
       <div className="main-dropdown-search">
         <DropDownSearch

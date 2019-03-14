@@ -29,7 +29,6 @@ export default class FormCreate extends Modal {
     );
   }
 
-
   handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -70,7 +69,6 @@ export default class FormCreate extends Modal {
         values["entries"] = stockAdjustmentEntries;
         values["locationId"] = parseFloat(values.locationId);
         this.dispatch(StockAdjustmentRequestAction.add(values));
-
       }
     });
   }
@@ -97,6 +95,7 @@ export default class FormCreate extends Modal {
           accessLocation={this.props.accessLocation}
           productSearch={productSearch} 
           productVariant={this.props.productVariant}
+          seletList={this.props.seletList}
           dispatch={dispatch} 
           locale={locale} />;
       return super.render();
