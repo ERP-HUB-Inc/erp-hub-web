@@ -10,9 +10,9 @@ export default class FormItem extends Modal {
     this.state = {
       locations: [],
       locationId: "",
-      handleOnChangeLocation: false
     };
     this.handleOnChangeLocation = this.handleOnChangeLocation.bind(this);
+    this.change = null;
   }
 
   componentDidMount(){
@@ -25,7 +25,8 @@ export default class FormItem extends Modal {
   handleOnChangeLocation(value) {
     this.setState({
       locationId: value
-    });
+    });   
+    this.change = true;
   }
 
   render() {
@@ -90,6 +91,7 @@ export default class FormItem extends Modal {
             dataSource={productSearch}
             productVariant={this.props.productVariant}
             locationId={this.state.locationId}
+            handleOnChangeLocation = {this.change}
             stockAdjustmentRequest={formData.stockAdjustmentEntries}
             locale={locale}
             dispatch={dispatch}

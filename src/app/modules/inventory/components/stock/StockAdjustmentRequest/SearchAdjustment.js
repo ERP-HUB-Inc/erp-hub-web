@@ -7,7 +7,6 @@ import ProductVariantAction from "../../../actions/products/productVariant";
 import ProductVariantConstant from "../../../constants/products/productVariant";
 import Modal from "../../../../common/components/shares/Modal";
 import "../PurchaseOrder/index.css";
-import "./index.css";
 
 export default class SearchAdjustmentRequest extends Modal {
   constructor(props){
@@ -92,9 +91,7 @@ export default class SearchAdjustmentRequest extends Modal {
           return <this.InputNumber
             name={`adjustQuantity[${index}]`}
             className="text-right"
-            // isAutoSelect={true}
-            // isHideTool={true}
-            // required={true}
+            isHideTool={true}
             precision={0}
             data={record.adjustQuantity}
             handleKeyUp={(e) => this.handleOnChangeAdjust(e, index)}
@@ -231,6 +228,7 @@ export default class SearchAdjustmentRequest extends Modal {
       existingProductList.splice(index, 1);
     } else {
       existingProductList[index]["stockAdjustmentRequestStatus"] = this.Enum.ARCHIVE;
+
     }
 
     this.setState({
@@ -304,8 +302,6 @@ export default class SearchAdjustmentRequest extends Modal {
     }
     this.setState({productLists: existingProductList});
   }
-
-
 
   render(){
     const {productLists} = this.state; 
