@@ -95,7 +95,7 @@ export default class ClientSignIn extends Component {
     });
   }
 
-  handleKeyDown () {
+  async handleKeyDown () {
     this.errorMessage = null;
     this.validateClassStatus = "";
   }
