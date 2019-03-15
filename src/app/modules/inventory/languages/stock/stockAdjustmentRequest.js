@@ -42,9 +42,9 @@ export default {
   ],
 
   "text_approve": [
-    "Approved",
-    "Approved",
-    "Approved"
+    "Approve",
+    "Approve",
+    "Approve"
   ],
 
   "text_reject": [
