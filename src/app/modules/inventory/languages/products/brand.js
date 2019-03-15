@@ -1,13 +1,13 @@
 export default {
   "text_brand": [
     "Brand",
-    "Brand",
-    "Brand"
+    "ម៉ាក",
+    "အမှတ်တံဆိပ်"
   ],
 
   "text_all_brand": [
     "All Brand",
-    "All Brand",
-    "All Brand"
+    "គ្រប់ម៉ាក",
+    "အားလုံးကုန်အမှတ်တံဆိပ်"
   ]
 };

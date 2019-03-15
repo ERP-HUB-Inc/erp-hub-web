@@ -1,43 +1,43 @@
 export default {
   "text_product": [
     "Product",
-    "Product",
+    "ផលិតផល",
     "Product"
   ],
 
   "text_product_name": [
     "Product Name",
-    "Product Name",
+    "ឈ្មោះផលិតផល",
     "Product Name"
   ],
 
   "text_product_description": [
     "Product Description",
-    "Product Description",
+    "បរិយាយផលិតផល",
     "Product Description"
   ],
 
   "text_out_of_stock": [
     "Out of stock",
-    "Out of stock",
+    "អស់ពី​ស្តុក",
     "Out of stock"
   ],
 
   "col_products_tag": [
     "Tags",
-    "Tags",
+    "ស្លាក",
     "Tags"
   ],
 
   "col_products_supplier": [
     "Supplier",
-    "Supplier",
+    "អ្នកផ្គត់ផ្គង់",
     "Supplier"
   ],
 
   "col_products_unit": [
     "Unit",
-    "Unit",
+    "ឯកតា",
     "Unit"
   ],
 
@@ -49,99 +49,99 @@ export default {
 
   "text_product_total_cost": [
     "Total Cost",
-    "Total Cost",
+    "សរុបថ្លៃដើម",
     "Total Cost"
   ],
 
   "text_total_price": [
     "Total Price",
-    "Total Price",
+    "តំលៃសរុប",
     "Total Price"
   ],
 
   // TAB
   "text_description": [
     "Description",
-    "Description",
+    "បរិយាយ",
     "Description"
   ],
 
   "tab_cost_log": [
     "Cost Log",
-    "Cost Log",
+    "តាមដានថ្លៃដើម",
     "Cost Log"
   ],
 
   "tab_product_log": [
     "Product Log",
-    "Product Log",
+    "តាមដានផលិតផល",
     "Product Log"
   ],
 
-  // INPUT
-  "text_brand": [
-    "Brand",
-    "Brand",
-    "Brand"
-  ],
+  // // INPUT
+  // "text_brand": [
+  //   "Brand",
+  //   "Brand",
+  //   "Brand"
+  // ],
 
   "input_product_enter_custom_code": [
     "Enter custom product SKU",
-    "Enter custom product SKU",
+    "បញ្ចូល SKU​ របស់ផលិតផល",
     "Enter custom product SKU"
   ],
 
   "input_product_auto_generate_code": [
     "Automatiacally generate SKU",
-    "Automatiacally generate SKU",
+    "បង្កើត SKU​ ដោយស្វយ័ប្រវត្តិ",
     "Automatiacally generate SKU"
   ],
 
   "input_product_is_avialable_sale": [
     "Sell on Point-of-Sale",
-    "Sell on Point-of-Sale",
+    "លក់តាម ប្រព័ន្ធគ្រប់គ្រងលក់",
     "Sell on Point-of-Sale"
   ],
 
   "input_product_is_publish": [
     "Sell on e-Commerce",
-    "Sell on e-Commerce",
+    "លក់តាម e-Commerce",
     "Sell on e-Commerce"
   ],
 
   "text_serial_type": [
     "Serial Type",
-    "Serial Type",
+    "ប្រភេទលេខរៀង",
     "Serial Type"
   ],
 
   "input_product_re_order_point": [
     "Re-Order Point",
-    "Re-Order Point",
+    "ចំនួនបញ្ជាទិញឡើងវិញ",
     "Re-Order Point"
   ],
 
   "input_product_tax": [
     "Tax",
-    "Tax",
+    "ពន្ធអាករ",
     "Tax"
   ],
 
   "input_product_tag": [
     "Tag",
-    "Tag",
+    "ស្លាកតំលៃ",
     "Tag"
   ],
 
   "input_product_supplier_price": [
     "Supplier Price",
-    "Supplier Price",
+    "តំលៃទិញចូល",
     "Supplier Price"
   ],
 
   "label_attrib_value": [
     "Value (e.g. Small, Medium, Large)",
-    "Value (e.g. Small, Medium, Large)",
+    "លក្ខណះ (e.g. តូច, មធ្យម, ធំ)",
     "Value (e.g. Small, Medium, Large)"
   ],
 
@@ -171,7 +171,7 @@ export default {
 
   "input_product_mark_up": [
     "Markup",
-    "Markup",
+    "បង្កើនតំលៃ",
     "Markup"
   ],
 
@@ -190,73 +190,73 @@ export default {
 
   "input_product_upload_image": [
     "You can also upload files by",
-    "You can also upload files by",
+    "អ្នកអាច upload file ដោយ",
     "You can also upload files by"
   ],
 
   "input_product_variant_name": [
     "Variant Name",
-    "Variant Name",
+    "ឈ្មោះវារ៉្យង់",
     "Variant Name"
   ],
 
   "input_product_search_product": [
     "Search product",
-    "Search product",
+    "ស្ងែងរកផលិតផល",
     "Search product"
   ],
 
   "input_product_serial": [
     "Serial",
-    "Serial",
+    "លេខរៀងផលិតផល",
     "Serial"
   ],
 
   "input_product_non_inventory": [
     "Non-Inventory",
-    "Non-Inventory",
+    "មិនមែនសារពើភ័ណ្ឌ",
     "Non-Inventory"
   ],
 
   "input_product_standard": [
     "Standard",
-    "Standard",
+    "ស្តង់ដា",
     "Standard"
   ],
 
   "input_product_license": [
     "License",
-    "License",
+    "អាជ្ញាប័ណ្ណ",
     "License"
   ],
 
   "input_product_good": [
     "Good",
-    "Good",
+    "ផលិតផលសំរេច",
     "Good"
   ],
 
   "input_product_raw_material": [
     "Raw Material",
-    "Raw Material",
+    "វត្ថុធាតុដើម",
     "Raw Material"
   ],
 
   "delete_variant_warning": [
     "Warning",
-    "Warning",
+    "ព្រមាន",
     "Warning"
   ],
 
   "text_delete_confirm_variant_product": [
     "Are you sure delete this variant product?",
-    "Are you sure delete this variant product?",
+    "តើអ្នកប្រាកដជាលុបផលិតផលវ៉ារ្យ៉ង់នេះមែនទេ?",
     "Are you sure delete this variant product?"
   ],
 
   "text_not_allow_to_delete_product_has_quantity": [
     "Not allow delete product that has quantity.",
-    "Not allow delete product that has quantity.",
+    "មិនអនុញ្ញាតឱ្យលុបផលិតផលដែលមានចំនួនក្នុងស្តុក",
     "Not allow delete product that has quantity."
   ],
 
@@ -264,134 +264,134 @@ export default {
 
   "radio_box_product_standard": [
     "Standard Product",
-    "Standard Product",
+    "ផលិតផលស្តង់ដា",
     "Standard Product"
   ],
 
   "radio_box_product_standard_description": [
     "This product has one SKU with its own inventory.",
-    "This product has one SKU with its own inventory.",
+    "ផលិតផលនេះមាន SKU តែមួយដែលមានស្តុកផ្ទាល់ខ្លួនរបស់វា",
     "This product has one SKU with its own inventory."
   ],
 
   "radio_box_product_variant": [
     "Product with Variants",
-    "Product with Variants",
+    "ផលិតផលមានលក្ខណៈច្រើនសណ្ឋាន",
     "Product with Variants"
   ],
 
   "radio_box_product_variant_description": [
     "These products have different attributes, like size or color. Each variant has a unique SKU and inventory level.",
-    "These products have different attributes, like size or color. Each variant has a unique SKU and inventory level.",
+    "ផលិតផលទាំងនេះមានប្រភេទលក្ខណៈខុសៗគ្នាដូចជាទំហំឬពណ៌​​ ហើយលក្ខណៈនីមួយៗមាន SKU និងមានចំនួនកនត់ក្នុងស្តុក",
     "These products have different attributes, like size or color. Each variant has a unique SKU and inventory level."
   ],
 
   "radio_box_product_composite": [
     "Composite Product",
-    "Composite Product",
+    "សមាសធាតុផលិតផល",
     "Composite Product"
   ],
 
   "radio_box_product_composite_description": [
     "A composite contains one or more standard products. It has one SKU but adjusts inventory levels for each standard product.",
-    "A composite contains one or more standard products. It has one SKU but adjusts inventory levels for each standard product.",
+    "សមាសធាតុមួយកើតពីផលិតផលមួយឬច្រើន។ វាមាន SKU មួយប៉ុន្តែវាកាត់ស្តុកចេញពី សមាសធាតុផលិតចូលរួម",
     "A composite contains one or more standard products. It has one SKU but adjusts inventory levels for each standard product."
   ],
 
   "btn_product_add_another_attribute": [
     "Add another attribute",
-    "Add another attribute",
+    "បញ្ចូលលក្ខណៈផ្សេង",
     "Add another attribute"
   ],
 
   "btn_product_add_another_variant": [
     "Add another variant",
-    "Add another variant",
+    "បញ្ចូលលក្ខណៈផ្សេង",
     "Add another variant"
   ],
 
   "btn_product_clone": [
     "Clone",
-    "Clone",
+    "ចម្លងតាមគំរូ",
     "Clone"
   ],
 
   "btn_product_print_label": [
     "Print Label",
-    "Print Label",
+    "បោះពុម្ភស្លាកសញ្ញា",
     "Print Label"
   ],
 
   "col_composite_product_markup": [
     "Markup",
-    "Markup",
+    "បង្កើនតំលៃ",
     "Markup"
   ],
 
   "col_product_cost_log_po_number": [
     "PO Number",
-    "PO Number",
+    "លេខការបញ្ជាទិញ",
     "PO Number"
   ],
 
   "col_product_cost_log_user": [
     "User",
-    "User",
+    "អ្នកប្រើប្រាស់",
     "User"
   ],
 
   "placeholder_table_composite_product": [
     "No composite product",
-    "No composite product",
+    "គ្មានសមាសធាតុផលិតផល",
     "No composite product"
   ],
 
   "placeholder_table_product_cost_log": [
     "No product cost log",
-    "No product cost log",
+    "គ្មានការតាមដានថ្លៃដើមផលិតផល",
     "No product cost log"
   ],
 
   "placeholder_table_product_log": [
     "No product log",
-    "No product log",
+    "គ្មានការតាមដានផលិតផល",
     "No product log"
   ],
 
   "placeholder_table_variant_product": [
     "No variant product",
-    "No variant product",
+    "ផលិតផលគ្នាលក្ខណៈផ្សេង",
     "No variant product"
   ],
 
   
   "placeholder_product_list_search": [
     "No product found",
-    "No product found",
+    "ផលិតផលរកមិនឃើញ",
     "No product found"
   ],
 
   "text_variant": [
     "Variant",
-    "Variant",
+    "លក្ខណៈ",
     "Variant"
   ],
 
   "text_variants": [
     "Variants",
-    "Variants",
+    "លក្ខណៈផលិតផល",
     "Variants"
   ],
 
   "text_product_variant": [
     "Product Variant",
-    "Product Variant",
+    "លក្ខណៈផលិតផល",
     "Product Variant"
   ],
 
   "text_product_in_stock": [
     "Product In Stock",
-    "Product In Stock",
+    "ផលិតផលមានក្នុងស្តុក",
     "Product In Stock"
   ],
 
@@ -409,31 +409,31 @@ export default {
 
   "text_current": [
     "Current",
-    "Current",
+    "បច្ចុប្បន្នកាល",
     "Current"
   ],
 
   "text_other": [
     "Other",
-    "Other",
+    "ផ្សេងៗ",
     "Other"
   ],
 
   "text_attribute": [
     "Attribute",
-    "Attribute",
+    "ប្រភេទលក្ខណៈ",
     "Attribute"
   ],
 
   "text_attribute_example": [
     "(e.g. Size)",
-    "(e.g. Size)",
+    "(e.g. ទំហំ)",
     "(e.g. Size)"
   ],
 
   "text_general_seach_product": [
     "Search for brand, SKU and notation",
-    "Search for brand, SKU and notation",
+    "ស្វែងរកម៉ាក, SKU និងកំណត់សំគាល់",
     "Search for brand, SKU and notation"
   ],
 
@@ -441,79 +441,79 @@ export default {
 
   "error_require_brand": [
     "Choose product brand",
-    "Choose product brand",
+    "ជ្រើសរើសម៉ាកផលិតផល",
     "Choose product brand"
   ],
 
   "error_require_type": [
     "Choose product type",
-    "Choose product type",
+    "ជ្រើសរើសម៉ាកផលិតផល",
     "Choose product type"
   ],
 
   "error_require_unit": [
     "Choose unit",
-    "Choose unit",
+    "ជ្រើសរើសឯកតា",
     "Choose unit"
   ],
 
   "error_require_price": [
     "Enter price",
-    "Enter price",
+    "បញ្ចូលតំលៃ",
     "Enter price"
   ],
 
   "error_require_sku": [
     "Enter product code",
-    "Enter product code",
+    "បញ្ចូលកូដផលិតផល",
     "Enter product code"
   ],
 
   "input_error_products_name": [
     "Product name allow only 255 charactor only",
-    "Product name allow only 255 charactor only",
+    "ឈ្មោះផលិតផលអាចបញ្ចូលត្រឹមតែ ២៥៥ តួរអក្សរ",
     "Product name allow only 255 charactor only"
   ],
 
   "input_error_products_description": [
     "Product description allow only 255 charactor only",
-    "Product description allow only 255 charactor only",
+    "បរិយាយផលិតផលអាចបញ្ចូលត្រឹមតែ ២៥៥ តួរអក្សរ",
     "Product description allow only 255 charactor only"
   ],
 
   "error_require_serial_type": [
     "Choose serial type",
-    "Choose serial type",
+    "ជ្រើសរើសប្រភេទលេខរៀង",
     "Choose serial type"
   ],
 
   "error_product_not_found": [
     "Product not found",
-    "Product not found",
+    "មិនមានផលិតផលនេះ",
     "Product not found"
   ],
 
   "deactive_product_variant_warning": [
     "We are not allow to deactive product variant that has quantity in stock",
-    "We are not allow to deactive product variant that has quantity in stock",
+    "យើងមិនអនុញាតិអោយលប់ផលិតផលណាដែលមាននៅក្នុងស្តុក",
     "We are not allow to deactive product variant that has quantity in stock"
   ],
 
   "delete_product_variant_warning": [
     "We don't allow you to delete product variant that has quantity in stock.",
-    "We don't allow you to delete product variant that has quantity in stock.",
+    "យើងមិនអនុញាតិអោយលប់ផលិតផលណាដែលមាននៅក្នុងស្តុក",
     "We don't allow you to delete product variant that has quantity in stock."
   ],
 
   "delete_attribute_warning": [
     "We don't allow you to delete attribute that link to product variant that has quantity in stock.",
-    "We don't allow you to delete attribute that link to product variant that has quantity in stock.",
+    "យើងមិនអនុញាតិអោយលប់លក្ខណៈផលិតផលណា ដែលកំពុងភ្ជាប់ទៅផលិតផលណាដែលមាននៅក្នុងស្តុក",
     "We don't allow you to delete attribute that link to product variant that has quantity in stock.",
   ],
 
   "delete_attribute_value_warning": [
     "We don't allow you to delete attribute value that link to product variant that has quantity in stock.",
-    "We don't allow you to delete attribute value that link to product variant that has quantity in stock.",
+    "យើងមិនអនុញាតិអោយលប់ប្រភេទលក្ខណៈផលិតផលណា ដែលកំពុងភ្ជាប់ទៅផលិតផលណាដែលមាននៅក្នុងស្តុក",
     "We don't allow you to delete attribute value that link to product variant that has quantity in stock.",
   ],
   
