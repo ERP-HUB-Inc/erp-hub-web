@@ -180,7 +180,14 @@ export default class SearchAdjustmentRequest extends Modal {
     }
 
     if (this.props.productVariant.fetched) {
-      this.handleOnSelectList(this.state.selectedProduct, [this.props.productVariant.list], false); // SET IT AS ARRAY TO MAKE IT MATCH ALL CONDITION BOTH STANDARD AND VARIANT
+      if (this.props.productVariant.list) {
+        this.handleOnSelectList(this.state.selectedProduct, [this.props.productVariant.list], false); // SET IT AS ARRAY TO MAKE IT MATCH ALL CONDITION BOTH STANDARD AND VARIANT
+      } else {
+        this.Message.error(this.CATranslate("error_product_not_found", this.props.locale));
+        this.props.form.setFieldsValue({searchProduct: ""});
+        document.getElementById("searchProduct").focus();
+      }
+
       this.props.dispatch(ProductVariantAction.reset(ProductVariantConstant.RESET_PRODUCT_VARIANT));
     }
   }
