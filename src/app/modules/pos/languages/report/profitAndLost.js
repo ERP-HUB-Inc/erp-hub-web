@@ -1,55 +1,55 @@
 export default {
   "text_net_income": [
     "Net Income",
-    "Net Income",
+    "ប្រាក់ចំណូល",
     "Net Income"
   ],
 
   "no_operation": [
     "No operation",
-    "No operation",
+    "គ្មានប្រតិបត្តិការ",
     "No operation"
   ],
 
   "sale_report_type": [
     "Report Type",
-    "Report Type",
+    "ប្រភេទ​នៃ​របាយការណ៍",
     "Report Type"
   ],
 
   "text_operation_profit_and_lost": [
     "Operation Profit and Lost",
-    "Operation Profit and Lost",
+    "ប្រតិបត្តិការចំណេញនិងបាត់បង់",
     "Operation Profit and Lost"
   ],
 
   "text_sale_profit_and_lost": [
     "Sale Profit and Lost",
-    "Sale Profit and Lost",
+    "ប្រាក់ចំណេញលក់និងការបាត់បង់",
     "Sale Profit and Lost"
   ],
 
   "no_peration_revenue": [
     "No operation revenue",
-    "No operation revenue",
+    "គ្មានចំណូលប្រតិបត្តិការ",
     "No operation revenue"
   ],
 
   "no_peration_expense": [
     "No operation expense",
-    "No operation expense",
+    "មិនមានចំណាយប្រតិបត្តិការ",
     "No operation expense"
   ],
 
   "text_income_expense": [
     "Income and Expense",
-    "Income and Expense",
+    "ចំណូលនិងចំណាយ",
     "Income and Expense"
   ],
 
   "text_empty": [
     "Empty",
-    "Empty",
+    "ទទេ",
     "Empty"
   ]
 

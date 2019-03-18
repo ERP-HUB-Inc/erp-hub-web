@@ -266,7 +266,7 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: "Brands",
+        title:  <Translate id="text_brand" />,
         icon: "icon-brand",
         route: "/products/brand",
         component: Brand,

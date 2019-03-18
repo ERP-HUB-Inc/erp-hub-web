@@ -1,12 +1,12 @@
 export default {
   "text_stock_adjustment_approve": [
     "Adjustment Approve",
-    "Adjustment Approve",
+    "ការយល់ព្រមលើការកែតម្រូវ",
     "Adjustment Approve"
   ],
   "stock_adjustment_approve": [
     "Approve",
-    "Approve",
+    "យល់ព្រម",
     "Approve"
   ]
 };

@@ -7,7 +7,7 @@ export default {
 
   "text_code": [
     "Code",
-    "លេខកូដ",
+    "តួនាទី",
     "ကုဒ်"
   ],
 };

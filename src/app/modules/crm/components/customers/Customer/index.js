@@ -113,7 +113,7 @@ export default class CustomerList extends List {
   }
 
   renderFilterRecord() {
-    const {customerGroup, form} = this.props;
+    const {customerGroup, locale, form} = this.props;
     if (customerGroup) {
       const fetchingProps = this.props[this.fetchingProp];
       return (
@@ -125,8 +125,8 @@ export default class CustomerList extends List {
               <this.Col md="3">
                 <this.InputText
                   name="key"
-                  label="Search"
-                  placeholder="Search for code, name and address"
+                  label={<this.Translate id="text_search" />}
+                  placeholder= {this.CATranslate("text_search_code", locale)}
                   form={form}
                 />
               </this.Col>

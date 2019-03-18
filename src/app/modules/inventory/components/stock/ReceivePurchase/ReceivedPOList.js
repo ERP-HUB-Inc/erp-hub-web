@@ -15,7 +15,7 @@ export default class ReceivedPo extends Modal {
       {
         title: <this.Translate id="text_no" />,
         dataIndex: "no",
-        width: 50,
+        width: 100,
         align: "center",
         key: "no",
         render: (text, record, index) => 

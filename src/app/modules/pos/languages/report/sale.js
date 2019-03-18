@@ -1,22 +1,22 @@
 export default {
   "text_revenue": [
     "Revenue",
-    "Revenue",
+    "ប្រាក់ចំណូល",
     "Revenue"
   ],
   "text_cost_of_good": [
     "Cost of Goods",
-    "Cost of Goods",
+    "តម្លៃទំនិញ",
     "Cost of Goods"
   ],
   "text_gross_profit": [
     "Gross Profit",
-    "Gross Profit",
+    "ប្រាក់​ចំណេញ​ដុល",
     "Gross Profit"
   ],
   "text_margin": [
     "Margin",
-    "Margin",
+    "គំលាតលុយចំនេញ",
     "Margin"
   ]
 };

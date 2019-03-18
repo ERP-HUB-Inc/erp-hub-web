@@ -25,7 +25,7 @@ export default class SearchAdjustmentRequest extends Modal {
         title: <this.Translate id="text_no" />,
         dataIndex: "id",
         key: "no",
-        width: 50,
+        width: 100,
         align: "center",
         render: (text, record, index) => {
           return (
