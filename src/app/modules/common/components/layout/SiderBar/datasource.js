@@ -223,6 +223,7 @@ const dataSource = {
   transactions: {
     icon: "icon-list",
     route: "transactions",
+    title: <Translate id="text_transaction" />,
     subItems: [
       {
         title: <Translate id="text_sale_history" />,
@@ -257,6 +258,7 @@ const dataSource = {
   products: {
     icon: "icon-items",
     route: "products",
+    title: <Translate id="text_product" />,
     subItems: [
       {
         title: <Translate id="text_manage_product" />,
@@ -266,7 +268,7 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: "Brands",
+        title:  <Translate id="text_brand" />,
         icon: "icon-brand",
         route: "/products/brand",
         component: Brand,
@@ -319,6 +321,7 @@ const dataSource = {
   stocks: {
     icon: "icon-stock",
     route: "stock",
+    title: <Translate id="text_stock" />,
     subItems: [
       {
         title: <Translate id="text_supplier" />,
@@ -410,6 +413,7 @@ const dataSource = {
   customers: {
     icon: "icon-customer",
     route: "customers",
+    title: <Translate id="text_customer" />,
     subItems: [
       {
         title: <Translate id="text_manage_customer" />,
@@ -436,6 +440,7 @@ const dataSource = {
   employees: {
     icon: "icon-employee",
     route: "employees",
+    title: <Translate id="text_employee" />,
     subItems: [
       {
         title: <Translate id="text_manage_employee" />,
@@ -464,6 +469,7 @@ const dataSource = {
   reports: {
     icon: "icon-reports",
     route: "reports",
+    title: <Translate id="text_report" />,
     subItems: [
       {
         title: <Translate id="text_sale_report" />,
@@ -519,6 +525,7 @@ const dataSource = {
   settings: {
     icon: "icon-settings",
     route: "settings",
+    title: <Translate id="text_setting" />,
     subItems: [
       {
         title: <Translate id="text_store_account" />,

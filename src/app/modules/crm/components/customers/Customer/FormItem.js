@@ -81,7 +81,7 @@ export default class FormItem extends Modal {
 
     return (
       <this.Tabs type="card">
-        <this.TabPane tab="General" key="1">
+        <this.TabPane tab={<this.Translate id="text_general" />} key="1">
           <this.Row>
             <this.Col md="6">
               <this.InputText
@@ -183,7 +183,7 @@ export default class FormItem extends Modal {
         </this.TabPane>
 
         {/* =======================CONTACT CUSTOMER============== */}
-        <this.TabPane tab="Contact" key="2">
+        <this.TabPane tab={<this.Translate id="text_contact" />} key="2">
               
           {
             this.state.contactList.map((contact, index) =>

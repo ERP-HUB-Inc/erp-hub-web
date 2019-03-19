@@ -2,25 +2,25 @@ export default {
 
   "col_stock_management_product_tags": [
     "Tags",
-    "Tags",
+    "ស្លាក",
     "Tags",
   ],
 
   "col_stock_management_product_types": [
     "Product Types",
-    "Product Types",
+    "ប្រភេទផលិតផល",
     "Product Types",
   ],
 
   "col_stock_management_supplier": [
     "Supplier",
-    "Supplier",
+    "អ្នកផ្គត់ផ្គង់",
     "Supplier",
   ],
 
   "col_stock_management_unit": [
     "Unit",
-    "Unit",
+    "ឯកតា",
     "Unit",
   ]
 };

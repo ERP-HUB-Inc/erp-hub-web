@@ -16,13 +16,13 @@ export default class Diagram extends Component {
             {
               borderColor: "#398BF7",
               borderWidth: 2.5,
-              label: "Income",
+              label: this.CATranslate("text_income", this.props.locale),
               data: []
             },
             {
               borderColor: "#06D79C",
               borderWidth: 2,
-              label: "Expense",
+              label: this.CATranslate("text_expense", this.props.locale),
               data: []
             }
           ],
@@ -107,9 +107,10 @@ export default class Diagram extends Component {
     let graphChatDataSource = this.props.graphChat.list;
     if (graphChatDataSource.length === 0) {
       graphChatDataSource = this.state.defaultGraphChatDataSource;
+    }else{
+      graphChatDataSource.datasets[0].label = this.CATranslate("text_income", this.props.locale);
+      graphChatDataSource.datasets[1].label = this.CATranslate("text_expense", this.props.locale);
     }
-
-    console.log("graphChatDataSource=",graphChatDataSource);
     
     return (
       <div className="main-diagram">

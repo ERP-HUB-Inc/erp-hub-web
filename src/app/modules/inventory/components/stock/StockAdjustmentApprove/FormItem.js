@@ -127,7 +127,7 @@ export default class FormItem extends Modal {
           currentQty = stockApprove.currentQuantity;
         }
 
-        if(stockApprove.status !== this.Enum.ARCHIVE){
+        if(stockApprove.length > 0 && stockApprove.status !== this.Enum.ARCHIVE){
           existingProductList.push({
             stockApproveId: stockApprove.id,
             index: index,

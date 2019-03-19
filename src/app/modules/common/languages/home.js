@@ -1,154 +1,184 @@
 export default {
   "home_page_dashboard": [
     "Dashboad",
-    "Dashboad",
+    "ផ្ទាំងគ្រប់គ្រង",
     "Dashboad"
   ],
-
+  
   "home_page_title_today_is_sale": [
     "Today's Sale",
-    "Today's Sale",
+    "ការលក់ថ្ងៃនេះ",
     "Today's Sale"
   ],
-
+  
   "home_page_title_today_is_transaction": [
     "Today's Transaction",
-    "Today's Transaction",
+    "ប្រត្តិបត្តការណ៍លក់ថ្ងៃនេះ",
     "Today's Transaction"
   ],
   "home_page_title_today_is_product_sold": [
     "Today's Product Sold",
-    "Today's Product Sold",
+    "ផលិតផលបានលក់ថ្ងៃនេះ",
     "Today's Product Sold"
   ],
-
+  
   "home_page_total_customer": [
     "Total Customers",
-    "Total Customers",
+    "ចំនួនសរុបអតិថិជន",
     "Total Customers"
   ],
-
+  
   "home_page_graph_income": [
     "Income",
-    "Income",
+    "ចំណូល",
     "Income"
   ],
-
+  
   "text_expense": [
     "Expense",
-    "Expense",
+    "ចំណាយ",
     "Expense"
   ],
-
+  
   "text_user_guides": [
     "User Guides",
-    "User Guides",
+    "ការណែរនាំអ្នកប្រើប្រាស់",
     "User Guides"
   ],
   "home_page_guide_types": [
     "types",
-    "types",
+    "ប្រភេទ",
     "types"
   ],
-
+  
   "home_page_guide_brand": [
     "brand",
-    "brand",
+    "ម៉ាក",
     "brand"
   ],
   "home_page_guide_suppliers": [
     "suppliers",
-    "suppliers",
+    "អ្នកផ្គត់ផ្គង់",
     "suppliers"
   ],
-
+  
   "home_page_guide_pre_order": [
     "pre-order",
-    "pre-order",
+    "ការ​បញ្ជាទិញ​មុន",
     "pre-order"
   ],
-
+  
   "home_page_guide_setting_up": [
     "setting up",
-    "setting up",
+    "កំណត់​ឡើង",
     "setting up"
   ],
-
+  
   "home_page_guide_employee": [
     "employee",
-    "employee",
+    "បុគ្គលិក",
     "employee"
   ],
-
+  
   "home_page_guide_products": [
     "products",
-    "products",
+    "ផលិតផល",
     "products"
   ],
-
+  
   "home_page_guide_purchasing": [
     "purchasing",
-    "purchasing",
+    "បញ្ជារទិញ",
     "purchasing"
   ],
-
+  
   "home_page_guide_customers": [
     "customers",
-    "customers",
+    "អតិថិជន",
     "customers"
   ],
-
+  
   "home_page_guide_sale": [
     "sale",
-    "sale",
+    "ការលក់",
     "sale"
   ],
-  
   "home_page_guide_reports": [
     "reports",
-    "reports",
+    "របាយការណ៍",
     "reports"
   ],
-
+  
   "home_page_guide_add_products": [
     "add product",
-    "add product",
+    "បញ្ចូលផលិតផល",
     "add product"
   ],
-
+  
   "home_page_guide_stock": [
     "Stock",
-    "Stock",
+    "ស្តុកទំនិញ",
     "Stock"
   ],
-
+  
   "home_page_guide_sale_return": [
     "Sale return",
-    "Sale return",
+    "បង្វិលការលក់",
     "Sale return"
   ],
-
+  
   "home_page_dashboard_read_more": [
     "Read More",
-    "Read More",
+    "មើលបន្ថែម",
     "Read More"
   ],
-
+  
   "text_today_sale_summary": [
     "Today Sale Summary",
-    "Today Sale Summary",
+    "សង្ខេបការលក់ថ្ងៃនេះ",
     "Today Sale Summary",
   ],
-
+  
   "text_weekly_operation": [
     "Weekly Operation Report",
-    "Weekly Operation Report",
+    "របាយការណ៍ដំណើរការប្រចាំសប្តាហ៍",
     "Weekly Operation Report"
   ],
-
+  
   "text_summary_report": [
     "Summary Report",
-    "Summary Report",
+    "របាយការណ៍សង្ខេប",
     "Summary Report"
-  ]
+  ],
+
+  "text_income": [
+    "Income",
+    "ចំណូល",
+    "Income"
+  ],
+
+  "text_today_is_sale": [
+    "Today's Sale",
+    "លក់ថ្ងៃនេះ",
+    "Today's Sale"
+  ],
+
+  "text_today_is_transaction": [
+    "Today's Transaction",
+    "ប្រតិបត្តិការថ្ងៃនេះ",
+    "Today's Transaction"
+  ],
+
+  "text_today_is_product_sold": [
+    "Today's Product Sold",
+    "ផលិតផលថ្ងៃនេះបានលក់",
+    "Today's Product Sold"
+  ],
+
+  "text_total_customer": [
+    "Total Customers",
+    "អតិថិជនសរុប",
+    "Total Customers"
+  ],
+  
 };

@@ -450,7 +450,7 @@ export default class List extends Component {
             <this.Link to="/"><span className="icon-home"></span></this.Link>
           </li>
           <li className="fast-nav text-uppercase">
-            <this.Link to="#">{this.module}</this.Link>
+            <this.Link to="#">{this.moduleTranslate}</this.Link>
           </li>
           {
             menuSource[this.module]["subItems"].map((value, index) =>

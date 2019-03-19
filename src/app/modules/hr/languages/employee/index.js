@@ -1,73 +1,73 @@
 export default {
   "text_employee": [
     "Employee",
-    "Employee",
+    "បុគ្គលិក",
     "Employee"
   ],
   "text_full_name": [
     "Full name",
-    "Full name",
+    "ឈ្មោះ​ពេញ",
     "Full name"
   ],
 
   "text_phone_number": [
     "Phone No",
-    "Phone No",
+    "លេខទូរស័ព្ទ",
     "Phone No"
   ],
 
   "text_id_card": [
     "Id card",
-    "Id card",
+    "កាតសំគាល់",
     "Id card"
   ],
 
   "text_gender": [
     "Gender",
-    "Gender",
+    "ភេទ",
     "Gender",
   ],
 
   "text_date_of_birth": [
     "Date of Birth",
-    "Date of Birth",
+    "ថ្ងៃ​ ខែ​ ឆ្នាំ ​កំណើត",
     "Date of Birth"
   ],
 
   "text_email_address": [
     "Email Address",
-    "Email Address",
+    "អាស័យ​ដ្ឋាន​អ៊ី​ម៉េ​ល",
     "Email Address"
   ],  
 
 
   "text_photo": [
     "Photo",
-    "Photo",
+    "រូបថត",
     "Photo"
   ], 
 
   "text_user_name": [
     "User Name",
-    "User Name",
+    "ឈ្មោះ​អ្នកប្រើប្រាស់",
     "User Name"
   ], 
 
   "text_password": [
     "Password",
-    "Password",
+    "ពាក្យសម្ងាត់",
     "Password"
   ], 
 
   "text_auto_generate": [
     "Auto Generate",
-    "Auto Generate",
+    "បង្កើតដោយស្វ័យប្រវត្តិ",
     "Auto Generate"
   ], 
 
   "text_will_expired": [
     "Will be Expired",
-    "Will be Expired",
+    "នឹងត្រូវបានផុតកំណត់",
     "Will be Expired"
   ], 
   
@@ -79,55 +79,55 @@ export default {
 
   "text_expired_date": [
     "Expired Date",
-    "Expired Date",
+    "កាលបរិច្ឆេទ​ផុត​កំណត់",
     "Expired Date"
   ], 
 
   "error_require_first_name": [
     "Please input first name",
-    "Please input first name",
+    "សូមបញ្ចូលនាមខ្លួន",
     "Please input first name"
   ], 
 
   "error_require_last_name": [
     "Please input last name",
-    "Please input last name",
+    "សូមបញ្ចូលឈ្មោះចុងក្រោយ",
     "Please input last name"
   ], 
 
   "error_require_user_name": [
     "Please input user name",
-    "Please input user name",
+    "សូមបញ្ចូលឈ្មោះអ្នកប្រើប្រាស់",
     "Please input user name"
   ],
 
   "text_male": [
     "Male",
-    "Male",
+    "ប្រុស",
     "Male"
   ],
 
   "text_female": [
     "Female",
-    "Female",
+    "ស្រី",
     "Female"
   ],
 
   "text_user_access": [
     "User Access",
-    "User Access",
+    "ការចូលប្រើរបស់អ្នកប្រើ",
     "User Access"
   ],
 
   "text_location_access": [
     "Location Access",
-    "Location Access",
+    "ការចូលដំណើរការទីតាំង",
     "Location Access"
   ],
 
   "text_user_already_exist": [
     "User already exist !",
-    "User already exist !",
+    "អ្នកប្រើមានរួចហើយ!",
     "User already exist !"
   ]
 };

@@ -10,6 +10,7 @@ export default class SideBar extends React.Component {
       classToggle: "hidden",
       isHoverOnSubMenu: true,
       menuItems: {},
+      titleSubmenu: {},
       dataSource
     };
     this.hasUpdated = false;
@@ -41,9 +42,9 @@ export default class SideBar extends React.Component {
     if (menu in this.state.dataSource) {
       const dataMenu = {};
       dataMenu[menu] = this.state.dataSource[menu];
-
       this.setState({
         menuItems: dataMenu,
+        titleSubmenu: dataMenu[menu]["title"],
         isHoverOnSubMenu: true,
         classToggle: "show"
       });
@@ -169,7 +170,7 @@ export default class SideBar extends React.Component {
             this.state.classToggle === "show" 
               ?  
               <div>
-                <div className="title text-center text-uppercase">{subMenuItemTitle}</div>
+                <div className="title text-center text-uppercase">{this.state.titleSubmenu}</div>
                 <ul className="list-unstyled text-left text-uppercase">
                   {
                     this.state.menuItems[subMenuItemTitle]["subItems"].map((menu, key) => 

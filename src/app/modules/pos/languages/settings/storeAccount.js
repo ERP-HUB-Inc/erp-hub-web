@@ -1,266 +1,272 @@
 export default {
   "store_acc_business_name": [
     "Business Name",
-    "Business Name",
+    "ឈ្មោះអជីវកម្ម",
     "Business Name"
   ],
 
   "number_of_device": [
     "Number of Device",
-    "Number of Device",
+    "ចំនួនឧបករណ៍",
     "Number of Device"
   ],
 
   "copy_device_number": [
     "Copy",
-    "Copy",
+    "ចំលង",
     "Copy"
   ],
 
   "store_acc_store_name": [
     "Private URL",
-    "Private URL",
+    "URL ឯកជន",
     "Private URL"
   ],
 
   "text_country": [
     "Country",
-    "Country",
+    "ប្រទេស",
     "Country"
   ],
 
   "text_language": [
     "Language",
-    "Language",
+    "ភាសា",
     "Language"
   ],
 
   "to_currency": [
     "To Currency",
-    "To Currency",
+    "ទៅជា រូបិយប័ណ្ណ",
     "To Currency"
   ],
 
   "to_base_currency": [
     "To Base Currency",
-    "To Base Currency",
+    "ទៅជា រូបិយប័ណ្ណមូលដ្ឋាន",
     "To Base Currency"
   ],
 
   "from_currency": [
     "From Currency",
-    "From Currency",
+    "ពី  រូបិយប័ណ្ឌ",
     "From Currency"
   ],
 
   "switch_currency": [
     "Switch Currency",
-    "Switch Currency",
+    "ផ្លាស់ប្តូររូបិយប័ណ្ឌ",
     "Switch Currency"
   ],
 
   "from_base_currency": [
     "From Base Currency",
-    "From Base Currency",
+    "ពី រូបិយប័ណ្ណមូលដ្ឋាន",
     "From Base Currency"
   ],
 
   "currency_exchange": [
     "Currency Exchange",
-    "Currency Exchange",
+    "ប្តូររូបិយប័ណ្ឌ",
     "Currency Exchange"
   ],
 
 
   "text_currency_position": [
     "Currency Position",
-    "Currency Position",
+    "ទីតាំងនិមិត្តសញ្ញារូបិយប័ណ្ណ",
     "Currency Position"
   ],
 
   "text_before": [
     "Before",
-    "Before",
+    "ពីមុន",
     "Before"
   ],
 
   "text_after": [
     "After",
-    "After",
+    "បន្ទាប់",
     "After"
   ],
 
   "text_default_tax": [
     "Default Tax",
-    "Default Tax",
+    "ពន្ធលំនាំដើម",
     "Default Tax"
   ],
 
   "text_user_name": [
     "User Name",
-    "User Name",
+    "ឈ្មោះអ្នកប្រើប្រាស់",
     "User Name"
   ],
 
   "text_account": [
     "Account",
-    "Account",
+    "គណនីអ្នកប្រើប្រាស់",
     "Account"
   ],
 
   "text_current_password": [
     "Current Password",
-    "Current Password",
+    "ពាក្យសំងាត់បច្ចុប្បន្ន",
     "Current Password"
   ],
 
   "text_new_password": [
     "New Password",
-    "New Password",
+    "ពាក្យសំងាត់ថ្មី",
     "New Password"
   ],
 
   "text_confirm_password": [
     "Confirm Password",
-    "Confirm Password",
+    "បញ្ចាក់ពាក្យសំងាត់",
     "Confirm Password"
   ],
 
   "text_contact": [
     "Contact",
-    "Contact",
+    "ទំនាក់ទំនង",
     "Contact"
   ],
 
   "text_street": [
     "Street",
-    "Street",
+    "ផ្លូវ",
     "Street"
   ],
 
   "text_city": [
     "City",
-    "City",
+    "ទីក្រុង",
     "City"
   ],
 
   "text_post_code": [
     "Post Code",
-    "Post Code",
+    "លេខកូដប្រកាស",
     "Post Code"
+  ],
+
+  "text_device": [
+    "Device",
+    "ឧបករណ៍",
+    "Device"
   ],
 
   "text_setting": [
     "Setting",
-    "Setting",
+    "កំណត់សំគាល់",
     "Setting"
   ],
 
   "text_auto_generate_pcode": [
     "Auto Generate Product Code",
-    "Auto Generate Product Code",
+    "បង្កើតកូដទំនិញដោយស្វយ័ប្រវត្តិ",
     "Auto Generate Product Code"
   ],
 
   "text_start_sequence_code": [
     "Start Sequence Number",
-    "Start Sequence Number",
+    "ការចាប់ផ្តើមលេខរៀង",
     "Start Sequence Number"
   ],
 
   "text_billing": [
     "Billing",
-    "Billing",
+    "ការចេញវិក្ក័យបត្រ័",
     "Billing"
   ],
 
   "text_register_date": [
     "Register Date",
-    "Register Date",
+    "ចុះលេខ",
     "Register Date"
   ],
 
   "text_expired_date": [
     "Expired Date",
-    "Expired Date",
+    "កាលបរិច្ឆេតផុតកំណត់",
     "Expired Date"
   ],
 
   "text_plan": [
     "Plan",
-    "Plan",
+    "គំរោង",
     "Plan"
   ],
 
   "store_acc_error_sequence_start_no": [
     "Start sequence number allow only maximum 9999999999",
-    "Start sequence number allow only maximum 9999999999",
+    "ការចាប់ផ្តើមលេខរៀង​ ច្រើនបំផុត ៩៩៩៩៩៩៩៩៩៩",
     "Start sequence number allow only maximum 9999999999"
   ],
 
   "store_acc_error_confirm_pwd_not_match": [
     "Two passwords that you enter is inconsistent",
-    "Two passwords that you enter is inconsistent",
+    "ពាក្យសម្ងាត់ពីរដែលអ្នកបញ្ចូលគឺមិនដូចគ្នា",
     "Two passwords that you enter is inconsistent"
   ],
 
   "store_acc_error_pwd_required": [
     "Please input your password",
-    "Please input your password",
+    "សូមបញ្ចូលពាក្យសំងាត់",
     "Please input your password"
   ],
   
   "store_acc_error_confirm_pwd_required": [
     "Please confirm your password",
-    "Please confirm your password",
+    "សូមបញ្ចូលបញ្ចាក់ពាក្យសំងាត់",
     "Please confirm your password"
   ],
 
   "store_acc_error_current_pwd_not_match": [
     "Current password is not match",
-    "Current password is not match",
+    "ពាក្យសំងាត់នេះមិនដូចគ្នា",
     "Current password is not match"
   ],
 
   "text_auto": [
     "Auto",
-    "Auto",
+    "ស្វយ័ប្រវត្តិ",
     "Auto"
   ],
 
   "text_manaul": [
     "Manual",
-    "Manual",
+    "ធ្វើខ្លួនឯង",
     "Manual"
   ],
 
   "store_acc_pay_as_your_business_growth": [
     "Pay as your business growth",
-    "Pay as your business growth",
+    "បង់ថ្លៃតាមកំណើនអជីវកម្ម",
     "Pay as your business growth"
   ],
 
   "store_acc_pay_your_5_stores_package": [
     "Pay on your 5 stores package",
-    "Pay on your 5 stores package",
+    "បង់ថ្លៃតាមកញ្ចប់ ហាងទាំង ៥",
     "Pay on your 5 stores package"
   ],
 
   "store_acc_pay_your_10_stores_package": [
     "Pay on your 10 stores package",
-    "Pay on your 10 stores package",
+    "បង់ថ្លៃតាមកញ្ចប់ ហាងទាំង ១០",
     "Pay on your 10 stores package"
   ],
 
   "store_acc_pay_your_15_stores_package": [
     "Pay on your 15 stores package",
-    "Pay on your 15 stores package",
+    "បង់ថ្លៃតាមកញ្ចប់ ហាងទាំង ១៥",
     "Pay on your 15 stores package"
   ],
 
   "store_acc_date_format": [
     "Date Format",
-    "Date Format",
+    "ទំរង់កាលបរិច្ចេទ",
     "Date Format"
   ],
 };

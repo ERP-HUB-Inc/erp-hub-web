@@ -7,13 +7,13 @@ export default {
 
   "receipt_logo": [
     "Receipt Logo",
-    "Receipt Logo",
+    "រូបសញ្ញាបង្កាន់ដៃ",
     "Receipt Logo"
   ],
 
   "language_exist": [
     "Language already exist",
-    "Language already exist",
+    "ភាសាមានរួចហើយ",
     "Language already exist"
   ],
 

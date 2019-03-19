@@ -127,9 +127,8 @@ export default class StockAdjustmentApprovetLists extends List {
     let errorResponse = null;
     if (this.props.stockAdjustmentApproveUpdate.error) {
       errorResponse = this.props.stockAdjustmentApproveUpdate.error;
-    } else if (this.props.stockAdjustmentApproveUpdate.error) {
-      errorResponse = this.props.stockAdjustmentApproveUpdate.error;
-    } 
+    }
+    
     if (errorResponse) {
       let errorCode = this.Util.getErrorCodeFromState(errorResponse);
       let message = "Something wrong, Please contact system provider";

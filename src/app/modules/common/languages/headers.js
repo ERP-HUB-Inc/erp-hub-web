@@ -2,19 +2,19 @@ export default {
 
   "text_back_office": [
     "Back office",
-    "Back office",
+    "ការិយាល័យត្រឡប់មកវិ",
     "Back office"
   ],
 
   "text_login": [
     "Login",
-    "Login",
+    "ចូល",
     "Login"
   ],
 
   "text_logout": [
     "Logout",
-    "Logout",
+    "ចាកចេញ",
     "Logout"
   ],
 

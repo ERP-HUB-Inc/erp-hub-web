@@ -7,7 +7,7 @@ export default class FormItem extends Modal {
     const {formData, form, locale} = this.props;
     return (
       <this.Tabs type="card">
-        <this.TabPane tab="general" key="1"> 
+        <this.TabPane tab={<this.Translate id="text_general" />} key="1"> 
           <this.Row>
             <this.Col md="12"> 
               <this.InputText
@@ -37,7 +37,7 @@ export default class FormItem extends Modal {
             </this.Col> 
           </this.Row>
         </this.TabPane>
-        <this.TabPane tab="privilege" key="2">
+        <this.TabPane tab={<this.Translate id="text_privilege" />} key="2">
           <this.Row>  
             <this.Col lg="12" md="12">
               { 
@@ -48,6 +48,7 @@ export default class FormItem extends Modal {
                   privileges={this.props.privileges}
                   rowData={this.props.rowData}  
                   form ={this.props.form}
+                  locale={locale}
                   dispatch={this.props.dispatch}/> 
               }
             </this.Col> 

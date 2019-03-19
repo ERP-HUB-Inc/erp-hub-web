@@ -1,8 +1,14 @@
 export default {
   "text_transaction": [
     "Transactions",
+    "ប្រតិបត្តិការលក់",
     "Transactions",
-    "Transactions",
+  ],
+  
+  "text_report": [
+    "Report",
+    "របាយការណ៍",
+    "Report",
   ],
 
   "text_sale_history": [
@@ -10,136 +16,136 @@ export default {
     "ប្រវត្តិលក់",
     "Sale History"
   ],
-
+  
   "text_sale_order": [
     "Sale Order",
-    "Sale Order",
+    "ការបញ្ចារលក់",
     "Sale Order"
   ],
-
+  
   "text_return_exchange": [
     "Return & Exchange",
-    "Return & Exchange",
+    "បង្វិលឬប្តូរទំនិញ",
     "Return & Exchange",
   ],
-
+  
   "text_close_shift": [
     "Close Shift",
-    "Close Shift",
+    "បិទវេន",
     "Close Shift"
   ],
-
+  
   "text_manage_product": [
     "Manage Products",
-    "Manage Products",
+    "គ្រប់គ្រងផលិតផល",
     "Manage Products"
   ],
-
+  
   "text_product_type": [
     "Product Types",
-    "Product Types",
+    "ប្រភេទផលិតផល",
     "Product Types"
   ],
-
+  
   "text_product_tags": [
     "Product Tags",
-    "Product Tags",
+    "ស្លាកផលិតផល",
     "Product Tags"
   ],
-
+  
   "text_print_price_tags": [
     "Print Price Tags",
-    "Print Price Tags",
+    "បោះពុម្ភស្លាកតំលៃ",
     "Print Price Tags"
   ],
-
+  
   "text_manage_unit": [
     "Manage Units",
-    "Manage Units",
+    "គ្រប់គ្រងឯកតា",
     "Manage Units"
   ],
-
+  
   "text_purchase_order": [
     "Purchase Orders",
-    "Purchase Orders",
+    "ការបញ្ជារទិញ",
     "Purchase Orders"
   ],
-
+  
   "text_receive_purchase": [
     "Receive Purchase",
-    "Receive Purchase",
+    "ទទួលទំនិញដែលបានបញ្ជារទិញ",
     "Receive Purchase"
   ],
-
+  
   "text_return_purchase": [
     "Return Purchase",
-    "Return Purchase",
+    "បង្វិលទំនិញពីការបញ្ជារទិញ",
     "Return Purchase"
   ],
-
+  
   "text_receive_transfer": [
     "Receive Transfer",
-    "Receive Transfer",
+    "ទទួលទំនិញផ្ទេរ",
     "Receive Transfer"
   ],
-
+  
   "text_adjustment_request": [
     "Adjustment Request",
-    "Adjustment Request",
+    "សំណើកែតំរូវ",
     "Adjustment Request"
   ],
-
+  
   "text_adjustment_approve": [
     "Adjustment Approve",
-    "Adjustment Approve",
+    "យល់ព្រមការកែតំរូវ",
     "Adjustment Approve"
   ],
-
+  
   "text_manage_customer": [
     "Manage Customer",
-    "Manage Customer",
+    "គ្រប់គ្រងអតិថិជន",
     "Manage Customer"
   ],
-
+  
   "text_manage_employee": [
     "Manage Employee",
-    "Manage Employee",
+    "គ្រប់គ្រងបុគ្គលិក",
     "Manage Employee"
   ],
-
+  
   "text_sale_report": [
     "Sale Report",
-    "Sale Report",
+    "របាយការណ៍លក់",
     "Sale Report"
   ],
-
+  
   "text_purchase_report": [
     "Purchase Report",
-    "Purchase Report",
+    "របាយការណ៍បញ្ជារទិញ",
     "Purchase Report"
   ],
 
   "text_product_report": [
     "Product Report",
-    "Product Report",
+    "របាយការណ៍ទំនិញ",
     "Product Report"
   ],
 
   "text_profit_and_lost_report": [
     "Profit & Lost Report",
-    "Profit & Lost Report",
+    "របាយការណ៍ចំណេញខាត",
     "Profit & Lost Report"
   ],
-
+  
   "text_store_account": [
     "Store Account",
-    "Store Account",
+    "គណនីហាង",
     "Store Account"
   ],
-
+  
   "text_role_access": [
     "Role Access",
-    "Role Access",
+    "សិទ្ធិតួនាទី",
     "Role Access"
   ]
 };
