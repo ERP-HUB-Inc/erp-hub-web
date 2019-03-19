@@ -149,5 +149,36 @@ export default {
     "Summary Report",
     "របាយការណ៍សង្ខេប",
     "Summary Report"
-  ]
+  ],
+
+  "text_income": [
+    "Income",
+    "ចំណូល",
+    "Income"
+  ],
+
+  "text_today_is_sale": [
+    "Today's Sale",
+    "លក់ថ្ងៃនេះ",
+    "Today's Sale"
+  ],
+
+  "text_today_is_transaction": [
+    "Today's Transaction",
+    "ប្រតិបត្តិការថ្ងៃនេះ",
+    "Today's Transaction"
+  ],
+
+  "text_today_is_product_sold": [
+    "Today's Product Sold",
+    "ផលិតផលថ្ងៃនេះបានលក់",
+    "Today's Product Sold"
+  ],
+
+  "text_total_customer": [
+    "Total Customers",
+    "អតិថិជនសរុប",
+    "Total Customers"
+  ],
+  
 };

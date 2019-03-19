@@ -5,6 +5,12 @@ export default {
     "Transactions",
   ],
   
+  "text_report": [
+    "Report",
+    "របាយការណ៍",
+    "Report",
+  ],
+
   "text_sale_history": [
     "Sale History",
     "ប្រវត្តិលក់",

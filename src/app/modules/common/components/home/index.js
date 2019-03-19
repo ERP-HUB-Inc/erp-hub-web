@@ -82,7 +82,7 @@ export default class Home extends Component {
               decimals={2}
               decimal="." />
           }
-          icon="icon-dollar" title="Today's Sale"
+          icon="icon-dollar" title={<this.Translate id="text_today_is_sale"/>}
           readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
           to="transactions/salehistory?salehistory=1" />
 
@@ -94,7 +94,7 @@ export default class Home extends Component {
               duration={5}
               separator="" />
           }
-          icon="icon-list" title="Today's Transaction"
+          icon="icon-list" title={<this.Translate id="text_today_is_transaction"/>}
           readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
           route="read"
           to="transactions/salehistory?salehistory=1" />
@@ -106,7 +106,7 @@ export default class Home extends Component {
             duration={5}
             separator="" />
         }
-        icon="icon-stock" title="Today's Product Sold"
+        icon="icon-stock" title={<this.Translate id="text_today_is_product_sold"/>}
         readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
         route="read"
         to="#" />
@@ -120,7 +120,7 @@ export default class Home extends Component {
               separator="" />
           }
           icon="icon-customer"
-          title="Total Customers"
+          title={<this.Translate id="text_total_customer"/>}
           readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
           route="read"
           to="customer" />

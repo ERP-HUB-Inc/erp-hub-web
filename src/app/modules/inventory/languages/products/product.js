@@ -403,7 +403,7 @@ export default {
 
   "text_stock": [
     "Stock",
-    "Stock",
+    "ស្តុក",
     "Stock"
   ],
 
