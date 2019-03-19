@@ -107,6 +107,9 @@ export default class Diagram extends Component {
     let graphChatDataSource = this.props.graphChat.list;
     if (graphChatDataSource.length === 0) {
       graphChatDataSource = this.state.defaultGraphChatDataSource;
+    }else{
+      graphChatDataSource.datasets[0].label = this.CATranslate("text_income", this.props.locale);
+      graphChatDataSource.datasets[1].label = this.CATranslate("text_expense", this.props.locale);
     }
     
     return (
