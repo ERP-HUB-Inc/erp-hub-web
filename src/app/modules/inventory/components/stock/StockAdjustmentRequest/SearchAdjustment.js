@@ -157,7 +157,7 @@ export default class SearchAdjustmentRequest extends Modal {
           currentQty = stockAdjustmentRequest.currentQuantity;
         }
 
-        if(stockAdjustmentRequest.status !== this.Enum.ARCHIVE){
+        if(stockAdjustmentRequest.length > 0 && stockAdjustmentRequest.status !== this.Enum.ARCHIVE){
           existingProductList.push({
             stockAdjustmentRequestId: stockAdjustmentRequest.id,
             productName,

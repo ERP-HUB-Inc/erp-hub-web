@@ -150,6 +150,12 @@ export default {
     "Post Code"
   ],
 
+  "text_device": [
+    "Device",
+    "ឧបករណ៍",
+    "Device"
+  ],
+
   "text_setting": [
     "Setting",
     "កំណត់សំគាល់",
@@ -260,7 +266,7 @@ export default {
 
   "store_acc_date_format": [
     "Date Format",
-    "ទំរង់កាលបរិច្ចេត",
+    "ទំរង់កាលបរិច្ចេទ",
     "Date Format"
   ],
 };

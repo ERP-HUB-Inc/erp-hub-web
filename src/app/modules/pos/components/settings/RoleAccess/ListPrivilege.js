@@ -435,7 +435,7 @@ export default class ListPrivilege extends Component {
               <span className="search-icon icon-search"></span>
               <this.InputText 
                 name="search_name_privillege" 
-                placeholder="Search access privillege" 
+                placeholder={this.CATranslate("text_search_access_provilege", this.props.locale)}
                 form={form}
                 handleKeyUp={this.handleSearchPrivilege}/>  
               <div className="remove-search-icon icon-clear" onClick={this.handleRemoveTextSearch}></div>

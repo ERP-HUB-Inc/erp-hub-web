@@ -477,7 +477,7 @@ export default class StoreAccountList extends Component {
                             </this.Col> 
                           </this.Row>
                         </this.TabPane>
-                        <this.TabPane tab="Device" key="5">
+                        <this.TabPane tab={<this.Translate id="text_device" />} key="5">
                           <this.Row>
                             <this.Col lg="4" md="4" style={{marginBottom: 20}}> 
                               <this.InputNumber
