@@ -473,14 +473,14 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: <Translate id="text_sale_report" />,
+        title: <Translate id="text_purchase_report" />,
         icon: "icon-purchasing",
         route: "/reports/purchase",
         component: PurchaseReport,
         isFashNav: true
       },
       {
-        title: <Translate id="text_purchase_report" />,
+        title: <Translate id="text_product_report" />,
         icon: "icon-items",
         route: "/reports/product",
         component: ProductReport,

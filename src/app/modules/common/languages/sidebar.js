@@ -119,6 +119,12 @@ export default {
     "Purchase Report"
   ],
 
+  "text_product_report": [
+    "Product Report",
+    "Product Report",
+    "Product Report"
+  ],
+
   "text_profit_and_lost_report": [
     "Profit & Lost Report",
     "Profit & Lost Report",

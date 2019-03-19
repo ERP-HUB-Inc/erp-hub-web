@@ -1,4 +1,5 @@
 import moment from "moment";
+import "moment/min/locales";
 import _ from "lodash";
 import Enum from "../enums";
 import ConstantAuth from "../constants/authentication";
@@ -59,7 +60,7 @@ export class Util {
     return result;
   }
 
-  getBaseUrl(){
+  getBaseUrl() {
     return window.location.origin;
   }
   
@@ -77,6 +78,20 @@ export class Util {
       return result.setting;
     else 
       return null;
+  }
+
+  getCurrentLanguageCode() {
+    let languageCode = "en-ca";
+    const currentSetting = this.getSetting();
+    if (currentSetting) {
+      languageCode = currentSetting.defaultLanguageCode;
+    }
+
+    if (languageCode === "en") {
+      languageCode = "en-ca";
+    }
+
+    return languageCode;
   }
 
   getCurrentUser() {
@@ -125,11 +140,15 @@ export class Util {
   
   formatDate (value, format = "DD-MMM-YYYY") {
     format = format === null || format === "" ? "DD MMM YYYY" : format;
+    const locale = this.getCurrentLanguageCode(); 
+    moment.locale(locale);
     return moment(value).format(format);
   }
 
   formatDateTime (value, format = "DD MMMM YYYY h:mm:ss A") {
     format = format == null ? "DD MMMM YYYY h:mm:ss A" : format;
+    const locale = this.getCurrentLanguageCode(); 
+    moment.locale(locale);
     return moment(value).format(format);
   }
 
@@ -169,7 +188,6 @@ export class Util {
   formtTextError(value){
     return value !=="" && value !== null ? value : "-";
   }
-
 
   isObjectEmpty (data) {
     return _.isEmpty(data);
