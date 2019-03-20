@@ -124,11 +124,6 @@ export default class Home extends Component {
           readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
           route="read"
           to="customer" />
-        {/* <this.Col md="12">
-            {
-              this.isShowDiagram ? <Diagram/> : <Guide/>
-            }
-          </this.Col> */}
         <this.Col md="8">
           <Diagram/>
         </this.Col>

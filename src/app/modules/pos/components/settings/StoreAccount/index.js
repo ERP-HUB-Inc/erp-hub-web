@@ -27,7 +27,7 @@ export default class StoreAccountList extends Component {
       classChange: "unhide",
       getstoreaccid: "",
     };
-    this.module = "settings";
+    this.module = <this.Translate id="text_setting" />;
     
     // ERROR CURRENT PASSWORD
     this.errorMessageCurrentPWD = "";
