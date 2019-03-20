@@ -153,5 +153,18 @@ export default {
     "Serial number required",
     "លេខស៊េរីទាមទារ",
     "Serial number required"
+  ],
+
+  "text_unavailable_mobile_layout": [
+    "This page is unavailable on mobile",
+    "គេហទំព័រនេះមិនអាច​បើលលើទូរស័ព្ទបានទេ",
+    "This page is unavailable on mobile"
+  ],
+
+  "text_unavailable_mobile_download_app": [
+    "Please download app below",
+    "សូមដំឡើងកម្មវិធី",
+    "Please download app below"
   ]
+
 };

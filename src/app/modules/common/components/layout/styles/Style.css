@@ -881,3 +881,23 @@ color: #4D4F5C;
 .table-wrapper {
     background-color: white
 }
+
+/* unavailable mobile  */
+.unavailable-mobile-layout  {
+    text-align: center;
+    color: #093163;
+    font-size: 16pt;
+}
+
+.unavailable-mobile-layout .unavailable-mobile {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.unavailable-mobile-layout a {
+    color: #093163;
+    text-decoration: underline;
+    font-weight: bold;
+}
