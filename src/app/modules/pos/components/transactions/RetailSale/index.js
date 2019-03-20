@@ -28,7 +28,9 @@ import POSUtil from "../../../utils";
 import Component from "../../../../common/components/Component";
 import PaymentForm from "../../../containers/transactions/SaleWalkin/Payment";
 import VaraintProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
+import { isMobile, isAndroid, isIOS } from "react-device-detect";
 import "./index.css";
+
 export default class Retail extends Component {
   constructor(props) {
     super(props);
@@ -629,12 +631,14 @@ export default class Retail extends Component {
     const element = document.getElementById("center-container");
 
     // const body = document.getElementsByTagName("BODY")[0];
-    if (element.classList.contains("full-screen")) {
-      this.setState({
-        iconFullScreen: "icon-full-screen",
-        textFullScreen: <this.Translate id="text_full_screen" />
-      });
-      element.classList.remove("full-screen");
+    if(isMobile || isAndroid || isIOS){
+      if (element.classList.contains("full-screen")) {
+        this.setState({
+          iconFullScreen: "icon-full-screen",
+          textFullScreen: <this.Translate id="text_full_screen" />
+        });
+        element.classList.remove("full-screen");
+      }
     } else {
       const rootElement = document.getElementById("root");
       if (rootElement) {
@@ -730,6 +734,21 @@ export default class Retail extends Component {
   }
 
   render() {
+
+    if (isMobile) {
+      return <div className="unavailable-mobile-layout"> 
+        <div className="unavailable-mobile"> 
+          <this.Translate id="text_unavailable_mobile_layout"/><br/>
+          <this.Translate id="text_unavailable_mobile_download_app"/> <br/>
+          { 
+            isAndroid ?
+              <a href="www">Play Store</a>
+              : isIOS ? <a href="www">App Store</a> : ""
+          }
+        </div>
+      </div> ;
+    }
+    
     const {
       summaryTotal,
       discountAmount,
@@ -742,7 +761,7 @@ export default class Retail extends Component {
       taxTotal,
       countTax
     } = POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale));
-
+  
     return (
       this.Util.isCheckingPermission(this.props) ?
         <this.Row className="main-layout main-store-account" id="retail-sale">
@@ -1014,6 +1033,7 @@ export default class Retail extends Component {
             </this.Col>
             {this.state.modalContent}
           </this.Row>
+       
     );
   }
 }
