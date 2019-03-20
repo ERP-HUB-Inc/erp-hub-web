@@ -124,7 +124,13 @@ export default {
     "របាយការណ៍បញ្ជារទិញ",
     "Purchase Report"
   ],
-  
+
+  "text_product_report": [
+    "Product Report",
+    "របាយការណ៍ទំនិញ",
+    "Product Report"
+  ],
+
   "text_profit_and_lost_report": [
     "Profit & Lost Report",
     "របាយការណ៍ចំណេញខាត",
