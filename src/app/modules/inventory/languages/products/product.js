@@ -43,7 +43,7 @@ export default {
 
   "text_product_code": [
     "SKU",
-    "SKU",
+    "លេខកូដផលិតផល",
     "SKU"
   ],
 
@@ -397,7 +397,7 @@ export default {
 
   "text_current_stock": [
     "Current Stock",
-    "Current Stock",
+    "ស្តុកបច្ចុប្បន្",
     "Current Stock",
   ],
 
@@ -427,7 +427,7 @@ export default {
 
   "text_attribute_example": [
     "(e.g. Size)",
-    "(e.g. ទំហំ)",
+    "(ឧ. ទំហំ)",
     "(e.g. Size)"
   ],
 
@@ -519,7 +519,7 @@ export default {
   
   "error_require_variant": [
     "You need to have variant collection",
-    "You need to have variant collection",
+    "អ្នកត្រូវមានការប្រមូលផ្តុំ",
     "You need to have variant collection"
   ],
 };

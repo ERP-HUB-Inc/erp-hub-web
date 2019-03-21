@@ -157,26 +157,26 @@ export default class SearchAdjustmentRequest extends Modal {
           currentQty = stockAdjustmentRequest.currentQuantity;
         }
 
-        if(stockAdjustmentRequest.length > 0 && stockAdjustmentRequest.status !== this.Enum.ARCHIVE){
-          existingProductList.push({
-            stockAdjustmentRequestId: stockAdjustmentRequest.id,
-            productName,
-            variantName,
-            unitId: stockAdjustmentRequest.unitId,
-            productVariantId: stockAdjustmentRequest.productVariantId,
-            currentQty,
-            productVariants: [stockAdjustmentRequest.productVariant],
-            adjustQuantity: stockAdjustmentRequest.adjustQuantity,
-            different: stockAdjustmentRequest.adjustQuantity - currentQty,
-            stockAdjustmentRequestStatus: stockAdjustmentRequest.productVariant.product.status
-          }); 
-        }
+        existingProductList.push({
+          stockAdjustmentRequestId: stockAdjustmentRequest.id,
+          productName,
+          variantName,
+          unitId: stockAdjustmentRequest.unitId,
+          productVariantId: stockAdjustmentRequest.productVariantId,
+          currentQty,
+          productVariants: [stockAdjustmentRequest.productVariant],
+          adjustQuantity: stockAdjustmentRequest.adjustQuantity,
+          different: stockAdjustmentRequest.adjustQuantity - currentQty,
+          stockAdjustmentRequestStatus: stockAdjustmentRequest.status
+        }); 
+       
       });
       
       this.setState({
         productLists: existingProductList,
         isNotYetLoadComponentDidUpdated: false
       });
+      console.log("productLists",this.state.productLists);
     }
 
     if (this.props.productVariant.fetched) {

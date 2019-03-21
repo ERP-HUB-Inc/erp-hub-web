@@ -180,5 +180,47 @@ export default {
     "អតិថិជនសរុប",
     "Total Customers"
   ],
+
+  "text_monday": [
+    "Monday",
+    "ចន្ទ",
+    "Monday"
+  ],
+
+  "text_tuesday": [
+    "Tuesday",
+    "អង្គារ",
+    "Tuesday"
+  ],
+
+  "text_wednesday": [
+    "Wednesday",
+    "ពុធ",
+    "Wednesday"
+  ],
+
+  "text_thursday": [
+    "Thursday",
+    "ព្រហស្បត្តិ៍",
+    "Thursday"
+  ],
+
+  "text_friday": [
+    "Friday",
+    "សុក្រ",
+    "Friday"
+  ],
+
+  "text_saturday": [
+    "Saturday",
+    "សៅរ៍",
+    "Saturday"
+  ],
+
+  "text_sunday": [
+    "Sunday",
+    "អាទិត្យ",
+    "Sunday"
+  ],
   
 };

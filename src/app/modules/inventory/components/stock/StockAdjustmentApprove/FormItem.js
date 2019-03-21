@@ -126,22 +126,21 @@ export default class FormItem extends Modal {
           variantName = stockApprove.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? stockApprove.productVariant.name : "";
           currentQty = stockApprove.currentQuantity;
         }
-
-        if(stockApprove.length > 0 && stockApprove.status !== this.Enum.ARCHIVE){
-          existingProductList.push({
-            stockApproveId: stockApprove.id,
-            index: index,
-            productName,
-            variantName,
-            unitId: stockApprove.unitId,
-            productVariantId: stockApprove.productVariantId,
-            currentQty,
-            adjustQuantity: stockApprove.adjustQuantity,
-            different: stockApprove.adjustQuantity - currentQty,
-            stockApproveStatus: stockApprove.productVariant.product.status,
-            isApprove: 0,
-          }); 
-        }
+      
+        existingProductList.push({
+          stockApproveId: stockApprove.id,
+          index: index,
+          productName,
+          variantName,
+          unitId: stockApprove.unitId,
+          productVariantId: stockApprove.productVariantId,
+          currentQty,
+          adjustQuantity: stockApprove.adjustQuantity,
+          different: stockApprove.adjustQuantity - currentQty,
+          stockApproveStatus: stockApprove.productVariant.product.status,
+          isApprove: 0
+        }); 
+        
       }); 
 
       this.setState({
