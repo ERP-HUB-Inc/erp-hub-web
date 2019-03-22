@@ -1,7 +1,7 @@
 export default {
   "text_receipt_template": [
     "Receipt Template",
-    "កង្កាន់ដៃគំរូ",
+    "បង្កាន់ដៃគំរូ",
     "Receipt Template"
   ],
 

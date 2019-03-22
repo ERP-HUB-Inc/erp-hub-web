@@ -86,6 +86,8 @@ export default class StockAdjustmentRequestLists extends List {
         message = this.CATranslate("error_unit_not_found", this.props.locale);
       } else if (errorCode === Enum.INVALID_LOCATION_FOR_RECEIVE) {
         message = this.CATranslate("invalid_location_for_receive", this.props.locale);
+      } else if (errorCode === Enum.STOCK_ADJUSTMENT_ENTRY_NOT_FOUND) {
+        message = this.CATranslate("invalid_stock_adjustment_entry", this.props.locale);
       }
       this.props.dispatch(StockAdjustmentRequestAction.reset());
       this.Message.error(message);

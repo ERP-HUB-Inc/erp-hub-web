@@ -13,7 +13,7 @@ export default {
   
   "col_tax_label_on_invoice": [
     "Label on Invoice",
-    "အမည်",
+    "ស្លាកលើវិក្កយបត្រ",
     "Label on Invoice"
   ],
   

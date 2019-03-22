@@ -117,5 +117,11 @@ export default {
     "You can not receive to location that you has created stock transfer",
     "អ្នកមិនអាចទទួលបានទីតាំងដែលអ្នកបានបង្កើតការផ្ទេរភាគហ៊ុន",
     "You can not receive to location that you has created stock transfer"
-  ]
+  ],
+
+  "invalid_stock_adjustment_entry": [
+    "Stock adjustment Entry not found",
+    "រកមិនឃើញបញ្ចូល ស្តុក",
+    "Stock adjustment Entry not found"
+  ],
 };
