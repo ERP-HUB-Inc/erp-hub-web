@@ -55,7 +55,7 @@ export default {
 
   "switch_currency": [
     "Switch Currency",
-    "ផ្លាស់ប្តូររូបិយប័ណ្ឌ",
+    "ផ្លាស់ប្តូររូបិយប័ណ្ណ",
     "Switch Currency"
   ],
 
@@ -67,7 +67,7 @@ export default {
 
   "currency_exchange": [
     "Currency Exchange",
-    "ប្តូររូបិយប័ណ្ឌ",
+    "ប្តូររូបិយប័ណ្ណ",
     "Currency Exchange"
   ],
 

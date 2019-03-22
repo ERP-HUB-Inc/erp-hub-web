@@ -1,7 +1,7 @@
 export default {
   "operation_record_title": [
     "Operation Record",
-    "ប្រតិបត្ដិការកត់ត្រា",
+    "ការកត់ត្រាប្រតិបត្ដិការ",
     "Operation Record"
   ],
 

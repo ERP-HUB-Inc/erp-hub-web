@@ -356,7 +356,7 @@ export default {
   
   "text_payment_method": [
     "Payment Method",
-    "វិធី​សា​ស្រ្ត​ទូទាត់",
+    "មធ្យោបាយទូទាត់ប្រាក់",
     "Payment Method"
   ],
   
@@ -590,13 +590,13 @@ export default {
   
   "text_available": [
     "Available",
-    "មាន",
+    "ប្រើបាន",
     "Available"
   ],
   
   "text_not_available": [
     "Not Available",
-    "មិនមាន",
+    "មិនអាចប្រើបាន",
     "Not Available"
   ],
   

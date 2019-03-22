@@ -872,23 +872,24 @@ export default class FormVariant extends Modal {
   handleKeyDownAttributeValue(event, index) {
     const variantAttributeList = this.state.variantAttributeList;
     const variantAttributeLength = variantAttributeList.length;
+    const attributeValue = event.target.value + "".trim();
     if (variantAttributeLength <= 0 || index > variantAttributeLength) {
       return;
     }
 
     if (
-      event.target.value &&
+      attributeValue &&
       (event.keyCode === 188 || event.keyCode === 13)
     ) {
       let notExistYet = true;
       variantAttributeList[index]["attributeValues"].forEach(attributeValue => {
-        if (attributeValue.name === event.target.value && attributeValue.status === this.Enum.ACTIVE) {
+        if (attributeValue.name === attributeValue && attributeValue.status === this.Enum.ACTIVE) {
           notExistYet = false;
         }
       });
 
       if (notExistYet) {
-        variantAttributeList[index]["attributeValues"].push(this.appendAttributeValue({id: "", name: event.target.value}));
+        variantAttributeList[index]["attributeValues"].push(this.appendAttributeValue({id: "", name: attributeValue}));
         document.getElementById(`lozenge-item${index}`).value = "";
         const productVariantList = this.generateProductVariant(
           this.variantAttributeListForGenerateVariantV2(variantAttributeList),
@@ -912,7 +913,7 @@ export default class FormVariant extends Modal {
       }
 
     } else if (
-      !event.target.value &&
+      !attributeValue &&
       event.keyCode === 8
     ) {
       // When key backspace find the last active attribute value and remove it
@@ -1109,7 +1110,7 @@ export default class FormVariant extends Modal {
                             variantAttribute.attributeValues.map((attributeValue, attributeValueIndex) =>
                               attributeValue.status === this.Enum.ACTIVE ?
                                 <div key={attributeValueIndex} className="lozenge-item">
-                                  {attributeValue.name}
+                                  <span>{attributeValue.name.trim()}</span>
                                   <span className="icon-delete" onClick={() => this.handleOnRemoveLozengeItem(attributeValueIndex, variantAttributeKey)}></span>
                                 </div>
                                 :
