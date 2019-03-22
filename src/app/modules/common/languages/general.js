@@ -79,7 +79,7 @@ export default {
   
   "text_date": [
     "Date",
-    "កាលបរិច្ចេត",
+    "កាលបរិច្ចេទ",
     "Date"
   ],
   

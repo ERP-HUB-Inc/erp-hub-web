@@ -9,28 +9,29 @@ import "./index.css";
 
 export default class Home extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.isShowDiagram = null;
-    this.toggleDashboard = this.toggleDashboard.bind(this);
+    // this.toggleDashboard = this.toggleDashboard.bind(this);
     this.hasDidUpdate = false;
   }	
 
-  toggleDashboard(checked) {
-    this.isShowDiagram  =  checked === 0;
-    localStorage.setItem("defaultDashboardSetting", JSON.stringify(checked));
-  }
+  // toggleDashboard(checked) {
+  //   this.isShowDiagram  =  checked === 0;
+  //   localStorage.setItem("defaultDashboardSetting", JSON.stringify(checked));
+  // }
 
-  componentWillUpdate() {
-    if(!this.hasDidUpdate){
-      let getDefaultSetting = localStorage.getItem("defaultDashboardSetting");
-      if(parseInt(getDefaultSetting, 10) === 1) {
-        this.isShowDiagram  = true;
-      } else {
-        this.isShowDiagram  = false;
-      }
-    }
-  }
+  // componentWillUpdate() {
+  //   if(!this.hasDidUpdate){
+  //     let getDefaultSetting = localStorage.getItem("defaultDashboardSetting");
+  //     if(parseInt(getDefaultSetting, 10) === 1) {
+  //       this.isShowDiagram  = true;
+  //     } else {
+  //       this.isShowDiagram  = false;
+  //     }
+  //   }
+  // }
+
 
   componentDidMount(){
     this.props.dispatch(CardAction.fetchDashboardCard());    
@@ -66,9 +67,9 @@ export default class Home extends Component {
               <li>
                 <this.BreadcrumbTitle title= {this.CATranslate("home_page_dashboard", this.props.locale)} />
               </li>
-              <li style={{marginLeft: "15px"}}>
+              {/* <li style={{marginLeft: "15px"}}>
                 {<this.Switchs name="switch" checked={1} onChange={this.toggleDashboard} form={this.props.form} />}
-              </li>
+              </li> */}
             </ul>
           </div>
         </this.Col>

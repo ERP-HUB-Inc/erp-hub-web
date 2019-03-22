@@ -36,7 +36,7 @@ export default class FormCreate extends Modal {
         
         const stockAdjustmentEntries = [];
 
-        if("stockAdjustmentRequestId" in values){
+        if("productVariantId" in values){
           values.productVariantId.forEach((productVariantId, index) => {
             stockAdjustmentEntries.push({
               currentQuantity: parseInt(values.currentQty[index], 10),

@@ -26,7 +26,15 @@ export default class Diagram extends Component {
               data: []
             }
           ],
-          labels: []
+          labels: [
+            this.CATranslate("text_friday", this.props.locale),
+            this.CATranslate("text_saturday", this.props.locale),
+            this.CATranslate("text_sunday", this.props.locale),
+            this.CATranslate("text_monday", this.props.locale),
+            this.CATranslate("text_tuesday", this.props.locale),
+            this.CATranslate("text_wednesday", this.props.locale),
+            this.CATranslate("text_thursday", this.props.locale)
+          ]
         }
     };
     this.statusList = [
@@ -105,12 +113,24 @@ export default class Diagram extends Component {
 
   render() {
     let graphChatDataSource = this.props.graphChat.list;
+
     if (graphChatDataSource.length === 0) {
       graphChatDataSource = this.state.defaultGraphChatDataSource;
     }else{
       graphChatDataSource.datasets[0].label = this.CATranslate("text_income", this.props.locale);
       graphChatDataSource.datasets[1].label = this.CATranslate("text_expense", this.props.locale);
+
+      graphChatDataSource.labels[0] = this.CATranslate("text_friday", this.props.locale);
+      graphChatDataSource.labels[1] = this.CATranslate("text_saturday", this.props.locale);
+      graphChatDataSource.labels[2] = this.CATranslate("text_sunday", this.props.locale);
+      graphChatDataSource.labels[3] = this.CATranslate("text_monday", this.props.locale);
+      graphChatDataSource.labels[4] = this.CATranslate("text_tuesday", this.props.locale);
+      graphChatDataSource.labels[5] = this.CATranslate("text_wednesday", this.props.locale);
+      graphChatDataSource.labels[6] = this.CATranslate("text_thursday", this.props.locale);
+
     }
+    
+
     
     return (
       <div className="main-diagram">

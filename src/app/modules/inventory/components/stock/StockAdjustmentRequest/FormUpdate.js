@@ -56,7 +56,7 @@ export default class Form extends Modal {
       if (!err) {
         values["id"] = this.props.stockAdjustmentRequestDetail.data.id;
         const stockAdjustmentEntries = [];
-        if("stockAdjustmentRequestId" in values){
+        if("productVariantId" in values){
           values.productVariantId.forEach((productVariantId, index) => {
             stockAdjustmentEntries.push({
               id: values.stockAdjustmentRequestId[index],
