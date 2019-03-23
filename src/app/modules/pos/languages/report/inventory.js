@@ -25,13 +25,13 @@ export default {
 
   "text_date_range": [
     "Date Range",
-    "ជួរកាលបរិច្ឆេទ",
+    "កាលបរិច្ឆេទ",
     "Date Range"
   ],
 
   "errpr_text_date_range": [
     "Date Range is required",
-    "ជួរកាលបរិច្ឆេទត្រូវបានទាមទារ",
+    "កាលបរិច្ឆេទត្រូវបានទាមទារ",
     "Date Range is required"
   ],
 

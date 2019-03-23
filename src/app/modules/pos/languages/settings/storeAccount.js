@@ -158,7 +158,7 @@ export default {
 
   "text_setting": [
     "Setting",
-    "កំណត់សំគាល់",
+    "ការកំណត់",
     "Setting"
   ],
 

@@ -31,7 +31,6 @@ C3Chart.defaultProps = {
   legend: {
     show: false
   },
-  // title: "Summary Report",
   size: {
     height: 300
   },

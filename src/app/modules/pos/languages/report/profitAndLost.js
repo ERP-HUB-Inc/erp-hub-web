@@ -19,19 +19,19 @@ export default {
 
   "text_operation_profit_and_lost": [
     "Operation Profit and Lost",
-    "ប្រតិបត្តិការចំណេញនិងបាត់បង់",
+    "ប្រតិបត្តិការចំណេញ ខាត",
     "Operation Profit and Lost"
   ],
 
   "text_sale_profit_and_lost": [
     "Sale Profit and Lost",
-    "ប្រាក់ចំណេញលក់និងការបាត់បង់",
+    "ប្រាក់ចំណេញលក់និងការខាត",
     "Sale Profit and Lost"
   ],
 
   "no_peration_revenue": [
     "No operation revenue",
-    "គ្មានចំណូលប្រតិបត្តិការ",
+    "គ្មានប្រតិបត្តិការ",
     "No operation revenue"
   ],
 
