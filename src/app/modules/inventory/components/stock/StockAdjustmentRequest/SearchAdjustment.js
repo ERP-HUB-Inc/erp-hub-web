@@ -91,6 +91,7 @@ export default class SearchAdjustmentRequest extends Modal {
           return <this.InputNumber
             name={`adjustQuantity[${index}]`}
             className="text-right"
+            isAutoSelect={true}
             isHideTool={true}
             precision={0}
             data={record.adjustQuantity}

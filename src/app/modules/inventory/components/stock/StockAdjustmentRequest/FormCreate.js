@@ -23,7 +23,7 @@ export default class FormCreate extends Modal {
           <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel" />
         </this.Button>  
         <this.Button htmlType="submit" loading={this.submitLoading} className="info">
-          <span className="icon-save icon-padding-right"></span><this.Translate id="text_adjust" />
+          <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
         </this.Button>
       </div>
     );
