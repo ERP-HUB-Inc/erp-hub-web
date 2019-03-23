@@ -91,13 +91,13 @@ export default {
   
   "text_adjustment_request": [
     "Adjustment Request",
-    "សំណើកែតំរូវ",
+    "សំណើកែតំរូវស្តុក",
     "Adjustment Request"
   ],
   
   "text_adjustment_approve": [
     "Adjustment Approve",
-    "យល់ព្រមការកែតំរូវ",
+    "យល់ព្រមការកែតំរូវស្តុក",
     "Adjustment Approve"
   ],
   

@@ -41,7 +41,6 @@ class Column extends List {
   constructor(props) {
     super(props);
     return [
-      this.columnCreatedAt,
       {
         title: <this.Translate id="col_products_brand_name" />,
         dataIndex: "name",

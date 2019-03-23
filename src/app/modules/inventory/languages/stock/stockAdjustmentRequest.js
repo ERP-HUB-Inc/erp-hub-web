@@ -37,7 +37,7 @@ export default {
 
   "text_location": [
     "Location",
-    "ទីតាំង",
+    "ទីតាំងហាង",
     "Location"
   ],
 

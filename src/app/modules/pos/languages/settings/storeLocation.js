@@ -7,7 +7,7 @@ export default {
   
   "UPDATE_LOCATION_title": [
     "Location",
-    "ទីតាំង",
+    "ទីតាំងហាង",
     "Location"
   ],
   

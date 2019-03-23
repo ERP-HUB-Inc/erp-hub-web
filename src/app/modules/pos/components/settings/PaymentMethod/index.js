@@ -23,7 +23,6 @@ class Column extends List {
   constructor(props) {
     super(props);
     return [
-      this.columnCreatedAt,
       this.columnNo,
       {
         title: <this.Translate id="text_name" />,
