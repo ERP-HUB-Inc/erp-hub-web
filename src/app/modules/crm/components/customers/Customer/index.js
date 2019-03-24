@@ -172,13 +172,8 @@ class ColumnExpend extends List {
       {
         dataIndex: "blank1",
         key: "blank1",
-        width: 50,
+        width: 20,
         render: () => {},
-      },
-      {
-        dataIndex: "createdAt",  
-        width: 155,
-        render: () => {}
       },
       {
         dataIndex: "name",

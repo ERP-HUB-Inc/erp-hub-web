@@ -224,7 +224,7 @@ export default {
   
   "text_warning_select_row_to_delete": [
     "Please select rows to perform delete operation",
-    "សូមជ្រើសរើស ដើម្បីលប់ប្រត្តិបត្តការណ៍",
+    "សូមជ្រើសរើសទិន្នន័យ ដើម្បីលប់",
     "Please select rows to perform delete operation"
   ],
   
@@ -748,5 +748,41 @@ export default {
     "Product type do not exist",
     "គ្មានប្រភេទទំនិញនៅក្នុងនេះ",
     "Product type do not exist"
+  ],
+
+  "text_last_week": [
+    "Last Week",
+    "សប្ដាហ៍​មុន",
+    "Last Week"
+  ],
+
+  "text_this_week": [
+    "This Week",
+    "ស​ប្តា​ហ៍​នេះ",
+    "This Week"
+  ],
+
+  "text_before_last_month": [
+    "Before Last Month",
+    "មុនខែមុន",
+    "Before Last Month"
+  ],
+
+  "text_last_month": [
+    "Last Month",
+    "ខែមុន",
+    "Last Month"
+  ],
+
+  "text_this_month": [
+    "This Month",
+    "ខែ​នេះ",
+    "This Month"
+  ],
+
+  "text_today": [
+    "Today",
+    "ថ្ងៃនេះ",
+    "Today"
   ]
 };

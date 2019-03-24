@@ -222,7 +222,8 @@ export default class SaleHistoryList extends List {
                 name="createdAt"
                 defaultValue={this.state.setDefaultDate}
                 label={<this.Translate id="text_date" />}
-                form={this.props.form}/>
+                form={this.props.form}
+                ranges={this.dateRangeDataSource()} />
             </this.Col>
             <this.Col md="2">
               <this.Select
@@ -282,7 +283,6 @@ export default class SaleHistoryList extends List {
         this.Util.formatDateForMYSQL(getCurrentDate) + " 23:59:59"
       ]});
 
-
     let searchKey = "";
 
     this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
@@ -321,10 +321,8 @@ export default class SaleHistoryList extends List {
                 this.Util.formatDateForMYSQL(values.createdAt[0]) + " 00:00:00",
                 this.Util.formatDateForMYSQL(values.createdAt[1]) + " 23:59:59"
               ]});
-
           }
           
-
           filter = JSON.stringify(filter);
 
           let searchKey = "";
@@ -355,7 +353,7 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="text_no" />,
+        title: <this.Translate id="text_transaction_no" />,
         dataIndex: "number",
         key: "number",
         sorter: true

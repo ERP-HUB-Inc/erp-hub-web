@@ -1,5 +1,6 @@
 import moment from "moment";
 import "moment/min/locales";
+import "moment/locale/en-ca";
 import _ from "lodash";
 import Enum from "../enums";
 import ConstantAuth from "../constants/authentication";
@@ -154,7 +155,13 @@ export class Util {
 
   formatDateForMYSQL (value, format = "YYYY-MM-DD") {
     format = format == null ? "YYYY-MM-DD" : format;
-    return moment(value).format(format);
+    value = moment(value).format(format);
+
+    if (this.getCurrentLanguageCode() === "km") {
+      value = this.fromKHNumberToStandard(value.split(""));
+    }
+
+    return value;
   }
 
   formDateDOB (value) {
@@ -498,6 +505,66 @@ export class Util {
 
   processImageOnFlightCropCenter(imageURL, size = {width: 100, height: 100}) {
     return `${process.env.REACT_APP_IMAGE_FLIGHT_HOST}/OptionKey_OptionValue - g_Center, w_${size.width}, h_${size.height}/${imageURL}`;
+  }
+
+  fromKHNumberToStandard(dataValue) {
+    const khNumber = [
+      {
+        km: "១",
+        en: "1"
+      },
+      {
+        km: "២",
+        en: "2"
+      },
+      {
+        km: "៣",
+        en: "3"
+      },
+      {
+        km: "៤",
+        en: "4"
+      },
+      {
+        km: "៥",
+        en: "5"
+      },
+      {
+        km: "៦",
+        en: "6"
+      },
+      {
+        km: "៧",
+        en: "7"
+      },
+      {
+        km: "៨",
+        en: "8"
+      },
+      {
+        km: "៩",
+        en: "9"
+      },
+      {
+        km: "០",
+        en: "0"
+      }
+    ];
+
+    let newDataValue = "";
+
+    dataValue.forEach(value => {
+      if (value === "-") {
+        newDataValue += value;
+      } else {
+        const findResult = khNumber.find(khNumberValue => khNumberValue.km === value);
+        if (findResult) {
+          newDataValue += findResult.en;
+        }
+      }
+    });
+
+    return newDataValue;
   }
   
 }

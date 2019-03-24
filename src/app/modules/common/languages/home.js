@@ -171,13 +171,13 @@ export default {
 
   "text_today_is_product_sold": [
     "Today's Product Sold",
-    "ផលិតផលថ្ងៃនេះបានលក់",
+    "ផលិតផលលក់ថ្ងៃនេះ",
     "Today's Product Sold"
   ],
 
   "text_total_customer": [
     "Total Customers",
-    "អតិថិជនសរុប",
+    "អតិថិជន",
     "Total Customers"
   ],
 
