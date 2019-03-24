@@ -356,7 +356,8 @@ export default class ProfitAndLostList extends List {
                   label={<this.Translate id="text_date_range" />}
                   defaultValue={this.state.setDefaultDate}
                   errorRequired={<this.Translate id="errpr_text_date_range" />}
-                  form={this.props.form}/>
+                  form={this.props.form}
+                  ranges={this.dateRangeDataSource()} />
               </this.Col>
             
               <this.Col md="2" className="reorder-point-button-search report-button wrap-btn-search">

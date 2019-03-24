@@ -37,7 +37,7 @@ export default {
 
   "no_peration_expense": [
     "No operation expense",
-    "មិនមានចំណាយប្រតិបត្តិការ",
+    "មិនមានប្រតិបត្តិការចំណាយទេ",
     "No operation expense"
   ],
 

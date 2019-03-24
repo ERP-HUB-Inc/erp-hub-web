@@ -198,7 +198,7 @@ class Column extends List {
     super(props);
     return [
       {
-        title: "Date",
+        title: <this.Translate id="text_date" />,
         dataIndex: "date",
         key: "date",
         width: 200,
