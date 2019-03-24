@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import {Translate, setActiveLanguage, getActiveLanguage} from "react-localize-redux";
 import {connect} from "react-redux";
 import {CSVLink, CSVDownload} from "react-csv";
@@ -206,6 +207,17 @@ export default class Component extends React.Component {
 
   getCurrentLanguage(state) {
     return getActiveLanguage(state);
+  }
+
+  dateRangeDataSource() {
+    return { 
+      [this.CATranslate("text_last_week", this.props.locale)]: [moment().subtract(1, "week").startOf("isoWeek"), moment().subtract(1, "week").endOf("isoWeek")],
+      [this.CATranslate("text_this_week", this.props.locale)]: [moment().startOf("isoWeek"), moment().endOf("isoWeek")],
+      [this.CATranslate("text_before_last_month", this.props.locale)]:  [moment().subtract(1, "months").startOf("month")],
+      [this.CATranslate("text_last_month", this.props.locale)]: [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")],
+      [this.CATranslate("text_this_month", this.props.locale)]: [moment().startOf("month"), moment().endOf("month")],
+      [this.CATranslate("text_today", this.props.locale)]: [moment(), moment()]
+    };
   }
 
   getCurrentIndexLanguage(state) {

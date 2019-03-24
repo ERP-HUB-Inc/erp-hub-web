@@ -12,6 +12,12 @@ export default {
     "Store"
   ],
 
+  "text_transaction_no": [
+    "No",
+    "លេខប្រតិបត្តិការ",
+    "No"
+  ],
+
   "place-holder-sale-history-date": [
     "Range Dates",
     "ចន្លោះកាលបរិច្ឆេត",

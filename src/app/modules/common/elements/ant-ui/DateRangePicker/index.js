@@ -17,14 +17,7 @@ export class DateRangePicker extends Element {
             { type: "array" }
           ], initialValue: this.props.defaultValue})(
             <DatePicker.RangePicker
-              ranges={{ 
-                "Last Week": [moment().subtract(1, "week").startOf("isoWeek"), moment().subtract(1, "week").endOf("isoWeek")],
-                "This Week": [moment().startOf("isoWeek"), moment().endOf("isoWeek")],
-                "Before Last Month":  [moment().subtract(1, "months").startOf("month")],
-                "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")],
-                "This Month": [moment().startOf("month"), moment().endOf("month")],
-                Today: [moment(), moment()]
-              }}
+              ranges={this.props.ranges}
               format={this.props.dateFormat}
               onChange={this.props.onChange}
               disabled={this.props.disabled} />
@@ -38,6 +31,14 @@ export class DateRangePicker extends Element {
 DateRangePicker.defaultProps = {
   name: "name",
   dateFormat: "DD MMM YYYY",
-  required: false
+  required: false,
+  ranges: { 
+    "Last Week": [moment().subtract(1, "week").startOf("isoWeek"), moment().subtract(1, "week").endOf("isoWeek")],
+    "This Week": [moment().startOf("isoWeek"), moment().endOf("isoWeek")],
+    "Before Last Month":  [moment().subtract(1, "months").startOf("month")],
+    "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")],
+    "This Month": [moment().startOf("month"), moment().endOf("month")],
+    Today: [moment(), moment()]
+  }
 };
 

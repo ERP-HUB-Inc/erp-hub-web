@@ -176,7 +176,8 @@ export default class SaleList extends List {
                   label={<this.Translate id="text_date_range" />}
                   defaultValue={this.state.setDefaultDate}
                   errorRequired={<this.Translate id="errpr_text_date_range" />}
-                  form={this.props.form}/>
+                  form={this.props.form}
+                  ranges={this.dateRangeDataSource()}/>
               </this.Col>
               <this.Col md="2">
                 <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching} className="wrap-report-btn-search">

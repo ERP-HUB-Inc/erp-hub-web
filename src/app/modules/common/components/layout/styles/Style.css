@@ -760,7 +760,7 @@ color: #4D4F5C;
 .btn-removecontact button:hover {
     border: none;
     padding-left: 0;
-    height: 0;
+    height: 30px
 }
 
 .btn-addcontact button span {

@@ -315,8 +315,7 @@ export default class PurchaseList extends List {
                 <this.DatePickers
                   name="deliveryDueDate"
                   label={<this.Translate id="text_due_date" />}
-                  form={form}
-                />
+                  form={form} />
               </this.Col>
               <this.Col md="2">
                 <this.Select

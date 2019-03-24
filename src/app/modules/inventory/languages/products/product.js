@@ -433,7 +433,7 @@ export default {
 
   "text_general_seach_product": [
     "Search for brand, SKU and notation",
-    "ស្វែងរកម៉ាក, SKU និងកំណត់សំគាល់",
+    "ស្វែងរកតាម ម៉ាក​ លេខកូដ និងកំណត់សំគាល់",
     "Search for brand, SKU and notation"
   ],
 
