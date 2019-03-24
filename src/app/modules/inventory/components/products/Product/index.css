@@ -176,7 +176,8 @@
 
 .modal-product .ant-tabs .ant-tabs-content .ant-tabs-tabpane:first-child{
     overflow: hidden auto;/*x:hidden y: auto*/
-    padding-right: 15px
+    padding-right: 15px;
+    height: 100%
 }
 
 .modal-product .ant-tabs .ant-tabs-content .ant-tabs-tabpane{
@@ -193,4 +194,5 @@
 .modal-product .ant-tabs,
 .modal-product .ant-tabs .ant-tabs-content {
     display: flex;
+    height: 100%
 }
