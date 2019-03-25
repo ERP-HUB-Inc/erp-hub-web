@@ -43,7 +43,7 @@ export default {
 
   "text_product_code": [
     "SKU",
-    "លេខកូដផលិតផល",
+    "លេខកូដ",
     "SKU"
   ],
 
