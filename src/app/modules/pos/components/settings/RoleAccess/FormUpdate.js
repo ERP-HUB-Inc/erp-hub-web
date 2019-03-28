@@ -33,6 +33,7 @@ export default class Form extends Modal {
         ]);
 
         values["privileges"] = this.state.rolePrivileges;
+        values["description"] = "";
         this.dispatch(RoleAccessAction.update(values));
       }
     });

@@ -8,6 +8,7 @@
 
 # production
 /dist
+/src/app/modules/common/containers/app
 
 # misc
 .DS_Store

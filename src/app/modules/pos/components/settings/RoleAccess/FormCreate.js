@@ -25,11 +25,9 @@ export default class Form extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-
         this.Util.clearObjProperty(values, ["search_name_privillege"]);
-
         values["privileges"] = this.state.rolePrivileges;
-
+        values["description"] = "";
         this.dispatch(RoleAccessAction.add(values));
       }
     });

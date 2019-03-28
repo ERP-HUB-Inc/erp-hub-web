@@ -290,35 +290,19 @@ export default class PrintPriceTag extends List {
       return;
     } else if (productVariant && productVariant.length > 0) {
       productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
-      productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
+      if(productVariant){
+        productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
+      }
     }
 
-    const productName = Util.getProductName(product);
-    const {quantity} = productVariant;
+    if(productVariant){
+      
+      const productName = Util.getProductName(product);
+      const {quantity} = productVariant;
 
-    const existingProductList = this.state.productList;
+      const existingProductList = this.state.productList;
 
-    if (existingProductList.length === 0) {
-      existingProductList.push({
-        id: productVariant.id,
-        barcode: productVariant.barcode,
-        price: productVariant.price,
-        productName,
-        variantName: productVariant.name,
-        qauntityInStore: Util.countProductQTYCurrentLocation(product, this.Util.getLocationId()),
-        quantity,
-        productVariants: product.productVariants,
-        productOption: product.productOption
-      });
-    } else {
-      let isNotTheSame = true;
-      existingProductList.forEach(data => {
-        if (data.barcode === productVariant.barcode) {
-          isNotTheSame = false;
-        }
-      });
-
-      if (isNotTheSame) {
+      if (existingProductList.length === 0) {
         existingProductList.push({
           id: productVariant.id,
           barcode: productVariant.barcode,
@@ -330,11 +314,36 @@ export default class PrintPriceTag extends List {
           productVariants: product.productVariants,
           productOption: product.productOption
         });
+      } else {
+        let isNotTheSame = true;
+        existingProductList.forEach(data => {
+          if (data.barcode === productVariant.barcode) {
+            isNotTheSame = false;
+          }
+        });
+
+        if (isNotTheSame) {
+          existingProductList.push({
+            id: productVariant.id,
+            barcode: productVariant.barcode,
+            price: productVariant.price,
+            productName,
+            variantName: productVariant.name,
+            qauntityInStore: Util.countProductQTYCurrentLocation(product, this.Util.getLocationId()),
+            quantity,
+            productVariants: product.productVariants,
+            productOption: product.productOption
+          });
+        }
+
       }
+      this.props.form.setFieldsValue({searchProduct: ""});
+      this.setState({productList: existingProductList, isFocusSearchInput: true});
+    }else{
+      this.Message.warning(this.CATranslate("text_check_product_qty_is_null", this.props.locale));
     }
 
-    this.props.form.setFieldsValue({searchProduct: ""});
-    this.setState({productList: existingProductList, isFocusSearchInput: true});
+   
   }
 
   handleRemoveProductList(index) {

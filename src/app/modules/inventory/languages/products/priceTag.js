@@ -99,5 +99,12 @@ export default {
     "Print QR",
     "បោះពុម្ពលេខកូដ QR",
     "Print QR"
+  ],
+
+  "text_check_product_qty_is_null": [
+    "you can not selected or print barcode because your product name don't have quantity in store .",
+    "អ្នកមិនអាចជ្រើសរើសឬបោះពុម្ពកូដផលិតផលទេពីព្រោះឈ្មោះផលិតផលរបស់អ្នកមិនមានបរិមាណនៅក្នុងស្តុក។",
+    "you can not selected or print barcode because your product name don't have quantity in store ."
   ]
+
 };
