@@ -126,7 +126,7 @@ export default class FormItem extends Modal {
         .catch((error) => {
           callback();
         });
-    }.bind(this), 300);
+    }.bind(this), 500);
   }
 
   onChangeAssign(e, index) {

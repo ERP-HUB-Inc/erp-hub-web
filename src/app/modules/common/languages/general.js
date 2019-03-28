@@ -362,7 +362,7 @@ export default {
   
   "text_received": [
     "Received",
-    "ទទួលបាន",
+    "បានទទួល",
     "Received"
   ],
   

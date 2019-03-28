@@ -422,7 +422,7 @@ export default class List extends Component {
       title: <this.Translate id="text_date" />,
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 180,
+      width: this.Util.getCurrentLanguageCode() === "km" ? 220 : 180,
       render: value => this.formatDate(value),
       sorter: true
     };

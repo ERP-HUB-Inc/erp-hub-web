@@ -112,7 +112,7 @@ export default class FormEntry extends Modal {
         }
       },
       {
-        title: "Action",
+        title: <this.Translate id="text_action" />,
         key: "action",
         width: 150,
         align: "right",

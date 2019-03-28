@@ -79,7 +79,7 @@ export default {
 
   "error_warning_edit_adjustment" : [
     "Sorry, we not allow edit when stock adjustment already complete",
-    "សូមទោសយើងមិនអនុញ្ញាតឱ្យកែតម្រូវនៅពេលការកែសម្រួលភាគហ៊ុនបានបញ្ចប់",
+    "សូមទោសយើងមិនអនុញ្ញាតឱ្យកែតម្រូវនៅពេលការកែសម្រួលបានបញ្ចប់ឡើយ",
     "Sorry, we not allow edit when stock adjustment already complete"
   ]
 

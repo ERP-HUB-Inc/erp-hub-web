@@ -19,25 +19,25 @@ export default {
 
   "text_from_location": [
     "From Location",
-    "ពីទីតាំង",
+    "ផ្ទេរពីទីតាំង",
     "From Location",
   ],
 
   "text_to_location": [
     "To Location",
-    "ទៅទីតាំង",
+    "ផ្ទេរទៅទីតាំង",
     "To Location",
   ],
 
   "text_transfer_by": [
     "Transfer By",
-    "ផ្ទេរតាម",
+    "អ្នកផ្ទេរ",
     "Transfer By",
   ],
 
   "text_receive_by": [
     "Received By",
-    "បានទទួលដោយ",
+    "អ្នកទទួល",
     "Received By",
   ],
 

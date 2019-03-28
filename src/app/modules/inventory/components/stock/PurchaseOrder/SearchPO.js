@@ -358,9 +358,10 @@ export default class SearchPo extends Modal {
     return(
       <div className="main-dropdown-search">
         <DropDownSearch
-          productSearch={ this.props.dataSource }
+          productSearch={this.props.dataSource}
           handleOnSelectList={this.handleOnSelectList}
           dispatch={this.props.dispatch}
+          filter={JSON.stringify({serialType: [Enum.SERIAL_TYPE.LICENSE, Enum.SERIAL_TYPE.STANDARD, Enum.SERIAL_TYPE.SERIAL]})}
           className="ca-input-v1 purchase-order"
           locale={this.props.locale}
           form={this.props.form}/>  
