@@ -8,7 +8,7 @@
 
 # production
 /dist
-/src/app/modules/common/containers/app
+/src/app/modules/common/containers/App.js
 
 # misc
 .DS_Store
