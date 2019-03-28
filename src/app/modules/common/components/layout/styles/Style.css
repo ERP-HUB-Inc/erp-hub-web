@@ -648,7 +648,7 @@ color: #4D4F5C;
 
 .modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs-content .ant-tabs-tabpane {
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-right: 10px;
     padding-top: 10px;
     height: 100%

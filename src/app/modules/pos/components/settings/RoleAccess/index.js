@@ -133,7 +133,6 @@ class Column extends List {
   constructor(props) {
     super(props);
     return [
-      this.columnNo,
       {
         title: <this.Translate id="text_name" />,
         dataIndex: "name",
