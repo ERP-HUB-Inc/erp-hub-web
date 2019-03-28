@@ -1,7 +1,7 @@
 export default {
   "text_brand": [
     "Brand",
-    "ម៉ាកផលិតផល",
+    "ម៉ាក",
     "အမှတ်တံဆိပ်"
   ],
 

@@ -62,7 +62,7 @@ export default {
 
   "col_stock_reorder_point_brand": [
     "Brand",
-    "ម៉ាកផលិតផល",
+    "ម៉ាក",
     "Brand",
   ],
 
