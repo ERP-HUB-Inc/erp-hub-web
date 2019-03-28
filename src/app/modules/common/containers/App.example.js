@@ -7,13 +7,12 @@ import {
   Router,
   Switch
 } from "react-router-dom";
-// import km_KM from "antd/lib/locale-provider/km_KM";
-// import en_US from "antd/lib/locale-provider/en_US";
+import km_KM from "antd/lib/locale-provider/km_KM";
+import en_US from "antd/lib/locale-provider/en_US";
 import history from "../router/history";
 import StartUp from "../components/StartUp";
 import ErrorBoundary from "../components/ErrorHandle";
-// import { Util } from "../../common/util";
-
+import { Util } from "../../common/util";
 
 export default class App extends React.Component {
 
@@ -26,19 +25,19 @@ export default class App extends React.Component {
   }
 
   getCurrentLocaleContext() {
-  //   const currentSetting = (new Util()).getSetting();
-  //   let languageCode = "en";
-  //   if (currentSetting) {
-  //     languageCode = currentSetting.defaultLanguageCode;
-  //   }
+    const currentSetting = (new Util()).getSetting();
+    let languageCode = "en";
+    if (currentSetting) {
+      languageCode = currentSetting.defaultLanguageCode;
+    }
     
-  //   if (languageCode === "en") {
-  //     return en_US;
-  //   } else if (languageCode === "km") {
-  //     return km_KM;
-  //   } else {
-  //     return en_US;
-  //   }
+    if (languageCode === "en") {
+      return en_US;
+    } else if (languageCode === "km") {
+      return km_KM;
+    } else {
+      return en_US;
+    }
   }
 
   render() {
