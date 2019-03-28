@@ -174,9 +174,9 @@ export default {
   ],
 
   "purchase_order_po_number_already_exist": [
-    "PO number is already exist",
+    "Order number is already exist",
     "លេខបញ្ជារទិញមានរួចរាល់ហើយ",
-    "PO number is already exist",
+    "Order number is already exist",
   ],
 
   "purchase_order_confirm_push_to_supplier": [

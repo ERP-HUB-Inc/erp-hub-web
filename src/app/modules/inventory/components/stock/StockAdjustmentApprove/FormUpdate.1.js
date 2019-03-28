@@ -26,15 +26,16 @@ export default class Form extends Modal {
         <this.Button className="danger" onClick={() => this.handleCancel()}>
           <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel" />
         </this.Button>  
-        <this.Button htmlType="submit" className="info">
+        <this.Button htmlType="submit" loading={this.submitLoading} className="info">
           <span className="icon-save icon-padding-right"></span><this.Translate id="stock_adjustment_approve" />
         </this.Button>
       </div>
     );
   }
 
-  handleSubmitConfirmAction(){
-    this.props.form.validateFieldsAndScroll((err, values) => {  
+  handleSubmit (e) {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
       values["id"] = this.props.stockAdjustmentApproveDetail.data.id;
       const stockAdjustmentEntries = [];
       if("stockApproveId" in values){
@@ -73,43 +74,9 @@ export default class Form extends Modal {
       this.dispatch(StockAdjustmentAction.update(values));
     }); 
   }
-
-  handleSubmit (e) {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      this.setState({modalVisible: true});
-      this.renderModalConfirmAction();
-    }); 
-  }
-
-  renderModalConfirmAction() {
-    return (
-      <this.Modal
-        visible={this.state.modalVisible}
-        wrapClassName="confirm-delete"  
-        footer={null}>
-        <div>
-          <span className="icon-help icon-padding-right"></span>
-          <span className="title text-uppercase">{this.confirmTitle}</span><br/>
-          <span>
-            <this.Translate id="stock_adjustment_approve_when_click_yes"/>
-          </span>
-        </div>
-        <div className="ant-modal-footer">
-          <this.Button className="danger text-uppercase" onClick={() => this.handleCancelConfirmAction()}>
-            <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_no" />
-          </this.Button>
-          <this.Button onClick={() => this.handleSubmitConfirmAction()} loading={this.submitLoading} className="info text-uppercase">
-            <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes" />
-          </this.Button>
-        </div>
-      </this.Modal>
-    );
-  }
   
   handleCancel() {
     this.dispatch(StockAdjustmentAction.reset(Constant.RESET_STOCK_ADJUSTMENT_APPROVE));
-
   }
 
   render() {
@@ -124,16 +91,13 @@ export default class Form extends Modal {
 
     if (stockAdjustmentApproveDetail.showForm) {
       this.content = (
-        <div>
-          <FormItem 
-            form={form} 
-            formData={stockAdjustmentApproveDetail.data} 
-            accessLocation={this.props.accessLocation} 
-            dispatch={dispatch} 
-            locale={locale}
-          />
-          {this.renderModalConfirmAction()}
-        </div>
+        <FormItem 
+          form={form} 
+          formData={stockAdjustmentApproveDetail.data} 
+          accessLocation={this.props.accessLocation} 
+          dispatch={dispatch} 
+          locale={locale}
+        />
       );
       return super.render();
     } else {
