@@ -79,10 +79,7 @@ class Util {
       product.productVariants.forEach(productVariant => {
         if (productVariant && Array.isArray(productVariant.productLocations)) {
           productVariant.productLocations.forEach(productLocation => {
-            // if (productLocation.locationId === currentLocationId) {
-            //   quantity += productLocation.quantity;
-            // }
-            if (productLocation.locationId === 12) {
+            if (productLocation.locationId === currentLocationId) {
               quantity += productLocation.quantity;
             }
           });

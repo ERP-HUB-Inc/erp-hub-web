@@ -79,7 +79,8 @@
 }
 
 #sum-menu ul li a {
-    color: #9A9A9A
+    color: #9A9A9A;
+    display: block
 }
 
 #sum-menu div.title,
@@ -90,6 +91,14 @@
 #sum-menu ul li {
     font-size: 10pt;
     padding: 7px 10px
+}
+
+#sum-menu ul li:hover {
+    background-color: #093163;
+}
+
+#sum-menu ul li:hover a {
+    color: white
 }
 
 #sum-menu ul li a [class^="icon-"] {

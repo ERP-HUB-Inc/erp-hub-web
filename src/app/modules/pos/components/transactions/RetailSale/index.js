@@ -630,16 +630,14 @@ export default class Retail extends Component {
   handleSetFullScreen() {
     const element = document.getElementById("center-container");
 
-    // const body = document.getElementsByTagName("BODY")[0];
-    if(isMobile || isAndroid || isIOS){
-      if (element.classList.contains("full-screen")) {
-        this.setState({
-          iconFullScreen: "icon-full-screen",
-          textFullScreen: <this.Translate id="text_full_screen" />
-        });
-        element.classList.remove("full-screen");
-      }
-    } else {
+    if (element.classList.contains("full-screen")) {
+      this.setState({
+        iconFullScreen: "icon-full-screen",
+        textFullScreen: <this.Translate id="text_full_screen" />
+      });
+      element.classList.remove("full-screen");
+    }
+    else {
       const rootElement = document.getElementById("root");
       if (rootElement) {
         if (rootElement.classList.contains("mini-sidebar")) {
@@ -653,7 +651,6 @@ export default class Retail extends Component {
       });
       element.classList.add("full-screen");
     }
-    // this.Util.toggleFullScreen(body);
   }
 
   handleLinkSaleHistory() {
