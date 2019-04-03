@@ -480,7 +480,7 @@ class Column extends List {
         title: <this.Translate id="text_brand" />,
         dataIndex: "brandId",
         key: "brand",
-        width: 100,
+        width: 140,
         render: (text, record) => {
           return Util.getProductBrand(record, this.emptyCell);
         },

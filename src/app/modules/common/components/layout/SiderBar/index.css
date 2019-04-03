@@ -80,7 +80,8 @@
 
 #sum-menu ul li a {
     color: #9A9A9A;
-    display: block
+    display: block;
+    padding: 7px 10px
 }
 
 #sum-menu div.title,
@@ -89,8 +90,7 @@
 }
 
 #sum-menu ul li {
-    font-size: 10pt;
-    padding: 7px 10px
+    font-size: 10pt
 }
 
 #sum-menu ul li:hover {
@@ -110,13 +110,15 @@
 }
 
 #sum-menu ul li a .icon {
-    width: 30px
+    width: 30px;
+    top: 2px;
+    position: relative
 }
 
 #sum-menu ul li a .item-text {
     position: relative;
     left: 5px;
-    top: -4px;
+    top: -2px;
 }
 
 #sum-menu div.title {

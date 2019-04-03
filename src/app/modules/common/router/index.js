@@ -1,9 +1,10 @@
 import React from "react";
-// import {Offline} from "react-detect-offline";
+import {Offline} from "react-detect-offline";
 import {Layout} from "antd";
 import {Route, Switch} from "react-router-dom";
 import {connect} from "react-redux";
 import history from "./history";
+import Profile from "../containers/user/Profile";
 import Home from "../containers/home";
 import SideBar from "../components/layout/SiderBar";
 import Headers from "../containers/layout/Header";
@@ -30,7 +31,7 @@ class Router extends Component {
 
     return (
       <Layout>
-        {/* <Offline>
+        <Offline>
           <div id="offline">
             <this.Alert
               message="No internet connection"
@@ -38,7 +39,7 @@ class Router extends Component {
               type="warning"
               showIcon/>
           </div>
-        </Offline> */}
+        </Offline>
         <Headers />
         <SideBar />
         <Content className="layoutContent" id="center-container">
@@ -54,6 +55,7 @@ class Router extends Component {
               )
             }
             <Route path="/" component={Home}></Route>
+            <Route path="/profile" component={Profile}></Route>
           </Switch>
         </Content>
       </Layout>

@@ -451,7 +451,7 @@ const dataSource = {
       {
         route: "/profile",
         component: Profile
-      }
+      },
       // {
       //   title: "Timesheets",
       //   icon: "icon-timesheet",

@@ -11,7 +11,7 @@ export default class ComponentToPrint extends List {
   
   componentDidUpdate() {
     if (this.props.dataSource.length > 0) {
-      this.props.dataSource.forEach(value => {
+      this.props.dataSource.forEach((value, dataIndex) => {
         const numberOfLabel = Array.from(Array(value["numberOfPrint"]).keys());
         const numberOfRows = this.Util.chuckCollection(numberOfLabel, this.props.numberOfColumn);
         numberOfRows.forEach((row, rowIndex) => {
@@ -29,7 +29,7 @@ export default class ComponentToPrint extends List {
                     console.error(err);
                   });
               } else {
-                JsBarcode(`#printbarcode${index}${rowIndex}`, value["barcode"], {
+                JsBarcode(`#printbarcode${index}${rowIndex}${dataIndex}`, value["barcode"], {
                   font: "monospace",
                   width: this.props.widthOfLabel,
                   height: this.props.heightOfLabel,
@@ -43,7 +43,7 @@ export default class ComponentToPrint extends List {
     }
   }
 
-  renderRow(rowValue) {
+  renderRow(rowValue, dataIndex) {
     const numberOfLabel = Array.from(Array(rowValue["numberOfPrint"]).keys());
     const numberOfRows = this.Util.chuckCollection(numberOfLabel, this.props.numberOfColumn);
     return (
@@ -68,7 +68,7 @@ export default class ComponentToPrint extends List {
                               this.props.isGenerateQR === Enum.TYPE_OF_PRINT.QR ?
                                 <img style={{width: this.props.widthOfLabel * 10, height: this.props.heightOfLabel * 10}} id={`printbarcode${index}${rowIndex}`} alt={`barcode${index}${rowIndex}`}/>
                                 :
-                                <img id={`printbarcode${index}${rowIndex}`} alt={`barcode${index}${rowIndex}`}/>
+                                <img id={`printbarcode${index}${rowIndex}${dataIndex}`} alt={`barcode${index}${rowIndex}${dataIndex}`}/>
                             }
                           </td>
                         </tr>
@@ -100,7 +100,7 @@ export default class ComponentToPrint extends List {
         <tr>
           <td style={{background: "white", margin: "0 auto"}}>
             {
-              this.props.dataSource.map(value => this.renderRow(value))
+              this.props.dataSource.map((value, dataIndex) => this.renderRow(value, dataIndex))
             }
           </td>
         </tr>

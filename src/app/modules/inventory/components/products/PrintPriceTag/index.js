@@ -753,7 +753,7 @@ export default class PrintPriceTag extends List {
                         }
                       </div>
                     </this.Col>
-                    <this.Col md="6" style={{borderLeft: "1px solid #f7f7f7", overflow: "auto"}}>
+                    <this.Col md="6" style={{borderLeft: "1px solid #f7f7f7", overflow: "auto", height: "100%"}}>
                       <PriceTagList
                         dataSource={this.state.dataSourceToPrint}
                         widthOfLabel={this.state.widthOfLabel}
