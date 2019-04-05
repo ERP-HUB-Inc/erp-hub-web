@@ -87,13 +87,13 @@ export default {
 
   "input_product_enter_custom_code": [
     "Enter custom product SKU",
-    "បញ្ចូល SKU​ របស់ផលិតផល",
+    "បញ្ចូល លេខកូដ របស់ផលិតផល",
     "Enter custom product SKU"
   ],
 
   "input_product_auto_generate_code": [
     "Automatiacally generate SKU",
-    "បង្កើត SKU​ ដោយស្វយ័ប្រវត្តិ",
+    "បង្កើត លេខកូដ​ ដោយស្វយ័ប្រវត្តិ",
     "Automatiacally generate SKU"
   ],
 
@@ -105,7 +105,7 @@ export default {
 
   "input_product_is_publish": [
     "Sell on e-Commerce",
-    "លក់តាម e-Commerce",
+    "លក់តាម ពា.កម្មអេឡិចត្រូនិច",
     "Sell on e-Commerce"
   ],
 

@@ -122,7 +122,7 @@ class ProductService extends BaseService {
   ){
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/detail/${id}?productOption=${productOption}`,
+      url: `${this.baseUrl}/detail/${id}?productOption=${productOption}&languageId=${this.getLanguageId()}`,
       data: this.data,
       headers: this.header
     });

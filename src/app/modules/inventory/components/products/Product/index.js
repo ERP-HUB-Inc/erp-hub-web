@@ -36,7 +36,7 @@ export default class ProductList extends List {
     this.fetchingProp = "products";
     this.placeHolderForGeneralSearch = "text_general_seach_product";
     this.isShowExpandable = true;
-    this.rowClassName = record => record.productOption === Enum.PRODUCT_STANDARD ? "standard-product-row" : "";
+    this.rowClassName = record => record.productOption !== Enum.PRODUCT_VARIANT ? "standard-product-row" : "";
     this.componentHasUpdated = false;
     this.service = ProductService;
     this.columnFilterWithKey = ["name", "barcode"];
@@ -169,15 +169,15 @@ export default class ProductList extends List {
   buttonActionCollection() {
     return [
       this.renderButtonAddNew(),
-      <this.Button
-        key={2}
-        disabled={this.state.selectedRowKeys.length <= 0 || this.state.selectedRowKeys.length > 1}
-        htmlType="submit"
-        className="info"
-        loading={this.props.productClone.adding}
-        onClick={() => this.handleClone()}>
-        <span className="icon-add icon-padding-right"></span><this.Translate id="btn_product_clone" />
-      </this.Button>,
+      // <this.Button
+      //   key={2}
+      //   disabled={this.state.selectedRowKeys.length <= 0 || this.state.selectedRowKeys.length > 1}
+      //   htmlType="submit"
+      //   className="info"
+      //   loading={this.props.productClone.adding}
+      //   onClick={() => this.handleClone()}>
+      //   <span className="icon-add icon-padding-right"></span><this.Translate id="btn_product_clone" />
+      // </this.Button>,
       // <this.Button
       //   propKey="btn_product_print_label"
       //   disabled={this.state.selectedRowKeys.length <= 0}

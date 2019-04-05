@@ -63,18 +63,18 @@ export default class FormComposite extends Modal {
 
   componentDidUpdate() {
     const {productPackageToProduct} = this.props;
-    if (productPackageToProduct.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
+    if (productPackageToProduct && productPackageToProduct.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
       const existingCompositeList = this.state.compositeList;
 
       productPackageToProduct.forEach(productPackage => {
         if (productPackage.status === this.Enum.ACTIVE) {
           existingCompositeList.push({
             id: productPackage.id,
-            productName: productPackage.rawProductToProductPackage.productDescriptions.length > 0 ? productPackage.rawProductToProductPackage.productDescriptions[0].name : "",
-            productCode: productPackage.rawProductToProductPackage.barcode,
+            productName: Util.getProductName(productPackage.product),
+            productCode: Util.getProductBarcode(productPackage.product),
             productCompositeProductId: productPackage.rawProductId,
             markup: productPackage.quantity,
-            cost: productPackage.rawProductToProductPackage.cost,
+            cost: Util.getProductCost(productPackage.product),
             status: productPackage.status
           });
         }

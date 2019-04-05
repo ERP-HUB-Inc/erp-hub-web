@@ -27,7 +27,7 @@ export default class BaseService {
     let languageId = "en";
     const currentSetting = this.Util.getSetting();
     
-    if (currentSetting != null && "defaultLanguageCode" in currentSetting) {
+    if (currentSetting && "defaultLanguageCode" in currentSetting) {
       languageId = currentSetting.defaultLanguageCode;
     }
 

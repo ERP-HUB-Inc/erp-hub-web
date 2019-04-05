@@ -6,7 +6,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PRODUCTS_TYPE,
-        payload: ProductsTypeService.listsLanguage(limit, offset, sortField, sortOrder)
+        payload: ProductsTypeService.lists(limit, offset, sortField, sortOrder)
       });
     };
   },

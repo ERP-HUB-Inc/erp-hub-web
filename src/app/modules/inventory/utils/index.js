@@ -32,6 +32,10 @@ class Util {
     return this.isValidProductVariant(product) ? product.productVariants[0].price : 0;
   }
 
+  getProductCost(product) {
+    return this.isValidProductVariant(product) ? product.productVariants[0].cost : 0;
+  }
+
   getProductBrand(product, emptyVaue = "") {
     if (!product) return emptyVaue;
     
