@@ -3,6 +3,7 @@ import List from "../List";
 import Receipt from "../RetailSale/Receipt";
 import Enum from "../../../enums";
 import POSUtil from "../../../utils";
+import Detail from "../../../containers/transactions/SaleHistory/Detail";
 import Constant from "../../../constants/transactions/transaction";
 import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
@@ -18,7 +19,9 @@ export default class SaleHistoryList extends List {
     this.state = {
       ...this.state,
       setDefaultDate: [],
-      reprintReceiptContent: null
+      reprintReceiptContent: null,
+      isRequestReprint: false,
+      isRequestShowDetail: false
     };
     this.columns = new Column();
     this.title = <this.Translate id="text_sale_history"/>;
@@ -59,34 +62,50 @@ export default class SaleHistoryList extends List {
 
   componentDidUpdate() {
     const element = document.getElementById("pos-receipt-preview");
-    if (this.props.detail.fetched && this.props.receiptTemplate.fetched && this.props.detail.data) {
+    if (
+      this.props.detail.fetched &&
+      this.props.detail.data &&
+      this.props.receiptTemplate.fetched) {
       const customerPayment = this.getCustomerPaymentList(this.props.detail.data);
       const productOrderList = this.getProductOrderList(this.props.detail.data);
       const productTaxList = this.getProductTaxList(productOrderList);
-      this.setState({
-        reprintReceiptContent: <div style={{display: "none"}} id="reprint-receipt"><Receipt
-          data={this.props.detail.data}
-          receiptTemplate={this.props.receiptTemplate.data}
-          currentUser={this.getCurrentUserForRePrintReceipt(this.props.detail.data)}
-          customerPaymentList={customerPayment.customerPaymentList}
-          productList={productOrderList}
-          productTaxList={productTaxList}
-          summaryTotal={this.getSummaryTotal(this.props.detail.data)}
-          summaryTax={POSUtil.getSummaryTax(productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale))}
-          changeAmount={customerPayment.changeAmount}
-          taxAmount={this.getTaxAmount(this.props.detail.data)}
-          discountAmount={this.props.detail.data.discount} />
-        </div>
-      });
-      this.props.dispatch(TransactionAction.reset(Constant.RESET_DETAIL_TRANSACTION));
+      const receiptContent = <Receipt
+        data={this.props.detail.data}
+        isRequestShowDetail={this.state.isRequestShowDetail}
+        receiptTemplate={this.props.receiptTemplate.data}
+        currentUser={this.getCurrentUserForRePrintReceipt(this.props.detail.data)}
+        customerPaymentList={customerPayment.customerPaymentList}
+        productList={productOrderList}
+        productTaxList={productTaxList}
+        summaryTotal={this.getSummaryTotal(this.props.detail.data)}
+        summaryTax={POSUtil.getSummaryTax(productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale))}
+        changeAmount={customerPayment.changeAmount}
+        taxAmount={this.getTaxAmount(this.props.detail.data)}
+        discountAmount={this.props.detail.data.discount} />;
+
+      if (this.state.isRequestReprint) {
+        this.setState({
+          reprintReceiptContent: <div style={{display: "none"}} id="reprint-receipt">{receiptContent}</div>
+        });
+        this.props.dispatch(TransactionAction.reset(Constant.RESET_DETAIL_TRANSACTION));
+      } else if (this.state.isRequestShowDetail) {
+        this.setState({
+          loadingPopup: false,
+          isRequestShowDetail: false,
+          modalConten: <Detail
+            receiptContent={receiptContent}
+            dispatch={this.props.dispatch} />
+        });
+      }
     }
 
-    if (element) {
+    if (element && this.state.isRequestReprint) {
       this.Util.printElem(element.innerHTML);
 
       this.setState({
         selectedRowKeys: [],
-        reprintReceiptContent: null
+        reprintReceiptContent: null,
+        isRequestReprint: false
       });
     }
 
@@ -174,8 +193,10 @@ export default class SaleHistoryList extends List {
   getTaxAmount(data) {
     return data.total - data.totalExcludeTax;
   }
+
   handleRePrint = async () => {
     const selectLength = this.state.selectedListIds.length;
+    this.setState({isRequestReprint: true});
 
     if (selectLength === 0 && this.state.selectedListIds) {
       this.Message.error(this.CATranslate("text_reprint_warning_1", this.props.locale));
@@ -186,15 +207,26 @@ export default class SaleHistoryList extends List {
     }
   }
 
+  handleShowFormEdit(rowData) {
+    this.props.dispatch(TransactionAction.detail({id: rowData.id}));
+    this.setState({
+      loadingPopup: true,
+      isRequestShowDetail: true
+    });
+  }
+
   renderActionButton(){
     return(
-      <this.Button type="info" loading={this.props.detail.fetching} onClick={this.handleRePrint}>
+      <this.Button type="info" loading={this.props.detail.fetching && this.state.isRequestReprint} onClick={this.handleRePrint}>
         <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print"/>
+        <div id="receiptLogoPreLoading" style={{display: "none"}}>
+          {<img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate && this.props.receiptTemplate.data ? this.props.receiptTemplate.data.logo : "", "general").url} />}
+        </div>
       </this.Button>
     );
   }
-
   
+
   renderFilterRecord() {
     const fetchingProps = this.props[this.fetchingProp];
     return(
@@ -356,6 +388,13 @@ class Column extends List {
         title: <this.Translate id="text_transaction_no" />,
         dataIndex: "number",
         key: "number",
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_reference_no" />,
+        dataIndex: "referenceNo",
+        key: "referenceNo",
+        render: referenceNo =>  referenceNo ? referenceNo : this.emptyCell,
         sorter: true
       },
       {

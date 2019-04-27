@@ -259,20 +259,22 @@ export default class Payment extends Modal {
         <this.Row>
           {
             this.props.transaction.response ?
-              <Receipt
-                data={this.props.transaction.response.data}
-                receiptTemplate={this.props.receiptTemplate.data}
-                currentUser={this.currentUser}
-                customerPaymentList={this.state.customerPaymentList}
-                productList={this.props.productOrderList}
-                productTaxList={this.props.productTaxList}
-                summaryTotal={summaryTotal}
-                summaryTax={this.props.summaryTax}
-                grandTotal={grandTotal}
-                changeAmount={changeAmount}
-                taxRate={taxRate}
-                taxAmount={taxAmount}
-                discountAmount={discountAmount} />
+              <div style={{display: "none"}}>
+                <Receipt
+                  data={this.props.transaction.response.data}
+                  receiptTemplate={this.props.receiptTemplate.data}
+                  currentUser={this.currentUser}
+                  customerPaymentList={this.state.customerPaymentList}
+                  productList={this.props.productOrderList}
+                  productTaxList={this.props.productTaxList}
+                  summaryTotal={summaryTotal}
+                  summaryTax={this.props.summaryTax}
+                  grandTotal={grandTotal}
+                  changeAmount={changeAmount}
+                  taxRate={taxRate}
+                  taxAmount={taxAmount}
+                  discountAmount={discountAmount} />
+              </div>
               :
               ""
           }

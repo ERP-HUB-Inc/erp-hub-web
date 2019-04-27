@@ -18,6 +18,12 @@ export default {
     "No"
   ],
 
+  "text_reference_no": [
+    "Reference No",
+    "លេខយោង",
+    "Reference No"
+  ],
+
   "place-holder-sale-history-date": [
     "Range Dates",
     "ចន្លោះកាលបរិច្ឆេត",

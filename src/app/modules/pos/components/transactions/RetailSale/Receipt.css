@@ -3,4 +3,10 @@
          display: inline;
          visibility: visible;
     }
+
+    @page 
+    {
+        size: auto;
+        margin: 0mm;
+    }
 }

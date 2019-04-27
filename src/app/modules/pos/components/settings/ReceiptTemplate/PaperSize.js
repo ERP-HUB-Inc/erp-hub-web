@@ -8,7 +8,8 @@ export const PaperSize = [
       dataFontSize: "8pt",
       subDataFontSize: "7pt",
       width: "120mm",
-      color: "rgb(142, 136, 136)"
+      color: "rgb(142, 136, 136)",
+      padding: 0
     }
   },
   {
@@ -16,10 +17,11 @@ export const PaperSize = [
     name: "Thermal",
     setting: {
       storeNameFontSize: "10pt",
-      dataFontSize: "7pt",
+      dataFontSize: "7.5pt",
       subDataFontSize: "6pt",
       width: "100%",
-      color: "black"
+      color: "black",
+      padding: 0
     }
   },
   {
@@ -30,7 +32,8 @@ export const PaperSize = [
       dataFontSize: "6pt",
       subDataFontSize: "5pt",
       width: "80%",
-      color: "black"
+      color: "black",
+      padding: 5
     }
   }
 ];

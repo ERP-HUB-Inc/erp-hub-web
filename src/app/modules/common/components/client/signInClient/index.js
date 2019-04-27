@@ -48,7 +48,8 @@ export default class ClientSignIn extends Component {
       } else {
         history.push("/");
       }
-    } else if (signinUser.error != null) {
+
+    } else if (signinUser.error) {
 
       const {error} = signinUser;
 

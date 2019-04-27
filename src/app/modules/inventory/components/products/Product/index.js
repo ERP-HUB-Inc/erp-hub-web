@@ -16,7 +16,6 @@ import ProductAction from "../../../actions/products/product";
 // import PriceTagAction from "../../../actions/products/priceTag";
 import ProductTagAction from "../../../actions/products/productsTag";
 import ProductService from "../../../services/products/ProductService";
-import PrivilegeAction from "../../../../pos/action/settings/privilege";
 import "./index.css";
 
 export default class ProductList extends List {
@@ -105,17 +104,15 @@ export default class ProductList extends List {
   }
 
   componentDidMount() {
-    this.props.dispatch(PrivilegeAction.reset());
-    this.props.dispatch(PrivilegeAction.checkPermission(this.service.listRoute));
-    this.props.dispatch(ProductTypeAction.fetch(100));
-    this.props.dispatch(BrandAction.fetch(100));
-    this.props.dispatch(LocationAction.fetch(100));
     this.props.dispatch(ProductAction.reset()); // reset state to make 2: check condition again
     super.componentDidMount();
   }
 
   componentDidUpdate() {
     if (!this.componentHasUpdated && this.props.products.fetched) { // 2:
+      this.props.dispatch(ProductTypeAction.fetch(100));
+      this.props.dispatch(BrandAction.fetch(100));
+      this.props.dispatch(LocationAction.fetch(100));
       this.props.dispatch(UnitAction.fetch(100));
       this.props.dispatch(TaxAction.fetch(100));
       this.props.dispatch(LanguageAction.fetch(10));

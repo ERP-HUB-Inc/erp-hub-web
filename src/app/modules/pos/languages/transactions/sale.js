@@ -91,7 +91,7 @@ export default {
 
   "text_qty": [
     "QTY",
-    "ចំនួន",
+    "បរិមាណ",
     "QTY"
   ],
 
@@ -109,13 +109,13 @@ export default {
 
   "text_change": [
     "Change",
-    "អាប់ប្រាក់",
+    "ប្រាក់អាប់",
     "Change"
   ],
 
   "text_thank_you_on_receipt": [
     "THANK YOU FOR CHOOSING US !",
-    "អរគុណសំរាប់ការជ្រើសរើសយើង!",
+    "អរគុណសំរាប់ការជ្រើសរើសយកហាងរបស់យើងខ្ញុំ!",
     "THANK YOU FOR CHOOSING US !"
   ],
 
