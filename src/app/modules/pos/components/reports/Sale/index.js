@@ -11,9 +11,48 @@ export default class SaleList extends List {
     this.state = {
       ...this.state,
       csvData: "",
-      setDefaultDate:  []
+      setDefaultDate:  [],
+      reportType: 0
     };
-    this.columns = new Column();
+    this.columns = [
+      {
+        title: <this.Translate id="text_date" />,
+        dataIndex: "date",
+        key: "date",
+        width: 200,
+        className: "sale-report",
+        align: "center",
+        render: value => this.Util.formatDate(value)
+      },
+      {
+        title: <this.Translate id="text_product" />,
+        dataIndex: "name",
+        key: "name",
+        width: 200,
+        className: "sale-report"
+      },
+      {
+        title: <this.Translate id="text_user" />,
+        dataIndex: "user",
+        key: "user",
+        width: 200,
+        className: "sale-report"
+      },
+      {
+        title: <this.Translate id="text_customer" />,
+        dataIndex: "customer",
+        key: "customer",
+        width: 200,
+        className: "sale-report"
+      },
+      {
+        title: <this.Translate id="text_location" />,
+        dataIndex: "location",
+        key: "location",
+        width: 200,
+        className: "sale-report"
+      }
+    ];
     this.ExportheadersCsv = [
       {label: this.CATranslate("text_date", this.props.locale), key: "date"},
       {label: this.CATranslate("text_revenue", this.props.locale), key: "revenue"},
@@ -21,7 +60,14 @@ export default class SaleList extends List {
       {label: this.CATranslate("text_cost_of_good", this.props.locale), key: "profit"},
       {label: this.CATranslate("text_margin", this.props.locale), key: "margin"}
     ];
-    this.exportCsvFileName = "sale_report.csv"; 
+    this.exportCsvFileName = "sale_report.csv";
+    this.reportTypeList = [
+      {value: 0, name: this.CATranslate("text_sale_summary", this.props.locale)},
+      {value: 1, name: this.CATranslate("text_product", this.props.locale)},
+      {value: 2, name: this.CATranslate("text_user", this.props.locale)},
+      {value: 3, name: this.CATranslate("text_customer", this.props.locale)},
+      {value: 4, name: this.CATranslate("text_location", this.props.locale)}
+    ];
 
     this.fetchingProp = "saleReport";
     this.service = SaleReportService;
@@ -67,13 +113,52 @@ export default class SaleList extends List {
   }
 
   renderTable(){
-    const { saleReport } = this.props;
     return (  
       <div className="main-table-sale-report">
         <this.Table 
-          dataSource={saleReport.list}
-          rowKey="date"
-          columns={this.columns}
+          dataSource={this.props.saleReport.list}
+          rowKey="id"
+          columns={
+            [
+              this.columns[this.state.reportType],
+              {
+                title: <this.Translate id="text_revenue" />,
+                dataIndex: "revenue",
+                align: "center",
+                key: "revenue",
+                render: value => this.formatCurrency(value)
+              },
+              {
+                title: <this.Translate id="text_cost_of_good" />,
+                dataIndex: "cost",
+                align: "center",
+                key: "cost",
+                render: value => this.formatCurrency(value)
+              },
+              {
+                title: <this.Translate id="text_gross_profit" />,
+                dataIndex: "profit",
+                align: "center",
+                key: "profit",
+                render: (text, record) => {
+                  let profit = 0;
+                  profit = "profit" in record ? record.profit : record.revenue - record.cost;
+                  return this.formatCurrency(profit);
+                }
+              },
+              {
+                title: <this.Translate id="text_margin" />,
+                dataIndex: "margin",
+                align: "center",
+                key: "margin",
+                render: (text, record) => {
+                  let margin = 0;
+                  margin = "margin" in record ? record.margin : ((record.revenue - record.cost)/record.revenue) * 100;
+                  return this.Util.formatPercentage(margin);
+                }
+              }
+            ]
+          }
           onChange={this.onChange}
           locale={{emptyText: <this.Translate id="table_empty_data"/>}}
           loading={this.props.saleReport.fetching} />
@@ -85,15 +170,12 @@ export default class SaleList extends List {
   handleSubmitFilter(e){
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
-      if (this.action != null) {
+      if (this.action) {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
           if (!err) {
-            const {dispatch} = this.props;
 
             let filter = {};
-
-            filter["type"] = [values.reportType];
         
             let rangFilter = "";
             if (values.createdAt) {
@@ -108,9 +190,11 @@ export default class SaleList extends List {
 
             filter = JSON.stringify(filter);
           
-            dispatch(this.action.fetch(filter,rangFilter));
-
-            this.setState({isClickFilter: true});
+            this.props.dispatch(this.action.fetch(filter, rangFilter, values.reportType));
+            this.setState({
+              isClickFilter: true,
+              reportType: values.reportType ? values.reportType : this.state.reportType
+            });
             
           }
         
@@ -145,7 +229,6 @@ export default class SaleList extends List {
 
   }
 
-
   renderActionButton(){
     return(
       <this.CSVLink
@@ -169,7 +252,16 @@ export default class SaleList extends List {
         :
         <div>
           <this.Form onSubmit={this.handleSubmitFilter}>
-            <this.Row className="main-search-layout"> 
+            <this.Row className="main-search-layout">
+              <this.Col md="2">
+                <this.Select
+                  name="reportType"
+                  placeholder={this.CATranslate("text_sale_summary", this.props.locale)}
+                  dataSource={this.reportTypeList}
+                  label={<this.Translate id="text_report_type" />}
+                  defaultValue={this.reportTypeList[0].value}
+                  form={this.props.form}/>
+              </this.Col>
               <this.Col md="3">
                 <this.DateRangePicker
                   name="createdAt"
@@ -191,49 +283,4 @@ export default class SaleList extends List {
 
   }
 
-}
-
-class Column extends List {
-  constructor(props) {
-    super(props);
-    return [
-      {
-        title: <this.Translate id="text_date" />,
-        dataIndex: "date",
-        key: "date",
-        width: 200,
-        className: "sale-report",
-        align: "center",
-        render: value => this.Util.formatDate(value)
-      },
-      {
-        title: <this.Translate id="text_revenue" />,
-        dataIndex: "revenue",
-        align: "center",
-        key: "revenue",
-        render: value => this.formatCurrency(value)
-      },
-      {
-        title: <this.Translate id="text_cost_of_good" />,
-        dataIndex: "cost",
-        align: "center",
-        key: "cost",
-        render: value => this.formatCurrency(value)
-      },
-      {
-        title: <this.Translate id="text_gross_profit" />,
-        dataIndex: "profit",
-        align: "center",
-        key: "profit",
-        render: value => this.formatCurrency(value)
-      },
-      {
-        title: <this.Translate id="text_margin" />,
-        dataIndex: "margin",
-        align: "center",
-        key: "margin",
-        render: value => this.Util.formatPercentage(value)
-      }
-    ];
-  }
 }

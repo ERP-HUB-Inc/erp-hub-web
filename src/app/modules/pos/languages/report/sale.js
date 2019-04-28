@@ -4,6 +4,11 @@ export default {
     "ប្រាក់ចំណូល",
     "Revenue"
   ],
+  "text_sale_summary": [
+    "Sale Summary",
+    "របាយការណ៍លក់",
+    "Sale Summary"
+  ],
   "text_cost_of_good": [
     "Cost of Goods",
     "តម្លៃទំនិញ",

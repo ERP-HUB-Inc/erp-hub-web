@@ -346,7 +346,7 @@ export default class ProfitAndLostList extends List {
                   name="reportType"
                   placeholder={this.CATranslate("sale_report_type", this.props.locale)}
                   dataSource={this.reportTypeList}
-                  label={<this.Translate id="input_inventory_report_type" />}
+                  label={<this.Translate id="text_report_type" />}
                   defaultValue={this.reportType.OPERATION_PROFIT}
                   form={this.props.form}/>
               </this.Col>

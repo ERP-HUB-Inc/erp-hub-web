@@ -35,7 +35,7 @@ export default {
     "Date Range is required"
   ],
 
-  "input_inventory_report_type": [
+  "text_report_type": [
     "Report Type",
     "ប្រភេទ​នៃ​របាយការណ៍",
     "Report Type"

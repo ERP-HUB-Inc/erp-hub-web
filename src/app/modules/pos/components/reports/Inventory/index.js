@@ -212,7 +212,7 @@ export default class InventoryList extends List {
                   name="status"
                   placeholder={this.CATranslate("text_status", this.props.locale)}
                   dataSource={this.statusList}
-                  label={<this.Translate id="input_inventory_report_type" />}
+                  label={<this.Translate id="text_report_type" />}
                   defaultValue={this.Enum.ALL_STATE}
                   form={this.props.form}/>
               </this.Col>
