@@ -3,6 +3,7 @@ import List from "../List";
 import Constant from "../../../constants/report/sale";
 import SaleReportAction from "../../../action/report/sale";
 import SaleReportService from "../../../services/report/SaleService";
+import Enum from "../../../../inventory/enums";
 import "./index.css";
 
 export default class SaleList extends List {
@@ -29,7 +30,14 @@ export default class SaleList extends List {
         dataIndex: "name",
         key: "name",
         width: 200,
-        className: "sale-report"
+        className: "sale-report",
+        render: (text, record) => {
+          let variantName = "";
+          if (record.productOption === Enum.PRODUCT_VARIANT) {
+            variantName = ` / ${record.variant}`;
+          }
+          return record.name + variantName;
+        }
       },
       {
         title: <this.Translate id="text_user" />,

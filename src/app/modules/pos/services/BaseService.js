@@ -42,7 +42,7 @@ export default class BaseService extends Service {
   ) {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/lists?filter=${filter}&rangFilter=${rangFilter}&type=${type}`,  
+      url: `${this.baseUrl}/lists?filter=${filter}&rangFilter=${rangFilter}&type=${type}&languageId=${this.getLanguageId()}`,  
       data: this.data,
       headers: this.header
     });
