@@ -93,8 +93,8 @@ export default class Receipt extends Component {
                       <table style={{color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white"}}>
                         <tbody>
                           <tr>
-                            <td style={{backgroundColor: "white", textAlign: "left", paddingTop: 30, paddingRight: 0}}><this.Translate id="register_no"/>. {this.Util.getDeviceNumber()}</td>
-                            <td style={{backgroundColor: "white", textAlign: "right", paddingTop: 30}}><this.Translate id="text_date"/>: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
+                            <td style={{backgroundColor: "white", textAlign: "left", paddingTop: 20, paddingRight: 0}}><this.Translate id="register_no"/>. {this.Util.getDeviceNumber()}</td>
+                            <td style={{backgroundColor: "white", textAlign: "right", paddingTop: 20}}><this.Translate id="text_date"/>: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
                           </tr>
                           <tr>
                             <td style={{backgroundColor: "white", textAlign: "left"}}><this.Translate id="receipt_no"/>. {this.props.data.receiptNumber}</td>
@@ -106,7 +106,7 @@ export default class Receipt extends Component {
                       <table style={{color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white"}}>
                         <tbody>
                           <tr>
-                            <td colSpan="2" style={{backgroundColor: "white", textAlign: "left", paddingTop: 30}}><this.Translate id="register_no"/>: {this.Util.getDeviceNumber()}</td>
+                            <td colSpan="2" style={{backgroundColor: "white", textAlign: "left", paddingTop: 20}}><this.Translate id="register_no"/>: {this.Util.getDeviceNumber()}</td>
                           </tr>
                           <tr>
                             <td colSpan="2" style={{backgroundColor: "white", textAlign: "left"}}><this.Translate id="text_date"/>: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
@@ -225,7 +225,7 @@ export default class Receipt extends Component {
                 </td>
               </tr>
               <tr>
-                <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", paddingTop: 60, textTransform: "uppercase"}}><this.Translate id="text_thank_you_on_receipt"/></td>
+                <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", paddingTop: 30, textTransform: "uppercase"}}><this.Translate id="text_thank_you_on_receipt"/></td>
               </tr>
               <tr>
                 <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>

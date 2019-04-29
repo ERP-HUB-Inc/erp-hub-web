@@ -124,17 +124,14 @@ export default class Payment extends Modal {
 
   handleOnCompletePayment() {
     if (this.props.transaction.paid && this.state.isNotYetPaid) {
-      const element = document.getElementById("pos-receipt-preview");
-      if (element) {
-        // this.Util.printElemV2(element.innerHTML);
-        this.props.dispatch(TransactionAction.reset());
-        this.setState({
-          isNotYetPaid: false,
-          customerPaymentList: [],
-          amountToPay: 0
-        });
-        this.props.handleOnResetOrder();
-      }
+      this.props.dispatch(TransactionAction.reset());
+      this.setState({
+        isAlreadyAutoPrint: false,
+        isNotYetPaid: true,
+        customerPaymentList: [],
+        amountToPay: 0
+      });
+      this.props.handleOnResetOrder();
     }
   }
 

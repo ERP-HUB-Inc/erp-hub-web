@@ -183,7 +183,7 @@ export default class SideBar extends React.Component {
               ""
           }
         </div>
-        <div id="version">V1.0.0</div>
+        <div id="version">V1.9.0</div>
       </div>
     );
   }

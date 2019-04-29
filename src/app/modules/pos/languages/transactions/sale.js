@@ -97,7 +97,7 @@ export default {
 
   "text_desc": [
     "DESC",
-    "ពិពណ៏នា",
+    "ឈ្មោះមុខទំនិញ",
     "DESC"
   ],
 
