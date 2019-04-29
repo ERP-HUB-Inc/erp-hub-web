@@ -149,6 +149,18 @@ export default {
     "Push"
   ],
 
+  "text_auto_send_receive": [
+    "Receive stock automatically",
+    "ទទួលស្តុកដោយស្វ័យប្រវត្តិ",
+    "Receive automatically"
+  ],
+
+  "text_save_and_auto_send_receive": [
+    "Save and receive stock automatically",
+    "រក្សាទុកហើយទទួលស្តុកដោយស្វ័យប្រវត្តិ",
+    "Send and receive automatically"
+  ],
+
   "create_stock_purchase_order_send_mail_title": [
     "Comfirm purchase order",
     "បញ្ជាក់ការបញ្ជារទិញ",

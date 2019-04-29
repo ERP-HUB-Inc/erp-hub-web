@@ -10,13 +10,21 @@ export default class FormItem extends Modal {
     super(props);
     this.state = {
       locations: [],
-      suppliers: []
+      suppliers: [],
+      isAutoReceive: false
     };
     this.timer = null;
     this.handleCheckPONumber = this.handleCheckPONumber.bind(this);
     this.validateOrderNumber = "";
     this.errorMessageOrderNumber = "";
+    this.handleOnChangeIsAutoReceive = this.handleOnChangeIsAutoReceive.bind(this);
+  }
 
+  componentDidMount(){
+    this.setState({
+      locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION)),
+      suppliers: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.SUPPLIER))
+    });
   }
 
   handleCheckPONumber(event){
@@ -29,11 +37,13 @@ export default class FormItem extends Modal {
     }, 500);
   }
 
-  componentDidMount(){
-    this.setState({
-      locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION)),
-      suppliers: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.SUPPLIER))
-    });
+  handleOnChangeIsAutoReceive(event) {
+    if (event.target.checked) {
+      document.getElementById("btnModalSave").innerHTML = this.CATranslate("text_save_and_auto_send_receive", this.props.locale);
+    } else {
+      document.getElementById("btnModalSave").innerHTML = this.CATranslate("text_save", this.props.locale);
+    }
+
   }
 
   render() {
@@ -102,7 +112,6 @@ export default class FormItem extends Modal {
                   label={<this.Translate id="text_due_date" />}
                   placeholder={this.CATranslate("text_due_date", locale)}
                   errorRequired={<this.Translate id="error_select_due_date" />}
-                  required={true}
                   form={form}/>
                 :
                 <this.DatePickers
@@ -111,7 +120,6 @@ export default class FormItem extends Modal {
                   label={<this.Translate id="text_due_date" />}
                   placeholder={this.CATranslate("text_due_date", locale)}
                   errorRequired={<this.Translate id="error_select_due_date" />}
-                  required={true}
                   form={form}/>
               }
 
@@ -125,7 +133,6 @@ export default class FormItem extends Modal {
                 defaultValue={formData.supplierId}
                 dataSource={this.state.suppliers}
                 valueKey="id"
-                required={true}
                 form={form}/>
             </this.Col>
             <this.Col md="2">
@@ -147,6 +154,13 @@ export default class FormItem extends Modal {
                 dataSource={this.state.locations}
                 valueKey="id"
                 form={form}/>
+            </this.Col>
+            <this.Col md="4" style={{marginTop: 25}}>
+              <this.Checkboxs
+                name="isAutoReceive" 
+                label={<this.Translate id="text_auto_send_receive"/>}
+                onChange={this.handleOnChangeIsAutoReceive}
+                form={this.props.form}/>
             </this.Col>
           </this.Row>
         </this.Col>

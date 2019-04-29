@@ -120,7 +120,7 @@ export default class Modal extends Component {
           <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel" />
         </this.Button>  
         <this.Button htmlType="submit" loading={this.submitLoading} className="info">
-          <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
+          <span className="icon-save icon-padding-right"></span><span id="btnModalSave"><this.Translate id="text_save" /></span>
         </this.Button>
         {this.renderOtherAction()}
       </div>
