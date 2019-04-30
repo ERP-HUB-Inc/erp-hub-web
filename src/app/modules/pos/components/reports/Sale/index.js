@@ -132,21 +132,21 @@ export default class SaleList extends List {
               {
                 title: <this.Translate id="text_revenue" />,
                 dataIndex: "revenue",
-                align: "center",
+                align: "right",
                 key: "revenue",
                 render: value => this.formatCurrency(value)
               },
               {
                 title: <this.Translate id="text_cost_of_good" />,
                 dataIndex: "cost",
-                align: "center",
+                align: "right",
                 key: "cost",
                 render: value => this.formatCurrency(value)
               },
               {
                 title: <this.Translate id="text_gross_profit" />,
                 dataIndex: "profit",
-                align: "center",
+                align: "right",
                 key: "profit",
                 render: (text, record) => {
                   let profit = 0;
@@ -157,7 +157,7 @@ export default class SaleList extends List {
               {
                 title: <this.Translate id="text_margin" />,
                 dataIndex: "margin",
-                align: "center",
+                align: "right",
                 key: "margin",
                 render: (text, record) => {
                   let margin = 0;
@@ -186,6 +186,8 @@ export default class SaleList extends List {
             let filter = {};
         
             let rangFilter = "";
+            filter["type"] = [0, 1];
+
             if (values.createdAt) {
               rangFilter = JSON.stringify({
                 column: "registerDate",

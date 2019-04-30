@@ -200,8 +200,14 @@ export default {
   
   "text_quantity": [
     "Quantity",
-    "ចំនួន",
+    "បរិមាណ",
     "Quantity"
+  ],
+
+  "text_quantity_buy_in": [
+    "Quantity Buy In",
+    "បរិមាណទិញចូល",
+    "Quantity Buy In"
   ],
   
   "text_transfer_quantity": [

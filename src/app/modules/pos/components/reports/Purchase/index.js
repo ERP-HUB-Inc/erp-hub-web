@@ -10,11 +10,120 @@ import "./index.css";
 export default class PurchaseList extends List {
   constructor(props) {
     super(props);
+    this.state = {
+      ...this.state,
+      setDefaultDate: [],
+      reportType: 0,
+      columns: this.columnSummary()
+    };
+
+    this.RESET_CONSTANT = Constant.RESET_PURCHASE_REPORT;
+
     this.fetchingProp = "purchaseReport";
     this.service = PurchaseReportService;
     this.action = PurchaseReportAction;
-    this.RESET_CONSTANT = Constant.RESET_PURCHASE_REPORT;
-    this.columns = this.columns = [
+  
+    this.columnFilterWithKey = [
+      "name",
+      "number",
+      "invoiceNo",
+      "shippingFee",
+      "requestTotal",
+      "returnTotal",
+      "receiveTotal"
+    ];
+    this.supplierList = [{name: <this.Translate id="text_all_supplier"/>, id: 0}];
+    this.PO_STEP_STR = {
+      [Enum.PO_STEP.DRAFT]: {name: this.CATranslate("purchase_order_step_draff", this.props.locale), color: this.Enum.PO_STEP_COLOR.DRAFT},
+      [Enum.PO_STEP.PROCESS]: {name: this.CATranslate("text_process", this.props.locale), color: this.Enum.PO_STEP_COLOR.PROCESS},
+      [Enum.PO_STEP.RECEIVED]: {name: this.CATranslate("text_received", this.props.locale), color: this.Enum.PO_STEP_COLOR.RECEIVE},
+      [Enum.PO_STEP.CANCEL]: {name: this.CATranslate("text_cancel", this.props.locale), color: this.Enum.PO_STEP_COLOR.CANCEL},
+      [Enum.PO_STEP.RETURN]: {name: this.CATranslate("text_return", this.props.locale), color: this.Enum.PO_STEP_COLOR.RETURN},
+      [Enum.PO_STEP.PAID]: {name: this.CATranslate("purchase_order_step_paid", this.props.locale), color: this.Enum.PO_STEP_COLOR.PAID},
+    };
+
+    this.reportTypeList = [
+      {value: 0, name: this.CATranslate("text_purchase_summary", this.props.locale)},
+      {value: 1, name: this.CATranslate("text_product", this.props.locale)},
+      {value: 2, name: this.CATranslate("text_supplier", this.props.locale)}
+    ];
+
+    this.ExportheadersCsv = [
+      {label: this.CATranslate("text_date", this.props.locale), key: "createdAt"},
+      {label: this.CATranslate("text_name", this.props.locale) , key: "name"},
+      {label: this.CATranslate("text_number", this.props.locale), key: "number"},
+      {label: this.CATranslate("text_reference", this.props.locale), key: "number"},
+      {label: this.CATranslate("text_receiver", this.props.locale), key: "receiverId"},
+      {label: this.CATranslate("text_supplier", this.props.locale), key: "supplier"},
+      {label: this.CATranslate("text_location", this.props.locale), key: "location"},
+      {label: this.CATranslate("text_due_date", this.props.locale), key: "deliveryDueDate"},
+      {label: this.CATranslate("text_step", this.props.locale), key: "step"},
+      {label: this.CATranslate("text_shipping_fee", this.props.locale), key: "shippingFee"},
+      {label: this.CATranslate("text_total", this.props.locale), key: "requestTotal"},
+    ];
+    this.exportCsvFileName = "purchase_report.csv"; 
+    
+    this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
+    this.summaryPurchaseReprot = this.summaryPurchaseReprot.bind(this);
+  }
+
+  componentDidMount(){
+    super.componentDidMount();
+    this.props.dispatch(SupplierAction.fetch(100));
+  }
+
+  columnProduct() {
+    return [
+      {
+        title: <this.Translate id="text_product_name" />,
+        dataIndex: "name",
+        key: "name",
+        render: (text, record) => {
+          let variantName = "";
+          if (record.productOption === Enum.PRODUCT_VARIANT) {
+            variantName = ` / ${record.variant}`;
+          }
+          return record.name + variantName;
+        }
+      },
+      {
+        title: <this.Translate id="text_quantity_buy_in" />,
+        dataIndex: "quantity",
+        key: "quantity",
+        width: 250,
+        align: "center"
+      },
+      {
+        title: <this.Translate id="text_amount" />,
+        dataIndex: "amount",
+        key: "amount",
+        width: 250,
+        align: "right",
+        render: amount => this.formatCurrency(amount)
+      }
+    ];
+  }
+
+  columnSupplier() {
+    return [
+      {
+        title: <this.Translate id="text_supplier" />,
+        dataIndex: "supplier",
+        key: "supplier"
+      },
+      {
+        title: <this.Translate id="text_amount" />,
+        dataIndex: "amount",
+        key: "amount",
+        width: 250,
+        align: "right",
+        render: amount => this.formatCurrency(amount)
+      }
+    ];
+  }
+
+  columnSummary() {
+    return [
       this.columnCreatedAt,
       {
         title: <this.Translate id="text_name" />,
@@ -101,40 +210,6 @@ export default class PurchaseList extends List {
         }
       }
     ];
-  
-    this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
-    this.columnFilterWithKey = ["name", "number", "invoiceNo", "shippingFee", "requestTotal", "returnTotal", "receiveTotal"];
-    this.supplierList = [{name: <this.Translate id="text_all_supplier"/>, id: 0}];
-    this.PO_STEP_STR = {
-      [Enum.PO_STEP.DRAFT]: {name: this.CATranslate("purchase_order_step_draff", this.props.locale), color: this.Enum.PO_STEP_COLOR.DRAFT},
-      [Enum.PO_STEP.PROCESS]: {name: this.CATranslate("text_process", this.props.locale), color: this.Enum.PO_STEP_COLOR.PROCESS},
-      [Enum.PO_STEP.RECEIVED]: {name: this.CATranslate("text_received", this.props.locale), color: this.Enum.PO_STEP_COLOR.RECEIVE},
-      [Enum.PO_STEP.CANCEL]: {name: this.CATranslate("text_cancel", this.props.locale), color: this.Enum.PO_STEP_COLOR.CANCEL},
-      [Enum.PO_STEP.RETURN]: {name: this.CATranslate("text_return", this.props.locale), color: this.Enum.PO_STEP_COLOR.RETURN},
-      [Enum.PO_STEP.PAID]: {name: this.CATranslate("purchase_order_step_paid", this.props.locale), color: this.Enum.PO_STEP_COLOR.PAID},
-    };
-
-    this.ExportheadersCsv = [
-      {label: this.CATranslate("text_date", this.props.locale), key: "createdAt"},
-      {label: this.CATranslate("text_name", this.props.locale) , key: "name"},
-      {label: this.CATranslate("text_number", this.props.locale), key: "number"},
-      {label: this.CATranslate("text_reference", this.props.locale), key: "number"},
-      {label: this.CATranslate("text_receiver", this.props.locale), key: "receiverId"},
-      {label: this.CATranslate("text_supplier", this.props.locale), key: "supplier"},
-      {label: this.CATranslate("text_location", this.props.locale), key: "location"},
-      {label: this.CATranslate("text_due_date", this.props.locale), key: "deliveryDueDate"},
-      {label: this.CATranslate("text_step", this.props.locale), key: "step"},
-      {label: this.CATranslate("text_shipping_fee", this.props.locale), key: "shippingFee"},
-      {label: this.CATranslate("text_total", this.props.locale), key: "requestTotal"},
-    ];
-    this.exportCsvFileName = "purchase_report.csv"; 
-    
-    this.summaryPurchaseReprot = this.summaryPurchaseReprot.bind(this);
-  }
-
-  componentDidMount(){
-    super.componentDidMount();
-    this.props.dispatch(SupplierAction.fetch(100));
   }
 
   summaryPurchaseReprot(){
@@ -169,21 +244,31 @@ export default class PurchaseList extends List {
         <this.Col md="12">
           <this.Table 
             dataSource={this.props.purchaseReport.list}
-            columns= {this.columns}
+            columns= {this.state.columns}
             loading={this.props.purchaseReport.fetching}
             locale={{emptyText: <this.Translate id="table_empty_data"/>}}
             footer={() => 
-              <div className="wrap-table-footer" style={{minWidth: 347}} >
-                <div className="text-uppercase pull-left">
-                  <this.Translate id="text_total" />:
+              !this.state.reportType || this.state.reportType === this.reportTypeList[0].value ?
+                <div className="wrap-table-footer" style={{minWidth: 347}} >
+                  <div className="text-uppercase pull-left">
+                    <this.Translate id="text_total" />:
+                  </div>
+                  <div className="item pull-left" style={{minWidth: 160, textAlign: "right", paddingRight: 0 }}>
+                    {this.formatCurrency(this.summaryPurchaseReprot().totalShippingFee)}
+                  </div>
+                  <div className="item pull-left" style={{minWidth: 124, paddingRight: 0}}>
+                    {this.formatCurrency(this.summaryPurchaseReprot().total)}
+                  </div>
                 </div>
-                <div className="item pull-left" style={{minWidth: 157,textAlign: "right" }}>
-                  {this.formatCurrency(this.summaryPurchaseReprot().totalShippingFee)}
+                :
+                <div className="wrap-table-footer" style={{minWidth: 175}} >
+                  <div className="text-uppercase pull-left">
+                    <this.Translate id="text_total" />:
+                  </div>
+                  <div className="item pull-left" style={{minWidth: 124, paddingRight: 0}}>
+                    {this.formatCurrency(this.Util.sumBy(this.props.purchaseReport.list, "amount"))}
+                  </div>
                 </div>
-                <div className="item pull-left" style={{minWidth: 124}}>
-                  {this.formatCurrency(this.summaryPurchaseReprot().total)}
-                </div>
-              </div>
             }
           />
         </this.Col>
@@ -197,7 +282,16 @@ export default class PurchaseList extends List {
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           let filter = {};
-          let rangFilter = {};
+          let rangFilter = "";
+
+          if (values.reportType === this.reportTypeList[1].value) {
+            this.setState({columns: this.columnProduct()});
+          } else if (values.reportType === this.reportTypeList[2].value) {
+            this.setState({columns: this.columnSupplier()});
+          } else {
+            this.setState({columns: this.columnSummary()});
+          }
+
           if (values.step !== -1) {
             filter["step"] = [values.step];
           }
@@ -207,15 +301,23 @@ export default class PurchaseList extends List {
           }
 
           if (values.deliveryDueDate) {
-            values.deliveryDueDate = this.Util.formatDateForMYSQL(values.deliveryDueDate);
-            rangFilter = JSON.stringify({column: "deliveryDueDate", value: [values.deliveryDueDate  + " 00:00:00", values.deliveryDueDate + " 23:59:59"]});
+            rangFilter = JSON.stringify({
+              column: "deliveryDueDate",
+              value: [
+                this.Util.formatDateForMYSQL(values.deliveryDueDate[0]) + " 00:00:00",
+                this.Util.formatDateForMYSQL(values.deliveryDueDate[1]) + " 23:59:59"
+              ]
+            });
           }
     
           filter = JSON.stringify(filter);
 
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
-          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
-          this.setState({isClickFilter: true});
+          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter, values.reportType));
+          this.setState({
+            isClickFilter: true,
+            reportType: values.reportType
+          });
         }
       
       }); 
@@ -267,9 +369,9 @@ export default class PurchaseList extends List {
     return(
       <this.CSVLink
         filename={this.exportCsvFileName}
-        data={this.exportCsv()}
-        headers={this.ExportheadersCsv}
-      >
+        // data={this.exportCsv}
+        data={[]}
+        headers={this.ExportheadersCsv}>
         <this.Button type="info" disabled={ this.props.purchaseReport.list.length > 0 ? false : true }>
           <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
         </this.Button>
@@ -293,7 +395,16 @@ export default class PurchaseList extends List {
         :
         <div>
           <this.Form onSubmit={this.handleSubmitFilter}>
-            <this.Row className="main-search-layout"> 
+            <this.Row className="main-search-layout">
+              <this.Col md="2">
+                <this.Select
+                  name="reportType"
+                  placeholder={this.CATranslate("text_purchase_summary", this.props.locale)}
+                  dataSource={this.reportTypeList}
+                  label={<this.Translate id="text_report_type" />}
+                  defaultValue={this.reportTypeList[0].value}
+                  form={this.props.form}/>
+              </this.Col>
               <this.Col md="2">
                 <this.InputText
                   name="key"
@@ -312,10 +423,12 @@ export default class PurchaseList extends List {
                   form={form}/>
               </this.Col>
               <this.Col md="2">
-                <this.DatePickers
+                <this.DateRangePicker
                   name="deliveryDueDate"
-                  label={<this.Translate id="text_due_date" />}
-                  form={form} />
+                  label={<this.Translate id="text_date_range" />}
+                  form={form}
+                  defaultValue={this.state.setDefaultDate}
+                  ranges={this.dateRangeDataSource()} />
               </this.Col>
               <this.Col md="2">
                 <this.Select

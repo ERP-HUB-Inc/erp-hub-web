@@ -23,7 +23,8 @@ export default class FormItem extends Modal {
   componentDidMount(){
     this.setState({
       locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION)),
-      suppliers: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.SUPPLIER))
+      suppliers: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.SUPPLIER)),
+      isAutoReceive: parseInt(localStorage.getItem(Constant.IS_AUTO_RECEIVE_STOCK_KEY), 10) === Enum.IS_AUTO_RECEIVE_STOCK
     });
   }
 
@@ -39,8 +40,10 @@ export default class FormItem extends Modal {
 
   handleOnChangeIsAutoReceive(event) {
     if (event.target.checked) {
+      localStorage.setItem(Constant.IS_AUTO_RECEIVE_STOCK_KEY, Enum.IS_AUTO_RECEIVE_STOCK);
       document.getElementById("btnModalSave").innerHTML = this.CATranslate("text_save_and_auto_send_receive", this.props.locale);
     } else {
+      localStorage.removeItem(Constant.IS_AUTO_RECEIVE_STOCK_KEY);
       document.getElementById("btnModalSave").innerHTML = this.CATranslate("text_save", this.props.locale);
     }
 
@@ -133,6 +136,7 @@ export default class FormItem extends Modal {
                 defaultValue={formData.supplierId}
                 dataSource={this.state.suppliers}
                 valueKey="id"
+                required={true}
                 form={form}/>
             </this.Col>
             <this.Col md="2">
@@ -157,7 +161,8 @@ export default class FormItem extends Modal {
             </this.Col>
             <this.Col md="4" style={{marginTop: 25}}>
               <this.Checkboxs
-                name="isAutoReceive" 
+                name="isAutoReceive"
+                defaultValue={this.state.isAutoReceive}
                 label={<this.Translate id="text_auto_send_receive"/>}
                 onChange={this.handleOnChangeIsAutoReceive}
                 form={this.props.form}/>

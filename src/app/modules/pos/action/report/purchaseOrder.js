@@ -3,11 +3,11 @@ import Constant from "../../constants/report/purchase";
 import PurchaseService from "../../services/report/PurchaseService";
 
 export default{
-  fetch:(limit, offset, sortField, sortOrder, filter, searchKey, rangFilter) => {
+  fetch:(limit, offset, sortField, sortOrder, filter, searchKey, rangFilter, type) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PURCHASE_REPORT,
-        payload: PurchaseService.lists(limit, offset, sortField, sortOrder, filter, searchKey, rangFilter)
+        payload: PurchaseService.lists(limit, offset, sortField, sortOrder, filter, searchKey, rangFilter, null, type)
       });
     };
   },

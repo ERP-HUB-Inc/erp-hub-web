@@ -139,7 +139,7 @@ export default {
 
   "text_push_po_with_email": [
     "Push to supplier and send email",
-    "បញ្ជូនទៅអ្នកផ្គត់ផ្គង់ និងផ្ញើរ email",
+    "បញ្ជូនទៅអ្នកផ្គត់ផ្គង់ និងផ្ញើរ អ៊ីមែល",
     "Push to supplier and send email"
   ],
 
@@ -195,6 +195,12 @@ export default {
     "Do you want to send confirm email?",
     "តើអ្នកចង់បញ្ជាក់ការផ្ញើរ ​email?",
     "Do you want to send confirm email?"
+  ],
+
+  "text_purchase_summary": [
+    "Purchase Summary",
+    "សង្ខេបនៃការបញ្ជាទិញ",
+    "Purchase Summary"
   ],
 
   "error_require_po_number": [

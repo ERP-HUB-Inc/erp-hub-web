@@ -24,6 +24,7 @@ export default {
     RETURN : 4,
     PAID : 5
   },
+  IS_AUTO_RECEIVE_STOCK: 1,
   STOCK_ADJUST_STEP: {
     REQUEST : 0,
     COMPLETE : 1

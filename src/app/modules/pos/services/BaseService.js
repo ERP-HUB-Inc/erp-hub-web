@@ -25,11 +25,12 @@ export default class BaseService extends Service {
     filter, // {"column1": [value1, value2], "column2": [value1, value2]}
     searchKey, // {"column": ["columnname1", "columnname2"], "value": "hello"}
     rangFilter,// {"column": "createdAtt", "value": [1, 100]}
-    locationId
+    locationId,
+    type // some api use this argument some not use, but no problem wether we use it or not
   ) {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}`,  
+      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}&type=${type}`,  
       data: this.data,
       headers: this.header
     });
