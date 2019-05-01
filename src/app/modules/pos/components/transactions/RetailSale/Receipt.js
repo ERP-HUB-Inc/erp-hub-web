@@ -90,7 +90,7 @@ export default class Receipt extends Component {
                 <td colSpan="2">
                   {
                     paperSize.code === Enum.PAPER_SIZE.A4 ?
-                      <table style={{color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white"}}>
+                      <table style={{color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white", width: "100%"}}>
                         <tbody>
                           <tr>
                             <td style={{backgroundColor: "white", textAlign: "left", paddingTop: 20, paddingRight: 0}}><this.Translate id="register_no"/>. {this.Util.getDeviceNumber()}</td>
