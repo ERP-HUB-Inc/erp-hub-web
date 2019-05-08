@@ -106,18 +106,20 @@ export default class ProductList extends List {
   componentDidMount() {
     this.props.dispatch(ProductAction.reset()); // reset state to make 2: check condition again
     super.componentDidMount();
+    this.requestSubDataAsync();
   }
 
   componentDidUpdate() {
     if (!this.componentHasUpdated && this.props.products.fetched) { // 2:
-      this.props.dispatch(ProductTypeAction.fetch(100));
-      this.props.dispatch(BrandAction.fetch(100));
-      this.props.dispatch(LocationAction.fetch(100));
-      this.props.dispatch(UnitAction.fetch(100));
-      this.props.dispatch(TaxAction.fetch(100));
-      this.props.dispatch(LanguageAction.fetch(10));
-      this.props.dispatch(ProductTagAction.fetch(100));
-      this.componentHasUpdated = true;
+      //TODO: we try to use async promise
+      // this.props.dispatch(ProductTypeAction.fetch(100));
+      // this.props.dispatch(BrandAction.fetch(100));
+      // this.props.dispatch(LocationAction.fetch(100));
+      // this.props.dispatch(UnitAction.fetch(100));
+      // this.props.dispatch(TaxAction.fetch(100));
+      // this.props.dispatch(LanguageAction.fetch(10));
+      // this.props.dispatch(ProductTagAction.fetch(100));
+      // this.componentHasUpdated = true;
     }
 
     if (this.props.productDetail.fetched) {
@@ -141,6 +143,20 @@ export default class ProductList extends List {
 
       this.props.dispatch(ProductAction.reset(Constant.RESET_ADD_PRODUCT));
     }
+  }
+
+  requestSubDataAsync() {
+    return new Promise(() => {
+      setTimeout(() => {
+        this.props.dispatch(ProductTypeAction.fetch(100));
+        this.props.dispatch(BrandAction.fetch(100));
+        this.props.dispatch(LocationAction.fetch(100));
+        this.props.dispatch(UnitAction.fetch(100));
+        this.props.dispatch(TaxAction.fetch(100));
+        this.props.dispatch(LanguageAction.fetch(10));
+        this.props.dispatch(ProductTagAction.fetch(100));
+      }, 2000);
+    });
   }
 
   showFormEdit(rowData) {

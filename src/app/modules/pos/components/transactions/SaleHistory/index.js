@@ -50,10 +50,8 @@ export default class SaleHistoryList extends List {
 
   componentDidMount() {
     super.componentDidMount();
-    this.props.dispatch(LocationAction.fetch(100));
-    this.props.dispatch(UserAction.fetch(100));
-    this.props.dispatch(ReceiptTemplateAction.default());
-
+    this.requestSubDataAsync();
+    
     if(parseInt(this.Util.getParameterByName("salehistory"), 10) === 1) {
       this.handleSubmitCurrentSearchFilter();
     }
@@ -109,6 +107,16 @@ export default class SaleHistoryList extends List {
       });
     }
 
+  }
+
+  requestSubDataAsync() {
+    return new Promise(() => {
+      setTimeout(() => {
+        this.props.dispatch(LocationAction.fetch(100));
+        this.props.dispatch(UserAction.fetch(100));
+        this.props.dispatch(ReceiptTemplateAction.default());
+      }, 2000);
+    });
   }
 
   getCurrentUserForRePrintReceipt(data) {

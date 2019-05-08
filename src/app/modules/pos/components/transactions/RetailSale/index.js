@@ -710,14 +710,15 @@ export default class Retail extends Component {
                   : 
                   ""
               }
-
-              <div className="name">
-                {
-                  product.productDescriptions.length > 0 ?
-                    product.productDescriptions[0].name
-                    :
-                    ""
-                }
+              <div style={{maxHeight: 20, overflow: "hidden", wordBreak: "break-all"}}>
+                <div className="name">
+                  {
+                    product.productDescriptions.length > 0 ?
+                      product.productDescriptions[0].name
+                      :
+                      ""
+                  }
+                </div>
               </div>
               <div className="price">{this.formatCurrency(Util.getProductPrice(product))}</div>
             </div>

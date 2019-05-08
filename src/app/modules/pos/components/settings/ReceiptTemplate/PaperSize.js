@@ -31,9 +31,11 @@ export const PaperSize = [
       storeNameFontSize: "10pt",
       dataFontSize: "6pt",
       subDataFontSize: "5pt",
-      width: "80%",
+      // width: "80%",
+      width: "100%",
       color: "black",
-      padding: 5
+      padding: 0
+      // padding: 5
     }
   }
 ];
