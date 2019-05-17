@@ -40,6 +40,13 @@ export default class SaleList extends List {
         }
       },
       {
+        title: <this.Translate id="text_product_type" />,
+        dataIndex: "name",
+        key: "name",
+        width: 200,
+        className: "sale-report"
+      },
+      {
         title: <this.Translate id="text_user" />,
         dataIndex: "user",
         key: "user",
@@ -72,9 +79,10 @@ export default class SaleList extends List {
     this.reportTypeList = [
       {value: 0, name: this.CATranslate("text_sale_summary", this.props.locale)},
       {value: 1, name: this.CATranslate("text_product", this.props.locale)},
-      {value: 2, name: this.CATranslate("text_user", this.props.locale)},
-      {value: 3, name: this.CATranslate("text_customer", this.props.locale)},
-      {value: 4, name: this.CATranslate("text_location", this.props.locale)}
+      {value: 2, name: this.CATranslate("text_product_type", this.props.locale)},
+      {value: 3, name: this.CATranslate("text_user", this.props.locale)},
+      {value: 4, name: this.CATranslate("text_customer", this.props.locale)},
+      {value: 5, name: this.CATranslate("text_location", this.props.locale)}
     ];
 
     this.fetchingProp = "saleReport";

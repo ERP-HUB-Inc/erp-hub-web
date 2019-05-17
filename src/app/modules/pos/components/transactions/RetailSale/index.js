@@ -16,7 +16,7 @@ import ConstantOpenRegistrationSale from "../../../constants/transactions/openSa
 import ProductAction from "../../../../inventory/actions/products/product";
 import ProductConstant from "../../../../inventory/constants/products/product";
 import ProductVariantConstant from "../../../../inventory/constants/products/productVariant";
-import CustomerDropDownSearch from "../../../../crm/components/customers/Customer/DropDownSearch";
+// import CustomerDropDownSearch from "../../../../crm/components/customers/Customer/DropDownSearch";
 import ProductDropDownSearch from "../../../../inventory/components/products/Product/DropDownSearch";
 import FormOpenSaleRegistration from "../../../containers/transactions/OpenSaleRegistration/FormOpen";
 import OpenSaleRegistrationAction from "../../../action/transaction/openSalaRegisration";
@@ -835,12 +835,12 @@ export default class Retail extends Component {
                     {this.Util.getCurrentUser().fullName}
                   </div>
                 </this.Col>
-                <CustomerDropDownSearch
+                {/* <CustomerDropDownSearch
                   customers={this.props.customers}
                   locale={this.props.locale}
                   form={this.props.form}
                   dispatch={this.props.dispatch}
-                  handleOnAddNewCustomer={this.handleOnAddNewCustomer}/>
+                  handleOnAddNewCustomer={this.handleOnAddNewCustomer}/> */}
                
                 <ProductDropDownSearch
                   placeholder={this.CATranslate("text_search_and_scan_barcode", this.props.locale)}
