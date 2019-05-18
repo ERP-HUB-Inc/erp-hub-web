@@ -138,6 +138,14 @@ class Util {
     return productTaxList;
   }
 
+  toSubCurrencyGrantTotal(grandTotalOfBaseCurrency, baseCurrency, subCurrency) {
+    if (baseCurrency && subCurrency) {
+      return grandTotalOfBaseCurrency * (subCurrency.value / baseCurrency.value);
+    } else {
+      return 0;
+    }
+  }
+
   getTaxDescription(tax) {
     let name = "";
     if ("tax" in tax && tax["tax"]) {

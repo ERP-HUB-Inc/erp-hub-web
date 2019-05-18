@@ -99,7 +99,8 @@
 
 #retail-sale .product {
     height: 160px;
-    padding: 5px
+    padding: 5px;
+    border: 1.5px solid white
 }
 
 
@@ -113,7 +114,7 @@
 #retail-sale .category:hover {
     color: #FFFFFF;
     background-color: #0D62AF;
-    border: 1.5px solid #0D62AF
+    border: 1px solid #0D62AF
 }
 
 #retail-sale .product.selected,
@@ -144,7 +145,11 @@
 
 #retail-sale .product-box .product .price {
     font-size: 12pt;
-    font-weight: 500
+    font-weight: 500;
+    background-color: #0070e6;
+    color: white;
+    margin-top: 2px;
+    border-radius: 3px
 }
 
 
@@ -213,7 +218,7 @@
 }
 
 #retail-sale .product-order-list .product-order-item .barcode-number {
-    font-size: 7pt
+    font-size: 7pt;
 }
 
 #retail-sale .product-order-list .product-order-item .price {
@@ -227,6 +232,15 @@
     position: absolute;
     top: 15px;
     text-decoration: line-through
+}
+
+.variant-name {
+    width: fit-content;
+    background-color: #57A600;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 7pt
 }
 
 #retail-sale .delete {
@@ -331,7 +345,7 @@
 #retail-sale #wrap-payment .payment {
     background-color: #FAFAFA;
     box-shadow: 0 0 4px 0 rgba(0,0,0,0.3);
-    padding: 15px 5px;
+    padding: 5px 0px;
     line-height: 26px;
     overflow-y: hidden;
     overflow-x: auto;

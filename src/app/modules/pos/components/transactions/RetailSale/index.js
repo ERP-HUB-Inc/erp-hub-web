@@ -7,6 +7,7 @@ import TransactionAction from "../../../action/transaction/transaction";
 import PrivilegeAction from "../../../action/settings/privilege";
 import TransactionService from "../../../services/transactions/TransactionService";
 import Constant from "../../../constants/transactions/transaction";
+import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
 import FormCreateCustomer from "../../../../crm/containers/customers/Customer/FormCreate";
 import CustomerAction from "../../../../crm/actions/customers/customer";
@@ -42,6 +43,8 @@ export default class Retail extends Component {
       categoryList: [
         {id: 0, name: <this.Translate id="text_all_category"/>},
       ],
+      textFullScreen: <this.Translate id="text_full_screen" />,
+      iconFullScreen: "icon-full-screen",
       productOrderList: [],
       discountValue: {type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: 0},
       initialOrderQuantity: 1,
@@ -51,11 +54,13 @@ export default class Retail extends Component {
       isDiscountHasAdded: false,
       selectedCategoryIds: [0],
       selectedReceiptType: Enum.CURRENT_RECEIPT,
-      textFullScreen: <this.Translate id="text_full_screen" />,
-      iconFullScreen: "icon-full-screen"
+      isHasSubCurrency: false,
+      baseCurrency: {},
+      subCurrency: {}
     };
     this.isSetFocusOnSearchProduct = false;
     this.hasDidUpdate = false;
+    this.hadNotYetReceiveProps = true;
     this.service = TransactionService;
 
     this.handleOnSelectCategory = this.handleOnSelectCategory.bind(this);
@@ -136,23 +141,40 @@ export default class Retail extends Component {
 
   componentDidMount() {
 
+    this.addEventKeyDownAndCaptureValueToInputSearchProduct();
+    window.addEventListener("resize", this.handleOnResizeScreen);
+    this.handleSetFullScreen();
+
     this.props.dispatch(PrivilegeAction.reset());
     this.props.dispatch(PrivilegeAction.checkPermission(this.service.createRoute));
     
-    this.handleSetFullScreen();
-    this.addEventKeyDownAndCaptureValueToInputSearchProduct();
-
-    this.props.dispatch(ProductTypeAction.fetch(18));
-    this.props.dispatch(ProductAction.fetch(25, "", "", "", JSON.stringify({isAvialableSale: [Enum.PRODUCT_AVIALABLE_ON_SALE], type: [InventoryEnum.TYPE_OF_PRODUCT.GOOD]}), "", this.Util.getLocationId()));
-    this.props.dispatch(PaymentMethodAction.fetch(100, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
-    window.addEventListener("resize", this.handleOnResizeScreen);
     this.props.dispatch(OpenSaleRegistrationAction.showForm());
     this.props.dispatch(OpenSaleRegistrationAction.last());
+
+    this.props.dispatch(ProductTypeAction.fetch(9999));
+    this.props.dispatch(ProductAction.fetch(9999, "", "", "", JSON.stringify({isAvialableSale: [Enum.PRODUCT_AVIALABLE_ON_SALE], type: [InventoryEnum.TYPE_OF_PRODUCT.GOOD]}), "", this.Util.getLocationId()));
+
+    new Promise(() => {
+      this.props.dispatch(ReceiptTemplateAction.default());
+      this.props.dispatch(PaymentMethodAction.fetch(100, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
+    });
 
     // RESTORE CURRENT RECEIPT
     //this.restoreReceipt(Enum.CURRENT_RECEIPT);
   }
+  
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.receiptTemplate.data && this.hadNotYetReceiveProps) {
+      this.hadNotYetReceiveProps = false;
 
+      this.setState({
+        baseCurrency: nextProps.receiptTemplate.data.baseCurrency,
+        isHasSubCurrency: nextProps.receiptTemplate.data.isHasSubCurrency,
+        subCurrency: nextProps.receiptTemplate.data.subCurrency
+      });
+    }
+  }
+  
   getValueFromUserTypeKeyboard(event) {
     // const existingValue = this.props.form.getFieldValue("searchProduct");
     // if (event.keyCode !== 8) {
@@ -869,9 +891,14 @@ export default class Retail extends Component {
                             {/* <div className="barcode-number">
                               {<this.Translate id="text_product_code"/>}: {productOrder.barcode}
                             </div> */}
-                            <div className="barcode-number">
-                              {productOrder.variantName}
-                            </div>
+                            {
+                              productOrder.variantName ?
+                                <div className="barcode-number variant-name">
+                                  {productOrder.variantName}
+                                </div>
+                                :
+                                ""
+                            }
                           </div>
                           <div className="quantity">
                             {productOrder.quantity}x
@@ -1002,21 +1029,39 @@ export default class Retail extends Component {
                           ""
                       }
                       {/*END DISCOUNT ROW */}
+
                       <div className="sub-total">
                         <div className="sub-total-title">
                           <this.Translate id="text_total"/>
+                          {this.state.isHasSubCurrency ? ` (${this.state.baseCurrency.symbol})` : ""}
                         </div>
                         <div className="sub-total-value">
                           {this.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount))}
                         </div>
                       </div>
+
+                      {
+                        this.state.isHasSubCurrency ?
+                          <div className="sub-total">
+                            <div className="sub-total-title">
+                              <this.Translate id="text_total"/> ({this.state.subCurrency.symbol})
+                            </div>
+                            <div className="sub-total-value">
+                              {this.Util.formatCurrency(POSUtil.toSubCurrencyGrantTotal(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount), this.state.baseCurrency, this.state.subCurrency), this.state.subCurrency.symbol)}
+                            </div>
+                          </div>
+                          :
+                          ""
+                      }
                     </this.Col>
+
                     <this.Col md="6" className="text-right" style={{display: "none"}}>
                       <div className="grand-total">
                         <div className="grand-total-title"><this.Translate id="text_total"/></div>
                         <div className="grand-total-value">{this.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount))}</div>
                       </div>
                     </this.Col>
+
                   </this.Row>
                   <this.Row className="payment-action">
                     <this.Button type="info" className="mg-right" onClick={this.handleOnSaveParkReceipt}>

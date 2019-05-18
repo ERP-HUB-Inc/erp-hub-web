@@ -61,7 +61,7 @@ export default {
 
   "from_base_currency": [
     "From Base Currency",
-    "ពី រូបិយប័ណ្ណមូលដ្ឋាន",
+    "ពីរូបិយប័ណ្ណមូលដ្ឋាន",
     "From Base Currency"
   ],
 
@@ -71,6 +71,11 @@ export default {
     "Currency Exchange"
   ],
 
+  "exchange_rate": [
+    "Exchange Rate",
+    "អត្រាប្ដូរប្រាក់",
+    "Exchange Rate"
+  ],
 
   "text_currency_position": [
     "Currency Position",

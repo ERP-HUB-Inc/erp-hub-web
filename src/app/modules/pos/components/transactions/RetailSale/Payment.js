@@ -3,7 +3,6 @@ import Receipt from "./Receipt";
 import Enum from "../../../enums";
 import GeneralAction from "../../../../common/actions/general";
 import TransactionAction from "../../../action/transaction/transaction";
-import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
 import POSUtil from "../../../utils";
 import Modal from "../../../../common/components/shares/Modal";
 import "./Payment.css";
@@ -28,10 +27,6 @@ export default class Payment extends Modal {
     this.handleOnMakePaymentWithCash = this.handleOnMakePaymentWithCash.bind(this);
     this.handleOnCompletePayment = this.handleOnCompletePayment.bind(this);
     this.handleOnSendMailReceipt = this.handleOnSendMailReceipt.bind(this);
-  }
-
-  componentDidMount() {
-    this.props.dispatch(ReceiptTemplateAction.default());
   }
 
   componentDidUpdate() {
@@ -165,7 +160,6 @@ export default class Payment extends Modal {
 
       const dataValue = {
         deviceNumber: this.Util.getDeviceNumber(),
-        exchangeRate: 0,
         deposit: 0,
         discount: discountAmount,
         total: this.getGrandTotalWithOutDiscount(),
@@ -282,7 +276,15 @@ export default class Payment extends Modal {
                 {
                   this.props.productOrderList.map((productOrder, productOrderIndex) => 
                     <li key={productOrderIndex}>
-                      <div className="title">{productOrder.name}</div>
+                      <div className="title">
+                        {productOrder.name}
+                        {
+                          productOrder.variantName ?
+                            <div className="variant-name">{productOrder.variantName}</div>
+                            :
+                            ""
+                        }
+                      </div>
                       <div className="quantity">{productOrder.quantity}x</div>
                       <div className="price">
                         {
