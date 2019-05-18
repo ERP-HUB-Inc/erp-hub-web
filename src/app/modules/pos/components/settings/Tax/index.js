@@ -1,5 +1,6 @@
 import React from "react";
 import List from "../List";
+import Enum from "../../../../inventory/enums";
 import FormCreate from "../../../containers/settings/Tax/FormCreate";
 import FormUpdate from "../../../containers/settings/Tax/FormUpdate";
 import Constant from "../../../constants/settings/tax";
@@ -16,6 +17,16 @@ export default class TaxList extends List {
     this.service = TaxService;
     this.action = TaxAction;
     this.RESET_CONSTANT = Constant.RESET_TAX;
+  }
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.add.added && nextProps.add.response) {
+      const newAddedTax = nextProps.add.response.data;
+      let existingTaxes = localStorage.getItem(Enum.LOCAL_SCHEMA.TAX);
+      existingTaxes = JSON.parse(existingTaxes);
+      existingTaxes.push(newAddedTax);
+      localStorage.setItem(Enum.LOCAL_SCHEMA.TAX, JSON.stringify(existingTaxes));
+    }
   }
 }
 
@@ -46,7 +57,7 @@ class Column extends List {
         title: <this.Translate id="col_tax_rate" />,
         dataIndex: "rate",
         sorter: true,
-        render: (rate) => rate + "%"
+        render: rate => rate + "%"
       },
       this.columnStatus
     ];

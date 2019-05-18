@@ -1,5 +1,6 @@
 import React from "react";
 import List from "../../List";
+import Enum from "../../../enums";
 import FormCreate from "../../../containers/products/ProductsUnit/FormCreate";
 import FormUpdate from "../../../containers/products/ProductsUnit/FormUpdate";
 import Constant from "../../../constants/products/productsUnit";
@@ -16,6 +17,16 @@ export default class Lists extends List {
     this.service = ProductsUnitService;
     this.action = ProductsUnitAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCTS_UNIT;
+  }
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.add.added && nextProps.add.response) {
+      const newAddedUnit = nextProps.add.response.data;
+      let existingUnits = localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT);
+      existingUnits = JSON.parse(existingUnits);
+      existingUnits.push(newAddedUnit);
+      localStorage.setItem(Enum.LOCAL_SCHEMA.UNIT, JSON.stringify(existingUnits));
+    }
   }
 
 }

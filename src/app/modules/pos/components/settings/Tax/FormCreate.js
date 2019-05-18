@@ -26,19 +26,15 @@ export default class Form extends Modal {
   }
   
   render() {
-    const {taxAdd, form, locale} = this.props;
+    this.submitLoading = this.props.taxAdd.adding;
 
-    this.submitLoading = taxAdd.adding;
-
-    this.validatorAddRecord(taxAdd);
+    this.validatorAddRecord(this.props.taxAdd);
     
-    if (taxAdd.showForm) {
-      this.content = (
-        <FormItem form={form} locale={locale} />
-      );
+    if (this.props.taxAdd.showForm) {
+      this.content = <FormItem form={this.props.form} locale={this.props.locale} />;
       return super.render();
     } else {
-      return (<div></div>);
+      return <div />;
     }
   }
 }
