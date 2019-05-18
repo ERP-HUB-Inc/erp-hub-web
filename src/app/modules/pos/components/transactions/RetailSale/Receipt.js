@@ -59,7 +59,15 @@ export default class Receipt extends Component {
           margin: "0 auto",
           fontFamily: "Khmer OS Content"
         }}>
-          <table style={{color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white", margin: "auto", /*width: "120mm",*/ width: paperSize.setting.width, padding: paperSize.setting.padding}}>
+          <table style={{
+            color: paperSize.setting.color,
+            fontSize: paperSize.setting.dataFontSize,
+            backgroundColor: "white",
+            margin: "auto",
+            /*width: "120mm",*/
+            width: paperSize.setting.width,
+            padding: paperSize.setting.padding,
+            marginLeft: this.props.isRequestClearMarginLeft ? 0 : paperSize.setting.marginLef}}>
             <tbody>
               <tr>
                 <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>
@@ -253,5 +261,7 @@ export default class Receipt extends Component {
 Receipt.defaultProps = {
   receiptTemplate: {
     logo: ""
-  }
+  },
+  isRequestClearMarginLeft: false
+  //We use it to help when to want clear marginLeft (-30px) in case mini printer 58mm. The problem is because of margin
 };

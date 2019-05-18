@@ -59,39 +59,24 @@ export default class SaleHistoryList extends List {
   }  
 
   componentDidUpdate() {
-    const element = document.getElementById("pos-receipt-preview");
+    const element = document.getElementById("reprint-receipt");
     if (
       this.props.detail.fetched &&
       this.props.detail.data &&
       this.props.receiptTemplate.fetched) {
-      const customerPayment = this.getCustomerPaymentList(this.props.detail.data);
-      const productOrderList = this.getProductOrderList(this.props.detail.data);
-      const productTaxList = this.getProductTaxList(productOrderList);
-      const receiptContent = <Receipt
-        data={this.props.detail.data}
-        isRequestShowDetail={this.state.isRequestShowDetail}
-        receiptTemplate={this.props.receiptTemplate.data}
-        currentUser={this.getCurrentUserForRePrintReceipt(this.props.detail.data)}
-        customerPaymentList={customerPayment.customerPaymentList}
-        productList={productOrderList}
-        productTaxList={productTaxList}
-        summaryTotal={this.getSummaryTotal(this.props.detail.data)}
-        summaryTax={POSUtil.getSummaryTax(productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale))}
-        changeAmount={customerPayment.changeAmount}
-        taxAmount={this.getTaxAmount(this.props.detail.data)}
-        discountAmount={this.props.detail.data.discount} />;
+      const isRequestClearReceiptMarginLeft = false;
+      const receiptContent = this.renderReceipt(isRequestClearReceiptMarginLeft);
+      const detailTransactionDisplay = this.renderReceipt();
 
       if (this.state.isRequestReprint) {
-        this.setState({
-          reprintReceiptContent: <div style={{display: "none"}} id="reprint-receipt">{receiptContent}</div>
-        });
         this.props.dispatch(TransactionAction.reset(Constant.RESET_DETAIL_TRANSACTION));
       } else if (this.state.isRequestShowDetail) {
         this.setState({
           loadingPopup: false,
           isRequestShowDetail: false,
           modalConten: <Detail
-            receiptContent={receiptContent}
+            reprintReceiptContent={<div style={{display: "none"}} id="reprint-receipt">{receiptContent}</div>}
+            receiptContent={detailTransactionDisplay}
             dispatch={this.props.dispatch} />
         });
       }
@@ -107,6 +92,26 @@ export default class SaleHistoryList extends List {
       });
     }
 
+  }
+
+  renderReceipt(isRequestClearReceiptMarginLeft = true) {
+    const customerPayment = this.getCustomerPaymentList(this.props.detail.data);
+    const productOrderList = this.getProductOrderList(this.props.detail.data);
+    const productTaxList = this.getProductTaxList(productOrderList);
+    return <Receipt
+      data={this.props.detail.data}
+      isRequestClearMarginLeft={isRequestClearReceiptMarginLeft}
+      isRequestShowDetail={this.state.isRequestShowDetail}
+      receiptTemplate={this.props.receiptTemplate.data}
+      currentUser={this.getCurrentUserForRePrintReceipt(this.props.detail.data)}
+      customerPaymentList={customerPayment.customerPaymentList}
+      productList={productOrderList}
+      productTaxList={productTaxList}
+      summaryTotal={this.getSummaryTotal(this.props.detail.data)}
+      summaryTax={POSUtil.getSummaryTax(productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale))}
+      changeAmount={customerPayment.changeAmount}
+      taxAmount={this.getTaxAmount(this.props.detail.data)}
+      discountAmount={this.props.detail.data.discount} />;
   }
 
   requestSubDataAsync() {
@@ -202,17 +207,21 @@ export default class SaleHistoryList extends List {
     return data.total - data.totalExcludeTax;
   }
 
-  handleRePrint = async () => {
-    const selectLength = this.state.selectedListIds.length;
-    this.setState({isRequestReprint: true});
+  handleRePrint() {
+    new Promise(() => {
+      const selectLength = this.state.selectedListIds.length;
+      this.setState({
+        isRequestReprint: true
+      });
 
-    if (selectLength === 0 && this.state.selectedListIds) {
-      this.Message.error(this.CATranslate("text_reprint_warning_1", this.props.locale));
-    } else if (selectLength > 1) {
-      this.Message.error(this.CATranslate("text_reprint_warning_2", this.props.locale));
-    } else {
-      this.props.dispatch(TransactionAction.detail({id: this.state.selectedListIds[0]}));
-    }
+      if (selectLength === 0 && this.state.selectedListIds) {
+        this.Message.error(this.CATranslate("text_reprint_warning_1", this.props.locale));
+      } else if (selectLength > 1) {
+        this.Message.error(this.CATranslate("text_reprint_warning_2", this.props.locale));
+      } else {
+        this.props.dispatch(TransactionAction.detail({id: this.state.selectedListIds[0]}));
+      }
+    });
   }
 
   handleShowFormEdit(rowData) {
@@ -299,7 +308,6 @@ export default class SaleHistoryList extends List {
             </this.Col>
             
           </this.Row>
-          {this.state.reprintReceiptContent}
         </this.Form>
     );
   }

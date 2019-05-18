@@ -9,7 +9,8 @@ export const PaperSize = [
       subDataFontSize: "7pt",
       width: "120mm",
       color: "rgb(142, 136, 136)",
-      padding: 0
+      marginLef: "auto",
+      padding: 0,
     }
   },
   {
@@ -21,6 +22,7 @@ export const PaperSize = [
       subDataFontSize: "6pt",
       width: "100%",
       color: "black",
+      marginLef: "auto",
       padding: 0
     }
   },
@@ -29,12 +31,13 @@ export const PaperSize = [
     name: "Mini Thermal",
     setting: {
       storeNameFontSize: "10pt",
-      dataFontSize: "6pt",
-      subDataFontSize: "5pt",
+      dataFontSize: "7.5pt",
+      subDataFontSize: "6.5pt",
       // width: "80%",
       width: "100%",
       color: "black",
-      padding: 0
+      marginLef: "-30px", // Help to solve problem with mini printer print over margin right
+      padding: "0px 15px"
       // padding: 5
     }
   }

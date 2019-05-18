@@ -34,6 +34,18 @@ export default {
     "Name allow from 3 to 100 character only",
     "ឈ្មោះ ត្រូវតែចាប់ពី ៣ ទៅ ១០០ តួអក្សរ",
     "Name allow from 3 to 100 character only"
+  ],
+
+  "text_has_sub_currency": [
+    "Has Sub Currency",
+    "មានរូបិយប័ណ្ណខាងក្រោម",
+    "Has Sub Currency"
+  ],
+
+  "text_sub_currency": [
+    "Sub Currency",
+    "រូបិយប័ណ្ណខាងក្រោម",
+    "Sub Currency"
   ]
 
 };

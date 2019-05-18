@@ -34,7 +34,10 @@ export default class Form extends Modal {
   
   render() {
     if (this.props.detail.showForm) {
-      this.content = <div style={{maxHeight: window.innerHeight - 150, overflow: "auto"}}>{this.props.receiptContent}</div>;
+      this.content = <div style={{maxHeight: window.innerHeight - 150, overflow: "auto"}}>
+        {this.props.reprintReceiptContent}
+        {this.props.receiptContent}
+      </div>;
       return super.render();
     }
 

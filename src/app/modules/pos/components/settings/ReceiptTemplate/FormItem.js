@@ -1,9 +1,42 @@
 import React from "react";
+import {PaperSize} from "./PaperSize";
+import CurrencyService from "../../../services/settings/CurrencyService";
 import Modal from "../../../../common/components/shares/Modal";
 import Enum from "../../../enums";
-import { PaperSize } from "./PaperSize";
 
 export default class FormItem extends Modal {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ...this.state,
+      subCurrencies: [],
+      isHasSubCurrency: false
+    };
+
+    this.handleOnChangeIsHasSubCurrency = this.handleOnChangeIsHasSubCurrency.bind(this);
+  }
+
+  componentDidMount() {
+    new Promise(() => {
+      CurrencyService.listsAllSubCurrency()
+        .then(response => {
+          if (response && response.data && response.data.data) {
+            this.setState({subCurrencies: response.data.data});
+          }
+        });
+    });
+
+    this.setState({isHasSubCurrency: this.props.formData.isHasSubCurrency});
+  }
+
+  handleOnChangeIsHasSubCurrency(event) {
+    if (event.target.checked) {
+      this.setState({isHasSubCurrency: true});
+    } else {
+      this.setState({isHasSubCurrency: false});
+    }
+  }
+
   render() {
     const {formData, form, locale} = this.props;
     const image = {
@@ -13,7 +46,7 @@ export default class FormItem extends Modal {
       url: this.Util.getProductImage(formData.logo, this.Enum.IMAGE_SPACE.GENERAL).url
     };
     return (
-      <this.Row>
+      <this.Row style={{maxHeight: 500, overflow: "auto"}}>
         <this.Col md="12">
           <this.InputText
             name="name"
@@ -26,6 +59,14 @@ export default class FormItem extends Modal {
             required={true}
             isAutoFocus={true}
             form={form}/>
+        </this.Col>
+        <this.Col md="12">
+          <this.Checkboxs
+            name="isHasSubCurrency"
+            defaultValue={formData.isHasSubCurrency}
+            label={<this.Translate id="text_has_sub_currency"/>}
+            onChange={this.handleOnChangeIsHasSubCurrency}
+            form={this.props.form} />
         </this.Col>
         <this.Col md="12">
           <this.UploadImg 
@@ -47,6 +88,23 @@ export default class FormItem extends Modal {
             defaultValue={formData.paperSize}
             form={form}/>
         </this.Col>
+        {
+          this.state.isHasSubCurrency ?
+            <this.Col md="12">
+              <this.Select
+                name="subCurrencyId"
+                placeholder={this.CATranslate("text_sub_currency", this.props.locale)}
+                label={<this.Translate id="text_sub_currency" />}
+                dataSource={this.state.subCurrencies}
+                valueKey="id"
+                nameKey="name"
+                required={true}
+                defaultValue={formData.subCurrencyId}
+                form={form} />
+            </this.Col>
+            :
+            <div />
+        }
         <this.Col md="12">
           <this.Switchs
             name="isShowStoreName"
