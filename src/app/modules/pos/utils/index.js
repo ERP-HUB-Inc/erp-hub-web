@@ -69,11 +69,12 @@ class Util {
   }
 
   appendCustomerPaymentList(customerPaymentList, giveAmount, paymentMethod, balance) {
+    const change = giveAmount - balance;
     if (customerPaymentList.length === 0) {
       customerPaymentList.push({
         tender: giveAmount,
         balance,
-        change: 0,
+        change: change < 0 ? 0 : change,
         paymentMethodName: paymentMethod.name,
         paymentMethodId: paymentMethod.id
       });
@@ -90,7 +91,7 @@ class Util {
         customerPaymentList.push({
           tender: giveAmount,
           balance,
-          change: 0,
+          change: change < 0 ? 0 : change,
           paymentMethodName: paymentMethod.name,
           paymentMethodId: paymentMethod.id
         });
