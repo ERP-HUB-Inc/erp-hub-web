@@ -16,6 +16,7 @@ export default class Payment extends Modal {
       amountToPay: 0,
       isAlreadyAutoPrint: false,
       isNotYetPaid: true,
+      isFocusOnInputBaseCurrency: true,
       validateStatus: "",
       errorMsg: ""
     };
@@ -27,6 +28,7 @@ export default class Payment extends Modal {
     this.handleOnMakePaymentWithCash = this.handleOnMakePaymentWithCash.bind(this);
     this.handleOnCompletePayment = this.handleOnCompletePayment.bind(this);
     this.handleOnSendMailReceipt = this.handleOnSendMailReceipt.bind(this);
+    this.handleOnFocusInputAmount = this.handleOnFocusInputAmount.bind(this);
   }
 
   componentDidUpdate() {
@@ -48,15 +50,6 @@ export default class Payment extends Modal {
 
   componentWillUnmount() {
     this.setState({isAlreadyAutoPrint: false});
-  }
-
-  handleSubmit (e) { // Here use only for protected from refresh page when hit enter while focus input payment
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        
-      }
-    });
   }
 
   calculateBalance(grandTotal, amountToPay) {
@@ -84,6 +77,23 @@ export default class Payment extends Modal {
   getChangeAmount() {
     const totalCustomerHasGiveMoney = this.totalCustomerPaymentList();
     return totalCustomerHasGiveMoney - this.getGrandTotal();
+  }
+
+  handleOnFocusInputAmount(isFocusOnBaseCurrency) {
+    if (isFocusOnBaseCurrency) {
+      this.setState({isFocusOnInputBaseCurrency: true});
+    } else {
+      this.setState({isFocusOnInputBaseCurrency: false});
+    }
+  }
+
+  handleSubmit (e) { // Here use only for protected from refresh page when hit enter while focus input payment
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        
+      }
+    });
   }
 
   handleCancel() {
@@ -132,7 +142,16 @@ export default class Payment extends Modal {
 
   handleOnMakePaymentWithCash(paymentMethod, paymentMethodIndex) {
     let amountToPay = this.props.form.getFieldValue("amountToPay"); // AMOUNT FROM INPUT OF CASHEIR
+    let amountToPaySubCurrency = this.props.form.getFieldValue("amountToPaySubCurrency"); // AMOUNT FROM INPUT OF CASHEIR AS SUB CURRENCY
+    
     amountToPay = parseFloat(amountToPay);
+    amountToPaySubCurrency = parseFloat(amountToPaySubCurrency);
+    
+    // ADD ADDITIONAL SUB CURRENCY AMOUNT TO BASE CURRENCY VALUE
+    if (!isNaN(amountToPaySubCurrency)) {
+      amountToPay = amountToPay + POSUtil.toSubCurrencyGrantTotal(amountToPaySubCurrency, this.props.subCurrency, this.props.baseCurrency);
+    }
+
 
     let grandTotal = this.getGrandTotal();
     let totalCustomerHasGiveMoney = this.totalCustomerPaymentList() + amountToPay; // previus paid + current pay of pos
@@ -144,7 +163,11 @@ export default class Payment extends Modal {
 
     if (totalCustomerHasGiveMoney < grandTotal) {
 
-      this.props.form.setFieldsValue({amountToPay: balance});
+      // this.props.form.setFieldsValue({amountToPay: balance});
+      this.props.form.setFieldsValue({amountToPay: 0});
+
+      // this.props.form.setFieldsValue({amountToPaySubCurrency: POSUtil.toSubCurrencyGrantTotal(balance, this.props.baseCurrency, this.props.subCurrency)});
+      this.props.form.setFieldsValue({amountToPaySubCurrency: 0});
 
       this.setState({amountToPay: balance});
 
@@ -371,8 +394,28 @@ export default class Payment extends Modal {
               // this.totalCustomerPaymentList() < grandTotal && !this.props.transaction.paid ?
               !this.props.transaction.paid ?
                 <div className="payment-tool">
+                  <div className="total-display">
+                    <div className="title-total-display">
+                      <this.Translate id="text_balance" />
+                    </div>
+                    <div className="value-total-display">
+                      {
+                        this.state.isFocusOnInputBaseCurrency ?
+                          this.formatCurrency(balance)
+                          :
+                          this.Util.formatCurrency(POSUtil.toSubCurrencyGrantTotal(balance, this.props.baseCurrency, this.props.subCurrency), this.props.subCurrency.symbol)
+                      }
+                    </div>
+                  </div>
                   <div className="amount-to-pay">
-                    <div className="title"><this.Translate id="text_pay"/></div>
+                    {/* <div className="title">
+                      <this.Translate id="text_pay"/>
+                    </div> */}
+                    <div className="currency-symbol-payment">
+                      <div>
+                        {this.Util.getSetting() ? this.Util.getSetting().currency : "ERROR"}
+                      </div>
+                    </div>
                     <this.InputNumber
                       name="amountToPay"
                       className="ca-input-v1 text-right"
@@ -381,9 +424,32 @@ export default class Payment extends Modal {
                       isAutoSelect={true}
                       validateStatus={this.state.validateStatus}
                       errorMsg={this.state.errorMsg}
-                      data={grandTotal}
-                      form={this.props.form}/>
+                      // data={grandTotal}
+                      form={this.props.form}
+                      handleOnFocus={() => this.handleOnFocusInputAmount(true)} />
                   </div>
+                  {
+                    this.props.isHasSubCurrency ?
+                      <div className="amount-to-pay" style={{marginTop: 10}}>
+                        <div className="currency-symbol-payment">
+                          <div>
+                            {this.props.subCurrency ? this.props.subCurrency.symbol : "ERROR"}
+                          </div>
+                        </div>
+                        <this.InputNumber
+                          name="amountToPaySubCurrency"
+                          className="ca-input-v1 text-right"
+                          isHideTool={true}
+                          isAutoSelect={true}
+                          validateStatus={this.state.validateStatus}
+                          errorMsg={this.state.errorMsg}
+                          form={this.props.form}
+                          handleOnFocus={() => this.handleOnFocusInputAmount(false)}
+                          handleOnBlur={() => this.handleOnFocusInputAmount(true)} />
+                      </div>
+                      :
+                      ""
+                  }
                   <div className="action-button-to-pay">
                     {
                       paymentMethodList.map((paymentMethodListChild, index1) =>

@@ -597,6 +597,9 @@ export default class Retail extends Component {
     if (this.state.productOrderList.length > 0) {
       this.props.dispatch(TransactionAction.showForm());
       this.setState({modalContent: <PaymentForm
+        isHasSubCurrency={this.state.isHasSubCurrency}
+        baseCurrency={this.state.baseCurrency}
+        subCurrency={this.state.subCurrency}
         handleCancel={this.handleCancelMakePayment}
         productOrderList={this.state.productOrderList}
         paymentMethodList={this.props.paymentMethod}

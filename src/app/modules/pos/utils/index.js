@@ -84,6 +84,7 @@ class Util {
         if (payment.paymentMethodId === paymentMethod.id) {
           isNotTheSame = false;
           customerPaymentList[index]["tender"] += giveAmount;
+          customerPaymentList[index]["change"] += change;
         }
       });
 
