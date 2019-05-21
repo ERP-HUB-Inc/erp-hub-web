@@ -138,9 +138,9 @@ export default {
   ],
 
   "text_qty_not_enought_for_sale": [
-    "Quantity not enought for sale",
-    "បរិមាណមិនគ្រប់គ្រាន់សម្រាប់លក់",
-    "Quantity not enought for sale"
+    "Quantity not enought in stock has",
+    "បរិមាណមិនគ្រប់គ្រាន់សម្រាប់លក់ ក្នុងស្តុកមានតែ",
+    "Quantity not enought in stock has"
   ],
 
   "text_search_and_scan_barcode": [

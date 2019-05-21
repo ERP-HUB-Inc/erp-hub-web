@@ -156,17 +156,21 @@ export default class DropDownSearch extends Modal {
         title={productDescriptions.length > 0 ? productDescriptions[0].name : ""}
         description={
           <div>
-            <div className="wrap-description">
-              <this.Translate id="text_product_code"/>: {barcode}
-            </div>
+            {
+              barcode ?
+                <div className="wrap-description">
+                  <this.Translate id="text_product_code"/>: {barcode}
+                </div>
+                :
+                ""
+            }
             {
               product.productOption === Enum.PRODUCT_VARIANT ?
-              
-                product.productVariants.length > 0 ?
-                  <div className="variant">{product.productVariants.length} {product.productVariants.length > 1 ? <this.Translate id="text_variants"/> : <this.Translate id="text_variant"/>}</div>
-                  :
-                  <div className="price">{this.formatCurrency(product.price)}</div>
-                  
+                ""
+                // product.productVariants.length > 0 ?
+                //   <div className="variant">{product.productVariants.length} {product.productVariants.length > 1 ? <this.Translate id="text_variants"/> : <this.Translate id="text_variant"/>}</div>
+                //   :
+                //   <div className="price">{this.formatCurrency(product.price)}</div>
                 :
                 <div className="product-stock">
                   <div>

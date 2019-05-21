@@ -410,13 +410,13 @@ export default class FormItem extends Modal {
                     name="serialType"
                     label={
                       <span>
-                        <this.Translate id="text_serial_type" />&nbsp;
+                        <this.Translate id="text_stock_type" />&nbsp;
                         <this.Tooltip title="Do you want your product calculate stock or not?">
                           <this.Icon type="question-circle-o" />
                         </this.Tooltip>
                       </span>
                     }
-                    placeholder={this.CATranslate("text_serial_type", locale)}
+                    placeholder={this.CATranslate("text_stock_type", locale)}
                     dataSource={this.serialTypes}
                     defaultValue={formData.serialType}
                     errorRequired={<this.Translate id="error_require_serial_type" />}

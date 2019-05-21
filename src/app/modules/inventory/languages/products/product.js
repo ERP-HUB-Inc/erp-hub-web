@@ -115,6 +115,12 @@ export default {
     "Serial Type"
   ],
 
+  "text_stock_type": [
+    "Stock Type",
+    "ប្រភេទស្តុក",
+    "Stock Type"
+  ],
+
   "input_product_re_order_point": [
     "Re-Order Point",
     "ចំនួនបញ្ជាទិញឡើងវិញ",

@@ -49,7 +49,7 @@ export default class SearchPo extends Modal {
         render: (text, record) => {
           return <div>
             <div>{record.productName}</div>
-            <div className="variant-name">{record.variantName}</div>
+            {record.variantName ? <div className="variant-name">{record.variantName}</div> : ""}
           </div>;
         }
       },

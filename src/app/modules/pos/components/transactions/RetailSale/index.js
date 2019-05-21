@@ -123,6 +123,11 @@ export default class Retail extends Component {
 
     if (this.props.posPay.error) {
       let errorCode = this.Util.getErrorCodeFromState(this.props.posPay.error);
+      let messageProductError = this.Util.getErrorMessageFromState(this.props.posPay.error);
+      messageProductError = JSON.parse(messageProductError);
+      const productVariantErrorId = messageProductError.productVariantId;
+      const productErrorResult = this.state.productOrderList.find(productOrder => productOrder.productVariantId === productVariantErrorId);
+
       let message = "Something went wrong";
       if (errorCode === Enum.LOCATION_NOT_FOUND) {
         message = this.CATranslate("error_location_not_found", this.props.locale);
@@ -130,11 +135,12 @@ export default class Retail extends Component {
         message = this.CATranslate("error_product_not_found", this.props.locale);
       } else if (errorCode === InventoryEnum.PRODUCT_QTY_NOT_ENOUGHT) {
         message = this.CATranslate("text_qty_not_enought_for_sale", this.props.locale);
+        message = `${message} ${messageProductError.quantityInStock}`;
       } else if (errorCode === Enum.SERIAL_NUMBER_REQUIRE) {
         message = this.CATranslate("error_serial_number_require", this.props.locale);
       }
 
-      this.Message.error(message);
+      this.Message.error(`${productErrorResult.name}/${productErrorResult.variantName} ${message}`);
       this.props.dispatch(TransactionAction.reset(Constant.RESET_ERROR_TRANSACTION));
     }
   }
@@ -385,8 +391,10 @@ export default class Retail extends Component {
     }
 
     if (product.serialType !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY) {
-      if (product.quantity <= 0 || (productVariant && productVariant.quantity <= 0)) {
-        let varinatName = productVariant ? `(${productVariant.name})` : "";
+      if (
+        (product.productOption === InventoryEnum.PRODUCT_STANDARD && Util.isOutOfStandardProductStock(product))
+        || (productVariant && productVariant.quantity <= 0)) {
+        let varinatName = productVariant && productVariant.name ? `(${productVariant.name})` : "";
         this.Message.error(`${Util.getProductName(product)}${varinatName}: ${this.CATranslate("text_out_of_stock", this.props.locale)}`);
         this.props.form.setFieldsValue({searchProduct: ""});
         document.getElementById("searchProduct").focus();

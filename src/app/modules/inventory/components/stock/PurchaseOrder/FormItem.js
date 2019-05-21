@@ -21,11 +21,16 @@ export default class FormItem extends Modal {
   }
 
   componentDidMount(){
+    const isAutoReceive = parseInt(localStorage.getItem(Constant.IS_AUTO_RECEIVE_STOCK_KEY), 10) === Enum.IS_AUTO_RECEIVE_STOCK;
     this.setState({
       locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION)),
       suppliers: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.SUPPLIER)),
-      isAutoReceive: parseInt(localStorage.getItem(Constant.IS_AUTO_RECEIVE_STOCK_KEY), 10) === Enum.IS_AUTO_RECEIVE_STOCK
+      isAutoReceive
     });
+
+    if (isAutoReceive) {
+      document.getElementById("btnModalSave").innerHTML = this.CATranslate("text_save_and_auto_send_receive", this.props.locale);
+    }
   }
 
   handleCheckPONumber(event){

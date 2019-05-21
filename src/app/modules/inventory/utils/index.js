@@ -112,6 +112,16 @@ class Util {
   isValidProductVariant(product) {
     return product && Array.isArray(product.productVariants) && product.productVariants.length > 0;
   }
+
+  isOutOfStandardProductStock(product) {
+    if (!product || (product.productVariants[0] && product.productVariants[0].productLocations.length === 0)) {
+      return true;
+    }
+
+    if (product.productVariants[0].quantity <= 0 || product.productVariants[0].productLocations[0].quantity <= 0) {
+      return true;
+    }
+  }
 }
 
 export default new Util();

@@ -503,6 +503,22 @@ export class Util {
     return code;
   }
 
+  getErrorMessageFromState(error) {
+    let message;
+    
+    if (
+      error &&
+      "data" in error &&
+      error["data"] &&
+      "error" in error["data"] &&
+      error["data"]["error"]
+    ) {
+      message = error["data"]["error"]["message"];
+    }
+
+    return message;
+  }
+
   processImageOnFlightCropCenter(imageURL, size = {width: 100, height: 100}) {
     return `${process.env.REACT_APP_IMAGE_FLIGHT_HOST}/OptionKey_OptionValue - g_Center, w_${size.width}, h_${size.height}/${imageURL}`;
   }
