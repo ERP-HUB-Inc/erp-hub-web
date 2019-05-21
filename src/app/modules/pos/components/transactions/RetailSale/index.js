@@ -710,16 +710,22 @@ export default class Retail extends Component {
 
   renderProductList() {
     const countProduct = this.props.products.list.length;
-    const numberOfColumn = 5;
     const scrollWidth = 20;
     const categoryPanelHeight = 68;
     const headerHeight = 50;
     const itemPanelHeight = window.innerHeight - (headerHeight + categoryPanelHeight);
     const screenWidth = window.innerWidth - 420;
+    let numberOfColumn = 5;
+    let cuttingPaddingRightScroll = 4;
+
+    if (screenWidth > 1300) {
+      numberOfColumn = 6;
+      cuttingPaddingRightScroll = 3;
+    }
 
     const numberOfItemRow = Math.ceil(countProduct / numberOfColumn);
 
-    let productWidth = (screenWidth/numberOfColumn) - 4;
+    let productWidth = (screenWidth/numberOfColumn) - cuttingPaddingRightScroll;
     let productHeight = productWidth;
 
     if ((numberOfItemRow * productHeight) > itemPanelHeight) { // calculate total height of all row of item list
