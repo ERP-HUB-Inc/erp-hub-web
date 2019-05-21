@@ -805,6 +805,9 @@ export default class Retail extends Component {
           </this.Row>
           :
           <this.Row className="main-layout main-store-account" id="retail-sale">
+            <div id="receiptLogoPreLoading" style={{display: "none"}}>
+              {<img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate && this.props.receiptTemplate.data ? this.props.receiptTemplate.data.logo : "", "general").url} />}
+            </div>
             <this.Col md="8" id="left-block">
               <this.Row className="wrap-receipt-type">
                 <this.Col md="12" className="receipt-type">

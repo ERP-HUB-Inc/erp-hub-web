@@ -51,6 +51,8 @@ export default class Receipt extends Component {
       paperSize = PaperSize[0];
     }
 
+    const paddingTopForHeaderAndFooter = paperSize.code === Enum.PAPER_SIZE.MINI_THERMAL ? -10 : 2.5;
+
     return (
       <div /*style={{display: "none"}}*/ id="pos-receipt-preview">
         <div style={{
@@ -117,18 +119,18 @@ export default class Receipt extends Component {
                             <td colSpan="2" style={{backgroundColor: "white", textAlign: "left", paddingTop: 10}}><this.Translate id="register_no"/>: {this.Util.getDeviceNumber()}</td>
                           </tr>
                           <tr>
-                            <td colSpan="2" style={{backgroundColor: "white", textAlign: "left"}}><this.Translate id="text_date"/>: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
+                            <td colSpan="2" style={{backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter}}><this.Translate id="text_date"/>: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
                           </tr>
                           <tr>
-                            <td colSpan="2" style={{backgroundColor: "white", textAlign: "left"}}><this.Translate id="receipt_no"/>: {this.props.data.receiptNumber}</td>
+                            <td colSpan="2" style={{backgroundColor: "white", textAlign: "left",  paddingTop: paddingTopForHeaderAndFooter}}><this.Translate id="receipt_no"/>: {this.props.data.receiptNumber}</td>
                           </tr>
                           <tr>
-                            <td colSpan="2" style={{backgroundColor: "white", textAlign: "left"}}><this.Translate id="text_cashier"/>: <span style={{textTransform: "uppercase"}}>{cashier}</span></td>
+                            <td colSpan="2" style={{backgroundColor: "white", textAlign: "left",  paddingTop: paddingTopForHeaderAndFooter}}><this.Translate id="text_cashier"/>: <span style={{textTransform: "uppercase"}}>{cashier}</span></td>
                           </tr>
                           {
                             this.props.receiptTemplate.isHasSubCurrency ?
                               <tr>
-                                <td colSpan="2" style={{backgroundColor: "white", textAlign: "left"}}><this.Translate id="exchange_rate"/>: {this.Util.formatCurrency(this.props.receiptTemplate.subCurrency.value, this.props.receiptTemplate.subCurrency.symbol)}</td>
+                                <td colSpan="2" style={{backgroundColor: "white", textAlign: "left",  paddingTop: paddingTopForHeaderAndFooter}}><this.Translate id="exchange_rate"/>: {this.Util.formatCurrency(this.props.receiptTemplate.subCurrency.value, this.props.receiptTemplate.subCurrency.symbol)}</td>
                               </tr>
                               :
                               <tr />
@@ -166,7 +168,7 @@ export default class Receipt extends Component {
                               <div>{product.name}</div>
                               {
                                 product.variantName ?
-                                  <div style={{fontSize: paperSize.setting.subDataFontSize, marginTop: "2px"}}>{product.variantName}</div>
+                                  <div style={{fontSize: paperSize.setting.subDataFontSize}}>{product.variantName}</div>
                                   :
                                   ""
                               }
@@ -186,19 +188,19 @@ export default class Receipt extends Component {
                         <td style={{backgroundColor: "white", textAlign: "right", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5}}>{this.formatCurrency(this.props.summaryTotal.subTotalAfterDiscount)}</td>
                       </tr>
                       <tr>
-                        <td style={{backgroundColor: "white"}} />
+                        <td style={{backgroundColor: "white", paddingTop: 5}} />
                         <td style={{backgroundColor: "white"}}>
                           <span className="text-uppercase"><this.Translate id="text_tax" /></span> {taxTitle}:
                         </td>
                         <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency(this.props.taxAmount)}</td>
                       </tr>
                       <tr>
-                        <td style={{backgroundColor: "white"}} />
+                        <td style={{backgroundColor: "white", paddingTop: 5}} />
                         <td style={{backgroundColor: "white"}}><this.Translate id="text_discount"/>:</td>
                         <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency(this.props.discountAmount)}</td>
                       </tr>
                       <tr>
-                        <td style={{backgroundColor: "white"}} />
+                        <td style={{backgroundColor: "white", paddingTop: 5}} />
                         <td style={{backgroundColor: "white"}}><this.Translate id="text_total" />{this.props.receiptTemplate.isHasSubCurrency ? `(${this.props.receiptTemplate.baseCurrency.symbol})` : ""}:</td>
                         <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency((this.props.summaryTotal.subTotalAfterDiscount + this.props.taxAmount) - this.props.discountAmount)}</td>
                       </tr>
