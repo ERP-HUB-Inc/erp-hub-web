@@ -81,6 +81,10 @@
     padding-left: 35px
 }
 
+.wrap-variant-item-row .wrap-lozenge-group-input {
+    height: auto
+}
+
 .btn-delete-attribute {
     margin-top: 5px;
     margin-left: 15px;

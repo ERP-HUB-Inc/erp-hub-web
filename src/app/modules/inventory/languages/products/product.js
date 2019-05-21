@@ -219,9 +219,9 @@ export default {
   ],
 
   "input_product_non_inventory": [
-    "Non-Inventory",
+    "None-Inventory",
     "មិនមែនសារពើភ័ណ្ឌ",
-    "Non-Inventory"
+    "None-Inventory"
   ],
 
   "input_product_standard": [

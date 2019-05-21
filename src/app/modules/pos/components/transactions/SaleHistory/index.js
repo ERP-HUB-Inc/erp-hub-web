@@ -129,7 +129,8 @@ export default class SaleHistoryList extends List {
       setting: {
         storeName: "",
         address: "",
-        phoneNumber: ""
+        phoneNumber: "",
+        businessName: ""
       },
       currentUser: {
         fullName: ""
@@ -140,6 +141,7 @@ export default class SaleHistoryList extends List {
       currentUser.setting.storeName = data.client.storeName;
       currentUser.setting.address = data.client.address;
       currentUser.setting.phoneNumber = data.client.phoneNumber;
+      currentUser.setting.businessName = data.client.businessName;
     }
 
     if (data.user) {

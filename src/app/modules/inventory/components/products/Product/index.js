@@ -475,11 +475,22 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="col_products_tag" />,
-        key: "tag",
+        title: <this.Translate id="text_stock_type" />,
+        dataIndex: "serialType",
+        key: "serialType",
         width: 150,
-        render: (text, record) => {
-          return record.tags.map((tag, index) => `${tag.tag}${(index + 1) !== record.tags.length ? ", " : ""}`);
+        render: serialType => {
+          let stockTypeStr = <this.Translate id="text_other" />;
+          let stockTypeColorIndex = 1;
+          if (serialType === Enum.SERIAL_TYPE.STANDARD) {
+            stockTypeStr = <this.Translate id="input_product_standard" />;
+            stockTypeColorIndex = 0;
+          } else if (serialType === Enum.SERIAL_TYPE.NON_INVENTORY) {
+            stockTypeStr = <this.Translate id="input_product_non_inventory" />;
+            stockTypeColorIndex = 1;
+          }
+
+          return <this.Tag color={this.colorStockStatus[stockTypeColorIndex]} className="text-center label-stock-status" style={{minWidth: 100}}>{stockTypeStr}</this.Tag>;
         }
       },
       {
