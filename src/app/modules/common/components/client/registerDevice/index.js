@@ -63,7 +63,7 @@ export default class SignInStore extends Component {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.dispatch(DeviceAction.update(values.deviceNumber, this.Util.getDomainInfo().subStr));
+        this.props.dispatch(DeviceAction.update(values.deviceName, values.deviceNumber, this.Util.getDomainInfo().subStr));
       }
     });
   }
@@ -85,17 +85,26 @@ export default class SignInStore extends Component {
         <this.Form onSubmit={this.handleSubmit}>
           <div className={this.validateClassStatus}>
             <this.InputText
+              name="deviceName"
+              placeholder="Name"
+              type="text"
+              label="Name"
+              required={true}
+              isAutoFocus={true}
+              errorRequired="Please enter device name"
+              form={this.props.form}/>
+
+            <this.InputText
               name="deviceNumber"
               placeholder="Device Number"
               type="text"
               label="Device Number"
               required={true}
-              isAutoFocus={true}
               {...this.state.errorDeviceNumber}
               errorRequired="Please enter device number to grant access"
               validateClassStatus={this.validateClassStatus}
               handleKeyDown={this.handleKeyDown}
-              form={this.props.form}/>
+              form={this.props.form} />
             {this.errorMessage != null ? <div className="ant-form-explain">{this.errorMessage}</div> : "" }
             <div className="main-signin" style={{marginTop: 15}}>
               <this.Button loading={this.props.update.updating} htmlType="submit" type="info">SUBMIT</this.Button>

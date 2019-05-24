@@ -274,5 +274,11 @@ export default {
     "ទំរង់កាលបរិច្ចេទ",
     "Date Format"
   ],
+
+  "text_new_device_success": [
+    "Device has renew successfully",
+    "លេខឧបករណ៍បានបង្កើរឡើងវិញ",
+    "Device has renew successfully"
+  ]
 };
   

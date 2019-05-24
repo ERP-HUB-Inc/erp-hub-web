@@ -26,6 +26,7 @@ export default class StoreAccountList extends Component {
     this.state = {
       classChange: "unhide",
       getstoreaccid: "",
+      deviceList: []
     };
     this.module = <this.Translate id="text_setting" />;
     
@@ -82,6 +83,8 @@ export default class StoreAccountList extends Component {
       }
     ];
 
+    this.hasUpdated = false;
+
     this.handleOnReNewDeviceNumber = this.handleOnReNewDeviceNumber.bind(this);
     this.handleOnCopyDeviceNumber = this.handleOnCopyDeviceNumber.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -93,7 +96,7 @@ export default class StoreAccountList extends Component {
 
   componentDidMount(){
     this.dispatch(PrivilegeAction.checkPermission(StoreAccountService.detailRoute));
-    this.dispatch(StoreAccountAction.fetch(this.client.clientId));  
+    this.dispatch(StoreAccountAction.fetch(this.client.clientId));
     this.dispatch(fetchAllBusinessPlanSystem());
     this.dispatch(TaxAction.fetch(100));
     this.dispatch(LanguageAction.fetch(100));
@@ -103,9 +106,25 @@ export default class StoreAccountList extends Component {
 
   componentDidUpdate() {
     if (this.props.renew.updated) {
+      if (this.props.renew.response && this.props.renew.response.data) {
+        const deviceList = this.state.deviceList.find(device => device.id === this.props.renew.response.data.id);
+        deviceList["status"] = this.props.renew.response.data.status;
+        deviceList["code"] = this.props.renew.response.data.code;
+      }
+
+      this.Message.success(this.CATranslate("text_new_device_success", this.props.locale));
+
       this.dispatch(DeviceAction.reset(ConstantDevice.RESET_RENEW_DEVICE));
-      window.location.reload();
     }
+
+    if (!this.hasUpdated && this.props.devices.fetched) {
+      this.setState({deviceList: this.props.devices.list});
+      this.hasUpdated = true;
+    }
+  }
+
+  componentWillUnmount() {
+    this.hasUpdated = false;
   }
 
   handleSubmit(e){
@@ -489,8 +508,14 @@ export default class StoreAccountList extends Component {
                                 disabled={true}
                                 form={form} />
                               <this.Table 
-                                dataSource={this.props.devices.list}
+                                dataSource={this.state.deviceList}
                                 columns={[
+                                  {
+                                    title: <this.Translate id="text_name" />,
+                                    dataIndex: "name",
+                                    key: "name",
+                                    width: 180
+                                  },
                                   {
                                     title: <this.Translate id="text_number" />,
                                     dataIndex: "code",

@@ -8,8 +8,9 @@ class DeviceService extends BaseService {
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 
-  update(number, storeName) {
+  update(deviceName, number, storeName) {
     this.header["storeName"] = storeName;
+    this.header["deviceName"] = deviceName;
     return this.PUT({
       url: `${this.baseUrl}/update/${number}`,
       data: {},

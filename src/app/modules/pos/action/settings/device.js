@@ -11,11 +11,11 @@ export default {
       });
     };
   },
-  update: (number, storeName) => {
+  update: (deviceName, number, storeName) => {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_DEVICE,
-        payload: DeviceService.update(number, storeName)
+        payload: DeviceService.update(deviceName, number, storeName)
       });
     };
   },
