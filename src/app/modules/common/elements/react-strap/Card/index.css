@@ -68,7 +68,8 @@
 .wrap-card .card-footer a
 {
     font-size: 10pt;
-    text-decoration: none
+    text-decoration: none;
+    display: block
 }
 
 .wrap-card .total

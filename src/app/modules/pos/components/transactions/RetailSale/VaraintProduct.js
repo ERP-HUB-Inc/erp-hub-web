@@ -119,15 +119,18 @@ export default class VariantProduct extends Modal {
     const numberRow = 3;
     const attributesValueRows = this.Util.chuckCollection(attributeValues, numberRow);
 
-    return attributesValueRows.map(values => 
-      values.map((variant, variantIndex) =>
-        <this.Col md={12/values.length} className="variant-box" key={variantIndex} onClick={() => this.handleOnSelectAttributeValue(this.state.selectedAttributeIndex, variant.name, variant.id)}>
-          <div className="variant-item">
-            {variant.name}
-          </div>
-        </this.Col>
-      )
-    );
+    return <this.Row style={{margin: 0, maxHeight: 500, overflow: "auto"}}>
+      {
+        attributesValueRows.map(values => 
+          values.map((variant, variantIndex) =>
+            <this.Col md={12/values.length} className="variant-box" key={variantIndex} onClick={() => this.handleOnSelectAttributeValue(this.state.selectedAttributeIndex, variant.name, variant.id)}>
+              <div className="variant-item">
+                {variant.name}
+              </div>
+            </this.Col>
+          )
+        )}
+    </this.Row>;
   }
 
   render() {

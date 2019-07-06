@@ -31,12 +31,12 @@ export const PaperSize = [
     name: "Mini Thermal",
     setting: {
       storeNameFontSize: "10pt",
-      dataFontSize: "7.5pt",
-      subDataFontSize: "6.5pt",
+      dataFontSize: "7pt",
+      subDataFontSize: "6pt",
       // width: "80%",
       width: "100%",
       color: "black",
-      marginLef: "-30px", // Help to solve problem with mini printer print over margin right
+      marginLef: "-25px", // Help to solve problem with mini printer print over margin right
       padding: "0px 15px"
       // padding: 5
     }

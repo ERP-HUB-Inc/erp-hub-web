@@ -1,4 +1,6 @@
 import React from "react";
+import { isMobile, isAndroid, isIOS } from "react-device-detect";
+import ProductTypeList from "./ProductTypeList";
 import DiscountSetup from "./DiscountSetup";
 import TaxSetting from "./TaxSetting";
 import Enum from "../../../enums";
@@ -29,7 +31,6 @@ import POSUtil from "../../../utils";
 import Component from "../../../../common/components/Component";
 import PaymentForm from "../../../containers/transactions/SaleWalkin/Payment";
 import VaraintProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
-import { isMobile, isAndroid, isIOS } from "react-device-detect";
 import "./index.css";
 
 export default class Retail extends Component {
@@ -52,7 +53,7 @@ export default class Retail extends Component {
       initialOrderDiscountType: Enum.DISCOUNT_TYPE.PERCENTAGE,
       initialTax: 0,
       isDiscountHasAdded: false,
-      selectedCategoryIds: [0],
+      selectedCategoryIds: [],
       selectedReceiptType: Enum.CURRENT_RECEIPT,
       isHasSubCurrency: false,
       baseCurrency: {},
@@ -61,6 +62,7 @@ export default class Retail extends Component {
     this.isSetFocusOnSearchProduct = false;
     this.hasDidUpdate = false;
     this.hadNotYetReceiveProps = true;
+    this.productWidth = 0;
     this.service = TransactionService;
 
     this.handleOnSelectCategory = this.handleOnSelectCategory.bind(this);
@@ -83,6 +85,8 @@ export default class Retail extends Component {
     this.handleOnOpenTaxSetting = this.handleOnOpenTaxSetting.bind(this);
     this.handleCancelTaxSetting = this.handleCancelTaxSetting.bind(this);
     this.handleCancelDiscountSetup = this.handleCancelDiscountSetup.bind(this);
+    this.handleOnClickAllCategory = this.handleOnClickAllCategory.bind(this);
+    this.handleOnCancelAllCategory = this.handleOnCancelAllCategory.bind(this);
     this.handleOnResizeScreen = this.handleOnResizeScreen.bind(this);
     this.handleRemoveDiscount = this.handleRemoveDiscount.bind(this);
     this.handleGetDiscount = this.handleGetDiscount.bind(this);
@@ -257,13 +261,14 @@ export default class Retail extends Component {
     }
 
     const tax = POSUtil.getTaxFromProduct(product);
+    const price = isNaN(parseFloat(productVariant.price)) ? 0 : productVariant.price;
     targetList.push({
       productVariantId: productVariant.id,
       name: Util.getProductName(product),
       variantName: productVariant.name,
       barcode: productVariant.barcode,
-      price: productVariant.price,
-      newPrice: productVariant.price,
+      price,
+      newPrice: price,
       quantity: this.state.initialOrderQuantity,
       discount: this.state.initialOrderDiscount,
       discountType: this.state.initialOrderDiscountType,
@@ -358,10 +363,19 @@ export default class Retail extends Component {
     let filter = "";
     if (value !== 0) {
       filter = JSON.stringify({productTypeId: [value]});
+
+      if (this.state.selectedCategoryIds.includes(value)) {
+        filter = "";
+        this.setState({selectedCategoryIds: []});
+      } else {
+        this.setState({selectedCategoryIds: [value]});
+      }
+    } else {
+      this.handleOnClickAllCategory();
+      return;
     }
 
-    this.props.dispatch(ProductAction.fetch(25, "", "", "", filter, "", this.Util.getLocationId()));
-    this.setState({selectedCategoryIds: [value]});
+    this.props.dispatch(ProductAction.fetch(9999, "", "", "", filter, "", this.Util.getLocationId()));
   }
 
   handleCancelVariantProduct() {
@@ -596,6 +610,12 @@ export default class Retail extends Component {
     });
   }
 
+  handleOnCancelAllCategory () {
+    this.setState({
+      modalContent: null
+    });
+  }
+
   handleOnMakePayment() {
     this.handleonSearchfails();
     if (this.openFormSaleRegisration()) {
@@ -624,6 +644,16 @@ export default class Retail extends Component {
   handleGetDiscount(discountValue) {
     this.setState({
       discountValue
+    });
+  }
+
+  handleOnClickAllCategory() {
+    this.setState({
+      modalContent: <ProductTypeList
+        list={this.props.productsType.list}
+        handleCancel={this.handleOnCancelAllCategory}
+        form={this.props.form}
+        handleOnSelectCategory={this.handleOnSelectCategory} />
     });
   }
 
@@ -710,8 +740,8 @@ export default class Retail extends Component {
 
   renderProductList() {
     const countProduct = this.props.products.list.length;
-    const scrollWidth = 20;
-    const categoryPanelHeight = 68;
+    const scrollWidth = 5;
+    const categoryPanelHeight = 60;
     const headerHeight = 50;
     const itemPanelHeight = window.innerHeight - (headerHeight + categoryPanelHeight);
     const screenWidth = window.innerWidth - 420;
@@ -734,13 +764,14 @@ export default class Retail extends Component {
 
     const imageHeight = productWidth - 70;
     const imageWidth = productWidth - 25;
+    this.productWidth = productWidth;
 
     return (
       countProduct > 0 ?
         this.props.products.list.map((product, index) =>
           <this.Col style={{width: productWidth, maxWidth: "none", flex: "none"}} md="3" className="product-box" key={index}>
             <div onClick={() => this.handleOnSelectProduct(product, product.productVariants)} className="product" style={{height: productWidth}}>
-              <div className="image" style={{maxHeight: imageHeight}}>
+              <div className="image" style={{minHeight: imageHeight, maxHeight: imageHeight}}>
                 <this.Image style={{maxHeight: imageHeight}} url={this.Util.processImageOnFlightCropCenter(this.Util.getProductImage(product.image).url, {height: imageHeight, width: imageWidth})}/>
               </div>
               {
@@ -845,14 +876,18 @@ export default class Retail extends Component {
                     <StartUp />
                     :
                     this.state.categoryList.concat(this.props.productsType.list).map((category, index) =>
-                      <this.Col md="3" className="category-box" key={index}>
+                      <this.Col md="3" className="category-box" style={{width: this.productWidth}} key={index}>
                         <div onClick={() => this.handleOnSelectCategory(category.id)} className={`category ${this.state.selectedCategoryIds.includes(category.id)? "selected": "" }`}>
-                          {
-                            "productTypeDescriptions" in category && category["productTypeDescriptions"].length > 0 ?
-                              category["productTypeDescriptions"][0].name
-                              :
-                              category.name
-                          }
+                          <div style={{maxHeight: 20, overflow: "hidden", wordBreak: "break-all"}}>
+                            <div>
+                              {
+                                "productTypeDescriptions" in category && category["productTypeDescriptions"].length > 0 ?
+                                  category["productTypeDescriptions"][0].name
+                                  :
+                                  category.name
+                              }
+                            </div>
+                          </div>
                         </div>
                       </this.Col>
                     )

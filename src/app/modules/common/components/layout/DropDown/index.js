@@ -76,7 +76,7 @@ export default class MenuDropDown extends Component {
                   }
                 </Menu>
                 }
-                trigger={["click"]}>
+                trigger={["hover"]}>
                 <this.Link to="#" className="ant-dropdown-link user-account">
                   {this.iconLanguages[this.props.currentLanguage.code]}
                   <span className="title-user">{this.props.currentLanguage.name}</span> 
@@ -94,7 +94,7 @@ export default class MenuDropDown extends Component {
           </a>
         </li> */}
         <li>
-          <Dropdown overlay={this.menu} trigger={["click"]}>
+          <Dropdown overlay={this.menu} trigger={["hover"]}>
             <this.Link to="#" className="ant-dropdown-link user-account">
               <span className="icon-user icon-padding-right"></span>
               <span className="title-user">{fullName}</span> 

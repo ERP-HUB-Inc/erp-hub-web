@@ -457,6 +457,10 @@ export class Util {
     return _.sumBy(collection, key);
   }
 
+  orderBy(collection, field = [], type="asc") {
+    return _.orderBy(collection, field, type);
+  }
+
   isNoPermissionProp(props) {
     return props.checkPermission && this.getErrorCodeFromState(props.checkPermission.error) === Enum.NO_PERMISSON;
   }
