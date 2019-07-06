@@ -279,9 +279,9 @@ export default class PurchaseOrderLists extends List {
             filter["supplierId"] = [values.supplierId];
           }
 
-          if (values.deliveryDueDate) {
-            values.deliveryDueDate = this.Util.formatDateForMYSQL(values.deliveryDueDate);
-            rangFilter = JSON.stringify({column: "deliveryDueDate", value: [values.deliveryDueDate, values.deliveryDueDate]});
+          if (values.createdAt) {
+            values.createdAt = this.Util.formatDateForMYSQL(values.createdAt);
+            rangFilter = JSON.stringify({column: "createdAt", value: [values.createdAt + " 00:00:00", values.createdAt + " 23:59:59"]});
           }
     
           filter = JSON.stringify(filter);
@@ -316,7 +316,7 @@ export default class PurchaseOrderLists extends List {
                 label={<this.Translate id="text_search" />}
                 placeholder={this.CATranslate("text_po_general_search", locale)}
                 isAutoFocus={true}
-                form={form}/>
+                form={form} />
             </this.Col>
             <this.Col md="2">
               <this.Select
@@ -325,14 +325,13 @@ export default class PurchaseOrderLists extends List {
                 dataSource={this.supplierList.concat(this.props.supplier.list)}
                 defaultValue={this.supplierList[0].id}
                 valueKey="id"
-                form={form}/>
+                form={form} />
             </this.Col>
             <this.Col md="2">
               <this.DatePickers
-                name="deliveryDueDate"
-                label={<this.Translate id="text_due_date" />}
-                form={form}
-              />
+                name="createdAt"
+                label={<this.Translate id="text_date" />}
+                form={form} />
             </this.Col>
             <this.Col md="2">
               <this.Select
@@ -340,8 +339,7 @@ export default class PurchaseOrderLists extends List {
                 label={<this.Translate id="text_step" />}
                 dataSource={POStepList}
                 defaultValue={POStepList[0].value}
-                form={form}
-              />
+                form={form} />
             </this.Col>
             <this.Col md="2" className="wrap-btn-search">
               <div className="ant-form-item-label" style={{visibility: "hidden"}}>
