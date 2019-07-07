@@ -119,7 +119,7 @@ export default class VariantProduct extends Modal {
     const numberRow = 3;
     const attributesValueRows = this.Util.chuckCollection(attributeValues, numberRow);
 
-    return <this.Row style={{margin: 0, maxHeight: 500, overflow: "auto"}}>
+    return <this.Row style={{margin: 0, maxHeight: 500, overflow: "auto", width: "100%"}}>
       {
         attributesValueRows.map(values => 
           values.map((variant, variantIndex) =>

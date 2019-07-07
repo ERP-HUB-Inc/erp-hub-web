@@ -16,6 +16,7 @@ import StartUp from "../../../../common/components/StartUp";
 import menuSource from "../../../../common/components/layout/SiderBar/datasource";
 import PrivilegeService from "../../../../pos/services/settings/PrivilegeService";
 import PrivilegeAction from "../../../../pos/action/settings/privilege";
+import {modules} from "../../../../common/components/layout/Module";
 import "./index.css";
 
 const currentPath = window.location.pathname;
@@ -26,6 +27,12 @@ export default class StoreAccountList extends Component {
     this.state = {
       classChange: "unhide",
       getstoreaccid: "",
+      selectedModules: [
+        {id: 1, route: "transactions", status: 1},
+        {id: 2, route: "/transactions/salehistory", status: 1},
+        {id: 3, route: "/transactions/saleorder", status: 1},
+        {id: 3, route: "/transactions/saleregister", status: 1}
+      ],
       deviceList: []
     };
     this.module = <this.Translate id="text_setting" />;
@@ -87,6 +94,7 @@ export default class StoreAccountList extends Component {
 
     this.handleOnReNewDeviceNumber = this.handleOnReNewDeviceNumber.bind(this);
     this.handleOnCopyDeviceNumber = this.handleOnCopyDeviceNumber.bind(this);
+    this.onChangeOnCheckModule = this.onChangeOnCheckModule.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onSelect = this.onSelect.bind(this);
@@ -168,6 +176,84 @@ export default class StoreAccountList extends Component {
 
   handleChangeDateFormat(value) {
     this.exampleDateFormat= "Ex: " + this.Util.formatDate("2018-08-04", value);
+  }
+
+  onChangeOnCheckModule(e, moduleObj, moduleKey) {
+    let selectedModules = this.state.selectedModules;
+    const modulesArr = Object.keys(modules).map(key => modules[key]);
+
+    if (e.target.checked) {
+      const resultFindIndex = selectedModules.findIndex(value => value.route === moduleObj.route);
+      if (resultFindIndex >= 0) {
+        selectedModules[resultFindIndex]["status"] = this.Enum.ACTIVE;
+
+        // MAKE AUTO CHECK FOR SUB MODULES
+        if (!moduleObj.parent) {
+          const subModules = modulesArr.filter(value => value.parent === moduleKey);
+          
+          subModules.forEach(value => {
+            //CHECK EXIST OR NOT
+            const subModuleFindIndex = selectedModules.findIndex(selectedModule => selectedModule.route === value.route);
+            if (subModuleFindIndex >= 0) {
+              selectedModules[subModuleFindIndex]["status"] = this.Enum.ACTIVE;
+            }
+          });
+        }
+      } else {
+        selectedModules.push({
+          route: moduleObj.route,
+          status: this.Enum.ACTIVE
+        });
+
+        // MAKE AUTO CHECK FOR SUB MODULES
+        if (!moduleObj.parent) {
+          const subModules = modulesArr.filter(value => value.parent === moduleKey);
+          subModules.forEach(value => {
+            //CHECK EXIST OR NOT
+            const subModuleFindIndex = selectedModules.findIndex(selectedModule => selectedModule.route === value.route);
+            if (subModuleFindIndex === -1) {
+              selectedModules.push({
+                route: value.route,
+                status: this.Enum.ACTIVE
+              });
+            }
+          });
+        }
+      }
+    } else {
+      let tempSelectedModules = [];
+      selectedModules.forEach(value => {
+        if (value.id && moduleObj.route === value.route) {
+          value["status"] = this.Enum.ARCHIVE;
+          tempSelectedModules.push(value);
+        } else if (value.route !== moduleObj.route) {
+          tempSelectedModules.push(value);
+        }
+      });
+
+      selectedModules = tempSelectedModules;
+      tempSelectedModules = [];
+
+      if (!moduleObj.parent) {
+        const subModules = modulesArr.filter(value => value.parent === moduleKey).map(value => value.route);
+
+        selectedModules.forEach(value => {
+          if (value.id && subModules.includes(value.route)) {
+            value["status"] = this.Enum.ARCHIVE;
+            tempSelectedModules.push(value);
+          } else if (!subModules.includes(value.route)) {
+            tempSelectedModules.push(value);
+          }
+        });
+
+        console.log("TempSelectedModules:", tempSelectedModules);
+        selectedModules = tempSelectedModules;
+      }
+    }
+
+    console.log("SelectedModules:", selectedModules);
+
+    this.setState({selectedModules});
   }
 
   onSelect(value){
@@ -375,6 +461,22 @@ export default class StoreAccountList extends Component {
                                 placeholder={this.CATranslate("store_acc_date_format", locale)}
                                 form={form} />
 
+                              <this.Select
+                                name="productGenerateCodeType"
+                                defaultValue={storeAccount.list.productGenerateCodeType}
+                                dataSource={this.autoGenerateDataSource}
+                                label={<this.Translate id="text_auto_generate_pcode" />}
+                                placeholder={this.CATranslate("text_auto_generate_pcode", locale)}
+                                form={form} />
+
+                              <this.InputNumber
+                                name="productCodeSequenceStart"
+                                label={<this.Translate id="text_start_sequence_code" />}
+                                placeholder={this.CATranslate("text_start_sequence_code", locale)}
+                                data={storeAccount.list.productCodeSequenceStart}
+                                max={9999999999}
+                                errorLength={<this.Translate id="store_acc_error_sequence_start_no" />}
+                                form={form} />
                             </this.Col>
                           </this.Row>
                         </this.TabPane>
@@ -474,25 +576,21 @@ export default class StoreAccountList extends Component {
                             </this.Col>
                           </this.Row>
                         </this.TabPane>
-                        <this.TabPane tab={<this.Translate id="text_setting" />} key="4">
+                        <this.TabPane tab={<this.Translate id="text_module" />} key="4">
                           <this.Row>
-                            <this.Col lg="4" md="4"> 
-                              <this.Select
-                                name="productGenerateCodeType"
-                                defaultValue={storeAccount.list.productGenerateCodeType}
-                                dataSource={this.autoGenerateDataSource}
-                                label={<this.Translate id="text_auto_generate_pcode" />}
-                                placeholder={this.CATranslate("text_auto_generate_pcode", locale)}
-                                form={form} />
-
-                              <this.InputNumber
-                                name="productCodeSequenceStart"
-                                label={<this.Translate id="text_start_sequence_code" />}
-                                placeholder={this.CATranslate("text_start_sequence_code", locale)}
-                                data={storeAccount.list.productCodeSequenceStart}
-                                max={9999999999}
-                                errorLength={<this.Translate id="store_acc_error_sequence_start_no" />}
-                                form={form} />
+                            <this.Col lg="4" md="4" style={{paddingBottom: 15}}> 
+                              {
+                                Object.keys(modules).map((key, index) => 
+                                  <div className={`module ${modules[key].parent ? "sub-module" : ""}`}>
+                                    <this.Checkbox
+                                      value={{id: modules[key].id, name: modules[key].route, parent: modules[key].parent}}
+                                      checked={this.state.selectedModules.findIndex(value => value.route === modules[key].route && value.status === this.Enum.ACTIVE) >= 0}
+                                      onChange={(e) => this.onChangeOnCheckModule(e, modules[key], key)}>
+                                      {modules[key].title}
+                                    </this.Checkbox>
+                                  </div>
+                                )
+                              }
                             </this.Col> 
                           </this.Row>
                         </this.TabPane>

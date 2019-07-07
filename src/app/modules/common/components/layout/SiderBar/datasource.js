@@ -429,12 +429,6 @@ const dataSource = {
         component: GroupCustomer,
         isFashNav: true
       }
-      // {
-      //   title: "Purchase History",
-      //   icon: "icon-time",
-      //   route: "/customers/history",
-      //   component: PurchaseHistory
-      // }
     ]
   },
   employees: {
