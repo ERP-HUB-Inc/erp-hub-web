@@ -39,3 +39,22 @@
 .main-layout.main-store-account .main-upload .ant-upload-list-picture-card .ant-upload-list-item {
    height: 153px !important; 
 }
+
+.module {
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: #fafafa;
+    border-bottom: 0.5px solid #f3f1f1
+}
+
+.module:hover {
+    background-color: #fcfcfc
+}
+
+.module .ant-checkbox-wrapper {
+    width: 100%
+}
+
+.sub-module {
+    padding-left: 25px
+}

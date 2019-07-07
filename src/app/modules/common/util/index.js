@@ -461,6 +461,17 @@ export class Util {
     return _.orderBy(collection, field, type);
   }
 
+  moveArray(arr, old_index, new_index) {
+    if (new_index >= arr.length) {
+      var k = new_index - arr.length + 1;
+      while (k--) {
+        arr.push(undefined);
+      }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr; // for testing
+  };
+
   isNoPermissionProp(props) {
     return props.checkPermission && this.getErrorCodeFromState(props.checkPermission.error) === Enum.NO_PERMISSON;
   }

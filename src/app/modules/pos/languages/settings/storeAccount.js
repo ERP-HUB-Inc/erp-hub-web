@@ -279,6 +279,12 @@ export default {
     "Device has renew successfully",
     "លេខឧបករណ៍បានបង្កើរឡើងវិញ",
     "Device has renew successfully"
+  ],
+
+  "text_module": [
+    "Module",
+    "Module",
+    "Module"
   ]
 };
   
