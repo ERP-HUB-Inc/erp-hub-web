@@ -769,12 +769,12 @@ export default class Retail extends Component {
 
     if (screenWidth > 1300) {
       numberOfColumn = 6;
-      cuttingPaddingRightScroll = 2.5;
+      cuttingPaddingRightScroll = 4;
     }
 
     const numberOfItemRow = Math.ceil(countProduct / numberOfColumn);
 
-    let productWidth = (screenWidth/numberOfColumn) - cuttingPaddingRightScroll;
+    let productWidth = (screenWidth / numberOfColumn) - cuttingPaddingRightScroll;
     let productHeight = productWidth;
 
     if ((numberOfItemRow * productHeight) > itemPanelHeight) { // calculate total height of all row of item list
