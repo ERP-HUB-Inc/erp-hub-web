@@ -7,6 +7,7 @@ import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
 import PurchaseOrderShowEmailAction from "../../../actions/stock/purchaseOrderSendEmail";
 import FormCreatePurchseOrderSendEmail from "../../../containers/stock/PurchaseOrder/ConfirmEmail/FormCreate";
 import EnumSetting from "../../../../pos/enums";
+import history from "../../../../../modules/common/router/history";
 import "./index.css";
 
 export default class FormCreate extends Modal {
@@ -105,6 +106,10 @@ export default class FormCreate extends Modal {
 
         values["POEntries"] = purchaseEntries;
         this.dispatch(PurchaseOrderAction.add(values));
+
+        if(this.props.isHasReOrderProductList){
+          history.push("/stock/purchase/order");
+        }
       }
     });
   }
