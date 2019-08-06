@@ -21,11 +21,14 @@ export default class TaxList extends List {
 
   componentWillUpdate(nextProps) {
     if (nextProps.add.added && nextProps.add.response) {
-      const newAddedTax = nextProps.add.response.data;
-      let existingTaxes = localStorage.getItem(Enum.LOCAL_SCHEMA.TAX);
-      existingTaxes = JSON.parse(existingTaxes);
-      existingTaxes.push(newAddedTax);
-      localStorage.setItem(Enum.LOCAL_SCHEMA.TAX, JSON.stringify(existingTaxes));
+      if(nextProps.add.response.data){
+        const newAddedTax = nextProps.add.response.data;
+        let existingTaxes = localStorage.getItem(Enum.LOCAL_SCHEMA.TAX);
+        existingTaxes = JSON.parse(existingTaxes);
+        existingTaxes.push(newAddedTax);
+        localStorage.setItem(Enum.LOCAL_SCHEMA.TAX, JSON.stringify(existingTaxes));
+      }
+     
     }
   }
 }
