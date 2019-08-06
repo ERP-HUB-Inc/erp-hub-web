@@ -581,16 +581,20 @@ export default class FormItem extends Modal {
                 <this.Col md="4">
                 </this.Col>
 
-                <this.Col md="4">
-                  <this.InputNumber
-                    name="costDisplay"
-                    label={<span><this.Translate id="text_cost" /><span> ({currentUser.setting.currency})</span></span>}
-                    data={formData.cost === 0 ? null : formData.cost}
-                    placeholder={this.CATranslate("text_cost_placeholder", locale)}
-                    max={99999999}
-                    disabled={true}
-                    form={form}/>
-                </this.Col>
+                {
+                  formData.productOption === Enum.PRODUCT_VARIANT ?
+                    ""
+                    :
+                    <this.Col md="4">
+                      <this.InputNumber
+                        name="costDisplay"
+                        label={<span><this.Translate id="text_cost" /><span> ({currentUser.setting.currency})</span></span>}
+                        data={Util.getProductCost(formData)}
+                        placeholder={this.CATranslate("text_cost_placeholder", locale)}
+                        disabled={true}
+                        form={form}/>
+                    </this.Col>
+                }
 
                 <this.Col md="4">
                   <this.InputNumber
