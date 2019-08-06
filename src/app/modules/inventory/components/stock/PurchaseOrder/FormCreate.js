@@ -143,7 +143,7 @@ export default class FormCreate extends Modal {
           productVariant={this.props.productVariant}
           requestOrderNumber={requestOrderNumber}
           product={product}
-          isHasReOrderProductList={this.props.isHasReOrderProductList}
+          productReOrderPointList={this.props.productReOrderPointList}
           dispatch={dispatch} 
           locale={locale} />;
     

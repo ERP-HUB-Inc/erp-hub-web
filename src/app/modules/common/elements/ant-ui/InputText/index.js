@@ -10,6 +10,7 @@ export class InputText extends Element {
         type={ this.props.type }
         name={this.props.name}
         className={this.props.className}
+        autoComplete={this.props.autoComplete}
         placeholder={this.props.placeholder}
         label={this.props.label}
         help={this.props.help}

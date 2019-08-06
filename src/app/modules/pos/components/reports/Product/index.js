@@ -8,7 +8,6 @@ import ProductTypeAction from "../../../../inventory/actions/products/productsTy
 import BrandAction from "../../../../inventory/actions/products/brand";
 import LocationAction from "../../../../pos/action/settings/location";
 import PurchaseAction from "../../../../inventory/actions/stock/purchaseOrder";
-import ProductAction from "../../../../inventory/actions/products/product";
 import InventoryUtil from "../../../../inventory/utils"; 
 import Enum from "../../../../inventory/enums";
 import "./index.css";
@@ -104,13 +103,11 @@ export default class ProductList extends List {
   }
 
   handlePurchaseOrderForm(){
-    this.props.dispatch(PurchaseAction.showForm());  
-    this.props.dispatch(ProductAction.fetch(1000));  
-    this.setState({
-      modalConten: <FormCreate
-        isHasReOrderProductList = {true}
-      />
-    });
+    this.props.dispatch(PurchaseAction.showForm());
+    if (this.props.list.list && Array.isArray(this.props.list.list)) {
+      const productReOrderPointList = this.props.list.list.filter(value => value.quantity <= value.reorderPoint && value.product.serialType === Enum.SERIAL_TYPE.STANDARD);
+      this.setState({ modalConten: <FormCreate productReOrderPointList={productReOrderPointList} /> });
+    }
   }
 
   exportCsv(){
@@ -124,7 +121,7 @@ export default class ProductList extends List {
           filename={this.exportCsvFileName}
           data={this.exportCsv()}
           headers={this.ExportheadersCsv}>
-          <this.Button type="info" disabled={ this.props.list.list.length > 0 ? false : true }>
+          <this.Button type="info" disabled={this.props.list.list.length > 0 ? false : true }>
             <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
           </this.Button>
         </this.CSVLink>

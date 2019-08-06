@@ -46,9 +46,9 @@ export default {
     "User Guides"
   ],
   "home_page_guide_types": [
-    "categorys",
+    "category",
     "ប្រភេទ",
-    "categorys"
+    "category"
   ],
   
   "home_page_guide_brand": [

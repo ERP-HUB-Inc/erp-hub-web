@@ -44,7 +44,7 @@ export default class InputText extends Element {
           initialValue: this.props.data})(<this.Input type={this.props.type}
             ref={(input) => { this.nameInput = input; }}
             placeholder={this.props.placeholder}
-            autoComplete="off"
+            autoComplete={this.props.autoComplete}
             disabled={this.props.disabled}
             onChange={this.props.onChange}
             onKeyDown={this.props.handleKeyDown}

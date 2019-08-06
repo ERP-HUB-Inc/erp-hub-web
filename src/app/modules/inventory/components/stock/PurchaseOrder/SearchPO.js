@@ -161,6 +161,10 @@ export default class SearchPo extends Modal {
 
   componentDidMount() {
     this.setState({units: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT))});
+    console.log("ProductReOrderPointList:", this.props.productReOrderPointList);
+    if (this.props.productReOrderPointList && this.props.productReOrderPointList.length > 0) {
+      this.getReOrderPointProductList();
+    }
   }
   
   getQTY(record) {
@@ -180,58 +184,39 @@ export default class SearchPo extends Modal {
     return quantity < 0 ? 0 : quantity;
   }
 
-  reOrderProduct(){
-    const existingProductList = [];
-   
-    const purchaseOrderEntries = this.props.product.list;
-    if(purchaseOrderEntries.length > 0 && this.state.didUpdateReportOrder){
-
-      purchaseOrderEntries.forEach(purchaseOrderEntry => {
-        let productName = "";
-        let variantName = "";
-        let quantityOnHand = 0;
-        let price = 0;
-        let quantity = 1;
+  getReOrderPointProductList(){
+    const productLists = [];
+    this.props.productReOrderPointList.forEach(productVariant => {
+      let productName = "";
+      let variantName = productVariant.name;
+      let quantityOnHand = 0;
+      let price = 0;
+      let quantity = 0;
       
-        productName = Util.getProductName(purchaseOrderEntry);
-        if (purchaseOrderEntry.productVariant) {
-          variantName = purchaseOrderEntry.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? purchaseOrderEntry.productVariant.name : "";
-          quantityOnHand = purchaseOrderEntry.productVariant.quantity;
-        }
+      productName = Util.getProductName(productVariant.product);
   
-        if(this.getQTY(purchaseOrderEntry) <= purchaseOrderEntry.reorderPoint && purchaseOrderEntry.serialType === Enum.SERIAL_TYPE.STANDARD){
-          existingProductList.push({
-            purchaseEntryId: "",
-            productName,
-            variantName,
-            unitId: purchaseOrderEntry.unit.id,
-            productVariantId: purchaseOrderEntry.productVariants[0].id,
-            quantityOnHand,
-            quantity, 
-            price,
-            totalPrice: 0,
-            purchaseEntryStatus: purchaseOrderEntry.status
-          }); 
-        }
-         
-  
-      }); 
-    
-      this.setState({
-        didUpdateReportOrder: false,
-        productLists: existingProductList
+      productLists.push({
+        purchaseEntryId: "",
+        productName,
+        variantName,
+        unitId: productVariant.product.defaultUnitId,
+        productVariantId: productVariant.id,
+        quantityOnHand,
+        quantity,
+        price,
+        totalPrice: 0,
+        purchaseEntryStatus: this.Enum.ACTIVE
       });
-
-    }
-
+    }); 
+    
+    this.setState({
+      didUpdateReportOrder: false,
+      productLists
+    });
 
   }
 
   componentDidUpdate(){
-    
-    if(this.props.isHasReOrderProductList){
-      this.reOrderProduct();
-    }
 
     const {purchaseOrderEntries} = this.props;
     if (purchaseOrderEntries.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {

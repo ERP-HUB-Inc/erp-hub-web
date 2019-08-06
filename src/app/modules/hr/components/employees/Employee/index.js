@@ -63,19 +63,21 @@ class Column extends List {
         title: <this.Translate id="text_phone_number" />,
         dataIndex: "phoneNumber",
         key: "phoneNumber",
-        sorter: true
+        sorter: true,
+        render: phoneNumber => phoneNumber ? phoneNumber : this.emptyText
       },
       {
         title: <this.Translate id="text_id_card" />,
         dataIndex: "idCard",
         key: "idCard",
-        sorter: true
+        sorter: true,
+        render: idCard => idCard ? idCard : this.emptyText
       },
       {
         title: <this.Translate id="text_date_of_birth" />,
         dataIndex: "dob",
         key: "dob",
-        render: value => this.Util.formDateDOB(value),
+        render: dob => dob ? this.Util.formDateDOB(dob) : this.emptyText,
         sorter: true
       },
       {
@@ -83,13 +85,14 @@ class Column extends List {
         dataIndex: "gender",
         key: "gender",
         sorter: true,
-        render: (gender) => gender === this.Enum.GENDER.MALE ? "Male" : "Female"
+        render: gender => gender === this.Enum.GENDER.MALE ? <this.Translate id="text_male" /> : <this.Translate id="text_female" />
       },
       {
         title: <this.Translate id="text_address" />,
         dataIndex: "address",
         key: "address",
-        sorter: true
+        sorter: true,
+        render: address => address ? address : this.emptyText
       },
       this.columnStatus
     ];
