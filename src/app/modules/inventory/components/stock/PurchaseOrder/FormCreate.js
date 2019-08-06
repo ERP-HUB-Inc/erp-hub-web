@@ -104,7 +104,6 @@ export default class FormCreate extends Modal {
         values["status"] = this.Enum.ACTIVE;
 
         values["POEntries"] = purchaseEntries;
-      
         this.dispatch(PurchaseOrderAction.add(values));
       }
     });
@@ -123,6 +122,7 @@ export default class FormCreate extends Modal {
       storeLocation, 
       productSearch, 
       requestOrderNumber,
+      product,
       dispatch
     } = this.props;
     
@@ -137,6 +137,8 @@ export default class FormCreate extends Modal {
           productSearch={productSearch} 
           productVariant={this.props.productVariant}
           requestOrderNumber={requestOrderNumber}
+          product={product}
+          isHasReOrderProductList={this.props.isHasReOrderProductList}
           dispatch={dispatch} 
           locale={locale} />;
     

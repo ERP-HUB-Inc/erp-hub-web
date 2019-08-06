@@ -10,7 +10,7 @@ export default class Duide extends Component {
           <div className="main-icon-top">
             <ul>
               <li>
-                <this.Link to="products/types">
+                <this.Link to="products/category">
                   <span className="icon-types"></span>
                 </this.Link>
                 <div className="grap-guide-title grap-title">3.1. <this.Translate id="home_page_guide_types"/></div>

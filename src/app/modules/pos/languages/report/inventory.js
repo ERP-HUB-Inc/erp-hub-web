@@ -41,6 +41,12 @@ export default {
     "Report Type"
   ],
 
+  "text_order": [
+    "Order",
+    "បញ្ជាទិញ",
+    "Order"
+  ],
+
   "input_inventory_report_key": [
     "Input keyword to filter report",
     "បញ្ចូលពាក្យគន្លឹះដើម្បីត្រងរបាយការណ៍",

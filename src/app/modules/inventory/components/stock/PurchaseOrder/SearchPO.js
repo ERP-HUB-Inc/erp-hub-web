@@ -18,7 +18,8 @@ export default class SearchPo extends Modal {
       units: [],
       productLists: [],
       modalVariant: null,
-      isNotYetLoadComponentDidUpdated: true
+      isNotYetLoadComponentDidUpdated: true,
+      didUpdateReportOrder: true
     };
     this.form = this.props.form;
     this.columns = [
@@ -161,8 +162,77 @@ export default class SearchPo extends Modal {
   componentDidMount() {
     this.setState({units: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT))});
   }
+  
+  getQTY(record) {
+    let quantity = 0;
+    let isNotFilterByLocation = true;
+    record["productVariants"].forEach(productVariant => {
+      if ("productLocations" in productVariant) {
+        isNotFilterByLocation = false;
+        quantity += Util.getProductQTYLocation(productVariant["productLocations"]);
+      }
+    });
+
+    if (isNotFilterByLocation) {
+      quantity = Util.getProductQTYLocation(record["productVariants"]);
+    }
+
+    return quantity < 0 ? 0 : quantity;
+  }
+
+  reOrderProduct(){
+    const existingProductList = [];
+   
+    const purchaseOrderEntries = this.props.product.list;
+    if(purchaseOrderEntries.length > 0 && this.state.didUpdateReportOrder){
+
+      purchaseOrderEntries.forEach(purchaseOrderEntry => {
+        let productName = "";
+        let variantName = "";
+        let quantityOnHand = 0;
+        let price = 0;
+        let quantity = 1;
+      
+        productName = Util.getProductName(purchaseOrderEntry);
+        if (purchaseOrderEntry.productVariant) {
+          variantName = purchaseOrderEntry.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? purchaseOrderEntry.productVariant.name : "";
+          quantityOnHand = purchaseOrderEntry.productVariant.quantity;
+        }
+  
+        if(this.getQTY(purchaseOrderEntry) <= purchaseOrderEntry.reorderPoint && purchaseOrderEntry.serialType === Enum.SERIAL_TYPE.STANDARD){
+          existingProductList.push({
+            purchaseEntryId: "",
+            productName,
+            variantName,
+            unitId: purchaseOrderEntry.unit.id,
+            productVariantId: purchaseOrderEntry.productVariants[0].id,
+            quantityOnHand,
+            quantity, 
+            price,
+            totalPrice: 0,
+            purchaseEntryStatus: purchaseOrderEntry.status
+          }); 
+        }
+         
+  
+      }); 
+    
+      this.setState({
+        didUpdateReportOrder: false,
+        productLists: existingProductList
+      });
+
+    }
+
+
+  }
 
   componentDidUpdate(){
+    
+    if(this.props.isHasReOrderProductList){
+      this.reOrderProduct();
+    }
+
     const {purchaseOrderEntries} = this.props;
     if (purchaseOrderEntries.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
       const existingProductList = this.state.productLists;

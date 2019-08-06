@@ -29,7 +29,7 @@ const Brand = Loadable({
   loading: () => <StartUp />,
 });
 
-const ProductType = Loadable({
+const Category = Loadable({
   loader: () => import("../../../../inventory/containers/products/ProductsType"),
   loading: () => <StartUp />,
 });
@@ -277,8 +277,8 @@ const dataSource = {
       {
         title: <Translate id="text_product_type" />,
         icon: "icon-types",
-        route: "/products/types",
-        component: ProductType,
+        route: "/products/category",
+        component: Category,
         isFashNav: true
       },
       {
