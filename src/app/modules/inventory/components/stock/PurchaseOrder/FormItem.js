@@ -180,6 +180,8 @@ export default class FormItem extends Modal {
             productVariant={this.props.productVariant}
             purchaseOrderEntries={formData.purchaseOrderEntries}
             locale={locale}
+            reportProduct={this.props.reportProduct}
+            product={this.props.product}
             dispatch={dispatch}
             form={form} />
         </this.Col>

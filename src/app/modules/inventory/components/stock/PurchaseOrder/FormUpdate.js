@@ -182,6 +182,7 @@ export default class Form extends Modal {
           requestOrderNumber={requestOrderNumber}
           dispatch={dispatch} 
           buttonPushToSupplier={buttonPushToSupplier}
+          reportProduct={this.props.reportProduct}
           locale={locale}/>
       );
       return super.render();

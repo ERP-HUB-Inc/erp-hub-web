@@ -1,11 +1,14 @@
 import React from "react";
 import List from "../List";
 import Constant from "../../../constants/report/purchase";
+import FormCreate from "../../../../inventory/containers/stock/PurchaseOrder/FormCreate";
 import ProductReportAction from "../../../action/report/product";
 import ProductReportService from "../../../services/report/ProductService";
 import ProductTypeAction from "../../../../inventory/actions/products/productsType";
 import BrandAction from "../../../../inventory/actions/products/brand";
 import LocationAction from "../../../../pos/action/settings/location";
+import PurchaseAction from "../../../../inventory/actions/stock/purchaseOrder";
+import ProductAction from "../../../../inventory/actions/products/product";
 import InventoryUtil from "../../../../inventory/utils"; 
 import Enum from "../../../../inventory/enums";
 import "./index.css";
@@ -38,6 +41,7 @@ export default class ProductList extends List {
     this.exportCsvFileName = "product_report.csv"; 
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
     this.getProduct = this.getProduct.bind(this);
+    this.handlePurchaseOrderForm = this.handlePurchaseOrderForm.bind(this);
   }
 
   componentDidMount() {
@@ -99,20 +103,46 @@ export default class ProductList extends List {
     } 
   }
 
+  handlePurchaseOrderForm(){
+    this.props.dispatch(PurchaseAction.showForm());  
+    this.props.dispatch(ProductAction.fetch(500));  
+    this.setState({
+      modalConten: <FormCreate
+        reportProduct = {true}
+      />
+    });
+  }
+
   exportCsv(){
     return this.getProduct();
   }
 
-  renderActionButton(){
+  renderButtonAddNew(){
     return(
-      <this.CSVLink
-        filename={this.exportCsvFileName}
-        data={this.exportCsv()}
-        headers={this.ExportheadersCsv}>
-        <this.Button type="info" disabled={ this.props.list.list.length > 0 ? false : true }>
-          <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
-        </this.Button>
-      </this.CSVLink>
+      <div style={{ float: "left", marginRight: "11px" }}>
+        <this.CSVLink
+          filename={this.exportCsvFileName}
+          data={this.exportCsv()}
+          headers={this.ExportheadersCsv}>
+          <this.Button type="info" disabled={ this.props.list.list.length > 0 ? false : true }>
+            <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
+          </this.Button>
+        </this.CSVLink>
+      </div>
+    );
+  }
+
+  renderButtonDelete(){
+    return(
+      <this.Button
+        type="info"
+        id="btnAdd"
+        className="mg-right text-uppercase"
+        disabled={this.state.loadingPopup}
+        onClick={this.handlePurchaseOrderForm}>
+        <span className="icon-purchasing icon-padding-right"></span>
+        <this.Translate id="text_order" />
+      </this.Button>
     );
   }
 

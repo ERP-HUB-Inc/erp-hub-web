@@ -66,6 +66,9 @@ class Util {
     return quantity;
   }
 
+  
+
+
   getProductTypeDescription(productTypeDescriptions, key ="name") {
     if (productTypeDescriptions === null && !Array.isArray(productTypeDescriptions))
       return "";
