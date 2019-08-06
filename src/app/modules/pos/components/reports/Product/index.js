@@ -108,7 +108,7 @@ export default class ProductList extends List {
     this.props.dispatch(ProductAction.fetch(500));  
     this.setState({
       modalConten: <FormCreate
-        reportProduct = {true}
+        isHasReOrderProductList = {true}
       />
     });
   }

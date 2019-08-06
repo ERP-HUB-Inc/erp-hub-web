@@ -180,58 +180,59 @@ export default class SearchPo extends Modal {
     return quantity < 0 ? 0 : quantity;
   }
 
-  rePortProduct(){
+  reOrderProduct(){
     const existingProductList = [];
-    if(this.props.reportProduct){
-      const purchaseOrderEntries = this.props.product.list;
-      if(purchaseOrderEntries.length > 0 && this.state.didUpdateReportOrder){
+   
+    const purchaseOrderEntries = this.props.product.list;
+    if(purchaseOrderEntries.length > 0 && this.state.didUpdateReportOrder){
 
-        purchaseOrderEntries.forEach(purchaseOrderEntry => {
-          let productName = "";
-          let variantName = "";
-          let quantityOnHand = 0;
-          let price = 0;
-          let quantity = 1;
+      purchaseOrderEntries.forEach(purchaseOrderEntry => {
+        let productName = "";
+        let variantName = "";
+        let quantityOnHand = 0;
+        let price = 0;
+        let quantity = 1;
       
-          productName = Util.getProductName(purchaseOrderEntry);
-          if (purchaseOrderEntry.productVariant) {
-            variantName = purchaseOrderEntry.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? purchaseOrderEntry.productVariant.name : "";
-            quantityOnHand = purchaseOrderEntry.productVariant.quantity;
-          }
+        productName = Util.getProductName(purchaseOrderEntry);
+        if (purchaseOrderEntry.productVariant) {
+          variantName = purchaseOrderEntry.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? purchaseOrderEntry.productVariant.name : "";
+          quantityOnHand = purchaseOrderEntry.productVariant.quantity;
+        }
   
-          if(this.getQTY(purchaseOrderEntry) <= purchaseOrderEntry.reorderPoint && purchaseOrderEntry.serialType === Enum.SERIAL_TYPE.STANDARD){
-            existingProductList.push({
-              purchaseEntryId: "",
-              productName,
-              variantName,
-              unitId: purchaseOrderEntry.unit.id,
-              productVariantId: purchaseOrderEntry.productVariants[0].id,
-              quantityOnHand,
-              quantity, 
-              price,
-              totalPrice: 0,
-              purchaseEntryStatus: purchaseOrderEntry.status
-            }); 
-          }
+        if(this.getQTY(purchaseOrderEntry) <= purchaseOrderEntry.reorderPoint && purchaseOrderEntry.serialType === Enum.SERIAL_TYPE.STANDARD){
+          existingProductList.push({
+            purchaseEntryId: "",
+            productName,
+            variantName,
+            unitId: purchaseOrderEntry.unit.id,
+            productVariantId: purchaseOrderEntry.productVariants[0].id,
+            quantityOnHand,
+            quantity, 
+            price,
+            totalPrice: 0,
+            purchaseEntryStatus: purchaseOrderEntry.status
+          }); 
+        }
          
   
-        }); 
+      }); 
     
-        this.setState({
-          didUpdateReportOrder: false,
-          productLists: existingProductList
-        });
+      this.setState({
+        didUpdateReportOrder: false,
+        productLists: existingProductList
+      });
 
-      }
-
-     
-    
     }
+
 
   }
 
   componentDidUpdate(){
-    this.rePortProduct();
+    
+    if(this.props.isHasReOrderProductList){
+      this.reOrderProduct();
+    }
+
     const {purchaseOrderEntries} = this.props;
     if (purchaseOrderEntries.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
       const existingProductList = this.state.productLists;
@@ -426,18 +427,14 @@ export default class SearchPo extends Modal {
     const {productLists} = this.state;
     return(
       <div className="main-dropdown-search">
-        {
-          this.props.reportProduct ?
-            <div></div> : 
-            <DropDownSearch
-              productSearch={this.props.dataSource}
-              handleOnSelectList={this.handleOnSelectList}
-              dispatch={this.props.dispatch}
-              filter={JSON.stringify({serialType: [Enum.SERIAL_TYPE.LICENSE, Enum.SERIAL_TYPE.STANDARD, Enum.SERIAL_TYPE.SERIAL]})}
-              className="ca-input-v1 purchase-order"
-              locale={this.props.locale}
-              form={this.props.form}/>  
-        }
+        <DropDownSearch
+          productSearch={this.props.dataSource}
+          handleOnSelectList={this.handleOnSelectList}
+          dispatch={this.props.dispatch}
+          filter={JSON.stringify({serialType: [Enum.SERIAL_TYPE.LICENSE, Enum.SERIAL_TYPE.STANDARD, Enum.SERIAL_TYPE.SERIAL]})}
+          className="ca-input-v1 purchase-order"
+          locale={this.props.locale}
+          form={this.props.form}/>  
         <this.Table
           rowKey="productVariantId"
           rowClassName={record => record.purchaseEntryStatus === this.Enum.ACTIVE ? "" : "hidden"}
