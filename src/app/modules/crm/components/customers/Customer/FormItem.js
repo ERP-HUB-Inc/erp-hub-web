@@ -201,7 +201,7 @@ export default class FormItem extends Modal {
             )
           } 
           <div className="btn-addcontact">
-            <this.Button onClick={this.add} style={{ width: "60%" }}>
+            <this.Button onClick={this.add}>
               <span className="icon-add"></span> <span><this.Translate id="text_add" /></span>
             </this.Button>
           </div>

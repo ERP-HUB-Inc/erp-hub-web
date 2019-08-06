@@ -230,7 +230,7 @@ export default class DropDownSearch extends Modal {
 
   render() {
     return (
-      <this.Col md="12" className="search-dropdown-product search-height" style={{position: "relative", marginTop: 0}}>
+      <this.Col md="12" className="search-dropdown-product search-height" style={{position: "relative"}}>
         <div className="main-searchs">
           <div className="search-icon icon-add-product"></div>
           <this.InputText

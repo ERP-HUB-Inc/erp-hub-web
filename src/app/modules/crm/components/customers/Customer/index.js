@@ -222,28 +222,28 @@ class Column extends List {
         key: "phoneNumber",
         sorter: true,
         width: 150,
-        render: (phoneNumber) => this.Util.formtTextError(phoneNumber)
+        render: phoneNumber => phoneNumber ? this.Util.formtTextError(phoneNumber) : this.emptyText
       },
       {
         title: <this.Translate id="text_address" />,
         dataIndex: "address",
         key: "address",
         sorter: true,
-        render: (address) => this.Util.formtTextError(address)
+        render: address => address ? this.Util.formtTextError(address) : this.emptyText
       },
       {
         title: <this.Translate id="text_email" />,
         dataIndex: "email",
         key: "email",
         sorter: true,
-        render: (email) => this.Util.formtTextError(email)
+        render: email => email ? this.Util.formtTextError(email) : this.emptyText
       },
       {
         title: <this.Translate id="text_group" />,
         dataIndex: "groupCustomer",
         key: "groupCustomer",
         sorter: true,
-        render: (groupCustomer) => groupCustomer !=null  ? <span className="text-capitalize">{groupCustomer.name}</span> : "-"
+        render: groupCustomer => groupCustomer ? <span className="text-capitalize">{groupCustomer.name}</span> : this.emptyText
       },
       this.columnStatus
     ];
