@@ -130,6 +130,14 @@ export class Util {
       return null;
   }
 
+  getClientCustomerCreditStatus() {
+    const result = this.getSetting();
+    if (result)
+      return result.isAllowCustomerCredit;
+    else
+      return null;
+  }
+
   getCurrentDate () {
     return moment();
   }

@@ -17,7 +17,8 @@ export default {
     OPEN: 0,
     OVERDUE: 1,
     PAID: 2,
-    PENDING: 3
+    CREDIT: 3,
+    CLOSED: 4
   },
   PAYMENT_METHOD_AVIALE_ON_POS: 1,
   PRODUCT_AVIALABLE_ON_SALE: 1,
@@ -34,5 +35,9 @@ export default {
     A4: 1,
     THERMAL: 2,
     MINI_THERMAL: 3
+  },
+  CUSTOMER_CREDIT_STATUS: {
+    DISABLE: 1,
+    ENABLE: 2
   }
 };

@@ -281,6 +281,12 @@ export default {
     "Device has renew successfully"
   ],
 
+  "text_allow_customer_credit": [
+    "Allow Customer Credit",
+    "អនុញ្ញាតិអតិថិជនជំពាក់លុយ",
+    "Allow Customer Credit"
+  ],
+
   "text_module": [
     "Module",
     "Module",

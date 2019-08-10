@@ -52,6 +52,7 @@ export default class DropDownSearch extends Modal {
 
   handleOnBlurSearch() {
     if (!this.state.isMouseHoverOnSearchList) {
+      this.props.dispatch(CustomerAction.reset(Constant.REQUEST_CUSTOMERS_RESET));
       this.setState({visibleDropDown: false});
     }
 
@@ -70,8 +71,11 @@ export default class DropDownSearch extends Modal {
     this.setState({isMouseHoverOnSearchList: false});
   }
 
-  handleOnSelectList(value) {
+  handleOnSelectList(selectedCustomer) {
     this.setState({visibleDropDown: false});
+    if (this.props.callBack) {
+      this.props.callBack(selectedCustomer);
+    }
   }
 
   handleKeyDownOnSearch(event) {
@@ -123,6 +127,7 @@ export default class DropDownSearch extends Modal {
   handleRemoveTextSearch() {
     this.props.form.setFieldsValue({searchRecord: ""});
     this.setState({isSetFocusSearchInput: true});
+    this.props.dispatch(CustomerAction.reset(Constant.REQUEST_CUSTOMERS_RESET));
   }
 
   renderSearchItem(record) {
@@ -145,14 +150,14 @@ export default class DropDownSearch extends Modal {
         <this.List.Item onClick={this.props.handleOnAddNewCustomer} className="add-customer">
           <this.List.Item.Meta
             avatar={<span className="icon-add"></span>}
-            title={<this.Translate id="text_add_new_customer"/>} />
+            title={<div><this.Translate id="text_add_new_customer" /> <span style={{ color: "#4D4F5C" }}>{this.props.customers.list.length > 0 || !this.props.form.getFieldValue("searchRecord") ? "" : `"${this.props.form.getFieldValue("searchRecord")}"` }</span></div>} />
         </this.List.Item>
     );
   }
 
   render() {
     return (
-      <this.Col md="12" className="search-height" style={{position: "relative"}}>
+      <this.Col md="12" className="search-height" style={{position: "relative", marginBottom: 10}}>
         <div className="main-searchs">
           <div className="search-icon icon-person"></div>
           <this.InputText
@@ -171,7 +176,7 @@ export default class DropDownSearch extends Modal {
           <div className="remove-search-icon icon-delete" onClick={this.handleRemoveTextSearch}></div>
         </div>
         {
-          this.state.visibleDropDown && this.props.customers.fetched?
+          this.state.visibleDropDown?
             <div className="wrap-dropdown-search-ca">
               <this.List
                 itemLayout="horizontal"
@@ -180,10 +185,7 @@ export default class DropDownSearch extends Modal {
                 className="list-search"
                 onMouseEnter={this.handleOnMouseHoverOnSearchList}
                 onMouseLeave={this.handleOnMouseLeaveOnSearchList}
-                renderItem={recordItem => this.renderSearchItem(recordItem)}
-              />
-              
-          
+                renderItem={recordItem => this.renderSearchItem(recordItem)}/>
             </div>
             :
             ""

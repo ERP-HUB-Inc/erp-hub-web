@@ -17,6 +17,11 @@ export default class PaymentMethodList extends List {
     this.columnFilterWithKey = ["name"];
     this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
   }
+
+  renderActionButton() {}
+
+  renderPagination() {}
+
 }
 
 class Column extends List {

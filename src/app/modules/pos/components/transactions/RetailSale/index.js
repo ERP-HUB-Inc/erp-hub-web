@@ -5,6 +5,7 @@ import DiscountSetup from "./DiscountSetup";
 import TaxSetting from "./TaxSetting";
 import Enum from "../../../enums";
 import InventoryEnum from "../../../../inventory/enums";
+import SettingEnum from "../../../../pos/enums";
 import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
 import Constant from "../../../constants/transactions/transaction";
@@ -37,6 +38,7 @@ export default class Retail extends Component {
     this.state = {
       modalContent: null,
       expandRowOrderIndex: null,
+      selectedCustomer: null,
       expandOrderItemRow: [],
       productTaxList: [],
       categoryList: [
@@ -233,30 +235,6 @@ export default class Retail extends Component {
       return true; // has no record so set true to be allow to open sale
     }
   }
-  
-  getTaxDescription(tax) {
-    let name = "";
-    if ("tax" in tax && tax["tax"]) {
-      name = tax["tax"].name;
-    }
-    return name;
-  }
-
-  getTaxFromProduct(product) {
-    let taxId = 0;
-    let taxRate = 0;
-    let taxName = "";
-    if (product["productTaxes"] && product["productTaxes"].length > 0) {
-      taxId = product["productTaxes"][0].id;
-      taxRate = product["productTaxes"][0].rate;
-      taxName = this.getTaxDescription(product["productTaxes"][0]);
-    }
-    return {
-      id: taxId,
-      taxRate,
-      taxName
-    };
-  }
 
   appendProductTaxList(productOrderList) {
     this.setState({productTaxList: POSUtil.appendProductTaxList(productOrderList)});
@@ -310,6 +288,15 @@ export default class Retail extends Component {
       discountTypeStr,
       discountType: this.state.discountValue.type
     };
+  }
+
+  getSelectedCustomer = (selectedCustomer) => {
+    this.setState({selectedCustomer});
+    if (selectedCustomer) {
+      this.props.form.setFieldsValue({ searchRecord: `${selectedCustomer.firstName} ${selectedCustomer.lastName} ${selectedCustomer.phoneNumber ? " - " + selectedCustomer.phoneNumber : ""}` });
+    } else {
+      this.props.form.setFieldsValue({ searchRecord: "" });
+    }
   }
 
   saveReceipt(key) {
@@ -574,7 +561,7 @@ export default class Retail extends Component {
   handleOnAddNewCustomer() {
     this.props.dispatch(CustomerAction.showForm());
     this.setState({
-      modalContent: <FormCreateCustomer/>
+      modalContent: <FormCreateCustomer />
     });
   }
 
@@ -936,12 +923,18 @@ export default class Retail extends Component {
               {this.Util.getCurrentUser().fullName}
             </div>
           </this.Col>
-          <CustomerDropDownSearch
-            customers={this.props.customers}
-            locale={this.props.locale}
-            form={this.props.form}
-            dispatch={this.props.dispatch}
-            handleOnAddNewCustomer={this.handleOnAddNewCustomer}/>
+          {
+            this.Util.getClientCustomerCreditStatus() === SettingEnum.CUSTOMER_CREDIT_STATUS.ENABLE ?
+              <CustomerDropDownSearch
+                customers={this.props.customers}
+                locale={this.props.locale}
+                form={this.props.form}
+                dispatch={this.props.dispatch}
+                callBack={this.getSelectedCustomer}
+                handleOnAddNewCustomer={this.handleOnAddNewCustomer} />
+              :
+              ""
+          }
        
           <ProductDropDownSearch
             placeholder={this.CATranslate("text_search_and_scan_barcode", this.props.locale)}

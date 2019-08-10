@@ -23,7 +23,6 @@ export default class SaleHistoryList extends List {
       isRequestReprint: false,
       isRequestShowDetail: false
     };
-    this.columns = new Column();
     this.title = <this.Translate id="text_sale_history"/>;
     this.fetchingProp = "list";
     this.columnFilterWithKey = ["number", "firstName", "lastName", "company", "email", "phoneNumber", "address"];
@@ -35,6 +34,15 @@ export default class SaleHistoryList extends List {
       {value: Enum.TRANSACTION_TYPE.CREDIT_NOTE, name: <this.Translate id="text_credit_note"/>},
       {value: Enum.TRANSACTION_TYPE.RETURN, name: <this.Translate id="text_return"/>}
     ];
+
+    this.TRANSACTION_STATUS_STR = {
+      [Enum.TRANSACTION_STATUS.OPEN]: <this.Translate id="text_open" />,
+      [Enum.TRANSACTION_STATUS.OVERDUE]: <this.Translate id="text_overdue" />,
+      [Enum.TRANSACTION_STATUS.PAID]: <this.Translate id="text_paid" />,
+      [Enum.TRANSACTION_STATUS.CREDIT]: <this.Translate id="text_credit" />,
+      [Enum.TRANSACTION_STATUS.CLOSED]: <this.Translate id="text_closed" />
+    };
+
     this.action = TransactionAction;
     this.service = TransactionService;
     this.handleRePrint = this.handleRePrint.bind(this);
@@ -46,6 +54,103 @@ export default class SaleHistoryList extends List {
       id: "",
       name: <this.Translate id="text_all_store"/>
     }];
+
+    this.columns = [
+      {
+        title: <this.Translate id="text_date" />,
+        dataIndex: "registerDate",
+        key: "createdAt",
+        render: registerDate => this.Util.formatDateTime(registerDate),
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_transaction_no" />,
+        dataIndex: "number",
+        key: "number",
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_reference_no" />,
+        dataIndex: "referenceNo",
+        key: "referenceNo",
+        render: referenceNo => referenceNo ? referenceNo : this.emptyCell,
+        sorter: true
+      },
+      {
+        title: <this.Translate id="col-sale-history-sold-by" />,
+        dataIndex: "userId",
+        key: "userId",
+        render: (text, record) => {
+          return record.user ? record.user.userName : this.emptyCell;
+        },
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_customer" />,
+        dataIndex: "customerId",
+        key: "customerId",
+        render: (text, record, index) => {
+          let customerName = "";
+          if (record.customer) {
+            customerName = `${record.customer.firstName} ${record.customer.lastName}`;
+
+            if (record.customer.isSystem === this.Enum.IS_SYSTEM) {
+              customerName = <this.TagLabel color="blue">
+                <this.Translate id="text_walkin" />
+              </this.TagLabel>;
+            }
+          }
+          return record.customer ? customerName : this.emptyCell;
+        },
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_notation" />,
+        dataIndex: "description",
+        key: "description",
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_sub_total" />,
+        dataIndex: "totalExcludeTax",
+        key: "totalExcludeTax",
+        render: totalExcludeTax => this.formatCurrency(totalExcludeTax),
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_tax" />,
+        dataIndex: "tax",
+        key: "tax",
+        render: (text, record, index) => {
+          return this.formatCurrency(record.total - record.totalExcludeTax);
+        },
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_discount" />,
+        dataIndex: "discount",
+        key: "discount",
+        render: discount => this.formatCurrency(discount),
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_sale_total" />,
+        dataIndex: "total",
+        key: "total",
+        render: (text, record, index) => {
+          return this.formatCurrency(record.total - record.discount);
+        },
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_status" />,
+        dataIndex: "status",
+        key: "status",
+        // width: 120,
+        render: status => <this.Badge style={{ textTransform: "uppercase" }} status="success" text={this.TRANSACTION_STATUS_STR[status]} />,
+        sorter: true
+      }
+    ];
   }
 
   componentDidMount() {
@@ -389,113 +494,4 @@ export default class SaleHistoryList extends List {
     }
   }
 
-}
-
-class Column extends List {
-  constructor(props) {
-    super(props);
-    return [
-      {
-        title: <this.Translate id="text_date" />,
-        dataIndex: "registerDate",
-        key: "createdAt",
-        render: registerDate => this.Util.formatDateTime(registerDate),
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_transaction_no" />,
-        dataIndex: "number",
-        key: "number",
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_reference_no" />,
-        dataIndex: "referenceNo",
-        key: "referenceNo",
-        render: referenceNo =>  referenceNo ? referenceNo : this.emptyCell,
-        sorter: true
-      },
-      {
-        title: <this.Translate id="col-sale-history-sold-by" />,
-        dataIndex: "userId",
-        key: "userId",
-        render: (text, record) => {
-          return record.user ? record.user.userName : this.emptyCell;
-        },
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_customer" />,
-        dataIndex: "customerId",
-        key: "customerId",
-        render: (text, record, index) => {
-          let customerName = "";
-          if (record.customer) {
-            customerName = `${record.customer.firstName} ${record.customer.lastName}`;
-
-            if (record.customer.isSystem === this.Enum.IS_SYSTEM) {
-              customerName = <this.TagLabel color="blue">
-                <this.Translate id="text_walkin"/>
-              </this.TagLabel>;
-            }
-          }
-          return record.customer ? customerName : this.emptyCell;
-        },
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_notation" />,
-        dataIndex: "description",
-        key: "description",
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_sub_total" />,
-        dataIndex: "totalExcludeTax",
-        key: "totalExcludeTax",
-        render: totalExcludeTax => this.formatCurrency(totalExcludeTax),
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_tax" />,
-        dataIndex: "tax",
-        key: "tax",
-        render: (text, record, index) => {
-          return this.formatCurrency(record.total - record.totalExcludeTax);
-        },
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_discount" />,
-        dataIndex: "discount",
-        key: "discount",
-        render: discount => this.formatCurrency(discount),
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_sale_total" />,
-        dataIndex: "total",
-        key: "total",
-        render: (text, record, index) => {
-          return this.formatCurrency(record.total - record.discount);
-        },
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_status" />,
-        dataIndex: "status",
-        key: "status",
-        width: 120,
-        render: value => {
-          return (
-            value === Enum.TRANSACTION_STATUS.PAID ?
-              <this.Badge status="success" text={<this.Translate id="text_completed" />} />
-              :
-              <this.Badge status="error" text={<this.Translate id="select_text_deactive" />} />
-          );
-        },
-        sorter: true
-      }
-    ];
-  }
 }

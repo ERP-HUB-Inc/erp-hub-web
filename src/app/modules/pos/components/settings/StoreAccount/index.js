@@ -3,6 +3,7 @@ import {
   isMobile
 } from "react-device-detect";
 import history from "../../../../common/router/history";
+import Enum from "../../../enums";
 import StoreAccountAction from "../../../action/settings/storeAccount";
 import TaxAction from "../../../action/settings/tax";
 import LanguageAction from "../../../action/settings/storeLanguage";
@@ -87,6 +88,17 @@ export default class StoreAccountList extends Component {
       {
         name: <this.Translate id="text_after" />,
         value: this.Enum.CURRENCY_POSITION.AFTER
+      }
+    ];
+
+    this.customerCreditStatus = [
+      {
+        name: <this.Translate id="text_yes" />,
+        value: Enum.CUSTOMER_CREDIT_STATUS.ENABLE
+      },
+      {
+        name: <this.Translate id="text_no" />,
+        value: Enum.CUSTOMER_CREDIT_STATUS.DISABLE
       }
     ];
 
@@ -449,6 +461,14 @@ export default class StoreAccountList extends Component {
                                 valueKey="id"
                                 label={<this.Translate id="text_default_tax" />}
                                 placeholder={this.CATranslate("text_default_tax", locale)}
+                                form={form} />
+
+                              <this.Select
+                                name="isAllowCustomerCredit"
+                                dataSource={this.customerCreditStatus}
+                                defaultValue={storeAccount.list.isAllowCustomerCredit}
+                                label={<this.Translate id="text_allow_customer_credit" />}
+                                placeholder={this.CATranslate("text_allow_customer_credit", locale)}
                                 form={form} />
 
                               <this.Select

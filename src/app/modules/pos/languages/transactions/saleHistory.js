@@ -70,6 +70,36 @@ export default {
     "All Sales",
     "ការលក់ទាំងអស់",
     "All Sales"
+  ],
+
+  "text_open": [
+    "Open",
+    "Open",
+    "Open"
+  ],
+
+  "text_overdue": [
+    "Overdue",
+    "Overdue",
+    "Overdue"
+  ],
+
+  "text_paid": [
+    "Paid",
+    "បានបង់ប្រាក់",
+    "Paid"
+  ],
+
+  "text_credit": [
+    "Credit",
+    "ជំពាក់",
+    "Credit"
+  ],
+
+  "text_closed": [
+    "Closed",
+    "Closed",
+    "Closed"
   ]
 };
       

@@ -57,7 +57,7 @@ export default class FormContact extends Modal {
             </this.Col>
           </this.Row>
           <div className="btn-removecontact">
-            <this.Button onClick={() => this.props.remove(index)} style={{ width: "60%" }}>
+            <this.Button onClick={() => this.props.remove(index)}>
               <span className="icon-delete"></span> <span><this.Translate id="text_remove" /></span>
             </this.Button>
           </div>

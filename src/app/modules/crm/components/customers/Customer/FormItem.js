@@ -112,6 +112,7 @@ export default class FormItem extends Modal {
               <this.InputText
                 name="phoneNumber"
                 label={<this.Translate id="text_phone_number" />}
+                required={true}
                 data={formData.phoneNumber}
                 placeholder={this.CATranslate("text_phone_number", this.props.locale)}
                 max={100}
@@ -119,11 +120,21 @@ export default class FormItem extends Modal {
             </this.Col>
 
             <this.Col md="12">
+              <this.InputEmail
+                name="email"
+                label={<this.Translate id="text_email" />}
+                data={formData.email}
+                placeholder={this.CATranslate("text_email", this.props.locale)}
+                max={100}
+                form={this.props.form} />
+            </this.Col> 
+
+            <this.Col md="12">
               <this.SelectSearch
                 name="groupCustomerId"
                 label={<this.Translate id="text_group" />}
                 placeholder={this.CATranslate("select_customer_place_holder_group", this.props.locale)}
-                defaultValue={formData.groupCustomer ? formData.groupCustomer.id : []}
+                defaultValue={formData.groupCustomer ? formData.groupCustomerId : groupCustomers.list.length > 0 ? groupCustomers.list[0].id: ""}
                 dataSource={groupCustomers.list}
                 valueKey="id"
                 addNew={this.props.handleAddCustomerGroup}
@@ -138,17 +149,7 @@ export default class FormItem extends Modal {
                 placeholder={this.CATranslate("text_company", this.props.locale)}
                 max={100}
                 form={this.props.form}/>
-            </this.Col>  
-
-            <this.Col md="12">
-              <this.InputEmail   
-                name="email"
-                label={<this.Translate id="text_email" />}
-                data={formData.email}
-                placeholder={this.CATranslate("text_email", this.props.locale)}
-                max={100}
-                form={this.props.form}/>
-            </this.Col>  
+            </this.Col> 
 
             {/* <this.Col md="12">
               <this.InputTextArea
