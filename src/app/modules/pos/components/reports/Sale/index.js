@@ -99,7 +99,7 @@ export default class SaleList extends List {
     let filedValues = {label: this.CATranslate("text_date", this.props.locale), key: "fieldNames"};
     let keyFileds;
     if(getFieldValues === 0){
-      filedValues =  {label: this.CATranslate("text_date", this.props.locale), key: "fieldNames"};
+      filedValues =  {label: this.CATranslate("text_sale_summary", this.props.locale), key: "fieldNames"};
     }else if(getFieldValues === 1){
       filedValues =  {label: this.CATranslate("text_product", this.props.locale), key: "fieldNames"};
     }else if(getFieldValues === 2){
