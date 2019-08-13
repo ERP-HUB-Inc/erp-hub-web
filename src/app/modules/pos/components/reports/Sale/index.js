@@ -68,13 +68,7 @@ export default class SaleList extends List {
         className: "sale-report"
       }
     ];
-    this.ExportheadersCsv = [
-      {label: this.CATranslate("text_date", this.props.locale), key: "date"},
-      {label: this.CATranslate("text_revenue", this.props.locale), key: "revenue"},
-      {label: this.CATranslate("text_cost_of_good", this.props.locale), key: "cost"},
-      {label: this.CATranslate("text_cost_of_good", this.props.locale), key: "profit"},
-      {label: this.CATranslate("text_margin", this.props.locale), key: "margin"}
-    ];
+  
     this.exportCsvFileName = "sale_report.csv";
     this.reportTypeList = [
       {value: 0, name: this.CATranslate("text_sale_summary", this.props.locale)},
@@ -91,6 +85,7 @@ export default class SaleList extends List {
     this.RESET_CONSTANT = Constant.RESET_SALE_REPORT;
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
     this.exportCsv = this.exportCsv.bind(this);
+    this.exportheadersCsv = this.exportheadersCsv.bind(this);
     this.handleFilesUploadCsv = this.handleFilesUploadCsv.bind(this);
   }
 
@@ -99,17 +94,54 @@ export default class SaleList extends List {
     this.loadFilter();
   }
 
+  changeFormValueWhenExport(propertyFields){
+    let getFieldValues = this.props.form.getFieldValue("reportType");
+    let filedValues;
+    let keyFileds;
+    if(getFieldValues === 0){
+      filedValues =  {label: this.CATranslate("text_date", this.props.locale), key: "fieldNames"};
+    }else if(getFieldValues === 1){
+      filedValues =  {label: this.CATranslate("text_product", this.props.locale), key: "fieldNames"};
+    }else if(getFieldValues === 2){
+      filedValues =  {label: this.CATranslate("text_product_type", this.props.locale), key: "fieldNames"};
+    }else if(getFieldValues === 3){
+      filedValues =  {label: this.CATranslate("text_user", this.props.locale), key: "fieldNames"};
+    }else if(getFieldValues === 4){
+      filedValues =  {label: this.CATranslate("text_customer", this.props.locale), key: "fieldNames"};
+    }else if(getFieldValues === 5){
+      filedValues =  {label: this.CATranslate("text_location", this.props.locale), key: "fieldNames"};
+    }
+
+    if(propertyFields){
+      if(getFieldValues === 0){
+        keyFileds = propertyFields.date;
+      }else if(getFieldValues === 1){
+        keyFileds = propertyFields.name;
+      }else if(getFieldValues === 2){
+        keyFileds = propertyFields.name;
+      }else if(getFieldValues === 3){
+        keyFileds = propertyFields.user;
+      }else if(getFieldValues === 4){
+        keyFileds = propertyFields.customer;
+      }else if(getFieldValues === 5){
+        keyFileds = propertyFields.location;
+      }
+    } 
+
+    return { filedValues,keyFileds };
+  }
+
   exportCsv(){
     const { saleReport } = this.props;
     let getSaleReport = [];
-    if(saleReport.list){
+    if(saleReport.list && saleReport.list.length > 0){
       saleReport.list.forEach(saleReport => {
         getSaleReport.push({
-          date: this.formatDate(saleReport.date),
-          revenue: saleReport.revenue,
+          fieldNames: this.changeFormValueWhenExport(saleReport).keyFileds,
+          revenue: this.formatCurrency(saleReport.revenue),
           cost: this.formatCurrency(saleReport.cost),
-          profit: this.formatCurrency(saleReport.profit),
-          margin: saleReport.margin + "%"
+          profit: this.formatCurrency("profit" in saleReport ? saleReport.profit : saleReport.revenue - saleReport.cost),
+          margin: this.Util.formatPercentage("margin" in saleReport ? saleReport.margin : ((saleReport.revenue - saleReport.cost)/saleReport.revenue) * 100)
         });
       });
     }
@@ -247,12 +279,22 @@ export default class SaleList extends List {
 
   }
 
+  exportheadersCsv(){
+    return [
+      this.changeFormValueWhenExport().filedValues,
+      {label: this.CATranslate("text_revenue", this.props.locale), key: "revenue"},
+      {label: this.CATranslate("text_cost_of_good", this.props.locale), key: "cost"},
+      {label: this.CATranslate("text_cost_of_good", this.props.locale), key: "profit"},
+      {label: this.CATranslate("text_margin", this.props.locale), key: "margin"}
+    ];
+  }
+
   renderActionButton(){
     return(
       <this.CSVLink
         filename={this.exportCsvFileName}
         data={this.exportCsv()}
-        headers={this.ExportheadersCsv}>
+        headers={this.exportheadersCsv()}>
         <this.Button type="info" disabled={ this.props.saleReport.list.length > 0 ? false : true }>
           <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
         </this.Button>
