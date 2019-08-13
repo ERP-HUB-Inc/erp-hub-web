@@ -6,7 +6,9 @@ import POSUtil from "../../../utils";
 import Detail from "../../../containers/transactions/SaleHistory/Detail";
 import Constant from "../../../constants/transactions/transaction";
 import TransactionAction from "../../../action/transaction/transaction";
+import ReceivePaymentAction from "../../../action/transaction/receivePayment";
 import TransactionService from "../../../services/transactions/TransactionService";
+import ReceiePaymentForm from "../../../containers/transactions/SaleHistory/ReceivePayment";
 import LocationAction from "../../../action/settings/location";
 import UserAction from "../../../../common/actions/users";
 import InventoryUtil from "../../../../inventory/utils";
@@ -21,7 +23,8 @@ export default class SaleHistoryList extends List {
       setDefaultDate: [],
       reprintReceiptContent: null,
       isRequestReprint: false,
-      isRequestShowDetail: false
+      isRequestShowDetail: false,
+      isRequestReceivePayment: false
     };
     this.title = <this.Translate id="text_sale_history"/>;
     this.fetchingProp = "list";
@@ -46,6 +49,7 @@ export default class SaleHistoryList extends List {
     this.action = TransactionAction;
     this.service = TransactionService;
     this.handleRePrint = this.handleRePrint.bind(this);
+    this.handleReceivePayment = this.handleReceivePayment.bind(this);
     this.employeeList = [{
       id: "",
       fullName: <this.Translate id="text_all_employee"/>
@@ -146,7 +150,6 @@ export default class SaleHistoryList extends List {
         title: <this.Translate id="text_status" />,
         dataIndex: "status",
         key: "status",
-        // width: 120,
         render: status => <this.Badge style={{ textTransform: "uppercase" }} status="success" text={this.TRANSACTION_STATUS_STR[status]} />,
         sorter: true
       }
@@ -194,6 +197,16 @@ export default class SaleHistoryList extends List {
         selectedRowKeys: [],
         reprintReceiptContent: null,
         isRequestReprint: false
+      });
+    }
+
+    if(this.state.isRequestReceivePayment){
+      this.props.dispatch(TransactionAction.detail({id: this.state.selectedListIds[0]}));
+      this.props.dispatch(ReceivePaymentAction.showForm());
+      this.setState({
+        modalConten: <ReceiePaymentForm customer={this.state.selectedRows[0]} />,
+        loadingPopup: false,
+        isRequestReceivePayment: false
       });
     }
 
@@ -331,6 +344,21 @@ export default class SaleHistoryList extends List {
     });
   }
 
+  handleReceivePayment(){
+    const selectLength = this.state.selectedListIds.length;
+    if(selectLength && selectLength === 1){
+      this.setState({
+        loadingPopup: true,
+        isRequestReceivePayment: true
+      });
+    }else if(selectLength > 1){
+      this.Message.warning(this.CATranslate("text_allow_select_one_record", this.props.locale));
+    }else{
+      this.Message.warning(this.CATranslate("text_please_select_record", this.props.locale));
+    }
+   
+  }
+
   handleShowFormEdit(rowData) {
     this.props.dispatch(TransactionAction.detail({id: rowData.id}));
     this.setState({
@@ -339,9 +367,9 @@ export default class SaleHistoryList extends List {
     });
   }
 
-  renderActionButton(){
+  renderButtonAddNew(){
     return(
-      <this.Button type="info" loading={this.props.detail.fetching && this.state.isRequestReprint} onClick={this.handleRePrint}>
+      <this.Button className="mg-right text-uppercase" type="info" loading={this.props.detail.fetching && this.state.isRequestReprint} onClick={this.handleRePrint}>
         <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print"/>
         <div id="receiptLogoPreLoading" style={{display: "none"}}>
           {<img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate && this.props.receiptTemplate.data ? this.props.receiptTemplate.data.logo : "", "general").url} />}
@@ -350,6 +378,13 @@ export default class SaleHistoryList extends List {
     );
   }
   
+  renderButtonDelete(){
+    return(
+      <this.Button type="info" loading={this.props.detail.fetching && this.state.isRequestReprint} onClick={this.handleReceivePayment}>
+        <span className="icon-payment-report icon-padding-right text-uppercase"></span><this.Translate id="text_receive_payment"/>
+      </this.Button>
+    );
+  }
 
   renderFilterRecord() {
     const fetchingProps = this.props[this.fetchingProp];

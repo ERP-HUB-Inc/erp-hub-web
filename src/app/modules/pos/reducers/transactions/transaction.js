@@ -1,6 +1,7 @@
 import {combineReducers} from "redux";
 import reducer from "../../../common/reducers/reducer";
 import Constant from "../../constants/transactions/transaction";
+import ConstantReceivePayment from "../../constants/transactions/receivePayment";
 import InitialState from "../../../common/reducers/initialState";
 
 export default combineReducers({
@@ -81,5 +82,17 @@ export default combineReducers({
     default: 
       return state;
     }
+  },
+
+  addReceivePayment: (state = InitialState.add(), action) => {
+    const constants = [
+      ConstantReceivePayment.ADD_RECEIVE_PAYMENT_PENDING,
+      ConstantReceivePayment.ADD_RECEIVE_PAYMENT_REJECTED,
+      ConstantReceivePayment.ADD_RECEIVE_PAYMENT_FULFILLED,
+      ConstantReceivePayment.SHOW_RECEIVE_PAYMENT_FORM,
+      ConstantReceivePayment.RESET_RECEIVE_PAYMENT
+    ];
+    return reducer.add(state, action, constants);
   }
+  
 });

@@ -100,6 +100,37 @@ export default {
     "Closed",
     "Closed",
     "Closed"
-  ]
+  ],
+
+  "text_receive_payment": [
+    "Receive Payment",
+    "ទទួលបានការទូទាត់",
+    "Receive Payment"
+  ],
+
+  "text_payment_date": [
+    "Payment Date",
+    "កាលបរិច្ឆេទទូទាត់ប្រាក់",
+    "Payment Date"
+  ],
+
+  "text_receive_amount": [
+    "Receive Amount",
+    "ទទួលបានចំនួនទឹកប្រាក់",
+    "Receive Amount"
+  ],
+
+  "text_allow_select_one_record": [
+    "Allow selected only one record !",
+    "អនុញ្ញាតឱ្យជ្រើសរើសតែទិន្នន័យមួយប៉ុណ្ណោះ !",
+    "Allow selected only one record !"
+  ],
+
+  "text_please_select_record": [
+    "Please selected record !",
+    "សូមជ្រើសរើសទិន្នន័យ !",
+    "Please selected record !"
+  ],
+
 };
       
