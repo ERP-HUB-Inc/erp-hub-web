@@ -96,7 +96,7 @@ export default class SaleList extends List {
 
   changeFormValueWhenExport(propertyFields){
     let getFieldValues = this.props.form.getFieldValue("reportType");
-    let filedValues;
+    let filedValues = {label: this.CATranslate("text_date", this.props.locale), key: "fieldNames"};
     let keyFileds;
     if(getFieldValues === 0){
       filedValues =  {label: this.CATranslate("text_date", this.props.locale), key: "fieldNames"};
@@ -113,6 +113,7 @@ export default class SaleList extends List {
     }
 
     if(propertyFields){
+      keyFileds = propertyFields.date;
       if(getFieldValues === 0){
         keyFileds = propertyFields.date;
       }else if(getFieldValues === 1){
