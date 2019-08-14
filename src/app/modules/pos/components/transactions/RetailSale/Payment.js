@@ -8,6 +8,7 @@ import Modal from "../../../../common/components/shares/Modal";
 import "./Payment.css";
 
 export default class Payment extends Modal {
+  static PAYMENT_METHOD_CREDIT_CODE = "002";
   constructor(props) {
     super(props);
     this.state = {
@@ -136,24 +137,30 @@ export default class Payment extends Modal {
         customerPaymentList: [],
         amountToPay: 0
       });
+      this.wrapClassName = "pos-payment";
       this.props.handleOnResetOrder();
     }
   }
 
   handleOnMakePaymentWithCash(paymentMethod, paymentMethodIndex) {
+
     let amountToPay = this.props.form.getFieldValue("amountToPay"); // AMOUNT FROM INPUT OF CASHEIR
     let amountToPaySubCurrency = this.props.form.getFieldValue("amountToPaySubCurrency"); // AMOUNT FROM INPUT OF CASHEIR AS SUB CURRENCY
     
     amountToPay = parseFloat(amountToPay);
     amountToPaySubCurrency = parseFloat(amountToPaySubCurrency);
+    let grandTotal = this.getGrandTotal();
+    
+    // CHECK WETHER USER HAS CLICK CREDIT PAYMENT
+    if (paymentMethod.code === Payment.PAYMENT_METHOD_CREDIT_CODE) {
+      amountToPay = grandTotal;
+    }
     
     // ADD ADDITIONAL SUB CURRENCY AMOUNT TO BASE CURRENCY VALUE
     if (!isNaN(amountToPaySubCurrency)) {
       amountToPay = amountToPay + POSUtil.toSubCurrencyGrantTotal(amountToPaySubCurrency, this.props.subCurrency, this.props.baseCurrency);
     }
 
-
-    let grandTotal = this.getGrandTotal();
     let totalCustomerHasGiveMoney = this.totalCustomerPaymentList() + amountToPay; // previus paid + current pay of pos
 
     const previusBalance = this.calculateBalance(grandTotal, totalCustomerHasGiveMoney - amountToPay); // balance before get money from customer
@@ -182,6 +189,7 @@ export default class Payment extends Modal {
       } = this.props.summaryTotal;
 
       const dataValue = {
+        customerId: this.props.customer ? this.props.customer.id : null,
         deviceNumber: this.Util.getDeviceNumber(),
         deposit: 0,
         discount: discountAmount,
@@ -189,6 +197,7 @@ export default class Payment extends Modal {
         totalExcludeTax: summaryTotal.subTotalAfterDiscount,
         type: Enum.TRANSACTION_TYPE.RECEIPT,
         transactionEntries: this.props.productOrderList,
+        paymentMethodId: paymentMethod.code === Payment.PAYMENT_METHOD_CREDIT_CODE ? paymentMethod.id : null,
         transactionPaymentEntries: this.state.customerPaymentList
       };
 
@@ -239,6 +248,28 @@ export default class Payment extends Modal {
   renderCrudAction() {
   }
 
+  renderCustomerInfo() {
+    return <div className="customer-credit-info">
+      <div className="inner-customer-credit-info">
+        <div className="customer-info-title"><this.Translate id="text_customer_info" /></div>
+        <div className="data-row" style={{ lineHeight: 1, marginBottom: 10 }}>
+          <div>
+            {`${this.props.customer.firstName} ${this.props.customer.lastName}`}
+          </div>
+          <div style={{ fontSize: "10pt" }}>{this.props.customer.phoneNumber}</div>
+        </div>
+        <div className="data-row" style={{ display: "flex", alignItems: "center" }}>
+          <div>
+            {<this.Translate id="text_credit_balance" />}:
+          </div>
+          <div style={{ fontSize: "16pt", fontFamily: "serif", paddingLeft: 10 }}>
+            {this.formatCurrency(this.props.customer.credit)}
+          </div>
+        </div>
+      </div>
+    </div>;
+  }
+
   render() {
     const {
       summaryTotal,
@@ -261,7 +292,7 @@ export default class Payment extends Modal {
     
     let paymentMethodList = [];
     if (this.props.paymentMethodList) {
-      paymentMethodList = this.Util.chuckCollection(this.props.paymentMethodList.list, 2);
+      paymentMethodList = this.Util.chuckCollection(this.props.paymentMethodList.list.filter(paymentMethod => paymentMethod.code !== Payment.PAYMENT_METHOD_CREDIT_CODE), 2);
     }
 
     if (this.props.transaction.paid) {
@@ -396,7 +427,7 @@ export default class Payment extends Modal {
                 <div className="payment-tool">
                   <div className="total-display">
                     <div className="title-total-display">
-                      <this.Translate id="text_balance" />
+                      <this.Translate id="text_amount_to_pay" />:
                     </div>
                     <div className="value-total-display">
                       {
@@ -460,29 +491,74 @@ export default class Payment extends Modal {
                             loading={this.paymentMethodSelectedIndex === parseInt(`${index1}${index2}`, 10) && this.props.transaction.paying} 
                             type="info"
                             className={index2 === 0 && paymentMethodListChild.length > 1 ? "mg-right" : ""}
-                            width={`${(100/paymentMethodListChild.length)-1}%`}
+                            width="308px"
                             onClick={() => this.handleOnMakePaymentWithCash(paymentMethod, parseInt(`${index1}${index2}`, 10))}>
-                            {paymentMethod.name}
+                            <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                              <img src={this.Util.getGeneralImage("storeVein/cash-payment-method.svg").url} alt="cash" style={{width: 40, marginRight: 15}} />
+                              <div>{paymentMethod.name}</div>
+                            </div>
                           </this.Button>
                         ) 
                       )
                     }
                   </div>
+                  {
+                    this.props.customer ?
+                      <div className="wrap-customer-credit-info">
+                        <div style={{ border: "0.5px solid #d9d9d9" }} />
+                        <div className="separate-title-line">
+                          <this.Translate id="text_or_pay_later" />
+                        </div>
+                        {this.renderCustomerInfo()}
+                        <div className="action-button-to-pay">
+                          {
+                            this.props.paymentMethodList.list.filter(paymentMethod => paymentMethod.code === Payment.PAYMENT_METHOD_CREDIT_CODE).map(paymentMethod => 
+                              <this.Button
+                                htmlType="submit"
+                                key={Payment.PAYMENT_METHOD_CREDIT_CODE} // duplicate key index of loop
+                                loading={this.paymentMethodSelectedIndex === Payment.PAYMENT_METHOD_CREDIT_CODE && this.props.transaction.paying}
+                                type="info"
+                                width="308px"
+                                onClick={() => this.handleOnMakePaymentWithCash(paymentMethod, Payment.PAYMENT_METHOD_CREDIT_CODE)}>
+                                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginLeft: 10 }}>
+                                  <img src={this.Util.getGeneralImage("storeVein/credit-note.svg").url} alt="cash" style={{ width: 50, marginRight: 15 }} />
+                                  <div>{paymentMethod.name}</div>
+                                </div>
+                              </this.Button> 
+                            )
+                          }
+                        </div>
+                      </div>
+                      :
+                      ""
+                  }
                 </div>
                 :
                 <div className="confirm-payment">
-                  <div className="text-center title">
-                    {
-                      changeAmount > 0 ?
-                        <span>
-                          <this.Translate id="text_give"/> {this.formatCurrency(changeAmount)} <this.Translate id="text_change"/>
-                        </span>
-                        :
-                        <span>
-                          <this.Translate id="text_payment"/> <this.Translate id="text_received"/>
-                        </span>
-                    }
-                  </div>
+                  {
+                    this.props.customer ?
+                      <div style={{marginBottom: 30}}>
+                        <div className="text-center title">
+                          <span>
+                            {this.formatCurrency(grandTotal)} <this.Translate id="text_info_for_customer_credit" />
+                          </span>
+                        </div>
+                        {this.renderCustomerInfo()}
+                      </div>
+                      :
+                      <div className="text-center title">
+                        {
+                          changeAmount > 0 ?
+                            <span>
+                              <this.Translate id="text_give" /> {this.formatCurrency(changeAmount)} <this.Translate id="text_change" />
+                            </span>
+                            :
+                            <span>
+                              <this.Translate id="text_payment" /> <this.Translate id="text_received" />
+                            </span>
+                        }
+                      </div>
+                  }
                   <div className="wrap-email-receipt">
                     <this.InputEmail
                       name="email"

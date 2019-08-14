@@ -88,7 +88,8 @@
 .pos-payment .sale-summary ul li .quantity,
 .pos-payment .sale-summary ul li .price,
 .pos-payment .sale-summary ul li .sub-total-title,
-.pos-payment .sale-summary ul li .sub-total-value {
+.pos-payment .sale-summary ul li .sub-total-value,
+.inner-customer-credit-info .data-row {
     font-size: 11.25pt;
     color: #093163;
     font-weight: 400
@@ -114,17 +115,13 @@
     color: #093163
 }
 
-.pos-payment .wrap-payment-tool {
-    border-left: 1px solid #ECECEC
-}
-
-.pos-payment .payment-tool .title {
+.pos-payment .payment-tool>.title {
     padding-right: 30px
 }
 
-.pos-payment .payment-tool .title,
+.pos-payment .payment-tool>.title,
 .pos-payment .confirm-payment .title {
-    font-size: 30pt;
+    font-size: 25pt;
     color: #093163
 }
 
@@ -136,11 +133,16 @@
 
 .pos-payment .payment-tool .amount-to-pay input {
     text-align: right;
-    font-size: 25pt;
+    font-size: 20pt;
     font-weight: 600;
     height: 100%;
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
+    font-family: serif;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 15px;
+    border-width: 0.5px
 }
 
 .pos-payment .payment-tool .amount-to-pay .ant-form-item {
@@ -155,7 +157,7 @@
 }
 
 .pos-payment .payment-tool .action-button-to-pay {
-    margin-top: 50px;
+    margin-top: 30px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center
@@ -166,25 +168,31 @@
 }
 
 .pos-payment .payment-tool .action-button-to-pay button:hover {
-    border: 1.5px solid #0D62AF;
     box-shadow: 0 0 3px 2px rgba(0,138,232,.35);
     border-color: #008ae8;
 }
 
 .pos-payment .payment-tool .action-button-to-pay button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 11.25pt;
-    height: 70px;
+    height: 58px;
     margin-bottom: 10px;
-    letter-spacing: 2px;
     padding-top: 8px;
     padding-bottom: 8px;
     font-weight: 600;
     box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.2);
 }
 
+.pos-payment .payment-tool .action-button-to-pay button .anticon-loading{
+    position: absolute;
+    left: 60px
+}
+
 .pos-payment .wrap-payment-tool {
     min-height: 700px;
-    padding-top: 60px
+    padding-top: 30px
 }
 
 .pos-payment .ant-modal-body {
@@ -234,16 +242,17 @@
 
 .currency-symbol-payment {
     width: 60px;
-    border: 1.5px solid #ECECEC;
+    border: 0.5px solid #ECECEC;
     border-right: 0;
-    height: 67px;
+    height: 54px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-bottom-left-radius: 3px;
     border-top-left-radius: 3px;
-    font-size: 25pt;
-    font-weight: 600
+    font-size: 20pt;
+    font-weight: 600;
+    font-family: serif
 }
 
 .total-display {
@@ -251,12 +260,18 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    align-items: center
+    align-items: center;
+    flex-direction: row
+}
+
+.value-total-display {
+    margin-left: 5px;
+    font-family: serif
 }
 
 .total-display .value-total-display,
 .total-display .title-total-display {
-    font-size: 25pt;
+    font-size: 20pt;
     color: #093163;
     font-weight: 600
 }
@@ -265,4 +280,46 @@
     text-transform: uppercase;
     font-size: 16pt;
     letter-spacing: 1.5px
+}
+
+.separate-title-line {
+    position: absolute;
+    top: -10px;
+    background-color: white;
+    padding-left: 5px;
+    padding-right: 5px;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    margin: auto
+}
+
+.wrap-customer-credit-info {
+    position: relative;
+    margin: 0 auto;
+    margin-top: 30px;
+    width: 80%
+}
+
+.customer-credit-info {
+    margin-top: 40px
+}
+
+.inner-customer-credit-info {
+    padding: 10px;
+    padding-top: 20px;
+    border-radius: 3px;
+    border: 1px solid #ECECEC;
+    margin-top: 20px;
+    position: relative
+}
+
+.inner-customer-credit-info .customer-info-title {
+    width: fit-content;
+    font-weight: 600;
+    font-size: 11.25pt;
+    color: #093163;
+    background-color: white;
+    position: absolute;
+    top: -12px
 }

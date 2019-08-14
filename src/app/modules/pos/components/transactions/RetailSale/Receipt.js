@@ -13,7 +13,7 @@ export default class Receipt extends Component {
     };
   }
   componentDidMount() {
-    JsBarcode("#receiptCarcode", this.props.data.receiptNumber, {
+    JsBarcode("#receiptCarcode", this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number, {
       height: 35,
       displayValue: false
     });

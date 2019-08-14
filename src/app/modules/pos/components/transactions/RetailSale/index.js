@@ -13,6 +13,7 @@ import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTempla
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
 import FormCreateCustomer from "../../../../crm/containers/customers/Customer/FormCreate";
 import CustomerAction from "../../../../crm/actions/customers/customer";
+import CustomerConstant from "../../../../crm/constants/customers/customer";
 import ProductTypeAction from "../../../../inventory/actions/products/productsType";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import ConstantOpenRegistrationSale from "../../../constants/transactions/openSaleRegisration";
@@ -174,7 +175,7 @@ export default class Retail extends Component {
 
     new Promise(() => {
       this.props.dispatch(ReceiptTemplateAction.default());
-      this.props.dispatch(PaymentMethodAction.fetch(10, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
+      this.props.dispatch(PaymentMethodAction.fetch(2, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
     });
 
     // RESTORE CURRENT RECEIPT
@@ -550,6 +551,10 @@ export default class Retail extends Component {
       }
     }
 
+    if (field === "description") {
+      existingProductOrderList[proderOrderRowIndex]["description"] = event.target.value;
+    }
+
     // UPDATE SUMMARY TAX LIST
     this.appendProductTaxList(existingProductOrderList);
 
@@ -629,12 +634,14 @@ export default class Retail extends Component {
     }
     
     if (this.state.productOrderList.length > 0) {
+
       this.props.dispatch(TransactionAction.showForm());
       this.setState({modalContent: <PaymentForm
         isHasSubCurrency={this.state.isHasSubCurrency}
         baseCurrency={this.state.baseCurrency}
         subCurrency={this.state.subCurrency}
         handleCancel={this.handleCancelMakePayment}
+        customer={this.state.selectedCustomer}
         productOrderList={this.state.productOrderList}
         paymentMethodList={this.props.paymentMethod}
         productTaxList={this.state.productTaxList}
@@ -642,6 +649,10 @@ export default class Retail extends Component {
         summaryTotal={this.getSummaryTotal()}
         summaryTax={POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale))}/>
       });
+
+      this.props.dispatch(CustomerAction.reset(CustomerConstant.REQUEST_CUSTOMERS_RESET));
+      this.props.form.setFieldsValue({ searchRecord: "" }); //searchRecord: customer search field
+      this.setState({selectedCustomer: null});
     } else {
       // TO DO: alert message can make payment with empty list
     }
@@ -842,6 +853,11 @@ export default class Retail extends Component {
       leftSideElementWidth = leftSideElement.offsetWidth;
     }
 
+    let categoryList = this.props.productsType.list;
+    if (categoryList.length > 4) {
+      categoryList = this.state.categoryList.concat(categoryList);
+    }
+
     return <this.Row className="main-layout main-store-account" id="retail-sale">
       <div id="receiptLogoPreLoading" style={{display: "none"}}>
         {<img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate && this.props.receiptTemplate.data ? this.props.receiptTemplate.data.logo : "", "general").url} />}
@@ -876,7 +892,7 @@ export default class Retail extends Component {
             this.props.productsType.fetching && !this.state.isRequestLoadingMore ?
               <StartUp />
               :
-              this.state.categoryList.concat(this.props.productsType.list).map((category, index) =>
+              categoryList.map((category, index) =>
                 <this.Col md="3" className="category-box" style={{width: this.productWidth}} key={index}>
                   <div onClick={() => this.handleOnSelectCategory(category.id)} className={`category ${this.state.selectedCategoryIds.includes(category.id)? "selected": "" }`}>
                     <div style={{maxHeight: 20, overflow: "hidden", wordBreak: "break-all"}}>

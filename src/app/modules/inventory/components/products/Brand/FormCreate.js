@@ -30,9 +30,7 @@ export default class FormCreate extends Modal {
     this.submitLoading = brandAdd.adding;
 
     if (brandAdd.showForm) {
-      this.content = (
-        <FormItem form={form} locale={locale}/>
-      );
+      this.content = <FormItem form={form} locale={locale} />;
       return super.render();
     } else {
       return (<div></div>);

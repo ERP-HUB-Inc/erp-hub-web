@@ -29,6 +29,18 @@ export default {
     "Enter cash"
   ],
 
+  "text_amount_to_pay": [
+    "Amount to pay",
+    "ចំនួនទឹកប្រាក់ត្រូវបង់",
+    "Amount to pay"
+  ],
+
+  "text_or_pay_later": [
+    "OR PAY LATER",
+    "ឬមិនទាន់បង់ប្រាក់",
+    "OR PAY LATER"
+  ],
+
   "variant_product_select_text": [
     "Select",
     "ជ្រើសរើស",
@@ -55,7 +67,7 @@ export default {
 
   "text_email_receipt": [
     "Email Receipt",
-    "ផ្ញើរបង្កាន់ដៃបង់ប្រាក់ទៅអុីម៉ែល",
+    "ផ្ញើរបង្កាន់ដៃទៅអុីម៉ែល",
     "Email Receipt"
   ],
 
@@ -165,6 +177,24 @@ export default {
     "Please download app below",
     "សូមដំឡើងកម្មវិធី",
     "Please download app below"
+  ],
+
+  "text_credit_balance": [
+    "Credit​ Amount",
+    "ទឹកប្រាក់នៅជំពាក់",
+    "Credit​ Amount",
+  ],
+
+  "text_customer_info": [
+    "Customer Info",
+    "ពត៏មានអតិថិជន",
+    "Customer Info"
+  ],
+
+  "text_info_for_customer_credit": [
+    "on Credit",
+    "ទុកបង់ប្រាក់នៅពេលក្រោយ",
+    "on Credit"
   ]
 
 };

@@ -147,7 +147,7 @@ export default class SaleHistoryList extends List {
         dataIndex: "status",
         key: "status",
         // width: 120,
-        render: status => <this.Badge style={{ textTransform: "uppercase" }} status="success" text={this.TRANSACTION_STATUS_STR[status]} />,
+        render: status => <this.Badge style={{ textTransform: "uppercase" }} status={[Enum.TRANSACTION_STATUS.CREDIT, Enum.TRANSACTION_STATUS.OVERDUE].includes(status) ? "error" : "success"} text={this.TRANSACTION_STATUS_STR[status]} />,
         sorter: true
       }
     ];

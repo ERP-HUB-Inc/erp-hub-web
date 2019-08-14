@@ -1,5 +1,6 @@
 import React from "react";
 import List from "../../List";
+import Enum from "../../../enums";
 import FormCreate from "../../../containers/products/Brand/FormCreate";
 import FormUpdate from "../../../containers/products/Brand/FormUpdate";
 import Constant from "../../../constants/products/brand";
@@ -9,20 +10,7 @@ import BrandService from "../../../services/products/BrandService";
 export default class Lists extends List {
   constructor(props) {
     super(props);
-    this.columns = new Column();
-    this.formCreate = <FormCreate/>;
-    this.formUpdate = <FormUpdate/>;
-    this.service = BrandService;
-    this.columnFilterWithKey = ["name"];
-    this.action = BrandAction;
-    this.RESET_CONSTANT = Constant.RESET_BRAND;
-  }
-}
-
-class Column extends List {
-  constructor(props) {
-    super(props);
-    return [
+    this.columns = [
       {
         title: <this.Translate id="text_name" />,
         dataIndex: "name",
@@ -37,5 +25,12 @@ class Column extends List {
       },
       this.columnStatus
     ];
+    this.formCreate = <FormCreate/>;
+    this.formUpdate = <FormUpdate/>;
+    this.service = BrandService;
+    this.localStorageKey = Enum.LOCAL_SCHEMA.BRAND;
+    this.columnFilterWithKey = ["name"];
+    this.action = BrandAction;
+    this.RESET_CONSTANT = Constant.RESET_BRAND;
   }
 }

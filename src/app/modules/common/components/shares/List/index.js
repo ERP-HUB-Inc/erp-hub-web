@@ -46,6 +46,8 @@ export default class List extends Component {
     this.addingProp = "add"; // prop of reducer of adding record that get from map state to prop from container
     this.updatingProp = "update"; // prop of reducer of adding record that get from map state to prop from container
 
+    this.localStorageKey = null; // key of localstorage in case you want to store it as caching
+
     this.pageSize = 20; // default limit record display in table list
     this.confirmTextDelete = <this.Translate id="text_confirm_delete" />;
     this.requiredMessage = "Please input all required field."; // require message display on modal popup
@@ -776,6 +778,11 @@ export default class List extends Component {
         if (addingProps.response.data) {
           fetchingProps.list = [addingProps.response.data, ...fetchingProps.list];
         }
+
+        if (this.localStorageKey) {
+          localStorage.setItem(this.localStorageKey, JSON.stringify(fetchingProps.list));
+        }
+
         this.props.dispatch({type: this.RESET_CONSTANT});
       }
     }
@@ -788,6 +795,11 @@ export default class List extends Component {
           const updateIndex = this.Util.findArrayIndex(fetchingProps.list, "id", updatingProps.response.data.id);
           fetchingProps.list.splice(updateIndex, 1, updatingProps.response.data);
         }
+
+        if (this.localStorageKey) {
+          localStorage.setItem(this.localStorageKey, JSON.stringify(fetchingProps.list));
+        }
+
         this.props.dispatch({type: this.RESET_CONSTANT});
       }
     }

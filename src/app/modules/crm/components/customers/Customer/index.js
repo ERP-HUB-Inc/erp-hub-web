@@ -239,6 +239,13 @@ class Column extends List {
         render: email => email ? this.Util.formtTextError(email) : this.emptyText
       },
       {
+        title: <this.Translate id="text_credit" />,
+        dataIndex: "credit",
+        key: "credit",
+        sorter: true,
+        render: credit => credit ? this.formatCurrency(credit) : this.formatCurrency(0)
+      },
+      {
         title: <this.Translate id="text_group" />,
         dataIndex: "groupCustomer",
         key: "groupCustomer",

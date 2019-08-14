@@ -17,8 +17,8 @@ export default {
     OPEN: 0,
     OVERDUE: 1,
     PAID: 2,
-    CREDIT: 3,
-    CLOSED: 4
+    CREDIT: 4,
+    CLOSED: 5
   },
   PAYMENT_METHOD_AVIALE_ON_POS: 1,
   PRODUCT_AVIALABLE_ON_SALE: 1,
