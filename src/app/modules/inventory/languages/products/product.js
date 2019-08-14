@@ -413,6 +413,18 @@ export default {
     "Stock"
   ],
 
+  "text_in_stock": [
+    "In Stock",
+    "មាននៅ​ក្នុង​ស្តុក",
+    "In Stock"
+  ],
+
+  "select_text_all_stock": [
+    "All Stock",
+    "ស្តុកទាំងអស់",
+    "All Stock"
+  ],
+
   "text_current": [
     "Current",
     "បច្ចុប្បន្នកាល",

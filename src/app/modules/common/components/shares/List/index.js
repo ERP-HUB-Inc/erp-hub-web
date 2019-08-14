@@ -19,6 +19,7 @@ export default class List extends Component {
       current: 1,
       selectedRowKeys: [],
       selectedListIds: [],
+      selectedRows: [],
       modalVisible: false,
       deleting: false,
       isClickFilter: false,
@@ -197,7 +198,8 @@ export default class List extends Component {
   onSelectChange(selectedRowKeys, selectedRows) {
     this.setState({
       selectedListIds: this.mapSelectedListIds(selectedRows),
-      selectedRowKeys
+      selectedRowKeys,
+      selectedRows
     });
   }
 
