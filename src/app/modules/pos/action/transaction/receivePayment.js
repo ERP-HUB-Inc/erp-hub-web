@@ -2,11 +2,11 @@ import Constant from "../../constants/transactions/receivePayment";
 import ReceivePaymentService from "../../services/transactions/TransactionService";
 
 export default {
-  add: (data) => {
+  update: (data, id) => {
     return dispatch => {
       return dispatch({
-        type: Constant.ADD_RECEIVE_PAYMENT,
-        payload: ReceivePaymentService.add(data)
+        type: Constant.UPDATE_RECEIVE_PAYMENT,
+        payload: ReceivePaymentService.update(data, id)
       });
     };
   },

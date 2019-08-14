@@ -95,36 +95,36 @@ export default class SaleList extends List {
   }
 
   changeFormValueWhenExport(propertyFields){
-    let getFieldValues = this.props.form.getFieldValue("reportType");
+    let getReportTypeValues = this.props.form.getFieldValue("reportType");
     let filedValues = {label: this.CATranslate("text_date", this.props.locale), key: "fieldNames"};
     let keyFileds;
-    if(getFieldValues === 0){
-      filedValues =  {label: this.CATranslate("text_sale_summary", this.props.locale), key: "fieldNames"};
-    }else if(getFieldValues === 1){
-      filedValues =  {label: this.CATranslate("text_product", this.props.locale), key: "fieldNames"};
-    }else if(getFieldValues === 2){
-      filedValues =  {label: this.CATranslate("text_product_type", this.props.locale), key: "fieldNames"};
-    }else if(getFieldValues === 3){
-      filedValues =  {label: this.CATranslate("text_user", this.props.locale), key: "fieldNames"};
-    }else if(getFieldValues === 4){
-      filedValues =  {label: this.CATranslate("text_customer", this.props.locale), key: "fieldNames"};
-    }else if(getFieldValues === 5){
-      filedValues =  {label: this.CATranslate("text_location", this.props.locale), key: "fieldNames"};
+    if(getReportTypeValues === 0){
+      filedValues = {label: this.CATranslate("text_sale_summary", this.props.locale), key: "fieldNames"};
+    }else if(getReportTypeValues === 1){
+      filedValues = {label: this.CATranslate("text_product", this.props.locale), key: "fieldNames"};
+    }else if(getReportTypeValues === 2){
+      filedValues = {label: this.CATranslate("text_product_type", this.props.locale), key: "fieldNames"};
+    }else if(getReportTypeValues === 3){
+      filedValues = {label: this.CATranslate("text_user", this.props.locale), key: "fieldNames"};
+    }else if(getReportTypeValues === 4){
+      filedValues = {label: this.CATranslate("text_customer", this.props.locale), key: "fieldNames"};
+    }else if(getReportTypeValues === 5){
+      filedValues = {label: this.CATranslate("text_location", this.props.locale), key: "fieldNames"};
     }
 
     if(propertyFields){
       keyFileds = propertyFields.date;
-      if(getFieldValues === 0){
+      if(getReportTypeValues === 0){
         keyFileds = propertyFields.date;
-      }else if(getFieldValues === 1){
+      }else if(getReportTypeValues === 1){
         keyFileds = propertyFields.name;
-      }else if(getFieldValues === 2){
+      }else if(getReportTypeValues === 2){
         keyFileds = propertyFields.name;
-      }else if(getFieldValues === 3){
+      }else if(getReportTypeValues === 3){
         keyFileds = propertyFields.user;
-      }else if(getFieldValues === 4){
+      }else if(getReportTypeValues === 4){
         keyFileds = propertyFields.customer;
-      }else if(getFieldValues === 5){
+      }else if(getReportTypeValues === 5){
         keyFileds = propertyFields.location;
       }
     } 

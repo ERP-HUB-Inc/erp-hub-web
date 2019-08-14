@@ -1,16 +1,30 @@
 import React from "react";
 import Modal from "../../../../../common/components/shares/Modal";
 import InventoryUtil from "../../../../../inventory/utils";
+import InventoryEnum from "../../../../../inventory/enums";
+import POSUtil from "../../../../utils";
 import "./index.css";
 
 export default class FormItem extends Modal {
   constructor(props){
     super(props);
+    this.state = {
+      transactionPaymentEntries: [],
+      ishandlePayment: true
+    };
     this.columns = [
       {
         title: <this.Translate id="text_description" />,
         dataIndex: "name",
-        key: "name"
+        key: "name",
+        render: (text, record, index) => {
+          return(
+            <div>
+              <div>{ record.name }</div>
+              <div style={{ fontSize: "10px" }}>{ record.variantName ? record.variantName : "" }</div>
+            </div>
+          );
+        }
       },
       {
         title: <this.Translate id="text_quantity" />,
@@ -30,27 +44,67 @@ export default class FormItem extends Modal {
         render: (text, record, index) => this.Util.formatCurrency(record.price * record.quantity) 
       }
     ];
+    this.handleReceive = this.handleReceive.bind(this);
+  }
+
+  handleReceive () {
+    this.props.transactionPaymentEntries(this.state.transactionPaymentEntries);
+  }
+  
+  getSummaryTotal(data) {
+    return data.total - (data.discount + this.getTaxAmount(data));
+  }
+
+  getTaxAmount(data) {
+    return data.total - data.totalExcludeTax;
   }
 
   getProductOrderList(data) {
     let productOrderList = [];
+    let transactionPaymentEntries = [];
     if (this.Util.isValidCollectionInObj(data, "transactionEntries")) {
       data.transactionEntries.forEach(transactionEntry => {
         if (transactionEntry.productVariant && transactionEntry.productVariant.product) {
           const productVariant = transactionEntry.productVariant;
+          const tax = POSUtil.getTaxFromProduct(productVariant.product);
           productOrderList.push({
             quantity: transactionEntry.quantity,
             name: InventoryUtil.getProductName(productVariant.product),
+            variantName: productVariant.product.productOption === InventoryEnum.PRODUCT_VARIANT ? productVariant.name : "",
+            tax: tax.taxRate/100,
+            taxDescription: tax,
             price: transactionEntry.price
+            // newPrice: transactionEntry.price
           });
         }
+
+        if(data.transactionPayment[0]){
+          if(this.state.ishandlePayment){
+            transactionPaymentEntries.push({
+              tender: data.total,
+              balance: 0,
+              change: 0,
+              paymentMethodName: data.transactionPayment[0].paymentMethod.name,
+              paymentMethodId: data.transactionPayment[0].paymentMethodId
+            });
+  
+            this.setState({
+              transactionPaymentEntries: transactionPaymentEntries,
+              ishandlePayment: false
+            });
+  
+          }
+         
+        }
+
       });
+      
     }
     return productOrderList;
   }
 
   render() {
-    const {formData, customer, form, locale} = this.props;
+    const {formData, customer, locale, form} = this.props;
     const productOrderList = this.getProductOrderList(formData);
     return (
     
@@ -60,6 +114,7 @@ export default class FormItem extends Modal {
           <div style={{flexGrow: 1, marginBottom: 15}}>
             <div className="main-table-receive main-receive-payment">
               <this.Table 
+                rowKey="receivePaymentId"
                 dataSource={productOrderList}
                 columns={this.columns}
                 locale={{emptyText: <this.Translate id="table_empty_data"/>}}
@@ -84,32 +139,39 @@ export default class FormItem extends Modal {
                 <div className="left">: {customer && customer.customer.phoneNumber ? customer.customer.phoneNumber : "N/A" }</div>
               </div>
               <div className="showSummery">
-                <div className="right" style={{ marginTop: "-22px" }}><this.Translate id="text_payment_date"/></div>
+                <div className="right"><this.Translate id="text_tax"/></div>
+                <div className="left">: {this.formatCurrency(this.getTaxAmount(formData))}</div>
+              </div>
+              <div className="showSummery">
+                <div className="right"><this.Translate id="text_discount"/></div>
+                <div className="left">: {this.formatCurrency(formData.discount)}</div>
+              </div>
+              <div className="showSummery">
+                <div className="right" style={{ marginTop: "-11px" }}><this.Translate id="text_payment_date"/></div>
                 <div className="left">
                   <this.DatePickers
-                    defaultValue={this.Util.formatDatePicker(formData.createdAt)} 
-                    name="paymentDate"
+                    defaultValue={this.Util.formatDatePicker(formData.payDate)} 
+                    name="payDate"
                     placeholder={this.CATranslate("text_payment_date", locale)}
                     required={true}
                     form={form}/> 
                 </div>
               </div>
-              <div className="showSummery" style={{ marginTop: "-4px" }}>
-                <div className="right" style={{ marginTop: "-22px" }}><this.Translate id="text_receive_amount"/></div>
-                <div className="left">
-                  <this.InputNumber
-                    name="receiveAmount"
-                    placeholder={this.CATranslate("text_receive_amount", locale)}
-                    // required={true}
-                    isAutoFocus={true}
-                    form={form}/> 
-                </div>
+
+              <div className="showSummery">
+                <div className="right"><this.Translate id="text_sub_total"/></div>
+                <div className="left">: {this.formatCurrency(this.getSummaryTotal(formData))}</div>
+              </div>
+
+              <div className="showSummery">
+                <div className="right"><this.Translate id="text_receive_amount"/></div>
+                <div className="left">: {this.formatCurrency(formData.total)}</div>
               </div>
 
               <div className="show-searchroom-layout">
                 <div className="right" />
-                <div className="left" style={{marginTop: 10}}>
-                  <this.Button htmlType="submit" style={{ width: "100%" }} type="info">
+                <div className="left" style={{marginTop: 24}}>
+                  <this.Button htmlType="submit" onClick={this.handleReceive} style={{ width: "100%" }} loading={this.props.updateReceivePayment.updating} type="info">
                     <span className="icon-payment-report icon-padding-right text-uppercase"></span> <this.Translate id="text_receive"/>
                   </this.Button>
                 </div>

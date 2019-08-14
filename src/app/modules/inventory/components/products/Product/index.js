@@ -28,6 +28,11 @@ export default class ProductList extends List {
     this.brandList = [{name: <this.Translate id="text_all_brand"/>, id: 0}];
     this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
     this.productTypeList = [{productTypeDescriptions: {name: <this.Translate id="text_all_product_type"/>}, id: 0}];
+    this.stockList = [
+      {name: <this.Translate id="select_text_all_stock"/>, id: 0},
+      {name: <this.Translate id="text_in_stock"/>, id: 1},
+      {name: <this.Translate id="text_out_of_stock"/>, id: 2}
+    ];
     this.columns = new Column();
     this.formCreate = <FormCreate/>;
     this.callBackOnShowEditForm = this.showFormEdit;
@@ -253,6 +258,17 @@ export default class ProductList extends List {
                 form={form}
                 defaultValue={this.locationList[0].id}/>
             </this.Col>
+            {/* <this.Col md="2">            
+              <this.Select
+                name="stockId"
+                label={<this.Translate id="text_stock"/>}
+                dataSource={this.stockList}
+                valueKey="id"
+                nameKey="name"
+                form={form}
+                defaultValue={0}
+              />
+            </this.Col> */}
             <this.Col md="2">
               <this.Select
                 name="brandId"

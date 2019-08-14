@@ -204,7 +204,7 @@ export default class SaleHistoryList extends List {
       this.props.dispatch(TransactionAction.detail({id: this.state.selectedListIds[0]}));
       this.props.dispatch(ReceivePaymentAction.showForm());
       this.setState({
-        modalConten: <ReceiePaymentForm customer={this.state.selectedRows[0]} />,
+        modalConten: <ReceiePaymentForm id={this.state.selectedListIds[0]} customer={this.state.selectedRows[0]} />,
         loadingPopup: false,
         isRequestReceivePayment: false
       });

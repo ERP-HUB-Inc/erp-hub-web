@@ -11,7 +11,7 @@ class ReceivePayment extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    addReceivePayment: state.reducer.transaction.addReceivePayment,
+    updateReceivePayment: state.reducer.transaction.updateReceivePayment,
     detailTransaction: state.reducer.transaction.detail,
     checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale

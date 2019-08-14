@@ -84,15 +84,15 @@ export default combineReducers({
     }
   },
 
-  addReceivePayment: (state = InitialState.add(), action) => {
+  updateReceivePayment: (state = InitialState.update(), action) => {
     const constants = [
-      ConstantReceivePayment.ADD_RECEIVE_PAYMENT_PENDING,
-      ConstantReceivePayment.ADD_RECEIVE_PAYMENT_REJECTED,
-      ConstantReceivePayment.ADD_RECEIVE_PAYMENT_FULFILLED,
+      ConstantReceivePayment.UPDATE_RECEIVE_PAYMENT_PENDING,
+      ConstantReceivePayment.UPDATE_RECEIVE_PAYMENT_REJECTED,
+      ConstantReceivePayment.UPDATE_RECEIVE_PAYMENT_FULFILLED,
       ConstantReceivePayment.SHOW_RECEIVE_PAYMENT_FORM,
       ConstantReceivePayment.RESET_RECEIVE_PAYMENT
     ];
-    return reducer.add(state, action, constants);
+    return reducer.update(state, action, constants);
   }
   
 });
