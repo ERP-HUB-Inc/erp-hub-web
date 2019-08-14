@@ -28,7 +28,7 @@ export default class SaleHistoryList extends List {
     };
     this.title = <this.Translate id="text_sale_history"/>;
     this.fetchingProp = "list";
-    this.columnFilterWithKey = ["number", "firstName", "lastName", "company", "email", "phoneNumber", "address"];
+    this.columnFilterWithKey = ["firstName", "lastName", "email", "phoneNumber"];
     this.TRANSACTION_TYPE_STR = [
       {value: -1, name: <this.Translate id="text_all_sales"/>},
       {value: Enum.TRANSACTION_TYPE.RECEIPT, name: <this.Translate id="text_receipt"/>},

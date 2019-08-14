@@ -104,7 +104,7 @@ export default {
 
   "text_receive_payment": [
     "Receive Payment",
-    "ទទួលបានការទូទាត់",
+    "បង់ប្រាក់",
     "Receive Payment"
   ],
 
@@ -131,6 +131,12 @@ export default {
     "សូមជ្រើសរើសទិន្នន័យ !",
     "Please selected record !"
   ],
+
+  "text_amount_to_pay": [
+    "Amount to pay",
+    "ទឹកប្រាក់ត្រូវបង់",
+    "Amount to pay"
+  ]
 
 };
       

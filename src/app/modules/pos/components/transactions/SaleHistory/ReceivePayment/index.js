@@ -22,8 +22,8 @@ export default class Form extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        values["id"] = this.props.detailTransaction.data.id;
         values["payDate"] = this.Util.formatDateForMYSQL(values.payDate);
-        values["deposit"] = 0;
         values["type"] = Enum.TRANSACTION_TYPE.RECEIPT;
         values["status"] = Enum.TRANSACTION_STATUS.PAID;
         values["transactionPaymentEntries"] = this.state.transactionPaymentEntries;
@@ -48,23 +48,19 @@ export default class Form extends Modal {
     this.submitLoading = updateReceivePayment.updating;
 
     this.validatorAddRecord(updateReceivePayment);
+
     if (updateReceivePayment.showForm && detailTransaction.showForm) {
-      this.content = (
-        <div>
-          <FormItem
-            formData={detailTransaction.data}
-            updateReceivePayment={updateReceivePayment}
-            customer={this.props.customer}
-            transactionPaymentEntries={this.transactionPaymentEntries}
-            form={form}
-            dispatch={this.props.dispatch}
-            locale={locale}
-          />
-        </div>
-      );
+      this.content = <FormItem
+        formData={detailTransaction.data}
+        updateReceivePayment={updateReceivePayment}
+        customer={this.props.customer}
+        transactionPaymentEntries={this.transactionPaymentEntries}
+        form={form}
+        dispatch={this.props.dispatch}
+        locale={locale} />;
       return super.render();
     } else {
-      return (<div></div>);
+      return <div />;
     }
   }
 }

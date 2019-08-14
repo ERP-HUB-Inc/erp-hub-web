@@ -19,6 +19,10 @@
     border-radius: 3px;
 }
 
+.main-receive-payment .ant-table-content {
+    margin-top: 0 !important
+}
+
 .main-receive-payment .summary {
     text-align: center;
     font-size: 12pt;
@@ -30,8 +34,8 @@
 
 .main-receive-payment .showSummery {
     display: flex;
-    margin-bottom: 5px;
-    margin-top: 16px;
+    margin-bottom: 10px;
+    align-items: center
 }
 
 .main-receive-payment .showSummery .right {

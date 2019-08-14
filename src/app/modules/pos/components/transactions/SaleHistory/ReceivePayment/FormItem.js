@@ -14,7 +14,7 @@ export default class FormItem extends Modal {
     };
     this.columns = [
       {
-        title: <this.Translate id="text_description" />,
+        title: <this.Translate id="text_product_name" />,
         dataIndex: "name",
         key: "name",
         render: (text, record, index) => {
@@ -35,12 +35,14 @@ export default class FormItem extends Modal {
         title: <this.Translate id="text_price" />,
         dataIndex: "price",
         key: "price",
-        render: (price) => this.Util.formatCurrency(price) 
+        align: "right",
+        render: price => this.Util.formatCurrency(price) 
       },
       {
         title: <this.Translate id="text_amount" />,
         dataIndex: "amount",
         key: "amount",
+        align: "right",
         render: (text, record, index) => this.Util.formatCurrency(record.price * record.quantity) 
       }
     ];
@@ -68,6 +70,7 @@ export default class FormItem extends Modal {
           const productVariant = transactionEntry.productVariant;
           const tax = POSUtil.getTaxFromProduct(productVariant.product);
           productOrderList.push({
+            id: transactionEntry.id,
             quantity: transactionEntry.quantity,
             name: InventoryUtil.getProductName(productVariant.product),
             variantName: productVariant.product.productOption === InventoryEnum.PRODUCT_VARIANT ? productVariant.name : "",
@@ -113,8 +116,7 @@ export default class FormItem extends Modal {
         <div style={{display: "flex", flexDirection: "row", height: "100%"}}>
           <div style={{flexGrow: 1, marginBottom: 15}}>
             <div className="main-table-receive main-receive-payment">
-              <this.Table 
-                rowKey="receivePaymentId"
+              <this.Table
                 dataSource={productOrderList}
                 columns={this.columns}
                 locale={{emptyText: <this.Translate id="table_empty_data"/>}}
@@ -128,7 +130,7 @@ export default class FormItem extends Modal {
 
               <div className="showSummery">
                 <div className="right"><this.Translate id="text_invoice_no"/></div>
-                <div className="left">: {formData ? formData.receiptNumber : "N/A"}</div>
+                <div className="left">: {formData ? formData.number : "N/A"}</div>
               </div>
               <div className="showSummery">
                 <div className="right"><this.Translate id="text_customer"/></div>
@@ -139,15 +141,7 @@ export default class FormItem extends Modal {
                 <div className="left">: {customer && customer.customer.phoneNumber ? customer.customer.phoneNumber : "N/A" }</div>
               </div>
               <div className="showSummery">
-                <div className="right"><this.Translate id="text_tax"/></div>
-                <div className="left">: {this.formatCurrency(this.getTaxAmount(formData))}</div>
-              </div>
-              <div className="showSummery">
-                <div className="right"><this.Translate id="text_discount"/></div>
-                <div className="left">: {this.formatCurrency(formData.discount)}</div>
-              </div>
-              <div className="showSummery">
-                <div className="right" style={{ marginTop: "-11px" }}><this.Translate id="text_payment_date"/></div>
+                <div className="right"><this.Translate id="text_payment_date"/></div>
                 <div className="left">
                   <this.DatePickers
                     defaultValue={this.Util.formatDatePicker(formData.payDate)} 
@@ -157,14 +151,20 @@ export default class FormItem extends Modal {
                     form={form}/> 
                 </div>
               </div>
-
               <div className="showSummery">
                 <div className="right"><this.Translate id="text_sub_total"/></div>
                 <div className="left">: {this.formatCurrency(this.getSummaryTotal(formData))}</div>
               </div>
-
               <div className="showSummery">
-                <div className="right"><this.Translate id="text_receive_amount"/></div>
+                <div className="right"><this.Translate id="text_tax" /></div>
+                <div className="left">: {this.formatCurrency(this.getTaxAmount(formData))}</div>
+              </div>
+              <div className="showSummery">
+                <div className="right"><this.Translate id="text_discount" /></div>
+                <div className="left">: {this.formatCurrency(formData.discount)}</div>
+              </div>
+              <div className="showSummery">
+                <div className="right"><this.Translate id="text_amount_to_pay"/></div>
                 <div className="left">: {this.formatCurrency(formData.total)}</div>
               </div>
 
@@ -172,7 +172,7 @@ export default class FormItem extends Modal {
                 <div className="right" />
                 <div className="left" style={{marginTop: 24}}>
                   <this.Button htmlType="submit" onClick={this.handleReceive} style={{ width: "100%" }} loading={this.props.updateReceivePayment.updating} type="info">
-                    <span className="icon-payment-report icon-padding-right text-uppercase"></span> <this.Translate id="text_receive"/>
+                    <span className="icon-payment-report icon-padding-right text-uppercase"></span> <this.Translate id="text_receive_payment"/>
                   </this.Button>
                 </div>
               </div>

@@ -6,7 +6,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_RECEIVE_PAYMENT,
-        payload: ReceivePaymentService.update(data, id)
+        payload: ReceivePaymentService.update(data)
       });
     };
   },
