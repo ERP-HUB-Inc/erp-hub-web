@@ -285,7 +285,7 @@ export default class SaleList extends List {
       this.changeFormValueWhenExport().filedValues,
       {label: this.CATranslate("text_revenue", this.props.locale), key: "revenue"},
       {label: this.CATranslate("text_cost_of_good", this.props.locale), key: "cost"},
-      {label: this.CATranslate("text_cost_of_good", this.props.locale), key: "profit"},
+      {label: this.CATranslate("text_gross_profit", this.props.locale), key: "profit"},
       {label: this.CATranslate("text_margin", this.props.locale), key: "margin"}
     ];
   }
