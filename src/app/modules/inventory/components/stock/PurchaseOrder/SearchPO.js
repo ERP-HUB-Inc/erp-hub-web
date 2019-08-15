@@ -96,7 +96,7 @@ export default class SearchPo extends Modal {
         }
       },
       {
-        title: <this.Translate id="text_price" />,  
+        title: <this.Translate id="text_cost" />,  
         dataIndex: "price",
         width: 150,
         key: "price",
@@ -161,27 +161,9 @@ export default class SearchPo extends Modal {
 
   componentDidMount() {
     this.setState({units: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT))});
-    console.log("ProductReOrderPointList:", this.props.productReOrderPointList);
     if (this.props.productReOrderPointList && this.props.productReOrderPointList.length > 0) {
       this.getReOrderPointProductList();
     }
-  }
-  
-  getQTY(record) {
-    let quantity = 0;
-    let isNotFilterByLocation = true;
-    record["productVariants"].forEach(productVariant => {
-      if ("productLocations" in productVariant) {
-        isNotFilterByLocation = false;
-        quantity += Util.getProductQTYLocation(productVariant["productLocations"]);
-      }
-    });
-
-    if (isNotFilterByLocation) {
-      quantity = Util.getProductQTYLocation(record["productVariants"]);
-    }
-
-    return quantity < 0 ? 0 : quantity;
   }
 
   getReOrderPointProductList(){

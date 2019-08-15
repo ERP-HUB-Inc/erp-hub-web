@@ -71,17 +71,22 @@ export default class SaleHistoryList extends List {
         title: <this.Translate id="text_transaction_no" />,
         dataIndex: "number",
         key: "number",
+        width: 140,
         sorter: true
       },
       {
-        title: <this.Translate id="text_reference_no" />,
-        dataIndex: "referenceNo",
-        key: "referenceNo",
-        render: referenceNo => referenceNo ? referenceNo : this.emptyCell,
+        title: <this.Translate id="text_type" />,
+        dataIndex: "type",
+        key: "type",
+        width: 100,
+        render: type => {
+          const valueType = this.TRANSACTION_TYPE_STR.find(transactionType => transactionType.value === type);
+          return <this.TagLabel color={[Enum.TRANSACTION_TYPE.CREDIT_NOTE].includes(valueType.value) ? "red" : "blue"}>{valueType.name}</this.TagLabel>;
+        },
         sorter: true
       },
       {
-        title: <this.Translate id="col-sale-history-sold-by" />,
+        title: <this.Translate id="text_seller" />,
         dataIndex: "userId",
         key: "userId",
         render: (text, record) => {

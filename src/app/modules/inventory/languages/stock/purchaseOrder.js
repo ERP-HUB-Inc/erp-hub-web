@@ -85,7 +85,7 @@ export default {
 
   "text_supplier_invoice": [
     "Supplier Invoice No",
-    "លេខវិក្ក័យបត្រ័អ្នកផ្គត់ផ្គង់",
+    "លេខវិក័យបត្រអ្នកផ្គត់ផ្គង់",
     "Supplier Invoice No"
   ],
   
@@ -156,9 +156,9 @@ export default {
   ],
 
   "text_save_and_auto_send_receive": [
-    "Save and receive stock automatically",
+    "Save and receive stock",
     "រក្សាទុកហើយទទួលស្តុកដោយស្វ័យប្រវត្តិ",
-    "Send and receive automatically"
+    "Save and receive stock"
   ],
 
   "create_stock_purchase_order_send_mail_title": [

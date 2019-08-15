@@ -1,9 +1,9 @@
 export default {
 
-  "col-sale-history-sold-by": [
-    "Sold By",
-    "លក់ដោយ",
-    "Sold By"
+  "text_seller": [
+    "Seller",
+    "អ្នកលក់",
+    "Seller"
   ],
 
   "input-sale-history-store": [

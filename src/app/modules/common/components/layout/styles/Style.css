@@ -215,7 +215,7 @@ html,
 
 .wrap-btn-search {
     display: flex;
-    align-items: end;
+    align-items: flex-start;
     flex-direction: column
 }
 

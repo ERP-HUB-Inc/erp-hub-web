@@ -1,6 +1,7 @@
 import React from "react";
 import List from "../List";
 import Constant from "../../../constants/report/purchase";
+import History from "../../../../common/router/history";
 import FormCreate from "../../../../inventory/containers/stock/PurchaseOrder/FormCreate";
 import ProductReportAction from "../../../action/report/product";
 import ProductReportService from "../../../services/report/ProductService";
@@ -48,6 +49,13 @@ export default class ProductList extends List {
     this.props.dispatch(ProductTypeAction.fetch(100));
     this.props.dispatch(BrandAction.fetch(100));
     this.props.dispatch(LocationAction.fetch(100));
+  }
+
+  componentDidUpdate() {
+    if (this.props.purchaseOrder.added) {
+      History.push("/stock/purchase/order");
+      this.props.dispatch(PurchaseAction.reset());
+    }
   }
 
   getProduct(){

@@ -93,11 +93,11 @@ export default class StoreAccountList extends Component {
 
     this.customerCreditStatus = [
       {
-        name: <this.Translate id="text_yes" />,
+        name: <this.Translate id="text_enable" />,
         value: Enum.CUSTOMER_CREDIT_STATUS.ENABLE
       },
       {
-        name: <this.Translate id="text_no" />,
+        name: <this.Translate id="text_disable" />,
         value: Enum.CUSTOMER_CREDIT_STATUS.DISABLE
       }
     ];

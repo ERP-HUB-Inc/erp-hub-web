@@ -40,6 +40,18 @@ export default {
     "យល់ព្រម",
     "Yes"
   ],
+
+  "text_disable": [
+    "Disable",
+    "មិនអោយដំណើរការ",
+    "Disable"
+  ],
+
+  "text_enable": [
+    "Enable",
+    "ដាក់អោយដំណើរការ",
+    "Enable"
+  ],
   
   "text_cancel": [
     "Cancel",
@@ -500,7 +512,7 @@ export default {
   
   "text_invoice": [
     "Invoice",
-    "វិក្ក័យបត្រ័",
+    "វិក័យប័ត្រ",
     "Invoice"
   ],
   
@@ -512,7 +524,7 @@ export default {
   
   "text_credit_note": [
     "Credit Note",
-    "វិក្ក័យបត្រ័ជំពាក់",
+    "វិក័យប័ត្រជំពាក់",
     "Credit Note"
   ],
   

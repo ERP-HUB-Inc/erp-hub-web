@@ -1,6 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import dataSource from "./datasource";
+import packagejson from "../../../../../../../package.json";
 import "./index.css";
 
 export default class SideBar extends React.Component {
@@ -183,7 +184,7 @@ export default class SideBar extends React.Component {
               ""
           }
         </div>
-        <div id="version">V1.9.0</div>
+        <div id="version">v{packagejson.version}</div>
       </div>
     );
   }

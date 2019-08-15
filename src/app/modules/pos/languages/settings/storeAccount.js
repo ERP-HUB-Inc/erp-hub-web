@@ -181,7 +181,7 @@ export default {
 
   "text_billing": [
     "Billing",
-    "ការចេញវិក្ក័យបត្រ័",
+    "ការចេញវិក័យប័ត្រ",
     "Billing"
   ],
 

@@ -19,6 +19,7 @@ function mapStateToProps(state) {
     brands: state.reducer.brand.request,
     productsType: state.reducer.productsType.request,
     checkPermission: state.reducer.privilege.checkPermission,
+    purchaseOrder: state.reducer.purchaseOrder.add,
     locale: state.locale
   };
 }
