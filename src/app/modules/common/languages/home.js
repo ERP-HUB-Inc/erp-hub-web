@@ -53,7 +53,7 @@ export default {
   
   "home_page_guide_brand": [
     "brand",
-    "ម៉ាក",
+    "ម៉ាកផលិតផល",
     "brand"
   ],
   "home_page_guide_suppliers": [
