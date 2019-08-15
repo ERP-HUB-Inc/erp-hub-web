@@ -87,36 +87,28 @@ export default class SaleHistoryList extends List {
       },
       {
         title: <this.Translate id="text_seller" />,
-        dataIndex: "userId",
-        key: "userId",
-        render: (text, record) => {
-          return record.user ? record.user.userName : this.emptyCell;
-        },
+        dataIndex: "user",
+        key: "user",
+        render: user => user ? user.userName : this.emptyText,
         sorter: true
       },
       {
         title: <this.Translate id="text_customer" />,
-        dataIndex: "customerId",
-        key: "customerId",
-        render: (text, record, index) => {
+        dataIndex: "customer",
+        key: "customer",
+        render: customer => {
           let customerName = "";
-          if (record.customer) {
-            customerName = `${record.customer.firstName} ${record.customer.lastName}`;
+          if (customer) {
+            customerName = `${customer.firstName} ${customer.lastName}`;
 
-            if (record.customer.isSystem === this.Enum.IS_SYSTEM) {
+            if (customer.isSystem === this.Enum.IS_SYSTEM) {
               customerName = <this.TagLabel color="blue">
                 <this.Translate id="text_walkin" />
               </this.TagLabel>;
             }
           }
-          return record.customer ? customerName : this.emptyCell;
+          return customer ? customerName : this.emptyCell;
         },
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_notation" />,
-        dataIndex: "description",
-        key: "description",
         sorter: true
       },
       {

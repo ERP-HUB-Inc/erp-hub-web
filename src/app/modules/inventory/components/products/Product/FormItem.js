@@ -547,7 +547,7 @@ export default class FormItem extends Modal {
                     form={form} />
                 </this.Col> */}
 
-                <this.Col md="12">
+                <this.Col md="12" style={{display: "none"}}>
                   <this.InputTextArea
                     name="productDescriptionDefault"
                     label={<this.Translate id="text_description" />}

@@ -105,7 +105,7 @@ export default {
 
   "input_product_is_publish": [
     "Sell on e-Commerce",
-    "លក់តាម ពា.កម្មអេឡិចត្រូនិច",
+    "លក់តាម អនឡាញ",
     "Sell on e-Commerce"
   ],
 

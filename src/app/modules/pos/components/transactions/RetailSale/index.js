@@ -1029,6 +1029,7 @@ export default class Retail extends Component {
                       handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "newPrice")}
                       handleOnBlur={this.handleOnChangOrderFieldBlur}
                       className="ca-input-v1"
+                      precision={2}
                       isAutoSelect={true}
                       isHideTool={true}
                       form={this.props.form}/>
@@ -1039,7 +1040,7 @@ export default class Retail extends Component {
                       handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "discount")}
                       handleOnBlur={this.handleOnChangOrderFieldBlur}
                       className="ca-input-v1"
-                      precision={0}
+                      precision={2}
                       isAutoSelect={true}
                       isHideTool={true}
                       form={this.props.form} />

@@ -195,6 +195,12 @@ export default {
     "on Credit",
     "ទុកបង់ប្រាក់នៅពេលក្រោយ",
     "on Credit"
+  ],
+
+  "text_print_receipt": [
+    "Print Receipt",
+    "បោះពុម្ភវិក័យប័ត្រ",
+    "Print Receipt"
   ]
 
 };

@@ -391,7 +391,6 @@ export default class SearchPo extends Modal {
   }
 
   render(){
-    const {productLists} = this.state;
     return(
       <div className="main-dropdown-search">
         <DropDownSearch
@@ -405,11 +404,11 @@ export default class SearchPo extends Modal {
         <this.Table
           rowKey="productVariantId"
           rowClassName={record => record.purchaseEntryStatus === this.Enum.ACTIVE ? "" : "hidden"}
-          dataSource={productLists}
+          dataSource={this.state.productLists}
           loading={this.props.productVariant.fetching}
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
-          footer={() => <div className={`float-right ${productLists.length > 0 ? "" : "hidden"}`}>
+          footer={() => <div className={`float-right ${this.state.productLists.length > 0 ? "" : "hidden"}`}>
             <div className="total-title text-uppercase pull-left"><this.Translate id="text_total_amount" />: </div>
             <div className="total-value pull-left">
               <this.InputText name="requestTotal" disabled={true} className="ca-input-no-border grandTotal" form={this.props.form}/>

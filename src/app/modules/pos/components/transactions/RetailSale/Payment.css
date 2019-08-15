@@ -157,10 +157,12 @@
 }
 
 .pos-payment .payment-tool .action-button-to-pay {
-    margin-top: 30px;
+    margin-top: 15px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center
+    justify-content: center;
+    flex-direction: column;
+    align-items: center
 }
 
 .pos-payment-paid .ant-modal-close-x {

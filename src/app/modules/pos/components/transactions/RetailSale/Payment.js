@@ -16,6 +16,7 @@ export default class Payment extends Modal {
       customerPaymentList: [],
       amountToPay: 0,
       isAlreadyAutoPrint: false,
+      isAllowPrintReceipt: false,
       isNotYetPaid: true,
       isFocusOnInputBaseCurrency: true,
       validateStatus: "",
@@ -42,9 +43,12 @@ export default class Payment extends Modal {
 
     if (this.props.transaction.paid && !this.state.isAlreadyAutoPrint) {
       const element = document.getElementById("pos-receipt-preview");
-      if (element) {
+      if (element && this.state.isAllowPrintReceipt) {
         this.Util.printElemV2(element.innerHTML);
-        this.setState({isAlreadyAutoPrint: true});
+        this.setState({
+          isAlreadyAutoPrint: true,
+          isAllowPrintReceipt: false
+        });
       }
     }
   }
@@ -143,7 +147,6 @@ export default class Payment extends Modal {
   }
 
   handleOnMakePaymentWithCash(paymentMethod, paymentMethodIndex) {
-
     let amountToPay = this.props.form.getFieldValue("amountToPay"); // AMOUNT FROM INPUT OF CASHEIR
     let amountToPaySubCurrency = this.props.form.getFieldValue("amountToPaySubCurrency"); // AMOUNT FROM INPUT OF CASHEIR AS SUB CURRENCY
     
@@ -203,6 +206,7 @@ export default class Payment extends Modal {
 
       this.props.dispatch(TransactionAction.add(dataValue));
       this.setState({
+        isAllowPrintReceipt: this.props.form.getFieldValue("isAllowPrintReceipt"),
         amountToPay
       });
     }
@@ -455,7 +459,7 @@ export default class Payment extends Modal {
                       isAutoSelect={true}
                       validateStatus={this.state.validateStatus}
                       errorMsg={this.state.errorMsg}
-                      // data={grandTotal}
+                      data={grandTotal}
                       form={this.props.form}
                       handleOnFocus={() => this.handleOnFocusInputAmount(true)} />
                   </div>
@@ -482,6 +486,11 @@ export default class Payment extends Modal {
                       ""
                   }
                   <div className="action-button-to-pay">
+                    <this.Checkboxs
+                      name="isAllowPrintReceipt"
+                      defaultValue={true}
+                      label={<this.Translate id="text_print_receipt" />}
+                      form={this.props.form} />
                     {
                       paymentMethodList.map((paymentMethodListChild, index1) =>
                         paymentMethodListChild.map((paymentMethod, index2) => 

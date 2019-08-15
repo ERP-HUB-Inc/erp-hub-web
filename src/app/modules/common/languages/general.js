@@ -523,9 +523,9 @@ export default {
   ],
   
   "text_credit_note": [
-    "Credit Note",
+    "Credit",
     "វិក័យប័ត្រជំពាក់",
-    "Credit Note"
+    "Credit"
   ],
   
   "text_return": [
