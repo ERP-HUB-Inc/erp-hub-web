@@ -150,7 +150,6 @@ export default class SaleHistoryList extends List {
         title: <this.Translate id="text_status" />,
         dataIndex: "status",
         key: "status",
-        // width: 120,
         render: status => <this.Badge style={{ textTransform: "uppercase" }} status={[Enum.TRANSACTION_STATUS.CREDIT, Enum.TRANSACTION_STATUS.OVERDUE].includes(status) ? "error" : "success"} text={this.TRANSACTION_STATUS_STR[status]} />,
         sorter: true
       }
@@ -211,6 +210,13 @@ export default class SaleHistoryList extends List {
       });
     }
 
+  }
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.updateReceivePayment.updated) {
+      super.componentDidMount();
+      nextProps.dispatch(ReceivePaymentAction.reset());
+    }
   }
 
   renderReceipt(isRequestClearReceiptMarginLeft = true) {
