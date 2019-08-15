@@ -23,6 +23,7 @@ export default class Form extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values["id"] = this.props.detailTransaction.data.id;
+        values["deposit"] = 0;
         values["payDate"] = this.Util.formatDateForMYSQL(values.payDate);
         values["type"] = Enum.TRANSACTION_TYPE.RECEIPT;
         values["status"] = Enum.TRANSACTION_STATUS.PAID;

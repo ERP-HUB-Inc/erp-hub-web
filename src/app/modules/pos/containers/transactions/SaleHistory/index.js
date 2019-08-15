@@ -17,6 +17,7 @@ function mapStateToProps(state) {
     users: state.reducer.user.request,
     receiptTemplate: state.reducer.receiptTemplate.detail,
     checkPermission: state.reducer.privilege.checkPermission,
+    updateReceivePayment: state.reducer.transaction.updateReceivePayment,
     locale: state.locale
   };
 }

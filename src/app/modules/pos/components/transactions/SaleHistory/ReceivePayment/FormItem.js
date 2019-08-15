@@ -2,7 +2,6 @@ import React from "react";
 import Modal from "../../../../../common/components/shares/Modal";
 import InventoryUtil from "../../../../../inventory/utils";
 import InventoryEnum from "../../../../../inventory/enums";
-import POSUtil from "../../../../utils";
 import "./index.css";
 
 export default class FormItem extends Modal {
@@ -20,8 +19,8 @@ export default class FormItem extends Modal {
         render: (text, record, index) => {
           return(
             <div>
-              <div>{ record.name }</div>
-              <div style={{ fontSize: "10px" }}>{ record.variantName ? record.variantName : "" }</div>
+              <div>{ InventoryUtil.getProductName(record.productVariant.product) }</div>
+              <div style={{ fontSize: "10px" }}>{ record.productVariant.product.productOption === InventoryEnum.PRODUCT_VARIANT ? record.productVariant.name : "" }</div>
             </div>
           );
         }
@@ -62,53 +61,31 @@ export default class FormItem extends Modal {
   }
 
   getProductOrderList(data) {
-    let productOrderList = [];
     let transactionPaymentEntries = [];
-    if (this.Util.isValidCollectionInObj(data, "transactionEntries")) {
-      data.transactionEntries.forEach(transactionEntry => {
-        if (transactionEntry.productVariant && transactionEntry.productVariant.product) {
-          const productVariant = transactionEntry.productVariant;
-          const tax = POSUtil.getTaxFromProduct(productVariant.product);
-          productOrderList.push({
-            id: transactionEntry.id,
-            quantity: transactionEntry.quantity,
-            name: InventoryUtil.getProductName(productVariant.product),
-            variantName: productVariant.product.productOption === InventoryEnum.PRODUCT_VARIANT ? productVariant.name : "",
-            tax: tax.taxRate/100,
-            taxDescription: tax,
-            price: transactionEntry.price
-            // newPrice: transactionEntry.price
-          });
-        }
-
-        if(data.transactionPayment[0]){
-          if(this.state.ishandlePayment){
-            transactionPaymentEntries.push({
-              tender: data.total,
-              balance: 0,
-              change: 0,
-              paymentMethodName: data.transactionPayment[0].paymentMethod.name,
-              paymentMethodId: data.transactionPayment[0].paymentMethodId
-            });
+    if(data.transactionPayment[0]){
+      if(this.state.ishandlePayment){
+        transactionPaymentEntries.push({
+          tender: data.total,
+          balance: 0,
+          change: 0,
+          paymentMethodName: data.transactionPayment[0].paymentMethod.name,
+          paymentMethodId: data.transactionPayment[0].paymentMethodId
+        });
   
-            this.setState({
-              transactionPaymentEntries: transactionPaymentEntries,
-              ishandlePayment: false
-            });
+        this.setState({
+          transactionPaymentEntries: transactionPaymentEntries,
+          ishandlePayment: false
+        });
   
-          }
+      }
          
-        }
-
-      });
-      
     }
-    return productOrderList;
+    return transactionPaymentEntries;
   }
 
   render() {
     const {formData, customer, locale, form} = this.props;
-    const productOrderList = this.getProductOrderList(formData);
+    this.getProductOrderList(formData);
     return (
     
       <div className="receive-payment-layout">
@@ -117,7 +94,7 @@ export default class FormItem extends Modal {
           <div style={{flexGrow: 1, marginBottom: 15}}>
             <div className="main-table-receive main-receive-payment">
               <this.Table
-                dataSource={productOrderList}
+                dataSource = {formData.transactionEntries}
                 columns={this.columns}
                 locale={{emptyText: <this.Translate id="table_empty_data"/>}}
               />

@@ -540,4 +540,12 @@ export default {
     "អ្នកត្រូវមានការប្រមូលផ្តុំ",
     "You need to have variant collection"
   ],
+
+  "text_view_cost_detail": [
+    "View cost details",
+    "មើលព័ត៌មានលម្អិតតម្លៃ",
+    "View cost details"
+  ],
+
+
 };

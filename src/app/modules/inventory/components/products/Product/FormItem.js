@@ -558,53 +558,64 @@ export default class FormItem extends Modal {
                     form={form}/>
                 </this.Col>
 
-                <this.Col md="4">
-                  <this.InputNumber
-                    name="factoryCost"
-                    label={<span><this.Translate id="input_product_supplier_price" /><span> ({currentUser.setting.currency})</span></span>}
-                    data={formData.factoryCost === 0 ? null : formData.factoryCost}
-                    placeholder={this.CATranslate("input_product_supplier_price_placeholder", locale)}
-                    max={99999999}
-                    form={form}/>
+                <this.Col md="12" className="main-product-collapse">
+                  <this.Collapse bordered={false}>
+                    <this.Panel header={<this.Translate id="text_view_cost_detail" />} key="1">
+
+                      <this.Row>
+                     
+                        <this.Col md="4">
+                          <this.InputNumber
+                            name="factoryCost"
+                            label={<span><this.Translate id="input_product_supplier_price" /><span> ({currentUser.setting.currency})</span></span>}
+                            data={formData.factoryCost === 0 ? null : formData.factoryCost}
+                            placeholder={this.CATranslate("input_product_supplier_price_placeholder", locale)}
+                            max={99999999}
+                            form={form}/>
+                        </this.Col>
+
+                        <this.Col md="4">
+                          <this.InputNumber
+                            name="shippingFee"
+                            label={<span><this.Translate id="text_shipping_fee" /><span> ({currentUser.setting.currency})</span></span>}
+                            data={formData.shippingFee === 0 ? null : formData.shippingFee}
+                            placeholder={this.CATranslate("input_product_shipping_fee_placeholder", locale)}
+                            max={99999999}
+                            form={form}/>
+                        </this.Col>
+
+                        {
+                          formData.productOption === Enum.PRODUCT_VARIANT ?
+                            ""
+                            :
+                            <this.Col md="4">
+                              <this.InputNumber
+                                name="costDisplay"
+                                label={<span><this.Translate id="text_cost" /><span> ({currentUser.setting.currency})</span></span>}
+                                data={Util.getProductCost(formData)}
+                                placeholder={this.CATranslate("text_cost_placeholder", locale)}
+                                disabled={true}
+                                form={form}/>
+                            </this.Col>
+                        }
+
+                        <this.Col md="4">
+                          <this.InputNumber
+                            name="markup"
+                            label={<span><this.Translate id="input_product_mark_up" /><span> (%)</span></span>}
+                            data={formData.markup === 0 ? null : formData.markup}
+                            placeholder={this.CATranslate("input_product_mark_up_placeholder", locale)}
+                            max={20}
+                            form={form}/>
+                        </this.Col>
+
+                      </this.Row>  
+
+                    </this.Panel>
+                  </this.Collapse>,
                 </this.Col>
 
-                <this.Col md="4">
-                  <this.InputNumber
-                    name="shippingFee"
-                    label={<span><this.Translate id="text_shipping_fee" /><span> ({currentUser.setting.currency})</span></span>}
-                    data={formData.shippingFee === 0 ? null : formData.shippingFee}
-                    placeholder={this.CATranslate("input_product_shipping_fee_placeholder", locale)}
-                    max={99999999}
-                    form={form}/>
-                </this.Col>
-
-                <this.Col md="4">
-                </this.Col>
-
-                {
-                  formData.productOption === Enum.PRODUCT_VARIANT ?
-                    ""
-                    :
-                    <this.Col md="4">
-                      <this.InputNumber
-                        name="costDisplay"
-                        label={<span><this.Translate id="text_cost" /><span> ({currentUser.setting.currency})</span></span>}
-                        data={Util.getProductCost(formData)}
-                        placeholder={this.CATranslate("text_cost_placeholder", locale)}
-                        disabled={true}
-                        form={form}/>
-                    </this.Col>
-                }
-
-                <this.Col md="4">
-                  <this.InputNumber
-                    name="markup"
-                    label={<span><this.Translate id="input_product_mark_up" /><span> (%)</span></span>}
-                    data={formData.markup === 0 ? null : formData.markup}
-                    placeholder={this.CATranslate("input_product_mark_up_placeholder", locale)}
-                    max={20}
-                    form={form}/>
-                </this.Col>
+             
                 
                 <this.Col md="4">
                   <this.InputNumber
