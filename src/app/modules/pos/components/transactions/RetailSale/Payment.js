@@ -15,6 +15,7 @@ export default class Payment extends Modal {
       ...this.state,
       customerPaymentList: [],
       amountToPay: 0,
+      isCustomerCredit: false,
       isAlreadyAutoPrint: false,
       isAllowPrintReceipt: false,
       isNotYetPaid: true,
@@ -136,6 +137,7 @@ export default class Payment extends Modal {
     if (this.props.transaction.paid && this.state.isNotYetPaid) {
       this.props.dispatch(TransactionAction.reset());
       this.setState({
+        isCustomerCredit: false,
         isAlreadyAutoPrint: false,
         isNotYetPaid: true,
         customerPaymentList: [],
@@ -157,6 +159,7 @@ export default class Payment extends Modal {
     // CHECK WETHER USER HAS CLICK CREDIT PAYMENT
     if (paymentMethod.code === Payment.PAYMENT_METHOD_CREDIT_CODE) {
       amountToPay = grandTotal;
+      this.setState({isCustomerCredit: true});
     }
     
     // ADD ADDITIONAL SUB CURRENCY AMOUNT TO BASE CURRENCY VALUE
@@ -267,7 +270,7 @@ export default class Payment extends Modal {
             {<this.Translate id="text_credit_balance" />}:
           </div>
           <div style={{ fontSize: "16pt", fontFamily: "serif", paddingLeft: 10 }}>
-            {this.formatCurrency(this.props.customer.credit)}
+            {this.formatCurrency(this.props.customer.credit ? this.props.customer.credit : 0)}
           </div>
         </div>
       </div>
@@ -545,7 +548,7 @@ export default class Payment extends Modal {
                 :
                 <div className="confirm-payment">
                   {
-                    this.props.customer ?
+                    this.state.isCustomerCredit ?
                       <div style={{marginBottom: 30}}>
                         <div className="text-center title">
                           <span>

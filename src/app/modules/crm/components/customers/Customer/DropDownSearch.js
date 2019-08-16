@@ -150,7 +150,8 @@ export default class DropDownSearch extends Modal {
         <this.List.Item onClick={this.props.handleOnAddNewCustomer} className="add-customer">
           <this.List.Item.Meta
             avatar={<span className="icon-add"></span>}
-            title={<div><this.Translate id="text_add_new_customer" /> <span style={{ color: "#4D4F5C" }}>{this.props.customers.list.length > 0 || !this.props.form.getFieldValue("searchRecord") ? "" : `"${this.props.form.getFieldValue("searchRecord")}"` }</span></div>} />
+            // title={<div><this.Translate id="text_add_new_customer" /> <span style={{ color: "#4D4F5C" }}>{this.props.customers.list.length > 0 || !this.props.form.getFieldValue("searchRecord") ? "" : `"${this.props.form.getFieldValue("searchRecord")}"` }</span></div>}
+            title={<this.Translate id="text_add_new_customer" />} />
         </this.List.Item>
     );
   }

@@ -25,7 +25,8 @@ class Util {
   }
 
   getItemFromCollection(key) {
-    return JSON.parse(localStorage.getItem(key));
+    const results = JSON.parse(localStorage.getItem(key));
+    return results ? results : [];
   }
 }
 

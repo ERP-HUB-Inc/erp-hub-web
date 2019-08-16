@@ -105,7 +105,8 @@
 
 
 .wrap-dropdown-search-ca .list-search .record-item-search:hover, 
-.wrap-dropdown-search-ca .list-search .record-item-search.search-item-hover {
+.wrap-dropdown-search-ca .list-search .record-item-search.search-item-hover,
+.wrap-dropdown-search-ca .list-search .add-customer:hover {
     background-color: #ECECEC
 }
 

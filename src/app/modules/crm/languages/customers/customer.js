@@ -36,7 +36,7 @@ export default {
   
   "input_search_customer": [
     "Search customer | name | phone number",
-    "ស្វែងរកអតិថិជន",
+    "ស្វែងរកអតិថិជន | ឈ្មោះ​ | លេខទូរសព្ទ",
     "Search customer"
   ],
   

@@ -119,6 +119,11 @@ export default class Retail extends Component {
       this.hasDidUpdate = true;
     }
 
+    if (this.props.customerAdd.added && this.props.customerAdd.response.data) {
+      this.getSelectedCustomer(this.props.customerAdd.response.data);
+      this.props.dispatch(CustomerAction.reset(CustomerConstant.RESET_ADD_CUSTOMERS));
+    }
+
     if (this.props.open.added) {
       this.props.dispatch(OpenSaleRegistrationAction.last());
       this.props.dispatch(OpenSaleRegistrationAction.reset(ConstantOpenRegistrationSale.RESET_OPEN_SALE_REGISTRATION));

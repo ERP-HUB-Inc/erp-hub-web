@@ -100,7 +100,7 @@ export default class ProductList extends List {
   }
 
   componentDidMount() {
-    this.props.dispatch(ProductAction.reset()); // reset state to make 2: check condition again
+    // this.props.dispatch(ProductAction.reset()); // reset state to make 2: check condition again
     super.componentDidMount();
     this.requestSubDataAsync();
 

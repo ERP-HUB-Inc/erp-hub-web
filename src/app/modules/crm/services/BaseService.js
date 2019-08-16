@@ -37,6 +37,7 @@ export default class BaseService extends Service {
   }
 
   archive(ids) {
+    this.setHeader();
     return this.DELETE({ 
       url: `${this.baseUrl}/archive/${ids}`,
       data: this.data,
@@ -45,6 +46,7 @@ export default class BaseService extends Service {
   }
 
   add(data) {
+    this.setHeader();
     return this.POST({
       url: `${this.baseUrl}/create`,
       data: {
@@ -57,9 +59,9 @@ export default class BaseService extends Service {
   }
 
   update(data) {
-    const {id} = data;
+    this.setHeader();
     return this.PUT({
-      url: `${this.baseUrl}/update/${id}`,
+      url: `${this.baseUrl}/update/${data.id}`,
       data: {
         ...data,
         isSystem: 0,

@@ -5,7 +5,6 @@ import {
 } from "react-device-detect";
 import {Pagination} from "antd";
 import NoPermission from "./NoPermission";
-import StartUp from "../../StartUp";
 import Component  from "../../Component";
 import menuSource from "../../layout/SiderBar/datasource";
 import BaseService from "../../../services/BaseService";
@@ -129,13 +128,17 @@ export default class List extends Component {
 
   /**===================================================================EVENT CONTROL FOR CHILD CLASS============================================================**/
   componentDidMount() {
-    this.props.dispatch(PrivilegeAction.reset());
-    if (this.service.listRoute) {
-      this.props.dispatch(PrivilegeAction.checkPermission(this.service.listRoute));
-    }
-    if (this.action) {
-      this.props.dispatch(this.action.fetch(this.pageSize));
-    }
+    new Promise(() => {
+      setTimeout(() => {
+        this.props.dispatch(PrivilegeAction.reset());
+        if (this.service.listRoute) {
+          this.props.dispatch(PrivilegeAction.checkPermission(this.service.listRoute));
+        }
+        if (this.action) {
+          this.props.dispatch(this.action.fetch(this.pageSize));   
+        }
+      }, 200);
+    });
   }
 
   /**
@@ -818,9 +821,9 @@ export default class List extends Component {
         }
         
         {
-          this.Util.isCheckingPermission(this.props) ?
-            <StartUp/>
-            :
+          // this.Util.isCheckingPermission(this.props) ?
+          //   <StartUp/>
+          //   :
             this.Util.isNoPermissionProp(this.props) ?
               <NoPermission />
               :

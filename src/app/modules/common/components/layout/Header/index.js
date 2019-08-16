@@ -68,7 +68,8 @@ class Headers extends Component {
     // this.props.dispatch(this.changeLanguage(key));
   }
   
-  render() { 
+  render() {
+    const languages = JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LANGUAGE));
     return (
       <Header id="top-header" className="header" style={{ background: "#fff" }}>
         <div className="store-logo">
@@ -92,7 +93,7 @@ class Headers extends Component {
             <DropDown
               onSwitchLanguage={this.switchLanguage}
               localization={this.props.locale}
-              activeLanguages={JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LANGUAGE))}
+              activeLanguages={languages ? languages : []}
               currentLanguage={this.getCurrentLanguage(this.props.locale)}/>
           </div>
         </this.Row>

@@ -220,7 +220,7 @@ export default {
 
   "input_product_non_inventory": [
     "None-Inventory",
-    "មិនមែនសារពើភ័ណ្ឌ",
+    "ទំនិញមិនកាត់ស្តុក",
     "None-Inventory"
   ],
 

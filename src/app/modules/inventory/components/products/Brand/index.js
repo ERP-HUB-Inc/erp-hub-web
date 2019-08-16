@@ -21,6 +21,7 @@ export default class Lists extends List {
         title: <this.Translate id="text_description" />,
         dataIndex: "description",
         key: "description",
+        render: description => description ? description : this.emptyText,
         sorter: true
       },
       this.columnStatus

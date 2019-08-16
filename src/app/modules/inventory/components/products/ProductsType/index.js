@@ -54,7 +54,10 @@ class Column extends List {
         dataIndex: "productTypeDescriptions",
         key: "description",
         sorter: true,
-        render: productTypeDescriptions => Util.getProductTypeDescription(productTypeDescriptions, "description")
+        render: productTypeDescriptions => {
+          const description = Util.getProductTypeDescription(productTypeDescriptions, "description");
+          return description ? description : this.emptyText;
+        }
       },
       this.columnStatus
     ];
