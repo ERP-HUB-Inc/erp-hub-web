@@ -24,8 +24,8 @@ class Util {
     }
   }
 
-  getItemFromCollection() {
-
+  getItemFromCollection(key) {
+    return JSON.parse(localStorage.getItem(key));
   }
 }
 

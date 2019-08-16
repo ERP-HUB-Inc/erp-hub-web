@@ -8,7 +8,9 @@ export default combineReducers({
     const constants = [
       Constant.REQUEST_BRAND_PENDING,
       Constant.REQUEST_BRAND_REJECTED,
-      Constant.REQUEST_BRAND_FULFILLED
+      Constant.REQUEST_BRAND_FULFILLED,
+      null,
+      Constant.RESET_PRODUCTS_TYPE
     ];
     return reducer.request(state, action, constants);
   },

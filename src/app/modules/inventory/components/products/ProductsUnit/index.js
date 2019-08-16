@@ -15,6 +15,7 @@ export default class Lists extends List {
     this.formUpdate = <FormUpdate/>;
     this.columnFilterWithKey = ["name"];
     this.service = ProductsUnitService;
+    this.localStorageKey = Enum.LOCAL_SCHEMA.UNIT;
     this.action = ProductsUnitAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCTS_UNIT;
   }

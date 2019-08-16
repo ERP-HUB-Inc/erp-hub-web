@@ -6,15 +6,11 @@ import Enum from "../../../enums";
 import FormCreate from "../../../containers/products/Product/FormCreate";
 import FormUpdate from "../../../containers/products/Product/FormUpdate";
 import Constant from "../../../constants/products/product";
-import BrandAction from "../../../actions/products/brand";
+import LocalStorageUtil from "../../../../common/localstorage/util";
 import ProductTypeAction from "../../../actions/products/productsType";
 import UnitAction from "../../../actions/products/productsUnit";
-import TaxAction from "../../../../pos/action/settings/tax";
-import LanguageAction from "../../../../pos/action/settings/storeLanguage";
-import LocationAction from "../../../../pos/action/settings/location";
 import ProductAction from "../../../actions/products/product";
-// import PriceTagAction from "../../../actions/products/priceTag";
-import ProductTagAction from "../../../actions/products/productsTag";
+import BrandAction from "../../../actions/products/brand";
 import ProductService from "../../../services/products/ProductService";
 import "./index.css";
 
@@ -23,6 +19,9 @@ export default class ProductList extends List {
     super(props);
     this.state = {
       ...this.state,
+      brands: [],
+      locations: [],
+      productTypes: [],
       dataSourceToPrint: []
     };
     this.brandList = [{name: <this.Translate id="text_all_brand"/>, id: 0}];
@@ -84,27 +83,19 @@ export default class ProductList extends List {
 
     // SAVE SETTING TO LOCALE STORAGE
     if (nextProps.brands.fetched) {
+      this.setState({brands: nextProps.brands.list});
       localStorage.setItem(Enum.LOCAL_SCHEMA.BRAND, JSON.stringify(nextProps.brands.list));
+      this.props.dispatch(BrandAction.reset());
     }
 
     if (nextProps.units.fetched) {
       localStorage.setItem(Enum.LOCAL_SCHEMA.UNIT, JSON.stringify(nextProps.units.list));
     }
 
-    if (nextProps.taxs.fetched) {
-      localStorage.setItem(Enum.LOCAL_SCHEMA.TAX, JSON.stringify(nextProps.taxs.list));
-    }
-
     if (nextProps.productsType.fetched) {
+      this.setState({productTypes: nextProps.productsType.list});
       localStorage.setItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE, JSON.stringify(nextProps.productsType.list));
-    }
-
-    if (nextProps.storeLanguage.fetched) {
-      localStorage.setItem(Enum.LOCAL_SCHEMA.LANGUAGE, JSON.stringify(nextProps.storeLanguage.list));
-    }
-
-    if (nextProps.tags.fetched) {
-      localStorage.setItem(Enum.LOCAL_SCHEMA.PRODUCT_TAG, JSON.stringify(nextProps.tags.list));
+      this.props.dispatch(ProductTypeAction.reset());
     }
   }
 
@@ -112,21 +103,15 @@ export default class ProductList extends List {
     this.props.dispatch(ProductAction.reset()); // reset state to make 2: check condition again
     super.componentDidMount();
     this.requestSubDataAsync();
+
+    this.setState({
+      brands: LocalStorageUtil.getItemFromCollection(Enum.LOCAL_SCHEMA.BRAND),
+      locations: LocalStorageUtil.getItemFromCollection(Enum.LOCAL_SCHEMA.LOCATION),
+      productTypes: LocalStorageUtil.getItemFromCollection(Enum.LOCAL_SCHEMA.PRODUCT_TYPE)
+    });
   }
 
   componentDidUpdate() {
-    if (!this.componentHasUpdated && this.props.products.fetched) { // 2:
-      //TODO: we try to use async promise
-      // this.props.dispatch(ProductTypeAction.fetch(100));
-      // this.props.dispatch(BrandAction.fetch(100));
-      // this.props.dispatch(LocationAction.fetch(100));
-      // this.props.dispatch(UnitAction.fetch(100));
-      // this.props.dispatch(TaxAction.fetch(100));
-      // this.props.dispatch(LanguageAction.fetch(10));
-      // this.props.dispatch(ProductTagAction.fetch(100));
-      // this.componentHasUpdated = true;
-    }
-
     if (this.props.productDetail.fetched) {
       this.setState({
         loadingPopup: false
@@ -153,13 +138,18 @@ export default class ProductList extends List {
   requestSubDataAsync() {
     return new Promise(() => {
       setTimeout(() => {
-        this.props.dispatch(ProductTypeAction.fetch(100));
-        this.props.dispatch(BrandAction.fetch(100));
-        this.props.dispatch(LocationAction.fetch(100));
-        this.props.dispatch(UnitAction.fetch(100));
-        this.props.dispatch(TaxAction.fetch(100));
-        this.props.dispatch(LanguageAction.fetch(10));
-        this.props.dispatch(ProductTagAction.fetch(100));
+
+        if (!localStorage.getItem(Enum.LOCAL_SCHEMA.BRAND)) {
+          this.props.dispatch(BrandAction.fetch(50));
+        }
+
+        if (!localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT)) {
+          this.props.dispatch(UnitAction.fetch(20));
+        }
+
+        if (!localStorage.getItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE)) {
+          this.props.dispatch(ProductTypeAction.fetch(100));
+        }
       }, 2000);
     });
   }
@@ -252,7 +242,7 @@ export default class ProductList extends List {
               <this.Select
                 name="locationId"
                 label={<this.Translate id="text_store"/>}
-                dataSource={this.locationList.concat(this.props.locations.list)}
+                dataSource={this.locationList.concat(this.state.locations)}
                 valueKey="id"
                 nameKey="name"
                 form={form}
@@ -273,7 +263,7 @@ export default class ProductList extends List {
               <this.Select
                 name="brandId"
                 label={<this.Translate id="text_brand"/>}
-                dataSource={this.brandList.concat(this.props.brands.list)}
+                dataSource={this.brandList.concat(this.state.brands)}
                 valueKey="id"
                 nameKey="name"
                 form={form}
@@ -283,7 +273,7 @@ export default class ProductList extends List {
               <this.Select
                 name="productTypeId"
                 label={<this.Translate id="text_product_type"/>}
-                dataSource={this.productTypeList.concat(this.props.productsType.list)}
+                dataSource={this.productTypeList.concat(this.state.productTypes)}
                 defaultValue={this.productTypeList[0].id}
                 valueKey="id"
                 nestedName="productTypeDescriptions"

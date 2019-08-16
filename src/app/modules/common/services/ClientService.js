@@ -19,6 +19,19 @@ class ClientService extends BaseService {
     );
   }
 
+  getInitializeSetting() {
+    this.module = "client";
+    this.baseUrl = `${this.generateAPIUrl()}/${this.module}/${this.version}`;
+    this.setHeader();
+    return this.GET(
+      {
+        url: `${this.baseUrl}/initial/setting`,
+        data: {},
+        headers: this.header
+      }
+    );
+  }
+
   register(data) {
     return this.POST({
       url: `${this.baseUrl}/register`,

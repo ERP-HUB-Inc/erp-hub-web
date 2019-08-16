@@ -4,6 +4,8 @@ import Component from "../../Component";
 import history from "../../../router/history";
 import ConstantAuth from "../../../constants/authentication";
 import ClientAction from "../../../actions/client";
+import ClientService from "../../../services/ClientService";
+import EnumInventorySetting from "../../../../inventory/enums";
 
 export default class ClientSignIn extends Component {
   constructor(props) {
@@ -40,6 +42,15 @@ export default class ClientSignIn extends Component {
       this.props.dispatch(this.changeLanguage(languageCode));
 
       this.props.dispatch(ClientAction.reset());
+
+      ClientService.getInitializeSetting()
+      .then(initializeSetting => {
+        if (initializeSetting && initializeSetting.data && initializeSetting.data.data) {
+          localStorage.setItem(EnumInventorySetting.LOCAL_SCHEMA.LANGUAGE, JSON.stringify(initializeSetting.data.data.languages));
+          localStorage.setItem(EnumInventorySetting.LOCAL_SCHEMA.LOCATION, JSON.stringify(initializeSetting.data.data.locations));
+          localStorage.setItem(EnumInventorySetting.LOCAL_SCHEMA.TAX, JSON.stringify(initializeSetting.data.data.taxes));
+        }
+      });
 
       if (setting &&
         setting.currentUser &&

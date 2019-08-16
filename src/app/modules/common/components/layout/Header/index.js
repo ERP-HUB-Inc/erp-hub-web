@@ -1,11 +1,10 @@
 import React from "react";
-import Component from "../../Component";
+import {Layout} from "antd";
 import DropDown from "../DropDown";
-import { Layout } from "antd";
-// import SearchForm from "../Search";
-import LanguageAction from "../../../../pos/action/settings/storeLanguage";
+import Component from "../../Component";
+import Enum from "../../../../inventory/enums";
 import "./index.css";
-const { Header } = Layout;
+const {Header} = Layout;
 
 class Headers extends Component {
   constructor(props) {
@@ -13,11 +12,9 @@ class Headers extends Component {
     this.state = {
       languages: []
     };
-    this.switchLanguage = this.switchLanguage.bind(this);
   }
 
   componentDidMount() {
-    this.props.dispatch(LanguageAction.fetch(5));
     const element = document.getElementById("mobile-logo");
     const centerElement = document.getElementById("center-container");
     if (element) {
@@ -62,7 +59,7 @@ class Headers extends Component {
     }
   }
 
-  switchLanguage(key) {
+  switchLanguage = (key) => {
     const accessToken = this.Util.getAuthSession();
     accessToken["setting"]["defaultLanguageCode"] = key;
     this.Util.setAuthSession(accessToken);
@@ -91,14 +88,11 @@ class Headers extends Component {
               </div>
             </div>
           </div>
-          {/* <div className="main-search">
-            <SearchForm locale={this.props.locale}/>
-          </div> */}
           <div className="header-right">
             <DropDown
               onSwitchLanguage={this.switchLanguage}
               localization={this.props.locale}
-              activeLanguages={this.props.reducer.storeLanguage.request.list}
+              activeLanguages={JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LANGUAGE))}
               currentLanguage={this.getCurrentLanguage(this.props.locale)}/>
           </div>
         </this.Row>
