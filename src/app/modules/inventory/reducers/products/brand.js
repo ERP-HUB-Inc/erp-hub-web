@@ -10,7 +10,7 @@ export default combineReducers({
       Constant.REQUEST_BRAND_REJECTED,
       Constant.REQUEST_BRAND_FULFILLED,
       null,
-      Constant.RESET_PRODUCTS_TYPE
+      Constant.RESET_BRAND
     ];
     return reducer.request(state, action, constants);
   },
