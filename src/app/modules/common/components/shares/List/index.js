@@ -213,21 +213,28 @@ export default class List extends Component {
 
   handleShowFormAdd() {
     if (this.action && this.formCreate) {
+      this.props.dispatch(this.action.showForm());
       this.setState({
-        loadingPopup: true
+        modalConten: this.formCreate,
+        loadingPopup: false
       });
-      this.PrivilegeService.checkPermission(this.service.createRoute)
-        .then(response => {
-          this.props.dispatch(this.action.showForm());
-          this.setState({
-            modalConten: this.formCreate,
-            loadingPopup: false
-          });
-        })
-        .catch(error => {
-          this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
-          this.setState({loadingPopup: false});
-        });
+
+      // TO DO: Disable check permission temporary
+      // this.setState({
+      //   loadingPopup: true
+      // });
+      // this.PrivilegeService.checkPermission(this.service.createRoute)
+      //   .then(response => {
+      //     this.props.dispatch(this.action.showForm());
+      //     this.setState({
+      //       modalConten: this.formCreate,
+      //       loadingPopup: false
+      //     });
+      //   })
+      //   .catch(error => {
+      //     this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
+      //     this.setState({loadingPopup: false});
+      //   });
     }
   }
 
@@ -504,7 +511,7 @@ export default class List extends Component {
         type="info"
         id="btnAdd"
         className="mg-right text-uppercase"
-        disabled={this.state.loadingPopup}
+        disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
         onClick={this.handleShowFormAdd}>
         <span className="icon-add icon-padding-right"></span>
         <this.Translate id="text_add_new" />

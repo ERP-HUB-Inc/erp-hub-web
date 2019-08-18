@@ -1,4 +1,5 @@
 import React from "react";
+import {Translate} from "react-localize-redux";
 import Element from "../../common/Element";
 import "./index.css";
 
@@ -44,7 +45,7 @@ export class SelectSearch extends Element {
                   : "" 
               }  
               {
-                this.props.dataSource.map((value, index) =>
+                this.props.dataSource && this.props.dataSource.map((value, index) =>
                   <this.Option key={index} value={value[this.props.valueKey]}>{this.getName(value)}</this.Option>
                 )
               }
@@ -60,7 +61,7 @@ SelectSearch.defaultProps = {
   required: false,
   errorRequired: "Please select this field.",
   notFoundContent: "No item found",
-  textAddNew: "Add New",
+  textAddNew: <Translate id="text_add_new" />,
   valueKey: "value",
   nameKey: "name",
   nestedName: null
