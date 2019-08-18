@@ -94,6 +94,42 @@ export default {
     "កាលបរិច្ចេទ",
     "Date"
   ],
+
+  "text_try": [
+    "Try",
+    "សាកល្បង",
+    "Try",
+  ],
+
+  "text_sorry": [
+    "Sorry",
+    "សោមអភ័យទោស",
+    "Sorry"
+  ],
+
+  "text_sorry_server_has_issue": [
+    "Looks like we're having some server issues",
+    "ម៉ាស៊ីនបំរើកំពុងមានបញ្ហា​ សូមសាកល្បងតាមការណែនាំដូចខាងក្រោម",
+    "Looks like we're having some server issues"
+  ],
+
+  "text_please_try_refresh_page": [
+    "Please try to reload page",
+    "សូមព្យាយាមទាញយកប្រព័ន្ធម្តងទៀតដោយចុចលើប៊ូតុងទាញយកម្តងទៀត",
+    "Please try to reload page"
+  ],
+
+  "text_please_contact_us": [
+    "Please contact with customer support​ to solve problem",
+    "សូមទំនាក់ទំនងទៅកាន់ផ្នែកបម្រើអតិថិជនដើម្បីដោះស្រាយបញ្ហានេះ",
+    "Please contact with customer support​ to solve problem"
+  ],
+
+  "text_reload": [
+    "Reload",
+    "ទាញយកម្តងទៀត",
+    "Reload"
+  ],
   
   "text_add": [
     "Add",

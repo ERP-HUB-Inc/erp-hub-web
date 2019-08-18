@@ -1,6 +1,6 @@
 {
   "name": "storevein",
-  "version": "2.0.2",
+  "version": "2.0.4",
   "private": true,
   "dependencies": {
     "@types/ably": "^1.0.0",
