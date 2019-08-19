@@ -206,9 +206,7 @@ export default class ProductList extends List {
   handleConfirm() {
     let selectedRows = this.state.selectedRows;
     if(selectedRows.length === 1){
-      this.setState({
-        modalVisible: true
-      });
+      this.setState({ modalVisible: true });
     }else if(selectedRows.length > 1){
       this.Message.warning(this.CATranslate("text_allow_select_one_record", this.props.locale));
     }else{
