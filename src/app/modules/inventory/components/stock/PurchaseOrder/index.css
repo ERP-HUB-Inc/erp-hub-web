@@ -67,7 +67,7 @@
     font-size: 8pt
 }
 
-.ant-form-horizontal .ant-form-item {
+#purchase-order-form .ant-form-horizontal .ant-form-item {
     margin-bottom: 0 !important
 }
 

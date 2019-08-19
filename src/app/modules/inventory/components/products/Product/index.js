@@ -70,15 +70,15 @@ export default class ProductList extends List {
 
     // WHEN CREATE NEW SAVE SETTING TO LOCALE STORAGE
     if (nextProps.brandsAdd.added) {
-      localStorage.setItem(Enum.LOCAL_SCHEMA.BRAND, JSON.stringify(nextProps.brands.list.push(nextProps.brandsAdd.response.data)));
+      localStorage.setItem(Enum.LOCAL_SCHEMA.BRAND, JSON.stringify(nextProps.brands.list.concat([nextProps.brandsAdd.response.data])));
     }
 
     if (nextProps.productsTypeAdd.added) {
-      localStorage.setItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE, JSON.stringify(nextProps.productsType.list.push(nextProps.productsTypeAdd.response.data)));
+      localStorage.setItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE, JSON.stringify(nextProps.productsType.list.concat(nextProps.productsTypeAdd.response.data)));
     }
 
     if (nextProps.unitsAdd.added) {
-      localStorage.setItem(Enum.LOCAL_SCHEMA.UNIT, JSON.stringify(nextProps.units.list.push(nextProps.unitsAdd.response.data)));
+      localStorage.setItem(Enum.LOCAL_SCHEMA.UNIT, JSON.stringify(nextProps.units.list.concat(nextProps.unitsAdd.response.data)));
     }
 
     // SAVE SETTING TO LOCALE STORAGE
@@ -173,34 +173,20 @@ export default class ProductList extends List {
   }
 
   handleDelete() {
-    let selectedRows = this.state.selectedRows;
-    if(this.state.selectedRows){
+    let product = this.state.selectedRows;
+    if(product){
+      let quantity = this.getAllQTY(product[0]);
 
-      let valuesDelete = {
-        "id": this.state.selectedListIds[0],
-        "status": Enum.DELETE,
-        "brandId": selectedRows[0].brandId,
-        "productTypeId": selectedRows[0].productTypeId,
-        "defaultUnitId": selectedRows[0].defaultUnitId
-      };
-
-      let quantity = this.getAllQTY(selectedRows[0]);
-
-      if(selectedRows[0].serialType === Enum.SERIAL_TYPE.NON_INVENTORY){
-        this.submitDelete(valuesDelete);
+      if (product[0].serialType === Enum.SERIAL_TYPE.NON_INVENTORY){
+        super.handleDelete();
       }else if(quantity === 0){
-        this.submitDelete(valuesDelete);
-      }else{
+        super.handleDelete();
+      } else{
         this.setState({modalVisible: false});
         this.Message.warning(this.CATranslate("error_delete_product", this.props.locale));
       }
 
     }
-  }
-
-  submitDelete(valuesDelete){
-    this.props.dispatch(ProductAction.update(valuesDelete));
-    this.setState({modalVisible: false});
   }
 
   handleConfirm() {
@@ -310,7 +296,7 @@ export default class ProductList extends List {
               <this.Select
                 name="brandId"
                 label={<this.Translate id="text_brand"/>}
-                dataSource={this.brandList.concat(this.state.brands)}
+                dataSource={this.brandList.concat(Array.isArray(this.state.brands) ? this.state.brands : [])}
                 valueKey="id"
                 nameKey="name"
                 form={form}
@@ -320,7 +306,7 @@ export default class ProductList extends List {
               <this.Select
                 name="productTypeId"
                 label={<this.Translate id="text_product_type"/>}
-                dataSource={this.productTypeList.concat(this.state.productTypes)}
+                dataSource={this.productTypeList.concat(Array.isArray(this.state.productTypes) ? this.state.productTypes : [])}
                 defaultValue={this.productTypeList[0].id}
                 valueKey="id"
                 nestedName="productTypeDescriptions"
