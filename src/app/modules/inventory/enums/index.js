@@ -1,4 +1,5 @@
 export default {
+  DELETE: 3,
   PRODUCT_STANDARD: 0,
   PRODUCT_VARIANT: 1,
   PRODUCT_COMPOSITE: 2,

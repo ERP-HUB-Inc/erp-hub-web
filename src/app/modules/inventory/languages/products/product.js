@@ -529,6 +529,12 @@ export default {
     "We don't allow you to delete attribute that link to product variant that has quantity in stock.",
   ],
 
+  "error_delete_product": [
+    "Can not delete product ! Product Allow delete only quantity equal 0 and Noninventory",
+    "មិនអាចលុបផលិតផលបានទេ! ផលិតផលអនុញ្ញាតឱ្យលុបលះត្រាតែបរិមាណ គឺស្មើ ០ និង មិនមាននៅក្នុងស្តុក",
+    "Can not delete product ! Product Allow delete only quantity equal 0 and Noninventory"
+  ],
+
   "delete_attribute_value_warning": [
     "We don't allow you to delete attribute value that link to product variant that has quantity in stock.",
     "យើងមិនអនុញាតិអោយលប់ប្រភេទលក្ខណៈផលិតផលណា ដែលកំពុងភ្ជាប់ទៅផលិតផលណាដែលមាននៅក្នុងស្តុក",

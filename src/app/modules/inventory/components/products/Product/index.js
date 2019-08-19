@@ -168,6 +168,54 @@ export default class ProductList extends List {
     }
   }
 
+  getAllQTY(record) {
+    return Util.getProductQTYLocation(record["productVariants"]);
+  }
+
+  handleDelete() {
+    let selectedRows = this.state.selectedRows;
+    if(this.state.selectedRows){
+
+      let valuesDelete = {
+        "id": this.state.selectedListIds[0],
+        "status": Enum.DELETE,
+        "brandId": selectedRows[0].brandId,
+        "productTypeId": selectedRows[0].productTypeId,
+        "defaultUnitId": selectedRows[0].defaultUnitId
+      };
+
+      let quantity = this.getAllQTY(selectedRows[0]);
+
+      if(selectedRows[0].serialType === Enum.SERIAL_TYPE.NON_INVENTORY){
+        this.submitDelete(valuesDelete);
+      }else if(quantity === 0){
+        this.submitDelete(valuesDelete);
+      }else{
+        this.setState({modalVisible: false});
+        this.Message.warning(this.CATranslate("error_delete_product", this.props.locale));
+      }
+
+    }
+  }
+
+  submitDelete(valuesDelete){
+    this.props.dispatch(ProductAction.update(valuesDelete));
+    this.setState({modalVisible: false});
+  }
+
+  handleConfirm() {
+    let selectedRows = this.state.selectedRows;
+    if(selectedRows.length === 1){
+      this.setState({
+        modalVisible: true
+      });
+    }else if(selectedRows.length > 1){
+      this.Message.warning(this.CATranslate("text_allow_select_one_record", this.props.locale));
+    }else{
+      this.Message.warning(this.CATranslate("text_please_select_record", this.props.locale));
+    }
+  }
+
   // handleOnPrintLabel() {
   //   const productList = this.props.products.list.filter(product => this.state.dataSourceToPrint.includes(product.id));
   //   this.props.dispatch(PriceTagAction.selectProductFromListToPrint(productList));
@@ -177,6 +225,7 @@ export default class ProductList extends List {
   buttonActionCollection() {
     return [
       this.renderButtonAddNew(),
+      this.renderButtonDelete()
       // <this.Button
       //   key={2}
       //   disabled={this.state.selectedRowKeys.length <= 0 || this.state.selectedRowKeys.length > 1}
