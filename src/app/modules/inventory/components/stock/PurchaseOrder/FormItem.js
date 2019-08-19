@@ -113,7 +113,7 @@ export default class FormItem extends Modal {
                 errorRequired={<this.Translate id="error_require_po_number" />}
                 form={form} /> 
             </this.Col>
-            <this.Col md="2">
+            <this.Col md="2" style={{display: "none"}}>
               { formData.deliveryDueDate == null ?
                 <this.DatePickers
                   name="deliveryDueDate"
@@ -162,9 +162,10 @@ export default class FormItem extends Modal {
                 defaultValue={locationId}
                 dataSource={this.state.locations}
                 valueKey="id"
+                required={true}
                 form={form}/>
             </this.Col>
-            <this.Col md="4" style={{marginTop: 25}}>
+            <this.Col md="4">
               <this.Checkboxs
                 name="isAutoReceive"
                 defaultValue={this.state.isAutoReceive}

@@ -779,6 +779,12 @@ export default {
     "បញ្ចូលឈ្មោះ",
     "Enter name"
   ],
+
+  "error_require_quanity": [
+    "Enter quantity",
+    "បញ្ចូលបរិមាណ",
+    "Enter quantity"
+  ],
   
   "error_require_description": [
     "Enter description",

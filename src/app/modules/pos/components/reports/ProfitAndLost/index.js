@@ -23,7 +23,26 @@ export default class ProfitAndLostList extends List {
       }
     };
 
-    this.columns = new Column();
+    this.columns = [
+      {
+        title: <this.Translate id="text_revenue" />,
+        children: [
+          {
+            dataIndex: "name",
+            className: "profit-and-lost-column",
+            key: "name",
+          },
+          {
+            dataIndex: "amount",
+            align: "right",
+            className: "profit-and-lost-price",
+            key: "amount",
+            render: amount => amount ? this.formatCurrency(amount) : this.formatCurrency(0)
+          }
+        ]
+      },
+
+    ];
     this.ExportheadersCsv = [
       {label: this.CATranslate("text_date", this.props.locale), key: "createdAt"},
       {label: this.CATranslate("text_name", this.props.locale), key: "name"},
@@ -275,16 +294,57 @@ export default class ProfitAndLostList extends List {
       <div className="main-profit-and-lost-report">
         <this.Row>
           <this.Col md="8" className="devide-main-profit-layout">
+
             <this.Table 
               dataSource={incomeExpense.income}
               locale={{emptyText: <this.Translate id="no_peration_revenue" />}}
-              columns={new Column(<this.Translate id="text_revenue" />)}
+              columns={[
+                {
+                  title: <this.Translate id="text_revenue" />,
+                  children: [
+                    {
+                      dataIndex: "name",
+                      className: "profit-and-lost-column",
+                      key: "name",
+                    },
+                    {
+                      dataIndex: "amount",
+                      align: "right",
+                      className: "profit-and-lost-price",
+                      key: "amount",
+                      render: amount => amount ? this.formatCurrency(amount) : this.formatCurrency(0)
+                    }
+                  ]
+                }]
+              }
               onChange={this.handleTableChange}/>
+
+
             <this.Table 
               dataSource={incomeExpense.expense}
               locale={{emptyText: <this.Translate id="no_peration_expense" />}}
-              columns={new Column(<this.Translate id="text_expense" />,"revenuse-report")}
+              columns={[
+                {
+                  title: <this.Translate id="text_expense" />,
+                  className: "revenuse-report",
+                  children: [
+                    {
+                      dataIndex: "name",
+                      className: "profit-and-lost-column",
+                      key: "name",
+                    },
+                    {
+                      dataIndex: "amount",
+                      align: "right",
+                      className: "profit-and-lost-price",
+                      key: "amount",
+                      render: amount => amount ? this.formatCurrency(amount) : this.formatCurrency(0)
+                    }
+                  ]
+                }]
+              }
               onChange={this.handleTableChange}/>
+
             <div className="net-income text-uppercase">
               <this.Translate id="text_net_income" />
             </div>
@@ -376,33 +436,4 @@ export default class ProfitAndLostList extends List {
 
   }
 
-}
-
-class Column extends List {
-  constructor(title =  <this.Translate id="text_revenue" />,className) {
-    super();
-    return [
-      {
-        title: title,
-        className: className,
-        children:[
-          {
-            dataIndex: "name",
-            className: "profit-and-lost-column",
-            key: "name",
-          },
-          {
-            dataIndex: "amount",
-            align: "right",
-            className: "profit-and-lost-price",
-            key: "amount",
-            render: (text,record,index) => {
-              return(this.formatCurrency(record.amount));
-            }
-          }
-        ]
-      },
-    
-    ];
-  }
 }

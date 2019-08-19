@@ -13,7 +13,8 @@ export default class SaleList extends List {
       ...this.state,
       csvData: "",
       setDefaultDate:  [],
-      reportType: 0
+      reportType: 0,
+      isClickFilter: false
     };
     this.columns = [
       {
@@ -81,7 +82,6 @@ export default class SaleList extends List {
 
     this.fetchingProp = "saleReport";
     this.service = SaleReportService;
-    this.action = SaleReportAction;
     this.RESET_CONSTANT = Constant.RESET_SALE_REPORT;
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
     this.exportCsv = this.exportCsv.bind(this);
@@ -161,97 +161,35 @@ export default class SaleList extends List {
     reader.readAsText(files[0]);
   }
 
-  renderTable(){
-    return (  
-      <div className="main-table-sale-report">
-        <this.Table 
-          dataSource={this.props.saleReport.list}
-          rowKey="id"
-          columns={
-            [
-              this.columns[this.state.reportType],
-              {
-                title: <this.Translate id="text_revenue" />,
-                dataIndex: "revenue",
-                align: "right",
-                key: "revenue",
-                render: value => this.formatCurrency(value)
-              },
-              {
-                title: <this.Translate id="text_cost_of_good" />,
-                dataIndex: "cost",
-                align: "right",
-                key: "cost",
-                render: value => this.formatCurrency(value)
-              },
-              {
-                title: <this.Translate id="text_gross_profit" />,
-                dataIndex: "profit",
-                align: "right",
-                key: "profit",
-                render: (text, record) => {
-                  let profit = 0;
-                  profit = "profit" in record ? record.profit : record.revenue - record.cost;
-                  return this.formatCurrency(profit);
-                }
-              },
-              {
-                title: <this.Translate id="text_margin" />,
-                dataIndex: "margin",
-                align: "right",
-                key: "margin",
-                render: (text, record) => {
-                  let margin = 0;
-                  margin = "margin" in record ? record.margin : ((record.revenue - record.cost)/record.revenue) * 100;
-                  return this.Util.formatPercentage(margin);
-                }
-              }
-            ]
-          }
-          onChange={this.onChange}
-          locale={{emptyText: <this.Translate id="table_empty_data"/>}}
-          loading={this.props.saleReport.fetching} />
-      </div>
-    );
-  }
-
-
   handleSubmitFilter(e){
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
-      if (this.action) {
-        e.preventDefault();
-        this.props.form.validateFieldsAndScroll((err, values) => {
-          if (!err) {
+      if (!err) {
 
-            let filter = {};
-        
-            let rangFilter = "";
-            filter["type"] = [0, 1];
+        let filter = {};
 
-            if (values.createdAt) {
-              rangFilter = JSON.stringify({
-                column: "registerDate",
-                value: [
-                  this.Util.formatDateForMYSQL(values.createdAt[0]) + " 00:00:00",
-                  this.Util.formatDateForMYSQL(values.createdAt[1]) + " 23:59:59"
-                ]});
-  
-            }
+        let rangFilter = "";
+        filter["type"] = [0, 1];
 
-            filter = JSON.stringify(filter);
-          
-            this.props.dispatch(this.action.fetch(filter, rangFilter, values.reportType));
-            this.setState({
-              isClickFilter: true,
-              reportType: values.reportType ? values.reportType : this.state.reportType
-            });
-            
-          }
-        
-        }); 
-      } 
-    }); 
+        if (values.createdAt) {
+          rangFilter = JSON.stringify({
+            column: "registerDate",
+            value: [
+              this.Util.formatDateForMYSQL(values.createdAt[0]) + " 00:00:00",
+              this.Util.formatDateForMYSQL(values.createdAt[1]) + " 23:59:59"
+            ]
+          });
+
+        }
+
+        filter = JSON.stringify(filter);
+
+        this.props.dispatch(SaleReportAction.fetch(filter, rangFilter, values.reportType));
+        this.setState({
+          isClickFilter: true
+        });
+      }
+    });
   }
 
   loadFilter(){
@@ -275,9 +213,7 @@ export default class SaleList extends List {
       ]});
 
     filter = JSON.stringify(filter);
-    this.props.dispatch(this.action.fetch(filter, rangFilter));
-    this.setState({isClickFilter: true});
-
+    this.props.dispatch(SaleReportAction.fetch(filter, rangFilter));
   }
 
   exportheadersCsv(){
@@ -320,7 +256,7 @@ export default class SaleList extends List {
                   placeholder={this.CATranslate("text_sale_summary", this.props.locale)}
                   dataSource={this.reportTypeList}
                   label={<this.Translate id="text_report_type" />}
-                  defaultValue={this.reportTypeList[0].value}
+                  onChange={reportType => this.setState({reportType})}
                   form={this.props.form}/>
               </this.Col>
               <this.Col md="3">
@@ -342,6 +278,60 @@ export default class SaleList extends List {
         </div>
     );
 
+  }
+
+  renderTable() {
+    return (
+      <div className="main-table-sale-report">
+        <this.Table
+          dataSource={this.props.saleReport.fetching ? [] : this.props.saleReport.list}
+          rowKey="id"
+          columns={
+            [
+              this.columns[this.state.reportType],
+              {
+                title: <this.Translate id="text_revenue" />,
+                dataIndex: "revenue",
+                align: "right",
+                key: "revenue",
+                render: value => this.formatCurrency(value)
+              },
+              {
+                title: <this.Translate id="text_cost_of_good" />,
+                dataIndex: "cost",
+                align: "right",
+                key: "cost",
+                render: value => this.formatCurrency(value)
+              },
+              {
+                title: <this.Translate id="text_gross_profit" />,
+                dataIndex: "profit",
+                align: "right",
+                key: "profit",
+                render: (text, record) => {
+                  let profit = 0;
+                  profit = "profit" in record ? record.profit : record.revenue - record.cost;
+                  return this.formatCurrency(profit);
+                }
+              },
+              {
+                title: <this.Translate id="text_margin" />,
+                dataIndex: "margin",
+                align: "right",
+                key: "margin",
+                render: (text, record) => {
+                  let margin = 0;
+                  margin = "margin" in record ? record.margin : ((record.revenue - record.cost) / record.revenue) * 100;
+                  return this.Util.formatPercentage(margin);
+                }
+              }
+            ]
+          }
+          onChange={this.onChange}
+          locale={{ emptyText: <this.Translate id="table_empty_data" /> }}
+          loading={this.props.saleReport.fetching} />
+      </div>
+    );
   }
 
 }

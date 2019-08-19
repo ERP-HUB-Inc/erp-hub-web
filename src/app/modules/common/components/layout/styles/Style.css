@@ -69,7 +69,7 @@ html,
 
 .ant-table-footer {
     font-weight: 500;
-    /* padding: 0 0 !important; */
+    padding: 10px 16px !important;
     color: #9A9A9A;
     background: white !important;
     padding-right: 8px;
