@@ -1,3 +1,7 @@
+.wrap-dropdown-search-product .list-search {
+    max-height: 270px
+}
+
 .ant-form.ant-form-horizontal {
     width: 100% !important;
 }

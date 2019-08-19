@@ -110,10 +110,17 @@ export default class ProductList extends List {
     } 
   }
 
-  handlePurchaseOrderForm(){
+  handlePurchaseOrderForm() {
+    const limitRecord = 10;
     this.props.dispatch(PurchaseAction.showForm());
     if (this.props.list.list && Array.isArray(this.props.list.list)) {
-      const productReOrderPointList = this.props.list.list.filter(value => value.quantity <= value.reorderPoint && value.product.serialType === Enum.SERIAL_TYPE.STANDARD);
+      let productReOrderPointList = [];
+      if (this.state.selectedListIds.length > 0) {
+        const selectedListIds = this.state.selectedListIds.filter((value, index) => index < limitRecord);
+        productReOrderPointList = this.props.list.list.filter(value => selectedListIds.includes(value.id) && value.product.serialType === Enum.SERIAL_TYPE.STANDARD);
+      } else {
+        productReOrderPointList = this.props.list.list.filter((value, index) => index < limitRecord && value.quantity <= value.reorderPoint && value.product.serialType === Enum.SERIAL_TYPE.STANDARD);
+      }
       this.setState({ modalConten: <FormCreate productReOrderPointList={productReOrderPointList} /> });
     }
   }
@@ -146,7 +153,7 @@ export default class ProductList extends List {
         disabled={this.state.loadingPopup}
         onClick={this.handlePurchaseOrderForm}>
         <span className="icon-purchasing icon-padding-right"></span>
-        <this.Translate id="text_order" />
+        <this.Translate id="text_order_product" />
       </this.Button>
     );
   }

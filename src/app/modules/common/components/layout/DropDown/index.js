@@ -56,6 +56,7 @@ export default class MenuDropDown extends Component {
 
     return(
       <ul className="menu-right list-unstyled">
+        <li><this.Button onClick={() => window.location.reload(true)} type="default" style={{backgroundColor: "#FFD627"}}><this.Translate id="text_update_now" /></this.Button></li>
         {/* <li>
           <this.Link to="#" className="user-account">
             <this.Noteicon />

@@ -101,6 +101,12 @@ export default {
     "Try",
   ],
 
+  "text_update_now": [
+    "Update Now",
+    "ធ្វើបច្ចុប្បន្នភាព",
+    "Update Now"
+  ],
+
   "text_sorry": [
     "Sorry",
     "សោមអភ័យទោស",

@@ -44,7 +44,7 @@ export default class ErrorBoundary extends Component {
               fontSize: "40pt",
               color: "white",
               textTransform: "uppercase",
-              marginBottom: 20
+              marginBottom: 15
           }}>
             <this.Translate id="text_sorry" />!!!
           </div>
@@ -55,7 +55,7 @@ export default class ErrorBoundary extends Component {
               <li><this.Translate id="text_please_try_refresh_page" /></li>
               <li><this.Translate id="text_please_contact_us" /></li>
             </ol>
-            <Button style={{ backgroundColor: "#FFD627", marginTop: 30 }} onClick={() => alert("Hello World")}><this.Translate id="text_reload" /></Button>
+          <Button style={{ backgroundColor: "#FFD627", marginTop: 30 }} onClick={() => window.location.reload(true)}><this.Translate id="text_reload" /></Button>
           </div>
         </div>;
     }

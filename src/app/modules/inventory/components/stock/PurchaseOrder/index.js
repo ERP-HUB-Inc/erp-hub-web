@@ -1,6 +1,6 @@
 import React from "react";
-import List from "../List";
 import POEmailTemplate from "./EmailTemplate/PO";
+import List from "../List";
 import Enum from "../../../enums";
 import FormCreate from "../../../containers/stock/PurchaseOrder/FormCreate";
 import FormUpdate from "../../../containers/stock/PurchaseOrder/FormUpdate";
