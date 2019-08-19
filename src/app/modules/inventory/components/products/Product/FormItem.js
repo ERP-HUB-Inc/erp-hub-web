@@ -11,6 +11,7 @@ import ProductTypeAction from "../../../actions/products/productsType";
 import UnitAction from "../../../actions/products/productsUnit";
 import TaxAction from "../../../../pos/action/settings/tax";
 import Modal from "../../../../common/components/shares/Modal";
+import CommonEnum from "../../../../common/enums";
 import "./index.css";
 
 export default class FormItem extends Modal {
@@ -24,7 +25,7 @@ export default class FormItem extends Modal {
       languages: [],
       tags: [],
       productTypeIndex: 0, // for condition three type starndard, variant, composite
-      isAutoGenerateBarcode: 0,
+      isAutoGenerateBarcode: this.Enum.GENERATE_PRODUCT_CODE.MANAUL,
       isRequireInputBarcode: true,
       isSetFocusBarcode: false,
       isComponentNotYetUpdated: true,
@@ -213,10 +214,6 @@ export default class FormItem extends Modal {
     if (e.target.value === this.Enum.GENERATE_PRODUCT_CODE.AUTO) {
       this.props.form.setFieldsValue({
         barcode: ""
-      });
-    } else {
-      this.setState({
-        isSetFocusBarcode: true
       });
     }
 
@@ -458,12 +455,9 @@ export default class FormItem extends Modal {
                             placeholder={this.CATranslate("text_product_code", locale)}
                             required={this.state.isRequireInputBarcode}
                             errorRequired={<this.Translate id="error_require_sku" />}
-                            isAutoFocus={this.state.isSetFocusBarcode}
-                            didUpdateMakeAutoFocus={this.state.isSetFocusBarcode}
                             max={20}
                             form={form}
-                            disabled={
-                              (formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || 
+                            disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || 
                           this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO
                             } />
                         </this.Col>
@@ -745,7 +739,7 @@ FormItem.defaultProps = {
     brandId: "",
     productTypeId: "",
     serialType: "",
-    isAutoGenerateBarcode: 0,
+    isAutoGenerateBarcode: CommonEnum.GENERATE_PRODUCT_CODE.MANAUL,
     barcode: "",
     type: "",
     productOption: Enum.PRODUCT_STANDARD,
