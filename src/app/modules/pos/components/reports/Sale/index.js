@@ -117,7 +117,11 @@ export default class SaleList extends List {
       if(getReportTypeValues === 0){
         keyFileds = propertyFields.date;
       }else if(getReportTypeValues === 1){
-        keyFileds = propertyFields.name;
+        let variantName = "";
+        if(propertyFields.productOption === Enum.PRODUCT_VARIANT){
+          variantName = ` / ${propertyFields.variant}`;
+        }
+        keyFileds = propertyFields.name + variantName;
       }else if(getReportTypeValues === 2){
         keyFileds = propertyFields.name;
       }else if(getReportTypeValues === 3){
