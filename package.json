@@ -1,6 +1,6 @@
 {
   "name": "storevein",
-  "version": "2.0.9",
+  "version": "2.0.13",
   "private": true,
   "dependencies": {
     "@types/ably": "^1.0.0",
@@ -57,7 +57,9 @@
     "start": "set PORT=3081 & react-scripts start",
     "build": "react-scripts build",
     "webpack": "webpack-dev-server --mode development --open",
-    "webpack:build": "webpack --mode production",
+    "webpack:build": "npm run prebuild && webpack --mode production",
+    "generate-build-version": "node generate-build-version",
+    "prebuild": "npm run generate-build-version",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "electron": "electron ."

@@ -109,7 +109,7 @@ export default {
 
   "text_sorry": [
     "Sorry",
-    "សោមអភ័យទោស",
+    "សូមអភ័យទោស",
     "Sorry"
   ],
 

@@ -2,6 +2,7 @@ import React from "react";
 import Component from "../Component";
 import {Button} from "../../elements/ant-ui/Button";
 import {Util} from "../../util";
+import InventoryEnum from "../../../inventory/enums";
 
 export default class ErrorBoundary extends Component {
   constructor(props) {
@@ -16,6 +17,13 @@ export default class ErrorBoundary extends Component {
     this.setState({
       hasError: true
     });
+  }
+
+  handleOnHardReload = () => {
+    localStorage.removeItem(InventoryEnum.LOCAL_SCHEMA.BRAND);
+    localStorage.removeItem(InventoryEnum.LOCAL_SCHEMA.PRODUCT_TYPE);
+    localStorage.removeItem(InventoryEnum.LOCAL_SCHEMA.UNIT);
+    window.location.reload(true);
   }
   
   render() {
@@ -55,7 +63,7 @@ export default class ErrorBoundary extends Component {
               <li><this.Translate id="text_please_try_refresh_page" /></li>
               <li><this.Translate id="text_please_contact_us" /></li>
             </ol>
-          <Button style={{ backgroundColor: "#FFD627", marginTop: 30 }} onClick={() => window.location.reload(true)}><this.Translate id="text_reload" /></Button>
+          <Button style={{ backgroundColor: "#FFD627", marginTop: 30 }} onClick={this.handleOnHardReload}><this.Translate id="text_reload" /></Button>
           </div>
         </div>;
     }

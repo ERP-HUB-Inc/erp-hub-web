@@ -70,15 +70,21 @@ export default class ProductList extends List {
 
     // WHEN CREATE NEW SAVE SETTING TO LOCALE STORAGE
     if (nextProps.brandsAdd.added) {
-      localStorage.setItem(Enum.LOCAL_SCHEMA.BRAND, JSON.stringify(nextProps.brands.list.concat([nextProps.brandsAdd.response.data])));
+      let existBrands = localStorage.getItem(Enum.LOCAL_SCHEMA.BRAND);
+      existBrands = existBrands ? JSON.parse(existBrands) : [];
+      localStorage.setItem(Enum.LOCAL_SCHEMA.BRAND, JSON.stringify(existBrands.concat([nextProps.brandsAdd.response.data])));
     }
 
     if (nextProps.productsTypeAdd.added) {
-      localStorage.setItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE, JSON.stringify(nextProps.productsType.list.concat(nextProps.productsTypeAdd.response.data)));
+      let existProductTypes = localStorage.getItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE);
+      existProductTypes = existProductTypes ? JSON.parse(existProductTypes) : [];
+      localStorage.setItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE, JSON.stringify(existProductTypes.concat(nextProps.productsTypeAdd.response.data)));
     }
 
     if (nextProps.unitsAdd.added) {
-      localStorage.setItem(Enum.LOCAL_SCHEMA.UNIT, JSON.stringify(nextProps.units.list.concat(nextProps.unitsAdd.response.data)));
+      let existUnits = localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT);
+      existUnits = existUnits ? JSON.parse(existUnits) : [];
+      localStorage.setItem(Enum.LOCAL_SCHEMA.UNIT, JSON.stringify(existUnits.concat(nextProps.unitsAdd.response.data)));
     }
 
     // SAVE SETTING TO LOCALE STORAGE
@@ -140,7 +146,7 @@ export default class ProductList extends List {
       setTimeout(() => {
 
         if (!localStorage.getItem(Enum.LOCAL_SCHEMA.BRAND)) {
-          this.props.dispatch(BrandAction.fetch(50));
+          this.props.dispatch(BrandAction.fetch(100));
         }
 
         if (!localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT)) {

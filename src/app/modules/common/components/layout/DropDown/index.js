@@ -3,6 +3,7 @@ import { Menu, Dropdown } from "antd";
 import Component from "../../Component";
 import history from "../../../router/history";
 import AuthService from "../../../services/AuthService";
+import InventoryEnum from "../../../../inventory/enums";
 import "./index.css";
 import "./index.scss";
 
@@ -39,6 +40,13 @@ export default class MenuDropDown extends Component {
     };
   }
 
+  handleOnHardReload = () => {
+    localStorage.removeItem(InventoryEnum.LOCAL_SCHEMA.BRAND);
+    localStorage.removeItem(InventoryEnum.LOCAL_SCHEMA.PRODUCT_TYPE);
+    localStorage.removeItem(InventoryEnum.LOCAL_SCHEMA.UNIT);
+    window.location.reload(true);
+  }
+
   handleLogOut() {
     AuthService.logout();
     this.Util.logout(history);
@@ -56,7 +64,7 @@ export default class MenuDropDown extends Component {
 
     return(
       <ul className="menu-right list-unstyled">
-        <li><this.Button onClick={() => window.location.reload(true)} type="default" style={{backgroundColor: "#FFD627"}}><this.Translate id="text_update_now" /></this.Button></li>
+        <li><this.Button onClick={this.handleOnHardReload} type="default" style={{backgroundColor: "#FFD627"}}><this.Translate id="text_update_now" /></this.Button></li>
         {/* <li>
           <this.Link to="#" className="user-account">
             <this.Noteicon />
