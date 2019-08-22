@@ -1,6 +1,7 @@
 import React from "react";
 import moment from "moment";
 import {Translate, setActiveLanguage, getActiveLanguage} from "react-localize-redux";
+import CSVReader from "react-csv-reader";
 import {connect} from "react-redux";
 import {CSVLink, CSVDownload} from "react-csv";
 import {  
@@ -182,6 +183,7 @@ export default class Component extends React.Component {
 
     this.CSVLink = CSVLink;
     this.CSVDownload = CSVDownload;
+    this.CSVReader = CSVReader;
 
     this.Doughnut = Doughnut;
     this.Line = Line;

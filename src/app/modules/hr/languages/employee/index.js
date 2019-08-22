@@ -129,5 +129,23 @@ export default {
     "User already exist !",
     "អ្នកប្រើមានរួចហើយ!",
     "User already exist !"
+  ],
+
+  "text_allow_edit_product": [
+    "Allow edit product",
+    "អនុញ្ញាតឱ្យកែផលិតផល",
+    "Allow edit product"
+  ],
+
+  "text_allow_edit_product_price_when_sale": [
+    "Allow to  edit product price when sale",
+    "អនុញ្ញាតិអោយផ្លាស់ប្តូរតម្លៃទំនិញពេលលក់",
+    "Allow to  edit product price when sale"
+  ],
+
+  "text_not_allow_edit_product_price_when_sale": [
+    "Not allow to edit product price when sale",
+    "មិនអនុញ្ញាតឱ្យកែសម្រួលផ្លាស់ប្តូរតម្លៃទំនិញនៅពេលលក់",
+    "Not allow to edit product price when sale"
   ]
 };

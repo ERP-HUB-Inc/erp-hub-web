@@ -49,6 +49,11 @@ const ProductUnit = Loadable({
   loading: () => <StartUp />,
 });
 
+const importProduct = Loadable({
+  loader: () => import("../../../../inventory/containers/products/ProductsUnit/importProduct"),
+  loading: () => <StartUp />,
+});
+
 // STOCK CONTROL
 // const Stock = Loadable({
 //   loader: () => import("../../../../inventory/containers/stock/StockManagement"),
@@ -302,6 +307,13 @@ const dataSource = {
         component: ProductUnit,
         isFashNav: true
       },
+      {
+        title: "Import Product",
+        icon: "icon-price-book",
+        route: "/products/import",
+        component: importProduct,
+        isFashNav: true
+      }
       // {
       //   title: "Price Books",
       //   icon: "icon-price-book",
