@@ -312,7 +312,7 @@ const dataSource = {
         icon: "icon-price-book",
         route: "/products/import",
         component: importProduct,
-        isFashNav: true
+        isFashNav: false
       }
       // {
       //   title: "Price Books",
