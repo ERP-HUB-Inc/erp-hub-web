@@ -63,6 +63,16 @@ export default class FormItem extends Modal {
         },
       }
     ];
+    this.employeeTypes = [
+      {
+        title: <this.Translate id="text_allow_edit_product_price_when_sale" />,
+        value: Enum.ALLOW_EDIT_SALE_PRODUCT.ALLOW
+      },
+      {
+        title: <this.Translate id="text_not_allow_edit_product_price_when_sale" />,
+        value: Enum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW
+      }
+    ];
     this.onChange = this.onChange.bind(this);
     this.onChangeAssign = this.onChangeAssign.bind(this);
     this.onChangeDefaultLocation = this.onChangeDefaultLocation.bind(this);
@@ -419,6 +429,18 @@ export default class FormItem extends Modal {
                 dataSource={this.state.locations}
                 columns={this.columns}
                 locale={{emptyText: <this.Translate id="table_empty_data" />}} />
+            </this.Col>
+          </this.Row>
+        </this.TabPane>
+        <this.TabPane tab={<this.Translate id="text_allow_edit_product"/>} key="4">
+          <this.Row>
+            <this.Col md="12">
+              <this.RadioButton 
+                name="isAllowEditPrice"
+                defaultValue={1}
+                dataSource={this.employeeTypes}
+                form={form}
+                required/>
             </this.Col>
           </this.Row>
         </this.TabPane>
