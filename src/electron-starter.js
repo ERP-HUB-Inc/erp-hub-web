@@ -13,13 +13,20 @@ let mainWindow;
 
 function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600});
+  mainWindow = new BrowserWindow({
+    icon: __dirname + "/favicon.ico",
+    width: 1024,
+    height: 600
+  });
+
+  // Remove menu item
+  // mainWindow.setMenu(null);
 
   // and load the index.html of the app.
-  mainWindow.loadURL("http://localhost:3081");
+  mainWindow.loadURL("http://secure.storevein.com/store");
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on("closed", function () {
