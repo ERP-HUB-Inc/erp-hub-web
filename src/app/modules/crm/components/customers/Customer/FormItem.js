@@ -121,7 +121,18 @@ export default class FormItem extends Modal {
                 errorRequired={<this.Translate id="error_required_last_name" />}
                 max={100}
                 form={this.props.form}/>
-            </this.Col>   
+            </this.Col>
+
+            <this.Col md="12">
+              <this.InputText
+                name="company"
+                label={<this.Translate id="text_company" />}
+                required={true}
+                data={formData.company}
+                placeholder={this.CATranslate("text_company", this.props.locale)}
+                max={100}
+                form={this.props.form} />
+            </this.Col>
 
             <this.Col md="12">
               <this.InputText
@@ -166,17 +177,7 @@ export default class FormItem extends Modal {
                 valueKey="id"
                 addNew={this.props.handleAddCustomerGroup}
                 form={this.props.form}/>
-            </this.Col>  
-
-            <this.Col md="12">
-              <this.InputText   
-                name="company"
-                label={<this.Translate id="text_company" />}
-                data={formData.company}
-                placeholder={this.CATranslate("text_company", this.props.locale)}
-                max={100}
-                form={this.props.form}/>
-            </this.Col> 
+            </this.Col>   
 
             {/* <this.Col md="12">
               <this.InputTextArea

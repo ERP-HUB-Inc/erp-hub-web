@@ -60,6 +60,12 @@ class Column extends List {
         sorter: true
       },
       {
+        title: <this.Translate id="text_user_account" />,
+        dataIndex: "account",
+        key: "account",
+        render: account => account ? account.userName : this.emptyText
+      },
+      {
         title: <this.Translate id="text_phone_number" />,
         dataIndex: "phoneNumber",
         key: "phoneNumber",

@@ -29,6 +29,24 @@ export default {
     "Tags"
   ],
 
+  "text_retial_price": [
+    "Price",
+    "តម្លៃលក់រាយ",
+    "Price"
+  ],
+
+  "text_whole_price": [
+    "Whole Price",
+    "តម្លៃលក់ដុំ",
+    "Whole Price"
+  ],
+
+  "text_distribute_price": [
+    "Distribute Price",
+    "តម្លៃដំណាងចែកចាយ",
+    "Distribute Price"
+  ],
+
   "col_products_supplier": [
     "Supplier",
     "អ្នកផ្គត់ផ្គង់",
@@ -202,7 +220,7 @@ export default {
 
   "input_product_variant_name": [
     "Variant Name",
-    "ឈ្មោះវារ៉្យង់",
+    "ឈ្មោះ",
     "Variant Name"
   ],
 

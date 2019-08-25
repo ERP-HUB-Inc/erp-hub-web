@@ -5,6 +5,7 @@ import DiscountSetup from "./DiscountSetup";
 import TaxSetting from "./TaxSetting";
 import Enum from "../../../enums";
 import InventoryEnum from "../../../../inventory/enums";
+import HREnum from "../../../../hr/enums";
 import SettingEnum from "../../../../pos/enums";
 import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
@@ -176,6 +177,7 @@ export default class Retail extends Component {
     this.props.dispatch(OpenSaleRegistrationAction.last());
 
     this.props.dispatch(ProductTypeAction.fetch(9999));
+    this.props.dispatch(ProductAction.reset());
     this.props.dispatch(ProductAction.fetch(40, "", "", "", JSON.stringify({isAvialableSale: [Enum.PRODUCT_AVIALABLE_ON_SALE], type: [InventoryEnum.TYPE_OF_PRODUCT.GOOD]}), "", this.Util.getLocationId()));
 
     new Promise(() => {
@@ -1038,6 +1040,7 @@ export default class Retail extends Component {
                       precision={2}
                       isAutoSelect={true}
                       isHideTool={true}
+                      disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW}
                       form={this.props.form}/>
                     <this.InputNumber
                       name={`discount[${productOrderIndex}]`}
@@ -1049,6 +1052,7 @@ export default class Retail extends Component {
                       precision={2}
                       isAutoSelect={true}
                       isHideTool={true}
+                      disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW}
                       form={this.props.form} />
                     {/* <div className="detail-inventory">
                 <span className="icon-help icon-padding-right"></span>Show Inventories & Details
