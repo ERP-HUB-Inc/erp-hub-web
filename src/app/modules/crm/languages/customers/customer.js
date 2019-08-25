@@ -88,6 +88,25 @@ export default {
     "contact"
   ],
 
+  "text_retail_sale": [
+    "Retail Sale",
+    "លក់រាយ",
+    "Retail Sale"
+  ],
+
+  "text_whole_sale": [
+    "Wholesale",
+    "លក់ដុំ",
+    "Wholesale"
+  ],
+
+  "text_distributor": [
+    "Distributor",
+    "តំណាងចែកចាយ",
+    "Distributor"
+  ],
+
+  
   "text_search_code": [
     "Search for code, name and address",
     "ស្វែងរកលេខកូដឈ្មោះនិងអាសយដ្ឋាន",

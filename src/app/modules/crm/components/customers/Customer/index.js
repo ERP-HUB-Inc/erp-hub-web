@@ -239,6 +239,12 @@ class Column extends List {
         render: email => email ? this.Util.formtTextError(email) : this.emptyText
       },
       {
+        title: <this.Translate id="text_type" />,
+        dataIndex: "type",
+        key: "type",
+        sorter: true
+      },
+      {
         title: <this.Translate id="text_credit" />,
         dataIndex: "credit",
         key: "credit",
