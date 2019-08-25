@@ -29,6 +29,18 @@ export default {
     "Tags"
   ],
 
+  "text_retial_price": [
+    "Price",
+    "តម្លៃលក់រាយ",
+    "Price"
+  ],
+
+  "text_whole_price": [
+    "Whole Price",
+    "តម្លៃលក់ដុំ",
+    "Whole Price"
+  ],
+
   "col_products_supplier": [
     "Supplier",
     "អ្នកផ្គត់ផ្គង់",

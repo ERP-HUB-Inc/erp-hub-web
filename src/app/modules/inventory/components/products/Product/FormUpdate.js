@@ -182,6 +182,7 @@ export default class Form extends Modal {
         values["cost"] = values["cost"] ? values["cost"] : 0;
         values["markup"] = values["markup"] ? values["markup"] : 0;
         values["price"] = values["price"] ? values["price"] : 0;
+        values["wholePrice"] = values["wholePrice"] ? values["wholePrice"] : 0;
         values["taxes"] = [{taxId: values["taxId"]}];
         values["productTags"] = this.state.tagList;
         values["descriptions"] = productDescriptions;

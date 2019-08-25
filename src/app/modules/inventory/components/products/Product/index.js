@@ -556,12 +556,21 @@ class Column extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="text_price" />,
+        title: <this.Translate id="text_retial_price" />,
         key: "price",
         dataIndex: "price",
         width: 150,
         align: "center",
         render: (text, record) => this.formatCurrency(Util.getProductPrice(record)),
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_whole_price" />,
+        key: "wholePrice",
+        dataIndex: "wholePrice",
+        width: 150,
+        align: "center",
+        render: (text, record) => this.formatCurrency(Util.getProductWholeSalePrice(record)),
         sorter: true
       },
       {

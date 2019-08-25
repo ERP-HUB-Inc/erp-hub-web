@@ -611,18 +611,28 @@ export default class FormItem extends Modal {
                   </this.Collapse>,
                 </this.Col>
 
-             
-                
                 <this.Col md="4">
                   <this.InputNumber
                     name="price"
-                    label={<span><this.Translate id="text_price" /><span> ({currentUser.setting.currency})</span></span>}
+                    label={<span><this.Translate id="text_retial_price" /><span> ({currentUser.setting.currency})</span></span>}
                     data={Util.getProductPrice(formData)}
                     isAutoSelect={true}
                     placeholder={this.CATranslate("input_product_price_placeholder", locale)}
                     errorRequired={<this.Translate id="error_require_price" />}
                     max={99999999}
                     form={form}/>
+                </this.Col>
+
+                <this.Col md="4">
+                  <this.InputNumber
+                    name="wholePrice"
+                    label={<span><this.Translate id="text_whole_price" /><span> ({currentUser.setting.currency})</span></span>}
+                    data={Util.getProductWholeSalePrice(formData)}
+                    isAutoSelect={true}
+                    placeholder={this.CATranslate("input_product_price_placeholder", locale)}
+                    errorRequired={<this.Translate id="error_require_price" />}
+                    max={99999999}
+                    form={form} />
                 </this.Col>
 
                 <this.Col md="12">

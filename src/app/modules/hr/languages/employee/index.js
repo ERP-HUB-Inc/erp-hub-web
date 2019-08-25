@@ -131,10 +131,16 @@ export default {
     "User already exist !"
   ],
 
-  "text_allow_edit_product": [
-    "Allow edit product",
-    "អនុញ្ញាតឱ្យកែផលិតផល",
-    "Allow edit product"
+  "text_sale_setting": [
+    "Sale Setting",
+    "ការកំណត់ការលក់",
+    "Sale Setting"
+  ],
+
+  "text_user_account": [
+    "User Account",
+    "គណនី​អ្នកប្រើប្រាស់",
+    "User Account"
   ],
 
   "text_allow_edit_product_price_when_sale": [
@@ -145,7 +151,7 @@ export default {
 
   "text_not_allow_edit_product_price_when_sale": [
     "Not allow to edit product price when sale",
-    "មិនអនុញ្ញាតឱ្យកែសម្រួលផ្លាស់ប្តូរតម្លៃទំនិញនៅពេលលក់",
+    "មិនអនុញ្ញាតឱ្យផ្លាស់ប្តូរតម្លៃទំនិញនៅពេលលក់",
     "Not allow to edit product price when sale"
   ]
 };

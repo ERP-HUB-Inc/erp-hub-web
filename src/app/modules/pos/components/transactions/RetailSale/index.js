@@ -5,6 +5,7 @@ import DiscountSetup from "./DiscountSetup";
 import TaxSetting from "./TaxSetting";
 import Enum from "../../../enums";
 import InventoryEnum from "../../../../inventory/enums";
+import HREnum from "../../../../hr/enums";
 import SettingEnum from "../../../../pos/enums";
 import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
@@ -1037,6 +1038,7 @@ export default class Retail extends Component {
                       precision={2}
                       isAutoSelect={true}
                       isHideTool={true}
+                      disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW}
                       form={this.props.form}/>
                     <this.InputNumber
                       name={`discount[${productOrderIndex}]`}
@@ -1048,6 +1050,7 @@ export default class Retail extends Component {
                       precision={2}
                       isAutoSelect={true}
                       isHideTool={true}
+                      disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW}
                       form={this.props.form} />
                     {/* <div className="detail-inventory">
                 <span className="icon-help icon-padding-right"></span>Show Inventories & Details

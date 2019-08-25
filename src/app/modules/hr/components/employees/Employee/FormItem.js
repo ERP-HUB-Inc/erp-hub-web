@@ -432,7 +432,7 @@ export default class FormItem extends Modal {
             </this.Col>
           </this.Row>
         </this.TabPane>
-        <this.TabPane tab={<this.Translate id="text_allow_edit_product"/>} key="4">
+        <this.TabPane tab={<this.Translate id="text_sale_setting"/>} key="4">
           <this.Row>
             <this.Col md="12">
               <this.RadioButton 

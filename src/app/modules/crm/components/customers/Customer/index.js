@@ -16,7 +16,7 @@ export default class CustomerList extends List {
     this.formCreate = <FormCreate/>;
     this.callBackOnShowEditForm = this.showFormEdit;
     this.columnExpend = new ColumnExpend();
-    this.isShowExpandable = true;
+    // this.isShowExpandable = true;
     this.rowClassName = record => record && record.contacts && record.contacts.length === 0 ? "standard-product-row" : "";
     this.service = CustomerService;
     this.action = CustomerAction;
@@ -243,6 +243,7 @@ class Column extends List {
         dataIndex: "credit",
         key: "credit",
         sorter: true,
+        align: "right",
         render: credit => credit ? this.formatCurrency(credit) : this.formatCurrency(0)
       },
       {
