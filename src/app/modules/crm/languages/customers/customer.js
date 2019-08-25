@@ -23,9 +23,9 @@ export default {
     "Group"
   ],
   "text_company": [
-    "Company",
-    "ក្រុមហ៊ុន",
-    "Company"
+    "Company Name / Shop Name",
+    "ឈ្មោះក្រុមហ៊ុន ឬ​​ ឈ្មោះហាង",
+    "Company Name / Shop Name"
   ],
   
   "text_address": [

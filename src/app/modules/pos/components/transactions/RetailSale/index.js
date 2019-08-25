@@ -177,6 +177,7 @@ export default class Retail extends Component {
     this.props.dispatch(OpenSaleRegistrationAction.last());
 
     this.props.dispatch(ProductTypeAction.fetch(9999));
+    this.props.dispatch(ProductAction.reset());
     this.props.dispatch(ProductAction.fetch(40, "", "", "", JSON.stringify({isAvialableSale: [Enum.PRODUCT_AVIALABLE_ON_SALE], type: [InventoryEnum.TYPE_OF_PRODUCT.GOOD]}), "", this.Util.getLocationId()));
 
     new Promise(() => {
