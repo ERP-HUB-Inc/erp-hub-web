@@ -362,7 +362,7 @@ class ColumnExpand extends List {
       {
         dataIndex: "blank1",
         key: "blank1",
-        width: 50,
+        width: 20,
         render: () => {},
       },
       {
@@ -376,10 +376,11 @@ class ColumnExpand extends List {
         render: barcode => barcode ? barcode : this.emptyCell
       },
       {
-        dataIndex: "tag",
-        key: "tag",
+        title: <this.Translate id="text_stock_type" />,
+        dataIndex: "serialType",
+        key: "serialType",
         width: 150,
-        render: () => {},
+        render: () => { }
       },
       {
         dataIndex: "productType",
@@ -399,6 +400,20 @@ class ColumnExpand extends List {
         width: 150,
         align: "center",
         render: price => this.formatCurrency(price)
+      },
+      {
+        dataIndex: "wholePrice",
+        key: "wholePrice",
+        width: 150,
+        align: "center",
+        render: wholePrice => this.formatCurrency(wholePrice),
+      },
+      {
+        dataIndex: "distributePrice",
+        key: "distributePrice",
+        width: 170,
+        align: "center",
+        render: distributePrice => this.formatCurrency(distributePrice)
       },
       {
         dataIndex: "quantity",
@@ -460,8 +475,7 @@ class ColumnExpand extends List {
       {
         dataIndex: "unit",
         key: "unit",
-        width: 100,
-        render: () => {}
+        width: 100
       },
       {
         dataIndex: "type",
@@ -571,6 +585,15 @@ class Column extends List {
         width: 150,
         align: "center",
         render: (text, record) => this.formatCurrency(Util.getProductWholeSalePrice(record)),
+        sorter: true
+      },
+      {
+        title: <this.Translate id="text_distribute_price" />,
+        key: "distributePrice",
+        dataIndex: "distributePrice",
+        width: 170,
+        align: "center",
+        render: (text, record) => this.formatCurrency(Util.getProductDistributePrice(record)),
         sorter: true
       },
       {

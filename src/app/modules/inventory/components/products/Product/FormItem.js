@@ -635,6 +635,18 @@ export default class FormItem extends Modal {
                     form={form} />
                 </this.Col>
 
+                <this.Col md="4">
+                  <this.InputNumber
+                    name="distributePrice"
+                    label={<span><this.Translate id="text_distribute_price" /><span> ({currentUser.setting.currency})</span></span>}
+                    data={Util.getProductDistributePrice(formData)}
+                    isAutoSelect={true}
+                    placeholder={this.CATranslate("input_product_price_placeholder", locale)}
+                    errorRequired={<this.Translate id="error_require_price" />}
+                    max={99999999}
+                    form={form} />
+                </this.Col>
+
                 <this.Col md="12">
                   <this.UploadImg
                     name="image"    

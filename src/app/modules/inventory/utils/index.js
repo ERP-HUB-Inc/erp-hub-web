@@ -36,6 +36,10 @@ class Util {
     return this.isValidProductVariant(product) && product.productVariants[0].wholePrice ? product.productVariants[0].wholePrice : 0;
   }
 
+  getProductDistributePrice(product) {
+    return this.isValidProductVariant(product) && product.productVariants[0].distributePrice ? product.productVariants[0].distributePrice : 0;
+  }
+
   getProductCost(product) {
     return this.isValidProductVariant(product) ? product.productVariants[0].cost : 0;
   }

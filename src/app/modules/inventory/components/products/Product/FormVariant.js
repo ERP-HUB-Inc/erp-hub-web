@@ -49,27 +49,12 @@ export default class FormVariant extends Modal {
         }
       },
       {
-        title: <this.Translate id="text_cost" />,
-        dataIndex: "cost",
-        key: "cost",
-        align: "right",
-        width: 120,
-        render: (text, record, index) => {
-          return <this.InputNumber
-            name={`variantProductCost[${index}]`}
-            className="text-right"
-            disabled={true}
-            data={record.cost === null ? 0 : record.cost}
-            form={this.props.form}/>;
-        }
-      },
-      {
-        title: <this.Translate id="text_price" />,
+        title: <this.Translate id="text_retial_price" />,
         dataIndex: "price",
         key: "price",
         align: "right",
         width: 120,
-        render: (text, record, index) => {
+        render: (price, record, index) => {
           return <this.InputNumber
             name={`variantProductPrice[${index}]`}
             className="text-right"
@@ -77,9 +62,47 @@ export default class FormVariant extends Modal {
             isHideTool={true}
             required={true}
             errorRequired={<this.Translate id="error_require_price" />}
-            data={record.price}
+            data={price}
             handleKeyUp={(e) => this.handleOnChangePrice(e, index)}
+            form={this.props.form} />;
+        }
+      },
+      {
+        title: <this.Translate id="text_whole_price" />,
+        dataIndex: "wholePrice",
+        key: "wholePrice",
+        align: "right",
+        width: 120,
+        render: (wholePrice, record, index) => {
+          return <this.InputNumber
+            name={`variantProductWholePrice[${index}]`}
+            className="text-right"
+            isAutoSelect={true}
+            isHideTool={true}
+            required={true}
+            errorRequired={<this.Translate id="error_require_price" />}
+            data={wholePrice}
+            handleKeyUp={(e) => this.handleOnChangePrice(e, index, "wholePrice")}
             form={this.props.form}/>;
+        }
+      },
+      {
+        title: <this.Translate id="text_distribute_price" />,
+        dataIndex: "distributePrice",
+        key: "distributePrice",
+        align: "right",
+        width: 150,
+        render: (distributePrice, record, index) => {
+          return <this.InputNumber
+            name={`variantProductDistributePrice[${index}]`}
+            className="text-right"
+            isAutoSelect={true}
+            isHideTool={true}
+            required={true}
+            errorRequired={<this.Translate id="error_require_price" />}
+            data={distributePrice}
+            handleKeyUp={(e) => this.handleOnChangePrice(e, index, "distributePrice")}
+            form={this.props.form} />;
         }
       },
       {
@@ -87,7 +110,7 @@ export default class FormVariant extends Modal {
         dataIndex: "action",
         key: "action",
         align: "center",
-        width: 80,
+        width: 100,
         render: (text, record, index) => {
           return <div className="wrap-variant-action">
             <this.Switchs
@@ -420,9 +443,9 @@ export default class FormVariant extends Modal {
     }
   }
 
-  handleOnChangePrice(event, index) {
+  handleOnChangePrice(event, index, fieldName = "price") {
     const productVariantList = this.state.productVariantList;
-    productVariantList[index]["price"] = parseFloat(event.target.value);
+    productVariantList[index][fieldName] = parseFloat(event.target.value);
   }
 
   handleOnChangeBarcode(event, index) {
@@ -433,11 +456,10 @@ export default class FormVariant extends Modal {
   syncInputTableWithProductVariant() {
     this.state.productVariantList.forEach((productVariant, index) => {
       if (productVariant.status === this.Enum.ACTIVE) {
-        productVariant.cost = productVariant.cost === null ? 0 : productVariant.cost;
-
         this.props.form.setFieldsValue({[`variantProductCode[${index}]`]: productVariant.barcode});
         this.props.form.setFieldsValue({[`variantProductPrice[${index}]`]: productVariant.price});
-        this.props.form.setFieldsValue({[`variantProductCost[${index}]`]: productVariant.cost});
+        this.props.form.setFieldsValue({[`variantProductWholePrice[${index}]`]: productVariant.wholePrice});
+        this.props.form.setFieldsValue({ [`variantProductDistributePrice[${index}]`]: productVariant.distributePrice });
       }
     });
   }
@@ -531,9 +553,10 @@ export default class FormVariant extends Modal {
       id: "",
       name,
       price: this.props.form.getFieldValue("price") ? this.props.form.getFieldValue("price") : 0,
+      wholePrice: this.props.form.getFieldValue("wholePrice") ? this.props.form.getFieldValue("wholePrice") : 0,
+      distributePrice: this.props.form.getFieldValue("distributePrice") ? this.props.form.getFieldValue("distributePrice") : 0,
       isAutoGenerateBarcode: this.props.form.getFieldValue("isAutoGenerateBarcode"),
       barcode: "",
-      cost: 0
     };
   }
 
@@ -748,7 +771,8 @@ export default class FormVariant extends Modal {
           existingProductVariantList.splice(insertAtIndex - 1, 0, productVariant);
           this.props.form.setFieldsValue({[`variantProductCode[${insertAtIndex - 1}]`]: ""});
           this.props.form.setFieldsValue({[`variantProductPrice[${insertAtIndex - 1}]`]: 0.00});
-          this.props.form.setFieldsValue({[`variantProductCost[${insertAtIndex - 1}]`]: 0.00});
+          this.props.form.setFieldsValue({[`variantProductWholePrice[${insertAtIndex - 1}]`]: 0.00});
+          this.props.form.setFieldsValue({[`variantProductDistributePrice[${insertAtIndex - 1}]`]: 0.00 });
         }
       });
     } else {
@@ -806,8 +830,9 @@ export default class FormVariant extends Modal {
       name: variantAttribute.name,
       barcode: variantAttribute.barcode,
       isAutoGenerateBarcode: variantAttribute.isAutoGenerateBarcode,
-      cost: variantAttribute.cost,
       price: variantAttribute.price,
+      wholePrice: variantAttribute.wholePrice,
+      distributePrice: variantAttribute.distributePrice,
       quantity: variantAttribute.quantity,
       status: this.Enum.ACTIVE,
       tempPVId: variantAttribute.temp,
@@ -1017,8 +1042,9 @@ export default class FormVariant extends Modal {
           id: "",
           name: "",
           barcode: "",
-          cost: null,
           price: null,
+          wholePrice: null,
+          distributePrice: null,
           quantity: 0,
           status: this.Enum.ACTIVE
         });
