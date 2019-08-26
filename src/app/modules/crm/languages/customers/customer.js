@@ -95,9 +95,9 @@ export default {
   ],
 
   "text_whole_sale": [
-    "Wholesale",
+    "Whole Sale",
     "លក់ដុំ",
-    "Wholesale"
+    "Whole Sale"
   ],
 
   "text_distributor": [

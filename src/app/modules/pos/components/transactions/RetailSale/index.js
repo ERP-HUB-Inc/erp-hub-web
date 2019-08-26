@@ -63,6 +63,7 @@ export default class Retail extends Component {
       baseCurrency: {},
       subCurrency: {}
     };
+
     this.isSetFocusOnSearchProduct = false;
     this.hasDidUpdate = false;
     this.hadNotYetReceiveProps = true;
@@ -758,8 +759,7 @@ export default class Retail extends Component {
   }
 
   handleOnRestoreReceipt(key) {
-    this.restore
-    (key);
+    this.restore(key);
     this.setState({selectedReceiptType: key});
   }
 

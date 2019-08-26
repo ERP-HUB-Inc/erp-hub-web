@@ -31,6 +31,7 @@ export default class CustomerList extends List {
       "phoneNumber",
       "name"
     ];
+
     this.RESET_CONSTANT = Constant.RESET_CUSTOMERS;
   }
 
@@ -208,6 +209,22 @@ class ColumnExpend extends List {
 class Column extends List {
   constructor(props) {
     super(props);
+
+    this.customerTypes = [
+      {
+        title: <this.Translate id="text_retail_sale" />,
+        value: Enum.CUSTOMER_TYPE.RETAIL_SALE
+      },
+      {
+        title: <this.Translate id="text_whole_sale" />,
+        value: Enum.CUSTOMER_TYPE.WHOLE_SALE
+      },
+      {
+        title: <this.Translate id="text_distributor" />,
+        value: Enum.CUSTOMER_TYPE.DISTRIBUTOR
+      }
+    ];
+    
     return [
       {
         title: <this.Translate id="text_name" />,
@@ -239,10 +256,21 @@ class Column extends List {
         render: email => email ? this.Util.formtTextError(email) : this.emptyText
       },
       {
+        title: <this.Translate id="text_group" />,
+        dataIndex: "groupCustomer",
+        key: "groupCustomer",
+        sorter: true,
+        render: groupCustomer => groupCustomer ? <span className="text-capitalize">{groupCustomer.name}</span> : this.emptyText
+      },
+      {
         title: <this.Translate id="text_type" />,
         dataIndex: "type",
         key: "type",
-        sorter: true
+        sorter: true,
+        render: type => {
+          const customerType = this.customerTypes.find(customer => customer.value === type);
+          return <this.Tag color="blue" className="text-center label-stock-status" style={{width: 100}}>{customerType ? customerType.title : this.emptyText}</this.Tag>;
+        }
       },
       {
         title: <this.Translate id="text_credit" />,
@@ -251,13 +279,6 @@ class Column extends List {
         sorter: true,
         align: "right",
         render: credit => credit ? this.formatCurrency(credit) : this.formatCurrency(0)
-      },
-      {
-        title: <this.Translate id="text_group" />,
-        dataIndex: "groupCustomer",
-        key: "groupCustomer",
-        sorter: true,
-        render: groupCustomer => groupCustomer ? <span className="text-capitalize">{groupCustomer.name}</span> : this.emptyText
       },
       this.columnStatus
     ];
