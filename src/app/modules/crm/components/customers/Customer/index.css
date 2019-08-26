@@ -26,3 +26,13 @@ tr.ant-table-expanded-row td {
 .standard-product-row .ant-table-row-expand-icon-cell .ant-table-row-expand-icon {
     display: none
 }
+
+.customerType .ant-radio-group {
+    display: flex;
+    margin-bottom: -23px;
+}
+
+
+.customerType .ant-radio-group > label.ant-radio-wrapper { 
+    width: 150px;
+}

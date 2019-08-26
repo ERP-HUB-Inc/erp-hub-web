@@ -1,5 +1,6 @@
 import React from "react";
 import FormContact from "./FormContact";
+import Enum from "../../../enum"
 import GroupCustomerAction from "../../../actions/customers/group";
 import Modal from "../../../../common/components/shares/Modal";
 import "./index.css";
@@ -11,6 +12,20 @@ export default class FormItem extends Modal {
       removeContactKeys: [],
       contactList: []
     };
+    this.customerTypes = [
+      {
+        title: <this.Translate id="text_retail_sale" />,
+        value: Enum.CUSTOMER_TYPE.RETAIL_SALE
+      },
+      {
+        title: <this.Translate id="text_whole_sale" />,
+        value: Enum.CUSTOMER_TYPE.WHOLE_SALE
+      },
+      {
+        title: <this.Translate id="text_distributor" />,
+        value: Enum.CUSTOMER_TYPE.DISTRIBUTOR
+      }
+    ];
     this.contactIndex = 0;
     this.add = this.add.bind(this);
     this.remove = this.remove.bind(this);
@@ -139,6 +154,18 @@ export default class FormItem extends Modal {
                 max={100}
                 form={this.props.form} />
             </this.Col> 
+
+            <this.Col md="12">
+              <div className="customerType">
+                <this.RadioButton 
+                    name="type"
+                    label={<this.Translate id="text_type" />}
+                    defaultValue={0}
+                    dataSource={this.customerTypes}
+                    form={this.props.form}
+                    required/>
+              </div>
+            </this.Col>
 
             <this.Col md="12">
               <this.SelectSearch
