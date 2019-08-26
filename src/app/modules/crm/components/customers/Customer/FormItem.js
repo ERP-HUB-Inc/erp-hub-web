@@ -127,7 +127,7 @@ export default class FormItem extends Modal {
               <this.RadioButton
                 name="type"
                 label={<this.Translate id="text_type" />}
-                defaultValue={0}
+                defaultValue={formData.type}
                 dataSource={this.customerTypes}
                 form={this.props.form} />
             </this.Col>
@@ -240,6 +240,7 @@ export default class FormItem extends Modal {
 FormItem.defaultProps = {
   formData: {
     id: "",
+    type: 0,
     firstName: "",
     lastName: "",
     phoneNumber: "",

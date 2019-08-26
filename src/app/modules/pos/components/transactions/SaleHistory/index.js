@@ -384,7 +384,7 @@ export default class SaleHistoryList extends List {
   
   renderButtonDelete(){
     return(
-      <this.Button type="info" loading={this.props.detail.fetching && this.state.isRequestReceivePayment} onClick={this.handleReceivePayment}>
+      <this.Button type="info" loading={this.props.detail.fetching && this.state.isRequestReprint} onClick={this.handleReceivePayment}>
         <span className="icon-payment-report icon-padding-right text-uppercase"></span><this.Translate id="text_receive_payment"/>
       </this.Button>
     );

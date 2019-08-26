@@ -234,6 +234,13 @@ class Column extends List {
         render: (text, row) => text + " " + row.lastName
       },
       {
+        title: <this.Translate id="text_company" />,
+        dataIndex: "company",
+        key: "company",
+        sorter: true,
+        render: company => company ? company : this.emptyText
+      },
+      {
         title: <this.Translate id="text_phone_number" />,
         dataIndex: "phoneNumber",
         key: "phoneNumber",
