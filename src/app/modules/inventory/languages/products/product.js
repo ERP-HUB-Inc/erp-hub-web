@@ -43,7 +43,7 @@ export default {
 
   "text_distribute_price": [
     "Distribute Price",
-    "តម្លៃដំណាងចែកចាយ",
+    "តម្លៃតំណាងចែកចាយ",
     "Distribute Price"
   ],
 
@@ -237,15 +237,15 @@ export default {
   ],
 
   "input_product_non_inventory": [
-    "None-Inventory",
-    "ទំនិញមិនកាត់ស្តុក",
-    "None-Inventory"
+    "Service",
+    "ទំនិញគ្មានស្តុក",
+    "Service"
   ],
 
   "input_product_standard": [
-    "Standard",
-    "ស្តង់ដា",
-    "Standard"
+    "Inventory",
+    "ទំនិញគិតស្តុក",
+    "Inventory"
   ],
 
   "input_product_license": [
