@@ -411,7 +411,7 @@ class ColumnExpand extends List {
       {
         dataIndex: "distributePrice",
         key: "distributePrice",
-        width: 170,
+        width: 180,
         align: "center",
         render: distributePrice => this.formatCurrency(distributePrice)
       },
