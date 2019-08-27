@@ -318,6 +318,7 @@ export default class Payment extends Modal {
                   currentUser={this.currentUser}
                   customerPaymentList={this.state.customerPaymentList}
                   productList={this.props.productOrderList}
+                  customerFieldPrice={this.props.customerFieldPrice}
                   productTaxList={this.props.productTaxList}
                   summaryTotal={summaryTotal}
                   summaryTax={this.props.summaryTax}
@@ -351,13 +352,13 @@ export default class Payment extends Modal {
                         {
                           productOrder.discount > 0 ?
                             <div className="after-discount-price">
-                              {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity,  productOrder.price, productOrder.discount))}
+                              {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity,  productOrder[this.props.customerFieldPrice], productOrder.discount))}
                             </div>
                             :
                             ""
                         }
                         <div className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`}>
-                          {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder.price))}
+                          {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder[this.props.customerFieldPrice]))}
                         </div>
                       </div>
                     </li>   
@@ -462,7 +463,7 @@ export default class Payment extends Modal {
                       isAutoSelect={true}
                       validateStatus={this.state.validateStatus}
                       errorMsg={this.state.errorMsg}
-                      data={grandTotal}
+                      // data={grandTotal}
                       form={this.props.form}
                       handleOnFocus={() => this.handleOnFocusInputAmount(true)} />
                   </div>
@@ -599,5 +600,6 @@ export default class Payment extends Modal {
 }
 
 Payment.defaultProps = {
-  productOrderList: []
+  productOrderList: [],
+  customerFieldPrice: "price"
 };

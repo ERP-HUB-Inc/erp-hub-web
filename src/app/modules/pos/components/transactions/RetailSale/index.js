@@ -6,7 +6,7 @@ import TaxSetting from "./TaxSetting";
 import Enum from "../../../enums";
 import InventoryEnum from "../../../../inventory/enums";
 import HREnum from "../../../../hr/enums";
-import CRMEnum from "../../../../crm/enum";
+import CRMUtil from "../../../../crm/util";
 import SettingEnum from "../../../../pos/enums";
 import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
@@ -308,23 +308,14 @@ export default class Retail extends Component {
 
   getSelectedCustomer = (selectedCustomer) => {
     this.setState({selectedCustomer});
-    let customerFieldPrice = "price";
-    if (selectedCustomer) {
-      if (selectedCustomer.type === CRMEnum.CUSTOMER_TYPE.RETAIL_SALE) {
-        customerFieldPrice = "price";
-      } else if (selectedCustomer.type === CRMEnum.CUSTOMER_TYPE.WHOLE_SALE) {
-        customerFieldPrice = "wholePrice";
-      } else if (selectedCustomer.type === CRMEnum.CUSTOMER_TYPE.DISTRIBUTOR) {
-        customerFieldPrice = "distributePrice";
-      }
 
+    if (selectedCustomer) {
       this.props.form.setFieldsValue({ searchRecord: `${selectedCustomer.firstName} ${selectedCustomer.lastName} ${selectedCustomer.phoneNumber ? " - " + selectedCustomer.phoneNumber : ""}` });
     } else {
-      customerFieldPrice = "price";
       this.props.form.setFieldsValue({ searchRecord: "" });
     }
     
-    this.setState({customerFieldPrice});
+    this.setState({customerFieldPrice: CRMUtil.getCustomerPriceField(selectedCustomer)});
   }
 
   saveReceipt(key) {
@@ -368,9 +359,14 @@ export default class Retail extends Component {
       productTaxList: [],
       discountValue: {type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: 0},
       isDiscountHasAdded: false,
+      selectedCustomer: null,
+      customerFieldPrice: "price"
     });
 
     localStorage.removeItem(Enum.CURRENT_RECEIPT);
+
+    this.props.dispatch(CustomerAction.reset(CustomerConstant.REQUEST_CUSTOMERS_RESET));
+    this.props.form.setFieldsValue({searchRecord: ""}); //searchRecord: customer search field
   }
 
   handleOnResizeScreen() {
@@ -669,6 +665,7 @@ export default class Retail extends Component {
         subCurrency={this.state.subCurrency}
         handleCancel={this.handleCancelMakePayment}
         customer={this.state.selectedCustomer}
+        customerFieldPrice={this.state.customerFieldPrice}
         productOrderList={this.state.productOrderList}
         paymentMethodList={this.props.paymentMethod}
         productTaxList={this.state.productTaxList}
@@ -676,10 +673,6 @@ export default class Retail extends Component {
         summaryTotal={this.getSummaryTotal()}
         summaryTax={POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale))}/>
       });
-
-      this.props.dispatch(CustomerAction.reset(CustomerConstant.REQUEST_CUSTOMERS_RESET));
-      this.props.form.setFieldsValue({ searchRecord: "" }); //searchRecord: customer search field
-      this.setState({selectedCustomer: null});
     } else {
       // TO DO: alert message can make payment with empty list
     }

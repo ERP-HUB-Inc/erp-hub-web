@@ -606,6 +606,5 @@ export class Util {
     });
 
     return newDataValue;
-  }
-  
+  }  
 }

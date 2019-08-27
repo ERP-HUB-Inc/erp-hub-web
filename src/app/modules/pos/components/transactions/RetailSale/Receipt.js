@@ -176,8 +176,8 @@ export default class Receipt extends Component {
                                   ""
                               }
                             </td>
-                            <td style={{textAlign: "right", backgroundColor: "white"}}>{this.formatCurrency(product.price)}</td>
-                            <td style={{textAlign: "right", backgroundColor: "white"}}>{this.formatCurrency(product.price * product.quantity)}</td>
+                            <td style={{ textAlign: "right", backgroundColor: "white" }}>{this.formatCurrency(product[this.props.customerFieldPrice])}</td>
+                            <td style={{ textAlign: "right", backgroundColor: "white" }}>{this.formatCurrency(product[this.props.customerFieldPrice] * product.quantity)}</td>
                           </tr> 
                         )
                       }
@@ -296,6 +296,7 @@ Receipt.defaultProps = {
   receiptTemplate: {
     logo: ""
   },
+  customerFieldPrice: "price",
   isRequestClearMarginLeft: false
   //We use it to help when to want clear marginLeft (-30px) in case mini printer 58mm. The problem is because of margin
 };

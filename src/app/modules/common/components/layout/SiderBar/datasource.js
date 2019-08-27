@@ -307,13 +307,13 @@ const dataSource = {
         component: ProductUnit,
         isFashNav: true
       },
-      {
-        title: "Import Product",
-        icon: "icon-price-book",
-        route: "/products/import",
-        component: importProduct,
-        isFashNav: false
-      }
+      // {
+      //   title: "Import Product",
+      //   icon: "icon-price-book",
+      //   route: "/products/import",
+      //   component: importProduct,
+      //   isFashNav: false
+      // }
       // {
       //   title: "Price Books",
       //   icon: "icon-price-book",
