@@ -6,6 +6,7 @@ import TaxSetting from "./TaxSetting";
 import Enum from "../../../enums";
 import InventoryEnum from "../../../../inventory/enums";
 import HREnum from "../../../../hr/enums";
+import CRMEnum from "../../../../crm/enum";
 import SettingEnum from "../../../../pos/enums";
 import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
@@ -46,6 +47,7 @@ export default class Retail extends Component {
       categoryList: [
         {id: 0, name: <this.Translate id="text_all_category"/>},
       ],
+      customerFieldPrice: "price",
       textFullScreen: <this.Translate id="text_full_screen" />,
       iconFullScreen: "icon-full-screen",
       productList: [],
@@ -257,6 +259,9 @@ export default class Retail extends Component {
 
     const tax = POSUtil.getTaxFromProduct(product);
     const price = isNaN(parseFloat(productVariant.price)) ? 0 : productVariant.price;
+    const wholePrice = isNaN(parseFloat(productVariant.wholePrice)) ? 0 : productVariant.wholePrice;
+    const distributePrice = isNaN(parseFloat(productVariant.distributePrice)) ? 0 : productVariant.distributePrice;
+
     targetList.push({
       productVariantId: productVariant.id,
       name: Util.getProductName(product),
@@ -264,6 +269,8 @@ export default class Retail extends Component {
       barcode: productVariant.barcode,
       price,
       newPrice: price,
+      wholePrice,
+      distributePrice,
       quantity: this.state.initialOrderQuantity,
       discount: this.state.initialOrderDiscount,
       discountType: this.state.initialOrderDiscountType,
@@ -275,7 +282,7 @@ export default class Retail extends Component {
   }
 
   getSummaryTotal() {
-    const summaryTotal = POSUtil.getSummaryTotalInOrder(this.state.productOrderList);
+    const summaryTotal = POSUtil.getSummaryTotalInOrder(this.state.productOrderList, this.state.customerFieldPrice);
     let discountAmount = 0;
     let discountTypeStr = "";
 
@@ -301,11 +308,23 @@ export default class Retail extends Component {
 
   getSelectedCustomer = (selectedCustomer) => {
     this.setState({selectedCustomer});
+    let customerFieldPrice = "price";
     if (selectedCustomer) {
+      if (selectedCustomer.type === CRMEnum.CUSTOMER_TYPE.RETAIL_SALE) {
+        customerFieldPrice = "price";
+      } else if (selectedCustomer.type === CRMEnum.CUSTOMER_TYPE.WHOLE_SALE) {
+        customerFieldPrice = "wholePrice";
+      } else if (selectedCustomer.type === CRMEnum.CUSTOMER_TYPE.DISTRIBUTOR) {
+        customerFieldPrice = "distributePrice";
+      }
+
       this.props.form.setFieldsValue({ searchRecord: `${selectedCustomer.firstName} ${selectedCustomer.lastName} ${selectedCustomer.phoneNumber ? " - " + selectedCustomer.phoneNumber : ""}` });
     } else {
+      customerFieldPrice = "price";
       this.props.form.setFieldsValue({ searchRecord: "" });
     }
+    
+    this.setState({customerFieldPrice});
   }
 
   saveReceipt(key) {
@@ -1009,7 +1028,7 @@ export default class Retail extends Component {
                           ""
                       }
                       <div className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`}>
-                        {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder.price))}
+                        {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder[this.state.customerFieldPrice]))}
                       </div>
                     </div>
                   </div>
@@ -1033,7 +1052,7 @@ export default class Retail extends Component {
                     <this.InputNumber
                       name={`price[${productOrderIndex}]`}
                       label={<this.Translate id="text_price" />}
-                      data={POSUtil.getTotalAmountAfterDiscount(1, productOrder.price, productOrder.discount)}
+                      data={POSUtil.getTotalAmountAfterDiscount(1, productOrder[this.state.customerFieldPrice], productOrder.discount)}
                       handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "newPrice")}
                       handleOnBlur={this.handleOnChangOrderFieldBlur}
                       className="ca-input-v1"

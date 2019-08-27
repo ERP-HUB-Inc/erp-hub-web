@@ -128,6 +128,10 @@ export default class DropDownSearch extends Modal {
     this.props.form.setFieldsValue({searchRecord: ""});
     this.setState({isSetFocusSearchInput: true});
     this.props.dispatch(CustomerAction.reset(Constant.REQUEST_CUSTOMERS_RESET));
+
+    if (this.props.callBack) {
+      this.props.callBack(null);
+    }
   }
 
   renderSearchItem(record) {
