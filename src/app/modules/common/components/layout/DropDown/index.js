@@ -64,7 +64,9 @@ export default class MenuDropDown extends Component {
 
     return(
       <ul className="menu-right list-unstyled">
-        <li><this.Button onClick={this.handleOnHardReload} type="default" style={{backgroundColor: "#FFD627"}}><this.Translate id="text_update_now" /></this.Button></li>
+        <li>
+          <this.Button className="btn-update-now" type="default" style={{ backgroundColor: "#FFD627" }} onClick={this.handleOnHardReload}><this.Translate id="text_update_now" /></this.Button>
+        </li>
         {/* <li>
           <this.Link to="#" className="user-account">
             <this.Noteicon />
