@@ -771,7 +771,7 @@ export default class Retail extends Component {
   }
 
   handleOnRestoreReceipt(key) {
-    this.restore(key);
+    this.restoreReceipt(key);
     this.setState({selectedReceiptType: key});
   }
 

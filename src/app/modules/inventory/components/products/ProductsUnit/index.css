@@ -17,3 +17,33 @@
     padding-top: 10px;
     color: #666;
   }
+
+  .cans-layouts {
+    display: flex
+  }
+
+  .cans-layouts .cans-label-fix-values {
+    position: absolute;
+    height: 32px;
+    top: 29px;
+    left: 12px;
+    width: 37px;
+    z-index: 1;
+    margin-left: 4px;
+    background-color: #d9d9d9;
+    padding: 5px;
+    text-align: center;
+  }
+
+  .cans-layouts .cans-input input {
+    text-align: right;
+  }   
+
+  .cans-layouts .cans-input input {
+    padding-left: 24px;
+  }
+
+  .cans-label input {
+    text-align: center;
+  }
+   

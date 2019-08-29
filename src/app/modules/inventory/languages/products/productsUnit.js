@@ -23,4 +23,28 @@ export default {
     "Please input your number in a unit"
   ], 
 
+  "text_number_one": [
+    "1",
+    "១",
+    "1"
+  ],
+
+  "text_cans": [
+    "Cans",
+    "កំប៉ុង",
+    "Cans"
+  ],
+
+  "text_case": [
+    "Carton",
+    "កេស",
+    "Carton"
+  ],
+
+  "text_have": [
+    "have",
+    "មាន",
+    "have"
+  ]
+
 };
