@@ -49,10 +49,10 @@ const ProductUnit = Loadable({
   loading: () => <StartUp />,
 });
 
-const importProduct = Loadable({
-  loader: () => import("../../../../inventory/containers/products/ProductsUnit/importProduct"),
-  loading: () => <StartUp />,
-});
+// const importProduct = Loadable({
+//   loader: () => import("../../../../inventory/containers/products/ProductsUnit/importProduct"),
+//   loading: () => <StartUp />,
+// });
 
 // STOCK CONTROL
 // const Stock = Loadable({
