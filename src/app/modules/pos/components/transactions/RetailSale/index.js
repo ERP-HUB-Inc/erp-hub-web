@@ -886,11 +886,10 @@ export default class Retail extends Component {
       leftSideElementWidth = leftSideElement.offsetWidth;
     }
 
-    // let categoryList = this.props.productsType.list;
-    // if (categoryList.length > 4) {
-    //   categoryList = this.state.categoryList.concat(categoryList);
-    // }
-    let categoryList = [];
+    let categoryList = this.props.productsType.list;
+    if (categoryList.length > 4) {
+      categoryList = this.state.categoryList.concat(categoryList);
+    }
 
     return <this.Row className="main-layout main-store-account" id="retail-sale">
       <div id="receiptLogoPreLoading" style={{display: "none"}}>
