@@ -44,6 +44,7 @@ import inventoryReport from "../../pos/languages/report/inventory";
 import profitAndLostReport from "../../pos/languages/report/profitAndLost";
 //transaction
 import saleHistory from "../../pos/languages/transactions/saleHistory";
+import quotation from "../../pos/languages/transactions/quotation";
 // home page
 import homePage from "../../common/languages/home";
 
@@ -96,6 +97,7 @@ export function setTranslation() {
     ...inventoryReport,
     ...profitAndLostReport,
     ...saleHistory,
-    ...homePage
+    ...homePage,
+    ...quotation
   });
 }

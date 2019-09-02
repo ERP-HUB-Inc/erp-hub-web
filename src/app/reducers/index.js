@@ -33,6 +33,7 @@ import productsTag from "../modules/inventory/reducers/products/productsTag";
 import variantAttribute from "../modules/inventory/reducers/products/variantAttribute";
 // import supplier from "../modules/stock/reducers/supplier";
 // transaction
+import quotation from "../modules/pos/reducers/transactions/quotation";
 import transaction from "../modules/pos/reducers/transactions/transaction";
 import openSaleRegistration from "../modules/pos/reducers/transactions/openSaleRegistration";
 import supplier from "../modules/inventory/reducers/stock/supplier";
@@ -107,6 +108,7 @@ const reducer = combineReducers({
   productReport,
   profitAndLostReport,
   transaction,
+  quotation,
   openSaleRegistration,
 
   homePage

@@ -838,6 +838,19 @@ export default class Retail extends Component {
     );
   }
 
+  renderSaveAndPayButton(){
+    return(
+      <this.Row className="payment-action">
+        <this.Button type="info" className="mg-right" onClick={this.handleOnSaveParkReceipt}>
+          <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
+        </this.Button>
+        <this.Button type="info" onClick={this.handleOnMakePayment}>
+          <span className="icon-checked icon-padding-right"></span><this.Translate id="text_pay" />
+        </this.Button>
+      </this.Row>
+    );
+  }
+
   render() {
 
     if (isMobile) {
@@ -873,10 +886,11 @@ export default class Retail extends Component {
       leftSideElementWidth = leftSideElement.offsetWidth;
     }
 
-    let categoryList = this.props.productsType.list;
-    if (categoryList.length > 4) {
-      categoryList = this.state.categoryList.concat(categoryList);
-    }
+    // let categoryList = this.props.productsType.list;
+    // if (categoryList.length > 4) {
+    //   categoryList = this.state.categoryList.concat(categoryList);
+    // }
+    let categoryList = [];
 
     return <this.Row className="main-layout main-store-account" id="retail-sale">
       <div id="receiptLogoPreLoading" style={{display: "none"}}>
@@ -1174,14 +1188,7 @@ export default class Retail extends Component {
               </this.Col>
 
             </this.Row>
-            <this.Row className="payment-action">
-              <this.Button type="info" className="mg-right" onClick={this.handleOnSaveParkReceipt}>
-                <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
-              </this.Button>
-              <this.Button type="info" onClick={this.handleOnMakePayment}>
-                <span className="icon-checked icon-padding-right"></span><this.Translate id="text_pay" />
-              </this.Button>
-            </this.Row>
+            { this.renderSaveAndPayButton() }
           </this.Col>
         </div>
       </this.Col>
