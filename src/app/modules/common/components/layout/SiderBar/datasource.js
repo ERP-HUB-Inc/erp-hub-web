@@ -10,10 +10,10 @@ const SaleHistory = Loadable({
   loading: () => <StartUp />,
 });
 
-const Quotation = Loadable({
-  loader: () => import("../../../../pos/containers/transactions/Quotation"),
-  loading: () => <StartUp />,
-});
+// const Quotation = Loadable({
+//   loader: () => import("../../../../pos/containers/transactions/Quotation"),
+//   loading: () => <StartUp />,
+// });
 
 const QuotationCreate = Loadable({
   loader: () => import("../../../../pos/containers/transactions/Quotation/FormCreate"),
@@ -241,13 +241,13 @@ const dataSource = {
     route: "transactions",
     title: <Translate id="text_transaction" />,
     subItems: [
-      {
-        title: <Translate id="text_quotation" />,
-        icon: "icon-time",
-        route: "/transactions/quotation", 
-        component: Quotation,
-        isFashNav: true
-      },
+      // {
+      //   title: <Translate id="text_quotation" />,
+      //   icon: "icon-time",
+      //   route: "/transactions/quotation", 
+      //   component: Quotation,
+      //   isFashNav: true
+      // },
       {
         route: "/transactions/quotation-create", 
         component: QuotationCreate,

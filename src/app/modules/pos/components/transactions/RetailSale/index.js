@@ -320,6 +320,7 @@ export default class Retail extends Component {
 
   saveReceipt(key) {
     localStorage.setItem(key, JSON.stringify({
+      isParkReceipt: true,
       productOrderList: this.state.productOrderList,
       productTaxList: this.state.productTaxList,
       discountValue: this.state.discountValue,
@@ -357,14 +358,16 @@ export default class Retail extends Component {
       expandOrderItemRow: [],
       productOrderList: [],
       productTaxList: [],
-      discountValue: {type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: 0},
+      discountValue: {
+        type: Enum.DISCOUNT_TYPE.PERCENTAGE,
+        value: 0
+      },
       isDiscountHasAdded: false,
       selectedCustomer: null,
       customerFieldPrice: "price"
     });
 
     localStorage.removeItem(Enum.CURRENT_RECEIPT);
-
     this.props.dispatch(CustomerAction.reset(CustomerConstant.REQUEST_CUSTOMERS_RESET));
     this.props.form.setFieldsValue({searchRecord: ""}); //searchRecord: customer search field
   }
@@ -673,6 +676,16 @@ export default class Retail extends Component {
         summaryTotal={this.getSummaryTotal()}
         summaryTax={POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale))}/>
       });
+
+      // CLEAR PARK RECEIPT IN CASE USER HAS RESTORE IT AND MAKE PAYMENT
+      let parkReceipt = localStorage.getItem(Enum.PARK_RECEIPT);
+      if (parkReceipt) {
+        parkReceipt = JSON.parse(parkReceipt);
+        if (parkReceipt.isParkReceipt) {
+          localStorage.removeItem(Enum.PARK_RECEIPT);
+        }
+      }
+      
     } else {
       // TO DO: alert message can make payment with empty list
     }
