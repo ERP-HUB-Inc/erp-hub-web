@@ -81,7 +81,8 @@ import {
   Spin,
   Tag,
   List,
-  Breadcrumb 
+  Breadcrumb,
+  Input
 } from "antd";
 
 const Panel = Collapse.Panel;
@@ -90,6 +91,8 @@ const { Option } = Select;
 const TabPane = Tabs.TabPane;
 
 const CheckboxGroup = Checkbox.Group;
+
+const InputGroup = Input.Group;
 
 export default class Component extends React.Component {
   constructor(props) {
@@ -180,6 +183,7 @@ export default class Component extends React.Component {
     this.Breadcrumb  = Breadcrumb;
     this.MonthPicker = MonthsPicker;
     this.WeekPickers = WeekPickers;
+    this.InputGroup = InputGroup;
 
     this.CSVLink = CSVLink;
     this.CSVDownload = CSVDownload;

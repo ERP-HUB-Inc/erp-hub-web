@@ -21,7 +21,12 @@ export default class CustomerList extends List {
     this.service = CustomerService;
     this.action = CustomerAction;
     this.groupCustomerList = [{name: <this.Translate id="text_all_group" />, id: 0}];
-  
+    this.customerTypes = [
+      {name: <this.Translate id="text_all_group"/>, value: 4},
+      {name: <this.Translate id="text_retail_sale"/>, value: Enum.CUSTOMER_TYPE.RETAIL_SALE},
+      {name: <this.Translate id="text_whole_sale"/>, value: Enum.CUSTOMER_TYPE.WHOLE_SALE},
+      {name: <this.Translate id="text_distributor"/>, value: Enum.CUSTOMER_TYPE.DISTRIBUTOR}
+    ];
     this.columnFilterWithKey = [
       "firstName",
       "lastName",
@@ -99,8 +104,15 @@ export default class CustomerList extends List {
           const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
           let filter = {status};
 
-          if ((values.groupCustomerId - this.groupCustomerList.value) !== 0) {
+          if ((values.groupCustomerId - this.groupCustomerList[0].id) !== 0) {
             filter["groupCustomerId"] = [values.groupCustomerId];
+          }
+  
+
+          if(values.type === 4){
+            filter["type"] = [Enum.CUSTOMER_TYPE.RETAIL_SALE,Enum.CUSTOMER_TYPE.WHOLE_SALE,Enum.CUSTOMER_TYPE.DISTRIBUTOR];
+          }else{
+            filter["type"] = [values.type];
           }
 
           filter = JSON.stringify(filter);
@@ -138,6 +150,15 @@ export default class CustomerList extends List {
                   dataSource={this.groupCustomerList.concat(customerGroup.list)}
                   defaultValue={this.groupCustomerList[0].id}
                   valueKey="id"
+                  form={form}
+                />
+              </this.Col>
+              <this.Col md="2">
+                <this.Select
+                  name="type"
+                  label={<this.Translate id="text_type" />}
+                  dataSource={this.customerTypes}
+                  defaultValue={4}
                   form={form}
                 />
               </this.Col>

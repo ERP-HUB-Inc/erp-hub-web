@@ -9,7 +9,7 @@ class RetailSaleForm extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
   return {
     customers: state.reducer.customer.request,
     products: state.reducer.product.request,
