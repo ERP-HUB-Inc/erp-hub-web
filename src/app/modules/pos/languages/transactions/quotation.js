@@ -18,5 +18,21 @@ export default {
     "Create Quotation",
     "បង្កើតសម្រង់តំលៃ",
     "Create Quotation"
-  ]
+  ],
+  
+  "text_error_not_create_quotation": [
+    "Can't crete quotation because don't have product!",
+    "មិនអាចបង្កើតសម្រង់តំលៃបានទេពីព្រោះផលិតផលគ្មានផលិតផល!",
+    "Can't crete quotation because don't have product!"
+  ],
+  "text_error_create_quotation": [
+    "please search customer before create quotation !",
+    "សូមស្វែងរកអតិថិជនមុនពេលបង្កើតសម្រង់តំលៃ !",
+    "please search customer before create quotation !"
+  ],
+  "text_error_allow_update_only_draft_step": [
+    "We allow update only step draft!",
+    "អនុញ្ញាតឱ្យអាចធ្វើការកែតំរូវត្រឹមតែជំហានសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",
+    "We allow update only step draft!"
+  ],
 };

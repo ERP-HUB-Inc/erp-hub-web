@@ -42,5 +42,11 @@ export default {
   CUSTOMER_CREDIT_STATUS: {
     DISABLE: 1,
     ENABLE: 2
-  }
+  },
+  QUOTATION_STEP: {
+    DRAFT : 0,
+    PROCESS : 1,
+    CANCEL : 2,
+    COMPLETED : 4
+  },
 };
