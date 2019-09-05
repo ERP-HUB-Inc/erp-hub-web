@@ -149,15 +149,15 @@ export default class QuotationList extends List {
     );
   }
 
-  handleShowFormAdd() {
-    history.push("/transactions/quotation-create");
+  componentDidUpdate(){
+    if(this.state.isNotYetLoadComponentDidUpdated && this.props.quotationDetail.fetching){
+      history.push("/transactions/quotation-update");
+      this.setState({isNotYetLoadComponentDidUpdated: false});
+    }
   }
 
-  componentDidUpdate(){
-      if(this.state.isNotYetLoadComponentDidUpdated && this.props.quotationDetail.fetching){
-        history.push("/transactions/quotation-update");
-        this.setState({isNotYetLoadComponentDidUpdated: false});
-      }
+  handleShowFormAdd() {
+    history.push("/transactions/quotation-create");
   }
 
   handleShowFormEdit(rowData){
@@ -165,6 +165,26 @@ export default class QuotationList extends List {
       this.props.dispatch(QuotationAction.detail(rowData.id));
     }else{
       this.Message.warning(this.CATranslate("text_error_allow_update_only_draft_step", this.props.locale));
+    }
+  }
+
+  handleDelete(){
+    if(this.state.selectedRows[0].status !== Enum.QUOTATION_STEP.DRAFT){
+      this.Message.warning(this.CATranslate("text_error_allow_only_delete_draft_step", this.props.locale));
+    }else{
+      this.setState({deleting: true});
+      this.service.archive(this.state.selectedListIds)
+        .then(response => {
+          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
+          this.setState({
+            selectedRowKeys: [],
+            modalVisible: false,
+            deleting: false
+          });
+        })
+        .catch(err => {
+          this.setState({deleting: false});
+        });
     }
   }
 

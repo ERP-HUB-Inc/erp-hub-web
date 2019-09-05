@@ -490,7 +490,7 @@ export default class Retail extends Component {
     document.getElementById("searchProduct").focus();
   }
 
-  handleOnRemoveProductFromOrderList(productVariant) {
+  handleOnRemoveProductFromOrderList(productVariant,index) {
     const productOrderList = this.state.productOrderList.filter(productOrder => productOrder.productVariantId !== productVariant.productVariantId);
     this.setState({
       productOrderList,
@@ -1016,6 +1016,7 @@ export default class Retail extends Component {
         <div className="product-order-list">
           {
             this.state.productOrderList.map((productOrder, productOrderIndex) => 
+            productOrder.quotationStatus === this.Enum.ARCHIVE ? " " :
               <div className={`product-order-item ${this.state.expandOrderItemRow.includes(productOrder.productVariantId) ? "expanded" : ""}`} key={productOrderIndex}>
                 <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                   <div className="item" onClick={() => this.handleExpandOrderItem(productOrder.productVariantId, productOrderIndex)}>
@@ -1051,7 +1052,7 @@ export default class Retail extends Component {
                       </div>
                     </div>
                   </div>
-                  <div className="delete" onClick={() => this.handleOnRemoveProductFromOrderList(productOrder)}><span className="icon-delete"></span></div>
+                  <div className="delete" onClick={() => this.handleOnRemoveProductFromOrderList(productOrder,productOrderIndex)}><span className="icon-delete"></span></div>
                 </div>
                 <div className="product-order-item-detail">
                   <div className="detail-row-1">

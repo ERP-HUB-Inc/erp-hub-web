@@ -19,7 +19,11 @@ export default {
     "បង្កើតសម្រង់តំលៃ",
     "Create Quotation"
   ],
-  
+  "text_edit_quotation": [
+    "Edit Quotation",
+    "កែប្រៃសម្រង់តំលៃ",
+    "Edit Quotation"
+  ],
   "text_error_not_create_quotation": [
     "Can't crete quotation because don't have product!",
     "មិនអាចបង្កើតសម្រង់តំលៃបានទេពីព្រោះផលិតផលគ្មានផលិតផល!",
@@ -34,5 +38,10 @@ export default {
     "We allow update only step draft!",
     "អនុញ្ញាតឱ្យអាចធ្វើការកែតំរូវត្រឹមតែជំហានសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",
     "We allow update only step draft!"
+  ],
+  "text_error_allow_only_delete_draft_step": [
+    "We allow delete only step draft!",
+    "អនុញ្ញាតឱ្យអាចធ្វើការលុបតែជំហានសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",
+    "We allow delete only step draft!"
   ],
 };

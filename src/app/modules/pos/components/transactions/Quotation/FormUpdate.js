@@ -15,7 +15,9 @@ export default class Form extends Retail {
           ...this.state,
           quotationId: "",
           productStatus: 0,
-          isNotYetLoadComponentDidUpdated: true
+          handleRemove: false,
+          isNotYetLoadComponentDidUpdated: true,
+          listQuotationWhenRemove: []
         }
         this.handleCreateQuotation = this.handleCreateQuotation.bind(this);
         this.handleCancelQuotation = this.handleCancelQuotation.bind(this);
@@ -26,7 +28,7 @@ export default class Form extends Retail {
         super.componentDidUpdate();
         let quotaionValues = this.props.quotationDetail.data;
         let quotationColletion = [];
-        if(this.props.quotationDetail.data){
+        if(quotaionValues){
             if(this.state.isNotYetLoadComponentDidUpdated){
 
                 quotaionValues.quotationEntries.forEach((values, index) => {
@@ -43,7 +45,8 @@ export default class Form extends Retail {
                             id: 0,
                             taxRate: 0,
                             taxName: "No Tax"
-                        }
+                        },
+                        quotationStatus: ""
                     });
                 });
               
@@ -56,6 +59,7 @@ export default class Form extends Retail {
                 this.props.dispatch(QuotationAction.reset(Constant.RESET_DETAIL_QUOTATION));
             }
         }
+       
     }
 
     handleCancelQuotation(){
@@ -80,12 +84,22 @@ export default class Form extends Retail {
         if (productOrderList.length > 0) {
             this.props.form.validateFieldsAndScroll((err, values) => {
                 productOrderList.forEach((values, index) => {
-                    productList.push({
-                        id: values.id,
-                        productVariantId: values.productVariantId,
-                        quantity: values.quantity,
-                        price: values.price
-                    });
+                    if(values.quotationStatus === this.Enum.ARCHIVE){
+                        productList.push({
+                            id: values.id,
+                            productVariantId: values.productVariantId,
+                            quantity: values.quantity,
+                            price: values.price,
+                            status: values.quotationStatus
+                        });
+                    }else{
+                        productList.push({
+                            id: values.id,
+                            productVariantId: values.productVariantId,
+                            quantity: values.quantity,
+                            price: values.price
+                        });
+                    }
                 });
 
                 this.Util.clearObjProperty(values, [
@@ -101,17 +115,17 @@ export default class Form extends Retail {
                 values["total"] = summaryTotal.subTotal;
                 values["status"] = status;
                 values["name"] = "Create Quotation";
-                values["customerId"] = this.state.selectedCustomer.id;
                 values["Entries"] = productList;
 
-                if(this.state.selectedCustomer){
+                if(this.state.selectedCustomer && this.state.quotationId){
+                    values["customerId"] = this.state.selectedCustomer.id;
                     values["id"] = this.state.quotationId;
                     this.props.dispatch(QuotationAction.update(values,this.state.quotationId)); 
                     history.push("/transactions/quotation");
                 }else{
                     this.Message.warning(this.CATranslate("text_error_create_quotation", this.props.locale));
                 }
-                
+
             });
         }else{
             this.Message.warning(this.CATranslate("text_error_not_create_quotation", this.props.locale));
@@ -120,18 +134,28 @@ export default class Form extends Retail {
 
 
 
+    handleOnRemoveProductFromOrderList(values,index){
+        let productOrderList = this.state.productOrderList;
+        productOrderList[index]["quotationStatus"] = this.Enum.ARCHIVE;
+        this.setState({
+            productOrderList: productOrderList
+        });
+    }
+
     renderSaveAndPayButton(){
         return(
             <this.Row  className="create-quotation-action" >
                 <this.Button type="info" className="mg-right" onClick={this.handleCreateQuotation}>
-                    <span className="icon-add icon-padding-right"></span><this.Translate id="text_create_quotation" />
+                    <span className="icon-save icon-padding-right"></span><this.Translate id="text_edit_quotation" />
                 </this.Button>
-                <this.Button type="info" onClick={this.handleCancelQuotation}>
-                    <span className="icon-checked icon-padding-right"></span><this.Translate id="text_cancel" />
-                </this.Button>
-                <this.Button type="info" onClick={this.handleProcessQuotation}>
-                    <span className="icon-checked icon-padding-right"></span><this.Translate id="text_process" />
-                </this.Button>
+                <div className="action_create_quotation">
+                    <this.Button type="danger" onClick={this.handleCancelQuotation} style={{ marginRight: "10px" }}>
+                        <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel" />
+                    </this.Button>
+                    <this.Button type="info" onClick={this.handleProcessQuotation}>
+                        <span className="icon-checked icon-padding-right"></span><this.Translate id="text_process" />
+                    </this.Button>
+                </div>
           </this.Row>
         );
     }
