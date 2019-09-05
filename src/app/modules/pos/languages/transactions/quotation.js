@@ -34,14 +34,24 @@ export default {
     "សូមស្វែងរកអតិថិជនមុនពេលបង្កើតសម្រង់តំលៃ !",
     "please search customer before create quotation !"
   ],
-  "text_error_allow_update_only_draft_step": [
-    "We allow update only step draft!",
-    "អនុញ្ញាតឱ្យអាចធ្វើការកែតំរូវត្រឹមតែជំហានសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",
-    "We allow update only step draft!"
+  "text_error_allow_process_only_draft_step": [
+    "We allow process only step draft!",
+    "អនុញ្ញាតឱ្យអាចធ្វើការដំណើរការត្រឹមតែជំហានសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",
+    "We allow process only step draft!"
+  ],
+  "text_error_allow_delete_only_draft_step": [
+    "We allow delete only step draft!",
+    "អនុញ្ញាតឱ្យអាចធ្វើការលុបត្រឹមតែជំហានសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",
+    "We allow delete only step draft!"
   ],
   "text_error_allow_only_delete_draft_step": [
     "We allow delete only step draft!",
     "អនុញ្ញាតឱ្យអាចធ្វើការលុបតែជំហានសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",
     "We allow delete only step draft!"
   ],
+  "text_error_allow_update_only_draft_step": [
+    "We allow edit only step draft!",
+    "អនុញ្ញាតឱ្យអាចធ្វើការកែតំរូវតែជំហានសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",
+    "We allow edit only step draft!"
+  ]
 };

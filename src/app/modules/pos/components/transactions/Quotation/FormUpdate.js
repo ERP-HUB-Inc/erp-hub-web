@@ -20,17 +20,17 @@ export default class Form extends Retail {
           listQuotationWhenRemove: []
         }
         this.handleCreateQuotation = this.handleCreateQuotation.bind(this);
-        this.handleCancelQuotation = this.handleCancelQuotation.bind(this);
-        this.handleProcessQuotation = this.handleProcessQuotation.bind(this);
     }
 
     componentDidUpdate(){
         super.componentDidUpdate();
         let quotaionValues = this.props.quotationDetail.data;
         let quotationColletion = [];
-        if(quotaionValues){
-            if(this.state.isNotYetLoadComponentDidUpdated){
 
+        if(this.state.isNotYetLoadComponentDidUpdated){
+
+            if(quotaionValues){
+            
                 quotaionValues.quotationEntries.forEach((values, index) => {
                     quotationColletion.push({
                         id: values.id,
@@ -49,8 +49,9 @@ export default class Form extends Retail {
                         quotationStatus: ""
                     });
                 });
-              
-                this.getSelectedCustomer(quotaionValues.customer);
+            
+                this.props.form.setFieldsValue({ searchRecord: `${quotaionValues.customer.firstName} ${quotaionValues.customer.lastName}` });
+
                 this.setState({
                     productOrderList: quotationColletion,
                     isNotYetLoadComponentDidUpdated: false,
@@ -59,17 +60,7 @@ export default class Form extends Retail {
                 this.props.dispatch(QuotationAction.reset(Constant.RESET_DETAIL_QUOTATION));
             }
         }
-       
     }
-
-    handleCancelQuotation(){
-        this.saveQuotation(Enum.QUOTATION_STEP.CANCEL);
-    }
-
-    handleProcessQuotation(){
-        this.saveQuotation(Enum.QUOTATION_STEP.PROCESS);
-    }
-
     
     handleCreateQuotation(){
         this.saveQuotation(Enum.QUOTATION_STEP.DRAFT);
@@ -144,19 +135,11 @@ export default class Form extends Retail {
 
     renderSaveAndPayButton(){
         return(
-            <this.Row  className="create-quotation-action" >
-                <this.Button type="info" className="mg-right" onClick={this.handleCreateQuotation}>
-                    <span className="icon-save icon-padding-right"></span><this.Translate id="text_edit_quotation" />
+            <this.Row className="create-quotation-action" onClick={this.handleCreateQuotation}>
+                <this.Button type="info" className="mg-right">
+                    <span className="icon-add icon-padding-right"></span><this.Translate id="text_create_quotation" />
                 </this.Button>
-                <div className="action_create_quotation">
-                    <this.Button type="danger" onClick={this.handleCancelQuotation} style={{ marginRight: "10px" }}>
-                        <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel" />
-                    </this.Button>
-                    <this.Button type="info" onClick={this.handleProcessQuotation}>
-                        <span className="icon-checked icon-padding-right"></span><this.Translate id="text_process" />
-                    </this.Button>
-                </div>
-          </this.Row>
+            </this.Row>
         );
     }
 }

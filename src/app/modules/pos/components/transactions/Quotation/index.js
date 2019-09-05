@@ -8,12 +8,14 @@ import Constant from "../../../constants/transactions/quotation";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import QuotationAction from "../../../action/transaction/quotation";
 import QuotationService from "../../../services/transactions/QuotationService";
+import "./index.css";
 
 export default class QuotationList extends List {
   constructor(props) {
     super(props);
     this.state = {
-      isNotYetLoadComponentDidUpdated: true
+      isNotYetLoadComponentDidUpdated: true,
+      ...this.state
     }
     this.QUOTATION_STEP_STR = {
       [Enum.QUOTATION_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color: this.Enum.PO_STEP_COLOR.DRAFT},
@@ -34,18 +36,6 @@ export default class QuotationList extends List {
         render: (customer) => customer ? customer.firstName + " " + customer.lastName : this.emptyText
       },
       {
-        title: <this.Translate id="text_terms" />,
-        dataIndex: "term",
-        sorter: true,
-        render: (term) => term ? term : this.emptyText
-      },
-      {
-        title: <this.Translate id="text_deposit" />,
-        dataIndex: "deposit",
-        sorter: true,
-        render: (deposit) => deposit ? deposit : this.emptyText
-      },
-      {
         title: <this.Translate id="text_total" />,
         dataIndex: "total",
         sorter: true,
@@ -57,7 +47,30 @@ export default class QuotationList extends List {
         key: "status",
         sorter: true,
         width: 100,
-        render: status => status in this.QUOTATION_STEP_STR ? <this.Tag color={this.QUOTATION_STEP_STR[status].color} className="text-uppercase text-center po-step-tag">{this.QUOTATION_STEP_STR[status].name}</this.Tag> : ""
+        render: status => status in this.QUOTATION_STEP_STR ? <this.Tag style={{ width: "100%" }} color={this.QUOTATION_STEP_STR[status].color} className="text-uppercase text-center po-step-tag">{this.QUOTATION_STEP_STR[status].name}</this.Tag> : ""
+      },
+      {
+        title: <this.Translate id="text_action" />,
+        dataIndex: "id",
+        key: "action",
+        align: "center",
+        width: 100,
+        render: (text, record) => {
+          return <div style={{ flexDirection: "row", display: "flex", width: "100%" }} className="action_create_quotation"> 
+          <this.Button className="mg-right text-uppercase cancel_step"
+              onClick={() => this.handleCancelQuotation(record,this.state.selectedRows)}><span className="icon-cancel icon-padding-right"></span>
+            <this.Translate id="text_cancel"/>
+          </this.Button>  
+          <this.Button 
+            className="mg-right text-uppercase process_step"
+             onClick={() => this.handleProcessQuotation(record)}
+            >
+            <span className="icon-operation icon-padding-right"></span>
+            <this.Translate id="text_process"/>
+          </this.Button>
+          
+          </div>;
+        }
       }
     ];
     this.formCreate = <FormCreate/>;
@@ -68,6 +81,8 @@ export default class QuotationList extends List {
     this.service = QuotationService;
     this.action = QuotationAction;
     this.RESET_CONSTANT = Constant.RESET_QUOTATION;
+    this.handleCancelQuotation = this.handleCancelQuotation.bind(this);
+    this.handleProcessQuotation = this.handleProcessQuotation.bind(this);
   }
 
   componentDidMount(){
@@ -81,18 +96,40 @@ export default class QuotationList extends List {
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           let filter = {};
-         
+          let searchKey = "";
+
           if (values.step !== -1) {
             filter["status"] = [values.step];
           }
           filter = JSON.stringify(filter);
-          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
+
+          if(values.key){
+            searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
+          }
           this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, ""));
           this.setState({isClickFilter: true});
         }
       
       }); 
     } 
+  }
+
+  handleCancelQuotation(record){
+    if(record.status === Enum.QUOTATION_STEP.DRAFT){
+      let status = { "status": Enum.QUOTATION_STEP.CANCEL,"id": record.id }
+      this.props.dispatch(QuotationAction.update(status)); 
+    }else{
+      this.Message.warning(this.CATranslate("text_error_allow_process_only_draft_step", this.props.locale));
+    }
+  }
+
+  handleProcessQuotation(record){
+    if(record.status === Enum.QUOTATION_STEP.DRAFT){
+      let status = { "status": Enum.QUOTATION_STEP.PROCESS,"id": record.id }
+      this.props.dispatch(QuotationAction.update(status)); 
+    }else{
+      this.Message.warning(this.CATranslate("text_error_allow_process_only_draft_step", this.props.locale));
+    }
   }
 
   renderFilterRecord() {
@@ -178,7 +215,6 @@ export default class QuotationList extends List {
           this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
           this.setState({
             selectedRowKeys: [],
-            modalVisible: false,
             deleting: false
           });
         })

@@ -39,6 +39,7 @@ export default class Form extends Retail {
                 values["total"] = summaryTotal.subTotal;
                 values["name"] = "Create Quotation";
                 values["Entries"] = productList;
+            
                 if(this.state.selectedCustomer){
                     values["customerId"] = this.state.selectedCustomer.id;
                     this.props.dispatch(QuotationAction.add(values)); 
@@ -46,7 +47,7 @@ export default class Form extends Retail {
                 }else{
                     this.Message.warning(this.CATranslate("text_error_create_quotation", this.props.locale));
                 }
-                
+
             });
         }else{
             this.Message.warning(this.CATranslate("text_error_not_create_quotation", this.props.locale));

@@ -15,3 +15,13 @@
     display: flex;
     width: 100%;
 }
+
+.action_create_quotation button.process_step {
+    background-color: rgb(45, 183, 245) !important;
+    color: white;
+}
+
+.action_create_quotation button.cancel_step {
+    background-color: #108ee9 !important;
+    color: white;
+}
