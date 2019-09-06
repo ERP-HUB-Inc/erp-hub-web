@@ -19,14 +19,10 @@ export class Select extends Element {
     }
     
     if(this.props.concatNameKey){
-      console.log("this.props.concatNameKey",`${value[this.props.nameKey]} ${value[this.props.concatNameKey]}`);
-      // return value[this.props.nameKey] + " " + value[this.props.concatNameKey];
       return `${value[this.props.nameKey]} ${value[this.props.concatNameKey]}`;
     }else{
       return value[this.props.nameKey];
     }
-
-    // return value[this.props.nameKey];
    
   }
 

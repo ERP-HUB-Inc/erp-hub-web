@@ -135,6 +135,8 @@ export default class Form extends Retail {
 
     handleSetFullScreen(){}
 
+    mainReceiptHeader(){}
+
     renderSaveAndPayButton(){
         return(
             <this.Row className="create-quotation-action" onClick={this.handleCreateQuotation}>
