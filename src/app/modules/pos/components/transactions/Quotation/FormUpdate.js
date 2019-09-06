@@ -135,7 +135,7 @@ export default class Form extends Retail {
 
     handleSetFullScreen(){}
 
-    mainReceiptHeader(){}
+    saleOrderHeader(){}
 
     renderSaveAndPayButton(){
         return(
