@@ -8,6 +8,7 @@ export class Select extends Element {
     this.getName = this.getName.bind(this);
   }
   getName(value) {
+  
     if (this.props.nestedName &&
       this.props.nestedName in value &&
       value[this.props.nestedName]) {
@@ -16,8 +17,19 @@ export class Select extends Element {
       }
       return value[this.props.nestedName][this.props.nameKey];
     }
-    return value[this.props.nameKey];
+    
+    if(this.props.concatNameKey){
+      console.log("this.props.concatNameKey",`${value[this.props.nameKey]} ${value[this.props.concatNameKey]}`);
+      // return value[this.props.nameKey] + " " + value[this.props.concatNameKey];
+      return `${value[this.props.nameKey]} ${value[this.props.concatNameKey]}`;
+    }else{
+      return value[this.props.nameKey];
+    }
+
+    // return value[this.props.nameKey];
+   
   }
+
   render() {
     const {getFieldDecorator} = this.props.form;
     let dataSource = this.props.dataSource;
@@ -72,5 +84,6 @@ Select.defaultProps = {
   errorRequired: "Please select this field",
   valueKey: "value",
   nameKey: "name",
-  nestedName: null
+  nestedName: null, 
+  concatNameKey: null
 };

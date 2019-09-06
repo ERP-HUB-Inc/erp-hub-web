@@ -24,6 +24,11 @@ export default {
     "កែប្រៃសម្រង់តំលៃ",
     "Edit Quotation"
   ],
+  "text_all_customer": [
+    "All Customer",
+    "អតិថិជនទាំងអស់",
+    "All Customer"
+  ],
   "text_error_not_create_quotation": [
     "Can't crete quotation because don't have product!",
     "មិនអាចបង្កើតសម្រង់តំលៃបានទេពីព្រោះផលិតផលគ្មានផលិតផល!",

@@ -73,6 +73,7 @@ export default class QuotationList extends List {
         }
       }
     ];
+    this.customerList = [{firstName: this.CATranslate("text_all_customer", this.props.locale), lastName: "", id: 0}];
     this.formCreate = <FormCreate/>;
     this.formUpdate = <FormUpdate/>;
     this.generalSearchLabel = "text_name";
@@ -100,7 +101,10 @@ export default class QuotationList extends List {
 
           if (values.step !== -1) {
             filter["status"] = [values.step];
+          }else if(values.customerId){
+            filter["customerId"] = [values.customerId];
           }
+          
           filter = JSON.stringify(filter);
 
           if(values.key){
@@ -140,6 +144,7 @@ export default class QuotationList extends List {
     });
     QuotationStepList.unshift({name: <this.Translate id="text_all_step"/>, value: -1});
 
+
     const fetchingProps = this.props[this.fetchingProp];
     return (
       form == null ?
@@ -155,16 +160,17 @@ export default class QuotationList extends List {
                 isAutoFocus={true}
                 form={form} />
             </this.Col>
-             {/* <this.Col md="2">
+             <this.Col md="2">
               <this.Select
                   name="customerId"
                   label={<this.Translate id="text_customer" /> }
-                  dataSource={[]}
-                  // dataSource={this.supplierList.concat(this.props.supplier.list)}
-                  // defaultValue={this.supplierList[0].id}
+                  dataSource={this.customerList.concat(this.props.customer.list)}
+                  defaultValue={this.customerList[0].id}
                   valueKey="id"
+                  nameKey="firstName"
+                  concatNameKey="lastName"
                   form={form} />
-            </this.Col> */}
+            </this.Col>
             <this.Col md="2">
               <this.Select
                 name="step"
