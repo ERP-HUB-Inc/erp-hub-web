@@ -32,7 +32,7 @@ export default class ProductList extends List {
       {name: <this.Translate id="text_in_stock"/>, id: 1},
       {name: <this.Translate id="text_out_of_stock"/>, id: 2}
     ];
-    this.columns = new Column();
+    this.columns = new Column(this.props);
     this.formCreate = <FormCreate/>;
     this.callBackOnShowEditForm = this.showFormEdit;
     this.columnExpend = new ColumnExpand(); 
@@ -652,7 +652,7 @@ class Column extends List {
               {record.unit.name}
             </div>
             <div className="unit-value">
-              {quantity/record.unit.multiple} {record.unit.name}
+              {this.formatUnit(quantity,record.unit.multiple,record.unit.name,record.unit.label,this.CATranslate("text_and", props.locale))}
             </div>
           </div>;
         }

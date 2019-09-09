@@ -286,6 +286,15 @@ export default class Component extends React.Component {
     return value < 0 ? `(${temp})` : temp;
   }
 
+  formatUnit(quantity,multiple,unitName,label = "",andTranslated){
+    let unit = (quantity/multiple) - Math.floor(quantity/multiple);
+    if(unit !== 0){
+      return `${Math.floor(quantity/multiple)} ${unitName} ${andTranslated} ${unit * multiple} ${label}`;
+    }else{
+      return `${Math.floor(quantity/multiple)} ${unitName}`;
+    }
+  }
+
   getImageFromUpload(value, key = "image") {
     let image = "";
     
