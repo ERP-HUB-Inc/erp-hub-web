@@ -18,11 +18,19 @@ export default {
       });
     };
   },
+  update: (data, id) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.UPDATE_QUOTATION,
+        payload: QuotationService.update(data, id)
+      });
+    };
+  },
   detail: (data, languageId) => {
     return dispatch => {
       return dispatch({
         type: Constant.DETAIL_QUOTATION,
-        payload: QuotationService.detail(data.id, languageId)
+        payload: QuotationService.detail(data, languageId)
       });
     };
   },

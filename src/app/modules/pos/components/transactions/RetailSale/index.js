@@ -490,7 +490,7 @@ export default class Retail extends Component {
     document.getElementById("searchProduct").focus();
   }
 
-  handleOnRemoveProductFromOrderList(productVariant) {
+  handleOnRemoveProductFromOrderList(productVariant,index) {
     const productOrderList = this.state.productOrderList.filter(productOrder => productOrder.productVariantId !== productVariant.productVariantId);
     this.setState({
       productOrderList,
@@ -864,6 +864,35 @@ export default class Retail extends Component {
     );
   }
 
+  saleOrderHeader(){
+    return(
+      <this.Row className="wrap-receipt-type">
+          <this.Col md="12" className="receipt-type">
+            <div className={`pull-left current-receipt ${this.state.selectedReceiptType === Enum.CURRENT_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.CURRENT_RECEIPT)}>
+              <span className="icon-receipt icon-padding-right"></span><this.Translate id="current_receipt_type"/>
+            </div>
+            {
+              localStorage.getItem(Enum.PARK_RECEIPT) ?
+                <div className={`pull-left park-receipt ${this.state.selectedReceiptType === Enum.PARK_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.PARK_RECEIPT)}>
+                  <span className="icon-reports icon-padding-right"></span><this.Translate id="park_receipt_type"/>
+                </div>
+                :
+                ""
+            }
+            <div className="pull-left park-receipt" onClick={this.handleLinkSaleHistory}>
+              <span className="icon-time icon-padding-right"></span><this.Translate id="text_sale_history" />
+            </div>
+            <div className="pull-left park-receipt" onClick={this.handleLinkCloseShift}>
+              <span className="icon-currency icon-padding-right"></span><this.Translate id="text_close_shift" />
+            </div>
+            {/* <div className="pull-left park-receipt" onClick={this.handleSetFullScreen}>
+            <span className={`${this.state.iconFullScreen} icon-padding-right`}></span>{this.state.textFullScreen}
+          </div> */}
+          </this.Col>
+        </this.Row>
+    )
+  }
+
   render() {
 
     if (isMobile) {
@@ -909,30 +938,10 @@ export default class Retail extends Component {
         {<img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate && this.props.receiptTemplate.data ? this.props.receiptTemplate.data.logo : "", "general").url} />}
       </div>
       <this.Col md="8" id="left-block">
-        <this.Row className="wrap-receipt-type">
-          <this.Col md="12" className="receipt-type">
-            <div className={`pull-left current-receipt ${this.state.selectedReceiptType === Enum.CURRENT_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.CURRENT_RECEIPT)}>
-              <span className="icon-receipt icon-padding-right"></span><this.Translate id="current_receipt_type"/>
-            </div>
-            {
-              localStorage.getItem(Enum.PARK_RECEIPT) ?
-                <div className={`pull-left park-receipt ${this.state.selectedReceiptType === Enum.PARK_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.PARK_RECEIPT)}>
-                  <span className="icon-reports icon-padding-right"></span><this.Translate id="park_receipt_type"/>
-                </div>
-                :
-                ""
-            }
-            <div className="pull-left park-receipt" onClick={this.handleLinkSaleHistory}>
-              <span className="icon-time icon-padding-right"></span><this.Translate id="text_sale_history" />
-            </div>
-            <div className="pull-left park-receipt" onClick={this.handleLinkCloseShift}>
-              <span className="icon-currency icon-padding-right"></span><this.Translate id="text_close_shift" />
-            </div>
-            {/* <div className="pull-left park-receipt" onClick={this.handleSetFullScreen}>
-            <span className={`${this.state.iconFullScreen} icon-padding-right`}></span>{this.state.textFullScreen}
-          </div> */}
-          </this.Col>
-        </this.Row>
+
+          {this.saleOrderHeader()}
+
+
         <this.Row className="wrap-category">
           {
             this.props.productsType.fetching && !this.state.isRequestLoadingMore ?
@@ -1016,6 +1025,7 @@ export default class Retail extends Component {
         <div className="product-order-list">
           {
             this.state.productOrderList.map((productOrder, productOrderIndex) => 
+            productOrder.quotationStatus === this.Enum.ARCHIVE ? " " :
               <div className={`product-order-item ${this.state.expandOrderItemRow.includes(productOrder.productVariantId) ? "expanded" : ""}`} key={productOrderIndex}>
                 <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                   <div className="item" onClick={() => this.handleExpandOrderItem(productOrder.productVariantId, productOrderIndex)}>
@@ -1051,7 +1061,7 @@ export default class Retail extends Component {
                       </div>
                     </div>
                   </div>
-                  <div className="delete" onClick={() => this.handleOnRemoveProductFromOrderList(productOrder)}><span className="icon-delete"></span></div>
+                  <div className="delete" onClick={() => this.handleOnRemoveProductFromOrderList(productOrder,productOrderIndex)}><span className="icon-delete"></span></div>
                 </div>
                 <div className="product-order-item-detail">
                   <div className="detail-row-1">

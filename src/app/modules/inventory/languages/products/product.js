@@ -571,5 +571,10 @@ export default {
     "View cost details"
   ],
 
+  "text_and": [
+    "And",
+    "នឹង",
+    "And"
+  ]
 
 };

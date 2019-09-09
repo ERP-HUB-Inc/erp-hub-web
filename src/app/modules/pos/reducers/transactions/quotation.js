@@ -30,6 +30,16 @@ export default combineReducers({
     ];
     return reducer.add(state, action, constants);
   },
+  detail: (state = InitialState.detail(), action) => {
+    const constants = [
+      Constant.DETAIL_QUOTATION_PENDING,
+      Constant.DETAIL_QUOTATION_REJECTED,
+      Constant.DETAIL_QUOTATION_FULFILLED,
+      Constant.RESET_DETAIL_QUOTATION,
+      Constant.PARTIAL_RESET_DETAIL_QUOTATION
+    ];
+    return reducer.detail(state, action, constants);
+  },
   update: (state = InitialState.update(), action) => {
     const constants = [
       Constant.UPDATE_QUOTATION_PENDING,
