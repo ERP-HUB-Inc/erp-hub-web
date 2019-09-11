@@ -22,12 +22,12 @@ export default class Form extends Retail {
                     productList.push({
                         productVariantId: values.productVariantId,
                         quantity: values.quantity,
-                        price: values.price
+                        price: this.props.form.getFieldValue(`price[${index}]`),
+                        description: this.props.form.getFieldValue(`description[${index}]`)
                     });
                 });
 
                 this.Util.clearObjProperty(values, [
-                "description",
                 "discount",
                 "isFocusOnSearchCompositeProduct",
                 "price",
@@ -54,8 +54,6 @@ export default class Form extends Retail {
         }
     }
 
-    handleSetFullScreen(){}
-
     saleOrderHeader(){}
     
     renderSaveAndPayButton(){
@@ -67,4 +65,17 @@ export default class Form extends Retail {
             </this.Row>
         );
     }
+
+    FieldNotation(index,values){
+        return(
+            <this.InputTextArea
+                name={`description[${index}]`}
+                label={<this.Translate id="text_notation"/>}
+                handleKeyUp={(event) => this.handleOnChangOrderField(event, index, "description")}
+                placeholder={this.CATranslate("text_add_notation", this.props.locale)}
+                rows={7}
+                form={this.props.form} />
+        )
+    }
+
 }

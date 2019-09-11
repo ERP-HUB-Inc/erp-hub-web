@@ -17,7 +17,8 @@ export default class Form extends Retail {
           productStatus: 0,
           handleRemove: false,
           isNotYetLoadComponentDidUpdated: true,
-          listQuotationWhenRemove: []
+          listQuotationWhenRemove: [],
+          productRemove: []
         }
         this.handleCreateQuotation = this.handleCreateQuotation.bind(this);
     }
@@ -89,29 +90,69 @@ export default class Form extends Retail {
         let productOrderList = this.state.productOrderList;
         const summaryTotal = POSUtil.getSummaryTotalInOrder(this.state.productOrderList, this.state.customerFieldPrice);
 
+        console.log("productRemove",this.state.productRemove);
+
         if (productOrderList.length > 0) {
             this.props.form.validateFieldsAndScroll((err, values) => {
-                productOrderList.forEach((values, index) => {
-                    if(values.quotationStatus === this.Enum.ARCHIVE){
-                        productList.push({
-                            id: values.id,
-                            productVariantId: values.productVariantId,
-                            quantity: values.quantity,
-                            price: this.props.form.getFieldValue(`price[${index}]`),
-                            description: this.props.form.getFieldValue(`description[${index}]`),
-                            status: values.quotationStatus
-                        });
-                    }else{
-                        productList.push({
-                            id: values.id,
-                            productVariantId: values.productVariantId,
-                            quantity: values.quantity,
-                            price: this.props.form.getFieldValue(`price[${index}]`),
-                            description: this.props.form.getFieldValue(`description[${index}]`)
-                        });
-                    }
-                });
-            
+                // productOrderList.forEach((values, index) => {
+                //     if(values.quotationStatus === this.Enum.ARCHIVE){
+                //         productList.push({
+                //             id: values.id,
+                //             productVariantId: values.productVariantId,
+                //             quantity: values.quantity,
+                //             price: this.props.form.getFieldValue(`price[${index}]`),
+                //             description: this.props.form.getFieldValue(`description[${index}]`),
+                //             status: values.quotationStatus
+                //         });
+                //     }else{
+                //         productList.push({
+                //             id: values.id,
+                //             productVariantId: values.productVariantId,
+                //             quantity: values.quantity,
+                //             price: this.props.form.getFieldValue(`price[${index}]`),
+                //             description: this.props.form.getFieldValue(`description[${index}]`)
+                //         });
+                //     }
+                // });
+                let productRemove = this.state.productRemove;
+                if(productRemove.length > 0){
+                    productRemove.forEach((values, index) => {
+                        if(values.quotationStatus === this.Enum.ARCHIVE){
+                            this.productList(values,index);
+                        }else{
+                            productList.push({
+                                id: values.id,
+                                productVariantId: values.productVariantId,
+                                quantity: values.quantity,
+                                price: this.props.form.getFieldValue(`price[${index}]`),
+                                description: this.props.form.getFieldValue(`description[${index}]`)
+                            });
+                        }
+                    });
+                }else{
+
+                    productOrderList.forEach((values, index) => {
+                        if(values.quotationStatus === this.Enum.ARCHIVE){
+                            productList.push({
+                                id: values.id,
+                                productVariantId: values.productVariantId,
+                                quantity: values.quantity,
+                                price: this.props.form.getFieldValue(`price[${index}]`),
+                                description: this.props.form.getFieldValue(`description[${index}]`),
+                                status: values.quotationStatus
+                            });
+                        }else{
+                            productList.push({
+                                id: values.id,
+                                productVariantId: values.productVariantId,
+                                quantity: values.quantity,
+                                price: this.props.form.getFieldValue(`price[${index}]`),
+                                description: this.props.form.getFieldValue(`description[${index}]`)
+                            });
+                        }
+                    });
+
+                }
 
                 this.Util.clearObjProperty(values, [
                     "discount",
@@ -127,11 +168,13 @@ export default class Form extends Retail {
                 values["name"] = "Create Quotation";
                 values["Entries"] = productList;
 
+                console.log("productList", productList);
+
                 if(this.state.selectedCustomer && this.state.quotationId){
-                    values["customerId"] = this.state.selectedCustomer.id;
-                    values["id"] = this.state.quotationId;
-                    this.props.dispatch(QuotationAction.update(values,this.state.quotationId)); 
-                    history.push("/transactions/quotation");
+                    // values["customerId"] = this.state.selectedCustomer.id;
+                    // values["id"] = this.state.quotationId;
+                    // this.props.dispatch(QuotationAction.update(values,this.state.quotationId)); 
+                    // history.push("/transactions/quotation");
                 }else{
                     this.Message.warning(this.CATranslate("text_error_create_quotation", this.props.locale));
                 }
@@ -144,12 +187,27 @@ export default class Form extends Retail {
     }
 
 
+
+    // handleOnRemoveProductFromOrderList(values,index){
+    //     let productOrderList = this.state.productOrderList;
+    //     productOrderList[index]["quotationStatus"] = this.Enum.ARCHIVE;
+    //     this.setState({
+    //         productOrderList: productOrderList
+    //     });
+    // }
+
     handleOnRemoveProductFromOrderList(values,index){
-        let productOrderList = this.state.productOrderList;
-        productOrderList[index]["quotationStatus"] = this.Enum.ARCHIVE;
+        let productRemove = this.state.productOrderList;
+        productRemove[index]["quotationStatus"] = this.Enum.ARCHIVE;
+
+        const productOrderList = this.state.productOrderList.filter(productOrder => productOrder.productVariantId !== values.productVariantId);
+
         this.setState({
-            productOrderList: productOrderList
+            productRemove: productRemove,
+            productOrderList
         });
+
+
     }
 
     FieldNotation(index,values){

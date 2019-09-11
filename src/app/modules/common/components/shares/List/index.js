@@ -92,7 +92,6 @@ export default class List extends Component {
     this.buttonActionCollection = this.buttonActionCollection.bind(this);
     this.handleShowFormAdd = this.handleShowFormAdd.bind(this);
     this.handleOnToggleFilter = this.handleOnToggleFilter.bind(this);
-
     this.RESET_CONSTANT = "RESET";
   }
 
@@ -546,11 +545,14 @@ export default class List extends Component {
     );
   }
 
+  renderOtherAction(){}
+
 
   buttonActionCollection() {
     return [
       this.renderButtonAddNew(),
-      this.renderButtonDelete()
+      this.renderButtonDelete(),
+      this.renderOtherAction()
     ];
   }
   /**

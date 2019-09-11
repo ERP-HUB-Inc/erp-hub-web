@@ -49,4 +49,10 @@ export default {
     CANCEL : 2,
     COMPLETED : 4
   },
+  QUOTATION_STEP_COLOR: {
+    DRAFT: "#FAAD14",
+    PROCESS: "#2db7f5",
+    CANCEL: "#2DB7F5",
+    COMPLETE: "#5BC726"
+  }
 };

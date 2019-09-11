@@ -7,7 +7,12 @@ import FormUpdate from "../../../containers/transactions/Quotation/FormUpdate";
 import Constant from "../../../constants/transactions/quotation";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import QuotationAction from "../../../action/transaction/quotation";
+import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
 import QuotationService from "../../../services/transactions/QuotationService";
+import ReceiptA4Extend from "./ReceiptA4";
+import Detail from "../../../containers/transactions/Quotation/Detail";
+import InventoryUtil from "../../../../inventory/utils";
+import InventoryEnum from "../../../../inventory/enums";
 import "./index.css";
 
 export default class QuotationList extends List {
@@ -15,15 +20,18 @@ export default class QuotationList extends List {
     super(props);
     this.state = {
       isNotYetLoadComponentDidUpdated: true,
+      isRequestPrint: false,
+      handleUpdateForm: false,
       ...this.state
     }
     this.QUOTATION_STEP_STR = {
-      [Enum.QUOTATION_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color: this.Enum.PO_STEP_COLOR.DRAFT},
-      [Enum.QUOTATION_STEP.PROCESS]: {name: <this.Translate id="text_process" />, color:  this.Enum.PO_STEP_COLOR.PROCESS},
-      [Enum.QUOTATION_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color:  this.Enum.PO_STEP_COLOR.CANCEL},
-      [Enum.QUOTATION_STEP.COMPLETED]: {name: <this.Translate id="text_complete" />, color:  this.Enum.PO_STEP_COLOR.PAID}
+      [Enum.QUOTATION_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color:"warning"},
+      [Enum.QUOTATION_STEP.PROCESS]: {name: <this.Translate id="text_process" />, color:"processing"},
+      [Enum.QUOTATION_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color:"error"},
+      [Enum.QUOTATION_STEP.COMPLETED]: {name: <this.Translate id="text_complete" />, color:"success"}
     };
     this.columns = [
+      this.columnCreatedAt,
       {
         title: <this.Translate id="text_name" />,
         dataIndex: "name",
@@ -32,8 +40,31 @@ export default class QuotationList extends List {
       {
         title: <this.Translate id="text_customer" />,
         dataIndex: "customer",
+        key: "firstName",
         sorter: true,
         render: (customer) => customer ? customer.firstName + " " + customer.lastName : this.emptyText
+      },
+      {
+        title: <this.Translate id="text_phone_number" />,
+        dataIndex: "customer",
+        key: "phoneNumber",
+        sorter: true,
+        render: (customer) => customer ? customer.phoneNumber : this.emptyText 
+      },
+      {
+        title: <this.Translate id="text_email" />,
+        dataIndex: "customer",
+        key: "email",
+        sorter: true,
+        render :(text,record) => {
+         if(record.customer){
+           if(record.customer.email){
+            return record.email;
+           }else{
+             return this.emptyText
+           }
+         }
+        }
       },
       {
         title: <this.Translate id="text_total" />,
@@ -46,8 +77,8 @@ export default class QuotationList extends List {
         dataIndex: "status",
         key: "status",
         sorter: true,
-        width: 100,
-        render: status => status in this.QUOTATION_STEP_STR ? <this.Tag style={{ width: "100%" }} color={this.QUOTATION_STEP_STR[status].color} className="text-uppercase text-center po-step-tag">{this.QUOTATION_STEP_STR[status].name}</this.Tag> : ""
+        width: 120,
+        render: status => status in this.QUOTATION_STEP_STR ? <this.Badge style={{ textTransform: "uppercase" }} status={this.QUOTATION_STEP_STR[status].color}  text={this.QUOTATION_STEP_STR[status].name} /> : this.emptyText()
       },
       {
         title: <this.Translate id="text_action" />,
@@ -57,18 +88,20 @@ export default class QuotationList extends List {
         width: 100,
         render: (text, record) => {
           return <div style={{ flexDirection: "row", display: "flex", width: "100%" }} className="action_create_quotation"> 
-          <this.Button className="mg-right text-uppercase cancel_step"
-              onClick={() => this.handleCancelQuotation(record,this.state.selectedRows)}><span className="icon-cancel icon-padding-right"></span>
-            <this.Translate id="text_cancel"/>
-          </this.Button>  
-          <this.Button 
-            className="mg-right text-uppercase process_step"
-             onClick={() => this.handleProcessQuotation(record)}
-            >
-            <span className="icon-operation icon-padding-right"></span>
-            <this.Translate id="text_process"/>
-          </this.Button>
-          
+            <this.Button className="mg-right text-uppercase cancel_step" onClick={() => this.handleCancelQuotation(record,this.state.selectedRows)}>
+              <span className="icon-cancel icon-padding-right"></span>
+              <this.Translate id="text_cancel"/>
+            </this.Button>  
+            { record.status === Enum.QUOTATION_STEP.DRAFT ? 
+            <this.Button className="mg-right text-uppercase process_step" onClick={() => this.handleProcessQuotation(record)}>
+              <span className="icon-operation icon-padding-right"></span>
+              <this.Translate id="text_process"/>
+            </this.Button> : 
+            <this.Button className="mg-right text-uppercase complete_step" onClick={() => this.handleCompleteQuotation(record)}>
+              <span className="icon-operation icon-padding-right"></span>
+              <this.Translate id="text_complete"/>
+            </this.Button>
+          } 
           </div>;
         }
       }
@@ -84,12 +117,44 @@ export default class QuotationList extends List {
     this.RESET_CONSTANT = Constant.RESET_QUOTATION;
     this.handleCancelQuotation = this.handleCancelQuotation.bind(this);
     this.handleProcessQuotation = this.handleProcessQuotation.bind(this);
+    this.handleCompleteQuotation = this.handleCompleteQuotation.bind(this);
+    this.handlePrint = this.handlePrint.bind(this);
   }
 
   componentDidMount(){
     super.componentDidMount();
     this.props.dispatch(CustomerAction.fetch(100));
+    new Promise(() => {
+      this.props.dispatch(ReceiptTemplateAction.default());
+    });
   }
+
+  handlePrint(){
+    new Promise(() => {
+      const selectLength = this.state.selectedListIds.length;
+      if (selectLength === 0 && this.state.selectedListIds) {
+        this.Message.error(this.CATranslate("text_reprint_warning_1", this.props.locale));
+      } else if (selectLength > 1) {
+        this.Message.error(this.CATranslate("text_reprint_warning_2", this.props.locale));
+      } else {
+        this.setState({isRequestPrint: true});  
+        this.props.dispatch(QuotationAction.detail(this.state.selectedListIds[0]));
+      }
+    });
+  }
+
+  renderOtherAction(){
+    return(
+      <this.Button className="mg-right text-uppercase" type="info" loading={this.props.list.fetching && this.state.isRequestPrint} onClick={this.handlePrint}>
+        <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print"/>
+        <div id="receiptLogoPreLoading" style={{display: "none"}}>
+          {<img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate && this.props.receiptTemplate.data ? this.props.receiptTemplate.data.logo : "", "general").url} />}
+        </div>
+      </this.Button>
+    );
+  }
+
+  renderButtonDelete(){}
 
   handleSubmitFilter(e){
     if (this.action != null) {
@@ -119,11 +184,11 @@ export default class QuotationList extends List {
   }
 
   handleCancelQuotation(record){
-    if(record.status === Enum.QUOTATION_STEP.DRAFT){
+    if(record.status === Enum.QUOTATION_STEP.DRAFT || record.status === Enum.QUOTATION_STEP.PROCESS){
       let status = { "status": Enum.QUOTATION_STEP.CANCEL,"id": record.id }
       this.props.dispatch(QuotationAction.update(status)); 
     }else{
-      this.Message.warning(this.CATranslate("text_error_allow_process_only_draft_step", this.props.locale));
+      this.Message.warning(this.CATranslate("text_error_allow_cancel_only_draft_step_and_process", this.props.locale));
     }
   }
 
@@ -133,6 +198,15 @@ export default class QuotationList extends List {
       this.props.dispatch(QuotationAction.update(status)); 
     }else{
       this.Message.warning(this.CATranslate("text_error_allow_process_only_draft_step", this.props.locale));
+    }
+  }
+
+  handleCompleteQuotation(record){
+    if(record.status === Enum.QUOTATION_STEP.PROCESS){
+      let status = { "status": Enum.QUOTATION_STEP.COMPLETED,"id": record.id }
+      this.props.dispatch(QuotationAction.update(status)); 
+    }else{
+      this.Message.warning(this.CATranslate("text_error_allow_complete_only_process_step", this.props.locale));
     }
   }
 
@@ -192,11 +266,46 @@ export default class QuotationList extends List {
     );
   }
 
-  componentDidUpdate(){
-    if(this.state.isNotYetLoadComponentDidUpdated && this.props.quotationDetail.fetching){
-      history.push("/transactions/quotation-update");
-      this.setState({isNotYetLoadComponentDidUpdated: false});
+  getProductOrderList(data) {
+    let productOrderList = [];
+    if (this.Util.isValidCollectionInObj(data, "quotationEntries")) {
+      data.quotationEntries.forEach(quotationtionEntry => {
+        if (quotationtionEntry.productVariant && quotationtionEntry.productVariant.product) {
+          const productVariant = quotationtionEntry.productVariant;
+          productOrderList.push({
+            quantity: quotationtionEntry.quantity,
+            name: InventoryUtil.getProductName(productVariant.product),
+            productDescription: quotationtionEntry.description,
+            variantName: productVariant.product.productOption === InventoryEnum.PRODUCT_VARIANT ? productVariant.name : "",
+            price: quotationtionEntry.price,
+          });
+        }
+      });
     }
+    return productOrderList;
+  }
+
+  componentDidUpdate(){
+    if(this.props.quotationDetail.data && this.state.isRequestPrint){
+      let listProduct = this.getProductOrderList(this.props.quotationDetail.data);
+        this.setState({
+          modalConten: <Detail
+            receiptContent={ 
+              <ReceiptA4Extend 
+                data={this.props.quotationDetail.data} 
+                receiptTemplate={this.props.receiptTemplate}
+                productList={listProduct} />}
+                dispatch={this.props.dispatch} 
+            />,
+            isRequestPrint: false
+        });
+    }
+    
+    if(this.state.isNotYetLoadComponentDidUpdated && this.props.quotationDetail.fetching && this.state.handleUpdateForm){
+      history.push("/transactions/quotation-update");
+      this.setState({isNotYetLoadComponentDidUpdated: false, handleUpdateForm: false});
+    }
+    this.Util.removeFullScreen();
   }
 
   handleShowFormAdd() {
@@ -205,6 +314,7 @@ export default class QuotationList extends List {
 
   handleShowFormEdit(rowData){
     if(rowData.status === Enum.QUOTATION_STEP.DRAFT){
+      this.setState({handleUpdateForm: true});
       this.props.dispatch(QuotationAction.detail(rowData.id));
     }else{
       this.Message.warning(this.CATranslate("text_error_allow_update_only_draft_step", this.props.locale));

@@ -20,6 +20,11 @@ export class Util {
     return url;
   }
 
+  removeFullScreen() {
+    const element = document.getElementById("center-container");
+    element.classList.remove("full-screen");
+  }
+
   logout(history) {
     localStorage.removeItem(ConstantAuth.ACCESS_TOKEN);
     localStorage.removeItem(ConstantAuth.STORE_ACCESS_TOKEN);

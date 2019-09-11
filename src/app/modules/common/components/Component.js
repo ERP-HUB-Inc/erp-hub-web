@@ -272,14 +272,18 @@ export default class Component extends React.Component {
     return "en";
   }
 
-  formatCurrency(value) {
+  formatCurrency(value, currency = "", isShowSymbol = true) {
     let temp = value;
     const currentSetting = this.Util.getSetting();
-    let currency = "";
     let currencyPosition = 0;
-    if (currentSetting) {
+    if (currentSetting && !currency) {
       currency = currentSetting.currency;
       currencyPosition = currentSetting.currencyPosition;
+    }
+
+    // DETECT DONT WANT TO SHOW CURRENCY SYMBOL
+    if (!isShowSymbol) {
+      currency = "";
     }
 
     temp = this.Util.formatCurrency(Math.abs(temp), currency, currencyPosition);

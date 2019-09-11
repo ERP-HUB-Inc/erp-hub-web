@@ -4,6 +4,11 @@ export default {
     "ការដាក់ប្រាក់",
     "Deposit"
   ],
+  "text_complete": [
+    "Complete",
+    "បញ្ចប់",
+    "Complete",
+  ],
   "text_terms": [
     "Terms",
     "ល័ក្ខខ័ណ្",
@@ -46,17 +51,27 @@ export default {
   ],
   "text_error_allow_delete_only_draft_step": [
     "We allow delete only step draft!",
-    "អនុញ្ញាតឱ្យអាចធ្វើការលុបត្រឹមតែជំហានសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",
+    "អនុញ្ញាតឱ្យអាចធ្វើការលុបត្រឹមតែដំណើរការសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",
     "We allow delete only step draft!"
   ],
   "text_error_allow_only_delete_draft_step": [
     "We allow delete only step draft!",
-    "អនុញ្ញាតឱ្យអាចធ្វើការលុបតែជំហានសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",
+    "អនុញ្ញាតឱ្យអាចធ្វើការលុបតែដំណើរការសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",
     "We allow delete only step draft!"
   ],
   "text_error_allow_update_only_draft_step": [
     "We allow edit only step draft!",
-    "អនុញ្ញាតឱ្យអាចធ្វើការកែតំរូវតែជំហានសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",
+    "អនុញ្ញាតឱ្យអាចធ្វើការកែតំរូវតែដំណើរការសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",
     "We allow edit only step draft!"
+  ], 
+  "text_error_allow_complete_only_process_step": [
+    "We allow complete only step process!",
+    "អនុញ្ញាតឱ្យដំណើរការតែជំហានដំណើរការប៉ុណ្ណោះ!",
+    "We allow complete only step process!"
+  ],
+  "text_error_allow_cancel_only_draft_step_and_process": [
+    "We allow cancel only step draft and process!",
+    "អនុញ្ញាតឱ្យបោះបុងតែដំណាក់កាលសេចក្តីព្រៀងនឹងដំណើរការ",
+    "We allow cancel only step draft and process!"
   ]
 };

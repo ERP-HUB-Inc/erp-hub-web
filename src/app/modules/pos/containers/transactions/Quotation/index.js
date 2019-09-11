@@ -15,6 +15,7 @@ function mapStateToProps(state) {
   return {
     list: state.reducer.quotation.request,
     customer: state.reducer.customer.request,
+    receiptTemplate: state.reducer.receiptTemplate.detail,
     add: state.reducer.quotation.add,
     update: state.reducer.quotation.update,
     quotationDetail: state.reducer.quotation.detail,

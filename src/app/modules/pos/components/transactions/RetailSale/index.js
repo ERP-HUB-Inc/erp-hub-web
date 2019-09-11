@@ -893,6 +893,21 @@ export default class Retail extends Component {
     )
   }
 
+  FieldNotation(productOrderIndex,productOrder){
+    return(
+      <div className="detail-row-2">
+        <this.InputText
+          name={`description[${productOrderIndex}]`}
+          label={<this.Translate id="text_notation"/>}
+          data={productOrder.description}
+          className="ca-input-v1"
+          handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "description")}
+          placeholder={this.CATranslate("text_add_notation", this.props.locale)}
+          form={this.props.form}/>
+      </div>
+    )
+  }
+
   render() {
 
     if (isMobile) {
@@ -1106,17 +1121,18 @@ export default class Retail extends Component {
                 <span className="icon-help icon-padding-right"></span>Show Inventories & Details
               </div> */}
                   </div>
-                  <div className="detail-row-2">
-                    <this.InputText
-                      name={`description[${productOrderIndex}]`}
-                      label={<this.Translate id="text_notation"/>}
-                      data={productOrder.description}
-                      className="ca-input-v1"
-                      handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "description")}
-                      placeholder={this.CATranslate("text_add_notation", this.props.locale)}
-                      form={this.props.form}/>
-                  </div>
-                </div>
+                  {this.FieldNotation(productOrderIndex,productOrder)}
+                    {/* <div className="detail-row-2">
+                      <this.InputText
+                        name={`description[${productOrderIndex}]`}
+                        label={<this.Translate id="text_notation"/>}
+                        data={productOrder.description}
+                        className="ca-input-v1"
+                        handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "description")}
+                        placeholder={this.CATranslate("text_add_notation", this.props.locale)}
+                        form={this.props.form}/>
+                    </div> */}
+                  </div> 
               </div>
             )
           }

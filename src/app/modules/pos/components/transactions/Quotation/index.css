@@ -17,11 +17,18 @@
 }
 
 .action_create_quotation button.process_step {
-    background-color: rgb(45, 183, 245) !important;
+    background-color: #1890FF !important;
     color: white;
+    width: 121px;
+}
+
+.action_create_quotation button.complete_step {
+    background-color: #52C41A !important;
+    color: white;
+    width: 121px;
 }
 
 .action_create_quotation button.cancel_step {
-    background-color: #108ee9 !important;
+    background-color: #F5222D !important;
     color: white;
 }
