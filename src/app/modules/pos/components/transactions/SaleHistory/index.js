@@ -39,11 +39,13 @@ export default class SaleHistoryList extends List {
     ];
 
     this.TRANSACTION_STATUS_STR = {
-      [Enum.TRANSACTION_STATUS.OPEN]: <this.Translate id="text_open" />,
-      [Enum.TRANSACTION_STATUS.OVERDUE]: <this.Translate id="text_overdue" />,
-      [Enum.TRANSACTION_STATUS.PAID]: <this.Translate id="text_paid" />,
-      [Enum.TRANSACTION_STATUS.CREDIT]: <this.Translate id="text_credit" />,
-      [Enum.TRANSACTION_STATUS.CLOSED]: <this.Translate id="text_closed" />
+      [Enum.TRANSACTION_STEP.PROCESS]: { title: <this.Translate id="text_process" />, color: "processing" },
+      [Enum.TRANSACTION_STEP.VOID]: { title: <this.Translate id="text_void" />, color: "warning" },
+      [Enum.TRANSACTION_STEP.RETURN]: { title: <this.Translate id="text_return" />, color: "warning"},
+      [Enum.TRANSACTION_STEP.COMPLETED]: { title: <this.Translate id="text_completed" />, color: "success"},
+      [Enum.TRANSACTION_STEP.IN_DELIVERY]: { title: <this.Translate id="text_in_delivery" />, color: "success"},
+      [Enum.TRANSACTION_STEP.CREDIT]: { title: <this.Translate id="text_credit" />, color: "error"},
+      [Enum.TRANSACTION_STEP.PAID]: { title: <this.Translate id="text_paid" />, color: "success"}
     };
 
     this.action = TransactionAction;
@@ -138,16 +140,20 @@ export default class SaleHistoryList extends List {
         title: <this.Translate id="text_sale_total" />,
         dataIndex: "total",
         key: "total",
-        render: (text, record, index) => {
-          return this.formatCurrency(record.total - record.discount);
-        },
+        render: (total, record) => this.formatCurrency(total - record.discount),
         sorter: true
       },
       {
         title: <this.Translate id="text_status" />,
-        dataIndex: "status",
-        key: "status",
-        render: status => <this.Badge style={{ textTransform: "uppercase" }} status={[Enum.TRANSACTION_STATUS.CREDIT, Enum.TRANSACTION_STATUS.OVERDUE].includes(status) ? "error" : "success"} text={this.TRANSACTION_STATUS_STR[status]} />,
+        dataIndex: "step",
+        key: "step",
+        render: step => {
+          const stepValue = this.TRANSACTION_STATUS_STR[step];
+          let stepColor = stepValue.color;
+          let stepTitile = stepValue.title;
+
+          return <this.Badge style={{ textTransform: "uppercase" }} status={stepColor} text={stepTitile} />;
+        },
         sorter: true
       }
     ];
