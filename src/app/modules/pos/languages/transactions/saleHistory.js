@@ -78,6 +78,18 @@ export default {
     "Open"
   ],
 
+  "text_void": [
+    "Void",
+    "Void",
+    "Void"
+  ],
+
+  "text_in_delivery": [
+    "Delivery",
+    "Delivery",
+    "Delivery"
+  ],
+
   "text_overdue": [
     "Overdue",
     "Overdue",
