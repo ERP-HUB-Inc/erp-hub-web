@@ -69,20 +69,6 @@ export default class Form extends Retail {
         this.saveQuotation(Enum.QUOTATION_STEP.DRAFT);
     }
 
-    productList(values,index){
-        let productList = [];
-        productList.push({
-            id: values.id,
-            productVariantId: values.productVariantId,
-            quantity: values.quantity,
-            price: this.props.form.getFieldValue(`price[${index}]`),
-            description: this.props.form.getFieldValue(`description[${index}]`),
-            status: values.quotationStatus
-        });
-        return productList;
-    }
-    
-
     saveQuotation(status){
       
         let productList = [];
@@ -147,10 +133,63 @@ export default class Form extends Retail {
     handleOnRemoveProductFromOrderList(values,index){
         let productOrderList = this.state.productOrderList;
         productOrderList[index]["quotationStatus"] = this.Enum.ARCHIVE;
+        productOrderList[index]["quantity"] = 0;
         this.setState({
             productOrderList: productOrderList
         });
     }
+
+    // For calculate summary total when status remove Enum = 3 
+    getSummaryTotalInQuotation(orderList, priceFeild = "price") {
+        let summaryTotal = {
+          subTotal: 0,
+          totalQuantity: 0,
+          subTotalAfterDiscount: 0,
+          discount: 0,
+          tax: 0
+        };
+    
+        if (orderList === null || !Array.isArray(orderList)) 
+          return summaryTotal;
+        orderList.forEach(value => {
+          let totalAmount = "";
+          if(value.quotationStatus !== this.Enum.ARCHIVE){
+              totalAmount = POSUtil.getTotalAmount(value.quantity, value[priceFeild]);
+              summaryTotal.totalQuantity += value.quantity;
+              summaryTotal.subTotal += totalAmount;
+              summaryTotal.subTotalAfterDiscount += POSUtil.getTotalAmountAfterDiscount(value.quantity, value[priceFeild], value.discount);
+              summaryTotal.discount += POSUtil.getDiscountByRate(totalAmount, value.discount);
+          }
+        });
+        return summaryTotal;
+      }
+
+    getSummaryTotal() {
+        const summaryTotal = this.getSummaryTotalInQuotation(this.state.productOrderList, this.state.customerFieldPrice);
+        let discountAmount = 0;
+        let discountTypeStr = "";
+
+        const taxAmount = POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale)).taxTotal;
+
+        if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+            discountTypeStr = ` (${this.state.discountValue.value}%)`;
+            discountAmount = POSUtil.getDiscountByRate(summaryTotal.subTotal + taxAmount, this.state.discountValue.value); // WE DISCOUNT AFTER TAX IF DIFFERENCE FROM EACH ITEM
+        } else if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.AMOUNT) {
+            discountAmount = this.state.discountValue.value;
+        } else {
+            discountAmount = summaryTotal.discount;
+        }
+
+        return {
+            summaryTotal,
+            taxAmount,
+            discountAmount,
+            discountTypeStr,
+            discountType: this.state.discountValue.type
+        };
+    }
+
+    // ..............................
 
     FieldNotation(index,values){
         return(

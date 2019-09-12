@@ -22,6 +22,7 @@ class Util {
     return summaryTotal;
   }
 
+
   getTaxAmount(value, rate) {
     if (value === null || isNaN(value))
       return 0;

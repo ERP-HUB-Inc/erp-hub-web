@@ -277,7 +277,7 @@ export default class Retail extends Component {
       tax: tax.taxRate/100,
       taxDescription: tax,
       description: "",
-      options: []
+      options: [],
     });
   }
 
@@ -472,6 +472,7 @@ export default class Retail extends Component {
         if (productVariant && productOrder.productVariantId === productVariant.id) {
           isNotTheSame = false;
           existingProductOrderList[productOrderIndex]["quantity"] += this.state.initialOrderQuantity;
+          existingProductOrderList[productOrderIndex]["quotationStatus"] = "";
         }
       });
 
