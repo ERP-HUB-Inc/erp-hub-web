@@ -14,8 +14,6 @@ export default class Form extends Retail {
     handleCreateQuotation(){
         let productList = [];
         let productOrderList = this.state.productOrderList;
-        const summaryTotal = POSUtil.getSummaryTotalInOrder(this.state.productOrderList, this.state.customerFieldPrice);
-
         if (productOrderList.length > 0) {
             this.props.form.validateFieldsAndScroll((err, values) => {
                 productOrderList.forEach((values, index) => {
@@ -35,8 +33,17 @@ export default class Form extends Retail {
                 "searchProduct",
                 "searchRecord"
                 ]);
+
+                const {
+                    summaryTotal,
+                    discountAmount,
+                    taxAmount
+                  } = this.getSummaryTotal();
+
                 values["status"] = 0;
-                values["total"] = summaryTotal.subTotal;
+                values["discount"] = this.state.discountValue.value;
+                values["total"] = POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
+                // values["total"] = summaryTotal.subTotal;
                 values["name"] = "Create Quotation";
                 values["Entries"] = productList;
             

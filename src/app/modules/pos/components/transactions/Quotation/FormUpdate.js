@@ -28,9 +28,7 @@ export default class Form extends Retail {
         let quotationColletion = [];
 
         if(this.state.isNotYetLoadComponentDidUpdated){
-
             if(quotaionValues){
-            
                 quotaionValues.quotationEntries.forEach((values, index) => {
                     quotationColletion.push({
                         id: values.id,
@@ -52,13 +50,15 @@ export default class Form extends Retail {
                     
                 });
             
-                this.props.form.setFieldsValue({ searchRecord: `${quotaionValues.customer.firstName} ${quotaionValues.customer.lastName}` });
+                this.props.form.setFieldsValue({ searchRecord: `${quotaionValues.customer.firstName} ${quotaionValues.customer.lastName}`});
                 this.getSelectedCustomer(this.props.quotationDetail.data.customer);
-
+               
                 this.setState({
                     productOrderList: quotationColletion,
                     isNotYetLoadComponentDidUpdated: false,
-                    quotationId: this.props.quotationDetail.data.id
+                    quotationId: this.props.quotationDetail.data.id,
+                    isDiscountHasAdded: this.props.quotationDetail.data.discount > 0,
+                    discountValue: {type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: quotaionValues.discount}
                 });
                 this.props.dispatch(QuotationAction.reset(Constant.RESET_DETAIL_QUOTATION));
             }
@@ -70,11 +70,8 @@ export default class Form extends Retail {
     }
 
     saveQuotation(status){
-      
         let productList = [];
         let productOrderList = this.state.productOrderList;
-        const summaryTotal = POSUtil.getSummaryTotalInOrder(this.state.productOrderList, this.state.customerFieldPrice);
-
         if (productOrderList.length > 0) {
             this.props.form.validateFieldsAndScroll((err, values) => {
                 productOrderList.forEach((values, index) => {
@@ -100,7 +97,6 @@ export default class Form extends Retail {
             
 
                 this.Util.clearObjProperty(values, [
-                    "discount",
                     "isFocusOnSearchCompositeProduct",
                     "price",
                     "quantity",
@@ -108,11 +104,19 @@ export default class Form extends Retail {
                     "searchRecord"
                 ]);
 
-                values["total"] = summaryTotal.subTotal;
+                const {
+                    summaryTotal,
+                    discountAmount,
+                    taxAmount
+                  } = this.getSummaryTotal();
+                
+
+                values["total"] = POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
                 values["status"] = status;
                 values["name"] = "Create Quotation";
+                // values["discount"] = discountAmount;
+                values["discount"] = this.state.discountValue.value;
                 values["Entries"] = productList;
-
                 if(this.state.selectedCustomer && this.state.quotationId){
                     values["customerId"] = this.state.selectedCustomer.id;
                     values["id"] = this.state.quotationId;
@@ -163,31 +167,6 @@ export default class Form extends Retail {
         });
         return summaryTotal;
       }
-
-    getSummaryTotal() {
-        const summaryTotal = this.getSummaryTotalInQuotation(this.state.productOrderList, this.state.customerFieldPrice);
-        let discountAmount = 0;
-        let discountTypeStr = "";
-
-        const taxAmount = POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale)).taxTotal;
-
-        if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-            discountTypeStr = ` (${this.state.discountValue.value}%)`;
-            discountAmount = POSUtil.getDiscountByRate(summaryTotal.subTotal + taxAmount, this.state.discountValue.value); // WE DISCOUNT AFTER TAX IF DIFFERENCE FROM EACH ITEM
-        } else if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.AMOUNT) {
-            discountAmount = this.state.discountValue.value;
-        } else {
-            discountAmount = summaryTotal.discount;
-        }
-
-        return {
-            summaryTotal,
-            taxAmount,
-            discountAmount,
-            discountTypeStr,
-            discountType: this.state.discountValue.type
-        };
-    }
 
     // ..............................
 

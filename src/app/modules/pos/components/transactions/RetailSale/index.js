@@ -296,7 +296,7 @@ export default class Retail extends Component {
     } else {
       discountAmount = summaryTotal.discount;
     }
-
+    
     return {
       summaryTotal,
       taxAmount,
