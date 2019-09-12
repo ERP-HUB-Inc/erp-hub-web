@@ -114,7 +114,6 @@ export default class Form extends Retail {
                 values["total"] = POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
                 values["status"] = status;
                 values["name"] = "Create Quotation";
-                // values["discount"] = discountAmount;
                 values["discount"] = this.state.discountValue.value;
                 values["Entries"] = productList;
                 if(this.state.selectedCustomer && this.state.quotationId){
