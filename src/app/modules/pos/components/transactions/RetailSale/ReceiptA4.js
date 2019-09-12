@@ -1,4 +1,5 @@
 import React from "react";
+import POSUtil from "../../../utils";
 import Component from "../../../../common/components/Component";
 export default class ReceiptA4 extends Component {
   
@@ -34,11 +35,25 @@ export default class ReceiptA4 extends Component {
     )
   }
 
-  renderMoneyCell(value,symbol) {
+  renderMoneyCell(value = 0,symbol) {
     return <div style={{display: "flex", justifyContent: "space-between"}}>
       <div>{symbol ? symbol : "$" }</div>
       <div>{this.formatCurrency(value, "", false)}</div>
     </div>;
+  }
+
+  calculateDiscount(productList,discount){
+    let totalAllproduct = "";
+    
+    productList.map((product, index) =>
+      totalAllproduct += product.price * product.quantity
+    )
+
+    if(discount > 0){
+      return POSUtil.getDiscountByRate(totalAllproduct,discount);
+    }else{
+      return;
+    }
   }
 
   itemlist(){
@@ -110,7 +125,7 @@ export default class ReceiptA4 extends Component {
               <td style={{borderRight: "1px solid black", width: "100px", textAlign: "right", fontSize: "11px"}} />
             </tr>
             <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
-              <td colSpan={2} rowSpan={4} style={{borderRight: "1px solid black", backgroundColor: "#E7E6E6", fontSize: "11px", padding: "8px", textAlign: "left"}}>
+              <td colSpan={2} rowSpan={5} style={{borderRight: "1px solid black", backgroundColor: "#E7E6E6", fontSize: "11px", padding: "8px", textAlign: "left"}}>
                 Please pay to our company bank account as below: <br />
                 <span style={{border: "1px solid black", width: "10px", height: "10px", display: "inline-block", position: "relative", top: "3px"}}>&nbsp;&nbsp;</span>&nbsp;&nbsp;Cheque to <b>R E Design Co., Ltd.</b>&nbsp;or<br />
                 <span style={{border: "1px solid black", width: "10px", height: "10px", display: "inline-block", position: "relative", top: "2px"}} />&nbsp;&nbsp;Bank account as below:<br />
@@ -135,6 +150,14 @@ export default class ReceiptA4 extends Component {
               {this.renderMoneyCell(0)}
               </td>
             </tr>
+
+            <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
+              <td colSpan={2} style={{borderRight: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left"}}>បញ្ចុះតំលៃ Discount ({this.props.data.discount ? this.props.data.discount : 0} %)</td>
+              <td style={{borderRight: "1px solid black"}}>
+              {this.renderMoneyCell(this.calculateDiscount(this.props.productList,this.props.data.discount))}
+              </td>
+            </tr>
+
             <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
               <td colSpan={2} style={{borderRight: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left"}}>សរុបរួម Grand Total </td>
               <td style={{borderRight: "1px solid black"}}>
