@@ -45,6 +45,12 @@ export default class QuotationList extends List {
         render: (customer) => customer ? customer.firstName + " " + customer.lastName : this.emptyText
       },
       {
+        title: <this.Translate id="text_number" />,
+        dataIndex: "number",
+        key: "number",
+        sorter: true
+      },
+      {
         title: <this.Translate id="text_phone_number" />,
         dataIndex: "customer",
         key: "phoneNumber",

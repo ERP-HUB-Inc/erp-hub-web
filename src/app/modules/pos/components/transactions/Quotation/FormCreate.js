@@ -1,4 +1,5 @@
 import React from "react";
+import Enum from "../../../enums";
 import history from "../../../../../modules/common/router/history";
 import Retail from "../../../../pos/components/transactions/RetailSale";
 import QuotationAction from "../../../action/transaction/quotation";
@@ -40,7 +41,7 @@ export default class Form extends Retail {
                     taxAmount
                   } = this.getSummaryTotal();
 
-                values["status"] = 0;
+                values["status"] = Enum.QUOTATION_STEP.DRAFT;
                 values["discount"] = this.state.discountValue.value;
                 values["total"] = POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
                 values["name"] = "Create Quotation";

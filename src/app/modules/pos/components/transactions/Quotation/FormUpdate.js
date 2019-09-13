@@ -154,16 +154,16 @@ export default class Form extends Retail {
     
         if (orderList === null || !Array.isArray(orderList)) 
           return summaryTotal;
-        orderList.forEach(value => {
-          let totalAmount = "";
-          if(value.quotationStatus !== this.Enum.ARCHIVE){
-              totalAmount = POSUtil.getTotalAmount(value.quantity, value[priceFeild]);
-              summaryTotal.totalQuantity += value.quantity;
-              summaryTotal.subTotal += totalAmount;
-              summaryTotal.subTotalAfterDiscount += POSUtil.getTotalAmountAfterDiscount(value.quantity, value[priceFeild], value.discount);
-              summaryTotal.discount += POSUtil.getDiscountByRate(totalAmount, value.discount);
-          }
-        });
+            orderList.forEach(value => {
+                let totalAmount = "";
+                if(value.quotationStatus !== this.Enum.ARCHIVE){
+                    totalAmount = POSUtil.getTotalAmount(value.quantity, value[priceFeild]);
+                    summaryTotal.totalQuantity += value.quantity;
+                    summaryTotal.subTotal += totalAmount;
+                    summaryTotal.subTotalAfterDiscount += POSUtil.getTotalAmountAfterDiscount(value.quantity, value[priceFeild], value.discount);
+                    summaryTotal.discount += POSUtil.getDiscountByRate(totalAmount, value.discount);
+                }
+            });
         return summaryTotal;
       }
 
