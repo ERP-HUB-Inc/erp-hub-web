@@ -72,11 +72,11 @@ export default class ReceiptA4 extends Component {
                       ""
                   }
                   </div>
-                  <div><pre style={{ fontSize: "11px", fontFamily: "Khmer OS Content", overflow: "hidden" }}>{product.productDescription}</pre></div>
+                 <pre style={{ fontSize: "11px", fontFamily: "Khmer OS Content", overflow: "hidden", marginTop: 0, marginBottom: 0 }}>{product.productDescription}</pre>
               </div>
             </td>
             <td style={{borderRight: "1px solid black", width: "100px", textAlign: "center", fontSize: "11px", verticalAlign: "top", padding: "4px"}}>{product.quantity}</td>
-            <td style={{borderRight: "1px solid black", width: "150px", textAlign: "right", fontSize: "11px", verticalAlign: "top", padding: "4px"}}>{this.formatCurrency(product.price,"",false)}</td>
+            <td style={{borderRight: "1px solid black", width: "150px", textAlign: "right", fontSize: "11px", verticalAlign: "top", padding: "4px"}}>{this.renderMoneyCell(this.formatCurrency(product.price,"",false))}</td>
             <td style={{borderRight: "1px solid black", width: "100px", textAlign: "right", fontSize: "11px", verticalAlign: "top", padding: "4px"}}>{this.renderMoneyCell(product.price * product.quantity)}</td>
           </tr>
         )
@@ -99,9 +99,9 @@ export default class ReceiptA4 extends Component {
         <div style={{fontSize: "23px",textAlign:"center",fontWeight: "bold", fontFamily: "Khmer OS Muol", color: "red"}}>
           សម្រង់តម្លៃ / QUOTATION
         </div>
-        <div style={{display: "flex", fontSize: "11px", marginTop: "8px", marginBottom: "8px"}}>
+        <div style={{display: "flex", fontSize: "11px", marginTop: "2px", marginBottom: "8px"}}>
           <div style={{flexGrow: 2, textAlign: "left"}}>កាលបរិច្ឆេទ Date: <span style={{fontWeight: "bold"}}>{this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY")}</span></div>
-          <div style={{flexGrow: 2, textAlign: "left"}}>VAT TIN: </div>
+          <div style={{flexGrow: 2, textAlign: "left"}}>VAT IN: </div>
           <div style={{flexGrow: 2, textAlign: "right"}}>លេខ No: <span style={{fontWeight: "bold", color: "#CC0000", fontSize: "14px"}}>{this.props.data.number}</span></div>
         </div>
 
@@ -113,8 +113,8 @@ export default class ReceiptA4 extends Component {
               <th style={{color: "white", borderRight: "1px solid black", fontSize: "11pt"}}>លរ <br /> No</th>
               <th style={{color: "white", borderRight: "1px solid black", fontSize: "11pt"}}>បរិយាយ​<br />Description</th>
               <th style={{color: "white", borderRight: "1px solid black", fontSize: "11pt"}}>បរិមាណ<br />Quantity</th>
-              <th style={{color: "white", borderRight: "1px solid black", fontSize: "11pt"}}>តំលៃ<br />Unit Price</th>
-              <th style={{color: "white", borderRight: "1px solid black", fontSize: "11pt"}}>សរុប<br />Total</th>
+              <th style={{color: "white", borderRight: "1px solid black", fontSize: "11pt", width: "160px"}}>តំលៃ<br />Unit Price</th>
+              <th style={{color: "white", borderRight: "1px solid black", fontSize: "11pt", width: "160px"}}>សរុប<br />Total</th>
             </tr>
             {this.itemlist()}
             <tr style={{borderLeft: "1px solid black"}}>
@@ -141,13 +141,13 @@ export default class ReceiptA4 extends Component {
             <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
               <td colSpan={2} style={{borderRight: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left"}}>ពន្ធកាត់ទុក Withodling Tax (0%) </td>
               <td style={{borderRight: "1px solid black"}}>
-                {this.renderMoneyCell(0)}
+                {this.renderMoneyCell()}
               </td>
             </tr>
             <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
               <td colSpan={2} style={{borderRight: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left"}}>អាករ VAT 0% </td>
               <td style={{borderRight: "1px solid black"}}>
-              {this.renderMoneyCell(0)}
+              {this.renderMoneyCell()}
               </td>
             </tr>
 
@@ -171,7 +171,7 @@ export default class ReceiptA4 extends Component {
             <div style={{flexGrow: 2, textAlign: "right"}}>អតិថិជន/Customer ………………………………</div>
           </div>
           <div style={{textAlign: "center", backgroundColor: "#F8CBAD", padding: "8px", fontSize: "11px", marginBottom: "15px"}}>
-            <div style={{fontWeight: "bold"}}>ចំណាំ៖ ច្បាប់ដើមសម្រាប់​អ្នកទិញ និង ​ច្បាប់​ចម្លង​សម្រាប់​អ្នក​លក់</div>
+            <div style={{ fontFamily: "Khmer OS" }}><span style={{fontWeight: "bold"}}>ចំណាំ៖ </span>&nbsp;ច្បាប់ដើមសម្រាប់​អ្នកទិញ និង ​ច្បាប់​ចម្លង​សម្រាប់​អ្នក​លក់</div>
           </div>
           <div style={{textAlign: "center", fontSize: "11px", marginBottom: "15px"}}>
             <div style={{fontWeight: "bold"}}>សូមអំណរគុណ​សំរាប់​គាំទ្រដល់​សេវាកម្ម​យើង​ខ្ញុំ‌‌!    <i>Thank you for support our service!</i></div>
