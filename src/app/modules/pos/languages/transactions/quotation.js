@@ -24,6 +24,11 @@ export default {
     "បង្កើតសម្រង់តំលៃ",
     "Create Quotation"
   ],
+  "text_save_quotation": [
+    "Save Quotation",
+    "រក្សាទុកសម្រង់តំលៃ",
+    "Save Quotation"
+  ],
   "text_edit_quotation": [
     "Edit Quotation",
     "កែប្រែសម្រង់តំលៃ",

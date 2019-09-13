@@ -189,7 +189,7 @@ export default class Form extends Retail {
         return(
             <this.Row className="create-quotation-action" onClick={this.handleCreateQuotation}>
                 <this.Button type="info" className="mg-right">
-                    <span className="icon-add icon-padding-right"></span><this.Translate id="text_create_quotation" />
+                    <span className="icon-save icon-padding-right"></span><this.Translate id="text_save_quotation" />
                 </this.Button>
             </this.Row>
         );
