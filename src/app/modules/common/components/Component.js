@@ -291,11 +291,12 @@ export default class Component extends React.Component {
   }
 
   formatUnit(quantity,multiple,unitName,label = "",andTranslated){
-    let unit = (quantity/multiple) - Math.floor(quantity/multiple);
+    let multipleValues = quantity / multiple;
+    let unit = (multipleValues) - Math.floor(multipleValues);
     if(unit !== 0){
-      return `${Math.floor(quantity/multiple)} ${unitName} ${andTranslated} ${unit * multiple} ${label}`;
+      return `${Math.floor(multipleValues)} ${unitName} ${andTranslated} ${unit * multiple} ${label}`;
     }else{
-      return `${Math.floor(quantity/multiple)} ${unitName}`;
+      return `${Math.floor(multipleValues)} ${unitName}`;
     }
   }
 

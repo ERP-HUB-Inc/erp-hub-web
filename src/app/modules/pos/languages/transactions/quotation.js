@@ -26,7 +26,7 @@ export default {
   ],
   "text_edit_quotation": [
     "Edit Quotation",
-    "កែប្រៃសម្រង់តំលៃ",
+    "កែប្រែសម្រង់តំលៃ",
     "Edit Quotation"
   ],
   "text_all_customer": [
@@ -35,14 +35,14 @@ export default {
     "All Customer"
   ],
   "text_error_not_create_quotation": [
-    "Can't crete quotation because don't have product!",
+    "Can't create quotation because don't have product!",
     "មិនអាចបង្កើតសម្រង់តំលៃបានទេពីព្រោះផលិតផលគ្មានផលិតផល!",
-    "Can't crete quotation because don't have product!"
+    "Can't create quotation because don't have product!"
   ],
   "text_error_create_quotation": [
-    "please search customer before create quotation !",
+    "Please search customer before create quotation !",
     "សូមស្វែងរកអតិថិជនមុនពេលបង្កើតសម្រង់តំលៃ !",
-    "please search customer before create quotation !"
+    "Please search customer before create quotation !"
   ],
   "text_error_allow_process_only_draft_step": [
     "We allow process only step draft!",

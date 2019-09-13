@@ -50,7 +50,7 @@ export default class Form extends Retail {
                     
                 });
             
-                this.props.form.setFieldsValue({ searchRecord: `${quotaionValues.customer.firstName} ${quotaionValues.customer.lastName}`});
+                this.props.form.setFieldsValue({ searchRecord: `${quotaionValues.customer.firstName ? quotaionValues.customer.firstName : "" } ${quotaionValues.customer.lastName ? quotaionValues.customer.lastName : ""}`});
                 this.getSelectedCustomer(this.props.quotationDetail.data.customer);
                
                 this.setState({
@@ -113,7 +113,7 @@ export default class Form extends Retail {
 
                 values["total"] = POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
                 values["status"] = status;
-                values["name"] = "Create Quotation";
+                values["name"] = "Quotation";
                 values["discount"] = this.state.discountValue.value;
                 values["Entries"] = productList;
                 if(this.state.selectedCustomer && this.state.quotationId){

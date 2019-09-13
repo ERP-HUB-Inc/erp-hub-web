@@ -35,20 +35,15 @@ export default class QuotationList extends List {
       {
         title: <this.Translate id="text_name" />,
         dataIndex: "name",
-        sorter: true
+        sorter: true,
+        render: (text,record) => `${record.name}:${record.number}`
       },
       {
         title: <this.Translate id="text_customer" />,
         dataIndex: "customer",
         key: "firstName",
         sorter: true,
-        render: (customer) => customer ? customer.firstName + " " + customer.lastName : this.emptyText
-      },
-      {
-        title: <this.Translate id="text_number" />,
-        dataIndex: "number",
-        key: "number",
-        sorter: true
+        render: (customer) => customer ? `${customer.firstName} ${customer.lastName}` : this.emptyText
       },
       {
         title: <this.Translate id="text_phone_number" />,
@@ -117,7 +112,7 @@ export default class QuotationList extends List {
     this.formUpdate = <FormUpdate/>;
     this.generalSearchLabel = "text_name";
     this.placeHolderForGeneralSearch = "text_name";
-    this.columnFilterWithKey = ["name"];
+    this.columnFilterWithKey = ["name","number"];
     this.service = QuotationService;
     this.action = QuotationAction;
     this.RESET_CONSTANT = Constant.RESET_QUOTATION;
@@ -191,7 +186,7 @@ export default class QuotationList extends List {
 
   handleCancelQuotation(record){
     if(record.status === Enum.QUOTATION_STEP.DRAFT || record.status === Enum.QUOTATION_STEP.PROCESS){
-      let status = { "status": Enum.QUOTATION_STEP.CANCEL,"id": record.id }
+      let status = { status: Enum.QUOTATION_STEP.CANCEL, id: record.id }
       this.props.dispatch(QuotationAction.update(status)); 
     }else{
       this.Message.warning(this.CATranslate("text_error_allow_cancel_only_draft_step_and_process", this.props.locale));
@@ -200,7 +195,7 @@ export default class QuotationList extends List {
 
   handleProcessQuotation(record){
     if(record.status === Enum.QUOTATION_STEP.DRAFT){
-      let status = { "status": Enum.QUOTATION_STEP.PROCESS,"id": record.id }
+      let status = { status: Enum.QUOTATION_STEP.PROCESS, id: record.id }
       this.props.dispatch(QuotationAction.update(status)); 
     }else{
       this.Message.warning(this.CATranslate("text_error_allow_process_only_draft_step", this.props.locale));
@@ -209,7 +204,7 @@ export default class QuotationList extends List {
 
   handleCompleteQuotation(record){
     if(record.status === Enum.QUOTATION_STEP.PROCESS){
-      let status = { "status": Enum.QUOTATION_STEP.COMPLETED,"id": record.id }
+      let status = { status: Enum.QUOTATION_STEP.COMPLETED, id: record.id }
       this.props.dispatch(QuotationAction.update(status)); 
     }else{
       this.Message.warning(this.CATranslate("text_error_allow_complete_only_process_step", this.props.locale));

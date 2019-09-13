@@ -44,7 +44,7 @@ export default class Form extends Retail {
                 values["status"] = Enum.QUOTATION_STEP.DRAFT;
                 values["discount"] = this.state.discountValue.value;
                 values["total"] = POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
-                values["name"] = "Create Quotation";
+                values["name"] = "Quotation";
                 values["Entries"] = productList;
             
                 if(this.state.selectedCustomer){
