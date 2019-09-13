@@ -10,6 +10,7 @@ export default class Form extends Retail {
     constructor(props){
         super(props);
         this.handleCreateQuotation = this.handleCreateQuotation.bind(this);
+        this.handleViewQuotation = this.handleViewQuotation.bind(this);
     }
 
     handleCreateQuotation(){
@@ -61,8 +62,22 @@ export default class Form extends Retail {
         }
     }
 
-    saleOrderHeader(){}
-    
+    handleViewQuotation(){
+        history.push("/transactions/quotation");
+    }
+
+    saleOrderHeader(){
+        return(
+            <this.Row className="wrap-receipt-type">
+                <this.Col md="12" className="receipt-type">
+                  <div className="pull-left park-receipt" onClick={this.handleViewQuotation}>
+                    <span className="icon-time icon-padding-right"></span><this.Translate id="text_view_quotation" />
+                  </div>
+                </this.Col>
+              </this.Row>
+          )
+    }
+
     renderSaveAndPayButton(){
         return(
             <this.Row className="create-quotation-action" onClick={this.handleCreateQuotation}>

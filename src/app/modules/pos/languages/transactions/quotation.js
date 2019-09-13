@@ -29,6 +29,11 @@ export default {
     "រក្សាទុកសម្រង់តំលៃ",
     "Save Quotation"
   ],
+  "text_view_quotation": [
+    "View Quotation",
+    "ត្រឡប់ទៅមើលសម្រង់តំលៃ",
+    "View Quotation"
+  ],
   "text_edit_quotation": [
     "Edit Quotation",
     "កែប្រែសម្រង់តំលៃ",
