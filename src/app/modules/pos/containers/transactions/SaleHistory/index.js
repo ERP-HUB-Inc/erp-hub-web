@@ -9,7 +9,7 @@ class SaleHistoryList extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+export function mapStateToProps(state) {
   return {
     list: state.reducer.transaction.request,
     detail: state.reducer.transaction.detail,

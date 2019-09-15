@@ -106,6 +106,11 @@ const Supplier = Loadable({
   loading: () => <StartUp />,
 });
 
+const SaleOrderQuotation = Loadable({
+  loader: () => import("../../../../inventory/containers/stock/SaleOrder"),
+  loading: () => <StartUp />,
+});
+
 const StockAdjustmentRequest = Loadable({
   loader: () => import("../../../../inventory/containers/stock/StockAdjustmentRequest"),
   loading: () => <StartUp />,
@@ -368,6 +373,13 @@ const dataSource = {
     route: "stock",
     title: <Translate id="text_stock" />,
     subItems: [
+      {
+        title: <Translate id="text_sale_order" />,
+        icon: "icon-time",
+        route: "/stock/sale-order",
+        component: SaleOrderQuotation,
+        isFashNav: true
+      },
       {
         title: <Translate id="text_supplier" />,
         icon: "icon-customer",

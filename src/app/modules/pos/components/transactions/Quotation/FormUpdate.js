@@ -20,6 +20,7 @@ export default class Form extends Retail {
           listQuotationWhenRemove: []
         }
         this.handleCreateQuotation = this.handleCreateQuotation.bind(this);
+        this.handleProcessQuotation = this.handleProcessQuotation.bind(this);
         this.handleViewQuotation = this.handleViewQuotation.bind(this);
     }
 
@@ -68,6 +69,10 @@ export default class Form extends Retail {
     
     handleCreateQuotation(){
         this.saveQuotation(Enum.QUOTATION_STEP.DRAFT);
+    }
+
+    handleProcessQuotation(){
+        this.saveQuotation(Enum.QUOTATION_STEP.PROCESS);
     }
 
     saveQuotation(status){
@@ -193,7 +198,7 @@ export default class Form extends Retail {
             <this.Row className="wrap-receipt-type">
                 <this.Col md="12" className="receipt-type">
                   <div className="pull-left park-receipt" onClick={this.handleViewQuotation}>
-                    <span className="icon-time icon-padding-right"></span><this.Translate id="text_view_quotation" />
+                    <span className="icon-time icon-padding-right"></span><this.Translate id="text_list_quotation" />
                   </div>
                 </this.Col>
               </this.Row>
@@ -202,9 +207,12 @@ export default class Form extends Retail {
 
     renderSaveAndPayButton(){
         return(
-            <this.Row className="create-quotation-action" onClick={this.handleCreateQuotation}>
-                <this.Button type="info" className="mg-right">
-                    <span className="icon-save icon-padding-right"></span><this.Translate id="text_save_quotation" />
+            <this.Row className="payment-action">
+                <this.Button type="info" className="mg-right" onClick={this.handleCreateQuotation}>
+                   <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
+                </this.Button>
+                <this.Button type="info"  onClick={this.handleProcessQuotation}>
+                    <span className="icon-checked icon-padding-right"></span><this.Translate id="text_process" />
                 </this.Button>
             </this.Row>
         );

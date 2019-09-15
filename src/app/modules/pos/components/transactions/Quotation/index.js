@@ -27,8 +27,7 @@ export default class QuotationList extends List {
     this.QUOTATION_STEP_STR = {
       [Enum.QUOTATION_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color:"warning"},
       [Enum.QUOTATION_STEP.PROCESS]: {name: <this.Translate id="text_process" />, color:"processing"},
-      [Enum.QUOTATION_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color:"error"},
-      [Enum.QUOTATION_STEP.COMPLETED]: {name: <this.Translate id="text_complete" />, color:"success"}
+      [Enum.QUOTATION_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color:"error"}
     };
     this.columns = [
       this.columnCreatedAt,
@@ -79,7 +78,7 @@ export default class QuotationList extends List {
         key: "status",
         sorter: true,
         width: 120,
-        render: status => status in this.QUOTATION_STEP_STR ? <this.Badge style={{ textTransform: "uppercase" }} status={this.QUOTATION_STEP_STR[status].color}  text={this.QUOTATION_STEP_STR[status].name} /> : this.emptyText()
+        render: status => status in this.QUOTATION_STEP_STR ? <this.Badge style={{ textTransform: "uppercase" }} status={this.QUOTATION_STEP_STR[status].color}  text={this.QUOTATION_STEP_STR[status].name} /> : this.emptyText
       },
       {
         title: <this.Translate id="text_action" />,
@@ -93,16 +92,6 @@ export default class QuotationList extends List {
               <span className="icon-cancel icon-padding-right"></span>
               <this.Translate id="text_cancel"/>
             </this.Button>  
-            { record.status === Enum.QUOTATION_STEP.DRAFT ? 
-            <this.Button className="mg-right text-uppercase process_step" onClick={() => this.handleProcessQuotation(record)}>
-              <span className="icon-operation icon-padding-right"></span>
-              <this.Translate id="text_process"/>
-            </this.Button> : 
-            <this.Button className="mg-right text-uppercase complete_step" onClick={() => this.handleCompleteQuotation(record)}>
-              <span className="icon-operation icon-padding-right"></span>
-              <this.Translate id="text_complete"/>
-            </this.Button>
-          } 
           </div>;
         }
       }

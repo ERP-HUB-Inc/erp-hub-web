@@ -29,10 +29,10 @@ export default {
     "រក្សាទុកសម្រង់តំលៃ",
     "Save Quotation"
   ],
-  "text_view_quotation": [
-    "View Quotation",
-    "ត្រឡប់ទៅមើលសម្រង់តំលៃ",
-    "View Quotation"
+  "text_list_quotation": [
+    "Quotation List",
+    "បញ្ជីសម្រង់",
+    "Quotation List"
   ],
   "text_edit_quotation": [
     "Edit Quotation",
