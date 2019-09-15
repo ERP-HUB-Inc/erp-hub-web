@@ -37,7 +37,7 @@ export default class SaleOrder extends SaleHistory {
   }
   
   componentWillUpdate(nextProps) {
-    let status = {status: [Enum.TRANSACTION_STATUS.PROCESS]}
+    let status = {status: [Enum.TRANSACTION_STEP.PROCESS]}
     if (nextProps.updateReceivePayment.updated) {
       this.props.dispatch(TransactionAction.fetch(this.pageSize,"","","",JSON.stringify(status),"",""));
       nextProps.dispatch(ReceivePaymentAction.reset());
@@ -53,7 +53,7 @@ export default class SaleOrder extends SaleHistory {
             id={this.state.transectionId} 
             customer={this.props.detail.data} 
             buttonReceivePaymentTitle={ <this.Translate id="text_complete" />} 
-            status={Enum.TRANSACTION_STATUS.CREDIT}
+            status={Enum.TRANSACTION_STEP.CREDIT}
           />,
         loadingPopup: false,
         isRequestReceivePayment: false
