@@ -22,7 +22,7 @@ export default class QuotationList extends List {
       isNotYetLoadComponentDidUpdated: true,
       isRequestPrint: false,
       handleUpdateForm: false,
-      processQuotation: false,
+      quotationStatus: false,
       ...this.state
     }
     this.QUOTATION_STEP_STR = {
@@ -50,7 +50,15 @@ export default class QuotationList extends List {
         dataIndex: "customer",
         key: "phoneNumber",
         sorter: true,
-        render: (customer) => customer ? customer.phoneNumber : this.emptyText 
+        render :(text,record) => {
+          if(record.customer){
+            if(record.customer.phoneNumber){
+             return record.customer.phoneNumber;
+            }else{
+              return this.emptyText
+            }
+          }
+         }
       },
       {
         title: <this.Translate id="text_email" />,
@@ -181,7 +189,9 @@ export default class QuotationList extends List {
   }
 
   handleCancelQuotation(record){
-    if(record.status === Enum.QUOTATION_STEP.DRAFT){
+    if(record.status === Enum.QUOTATION_STEP.PROCESS){
+      // this.setState({quotationStatus: true});
+      // this.props.dispatch(QuotationAction.detail(record.id));
       let status = { status: Enum.QUOTATION_STEP.CANCEL, id: record.id }
       this.props.dispatch(QuotationAction.update(status)); 
     }else{
@@ -191,7 +201,7 @@ export default class QuotationList extends List {
 
   handleProcessQuotation(record){
     if(record.status === Enum.QUOTATION_STEP.DRAFT){
-      this.setState({processQuotation: true});
+      this.setState({quotationStatus: true});
       this.props.dispatch(QuotationAction.detail(record.id));
     }else{
       this.Message.warning(this.CATranslate("text_error_allow_process_only_draft_step", this.props.locale));
@@ -312,7 +322,7 @@ export default class QuotationList extends List {
       this.setState({isNotYetLoadComponentDidUpdated: false, handleUpdateForm: false});
     }
 
-    if(this.state.processQuotation && this.props.quotationDetail.data){
+    if(this.state.quotationStatus && this.props.quotationDetail.data){
       let quotationEntry = [];
       if(this.props.quotationDetail){
         this.props.quotationDetail.data.quotationEntries.forEach((values, index) => {
@@ -325,7 +335,7 @@ export default class QuotationList extends List {
         });
         this.saveProcessQuotation(quotationEntry,this.props.quotationDetail.data);
       }
-      this.setState({processQuotation: false})
+      this.setState({quotationStatus: false})
     }
 
     this.Util.removeFullScreen();
