@@ -285,7 +285,7 @@ export default class QuotationList extends List {
   }
 
   componentWillUpdate(nextProps) {
-    if (nextProps.update.updated) {
+    if (nextProps.update.updated || nextProps.add.added) {
       this.props.dispatch(QuotationAction.fetch(this.pageSize));
     }
   } 
