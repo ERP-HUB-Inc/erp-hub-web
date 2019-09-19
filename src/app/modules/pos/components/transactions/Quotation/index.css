@@ -31,4 +31,5 @@
 .action_create_quotation button.cancel_step {
     background-color: #F5222D !important;
     color: white;
+    width: 121px;
 }

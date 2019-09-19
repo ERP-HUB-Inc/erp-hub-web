@@ -54,9 +54,8 @@ export default {
   },
   QUOTATION_STEP: {
     DRAFT : 0,
-    PROCESS : 1,
-    CANCEL : 2,
-    COMPLETED : 4
+    PROCESS : 1, //create invoice
+    CANCEL : 2
   },
   QUOTATION_STEP_COLOR: {
     DRAFT: "#FAAD14",

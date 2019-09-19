@@ -79,9 +79,9 @@ export default {
     "អនុញ្ញាតឱ្យដំណើរការតែជំហានដំណើរការប៉ុណ្ណោះ!",
     "We allow complete only step process!"
   ],
-  "text_error_allow_cancel_only_draft_step_and_process": [
-    "We allow cancel only step draft and process!",
-    "អនុញ្ញាតឱ្យបោះបុងតែដំណាក់កាលសេចក្តីព្រៀងនឹងដំណើរការ",
-    "We allow cancel only step draft and process!"
+  "text_error_allow_cancel_only_draft_step": [
+    "We allow cancel only step draft!",
+    "អនុញ្ញាតឱ្យបោះបុងតែដំណាក់កាលសេចក្តីព្រៀង!",
+    "We allow cancel only step draft!"
   ]
 };

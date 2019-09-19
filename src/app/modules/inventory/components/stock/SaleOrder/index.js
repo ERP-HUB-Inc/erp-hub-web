@@ -62,6 +62,17 @@ export default class SaleOrder extends SaleHistory {
 
   }
 
+  renderButtonSearch(fetchingProps){
+    return(
+      <this.Col md="2" className="wrap-btn-search" style={{ marginTop: 27 }}>
+        <this.Button htmlType="submit" type="info"  loading={this.state.isClickFilter && fetchingProps.fetching}>
+          <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
+        </this.Button> 
+      </this.Col>
+    )
+  }
+
+  renderFilterType(){}
   renderButtonDelete(){}
   renderButtonAddNew(){}
 }

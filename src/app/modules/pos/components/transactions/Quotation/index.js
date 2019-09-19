@@ -22,6 +22,7 @@ export default class QuotationList extends List {
       isNotYetLoadComponentDidUpdated: true,
       isRequestPrint: false,
       handleUpdateForm: false,
+      processQuotation: false,
       ...this.state
     }
     this.QUOTATION_STEP_STR = {
@@ -59,7 +60,7 @@ export default class QuotationList extends List {
         render :(text,record) => {
          if(record.customer){
            if(record.customer.email){
-            return record.email;
+            return record.customer.email;
            }else{
              return this.emptyText
            }
@@ -88,10 +89,17 @@ export default class QuotationList extends List {
         width: 100,
         render: (text, record) => {
           return <div style={{ flexDirection: "row", display: "flex", width: "100%" }} className="action_create_quotation"> 
-            <this.Button className="mg-right text-uppercase cancel_step" onClick={() => this.handleCancelQuotation(record,this.state.selectedRows)}>
-              <span className="icon-cancel icon-padding-right"></span>
-              <this.Translate id="text_cancel"/>
-            </this.Button>  
+            {
+              record.status === Enum.QUOTATION_STEP.DRAFT ?
+              <this.Button className="mg-right text-uppercase process_step" onClick={() => this.handleProcessQuotation(record,this.state.selectedRows)}>
+                <span className="icon-operation icon-padding-right"></span>
+                <this.Translate id="text_process"/>
+              </this.Button>  :
+              <this.Button className="mg-right text-uppercase cancel_step" onClick={() => this.handleCancelQuotation(record,this.state.selectedRows)}>
+                <span className="icon-cancel icon-padding-right"></span>
+                <this.Translate id="text_cancel"/>
+              </this.Button>
+            }
           </div>;
         }
       }
@@ -107,7 +115,6 @@ export default class QuotationList extends List {
     this.RESET_CONSTANT = Constant.RESET_QUOTATION;
     this.handleCancelQuotation = this.handleCancelQuotation.bind(this);
     this.handleProcessQuotation = this.handleProcessQuotation.bind(this);
-    this.handleCompleteQuotation = this.handleCompleteQuotation.bind(this);
     this.handlePrint = this.handlePrint.bind(this);
   }
 
@@ -174,30 +181,32 @@ export default class QuotationList extends List {
   }
 
   handleCancelQuotation(record){
-    if(record.status === Enum.QUOTATION_STEP.DRAFT || record.status === Enum.QUOTATION_STEP.PROCESS){
+    if(record.status === Enum.QUOTATION_STEP.DRAFT){
       let status = { status: Enum.QUOTATION_STEP.CANCEL, id: record.id }
       this.props.dispatch(QuotationAction.update(status)); 
     }else{
-      this.Message.warning(this.CATranslate("text_error_allow_cancel_only_draft_step_and_process", this.props.locale));
+      this.Message.warning(this.CATranslate("text_error_allow_cancel_only_draft_step", this.props.locale));
     }
   }
 
   handleProcessQuotation(record){
     if(record.status === Enum.QUOTATION_STEP.DRAFT){
-      let status = { status: Enum.QUOTATION_STEP.PROCESS, id: record.id }
-      this.props.dispatch(QuotationAction.update(status)); 
+      this.setState({processQuotation: true});
+      this.props.dispatch(QuotationAction.detail(record.id));
     }else{
       this.Message.warning(this.CATranslate("text_error_allow_process_only_draft_step", this.props.locale));
     }
   }
 
-  handleCompleteQuotation(record){
-    if(record.status === Enum.QUOTATION_STEP.PROCESS){
-      let status = { status: Enum.QUOTATION_STEP.COMPLETED, id: record.id }
-      this.props.dispatch(QuotationAction.update(status)); 
-    }else{
-      this.Message.warning(this.CATranslate("text_error_allow_complete_only_process_step", this.props.locale));
+  saveProcessQuotation(quotationEntry,values){
+    let data = { 
+      status: Enum.QUOTATION_STEP.PROCESS,
+      Entries: quotationEntry,
+      id: values.id,
+      total: values.total,
+      totalExcludeTax: values.totalExcludeTax
     }
+    this.props.dispatch(QuotationAction.update(data)); 
   }
 
   renderFilterRecord() {
@@ -275,6 +284,13 @@ export default class QuotationList extends List {
     return productOrderList;
   }
 
+  componentWillUpdate(nextProps) {
+    if (nextProps.update.updated) {
+      this.props.dispatch(QuotationAction.fetch(this.pageSize));
+    }
+  } 
+ 
+
   componentDidUpdate(){
     if(this.props.quotationDetail.data && this.state.isRequestPrint){
       let listProduct = this.getProductOrderList(this.props.quotationDetail.data);
@@ -295,6 +311,23 @@ export default class QuotationList extends List {
       history.push("/transactions/quotation-update");
       this.setState({isNotYetLoadComponentDidUpdated: false, handleUpdateForm: false});
     }
+
+    if(this.state.processQuotation && this.props.quotationDetail.data){
+      let quotationEntry = [];
+      if(this.props.quotationDetail){
+        this.props.quotationDetail.data.quotationEntries.forEach((values, index) => {
+          quotationEntry.push({
+              productVariantId: values.productVariantId,
+              quantity: values.quantity,
+              price: values.price,
+              description: values.description
+          });
+        });
+        this.saveProcessQuotation(quotationEntry,this.props.quotationDetail.data);
+      }
+      this.setState({processQuotation: false})
+    }
+
     this.Util.removeFullScreen();
   }
 

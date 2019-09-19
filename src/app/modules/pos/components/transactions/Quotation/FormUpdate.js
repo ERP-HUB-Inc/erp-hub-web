@@ -19,7 +19,7 @@ export default class Form extends Retail {
           isNotYetLoadComponentDidUpdated: true,
           listQuotationWhenRemove: []
         }
-        this.handleCreateQuotation = this.handleCreateQuotation.bind(this);
+        this.handleSaveQuotation = this.handleSaveQuotation.bind(this);
         this.handleProcessQuotation = this.handleProcessQuotation.bind(this);
         this.handleViewQuotation = this.handleViewQuotation.bind(this);
     }
@@ -67,7 +67,7 @@ export default class Form extends Retail {
         }
     }
     
-    handleCreateQuotation(){
+    handleSaveQuotation(){
         this.saveQuotation(Enum.QUOTATION_STEP.DRAFT);
     }
 
@@ -121,6 +121,7 @@ export default class Form extends Retail {
                 values["status"] = status;
                 values["name"] = "Quotation";
                 values["discount"] = this.state.discountValue.value;
+                values["totalExcludeTax"] = summaryTotal.subTotalAfterDiscount;
                 values["Entries"] = productList;
                 if(this.state.selectedCustomer && this.state.quotationId){
                     values["customerId"] = this.state.selectedCustomer.id;
@@ -208,7 +209,7 @@ export default class Form extends Retail {
     renderSaveAndPayButton(){
         return(
             <this.Row className="payment-action">
-                <this.Button type="info" className="mg-right" onClick={this.handleCreateQuotation}>
+                <this.Button type="info" className="mg-right" onClick={this.handleSaveQuotation}>
                    <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
                 </this.Button>
                 <this.Button type="info"  onClick={this.handleProcessQuotation}>
