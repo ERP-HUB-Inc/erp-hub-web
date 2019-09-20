@@ -190,8 +190,6 @@ export default class QuotationList extends List {
 
   handleCancelQuotation(record){
     if(record.status === Enum.QUOTATION_STEP.PROCESS){
-      // this.setState({quotationStatus: true});
-      // this.props.dispatch(QuotationAction.detail(record.id));
       let status = { status: Enum.QUOTATION_STEP.CANCEL, id: record.id }
       this.props.dispatch(QuotationAction.update(status)); 
     }else{

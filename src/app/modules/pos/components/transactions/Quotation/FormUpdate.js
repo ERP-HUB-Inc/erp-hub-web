@@ -122,6 +122,7 @@ export default class Form extends Retail {
                 values["name"] = "Quotation";
                 values["discount"] = this.state.discountValue.value;
                 values["totalExcludeTax"] = summaryTotal.subTotalAfterDiscount;
+                values["discount"] = discountAmount;
                 values["Entries"] = productList;
                 if(this.state.selectedCustomer && this.state.quotationId){
                     values["customerId"] = this.state.selectedCustomer.id;
@@ -131,7 +132,7 @@ export default class Form extends Retail {
                 }else{
                     this.Message.warning(this.CATranslate("text_error_create_quotation", this.props.locale));
                 }
-
+               
             });
         }else{
             this.Message.warning(this.CATranslate("text_error_not_create_quotation", this.props.locale));

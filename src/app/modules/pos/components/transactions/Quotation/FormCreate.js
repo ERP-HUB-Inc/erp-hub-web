@@ -52,10 +52,10 @@ export default class Form extends Retail {
                   } = this.getSummaryTotal();
 
                 values["status"] = status;
-                values["discount"] = this.state.discountValue.value;
                 values["total"] = POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
                 values["name"] = "Quotation";
                 values["totalExcludeTax"] = summaryTotal.subTotalAfterDiscount;
+                values["discount"] = discountAmount;
                 values["Entries"] = productList;
                 if(this.state.selectedCustomer){
                     values["customerId"] = this.state.selectedCustomer.id;
@@ -64,6 +64,7 @@ export default class Form extends Retail {
                 }else{
                     this.Message.warning(this.CATranslate("text_error_create_quotation", this.props.locale));
                 }
+        
             });
         }else{
             this.Message.warning(this.CATranslate("text_error_not_create_quotation", this.props.locale));
