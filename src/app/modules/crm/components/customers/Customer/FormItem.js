@@ -104,7 +104,6 @@ export default class FormItem extends Modal {
                 label={<this.Translate id="text_first_name" />}
                 data={formData.firstName}
                 placeholder={this.CATranslate("text_first_name",this.props.locale)}
-                required={true}
                 isAutoFocus={true}
                 errorRequired={<this.Translate id="error_required_first_name" />}
                 max={100}
@@ -117,7 +116,6 @@ export default class FormItem extends Modal {
                 label={<this.Translate id="text_last_name" />}
                 data={formData.lastName}
                 placeholder={this.CATranslate("text_last_name", this.props.locale)}
-                required={true}
                 errorRequired={<this.Translate id="error_required_last_name" />}
                 max={100}
                 form={this.props.form}/>

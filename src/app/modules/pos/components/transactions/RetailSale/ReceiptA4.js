@@ -152,7 +152,9 @@ export default class ReceiptA4 extends Component {
             </tr>
 
             <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
-              <td colSpan={2} style={{borderRight: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left"}}>បញ្ចុះតំលៃ Discount ({this.props.data.discount ? this.props.data.discount : 0} %)</td>
+              <td colSpan={2} style={{borderRight: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left"}}>
+                បញ្ចុះតំលៃ Discount ({this.props.data.discount ? this.props.data.discount : 0}  %)
+              </td>
               <td style={{borderRight: "1px solid black"}}>
               {this.renderMoneyCell(this.calculateDiscount(this.props.productList,this.props.data.discount))}
               </td>

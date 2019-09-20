@@ -53,7 +53,7 @@ export default class SaleOrder extends SaleHistory {
             id={this.state.transectionId} 
             customer={this.props.detail.data} 
             buttonReceivePaymentTitle={ <this.Translate id="text_complete" />} 
-            status={Enum.TRANSACTION_STEP.CREDIT}
+            status={Enum.TRANSACTION_STEP.CREDIT} //step complete 
           />,
         loadingPopup: false,
         isRequestReceivePayment: false
