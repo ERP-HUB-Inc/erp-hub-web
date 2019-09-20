@@ -148,11 +148,12 @@ export default class SaleHistoryList extends List {
         dataIndex: "step",
         key: "step",
         render: step => {
-          const stepValue = this.TRANSACTION_STATUS_STR[step];
-          let stepColor = stepValue.color;
-          let stepTitile = stepValue.title;
-
-          return <this.Badge style={{ textTransform: "uppercase" }} status={stepColor} text={stepTitile} />;
+          if(step){
+            const stepValue = this.TRANSACTION_STATUS_STR[step];
+            let stepColor = stepValue.color;
+            let stepTitile = stepValue.title;
+            return <this.Badge style={{ textTransform: "uppercase" }} status={stepColor} text={stepTitile} />;
+          }
         },
         sorter: true
       }

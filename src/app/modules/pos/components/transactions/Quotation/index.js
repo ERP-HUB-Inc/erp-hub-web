@@ -352,23 +352,23 @@ export default class QuotationList extends List {
     }
   }
 
-  handleDelete(){
-    if(this.state.selectedRows[0].status !== Enum.QUOTATION_STEP.DRAFT){
-      this.Message.warning(this.CATranslate("text_error_allow_only_delete_draft_step", this.props.locale));
-    }else{
-      this.setState({deleting: true});
-      this.service.archive(this.state.selectedListIds)
-        .then(response => {
-          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
-          this.setState({
-            selectedRowKeys: [],
-            deleting: false
-          });
-        })
-        .catch(err => {
-          this.setState({deleting: false});
-        });
-    }
-  }
+  // handleDelete(){
+  //   if(this.state.selectedRows[0].status !== Enum.QUOTATION_STEP.DRAFT){
+  //     this.Message.warning(this.CATranslate("text_error_allow_only_delete_draft_step", this.props.locale));
+  //   }else{
+  //     this.setState({deleting: true});
+  //     this.service.archive(this.state.selectedListIds)
+  //       .then(response => {
+  //         this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
+  //         this.setState({
+  //           selectedRowKeys: [],
+  //           deleting: false
+  //         });
+  //       })
+  //       .catch(err => {
+  //         this.setState({deleting: false});
+  //       });
+  //   }
+  // }
 
 }

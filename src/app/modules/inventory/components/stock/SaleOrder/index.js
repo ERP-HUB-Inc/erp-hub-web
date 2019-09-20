@@ -75,4 +75,5 @@ export default class SaleOrder extends SaleHistory {
   renderFilterType(){}
   renderButtonDelete(){}
   renderButtonAddNew(){}
+  
 }
