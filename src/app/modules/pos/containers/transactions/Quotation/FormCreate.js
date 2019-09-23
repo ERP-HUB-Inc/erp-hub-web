@@ -15,6 +15,7 @@ class QuotationForm extends RetailSaleForm {
 function mapStateToPropsChild(state) {
   return {
     ...mapStateToProps(state),
+    customer: state.reducer.customer.add,
     quotationAdd: state.reducer.quotation.add,
     locale: state.locale
   };

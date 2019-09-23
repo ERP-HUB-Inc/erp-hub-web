@@ -1,8 +1,11 @@
 import React from "react";
 import Enum from "../../../enums";
+import EnumCustomer from "../../../../crm/enum";
 import history from "../../../../../modules/common/router/history";
 import Retail from "../../../../pos/components/transactions/RetailSale";
 import QuotationAction from "../../../action/transaction/quotation";
+import CustomerAction from "../../../../crm/actions/customers/customer";
+import ConstantCustomer from "../../../../crm/constants/customers/customer";
 import POSUtil from "../../../../pos/utils";
 import "./index.css";
 
@@ -56,6 +59,7 @@ export default class Form extends Retail {
                 values["name"] = "Quotation";
                 values["totalExcludeTax"] = summaryTotal.subTotalAfterDiscount;
                 values["discount"] = discountAmount;
+                values["terms"] = this.state.discountValue.value;
                 values["Entries"] = productList;
                 if(this.state.selectedCustomer){
                     values["customerId"] = this.state.selectedCustomer.id;
@@ -73,6 +77,23 @@ export default class Form extends Retail {
 
     handleViewQuotation(){
         history.push("/transactions/quotation");
+    }
+
+    componentDidUpdate(){
+        super.componentDidUpdate();
+        let errorCode = "";
+        if (this.props.customer.error) {
+            errorCode = this.Util.getErrorCodeFromState(this.props.customer.error);
+        }
+    
+        if (errorCode) {
+            let message = "Something went wrong";
+            if (errorCode === EnumCustomer.CUSTOMER_EXIST) {
+                message = this.CATranslate("error_exist_customer", this.props.locale);
+            }
+            this.Message.error(message);
+            this.props.dispatch(CustomerAction.reset(ConstantCustomer.RESET_ADD_CUSTOMERS));
+        }
     }
 
     saleOrderHeader(){
