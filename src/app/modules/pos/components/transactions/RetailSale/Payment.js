@@ -43,8 +43,7 @@ export default class Payment extends Modal {
     }
 
     if (
-      !this.state.isCustomerCredit
-      && this.props.transaction.paid
+      this.props.transaction.paid
       && !this.state.isAlreadyAutoPrint) {
       const element = document.getElementById("pos-receipt-preview");
       if (element && this.state.isAllowPrintReceipt) {
