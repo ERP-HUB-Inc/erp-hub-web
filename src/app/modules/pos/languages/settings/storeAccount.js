@@ -17,6 +17,12 @@ export default {
     "Copy"
   ],
 
+  "text_vat_no": [
+    "VAT Number",
+    "លេខពន្ធ",
+    "VAT Number"
+  ],
+
   "store_acc_store_name": [
     "Private URL",
     "URL ឯកជន",

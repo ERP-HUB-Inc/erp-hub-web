@@ -1,10 +1,10 @@
 import React from "react";
 import JsBarcode from "jsbarcode";
+import { PaperSize } from "../../settings/ReceiptTemplate/PaperSize";
 import Component from "../../../../common/components/Component";
 import Enum from "../../../../pos/enums";
-import "./Receipt.css";
-import { PaperSize } from "../../settings/ReceiptTemplate/PaperSize";
 import Util from "../../../../pos/utils";
+import "./Receipt.css";
 export default class Receipt extends Component {
   constructor(props) {
     super(props);
@@ -40,6 +40,8 @@ export default class Receipt extends Component {
         cashier = this.props.currentUser.currentUser.fullName;
       }
     }
+
+    console.log("Transaction Back:", this.props.data);
 
     const {
       taxTitle,
@@ -107,9 +109,18 @@ export default class Receipt extends Component {
                             <td style={{backgroundColor: "white", textAlign: "right", paddingTop: 10}}><this.Translate id="text_date"/>: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
                           </tr>
                           <tr>
-                            <td style={{backgroundColor: "white", textAlign: "left"}}><this.Translate id="receipt_no"/>. {this.props.data.receiptNumber}</td>
+                            <td style={{ backgroundColor: "white", textAlign: "left" }}><this.Translate id="receipt_no" />. {this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number}</td>
                             <td style={{backgroundColor: "white", textAlign: "right", textTransform: "uppercase"}}><this.Translate id="text_cashier"/>: {cashier}</td>
                           </tr>
+                          {
+                            this.props.customer ?
+                              <tr>
+                                <td style={{ backgroundColor: "white", textAlign: "left" }}><this.Translate id="text_customer_name" />. {`${this.props.customer.firstName} ${this.props.customer.lastName}`}</td>
+                                <td style={{ backgroundColor: "white", textAlign: "right", textTransform: "uppercase" }}><this.Translate id="text_phone_number" />: {this.props.customer.phoneNumber}</td>
+                              </tr>
+                              :
+                              <tr />
+                          }
                         </tbody>
                       </table>
                       :
@@ -122,7 +133,7 @@ export default class Receipt extends Component {
                             <td colSpan="2" style={{backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter}}><this.Translate id="text_date"/>: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
                           </tr>
                           <tr>
-                            <td colSpan="2" style={{backgroundColor: "white", textAlign: "left",  paddingTop: paddingTopForHeaderAndFooter}}><this.Translate id="receipt_no"/>: {this.props.data.receiptNumber}</td>
+                            <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><this.Translate id="receipt_no" />: {this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number}</td>
                           </tr>
                           <tr>
                             <td colSpan="2" style={{backgroundColor: "white", textAlign: "left",  paddingTop: paddingTopForHeaderAndFooter}}><this.Translate id="text_cashier"/>: <span style={{textTransform: "uppercase"}}>{cashier}</span></td>
@@ -233,12 +244,20 @@ export default class Receipt extends Component {
                               ""
                           )
                           :
-                          <tr></tr>
+                          <tr />
                       }
-                      <tr>
-                        <td colSpan={4} style={{backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color}} ></td>
-                      </tr>
                       {
+                        this.props.isCustomerCredit ?
+                          <tr />
+                          :
+                          <tr>
+                            <td colSpan={4} style={{ backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }} ></td>
+                          </tr>
+                      }
+                      {
+                        this.props.isCustomerCredit ?
+                        <tr />
+                        :
                         this.props.customerPaymentList.map((customerPayment, customerPaymentIndex) => 
                           <tr key={customerPaymentIndex}>
                             <td style={{backgroundColor: "white", paddingTop: customerPaymentIndex === 0 ? 5 : 0}} />
@@ -247,13 +266,18 @@ export default class Receipt extends Component {
                           </tr>
                         )
                       }
-                      <tr>
-                        <td style={{backgroundColor: "white"}} />
-                        <td colSpan="2" style={{backgroundColor: "white"}}><this.Translate id="text_change"/>{this.props.receiptTemplate.isHasSubCurrency ? `(${this.props.receiptTemplate.baseCurrency.symbol})` : ""}:</td>
-                        <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency(this.props.changeAmount)}</td>
-                      </tr>
                       {
-                        this.props.receiptTemplate.isHasSubCurrency ?
+                        this.props.isCustomerCredit ?
+                          <tr />
+                        :
+                          <tr>
+                            <td style={{ backgroundColor: "white" }} />
+                            <td colSpan="2" style={{ backgroundColor: "white" }}><this.Translate id="text_change" />{this.props.receiptTemplate.isHasSubCurrency ? `(${this.props.receiptTemplate.baseCurrency.symbol})` : ""}:</td>
+                            <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(this.props.changeAmount)}</td>
+                          </tr>
+                      }
+                      {
+                        !this.props.isCustomerCredit && this.props.receiptTemplate.isHasSubCurrency ?
                           <tr>
                             <td style={{backgroundColor: "white"}} />
                             <td colSpan="2" style={{backgroundColor: "white"}}>ប្រាក់អាប់{`(${this.props.receiptTemplate.subCurrency.symbol})`}:</td>
@@ -297,6 +321,7 @@ Receipt.defaultProps = {
     logo: ""
   },
   customerFieldPrice: "price",
-  isRequestClearMarginLeft: false
+  isRequestClearMarginLeft: false,
+  isCustomerCredit: false
   //We use it to help when to want clear marginLeft (-30px) in case mini printer 58mm. The problem is because of margin
 };

@@ -10,12 +10,6 @@ export default {
     "Full name"
   ],
 
-  "text_phone_number": [
-    "Phone No",
-    "លេខទូរស័ព្ទ",
-    "Phone No"
-  ],
-
   "text_id_card": [
     "Id card",
     "កាតសំគាល់",
