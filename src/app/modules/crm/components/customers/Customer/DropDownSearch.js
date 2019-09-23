@@ -45,9 +45,10 @@ export default class DropDownSearch extends Modal {
   handlePressEnterOnSearch() {
     const currentActive = $(".ant-spin-container div.search-item-hover");
     const recordId = currentActive.attr("classid");
-    const result = this.props.productSearch.list.find(value => value.id === recordId);
-    this.props.handlePressEnterOnSearch(result);
-    this.setState({visibleDropDown: false});
+    const result = this.props.customers.list.find(value => value.id === recordId);
+    // this.props.handlePressEnterOnSearch(result);
+    // this.setState({visibleDropDown: false});
+    this.handleOnSelectList(result);
   }
 
   handleOnBlurSearch() {
@@ -145,7 +146,9 @@ export default class DropDownSearch extends Modal {
               <div className="wrap-description">
                 <span className="text-uppercase">{record.phoneNumber}</span>
                 <div className="right-description">
-                  <div className="customer-code">A-0001</div>
+                  {
+                    record.number ? <div className="customer-code">{record.number}</div> : ""
+                  }
                   <this.Tag color="#FFD627" className="text-uppercase">{record.groupCustomer ? record.groupCustomer.name : "general" }</this.Tag>
                 </div>
               </div>} />

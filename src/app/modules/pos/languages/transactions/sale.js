@@ -25,6 +25,8 @@ export default {
 
   "text_delivery_order": [
     "Delivery Order",
+    "បណ្ណ័ដឹកទំនិញ",
+    "Delivery Order"
   ],
 
   "current_receipt_type": [
