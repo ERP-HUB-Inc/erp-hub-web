@@ -1,9 +1,12 @@
 import React from "react";
 import Constant from "../../../constants/transactions/quotation";
+import ConstantCustomer from "../../../../crm/constants/customers/customer";
 import Enum from "../../../enums";
+import EnumCustomer from "../../../../crm/enum";
 import history from "../../../../../modules/common/router/history";
 import Retail from "../../../../pos/components/transactions/RetailSale";
 import QuotationAction from "../../../action/transaction/quotation";
+import CustomerAction from "../../../../crm/actions/customers/customer";
 import POSUtil from "../../../../pos/utils";
 import Util from "../../../../inventory/utils";
 import "./index.css";
@@ -28,6 +31,7 @@ export default class Form extends Retail {
         super.componentDidUpdate();
         let quotaionValues = this.props.quotationDetail.data;
         let quotationColletion = [];
+        let errorCode = "";
 
         if(this.state.isNotYetLoadComponentDidUpdated){
             if(quotaionValues){
@@ -47,7 +51,7 @@ export default class Form extends Retail {
                             taxName: "No Tax"
                         },
                         quotationStatus: "",
-                        description: values.description
+                        description: values.description,
                     });
                     
                 });
@@ -60,12 +64,32 @@ export default class Form extends Retail {
                     isNotYetLoadComponentDidUpdated: false,
                     quotationId: this.props.quotationDetail.data.id,
                     isDiscountHasAdded: this.props.quotationDetail.data.discount > 0,
-                    discountValue: {type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: quotaionValues.discount}
+                    discountValue: {type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: quotaionValues.terms ? quotaionValues.terms : 0 }
                 });
+
+
+               
                 this.props.dispatch(QuotationAction.reset(Constant.RESET_DETAIL_QUOTATION));
             }
         }
+
+       
+        if (this.props.customer.error) {
+            errorCode = this.Util.getErrorCodeFromState(this.props.customer.error);
+        }
+    
+        if (errorCode) {
+            let message = "Something went wrong";
+            if (errorCode === EnumCustomer.CUSTOMER_EXIST) {
+                message = this.CATranslate("error_exist_customer", this.props.locale);
+            }
+            this.Message.error(message);
+            this.props.dispatch(CustomerAction.reset(ConstantCustomer.RESET_ADD_CUSTOMERS));
+        }
+        
+
     }
+
     
     handleSaveQuotation(){
         this.saveQuotation(Enum.QUOTATION_STEP.DRAFT);
@@ -120,9 +144,9 @@ export default class Form extends Retail {
                 values["total"] = POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
                 values["status"] = status;
                 values["name"] = "Quotation";
-                values["discount"] = this.state.discountValue.value;
                 values["totalExcludeTax"] = summaryTotal.subTotalAfterDiscount;
                 values["discount"] = discountAmount;
+                values["terms"] = this.state.discountValue.value;
                 values["Entries"] = productList;
                 if(this.state.selectedCustomer && this.state.quotationId){
                     values["customerId"] = this.state.selectedCustomer.id;
