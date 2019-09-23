@@ -32,8 +32,8 @@ export default class SaleOrder extends SaleHistory {
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           let filter = {};
-          let status = {status: [Enum.TRANSACTION_STEP.PROCESS]}
-          filter["status"] = [status];
+      
+          filter["status"] = [Enum.TRANSACTION_STEP.PROCESS];
 
           if (values.locationId) {
             filter["locationId"] = [values.locationId];
