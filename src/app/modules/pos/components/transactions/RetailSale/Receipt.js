@@ -24,24 +24,86 @@ export default class Receipt extends Component {
     }
   }
 
+  renderHeader = (paperSize) => {
+    let cashier = "";
+    if (this.props.currentUser) {
+      if (this.props.currentUser.currentUser) {
+        cashier = this.props.currentUser.currentUser.fullName;
+      }
+    }
+    const paddingTopForHeaderAndFooter = paperSize.code === Enum.PAPER_SIZE.MINI_THERMAL ? -10 : 2.5;
+
+    if (paperSize.code === Enum.PAPER_SIZE.A4) {
+      if (this.props.customer) {
+        return <table style={{ color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white", width: "100%" }}>
+          <tbody>
+            <tr>
+              <td style={{ backgroundColor: "white", textAlign: "left", paddingTop: 10, paddingRight: 0 }}><this.Translate id="text_customer_name" />. {`${this.props.customer.firstName} ${this.props.customer.lastName}`}</td>
+              <td style={{ backgroundColor: "white", textAlign: "right", paddingTop: 10 }}><this.Translate id="text_date" />: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
+            </tr>
+            <tr>
+              <td style={{ backgroundColor: "white", textAlign: "left" }}><this.Translate id="text_phone_number" />: {this.props.customer.phoneNumber}</td>
+              <td style={{ backgroundColor: "white", textAlign: "right" }}><this.Translate id="receipt_no" />. {this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number}</td>
+            </tr>
+            <tr>
+              <td style={{ backgroundColor: "white", textAlign: "left" }}><this.Translate id="text_address" />: {this.props.customer.address}</td>
+              <td style={{ backgroundColor: "white", textAlign: "right" }}><this.Translate id="text_cashier" />. {cashier}</td>
+            </tr>
+          </tbody>
+        </table>;
+      }
+
+      return <table style={{ color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white", width: "100%" }}>
+        <tbody>
+          <tr>
+            <td style={{ backgroundColor: "white", textAlign: "left", paddingTop: 10, paddingRight: 0 }}><this.Translate id="register_no" />. {this.Util.getDeviceNumber()}</td>
+            <td style={{ backgroundColor: "white", textAlign: "right", paddingTop: 10 }}><this.Translate id="text_date" />: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
+          </tr>
+          <tr>
+            <td style={{ backgroundColor: "white", textAlign: "left" }}><this.Translate id="receipt_no" />. {this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number}</td>
+            <td style={{ backgroundColor: "white", textAlign: "right" }}><this.Translate id="text_cashier" />: {cashier}</td>
+          </tr>
+        </tbody>
+      </table>;
+    } else {
+      return <table style={{ color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white" }}>
+        <tbody>
+          <tr>
+            <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: 10 }}><this.Translate id="register_no" />: {this.Util.getDeviceNumber()}</td>
+          </tr>
+          <tr>
+            <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><this.Translate id="text_date" />: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
+          </tr>
+          <tr>
+            <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><this.Translate id="receipt_no" />: {this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number}</td>
+          </tr>
+          <tr>
+            <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><this.Translate id="text_cashier" />: <span style={{ textTransform: "uppercase" }}>{cashier}</span></td>
+          </tr>
+          {
+            this.props.receiptTemplate.isHasSubCurrency ?
+              <tr>
+                <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><this.Translate id="exchange_rate" />: {this.Util.formatCurrency(this.props.receiptTemplate.subCurrency.value, this.props.receiptTemplate.subCurrency.symbol)}</td>
+              </tr>
+              :
+              <tr />
+          }
+        </tbody>
+      </table>;
+    }
+  }
+
   render() {
     let businessName = "";
     let address = "";
     let phoneNumber = "";
-    let cashier = "";
     if (this.props.currentUser) {
       if (this.props.currentUser.setting) {
         businessName = this.props.currentUser.setting.businessName;
         address = this.props.currentUser.setting.address;
         phoneNumber = this.props.currentUser.setting.phoneNumber;
       }
-
-      if (this.props.currentUser.currentUser) {
-        cashier = this.props.currentUser.currentUser.fullName;
-      }
     }
-
-    console.log("Transaction Back:", this.props.data);
 
     const {
       taxTitle,
@@ -52,8 +114,6 @@ export default class Receipt extends Component {
     if (!paperSize) {
       paperSize = PaperSize[0];
     }
-
-    const paddingTopForHeaderAndFooter = paperSize.code === Enum.PAPER_SIZE.MINI_THERMAL ? -10 : 2.5;
 
     return (
       <div /*style={{display: "none"}}*/ id="pos-receipt-preview">
@@ -100,55 +160,7 @@ export default class Receipt extends Component {
               </tr>
               <tr>
                 <td colSpan="2">
-                  {
-                    paperSize.code === Enum.PAPER_SIZE.A4 ?
-                      <table style={{color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white", width: "100%"}}>
-                        <tbody>
-                          <tr>
-                            <td style={{backgroundColor: "white", textAlign: "left", paddingTop: 10, paddingRight: 0}}><this.Translate id="register_no"/>. {this.Util.getDeviceNumber()}</td>
-                            <td style={{backgroundColor: "white", textAlign: "right", paddingTop: 10}}><this.Translate id="text_date"/>: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
-                          </tr>
-                          <tr>
-                            <td style={{ backgroundColor: "white", textAlign: "left" }}><this.Translate id="receipt_no" />. {this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number}</td>
-                            <td style={{backgroundColor: "white", textAlign: "right", textTransform: "uppercase"}}><this.Translate id="text_cashier"/>: {cashier}</td>
-                          </tr>
-                          {
-                            this.props.customer ?
-                              <tr>
-                                <td style={{ backgroundColor: "white", textAlign: "left" }}><this.Translate id="text_customer_name" />. {`${this.props.customer.firstName} ${this.props.customer.lastName}`}</td>
-                                <td style={{ backgroundColor: "white", textAlign: "right", textTransform: "uppercase" }}><this.Translate id="text_phone_number" />: {this.props.customer.phoneNumber}</td>
-                              </tr>
-                              :
-                              <tr />
-                          }
-                        </tbody>
-                      </table>
-                      :
-                      <table style={{color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white"}}>
-                        <tbody>
-                          <tr>
-                            <td colSpan="2" style={{backgroundColor: "white", textAlign: "left", paddingTop: 10}}><this.Translate id="register_no"/>: {this.Util.getDeviceNumber()}</td>
-                          </tr>
-                          <tr>
-                            <td colSpan="2" style={{backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter}}><this.Translate id="text_date"/>: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
-                          </tr>
-                          <tr>
-                            <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><this.Translate id="receipt_no" />: {this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number}</td>
-                          </tr>
-                          <tr>
-                            <td colSpan="2" style={{backgroundColor: "white", textAlign: "left",  paddingTop: paddingTopForHeaderAndFooter}}><this.Translate id="text_cashier"/>: <span style={{textTransform: "uppercase"}}>{cashier}</span></td>
-                          </tr>
-                          {
-                            this.props.receiptTemplate.isHasSubCurrency ?
-                              <tr>
-                                <td colSpan="2" style={{backgroundColor: "white", textAlign: "left",  paddingTop: paddingTopForHeaderAndFooter}}><this.Translate id="exchange_rate"/>: {this.Util.formatCurrency(this.props.receiptTemplate.subCurrency.value, this.props.receiptTemplate.subCurrency.symbol)}</td>
-                              </tr>
-                              :
-                              <tr />
-                          }
-                        </tbody>
-                      </table>
-                  }
+                  {this.renderHeader(paperSize)}
                 </td>
               </tr>
               <tr>

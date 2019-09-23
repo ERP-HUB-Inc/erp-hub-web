@@ -266,7 +266,7 @@ class Column extends List {
         dataIndex: "phoneNumber",
         key: "phoneNumber",
         sorter: true,
-        width: 150,
+        width: 160,
         render: phoneNumber => phoneNumber ? this.Util.formtTextError(phoneNumber) : this.emptyText
       },
       {
