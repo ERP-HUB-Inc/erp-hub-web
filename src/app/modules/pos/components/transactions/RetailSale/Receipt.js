@@ -11,6 +11,8 @@ export default class Receipt extends Component {
     this.state = {
       logoContent: ""
     };
+
+    this.contentId = "pos-receipt-preview";
   }
   componentDidMount() {
     JsBarcode("#receiptCarcode", this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number, {
@@ -24,6 +26,30 @@ export default class Receipt extends Component {
     }
   }
 
+  renderTitle = () => {
+    return this.props.isRequestShowDetail ?
+      <div style={{ position: "relative", margin: "0 auto" }}>
+        <img style={{ width: 100 }} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} />
+      </div>
+      :
+      <div style={{ position: "relative", margin: "0 auto" }}>
+        {this.state.logoContent ? this.state.logoContent : <img style={{ width: 100 }} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} />}
+      </div>;
+  }
+
+  renderStoreName = (paperSize, businessName) => {
+    return this.props.receiptTemplate.isShowStoreName ?
+      <tr>
+        <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white", fontSize: paperSize.setting.storeNameFontSize }}>{businessName}</td>
+      </tr>
+      :
+      <tr />;
+  }
+
+  renderCustomerFooter = () => {
+
+  }
+
   renderHeader = (paperSize) => {
     let cashier = "";
     if (this.props.currentUser) {
@@ -34,6 +60,7 @@ export default class Receipt extends Component {
     const paddingTopForHeaderAndFooter = paperSize.code === Enum.PAPER_SIZE.MINI_THERMAL ? -10 : 2.5;
 
     if (paperSize.code === Enum.PAPER_SIZE.A4) {
+
       if (this.props.customer) {
         return <table style={{ color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white", width: "100%" }}>
           <tbody>
@@ -93,6 +120,14 @@ export default class Receipt extends Component {
     }
   }
 
+  renderQRCode = () => {
+    return <tr>
+      <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white" }}>
+        <img id="receiptCarcode" alt="" />
+      </td>
+    </tr>;
+  }
+
   render() {
     let businessName = "";
     let address = "";
@@ -115,13 +150,13 @@ export default class Receipt extends Component {
       paperSize = PaperSize[0];
     }
 
-    return (
-      <div /*style={{display: "none"}}*/ id="pos-receipt-preview">
+    return <div /*style={{display: "none"}}*/ id={this.contentId}>
         <div style={{
           // padding: "15px 15px",
           // backgroundColor: "#f5f2f2",
           margin: "0 auto",
-          fontFamily: "Khmer OS Content"
+          fontFamily: "Khmer OS Content",
+          pageBreakBefore: "always"
         }}>
           <table style={{
             color: paperSize.setting.color,
@@ -135,26 +170,10 @@ export default class Receipt extends Component {
             <tbody>
               <tr>
                 <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>
-                  {
-                    this.props.isRequestShowDetail ?
-                      <div style={{position: "relative", margin: "0 auto"}}>
-                        <img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} />
-                      </div>
-                      :
-                      <div style={{position: "relative", margin: "0 auto"}}>
-                        {this.state.logoContent ? this.state.logoContent : <img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} />}
-                      </div>
-                  }
+                  {this.renderTitle()}
                 </td>
               </tr>
-              {
-                this.props.receiptTemplate.isShowStoreName ?
-                  <tr>
-                    <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", fontSize: paperSize.setting.storeNameFontSize}}>{businessName}</td>
-                  </tr>
-                  :
-                  <tr></tr>
-              }
+              { this.renderStoreName(paperSize, businessName) }
               <tr>
                 <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>{address} {phoneNumber}</td>
               </tr>
@@ -303,13 +322,12 @@ export default class Receipt extends Component {
                 </td>
               </tr>
               <tr>
-                <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", paddingTop: 20, textTransform: "uppercase"}}><this.Translate id="text_thank_you_on_receipt"/></td>
+                  {this.renderCustomerFooter(paperSize)}
               </tr>
               <tr>
-                <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>
-                  <img id="receiptCarcode" alt="" />
-                </td>
+                <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", paddingTop: 20, textTransform: "uppercase"}}><this.Translate id="text_thank_you_on_receipt"/></td>
               </tr>
+              { this.renderQRCode() }
               <tr>
                 <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}><this.Translate id="text_feedback_keep_on_receipt"/></td>
               </tr>
@@ -321,10 +339,10 @@ export default class Receipt extends Component {
                   :
                   <tr></tr>
               }
-            </tbody></table>
+            </tbody>
+          </table>
         </div>
-      </div>
-    );
+      </div>;
   }
 }
 

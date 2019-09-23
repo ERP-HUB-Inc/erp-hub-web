@@ -1,5 +1,6 @@
 import React from "react";
 import Receipt from "./Receipt";
+import DeliveryNote from "./DeliveryNote";
 import Enum from "../../../enums";
 import GeneralAction from "../../../../common/actions/general";
 import TransactionAction from "../../../action/transaction/transaction";
@@ -18,6 +19,7 @@ export default class Payment extends Modal {
       isCustomerCredit: false,
       isAlreadyAutoPrint: false,
       isAllowPrintReceipt: false,
+      isAllowPrintDeliveryNote: false,
       isNotYetPaid: true,
       isFocusOnInputBaseCurrency: true,
       validateStatus: "",
@@ -45,15 +47,26 @@ export default class Payment extends Modal {
     if (
       this.props.transaction.paid
       && !this.state.isAlreadyAutoPrint) {
-      const element = document.getElementById("pos-receipt-preview");
+      let element = document.getElementById("pos-receipt-preview");
       if (element && this.state.isAllowPrintReceipt) {
         this.Util.printElemV2(element.innerHTML);
         this.setState({
-          isAlreadyAutoPrint: true,
           isAllowPrintReceipt: false
         });
       }
-    }
+
+      const element2 = document.getElementById("content-receipt-and-delivery-order");
+      if (element2 && this.state.isAllowPrintDeliveryNote) {
+        this.Util.printElemV2(element2.innerHTML);
+        this.setState({
+          isAllowPrintDeliveryOrder: false
+        });
+      }
+
+      this.setState({
+        isAlreadyAutoPrint: true
+      });
+    }    
   }
 
   componentWillUnmount() {
@@ -163,7 +176,10 @@ export default class Payment extends Modal {
     if (paymentMethod.code === Payment.PAYMENT_METHOD_CREDIT_CODE) {
       amountToPay = grandTotal;
       paymentMethodId = paymentMethod.id;
-      this.setState({isCustomerCredit: true});
+      this.setState({
+        isCustomerCredit: true,
+        isAllowPrintDeliveryNote: true
+      });
     }
     
     // ADD ADDITIONAL SUB CURRENCY AMOUNT TO BASE CURRENCY VALUE
@@ -175,10 +191,14 @@ export default class Payment extends Modal {
 
     const previusBalance = this.calculateBalance(grandTotal, totalCustomerHasGiveMoney - amountToPay); // balance before get money from customer
     const balance = this.calculateBalance(grandTotal, totalCustomerHasGiveMoney);
+    const {
+      summaryTotal,
+      discountAmount,
+    } = this.props.summaryTotal;
 
     this.appendCustomerPaymentList(this.state.customerPaymentList, amountToPay, paymentMethod, previusBalance);
 
-    if (totalCustomerHasGiveMoney < grandTotal) {
+    if (totalCustomerHasGiveMoney < (grandTotal - discountAmount)) {
 
       // this.props.form.setFieldsValue({amountToPay: balance});
       this.props.form.setFieldsValue({amountToPay: 0});
@@ -192,11 +212,6 @@ export default class Payment extends Modal {
 
     } else {
       this.paymentMethodSelectedIndex = paymentMethodIndex;
-
-      const {
-        summaryTotal,
-        discountAmount,
-      } = this.props.summaryTotal;
 
       const dataValue = {
         customerId: this.props.customer ? this.props.customer.id : null,
@@ -311,28 +326,41 @@ export default class Payment extends Modal {
     }
 
     if (this.props.transaction.showForm) {
+      let dataForReceipt = {};
+
+      if (this.props.transaction.response) {
+        dataForReceipt = {
+          data: this.props.transaction.response.data,
+          receiptTemplate: this.props.receiptTemplate.data,
+          currentUser: this.currentUser,
+          customerPaymentList: this.state.customerPaymentList,
+          customer: this.props.customer,
+          isCustomerCredit: this.state.isCustomerCredit,
+          productList: this.props.productOrderList,
+          customerFieldPrice: this.props.customerFieldPrice,
+          productTaxList: this.props.productTaxList,
+          summaryTotal: summaryTotal,
+          summaryTax: this.props.summaryTax,
+          grandTotal: grandTotal,
+          changeAmount: changeAmount,
+          taxRate: taxRate,
+          taxAmount: taxAmount,
+          discountAmount: discountAmount
+        };
+      }
+
       this.content = (
         <this.Row>
           {
             this.props.transaction.response ?
-              <div style={{display: "none"}}>
-                <Receipt
-                  data={this.props.transaction.response.data}
-                  receiptTemplate={this.props.receiptTemplate.data}
-                  currentUser={this.currentUser}
-                  customerPaymentList={this.state.customerPaymentList}
-                  customer={this.props.customer}
-                  isCustomerCredit={this.state.isCustomerCredit}
-                  productList={this.props.productOrderList}
-                  customerFieldPrice={this.props.customerFieldPrice}
-                  productTaxList={this.props.productTaxList}
-                  summaryTotal={summaryTotal}
-                  summaryTax={this.props.summaryTax}
-                  grandTotal={grandTotal}
-                  changeAmount={changeAmount}
-                  taxRate={taxRate}
-                  taxAmount={taxAmount}
-                  discountAmount={discountAmount} />
+              <div style={{display: "none"}} id="content-receipt-and-delivery-order">
+                <Receipt {...dataForReceipt} />
+                {
+                  this.state.isAllowPrintDeliveryNote ?
+                    <DeliveryNote {...dataForReceipt} />
+                    :
+                    ""
+                }
               </div>
               :
               ""
