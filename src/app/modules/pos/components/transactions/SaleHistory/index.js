@@ -148,11 +148,12 @@ export default class SaleHistoryList extends List {
         dataIndex: "step",
         key: "step",
         render: step => {
-          const stepValue = this.TRANSACTION_STATUS_STR[step];
-          let stepColor = stepValue.color;
-          let stepTitile = stepValue.title;
-
-          return <this.Badge style={{ textTransform: "uppercase" }} status={stepColor} text={stepTitile} />;
+          if(step){
+            const stepValue = this.TRANSACTION_STATUS_STR[step];
+            let stepColor = stepValue.color;
+            let stepTitile = stepValue.title;
+            return <this.Badge style={{ textTransform: "uppercase" }} status={stepColor} text={stepTitile} />;
+          }
         },
         sorter: true
       }
@@ -396,6 +397,29 @@ export default class SaleHistoryList extends List {
     );
   }
 
+  renderFilterType(){
+    return(
+      <this.Col md="2">
+        <this.Select
+          name="type"
+          placeholder={this.CATranslate("text_type", this.props.locale)}
+          dataSource={this.TRANSACTION_TYPE_STR}
+          label={<this.Translate id="text_type" />}
+          form={this.props.form}/>
+      </this.Col>
+    )
+  }
+
+  renderButtonSearch(fetchingProps){
+    return(
+      <this.Col md="2" className="wrap-btn-search">
+        <this.Button htmlType="submit" type="info"  loading={this.state.isClickFilter && fetchingProps.fetching}>
+          <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
+        </this.Button> 
+      </this.Col>
+    )
+  }
+
   renderFilterRecord() {
     const fetchingProps = this.props[this.fetchingProp];
     return(
@@ -426,14 +450,7 @@ export default class SaleHistoryList extends List {
                 form={this.props.form}
                 ranges={this.dateRangeDataSource()} />
             </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="type"
-                placeholder={this.CATranslate("text_type", this.props.locale)}
-                dataSource={this.TRANSACTION_TYPE_STR}
-                label={<this.Translate id="text_type" />}
-                form={this.props.form}/>
-            </this.Col>
+            {this.renderFilterType()}
             <this.Col md="2">
               <this.Select
                 name="locationId"
@@ -453,12 +470,7 @@ export default class SaleHistoryList extends List {
                 label={<this.Translate id="text_employee" />}
                 form={this.props.form}/>
             </this.Col>
-            <this.Col md="2" className="wrap-btn-search">
-              <this.Button htmlType="submit" type="info"  loading={this.state.isClickFilter && fetchingProps.fetching}>
-                <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
-              </this.Button> 
-            </this.Col>
-            
+            {this.renderButtonSearch(fetchingProps)}
           </this.Row>
         </this.Form>
     );

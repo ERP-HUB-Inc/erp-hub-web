@@ -29,6 +29,11 @@ export default {
     "រក្សាទុកសម្រង់តំលៃ",
     "Save Quotation"
   ],
+  "text_list_quotation": [
+    "Quotation List",
+    "បញ្ជីសម្រង់",
+    "Quotation List"
+  ],
   "text_edit_quotation": [
     "Edit Quotation",
     "កែប្រែសម្រង់តំលៃ",
@@ -74,9 +79,9 @@ export default {
     "អនុញ្ញាតឱ្យដំណើរការតែជំហានដំណើរការប៉ុណ្ណោះ!",
     "We allow complete only step process!"
   ],
-  "text_error_allow_cancel_only_draft_step_and_process": [
-    "We allow cancel only step draft and process!",
-    "អនុញ្ញាតឱ្យបោះបុងតែដំណាក់កាលសេចក្តីព្រៀងនឹងដំណើរការ",
-    "We allow cancel only step draft and process!"
+  "text_error_allow_cancel_only_draft_step": [
+    "We allow cancel only step draft!",
+    "អនុញ្ញាតឱ្យបោះបុងតែដំណាក់កាលសេចក្តីព្រៀង!",
+    "We allow cancel only step draft!"
   ]
 };

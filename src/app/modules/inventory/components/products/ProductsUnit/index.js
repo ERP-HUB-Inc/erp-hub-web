@@ -51,7 +51,8 @@ class Column extends List {
         title: <this.Translate id="text_number_in_unit" />,
         dataIndex: "multiple",
         key: "multiple",
-        sorter: true
+        sorter: true,
+        render: (text,render) => `${render.multiple} ${render.label ? render.label : ""}`
       },
       this.columnStatus
     ];

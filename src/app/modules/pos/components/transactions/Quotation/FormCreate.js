@@ -9,10 +9,20 @@ import "./index.css";
 export default class Form extends Retail {
     constructor(props){
         super(props);
-        this.handleCreateQuotation = this.handleCreateQuotation.bind(this);
+        this.handleSaveQuotation = this.handleSaveQuotation.bind(this);
+        this.handleProcessQuotation = this.handleProcessQuotation.bind(this);
+        this.handleViewQuotation = this.handleViewQuotation.bind(this);
     }
 
-    handleCreateQuotation(){
+    handleProcessQuotation(){
+        this.saveQuotation(Enum.QUOTATION_STEP.PROCESS);
+    }
+
+    handleSaveQuotation(){
+        this.saveQuotation(Enum.QUOTATION_STEP.DRAFT);
+    }
+
+    saveQuotation(status = Enum.QUOTATION_STEP.DRAFT){
         let productList = [];
         let productOrderList = this.state.productOrderList;
         if (productOrderList.length > 0) {
@@ -41,12 +51,12 @@ export default class Form extends Retail {
                     taxAmount
                   } = this.getSummaryTotal();
 
-                values["status"] = Enum.QUOTATION_STEP.DRAFT;
-                values["discount"] = this.state.discountValue.value;
+                values["status"] = status;
                 values["total"] = POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
                 values["name"] = "Quotation";
+                values["totalExcludeTax"] = summaryTotal.subTotalAfterDiscount;
+                values["discount"] = discountAmount;
                 values["Entries"] = productList;
-            
                 if(this.state.selectedCustomer){
                     values["customerId"] = this.state.selectedCustomer.id;
                     this.props.dispatch(QuotationAction.add(values)); 
@@ -54,20 +64,37 @@ export default class Form extends Retail {
                 }else{
                     this.Message.warning(this.CATranslate("text_error_create_quotation", this.props.locale));
                 }
-
+        
             });
         }else{
             this.Message.warning(this.CATranslate("text_error_not_create_quotation", this.props.locale));
         }
     }
 
-    saleOrderHeader(){}
-    
+    handleViewQuotation(){
+        history.push("/transactions/quotation");
+    }
+
+    saleOrderHeader(){
+        return(
+            <this.Row className="wrap-receipt-type">
+                <this.Col md="12" className="receipt-type">
+                  <div className="pull-left park-receipt" onClick={this.handleViewQuotation}>
+                    <span className="icon-time icon-padding-right"></span><this.Translate id="text_list_quotation" />
+                  </div>
+                </this.Col>
+              </this.Row>
+          )
+    }
+
     renderSaveAndPayButton(){
         return(
-            <this.Row className="create-quotation-action" onClick={this.handleCreateQuotation}>
-                <this.Button type="info" className="mg-right">
-                    <span className="icon-add icon-padding-right"></span><this.Translate id="text_create_quotation" />
+            <this.Row className="payment-action">
+                <this.Button type="info" className="mg-right" onClick={this.handleSaveQuotation}>
+                    <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
+                </this.Button>
+                <this.Button type="info"  onClick={this.handleProcessQuotation}>
+                    <span className="icon-checked icon-padding-right"></span><this.Translate id="text_process" />
                 </this.Button>
             </this.Row>
         );

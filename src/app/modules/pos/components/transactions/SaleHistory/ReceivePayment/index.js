@@ -26,7 +26,7 @@ export default class Form extends Modal {
         values["deposit"] = 0;
         values["payDate"] = this.Util.formatDateForMYSQL(values.payDate);
         values["type"] = Enum.TRANSACTION_TYPE.RECEIPT;
-        values["status"] = Enum.TRANSACTION_STATUS.PAID;
+        values["status"] = this.props.status;
         values["transactionPaymentEntries"] = this.state.transactionPaymentEntries;
         this.dispatch(ReceivePaymentAction.update(values));
       }
@@ -58,6 +58,7 @@ export default class Form extends Modal {
         transactionPaymentEntries={this.transactionPaymentEntries}
         form={form}
         dispatch={this.props.dispatch}
+        buttonReceivePaymentTitle={this.props.buttonReceivePaymentTitle}
         locale={locale} />;
       return super.render();
     } else {
@@ -65,3 +66,7 @@ export default class Form extends Modal {
     }
   }
 }
+
+Form.defaultProps = {
+  status: Enum.TRANSACTION_STATUS.PAID
+};
