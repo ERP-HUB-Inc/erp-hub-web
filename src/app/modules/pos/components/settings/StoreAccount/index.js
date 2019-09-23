@@ -463,6 +463,13 @@ export default class StoreAccountList extends Component {
                                 placeholder={this.CATranslate("text_default_tax", locale)}
                                 form={form} />
 
+                              <this.InputText
+                                name="VATNo"
+                                data={storeAccount.list.VATNo}
+                                label={<this.Translate id="text_vat_no" />}
+                                placeholder={this.CATranslate("text_vat_no", locale)}
+                                form={form} />
+
                               <this.Select
                                 name="isAllowCustomerCredit"
                                 dataSource={this.customerCreditStatus}

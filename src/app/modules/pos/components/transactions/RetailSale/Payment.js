@@ -42,7 +42,10 @@ export default class Payment extends Modal {
       this.props.dispatch(GeneralAction.sendMailReset());
     }
 
-    if (this.props.transaction.paid && !this.state.isAlreadyAutoPrint) {
+    if (
+      !this.state.isCustomerCredit
+      && this.props.transaction.paid
+      && !this.state.isAlreadyAutoPrint) {
       const element = document.getElementById("pos-receipt-preview");
       if (element && this.state.isAllowPrintReceipt) {
         this.Util.printElemV2(element.innerHTML);
@@ -151,7 +154,8 @@ export default class Payment extends Modal {
   handleOnMakePaymentWithCash(paymentMethod, paymentMethodIndex) {
     let amountToPay = this.props.form.getFieldValue("amountToPay"); // AMOUNT FROM INPUT OF CASHEIR
     let amountToPaySubCurrency = this.props.form.getFieldValue("amountToPaySubCurrency"); // AMOUNT FROM INPUT OF CASHEIR AS SUB CURRENCY
-    
+    let paymentMethodId = null;
+
     amountToPay = parseFloat(amountToPay);
     amountToPaySubCurrency = parseFloat(amountToPaySubCurrency);
     let grandTotal = this.getGrandTotal();
@@ -159,6 +163,7 @@ export default class Payment extends Modal {
     // CHECK WETHER USER HAS CLICK CREDIT PAYMENT
     if (paymentMethod.code === Payment.PAYMENT_METHOD_CREDIT_CODE) {
       amountToPay = grandTotal;
+      paymentMethodId = paymentMethod.id;
       this.setState({isCustomerCredit: true});
     }
     
@@ -203,7 +208,7 @@ export default class Payment extends Modal {
         totalExcludeTax: summaryTotal.subTotalAfterDiscount,
         type: Enum.TRANSACTION_TYPE.RECEIPT,
         transactionEntries: this.props.productOrderList,
-        paymentMethodId: paymentMethod.code === Payment.PAYMENT_METHOD_CREDIT_CODE ? paymentMethod.id : null,
+        paymentMethodId,
         transactionPaymentEntries: this.state.customerPaymentList
       };
 
@@ -317,6 +322,8 @@ export default class Payment extends Modal {
                   receiptTemplate={this.props.receiptTemplate.data}
                   currentUser={this.currentUser}
                   customerPaymentList={this.state.customerPaymentList}
+                  customer={this.props.customer}
+                  isCustomerCredit={this.state.isCustomerCredit}
                   productList={this.props.productOrderList}
                   customerFieldPrice={this.props.customerFieldPrice}
                   productTaxList={this.props.productTaxList}

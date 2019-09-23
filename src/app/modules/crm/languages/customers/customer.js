@@ -16,6 +16,12 @@ export default {
     "នាមត្រកូល",
     "Last Name"
   ],
+
+  "text_customer_name": [
+    "Customer Name",
+    "អតិថិជនឈ្មោះ",
+    "Customer Name"
+  ],
   
   "text_group": [
     "Group",
