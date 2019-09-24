@@ -189,6 +189,17 @@ export default class QuotationList extends List {
     }
   }
 
+  saveProcessQuotation(quotationEntry,values){
+    let data = { 
+      status: Enum.QUOTATION_STEP.PROCESS,
+      Entries: quotationEntry,
+      id: values.id,
+      total: values.total,
+      totalExcludeTax: values.totalExcludeTax
+    }
+    this.props.dispatch(QuotationAction.update(data)); 
+  }
+
   renderFilterRecord() {
     const {form, locale} = this.props;
 
@@ -292,6 +303,22 @@ export default class QuotationList extends List {
       this.setState({isNotYetLoadComponentDidUpdated: false, handleUpdateForm: false});
     }
 
+    if(this.state.quotationStatus && this.props.quotationDetail.data){
+      let quotationEntry = [];
+      if(this.props.quotationDetail){
+        this.props.quotationDetail.data.quotationEntries.forEach((values, index) => {
+          quotationEntry.push({
+              productVariantId: values.productVariantId,
+              quantity: values.quantity,
+              price: values.price,
+              description: values.description
+          });
+        });
+        this.saveProcessQuotation(quotationEntry,this.props.quotationDetail.data);
+      }
+      this.setState({quotationStatus: false})
+    }
+
     this.Util.removeFullScreen();
   }
 
@@ -308,5 +335,23 @@ export default class QuotationList extends List {
     }
   }
 
+  // handleDelete(){
+  //   if(this.state.selectedRows[0].status !== Enum.QUOTATION_STEP.DRAFT){
+  //     this.Message.warning(this.CATranslate("text_error_allow_only_delete_draft_step", this.props.locale));
+  //   }else{
+  //     this.setState({deleting: true});
+  //     this.service.archive(this.state.selectedListIds)
+  //       .then(response => {
+  //         this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
+  //         this.setState({
+  //           selectedRowKeys: [],
+  //           deleting: false
+  //         });
+  //       })
+  //       .catch(err => {
+  //         this.setState({deleting: false});
+  //       });
+  //   }
+  // }
 
 }

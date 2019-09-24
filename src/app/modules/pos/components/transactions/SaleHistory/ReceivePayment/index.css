@@ -50,3 +50,11 @@
     text-align: left;
     font-weight: 600;
 }
+
+.variant-name {
+    width: fit-content;
+    background-color: #57A600;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+}

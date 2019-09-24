@@ -68,8 +68,6 @@ export default class Form extends Retail {
                     discountValue: {type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: quotaionValues.terms ? quotaionValues.terms : 0 }
                 });
 
-
-               
                 this.props.dispatch(QuotationAction.reset(Constant.RESET_DETAIL_QUOTATION));
             }
         }

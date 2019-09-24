@@ -20,7 +20,11 @@ export default class FormItem extends Modal {
           return(
             <div>
               <div>{ InventoryUtil.getProductName(record.productVariant.product) }</div>
-              <div style={{ fontSize: "10px" }}>{ record.productVariant.product.productOption === InventoryEnum.PRODUCT_VARIANT ? record.productVariant.name : "" }</div>
+              {
+                record.productVariant.product.productOption === InventoryEnum.PRODUCT_VARIANT ?
+                  <div className="variant-name" style={{ fontSize: "10px" }}>{ record.productVariant.name }</div>
+                : ""
+              }
             </div>
           );
         }
