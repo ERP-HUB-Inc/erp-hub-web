@@ -124,7 +124,7 @@ html,
 
 .breadcrumb {
     border-radius: 3px !important;
-    padding: 10px 15px !important;
+    padding: 5px 15px !important;
     background-color: #ffffff !important;
     margin-top: 8px;
     flex: none
@@ -531,9 +531,10 @@ color: #4D4F5C;
 .ant-layout-content {
     padding: 15px;
     background:#F7F7F7;
-    margin-left: 90px;
+    margin-left: 80px;
     z-index: 0;
-    margin-top: 62px;
+    /* margin-top: 62px; */
+    margin-top: 40px;
     display: flex;
     height: 100%
 }
@@ -548,7 +549,10 @@ color: #4D4F5C;
     background:#F7F7F7;
     height: 100%;
     position: relative
-    
+}
+
+.ant-badge-status-text {
+    font-size: 10pt !important
 }
 
 .ant-layout-sider-children .logo {

@@ -1,8 +1,7 @@
 .menu-right {
     margin: 0;
-    display: table-cell;
-    vertical-align: middle;
-    text-align: right
+    display: flex;
+    align-items: center
 }
 
 .menu-right li {
@@ -58,7 +57,8 @@
 .icon-user,
 .icon-bell,
 .icon-help,
-.icon-logout {
+.icon-logout,
+.icon-reload {
     font-size: 18pt
 }
 

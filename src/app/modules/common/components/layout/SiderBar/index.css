@@ -1,9 +1,9 @@
 #sidebar {
-    padding-top: 70px;
+    padding-top: 50px;
     background-image: url("../styles/images/sidebar-bg.jpg");
     background-repeat-y: repeat;
     background-size: 116px;
-    width: 90px;
+    width: 80px;
     position: fixed;
     height: 100%;
     z-index: 1

@@ -43,6 +43,10 @@ tr:nth-child(odd) {
     border-bottom: none !important
 }
 
+.ant-table-thead > tr > th {
+    font-weight: 400 !important
+}
+
 
 .ant-table-tbody > tr > td,
 .ant-table-thead > tr > th {

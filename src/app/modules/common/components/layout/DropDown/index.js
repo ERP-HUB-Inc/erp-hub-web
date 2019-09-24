@@ -29,6 +29,10 @@ export default class MenuDropDown extends Component {
             <span className="title"><this.Translate id="text_tutorial"/></span>
           </a>
         </Menu.Item>
+        <Menu.Item onClick={this.handleOnHardReload}>
+          <span className="icon-reload icon-padding-right"></span>
+          <span className="title"><this.Translate id="text_update_now" /></span>
+        </Menu.Item>
         <Menu.Item onClick={() => this.handleLogOut()}>
           <span className="icon-logout icon-padding-right"></span>
           <span className="title"><this.Translate id="text_logout"/></span>
@@ -68,7 +72,7 @@ export default class MenuDropDown extends Component {
     return(
       <ul className="menu-right list-unstyled">
         <li>
-          <this.Button className="btn-update-now" type="default" style={{ backgroundColor: "#FFD627" }} onClick={this.handleOnHardReload}><this.Translate id="text_update_now" /></this.Button>
+          <this.Button className="btn-update-now" type="default" style={{ backgroundColor: "#FFD627" }} onClick={() => history.push("/transactions/saleorder")}><this.Translate id="text_pos" /></this.Button>
         </li>
         {/* <li>
           <this.Link to="#" className="user-account">

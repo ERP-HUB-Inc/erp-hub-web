@@ -1,8 +1,7 @@
 
     .header-color,
     .padding-title,
-    .icon-user,
-    {
+    .icon-user {
         color: #9A9A9A;
     }
 
@@ -37,7 +36,8 @@
     .ant-layout-header,
     .header-left,
     .header-right {
-        height: 70px;
+        /* height: 70px; */
+        height: 50px
     }
 
     .ant-layout-header {
@@ -97,8 +97,10 @@
     }
 
     .store-logo {
-        width: 90px;
-        height: 70px;
+        /* width: 90px;
+        height: 70px; */
+        width: 80px;
+        height: 50px;
         position: fixed;
         background-color: #093163;
         text-align: center;

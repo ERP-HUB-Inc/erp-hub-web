@@ -1,7 +1,8 @@
 import React from "react";
+import QuotationA4 from "./QuotationA4";
+import List from "../List";
 import Enum from "../../../enums";
 import history from "../../../../../modules/common/router/history";
-import List from "../List";
 import FormCreate from "../../../containers/transactions/Quotation/FormCreate";
 import FormUpdate from "../../../containers/transactions/Quotation/FormUpdate";
 import Constant from "../../../constants/transactions/quotation";
@@ -9,7 +10,6 @@ import CustomerAction from "../../../../crm/actions/customers/customer";
 import QuotationAction from "../../../action/transaction/quotation";
 import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
 import QuotationService from "../../../services/transactions/QuotationService";
-import ReceiptA4Extend from "./ReceiptA4";
 import Detail from "../../../containers/transactions/Quotation/Detail";
 import InventoryUtil from "../../../../inventory/utils";
 import InventoryEnum from "../../../../inventory/enums";
@@ -35,51 +35,37 @@ export default class QuotationList extends List {
       {
         title: <this.Translate id="text_name" />,
         dataIndex: "name",
+        key: "name",
         sorter: true,
-        render: (text,record) => `${record.name}:${record.number}`
+        render: (text, record) => `${record.name}:${record.number}`
       },
       {
         title: <this.Translate id="text_customer" />,
         dataIndex: "customer",
-        key: "firstName",
+        key: "customer",
         sorter: true,
-        render: (customer) => customer ? `${customer.firstName} ${customer.lastName}` : this.emptyText
+        render: customer => customer ? `${customer.firstName} ${customer.lastName}` : this.emptyText
       },
       {
         title: <this.Translate id="text_phone_number" />,
         dataIndex: "customer",
         key: "phoneNumber",
         sorter: true,
-        render :(text,record) => {
-          if(record.customer){
-            if(record.customer.phoneNumber){
-             return record.customer.phoneNumber;
-            }else{
-              return this.emptyText
-            }
-          }
-         }
+        render: customer => customer && customer.phoneNumber ? customer.phoneNumber : this.emptyText
       },
       {
         title: <this.Translate id="text_email" />,
         dataIndex: "customer",
         key: "email",
         sorter: true,
-        render :(text,record) => {
-         if(record.customer){
-           if(record.customer.email){
-            return record.customer.email;
-           }else{
-             return this.emptyText
-           }
-         }
-        }
+        render: customer => customer && customer.email ? customer.email : this.emptyText
       },
       {
         title: <this.Translate id="text_total" />,
         dataIndex: "total",
+        key: "total",
         sorter: true,
-        render: (total) => this.Util.formatCurrency(total)
+        render: total => this.Util.formatCurrency(total)
       },
       {
         title: <this.Translate id="text_step" />,
@@ -91,17 +77,14 @@ export default class QuotationList extends List {
       },
       {
         title: <this.Translate id="text_action" />,
-        dataIndex: "id",
         key: "action",
         align: "center",
         width: 100,
         render: (text, record) => {
-          return <div style={{ flexDirection: "row", display: "flex", width: "100%" }} className="action_create_quotation"> 
-             <this.Button className="mg-right text-uppercase cancel_step" onClick={() => this.handleCancelQuotation(record,this.state.selectedRows)}>
-                <span className="icon-cancel icon-padding-right"></span>
-                <this.Translate id="text_cancel"/>
-              </this.Button>
-          </div>;
+          return <this.Button className="mg-right text-uppercase danger" onClick={() => this.handleCancelQuotation(record, this.state.selectedRows)}>
+            <span className="icon-cancel icon-padding-right"></span>
+            <this.Translate id="text_cancel" />
+          </this.Button>;
         }
       }
     ];
@@ -110,7 +93,7 @@ export default class QuotationList extends List {
     this.formUpdate = <FormUpdate/>;
     this.generalSearchLabel = "text_name";
     this.placeHolderForGeneralSearch = "text_name";
-    this.columnFilterWithKey = ["name","number"];
+    this.columnFilterWithKey = ["name", "number"];
     this.service = QuotationService;
     this.action = QuotationAction;
     this.RESET_CONSTANT = Constant.RESET_QUOTATION;
@@ -277,7 +260,7 @@ export default class QuotationList extends List {
         this.setState({
           modalConten: <Detail
             receiptContent={ 
-              <ReceiptA4Extend 
+              <QuotationA4 
                 data={this.props.quotationDetail.data} 
                 receiptTemplate={this.props.receiptTemplate}
                 productList={listProduct} />}
