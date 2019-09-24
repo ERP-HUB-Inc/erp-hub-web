@@ -27,6 +27,7 @@ export default class Form extends Modal {
         values["payDate"] = this.Util.formatDateForMYSQL(values.payDate);
         values["type"] = Enum.TRANSACTION_TYPE.RECEIPT;
         values["status"] = this.props.status;
+        values["step"] =  Enum.TRANSACTION_STEP.PAID;
         if(this.props.status === Enum.TRANSACTION_STEP.CREDIT){
           values["step"] = this.props.status;
         }
