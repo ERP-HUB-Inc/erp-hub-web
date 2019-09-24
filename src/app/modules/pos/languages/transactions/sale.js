@@ -1,4 +1,34 @@
 export default {
+  "text_buyer": [
+    "Buyer",
+    "អ្នកទិញ",
+    "Buyer"
+  ],
+
+  "text_receiver": [
+    "Receiver",
+    "អ្នកទទួល",
+    "Receiver"
+  ],
+
+  "text_driver": [
+    "Driver",
+    "អ្នកបើកបរ",
+    "Driver"
+  ],
+
+  "text_seller": [
+    "Seller",
+    "អ្នកលក់",
+    "Seller"
+  ],
+
+  "text_delivery_order": [
+    "Delivery Order",
+    "បណ្ណ័ដឹកទំនិញ",
+    "Delivery Order"
+  ],
+
   "current_receipt_type": [
     "Current Receipts",
     "បង្កាន់ដៃបច្ចុប្បន្ន",

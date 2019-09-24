@@ -22,7 +22,32 @@ class Util {
     return summaryTotal;
   }
 
+  getProductFieldPrice(product, selectedFieldPrice) {
+    const productFieldPrice = {
+      price: "price",
+      wholePrice: "wholePrice",
+      distributePrice: "distributePrice"
+    };
 
+    if (selectedFieldPrice === productFieldPrice.distributePrice) {
+      if (product[selectedFieldPrice] > 0) {
+        return selectedFieldPrice;
+      } else if (product[productFieldPrice.wholePrice] > 0) {
+        return productFieldPrice.wholePrice;
+      } else {
+        return productFieldPrice.price;
+      }
+    } else if (selectedFieldPrice === productFieldPrice.wholePrice) {
+      if (product[selectedFieldPrice] > 0) {
+        return selectedFieldPrice;
+      } else {
+        return productFieldPrice.price;
+      }
+    } else {
+      return selectedFieldPrice;
+    }
+  }
+  
   getTaxAmount(value, rate) {
     if (value === null || isNaN(value))
       return 0;

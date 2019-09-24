@@ -1,5 +1,8 @@
 import React from "react";
-import { Menu, Dropdown } from "antd";
+import {
+  Menu,
+  Dropdown
+} from "antd";
 import Component from "../../Component";
 import history from "../../../router/history";
 import AuthService from "../../../services/AuthService";
