@@ -277,7 +277,7 @@ export default class QuotationList extends List {
 
   componentWillUpdate(nextProps) {
     if (nextProps.update.updated || nextProps.add.added) {
-      this.props.dispatch(QuotationAction.fetch(this.pageSize));
+      this.props.dispatch(QuotationAction.fetch(this.pageSize,"","","",JSON.stringify({status: [Enum.QUOTATION_STEP.DRAFT]}),"",""));
     }
   } 
  
