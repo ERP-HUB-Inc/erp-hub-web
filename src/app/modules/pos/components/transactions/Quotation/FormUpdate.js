@@ -148,6 +148,7 @@ export default class Form extends Retail {
                 values["discount"] = discountAmount;
                 values["terms"] = this.state.discountValue.value;
                 values["Entries"] = productList;
+                console.log("Entries",productList);
                 if(this.state.selectedCustomer && this.state.quotationId){
                     values["customerId"] = this.state.selectedCustomer.id;
                     values["id"] = this.state.quotationId;
