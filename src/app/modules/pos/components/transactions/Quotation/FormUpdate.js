@@ -243,6 +243,4 @@ export default class Form extends Retail {
             </this.Row>
         );
     }
-
-    renderOutOfStock(){}
 }

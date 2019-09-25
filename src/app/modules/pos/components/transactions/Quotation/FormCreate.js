@@ -187,6 +187,4 @@ export default class Form extends Retail {
         )
     }
 
-    renderOutOfStock(){}
-
 }
