@@ -28,7 +28,7 @@ export default class ReceiptA4 extends Component {
             this.props.data.customer ?
           <div>
             <div style={{fontWeight: "bold"}}>{ this.props.data.customer.company }</div>
-            { this.props.data.customer.address ? this.props.data.customer.address + <br /> : "" } 
+            { this.props.data.customer.address ? this.props.data.customer.address : "" } <br/> 
             Tel: {this.props.data.customer.phoneNumber} |  Email: {this.props.data.customer.email}<br />
           </div> : "" }
       </div>
@@ -90,9 +90,9 @@ export default class ReceiptA4 extends Component {
           <div style={{flexGrow: 2, textAlign: "left"}}>
               {this.renderLogo()}
           </div>
-          <div style={{flexGrow: 2, textAlign: "right", fontSize: "18pt", fontWeight: "bold", fontFamily: "Khmer OS Muol"}}>
-            <span>ក្រុម​ហ៊ុន អ អ៊ី ឌីហ្សាញ់ ឯ.ក </span><br />
-            <span style={{fontSize: "15pt", fontFamily: "Berlin Sans FB Demi"}}>R.E. DESIGNS Co., Ltd,</span>
+           <div style={{flexGrow: 2, textAlign: "right", fontSize: "18pt", fontWeight: "bold", fontFamily: "Khmer OS Muol"}}>
+            <span>{this.props.data.client.businessName}</span><br />
+            {/* <span style={{fontSize: "15pt", fontFamily: "Berlin Sans FB Demi"}}>R.E. DESIGNS Co., Ltd,</span> */}
           </div>
         </div>
         {this.companyInfo()}
@@ -101,7 +101,7 @@ export default class ReceiptA4 extends Component {
         </div>
         <div style={{display: "flex", fontSize: "11px", marginTop: "2px", marginBottom: "8px"}}>
           <div style={{flexGrow: 2, textAlign: "left"}}>កាលបរិច្ឆេទ Date: <span style={{fontWeight: "bold"}}>{this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY")}</span></div>
-          <div style={{flexGrow: 2, textAlign: "left"}}>VAT IN: </div>
+          {/* <div style={{flexGrow: 2, textAlign: "left"}}>VAT IN: </div> */}
           <div style={{flexGrow: 2, textAlign: "right"}}>លេខ No: <span style={{fontWeight: "bold", color: "#CC0000", fontSize: "14px"}}>{this.props.data.number}</span></div>
         </div>
 
@@ -125,23 +125,15 @@ export default class ReceiptA4 extends Component {
               <td style={{borderRight: "1px solid black", width: "100px", textAlign: "right", fontSize: "11px"}} />
             </tr>
             <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
-              <td colSpan={2} rowSpan={5} style={{borderRight: "1px solid black", backgroundColor: "#E7E6E6", fontSize: "11px", padding: "8px", textAlign: "left"}}>
+              <td colSpan={2} rowSpan={4} style={{borderRight: "1px solid black", backgroundColor: "#E7E6E6", fontSize: "11px", padding: "8px", textAlign: "left"}}>
                 Please pay to our company bank account as below: <br />
-                <span style={{border: "1px solid black", width: "10px", height: "10px", display: "inline-block", position: "relative", top: "3px"}}>&nbsp;&nbsp;</span>&nbsp;&nbsp;Cheque to <b>R E Design Co., Ltd.</b>&nbsp;or<br />
+                <span style={{border: "1px solid black", width: "10px", height: "10px", display: "inline-block", position: "relative", top: "3px"}}>&nbsp;&nbsp;</span>&nbsp;&nbsp;Cheque to <b>{this.props.data.client.businessName}</b>&nbsp;or<br />
                 <span style={{border: "1px solid black", width: "10px", height: "10px", display: "inline-block", position: "relative", top: "2px"}} />&nbsp;&nbsp;Bank account as below:<br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Account Name: R E Design Co.,Ltd.<br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Account Number: 00008/02/000166/05 (USD)<br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Bank Name: May Bank (Cambodia) Plc.
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Account Name: {this.props.data.client.businessName}.<br />
               </td>
               <td colSpan={2} style={{borderRight: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left"}}>សរុប Total </td>
               <td style={{borderRight: "1px solid black"}} >
                 {this.renderMoneyCell(this.props.data.total)}
-              </td>
-            </tr>
-            <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
-              <td colSpan={2} style={{borderRight: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left"}}>ពន្ធកាត់ទុក Withodling Tax (0%) </td>
-              <td style={{borderRight: "1px solid black"}}>
-                {this.renderMoneyCell()}
               </td>
             </tr>
             <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
@@ -153,10 +145,10 @@ export default class ReceiptA4 extends Component {
 
             <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
               <td colSpan={2} style={{borderRight: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left"}}>
-                បញ្ចុះតំលៃ Discount ({this.props.data.discount ? this.props.data.discount : 0}  %)
+                បញ្ចុះតំលៃ Discount ({this.props.data.terms ? this.props.data.terms : 0}  %)
               </td>
               <td style={{borderRight: "1px solid black"}}>
-              {this.renderMoneyCell(this.calculateDiscount(this.props.productList,this.props.data.discount))}
+              {this.renderMoneyCell(this.calculateDiscount(this.props.productList,this.props.data.terms))}
               </td>
             </tr>
 
@@ -169,8 +161,8 @@ export default class ReceiptA4 extends Component {
           </tbody></table> 
         <div style={{position: "relative", top: "25px"}}>
           <div style={{display: "flex", fontSize: "11px", marginTop: "8px", marginBottom: "8px"}}>
-            <div style={{flexGrow: 2, textAlign: "left"}}>អ្នកចេញវិក្ក័យបត្រ័​ /Issued by ………………………………</div>
-            <div style={{flexGrow: 2, textAlign: "right"}}>អតិថិជន/Customer ………………………………</div>
+            <div style={{flexGrow: 2, textAlign: "left"}}>អ្នកចេញសម្រង់តម្លៃ​ / Quotation by ………………………………</div>
+            <div style={{flexGrow: 2, textAlign: "right"}}>អតិថិជន ​/ Customer ………………………………</div>
           </div>
           <div style={{textAlign: "center", backgroundColor: "#F8CBAD", padding: "8px", fontSize: "11px", marginBottom: "15px"}}>
             <div style={{ fontFamily: "Khmer OS" }}><span style={{fontWeight: "bold"}}>ចំណាំ៖ </span>&nbsp;ច្បាប់ដើមសម្រាប់​អ្នកទិញ និង ​ច្បាប់​ចម្លង​សម្រាប់​អ្នក​លក់</div>
