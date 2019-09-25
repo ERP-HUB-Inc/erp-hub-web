@@ -16,6 +16,7 @@ function mapStateToPropsChild(state) {
   return {
     ...mapStateToProps(state),
     customer: state.reducer.customer.add,
+    quotationDetail: state.reducer.quotation.detail,
     quotationAdd: state.reducer.quotation.add,
     locale: state.locale
   };

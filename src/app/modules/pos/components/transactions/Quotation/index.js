@@ -99,6 +99,8 @@ export default class QuotationList extends List {
     this.RESET_CONSTANT = Constant.RESET_QUOTATION;
     this.handleCancelQuotation = this.handleCancelQuotation.bind(this);
     this.handlePrint = this.handlePrint.bind(this);
+    this.handleClone = this.handleClone.bind(this);
+    this.handleShowFormAdd = this.handleShowFormAdd.bind(this);
   }
 
   componentDidMount(){
@@ -123,14 +125,37 @@ export default class QuotationList extends List {
     });
   }
 
+  handleClone(){
+    new Promise(() => {
+      const selectLength = this.state.selectedListIds.length;
+      if (selectLength === 0 && this.state.selectedListIds) {
+        this.Message.error(this.CATranslate("text_clone_warning_1", this.props.locale));
+      } else if (selectLength > 1) {
+        this.Message.error(this.CATranslate("text_clone_warning_2", this.props.locale));
+      } else {
+        this.props.dispatch(QuotationAction.detail(this.state.selectedListIds[0]));
+        history.push("/transactions/quotation-create");
+      }
+    });
+  }
+
+  renderButtonAddNew(){}
+
   renderOtherAction(){
     return(
-      <this.Button className="mg-right text-uppercase" type="info" loading={this.props.list.fetching && this.state.isRequestPrint} onClick={this.handlePrint}>
-        <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print"/>
-        <div id="receiptLogoPreLoading" style={{display: "none"}}>
-          {<img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate && this.props.receiptTemplate.data ? this.props.receiptTemplate.data.logo : "", "general").url} />}
-        </div>
-      </this.Button>
+      <div>
+        <this.Button type="info" id="btnAdd" className="mg-right text-uppercase" disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching} onClick={this.handleShowFormAdd}>
+          <span className="icon-add icon-padding-right"></span>
+          <this.Translate id="text_add_new" />
+        </this.Button>
+        <this.Button className="mg-right text-uppercase" type="info" loading={this.props.list.fetching && this.state.isRequestPrint} onClick={this.handleClone}>
+          <span className="icon-change icon-padding-right text-uppercase"></span>
+          <this.Translate id="text_clone"/>
+        </this.Button>
+        <this.Button className="mg-right text-uppercase" type="info" loading={this.props.list.fetching && this.state.isRequestPrint} onClick={this.handlePrint}>
+          <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print"/>
+        </this.Button>
+      </div>
     );
   }
 

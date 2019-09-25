@@ -1,5 +1,4 @@
 import React from "react";
-import POSUtil from "../../../utils";
 import Component from "../../../../common/components/Component";
 export default class ReceiptA4 extends Component {
   
@@ -42,19 +41,6 @@ export default class ReceiptA4 extends Component {
     </div>;
   }
 
-  calculateDiscount(productList,discount){
-    let totalAllproduct = "";
-    
-    productList.map((product, index) =>
-      totalAllproduct += product.price * product.quantity
-    )
-
-    if(discount > 0){
-      return POSUtil.getDiscountByRate(totalAllproduct,discount);
-    }else{
-      return;
-    }
-  }
 
   itemlist(){
     return(
@@ -148,7 +134,7 @@ export default class ReceiptA4 extends Component {
                 បញ្ចុះតំលៃ Discount ({this.props.data.terms ? this.props.data.terms : 0}  %)
               </td>
               <td style={{borderRight: "1px solid black"}}>
-              {this.renderMoneyCell(this.calculateDiscount(this.props.productList,this.props.data.terms))}
+              {this.renderMoneyCell(this.props.data.discount)}
               </td>
             </tr>
 

@@ -16,11 +16,12 @@ export default class Form extends Retail {
         super(props);
         this.state = {
           ...this.state,
+          isCloseDiscountMoney: false,
+          isOutOfStock: false,
           quotationId: "",
           productStatus: 0,
           handleRemove: false,
-          isNotYetLoadComponentDidUpdated: true,
-          listQuotationWhenRemove: []
+          isNotYetLoadComponentDidUpdated: true
         }
         this.handleSaveQuotation = this.handleSaveQuotation.bind(this);
         this.handleProcessQuotation = this.handleProcessQuotation.bind(this);
@@ -242,4 +243,6 @@ export default class Form extends Retail {
             </this.Row>
         );
     }
+
+    renderOutOfStock(){}
 }
