@@ -27,8 +27,8 @@ export default class ReceiptA4 extends Component {
             this.props.data.customer ?
           <div>
             <div style={{fontWeight: "bold"}}>{ this.props.data.customer.company }</div>
-            { this.props.data.customer.address ? this.props.data.customer.address : "" } <br/> 
-            Tel: {this.props.data.customer.phoneNumber} |  Email: {this.props.data.customer.email}<br />
+            { this.props.data.customer.address ? this.props.data.customer.address : "" }  
+           <div> Tel: {this.props.data.customer.phoneNumber} |  Email: {this.props.data.customer.email}</div>
           </div> : "" }
       </div>
     )
