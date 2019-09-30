@@ -434,8 +434,6 @@ export default class Retail extends Component {
 
   handleOnSelectProduct(product, productVariant, isRequestVariantForm = true) {
 
-    console.log("product",product);
-
     // POPUP INPUT CASH REQUIRE IF YOU NOT YET OPEN
     if (this.openFormSaleRegisration()) {
       return;
