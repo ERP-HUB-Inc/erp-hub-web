@@ -151,7 +151,7 @@ export default class Form extends Retail {
                 if(this.state.selectedCustomer && this.state.quotationId){
                     values["customerId"] = this.state.selectedCustomer.id;
                     values["id"] = this.state.quotationId;
-                    this.props.dispatch(QuotationAction.update(values,this.state.quotationId)); 
+                    this.props.dispatch(QuotationAction.update(values)); 
                     history.push("/transactions/quotation");
                 }else{
                     this.Message.warning(this.CATranslate("text_error_create_quotation", this.props.locale));
