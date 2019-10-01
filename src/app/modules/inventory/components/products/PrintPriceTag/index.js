@@ -670,7 +670,7 @@ export default class PrintPriceTag extends List {
               <NoPermission />
               :
               <div className="main-layout" style={{height: "100%", display: "flex", flexDirection: "column", padding: 0}}>
-                <Form autoComplete="off" onSubmit={this.handleOnGeneratePriceTag} style={{display: "flex", flexDirection: "column"}}>
+                <Form autoComplete="off" onSubmit={this.handleOnGeneratePriceTag} style={{display: "flex", flexDirection: "column", height: "100%"}}>
                   <this.Row style={{height: "100%", marginLeft: 0}}>
                     <this.Col md="6">
                       <div id="print-price-tag">
