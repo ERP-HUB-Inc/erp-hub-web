@@ -22,6 +22,12 @@ export default {
     "ការបញ្ចារលក់",
     "Sale Order"
   ],
+
+  "text_sale_order_pos": [
+    "Sale Order (POS)",
+    "លក់ (POS)",
+    "Sale Order (POS)"
+  ],
   
   "text_return_exchange": [
     "Return & Exchange",

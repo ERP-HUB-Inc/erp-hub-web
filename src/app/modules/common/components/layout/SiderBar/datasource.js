@@ -253,7 +253,7 @@ const dataSource = {
     subItems: [
       {
         title: <Translate id="text_quotation" />,
-        icon: "icon-time",
+        icon: "icon-pre-order",
         route: "/transactions/quotation", 
         component: Quotation,
         isFashNav: true
@@ -276,8 +276,8 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: <Translate id="text_sale_order" />,
-        icon: "icon-pre-order",
+        title: <Translate id="text_sale_order_pos" />,
+        icon: "icon-sale",
         route: "/transactions/saleorder",
         component: SaleOrder,
         isFashNav: true
