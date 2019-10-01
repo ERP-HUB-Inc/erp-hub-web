@@ -33,6 +33,7 @@ export default class Form extends Retail {
         let quotaionValues = this.props.quotationDetail.data;
         let quotationColletion = [];
         let errorCode = "";
+        
 
         if(this.state.isNotYetLoadComponentDidUpdated){
             if(quotaionValues){
@@ -47,6 +48,7 @@ export default class Form extends Retail {
                         tax: values.tax,
                         price: values.price,
                         wholePrice: values.productVariant.wholePrice,
+                        discount: values.discount,
                         taxDescription: {
                             id: 0,
                             taxRate: 0,

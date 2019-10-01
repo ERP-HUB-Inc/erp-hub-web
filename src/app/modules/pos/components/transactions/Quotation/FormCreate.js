@@ -181,6 +181,8 @@ export default class Form extends Retail {
             <this.InputTextArea
                 name={`description[${index}]`}
                 label={<this.Translate id="text_notation"/>}
+                data={values.description}
+                className="ca-input-v1"
                 handleKeyUp={(event) => this.handleOnChangOrderField(event, index, "description")}
                 placeholder={this.CATranslate("text_add_notation", this.props.locale)}
                 rows={7}
