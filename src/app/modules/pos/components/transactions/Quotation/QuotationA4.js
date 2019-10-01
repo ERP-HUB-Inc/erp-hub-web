@@ -1,7 +1,7 @@
 import React from "react";
 import ReceiptA4 from "../RetailSale/ReceiptA4";
 
-export default class ReceiptA4Extend extends ReceiptA4 {
+export default class QuotationA4 extends ReceiptA4 {
   renderLogo(){
     return(
       <div style={{position: "relative", margin: "0 auto"}}>

@@ -931,3 +931,8 @@ color: #4D4F5C;
     text-decoration: underline;
     font-weight: bold;
 }
+
+.ant-message-notice-content {
+    background-color: #093163;
+    color: white;
+}

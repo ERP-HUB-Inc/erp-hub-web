@@ -81,7 +81,26 @@ export default {
   ],
   "text_error_allow_cancel_only_draft_step": [
     "We allow cancel only step draft!",
-    "អនុញ្ញាតឱ្យបោះបុងតែដំណាក់កាលសេចក្តីព្រៀង!",
+    "អនុញ្ញាតឱ្យបោះបង់តែដំណាក់កាលសេចក្តីព្រៀង!",
     "We allow cancel only step draft!"
+  ],
+
+  "text_clone": [
+    "Clone",
+    "ចម្លង",
+    "Clone"
+  ],
+
+  "text_clone_warning_1": [
+    "Please select any record for clone !",
+    "សូមជ្រើសរើសកំណត់ត្រាណាមួយសម្រាប់ចម្លង !",
+    "Please select any record for clone !"
+  ],
+
+  "text_clone_warning_2": [
+    "We not allow you to clone with multi record !",
+    "យើងមិនអនុញ្ញាតឱ្យអ្នកចម្លងជាមួយកំណត់ត្រាច្រើនទេ!",
+    "We not allow you to clone with multi record !"
   ]
+
 };

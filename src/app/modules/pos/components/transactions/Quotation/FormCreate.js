@@ -1,4 +1,5 @@
 import React from "react";
+import Constant from "../../../constants/transactions/quotation";
 import Enum from "../../../enums";
 import EnumCustomer from "../../../../crm/enum";
 import history from "../../../../../modules/common/router/history";
@@ -7,15 +8,85 @@ import QuotationAction from "../../../action/transaction/quotation";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import ConstantCustomer from "../../../../crm/constants/customers/customer";
 import POSUtil from "../../../../pos/utils";
+import Util from "../../../../inventory/utils";
 import "./index.css";
 
 export default class Form extends Retail {
     constructor(props){
         super(props);
+        this.state = {
+            ...this.state,
+            isCloseDiscountMoney: false,
+            isOutOfStock: false,
+            isNotYetLoadComponentDidUpdated: true
+          }
         this.handleSaveQuotation = this.handleSaveQuotation.bind(this);
         this.handleProcessQuotation = this.handleProcessQuotation.bind(this);
         this.handleViewQuotation = this.handleViewQuotation.bind(this);
     }
+
+    componentDidUpdate(){
+        super.componentDidUpdate();
+        let quotaionValues = this.props.quotationDetail.data;
+        let quotationColletion = [];
+        let errorCode = "";
+
+        if(this.state.isNotYetLoadComponentDidUpdated){
+            if(quotaionValues){
+                quotaionValues.quotationEntries.forEach((values, index) => {
+                    quotationColletion.push({
+                        id: values.id,
+                        productVariantId: values.productVariant.id,
+                        name: values.productVariant ? Util.getProductName(values.productVariant.product) : "",
+                        variantName: values.productVariant.name ? values.productVariant.name : "",
+                        barcode: values.productVariant.barcode,
+                        quantity: values.quantity,
+                        tax: values.tax,
+                        price: values.price,
+                        wholePrice: values.productVariant.wholePrice,
+                        taxDescription: {
+                            id: 0,
+                            taxRate: 0,
+                            taxName: "No Tax"
+                        },
+                        quotationStatus: "",
+                        description: values.description,
+                    });
+                    
+                });
+            
+                this.props.form.setFieldsValue({ searchRecord: `${quotaionValues.customer.firstName ? quotaionValues.customer.firstName : "" } ${quotaionValues.customer.lastName ? quotaionValues.customer.lastName : ""}`});
+                this.getSelectedCustomer(this.props.quotationDetail.data.customer);
+               
+                this.setState({
+                    productOrderList: quotationColletion,
+                    isNotYetLoadComponentDidUpdated: false,
+                    quotationId: this.props.quotationDetail.data.id,
+                    isDiscountHasAdded: this.props.quotationDetail.data.discount > 0,
+                    discountValue: {type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: quotaionValues.terms ? quotaionValues.terms : 0 }
+                });
+
+                this.props.dispatch(QuotationAction.reset(Constant.RESET_DETAIL_QUOTATION));
+            }
+        }
+
+       
+        if (this.props.customer.error) {
+            errorCode = this.Util.getErrorCodeFromState(this.props.customer.error);
+        }
+    
+        if (errorCode) {
+            let message = "Something went wrong";
+            if (errorCode === EnumCustomer.CUSTOMER_EXIST) {
+                message = this.CATranslate("error_exist_customer", this.props.locale);
+            }
+            this.Message.error(message);
+            this.props.dispatch(CustomerAction.reset(ConstantCustomer.RESET_ADD_CUSTOMERS));
+        }
+        
+
+    }
+
 
     handleProcessQuotation(){
         this.saveQuotation(Enum.QUOTATION_STEP.PROCESS);
@@ -61,6 +132,7 @@ export default class Form extends Retail {
                 values["discount"] = discountAmount;
                 values["terms"] = this.state.discountValue.value;
                 values["Entries"] = productList;
+                
                 if(this.state.selectedCustomer){
                     values["customerId"] = this.state.selectedCustomer.id;
                     this.props.dispatch(QuotationAction.add(values)); 
@@ -77,23 +149,6 @@ export default class Form extends Retail {
 
     handleViewQuotation(){
         history.push("/transactions/quotation");
-    }
-
-    componentDidUpdate(){
-        super.componentDidUpdate();
-        let errorCode = "";
-        if (this.props.customer.error) {
-            errorCode = this.Util.getErrorCodeFromState(this.props.customer.error);
-        }
-    
-        if (errorCode) {
-            let message = "Something went wrong";
-            if (errorCode === EnumCustomer.CUSTOMER_EXIST) {
-                message = this.CATranslate("error_exist_customer", this.props.locale);
-            }
-            this.Message.error(message);
-            this.props.dispatch(CustomerAction.reset(ConstantCustomer.RESET_ADD_CUSTOMERS));
-        }
     }
 
     saleOrderHeader(){

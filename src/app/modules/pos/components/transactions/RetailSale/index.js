@@ -39,6 +39,8 @@ export default class Retail extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isCloseDiscountMoney: true,
+      isOutOfStock: true,
       modalContent: null,
       expandRowOrderIndex: null,
       selectedCustomer: null,
@@ -437,17 +439,20 @@ export default class Retail extends Component {
       return;
     }
 
-    if (product.serialType !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY) {
-      if (
-        (product.productOption === InventoryEnum.PRODUCT_STANDARD && Util.isOutOfStandardProductStock(product))
-        || (productVariant && productVariant.quantity <= 0)) {
-        let varinatName = productVariant && productVariant.name ? `(${productVariant.name})` : "";
-        this.Message.error(`${Util.getProductName(product)}${varinatName}: ${this.CATranslate("text_out_of_stock", this.props.locale)}`);
-        this.props.form.setFieldsValue({searchProduct: ""});
-        document.getElementById("searchProduct").focus();
-        return;
+    if(this.state.isOutOfStock){  
+      if (product.serialType !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY) {
+        if (
+          (product.productOption === InventoryEnum.PRODUCT_STANDARD && Util.isOutOfStandardProductStock(product))
+          || (productVariant && productVariant.quantity <= 0)) {
+          let varinatName = productVariant && productVariant.name ? `(${productVariant.name})` : "";
+          this.Message.error(`${Util.getProductName(product)}${varinatName}: ${this.CATranslate("text_out_of_stock", this.props.locale)}`);
+          this.props.form.setFieldsValue({searchProduct: ""});
+          document.getElementById("searchProduct").focus();
+          return;
+        }
       }
     }
+   
 
     let isProductVariant = product.productOption === InventoryEnum.PRODUCT_VARIANT;
     if (isProductVariant && isRequestVariantForm) {
@@ -715,6 +720,7 @@ export default class Retail extends Component {
         form={this.props.form}
         discountValue={this.state.discountValue.value}
         discountType={this.state.discountValue.type}
+        isCloseDiscountMoney={this.state.isCloseDiscountMoney}
         callBack={this.handleGetDiscount} />,
       isDiscountHasAdded: true,
     });
@@ -789,6 +795,15 @@ export default class Retail extends Component {
     this.setState({selectedReceiptType: key});
   }
 
+  renderOutOfStock(product){
+    return(
+        Util.countProductQTYCurrentLocation(product, this.Util.getLocationId()) <= 0 && product.serialType !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY ?
+          <div className="out-of-stock"><this.Translate id="text_out_of_stock" /></div>
+          : 
+        ""
+    );  
+  }
+
   renderProductList() {
     const countProduct = this.state.productList.length;
     const scrollWidth = 5;
@@ -825,12 +840,7 @@ export default class Retail extends Component {
               <div className="image" style={{minHeight: imageHeight, maxHeight: imageHeight}}>
                 <this.Image style={{maxHeight: imageHeight}} url={this.Util.processImageOnFlightCropCenter(this.Util.getProductImage(product.image).url, {height: imageHeight, width: imageWidth})}/>
               </div>
-              {
-                Util.countProductQTYCurrentLocation(product, this.Util.getLocationId()) <= 0 && product.serialType !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY ?
-                  <div className="out-of-stock"><this.Translate id="text_out_of_stock" /></div>
-                  : 
-                  ""
-              }
+              {this.renderOutOfStock(product)}
               <div style={{maxHeight: 20, overflow: "hidden", wordBreak: "break-all"}}>
                 <div className="name">
                   {

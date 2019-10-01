@@ -16,11 +16,12 @@ export default class Form extends Retail {
         super(props);
         this.state = {
           ...this.state,
+          isCloseDiscountMoney: false,
+          isOutOfStock: false,
           quotationId: "",
           productStatus: 0,
           handleRemove: false,
-          isNotYetLoadComponentDidUpdated: true,
-          listQuotationWhenRemove: []
+          isNotYetLoadComponentDidUpdated: true
         }
         this.handleSaveQuotation = this.handleSaveQuotation.bind(this);
         this.handleProcessQuotation = this.handleProcessQuotation.bind(this);
@@ -150,7 +151,7 @@ export default class Form extends Retail {
                 if(this.state.selectedCustomer && this.state.quotationId){
                     values["customerId"] = this.state.selectedCustomer.id;
                     values["id"] = this.state.quotationId;
-                    this.props.dispatch(QuotationAction.update(values,this.state.quotationId)); 
+                    this.props.dispatch(QuotationAction.update(values)); 
                     history.push("/transactions/quotation");
                 }else{
                     this.Message.warning(this.CATranslate("text_error_create_quotation", this.props.locale));

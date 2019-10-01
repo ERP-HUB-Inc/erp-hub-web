@@ -22,7 +22,7 @@ export default {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_QUOTATION,
-        payload: QuotationService.update(data, id)
+        payload: QuotationService.update(data)
       });
     };
   },
