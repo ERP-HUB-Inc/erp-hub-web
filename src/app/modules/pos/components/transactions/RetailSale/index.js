@@ -1028,6 +1028,7 @@ export default class Retail extends Component {
                 form={this.props.form}
                 dispatch={this.props.dispatch}
                 callBack={this.getSelectedCustomer}
+                disabledCustomer={this.state.disabledCustomer}
                 handleOnAddNewCustomer={this.handleOnAddNewCustomer} />
               :
               ""

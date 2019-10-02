@@ -1,4 +1,5 @@
 import React from "react";
+import history from "../../../../../modules/common/router/history";
 import List from "../List";
 import Receipt from "../RetailSale/Receipt";
 import Enum from "../../../enums";
@@ -20,6 +21,7 @@ export default class SaleHistoryList extends List {
     super(props);
     this.state = {
       ...this.state,
+      isRequestReturn: false,
       setDefaultDate: [],
       reprintReceiptContent: null,
       isRequestReprint: false,
@@ -52,6 +54,7 @@ export default class SaleHistoryList extends List {
     this.service = TransactionService;
     this.handleRePrint = this.handleRePrint.bind(this);
     this.handleReceivePayment = this.handleReceivePayment.bind(this);
+    this.handleReturn = this.handleReturn.bind(this);
     this.employeeList = [{
       id: "",
       fullName: <this.Translate id="text_all_employee"/>
@@ -156,12 +159,25 @@ export default class SaleHistoryList extends List {
           }
         },
         sorter: true
+      },
+      {
+        title: <this.Translate id="text_action" />,
+        key: "action",
+        align: "center",
+        width: 100,
+        render: (text, record) => {
+          return <this.Button className="mg-right text-uppercase" style={{ backgroundColor: "#1890ff", color: "white" }}  onClick={() => this.handleReturn(record, this.state.selectedRows)}>
+            <span className="icon-sale-return icon-padding-right"></span>
+            <this.Translate id="text_return" />
+          </this.Button>;
+        }
       }
     ];
   }
 
   componentDidMount() {
     super.componentDidMount();
+    this.Util.removeFullScreen();
     this.requestSubDataAsync();
     
     if(parseInt(this.Util.getParameterByName("salehistory"), 10) === 1) {
@@ -214,6 +230,15 @@ export default class SaleHistoryList extends List {
       });
     }
 
+
+
+    if(this.state.isRequestReturn && this.props.detail.data){
+      history.push("/transactions/salehistory-return");
+      this.setState({
+        isRequestReturn: false
+      });
+    }
+    
   }
 
   componentWillUpdate(nextProps) {
@@ -336,6 +361,18 @@ export default class SaleHistoryList extends List {
 
   getTaxAmount(data) {
     return data.total - data.totalExcludeTax;
+  }
+
+  handleReturn(rowData){
+    if(rowData.step === Enum.TRANSACTION_STEP.PAID || rowData.step === Enum.TRANSACTION_STEP.CREDIT){
+      this.props.dispatch(TransactionAction.detail({id: rowData.id}));
+      this.setState({
+        loadingPopup: true,
+        isRequestReturn: true
+      });
+    }else{
+      this.Message.warning(this.CATranslate("text_error_allow_return", this.props.locale));
+    }
   }
 
   handleRePrint() {

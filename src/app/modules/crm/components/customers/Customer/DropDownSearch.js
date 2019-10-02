@@ -180,6 +180,7 @@ export default class DropDownSearch extends Modal {
             handlePressEnter={this.handlePressEnterOnSearch}
             handleOnBlur={this.handleOnBlurSearch}
             handleOnFocus={this.handleOnFocusSearch}
+            disabled={this.props.disabledCustomer}
             form={this.props.form}/>
           <div className="remove-search-icon icon-delete" onClick={this.handleRemoveTextSearch}></div>
         </div>
@@ -204,5 +205,6 @@ export default class DropDownSearch extends Modal {
 }
 
 DropDownSearch.defaultProps = {
-  filter: ""
+  filter: "",
+  disabledCustomer: false
 };

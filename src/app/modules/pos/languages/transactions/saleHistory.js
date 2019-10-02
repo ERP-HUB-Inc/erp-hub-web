@@ -148,6 +148,12 @@ export default {
     "Amount to pay",
     "ទឹកប្រាក់ត្រូវបង់",
     "Amount to pay"
+  ],
+
+  "text_error_allow_return": [
+    "Allow return only Paid and Credit !",
+    "អនុញ្ញាតបង្វិលអោយវិញលុះត្រាតែ បានបង់ប្រាក់ និង ជំពាក់ប៉ុណ្ណោះ !",
+    "Allow return only Paid and Credit !"
   ]
 
 };

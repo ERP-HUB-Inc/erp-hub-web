@@ -10,6 +10,11 @@ const SaleHistory = Loadable({
   loading: () => <StartUp />,
 });
 
+const Return = Loadable({
+  loader: () => import("../../../../pos/containers/transactions/SaleHistory/Return"),
+  loading: () => <StartUp />,
+});
+
 const Quotation = Loadable({
   loader: () => import("../../../../pos/containers/transactions/Quotation"),
   loading: () => <StartUp />,
@@ -252,6 +257,11 @@ const dataSource = {
     title: <Translate id="text_transaction" />,
     subItems: [
       {
+        route: "/transactions/salehistory-return", 
+        component: Return,
+        isFashNav: false
+      },
+      {
         title: <Translate id="text_quotation" />,
         icon: "icon-pre-order",
         route: "/transactions/quotation", 
@@ -288,7 +298,8 @@ const dataSource = {
         route: "/transactions/saleregister",
         component: OpenSaleRegistration,
         isFashNav: true
-      },
+      }
+     
       // {
       //   title: <Translate id="text_return_exchange" />,
       //   icon: "icon-sale-return",
