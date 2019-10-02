@@ -76,7 +76,8 @@ export default class Form extends Retail {
         }
 
         //is redirect to quotation list if refresh page
-        if(this.state.productOrderList.length === 0 && this.props.quotationDetail.fetched === false){
+        let { quotationDetail } = this.props;
+        if(this.state.productOrderList.length === 0 && quotationDetail.fetched === false &&  quotationDetail.fetching === false){
             history.push("/transactions/quotation");
         }
 

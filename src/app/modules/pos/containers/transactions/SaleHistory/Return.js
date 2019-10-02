@@ -15,7 +15,6 @@ class ReturnForm extends RetailSaleForm {
 function mapStateToPropsChild(state) {
   return {
     ...mapStateToProps(state),
-    // quotationUpdate: state.reducer.quotation.update,
     transactionDetail: state.reducer.transaction.detail,
     customer: state.reducer.customer.add,
     initialValues: state.reducer.quotation.update.data,

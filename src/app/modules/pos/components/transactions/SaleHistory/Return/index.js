@@ -69,7 +69,8 @@ export default class Form extends Retail {
         }
 
         //is redirect to saleHistory list if refresh page
-        if(this.state.productOrderList.length === 0 && this.props.transactionDetail.fetched === false){
+        let { transactionDetail } = this.props;
+        if(this.state.productOrderList.length === 0 && transactionDetail.fetched === false && transactionDetail.fetching === false){
             history.push("/transactions/salehistory");
         }
     }
