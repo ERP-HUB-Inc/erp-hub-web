@@ -75,6 +75,12 @@ export default class Form extends Retail {
             }
         }
 
+        //is redirect to quotation list if refresh page
+        let { quotationDetail } = this.props;
+        if(this.state.productOrderList.length === 0 && quotationDetail.fetched === false &&  quotationDetail.fetching === false){
+            history.push("/transactions/quotation");
+        }
+
        
         if (this.props.customer.error) {
             errorCode = this.Util.getErrorCodeFromState(this.props.customer.error);
