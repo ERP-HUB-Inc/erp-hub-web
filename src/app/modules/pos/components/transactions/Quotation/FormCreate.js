@@ -49,7 +49,7 @@ export default class Form extends Retail {
                             taxRate: 0,
                             taxName: "No Tax"
                         },
-                        quotationStatus: "",
+                        status: "",
                         description: values.description,
                     });
                     

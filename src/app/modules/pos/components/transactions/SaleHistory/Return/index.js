@@ -47,7 +47,7 @@ export default class Form extends Retail {
                             taxRate: 0,
                             taxName: "No Tax"
                         },
-                        quotationStatus: values.productVariant ? Util.getStatus(values.productVariant.product) : "",
+                        status: values.productVariant ? Util.getStatus(values.productVariant.product) : "",
                         description: values.description,
                     });
                     
@@ -82,35 +82,36 @@ export default class Form extends Retail {
         if (productOrderList.length > 0) {
             this.props.form.validateFieldsAndScroll((err, values) => {
                 productOrderList.forEach((values, index) => {
-                    if(values.quotationStatus === this.Enum.ARCHIVE){
-                            productList.push({
-                                id: values.id,
-                                productVariantId: values.productVariantId,
-                                quantity: values.quantity,
-                                price: this.props.form.getFieldValue(`price[${index}]`),
-                                description: this.props.form.getFieldValue(`description[${index}]`),
-                                status: values.quotationStatus === this.Enum.ARCHIVE ? Enum.TRANSACTION_TYPE.RETURN : values.quotationStatus
-                            });
-                            
-                            if(!values.id){
-                                delete productList[index].id;
-                            }
-                    }else{
-                            productList.push({
-                                id: values.id,
-                                productVariantId: values.productVariantId,
-                                quantity: values.quantity,
-                                price: this.props.form.getFieldValue(`price[${index}]`),
-                                description: this.props.form.getFieldValue(`description[${index}]`),
-                                status:  values.quotationStatus ? values.quotationStatus : ""
-                            });
+                    if(values.status === this.Enum.ARCHIVE){
+                        productList.push({
+                            id: values.id,
+                            productVariantId: values.productVariantId,
+                            quantity: values.quantity,
+                            price: this.props.form.getFieldValue(`price[${index}]`),
+                            description: this.props.form.getFieldValue(`description[${index}]`),
+                            status: values.status === this.Enum.ARCHIVE ? Enum.TRANSACTION_TYPE.RETURN : values.status
+                        });
+                        
+                        if(!values.id){
+                            delete productList[index].id;
+                        }
 
-                            if(!values.id){
-                                delete productList[index].id;
-                            }
-                            if(!values.status){
-                                delete productList[index].status;
-                            }
+                    }else{
+                        productList.push({
+                            id: values.id,
+                            productVariantId: values.productVariantId,
+                            quantity: values.quantity,
+                            price: this.props.form.getFieldValue(`price[${index}]`),
+                            description: this.props.form.getFieldValue(`description[${index}]`),
+                            status:  values.status ? values.status : ""
+                        });
+
+                        if(!values.id){
+                            delete productList[index].id;
+                        }
+                        if(!values.status){
+                            delete productList[index].status;
+                        }
                     }
                 });
             
@@ -149,7 +150,7 @@ export default class Form extends Retail {
 
     handleOnRemoveProductFromOrderList(values,index){
         let productOrderList = this.state.productOrderList;
-        productOrderList[index]["quotationStatus"] = this.Enum.ARCHIVE;
+        productOrderList[index]["status"] = this.Enum.ARCHIVE;
         productOrderList[index]["quantity"] = 0;
         this.setState({
             productOrderList: productOrderList
@@ -170,7 +171,7 @@ export default class Form extends Retail {
           return summaryTotal;
             orderList.forEach(value => {
                 let totalAmount = "";
-                if(value.quotationStatus !== this.Enum.ARCHIVE){
+                if(value.status !== this.Enum.ARCHIVE){
                     totalAmount = POSUtil.getTotalAmount(value.quantity, value[priceFeild]);
                     summaryTotal.totalQuantity += value.quantity;
                     summaryTotal.subTotal += totalAmount;

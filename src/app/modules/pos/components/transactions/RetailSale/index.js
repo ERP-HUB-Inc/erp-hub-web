@@ -477,7 +477,7 @@ export default class Retail extends Component {
         if (productVariant && productOrder.productVariantId === productVariant.id) {
           isNotTheSame = false;
           existingProductOrderList[productOrderIndex]["quantity"] += this.state.initialOrderQuantity;
-          existingProductOrderList[productOrderIndex]["quotationStatus"] = "";
+          existingProductOrderList[productOrderIndex]["status"] = "";
         }
       });
 
@@ -1052,7 +1052,7 @@ export default class Retail extends Component {
         <div className="product-order-list">
           {
             this.state.productOrderList.map((productOrder, productOrderIndex) => 
-            productOrder.quotationStatus === this.Enum.ARCHIVE ? " " :
+            productOrder.status === this.Enum.ARCHIVE ? " " :
               <div className={`product-order-item ${this.state.expandOrderItemRow.includes(productOrder.productVariantId) ? "expanded" : ""}`} key={productOrderIndex}>
                 <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                   <div className="item" onClick={() => this.handleExpandOrderItem(productOrder.productVariantId, productOrderIndex)}>

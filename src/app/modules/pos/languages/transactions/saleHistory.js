@@ -151,9 +151,9 @@ export default {
   ],
 
   "text_error_allow_return": [
-    "Allow return only Paid and Credit !",
-    "អនុញ្ញាតបង្វិលអោយវិញលុះត្រាតែ បានបង់ប្រាក់ និង ជំពាក់ប៉ុណ្ណោះ !",
-    "Allow return only Paid and Credit !"
+    "Allow return only action Paid and Credit !",
+    "អនុញ្ញាតបង្វិលអោយវិញលុះត្រាតែស្ថានភាព បានបង់ប្រាក់ និង ជំពាក់ប៉ុណ្ណោះ !",
+    "Allow return only action Paid and Credit !"
   ], 
 
   "text_error_not_return_transection": [
