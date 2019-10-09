@@ -79,17 +79,17 @@ export default class SaleHistoryList extends List {
         width: 140,
         sorter: true
       },
-      // {
-      //   title: <this.Translate id="text_type" />,
-      //   dataIndex: "type",
-      //   key: "type",
-      //   width: 100,
-      //   render: type => {
-      //     const valueType = this.TRANSACTION_TYPE_STR.find(transactionType => transactionType.value === type);
-      //     return <this.TagLabel color={[Enum.TRANSACTION_TYPE.CREDIT_NOTE].includes(valueType.value) ? "red" : "blue"}>{valueType.name}</this.TagLabel>;
-      //   },
-      //   sorter: true
-      // },
+      {
+        title: <this.Translate id="text_type" />,
+        dataIndex: "type",
+        key: "type",
+        width: 100,
+        render: type => {
+          const valueType = this.TRANSACTION_TYPE_STR.find(transactionType => transactionType.value === type);
+          return <this.TagLabel color={[Enum.TRANSACTION_TYPE.CREDIT_NOTE].includes(valueType.value) ? "red" : "blue"}>{valueType.name}</this.TagLabel>;
+        },
+        sorter: true
+      },
       {
         title: <this.Translate id="text_seller" />,
         dataIndex: "user",
