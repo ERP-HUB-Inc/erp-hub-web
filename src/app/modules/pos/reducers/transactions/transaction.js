@@ -93,6 +93,15 @@ export default combineReducers({
       ConstantReceivePayment.RESET_RECEIVE_PAYMENT
     ];
     return reducer.update(state, action, constants);
+  },
+
+  returnTransaction: (state = InitialState.update(), action) => {
+    const constants = [
+      Constant.RETURN_TRANSACTION_PENDING,
+      Constant.RETURN_TRANSACTION_REJECTED,
+      Constant.RETURN_TRANSACTION_FULFILLED
+    ];
+    return reducer.update(state, action, constants);
   }
   
 });

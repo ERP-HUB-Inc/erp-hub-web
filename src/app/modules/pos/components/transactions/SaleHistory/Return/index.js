@@ -3,6 +3,7 @@ import Constant from "../../../../constants/transactions/transaction";
 import Enum from "../../../../enums";
 import Retail from "../../../../../pos/components/transactions/RetailSale";
 import QuotationAction from "../../../../action/transaction/quotation";
+import TransactionAction from "../../../../action/transaction/transaction";
 import POSUtil from "../../../../../pos/utils";
 import Util from "../../../../../inventory/utils";
 import history from "../../../../../common/router/history";
@@ -16,7 +17,7 @@ export default class Form extends Retail {
           disabledCustomer: true,
           isCloseDiscountMoney: false,
           isOutOfStock: false,
-          quotationId: "",
+          returnId: "",
           isNotYetLoadComponentDidUpdated: true
         }
         this.handleReturn = this.handleReturn.bind(this);
@@ -26,7 +27,6 @@ export default class Form extends Retail {
         super.componentDidUpdate();
         let returnValues = this.props.transactionDetail.data;
         let returnColletion = [];
-
 
         if(this.state.isNotYetLoadComponentDidUpdated){
             if(returnValues){
@@ -47,20 +47,20 @@ export default class Form extends Retail {
                             taxRate: 0,
                             taxName: "No Tax"
                         },
-                        quotationStatus: "",
+                        quotationStatus: values.productVariant ? Util.getStatus(values.productVariant.product) : "",
                         description: values.description,
                     });
                     
                 });
             
                 this.props.form.setFieldsValue({ searchRecord: `${returnValues.customer.firstName ? returnValues.customer.firstName : "" } ${returnValues.customer.lastName ? returnValues.customer.lastName : ""}`});
-                this.getSelectedCustomer(this.props.transactionDetail.data.customer);
+                this.getSelectedCustomer(returnValues.customer);
                
                 this.setState({
                     productOrderList: returnColletion,
                     isNotYetLoadComponentDidUpdated: false,
-                    quotationId: this.props.transactionDetail.data.id,
-                    isDiscountHasAdded: this.props.transactionDetail.data.discount > 0,
+                    returnId: returnValues.id,
+                    isDiscountHasAdded: returnValues.discount > 0,
                     discountValue: {type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: returnValues.terms ? returnValues.terms : 0 }
                 });
 
@@ -77,7 +77,78 @@ export default class Form extends Retail {
 
     
     handleReturn(){
-        history.push("/transactions/salehistory");
+        let productList = [];
+        let productOrderList = this.state.productOrderList;
+        if (productOrderList.length > 0) {
+            this.props.form.validateFieldsAndScroll((err, values) => {
+                productOrderList.forEach((values, index) => {
+                    if(values.quotationStatus === this.Enum.ARCHIVE){
+                            productList.push({
+                                id: values.id,
+                                productVariantId: values.productVariantId,
+                                quantity: values.quantity,
+                                price: this.props.form.getFieldValue(`price[${index}]`),
+                                description: this.props.form.getFieldValue(`description[${index}]`),
+                                status: values.quotationStatus === this.Enum.ARCHIVE ? Enum.TRANSACTION_TYPE.RETURN : values.quotationStatus
+                            });
+                            
+                            if(!values.id){
+                                delete productList[index].id;
+                            }
+                    }else{
+                            productList.push({
+                                id: values.id,
+                                productVariantId: values.productVariantId,
+                                quantity: values.quantity,
+                                price: this.props.form.getFieldValue(`price[${index}]`),
+                                description: this.props.form.getFieldValue(`description[${index}]`),
+                                status:  values.quotationStatus ? values.quotationStatus : ""
+                            });
+
+                            if(!values.id){
+                                delete productList[index].id;
+                            }
+                            if(!values.status){
+                                delete productList[index].status;
+                            }
+                    }
+                });
+            
+
+                this.Util.clearObjProperty(values, [
+                    "isFocusOnSearchCompositeProduct",
+                    "price",
+                    "quantity",
+                    "searchProduct",
+                    "searchRecord",
+                    "description"
+                ]);
+
+                const {
+                    summaryTotal,
+                    discountAmount,
+                    taxAmount
+                  } = this.getSummaryTotal();
+                
+
+                values["total"] = POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
+                values["totalExcludeTax"] = summaryTotal.subTotalAfterDiscount;
+                values["discount"] = discountAmount;
+                values["transactionEntries"] = productList;
+                values["id"] = this.state.returnId;
+
+                if(values["id"]){
+                    this.props.dispatch(TransactionAction.returnTransaction(values)); 
+                    history.push("/transactions/salehistory");
+                }else{
+                    this.Message.warning(this.CATranslate("text_error_create_quotation", this.props.locale));
+                }
+                
+            });
+        }else{
+            this.Message.warning(this.CATranslate("text_error_not_create_quotation", this.props.locale));
+        }
+       
     }
 
     handleOnRemoveProductFromOrderList(values,index){
