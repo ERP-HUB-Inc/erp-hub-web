@@ -17,6 +17,16 @@ class TransactionService extends BaseService {
     });
   }
 
+  returnTransaction(data){
+    return this.PUT({
+      url: `${this.baseUrl}/return/${data.id}`,
+      data: {
+        ...data
+      },
+      headers: this.header
+    });
+  }
+
   sendMailReceipt(template, email) {
     this.setHeader();
     this.header["email"] = email;

@@ -58,5 +58,14 @@ export default {
         payload: data
       });
     };
+  },
+  returnTransaction: (data, id) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.RETURN_TRANSACTION,
+        payload: TransactionService.returnTransaction(data)
+      });
+    };
   }
+
 };

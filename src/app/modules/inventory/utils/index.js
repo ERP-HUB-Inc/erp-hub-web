@@ -14,6 +14,20 @@ class Util {
     }
   }
 
+  getStatus(product) {
+    if (product === null)
+      return "";
+
+    if (!("productDescriptions" in product))
+      return "";
+
+    if (product.productDescriptions.length > 0) {
+      return product.productDescriptions[0].status;
+    } else {
+      return "";
+    }
+  }
+
   getProductId(product) {
     let productId = "";
 
