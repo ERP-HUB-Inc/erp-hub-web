@@ -136,17 +136,13 @@ export default class Form extends Retail {
                 values["discount"] = discountAmount;
                 values["transactionEntries"] = productList;
                 values["id"] = this.state.returnId;
-
                 if(values["id"]){
                     this.props.dispatch(TransactionAction.returnTransaction(values)); 
                     history.push("/transactions/salehistory");
-                }else{
-                    this.Message.warning(this.CATranslate("text_error_create_quotation", this.props.locale));
-                }
-                
+                }    
             });
         }else{
-            this.Message.warning(this.CATranslate("text_error_not_create_quotation", this.props.locale));
+            this.Message.warning(this.CATranslate("text_error_not_return_transection", this.props.locale));
         }
        
     }

@@ -154,6 +154,12 @@ export default {
     "Allow return only Paid and Credit !",
     "អនុញ្ញាតបង្វិលអោយវិញលុះត្រាតែ បានបង់ប្រាក់ និង ជំពាក់ប៉ុណ្ណោះ !",
     "Allow return only Paid and Credit !"
+  ], 
+
+  "text_error_not_return_transection": [
+    "Can't return because don't have product in list!",
+    "មិនអាចបង្វិលអោយវិញព្រោះមិនមានផលិតផលនៅក្នុងបញ្ជី!",
+    "Can't return because don't have product in list!"
   ]
 
 };
