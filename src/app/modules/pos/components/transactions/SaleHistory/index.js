@@ -37,7 +37,7 @@ export default class SaleHistoryList extends List {
       {value: Enum.TRANSACTION_TYPE.INVOICE, name: <this.Translate id="text_invoice"/>},
       // {value: Enum.TRANSACTION_TYPE.PRE_ORDER, name: <this.Translate id="text_pre_order"/>},
       {value: Enum.TRANSACTION_TYPE.CREDIT_NOTE, name: <this.Translate id="text_credit_note"/>},
-      // {value: Enum.TRANSACTION_TYPE.RETURN, name: <this.Translate id="text_return"/>}
+      {value: Enum.TRANSACTION_TYPE.RETURN, name: <this.Translate id="text_return"/>}
     ];
 
     this.TRANSACTION_STATUS_STR = {
@@ -86,6 +86,7 @@ export default class SaleHistoryList extends List {
         width: 100,
         render: type => {
           const valueType = this.TRANSACTION_TYPE_STR.find(transactionType => transactionType.value === type);
+          console.log("Value Type:", type);
           return <this.TagLabel color={[Enum.TRANSACTION_TYPE.CREDIT_NOTE].includes(valueType.value) ? "red" : "blue"}>{valueType.name}</this.TagLabel>;
         },
         sorter: true

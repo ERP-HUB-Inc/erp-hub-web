@@ -169,7 +169,7 @@ export default class ClientSignIn extends Component {
             </div>
             :
             <div className="text-center">
-              <div style={{fontSize: "14pt", fontWeight: "500", color: "#4D4F5C"}}>
+              <div style={{fontSize: "14pt", fontWeight: "bold", color: "#4D4F5C"}}>
                 Sorry!!! there is no retailer found
               </div>
               <div style={{fontSize: "8pt", color: "#000000", marginTop: 10}}>

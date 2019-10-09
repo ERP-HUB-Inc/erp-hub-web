@@ -113,7 +113,7 @@ export default class ReceiptA4 extends Component {
             <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
               <td colSpan={2} rowSpan={4} style={{borderRight: "1px solid black", backgroundColor: "#E7E6E6", fontSize: "11px", padding: "8px", textAlign: "left"}}>
                 Please pay to our company bank account as below: <br />
-                <span style={{border: "1px solid black", width: "10px", height: "10px", display: "inline-block", position: "relative", top: "3px"}}>&nbsp;&nbsp;</span>&nbsp;&nbsp;Cheque to <b>{this.props.data.client.businessName}</b>&nbsp;or<br />
+                <span style={{border: "1px solid black", width: "10px", height: "10px", display: "inline-block", position: "relative", top: "3px"}}>&nbsp;&nbsp;</span>&nbsp;&nbsp;Cheque to <b>{this.props.data.client.businessName}</b><br />
                 <span style={{border: "1px solid black", width: "10px", height: "10px", display: "inline-block", position: "relative", top: "2px"}} />&nbsp;&nbsp;Bank account as below:<br />
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Account Name: {this.props.data.client.businessName}.<br />
               </td>
@@ -147,8 +147,8 @@ export default class ReceiptA4 extends Component {
           </tbody></table> 
         <div style={{position: "relative", top: "25px"}}>
           <div style={{display: "flex", fontSize: "11px", marginTop: "8px", marginBottom: "8px"}}>
-            <div style={{flexGrow: 2, textAlign: "left"}}>អ្នកចេញសម្រង់តម្លៃ​ / Quotation by ………………………………</div>
-            <div style={{flexGrow: 2, textAlign: "right"}}>អតិថិជន ​/ Customer ………………………………</div>
+            <div style={{ flexGrow: 2, textAlign: "left" }}>អ្នកចេញសម្រង់តម្លៃ​ / Quotation by ..............</div>
+            <div style={{flexGrow: 2, textAlign: "right"}}>អតិថិជន ​/ Customer ..............</div>
           </div>
           <div style={{textAlign: "center", backgroundColor: "#F8CBAD", padding: "8px", fontSize: "11px", marginBottom: "15px"}}>
             <div style={{ fontFamily: "Khmer OS" }}><span style={{fontWeight: "bold"}}>ចំណាំ៖ </span>&nbsp;ច្បាប់ដើមសម្រាប់​អ្នកទិញ និង ​ច្បាប់​ចម្លង​សម្រាប់​អ្នក​លក់</div>
