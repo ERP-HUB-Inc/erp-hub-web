@@ -152,28 +152,24 @@ export default class Form extends Retail {
     }
 
     saleOrderHeader(){
-        return(
-            <this.Row className="wrap-receipt-type">
+        return <this.Row className="wrap-receipt-type">
                 <this.Col md="12" className="receipt-type">
                   <div className="pull-left park-receipt" onClick={this.handleViewQuotation}>
                     <span className="icon-time icon-padding-right"></span><this.Translate id="text_list_quotation" />
                   </div>
                 </this.Col>
-              </this.Row>
-          )
+              </this.Row>;
     }
 
     renderSaveAndPayButton(){
-        return(
-            <this.Row className="payment-action">
+        return <this.Row className="payment-action">
                 <this.Button type="info" className="mg-right" onClick={this.handleSaveQuotation}>
                     <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
                 </this.Button>
                 <this.Button type="info"  onClick={this.handleProcessQuotation}>
                     <span className="icon-checked icon-padding-right"></span><this.Translate id="text_process" />
                 </this.Button>
-            </this.Row>
-        );
+            </this.Row>;
     }
 
     FieldNotation(index,values){

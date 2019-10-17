@@ -145,6 +145,14 @@ export class Util {
       return null;
   }
 
+  getClientPaymentTerm() {
+    const result = this.getSetting();
+    if (result)
+      return result.paymentTerm;
+    else
+      return "";
+  }
+
   getCurrentDate () {
     return moment();
   }

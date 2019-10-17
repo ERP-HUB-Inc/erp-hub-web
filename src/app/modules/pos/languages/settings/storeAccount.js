@@ -281,6 +281,12 @@ export default {
     "Date Format"
   ],
 
+  "text_payment_term": [
+    "Payment Condition",
+    "ល័ក្ខខ័ណ្ឌទូទាត់",
+    "Payment Condition"
+  ],
+
   "text_new_device_success": [
     "Device has renew successfully",
     "លេខឧបករណ៍បានបង្កើរឡើងវិញ",

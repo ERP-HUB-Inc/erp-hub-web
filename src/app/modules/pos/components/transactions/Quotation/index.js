@@ -207,8 +207,7 @@ export default class QuotationList extends List {
 
 
     const fetchingProps = this.props[this.fetchingProp];
-    return (
-      form == null ?
+    return form == null ?
         ""
         :
         <this.Form onSubmit={this.handleSubmitFilter}>
@@ -249,8 +248,7 @@ export default class QuotationList extends List {
               </this.Button>
             </this.Col>
           </this.Row>
-        </this.Form>
-    );
+        </this.Form>;
   }
 
   getProductOrderList(data) {
@@ -262,6 +260,7 @@ export default class QuotationList extends List {
           productOrderList.push({
             quantity: quotationtionEntry.quantity,
             name: InventoryUtil.getProductName(productVariant.product),
+            unit: productVariant.product ? productVariant.product.unit : null,
             productDescription: quotationtionEntry.description,
             variantName: productVariant.product.productOption === InventoryEnum.PRODUCT_VARIANT ? productVariant.name : "",
             price: quotationtionEntry.price,

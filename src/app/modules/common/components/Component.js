@@ -1,9 +1,16 @@
 import React from "react";
 import moment from "moment";
-import {Translate, setActiveLanguage, getActiveLanguage} from "react-localize-redux";
+import {
+  Translate,
+  setActiveLanguage,
+  getActiveLanguage
+} from "react-localize-redux";
 import CSVReader from "react-csv-reader";
 import {connect} from "react-redux";
-import {CSVLink, CSVDownload} from "react-csv";
+import {
+  CSVLink,
+  CSVDownload
+} from "react-csv";
 import {  
   Container,
   Col,  
@@ -16,7 +23,10 @@ import {
   Label,
   FormText
 } from "reactstrap";
-import {NavLink, Link} from "react-router-dom";
+import {
+  NavLink,
+  Link
+} from "react-router-dom";
 import 
 { 
   CTable,
@@ -56,7 +66,10 @@ import
   Line,
   C3Chart
 } from "../elements/ant-ui";
-import {BreadcrumbTitle, Cards} from "../elements/react-strap";
+import {
+  BreadcrumbTitle,
+  Cards
+} from "../elements/react-strap";
 import {Util} from "../util";
 import Enum from "../enums";
 import HttpCode from "../constants/error";

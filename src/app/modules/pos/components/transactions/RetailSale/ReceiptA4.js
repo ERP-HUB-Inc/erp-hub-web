@@ -1,4 +1,5 @@
 import React from "react";
+import ReactHtml from "raw-html-react";
 import Component from "../../../../common/components/Component";
 export default class ReceiptA4 extends Component {
   
@@ -42,15 +43,14 @@ export default class ReceiptA4 extends Component {
   }
 
 
-  itemlist(){
-    return(
-        this.props.productList.map((product, index) => 
+  itemlist() {
+    return this.props.productList.map((product, index) => 
           <tr style={{borderLeft: "1px solid black"}} key={index}>
             <td style={{borderRight: "1px solid black", width: "50px", textAlign: "center", fontSize: "12px", verticalAlign: "top",  padding: "4px"}}>{ index + 1 }</td>
             <td style={{borderRight: "1px solid black", width: "420px", fontSize: "11px", textAlign: "left", padding: "4px" }}>
               <div>
                 <span style={{ fontWeight: "bold", fontSize: "15px", fontFamily: "Khmer OS Content"  }}>{product.name}</span>
-                <div style={{fontSize: "7px", fontFamily: "Khmer OS Content" }}>
+                <div style={{ fontSize: "7px", fontFamily: "Khmer OS Content" }}>
                   {
                     product.variantName ?
                     product.variantName
@@ -61,12 +61,11 @@ export default class ReceiptA4 extends Component {
                  <pre style={{ fontSize: "11px", fontFamily: "Khmer OS Content", overflow: "hidden", marginTop: 0, marginBottom: 0 }}>{product.productDescription}</pre>
               </div>
             </td>
-            <td style={{borderRight: "1px solid black", width: "100px", textAlign: "center", fontSize: "11px", verticalAlign: "top", padding: "4px"}}>{product.quantity}</td>
-            <td style={{borderRight: "1px solid black", width: "150px", textAlign: "right", fontSize: "11px", verticalAlign: "top", padding: "4px"}}>{this.renderMoneyCell(this.formatCurrency(product.price,"",false))}</td>
-            <td style={{borderRight: "1px solid black", width: "100px", textAlign: "right", fontSize: "11px", verticalAlign: "top", padding: "4px"}}>{this.renderMoneyCell(product.price * product.quantity)}</td>
+        <td style={{ borderRight: "1px solid black", width: "100px", textAlign: "center", fontSize: "11px", verticalAlign: "top", padding: "4px" }}>{product.quantity} {product.unit ? product.unit.name : ""}</td>
+            <td style={{ borderRight: "1px solid black", width: "150px", textAlign: "right", fontSize: "11px", verticalAlign: "top", padding: "4px" }}>{this.renderMoneyCell(this.formatCurrency(product.price,"",false))}</td>
+            <td style={{ borderRight: "1px solid black", width: "100px", textAlign: "right", fontSize: "11px", verticalAlign: "top", padding: "4px" }}>{this.renderMoneyCell(product.price * product.quantity)}</td>
           </tr>
-        )
-    )
+        );
   }
 
   render() {
@@ -112,22 +111,24 @@ export default class ReceiptA4 extends Component {
             </tr>
             <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
               <td colSpan={2} rowSpan={4} style={{borderRight: "1px solid black", backgroundColor: "#E7E6E6", fontSize: "11px", padding: "8px", textAlign: "left"}}>
-                Please pay to our company bank account as below: <br />
+                {/* Please pay to our company bank account as below: <br />
                 <span style={{border: "1px solid black", width: "10px", height: "10px", display: "inline-block", position: "relative", top: "3px"}}>&nbsp;&nbsp;</span>&nbsp;&nbsp;Cheque to <b>{this.props.data.client.businessName}</b><br />
                 <span style={{border: "1px solid black", width: "10px", height: "10px", display: "inline-block", position: "relative", top: "2px"}} />&nbsp;&nbsp;Bank account as below:<br />
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Account Name: {this.props.data.client.businessName}.<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Account Name: {this.props.data.client.businessName}.<br /> */}
+                {/* {this.Util.getClientPaymentTerm()} */}
+                <ReactHtml html={this.Util.getClientPaymentTerm()} />
               </td>
               <td colSpan={2} style={{borderRight: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left"}}>សរុប Total </td>
               <td style={{borderRight: "1px solid black"}} >
                 {this.renderMoneyCell(this.props.data.total)}
               </td>
             </tr>
-            <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
+            {/* <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
               <td colSpan={2} style={{borderRight: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left"}}>អាករ VAT 0% </td>
               <td style={{borderRight: "1px solid black"}}>
               {this.renderMoneyCell()}
               </td>
-            </tr>
+            </tr> */}
 
             <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
               <td colSpan={2} style={{borderRight: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left"}}>

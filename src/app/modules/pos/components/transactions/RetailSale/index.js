@@ -263,10 +263,10 @@ export default class Retail extends Component {
     const price = isNaN(parseFloat(productVariant.price)) ? 0 : productVariant.price;
     const wholePrice = isNaN(parseFloat(productVariant.wholePrice)) ? 0 : productVariant.wholePrice;
     const distributePrice = isNaN(parseFloat(productVariant.distributePrice)) ? 0 : productVariant.distributePrice;
-
     targetList.push({
       productVariantId: productVariant.id,
       name: Util.getProductName(product),
+      unit: product.unit,
       variantName: productVariant.name,
       barcode: productVariant.barcode,
       price,

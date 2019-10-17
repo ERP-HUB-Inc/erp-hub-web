@@ -42,6 +42,7 @@ export default class Form extends Retail {
                         id: values.id,
                         productVariantId: values.productVariant.id,
                         name: values.productVariant ? Util.getProductName(values.productVariant.product) : "",
+                        unit: values.productVariant && values.productVariant.product ? values.productVariant.product.unit : null,
                         variantName: values.productVariant.name ? values.productVariant.name : "",
                         barcode: values.productVariant.barcode,
                         quantity: values.quantity,

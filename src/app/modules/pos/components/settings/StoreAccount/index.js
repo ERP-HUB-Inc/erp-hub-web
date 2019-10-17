@@ -2,6 +2,8 @@ import React from "react";
 import {
   isMobile
 } from "react-device-detect";
+import CKEditor from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import history from "../../../../common/router/history";
 import Enum from "../../../enums";
 import StoreAccountAction from "../../../action/settings/storeAccount";
@@ -34,6 +36,7 @@ export default class StoreAccountList extends Component {
         {id: 3, route: "/transactions/saleorder", status: 1},
         {id: 3, route: "/transactions/saleregister", status: 1}
       ],
+      paymentTerm: "",
       deviceList: []
     };
     this.module = <this.Translate id="text_setting" />;
@@ -156,6 +159,7 @@ export default class StoreAccountList extends Component {
             values["id"] = this.client.clientId;
             values["userId"] = this.client.userId;
             values["logo"] = this.getImageFromUpload(values, "logo");
+            values["paymentTerm"] = this.state.paymentTerm;
             values["status"] = this.Enum.ACTIVE;
             this.dispatch(StoreAccountAction.update(values));
           }
@@ -477,6 +481,41 @@ export default class StoreAccountList extends Component {
                                 label={<this.Translate id="text_allow_customer_credit" />}
                                 placeholder={this.CATranslate("text_allow_customer_credit", locale)}
                                 form={form} />
+
+                              {/* <this.InputText
+                                name="paymentTerm"
+                                data={storeAccount.list.paymentTerm}
+                                label={<this.Translate id="text_payment_term" />}
+                                placeholder={this.CATranslate("text_payment_term", locale)}
+                                form={form} /> */}
+
+                              <div>
+                                <div className="ant-form-item-label">
+                                  <label for="paymentTerm"><this.Translate id="text_payment_term" /></label>
+                                </div>
+                                <div style={{ marginTop: 5 }}>
+                                  <CKEditor
+                                    editor={ClassicEditor}
+                                    data={storeAccount.list.paymentTerm ? storeAccount.list.paymentTerm : "<p></p>"}
+                                    onInit={paymentTerm => {
+                                      // You can store the "editor" and use when it is needed.
+                                      // console.log('Editor is ready to use!', paymentTerm.data);
+                                      // this.setState({ paymentTerm: paymentTerm.data });
+                                    }}
+                                    onChange={(event, editor) => {
+                                      const data = editor.getData();
+                                      // console.log({ event, editor, data });
+                                      this.setState({ paymentTerm: data });
+                                    }}
+                                    onBlur={(event, editor) => {
+                                      // console.log('Blur.', editor);
+                                    }}
+                                    onFocus={(event, editor) => {
+                                      // console.log('Focus.', editor);
+                                    }}
+                                  />
+                                </div>
+                              </div>
 
                               <this.Select
                                 name="dateFormat"
