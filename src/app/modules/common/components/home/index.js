@@ -78,7 +78,7 @@ export default class Home extends Component {
             <CountUp
               start={0}
               end={this.getValueFromDashboardList()}
-              duration={5}
+              duration={2}
               separator=","
               decimals={2}
               decimal="." />
@@ -92,7 +92,7 @@ export default class Home extends Component {
             <CountUp
               start={0}
               end={this.getValueFromDashboardList(1)}
-              duration={5}
+              duration={2}
               separator="" />
           }
           icon="icon-list" title={<this.Translate id="text_today_is_transaction"/>}
@@ -104,7 +104,7 @@ export default class Home extends Component {
           <CountUp
             start={0}
             end={this.getValueFromDashboardList(2)}
-            duration={5}
+            duration={2}
             separator="" />
         }
         icon="icon-stock" title={<this.Translate id="text_today_is_product_sold"/>}
