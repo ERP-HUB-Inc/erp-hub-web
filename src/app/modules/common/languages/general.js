@@ -572,7 +572,7 @@ export default {
   
   "text_return": [
     "Return",
-    "បង្វិលអោយវិញ",
+    "បង្វិលវិញ",
     "Return"
   ],
   
