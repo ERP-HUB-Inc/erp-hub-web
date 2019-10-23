@@ -11,9 +11,9 @@ export default {
   ],
 
   "stock_adjustment_approve_when_click_yes": [
-    "Do you want approve stock ? if you click yes stock has been approve.",
+    "Do you want approve stock ? If you click yes stock has been approved.",
     "តើអ្នកយល់ព្រម​នៃការ approve ស្តុកដែររឺទេ ? ប្រសិនបើអ្នកចុច Yes ស្តុកត្រូវបានយល់ព្រម​",
-    "Do you want approve stock ? if you click yes stock has been approve."
+    "Do you want approve stock ? If you click yes stock has been approved."
   ]
 
 };

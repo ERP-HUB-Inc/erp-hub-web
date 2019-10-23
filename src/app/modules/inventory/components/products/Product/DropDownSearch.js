@@ -272,8 +272,14 @@ export default class DropDownSearch extends Modal {
             handleOnBlur={this.handleOnBlurSearch}
             handleOnFocus={this.handleOnFocusSearch}
             autoComplete="off"
-            form={this.props.form}/>
-          <div className="icon-scaner icon-clear" onClick={this.handleRemoveTextSearch} style={{ right: 30, display: this.state.isFocusOnSearchInput ? "flex" : "none" }}></div>
+            form={this.props.form}
+          />
+          {
+            this.state.isShowBarcodeScannerIcon ?
+              <div className="icon-scaner icon-clear" onClick={this.handleRemoveTextSearch} style={{ right: 30, display: this.state.isFocusOnSearchInput ? "flex" : "none" }}></div>
+              :
+              ""
+          }
           <div className="remove-search-icon icon-clear" onClick={this.handleRemoveTextSearch}></div>
         </div>
         <this.Col md="4" className="hidden">
@@ -313,5 +319,6 @@ export default class DropDownSearch extends Modal {
 
 DropDownSearch.defaultProps = {
   filter: "",
-  searchFor: 0
+  searchFor: 0,
+  isShowBarcodeScannerIcon: false
 };

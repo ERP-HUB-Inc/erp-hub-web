@@ -1015,6 +1015,7 @@ export default class Retail extends Component {
             didUpdateMakeAutoFocus={this.isSetFocusOnSearchProduct}
             locale={this.props.locale}
             form={this.props.form}
+            isShowBarcodeScannerIcon={true}
             dispatch={this.props.dispatch} />
         </this.Row>
         <div className="product-order-list">

@@ -16,7 +16,6 @@ export default class StockAdjustmentApprovetLists extends List {
         title: <this.Translate id="text_title" />,
         dataIndex: "title",
         key: "title",
-        width: 500,
         sorter: true
       },
       {
@@ -29,14 +28,12 @@ export default class StockAdjustmentApprovetLists extends List {
         title: <this.Translate id="text_reason" />,
         dataIndex: "reason",
         key: "reason",
-        width: 300
       },
       {
         title: <this.Translate id="text_location" />,
         dataIndex: "location",
         key: "location",
         sorter: true,
-        width: 140,
         render: location => location ? location.name: this.emptyText
       },
       {

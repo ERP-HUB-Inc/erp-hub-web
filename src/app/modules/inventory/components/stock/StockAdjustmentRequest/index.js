@@ -17,7 +17,6 @@ export default class StockAdjustmentRequestLists extends List {
         title: <this.Translate id="text_title" />,
         dataIndex: "title",
         key: "title",
-        width: 500,
         sorter: true
       },
       {
@@ -48,7 +47,7 @@ export default class StockAdjustmentRequestLists extends List {
     this.ADJUSTMENT_STEP = {
 
       [Enum.STOCK_ADJUST_STEP.REQUEST]: {name: <this.Translate id="text_request" />, color:  this.Enum.STOCK_ADJUST_COLOR.REQUEST},
-      [Enum.STOCK_ADJUST_STEP.COMPLETE]: {name: <this.Translate id="text_complete" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
+      [Enum.STOCK_ADJUST_STEP.COMPLETE]: { name: <this.Translate id="text_completed" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
     };
     this.columnFilterWithKey = ["title","reason"];
     this.action = StockAdjustmentRequestAction;

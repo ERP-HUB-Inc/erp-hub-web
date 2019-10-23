@@ -33,7 +33,7 @@ export default class FormItem extends Modal {
               <this.InputText name={`variantName[${index}]`} type="hidden" data={record.variantName} form={this.form} />
               <this.InputNumber name={`stockAdjustmentRequestStatus[${index}]`} className="hidden" data={record.stockAdjustmentRequestStatus} form={this.form} />
               <this.InputNumber name={`isApprove[${record.index}]`} data={0} className="hidden" form={this.form} />
-              <this.InputNumber name={`adjustQuantity[${index}]`} className="hidden" isAutoSelect={true} required={true} disabled={true} data={record.adjustQuantity} form={this.form} /> 
+              <this.InputNumber name={`adjustQuantity[${index}]`} className="hidden" isAutoSelect={true} disabled={true} data={record.adjustQuantity} form={this.form} /> 
             </div>
           );
         }
@@ -45,7 +45,12 @@ export default class FormItem extends Modal {
         render: (text, record) => {
           return <div>
             <div>{record.productName}</div>
-            <div className="variant-name">{record.variantName}</div>
+            {
+              record.variantName ?
+                <div className="variant-name">{record.variantName}</div>
+                :
+                ""
+            }
           </div>;
         }
       },

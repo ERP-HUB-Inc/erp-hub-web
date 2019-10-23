@@ -95,7 +95,7 @@ export default class SearchAdjustmentRequest extends Modal {
             isHideTool={true}
             precision={0}
             data={record.adjustQuantity}
-            required={true}
+            // required={true}
             handleKeyUp={(e) => this.handleOnChangeAdjust(e, index)}
             form={this.form} />;
         }
