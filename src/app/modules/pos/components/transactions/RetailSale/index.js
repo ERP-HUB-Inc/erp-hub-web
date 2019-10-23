@@ -1,5 +1,9 @@
 import React from "react";
-import { isMobile, isAndroid, isIOS } from "react-device-detect";
+import {
+  isMobile,
+  isAndroid,
+  isIOS
+} from "react-device-detect";
 import ProductTypeList from "./ProductTypeList";
 import DiscountSetup from "./DiscountSetup";
 import TaxSetting from "./TaxSetting";
@@ -82,8 +86,6 @@ export default class Retail extends Component {
     this.handleOnSelectProductSearchList = this.handleOnSelectProductSearchList.bind(this);
     this.handleExpandOrderItem = this.handleExpandOrderItem.bind(this);
     this.handleSetFullScreen = this.handleSetFullScreen.bind(this);
-    this.addEventKeyDownAndCaptureValueToInputSearchProduct = this.addEventKeyDownAndCaptureValueToInputSearchProduct.bind(this);
-    this.getValueFromUserTypeKeyboard = this.getValueFromUserTypeKeyboard.bind(this);
     this.handleLinkSaleHistory = this.handleLinkSaleHistory.bind(this);
     this.handleLinkCloseShift = this.handleLinkCloseShift.bind(this);
     this.handleOnMakePayment = this.handleOnMakePayment.bind(this);
@@ -173,8 +175,6 @@ export default class Retail extends Component {
   }
 
   componentDidMount() {
-
-    this.addEventKeyDownAndCaptureValueToInputSearchProduct();
     window.addEventListener("resize", this.handleOnResizeScreen);
     this.handleSetFullScreen();
     
@@ -204,36 +204,6 @@ export default class Retail extends Component {
         subCurrency: nextProps.receiptTemplate.data.subCurrency
       });
     }
-  }
-  
-  getValueFromUserTypeKeyboard(event) {
-    // const existingValue = this.props.form.getFieldValue("searchProduct");
-    // if (event.keyCode !== 8) {
-    // let userInput = String.fromCharCode(event.keyCode);
-    // if (existingValue) {
-    // userInput = existingValue + userInput;
-    // }
-    // this.props.form.setFieldsValue({searchProduct: String.fromCharCode(event.keyCode)});
-    // this.setState({
-    //   isSetFocusOnSearchProduct: !this.isOpenSaleRegistrationClosed() 
-    // });
-
-    // this.isSetFocusOnSearchProduct = !this.isOpenSaleRegistrationClosed();
-    // this.isSetFocusOnSearchProduct = true;
-
-  
-    // if(this.isSetFocusOnSearchProduct){
-    //   this.isSetFocusOnSearchProduct = true;
-    // }
-
-    if(event.key === "Escape"){
-      this.isSetFocusOnSearchProduct = true;
-    }
-    
-  }
-
-  addEventKeyDownAndCaptureValueToInputSearchProduct() {
-    document.addEventListener("keydown", this.getValueFromUserTypeKeyboard);
   }
 
   isValidOpenSaleRegistrationList() {
@@ -452,7 +422,6 @@ export default class Retail extends Component {
         }
       }
     }
-   
 
     let isProductVariant = product.productOption === InventoryEnum.PRODUCT_VARIANT;
     if (isProductVariant && isRequestVariantForm) {
@@ -463,7 +432,7 @@ export default class Retail extends Component {
           handleCancel={this.handleCancelVariantProduct} />
       });
       return;
-    } else if (productVariant && productVariant.length > 0) {
+    } else if (productVariant && productVariant.length === 1) {
       productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
       productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
     }
@@ -522,7 +491,6 @@ export default class Retail extends Component {
   }
 
   handleOnChangOrderFieldBlur(){
-    // this.isSetFocusOnSearchProduct = true;
     this.setState({expandRowOrderIndex: null});
   }
 
@@ -624,13 +592,13 @@ export default class Retail extends Component {
     }
   }
 
-  handleOnAutoSelectProductAfterSearchResult(productList) {
+  handleOnAutoSelectProductAfterSearchResult(productList, isRequestVariantForm) {
     if (this.openFormSaleRegisration()) {
       return;
     }
 
     if (productList.length === 1) {
-      this.handleOnSelectProduct(productList[0], productList[0].productVariants);
+      this.handleOnSelectProduct(productList[0], productList[0].productVariants, isRequestVariantForm);
       this.props.form.setFieldsValue({searchProduct: ""});
       this.props.dispatch(ProductAction.reset(ProductConstant.SEARCH_PRODUCT_RESET));
     }
@@ -1043,7 +1011,7 @@ export default class Retail extends Component {
             handleOnBlur={this.handleOnBlurSearchProduct}
             searchFor={1}
             className="ca-input-v1-icon-left ca-input-v1"
-            isAutoFocus={true || this.isSetFocusOnSearchProduct}
+            // isAutoFocus={true || this.isSetFocusOnSearchProduct}
             didUpdateMakeAutoFocus={this.isSetFocusOnSearchProduct}
             locale={this.props.locale}
             form={this.props.form}

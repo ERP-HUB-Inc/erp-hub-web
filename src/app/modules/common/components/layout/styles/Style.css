@@ -452,7 +452,8 @@ html,
     bottom: 0
 }
 
-.main-searchs .remove-search-icon {
+.main-searchs .remove-search-icon,
+.main-searchs .icon-scaner {
     position: absolute;
     right: 10px;
     font-size: 30px;
@@ -461,7 +462,8 @@ html,
 }
 
 .main-searchs .remove-search-icon, 
-.main-searchs .search-icon{
+.main-searchs .search-icon,
+.main-searchs .icon-scaner {
     color: #c1bebe
 }
 

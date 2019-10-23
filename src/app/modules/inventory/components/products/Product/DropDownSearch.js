@@ -1,4 +1,5 @@
 import React from "react";
+import BarcodeReader from "react-barcode-reader";
 import $ from "jquery";
 import ProductAction from "../../../actions/products/product";
 import Constant from "../../../constants/products/product";
@@ -12,22 +13,14 @@ export default class DropDownSearch extends Modal {
     super(props);
     this.state = {
       visibleDropDown: false,
+      isScanBarcode: false,
       isMouseHoverOnSearchList: false,
+      isFocusOnSearchInput: false,
       isSetFocusSearchInput: false
     };
 
     this.scrollTop = 0;
     this.timer = null;
-
-    this.handleKeyDownOnProductSearch = this.handleKeyDownOnProductSearch.bind(this);
-    this.handlePressEnterOnSearch = this.handlePressEnterOnSearch.bind(this);
-    this.handleOnBlurSearch = this.handleOnBlurSearch.bind(this);
-    this.handleOnFocusSearch = this.handleOnFocusSearch.bind(this);
-    this.handleOnSelectList = this.handleOnSelectList.bind(this);
-    this.handleOnMouseHoverOnSearchList = this.handleOnMouseHoverOnSearchList.bind(this);
-    this.handleOnMouseLeaveOnSearchList = this.handleOnMouseLeaveOnSearchList.bind(this);
-    this.renderSearchItem = this.renderSearchItem.bind(this);
-    this.handleRemoveTextSearch = this.handleRemoveTextSearch.bind(this);
   }
 
   componentDidMount() {
@@ -41,14 +34,30 @@ export default class DropDownSearch extends Modal {
     var element = document.getElementsByClassName("ant-list-item");
     if (element.length > 0) {
       element[0].classList.add("search-item-hover");
+    }
 
-      if (this.props.callBack && this.props.productSearch.fetched) {
-        this.props.callBack(this.props.productSearch.list);
+    if (this.props.callBack && this.props.productSearch.fetched) {
+      this.props.callBack(this.props.productSearch.list, this.state.isScanBarcode ? false : true); // productList, isRequestVariantForm
+      this.props.dispatch(ProductAction.reset(Constant.SEARCH_PRODUCT_RESET_PARTIAL));
+
+      if (this.state.isScanBarcode) {
+        this.setState({ isScanBarcode: false });
+        this.props.form.setFieldsValue({ searchProduct: "" });
+        document.getElementById("searchProduct").blur();
       }
     }
   }
 
-  handlePressEnterOnSearch() {
+  handleScan = (searchProduct) => {
+    this.setState({ isScanBarcode: true });
+    this.props.form.setFieldsValue({ searchProduct });
+    this.handleSearchProduct(searchProduct, true);
+  }
+  handleScanError = (err) => {
+    console.error(err);
+  }
+
+  handlePressEnterOnSearch =() => {
     const currentActive = $(".ant-spin-container div.search-item-hover");
     const productId = currentActive.attr("classid");
     const product = this.props.productSearch.list.find(value => value.id === productId);
@@ -58,44 +67,54 @@ export default class DropDownSearch extends Modal {
     }
   }
 
-  handleOnBlurSearch() {
+  handleOnBlurSearch = () => {
     if (!this.state.isMouseHoverOnSearchList) {
       this.setState({visibleDropDown: false});
       this.props.dispatch(ProductAction.reset(Constant.SEARCH_PRODUCT_RESET));
     }
 
-    this.setState({isSetFocusSearchInput: false});
+    this.setState({
+      isSetFocusSearchInput: false,
+      isFocusOnSearchInput: false
+    });
 
     if (this.props.handleOnBlur) {
       this.props.handleOnBlur();
     }
   }
 
-  handleOnFocusSearch() {
-    this.setState({visibleDropDown: true});
+  handleOnFocusSearch = () => {
+    this.setState({
+      visibleDropDown: true,
+      isFocusOnSearchInput: true
+    });
 
     if (this.props.handleOnFocusSearch) {
       this.props.handleOnFocusSearch();
     }
   }
 
-  handleOnMouseHoverOnSearchList() {
+  handleOnMouseHoverOnSearchList = () => {
     this.setState({isMouseHoverOnSearchList: true});
   }
 
-  handleOnMouseLeaveOnSearchList() {
+  handleOnMouseLeaveOnSearchList = () => {
     this.setState({isMouseHoverOnSearchList: false});
   }
 
-  handleOnSelectList(value) {
+  handleOnSelectList = (value) => {
     this.props.handleOnSelectList(value, value.productVariants);
     this.setState({visibleDropDown: false});
     this.props.dispatch(ProductAction.reset(Constant.SEARCH_PRODUCT_RESET));
   }
 
-  handleKeyDownOnProductSearch(event) {
-    const value = event.target.value.trim();
+  handleSearchProduct = (value, isSearchingBarcode = false) => {
+    const searchKey = JSON.stringify({ column: ["name", "barcode"], value });
+    this.props.dispatch(ProductAction.search(100, 0, "", "", this.props.filter, searchKey, this.props.searchFor, isSearchingBarcode));
+  }
 
+  handleKeyDownOnProductSearch = (event) => {
+    const value = event.target.value.trim();
     if (event.keyCode === 13) {
       return;
     }
@@ -126,12 +145,10 @@ export default class DropDownSearch extends Modal {
         $(".wrap-dropdown-search-product .list-search").scrollTop(this.scrollTop);
       }
     } else {
-
       if (value.length > 1) {
         clearTimeout(this.timer);
         this.timer = setTimeout(function() {
-          const searchKey = JSON.stringify({column: ["name", "barcode"], value});
-          this.props.dispatch(ProductAction.search(100, 0, "", "", this.props.filter, searchKey, this.props.searchFor));
+          this.handleSearchProduct(value);
           this.setState({visibleDropDown: true});
         }.bind(this), 200);
       } else {
@@ -140,12 +157,12 @@ export default class DropDownSearch extends Modal {
     }
   }
 
-  handleRemoveTextSearch() {
+  handleRemoveTextSearch = () => {
     this.props.form.setFieldsValue({searchProduct: ""});
     this.setState({isSetFocusSearchInput: true});
   }
 
-  renderSearchItem(product) {
+  renderSearchItem = (product) => {
     const {productDescriptions} = product;
     const barcode = product.productVariants.length > 0 ? product.productVariants[0].barcode : "";
     return (
@@ -231,6 +248,16 @@ export default class DropDownSearch extends Modal {
   render() {
     return (
       <this.Col md="12" className="search-dropdown-product search-height" style={{position: "relative"}}>
+        <BarcodeReader
+          minLength={4}
+          onError={this.handleScanError}
+          onScan={this.handleScan}
+          preventDefault={true}
+          avgTimeByChar={40}
+          endChar={[13]}
+          timeBeforeScanTest={200}
+          onKeyDetect={() => console.log("Hello World")}
+        />
         <div className="main-searchs">
           <div className="search-icon icon-add-product"></div>
           <this.InputText
@@ -244,7 +271,9 @@ export default class DropDownSearch extends Modal {
             // handlePressEnter={this.handlePressEnterOnSearch}
             handleOnBlur={this.handleOnBlurSearch}
             handleOnFocus={this.handleOnFocusSearch}
+            autoComplete="off"
             form={this.props.form}/>
+          <div className="icon-scaner icon-clear" onClick={this.handleRemoveTextSearch} style={{ right: 30, display: this.state.isFocusOnSearchInput ? "flex" : "none" }}></div>
           <div className="remove-search-icon icon-clear" onClick={this.handleRemoveTextSearch}></div>
         </div>
         <this.Col md="4" className="hidden">

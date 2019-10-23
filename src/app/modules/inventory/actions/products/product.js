@@ -34,11 +34,11 @@ export default {
       });
     };
   },
-  search: (limit, offset, sortField, sortOrder, filter, searchKey, searchFor) => {
+  search: (limit, offset, sortField, sortOrder, filter, searchKey, searchFor, isSearchingBarcode) => {
     return dispatch => {
       return dispatch({
         type: Constant.SEARCH_PRODUCT,
-        payload: ProductService.searchForDrowDown(limit, offset, sortField, sortOrder, filter, searchKey, searchFor)
+        payload: ProductService.searchForDrowDown(limit, offset, sortField, sortOrder, filter, searchKey, searchFor, isSearchingBarcode)
       });
     };
   },

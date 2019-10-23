@@ -172,13 +172,34 @@
 #retail-sale .main-searchs .search-icon {
     font-size: 22pt;
     top: 8px;
-    padding-left: 10px
+    padding-left: 0px
 }
 
-#retail-sale .main-searchs .remove-search-icon {
+#retail-sale .main-searchs .remove-search-icon,
+#retail-sale .main-searchs .icon-scaner {
     font-size: 18pt;
-    top: 10px;
-    padding-right: 8px
+    top: 2px;
+    padding-right: 0px;
+    height: 40px;
+    width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 0
+}
+
+#retail-sale .main-searchs .remove-search-icon:hover {
+    background-color: #e4e4e4;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px
+}
+
+#retail-sale .main-searchs .icon-scaner:hover {
+    background-color: #e4e4e4
+}
+
+#retail-sale .main-searchs .ca-input-v1-icon-left .ant-input {
+    padding-left: 40px !important
 }
 
 /* #retail-sale .search-dropdown-product {

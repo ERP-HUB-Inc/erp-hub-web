@@ -171,7 +171,7 @@ export default class DropDownSearch extends Modal {
           <this.InputText
             name="searchRecord"
             autoComplete="off"
-            isAutoFocus={this.props.isAutoFocus || true}
+            // isAutoFocus={this.props.isAutoFocus || true}
             didUpdateMakeAutoFocus={this.state.isSetFocusSearchInput}
             className="ca-input-v1-icon-left ca-input-v1"
             placeholder={this.CATranslate("input_search_customer", this.props.locale)}

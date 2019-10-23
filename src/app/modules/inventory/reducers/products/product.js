@@ -43,7 +43,8 @@ export default combineReducers({
       Constant.SEARCH_PRODUCT_PENDING,
       Constant.SEARCH_PRODUCT_REJECTED,
       Constant.SEARCH_PRODUCT_FULFILLED,
-      Constant.SEARCH_PRODUCT_RESET
+      Constant.SEARCH_PRODUCT_RESET,
+      Constant.SEARCH_PRODUCT_RESET_PARTIAL
     ];
     return reducer.request(state, action, constants);
   },

@@ -18,6 +18,15 @@ class ProductVariantService extends BaseService {
     });
   }
 
+  fetchByBarcode(barcode) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/productvariant/${barcode}`,
+      data: this.data,
+      headers: this.header
+    });
+  }
+
   checkIsAvailableForArchive(id){
     this.setHeader();
     return this.GET({ 

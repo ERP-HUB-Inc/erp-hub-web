@@ -10,6 +10,14 @@ export default {
       });
     };
   },
+  fetchByBarcode: (barcode) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.REQUEST_PRODUCT_VARIANT,
+        payload: ProductVariantService.fetchByBarcode(barcode)
+      });
+    };
+  },
   checkIsAvailableForArchive: (id) => {
     return dispatch => {
       return dispatch({

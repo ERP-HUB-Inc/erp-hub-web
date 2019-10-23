@@ -44,12 +44,13 @@ class ProductService extends BaseService {
     sortOrder,
     filter,
     searchKey,
-    searchFor
+    searchFor,
+    isSearchingBarcode
   ) {
     const languageId = this.getLanguageId();
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/lists/dropdown?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&languageId=${languageId}&searchFor=${searchFor}`,  
+      url: `${this.baseUrl}/lists/dropdown?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&languageId=${languageId}&searchFor=${searchFor}&isSearchingBarcode=${isSearchingBarcode}`,  
       data: this.data,
       headers: this.header
     });
