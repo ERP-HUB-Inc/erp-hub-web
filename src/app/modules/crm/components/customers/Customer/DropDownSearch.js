@@ -82,6 +82,8 @@ export default class DropDownSearch extends Modal {
   handleKeyDownOnSearch(event) {
     const value = event.target.value.trim();
 
+    if (event.keyCode === 13) return;
+
     if (event.keyCode === 38) {
       const currentActive = $(".ant-spin-container div.search-item-hover");
       if (currentActive.prev().hasClass("ant-list-item")) {

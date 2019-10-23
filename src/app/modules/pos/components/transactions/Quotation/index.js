@@ -61,10 +61,26 @@ export default class QuotationList extends List {
         render: customer => customer && customer.email ? customer.email : this.emptyText
       },
       {
+        title: <this.Translate id="text_sub_total" />,
+        key: "subTotal",
+        sorter: true,
+        align: "right",
+        render: (total, record) => this.Util.formatCurrency(record.total + record.discount)
+      },
+      {
+        title: <this.Translate id="text_discount" />,
+        dataIndex: "discount",
+        key: "discount",
+        sorter: true,
+        align: "right",
+        render: discount => this.Util.formatCurrency(discount)
+      },
+      {
         title: <this.Translate id="text_total" />,
         dataIndex: "total",
         key: "total",
         sorter: true,
+        align: "right",
         render: total => this.Util.formatCurrency(total)
       },
       {
@@ -139,27 +155,21 @@ export default class QuotationList extends List {
     });
   }
 
-  renderButtonAddNew(){}
-
-  renderOtherAction(){
-    return(
-      <div>
-        <this.Button type="info" id="btnAdd" className="mg-right text-uppercase" disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching} onClick={this.handleShowFormAdd}>
-          <span className="icon-add icon-padding-right"></span>
-          <this.Translate id="text_add_new" />
-        </this.Button>
-        <this.Button className="mg-right text-uppercase" type="info" loading={this.props.list.fetching && this.state.isRequestPrint} onClick={this.handleClone}>
-          <span className="icon-change icon-padding-right text-uppercase"></span>
-          <this.Translate id="text_clone"/>
-        </this.Button>
-        <this.Button className="mg-right text-uppercase" type="info" loading={this.props.list.fetching && this.state.isRequestPrint} onClick={this.handlePrint}>
-          <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print"/>
-        </this.Button>
-      </div>
-    );
+  buttonActionCollection(){
+    return [
+      <this.Button key={1} type="info" id="btnAdd" className="mg-right text-uppercase" disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching} onClick={this.handleShowFormAdd}>
+        <span className="icon-add icon-padding-right"></span>
+        <this.Translate id="text_add_new" />
+      </this.Button>,
+      <this.Button key={2} className="mg-right text-uppercase" type="info" loading={this.props.list.fetching && this.state.isRequestPrint} onClick={this.handleClone}>
+        <span className="icon-change icon-padding-right text-uppercase"></span>
+        <this.Translate id="text_clone" />
+      </this.Button>,
+      <this.Button key={3} className="mg-right text-uppercase" type="info" loading={this.props.list.fetching && this.state.isRequestPrint} onClick={this.handlePrint}>
+        <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print" />
+      </this.Button>
+    ];
   }
-
-  renderButtonDelete(){}
 
   handleSubmitFilter(e){
     if (this.action != null) {
@@ -171,7 +181,9 @@ export default class QuotationList extends List {
 
           if (values.step !== -1) {
             filter["status"] = [values.step];
-          }else if(values.customerId){
+          }
+
+          if (values.customerId) {
             filter["customerId"] = [values.customerId];
           }
           

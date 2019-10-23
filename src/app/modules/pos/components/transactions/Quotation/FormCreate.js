@@ -16,7 +16,6 @@ export default class Form extends Retail {
         super(props);
         this.state = {
             ...this.state,
-            isCloseDiscountMoney: false,
             isOutOfStock: false,
             isNotYetLoadComponentDidUpdated: true
           }

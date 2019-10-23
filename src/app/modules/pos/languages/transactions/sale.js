@@ -23,6 +23,18 @@ export default {
     "Seller"
   ],
 
+  "text_warning": [
+    "Warning",
+    "បញ្ជាក់",
+    "Warning"
+  ],
+
+  "text_warning_before_scan": [
+    "Please click here before starting scan your item with barcode scanner.",
+    "សូមចុចនៅប៊ូតុងនេះមុននឹងស្គែនទំនិញ.",
+    "Please click here before starting scan your item with barcode scanner."
+  ],
+
   "text_delivery_order": [
     "Delivery Order",
     "បណ្ណ័ដឹកទំនិញ",

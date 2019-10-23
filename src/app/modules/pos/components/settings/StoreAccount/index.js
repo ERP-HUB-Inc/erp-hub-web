@@ -37,6 +37,7 @@ export default class StoreAccountList extends Component {
         {id: 3, route: "/transactions/saleregister", status: 1}
       ],
       paymentTerm: "",
+      address: "",
       deviceList: []
     };
     this.module = <this.Translate id="text_setting" />;
@@ -160,6 +161,7 @@ export default class StoreAccountList extends Component {
             values["userId"] = this.client.userId;
             values["logo"] = this.getImageFromUpload(values, "logo");
             values["paymentTerm"] = this.state.paymentTerm;
+            values["address"] = this.state.address;
             values["status"] = this.Enum.ACTIVE;
             this.dispatch(StoreAccountAction.update(values));
           }
@@ -612,12 +614,27 @@ export default class StoreAccountList extends Component {
                                 placeholder={this.CATranslate("text_phone_number", locale)}
                                 form={form} />
                             
-                              <this.InputText
+                              {/* <this.InputText
                                 data={storeAccount.list.address}
                                 name="address"
                                 label={<this.Translate id="text_address" />}
                                 placeholder={this.CATranslate("text_address", locale)}
-                                form={form}/>
+                                form={form}/> */}
+                              
+                              <div>
+                                <div className="ant-form-item-label">
+                                  <label for="address"><this.Translate id="text_address" /></label>
+                                </div>
+                                <div style={{ marginTop: 5 }}>
+                                  <CKEditor
+                                    editor={ClassicEditor}
+                                    data={storeAccount.list.address ? storeAccount.list.address : "<p></p>"}
+                                    onChange={(event, editor) => {
+                                      this.setState({ address: editor.getData() });
+                                    }}
+                                  />
+                                </div>
+                              </div>
                           
                               <this.InputText
                                 data={storeAccount.list.street}
@@ -705,7 +722,7 @@ export default class StoreAccountList extends Component {
                                   {
                                     title: <this.Translate id="text_action" />,
                                     key: "action",
-                                    width: 50,
+                                    width: 100,
                                     render: (text, record, index) => {
                                       return <div className="btn-action-device">{(record.status === this.Enum.ACTIVE ?
                                         <this.Button style={{width: 70}} type="info" onClick={() => this.handleOnCopyDeviceNumber(`device-${index}`, record.status)}>{<this.Translate id="copy_device_number"/>}</this.Button>

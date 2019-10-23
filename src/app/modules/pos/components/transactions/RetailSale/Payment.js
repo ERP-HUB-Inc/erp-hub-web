@@ -339,13 +339,13 @@ export default class Payment extends Modal {
           productList: this.props.productOrderList,
           customerFieldPrice: this.props.customerFieldPrice,
           productTaxList: this.props.productTaxList,
-          summaryTotal: summaryTotal,
+          summaryTotal,
           summaryTax: this.props.summaryTax,
-          grandTotal: grandTotal,
-          changeAmount: changeAmount,
-          taxRate: taxRate,
-          taxAmount: taxAmount,
-          discountAmount: discountAmount
+          grandTotal,
+          changeAmount,
+          taxRate,
+          taxAmount,
+          discountAmount
         };
       }
 

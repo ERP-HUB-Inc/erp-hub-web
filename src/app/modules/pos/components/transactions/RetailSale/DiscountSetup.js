@@ -91,12 +91,9 @@ export default class DiscountSetup extends Modal {
             <div className={`item ${isPercentageDiscount ? "selected" : ""}`} onClick={() => this.handleOnSelectDiscount(Enum.DISCOUNT_TYPE.PERCENTAGE)}>
               %
             </div>
-            {
-              this.props.isCloseDiscountMoney ?
             <div className={`item ${!isPercentageDiscount ? "selected" : ""}`} onClick={() => this.handleOnSelectDiscount(Enum.DISCOUNT_TYPE.AMOUNT)}>
               $
             </div>
-              : "" }
           </div>
           <div className="discount-value">
             {
@@ -127,6 +124,5 @@ export default class DiscountSetup extends Modal {
 }
 
 DiscountSetup.defaultProps = {
-  discountValue: 0,
-  isCloseDiscountMoney: true
+  discountValue: 0
 };

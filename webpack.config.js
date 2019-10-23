@@ -9,10 +9,10 @@ var SRC_DIR = path.resolve(__dirname, "src");
 
 
 module.exports = {
-  entry: SRC_DIR + "/index.js",
+  entry: SRC_DIR + "/index.js?v=1238238",
   output: {
     path: DIST_DIR + "/",
-    filename: "[name].bundle.js",
+    filename: "[name].[hash].js",
     publicPath: "/"
   },
   optimization: {
@@ -30,7 +30,8 @@ module.exports = {
       title: "POS",
       favicon: "./public/favicon.ico",
       template: "./public/index.html",
-      chunksSortMode: "none"
+      chunksSortMode: "none",
+      hash: true
     })
   ],
   module: {

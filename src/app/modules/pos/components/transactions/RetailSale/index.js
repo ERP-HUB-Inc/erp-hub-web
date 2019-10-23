@@ -43,7 +43,6 @@ export default class Retail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isCloseDiscountMoney: true,
       isOutOfStock: true,
       modalContent: null,
       expandRowOrderIndex: null,
@@ -462,7 +461,7 @@ export default class Retail extends Component {
     this.saveReceipt(Enum.CURRENT_RECEIPT);
 
     this.props.form.setFieldsValue({searchProduct: ""});
-    document.getElementById("searchProduct").focus();
+    // document.getElementById("searchProduct").focus();
   }
 
   handleOnRemoveProductFromOrderList(productVariant,index) {
@@ -523,14 +522,14 @@ export default class Retail extends Component {
           }
         });
       }
-      const price = POSUtil.getTotalAmountAfterDiscount(1, existingProductOrderList[proderOrderRowIndex]["price"], existingProductOrderList[proderOrderRowIndex]["discount"]);
+      const price = POSUtil.getTotalAmountAfterDiscount(1, existingProductOrderList[proderOrderRowIndex][this.state.customerFieldPrice], existingProductOrderList[proderOrderRowIndex]["discount"]);
       existingProductOrderList[proderOrderRowIndex]["newPrice"] = price;
       this.props.form.setFieldsValue({[`price[${proderOrderRowIndex}]`]: price});
     }
 
     if (field === "newPrice") {
       const newPrice = existingProductOrderList[proderOrderRowIndex]["newPrice"];
-      let price = existingProductOrderList[proderOrderRowIndex]["price"];
+      let price = existingProductOrderList[proderOrderRowIndex][this.state.customerFieldPrice];
       if (newPrice < price) { // DISCOUNT EVENT APPEAR
         const discountAmount = price - newPrice;
         const discount = POSUtil.getDiscountRateByAmount(price, discountAmount);
@@ -688,7 +687,6 @@ export default class Retail extends Component {
         form={this.props.form}
         discountValue={this.state.discountValue.value}
         discountType={this.state.discountValue.type}
-        isCloseDiscountMoney={this.state.isCloseDiscountMoney}
         callBack={this.handleGetDiscount} />,
       isDiscountHasAdded: true,
     });
@@ -1029,8 +1027,8 @@ export default class Retail extends Component {
                     <div className="description">
                       <div className="name">{productOrder.name}</div>
                       {/* <div className="barcode-number">
-                      {<this.Translate id="text_product_code"/>}: {productOrder.barcode}
-                    </div> */}
+                        {<this.Translate id="text_product_code"/>}: {productOrder.barcode}
+                      </div> */}
                       {
                         productOrder.variantName ?
                           <div className="barcode-number variant-name">
@@ -1047,7 +1045,7 @@ export default class Retail extends Component {
                       {
                         productOrder.discount > 0 ?
                           <div className="after-discount-price">
-                            {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity,  productOrder.price, productOrder.discount))}
+                              {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity, productOrder[this.state.customerFieldPrice], productOrder.discount))}
                           </div>
                           :
                           ""

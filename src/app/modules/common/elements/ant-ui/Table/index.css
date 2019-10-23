@@ -33,6 +33,13 @@ tr:nth-child(odd) {
     padding-right: 0 !important
 }
 
+.ant-table-body table {
+    border-left: 1px solid #e8e8e8;
+    border-right: 1px solid #e8e8e8;
+    border-top: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8
+}
+
 .ant-table-body table tr td {
     color: #4D4F5C;
     font-size: 10pt;
@@ -44,14 +51,15 @@ tr:nth-child(odd) {
 }
 
 .ant-table-thead > tr > th {
-    font-weight: 400 !important
+    font-weight: 400 !important;
+    border-top: 0px
 }
 
 
 .ant-table-tbody > tr > td,
 .ant-table-thead > tr > th {
-    padding-top: 8px !important;
-    padding-bottom: 8px !important
+    padding-top: 6px !important;
+    padding-bottom: 6px !important
 }
 
 .ant-table-tbody > tr > td,

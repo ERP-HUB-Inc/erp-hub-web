@@ -1,5 +1,6 @@
 import React from "react";
 import JsBarcode from "jsbarcode";
+import ReceiptA4 from "./ReceiptA4";
 import { PaperSize } from "../../settings/ReceiptTemplate/PaperSize";
 import Component from "../../../../common/components/Component";
 import Enum from "../../../../pos/enums";
@@ -15,10 +16,13 @@ export default class Receipt extends Component {
     this.contentId = "pos-receipt-preview";
   }
   componentDidMount() {
-    JsBarcode("#receiptCarcode", this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number, {
-      height: 35,
-      displayValue: false
-    });
+    const elementGenerateBarcode = document.getElementById("receiptCarcode");
+    if (elementGenerateBarcode) {
+      JsBarcode("#receiptCarcode", this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number, {
+        height: 35,
+        displayValue: false
+      });
+    }
 
     const logoContent = document.getElementById("receiptLogoPreLoading");
     if (logoContent) {
@@ -132,11 +136,13 @@ export default class Receipt extends Component {
     let businessName = "";
     let address = "";
     let phoneNumber = "";
+    let email = "";
     if (this.props.currentUser) {
       if (this.props.currentUser.setting) {
         businessName = this.props.currentUser.setting.businessName;
         address = this.props.currentUser.setting.address;
         phoneNumber = this.props.currentUser.setting.phoneNumber;
+        email = this.props.currentUser.setting.email;
       }
     }
 
@@ -150,198 +156,220 @@ export default class Receipt extends Component {
       paperSize = PaperSize[0];
     }
 
-    return <div /*style={{display: "none"}}*/ id={this.contentId}>
-        <div style={{
-          // padding: "15px 15px",
-          // backgroundColor: "#f5f2f2",
-          margin: "0 auto",
-          fontFamily: "Khmer OS Content",
-          pageBreakBefore: "always"
-        }}>
-          <table style={{
-            color: paperSize.setting.color,
-            fontSize: paperSize.setting.dataFontSize,
-            backgroundColor: "white",
-            margin: "auto",
-            /*width: "120mm",*/
-            width: paperSize.setting.width,
-            padding: paperSize.setting.padding,
-            marginLeft: this.props.isRequestClearMarginLeft ? 0 : paperSize.setting.marginLef}}>
-            <tbody>
-              <tr>
-                <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>
-                  {this.renderTitle()}
-                </td>
-              </tr>
-              { this.renderStoreName(paperSize, businessName) }
-              <tr>
-                <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>{address} {phoneNumber}</td>
-              </tr>
-              <tr>
-                <td colSpan="2">
-                  {this.renderHeader(paperSize)}
-                </td>
-              </tr>
-              <tr>
-                <td colSpan={2} style={{paddingTop: 5, backgroundColor: "white"}}>
-                  <table style={{fontSize: paperSize.setting.dataFontSize, color: paperSize.setting.color, margin: "0 auto"}}>
-                    <thead>
-                      <tr>
-                        <th style={{fontWeight: 500, width: "10mm", textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color}}>
-                          <this.Translate id="text_qty"/>
-                        </th>
-                        <th style={{fontWeight: 500, width: "90mm", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color, textAlign: "left"}}>
-                          <this.Translate id="text_desc"/>
-                        </th>
-                        <th style={{fontWeight: 500, width: "20mm", textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color}}>
-                          <this.Translate id="text_price"/>
-                        </th>
-                        <th style={{fontWeight: 500, width: "20mm", textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color}}>
-                          <this.Translate id="text_amount"/>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td colSpan="3" style={{backgroundColor: "white"}} />
-                      </tr>
-                      {
-                        this.props.productList.map((product, index) => 
-                          <tr key={index}>
-                            <td style={{textAlign: "center", backgroundColor: "white"}}>{product.quantity}</td>
-                            <td style={{backgroundColor: "white"}}>
-                              <div>{product.name}</div>
-                              {
-                                product.variantName ?
-                                  <div style={{fontSize: paperSize.setting.subDataFontSize}}>{product.variantName}</div>
-                                  :
-                                  ""
-                              }
-                            </td>
-                            <td style={{ textAlign: "right", backgroundColor: "white" }}>{this.formatCurrency(product[this.props.customerFieldPrice])}</td>
-                            <td style={{ textAlign: "right", backgroundColor: "white" }}>{this.formatCurrency(product[this.props.customerFieldPrice] * product.quantity)}</td>
-                          </tr> 
-                        )
-                      }
-                      <tr>
-                        <td colSpan="3" style={{backgroundColor: "white"}} />
-                      </tr>
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <td style={{backgroundColor: "white", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5}} />
-                        <td colSpan="2" style={{backgroundColor: "white", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5, textDecoration: "uppercase"}}><this.Translate id="text_sub_total" />:</td>
-                        <td style={{backgroundColor: "white", textAlign: "right", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5}}>{this.formatCurrency(this.props.summaryTotal.subTotalAfterDiscount)}</td>
-                      </tr>
-                      <tr>
-                        <td style={{backgroundColor: "white", paddingTop: 5}} />
-                        <td colSpan="2" style={{backgroundColor: "white"}}>
-                          <span className="text-uppercase"><this.Translate id="text_tax" /></span> {taxTitle}:
-                        </td>
-                        <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency(this.props.taxAmount)}</td>
-                      </tr>
-                      <tr>
-                        <td style={{backgroundColor: "white", paddingTop: 5}} />
-                        <td colSpan="2" style={{backgroundColor: "white"}}><this.Translate id="text_discount"/>:</td>
-                        <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency(this.props.discountAmount)}</td>
-                      </tr>
-                      <tr>
-                        <td style={{backgroundColor: "white", paddingTop: 5}} />
-                        <td colSpan="2" style={{backgroundColor: "white"}}><this.Translate id="text_total" />{this.props.receiptTemplate.isHasSubCurrency ? `(${this.props.receiptTemplate.baseCurrency.symbol})` : ""}:</td>
-                        <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency((this.props.summaryTotal.subTotalAfterDiscount + this.props.taxAmount) - this.props.discountAmount)}</td>
-                      </tr>
-                      {
-                        this.props.receiptTemplate.isHasSubCurrency ?
-                          <tr>
-                            <td style={{backgroundColor: "white"}} />
-                            <td colSpan="2" style={{backgroundColor: "white", textDecoration: "uppercase"}}>សរុប{`(${this.props.receiptTemplate.subCurrency.symbol})`}:</td>
-                            <td style={{backgroundColor: "white", textAlign: "right"}}>{this.Util.formatCurrency(Util.toSubCurrencyGrantTotal((this.props.summaryTotal.subTotalAfterDiscount + this.props.taxAmount) - this.props.discountAmount, this.props.receiptTemplate.baseCurrency, this.props.receiptTemplate.subCurrency), this.props.receiptTemplate.subCurrency.symbol)}</td>
-                          </tr>
-                          :
-                          <tr />
-                      }
-                      {
-                        countTax > 1 ?
-                          this.props.productTaxList.map((productTax, productTaxIndex) =>
-                            productTax.totalTaxAmount > 0 ?
-                              <tr key={productTaxIndex}>
-                                <td style={{backgroundColor: "white"}} />
-                                <td colSpan="2" style={{backgroundColor: "white", paddingLeft: 15}}>
-                                  {productTax.name}
-                                </td>
-                                <td style={{backgroundColor: "white", textAlign: "right"}}>{this.formatCurrency(productTax.totalTaxAmount)}</td>
-                              </tr>
-                              :
-                              ""
+    const total = (this.props.summaryTotal.subTotalAfterDiscount + this.props.taxAmount) - this.props.discountAmount;
+
+    return <div id={this.contentId}>
+        {
+        paperSize.code === Enum.PAPER_SIZE.A4 ?
+          <ReceiptA4
+            data={{
+              client: {
+                businessName,
+                address,
+                phoneNumber,
+                email
+              },
+              number: this.props.data.number,
+              createdAt: this.props.data.createdAt,
+              customer: this.props.customer,
+              discount: this.props.discountAmount,
+              taxAmount: this.props.taxAmount,
+              total,
+            }}
+            receiptTemplate={this.props.receiptTemplate}
+            productList={this.props.productList}
+            dispatch={this.props.dispatch} />
+          :
+          <div style={{
+            margin: "0 auto",
+            fontFamily: "Khmer OS Content",
+            pageBreakBefore: "always"
+          }}>
+            <table style={{
+              color: paperSize.setting.color,
+              fontSize: paperSize.setting.dataFontSize,
+              backgroundColor: "white",
+              margin: "auto",
+              width: paperSize.setting.width,
+              padding: paperSize.setting.padding,
+              marginLeft: this.props.isRequestClearMarginLeft ? 0 : paperSize.setting.marginLef
+            }}>
+              <tbody>
+                <tr>
+                  <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white" }}>
+                    {this.renderTitle()}
+                  </td>
+                </tr>
+                {this.renderStoreName(paperSize, businessName)}
+                <tr>
+                  <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white" }}>{address} {phoneNumber}</td>
+                </tr>
+                <tr>
+                  <td colSpan="2">
+                    {this.renderHeader(paperSize)}
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan={2} style={{ paddingTop: 5, backgroundColor: "white" }}>
+                    <table style={{ fontSize: paperSize.setting.dataFontSize, color: paperSize.setting.color, margin: "0 auto" }}>
+                      <thead>
+                        <tr>
+                          <th style={{ fontWeight: 500, width: "10mm", textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
+                            <this.Translate id="text_qty" />
+                          </th>
+                          <th style={{ fontWeight: 500, width: "90mm", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color, textAlign: "left" }}>
+                            <this.Translate id="text_desc" />
+                          </th>
+                          <th style={{ fontWeight: 500, width: "20mm", textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
+                            <this.Translate id="text_price" />
+                          </th>
+                          <th style={{ fontWeight: 500, width: "20mm", textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
+                            <this.Translate id="text_amount" />
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td colSpan="3" style={{ backgroundColor: "white" }} />
+                        </tr>
+                        {
+                          this.props.productList.map((product, index) =>
+                            <tr key={index}>
+                              <td style={{ textAlign: "center", backgroundColor: "white" }}>{product.quantity}</td>
+                              <td style={{ backgroundColor: "white" }}>
+                                <div>{product.name}</div>
+                                {
+                                  product.variantName ?
+                                    <div style={{ fontSize: paperSize.setting.subDataFontSize }}>{product.variantName}</div>
+                                    :
+                                    ""
+                                }
+                              </td>
+                              <td style={{ textAlign: "right", backgroundColor: "white" }}>{this.formatCurrency(product[this.props.customerFieldPrice])}</td>
+                              <td style={{ textAlign: "right", backgroundColor: "white" }}>{this.formatCurrency(product[this.props.customerFieldPrice] * product.quantity)}</td>
+                            </tr>
                           )
-                          :
-                          <tr />
-                      }
-                      {
-                        this.props.isCustomerCredit ?
-                          <tr />
-                          :
-                          <tr>
-                            <td colSpan={4} style={{ backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }} ></td>
-                          </tr>
-                      }
-                      {
-                        this.props.isCustomerCredit ?
-                        <tr />
-                        :
-                        this.props.customerPaymentList.map((customerPayment, customerPaymentIndex) => 
-                          <tr key={customerPaymentIndex}>
-                            <td style={{backgroundColor: "white", paddingTop: customerPaymentIndex === 0 ? 5 : 0}} />
-                            <td colSpan="2" style={{backgroundColor: "white", paddingTop: customerPaymentIndex === 0 ? 5 : 0}}>{customerPayment.paymentMethodName}:</td>
-                            <td style={{backgroundColor: "white", textAlign: "right", paddingTop: customerPaymentIndex === 0 ? 5 : 0}}>{this.formatCurrency(customerPayment.tender)}</td>
-                          </tr>
-                        )
-                      }
-                      {
-                        this.props.isCustomerCredit ?
-                          <tr />
-                        :
-                          <tr>
-                            <td style={{ backgroundColor: "white" }} />
-                            <td colSpan="2" style={{ backgroundColor: "white" }}><this.Translate id="text_change" />{this.props.receiptTemplate.isHasSubCurrency ? `(${this.props.receiptTemplate.baseCurrency.symbol})` : ""}:</td>
-                            <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(this.props.changeAmount)}</td>
-                          </tr>
-                      }
-                      {
-                        !this.props.isCustomerCredit && this.props.receiptTemplate.isHasSubCurrency ?
-                          <tr>
-                            <td style={{backgroundColor: "white"}} />
-                            <td colSpan="2" style={{backgroundColor: "white"}}>ប្រាក់អាប់{`(${this.props.receiptTemplate.subCurrency.symbol})`}:</td>
-                            <td style={{backgroundColor: "white", textAlign: "right"}}>{this.Util.formatCurrency(Util.toSubCurrencyGrantTotal(this.props.changeAmount, this.props.receiptTemplate.baseCurrency, this.props.receiptTemplate.subCurrency), this.props.receiptTemplate.subCurrency.symbol)}</td>
-                          </tr>
-                          :
-                          <tr />
-                      }
-                    </tfoot>
-                  </table>
-                </td>
-              </tr>
-              <tr>
+                        }
+                        <tr>
+                          <td colSpan="3" style={{ backgroundColor: "white" }} />
+                        </tr>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td style={{ backgroundColor: "white", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5 }} />
+                          <td colSpan="2" style={{ backgroundColor: "white", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5, textDecoration: "uppercase" }}><this.Translate id="text_sub_total" />:</td>
+                          <td style={{ backgroundColor: "white", textAlign: "right", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5 }}>{this.formatCurrency(this.props.summaryTotal.subTotalAfterDiscount)}</td>
+                        </tr>
+                        <tr>
+                          <td style={{ backgroundColor: "white", paddingTop: 5 }} />
+                          <td colSpan="2" style={{ backgroundColor: "white" }}>
+                            <span className="text-uppercase"><this.Translate id="text_tax" /></span> {taxTitle}:
+                        </td>
+                          <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(this.props.taxAmount)}</td>
+                        </tr>
+                        <tr>
+                          <td style={{ backgroundColor: "white", paddingTop: 5 }} />
+                          <td colSpan="2" style={{ backgroundColor: "white" }}><this.Translate id="text_discount" />:</td>
+                          <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(this.props.discountAmount)}</td>
+                        </tr>
+                        <tr>
+                          <td style={{ backgroundColor: "white", paddingTop: 5 }} />
+                          <td colSpan="2" style={{ backgroundColor: "white" }}><this.Translate id="text_total" />{this.props.receiptTemplate.isHasSubCurrency ? `(${this.props.receiptTemplate.baseCurrency.symbol})` : ""}:</td>
+                          <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(total)}</td>
+                        </tr>
+                        {
+                          this.props.receiptTemplate.isHasSubCurrency ?
+                            <tr>
+                              <td style={{ backgroundColor: "white" }} />
+                              <td colSpan="2" style={{ backgroundColor: "white", textDecoration: "uppercase" }}>សរុប{`(${this.props.receiptTemplate.subCurrency.symbol})`}:</td>
+                              <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.Util.formatCurrency(Util.toSubCurrencyGrantTotal((this.props.summaryTotal.subTotalAfterDiscount + this.props.taxAmount) - this.props.discountAmount, this.props.receiptTemplate.baseCurrency, this.props.receiptTemplate.subCurrency), this.props.receiptTemplate.subCurrency.symbol)}</td>
+                            </tr>
+                            :
+                            <tr />
+                        }
+                        {
+                          countTax > 1 ?
+                            this.props.productTaxList.map((productTax, productTaxIndex) =>
+                              productTax.totalTaxAmount > 0 ?
+                                <tr key={productTaxIndex}>
+                                  <td style={{ backgroundColor: "white" }} />
+                                  <td colSpan="2" style={{ backgroundColor: "white", paddingLeft: 15 }}>
+                                    {productTax.name}
+                                  </td>
+                                  <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(productTax.totalTaxAmount)}</td>
+                                </tr>
+                                :
+                                ""
+                            )
+                            :
+                            <tr />
+                        }
+                        {
+                          this.props.isCustomerCredit ?
+                            <tr />
+                            :
+                            <tr>
+                              <td colSpan={4} style={{ backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }} ></td>
+                            </tr>
+                        }
+                        {
+                          this.props.isCustomerCredit ?
+                            <tr />
+                            :
+                            this.props.customerPaymentList.map((customerPayment, customerPaymentIndex) =>
+                              <tr key={customerPaymentIndex}>
+                                <td style={{ backgroundColor: "white", paddingTop: customerPaymentIndex === 0 ? 5 : 0 }} />
+                                <td colSpan="2" style={{ backgroundColor: "white", paddingTop: customerPaymentIndex === 0 ? 5 : 0 }}>{customerPayment.paymentMethodName}:</td>
+                                <td style={{ backgroundColor: "white", textAlign: "right", paddingTop: customerPaymentIndex === 0 ? 5 : 0 }}>{this.formatCurrency(customerPayment.tender)}</td>
+                              </tr>
+                            )
+                        }
+                        {
+                          this.props.isCustomerCredit ?
+                            <tr />
+                            :
+                            <tr>
+                              <td style={{ backgroundColor: "white" }} />
+                              <td colSpan="2" style={{ backgroundColor: "white" }}><this.Translate id="text_change" />{this.props.receiptTemplate.isHasSubCurrency ? `(${this.props.receiptTemplate.baseCurrency.symbol})` : ""}:</td>
+                              <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(this.props.changeAmount)}</td>
+                            </tr>
+                        }
+                        {
+                          !this.props.isCustomerCredit && this.props.receiptTemplate.isHasSubCurrency ?
+                            <tr>
+                              <td style={{ backgroundColor: "white" }} />
+                              <td colSpan="2" style={{ backgroundColor: "white" }}>ប្រាក់អាប់{`(${this.props.receiptTemplate.subCurrency.symbol})`}:</td>
+                              <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.Util.formatCurrency(Util.toSubCurrencyGrantTotal(this.props.changeAmount, this.props.receiptTemplate.baseCurrency, this.props.receiptTemplate.subCurrency), this.props.receiptTemplate.subCurrency.symbol)}</td>
+                            </tr>
+                            :
+                            <tr />
+                        }
+                      </tfoot>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
                   {this.renderCustomerFooter(paperSize)}
-              </tr>
-              <tr>
-                <td colSpan={2} style={{textAlign: "center", backgroundColor: "white", paddingTop: 20, textTransform: "uppercase"}}><this.Translate id="text_thank_you_on_receipt"/></td>
-              </tr>
-              { this.renderQRCode() }
-              <tr>
-                <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}><this.Translate id="text_feedback_keep_on_receipt"/></td>
-              </tr>
-              {
-                this.props.receiptTemplate.isShowDevelopBy ?
-                  <tr>
-                    <td colSpan={2} style={{textAlign: "center", backgroundColor: "white"}}>www.storevein.com</td>
-                  </tr>
-                  :
-                  <tr></tr>
-              }
-            </tbody>
-          </table>
-        </div>
+                </tr>
+                <tr>
+                  <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white", paddingTop: 20, textTransform: "uppercase" }}><this.Translate id="text_thank_you_on_receipt" /></td>
+                </tr>
+                {this.renderQRCode()}
+                <tr>
+                  <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white" }}><this.Translate id="text_feedback_keep_on_receipt" /></td>
+                </tr>
+                {
+                  this.props.receiptTemplate.isShowDevelopBy ?
+                    <tr>
+                      <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white" }}>www.storevein.com</td>
+                    </tr>
+                    :
+                    <tr></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
       </div>;
   }
 }

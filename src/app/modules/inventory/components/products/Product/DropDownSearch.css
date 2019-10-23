@@ -176,3 +176,35 @@
 .wrap-dropdown-search-product .list-search .ant-list-item {
     padding: 10px 15px
 }
+
+.text-warning-before-scan {
+    width: 325px;
+    position: absolute;
+    right: 0;
+    border-radius: 3px;
+    z-index: 1;
+}
+
+.text-warning-before-scan:before {
+    top: -7px;
+    right: 38px;
+    content: "";
+    position: absolute;
+    z-index: 1;
+    border-right: 7px solid transparent;
+    border-left: 7px solid transparent;
+    border-bottom: 7px solid #ffe58f;
+}
+
+.text-warning-before-scan:after{
+    content: "";
+    position: absolute;
+    right: 39px;
+    top: -6px;
+    z-index: 1;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #ffffff;
+}

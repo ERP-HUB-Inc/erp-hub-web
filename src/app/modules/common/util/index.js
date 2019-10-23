@@ -153,6 +153,14 @@ export class Util {
       return "";
   }
 
+  getClientVATNo() {
+    const result = this.getSetting();
+    if (result)
+      return result.VATNo;
+    else
+      return "";
+  }
+
   getCurrentDate () {
     return moment();
   }

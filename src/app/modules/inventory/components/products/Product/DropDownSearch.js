@@ -275,8 +275,18 @@ export default class DropDownSearch extends Modal {
             form={this.props.form}
           />
           {
-            this.state.isShowBarcodeScannerIcon ?
-              <div className="icon-scaner icon-clear" onClick={this.handleRemoveTextSearch} style={{ right: 30, display: this.state.isFocusOnSearchInput ? "flex" : "none" }}></div>
+            this.props.isShowBarcodeScannerIcon ?
+              <div style={{ display: this.state.isFocusOnSearchInput ? "flex" : "none" }}>
+                <div className="icon-scaner icon-clear" onClick={this.handleRemoveTextSearch} style={{ right: 30 }}></div>
+                <div className="text-warning-before-scan">
+                  <this.Alert
+                    message={<this.Translate id="text_warning" />}
+                    description={<this.Translate id="text_warning_before_scan" />}
+                    type="warning"
+                    showIcon
+                  />
+                </div>
+              </div>
               :
               ""
           }

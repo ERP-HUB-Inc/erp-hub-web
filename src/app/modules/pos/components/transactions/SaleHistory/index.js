@@ -1,5 +1,4 @@
 import React from "react";
-import history from "../../../../../modules/common/router/history";
 import List from "../List";
 import Receipt from "../RetailSale/Receipt";
 import Enum from "../../../enums";
@@ -14,6 +13,7 @@ import LocationAction from "../../../action/settings/location";
 import UserAction from "../../../../common/actions/users";
 import InventoryUtil from "../../../../inventory/utils";
 import InventoryEnum from "../../../../inventory/enums";
+import history from "../../../../../modules/common/router/history";
 import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
 
 export default class SaleHistoryList extends List {
@@ -86,7 +86,6 @@ export default class SaleHistoryList extends List {
         width: 100,
         render: type => {
           const valueType = this.TRANSACTION_TYPE_STR.find(transactionType => transactionType.value === type);
-          console.log("Value Type:", type);
           return <this.TagLabel color={[Enum.TRANSACTION_TYPE.CREDIT_NOTE].includes(valueType.value) ? "red" : "blue"}>{valueType.name}</this.TagLabel>;
         },
         sorter: true
