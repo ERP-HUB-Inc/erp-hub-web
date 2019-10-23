@@ -6,7 +6,8 @@ import Modal from "../../../../common/components/shares/Modal";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="text_receipt"/>;
+    this.title = <div style={{ visibility: "hidden" }}><this.Translate id="text_receipt" /></div>;
+    this.width = "850px";
     this.dispatch = this.props.dispatch;
     this.handleRePrint = this.handleRePrint.bind(this);
   }

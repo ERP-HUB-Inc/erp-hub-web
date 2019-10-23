@@ -254,6 +254,7 @@ export default class SaleHistoryList extends List {
     const productTaxList = this.getProductTaxList(productOrderList);
     return <Receipt
       data={this.props.detail.data}
+      customer={this.props.detail.data.customer}
       isRequestClearMarginLeft={isRequestClearReceiptMarginLeft}
       isRequestShowDetail={this.state.isRequestShowDetail}
       receiptTemplate={this.props.receiptTemplate.data}
