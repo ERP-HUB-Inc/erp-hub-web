@@ -96,13 +96,6 @@ export default {
     "Product Log"
   ],
 
-  // // INPUT
-  // "text_brand": [
-  //   "Brand",
-  //   "Brand",
-  //   "Brand"
-  // ],
-
   "input_product_enter_custom_code": [
     "Enter custom product SKU",
     "បញ្ចូល លេខកូដ របស់ផលិតផល",

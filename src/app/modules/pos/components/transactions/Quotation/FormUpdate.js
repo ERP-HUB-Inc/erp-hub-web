@@ -20,6 +20,8 @@ export default class Form extends Retail {
           quotationId: "",
           productStatus: 0,
           handleRemove: false,
+          isClickSave: false,
+          isClickProcess: false,
           isNotYetLoadComponentDidUpdated: true
         }
         this.handleSaveQuotation = this.handleSaveQuotation.bind(this);
@@ -27,12 +29,11 @@ export default class Form extends Retail {
         this.handleViewQuotation = this.handleViewQuotation.bind(this);
     }
 
-    componentDidUpdate(){
+    componentDidUpdate() {
         super.componentDidUpdate();
         let quotaionValues = this.props.quotationDetail.data;
         let quotationColletion = [];
         let errorCode = "";
-        
 
         if(this.state.isNotYetLoadComponentDidUpdated){
             if(quotaionValues){
@@ -48,13 +49,14 @@ export default class Form extends Retail {
                         tax: values.tax,
                         price: values.price,
                         wholePrice: values.productVariant.wholePrice,
+                        distributePrice: values.productVariant.distributePrice,
                         discount: values.discount,
                         taxDescription: {
                             id: 0,
                             taxRate: 0,
                             taxName: "No Tax"
                         },
-                        status: "",
+                        status: this.Enum.ACTIVE,
                         description: values.description,
                     });
                     
@@ -75,12 +77,20 @@ export default class Form extends Retail {
             }
         }
 
-        //is redirect to quotation list if refresh page
-        let { quotationDetail } = this.props;
-        if(this.state.productOrderList.length === 0 && quotationDetail.fetched === false &&  quotationDetail.fetching === false){
+        if (this.props.quotationUpdate.updated) {
+            this.setState({
+                isClickSave: false,
+                isClickProcess: false
+            });
+            this.props.dispatch(QuotationAction.reset());
             history.push("/transactions/quotation");
         }
 
+        //is redirect to quotation list if refresh page
+        if (this.state.productOrderList.length === 0 && this.props.quotationDetail.fetched === false && this.props.quotationDetail.fetching === false){
+            history.push("/transactions/quotation");
+        }
+        
        
         if (this.props.customer.error) {
             errorCode = this.Util.getErrorCodeFromState(this.props.customer.error);
@@ -94,48 +104,24 @@ export default class Form extends Retail {
             this.Message.error(message);
             this.props.dispatch(CustomerAction.reset(ConstantCustomer.RESET_ADD_CUSTOMERS));
         }
-        
-
     }
-
     
-    handleSaveQuotation(){
+    handleSaveQuotation() {
+        this.setState({ isClickSave: true });
         this.saveQuotation(Enum.QUOTATION_STEP.DRAFT);
     }
 
-    handleProcessQuotation(){
+    handleProcessQuotation() {
+        this.setState({ isClickProcess: true });
         this.saveQuotation(Enum.QUOTATION_STEP.PROCESS);
     }
 
-    saveQuotation(status){
-        let productList = [];
+    saveQuotation(status) {
         let productOrderList = this.state.productOrderList;
         if (productOrderList.length > 0) {
             this.props.form.validateFieldsAndScroll((err, values) => {
-                productOrderList.forEach((values, index) => {
-                    if(values.status === this.Enum.ARCHIVE){
-                        productList.push({
-                            id: values.id,
-                            productVariantId: values.productVariantId,
-                            quantity: values.quantity,
-                            price: this.props.form.getFieldValue(`price[${index}]`),
-                            description: this.props.form.getFieldValue(`description[${index}]`),
-                            status: values.status
-                        });
-                    }else{
-                        productList.push({
-                            id: values.id,
-                            productVariantId: values.productVariantId,
-                            quantity: values.quantity,
-                            price: this.props.form.getFieldValue(`price[${index}]`),
-                            description: this.props.form.getFieldValue(`description[${index}]`)
-                        });
-                    }
-                });
-            
 
                 this.Util.clearObjProperty(values, [
-                    "isFocusOnSearchCompositeProduct",
                     "price",
                     "quantity",
                     "searchProduct",
@@ -155,25 +141,22 @@ export default class Form extends Retail {
                 values["totalExcludeTax"] = summaryTotal.subTotalAfterDiscount;
                 values["discount"] = discountAmount;
                 values["terms"] = this.state.discountValue.value;
-                values["Entries"] = productList;
-                if(this.state.selectedCustomer && this.state.quotationId){
+                values["Entries"] = productOrderList;
+
+                if(this.state.selectedCustomer && this.state.quotationId) {
                     values["customerId"] = this.state.selectedCustomer.id;
                     values["id"] = this.state.quotationId;
-                    this.props.dispatch(QuotationAction.update(values)); 
-                    history.push("/transactions/quotation");
-                }else{
+                    this.props.dispatch(QuotationAction.update(values));
+                } else {
                     this.Message.warning(this.CATranslate("text_error_create_quotation", this.props.locale));
                 }
                
             });
-        }else{
+        } else {
             this.Message.warning(this.CATranslate("text_error_not_create_quotation", this.props.locale));
         }
-       
     }
-
-
-    handleOnRemoveProductFromOrderList(values,index){
+    handleOnRemoveProductFromOrderList(values, index) {
         let productOrderList = this.state.productOrderList;
         productOrderList[index]["status"] = this.Enum.ARCHIVE;
         productOrderList[index]["quantity"] = 0;
@@ -182,73 +165,40 @@ export default class Form extends Retail {
         });
     }
 
-    // For calculate summary total when status remove Enum = 3 
-    getSummaryTotalInQuotation(orderList, priceFeild = "price") {
-        let summaryTotal = {
-          subTotal: 0,
-          totalQuantity: 0,
-          subTotalAfterDiscount: 0,
-          discount: 0,
-          tax: 0
-        };
-    
-        if (orderList === null || !Array.isArray(orderList)) 
-          return summaryTotal;
-            orderList.forEach(value => {
-                let totalAmount = "";
-                if(value.status !== this.Enum.ARCHIVE){
-                    totalAmount = POSUtil.getTotalAmount(value.quantity, value[priceFeild]);
-                    summaryTotal.totalQuantity += value.quantity;
-                    summaryTotal.subTotal += totalAmount;
-                    summaryTotal.subTotalAfterDiscount += POSUtil.getTotalAmountAfterDiscount(value.quantity, value[priceFeild], value.discount);
-                    summaryTotal.discount += POSUtil.getDiscountByRate(totalAmount, value.discount);
-                }
-            });
-        return summaryTotal;
-      }
-
-    // ..............................
-
-    FieldNotation(index,values){
-        return(
-            <this.InputTextArea
-                name={`description[${index}]`}
-                label={<this.Translate id="text_notation"/>}
-                data={values.description}
-                className="ca-input-v1"
-                handleKeyUp={(event) => this.handleOnChangOrderField(event, index, "description")}
-                placeholder={this.CATranslate("text_add_notation", this.props.locale)}
-                rows={7}
-                form={this.props.form} />
-        )
+    fieldNotation(index, values) {
+        return <this.InputTextArea
+            name={`description[${index}]`}
+            label={<this.Translate id="text_notation" />}
+            data={values.description}
+            className="ca-input-v1"
+            handleKeyUp={event => this.handleOnChangOrderField(event, index, "description")}
+            placeholder={this.CATranslate("text_add_notation", this.props.locale)}
+            rows={6}
+            form={this.props.form} />;
     }
 
-    handleViewQuotation(){
+    handleViewQuotation() {
         history.push("/transactions/quotation");
     }
 
-    saleOrderHeader(){
-        return(
-            <this.Row className="wrap-receipt-type">
-                <this.Col md="12" className="receipt-type">
-                  <div className="pull-left park-receipt" onClick={this.handleViewQuotation}>
+    saleOrderHeader() {
+        return <this.Row className="wrap-receipt-type">
+            <this.Col md="12" className="receipt-type">
+                <div className="pull-left park-receipt" onClick={this.handleViewQuotation}>
                     <span className="icon-time icon-padding-right"></span><this.Translate id="text_list_quotation" />
-                  </div>
-                </this.Col>
-              </this.Row>
-          )
+                </div>
+            </this.Col>
+        </this.Row>;
     }
 
-    renderSaveAndPayButton(){
-        return(
-            <this.Row className="payment-action">
-                <this.Button type="info" className="mg-right" onClick={this.handleSaveQuotation}>
-                   <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
-                </this.Button>
-                <this.Button type="info"  onClick={this.handleProcessQuotation}>
-                    <span className="icon-checked icon-padding-right"></span><this.Translate id="text_process" />
-                </this.Button>
-            </this.Row>
-        );
+    renderSaveAndPayButton() {
+        return <this.Row className="payment-action">
+            <this.Button type="info" className="mg-right" loading={this.state.isClickSave && this.props.quotationUpdate.updating} onClick={this.handleSaveQuotation}>
+                <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
+            </this.Button>
+            <this.Button type="info" loading={this.state.isClickProcess && this.props.quotationUpdate.updating} onClick={this.handleProcessQuotation}>
+                <span className="icon-checked icon-padding-right"></span><this.Translate id="text_process" />
+            </this.Button>
+        </this.Row>;
     }
 }

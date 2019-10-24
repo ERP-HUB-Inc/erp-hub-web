@@ -17,6 +17,8 @@ export default class Form extends Retail {
         this.state = {
             ...this.state,
             isOutOfStock: false,
+            isClickSave: false,
+            isClickProcess: false,
             isNotYetLoadComponentDidUpdated: true
           }
         this.handleSaveQuotation = this.handleSaveQuotation.bind(this);
@@ -43,6 +45,7 @@ export default class Form extends Retail {
                         tax: values.tax,
                         price: values.price,
                         wholePrice: values.productVariant.wholePrice,
+                        distributePrice: values.productVariant.distributePrice,
                         taxDescription: {
                             id: 0,
                             taxRate: 0,
@@ -69,6 +72,15 @@ export default class Form extends Retail {
             }
         }
 
+        if (this.props.quotationAdd.added) {
+            this.setState({
+                isClickSave: false,
+                isClickProcess: false
+            });
+            this.props.dispatch(QuotationAction.reset());
+            history.push("/transactions/quotation");
+        }
+
        
         if (this.props.customer.error) {
             errorCode = this.Util.getErrorCodeFromState(this.props.customer.error);
@@ -82,16 +94,15 @@ export default class Form extends Retail {
             this.Message.error(message);
             this.props.dispatch(CustomerAction.reset(ConstantCustomer.RESET_ADD_CUSTOMERS));
         }
-        
-
     }
 
-
     handleProcessQuotation(){
+        this.setState({ isClickProcess: true });
         this.saveQuotation(Enum.QUOTATION_STEP.PROCESS);
     }
 
     handleSaveQuotation(){
+        this.setState({ isClickSave: true });
         this.saveQuotation(Enum.QUOTATION_STEP.DRAFT);
     }
 
@@ -111,7 +122,6 @@ export default class Form extends Retail {
 
                 this.Util.clearObjProperty(values, [
                 "discount",
-                "isFocusOnSearchCompositeProduct",
                 "price",
                 "quantity",
                 "searchProduct",
@@ -135,7 +145,6 @@ export default class Form extends Retail {
                 if(this.state.selectedCustomer){
                     values["customerId"] = this.state.selectedCustomer.id;
                     this.props.dispatch(QuotationAction.add(values)); 
-                    history.push("/transactions/quotation");
                 }else{
                     this.Message.warning(this.CATranslate("text_error_create_quotation", this.props.locale));
                 }
@@ -152,37 +161,35 @@ export default class Form extends Retail {
 
     saleOrderHeader(){
         return <this.Row className="wrap-receipt-type">
-                <this.Col md="12" className="receipt-type">
-                  <div className="pull-left park-receipt" onClick={this.handleViewQuotation}>
-                    <span className="icon-time icon-padding-right"></span><this.Translate id="text_list_quotation" />
-                  </div>
-                </this.Col>
-              </this.Row>;
+            <this.Col md="12" className="receipt-type">
+                <div className="pull-left park-receipt" onClick={this.handleViewQuotation}>
+                <span className="icon-time icon-padding-right"></span><this.Translate id="text_list_quotation" />
+                </div>
+            </this.Col>
+        </this.Row>;
     }
 
     renderSaveAndPayButton(){
         return <this.Row className="payment-action">
-                <this.Button type="info" className="mg-right" onClick={this.handleSaveQuotation}>
-                    <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
-                </this.Button>
-                <this.Button type="info"  onClick={this.handleProcessQuotation}>
-                    <span className="icon-checked icon-padding-right"></span><this.Translate id="text_process" />
-                </this.Button>
-            </this.Row>;
+            <this.Button type="info" className="mg-right" loading={this.state.isClickSave && this.props.quotationAdd.adding} onClick={this.handleSaveQuotation}>
+                <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
+            </this.Button>
+            <this.Button type="info" loading={this.state.isClickProcess && this.props.quotationAdd.adding} onClick={this.handleProcessQuotation}>
+                <span className="icon-checked icon-padding-right"></span><this.Translate id="text_process" />
+            </this.Button>
+        </this.Row>;
     }
 
-    FieldNotation(index,values){
-        return(
-            <this.InputTextArea
-                name={`description[${index}]`}
-                label={<this.Translate id="text_notation"/>}
-                data={values.description}
-                className="ca-input-v1"
-                handleKeyUp={(event) => this.handleOnChangOrderField(event, index, "description")}
-                placeholder={this.CATranslate("text_add_notation", this.props.locale)}
-                rows={7}
-                form={this.props.form} />
-        )
+    fieldNotation(index, values) {
+        return <this.InputTextArea
+            name={`description[${index}]`}
+            label={<this.Translate id="text_notation" />}
+            data={values.description}
+            className="ca-input-v1"
+            handleKeyUp={(event) => this.handleOnChangOrderField(event, index, "description")}
+            placeholder={this.CATranslate("text_add_notation", this.props.locale)}
+            rows={7}
+            form={this.props.form} />;
     }
 
 }

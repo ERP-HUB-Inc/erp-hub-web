@@ -14,20 +14,27 @@ export default class FormItem extends Modal {
     this.columns = [
       {
         title: <this.Translate id="text_product_name" />,
-        dataIndex: "name",
+        dataIndex: "productVariant",
         key: "name",
-        render: (text, record, index) => {
-          return(
+        render: productVariant => {
+          return (
             <div>
-              <div>{ InventoryUtil.getProductName(record.productVariant.product) }</div>
+              <div>{InventoryUtil.getProductName(productVariant.product) }</div>
               {
-                record.productVariant.product.productOption === InventoryEnum.PRODUCT_VARIANT ?
-                  <div className="variant-name" style={{ fontSize: "10px" }}>{ record.productVariant.name }</div>
+                productVariant.product.productOption === InventoryEnum.PRODUCT_VARIANT ?
+                  <div className="variant-name" style={{ fontSize: "10px" }}>{ productVariant.name }</div>
                 : ""
               }
             </div>
           );
         }
+      },
+      {
+        title: <this.Translate id="text_product_code" />,
+        dataIndex: "productVariant",
+        key: "barcode",
+        width: 100,
+        render: productVariant => productVariant.barcode
       },
       {
         title: <this.Translate id="text_quantity" />,
@@ -43,10 +50,10 @@ export default class FormItem extends Modal {
       },
       {
         title: <this.Translate id="text_amount" />,
-        dataIndex: "amount",
+        dataIndex: "price",
         key: "amount",
         align: "right",
-        render: (text, record, index) => this.Util.formatCurrency(record.price * record.quantity) 
+        render: (price, record) => this.Util.formatCurrency(price * record.quantity) 
       }
     ];
     this.handleReceive = this.handleReceive.bind(this);

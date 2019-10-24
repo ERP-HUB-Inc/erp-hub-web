@@ -155,35 +155,7 @@ export default class Form extends Retail {
             productOrderList: productOrderList
         });
     }
-
-    // For calculate summary total when status remove Enum = 3 
-    getSummaryTotalInQuotation(orderList, priceFeild = "price") {
-        let summaryTotal = {
-          subTotal: 0,
-          totalQuantity: 0,
-          subTotalAfterDiscount: 0,
-          discount: 0,
-          tax: 0
-        };
-    
-        if (orderList === null || !Array.isArray(orderList)) 
-          return summaryTotal;
-            orderList.forEach(value => {
-                let totalAmount = "";
-                if(value.status !== this.Enum.ARCHIVE){
-                    totalAmount = POSUtil.getTotalAmount(value.quantity, value[priceFeild]);
-                    summaryTotal.totalQuantity += value.quantity;
-                    summaryTotal.subTotal += totalAmount;
-                    summaryTotal.subTotalAfterDiscount += POSUtil.getTotalAmountAfterDiscount(value.quantity, value[priceFeild], value.discount);
-                    summaryTotal.discount += POSUtil.getDiscountByRate(totalAmount, value.discount);
-                }
-            });
-        return summaryTotal;
-    }
-
-    // ..............................
-
-    FieldNotation(index,values){
+    fieldNotation(index,values){
         return(
             <this.InputTextArea
                 name={`description[${index}]`}

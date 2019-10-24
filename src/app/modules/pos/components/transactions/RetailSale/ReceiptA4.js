@@ -57,7 +57,7 @@ export default class ReceiptA4 extends Component {
         <td style={{borderRight: "1px solid black", width: "50px", textAlign: "center", fontSize: "12px", verticalAlign: "top",  padding: 5}}>{ index + 1 }</td>
         <td style={{ borderRight: "1px solid black", width: "420px", fontSize: "8.5pt", textAlign: "left", padding: 5, verticalAlign: "middle" }}>
           <div>
-            <span style={{ fontWeight: "bold", fontSize: "15px", fontFamily: "Khmer OS Content"  }}>{product.name}</span>
+            <span style={{ fontWeight: "bold", fontSize: "9.5pt", fontFamily: "Khmer OS Content"  }}>{product.name}</span>
             <div style={{ fontSize: "7px", fontFamily: "Khmer OS Content" }}>
             { product.variantName ? product.variantName : "" }
             </div>

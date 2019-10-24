@@ -556,7 +556,6 @@ export default class Retail extends Component {
 
     // UPDATE SUMMARY TAX LIST
     this.appendProductTaxList(existingProductOrderList);
-
     this.setState({
       productOrderList: existingProductOrderList,
     });
@@ -870,7 +869,7 @@ export default class Retail extends Component {
     )
   }
 
-  FieldNotation(productOrderIndex,productOrder){
+  fieldNotation(productOrderIndex,productOrder){
     return(
       <div className="detail-row-2">
         <this.InputText
@@ -1100,7 +1099,7 @@ export default class Retail extends Component {
                 <span className="icon-help icon-padding-right"></span>Show Inventories & Details
               </div> */}
                   </div>
-                  {this.FieldNotation(productOrderIndex,productOrder)}
+                  {this.fieldNotation(productOrderIndex,productOrder)}
                     {/* <div className="detail-row-2">
                       <this.InputText
                         name={`description[${productOrderIndex}]`}
