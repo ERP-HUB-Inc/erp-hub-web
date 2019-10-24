@@ -21,6 +21,7 @@ export default class PicturesUpload extends Element {
 
   constructor(props){
     super(props);
+    this._isMounted = false;
     this.state = {
       cardPreviewImage: "",
       isRemoveImage: false,
@@ -28,28 +29,34 @@ export default class PicturesUpload extends Element {
       cardImgList: null,
       fileList: []
     };
-    this.handleCardChange = this.handleCardChange.bind(this);
-    this.initializeImage = this.initializeImage.bind(this);
   }
 
-  initializeImage(status) {
-    if (status === "success") {
-      this.setState({
-        fileList: this.props.fileList,
-        cardImgList: this.props.fileList[0].name
-      });
-    } else if (status === "error") {
-      this.setState({
-        fileList: [],
-        cardImgList: null
-      });
+  initializeImage = (status) => {
+    if (this._isMounted) {
+      if (status === "success") {
+        this.setState({
+          fileList: this.props.fileList,
+          cardImgList: this.props.fileList[0].name
+        });
+      } else if (status === "error") {
+        this.setState({
+          fileList: [],
+          cardImgList: null
+        });
+      }
     }
   }
 
   componentDidMount() {
+    this._isMounted = true;
+
     if (this.props.fileList.length > 0) {
       this.validImage(this.props.fileList[0].url, this.initializeImage);
     }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   validImage(url, callback, timeout) {
@@ -75,7 +82,7 @@ export default class PicturesUpload extends Element {
     }, timeout); 
   }
 
-  handleCardChange({fileList, file}){ console.log("Content File:", file);
+  handleCardChange = ({fileList, file}) => {
     if (!this.state.isRemoveImage) {
       this.setState({
         cardImgList: file.name,
@@ -113,7 +120,6 @@ export default class PicturesUpload extends Element {
   render() {
     const cardImgProps = {
       action: this.props.endPoint,
-      
       onRemove: (file) => {
         axios({
           method: "DELETE",
@@ -148,11 +154,14 @@ export default class PicturesUpload extends Element {
       listType: "picture-card"
     };
 
-    const {cardImgList, cardPreviewVisible, cardPreviewImage} = this.state;
+    const {
+      cardImgList,
+      cardPreviewVisible,
+      cardPreviewImage
+    } = this.state;
     const { getFieldDecorator } = this.props.form;
     
-    return (
-      <div className="clearfix main-upload">
+    return <div className="clearfix main-upload">
         <this.FormItem label={this.props.label} className="wrap-upload">
           {
             getFieldDecorator(this.props.name, { rules: this.props.rules, initialValue: this.props.data } )(
@@ -165,8 +174,7 @@ export default class PicturesUpload extends Element {
             <img alt="example" style={{ width: "100%" }} src={cardPreviewImage} />
           </Modal>
         </this.FormItem>
-      </div>
-    );
+      </div>;
   }
 }
 

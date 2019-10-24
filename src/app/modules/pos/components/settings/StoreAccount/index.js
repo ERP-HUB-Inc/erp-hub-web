@@ -348,7 +348,7 @@ export default class StoreAccountList extends Component {
     const currency = storeAccount.list.currency != null ? [storeAccount.list.currency] : [];
     
     let image = {};
-    if (storeAccount.list) {
+    if (storeAccount.fetched) {
       image = {
         uid: "-1",
         name: storeAccount.list.logo,
@@ -357,8 +357,7 @@ export default class StoreAccountList extends Component {
       };
     }
 
-    return (
-      <div style={{width: "100%"}}>
+    return <div style={{width: "100%"}}>
         {
           isMobile ?
             this.renderMiniBreadCrumb()
@@ -385,7 +384,7 @@ export default class StoreAccountList extends Component {
             </div>
         }
         {
-          this.Util.isCheckingPermission(this.props) ?
+          this.Util.isCheckingPermission(this.props) || storeAccount.fetching ?
             <StartUp />
             :
             this.Util.isNoPermissionProp(this.props) ?
@@ -493,7 +492,7 @@ export default class StoreAccountList extends Component {
 
                               <div>
                                 <div className="ant-form-item-label">
-                                  <label for="paymentTerm"><this.Translate id="text_payment_term" /></label>
+                                  <label htmlFor="paymentTerm"><this.Translate id="text_payment_term" /></label>
                                 </div>
                                 <div style={{ marginTop: 5 }}>
                                   <CKEditor
@@ -623,7 +622,7 @@ export default class StoreAccountList extends Component {
                               
                               <div>
                                 <div className="ant-form-item-label">
-                                  <label for="address"><this.Translate id="text_address" /></label>
+                                  <label htmlFor="address"><this.Translate id="text_address" /></label>
                                 </div>
                                 <div style={{ marginTop: 5 }}>
                                   <CKEditor
@@ -664,7 +663,7 @@ export default class StoreAccountList extends Component {
                             <this.Col lg="4" md="4" style={{paddingBottom: 15}}> 
                               {
                                 Object.keys(modules).map((key, index) => 
-                                  <div className={`module ${modules[key].parent ? "sub-module" : ""}`}>
+                                  <div key={index} className={`module ${modules[key].parent ? "sub-module" : ""}`}>
                                     <this.Checkbox
                                       value={{id: modules[key].id, name: modules[key].route, parent: modules[key].parent}}
                                       checked={this.state.selectedModules.findIndex(value => value.route === modules[key].route && value.status === this.Enum.ACTIVE) >= 0}
@@ -810,7 +809,6 @@ export default class StoreAccountList extends Component {
                 </this.Form>
               </div>
         }
-      </div>
-    );
+      </div>;
   }
 }
