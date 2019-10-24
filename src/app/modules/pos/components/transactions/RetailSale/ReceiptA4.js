@@ -5,7 +5,7 @@ import "./ReceiptA4.css";
 export default class ReceiptA4 extends Component {
   constructor(props) {
     super(props);
-    this.title = "វិក័យប័ត្រ / Invoice";
+    this.title = "វិក័យប័ត្រ / INVOICE";
     this.issuedBy = "អ្នកចេញវិក័យប័ត្រ​​ / Issued by";
     this.isQuotation = false;
   }
