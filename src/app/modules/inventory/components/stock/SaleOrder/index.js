@@ -16,24 +16,24 @@ export default class SaleOrder extends SaleHistory {
       this.module = "stocks";
       this.action = TransactionAction;
       this.service = TransactionService;
-      this.columns.splice(2,1);
+      this.columns.splice(2, 1);
       this.columns.splice(this.columns.length - 1,1);
   }
 
   componentDidMount(){
     this.requestSubDataAsync();
-    let status = {status: [Enum.TRANSACTION_STEP.PROCESS]}
-    this.props.dispatch(TransactionAction.fetch(this.pageSize,"","","",JSON.stringify(status),"",""));
+    const filter = {step: [Enum.TRANSACTION_STEP.PROCESS]}
+    this.props.dispatch(TransactionAction.fetch(this.pageSize, "", "", "", JSON.stringify(filter), "", ""));
   }
 
   handleSubmitFilter(e) {
-    if (this.action != null) {
+    if (this.action) {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           let filter = {};
       
-          filter["status"] = [Enum.TRANSACTION_STEP.PROCESS];
+          filter["step"] = [Enum.TRANSACTION_STEP.PROCESS];
 
           if (values.locationId) {
             filter["locationId"] = [values.locationId];
@@ -64,7 +64,6 @@ export default class SaleOrder extends SaleHistory {
           if (values.customer) {
             searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.customer});
           }
-
 
           this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
           this.setState({isClickFilter: true});
