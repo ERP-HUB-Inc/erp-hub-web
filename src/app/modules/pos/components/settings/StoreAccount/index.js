@@ -33,7 +33,7 @@ export default class StoreAccountList extends Component {
       selectedModules: [
         {id: 1, route: "transactions", status: 1},
         {id: 2, route: "/transactions/salehistory", status: 1},
-        {id: 3, route: "/transactions/saleorder", status: 1},
+        {id: 3, route: "/transactions/pos", status: 1},
         {id: 3, route: "/transactions/saleregister", status: 1}
       ],
       paymentTerm: "",

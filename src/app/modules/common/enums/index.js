@@ -6,8 +6,17 @@ export default {
   IS_SYSTEM: 1,
   IS_DEFAULT: 1,
   NOT_DEFAULT: 0,
-  CURRENCY_POSITION: {BEFORE: 0, AFTER: 1},
-  GENERATE_PRODUCT_CODE: {MANAUL: 1, AUTO: 2},
+  TRANSACTION_ENTRY_STATUS: {
+    RETURN: 4
+  },
+  CURRENCY_POSITION: {
+    BEFORE: 0,
+    AFTER: 1
+  },
+  GENERATE_PRODUCT_CODE: {
+    MANAUL: 1,
+    AUTO: 2
+  },
   OPERATION_TYPE: {
     EXPENSE: 0,
     INCOME: 1,
@@ -15,7 +24,10 @@ export default {
     COGS: 3,
     NO_OPERATION: 4
   },
-  IS_SALE_RECORD: {YES: 1, NO: 0},
+  IS_SALE_RECORD: {
+    YES: 1,
+    NO: 0
+  },
   GENDER: {
     MALE: 0,
     FEMALE: 1

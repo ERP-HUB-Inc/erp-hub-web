@@ -257,7 +257,7 @@ const dataSource = {
     title: <Translate id="text_transaction" />,
     subItems: [
       {
-        route: "/transactions/salehistory-return", 
+        route: "/transactions/return", 
         component: Return,
         isFashNav: false
       },
@@ -288,7 +288,7 @@ const dataSource = {
       {
         title: <Translate id="text_sale_order_pos" />,
         icon: "icon-sale",
-        route: "/transactions/saleorder",
+        route: "/transactions/pos",
         component: SaleOrder,
         isFashNav: true
       },

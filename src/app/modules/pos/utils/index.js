@@ -1,3 +1,4 @@
+import Enum from "../../common/enums";
 class Util {
   getSummaryTotalInOrder(orderList, priceFeild = "price") {
     let summaryTotal = {
@@ -8,16 +9,28 @@ class Util {
       tax: 0
     };
 
+    let returnAmount = 0;
+    let returnSubTotalAfterDiscount = 0;
+
     if (orderList === null || !Array.isArray(orderList)) 
       return summaryTotal;
 
     orderList.forEach(value => {
       const totalAmount = this.getTotalAmount(value.quantity, value[priceFeild]);
-      summaryTotal.totalQuantity += value.quantity;
-      summaryTotal.subTotal += totalAmount;
-      summaryTotal.subTotalAfterDiscount += this.getTotalAmountAfterDiscount(value.quantity, value[priceFeild], value.discount);
-      summaryTotal.discount += this.getDiscountByRate(totalAmount, value.discount);
+      const subTotalAfterDiscount = this.getTotalAmountAfterDiscount(value.quantity, value[priceFeild], value.discount);
+      if (value.status === Enum.ACTIVE) {
+        summaryTotal.totalQuantity += value.quantity;
+        summaryTotal.subTotal += totalAmount;
+        summaryTotal.subTotalAfterDiscount += subTotalAfterDiscount;
+        summaryTotal.discount += this.getDiscountByRate(totalAmount, value.discount);
+      } else if (value.status === Enum.TRANSACTION_ENTRY_STATUS.RETURN) {
+        returnAmount += totalAmount;
+        returnSubTotalAfterDiscount += subTotalAfterDiscount;
+      }
     });
+
+    summaryTotal.subTotal -= returnAmount;
+    summaryTotal.subTotalAfterDiscount -= returnSubTotalAfterDiscount;
 
     return summaryTotal;
   }
@@ -66,18 +79,21 @@ class Util {
 
     discount = (amount * rate) / 100;
 
-    return discount < 0 ? 0 : discount;
+    // return discount < 0 ? 0 : discount;
+    return discount;
   }
 
   getTotalAmount(quantity, price) {
     const totalAmount =  (quantity * price);
-    return totalAmount < 0 ? 0 : totalAmount;
+    // return totalAmount < 0 ? 0 : totalAmount;
+    return totalAmount;
   }
 
   getTotalAmountAfterDiscount(quantity, price, rate) {
     const totalAmount = this.getTotalAmount(quantity, price);
     const result = totalAmount - this.getDiscountByRate(totalAmount, rate);
-    return result < 0 ? 0 : result; 
+    // return result < 0 ? 0 : result;
+    return result;
   }
   
   getDiscountRateByAmount(oldPrice, discountAmount) {
@@ -86,12 +102,14 @@ class Util {
 
   getGrandTotal(value = 0, tax = 0, discount = 0) {
     const grandTotal = (value + tax) - discount;
-    return grandTotal < 0 ? 0 : grandTotal;
+    // return grandTotal < 0 ? 0 : grandTotal;
+    return grandTotal;
   }
 
   getGrandTotalWithOutDiscount(value = 0, tax = 0) {
     const grandTotal = value + tax;
-    return grandTotal < 0 ? 0 : grandTotal;
+    // return grandTotal < 0 ? 0 : grandTotal;
+    return grandTotal;
   }
 
   appendCustomerPaymentList(customerPaymentList, giveAmount, paymentMethod, balance) {

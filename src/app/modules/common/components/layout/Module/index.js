@@ -21,7 +21,7 @@ export const modules = {
   SaleOrder: {
     title: <Translate id="text_sale_order" />,
     icon: "icon-pre-order",
-    route: "/transactions/saleorder",
+    route: "/transactions/pos",
     component: loadComponet(import("../../../../pos/containers/transactions/SaleWalkin")),
     parent: "Transaction",
     isFashNav: true

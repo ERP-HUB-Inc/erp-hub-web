@@ -281,15 +281,28 @@
     font-size: 7pt
 }
 
+.return-order {
+    text-transform: uppercase;
+    background-color: #B90000 !important
+}
+
 #retail-sale .delete {
     font-size: 18pt;
+    text-align: center;
+    border-radius: 3px;
     color: #093163;
-    margin-left: 25px
+    margin-left: 15px;
+    width: 40px
 }
 
 #retail-sale .delete:hover {
     color: #B90000;
-    cursor: pointer
+    cursor: pointer;
+    background-color: white;
+    border: 1.5px solid #0D62AF;
+    box-shadow: 0 0 3px 2px rgba(0,138,232,.35);
+    border-color: #008ae8;
+    width: 40px;
 }
 
 #retail-sale .product-order-list .product-order-item-detail {

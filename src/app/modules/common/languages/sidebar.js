@@ -24,9 +24,9 @@ export default {
   ],
 
   "text_sale_order_pos": [
-    "Sale Order (POS)",
-    "លក់ (POS)",
-    "Sale Order (POS)"
+    "POS",
+    "លក់",
+    "POS"
   ],
   
   "text_return_exchange": [

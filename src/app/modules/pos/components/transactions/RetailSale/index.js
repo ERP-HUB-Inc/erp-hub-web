@@ -90,7 +90,6 @@ export default class Retail extends Component {
     this.handleOnMakePayment = this.handleOnMakePayment.bind(this);
     this.handleCancelMakePayment = this.handleCancelMakePayment.bind(this);
     this.handleOnGetTaxList = this.handleOnGetTaxList.bind(this);
-    this.handleOnRemoveProductFromOrderList = this.handleOnRemoveProductFromOrderList.bind(this);
     this.handleOnChangOrderField = this.handleOnChangOrderField.bind(this);
     this.handleOnSetupDiscount = this.handleOnSetupDiscount.bind(this);
     this.handleOnOpenTaxSetting = this.handleOnOpenTaxSetting.bind(this);
@@ -249,6 +248,7 @@ export default class Retail extends Component {
       taxDescription: tax,
       description: "",
       options: [],
+      status: this.Enum.ACTIVE
     });
   }
 
@@ -386,7 +386,8 @@ export default class Retail extends Component {
     this.setState({modalContent: null});
   }
 
-  handleExpandOrderItem(expandOrderItemRow, productOrderIndex) {
+  handleExpandOrderItem(expandOrderItemRow, productOrderIndex, status) {
+    expandOrderItemRow = `${expandOrderItemRow}-${status}`;
     this.handleonSearchfails();
     if (this.state.expandOrderItemRow.includes(expandOrderItemRow)) {
       this.setState({
@@ -442,10 +443,10 @@ export default class Retail extends Component {
     } else {
       let isNotTheSame = true;
       existingProductOrderList.forEach((productOrder, productOrderIndex) => {
-        if (productVariant && productOrder.productVariantId === productVariant.id) {
+        if (productVariant && productOrder.productVariantId === productVariant.id && productOrder.status === this.Enum.ACTIVE) {
           isNotTheSame = false;
           existingProductOrderList[productOrderIndex]["quantity"] += this.state.initialOrderQuantity;
-          existingProductOrderList[productOrderIndex]["status"] = "";
+          existingProductOrderList[productOrderIndex]["status"] = this.Enum.ACTIVE;
         }
       });
 
@@ -464,7 +465,7 @@ export default class Retail extends Component {
     // document.getElementById("searchProduct").focus();
   }
 
-  handleOnRemoveProductFromOrderList(productVariant,index) {
+  removeProductFromOrderList = (productVariant) => {
     const productOrderList = this.state.productOrderList.filter(productOrder => productOrder.productVariantId !== productVariant.productVariantId);
     this.setState({
       productOrderList,
@@ -474,6 +475,10 @@ export default class Retail extends Component {
     this.appendProductTaxList(productOrderList);
 
     this.saveReceipt(Enum.CURRENT_RECEIPT);
+  }
+
+  handleOnRemoveProductFromOrderList = (productVariant) => {
+    this.removeProductFromOrderList(productVariant);
   }
 
   handleOnGetTaxList(productTaxList, taxRate) {
@@ -797,8 +802,7 @@ export default class Retail extends Component {
     const imageWidth = productWidth - 25;
     this.productWidth = productWidth;
 
-    return (
-      countProduct > 0 ?
+    return countProduct > 0 ?
         this.state.productList.map((product, index) =>
           <this.Col style={{width: productWidth, maxWidth: "none", flex: "none"}} md="3" className="product-box" key={index}>
             <div onClick={() => this.handleOnSelectProduct(product, product.productVariants)} className="product" style={{height: productWidth}}>
@@ -823,66 +827,59 @@ export default class Retail extends Component {
         :
         <div style={{display: "flex", alignItems: "center", margin: "0 auto", height: "100%"}}>
           <img src={`${this.Util.getGeneralImage("storeVein/no-product-found.png").url}`} style={{width: 150}}  alt=""/>
+        </div>;
+  }
+
+  renderSaveAndPayButton = () => (
+    <this.Row className="payment-action">
+      <this.Button type="info" className="mg-right" onClick={this.handleOnSaveParkReceipt}>
+        <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
+      </this.Button>
+      <this.Button type="info" onClick={this.handleOnMakePayment}>
+        <span className="icon-checked icon-padding-right"></span><this.Translate id="text_pay" />
+      </this.Button>
+    </this.Row>
+  )
+
+  saleOrderHeader = () => (
+    <this.Row className="wrap-receipt-type">
+      <this.Col md="12" className="receipt-type">
+        <div className={`pull-left current-receipt ${this.state.selectedReceiptType === Enum.CURRENT_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.CURRENT_RECEIPT)}>
+          <span className="icon-receipt icon-padding-right"></span><this.Translate id="current_receipt_type" />
         </div>
-    );
-  }
-
-  renderSaveAndPayButton(){
-    return(
-      <this.Row className="payment-action">
-        <this.Button type="info" className="mg-right" onClick={this.handleOnSaveParkReceipt}>
-          <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
-        </this.Button>
-        <this.Button type="info" onClick={this.handleOnMakePayment}>
-          <span className="icon-checked icon-padding-right"></span><this.Translate id="text_pay" />
-        </this.Button>
-      </this.Row>
-    );
-  }
-
-  saleOrderHeader(){
-    return(
-      <this.Row className="wrap-receipt-type">
-          <this.Col md="12" className="receipt-type">
-            <div className={`pull-left current-receipt ${this.state.selectedReceiptType === Enum.CURRENT_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.CURRENT_RECEIPT)}>
-              <span className="icon-receipt icon-padding-right"></span><this.Translate id="current_receipt_type"/>
+        {
+          localStorage.getItem(Enum.PARK_RECEIPT) ?
+            <div className={`pull-left park-receipt ${this.state.selectedReceiptType === Enum.PARK_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.PARK_RECEIPT)}>
+              <span className="icon-reports icon-padding-right"></span><this.Translate id="park_receipt_type" />
             </div>
-            {
-              localStorage.getItem(Enum.PARK_RECEIPT) ?
-                <div className={`pull-left park-receipt ${this.state.selectedReceiptType === Enum.PARK_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.PARK_RECEIPT)}>
-                  <span className="icon-reports icon-padding-right"></span><this.Translate id="park_receipt_type"/>
-                </div>
-                :
-                ""
-            }
-            <div className="pull-left park-receipt" onClick={this.handleLinkSaleHistory}>
-              <span className="icon-time icon-padding-right"></span><this.Translate id="text_sale_history" />
-            </div>
-            <div className="pull-left park-receipt" onClick={this.handleLinkCloseShift}>
-              <span className="icon-currency icon-padding-right"></span><this.Translate id="text_close_shift" />
-            </div>
-            {/* <div className="pull-left park-receipt" onClick={this.handleSetFullScreen}>
+            :
+            ""
+        }
+        <div className="pull-left park-receipt" onClick={this.handleLinkSaleHistory}>
+          <span className="icon-time icon-padding-right"></span><this.Translate id="text_sale_history" />
+        </div>
+        <div className="pull-left park-receipt" onClick={this.handleLinkCloseShift}>
+          <span className="icon-currency icon-padding-right"></span><this.Translate id="text_close_shift" />
+        </div>
+        {/* <div className="pull-left park-receipt" onClick={this.handleSetFullScreen}>
             <span className={`${this.state.iconFullScreen} icon-padding-right`}></span>{this.state.textFullScreen}
           </div> */}
-          </this.Col>
-        </this.Row>
-    )
-  }
+      </this.Col>
+    </this.Row>
+  )
 
-  fieldNotation(productOrderIndex,productOrder){
-    return(
-      <div className="detail-row-2">
-        <this.InputText
-          name={`description[${productOrderIndex}]`}
-          label={<this.Translate id="text_notation"/>}
-          data={productOrder.description}
-          className="ca-input-v1"
-          handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "description")}
-          placeholder={this.CATranslate("text_add_notation", this.props.locale)}
-          form={this.props.form}/>
-      </div>
-    )
-  }
+  fieldNotation = (productOrderIndex, productOrder) => (
+    <div className="detail-row-2">
+      <this.InputText
+        name={`description[${productOrderIndex}]`}
+        label={<this.Translate id="text_notation" />}
+        data={productOrder.description}
+        className="ca-input-v1"
+        handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "description")}
+        placeholder={this.CATranslate("text_add_notation", this.props.locale)}
+        form={this.props.form} />
+    </div>
+  )
 
   render() {
 
@@ -965,11 +962,11 @@ export default class Retail extends Component {
           }
           {
             this.props.products.fetching && this.state.isRequestLoadingMore ?
-              <div className="loading-more-spin" style={{left: leftSideElementWidth/2}}>
+              <div className="loading-more-spin" style={{left: leftSideElementWidth / 2}}>
                 <this.Spin />
               </div>
               :
-              <div className="load-more-button" style={{left: leftSideElementWidth/2}} onClick={this.handleOnLoadMoreProduct}>
+              <div className="load-more-button" style={{left: leftSideElementWidth / 2}} onClick={this.handleOnLoadMoreProduct}>
                 <span className="icon-move-down" style={{fontSize: "30pt"}}></span>
               </div>
           }
@@ -1018,51 +1015,70 @@ export default class Retail extends Component {
         <div className="product-order-list">
           {
             this.state.productOrderList.map((productOrder, productOrderIndex) => 
-            productOrder.status === this.Enum.ARCHIVE ? " " :
-              <div className={`product-order-item ${this.state.expandOrderItemRow.includes(productOrder.productVariantId) ? "expanded" : ""}`} key={productOrderIndex}>
+            productOrder.status === this.Enum.ARCHIVE ? "" :
+              <div className={`product-order-item ${this.state.expandOrderItemRow.includes(`${productOrder.productVariantId}-${productOrder.status}`) ? "expanded" : ""}`} key={productOrderIndex}>
                 <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                  <div className="item" onClick={() => this.handleExpandOrderItem(productOrder.productVariantId, productOrderIndex)}>
-                    <div className={`epxand-icon ${this.state.expandOrderItemRow.includes(productOrder.productVariantId) ? "icon-move-down" : "icon-next"}`}></div>
-                    <div className="description">
-                      <div className="name">{productOrder.name}</div>
-                      {/* <div className="barcode-number">
-                        {<this.Translate id="text_product_code"/>}: {productOrder.barcode}
-                      </div> */}
-                      {
-                        productOrder.variantName ?
-                          <div className="barcode-number variant-name">
-                            {productOrder.variantName}
-                          </div>
-                          :
-                          ""
-                      }
-                    </div>
-                    <div className="quantity">
-                      {productOrder.quantity}x
-                    </div>
-                    <div className="price">
-                      {
-                        productOrder.discount > 0 ?
-                          <div className="after-discount-price">
-                              {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity, productOrder[this.state.customerFieldPrice], productOrder.discount))}
-                          </div>
-                          :
-                          ""
-                      }
-                      <div className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`}>
-                        {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder[this.state.customerFieldPrice]))}
+                    <div className="item" onClick={() => this.handleExpandOrderItem(productOrder.productVariantId, productOrderIndex, productOrder.status)}>
+                      <div className={`epxand-icon ${this.state.expandOrderItemRow.includes(`${productOrder.productVariantId}-${productOrder.status}`) ? "icon-move-down" : "icon-next"}`}></div>
+                      <div className="description">
+                        <div className="name">{productOrder.name}</div>
+                        {/* <div className="barcode-number">
+                          {<this.Translate id="text_product_code"/>}: {productOrder.barcode}
+                        </div> */}
+                        {
+                          productOrder.variantName ?
+                            <div className="barcode-number variant-name">
+                              {productOrder.variantName}
+                            </div>
+                            :
+                            ""
+                        }
+
+                          {
+                            productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN ?
+                              <div className="barcode-number return-order variant-name">
+                                <this.Translate id="text_return" />
+                              </div>
+                              :
+                              ""
+                          }
                       </div>
-                    </div>
+                      <div className="quantity">
+                          {
+                            productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN ?
+                            productOrder.quantity > 0 ? `-${productOrder.quantity}` : productOrder.quantity
+                            :
+                            `${productOrder.quantity}x`
+                          }
+                      </div>
+                      <div className="price">
+                        {
+                          productOrder.discount > 0 ?
+                            <div className="after-discount-price">
+                                {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity, productOrder[this.state.customerFieldPrice], productOrder.discount))}
+                            </div>
+                            :
+                            ""
+                        }
+                        <div className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`}>
+                          {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder[this.state.customerFieldPrice]))}
+                        </div>
+                      </div>
                   </div>
-                  <div className="delete" onClick={() => this.handleOnRemoveProductFromOrderList(productOrder,productOrderIndex)}><span className="icon-delete"></span></div>
+                  {
+                    productOrder.status === this.Enum.ACTIVE ?
+                        <div className="delete" onClick={() => this.handleOnRemoveProductFromOrderList(productOrder, productOrderIndex)}><span className="icon-delete"></span></div>
+                        :
+                        <div style={{ visibility: "hidden" }} className="delete" onClick={() => this.handleOnRemoveProductFromOrderList(productOrder, productOrderIndex, true)}><span className="icon-undo"></span></div>
+                  }
                 </div>
                 <div className="product-order-item-detail">
                   <div className="detail-row-1">
                     <this.InputNumber
                       name={`quantity[${productOrderIndex}]`}
-                      label={<this.Translate id="text_quantity"/> }
+                      label={productOrder.status === this.Enum.ACTIVE ? <this.Translate id="text_quantity" /> : <this.Translate id="text_return_quantity" /> }
                       data={productOrder.quantity}
-                      handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "quantity")}
+                      handleKeyUp={event => this.handleOnChangOrderField(event, productOrderIndex, "quantity")}
                       handleOnBlur={this.handleOnChangOrderFieldBlur}
                       className="ca-input-v1 order-quantity"
                       isHideTool={true}
@@ -1081,36 +1097,28 @@ export default class Retail extends Component {
                       precision={2}
                       isAutoSelect={true}
                       isHideTool={true}
-                      disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW}
-                      form={this.props.form}/>
+                      disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW || productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN}
+                      form={this.props.form}
+                    />
                     <this.InputNumber
                       name={`discount[${productOrderIndex}]`}
                       label={<span><this.Translate id="text_discount"/> (%)</span>}
                       data={productOrder.discount}
-                      handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "discount")}
+                      handleKeyUp={event => this.handleOnChangOrderField(event, productOrderIndex, "discount")}
                       handleOnBlur={this.handleOnChangOrderFieldBlur}
                       className="ca-input-v1"
                       precision={2}
                       isAutoSelect={true}
                       isHideTool={true}
-                      disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW}
-                      form={this.props.form} />
+                      disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW || productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN}
+                      form={this.props.form}
+                    />
                     {/* <div className="detail-inventory">
                 <span className="icon-help icon-padding-right"></span>Show Inventories & Details
               </div> */}
                   </div>
-                  {this.fieldNotation(productOrderIndex,productOrder)}
-                    {/* <div className="detail-row-2">
-                      <this.InputText
-                        name={`description[${productOrderIndex}]`}
-                        label={<this.Translate id="text_notation"/>}
-                        data={productOrder.description}
-                        className="ca-input-v1"
-                        handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "description")}
-                        placeholder={this.CATranslate("text_add_notation", this.props.locale)}
-                        form={this.props.form}/>
-                    </div> */}
-                  </div> 
+                  {this.fieldNotation(productOrderIndex, productOrder)}
+                  </div>
               </div>
             )
           }

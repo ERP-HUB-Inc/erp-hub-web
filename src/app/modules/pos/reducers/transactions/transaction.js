@@ -99,7 +99,9 @@ export default combineReducers({
     const constants = [
       Constant.RETURN_TRANSACTION_PENDING,
       Constant.RETURN_TRANSACTION_REJECTED,
-      Constant.RETURN_TRANSACTION_FULFILLED
+      Constant.RETURN_TRANSACTION_FULFILLED,
+      null,
+      Constant.RESET_RETURN_TRANSACTION
     ];
     return reducer.update(state, action, constants);
   }

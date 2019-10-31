@@ -136,7 +136,7 @@ export default class List extends Component {
         if (this.action) {
           this.props.dispatch(this.action.fetch(this.pageSize));   
         }
-      }, 200);
+      }, 100);
     });
   }
 

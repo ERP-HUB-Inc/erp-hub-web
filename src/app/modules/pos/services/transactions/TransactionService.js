@@ -17,12 +17,10 @@ class TransactionService extends BaseService {
     });
   }
 
-  returnTransaction(data){
+  returnTransaction(referenceId, data){
     return this.PUT({
-      url: `${this.baseUrl}/return/${data.id}`,
-      data: {
-        ...data
-      },
+      url: `${this.baseUrl}/return/${referenceId}`,
+      data,
       headers: this.header
     });
   }

@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import RetailSaleForm,{mapStateToProps} from "../../../../pos/containers/transactions/SaleWalkin";
+import RetailSaleForm, { mapStateToProps } from "../../../../pos/containers/transactions/SaleWalkin";
 import FormReturn from "../../../components/transactions/SaleHistory/Return";
 
 class ReturnForm extends RetailSaleForm {
@@ -16,6 +16,7 @@ function mapStateToPropsChild(state) {
   return {
     ...mapStateToProps(state),
     transactionDetail: state.reducer.transaction.detail,
+    transactionReturn: state.reducer.transaction.returnTransaction,
     customer: state.reducer.customer.add,
     initialValues: state.reducer.quotation.update.data,
     locale: state.locale

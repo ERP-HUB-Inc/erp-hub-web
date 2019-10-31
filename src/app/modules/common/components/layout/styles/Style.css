@@ -938,3 +938,9 @@ color: #4D4F5C;
     background-color: #093163;
     color: white;
 }
+
+/* Sweet alert */
+.swal-button {
+    border-radius: 3px !important;
+    text-transform: uppercase
+}

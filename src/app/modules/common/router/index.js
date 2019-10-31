@@ -42,7 +42,7 @@ class Router extends Component {
         </Offline>
         <Headers />
         <SideBar />
-        <Content className={`layoutContent${window.location.pathname === "/transactions/saleorder" ? "full-screen" : ""}`} id="center-container">
+        <Content className={`layoutContent${window.location.pathname === "/transactions/pos" ? "full-screen" : ""}`} id="center-container">
           <Switch>
             {
               Object.keys(dataSource).map((key) => 

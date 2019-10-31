@@ -59,11 +59,11 @@ export default {
       });
     };
   },
-  returnTransaction: (data, id) => {
+  returnTransaction: (referenceId, data) => {
     return dispatch => {
       return dispatch({
         type: Constant.RETURN_TRANSACTION,
-        payload: TransactionService.returnTransaction(data)
+        payload: TransactionService.returnTransaction(referenceId, data)
       });
     };
   }

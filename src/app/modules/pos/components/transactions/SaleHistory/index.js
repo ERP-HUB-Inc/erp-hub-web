@@ -80,6 +80,14 @@ export default class SaleHistoryList extends List {
         sorter: true
       },
       {
+        title: <this.Translate id="text_reference_no" />,
+        dataIndex: "referenceNo",
+        key: "referenceNo",
+        width: 150,
+        sorter: true,
+        render: referenceNo => referenceNo ? referenceNo : this.emptyText
+      },
+      {
         title: <this.Translate id="text_type" />,
         dataIndex: "type",
         key: "type",
@@ -166,7 +174,7 @@ export default class SaleHistoryList extends List {
         align: "center",
         width: 100,
         render: (text, record) => {
-          return <this.Button className="mg-right text-uppercase" style={{ backgroundColor: "#1890ff", color: "white" }}  onClick={() => this.handleReturn(record, this.state.selectedRows)}>
+          return <this.Button className="info mg-right text-uppercase"  onClick={() => this.handleReturn(record, this.state.selectedRows)}>
             <span className="icon-sale-return icon-padding-right"></span>
             <this.Translate id="text_return" />
           </this.Button>;
@@ -233,7 +241,7 @@ export default class SaleHistoryList extends List {
 
 
     if(this.state.isRequestReturn && this.props.detail.data){
-      history.push("/transactions/salehistory-return");
+      history.push("/transactions/return");
       this.setState({
         isRequestReturn: false
       });
@@ -364,15 +372,15 @@ export default class SaleHistoryList extends List {
     return data.total - data.totalExcludeTax;
   }
 
-  handleReturn(rowData){
+  handleReturn(rowData) {
     if(rowData.step === Enum.TRANSACTION_STEP.PAID || rowData.step === Enum.TRANSACTION_STEP.CREDIT){
       this.props.dispatch(TransactionAction.detail({id: rowData.id}));
       this.setState({
         loadingPopup: true,
         isRequestReturn: true
       });
-    }else{
-      this.Message.warning(this.CATranslate("text_error_allow_return", this.props.locale));
+    } else {
+      this.MessageV2.warning(this.CATranslate("text_error_allow_return", this.props.locale));
     }
   }
 
@@ -384,9 +392,9 @@ export default class SaleHistoryList extends List {
       });
 
       if (selectLength === 0 && this.state.selectedListIds) {
-        this.Message.error(this.CATranslate("text_reprint_warning_1", this.props.locale));
+        this.MessageV2.warning(this.CATranslate("text_reprint_warning_1", this.props.locale));
       } else if (selectLength > 1) {
-        this.Message.error(this.CATranslate("text_reprint_warning_2", this.props.locale));
+        this.MessageV2.warning(this.CATranslate("text_reprint_warning_2", this.props.locale));
       } else {
         this.props.dispatch(TransactionAction.detail({id: this.state.selectedListIds[0]}));
       }
@@ -401,9 +409,9 @@ export default class SaleHistoryList extends List {
         isRequestReceivePayment: true
       });
     }else if(selectLength > 1){
-      this.Message.warning(this.CATranslate("text_allow_select_one_record", this.props.locale));
+      this.MessageV2.warning(this.CATranslate("text_allow_select_one_record", this.props.locale));
     }else{
-      this.Message.warning(this.CATranslate("text_please_select_record", this.props.locale));
+      this.MessageV2.warning(this.CATranslate("text_please_select_record", this.props.locale));
     }
    
   }

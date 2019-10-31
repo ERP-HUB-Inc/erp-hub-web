@@ -55,7 +55,7 @@ export default class ClientSignIn extends Component {
       if (setting &&
         setting.currentUser &&
         setting.currentUser.roleCode === this.Enum.CASHIER_ROLE) {
-        history.push("/transactions/saleorder");
+        history.push("/transactions/pos");
       } else {
         history.push("/");
       }

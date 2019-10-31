@@ -4,6 +4,18 @@ export default {
     "សកម្មភាព",
     "Action"
   ],
+
+  "text_warning_info": [
+    "Warning Information",
+    "ព័ត៏មានបញ្ជាក់",
+    "Warning Information"
+  ],
+
+  "text_error_info": [
+    "Error Information",
+    "ព័ត៏មានកំហុស",
+    "Error Information"
+  ],
   
   "text_no": [
     "No",
@@ -572,8 +584,14 @@ export default {
   
   "text_return": [
     "Return",
-    "បង្វិលវិញ",
+    "បង្វិលជូនវិញ",
     "Return"
+  ],
+
+  "text_ok": [
+    "ok",
+    "យល់ព្រម",
+    "ok"
   ],
   
   "text_returned": [

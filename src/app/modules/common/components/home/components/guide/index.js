@@ -98,7 +98,7 @@ export default class Duide extends Component {
                 <span className="icon-arrow-right arrow"></span>
               </li>
               <li>
-                <this.Link to="transactions/saleorder">
+                <this.Link to="transactions/pos">
                   <span className="icon-sale"></span>
                 </this.Link>
                 <div className="grap-guide-title grap-title">6. <this.Translate id="home_page_guide_sale"/></div>

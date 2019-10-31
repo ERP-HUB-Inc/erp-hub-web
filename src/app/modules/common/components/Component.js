@@ -64,7 +64,8 @@ import
   WeekPickers,
   Doughnut,
   Line,
-  C3Chart
+  C3Chart,
+  MessageV2
 } from "../elements/ant-ui";
 import {
   BreadcrumbTitle,
@@ -117,6 +118,7 @@ export default class Component extends React.Component {
     this.SubTable = SubTable;
     this.Button = Button;
     this.Message = message;
+    this.MessageV2 = MessageV2;
     this.Alert = Alert;
     this.Popconfirm = Popconfirm;
     this.Modal = Modal;
