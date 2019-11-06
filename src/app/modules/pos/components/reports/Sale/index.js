@@ -36,6 +36,8 @@ export default class SaleList extends List {
           let variantName = "";
           if (record.productOption === Enum.PRODUCT_VARIANT) {
             variantName = ` / ${record.variant}`;
+          } else {
+            variantName = record.variant;
           }
           return record.name + variantName;
         }
@@ -52,7 +54,10 @@ export default class SaleList extends List {
         dataIndex: "user",
         key: "user",
         width: 200,
-        className: "sale-report"
+        className: "sale-report",
+        render: (user, record) => {
+          return `${record.firstName}${record.lastName ? " " + record.lastName + ":" + user : ":" + user}`
+        }
       },
       {
         title: <this.Translate id="text_customer" />,

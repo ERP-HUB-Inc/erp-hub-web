@@ -38,7 +38,7 @@ export default class DropDownSearch extends Modal {
 
     if (this.props.callBack && this.props.productSearch.fetched) {
       this.props.callBack(this.props.productSearch.list, this.state.isScanBarcode ? false : true); // productList, isRequestVariantForm
-      this.props.dispatch(ProductAction.reset(Constant.SEARCH_PRODUCT_RESET_PARTIAL));
+      // this.props.dispatch(ProductAction.reset(Constant.SEARCH_PRODUCT_RESET_PARTIAL));
 
       if (this.state.isScanBarcode) {
         this.setState({ isScanBarcode: false });
@@ -256,7 +256,7 @@ export default class DropDownSearch extends Modal {
           avgTimeByChar={40}
           endChar={[13]}
           timeBeforeScanTest={200}
-          onKeyDetect={() => console.log("Hello World")}
+          // onKeyDetect={() => console.log("Hello World")}
         />
         <div className="main-searchs">
           <div className="search-icon icon-add-product"></div>
@@ -278,7 +278,7 @@ export default class DropDownSearch extends Modal {
             this.props.isShowBarcodeScannerIcon ?
               <div style={{ display: this.state.isFocusOnSearchInput ? "flex" : "none" }}>
                 <div className="icon-scaner icon-clear" onClick={this.handleRemoveTextSearch} style={{ right: 30 }}></div>
-                <div className="text-warning-before-scan">
+                <div className="text-warning-before-scan" style={{ display: "none" }}>
                   <this.Alert
                     message={<this.Translate id="text_warning" />}
                     description={<this.Translate id="text_warning_before_scan" />}
@@ -302,7 +302,7 @@ export default class DropDownSearch extends Modal {
             form={this.props.form}/>
         </this.Col>
         {
-          this.state.visibleDropDown && this.props.productSearch.fetched?
+          this.state.visibleDropDown && this.props.productSearch.fetched ?
             <div className="wrap-dropdown-search-product">
           
               <this.List

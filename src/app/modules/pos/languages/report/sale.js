@@ -11,7 +11,7 @@ export default {
   ],
   "text_cost_of_good": [
     "Cost of Goods",
-    "តម្លៃទំនិញ",
+    "ថ្លៃដើមទំនិញ",
     "Cost of Goods"
   ],
   "text_gross_profit": [
