@@ -11,8 +11,6 @@ if (process.env.REACT_APP_ENV === "DEV") {
   registerMiddleWare.push(createLogger());
 }
 
-registerMiddleWare.push(createLogger());
-
 const middleware = applyMiddleware(...registerMiddleWare);
 
 const configureStore = () => createStore(combineReducers({ locale, reducer }), middleware);
