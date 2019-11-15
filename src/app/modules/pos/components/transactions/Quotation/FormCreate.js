@@ -159,7 +159,7 @@ export default class Form extends Retail {
     history.push("/transactions/quotation");
   }
 
-  saleOrderHeader(){
+  saleOrderHeader = () => {
     return <this.Row className="wrap-receipt-type">
       <this.Col md="12" className="receipt-type">
         <div className="pull-left park-receipt" onClick={this.handleViewQuotation}>
