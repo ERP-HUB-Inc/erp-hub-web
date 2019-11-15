@@ -24,7 +24,7 @@ export default class QuotationList extends List {
       handleUpdateForm: false,
       quotationStatus: false,
       ...this.state
-    }
+    };
     this.QUOTATION_STEP_STR = {
       [Enum.QUOTATION_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color:"warning"},
       [Enum.QUOTATION_STEP.PROCESS]: {name: <this.Translate id="text_process" />, color:"processing"},
@@ -202,7 +202,7 @@ export default class QuotationList extends List {
 
   handleCancelQuotation(record){
     if(record.status === Enum.QUOTATION_STEP.DRAFT){
-      let status = { status: Enum.QUOTATION_STEP.CANCEL, id: record.id }
+      let status = { status: Enum.QUOTATION_STEP.CANCEL, id: record.id };
       this.props.dispatch(QuotationAction.update(status)); 
     }else{
       this.Message.warning(this.CATranslate("text_error_allow_cancel_only_draft_step", this.props.locale));
@@ -220,47 +220,47 @@ export default class QuotationList extends List {
 
     const fetchingProps = this.props[this.fetchingProp];
     return form == null ?
-        ""
-        :
-        <this.Form onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout">
-            <this.Col md="2">
-              <this.InputText
-                name="key"
-                label={<this.Translate id="text_search" />}
-                placeholder={this.CATranslate("text_general", locale)}
-                isAutoFocus={true}
-                form={form} />
-            </this.Col>
-             <this.Col md="2">
-              <this.Select
-                  name="customerId"
-                  label={<this.Translate id="text_customer" /> }
-                  dataSource={this.customerList.concat(this.props.customer.list)}
-                  defaultValue={this.customerList[0].id}
-                  valueKey="id"
-                  nameKey="firstName"
-                  concatNameKey="lastName"
-                  form={form} />
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="step"
-                label={<this.Translate id="text_step" />}
-                dataSource={QuotationStepList}
-                defaultValue={QuotationStepList[1].value}
-                form={form} />
-            </this.Col>
-            <this.Col md="2" className="wrap-btn-search">
-              <div className="ant-form-item-label" style={{visibility: "hidden"}}>
-                <label htmlFor="status" className="" title=""><this.Translate id="text_filter" /></label>
-              </div>
-              <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-              </this.Button>
-            </this.Col>
-          </this.Row>
-        </this.Form>;
+      ""
+      :
+      <this.Form onSubmit={this.handleSubmitFilter}>
+        <this.Row className="main-search-layout">
+          <this.Col md="2">
+            <this.InputText
+              name="key"
+              label={<this.Translate id="text_search" />}
+              placeholder={this.CATranslate("text_general", locale)}
+              isAutoFocus={true}
+              form={form} />
+          </this.Col>
+          <this.Col md="2">
+            <this.Select
+              name="customerId"
+              label={<this.Translate id="text_customer" /> }
+              dataSource={this.customerList.concat(this.props.customer.list)}
+              defaultValue={this.customerList[0].id}
+              valueKey="id"
+              nameKey="firstName"
+              concatNameKey="lastName"
+              form={form} />
+          </this.Col>
+          <this.Col md="2">
+            <this.Select
+              name="step"
+              label={<this.Translate id="text_step" />}
+              dataSource={QuotationStepList}
+              defaultValue={QuotationStepList[1].value}
+              form={form} />
+          </this.Col>
+          <this.Col md="2" className="wrap-btn-search">
+            <div className="ant-form-item-label" style={{visibility: "hidden"}}>
+              <label htmlFor="status" className="" title=""><this.Translate id="text_filter" /></label>
+            </div>
+            <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+              <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+            </this.Button>
+          </this.Col>
+        </this.Row>
+      </this.Form>;
   }
 
   getProductOrderList(data) {
@@ -293,17 +293,17 @@ export default class QuotationList extends List {
   componentDidUpdate(){
     if(this.props.quotationDetail.data && this.state.isRequestPrint){
       let listProduct = this.getProductOrderList(this.props.quotationDetail.data);
-        this.setState({
-          modalConten: <Detail
-            receiptContent={ 
-              <QuotationA4 
-                data={this.props.quotationDetail.data} 
-                receiptTemplate={this.props.receiptTemplate}
-                productList={listProduct} />}
-                dispatch={this.props.dispatch} 
-            />,
-            isRequestPrint: false
-        });
+      this.setState({
+        modalConten: <Detail
+          receiptContent={ 
+            <QuotationA4 
+              data={this.props.quotationDetail.data} 
+              receiptTemplate={this.props.receiptTemplate}
+              productList={listProduct} />}
+          dispatch={this.props.dispatch} 
+        />,
+        isRequestPrint: false
+      });
     }
     
     if(this.state.isNotYetLoadComponentDidUpdated && this.props.quotationDetail.fetching && this.state.handleUpdateForm){

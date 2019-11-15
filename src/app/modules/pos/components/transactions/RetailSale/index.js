@@ -767,9 +767,9 @@ export default class Retail extends Component {
 
   renderOutOfStock(product){
     return(
-        Util.countProductQTYCurrentLocation(product, this.Util.getLocationId()) <= 0 && product.serialType !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY ?
-          <div className="out-of-stock"><this.Translate id="text_out_of_stock" /></div>
-          : 
+      Util.countProductQTYCurrentLocation(product, this.Util.getLocationId()) <= 0 && product.serialType !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY ?
+        <div className="out-of-stock"><this.Translate id="text_out_of_stock" /></div>
+        : 
         ""
     );  
   }
@@ -803,31 +803,31 @@ export default class Retail extends Component {
     this.productWidth = productWidth;
 
     return countProduct > 0 ?
-        this.state.productList.map((product, index) =>
-          <this.Col style={{width: productWidth, maxWidth: "none", flex: "none"}} md="3" className="product-box" key={index}>
-            <div onClick={() => this.handleOnSelectProduct(product, product.productVariants)} className="product" style={{height: productWidth}}>
-              <div className="image" style={{minHeight: imageHeight, maxHeight: imageHeight}}>
-                <this.Image style={{maxHeight: imageHeight}} url={this.Util.processImageOnFlightCropCenter(this.Util.getProductImage(product.image).url, {height: imageHeight, width: imageWidth})}/>
-              </div>
-              {this.renderOutOfStock(product)}
-              <div style={{maxHeight: 20, overflow: "hidden", wordBreak: "break-all"}}>
-                <div className="name">
-                  {
-                    product.productDescriptions.length > 0 ?
-                      product.productDescriptions[0].name
-                      :
-                      ""
-                  }
-                </div>
-              </div>
-              <div className="price">{this.formatCurrency(Util.getProductPrice(product))}</div>
+      this.state.productList.map((product, index) =>
+        <this.Col style={{width: productWidth, maxWidth: "none", flex: "none"}} md="3" className="product-box" key={index}>
+          <div onClick={() => this.handleOnSelectProduct(product, product.productVariants)} className="product" style={{height: productWidth}}>
+            <div className="image" style={{minHeight: imageHeight, maxHeight: imageHeight}}>
+              <this.Image style={{maxHeight: imageHeight}} url={this.Util.processImageOnFlightCropCenter(this.Util.getProductImage(product.image).url, {height: imageHeight, width: imageWidth})}/>
             </div>
-          </this.Col>
-        )
-        :
-        <div style={{display: "flex", alignItems: "center", margin: "0 auto", height: "100%"}}>
-          <img src={`${this.Util.getGeneralImage("storeVein/no-product-found.png").url}`} style={{width: 150}}  alt=""/>
-        </div>;
+            {this.renderOutOfStock(product)}
+            <div style={{maxHeight: 20, overflow: "hidden", wordBreak: "break-all"}}>
+              <div className="name">
+                {
+                  product.productDescriptions.length > 0 ?
+                    product.productDescriptions[0].name
+                    :
+                    ""
+                }
+              </div>
+            </div>
+            <div className="price">{this.formatCurrency(Util.getProductPrice(product))}</div>
+          </div>
+        </this.Col>
+      )
+      :
+      <div style={{display: "flex", alignItems: "center", margin: "0 auto", height: "100%"}}>
+        <img src={`${this.Util.getGeneralImage("storeVein/no-product-found.png").url}`} style={{width: 150}}  alt=""/>
+      </div>;
   }
 
   renderSaveAndPayButton = () => (
@@ -927,7 +927,7 @@ export default class Retail extends Component {
       </div>
       <this.Col md="8" id="left-block">
 
-          {this.saleOrderHeader()}
+        {this.saleOrderHeader()}
 
 
         <this.Row className="wrap-category">
@@ -1015,9 +1015,9 @@ export default class Retail extends Component {
         <div className="product-order-list">
           {
             this.state.productOrderList.map((productOrder, productOrderIndex) => 
-            productOrder.status === this.Enum.ARCHIVE ? "" :
-              <div className={`product-order-item ${this.state.expandOrderItemRow.includes(`${productOrder.productVariantId}-${productOrder.status}`) ? "expanded" : ""}`} key={productOrderIndex}>
-                <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+              productOrder.status === this.Enum.ARCHIVE ? "" :
+                <div className={`product-order-item ${this.state.expandOrderItemRow.includes(`${productOrder.productVariantId}-${productOrder.status}`) ? "expanded" : ""}`} key={productOrderIndex}>
+                  <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                     <div className="item" onClick={() => this.handleExpandOrderItem(productOrder.productVariantId, productOrderIndex, productOrder.status)}>
                       <div className={`epxand-icon ${this.state.expandOrderItemRow.includes(`${productOrder.productVariantId}-${productOrder.status}`) ? "icon-move-down" : "icon-next"}`}></div>
                       <div className="description">
@@ -1034,28 +1034,28 @@ export default class Retail extends Component {
                             ""
                         }
 
-                          {
-                            productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN ?
-                              <div className="barcode-number return-order variant-name">
-                                <this.Translate id="text_return" />
-                              </div>
-                              :
-                              ""
-                          }
+                        {
+                          productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN ?
+                            <div className="barcode-number return-order variant-name">
+                              <this.Translate id="text_return" />
+                            </div>
+                            :
+                            ""
+                        }
                       </div>
                       <div className="quantity">
-                          {
-                            productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN ?
+                        {
+                          productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN ?
                             productOrder.quantity > 0 ? `-${productOrder.quantity}` : productOrder.quantity
                             :
                             `${productOrder.quantity}x`
-                          }
+                        }
                       </div>
                       <div className="price">
                         {
                           productOrder.discount > 0 ?
                             <div className="after-discount-price">
-                                {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity, productOrder[this.state.customerFieldPrice], productOrder.discount))}
+                              {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity, productOrder[this.state.customerFieldPrice], productOrder.discount))}
                             </div>
                             :
                             ""
@@ -1064,62 +1064,62 @@ export default class Retail extends Component {
                           {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder[this.state.customerFieldPrice]))}
                         </div>
                       </div>
-                  </div>
-                  {
-                    productOrder.status === this.Enum.ACTIVE ?
+                    </div>
+                    {
+                      productOrder.status === this.Enum.ACTIVE ?
                         <div className="delete" onClick={() => this.handleOnRemoveProductFromOrderList(productOrder, productOrderIndex)}><span className="icon-delete"></span></div>
                         :
                         <div style={{ visibility: "hidden" }} className="delete" onClick={() => this.handleOnRemoveProductFromOrderList(productOrder, productOrderIndex, true)}><span className="icon-undo"></span></div>
-                  }
-                </div>
-                <div className="product-order-item-detail">
-                  <div className="detail-row-1">
-                    <this.InputNumber
-                      name={`quantity[${productOrderIndex}]`}
-                      label={productOrder.status === this.Enum.ACTIVE ? <this.Translate id="text_quantity" /> : <this.Translate id="text_return_quantity" /> }
-                      data={productOrder.quantity}
-                      handleKeyUp={event => this.handleOnChangOrderField(event, productOrderIndex, "quantity")}
-                      handleOnBlur={this.handleOnChangOrderFieldBlur}
-                      className="ca-input-v1 order-quantity"
-                      isHideTool={true}
-                      precision={0}
-                      isAutoSelect={true}
-                      isAutoFocus={true}
-                      didUpdateMakeAutoFocus={this.state.expandRowOrderIndex === productOrderIndex}
-                      form={this.props.form}/>
-                    <this.InputNumber
-                      name={`price[${productOrderIndex}]`}
-                      label={<this.Translate id="text_price" />}
-                      data={POSUtil.getTotalAmountAfterDiscount(1, productOrder[this.state.customerFieldPrice], productOrder.discount)}
-                      handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "newPrice")}
-                      handleOnBlur={this.handleOnChangOrderFieldBlur}
-                      className="ca-input-v1"
-                      precision={2}
-                      isAutoSelect={true}
-                      isHideTool={true}
-                      disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW || productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN}
-                      form={this.props.form}
-                    />
-                    <this.InputNumber
-                      name={`discount[${productOrderIndex}]`}
-                      label={<span><this.Translate id="text_discount"/> (%)</span>}
-                      data={productOrder.discount}
-                      handleKeyUp={event => this.handleOnChangOrderField(event, productOrderIndex, "discount")}
-                      handleOnBlur={this.handleOnChangOrderFieldBlur}
-                      className="ca-input-v1"
-                      precision={2}
-                      isAutoSelect={true}
-                      isHideTool={true}
-                      disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW || productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN}
-                      form={this.props.form}
-                    />
-                    {/* <div className="detail-inventory">
+                    }
+                  </div>
+                  <div className="product-order-item-detail">
+                    <div className="detail-row-1">
+                      <this.InputNumber
+                        name={`quantity[${productOrderIndex}]`}
+                        label={productOrder.status === this.Enum.ACTIVE ? <this.Translate id="text_quantity" /> : <this.Translate id="text_return_quantity" /> }
+                        data={productOrder.quantity}
+                        handleKeyUp={event => this.handleOnChangOrderField(event, productOrderIndex, "quantity")}
+                        handleOnBlur={this.handleOnChangOrderFieldBlur}
+                        className="ca-input-v1 order-quantity"
+                        isHideTool={true}
+                        precision={0}
+                        isAutoSelect={true}
+                        isAutoFocus={true}
+                        didUpdateMakeAutoFocus={this.state.expandRowOrderIndex === productOrderIndex}
+                        form={this.props.form}/>
+                      <this.InputNumber
+                        name={`price[${productOrderIndex}]`}
+                        label={<this.Translate id="text_price" />}
+                        data={POSUtil.getTotalAmountAfterDiscount(1, productOrder[this.state.customerFieldPrice], productOrder.discount)}
+                        handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "newPrice")}
+                        handleOnBlur={this.handleOnChangOrderFieldBlur}
+                        className="ca-input-v1"
+                        precision={2}
+                        isAutoSelect={true}
+                        isHideTool={true}
+                        disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW || productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN}
+                        form={this.props.form}
+                      />
+                      <this.InputNumber
+                        name={`discount[${productOrderIndex}]`}
+                        label={<span><this.Translate id="text_discount"/> (%)</span>}
+                        data={productOrder.discount}
+                        handleKeyUp={event => this.handleOnChangOrderField(event, productOrderIndex, "discount")}
+                        handleOnBlur={this.handleOnChangOrderFieldBlur}
+                        className="ca-input-v1"
+                        precision={2}
+                        isAutoSelect={true}
+                        isHideTool={true}
+                        disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW || productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN}
+                        form={this.props.form}
+                      />
+                      {/* <div className="detail-inventory">
                 <span className="icon-help icon-padding-right"></span>Show Inventories & Details
               </div> */}
+                    </div>
+                    {this.fieldNotation(productOrderIndex, productOrder)}
                   </div>
-                  {this.fieldNotation(productOrderIndex, productOrder)}
-                  </div>
-              </div>
+                </div>
             )
           }
         </div>

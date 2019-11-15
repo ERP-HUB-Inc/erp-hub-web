@@ -16,7 +16,7 @@ module.exports = {
     "rules": {
         "semi": ["error", "always"],
         "quotes": ["error", "double"],
-        "no-trailing-whitespace": true,
+        "no-trailing-whitespace": 0,
         // "eslint-disable no-script-url": true,
         "indent": [
             "error",

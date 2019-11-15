@@ -98,7 +98,7 @@ class ClientRegister extends Component {
       this.props.clientRegister.step === 1 ? 
         <ParentLayout>
           <div className="title">
-            <h6>Start Register with Us</h6>
+            <h6>Start Register with us</h6>
           </div>
           <this.Form onSubmit={this.handleSubmit}>
             <this.InputEmail

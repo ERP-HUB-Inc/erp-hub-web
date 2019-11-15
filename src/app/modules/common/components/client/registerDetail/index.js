@@ -89,7 +89,6 @@ class ClientRegister extends Component {
   render() {
     let {
       currencies,
-      languages,
       businessTypes,
       businessPlans
     } = this.props;
@@ -206,9 +205,10 @@ class ClientRegister extends Component {
           <this.Select 
             name="languageId" 
             label="Language"
-            defaultValue={languages.list.length > 0 ? languages.list[0].id : ""}
-            dataSource={languages.list}
-            valueKey="id"
+            defaultValue="km"
+            // dataSource={languages.list}
+            dataSource={[{ name: "Khmer", code: "km" }, { name: "English", code: "en" }, { name: "Burma", code: "bm" }]}
+            valueKey="code"
             nameKey="name"
             placeholder="Please select language"
             form={this.props.form} />

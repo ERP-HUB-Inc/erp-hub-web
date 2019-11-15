@@ -27,7 +27,7 @@ export default class RegisterComplete extends Component {
           </ul>
           <ul className="main-register-complete">
             <li>Private URL:</li>
-            <li><b>{clientRegister.response.data.storeName}.storevein.com</b></li>
+            <li><a href={`http://${clientRegister.response.data.storeName}.storevein.com`}><b>{clientRegister.response.data.storeName}.storevein.com</b></a></li>
           </ul>
           <ul className="main-register-complete">
             <li>Your Full Name:</li>
