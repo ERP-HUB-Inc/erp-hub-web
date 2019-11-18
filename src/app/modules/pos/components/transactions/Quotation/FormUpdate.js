@@ -15,15 +15,15 @@ export default class Form extends Retail {
     constructor(props){
         super(props);
         this.state = {
-          ...this.state,
-          isOutOfStock: false,
-          quotationId: "",
-          productStatus: 0,
-          handleRemove: false,
-          isClickSave: false,
-          isClickProcess: false,
-          isNotYetLoadComponentDidUpdated: true
-        }
+        ...this.state,
+        isOutOfStock: false,
+        quotationId: "",
+        productStatus: 0,
+        handleRemove: false,
+        isClickSave: false,
+        isClickProcess: false,
+        isNotYetLoadComponentDidUpdated: true
+        };
         this.handleSaveQuotation = this.handleSaveQuotation.bind(this);
         this.handleProcessQuotation = this.handleProcessQuotation.bind(this);
         this.handleViewQuotation = this.handleViewQuotation.bind(this);
@@ -36,73 +36,73 @@ export default class Form extends Retail {
         let errorCode = "";
 
         if(this.state.isNotYetLoadComponentDidUpdated){
-            if(quotaionValues){
-                quotaionValues.quotationEntries.forEach((values, index) => {
-                    quotationColletion.push({
-                        id: values.id,
-                        productVariantId: values.productVariant.id,
-                        name: values.productVariant ? Util.getProductName(values.productVariant.product) : "",
-                        unit: values.productVariant && values.productVariant.product ? values.productVariant.product.unit : null,
-                        variantName: values.productVariant.name ? values.productVariant.name : "",
-                        barcode: values.productVariant.barcode,
-                        quantity: values.quantity,
-                        tax: values.tax,
-                        price: values.price,
-                        wholePrice: values.productVariant.wholePrice,
-                        distributePrice: values.productVariant.distributePrice,
-                        discount: values.discount,
-                        taxDescription: {
-                            id: 0,
-                            taxRate: 0,
-                            taxName: "No Tax"
-                        },
-                        status: this.Enum.ACTIVE,
-                        description: values.description,
-                    });
-                    
-                });
-            
-                this.props.form.setFieldsValue({ searchRecord: `${quotaionValues.customer.firstName ? quotaionValues.customer.firstName : "" } ${quotaionValues.customer.lastName ? quotaionValues.customer.lastName : ""}`});
-                this.getSelectedCustomer(this.props.quotationDetail.data.customer);
-               
-                this.setState({
-                    productOrderList: quotationColletion,
-                    isNotYetLoadComponentDidUpdated: false,
-                    quotationId: this.props.quotationDetail.data.id,
-                    isDiscountHasAdded: this.props.quotationDetail.data.discount > 0,
-                    discountValue: {type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: quotaionValues.terms ? quotaionValues.terms : 0 }
-                });
+        if(quotaionValues){
+            quotaionValues.quotationEntries.forEach((values, index) => {
+            quotationColletion.push({
+                id: values.id,
+                productVariantId: values.productVariant.id,
+                name: values.productVariant ? Util.getProductName(values.productVariant.product) : "",
+                unit: values.productVariant && values.productVariant.product ? values.productVariant.product.unit : null,
+                variantName: values.productVariant.name ? values.productVariant.name : "",
+                barcode: values.productVariant.barcode,
+                quantity: values.quantity,
+                tax: values.tax,
+                price: values.price,
+                wholePrice: values.productVariant.wholePrice,
+                distributePrice: values.productVariant.distributePrice,
+                discount: values.discount,
+                taxDescription: {
+                id: 0,
+                taxRate: 0,
+                taxName: "No Tax"
+                },
+                status: this.Enum.ACTIVE,
+                description: values.description,
+            });
+                        
+            });
+                
+            this.props.form.setFieldsValue({ searchRecord: `${quotaionValues.customer.firstName ? quotaionValues.customer.firstName : "" } ${quotaionValues.customer.lastName ? quotaionValues.customer.lastName : ""}`});
+            this.getSelectedCustomer(this.props.quotationDetail.data.customer);
+                
+            this.setState({
+            productOrderList: quotationColletion,
+            isNotYetLoadComponentDidUpdated: false,
+            quotationId: this.props.quotationDetail.data.id,
+            isDiscountHasAdded: this.props.quotationDetail.data.discount > 0,
+            discountValue: {type: Enum.DISCOUNT_TYPE.PERCENTAGE, value: quotaionValues.terms ? quotaionValues.terms : 0 }
+            });
 
-                this.props.dispatch(QuotationAction.reset(Constant.RESET_DETAIL_QUOTATION));
-            }
+            this.props.dispatch(QuotationAction.reset(Constant.RESET_DETAIL_QUOTATION));
+        }
         }
 
         if (this.props.quotationUpdate.updated) {
-            this.setState({
-                isClickSave: false,
-                isClickProcess: false
-            });
-            this.props.dispatch(QuotationAction.reset());
-            history.push("/transactions/quotation");
+        this.setState({
+            isClickSave: false,
+            isClickProcess: false
+        });
+        this.props.dispatch(QuotationAction.reset());
+        history.push("/transactions/quotation");
         }
 
         //is redirect to quotation list if refresh page
         if (this.state.productOrderList.length === 0 && this.props.quotationDetail.fetched === false && this.props.quotationDetail.fetching === false){
-            history.push("/transactions/quotation");
+        history.push("/transactions/quotation");
+        }
+            
+        
+        if (this.props.customer.error) {
+        errorCode = this.Util.getErrorCodeFromState(this.props.customer.error);
         }
         
-       
-        if (this.props.customer.error) {
-            errorCode = this.Util.getErrorCodeFromState(this.props.customer.error);
-        }
-    
         if (errorCode) {
-            let message = "Something went wrong";
-            if (errorCode === EnumCustomer.CUSTOMER_EXIST) {
-                message = this.CATranslate("error_exist_customer", this.props.locale);
-            }
-            this.Message.error(message);
-            this.props.dispatch(CustomerAction.reset(ConstantCustomer.RESET_ADD_CUSTOMERS));
+        let message = "Something went wrong";
+        if (errorCode === EnumCustomer.CUSTOMER_EXIST) {
+            message = this.CATranslate("error_exist_customer", this.props.locale);
+        }
+        this.Message.error(message);
+        this.props.dispatch(CustomerAction.reset(ConstantCustomer.RESET_ADD_CUSTOMERS));
         }
     }
     
@@ -119,41 +119,41 @@ export default class Form extends Retail {
     saveQuotation(status) {
         let productOrderList = this.state.productOrderList;
         if (productOrderList.length > 0) {
-            this.props.form.validateFieldsAndScroll((err, values) => {
+        this.props.form.validateFieldsAndScroll((err, values) => {
 
-                this.Util.clearObjProperty(values, [
-                    "price",
-                    "quantity",
-                    "searchProduct",
-                    "searchRecord"
-                ]);
+            this.Util.clearObjProperty(values, [
+            "price",
+            "quantity",
+            "searchProduct",
+            "searchRecord"
+            ]);
 
-                const {
-                    summaryTotal,
-                    discountAmount,
-                    taxAmount
-                  } = this.getSummaryTotal();
+            const {
+            summaryTotal,
+            discountAmount,
+            taxAmount
+            } = this.getSummaryTotal();
+                    
+
+            values["total"] = POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
+            values["status"] = status;
+            values["name"] = "Quotation";
+            values["totalExcludeTax"] = summaryTotal.subTotalAfterDiscount;
+            values["discount"] = discountAmount;
+            values["terms"] = this.state.discountValue.value;
+            values["Entries"] = productOrderList;
+
+            if(this.state.selectedCustomer && this.state.quotationId) {
+            values["customerId"] = this.state.selectedCustomer.id;
+            values["id"] = this.state.quotationId;
+            this.props.dispatch(QuotationAction.update(values));
+            } else {
+            this.Message.warning(this.CATranslate("text_error_create_quotation", this.props.locale));
+            }
                 
-
-                values["total"] = POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
-                values["status"] = status;
-                values["name"] = "Quotation";
-                values["totalExcludeTax"] = summaryTotal.subTotalAfterDiscount;
-                values["discount"] = discountAmount;
-                values["terms"] = this.state.discountValue.value;
-                values["Entries"] = productOrderList;
-
-                if(this.state.selectedCustomer && this.state.quotationId) {
-                    values["customerId"] = this.state.selectedCustomer.id;
-                    values["id"] = this.state.quotationId;
-                    this.props.dispatch(QuotationAction.update(values));
-                } else {
-                    this.Message.warning(this.CATranslate("text_error_create_quotation", this.props.locale));
-                }
-               
-            });
+        });
         } else {
-            this.Message.warning(this.CATranslate("text_error_not_create_quotation", this.props.locale));
+        this.Message.warning(this.CATranslate("text_error_not_create_quotation", this.props.locale));
         }
     }
     handleOnRemoveProductFromOrderList(values, index) {
@@ -161,44 +161,44 @@ export default class Form extends Retail {
         productOrderList[index]["status"] = this.Enum.ARCHIVE;
         productOrderList[index]["quantity"] = 0;
         this.setState({
-            productOrderList: productOrderList
+        productOrderList: productOrderList
         });
     }
 
-    fieldNotation(index, values) {
-        return <this.InputTextArea
-            name={`description[${index}]`}
-            label={<this.Translate id="text_notation" />}
-            data={values.description}
-            className="ca-input-v1"
-            handleKeyUp={event => this.handleOnChangOrderField(event, index, "description")}
-            placeholder={this.CATranslate("text_add_notation", this.props.locale)}
-            rows={6}
-            form={this.props.form} />;
+    fieldNotation = (index, values) => {
+      return <this.InputTextArea
+        name={`description[${index}]`}
+        label={<this.Translate id="text_notation" />}
+        data={values.description}
+        className="ca-input-v1"
+        handleKeyUp={event => this.handleOnChangOrderField(event, index, "description")}
+        placeholder={this.CATranslate("text_add_notation", this.props.locale)}
+        rows={6}
+        form={this.props.form} />;
     }
 
-    handleViewQuotation() {
-        history.push("/transactions/quotation");
+    handleViewQuotation = () => {
+      history.push("/transactions/quotation");
     }
 
-    saleOrderHeader() {
-        return <this.Row className="wrap-receipt-type">
-            <this.Col md="12" className="receipt-type">
-                <div className="pull-left park-receipt" onClick={this.handleViewQuotation}>
-                    <span className="icon-time icon-padding-right"></span><this.Translate id="text_list_quotation" />
-                </div>
-            </this.Col>
-        </this.Row>;
+    saleOrderHeader = () => {
+      return <this.Row className="wrap-receipt-type">
+        <this.Col md="12" className="receipt-type">
+          <div className="pull-left park-receipt" onClick={this.handleViewQuotation}>
+            <span className="icon-time icon-padding-right"></span><this.Translate id="text_list_quotation" />
+          </div>
+        </this.Col>
+      </this.Row>;
     }
 
-    renderSaveAndPayButton() {
-        return <this.Row className="payment-action">
-            <this.Button type="info" className="mg-right" loading={this.state.isClickSave && this.props.quotationUpdate.updating} onClick={this.handleSaveQuotation}>
-                <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
-            </this.Button>
-            <this.Button type="info" loading={this.state.isClickProcess && this.props.quotationUpdate.updating} onClick={this.handleProcessQuotation}>
-                <span className="icon-checked icon-padding-right"></span><this.Translate id="text_process" />
-            </this.Button>
-        </this.Row>;
+    renderSaveAndPayButton = () => {
+      return <this.Row className="payment-action">
+        <this.Button type="info" className="mg-right" loading={this.state.isClickSave && this.props.quotationUpdate.updating} onClick={this.handleSaveQuotation}>
+          <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
+        </this.Button>
+        <this.Button type="info" loading={this.state.isClickProcess && this.props.quotationUpdate.updating} onClick={this.handleProcessQuotation}>
+          <span className="icon-checked icon-padding-right"></span><this.Translate id="text_process" />
+        </this.Button>
+      </this.Row>;
     }
 }

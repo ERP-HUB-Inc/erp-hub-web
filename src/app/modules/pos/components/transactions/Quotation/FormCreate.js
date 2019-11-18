@@ -140,7 +140,7 @@ export default class Form extends Retail {
         }
         
       });
-    }else{
+    } else {
       this.Message.warning(this.CATranslate("text_error_not_create_quotation", this.props.locale));
     }
   }
@@ -170,7 +170,7 @@ export default class Form extends Retail {
     </this.Row>;
   }
 
-  fieldNotation(index, values) {
+  fieldNotation = (index, values) => {
     return <this.InputTextArea
       name={`description[${index}]`}
       label={<this.Translate id="text_notation" />}

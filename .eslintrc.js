@@ -18,9 +18,9 @@ module.exports = {
         "quotes": ["error", "double"],
         "no-trailing-whitespace": 0,
         // "eslint-disable no-script-url": true,
-        "indent": [
-            "error",
-            2
-        ],
+        // "indent": [
+        //     "error",
+        //     2
+        // ],
     }
 };

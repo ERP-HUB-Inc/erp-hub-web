@@ -63,5 +63,11 @@ export default {
     PROCESS: "#2db7f5",
     CANCEL: "#2DB7F5",
     COMPLETE: "#5BC726"
+  },
+  PAYMENT_METHOD: {
+    CODE: {
+      CASH: "001",
+      CREDIT: "002"
+    }
   }
 };

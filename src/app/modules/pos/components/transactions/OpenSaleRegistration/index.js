@@ -110,36 +110,38 @@ export default class OpenSaleRegistrationList extends List {
       const summaryList = [];
       if (this.isValidOpenSaleRegistrationList()) {
         this.props.paymentMethodList.list.forEach(value => {
-          let expected = 0;
-          let count = 0;
-          if (value.isSystem === this.Enum.IS_SYSTEM) {
-            expected = this.props.openSaleRegistration.list[0].open;
-          }
+          if (value.code === Enum.PAYMENT_METHOD.CODE.CASH) {
+            let expected = 0;
+            let count = 0;
+            if (value.isSystem === this.Enum.IS_SYSTEM) {
+              expected = this.props.openSaleRegistration.list[0].open;
+            }
 
-          // IF OPEN SALE REGISTRATION HAS CLOSED
-          if (this.isOpenSaleRegistrationClosed()) {
-            this.props.openSaleRegistration.list[0].openSaleRegistrationEntries.forEach(openSaleRegistration => {
-              if (openSaleRegistration.paymentMethodId === value.id) {
-                expected = openSaleRegistration.expected;
-                count = openSaleRegistration.count;
-              }
-            });
-          // ELSE OPEN SALE REGISTRATION IS OPENING
-          } else if (this.props.todaySaleSummary.list && Array.isArray(this.props.todaySaleSummary.list)) {
-            this.props.todaySaleSummary.list.forEach(todaySaleSummary => {
-              if (value.id === todaySaleSummary.paymentMethodId) {
-                expected += todaySaleSummary.amount;
-              }
+            // IF OPEN SALE REGISTRATION HAS CLOSED
+            if (this.isOpenSaleRegistrationClosed()) {
+              this.props.openSaleRegistration.list[0].openSaleRegistrationEntries.forEach(openSaleRegistration => {
+                if (openSaleRegistration.paymentMethodId === value.id) {
+                  expected = openSaleRegistration.expected;
+                  count = openSaleRegistration.count;
+                }
+              });
+              // ELSE OPEN SALE REGISTRATION IS OPENING
+            } else if (this.props.todaySaleSummary.list && Array.isArray(this.props.todaySaleSummary.list)) {
+              this.props.todaySaleSummary.list.forEach(todaySaleSummary => {
+                if (value.id === todaySaleSummary.paymentMethodId) {
+                  expected += todaySaleSummary.amount;
+                }
+              });
+            }
+
+            summaryList.push({
+              paymentMethodId: value.id,
+              name: value.name,
+              expected,
+              count,
+              difference: this.parseValueToDiffernece(count - expected)
             });
           }
-
-          summaryList.push({
-            paymentMethodId: value.id,
-            name: value.name,
-            expected,
-            count,
-            difference: this.parseValueToDiffernece(count - expected)
-          });
         });
       }
 
