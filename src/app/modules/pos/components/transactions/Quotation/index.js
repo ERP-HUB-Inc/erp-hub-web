@@ -120,7 +120,7 @@ export default class QuotationList extends List {
   }
 
   componentDidMount(){
-    this.props.dispatch(QuotationAction.fetch(this.pageSize,"","","",JSON.stringify({status: [Enum.QUOTATION_STEP.DRAFT]}),"",""));
+    this.props.dispatch(QuotationAction.fetch(this.pageSize, "", "", "", "", "", ""));
     this.props.dispatch(CustomerAction.fetch(100));
     new Promise(() => {
       this.props.dispatch(ReceiptTemplateAction.default());
