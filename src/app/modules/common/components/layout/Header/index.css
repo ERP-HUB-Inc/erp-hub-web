@@ -78,7 +78,8 @@
     }
 
     .header .header-left {
-        padding-left: 15px
+        padding-left: 15px;
+        cursor: pointer
     }
 
     .header .header-left,
