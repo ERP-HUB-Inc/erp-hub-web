@@ -107,18 +107,8 @@ export default class Form extends Retail {
   }
 
   saveQuotation(status = Enum.QUOTATION_STEP.DRAFT){
-    let productList = [];
-    let productOrderList = this.state.productOrderList;
-    if (productOrderList.length > 0) {
+    if (this.state.productOrderList.length > 0) {
       this.props.form.validateFieldsAndScroll((err, values) => {
-        productOrderList.forEach((values, index) => {
-          productList.push({
-            productVariantId: values.productVariantId,
-            quantity: values.quantity,
-            price: this.props.form.getFieldValue(`price[${index}]`),
-            description: this.props.form.getFieldValue(`description[${index}]`)
-          });
-        });
 
         this.Util.clearObjProperty(values, [
           "discount",
@@ -140,7 +130,7 @@ export default class Form extends Retail {
         values["totalExcludeTax"] = summaryTotal.subTotalAfterDiscount;
         values["discount"] = discountAmount;
         values["terms"] = this.state.discountValue.value;
-        values["Entries"] = productList;
+        values["Entries"] = this.state.productOrderList;
                 
         if(this.state.selectedCustomer){
           values["customerId"] = this.state.selectedCustomer.id;

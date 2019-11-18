@@ -8,21 +8,21 @@ import SaleHistory from "../../../../pos/components/transactions/SaleHistory";
 
 export default class SaleOrder extends SaleHistory {
   constructor(props){
-      super(props);
-      this.state = {
-        ...this.state,
-        transectionId: ""
-      }
-      this.module = "stocks";
-      this.action = TransactionAction;
-      this.service = TransactionService;
-      this.columns.splice(2, 1);
-      this.columns.splice(this.columns.length - 1,1);
+    super(props);
+    this.state = {
+      ...this.state,
+      transectionId: ""
+    };
+    this.module = "stocks";
+    this.action = TransactionAction;
+    this.service = TransactionService;
+    this.columns.splice(2, 1);
+    this.columns.splice(this.columns.length - 1,1);
   }
 
   componentDidMount(){
     this.requestSubDataAsync();
-    const filter = {step: [Enum.TRANSACTION_STEP.PROCESS]}
+    const filter = {step: [Enum.TRANSACTION_STEP.PROCESS]};
     this.props.dispatch(TransactionAction.fetch(this.pageSize, "", "", "", JSON.stringify(filter), "", ""));
   }
 
@@ -83,9 +83,9 @@ export default class SaleOrder extends SaleHistory {
   }
   
   componentWillUpdate(nextProps) {
-    let status = {status: [Enum.TRANSACTION_STEP.PROCESS]}
+    let status = { step: [Enum.TRANSACTION_STEP.PROCESS] };
     if (nextProps.updateReceivePayment.updated) {
-      this.props.dispatch(TransactionAction.fetch(this.pageSize,"","","",JSON.stringify(status),"",""));
+      this.props.dispatch(TransactionAction.fetch(this.pageSize, "", "", "", JSON.stringify(status), "", ""));
       nextProps.dispatch(ReceivePaymentAction.reset());
     }
   } 
@@ -115,7 +115,7 @@ export default class SaleOrder extends SaleHistory {
           <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
         </this.Button> 
       </this.Col>
-    )
+    );
   }
 
   renderFilterType(){}

@@ -248,7 +248,7 @@ export default class QuotationList extends List {
               name="step"
               label={<this.Translate id="text_step" />}
               dataSource={QuotationStepList}
-              defaultValue={QuotationStepList[1].value}
+              defaultValue={QuotationStepList[0].value}
               form={form} />
           </this.Col>
           <this.Col md="2" className="wrap-btn-search">
