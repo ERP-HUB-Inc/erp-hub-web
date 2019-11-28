@@ -464,10 +464,10 @@ export default class FormItem extends Modal {
                           <this.Select
                             name="taxId"
                             label={<this.Translate id="input_product_tax" />}
+                            placeholder={this.CATranslate("input_product_tax", locale)}
                             valueKey="id"
                             dataSource={this.state.taxs}
-                            defaultValue={formData.id !== null && formData.productTaxes.length > 0 ? formData.productTaxes[0].taxId : currentUser.setting.defaultTaxId}
-                            addNew={this.props.handleAddTax}
+                            defaultValue={formData.taxId}
                             form={form} />
                         </this.Col>
 
@@ -685,7 +685,6 @@ FormItem.defaultProps = {
     productAttributes: [],
     productPackageToProduct: [],
     productDescriptions:[],
-    productTaxes: [],
     status: 1
   },
   tagList: []

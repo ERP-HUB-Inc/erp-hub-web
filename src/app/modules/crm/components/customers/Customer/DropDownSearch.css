@@ -42,8 +42,9 @@
 }
 
 .wrap-dropdown-search-ca .right-description .customer-code {
-    font-size: 10pt;
-    color: #4D4F5C
+    font-size: 7pt;
+    color: #4D4F5C;
+    margin-top: 4px
 }
 
 .wrap-dropdown-search-ca .right-description .ant-tag {
@@ -51,9 +52,11 @@
     font-size: 7pt;
     font-weight: 600;
     margin-right: 0;
-    padding-right: 25px;
-    padding-left: 25px;
-    margin-top: 12px
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-top: 12px;
+    height: 20px;
+    line-height: 19px
 }
 
 .wrap-dropdown-search-ca .list-search {

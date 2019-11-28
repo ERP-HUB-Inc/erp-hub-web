@@ -76,10 +76,10 @@ export default class InputNumber extends Element {
           getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.data})(
             <this.InputNumber
               ref={(input) => { this.nameInput = input; }}
-              // formatter={value => `${value}`.replace(this.props.formatter, ",")}
-              // parser={value => parseInt(value)}
               placeholder={this.props.placeholder}
               disabled={this.props.disabled}
+              min={this.props.min}
+              max={this.props.max}
               step={this.props.step}
               precision={this.props.precision}
               onChange={this.handleNumberChange}

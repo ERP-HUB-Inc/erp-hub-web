@@ -1016,18 +1016,23 @@ export default class Retail extends Component {
                     <div className="item" onClick={() => this.handleExpandOrderItem(productOrder.productVariantId, productOrderIndex, productOrder.status)}>
                       <div className={`epxand-icon ${this.state.expandOrderItemRow.includes(`${productOrder.productVariantId}-${productOrder.status}`) ? "icon-move-down" : "icon-next"}`}></div>
                       <div className="description">
-                        <div className="name">{productOrder.name}</div>
-                        {/* <div className="barcode-number">
-                          {<this.Translate id="text_product_code"/>}: {productOrder.barcode}
-                        </div> */}
+                        <div style={{ maxHeight: "20px", maxWidth: "160px", overflow: "hidden", wordBreak: "break-all" }}>
+                          <div className="name">
+                            {productOrder.name}
+                          </div>
+                        </div>
                         {
                           productOrder.variantName ?
-                            <div className="barcode-number variant-name">
+                            <div className="barcode-number variant-name" style={{ marginTop: 5 }}>
                               {productOrder.variantName}
                             </div>
                             :
                             ""
                         }
+
+                        <div className="barcode-number" style={{ marginTop: 5 }}>
+                          {<this.Translate id="text_product_code"/>}: {productOrder.barcode}
+                        </div>
 
                         {
                           productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN ?
@@ -1076,7 +1081,8 @@ export default class Retail extends Component {
                         handleKeyUp={event => this.handleOnChangOrderField(event, productOrderIndex, "quantity")}
                         handleOnBlur={this.handleOnChangOrderFieldBlur}
                         className="ca-input-v1 order-quantity"
-                        isHideTool={true}
+                        min={0}
+                        // isHideTool={true}
                         precision={0}
                         isAutoSelect={true}
                         isAutoFocus={true}

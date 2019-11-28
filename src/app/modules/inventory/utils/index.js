@@ -18,10 +18,9 @@ class Util {
   getProductNameV2(product) {
     const currentLanguageCode = (new SettingUtil()).getCurrentLanguageCode();
     if (currentLanguageCode === "en") {
-      return `${product.name}${product.namekm ? (product.name ? " / " : product.name) + product.namekm : ""}`;
+      return `${product.name ? product.name : ""}${product.namekm ? (product.name ? " / " : "") + product.namekm : ""}`;
     } else if (currentLanguageCode === "km") {
-
-      return `${product.namekm}${product.name ? (product.namekm ? " / " : "") + product.name : ""}`;
+      return `${product.namekm ? product.namekm : ""}${product.name ? (product.namekm ? " / " : "") + product.name : ""}`;
     }
     
   }

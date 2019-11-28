@@ -1,5 +1,6 @@
 import React from "react";
 import $ from "jquery";
+import Enum from "../../../enum";
 import CustomerAction from "../../../actions/customers/customer";
 import Constant from "../../../constants/customers/customer";
 import Modal from "../../../../common/components/shares/Modal";
@@ -16,6 +17,12 @@ export default class DropDownSearch extends Modal {
 
     this.scrollTop = 0;
     this.timer = null;
+
+    this.customerType = {
+      [Enum.CUSTOMER_TYPE.RETAIL_SALE]: { name: <this.Translate id="text_retail_sale" /> , value: Enum.CUSTOMER_TYPE.RETAIL_SALE },
+      [Enum.CUSTOMER_TYPE.WHOLE_SALE]: { name: <this.Translate id="text_whole_sale" /> , value: Enum.CUSTOMER_TYPE.WHOLE_SALE },
+      [Enum.CUSTOMER_TYPE.DISTRIBUTOR]: { name: <this.Translate id="text_distributor" /> , value: Enum.CUSTOMER_TYPE.DISTRIBUTOR }
+    };
 
     this.handleKeyDownOnSearch = this.handleKeyDownOnSearch.bind(this);
     this.handlePressEnterOnSearch = this.handlePressEnterOnSearch.bind(this);
@@ -149,7 +156,7 @@ export default class DropDownSearch extends Modal {
                 <span className="text-uppercase">{record.phoneNumber}</span>
                 <div className="right-description">
                   {
-                    record.number ? <div className="customer-code">{record.number}</div> : ""
+                    record.number ? <div className="customer-code">{this.customerType[record.type].name}</div> : ""
                   }
                   <this.Tag color="#FFD627" className="text-uppercase">{record.groupCustomer ? record.groupCustomer.name : "general" }</this.Tag>
                 </div>

@@ -236,6 +236,10 @@
     text-align: right
 }
 
+#retail-sale .product-order-list .product-order-item-detail .detail-row-1 .order-quantity input {
+    text-align: left
+}
+
 #retail-sale .product-order-list .product-order-item .epxand-icon {
     width: 30px;
     font-size: 8pt
@@ -247,7 +251,7 @@
 #retail-sale .product-order-list .product-order-item-detail .ant-form-item-label label,
 #retail-sale .product-order-list .product-order-item-detail input {
     font-size: 11pt;
-    font-weight: 600;
+    font-weight: 500;
     color: #093163
 }
 
@@ -256,7 +260,7 @@
 }
 
 #retail-sale .product-order-list .product-order-item .barcode-number {
-    font-size: 7pt;
+    font-size: 8.5pt;
 }
 
 #retail-sale .product-order-list .product-order-item .price {

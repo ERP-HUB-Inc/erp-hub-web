@@ -204,10 +204,10 @@ class Util {
     let taxId = 0;
     let taxRate = 0;
     let taxName = "";
-    if (product["productTaxes"] && product["productTaxes"].length > 0) {
-      taxId = product["productTaxes"][0].id;
-      taxRate = product["productTaxes"][0].rate;
-      taxName = this.getTaxDescription(product["productTaxes"][0]);
+    if (product.taxId) {
+      taxId = product.taxId;
+      taxRate = product.tax.rate;
+      taxName = product.tax.labelOnInvoice;
     }
     return {
       id: taxId,

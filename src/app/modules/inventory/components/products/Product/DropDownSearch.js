@@ -38,7 +38,6 @@ export default class DropDownSearch extends Modal {
 
     if (this.props.callBack && this.props.productSearch.fetched) {
       this.props.callBack(this.props.productSearch.list, this.state.isScanBarcode ? false : true); // productList, isRequestVariantForm
-      // this.props.dispatch(ProductAction.reset(Constant.SEARCH_PRODUCT_RESET_PARTIAL));
 
       if (this.state.isScanBarcode) {
         this.setState({ isScanBarcode: false });
@@ -109,7 +108,7 @@ export default class DropDownSearch extends Modal {
   }
 
   handleSearchProduct = (value, isSearchingBarcode = false) => {
-    const searchKey = JSON.stringify({ column: ["name", "barcode"], value });
+    const searchKey = JSON.stringify({ column: ["name", "namekm", "namebm", "barcode"], value });
     this.props.dispatch(ProductAction.search(100, 0, "", "", this.props.filter, searchKey, this.props.searchFor, isSearchingBarcode));
   }
 
@@ -163,14 +162,12 @@ export default class DropDownSearch extends Modal {
   }
 
   renderSearchItem = (product) => {
-    const {productDescriptions} = product;
-    const barcode = product.productVariants.length > 0 ? product.productVariants[0].barcode : "";
-    return (
-      <this.List.Item.Meta
+    const barcode = Util.getProductBarcode(product);
+    return <this.List.Item.Meta
         avatar={
           <this.Image url={this.Util.getProductImage(product.image).url}/>
         }
-        title={productDescriptions.length > 0 ? productDescriptions[0].name : ""}
+        title={Util.getProductNameV2(product)}
         description={
           <div>
             {
@@ -184,10 +181,6 @@ export default class DropDownSearch extends Modal {
             {
               product.productOption === Enum.PRODUCT_VARIANT ?
                 ""
-                // product.productVariants.length > 0 ?
-                //   <div className="variant">{product.productVariants.length} {product.productVariants.length > 1 ? <this.Translate id="text_variants"/> : <this.Translate id="text_variant"/>}</div>
-                //   :
-                //   <div className="price">{this.formatCurrency(product.price)}</div>
                 :
                 <div className="product-stock">
                   <div>
@@ -200,49 +193,8 @@ export default class DropDownSearch extends Modal {
             }
           </div>
         }
-        // title={
-        //   <this.Row>
-        //     <this.Col md="4">
-        //       {productDescriptions.length > 0 ? productDescriptions[0].name : ""}
-        //     </this.Col>
-        //   </this.Row>
-        // }
-        // description={
-        //   <this.Row className="wrap-description">
-        //     <this.Col md="4" className="text-uppercase">
-        //       <this.Translate id="text_product_code"/>: {barcode}
-        //     </this.Col>
-        //     <this.Col md="4">
-        //       <div className="center-description">
-        //         <div className="product-stock">{<this.Translate id="text_product_in_stock"/>}</div>
-        //         <div className="product-stock-status">
-        //           <div className="current-stock">
-        //             <div className="title">{<this.Translate id="text_current"/>}</div>
-        //             <div className="quantity">{Util.countProductQTYCurrentLocation(product, this.Util.getLocationId())}</div>
-        //           </div>
-        //           <div className="other-stock">
-        //             <div className="title">{<this.Translate id="text_other"/>}</div>
-        //             <div className="quantity">{Util.countProductQTYOtherLocation(product, this.Util.getLocationId())}</div>
-        //           </div>
-        //         </div>
-        //       </div>
-        //     </this.Col>
-        //     {
-        //       product.productOption === Enum.PRODUCT_VARIANT ?
-        //         <this.Col md="4" className="right-description">
-        //           {
-        //             product.productVariants.length > 0 ?
-        //               <div className="variant">{product.productVariants.length} {product.productVariants.length > 1 ? <this.Translate id="text_variants"/> : <this.Translate id="text_variant"/>}</div>
-        //               :
-        //               <div className="price">{this.formatCurrency(product.price)}</div>
-        //           }
-        //         </this.Col>
-        //         :
-        //         ""
-        //     }
-        //   </this.Row>}
-      />
-    );
+        
+      />;
   }
 
   render() {
