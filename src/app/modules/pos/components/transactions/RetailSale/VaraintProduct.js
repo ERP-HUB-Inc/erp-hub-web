@@ -142,7 +142,7 @@ export default class VariantProduct extends Modal {
         {
           this.props.productAttributes.fetched ?
             <this.Col md="12" className="variant-breadcrumb">
-              <div className="ant-modal-title">{Util.getProductName(this.props.product)}</div>
+              <div className="ant-modal-title">{Util.getProductNameV2(this.props.product)}</div>
               <this.Breadcrumb separator=">">
                 { this.props.productAttributes.list.map((attribute, attributeIndex) => this.renderBreadCrumb(attribute, attributeIndex)) }
               </this.Breadcrumb>

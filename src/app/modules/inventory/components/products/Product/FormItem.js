@@ -30,9 +30,6 @@ export default class FormItem extends Modal {
       isSetFocusBarcode: false,
       isComponentNotYetUpdated: true,
       isComponentNotYetLoadedWillUpdate: true,
-      productDescriptionIdDefault: "",
-      productNameDefault: "",
-      productDescriptionDefault: "",
       productOptionClassDisabled: ""
     };
 
@@ -92,8 +89,6 @@ export default class FormItem extends Modal {
 
     this.onChange = this.onChange.bind(this);
     this.onCangeIsAutoGenerateCode = this.onCangeIsAutoGenerateCode.bind(this);
-    this.onChangeProductName = this.onChangeProductName.bind(this);
-    this.onChangeDefaultDescription = this.onChangeDefaultDescription.bind(this);
     this.onChangeTab = this.onChangeTab.bind(this);
     this.getProductImageFromCallBack = this.getProductImageFromCallBack.bind(this);
     this.handleChangeType = this.handleChangeType.bind(this);
@@ -111,22 +106,6 @@ export default class FormItem extends Modal {
   }
 
   componentWillUpdate(nextProps) {
-    if (nextProps.formData.productDescriptions.length > 0 && this.state.isComponentNotYetLoadedWillUpdate) {
-      let currentLanguageDescription = nextProps.formData.productDescriptions.find(value => value.languageId === this.getCurrentLanguageCode());
-      if (!currentLanguageDescription) {
-        currentLanguageDescription = {};
-        currentLanguageDescription["id"] = "";
-        currentLanguageDescription["name"] = "";
-        currentLanguageDescription["description"] = "";
-      }
-      this.setState({
-        productDescriptionIdDefault: currentLanguageDescription.id,
-        productNameDefault: currentLanguageDescription.name,
-        productDescriptionDefault: currentLanguageDescription.description,
-        isComponentNotYetLoadedWillUpdate: false
-      });
-    }
-
     // APEND DATA WHEN ADD MORE IN SELECT LIST
     if (nextProps.brandAdd.response) {
       this.setState({brands: [nextProps.brandAdd.response.data, ...this.state.brands]});
@@ -225,82 +204,12 @@ export default class FormItem extends Modal {
     this.props.dispatch(ProductAction.switchTypeOfGenerateSKU(e.target.value));
   }
 
-  onChangeProductName(e) {
-    this.setState({
-      productNameDefault: e.target.value
-    });
-  }
-
   handleChangeType(value) {
     if (value === Enum.TYPE_OF_PRODUCT.RAW_MATERIAL) {
       this.setState({productOptionClassDisabled: "disabled-click"});
     } else {
       this.setState({productOptionClassDisabled: ""});
     }
-  }
-
-  onChangeDefaultDescription(e) {
-    this.setState({
-      productDescriptionDefault: e.target.value
-    });
-  }
-
-  renderDescription(language, languagesIndex) {
-    const {locale, form, formData} = this.props;
-    let productDescriptionId = "",
-      productName = "",
-      productDescription = "";
-    
-    formData.productDescriptions.forEach(productDescription => {
-      if (language.code === productDescription.languageId) {
-        productDescriptionId = productDescription.id;
-        productName = productDescription.name;
-        productDescription = productDescription.description;
-      }
-    });
-
-    if (languagesIndex === 0) {
-      productDescriptionId = this.state.productDescriptionIdDefault;
-      productName = this.state.productNameDefault;
-      productDescription = this.state.productDescriptionDefault;
-    }
-
-    return (
-      <this.TabPane tab={this.getLanguageIcon(language.code)} key={languagesIndex}>
-        <this.Row className="wrapRowContentTab">
-          <this.InputText 
-            name={`language[${languagesIndex}]`} 
-            className="hidden"
-            data={language.code}
-            form={form} />
-          <this.InputText 
-            name={`id[${languagesIndex}]`} 
-            className="hidden"
-            data={productDescriptionId}
-            form={form} />
-          <this.Col md="12">
-            <this.InputText
-              name={`productName[${languagesIndex}]`}
-              data={productName}
-              label={<this.Translate id="text_product_name" />}
-              placeholder={this.CATranslate("text_product_name", locale)}
-              onChange={languagesIndex === 0 ? this.onChangeProductName : null}
-              max={100}
-              form={form}/>
-          </this.Col>
-          <this.Col md="12">
-            <this.InputTextArea
-              name={`productDescription[${languagesIndex}]`}
-              data={productDescription}
-              label={<this.Translate id="text_description" />}
-              placeholder={this.CATranslate("text_description", locale)}
-              onChange={languagesIndex === 0 ? this.onChangeDefaultDescription : null}
-              max={255}
-              form={form}/>
-          </this.Col>
-        </this.Row>
-      </this.TabPane>
-    );
   }
 
   render() {
@@ -355,23 +264,18 @@ export default class FormItem extends Modal {
               <this.Row>
                 <this.Col md="4">
                   <this.InputText
-                    name="productNameDefault"
-                    label={<this.Translate id="text_name" />}
-                    data={this.state.productNameDefault}
-                    placeholder={this.CATranslate("text_name", locale)}
+                    name={`name${this.Util.getProductNameField(this.Util.getCurrentLanguageCode())}`}
+                    label={<this.Translate id="text_product_name" />}
+                    data={formData[`name${this.Util.getProductNameField(this.Util.getCurrentLanguageCode())}`]}
+                    placeholder={this.CATranslate("text_product_name", locale)}
                     errorRequired={<this.Translate id="error_require_name" />}
                     errorLenght={<this.Translate id="input_error_products_name" />}
-                    onChange={this.onChangeProductName}
                     isAutoFocus={true}
                     required={true}
                     max={255}
                     min={0}
-                    form={form}/>
-                  <this.InputText
-                    name="productDescriptionId"
-                    data={this.state.productDescriptionIdDefault}
-                    className="hidden"
-                    form={form}/>
+                    form={form}
+                    suffix={this.getLanguageIcon(this.Util.getCurrentLanguageCode())}/>
                 </this.Col>
 
                 <this.Col md="4">
@@ -501,30 +405,39 @@ export default class FormItem extends Modal {
                 </this.Col>
 
                 <this.Col md="4">
-                  <this.Select
-                    name="taxId"
-                    label={<this.Translate id="input_product_tax" />}
-                    valueKey="id"
-                    dataSource={this.state.taxs}
-                    defaultValue={formData.id !== null && formData.productTaxes.length > 0 ? formData.productTaxes[0].taxId : currentUser.setting.defaultTaxId}
-                    addNew={this.props.handleAddTax}
-                    form={form}/>
+                  <this.InputNumber
+                    name="price"
+                    label={<span><this.Translate id="text_retial_price" /><span> ({currentUser.setting.currency})</span></span>}
+                    data={Util.getProductPrice(formData)}
+                    isAutoSelect={true}
+                    placeholder={this.CATranslate("input_product_price_placeholder", locale)}
+                    errorRequired={<this.Translate id="error_require_price" />}
+                    max={99999999}
+                    form={form} />
                 </this.Col>
 
-                <this.Col md="4" style={{display: "flex", alignItems: "center", paddingTop: 20}}>
-                  <this.Switchs
-                    name="isAvialableSale"
-                    label={<this.Translate id="input_product_is_avialable_sale" />}
-                    checked={formData.isAvialableSale}
-                    form={form}/>
+                <this.Col md="4">
+                  <this.InputNumber
+                    name="wholePrice"
+                    label={<span><this.Translate id="text_whole_price" /><span> ({currentUser.setting.currency})</span></span>}
+                    data={Util.getProductWholeSalePrice(formData)}
+                    isAutoSelect={true}
+                    placeholder={this.CATranslate("input_product_price_placeholder", locale)}
+                    errorRequired={<this.Translate id="error_require_price" />}
+                    max={99999999}
+                    form={form} />
                 </this.Col>
 
-                <this.Col md="4" style={{display: "flex", alignItems: "center", paddingTop: 20}}>
-                  <this.Switchs
-                    name="isPublic"
-                    label={<this.Translate id="input_product_is_publish" />}
-                    checked={formData.isPublic}
-                    form={form}/>
+                <this.Col md="4">
+                  <this.InputNumber
+                    name="distributePrice"
+                    label={<span><this.Translate id="text_distribute_price" /><span> ({currentUser.setting.currency})</span></span>}
+                    data={Util.getProductDistributePrice(formData)}
+                    isAutoSelect={true}
+                    placeholder={this.CATranslate("input_product_price_placeholder", locale)}
+                    errorRequired={<this.Translate id="error_require_price" />}
+                    max={99999999}
+                    form={form} />
                 </this.Col>
 
                 {/* <this.Col md="12">
@@ -543,23 +456,21 @@ export default class FormItem extends Modal {
                     form={form} />
                 </this.Col> */}
 
-                <this.Col md="12" style={{display: "none"}}>
-                  <this.InputTextArea
-                    name="productDescriptionDefault"
-                    label={<this.Translate id="text_description" />}
-                    data={this.state.productDescriptionDefault}
-                    placeholder={this.CATranslate("text_description", locale)}
-                    handleOnChange={this.onChangeDefaultDescription}
-                    max={255}
-                    form={form}/>
-                </this.Col>
-
                 <this.Col md="12" className="main-product-collapse">
                   <this.Collapse bordered={false}>
-                    <this.Panel header={<this.Translate id="text_view_cost_detail" />} key="1">
-
+                    <this.Panel style={{ color: "red" }} header={<this.Translate id="text_view_cost_detail" />} key="1">
                       <this.Row>
-                     
+                        <this.Col md="4">
+                          <this.Select
+                            name="taxId"
+                            label={<this.Translate id="input_product_tax" />}
+                            valueKey="id"
+                            dataSource={this.state.taxs}
+                            defaultValue={formData.id !== null && formData.productTaxes.length > 0 ? formData.productTaxes[0].taxId : currentUser.setting.defaultTaxId}
+                            addNew={this.props.handleAddTax}
+                            form={form} />
+                        </this.Col>
+
                         <this.Col md="4">
                           <this.InputNumber
                             name="factoryCost"
@@ -608,42 +519,22 @@ export default class FormItem extends Modal {
                       </this.Row>  
 
                     </this.Panel>
-                  </this.Collapse>,
+                  </this.Collapse>
                 </this.Col>
 
-                <this.Col md="4">
-                  <this.InputNumber
-                    name="price"
-                    label={<span><this.Translate id="text_retial_price" /><span> ({currentUser.setting.currency})</span></span>}
-                    data={Util.getProductPrice(formData)}
-                    isAutoSelect={true}
-                    placeholder={this.CATranslate("input_product_price_placeholder", locale)}
-                    errorRequired={<this.Translate id="error_require_price" />}
-                    max={99999999}
-                    form={form}/>
-                </this.Col>
-
-                <this.Col md="4">
-                  <this.InputNumber
-                    name="wholePrice"
-                    label={<span><this.Translate id="text_whole_price" /><span> ({currentUser.setting.currency})</span></span>}
-                    data={Util.getProductWholeSalePrice(formData)}
-                    isAutoSelect={true}
-                    placeholder={this.CATranslate("input_product_price_placeholder", locale)}
-                    errorRequired={<this.Translate id="error_require_price" />}
-                    max={99999999}
+                <this.Col md="4" style={{ display: "flex", alignItems: "center", paddingTop: 20 }}>
+                  <this.Switchs
+                    name="isAvialableSale"
+                    label={<this.Translate id="input_product_is_avialable_sale" />}
+                    checked={formData.isAvialableSale}
                     form={form} />
                 </this.Col>
 
-                <this.Col md="4">
-                  <this.InputNumber
-                    name="distributePrice"
-                    label={<span><this.Translate id="text_distribute_price" /><span> ({currentUser.setting.currency})</span></span>}
-                    data={Util.getProductDistributePrice(formData)}
-                    isAutoSelect={true}
-                    placeholder={this.CATranslate("input_product_price_placeholder", locale)}
-                    errorRequired={<this.Translate id="error_require_price" />}
-                    max={99999999}
+                <this.Col md="4" style={{ display: "flex", alignItems: "center", paddingTop: 20 }}>
+                  <this.Switchs
+                    name="isPublic"
+                    label={<this.Translate id="input_product_is_publish" />}
+                    checked={formData.isPublic}
                     form={form} />
                 </this.Col>
 
@@ -718,10 +609,26 @@ export default class FormItem extends Modal {
             </this.Col>
           </this.Row>
         </this.TabPane>
-        <this.TabPane tab={<this.Translate id="text_description" />} key="2">
-          <this.Tabs type="card" className="tab-item-language">
-            {this.state.languages.map((language, languagesIndex) => this.renderDescription(language, languagesIndex))}
-          </this.Tabs>
+        <this.TabPane tab={<this.Translate id="text_language" />} key="2">
+          {
+            this.state.languages.map((language, languagesIndex) =>
+              language.code !== this.Util.getCurrentLanguageCode() ?
+              <this.Row key={languagesIndex}>
+                <this.Col md="4">
+                  <this.InputText
+                    name={`name${this.Util.getProductNameField(language.code)}`}
+                    data={formData[`name${this.Util.getProductNameField(language.code)}`]}
+                    label={<this.Translate id="text_product_name" />}
+                    placeholder={this.CATranslate("text_product_name", locale)}
+                    max={255}
+                    form={this.props.form}
+                    suffix={this.getLanguageIcon(language.code)} />
+                </this.Col>
+              </this.Row>
+              :
+              ""
+            )
+          }
         </this.TabPane>
         {
           formData.id ?

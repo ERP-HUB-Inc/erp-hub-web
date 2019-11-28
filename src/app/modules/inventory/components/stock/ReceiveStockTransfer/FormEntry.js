@@ -112,7 +112,7 @@ export default class FormEntry extends Modal {
         let variantName = "";
         
         if (transferEntry.productVariant) {
-          productName = Util.getProductName(transferEntry.productVariant.product);
+          productName = Util.getProductNameV2(transferEntry.productVariant.product);
           variantName = transferEntry.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? transferEntry.productVariant.name : "";
         }
 

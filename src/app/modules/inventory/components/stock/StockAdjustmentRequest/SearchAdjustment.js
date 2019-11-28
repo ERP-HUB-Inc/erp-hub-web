@@ -154,7 +154,7 @@ export default class SearchAdjustmentRequest extends Modal {
         let currentQty = 0;
         
         if (stockAdjustmentRequest.productVariant) {
-          productName = Util.getProductName(stockAdjustmentRequest.productVariant.product);
+          productName = Util.getProductNameV2(stockAdjustmentRequest.productVariant.product);
           variantName = stockAdjustmentRequest.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? stockAdjustmentRequest.productVariant.name : "";
           currentQty = stockAdjustmentRequest.currentQuantity;
         }
@@ -267,7 +267,7 @@ export default class SearchAdjustmentRequest extends Modal {
       }
     }
 
-    const productName = Util.getProductName(product);
+    const productName = Util.getProductNameV2(product);
     const adjustQuantity = 0;
     const {quantity} = productVariant;
     const existingProductList = this.state.productLists;

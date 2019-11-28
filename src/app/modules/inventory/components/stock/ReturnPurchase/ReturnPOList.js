@@ -108,7 +108,7 @@ export default class ReceivedPO extends Modal {
         let variantName = "";
         
         if (purchaseOrderEntry.productVariant) {
-          productName = Util.getProductName(purchaseOrderEntry.productVariant.product);
+          productName = Util.getProductNameV2(purchaseOrderEntry.productVariant.product);
           variantName = purchaseOrderEntry.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? purchaseOrderEntry.productVariant.name : "";
         }
 

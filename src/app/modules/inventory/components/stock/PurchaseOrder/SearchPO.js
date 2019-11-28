@@ -176,7 +176,7 @@ export default class SearchPo extends Modal {
       let price = 0;
       let quantity = 0;
       
-      productName = Util.getProductName(productVariant.product);
+      productName = Util.getProductNameV2(productVariant.product);
   
       productLists.push({
         purchaseEntryId: "",
@@ -211,7 +211,7 @@ export default class SearchPo extends Modal {
         let quantityOnHand = 0;
         
         if (purchaseOrderEntry.productVariant) {
-          productName = Util.getProductName(purchaseOrderEntry.productVariant.product);
+          productName = Util.getProductNameV2(purchaseOrderEntry.productVariant.product);
           variantName = purchaseOrderEntry.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? purchaseOrderEntry.productVariant.name : "";
           quantityOnHand = purchaseOrderEntry.productVariant.quantity;
         }
@@ -330,7 +330,7 @@ export default class SearchPo extends Modal {
       productVariant.name = isProductVariant && productVariant ? productVariant.name : ""; // Remove product variant name away from label table
     }
 
-    const productName = Util.getProductName(product);
+    const productName = Util.getProductNameV2(product);
 
     const {quantity} = productVariant;
     const existingProductList = this.state.productLists;

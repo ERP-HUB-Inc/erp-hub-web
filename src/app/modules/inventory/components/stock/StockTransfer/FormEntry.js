@@ -149,7 +149,7 @@ export default class FormEntry extends Modal {
         let allQuantity = 0;
         
         if (transferEntry.productVariant) {
-          productName = Util.getProductName(transferEntry.productVariant.product);
+          productName = Util.getProductNameV2(transferEntry.productVariant.product);
           variantName = transferEntry.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? transferEntry.productVariant.name : "";
           allQuantity = transferEntry.productVariant.quantity;
         }
@@ -236,7 +236,7 @@ export default class FormEntry extends Modal {
       productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
     }
 
-    const productName = Util.getProductName(product);
+    const productName = Util.getProductNameV2(product);
 
     const {quantity} = productVariant;
     const existingProductList = this.state.productLists;

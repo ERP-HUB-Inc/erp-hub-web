@@ -208,3 +208,8 @@
 .main-product-collapse {
     margin-bottom: -20px;
 }
+
+.main-product-collapse .ant-collapse-header {
+    color: #40586d;
+    font-weight: 500;
+}

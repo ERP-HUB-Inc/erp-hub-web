@@ -41,7 +41,9 @@ export default class InputText extends Element {
               validator: this.props.validator
             }
           ],
-          initialValue: this.props.data})(<this.Input type={this.props.type}
+          initialValue: this.props.data})(<this.Input
+            suffix={this.props.suffix}
+            type={this.props.type}
             ref={(input) => { this.nameInput = input; }}
             placeholder={this.props.placeholder}
             autoComplete={this.props.autoComplete}

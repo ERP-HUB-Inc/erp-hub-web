@@ -50,7 +50,7 @@ export default class ProductList extends List {
     this.props.dispatch(BrandAction.fetch(100));
     this.props.dispatch(LocationAction.fetch(100));
   }
-
+  
   componentDidUpdate() {
     if (this.props.purchaseOrder.added) {
       History.push("/stock/purchase/order");
@@ -68,7 +68,7 @@ export default class ProductList extends List {
         }
 
         getAllProductReport.push({
-          productDescriptions: `${InventoryUtil.getProductName(productReport.product)} ${variantName}`,
+          productDescriptions: `${InventoryUtil.getProductNameV2(productReport.product)} ${variantName}`,
           barcode: productReport.barcode ? productReport.barcode : this.emptyCell,
           type: productReport.type === Enum.TYPE_OF_PRODUCT.GOOD ? this.CATranslate("input_product_good", this.props.locale) : this.CATranslate("input_product_raw_material", this.props.locale) ,
           quantity: productReport.quantity,
@@ -192,9 +192,7 @@ export default class ProductList extends List {
           </this.Form>
         </div>
     );
-
   }
-
 }
 
 
@@ -214,7 +212,7 @@ class Column extends List {
           if (record.product && record.product.productOption === Enum.PRODUCT_VARIANT) {
             variantName = ` / ${record.name}`;
           }
-          return InventoryUtil.getProductName(record.product) + variantName;
+          return InventoryUtil.getProductNameV2(record.product) + variantName;
         }
       },
       {

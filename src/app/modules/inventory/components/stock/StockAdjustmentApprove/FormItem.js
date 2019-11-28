@@ -127,7 +127,7 @@ export default class FormItem extends Modal {
         let currentQty = 0;
         
         if (stockApprove.productVariant) {
-          productName = Util.getProductName(stockApprove.productVariant.product);
+          productName = Util.getProductNameV2(stockApprove.productVariant.product);
           variantName = stockApprove.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? stockApprove.productVariant.name : "";
           currentQty = stockApprove.currentQuantity;
         }

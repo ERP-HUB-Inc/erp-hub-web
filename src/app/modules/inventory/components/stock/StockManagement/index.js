@@ -1,5 +1,6 @@
 import React from "react";
 import List from "../List";
+import Util from "../../../utils";
 import Enum from "../../../enums";
 import Constant from "../../../constants/stock/stockManagement";
 import StockManagementAction from "../../../actions/stock/stockManagement";
@@ -96,7 +97,7 @@ class Column extends List {
         title: <this.Translate id="text_product_name" />,
         key: "productName",
         width: 250,
-        render: (text, record, index) => record.productDescriptions.length > 0 ?  record.productDescriptions[0].name : this.emptyCell,
+        render: (text, record) => Util.getProductNameV2(record),
         sorter: true
       },
       {

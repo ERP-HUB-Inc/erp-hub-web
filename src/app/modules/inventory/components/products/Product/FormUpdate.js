@@ -135,26 +135,6 @@ export default class Form extends Modal {
           });
         }
 
-        // PREPARE DATA FROM DESCRIPTION
-        const productDescriptions = [];
-
-        if (values.productName) {
-          values.productName.forEach((productName, index) => {
-            productDescriptions.push({
-              id: values.id[index],
-              languageId: values.language[index],
-              name: productName,
-              description: values.productDescription[index]
-            });
-          });
-        } else {
-          productDescriptions.push({
-            id: values["productDescriptionId"],
-            languageId: this.getCurrentLanguageCode(),
-            name: values["productNameDefault"],
-            description: values["productDescriptionDefault"]
-          });
-        }
 
         this.Util.clearObjProperty(values, [
           "variantProductCode",
@@ -164,10 +144,6 @@ export default class Form extends Modal {
           "attributeId",
           "productName",
           "language",
-          "productDescription",
-          "productDescriptionId",
-          "productNameDefault",
-          "productDescriptionDefault",
           "productCompositeId",
           "productCompositeProductId",
           "productCompositeMarkUp",
@@ -186,7 +162,6 @@ export default class Form extends Modal {
         values["distributePrice"] = values["distributePrice"] ? values["distributePrice"] : 0;
         values["taxes"] = [{taxId: values["taxId"]}];
         values["productTags"] = this.state.tagList;
-        values["descriptions"] = productDescriptions;
         values["attributes"] = this.state.productArchiveAttributes.concat(this.state.productAttributes);
         values["variantProducts"] = this.state.productArchiveVariants.concat(this.state.productVariants);
         values["productPackages"] = productPackageToProduct;

@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { Util as SettingUtil } from "../../common/util";
 class Util {
   getProductName(product) {
     if (product === null)
@@ -12,6 +13,17 @@ class Util {
     } else {
       return "";
     }
+  }
+
+  getProductNameV2(product) {
+    const currentLanguageCode = (new SettingUtil()).getCurrentLanguageCode();
+    if (currentLanguageCode === "en") {
+      return `${product.name}${product.namekm ? (product.name ? " / " : product.name) + product.namekm : ""}`;
+    } else if (currentLanguageCode === "km") {
+
+      return `${product.namekm}${product.name ? (product.namekm ? " / " : "") + product.name : ""}`;
+    }
+    
   }
 
   getStatus(product) {

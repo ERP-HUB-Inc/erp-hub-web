@@ -516,12 +516,11 @@ class Column extends List {
     return [
       {
         title: <this.Translate id="text_product_name" />,
-        key: "productDescriptions",
-        render: (text, record) => {
-          const productName = Util.getProductName(record);
+        dataIndex: "name",
+        key: "name",
+        render: (name, record) => {
           return <div>
-            <div>{productName ? productName: this.emptyCell}</div>
-            {/* <div className="barcode-number text-uppercase"><this.Translate id="text_product_code"/>: {record.barcode}</div> */}
+            {Util.getProductNameV2(record, this.Util.getCurrentLanguageCode())}
           </div>;
         }
       },

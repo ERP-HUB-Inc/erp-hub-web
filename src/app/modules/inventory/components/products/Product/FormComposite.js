@@ -70,7 +70,7 @@ export default class FormComposite extends Modal {
         if (productPackage.status === this.Enum.ACTIVE) {
           existingCompositeList.push({
             id: productPackage.id,
-            productName: Util.getProductName(productPackage.product),
+            productName: Util.getProductNameV2(productPackage.product),
             productCode: Util.getProductBarcode(productPackage.product),
             productCompositeProductId: productPackage.rawProductId,
             markup: productPackage.quantity,
@@ -112,7 +112,7 @@ export default class FormComposite extends Modal {
       return;
     }
 
-    const productName = Util.getProductName(value);
+    const productName = Util.getProductNameV2(value);
 
     const existingCompositeList = this.state.compositeList;
 

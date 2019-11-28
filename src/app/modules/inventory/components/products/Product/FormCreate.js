@@ -81,45 +81,9 @@ export default class Form extends Modal {
           });
         }
 
-        // PREPARE DATA FROM DESCRIPTION
-        const productDescriptions = [];
-    
-        if (values.productName) {
-          values.productName.forEach((productName, index) => {
-            productDescriptions.push({
-              languageId: values.language[index],
-              name: productName,
-              description: values.productDescription[index]
-            });
-          });
-        } else {
-          productDescriptions.push({
-            languageId: this.getCurrentLanguageCode(),
-            name: values["productNameDefault"],
-            description: values["productDescriptionDefault"]
-          });
-        }
-
-        // IF NOT ENOUGHT DESCRIPTION WITH LANGUAGE ACTIVE WE ADD DEFAULT DESCRIPTION DEFAULT FOR IT
-        if (productDescriptions.length > 0 && productDescriptions.length !== this.props.storeLanguage.length) {
-          this.props.storeLanguage.list.forEach(language => {
-            const findExistDescription = productDescriptions.find(value => value.languageId === language.code);
-            if(!findExistDescription) {
-              productDescriptions.push({
-                languageId: language.code,
-                name: "",
-                description: ""
-              });
-            }
-          });
-        }
-
         this.Util.clearObjProperty(values, [
           "productName",
           "language",
-          "productDescription",
-          "productNameDefault",
-          "productDescriptionDefault",
           "productCompositeId",
           "productCompositeProductId",
           "productCompositeMarkUp",
@@ -136,9 +100,7 @@ export default class Form extends Modal {
         values["price"] = values["price"] ? values["price"] : 0;
         values["wholePrice"] = values["wholePrice"] ? values["wholePrice"] : 0;
         values["distributePrice"] = values["distributePrice"] ? values["distributePrice"] : 0;
-        values["taxes"] = [{taxId: values["taxId"]}];
         values["productTags"] = this.state.tagList;
-        values["descriptions"] = productDescriptions;
         values["attributes"] = this.state.productAttributes;
         values["variantProducts"] = this.state.productVariants;
         values["productPackages"] = productPackageToProduct;

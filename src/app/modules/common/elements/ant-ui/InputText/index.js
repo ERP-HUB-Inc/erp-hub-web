@@ -7,6 +7,7 @@ export class InputText extends Element {
   render() {
     return (
       <Input
+        suffix={this.props.suffix}
         type={ this.props.type }
         name={this.props.name}
         className={this.props.className}

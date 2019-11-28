@@ -345,7 +345,7 @@ export default class SaleHistoryList extends List {
           const tax = POSUtil.getTaxFromProduct(productVariant.product);
           productOrderList.push({
             quantity: transactionEntry.quantity,
-            name: InventoryUtil.getProductName(productVariant.product),
+            name: InventoryUtil.getProductNameV2(productVariant.product),
             variantName: productVariant.product.productOption === InventoryEnum.PRODUCT_VARIANT ? productVariant.name : "",
             tax: tax.taxRate/100,
             taxDescription: tax,
@@ -425,51 +425,42 @@ export default class SaleHistoryList extends List {
   }
 
   renderButtonAddNew(){
-    return(
-      <this.Button className="mg-right text-uppercase" type="info" loading={this.props.detail.fetching && this.state.isRequestReprint} onClick={this.handleRePrint}>
-        <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print"/>
-        <div id="receiptLogoPreLoading" style={{display: "none"}}>
-          {<img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate && this.props.receiptTemplate.data ? this.props.receiptTemplate.data.logo : "", "general").url} />}
-        </div>
-      </this.Button>
-    );
+    return <this.Button className="mg-right text-uppercase" type="info" loading={this.props.detail.fetching && this.state.isRequestReprint} onClick={this.handleRePrint}>
+      <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print" />
+      <div id="receiptLogoPreLoading" style={{ display: "none" }}>
+        {<img style={{ width: 100 }} alt="" src={this.Util.getProductImage(this.props.receiptTemplate && this.props.receiptTemplate.data ? this.props.receiptTemplate.data.logo : "", "general").url} />}
+      </div>
+    </this.Button>;
   }
   
   renderButtonDelete(){
-    return(
-      <this.Button type="info" loading={this.props.detail.fetching && this.state.isRequestReprint} onClick={this.handleReceivePayment}>
-        <span className="icon-payment-report icon-padding-right text-uppercase"></span><this.Translate id="text_receive_payment"/>
-      </this.Button>
-    );
+    return <this.Button type="info" loading={this.props.detail.fetching && this.state.isRequestReprint} onClick={this.handleReceivePayment}>
+      <span className="icon-payment-report icon-padding-right text-uppercase"></span><this.Translate id="text_receive_payment" />
+    </this.Button>;
   }
 
   renderFilterType(){
-    return(
-      <this.Col md="2">
-        <this.Select
-          name="type"
-          placeholder={this.CATranslate("text_type", this.props.locale)}
-          dataSource={this.TRANSACTION_TYPE_STR}
-          label={<this.Translate id="text_type" />}
-          form={this.props.form}/>
-      </this.Col>
-    )
+    return <this.Col md="2">
+      <this.Select
+        name="type"
+        placeholder={this.CATranslate("text_type", this.props.locale)}
+        dataSource={this.TRANSACTION_TYPE_STR}
+        label={<this.Translate id="text_type" />}
+        form={this.props.form} />
+    </this.Col>;
   }
 
   renderButtonSearch(fetchingProps){
-    return(
-      <this.Col md="2" className="wrap-btn-search">
-        <this.Button htmlType="submit" type="info"  loading={this.state.isClickFilter && fetchingProps.fetching}>
-          <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
-        </this.Button> 
-      </this.Col>
-    )
+    return <this.Col md="2" className="wrap-btn-search">
+      <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+        <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
+      </this.Button>
+    </this.Col>;
   }
 
   renderFilterRecord() {
     const fetchingProps = this.props[this.fetchingProp];
-    return(
-      this.props.form == null ?
+    return this.props.form == null ?
         ""
         :
         <this.Form onSubmit={this.handleSubmitFilter}>
@@ -518,8 +509,7 @@ export default class SaleHistoryList extends List {
             </this.Col>
             {this.renderButtonSearch(fetchingProps)}
           </this.Row>
-        </this.Form>
-    );
+        </this.Form>;
   }
 
   handleSubmitCurrentSearchFilter(){

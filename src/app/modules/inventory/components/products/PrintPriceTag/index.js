@@ -297,7 +297,7 @@ export default class PrintPriceTag extends List {
 
     if(productVariant){
       
-      const productName = Util.getProductName(product);
+      const productName = Util.getProductNameV2(product);
       const {quantity} = productVariant;
 
       const existingProductList = this.state.productList;

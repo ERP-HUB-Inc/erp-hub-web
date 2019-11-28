@@ -233,7 +233,7 @@ export default class Retail extends Component {
     const distributePrice = isNaN(parseFloat(productVariant.distributePrice)) ? 0 : productVariant.distributePrice;
     targetList.push({
       productVariantId: productVariant.id,
-      name: Util.getProductName(product),
+      name: Util.getProductNameV2(product),
       unit: product.unit,
       variantName: productVariant.name,
       barcode: productVariant.barcode,
@@ -415,7 +415,7 @@ export default class Retail extends Component {
           (product.productOption === InventoryEnum.PRODUCT_STANDARD && Util.isOutOfStandardProductStock(product))
           || (productVariant && productVariant.quantity <= 0)) {
           let varinatName = productVariant && productVariant.name ? `(${productVariant.name})` : "";
-          this.Message.error(`${Util.getProductName(product)}${varinatName}: ${this.CATranslate("text_out_of_stock", this.props.locale)}`);
+          this.Message.error(`${Util.getProductNameV2(product)}${varinatName}: ${this.CATranslate("text_out_of_stock", this.props.locale)}`);
           this.props.form.setFieldsValue({searchProduct: ""});
           document.getElementById("searchProduct").focus();
           return;
@@ -812,12 +812,7 @@ export default class Retail extends Component {
             {this.renderOutOfStock(product)}
             <div style={{maxHeight: 20, overflow: "hidden", wordBreak: "break-all"}}>
               <div className="name">
-                {
-                  product.productDescriptions.length > 0 ?
-                    product.productDescriptions[0].name
-                    :
-                    ""
-                }
+                {Util.getProductNameV2(product)}
               </div>
             </div>
             <div className="price">{this.formatCurrency(Util.getProductPrice(product))}</div>

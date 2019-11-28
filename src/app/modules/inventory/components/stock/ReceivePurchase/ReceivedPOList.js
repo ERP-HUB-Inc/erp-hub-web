@@ -37,7 +37,12 @@ export default class ReceivedPo extends Modal {
         render: (text, record) => {
           return <div>
             <div>{record.productName}</div>
-            <div className="variant-name">{record.variantName}</div>
+            {
+              record.variantName ? 
+                <div className="variant-name">{record.variantName}</div>
+                :
+                ""
+            }
           </div>;
         }
       },
@@ -122,7 +127,7 @@ export default class ReceivedPo extends Modal {
         let variantName = "";
         
         if (purchaseOrderEntry.productVariant) {
-          productName = Util.getProductName(purchaseOrderEntry.productVariant.product);
+          productName = Util.getProductNameV2(purchaseOrderEntry.productVariant.product);
           variantName = purchaseOrderEntry.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? purchaseOrderEntry.productVariant.name : "";
         }
 

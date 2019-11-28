@@ -89,17 +89,21 @@ export class Util {
   }
 
   getCurrentLanguageCode() {
-    let languageCode = "en-ca";
+    let languageCode = "en";
     const currentSetting = this.getSetting();
     if (currentSetting) {
       languageCode = currentSetting.defaultLanguageCode;
     }
 
     if (languageCode === "en") {
-      languageCode = "en-ca";
+      languageCode = "en";
     }
 
     return languageCode;
+  }
+
+  getProductNameField(code) {
+    return code === "en" ? "" : code;
   }
 
   getCurrentUser() {

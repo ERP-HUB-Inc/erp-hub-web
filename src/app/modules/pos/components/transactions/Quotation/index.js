@@ -271,7 +271,7 @@ export default class QuotationList extends List {
           const productVariant = quotationtionEntry.productVariant;
           productOrderList.push({
             quantity: quotationtionEntry.quantity,
-            name: InventoryUtil.getProductName(productVariant.product),
+            name: InventoryUtil.getProductNameV2(productVariant.product),
             unit: productVariant.product ? productVariant.product.unit : null,
             productDescription: quotationtionEntry.description,
             variantName: productVariant.product.productOption === InventoryEnum.PRODUCT_VARIANT ? productVariant.name : "",
