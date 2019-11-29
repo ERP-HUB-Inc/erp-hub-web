@@ -5,68 +5,39 @@ import Constant from "../../../constants/products/productsType";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class Form extends Modal {
+
+  title = <this.Translate id="text_product_type" />;
+
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="text_product_type" />;
-    this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
-
   }
 
-  handleSubmit (e) {
+  handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const productTypeDescriptions = [];
-
-        values.productTypeName.forEach((productTypeName, index) => {
-          productTypeDescriptions.push({
-            id: values.id[index],
-            languageId: values.language[index],
-            name: productTypeName,
-            description: values.productTypeDescription[index]
-          });
-        });
-
-        delete values["keys"];
-        delete values["language"];
-        delete values["productTypeName"];
-        delete values["productTypeDescription"];
-
         values["id"] = this.props.productsTypeDetail.data.id;
-        values["productTypeDescriptions"] = productTypeDescriptions;
-        console.log("ProductTypeDescriptions:", values);
-
-        this.dispatch(ProductsTypeAction.update(values));
-
+        this.props.dispatch(ProductsTypeAction.update(values));
       }
     });
   }
     
   handleCancel() {
-    this.dispatch(ProductsTypeAction.reset(Constant.RESET_DETAIL_PRODUCTS_TYPE));
+    this.props.dispatch(ProductsTypeAction.reset(Constant.RESET_DETAIL_PRODUCTS_TYPE));
   }
 
   render() {
-    const {
-      productsTypeUpdate,
-      productsTypeDetail,
-      form,
-      locale,
-      storeLanguage,
-      dispatch
-    } = this.props;
+    this.submitLoading = this.props.productsTypeUpdate.updating;
 
-    this.submitLoading = productsTypeUpdate.updating;
-
-    if (productsTypeDetail.showForm) {
+    if (this.props.productsTypeDetail.showForm) {
       this.content = <FormItem
-        formData={productsTypeDetail.data}
-        languages={storeLanguage}
-        dispatch={dispatch}
-        productsType={productsTypeUpdate}
-        form={form}
-        locale={locale}/>;
+        formData={this.props.productsTypeDetail.data}
+        languages={this.props.storeLanguage}
+        dispatch={this.props.dispatch}
+        productsType={this.props.productsTypeUpdate}
+        form={this.props.form}
+        locale={this.props.locale}/>;
 
       return super.render();
     } else {

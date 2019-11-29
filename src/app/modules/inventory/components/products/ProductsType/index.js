@@ -44,20 +44,10 @@ class Column extends List {
     return [
       {
         title: <this.Translate id="text_name" />,
-        dataIndex: "productTypeDescriptions",
+        dataIndex: "name",
         key: "name",
         sorter: true,
-        render: productTypeDescriptions => Util.getProductTypeDescription(productTypeDescriptions)
-      },
-      {
-        title: <this.Translate id="text_description" />,
-        dataIndex: "productTypeDescriptions",
-        key: "description",
-        sorter: true,
-        render: productTypeDescriptions => {
-          const description = Util.getProductTypeDescription(productTypeDescriptions, "description");
-          return description ? description : this.emptyText;
-        }
+        render: (name, record) => Util.getProductTypeName(record)
       },
       this.columnStatus
     ];

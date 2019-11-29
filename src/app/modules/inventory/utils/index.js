@@ -99,8 +99,6 @@ class Util {
     return quantity;
   }
 
-  
-
 
   getProductTypeDescription(productTypeDescriptions, key ="name") {
     if (productTypeDescriptions === null && !Array.isArray(productTypeDescriptions))
@@ -111,6 +109,11 @@ class Util {
     } else {
       return "";
     }
+  }
+
+  getProductTypeName(productType) {
+    const currentLanguageCode = (new SettingUtil()).getCurrentLanguageCode();
+    return productType[`name${currentLanguageCode === "en" ? "" : currentLanguageCode}`];;
   }
 
   countProductQTYCurrentLocation(product, currentLocationId) {

@@ -4,58 +4,31 @@ import Modal from "../../../../common/components/shares/Modal";
 import ProductsTypeAction from "../../../actions/products/productsType";
 
 export default class FormCreate extends Modal {
-  constructor(props) {
-    super(props);
-    this.title = <this.Translate id="text_product_type" />;
-    this.dispatch = this.props.dispatch;
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+  title = <this.Translate id="text_product_type" />;
 
-  handleSubmit (e) {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const productTypeDescriptions = [];
-
-        values.productTypeName.forEach((productTypeName, index) => {
-          productTypeDescriptions.push({
-            languageId: values.language[index],
-            name: productTypeName,
-            description: values.productTypeDescription[index]
-          });
-        });
-
-        this.Util.clearObjProperty(values, [
-          "keys",
-          "language",
-          "productTypeName",
-          "productTypeDescription"
-        ]);
-
-        values["productTypeDescriptions"] = productTypeDescriptions;
-
-        this.dispatch(ProductsTypeAction.add(values)); 
-
+        this.props.dispatch(ProductsTypeAction.add(values)); 
       }
     });
   }
       
   handleCancel() {
-    this.dispatch(ProductsTypeAction.reset());
+    this.props.dispatch(ProductsTypeAction.reset());
   }
 
   render() {
-    const {productsTypeAdd, form,locale, storeLanguage, dispatch} = this.props;
-    
-    this.submitLoading = productsTypeAdd.adding;
+    this.submitLoading = this.props.productsTypeAdd.adding;
 
-    if (productsTypeAdd.showForm) {
+    if (this.props.productsTypeAdd.showForm) {
       this.content = <FormItem
-        form={form}
-        languages={storeLanguage}
-        dispatch={dispatch}
+        form={this.props.form}
+        languages={this.props.storeLanguage}
+        dispatch={this.props.dispatch}
         productsType={[]}
-        locale={locale}/>;
+        locale={this.props.locale}/>;
       return super.render();
     } else {
       return <div/>;

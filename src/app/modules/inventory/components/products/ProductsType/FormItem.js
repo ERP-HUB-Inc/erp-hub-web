@@ -3,83 +3,34 @@ import LanguageAction from "../../../../pos/action/settings/storeLanguage";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormItem extends Modal {
-  constructor(props) {
-    super(props);
-    this.renderDescription = this.renderDescription.bind(this);
-  }
- 
   componentDidMount(){
-    this.props.dispatch(LanguageAction.fetch(100));
-  }
-
-  renderDescription(language, languagesIndex) {
-    const {locale, form, formData} = this.props;
-    let productTypeId = "",
-      productTypeName = "",
-      productTypeDescription = "";
-    
-    formData.productTypeDescriptions.forEach(productType => {
-      if (language.code === productType.languageId) {
-        productTypeId = productType.id;
-        productTypeName = productType.name;
-        productTypeDescription = productType.description;
-      }
-    });
-
-    return (
-      <this.TabPane tab={this.getLanguageIcon(language.code)} key={languagesIndex}>
-        <this.Row>
-          <this.InputText 
-            name={`language[${languagesIndex}]`} 
-            type="hidden"
-            data={language.code}
-            form={form} />
-          <this.InputText 
-            name={`id[${languagesIndex}]`} 
-            type="hidden"
-            data={productTypeId}
-            form={form} />
-          <this.Col md="12">
-            <this.InputText
-              name={`productTypeName[${languagesIndex}]`}
-              data={productTypeName}
-              label={<this.Translate id="text_name" />}
-              placeholder={this.CATranslate("text_name", locale)}
-              isAutoFocus={true}
-              errorRequired={<this.Translate id="error_require_name" />}
-              required={true}
-              max={100}
-              form={form}/>
-          </this.Col>
-          <this.Col md="12">
-            <this.InputTextArea
-              name={`productTypeDescription[${languagesIndex}]`}
-              data={productTypeDescription}
-              label={<this.Translate id="text_description" />}
-              placeholder={this.CATranslate("text_description", locale)}
-              max={255}
-              form={form}/>
-          </this.Col>
-        </this.Row>
-      </this.TabPane>
-    );
+    this.props.dispatch(LanguageAction.fetch(3));
   }
 
   render() {
-    const {languages} = this.props;
-
-    return (  
-      <this.Tabs type="card">
-        {languages.map((language, languagesIndex) => this.renderDescription(language, languagesIndex))}
-      </this.Tabs>
-    );
+    return <this.Row>
+      {
+      this.props.languages.map((language, index) =>
+        <this.Col md="12" key={index}>
+          <this.InputText
+            name={`name${this.Util.getProductNameField(language.code)}`}
+            data={this.props.formData[`name${this.Util.getProductNameField(language.code)}`]}
+            label={<this.Translate id="text_name" />}
+            placeholder={this.CATranslate("text_name", this.props.locale)}
+            errorRequired={<this.Translate id="error_require_name" />}
+            max={255}
+            form={this.props.form}
+            suffix={this.getLanguageIcon(language.code)} />
+        </this.Col>
+      )
+      }
+    </this.Row>;
   }
 }
 
 FormItem.defaultProps = {
   formData: {
     name:"",
-    description:"",
-    productTypeDescriptions:[]
+    description:""
   }
 };

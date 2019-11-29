@@ -228,7 +228,9 @@ export default class FormItem extends Modal {
     
     if (this.state.productsType) {
       this.state.productsType.forEach((productTypeValue, productTypeIndex) => {
-        this.state.productsType[productTypeIndex].name = productTypeValue.productTypeDescriptions.length > 0 ? productTypeValue.productTypeDescriptions[0].name : "";
+        this.state.productsType[productTypeIndex].name = productTypeValue.name;
+        this.state.productsType[productTypeIndex].namekm = productTypeValue.namekm;
+        this.state.productsType[productTypeIndex].namebm = productTypeValue.namebm;
       });
     }
 
@@ -302,8 +304,7 @@ export default class FormItem extends Modal {
                     dataSource={this.state.productsType}
                     defaultValue={formData.productTypeId}
                     addNew={this.props.handleAddProductType}
-                    nestedName="productTypeDescriptions"
-                    nameKey="name"
+                    nameKey={`name${this.Util.getProductNameField(this.Util.getCurrentLanguageCode())}`}
                     required={true}
                     form={form}/>
                 </this.Col>

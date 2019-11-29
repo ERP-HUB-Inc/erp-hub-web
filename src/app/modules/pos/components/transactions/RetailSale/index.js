@@ -50,7 +50,7 @@ export default class Retail extends Component {
       expandOrderItemRow: [],
       productTaxList: [],
       categoryList: [
-        {id: 0, name: <this.Translate id="text_all_category"/>},
+        { id: 0, name: <this.Translate id="text_all_category" />, namekm: <this.Translate id="text_all_category" />, namebm: <this.Translate id="text_all_category" />},
       ],
       customerFieldPrice: "price",
       textFullScreen: <this.Translate id="text_full_screen" />,
@@ -935,12 +935,7 @@ export default class Retail extends Component {
                   <div onClick={() => this.handleOnSelectCategory(category.id)} className={`category ${this.state.selectedCategoryIds.includes(category.id)? "selected": "" }`}>
                     <div style={{maxHeight: 20, overflow: "hidden", wordBreak: "break-all"}}>
                       <div>
-                        {
-                          "productTypeDescriptions" in category && category["productTypeDescriptions"].length > 0 ?
-                            category["productTypeDescriptions"][0].name
-                            :
-                            category.name
-                        }
+                        {Util.getProductTypeName(category)}
                       </div>
                     </div>
                   </div>

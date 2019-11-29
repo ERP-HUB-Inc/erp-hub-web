@@ -48,7 +48,7 @@ export default class List extends Component {
 
     this.localStorageKey = null; // key of localstorage in case you want to store it as caching
 
-    this.pageSize = 20; // default limit record display in table list
+    this.pageSize = 50; // default limit record display in table list
     this.confirmTextDelete = <this.Translate id="text_confirm_delete" />;
     this.requiredMessage = "Please input all required field."; // require message display on modal popup
     this.generalSearchLabel = "text_search";
