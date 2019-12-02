@@ -390,13 +390,13 @@ export default class FormItem extends Modal {
                 disabled={this.state.disabled}
                 form={form}/>
             </this.Col>
-            <this.Col md="6" className="wrap-switch">
+            {/* <this.Col md="6" className="wrap-switch">
               <this.Switchs
                 label={<this.Translate id="text_auto_generate" />}
                 name="autogenerate"
                 onChange={this.onChange}
                 form={form}/>
-            </this.Col>
+            </this.Col> */}
 
             {/* <this.Col md="6">
               <this.DatePickers
