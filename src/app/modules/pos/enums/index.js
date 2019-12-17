@@ -47,7 +47,8 @@ export default {
   PAPER_SIZE: {
     A4: 1,
     THERMAL: 2,
-    MINI_THERMAL: 3
+    MINI_THERMAL: 3,
+    A4V3: 4
   },
   CUSTOMER_CREDIT_STATUS: {
     DISABLE: 1,

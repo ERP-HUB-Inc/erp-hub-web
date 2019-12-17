@@ -40,5 +40,18 @@ export const PaperSize = [
       padding: "0px 15px"
       // padding: 5
     }
-  }
+  },
+  {
+    code: Enum.PAPER_SIZE.A4V3,
+    name: "A4V3",
+    setting: {
+      storeNameFontSize: "16pt",
+      dataFontSize: "8pt",
+      subDataFontSize: "7pt",
+      width: "120mm",
+      color: "rgb(142, 136, 136)",
+      marginLef: "auto",
+      padding: 0,
+    }
+  },
 ];

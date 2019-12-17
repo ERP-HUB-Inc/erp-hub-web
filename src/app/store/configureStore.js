@@ -7,7 +7,7 @@ import reducer from "../reducers";
 
 const registerMiddleWare = [promise(), thunk];
 
-if (process.env.REACT_APP_ENV === "DEV") {
+if (process.env.REACT_APP_ENV === "PRE_PROD") {
   registerMiddleWare.push(createLogger());
 }
 

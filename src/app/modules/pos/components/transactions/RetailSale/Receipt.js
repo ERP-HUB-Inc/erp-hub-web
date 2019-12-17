@@ -1,6 +1,7 @@
 import React from "react";
 import JsBarcode from "jsbarcode";
 import ReceiptA4 from "./ReceiptA4";
+import ReceiptA4V3HaveTax from "./ReceiptA4V3/ReceiptA4V3HaveTax";
 import { PaperSize } from "../../settings/ReceiptTemplate/PaperSize";
 import Component from "../../../../common/components/Component";
 import Enum from "../../../../pos/enums";
@@ -96,7 +97,9 @@ export default class Receipt extends Component {
           </tr>
         </tbody>
       </table>;
-    } else {
+    
+  
+    }else {
       return <table style={{ color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white" }}>
         <tbody>
           <tr>
@@ -178,7 +181,31 @@ export default class Receipt extends Component {
             }}
             receiptTemplate={this.props.receiptTemplate}
             productList={this.props.productList}
-            dispatch={this.props.dispatch} />
+            dispatch={this.props.dispatch} /> 
+
+            : 
+
+           paperSize.code === Enum.PAPER_SIZE.A4V3 ?  
+
+           <ReceiptA4V3HaveTax
+            data={{
+              client: {
+                businessName,
+                address,
+                phoneNumber,
+                email
+              },
+              number: this.props.data.number,
+              createdAt: this.props.data.createdAt,
+              customer: this.props.customer,
+              discount: this.props.discountAmount,
+              taxAmount: this.props.taxAmount,
+              total,
+            }}
+            receiptTemplate={this.props.receiptTemplate}
+            productList={this.props.productList}
+            dispatch={this.props.dispatch} /> 
+
           :
           <div style={{
             margin: "0 auto",
@@ -369,7 +396,13 @@ export default class Receipt extends Component {
               </tbody>
             </table>
           </div>
+        
         }
+
+        {/* {
+           paperSize.code === Enum.PAPER_SIZE.A4V3 ? "" : ""
+        } */}
+        
       </div>;
   }
 }

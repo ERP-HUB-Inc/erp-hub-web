@@ -1,0 +1,200 @@
+import React from "react";
+import Component from "../../../../../common/components/Component";
+export default class ReceiptA4V3HaveTax extends Component {
+  constructor(props) {
+    super(props);
+    this.title = "";
+    this.rowSpan = 4;
+    this.borderTopCustomerInfo = "1px solid black";
+    this.issuedBy = "អ្នកចេញវិក័យប័ត្រ​​ / Issued by";
+    this.isQuotation = false;
+  }
+  renderLogo(){
+    return(
+      <div style={{position: "relative", margin: "0 auto"}}>
+        <img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} />
+      </div>
+    )
+  }
+
+  customerInfo(){
+    return(
+      
+      <div style={{ paddingTop: "3px", paddingBottom: "3px", fontSize: "12px",borderTop: this.borderTopCustomerInfo, textAlign:"center"}}>
+         <table style={{width: "100%", borderCollapse: "collapse"}}>
+         <tbody>
+            <tr style={{backgroundColor: "white"}}>
+             <td style={{ textAlign: "left", width: "65%",fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>TO :</span> { this.props.data.customer.firstName + " " + this.props.data.customer.lastName   }</td>
+             <td style={{ textAlign: "left",fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Invoice No : </span></td>
+            </tr>
+            <tr style={{backgroundColor: "white"}}>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Attn : </span></td>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Date : </span></td>
+            </tr>
+            <tr style={{backgroundColor: "white"}}>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Phone :</span>{this.props.data.customer.phoneNumber}</td>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Currency : </span></td>
+            </tr>
+            <tr style={{backgroundColor: "white"}}>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Address :</span> { this.props.data.customer.address ? this.props.data.customer.address : "" }</td>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Sale Rep : </span></td>
+            </tr>
+            <tr style={{backgroundColor: "white"}}>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><b>Email : {this.props.data.customer.email}</b></td>
+              <td style={{ textAlign: "left", fontSize: "12px" }}></td>
+            </tr>
+          </tbody>
+         </table>
+         {this.vatNumber()}
+      </div>
+    )
+  }
+
+  companyInformation(){
+    return(
+      <div style={{ textAlign: "left", fontSize: "12px" }}>
+          <div style={{ width: "250px" }}>
+              <div style={{ width: "53px", float: "left", fontWeight: "bold" }}>Address</div>
+              <div style={{ width: "281px" }}>: {this.props.data.client.address} </div>
+          </div>
+          <div style={{ width: "250px" }}>
+            <span style={{ marginRight: "17px", fontWeight: "bold" }}>Phone</span>: { this.props.data.client.phoneNumber }
+          </div>
+          <div style={{ width: "250px" }}>
+            <span style={{ marginRight: "22px", fontWeight: "bold" }}>Email</span>: {this.props.data.client.email}
+          </div>
+      </div>
+    );
+  }
+
+  tax(){
+    return(
+      <tr style={{border: "1px solid black", backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>
+        <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left", padding: 1, fontSize: "12px"}}>TAX :</td>
+        <td style={{ borderRight: "1px solid black", padding: 1 }}></td>
+      </tr>
+    );
+  }
+
+  vatNumber(){
+    return(
+      <div style={{ backgroundColor: "rgb(231, 230, 230)", textAlign: "left", padding: "4px", fontWeight: "bold", fontSize: "12px" }}>VAT Number:</div>
+    );
+  }
+
+  renderMoneyCell(value = 0, symbol, isBold = false, fontSize = "8.5pt") {
+    return <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+      <div style={{ fontSize, fontWeight: isBold ? "600" : "400" }}>{symbol ? symbol : "$" }</div>
+      <div style={{ fontSize, fontWeight: isBold ? "600" : "400" }}>{this.formatCurrency(value, "", false)}</div>
+    </div>;
+  }
+
+
+  itemlist() {
+    return this.props.productList.map((product, index) => 
+      <tr style={{borderLeft: "1px solid black", borderBottom: "1px solid black"}} key={index}>
+        <td style={{borderRight: "1px solid black", width: "50px", textAlign: "center", fontSize: "12px", verticalAlign: "top",  padding: 6}}>{ index + 1 }</td>
+        <td style={{ borderRight: "1px solid black", width: "420px", fontSize: "8.5pt", textAlign: "left", padding: 6, verticalAlign: "middle" }}>
+          <div>
+            <span style={{ fontWeight: "bold", fontSize: "9.5pt", fontFamily: "Khmer OS Content"  }}>{product.name}</span>
+            <div style={{ fontSize: "7px", fontFamily: "Khmer OS Content" }}>
+            { product.variantName ? product.variantName : "" }
+            </div>
+            <pre style={{ fontSize: "8.5pt", fontFamily: "Khmer OS Content", overflow: "hidden", marginTop: 0, marginBottom: 0 }}>{product.productDescription}</pre>
+          </div>
+        </td>
+        <td style={{ borderRight: "1px solid black", width: "100px", textAlign: "center", fontSize: "8.5pt", padding: 6, verticalAlign: "middle" }}>{product.quantity} {product.unit ? product.unit.name : ""}</td>
+        <td style={{ borderRight: "1px solid black", width: "150px", textAlign: "right", fontSize: "8.5pt", padding: 6, verticalAlign: "middle" }}>{this.renderMoneyCell(this.formatCurrency(product.price,"",false))}</td>
+        <td style={{ borderRight: "1px solid black", width: "100px", textAlign: "right", fontSize: "8.5pt", padding: 6, verticalAlign: "middle" }}>{this.renderMoneyCell(product.price * product.quantity)}</td>
+      </tr>
+    );
+  }
+
+  render() {
+    return (
+      <div id="pos-receipt-preview" style={{textAlign: "center", width: "705px", margin: "auto", fontFamily: "Khmer OS Content", display: "block", pageBreakBefore: "always"}}>
+        <div style={{display: "flex", fontSize: "12px"}}>
+          <div style={{ flexGrow: 2, fontSize: "40px", fontWeight: "bold", fontFamily: "Franklin Gothic Demi Cond", display: "flex", textAlign: "left", textDecoration: "underline" }}>
+            <span>INVOICE</span><br />
+          </div>
+           
+        </div>
+        {this.companyInformation()}
+        {this.customerInfo()}
+        <div style={{fontSize: "23px",textAlign:"center",fontWeight: "bold", fontFamily: "Khmer OS Muol", color: "red"}}>
+          {this.title}
+        </div>
+        
+        <table style={{width: "100%", fontFamily: "Khmer OS Content", borderCollapse: "collapse"}}>
+          <tbody><tr style={{backgroundColor: "#FFC000"}}>
+              <td style={{border: "1px solid black", fontSize: "12px", padding: "6px"}}>NO#</td>
+              <td style={{border: "1px solid black", fontSize: "12px", width: "650px", padding: "6px"}}>DESCRIPTION</td>
+              <td style={{border: "1px solid black", fontSize: "12px", width: "14px", padding: "6px", textAlign: "center"}}>QTY</td>
+              <td style={{border: "1px solid black", fontSize: "12px", width: "135px", padding: "6px", textAlign: "center"}}>UNIT PRICE</td>
+              <td style={{border: "1px solid black", fontSize: "12px", width: "135px", padding: "6px", textAlign: "center"}}>AMOUNT</td>
+            </tr>
+            {this.itemlist()}
+            <tr style={{borderTop: "1px solid black", fontSize: "12px"}}>
+              <td colSpan={2} rowSpan={this.rowSpan} style={{borderRight: "1px solid black", fontSize: "12px", textAlign: "left", backgroundColor: "white"}}>
+                For Warranty details, please look at details below items. Warranty 
+                void if: Eltric shock, accident, Seal broken, misuse, or modification by
+                anyone other then <b>Tech Solutions.</b> No Warranty for fdd, 
+                keyboard, mouse, speaker, power supply and software.			
+              </td>
+              <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left", padding: 1, backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>SUBTOTAL :</td>
+              <td style={{ borderRight: "1px solid black", padding: 1, backgroundColor: "rgb(255, 192, 0)" }} >
+                {this.renderMoneyCell(this.props.data.total + this.props.data.discount, "$", true, "9pt")}
+              </td>
+            </tr>
+            
+            <tr style={{border: "1px solid black", backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>
+              <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left", padding: 1, fontSize: "12px"}}>
+                DISCOUNT :
+              </td>
+              <td style={{ borderRight: "1px solid black", padding: 1,fontSize: "12px" }}>
+                {this.renderMoneyCell(this.props.data.discount, "$", true, "9pt")}
+              </td>
+            </tr>
+
+            {this.tax()}
+
+            <tr style={{border: "1px solid black", backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>
+              <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left", padding: 1, fontSize: "12px"}}>TOTAL :</td>
+              <td style={{ borderRight: "1px solid black", padding: 1 }}>
+                {this.renderMoneyCell(this.props.data.total + this.props.data.discount, "$", true, "9pt")}
+              </td>
+            </tr>
+          </tbody>
+        </table> 
+        <div style={{ textAlign: "left", fontSize: "12px", fontWeight: "bold" }}>*Good Sold are not returable and received in good condition.</div>
+        <div style={{ textAlign: "left", fontSize: "12px", fontWeight: "bold" }}>*We look forward to hearing from you.</div>
+
+        <div style={{ marginTop: "40px" }}>
+          <div style={{ width: "60%", textAlign: "left", float: "left", fontSize: "12px", fontWeight: "bold" }}>
+            <div style={{ fontWeight: "bold", borderBottom: "1px solid black", lineHeight: "14px", width: "263px" }}>
+              <span style={{ marginRight: "75px" }}>Date:</span><span style={{ marginRight: "75px" }}>/</span><span style={{ marginRight: "75px" }}>/</span>
+            </div> 
+            <div style={{ width: "263px", textAlign: "center" }}>Customer's Signature</div>
+          </div>
+          <div style={{ width: "40%", textAlign: "left", float: "right", fontSize: "12px", fontWeight: "bold" }}>
+            <div style={{ fontWeight: "bold", borderBottom: "1px solid black", lineHeight: "14px" }}>
+              <span style={{ marginRight: "75px" }}>Date:</span><span style={{ marginRight: "75px" }}>/</span><span style={{ marginRight: "75px" }}>/</span>
+            </div> 
+            <div style={{ width: "263px", textAlign: "center" }}>
+              Employee's Signature<br/>
+              {this.props.data.client.businessName}<br/>
+              {this.props.data.client.phoneNumber}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    );
+  }
+}
+
+ReceiptA4V3HaveTax.defaultProps = {
+  receiptTemplate: {
+    logo: ""
+  },
+};
