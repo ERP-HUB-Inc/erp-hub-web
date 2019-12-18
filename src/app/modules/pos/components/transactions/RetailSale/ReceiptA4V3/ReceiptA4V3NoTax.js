@@ -5,8 +5,12 @@ export default class ReceiptA4V3NoTax extends ReceiptA4V3HaveTax {
     this.rowSpan = 3;
     this.borderTopCustomerInfo = "";
   }
+
   companyInformation(){ return; }
+
   vatNumber(){ return; }
+
   tax(){ return;  }
+  
 }
 

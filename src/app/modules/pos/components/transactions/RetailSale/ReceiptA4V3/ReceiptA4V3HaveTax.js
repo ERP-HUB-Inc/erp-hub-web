@@ -10,7 +10,6 @@ export default class ReceiptA4V3HaveTax extends Component {
 
   customerInfo(){
     return(
-      
       <div style={{ paddingTop: "3px", paddingBottom: "3px", fontSize: "12px",borderTop: this.borderTopCustomerInfo, textAlign:"center"}}>
          <table style={{width: "100%", borderCollapse: "collapse"}}>
          <tbody>
@@ -36,7 +35,9 @@ export default class ReceiptA4V3HaveTax extends Component {
             </tr>
           </tbody>
          </table>
+
          {this.vatNumber()}
+
       </div>
     )
   }
@@ -67,9 +68,22 @@ export default class ReceiptA4V3HaveTax extends Component {
     );
   }
 
+  discount(){
+    return(
+      <tr style={{border: "1px solid black", backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>
+        <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", padding: 3, fontSize: "12px"}}>
+          DISCOUNT :
+        </td>
+        <td style={{ borderRight: "1px solid black", padding: 3,fontSize: "12px" }}>
+          {this.renderMoneyCell(this.props.data.discount, "$", true, "9pt")}
+        </td>
+    </tr>
+    )
+  }
+
   vatNumber(){
     return(
-      <div style={{ backgroundColor: "rgb(231, 230, 230)", textAlign: "left", padding: "4px", fontWeight: "bold", fontSize: "12px" }}>VAT Number:</div>
+      <div style={{ backgroundColor: "rgb(231, 230, 230)", textAlign: "left", padding: "1px", fontWeight: "bold", fontSize: "12px" }}>VAT Number:</div>
     );
   }
 
@@ -100,13 +114,12 @@ export default class ReceiptA4V3HaveTax extends Component {
 
   textButtomTermAndCondition(){
     return(
-      <div>
+      <div style={{ marginTop: "10px" }}>
           <div style={{ textAlign: "left", fontSize: "12px", fontWeight: "bold" }}>*Good Sold are not returable and received in good condition.</div>
           <div style={{ textAlign: "left", fontSize: "12px", fontWeight: "bold" }}>*We look forward to hearing from you.</div>
       </div>
     );
   }
-
 
   itemlist() {
     return this.props.productList.map((product, index) => 
@@ -131,11 +144,11 @@ export default class ReceiptA4V3HaveTax extends Component {
   render() {
     return (
       <div id="pos-receipt-preview" style={{textAlign: "center", width: "705px", margin: "auto", fontFamily: "Khmer OS Content", display: "block", pageBreakBefore: "always"}}>
+        
         <div style={{display: "flex", fontSize: "12px"}}>
           <div style={{ flexGrow: 2, fontSize: "40px", fontWeight: "bold", fontFamily: "Franklin Gothic Demi Cond", display: "flex", textAlign: "left", textDecoration: "underline" }}>
-          <span>{this.title}</span><br />
+            <span>{this.title}</span><br />
           </div>
-           
         </div>
 
         {this.companyInformation()}
@@ -146,25 +159,18 @@ export default class ReceiptA4V3HaveTax extends Component {
           <tbody>
             
             <tr style={{backgroundColor: "#FFC000"}}>
-              <td style={{border: "1px solid black", fontSize: "12px", padding: "6px"}}>NO#</td>
-              <td style={{border: "1px solid black", fontSize: "12px", width: "650px", padding: "6px"}}>DESCRIPTION</td>
-              <td style={{border: "1px solid black", fontSize: "12px", width: "14px", padding: "6px", textAlign: "center"}}>QTY</td>
-              <td style={{border: "1px solid black", fontSize: "12px", width: "135px", padding: "6px", textAlign: "center"}}>UNIT PRICE</td>
-              <td style={{border: "1px solid black", fontSize: "12px", width: "135px", padding: "6px", textAlign: "center"}}>AMOUNT</td>
+              <td style={{border: "1px solid black", fontSize: "12px", padding: "1px"}}>NO#</td>
+              <td style={{border: "1px solid black", fontSize: "12px", width: "650px", padding: "1px"}}>DESCRIPTION</td>
+              <td style={{border: "1px solid black", fontSize: "12px", width: "14px", padding: "1px", textAlign: "center"}}>QTY</td>
+              <td style={{border: "1px solid black", fontSize: "12px", width: "135px", padding: "1px", textAlign: "center"}}>UNIT PRICE</td>
+              <td style={{border: "1px solid black", fontSize: "12px", width: "135px", padding: "1px", textAlign: "center"}}>AMOUNT</td>
             </tr>
 
             {this.itemlist()}
 
             {this.termAndCondition()}
 
-            <tr style={{border: "1px solid black", backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>
-              <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", padding: 3, fontSize: "12px"}}>
-                DISCOUNT :
-              </td>
-              <td style={{ borderRight: "1px solid black", padding: 3,fontSize: "12px" }}>
-                {this.renderMoneyCell(this.props.data.discount, "$", true, "9pt")}
-              </td>
-            </tr>
+            {this.discount()}
 
             {this.tax()}
 
