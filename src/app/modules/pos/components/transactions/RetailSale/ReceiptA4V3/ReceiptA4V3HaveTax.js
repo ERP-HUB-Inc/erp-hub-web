@@ -6,15 +6,6 @@ export default class ReceiptA4V3HaveTax extends Component {
     this.title = "INVOICE";
     this.rowSpan = 4;
     this.borderTopCustomerInfo = "1px solid black";
-    this.issuedBy = "អ្នកចេញវិក័យប័ត្រ​​ / Issued by";
-    this.isQuotation = false;
-  }
-  renderLogo(){
-    return(
-      <div style={{position: "relative", margin: "0 auto"}}>
-        <img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} />
-      </div>
-    )
   }
 
   customerInfo(){
@@ -94,9 +85,9 @@ export default class ReceiptA4V3HaveTax extends Component {
       <tr style={{borderTop: "1px solid black", fontSize: "12px"}}>
             <td colSpan={2} rowSpan={this.rowSpan} style={{borderRight: "1px solid black", textAlign: "left", backgroundColor: "white"}}>
               <div style={{ height: "20px", backgroundColor: "rgb(255, 192, 0)" }}></div>
-              For Warranty details, please look at details below items. Warranty 
-              void if: Eltric shock, accident, Seal broken, misuse, or modification by
-              anyone other then <b>Tech Solutions.</b> No Warranty for fdd, 
+              For Warranty details, please look at details below items. Warranty <br/>
+              void if: Eltric shock, accident, Seal broken, misuse, or modification by<br/>
+              anyone other then <b>Tech Solutions.</b> No Warranty for fdd, <br/>
               keyboard, mouse, speaker, power supply and software.			
             </td>
             <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", padding: 1, backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>SUBTOTAL :</td>
@@ -211,9 +202,3 @@ export default class ReceiptA4V3HaveTax extends Component {
     );
   }
 }
-
-ReceiptA4V3HaveTax.defaultProps = {
-  receiptTemplate: {
-    logo: ""
-  },
-};
