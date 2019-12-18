@@ -3,7 +3,7 @@ import Component from "../../../../../common/components/Component";
 export default class ReceiptA4V3HaveTax extends Component {
   constructor(props) {
     super(props);
-    this.title = "";
+    this.title = "INVOICE";
     this.rowSpan = 4;
     this.borderTopCustomerInfo = "1px solid black";
     this.issuedBy = "អ្នកចេញវិក័យប័ត្រ​​ / Issued by";
@@ -24,7 +24,7 @@ export default class ReceiptA4V3HaveTax extends Component {
          <table style={{width: "100%", borderCollapse: "collapse"}}>
          <tbody>
             <tr style={{backgroundColor: "white"}}>
-             <td style={{ textAlign: "left", width: "65%",fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>TO :</span> { this.props.data.customer.firstName + " " + this.props.data.customer.lastName   }</td>
+             <td style={{ textAlign: "left", width: "61%",fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>TO :</span> { this.props.data.customer.firstName + " " + this.props.data.customer.lastName   }</td>
              <td style={{ textAlign: "left",fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Invoice No : </span></td>
             </tr>
             <tr style={{backgroundColor: "white"}}>
@@ -70,8 +70,8 @@ export default class ReceiptA4V3HaveTax extends Component {
   tax(){
     return(
       <tr style={{border: "1px solid black", backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>
-        <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left", padding: 1, fontSize: "12px"}}>TAX :</td>
-        <td style={{ borderRight: "1px solid black", padding: 1 }}></td>
+        <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", padding: 3, fontSize: "12px"}}>TAX :</td>
+        <td style={{ borderRight: "1px solid black", padding: 3 }}></td>
       </tr>
     );
   }
@@ -87,6 +87,32 @@ export default class ReceiptA4V3HaveTax extends Component {
       <div style={{ fontSize, fontWeight: isBold ? "600" : "400" }}>{symbol ? symbol : "$" }</div>
       <div style={{ fontSize, fontWeight: isBold ? "600" : "400" }}>{this.formatCurrency(value, "", false)}</div>
     </div>;
+  }
+
+  termAndCondition(){
+    return(
+      <tr style={{borderTop: "1px solid black", fontSize: "12px"}}>
+            <td colSpan={2} rowSpan={this.rowSpan} style={{borderRight: "1px solid black", textAlign: "left", backgroundColor: "white"}}>
+              For Warranty details, please look at details below items. Warranty 
+              void if: Eltric shock, accident, Seal broken, misuse, or modification by
+              anyone other then <b>Tech Solutions.</b> No Warranty for fdd, 
+              keyboard, mouse, speaker, power supply and software.			
+            </td>
+            <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", padding: 1, backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>SUBTOTAL :</td>
+            <td style={{ borderRight: "1px solid black", padding: 1, backgroundColor: "rgb(255, 192, 0)" }} >
+              {this.renderMoneyCell(this.props.data.total + this.props.data.discount, "$", true, "9pt")}
+            </td>
+      </tr>
+    );
+  }
+
+  textButtomTermAndCondition(){
+    return(
+      <div>
+          <div style={{ textAlign: "left", fontSize: "12px", fontWeight: "bold" }}>*Good Sold are not returable and received in good condition.</div>
+          <div style={{ textAlign: "left", fontSize: "12px", fontWeight: "bold" }}>*We look forward to hearing from you.</div>
+      </div>
+    );
   }
 
 
@@ -115,43 +141,35 @@ export default class ReceiptA4V3HaveTax extends Component {
       <div id="pos-receipt-preview" style={{textAlign: "center", width: "705px", margin: "auto", fontFamily: "Khmer OS Content", display: "block", pageBreakBefore: "always"}}>
         <div style={{display: "flex", fontSize: "12px"}}>
           <div style={{ flexGrow: 2, fontSize: "40px", fontWeight: "bold", fontFamily: "Franklin Gothic Demi Cond", display: "flex", textAlign: "left", textDecoration: "underline" }}>
-            <span>INVOICE</span><br />
+          <span>{this.title}</span><br />
           </div>
            
         </div>
+
         {this.companyInformation()}
+
         {this.customerInfo()}
-        <div style={{fontSize: "23px",textAlign:"center",fontWeight: "bold", fontFamily: "Khmer OS Muol", color: "red"}}>
-          {this.title}
-        </div>
         
         <table style={{width: "100%", fontFamily: "Khmer OS Content", borderCollapse: "collapse"}}>
-          <tbody><tr style={{backgroundColor: "#FFC000"}}>
+          <tbody>
+            
+            <tr style={{backgroundColor: "#FFC000"}}>
               <td style={{border: "1px solid black", fontSize: "12px", padding: "6px"}}>NO#</td>
               <td style={{border: "1px solid black", fontSize: "12px", width: "650px", padding: "6px"}}>DESCRIPTION</td>
               <td style={{border: "1px solid black", fontSize: "12px", width: "14px", padding: "6px", textAlign: "center"}}>QTY</td>
               <td style={{border: "1px solid black", fontSize: "12px", width: "135px", padding: "6px", textAlign: "center"}}>UNIT PRICE</td>
               <td style={{border: "1px solid black", fontSize: "12px", width: "135px", padding: "6px", textAlign: "center"}}>AMOUNT</td>
             </tr>
+
             {this.itemlist()}
-            <tr style={{borderTop: "1px solid black", fontSize: "12px"}}>
-              <td colSpan={2} rowSpan={this.rowSpan} style={{borderRight: "1px solid black", fontSize: "12px", textAlign: "left", backgroundColor: "white"}}>
-                For Warranty details, please look at details below items. Warranty 
-                void if: Eltric shock, accident, Seal broken, misuse, or modification by
-                anyone other then <b>Tech Solutions.</b> No Warranty for fdd, 
-                keyboard, mouse, speaker, power supply and software.			
-              </td>
-              <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left", padding: 1, backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>SUBTOTAL :</td>
-              <td style={{ borderRight: "1px solid black", padding: 1, backgroundColor: "rgb(255, 192, 0)" }} >
-                {this.renderMoneyCell(this.props.data.total + this.props.data.discount, "$", true, "9pt")}
-              </td>
-            </tr>
-            
+
+            {this.termAndCondition()}
+
             <tr style={{border: "1px solid black", backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>
-              <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left", padding: 1, fontSize: "12px"}}>
+              <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", padding: 3, fontSize: "12px"}}>
                 DISCOUNT :
               </td>
-              <td style={{ borderRight: "1px solid black", padding: 1,fontSize: "12px" }}>
+              <td style={{ borderRight: "1px solid black", padding: 3,fontSize: "12px" }}>
                 {this.renderMoneyCell(this.props.data.discount, "$", true, "9pt")}
               </td>
             </tr>
@@ -159,15 +177,15 @@ export default class ReceiptA4V3HaveTax extends Component {
             {this.tax()}
 
             <tr style={{border: "1px solid black", backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>
-              <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left", padding: 1, fontSize: "12px"}}>TOTAL :</td>
-              <td style={{ borderRight: "1px solid black", padding: 1 }}>
+              <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", padding: 3, fontSize: "12px"}}>TOTAL :</td>
+              <td style={{ borderRight: "1px solid black", padding: 3 }}>
                 {this.renderMoneyCell(this.props.data.total + this.props.data.discount, "$", true, "9pt")}
               </td>
             </tr>
           </tbody>
         </table> 
-        <div style={{ textAlign: "left", fontSize: "12px", fontWeight: "bold" }}>*Good Sold are not returable and received in good condition.</div>
-        <div style={{ textAlign: "left", fontSize: "12px", fontWeight: "bold" }}>*We look forward to hearing from you.</div>
+        
+        {this.textButtomTermAndCondition()}
 
         <div style={{ marginTop: "40px" }}>
           <div style={{ width: "60%", textAlign: "left", float: "left", fontSize: "12px", fontWeight: "bold" }}>

@@ -1,4 +1,3 @@
-// import React from "react";
 import ReceiptA4V3HaveTax from "./ReceiptA4V3HaveTax";
 export default class ReceiptA4V3NoTax extends ReceiptA4V3HaveTax {
   constructor(props){
@@ -11,8 +10,3 @@ export default class ReceiptA4V3NoTax extends ReceiptA4V3HaveTax {
   tax(){ return;  }
 }
 
-ReceiptA4V3NoTax.defaultProps = {
-  receiptTemplate: {
-    logo: ""
-  },
-};
