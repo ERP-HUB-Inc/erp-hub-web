@@ -93,6 +93,7 @@ export default class ReceiptA4V3HaveTax extends Component {
     return(
       <tr style={{borderTop: "1px solid black", fontSize: "12px"}}>
             <td colSpan={2} rowSpan={this.rowSpan} style={{borderRight: "1px solid black", textAlign: "left", backgroundColor: "white"}}>
+              <div style={{ height: "20px", backgroundColor: "rgb(255, 192, 0)" }}></div>
               For Warranty details, please look at details below items. Warranty 
               void if: Eltric shock, accident, Seal broken, misuse, or modification by
               anyone other then <b>Tech Solutions.</b> No Warranty for fdd, 
