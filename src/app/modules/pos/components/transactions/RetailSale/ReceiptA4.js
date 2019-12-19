@@ -131,7 +131,7 @@ export default class ReceiptA4 extends Component {
                 បញ្ចុះតំលៃ Discount ({this.props.data.terms ? this.props.data.terms : 0}  %)
               </td>
               <td style={{ borderRight: "1px solid black", padding: 5 }}>
-                {this.renderMoneyCell(this.props.data.discount, "$", true, "9pt")}
+              {this.renderMoneyCell(this.props.data.discount, "$", true, "9pt")}
               </td>
             </tr>
 

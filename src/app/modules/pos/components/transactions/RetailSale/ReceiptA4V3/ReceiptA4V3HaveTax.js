@@ -1,10 +1,11 @@
 import React from "react";
+import ReactHtml from "raw-html-react";
 import Component from "../../../../../common/components/Component";
 export default class ReceiptA4V3HaveTax extends Component {
   constructor(props) {
     super(props);
     this.title = "INVOICE";
-    this.rowSpan = 4;
+    this.rowSpan = 5;
     this.borderTopCustomerInfo = "1px solid black";
   }
 
@@ -62,8 +63,8 @@ export default class ReceiptA4V3HaveTax extends Component {
   tax(){
     return(
       <tr style={{border: "1px solid black", backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>
-        <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", padding: 3, fontSize: "12px"}}>TAX :</td>
-        <td style={{ borderRight: "1px solid black", padding: 3 }}></td>
+        <td colSpan={2} style={{ letterSpacing: "1.2px", borderLeft: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", padding: 3, fontSize: "12px"}}>TAX :</td>
+        <td style={{ borderRight: "1px solid black" }}></td>
       </tr>
     );
   }
@@ -71,10 +72,10 @@ export default class ReceiptA4V3HaveTax extends Component {
   discount(){
     return(
       <tr style={{border: "1px solid black", backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>
-        <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", padding: 3, fontSize: "12px"}}>
+        <td colSpan={2} style={{ letterSpacing: "1.2px", borderLeft: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", fontSize: "12px"}}>
           DISCOUNT :
         </td>
-        <td style={{ borderRight: "1px solid black", padding: 3,fontSize: "12px" }}>
+        <td style={{ borderRight: "1px solid black",fontSize: "12px" }}>
           {this.renderMoneyCell(this.props.data.discount, "$", true, "9pt")}
         </td>
     </tr>
@@ -97,29 +98,22 @@ export default class ReceiptA4V3HaveTax extends Component {
   termAndCondition(){
     return(
       <tr style={{borderTop: "1px solid black", fontSize: "12px"}}>
-            <td colSpan={2} rowSpan={this.rowSpan} style={{borderRight: "1px solid black", textAlign: "left", backgroundColor: "white"}}>
-              <div style={{ height: "20px", backgroundColor: "rgb(255, 192, 0)" }}></div>
-              For Warranty details, please look at details below items. Warranty <br/>
-              void if: Eltric shock, accident, Seal broken, misuse, or modification by<br/>
-              anyone other then <b>Tech Solutions.</b> No Warranty for fdd, <br/>
-              keyboard, mouse, speaker, power supply and software.			
+            <td colSpan={2} rowSpan={this.rowSpan} style={{textAlign: "left", backgroundColor: "white", verticalAlign: "top", height: "200px" }}>
+              <div style={{ height: "20px", backgroundColor: "rgb(255, 192, 0)", width: "100%" }}>
+                <span style={{ borderLeft: "1px solid black",position: "relative", height: "25px", float: "right", marginRight: "-2px", marginTop: "-2px"  }}></span>
+              </div>
+              <ReactHtml html={this.Util.getClientPaymentTerm()} />
             </td>
-            <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", padding: 1, backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>SUBTOTAL :</td>
-            <td style={{ borderRight: "1px solid black", padding: 1, backgroundColor: "rgb(255, 192, 0)" }} >
+            <td colSpan={2} style={{ letterSpacing: "1.2px",  fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", padding: 1, backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>
+             SUBTOTAL :
+            </td>
+            <td style={{ borderRight: "1px solid black",  padding: 1, backgroundColor: "rgb(255, 192, 0)" }} >
               {this.renderMoneyCell(this.props.data.total + this.props.data.discount, "$", true, "9pt")}
             </td>
       </tr>
     );
   }
 
-  textButtomTermAndCondition(){
-    return(
-      <div style={{ marginTop: "10px" }}>
-          <div style={{ textAlign: "left", fontSize: "12px", fontWeight: "bold" }}>*Good Sold are not returable and received in good condition.</div>
-          <div style={{ textAlign: "left", fontSize: "12px", fontWeight: "bold" }}>*We look forward to hearing from you.</div>
-      </div>
-    );
-  }
 
   itemlist() {
     return this.props.productList.map((product, index) => 
@@ -175,16 +169,14 @@ export default class ReceiptA4V3HaveTax extends Component {
             {this.tax()}
 
             <tr style={{border: "1px solid black", backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>
-              <td colSpan={2} style={{ letterSpacing: "1.2px", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", padding: 3, fontSize: "12px"}}>TOTAL :</td>
+              <td colSpan={2} style={{ letterSpacing: "1.2px", borderLeft: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", fontSize: "12px"}}>TOTAL :</td>
               <td style={{ borderRight: "1px solid black", padding: 3 }}>
                 {this.renderMoneyCell(this.props.data.total + this.props.data.discount, "$", true, "9pt")}
               </td>
             </tr>
           </tbody>
         </table> 
-        
-        {this.textButtomTermAndCondition()}
-
+      
         <div style={{ marginTop: "40px" }}>
           <div style={{ width: "60%", textAlign: "left", float: "left", fontSize: "12px", fontWeight: "bold" }}>
             <div style={{ fontWeight: "bold", borderBottom: "1px solid black", lineHeight: "14px", width: "263px" }}>
