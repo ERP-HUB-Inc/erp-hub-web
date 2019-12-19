@@ -1,7 +1,7 @@
 import React from "react";
 import JsBarcode from "jsbarcode";
 import ReceiptA4 from "./ReceiptA4";
-import ReceiptA4V3HaveTax from "./ReceiptA4V3/ReceiptA4V3HaveTax";
+import QuotationNoVat from "./ReceiptA4V3/QuotationNoVat";
 import { PaperSize } from "../../settings/ReceiptTemplate/PaperSize";
 import Component from "../../../../common/components/Component";
 import Enum from "../../../../pos/enums";
@@ -187,7 +187,7 @@ export default class Receipt extends Component {
 
            paperSize.code === Enum.PAPER_SIZE.A4V3 ?  
 
-           <ReceiptA4V3HaveTax
+           <QuotationNoVat
             data={{
               client: {
                 businessName,
