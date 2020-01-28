@@ -10,3 +10,9 @@
         margin: 0mm;
     }
 }
+
+table.invoice-title {
+    width: 50%;
+    position: relative;
+    left: 128px;
+}

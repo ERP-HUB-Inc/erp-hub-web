@@ -100,7 +100,7 @@ export default class Receipt extends Component {
     
   
     }else {
-      return <table style={{ color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white" }}>
+      return <table className="invoice-title" style={{ color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white" }}>
         <tbody>
           <tr>
             <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: 10 }}><this.Translate id="register_no" />: {this.Util.getDeviceNumber()}</td>
