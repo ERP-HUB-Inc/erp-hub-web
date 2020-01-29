@@ -9,6 +9,15 @@
         size: auto;
         margin: 0mm;
     }
+
+    body {
+        -webkit-print-color-adjust: exact;
+     }
+
+     /* table tr td {
+         line-height: 1px;
+     } */
+
 }
 
 table.invoice-title {

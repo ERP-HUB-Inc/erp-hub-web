@@ -33,8 +33,8 @@ export default class Receipt extends Component {
 
   renderTitle = () => {
     return this.props.isRequestShowDetail ?
-      <div style={{ position: "relative", margin: "0 auto" }}>
-        <img style={{ width: 100 }} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} />
+      <div  style={{ position: "relative", margin: "0 auto", marginBottom: "4px" }}>
+        <img height="60px" style={{ maxWidth: "177px" }} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} />
       </div>
       :
       <div style={{ position: "relative", margin: "0 auto" }}>
@@ -101,12 +101,19 @@ export default class Receipt extends Component {
   
     }else {
       return <table className="invoice-title" style={{ color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white" }}>
+        <style>
+        {`@media print { table tr td { line-height: 8px } }`}
+      </style>
         <tbody>
           <tr>
-            <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: 10 }}><this.Translate id="register_no" />: {this.Util.getDeviceNumber()}</td>
+            <td  colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: 10 }}>
+              <this.Translate id="register_no" />: {this.Util.getDeviceNumber()}
+            </td>
           </tr>
           <tr>
-            <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><this.Translate id="text_date" />: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
+            <td valign="top" colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}>
+                <this.Translate id="text_date" />: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}
+            </td>
           </tr>
           <tr>
             <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><this.Translate id="receipt_no" />: {this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number}</td>
@@ -211,7 +218,7 @@ export default class Receipt extends Component {
             margin: "0 auto",
             fontFamily: "Khmer OS Content",
             pageBreakBefore: "always"
-          }}>
+          }} >
             <table style={{
               color: paperSize.setting.color,
               fontSize: paperSize.setting.dataFontSize,
@@ -381,7 +388,7 @@ export default class Receipt extends Component {
                 <tr>
                   <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white", paddingTop: 20, textTransform: "uppercase" }}><this.Translate id="text_thank_you_on_receipt" /></td>
                 </tr>
-                {this.renderQRCode()}
+                {/* {this.renderQRCode()} */}
                 <tr>
                   <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white" }}><this.Translate id="text_feedback_keep_on_receipt" /></td>
                 </tr>

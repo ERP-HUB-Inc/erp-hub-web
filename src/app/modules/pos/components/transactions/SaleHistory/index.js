@@ -220,7 +220,7 @@ export default class SaleHistoryList extends List {
 
     if (element && this.state.isRequestReprint) {
       this.Util.printElem(element.innerHTML);
-
+      
       this.setState({
         selectedRowKeys: [],
         reprintReceiptContent: null,
