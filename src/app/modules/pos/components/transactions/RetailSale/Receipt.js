@@ -1,7 +1,8 @@
 import React from "react";
 import JsBarcode from "jsbarcode";
 import ReceiptA4 from "./ReceiptA4";
-import QuotationNoVat from "./ReceiptA4V3/QuotationNoVat";
+import ReceiptExcludeTax from "./ReceiptA4V3/ReceiptExcludeTax";
+import ReceiptIncludeTax from "./ReceiptA4V3/ReceiptIncludeTax";
 import { PaperSize } from "../../settings/ReceiptTemplate/PaperSize";
 import Component from "../../../../common/components/Component";
 import Enum from "../../../../pos/enums";
@@ -155,7 +156,7 @@ export default class Receipt extends Component {
         email = this.props.currentUser.setting.email;
       }
     }
-
+    
     const {
       taxTitle,
       countTax
@@ -192,9 +193,9 @@ export default class Receipt extends Component {
 
             : 
 
-           paperSize.code === Enum.PAPER_SIZE.A4V3 ?  
-
-           <QuotationNoVat
+           paperSize.code === Enum.PAPER_SIZE.EXCLUDE_TAX ?  
+           
+           <ReceiptExcludeTax
             data={{
               client: {
                 businessName,
@@ -214,6 +215,29 @@ export default class Receipt extends Component {
             dispatch={this.props.dispatch} /> 
 
           :
+
+          paperSize.code === Enum.PAPER_SIZE.INCLUDE_TAX ?
+          <ReceiptIncludeTax
+          data={{
+            client: {
+              businessName,
+              address,
+              phoneNumber,
+              email
+            },
+            number: this.props.data.number,
+            createdAt: this.props.data.createdAt,
+            customer: this.props.customer,
+            discount: this.props.discountAmount,
+            taxAmount: this.props.taxAmount,
+            total,
+          }}
+          receiptTemplate={this.props.receiptTemplate}
+          productList={this.props.productList}
+          dispatch={this.props.dispatch} /> 
+
+          :
+
           <div style={{
             margin: "0 auto",
             fontFamily: "Khmer OS Content",

@@ -1,4 +1,10 @@
-.wrap-company-address p {
+.wrap-company-address p
+{
   margin-bottom: 0px;
   letter-spacing: 1.2px;
+}
+
+#pos-receipt-preview p {
+  margin-bottom: 0px !important;
+  line-height: 18px;
 }

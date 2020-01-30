@@ -42,8 +42,21 @@ export const PaperSize = [
     }
   },
   {
-    code: Enum.PAPER_SIZE.A4V3,
-    name: "A4V3",
+    code: Enum.PAPER_SIZE.EXCLUDE_TAX,
+    name: "Exclude Tax",
+    setting: {
+      storeNameFontSize: "16pt",
+      dataFontSize: "8pt",
+      subDataFontSize: "7pt",
+      width: "120mm",
+      color: "rgb(142, 136, 136)",
+      marginLef: "auto",
+      padding: 0,
+    }
+  },
+  {
+    code: Enum.PAPER_SIZE.INCLUDE_TAX,
+    name: "Include Tax",
     setting: {
       storeNameFontSize: "16pt",
       dataFontSize: "8pt",

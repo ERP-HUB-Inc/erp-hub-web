@@ -48,7 +48,8 @@ export default {
     A4: 1,
     THERMAL: 2,
     MINI_THERMAL: 3,
-    A4V3: 4
+    EXCLUDE_TAX: 4,
+    INCLUDE_TAX: 5
   },
   CUSTOMER_CREDIT_STATUS: {
     DISABLE: 1,

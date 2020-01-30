@@ -1,7 +1,7 @@
 import React from "react";
 import ReactHtml from "raw-html-react";
 import Component from "../../../../../common/components/Component";
-export default class ReceiptA4V3HaveTax extends Component {
+export default class ReceiptIncludeTax extends Component {
   constructor(props) {
     super(props);
     this.title = "INVOICE";
@@ -16,11 +16,11 @@ export default class ReceiptA4V3HaveTax extends Component {
          <tbody>
             <tr style={{backgroundColor: "white"}}>
              <td style={{ textAlign: "left", width: "61%",fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>TO :</span> { this.props.data.customer.firstName + " " + this.props.data.customer.lastName   }</td>
-             <td style={{ textAlign: "left",fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Invoice No : </span></td>
+             <td style={{ textAlign: "left",fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Invoice No : {this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number}</span></td>
             </tr>
             <tr style={{backgroundColor: "white"}}>
               <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Attn : </span></td>
-              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Date : </span></td>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Date : </span>{this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
             </tr>
             <tr style={{backgroundColor: "white"}}>
               <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Phone :</span>{this.props.data.customer.phoneNumber}</td>
@@ -64,7 +64,9 @@ export default class ReceiptA4V3HaveTax extends Component {
     return(
       <tr style={{border: "1px solid black", backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>
         <td colSpan={2} style={{ letterSpacing: "1.2px", borderLeft: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", padding: 3, fontSize: "12px"}}>TAX :</td>
-        <td style={{ borderRight: "1px solid black" }}></td>
+        <td style={{ borderRight: "1px solid black" }}>
+            {this.renderMoneyCell(this.props.data.taxAmount, "$", true, "9pt")}
+        </td>
       </tr>
     );
   }
@@ -138,7 +140,6 @@ export default class ReceiptA4V3HaveTax extends Component {
   render() {
     return (
       <div id="pos-receipt-preview" style={{textAlign: "center", width: "705px", margin: "auto", fontFamily: "Khmer OS Content", display: "block", pageBreakBefore: "always"}}>
-        
         <div style={{display: "flex", fontSize: "12px"}}>
           <div style={{ flexGrow: 2, fontSize: "40px", fontWeight: "bold", fontFamily: "Franklin Gothic Demi Cond", display: "flex", textAlign: "left", textDecoration: "underline" }}>
             <span>{this.title}</span><br />
@@ -150,8 +151,11 @@ export default class ReceiptA4V3HaveTax extends Component {
         {this.customerInfo()}
         
         <table style={{width: "100%", fontFamily: "Khmer OS Content", borderCollapse: "collapse"}}>
+            <style>
+                {`@media print { table tr td p { line-height: 8px; }, table tr td strong { font-weight: bold; } }`}
+            </style>  
+
           <tbody>
-            
             <tr style={{backgroundColor: "#FFC000"}}>
               <td style={{border: "1px solid black", fontSize: "12px", padding: "1px"}}>NO#</td>
               <td style={{border: "1px solid black", fontSize: "12px", width: "650px", padding: "1px"}}>DESCRIPTION</td>
@@ -180,16 +184,16 @@ export default class ReceiptA4V3HaveTax extends Component {
         <div style={{ marginTop: "40px" }}>
           <div style={{ width: "60%", textAlign: "left", float: "left", fontSize: "12px", fontWeight: "bold" }}>
             <div style={{ fontWeight: "bold", borderBottom: "1px solid black", lineHeight: "14px", width: "263px" }}>
-              <span style={{ marginRight: "75px" }}>Date:</span><span style={{ marginRight: "75px" }}>/</span><span style={{ marginRight: "75px" }}>/</span>
+              <span style={{ marginRight: "75px" }}><strong>Date:</strong></span><span style={{ marginRight: "75px" }}>/</span><span style={{ marginRight: "75px" }}>/</span>
             </div> 
-            <div style={{ width: "263px", textAlign: "center" }}>Customer's Signature</div>
+            <div style={{ width: "263px", textAlign: "center" }}><strong>Customer's Signature</strong></div>
           </div>
           <div style={{ width: "40%", textAlign: "left", float: "right", fontSize: "12px", fontWeight: "bold" }}>
             <div style={{ fontWeight: "bold", borderBottom: "1px solid black", lineHeight: "14px" }}>
-              <span style={{ marginRight: "75px" }}>Date:</span><span style={{ marginRight: "75px" }}>/</span><span style={{ marginRight: "75px" }}>/</span>
+              <span style={{ marginRight: "75px" }}><strong>Date:</strong></span><span style={{ marginRight: "75px" }}>/</span><span style={{ marginRight: "75px" }}>/</span>
             </div> 
             <div style={{ width: "263px", textAlign: "center" }}>
-              Employee's Signature<br/>
+              <strong>Employee's Signature</strong><br/>
               {this.props.data.client.businessName}<br/>
               {this.props.data.client.phoneNumber}
             </div>
