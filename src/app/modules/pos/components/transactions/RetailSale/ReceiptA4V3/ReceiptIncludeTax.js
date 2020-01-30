@@ -174,7 +174,7 @@ export default class ReceiptIncludeTax extends Component {
 
             <tr style={{border: "1px solid black", backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>
               <td colSpan={2} style={{ letterSpacing: "1.2px", borderLeft: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", fontSize: "12px"}}>TOTAL :</td>
-              <td style={{ borderRight: "1px solid black", padding: 3 }}>
+              <td style={{ borderRight: "1px solid black" }}>
                 {this.renderMoneyCell(this.props.data.total + this.props.data.discount, "$", true, "9pt")}
               </td>
             </tr>
