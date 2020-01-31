@@ -11,27 +11,28 @@ export default class ReceiptIncludeTax extends Component {
 
   customerInfo(){
     return(
-      <div style={{ paddingTop: "3px", paddingBottom: "3px", fontSize: "12px",borderTop: this.borderTopCustomerInfo, textAlign:"center"}}>
+      <div className="main-customer" style={{ paddingTop: "3px", paddingBottom: "3px", fontSize: "12px", borderTop: this.borderTopCustomerInfo, textAlign:"center", lineHeight: "15px"}}>
          <table style={{width: "100%", borderCollapse: "collapse"}}>
+        
          <tbody>
             <tr style={{backgroundColor: "white"}}>
              <td style={{ textAlign: "left", width: "61%",fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>TO :</span> { this.props.data.customer.firstName + " " + this.props.data.customer.lastName   }</td>
-             <td style={{ textAlign: "left",fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Invoice No : {this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number}</span></td>
+             <td style={{ textAlign: "left",fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Invoice No : </span> {this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number}</td>
             </tr>
             <tr style={{backgroundColor: "white"}}>
               <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Attn : </span></td>
-              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Date : </span>{this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Date : </span> {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
             </tr>
             <tr style={{backgroundColor: "white"}}>
-              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Phone :</span>{this.props.data.customer.phoneNumber}</td>
-              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Currency : </span></td>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Phone :</span> {this.props.data.customer.phoneNumber}</td>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Currency :</span> {this.props.data.defaultCurrency ? this.props.data.defaultCurrency.symbol : ""}</td>
             </tr>
             <tr style={{backgroundColor: "white"}}>
               <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Address :</span> { this.props.data.customer.address ? this.props.data.customer.address : "" }</td>
               <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Sale Rep : </span></td>
             </tr>
             <tr style={{backgroundColor: "white"}}>
-              <td style={{ textAlign: "left", fontSize: "12px" }}><b>Email : {this.props.data.customer.email}</b></td>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><b>Email :</b> {this.props.data.customer.email}</td>
               <td style={{ textAlign: "left", fontSize: "12px" }}></td>
             </tr>
           </tbody>
@@ -45,7 +46,7 @@ export default class ReceiptIncludeTax extends Component {
 
   companyInformation(){
     return(
-      <div style={{ textAlign: "left", fontSize: "12px" }}>
+      <div style={{ textAlign: "left", fontSize: "12px" }} className="main-customer">
           <div style={{ width: "250px" }}>
               <div style={{ width: "53px", float: "left", fontWeight: "bold" }}>Address</div>
               <div style={{ width: "281px" }}>: {this.props.data.client.address} </div>
@@ -145,16 +146,23 @@ export default class ReceiptIncludeTax extends Component {
             <span>{this.title}</span><br />
           </div>
         </div>
+      
+         <style>
+              {`@media print { 
+                table tr td p { line-height: 8px; }, 
+                table tr td strong { font-weight: bold; }, 
+                .employee-signature { line-height: "17px" }, 
+                } 
+                .main-customer table tr td, .main-customer { line-height: 15px; }
+              `}
+          </style>  
 
         {this.companyInformation()}
 
         {this.customerInfo()}
         
         <table style={{width: "100%", fontFamily: "Khmer OS Content", borderCollapse: "collapse"}}>
-            <style>
-                {`@media print { table tr td p { line-height: 8px; }, table tr td strong { font-weight: bold; } }`}
-            </style>  
-
+          
           <tbody>
             <tr style={{backgroundColor: "#FFC000"}}>
               <td style={{border: "1px solid black", fontSize: "12px", padding: "1px"}}>NO#</td>
@@ -192,7 +200,7 @@ export default class ReceiptIncludeTax extends Component {
             <div style={{ fontWeight: "bold", borderBottom: "1px solid black", lineHeight: "14px" }}>
               <span style={{ marginRight: "75px" }}><strong>Date:</strong></span><span style={{ marginRight: "75px" }}>/</span><span style={{ marginRight: "75px" }}>/</span>
             </div> 
-            <div style={{ width: "263px", textAlign: "center" }}>
+            <div className="employee-signature" style={{ width: "263px", textAlign: "center", lineHeight: "17px" }}>
               <strong>Employee's Signature</strong><br/>
               {this.props.data.client.businessName}<br/>
               {this.props.data.client.phoneNumber}
