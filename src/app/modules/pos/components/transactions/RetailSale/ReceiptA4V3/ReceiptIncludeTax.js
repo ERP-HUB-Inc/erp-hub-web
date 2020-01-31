@@ -46,17 +46,21 @@ export default class ReceiptIncludeTax extends Component {
 
   companyInformation(){
     return(
-      <div style={{ textAlign: "left", fontSize: "12px" }} className="main-customer">
-          <div style={{ width: "250px" }}>
-              <div style={{ width: "53px", float: "left", fontWeight: "bold" }}>Address</div>
-              <div style={{ width: "281px" }}>: {this.props.data.client.address} </div>
-          </div>
-          <div style={{ width: "250px" }}>
-            <span style={{ marginRight: "17px", fontWeight: "bold" }}>Phone</span>: { this.props.data.client.phoneNumber }
-          </div>
-          <div style={{ width: "250px" }}>
-            <span style={{ marginRight: "22px", fontWeight: "bold" }}>Email</span>: {this.props.data.client.email}
-          </div>
+      <div className="main-customer">
+           <table style={{width: "50%", fontFamily: "Khmer OS Content", borderCollapse: "collapse"}}>
+            <tbody>
+              <tr style={{ backgroundColor: "white" }}>
+                <td valign="top"  style={{ textAlign: "left", fontWeight: "bold", fontSize: "12px", width: "60px" }}>Address :</td>
+                <td style={{ textAlign: "left",fontSize: "12px" }}> <ReactHtml html={this.props.data.client.address} /></td>
+              </tr>
+              <tr style={{ backgroundColor: "white" }}>
+                <td colSpan={2} style={{ textAlign: "left", fontWeight: "bold", fontSize: "12px" }}>Phone : { this.props.data.client.phoneNumber }</td>
+              </tr>
+              <tr style={{ backgroundColor: "white" }}>
+                <td colSpan={2} style={{ textAlign: "left", fontWeight: "bold", fontSize: "12px" }}>Email : {this.props.data.client.email}</td>
+              </tr>
+            </tbody>
+        </table>
       </div>
     );
   }
@@ -152,9 +156,12 @@ export default class ReceiptIncludeTax extends Component {
                 table tr td p { line-height: 8px; }, 
                 table tr td strong { font-weight: bold; }, 
                 .employee-signature { line-height: "17px" }, 
-                } 
-                .main-customer table tr td, .main-customer { line-height: 15px; }
-              `}
+              
+                .main-customer table tr td, .main-customer, .main-customer table tr td p { line-height: 15px; },
+                .main-address { display: "block" }
+                .main-customer .company-address, .main-customer .company-address div { float: "left" }
+                
+              }`}
           </style>  
 
         {this.companyInformation()}

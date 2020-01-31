@@ -25,3 +25,8 @@ table.invoice-title {
     position: relative;
     left: 128px;
 }
+
+.company-address, 
+.company-address div {
+    float: left;
+}
