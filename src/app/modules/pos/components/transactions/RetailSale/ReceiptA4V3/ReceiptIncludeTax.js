@@ -20,7 +20,7 @@ export default class ReceiptIncludeTax extends Component {
              <td style={{ textAlign: "left",fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Invoice No : </span> {this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number}</td>
             </tr>
             <tr style={{backgroundColor: "white"}}>
-              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Attn : </span></td>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Attn : </span>N/A</td>
               <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Date : </span> {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
             </tr>
             <tr style={{backgroundColor: "white"}}>
@@ -29,7 +29,7 @@ export default class ReceiptIncludeTax extends Component {
             </tr>
             <tr style={{backgroundColor: "white"}}>
               <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Address :</span> { this.props.data.customer.address ? this.props.data.customer.address : "" }</td>
-              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Sale Rep : </span></td>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Sale Rep : </span>{ this.props.data.referenceNo ? this.props.data.referenceNo : "N/A" }</td>
             </tr>
             <tr style={{backgroundColor: "white"}}>
               <td style={{ textAlign: "left", fontSize: "12px" }}><b>Email :</b> {this.props.data.customer.email}</td>
@@ -91,7 +91,7 @@ export default class ReceiptIncludeTax extends Component {
 
   vatNumber(){
     return(
-      <div style={{ backgroundColor: "rgb(231, 230, 230)", textAlign: "left", padding: "1px", fontWeight: "bold", fontSize: "12px" }}>VAT Number:</div>
+    <div style={{ backgroundColor: "rgb(231, 230, 230)", textAlign: "left", padding: "1px", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>VAT Number:</span> {this.Util.getClientVATNo()}</div>
     );
   }
 
