@@ -4,6 +4,7 @@ import Component from "../../Component";
 import history from "../../../router/history";
 import ConstantAuth from "../../../constants/authentication";
 import ClientAction from "../../../actions/client";
+import DeviceAction from "../../../../pos/action/settings/device";
 import ClientService from "../../../services/ClientService";
 import EnumInventorySetting from "../../../../inventory/enums";
 
@@ -23,7 +24,10 @@ export default class ClientSignIn extends Component {
     }
     const domainInfo = this.Util.getDomainInfo();
     this.dispatch(ClientAction.findClientByColumn("storeName", domainInfo.subStr));
+    //set device number
+    this.props.dispatch(DeviceAction.update("ca",851954,this.Util.getDomainInfo().subStr));
   }
+  
 
   componentDidUpdate() {
     const {signinUser} = this.props;
@@ -81,10 +85,11 @@ export default class ClientSignIn extends Component {
           this.errorMessage = "Invalid user name or password.";
         } else if (data.error.code === this.HttpCode.NO_PERMISSION_ON_STORE) {
           this.errorMessage = "Your account no permission to any store.";
-        } else if (data.error.code === this.HttpCode.DEVICE_NOT_FOUND) {
-          this.errorMessage = "You are not yet register device.";
-          localStorage.removeItem(ConstantAuth.ACCESS_DEVICE);
-          history.push("/device");
+        // } 
+        // else if (data.error.code === this.HttpCode.DEVICE_NOT_FOUND) {
+        //   this.errorMessage = "You are not yet register device.";
+        //   localStorage.removeItem(ConstantAuth.ACCESS_DEVICE);
+        //   history.push("/device");
         } else if (data.error.code === this.HttpCode.INTERNAL_SERVER_ERROR) {
           this.errorMessage = "Please check your connection.";
         }
@@ -96,6 +101,13 @@ export default class ClientSignIn extends Component {
 
       this.props.dispatch(ClientAction.reset());
     }
+
+    //set device number
+    if(this.props.updateDeviceNumber.updated){
+      localStorage.setItem(ConstantAuth.ACCESS_DEVICE, this.props.updateDeviceNumber.response.data.code);
+    }
+   
+
   }
   
   handleSubmit(e) {

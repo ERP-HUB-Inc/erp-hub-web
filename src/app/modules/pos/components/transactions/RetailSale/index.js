@@ -24,11 +24,14 @@ import ProductTypeAction from "../../../../inventory/actions/products/productsTy
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import ConstantOpenRegistrationSale from "../../../constants/transactions/openSaleRegisration";
 import ProductAction from "../../../../inventory/actions/products/product";
+import DeviceAction from "../../../../pos/action/settings/device";
 import ProductConstant from "../../../../inventory/constants/products/product";
 import ProductVariantConstant from "../../../../inventory/constants/products/productVariant";
+import ConstantAuth from "../../../../common/constants/authentication";
 import CustomerDropDownSearch from "../../../../crm/components/customers/Customer/DropDownSearch";
 import ProductDropDownSearch from "../../../../inventory/components/products/Product/DropDownSearch";
 import FormOpenSaleRegistration from "../../../containers/transactions/OpenSaleRegistration/FormOpen";
+import DeviceNumber from "../../../containers/transactions/SaleOrder/deviceNumber";
 import OpenSaleRegistrationAction from "../../../action/transaction/openSalaRegisration";
 import StartUp from "../../../../common/components/StartUp";
 import history from "../../../../common/router/history";
@@ -68,7 +71,8 @@ export default class Retail extends Component {
       isHasSubCurrency: false,
       isRequestLoadingMore: false,
       baseCurrency: {},
-      subCurrency: {}
+      subCurrency: {},
+      modalVisible: false
     };
 
     this.isSetFocusOnSearchProduct = false;
@@ -108,7 +112,7 @@ export default class Retail extends Component {
     this.handleOnChangOrderFieldBlur = this.handleOnChangOrderFieldBlur.bind(this);
   }
 
-  componentDidUpdate() {
+  componentDidUpdate() {    
     if (!this.hasDidUpdate &&
       this.props.openSaleRegistration.fetched &&
       this.props.open.showForm) {
@@ -170,12 +174,16 @@ export default class Retail extends Component {
       });
       this.props.dispatch(ProductAction.reset(ProductConstant.RESET_PARTIAL_PRODUCT));
     }
+    
+
   }
 
   componentDidMount() {
     window.addEventListener("resize", this.handleOnResizeScreen);
     this.handleSetFullScreen();
-    
+  
+    this.props.dispatch(DeviceAction.update(this.Util.getSetting().storeName,123,this.Util.getDomainInfo().subStr));
+
     this.props.dispatch(OpenSaleRegistrationAction.showForm());
     this.props.dispatch(OpenSaleRegistrationAction.last());
 
@@ -187,6 +195,12 @@ export default class Retail extends Component {
       this.props.dispatch(ReceiptTemplateAction.default());
       this.props.dispatch(PaymentMethodAction.fetch(2, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
     });
+
+    if(localStorage.getItem(ConstantAuth.ACCESS_DEVICE)) {
+      this.setState({
+        modalContent: <DeviceNumber/>
+      });
+    }
 
     // RESTORE CURRENT RECEIPT
     //this.restoreReceipt(Enum.CURRENT_RECEIPT);

@@ -16,6 +16,7 @@ function mapStateToProps(state) {
   return {
     signinUser: state.reducer.client.signin,
     signinDomain: state.reducer.client.signinDomain,
+    updateDeviceNumber: state.reducer.device.update,
     client: state.reducer.client.request
   };
 }

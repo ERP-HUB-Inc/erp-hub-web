@@ -21,9 +21,9 @@ function renderPageAuth () {
     }
   }
 
-  if (!isAccessSecureSubDomain && !localStorage.getItem(Constant.ACCESS_DEVICE)) {
-    return <Redirect to="/device" />;
-  }
+  // if (!isAccessSecureSubDomain && !localStorage.getItem(Constant.ACCESS_DEVICE)) {
+  //   return <Redirect to="/device" />;
+  // }
 
   return isAccessSecureSubDomain
     ? <Redirect to="/store" /> : <Redirect to="/signin" />;

@@ -14,6 +14,7 @@ function mapStateToProps(state) {
     customers: state.reducer.customer.request,
     customerAdd: state.reducer.customer.add,
     productSearch: state.reducer.product.search,
+    updateDeviceNumber: state.reducer.device.update,
     locale: state.locale
   };
 }
