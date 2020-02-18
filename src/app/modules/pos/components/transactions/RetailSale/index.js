@@ -195,8 +195,9 @@ export default class Retail extends Component {
       this.props.dispatch(ReceiptTemplateAction.default());
       this.props.dispatch(PaymentMethodAction.fetch(2, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
     });
-
-    if(localStorage.getItem(ConstantAuth.ACCESS_DEVICE)) {
+    
+    //show device dialog
+    if(!localStorage.getItem(ConstantAuth.ACCESS_DEVICE)) {
       this.setState({
         modalContent: <DeviceNumber/>
       });

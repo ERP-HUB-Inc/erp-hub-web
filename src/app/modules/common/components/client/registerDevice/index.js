@@ -95,7 +95,7 @@ export default class SignInStore extends Component {
               errorRequired="Please enter device name"
               form={this.props.form}/>
 
-            {/* <this.InputText
+            <this.InputText
               name="deviceNumber"
               placeholder="Device Number"
               type="text"
@@ -107,7 +107,7 @@ export default class SignInStore extends Component {
               handleKeyDown={this.handleKeyDown}
               form={this.props.form} />
             {this.errorMessage != null ? <div className="ant-form-explain">{this.errorMessage}</div> : "" }
-            */}
+           
             <div className="main-signin" style={{marginTop: 15}}>
               <this.Button loading={this.props.update.updating} htmlType="submit" type="info">SUBMIT</this.Button>
             </div>
