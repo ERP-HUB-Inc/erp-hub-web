@@ -77,12 +77,12 @@ export default class SaleList extends List {
   
     this.exportCsvFileName = "sale_report.csv";
     this.reportTypeList = [
-      {value: 0, name: this.CATranslate("text_sale_summary", this.props.locale)},
-      {value: 1, name: this.CATranslate("text_product", this.props.locale)},
-      {value: 2, name: this.CATranslate("text_product_type", this.props.locale)},
-      {value: 3, name: this.CATranslate("text_user", this.props.locale)},
-      {value: 4, name: this.CATranslate("text_customer", this.props.locale)},
-      {value: 5, name: this.CATranslate("text_location", this.props.locale)}
+      {value: Enum.REPORT_TYPE.SALE_SUMMARY, name: this.CATranslate("text_sale_summary", this.props.locale)},
+      {value: Enum.REPORT_TYPE.PRODUCT, name: this.CATranslate("text_product", this.props.locale)},
+      {value: Enum.REPORT_TYPE.CATEGORY, name: this.CATranslate("text_product_type", this.props.locale)},
+      {value: Enum.REPORT_TYPE.USER, name: this.CATranslate("text_user", this.props.locale)},
+      {value: Enum.REPORT_TYPE.CUSTOMER, name: this.CATranslate("text_customer", this.props.locale)},
+      {value: Enum.REPORT_TYPE.LOCATION, name: this.CATranslate("text_location", this.props.locale)}
     ];
 
     this.fetchingProp = "saleReport";
@@ -289,6 +289,18 @@ export default class SaleList extends List {
 
   }
 
+  renderQuantityColumn(){
+    if(this.state.reportType === Enum.REPORT_TYPE.PRODUCT){
+      return {
+        title: <this.Translate id="text_quantity" />,
+        dataIndex: "quantity",
+        key: "quantity",
+        width: 200
+      }
+    }
+    return [];
+  }
+
   renderTable() {
     return (
       <div className="main-table-sale-report">
@@ -298,6 +310,7 @@ export default class SaleList extends List {
           columns={
             [
               this.columns[this.state.reportType],
+              this.renderQuantityColumn(),
               {
                 title: <this.Translate id="text_revenue" />,
                 dataIndex: "revenue",

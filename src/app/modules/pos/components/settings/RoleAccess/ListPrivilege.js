@@ -364,7 +364,7 @@ export default class ListPrivilege extends Component {
         }
         key={parent.id}
 
-        id={`${parent.id}`}>
+        id={`${parent.id}`} >
         <this.Row key={parent.id}>
           <this.Checkbox // 2 THIS THE SAME IT SHOW OVER 1 WHEN COLAPSE OPEN
             indeterminate={resultCompare["indeterminate"]}
@@ -443,7 +443,7 @@ export default class ListPrivilege extends Component {
           </this.Col>
         </this.Row>
         { privileges.fetched ?
-          <this.Row>
+          <this.Row style={{ position: "absolute", width: "100%" }}>
             <this.Col md="12">   
               <this.Collapse>
                 {this.privilegeCollection.map(parent => this.renderPanelPrivilege(parent))}
