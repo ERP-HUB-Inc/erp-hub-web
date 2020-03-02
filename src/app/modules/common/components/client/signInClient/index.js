@@ -4,7 +4,7 @@ import Component from "../../Component";
 import history from "../../../router/history";
 import ConstantAuth from "../../../constants/authentication";
 import ClientAction from "../../../actions/client";
-import DeviceAction from "../../../../pos/action/settings/device";
+// import DeviceAction from "../../../../pos/action/settings/device";
 import ClientService from "../../../services/ClientService";
 import EnumInventorySetting from "../../../../inventory/enums";
 
@@ -24,8 +24,9 @@ export default class ClientSignIn extends Component {
     }
     const domainInfo = this.Util.getDomainInfo();
     this.dispatch(ClientAction.findClientByColumn("storeName", domainInfo.subStr));
+
     //set device number
-    this.props.dispatch(DeviceAction.update("ca",851954,this.Util.getDomainInfo().subStr));
+    // this.props.dispatch(DeviceAction.update("ca", 851954, this.Util.getDomainInfo().subStr));
   }
   
 

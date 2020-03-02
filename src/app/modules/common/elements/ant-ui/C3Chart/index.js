@@ -3,7 +3,10 @@ import C3 from "react-c3js";
 import "c3/c3.css";
 import "./index.css";
 export class C3Chart extends Component {
-  render() {
+  render () {
+    return <div/>;
+  }
+  renders() {
     return <C3
       data={this.props.data}
       size={this.props.size}
