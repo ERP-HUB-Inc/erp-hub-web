@@ -13,6 +13,16 @@ export default combineReducers({
     ];
     return reducer.request(state, action, constants);
   },
+  checkDevice: (state = InitialState.detail(), action) => {
+    const constants = [
+      Constant.CHECK_DEVICE_PENDING,
+      Constant.CHECK_DEVICE_REJECTED,
+      Constant.CHECK_DEVICE_FULFILLED,
+      null,
+      Constant.RESET_CHECK_DEVICE
+    ];
+    return reducer.detail(state, action, constants);
+  },
   update: (state = InitialState.update(), action) => {
     const constants = [
       Constant.UPDATE_DEVICE_PENDING,

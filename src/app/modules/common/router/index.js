@@ -63,16 +63,17 @@ class Router extends Component {
           className="text-uppercase"
           onClick={() => window.location.reload(true)}
           style={{
+            display: "none",
             position: "fixed",
             bottom: 8,
             borderRadius: 50,
-            height: 60,
-            width: 60,
+            height: 50,
+            width: 50,
             right: 18,
             backgroundColor: "#ff4b55",
             boxShadow: "0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.2)"
           }}>
-          <span className="icon-reload" style={{fontSize: "25pt"}}></span>
+          <span className="icon-reload" style={{fontSize: "18pt"}}></span>
         </this.Button>
       </Layout>
     );

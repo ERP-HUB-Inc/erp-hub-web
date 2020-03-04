@@ -11,6 +11,14 @@ export default {
       });
     };
   },
+  checkDevice: deviceNumber => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.CHECK_DEVICE,
+        payload: DeviceService.checkDevice(deviceNumber)
+      });
+    };
+  },
   update: (deviceName, number, storeName) => {
     return dispatch => {
       return dispatch({

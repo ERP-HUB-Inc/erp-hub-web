@@ -12,6 +12,7 @@ class DeviceNumber extends React.Component {
 function mapStateToProps(state) {
   return {
     updateDeviceNumber: state.reducer.device.update,
+    checkDevice: state.reducer.device.checkDevice,
     locale: state.locale
   };
 }

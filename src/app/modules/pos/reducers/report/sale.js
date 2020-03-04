@@ -8,7 +8,8 @@ export default combineReducers({
     const constants = [
       Constant.REQUEST_SALE_REPORT_PENDING,
       Constant.REQUEST_SALE_REPORT_REJECTED,
-      Constant.REQUEST_SALE_REPORT_FULFILLED
+      Constant.REQUEST_SALE_REPORT_FULFILLED,
+      Constant.RESET_SALE_REPORT
     ];
     return reducer.request(state, action, constants);
   }

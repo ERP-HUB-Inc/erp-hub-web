@@ -23,6 +23,7 @@ export function mapStateToProps(state) {
     openSaleRegistration: state.reducer.openSaleRegistration.request,
     open: state.reducer.openSaleRegistration.open,
     checkPermission: state.reducer.privilege.checkPermission,
+    checkDevice: state.reducer.device.checkDevice,
     locale: state.locale
   };
 }

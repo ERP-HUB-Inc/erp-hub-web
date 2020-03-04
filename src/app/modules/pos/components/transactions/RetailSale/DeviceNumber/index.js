@@ -1,17 +1,20 @@
 import React from "react";
+import history from "../../../../../common/router/history";
 import DeviceAction from "../../../../../pos/action/settings/device";
+import Constant from "../../../../../pos/constants/settings/device";
 import ConstantAuth from "../../../../../../modules/common/constants/authentication";
 import Modal from "../../../../../common/components/shares/Modal";
 
 export default class DeviceNumber extends Modal {
   constructor(props) {
     super(props);
+    this.state = {
+      errorDeviceNumber: {}
+    };
     this.title = "register device";
-    this.errorDeviceNumber = "";
     this.storeName = "";
     this.errorMessage = null;
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidUpdate() {
@@ -23,20 +26,23 @@ export default class DeviceNumber extends Modal {
       && "error" in error["data"]
       ) {
         if (error["data"]["error"].code === this.HttpCode.DEVICE_NOT_FOUND) {
-                this.errorDeviceNumber = {
-                  help: "Invalid device number",
-                  validateStatus: "error"
-                }
+          this.setState({errorDeviceNumber: {
+            help: "Invalid device number",
+            validateStatus: "error"
+          }});
         }
 
         if (error["data"]["error"].code === this.HttpCode.DEVICE_NOT_AVAILABLE) {
-            this.errorDeviceNumber = {
+            this.setState({
+              errorDeviceNumber: {
                 help: "Device number is not available",
                 validateStatus: "error"
-            }
+            }});
         }
       }
-        //   this.props.dispatch(DeviceAction.reset(Constant.RESET_UPDATE));
+
+      this.props.dispatch(DeviceAction.reset(Constant.RESET_UPDATE));
+
     } else if (this.props.updateDeviceNumber && this.props.updateDeviceNumber.response && this.props.updateDeviceNumber.response.data) {
         localStorage.setItem(ConstantAuth.ACCESS_DEVICE, this.props.updateDeviceNumber.response.data.code);
         window.location.reload();
@@ -61,13 +67,19 @@ export default class DeviceNumber extends Modal {
     });
   }
 
-  handleKeyDown () {
-    this.validateClassStatus = "";
+  handleKeyDown = () => {
+    this.setState({
+      validateClassStatus: {}
+    });
   }
 
+  handleCancel() {
+    history.push("/");
+  }
   
   render() {
-    if (this.props.updateDeviceNumber.showForm) {
+    this.submitLoading = this.props.updateDeviceNumber.updating;
+    if (this.props.checkDevice.showForm) {
       this.content = (
         <div>
            <this.InputText
@@ -85,7 +97,7 @@ export default class DeviceNumber extends Modal {
               type="text"
               label="Device Number"
               required={true}
-              {...this.errorDeviceNumber}
+              {...this.state.errorDeviceNumber}
               errorRequired="Please enter device number to grant access"
               validateClassStatus={this.validateClassStatus}
               handleKeyDown={this.handleKeyDown}

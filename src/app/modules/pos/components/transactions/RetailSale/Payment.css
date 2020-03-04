@@ -246,7 +246,7 @@
     width: 60px;
     border: 0.5px solid #ECECEC;
     border-right: 0;
-    height: 54px;
+    height: 44px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -254,7 +254,6 @@
     border-top-left-radius: 3px;
     font-size: 20pt;
     font-weight: 600;
-    font-family: serif
 }
 
 .total-display {

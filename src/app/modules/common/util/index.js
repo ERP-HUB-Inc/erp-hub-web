@@ -176,15 +176,15 @@ export class Util {
   
   formatDate (value, format = "DD-MMM-YYYY") {
     format = format === null || format === "" ? "DD MMM YYYY" : format;
-    const locale = this.getCurrentLanguageCode(); 
-    moment.locale(locale);
+    // const locale = this.getCurrentLanguageCode(); 
+    // moment.locale(locale);
     return moment(value).format(format);
   }
 
   formatDateTime (value, format = "DD MMMM YYYY h:mm:ss A") {
     format = format == null ? "DD MMMM YYYY h:mm:ss A" : format;
-    const locale = this.getCurrentLanguageCode(); 
-    moment.locale(locale);
+    // const locale = this.getCurrentLanguageCode(); 
+    // moment.locale(locale);
     return moment(value).format(format);
   }
 
@@ -192,9 +192,9 @@ export class Util {
     format = format == null ? "YYYY-MM-DD" : format;
     value = moment(value).format(format);
 
-    if (this.getCurrentLanguageCode() === "km") {
-      value = this.fromKHNumberToStandard(value.split(""));
-    }
+    // if (this.getCurrentLanguageCode() === "km") {
+    //   value = this.fromKHNumberToStandard(value.split(""));
+    // }
 
     return value;
   }

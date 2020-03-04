@@ -18,6 +18,14 @@ class DeviceService extends BaseService {
     });
   }
 
+  checkDevice(deviceName) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/check/device?code=${deviceName}`,
+      headers: this.header
+    });
+  }
+
   renew(id) {
     return this.PUT({
       url: `${this.baseUrl}/renew/${id}`,

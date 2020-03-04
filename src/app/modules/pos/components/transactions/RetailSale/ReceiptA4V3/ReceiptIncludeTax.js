@@ -10,13 +10,18 @@ export default class ReceiptIncludeTax extends Component {
   }
 
   customerInfo(){
+    let customer = this.props.data.customer;
+
+    if (!customer) {
+      customer ={};
+    }
     return(
       <div className="main-customer" style={{ paddingTop: "3px", paddingBottom: "3px", fontSize: "12px", borderTop: this.borderTopCustomerInfo, textAlign:"center", lineHeight: "15px"}}>
          <table style={{width: "100%", borderCollapse: "collapse"}}>
         
          <tbody>
             <tr style={{backgroundColor: "white"}}>
-             <td style={{ textAlign: "left", width: "61%",fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>TO :</span> { this.props.data.customer.firstName + " " + this.props.data.customer.lastName   }</td>
+             <td style={{ textAlign: "left", width: "61%",fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>TO :</span> { customer.firstName + " " + customer.lastName   }</td>
              <td style={{ textAlign: "left",fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Invoice No : </span> {this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number}</td>
             </tr>
             <tr style={{backgroundColor: "white"}}>
@@ -24,15 +29,15 @@ export default class ReceiptIncludeTax extends Component {
               <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Date : </span> {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
             </tr>
             <tr style={{backgroundColor: "white"}}>
-              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Phone :</span> {this.props.data.customer.phoneNumber}</td>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Phone :</span> {customer.phoneNumber}</td>
               <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Currency :</span> {this.props.data.defaultCurrency ? this.props.data.defaultCurrency.symbol : ""}</td>
             </tr>
             <tr style={{backgroundColor: "white"}}>
-              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Address :</span> { this.props.data.customer.address ? this.props.data.customer.address : "" }</td>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Address :</span> { customer.address ? customer.address : "" }</td>
               <td style={{ textAlign: "left", fontSize: "12px" }}><span style={{ fontWeight: "bold" }}>Sale Rep : </span>{ this.props.data.referenceNo ? this.props.data.referenceNo : "N/A" }</td>
             </tr>
             <tr style={{backgroundColor: "white"}}>
-              <td style={{ textAlign: "left", fontSize: "12px" }}><b>Email :</b> {this.props.data.customer.email}</td>
+              <td style={{ textAlign: "left", fontSize: "12px" }}><b>Email :</b> {customer.email}</td>
               <td style={{ textAlign: "left", fontSize: "12px" }}></td>
             </tr>
           </tbody>

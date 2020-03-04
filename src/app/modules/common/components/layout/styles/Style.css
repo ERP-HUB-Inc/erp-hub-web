@@ -10,6 +10,26 @@ body {
     background-color: #F7F7F7 !important;
 }
 
+body,
+.ant-form-item,
+.ant-table table,
+.ant-select,
+.ant-select-dropdown,
+.ant-dropdown,
+.ant-btn,
+.ant-modal,
+.ant-form,
+.ant-tag,
+.ant-tabs,
+.ant-input,
+.ant-badge,
+.ant-calendar-picker-container,
+.ant-table-placeholder,
+.ant-pagination.mini .ant-pagination-total-text
+{
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji", khfont !important;
+}
+
 html,
 #root {
     height: 100%

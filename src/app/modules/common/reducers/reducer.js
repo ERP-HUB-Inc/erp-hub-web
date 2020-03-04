@@ -189,7 +189,7 @@ export default {
         ...state,
         fetching: false,
         showForm: false,
-        error: action.payload.data
+        error: action.payload.response
       };
     }
     case FULFILLED: {

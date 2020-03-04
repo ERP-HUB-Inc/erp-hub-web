@@ -248,6 +248,11 @@ export default class SaleList extends List {
     );
   }
 
+  handleChange = reportType => {
+    this.setState({reportType});
+    this.props.dispatch(SaleReportAction.reset());
+  }
+
   renderPagination(){}
 
   renderFilterRecord() {
@@ -265,7 +270,7 @@ export default class SaleList extends List {
                   placeholder={this.CATranslate("text_sale_summary", this.props.locale)}
                   dataSource={this.reportTypeList}
                   label={<this.Translate id="text_report_type" />}
-                  onChange={reportType => this.setState({reportType})}
+                  onChange={reportType => this.handleChange(reportType)}
                   form={this.props.form}/>
               </this.Col>
               <this.Col md="3">
@@ -295,7 +300,8 @@ export default class SaleList extends List {
         title: <this.Translate id="text_quantity" />,
         dataIndex: "quantity",
         key: "quantity",
-        width: 200
+        width: 200,
+        render: (quantity, record) => record ? `${quantity} ${record.unitName}` : ""
       }
     }
     return [];

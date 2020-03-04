@@ -721,10 +721,15 @@ export default class List extends Component {
       current: this.state.current,
       pageSizeOptions: this.pageSizeOptions
     };
+
+    const showTotal = total => {
+      return `${this.CATranslate("text_total", this.props.locale)} ${total} ${this.CATranslate("text_records", this.props.locale)}`;
+    };
+
     return( 
       pagination.total > 0 ?
         <div className={classsName}>
-          <Pagination showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
+          <Pagination size="small" showTotal={showTotal} showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
         </div>
         :
         ""
@@ -767,10 +772,21 @@ export default class List extends Component {
 
         {
           this.isMobileOnly ?
+            ""
+            :
+            <div style={{marginTop: 15}}>
+              {this.renderPagination(fetchingProps)}
+            </div>
+        }
+
+        {
+          this.isMobileOnly ?
             this.renderPagination(fetchingProps, "text-center mobile-pagination")
             :
             ""
         }
+
+        <this.clearFloating/>
 
       </div>
     );

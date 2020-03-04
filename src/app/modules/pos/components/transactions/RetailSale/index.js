@@ -15,6 +15,7 @@ import SettingEnum from "../../../../pos/enums";
 import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
 import Constant from "../../../constants/transactions/transaction";
+import ConstantDevice from "../../../constants/settings/device";
 import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
 import FormCreateCustomer from "../../../../crm/containers/customers/Customer/FormCreate";
@@ -174,6 +175,14 @@ export default class Retail extends Component {
       });
       this.props.dispatch(ProductAction.reset(ProductConstant.RESET_PARTIAL_PRODUCT));
     }
+
+    if (this.props.checkDevice && this.props.checkDevice.fetched && this.props.checkDevice.data && !this.props.checkDevice.data.status) {
+      this.setState({
+        modalContent: <DeviceNumber/>
+      });
+
+      this.props.dispatch(DeviceAction.reset(ConstantDevice.RESET_CHECK_DEVICE));
+    }
     
 
   }
@@ -182,7 +191,7 @@ export default class Retail extends Component {
     window.addEventListener("resize", this.handleOnResizeScreen);
     this.handleSetFullScreen();
   
-    this.props.dispatch(DeviceAction.update(this.Util.getSetting().storeName,123,this.Util.getDomainInfo().subStr));
+    this.props.dispatch(DeviceAction.checkDevice(localStorage.getItem(ConstantAuth.ACCESS_DEVICE)));
 
     this.props.dispatch(OpenSaleRegistrationAction.showForm());
     this.props.dispatch(OpenSaleRegistrationAction.last());
@@ -195,13 +204,6 @@ export default class Retail extends Component {
       this.props.dispatch(ReceiptTemplateAction.default());
       this.props.dispatch(PaymentMethodAction.fetch(2, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
     });
-
-    //show device dialog
-    if(!localStorage.getItem(ConstantAuth.ACCESS_DEVICE)) {
-      this.setState({
-        modalContent: <DeviceNumber/>
-      });
-    }
 
     // RESTORE CURRENT RECEIPT
     //this.restoreReceipt(Enum.CURRENT_RECEIPT);

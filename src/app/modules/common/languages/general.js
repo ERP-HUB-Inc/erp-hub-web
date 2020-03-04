@@ -377,6 +377,12 @@ export default {
     "មុខទំនិញ",
     "Items"
   ],
+
+  "text_records": [
+    "Items",
+    "ទិន្នន័យ",
+    "Items"
+  ],
   
   "text_balance": [
     "Balance",
