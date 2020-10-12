@@ -79,20 +79,17 @@ class Util {
 
     discount = (amount * rate) / 100;
 
-    // return discount < 0 ? 0 : discount;
     return discount;
   }
 
   getTotalAmount(quantity, price) {
-    const totalAmount =  (quantity * price);
-    // return totalAmount < 0 ? 0 : totalAmount;
+    const totalAmount = quantity * price;
     return totalAmount;
   }
 
   getTotalAmountAfterDiscount(quantity, price, rate) {
     const totalAmount = this.getTotalAmount(quantity, price);
     const result = totalAmount - this.getDiscountByRate(totalAmount, rate);
-    // return result < 0 ? 0 : result;
     return result;
   }
   
@@ -102,7 +99,6 @@ class Util {
 
   getGrandTotal(value = 0, tax = 0, discount = 0) {
     const grandTotal = (value + tax) - discount;
-    // return grandTotal < 0 ? 0 : grandTotal;
     return grandTotal;
   }
 

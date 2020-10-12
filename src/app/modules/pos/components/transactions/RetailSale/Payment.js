@@ -87,7 +87,7 @@ export default class Payment extends Modal {
     return  POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount);
   }
 
-  getGrandTotalWithOutDiscount() {
+  getGrandTotalIncludeTax() {
     const {
       summaryTotal,
       taxAmount
@@ -218,8 +218,8 @@ export default class Payment extends Modal {
         deviceNumber: this.Util.getDeviceNumber(),
         deposit: 0,
         discount: discountAmount,
-        total: this.getGrandTotalWithOutDiscount(),
-        totalExcludeTax: summaryTotal.subTotalAfterDiscount,
+        total: this.getGrandTotalIncludeTax(),
+        totalExcludeTax: summaryTotal.subTotal,
         type: Enum.TRANSACTION_TYPE.RECEIPT,
         transactionEntries: this.props.productOrderList,
         paymentMethodId,
@@ -329,6 +329,13 @@ export default class Payment extends Modal {
       let dataForReceipt = {};
 
       if (this.props.transaction.response) {
+        let {
+          total,
+          discount
+        } = this.props.transaction.response.data;
+
+        summaryTotal.subTotalAfterDiscount = total - discount;
+
         dataForReceipt = {
           data: this.props.transaction.response.data,
           receiptTemplate: this.props.receiptTemplate.data,

@@ -18,7 +18,7 @@ export default combineReducers({
       Constant.CHECK_DEVICE_PENDING,
       Constant.CHECK_DEVICE_REJECTED,
       Constant.CHECK_DEVICE_FULFILLED,
-      null,
+      Constant.FULL_RESET_CHECK_DEVICE,
       Constant.RESET_CHECK_DEVICE
     ];
     return reducer.detail(state, action, constants);

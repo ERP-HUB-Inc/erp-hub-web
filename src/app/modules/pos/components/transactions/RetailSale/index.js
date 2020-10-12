@@ -15,7 +15,7 @@ import SettingEnum from "../../../../pos/enums";
 import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
 import Constant from "../../../constants/transactions/transaction";
-import ConstantDevice from "../../../constants/settings/device";
+// import ConstantDevice from "../../../constants/settings/device";
 import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
 import FormCreateCustomer from "../../../../crm/containers/customers/Customer/FormCreate";
@@ -79,6 +79,7 @@ export default class Retail extends Component {
     this.isSetFocusOnSearchProduct = false;
     this.hasDidUpdate = false;
     this.hadNotYetReceiveProps = true;
+    this.hadDidUpdateCheckDevice = false;
     this.productWidth = 0;
     this.service = TransactionService;
 
@@ -176,15 +177,15 @@ export default class Retail extends Component {
       this.props.dispatch(ProductAction.reset(ProductConstant.RESET_PARTIAL_PRODUCT));
     }
 
-    if (this.props.checkDevice && this.props.checkDevice.fetched && this.props.checkDevice.data && !this.props.checkDevice.data.status) {
+    if (this.props.checkDevice && this.props.checkDevice.data &&
+      !this.props.checkDevice.data.status &&
+      !this.hadDidUpdateCheckDevice
+      ) {
       this.setState({
-        modalContent: <DeviceNumber/>
+        modalContent: <DeviceNumber />
       });
-
-      this.props.dispatch(DeviceAction.reset(ConstantDevice.RESET_CHECK_DEVICE));
+      this.hadDidUpdateCheckDevice = true;
     }
-    
-
   }
 
   componentDidMount() {
@@ -219,6 +220,10 @@ export default class Retail extends Component {
         subCurrency: nextProps.receiptTemplate.data.subCurrency
       });
     }
+  }
+
+  componentWillUnmount() {
+    this.hadDidUpdateCheckDevice = false;
   }
 
   isValidOpenSaleRegistrationList() {
@@ -405,7 +410,7 @@ export default class Retail extends Component {
 
   handleExpandOrderItem(expandOrderItemRow, productOrderIndex, status) {
     expandOrderItemRow = `${expandOrderItemRow}-${status}`;
-    this.handleonSearchfails();
+    this.handleonSearchFails();
     if (this.state.expandOrderItemRow.includes(expandOrderItemRow)) {
       this.setState({
         expandOrderItemRow: [],
@@ -515,12 +520,12 @@ export default class Retail extends Component {
     this.setState({expandRowOrderIndex: null});
   }
 
-  handleonSearchfails(){
+  handleonSearchFails(){
     this.isSetFocusOnSearchProduct = false;
   }
 
   handleOnChangOrderField(event, proderOrderRowIndex, field = "quantity") {
-    this.handleonSearchfails();
+    this.handleonSearchFails();
     const value = parseFloat(event.target.value);
     let existingProductOrderList = this.state.productOrderList;
     existingProductOrderList[proderOrderRowIndex][field] = isNaN(value) ? 0 : value;
@@ -648,7 +653,7 @@ export default class Retail extends Component {
   }
 
   handleOnMakePayment() {
-    this.handleonSearchfails();
+    this.handleonSearchFails();
     if (this.openFormSaleRegisration()) {
       return;
     }

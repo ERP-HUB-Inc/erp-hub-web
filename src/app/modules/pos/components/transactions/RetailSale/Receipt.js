@@ -167,7 +167,7 @@ export default class Receipt extends Component {
       paperSize = PaperSize[0];
     }
 
-    const total = (this.props.summaryTotal.subTotalAfterDiscount + this.props.taxAmount) - this.props.discountAmount;
+    const total = this.props.summaryTotal.subTotalAfterDiscount + this.props.taxAmount;
 
     return <div id={this.contentId}>
         {
@@ -297,7 +297,7 @@ export default class Receipt extends Component {
                             <tr key={index}>
                               <td style={{ textAlign: "center", backgroundColor: "white" }}>{product.quantity}</td>
                               <td style={{ backgroundColor: "white" }}>
-                                <div>{product.name}</div>
+                              <div>{product.name}</div>
                                 {
                                   product.variantName ?
                                     <div style={{ fontSize: paperSize.setting.subDataFontSize }}>{product.variantName}</div>
@@ -318,15 +318,20 @@ export default class Receipt extends Component {
                         <tr>
                           <td style={{ backgroundColor: "white", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5 }} />
                           <td colSpan="2" style={{ backgroundColor: "white", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5, textDecoration: "uppercase" }}><this.Translate id="text_sub_total" />:</td>
-                          <td style={{ backgroundColor: "white", textAlign: "right", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5 }}>{this.formatCurrency(this.props.summaryTotal.subTotalAfterDiscount)}</td>
+                          <td style={{ backgroundColor: "white", textAlign: "right", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5 }}>{this.formatCurrency(this.props.summaryTotal.subTotalAfterDiscount + this.props.discountAmount)}</td>
                         </tr>
-                        <tr>
-                          <td style={{ backgroundColor: "white", paddingTop: 5 }} />
-                          <td colSpan="2" style={{ backgroundColor: "white" }}>
-                            <span className="text-uppercase"><this.Translate id="text_tax" /></span> {taxTitle}:
-                        </td>
-                          <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(this.props.taxAmount)}</td>
-                        </tr>
+                        {
+                          this.props.taxAmount > 0 ?
+                          <tr>
+                            <td style={{ backgroundColor: "white", paddingTop: 5 }} />
+                            <td colSpan="2" style={{ backgroundColor: "white" }}>
+                              <span className="text-uppercase"><this.Translate id="text_tax" /></span> {taxTitle}:
+                            </td>
+                            <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(this.props.taxAmount)}</td>
+                          </tr>
+                          :
+                          <tr/>
+                        }
                         <tr>
                           <td style={{ backgroundColor: "white", paddingTop: 5 }} />
                           <td colSpan="2" style={{ backgroundColor: "white" }}><this.Translate id="text_discount" />:</td>
@@ -342,7 +347,7 @@ export default class Receipt extends Component {
                             <tr>
                               <td style={{ backgroundColor: "white" }} />
                               <td colSpan="2" style={{ backgroundColor: "white", textDecoration: "uppercase" }}>សរុប{`(${this.props.receiptTemplate.subCurrency.symbol})`}:</td>
-                              <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.Util.formatCurrency(Util.toSubCurrencyGrantTotal((this.props.summaryTotal.subTotalAfterDiscount + this.props.taxAmount) - this.props.discountAmount, this.props.receiptTemplate.baseCurrency, this.props.receiptTemplate.subCurrency), this.props.receiptTemplate.subCurrency.symbol)}</td>
+                              <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.Util.formatCurrency(Util.toSubCurrencyGrantTotal(total, this.props.receiptTemplate.baseCurrency, this.props.receiptTemplate.subCurrency), this.props.receiptTemplate.subCurrency.symbol)}</td>
                             </tr>
                             :
                             <tr />

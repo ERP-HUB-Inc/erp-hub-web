@@ -350,6 +350,7 @@ export default class SaleHistoryList extends List {
             tax: tax.taxRate/100,
             taxDescription: tax,
             price: transactionEntry.price,
+            discount: transactionEntry.discount,
             newPrice: transactionEntry.price
           });
         }
@@ -360,7 +361,7 @@ export default class SaleHistoryList extends List {
 
   getSummaryTotal(data) {
     return {
-      subTotalAfterDiscount: data.total - (data.discount + this.getTaxAmount(data))
+      subTotalAfterDiscount: data.total - data.discount
     };
   }
 

@@ -8,8 +8,6 @@
 
 # production
 /dist
-/src/app/modules/common/containers/App.js
-
 # misc
 .DS_Store
 .env
