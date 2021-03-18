@@ -408,7 +408,6 @@ export default class SearchPo extends Modal {
           dataSource={this.state.productLists}
           loading={this.props.productVariant.fetching}
           columns={this.columns}
-          scroll={{ y: 240 }}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
           footer={() => <div className={`float-right ${this.state.productLists.length > 0 ? "" : "hidden"}`}>
             <div className="total-title text-uppercase pull-left"><this.Translate id="text_total_amount" /> ({this.state.productLists.length} <this.Translate id="text_item" />{this.Util.getCurrentLanguageCode() === "en-ca" && this.state.productLists.length > 1 ? "s" : ""}): </div>

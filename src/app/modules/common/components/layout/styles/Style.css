@@ -964,3 +964,8 @@ color: #4D4F5C;
     border-radius: 3px !important;
     text-transform: uppercase
 }
+
+.no-flex > .ant-tabs-content > .ant-tabs-tabpane-inactive,
+.ant-tabs-no-animation > .ant-tabs-content > .ant-tabs-tabpane-inactive {
+    display: none;
+}

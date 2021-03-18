@@ -56,7 +56,7 @@ export default class SaleList extends List {
         width: 200,
         className: "sale-report",
         render: (user, record) => {
-          return `${record.firstName}${record.lastName ? " " + record.lastName + ":" + user : ":" + user}`
+          return `${record.firstName}${record.lastName ? " " + record.lastName + ":" + user : ":" + user}`;
         }
       },
       {
@@ -301,8 +301,8 @@ export default class SaleList extends List {
         dataIndex: "quantity",
         key: "quantity",
         width: 200,
-        render: (quantity, record) => record ? `${quantity} ${record.unitName}` : ""
-      }
+        render: (quantity, record) => record ? quantity : ""
+      };
     }
     return [];
   }

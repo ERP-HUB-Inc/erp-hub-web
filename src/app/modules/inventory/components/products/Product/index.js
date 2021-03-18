@@ -42,7 +42,7 @@ export default class ProductList extends List {
     this.rowClassName = record => record.productOption !== Enum.PRODUCT_VARIANT ? "standard-product-row" : "";
     this.componentHasUpdated = false;
     this.service = ProductService;
-    this.columnFilterWithKey = ["name", "barcode"];
+    this.columnFilterWithKey = ["name", "barcode", "namekm"];
     this.action = ProductAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCT;
     this.handleClone = this.handleClone.bind(this);
