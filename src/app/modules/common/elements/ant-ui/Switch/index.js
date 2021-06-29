@@ -27,25 +27,28 @@ export class Switchs extends Element {
 
   render(){
     const { getFieldDecorator } = this.props.form;
-    const { icon,checkedicon } = this.props;
+    const { /*icon,*/checkedicon } = this.props;
     return(
       <div className="main-switch">
         <this.FormItem label={ this.props.label }>
           {
             getFieldDecorator(this.props.name, { initialValue: this.props.checked })(
               <div>
-                { checkedicon ?
-                
+                { 
+                  checkedicon ?
                   <Switch
+                    checkedChildren={this.props.label}
+                    unCheckedChildren={this.props.label}
                     disabled={false}
-                    checkedChildren={<span className={icon}></span>} 
-                    unCheckedChildren={<span className={icon}></span>} 
+                    // checkedChildren={<span className={icon}></span>} 
+                    // unCheckedChildren={<span className={icon}></span>} 
                     defaultChecked {...this.state}    
                     onChange={ this.onChange }
-                  />
-                    
+                  />  
                   : 
                   <Switch
+                    checkedChildren={this.props.label}
+                    unCheckedChildren={this.props.label}
                     disabled={false}
                     defaultChecked {...this.state}    
                     onChange={ this.onChange }

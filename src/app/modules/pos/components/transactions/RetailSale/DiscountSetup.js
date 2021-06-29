@@ -106,7 +106,7 @@ export default class DiscountSetup extends Modal {
               isAutoFocus={true}
               isAutoSelect={true}
               isHideTool={true}
-              precision={0}
+              precision={2}
               name="discountValue"
               data={this.props.discountValue}
               className={`ca-input-v1 ${isPercentageDiscount ? "percentage-value-type" : "amount-value-type"}`}

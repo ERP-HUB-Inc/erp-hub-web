@@ -4,7 +4,7 @@ import dataSource from "./datasource";
 import packagejson from "../../../../../../../package.json";
 import "./index.css";
 
-export default class SideBar extends React.Component {
+export default class SideBar extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {

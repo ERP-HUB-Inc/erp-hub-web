@@ -108,7 +108,7 @@ const CheckboxGroup = Checkbox.Group;
 
 const InputGroup = Input.Group;
 
-export default class Component extends React.Component {
+export default class Component extends React.PureComponent {
   constructor(props) {
     super(props);
 

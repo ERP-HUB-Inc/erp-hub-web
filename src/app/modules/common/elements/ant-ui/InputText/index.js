@@ -1,41 +1,37 @@
 import React from "react";
 import Input from "./input";
-import Element from "../../common/Element";
 import "./index.css";
 
-export class InputText extends Element {
-  render() {
-    return (
-      <Input
-        suffix={this.props.suffix}
-        type={ this.props.type }
-        name={this.props.name}
-        className={this.props.className}
-        autoComplete={this.props.autoComplete}
-        placeholder={this.props.placeholder}
-        label={this.props.label}
-        help={this.props.help}
-        validateStatus={this.props.validateStatus}
-        data={this.props.data}
-        required={this.props.required}
-        notation={this.props.notation}
-        errorLenght={this.props.errorLenght}
-        errorRequired={this.props.errorRequired}
-        validator={this.props.validator}
-        form={this.props.form}
-        min={this.props.min}
-        max={this.props.max}
-        onChange={this.props.onChange}
-        handleKeyDown={this.props.handleKeyDown}
-        handleKeyUp={this.props.handleKeyUp}
-        handlePressEnter={this.props.handlePressEnter}
-        handleOnBlur={this.props.handleOnBlur}
-        handleOnFocus={this.props.handleOnFocus}
-        disabled= {this.props.disabled}
-        isAutoFocus={this.props.isAutoFocus}
-        didUpdateMakeAutoFocus={this.props.didUpdateMakeAutoFocus}/>
-    );
-  }   
+
+export function InputText(props) {
+  return <Input
+    suffix={props.suffix}
+    type={ props.type }
+    name={props.name}
+    className={props.className}
+    autoComplete={props.autoComplete}
+    placeholder={props.placeholder}
+    label={props.label}
+    help={props.help}
+    validateStatus={props.validateStatus}
+    data={props.data}
+    required={props.required}
+    notation={props.notation}
+    errorLenght={props.errorLenght}
+    errorRequired={props.errorRequired}
+    validator={props.validator}
+    form={props.form}
+    min={props.min}
+    max={props.max}
+    onChange={props.onChange}
+    handleKeyDown={props.handleKeyDown}
+    handleKeyUp={props.handleKeyUp}
+    handlePressEnter={props.handlePressEnter}
+    handleOnBlur={props.handleOnBlur}
+    handleOnFocus={props.handleOnFocus}
+    disabled= {props.disabled}
+    isAutoFocus={props.isAutoFocus}
+    didUpdateMakeAutoFocus={props.didUpdateMakeAutoFocus}/>;
 }
 
 Input.defaultProps = {

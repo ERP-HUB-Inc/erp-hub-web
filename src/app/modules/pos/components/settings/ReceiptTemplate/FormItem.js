@@ -108,7 +108,7 @@ export default class FormItem extends Modal {
         <this.Col md="12">
           <this.Switchs
             name="isShowStoreName"
-            label={<this.Translate id="text_show_store_name" />}
+            label={this.CATranslate("text_show_store_name", this.props.locale)}
             checked={formData.isShowStoreName}
             form={form}/>
         </this.Col>
