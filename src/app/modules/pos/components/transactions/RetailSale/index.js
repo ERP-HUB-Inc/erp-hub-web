@@ -115,22 +115,6 @@ export default class Retail extends Component {
   }
 
   componentDidUpdate() {    
-    if (!this.hasDidUpdate &&
-      this.props.openSaleRegistration.fetched &&
-      this.props.open.showForm) {
-        
-      if(!this.isOpenSaleRegistrationClosed() && this.isSetFocusOnSearchProduct){
-        this.isSetFocusOnSearchProduct = true;
-      }
-
-      if (this.isOpenSaleRegistrationClosed()) {
-        this.setState({
-          modalContent: <FormOpenSaleRegistration/>
-        });
-      }
-      this.hasDidUpdate = true;
-    }
-
     if (this.props.customerAdd.added && this.props.customerAdd.response.data) {
       this.getSelectedCustomer(this.props.customerAdd.response.data);
       this.props.dispatch(CustomerAction.reset(CustomerConstant.RESET_ADD_CUSTOMERS));
@@ -177,14 +161,25 @@ export default class Retail extends Component {
       this.props.dispatch(ProductAction.reset(ProductConstant.RESET_PARTIAL_PRODUCT));
     }
 
-    if (this.props.checkDevice && this.props.checkDevice.data &&
-      !this.props.checkDevice.data.status &&
-      !this.hadDidUpdateCheckDevice
-      ) {
-      this.setState({
-        modalContent: <DeviceNumber />
-      });
-      this.hadDidUpdateCheckDevice = true;
+    if (this.props.checkDevice.fetched && this.props.checkDevice.data) {
+      if (!this.props.checkDevice.data.status && !this.hadDidUpdateCheckDevice) {
+        this.setState({
+          modalContent: <DeviceNumber />
+        });
+        this.hadDidUpdateCheckDevice = true;
+      } else if (this.props.checkDevice.data.status && !this.hasDidUpdate && this.props.openSaleRegistration.fetched && this.props.open.showForm) {
+          if(!this.isOpenSaleRegistrationClosed() && this.isSetFocusOnSearchProduct){
+            this.isSetFocusOnSearchProduct = true;
+          }
+    
+          if (this.isOpenSaleRegistrationClosed()) {
+            this.setState({
+              modalContent: <FormOpenSaleRegistration/>
+            });
+          }
+
+          this.hasDidUpdate = true;
+      }
     }
   }
 

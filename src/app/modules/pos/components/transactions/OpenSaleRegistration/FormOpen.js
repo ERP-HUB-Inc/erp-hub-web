@@ -18,6 +18,12 @@ export default class Form extends Modal {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidUpdate() {
+    if (this.Util.getErrorCodeFromState(this.props.open.error) === 625) {
+      this.Message.error("Device not found");
+    }
+  }
+
   handleSubmit (e) {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
