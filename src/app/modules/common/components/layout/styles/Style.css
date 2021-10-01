@@ -27,7 +27,7 @@ body,
 .ant-table-placeholder,
 .ant-pagination.mini .ant-pagination-total-text
 {
-    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji", khfont !important;
+    font-family: Arial,khfont !important;
 }
 
 html,
