@@ -720,9 +720,9 @@ color: #4D4F5C;
 
 .ant-modal-title{
     font-size: 15pt;
-    text-transform: uppercase;
+    text-transform: capitalize;
     color: #4D4F5C;
-    font-weight: 500    
+    font-weight: 600    
 }
 
 .ant-modal-close-x {

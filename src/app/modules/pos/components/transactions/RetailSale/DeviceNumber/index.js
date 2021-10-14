@@ -1,5 +1,4 @@
 import React from "react";
-import history from "../../../../../common/router/history";
 import DeviceAction from "../../../../../pos/action/settings/device";
 import Constant from "../../../../../pos/constants/settings/device";
 import ConstantAuth from "../../../../../../modules/common/constants/authentication";
@@ -44,7 +43,12 @@ export default class DeviceNumber extends Modal {
       this.props.dispatch(DeviceAction.reset(Constant.RESET_UPDATE));
 
     } else if (this.props.updateDeviceNumber && this.props.updateDeviceNumber.response && this.props.updateDeviceNumber.response.data) {
-        localStorage.setItem(ConstantAuth.ACCESS_DEVICE, this.props.updateDeviceNumber.response.data.code);
+        const deviceNumber = this.props.updateDeviceNumber.response.data.code;
+        localStorage.setItem(ConstantAuth.ACCESS_DEVICE, deviceNumber);
+
+        const accessTokenObj = JSON.parse(localStorage.getItem(ConstantAuth.ACCESS_TOKEN));
+        accessTokenObj["setting"]["deviceNumber"] = deviceNumber;
+        localStorage.setItem(ConstantAuth.ACCESS_TOKEN, JSON.stringify(accessTokenObj));
         window.location.reload();
     }
   }
@@ -53,7 +57,7 @@ export default class DeviceNumber extends Modal {
     return(
     <div className="ant-modal-footer">
         <this.Button htmlType="submit" loading={this.submitLoading} className="info">
-        <span className="icon-save icon-padding-right"></span><span id="btnModalSave">SUBMIT</span>
+          <span className="icon-save icon-padding-right"></span><span id="btnModalSave">SUBMIT</span>
         </this.Button>
     </div>);
   }
@@ -62,7 +66,7 @@ export default class DeviceNumber extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.dispatch(DeviceAction.update(values.deviceName,values.deviceNumber,this.Util.getDomainInfo().subStr));
+        this.props.dispatch(DeviceAction.update(values.deviceName,values.deviceNumber,this.Util.getDomainInfo().subStr, this.Util.getAccessToken()));
       } 
     });
   }
@@ -74,7 +78,7 @@ export default class DeviceNumber extends Modal {
   }
 
   handleCancel() {
-    history.push("/");
+    this.props.dispatch(DeviceAction.reset(Constant.FULL_RESET_CHECK_DEVICE));
   }
   
   render() {

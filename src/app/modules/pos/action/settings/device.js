@@ -19,11 +19,11 @@ export default {
       });
     };
   },
-  update: (deviceName, number, storeName) => {
+  update: (deviceName, number, storeName, accessToken) => {
     return dispatch => {
       return dispatch({
         type: Constant.UPDATE_DEVICE,
-        payload: DeviceService.update(deviceName, number, storeName)
+        payload: DeviceService.update(deviceName, number, storeName, accessToken)
       });
     };
   },

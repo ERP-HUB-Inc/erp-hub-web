@@ -25,8 +25,10 @@ export default class ClientSignIn extends Component {
     const domainInfo = this.Util.getDomainInfo();
     this.dispatch(ClientAction.findClientByColumn("storeName", domainInfo.subStr));
 
-    //set device number
-    // this.props.dispatch(DeviceAction.update("ca", 851954, this.Util.getDomainInfo().subStr));
+    const languageCode = localStorage.getItem("CHOOSED_LANGUAGE");
+    if (languageCode) {
+      this.props.dispatch(this.changeLanguage(languageCode));
+    }
   }
   
 
@@ -155,10 +157,10 @@ export default class ClientSignIn extends Component {
                   <div className={this.validateClassStatus}>
                     <this.InputText
                       name="username"
-                      placeholder="User name"
+                      placeholder={this.CATranslate("text_user_name", this.props.locale)}
                       type="text"
-                      label="User Name"
-                      errorRequired="Username is required."
+                      label={<this.Translate id="text_user_name" />}
+                      errorRequired={<this.Translate id="text_required_username" />}
                       isAutoFocus={true}
                       required={true}
                       handleKeyDown={() => this.handleKeyDown()}
@@ -167,15 +169,16 @@ export default class ClientSignIn extends Component {
                   </div>
                   <this.FormGroup>
                     <this.InputPassword
-                      label="Password"
-                      placeholder="Password"
+                      placeholder={this.CATranslate("text_password", this.props.locale)}
+                      label={<this.Translate id="text_password" />}
+                      errorRequired={<this.Translate id="text_required_password" />}
                       required={true}
                       checkConfirm={false}
                       form={form} />
                   </this.FormGroup>
                  
                   <div className="main-signin">
-                    <this.Button loading={signinUser.submiting} htmlType="submit" type="info">Sign In</this.Button>
+                    <this.Button loading={signinUser.submiting} htmlType="submit" type="info"><this.Translate id="text_signin" /></this.Button>
                   </div>
                 </this.Form>
               </div>

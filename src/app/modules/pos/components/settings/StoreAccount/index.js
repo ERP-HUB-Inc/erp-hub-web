@@ -658,7 +658,7 @@ export default class StoreAccountList extends Component {
                             </this.Col>
                           </this.Row>
                         </this.TabPane>
-                        <this.TabPane tab={<this.Translate id="text_module" />} key="4">
+                        {/* <this.TabPane tab={<this.Translate id="text_module" />} key="4">
                           <this.Row>
                             <this.Col lg="4" md="4" style={{paddingBottom: 15}}> 
                               {
@@ -675,7 +675,7 @@ export default class StoreAccountList extends Component {
                               }
                             </this.Col> 
                           </this.Row>
-                        </this.TabPane>
+                        </this.TabPane> */}
                         <this.TabPane tab={<this.Translate id="text_device" />} key="5">
                           <this.Row>
                             <this.Col lg="5" md="5" style={{marginBottom: 20}}> 

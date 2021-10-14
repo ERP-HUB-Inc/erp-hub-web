@@ -17,7 +17,8 @@ function mapStateToProps(state) {
     signinUser: state.reducer.client.signin,
     signinDomain: state.reducer.client.signinDomain,
     updateDeviceNumber: state.reducer.device.update,
-    client: state.reducer.client.request
+    client: state.reducer.client.request,
+    locale: state.locale
   };
 }
 

@@ -174,7 +174,7 @@ export default class SaleHistoryList extends List {
         align: "center",
         width: 100,
         render: (text, record) => {
-          return <this.Button className="info mg-right text-uppercase"  onClick={() => this.handleReturn(record, this.state.selectedRows)}>
+          return <this.Button className="danger mg-right text-uppercase"  onClick={() => this.handleReturn(record, this.state.selectedRows)}>
             <span className="icon-sale-return icon-padding-right"></span>
             <this.Translate id="text_return" />
           </this.Button>;
@@ -453,7 +453,10 @@ export default class SaleHistoryList extends List {
 
   renderButtonSearch(fetchingProps){
     return <this.Col md="2" className="wrap-btn-search">
-      <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+      <div className="ant-form-item-label" style={{visibility: "hidden"}}>
+        <label htmlFor="status" className="" title="">Filter</label>
+      </div>
+      <this.Button htmlType="submit" type="default" loading={this.state.isClickFilter && fetchingProps.fetching}>
         <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
       </this.Button>
     </this.Col>;
@@ -473,7 +476,7 @@ export default class SaleHistoryList extends List {
                 label={<this.Translate id="text_search_for_sale_no" />}
                 form={this.props.form}/>
             </this.Col>
-            <this.Col md="2">
+            <this.Col md="2" className="hidden">
               <this.InputText
                 name="customer"
                 placeholder={this.CATranslate("text_search_for_customer", this.props.locale)}

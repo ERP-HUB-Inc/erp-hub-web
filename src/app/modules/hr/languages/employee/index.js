@@ -41,17 +41,29 @@ export default {
     "Photo"
   ], 
 
-  "text_user_name": [
-    "User Name",
-    "ឈ្មោះ​អ្នកប្រើប្រាស់",
-    "User Name"
-  ], 
-
   "text_password": [
     "Password",
     "ពាក្យសម្ងាត់",
     "Password"
-  ], 
+  ],
+  
+  "text_signin": [
+    "Sign In",
+    "ចូលប្រើ",
+    "Sign In"
+  ],
+
+  "text_required_username": [
+    "Username is required.",
+    "សូមបញ្ចូលឈ្មោះអ្នកប្រើប្រាស់",
+    "Username is required."
+  ],
+
+  "text_required_password": [
+    "Password is required.",
+    "សូមបញ្ចូលពាក្យសម្ងាត់",
+    "Password is required."
+  ],
 
   "text_auto_generate": [
     "Auto Generate",

@@ -319,7 +319,7 @@ export default class ProductList extends List {
                 nameKey="name"
                 form={form}/>
             </this.Col>
-            <this.Col md="2">
+            <this.Col md="2" className="hidden">
               <this.Select
                 name="status"
                 label={<this.Translate id="text_status" />}
@@ -328,7 +328,10 @@ export default class ProductList extends List {
                 form={form}/>
             </this.Col>
             <this.Col md="2" className="wrap-btn-search">
-              <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
+              <div className="ant-form-item-label" style={{visibility: "hidden"}}>
+                <label htmlFor="status" className="" title="">Filter</label>
+              </div>
+              <this.Button htmlType="submit" type="default" loading={this.state.isClickFilter && fetchingProps.fetching}>
                 <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
               </this.Button>
             </this.Col>
