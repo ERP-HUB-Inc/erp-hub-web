@@ -239,7 +239,7 @@ export class Util {
     const full = window.location.host;
     //window.location.host is subdomain.domain.com
     const parts = full.split(".");
-    const sub = parts[0];
+    let sub = parts[0];
     let domain = parts[1];
     const type = parts[2];
     if (type != null) {
@@ -251,7 +251,7 @@ export class Util {
     if (type != null) {
       subdomain = `${subdomain}.${type}`;
     }
-
+    
     return {
       domain: `${protocol}://${domain}`,
       subdomain,
@@ -387,7 +387,7 @@ export class Util {
 
     setTimeout(function() {
       mywindow.print();
-      mywindow.close();
+      // mywindow.close();
     }, 250);
 
     return true;
@@ -416,7 +416,7 @@ export class Util {
 
     setTimeout(function() {
       mywindow.print();
-      mywindow.close();
+      // mywindow.close();
     }, 250);
 
     return true;

@@ -333,9 +333,9 @@ export default class StoreAccountList extends Component {
       const {error} = storeAccountUpdate;
 
       if ("error" in error 
-      && error["error"] != null
+      && error.data["error"] != null
       ) {
-        if (error["error"].code === this.HttpCode.CURRENT_PASSWORD_NOT_MATCH) {
+        if (error.data["error"].code === this.HttpCode.CURRENT_PASSWORD_NOT_MATCH) {
           this.errorMessageCurrentPWD = <this.Translate id="store_acc_error_current_pwd_not_match" />;
         }
       }
