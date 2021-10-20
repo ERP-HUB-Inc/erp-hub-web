@@ -741,9 +741,9 @@ color: #4D4F5C;
     min-width: 110px
 }
 
-.ant-modal-wrap {
+/* .ant-modal-wrap {
     overflow: hidden !important
-}
+} */
 
 .ant-modal {
     padding-bottom: 0 !important

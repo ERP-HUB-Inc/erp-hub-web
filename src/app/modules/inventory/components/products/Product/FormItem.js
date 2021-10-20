@@ -103,6 +103,8 @@ export default class FormItem extends Modal {
       languages: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LANGUAGE)),
       tags: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.PRODUCT_TAG))
     });
+
+    this.dispatch(TaxAction.fetch(100));
   }
 
   componentWillUpdate(nextProps) {
@@ -467,7 +469,7 @@ export default class FormItem extends Modal {
                             label={<this.Translate id="input_product_tax" />}
                             placeholder={this.CATranslate("input_product_tax", locale)}
                             valueKey="id"
-                            dataSource={this.state.taxs}
+                            dataSource={this.props.taxs.list}
                             defaultValue={formData.taxId}
                             form={form} />
                         </this.Col>

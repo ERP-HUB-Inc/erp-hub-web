@@ -146,10 +146,10 @@
     flex-direction: column
 }
 
-.modal-product .ant-modal,
+/* .modal-product .ant-modal,
 .modal-product .ant-modal-content {
     height: 100%
-}
+} */
 
 .modal-product .ant-modal-body {
     flex-direction: row

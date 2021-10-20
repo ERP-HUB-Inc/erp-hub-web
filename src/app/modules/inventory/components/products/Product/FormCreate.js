@@ -240,6 +240,7 @@ export default class Form extends Modal {
           handleAddUnit={this.handleAddUnit}
           taxAdd={taxAdd}
           handleAddTax={this.handleAddTax}
+          taxs={this.props.taxs}
           tags={tags}
           tagAdd={tagAdd}
           callBackGetProductAttribute={this.handleCallBackGetProductAttribute}
