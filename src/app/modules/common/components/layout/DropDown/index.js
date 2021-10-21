@@ -8,7 +8,7 @@ import history from "../../../router/history";
 import AuthService from "../../../services/AuthService";
 import InventoryEnum from "../../../../inventory/enums";
 import "./index.css";
-import "./index.scss";
+// import "./index.scss";
 
 
 export default class MenuDropDown extends Component {
