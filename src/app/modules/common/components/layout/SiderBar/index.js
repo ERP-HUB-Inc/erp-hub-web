@@ -144,7 +144,7 @@ export default class SideBar extends React.PureComponent {
     );
   }
 
-  render() { console.log("DDDDDDD");
+  render() {
     const subMenuItemTitle = Object.keys(this.state.menuItems);
 
     if (window.location.pathname === "/") {
