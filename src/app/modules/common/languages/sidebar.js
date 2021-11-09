@@ -79,7 +79,7 @@ export default {
   
   "text_receive_purchase": [
     "Receive Purchase",
-    "ទទួលទំនិញដែលបានបញ្ជារទិញ",
+    "ទទួលការបញ្ជារទិញ",
     "Receive Purchase"
   ],
   

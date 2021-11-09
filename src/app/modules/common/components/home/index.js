@@ -58,7 +58,7 @@ export default class Home extends Component {
       pieDataSource["colors"]["Cost"] = "#26c6da";
       pieDataSource["colors"]["Profit"] = "rgb(116, 90, 242)";
     }
-
+    
     return(
       <this.Row style={{alignContent: "flex-start"}}>
         <this.Col md="12">
@@ -134,40 +134,40 @@ export default class Home extends Component {
               <this.Translate id="text_today_sale_summary" />
             </div>
             {
-              this.props.saleReport.fetched ?
-                <this.C3Chart
-                  data={pieDataSource}
-                  legend={{
-                    position: "bottom"
-                  }}
-                  title={this.CATranslate("text_summary_report", this.props.locale)}
-                  size={{
-                    height: 345
-                  }}
-                  tooltip={{
-                    format: {
-                      value: value => {
-                        return this.formatCurrency(value);
-                      }
-                    }
-                  }}/>
-                :
-                <this.C3Chart
-                  data={pieDataSource}
-                  legend={{
-                    position: "bottom"
-                  }}
-                  title={this.CATranslate("text_summary_report", this.props.locale)}
-                  size={{
-                    height: 345
-                  }}
-                  tooltip={{
-                    format: {
-                      value: value => {
-                        return this.formatCurrency(value);
-                      }
-                    }
-                  }}/>
+              // this.props.saleReport.fetched ?
+              //   <this.C3Chart
+              //     data={pieDataSource}
+              //     legend={{
+              //       position: "bottom"
+              //     }}
+              //     title={this.CATranslate("text_summary_report", this.props.locale)}
+              //     size={{
+              //       height: 345
+              //     }}
+              //     tooltip={{
+              //       format: {
+              //         value: value => {
+              //           return this.formatCurrency(value);
+              //         }
+              //       }
+              //     }}/>
+              //   :
+              //   <this.C3Chart
+              //     data={pieDataSource}
+              //     legend={{
+              //       position: "bottom"
+              //     }}
+              //     title={this.CATranslate("text_summary_report", this.props.locale)}
+              //     size={{
+              //       height: 345
+              //     }}
+              //     tooltip={{
+              //       format: {
+              //         value: value => {
+              //           return this.formatCurrency(value);
+              //         }
+              //       }
+              //     }}/>
             }
           </div>
         </this.Col>

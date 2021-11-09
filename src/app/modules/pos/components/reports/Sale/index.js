@@ -80,7 +80,7 @@ export default class SaleList extends List {
       {value: Enum.REPORT_TYPE.SALE_SUMMARY, name: this.CATranslate("text_sale_summary", this.props.locale)},
       {value: Enum.REPORT_TYPE.PRODUCT, name: this.CATranslate("text_product", this.props.locale)},
       {value: Enum.REPORT_TYPE.CATEGORY, name: this.CATranslate("text_product_type", this.props.locale)},
-      {value: Enum.REPORT_TYPE.USER, name: this.CATranslate("text_user", this.props.locale)},
+      {value: Enum.REPORT_TYPE.USER, name: this.CATranslate("text_seller", this.props.locale)},
       {value: Enum.REPORT_TYPE.CUSTOMER, name: this.CATranslate("text_customer", this.props.locale)},
       {value: Enum.REPORT_TYPE.LOCATION, name: this.CATranslate("text_location", this.props.locale)}
     ];

@@ -13,7 +13,7 @@ export default {
   
   "text_export_csv": [
     "Export CSV",
-    "នាំចេញ CSV",
+    "ទាញយករបាយការណ៍",
     "Export CSV",
   ],
 

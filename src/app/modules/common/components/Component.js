@@ -309,7 +309,7 @@ export default class Component extends React.Component {
     let multipleValues = quantity / multiple;
     let unit = (multipleValues) - Math.floor(multipleValues);
     if(unit !== 0){
-      return `${Math.floor(multipleValues)} ${unitName} ${andTranslated} ${unit * multiple} ${label}`;
+      return `${Math.floor(multipleValues)} ${unitName} ${andTranslated} ${(parseInt(unit * multiple))} ${label}`;
     }else{
       return `${Math.floor(multipleValues)} ${unitName}`;
     }

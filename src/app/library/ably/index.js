@@ -1,4 +1,4 @@
-import { Realtime } from "ably/browser/static/ably-commonjs.js";
+// import { Realtime } from "ably/browser/static/ably-commonjs.js";
  
 // window.Ably = new Realtime("keC0MQ.3Aw0TQ:5I9_irvlIoGdpws9");
 

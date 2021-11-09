@@ -1,11 +1,4 @@
 export default {
-
-  "text_seller": [
-    "Seller",
-    "អ្នកលក់",
-    "Seller"
-  ],
-
   "input-sale-history-store": [
     "Store",
     "ហាង",
