@@ -63,7 +63,7 @@ export default {
     "Search for Key",
     "ស្វែងរកពាក្យគន្លឹះ",
     "Search for Key"
-  ],
+  ]
 
 };
   

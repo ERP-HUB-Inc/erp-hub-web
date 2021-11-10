@@ -87,6 +87,17 @@ export default class PurchaseList extends List {
         }
       },
       {
+        title: <this.Translate id="text_product_code" />,
+        dataIndex: "barcode",
+        key: "barcode"
+      },
+      {
+        title: <this.Translate id="text_purchase_date" />,
+        dataIndex: "date",
+        key: "date",
+        render: date => this.formatDate(date)
+      },
+      {
         title: <this.Translate id="text_quantity_buy_in" />,
         dataIndex: "quantity",
         key: "quantity",
@@ -94,7 +105,15 @@ export default class PurchaseList extends List {
         align: "center"
       },
       {
-        title: <this.Translate id="text_amount" />,
+        title: <this.Translate id="text_unit_cost" />,
+        dataIndex: "price",
+        key: "price",
+        width: 250,
+        align: "right",
+        render: price => this.formatCurrency(price)
+      },
+      {
+        title: <this.Translate id="text_total" />,
         dataIndex: "amount",
         key: "amount",
         width: 250,
@@ -182,7 +201,6 @@ export default class PurchaseList extends List {
         dataIndex: "step",
         key: "step",
         width: 100,
-        // render: step => step in this.PO_STEP_STR ? this.PO_STEP_STR[step].name : ""
         render: step => step in this.PO_STEP_STR ? <this.Tag color={this.PO_STEP_STR[step].color} className="text-uppercase text-center po-step-tag">{this.PO_STEP_STR[step].name}</this.Tag> : ""
       },
       {
@@ -206,7 +224,8 @@ export default class PurchaseList extends List {
           } else if (record.step === Enum.PO_STEP.RETURN) {
             key = "returnTotal";
           }
-          return this.formatCurrency(record[key]);
+          const value = record[key];
+          return this.formatCurrency(value ? value : 0);
         }
       }
     ];

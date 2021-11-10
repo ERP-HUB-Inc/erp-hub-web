@@ -220,6 +220,12 @@ export default {
     "ថ្លៃដើម",
     "Cost"
   ],
+
+  "text_unit_cost": [
+    "Unit Cost",
+    "តម្លៃឯកតា",
+    "Unit Cost"
+  ],
   
   "button_text_search": [
     "Search",

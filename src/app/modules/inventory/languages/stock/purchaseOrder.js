@@ -11,6 +11,12 @@ export default {
     "Delivery Date"
   ],
 
+  "text_purchase_date": [
+    "Purchase Date",
+    "កាលបរិច្ឆេតទិញចូល",
+    "Purchase Date"
+  ],
+
   "text_order_qty": [
     "Order QTY",
     "ចំនួនបញ្ជាទិញ",
