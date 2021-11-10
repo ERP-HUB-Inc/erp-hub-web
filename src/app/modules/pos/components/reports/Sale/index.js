@@ -17,62 +17,79 @@ export default class SaleList extends List {
       isClickFilter: false
     };
     this.columns = [
-      {
-        title: <this.Translate id="text_date" />,
-        dataIndex: "date",
-        key: "date",
-        width: 200,
-        className: "sale-report",
-        align: "center",
-        render: value => this.Util.formatDate(value)
-      },
-      {
-        title: <this.Translate id="text_product" />,
-        dataIndex: "name",
-        key: "name",
-        width: 200,
-        className: "sale-report",
-        render: (text, record) => {
-          let variantName = "";
-          if (record.productOption === Enum.PRODUCT_VARIANT) {
-            variantName = ` / ${record.variant}`;
-          } else {
-            variantName = record.variant;
+      [
+        {
+          title: <this.Translate id="text_date" />,
+          dataIndex: "date",
+          key: "date",
+          width: 200,
+          className: "sale-report",
+          align: "center",
+          render: value => this.Util.formatDate(value)
+        }
+      ],
+      [
+        {
+          title: <this.Translate id="text_product" />,
+          dataIndex: "name",
+          key: "name",
+          width: 200,
+          className: "sale-report",
+          render: (name, record) => name ? name : record.namekm 
+        },
+        {
+          title: <this.Translate id="text_variant" />,
+          dataIndex: "variant",
+          key: "variant",
+          className: "sale-report",
+          render: (variant, record) => variant
+        },
+        {
+          title: <this.Translate id="text_product_code" />,
+          dataIndex: "barcode",
+          key: "barcode",
+          className: "sale-report"
+        }
+      ],
+      [
+        {
+          title: <this.Translate id="text_product_type" />,
+          dataIndex: "name",
+          key: "name",
+          width: 200,
+          className: "sale-report"
+        }
+      ],
+      [
+        {
+          title: <this.Translate id="text_user" />,
+          dataIndex: "user",
+          key: "user",
+          width: 200,
+          className: "sale-report",
+          render: (user, record) => {
+            return `${record.firstName}${record.lastName ? " " + record.lastName + ":" + user : ":" + user}`;
           }
-          return record.name + variantName;
         }
-      },
-      {
-        title: <this.Translate id="text_product_type" />,
-        dataIndex: "name",
-        key: "name",
-        width: 200,
-        className: "sale-report"
-      },
-      {
-        title: <this.Translate id="text_user" />,
-        dataIndex: "user",
-        key: "user",
-        width: 200,
-        className: "sale-report",
-        render: (user, record) => {
-          return `${record.firstName}${record.lastName ? " " + record.lastName + ":" + user : ":" + user}`;
+      ],
+      [
+        {
+          title: <this.Translate id="text_customer" />,
+          dataIndex: "customer",
+          key: "customer",
+          width: 200,
+          className: "sale-report"
         }
-      },
-      {
-        title: <this.Translate id="text_customer" />,
-        dataIndex: "customer",
-        key: "customer",
-        width: 200,
-        className: "sale-report"
-      },
-      {
-        title: <this.Translate id="text_location" />,
-        dataIndex: "location",
-        key: "location",
-        width: 200,
-        className: "sale-report"
-      }
+      ],
+      [
+        {
+          title: <this.Translate id="text_location" />,
+          dataIndex: "location",
+          key: "location",
+          width: 200,
+          className: "sale-report"
+        }
+      ]
     ];
   
     this.exportCsvFileName = "sale_report.csv";
@@ -297,7 +314,7 @@ export default class SaleList extends List {
   renderQuantityColumn(){
     if(this.state.reportType === Enum.REPORT_TYPE.PRODUCT){
       return {
-        title: <this.Translate id="text_quantity" />,
+        title: <this.Translate id="text_sold_quantity" />,
         dataIndex: "quantity",
         key: "quantity",
         width: 200,
@@ -315,7 +332,7 @@ export default class SaleList extends List {
           rowKey="id"
           columns={
             [
-              this.columns[this.state.reportType],
+              ...this.columns[this.state.reportType],
               this.renderQuantityColumn(),
               {
                 title: <this.Translate id="text_revenue" />,

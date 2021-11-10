@@ -274,12 +274,14 @@ export class Util {
       return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
     });
 
+    result = isNaN(result) ? 0 : result;
+
     if (position === 0) {
       result = `${percentage}${result}`;
     } else {
       result = `${result}${percentage}`;
     }
-
+  
     return `${unsigne}${result}`;
   }
 

@@ -388,12 +388,6 @@ export default {
     "No product found"
   ],
 
-  "text_variant": [
-    "Variant",
-    "លក្ខណៈ",
-    "Variant"
-  ],
-
   "text_variants": [
     "Variants",
     "លក្ខណៈផលិតផល",
@@ -404,6 +398,12 @@ export default {
     "Product Variant",
     "លក្ខណៈផលិតផល",
     "Product Variant"
+  ],
+
+  "text_variant": [
+    "Variant",
+    "វ៉ារ្យ៉ង់",
+    "Variant"
   ],
 
   "text_product_in_stock": [

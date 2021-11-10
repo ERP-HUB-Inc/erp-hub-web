@@ -407,6 +407,12 @@ export default {
     "ការលក់សង្ខេប",
     "Sale Summary"
   ],
+
+  "text_sold_quantity": [
+    "Sold Quantity",
+    "បរិមាណលក់",
+    "Sold Quantity"
+  ],
   
   "text_change": [
     "Change",
