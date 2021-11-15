@@ -1065,8 +1065,10 @@ export default class FormVariant extends Modal {
       this.props.dispatch(ProductVariantAction.checkIsAvailableForArchive(id));
     } else {
       const productVariantList = this.state.productVariantList;
+      const variantAttributeList = this.state.variantAttributeList;
       productVariantList.splice(productVariantRow, 1);
-      this.setState({productVariantList});
+      variantAttributeList[0]["attributeValues"].splice(productVariantRow, 1);
+      this.setState({productVariantList,variantAttributeList});
     }
   }
 
