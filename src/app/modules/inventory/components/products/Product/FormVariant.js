@@ -902,10 +902,7 @@ export default class FormVariant extends Modal {
       return;
     }
 
-    if (
-      attributeValue &&
-      (event.keyCode === 188 || event.keyCode === 13)
-    ) {
+    if (attributeValue && event.keyCode === 13) {
       let notExistYet = true;
       variantAttributeList[index]["attributeValues"].forEach(attributeValue => {
         if (attributeValue.name === attributeValue && attributeValue.status === this.Enum.ACTIVE) {
