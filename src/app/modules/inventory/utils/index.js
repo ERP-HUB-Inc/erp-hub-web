@@ -53,6 +53,10 @@ class Util {
     return this.isValidProductVariant(product) ? product.productVariants[0].barcode : "";
   }
 
+  getProductSku(product) {
+    return this.isValidProductVariant(product) ? product.productVariants[0].sku : "";
+  }
+
   getProductPrice(product) {
     return this.isValidProductVariant(product) ? product.productVariants[0].price : 0;
   }

@@ -91,6 +91,7 @@ export default class Form extends Modal {
           "tagId"
         ]);
 
+        values["isAutoGenerateBarcode"] = values["barcode"] ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO;
         values["quantity"] = 0;
         values["reorderPoint"] = values["reorderPoint"] ? values["reorderPoint"] : 0;
         values["factoryCost"] = values["factoryCost"] ? values["factoryCost"] : 0;
@@ -105,7 +106,6 @@ export default class Form extends Modal {
         values["variantProducts"] = this.state.productVariants;
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
-
         this.dispatch(ProductAction.add(values));
 
         // RESET STATE

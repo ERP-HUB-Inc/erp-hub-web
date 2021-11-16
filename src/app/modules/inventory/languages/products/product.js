@@ -60,9 +60,9 @@ export default {
   ],
 
   "text_product_code": [
-    "SKU",
+    "Barcode",
     "លេខកូដ",
-    "SKU"
+    "Barcode"
   ],
 
   "text_product_total_cost": [
@@ -568,6 +568,11 @@ export default {
     "And",
     "នឹង",
     "And"
-  ]
+  ],
+  "text_product_sku": [
+    "SKU",
+    "SKU",
+    "SKU"
+  ],
 
 };

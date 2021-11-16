@@ -331,46 +331,39 @@ export default class FormItem extends Modal {
                     form={form}/>
                 </this.Col>
 
-                <this.Col md="8">
-                  <this.Row className="group-code-generate">
-                    <this.Col md="6" className="wrap-generate-code">
-                      <this.RadioButton 
-                        name="isAutoGenerateBarcode"
-                        defaultValue={formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.MANAUL ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO}
-                        disabled={formData.id != null}
-                        onChange={this.onCangeIsAutoGenerateCode}
-                        dataSource={[
-                          {
-                            value: this.Enum.GENERATE_PRODUCT_CODE.MANAUL,
-                            title: <this.Translate id="input_product_enter_custom_code" />}, 
-                          { 
-                            value: this.Enum.GENERATE_PRODUCT_CODE.AUTO,
-                            title: <this.Translate id="input_product_auto_generate_code" />
-                          }
-                        ]}
-                        form={form}/>
-                    </this.Col>
-                    {
-                      this.state.productTypeIndex === Enum.PRODUCT_VARIANT || formData.productOption === Enum.PRODUCT_VARIANT ?
-                        ""
-                        :
+                {
+                  this.state.productTypeIndex === Enum.PRODUCT_VARIANT || formData.productOption === Enum.PRODUCT_VARIANT ? ""
+                    :
+                    <this.Col md="8">
+                      <this.Row className="group-code-generate">
+                        <this.Col md="6">
+                            <this.InputText
+                              name="sku"
+                              label={<this.Translate id="text_product_sku" />}
+                              data={Util.getProductSku(formData)}
+                              placeholder={this.CATranslate("text_product_sku", locale)}
+                              max={20}
+                              form={form}
+                            />  
+                        </this.Col> 
+            
                         <this.Col md="6">
                           <this.InputText
                             name="barcode"
                             label={<this.Translate id="text_product_code" />}
                             data={Util.getProductBarcode(formData)}
                             placeholder={this.CATranslate("text_product_code", locale)}
-                            required={this.state.isRequireInputBarcode}
                             errorRequired={<this.Translate id="error_require_sku" />}
                             max={20}
                             form={form}
                             disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || 
-                          this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO
-                            } />
+                            this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO
+                          } />  
                         </this.Col>
-                    }
-                  </this.Row>
-                </this.Col>
+                    </this.Row>
+                  </this.Col>
+                }
+                
 
                 <this.Col md="4">
                   <this.SelectSearch

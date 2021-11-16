@@ -34,6 +34,21 @@ export default class FormVariant extends Modal {
         key: "name"
       },
       {
+        title: <this.Translate id="text_product_sku" />,
+        dataIndex: "sku",
+        key: "sku",
+        width: 120,
+        render: (text, record, index) => {
+          return <this.InputText
+            name={`variantProductSku[${index}]`}
+            placeholder={this.CATranslate("text_product_sku", this.props.locale)}
+            data={record.sku}
+            // disabled={record.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
+            handleKeyUp={(e) => this.handleOnChangeSKU(e, index)}
+            form={this.props.form}/>;
+        }
+      },
+      {
         title: <this.Translate id="text_product_code" />,
         dataIndex: "barcode",
         key: "barcode",
@@ -451,6 +466,11 @@ export default class FormVariant extends Modal {
   handleOnChangeBarcode(event, index) {
     const productVariantList = this.state.productVariantList;
     productVariantList[index]["barcode"] = event.target.value;
+  }
+
+  handleOnChangeSKU(event, index) {
+    const productVariantList = this.state.productVariantList;
+    productVariantList[index]["sku"] = event.target.value;
   }
 
   syncInputTableWithProductVariant() {
