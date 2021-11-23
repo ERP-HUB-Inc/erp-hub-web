@@ -95,20 +95,7 @@ export default class PicturesUpload extends Element {
           "content-type": "multipart/form-data",
           "Authorization": `Bearer ${this.props.accessToken}`
         }
-      });
-      //.then((response) => {
-      // this.setState({
-      // cardImgList: response.data.key,
-      // fileList: [{
-      //   uid: "-1",
-      //   name: file.name,
-      //   url: response.data.location
-      // }]
-      // });
-      // })
-      // .catch((error) => {
-          
-      // });
+      }).then(this.props.responseAfterUpload);
     } else {
       this.setState({
         isRemoveImage: false,
@@ -135,6 +122,7 @@ export default class PicturesUpload extends Element {
               isRemoveImage: false
             });
             this.props.form.setFieldsValue({[this.props.name]: null});
+            this.props.responseAfterUpload(response);
           })
           .catch((error) => {
             
@@ -151,7 +139,8 @@ export default class PicturesUpload extends Element {
       onPreview: this.handleCardPreview,
       onChange: this.handleCardChange,
       // accept: "image/*",
-      listType: "picture-card"
+      listType: "picture-card",
+      className: this.props.className
     };
 
     const {
@@ -166,7 +155,7 @@ export default class PicturesUpload extends Element {
           {
             getFieldDecorator(this.props.name, { rules: this.props.rules, initialValue: this.props.data } )(
               <Upload {...cardImgProps}>
-                {cardImgList ? null : uploadButton}
+                {cardImgList ? null : this.props.customerButtonUpload ? this.props.customerButtonUpload : uploadButton}
               </Upload>
             )
           }

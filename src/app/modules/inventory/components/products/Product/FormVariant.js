@@ -6,6 +6,10 @@ import ProductVariantAction from "../../../actions/products/productVariant";
 import ConstantAttribute from "../../../constants/products/variantAttribute";
 import VariantAttributeAction from "../../../actions/products/variantAttribute";
 import Modal from "../../../../common/components/shares/Modal";
+import { Icon } from "antd";
+
+import "./index.css";
+
 export default class FormVariant extends Modal {
   constructor(props) {
     super(props);
@@ -25,7 +29,8 @@ export default class FormVariant extends Modal {
       productVariantArchiveList: [],
       productAttributeArchiveList: [],
       addAttributeRowIndex: 0,
-      isNotYetLoadComponentDidUpdated: true
+      isNotYetLoadComponentDidUpdated: true,
+      variantImageList: [],
     };
     this.columns = [
       {
@@ -38,12 +43,11 @@ export default class FormVariant extends Modal {
         dataIndex: "sku",
         key: "sku",
         width: 120,
-        render: (text, record, index) => {
+        render: (sku, record, index) => {
           return <this.InputText
             name={`variantProductSku[${index}]`}
             placeholder={this.CATranslate("text_product_sku", this.props.locale)}
-            data={record.sku}
-            // disabled={record.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
+            data={sku}
             handleKeyUp={(e) => this.handleOnChangeSKU(e, index)}
             form={this.props.form}/>;
         }
@@ -53,11 +57,11 @@ export default class FormVariant extends Modal {
         dataIndex: "barcode",
         key: "barcode",
         width: 120,
-        render: (text, record, index) => {
+        render: (barcode, record, index) => {
           return <this.InputText
             name={`variantProductCode[${index}]`}
             placeholder={this.CATranslate("text_product_code", this.props.locale)}
-            data={record.barcode}
+            data={barcode}
             disabled={record.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
             handleKeyUp={(e) => this.handleOnChangeBarcode(e, index)}
             form={this.props.form}/>;
@@ -121,6 +125,41 @@ export default class FormVariant extends Modal {
         }
       },
       {
+        title: <this.Translate id="text_photo" />,
+        dataIndex: "variantImage",
+        key: "variantImage",
+        align: "center",
+        render: (variantImage, record, index) => {
+          const image = {
+            uid: index,
+            name: variantImage,
+            status: "done",
+            url: this.Util.getProductImage(record.variantImage).url
+          };
+          
+          const uploadButton = (
+            <div>
+              <Icon type="plus" />
+              <div className="ant-upload-text">Upload</div>
+            </div>
+          );
+          
+          return <this.UploadImg
+            customerButtonUpload={uploadButton}
+            className="variantImage .ant-upload.ant-upload-select-picture-card main-upload .ant-upload-list-picture-card .ant-upload-list-item "
+            name={`variantImage${index}`}  
+            data={{file: image}}
+            fileList={[image]}
+            showPlusIcon={true}
+            endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}
+            endPointDelete={`${this.Util.getAPIURL()}/file/v1/product/delete`}
+            varianrIndex={index}
+            accessToken={this.Util.getAccessToken()}
+            responseAfterUpload={data => this.responseAfterUpload(data,index)}
+            form={this.props.form}/>;
+        }
+      },
+      {
         title: <this.Translate id="text_action" />,
         dataIndex: "action",
         key: "action",
@@ -160,6 +199,15 @@ export default class FormVariant extends Modal {
     this.handleOnFocusOutAttributeValue = this.handleOnFocusOutAttributeValue.bind(this);
     this.handleChangeProductVariantStatus = this.handleChangeProductVariantStatus.bind(this);
     this.syncInputTableWithProductVariant = this.syncInputTableWithProductVariant.bind(this);
+  }
+
+  responseAfterUpload = (response,index) => {
+    const productVariantList = this.state.productVariantList;
+    const variantImageList = this.state.variantImageList;
+    const {originalname} = response.data;
+    variantImageList.push(originalname);
+    productVariantList[index]["variantImage"] = originalname;
+    this.setState({productVariantList,variantImageList});
   }
 
   componentWillUpdate(nextProps) {
@@ -576,7 +624,7 @@ export default class FormVariant extends Modal {
       wholePrice: this.props.form.getFieldValue("wholePrice") ? this.props.form.getFieldValue("wholePrice") : 0,
       distributePrice: this.props.form.getFieldValue("distributePrice") ? this.props.form.getFieldValue("distributePrice") : 0,
       isAutoGenerateBarcode: this.props.form.getFieldValue("isAutoGenerateBarcode"),
-      barcode: "",
+      barcode: ""
     };
   }
 
@@ -844,10 +892,12 @@ export default class FormVariant extends Modal {
     return existingProductVariantList;
   }
 
-  appendProductVariant(variantAttribute = {}) {
+  appendProductVariant(variantAttribute = {},index) {
     return {
       id: variantAttribute.id,
       name: variantAttribute.name,
+      sku:variantAttribute.sku,
+      variantImage: this.state.variantImageList[index],
       barcode: variantAttribute.barcode,
       isAutoGenerateBarcode: variantAttribute.isAutoGenerateBarcode,
       price: variantAttribute.price,
@@ -938,7 +988,8 @@ export default class FormVariant extends Modal {
           index,
           this.countProductVariantThatHasId(this.state.productVariantList) > 0 // 1: Here to check wether need to generate variant by update or create 
         );
-
+        // productVariantList[index].variantImage = this.state.variantImageList[index];
+        
         this.setState({
           variantAttributeList,
           productVariantList
@@ -1042,7 +1093,8 @@ export default class FormVariant extends Modal {
     });
 
     this.setState({
-      variantAttributeList: existingVariantAttributes
+      variantAttributeList: existingVariantAttributes,
+      variantImageList: []
     });
 
     if (this.props.callBackGetProductAttribute) {
@@ -1063,7 +1115,8 @@ export default class FormVariant extends Modal {
           wholePrice: null,
           distributePrice: null,
           quantity: 0,
-          status: this.Enum.ACTIVE
+          status: this.Enum.ACTIVE,
+          variantImage: ""
         });
       }
     });
@@ -1085,10 +1138,12 @@ export default class FormVariant extends Modal {
       this.props.dispatch(ProductVariantAction.checkIsAvailableForArchive(id));
     } else {
       const productVariantList = this.state.productVariantList;
+      const variantImageList = this.state.variantImageList;
       const variantAttributeList = this.state.variantAttributeList;
       productVariantList.splice(productVariantRow, 1);
+      variantImageList.splice(productVariantRow, 1);
       variantAttributeList[0]["attributeValues"].splice(productVariantRow, 1);
-      this.setState({productVariantList,variantAttributeList});
+      this.setState({productVariantList,variantAttributeList,variantImageList});
     }
   }
 

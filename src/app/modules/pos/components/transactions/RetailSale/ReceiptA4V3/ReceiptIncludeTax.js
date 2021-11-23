@@ -46,7 +46,7 @@ export default class ReceiptIncludeTax extends Component {
          {this.vatNumber()}
 
       </div>
-    )
+    );
   }
 
   companyInformation(){
@@ -91,7 +91,7 @@ export default class ReceiptIncludeTax extends Component {
           {this.renderMoneyCell(this.props.data.discount, "$", true, "9pt")}
         </td>
     </tr>
-    )
+    );
   }
 
   vatNumber(){

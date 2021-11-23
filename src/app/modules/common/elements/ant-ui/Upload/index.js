@@ -17,6 +17,7 @@ export class UploadImg extends Element {
   render() {
     return (
       <PicturesUpload 
+        customerButtonUpload={this.props.customerButtonUpload}
         name={ this.props.name }
         form={this.props.form}
         label={this.props.label}
@@ -28,6 +29,8 @@ export class UploadImg extends Element {
         accessToken={this.props.accessToken}
         beforeUpload={this.props.beforeUpload}
         handleCardChange={this.handleCardChange}
+        responseAfterUpload={this.props.responseAfterUpload}
+        className={this.props.className}
       />
     );
   }   

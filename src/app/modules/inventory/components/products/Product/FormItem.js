@@ -223,7 +223,6 @@ export default class FormItem extends Modal {
       productSearch,
       variantAttributeAdd
     } = this.props;
-
     let defaultUnit = {id: ""};
 
     const currentUser = this.getCurrentUser();
@@ -435,22 +434,6 @@ export default class FormItem extends Modal {
                     max={99999999}
                     form={form} />
                 </this.Col>
-
-                {/* <this.Col md="12">
-                  <this.SelectTag
-                    name="tagId"
-                    label={<this.Translate id="input_product_tag" />}
-                    placeholder={this.CATranslate("input_product_tag", locale)}
-                    nameKey="tag"
-                    valueKey="id"
-                    dataSource={this.state.tags}
-                    defaultValue={formData.tags.map(productTag => productTag.tagId)}
-                    onChange={this.props.handleChangeTag}
-                    onSelect={this.props.handleSelectTag}
-                    onDeselect={this.props.handleDeselectTag}
-                    style={{ width: "100%" }}
-                    form={form} />
-                </this.Col> */}
 
                 <this.Col md="12" className="main-product-collapse">
                   <this.Collapse bordered={false}>

@@ -14,7 +14,7 @@ export default class ReceiptA4 extends Component {
       <div style={{position: "relative", margin: "0 auto"}}>
         <img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} />
       </div>
-    )
+    );
   }
 
   companyInfo(){
@@ -25,7 +25,7 @@ export default class ReceiptA4 extends Component {
           </div>
           <div>Tel: <span style={{textDecoration: "underline"}}>{this.props.data.client.phoneNumber}</span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;Email: <span style={{textDecoration: "underline"}}>{this.props.data.client.email} </span></div>
       </div>
-    )
+    );
   }
 
   customerInfo(){
@@ -40,7 +40,7 @@ export default class ReceiptA4 extends Component {
            <div> Tel: {this.props.data.customer.phoneNumber} |  Email: {this.props.data.customer.email}</div>
           </div> : "" }
       </div>
-    )
+    );
   }
 
   renderMoneyCell(value = 0, symbol, isBold = false, fontSize = "8.5pt") {

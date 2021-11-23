@@ -536,6 +536,14 @@ class Column extends List {
         sorter: true
       },
       {
+        title: <this.Translate id="text_product_sku" />,
+        dataIndex: "sku",
+        key: "sku",
+        width: 100,
+        render: (text, record) => Util.getProductSku(record) !== null ? Util.getProductSku(record) : "N/A",
+        sorter: true
+      },
+      {
         title: <this.Translate id="text_stock_type" />,
         dataIndex: "serialType",
         key: "serialType",

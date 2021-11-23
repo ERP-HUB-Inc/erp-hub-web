@@ -16,7 +16,7 @@ const semverGreaterThan = (versionA, versionB) => {
     return a > b || isNaN(b);
   }
   return false;
-}
+};
 
 export default class CacheBuster extends React.Component {
   constructor(props) {
@@ -25,7 +25,7 @@ export default class CacheBuster extends React.Component {
       loading: true,
       isLatestVersion: false,
       refreshCacheAndReload: () => {
-        console.log('Clearing cache and hard reloading...')
+        console.log("Clearing cache and hard reloading...");
         if (caches) {
           // Service worker cache should be cleared with caches.delete()
           caches.keys().then(function (names) {
@@ -39,7 +39,7 @@ export default class CacheBuster extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/meta.json')
+    fetch("/meta.json")
       .then((response) => response.json())
       .then((meta) => {
         const latestVersion = meta.version;

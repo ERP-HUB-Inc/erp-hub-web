@@ -213,3 +213,17 @@
     color: #40586d;
     font-weight: 500;
 }
+
+.variantImage .ant-upload.ant-upload-select-picture-card {
+    width: 100px;
+    height: 100px;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-upload .ant-upload-list-picture-card .ant-upload-list-item {
+    border: 2px dashed #d9d9d9;
+    background-color: white;
+    width: 100%;
+    height: 100%;
+}
