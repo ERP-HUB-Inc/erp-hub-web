@@ -126,15 +126,15 @@ export default class FormVariant extends Modal {
       },
       {
         title: <this.Translate id="text_photo" />,
-        dataIndex: "variantImage",
-        key: "variantImage",
+        dataIndex: "image",
+        key: "image",
         align: "center",
         render: (variantImage, record, index) => {
           const image = {
             uid: index,
             name: variantImage,
             status: "done",
-            url: this.Util.getProductImage(record.variantImage).url
+            url: this.Util.getProductImage(record.image).url
           };
           
           const uploadButton = (
@@ -147,7 +147,7 @@ export default class FormVariant extends Modal {
           return <this.UploadImg
             customerButtonUpload={uploadButton}
             className="variantImage .ant-upload.ant-upload-select-picture-card main-upload .ant-upload-list-picture-card .ant-upload-list-item "
-            name={`variantImage${index}`}  
+            name={`image${index}`}  
             data={{file: image}}
             fileList={[image]}
             showPlusIcon={true}
@@ -204,9 +204,11 @@ export default class FormVariant extends Modal {
   responseAfterUpload = (response,index) => {
     const productVariantList = this.state.productVariantList;
     const variantImageList = this.state.variantImageList;
-    const {originalname} = response.data;
-    variantImageList.push(originalname);
-    productVariantList[index]["variantImage"] = originalname;
+    let image = null;
+    if (response.data === "success") image = null;
+    else image = response.data.originalname;
+    variantImageList.push(image);
+    productVariantList[index]["image"] = image;
     this.setState({productVariantList,variantImageList});
   }
 
@@ -897,7 +899,7 @@ export default class FormVariant extends Modal {
       id: variantAttribute.id,
       name: variantAttribute.name,
       sku:variantAttribute.sku,
-      variantImage: this.state.variantImageList[index],
+      image: this.state.variantImageList[index],
       barcode: variantAttribute.barcode,
       isAutoGenerateBarcode: variantAttribute.isAutoGenerateBarcode,
       price: variantAttribute.price,
@@ -988,7 +990,6 @@ export default class FormVariant extends Modal {
           index,
           this.countProductVariantThatHasId(this.state.productVariantList) > 0 // 1: Here to check wether need to generate variant by update or create 
         );
-        // productVariantList[index].variantImage = this.state.variantImageList[index];
         
         this.setState({
           variantAttributeList,
@@ -1116,7 +1117,7 @@ export default class FormVariant extends Modal {
           distributePrice: null,
           quantity: 0,
           status: this.Enum.ACTIVE,
-          variantImage: ""
+          image: ""
         });
       }
     });

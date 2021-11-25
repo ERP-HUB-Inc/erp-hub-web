@@ -80,10 +80,16 @@ export default class Form extends Modal {
             productPackageToProduct.push(packageProduct);
           });
         }
-        
+
+        /**
+         * @ Note
+         * revove image variant from form
+         * 
+        */
+
         if (this.state.productVariants.length > 0) {
           for(let i = 0; i < this.state.productVariants.length; i++) {
-            delete values[`variantImage${i}`];
+            delete values[`image${i}`];
           }
         }
 

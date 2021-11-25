@@ -135,6 +135,17 @@ export default class Form extends Modal {
           });
         }
 
+        /**
+         * @ Note
+         * revove image variant from form
+         * 
+        */
+
+         if (this.state.productVariants.length > 0) {
+          for(let i = 0; i < this.state.productVariants.length; i++) {
+            delete values[`image${i}`];
+          }
+        }
 
         this.Util.clearObjProperty(values, [
           "variantProductCode",
@@ -171,7 +182,6 @@ export default class Form extends Modal {
           tagList: [],
           isNotYetLoadComponentDidUpdated: true
         });
-
         this.dispatch(ProductAction.update(values));
       }
     });
