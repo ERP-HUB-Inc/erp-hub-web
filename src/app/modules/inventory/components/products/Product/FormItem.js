@@ -18,8 +18,6 @@ export default class FormItem extends Modal {
   constructor(props) {
     super(props);
     this.state = {
-      brands: [],
-      units: [],
       taxs: [],
       productsType: [],
       languages: [],
@@ -96,10 +94,7 @@ export default class FormItem extends Modal {
 
   componentDidMount() {
     this.setState({
-      brands: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.BRAND)),
-      units: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT)),
       taxs: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.TAX)),
-      productsType: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE)),
       languages: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LANGUAGE)),
       tags: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.PRODUCT_TAG))
     });
@@ -109,16 +104,9 @@ export default class FormItem extends Modal {
 
   componentWillUpdate(nextProps) {
     // APEND DATA WHEN ADD MORE IN SELECT LIST
-    if (nextProps.brandAdd.response) {
-      this.setState({brands: [nextProps.brandAdd.response.data, ...this.state.brands]});
-    }
 
     if (nextProps.productsTypeAdd.response) {
       this.setState({productsType: [nextProps.productsTypeAdd.response.data, ...this.state.productsType]});
-    }
-
-    if (nextProps.unitAdd.response) {
-      this.setState({units: [nextProps.unitAdd.response.data, ...this.state.units]});
     }
 
     if (nextProps.taxAdd.response) {
@@ -223,7 +211,6 @@ export default class FormItem extends Modal {
       productSearch,
       variantAttributeAdd
     } = this.props;
-    let defaultUnit = {id: ""};
 
     const currentUser = this.getCurrentUser();
     
@@ -233,16 +220,6 @@ export default class FormItem extends Modal {
         this.state.productsType[productTypeIndex].namekm = productTypeValue.namekm;
         this.state.productsType[productTypeIndex].namebm = productTypeValue.namebm;
       });
-    }
-
-    if (Array.isArray(this.state.units) && this.state.units.length > 0) {
-      const findDefaultUnit = this.state.units.find(unitValue => unitValue.isDefault === this.Enum.IS_DEFAULT);
-
-      if (findDefaultUnit) {
-        defaultUnit = findDefaultUnit;
-      }
-
-      defaultUnit.id = this.props.formData.unitId ? this.props.formData.unitId : defaultUnit.id;
     }
 
     let productTypeBox = Enum.PRODUCT_STANDARD;
@@ -288,7 +265,7 @@ export default class FormItem extends Modal {
                     placeholder={this.CATranslate("text_brand", locale)}
                     errorRequired={<this.Translate id="error_require_brand" />}
                     valueKey="id"
-                    dataSource={this.state.brands}
+                    dataSource={this.props.brands.list}
                     defaultValue={formData.brandId}
                     addNew={this.props.handleAddBrand}
                     required={true}
@@ -302,7 +279,7 @@ export default class FormItem extends Modal {
                     placeholder={this.CATranslate("text_product_type", locale)}
                     errorRequired={<this.Translate id="error_require_type" />}
                     valueKey="id"
-                    dataSource={this.state.productsType}
+                    dataSource={this.props.productsType.list}
                     defaultValue={formData.productTypeId}
                     addNew={this.props.handleAddProductType}
                     nameKey={`name${this.Util.getProductNameField(this.Util.getCurrentLanguageCode())}`}
@@ -330,38 +307,46 @@ export default class FormItem extends Modal {
                     form={form}/>
                 </this.Col>
 
-                {
-                  this.state.productTypeIndex === Enum.PRODUCT_VARIANT || formData.productOption === Enum.PRODUCT_VARIANT ? ""
-                    :
-                    <this.Col md="8">
-                      <this.Row className="group-code-generate">
-                        <this.Col md="6">
-                            <this.InputText
-                              name="sku"
-                              label={<this.Translate id="text_product_sku" />}
-                              data={Util.getProductSku(formData)}
-                              placeholder={this.CATranslate("text_product_sku", locale)}
-                              max={20}
-                              form={form}
-                            />  
-                        </this.Col> 
-            
+                <this.Col md="8">
+                  <this.Row className="group-code-generate">
+                    <this.Col md="6" className="wrap-generate-code">
+                      <this.RadioButton 
+                        name="isAutoGenerateBarcode"
+                        defaultValue={formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.MANAUL ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO}
+                        disabled={formData.id != null}
+                        onChange={this.onCangeIsAutoGenerateCode}
+                        dataSource={[
+                          {
+                            value: this.Enum.GENERATE_PRODUCT_CODE.MANAUL,
+                            title: <this.Translate id="input_product_enter_custom_code" />}, 
+                          { 
+                            value: this.Enum.GENERATE_PRODUCT_CODE.AUTO,
+                            title: <this.Translate id="input_product_auto_generate_code" />
+                          }
+                        ]}
+                        form={form}/>
+                    </this.Col>
+                    {
+                      this.state.productTypeIndex === Enum.PRODUCT_VARIANT || formData.productOption === Enum.PRODUCT_VARIANT ?
+                        ""
+                        :
                         <this.Col md="6">
                           <this.InputText
                             name="barcode"
                             label={<this.Translate id="text_product_code" />}
                             data={Util.getProductBarcode(formData)}
                             placeholder={this.CATranslate("text_product_code", locale)}
+                            required={this.state.isRequireInputBarcode}
                             errorRequired={<this.Translate id="error_require_sku" />}
                             max={20}
                             form={form}
                             disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || 
-                            this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO
-                          } />  
+                          this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO
+                            } />
                         </this.Col>
-                    </this.Row>
-                  </this.Col>
-                }
+                    }
+                  </this.Row>
+                </this.Col>
                 
 
                 <this.Col md="4">
@@ -371,7 +356,7 @@ export default class FormItem extends Modal {
                     placeholder={this.CATranslate("text_unit", locale)}
                     errorRequired={<this.Translate id="error_require_unit" />}
                     valueKey="id"
-                    dataSource={this.state.units}
+                    dataSource={this.props.units.list}
                     defaultValue={formData.defaultUnitId}
                     addNew={this.props.handleAddUnit}
                     required={true}

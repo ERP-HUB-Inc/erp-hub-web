@@ -15,6 +15,7 @@ import InventoryUtil from "../../../../inventory/utils";
 import InventoryEnum from "../../../../inventory/enums";
 import history from "../../../../../modules/common/router/history";
 import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
+import product from "../../../../inventory/constants/products/product";
 
 export default class SaleHistoryList extends List {
   constructor(props) {
@@ -345,7 +346,9 @@ export default class SaleHistoryList extends List {
           const tax = POSUtil.getTaxFromProduct(productVariant.product);
           productOrderList.push({
             quantity: transactionEntry.quantity,
-            name: InventoryUtil.getProductNameV2(productVariant.product),
+            // name: InventoryUtil.getProductNameV2(productVariant.product),
+            name: productVariant.product.name,
+            namekm: productVariant.product.namekm,
             variantName: productVariant.product.productOption === InventoryEnum.PRODUCT_VARIANT ? productVariant.name : "",
             tax: tax.taxRate/100,
             taxDescription: tax,

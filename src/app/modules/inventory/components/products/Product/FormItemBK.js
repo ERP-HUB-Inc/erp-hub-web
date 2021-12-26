@@ -1,0 +1,633 @@
+import React from "react";
+import FormComposite from "./FormComposite";
+import FormVariant from "./FormVariant";
+// import FormCostLog from "./FormCostLog";
+// import FormProductLog from "./FormProductLog";
+import Enum from "../../../enums";
+import Util from "../../../utils";
+import ProductAction from "../../../actions/products/product";
+import BrandAction from "../../../actions/products/brand";
+import ProductTypeAction from "../../../actions/products/productsType";
+import UnitAction from "../../../actions/products/productsUnit";
+import TaxAction from "../../../../pos/action/settings/tax";
+import Modal from "../../../../common/components/shares/Modal";
+import CommonEnum from "../../../../common/enums";
+import "./index.css";
+
+export default class FormItem extends Modal {
+  constructor(props) {
+    super(props);
+    this.state = {
+      brands: [],
+      units: [],
+      taxs: [],
+      productsType: [],
+      languages: [],
+      tags: [],
+      productTypeIndex: 0, // for condition three type starndard, variant, composite
+      isAutoGenerateBarcode: this.Enum.GENERATE_PRODUCT_CODE.MANAUL,
+      isRequireInputBarcode: true,
+      isSetFocusBarcode: false,
+      isComponentNotYetUpdated: true,
+      isComponentNotYetLoadedWillUpdate: true,
+      productOptionClassDisabled: ""
+    };
+
+    this.TAB_PRODUCT_COST_LOG = 3;
+
+    this.TAB_PRODUCT_LOG = 4;
+
+    this.productTypeContent = "";
+    
+    this.productTypes = [
+      {
+        name: <this.Translate id="radio_box_product_standard" />,
+        description: <this.Translate id="radio_box_product_standard_description" />,
+        value: Enum.PRODUCT_STANDARD
+      },
+      {
+        name: <this.Translate id="radio_box_product_variant" />,
+        description: <this.Translate id="radio_box_product_variant_description" />,
+        value: Enum.PRODUCT_VARIANT
+      },
+      {
+        name: <this.Translate id="radio_box_product_composite" />,
+        description: <this.Translate id="radio_box_product_composite_description" />,
+        value: Enum.PRODUCT_COMPOSITE
+      }
+    ];
+
+    this.serialTypes = [
+      // {
+      //   name: <this.Translate id="input_product_serial" />,
+      //   value: Enum.SERIAL_TYPE.SERIAL
+      // },
+      {
+        name: <this.Translate id="input_product_non_inventory" />,
+        value: Enum.SERIAL_TYPE.NON_INVENTORY
+      },
+      {
+        name: <this.Translate id="input_product_standard" />,
+        value: Enum.SERIAL_TYPE.STANDARD
+      },
+      // {
+      //   name: <this.Translate id="input_product_license" />,
+      //   value: Enum.SERIAL_TYPE.LICENSE
+      // }
+    ];
+
+    this.typesOfProduct = [
+      {
+        name: <this.Translate id="input_product_good" />,
+        value: Enum.TYPE_OF_PRODUCT.GOOD
+      },
+      {
+        name: <this.Translate id="input_product_raw_material" />,
+        value: Enum.TYPE_OF_PRODUCT.RAW_MATERIAL
+      }
+    ];
+
+    this.onChange = this.onChange.bind(this);
+    this.onCangeIsAutoGenerateCode = this.onCangeIsAutoGenerateCode.bind(this);
+    this.onChangeTab = this.onChangeTab.bind(this);
+    this.getProductImageFromCallBack = this.getProductImageFromCallBack.bind(this);
+    this.handleChangeType = this.handleChangeType.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({
+      brands: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.BRAND)),
+      units: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT)),
+      taxs: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.TAX)),
+      productsType: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE)),
+      languages: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LANGUAGE)),
+      tags: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.PRODUCT_TAG))
+    });
+
+    this.dispatch(TaxAction.fetch(100));
+  }
+
+  componentWillUpdate(nextProps) {
+    // APEND DATA WHEN ADD MORE IN SELECT LIST
+    if (nextProps.brandAdd.response) {
+      this.setState({brands: [nextProps.brandAdd.response.data, ...this.state.brands]});
+    }
+
+    if (nextProps.productsTypeAdd.response) {
+      this.setState({productsType: [nextProps.productsTypeAdd.response.data, ...this.state.productsType]});
+    }
+
+    if (nextProps.unitAdd.response) {
+      this.setState({units: [nextProps.unitAdd.response.data, ...this.state.units]});
+    }
+
+    if (nextProps.taxAdd.response) {
+      this.setState({taxs: [nextProps.taxAdd.response.data, ...this.state.taxs]});
+    }
+  }
+
+  componentDidUpdate() {
+    const {
+      dispatch,
+      formData,
+      brandAdd,
+      productsTypeAdd,
+      unitAdd,
+      taxAdd,
+    } = this.props;
+
+    if (brandAdd.added) {
+      this.props.form.setFieldsValue({brandId: brandAdd.response.data.id});
+      dispatch(BrandAction.reset());
+    }
+
+    if (productsTypeAdd.added) {
+      this.props.form.setFieldsValue({productTypeId: productsTypeAdd.response.data.id});
+      dispatch(ProductTypeAction.reset());
+    }
+
+    if (unitAdd.added) {
+      this.props.form.setFieldsValue({defaultUnitId: unitAdd.response.data.id});
+      dispatch(UnitAction.reset());
+    }
+
+    if (taxAdd.added) {
+      this.props.form.setFieldsValue({taxId: taxAdd.response.data.id});
+      dispatch(TaxAction.reset());
+    }
+
+    if (formData.tags.length > 0 && this.state.isComponentNotYetUpdated) {
+      this.setState({isComponentNotYetUpdated: false});
+    }
+  }
+
+  getProductImageFromCallBack(value) {
+    this.props.form.setFieldsValue({image: value});
+  } 
+
+  onChangeTab(activeKey) {
+    const {dispatch, formData} = this.props;
+    const productVariantId = formData.productVariants.length > 0 ? formData.productVariants[0].id : "";
+    if ((activeKey - this.TAB_PRODUCT_COST_LOG) === 0) {
+      dispatch(ProductAction.fetchCostLog(productVariantId, 100));
+    } else if ((activeKey - this.TAB_PRODUCT_LOG) === 0) {
+      dispatch(ProductAction.fetchLog(productVariantId, 100));
+    }
+  }
+
+  onChange(e) {
+    this.setState({
+      productTypeIndex: e.target.value
+    });
+
+    if (e.target.value === Enum.PRODUCT_VARIANT) {
+      this.setState({
+        isAutoGenerateBarcode: this.Enum.GENERATE_PRODUCT_CODE.AUTO
+      });
+    } else {
+      this.setState({
+        isAutoGenerateBarcode: this.props.form.getFieldValue("isAutoGenerateBarcode")
+      });
+    }
+  }
+
+  onCangeIsAutoGenerateCode(e) {
+    if (e.target.value === this.Enum.GENERATE_PRODUCT_CODE.AUTO) {
+      this.props.form.setFieldsValue({
+        barcode: ""
+      });
+    }
+
+    this.setState({
+      isAutoGenerateBarcode: e.target.value,
+      isRequireInputBarcode: e.target.value === this.Enum.GENERATE_PRODUCT_CODE.MANAUL
+    });
+
+    this.props.dispatch(ProductAction.switchTypeOfGenerateSKU(e.target.value));
+  }
+
+  handleChangeType(value) {
+    if (value === Enum.TYPE_OF_PRODUCT.RAW_MATERIAL) {
+      this.setState({productOptionClassDisabled: "disabled-click"});
+    } else {
+      this.setState({productOptionClassDisabled: ""});
+    }
+  }
+
+  render() {
+    const {
+      dispatch,
+      form,
+      locale,
+      formData,
+      productSearch,
+      variantAttributeAdd
+    } = this.props;
+    let defaultUnit = {id: ""};
+
+    const currentUser = this.getCurrentUser();
+    
+    if (this.state.productsType) {
+      this.state.productsType.forEach((productTypeValue, productTypeIndex) => {
+        this.state.productsType[productTypeIndex].name = productTypeValue.name;
+        this.state.productsType[productTypeIndex].namekm = productTypeValue.namekm;
+        this.state.productsType[productTypeIndex].namebm = productTypeValue.namebm;
+      });
+    }
+
+    if (Array.isArray(this.state.units) && this.state.units.length > 0) {
+      const findDefaultUnit = this.state.units.find(unitValue => unitValue.isDefault === this.Enum.IS_DEFAULT);
+
+      if (findDefaultUnit) {
+        defaultUnit = findDefaultUnit;
+      }
+
+      defaultUnit.id = this.props.formData.unitId ? this.props.formData.unitId : defaultUnit.id;
+    }
+
+    let productTypeBox = Enum.PRODUCT_STANDARD;
+    if (formData.id) {
+      productTypeBox = formData.productOption;
+    } else {
+      productTypeBox = this.state.productTypeIndex;
+    }
+
+    const image = {
+      uid: "-1",
+      name: formData.image,
+      status: "done",
+      url: this.Util.getProductImage(formData.image).url
+    };
+
+    return (
+      <this.Row>
+      <this.Col md="6" className="create-product-column-left">
+        <this.Row>
+        <this.Col md="4">
+            <this.InputText
+              name="name"
+              label={<this.Translate id="text_product_name" />}
+              data={formData["name"]}
+              placeholder={this.CATranslate("text_product_name", locale)}
+              errorRequired={<this.Translate id="error_require_name" />}
+              errorLenght={<this.Translate id="input_error_products_name" />}
+              isAutoFocus={true}
+              required={true}
+              max={255}
+              min={0}
+              form={form}
+              suffix={this.getLanguageIcon("en")}/>
+          </this.Col>
+          <this.Col md="4">
+            <this.InputText
+              name="namekm"
+              label={<this.Translate id="text_product_name" />}
+              data={formData["namekm"]}
+              placeholder={this.CATranslate("text_product_name", locale)}
+              errorRequired={<this.Translate id="error_require_name" />}
+              errorLenght={<this.Translate id="input_error_products_name" />}
+              max={255}
+              min={0}
+              form={form}
+              suffix={this.getLanguageIcon("km")}/>
+          </this.Col>
+
+          <this.Col md="4">
+            <this.SelectSearch
+              name="brandId"
+              label={<this.Translate id="text_brand" />}
+              placeholder={this.CATranslate("text_brand", locale)}
+              errorRequired={<this.Translate id="error_require_brand" />}
+              valueKey="id"
+              dataSource={this.state.brands}
+              defaultValue={formData.brandId}
+              addNew={this.props.handleAddBrand}
+              required={true}
+              form={form}/>
+          </this.Col>
+
+          <this.Col md="4">
+            <this.SelectSearch
+              name="productTypeId"
+              label={<this.Translate id="text_product_type" />}
+              placeholder={this.CATranslate("text_product_type", locale)}
+              errorRequired={<this.Translate id="error_require_type" />}
+              valueKey="id"
+              dataSource={this.state.productsType}
+              defaultValue={formData.productTypeId}
+              addNew={this.props.handleAddProductType}
+              nameKey={`name${this.Util.getProductNameField(this.Util.getCurrentLanguageCode())}`}
+              required={true}
+              form={form}/>
+          </this.Col>
+
+          <this.Col md="4">
+            <this.Select
+              name="serialType"
+              label={
+                <span>
+                  <this.Translate id="text_stock_type" />&nbsp;
+                  <this.Tooltip title="Do you want your product calculate stock or not?">
+                    <this.Icon type="question-circle-o" />
+                  </this.Tooltip>
+                </span>
+              }
+              placeholder={this.CATranslate("text_stock_type", locale)}
+              dataSource={this.serialTypes}
+              defaultValue={formData.serialType}
+              errorRequired={<this.Translate id="error_require_serial_type" />}
+              disabled={formData.id != null}
+              required={true}
+              form={form}/>
+          </this.Col>
+
+          {
+            this.state.productTypeIndex === Enum.PRODUCT_VARIANT || formData.productOption === Enum.PRODUCT_VARIANT ? ""
+              :
+              <this.Col md="8">
+                <this.Row className="group-code-generate">
+                  <this.Col md="6">
+                      <this.InputText
+                        name="sku"
+                        label={<this.Translate id="text_product_sku" />}
+                        data={Util.getProductSku(formData)}
+                        placeholder={this.CATranslate("text_product_sku", locale)}
+                        max={20}
+                        form={form}
+                      />  
+                  </this.Col> 
+      
+                  <this.Col md="6">
+                    <this.InputText
+                      name="barcode"
+                      label={<this.Translate id="text_product_code" />}
+                      data={Util.getProductBarcode(formData)}
+                      placeholder={this.CATranslate("text_product_code", locale)}
+                      errorRequired={<this.Translate id="error_require_sku" />}
+                      max={20}
+                      form={form}
+                      disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || 
+                      this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO
+                    } />  
+                  </this.Col>
+              </this.Row>
+            </this.Col>
+          }
+          
+
+          <this.Col md="4">
+            <this.SelectSearch
+              name="defaultUnitId"
+              label={<this.Translate id="text_unit" />}
+              placeholder={this.CATranslate("text_unit", locale)}
+              errorRequired={<this.Translate id="error_require_unit" />}
+              valueKey="id"
+              dataSource={this.state.units}
+              defaultValue={formData.defaultUnitId}
+              addNew={this.props.handleAddUnit}
+              required={true}
+              form={form}/>
+          </this.Col>  
+
+          <this.Col md="4">
+            <this.Select
+              name="type"
+              label={<this.Translate id="text_type" />}
+              dataSource={this.typesOfProduct}
+              defaultValue={formData.type !== "" ? formData.type : this.typesOfProduct[0].value}
+              disabled={formData.id != null}
+              onChange={this.handleChangeType}
+              form={form}/>
+          </this.Col>
+
+          <this.Col md="4">
+            <this.InputNumber
+              name="reorderPoint"
+              label={<this.Translate id="input_product_re_order_point" />}
+              data={formData.reorderPoint === 0 ? null : formData.reorderPoint}
+              placeholder={this.CATranslate("input_product_re_order_point_placeholder", locale)}
+              max={9999999}
+              form={form}/>
+          </this.Col>
+
+          <this.Col md="4">
+            <this.InputNumber
+              name="price"
+              label={<span><this.Translate id="text_retial_price" /><span> ({currentUser.setting.currency})</span></span>}
+              data={Util.getProductPrice(formData)}
+              isAutoSelect={true}
+              placeholder={this.CATranslate("input_product_price_placeholder", locale)}
+              errorRequired={<this.Translate id="error_require_price" />}
+              max={99999999}
+              form={form} />
+          </this.Col>
+
+          <this.Col md="4">
+            <this.InputNumber
+              name="wholePrice"
+              label={<span><this.Translate id="text_whole_price" /><span> ({currentUser.setting.currency})</span></span>}
+              data={Util.getProductWholeSalePrice(formData)}
+              isAutoSelect={true}
+              placeholder={this.CATranslate("input_product_price_placeholder", locale)}
+              errorRequired={<this.Translate id="error_require_price" />}
+              max={99999999}
+              form={form} />
+          </this.Col>
+
+          <this.Col md="4">
+            <this.InputNumber
+              name="distributePrice"
+              label={<span><this.Translate id="text_distribute_price" /><span> ({currentUser.setting.currency})</span></span>}
+              data={Util.getProductDistributePrice(formData)}
+              isAutoSelect={true}
+              placeholder={this.CATranslate("input_product_price_placeholder", locale)}
+              errorRequired={<this.Translate id="error_require_price" />}
+              max={99999999}
+              form={form} />
+          </this.Col>
+
+          <this.Col md="12" className="main-product-collapse">
+            <this.Collapse bordered={false}>
+              <this.Panel style={{ color: "red" }} header={<this.Translate id="text_view_cost_detail" />} key="1">
+                <this.Row>
+                  <this.Col md="4">
+                    <this.Select
+                      name="taxId"
+                      label={<this.Translate id="input_product_tax" />}
+                      placeholder={this.CATranslate("input_product_tax", locale)}
+                      valueKey="id"
+                      dataSource={this.props.taxs.list}
+                      defaultValue={formData.taxId}
+                      form={form} />
+                  </this.Col>
+
+                  <this.Col md="4">
+                    <this.InputNumber
+                      name="factoryCost"
+                      label={<span><this.Translate id="input_product_supplier_price" /><span> ({currentUser.setting.currency})</span></span>}
+                      data={formData.factoryCost === 0 ? null : formData.factoryCost}
+                      placeholder={this.CATranslate("input_product_supplier_price_placeholder", locale)}
+                      max={99999999}
+                      form={form}/>
+                  </this.Col>
+
+                  <this.Col md="4">
+                    <this.InputNumber
+                      name="shippingFee"
+                      label={<span><this.Translate id="text_shipping_fee" /><span> ({currentUser.setting.currency})</span></span>}
+                      data={formData.shippingFee === 0 ? null : formData.shippingFee}
+                      placeholder={this.CATranslate("input_product_shipping_fee_placeholder", locale)}
+                      max={99999999}
+                      form={form}/>
+                  </this.Col>
+
+                  {
+                    formData.productOption === Enum.PRODUCT_VARIANT ?
+                      ""
+                      :
+                      <this.Col md="4">
+                        <this.InputNumber
+                          name="costDisplay"
+                          label={<span><this.Translate id="text_cost" /><span> ({currentUser.setting.currency})</span></span>}
+                          data={Util.getProductCost(formData)}
+                          placeholder={this.CATranslate("text_cost_placeholder", locale)}
+                          disabled={true}
+                          form={form}/>
+                      </this.Col>
+                  }
+
+                  <this.Col md="4">
+                    <this.InputNumber
+                      name="markup"
+                      label={<span><this.Translate id="input_product_mark_up" /><span> (%)</span></span>}
+                      data={formData.markup === 0 ? null : formData.markup}
+                      placeholder={this.CATranslate("input_product_mark_up_placeholder", locale)}
+                      max={20}
+                      form={form}/>
+                  </this.Col>
+
+                </this.Row>  
+
+              </this.Panel>
+            </this.Collapse>
+          </this.Col>
+
+          <this.Col md="4" style={{ display: "flex", alignItems: "center", paddingTop: 20 }}>
+            <this.Switchs
+              name="isAvialableSale"
+              label={<this.Translate id="input_product_is_avialable_sale" />}
+              checked={formData.isAvialableSale}
+              form={form} />
+          </this.Col>
+
+          <this.Col md="4" style={{ display: "flex", alignItems: "center", paddingTop: 20 }}>
+            <this.Switchs
+              name="isPublic"
+              label={<this.Translate id="input_product_is_publish" />}
+              checked={formData.isPublic}
+              form={form} />
+          </this.Col>
+
+          <this.Col md="12">
+            <this.UploadImg
+              name="image"    
+              label={<this.Translate id="text_photo" />}
+              data={{file: image}}
+              fileList={[image]}
+              endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}
+              endPointDelete={`${this.Util.getAPIURL()}/file/v1/product/delete`}
+              accessToken={this.Util.getAccessToken()}
+              form={form}/>
+          </this.Col>
+        </this.Row> 
+      </this.Col>
+      <this.Col md="6" className="create-product-column-right">
+        <this.RadioBox
+          className="main-radio-acc product-type"
+          name="productOption"
+          type="radio"
+          defaultValue={formData.productOption}
+          disabled={formData.id != null || this.state.productOptionClassDisabled !== ""}
+          form={form}
+          onSelect={this.onSelect}
+          onChange={this.onChange}>
+          { this.productTypes.map((productType, key) => 
+            <this.RadioChildBox
+              key={key}
+              title={productType.name}
+              language={productType.description}
+              value={productType.value}
+              className={productType.value === productTypeBox || formData.id == null ? productType.value !== Enum.PRODUCT_STANDARD ? this.state.productOptionClassDisabled : "" : "disabled-click"} /> 
+          ) 
+          }
+        </this.RadioBox>
+        <div className="product-type-content">
+          {
+            productTypeBox === Enum.PRODUCT_VARIANT ?
+              <FormVariant
+                currentUser={currentUser}
+                dispatch={dispatch}
+                form={form}
+                locale={locale}
+                formData={formData}
+                switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
+                productVariantArchive={this.props.productVariantArchive}
+                productVariantCheckStatus={this.props.productVariantCheckStatus}
+                productAttributeCheckStatus={this.props.productAttributeCheckStatus}
+                productAttributeValueCheckStatus={this.props.productAttributeValueCheckStatus}
+                callBackGetProductAttribute={this.props.callBackGetProductAttribute}
+                callBackGetProductVariant={this.props.callBackGetProductVariant}
+                handleCallBackGetArchiveProductVariant={this.props.handleCallBackGetArchiveProductVariant}
+                handleCallBackGetArchiveProductAttributes={this.props.handleCallBackGetArchiveProductAttributes}
+                productVariants={formData.productVariants}
+                productAttributes={formData.productAttributes}
+                variantAttributes={this.props.variantAttributes}
+                variantAttributeAdd={variantAttributeAdd}
+                handleAddVariantAttribute={this.props.handleAddVariantAttribute}/>
+              :
+              productTypeBox === Enum.PRODUCT_COMPOSITE ?
+                <FormComposite
+                  dispatch={dispatch}
+                  form={form}
+                  locale={locale}
+                  productPackageToProduct={formData.productPackageToProduct}
+                  productSearch={productSearch} />
+                :
+                ""
+          }
+        </div>
+      </this.Col>
+    </this.Row>
+    );
+  }
+}
+
+FormItem.defaultProps = {
+  formData: {
+    name:"",
+    description:"",
+    defaultUnitId: "",
+    brandId: "",
+    productTypeId: "",
+    serialType: "",
+    isAutoGenerateBarcode: CommonEnum.GENERATE_PRODUCT_CODE.MANAUL,
+    barcode: "",
+    type: "",
+    productOption: Enum.PRODUCT_STANDARD,
+    reorderPoint: null,
+    factoryCost: null,
+    shippingFee: null,
+    cost: null,
+    markup: null,
+    price: null,
+    isAvialableSale: 1,
+    isPublic: 0,
+    tags: [],
+    productVariants: [],
+    productAttributes: [],
+    productPackageToProduct: [],
+    productDescriptions:[],
+    status: 1
+  },
+  tagList: []
+};

@@ -30,7 +30,7 @@ export class Switchs extends Element {
     const { /*icon,*/checkedicon } = this.props;
     return(
       <div className="main-switch">
-        <this.FormItem label={ this.props.label }>
+        <this.FormItem label={ this.props.label } style={this.props.style}>
           {
             getFieldDecorator(this.props.name, { initialValue: this.props.checked })(
               <div>

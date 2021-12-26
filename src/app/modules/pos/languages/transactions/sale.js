@@ -151,7 +151,7 @@ export default {
 
   "text_desc": [
     "DESC",
-    "ឈ្មោះមុខទំនិញ",
+    "មុខទំនិញ",
     "DESC"
   ],
 

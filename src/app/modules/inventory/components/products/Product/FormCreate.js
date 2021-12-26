@@ -217,8 +217,11 @@ export default class Form extends Modal {
       dispatch,
       productVariantArchive,
       productAdd,
+      productsType,
       productsTypeAdd,
+      brands,
       brandAdd,
+      units,
       unitAdd,
       taxAdd,
       tags,
@@ -243,10 +246,13 @@ export default class Form extends Modal {
           productVariantCheckStatus={this.props.productVariantCheckStatus}
           productAttributeCheckStatus={this.props.productAttributeCheckStatus}
           productAttributeValueCheckStatus={this.props.productAttributeValueCheckStatus}
+          brands={brands}
           brandAdd={brandAdd}
           handleAddBrand={this.handleAddBrand}
+          productsType={productsType}
           productsTypeAdd={productsTypeAdd}
           handleAddProductType={this.handleAddProductType}
+          units={units}
           unitAdd={unitAdd}
           handleAddUnit={this.handleAddUnit}
           taxAdd={taxAdd}

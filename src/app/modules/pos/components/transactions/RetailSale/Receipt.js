@@ -274,16 +274,16 @@ export default class Receipt extends Component {
                     <table style={{ fontSize: paperSize.setting.dataFontSize, color: paperSize.setting.color, margin: "0 auto" }}>
                       <thead>
                         <tr>
-                          <th style={{ fontWeight: 500, width: "10mm", textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
+                          <th style={{ fontWeight: 500, width: "8mm", textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
                             <this.Translate id="text_qty" />
                           </th>
-                          <th style={{ fontWeight: 500, width: "90mm", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color, textAlign: "left" }}>
+                          <th style={{ fontWeight: 500, padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color, textAlign: "left" }}>
                             <this.Translate id="text_desc" />
                           </th>
-                          <th style={{ fontWeight: 500, width: "20mm", textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
+                          <th style={{ fontWeight: 500, width: "16mm", textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
                             <this.Translate id="text_price" />
                           </th>
-                          <th style={{ fontWeight: 500, width: "20mm", textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
+                          <th style={{ fontWeight: 500, width: "17mm", textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
                             <this.Translate id="text_amount" />
                           </th>
                         </tr>
@@ -296,14 +296,14 @@ export default class Receipt extends Component {
                           this.props.productList.map((product, index) =>
                             <tr key={index}>
                               <td style={{ textAlign: "center", backgroundColor: "white" }}>{product.quantity}</td>
-                              <td style={{ backgroundColor: "white" }}>
-                              <div>{product.name}</div>
-                                {
-                                  product.variantName ?
-                                    <div style={{ fontSize: paperSize.setting.subDataFontSize }}>{product.variantName}</div>
-                                    :
-                                    ""
-                                }
+                              <td style={{ backgroundColor: "white", paddingTop: 2, paddingBottom: 2 }}>
+                                <div style={{lineHeight: "12px"}}>{product.name ? product.name : product.namekm}</div>
+                                  {
+                                    product.variantName ?
+                                      <div style={{ fontSize: paperSize.setting.subDataFontSize }}>{product.variantName}</div>
+                                      :
+                                      ""
+                                  }
                               </td>
                               <td style={{ textAlign: "right", backgroundColor: "white" }}>{this.formatCurrency(product[this.props.customerFieldPrice])}</td>
                               <td style={{ textAlign: "right", backgroundColor: "white" }}>{this.formatCurrency(product[this.props.customerFieldPrice] * product.quantity)}</td>

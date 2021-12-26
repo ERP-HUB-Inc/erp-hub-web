@@ -144,18 +144,10 @@ export default class ProductList extends List {
   requestSubDataAsync() {
     return new Promise(() => {
       setTimeout(() => {
+        this.props.dispatch(BrandAction.fetch(500));
+        this.props.dispatch(UnitAction.fetch(50, 0, "name", "ASC"));
+        this.props.dispatch(ProductTypeAction.fetch(100));
 
-        if (!localStorage.getItem(Enum.LOCAL_SCHEMA.BRAND)) {
-          this.props.dispatch(BrandAction.fetch(100));
-        }
-
-        if (!localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT)) {
-          this.props.dispatch(UnitAction.fetch(20));
-        }
-
-        if (!localStorage.getItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE)) {
-          this.props.dispatch(ProductTypeAction.fetch(100));
-        }
       }, 2000);
     });
   }
@@ -375,7 +367,7 @@ class ColumnExpand extends List {
       {
         dataIndex: "barcode",
         key: "barcode",
-        width: 100,
+        width: 130,
         render: barcode => barcode ? barcode : this.emptyCell
       },
       {
@@ -531,16 +523,8 @@ class Column extends List {
         title: <this.Translate id="text_product_code" />,
         dataIndex: "barcode",
         key: "barcode",
-        width: 100,
+        width: 130,
         render: (text, record) => Util.getProductBarcode(record),
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_product_sku" />,
-        dataIndex: "sku",
-        key: "sku",
-        width: 100,
-        render: (text, record) => Util.getProductSku(record) !== null ? Util.getProductSku(record) : "N/A",
         sorter: true
       },
       {
