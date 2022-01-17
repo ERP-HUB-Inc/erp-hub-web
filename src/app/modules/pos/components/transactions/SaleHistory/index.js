@@ -11,11 +11,11 @@ import TransactionService from "../../../services/transactions/TransactionServic
 import ReceiePaymentForm from "../../../containers/transactions/SaleHistory/ReceivePayment";
 import LocationAction from "../../../action/settings/location";
 import UserAction from "../../../../common/actions/users";
-import InventoryUtil from "../../../../inventory/utils";
+// import InventoryUtil from "../../../../inventory/utils";
 import InventoryEnum from "../../../../inventory/enums";
 import history from "../../../../../modules/common/router/history";
 import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
-import product from "../../../../inventory/constants/products/product";
+// import product from "../../../../inventory/constants/products/product";
 
 export default class SaleHistoryList extends List {
   constructor(props) {
