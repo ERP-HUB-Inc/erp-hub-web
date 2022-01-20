@@ -72,6 +72,9 @@ export default class MenuDropDown extends Component {
     return(
       <ul className="menu-right list-unstyled">
         <li>
+          <this.Button className="btn-update-now" type="default" style={{ backgroundColor: "#e85757", color: "#fff" }} onClick={() => window.location.reload(false)}>Update</this.Button>
+        </li>
+        <li>
           <this.Button className="btn-update-now" type="default" style={{ backgroundColor: "#FFD627" }} onClick={() => history.push("/transactions/pos")}><this.Translate id="text_pos" /></this.Button>
         </li>
         {/* <li>

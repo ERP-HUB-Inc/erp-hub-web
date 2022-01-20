@@ -204,21 +204,17 @@ export default class Retail extends Component {
     window.addEventListener("keydown", (e) => {
       const EndKey = 35,
         F2 = 113,
-        F11 = 122;
+        F11 = 122,
+        F = 70;
       if (e.keyCode === EndKey) {
         this.handleOnMakePayment();
       } else if (e.keyCode === F2) {
         this.handleOnSetupDiscount();
       } else if (e.keyCode === F11 && e.shiftKey) {
         this.setState({productOrderList: []});
-      }
-    });
-
-    window.addEventListener("keypress", (e) => {
-      const F = 102;
-      if (e.keyCode === F) {
+      } else if (e.keyCode === F && e.ctrlKey) {
+        e.preventDefault();
         document.getElementById("searchProduct").focus();
-        document.getElementById("searchProduct").value = "";
       }
     });
 
@@ -241,7 +237,6 @@ export default class Retail extends Component {
   componentWillUnmount() {
     this.hadDidUpdateCheckDevice = false;
     window.removeEventListener("keydown", null);
-    window.removeEventListener("keypress", null);
   }
 
   isValidOpenSaleRegistrationList() {
@@ -1029,7 +1024,7 @@ export default class Retail extends Component {
           }
        
           <ProductDropDownSearch
-            placeholder={this.CATranslate("text_search_and_scan_barcode", this.props.locale)}
+            placeholder={`${this.CATranslate("text_search_and_scan_barcode", this.props.locale)}(Ctrl+F)`}
             productSearch={this.props.productSearch}
             handleOnSelectList={this.handleOnSelectProductSearchList}
             callBack={this.handleOnAutoSelectProductAfterSearchResult}
