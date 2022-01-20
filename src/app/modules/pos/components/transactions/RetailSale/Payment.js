@@ -200,10 +200,8 @@ export default class Payment extends Modal {
 
     if (totalCustomerHasGiveMoney < (grandTotal - discountAmount)) {
 
-      // this.props.form.setFieldsValue({amountToPay: balance});
       this.props.form.setFieldsValue({amountToPay: 0});
 
-      // this.props.form.setFieldsValue({amountToPaySubCurrency: POSUtil.toSubCurrencyGrantTotal(balance, this.props.baseCurrency, this.props.subCurrency)});
       this.props.form.setFieldsValue({amountToPaySubCurrency: 0});
 
       this.setState({amountToPay: balance});
