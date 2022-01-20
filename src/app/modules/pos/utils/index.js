@@ -99,7 +99,7 @@ class Util {
 
   getGrandTotal(value = 0, tax = 0, discount = 0) {
     const grandTotal = (value + tax) - discount;
-    return grandTotal;
+    return parseFloat(grandTotal.toFixed(2));
   }
 
   getGrandTotalWithOutDiscount(value = 0, tax = 0) {

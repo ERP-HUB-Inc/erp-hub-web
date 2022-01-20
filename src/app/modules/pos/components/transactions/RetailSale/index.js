@@ -201,6 +201,27 @@ export default class Retail extends Component {
       this.props.dispatch(PaymentMethodAction.fetch(2, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
     });
 
+    window.addEventListener("keydown", (e) => {
+      const EndKey = 35,
+        F2 = 113,
+        F11 = 122;
+      if (e.keyCode === EndKey) {
+        this.handleOnMakePayment();
+      } else if (e.keyCode === F2) {
+        this.handleOnSetupDiscount();
+      } else if (e.keyCode === F11 && e.shiftKey) {
+        this.setState({productOrderList: []});
+      }
+    });
+
+    window.addEventListener("keypress", (e) => {
+      const F = 102;
+      if (e.keyCode === F) {
+        document.getElementById("searchProduct").focus();
+        document.getElementById("searchProduct").value = "";
+      }
+    });
+
     // RESTORE CURRENT RECEIPT
     //this.restoreReceipt(Enum.CURRENT_RECEIPT);
   }
@@ -219,6 +240,8 @@ export default class Retail extends Component {
 
   componentWillUnmount() {
     this.hadDidUpdateCheckDevice = false;
+    window.removeEventListener("keydown", null);
+    window.removeEventListener("keypress", null);
   }
 
   isValidOpenSaleRegistrationList() {
@@ -850,7 +873,7 @@ export default class Retail extends Component {
         <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
       </this.Button>
       <this.Button type="info" onClick={this.handleOnMakePayment}>
-        <span className="icon-checked icon-padding-right"></span><this.Translate id="text_pay" />
+        <span className="icon-checked icon-padding-right"></span><this.Translate id="text_pay" /><span style={{textTransform: "capitalize", fontSize: "12pt"}}>(End)</span>
       </this.Button>
     </this.Row>
   )
@@ -1145,7 +1168,7 @@ export default class Retail extends Component {
                 {
                   !this.state.isDiscountHasAdded && summaryTotal.discount <= 0 ?
                     <div className="sub-total add-discount" style={{justifyContent: "end"}} onClick={this.handleOnSetupDiscount}>
-                      <span className="icon-add icon-padding-right"></span> <span><this.Translate id="text_add"/> <this.Translate id="text_discount"/></span>
+                      <span className="icon-add icon-padding-right"></span> <span><this.Translate id="text_add"/> <this.Translate id="text_discount"/></span><span style={{fontSize: "10pt"}}>(F2)</span>
                     </div>
                     :
                     ""
@@ -1168,12 +1191,15 @@ export default class Retail extends Component {
                 {/* END SUB TOTAL ROW */}
 
                 {/* TAX ROW */}
-                <div className="sub-total">
-                  <div className="sub-total-title" onClick={countTax > 0 ? this.handleOnOpenTaxSetting : null}>
-                    <span className={`${countTax > 0 ? "ca-link" : ""}`}><this.Translate id="text_tax"/></span> {taxTitle}
+                {
+                  taxTotal > 0 && 
+                  <div className="sub-total">
+                    <div className="sub-total-title" onClick={countTax > 0 ? this.handleOnOpenTaxSetting : null}>
+                      <span className={`${countTax > 0 ? "ca-link" : ""}`}><this.Translate id="text_tax"/></span> {taxTitle}
+                    </div>
+                    <div className="sub-total-value">{this.formatCurrency(taxTotal)}</div>
                   </div>
-                  <div className="sub-total-value">{this.formatCurrency(taxTotal)}</div>
-                </div>
+                }
                 {/*END TAX ROW */}
 
                 {/* DISCOUNT ROW */}
