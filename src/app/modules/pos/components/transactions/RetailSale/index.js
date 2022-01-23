@@ -194,7 +194,7 @@ export default class Retail extends Component {
 
     this.props.dispatch(ProductTypeAction.fetch(9999));
     this.props.dispatch(ProductAction.reset());
-    this.props.dispatch(ProductAction.fetch(40, "", "", "", JSON.stringify({isAvialableSale: [Enum.PRODUCT_AVIALABLE_ON_SALE], type: [InventoryEnum.TYPE_OF_PRODUCT.GOOD]}), "", this.Util.getLocationId()));
+    this.props.dispatch(ProductAction.fetch(15, "", "", "", JSON.stringify({isAvialableSale: [Enum.PRODUCT_AVIALABLE_ON_SALE], type: [InventoryEnum.TYPE_OF_PRODUCT.GOOD]}), "", this.Util.getLocationId()));
 
     new Promise(() => {
       this.props.dispatch(ReceiptTemplateAction.default());
@@ -1115,7 +1115,7 @@ export default class Retail extends Component {
                         className="ca-input-v1 order-quantity"
                         min={0}
                         // isHideTool={true}
-                        precision={0}
+                        precision={1}
                         isAutoSelect={true}
                         isAutoFocus={true}
                         didUpdateMakeAutoFocus={this.state.expandRowOrderIndex === productOrderIndex}

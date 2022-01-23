@@ -23,7 +23,7 @@ export default class PurchaseOrderLists extends List {
     this.columns = [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="text_name" />,
+        title: <this.Translate id="text_description" />,
         dataIndex: "name",
         key: "name",
         sorter: true
@@ -40,7 +40,7 @@ export default class PurchaseOrderLists extends List {
         dataIndex: "referenceId",
         key: "referenceId",
         sorter: true,
-        width: 130,
+        width: 140,
         render: (text, record, index) => {
           let referenceNo = this.emptyText;
           if ("reference" in record && record["reference"] != null) {
@@ -73,23 +73,23 @@ export default class PurchaseOrderLists extends List {
         width: 140,
         render: location => location ? location.name: this.emptyText
       },
-      {
-        title: <this.Translate id="text_due_date" />,
-        dataIndex: "deliveryDueDate",
-        key: "deliveryDueDate",
-        sorter: true,
-        // width: 180,
-        render: deliveryDueDate => this.formatDate(deliveryDueDate)
-      },
-      {
-        title: <this.Translate id="text_shipping_fee" />,
-        dataIndex: "shippingFee",
-        key: "shippingFee",
-        sorter: true,
-        width: 150,
-        align: "right",
-        render: shippingFee => this.formatCurrency(shippingFee)
-      },
+      // {
+      //   title: <this.Translate id="text_due_date" />,
+      //   dataIndex: "deliveryDueDate",
+      //   key: "deliveryDueDate",
+      //   sorter: true,
+      //   width: 180,
+      //   render: deliveryDueDate => this.formatDate(deliveryDueDate)
+      // },
+      // {
+      //   title: <this.Translate id="text_shipping_fee" />,
+      //   dataIndex: "shippingFee",
+      //   key: "shippingFee",
+      //   sorter: true,
+      //   width: 150,
+      //   align: "right",
+      //   render: shippingFee => this.formatCurrency(shippingFee)
+      // },
       {
         title: <this.Translate id="text_items" />,
         dataIndex: "purchaseOrderEntries",
@@ -97,15 +97,16 @@ export default class PurchaseOrderLists extends List {
         width: 100,
         align: "center",
         render: (text, record) => {
-          let key = "requestQuantity";
+          // let key = "requestQuantity";
 
-          if (record.step === Enum.PO_STEP.RECEIVED) {
-            key = "receiveQuantity";
-          } else if (record.step === Enum.PO_STEP.RETURN) {
-            key = "returnQuantity";
-          }
+          // if (record.step === Enum.PO_STEP.RECEIVED) {
+          //   key = "receiveQuantity";
+          // } else if (record.step === Enum.PO_STEP.RETURN) {
+          //   key = "returnQuantity";
+          // }
 
-          return this.Util.sumBy(record.purchaseOrderEntries, key);
+          // return this.Util.sumBy(record.purchaseOrderEntries, key);
+          return record.purchaseOrderEntries.length;
         }
       },
       {

@@ -659,7 +659,7 @@ class Column extends List {
         render: type => type === Enum.TYPE_OF_PRODUCT.GOOD ? <this.Translate id="input_product_good" /> : <this.Translate id="input_product_raw_material" />,
         sorter: true
       },
-      this.columnStatus
+      // this.columnStatus
     ];
   }
 

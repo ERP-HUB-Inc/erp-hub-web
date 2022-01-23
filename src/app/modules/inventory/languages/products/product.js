@@ -42,9 +42,9 @@ export default {
   ],
 
   "text_distribute_price": [
-    "Distribute Price",
+    "Distr. Price",
     "តម្លៃតំណាងចែកចាយ",
-    "Distribute Price"
+    "Distr. Price"
   ],
 
   "col_products_supplier": [

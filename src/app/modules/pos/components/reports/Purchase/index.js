@@ -102,7 +102,8 @@ export default class PurchaseList extends List {
         dataIndex: "quantity",
         key: "quantity",
         width: 250,
-        align: "center"
+        align: "center",
+        render: (quantity, record) => `${quantity} ${record.unit}`
       },
       {
         title: <this.Translate id="text_unit_cost" />,

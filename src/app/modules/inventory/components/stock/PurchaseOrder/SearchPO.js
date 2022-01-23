@@ -90,7 +90,7 @@ export default class SearchPo extends Modal {
             isAutoSelect={true}
             isHideTool={true}
             required={true}
-            precision={0}
+            precision={1}
             errorRequired={<this.Translate id="error_require_quanity" />}
             handleKeyUp={(e) => this.handleOnChangeQuantity(e, index)}
             form={this.form} />;

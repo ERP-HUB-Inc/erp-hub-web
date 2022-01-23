@@ -218,7 +218,6 @@ class Column extends List {
       {
         title: <this.Translate id="text_product_code" />,
         dataIndex: "barcode",
-        align: "center",
         key: "barcode"
       },
       {

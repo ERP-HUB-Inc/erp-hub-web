@@ -92,7 +92,7 @@ export default class FormItem extends Modal {
             <this.Col md="4">
               <this.InputText
                 name="name"
-                label={<this.Translate id="text_name" />}
+                label={<this.Translate id="text_description" />}
                 data={formData.name}
                 placeholder={this.CATranslate("text_name", locale)}
                 errorRequired={<this.Translate id="error_require_name" />}
