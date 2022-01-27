@@ -14,7 +14,7 @@ export default class StockAdjustmentRequestLists extends List {
     this.columns = [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="text_title" />,
+        title: <this.Translate id="text_description" />,
         dataIndex: "title",
         key: "title",
         sorter: true

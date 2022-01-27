@@ -47,7 +47,9 @@ export default class SearchAdjustmentRequest extends Modal {
         render: (text, record) => {
           return <div>
             <div>{record.productName}</div>
-            <div className="variant-name">{record.variantName}</div>
+            {
+              record.variantName ? <div className="variant-name">{record.variantName}</div> : ""
+            }
           </div>;
         }
       },
@@ -57,8 +59,8 @@ export default class SearchAdjustmentRequest extends Modal {
         width: 250,
         align: "center",
         key: "currentQty",
-        render: (text, product, index) => {
-          const currentQty = this.countCurrentQty(product);
+        render: (currentQty, product, index) => {
+          currentQty = this.countCurrentQty(product);
           return <div>
             <this.InputNumber className="hidden" type="hidden" name={`currentQty[${index}]`} precision={0} data={currentQty} form={this.form} />
             {currentQty}  

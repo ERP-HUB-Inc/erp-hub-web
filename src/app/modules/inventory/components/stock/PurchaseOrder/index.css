@@ -62,8 +62,7 @@
 }
 
 .adjustment-step-tag { 
-    min-width: 73px;
-    width: 73px;
+    width: fit-content;
     font-size: 8pt
 }
 

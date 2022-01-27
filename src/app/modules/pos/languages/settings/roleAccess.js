@@ -12,15 +12,15 @@ export default {
   ],
 
   "text_privilege": [
-    "privilege",
-    "ឯកសិទ្ធិ",
-    "privilege"
+    "Privilege",
+    "សិទ្ធិ",
+    "Privilege"
   ],
 
   "text_search_access_provilege": [
-    "Search access privileg",
+    "Search access privileges",
     "ស្វែងរកសិទ្ធិចូលដំណើរការ",
-    "Search access privileg"
+    "Search access privileges"
   ],
 
   "text_code": [
