@@ -1,6 +1,6 @@
 {
   "name": "storevein",
-  "version": "2.0.37",
+  "version": "2.0.38",
   "private": true,
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^31.0.0",

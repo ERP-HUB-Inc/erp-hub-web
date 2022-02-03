@@ -67,7 +67,7 @@ export default class FormCreate extends Modal {
         ]);
 
         values["entries"] = stockAdjustmentEntries;
-        values["locationId"] = parseFloat(values.locationId);
+        values["locationId"] = parseInt(values.locationId);
         this.dispatch(StockAdjustmentRequestAction.add(values));
       }
     });

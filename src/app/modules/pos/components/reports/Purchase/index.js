@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import List from "../List";
 import Constant from "../../../constants/report/purchase";
 import Enum from "../../../../inventory/enums";
@@ -12,7 +13,7 @@ export default class PurchaseList extends List {
     super(props);
     this.state = {
       ...this.state,
-      setDefaultDate: [],
+      setDefaultDate: [moment().startOf("month"), moment().endOf("month")],
       reportType: 0,
       columns: this.columnSummary()
     };
@@ -27,7 +28,6 @@ export default class PurchaseList extends List {
       "name",
       "number",
       "invoiceNo",
-      "shippingFee",
       "requestTotal",
       "returnTotal",
       "receiveTotal"
@@ -58,7 +58,6 @@ export default class PurchaseList extends List {
       {label: this.CATranslate("text_location", this.props.locale), key: "location"},
       {label: this.CATranslate("text_due_date", this.props.locale), key: "deliveryDueDate"},
       {label: this.CATranslate("text_step", this.props.locale), key: "step"},
-      {label: this.CATranslate("text_shipping_fee", this.props.locale), key: "shippingFee"},
       {label: this.CATranslate("text_total", this.props.locale), key: "requestTotal"},
     ];
     this.exportCsvFileName = "purchase_report.csv"; 
@@ -68,7 +67,7 @@ export default class PurchaseList extends List {
   }
 
   componentDidMount(){
-    super.componentDidMount();
+    this.props.dispatch(PurchaseReportAction.fetch(100, 0, "", "", "", "", JSON.stringify({column: "deliveryDueDate", value: [moment().startOf("month").format("YYYY-MM-DD"), moment().endOf("month").format("YYYY-MM-DD")]})));
     this.props.dispatch(SupplierAction.fetch(100));
   }
 
@@ -158,37 +157,26 @@ export default class PurchaseList extends List {
       },
       {
         title: <this.Translate id="text_reference" />,
-        dataIndex: "referenceId",
-        key: "referenceId",
-        width: 130,
-        render: (text, record, index) => {
-          let referenceNo = this.emptyText;
-          if ("reference" in record && record["reference"] != null) {
-            referenceNo = record["reference"]["number"];
-          }
-          return referenceNo;
-        }
+        dataIndex: "referenceNo",
+        key: "referenceNo",
+        width: 130
       },
       {
         title: <this.Translate id="text_receiver"/>,
         dataIndex: "receiver",
         key: "receiverId",
-        width: 140,
-        render: receiver => receiver ? receiver.fullName: this.emptyText
+        width: 140
       },
       {
         title: <this.Translate id="text_supplier" />,
         dataIndex: "supplier",
-        key: "supplierId",
-        width: 140,
-        render: supplier => supplier ? supplier.name: this.emptyText
+        key: "supplierId"
       },
       {
         title: <this.Translate id="text_location" />,
         dataIndex: "location",
         key: "location",
-        width: 140,
-        render: location => location ? location.name: this.emptyText
+        width: 140
       },
       {
         title: <this.Translate id="text_due_date" />,
@@ -203,14 +191,6 @@ export default class PurchaseList extends List {
         key: "step",
         width: 100,
         render: step => step in this.PO_STEP_STR ? <this.Tag color={this.PO_STEP_STR[step].color} className="text-uppercase text-center po-step-tag">{this.PO_STEP_STR[step].name}</this.Tag> : ""
-      },
-      {
-        title: <this.Translate id="text_shipping_fee" />,
-        dataIndex: "shippingFee",
-        key: "shippingFee",
-        width: 130,
-        align: "right",
-        render: shippingFee => this.formatCurrency(shippingFee)
       },
       {
         title: <this.Translate id="text_total" />,
@@ -235,9 +215,7 @@ export default class PurchaseList extends List {
   summaryPurchaseReprot(){
     const {purchaseReport} = this.props;
     let total = [];
-    let totalShippingFee = [];
     let totalSummary = 0;
-    let totalSummaryShippingFee = 0;
 
     if (Array.isArray(purchaseReport.list)) {
       purchaseReport.list.forEach(poReport => {
@@ -248,13 +226,11 @@ export default class PurchaseList extends List {
         } else {
           totalSummary += poReport.requestTotal;
         }
-        totalSummaryShippingFee += poReport.shippingFee;
       });
       total.push(totalSummary);
-      totalShippingFee.push(totalSummaryShippingFee);
     }
 
-    return {total, totalShippingFee};
+    return {total};
 
   }
 
@@ -269,12 +245,9 @@ export default class PurchaseList extends List {
             locale={{emptyText: <this.Translate id="table_empty_data"/>}}
             footer={() => 
               !this.state.reportType || this.state.reportType === this.reportTypeList[0].value ?
-                <div className="wrap-table-footer" style={{minWidth: 347}} >
+                <div className="wrap-table-footer">
                   <div className="text-uppercase pull-left">
                     <this.Translate id="text_total" />:
-                  </div>
-                  <div className="item pull-left" style={{minWidth: 160, textAlign: "right", paddingRight: 0 }}>
-                    {this.formatCurrency(this.summaryPurchaseReprot().totalShippingFee)}
                   </div>
                   <div className="item pull-left" style={{minWidth: 124, paddingRight: 0}}>
                     {this.formatCurrency(this.summaryPurchaseReprot().total)}
@@ -301,8 +274,9 @@ export default class PurchaseList extends List {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
-          let filter = {};
-          let rangFilter = "";
+          let filter = {},
+            rangFilter = "",
+            searchKey = "";
 
           if (values.reportType === this.reportTypeList[1].value) {
             this.setState({columns: this.columnProduct()});
@@ -313,26 +287,29 @@ export default class PurchaseList extends List {
           }
 
           if (values.step !== -1) {
-            filter["step"] = [values.step];
+            filter["step"] = values.step;
           }
 
           if (values.supplierId !== 0) {
-            filter["supplierId"] = [values.supplierId];
+            filter["supplierId"] = values.supplierId;
           }
 
           if (values.deliveryDueDate) {
             rangFilter = JSON.stringify({
               column: "deliveryDueDate",
               value: [
-                this.Util.formatDateForMYSQL(values.deliveryDueDate[0]) + " 00:00:00",
-                this.Util.formatDateForMYSQL(values.deliveryDueDate[1]) + " 23:59:59"
+                this.Util.formatDateForMYSQL(values.deliveryDueDate[0]),
+                this.Util.formatDateForMYSQL(values.deliveryDueDate[1])
               ]
             });
           }
     
           filter = JSON.stringify(filter);
 
-          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
+          if (values.key) {
+            searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
+          }
+          
           this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter, values.reportType));
           this.setState({
             isClickFilter: true,
@@ -361,7 +338,6 @@ export default class PurchaseList extends List {
           location: poReport.location.name,
           deliveryDueDate: this.formatDate(poReport.deliveryDueDate),
           step: poReport.step in this.PO_STEP_STR ? this.PO_STEP_STR[poReport.step].name : "",
-          shippingFee: this.formatCurrency(poReport.shippingFee),
           requestTotal: this.formatCurrency(poReport.requestTotal),
         });
 
@@ -377,7 +353,6 @@ export default class PurchaseList extends List {
         location: "",
         deliveryDueDate: "",
         step: "Total",
-        shippingFee: this.formatCurrency(this.summaryPurchaseReprot().totalShippingFee),
         requestTotal: this.formatCurrency(this.summaryPurchaseReprot().total)
       });
       
