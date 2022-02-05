@@ -408,6 +408,12 @@ export default {
     "Sale Summary"
   ],
 
+  "text_invalid_tender_amount": [
+    "Invalid Tender Amount!",
+    "ចំនួនទឹកប្រាក់មិនត្រឹមត្រូវ",
+    "Invalid Tender Amount"
+  ],
+
   "text_sold_quantity": [
     "Sold Quantity",
     "បរិមាណលក់",

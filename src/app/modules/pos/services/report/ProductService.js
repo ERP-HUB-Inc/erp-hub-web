@@ -26,6 +26,15 @@ class ProductService extends BaseService {
       "",
       locationId);
   }
+
+  exportProducts(search, locationId) {
+    this.setHeader();
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/exports?locationId=${locationId}&search=${search}`,  
+      headers: this.header
+    });
+  }
   
 }
 

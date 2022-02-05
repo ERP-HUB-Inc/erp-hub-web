@@ -1,4 +1,6 @@
 import React from "react";
+import _ from "lodash";
+import sweetalert from "sweetalert";
 import Receipt from "./Receipt";
 import DeliveryNote from "./DeliveryNote";
 import Enum from "../../../enums";
@@ -224,11 +226,23 @@ export default class Payment extends Modal {
         transactionPaymentEntries: this.state.customerPaymentList
       };
 
-      this.props.dispatch(TransactionAction.add(dataValue));
-      this.setState({
-        isAllowPrintReceipt: this.props.form.getFieldValue("isAllowPrintReceipt"),
-        amountToPay
-      });
+      if (typeof _.sumBy(this.state.customerPaymentList, "tender") === "number") {
+        this.props.dispatch(TransactionAction.add(dataValue));
+        this.setState({
+          isAllowPrintReceipt: this.props.form.getFieldValue("isAllowPrintReceipt"),
+          amountToPay
+        });
+      } else {
+        sweetalert({
+          icon: "error",
+          title: this.CATranslate("text_invalid_tender_amount", this.props.locale),
+          text: `
+            You can try to re-enter tender amount again
+          `,
+          buttons: [false, this.CATranslate("text_close", this.props.locale)],
+          dangerMode: true
+        });
+      }
     }
   }
 

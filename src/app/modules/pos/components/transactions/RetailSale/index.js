@@ -5,6 +5,7 @@ import {
   isIOS
 } from "react-device-detect";
 import sweetalert from "sweetalert";
+import _ from "lodash";
 import ProductTypeList from "./ProductTypeList";
 import DiscountSetup from "./DiscountSetup";
 import TaxSetting from "./TaxSetting";
@@ -196,7 +197,7 @@ export default class Retail extends Component {
 
     this.props.dispatch(ProductTypeAction.fetch(9999));
     this.props.dispatch(ProductAction.reset());
-    this.props.dispatch(ProductAction.fetch(15, "", "", "", JSON.stringify({isAvialableSale: [Enum.PRODUCT_AVIALABLE_ON_SALE], type: [InventoryEnum.TYPE_OF_PRODUCT.GOOD]}), "", this.Util.getLocationId()));
+    this.props.dispatch(ProductAction.fetch(6, "", "", "", JSON.stringify({isAvialableSale: [Enum.PRODUCT_AVIALABLE_ON_SALE], type: [InventoryEnum.TYPE_OF_PRODUCT.GOOD]}), "", this.Util.getLocationId()));
 
     new Promise(() => {
       this.props.dispatch(ReceiptTemplateAction.default());
@@ -207,7 +208,8 @@ export default class Retail extends Component {
       const EndKey = 35,
         F2 = 113,
         F11 = 122,
-        F = 70;
+        F = 70,
+        S = 83;
       if (e.keyCode === EndKey) {
         this.handleOnMakePayment();
       } else if (e.keyCode === F2) {
@@ -217,6 +219,9 @@ export default class Retail extends Component {
       } else if (e.keyCode === F && e.ctrlKey) {
         e.preventDefault();
         document.getElementById("searchProduct").focus();
+      } else if (e.keyCode === S && e.ctrlKey) {
+        e.preventDefault();
+        this.handleOnSaveParkReceipt();
       }
     });
 
@@ -328,10 +333,10 @@ export default class Retail extends Component {
     this.setState({customerFieldPrice: CRMUtil.getCustomerPriceField(selectedCustomer)});
   }
 
-  saveReceipt(key) {
+  saveReceipt(key, productOrderList = []) {
     localStorage.setItem(key, JSON.stringify({
-      isParkReceipt: true,
-      productOrderList: this.state.productOrderList,
+      isParkReceipt: key === Enum.PARK_RECEIPT,
+      productOrderList,
       productTaxList: this.state.productTaxList,
       discountValue: this.state.discountValue,
       isDiscountHasAdded: this.state.isDiscountHasAdded
@@ -342,9 +347,13 @@ export default class Retail extends Component {
     let receipt = localStorage.getItem(key);
     if (this.Util.isJsonString(receipt)) {
       receipt = JSON.parse(receipt);
-      this.setState({
-        ...receipt
-      });
+      if (receipt) {
+        this.setState({
+          ...receipt
+        });
+      } else {
+        this.handleOnResetOrder();
+      }
     }
   }
 
@@ -365,6 +374,7 @@ export default class Retail extends Component {
 
   handleOnResetOrder() {
     this.setState({
+      selectedReceiptType: Enum.CURRENT_RECEIPT,
       expandOrderItemRow: [],
       productOrderList: [],
       productTaxList: [],
@@ -409,7 +419,7 @@ export default class Retail extends Component {
 
     this.setState({productList: []});
 
-    this.props.dispatch(ProductAction.fetch(40, "", "", "", filter, "", this.Util.getLocationId()));
+    this.props.dispatch(ProductAction.fetch(10, "", "", "", filter, "", this.Util.getLocationId()));
   }
 
   handleOnLoadMoreProduct() {
@@ -418,7 +428,7 @@ export default class Retail extends Component {
       filter = JSON.stringify({productTypeId: [this.state.selectedCategoryIds[0]]});
     }
     this.setState({isRequestLoadingMore: true});
-    this.props.dispatch(ProductAction.fetch(40, this.state.productList.length, "", "", filter, "", this.Util.getLocationId()));
+    this.props.dispatch(ProductAction.fetch(10, this.state.productList.length, "", "", filter, "", this.Util.getLocationId()));
   }
 
   handleCancelVariantProduct() {
@@ -508,7 +518,7 @@ export default class Retail extends Component {
 
     this.setState({productOrderList: existingProductOrderList});
 
-    this.saveReceipt(Enum.CURRENT_RECEIPT);
+    this.saveReceipt(Enum.CURRENT_RECEIPT, existingProductOrderList);
 
     this.props.form.setFieldsValue({searchProduct: ""});
     // document.getElementById("searchProduct").focus();
@@ -523,7 +533,7 @@ export default class Retail extends Component {
 
     this.appendProductTaxList(productOrderList);
 
-    this.saveReceipt(Enum.CURRENT_RECEIPT);
+    this.saveReceipt(Enum.CURRENT_RECEIPT, productOrderList);
   }
 
   handleOnRemoveProductFromOrderList = (productVariant) => {
@@ -703,15 +713,16 @@ export default class Retail extends Component {
         summaryTax={POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale))}/>
       });
 
-      // CLEAR PARK RECEIPT IN CASE USER HAS RESTORE IT AND MAKE PAYMENT
-      let parkReceipt = localStorage.getItem(Enum.PARK_RECEIPT);
-      if (parkReceipt) {
-        parkReceipt = JSON.parse(parkReceipt);
-        if (parkReceipt.isParkReceipt) {
-          localStorage.removeItem(Enum.PARK_RECEIPT);
+      if (this.state.selectedReceiptType === Enum.PARK_RECEIPT) {
+        // CLEAR PARK RECEIPT IN CASE USER HAS RESTORE IT AND MAKE PAYMENT
+        let parkReceipt = localStorage.getItem(Enum.PARK_RECEIPT);
+        if (parkReceipt) {
+          parkReceipt = JSON.parse(parkReceipt);
+          if (parkReceipt.isParkReceipt) {
+            localStorage.removeItem(Enum.PARK_RECEIPT);
+          }
         }
       }
-      
     } else {
       // TO DO: alert message can make payment with empty list
     }
@@ -805,7 +816,7 @@ export default class Retail extends Component {
   }
 
   handleOnSaveParkReceipt() {
-    this.saveReceipt(Enum.PARK_RECEIPT);
+    this.saveReceipt(Enum.PARK_RECEIPT, this.state.productOrderList);
     this.handleOnResetOrder();
   }
 
@@ -848,7 +859,7 @@ export default class Retail extends Component {
     }
 
     const imageHeight = productWidth - 70;
-    const imageWidth = productWidth - 25;
+    // const imageWidth = productWidth - 25;
     this.productWidth = productWidth;
 
     return countProduct > 0 ?
@@ -856,7 +867,8 @@ export default class Retail extends Component {
         <this.Col style={{width: productWidth, maxWidth: "none", flex: "none"}} md="3" className="product-box" key={index}>
           <div onClick={() => this.handleOnSelectProduct(product, product.productVariants)} className="product" style={{height: productWidth}}>
             <div className="image" style={{minHeight: imageHeight, maxHeight: imageHeight}}>
-              <this.Image style={{maxHeight: imageHeight}} url={this.Util.processImageOnFlightCropCenter(this.Util.getProductImage(product.image).url, {height: imageHeight, width: imageWidth})}/>
+              {/* <this.Image style={{maxHeight: imageHeight}} url={this.Util.processImageOnFlightCropCenter(this.Util.getProductImage(product.image).url, {height: imageHeight, width: imageWidth})}/> */}
+              <this.Image style={{maxHeight: imageHeight}} url={this.Util.getProductImage(product.image).url}/>
             </div>
             {this.renderOutOfStock(product)}
             <div style={{maxHeight: 20, overflow: "hidden", wordBreak: "break-all"}}>
@@ -885,8 +897,12 @@ export default class Retail extends Component {
     </this.Row>
   )
 
-  saleOrderHeader = () => (
-    <this.Row className="wrap-receipt-type">
+  saleOrderHeader = () => {
+    let parkReceipt = localStorage.getItem(Enum.PARK_RECEIPT);
+    if (parkReceipt) {
+      parkReceipt = JSON.parse(parkReceipt);
+    }
+    return <this.Row className="wrap-receipt-type">
       <this.Col md="12" className="receipt-type">
         <div className={`pull-left current-receipt ${this.state.selectedReceiptType === Enum.CURRENT_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.CURRENT_RECEIPT)}>
           <span className="icon-receipt icon-padding-right"></span><this.Translate id="current_receipt_type" />
@@ -894,7 +910,7 @@ export default class Retail extends Component {
         {
           localStorage.getItem(Enum.PARK_RECEIPT) ?
             <div className={`pull-left park-receipt ${this.state.selectedReceiptType === Enum.PARK_RECEIPT ? "selected" : ""}`} onClick={() => this.handleOnRestoreReceipt(Enum.PARK_RECEIPT)}>
-              <span className="icon-reports icon-padding-right"></span><this.Translate id="park_receipt_type" />
+              <span className="icon-reports icon-padding-right"></span><this.Translate id="park_receipt_type" />({_.sumBy(parkReceipt["productOrderList"], "quantity")} Items)
             </div>
             :
             ""
@@ -909,8 +925,8 @@ export default class Retail extends Component {
             <span className={`${this.state.iconFullScreen} icon-padding-right`}></span>{this.state.textFullScreen}
           </div> */}
       </this.Col>
-    </this.Row>
-  )
+    </this.Row>;
+  }
 
   fieldNotation = (productOrderIndex, productOrder) => (
     <div className="detail-row-2">

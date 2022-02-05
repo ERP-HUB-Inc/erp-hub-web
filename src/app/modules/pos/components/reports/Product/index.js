@@ -1,4 +1,5 @@
 import React from "react";
+import ExportForm from "./ExportForm";
 import List from "../List";
 import Constant from "../../../constants/report/purchase";
 import History from "../../../../common/router/history";
@@ -130,18 +131,21 @@ export default class ProductList extends List {
   }
 
   renderButtonAddNew(){
-    return(
-      <div style={{ float: "left", marginRight: "11px" }}>
-        <this.CSVLink
-          filename={this.exportCsvFileName}
-          data={this.exportCsv()}
-          headers={this.ExportheadersCsv}>
-          <this.Button type="info" disabled={this.props.list.list.length > 0 ? false : true }>
-            <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
-          </this.Button>
-        </this.CSVLink>
-      </div>
-    );
+    // return(
+    //   <div style={{ float: "left", marginRight: "11px" }}>
+    //     <this.CSVLink
+    //       filename={this.exportCsvFileName}
+    //       data={this.exportCsv()}
+    //       headers={this.ExportheadersCsv}>
+    //       <this.Button type="info" disabled={this.props.list.list.length > 0 ? false : true }>
+    //         <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
+    //       </this.Button>
+    //     </this.CSVLink>
+    //   </div>
+    // );
+    return <div style={{ float: "left", marginRight: "11px" }}>
+      <ExportForm />
+    </div>;
   }
 
   renderButtonDelete(){
