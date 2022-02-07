@@ -124,3 +124,68 @@
     position: absolute; */
     margin: 0 auto
 }
+
+#profit-loss-report {
+    background-color: #fff;
+    margin: 0 auto;
+    min-width: 600px;
+    width: fit-content;
+    padding-top: 35px;
+}
+
+#profit-loss-report table {
+    margin-top: 25px
+}
+
+#profit-loss-report table tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+#profit-loss-report .summary-row td,
+#profit-loss-report .title td {
+    font-weight: bold;
+}
+
+#profit-loss-report .summary-row td {
+    border-bottom-style: double;
+    border-top-color: black;
+    padding: 8px 5px;
+}
+
+#profit-loss-report .title td {
+    padding: 6px 5px;
+    border-top-width: 0;
+}
+
+.expense-row td,
+.income-row td {
+    padding: 4px 5px;
+    background-color: #f2f5f7;
+    border-top: 3px solid #fff;
+}
+
+.expense-row td:last-child,
+.income-row td:last-child,
+.summary-row td:last-child {
+    text-align: right;
+}
+
+.expense-row td,
+.income-row td {
+    background-color: #f2f5f7
+}
+
+@media print {
+    .header,
+    .ant-page-header,
+    #sidebar
+    {
+      display: none !important;
+    }
+  
+    .ant-layout-content {
+      margin-left: 0;
+      margin-top: 0;
+      background: #fff
+    }
+  }

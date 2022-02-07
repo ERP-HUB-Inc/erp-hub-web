@@ -138,9 +138,9 @@ export default {
   ],
 
   "text_profit_and_lost_report": [
-    "Profit & Lost Report",
+    "Profit & Loss Report",
     "របាយការណ៍ចំណេញខាត",
-    "Profit & Lost Report"
+    "Profit & Loss Report"
   ],
   
   "text_store_account": [
