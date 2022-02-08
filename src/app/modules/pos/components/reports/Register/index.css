@@ -1,0 +1,14 @@
+@media print {
+    .header,
+    .ant-page-header,
+    #sidebar
+    {
+      display: none !important;
+    }
+  
+    .ant-layout-content {
+      margin-left: 0;
+      margin-top: 0;
+      background: #fff
+    }
+  }

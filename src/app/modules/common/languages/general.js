@@ -647,12 +647,6 @@ export default {
     "លេខទូរសព្ទ័",
     "Phone Number"
   ],
-
-  "text_pos": [
-    "POS",
-    "POS",
-    "POS"
-  ],
   
   "text_supplier": [
     "Supplier",

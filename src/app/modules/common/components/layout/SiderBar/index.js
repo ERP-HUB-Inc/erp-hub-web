@@ -1,4 +1,5 @@
 import React from "react";
+import { Badge } from "antd";
 import {Link} from "react-router-dom";
 import dataSource from "./datasource";
 import packagejson from "../../../../../../../package.json";
@@ -133,12 +134,17 @@ export default class SideBar extends React.PureComponent {
     );
   }
 
-  subMenuItem(key, route, title, icon) {
+  subMenuItem(key, route, title, icon, titleNew) {
     return (
       <li key={key} onClick={() => this.handleOnClickSubMenu()}>
         <Link to={ route }>
           <div className="icon item"><span className={icon}></span></div>
-          <div className="item-text item">{title}</div>
+          <div className="item-text item" style={{position: "relative"}}>
+            {title}
+            <div style={{position: "absolute", top: -16, right: -25}}>
+              {titleNew && <Badge count="New" style={{backgroundColor: "#52c41a", marginLeft: 5}} />}
+            </div>
+          </div>
         </Link>
       </li>
     );
@@ -175,7 +181,7 @@ export default class SideBar extends React.PureComponent {
                 <ul className="list-unstyled text-left text-uppercase">
                   {
                     this.state.menuItems[subMenuItemTitle]["subItems"].map((menu, key) => 
-                      menu["title"] ? this.subMenuItem(key, menu["route"], menu["title"], menu["icon"]) : ""
+                      menu["title"] ? this.subMenuItem(key, menu["route"], menu["title"], menu["icon"], menu["new"]) : ""
                     )
                   }
                 </ul>

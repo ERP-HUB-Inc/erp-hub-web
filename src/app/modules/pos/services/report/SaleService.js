@@ -8,6 +8,14 @@ class SaleService extends BaseService {
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
     this.initializeRoute();
   }
+
+  registers() {
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/registers`,
+      headers: this.header
+    });
+  }
 }
 
 export default new SaleService();

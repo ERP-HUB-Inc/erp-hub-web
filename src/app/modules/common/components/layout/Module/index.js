@@ -172,7 +172,7 @@ export const modules = {
     parent: "Report"
   },
   ProfitAndLostReport: {
-    title: <Translate id="text_profit_and_lost_report" />,
+    title: <Translate id="text_profit_and_loss_report" />,
     icon: "icon-sale-return",
     route: "/reports/profit-lost",
     component: loadComponet(import("../../../../pos/containers/reports/ProfitAndLost")),

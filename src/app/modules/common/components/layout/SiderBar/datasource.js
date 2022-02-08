@@ -147,10 +147,10 @@ const ProductReport = Loadable({
 //   loading: () => <StartUp />,
 // });
 
-// const PaymentReport = Loadable({
-//   loader: () => import("../../../../pos/containers/reports/Payment"),
-//   loading: () => <StartUp />,
-// });
+const RegisterReport = Loadable({
+  loader: () => import("../../../../pos/components/reports/Register"),
+  loading: () => <StartUp />,
+});
 
 const ProfitAndLostReport = Loadable({
   loader: () => import("../../../../pos/containers/reports/ProfitAndLost"),
@@ -286,7 +286,7 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: <Translate id="text_sale_order_pos" />,
+        title: <Translate id="text_pos" />,
         icon: "icon-sale",
         route: "/transactions/pos",
         component: SaleOrder,
@@ -534,6 +534,14 @@ const dataSource = {
     title: <Translate id="text_report" />,
     subItems: [
       {
+        title: <Translate id="text_register_report" />,
+        icon: "icon-payment-report",
+        route: "/reports/register",
+        new: "New",
+        isFashNav: true,
+        component: RegisterReport
+      },
+      {
         title: <Translate id="text_sale_report" />,
         icon: "icon-sale-report",
         route: "/reports/sale",
@@ -561,17 +569,11 @@ const dataSource = {
       //   component: InventoryReport,
       //   isFashNav: false
       // },
-      // {
-      //   title: "Payment Report",
-      //   icon: "icon-payment-report",
-      //   route: "/reports/payment",
-      //   component: PaymentReport,
-      //   isFashNav: false
-      // },
       {
-        title: <Translate id="text_profit_and_lost_report" />,
+        title: <Translate id="text_profit_and_loss_report" />,
         icon: "icon-sale-return",
         route: "/reports/profit-lost",
+        new: "New",
         component: ProfitAndLostReport,
         isFashNav: true
       },
