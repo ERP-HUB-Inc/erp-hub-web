@@ -248,9 +248,9 @@ export default {
   ],
 
   "input_product_good": [
-    "Good",
+    "Goods",
     "ផលិតផលសំរេច",
-    "Good"
+    "Goods"
   ],
 
   "input_product_raw_material": [
