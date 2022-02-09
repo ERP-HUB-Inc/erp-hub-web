@@ -122,7 +122,7 @@ export default {
   ],
 
   "text_register_report": [
-    "Register Report",
+    "Shift Report",
     "របាយការណ៍វេនលក់"
   ],
   

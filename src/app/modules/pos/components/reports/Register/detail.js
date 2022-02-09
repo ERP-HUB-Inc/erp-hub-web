@@ -12,6 +12,7 @@ import {
     CTable as Table
 } from "../../../../common/elements/ant-ui";
 import SaleService from "../../../services/report/SaleService";
+import Enum from "../../../enums";
 import {Util} from "../../../../common/util";
 
 export default function Detail(props) {
@@ -41,7 +42,7 @@ export default function Detail(props) {
             <Statistic title="Cashier" value={registerDetail.cashier} />
         </Col>
         <Col span={4}>
-            <Statistic title="Date" value={moment(registerDetail.date).format("DD MMM YYYY")} />
+            <Statistic title={`Date(${moment(registerDetail.openedTime).format("h:mm A")}~${registerDetail.status === Enum.OPEN_SALE_REGISTRATION_STATUS.CLOSED ? moment(registerDetail.closedTime).format("h:mm A") : "N/A"})`} value={moment(registerDetail.date).format("DD MMM YYYY")} />
         </Col>
         <Col span={4}>
             <Statistic title="Open Cash" value={registerDetail.open} precision={2} prefix="$" />
@@ -54,7 +55,7 @@ export default function Detail(props) {
         </Col>
         <Col span={4}>
             {/* eslint-disable-next-line */}
-            <Statistic title="Different(Actault - Expected)" value={registerDetail.count - registerDetail.expected} precision={2} prefix="$" valueStyle={{ color: registerDetail.count == registerDetail.expected ? "green" : (registerDetail.count > registerDetail.expected ? "#f0ad4e" : "#cf1322") }} />
+            <Statistic title="Difference(Actault - Expected)" value={registerDetail.count - registerDetail.expected} precision={2} prefix="$" valueStyle={{ color: registerDetail.count == registerDetail.expected ? "green" : (registerDetail.count > registerDetail.expected ? "#f0ad4e" : "#cf1322") }} />
         </Col>
         <Col span={24}>
             <Table
@@ -65,6 +66,12 @@ export default function Detail(props) {
                         dataIndex: "no",
                         key: "no",
                         render: (no, record, index) => index + 1
+                    },
+                    {
+                        title: <Translate id="text_date" />,
+                        dataIndex: "date",
+                        key: "date",
+                        render: date => (new Util()).formatDateTime(date, "DD/MM/YYYY h:mm A")
                     },
                     {
                         title: <Translate id="text_receipt" />,
@@ -119,7 +126,7 @@ export default function Detail(props) {
                         render: changeAmount => (new Util()).formatCurrency(changeAmount)
                     },
                     {
-                        title: "Cash Drawer",
+                        title: "Cash In Drawer",
                         dataIndex: "balance",
                         key: "inDrawer",
                         align: "right",
@@ -130,7 +137,7 @@ export default function Detail(props) {
                             expectedCasInDrawer = parseFloat(expectedCasInDrawer.toFixed(2));
 
                             return <div style={{display: "flex", justifyContent: "flex-end"}}>
-                                <span>{cashInDrawer}</span>
+                                <span>{(new Util()).formatCurrency(cashInDrawer)}</span>
                                 {
                                     record.tender < record.grandTotal ?
                                     <Icon type="close" style={{color: "red", fontSize: "12pt", marginLeft: 10}} />

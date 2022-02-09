@@ -12,9 +12,9 @@ export default {
   ],
 
   "text_reference_no": [
-    "Reference No",
+    "Reference",
     "លេខយោង",
-    "Reference No"
+    "Reference"
   ],
 
   "place-holder-sale-history-date": [

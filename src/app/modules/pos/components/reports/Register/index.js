@@ -65,7 +65,7 @@ export default function RegiserReport() {
                 }
             }}
             title="Report"
-            subTitle="Register Report"
+            subTitle="Shift Report"
             extra={[
                 <div style={{display: "flex"}}>
                     <DatePicker

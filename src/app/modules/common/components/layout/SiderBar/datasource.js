@@ -534,19 +534,19 @@ const dataSource = {
     title: <Translate id="text_report" />,
     subItems: [
       {
-        title: <Translate id="text_register_report" />,
-        icon: "icon-payment-report",
-        route: "/reports/register",
-        new: "New",
-        isFashNav: true,
-        component: RegisterReport
-      },
-      {
         title: <Translate id="text_sale_report" />,
         icon: "icon-sale-report",
         route: "/reports/sale",
         component: SaleReport,
         isFashNav: true
+      },
+      {
+        title: <Translate id="text_register_report" />,
+        icon: "icon-currency",
+        route: "/reports/register",
+        new: "New",
+        isFashNav: true,
+        component: RegisterReport
       },
       {
         title: <Translate id="text_purchase_report" />,
