@@ -16,6 +16,14 @@ class SaleService extends BaseService {
       headers: this.header
     });
   }
+
+  registerDetail(date, userId) {
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/registers/${date}?userId=${userId}`,
+      headers: this.header
+    });
+  }
 }
 
 export default new SaleService();

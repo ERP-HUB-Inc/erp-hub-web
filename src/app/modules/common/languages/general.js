@@ -547,9 +547,9 @@ export default {
   ],
   
   "text_sale_total": [
-    "Sale Total",
+    "Grand Total",
     "សរុបការលក់",
-    "Sale Total"
+    "Grand Total"
   ],
   
   "text_completed": [
@@ -586,6 +586,12 @@ export default {
     "Receipt",
     "បង្កាន់ដៃ",
     "Receipt"
+  ],
+
+  "text_pay_amount": [
+    "Pay Amount",
+    "ប្រាក់ត្រូវបង់",
+    "Pay Amount"
   ],
   
   "text_invoice": [
