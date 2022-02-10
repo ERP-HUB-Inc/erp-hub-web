@@ -5,7 +5,7 @@ import {
     Col,
     Icon
 } from "antd";
-import * as moment from "moment";
+import moment from "moment";
 import { Translate } from "react-localize-redux";
 import "./index.css";
 import {

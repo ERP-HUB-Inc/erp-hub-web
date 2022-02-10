@@ -7,7 +7,7 @@ import {
     Tag
 } from "antd";
 import { Translate } from "react-localize-redux";
-import * as moment from "moment";
+import moment from "moment";
 import Detail from "./detail";
 import "./index.css";
 import {
