@@ -4,7 +4,6 @@ import List from "../List";
 import Constant from "../../../constants/report/purchase";
 import Enum from "../../../../inventory/enums";
 import PurchaseReportAction from "../../../action/report/purchaseOrder";
-import SupplierAction from "../../../../inventory/actions/stock/supplier";
 import PurchaseReportService from "../../../services/report/PurchaseService";
 import "./index.css";
 
@@ -32,7 +31,6 @@ export default class PurchaseList extends List {
       "returnTotal",
       "receiveTotal"
     ];
-    this.supplierList = [{name: <this.Translate id="text_all_supplier"/>, id: 0}];
     this.PO_STEP_STR = {
       [Enum.PO_STEP.DRAFT]: {name: this.CATranslate("purchase_order_step_draff", this.props.locale), color: this.Enum.PO_STEP_COLOR.DRAFT},
       [Enum.PO_STEP.PROCESS]: {name: this.CATranslate("text_process", this.props.locale), color: this.Enum.PO_STEP_COLOR.PROCESS},
@@ -68,11 +66,16 @@ export default class PurchaseList extends List {
 
   componentDidMount(){
     this.props.dispatch(PurchaseReportAction.fetch(100, 0, "", "", "", "", JSON.stringify({column: "deliveryDueDate", value: [moment().startOf("month").format("YYYY-MM-DD"), moment().endOf("month").format("YYYY-MM-DD")]})));
-    this.props.dispatch(SupplierAction.fetch(100));
   }
 
   columnProduct() {
     return [
+      {
+        title: "#",
+        dataIndex: "name",
+        key: "no",
+        render: (text, record, index) => index + 1
+      },
       {
         title: <this.Translate id="text_product_name" />,
         dataIndex: "name",
@@ -97,18 +100,20 @@ export default class PurchaseList extends List {
         render: date => this.formatDate(date)
       },
       {
+        title: <this.Translate id="text_supplier" />,
+        dataIndex: "supplierName",
+        key: "supplierName"
+      },
+      {
         title: <this.Translate id="text_quantity_buy_in" />,
         dataIndex: "quantity",
         key: "quantity",
-        width: 250,
-        align: "center",
         render: (quantity, record) => `${quantity} ${record.unit}`
       },
       {
         title: <this.Translate id="text_unit_cost" />,
         dataIndex: "price",
         key: "price",
-        width: 250,
         align: "right",
         render: price => this.formatCurrency(price)
       },
@@ -116,7 +121,6 @@ export default class PurchaseList extends List {
         title: <this.Translate id="text_total" />,
         dataIndex: "amount",
         key: "amount",
-        width: 250,
         align: "right",
         render: amount => this.formatCurrency(amount)
       }
@@ -125,6 +129,13 @@ export default class PurchaseList extends List {
 
   columnSupplier() {
     return [
+      {
+        title: "#",
+        dataIndex: "name",
+        key: "no",
+        width: 100,
+        render: (text, record, index) => index + 1
+      },
       {
         title: <this.Translate id="text_supplier" />,
         dataIndex: "supplier",
@@ -143,6 +154,12 @@ export default class PurchaseList extends List {
 
   columnSummary() {
     return [
+      {
+        title: "#",
+        dataIndex: "name",
+        key: "no",
+        render: (text, record, index) => index + 1
+      },
       this.columnCreatedAt,
       {
         title: <this.Translate id="text_name" />,
@@ -152,20 +169,17 @@ export default class PurchaseList extends List {
       {
         title: <this.Translate id="text_number" />,
         dataIndex: "number",
-        key: "number",
-        width: 130
+        key: "number"
       },
       {
         title: <this.Translate id="text_reference" />,
         dataIndex: "referenceNo",
-        key: "referenceNo",
-        width: 130
+        key: "referenceNo"
       },
       {
         title: <this.Translate id="text_receiver"/>,
         dataIndex: "receiver",
-        key: "receiverId",
-        width: 140
+        key: "receiverId"
       },
       {
         title: <this.Translate id="text_supplier" />,
@@ -175,30 +189,14 @@ export default class PurchaseList extends List {
       {
         title: <this.Translate id="text_location" />,
         dataIndex: "location",
-        key: "location",
-        width: 140
-      },
-      {
-        title: <this.Translate id="text_due_date" />,
-        dataIndex: "deliveryDueDate",
-        key: "deliveryDueDate",
-        width: 180,
-        render: deliveryDueDate => this.formatDate(deliveryDueDate)
-      },
-      {
-        title: <this.Translate id="text_step" />,
-        dataIndex: "step",
-        key: "step",
-        width: 100,
-        render: step => step in this.PO_STEP_STR ? <this.Tag color={this.PO_STEP_STR[step].color} className="text-uppercase text-center po-step-tag">{this.PO_STEP_STR[step].name}</this.Tag> : ""
+        key: "location"
       },
       {
         title: <this.Translate id="text_total" />,
         dataIndex: "requestTotal",
         key: "requestTotal",
-        width: 130,
         align: "right",
-        render: (text, record) => {
+        render: (requestTotal, record) => {
           let key = "requestTotal";
           if (record.step === Enum.PO_STEP.RECEIVED) {
             key = "receiveTotal";
@@ -286,15 +284,7 @@ export default class PurchaseList extends List {
             this.setState({columns: this.columnSummary()});
           }
 
-          if (values.step !== -1) {
-            filter["step"] = values.step;
-          }
-
-          if (values.supplierId !== 0) {
-            filter["supplierId"] = values.supplierId;
-          }
-
-          if (values.deliveryDueDate) {
+          if (values.deliveryDueDate && values.deliveryDueDate.length > 0) {
             rangFilter = JSON.stringify({
               column: "deliveryDueDate",
               value: [
@@ -409,30 +399,12 @@ export default class PurchaseList extends List {
                   form={form}/>
               </this.Col>
               <this.Col md="2">
-                <this.Select
-                  name="supplierId"
-                  label={<this.Translate id="text_supplier" /> }
-                  dataSource={this.supplierList.concat(this.props.supplier.list)}
-                  defaultValue={this.supplierList[0].id}
-                  valueKey="id"
-                  form={form}/>
-              </this.Col>
-              <this.Col md="2">
                 <this.DateRangePicker
                   name="deliveryDueDate"
-                  label={<this.Translate id="text_date_range" />}
+                  label={<this.Translate id="text_date" />}
                   form={form}
                   defaultValue={this.state.setDefaultDate}
                   ranges={this.dateRangeDataSource()} />
-              </this.Col>
-              <this.Col md="2">
-                <this.Select
-                  name="step"
-                  label={<this.Translate id="text_step" />}
-                  dataSource={POStepList}
-                  defaultValue={POStepList[0].value}
-                  form={form}
-                />
               </this.Col>
               <this.Col md="2" className="wrap-btn-search">
                 <div className="ant-form-item-label" style={{visibility: "hidden"}}>

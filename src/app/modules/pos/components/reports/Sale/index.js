@@ -30,10 +30,15 @@ export default class SaleList extends List {
       ],
       [
         {
+          title: "#",
+          dataIndex: "no",
+          key: "no",
+          render: (text, record, index) => index + 1
+        },
+        {
           title: <this.Translate id="text_product" />,
           dataIndex: "name",
           key: "name",
-          width: 200,
           className: "sale-report",
           render: (name, record) => name ? name : record.namekm 
         },
@@ -56,7 +61,6 @@ export default class SaleList extends List {
           title: <this.Translate id="text_product_type" />,
           dataIndex: "name",
           key: "name",
-          width: 200,
           className: "sale-report"
         }
       ],
@@ -65,7 +69,6 @@ export default class SaleList extends List {
           title: <this.Translate id="text_user" />,
           dataIndex: "user",
           key: "user",
-          width: 200,
           className: "sale-report",
           render: (user, record) => {
             return `${record.firstName}${record.lastName ? " " + record.lastName + ":" + user : ":" + user}`;
@@ -77,7 +80,6 @@ export default class SaleList extends List {
           title: <this.Translate id="text_customer" />,
           dataIndex: "customer",
           key: "customer",
-          width: 200,
           className: "sale-report"
         }
       ],
@@ -86,7 +88,6 @@ export default class SaleList extends List {
           title: <this.Translate id="text_location" />,
           dataIndex: "location",
           key: "location",
-          width: 200,
           className: "sale-report"
         }
       ]
