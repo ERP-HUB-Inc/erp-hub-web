@@ -119,7 +119,7 @@ export default class StoreAccountList extends Component {
   }
 
   componentDidMount(){
-    this.dispatch(PrivilegeAction.checkPermission(StoreAccountService.detailRoute));
+    this.dispatch(PrivilegeAction.checkPermission(StoreAccountService.updateRoute));
     this.dispatch(StoreAccountAction.fetch(this.client.clientId));
     this.dispatch(fetchAllBusinessPlanSystem());
     this.dispatch(TaxAction.fetch(100));
