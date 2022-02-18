@@ -1,6 +1,11 @@
 import React from "react";
+import {
+  Form,
+  PageHeader
+} from "antd";
+import sweetalert from "sweetalert";
 import FormItem from "./FormItem";
-import Constant from "../../../constants/products/product";
+import history from "../../../../common/router/history";
 import Enum from "../../../enums";
 import ProductAction from "../../../actions/products/product";
 import BrandAction from "../../../actions/products/brand";
@@ -13,11 +18,9 @@ import UnitAction from "../../../actions/products/productsUnit";
 import FormCreateUnit from "../../../containers/products/ProductsUnit/FormCreate";
 import TaxAction from "../../../../pos/action/settings/tax";
 import FormCreateTax from "../../../../pos/containers/settings/Tax/FormCreate";
-import ProductTagAction from "../../../actions/products/productsTag";
-import FormCreateTag from "../../../containers/products/ProductsTag/FormCreate";
-import Modal from "../../../../common/components/shares/Modal";
+import Component from "../../../../common/components/Component";
 
-export default class Form extends Modal {
+export default class ProductCreate extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,11 +39,36 @@ export default class Form extends Modal {
     this.handleAddVariantAttribute = this.handleAddVariantAttribute.bind(this);
     this.handleAddUnit = this.handleAddUnit.bind(this);
     this.handleAddTax = this.handleAddTax.bind(this);
-    this.handleAddTag = this.handleAddTag.bind(this);
-    this.handleChangeTag = this.handleChangeTag.bind(this);
-    this.handleSelectTag = this.handleSelectTag.bind(this);
-    this.handleDeselectTag = this.handleDeselectTag.bind(this);
     this.handleAddProductType = this.handleAddProductType.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener("keydown", (e) => {
+      const S = 83;
+      if (e.keyCode === S && e.ctrlKey) {
+        e.preventDefault();
+        document.getElementById("btnSubmit").click();
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("keydown", null);
+  }
+
+  componentDidUpdate(nextProps) {
+    if (this.props.productAdd.added && nextProps.productAdd.adding) {
+      sweetalert({
+        icon: "success",
+        title: "Success!",
+        text: "You have saved product!",
+        buttons: false,
+        timer: 1500
+      })
+      .then(() => {
+        this.props.form.resetFields();
+      });
+    }
   }
 
   handleCallBackGetProductAttribute(productAttributes) {
@@ -113,20 +141,18 @@ export default class Form extends Modal {
         values["price"] = values["price"] ? values["price"] : 0;
         values["wholePrice"] = values["wholePrice"] ? values["wholePrice"] : 0;
         values["distributePrice"] = values["distributePrice"] ? values["distributePrice"] : 0;
-        values["productTags"] = this.state.tagList;
+        values["productTags"] = [];
         values["attributes"] = this.state.productAttributes;
         values["variantProducts"] = this.state.productVariants;
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
         this.dispatch(ProductAction.add(values));
-        // RESET STATE
-        this.setState({tagList: []});
       }
     });
   }
       
   handleCancel() {
-    this.dispatch(ProductAction.reset(Constant.RESET_FORM_PRODUCT));
+    history.goBack();
   }
 
   handleAddBrand() {
@@ -157,59 +183,6 @@ export default class Form extends Modal {
     this.modal1 = <FormCreateTax />;
   }
 
-  handleAddTag() {
-    this.dispatch(ProductTagAction.showForm());
-    this.modal1 = <FormCreateTag />;
-  }
-
-  handleChangeTag(value) {
-    // console.log("Tag Changes:", value);
-  }
-
-  handleSelectTag(value) {
-    if (this.Util.isRecordId(value)) {
-      //value: In this the data of format is id of tag
-      const existTagList = this.state.tagList;
-      const findExistingTag = existTagList.find(tagValue => tagValue.id === value);
-      if (findExistingTag !== null) {
-        existTagList.push({
-          id: "",
-          tagId: value,
-          tag: "",
-          status: this.Enum.ACTIVE});
-      }
-      this.setState({tagList: existTagList});
-    } else {
-      // ADD NEW TAG TO DB
-      // value: in this case is string only
-      this.dispatch(ProductTagAction.add({tag: value}));
-    }
-  }
-
-  handleDeselectTag(value) {
-    const existTagList = this.state.tagList;
-    if (this.Util.isRecordId(value)) {
-      //value: In this the data of format is id of tag
-      this.setState({
-        tagList: existTagList.filter(tagValue => tagValue.tagId !== value)
-      });
-    } else {
-      this.setState({
-        tagList: existTagList.filter(tagValue => tagValue.tag !== value)
-      });
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const {tagAdd} = nextProps;
-    if (tagAdd.added) {
-      const existTagList = this.state.tagList;
-      existTagList.push({id: tagAdd.response.data.id, tag: tagAdd.response.data.tag, status: this.Enum.ACTIVE});
-      this.setState({tagList: existTagList});
-      this.dispatch(ProductTagAction.reset());
-    }
-  }
-
   render() {
     const {
       form,
@@ -224,18 +197,25 @@ export default class Form extends Modal {
       units,
       unitAdd,
       taxAdd,
-      tags,
-      tagAdd,
       variantAttributes,
       variantAttributeAdd,
       productSearch,
       storeLanguage
     } = this.props;
-    
-    this.submitLoading = productAdd.adding;
 
-    if (productAdd.showForm) {
-      this.content = (
+    return <div style={{marginBottom: 25}}>
+      <PageHeader
+        style={{
+            backgroundColor: "#f7f7f7",
+            paddingLeft: 0,
+            paddingRight: 0
+        }}
+        onBack={() => history.goBack()}
+        title={<this.Translate id="text_product" />}
+        subTitle={<this.Translate id="text_new_product" />}
+        extra={[]}
+    />
+      <Form autoComplete="off" onSubmit={this.handleSubmit}>
         <FormItem
           form={form}
           languages={storeLanguage.list}
@@ -258,23 +238,22 @@ export default class Form extends Modal {
           taxAdd={taxAdd}
           handleAddTax={this.handleAddTax}
           taxs={this.props.taxs}
-          tags={tags}
-          tagAdd={tagAdd}
           callBackGetProductAttribute={this.handleCallBackGetProductAttribute}
           callBackGetProductVariant={this.handleCallBackGetProductVariant}
-          handleChangeTag={this.handleChangeTag}
-          handleSelectTag={this.handleSelectTag}
-          handleDeselectTag={this.handleDeselectTag}
-          handleAddTag={this.handleAddTag}
           variantAttributes={variantAttributes}
           variantAttributeAdd={variantAttributeAdd}
           handleAddVariantAttribute={this.handleAddVariantAttribute}
           productSearch={productSearch} />
-      );
-      return super.render();
-    } else {
-      return <div/>;
-    }
+          <this.Row style={{justifyContent: "center", marginTop: 25}}>
+            <this.Button className="danger" onClick={this.handleCancel}>
+              <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_back" />
+            </this.Button>  
+            <this.Button htmlType="submit" loading={productAdd.adding} className="info" style={{marginLeft: 15}} id="btnSubmit">
+              <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />(Ctrl+s)
+            </this.Button>
+          </this.Row>
+      </Form>
+    </div>;
   }
 }
 

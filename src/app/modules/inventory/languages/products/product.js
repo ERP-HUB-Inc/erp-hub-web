@@ -11,6 +11,18 @@ export default {
     "Product Name"
   ],
 
+  "text_edit_product": [
+    "Edit Product",
+    "កែប្រែផលិតផល",
+    "Edit Product"
+  ],
+
+  "text_new_product": [
+    "New Product",
+    "បង្កើតផលិតផលថ្មី",
+    "New Product"
+  ],
+
   "text_product_description": [
     "Product Description",
     "បរិយាយផលិតផល",
@@ -97,15 +109,15 @@ export default {
   ],
 
   "input_product_enter_custom_code": [
-    "Enter custom product SKU",
-    "បញ្ចូល លេខកូដ របស់ផលិតផល",
-    "Enter custom product SKU"
+    "Custom",
+    "Custom",
+    "Custom"
   ],
 
   "input_product_auto_generate_code": [
-    "Automatiacally generate SKU",
-    "បង្កើត លេខកូដ​ ដោយស្វយ័ប្រវត្តិ",
-    "Automatiacally generate SKU"
+    "Auto",
+    "Auto",
+    "Auto"
   ],
 
   "input_product_is_avialable_sale": [
@@ -230,9 +242,9 @@ export default {
   ],
 
   "input_product_non_inventory": [
-    "Service",
+    "Non-Inventory",
     "ទំនិញគ្មានស្តុក",
-    "Service"
+    "Non-Inventory"
   ],
 
   "input_product_standard": [
@@ -511,9 +523,9 @@ export default {
   ],
 
   "error_require_serial_type": [
-    "Choose serial type",
+    "Choose stock type",
     "ជ្រើសរើសប្រភេទលេខរៀង",
-    "Choose serial type"
+    "Choose stock type"
   ],
 
   "error_product_not_found": [

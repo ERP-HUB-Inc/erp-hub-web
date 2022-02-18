@@ -39,7 +39,13 @@ export default {
     "Photo",
     "រូបថត",
     "Photo"
-  ], 
+  ],
+
+  "text_image": [
+    "Image",
+    "រូបភាព",
+    "Image"
+  ],
 
   "text_password": [
     "Password",

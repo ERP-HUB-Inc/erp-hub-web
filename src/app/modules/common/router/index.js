@@ -12,6 +12,8 @@ import Component from "../components/Component";
 import dataSource from "../components/layout/SiderBar/datasource";
 import AuthService from "../services/AuthService";
 import Authentication from "../constants/authentication";
+import ProductCreate from "../../inventory/containers/products/Product/FormCreate";
+import ProductUpdate from "../../inventory/containers/products/Product/FormUpdate";
 import {Util} from "../util";
 const {Content} = Layout;
 
@@ -54,6 +56,8 @@ class Router extends Component {
                 )
               )
             }
+            <Route path="/products/create" component={ProductCreate}></Route>
+            <Route path="/products/update/:id" component={ProductUpdate}></Route>
             <Route path="/" component={Home}></Route>
             <Route path="/profile" component={Profile}></Route>
           </Switch>

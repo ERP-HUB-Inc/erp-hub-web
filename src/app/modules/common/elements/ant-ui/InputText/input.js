@@ -48,6 +48,7 @@ export default class InputText extends Element {
             placeholder={this.props.placeholder}
             autoComplete={this.props.autoComplete}
             disabled={this.props.disabled}
+            allowClear={this.props.allowClear}
             onChange={this.props.onChange}
             onKeyDown={this.props.handleKeyDown}
             onKeyUp={this.props.handleKeyUp}

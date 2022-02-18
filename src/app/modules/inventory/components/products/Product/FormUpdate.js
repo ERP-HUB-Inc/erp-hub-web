@@ -1,89 +1,68 @@
 import React from "react";
+import {
+  Form,
+  Spin,
+  PageHeader
+} from "antd";
+import sweetalert from "sweetalert";
 import FormItem from "./FormItem";
+import history from "../../../../common/router/history";
 import ProductAction from "../../../actions/products/product";
-import Constant from "../../../constants/products/product";
 import Enum from "../../../enums";
-import BrandAction from "../../../actions/products/brand";
-import FormCreateBrand from "../../../containers/products/Brand/FormCreate";
-import ProductTypeAction from "../../../actions/products/productsType";
-import FormCreateProductType from "../../../containers/products/ProductsType/FormCreate";
 import VariantAttributeAction from "../../../actions/products/variantAttribute";
 import FormCreateVariantAttribute from "../../../containers/products/VariantAttribute/FormCreate";
-import UnitAction from "../../../actions/products/productsUnit";
-import FormCreateUnit from "../../../containers/products/ProductsUnit/FormCreate";
 import TaxAction from "../../../../pos/action/settings/tax";
 import FormCreateTax from "../../../../pos/containers/settings/Tax/FormCreate";
-import TagAction from "../../../actions/products/productsTag";
-import FormCreateTag from "../../../containers/products/ProductsTag/FormCreate";
-import Modal from "../../../../common/components/shares/Modal";
+import Component from "../../../../common/components/Component";
 
-export default class Form extends Modal {
+export default class ProductUpdate extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isNotYetLoadComponentDidUpdated: true,
-      tagList: [],
       productAttributes: [],
       productVariants: [],
       productArchiveVariants: [],
       productArchiveAttributes: []
     };
 
-    this.tagList = [];
-
     this.title = <this.Translate id="text_product" />;
-    this.width = "100%";
-    this.wrapClassName = "modal-product";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCallBackGetProductAttribute = this.handleCallBackGetProductAttribute.bind(this);
     this.handleCallBackGetProductVariant = this.handleCallBackGetProductVariant.bind(this);
     this.handleCallBackGetArchiveProductVariant = this.handleCallBackGetArchiveProductVariant.bind(this);
     this.handleCallBackGetArchiveProductAttributes = this.handleCallBackGetArchiveProductAttributes.bind(this);
-    this.handleAddBrand = this.handleAddBrand.bind(this);
     this.handleAddVariantAttribute = this.handleAddVariantAttribute.bind(this);
-    this.handleAddUnit = this.handleAddUnit.bind(this);
     this.handleAddTax = this.handleAddTax.bind(this);
-    this.handleAddTag = this.handleAddTag.bind(this);
-    this.handleChangeTag = this.handleChangeTag.bind(this);
-    this.handleSelectTag = this.handleSelectTag.bind(this);
-    this.handleDeselectTag = this.handleDeselectTag.bind(this);
-    this.handleAddProductType = this.handleAddProductType.bind(this);
   }
 
-  componentDidUpdate() {
-    const {productDetail} = this.props;
-    if (productDetail.fetched) {
-      if (productDetail.data) {
-        const tagList = [];
-        productDetail.data.tags.forEach(productTag => {
-          if (productTag.status === this.Enum.ACTIVE) {
-            tagList.push({
-              id: productTag.id,
-              tagId: productTag.tagId,
-              tag: "",
-              status: this.Enum.ACTIVE
-            });
-          }
-        });
-        this.setState({tagList});
-        this.dispatch(ProductAction.reset(Constant.PARTIAL_RESET_DETAIL_PRODUCTS));
+  componentDidMount() {
+    const { id } = this.props.match.params,
+    params = new URLSearchParams(this.props.location.search);
+    this.props.dispatch(ProductAction.requestAndShowForm({id, productOption: params.get("productOption")}));
+
+    window.addEventListener("keydown", (e) => {
+      const S = 83;
+      if (e.keyCode === S && e.ctrlKey) {
+        e.preventDefault();
+        document.getElementById("btnSubmit").click();
       }
-    }
+    });
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {tagAdd} = nextProps;
-    if (tagAdd.added) {
-      const existTagList = this.state.tagList;
-      existTagList.push({
-        id: "",
-        tagId: tagAdd.response.data.id,
-        tag: tagAdd.response.data.tag,
-        status: this.Enum.ACTIVE
+  componentWillUnmount() {
+    window.removeEventListener("keydown", null);
+  }
+
+  componentDidUpdate(nextProps) {
+    if (this.props.productUpdate.updated && nextProps.productUpdate.updating) {
+      sweetalert({
+        icon: "success",
+        title: "Success!",
+        text: "You have saved product!",
+        buttons: false,
+        timer: 1500
       });
-      this.setState({tagList: existTagList});
-      this.dispatch(TagAction.reset());
     }
   }
 
@@ -103,7 +82,7 @@ export default class Form extends Modal {
     this.setState({productArchiveAttributes});
   }
 
-  handleSubmit (e) {
+  handleSubmit(e) {
     e.preventDefault();
 
     if (this.props.form.getFieldValue("isFocusOnVariantInput") === 1) {
@@ -172,34 +151,17 @@ export default class Form extends Modal {
         values["wholePrice"] = values["wholePrice"] ? values["wholePrice"] : 0;
         values["distributePrice"] = values["distributePrice"] ? values["distributePrice"] : 0;
         values["taxes"] = [{taxId: values["taxId"]}];
-        values["productTags"] = this.state.tagList;
         values["attributes"] = this.state.productArchiveAttributes.concat(this.state.productAttributes);
         values["variantProducts"] = this.state.productArchiveVariants.concat(this.state.productVariants);
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
-
-        this.setState({
-          tagList: [],
-          isNotYetLoadComponentDidUpdated: true
-        });
         this.dispatch(ProductAction.update(values));
       }
     });
   }
       
   handleCancel() {
-    this.setState({isNotYetLoadComponentDidUpdated: true});
-    this.dispatch(ProductAction.reset(Constant.RESET_DETAIL_PRODUCTS));
-  }
-
-  handleAddBrand() {
-    this.dispatch(BrandAction.showForm());
-    this.modal1 = <FormCreateBrand />;
-  }
-
-  handleAddProductType() {
-    this.dispatch(ProductTypeAction.showForm());
-    this.modal1 = <FormCreateProductType />;
+    history.goBack();
   }
 
   handleAddVariantAttribute(index, callBack) {
@@ -210,78 +172,13 @@ export default class Form extends Modal {
     }
   }
 
-  handleAddUnit() {
-    this.dispatch(UnitAction.showForm());
-    this.modal1 = <FormCreateUnit />;
-  }
-
   handleAddTax() {
     this.dispatch(TaxAction.showForm());
     this.modal1 = <FormCreateTax />;
   }
 
-  handleAddTag() {
-    this.dispatch(TagAction.showForm());
-    this.modal1 = <FormCreateTag />;
-  }
-
-  handleChangeTag(value) {
-    // console.log("Tag Changes:", value);
-  }
-
-  handleSelectTag(value) {
-    if (this.Util.isRecordId(value)) {
-      //value: In this the data of format is id of tag
-      const existTagList = this.state.tagList;
-      let isNotTheSameTag = true;
-      existTagList.forEach((tagValue, tagIndex) => {
-        if (tagValue.tagId !== value && tagValue.status !== this.Enum.ACTIVE) {
-          isNotTheSameTag = false;
-          existTagList[tagIndex]["status"] = this.Enum.ACTIVE;          
-        }
-      });
-
-      if (isNotTheSameTag) {
-        existTagList.push({
-          id: "",
-          tagId: value,
-          tag: "",
-          status: this.Enum.ACTIVE
-        });
-      }
-
-      this.setState({tagList: existTagList});
-    } else {
-      // ADD NEW TAG TO DB
-      // value: in this case is string only
-      this.dispatch(TagAction.add({tag: value}));
-    }
-  }
-
-  handleDeselectTag(value) {
-    const existTagList = this.state.tagList;
-    if (this.Util.isRecordId(value)) {
-      //value: In this the data of format is id of tag
-      const tagList = [];
-      existTagList.forEach(tagValue => {
-        if (tagValue.tagId === value) {
-          if (tagValue.id) {
-            tagValue["status"] = this.Enum.ARCHIVE;
-            tagList.push(tagValue);
-          }
-        } else {
-          tagList.push(tagValue);
-        }
-      });
-      this.setState({tagList: tagList});
-    } else {
-      this.setState({tagList: existTagList.filter(tagValue => tagValue.tag !== value)});
-    }
-  }
-
   render() {
     const {
-      productUpdate,
       productDetail,
       productLog,
       productCostLog,
@@ -296,61 +193,71 @@ export default class Form extends Modal {
       unitAdd,
       taxs,
       taxAdd,
-      tags,
-      tagAdd,
       variantAttributes,
       variantAttributeAdd,
       productSearch,
       storeLanguage
     } = this.props;
 
-    this.submitLoading = productUpdate.updating;
-
-    if (productDetail.showForm) {
-      this.content = (
-        <FormItem
-          form={form}
-          languages={storeLanguage}
-          locale={locale}
-          dispatch={dispatch}
-          formData={productDetail.data}
-          productLog={productLog}
-          productCostLog={productCostLog}
-          switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
-          productVariantArchive={this.props.productVariantArchive}
-          productVariantCheckStatus={this.props.productVariantCheckStatus}
-          productAttributeCheckStatus={this.props.productAttributeCheckStatus}
-          productAttributeValueCheckStatus={this.props.productAttributeValueCheckStatus}
-          brands={brands}
-          brandAdd={brandAdd}
-          handleAddBrand={this.handleAddBrand}
-          productsType={productsType}
-          productsTypeAdd={productsTypeAdd}
-          handleAddProductType={this.handleAddProductType}
-          units={units}
-          unitAdd={unitAdd}
-          handleAddUnit={this.handleAddUnit}
-          taxs={taxs}
-          taxAdd={taxAdd}
-          handleAddTax={this.handleAddTax}
-          tags={tags}
-          tagAdd={tagAdd}
-          callBackGetProductAttribute={this.handleCallBackGetProductAttribute}
-          callBackGetProductVariant={this.handleCallBackGetProductVariant}
-          handleCallBackGetArchiveProductVariant={this.handleCallBackGetArchiveProductVariant}
-          handleCallBackGetArchiveProductAttributes={this.handleCallBackGetArchiveProductAttributes}
-          handleChangeTag={this.handleChangeTag}
-          handleSelectTag={this.handleSelectTag}
-          handleDeselectTag={this.handleDeselectTag}
-          handleAddTag={this.handleAddTag}
-          variantAttributes={variantAttributes}
-          variantAttributeAdd={variantAttributeAdd}
-          handleAddVariantAttribute={this.handleAddVariantAttribute}
-          productSearch={productSearch} />
-      );
-      return super.render();
-    } else {
-      return <div/>;
-    }
+    return <div style={{marginBottom: 25}}>
+      <PageHeader
+        style={{
+            backgroundColor: "#f7f7f7",
+            paddingLeft: 0,
+            paddingRight: 0
+        }}
+        onBack={() => history.goBack()}
+        title={<this.Translate id="text_product" />}
+        subTitle={<this.Translate id="text_edit_product" />}
+        extra={[]}
+    />
+      {
+        productDetail.fetched ?
+        <Form autoComplete="off" onSubmit={this.handleSubmit}>
+            <FormItem
+              form={form}
+              languages={storeLanguage}
+              locale={locale}
+              dispatch={dispatch}
+              formData={productDetail.data}
+              productLog={productLog}
+              productCostLog={productCostLog}
+              switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
+              productVariantArchive={this.props.productVariantArchive}
+              productVariantCheckStatus={this.props.productVariantCheckStatus}
+              productAttributeCheckStatus={this.props.productAttributeCheckStatus}
+              productAttributeValueCheckStatus={this.props.productAttributeValueCheckStatus}
+              brands={brands}
+              brandAdd={brandAdd}
+              productsType={productsType}
+              productsTypeAdd={productsTypeAdd}
+              units={units}
+              unitAdd={unitAdd}
+              taxs={taxs}
+              taxAdd={taxAdd}
+              handleAddTax={this.handleAddTax}
+              callBackGetProductAttribute={this.handleCallBackGetProductAttribute}
+              callBackGetProductVariant={this.handleCallBackGetProductVariant}
+              handleCallBackGetArchiveProductVariant={this.handleCallBackGetArchiveProductVariant}
+              handleCallBackGetArchiveProductAttributes={this.handleCallBackGetArchiveProductAttributes}
+              variantAttributes={variantAttributes}
+              variantAttributeAdd={variantAttributeAdd}
+              handleAddVariantAttribute={this.handleAddVariantAttribute}
+              productSearch={productSearch} />
+          <this.Row style={{justifyContent: "center", marginTop: 25}}>
+            <this.Button className="danger" onClick={this.handleCancel}>
+              <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_back" />
+            </this.Button>  
+            <this.Button htmlType="submit" loading={this.props.productUpdate.updating} className="info" style={{marginLeft: 15}} id="btnSubmit">
+              <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />(Ctrl+s)
+            </this.Button>
+          </this.Row>
+        </Form>
+        :
+        <div style={{width: 30, margin: "0 auto"}}>
+          <Spin />
+        </div>
+      }
+    </div>;
   }
 }

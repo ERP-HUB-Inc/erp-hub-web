@@ -31,6 +31,7 @@ export function InputText(props) {
     handleOnFocus={props.handleOnFocus}
     disabled= {props.disabled}
     isAutoFocus={props.isAutoFocus}
+    allowClear={props.allowClear}
     didUpdateMakeAutoFocus={props.didUpdateMakeAutoFocus}/>;
 }
 

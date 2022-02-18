@@ -18,6 +18,7 @@ export class SelectSearch extends Element {
     return (
       <this.FormItem
         label={this.props.label}
+        className={this.props.className}
         help={this.props.help}>
         {
           getFieldDecorator(this.props.name, this.rules)(
@@ -28,8 +29,10 @@ export class SelectSearch extends Element {
               style={{ width: "100%" }}
               optionFilterProp="children"
               dropdownClassName="wrap-select-search"
+              onSearch={this.props.onSearch}
               onChange={this.props.onChange}
-              filterOption={(value, option) => option.props.children.toString().toLowerCase().indexOf(value.toLowerCase()) >= 0}
+              filterOption={false}
+              // filterOption={(value, option) => option.props.children.toString().toLowerCase().indexOf(value.toLowerCase()) >= 0}
               showSearch>
               { 
                 this.props.addNew !=null ?

@@ -317,7 +317,7 @@ const dataSource = {
       {
         title: <Translate id="text_manage_product" />,
         icon: "icon-time",
-        route: "/products/manage",
+        route: "/products/list",
         component: ManageProduct,
         isFashNav: true
       },

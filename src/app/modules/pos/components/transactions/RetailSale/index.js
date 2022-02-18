@@ -1091,7 +1091,7 @@ export default class Retail extends Component {
                         }
 
                         <div className="barcode-number" style={{ marginTop: 5 }}>
-                          {<this.Translate id="text_product_code"/>}: {productOrder.barcode}
+                          {productOrder.barcode}
                         </div>
 
                         {
@@ -1142,7 +1142,7 @@ export default class Retail extends Component {
                         handleOnBlur={this.handleOnChangOrderFieldBlur}
                         className="ca-input-v1 order-quantity"
                         min={0}
-                        // isHideTool={true}
+                        isHideTool={true}
                         precision={1}
                         isAutoSelect={true}
                         isAutoFocus={true}

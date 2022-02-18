@@ -601,7 +601,8 @@ export default class List extends Component {
           name="key"
           label={<this.Translate id={this.generalSearchLabel}/>}
           placeholder={this.CATranslate(this.placeHolderForGeneralSearch, this.props.locale)}
-          form={this.props.form}/>
+          form={this.props.form}
+          allowClear={true} />
       </this.Col>
     );
   }
@@ -694,7 +695,7 @@ export default class List extends Component {
             onClick: (event) => this.handleOnTapHandler(event, record)
           })}
           rowSelection={rowSelection}
-          loading={fetchingProps.fetching || this.state.loadingPopup} />
+        loading={fetchingProps.fetching/* || this.state.loadingPopup*/} />
         :
         <this.Table 
           rowSelection={this.rowSelection ? rowSelection : null}
@@ -706,7 +707,7 @@ export default class List extends Component {
             onDoubleClick:() => this.handleShowFormEdit(record),
             onClick: (event) => this.handleOnTapHandler(event, record)
           })}
-          loading={fetchingProps.fetching || this.state.loadingPopup} />
+          loading={fetchingProps.fetching/* || this.state.loadingPopup*/} />
     );
   }
 

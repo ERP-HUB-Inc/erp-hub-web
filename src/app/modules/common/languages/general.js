@@ -70,6 +70,12 @@ export default {
     "បោះបង់",
     "Cancel"
   ],
+
+  "text_back": [
+    "Back",
+    "ត្រឡប់ក្រោយ",
+    "Back"
+  ],
   
   "text_canceled": [
     "Canceled",
@@ -448,6 +454,18 @@ export default {
     "Save",
     "រក្សារទុក",
     "Save"
+  ],
+
+  "text_edit": [
+    "Edit",
+    "កែប្រែ",
+    "Edit"
+  ],
+
+  "text_please_search": [
+    "Please search",
+    "សូមស្វែងរក",
+    "Please search"
   ],
   
   "text_payment_method": [

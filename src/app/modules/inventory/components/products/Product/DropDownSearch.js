@@ -149,7 +149,7 @@ export default class DropDownSearch extends Modal {
         this.timer = setTimeout(function() {
           this.handleSearchProduct(value);
           this.setState({visibleDropDown: true});
-        }.bind(this), 200);
+        }.bind(this), 500);
       } else {
         this.props.dispatch(ProductAction.reset(Constant.SEARCH_PRODUCT_RESET));
       }

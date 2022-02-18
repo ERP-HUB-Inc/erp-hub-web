@@ -2,15 +2,15 @@ import React from "react";
 import List from "../../List";
 import Util from "../../../utils";
 import Enum from "../../../enums";
+import history from "../../../../common/router/history";
 // import history from "../../../../common/router/history";
 import FormCreate from "../../../containers/products/Product/FormCreate";
 import FormUpdate from "../../../containers/products/Product/FormUpdate";
 import Constant from "../../../constants/products/product";
-import LocalStorageUtil from "../../../../common/localstorage/util";
-import ProductTypeAction from "../../../actions/products/productsType";
-import UnitAction from "../../../actions/products/productsUnit";
+import LocationAction from "../../../../pos/action/settings/location";
+// import UnitAction from "../../../actions/products/productsUnit";
 import ProductAction from "../../../actions/products/product";
-import BrandAction from "../../../actions/products/brand";
+// import BrandAction from "../../../actions/products/brand";
 import ProductService from "../../../services/products/ProductService";
 import "./index.css";
 
@@ -24,9 +24,7 @@ export default class ProductList extends List {
       productTypes: [],
       dataSourceToPrint: []
     };
-    this.brandList = [{name: <this.Translate id="text_all_brand"/>, id: 0}];
     this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
-    this.productTypeList = [{productTypeDescriptions: {name: <this.Translate id="text_all_product_type"/>}, id: 0}];
     this.stockList = [
       {name: <this.Translate id="select_text_all_stock"/>, id: 0},
       {name: <this.Translate id="text_in_stock"/>, id: 1},
@@ -46,11 +44,21 @@ export default class ProductList extends List {
     this.action = ProductAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCT;
     this.handleClone = this.handleClone.bind(this);
-    // this.handleOnPrintLabel = this.handleOnPrintLabel.bind(this);
+  }
+
+  componentDidMount() {
+    super.componentDidMount();
+    this.props.dispatch(LocationAction.fetch());
   }
 
   componentWillUpdate(nextProps) {
-    const {productAdd, productUpdate, productClone, dispatch} = nextProps;
+    const {
+      productAdd,
+      productUpdate,
+      productClone,
+      dispatch
+    } = nextProps;
+
     if (productAdd.added || productUpdate.updated) {
       dispatch(ProductAction.fetch(this.pageSize));
       dispatch(ProductAction.reset(Constant.RESET_FORM_PRODUCT));
@@ -68,53 +76,9 @@ export default class ProductList extends List {
       }
     }
 
-    // WHEN CREATE NEW SAVE SETTING TO LOCALE STORAGE
-    if (nextProps.brandsAdd.added) {
-      let existBrands = localStorage.getItem(Enum.LOCAL_SCHEMA.BRAND);
-      existBrands = existBrands ? JSON.parse(existBrands) : [];
-      localStorage.setItem(Enum.LOCAL_SCHEMA.BRAND, JSON.stringify(existBrands.concat([nextProps.brandsAdd.response.data])));
-    }
-
-    if (nextProps.productsTypeAdd.added) {
-      let existProductTypes = localStorage.getItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE);
-      existProductTypes = existProductTypes ? JSON.parse(existProductTypes) : [];
-      localStorage.setItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE, JSON.stringify(existProductTypes.concat(nextProps.productsTypeAdd.response.data)));
-    }
-
-    if (nextProps.unitsAdd.added) {
-      let existUnits = localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT);
-      existUnits = existUnits ? JSON.parse(existUnits) : [];
-      localStorage.setItem(Enum.LOCAL_SCHEMA.UNIT, JSON.stringify(existUnits.concat(nextProps.unitsAdd.response.data)));
-    }
-
-    // SAVE SETTING TO LOCALE STORAGE
-    if (nextProps.brands.fetched) {
-      this.setState({brands: nextProps.brands.list});
-      localStorage.setItem(Enum.LOCAL_SCHEMA.BRAND, JSON.stringify(nextProps.brands.list));
-      this.props.dispatch(BrandAction.reset());
-    }
-
     if (nextProps.units.fetched) {
       localStorage.setItem(Enum.LOCAL_SCHEMA.UNIT, JSON.stringify(nextProps.units.list));
     }
-
-    if (nextProps.productsType.fetched) {
-      this.setState({productTypes: nextProps.productsType.list});
-      localStorage.setItem(Enum.LOCAL_SCHEMA.PRODUCT_TYPE, JSON.stringify(nextProps.productsType.list));
-      this.props.dispatch(ProductTypeAction.reset());
-    }
-  }
-
-  componentDidMount() {
-    // this.props.dispatch(ProductAction.reset()); // reset state to make 2: check condition again
-    super.componentDidMount();
-    this.requestSubDataAsync();
-
-    this.setState({
-      brands: LocalStorageUtil.getItemFromCollection(Enum.LOCAL_SCHEMA.BRAND),
-      locations: LocalStorageUtil.getItemFromCollection(Enum.LOCAL_SCHEMA.LOCATION),
-      productTypes: LocalStorageUtil.getItemFromCollection(Enum.LOCAL_SCHEMA.PRODUCT_TYPE)
-    });
   }
 
   componentDidUpdate() {
@@ -141,23 +105,17 @@ export default class ProductList extends List {
     }
   }
 
-  requestSubDataAsync() {
-    return new Promise(() => {
-      setTimeout(() => {
-        this.props.dispatch(BrandAction.fetch(500));
-        this.props.dispatch(UnitAction.fetch(50, 0, "name", "ASC"));
-        this.props.dispatch(ProductTypeAction.fetch(100));
-
-      }, 2000);
-    });
+  renderButtonAddNew() {
+    return (
+      <this.Link to="/products/create" className="ant-btn info" style={{marginRight: 15}}>
+        <span className="icon-add icon-padding-right"></span>
+        <this.Translate id="text_add_new" />
+      </this.Link>
+    );
   }
 
   showFormEdit(rowData) {
-    this.props.dispatch(ProductAction.requestAndShowForm(rowData));
-    this.setState({
-      loadingPopup: true,
-      modalConten: <FormUpdate/>
-    });
+    history.push(`/products/update/${rowData.id}?productOption=${rowData.productOption}`);
   }
 
   handleClone() {
@@ -198,33 +156,10 @@ export default class ProductList extends List {
     }
   }
 
-  // handleOnPrintLabel() {
-  //   const productList = this.props.products.list.filter(product => this.state.dataSourceToPrint.includes(product.id));
-  //   this.props.dispatch(PriceTagAction.selectProductFromListToPrint(productList));
-  //   history.push("/products/price-tags");
-  // }
-
   buttonActionCollection() {
     return [
       this.renderButtonAddNew(),
       this.renderButtonDelete()
-      // <this.Button
-      //   key={2}
-      //   disabled={this.state.selectedRowKeys.length <= 0 || this.state.selectedRowKeys.length > 1}
-      //   htmlType="submit"
-      //   className="info"
-      //   loading={this.props.productClone.adding}
-      //   onClick={() => this.handleClone()}>
-      //   <span className="icon-add icon-padding-right"></span><this.Translate id="btn_product_clone" />
-      // </this.Button>,
-      // <this.Button
-      //   propKey="btn_product_print_label"
-      //   disabled={this.state.selectedRowKeys.length <= 0}
-      //   className="info margin-left-8"
-      //   onClick={this.handleOnPrintLabel}>
-      //   <span className="icon-barcode icon-padding-right"></span>
-      //   <this.Translate id="btn_product_print_label" />
-      // </this.Button>
     ];
   }
 
@@ -239,16 +174,6 @@ export default class ProductList extends List {
             locationId = values.locationId;
           }
 
-          if (values.brandId !== 0) {
-            filter["brandId"] = [values.brandId];
-          }
-
-          if (values.productTypeId !== 0) {
-            filter["productTypeId"] = [values.productTypeId];
-          }
-
-          filter["status"] = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
-    
           filter = JSON.stringify(filter);
 
           const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
@@ -273,43 +198,11 @@ export default class ProductList extends List {
               <this.Select
                 name="locationId"
                 label={<this.Translate id="text_store"/>}
-                dataSource={this.locationList.concat(this.state.locations)}
+                dataSource={this.locationList.concat(this.props.locations.list)}
                 valueKey="id"
                 nameKey="name"
                 form={form}
                 defaultValue={this.locationList[0].id}/>
-            </this.Col>
-            {/* <this.Col md="2">            
-              <this.Select
-                name="stockId"
-                label={<this.Translate id="text_stock"/>}
-                dataSource={this.stockList}
-                valueKey="id"
-                nameKey="name"
-                form={form}
-                defaultValue={0}
-              />
-            </this.Col> */}
-            <this.Col md="2">
-              <this.Select
-                name="brandId"
-                label={<this.Translate id="text_brand"/>}
-                dataSource={this.brandList.concat(Array.isArray(this.state.brands) ? this.state.brands : [])}
-                valueKey="id"
-                nameKey="name"
-                form={form}
-                defaultValue={this.brandList[0].id}/>
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="productTypeId"
-                label={<this.Translate id="text_product_type"/>}
-                dataSource={this.productTypeList.concat(Array.isArray(this.state.productTypes) ? this.state.productTypes : [])}
-                defaultValue={this.productTypeList[0].id}
-                valueKey="id"
-                nestedName="productTypeDescriptions"
-                nameKey="name"
-                form={form}/>
             </this.Col>
             <this.Col md="2" className="hidden">
               <this.Select
@@ -383,12 +276,12 @@ class ColumnExpand extends List {
         width: 200,
         render: () => {}
       },
-      {
-        dataIndex: "brandId",
-        key: "brandId",
-        width: 100,
-        render: () => {}
-      },
+      // {
+      //   dataIndex: "brandId",
+      //   key: "brandId",
+      //   width: 100,
+      //   render: () => {}
+      // },
       {
         dataIndex: "price",
         key: "price",
@@ -435,50 +328,7 @@ class ColumnExpand extends List {
 
           return <this.Tag color={this.colorStockStatus[colorIndex]} className="text-center label-stock-status">{quantity}</this.Tag>;
         },
-      },
-      {
-        dataIndex: "all_quantity",
-        key: "all_quantity",
-        width: 150,
-        align: "center",
-        render: (text, record) => {
-          const virtaulProduct = {
-            productVariants: [
-              {
-                ...record,
-                productLocations: record.productLocations
-              }
-            ]
-          };
-
-          let quantity = this.getAllQTY(virtaulProduct);
-          
-          let colorIndex = 0;
-          if (quantity === 0) {
-            colorIndex = 1;
-          } else if (quantity < 0) {
-            colorIndex = 2;
-          }
-
-          if (quantity <= record.reorderPoint) {
-            colorIndex = 1;
-          }
-
-          return <this.Tag color={this.colorStockStatus[colorIndex]} className="text-center label-stock-status">{quantity}</this.Tag>;
-        }
-      },
-      {
-        dataIndex: "unit",
-        key: "unit",
-        width: 100
-      },
-      {
-        dataIndex: "type",
-        key: "type",
-        width: 130,
-        render: () => {}
-      },
-      this.columnStatus
+      }
     ];
   }
 
@@ -534,16 +384,13 @@ class Column extends List {
         width: 150,
         render: serialType => {
           let stockTypeStr = <this.Translate id="text_other" />;
-          let stockTypeColorIndex = 1;
           if (serialType === Enum.SERIAL_TYPE.STANDARD) {
             stockTypeStr = <this.Translate id="input_product_standard" />;
-            stockTypeColorIndex = 0;
           } else if (serialType === Enum.SERIAL_TYPE.NON_INVENTORY) {
             stockTypeStr = <this.Translate id="input_product_non_inventory" />;
-            stockTypeColorIndex = 1;
           }
 
-          return <this.Tag color={this.colorStockStatus[stockTypeColorIndex]} className="text-center label-stock-status" style={{minWidth: 100}}>{stockTypeStr}</this.Tag>;
+          return stockTypeStr;
         }
       },
       {
@@ -552,16 +399,6 @@ class Column extends List {
         key: "productType",
         width: 200,
         render: productType => productType ? Util.getProductTypeName(productType) : this.emptyCell
-      },
-      {
-        title: <this.Translate id="text_brand" />,
-        dataIndex: "brandId",
-        key: "brand",
-        width: 140,
-        render: (text, record) => {
-          return Util.getProductBrand(record, this.emptyCell);
-        },
-        sorter: true
       },
       {
         title: <this.Translate id="text_retial_price" />,
@@ -595,71 +432,12 @@ class Column extends List {
         dataIndex: "quantity",
         key: "quantity",
         width: 130,
-        align: "center",
-        render: (text, record) => {
-          let quantity = this.getQTY(record);
-          
-          let colorIndex = 0;
-          if (quantity === 0) {
-            colorIndex = 1;
-          } else if (quantity < 0) {
-            colorIndex = 1;
-          }
-
-          return <this.Tag color={this.colorStockStatus[colorIndex]} className="text-center label-stock-status">{quantity}</this.Tag>;
-        },
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_all_quantity" />,
-        dataIndex: "all_quantity",
-        key: "all_quantity",
-        width: 150,
-        align: "center",
-        render: (text, record) => {
-          let quantity = this.getAllQTY(record);
-          
-          let colorIndex = 0;
-          if (quantity === 0) {
-            colorIndex = 1;
-          } else if (quantity < 0) {
-            colorIndex = 1;
-          }
-
-          if (quantity <= record.reorderPoint) {
-            colorIndex = 1;
-          }
-
-          return <this.Tag color={this.colorStockStatus[colorIndex]} className="text-center label-stock-status">{quantity}</this.Tag>;
-        },
-        sorter: true
-      },
-      {
-        title: <this.Translate id="col_products_unit" />,
-        dataIndex: "unit",
-        key: "unit",
-        width: 100,
-        render: (text, record) => {
-          let quantity = this.getQTY(record);
-          return <div>
-            <div>
-              {record.unit.name}
-            </div>
-            <div className="unit-value">
-              {this.formatUnit(quantity,record.unit.multiple,record.unit.name,record.unit.label,this.CATranslate("text_and", props.locale))}
-            </div>
-          </div>;
+        align: "right",
+        render: (quantity, record) => {
+          quantity = this.getQTY(record);
+          return `${quantity} ${record.unit.name}`;
         }
-      },
-      {
-        title: <this.Translate id="text_type" />,
-        dataIndex: "type",
-        key: "type",
-        width: 130,
-        render: type => type === Enum.TYPE_OF_PRODUCT.GOOD ? <this.Translate id="input_product_good" /> : <this.Translate id="input_product_raw_material" />,
-        sorter: true
-      },
-      // this.columnStatus
+      }
     ];
   }
 

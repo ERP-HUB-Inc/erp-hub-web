@@ -34,7 +34,8 @@
 
 .product-type .ant-radio-button-wrapper {
     height: auto !important;
-    width: 32% !important;
+    width: 48% !important;
+    /* width: 32% !important; */
     min-height: 100px !important
 }
 
@@ -205,10 +206,6 @@
     margin-left: -17px;
 }
 
-.main-product-collapse {
-    margin-bottom: -20px;
-}
-
 .main-product-collapse .ant-collapse-header {
     color: #40586d;
     font-weight: 500;
@@ -226,4 +223,17 @@
     background-color: white;
     width: 100%;
     height: 100%;
+}
+
+#wrap-input-barcode {
+    display: "flex";
+    align-items: "center"
+}
+
+.ant-form-horizontal .barcode-option {
+    margin-right: 10px;
+}
+
+#wrap-product-form .ant-form-item {
+    flex-grow: 1;
 }
