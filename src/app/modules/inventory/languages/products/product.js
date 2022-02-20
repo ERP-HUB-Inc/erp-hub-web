@@ -90,11 +90,6 @@ export default {
   ],
 
   // TAB
-  "text_description": [
-    "Description",
-    "បរិយាយ",
-    "Description"
-  ],
 
   "tab_cost_log": [
     "Cost Log",
@@ -145,9 +140,9 @@ export default {
   ],
 
   "input_product_re_order_point": [
-    "Re-Order Point",
-    "ចំនួនបញ្ជាទិញឡើងវិញ",
-    "Re-Order Point"
+    "Alert Quantity",
+    "បរិមាណជូនដំណឹង",
+    "Alert Quantity"
   ],
 
   "input_product_tax": [
@@ -473,9 +468,9 @@ export default {
   ],
 
   "text_general_seach_product": [
-    "Search for brand, SKU and notation",
-    "ស្វែងរកតាម ម៉ាក​ លេខកូដ និងកំណត់សំគាល់",
-    "Search for brand, SKU and notation"
+    "Search by name,barcode and description",
+    "ស្វែងរកតាម ឈ្មោះ​ លេខកូដ និងកំណត់សំគាល់",
+    "Search by name,barcode and description"
   ],
 
   // ERROR

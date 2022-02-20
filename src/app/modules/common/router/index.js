@@ -14,6 +14,8 @@ import AuthService from "../services/AuthService";
 import Authentication from "../constants/authentication";
 import ProductCreate from "../../inventory/containers/products/Product/FormCreate";
 import ProductUpdate from "../../inventory/containers/products/Product/FormUpdate";
+import AdjustmentCreate from "../../inventory/containers/stock/StockAdjustmentRequest/FormCreate";
+import AdjustmentUpdate from "../../inventory/containers/stock/StockAdjustmentRequest/FormUpdate";
 import {Util} from "../util";
 const {Content} = Layout;
 
@@ -58,6 +60,8 @@ class Router extends Component {
             }
             <Route path="/products/create" component={ProductCreate}></Route>
             <Route path="/products/update/:id" component={ProductUpdate}></Route>
+            <Route path="/stocks/adjustment/create" component={AdjustmentCreate}></Route>
+            <Route path="/stocks/adjustment/update/:id" component={AdjustmentUpdate}></Route>
             <Route path="/" component={Home}></Route>
             <Route path="/profile" component={Profile}></Route>
           </Switch>

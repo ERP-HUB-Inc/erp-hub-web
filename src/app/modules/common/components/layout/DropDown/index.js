@@ -74,11 +74,6 @@ export default class MenuDropDown extends Component {
         <li>
           <this.Button className="btn-update-now" type="default" style={{ backgroundColor: "#FFD627" }} onClick={() => history.push("/transactions/pos")}><this.Translate id="text_pos" /></this.Button>
         </li>
-        {/* <li>
-          <this.Link to="#" className="user-account">
-            <this.Noteicon />
-          </this.Link>
-        </li> */}
         {
           this.props.activeLanguages.length > 1 ?
             <li>
@@ -105,17 +100,11 @@ export default class MenuDropDown extends Component {
             :
             ""
         }
-        {/* <li>
-          <a className="user-account">
-            <span className="icon-help icon-padding-right"></span>
-            <span className="title-user"><this.Translate id="text_help"/></span>
-          </a>
-        </li> */}
         <li>
           <Dropdown overlay={this.menu} trigger={["hover"]}>
             <this.Link to="#" className="ant-dropdown-link user-account">
               <span className="icon-user icon-padding-right"></span>
-              <span className="title-user">{fullName}</span> 
+              <span className="title-user" style={{textTransform: "uppercase"}}>{fullName}</span> 
               <span className="icon-move-down icon-padding-left"></span>
             </this.Link>
           </Dropdown>

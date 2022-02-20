@@ -1,24 +1,49 @@
 import React from "react";
-import Enum from "../../../enums";
 import SearchAdjustment from "./SearchAdjustment";
+import {
+  Select
+} from "../../../../common/elements/ant-ui/Select";
+import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
-import LocationAction from "../../../../pos/action/settings/location";
+import LocationService from "../../../../pos/services/settings/StoreLocationService";
+
+function SelectLocation({form, label, placeholder, formData, onChange}) {
+  const [locations, setLocations] = React.useState([]);
+  const [locationId, setLocation] = React.useState(null);
+  React.useEffect(() => {
+    LocationService.listsLocationAccess(10)
+    .then(response => {
+      if (response.data) {
+        const locations = response.data.data;
+        const defaultLocation = locations.find(location => location.isDefault === 1);
+        setLocations(locations);
+
+        if (defaultLocation) {
+          setLocation(defaultLocation.id);
+        }
+      }
+    });
+  }, []);
+
+  return <Select
+    name="locationId"
+    label={label}
+    placeholder={placeholder}
+    defaultValue={formData.locationId ? formData.locationId : locationId}
+    dataSource={locations}
+    onChange={onChange}
+    valueKey="id"
+    required={true}
+    form={form} />;
+}
 
 export default class FormItem extends Modal {
   constructor(props){
     super(props);
     this.state = {
-      locations: [],
       locationId: "",
     };
     this.handleOnChangeLocation = this.handleOnChangeLocation.bind(this);
-  }
-
-  componentDidMount(){
-    this.props.dispatch(LocationAction.fetchLocationAccess(100));
-    this.setState({
-      locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION))
-    });
   }
 
   handleOnChangeLocation(value) {
@@ -36,55 +61,44 @@ export default class FormItem extends Modal {
       productSearch
     } = this.props;
 
-    let locationId = parseFloat(formData.locationId);
-    if (!locationId && Array.isArray(this.state.locations)) {
-      const defaultLocation = this.state.locations.find(location => location.isDefault === this.Enum.IS_DEFAULT);
-      if (defaultLocation) {
-        locationId = defaultLocation.id;
-      }
-    }
-    
     return (
       <this.Row id="purchase-order-form">
-        <this.Col md="12">
-          <this.Row className="ca-penel-v1 wrap-po-filter-create">
-            <this.Col md="4">
-              <this.InputText
-                name="title"
-                label={<this.Translate id="text_description" />}
-                data={formData.title}
-                placeholder={this.CATranslate("text_description", locale)}
-                errorRequired={<this.Translate id="error_require_name" />}
-                required={true}
-                isAutoFocus={true}
-                max={255}
-                form={form}/> 
-            </this.Col>
-            <this.Col md="4">
-              <this.InputText
-                name="reason"
-                label={<this.Translate id="text_reason" />}
-                data={formData.reason}
-                placeholder={this.CATranslate("text_reason",locale)}
-                required={true}
-                max={255}
-                form={form}/>
-            </this.Col>
-            <this.Col md="4">
-              <this.Select
-                name="locationId"
-                label={<this.Translate id="text_location" /> }
-                placeholder={this.CATranslate("text_location", locale)}
-                defaultValue={locationId}
-                dataSource={this.state.locations}
-                onChange={this.handleOnChangeLocation}
-                valueKey="id"
-                required={true}
-                form={form}/>
-            </this.Col>
-          </this.Row>
+        <this.Col md="4">
+          <this.InputText
+            name="title"
+            label={<this.Translate id="text_description" />}
+            data={formData.title}
+            placeholder={this.CATranslate("text_description", locale)}
+            errorRequired={<this.Translate id="error_require_description" />}
+            required={true}
+            isAutoFocus={true}
+            max={100}
+            form={form} />
+          <SelectLocation
+            form={form}
+            formData={formData}
+            label={<this.Translate id="text_location" />}
+            placeholder={this.CATranslate("text_location", locale)}
+            onChange={this.handleOnChangeLocation}
+            />
+          <this.Select
+            name="step"
+            label={<this.Translate id="text_adjustment_status" />}
+            placeholder={this.CATranslate("text_please_search", this.props.locale)}
+            dataSource={[{name: <this.Translate id="text_request" />, value: Enum.STOCK_ADJUST_STEP.REQUEST}, {name: <this.Translate id="text_mark_as_approved" />, value: Enum.STOCK_ADJUST_STEP.COMPLETE}]}
+            defaultValue={formData.id ? formData.step : Enum.STOCK_ADJUST_STEP.REQUEST}
+            required={true}
+            form={form} />
+          <this.InputTextArea
+            name="reason"
+            label={<this.Translate id="text_reason" />}
+            data={formData.reason}
+            placeholder={"សូមបញ្ជាក់មូលហេតុដែលអ្នកកែប្រែស្តុកទំនិញ"}
+            required={true}
+            max={1}
+            form={form}/>
         </this.Col>
-        <this.Col md="12" className="purchase-order-entry">
+        <this.Col md="8" className="purchase-order-entry" style={{marginTop: 30}}>
           <SearchAdjustment
             dataSource={productSearch}
             productVariant={this.props.productVariant}

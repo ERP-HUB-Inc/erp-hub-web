@@ -35,7 +35,7 @@ export default {
   ],
   
   "text_manage_product": [
-    "Manage Products",
+    "Manage Product",
     "គ្រប់គ្រងផលិតផល"
   ],
   
@@ -50,12 +50,12 @@ export default {
   ],
   
   "text_print_price_tags": [
-    "Print Price Tags",
+    "Print Price Tag",
     "បោះពុម្ភស្លាកតំលៃ"
   ],
   
   "text_manage_unit": [
-    "Manage Units",
+    "Manage Unit",
     "គ្រប់គ្រងឯកតា"
   ],
   
@@ -79,11 +79,6 @@ export default {
     "ទទួលទំនិញផ្ទេរ"
   ],
   
-  "text_adjustment_request": [
-    "Adjustment Request",
-    "សំណើកែតំរូវស្តុក"
-  ],
-  
   "text_adjustment_approve": [
     "Adjustment Approve",
     "យល់ព្រមការកែតំរូវស្តុក"
@@ -91,8 +86,7 @@ export default {
   
   "text_manage_customer": [
     "Manage Customer",
-    "គ្រប់គ្រងអតិថិជន",
-    "Manage Customer"
+    "គ្រប់គ្រងអតិថិជន"
   ],
   
   "text_manage_employee": [
@@ -102,8 +96,7 @@ export default {
   
   "text_sale_report": [
     "Sale Report",
-    "របាយការណ៍លក់",
-    "Sale Report"
+    "របាយការណ៍លក់"
   ],
   
   "text_purchase_report": [

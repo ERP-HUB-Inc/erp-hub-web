@@ -1,8 +1,8 @@
 import React from "react";
 import List from "../List";
 import Enum from "../../../enums";
+import history from "../../../../common/router/history";
 import FormCreate from "../../../containers/stock/StockAdjustmentRequest/FormCreate";
-import FormUpdate from "../../../containers/stock/StockAdjustmentRequest/FormUpdate";
 import Constant from "../../../constants/stock/stockAdjustmentRequest";
 import StockAdjustmentRequestAction from "../../../actions/stock/stockAdjustmentRequest";
 import StockAdjustmentRequestService from "../../../services/stock/StockAdjustmentRequestService";
@@ -16,27 +16,24 @@ export default class StockAdjustmentRequestLists extends List {
       {
         title: <this.Translate id="text_description" />,
         dataIndex: "title",
-        key: "title",
-        sorter: true
+        key: "title"
       },
       {
         title: <this.Translate id="text_who_request" />,
         dataIndex: "user",
         key: "user",
-        render: user => user ? user.fullName : this.emptyText
+        render: user => user ? <span style={{textTransform: "uppercase"}}>{user.fullName}</span> : this.emptyText
       },
       {
         title: <this.Translate id="text_reason" />,
         dataIndex: "reason",
-        key: "reason",
-        width: 300
+        key: "reason"
       },
       {
         title: <this.Translate id="text_step" />,
         dataIndex: "step",
         key: "step",
-        sorter: true,
-        width: 150,
+        width: 80,
         render: step => step in this.ADJUSTMENT_STEP ? <this.Tag color={this.ADJUSTMENT_STEP[step].color} className="text-uppercase text-center adjustment-step-tag">{this.ADJUSTMENT_STEP[step].name}</this.Tag> : ""
       }
     ];
@@ -45,8 +42,7 @@ export default class StockAdjustmentRequestLists extends List {
     this.fetchingProp = "stockAdjustmentRequest";
     this.service = StockAdjustmentRequestService;
     this.ADJUSTMENT_STEP = {
-
-      [Enum.STOCK_ADJUST_STEP.REQUEST]: {name: <this.Translate id="text_request" />, color:  this.Enum.STOCK_ADJUST_COLOR.REQUEST},
+      [Enum.STOCK_ADJUST_STEP.REQUEST]: {name: <this.Translate id="text_requested" />, color:  this.Enum.STOCK_ADJUST_COLOR.REQUEST},
       [Enum.STOCK_ADJUST_STEP.COMPLETE]: { name: <this.Translate id="text_completed" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
     };
     this.columnFilterWithKey = ["title","reason"];
@@ -94,15 +90,17 @@ export default class StockAdjustmentRequestLists extends List {
 
   }
 
+  renderButtonAddNew() {
+    return (
+      <this.Link to="/stocks/adjustment/create" className="ant-btn info" style={{marginRight: 15}}>
+        <span className="icon-add icon-padding-right"></span>
+        <this.Translate id="text_add_new" />
+      </this.Link>
+    );
+  }
+
   showFormEdit(rowData){
-    if(rowData.step === Enum.STOCK_ADJUST_STEP.REQUEST){
-      this.props.dispatch(StockAdjustmentRequestAction.detail(rowData));  
-      this.setState({
-        modalConten: <FormUpdate/>
-      });
-    }else{
-      this.Message.warning(this.CATranslate("error_warning_edit_adjustment", this.props.locale));
-    }
+    history.push(`/stocks/adjustment/update/${rowData.id}`);
   }
 
   handleDelete() {

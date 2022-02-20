@@ -130,7 +130,7 @@ export const modules = {
     parent: "Stock"
   },
   StockAdjustmentRequest: {
-    title: <Translate id="text_adjustment_request" />,
+    title: <Translate id="text_stock_adjustment" />,
     icon: "icon-stock-audit",
     route: "/stock/adjustment/request",
     component: loadComponet(import("../../../../inventory/containers/stock/StockAdjustmentRequest")),

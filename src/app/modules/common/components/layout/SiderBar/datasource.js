@@ -55,11 +55,6 @@ const Category = Loadable({
   loading: () => <StartUp />,
 });
 
-const ProductTag = Loadable({
-  loader: () => import("../../../../inventory/containers/products/ProductsTag"),
-  loading: () => <StartUp />,
-});
-
 const PrintPriceTag = Loadable({
   loader: () => import("../../../../inventory/containers/products/PrintPriceTag"),
   loading: () => <StartUp />,
@@ -121,10 +116,10 @@ const StockAdjustmentRequest = Loadable({
   loading: () => <StartUp />,
 });
 
-const StockAdjustmentApprove = Loadable({
-  loader: () => import("../../../../inventory/containers/stock/StockAdjustmentApprove"),
-  loading: () => <StartUp />,
-});
+// const StockAdjustmentApprove = Loadable({
+//   loader: () => import("../../../../inventory/containers/stock/StockAdjustmentApprove"),
+//   loading: () => <StartUp />,
+// });
 
 // REPORT
 const SaleReport = Loadable({
@@ -336,13 +331,6 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: <Translate id="text_product_tags" />,
-        icon: "icon-tags",
-        route: "/products/tags",
-        component: ProductTag,
-        isFashNav: true
-      },
-      {
         title: <Translate id="text_print_price_tags" />,
         icon: "icon-price-book",
         route: "/products/price-tags",
@@ -420,13 +408,6 @@ const dataSource = {
         isFashNav: false
       },
       {
-        //   title: "Re-Order Point",
-        //   icon: "icon-undo",
-        //   route: "/stock/re-order-point",
-        //   component: ReOrderPoint,
-        //   isFashNav: false
-        // },
-        // {
         title: <Translate id="text_stock_transfer" />,
         icon: "icon-stock-transfer",
         route: "/stock/transfer",
@@ -441,40 +422,18 @@ const dataSource = {
         isFashNav: false
       },
       {
-        title: <Translate id="text_adjustment_request" />,
+        title: <Translate id="text_stock_adjustment" />,
         icon: "icon-stock-audit",
         route: "/stock/adjustment/request",
         component: StockAdjustmentRequest,
         isFashNav: true
       },
-      {
-        title: <Translate id="text_adjustment_approve" />,
-        icon: "icon-import",
-        route: "/stock/adjustment/approve",
-        component: StockAdjustmentApprove,
-        isFashNav: true
-      },
-      
       // {
-      //   title: "Stock",
-      //   icon: "icon-stock",
-      //   route: "/stock",
-      //   component: Stock,
-      //   isFashNav: false
-      // },
-      // {
-      //   title: "Stock Control",
-      //   icon: "icon-barcode",
-      //   route: "/stock/control",
-      //   component: StockControl,
-      //   isFashNav: false
-      // },
-      // {
-      //   title: "Stock Audit",
-      //   icon: "icon-stock-audit",
-      //   route: "/stock/return",
-      //   component: StockAudit,
-      //   isFashNav: false
+      //   title: <Translate id="text_adjustment_approve" />,
+      //   icon: "icon-import",
+      //   route: "/stock/adjustment/approve",
+      //   component: StockAdjustmentApprove,
+      //   isFashNav: true
       // }
     ]
   },

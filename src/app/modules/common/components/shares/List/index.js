@@ -436,8 +436,7 @@ export default class List extends Component {
       dataIndex: "createdAt",
       key: "createdAt",
       width: this.Util.getCurrentLanguageCode() === "km" ? 220 : 180,
-      render: value => this.formatDate(value),
-      sorter: true
+      render: value => this.formatDate(value)
     };
     this.columnUpdatedAt = {
       title: <this.Translate id="text_updated_at" />,

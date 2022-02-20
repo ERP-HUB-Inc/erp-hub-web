@@ -10,6 +10,7 @@ export class InputTextArea extends Element {
         name={this.props.name}
         label={this.props.label}
         form={this.props.form}
+        required={this.props.required}
         placeholder={ this.props.placeholder }
         errorLenght={this.props.errorLenght}
         errorRequired={this.props.errorRequired}

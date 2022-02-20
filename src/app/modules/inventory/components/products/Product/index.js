@@ -3,7 +3,6 @@ import List from "../../List";
 import Util from "../../../utils";
 import Enum from "../../../enums";
 import history from "../../../../common/router/history";
-// import history from "../../../../common/router/history";
 import FormCreate from "../../../containers/products/Product/FormCreate";
 import FormUpdate from "../../../containers/products/Product/FormUpdate";
 import Constant from "../../../constants/products/product";

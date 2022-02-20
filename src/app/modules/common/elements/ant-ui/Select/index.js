@@ -41,7 +41,7 @@ export class Select extends Element {
       ]
     };
 
-    if (this.props.defaultValue) {
+    if (this.props.defaultValue !== null && this.props.defaultValue !== "") {
       options["initialValue"] = this.props.defaultValue;
     } else if (!this.props.placeholder) {
       options["initialValue"] = this.props.defaultValue;

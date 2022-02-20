@@ -67,7 +67,7 @@ export default class StockAdjustmentApprovetLists extends List {
     this.fetchingProp = "stockAdjustmentApprove";
     this.service = StockAdjustmentApproveService;
     this.ADJUSTMENT_STEP = {
-      [Enum.STOCK_ADJUST_STEP.REQUEST]: {name: <this.Translate id="text_request" />, color:  this.Enum.STOCK_ADJUST_COLOR.REQUEST},
+      [Enum.STOCK_ADJUST_STEP.REQUEST]: {name: <this.Translate id="text_requested" />, color:  this.Enum.STOCK_ADJUST_COLOR.REQUEST},
       [Enum.STOCK_ADJUST_STEP.COMPLETE]: {name: <this.Translate id="text_complete" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
     };
     this.columnFilterWithKey = ["title"];

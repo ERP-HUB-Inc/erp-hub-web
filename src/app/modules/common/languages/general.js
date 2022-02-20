@@ -467,6 +467,12 @@ export default {
     "សូមស្វែងរក",
     "Please search"
   ],
+
+  "text_please_select": [
+    "Please select",
+    "សូមជ្រើសរើស",
+    "Please select"
+  ],
   
   "text_payment_method": [
     "Payment Method",
@@ -484,6 +490,12 @@ export default {
     "Done",
     "បញ្ចប់",
     "Done"
+  ],
+
+  "text_mark_as_approved": [
+    "Mark as Approved",
+    "បានអនុម័ត",
+    "Mark as Approved"
   ],
   
   "text_give": [
@@ -650,7 +662,7 @@ export default {
   
   "text_description": [
     "Description",
-    "ពិពណ័នា",
+    "ការពិពណ៌នា",
     "Description"
   ],
   

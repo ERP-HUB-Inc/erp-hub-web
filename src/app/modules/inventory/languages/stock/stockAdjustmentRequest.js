@@ -1,14 +1,14 @@
 export default {
-  "text_stock_adjustment_request": [
-    "Adjustment Request",
-    "សំណើកែតម្រូវ",
-    "Adjustment Request"
+  "text_stock_adjustment": [
+    "Stock Adjustment",
+    "កែប្រែស្តុកទំនិញ",
+    "Stock Adjustment"
   ],
 
   "text_who_request": [
-    "Who Request",
-    "អ្នកណាស្នើសុំ",
-    "Who Request"
+    "Requested By",
+    "ស្នើសុំដោយ",
+    "Requested By"
   ],
 
   "text_reason": [
@@ -17,10 +17,34 @@ export default {
     "Reason"
   ],
 
+  "text_adjustment_type": [
+    "Adjustment Type",
+    "ប្រភេទកែតម្រូវ",
+    "Adjustment Type"
+  ],
+
+  "text_new_adjustment": [
+    "New Adjustment",
+    "បង្កើតការកែប្រែស្តុកថ្មី",
+    "New Adjustment"
+  ],
+
+  "text_edit_adjustment": [
+    "Edit Adjustment",
+    "កែតម្រូវការកែប្រែស្តុក",
+    "Edit Adjustment"
+  ],
+
   "text_adjust": [
     "Adjust",
-    "លៃតម្រូវ",
+    "កែតម្រូវ",
     "Adjust"
+  ],
+
+  "text_adjustment_status": [
+    "Adjustment Status",
+    "ស្ថានភាពកែប្រែស្តុក",
+    "Adjustment Status"
   ],
 
   "text_current_qty": [
@@ -29,10 +53,16 @@ export default {
     "Current Quantity"
   ],
 
-  "text_request": [
+  "text_requested": [
     "Requested",
     "បានស្នើ",
     "Requested"
+  ],
+
+  "text_request": [
+    "Request",
+    "ស្នើសុំ",
+    "Request"
   ],
 
   "text_location": [

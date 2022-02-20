@@ -22,10 +22,10 @@ export default class SearchAdjustmentRequest extends Modal {
     this.form = this.props.form;
     this.columns = [
       {
-        title: <this.Translate id="text_no" />,
+        title: "#",
         dataIndex: "id",
         key: "no",
-        width: 100,
+        width: 60,
         align: "center",
         render: (text, record, index) => {
           return (
@@ -50,6 +50,9 @@ export default class SearchAdjustmentRequest extends Modal {
             {
               record.variantName ? <div className="variant-name">{record.variantName}</div> : ""
             }
+            <div>
+              {record.barcode}
+            </div>
           </div>;
         }
       },
@@ -151,19 +154,24 @@ export default class SearchAdjustmentRequest extends Modal {
     if (stockAdjustmentRequest.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
       const existingProductList = this.state.productLists;
       stockAdjustmentRequest.forEach(stockAdjustmentRequest => {
-        let productName = "";
-        let variantName = "";
-        let currentQty = 0;
+        let productName = "",
+          variantName = "",
+          barcode = "",
+          currentQty = 0,
+          productVariant = stockAdjustmentRequest.productVariant;
         
-        if (stockAdjustmentRequest.productVariant) {
-          productName = Util.getProductNameV2(stockAdjustmentRequest.productVariant.product);
-          variantName = stockAdjustmentRequest.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? stockAdjustmentRequest.productVariant.name : "";
+        if (productVariant) {
+          productName = Util.getProductNameV2(productVariant.product);
+          barcode = productVariant.barcode;
+          variantName = productVariant.product.productOption === Enum.PRODUCT_VARIANT ? productVariant.name : "";
           currentQty = stockAdjustmentRequest.currentQuantity;
         }
+
         if(stockAdjustmentRequest.status !== this.Enum.ARCHIVE){
           existingProductList.push({
             stockAdjustmentRequestId: stockAdjustmentRequest.id,
             productName,
+            barcode,
             variantName,
             unitId: stockAdjustmentRequest.unitId,
             productVariantId: stockAdjustmentRequest.productVariantId,
@@ -277,6 +285,7 @@ export default class SearchAdjustmentRequest extends Modal {
       existingProductList.push({
         stockAdjustmentRequestId: "",
         productName,
+        barcode: productVariant.barcode,
         unitId: product.defaultUnitId,
         variantName: productVariant.name,
         currentQty: quantity,
@@ -300,6 +309,7 @@ export default class SearchAdjustmentRequest extends Modal {
           stockAdjustmentRequestId: "",
           productName,
           variantName: productVariant.name,
+          barcode: productVariant.barcode,
           currentQty: quantity,
           unitId: product.defaultUnitId,
           productVariants: productVariantForCalculateQTY,
