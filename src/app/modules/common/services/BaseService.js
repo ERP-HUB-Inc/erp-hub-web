@@ -23,6 +23,20 @@ export default class BaseService {
     this.archiveRoute = `${this.module}/archive`;
   }
 
+  bindQueryParam(option) {
+    let queryParam = "";
+    if (option) {
+      Object.keys(option).forEach((key, index) => {
+        if (index === 0) {
+          queryParam += `${key}=${option[key]}`;
+        } else {
+          queryParam += `&${key}=${option[key]}`;
+        }
+      });
+    }
+    return queryParam;
+  }
+
   getLanguageId() {
     let languageId = "en";
     const currentSetting = this.Util.getSetting();

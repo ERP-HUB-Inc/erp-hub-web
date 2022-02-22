@@ -346,7 +346,6 @@ and (orientation: portrait) {
     flex-direction: row;
     justify-content: space-between
   }
-  
   .wrap-button-action .action-button-right .anticon {
     font-size: 20pt;
     box-shadow: 0 0px 0px 0 rgba(0,0,0,0.5)

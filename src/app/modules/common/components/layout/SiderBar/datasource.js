@@ -137,10 +137,10 @@ const ProductReport = Loadable({
   loading: () => <StartUp />,
 });
 
-// const InventoryReport = Loadable({
-//   loader: () => import("../../../../pos/containers/reports/Inventory"),
-//   loading: () => <StartUp />,
-// });
+const InventoryDashboard = Loadable({
+  loader: () => import("../../../../pos/containers/reports/Inventory/InventoryDashboard"),
+  loading: () => <StartUp />,
+});
 
 const RegisterReport = Loadable({
   loader: () => import("../../../../pos/components/reports/Register"),
@@ -317,13 +317,6 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title:  <Translate id="text_brand" />,
-        icon: "icon-brand",
-        route: "/products/brand",
-        component: Brand,
-        isFashNav: true
-      },
-      {
         title: <Translate id="text_product_type" />,
         icon: "icon-types",
         route: "/products/category",
@@ -331,11 +324,10 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: <Translate id="text_print_price_tags" />,
-        icon: "icon-price-book",
-        route: "/products/price-tags",
-        component: PrintPriceTag,
-        isFashNav: true
+        title:  <Translate id="text_brand" />,
+        icon: "icon-brand",
+        route: "/products/brand",
+        component: Brand
       },
       {
         title: <Translate id="text_manage_unit" />,
@@ -343,6 +335,12 @@ const dataSource = {
         route: "/products/units",
         component: ProductUnit,
         isFashNav: true
+      },
+      {
+        title: <Translate id="text_print_price_tags" />,
+        icon: "icon-price-book",
+        route: "/products/price-tags",
+        component: PrintPriceTag
       },
       // {
       //   title: "Import Product",
@@ -426,6 +424,7 @@ const dataSource = {
         icon: "icon-stock-audit",
         route: "/stock/adjustment/request",
         component: StockAdjustmentRequest,
+        new: "New",
         isFashNav: true
       },
       // {
@@ -503,7 +502,6 @@ const dataSource = {
         title: <Translate id="text_register_report" />,
         icon: "icon-currency",
         route: "/reports/register",
-        new: "New",
         isFashNav: true,
         component: RegisterReport
       },
@@ -521,18 +519,18 @@ const dataSource = {
         component: ProductReport,
         isFashNav: true
       },
-      // {
-      //   title: "Inventory Report",
-      //   icon: "icon-stock",
-      //   route: "/reports/inventory",
-      //   component: InventoryReport,
-      //   isFashNav: false
-      // },
+      {
+        title: "Inventory Dashboard",
+        icon: "icon-stock",
+        route: "/reports/inventory_dashboard",
+        new: "New",
+        component: InventoryDashboard,
+        isFashNav: true
+      },
       {
         title: <Translate id="text_profit_and_loss_report" />,
         icon: "icon-sale-return",
         route: "/reports/profit-lost",
-        new: "New",
         component: ProfitAndLostReport,
         isFashNav: true
       },

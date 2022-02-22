@@ -5,16 +5,28 @@ export default {
     "Stock Adjustment"
   ],
 
-  "text_who_request": [
+  "text_requested_by": [
     "Requested By",
     "ស្នើសុំដោយ",
     "Requested By"
+  ],
+
+  "text_approved_by": [
+    "Approved By",
+    "អនុម័តដោយ",
+    "Approved By"
   ],
 
   "text_reason": [
     "Reason",
     "មូលហេតុ",
     "Reason"
+  ],
+
+  "text_reason_help": [
+    "Please tell why you modified the inventory",
+    "សូមបញ្ជាក់មូលហេតុដែលអ្នកកែប្រែស្តុកទំនិញ",
+    "Please tell why you modified the inventory"
   ],
 
   "text_adjustment_type": [
@@ -75,6 +87,12 @@ export default {
     "Approve",
     "យល់ព្រម",
     "Approve"
+  ],
+
+  "text_approved": [
+    "Approved",
+    "បានយល់ព្រម",
+    "Approved"
   ],
 
   "text_reject": [

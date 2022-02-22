@@ -93,7 +93,7 @@ export default class FormItem extends Modal {
             name="reason"
             label={<this.Translate id="text_reason" />}
             data={formData.reason}
-            placeholder={"សូមបញ្ជាក់មូលហេតុដែលអ្នកកែប្រែស្តុកទំនិញ"}
+            placeholder={this.CATranslate("text_reason_help", this.props.locale)}
             required={true}
             max={1}
             form={form}/>

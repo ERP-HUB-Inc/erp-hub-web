@@ -2,20 +2,17 @@ import React from "react";
 import {
     Drawer,
     Result,
-    Button as AntButton
-} from "antd";
-import {
     Button
-} from "../../../../common/elements/ant-ui";
-import ProductService from "../../../services/report/ProductService";
+} from "antd";
+import InventoryService from "../../../services/report/InventoryService";
 
-function ExportFormLoader({viewStock}) {
+function ExportFormLoader({limit, popularBy, locationId}) {
     const [loading, setLoading] = React.useState(false);
     const [result, setResult] = React.useState(null);
     React.useEffect(() => {
         try {
             setLoading(true);
-            ProductService.exportProducts({viewStock})
+            InventoryService.exportPopularProduct(limit, popularBy, locationId)
             .then(response => {
                 if (response.data) {
                     setResult(response.data);
@@ -31,7 +28,7 @@ function ExportFormLoader({viewStock}) {
 
     return <Result
         status="success"
-        title="Successfully Exported Product Report"
+        title="Successfully Exported"
         subTitle={loading ? "Please wait..." : ""}
         extra={[
             <a href={result ? result.link : "#"}>
@@ -74,7 +71,7 @@ export default class ExportForm extends React.PureComponent {
     render() {
         return (
         <div>
-            <Button type="info" onClick={this.showDrawer}>
+            <Button icon="file-markdown" onClick={this.showDrawer}>
                 Export
             </Button>
             <Drawer
@@ -85,7 +82,7 @@ export default class ExportForm extends React.PureComponent {
             visible={this.state.visible}
             >
                 {
-                    this.state.visible && <ExportFormLoader viewStock={this.props.viewStock} />
+                    this.state.visible && <ExportFormLoader {...this.props} />
                 }
                 <div
                     style={{
@@ -100,14 +97,14 @@ export default class ExportForm extends React.PureComponent {
                     borderRadius: "0 0 4px 4px",
                     }}
                 >
-                    <AntButton
+                    <Button
                     style={{
                         marginRight: 8,
                     }}
                     onClick={this.onClose}
                     >
                     Close
-                    </AntButton>
+                    </Button>
                 </div>
             </Drawer>
         </div>

@@ -19,7 +19,7 @@ export default class StockAdjustmentApprovetLists extends List {
         sorter: true
       },
       {
-        title: <this.Translate id="text_who_request" />,
+        title: <this.Translate id="text_requested_by" />,
         dataIndex: "user",
         key: "user",
         render: user => user ? user.fullName : this.emptyText

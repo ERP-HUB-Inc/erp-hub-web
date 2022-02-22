@@ -6,8 +6,6 @@ import History from "../../../../common/router/history";
 import FormCreate from "../../../../inventory/containers/stock/PurchaseOrder/FormCreate";
 import ProductReportAction from "../../../action/report/product";
 import ProductReportService from "../../../services/report/ProductService";
-import ProductTypeAction from "../../../../inventory/actions/products/productsType";
-import BrandAction from "../../../../inventory/actions/products/brand";
 import LocationAction from "../../../../pos/action/settings/location";
 import PurchaseAction from "../../../../inventory/actions/stock/purchaseOrder";
 import InventoryUtil from "../../../../inventory/utils"; 
@@ -28,27 +26,13 @@ export default class ProductList extends List {
     this.service = ProductReportService;
     this.action = ProductReportAction;
     this.RESET_CONSTANT = Constant.RESET_PURCHASE_REPORT;
-
-    this.ExportheadersCsv = [
-      {label: this.CATranslate("text_product_name", this.props.locale) , key: "productDescriptions"},
-      {label: this.CATranslate("text_product_code", this.props.locale), key: "barcode"},
-      {label: this.CATranslate("text_type", this.props.locale), key: "type"},
-      {label: this.CATranslate("text_quantity", this.props.locale), key: "quantity"},
-      {label: this.CATranslate("text_cost", this.props.locale), key: "cost"},
-      {label: this.CATranslate("text_product_total_cost", this.props.locale), key: "totalCost"},
-      {label: this.CATranslate("text_price", this.props.locale), key: "price"},
-      {label: this.CATranslate("text_total_price", this.props.locale), key: "totalPrice"}
-    ];
-    this.exportCsvFileName = "product_report.csv"; 
     this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
-    this.getProduct = this.getProduct.bind(this);
     this.handlePurchaseOrderForm = this.handlePurchaseOrderForm.bind(this);
   }
 
   componentDidMount() {
-    super.componentDidMount();
-    this.props.dispatch(ProductTypeAction.fetch(100));
-    this.props.dispatch(BrandAction.fetch(100));
+    const viewStock = this.Util.getQueryParam(this.props.location, "viewStock");
+    this.props.dispatch(ProductReportAction.getProductReport({limit: this.pageSize, offset: (this.state.current - 1) * this.pageSize, viewStock}));
     this.props.dispatch(LocationAction.fetch(100));
   }
   
@@ -59,53 +43,19 @@ export default class ProductList extends List {
     }
   }
 
-  getProduct(){
-    const getAllProductReport = [];
-    if (Array.isArray(this.props.list.list)) {
-      this.props.list.list.forEach(productReport => {
-        let variantName = "";
-        if (productReport.product && productReport.product.productOption === Enum.PRODUCT_VARIANT) {
-          variantName = `(${productReport.name})`;
-        }
-
-        getAllProductReport.push({
-          productDescriptions: `${InventoryUtil.getProductNameV2(productReport.product)} ${variantName}`,
-          barcode: productReport.barcode ? productReport.barcode : this.emptyCell,
-          type: productReport.type === Enum.TYPE_OF_PRODUCT.GOOD ? this.CATranslate("input_product_good", this.props.locale) : this.CATranslate("input_product_raw_material", this.props.locale) ,
-          quantity: productReport.quantity,
-          cost: this.formatCurrency(productReport.cost),
-          totalPrice: this.formatCurrency(productReport.quantity * productReport.price),
-          totalCost: this.formatCurrency(productReport.cost * productReport.quantity),
-          price: this.formatCurrency(productReport.price)
-        });
-      });
-      return getAllProductReport;
-    }
-  }
-
   handleSubmitFilter(e){
     if (this.action != null) {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
-          let filter = {};
-          
-          let locationId = "";
-
+          let locationId = 0;
           if (values.locationId !== 0) {
             locationId = values.locationId;
           }
 
-          filter["status"] =  [this.Enum.ACTIVE, this.Enum.DEACTIVE];
-    
-          filter = JSON.stringify(filter);
-
-          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
-
-          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, locationId));
+          this.props.dispatch(ProductReportAction.getProductReport(this.pageSize, (this.state.current - 1) * this.pageSize, values.key ? values.key : "", locationId));
           
           this.setState({isClickFilter: true});
-
         }
       }); 
     } 
@@ -126,29 +76,14 @@ export default class ProductList extends List {
     }
   }
 
-  exportCsv(){
-    return this.getProduct();
-  }
-
-  renderButtonAddNew(){
-    // return(
-    //   <div style={{ float: "left", marginRight: "11px" }}>
-    //     <this.CSVLink
-    //       filename={this.exportCsvFileName}
-    //       data={this.exportCsv()}
-    //       headers={this.ExportheadersCsv}>
-    //       <this.Button type="info" disabled={this.props.list.list.length > 0 ? false : true }>
-    //         <span className="icon-export icon-padding-right"></span>{<this.Translate id="text_export_csv" />}
-    //       </this.Button>
-    //     </this.CSVLink>
-    //   </div>
-    // );
+  renderButtonAddNew() {
+    const viewStock = this.Util.getQueryParam(this.props.location, "viewStock");
     return <div style={{ float: "left", marginRight: "11px" }}>
-      <ExportForm />
+      <ExportForm viewStock={viewStock} />
     </div>;
   }
 
-  renderButtonDelete(){
+  renderButtonDelete() {
     return(
       <this.Button
         type="info"
@@ -225,34 +160,19 @@ class Column extends List {
         key: "barcode"
       },
       {
-        title: <this.Translate id="text_type" />,
-        dataIndex: "product",
-        align: "center",
-        key: "product",
-        render: product => product && product.type === Enum.TYPE_OF_PRODUCT.GOOD ? <this.Translate id="input_product_good"/> : <this.Translate id="input_product_raw_material"/>
-      },
-      {
         title: <this.Translate id="text_quantity" />,
         dataIndex: "quantity",
         width: 150,
-        align: "center",
         key: "quantity",
-        render: (text, record) => {
-          let quantity = record.quantity;
-          let colorIndex = 0;
+        render: (quantity, record) => {
+          quantity = record.quantity;
           if ("productLocations" in record) {
             quantity = InventoryUtil.getProductQTYLocation(record["productLocations"]);
           } else if ("productVariants" in record) {
             quantity = InventoryUtil.getProductQTYLocation(record["productVariants"]);
           }
           
-          if (quantity === 0) {
-            colorIndex = 1;
-          } else if (quantity < 0) {
-            colorIndex = 2;
-          }
-
-          return <this.Tag color={this.colorStockStatus[colorIndex]} className="text-center label-stock-status">{quantity}</this.Tag>;
+          return `${quantity} ${record.product.unit.name}`;
         }
       },
       {

@@ -19,10 +19,16 @@ export default class StockAdjustmentRequestLists extends List {
         key: "title"
       },
       {
-        title: <this.Translate id="text_who_request" />,
+        title: <this.Translate id="text_requested_by" />,
         dataIndex: "user",
         key: "user",
         render: user => user ? <span style={{textTransform: "uppercase"}}>{user.fullName}</span> : this.emptyText
+      },
+      {
+        title: <this.Translate id="text_approved_by" />,
+        dataIndex: "approver",
+        key: "approver",
+        render: approver => approver ? <span style={{textTransform: "uppercase"}}>{approver.fullName}</span> : this.emptyText
       },
       {
         title: <this.Translate id="text_reason" />,
@@ -30,7 +36,7 @@ export default class StockAdjustmentRequestLists extends List {
         key: "reason"
       },
       {
-        title: <this.Translate id="text_step" />,
+        title: <this.Translate id="text_status" />,
         dataIndex: "step",
         key: "step",
         width: 80,
@@ -43,9 +49,8 @@ export default class StockAdjustmentRequestLists extends List {
     this.service = StockAdjustmentRequestService;
     this.ADJUSTMENT_STEP = {
       [Enum.STOCK_ADJUST_STEP.REQUEST]: {name: <this.Translate id="text_requested" />, color:  this.Enum.STOCK_ADJUST_COLOR.REQUEST},
-      [Enum.STOCK_ADJUST_STEP.COMPLETE]: { name: <this.Translate id="text_completed" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
+      [Enum.STOCK_ADJUST_STEP.COMPLETE]: { name: <this.Translate id="text_approved" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
     };
-    this.columnFilterWithKey = ["title","reason"];
     this.action = StockAdjustmentRequestAction;
     this.RESET_CONSTANT = Constant.RESET_STOCK_ADJUSTMENT_REQUEST;
   }

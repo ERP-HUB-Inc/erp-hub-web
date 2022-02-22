@@ -405,8 +405,7 @@ class Column extends List {
         dataIndex: "price",
         width: 150,
         align: "center",
-        render: (text, record) => this.formatCurrency(Util.getProductPrice(record)),
-        sorter: true
+        render: (text, record) => this.formatCurrency(Util.getProductPrice(record))
       },
       {
         title: <this.Translate id="text_whole_price" />,
@@ -414,8 +413,7 @@ class Column extends List {
         dataIndex: "wholePrice",
         width: 150,
         align: "center",
-        render: (text, record) => this.formatCurrency(Util.getProductWholeSalePrice(record)),
-        sorter: true
+        render: (text, record) => this.formatCurrency(Util.getProductWholeSalePrice(record))
       },
       {
         title: <this.Translate id="text_distribute_price" />,
@@ -423,8 +421,7 @@ class Column extends List {
         dataIndex: "distributePrice",
         width: 170,
         align: "center",
-        render: (text, record) => this.formatCurrency(Util.getProductDistributePrice(record)),
-        sorter: true
+        render: (text, record) => this.formatCurrency(Util.getProductDistributePrice(record))
       },
       {
         title: <this.Translate id="text_quantity" />,

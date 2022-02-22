@@ -3,11 +3,11 @@ import Constant from "../../constants/report/product";
 import ProductService from "../../services/report/ProductService";
 
 export default{
-  fetch:(limit, offset, sortField, sortOrder, filter, searchKey, locationId) => {
+  getProductReport:(option) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_PRODUCT_REPORT,
-        payload: ProductService.lists(limit, offset, sortField, sortOrder, filter, searchKey, locationId)
+        payload: ProductService.getProductReport(option)
       });
     };
   },

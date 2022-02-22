@@ -941,3 +941,7 @@ color: #4D4F5C;
     margin: 6px 0;
     margin-right: 16px;
 }
+
+.anticon {
+    vertical-align: 0 !important
+}
