@@ -360,9 +360,9 @@ export default class FormItem extends Modal {
                   <this.Col md="6">
                     <this.InputText
                       name="barcode"
-                      label={<this.Translate id="text_product_code" />}
+                      label={<this.Translate id="text_barcode" />}
                       data={Util.getProductBarcode(formData)}
-                      placeholder={this.CATranslate("text_product_code", locale)}
+                      placeholder={this.CATranslate("text_barcode", locale)}
                       errorRequired={<this.Translate id="error_require_sku" />}
                       max={20}
                       form={form}

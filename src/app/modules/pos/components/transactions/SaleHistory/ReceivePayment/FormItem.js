@@ -30,7 +30,7 @@ export default class FormItem extends Modal {
         }
       },
       {
-        title: <this.Translate id="text_product_code" />,
+        title: <this.Translate id="text_barcode" />,
         dataIndex: "productVariant",
         key: "barcode",
         width: 100,

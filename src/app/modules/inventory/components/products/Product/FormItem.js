@@ -414,9 +414,9 @@ export default class FormItem extends Modal {
                     <this.Col md="6">
                       <this.InputText
                         name="barcode"
-                        label={<this.Translate id="text_product_code" />}
+                        label={<this.Translate id="text_barcode" />}
                         data={Util.getProductBarcode(formData)}
-                        placeholder={this.CATranslate("text_product_code", locale)}
+                        placeholder={this.CATranslate("text_barcode", locale)}
                         required={this.state.isRequireInputBarcode}
                         errorRequired={<this.Translate id="error_require_sku" />}
                         max={20}
@@ -431,7 +431,7 @@ export default class FormItem extends Modal {
             
             <this.Col md="4">
               <div class="ant-col ant-form-item-label">
-                  <label for="unitName" class="ant-form-item-required"><this.Translate id="text_product_code" /></label>
+                  <label for="unitName" class="ant-form-item-required"><this.Translate id="text_barcode" /></label>
                 </div>
               <div id="wrap-input-barcode" style={{display: "flex", alignItems: "center"}}>
                 <SelectSearch
@@ -453,7 +453,7 @@ export default class FormItem extends Modal {
                 <this.InputText
                   name="barcode"
                   data={Util.getProductBarcode(formData)}
-                  placeholder={this.CATranslate("text_product_code", locale)}
+                  placeholder={this.CATranslate("text_barcode", locale)}
                   required={this.state.isRequireInputBarcode}
                   errorRequired={<this.Translate id="error_require_sku" />}
                   max={20}

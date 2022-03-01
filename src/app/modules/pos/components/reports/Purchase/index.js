@@ -89,7 +89,7 @@ export default class PurchaseList extends List {
         }
       },
       {
-        title: <this.Translate id="text_product_code" />,
+        title: <this.Translate id="text_barcode" />,
         dataIndex: "barcode",
         key: "barcode"
       },

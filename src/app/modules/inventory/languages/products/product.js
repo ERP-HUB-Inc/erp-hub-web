@@ -71,7 +71,7 @@ export default {
     "Unit"
   ],
 
-  "text_product_code": [
+  "text_barcode": [
     "Barcode",
     "លេខកូដ",
     "Barcode"

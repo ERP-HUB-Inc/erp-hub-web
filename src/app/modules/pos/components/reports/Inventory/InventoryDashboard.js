@@ -13,7 +13,7 @@ import {
 import ExportForm from "./ExportForm";
 import history from "../../../../common/router/history";
 import InventoryService from "../../../services/report/InventoryService";
-import {Util} from "../../../../common/util";
+import Util from "../../../../common/util";
 import "./index.css";
 
 const { TabPane } = Tabs;

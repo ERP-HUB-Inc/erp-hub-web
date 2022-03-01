@@ -16,7 +16,7 @@ import {
 import SaleService from "../../../services/report/SaleService";
 import Enum from "../../../enums";
 import history from "../../../../common/router/history";
-import {Util} from "../../../../common/util";
+import Util from "../../../../common/util";
 
 export default function RegiserReport() {
     const [records, setRecords] = React.useState([]),

@@ -4,7 +4,7 @@ import RoleAction from "../../../../pos/action/settings/roleAccess";
 import LocationAction from "../../../../pos/action/settings/location";
 import Modal from "../../../../common/components/shares/Modal";
 import UserService from "../../../../common/services/UserService";
-import {Util} from "../../../../common/util";
+import Util from "../../../../common/util";
 
 export default class FormItem extends Modal {
   constructor(props) {

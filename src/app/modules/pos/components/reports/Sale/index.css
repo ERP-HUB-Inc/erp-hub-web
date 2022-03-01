@@ -37,3 +37,16 @@
     background-color: #EAEAEA;
 }
 
+#sale-report-dashboard .ant-card-head-title {
+    font-weight: bold;
+}
+
+#sale-report-dashboard .footer {
+    display: flex;
+    justify-content: flex-end
+}
+
+#sale-report-dashboard .footer .ant-btn {
+    min-width: 100px
+}
+

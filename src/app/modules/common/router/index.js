@@ -16,7 +16,9 @@ import ProductCreate from "../../inventory/containers/products/Product/FormCreat
 import ProductUpdate from "../../inventory/containers/products/Product/FormUpdate";
 import AdjustmentCreate from "../../inventory/containers/stock/StockAdjustmentRequest/FormCreate";
 import AdjustmentUpdate from "../../inventory/containers/stock/StockAdjustmentRequest/FormUpdate";
-import {Util} from "../util";
+import ReportSaleSummary from "../../pos/containers/reports/Sale/ReportSaleSummary";
+import ReportSaleByProduct from "../../pos/containers/reports/Sale/ReportSaleByProduct";
+import Util from "../util";
 const {Content} = Layout;
 
 class Router extends Component {
@@ -62,6 +64,8 @@ class Router extends Component {
             <Route path="/products/update/:id" component={ProductUpdate}></Route>
             <Route path="/stocks/adjustment/create" component={AdjustmentCreate}></Route>
             <Route path="/stocks/adjustment/update/:id" component={AdjustmentUpdate}></Route>
+            <Route path="/reports/sale_summaries" component={ReportSaleSummary} />
+            <Route path="/reports/sold_products" component={ReportSaleByProduct} />
             <Route path="/" component={Home}></Route>
             <Route path="/profile" component={Profile}></Route>
           </Switch>

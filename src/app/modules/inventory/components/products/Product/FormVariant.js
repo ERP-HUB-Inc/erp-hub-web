@@ -53,14 +53,14 @@ export default class FormVariant extends Modal {
         }
       },
       {
-        title: <this.Translate id="text_product_code" />,
+        title: <this.Translate id="text_barcode" />,
         dataIndex: "barcode",
         key: "barcode",
         width: 120,
         render: (barcode, record, index) => {
           return <this.InputText
             name={`variantProductCode[${index}]`}
-            placeholder={this.CATranslate("text_product_code", this.props.locale)}
+            placeholder={this.CATranslate("text_barcode", this.props.locale)}
             data={barcode}
             disabled={record.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO}
             handleKeyUp={(e) => this.handleOnChangeBarcode(e, index)}

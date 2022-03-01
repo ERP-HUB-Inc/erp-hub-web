@@ -1,6 +1,6 @@
 import axios from "axios";
 import ConstantAuth from "../constants/authentication";
-import {Util} from "../util";
+import Util from "../util";
 
 export default class BaseService {
 

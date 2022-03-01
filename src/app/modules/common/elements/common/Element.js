@@ -12,7 +12,7 @@ import {
   Tag
 } from "antd";
 import {Doughnut, Line} from "react-chartjs-2";
-import {Util} from "../../util";
+import Util from "../../util";
 import {FormGroup, Label} from "reactstrap";
 import {Translate} from "react-localize-redux";
 

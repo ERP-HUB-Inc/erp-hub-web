@@ -173,7 +173,7 @@ export default class DropDownSearch extends Modal {
             {
               barcode ?
                 <div className="wrap-description">
-                  <this.Translate id="text_product_code"/>: {barcode}
+                  <this.Translate id="text_barcode"/>: {barcode}
                 </div>
                 :
                 ""

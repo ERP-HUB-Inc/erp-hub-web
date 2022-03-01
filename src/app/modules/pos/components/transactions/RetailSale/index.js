@@ -12,7 +12,7 @@ import TaxSetting from "./TaxSetting";
 import Enum from "../../../enums";
 import InventoryEnum from "../../../../inventory/enums";
 import HREnum from "../../../../hr/enums";
-import {Util as CommonUtil} from "../../../../common/util";
+import CommonUtil from "../../../../common/util";
 import CRMUtil from "../../../../crm/util";
 import SettingEnum from "../../../../pos/enums";
 import TransactionAction from "../../../action/transaction/transaction";
@@ -470,7 +470,7 @@ export default class Retail extends Component {
             text: `
               ${this.CATranslate("text_name", this.props.locale)}: ${Util.getProductNameV2(product)}\n
               ${this.CATranslate("text_variant", this.props.locale)}: ${varinatName}\n
-              ${this.CATranslate("text_product_code", this.props.locale)}: ${Util.getProductBarcode(product)}\n
+              ${this.CATranslate("text_barcode", this.props.locale)}: ${Util.getProductBarcode(product)}\n
               ${this.CATranslate("text_product_in_stock", this.props.locale)}: ${Util.countProductQTYCurrentLocation(product, (new CommonUtil()).getLocationId())}`,
             buttons: [false, this.CATranslate("text_close", this.props.locale)],
             dangerMode: true

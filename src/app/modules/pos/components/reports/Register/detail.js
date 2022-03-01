@@ -13,7 +13,7 @@ import {
 } from "../../../../common/elements/ant-ui";
 import SaleService from "../../../services/report/SaleService";
 import Enum from "../../../enums";
-import {Util} from "../../../../common/util";
+import Util from "../../../../common/util";
 
 export default function Detail(props) {
     const [records, setRecords] = React.useState([]),

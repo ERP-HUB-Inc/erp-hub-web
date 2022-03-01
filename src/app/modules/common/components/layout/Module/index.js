@@ -154,7 +154,7 @@ export const modules = {
     title: <Translate id="text_sale_report" />,
     icon: "icon-sale-report",
     route: "/reports/sale",
-    component: loadComponet(import("../../../../pos/containers/reports/Sale")),
+    component: loadComponet(import("../../../../pos/containers/reports/Sale/ReportSaleSummary")),
     parent: "Report"
   },
   PurchaseReport: {

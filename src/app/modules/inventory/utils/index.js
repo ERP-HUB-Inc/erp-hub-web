@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Util as SettingUtil } from "../../common/util";
+import SettingUtil from "../../common/util";
 class Util {
   getProductName(product) {
     if (product === null)

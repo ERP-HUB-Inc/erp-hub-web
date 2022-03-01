@@ -71,7 +71,7 @@ import {
   BreadcrumbTitle,
   Cards
 } from "../elements/react-strap";
-import {Util} from "../util";
+import Util from "../util";
 import Enum from "../enums";
 import HttpCode from "../constants/error";
 import ConstantAuth from "../constants/authentication";

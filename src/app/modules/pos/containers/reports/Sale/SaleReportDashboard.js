@@ -1,14 +1,10 @@
 import React from "react";
 import { Form } from "antd";
 import { connect } from "react-redux";
-import List from "../../../components/reports/Sale";
+import SaleReportDashboard from "../../../components/reports/Sale/SaleReportDashboard";
 
-class Sale extends React.Component {
-  render() {
-    return (
-      <List {...this.props} />
-    );
-  }
+function  SaleReportDashboardContainer(props) {
+  return <SaleReportDashboard {...props} />;
 }
 
 function mapStateToProps(state) {
@@ -25,6 +21,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const storeAccount =  Form.create(mapPropsToFields)(Sale);
+const saleReportDashboardContainer =  Form.create(mapPropsToFields)(SaleReportDashboardContainer);
 
-export default connect(mapStateToProps)(storeAccount);
+export default connect(mapStateToProps)(saleReportDashboardContainer);

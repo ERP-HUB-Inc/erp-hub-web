@@ -50,7 +50,7 @@ export default class SaleList extends List {
           render: (variant, record) => variant
         },
         {
-          title: <this.Translate id="text_product_code" />,
+          title: <this.Translate id="text_barcode" />,
           dataIndex: "barcode",
           key: "barcode",
           className: "sale-report"

@@ -11,7 +11,7 @@ import ProfitAndLossContext from "./ProfitAndLossContext";
 import ExportForm from "./ExportForm";
 import history from "../../../../common/router/history";
 import ProfitAndLostService from "../../../services/report/ProfitAndLostService";
-import {Util} from "../../../../common/util";
+import Util from "../../../../common/util";
 
 export default function ProfitAndLossReport() {
     const [data, setData] = React.useState(null);

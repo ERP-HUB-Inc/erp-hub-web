@@ -1,7 +1,7 @@
 import React from "react";
 import {Route, Redirect} from "react-router-dom";
 import Constant from "../constants/authentication";
-import {Util} from "../util";
+import Util from "../util";
 const PrivateRoute = ({component: AdminComponent, ...rest }) => (
   <Route {...rest} render={props => (
     localStorage.getItem(Constant.ACCESS_TOKEN)
@@ -20,10 +20,6 @@ function renderPageAuth () {
       return <Redirect to="/register" />;
     }
   }
-
-  // if (!isAccessSecureSubDomain && !localStorage.getItem(Constant.ACCESS_DEVICE)) {
-  //   return <Redirect to="/device" />;
-  // }
 
   return isAccessSecureSubDomain
     ? <Redirect to="/store" /> : <Redirect to="/signin" />;

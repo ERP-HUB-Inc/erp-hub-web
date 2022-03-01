@@ -5,7 +5,7 @@ import _ from "lodash";
 import Enum from "../enums";
 import ConstantAuth from "../constants/authentication";
 
-export class Util {
+export default class Util {
   getAPIURL() {
     let host = process.env.REACT_APP_API_HOST;
     let port = process.env.REACT_APP_API_PROD_PORT;

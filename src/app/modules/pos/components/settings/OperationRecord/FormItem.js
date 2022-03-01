@@ -1,6 +1,6 @@
 import React from "react";
 import Modal from "../../../../common/components/shares/Modal";
-import {Util} from "../../../../common/util";
+import Util from "../../../../common/util";
 import Enum from "../../../../common/enums";
 
 export default class FormItem extends Modal {

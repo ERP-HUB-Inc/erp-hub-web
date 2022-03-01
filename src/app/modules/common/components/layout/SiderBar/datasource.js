@@ -122,8 +122,8 @@ const StockAdjustmentRequest = Loadable({
 // });
 
 // REPORT
-const SaleReport = Loadable({
-  loader: () => import("../../../../pos/containers/reports/Sale"),
+const SaleReportDashboard = Loadable({
+  loader: () => import("../../../../pos/containers/reports/Sale/SaleReportDashboard"),
   loading: () => <StartUp />,
 });
 
@@ -494,9 +494,9 @@ const dataSource = {
       {
         title: <Translate id="text_sale_report" />,
         icon: "icon-sale-report",
-        route: "/reports/sale",
-        component: SaleReport,
-        isFashNav: true
+        route: "/reports/sale_dashboard",
+        new: "New",
+        component: SaleReportDashboard
       },
       {
         title: <Translate id="text_register_report" />,
