@@ -157,13 +157,6 @@ export const modules = {
     component: loadComponet(import("../../../../pos/containers/reports/Sale/ReportSaleSummary")),
     parent: "Report"
   },
-  PurchaseReport: {
-    title: <Translate id="text_purchase_report" />,
-    icon: "icon-purchasing",
-    route: "/reports/purchase",
-    component: loadComponet(import("../../../../pos/containers/reports/Purchase")),
-    parent: "Report"
-  },
   ProductReport: {
     title: <Translate id="text_product_report" />,
     icon: "icon-items",

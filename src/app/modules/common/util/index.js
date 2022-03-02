@@ -218,7 +218,8 @@ export default class Util {
     return [
       {name: "MMM-Do-YYYY h:mm A", value: "MMM-Do-YYYY h:mm A"},
       {name: "MMM Do YY", value: "MMM Do YY"},
-      {name: "YYYY/MM/DD", value: "YYYY/MM/DD"}
+      {name: "YYYY/MM/DD", value: "YYYY/MM/DD"},
+      {name: "DD/MM/YYYY", value: "DD/MM/YYYY"}
     ];
   }
 

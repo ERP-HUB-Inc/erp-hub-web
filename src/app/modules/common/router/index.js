@@ -18,6 +18,9 @@ import AdjustmentCreate from "../../inventory/containers/stock/StockAdjustmentRe
 import AdjustmentUpdate from "../../inventory/containers/stock/StockAdjustmentRequest/FormUpdate";
 import ReportSaleSummary from "../../pos/containers/reports/Sale/ReportSaleSummary";
 import ReportSaleByProduct from "../../pos/containers/reports/Sale/ReportSaleByProduct";
+import ReportPurchaseSummary from "../../pos/components/reports/Purchase/ReportPurchaseSummary";
+import ReportPurchaseByProduct from "../../pos/components/reports/Purchase/ReportPurchaseByProduct";
+import ReportPurchaseBySupplier from "../../pos/components/reports/Purchase/ReportPurchaseBySupplier";
 import Util from "../util";
 const {Content} = Layout;
 
@@ -66,6 +69,9 @@ class Router extends Component {
             <Route path="/stocks/adjustment/update/:id" component={AdjustmentUpdate}></Route>
             <Route path="/reports/sale_summaries" component={ReportSaleSummary} />
             <Route path="/reports/sold_products" component={ReportSaleByProduct} />
+            <Route path="/reports/purchase_summaries" component={ReportPurchaseSummary} />
+            <Route path="/reports/purchased_products" component={ReportPurchaseByProduct} />
+            <Route path="/reports/purchased_suppliers" component={ReportPurchaseBySupplier} />
             <Route path="/" component={Home}></Route>
             <Route path="/profile" component={Profile}></Route>
           </Switch>

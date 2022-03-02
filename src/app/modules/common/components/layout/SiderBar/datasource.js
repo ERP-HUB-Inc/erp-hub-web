@@ -127,8 +127,8 @@ const SaleReportDashboard = Loadable({
   loading: () => <StartUp />,
 });
 
-const PurchaseReport = Loadable({
-  loader: () => import("../../../../pos/containers/reports/Purchase"),
+const PurchaseReportDashboard = Loadable({
+  loader: () => import("../../../../pos/components/reports/Purchase/PurchaseReportDashboard"),
   loading: () => <StartUp />,
 });
 
@@ -508,16 +508,15 @@ const dataSource = {
       {
         title: <Translate id="text_purchase_report" />,
         icon: "icon-purchasing",
-        route: "/reports/purchase",
-        component: PurchaseReport,
-        isFashNav: true
+        route: "/reports/purchase_dashboard",
+        new: "New",
+        component: PurchaseReportDashboard
       },
       {
         title: <Translate id="text_product_report" />,
         icon: "icon-items",
         route: "/reports/product",
         component: ProductReport,
-        isFashNav: true
       },
       {
         title: "Inventory Dashboard",

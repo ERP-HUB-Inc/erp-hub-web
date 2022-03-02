@@ -1,9 +1,4 @@
-.main-purchase .totals {
-    margin-right: 258px;
-    font-size: 10pt;
-    float: left;
-}
-
-.main-purchase .ant-table-footer {
-    border-top: none;
+#purchase-report-dashboard .footer {
+    display: flex;
+    justify-content: flex-end
 }
