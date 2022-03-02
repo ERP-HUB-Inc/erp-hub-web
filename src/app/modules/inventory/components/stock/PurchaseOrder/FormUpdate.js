@@ -160,6 +160,7 @@ export default class Form extends Modal {
       form, 
       locale, 
       supplier,
+      unit,
       storeLocation,
       productSearch,
       requestOrderNumber,
@@ -176,6 +177,7 @@ export default class Form extends Modal {
           form={form} 
           formData={purchaseOrderDetail.data} 
           supplier={supplier}
+          unit={unit}
           productVariant={this.props.productVariant}
           storeLocation={storeLocation} 
           productSearch={productSearch}

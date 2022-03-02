@@ -17,6 +17,7 @@ function mapStateToProps(state) {
     purchaseOrderDetail: state.reducer.purchaseOrder.detail, 
     pushToSupplier: state.reducer.purchaseOrder.pushToSupplier,
     supplier: state.reducer.supplier.request,
+    unit: state.reducer.productsUnit.request,
     productVariant: state.reducer.productVariant.request,
     productSearch: state.reducer.product.search,
     storeLocation: state.reducer.location.request,

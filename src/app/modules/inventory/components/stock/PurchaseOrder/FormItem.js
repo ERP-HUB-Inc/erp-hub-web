@@ -3,6 +3,7 @@ import SearchPO from "./SearchPO";
 import Enum from "../../../enums";
 import Constant from "../../../constants/stock/purchaseOrder";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
+import UnitAction from "../../../actions/products/productsUnit";
 import Modal from "../../../../common/components/shares/Modal";
 
 export default class FormItem extends Modal {
@@ -20,7 +21,7 @@ export default class FormItem extends Modal {
     this.handleOnChangeIsAutoReceive = this.handleOnChangeIsAutoReceive.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const isAutoReceive = parseInt(localStorage.getItem(Constant.IS_AUTO_RECEIVE_STOCK_KEY), 10) === Enum.IS_AUTO_RECEIVE_STOCK;
     this.setState({
       locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION)),
@@ -31,6 +32,8 @@ export default class FormItem extends Modal {
     if (isAutoReceive) {
       document.getElementById("btnModalSave").innerHTML = this.CATranslate("text_save_and_auto_send_receive", this.props.locale);
     }
+    
+    this.props.dispatch(UnitAction.fetch(100,0));
   }
 
   handleCheckPONumber(event){
@@ -183,6 +186,7 @@ export default class FormItem extends Modal {
             locale={locale}
             productReOrderPointList={this.props.productReOrderPointList}
             product={this.props.product}
+            unit={this.props.unit}
             dispatch={dispatch}
             form={form} />
         </this.Col>

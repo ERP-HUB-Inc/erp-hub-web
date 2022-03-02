@@ -66,6 +66,8 @@ export default class FormCreate extends Modal {
             purchaseEntries.push({
               id: values.purchaseEntryId[index],
               productVariantId,
+              productName: values.productName[index],
+              variantName: values.variantName[index],
               unitId: values.unitId[index],
               requestQuantity: parseInt(values.purchaseQty[index], 10),
               price: parseFloat(values.purchasePrice[index]),
@@ -73,7 +75,6 @@ export default class FormCreate extends Modal {
             });
           });
         } else {
-          // HAVE NO PURCHASE ENTRY INCLUDE
           this.Message.warning(this.CATranslate("error_purchase_order_no_entry", this.props.locale), 3);
           return;
         }
@@ -128,6 +129,7 @@ export default class FormCreate extends Modal {
       productSearch, 
       requestOrderNumber,
       product,
+      unit,
       dispatch
     } = this.props;
     
@@ -143,6 +145,7 @@ export default class FormCreate extends Modal {
           productVariant={this.props.productVariant}
           requestOrderNumber={requestOrderNumber}
           product={product}
+          unit={unit}
           productReOrderPointList={this.props.productReOrderPointList}
           dispatch={dispatch} 
           locale={locale} />;

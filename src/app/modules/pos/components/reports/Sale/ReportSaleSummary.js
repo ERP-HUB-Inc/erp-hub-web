@@ -34,7 +34,7 @@ export default function ReportSaleSummary(props) {
 
   const fetchReport = (from, to) => {
     setLoading(true);
-    ReportSaleService.getReportSummary(from, to)
+    ReportSaleService.getReportSummary(from.format("YYYY-MM-DD"), to.format("YYYY-MM-DD"))
     .then(response => {
       if (response.data) {
         setData(response.data);
@@ -46,7 +46,7 @@ export default function ReportSaleSummary(props) {
   };
 
   React.useEffect(() => {
-    fetchReport(fromValue.format("YYYY-MM-DD"), toValue.format("YYYY-MM-DD"));
+    fetchReport(fromValue, toValue);
     //eslint-disable-next-line
   }, []);
 
@@ -110,7 +110,7 @@ export default function ReportSaleSummary(props) {
           <Card>
             <Statistic
               title="Margin"
-              value={data ? data.margin : 0}
+              value={data && data.margin ? data.margin : 0}
               precision={2}
               suffix="%"
             />

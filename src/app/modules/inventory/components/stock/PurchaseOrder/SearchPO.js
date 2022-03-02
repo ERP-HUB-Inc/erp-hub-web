@@ -15,7 +15,6 @@ export default class SearchPo extends Modal {
     super(props);
     this.state = {
       selectedProduct: null,
-      units: [],
       productLists: [],
       modalVariant: null,
       isNotYetLoadComponentDidUpdated: true,
@@ -71,7 +70,7 @@ export default class SearchPo extends Modal {
           return <this.Select
             name={`unitId[${index}]`}
             valueKey="id"
-            dataSource={this.state.units}
+            dataSource={this.props.unit.list}
             defaultValue={record.unitId}
             form={this.form} />;
         }
@@ -161,7 +160,6 @@ export default class SearchPo extends Modal {
   }
 
   componentDidMount() {
-    this.setState({units: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT))});
     if (this.props.productReOrderPointList && this.props.productReOrderPointList.length > 0) {
       this.getReOrderPointProductList();
     }
