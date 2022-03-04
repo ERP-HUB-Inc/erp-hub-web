@@ -1,7 +1,10 @@
 import React from "react";
 import {Offline} from "react-detect-offline";
 import {Layout} from "antd";
-import {Route, Switch} from "react-router-dom";
+import {
+  Route,
+  Switch
+} from "react-router-dom";
 import {connect} from "react-redux";
 import history from "./history";
 import Profile from "../containers/user/Profile";
@@ -18,6 +21,10 @@ import AdjustmentCreate from "../../inventory/containers/stock/StockAdjustmentRe
 import AdjustmentUpdate from "../../inventory/containers/stock/StockAdjustmentRequest/FormUpdate";
 import ReportSaleSummary from "../../pos/containers/reports/Sale/ReportSaleSummary";
 import ReportSaleByProduct from "../../pos/containers/reports/Sale/ReportSaleByProduct";
+import ReportSaleByCategory from "../../pos/components/reports/Sale/ReportSaleByCategory";
+import ReportSaleByCashier from "../../pos/components/reports/Sale/ReportSaleByCashier";
+import ReportSaleByCustomer from "../../pos/components/reports/Sale/ReportSaleByCustomer";
+import ReportSaleByLocation from "../../pos/components/reports/Sale/ReportSaleByLocation";
 import ReportPurchaseSummary from "../../pos/components/reports/Purchase/ReportPurchaseSummary";
 import ReportPurchaseByProduct from "../../pos/components/reports/Purchase/ReportPurchaseByProduct";
 import ReportPurchaseBySupplier from "../../pos/components/reports/Purchase/ReportPurchaseBySupplier";
@@ -69,6 +76,10 @@ class Router extends Component {
             <Route path="/stocks/adjustment/update/:id" component={AdjustmentUpdate}></Route>
             <Route path="/reports/sale_summaries" component={ReportSaleSummary} />
             <Route path="/reports/sold_products" component={ReportSaleByProduct} />
+            <Route path="/reports/sold_categories" component={ReportSaleByCategory} />
+            <Route path="/reports/sold_cashiers" component={ReportSaleByCashier} />
+            <Route path="/reports/sold_customers" component={ReportSaleByCustomer} />
+            <Route path="/reports/sold_locations" component={ReportSaleByLocation} />
             <Route path="/reports/purchase_summaries" component={ReportPurchaseSummary} />
             <Route path="/reports/purchased_products" component={ReportPurchaseByProduct} />
             <Route path="/reports/purchased_suppliers" component={ReportPurchaseBySupplier} />

@@ -25,6 +25,39 @@ class SaleService extends BaseService {
     });
   }
 
+  getReportSummaryByCategory(option) {
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/summary_by_categories?${this.bindQueryParam(option)}`,
+      headers: this.header
+    });
+  }
+
+
+  getReportSummaryByCashier(option) {
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/summary_by_cashiers?${this.bindQueryParam(option)}`,
+      headers: this.header
+    });
+  }
+
+  getReportSummaryByCustomer(option) {
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/summary_by_customers?${this.bindQueryParam(option)}`,
+      headers: this.header
+    });
+  }
+
+  getReportSummaryByLocation(option) {
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/summary_by_locations?${this.bindQueryParam(option)}`,
+      headers: this.header
+    });
+  }
+
   registers() {
     this.setHeader();
     return this.GET({ 

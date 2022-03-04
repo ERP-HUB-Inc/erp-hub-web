@@ -58,7 +58,7 @@ export const modules = {
     isFashNav: true
   },
   ProductType: {
-    title: <Translate id="text_product_type" />,
+    title: <Translate id="text_category" />,
     icon: "icon-types",
     route: "/products/types",
     component: loadComponet(import("../../../../inventory/containers/products/ProductsType")),

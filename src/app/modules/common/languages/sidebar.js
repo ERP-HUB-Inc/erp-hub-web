@@ -39,7 +39,7 @@ export default {
     "គ្រប់គ្រងផលិតផល"
   ],
   
-  "text_product_type": [
+  "text_category": [
     "Product Types",
     "ប្រភេទផលិតផល"
   ],

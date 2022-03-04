@@ -317,7 +317,7 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: <Translate id="text_product_type" />,
+        title: <Translate id="text_category" />,
         icon: "icon-types",
         route: "/products/category",
         component: Category,

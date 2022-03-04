@@ -4,7 +4,7 @@ import Modal from "../../../../common/components/shares/Modal";
 import ProductsTypeAction from "../../../actions/products/productsType";
 
 export default class FormCreate extends Modal {
-  title = <this.Translate id="text_product_type" />;
+  title = <this.Translate id="text_category" />;
 
   handleSubmit = (e) => {
     e.preventDefault();

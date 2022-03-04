@@ -58,7 +58,7 @@ export default class SaleList extends List {
       ],
       [
         {
-          title: <this.Translate id="text_product_type" />,
+          title: <this.Translate id="text_category" />,
           dataIndex: "name",
           key: "name",
           className: "sale-report"
@@ -97,7 +97,7 @@ export default class SaleList extends List {
     this.reportTypeList = [
       {value: Enum.REPORT_TYPE.SALE_SUMMARY, name: this.CATranslate("text_sale_summary", this.props.locale)},
       {value: Enum.REPORT_TYPE.PRODUCT, name: this.CATranslate("text_product", this.props.locale)},
-      {value: Enum.REPORT_TYPE.CATEGORY, name: this.CATranslate("text_product_type", this.props.locale)},
+      {value: Enum.REPORT_TYPE.CATEGORY, name: this.CATranslate("text_category", this.props.locale)},
       {value: Enum.REPORT_TYPE.USER, name: this.CATranslate("text_seller", this.props.locale)},
       {value: Enum.REPORT_TYPE.CUSTOMER, name: this.CATranslate("text_customer", this.props.locale)},
       {value: Enum.REPORT_TYPE.LOCATION, name: this.CATranslate("text_location", this.props.locale)}
@@ -126,7 +126,7 @@ export default class SaleList extends List {
     }else if(getReportTypeValues === 1){
       filedValues = {label: this.CATranslate("text_product", this.props.locale), key: "fieldNames"};
     }else if(getReportTypeValues === 2){
-      filedValues = {label: this.CATranslate("text_product_type", this.props.locale), key: "fieldNames"};
+      filedValues = {label: this.CATranslate("text_category", this.props.locale), key: "fieldNames"};
     }else if(getReportTypeValues === 3){
       filedValues = {label: this.CATranslate("text_user", this.props.locale), key: "fieldNames"};
     }else if(getReportTypeValues === 4){

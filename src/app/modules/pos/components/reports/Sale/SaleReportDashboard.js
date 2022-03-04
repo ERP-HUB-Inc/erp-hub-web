@@ -87,7 +87,7 @@ export default function SaleReportDashboard() {
                         </ul>
                     </div>
                     <div className="footer">
-                        <Button>View</Button>
+                        <Link to="/reports/sold_categories" className="ant-btn">View</Link>
                     </div>
                 </Card>
             </Col>
@@ -112,7 +112,7 @@ export default function SaleReportDashboard() {
                         </ul>
                     </div>
                     <div className="footer">
-                        <Button>View</Button>
+                        <Link to="/reports/sold_cashiers" className="ant-btn">View</Link>
                     </div>
                 </Card>
             </Col>
@@ -127,15 +127,15 @@ export default function SaleReportDashboard() {
                     bordered={false}>
                     <div className="content">
                         <ul style={{listStyle: "none", paddingLeft: 0}}>
-                            <li>- group sold products by category</li>
-                            <li>- count sold quantity by category</li>
-                            <li>- display revenue by category</li>
+                            <li>- view report base on date</li>
+                            <li>- display customer name,phone number,address</li>
+                            <li>- include number of order</li>
+                            <li>- total sale amount by customer</li>
                             <li>- include cogs by category</li>
-                            <li>- include profit by category</li>
                         </ul>
                     </div>
                     <div className="footer">
-                        <Button>View</Button>
+                        <Link to="/reports/sold_customers" className="ant-btn">View</Link>
                     </div>
                 </Card>
             </Col>
@@ -158,7 +158,7 @@ export default function SaleReportDashboard() {
                         </ul>
                     </div>
                     <div className="footer">
-                        <Button>View</Button>
+                        <Link to="/reports/sold_locations" className="ant-btn">View</Link>
                     </div>
                 </Card>
             </Col>

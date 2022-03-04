@@ -1,5 +1,5 @@
 export default {
-  "text_product_type": [
+  "text_category": [
     "Category",
     "ប្រភេទផលិតផល",
     "Category"

@@ -103,14 +103,14 @@ function SelectCategory(props) {
   return <div style={{display: "flex", alignItems: "center"}}>
       <InputText
         name="productTypeName"
-        label={<Translate id="text_product_type" />}
+        label={<Translate id="text_category" />}
         data={formData.productType ? formData.productType.name : ""}
         disabled={true}
         form={props.form}
         className={isEdit ? "hidden" : ""} />
       <SelectSearch
         name="productTypeId"
-        label={<Translate id="text_product_type" />}
+        label={<Translate id="text_category" />}
         placeholder={props.placeholder}
         notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
         valueKey="id"
@@ -519,7 +519,7 @@ export default class FormItem extends Modal {
                     <this.Col md="4">
                         <SelectCategory
                           formData={formData}
-                          placeholder={this.CATranslate("text_product_type", locale)}
+                          placeholder={this.CATranslate("text_category", locale)}
                           form={form}/>
                     </this.Col>
                     <this.Col md="4">

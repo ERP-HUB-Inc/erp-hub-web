@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import {
   Statistic,
   PageHeader,
@@ -16,7 +17,7 @@ import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import ReportSaleService from "../../../services/report/SaleService";
 
-export default function ReportSaleByProduct() {
+function ReportSaleByCategory() {
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState(null);
   const [summary, setSummary] = React.useState(null);
@@ -36,8 +37,8 @@ export default function ReportSaleByProduct() {
 
   const fetchReport = (from, to) => {
     setLoading(true);
-    ReportSaleService.getReportSummaryByProduct({startDate: from.format("YYYY-MM-DD"), endDate: to.format("YYYY-MM-DD")})
-    .then(response => {
+    ReportSaleService.getReportSummaryByCategory({startDate: from.format("YYYY-MM-DD"), endDate: to.format("YYYY-MM-DD")})
+    .then(response => {console.log("DDDD:", response);
       if (response.data) {
         setData(response.data);
         const totalRevenue = _.sumBy(response.data, value => parseFloat(value.revenue)),
@@ -78,7 +79,7 @@ export default function ReportSaleByProduct() {
           paddingRight: 0
       }}
       onBack={() => history.goBack()}
-      title="Product Sale Report"
+      title="Category Sale Report"
       subTitle=""
       extra={[
         <div style={{display: "flex"}}>
@@ -137,9 +138,6 @@ export default function ReportSaleByProduct() {
           </Card>
         </Col>
         <Col span={24}>
-          <ExportForm startDate={fromValue.format("YYYY-MM-DD")} endDate={toValue.format("YYYY-MM-DD")} />
-        </Col>
-        <Col span={24}>
           <Table
             rowKey="id"
             dataSource={data ? data : []}
@@ -152,27 +150,14 @@ export default function ReportSaleByProduct() {
                 render: (id, record, index) => index + 1
               },
               {
-                title: <Translate id="text_product" />,
-                dataIndex: "name",
-                key: "text_product"
-              },
-              {
-                title: <Translate id="text_variant" />,
-                dataIndex: "variant",
-                key: "variant"
-              },
-              {
-                title: <Translate id="text_barcode" />,
-                dataIndex: "barcode",
-                key: "barcode"
+                title: <Translate id="text_category" />,
+                dataIndex: "categoryName",
+                key: "categoryName"
               },
               {
                 title: <Translate id="text_quantity" />,
                 dataIndex: "quantity",
-                key: "quantity",
-                render: (quantity, record) => {
-                  return `${quantity} ${record.unitName ? record.unitName : ""}`;
-                }
+                key: "quantity"
               },
               {
                 title: <Translate id="text_revenue" />,
@@ -217,3 +202,11 @@ export default function ReportSaleByProduct() {
       </Row>
   </div>;
 }
+
+function mapStateToProps(state) {
+  return {
+    locale: state.locale
+  };
+}
+
+export default connect(mapStateToProps)(ReportSaleByCategory);

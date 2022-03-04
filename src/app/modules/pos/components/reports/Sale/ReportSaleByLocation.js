@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import {
   Statistic,
   PageHeader,
@@ -16,7 +17,7 @@ import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import ReportSaleService from "../../../services/report/SaleService";
 
-export default function ReportSaleByProduct() {
+function ReportSaleByLocation() {
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState(null);
   const [summary, setSummary] = React.useState(null);
@@ -36,7 +37,7 @@ export default function ReportSaleByProduct() {
 
   const fetchReport = (from, to) => {
     setLoading(true);
-    ReportSaleService.getReportSummaryByProduct({startDate: from.format("YYYY-MM-DD"), endDate: to.format("YYYY-MM-DD")})
+    ReportSaleService.getReportSummaryByLocation({startDate: from.format("YYYY-MM-DD"), endDate: to.format("YYYY-MM-DD")})
     .then(response => {
       if (response.data) {
         setData(response.data);
@@ -78,7 +79,7 @@ export default function ReportSaleByProduct() {
           paddingRight: 0
       }}
       onBack={() => history.goBack()}
-      title="Product Sale Report"
+      title="Location Sale Report"
       subTitle=""
       extra={[
         <div style={{display: "flex"}}>
@@ -152,27 +153,14 @@ export default function ReportSaleByProduct() {
                 render: (id, record, index) => index + 1
               },
               {
-                title: <Translate id="text_product" />,
-                dataIndex: "name",
-                key: "text_product"
-              },
-              {
-                title: <Translate id="text_variant" />,
-                dataIndex: "variant",
-                key: "variant"
-              },
-              {
-                title: <Translate id="text_barcode" />,
-                dataIndex: "barcode",
-                key: "barcode"
+                title: <Translate id="text_location" />,
+                dataIndex: "locationName",
+                key: "locationName"
               },
               {
                 title: <Translate id="text_quantity" />,
                 dataIndex: "quantity",
-                key: "quantity",
-                render: (quantity, record) => {
-                  return `${quantity} ${record.unitName ? record.unitName : ""}`;
-                }
+                key: "quantity"
               },
               {
                 title: <Translate id="text_revenue" />,
@@ -217,3 +205,11 @@ export default function ReportSaleByProduct() {
       </Row>
   </div>;
 }
+
+function mapStateToProps(state) {
+  return {
+    locale: state.locale
+  };
+}
+
+export default connect(mapStateToProps)(ReportSaleByLocation);

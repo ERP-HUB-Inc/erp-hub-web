@@ -6,7 +6,7 @@ import Modal from "../../../../common/components/shares/Modal";
 
 export default class Form extends Modal {
 
-  title = <this.Translate id="text_product_type" />;
+  title = <this.Translate id="text_category" />;
 
   constructor(props) {
     super(props);
