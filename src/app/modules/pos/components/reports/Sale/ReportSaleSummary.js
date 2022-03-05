@@ -61,7 +61,7 @@ export default function ReportSaleSummary(props) {
       title="Sale Summary"
       subTitle=""
       extra={[
-        <div style={{display: "flex"}}>
+        <div style={{display: "flex"}} key="1">
           <DatePicker
               format="DD/MM/YYYY"
               value={fromValue}
@@ -133,7 +133,14 @@ export default function ReportSaleSummary(props) {
                 dataIndex: "revenue",
                 align: "right",
                 key: "revenue",
-                render: value => (new Util()).formatCurrency(value)
+                render: (value, record) => (new Util()).formatCurrency(value + record.discount)
+              },
+              {
+                title: <Translate id="text_discount" />,
+                dataIndex: "discount",
+                align: "right",
+                key: "discount",
+                render: discount => (new Util()).formatCurrency(discount)
               },
               {
                 title: <Translate id="text_cost_of_good" />,

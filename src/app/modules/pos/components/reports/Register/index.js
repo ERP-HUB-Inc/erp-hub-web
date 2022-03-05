@@ -100,7 +100,7 @@ export default function RegiserReport() {
                         title: <Translate id="text_date" />,
                         dataIndex: "date",
                         key: "date",
-                        render: date => (new Util()).formatDate(date)
+                        render: date => (new Util()).formatDate(date, "DD/MM/YYYY")
                     },
                     {
                         title: <Translate id="text_location" />,

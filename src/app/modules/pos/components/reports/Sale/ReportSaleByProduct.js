@@ -39,9 +39,13 @@ export default function ReportSaleByProduct() {
     ReportSaleService.getReportSummaryByProduct({startDate: from.format("YYYY-MM-DD"), endDate: to.format("YYYY-MM-DD")})
     .then(response => {
       if (response.data) {
-        setData(response.data);
-        const totalRevenue = _.sumBy(response.data, value => parseFloat(value.revenue)),
-          totalCost = _.sumBy(response.data, value => parseFloat(value.cost));
+        const {
+          summaryByProducts
+        } = response.data;
+
+        setData(summaryByProducts);
+        const totalRevenue = _.sumBy(summaryByProducts, value => parseFloat(value.revenue)),
+          totalCost = _.sumBy(summaryByProducts, value => parseFloat(value.cost));
         setSummary({
           totalRevenue,
           totalCost
@@ -81,7 +85,7 @@ export default function ReportSaleByProduct() {
       title="Product Sale Report"
       subTitle=""
       extra={[
-        <div style={{display: "flex"}}>
+        <div style={{display: "flex"}} key="1">
           <DatePicker
               format="DD/MM/YYYY"
               value={fromValue}
@@ -179,7 +183,14 @@ export default function ReportSaleByProduct() {
                 dataIndex: "revenue",
                 align: "right",
                 key: "revenue",
-                render: value => (new Util()).formatCurrency(value)
+                render: revenue => (new Util()).formatCurrency(revenue)
+              },
+              {
+                title: <Translate id="text_discount" />,
+                dataIndex: "discount",
+                align: "right",
+                key: "discount",
+                render: discount => (new Util()).formatCurrency(discount)
               },
               {
                 title: <Translate id="text_cost_of_good" />,

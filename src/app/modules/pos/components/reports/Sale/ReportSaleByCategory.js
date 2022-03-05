@@ -12,7 +12,6 @@ import {
 import moment from "moment";
 import * as _ from "lodash";
 import { Translate } from "react-localize-redux";
-import ExportForm from "./ExportForm";
 import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import ReportSaleService from "../../../services/report/SaleService";
