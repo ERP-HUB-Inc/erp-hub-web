@@ -161,12 +161,6 @@ export default {
     "Receive automatically"
   ],
 
-  "text_save_and_auto_send_receive": [
-    "Save and receive stock",
-    "រក្សាទុកហើយទទួលស្តុកដោយស្វ័យប្រវត្តិ",
-    "Save and receive stock"
-  ],
-
   "create_stock_purchase_order_send_mail_title": [
     "Comfirm purchase order",
     "បញ្ជាក់ការបញ្ជារទិញ",
@@ -186,9 +180,9 @@ export default {
   ],
 
   "text_po_general_search": [
-    "Name/Number",
-    "ឈ្មោះ/លេខ",
-    "Name/Number"
+    "Search by number,description",
+    "ស្វែងរកតាមលេខ ការពិពណ៌នា",
+    "Search by number,description"
   ],
 
   "purchase_order_po_number_already_exist": [
@@ -225,12 +219,6 @@ export default {
     "Your email address is not valid",
     "អាស័យដ្ឋាន emial មិនត្រឹមត្រូវ",
     "Your email address is not valid",
-  ],
-
-  "error_purchase_order_update_warning": [
-    "PO allow only update on draft PO",
-    "ការបញ្ចារទិញអាចកែរប្រែបានតែ ការបញ្ជារទិញព្រៀងទេ",
-    "PO allow only update on draft PO"
   ],
 
   "error_purchase_order_no_entry": [

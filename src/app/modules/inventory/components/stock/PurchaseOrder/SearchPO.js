@@ -23,10 +23,10 @@ export default class SearchPo extends Modal {
     this.form = this.props.form;
     this.columns = [
       {
-        title: <this.Translate id="text_no" />,
+        title: "#",
         dataIndex: "id",
         key: "no",
-        width: 100,
+        width: 80,
         align: "center",
         render: (text, record, index) => {
           return (
@@ -46,9 +46,10 @@ export default class SearchPo extends Modal {
         title: <this.Translate id="text_product_name" />,
         dataIndex: "productName",
         key: "productName",
-        render: (text, record) => {
+        render: (productName, record) => {
           return <div>
-            <div>{record.productName}</div>
+            <div>{productName}</div>
+            <div>{record.barcode}</div>
             {record.variantName ? <div className="variant-name">{record.variantName}</div> : ""}
           </div>;
         }
@@ -78,7 +79,7 @@ export default class SearchPo extends Modal {
       {
         title: <this.Translate id="text_quantity" />,
         dataIndex: "requestQuantity",
-        width: 150,
+        width: 120,
         key: "requestQuantity",
         align: "right",
         render: (text, record, index) => {
@@ -98,7 +99,7 @@ export default class SearchPo extends Modal {
       {
         title: <this.Translate id="text_cost" />,  
         dataIndex: "price",
-        width: 150,
+        width: 120,
         key: "price",
         align: "right",
         render: (text, record, index) => {
@@ -118,7 +119,7 @@ export default class SearchPo extends Modal {
         title: <this.Translate id="text_total" />,
         dataIndex: "totalPrice",
         key: "totalPrice",
-        width: 150,
+        width: 120,
         align: "right",
         render: (text, record, index) => {
           return <div>
@@ -180,6 +181,7 @@ export default class SearchPo extends Modal {
         purchaseEntryId: "",
         productName,
         variantName,
+        barcode: productVariant.barcode,
         unitId: productVariant.product.defaultUnitId,
         productVariantId: productVariant.id,
         quantityOnHand,
@@ -197,16 +199,15 @@ export default class SearchPo extends Modal {
 
   }
 
-  componentDidUpdate(){
-
+  componentDidUpdate() {
     const {purchaseOrderEntries} = this.props;
     if (purchaseOrderEntries.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
       const existingProductList = this.state.productLists;
       
       purchaseOrderEntries.forEach(purchaseOrderEntry => {
-        let productName = "";
-        let variantName = "";
-        let quantityOnHand = 0;
+        let productName = "",
+          variantName = "",
+          quantityOnHand = 0;
         
         if (purchaseOrderEntry.productVariant) {
           productName = Util.getProductNameV2(purchaseOrderEntry.productVariant.product);
@@ -217,6 +218,7 @@ export default class SearchPo extends Modal {
         existingProductList.push({
           purchaseEntryId: purchaseOrderEntry.id,
           productName,
+          barcode: purchaseOrderEntry.productVariant.barcode,
           variantName,
           unitId: purchaseOrderEntry.unitId,
           productVariantId: purchaseOrderEntry.productVariantId,

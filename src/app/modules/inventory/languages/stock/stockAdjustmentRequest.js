@@ -1,7 +1,7 @@
 export default {
   "text_stock_adjustment": [
     "Stock Adjustment",
-    "កែប្រែស្តុកទំនិញ",
+    "កែប្រែស្តុក",
     "Stock Adjustment"
   ],
 

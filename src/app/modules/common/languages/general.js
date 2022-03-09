@@ -163,13 +163,13 @@ export default {
   
   "text_add_new": [
     "Add New",
-    "បញ្ចូលថ្មី",
+    "បន្ថែម​ថ្មី",
     "Add New"
   ],
   
   "text_delete": [
     "Delete",
-    "លប់ចោល",
+    "លុប",
     "Delete"
   ],
   

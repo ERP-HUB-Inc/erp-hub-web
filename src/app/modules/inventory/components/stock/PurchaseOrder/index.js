@@ -2,8 +2,8 @@ import React from "react";
 import POEmailTemplate from "./EmailTemplate/PO";
 import List from "../List";
 import Enum from "../../../enums";
+import history from "../../../../common/router/history";
 import FormCreate from "../../../containers/stock/PurchaseOrder/FormCreate";
-import FormUpdate from "../../../containers/stock/PurchaseOrder/FormUpdate";
 import Constant from "../../../constants/stock/purchaseOrder";
 import PurchaseAction from "../../../actions/stock/purchaseOrder";
 import SupplierAction from "../../../actions/stock/supplier";
@@ -25,96 +25,35 @@ export default class PurchaseOrderLists extends List {
       {
         title: <this.Translate id="text_description" />,
         dataIndex: "name",
-        key: "name",
-        sorter: true
+        key: "name"
       },
       {
         title: <this.Translate id="text_number" />,
         dataIndex: "number",
-        key: "number",
-        sorter: true,
-        width: 130
-      },
-      {
-        title: <this.Translate id="text_reference" />,
-        dataIndex: "referenceId",
-        key: "referenceId",
-        sorter: true,
-        width: 140,
-        render: (text, record, index) => {
-          let referenceNo = this.emptyText;
-          if ("reference" in record && record["reference"] != null) {
-            referenceNo = record["reference"]["number"];
-          }
-          return referenceNo;
-        }
+        key: "number"
       },
       {
         title: <this.Translate id="text_receiver"/>,
         dataIndex: "receiver",
         key: "receiverId",
-        sorter: true,
-        width: 140,
-        render: receiver => receiver ? receiver.fullName: this.emptyText
+        render: receiver => receiver ? <span style={{textTransform: "uppercase"}}>{receiver.fullName}</span> : this.emptyText
       },
       {
         title: <this.Translate id="text_supplier" />,
         dataIndex: "supplier",
         key: "supplierId",
-        sorter: true,
-        width: 140,
-        render: supplier => supplier ? supplier.name: this.emptyText
+        render: supplier => supplier ? supplier.name : this.emptyText
       },
       {
         title: <this.Translate id="text_location" />,
         dataIndex: "location",
         key: "location",
-        sorter: true,
-        width: 140,
         render: location => location ? location.name: this.emptyText
-      },
-      // {
-      //   title: <this.Translate id="text_due_date" />,
-      //   dataIndex: "deliveryDueDate",
-      //   key: "deliveryDueDate",
-      //   sorter: true,
-      //   width: 180,
-      //   render: deliveryDueDate => this.formatDate(deliveryDueDate)
-      // },
-      // {
-      //   title: <this.Translate id="text_shipping_fee" />,
-      //   dataIndex: "shippingFee",
-      //   key: "shippingFee",
-      //   sorter: true,
-      //   width: 150,
-      //   align: "right",
-      //   render: shippingFee => this.formatCurrency(shippingFee)
-      // },
-      {
-        title: <this.Translate id="text_items" />,
-        dataIndex: "purchaseOrderEntries",
-        key: "purchaseOrderEntries",
-        width: 100,
-        align: "center",
-        render: (text, record) => {
-          // let key = "requestQuantity";
-
-          // if (record.step === Enum.PO_STEP.RECEIVED) {
-          //   key = "receiveQuantity";
-          // } else if (record.step === Enum.PO_STEP.RETURN) {
-          //   key = "returnQuantity";
-          // }
-
-          // return this.Util.sumBy(record.purchaseOrderEntries, key);
-          return record.purchaseOrderEntries.length;
-        }
       },
       {
         title: <this.Translate id="text_total" />,
         dataIndex: "requestTotal",
         key: "requestTotal",
-        sorter: true,
-        width: 130,
         align: "right",
         render: (text, record) => {
           let key = "requestTotal";
@@ -127,10 +66,9 @@ export default class PurchaseOrderLists extends List {
         }
       },
       {
-        title: <this.Translate id="text_step" />,
+        title: <this.Translate id="text_status" />,
         dataIndex: "step",
         key: "step",
-        sorter: true,
         width: 100,
         render: step => step in this.PO_STEP_STR ? <this.Tag color={this.PO_STEP_STR[step].color} className="text-uppercase text-center po-step-tag">{this.PO_STEP_STR[step].name}</this.Tag> : ""
       }
@@ -234,14 +172,17 @@ export default class PurchaseOrderLists extends List {
     this.setState({dataForSendMail});
   }
 
+  renderButtonAddNew() {
+    return (
+      <this.Link to="/stocks/purchase/create" className="ant-btn info" style={{marginRight: 15}}>
+        <span className="icon-add icon-padding-right"></span>
+        <this.Translate id="text_add_new" />
+      </this.Link>
+    );
+  }
+
   showFormEdit(rowData) {
-    this.props.dispatch(PurchaseAction.detail(rowData));  
-    this.setState({
-      loadingPopup: true,
-      modalConten: <FormUpdate
-        callBackGetEmail={this.getEmailPushToSupplier}
-        callBackGetEmailData={this.getEmailDataForSend}/>
-    });
+    history.push(`/stocks/purchase/update/${rowData.id}`);
   }
 
   handleDelete() {
@@ -282,7 +223,7 @@ export default class PurchaseOrderLists extends List {
 
           if (values.createdAt) {
             values.createdAt = this.Util.formatDateForMYSQL(values.createdAt);
-            rangFilter = JSON.stringify({column: "createdAt", value: [values.createdAt + " 00:00:00", values.createdAt + " 23:59:59"]});
+            rangFilter = JSON.stringify({column: "createdAt", value: [values.createdAt, values.createdAt]});
           }
     
           filter = JSON.stringify(filter);

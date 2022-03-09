@@ -1,20 +1,24 @@
 import React from "react";
+import {
+  Form,
+  PageHeader
+} from "antd";
+import sweetalert from "sweetalert";
 import FormItem from "./FormItem";
 import Enum from "../../../enums";
+import history from "../../../../common/router/history";
 import Constant from "../../../constants/stock/purchaseOrder";
-import Modal from "../../../../common/components/shares/Modal";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
 import PurchaseOrderShowEmailAction from "../../../actions/stock/purchaseOrderSendEmail";
 import FormCreatePurchseOrderSendEmail from "../../../containers/stock/PurchaseOrder/ConfirmEmail/FormCreate";
 import EnumSetting from "../../../../pos/enums";
-import history from "../../../../../modules/common/router/history";
+import Component from "../../../../common/components/Component";
 import "./index.css";
 
-export default class FormCreate extends Modal {
+export default class FormCreate extends Component {
   constructor(props) {
     super(props);
     this.title = <this.Translate id="text_po" />;
-    this.wrapClassName = `${this.wrapClassName} wrap-modal-po modal-po-full-screen`;
     this.width = window.innerWidth < 1400 ? window.innerWidth : 1400;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -22,7 +26,30 @@ export default class FormCreate extends Modal {
     this.handlePushToSupplier = this.handlePushToSupplier.bind(this);
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
+    window.addEventListener("keydown", (e) => {
+      const S = 83;
+      if (e.keyCode === S && e.ctrlKey) {
+        e.preventDefault();
+        document.getElementById("btnSubmit").click();
+      }
+    });
+  }
+
+  componentDidUpdate(nextProps) {
+    if (this.props.purchaseOrderAdd.added && nextProps.purchaseOrderAdd.adding) {
+      sweetalert({
+        icon: "success",
+        title: "Success!",
+        text: "You have created purchase order!",
+        buttons: false,
+        timer: 1500
+      })
+      .then(() => {
+        history.goBack();
+      });
+    }
+
     if (this.props.purchaseOrderAdd.error) {
       const errorCode = this.Util.getErrorCodeFromState(this.props.purchaseOrderAdd.error);
       let message = "Something wrong, Please contact system provider";
@@ -116,10 +143,61 @@ export default class FormCreate extends Modal {
   }
       
   handleCancel() {
-    this.dispatch(PurchaseOrderAction.reset(Constant.RESET_PURCHASE_ORDER));
+    history.goBack();
   }
 
   render() {
+    const {
+      purchaseOrderAdd, 
+      form, 
+      locale, 
+      supplier,
+      storeLocation, 
+      productSearch, 
+      requestOrderNumber,
+      product,
+      unit,
+      dispatch
+    } = this.props;
+
+    return <div style={{marginBottom: 25, height: "100%"}}>
+      <PageHeader
+        style={{
+            backgroundColor: "#f7f7f7",
+            paddingLeft: 0,
+            paddingRight: 0
+        }}
+        onBack={() => history.goBack()}
+        title={<this.Translate id="text_po" />}
+        subTitle={<this.Translate id="text_po" />}
+        extra={[]}
+      />
+      <Form autoComplete="off" onSubmit={this.handleSubmit} style={{height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
+          <FormItem 
+              form={form} 
+              supplier={supplier}
+              storeLocation={storeLocation} 
+              productSearch={productSearch} 
+              productVariant={this.props.productVariant}
+              requestOrderNumber={requestOrderNumber}
+              product={product}
+              unit={unit}
+              productReOrderPointList={this.props.productReOrderPointList}
+              dispatch={dispatch} 
+              locale={locale} />
+          <this.Row style={{justifyContent: "center", marginTop: 25, marginBottom: 25}}>
+            <this.Button className="danger" onClick={this.handleCancel}>
+              <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_back" />
+            </this.Button>  
+            <this.Button htmlType="submit" loading={purchaseOrderAdd.adding} className="info" style={{marginLeft: 15}} id="btnSubmit">
+              <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />(Ctrl+s)
+            </this.Button>
+          </this.Row>
+      </Form>
+    </div>;
+  }
+
+  renderv2() {
     const {
       purchaseOrderAdd, 
       form, 

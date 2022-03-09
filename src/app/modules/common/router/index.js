@@ -19,6 +19,8 @@ import ProductCreate from "../../inventory/containers/products/Product/FormCreat
 import ProductUpdate from "../../inventory/containers/products/Product/FormUpdate";
 import AdjustmentCreate from "../../inventory/containers/stock/StockAdjustmentRequest/FormCreate";
 import AdjustmentUpdate from "../../inventory/containers/stock/StockAdjustmentRequest/FormUpdate";
+import PurchaseOrderCreate from "../../inventory/containers/stock/PurchaseOrder/FormCreate";
+import PurchaseOrderUpdate from "../../inventory/containers/stock/PurchaseOrder/FormUpdate";
 import ReportSaleSummary from "../../pos/containers/reports/Sale/ReportSaleSummary";
 import ReportSaleByProduct from "../../pos/containers/reports/Sale/ReportSaleByProduct";
 import ReportSaleByCategory from "../../pos/components/reports/Sale/ReportSaleByCategory";
@@ -70,10 +72,12 @@ class Router extends Component {
                 )
               )
             }
-            <Route path="/products/create" component={ProductCreate}></Route>
-            <Route path="/products/update/:id" component={ProductUpdate}></Route>
-            <Route path="/stocks/adjustment/create" component={AdjustmentCreate}></Route>
-            <Route path="/stocks/adjustment/update/:id" component={AdjustmentUpdate}></Route>
+            <Route path="/products/create" component={ProductCreate} />
+            <Route path="/products/update/:id" component={ProductUpdate} />
+            <Route path="/stocks/adjustment/create" component={AdjustmentCreate} />
+            <Route path="/stocks/adjustment/update/:id" component={AdjustmentUpdate} />
+            <Route path="/stocks/purchase/create" component={PurchaseOrderCreate} />
+            <Route path="/stocks/purchase/update/:id" component={PurchaseOrderUpdate} />
             <Route path="/reports/sale_summaries" component={ReportSaleSummary} />
             <Route path="/reports/sold_products" component={ReportSaleByProduct} />
             <Route path="/reports/sold_categories" component={ReportSaleByCategory} />
@@ -83,8 +87,8 @@ class Router extends Component {
             <Route path="/reports/purchase_summaries" component={ReportPurchaseSummary} />
             <Route path="/reports/purchased_products" component={ReportPurchaseByProduct} />
             <Route path="/reports/purchased_suppliers" component={ReportPurchaseBySupplier} />
-            <Route path="/" component={Home}></Route>
-            <Route path="/profile" component={Profile}></Route>
+            <Route path="/" component={Home} />
+            <Route path="/profile" component={Profile} />
           </Switch>
         </Content>
         <this.Button

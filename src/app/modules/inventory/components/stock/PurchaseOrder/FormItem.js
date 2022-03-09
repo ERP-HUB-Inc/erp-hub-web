@@ -28,10 +28,6 @@ export default class FormItem extends Modal {
       suppliers: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.SUPPLIER)),
       isAutoReceive
     });
-
-    if (isAutoReceive) {
-      document.getElementById("btnModalSave").innerHTML = this.CATranslate("text_save_and_auto_send_receive", this.props.locale);
-    }
     
     this.props.dispatch(UnitAction.fetch(100,0));
   }
@@ -49,10 +45,8 @@ export default class FormItem extends Modal {
   handleOnChangeIsAutoReceive(event) {
     if (event.target.checked) {
       localStorage.setItem(Constant.IS_AUTO_RECEIVE_STOCK_KEY, Enum.IS_AUTO_RECEIVE_STOCK);
-      document.getElementById("btnModalSave").innerHTML = this.CATranslate("text_save_and_auto_send_receive", this.props.locale);
     } else {
       localStorage.removeItem(Constant.IS_AUTO_RECEIVE_STOCK_KEY);
-      document.getElementById("btnModalSave").innerHTML = this.CATranslate("text_save", this.props.locale);
     }
 
   }
@@ -90,95 +84,61 @@ export default class FormItem extends Modal {
     
     return (
       <this.Row id="purchase-order-form">
-        <this.Col md="12">
-          <this.Row className="ca-penel-v1 wrap-po-filter-create">
-            <this.Col md="4">
-              <this.InputText
-                name="name"
-                label={<this.Translate id="text_description" />}
-                data={formData.name}
-                placeholder={this.CATranslate("text_name", locale)}
-                errorRequired={<this.Translate id="error_require_name" />}
-                required={true}
-                isAutoFocus={true}
-                max={100}
-                form={form}/> 
-            </this.Col>
-            <this.Col md="2">
-              <this.InputText
-                name="number"
-                label={<this.Translate id="input_stock_purchase_order_number" />}
-                data={formData.number}
-                // handleKeyUp={this.handleCheckPONumber}
-                // validateStatus={this.props.requestOrderNumber.fetching ? "validating" : this.validateOrderNumber}
-                // help={this.errorMessageOrderNumber}
-                placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
-                errorRequired={<this.Translate id="error_require_po_number" />}
-                form={form} /> 
-            </this.Col>
-            <this.Col md="2" style={{display: "none"}}>
-              { formData.deliveryDueDate == null ?
-                <this.DatePickers
-                  name="deliveryDueDate"
-                  label={<this.Translate id="text_due_date" />}
-                  placeholder={this.CATranslate("text_due_date", locale)}
-                  errorRequired={<this.Translate id="error_select_due_date" />}
-                  form={form}/>
-                :
-                <this.DatePickers
-                  name="deliveryDueDate"
-                  defaultValue={this.Util.formatDatePicker(formData.deliveryDueDate)} 
-                  label={<this.Translate id="text_due_date" />}
-                  placeholder={this.CATranslate("text_due_date", locale)}
-                  errorRequired={<this.Translate id="error_select_due_date" />}
-                  form={form}/>
-              }
-
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="supplierId"
-                label={<this.Translate id="text_supplier" /> }
-                placeholder={this.CATranslate("text_supplier", locale)}
-                errorRequired={<this.Translate id="error_require_supplier" />}
-                defaultValue={formData.supplierId}
-                dataSource={this.state.suppliers}
-                valueKey="id"
-                required={true}
-                form={form}/>
-            </this.Col>
-            <this.Col md="2">
-              <this.InputText
-                name="invoiceNo"
-                label={<this.Translate id="text_invoice_no" />}
-                data={formData.invoiceNo}
-                placeholder={this.CATranslate("text_invoice_no",locale)}
-                max={100}
-                form={form}/>
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="locationId"
-                label={<this.Translate id="text_delivery_to_location" />}
-                placeholder={this.CATranslate("text_delivery_to_location", locale)}
-                errorRequired={<this.Translate id="error_select_delivery_location" />}
-                defaultValue={locationId}
-                dataSource={this.state.locations}
-                valueKey="id"
-                required={true}
-                form={form}/>
-            </this.Col>
-            <this.Col md="4">
-              <this.Checkboxs
-                name="isAutoReceive"
-                defaultValue={this.state.isAutoReceive}
-                label={<this.Translate id="text_auto_send_receive"/>}
-                onChange={this.handleOnChangeIsAutoReceive}
-                form={this.props.form}/>
-            </this.Col>
+        <this.Col md="4">
+          <this.InputText
+            name="name"
+            label={<this.Translate id="text_description" />}
+            data={formData.name}
+            placeholder={this.CATranslate("text_description", locale)}
+            errorRequired={<this.Translate id="error_require_name" />}
+            required={true}
+            isAutoFocus={true}
+            max={100}
+            form={form} />
+          <this.InputText
+            name="number"
+            label={<this.Translate id="input_stock_purchase_order_number" />}
+            data={formData.number}
+            placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
+            errorRequired={<this.Translate id="error_require_po_number" />}
+            form={form} />
+          <this.Select
+            name="supplierId"
+            label={<this.Translate id="text_supplier" /> }
+            placeholder={this.CATranslate("text_supplier", locale)}
+            errorRequired={<this.Translate id="error_require_supplier" />}
+            defaultValue={formData.supplierId}
+            dataSource={this.state.suppliers}
+            valueKey="id"
+            required={true}
+            form={form} />
+          <this.InputText
+            name="invoiceNo"
+            label={<this.Translate id="text_invoice_no" />}
+            data={formData.invoiceNo}
+            placeholder={this.CATranslate("text_invoice_no",locale)}
+            max={100}
+            form={form} />
+          <this.Select
+            name="locationId"
+            label={<this.Translate id="text_location" />}
+            placeholder={this.CATranslate("text_location", locale)}
+            errorRequired={<this.Translate id="error_select_delivery_location" />}
+            defaultValue={locationId}
+            dataSource={this.state.locations}
+            valueKey="id"
+            required={true}
+            form={form} />
+          <this.Checkboxs
+            name="isAutoReceive"
+            defaultValue={this.state.isAutoReceive}
+            label={<this.Translate id="text_auto_send_receive"/>}
+            onChange={this.handleOnChangeIsAutoReceive}
+            form={this.props.form} />
+          <this.Row className="ca-penel-v1 wrap-po-filter-create hidden">
           </this.Row>
         </this.Col>
-        <this.Col md="12" className="purchase-order-entry">
+        <this.Col md="8" className="purchase-order-entry">
           <SearchPO
             dataSource={productSearch}
             productVariant={this.props.productVariant}

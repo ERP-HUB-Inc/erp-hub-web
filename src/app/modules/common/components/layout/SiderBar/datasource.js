@@ -424,16 +424,8 @@ const dataSource = {
         icon: "icon-stock-audit",
         route: "/stock/adjustment/request",
         component: StockAdjustmentRequest,
-        new: "New",
         isFashNav: true
-      },
-      // {
-      //   title: <Translate id="text_adjustment_approve" />,
-      //   icon: "icon-import",
-      //   route: "/stock/adjustment/approve",
-      //   component: StockAdjustmentApprove,
-      //   isFashNav: true
-      // }
+      }
     ]
   },
   customers: {
@@ -519,7 +511,7 @@ const dataSource = {
         component: ProductReport,
       },
       {
-        title: "Inventory Dashboard",
+        title: <Translate id="text_inventory_dashboard" />,
         icon: "icon-stock",
         route: "/reports/inventory_dashboard",
         new: "New",

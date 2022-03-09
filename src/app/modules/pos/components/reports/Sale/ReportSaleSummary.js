@@ -15,11 +15,11 @@ import Util from "../../../../common/util";
 import ReportSaleService from "../../../services/report/SaleService";
 import "./index.css";
 
-export default function ReportSaleSummary(props) {
+export default function ReportSaleSummary() {
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState(null);
-  const [fromValue, setFromValue] = React.useState(moment().startOf("month"));
-  const [toValue, setToValue] = React.useState(moment().endOf("month"));
+  const [fromValue, setFromValue] = React.useState(moment());
+  const [toValue, setToValue] = React.useState(moment());
 
   const onFromChange = value => {
       setFromValue(value);
@@ -126,7 +126,7 @@ export default function ReportSaleSummary(props) {
                 dataIndex: "date",
                 key: "date",
                 width: 200,
-                render: value => (new Util()).formatDate(value)
+                render: value => (new Util()).formatDate(value, "DD/MM/YYYY")
               },
               {
                 title: <Translate id="text_revenue" />,

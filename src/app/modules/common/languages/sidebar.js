@@ -109,6 +109,11 @@ export default {
     "របាយការណ៍ទំនិញ"
   ],
 
+  "text_inventory_dashboard": [
+    "Inventory Dashboard",
+    "ផ្ទាំងគ្រប់គ្រងផលិតផល"
+  ],
+
   "text_profit_and_loss_report": [
     "Profit & Loss Report",
     "របាយការណ៍ចំណេញខាត"

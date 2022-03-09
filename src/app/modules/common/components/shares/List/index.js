@@ -435,15 +435,15 @@ export default class List extends Component {
       title: <this.Translate id="text_date" />,
       dataIndex: "createdAt",
       key: "createdAt",
-      width: this.Util.getCurrentLanguageCode() === "km" ? 220 : 180,
-      render: value => this.formatDate(value)
+      width: 180,
+      render: value => this.Util.formatDate(value, "DD/MM/YYYY")
     };
     this.columnUpdatedAt = {
       title: <this.Translate id="text_updated_at" />,
       dataIndex: "updatedAt",
       key: "updatedAt",
       width: 180,
-      render: value => this.formatDate(value),
+      render: value => this.Util.formatDate(value, "DD/MM/YYYY"),
       sorter: true
     };
     this.statusList = [

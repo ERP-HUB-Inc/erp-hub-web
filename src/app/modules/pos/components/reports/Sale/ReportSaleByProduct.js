@@ -20,8 +20,8 @@ export default function ReportSaleByProduct() {
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState(null);
   const [summary, setSummary] = React.useState(null);
-  const [fromValue, setFromValue] = React.useState(moment().startOf("month"));
-  const [toValue, setToValue] = React.useState(moment().endOf("month"));
+  const [fromValue, setFromValue] = React.useState(moment());
+  const [toValue, setToValue] = React.useState(moment());
 
   const onFromChange = value => {
       setFromValue(value);
@@ -197,7 +197,7 @@ export default function ReportSaleByProduct() {
                 dataIndex: "cost",
                 align: "right",
                 key: "cost",
-                render: value => (new Util()).formatCurrency(value)
+                render: cost => (new Util()).formatCurrency(cost)
               },
               {
                 title: <Translate id="text_gross_profit" />,
@@ -215,8 +215,13 @@ export default function ReportSaleByProduct() {
                 align: "right",
                 key: "margin",
                 render: (margin, record) => {
-                  const profit = record.revenue - record.cost;
-                  margin = (profit / record.revenue) * 100;
+                  if (record.revenue > 0) {
+                    const profit = record.revenue - record.cost;
+                    margin = (profit / record.revenue) * 100;
+                  } else {
+                    margin = (-1) * 100;
+                  }
+
                   return (new Util()).formatPercentage(margin);
                 }
               }
