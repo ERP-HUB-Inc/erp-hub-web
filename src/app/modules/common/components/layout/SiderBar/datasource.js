@@ -34,6 +34,7 @@ const SaleOrder = Loadable({
   loader: () => import("../../../../pos/containers/transactions/SaleWalkin"),
   loading: () => <StartUp />,
 });
+
 const OpenSaleRegistration = Loadable({
   loader: () => import("../../../../pos/containers/transactions/OpenSaleRegistration"),
   loading: () => <StartUp />,
@@ -274,7 +275,7 @@ const dataSource = {
         isFashNav: false
       },
       {
-        title: <Translate id="text_sale_history" />,
+        title: <Translate id="text_sales" />,
         icon: "icon-time",
         route: "/transactions/salehistory", 
         component: SaleHistory,
@@ -283,9 +284,8 @@ const dataSource = {
       {
         title: <Translate id="text_pos" />,
         icon: "icon-sale",
-        route: "/transactions/pos",
-        component: SaleOrder,
-        isFashNav: true
+        route: "/pos",
+        component: SaleOrder
       },
       {
         title: <Translate id="text_close_shift" />,
@@ -307,10 +307,10 @@ const dataSource = {
   products: {
     icon: "icon-items",
     route: "products",
-    title: <Translate id="text_product" />,
+    title: <Translate id="text_manage_product" />,
     subItems: [
       {
-        title: <Translate id="text_manage_product" />,
+        title: <Translate id="text_product" />,
         icon: "icon-time",
         route: "/products/list",
         component: ManageProduct,

@@ -11,7 +11,7 @@ export const modules = {
     title: <Translate id="text_transaction" />
   },
   SaleHistory: {
-    title: <Translate id="text_sale_history" />,
+    title: <Translate id="text_sales" />,
     icon: "icon-time",
     route: "/transactions/salehistory",
     component: loadComponet(import("../../../../pos/containers/transactions/SaleHistory")),
@@ -21,7 +21,7 @@ export const modules = {
   SaleOrder: {
     title: <Translate id="text_sale_order" />,
     icon: "icon-pre-order",
-    route: "/transactions/pos",
+    route: "/pos",
     component: loadComponet(import("../../../../pos/containers/transactions/SaleWalkin")),
     parent: "Transaction",
     isFashNav: true
@@ -149,13 +149,6 @@ export const modules = {
     icon: "icon-reports",
     route: "reports",
     title: <Translate id="text_report" />
-  },
-  SaleReport: {
-    title: <Translate id="text_sale_report" />,
-    icon: "icon-sale-report",
-    route: "/reports/sale",
-    component: loadComponet(import("../../../../pos/containers/reports/Sale/ReportSaleSummary")),
-    parent: "Report"
   },
   ProductReport: {
     title: <Translate id="text_product_report" />,

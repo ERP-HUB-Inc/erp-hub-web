@@ -41,7 +41,7 @@ export default class Modal extends Component {
 
     this.isDefaultDataSource = [
       {
-        name: <this.Translate id="select_text_is_default_yes" />,
+        name: <this.Translate id="text_yes" />,
         value: this.Enum.IS_DEFAULT
       },
       {

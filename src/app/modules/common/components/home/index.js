@@ -85,7 +85,7 @@ export default class Home extends Component {
           }
           icon="icon-dollar" title={<this.Translate id="text_today_is_sale"/>}
           readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
-          to="transactions/salehistory?salehistory=1" />
+          to="reports/sale_summaries" />
 
         <Board
           contentValue={
@@ -98,7 +98,7 @@ export default class Home extends Component {
           icon="icon-list" title={<this.Translate id="text_today_is_transaction"/>}
           readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
           route="read"
-          to="transactions/salehistory?salehistory=1" />
+          to="reports/sale_summaries" />
 
         <Board contentValue={
           <CountUp
@@ -110,7 +110,7 @@ export default class Home extends Component {
         icon="icon-stock" title={<this.Translate id="text_today_is_product_sold"/>}
         readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
         route="read"
-        to="#" />
+        to="reports/sold_products" />
 
         <Board
           contentValue={
