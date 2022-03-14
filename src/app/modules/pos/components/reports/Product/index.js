@@ -43,7 +43,13 @@ export default class ProductList extends List {
     }
   }
 
-  handleSubmitFilter(e){
+  onChangePagination(current, pageSize) {
+    const viewStock = this.Util.getQueryParam(this.props.location, "viewStock");
+    this.props.dispatch(ProductReportAction.getProductReport({limit: pageSize, offset: (current - 1) * pageSize, viewStock}));
+    this.setState({current});
+  }
+
+  handleSubmitFilter(e) {
     if (this.action != null) {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {

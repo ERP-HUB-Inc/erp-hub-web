@@ -9,13 +9,16 @@ import {
   Col
 } from "antd";
 import moment from "moment";
+import { connect } from "react-redux";
 import { Translate } from "react-localize-redux";
 import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
+import SelectLocation from "../../../../common/components/SelectLocation";
 import ReportSaleService from "../../../services/report/SaleService";
 import "./index.css";
 
-export default function ReportSaleSummary() {
+function ReportSaleSummary() {
+  const [locationId, setLocationId] = React.useState((new Util()).getLocationId());
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState(null);
   const [fromValue, setFromValue] = React.useState(moment());
@@ -24,17 +27,22 @@ export default function ReportSaleSummary() {
   const onFromChange = value => {
       setFromValue(value);
       setToValue(value);
-      fetchReport(value, value);
+      fetchReport(locationId, value, value);
   };
 
   const onToChange = value => {
       setToValue(value);
-      fetchReport(fromValue, value);
+      fetchReport(locationId, fromValue, value);
   };
 
-  const fetchReport = (from, to) => {
+  const onChangeLocation = locationId => {
+    fetchReport(locationId, fromValue, toValue);
+    setLocationId(locationId);
+  };
+
+  const fetchReport = (locationId, from, to) => {
     setLoading(true);
-    ReportSaleService.getReportSummary(from.format("YYYY-MM-DD"), to.format("YYYY-MM-DD"))
+    ReportSaleService.getReportSummary(locationId, from.format("YYYY-MM-DD"), to.format("YYYY-MM-DD"))
     .then(response => {
       if (response.data) {
         setData(response.data);
@@ -46,7 +54,7 @@ export default function ReportSaleSummary() {
   };
 
   React.useEffect(() => {
-    fetchReport(fromValue, toValue);
+    fetchReport(locationId, fromValue, toValue);
     //eslint-disable-next-line
   }, []);
 
@@ -58,10 +66,14 @@ export default function ReportSaleSummary() {
           paddingRight: 0
       }}
       onBack={() => history.goBack()}
-      title="Sale Summary"
+      title={<Translate id="text_sale_summary" />}
       subTitle=""
       extra={[
         <div style={{display: "flex"}} key="1">
+          <SelectLocation
+            defaultValue={locationId}
+            onChange={onChangeLocation} />
+
           <DatePicker
               format="DD/MM/YYYY"
               value={fromValue}
@@ -82,7 +94,7 @@ export default function ReportSaleSummary() {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Revenue"
+              title={<Translate id="text_revenue" />}
               value={data ? data.revenue : 0}
               precision={2}
             />
@@ -91,7 +103,7 @@ export default function ReportSaleSummary() {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Cost of Goods Sold"
+              title={<Translate id="text_cost_of_good" />}
               value={data ? data.cost : 0}
               precision={2}
             />
@@ -100,7 +112,7 @@ export default function ReportSaleSummary() {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Gross Profit"
+              title={<Translate id="text_gross_profit" />}
               value={data ? data.profit : 0}
               precision={2}
             />
@@ -109,7 +121,7 @@ export default function ReportSaleSummary() {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Margin"
+              title={<Translate id="text_margin" />}
               value={data && data.margin ? data.margin : 0}
               precision={2}
               suffix="%"
@@ -179,3 +191,11 @@ export default function ReportSaleSummary() {
       </Row>
   </div>;
 }
+
+function mapStateToProps(state) {
+  return {
+    locale: state.locale
+  };
+}
+
+export default connect(mapStateToProps)(ReportSaleSummary);

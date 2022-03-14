@@ -82,7 +82,7 @@ export default function ReportSaleByProduct() {
           paddingRight: 0
       }}
       onBack={() => history.goBack()}
-      title="Product Sale Report"
+      title={<Translate id="text_product_sale_report" />}
       subTitle=""
       extra={[
         <div style={{display: "flex"}} key="1">
@@ -106,7 +106,7 @@ export default function ReportSaleByProduct() {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Revenue"
+              title={<Translate id="text_revenue" />}
               value={summary ? summary.totalRevenue : 0}
               precision={2}
             />
@@ -115,7 +115,7 @@ export default function ReportSaleByProduct() {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Cost of Goods Sold"
+              title={<Translate id="text_cost_of_good" />}
               value={summary ? summary.totalCost : 0}
               precision={2}
             />
@@ -124,7 +124,7 @@ export default function ReportSaleByProduct() {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Gross Profit"
+              title={<Translate id="text_gross_profit" />}
               value={totalProfit}
               precision={2}
             />
@@ -133,7 +133,7 @@ export default function ReportSaleByProduct() {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Margin"
+              title={<Translate id="text_margin" />}
               value={totalMargin}
               precision={2}
               suffix="%"

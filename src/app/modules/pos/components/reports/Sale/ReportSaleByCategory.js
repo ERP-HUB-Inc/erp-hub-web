@@ -37,7 +37,7 @@ function ReportSaleByCategory() {
   const fetchReport = (from, to) => {
     setLoading(true);
     ReportSaleService.getReportSummaryByCategory({startDate: from.format("YYYY-MM-DD"), endDate: to.format("YYYY-MM-DD")})
-    .then(response => {console.log("DDDD:", response);
+    .then(response => {
       if (response.data) {
         setData(response.data);
         const totalRevenue = _.sumBy(response.data, value => parseFloat(value.revenue)),
@@ -78,7 +78,7 @@ function ReportSaleByCategory() {
           paddingRight: 0
       }}
       onBack={() => history.goBack()}
-      title="Category Sale Report"
+      title={<Translate id="text_categories_sale_report" />}
       subTitle=""
       extra={[
         <div style={{display: "flex"}}>
@@ -102,7 +102,7 @@ function ReportSaleByCategory() {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Revenue"
+              title={<Translate id="text_revenue" />}
               value={summary ? summary.totalRevenue : 0}
               precision={2}
             />
@@ -111,7 +111,7 @@ function ReportSaleByCategory() {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Cost of Goods Sold"
+              title={<Translate id="text_cost_of_good" />}
               value={summary ? summary.totalCost : 0}
               precision={2}
             />
@@ -120,7 +120,7 @@ function ReportSaleByCategory() {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Gross Profit"
+              title={<Translate id="text_gross_profit" />}
               value={totalProfit}
               precision={2}
             />
@@ -129,7 +129,7 @@ function ReportSaleByCategory() {
         <Col span={6}>
           <Card>
             <Statistic
-              title="Margin"
+              title={<Translate id="text_margin" />}
               value={totalMargin}
               precision={2}
               suffix="%"

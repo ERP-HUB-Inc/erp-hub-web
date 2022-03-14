@@ -56,7 +56,7 @@ function ReportSaleByCustomer() {
           paddingRight: 0
       }}
       onBack={() => history.goBack()}
-      title="Customer Sale Report"
+      title={<Translate id="text_customers_sale_report" />}
       subTitle=""
       extra={[
         <div style={{display: "flex"}}>
@@ -105,7 +105,7 @@ function ReportSaleByCustomer() {
                 key: "address"
               },
               {
-                title: "Number of Order",
+                title: <Translate id="text_number_of_order" />,
                 dataIndex: "numberOfOrder",
                 key: "numberOfOrder"
               },

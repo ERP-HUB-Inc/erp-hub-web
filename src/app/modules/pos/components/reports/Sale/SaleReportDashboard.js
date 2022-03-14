@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import "./index.css";
 import history from "../../../../common/router/history";
+import { Translate } from "react-localize-redux";
 
 export default function SaleReportDashboard() {
     return <div id="sale-report-dashboard">
@@ -21,7 +22,7 @@ export default function SaleReportDashboard() {
                 paddingRight: 0
             }}
             onBack={() => history.goBack()}
-            title="Sale Report"
+            title={<Translate id="text_sale_report" />}
             subTitle=""
             />
         <Row gutter={16} style={{marginBottom: 15}}>
@@ -30,7 +31,7 @@ export default function SaleReportDashboard() {
                     title={
                         <div>
                             <Icon type="line-chart" style={{fontSize: 20}} />
-                            <span style={{marginLeft: 15}}>Sale Summary</span>
+                            <span style={{marginLeft: 15}}><Translate id="text_sale_summary" /></span>
                         </div>
                     }
                     bordered={false}>
@@ -44,14 +45,18 @@ export default function SaleReportDashboard() {
                         </ul>
                     </div>
                     <div className="footer">
-                        <Link to="/reports/sale_summaries" className="ant-btn">View</Link>
+                        <Link to="/reports/sale_summaries" className="ant-btn">
+                            <Translate id="text_view"/>
+                        </Link>
                     </div>
                 </Card>
             </Col>
             <Col span={8}>
                 <Card title={<div>
                     <Icon type="line-chart" style={{fontSize: 20}} />
-                    <span style={{marginLeft: 15}}>Products</span>
+                    <span style={{marginLeft: 15}}>
+                        <Translate id="text_sale_product_summary" />
+                    </span>
                 </div>} bordered={false}>
                     <div className="content">
                         <ul style={{listStyle: "none", paddingLeft: 0}}>
@@ -63,7 +68,9 @@ export default function SaleReportDashboard() {
                         </ul>
                     </div>
                     <div className="footer">
-                        <Link to="/reports/sold_products" className="ant-btn">View</Link>
+                        <Link to="/reports/sold_products" className="ant-btn">
+                            <Translate id="text_view"/>
+                        </Link>
                     </div>
                 </Card>
             </Col>
@@ -72,7 +79,7 @@ export default function SaleReportDashboard() {
                     title={
                         <div>
                             <Icon type="line-chart" style={{fontSize: 20}} />
-                            <span style={{marginLeft: 15}}>Categories</span>
+                            <span style={{marginLeft: 15}}><Translate id="text_sale_categories_summary"/></span>
                         </div>
                     }
                     bordered={false}>
@@ -86,7 +93,9 @@ export default function SaleReportDashboard() {
                         </ul>
                     </div>
                     <div className="footer">
-                        <Link to="/reports/sold_categories" className="ant-btn">View</Link>
+                        <Link to="/reports/sold_categories" className="ant-btn">
+                            <Translate id="text_view"/>
+                        </Link>
                     </div>
                 </Card>
             </Col>
@@ -97,21 +106,23 @@ export default function SaleReportDashboard() {
                     title={
                         <div>
                             <Icon type="line-chart" style={{fontSize: 20}} />
-                            <span style={{marginLeft: 15}}>Cashiers</span>
+                            <span style={{marginLeft: 15}}><Translate id="text_sale_cashiers_summary" /></span>
                         </div>
                     }
                     bordered={false}>
                     <div className="content">
                         <ul style={{listStyle: "none", paddingLeft: 0}}>
-                            <li>- group sold products by category</li>
-                            <li>- count sold quantity by category</li>
-                            <li>- display revenue by category</li>
-                            <li>- include cogs by category</li>
-                            <li>- include profit by category</li>
+                            <li>- group sold products by cashier</li>
+                            <li>- count sold quantity by cashier</li>
+                            <li>- display revenue by cashier</li>
+                            <li>- include cogs by cashier</li>
+                            <li>- include profit by cashier</li>
                         </ul>
                     </div>
                     <div className="footer">
-                        <Link to="/reports/sold_cashiers" className="ant-btn">View</Link>
+                        <Link to="/reports/sold_cashiers" className="ant-btn">
+                            <Translate id="text_view"/>
+                        </Link>
                     </div>
                 </Card>
             </Col>
@@ -120,7 +131,7 @@ export default function SaleReportDashboard() {
                     title={
                         <div>
                             <Icon type="line-chart" style={{fontSize: 20}} />
-                            <span style={{marginLeft: 15}}>Customers</span>
+                            <span style={{marginLeft: 15}}><Translate id="text_sale_customers_summary" /></span>
                         </div>
                     }
                     bordered={false}>
@@ -134,7 +145,9 @@ export default function SaleReportDashboard() {
                         </ul>
                     </div>
                     <div className="footer">
-                        <Link to="/reports/sold_customers" className="ant-btn">View</Link>
+                        <Link to="/reports/sold_customers" className="ant-btn">
+                            <Translate id="text_view"/>
+                        </Link>
                     </div>
                 </Card>
             </Col>
@@ -143,21 +156,23 @@ export default function SaleReportDashboard() {
                     title={
                         <div>
                             <Icon type="line-chart" style={{fontSize: 20}} />
-                            <span style={{marginLeft: 15}}>Locations</span>
+                            <span style={{marginLeft: 15}}><Translate id="text_sale_locations_summary" /></span>
                         </div>
                     }
                     bordered={false}>
                     <div className="content">
                         <ul style={{listStyle: "none", paddingLeft: 0}}>
-                            <li>- group sold products by category</li>
-                            <li>- count sold quantity by category</li>
-                            <li>- display revenue by category</li>
-                            <li>- include cogs by category</li>
-                            <li>- include profit by category</li>
+                            <li>- group sold products by location</li>
+                            <li>- count sold quantity by location</li>
+                            <li>- display revenue by location</li>
+                            <li>- include cogs by location</li>
+                            <li>- include profit by location</li>
                         </ul>
                     </div>
                     <div className="footer">
-                        <Link to="/reports/sold_locations" className="ant-btn">View</Link>
+                        <Link to="/reports/sold_locations" className="ant-btn">
+                            <Translate id="text_view"/>
+                        </Link>
                     </div>
                 </Card>
             </Col>
