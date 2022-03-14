@@ -247,8 +247,7 @@ export default {
 
   "error_price_require": [
     "Price require",
-    "តំរូវអោយបញ្ចូលតំលៃ",
+    "សូមបញ្ចូលតម្លៃ",
     "Price require"
-  ],
-
+  ]
 };

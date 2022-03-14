@@ -5,7 +5,7 @@ import {
 } from "../../../../common/elements/ant-ui/Select";
 import Enum from "../../../enums";
 import Modal from "../../../../common/components/shares/Modal";
-import LocationService from "../../../../pos/services/settings/StoreLocationService";
+import LocationService from "../../../../pos/services/settings/LocationService";
 
 function SelectLocation({form, label, placeholder, formData, onChange}) {
   const [locations, setLocations] = React.useState([]);

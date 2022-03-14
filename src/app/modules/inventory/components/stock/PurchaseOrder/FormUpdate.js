@@ -39,10 +39,12 @@ export default class PurchaseOrderUpdate extends Component {
     this.props.dispatch(PurchaseOrderAction.detail({id}));
 
     window.addEventListener("keydown", (e) => {
-      const S = 83;
-      if (e.keyCode === S && e.ctrlKey) {
-        e.preventDefault();
-        document.getElementById("btnSubmit").click();
+      if (!this.props.purchaseOrderUpdate.updating) {
+        const S = 83;
+        if (e.keyCode === S && e.ctrlKey) {
+          e.preventDefault();
+          document.getElementById("btnSubmit").click();
+        }
       }
     });
   }

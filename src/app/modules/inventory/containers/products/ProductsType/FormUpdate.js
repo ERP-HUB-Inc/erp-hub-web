@@ -17,7 +17,6 @@ function mapStateToProps(state) {
     productsType: state.reducer.productsType.request.list,
     productsTypeDetail: state.reducer.productsType.detail,
     initialValues: state.reducer.productsType.update.data,
-    storeLanguage: state.reducer.storeLanguage.request.list,
     locale: state.locale
   };
 }

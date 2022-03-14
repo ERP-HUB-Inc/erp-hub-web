@@ -128,6 +128,30 @@ class ProductService extends BaseService {
       headers: this.header
     });
   }
+
+  detailForSplit(
+    productVariantId,
+    locationId
+  ){
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/detail_for_split/${productVariantId}?locationId=${locationId}`,
+      data: this.data,
+      headers: this.header
+    });
+  }
+
+  splitProduct(
+    productVariantId,
+    dataForSplit
+  ){
+    this.setHeader();
+    return this.POST({ 
+      url: `${this.baseUrl}/split/${productVariantId}`,
+      data: dataForSplit,
+      headers: this.header
+    });
+  }
 }
 
 export default new ProductService(); 

@@ -49,6 +49,16 @@ class Util {
     return productId;
   }
 
+  getProductVariantId(product) {
+    let productVariantId = "";
+
+    if (product && product.productVariants) {
+      productVariantId = product.productVariants[0].id;
+    }
+
+    return productVariantId;
+  }
+
   getProductBarcode(product) {
     return this.isValidProductVariant(product) ? product.productVariants[0].barcode : "";
   }

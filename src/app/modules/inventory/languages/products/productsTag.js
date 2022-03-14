@@ -1,13 +1,13 @@
 export default {
   "create_products_tag_title": [
     "Product Tag",
-    "ស្លាកតំលៃផលិតផល",
+    "ស្លាកតម្លៃផលិតផល",
     "Product Tag"
   ],
       
   "update_products_tag_title": [
     "Product Tag",
-    "ស្លាកតំលៃផលិតផល",
+    "ស្លាកតម្លៃផលិតផល",
     "Product Tag"
   ],
 

@@ -28,10 +28,12 @@ export default class FormCreate extends Component {
 
   componentDidMount() {
     window.addEventListener("keydown", (e) => {
-      const S = 83;
-      if (e.keyCode === S && e.ctrlKey) {
-        e.preventDefault();
-        document.getElementById("btnSubmit").click();
+      if (!this.props.purchaseOrderAdd.adding) {
+        const S = 83;
+        if (e.keyCode === S && e.ctrlKey) {
+          e.preventDefault();
+          document.getElementById("btnSubmit").click();
+        }
       }
     });
   }
