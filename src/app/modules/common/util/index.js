@@ -183,8 +183,8 @@ export default class Util {
     return moment(value).format(format);
   }
 
-  formatDateTime (value, format = "DD MMMM YYYY h:mm:ss A") {
-    format = format == null ? "DD MMMM YYYY h:mm:ss A" : format;
+  formatDateTime (value, format = "DD/MM/YYYY h:mm A") {
+    format = format == null ? "DD/MM/YYYY h:mm A" : format;
     return moment(value).format(format);
   }
 
@@ -375,19 +375,20 @@ export default class Util {
 
     var mywindow = window.open("", "PRINT", `height=${height},width=${width},top=${top},${left}`);
 
-    mywindow.document.write("<html><head><title>" + document.title  + "</title>");
-    mywindow.document.write("</head><body >");
-    mywindow.document.write(contentHtml);
-    mywindow.document.write("</body></html>");
+    if (mywindow) {
+      mywindow.document.write("<html><head><title>" + document.title  + "</title>");
+      mywindow.document.write("</head><body >");
+      mywindow.document.write(contentHtml);
+      mywindow.document.write("</body></html>");
 
-    mywindow.document.close();
-    mywindow.focus();
+      mywindow.document.close();
+      mywindow.focus();
 
-    setTimeout(function() {
-      mywindow.print();
-      // mywindow.close();
-    }, 250);
-
+      setTimeout(function() {
+        mywindow.print();
+      }, 250);
+    }
+    
     return true;
   }
 

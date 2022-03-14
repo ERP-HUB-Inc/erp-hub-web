@@ -6,12 +6,32 @@ import FormCreate from "../../../containers/settings/StoreLocation/FormCreate";
 import FormUpdate from "../../../containers/settings/StoreLocation/FormUpdate";
 import Constant from "../../../constants/settings/storeLocation";
 import LocationAction from "../../../action/settings/location";
-import LocationService from "../../../services/settings/StoreLocationService";
+import LocationService from "../../../services/settings/LocationService";
 
 export default class LocationList extends List {
   constructor(props) {
     super(props);
-    this.columns = new Column();
+    this.state = {
+      ...this.state,
+      isShowFilter: false
+    };
+    this.columns = [
+      {
+        title: <this.Translate id="text_name" />,
+        dataIndex: "name",
+        key: "name",
+        render: (name, record) => {
+          return <div>
+            <span>{name}</span>{ record.isDefault === this.Enum.IS_DEFAULT  ? <this.TagLabel color="blue" style={{marginLeft: 10}}><this.Translate id="text_is_default" /></this.TagLabel> : "" }
+          </div>;
+        }
+      },
+      {
+        title: <this.Translate id="text_sort" />,
+        dataIndex: "sort",
+        key: "sort"
+      }
+    ];
     this.formCreate = <FormCreate/>;
     this.formUpdate = <FormUpdate/>;
     this.columnFilterWithKey = ["name"];
@@ -24,7 +44,7 @@ export default class LocationList extends List {
     if (this.action && this.formCreate) {
       this.setState({loadingPopup: true});
       this.PrivilegeService.checkPermission(this.service.createRoute)
-        .then(response => {
+        .then(() => {
           this.props.dispatch(this.action.showForm());
           this.setState({
             modalConten: this.formCreate,
@@ -62,41 +82,7 @@ export default class LocationList extends List {
     }
   }
 
-  checkIsAllowEditRecordOrNot() {}
-}
+  checkIsAllowEditRecordOrNot() {
 
-class Column extends List {
-  constructor(props) {
-    super(props);
-    return [
-      this.columnNo,
-      {
-        title: <this.Translate id="text_name" />,
-        dataIndex: "name",
-        render: (text, record, index) => {
-          return <div>
-            <span>{record.name}</span>{ record.isDefault === this.Enum.IS_DEFAULT  ? <this.TagLabel color="blue" style={{marginLeft: 10}}><this.Translate id="text_is_default" /></this.TagLabel> : "" }
-          </div>;
-        },
-        sorter: true
-      },
-      {
-        title: <this.Translate id="col_store_location_code" />,
-        dataIndex: "code",
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_receipt_template" />,
-        dataIndex: "receiptTemplate",
-        sorter: true,
-        render: receiptTemplate => receiptTemplate ? receiptTemplate.name : this.emptyCell
-      },
-      {
-        title: <this.Translate id="text_address" />,
-        dataIndex: "address",
-        sorter: true
-      },
-      this.columnStatus
-    ];
   }
 }

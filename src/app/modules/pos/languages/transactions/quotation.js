@@ -21,12 +21,12 @@ export default {
   ],
   "text_create_quotation": [
     "Create Quotation",
-    "បង្កើតសម្រង់តំលៃ",
+    "បង្កើតសម្រង់តម្លៃ",
     "Create Quotation"
   ],
   "text_save_quotation": [
     "Save Quotation",
-    "រក្សាទុកសម្រង់តំលៃ",
+    "រក្សាទុកសម្រង់តម្លៃ",
     "Save Quotation"
   ],
   "text_list_quotation": [
@@ -36,7 +36,7 @@ export default {
   ],
   "text_edit_quotation": [
     "Edit Quotation",
-    "កែប្រែសម្រង់តំលៃ",
+    "កែប្រែសម្រង់តម្លៃ",
     "Edit Quotation"
   ],
   "text_all_customer": [
@@ -46,12 +46,12 @@ export default {
   ],
   "text_error_not_create_quotation": [
     "Can't create quotation because don't have product!",
-    "មិនអាចបង្កើតសម្រង់តំលៃបានទេពីព្រោះផលិតផលគ្មានផលិតផល!",
+    "មិនអាចបង្កើតសម្រង់តម្លៃបានទេពីព្រោះផលិតផលគ្មានផលិតផល!",
     "Can't create quotation because don't have product!"
   ],
   "text_error_create_quotation": [
     "Please search customer before create quotation !",
-    "សូមស្វែងរកអតិថិជនមុនពេលបង្កើតសម្រង់តំលៃ !",
+    "សូមស្វែងរកអតិថិជនមុនពេលបង្កើតសម្រង់តម្លៃ !",
     "Please search customer before create quotation !"
   ],
   "text_error_allow_process_only_draft_step": [

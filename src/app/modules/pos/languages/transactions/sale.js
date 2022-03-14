@@ -91,7 +91,7 @@ export default {
 
   "text_about_discount": [
     "This discount will be applied to all items",
-    "គ្រប់ទំនិញនឹងត្រូវ បញ្ចុះតំលៃ",
+    "គ្រប់ទំនិញនឹងត្រូវ បញ្ចុះតម្លៃ",
     "This discount will be applied to all items"
   ],
 

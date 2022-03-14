@@ -1,6 +1,6 @@
 import BaseService from "../BaseService";
 
-class StoreLocationService extends BaseService {
+class LocationService extends BaseService {
 
   constructor() {
     super();
@@ -28,4 +28,4 @@ class StoreLocationService extends BaseService {
   }
 }
 
-export default new StoreLocationService();
+export default new LocationService();

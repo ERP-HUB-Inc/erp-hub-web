@@ -1,5 +1,5 @@
 import React from "react";
-import {Offline} from "react-detect-offline";
+// import {Offline} from "react-detect-offline";
 import {Layout} from "antd";
 import {
   Route,
@@ -16,12 +16,13 @@ import dataSource from "../components/layout/SiderBar/datasource";
 import AuthService from "../services/AuthService";
 import Authentication from "../constants/authentication";
 import ProductCreate from "../../inventory/containers/products/Product/FormCreate";
+import ProductSplit from "../../inventory/components/products/Product/ProductSplit";
 import ProductUpdate from "../../inventory/containers/products/Product/FormUpdate";
 import AdjustmentCreate from "../../inventory/containers/stock/StockAdjustmentRequest/FormCreate";
 import AdjustmentUpdate from "../../inventory/containers/stock/StockAdjustmentRequest/FormUpdate";
 import PurchaseOrderCreate from "../../inventory/containers/stock/PurchaseOrder/FormCreate";
 import PurchaseOrderUpdate from "../../inventory/containers/stock/PurchaseOrder/FormUpdate";
-import ReportSaleSummary from "../../pos/containers/reports/Sale/ReportSaleSummary";
+import ReportSaleSummary from "../../pos/components/reports/Sale/ReportSaleSummary";
 import ReportSaleByProduct from "../../pos/containers/reports/Sale/ReportSaleByProduct";
 import ReportSaleByCategory from "../../pos/components/reports/Sale/ReportSaleByCategory";
 import ReportSaleByCashier from "../../pos/components/reports/Sale/ReportSaleByCashier";
@@ -43,13 +44,11 @@ class Router extends Component {
           localStorage.removeItem(Authentication.ACCESS_TOKEN);
           history.push("/signin");
         }
-      })
-      .catch(error => {
       });
 
     return (
       <Layout>
-        <Offline>
+        {/* <Offline>
           <div id="offline">
             <this.Alert
               message="No internet connection"
@@ -57,10 +56,10 @@ class Router extends Component {
               type="warning"
               showIcon/>
           </div>
-        </Offline>
+        </Offline> */}
         <Headers />
         <SideBar />
-        <Content className={`layoutContent${window.location.pathname === "/transactions/pos" ? "full-screen" : ""}`} id="center-container">
+        <Content className={`layoutContent${window.location.pathname === "/pos" ? "full-screen" : ""}`} id="center-container">
           <Switch>
             {
               Object.keys(dataSource).map((key) => 
@@ -73,6 +72,7 @@ class Router extends Component {
               )
             }
             <Route path="/products/create" component={ProductCreate} />
+            <Route path="/products/split/:productVariantId" component={ProductSplit} />
             <Route path="/products/update/:id" component={ProductUpdate} />
             <Route path="/stocks/adjustment/create" component={AdjustmentCreate} />
             <Route path="/stocks/adjustment/update/:id" component={AdjustmentUpdate} />

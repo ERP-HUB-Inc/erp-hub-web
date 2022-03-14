@@ -1,28 +1,87 @@
 export default {
-  "text_revenue": [
-    "Revenue",
-    "ប្រាក់ចំណូល",
-    "Revenue"
-  ],
   "text_sale_summary": [
     "Sale Summary",
-    "របាយការណ៍លក់",
-    "Sale Summary"
+    "សង្ខេបការលក់"
   ],
+
+  "text_product_sale_report": [
+    "Product Sale Report",
+    "របាយការណ៍លក់ផលិតផល"
+  ],
+
+  "text_categories_sale_report": [
+    "Categories Sale Report",
+    "របាយការណ៍លក់តាមប្រភេទផលិតផល"
+  ],
+
+  "text_cashiers_sale_report": [
+    "Cashier Sale Report",
+    "របាយការណ៍តាមបុគ្គលិកលក់"
+  ],
+
+  "text_customers_sale_report": [
+    "Customer Sale Report",
+    "របាយការណ៍លក់តាមអតិថិជន"
+  ],
+
+  "text_locations_sale_report": [
+    "Location Sale Report",
+    "របាយការណ៍លក់តាមទីតាំង"
+  ],
+
+  "text_sale_product_summary": [
+    "Products",
+    "សង្ខេបការលក់តាមផលិតផល"
+  ],
+
+  "text_sale_categories_summary": [
+    "Categories",
+    "សង្ខេបការលក់តាមប្រភេទផលិតផល"
+  ],
+
+  "text_sale_cashiers_summary": [
+    "Cashiers",
+    "សង្ខេបការលក់តាមបុគ្គលិកលក់"
+  ],
+
+  "text_sale_customers_summary": [
+    "Customers",
+    "សង្ខេបការលក់តាមអតិថិជន"
+  ],
+
+  "text_sale_locations_summary": [
+    "Locations",
+    "សង្ខេបការលក់តាមទីតាំង"
+  ],
+
+  "text_revenue": [
+    "Revenue",
+    "ប្រាក់ចំណូល"
+  ],
+
+  "text_sale_report": [
+    "Sale Report",
+    "របាយការណ៍លក់"
+  ],
+
   "text_cost_of_good": [
     "Cost of Goods",
-    "ថ្លៃដើមទំនិញ",
-    "Cost of Goods"
+    "ថ្លៃដើមទំនិញ"
   ],
+
   "text_gross_profit": [
     "Gross Profit",
-    "ប្រាក់​ចំណេញ​ដុល",
-    "Gross Profit"
+    "ប្រាក់​ចំណេញ​ដុល"
   ],
+
   "text_margin": [
     "Margin",
-    "គំលាតលុយចំនេញ",
-    "Margin"
+    "គំលាតលុយចំនេញ"
+  ],
+
+  "text_number_of_order": [
+    "Number of Order",
+    "ចំនួនការកម្មង់"
   ]
 };
   

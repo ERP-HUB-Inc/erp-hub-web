@@ -72,9 +72,9 @@ export default {
   ],
 
   "currency_exchange": [
-    "Currency Exchange",
-    "ប្តូររូបិយប័ណ្ណ",
-    "Currency Exchange"
+    "Exchange Rate",
+    "អត្រាប្តូរប្រាក់",
+    "Exchange Rate"
   ],
 
   "exchange_rate": [

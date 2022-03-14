@@ -9,9 +9,9 @@ export default {
     "របាយការណ៍"
   ],
 
-  "text_sale_history": [
-    "Sale History",
-    "ប្រវត្តិលក់"
+  "text_sales": [
+    "Sales",
+    "ការលក់"
   ],
   
   "text_sale_order": [
@@ -21,7 +21,7 @@ export default {
 
   "text_pos": [
     "POS",
-    "លក់"
+    "POS"
   ],
   
   "text_return_exchange": [
@@ -51,12 +51,12 @@ export default {
   
   "text_print_price_tags": [
     "Print Price Tag",
-    "បោះពុម្ភស្លាកតំលៃ"
+    "បោះពុម្ភស្លាកតម្លៃ"
   ],
   
   "text_manage_unit": [
-    "Manage Unit",
-    "គ្រប់គ្រងឯកតា"
+    "Unit",
+    "ឯកតា"
   ],
   
   "text_purchase_order": [

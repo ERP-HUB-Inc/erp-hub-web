@@ -1,10 +1,4 @@
 export default {
-  "input-sale-history-store": [
-    "Store",
-    "ហាង",
-    "Store"
-  ],
-
   "text_transaction_no": [
     "No",
     "លេខប្រតិបត្តិការ",

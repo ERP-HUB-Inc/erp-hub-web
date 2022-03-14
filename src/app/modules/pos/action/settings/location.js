@@ -1,6 +1,5 @@
-  
 import Constant from "../../constants/settings/storeLocation";
-import LoctionService from "../../services/settings/StoreLocationService";
+import LoctionService from "../../services/settings/LocationService";
 
 export default{
   fetch:(limit, offset, sortField, sortOrder, filter, searchKey) => {

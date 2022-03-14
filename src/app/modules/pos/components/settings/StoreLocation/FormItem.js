@@ -31,13 +31,21 @@ export default class FormItem extends Modal {
           dataSource={this.props.receiptTemplates}
           defaultValue={formData.id ? formData.receiptTemplateId : this.props.receiptTemplates.length > 0 ? this.props.receiptTemplates[0].id : ""}
           valueKey="id"
-          form={form}/>
+          form={form} />
+        <this.InputNumber
+          data={formData.sort}
+          name="sort"
+          precision={0}
+          label={<this.Translate id="text_sort" />}
+          placeholder={this.CATranslate("text_sort", locale)}
+          form={form} />
         <this.Select
           name="status"
           label={<this.Translate id="text_status" />}
           dataSource={this.statusDataSource}
           defaultValue={formData.status}
-          form={form}/>
+          className="hidden"
+          form={form} />
       </div>
     );
   }

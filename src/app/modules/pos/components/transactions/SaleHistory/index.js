@@ -10,12 +10,9 @@ import ReceivePaymentAction from "../../../action/transaction/receivePayment";
 import TransactionService from "../../../services/transactions/TransactionService";
 import ReceiePaymentForm from "../../../containers/transactions/SaleHistory/ReceivePayment";
 import LocationAction from "../../../action/settings/location";
-import UserAction from "../../../../common/actions/users";
-// import InventoryUtil from "../../../../inventory/utils";
 import InventoryEnum from "../../../../inventory/enums";
 import history from "../../../../../modules/common/router/history";
 import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
-// import product from "../../../../inventory/constants/products/product";
 
 export default class SaleHistoryList extends List {
   constructor(props) {
@@ -29,7 +26,7 @@ export default class SaleHistoryList extends List {
       isRequestShowDetail: false,
       isRequestReceivePayment: false
     };
-    this.title = <this.Translate id="text_sale_history"/>;
+    this.title = <this.Translate id="text_sales"/>;
     this.fetchingProp = "list";
     this.columnFilterWithKey = ["firstName", "lastName", "email", "phoneNumber"];
     this.TRANSACTION_TYPE_STR = [
@@ -192,7 +189,6 @@ export default class SaleHistoryList extends List {
     if(parseInt(this.Util.getParameterByName("salehistory"), 10) === 1) {
       this.handleSubmitCurrentSearchFilter();
     }
-
   }  
 
   componentDidUpdate() {
@@ -282,7 +278,6 @@ export default class SaleHistoryList extends List {
     return new Promise(() => {
       setTimeout(() => {
         this.props.dispatch(LocationAction.fetch(100));
-        this.props.dispatch(UserAction.fetch(100));
         this.props.dispatch(ReceiptTemplateAction.default());
       }, 2000);
     });
@@ -428,7 +423,11 @@ export default class SaleHistoryList extends List {
     });
   }
 
-  renderButtonAddNew(){
+  buttonActionCollection() {
+    return [];
+  }
+
+  renderButtonAddNew() {
     return <this.Button className="mg-right text-uppercase" type="info" loading={this.props.detail.fetching && this.state.isRequestReprint} onClick={this.handleRePrint}>
       <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print" />
       <div id="receiptLogoPreLoading" style={{ display: "none" }}>
@@ -501,17 +500,7 @@ export default class SaleHistoryList extends List {
                 dataSource={this.storeList.concat(this.props.storeLocation.list)}
                 defaultValue=""
                 valueKey="id"
-                label={<this.Translate id="input-sale-history-store" />}
-                form={this.props.form}/>
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="userId"
-                dataSource={this.employeeList.concat(this.props.users.list)}
-                defaultValue=""
-                valueKey="id"
-                nameKey="fullName"
-                label={<this.Translate id="text_employee" />}
+                label={<this.Translate id="text_store" />}
                 form={this.props.form}/>
             </this.Col>
             {this.renderButtonSearch(fetchingProps)}
@@ -558,10 +547,6 @@ export default class SaleHistoryList extends List {
 
           if (values.locationId) {
             filter["locationId"] = [values.locationId];
-          }
-
-          if (values.userId) {
-            filter["userId"] = [values.userId];
           }
 
           if (values.number) {

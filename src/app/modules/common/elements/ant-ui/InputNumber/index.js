@@ -67,7 +67,7 @@ export class InputNumber extends Element {
         didUpdateMakeAutoFocus={this.props.didUpdateMakeAutoFocus}
         isAutoFocus={this.props.isAutoFocus}
         isAutoSelect={this.props.isAutoSelect}
-        isHideTool={this.props.isHideTool}/>
+        isHideTool={this.props.isHideTool} />
     );
   }   
 }

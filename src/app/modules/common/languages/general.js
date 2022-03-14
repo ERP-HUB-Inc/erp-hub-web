@@ -1,453 +1,413 @@
 export default {
   "text_action": [
     "Action",
-    "សកម្មភាព",
-    "Action"
+    "សកម្មភាព"
   ],
 
   "text_warning_info": [
     "Warning Information",
-    "ព័ត៏មានបញ្ជាក់",
-    "Warning Information"
+    "ព័ត៏មានបញ្ជាក់"
   ],
 
   "text_error_info": [
     "Error Information",
-    "ព័ត៏មានកំហុស",
-    "Error Information"
+    "ព័ត៏មានកំហុស"
   ],
   
   "text_no": [
     "No",
-    "លេខរៀង",
-    "No"
+    "លេខរៀង"
   ],
   
   "text_title": [
     "Title",
-    "ចំណងជើង",
-    "Title"
+    "ចំណងជើង"
   ],
   
   "text_logo": [
     "Logo",
-    "រូបសញ្ញា",
-    "Logo"
+    "រូបសញ្ញា"
   ],
   
   "text_key": [
     "Key",
-    "សោរ",
-    "Key"
+    "សោរ"
   ],
   
   "text_close": [
     "Close",
-    "បិត",
-    "Close"
+    "បិត"
   ],
   
   "text_yes": [
     "Yes",
-    "យល់ព្រម",
-    "Yes"
+    "យល់ព្រម"
   ],
 
   "text_disable": [
     "Disable",
-    "មិនអោយដំណើរការ",
-    "Disable"
+    "មិនអោយដំណើរការ"
   ],
 
   "text_enable": [
     "Enable",
-    "ដាក់អោយដំណើរការ",
-    "Enable"
+    "ដាក់អោយដំណើរការ"
   ],
   
   "text_cancel": [
     "Cancel",
-    "បោះបង់",
-    "Cancel"
+    "បោះបង់"
   ],
 
   "text_back": [
     "Back",
-    "ត្រឡប់ក្រោយ",
-    "Back"
+    "ត្រឡប់ក្រោយ"
   ],
   
   "text_canceled": [
     "Canceled",
-    "ត្រូវបានបោះបង់",
-    "Canceled"
+    "ត្រូវបានបោះបង់"
   ],
   
   "text_status": [
     "Status",
-    "ស្ថានភាព",
-    "Status"
+    "ស្ថានភាព"
   ],
   
   "text_is_default": [
     "Default",
-    "លំនាំដើម",
-    "Default"
+    "លំនាំដើម"
   ],
   
   "text_system": [
     "System",
-    "ប្រពន្ធ័",
-    "System"
+    "ប្រពន្ធ័"
   ],
   
   "text_user": [
     "User",
-    "អ្នកប្រើប្រាស់",
-    "User"
+    "អ្នកប្រើប្រាស់"
   ],
   
   "text_date": [
     "Date",
-    "កាលបរិច្ចេទ",
-    "Date"
+    "កាលបរិច្ចេទ"
   ],
 
   "text_try": [
     "Try",
-    "សាកល្បង",
-    "Try",
+    "សាកល្បង"
+  ],
+
+  "text_view": [
+    "View",
+    "មើល"
   ],
 
   "text_update_now": [
     "Update Now",
-    "ធ្វើបច្ចុប្បន្នភាព",
-    "Update Now"
+    "ធ្វើបច្ចុប្បន្នភាព"
   ],
 
   "text_sorry": [
     "Sorry",
-    "សូមអភ័យទោស",
-    "Sorry"
+    "សូមអភ័យទោស"
   ],
 
   "text_sorry_server_has_issue": [
     "Looks like we're having some server issues",
-    "ម៉ាស៊ីនបំរើកំពុងមានបញ្ហា​ សូមសាកល្បងតាមការណែនាំដូចខាងក្រោម",
-    "Looks like we're having some server issues"
+    "ម៉ាស៊ីនបំរើកំពុងមានបញ្ហា​ សូមសាកល្បងតាមការណែនាំដូចខាងក្រោម"
   ],
 
   "text_please_try_refresh_page": [
     "Please try to reload page",
-    "សូមព្យាយាមទាញយកប្រព័ន្ធម្តងទៀតដោយចុចលើប៊ូតុងទាញយកម្តងទៀត",
-    "Please try to reload page"
+    "សូមព្យាយាមទាញយកប្រព័ន្ធម្តងទៀតដោយចុចលើប៊ូតុងទាញយកម្តងទៀត"
   ],
 
   "text_please_contact_us": [
     "Please contact with customer support​ to solve problem",
-    "សូមទំនាក់ទំនងទៅកាន់ផ្នែកបម្រើអតិថិជនដើម្បីដោះស្រាយបញ្ហានេះ",
-    "Please contact with customer support​ to solve problem"
+    "សូមទំនាក់ទំនងទៅកាន់ផ្នែកបម្រើអតិថិជនដើម្បីដោះស្រាយបញ្ហានេះ"
   ],
 
   "text_reload": [
     "Reload",
-    "ទាញយកម្តងទៀត",
-    "Reload"
+    "ទាញយកម្តងទៀត"
   ],
   
   "text_add": [
     "Add",
-    "បញ្ចូល",
-    "Add"
+    "បញ្ចូល"
   ],
   
   "text_add_new": [
     "Add New",
-    "បន្ថែម​ថ្មី",
-    "Add New"
+    "បន្ថែម​ថ្មី"
   ],
   
   "text_delete": [
     "Delete",
-    "លុប",
-    "Delete"
+    "លុប"
   ],
   
   "text_remove": [
     "Remove",
-    "ដកចេញ",
-    "Remove"
+    "ដកចេញ"
   ],
   
   "text_updated_at": [
     "Update",
-    "កែរប្រែ",
-    "Update"
+    "កែរប្រែ"
+  ],
+
+  "text_option": [
+    "Option",
+    "ជម្រើស"
   ],
   
   "select_text_active": [
     "Active",
-    "ដំណើរការ",
-    "Active",
+    "ដំណើរការ"
   ],
   
   "select_text_deactive": [
     "Deactive",
-    "មិនអោយដំណើរការ",
-    "Deactive"
+    "មិនអោយដំណើរការ"
   ],
   
   "select_text_all_status": [
     "All Status",
-    "ស្ថានភាពទាំងអស់",
-    "All Status"
+    "ស្ថានភាពទាំងអស់"
   ],
   
-  "select_text_is_default_yes": [
+  "text_yes": [
     "Yes",
-    "បាទ/ចា",
-    "Yes",
+    "បាទ/ចា"
   ],
   
   "select_text_is_default_no": [
     "No",
-    "ទេ",
-    "No",
+    "ទេ"
   ],
   
   "button_text_tender": [
     "Tender",
-    "បង់ប្រាក់",
-    "Tender"
+    "បង់ប្រាក់"
   ],
   
   "text_cost": [
     "Cost",
-    "ថ្លៃដើម",
-    "Cost"
+    "ថ្លៃដើម"
+  ],
+  
+  "text_current_cost": [
+    "Current Cost",
+    "ថ្លៃដើមបច្ចុប្បន្ន"
   ],
 
   "text_unit_cost": [
     "Unit Cost",
-    "តម្លៃឯកតា",
-    "Unit Cost"
+    "តម្លៃឯកតា"
   ],
   
   "button_text_search": [
     "Search",
-    "ស្វែងរក",
-    "Search"
+    "ស្វែងរក"
   ],
   
   "table_empty_data": [
     "No record found",
-    "រកមិនឃើញ",
-    "No record found"
+    "រកមិនឃើញ"
   ],
   
   
   "text_cash": [
     "Cash",
-    "សាច់ប្រាក់",
-    "Cash"
+    "សាច់ប្រាក់"
   ],
   
   "text_copy": [
-    "Copied !",
-    "ថតចំលងហើយ",
-    "Copied !"
+    "Copied!",
+    "ថតចំលងហើយ"
   ],
   
   "text_credit_card": [
     "Credit Card",
-    "បណ្ឌឥណទាន",
-    "Credit Card"
+    "បណ្ឌឥណទាន"
   ],
   
   "text_all_category": [
     "All Categories",
-    "គ្រប់ប្រភេទ",
-    "All Categories"
+    "គ្រប់ប្រភេទ"
+  ],
+
+  "text_all_stores": [
+    "All Stores",
+    "គ្រប់ទីតាំង"
   ],
   
   "text_price": [
     "Price",
-    "តំលៃ",
-    "Price"
+    "តម្លៃ"
+  ],
+
+  "text_retail_price": [
+    "Retail Price",
+    "តម្លៃលក់រាយ"
   ],
   
   "text_quantity": [
     "Quantity",
-    "បរិមាណ",
-    "Quantity"
+    "បរិមាណ"
+  ],
+
+  "text_current_quantity": [
+    "Current Quantity",
+    "បរិមាណបច្ចុប្បន្ន"
+  ],
+
+  "text_output_quantity": [
+    "Output Quantity",
+    "បរិមាណបំបែកបាន"
   ],
 
   "text_quantity_buy_in": [
     "Quantity Buy In",
-    "បរិមាណទិញចូល",
-    "Quantity Buy In"
+    "បរិមាណទិញចូល"
+  ],
+
+  "text_quantity_to_split": [
+    "Quantity to Split",
+    "បរិមាណយកមកបំបែក"
   ],
   
   "text_transfer_quantity": [
     "Transfer Quantity",
-    "ផ្ទេរចំនួន",
-    "Transfer Quantity"
+    "ផ្ទេរចំនួន"
   ],
   
   "text_all_quantity": [
     "All Quantity",
-    "ចំនួនទាំងអស់",
-    "All Quantity"
+    "ចំនួនទាំងអស់"
   ],
   
   "text_no_permission": [
     "No permission to permform this operation",
-    "គ្មានសិទ្ធិដំណើរការ",
-    "No permission to permform this operation"
+    "គ្មានសិទ្ធិដំណើរការ"
   ],
   
   "text_warning_select_row_to_delete": [
     "Please select rows to perform delete operation",
-    "សូមជ្រើសរើសទិន្នន័យ ដើម្បីលប់",
-    "Please select rows to perform delete operation"
+    "សូមជ្រើសរើសទិន្នន័យ ដើម្បីលប់"
   ],
   
   "text_confirm_delete": [
-    "Are you sure delete this record ?",
-    "តើអ្នកប្រាកដថាលប់ហើយឬទេ?",
-    "Are you sure delete this record ?"
+    "Are you sure delete this record?",
+    "តើអ្នកប្រាកដថាលប់ហើយឬទេ?"
   ],
   
   "text_warning_delete_default_record": [
     "We don't allow you to delete default record",
-    "ទិន្នន័យដើមមិនអោយអ្នកលប់ទេ",
-    "We don't allow you to delete default record"
+    "ទិន្នន័យដើមមិនអោយអ្នកលប់ទេ"
   ],
   
   "text_warning_edit_system_record": [
     "We don't allow you to edit system record",
-    "អ្នកមិនអាចលប់ ទិន្នន័យរបស់ប្រពន្ធ័ទេ",
-    "We don't allow you to edit system record"
+    "អ្នកមិនអាចលប់ ទិន្នន័យរបស់ប្រពន្ធ័ទេ"
   ],
   
   "text_discount": [
     "Discount",
-    "បញ្ចុះតំលៃ",
-    "Discount"
+    "បញ្ចុះតម្លៃ"
   ],
   
   "text_sub_total": [
     "Sub Total",
-    "សរុបដំបូង",
-    "Sub Total"
+    "សរុបដំបូង"
   ],
   
   "text_notation": [
     "Notation",
-    "កំណត់សំគាល់",
-    "Notation"
+    "កំណត់សំគាល់"
   ],
   
   "text_tax": [
     "Tax",
-    "ពន្ធ",
-    "Tax"
+    "ពន្ធ"
   ],
   
   "text_taxes": [
     "Taxes",
-    "ពន្ធ",
-    "Taxes"
+    "ពន្ធ"
   ],
   
   "text_total": [
     "Total",
-    "សរុប",
-    "Total"
+    "សរុប"
   ],
   
   "text_add_notation": [
     "Add product notation",
-    "បញ្ចូលកំណត់សំគាល់ផលិតផល",
-    "Add product notation"
+    "បញ្ចូលកំណត់សំគាល់ផលិតផល"
   ],
   
   "text_no_tax": [
     "No Tax",
-    "គ្នានពន្ធ",
-    "No Tax"
+    "គ្នានពន្ធ"
   ],
   
   "text_item": [
     "Item",
-    "មុខទំនិញ",
-    "Item"
+    "មុខទំនិញ"
   ],
   
   "text_items": [
     "Items",
-    "មុខទំនិញ",
-    "Items"
+    "មុខទំនិញ"
   ],
 
   "text_records": [
     "Items",
-    "ទិន្នន័យ",
-    "Items"
+    "ទិន្នន័យ"
   ],
   
   "text_balance": [
     "Balance",
-    "សមតុល្យសាច់ប្រាក់",
-    "Balance"
+    "សមតុល្យសាច់ប្រាក់"
   ],
   
   "text_pay": [
     "Pay",
-    "បង់ប្រាក់",
-    "Pay"
-  ],
-  
-  "text_sale_summary": [
-    "Sale Summary",
-    "ការលក់សង្ខេប",
-    "Sale Summary"
+    "បង់ប្រាក់"
   ],
 
   "text_invalid_tender_amount": [
     "Invalid Tender Amount!",
-    "ចំនួនទឹកប្រាក់មិនត្រឹមត្រូវ",
-    "Invalid Tender Amount"
+    "ចំនួនទឹកប្រាក់មិនត្រឹមត្រូវ"
   ],
 
   "text_sold_quantity": [
     "Sold Quantity",
-    "បរិមាណលក់",
-    "Sold Quantity"
+    "បរិមាណលក់"
   ],
   
   "text_change": [
     "Change",
-    "ប្រាក់អាប់",
-    "Change"
+    "ប្រាក់អាប់"
   ],
   
   "text_payment": [
     "Payment",
-    "ការបង់ប្រាក់",
-    "Payment"
+    "ការបង់ប្រាក់"
   ],
   
   "text_search": [
     "Search",
-    "ស្វែងរក",
-    "Search"
+    "ស្វែងរក"
   ],
   
   "text_store": [
     "Store",
-    "ហាង",
-    "Store"
+    "ហាង"
   ],
   
   "text_save": [
@@ -458,74 +418,62 @@ export default {
 
   "text_edit": [
     "Edit",
-    "កែប្រែ",
-    "Edit"
+    "កែប្រែ"
   ],
 
   "text_please_search": [
     "Please search",
-    "សូមស្វែងរក",
-    "Please search"
+    "សូមស្វែងរក"
   ],
 
   "text_please_select": [
     "Please select",
-    "សូមជ្រើសរើស",
-    "Please select"
+    "សូមជ្រើសរើស"
   ],
   
   "text_payment_method": [
     "Payment Method",
-    "មធ្យោបាយទូទាត់ប្រាក់",
-    "Payment Method"
+    "មធ្យោបាយទូទាត់ប្រាក់"
   ],
   
   "text_received": [
     "Received",
-    "បានទទួល",
-    "Received"
+    "បានទទួល"
   ],
   
   "text_done": [
     "Done",
-    "បញ្ចប់",
-    "Done"
+    "បញ្ចប់"
   ],
 
   "text_mark_as_approved": [
     "Mark as Approved",
-    "បានអនុម័ត",
-    "Mark as Approved"
+    "បានអនុម័ត"
   ],
   
   "text_give": [
     "Give",
-    "ផ្តល់ឱ្យ",
-    "Give"
+    "ផ្តល់ឱ្យ"
   ],
   
   "text_step": [
     "Step",
-    "ជំហាន",
-    "Step"
+    "ជំហាន"
   ],
   
   "text_all_step": [
     "All Step",
-    "ជំហានទាំងអស់",
-    "All Step"
+    "ជំហានទាំងអស់"
   ],
   
   "text_number": [
     "Number",
-    "លេខ",
-    "Number"
+    "លេខ"
   ],
   
   "text_list": [
     "List",
-    "បញ្ចី",
-    "List"
+    "បញ្ចី"
   ],
   
   "text_amount": [
@@ -548,20 +496,22 @@ export default {
   
   "text_walkin": [
     "Walk In",
-    "អតិថិជនទូទៅ",
-    "Walk In"
+    "អតិថិជនទូទៅ"
   ],
   
   "text_location": [
     "Location",
-    "ទីកន្លែង",
-    "Location"
+    "ទីកន្លែង"
+  ],
+
+  "text_other_location": [
+    "Other Location",
+    "ទីតាំងផ្សេង"
   ],
   
   "text_assign": [
     "Assign",
-    "ចាត់តាំង",
-    "Assign"
+    "ចាត់តាំង"
   ],
   
   "text_default": [
@@ -928,5 +878,15 @@ export default {
     "Today",
     "ថ្ងៃនេះ",
     "Today"
+  ],
+
+  "text_are_you_sure": [
+    "Are you sure?",
+    "តើ​អ្នក​ប្រាកដ​ឬ​អត់?"
+  ],
+
+  "text_sort": [
+    "Order",
+    "លំដាប់"
   ]
 };
