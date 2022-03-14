@@ -161,7 +161,8 @@
     background-color: #0070e6;
     color: white;
     margin-top: 2px;
-    border-radius: 3px
+    border-radius: 3px;
+    display: none;
 }
 
 

@@ -99,7 +99,7 @@ export default class ReceiptA4 extends Component {
               <th style={{color: "white", border: "1px solid black", fontSize: "11pt"}}>លរ <br /> No</th>
               <th style={{color: "white", border: "1px solid black", fontSize: "11pt"}}>បរិយាយ​<br />Description</th>
               <th style={{color: "white", border: "1px solid black", fontSize: "11pt"}}>បរិមាណ<br />Quantity</th>
-              <th style={{color: "white", border: "1px solid black", fontSize: "11pt", width: "160px"}}>តំលៃ<br />Unit Price</th>
+              <th style={{color: "white", border: "1px solid black", fontSize: "11pt", width: "160px"}}>តម្លៃ<br />Unit Price</th>
               <th style={{color: "white", border: "1px solid black", fontSize: "11pt", width: "160px"}}>សរុប<br />Total</th>
             </tr>
             {this.itemlist()}
@@ -128,7 +128,7 @@ export default class ReceiptA4 extends Component {
 
             <tr style={{border: "1px solid black", backgroundColor: "#E7E6E6"}}>
               <td colSpan={2} style={{ letterSpacing: "1.2px", borderRight: "1px solid black", fontWeight: "bold", fontFamily: "Khmer OS Muol", fontSize: "9pt", textAlign: "left", padding: 5}}>
-                បញ្ចុះតំលៃ Discount ({this.props.data.terms ? this.props.data.terms : 0}  %)
+                បញ្ចុះតម្លៃ Discount ({this.props.data.terms ? this.props.data.terms : 0}  %)
               </td>
               <td style={{ borderRight: "1px solid black", padding: 5 }}>
               {this.renderMoneyCell(this.props.data.discount, "$", true, "9pt")}

@@ -745,12 +745,17 @@ export default class Retail extends Component {
   }
 
   handleOnSetupDiscount() {
+    const {
+      summaryTotal
+    } = this.getSummaryTotal();
+
     this.setState({
       modalContent: <DiscountSetup
         handleCancel={this.handleCancelDiscountSetup}
         form={this.props.form}
         discountValue={this.state.discountValue.value}
         discountType={this.state.discountValue.type}
+        summaryTotal={summaryTotal}
         callBack={this.handleGetDiscount} />,
       isDiscountHasAdded: true,
     });
@@ -916,7 +921,7 @@ export default class Retail extends Component {
             ""
         }
         <div className="pull-left park-receipt" onClick={this.handleLinkSaleHistory}>
-          <span className="icon-time icon-padding-right"></span><this.Translate id="text_sale_history" />
+          <span className="icon-time icon-padding-right"></span><this.Translate id="text_sales" />
         </div>
         <div className="pull-left park-receipt" onClick={this.handleLinkCloseShift}>
           <span className="icon-currency icon-padding-right"></span><this.Translate id="text_close_shift" />
@@ -1000,7 +1005,7 @@ export default class Retail extends Component {
                   <div onClick={() => this.handleOnSelectCategory(category.id)} className={`category ${this.state.selectedCategoryIds.includes(category.id)? "selected": "" }`}>
                     <div style={{maxHeight: 20, overflow: "hidden", wordBreak: "break-all"}}>
                       <div>
-                        {Util.getProductTypeName(category)}
+                        {category.name}
                       </div>
                     </div>
                   </div>

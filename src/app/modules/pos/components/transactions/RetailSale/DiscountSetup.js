@@ -27,9 +27,16 @@ export default class DiscountSetup extends Modal {
   handleSubmit (e) {
     e.preventDefault();
     const discountValue = {
-      value: this.props.form.getFieldValue("discountValue"),
-      type: this.state.selectedDiscountType
-    };
+        value: this.props.form.getFieldValue("discountValue"),
+        type: this.state.selectedDiscountType
+      },
+      isPercentageDiscount = this.state.selectedDiscountType === Enum.DISCOUNT_TYPE.PERCENTAGE;
+
+    if (isPercentageDiscount) {
+      if (discountValue.value > 100) discountValue.value = 100;
+    } else {
+      if (discountValue.value > this.props.summaryTotal.subTotal) discountValue.value = this.props.summaryTotal.subTotal;
+    }
 
     if (this.props.callBack) {
       this.props.callBack(discountValue);
@@ -72,15 +79,7 @@ export default class DiscountSetup extends Modal {
     this.props.handleCancel();
   }
   render() {
-    // const element = document.getElementById("wrap-payment");
-    // const leftElement = document.getElementById("left-block");
-    // const sideBarWidth = document.getElementById("sidebar").offsetWidth;
-    // const additionalTop = 0;
-    // const additionalSpace = 56;
-    // this.style = {top: (element.offsetTop/2) + additionalTop, left: (leftElement.offsetWidth + sideBarWidth + additionalSpace) - this.width};
-
     const isPercentageDiscount = this.state.selectedDiscountType === Enum.DISCOUNT_TYPE.PERCENTAGE;
-
     this.content = (
       <div className="order-discount">
         <div className="title">
