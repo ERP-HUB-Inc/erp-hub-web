@@ -30,7 +30,6 @@ export default class ProductCreate extends Component {
     };
     this.title = <this.Translate id="text_product" />;
     this.width = "100%";
-    this.wrapClassName = "modal-product";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCallBackGetProductAttribute = this.handleCallBackGetProductAttribute.bind(this);
@@ -44,10 +43,12 @@ export default class ProductCreate extends Component {
 
   componentDidMount() {
     window.addEventListener("keydown", (e) => {
-      const S = 83;
-      if (e.keyCode === S && e.ctrlKey) {
-        e.preventDefault();
-        document.getElementById("btnSubmit").click();
+      if (!this.props.productAdd.adding) {
+        const S = 83;
+        if (e.keyCode === S && e.ctrlKey) {
+          e.preventDefault();
+          document.getElementById("btnSubmit").click();
+        }
       }
     });
   }
@@ -213,8 +214,7 @@ export default class ProductCreate extends Component {
         onBack={() => history.goBack()}
         title={<this.Translate id="text_product" />}
         subTitle={<this.Translate id="text_new_product" />}
-        extra={[]}
-    />
+        extra={[]} />
       <Form autoComplete="off" onSubmit={this.handleSubmit}>
         <FormItem
           form={form}

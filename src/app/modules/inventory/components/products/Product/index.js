@@ -1,15 +1,17 @@
 import React from "react";
+import {
+  Menu,
+  Dropdown,
+  Icon
+} from "antd";
 import List from "../../List";
 import Util from "../../../utils";
 import Enum from "../../../enums";
 import history from "../../../../common/router/history";
 import FormCreate from "../../../containers/products/Product/FormCreate";
-import FormUpdate from "../../../containers/products/Product/FormUpdate";
 import Constant from "../../../constants/products/product";
 import LocationAction from "../../../../pos/action/settings/location";
-// import UnitAction from "../../../actions/products/productsUnit";
 import ProductAction from "../../../actions/products/product";
-// import BrandAction from "../../../actions/products/brand";
 import ProductService from "../../../services/products/ProductService";
 import "./index.css";
 
@@ -25,7 +27,7 @@ export default class ProductList extends List {
     };
     this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
     this.stockList = [
-      {name: <this.Translate id="select_text_all_stock"/>, id: 0},
+      {name: <this.Translate id="text_all_stock"/>, id: 0},
       {name: <this.Translate id="text_in_stock"/>, id: 1},
       {name: <this.Translate id="text_out_of_stock"/>, id: 2}
     ];
@@ -54,7 +56,6 @@ export default class ProductList extends List {
     const {
       productAdd,
       productUpdate,
-      productClone,
       dispatch
     } = nextProps;
 
@@ -62,17 +63,6 @@ export default class ProductList extends List {
       dispatch(ProductAction.fetch(this.pageSize));
       dispatch(ProductAction.reset(Constant.RESET_FORM_PRODUCT));
       dispatch(ProductAction.reset(Constant.RESET_DETAIL_PRODUCTS));
-    }
-
-    if (productClone.added) {
-      if (productClone.response.data) {
-        dispatch(ProductAction.requestAndShowForm(productClone.response.data));
-        dispatch(ProductAction.reset(Constant.RESET_FORM_PRODUCT));
-        this.setState({
-          modalConten: <FormUpdate/>,
-          selectedRowKeys: []
-        });
-      }
     }
 
     if (nextProps.units.fetched) {
@@ -275,12 +265,6 @@ class ColumnExpand extends List {
         width: 200,
         render: () => {}
       },
-      // {
-      //   dataIndex: "brandId",
-      //   key: "brandId",
-      //   width: 100,
-      //   render: () => {}
-      // },
       {
         dataIndex: "price",
         key: "price",
@@ -363,8 +347,27 @@ class Column extends List {
         dataIndex: "name",
         key: "name",
         render: (name, record) => {
-          return <div>
+          const menu = (
+            <Menu>
+              <Menu.Item>
+                <this.Link to={`/products/update/${record.id}?productOption=${record.productOption}`}>
+                  <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
+                </this.Link>
+              </Menu.Item>
+              <Menu.Item className={record.isSplittable ? "" : "hidden"}>
+                <this.Link to={`/products/split/${Util.getProductVariantId(record)}?productOption=${record.productOption}`}>
+                  <Icon type="scissor" style={{marginRight: 10}} /> <this.Translate id="text_slit_product" />
+                </this.Link>
+              </Menu.Item>
+            </Menu>
+          );
+          return <div className="wrap-product-name" style={{display: "flex"}}>
             {Util.getProductNameV2(record, this.Util.getCurrentLanguageCode())}
+            <Dropdown overlay={menu} className="product-row-option">
+              <a className="ant-dropdown-link" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
+                <this.Translate id="text_option" /> <Icon type="down" />
+              </a>
+            </Dropdown>
           </div>;
         }
       },
@@ -373,8 +376,7 @@ class Column extends List {
         dataIndex: "barcode",
         key: "barcode",
         width: 130,
-        render: (text, record) => Util.getProductBarcode(record),
-        sorter: true
+        render: (text, record) => Util.getProductBarcode(record)
       },
       {
         title: <this.Translate id="text_stock_type" />,
@@ -384,9 +386,9 @@ class Column extends List {
         render: serialType => {
           let stockTypeStr = <this.Translate id="text_other" />;
           if (serialType === Enum.SERIAL_TYPE.STANDARD) {
-            stockTypeStr = <this.Translate id="input_product_standard" />;
+            stockTypeStr = <this.Translate id="text_inventory" />;
           } else if (serialType === Enum.SERIAL_TYPE.NON_INVENTORY) {
-            stockTypeStr = <this.Translate id="input_product_non_inventory" />;
+            stockTypeStr = <this.Translate id="text_non_inventory" />;
           }
 
           return stockTypeStr;
@@ -397,7 +399,7 @@ class Column extends List {
         dataIndex: "productType",
         key: "productType",
         width: 200,
-        render: productType => productType ? Util.getProductTypeName(productType) : this.emptyCell
+        render: productType => productType ? productType.name : productType.namekm
       },
       {
         title: <this.Translate id="text_retial_price" />,

@@ -125,81 +125,8 @@
     font-size: 7pt
 }
 
-.modal-product .wrapRowContentTab .ant-table-content {
-    margin-top: 0
-}
-
 #productOption {
     display: inline-flex
-}
-
-/* FLEX LAYOUT FOR BIG COMPONENT */
-.modal-product .ant-tabs-bar {
-    margin: 0 0 0 0 !important
-}
-
-.modal-product .ant-modal-body {
-    padding-right: 0 !important;
-    padding-left: 0 !important
-}
-
-.modal-product .ant-modal-content {
-    flex-direction: column
-}
-
-/* .modal-product .ant-modal,
-.modal-product .ant-modal-content {
-    height: 100%
-} */
-
-.modal-product .ant-modal-body {
-    flex-direction: row
-}
-
-.modal-product .ant-form {
-    flex-direction: column
-}
-
-.modal-product .ant-form,
-.modal-product .ant-tabs {
-    width: 100%
-}
-
-.modal-product .ant-tabs {
-    flex-direction: column;
-    padding-left: 15px
-}
-
-.modal-product .tab-item-language {
-    padding-left: 0 !important
-}
-
-.modal-product .ant-tabs .ant-tabs-content {
-    flex-direction: row;
-    flex: 1
-}
-
-.modal-product .ant-tabs .ant-tabs-content .ant-tabs-tabpane:first-child{
-    overflow: hidden auto;/*x:hidden y: auto*/
-    padding-right: 15px;
-    height: 100%
-}
-
-.modal-product .ant-tabs .ant-tabs-content .ant-tabs-tabpane{
-    padding-top: 15px
-}
-
-.modal-product .ant-modal-footer {
-    background: #f7f7f7cc
-}
-
-.modal-product .ant-form,
-.modal-product .ant-modal-content,
-.modal-product .ant-modal-body,
-.modal-product .ant-tabs,
-.modal-product .ant-tabs .ant-tabs-content {
-    display: flex;
-    height: 100%
 }
 
 .main-product-collapse .ant-collapse-borderless > .ant-collapse-item:last-child .ant-collapse-header {
@@ -236,4 +163,43 @@
 
 #wrap-product-form .ant-form-item {
     flex-grow: 1;
+}
+
+#wrap-product-form .ant-upload-list-picture-card-container {
+    width: 204px;
+    height: 204px;
+}
+
+.ant-table-tbody tr td .product-row-option {
+    display: none;
+}
+
+.ant-table-tbody tr:hover td .wrap-product-name>.product-row-option {
+    display: block;
+}
+
+
+#product-split .ant-select-selection--single .ant-select-selection__rendered {
+    width: 200px
+}
+
+#product-split .search-dropdown-product {
+    padding: 0;
+}
+
+#product-split .ant-table-content {
+    margin-top: 0;
+}
+
+#product-split table tr {
+    vertical-align: top;
+}
+
+#product-split table tr td {
+    padding-top: 15px !important;
+    padding-bottom: 15px !important
+}
+
+#product-split .filter-location {
+    margin-bottom: 0;
 }

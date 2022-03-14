@@ -33,9 +33,7 @@ export default class Form extends Modal {
     if (this.props.productsTypeDetail.showForm) {
       this.content = <FormItem
         formData={this.props.productsTypeDetail.data}
-        languages={this.props.storeLanguage}
         dispatch={this.props.dispatch}
-        productsType={this.props.productsTypeUpdate}
         form={this.props.form}
         locale={this.props.locale}/>;
 

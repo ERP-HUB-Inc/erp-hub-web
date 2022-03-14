@@ -42,10 +42,12 @@ export default class ProductUpdate extends Component {
     this.props.dispatch(ProductAction.requestAndShowForm({id, productOption: params.get("productOption")}));
 
     window.addEventListener("keydown", (e) => {
-      const S = 83;
-      if (e.keyCode === S && e.ctrlKey) {
-        e.preventDefault();
-        document.getElementById("btnSubmit").click();
+      if (!this.props.productUpdate.updating) {
+        const S = 83;
+        if (e.keyCode === S && e.ctrlKey) {
+          e.preventDefault();
+          document.getElementById("btnSubmit").click();
+        }
       }
     });
   }

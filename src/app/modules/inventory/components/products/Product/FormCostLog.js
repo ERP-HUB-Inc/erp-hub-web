@@ -15,7 +15,7 @@ export default class FormCostLog extends Modal {
         render: createdAt => this.formatDate(createdAt)
       },
       {
-        title: <this.Translate id="col_product_cost_log_user" />,
+        title: <this.Translate id="text_user" />,
         dataIndex: "user",
         key: "user",
         render: user => user !== null ? user.userName : this.emptyText

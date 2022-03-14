@@ -217,15 +217,15 @@ export default class FormItem extends Modal {
 
     this.serialTypes = [
       // {
-      //   name: <this.Translate id="input_product_serial" />,
+      //   name: <this.Translate id="text_serial" />,
       //   value: Enum.SERIAL_TYPE.SERIAL
       // },
       {
-        name: <this.Translate id="input_product_non_inventory" />,
+        name: <this.Translate id="text_non_inventory" />,
         value: Enum.SERIAL_TYPE.NON_INVENTORY
       },
       {
-        name: <this.Translate id="input_product_standard" />,
+        name: <this.Translate id="text_inventory" />,
         value: Enum.SERIAL_TYPE.STANDARD
       }
     ];
@@ -338,129 +338,88 @@ export default class FormItem extends Modal {
     return (<this.Row id="wrap-product-form">
         <this.Col md="6" className="create-product-column-left">
           <this.Row>
-            <this.Col md="4" className="form-group">
-              <this.InputText
-                name="name"
-                label={<this.Translate id="text_product_name" />}
-                data={formData.name}
-                placeholder={this.CATranslate("text_product_name", locale)}
-                errorRequired={<this.Translate id="error_require_name" />}
-                errorLenght={<this.Translate id="input_error_products_name" />}
-                isAutoFocus={true}
-                required={true}
-                max={100}
-                min={0}
-                form={form}
-                suffix={this.getLanguageIcon("en")}/>
-            </this.Col>
+              <this.Col md="4" className="form-group">
+                <this.InputText
+                  name="name"
+                  label={<this.Translate id="text_product_name" />}
+                  data={formData.name}
+                  placeholder={this.CATranslate("text_product_name", locale)}
+                  errorRequired={<this.Translate id="error_require_name" />}
+                  errorLenght={<this.Translate id="input_error_products_name" />}
+                  isAutoFocus={true}
+                  required={true}
+                  max={100}
+                  min={0}
+                  form={form}
+                  suffix={this.getLanguageIcon("en")}/>
+              </this.Col>
 
-            <this.Col md="4" className="form-group">
-              <this.InputText
-                name="namekm"
-                label={<this.Translate id="text_product_name" />}
-                data={formData.namekm}
-                placeholder={this.CATranslate("text_product_name", locale)}
-                errorRequired={<this.Translate id="error_require_name" />}
-                errorLenght={<this.Translate id="input_error_products_name" />}
-                max={100}
-                min={0}
-                form={form}
-                suffix={this.getLanguageIcon("km")}/>
-            </this.Col>
+              <this.Col md="4" className="form-group">
+                <this.InputText
+                  name="namekm"
+                  label={<this.Translate id="text_product_name" />}
+                  data={formData.namekm}
+                  placeholder={this.CATranslate("text_product_name", locale)}
+                  errorRequired={<this.Translate id="error_require_name" />}
+                  errorLenght={<this.Translate id="input_error_products_name" />}
+                  max={100}
+                  min={0}
+                  form={form}
+                  suffix={this.getLanguageIcon("km")}/>
+              </this.Col>
 
-            <this.Col md="4" className="form-group">
-              <this.Select
-                name="serialType"
-                label={
-                  <span>
-                    <this.Translate id="text_stock_type" />&nbsp;
-                    <this.Tooltip title="Do you want your product calculate stock or not?">
-                      <this.Icon type="question-circle-o" />
-                    </this.Tooltip>
-                  </span>
-                }
-                placeholder={this.CATranslate("text_stock_type", locale)}
-                dataSource={this.serialTypes}
-                defaultValue={formData.serialType}
-                errorRequired={<this.Translate id="error_require_serial_type" />}
-                disabled={formData.id != null}
-                required={true}
-                form={form}/>
-            </this.Col>
-
-            {/* <this.Col md="8" className="form-group hidden">
-              <this.Row className="group-code-generate">
-                <this.Col md="6" className="wrap-generate-code">
-                  <this.RadioButton 
+              <this.Col md="4" className="form-group">
+                <this.Select
+                  name="serialType"
+                  label={
+                    <span>
+                      <this.Translate id="text_stock_type" />&nbsp;
+                      <this.Tooltip title="Do you want your product calculate stock or not?">
+                        <this.Icon type="question-circle-o" />
+                      </this.Tooltip>
+                    </span>
+                  }
+                  placeholder={this.CATranslate("text_stock_type", locale)}
+                  dataSource={this.serialTypes}
+                  defaultValue={formData.serialType}
+                  errorRequired={<this.Translate id="error_require_serial_type" />}
+                  disabled={formData.id != null}
+                  required={true}
+                  form={form}/>
+              </this.Col>
+              
+              <this.Col md="4">
+                <div className="ant-col ant-form-item-label">
+                    <label htmlFor="unitName" className="ant-form-item-required"><this.Translate id="text_barcode" /></label>
+                  </div>
+                <div id="wrap-input-barcode" style={{display: "flex", alignItems: "center"}}>
+                  <SelectSearch
                     name="isAutoGenerateBarcode"
                     defaultValue={formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.MANAUL ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO}
                     disabled={formData.id != null}
-                    onChange={this.onCangeIsAutoGenerateCode}
                     dataSource={[
                       {
                         value: this.Enum.GENERATE_PRODUCT_CODE.MANAUL,
-                        title: <this.Translate id="input_product_enter_custom_code" />}, 
+                        name: <this.Translate id="input_product_enter_custom_code" />}, 
                       { 
                         value: this.Enum.GENERATE_PRODUCT_CODE.AUTO,
-                        title: <this.Translate id="input_product_auto_generate_code" />
+                        name: <this.Translate id="input_product_auto_generate_code" />
                       }
                     ]}
-                    form={form}/>
-                </this.Col>
-                {
-                  this.state.productTypeIndex === Enum.PRODUCT_VARIANT || formData.productOption === Enum.PRODUCT_VARIANT ?
-                    ""
-                    :
-                    <this.Col md="6">
-                      <this.InputText
-                        name="barcode"
-                        label={<this.Translate id="text_barcode" />}
-                        data={Util.getProductBarcode(formData)}
-                        placeholder={this.CATranslate("text_barcode", locale)}
-                        required={this.state.isRequireInputBarcode}
-                        errorRequired={<this.Translate id="error_require_sku" />}
-                        max={20}
-                        form={form}
-                        disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || 
-                      this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO
-                        } />
-                    </this.Col>
-                }
-              </this.Row>
-            </this.Col> */}
-            
-            <this.Col md="4">
-              <div class="ant-col ant-form-item-label">
-                  <label for="unitName" class="ant-form-item-required"><this.Translate id="text_barcode" /></label>
-                </div>
-              <div id="wrap-input-barcode" style={{display: "flex", alignItems: "center"}}>
-                <SelectSearch
-                  name="isAutoGenerateBarcode"
-                  defaultValue={formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.MANAUL ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO}
-                  disabled={formData.id != null}
-                  dataSource={[
-                    {
-                      value: this.Enum.GENERATE_PRODUCT_CODE.MANAUL,
-                      name: <this.Translate id="input_product_enter_custom_code" />}, 
-                    { 
-                      value: this.Enum.GENERATE_PRODUCT_CODE.AUTO,
-                      name: <this.Translate id="input_product_auto_generate_code" />
-                    }
-                  ]}
-                  form={form}
-                  onChange={this.onCangeIsAutoGenerateCode}
-                  className="barcode-option" />
-                <this.InputText
-                  name="barcode"
-                  data={Util.getProductBarcode(formData)}
-                  placeholder={this.CATranslate("text_barcode", locale)}
-                  required={this.state.isRequireInputBarcode}
-                  errorRequired={<this.Translate id="error_require_sku" />}
-                  max={20}
-                  form={form}
-                  disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO} />
-                </div>
-          </this.Col>
+                    form={form}
+                    onChange={this.onCangeIsAutoGenerateCode}
+                    className="barcode-option" />
+                  <this.InputText
+                    name="barcode"
+                    data={Util.getProductBarcode(formData)}
+                    placeholder={this.CATranslate("text_barcode", locale)}
+                    required={this.state.isRequireInputBarcode}
+                    errorRequired={<this.Translate id="error_require_sku" />}
+                    max={20}
+                    form={form}
+                    disabled={(formData.id != null && formData.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO) || this.state.isAutoGenerateBarcode === this.Enum.GENERATE_PRODUCT_CODE.AUTO} />
+                  </div>
+            </this.Col>
 
             <this.Col md="4" className="form-group">
               <SelectUnit formData={formData} placeholder={this.CATranslate("text_unit", locale)} form={form} />
@@ -474,6 +433,14 @@ export default class FormItem extends Modal {
                 placeholder={this.CATranslate("text_cost_placeholder", locale)}
                 disabled={true}
                 form={form}/>
+            </this.Col>
+
+            <this.Col md="12" className="form-group">
+              <this.Checkboxs
+                name="isSplittable"
+                label={<this.Translate id="text_splittable" />}
+                defaultValue={formData.isSplittable}
+                form={this.props.form} />
             </this.Col>
 
             <this.Col md="4" className="form-group">
@@ -514,7 +481,7 @@ export default class FormItem extends Modal {
 
             <this.Col md="12" className="main-product-collapse form-group">
               <this.Collapse bordered={false}>
-                <this.Panel header={"Other"} key="1">
+                <this.Panel header={<Translate id="text_other" />} key="1">
                   <this.Row>
                     <this.Col md="4">
                         <SelectCategory

@@ -5,10 +5,10 @@ import ProductAction from "../../../actions/products/product";
 import Constant from "../../../constants/products/product";
 import Enum from "../../../enums";
 import Util from "../../../utils";
-import Modal from "../../../../common/components/shares/Modal";
+import Component from "../../../../common/components/Component";
 import "./DropDownSearch.css";
 
-export default class DropDownSearch extends Modal {
+export default class DropDownSearch extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -187,7 +187,7 @@ export default class DropDownSearch extends Modal {
                     <this.Translate id="text_current_stock"/>: {Util.countProductQTYCurrentLocation(product, this.Util.getLocationId())}
                   </div>
                   <div style={{marginLeft: 10}}>
-                    <this.Translate id="text_other"/>: {Util.countProductQTYOtherLocation(product, this.Util.getLocationId())}
+                    <this.Translate id="text_other_location"/>: {Util.countProductQTYOtherLocation(product, this.Util.getLocationId())}
                   </div>
                 </div>
             }
@@ -214,7 +214,7 @@ export default class DropDownSearch extends Modal {
           <div className="search-icon icon-add-product"></div>
           <this.InputText
             name="searchProduct"
-            placeholder={`${this.props.placeholder ? this.props.placeholder : this.CATranslate("input_product_search_product", this.props.locale)}`}
+            placeholder={`${this.props.placeholder ? this.props.placeholder : this.CATranslate("text_search_product", this.props.locale)}`}
             className={`ca-input-v1-icon-left ${this.props.className}`}
             isAutoFocus={this.props.isAutoFocus}
             didUpdateMakeAutoFocus={this.props.didUpdateMakeAutoFocus || this.state.isSetFocusSearchInput}

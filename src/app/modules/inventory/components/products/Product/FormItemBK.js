@@ -59,15 +59,15 @@ export default class FormItem extends Modal {
 
     this.serialTypes = [
       // {
-      //   name: <this.Translate id="input_product_serial" />,
+      //   name: <this.Translate id="text_serial" />,
       //   value: Enum.SERIAL_TYPE.SERIAL
       // },
       {
-        name: <this.Translate id="input_product_non_inventory" />,
+        name: <this.Translate id="text_non_inventory" />,
         value: Enum.SERIAL_TYPE.NON_INVENTORY
       },
       {
-        name: <this.Translate id="input_product_standard" />,
+        name: <this.Translate id="text_inventory" />,
         value: Enum.SERIAL_TYPE.STANDARD
       },
       // {

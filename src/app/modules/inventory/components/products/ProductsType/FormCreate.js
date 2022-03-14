@@ -25,9 +25,7 @@ export default class FormCreate extends Modal {
     if (this.props.productsTypeAdd.showForm) {
       this.content = <FormItem
         form={this.props.form}
-        languages={this.props.storeLanguage}
         dispatch={this.props.dispatch}
-        productsType={[]}
         locale={this.props.locale}/>;
       return super.render();
     } else {
