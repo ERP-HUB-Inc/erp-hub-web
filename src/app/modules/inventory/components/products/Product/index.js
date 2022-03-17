@@ -48,8 +48,10 @@ export default class ProductList extends List {
   }
 
   componentDidMount() {
-    super.componentDidMount();
-    this.props.dispatch(LocationAction.fetch());
+    if (!this.props.products.fetched) {
+      super.componentDidMount();
+      this.props.dispatch(LocationAction.fetch()); 
+    }
   }
 
   componentWillUpdate(nextProps) {
@@ -364,7 +366,8 @@ class Column extends List {
           return <div className="wrap-product-name" style={{display: "flex"}}>
             {Util.getProductNameV2(record, this.Util.getCurrentLanguageCode())}
             <Dropdown overlay={menu} className="product-row-option">
-              <a className="ant-dropdown-link" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
+               {/*eslint-disable-next-line*/}
+              <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
                 <this.Translate id="text_option" /> <Icon type="down" />
               </a>
             </Dropdown>

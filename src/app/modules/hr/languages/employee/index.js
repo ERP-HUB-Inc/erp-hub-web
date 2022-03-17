@@ -1,13 +1,22 @@
 export default {
   "text_employee": [
     "Employee",
-    "បុគ្គលិក",
-    "Employee"
+    "បុគ្គលិក"
   ],
+
+  "text_new_employee": [
+    "New Employee",
+    "បង្កើតបុគ្គលិកថ្មី"
+  ],
+
+  "text_edit_employee": [
+    "Edit Employee",
+    "កែប្រែបុគ្គលិក"
+  ],
+
   "text_full_name": [
     "Full name",
-    "ឈ្មោះ​ពេញ",
-    "Full name"
+    "ឈ្មោះ​ពេញ"
   ],
 
   "text_id_card": [

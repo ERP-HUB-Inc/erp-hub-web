@@ -23,7 +23,7 @@ export class DatePickers extends Element {
 
 DatePickers.defaultProps = {
   name: "name",
-  dateFormat: "DD MMM YYYY",
+  dateFormat: "DD/MM/YYYY",
   errorRequired: "Please select date",
   required: false,
   disabled: false

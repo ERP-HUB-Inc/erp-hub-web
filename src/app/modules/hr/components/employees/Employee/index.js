@@ -1,55 +1,16 @@
 import React from "react";
 import List from "../../List";
 import FormCreate from "../../../containers/employees/Employee/FormCreate";
-import FormUpdate from "../../../containers/employees/Employee/FormUpdate";
 import Constant from "../../../constants/employees/employee";
 import EmployeeAction from "../../../actions/employees/employee";
 import EmployeeService from "../../../services/employees/EmployeeService";
 import "./index.css";
+import history from "../../../../common/router/history";
 
 export default class EmployeeList extends List {
   constructor(props) {
     super(props);
-    this.columns = new Column();
-    this.formCreate = <FormCreate/>;
-    this.columnFilterWithKey = ["firstName","phoneNumber"];
-    this.callBackOnShowEditForm = this.showFormEdit;
-    this.service = EmployeeService;
-    this.action = EmployeeAction;
-    this.RESET_CONSTANT = Constant.RESET_EMPLOYEE;
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.update.updated) {
-      this.props.dispatch(EmployeeAction.reset(Constant.RESET_UPDATE_EMPLOYEE));
-      this.props.dispatch(EmployeeAction.reset(Constant.RESET_DETAIL_EMPLOYEE));
-    }
-  }
-
-  componentDidUpdate() {
-    if (this.props.detail.fetched) {
-      this.setState({
-        loadingPopup: false
-      });
-      this.props.dispatch(EmployeeAction.reset(Constant.PARTIAL_RESET_DETAIL_EMPLOYEE));
-    }
-  }
-
-  showFormEdit(rowData) {
-    this.props.dispatch(EmployeeAction.requestAndShowForm(rowData));
-    this.setState({
-      loadingPopup: true,
-      modalConten: <FormUpdate/>
-    });
-  }
-
-}
-
-
-class Column extends List {
-  constructor(props) {
-    super(props);
-    return [
+    this.columns = [
       {
         title: <this.Translate id="text_full_name" />,
         dataIndex: "firstName",
@@ -102,5 +63,41 @@ class Column extends List {
       },
       this.columnStatus
     ];
+
+    this.formCreate = <FormCreate/>;
+    this.columnFilterWithKey = ["firstName","phoneNumber"];
+    this.callBackOnShowEditForm = this.showFormEdit;
+    this.service = EmployeeService;
+    this.action = EmployeeAction;
+    this.RESET_CONSTANT = Constant.RESET_EMPLOYEE;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.update.updated) {
+      this.props.dispatch(EmployeeAction.reset(Constant.RESET_UPDATE_EMPLOYEE));
+      this.props.dispatch(EmployeeAction.reset(Constant.RESET_DETAIL_EMPLOYEE));
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.detail.fetched) {
+      this.setState({
+        loadingPopup: false
+      });
+      this.props.dispatch(EmployeeAction.reset(Constant.PARTIAL_RESET_DETAIL_EMPLOYEE));
+    }
+  }
+
+  renderButtonAddNew() {
+    return (
+      <this.Link to="/employees/create" className="ant-btn info" style={{marginRight: 15}}>
+        <span className="icon-add icon-padding-right"></span>
+        <this.Translate id="text_add_new" />
+      </this.Link>
+    );
+  }
+
+  showFormEdit(rowData) {
+    history.push(`/employees/update/${rowData.id}`);
   }
 }

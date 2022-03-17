@@ -65,6 +65,7 @@ export default class ProductUpdate extends Component {
         buttons: false,
         timer: 1500
       });
+      this.props.dispatch(ProductAction.reset());
     }
   }
 

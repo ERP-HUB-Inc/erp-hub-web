@@ -18,6 +18,8 @@ import Authentication from "../constants/authentication";
 import ProductCreate from "../../inventory/containers/products/Product/FormCreate";
 import ProductSplit from "../../inventory/components/products/Product/ProductSplit";
 import ProductUpdate from "../../inventory/containers/products/Product/FormUpdate";
+import EmployeeCreate from "../../hr/containers/employees/Employee/FormCreate";
+import EmployeeUpdate from "../../hr/containers/employees/Employee/FormUpdate";
 import AdjustmentCreate from "../../inventory/containers/stock/StockAdjustmentRequest/FormCreate";
 import AdjustmentUpdate from "../../inventory/containers/stock/StockAdjustmentRequest/FormUpdate";
 import PurchaseOrderCreate from "../../inventory/containers/stock/PurchaseOrder/FormCreate";
@@ -78,6 +80,8 @@ class Router extends Component {
             <Route path="/stocks/adjustment/update/:id" component={AdjustmentUpdate} />
             <Route path="/stocks/purchase/create" component={PurchaseOrderCreate} />
             <Route path="/stocks/purchase/update/:id" component={PurchaseOrderUpdate} />
+            <Route path="/employees/create" component={EmployeeCreate} />
+            <Route path="/employees/update/:id" component={EmployeeUpdate} />
             <Route path="/reports/sale_summaries" component={ReportSaleSummary} />
             <Route path="/reports/sold_products" component={ReportSaleByProduct} />
             <Route path="/reports/sold_categories" component={ReportSaleByCategory} />

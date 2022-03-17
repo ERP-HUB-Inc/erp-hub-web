@@ -10,6 +10,7 @@ import {
 import sweetalert from "sweetalert";
 import DropDownSearch from "./DropDownSearch";
 import Enum from "../../../enums";
+import ProductAction from "../../../actions/products/product";
 import Util from "../../../utils";
 import history from "../../../../common/router/history";
 import ProductService from "../../../services/products/ProductService";
@@ -173,6 +174,8 @@ class SplitProduct extends Component {
                         .then(() => {
                             history.goBack();
                         });
+
+                        this.props.dispatch(ProductAction.reset());
                     }
                 })
                 .finally(() => {

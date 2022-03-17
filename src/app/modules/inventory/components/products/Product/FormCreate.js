@@ -68,6 +68,7 @@ export default class ProductCreate extends Component {
       })
       .then(() => {
         this.props.form.resetFields();
+        this.props.dispatch(ProductAction.reset());
       });
     }
   }

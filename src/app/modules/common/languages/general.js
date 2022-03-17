@@ -179,11 +179,6 @@ export default {
     "ស្ថានភាពទាំងអស់"
   ],
   
-  "text_yes": [
-    "Yes",
-    "បាទ/ចា"
-  ],
-  
   "select_text_is_default_no": [
     "No",
     "ទេ"
@@ -542,12 +537,6 @@ export default {
     "Type",
     "ប្រភេទ",
     "Type"
-  ],
-  
-  "text_employee": [
-    "Employee",
-    "បុគ្គលិក",
-    "Employee"
   ],
   
   "text_all_employee": [

@@ -1,16 +1,20 @@
 import React from "react";
+import {
+  Form,
+  PageHeader
+} from "antd";
 import FormItem from "./FormItem";
 import EmployeeAction from "../../../actions/employees/employee";
-import Modal from "../../../../common/components/shares/Modal";
+import Component from "../../../../common/components/Component";
+import history from "../../../../common/router/history";
 
-export default class FormCreate extends Modal {
+export default class FormCreate extends Component {
   constructor(props) {
     super(props);
     this.state = {
       locations: [],
       locationId: ""
     };
-    this.wrapClassName = "modal-fix-footer";
     this.title = <this.Translate id="text_employee"/>;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -18,8 +22,14 @@ export default class FormCreate extends Modal {
     this.getDefaultLocation = this.getDefaultLocation.bind(this);
   }
 
+  componentDidUpdate(nextProps) {
+    if (this.props.manageEmployeeAdd.added && nextProps.manageEmployeeAdd.adding) {
+      history.goBack();
+    }
+  }
+
   handleCancel() {
-    this.dispatch(EmployeeAction.reset());
+    history.goBack();
   }
 
   getAccessLocation(locations) {
@@ -48,20 +58,36 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    this.submitLoading = this.props.manageEmployeeAdd.adding;
+    return <div>
+      <PageHeader
+        style={{
+            backgroundColor: "#f7f7f7",
+            paddingLeft: 0,
+            paddingRight: 0
+        }}
+        onBack={() => history.goBack()}
+        title={<this.Translate id="text_employee" />}
+        subTitle={<this.Translate id="text_new_employee" />}
+        extra={[]} />
+        <Form autoComplete="off" onSubmit={this.handleSubmit}>
+          <FormItem
+            roles={this.props.roles.list}
+            locations={this.props.locations.list}
+            callBack={this.getAccessLocation}
+            callBackDefaultLocation={this.getDefaultLocation}
+            dispatch={this.props.dispatch}
+            form={this.props.form}
+            locale={this.props.locale} />
 
-    if (this.props.manageEmployeeAdd.showForm) {
-      this.content = <FormItem
-        roles={this.props.roles.list}
-        locations={this.props.locations.list}
-        callBack={this.getAccessLocation}
-        callBackDefaultLocation={this.getDefaultLocation}
-        dispatch={this.props.dispatch}
-        form={this.props.form}
-        locale={this.props.locale}/>;
-      return super.render();
-    } else {
-      return <div/>;
-    }
+          <this.Row style={{justifyContent: "center", marginTop: 25}}>
+            <this.Button className="danger" onClick={this.handleCancel}>
+              <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_back" />
+            </this.Button>  
+            <this.Button htmlType="submit" loading={this.props.manageEmployeeAdd.adding} className="info" style={{marginLeft: 15}} id="btnSubmit">
+              <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
+            </this.Button>
+          </this.Row>
+        </Form>
+    </div>;
   }
 }

@@ -333,7 +333,7 @@ export default class List extends Component {
     if (this.service) {
       this.setState({deleting: true});
       this.service.archive(this.state.selectedListIds)
-        .then(response => {
+        .then(() => {
           this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
           this.setState({
             selectedRowKeys: [],

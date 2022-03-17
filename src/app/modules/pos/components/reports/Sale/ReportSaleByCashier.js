@@ -21,8 +21,8 @@ function ReportSaleByCashier() {
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState(null);
   const [summary, setSummary] = React.useState(null);
-  const [fromValue, setFromValue] = React.useState(moment().startOf("month"));
-  const [toValue, setToValue] = React.useState(moment().endOf("month"));
+  const [fromValue, setFromValue] = React.useState(moment());
+  const [toValue, setToValue] = React.useState(moment());
 
   const onFromChange = value => {
       setFromValue(value);

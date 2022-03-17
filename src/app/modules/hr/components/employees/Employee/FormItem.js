@@ -207,33 +207,6 @@ export default class FormItem extends Modal {
         }
       });
     }
-
-    // TO DO: AUTO SELECT DEFAULT LOCATION FOR BOTH CREATE AND UPDATE
-    // let length = 0;
-    // existLocation.forEach((value, index) => {
-    //   if (value.status === this.Enum.ACTIVE) {
-    //     length++;
-    //   }
-    // });
-    // if (length === 1) {
-    //   this.setState({
-    //     defaultLocation: {
-    //       locationId: existLocation[0].locationId,
-    //       checked: true
-    //     }
-    //   });
-
-    //   if (this.props.callBackDefaultLocation) {
-    //     this.props.callBackDefaultLocation(existLocation.locationId);
-    //   }
-    // } else if (length === 0) {
-    //   this.setState({
-    //     defaultLocation: {
-    //       locationId: "",
-    //       checked: false
-    //     }
-    //   });
-    // }
   }
 
   onChangeDefaultLocation(e) {
@@ -271,160 +244,138 @@ export default class FormItem extends Modal {
         <this.TabPane tab={<this.Translate id="text_general"/>} key="1">
           <this.Row>
             <this.Col md="6">
-              <this.InputText
-                name="firstName"
-                label={<this.Translate id="text_first_name" />}
-                data={formData.firstName}
-                placeholder={this.CATranslate("text_first_name", locale)}
-                required={true}
-                isAutoFocus={true}
-                errorRequired={<this.Translate id="error_require_first_name" />}
-                max={100}
-                form={form}/>
-            </this.Col>
-            <this.Col md="6">
-              <this.InputText
-                name="lastName"
-                label={<this.Translate id="text_last_name" />}
-                data={formData.lastName}
-                placeholder={this.CATranslate("text_last_name", locale)}
-                required={true}
-                errorRequired={<this.Translate id="error_require_last_name" />}
-                max={100}
-                form={form}/>
-            </this.Col>
-            <this.Col md="6">
-              <this.Select
-                name="gender"
-                label={<this.Translate id="text_gender" />}
-                placeholder={this.CATranslate("text_gender", locale)}
-                dataSource={this.gender}
-                defaultValue={formData.gender}
-                form={form}/>
-            </this.Col>
-            <this.Col md="6">
-              <this.DatePickers
-                name="dob"
-                defaultValue={this.Util.formatDatePicker(formData.dob, this.Util.getInitialDateForDOB())}
-                label={<this.Translate id="text_date_of_birth" />}
-                form={form}/>
-            </this.Col>
-            <this.Col md="12">
-              <this.InputText
-                name="phoneNumber" 
-                data={formData.phoneNumber}
-                placeholder={this.CATranslate("text_phone_number", locale)}
-                form={form} 
-                label={<this.Translate id="text_phone_number" />}/>
-            </this.Col>
-            <this.Col md="12">
-              <this.InputEmail
-                name="email" 
-                data={formData.email}
-                placeholder={this.CATranslate("text_email_address", locale)}
-                form={form} 
-                label={<this.Translate id="text_email_address" />}/>
-            </this.Col>
-            <this.Col md="12">
-              <this.InputText
-                name="idCard" 
-                data={formData.idCard}
-                placeholder={this.CATranslate("text_id_card", locale)}
-                form={form} 
-                label={<this.Translate id="text_id_card" />}/>
-            </this.Col>
-            <this.Col md="12">
-              <this.InputTextArea
-                name="address"
-                label={<this.Translate id="text_address" />}
-                data={formData.address}
-                placeholder={this.CATranslate("text_address", this.props.locale)}
-                max={100}
-                form={this.props.form}/>
-            </this.Col>
-            <this.Col md="12">
-              <this.UploadImg
-                name="photo"
-                data={{file: image}}
-                fileList={[image]}    
-                label={<this.Translate id="text_photo" />}
-                endPoint={`${this.Util.getAPIURL()}/file/v1/upload/employee`}
-                endPointDelete={`${this.Util.getAPIURL()}/file/v1/employee/delete`}
-                accessToken={this.Util.getAccessToken()}
-                form={form}/>
+              <this.Row>
+                <this.Col md="6">
+                  <this.InputText
+                    name="firstName"
+                    label={<this.Translate id="text_first_name" />}
+                    data={formData.firstName}
+                    placeholder={this.CATranslate("text_first_name", locale)}
+                    required={true}
+                    isAutoFocus={true}
+                    errorRequired={<this.Translate id="error_require_first_name" />}
+                    max={100}
+                    form={form}/>
+                </this.Col>
+                <this.Col md="6">
+                  <this.InputText
+                    name="lastName"
+                    label={<this.Translate id="text_last_name" />}
+                    data={formData.lastName}
+                    placeholder={this.CATranslate("text_last_name", locale)}
+                    required={true}
+                    errorRequired={<this.Translate id="error_require_last_name" />}
+                    max={100}
+                    form={form}/>
+                </this.Col>
+                <this.Col md="6">
+                  <this.Select
+                    name="gender"
+                    label={<this.Translate id="text_gender" />}
+                    placeholder={this.CATranslate("text_gender", locale)}
+                    dataSource={this.gender}
+                    defaultValue={formData.gender}
+                    form={form}/>
+                </this.Col>
+                <this.Col md="6">
+                  <this.DatePickers
+                    name="dob"
+                    defaultValue={this.Util.formatDatePicker(formData.dob, this.Util.getInitialDateForDOB())}
+                    label={<this.Translate id="text_date_of_birth" />}
+                    form={form}/>
+                </this.Col>
+                <this.Col md="12">
+                  <this.InputText
+                    name="phoneNumber" 
+                    data={formData.phoneNumber}
+                    placeholder={this.CATranslate("text_phone_number", locale)}
+                    form={form} 
+                    label={<this.Translate id="text_phone_number" />}/>
+                </this.Col>
+                <this.Col md="12">
+                  <this.InputEmail
+                    name="email" 
+                    data={formData.email}
+                    placeholder={this.CATranslate("text_email_address", locale)}
+                    form={form} 
+                    label={<this.Translate id="text_email_address" />}/>
+                </this.Col>
+                <this.Col md="12">
+                  <this.InputText
+                    name="idCard" 
+                    data={formData.idCard}
+                    placeholder={this.CATranslate("text_id_card", locale)}
+                    form={form} 
+                    label={<this.Translate id="text_id_card" />}/>
+                </this.Col>
+                <this.Col md="12">
+                  <this.InputTextArea
+                    name="address"
+                    label={<this.Translate id="text_address" />}
+                    data={formData.address}
+                    placeholder={this.CATranslate("text_address", this.props.locale)}
+                    max={100}
+                    form={this.props.form}/>
+                </this.Col>
+                <this.Col md="12">
+                  <this.UploadImg
+                    name="photo"
+                    data={{file: image}}
+                    fileList={[image]}    
+                    label={<this.Translate id="text_photo" />}
+                    endPoint={`${this.Util.getAPIURL()}/file/v1/upload/employee`}
+                    endPointDelete={`${this.Util.getAPIURL()}/file/v1/employee/delete`}
+                    accessToken={this.Util.getAccessToken()}
+                    form={form}/>
+                </this.Col>
+              </this.Row>
             </this.Col>
           </this.Row>
         </this.TabPane>
         <this.TabPane tab={<this.Translate id="text_user_access"/>} key="2">
           <this.Row>
             <this.Col md="6">
-              <this.InputText
-                name="userName"
-                data={formData.account ? formData.account.userName : ""}
-                label={<this.Translate id="text_user_name" />}
-                placeholder={this.CATranslate("text_user_name", locale)}
-                errorRequired={<this.Translate id="error_require_user_name" />}
-                disabled={formData.account != null && formData.account.userName != null}
-                validator={formData.account && formData.account.userName ? null : this.checkIsUserAlreadyExist}
-                max={100}
-                form={form}/>
+              <this.Row>
+                <this.Col md="6">
+                  <this.InputText
+                    name="userName"
+                    data={formData.account ? formData.account.userName : ""}
+                    label={<this.Translate id="text_user_name" />}
+                    placeholder={this.CATranslate("text_user_name", locale)}
+                    errorRequired={<this.Translate id="error_require_user_name" />}
+                    disabled={formData.account != null && formData.account.userName != null}
+                    validator={formData.account && formData.account.userName ? null : this.checkIsUserAlreadyExist}
+                    max={100}
+                    form={form}/>
+                </this.Col>
+                <this.Col md="6">
+                  <this.Select
+                    name="roleId"
+                    label={<this.Translate id="text_role" />}
+                    placeholder={this.CATranslate("text_role", locale)}
+                    valueKey="id"
+                    defaultValue={formData.account && formData.account.roles.length > 0 ? formData.account.roles[0].roleId : (this.props.roles.length > 0 ? this.props.roles[0].id : "")}
+                    dataSource={this.props.roles}
+                    form={form}/>
+                </this.Col>
+                <this.Col md="6">
+                  <this.InputText
+                    type="password"
+                    name="password"
+                    data={formData.password}
+                    label={<this.Translate id="text_password" />}
+                    placeholder={this.CATranslate("text_password", locale)}
+                    required={this.state.requiredPassword}
+                    disabled={this.state.disabled}
+                    form={form}/>
+                </this.Col>
+              </this.Row>
             </this.Col>
-            <this.Col md="6">
-              <this.Select
-                name="roleId"
-                label={<this.Translate id="text_role" />}
-                placeholder={this.CATranslate("text_role", locale)}
-                valueKey="id"
-                defaultValue={formData.account && formData.account.roles.length > 0 ? formData.account.roles[0].roleId : (this.props.roles.length > 0 ? this.props.roles[0].id : "")}
-                dataSource={this.props.roles}
-                form={form}/>
-            </this.Col>
-            <this.Col md="6">
-              <this.InputText
-                type="password"
-                name="password"
-                data={formData.password}
-                label={<this.Translate id="text_password" />}
-                placeholder={this.CATranslate("text_password", locale)}
-                required={this.state.requiredPassword}
-                disabled={this.state.disabled}
-                form={form}/>
-            </this.Col>
-            {/* <this.Col md="6" className="wrap-switch">
-              <this.Switchs
-                label={<this.Translate id="text_auto_generate" />}
-                name="autogenerate"
-                onChange={this.onChange}
-                form={form}/>
-            </this.Col> */}
-
-            {/* <this.Col md="6">
-              <this.DatePickers
-                label={<this.Translate id="text_expired_date" />}
-                defaultValue={this.Util.formatDatePicker(formData.passwordExpiredAt)}
-                name="passwordExpiredAt"
-                form={form}/>
-            </this.Col>
-            <this.Col md="6" className="wrap-switch">
-              <this.Switchs
-                label={<this.Translate id="text_must_change_password" />}
-                name="isMustChangePWNextLogin"
-                checked={formData.account != null && formData.account.isMustChangePWNextLogin}
-                form={form}/>
-            </this.Col>
-            <this.Col md="6" className="wrap-switch">
-              <this.Switchs
-                label={<this.Translate id="text_will_expired" />}
-                name="isPasswordExpired"
-                checked={formData.account != null && formData.account.isPasswordExpired}
-                form={form}
-              />
-            </this.Col>  */}
           </this.Row>
         </this.TabPane>
         <this.TabPane tab={<this.Translate id="text_location_access"/>} key="3">
           <this.Row>
-            <this.Col md="12">
+            <this.Col md="6">
               <this.Table
                 dataSource={this.state.locations}
                 columns={this.columns}

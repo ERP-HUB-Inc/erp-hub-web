@@ -182,12 +182,10 @@ export default class SaleHistoryList extends List {
   }
 
   componentDidMount() {
-    super.componentDidMount();
-    this.Util.removeFullScreen();
-    this.requestSubDataAsync();
-    
-    if(parseInt(this.Util.getParameterByName("salehistory"), 10) === 1) {
-      this.handleSubmitCurrentSearchFilter();
+    if (!this.props.list.fetched) {
+      super.componentDidMount();
+      this.Util.removeFullScreen();
+      this.requestSubDataAsync();
     }
   }  
 
@@ -507,33 +505,6 @@ export default class SaleHistoryList extends List {
           </this.Row>
         </this.Form>;
   }
-
-  handleSubmitCurrentSearchFilter(){
-
-    let getCurrentDate = new Date().toISOString().slice(0,10); 
-
-    this.setState({
-      setDefaultDate : [this.Util.formatDatePicker(getCurrentDate),this.Util.formatDatePicker(getCurrentDate)]
-    });
-
-
-    let rangFilter = "";
-    let filter = "";
-
-    rangFilter = JSON.stringify({
-      column: "registerDate",
-      value: [
-        this.Util.formatDateForMYSQL(getCurrentDate) + " 00:00:00",
-        this.Util.formatDateForMYSQL(getCurrentDate) + " 23:59:59"
-      ]});
-
-    let searchKey = "";
-
-    this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
-    this.setState({isClickFilter: true});
-
-  }
-
 
   handleSubmitFilter(e) {
     if (this.action != null) {
