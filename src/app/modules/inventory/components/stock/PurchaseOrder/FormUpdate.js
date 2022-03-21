@@ -20,7 +20,7 @@ export default class PurchaseOrderUpdate extends Component {
     this.wrapClassName = `${this.wrapClassName} wrap-modal-po  modal-po-full-screen`;
     this.width = window.innerWidth < 1400 ? window.innerWidth : 1400;
     this.PO_STEP_STR = {
-      [Enum.PO_STEP.DRAFT]: {name: this.CATranslate("purchase_order_step_draff", this.props.locale), color: this.Enum.PO_STEP_COLOR.DRAFT},
+      [Enum.PO_STEP.DRAFT]: {name: this.CATranslate("text_draft", this.props.locale), color: this.Enum.PO_STEP_COLOR.DRAFT},
       [Enum.PO_STEP.PROCESS]: {name: this.CATranslate("text_process", this.props.locale), color:  this.Enum.PO_STEP_COLOR.PROCESS},
       [Enum.PO_STEP.RECEIVED]: {name: this.CATranslate("text_received", this.props.locale), color:  this.Enum.PO_STEP_COLOR.RECEIVE},
       [Enum.PO_STEP.CANCEL]: {name: this.CATranslate("text_cancel", this.props.locale), color:  this.Enum.PO_STEP_COLOR.CANCEL},
@@ -140,7 +140,6 @@ export default class PurchaseOrderUpdate extends Component {
     values["shippingFee"] = this.props.purchaseOrderDetail.data.shippingFee;
     values["receiveTotal"] = this.props.purchaseOrderDetail.data.receiveTotal;
     values["returnTotal"] = this.props.purchaseOrderDetail.data.returnTotal;
-    values["step"] = this.props.purchaseOrderDetail.data.step;
     values["type"] = this.props.purchaseOrderDetail.data.type;
     values["status"] = this.props.purchaseOrderDetail.data.status;
 

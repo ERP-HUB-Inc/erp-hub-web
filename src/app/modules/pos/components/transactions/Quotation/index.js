@@ -26,7 +26,7 @@ export default class QuotationList extends List {
       ...this.state
     };
     this.QUOTATION_STEP_STR = {
-      [Enum.QUOTATION_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color:"warning"},
+      [Enum.QUOTATION_STEP.DRAFT]: {name: <this.Translate id="text_draft" />, color:"warning"},
       [Enum.QUOTATION_STEP.PROCESS]: {name: <this.Translate id="text_process" />, color:"processing"},
       [Enum.QUOTATION_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color:"error"}
     };

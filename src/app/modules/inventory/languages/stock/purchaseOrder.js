@@ -65,9 +65,9 @@ export default {
     "Reference"
   ],
 
-  "purchase_order_step_draff": [
+  "text_draft": [
     "Draft",
-    "សេចក្តីព្រៀង",
+    "ព្រៀង",
     "Draft"
   ],
 

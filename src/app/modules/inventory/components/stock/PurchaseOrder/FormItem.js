@@ -118,7 +118,8 @@ export default class FormItem extends Modal {
             data={formData.invoiceNo}
             placeholder={this.CATranslate("text_invoice_no",locale)}
             max={100}
-            form={form} />
+            form={form}
+            className="hidden" />
           <this.Select
             name="locationId"
             label={<this.Translate id="text_location" />}
@@ -127,14 +128,29 @@ export default class FormItem extends Modal {
             defaultValue={locationId}
             dataSource={this.state.locations}
             valueKey="id"
-            required={true}
             form={form} />
-          <this.Checkboxs
+          <this.Select
+              name="step"
+              label={<this.Translate id="text_status" />}
+              placeholder={this.CATranslate("text_status", locale)}
+              defaultValue={formData.id ? formData.step : (this.state.isAutoReceive ? Enum.PO_STEP.RECEIVED : Enum.PO_STEP.DRAFT)}
+              dataSource={[
+                {
+                  name: <this.Translate id="text_draft" />,
+                  value: Enum.PO_STEP.DRAFT
+                },
+                {
+                  name: <this.Translate id="text_received" />,
+                  value: Enum.PO_STEP.RECEIVED
+                }
+              ]}
+              form={form} />
+          {/* <this.Checkboxs
             name="isAutoReceive"
             defaultValue={this.state.isAutoReceive}
             label={<this.Translate id="text_auto_send_receive"/>}
             onChange={this.handleOnChangeIsAutoReceive}
-            form={this.props.form} />
+            form={this.props.form} /> */}
           <this.Row className="ca-penel-v1 wrap-po-filter-create hidden">
           </this.Row>
         </this.Col>

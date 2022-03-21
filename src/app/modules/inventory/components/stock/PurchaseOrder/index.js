@@ -6,7 +6,6 @@ import history from "../../../../common/router/history";
 import FormCreate from "../../../containers/stock/PurchaseOrder/FormCreate";
 import Constant from "../../../constants/stock/purchaseOrder";
 import PurchaseAction from "../../../actions/stock/purchaseOrder";
-import SupplierAction from "../../../actions/stock/supplier";
 import LocationAction from "../../../../pos/action/settings/location";
 import EmailAction from "../../../../common/actions/email";
 import PurchaseService from "../../../services/stock/PurchaseOrderService";
@@ -26,11 +25,6 @@ export default class PurchaseOrderLists extends List {
         title: <this.Translate id="text_description" />,
         dataIndex: "name",
         key: "name"
-      },
-      {
-        title: <this.Translate id="text_number" />,
-        dataIndex: "number",
-        key: "number"
       },
       {
         title: <this.Translate id="text_receiver"/>,
@@ -82,7 +76,7 @@ export default class PurchaseOrderLists extends List {
     this.POEmailHasSend = false;
 
     this.PO_STEP_STR = {
-      [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="purchase_order_step_draff" />, color: this.Enum.PO_STEP_COLOR.DRAFT},
+      [Enum.PO_STEP.DRAFT]: {name: <this.Translate id="text_draft" />, color: this.Enum.PO_STEP_COLOR.DRAFT},
       [Enum.PO_STEP.PROCESS]: {name: <this.Translate id="text_process" />, color:  this.Enum.PO_STEP_COLOR.PROCESS},
       [Enum.PO_STEP.RECEIVED]: {name: <this.Translate id="text_received" />, color:  this.Enum.PO_STEP_COLOR.RECEIVE},
       [Enum.PO_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color:  this.Enum.PO_STEP_COLOR.CANCEL},
@@ -97,11 +91,6 @@ export default class PurchaseOrderLists extends List {
     this.RESET_CONSTANT = Constant.RESET_PURCHASE_ORDER;
     this.getEmailPushToSupplier = this.getEmailPushToSupplier.bind(this);
     this.getEmailDataForSend = this.getEmailDataForSend.bind(this);
-  }
-
-  componentDidMount(){
-    super.componentDidMount();
-    this.props.dispatch(SupplierAction.fetch(100));
   }
 
   componentWillUpdate(nextProps) {
@@ -213,14 +202,7 @@ export default class PurchaseOrderLists extends List {
         if (!err) {
           let filter = {};
           let rangFilter = {};
-          if (values.step !== -1) {
-            filter["step"] = [values.step];
-          }
-
-          if (values.supplierId !== 0) {
-            filter["supplierId"] = [values.supplierId];
-          }
-
+          
           if (values.createdAt) {
             values.createdAt = this.Util.formatDateForMYSQL(values.createdAt);
             rangFilter = JSON.stringify({column: "createdAt", value: [values.createdAt, values.createdAt]});
@@ -261,26 +243,9 @@ export default class PurchaseOrderLists extends List {
                 form={form} />
             </this.Col>
             <this.Col md="2">
-              <this.Select
-                name="supplierId"
-                label={<this.Translate id="text_supplier" /> }
-                dataSource={this.supplierList.concat(this.props.supplier.list)}
-                defaultValue={this.supplierList[0].id}
-                valueKey="id"
-                form={form} />
-            </this.Col>
-            <this.Col md="2">
               <this.DatePickers
                 name="createdAt"
                 label={<this.Translate id="text_date" />}
-                form={form} />
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="step"
-                label={<this.Translate id="text_step" />}
-                dataSource={POStepList}
-                defaultValue={POStepList[0].value}
                 form={form} />
             </this.Col>
             <this.Col md="2" className="wrap-btn-search">

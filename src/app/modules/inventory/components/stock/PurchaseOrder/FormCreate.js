@@ -130,7 +130,6 @@ export default class FormCreate extends Component {
         values["returnTotal"] = 0;
         values["receiveTotal"] = values.isAutoReceive ? values["requestTotal"] : 0;
         values["deliveryDueDate"] = this.Util.formatDateForMYSQL(values.deliveryDueDate);
-        values["step"] = Enum.PO_STEP.DRAFT;
         values["type"] = Enum.CLIENT_AUTO_NUMBER_TYPE.PURCHASE;
         values["status"] = this.Enum.ACTIVE;
 
