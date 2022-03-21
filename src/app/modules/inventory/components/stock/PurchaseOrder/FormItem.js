@@ -3,6 +3,7 @@ import SearchPO from "./SearchPO";
 import Enum from "../../../enums";
 import Constant from "../../../constants/stock/purchaseOrder";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
+import SupplierAction from "../../../actions/stock/supplier";
 import UnitAction from "../../../actions/products/productsUnit";
 import Modal from "../../../../common/components/shares/Modal";
 
@@ -11,7 +12,6 @@ export default class FormItem extends Modal {
     super(props);
     this.state = {
       locations: [],
-      suppliers: [],
       isAutoReceive: false
     };
     this.timer = null;
@@ -25,10 +25,9 @@ export default class FormItem extends Modal {
     const isAutoReceive = parseInt(localStorage.getItem(Constant.IS_AUTO_RECEIVE_STOCK_KEY), 10) === Enum.IS_AUTO_RECEIVE_STOCK;
     this.setState({
       locations: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.LOCATION)),
-      suppliers: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.SUPPLIER)),
       isAutoReceive
     });
-    
+    this.props.dispatch(SupplierAction.fetch(500, 0));
     this.props.dispatch(UnitAction.fetch(100,0));
   }
 
@@ -108,7 +107,7 @@ export default class FormItem extends Modal {
             placeholder={this.CATranslate("text_supplier", locale)}
             errorRequired={<this.Translate id="error_require_supplier" />}
             defaultValue={formData.supplierId}
-            dataSource={this.state.suppliers}
+            dataSource={this.props.supplier.list}
             valueKey="id"
             required={true}
             form={form} />
