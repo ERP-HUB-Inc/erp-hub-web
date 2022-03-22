@@ -82,15 +82,15 @@ const PurchaseOrder = Loadable({
   loading: () => <StartUp />,
 });
 
-const ReceiveOrder = Loadable({
-  loader: () => import("../../../../inventory/containers/stock/ReceivePurchase"),
-  loading: () => <StartUp />,
-});
+// const ReceiveOrder = Loadable({
+//   loader: () => import("../../../../inventory/containers/stock/ReceivePurchase"),
+//   loading: () => <StartUp />,
+// });
 
-const StockReturn = Loadable({
-  loader: () => import("../../../../inventory/containers/stock/ReturnPurchase"),
-  loading: () => <StartUp />,
-});
+// const StockReturn = Loadable({
+//   loader: () => import("../../../../inventory/containers/stock/ReturnPurchase"),
+//   loading: () => <StartUp />,
+// });
 
 const StockTransfer = Loadable({
   loader: () => import("../../../../inventory/containers/stock/StockTransfer"),
@@ -107,10 +107,10 @@ const Supplier = Loadable({
   loading: () => <StartUp />,
 });
 
-const SaleOrderQuotation = Loadable({
-  loader: () => import("../../../../inventory/containers/stock/SaleOrder"),
-  loading: () => <StartUp />,
-});
+// const SaleOrderQuotation = Loadable({
+//   loader: () => import("../../../../inventory/containers/stock/SaleOrder"),
+//   loading: () => <StartUp />,
+// });
 
 const StockAdjustmentRequest = Loadable({
   loader: () => import("../../../../inventory/containers/stock/StockAdjustmentRequest"),
@@ -370,13 +370,13 @@ const dataSource = {
     route: "stock",
     title: <Translate id="text_stock" />,
     subItems: [
-      {
-        title: <Translate id="text_sale_order" />,
-        icon: "icon-time",
-        route: "/stock/sale-order",
-        component: SaleOrderQuotation,
-        isFashNav: true
-      },
+      // {
+      //   title: <Translate id="text_sale_order" />,
+      //   icon: "icon-time",
+      //   route: "/stock/sale-order",
+      //   component: SaleOrderQuotation,
+      //   isFashNav: true
+      // },
       {
         title: <Translate id="text_supplier" />,
         icon: "icon-customer",
@@ -391,19 +391,26 @@ const dataSource = {
         component: PurchaseOrder,
         isFashNav: true
       },
+      // {
+      //   title: <Translate id="text_receive_purchase" />,
+      //   icon: "icon-import",
+      //   route: "/stock/purchase/receive",
+      //   component: ReceiveOrder,
+      //   isFashNav: false
+      // },
+      // {
+      //   title: <Translate id="text_return_purchase" />,
+      //   icon: "icon-sale-return",
+      //   route: "/stock/return",
+      //   component: StockReturn,
+      //   isFashNav: false
+      // },
       {
-        title: <Translate id="text_receive_purchase" />,
-        icon: "icon-import",
-        route: "/stock/purchase/receive",
-        component: ReceiveOrder,
-        isFashNav: false
-      },
-      {
-        title: <Translate id="text_return_purchase" />,
-        icon: "icon-sale-return",
-        route: "/stock/return",
-        component: StockReturn,
-        isFashNav: false
+        title: <Translate id="text_stock_adjustment" />,
+        icon: "icon-stock-audit",
+        route: "/stock/adjustment/request",
+        component: StockAdjustmentRequest,
+        isFashNav: true
       },
       {
         title: <Translate id="text_stock_transfer" />,
@@ -418,13 +425,6 @@ const dataSource = {
         route: "/stock/receive/transfer",
         component: ReceiveStockTransfer,
         isFashNav: false
-      },
-      {
-        title: <Translate id="text_stock_adjustment" />,
-        icon: "icon-stock-audit",
-        route: "/stock/adjustment/request",
-        component: StockAdjustmentRequest,
-        isFashNav: true
       }
     ]
   },
