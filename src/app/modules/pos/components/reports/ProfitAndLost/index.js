@@ -14,6 +14,7 @@ import ProfitAndLostService from "../../../services/report/ProfitAndLostService"
 import Util from "../../../../common/util";
 
 export default function ProfitAndLossReport() {
+    
     const [data, setData] = React.useState(null);
     const [fromValue, setFromValue] = React.useState(moment().startOf("month"));
     const [toValue, setToValue] = React.useState(moment().endOf("month"));
@@ -153,4 +154,5 @@ export default function ProfitAndLossReport() {
             </div>
         </div>
     </ProfitAndLossContext.Provider>;
+   
 }
