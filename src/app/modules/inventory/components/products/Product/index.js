@@ -49,10 +49,8 @@ export default class ProductList extends List {
   }
 
   componentDidMount() {
-    if (!this.props.products.fetched) {
-      super.componentDidMount();
-      this.props.dispatch(LocationAction.fetch()); 
-    }
+    super.componentDidMount();
+    this.props.dispatch(LocationAction.fetch()); 
   }
 
   componentWillUpdate(nextProps) {
