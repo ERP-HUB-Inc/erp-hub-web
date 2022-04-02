@@ -60,7 +60,7 @@ export default {
   ],
   
   "text_purchase_order": [
-    "Purchase Orders",
+    "Purchase Order",
     "ការបញ្ជារទិញ"
   ],
   

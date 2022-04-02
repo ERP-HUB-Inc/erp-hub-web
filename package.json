@@ -57,7 +57,6 @@
     "sweetalert": "^2.1.2",
     "xlsx": "^0.14.0"
   },
-  "main": "src/electron-starter.js",
   "scripts": {
     "production": "webpack-dev-server --open",
     "start": "set PORT=3081 & react-scripts start",
@@ -68,8 +67,6 @@
     "prebuild": "npm run generate-build-version",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "electron": "electron .",
-    "electron-dev": "ELECTRON_START_URL=http://localhost:3081 && electron .",
     "lint": "eslint --fix --ext .js,.jsx ."
   },
   "devDependencies": {
@@ -89,7 +86,6 @@
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^3.2.0",
     "dotenv-webpack": "^1.5.5",
-    "electron": "^2.0.18",
     "eslint": "^6.1.0",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.11.0",
