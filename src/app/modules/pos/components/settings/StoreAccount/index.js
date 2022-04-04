@@ -32,7 +32,7 @@ export default class StoreAccountList extends Component {
       getstoreaccid: "",
       selectedModules: [
         {id: 1, route: "transactions", status: 1},
-        {id: 2, route: "/transactions/salehistory", status: 1},
+        {id: 2, route: "/transactions/sales", status: 1},
         {id: 3, route: "/pos", status: 1},
         {id: 3, route: "/transactions/saleregister", status: 1}
       ],

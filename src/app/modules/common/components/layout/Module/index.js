@@ -13,7 +13,7 @@ export const modules = {
   SaleHistory: {
     title: <Translate id="text_sales" />,
     icon: "icon-time",
-    route: "/transactions/salehistory",
+    route: "/transactions/sales",
     component: loadComponet(import("../../../../pos/containers/transactions/SaleHistory")),
     parent: "Transaction",
     isFashNav: true

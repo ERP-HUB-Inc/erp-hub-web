@@ -1,4 +1,5 @@
 import React from "react";
+import swal from "sweetalert";
 import List from "../List";
 import Receipt from "../RetailSale/Receipt";
 import Enum from "../../../enums";
@@ -370,11 +371,30 @@ export default class SaleHistoryList extends List {
   }
 
   handleReturn(rowData) {
-    if(rowData.step === Enum.TRANSACTION_STEP.PAID || rowData.step === Enum.TRANSACTION_STEP.CREDIT){
-      this.props.dispatch(TransactionAction.detail({id: rowData.id}));
-      this.setState({
-        loadingPopup: true,
-        isRequestReturn: true
+    if (rowData.step === Enum.TRANSACTION_STEP.PAID || rowData.step === Enum.TRANSACTION_STEP.CREDIT) {
+      swal({
+        title: this.CATranslate("text_confirm_return_invoice", this.props.locale),
+        text: this.CATranslate("text_message_return_invoice", this.props.locale),
+        icon: "warning",
+        buttons: [this.CATranslate("text_cancel", this.props.locale), this.CATranslate("text_ok", this.props.locale)],
+        dangerMode: true,
+      })
+      .then(ok => {
+          if (ok) {
+            TransactionService.returnTransaction(rowData.id)
+            .then(() => {
+              swal({
+                icon: "success",
+                title: "Success!",
+                text: "Your transaction has been returned",
+                buttons: false,
+                timer: 1500
+              })
+              .then(() => {
+                super.componentDidMount();
+              });
+            });
+          }
       });
     } else {
       this.MessageV2.warning(this.CATranslate("text_error_allow_return", this.props.locale));

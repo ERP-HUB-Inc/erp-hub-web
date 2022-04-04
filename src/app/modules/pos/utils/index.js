@@ -26,12 +26,12 @@ class Util {
       } else if (value.status === Enum.TRANSACTION_ENTRY_STATUS.RETURN) {
         returnAmount += totalAmount;
         returnSubTotalAfterDiscount += subTotalAfterDiscount;
+        summaryTotal.discount += this.getDiscountByRate(totalAmount, value.discount);
       }
     });
 
     summaryTotal.subTotal -= returnAmount;
     summaryTotal.subTotalAfterDiscount -= returnSubTotalAfterDiscount;
-
     return summaryTotal;
   }
 

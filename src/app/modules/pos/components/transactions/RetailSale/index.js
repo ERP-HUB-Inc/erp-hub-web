@@ -811,7 +811,7 @@ export default class Retail extends Component {
   handleLinkSaleHistory() {
     this.handleSetFullScreen();
 
-    history.push("/transactions/salehistory");
+    history.push("/transactions/sales");
   }
 
   handleLinkCloseShift() {
