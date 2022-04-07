@@ -238,9 +238,7 @@
     border-top: 1px solid #dadada;
 }
 
-/* .ant-tabs-nav .ant-tabs-tab-active:active {
-    color: #1890ff;
-} */
+
 
 .ant-tabs-nav .ant-tabs-tab {
     color: rgba(0, 0, 0, 0.85);
@@ -249,6 +247,17 @@
     line-height: 1.5;
 }
 
-/* .ant-tabs-ink-bar {
+.ant-descriptions-item-label{
+    color: #4D4F5C !important;
+    font-size: 10pt;
+    font-weight: 400;
+    font-family: 'PT Sans Narrow', sans-serif;
 
-} */
+}
+
+.ant-descriptions-item > span {
+    color: #4D4F5C !important;
+    font-size: 10pt;
+    font-weight: 400;
+    font-family: 'PT Sans Narrow', sans-serif;
+}

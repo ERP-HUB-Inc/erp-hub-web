@@ -131,6 +131,7 @@
     min-width: 600px;
     width: fit-content;
     padding-top: 35px;
+    min-height: 1000px
 }
 
 #profit-loss-report table {

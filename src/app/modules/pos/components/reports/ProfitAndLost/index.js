@@ -117,7 +117,7 @@ export default function ProfitAndLossReport() {
                                         {value.name}
                                     </td>
                                     <td>
-                                        {(new Util()).formatCurrency(value.amount, "")}
+                                        {(new Util()).formatCurrency(Math.abs(value.amount), "")}
                                     </td>
                                 </tr>
                             )
@@ -136,7 +136,7 @@ export default function ProfitAndLossReport() {
                                         {expense.name ? expense.name : "N/A"}
                                     </td>
                                     <td>
-                                        {(new Util()).formatCurrency(expense.amount, "")}
+                                        {expense.amount ? (new Util()).formatCurrency(expense.amount, "") : "N/A"}
                                     </td>
                                 </tr>
                             )

@@ -1,11 +1,11 @@
 import React from 'react';
+import './index.css';
 import { 
     Descriptions,
     Breadcrumb,
     Icon,
     Tabs, 
     Table,
-    Spin
   } from 'antd';
   import { Translate } from "react-localize-redux";
   import Enum from "../../../enums";
@@ -78,7 +78,7 @@ export default class ProductDetail extends React.Component {
     componentDidMount() {
       const { id } = this.props.match.params,
       params = new URLSearchParams(this.props.location.search);
-      ProductService.detail(id, params.get("productOption"))
+      ProductService.detail(id, params.get("productOption"), true)
       .then(response => {
         if (response.data) {
           this.setState({productDetail: response.data.data});
@@ -90,6 +90,7 @@ export default class ProductDetail extends React.Component {
   
     render() {
       const { productDetail } = this.state;
+      const {productVariants} = this.state;
       return productDetail ? (
         <div>
           
@@ -107,13 +108,13 @@ export default class ProductDetail extends React.Component {
             <div className='detail-product'>
               <Descriptions>
                 <Descriptions.Item label="Product Name">{productDetail.name}</Descriptions.Item>
-                <Descriptions.Item label="Barcode">{this.state.productVariants.barcode}</Descriptions.Item>
+                <Descriptions.Item label="Barcode">{productVariants.barcode}</Descriptions.Item>
                 <Descriptions.Item label="Stock Type"> {productDetail.serialType == Enum.SERIAL_TYPE.STANDARD ? <Translate id="text_inventory"/> : (productDetail.serialType == Enum.SERIAL_TYPE.NON_INVENTORY ? <Translate id="text_non_inventory"/> : "")} </Descriptions.Item>
                 <Descriptions.Item label="Category">{ productDetail.productType.name }</Descriptions.Item> 
-                <Descriptions.Item label="Price">{this.state.productVariants.price }</Descriptions.Item> 
-                <Descriptions.Item label="Whole Price">{this.state.productVariants.wholePrice }</Descriptions.Item> 
-                <Descriptions.Item label="Distr.Price">{this.state.productVariants.distributePrice }</Descriptions.Item> 
-                <Descriptions.Item label="Quantity">{productDetail.distributePrice }</Descriptions.Item> 
+                <Descriptions.Item label="Price">{productVariants.price }</Descriptions.Item> 
+                <Descriptions.Item label="Whole Price">{productVariants.wholePrice }</Descriptions.Item> 
+                <Descriptions.Item label="Distr.Price">{productVariants.distributePrice }</Descriptions.Item> 
+                <Descriptions.Item label="Quantity">{productVariants.quantity }</Descriptions.Item> 
               </Descriptions>
             </div>
             
