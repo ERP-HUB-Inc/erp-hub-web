@@ -72,7 +72,7 @@ export default class Form extends Retail {
 
         if (this.props.transactionReturn.updated) {
             this.props.dispatch(TransactionAction.reset(Constant.RESET_RETURN_TRANSACTION));
-            history.push("/transactions/salehistory");
+            history.push("/transactions/sales");
         }
 
         if (this.props.transactionReturn.error) {
@@ -88,7 +88,7 @@ export default class Form extends Retail {
 
         //is redirect to saleHistory list if refresh page
         if (this.state.productOrderList.length === 0 && this.props.transactionDetail.fetched === false && this.props.transactionDetail.fetching === false){
-            history.push("/transactions/salehistory");
+            history.push("/transactions/sales");
         }
     }
 

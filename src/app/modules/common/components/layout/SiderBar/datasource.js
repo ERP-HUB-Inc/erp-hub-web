@@ -277,7 +277,7 @@ const dataSource = {
       {
         title: <Translate id="text_sales" />,
         icon: "icon-time",
-        route: "/transactions/salehistory", 
+        route: "/transactions/sales", 
         component: SaleHistory,
         isFashNav: true
       },
