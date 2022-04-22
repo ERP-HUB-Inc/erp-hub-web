@@ -157,9 +157,9 @@ export default {
     "Income"
   ],
 
-  "text_today_is_sale": [
-    "Today's Sale",
-    "លក់ថ្ងៃនេះ",
+  "text_today_revenue": [
+    "Today's Revenu",
+    "ចំណូលថ្ងៃនេះ",
     "Today's Sale"
   ],
 
@@ -167,6 +167,18 @@ export default {
     "Today's Transaction",
     "ប្រតិបត្តិការថ្ងៃនេះ",
     "Today's Transaction"
+  ],
+
+  "text_today_discount": [
+    "Today's Discount",
+    "ការបញ្ចុះតម្លៃថ្ងៃនេះ",
+    "Today's Discount"
+  ],
+
+  "text_today_sale": [
+    "Today's Sale",
+    "លក់ថ្ងៃនេះ",
+    "Today's Sale"
   ],
 
   "text_today_is_product_sold": [

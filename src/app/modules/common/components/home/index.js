@@ -58,6 +58,9 @@ export default class Home extends Component {
       pieDataSource["colors"]["Cost"] = "#26c6da";
       pieDataSource["colors"]["Profit"] = "rgb(116, 90, 242)";
     }
+
+    const revenue = this.getValueFromDashboardList(),
+      discount = this.getValueFromDashboardList(1);
     
     return(
       <this.Row style={{alignContent: "flex-start"}}>
@@ -77,13 +80,13 @@ export default class Home extends Component {
           contentValue={
             <CountUp
               start={0}
-              end={this.getValueFromDashboardList()}
+              end={revenue}
               duration={2}
               separator=","
               decimals={2}
               decimal="." />
           }
-          icon="icon-dollar" title={<this.Translate id="text_today_is_sale"/>}
+          icon="icon-dollar" title={<this.Translate id="text_today_revenue"/>}
           readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
           to="reports/sale_summaries" />
 
@@ -91,23 +94,28 @@ export default class Home extends Component {
           contentValue={
             <CountUp
               start={0}
-              end={this.getValueFromDashboardList(1)}
+              end={discount}
               duration={2}
-              separator="" />
+              separator=","
+              decimals={2}
+              decimal="." />
           }
-          icon="icon-list" title={<this.Translate id="text_today_is_transaction"/>}
+          icon="icon-list" title={<this.Translate id="text_today_discount"/>}
           readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
           route="read"
+          color="#cf1322"
           to="reports/sale_summaries" />
 
         <Board contentValue={
           <CountUp
             start={0}
-            end={this.getValueFromDashboardList(2)}
+            end={revenue - discount}
             duration={2}
-            separator="" />
+            separator=","
+            decimals={2}
+            decimal="." />
         }
-        icon="icon-stock" title={<this.Translate id="text_today_is_product_sold"/>}
+        icon="icon-stock" title={<this.Translate id="text_today_sale"/>}
         readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
         route="read"
         to="reports/sold_products" />
@@ -118,7 +126,9 @@ export default class Home extends Component {
               start={0}
               end={this.getValueFromDashboardList(3)}
               duration={2}
-              separator="" />
+              separator=","
+              decimals={2}
+              decimal="." />
           }
           icon="icon-customer"
           title={<this.Translate id="text_total_customer"/>}

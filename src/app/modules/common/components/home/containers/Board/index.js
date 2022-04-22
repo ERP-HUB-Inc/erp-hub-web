@@ -9,6 +9,7 @@ export default class Board extends Component {
           contentValue={this.props.contentValue}
           icon={this.props.icon}
           contentText={this.props.title}
+          color={this.props.color}
           to={this.props.to}
           readMoreTitle={this.props.readMoreTitle}/>
       </this.Col>

@@ -59,6 +59,11 @@ export default {
     "ប្រាក់ចំណូល"
   ],
 
+  "text_net_sale": [
+    "Net Sale",
+    "ការលក់សុទ្ធ"
+  ],
+
   "text_sale_report": [
     "Sale Report",
     "របាយការណ៍លក់"

@@ -91,7 +91,7 @@ function ReportSaleSummary() {
       ]}
       />
       <Row gutter={16}>
-        <Col span={6}>
+        <Col span={4}>
           <Card>
             <Statistic
               title={<Translate id="text_revenue" />}
@@ -100,7 +100,25 @@ function ReportSaleSummary() {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={4}>
+          <Card>
+            <Statistic
+              title={<Translate id="text_discount" />}
+              value={data ? data.discount : 0}
+              precision={2}
+            />
+          </Card>
+        </Col>
+        <Col span={4}>
+          <Card>
+            <Statistic
+              title={<Translate id="text_net_sale" />}
+              value={data ? data.netSale : 0}
+              precision={2}
+            />
+          </Card>
+        </Col>
+        <Col span={4}>
           <Card>
             <Statistic
               title={<Translate id="text_cost_of_good" />}
@@ -109,7 +127,7 @@ function ReportSaleSummary() {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={4}>
           <Card>
             <Statistic
               title={<Translate id="text_gross_profit" />}
@@ -118,7 +136,7 @@ function ReportSaleSummary() {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={4}>
           <Card>
             <Statistic
               title={<Translate id="text_margin" />}
@@ -145,7 +163,7 @@ function ReportSaleSummary() {
                 dataIndex: "revenue",
                 align: "right",
                 key: "revenue",
-                render: (value, record) => (new Util()).formatCurrency(value + record.discount)
+                render: revenue => (new Util()).formatCurrency(revenue)
               },
               {
                 title: <Translate id="text_discount" />,
@@ -153,6 +171,13 @@ function ReportSaleSummary() {
                 align: "right",
                 key: "discount",
                 render: discount => (new Util()).formatCurrency(discount)
+              },
+              {
+                title: <Translate id="text_net_sale" />,
+                dataIndex: "sale",
+                align: "right",
+                key: "sale",
+                render: sale => (new Util()).formatCurrency(sale)
               },
               {
                 title: <Translate id="text_cost_of_good" />,
@@ -166,8 +191,8 @@ function ReportSaleSummary() {
                 dataIndex: "profit",
                 align: "right",
                 key: "profit",
-                render: (text, record) => {
-                  let profit = 0;
+                render: (profit, record) => {
+                  profit = 0;
                   profit = "profit" in record ? record.profit : record.revenue - record.cost;
                   return (new Util()).formatCurrency(profit);
                 }

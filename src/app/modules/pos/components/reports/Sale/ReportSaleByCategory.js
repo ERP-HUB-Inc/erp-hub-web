@@ -41,9 +41,11 @@ function ReportSaleByCategory() {
       if (response.data) {
         setData(response.data);
         const totalRevenue = _.sumBy(response.data, value => parseFloat(value.revenue)),
+          totalDiscount = _.sumBy(response.data, value => parseFloat(value.discount)),
           totalCost = _.sumBy(response.data, value => parseFloat(value.cost));
         setSummary({
           totalRevenue,
+          totalDiscount,
           totalCost
         });
       }
@@ -59,12 +61,14 @@ function ReportSaleByCategory() {
   }, []);
 
   let totalRevenue = 0,
+    totalNetSale = 0,
     totalCost = 0, 
     totalProfit = 0,
     totalMargin = 0;
 
   if (summary) {
     totalRevenue = summary.totalRevenue;
+    totalNetSale = summary.totalRevenue - summary.totalDiscount;
     totalCost = summary.totalCost;
     totalProfit = totalRevenue - totalCost;
     if (totalProfit > 0) totalMargin = (totalProfit / totalRevenue) * 100;
@@ -99,7 +103,7 @@ function ReportSaleByCategory() {
       ]}
       />
       <Row gutter={16}>
-        <Col span={6}>
+        <Col span={4}>
           <Card>
             <Statistic
               title={<Translate id="text_revenue" />}
@@ -108,7 +112,25 @@ function ReportSaleByCategory() {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={4}>
+          <Card>
+            <Statistic
+              title={<Translate id="text_discount" />}
+              value={summary ? summary.totalDiscount : 0}
+              precision={2}
+            />
+          </Card>
+        </Col>
+        <Col span={4}>
+          <Card>
+            <Statistic
+              title={<Translate id="text_net_sale" />}
+              value={totalNetSale}
+              precision={2}
+            />
+          </Card>
+        </Col>
+        <Col span={4}>
           <Card>
             <Statistic
               title={<Translate id="text_cost_of_good" />}
@@ -117,7 +139,7 @@ function ReportSaleByCategory() {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={4}>
           <Card>
             <Statistic
               title={<Translate id="text_gross_profit" />}
@@ -126,7 +148,7 @@ function ReportSaleByCategory() {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={4}>
           <Card>
             <Statistic
               title={<Translate id="text_margin" />}
@@ -166,6 +188,20 @@ function ReportSaleByCategory() {
                 render: value => (new Util()).formatCurrency(value)
               },
               {
+                title: <Translate id="text_discount" />,
+                dataIndex: "discount",
+                align: "right",
+                key: "discount",
+                render: discount => (new Util()).formatCurrency(discount)
+              },
+              {
+                title: <Translate id="text_net_sale" />,
+                dataIndex: "revenue",
+                align: "right",
+                key: "netSale",
+                render: (revenue, record) => (new Util()).formatCurrency(revenue - record.discount)
+              },
+              {
                 title: <Translate id="text_cost_of_good" />,
                 dataIndex: "cost",
                 align: "right",
@@ -178,7 +214,8 @@ function ReportSaleByCategory() {
                 align: "right",
                 key: "profit",
                 render: (profit, record) => {
-                  profit = record.revenue - record.cost;
+                  const netSale = record.revenue - record.discount;
+                  profit = netSale - record.cost;
                   return (new Util()).formatCurrency(profit);
                 }
               },
