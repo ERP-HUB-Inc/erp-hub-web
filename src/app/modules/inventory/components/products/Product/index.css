@@ -203,3 +203,61 @@
 #product-split .filter-location {
     margin-bottom: 0;
 }
+
+.bread {
+    padding: 20px 0;
+}
+
+.bread a {
+    text-decoration: none;
+}
+
+.ant-breadcrumb-separator {
+    display: none;
+}
+
+.bread i {
+    margin-right: 8px;
+    color: rgba(0, 0, 0, 0.85);
+    font-weight: bold;
+    font-size: 20px !important;
+    line-height: 1.5;
+}
+
+
+.bread span {
+    color: rgba(0, 0, 0, 0.85);
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.ant-tabs-bar {
+    background: none !important;
+    border-bottom: none;
+    border-top: 1px solid #dadada;
+}
+
+
+
+.ant-tabs-nav .ant-tabs-tab {
+    color: rgba(0, 0, 0, 0.85);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.ant-descriptions-item-label{
+    color: #4D4F5C !important;
+    font-size: 10pt;
+    font-weight: 400;
+    font-family: 'PT Sans Narrow', sans-serif;
+
+}
+
+.ant-descriptions-item > span {
+    color: #4D4F5C !important;
+    font-size: 10pt;
+    font-weight: 400;
+    font-family: 'PT Sans Narrow', sans-serif;
+}

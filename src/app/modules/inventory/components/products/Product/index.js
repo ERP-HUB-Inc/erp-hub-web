@@ -4,6 +4,7 @@ import {
   Dropdown,
   Icon
 } from "antd";
+
 import List from "../../List";
 import Util from "../../../utils";
 import Enum from "../../../enums";
@@ -349,6 +350,11 @@ class Column extends List {
         render: (name, record) => {
           const menu = (
             <Menu>
+              <Menu.Item>
+                <this.Link to={`/products/detail/${record.id}?productOption=${record.productOption}`}>
+                  <Icon type="eye" style={{marginRight: 10}} /> View
+                </this.Link>
+              </Menu.Item>
               <Menu.Item>
                 <this.Link to={`/products/update/${record.id}?productOption=${record.productOption}`}>
                   <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
