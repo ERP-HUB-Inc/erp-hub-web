@@ -350,7 +350,7 @@ class Column extends List {
         render: (name, record) => {
           const menu = (
             <Menu>
-              <Menu.Item>
+              <Menu.Item className="hidden">
                 <this.Link to={`/products/detail/${record.id}?productOption=${record.productOption}`}>
                   <Icon type="eye" style={{marginRight: 10}} /> View
                 </this.Link>

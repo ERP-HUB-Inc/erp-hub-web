@@ -100,7 +100,7 @@ export default class Home extends Component {
               decimals={2}
               decimal="." />
           }
-          icon="icon-list" title={<this.Translate id="text_today_discount"/>}
+          icon="icon-sale-return" title={<this.Translate id="text_today_discount"/>}
           readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
           route="read"
           color="#cf1322"

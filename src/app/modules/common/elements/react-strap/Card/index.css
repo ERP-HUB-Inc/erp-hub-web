@@ -75,6 +75,7 @@
 .wrap-card .total
 {
     font-size: 12pt;
+    margin-bottom: 10px;
     letter-spacing: 0.2px;
     font-weight: 500
 }

@@ -1,15 +1,15 @@
-import React from 'react';
-import './index.css';
+import React from "react";
+import "./index.css";
 import { 
     Descriptions,
     Breadcrumb,
     Icon,
     Tabs, 
     Table,
-  } from 'antd';
+  } from "antd";
   import { Translate } from "react-localize-redux";
   import Enum from "../../../enums";
-import ProductService from '../../../services/products/ProductService';
+import ProductService from "../../../services/products/ProductService";
 
 
 
@@ -18,50 +18,50 @@ import ProductService from '../../../services/products/ProductService';
 
     const columns = [
         {
-          title: '#',
-          dataIndex: 'id',
-          key: 'id',
+          title: "#",
+          dataIndex: "id",
+          key: "id",
         },
         {
-          title: 'Name',
-          dataIndex: 'name',
-          key: 'name',
+          title: "Name",
+          dataIndex: "name",
+          key: "name",
           
         },
         {
-          title: 'Barcode',
-          dataIndex: 'barcode',
-          key: 'barcode',
+          title: "Barcode",
+          dataIndex: "barcode",
+          key: "barcode",
         },
         {
-          title: 'Address',
-          dataIndex: 'address',
-          key: 'address',
+          title: "Address",
+          dataIndex: "address",
+          key: "address",
         },
         {
-            title: 'Price',
-            dataIndex: 'address',
-            key: 'address',
+            title: "Price",
+            dataIndex: "address",
+            key: "address",
           },
           {
-            title: 'Distri.Price',
-            dataIndex: 'address',
-            key: 'address',
+            title: "Distri.Price",
+            dataIndex: "address",
+            key: "address",
           },
           {
-            title: 'Whole Price',
-            dataIndex: 'address',
-            key: 'address',
+            title: "Whole Price",
+            dataIndex: "address",
+            key: "address",
           },
           {
-            title: 'Quantity',
-            dataIndex: 'address',
-            key: 'address',
+            title: "Quantity",
+            dataIndex: "address",
+            key: "address",
           },
           {
-            title: 'Total', 
-            dataIndex: 'address',
-            key: 'address',
+            title: "Total", 
+            dataIndex: "address",
+            key: "address",
           },
       ];
 
@@ -109,7 +109,7 @@ export default class ProductDetail extends React.Component {
               <Descriptions>
                 <Descriptions.Item label="Product Name">{productDetail.name}</Descriptions.Item>
                 <Descriptions.Item label="Barcode">{productVariants.barcode}</Descriptions.Item>
-                <Descriptions.Item label="Stock Type"> {productDetail.serialType == Enum.SERIAL_TYPE.STANDARD ? <Translate id="text_inventory"/> : (productDetail.serialType == Enum.SERIAL_TYPE.NON_INVENTORY ? <Translate id="text_non_inventory"/> : "")} </Descriptions.Item>
+                <Descriptions.Item label="Stock Type"> {productDetail.serialType === Enum.SERIAL_TYPE.STANDARD ? <Translate id="text_inventory"/> : (productDetail.serialType === Enum.SERIAL_TYPE.NON_INVENTORY ? <Translate id="text_non_inventory"/> : "")} </Descriptions.Item>
                 <Descriptions.Item label="Category">{ productDetail.productType.name }</Descriptions.Item> 
                 <Descriptions.Item label="Price">{productVariants.price }</Descriptions.Item> 
                 <Descriptions.Item label="Whole Price">{productVariants.wholePrice }</Descriptions.Item> 
@@ -134,7 +134,7 @@ export default class ProductDetail extends React.Component {
 
         </div>
       )
-      :'';
+      :"";
     }
   }
 
