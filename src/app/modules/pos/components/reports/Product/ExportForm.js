@@ -9,13 +9,13 @@ import {
 } from "../../../../common/elements/ant-ui";
 import ProductService from "../../../services/report/ProductService";
 
-function ExportFormLoader({viewStock}) {
+function ExportFormLoader({locationId, viewStock}) {
     const [loading, setLoading] = React.useState(false);
     const [result, setResult] = React.useState(null);
     React.useEffect(() => {
         try {
             setLoading(true);
-            ProductService.exportProducts({viewStock})
+            ProductService.exportProducts({locationId, viewStock})
             .then(response => {
                 if (response.data) {
                     setResult(response.data);
@@ -85,7 +85,7 @@ export default class ExportForm extends React.PureComponent {
             visible={this.state.visible}
             >
                 {
-                    this.state.visible && <ExportFormLoader viewStock={this.props.viewStock} />
+                    this.state.visible && <ExportFormLoader locationId={this.props.locationId} viewStock={this.props.viewStock} />
                 }
                 <div
                     style={{
