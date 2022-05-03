@@ -105,6 +105,7 @@ function ReportSaleSummary() {
             <Statistic
               title={<Translate id="text_discount" />}
               value={data ? data.discount : 0}
+              valueStyle={{ color: "#cf1322" }}
               precision={2}
             />
           </Card>
@@ -114,6 +115,7 @@ function ReportSaleSummary() {
             <Statistic
               title={<Translate id="text_net_sale" />}
               value={data ? data.netSale : 0}
+              valueStyle={{ color: "#3f8600" }}
               precision={2}
             />
           </Card>
