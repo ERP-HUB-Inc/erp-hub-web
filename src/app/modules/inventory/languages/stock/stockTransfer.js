@@ -53,6 +53,11 @@ export default {
     "No stock transfer item"
   ],
 
+  "text_stock_transfer_status": [
+    "Transfer Status",
+    "ស្ងានភាព"
+  ],
+
   "text_transfered": [
     "Transfered",
     "បានផ្ទេរ",

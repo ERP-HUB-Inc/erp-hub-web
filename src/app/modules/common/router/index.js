@@ -23,6 +23,8 @@ import EmployeeCreate from "../../hr/containers/employees/Employee/FormCreate";
 import EmployeeUpdate from "../../hr/containers/employees/Employee/FormUpdate";
 import AdjustmentCreate from "../../inventory/containers/stock/StockAdjustmentRequest/FormCreate";
 import AdjustmentUpdate from "../../inventory/containers/stock/StockAdjustmentRequest/FormUpdate";
+import StockTransferCreate from "../../inventory/containers/stock/StockTransfer/FormCreate";
+import StockTransferUpdate from "../../inventory/containers/stock/StockTransfer/FormUpdate";
 import PurchaseOrderCreate from "../../inventory/containers/stock/PurchaseOrder/FormCreate";
 import PurchaseOrderUpdate from "../../inventory/containers/stock/PurchaseOrder/FormUpdate";
 import ReportSaleSummary from "../../pos/components/reports/Sale/ReportSaleSummary";
@@ -80,6 +82,8 @@ class Router extends Component {
             <Route path="/products/detail/:id" component={ProductDetail} />
             <Route path="/stocks/adjustment/create" component={AdjustmentCreate} />
             <Route path="/stocks/adjustment/update/:id" component={AdjustmentUpdate} />
+            <Route path="/stocks/transfer/create" component={StockTransferCreate} />
+            <Route path="/stocks/transfer/update/:id" component={StockTransferUpdate} />
             <Route path="/stocks/purchase/create" component={PurchaseOrderCreate} />
             <Route path="/stocks/purchase/update/:id" component={PurchaseOrderUpdate} />
             <Route path="/employees/create" component={EmployeeCreate} />

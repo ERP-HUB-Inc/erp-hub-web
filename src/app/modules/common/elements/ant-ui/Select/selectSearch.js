@@ -62,7 +62,7 @@ export class SelectSearch extends Element {
 
 SelectSearch.defaultProps = {
   required: false,
-  errorRequired: "Please select this field.",
+  errorRequired: "Please select",
   notFoundContent: "No item found",
   textAddNew: <Translate id="text_add_new" />,
   valueKey: "value",

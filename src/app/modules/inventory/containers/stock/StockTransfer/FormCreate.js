@@ -17,7 +17,6 @@ function mapStateToProps(state) {
     productVariant: state.reducer.productVariant.request,
     productSearch: state.reducer.product.search,
     location: state.reducer.location.request,
-    accessLocation: state.reducer.location.requestAccessLocation,
     locale: state.locale
   };
 }

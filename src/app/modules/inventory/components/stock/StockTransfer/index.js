@@ -1,6 +1,7 @@
 import React from "react";
 import List from "../List";
 import Enum from "../../../enums";
+import history from "../../../../common/router/history";
 import FormCreate from "../../../containers/stock/StockTransfer/FormCreate";
 import FormUpdate from "../../../containers/stock/StockTransfer/FormUpdate";
 import Constant from "../../../constants/stock/stockTransfer";
@@ -9,7 +10,7 @@ import StockTransferService from "../../../services/stock/StockTransferService";
 import LoctionAction from "../../../../pos/action/settings/location";
 import "./index.css";
 
-export default class Lists extends List {
+export default class StockTransferList extends List {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,18 +21,6 @@ export default class Lists extends List {
     this.formUpdate = <FormUpdate />;
     this.columns = [
       this.columnCreatedAt,
-      {
-        title: <this.Translate id="text_no" />,
-        dataIndex: "number",
-        key: "number",
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_name" />,
-        dataIndex: "name",
-        key: "name",
-        sorter: true
-      },
       {
         title: <this.Translate id="text_description" />,
         dataIndex: "description",
@@ -51,20 +40,6 @@ export default class Lists extends List {
         key: "toLocation",
         sorter: true,
         render: toLocation => toLocation.name
-      },
-      {
-        title: <this.Translate id="text_transfer_by" />,
-        dataIndex: "user",
-        key: "user",
-        sorter: true,
-        render: user => user.fullName
-      },
-      {
-        title: <this.Translate id="text_receive_by" />,
-        dataIndex: "receiver",
-        key: "receiver",
-        sorter: true,
-        render: receiver => receiver ? receiver.fullName : ""
       },
       {
         title: <this.Translate id="text_step" />,
@@ -104,17 +79,9 @@ export default class Lists extends List {
     this.columnFilterWithKey = ["name", "description", "number"];
     this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
     this.RESET_CONSTANT = Constant.RESET_STOCK_TRANSFER;
-    this.handleCancelTransfer = this.handleCancelTransfer.bind(this);
   }
 
-  showFormEdit(rowData) {
-    this.props.dispatch(StockTransferAction.detail(rowData));
-    this.setState({
-      modalConten: <FormUpdate />
-    });
-  }
-
-  handleCancelTransfer(rowData) {
+  handleCancelTransfer = rowData => {
     if (rowData.step === Enum.STOCK_STRANSFER_STEP.RECEIVED) {
       this.Message.error(this.CATranslate("error_invalid_step_for_cancel", this.props.locale));
     } else if (rowData.step === Enum.STOCK_STRANSFER_STEP.CANCEL) {
@@ -125,11 +92,17 @@ export default class Lists extends List {
     }
   }
 
-  buttonActionCollection() {
-    return [
-      this.renderButtonAddNew(),
-      this.renderButtonExportCSV()
-    ];
+  renderButtonAddNew() {
+    return (
+      <this.Link to="/stocks/transfer/create" className="ant-btn info" style={{marginRight: 15}}>
+        <span className="icon-add icon-padding-right"></span>
+        <this.Translate id="text_add_new" />
+      </this.Link>
+    );
+  }
+
+  showFormEdit(rowData){
+    history.push(`/stocks/transfer/update/${rowData.id}`);
   }
 
   componentWillUpdate(nextProps) {

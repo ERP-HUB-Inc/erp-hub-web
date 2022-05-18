@@ -1,14 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import {Form} from "antd";
-import Lists from "../../../components/stock/StockTransfer";
+import { Form } from "antd";
+import StockTransfer from "../../../components/stock/StockTransfer";
 
-class List extends React.Component {
-  render() {
-    return (
-      <Lists {...this.props} />
-    );
-  }
+function StockTransferContainer(props) {
+  return <StockTransfer {...props} />;
 }
 
 function mapStateToProps(state) {
@@ -31,6 +27,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const list = Form.create(mapPropsToFields)(List);
+const stockTransferContainer = Form.create(mapPropsToFields)(StockTransferContainer);
 
-export default connect(mapStateToProps)(list);
+export default connect(mapStateToProps)(stockTransferContainer);

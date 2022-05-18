@@ -15,8 +15,6 @@ export default class FormCreate extends Component {
   constructor(props) {
     super(props);
     this.title = <this.Translate id="text_stock_adjustment" />;
-    this.wrapClassName = `${this.wrapClassName} wrap-modal-po modal-po-full-screen`;
-    this.width = window.innerWidth < 1400 ? window.innerWidth : 1400;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }

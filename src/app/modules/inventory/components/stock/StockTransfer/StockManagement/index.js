@@ -1,10 +1,10 @@
 import React from "react";
-import List from "../List";
-import Util from "../../../utils";
-import Enum from "../../../enums";
-import Constant from "../../../constants/stock/stockManagement";
-import StockManagementAction from "../../../actions/stock/stockManagement";
-import StockManagementService from "../../../services/stock/StockManagementService";
+import List from "../../List";
+import Util from "../../../../utils";
+import Enum from "../../../../enums";
+import Constant from "../../../../constants/stock/stockManagement";
+import StockManagementAction from "../../../../actions/stock/stockManagement";
+import StockManagementService from "../../../../services/stock/StockManagementService";
 
 export default class PaymentMethodList extends List {
   constructor(props) {

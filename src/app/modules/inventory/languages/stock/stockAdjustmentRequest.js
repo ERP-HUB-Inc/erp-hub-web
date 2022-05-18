@@ -25,8 +25,7 @@ export default {
 
   "text_reason_help": [
     "Please tell why you modified the inventory",
-    "សូមបញ្ជាក់មូលហេតុដែលអ្នកកែប្រែស្តុកទំនិញ",
-    "Please tell why you modified the inventory"
+    "សូមបញ្ជាក់មូលហេតុដែលអ្នកកែប្រែស្តុកទំនិញ"
   ],
 
   "text_adjustment_type": [
@@ -43,8 +42,7 @@ export default {
 
   "text_edit_adjustment": [
     "Edit Adjustment",
-    "កែតម្រូវការកែប្រែស្តុក",
-    "Edit Adjustment"
+    "កែតម្រូវការកែប្រែស្តុក"
   ],
 
   "text_adjust": [

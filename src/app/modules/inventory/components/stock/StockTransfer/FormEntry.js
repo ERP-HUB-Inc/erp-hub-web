@@ -49,16 +49,11 @@ export default class FormEntry extends Modal {
         render: (text, record) => {
           return <div>
             <div>{record.productName}</div>
-            <div className="variant-name">{record.variantName}</div>
+            {
+              record.variantName && <div className="variant-name">{record.variantName}</div>
+            }
           </div>;
         }
-      },
-      {
-        title: <this.Translate id="text_all_quantity" />,
-        dataIndex: "allQuantity",
-        width: 150,
-        align: "center",
-        key: "allQuantity",
       },
       {
         title: <this.Translate id="text_stock_on_hand" />,
@@ -66,8 +61,8 @@ export default class FormEntry extends Modal {
         width: 150,
         align: "center",
         key: "quantityOnHand",
-        render: (text, product, index) => {
-          const quantityOnHand = this.countQuantityOnHand(product);
+        render: (quantityOnHand, product, index) => {
+          quantityOnHand = this.countQuantityOnHand(product);
           return <div>
             <this.InputNumber name={`quantityOnHand[${index}]`} className="hidden" data={quantityOnHand} form={this.form} />
             {quantityOnHand}
@@ -97,17 +92,11 @@ export default class FormEntry extends Modal {
         key: "transferQuantity",
         align: "right",
         render: (text, product, index) => {
-          const quantityOnHand = this.countQuantityOnHand(product);
           return <this.InputNumber
             name={`transferQuantity[${index}]`}
             data={`${product.transferQuantity}`}
-            className="text-right"
-            compare={{value: quantityOnHand, message: <this.Translate id="text_transfer_qty_warning"/>}}
             isAutoSelect={true}
-            isHideTool={true}
             required={true}
-            handleKeyUp={(e) => this.handleOnChangeQuantity(e, index)}
-            precision={0}
             form={this.form} />;
         }
       },

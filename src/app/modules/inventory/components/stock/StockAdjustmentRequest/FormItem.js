@@ -95,7 +95,6 @@ export default class FormItem extends Modal {
             data={formData.reason}
             placeholder={this.CATranslate("text_reason_help", this.props.locale)}
             required={true}
-            max={1}
             form={form}/>
         </this.Col>
         <this.Col md="8" className="purchase-order-entry" style={{marginTop: 30}}>
