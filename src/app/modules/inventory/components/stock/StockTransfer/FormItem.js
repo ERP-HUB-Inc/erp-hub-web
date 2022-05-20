@@ -61,7 +61,7 @@ export default class FormItem extends Modal {
             name="step"
             label={<this.Translate id="text_stock_transfer_status" />}
             placeholder={this.CATranslate("text_please_search", this.props.locale)}
-            dataSource={[{name: <this.Translate id="text_process" />, value: Enum.STOCK_STRANSFER_STEP.PROCESS}, {name: <this.Translate id="text_mark_as_approved" />, value: Enum.STOCK_STRANSFER_STEP.RECEIVED}]}
+            dataSource={[{name: <this.Translate id="text_process" />, value: Enum.STOCK_STRANSFER_STEP.PROCESS}, {name: <this.Translate id="text_mark_as_received" />, value: Enum.STOCK_STRANSFER_STEP.RECEIVED}]}
             defaultValue={formData.id ? formData.step : Enum.STOCK_STRANSFER_STEP.PROCESS}
             required={true}
             form={form} />

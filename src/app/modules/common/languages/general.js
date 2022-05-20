@@ -445,6 +445,11 @@ export default {
     "Mark as Approved",
     "បានអនុម័ត"
   ],
+
+  "text_mark_as_received": [
+    "Mark as Received",
+    "បានទទួល"
+  ],
   
   "text_give": [
     "Give",

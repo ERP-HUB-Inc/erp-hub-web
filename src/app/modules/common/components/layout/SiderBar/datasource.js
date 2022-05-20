@@ -97,10 +97,10 @@ const StockTransfer = Loadable({
   loading: () => <StartUp />,
 });
 
-// const ReceiveStockTransfer = Loadable({
-//   loader: () => import("../../../../inventory/containers/stock/ReceiveStockTransfer"),
-//   loading: () => <StartUp />,
-// });
+const ReceiveStockTransfer = Loadable({
+  loader: () => import("../../../../inventory/containers/stock/ReceiveStockTransfer"),
+  loading: () => <StartUp />,
+});
 
 const Supplier = Loadable({
   loader: () => import("../../../../inventory/containers/stock/Supplier"),
@@ -419,13 +419,13 @@ const dataSource = {
         component: StockTransfer,
         isFashNav: true
       },
-      // {
-      //   title: <Translate id="text_receive_transfer" />,
-      //   icon: "icon-import",
-      //   route: "/stock/receive/transfer",
-      //   component: ReceiveStockTransfer,
-      //   isFashNav: false
-      // }
+      {
+        title: <Translate id="text_receive_transfer" />,
+        icon: "icon-import",
+        route: "/stock/receive/transfer",
+        component: ReceiveStockTransfer,
+        isFashNav: false
+      }
     ]
   },
   customers: {
