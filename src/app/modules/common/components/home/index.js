@@ -86,6 +86,7 @@ export default class Home extends Component {
               decimals={2}
               decimal="." />
           }
+          percentage={3.50}
           icon="icon-dollar" title={<this.Translate id="text_today_revenue"/>}
           readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
           to="reports/sale_summaries" />

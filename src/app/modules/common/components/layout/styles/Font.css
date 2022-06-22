@@ -26,6 +26,13 @@
 
 @font-face {
   font-family: 'enfont';
+  src:  url('fonts/OpenSans-Medium.ttf');
+  font-weight: 500;
+  font-style: 500;
+}
+
+@font-face {
+  font-family: 'enfont';
   src:  url('fonts/OpenSans-Bold.ttf');
   font-weight: bold;
   font-style: bold;

@@ -23,6 +23,12 @@ export class Cards extends React.Component {
                   </div>
                   <div className="price">
                     {this.props.contentValue}
+                      {
+                        this.props.percentage > 0 ?
+                        <span style={{color: "#48AB5D", fontSize: 15, fontWeight: "500", marginLeft: 10}}>+{this.props.percentage}%</span>
+                        :
+                        <span style={{color: "#E77271", fontSize: 15, marginLeft: 10}}>-{this.props.percentage}%</span>
+                      }
                   </div>
                 </div>
               </div>
