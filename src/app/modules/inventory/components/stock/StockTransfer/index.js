@@ -48,23 +48,6 @@ export default class StockTransferList extends List {
         sorter: true,
         width: 100,
         render: step => step in this.STOCK_STRANSFER_STEP_STR ? <this.Tag color={this.STOCK_STRANSFER_STEP_STR[step].color} className="text-uppercase text-center po-step-tag">{this.STOCK_STRANSFER_STEP_STR[step].name}</this.Tag> : ""
-      },
-      {
-        title: <this.Translate id="text_action" />,
-        dataIndex: "id",
-        key: "action",
-        align: "center",
-        width: 100,
-        render: (text, record) => {
-          return <this.Button
-            type="danger"
-            id="btnAdd"
-            className="mg-right text-uppercase"
-            onClick={() => this.handleCancelTransfer(record)}>
-            <span className="icon-undo icon-padding-right"></span>
-            <this.Translate id="text_cancel"/>
-          </this.Button>;
-        }
       }
     ];
     this.rowSelection = false;
@@ -79,17 +62,6 @@ export default class StockTransferList extends List {
     this.columnFilterWithKey = ["name", "description", "number"];
     this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
     this.RESET_CONSTANT = Constant.RESET_STOCK_TRANSFER;
-  }
-
-  handleCancelTransfer = rowData => {
-    if (rowData.step === Enum.STOCK_STRANSFER_STEP.RECEIVED) {
-      this.Message.error(this.CATranslate("error_invalid_step_for_cancel", this.props.locale));
-    } else if (rowData.step === Enum.STOCK_STRANSFER_STEP.CANCEL) {
-      this.Message.error(this.CATranslate("error_invalid_step_for_cancel", this.props.locale));
-    } else {
-      this.setState({loadingPopup: true});
-      this.props.dispatch(StockTransferAction.cancel(rowData));
-    }
   }
 
   renderButtonAddNew() {

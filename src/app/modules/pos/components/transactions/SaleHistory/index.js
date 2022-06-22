@@ -93,7 +93,11 @@ export default class SaleHistoryList extends List {
         width: 100,
         render: type => {
           const valueType = this.TRANSACTION_TYPE_STR.find(transactionType => transactionType.value === type);
-          return <this.TagLabel color={[Enum.TRANSACTION_TYPE.CREDIT_NOTE].includes(valueType.value) ? "red" : "blue"}>{valueType.name}</this.TagLabel>;
+          if (valueType) {
+            return <this.TagLabel color={[Enum.TRANSACTION_TYPE.CREDIT_NOTE].includes(valueType.value) ? "red" : "blue"}>{valueType.name}</this.TagLabel>;
+          }
+
+          return "";
         },
         sorter: true
       },

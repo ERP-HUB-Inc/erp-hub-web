@@ -2,7 +2,7 @@ import React from "react";
 import ExportForm from "./ExportForm";
 import List from "../List";
 import Constant from "../../../constants/report/purchase";
-import History from "../../../../common/router/history";
+import history from "../../../../common/router/history";
 import FormCreate from "../../../../inventory/containers/stock/PurchaseOrder/FormCreate";
 import ProductReportAction from "../../../action/report/product";
 import ProductReportService from "../../../services/report/ProductService";
@@ -69,7 +69,7 @@ export default class ProductList extends List {
         }
       },
       {
-        title: <this.Translate id="text_price" />,
+        title: <this.Translate id="text_retail_price" />,
         dataIndex: "price",
         width: 150,
         align: "right",
@@ -78,12 +78,27 @@ export default class ProductList extends List {
       },
       {
         title: <this.Translate id="text_total_price" />,
-        dataIndex: "totalPrice",
+        dataIndex: "price",
         width: 150,
         align: "right",
         key: "totalPrice",
-        render: (text, record) => {
-          return this.formatCurrency(record.price * record.quantity);
+        render: (price, record) => {
+          return this.formatCurrency(price * record.quantity);
+        }
+      },
+      {
+        title: <this.Translate id="text_margin" />,
+        dataIndex: "price",
+        width: 150,
+        align: "right",
+        key: "margin",
+        render: (price, record) => {
+
+          const totalPrice = price * record.quantity,
+            totalCost = record.cost * record.quantity,
+            margin = ((totalPrice - totalCost) / totalPrice) * 100;
+
+          return `${margin.toFixed(2)}%`;
         }
       }
     ];
@@ -102,21 +117,54 @@ export default class ProductList extends List {
   }
 
   componentDidMount() {
-    const viewStock = this.Util.getQueryParam(this.props.location, "viewStock");
-    this.props.dispatch(ProductReportAction.getProductReport({limit: this.pageSize, offset: (this.state.current - 1) * this.pageSize, viewStock}));
+    const viewStock = this.Util.getQueryParam(this.props.location, "viewStock"),
+      search = this.Util.getQueryParam(this.props.location, "search") | "",
+      locationId = parseInt(this.Util.getQueryParam(this.props.location, "locationId"));
+
+    let limit = this.Util.getQueryParam(this.props.location, "limit"),
+      offset = this.Util.getQueryParam(this.props.location, "offset"),
+      current = this.Util.getQueryParam(this.props.location, "current");
+
+    limit = limit ? limit : this.pageSize;
+    offset = offset ? offset : (this.state.current - 1) * limit;
+
+    if (current) {
+      this.setState({current: parseInt(current)});
+    } else {
+      current = this.state.current;
+    }
+    
+    this.props.form.setFieldsValue({locationId});
+
+    this.props.dispatch(ProductReportAction.getProductReport({limit, offset, viewStock, search, locationId}));
     this.props.dispatch(LocationAction.fetch(100));
   }
-  
-  componentDidUpdate() {
-    if (this.props.purchaseOrder.added) {
-      History.push("/stock/purchase/order");
-      this.props.dispatch(PurchaseAction.reset());
-    }
+
+  onShowSizeChange(current, pageSize) {
+    const params = new URLSearchParams(this.props.location.search);
+    let search = params.get("search"),
+      locationId = params.get("locationId");
+
+    const option = {
+      limit: pageSize,
+      offset: (current - 1) * pageSize,
+      search: search ? search : "",
+      locationId: locationId > 0 ? locationId : 0
+    };
+
+    params.set("limit", pageSize);
+    history.push({pathname: "/reports/product", search: `?${params.toString()}`});
+    this.props.dispatch(ProductReportAction.getProductReport(option));
   }
 
   onChangePagination(current, pageSize) {
-    const viewStock = this.Util.getQueryParam(this.props.location, "viewStock");
-    this.props.dispatch(ProductReportAction.getProductReport({limit: pageSize, offset: (current - 1) * pageSize, viewStock}));
+    const viewStock = this.Util.getQueryParam(this.props.location, "viewStock"),
+      params = new URLSearchParams(this.props.location.search),
+      offset = (current - 1) * pageSize;
+    params.set("current", current);
+    params.set("offset", offset);
+    history.push({pathname: "/reports/product", search: `?${params.toString()}`});
+    this.props.dispatch(ProductReportAction.getProductReport({limit: pageSize, offset, viewStock}));
     this.setState({current});
   }
 
@@ -131,6 +179,8 @@ export default class ProductList extends List {
             search: values.key ? values.key : "",
             locationId: values.locationId > 0 ? values.locationId : 0
           };
+
+          history.push({path: "/reports/product", search: `?limit=${option.limit}&offset=${option.offset}&current=${this.state.current}&search=${option.search}&locationId=${option.locationId}`});
 
           this.props.dispatch(ProductReportAction.getProductReport(option));
           
