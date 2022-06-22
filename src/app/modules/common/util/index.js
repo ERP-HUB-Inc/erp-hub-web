@@ -4,6 +4,7 @@ import "moment/locale/en-ca";
 import _ from "lodash";
 import Enum from "../enums";
 import ConstantAuth from "../constants/authentication";
+import history from "../router/history";
 
 export default class Util {
   getAPIURL() {
@@ -631,4 +632,16 @@ export default class Util {
 
     return newDataValue;
   }  
+
+  /**
+   * When user want to search params to URL
+   * @param {*} pathName 
+   * @param {*} strParam 
+   */
+  pushParamsToURL(pathName, strParam) {
+    history.push({
+      pathname: pathName,
+      search: strParam
+    });
+  }
 }
