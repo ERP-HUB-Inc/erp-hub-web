@@ -46,10 +46,21 @@ export default class ProductList extends List {
     this.action = ProductAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCT;
     this.handleClone = this.handleClone.bind(this);
+    this.pathName = "/products/list";
   }
 
   componentDidMount() {
-    super.componentDidMount();
+    const params = new URLSearchParams(document.location.search);
+    if (params.get("current")) {
+      this.setState({ current: Number(params.get("current")) });
+    }
+    if (params.get("search")) {
+      this.props.form.setFieldsValue({ key: params.get("search") });
+    }
+    if (params.get("locationId")) {
+      this.props.form.setFieldsValue({locationId: Number(params.get("locationId"))})
+    }
+    this.fetchList();
     this.props.dispatch(LocationAction.fetch()); 
   }
 
@@ -93,6 +104,33 @@ export default class ProductList extends List {
 
       this.props.dispatch(ProductAction.reset(Constant.RESET_ADD_PRODUCT));
     }
+  }
+
+  fetchList() {
+    let searchKey = "";
+    let filter = {}
+    let locationId = 0;
+    let limit = this.pageSize;
+    let offset = this.state.current;
+    const params = new URLSearchParams(document.location.search);
+
+    if (params.get("size")) {
+      limit = Number(params.get("size"));
+    }
+
+    if (params.get("current")) {
+      offset = (Number(params.get("current")) - 1) * limit;
+    }
+
+    if (params.get("search")) {
+      searchKey = JSON.stringify({ column: this.columnFilterWithKey, value: params.get("search") });
+    }
+
+    if (params.get("locationId")) {
+      locationId = Number(params.get("locationId"));
+    }
+
+    this.props.dispatch(this.action.fetch(limit, offset, "", "", filter, searchKey, locationId));
   }
 
   renderButtonAddNew() {
@@ -158,20 +196,62 @@ export default class ProductList extends List {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
-          let filter = {};
-          let locationId = 0;
-          if (values.locationId !== 0) {
-            locationId = values.locationId;
+          let strParam = "";
+          let symbol = "";
+
+          if (values.key) {
+            strParam += `search=${values.key}`;
+            symbol = `&`;
           }
 
-          filter = JSON.stringify(filter);
+          if (values.locationId) {
+            strParam += `${symbol}locationId=${values.locationId}`;
+          }
 
-          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
-          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, locationId));
+          this.Util.pushParamsToURL(this.pathName, strParam);
+          this.fetchList();
           this.setState({isClickFilter: true});
         }
       }); 
     } 
+  }
+
+  onShowSizeChange(current, pageSize) {
+    if (this.action) {
+      const params = new URLSearchParams(document.location.search);
+      let strParam = `size=${pageSize}&current=${current}`;
+
+      if (params.get("search")) {
+        strParam += `&search=${params.get("search")}`;
+      }
+
+      if (params.get("locationId")) {
+        strParam += `&locationId=${params.get("locationId")}`;
+      }
+
+      this.setState({ current, isClickFilter: false });
+      this.Util.pushParamsToURL(this.pathName, strParam);
+      this.fetchList();
+    }
+  }
+
+  onChangePagination(current, pageSize) {
+    if (this.action != null) {
+      const params = new URLSearchParams(document.location.search);
+      let strParam = `size=${pageSize}&current=${current}`;
+
+      if (params.get("search")) {
+        strParam += `&search=${params.get("search")}`;
+      }
+
+      if (params.get("locationId")) {
+        strParam += `&locationId=${params.get("locationId")}`;
+      }
+
+      this.setState({ current, isClickFilter: false });
+      this.Util.pushParamsToURL(this.pathName, strParam);
+      this.fetchList();
+    }
   }
 
   renderFilterRecord() {
