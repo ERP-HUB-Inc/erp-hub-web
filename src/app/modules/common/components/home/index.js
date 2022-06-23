@@ -50,6 +50,13 @@ export default class Home extends Component {
     if (!yesterdayValue) yesterdayValue = 0;
     todayValue = this.formatNumber(todayValue)
     yesterdayValue = this.formatNumber(yesterdayValue);
+
+    if (todayValue === 0 && yesterdayValue === 0) {
+      return 0;
+    }
+    if (yesterdayValue === 0 && todayValue) {
+      return 100;
+    }
     return this.formatNumber(((todayValue * 100) / yesterdayValue) - 100);
   }
 
@@ -105,6 +112,7 @@ export default class Home extends Component {
               decimal="." />
           }
           percentage={this.getDiffAsPercentagFromYesterday(revenue, yesterdayRevenue)}
+          showPercentage={true}
           icon="icon-dollar" title={<this.Translate id="text_today_revenue"/>}
           readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
           to="reports/sale_summaries" />
@@ -136,6 +144,7 @@ export default class Home extends Component {
         }
         icon="icon-dollar" title={<this.Translate id="text_today_sale" />}
         percentage={this.getDiffAsPercentagFromYesterday((revenue - discount), (yesterdayRevenue - yesterdayDiscount))}
+        showPercentage={true}
         readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
         route="read"
         to="reports/sold_products" />

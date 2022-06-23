@@ -12,6 +12,7 @@ export default class Board extends Component {
           contentText={this.props.title}
           color={this.props.color}
           to={this.props.to}
+          showPercentage={this.props.showPercentage}
           readMoreTitle={this.props.readMoreTitle}/>
       </this.Col>
     );
