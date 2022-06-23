@@ -72,7 +72,7 @@ export default class ProductList extends List {
     } = nextProps;
 
     if (productAdd.added || productUpdate.updated) {
-      dispatch(ProductAction.fetch(this.pageSize));
+      this.fetchList();
       dispatch(ProductAction.reset(Constant.RESET_FORM_PRODUCT));
       dispatch(ProductAction.reset(Constant.RESET_DETAIL_PRODUCTS));
     }

@@ -41,6 +41,22 @@ export default class Home extends Component {
     return this.props.cardDashboard.list.length > 0 ? this.props.cardDashboard.list[index].value : 0;
   }
 
+  getYesterdayValue(index = 0) {
+    return this.props.cardDashboard.list.length > 0 ? this.props.cardDashboard.list[index].yesterdayValue : 0;
+  }
+
+  getDiffAsPercentagFromYesterday(todayValue, yesterdayValue) {
+    if (!todayValue) todayValue = 0;
+    if (!yesterdayValue) yesterdayValue = 0;
+    todayValue = this.formatNumber(todayValue)
+    yesterdayValue = this.formatNumber(yesterdayValue);
+    return this.formatNumber(((todayValue * 100) / yesterdayValue) - 100);
+  }
+
+  formatNumber(value) {
+    return parseFloat((value * 1).toFixed(2));
+  }
+
   render() {
 
     let pieDataSource = {
@@ -60,8 +76,10 @@ export default class Home extends Component {
     }
 
     const revenue = this.getValueFromDashboardList(),
-      discount = this.getValueFromDashboardList(1);
-    
+      yesterdayRevenue = this.getYesterdayValue(),
+      discount = this.getValueFromDashboardList(1),
+      yesterdayDiscount = this.getYesterdayValue(1);
+          
     return(
       <this.Row style={{alignContent: "flex-start"}}>
         <this.Col md="12">
@@ -86,7 +104,7 @@ export default class Home extends Component {
               decimals={2}
               decimal="." />
           }
-          percentage={3.50}
+          percentage={this.getDiffAsPercentagFromYesterday(revenue, yesterdayRevenue)}
           icon="icon-dollar" title={<this.Translate id="text_today_revenue"/>}
           readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
           to="reports/sale_summaries" />
@@ -116,7 +134,8 @@ export default class Home extends Component {
             decimals={2}
             decimal="." />
         }
-        icon="icon-stock" title={<this.Translate id="text_today_sale"/>}
+        icon="icon-dollar" title={<this.Translate id="text_today_sale" />}
+        percentage={this.getDiffAsPercentagFromYesterday((revenue - discount), (yesterdayRevenue - yesterdayDiscount))}
         readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
         route="read"
         to="reports/sold_products" />
@@ -128,7 +147,7 @@ export default class Home extends Component {
               end={this.getValueFromDashboardList(3)}
               duration={2}
               separator=","
-              decimals={2}
+              decimals={0}
               decimal="." />
           }
           icon="icon-customer"
