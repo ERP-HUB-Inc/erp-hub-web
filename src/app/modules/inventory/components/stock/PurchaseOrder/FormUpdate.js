@@ -261,43 +261,4 @@ export default class PurchaseOrderUpdate extends Component {
       }
     </div>;
   }
-
-  renderv2() {
-    const {
-      purchaseOrderUpdate, 
-      form, 
-      locale, 
-      supplier,
-      unit,
-      storeLocation,
-      productSearch,
-      requestOrderNumber,
-      purchaseOrderDetail,
-      dispatch,
-      buttonPushToSupplier
-    } = this.props;
-
-    this.submitLoading = purchaseOrderUpdate.updating;
-
-    if (purchaseOrderDetail.showForm) {
-      this.content = (
-        <FormItem 
-          form={form} 
-          formData={purchaseOrderDetail.data}
-          supplier={supplier}
-          unit={unit}
-          productVariant={this.props.productVariant}
-          storeLocation={storeLocation} 
-          productSearch={productSearch}
-          requestOrderNumber={requestOrderNumber}
-          dispatch={dispatch} 
-          buttonPushToSupplier={buttonPushToSupplier}
-          reportProduct={this.props.reportProduct}
-          locale={locale} />
-      );
-      return super.render();
-    } else {
-      return <div/>;
-    }
-  }
 }

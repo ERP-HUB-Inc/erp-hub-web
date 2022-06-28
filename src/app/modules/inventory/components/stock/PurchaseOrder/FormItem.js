@@ -157,7 +157,7 @@ export default class FormItem extends Modal {
           <SearchPO
             dataSource={productSearch}
             productVariant={this.props.productVariant}
-            purchaseOrderEntries={formData.purchaseOrderEntries}
+            purchaseOrderEntries={formData.POEntries}
             locale={locale}
             productReOrderPointList={this.props.productReOrderPointList}
             product={this.props.product}

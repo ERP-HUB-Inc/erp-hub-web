@@ -55,13 +55,6 @@ export default class SearchPo extends Modal {
         }
       },
       {
-        title: <this.Translate id="text_stock_on_hand" />,
-        dataIndex: "quantityOnHand",
-        width: 150,
-        align: "center",
-        key: "quantityOnHand"
-      },
-      {
         title: <this.Translate id="text_unit" />,
         dataIndex: "unit",
         width: 150,
@@ -205,24 +198,14 @@ export default class SearchPo extends Modal {
       const existingProductList = this.state.productLists;
       
       purchaseOrderEntries.forEach(purchaseOrderEntry => {
-        let productName = "",
-          variantName = "",
-          quantityOnHand = 0;
-        
-        if (purchaseOrderEntry.productVariant) {
-          productName = Util.getProductNameV2(purchaseOrderEntry.productVariant.product);
-          variantName = purchaseOrderEntry.productVariant.product.productOption === Enum.PRODUCT_VARIANT ? purchaseOrderEntry.productVariant.name : "";
-          quantityOnHand = purchaseOrderEntry.productVariant.quantity;
-        }
-
         existingProductList.push({
           purchaseEntryId: purchaseOrderEntry.id,
-          productName,
-          barcode: purchaseOrderEntry.productVariant.barcode,
-          variantName,
+          productName: purchaseOrderEntry.productName,
+          barcode: "",
+          variantName: purchaseOrderEntry.variantName,
           unitId: purchaseOrderEntry.unitId,
           productVariantId: purchaseOrderEntry.productVariantId,
-          quantityOnHand,
+          quantityOnHand: 0,
           quantity: purchaseOrderEntry.requestQuantity, 
           price: purchaseOrderEntry.price,
           totalPrice: purchaseOrderEntry.requestQuantity * purchaseOrderEntry.price,
