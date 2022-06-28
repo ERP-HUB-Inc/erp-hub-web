@@ -6,7 +6,8 @@ import {
   DatePicker,
   Card,
   Row,
-  Col
+  Col,
+  Select
 } from "antd";
 import moment from "moment";
 import { connect } from "react-redux";
@@ -23,26 +24,33 @@ function ReportSaleSummary() {
   const [data, setData] = React.useState(null);
   const [fromValue, setFromValue] = React.useState(moment());
   const [toValue, setToValue] = React.useState(moment());
+  const [filterGroup, setFilterGroup] = React.useState("day");
 
   const onFromChange = value => {
-      setFromValue(value);
-      setToValue(value);
-      fetchReport(locationId, value, value);
+    if (!value) {
+        return;
+    }
+    setFromValue(value);
+    setToValue(value);
+    fetchReport(locationId, value, value, filterGroup);
   };
 
   const onToChange = value => {
-      setToValue(value);
-      fetchReport(locationId, fromValue, value);
+    if (!value) {
+      return;
+    }
+    setToValue(value);
+    fetchReport(locationId, fromValue, value, filterGroup);
   };
 
   const onChangeLocation = locationId => {
-    fetchReport(locationId, fromValue, toValue);
+    fetchReport(locationId, fromValue, toValue, filterGroup);
     setLocationId(locationId);
   };
 
-  const fetchReport = (locationId, from, to) => {
+  const fetchReport = (locationId, from, to, filterGroup) => {
     setLoading(true);
-    ReportSaleService.getReportSummary(locationId, from.format("YYYY-MM-DD"), to.format("YYYY-MM-DD"))
+    ReportSaleService.getReportSummary(locationId, from.format("YYYY-MM-DD"), to.format("YYYY-MM-DD"), filterGroup)
     .then(response => {
       if (response.data) {
         setData(response.data);
@@ -52,6 +60,23 @@ function ReportSaleSummary() {
       setLoading(false);
     });
   };
+
+  const onChangeFilterGroup = (value) => {
+    fetchReport(locationId, fromValue, toValue, value);
+    setFilterGroup(value);
+  }
+
+  function displayDate(value) {
+    let result = "";
+    if (filterGroup === "day") {
+      result = (new Util().formatDate(value.date, "DD/MM/YYYY"));
+    } else if (filterGroup === "week") {
+      result = `${(new Util().formatDate(value.startDate, "DD/MM/YYYY"))}~${(new Util().formatDate(value.endDate, "DD/MM/YYYY"))}`;
+    } else if (filterGroup === "month") {
+      result = (new Util().formatDate(value.date, "MM/YYYY"));
+    }
+    return result;
+  } 
 
   React.useEffect(() => {
     fetchReport(locationId, fromValue, toValue);
@@ -71,22 +96,36 @@ function ReportSaleSummary() {
       extra={[
         <div style={{display: "flex"}} key="1">
           <SelectLocation
-            defaultValue={locationId}
+            defaultValue={Number(locationId)}
             onChange={onChangeLocation} />
+          
+          <Select
+            showSearch
+            placeholder="Filter Group"
+            onChange={onChangeFilterGroup}
+            style={{ minWidth: 200, paddingRight: 15 }}
+            defaultValue="day"
+          >
+            <Select.Option value="day" key={1}><Translate id="text_day" /></Select.Option>
+            <Select.Option value="week" key={2}><Translate id="text_week" /></Select.Option>
+            <Select.Option value="month" key={3}><Translate id="text_month" /></Select.Option>
+          </Select>
 
           <DatePicker
-              format="DD/MM/YYYY"
-              value={fromValue}
-              placeholder="From"
-              onChange={onFromChange}
-              />
+            format="DD/MM/YYYY"
+            value={fromValue}
+            placeholder="From"
+            allowClear={false}
+            onChange={onFromChange}
+            />
           <DatePicker
-              format="DD/MM/YYYY"
-              value={toValue}
-              placeholder="To"
-              onChange={onToChange}
-              style={{marginLeft: 15}}
-              />
+            format="DD/MM/YYYY"
+            value={toValue}
+            placeholder="To"
+            allowClear={false}
+            onChange={onToChange}
+            style={{marginLeft: 15}}
+            />
         </div>
       ]}
       />
@@ -95,7 +134,7 @@ function ReportSaleSummary() {
           <Card>
             <Statistic
               title={<Translate id="text_revenue" />}
-              value={data ? data.revenue : 0}
+              value={data ? data.revenue.toFixed(2) : 0}
               precision={2}
             />
           </Card>
@@ -104,7 +143,7 @@ function ReportSaleSummary() {
           <Card>
             <Statistic
               title={<Translate id="text_discount" />}
-              value={data ? data.discount : 0}
+              value={data ? data.discount.toFixed(2) : 0}
               valueStyle={{ color: "#cf1322" }}
               precision={2}
             />
@@ -114,7 +153,7 @@ function ReportSaleSummary() {
           <Card>
             <Statistic
               title={<Translate id="text_net_sale" />}
-              value={data ? data.netSale : 0}
+              value={data ? data.netSale.toFixed(2) : 0}
               valueStyle={{ color: "#3f8600" }}
               precision={2}
             />
@@ -133,7 +172,7 @@ function ReportSaleSummary() {
           <Card>
             <Statistic
               title={<Translate id="text_gross_profit" />}
-              value={data ? data.profit : 0}
+              value={data ? data.profit.toFixed(2) : 0}
               precision={2}
             />
           </Card>
@@ -142,7 +181,7 @@ function ReportSaleSummary() {
           <Card>
             <Statistic
               title={<Translate id="text_margin" />}
-              value={data && data.margin ? data.margin : 0}
+              value={data && data.margin ? data.margin.toFixed(2) : 0}
               precision={2}
               suffix="%"
             />
@@ -158,7 +197,7 @@ function ReportSaleSummary() {
                 dataIndex: "date",
                 key: "date",
                 width: 200,
-                render: value => (new Util()).formatDate(value, "DD/MM/YYYY")
+                render: (value, record) => displayDate(record)
               },
               {
                 title: <Translate id="text_revenue" />,

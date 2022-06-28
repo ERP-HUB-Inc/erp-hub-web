@@ -9,10 +9,10 @@ class SaleService extends BaseService {
     this.initializeRoute();
   }
 
-  getReportSummary(locationId, startDate, endDate) {
+  getReportSummary(locationId, startDate, endDate, filterGroup = "") {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/summaries?locationId=${locationId}&startDate=${startDate}&endDate=${endDate}`,
+      url: `${this.baseUrl}/summaries?locationId=${locationId}&startDate=${startDate}&endDate=${endDate}&filterGroup=${filterGroup}`,
       headers: this.header
     });
   }

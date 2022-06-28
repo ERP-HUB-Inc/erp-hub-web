@@ -94,6 +94,26 @@ export default {
     "កាលបរិច្ចេទ"
   ],
 
+  "text_day": [
+    "Day",
+    "ថ្ងៃ"
+  ],
+
+  "text_month": [
+    "Month",
+    "ខែ"
+  ],
+
+  "text_week": [
+    "Week",
+    "សប្តាហ៍"
+  ],
+
+  "text_year": [
+    "Year",
+    "ឆ្នាំ"
+  ],
+
   "text_try": [
     "Try",
     "សាកល្បង"
