@@ -634,7 +634,7 @@ export default class Util {
   }  
 
   /**
-   * When user want to search params to URL
+   * When user want to push search params to URL
    * @param {*} pathName 
    * @param {*} strParam 
    */

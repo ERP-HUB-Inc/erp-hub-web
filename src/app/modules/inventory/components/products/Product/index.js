@@ -114,8 +114,8 @@ export default class ProductList extends List {
     let offset = this.state.current;
     const params = new URLSearchParams(document.location.search);
 
-    if (params.get("size")) {
-      limit = Number(params.get("size"));
+    if (params.get("limit")) {
+      limit = Number(params.get("limit"));
     }
 
     if (params.get("current")) {
@@ -196,19 +196,28 @@ export default class ProductList extends List {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
-          let strParam = "";
-          let symbol = "";
-
+          const params = new URLSearchParams(document.location.search);
           if (values.key) {
-            strParam += `search=${values.key}`;
-            symbol = `&`;
+            if (params.get("search")) {
+              params.set("search", values.key);
+            } else {
+              params.append("search", values.key);
+            }
+          } else {
+            params.delete("search");
           }
 
           if (values.locationId) {
-            strParam += `${symbol}locationId=${values.locationId}`;
+            if (params.get("locationId")) {
+              params.set("locationId", values.locationId); 
+            } else {
+              params.append("locationId", values.locationId);
+            }
+          } else {
+            params.delete("locationId");
           }
 
-          this.Util.pushParamsToURL(this.pathName, strParam);
+          this.Util.pushParamsToURL(this.pathName, params.toString());
           this.fetchList();
           this.setState({isClickFilter: true});
         }
@@ -219,8 +228,7 @@ export default class ProductList extends List {
   onShowSizeChange(current, pageSize) {
     if (this.action) {
       const params = new URLSearchParams(document.location.search);
-      let strParam = `size=${pageSize}&current=${current}`;
-
+      let strParam = `limit=${pageSize}&current=${current}`;
       if (params.get("search")) {
         strParam += `&search=${params.get("search")}`;
       }
@@ -238,7 +246,7 @@ export default class ProductList extends List {
   onChangePagination(current, pageSize) {
     if (this.action != null) {
       const params = new URLSearchParams(document.location.search);
-      let strParam = `size=${pageSize}&current=${current}`;
+      let strParam = `limit=${pageSize}&current=${current}`;
 
       if (params.get("search")) {
         strParam += `&search=${params.get("search")}`;
