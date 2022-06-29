@@ -19,36 +19,95 @@ import ReportSaleService from "../../../services/report/SaleService";
 import "./index.css";
 
 function ReportSaleSummary() {
-  const [locationId, setLocationId] = React.useState((new Util()).getLocationId());
+  const [defaultLocationId, setDefaultLocationId] = React.useState((new Util()).getLocationId());
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState(null);
   const [fromValue, setFromValue] = React.useState(moment());
   const [toValue, setToValue] = React.useState(moment());
-  const [filterGroup, setFilterGroup] = React.useState("day");
+  const [groupBy, setGroupBy] = React.useState("day");
+  const pathName = "/reports/sale_summaries";
 
   const onFromChange = value => {
+    const param = new URLSearchParams(document.location.search);
+
     if (!value) {
-        return;
+      param.delete("from")
+      return;
     }
-    setFromValue(value);
-    setToValue(value);
-    fetchReport(locationId, value, value, filterGroup);
+
+    value = moment(value).format("YYYY-MM-DD");
+    if (param.get("from")) {
+      param.set("from", value);
+    } else {
+      param.append("from", value);
+    }
+
+    if (param.get("to")) {
+      param.set("to", value);
+    } else {
+      param.append("to", value);
+    }
+
+    setFromValue(moment(value));
+    setToValue(moment(value));
+    (new Util().pushParamsToURL(pathName, param.toString()));
+    fetchReport();
   };
 
   const onToChange = value => {
+    const param = new URLSearchParams(document.location.search);
+
     if (!value) {
+      param.delete("to");
       return;
     }
-    setToValue(value);
-    fetchReport(locationId, fromValue, value, filterGroup);
+
+    value = moment(value).format("YYYY-MM-DD");
+    if (param.get("to")) {
+      param.set("to", value);
+    } else {
+      param.append("to", value);
+    }
+
+    setToValue(moment(value));
+    (new Util().pushParamsToURL(pathName, param.toString()));
+    fetchReport();
   };
 
   const onChangeLocation = locationId => {
-    fetchReport(locationId, fromValue, toValue, filterGroup);
-    setLocationId(locationId);
+    const param = new URLSearchParams(document.location.search);
+    if (locationId || locationId ===0) {
+      if (param.get("locationId")) {
+        param.set("locationId", locationId);
+      } else {
+        param.append("locationId", locationId);
+      }
+    }
+
+    setDefaultLocationId(locationId);
+    (new Util().pushParamsToURL(pathName, param.toString()));
+    fetchReport();
   };
 
-  const fetchReport = (locationId, from, to, filterGroup) => {
+  const fetchReport = () => {
+    const params = new URLSearchParams(document.location.search);
+    let locationId = null;
+    let from = moment();
+    let to = moment();
+    let filterGroup = groupBy;
+    if (params.get("locationId")) {
+      locationId = Number(params.get("locationId"));
+    }
+    if (params.get("from")) {
+      from = moment(params.get("from"));
+    }
+    if (params.get("to")) {
+      to = moment(params.get("to"));
+    }
+
+    if (params.get("group-by")) {
+      filterGroup = params.get("group-by");
+    }
     setLoading(true);
     ReportSaleService.getReportSummary(locationId, from.format("YYYY-MM-DD"), to.format("YYYY-MM-DD"), filterGroup)
     .then(response => {
@@ -62,24 +121,56 @@ function ReportSaleSummary() {
   };
 
   const onChangeFilterGroup = (value) => {
-    fetchReport(locationId, fromValue, toValue, value);
-    setFilterGroup(value);
+    const param = new URLSearchParams(document.location.search);
+    if (value) {
+      if (param.get("group-by")) {
+        param.set("group-by", value);
+      } else {
+        param.append("group-by", value);
+      }
+    } else {
+      param.delete("group-by");
+    }
+
+    setGroupBy(value);
+    (new Util().pushParamsToURL(pathName, param.toString()));
+    fetchReport();
+  }
+
+  const setFilterField = () => {
+    const params = new URLSearchParams(document.location.search);
+    if (params.get("locationId") || Number(params.get("locationId")) === 0) {      
+      setDefaultLocationId(Number(params.get("locationId")));
+    }
+
+    if (params.get("group-by")) {
+      setGroupBy(params.get("group-by"));
+    }
+
+    if (params.get("from")) {
+      setFromValue(moment(params.get("from")));
+    }
+
+    if (params.get("to")) {
+      setToValue(moment(params.get("to")));
+    }
   }
 
   function displayDate(value) {
     let result = "";
-    if (filterGroup === "day") {
+    if (groupBy === "day") {
       result = (new Util().formatDate(value.date, "DD/MM/YYYY"));
-    } else if (filterGroup === "week") {
+    } else if (groupBy === "week") {
       result = `${(new Util().formatDate(value.startDate, "DD/MM/YYYY"))}~${(new Util().formatDate(value.endDate, "DD/MM/YYYY"))}`;
-    } else if (filterGroup === "month") {
+    } else if (groupBy === "month") {
       result = (new Util().formatDate(value.date, "MM/YYYY"));
     }
     return result;
   } 
 
   React.useEffect(() => {
-    fetchReport(locationId, fromValue, toValue);
+    setFilterField();
+    fetchReport();
     //eslint-disable-next-line
   }, []);
 
@@ -96,15 +187,15 @@ function ReportSaleSummary() {
       extra={[
         <div style={{display: "flex"}} key="1">
           <SelectLocation
-            defaultValue={Number(locationId)}
+            value={Number(defaultLocationId)}
             onChange={onChangeLocation} />
           
           <Select
             showSearch
-            placeholder="Filter Group"
+            placeholder="Group By"
             onChange={onChangeFilterGroup}
             style={{ minWidth: 200, paddingRight: 15 }}
-            defaultValue="day"
+            value={groupBy}
           >
             <Select.Option value="day" key={1}><Translate id="text_day" /></Select.Option>
             <Select.Option value="week" key={2}><Translate id="text_week" /></Select.Option>
@@ -189,7 +280,7 @@ function ReportSaleSummary() {
         </Col>
         <Col span={24}>
           <Table
-            rowKey="date"
+            rowKey={((record, index) => index)}
             dataSource={data ? data.summaries : []}
             columns={[
               {

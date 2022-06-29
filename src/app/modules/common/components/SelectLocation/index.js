@@ -16,8 +16,8 @@ export default function SelectLocation(props) {
         });
     }, []);
 
-    return <Select defaultValue={props.defaultValue} style={{ minWidth: 200, marginRight: 15 }} onChange={props.onChange}>
-        <Option value=""><Translate id="text_all_stores" /></Option>
+    return <Select value={props.value} defaultValue={props.defaultValue} style={{ minWidth: 200, marginRight: 15 }} onChange={props.onChange} id={props.id}>
+        <Option value={0}><Translate id="text_all_stores" /></Option>
         {
             locations.map((location, index) => 
                 <Option value={location.id} key={index}>{location.name}</Option>
