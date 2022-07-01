@@ -186,37 +186,55 @@ function ReportSaleSummary() {
       subTitle=""
       extra={[
         <div style={{display: "flex"}} key="1">
-          <SelectLocation
-            value={Number(defaultLocationId)}
-            onChange={onChangeLocation} />
-          
-          <Select
-            showSearch
-            placeholder="Group By"
-            onChange={onChangeFilterGroup}
-            style={{ minWidth: 200, paddingRight: 15 }}
-            value={groupBy}
-          >
-            <Select.Option value="day" key={1}><Translate id="text_day" /></Select.Option>
-            <Select.Option value="week" key={2}><Translate id="text_week" /></Select.Option>
-            <Select.Option value="month" key={3}><Translate id="text_month" /></Select.Option>
-          </Select>
+          <div style={{ position: "relative", minWidth: 200 }}>
+            <SelectLocation
+              displayPrefixString={true}
+              id="filter-location"
+              value={Number(defaultLocationId)}
+              onChange={onChangeLocation} />
+            <div style={{ position: "absolute", top: 6, left: 7 }}>Location: </div>
+          </div>
 
-          <DatePicker
-            format="DD/MM/YYYY"
-            value={fromValue}
-            placeholder="From"
-            allowClear={false}
-            onChange={onFromChange}
+          <div style={{position: "relative", minWidth: 200}}>
+            <Select
+              showSearch
+              id="filter-group-by"
+              placeholder="Group By"
+              onChange={onChangeFilterGroup}
+              style={{ minWidth: 200, paddingRight: 15 }}
+              value={groupBy}
+            >
+              <Select.Option value="day" key={1}><Translate id="text_day" /></Select.Option>
+              <Select.Option value="week" key={2}><Translate id="text_week" /></Select.Option>
+              <Select.Option value="month" key={3}><Translate id="text_month" /></Select.Option>
+            </Select>
+            <div style={{position: "absolute", top: 6, left: 7}}>Group By: </div>
+          </div>
+
+          <div style={{ position: "relative", width: 220 }}>
+            <DatePicker
+              id="filter-from-date"
+              format="DD/MM/YYYY"
+              value={fromValue}
+              placeholder="From"
+              allowClear={false}
+              onChange={onFromChange}
             />
-          <DatePicker
-            format="DD/MM/YYYY"
-            value={toValue}
-            placeholder="To"
-            allowClear={false}
-            onChange={onToChange}
-            style={{marginLeft: 15}}
+            <div style={{ position: "absolute", top: 6, left: 7 }}>Start Date: </div>
+          </div>
+
+          <div style={{ position: "relative", width: 220 }}>
+            <DatePicker
+              id="filter-to-date"
+              format="DD/MM/YYYY"
+              value={toValue}
+              placeholder="To"
+              allowClear={false}
+              onChange={onToChange}
+              style={{marginLeft: 15, width: 204}}
             />
+            <div style={{ position: "absolute", top: 6, left: 24 }}>End Date: </div>
+          </div>
         </div>
       ]}
       />
