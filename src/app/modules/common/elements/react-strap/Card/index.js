@@ -3,6 +3,7 @@ import { Card,
   CardFooter, 
   CardBody,
 } from "reactstrap";
+import {Icon} from "antd";
 import {Link} from "react-router-dom";
 import "./index.css"; 
 
@@ -26,9 +27,9 @@ export class Cards extends React.Component {
                     {
                       this.props.showPercentage ?
                         this.props.percentage > 0 ?
-                        <span style={{color: "#48AB5D", fontSize: 15, fontWeight: "500", marginLeft: 10}}>+{this.props.percentage}%</span>
+                        <span style={{color: "#48AB5D", fontSize: 15, fontWeight: "500", marginLeft: 10}}><Icon type="rise" />{this.props.percentage}%</span>
                         :
-                        <span style={{ color: "#E77271", fontSize: 15, marginLeft: 10 }}>{this.props.percentage}%</span>
+                        <span style={{ color: "#E77271", fontSize: 15, marginLeft: 10 }}>{Math.abs(this.props.percentage)}<Icon type="fall" />%</span>
                       : null
                     }
                   </div>
