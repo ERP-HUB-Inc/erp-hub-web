@@ -859,13 +859,13 @@ export default {
   ],
 
   "text_last_week": [
-    "Last Week",
+    "Last week",
     "សប្ដាហ៍​មុន",
     "Last Week"
   ],
 
   "text_this_week": [
-    "This Week",
+    "This week",
     "ស​ប្តា​ហ៍​នេះ",
     "This Week"
   ],
@@ -877,21 +877,46 @@ export default {
   ],
 
   "text_last_month": [
-    "Last Month",
+    "Last month",
     "ខែមុន",
     "Last Month"
   ],
 
+  "text_last_3_months": [
+    "Last 3 months",
+    "3 ខែចុងក្រោយ"
+  ],
+
+  "text_last_12_months": [
+    "Last 12 months",
+    "12 ខែចុងក្រោយ"
+  ],
+
   "text_this_month": [
-    "This Month",
+    "This month",
     "ខែ​នេះ",
-    "This Month"
+    "This month"
   ],
 
   "text_today": [
     "Today",
     "ថ្ងៃនេះ",
     "Today"
+  ],
+
+  "text_last_30_days": [
+    "Last 30 days",
+    "30 ថ្ងៃចុងក្រោយ"
+  ],
+
+  "text_previous_quarter": [
+    "Previous quarter",
+    "ត្រីមាសមុន"
+  ],
+
+  "text_previous_year": [
+    "Previous year",
+    "ឆ្នាំមុន"
   ],
 
   "text_are_you_sure": [

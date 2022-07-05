@@ -1,10 +1,12 @@
 import React from "react";
 import CountUp from "react-countup";
+import moment from "moment";
 import Component from "../Component";
 import Diagram from "../home/containers/diagram";
 import Guide from "../home/containers/guide";
 import Board from "../home/containers/Board";
 import CardAction from "../../../common/actions/home";
+import history from "../../router/history";
 import "./index.css";
 
 export default class Home extends Component {
@@ -14,6 +16,8 @@ export default class Home extends Component {
     this.isShowDiagram = null;
     // this.toggleDashboard = this.toggleDashboard.bind(this);
     this.hasDidUpdate = false;
+    this.formatDate = "YYYY-MM-DD";
+    this.range = [moment().format(this.formatDate), moment().format(this.formatDate)];
   }	
 
   // toggleDashboard(checked) {
@@ -33,8 +37,59 @@ export default class Home extends Component {
   // }
 
 
-  componentDidMount(){
-    this.props.dispatch(CardAction.fetchDashboardCard());    
+  componentDidMount() {
+    const option = new URLSearchParams(document.location.search).get("option");
+    if (option) {
+      this.props.form.setFieldsValue({ range: option });
+    }
+    this.fetchDashboardCard();
+  }
+
+  fetchDashboardCard() {
+    let range = [],
+      lastRange = [];
+    
+    const option = new URLSearchParams(document.location.search).get("option");
+    if (option === "today") {
+      range = [moment(), moment()];
+      lastRange = [moment().subtract(1, "day"), moment().subtract(1, "day")];
+    } else if (option === "this-week") {
+      range = [moment().startOf("week"), moment().endOf("week")];
+      lastRange = [moment().subtract(1, "week").startOf("week"), moment().subtract(1, "week").endOf("week")];
+    } else if (option === "current-month") {
+      range = [moment().startOf('month'), moment().endOf("month")];
+      lastRange = [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")];
+    } else if (option === "last-30-days") {
+      range = [moment().subtract(29, "days"), moment()];
+      lastRange = [moment().subtract(59, "days"), moment().subtract(30, "days")];
+    } else if (option === "last-3-months") {
+      range = [moment().subtract(2, "months").startOf("month"), moment().endOf("month")];
+      lastRange = [moment().subtract(5, "months").startOf("month"), moment().subtract(3, "months").endOf("month")];
+    } else if (option === "previous-quater") {
+      range = [moment().subtract(1, "quarter").startOf("quarter"), moment().subtract(1, "quarter").endOf("quarter")];
+      lastRange = [moment().subtract(2, "quarter").startOf("quarter"), moment().subtract(2, "quarter").endOf("quarter")];
+    } else if (option === "last-12-months") {
+      range = [moment().subtract(11, "months").startOf("month"), moment().endOf("month")];
+      lastRange = [moment().subtract(23, "months").startOf("month"), moment().subtract(12, "months").endOf("month")];
+    } else if (option === "previous-year") {
+      range = [moment().subtract(1, "year").startOf("year"), moment().subtract(1, "year").endOf("year")];
+      lastRange = [moment().subtract(2, "year").startOf("year"), moment().subtract(2, "year").endOf("year")];
+    }
+      
+    if (range.length) {
+      this.range = [moment(range[0]).format(this.formatDate), moment(range[1]).format(this.formatDate)];
+      range = JSON.stringify({range, lastRange});
+    }
+
+    this.props.dispatch(CardAction.fetchDashboardCard(range));   
+  }
+
+  onChangeRange = value => {
+    history.push({
+      pathname: "",
+      search: `option=${value}`
+    })
+    this.fetchDashboardCard();
   }
 
   getValueFromDashboardList(index = 0) {
@@ -90,7 +145,7 @@ export default class Home extends Component {
     return(
       <this.Row style={{alignContent: "flex-start"}}>
         <this.Col md="12">
-          <div className="dashboard ">
+          <div className="dashboard " style={{display: "flex", justifyContent: "space-between"}}>
             <ul>
               <li>
                 <this.BreadcrumbTitle title= {this.CATranslate("home_page_dashboard", this.props.locale)} />
@@ -99,6 +154,25 @@ export default class Home extends Component {
                 {<this.Switchs name="switch" checked={1} onChange={this.toggleDashboard} form={this.props.form} />}
               </li> */}
             </ul>
+            <div style={{width: 220, marginBottom: -24}}>
+              <this.Select
+                name="range"
+                style={{ margin: 0 }}
+                defaultValue="today"
+                onChange={this.onChangeRange}
+                dataSource={[
+                  { value: "today", name: <this.Translate id="text_today" /> },
+                  { value: "this-week", name: <this.Translate id="text_this_week" /> },
+                  { value: "current-month", name: <this.Translate id="text_this_month" /> },
+                  { value: "last-30-days", name: <this.Translate id="text_last_30_days" /> },
+                  { value: "last-3-months", name: <this.Translate id="text_last_3_months" /> },
+                  { value: "previous-quater", name: <this.Translate id="text_previous_quarter" /> },
+                  { value: "last-12-months", name: <this.Translate id="text_last_12_months" /> },
+                  { value: "previous-year", name: <this.Translate id="text_previous_year" /> },
+                ]}
+                form={this.props.form}
+              />
+            </div>
           </div>
         </this.Col>
         <Board
@@ -113,9 +187,9 @@ export default class Home extends Component {
           }
           percentage={this.getDiffAsPercentagFromYesterday(revenue, yesterdayRevenue)}
           showPercentage={true}
-          icon="icon-dollar" title={<this.Translate id="text_today_revenue"/>}
+          icon="icon-dollar" title={<this.Translate id="text_revenue"/>}
           readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
-          to="reports/sale_summaries" />
+          to={`reports/sale_summaries?from=${this.range[0]}&to=${this.range[1]}`} />
 
         <Board
           contentValue={
@@ -127,11 +201,11 @@ export default class Home extends Component {
               decimals={2}
               decimal="." />
           }
-          icon="icon-sale-return" title={<this.Translate id="text_today_discount"/>}
-          readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
+          icon="icon-sale-return" title={<this.Translate id="text_discount" />}
+          readMoreTitle={<this.Translate id="home_page_dashboard_read_more" />}
           route="read"
           color="#cf1322"
-          to="reports/sale_summaries" />
+          to={`reports/sale_summaries?from=${this.range[0]}&to=${this.range[1]}`} />
 
         <Board contentValue={
           <CountUp
@@ -142,12 +216,12 @@ export default class Home extends Component {
             decimals={2}
             decimal="." />
         }
-        icon="icon-dollar" title={<this.Translate id="text_today_sale" />}
+        icon="icon-dollar" title={<this.Translate id="text_sales"/>}
         percentage={this.getDiffAsPercentagFromYesterday((revenue - discount), (yesterdayRevenue - yesterdayDiscount))}
         showPercentage={true}
         readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
         route="read"
-        to="reports/sold_products" />
+        to={`reports/sold_products?from=${this.range[0]}&to=${this.range[1]}`} />
 
         <Board
           contentValue={

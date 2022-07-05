@@ -22,11 +22,11 @@ export default {
     };
   },
 
-  fetchDashboardCard:() => {
+  fetchDashboardCard:(range) => {
     return dispatch => {
       return dispatch({
         type: Constant.REQUEST_CARD_DASHBOARD,
-        payload: CardDashboardService.lists()
+        payload: CardDashboardService.lists(range)
       });
     };
   }

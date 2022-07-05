@@ -7,10 +7,10 @@ class HomeService extends BaseService {
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 
-  lists() {
+  lists(range = "") {
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.GET({ 
-      url: `${this.baseUrl}/lists`,  
+      url: `${this.baseUrl}/lists?rangeFilter=${range}`,  
       data: this.data,
       headers: this.header
     });
