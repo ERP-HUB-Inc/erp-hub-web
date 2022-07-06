@@ -6,6 +6,7 @@ import Diagram from "../home/containers/diagram";
 import Guide from "../home/containers/guide";
 import Board from "../home/containers/Board";
 import CardAction from "../../../common/actions/home";
+import SelectDateOption from "../SelectDateOption";
 import history from "../../router/history";
 import "./index.css";
 
@@ -18,6 +19,7 @@ export default class Home extends Component {
     this.hasDidUpdate = false;
     this.formatDate = "YYYY-MM-DD";
     this.range = [moment().format(this.formatDate), moment().format(this.formatDate)];
+    this.defaultOption = "today";
   }	
 
   // toggleDashboard(checked) {
@@ -38,47 +40,21 @@ export default class Home extends Component {
 
 
   componentDidMount() {
-    const option = new URLSearchParams(document.location.search).get("option");
+    let option = new URLSearchParams(document.location.search).get("option");
     if (option) {
-      this.props.form.setFieldsValue({ range: option });
+      this.defaultOption = option;
     }
     this.fetchDashboardCard();
   }
 
   fetchDashboardCard() {
-    let range = [],
-      lastRange = [];
-    
+    let range = "";
     const option = new URLSearchParams(document.location.search).get("option");
-    if (option === "today") {
-      range = [moment(), moment()];
-      lastRange = [moment().subtract(1, "day"), moment().subtract(1, "day")];
-    } else if (option === "this-week") {
-      range = [moment().startOf("week"), moment().endOf("week")];
-      lastRange = [moment().subtract(1, "week").startOf("week"), moment().subtract(1, "week").endOf("week")];
-    } else if (option === "current-month") {
-      range = [moment().startOf('month'), moment().endOf("month")];
-      lastRange = [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")];
-    } else if (option === "last-30-days") {
-      range = [moment().subtract(29, "days"), moment()];
-      lastRange = [moment().subtract(59, "days"), moment().subtract(30, "days")];
-    } else if (option === "last-3-months") {
-      range = [moment().subtract(2, "months").startOf("month"), moment().endOf("month")];
-      lastRange = [moment().subtract(5, "months").startOf("month"), moment().subtract(3, "months").endOf("month")];
-    } else if (option === "previous-quater") {
-      range = [moment().subtract(1, "quarter").startOf("quarter"), moment().subtract(1, "quarter").endOf("quarter")];
-      lastRange = [moment().subtract(2, "quarter").startOf("quarter"), moment().subtract(2, "quarter").endOf("quarter")];
-    } else if (option === "last-12-months") {
-      range = [moment().subtract(11, "months").startOf("month"), moment().endOf("month")];
-      lastRange = [moment().subtract(23, "months").startOf("month"), moment().subtract(12, "months").endOf("month")];
-    } else if (option === "previous-year") {
-      range = [moment().subtract(1, "year").startOf("year"), moment().subtract(1, "year").endOf("year")];
-      lastRange = [moment().subtract(2, "year").startOf("year"), moment().subtract(2, "year").endOf("year")];
-    }
+    const dateRange = this.Util.getDatesFromSelectOption(option);
       
-    if (range.length) {
-      this.range = [moment(range[0]).format(this.formatDate), moment(range[1]).format(this.formatDate)];
-      range = JSON.stringify({range, lastRange});
+    if (dateRange["range"].length) {
+      this.range = [dateRange["range"][0], dateRange["range"][1]];
+      range = JSON.stringify({range: dateRange["range"], lastRange: dateRange["lastRange"]});
     }
 
     this.props.dispatch(CardAction.fetchDashboardCard(range));   
@@ -89,6 +65,7 @@ export default class Home extends Component {
       pathname: "",
       search: `option=${value}`
     })
+    this.defaultOption = value;
     this.fetchDashboardCard();
   }
 
@@ -154,25 +131,12 @@ export default class Home extends Component {
                 {<this.Switchs name="switch" checked={1} onChange={this.toggleDashboard} form={this.props.form} />}
               </li> */}
             </ul>
-            <div style={{width: 220, marginBottom: -24}}>
-              <this.Select
-                name="range"
-                style={{ margin: 0 }}
-                defaultValue="today"
-                onChange={this.onChangeRange}
-                dataSource={[
-                  { value: "today", name: <this.Translate id="text_today" /> },
-                  { value: "this-week", name: <this.Translate id="text_this_week" /> },
-                  { value: "current-month", name: <this.Translate id="text_this_month" /> },
-                  { value: "last-30-days", name: <this.Translate id="text_last_30_days" /> },
-                  { value: "last-3-months", name: <this.Translate id="text_last_3_months" /> },
-                  { value: "previous-quater", name: <this.Translate id="text_previous_quarter" /> },
-                  { value: "last-12-months", name: <this.Translate id="text_last_12_months" /> },
-                  { value: "previous-year", name: <this.Translate id="text_previous_year" /> },
-                ]}
-                form={this.props.form}
-              />
-            </div>
+            <SelectDateOption
+              name="range"
+              value={this.defaultOption}
+              style={{ minWidth: 220, marginTop: 4}}
+              onChange={this.onChangeRange}
+            />
           </div>
         </this.Col>
         <Board
