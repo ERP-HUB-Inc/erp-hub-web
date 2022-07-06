@@ -119,7 +119,7 @@ export default class ProductList extends List {
     }
 
     if (params.get("current")) {
-      offset = (Number(params.get("current")) - 1) * limit;
+      offset = Number(params.get("current"));
     }
 
     if (params.get("search")) {
@@ -130,6 +130,7 @@ export default class ProductList extends List {
       locationId = Number(params.get("locationId"));
     }
 
+    offset = (offset - 1) * limit;
     this.props.dispatch(this.action.fetch(limit, offset, "", "", filter, searchKey, locationId));
   }
 
