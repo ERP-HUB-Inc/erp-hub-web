@@ -3,18 +3,18 @@ import {
   Statistic,
   PageHeader,
   Table,
-  DatePicker,
   Card,
   Row,
   Col,
   Select
 } from "antd";
 import moment from "moment";
-import { connect } from "react-redux";
-import { Translate } from "react-localize-redux";
+import {connect} from "react-redux";
+import {Translate} from "react-localize-redux";
 import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import SelectLocation from "../../../../common/components/SelectLocation";
+import SelectDateOption from "../../../../common/components/SelectDateOption";
 import ReportSaleService from "../../../services/report/SaleService";
 import "./index.css";
 
@@ -22,62 +22,16 @@ function ReportSaleSummary() {
   const [defaultLocationId, setDefaultLocationId] = React.useState((new Util()).getLocationId());
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState(null);
-  const [fromValue, setFromValue] = React.useState(moment());
-  const [toValue, setToValue] = React.useState(moment());
   const [groupBy, setGroupBy] = React.useState("day");
+  const [option, setOption] = React.useState("today");
+  const [dateRange, setDateRange] = React.useState([]);
   const pathName = "/reports/sale_summaries";
-
-  const onFromChange = value => {
-    const param = new URLSearchParams(document.location.search);
-
-    if (!value) {
-      param.delete("from")
-      return;
-    }
-
-    value = moment(value).format("YYYY-MM-DD");
-    if (param.get("from")) {
-      param.set("from", value);
-    } else {
-      param.append("from", value);
-    }
-
-    if (param.get("to")) {
-      param.set("to", value);
-    } else {
-      param.append("to", value);
-    }
-
-    setFromValue(moment(value));
-    setToValue(moment(value));
-    (new Util().pushParamsToURL(pathName, param.toString()));
-    fetchReport();
-  };
-
-  const onToChange = value => {
-    const param = new URLSearchParams(document.location.search);
-
-    if (!value) {
-      param.delete("to");
-      return;
-    }
-
-    value = moment(value).format("YYYY-MM-DD");
-    if (param.get("to")) {
-      param.set("to", value);
-    } else {
-      param.append("to", value);
-    }
-
-    setToValue(moment(value));
-    (new Util().pushParamsToURL(pathName, param.toString()));
-    fetchReport();
-  };
+  const dateFormat = "YYYY-MM-DD";
 
   const onChangeLocation = locationId => {
     const param = new URLSearchParams(document.location.search);
     if (locationId || locationId ===0) {
-      if (param.get("locationId")) {
+      if (param.has("locationId")) {
         param.set("locationId", locationId);
       } else {
         param.append("locationId", locationId);
@@ -88,6 +42,69 @@ function ReportSaleSummary() {
     (new Util().pushParamsToURL(pathName, param.toString()));
     fetchReport();
   };
+
+  const onChangeDateOption = option => {
+    const params = new URLSearchParams(document.location.search);
+    const dates = (new Util()).getDatesFromSelectOption(option)["range"];
+    if (option === "modify") {
+      if (params.has("option")) {
+        params.set("option", option);
+      } else {
+        params.append("option", option);
+      }
+      setOption(option);
+      setDateRange([moment(dates[0]), moment(dates[1])]);
+      return (new Util()).pushParamsToURL(pathName, params.toString());
+    }
+    
+    if (dates.length) {
+      if (params.has("option")) {
+        params.set("option", option);
+      } else {
+        params.append("option", option);
+      }
+
+      if (params.has("from")) {
+        params.set("from", dates[0]);
+      } else {
+        params.append("from", dates[0]);
+      }
+
+      if (params.has("to")) {
+        params.set("to", dates[1]);
+      } else {
+        params.append("to", dates[1]);
+      }
+
+      (new Util()).pushParamsToURL(pathName, params.toString());
+      setOption(option);
+      fetchReport();
+    }
+  }
+
+  const onChangeDate = dates => {
+    if (dates && dates.length) {
+      const params = new URLSearchParams(document.location.search);
+      let date1 = moment(dates[0]).format(dateFormat);
+      let date2 = moment(dates[1]).format(dateFormat);
+
+      if (params.has("from")) {
+        params.set("from", date1);
+      } else {
+        params.append("from", date1);
+      }
+
+      if (params.has("to")) {
+        params.set("to", date2);
+      } else {
+        params.append("to", date2);
+      }
+
+      (new Util()).pushParamsToURL(pathName, params.toString());
+      setDateRange([moment(date1), moment(date2)]);
+      fetchReport();
+    }
+  }
 
   const fetchReport = () => {
     const params = new URLSearchParams(document.location.search);
@@ -123,7 +140,7 @@ function ReportSaleSummary() {
   const onChangeFilterGroup = (value) => {
     const param = new URLSearchParams(document.location.search);
     if (value) {
-      if (param.get("group-by")) {
+      if (param.has("group-by")) {
         param.set("group-by", value);
       } else {
         param.append("group-by", value);
@@ -147,12 +164,17 @@ function ReportSaleSummary() {
       setGroupBy(params.get("group-by"));
     }
 
-    if (params.get("from")) {
-      setFromValue(moment(params.get("from")));
-    }
+    if (params.get("option")) {
+      const option = params.get("option");
+      setOption(option);
 
-    if (params.get("to")) {
-      setToValue(moment(params.get("to")));
+      if (option === "modify") {
+        if (params.get("from") && params.get("to")) {
+          setDateRange([moment(params.get("from")), moment(params.get("to"))]);
+        } else if (params.get("from") && !params.get("to")) {
+          setDateRange([moment(params.get("from")), moment(params.get("from"))]);
+        }
+      }
     }
   }
 
@@ -186,18 +208,15 @@ function ReportSaleSummary() {
       subTitle=""
       extra={[
         <div style={{display: "flex"}} key="1">
-          <div style={{ position: "relative", minWidth: 200 }}>
-            <SelectLocation
-              displayPrefixString={true}
-              id="filter-location"
-              value={Number(defaultLocationId)}
-              onChange={onChangeLocation} />
-            <div style={{ position: "absolute", top: 6, left: 7 }}>Location: </div>
-          </div>
+          <SelectLocation
+            displayPrefixString={true}
+            id="filter-location"
+            prefixString="Location"
+            value={Number(defaultLocationId)}
+            onChange={onChangeLocation} />
 
           <div style={{position: "relative", minWidth: 200}}>
             <Select
-              showSearch
               id="filter-group-by"
               placeholder="Group By"
               onChange={onChangeFilterGroup}
@@ -211,29 +230,17 @@ function ReportSaleSummary() {
             <div style={{position: "absolute", top: 6, left: 7}}>Group By: </div>
           </div>
 
-          <div style={{ position: "relative", width: 220 }}>
-            <DatePicker
-              id="filter-from-date"
+          <div>
+            <SelectDateOption
+              style={{ minWidth: 220, paddingRight: option === "modify" ? 15 : "" }}
+              value={option}
+              rangeValue={dateRange}
+              showSelectCustomDate={true}
               format="DD/MM/YYYY"
-              value={fromValue}
-              placeholder="From"
-              allowClear={false}
-              onChange={onFromChange}
+              allowClearDates={false}
+              onChange={onChangeDateOption}
+              onChangeDate={onChangeDate}
             />
-            <div style={{ position: "absolute", top: 6, left: 7 }}>Start Date: </div>
-          </div>
-
-          <div style={{ position: "relative", width: 220 }}>
-            <DatePicker
-              id="filter-to-date"
-              format="DD/MM/YYYY"
-              value={toValue}
-              placeholder="To"
-              allowClear={false}
-              onChange={onToChange}
-              style={{marginLeft: 15, width: 204}}
-            />
-            <div style={{ position: "absolute", top: 6, left: 24 }}>End Date: </div>
           </div>
         </div>
       ]}

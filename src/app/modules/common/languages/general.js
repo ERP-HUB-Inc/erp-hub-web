@@ -545,7 +545,12 @@ export default {
     "អតិថិជន",
     "Customer"
   ],
-  
+
+  "text_custom": [
+    "Custom",
+    "កំណត់",
+  ],
+
   "text_sale_total": [
     "Grand Total",
     "សរុបការលក់",

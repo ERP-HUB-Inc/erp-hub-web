@@ -644,4 +644,45 @@ export default class Util {
       search: strParam
     });
   }
+
+  getDatesFromSelectOption(option) {
+    let range = [];
+    let lastRange = [];
+    const format = "YYYY-MM-DD";
+    if (option === "today") {
+      range = [moment(), moment()];
+      lastRange = [moment().subtract(1, "day"), moment().subtract(1, "day")];
+    } else if (option === "this-week") {
+      range = [moment().startOf("week"), moment().endOf("week")];
+      lastRange = [moment().subtract(1, "week").startOf("week"), moment().subtract(1, "week").endOf("week")];
+    } else if (option === "current-month") {
+      range = [moment().startOf('month'), moment().endOf("month")];
+      lastRange = [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")];
+    } else if (option === "last-30-days") {
+      range = [moment().subtract(29, "days"), moment()];
+      lastRange = [moment().subtract(59, "days"), moment().subtract(30, "days")];
+    } else if (option === "last-3-months") {
+      range = [moment().subtract(2, "months").startOf("month"), moment().endOf("month")];
+      lastRange = [moment().subtract(5, "months").startOf("month"), moment().subtract(3, "months").endOf("month")];
+    } else if (option === "previous-quater") {
+      range = [moment().subtract(1, "quarter").startOf("quarter"), moment().subtract(1, "quarter").endOf("quarter")];
+      lastRange = [moment().subtract(2, "quarter").startOf("quarter"), moment().subtract(2, "quarter").endOf("quarter")];
+    } else if (option === "last-12-months") {
+      range = [moment().subtract(11, "months").startOf("month"), moment().endOf("month")];
+      lastRange = [moment().subtract(23, "months").startOf("month"), moment().subtract(12, "months").endOf("month")];
+    } else if (option === "previous-year") {
+      range = [moment().subtract(1, "year").startOf("year"), moment().subtract(1, "year").endOf("year")];
+      lastRange = [moment().subtract(2, "year").startOf("year"), moment().subtract(2, "year").endOf("year")];
+    }
+
+    if (range.length) {
+      range = [moment(range[0]).format(format), moment(range[1]).format(format)];
+      lastRange = [moment(lastRange[0]).format(format), moment(lastRange[1]).format(format)];
+    }
+
+    return {
+      range,
+      lastRange
+    }
+  }
 }
