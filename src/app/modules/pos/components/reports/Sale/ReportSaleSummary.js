@@ -31,7 +31,7 @@ function ReportSaleSummary() {
     const param = new URLSearchParams(document.location.search);
 
     if (!value) {
-      param.delete("from")
+      param.delete("from");
       return;
     }
 
@@ -135,7 +135,7 @@ function ReportSaleSummary() {
     setGroupBy(value);
     (new Util().pushParamsToURL(pathName, param.toString()));
     fetchReport();
-  }
+  };
 
   const setFilterField = () => {
     const params = new URLSearchParams(document.location.search);
@@ -154,7 +154,7 @@ function ReportSaleSummary() {
     if (params.get("to")) {
       setToValue(moment(params.get("to")));
     }
-  }
+  };
 
   function displayDate(value) {
     let result = "";

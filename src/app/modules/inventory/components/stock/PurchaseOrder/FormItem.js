@@ -144,12 +144,6 @@ export default class FormItem extends Modal {
                 }
               ]}
               form={form} />
-          {/* <this.Checkboxs
-            name="isAutoReceive"
-            defaultValue={this.state.isAutoReceive}
-            label={<this.Translate id="text_auto_send_receive"/>}
-            onChange={this.handleOnChangeIsAutoReceive}
-            form={this.props.form} /> */}
           <this.Row className="ca-penel-v1 wrap-po-filter-create hidden">
           </this.Row>
         </this.Col>
