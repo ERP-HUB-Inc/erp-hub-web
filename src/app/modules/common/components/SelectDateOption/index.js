@@ -18,6 +18,7 @@ export default function SelectDateOption(props) {
 
   return <div style={{display: "flex"}}>
     <Select
+      name={props.name}
       defaultValue="today"
       value={props.value}
       style={props.style}
