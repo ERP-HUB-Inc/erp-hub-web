@@ -46,6 +46,11 @@ const ManageProduct = Loadable({
   loading: () => <StartUp />,
 });
 
+const Attribute = Loadable({
+  loader: () => import("../../../../inventory/containers/products/VariantAttribute"),
+  loading: () => <StartUp />,
+});
+
 const Brand = Loadable({
   loader: () => import("../../../../inventory/containers/products/Brand"),
   loading: () => <StartUp />,
@@ -327,6 +332,12 @@ const dataSource = {
         route: "/products/category",
         component: Category,
         isFashNav: true
+      },
+      {
+        title: <Translate id="text_attribute" />,
+        icon: "icon-time",
+        route: "/products/attributes",
+        component: Attribute
       },
       {
         title:  <Translate id="text_brand" />,

@@ -10,7 +10,7 @@ export default class Form extends Modal {
       disabled: false
     };
 
-    this.title = <this.Translate id="update_products_brand_title" />;
+    this.title = <this.Translate id="text_attribute" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -19,7 +19,7 @@ export default class Form extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        values["id"] = this.props.brandUpdate.data.id;
+        values["id"] = this.props.variantAttributeUpdate.data.id;
         values["status"] = this.Enum.ACTIVE;
         this.dispatch(VariantAttribute.update(values));
       }
@@ -31,13 +31,15 @@ export default class Form extends Modal {
   }
 
   render() {
-    const {brandUpdate, form, locale} = this.props;
+    const {
+      variantAttributeUpdate,
+      form,
+      locale
+    } = this.props;
 
-    this.submitLoading = brandUpdate.updating;
-
-    if (brandUpdate.showForm) {
+    if (variantAttributeUpdate.showForm) {
       this.content = (
-        <FormItem formData={brandUpdate.data} form={form} locale={locale}/>
+        <FormItem formData={variantAttributeUpdate.data} form={form} locale={locale}/>
       );
       return super.render();
     } else {

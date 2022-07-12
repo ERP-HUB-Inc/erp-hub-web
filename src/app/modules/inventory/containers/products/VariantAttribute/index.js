@@ -3,19 +3,15 @@ import { connect } from "react-redux";
 import {Form} from "antd";
 import VariantAttributeList from "../../../components/products/VariantAttribute";
 
-class VariantAttribute extends React.Component {
-  render() {
-    return (
-      <VariantAttributeList {...this.props} />
-    );
-  }
+function VariantAttribute(props) {
+  return <VariantAttributeList {...props} />;
 }
 
 function mapStateToProps(state) {
   return {
     variantAttributes: state.reducer.variantAttribute.request,
     variantAttributeAdd: state.reducer.variantAttribute.add,
-    checkPermission: state.reducer.privilege.checkPermission,
+    variantAttributeUpdate: state.reducer.variantAttribute.update,
     locale: state.locale
   };
 }

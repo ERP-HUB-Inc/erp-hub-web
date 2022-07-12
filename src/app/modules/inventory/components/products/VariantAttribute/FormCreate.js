@@ -6,7 +6,7 @@ import Modal from "../../../../common/components/shares/Modal";
 export default class FormCreate extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="create_variant_attribute_title" />;
+    this.title = <this.Translate id="text_attribute" />;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -25,10 +25,11 @@ export default class FormCreate extends Modal {
   }
 
   render() {
-    const {variantAttributeAdd, form, locale} = this.props;
-    
-    this.submitLoading = variantAttributeAdd.adding;
-
+    const {
+      variantAttributeAdd,
+      form,
+      locale
+    } = this.props;
     if (variantAttributeAdd.showForm) {
       this.content = (
         <FormItem form={form} locale={locale}/>

@@ -3,12 +3,8 @@ import {connect } from "react-redux";
 import {Form} from "antd";
 import FormCreate from "../../../components/products/VariantAttribute/FormCreate";
 
-class VariantAttributeForm extends React.Component {
-  render() {
-    return (
-      <FormCreate {...this.props} />
-    );
-  }
+function VariantAttributeForm(props) {
+  return <FormCreate {...props} />;
 }
 
 function mapStateToProps(state) {

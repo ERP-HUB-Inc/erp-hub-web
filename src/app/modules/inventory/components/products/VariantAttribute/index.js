@@ -3,26 +3,39 @@ import List from "../../List";
 import FormCreate from "../../../containers/products/VariantAttribute/FormCreate";
 import FormUpdate from "../../../containers/products/VariantAttribute/FormUpdate";
 import Constant from "../../../constants/products/variantAttribute";
-import VariantAttributeAction from "../../../actions/products/variantAttribute";
-import VariantAttributeService from "../../../services/products/VariantAttributeService";
+import AttributeAction from "../../../actions/products/variantAttribute";
+import AttributeService from "../../../services/products/VariantAttributeService";
 import "./index.css";
 
-export default class VariantAttributeList extends List {
+export default class AttributeList extends List {
   constructor(props) {
     super(props);
-    this.columns = new Column();
-    this.fetchingProp = "brand";
-    this.addingProp = "brandAdd";
-    this.updatingProp = "brandUpdate";
-    this.service = ProductsUnitService;
+    this.columns = [
+      {
+        title: <this.Translate id="text_name" />,
+        dataIndex: "name",
+        key: "name"
+      }
+    ];
+    this.fetchingProp = "variantAttributes";
+    this.addingProp = "variantAttributes";
+    this.updatingProp = "variantAttributeAdd";
+    this.service = AttributeService;
     this.columnFilterWithKey = ["name"];
-    this.action = BrandAction;
-    this.RESET_CONSTANT = Constant.RESET_BRAND;
+    this.action = AttributeAction;
+    this.RESET_CONSTANT = Constant.RESET_VARIANT_ATTRIBUTE;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.variantAttributeUpdate.updated) {
+      this.props.dispatch(AttributeAction.fetch(this.pageSize));
+      this.props.dispatch(AttributeAction.reset(Constant.RESET_VARIANT_ATTRIBUTE));
+    }
   }
 
   handleShowFormAdd() {
     const { dispatch } = this.props;
-    dispatch(BrandAction.showForm());
+    dispatch(AttributeAction.showForm());
     this.setState({
       modalConten: <FormCreate/>
     });
@@ -30,30 +43,9 @@ export default class VariantAttributeList extends List {
 
   handleShowFormEdit(rowData) {
     const { dispatch } = this.props;
-    dispatch(BrandAction.showForm(rowData));
+    dispatch(AttributeAction.showForm(rowData));
     this.setState({
       modalConten: <FormUpdate/>
     });
-  }
-}
-
-class Column extends List {
-  constructor(props) {
-    super(props);
-    return [
-      {
-        title: <this.Translate id="col_products_brand_name" />,
-        dataIndex: "name",
-        key: "name",
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_description" />,
-        dataIndex: "description",
-        key: "description",
-        sorter: true
-      },
-      this.columnStatus
-    ];
   }
 }

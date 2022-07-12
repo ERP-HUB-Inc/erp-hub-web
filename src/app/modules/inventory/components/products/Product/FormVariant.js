@@ -79,7 +79,6 @@ export default class FormVariant extends Modal {
             className="text-right"
             isAutoSelect={true}
             isHideTool={true}
-            required={true}
             errorRequired={<this.Translate id="error_require_price" />}
             data={price}
             handleKeyUp={(e) => this.handleOnChangePrice(e, index)}
@@ -98,7 +97,6 @@ export default class FormVariant extends Modal {
             className="text-right"
             isAutoSelect={true}
             isHideTool={true}
-            required={true}
             errorRequired={<this.Translate id="error_require_price" />}
             data={wholePrice}
             handleKeyUp={(e) => this.handleOnChangePrice(e, index, "wholePrice")}
@@ -117,7 +115,6 @@ export default class FormVariant extends Modal {
             className="text-right"
             isAutoSelect={true}
             isHideTool={true}
-            required={true}
             errorRequired={<this.Translate id="error_require_price" />}
             data={distributePrice}
             handleKeyUp={(e) => this.handleOnChangePrice(e, index, "distributePrice")}
@@ -1162,7 +1159,7 @@ export default class FormVariant extends Modal {
 
   renderVariantAttribute(variantAttribute, variantAttributeKey) {
     return (
-      <this.SelectSearch
+      <this.Select
         name={`attributeId[${variantAttributeKey}]`}
         label={variantAttributeKey === 0 ? <span><this.Translate id="text_attribute" /> <this.Translate id="text_attribute_example" /></span> : ""}
         placeholder="Select attribute"
@@ -1170,7 +1167,7 @@ export default class FormVariant extends Modal {
         dataSource={this.state.variantAttributes}
         defaultValue={variantAttribute.attributeId}
         onChange={(value) => this.handleOnChangeAttribute(variantAttributeKey, value)}
-        addNew={() => this.props.handleAddVariantAttribute(variantAttributeKey, this.handleCallBackAddAttribute)}
+        // addNew={() => this.props.handleAddVariantAttribute(variantAttributeKey, this.handleCallBackAddAttribute)}
         form={this.props.form}/>
     );
   }

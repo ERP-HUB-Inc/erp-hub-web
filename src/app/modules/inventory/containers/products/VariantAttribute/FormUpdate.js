@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Form } from "antd";
-import FormUpdate from "../../../components/products/Brand/FormUpdate";
+import FormUpdate from "../../../components/products/VariantAttribute/FormUpdate";
 
 class ManagementEmployeeForm extends React.Component {
   render() {
@@ -13,7 +13,7 @@ class ManagementEmployeeForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    brandUpdate: state.reducer.brand.update,
+    variantAttributeUpdate: state.reducer.variantAttribute.update,
     initialValues: state.reducer.brand.update.data,
     locale: state.locale
   };
