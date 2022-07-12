@@ -213,6 +213,11 @@ export default {
     "Cost",
     "ថ្លៃដើម"
   ],
+
+  "text_total_cost": [
+    "Total Cost",
+    "ថ្លៃដើមសរុប"
+  ],
   
   "text_current_cost": [
     "Current Cost",
@@ -263,6 +268,11 @@ export default {
   "text_price": [
     "Price",
     "តម្លៃ"
+  ],
+
+  "text_current_price": [
+    "Current Price",
+    "តម្លៃលក់បច្ចុប្បន្ន"
   ],
 
   "text_retail_price": [
@@ -403,6 +413,11 @@ export default {
   "text_sold_quantity": [
     "Sold Quantity",
     "បរិមាណលក់"
+  ],
+
+  "text_last_sold_date": [
+    "Last Sold Date",
+    "ថ្ងៃលក់ចុងក្រោយ"
   ],
   
   "text_change": [

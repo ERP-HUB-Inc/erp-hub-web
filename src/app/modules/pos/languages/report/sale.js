@@ -69,6 +69,11 @@ export default {
     "របាយការណ៍លក់"
   ],
 
+  "text_low_sales_report": [
+    "Low Sales Report",
+    "របាយការណ៍លក់ទាប"
+  ],
+
   "text_cost_of_good": [
     "Cost of Goods",
     "ថ្លៃដើមទំនិញ"

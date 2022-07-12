@@ -168,7 +168,7 @@ FormItem.defaultProps = {
   formData: {
     name:"",
     supplierid:"",
-    purchaseOrderEntries: []
+    POEntries: []
   },
   productSearch: []
 };

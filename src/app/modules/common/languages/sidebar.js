@@ -94,11 +94,6 @@ export default {
     "គ្រប់គ្រងបុគ្គលិក"
   ],
   
-  "text_sale_report": [
-    "Sale Report",
-    "របាយការណ៍លក់"
-  ],
-  
   "text_purchase_report": [
     "Purchase Report",
     "របាយការណ៍បញ្ជារទិញ"

@@ -197,41 +197,4 @@ export default class FormCreate extends Component {
       </Form>
     </div>;
   }
-
-  renderv2() {
-    const {
-      purchaseOrderAdd, 
-      form, 
-      locale, 
-      supplier,
-      storeLocation, 
-      productSearch, 
-      requestOrderNumber,
-      product,
-      unit,
-      dispatch
-    } = this.props;
-    
-    this.submitLoading = purchaseOrderAdd.adding;
-
-    if (purchaseOrderAdd.showForm) {
-      this.content = 
-        <FormItem 
-          form={form} 
-          supplier={supplier}
-          storeLocation={storeLocation} 
-          productSearch={productSearch} 
-          productVariant={this.props.productVariant}
-          requestOrderNumber={requestOrderNumber}
-          product={product}
-          unit={unit}
-          productReOrderPointList={this.props.productReOrderPointList}
-          dispatch={dispatch} 
-          locale={locale} />;
-    
-      return super.render();
-    } else {
-      return <div/>;
-    }
-  }
 }

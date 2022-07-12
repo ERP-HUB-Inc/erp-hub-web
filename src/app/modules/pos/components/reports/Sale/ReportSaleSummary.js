@@ -215,20 +215,17 @@ function ReportSaleSummary() {
             value={Number(defaultLocationId)}
             onChange={onChangeLocation} />
 
-          <div style={{position: "relative", minWidth: 200}}>
-            <Select
+          <Select
               id="filter-group-by"
               placeholder="Group By"
               onChange={onChangeFilterGroup}
               style={{ minWidth: 200, paddingRight: 15 }}
               value={groupBy}
             >
-              <Select.Option value="day" key={1}><Translate id="text_day" /></Select.Option>
-              <Select.Option value="week" key={2}><Translate id="text_week" /></Select.Option>
-              <Select.Option value="month" key={3}><Translate id="text_month" /></Select.Option>
-            </Select>
-            <div style={{position: "absolute", top: 6, left: 7}}>Group By: </div>
-          </div>
+            <Select.Option value="day" key={1}><Translate id="text_day" /></Select.Option>
+            <Select.Option value="week" key={2}><Translate id="text_week" /></Select.Option>
+            <Select.Option value="month" key={3}><Translate id="text_month" /></Select.Option>
+          </Select>
 
           <div>
             <SelectDateOption

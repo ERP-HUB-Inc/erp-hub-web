@@ -17,6 +17,14 @@ class SaleService extends BaseService {
     });
   }
 
+  getReportLowSales(option) {
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/low_sales?${this.bindQueryParam(option)}`,
+      headers: this.header
+    });
+  }
+
   getReportSummaryByProduct(option) {
     this.setHeader();
     return this.GET({ 

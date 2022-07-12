@@ -64,7 +64,7 @@ export default class Home extends Component {
     history.push({
       pathname: "",
       search: `option=${value}`
-    })
+    });
     this.defaultOption = value;
     this.fetchDashboardCard();
   }
@@ -80,7 +80,7 @@ export default class Home extends Component {
   getDiffAsPercentagFromYesterday(todayValue, yesterdayValue) {
     if (!todayValue) todayValue = 0;
     if (!yesterdayValue) yesterdayValue = 0;
-    todayValue = this.formatNumber(todayValue)
+    todayValue = this.formatNumber(todayValue);
     yesterdayValue = this.formatNumber(yesterdayValue);
 
     if (todayValue === 0 && yesterdayValue === 0) {
@@ -248,7 +248,7 @@ export default class Home extends Component {
             }
           </div>
         </this.Col>
-        <this.Col md="12">
+        <this.Col md="12" className="hidden">
           <div className="text-center dash-wrap-guide">
             <div className="dashboard-report-title text-left">
               <this.Translate id="text_user_guides" />

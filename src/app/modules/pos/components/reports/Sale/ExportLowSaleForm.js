@@ -6,20 +6,18 @@ import {
 } from "antd";
 import SaleService from "../../../services/report/SaleService";
 
-function ExportFormLoader({startDate, endDate}) {
+function ExportFormLoader({startDate, endDate, criticalLevel}) {
     const [loading, setLoading] = React.useState(false);
     const [result, setResult] = React.useState(null);
     React.useEffect(() => {
         try {
             setLoading(true);
-            SaleService.getReportSummaryByProduct({startDate, endDate, isExport: true})
+            SaleService.getReportLowSales({startDate, endDate, criticalLevel, isExport: true})
             .then(response => {
                 if (response.data) {
                     setResult(response.data);
                 }
             });
-        } catch (error) {
-            setLoading(false);
         } finally {
             setLoading(false);
         }
@@ -38,7 +36,7 @@ function ExportFormLoader({startDate, endDate}) {
     />;
 }
 
-export default class ExportForm extends React.PureComponent {
+export default class ExportLowSaleForm extends React.PureComponent {
     state = {
       visible: false,
       childrenDrawer: false

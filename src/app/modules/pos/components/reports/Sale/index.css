@@ -49,19 +49,3 @@
 #sale-report-dashboard .footer .ant-btn {
     min-width: 100px
 }
-
-#filter-group-by .ant-select-selection-selected-value {
-    padding-left: 68px;
-}
-
-#filter-from-date .ant-calendar-picker-input {
-  padding-left: 86px;
-}
-
-#filter-to-date .ant-calendar-picker-input {
-  padding-left: 80px;
-}
-
-#filter-location .ant-select-selection-selected-value {
-  padding-left: 65px;
-}
