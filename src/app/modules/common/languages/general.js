@@ -254,6 +254,11 @@ export default {
     "Copied!",
     "ថតចំលងហើយ"
   ],
+
+  "text_download_template": [
+    "Download Template",
+    "ទាញយកគំរូ"
+  ],
   
   "text_credit_card": [
     "Credit Card",

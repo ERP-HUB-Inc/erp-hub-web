@@ -198,7 +198,13 @@ export default function ProductImport() {
         onBack={() => history.goBack()}
         title={<Translate id="text_product" />}
         subTitle={<Translate id="text_import" />}
-        extra={[]} />
+        extra={[
+          <div>
+            <a href={`/product_import_template.xlsx`} className="ant-btn" download={`Product Import Template.xlsx`}>
+              <Icon type="download" /> <Translate id="text_download_template" />
+            </a>
+          </div>
+        ]} />
       
       <Row>
         <Col md={8}>
