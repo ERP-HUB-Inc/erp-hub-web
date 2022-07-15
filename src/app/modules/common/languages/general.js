@@ -124,6 +124,11 @@ export default {
     "មើល"
   ],
 
+  "text_view_log": [
+    "View logs",
+    "មើល logs"
+  ],
+
   "text_update_now": [
     "Update Now",
     "ធ្វើបច្ចុប្បន្នភាព"
@@ -449,6 +454,11 @@ export default {
   "text_edit": [
     "Edit",
     "កែប្រែ"
+  ],
+
+  "text_import": [
+    "Import",
+    "Import"
   ],
 
   "text_please_search": [

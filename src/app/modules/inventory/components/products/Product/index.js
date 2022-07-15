@@ -185,9 +185,17 @@ export default class ProductList extends List {
     }
   }
 
+  renderButtonImport() {
+    return <this.Link to={`/products/import`} className="ant-btn" style={{marginRight: 15}}>
+      <span className="icon-import icon-padding-right"></span>
+      <this.Translate id="text_import" />
+    </this.Link>
+  }
+
   buttonActionCollection() {
     return [
       this.renderButtonAddNew(),
+      this.renderButtonImport(),
       this.renderButtonDelete()
     ];
   }
