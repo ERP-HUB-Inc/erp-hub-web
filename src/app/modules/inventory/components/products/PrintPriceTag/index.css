@@ -34,3 +34,21 @@
     cursor: pointer;
     width: fit-content
 }
+
+@media print {
+    #print-price-tag,
+    .header,
+    #sidebar,
+    .breadcrumb {
+        display: none;
+    }
+
+    .ant-layout-content {
+        margin: 0 !important;
+    }
+
+    #print-price-tag-list {
+        flex: 1;
+        max-width: 100% !important;
+    }
+}

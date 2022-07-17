@@ -10,7 +10,6 @@ import {
   Col
 } from "antd";
 import moment from "moment";
-import * as _ from "lodash";
 import { Translate } from "react-localize-redux";
 import ExportLowSaleForm from "./ExportLowSaleForm";
 import Util from "../../../../common/util";

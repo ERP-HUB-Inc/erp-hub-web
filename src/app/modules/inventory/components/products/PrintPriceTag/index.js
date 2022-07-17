@@ -5,12 +5,9 @@ import DropDownSearch from "../Product/DropDownSearch";
 import Enum from "../../../enums";
 import Util from "../../../utils";
 import List from "../../List";
-// import PriceTagAction from "../../../actions/products/priceTag";
 import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/VariantProduct";
 import ProductVariantAction from "../../../actions/products/productVariant";
 import ProductVariantConstant from "../../../constants/products/productVariant";
-import NoPermission from "../../../../common/components/shares/List/NoPermission";
-import StartUp from "../../../../common/components/StartUp";
 import "./index.css";
 
 export default class PrintPriceTag extends List {
@@ -131,11 +128,6 @@ export default class PrintPriceTag extends List {
   componentDidMount() {
     
     super.componentDidMount();
-
-    // if (this.props.selectProductToPrint.passedTo) {
-    //   this.setState({productList: this.props.selectProductToPrint.selectedProduct});
-    //   this.props.dispatch(PriceTagAction.resetSelectProductFromListToPrint());
-    // }
   }
 
   componentDidUpdate() {
@@ -297,7 +289,7 @@ export default class PrintPriceTag extends List {
 
     if(productVariant){
       
-      const productName = Util.getProductNameV2(product);
+      const productName = product.name;
       const {quantity} = productVariant;
 
       const existingProductList = this.state.productList;
@@ -634,26 +626,6 @@ export default class PrintPriceTag extends List {
                 ""
             }
           </div>
-          {/* <this.Switchs
-        name="isShowPrice"
-        label="Show price"
-        checked={1}
-        form={this.props.form}/>
-      <this.Switchs
-        name="isShowName"
-        label="Show name"
-        checked={1}
-        form={this.props.form}/>
-      <this.Switchs
-        name="isShowBarcode"
-        label="Show barcode"
-        checked={1}
-        form={this.props.form}/>
-      <this.Switchs
-        name="isShowProductCode"
-        label="Show product code"
-        checked={1}
-        form={this.props.form}/> */}
         </this.Col>
       </this.Row>
     );
@@ -662,117 +634,109 @@ export default class PrintPriceTag extends List {
     return (
       <div style={{height: "100%", display: "flex", flexDirection: "column", width: "100%"}}>
         {this.renderBreadCrumb()}
-        {
-          this.Util.isCheckingPermission(this.props) ?
-            <StartUp />
-            :
-            this.Util.isNoPermissionProp(this.props) ?
-              <NoPermission />
-              :
-              <div className="main-layout" style={{height: "100%", display: "flex", flexDirection: "column", padding: 0}}>
-                <Form autoComplete="off" onSubmit={this.handleOnGeneratePriceTag} style={{display: "flex", flexDirection: "column", height: "100%"}}>
-                  <this.Row style={{height: "100%", marginLeft: 0}}>
-                    <this.Col md="6">
-                      <div id="print-price-tag">
-                        <this.Row>
-                          <this.Col md="12">
-                            <this.RadioButton 
-                              name="printType"
-                              disabled={this.state.productList.length <= 0}
-                              defaultValue={this.TYPE_OF_PRINT.QTY_IN_STOCK}
-                              onChange={this.onCangeTypeOfPrintLabel}
-                              dataSource={[
-                                {
-                                  value: this.TYPE_OF_PRINT.QTY_IN_STOCK,
-                                  title: <this.Translate id="text_print_type_option_1" />
-                                }, 
-                                {
-                                  value: this.TYPE_OF_PRINT.ALL_QTY,
-                                  title: <this.Translate id="text_print_type_option_2" /> 
-                                },
-                                {
-                                  value: this.TYPE_OF_PRINT.CUSTOM,
-                                  title: <this.Translate id="text_print_type_option_3" />
-                                }
-                              ]}
-                              form={this.props.form} />
-                              
-                            <div className="wrap-label-setting-button">
-                              <div>
-                                <div onClick={this.handleOnClickLabelSetting}><this.Translate id="text_label_setting" /> <Icon type="down" /></div>
-                                { this.state.isShowLabelSetting ? this.renderLabelSetting() : ""}
-                              </div>
-                            </div>
-                          </this.Col>
-                          <DropDownSearch
-                            productSearch={this.props.productSearch}
-                            handleOnSelectList={this.handleOnSelectList}
-                            handlePressEnterOnSearch={this.handlePressEnterOnSearch}
-                            handleOnFocusSearch={this.handleOnFocusSearch}
-                            dispatch={this.props.dispatch}
-                            isAutoFocus={true}
-                            didUpdateMakeAutoFocus={this.state.isFocusSearchInput}
-                            className="ca-input-v1 print-price-tag"
-                            locale={this.props.locale}
-                            form={this.props.form}/>
-                        </this.Row>
-                        <this.Table
-                          dataSource={this.state.productList}
-                          columns={this.columns}
-                          locale={{emptyText: <this.Translate id="table_empty_data"/>}} />
-
-                        <this.RadioButton 
-                          name="QROrBarcode"
-                          defaultValue={this.state.type}
-                          onChange={this.handleSelectType}
-                          dataSource={[
-                            {
-                              value: 1,
-                              title: <this.Translate id="text_print_barcode" />
-                            }, 
-                            {
-                              value: 2,
-                              title: <this.Translate id="text_print_qr" />
-                            }
-                          ]}
-                          form={this.props.form} />
-                        <this.Button htmlType="submit" type="info" className="btn-print-label text-uppercase" onClick={this.handleOnGeneratePriceTag}>
-                          <span className="icon-print icon-padding-right text-uppercase"></span> <this.Translate id="text_generate"/>
-                        </this.Button>
-                        {
-                          this.state.dataSourceToPrint.length > 0 ?
-                            <this.Button
-                              propKey="btn_product_print_label"
-                              className="info margin-left-8"
-                              onClick={this.handleOnPrint}>
-                              <span className="icon-barcode icon-padding-right"></span>
-                              <this.Translate id="btn_product_print_label" />
-                            </this.Button>
-                            :
-                            ""
-                        }
+        <div className="main-layout" style={{height: "100%", display: "flex", flexDirection: "column", padding: 0}}>
+          <Form autoComplete="off" onSubmit={this.handleOnGeneratePriceTag} style={{display: "flex", flexDirection: "column", height: "100%"}}>
+            <this.Row style={{height: "100%", marginLeft: 0}}>
+              <this.Col md="6" id="print-price-tag">
+                <div>
+                  <this.Row>
+                    <this.Col md="12">
+                      <this.RadioButton 
+                        name="printType"
+                        disabled={this.state.productList.length <= 0}
+                        defaultValue={this.TYPE_OF_PRINT.QTY_IN_STOCK}
+                        onChange={this.onCangeTypeOfPrintLabel}
+                        dataSource={[
+                          {
+                            value: this.TYPE_OF_PRINT.QTY_IN_STOCK,
+                            title: <this.Translate id="text_print_type_option_1" />
+                          }, 
+                          {
+                            value: this.TYPE_OF_PRINT.ALL_QTY,
+                            title: <this.Translate id="text_print_type_option_2" /> 
+                          },
+                          {
+                            value: this.TYPE_OF_PRINT.CUSTOM,
+                            title: <this.Translate id="text_print_type_option_3" />
+                          }
+                        ]}
+                        form={this.props.form} />
+                        
+                      <div className="wrap-label-setting-button">
+                        <div>
+                          <div onClick={this.handleOnClickLabelSetting}><this.Translate id="text_label_setting" /> <Icon type="down" /></div>
+                          { this.state.isShowLabelSetting ? this.renderLabelSetting() : ""}
+                        </div>
                       </div>
                     </this.Col>
-                    <this.Col md="6" style={{borderLeft: "1px solid #f7f7f7", overflow: "auto", height: "100%"}}>
-                      <PriceTagList
-                        dataSource={this.state.dataSourceToPrint}
-                        widthOfLabel={this.state.widthOfLabel}
-                        heightOfLabel={this.state.heightOfLabel}
-                        paddingLeft={this.state.paddingLeft}
-                        paddingRight={this.state.paddingRight}
-                        paddingTop={this.state.paddingTop}
-                        paddingBottom={this.state.paddingBottom}
-                        fontSizeOfValue={this.state.fontSizeOfValue}
-                        fontSizeOfName={this.state.fontSizeOfName}
-                        fontSizeOfPrice={this.state.fontSizeOfPrice}
-                        numberOfColumn={this.state.numberOfColumn}
-                        isGenerateQR={this.state.type}/>
-                    </this.Col>
+                    <DropDownSearch
+                      productSearch={this.props.productSearch}
+                      handleOnSelectList={this.handleOnSelectList}
+                      handlePressEnterOnSearch={this.handlePressEnterOnSearch}
+                      handleOnFocusSearch={this.handleOnFocusSearch}
+                      dispatch={this.props.dispatch}
+                      isAutoFocus={true}
+                      didUpdateMakeAutoFocus={this.state.isFocusSearchInput}
+                      className="ca-input-v1 print-price-tag"
+                      locale={this.props.locale}
+                      form={this.props.form}/>
                   </this.Row>
-                </Form>
-                {this.state.modalVariant}
-              </div>
-        }
+                  <this.Table
+                    dataSource={this.state.productList}
+                    columns={this.columns}
+                    locale={{emptyText: <this.Translate id="table_empty_data"/>}} />
+
+                  <this.RadioButton 
+                    name="QROrBarcode"
+                    defaultValue={this.state.type}
+                    onChange={this.handleSelectType}
+                    dataSource={[
+                      {
+                        value: 1,
+                        title: <this.Translate id="text_print_barcode" />
+                      }, 
+                      {
+                        value: 2,
+                        title: <this.Translate id="text_print_qr" />
+                      }
+                    ]}
+                    form={this.props.form} />
+                  <this.Button htmlType="submit" type="info" className="btn-print-label text-uppercase" onClick={this.handleOnGeneratePriceTag}>
+                    <span className="icon-print icon-padding-right text-uppercase"></span> <this.Translate id="text_generate"/>
+                  </this.Button>
+                  {
+                    this.state.dataSourceToPrint.length > 0 ?
+                      <this.Button
+                        propKey="btn_product_print_label"
+                        className="info margin-left-8"
+                        onClick={this.handleOnPrint}>
+                        <span className="icon-barcode icon-padding-right"></span>
+                        <this.Translate id="btn_product_print_label" />
+                      </this.Button>
+                      :
+                      ""
+                  }
+                </div>
+              </this.Col>
+              <this.Col md="6" style={{borderLeft: "1px solid #f7f7f7", overflow: "auto", height: "100%"}} id="print-price-tag-list">
+                <PriceTagList
+                  dataSource={this.state.dataSourceToPrint}
+                  widthOfLabel={this.state.widthOfLabel}
+                  heightOfLabel={this.state.heightOfLabel}
+                  paddingLeft={this.state.paddingLeft}
+                  paddingRight={this.state.paddingRight}
+                  paddingTop={this.state.paddingTop}
+                  paddingBottom={this.state.paddingBottom}
+                  fontSizeOfValue={this.state.fontSizeOfValue}
+                  fontSizeOfName={this.state.fontSizeOfName}
+                  fontSizeOfPrice={this.state.fontSizeOfPrice}
+                  numberOfColumn={this.state.numberOfColumn}
+                  isGenerateQR={this.state.type}/>
+              </this.Col>
+            </this.Row>
+          </Form>
+          {this.state.modalVariant}
+        </div>
       </div>
     );
   }

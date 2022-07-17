@@ -84,6 +84,9 @@ export default class AdjustmentEdit extends Component {
                   id: values.stockAdjustmentRequestId[index],
                   currentQuantity: parseInt(values.currentQty[index], 10),
                   productVariantId,
+                  productName: values.productName[index],
+                  variantName: values.variantName[index],
+                  barcode: values.barcode[index],
                   unitId: values.unitId[index],
                   adjustQuantity: values.adjustQuantity[index],
                   status: values.stockAdjustmentRequestStatus[index]
@@ -131,7 +134,6 @@ export default class AdjustmentEdit extends Component {
       dispatch
     } = this.props,
     isApproved = stockAdjustmentRequestDetail.data && stockAdjustmentRequestDetail.data.step === Enum.STOCK_ADJUST_STEP.COMPLETE;
-
 
     return <div style={{marginBottom: 25, height: "100%"}}>
       <PageHeader

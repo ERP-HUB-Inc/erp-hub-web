@@ -35,6 +35,7 @@ export default class SearchAdjustmentRequest extends Modal {
               <this.InputText name={`productVariantId[${index}]`} type="hidden"   data={record.productVariantId} form={this.form} />
               <this.InputText name={`productName[${index}]`} type="hidden" data={record.productName} form={this.form} />
               <this.InputText name={`variantName[${index}]`} type="hidden" data={record.variantName} form={this.form} />
+              <this.InputText name={`barcode[${index}]`} type="hidden" data={record.barcode} form={this.form} />
               <this.InputNumber name={`stockAdjustmentRequestStatus[${index}]`} className="hidden" data={record.stockAdjustmentRequestStatus} form={this.form} />
             </div>
           );
@@ -148,42 +149,27 @@ export default class SearchAdjustmentRequest extends Modal {
     this.setState({units: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT))});
   }
 
-  componentDidUpdate(){   
-   
+  componentDidUpdate() {
     const {stockAdjustmentRequest} = this.props; 
     if (stockAdjustmentRequest.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
       const existingProductList = this.state.productLists;
       stockAdjustmentRequest.forEach(stockAdjustmentRequest => {
-        let productName = "",
-          variantName = "",
-          barcode = "",
-          currentQty = 0,
-          productVariant = stockAdjustmentRequest.productVariant;
-        
-        if (productVariant) {
-          productName = Util.getProductNameV2(productVariant.product);
-          barcode = productVariant.barcode;
-          variantName = productVariant.product.productOption === Enum.PRODUCT_VARIANT ? productVariant.name : "";
-          currentQty = stockAdjustmentRequest.currentQuantity;
-        }
 
-        if(stockAdjustmentRequest.status !== this.Enum.ARCHIVE){
+        if (stockAdjustmentRequest.status !== this.Enum.ARCHIVE){
           existingProductList.push({
             stockAdjustmentRequestId: stockAdjustmentRequest.id,
-            productName,
-            barcode,
-            variantName,
+            productName: stockAdjustmentRequest.productName,
+            barcode: stockAdjustmentRequest.barcode,
+            variantName: stockAdjustmentRequest.variantName,
             unitId: stockAdjustmentRequest.unitId,
             productVariantId: stockAdjustmentRequest.productVariantId,
-            currentQty,
+            currentQty: stockAdjustmentRequest.currentQuantity,
             productVariants: [stockAdjustmentRequest.productVariant],
             adjustQuantity: stockAdjustmentRequest.adjustQuantity,
-            different: stockAdjustmentRequest.adjustQuantity - currentQty,
+            different: stockAdjustmentRequest.adjustQuantity - stockAdjustmentRequest.currentQuantity,
             stockAdjustmentRequestStatus: this.Enum.ACTIVE
           }); 
         }
-       
-       
       });
       
       this.setState({

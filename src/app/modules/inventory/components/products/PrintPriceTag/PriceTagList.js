@@ -48,7 +48,7 @@ export default class ComponentToPrint extends List {
     const numberOfRows = this.Util.chuckCollection(numberOfLabel, this.props.numberOfColumn);
     return (
       numberOfRows.map((row, rowIndex) =>
-        <table key={rowIndex} style={{background: "white", fontFamily: "Consolas", fontWeight: 600}}>
+        <table key={rowIndex} style={{background: "white", fontFamily: "Consolas", fontWeight: 600}} id="price-tags-wrapper">
           <tbody>
             <tr>
               { 

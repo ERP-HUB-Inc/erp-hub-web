@@ -81,6 +81,9 @@ export default class FormCreate extends Component {
                 stockAdjustmentEntries.push({
                   currentQuantity: parseInt(values.currentQty[index], 10),
                   productVariantId,
+                  productName: values.productName[index],
+                  variantName: values.variantName[index],
+                  barcode: values.barcode[index],
                   unitId: values.unitId[index],
                   adjustQuantity: values.adjustQuantity[index]
                 });

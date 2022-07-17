@@ -656,7 +656,7 @@ export default class Util {
       range = [moment().startOf("week"), moment().endOf("week")];
       lastRange = [moment().subtract(1, "week").startOf("week"), moment().subtract(1, "week").endOf("week")];
     } else if (option === "current-month") {
-      range = [moment().startOf('month'), moment().endOf("month")];
+      range = [moment().startOf("month"), moment().endOf("month")];
       lastRange = [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")];
     } else if (option === "last-30-days") {
       range = [moment().subtract(29, "days"), moment()];
@@ -683,6 +683,6 @@ export default class Util {
     return {
       range,
       lastRange
-    }
+    };
   }
 }
