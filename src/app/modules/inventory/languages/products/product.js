@@ -19,9 +19,19 @@ export default {
     "បង្កើតផលិតផលថ្មី"
   ],
 
+  "text_import_product": [
+    "Import Products",
+    "Import Products"
+  ],
+
   "text_out_of_stock": [
     "Out of stock",
     "អស់ពី​ស្តុក"
+  ],
+
+  "text_continue_upload": [
+    "Continue upload ?",
+    "បន្តរ upload ?"
   ],
 
   "col_products_tag": [

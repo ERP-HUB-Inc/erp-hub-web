@@ -56,6 +56,7 @@ export default {
     RECEIVED: "#87d068",
     CANCEL: "#108ee9"
   },
+  RECORD_EXIST: 603,
   TAX_NOT_FOUND: 622,
   BRAND_NOT_FOUND: 614,
   PRODUCT_TYPE_NOT_FOUND: 615,

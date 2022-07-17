@@ -218,3 +218,25 @@
     font-weight: 400;
     font-family: 'PT Sans Narrow', sans-serif;
 }
+
+.sv-tabs .ant-tabs-tab-active {
+    color: #093163;
+}
+
+.sv-tabs .ant-tabs-ink-bar {
+    background: #093163;
+}
+
+.sv-tabs .ant-tabs-nav .ant-tabs-tab:hover {
+    color: #093163;
+}
+
+.sv-modal-confirm .ant-modal-content {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.sv-modal-confirm .ant-btn-primary {
+  background: #093163;
+  border-color: #093163;
+}
