@@ -4,6 +4,7 @@ import {
 } from "react-device-detect";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import {message} from "antd";
 import history from "../../../../common/router/history";
 import Enum from "../../../enums";
 import StoreAccountAction from "../../../action/settings/storeAccount";
@@ -18,6 +19,8 @@ import NoPermission from "../../../../common/components/shares/List/NoPermission
 import StartUp from "../../../../common/components/StartUp";
 import menuSource from "../../../../common/components/layout/SiderBar/datasource";
 import PrivilegeService from "../../../../pos/services/settings/PrivilegeService";
+import ProductService from "../../../../inventory/services/products/ProductService";
+import TransactionService from "../../../services/transactions/TransactionService";
 import PrivilegeAction from "../../../../pos/action/settings/privilege";
 import {modules} from "../../../../common/components/layout/Module";
 import "./index.css";
@@ -38,7 +41,10 @@ export default class StoreAccountList extends Component {
       ],
       paymentTerm: "",
       address: "",
-      deviceList: []
+      deviceList: [],
+      isClearProduct: false,
+      isClearTransaction: false,
+      activeTap: 1
     };
     this.module = <this.Translate id="text_setting" />;
     
@@ -172,6 +178,48 @@ export default class StoreAccountList extends Component {
       });
   }
 
+  onClearProduct = () => {
+    this.Util.sweetAlertConfirm(
+      this.CATranslate("text_are_you_sure", this.props.locale),
+      "",
+      [this.CATranslate("text_cancel", this.props.locale), this.CATranslate("text_yes", this.props.locale)]
+    )
+    .then(willClear => {
+      if (willClear) {
+        this.setState({isClearProduct: true});
+        ProductService.clear()
+        .then(() => {
+          message.success("sucess");
+        })
+        .catch(() => {
+          message.error("Error");
+        })
+        .finally(() => this.setState({isClearProduct: false}));
+      }
+    });
+  }
+
+  onClearTransaction = () => {
+    this.Util.sweetAlertConfirm(
+      this.CATranslate("text_are_you_sure", this.props.locale),
+      "",
+      [this.CATranslate("text_cancel", this.props.locale), this.CATranslate("text_yes", this.props.locale)]
+    )
+    .then(willClear => {
+      if (willClear) {
+        this.setState({isClearTransaction: true});
+        TransactionService.clear()
+        .then(() => {
+          message.success("Success");
+        })
+        .catch(() => {
+          message.error("Error");
+        })
+        .finally(() => this.setState({isClearTransaction: false}));
+      }
+    })
+  }
+
   handleOnCopyDeviceNumber(id, status) {
     if (status !== this.Enum.ACTIVE) {
       this.Message.warning(this.CATranslate("text_not_available", this.props.locale));
@@ -286,6 +334,10 @@ export default class StoreAccountList extends Component {
     });
   }
 
+  onChangeTab = (key) => {
+    this.setState({activeTap: parseInt(key)});
+  }
+
   renderMiniBreadCrumb() {
     // get current path of breadcrum compare with url
     const currentPath = window.location.pathname;
@@ -395,7 +447,7 @@ export default class StoreAccountList extends Component {
                 <this.Form onSubmit={this.handleSubmit}>
                   <this.Row>
                     <this.Col md="12"> 
-                      <this.Tabs type="card">
+                      <this.Tabs type="card" onChange={this.onChangeTab}>
                         <this.TabPane tab={<this.Translate id="text_general" />} key="1">
                           <this.Row>
                             <this.Col lg="4" md="4"> 
@@ -797,15 +849,30 @@ export default class StoreAccountList extends Component {
                             </this.Col> 
                           </this.Row>
                         </this.TabPane>
-    
+                        <this.TabPane tab={<this.Translate id="text_data" />} key="7">
+                          <div style={{marginTop: 30, marginBottom: 35}}>
+                            <this.Button type="danger" style={{marginRight: 15}} loading={this.state.isClearProduct} onClick={this.onClearProduct}>
+                              <this.Icon type="delete" className="icon-padding-right" /> 
+                              <this.Translate id="text_clear_product" />
+                            </this.Button>
+                            <this.Button type="danger" loading={this.state.isClearTransaction} onClick={this.onClearTransaction}>
+                              <this.Icon type="delete" className="icon-padding-right" /> 
+                              <this.Translate id="text_clear_other" />
+                            </this.Button>
+                          </div>
+                        </this.TabPane>
                       </this.Tabs>
                       
                     </this.Col> 
                               
                   </this.Row>
-                  <this.Button type="info" htmlType="submit" loading={storeAccountUpdate.updating}>
-                    <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
-                  </this.Button>
+                  {
+                    this.state.activeTap !== 7 && (
+                      <this.Button type="info" htmlType="submit" loading={storeAccountUpdate.updating}>
+                        <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />
+                      </this.Button>
+                    )
+                  }
                 </this.Form>
               </div>
         }

@@ -153,6 +153,14 @@ class ProductService extends BaseService {
       headers: this.header
     });
   }
+
+  clear() {
+    this.setHeader();
+    return this.DELETE({
+      url: `${this.baseUrl}/clear`,
+      headers: this.header
+    });
+  }
 }
 
 export default new ProductService(); 
