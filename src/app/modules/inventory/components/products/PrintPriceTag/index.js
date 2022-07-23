@@ -177,14 +177,15 @@ export default class PrintPriceTag extends List {
   }
 
   handleOnPrint() {
-    const element = document.getElementById("print-tag-content");
-    if (element) {
-      this.Util.printElem(element.innerHTML);
-      this.setState({
-        dataSourceToPrint: [],
-        productList: []
-      });
-    }
+    // const element = document.getElementById("print-tag-content");
+    // if (element) {
+    //   this.Util.printElem(element.innerHTML);
+    //   this.setState({
+    //     dataSourceToPrint: [],
+    //     productList: []
+    //   });
+    // }
+    window.print();
   }
 
   handleOnReset() {

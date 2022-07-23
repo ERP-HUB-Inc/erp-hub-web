@@ -58,7 +58,7 @@ export default class ProductList extends List {
       this.props.form.setFieldsValue({ key: params.get("search") });
     }
     if (params.get("locationId")) {
-      this.props.form.setFieldsValue({locationId: Number(params.get("locationId"))})
+      this.props.form.setFieldsValue({locationId: Number(params.get("locationId"))});
     }
     this.fetchList();
     this.props.dispatch(LocationAction.fetch()); 
@@ -108,7 +108,7 @@ export default class ProductList extends List {
 
   fetchList() {
     let searchKey = "";
-    let filter = {}
+    let filter = {};
     let locationId = 0;
     let limit = this.pageSize;
     let offset = this.state.current;
@@ -186,16 +186,16 @@ export default class ProductList extends List {
   }
 
   renderButtonImport() {
-    return <this.Link to={`/products/import`} className="ant-btn" style={{marginRight: 15}}>
+    return <this.Link to={"/products/import"} className="ant-btn" style={{marginRight: 15}}>
       <span className="icon-import icon-padding-right"></span>
       <this.Translate id="text_import" />
-    </this.Link>
+    </this.Link>;
   }
 
   buttonActionCollection() {
     return [
       this.renderButtonAddNew(),
-      this.renderButtonImport(),
+      // this.renderButtonImport(),
       this.renderButtonDelete()
     ];
   }

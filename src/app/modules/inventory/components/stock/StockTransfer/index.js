@@ -22,30 +22,26 @@ export default class StockTransferList extends List {
     this.columns = [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="text_description" />,
-        dataIndex: "description",
-        key: "description",
-        sorter: true
-      },
-      {
         title: <this.Translate id="text_from_location" />,
         dataIndex: "fromLocation",
         key: "fromLocation",
-        sorter: true,
         render: fromLocation => fromLocation.name
       },
       {
         title: <this.Translate id="text_to_location" />,
         dataIndex: "toLocation",
         key: "toLocation",
-        sorter: true,
         render: toLocation => toLocation.name
+      },
+      {
+        title: <this.Translate id="text_description" />,
+        dataIndex: "description",
+        key: "description"
       },
       {
         title: <this.Translate id="text_step" />,
         dataIndex: "step",
         key: "step",
-        sorter: true,
         width: 100,
         render: step => step in this.STOCK_STRANSFER_STEP_STR ? <this.Tag color={this.STOCK_STRANSFER_STEP_STR[step].color} className="text-uppercase text-center po-step-tag">{this.STOCK_STRANSFER_STEP_STR[step].name}</this.Tag> : ""
       }
