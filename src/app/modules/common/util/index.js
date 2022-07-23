@@ -2,6 +2,7 @@ import moment from "moment";
 import "moment/min/locales";
 import "moment/locale/en-ca";
 import _ from "lodash";
+import swal from "sweetalert";
 import Enum from "../enums";
 import ConstantAuth from "../constants/authentication";
 import history from "../router/history";
@@ -684,5 +685,15 @@ export default class Util {
       range,
       lastRange
     };
+  }
+
+  sweetAlertConfirm(title, text, buttons = ["Cancel", "Yes"]) {
+    return swal({
+      title,
+      text,
+      icon: "warning",
+      buttons,
+      dangerMode: true,
+    })
   }
 }

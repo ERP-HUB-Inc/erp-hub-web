@@ -50,11 +50,9 @@ export default class Home extends Component {
   fetchDashboardCard() {
     let range = "";
     const option = new URLSearchParams(document.location.search).get("option");
-    const dateRange = this.Util.getDatesFromSelectOption(option);
       
-    if (dateRange["range"].length) {
-      this.range = [dateRange["range"][0], dateRange["range"][1]];
-      range = JSON.stringify({range: dateRange["range"], lastRange: dateRange["lastRange"]});
+    if (option) {
+      range = option
     }
 
     this.props.dispatch(CardAction.fetchDashboardCard(range));   
@@ -69,31 +67,8 @@ export default class Home extends Component {
     this.fetchDashboardCard();
   }
 
-  getValueFromDashboardList(index = 0) {
-    return this.props.cardDashboard.list.length > 0 ? this.props.cardDashboard.list[index].value : 0;
-  }
-
-  getYesterdayValue(index = 0) {
-    return this.props.cardDashboard.list.length > 0 ? this.props.cardDashboard.list[index].yesterdayValue : 0;
-  }
-
-  getDiffAsPercentagFromYesterday(todayValue, yesterdayValue) {
-    if (!todayValue) todayValue = 0;
-    if (!yesterdayValue) yesterdayValue = 0;
-    todayValue = this.formatNumber(todayValue);
-    yesterdayValue = this.formatNumber(yesterdayValue);
-
-    if (todayValue === 0 && yesterdayValue === 0) {
-      return 0;
-    }
-    if (yesterdayValue === 0 && todayValue) {
-      return 100;
-    }
-    return this.formatNumber(((todayValue * 100) / yesterdayValue) - 100);
-  }
-
-  formatNumber(value) {
-    return parseFloat((value * 1).toFixed(2));
+  getDashboardValue(index, key) {
+    return this.props.cardDashboard.list.length > 0 ? this.props.cardDashboard.list[index][key] : 0;
   }
 
   render() {
@@ -114,10 +89,8 @@ export default class Home extends Component {
       pieDataSource["colors"]["Profit"] = "rgb(116, 90, 242)";
     }
 
-    const revenue = this.getValueFromDashboardList(),
-      yesterdayRevenue = this.getYesterdayValue(),
-      discount = this.getValueFromDashboardList(1),
-      yesterdayDiscount = this.getYesterdayValue(1);
+    const revenue = this.getDashboardValue(0, "value"),
+      discount = this.getDashboardValue(1, "value");
           
     return(
       <this.Row style={{alignContent: "flex-start"}}>
@@ -149,7 +122,7 @@ export default class Home extends Component {
               decimals={2}
               decimal="." />
           }
-          percentage={this.getDiffAsPercentagFromYesterday(revenue, yesterdayRevenue)}
+          percentage={this.getDashboardValue(0, "diffRevenueFromLAstAsPercentag")}
           showPercentage={true}
           icon="icon-dollar" title={<this.Translate id="text_revenue"/>}
           readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
@@ -181,7 +154,7 @@ export default class Home extends Component {
             decimal="." />
         }
         icon="icon-dollar" title={<this.Translate id="text_sales"/>}
-        percentage={this.getDiffAsPercentagFromYesterday((revenue - discount), (yesterdayRevenue - yesterdayDiscount))}
+        percentage={this.getDashboardValue(0, "diffSaleFromLastAsPercentag")}
         showPercentage={true}
         readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
         route="read"
@@ -191,7 +164,7 @@ export default class Home extends Component {
           contentValue={
             <CountUp
               start={0}
-              end={this.getValueFromDashboardList(3)}
+              end={this.getDashboardValue(3, "value")}
               duration={2}
               separator=","
               decimals={0}

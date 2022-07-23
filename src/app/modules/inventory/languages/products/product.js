@@ -24,6 +24,26 @@ export default {
     "Import Products"
   ],
 
+  "text_data": [
+    "Data",
+    "ទិន្នន័យ"
+  ],
+
+  "text_clear_product": [
+    "Clear Products",
+    "Clear Products"
+  ],
+
+  "text_clear_other": [
+    "Clear Other",
+    "Clear Other"
+  ],
+
+  "text_clear_warning": [
+    "Note: this action can't be recovery your data back!",
+    "Note: this action can't be recovery your data back!"
+  ],
+
   "text_out_of_stock": [
     "Out of stock",
     "អស់ពី​ស្តុក"
