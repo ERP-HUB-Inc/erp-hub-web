@@ -51,6 +51,7 @@ export class InputNumber extends Element {
         formatter={this.props.formatter}
         step={this.props.step}
         compare={this.props.compare}
+        style={this.props.style}
         precision={this.props.precision}
         disabled={this.props.disabled}
         rules={this.rules}

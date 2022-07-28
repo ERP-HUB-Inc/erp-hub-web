@@ -24,6 +24,7 @@ export default class TextAreas extends Element {
             <TextArea
               placeholder={this.props.placeholder}
               rows={this.props.rows}
+              cols={this.props.cols}
               onKeyUp={this.props.handleKeyUp}
               onChange={this.props.onChange}
               disabled={this.props.disabled}

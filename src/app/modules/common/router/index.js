@@ -37,7 +37,10 @@ import ReportSaleByLocation from "../../pos/components/reports/Sale/ReportSaleBy
 import ReportPurchaseSummary from "../../pos/components/reports/Purchase/ReportPurchaseSummary";
 import ReportPurchaseByProduct from "../../pos/components/reports/Purchase/ReportPurchaseByProduct";
 import ReportPurchaseBySupplier from "../../pos/components/reports/Purchase/ReportPurchaseBySupplier";
+import InvoiceCreate from "../../pos/components/transactions/Invoice/FormItem";
+import InvoiceUpdate from "../../pos/components/transactions/Invoice/FormItem";
 import Util from "../util";
+
 const {Content} = Layout;
 
 class Router extends Component {
@@ -77,6 +80,8 @@ class Router extends Component {
                 )
               )
             }
+            <Route path="/transactions/create-invoice" component={InvoiceCreate} />
+            <Route path="/transactions/update-invoice/:id" component={InvoiceUpdate} />
             <Route path="/products/create" component={ProductCreate} />
             <Route path="/products/import" component={ProductImport} />
             <Route path="/products/split/:productVariantId" component={ProductSplit} />
