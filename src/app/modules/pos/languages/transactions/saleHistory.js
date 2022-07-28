@@ -89,6 +89,11 @@ export default {
     "Paid"
   ],
 
+  "text_partial_pay": [
+    "Partial Paid",
+    "បង់ខ្លះ"
+  ],
+
   "text_credit": [
     "Credit",
     "ជំពាក់",

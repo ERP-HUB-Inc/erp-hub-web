@@ -259,6 +259,26 @@ export default class Util {
     };
   }
 
+  getPercentage(total, amount) {
+    let value = 0;
+
+    if (amount) {
+      value = (amount * 100) / total;
+    }
+
+    return Number(value.toFixed(2));
+  }
+
+  getValueFromPercentage(total, amount) {
+    let value = 0;
+
+    if (amount) {
+      value = (amount * total) / 100;
+    }
+
+    return value;
+  }
+
   formatPercentage(n, position = 0) {
     let percentage = "%";
 
@@ -690,10 +710,16 @@ export default class Util {
   sweetAlertConfirm(title, text, buttons = ["Cancel", "Yes"]) {
     return swal({
       title,
-      text,
       icon: "warning",
       buttons,
       dangerMode: true,
+    })
+  }
+
+  sweetAlertMessage(text, icon) {
+    return swal({
+      text,
+      icon
     })
   }
 }

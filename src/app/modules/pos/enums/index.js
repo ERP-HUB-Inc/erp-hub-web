@@ -32,6 +32,12 @@ export default {
     CREDIT: 6,
     PAID: 7
   },
+  INVOICE_STATUS: {
+    DRAFT: 0,
+    SENT: 1,
+    PARTIAL: 2,
+    PAID: 3
+  },
   PAYMENT_METHOD_AVIALE_ON_POS: 1,
   PRODUCT_AVIALABLE_ON_SALE: 1,
   OPEN_SALE_REGISTRATION_STATUS: {
