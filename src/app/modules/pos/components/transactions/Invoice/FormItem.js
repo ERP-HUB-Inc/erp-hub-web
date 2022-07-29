@@ -7,7 +7,7 @@ import {
     Select,
     Input,
     Spin,
-    //Divider,
+    Divider,
     Icon,
     Table,
     message
@@ -23,13 +23,14 @@ import {
     Button,
     InputTextArea
 } from "../../../../common/elements/ant-ui";
-import Enum from "../../../../inventory/enums";
+import Enum from "../../../enums/index";
 import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import CustomerService from "../../../../crm/services/customers/CustomerService";
 import ProductService from "../../../../inventory/services/products/ProductService";
 import CustomerAction from "../../../../crm/actions/customers/customer";
+import CustomerConstant from "../../../../crm/constants/customers/customer";
 import InvoiceService from "../../../services/transactions/InvoiceService";
 import SearchProductDropdwon from "./SearchProduct";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
@@ -52,13 +53,8 @@ class NewInvoice extends React.PureComponent {
         fetching: false,
         customers: [],
         productSearch: [],
-        formData: {
-            customerId: null,
-            invoiceDate: moment(),
-            dueDate: null,
-            deposit: 0,
-            discount: 0
-        },
+        formData: {},
+        loading: false,
         transactionEntries: [],
         customerForm: null,
         saveCloseLoading: false,
@@ -124,11 +120,9 @@ class NewInvoice extends React.PureComponent {
             key: "variantName",
             render: (variantName, record, index) => {
                 return <div>
-                    {variantName}
                     <InputText 
                         name={`variantName[${index}]`}
                         data={variantName}
-                        style={{display: "none"}}
                         form={this.props.form} />
                 </div>
             }
@@ -154,6 +148,7 @@ class NewInvoice extends React.PureComponent {
             render: (quantity, record, index) => {
                 return <InputNumber
                     name={`quantity[${index}]`}
+                    min={0}
                     data={quantity}
                     isAutoSelect={true}
                     onChange={(value) => this.onChangeQty(value, index)}
@@ -168,6 +163,7 @@ class NewInvoice extends React.PureComponent {
             render: (price, record, index) => {
                 return <InputNumber 
                     name={`price[${index}]`}
+                    min={0}
                     data={price}
                     isAutoSelect={true}
                     onChange={(value) => this.onChangePrice(value, index)}
@@ -193,21 +189,27 @@ class NewInvoice extends React.PureComponent {
     id = "";
     saveOption = "";
     pageTitle = "";
+    textRequiredCustomer = "";
 
     componentDidMount() {
         const idParam = this.props.match.params.id;
         if (idParam) {
             this.id = idParam;
             this.pageTitle = <Translate id="text_edit_invoice" />;
+            this.setState({loading: true})
             InvoiceService.detail(this.id)
             .then((response) => {
                 const data = response.data;
                 const formData = {
                     customerId: data.customerId,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    phoneNumber: data.phoneNumber,
                     invoiceDate: moment(data.invoiceDate),
                     dueDate: data.dueDate ? moment(data.dueDate) : null,
                     registerDate: moment(data.registerDate),
                     discount: data.discount,
+                    discountType: data.discountType,
                     deposit: data.deposit
                 }
                 const transactionEntries = data.transactionEntries.length && data.transactionEntries.map(entry => ({
@@ -218,18 +220,39 @@ class NewInvoice extends React.PureComponent {
 
                 this.setState({
                     formData,
-                    transactionEntries
+                    transactionEntries,
                 });
-                this.props.form.setFieldsValue({
-                    customerInfo: JSON.stringify({
-                        firstName: data.firstName,
-                        lastName: data.lastName,
-                        phoneNumber: data.phoneNumber
-                    })
-                })
             })
+            .finally(() => this.setState({loading: false}))
         } else {
             this.pageTitle = <Translate id="text_create_invoice" />;
+            this.setState({
+                formData: {
+                    customerId: null,
+                    firstName: "",
+                    lastName: "",
+                    phoneNumber: "",
+                    invoiceDate: moment(),
+                    dueDate: null,
+                    deposit: 0,
+                    discount: 0,
+                    discountType: Enum.DISCOUNT_TYPE.AMOUNT
+                },
+                transactionEntries: [{
+                    productVariantId: "",
+                    variantName: "",
+                    categoryId: "",
+                    description: "",
+                    unitId: "",
+                    quantity: 1,
+                    unitName: "",
+                    cost: 0,
+                    price: 0,
+                    discount: 0,
+                    amount: 0,
+                    status: 1
+                }]
+            })
         }
 
         CustomerService.lists(15)
@@ -242,19 +265,42 @@ class NewInvoice extends React.PureComponent {
         .then(response => this.setState({productSearch: response && response.data.data}));
     }
 
+    componentDidUpdate() {
+        if (this.props.customerAdd.added) {
+            const {customers, formData} = this.state;
+            const data = this.props.customerAdd.response.data;
+            formData.customerId = data.id;
+            formData.firstName = data.firstName;
+            formData.lastName = data.lastName;
+            formData.phoneNumber = data.phoneNumber;
+            customers.unshift(data);
+            this.setState({
+                customers, 
+                formData
+            });
+
+            this.props.dispatch(CustomerAction.reset(CustomerConstant.RESET_ADD_CUSTOMERS));
+        }
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
-                const customer = JSON.parse(values["customerInfo"]);
+                if (!values.customerId) {
+                    this.textRequiredCustomer = <Translate id="text_required_customer" />;
+                    return;
+                }
                 const {formData} = this.state;
                 const invoice = {
                     customerId: values.customerId,
                     discount: values.discount,
                     deposit: values.deposit,
-                    firstName: customer.firstName,
-                    lastName: customer.lastName,
-                    phoneNumber: customer.phoneNumber,
+                    discountType: values.discountType,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    phoneNumber: formData.phoneNumber,
+                    note: values.note,
                     invoiceDate: this.util.formatDateForMYSQL(values["invoiceDate"]),
                     dueDate: this.util.formatDateForMYSQL(values["dueDate"]),
                     registerDate: this.util.formatDateForMYSQL(formData.registerDate ? formData.registerDate : moment()),
@@ -262,12 +308,12 @@ class NewInvoice extends React.PureComponent {
                 }
 
                 const transactionEntries = [];
-                if (values["productVariantId"] && values["productVariantId"].length) {
-                    values["productVariantId"].forEach((productVariantId, index) => {
+                if (values["variantName"] && values["variantName"].length) {
+                    values["variantName"].forEach((variantName, index) => {
                         transactionEntries.push({
                             id: values.id[index],
-                            productVariantId,
-                            variantName: values.variantName[index],
+                            productVariantId: values.productVariantId[index],
+                            variantName,
                             categoryId: values.categoryId[index],
                             description: values.description[index],
                             quantity: values.quantity[index],
@@ -342,6 +388,20 @@ class NewInvoice extends React.PureComponent {
             if (!amount || amount < 0) amount = 0;
             preState.transactionEntries[index].price = price;
             preState.transactionEntries[index].amount = amount;
+            return preState;
+        })
+    }
+
+    onChangeTotalDiscount = (discount) => {
+        this.setState(preState => {
+            preState.formData.discount = discount;
+            return discount;
+        })
+    }
+
+    onChangeDiscountType = (type) => {
+        this.setState(preState => {
+            preState.formData.discountType = type;
             return preState;
         })
     }
@@ -447,13 +507,18 @@ class NewInvoice extends React.PureComponent {
         this.props.form.resetFields();
         if (transactionEntries.length) {
             if (this.id) {
-                transactionEntries.forEach((entry, index) => {
-                    if (entry.id) {
-                        transactionEntries[index].status = 3;
-                    } else {
-                        transactionEntries.splice(index, 1);
+                this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
+                .then(willClear => {
+                    if (willClear) {
+                        transactionEntries.forEach((entry, index) => {
+                            if (entry.id) {
+                                transactionEntries[index].status = 3;
+                            } else {
+                                transactionEntries.splice(index, 1);
+                            }
+                            this.setState({transactionEntries, productSearch: []});
+                        })
                     }
-                    this.setState({transactionEntries});
                 })
             } else {
                 this.setState({transactionEntries: []});
@@ -464,20 +529,20 @@ class NewInvoice extends React.PureComponent {
     onSelectCustomer(value, record) {
         if (value) {
             const customer = record.props.object;
-            this.props.form.setFieldsValue({
-                "customerInfo": JSON.stringify({
-                    firstName: customer.firstName,
-                    lastName: customer.lastName,
-                    phoneNumber: customer.phoneNumber
-                })
-            });
+            const {formData} = this.state;
+            formData.firstName = customer.firstName;
+            formData.lastName = customer.lastName;
+            formData.phoneNumber = customer.phoneNumber;
+            this.textRequiredCustomer = "";
+            this.setState({formData});
+        } else {
+            this.textRequiredCustomer = <Translate id="text_required_customer" />;
         }
     }
 
     showCustomerForm = () => {
         this.setState({customerForm: <CustomerCreate />})
         this.props.dispatch(CustomerAction.showForm());
-        console.log("orops", this.props);
     }
 
     renderSelectCustomer() {
@@ -496,7 +561,7 @@ class NewInvoice extends React.PureComponent {
                         <div>
                             {menu}
                         </div>
-                        {/* <Divider style={{ margin: '4px 0' }} />
+                        <Divider style={{ margin: '4px 0' }} />
                         <div
                             style={{ padding: '5px 8px', cursor: 'pointer' }}
                             onMouseDown={e => e.preventDefault()}
@@ -511,7 +576,7 @@ class NewInvoice extends React.PureComponent {
                                 <Translate id="text_add_new_customer" />
                                 </div>
                             }
-                        </div> */}
+                        </div>
                     </div>
                 )}
             >
@@ -533,10 +598,10 @@ class NewInvoice extends React.PureComponent {
     }
 
     getTotalDiscount() {
-        let discount = Number(this.props.form.getFieldValue("discount"));
-        const type = this.props.form.getFieldValue("discountType");
+        const type = this.state.formData.discountType;
+        let discount = this.state.formData.discount;
         const total = this.getTotal();
-        if (type === "percentage") {
+        if (type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
             discount = this.util.getValueFromPercentage(total, discount);
         }
         if (!discount || discount < 0) discount = 0;
@@ -563,7 +628,8 @@ class NewInvoice extends React.PureComponent {
             },
         }
         const {formData} = this.state;
-        return (
+        return ( 
+            !this.state.loading && Object.keys(formData).length ? 
             <div style={{marginBottom: 25}}>
                 <Form 
                     {...formItemLayout}
@@ -593,17 +659,22 @@ class NewInvoice extends React.PureComponent {
                     <Row>
                         <Col md={8}>
                             <Form.Item
-                                style={{paddingLeft: 10, ...styles.itemCenter}}
+                                style={{paddingLeft: 10, position: "relative", ...styles.itemCenter}}
                                 label={<Translate id="text_customer" />}
                                 labelCol={{xs: {span: 20}, sm: {span: 4}}}
                             >
-                                {getFieldDecorator("customerId", {initialValue: formData.customerId, require: true})(this.renderSelectCustomer())}
+                                {
+                                    getFieldDecorator("customerId", {
+                                        rules: [
+                                            {
+                                                require: true
+                                            }
+                                        ],
+                                        initialValue: formData.customerId
+                                    })(this.renderSelectCustomer())
+                                }
+                                <span style={{color: "red", fontSize: 13, position: "absolute", left: 0, top: 20}}>{this.textRequiredCustomer}</span>
                             </Form.Item>
-                            <InputText 
-                                name="customerInfo"
-                                style={{display: "none"}}
-                                form={this.props.form}
-                            />
                         </Col>
                         <Col md={8}>
                             <DatePickers 
@@ -638,18 +709,21 @@ class NewInvoice extends React.PureComponent {
                                     label={<div style={{marginTop: 7, marginRight: 21}}><Translate id="text_discount" /></div>}
                                     style={{width: 280, marginRight : 8}}
                                     isAutoSelect={true}
+                                    min={0}
+                                    max={this.getTotal()}
+                                    onChange={this.onChangeTotalDiscount}
                                     form={this.props.form}
                                 />
                                 <Form.Item>
                                     {
-                                        getFieldDecorator("discountType", {initialValue: "amount"})
+                                        getFieldDecorator("discountType", {initialValue: formData.discountType})
                                         (
                                             <Select 
                                                 onChange={this.onChangeDiscountType} 
-                                                style={{marginTop: 4, width: 85}} 
+                                                style={{marginTop: 4, width: 90}} 
                                             >
-                                                <Select.Option key="percentage" value="percentage"><Translate id="text_percentage" /></Select.Option>
-                                                <Select.Option key="amount" value="amount"><Translate id="text_amount" /></Select.Option>
+                                                <Select.Option key={0} value={Enum.DISCOUNT_TYPE.PERCENTAGE}><Translate id="text_percentage" /></Select.Option>
+                                                <Select.Option key={1} value={Enum.DISCOUNT_TYPE.AMOUNT}><Translate id="text_amount" /></Select.Option>
                                             </Select>
                                         )
                                     }
@@ -680,18 +754,18 @@ class NewInvoice extends React.PureComponent {
                         <Col md={16}>
                             <table style={{border: "1px", borderCollapse: "collapse"}}>
                                 <thead>
-                                    <tr style={{height: 20}}>
+                                    <tr style={{height: 20, background: "none"}}>
                                         <th><Translate id="text_note" /></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr style={{background: "none"}}>
                                         <td>
                                             <InputTextArea 
                                                 name="note"
                                                 placeholder={`${stringTranslate("text_note", this.props.locale)}....`}
                                                 rows={8}
-                                                cols={65}
+                                                cols={70}
                                                 form={this.props.form}
                                             />
                                         </td>
@@ -718,6 +792,11 @@ class NewInvoice extends React.PureComponent {
                         </Col>
                     </Row>
                 </Form>
+                {this.state.customerForm}
+            </div>
+            :
+            <div style={{width: 30, margin: "0 auto", paddingTop: 30}}>
+                <Spin />
             </div>
         )
     }

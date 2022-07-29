@@ -108,7 +108,7 @@ export default class Invoice extends List {
         title: <this.Translate id="text_discount" />,
         dataIndex: "discount",
         key: "discount",
-        render: discount => discount ? this.formatCurrency(discount) : 0,
+        render: (discount, record) => this.Util.formatCurrency(this.getDiscount(record)),
         sorter: true
       },
       {
@@ -118,7 +118,7 @@ export default class Invoice extends List {
         render: (total, record) => {
           let discount = record.discount;
           if (!discount) discount = 0;
-          return this.Util.formatCurrency(total - discount);
+          return this.Util.formatCurrency(total - Number(this.getDiscount(record).toFixed(2)));
         },
         sorter: true
       },
@@ -198,6 +198,18 @@ export default class Invoice extends List {
 
   getProductTaxList(productOrderList) {
     return POSUtil.appendProductTaxList(productOrderList);
+  }
+
+  getDiscount(data) {
+    let discount = Number(data.discount);
+    if (!discount) {
+      discount = 0;
+    }
+
+    if (data.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+      discount = this.Util.getValueFromPercentage(data.total, discount);
+    }
+    return discount;
   }
 
   getTaxAmount(data) {
