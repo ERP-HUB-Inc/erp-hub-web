@@ -127,7 +127,7 @@ export default class Invoice extends List {
         dataIndex: "status",
         key: "status",
         render: status => {
-          if(status){
+          if(status || status >= 0){
             const stepValue = this.INVOICE_STATUS_STR[status];
             let stepColor = stepValue.color;
             let stepTitile = stepValue.title;
