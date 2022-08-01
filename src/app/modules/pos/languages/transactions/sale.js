@@ -222,9 +222,9 @@ export default {
   ],
 
   "text_credit_balance": [
-    "Credit​ Amount",
+    "Credit Amount",
     "ទឹកប្រាក់នៅជំពាក់",
-    "Credit​ Amount",
+    "Credit Amount",
   ],
 
   "text_customer_info": [
@@ -243,6 +243,61 @@ export default {
     "Print Receipt",
     "បោះពុម្ភវិក័យប័ត្រ",
     "Print Receipt"
-  ]
+  ],
+
+  "text_new_sale": [
+    "New Sale Order",
+    "បង្កើតការលក់"
+  ],
+
+  "text_edit_invoice": [
+    "Update Invoice",
+    "កែប្រែវិក័យប័ត្រ"
+  ],
+
+  "text_grand_total": [
+    "Grand Total",
+    "តម្លៃសរុបរួម"
+  ],
+
+  "text_clear": [
+    "Clear",
+    "Clear"
+  ],
+
+  "text_invoice_date": [
+    "Invoice Date",
+    "កាលបរិច្ឆេទវិក័្កយប័ត្រ"
+  ],
+
+  "text_please_select_product": [
+    "Please select product",
+    "សូមបញ្ចូលផលិតផល"
+  ],
+
+  "text_create_invoice": [
+    "Create New Invoice",
+    "បង្កើតវិក័្កយប័ត្រថ្មី"
+  ],
+
+  "text_percentage": [
+    "Percentage",
+    "ភាគរយ"
+  ],
+
+  "text_note": [
+    "Note",
+    "ចំណាំ"
+  ],
+
+  "text_no_sale_entries_product": [
+    "No entry products",
+    "មិនមានការបញ្ចូលផលិតផលសម្រាប់លក់"
+  ],
+
+  "text_success_save_invoice": [
+    "You have success save",
+    "អ្នកបានរក្សាទុកដោយជោគជ័យ"
+  ],
 
 };

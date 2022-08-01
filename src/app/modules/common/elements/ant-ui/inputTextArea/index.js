@@ -20,6 +20,7 @@ export class InputTextArea extends Element {
         min={this.props.min}
         max={this.props.max}
         rows={this.props.rows}
+        cols={this.props.cols}
         disabled={this.props.disabled}
         onChange={this.props.handleOnChange}
       />

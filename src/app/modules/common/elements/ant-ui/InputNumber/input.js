@@ -71,6 +71,7 @@ export default class InputNumber extends Element {
         label={this.props.label}
         validateStatus={this.props.validateStatus}
         help={this.props.errorMsg}
+        style={this.props.style}
       >
         {
           getFieldDecorator(this.props.name, {rules: this.props.rules, initialValue: this.props.data})(

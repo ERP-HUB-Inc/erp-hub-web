@@ -456,6 +456,11 @@ export default {
     "Save"
   ],
 
+  "text_save_and_close": [
+    "Save & Close",
+    "រក្សារទុក និងបិទ"
+  ],
+
   "text_edit": [
     "Edit",
     "កែប្រែ"

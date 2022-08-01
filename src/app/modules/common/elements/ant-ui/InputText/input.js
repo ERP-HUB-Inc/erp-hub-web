@@ -20,8 +20,11 @@ export default class InputText extends Element {
     return (
       <this.FormItem
         label={this.props.label}
+        labelCol={this.props.label}
+        wrapperCol={this.props.wrapperCol}
         help={this.props.help}
         validateStatus={this.props.validateStatus}
+        style={this.props.style}
         className={this.props.className}>
         {
           getFieldDecorator(this.props.name, {rules: [
@@ -44,6 +47,7 @@ export default class InputText extends Element {
           initialValue: this.props.data})(<this.Input
             suffix={this.props.suffix}
             type={this.props.type}
+            inputStyle={this.props.inputStyle}
             ref={(input) => { this.nameInput = input; }}
             placeholder={this.props.placeholder}
             autoComplete={this.props.autoComplete}

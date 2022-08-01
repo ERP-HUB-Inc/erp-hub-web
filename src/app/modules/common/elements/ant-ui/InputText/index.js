@@ -12,6 +12,8 @@ export function InputText(props) {
     autoComplete={props.autoComplete}
     placeholder={props.placeholder}
     label={props.label}
+    labelCol={props.labelCol}
+    wrapperCol={props.wrapperCol}
     help={props.help}
     validateStatus={props.validateStatus}
     data={props.data}
@@ -32,6 +34,8 @@ export function InputText(props) {
     disabled= {props.disabled}
     isAutoFocus={props.isAutoFocus}
     allowClear={props.allowClear}
+    style={props.style}
+    inputStyle={props.inputStyle}
     didUpdateMakeAutoFocus={props.didUpdateMakeAutoFocus}/>;
 }
 

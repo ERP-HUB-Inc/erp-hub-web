@@ -123,6 +123,16 @@ export default {
     "Customer already exist",
     "អតិថិជនមានរួចទៅហើយ",
     "Customer already exist"
-  ]
+  ],
+
+  "text_not_found_customer": [
+    "Customer not exist",
+    "រកមិនឃើញអតិថិជនដែលអ្នកស្វែងរក"
+  ],
+
+  "text_required_customer": [
+    "Please select customer",
+    "សូមជ្រើសរើសអតិថិជន"
+  ],
   
 };

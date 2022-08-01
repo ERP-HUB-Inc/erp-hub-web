@@ -8,6 +8,7 @@ export class DatePickers extends Element {
     return (
       <this.FormItem 
         label={this.props.label}
+        style={this.props.style}
         placeholder={this.props.placeholder}>
         { 
           getFieldDecorator(this.props.name, {rules: [{ type: "object", required: this.props.required, message: this.props.errorRequired }], initialValue: this.props.defaultValue})(

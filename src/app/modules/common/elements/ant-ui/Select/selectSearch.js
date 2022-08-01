@@ -49,7 +49,9 @@ export class SelectSearch extends Element {
               }  
               {
                 this.props.dataSource && this.props.dataSource.map((value, index) =>
-                  <this.Option key={index} value={value[this.props.valueKey]}>{this.getName(value)}</this.Option>
+                  <this.Option key={index} value={value[this.props.valueKey]}>
+                    {this.props.customOptionName ? this.props.customOptionName() : this.getName(value)}
+                    </this.Option>
                 )
               }
             </this.Select>
