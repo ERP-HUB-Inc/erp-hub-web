@@ -1,15 +1,16 @@
 import React from "react";
-import List from "../../List";
 import Enum from "../../../enums";
 import FormCreate from "../../../containers/products/ProductsType/FormCreate";
 import FormUpdate from "../../../containers/products/ProductsType/FormUpdate";
 import Constant from "../../../constants/products/productsType";
 import ProductTypeService from "../../../services/products/ProductsTypeService";
 import ProductTypeAction from "../../../actions/products/productsType";
+import DataTable from "../../../../common/components/shares/List/DataTable";
 
-export default class ProductTypeList extends List {
+export default class ProductTypeList extends DataTable {
   constructor(props) {
     super(props);
+    this.module = "products";
     this.columns = [
       {
         title: <this.Translate id="text_name" />,
@@ -17,8 +18,8 @@ export default class ProductTypeList extends List {
         key: "name"
       }
     ];
-    this.formCreate = <FormCreate/>;
-    this.formUpdate = <FormUpdate/>;
+    this.formCreate = <FormCreate />;
+    this.formUpdate = <FormUpdate />;
     this.callBackOnShowEditForm = this.showFormEdit;
     this.localStorageKey = Enum.LOCAL_SCHEMA.PRODUCT_TYPE;
     this.service = ProductTypeService;
@@ -29,7 +30,7 @@ export default class ProductTypeList extends List {
   showFormEdit(rowData) {
     this.props.dispatch(ProductTypeAction.requestAndShowForm(rowData));
     this.setState({
-      modalConten: <FormUpdate/>
+      modalContent: <FormUpdate/>
     });
   }
 
@@ -37,7 +38,7 @@ export default class ProductTypeList extends List {
     if (nextProps.add.added || nextProps.update.updated) {
       this.props.dispatch(ProductTypeAction.reset());
       this.props.dispatch(ProductTypeAction.reset(Constant.RESET_DETAIL_PRODUCTS_TYPE));
-      this.props.dispatch(ProductTypeAction.fetch(this.pageSize));
+      this.fetchData();
     }
   }
 }

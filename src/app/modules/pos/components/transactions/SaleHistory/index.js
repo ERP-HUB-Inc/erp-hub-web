@@ -187,11 +187,9 @@ export default class SaleHistoryList extends List {
   }
 
   componentDidMount() {
-    if (!this.props.list.fetched) {
-      super.componentDidMount();
-      this.Util.removeFullScreen();
-      this.requestSubDataAsync();
-    }
+    super.componentDidMount();
+    this.Util.removeFullScreen();
+    this.requestSubDataAsync();
   }  
 
   componentDidUpdate() {
