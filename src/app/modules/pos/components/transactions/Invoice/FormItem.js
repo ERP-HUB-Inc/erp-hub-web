@@ -131,12 +131,14 @@ class NewInvoice extends React.PureComponent {
             title: <Translate id="text_description" />,
             dataIndex: "description",
             key: "description",
+            className: "entry-column-note",
             width: 600,
             render: (description, record, index) => {
-                return <InputText
+                return <InputTextArea
                     name={`description[${index}]`}
                     data={description}
                     inputStyle={{width: "100%"}}
+                    style={{width: "100%"}}
                     form={this.props.form} 
                 />
             }
@@ -175,6 +177,8 @@ class NewInvoice extends React.PureComponent {
             title: <Translate id="text_total" />,
             dataIndex: "amount",
             key: "amount",
+            align: "right",
+            className: "entry-column-amount",
             render: (amount, record, index) => {
                 if (!amount || amount < 0) amount = 0;
                 return <div style={{width: "100%", textAlign: "right", fontSize: 14}}>
@@ -210,7 +214,8 @@ class NewInvoice extends React.PureComponent {
                     registerDate: moment(data.registerDate),
                     discount: data.discount,
                     discountType: data.discountType,
-                    deposit: data.deposit
+                    deposit: data.deposit,
+                    publicNote: data.publicNote
                 }
                 const transactionEntries = data.transactionEntries.length && data.transactionEntries.map(entry => ({
                     ...entry, 
@@ -236,7 +241,8 @@ class NewInvoice extends React.PureComponent {
                     dueDate: null,
                     deposit: 0,
                     discount: 0,
-                    discountType: Enum.DISCOUNT_TYPE.AMOUNT
+                    discountType: Enum.DISCOUNT_TYPE.AMOUNT,
+                    publicNote: ""
                 },
                 transactionEntries: [{
                     productVariantId: "",
@@ -300,7 +306,7 @@ class NewInvoice extends React.PureComponent {
                     firstName: formData.firstName,
                     lastName: formData.lastName,
                     phoneNumber: formData.phoneNumber,
-                    note: values.note,
+                    publicNote: values.publicNote,
                     invoiceDate: this.util.formatDateForMYSQL(values["invoiceDate"]),
                     dueDate: this.util.formatDateForMYSQL(values["dueDate"]),
                     registerDate: this.util.formatDateForMYSQL(formData.registerDate ? formData.registerDate : moment()),
@@ -710,7 +716,6 @@ class NewInvoice extends React.PureComponent {
                                     style={{width: 280, marginRight : 8}}
                                     isAutoSelect={true}
                                     min={0}
-                                    max={this.getTotal()}
                                     onChange={this.onChangeTotalDiscount}
                                     form={this.props.form}
                                 />
@@ -743,6 +748,7 @@ class NewInvoice extends React.PureComponent {
                             <Table 
                                 rowKey={((record, index) => index)}
                                 columns={this.entryColumn}
+                                className="table-form-invoice-entry"
                                 dataSource={this.state.transactionEntries}
                                 pagination={false}
                                 locale={{emptyText: <Translate id="text_no_sale_entries_product" />}}
@@ -752,7 +758,7 @@ class NewInvoice extends React.PureComponent {
                     </Row>
                     <Row>
                         <Col md={16}>
-                            <table style={{border: "1px", borderCollapse: "collapse"}}>
+                            <table style={{width: 500}}>
                                 <thead>
                                     <tr style={{height: 20, background: "none"}}>
                                         <th><Translate id="text_note" /></th>
@@ -760,12 +766,12 @@ class NewInvoice extends React.PureComponent {
                                 </thead>
                                 <tbody>
                                     <tr style={{background: "none"}}>
-                                        <td>
+                                        <td className="entry-column-note">
                                             <InputTextArea 
-                                                name="note"
+                                                name="publicNote"
                                                 placeholder={`${stringTranslate("text_note", this.props.locale)}....`}
-                                                rows={8}
-                                                cols={70}
+                                                rows={10}
+                                                data={formData.publicNote}
                                                 form={this.props.form}
                                             />
                                         </td>

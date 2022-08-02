@@ -1,0 +1,40 @@
+.table-invoice {
+  width: 100%;
+}
+
+.table-invoice-entry {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.table-invoice td, 
+.table-invoice-entry thead th,
+.table-invoice-entry tbody td{
+  padding: 6px;
+}
+
+@media print {
+  #sidebar,
+  .ant-layout-header,
+  .ant-page-header
+  {
+    display: none;
+  }
+
+  .invoice-page {
+    padding: 0;
+  }
+}
+
+.entry-column-note .wrap-textarea .ant-form-item-control-wrapper{
+  width: 100%;
+  padding-top: 0 !important;
+}
+
+.entry-column-amount .ant-table-header-column {
+  margin-right: 10;
+}
+
+.table-form-invoice-entry tbody {
+  vertical-align: top;
+}
