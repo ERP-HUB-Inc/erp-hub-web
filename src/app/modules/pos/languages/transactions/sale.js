@@ -300,4 +300,9 @@ export default {
     "អ្នកបានរក្សាទុកដោយជោគជ័យ"
   ],
 
+  "text_view_invoice": [
+    "View Invoice",
+    "មើលវិក័្កយប័ត្រ"
+  ]
+
 };

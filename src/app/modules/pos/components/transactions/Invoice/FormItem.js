@@ -66,6 +66,7 @@ class NewInvoice extends React.PureComponent {
             dataIndex: "no",
             key: "no",
             width: 80,
+            align: "center",
             render: (no, record, index) => {
                 return <div>
                     {index + 1}
@@ -115,32 +116,25 @@ class NewInvoice extends React.PureComponent {
             }
         },
         {
-            title: <Translate id="text_product" />,
-            dataIndex: "variantName",
-            key: "variantName",
-            render: (variantName, record, index) => {
-                return <div>
-                    <InputText 
-                        name={`variantName[${index}]`}
-                        data={variantName}
-                        form={this.props.form} />
-                </div>
-            }
-        },
-        {
             title: <Translate id="text_description" />,
             dataIndex: "description",
             key: "description",
             className: "entry-column-note",
             width: 600,
             render: (description, record, index) => {
-                return <InputTextArea
-                    name={`description[${index}]`}
-                    data={description}
-                    inputStyle={{width: "100%"}}
-                    style={{width: "100%"}}
-                    form={this.props.form} 
-                />
+                return <div>
+                    <InputText 
+                        style={{display: "none"}}
+                        name={`variantName[${index}]`}
+                        data={record.variantName}
+                        form={this.props.form} />
+                    <InputTextArea
+                        name={`description[${index}]`}
+                        data={description}
+                        inputStyle={{width: "100%"}}
+                        style={{width: "100%"}}
+                        form={this.props.form} />
+                </div>
             }
         },
         {
@@ -314,14 +308,14 @@ class NewInvoice extends React.PureComponent {
                 }
 
                 const transactionEntries = [];
-                if (values["variantName"] && values["variantName"].length) {
-                    values["variantName"].forEach((variantName, index) => {
+                if (values["description"] && values["description"].length) {
+                    values["description"].forEach((description, index) => {
                         transactionEntries.push({
                             id: values.id[index],
                             productVariantId: values.productVariantId[index],
-                            variantName,
+                            variantName: values.variantName[index],
                             categoryId: values.categoryId[index],
-                            description: values.description[index],
+                            description,
                             quantity: values.quantity[index],
                             unitId: values.unitId[index],
                             unitName: values.unitName[index],
@@ -464,7 +458,7 @@ class NewInvoice extends React.PureComponent {
                 productVariantId: productVariant.id,
                 variantName: product.name ? product.name : product.namekm,
                 categoryId: product.productTypeId,
-                description: "",
+                description: product.name ? product.name : product.namekm,
                 unitId: product.defaultUnitId,
                 quantity: 1,
                 unitName: product.unit.name,
@@ -490,7 +484,7 @@ class NewInvoice extends React.PureComponent {
                     productVariantId: productVariant.id,
                     variantName: product.name ? product.name : product.namekm,
                     categoryId: product.productTypeId,
-                    description: "",
+                    description: product.name ? product.name : product.namekm,
                     unitId: product.defaultUnitId,
                     quantity: 1,
                     unitName: product.unit.name,

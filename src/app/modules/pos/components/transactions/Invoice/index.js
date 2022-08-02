@@ -66,6 +66,11 @@ export default class Invoice extends List {
                   <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
                 </this.Link>
               </Menu.Item>
+              <Menu.Item>
+                <this.Link to={`/transactions/detail-invoice/${record.id}`}>
+                  <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_invoice" />
+                </this.Link>
+              </Menu.Item>
             </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
@@ -116,9 +121,9 @@ export default class Invoice extends List {
         dataIndex: "total",
         key: "totalSale",
         render: (total, record) => {
-          let discount = record.discount;
-          if (!discount) discount = 0;
-          return this.Util.formatCurrency(total - Number(this.getDiscount(record).toFixed(2)));
+          total = total - this.Util.floor(this.getDiscount(record));
+          if (total < 0) total = 0;
+          return this.Util.formatCurrency(total);
         },
         sorter: true
       },
