@@ -633,6 +633,12 @@ export default {
     "វិក័យប័ត្រ",
     "Invoice"
   ],
+
+  "text_invoices": [
+    "Invoice",
+    "វិក័យប័ត្រ",
+    "Invoices"
+  ],
   
   "text_pre_order": [
     "Pre-Order",

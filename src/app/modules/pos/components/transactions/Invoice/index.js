@@ -48,16 +48,15 @@ export default class Invoice extends List {
     this.columns = [
       {
         title: <this.Translate id="text_date" />,
-        dataIndex: "registerDate",
-        key: "registerDate",
-        render: registerDate => this.Util.formatDateTime(registerDate),
-        sorter: true
+        dataIndex: "invoiceDate",
+        key: "invoiceDate",
+        render: invoiceDate => this.Util.formatDateTime(invoiceDate)
       },
       {
         title: <this.Translate id="text_invoice_no" />,
         dataIndex: "invoiceNumber",
         key: "invoiceNumber",
-        width: 160,
+        width: 180,
         render: (invoiceNumber, record) => {
           const menu = (
             <Menu>
@@ -81,9 +80,8 @@ export default class Invoice extends List {
                 <this.Translate id="text_option" /> <Icon type="down" />
               </a>
             </Dropdown>
-          </div>
-        },
-        sorter: true
+          </div>;
+        }
       },
       {
         title: <this.Translate id="text_customer" />,
@@ -96,8 +94,7 @@ export default class Invoice extends List {
         title: <this.Translate id="text_sub_total" />,
         dataIndex: "total",
         key: "total",
-        render: total => this.formatCurrency(total),
-        sorter: true
+        render: total => this.formatCurrency(total)
       },
       // {
       //   title: <this.Translate id="text_tax" />,
@@ -113,8 +110,7 @@ export default class Invoice extends List {
         title: <this.Translate id="text_discount" />,
         dataIndex: "discount",
         key: "discount",
-        render: (discount, record) => this.Util.formatCurrency(this.getDiscount(record)),
-        sorter: true
+        render: (discount, record) => this.Util.formatCurrency(this.getDiscount(record))
       },
       {
         title: <this.Translate id="text_sale_total" />,
@@ -124,8 +120,7 @@ export default class Invoice extends List {
           total = total - this.Util.floor(this.getDiscount(record));
           if (total < 0) total = 0;
           return this.Util.formatCurrency(total);
-        },
-        sorter: true
+        }
       },
       {
         title: <this.Translate id="text_status" />,
@@ -138,19 +133,6 @@ export default class Invoice extends List {
             let stepTitile = stepValue.title;
             return <this.Badge style={{ textTransform: "uppercase" }} color={stepColor} text={stepTitile} />;
           }
-        },
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_action" />,
-        key: "action",
-        align: "center",
-        width: 100,
-        render: (text, record) => {
-          return <this.Button className="danger mg-right text-uppercase"  onClick={() => this.handleReturn(record, this.state.selectedRows)}>
-            <span className="icon-sale-return icon-padding-right"></span>
-            <this.Translate id="text_return" />
-          </this.Button>;
         }
       }
     ];
@@ -264,7 +246,7 @@ export default class Invoice extends List {
         onClick={() => history.push({pathname: "/transactions/create-invoice"})}>
         <span className="icon-add icon-padding-right"></span>
         <this.Translate id="text_add_new" />
-      </this.Button>
+      </this.Button>;
   }
   
   renderButtonDelete(){
@@ -376,7 +358,7 @@ export default class Invoice extends List {
         dataSource={this.state.data}
         onChange={this.onChange}
       />
-    )
+    );
   }
 
 }

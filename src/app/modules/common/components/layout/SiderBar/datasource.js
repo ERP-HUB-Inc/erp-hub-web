@@ -13,7 +13,7 @@ const SaleHistory = Loadable({
 const Invoice = Loadable({
   loader: () => import("../../../../pos/containers/transactions/Invoice"),
   loading: () => <StartUp />
-})
+});
 
 const Return = Loadable({
   loader: () => import("../../../../pos/containers/transactions/SaleHistory/Return"),
@@ -297,7 +297,7 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: <Translate id="text_invoice" />,
+        title: <Translate id="text_invoices" />,
         icon: "icon-calendar",
         route: "/transactions/invoice",
         component: Invoice,

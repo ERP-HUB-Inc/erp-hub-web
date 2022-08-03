@@ -46,7 +46,7 @@ const styles = {
         justifyContent: "flex-end",
         fontSize: 16
     }
-}
+};
 
 class NewInvoice extends React.PureComponent {
     state = {
@@ -112,7 +112,7 @@ class NewInvoice extends React.PureComponent {
                         data={record.status}
                         form={this.props.form}
                     />
-                </div>
+                </div>;
             }
         },
         {
@@ -134,7 +134,7 @@ class NewInvoice extends React.PureComponent {
                         inputStyle={{width: "100%"}}
                         style={{width: "100%"}}
                         form={this.props.form} />
-                </div>
+                </div>;
             }
         },
         {
@@ -149,7 +149,7 @@ class NewInvoice extends React.PureComponent {
                     isAutoSelect={true}
                     onChange={(value) => this.onChangeQty(value, index)}
                     form={this.props.form} 
-                />
+                />;
             }
         },
         {
@@ -164,7 +164,7 @@ class NewInvoice extends React.PureComponent {
                     isAutoSelect={true}
                     onChange={(value) => this.onChangePrice(value, index)}
                     form={this.props.form} 
-                />
+                />;
             }
         },
         {
@@ -178,7 +178,7 @@ class NewInvoice extends React.PureComponent {
                 return <div style={{width: "100%", textAlign: "right", fontSize: 14}}>
                     {this.util.formatCurrency(amount)}
                     <Icon type="close" style={{color: "red", marginRight: -10, marginLeft: 8, cursor: "pointer"}} onClick={() => this.removeEntry(index)} />
-                </div>
+                </div>;
             }
         }
     ];
@@ -194,7 +194,7 @@ class NewInvoice extends React.PureComponent {
         if (idParam) {
             this.id = idParam;
             this.pageTitle = <Translate id="text_edit_invoice" />;
-            this.setState({loading: true})
+            this.setState({loading: true});
             InvoiceService.detail(this.id)
             .then((response) => {
                 const data = response.data;
@@ -210,7 +210,7 @@ class NewInvoice extends React.PureComponent {
                     discountType: data.discountType,
                     deposit: data.deposit,
                     publicNote: data.publicNote
-                }
+                };
                 const transactionEntries = data.transactionEntries.length && data.transactionEntries.map(entry => ({
                     ...entry, 
                     discount: 0,
@@ -222,7 +222,7 @@ class NewInvoice extends React.PureComponent {
                     transactionEntries,
                 });
             })
-            .finally(() => this.setState({loading: false}))
+            .finally(() => this.setState({loading: false}));
         } else {
             this.pageTitle = <Translate id="text_create_invoice" />;
             this.setState({
@@ -252,7 +252,7 @@ class NewInvoice extends React.PureComponent {
                     amount: 0,
                     status: 1
                 }]
-            })
+            });
         }
 
         CustomerService.lists(15)
@@ -260,7 +260,7 @@ class NewInvoice extends React.PureComponent {
             if (response && response.data) {
                 this.setState({customers: response.data.data});
             }
-        })
+        });
         ProductService.searchForDrowDown(15, 0)
         .then(response => this.setState({productSearch: response && response.data.data}));
     }
@@ -305,7 +305,7 @@ class NewInvoice extends React.PureComponent {
                     dueDate: this.util.formatDateForMYSQL(values["dueDate"]),
                     registerDate: this.util.formatDateForMYSQL(formData.registerDate ? formData.registerDate : moment()),
                     total: this.getTotal()
-                }
+                };
 
                 const transactionEntries = [];
                 if (values["description"] && values["description"].length) {
@@ -324,15 +324,15 @@ class NewInvoice extends React.PureComponent {
                             discount: 0,
                             status: values.status[index]
                         });
-                    })
+                    });
                     invoice["transactionEntries"] = transactionEntries;
                 } else {
-                    return this.util.sweetAlertMessage(stringTranslate("text_please_select_product", this.props.locale), "warning")
+                    return this.util.sweetAlertMessage(stringTranslate("text_please_select_product", this.props.locale), "warning");
                 }
 
                 this.save(invoice);
             }
-        })
+        });
     }
 
     save(invoice) {
@@ -344,7 +344,7 @@ class NewInvoice extends React.PureComponent {
         if (this.id) {
             InvoiceService.update(invoice, this.id)
             .then(() => {
-                message.success(stringTranslate("text_success_save_invoice", this.props.locale))
+                message.success(stringTranslate("text_success_save_invoice", this.props.locale));
                 this.handlAfterSave();
             })
             .catch(() => message.error("Error"))
@@ -376,7 +376,7 @@ class NewInvoice extends React.PureComponent {
             preState.transactionEntries[index].quantity = qty;
             preState.transactionEntries[index].amount = amount;
             return preState;
-        })
+        });
     }
 
     onChangePrice = (price, index) => {
@@ -389,21 +389,21 @@ class NewInvoice extends React.PureComponent {
             preState.transactionEntries[index].price = price;
             preState.transactionEntries[index].amount = amount;
             return preState;
-        })
+        });
     }
 
     onChangeTotalDiscount = (discount) => {
         this.setState(preState => {
             preState.formData.discount = discount;
             return discount;
-        })
+        });
     }
 
     onChangeDiscountType = (type) => {
         this.setState(preState => {
             preState.formData.discountType = type;
             return preState;
-        })
+        });
     }
 
     removeEntry = (index) => {
@@ -415,7 +415,7 @@ class NewInvoice extends React.PureComponent {
                     transactionEntries[index].status = 3;
                     this.setState({transactionEntries, productSearch: []});
                 }
-            })
+            });
         } else {
             transactionEntries.splice(index, 1);
             this.setState({transactionEntries, productSearch: []});
@@ -430,7 +430,7 @@ class NewInvoice extends React.PureComponent {
         }
 
         this.timer = setTimeout(() => {
-            this.setState({fetching: true})
+            this.setState({fetching: true});
             CustomerService.lists(15, 0, "", "", "", search)
             .then((response) =>  this.setState({customers: response && response.data.data}))
             .finally(() => this.setState({fetching: false}));
@@ -517,9 +517,9 @@ class NewInvoice extends React.PureComponent {
                                 transactionEntries.splice(index, 1);
                             }
                             this.setState({transactionEntries, productSearch: []});
-                        })
+                        });
                     }
-                })
+                });
             } else {
                 this.setState({transactionEntries: []});
             }
@@ -541,7 +541,7 @@ class NewInvoice extends React.PureComponent {
     }
 
     showCustomerForm = () => {
-        this.setState({customerForm: <CustomerCreate />})
+        this.setState({customerForm: <CustomerCreate />});
         this.props.dispatch(CustomerAction.showForm());
     }
 
@@ -561,9 +561,9 @@ class NewInvoice extends React.PureComponent {
                         <div>
                             {menu}
                         </div>
-                        <Divider style={{ margin: '4px 0' }} />
+                        <Divider style={{ margin: "4px 0" }} />
                         <div
-                            style={{ padding: '5px 8px', cursor: 'pointer' }}
+                            style={{ padding: "5px 8px", cursor: "pointer" }}
                             onMouseDown={e => e.preventDefault()}
                             onClick={this.showCustomerForm}
                         >
@@ -584,7 +584,7 @@ class NewInvoice extends React.PureComponent {
                     <Select.Option key={index} object={customer} value={customer.id}>{customer.firstName} {customer.lastName}</Select.Option>
                 )}
             </Select>
-        )
+        );
     }
 
     getTotal() {
@@ -626,7 +626,7 @@ class NewInvoice extends React.PureComponent {
                     xs: { span: 24 },
                     sm: { span: 16 },
             },
-        }
+        };
         const {formData} = this.state;
         return ( 
             !this.state.loading && Object.keys(formData).length ? 
@@ -719,7 +719,7 @@ class NewInvoice extends React.PureComponent {
                                         (
                                             <Select 
                                                 onChange={this.onChangeDiscountType} 
-                                                style={{marginTop: 4, width: 90}} 
+                                                style={{marginTop: 4, width: 120}} 
                                             >
                                                 <Select.Option key={0} value={Enum.DISCOUNT_TYPE.PERCENTAGE}><Translate id="text_percentage" /></Select.Option>
                                                 <Select.Option key={1} value={Enum.DISCOUNT_TYPE.AMOUNT}><Translate id="text_amount" /></Select.Option>
@@ -798,7 +798,7 @@ class NewInvoice extends React.PureComponent {
             <div style={{width: 30, margin: "0 auto", paddingTop: 30}}>
                 <Spin />
             </div>
-        )
+        );
     }
 }
 
