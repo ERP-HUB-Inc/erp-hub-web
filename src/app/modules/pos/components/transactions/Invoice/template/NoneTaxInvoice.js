@@ -1,0 +1,126 @@
+import React from "react";
+import Util from "../../../../../common/util";
+import "./style.css";
+
+const util = new Util();
+const dateFormat = "DD-MM-YYYY";
+
+export default function NoneTaxInvoice(props) {
+  const {formData} = props;
+  return (
+    <div style={{width: "250mm", margin: "auto", background: "#FFFFFF", padding: 40, minHeight: "297mm"}}>
+      <table className="table-invoice">
+        <tbody>
+          <tr style={{background: "none"}}>
+            <td style={{display: "flex", width: 230, paddingLeft: 0}}>
+              <img src={`/CALogo.png`} alt="Logo" />
+            </td>
+            <td style={{width: 230}}>
+              <ul style={styles.ulStyle}>
+                <li style={{color: "#37a3c6", fontSize: "12pt"}}>CA INVENTION</li>
+                <li>http://cainvention.com </li>
+                <li>info@cainvention.com</li>
+                <li>+85599983339</li>
+              </ul>
+            </td>
+            <td style={{paddingRight: 0}}>
+              <ul style={styles.ulStyle}>
+                <li>No. 33-34, Room 488 (4th floor), st. 114</li>
+                <li>sangkat Monorom, khan 7 Makara</li>
+                <li>Phnm Penh 12251</li>
+                <li>Cambodia</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={3} >
+              <div style={{color: "#37a3c6", paddingTop: 40, paddingBottom: 10}}>INVOICE</div>
+            </td>
+          </tr>
+          <tr style={{background: "none", borderTop: "2px solid #ddd", borderBottom: "2px solid #ddd"}}>
+            <td style={{paddingTop: 6, paddingBottom: 6}}>
+              <ul style={styles.ulStyle}>
+                <li style={{display: "flex"}}>
+                  <div style={{width: 145}}>Invoice Number</div><div style={{fontWeight: 600}}>{formData.invoiceNumber}</div>
+                </li>
+                <li style={{display: "flex"}}>
+                  <div style={{width: 145}}>Invoice Date</div><div>{util.formatDate(formData.invoiceDate, dateFormat)}</div>
+                </li>
+                <li style={{display: "flex"}}>
+                  <div style={{width: 145}}>Due Date</div><div>{formData.dueDate ? util.formatDate(formData.dueDate, dateFormat) : null}</div>
+                </li>
+                <li style={{display: "flex"}}>
+                  <div style={{width: 145}}>Balance Due</div><div>{util.formatCurrency(formData.total)}</div>
+                </li>
+              </ul>
+            </td>
+            <td colSpan={2} style={{paddingTop: 6, paddingBottom: 6, position: "relative"}}>
+              <ul style={{...styles.ulStyle, position: "absolute", top: 6}}>
+                <li style={{fontWeight: 600}}>{formData.firstName} {formData.lastName}</li>
+                <li>{formData.address}</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={3} style={{padding: 0}}>
+              <table className="table-invoice-entry">
+                <thead>
+                  <tr style={{height: 54, background: "none", borderBottom: "2px solid #ddd"}}>
+                    <th style={{width: 145}}>Item</th>
+                    <th style={{width: 380}}>Descirption</th>
+                    <th style={{textAlign: "right"}}>Price</th>
+                    <th style={{textAlign: "right"}}>Quantity</th>
+                    <th style={{textAlign: "right"}}>Amount</th>
+                  </tr>
+                </thead>
+                <tbody style={{background: "#fbfbfb", borderBottom: "2px solid #ddd", verticalAlign: "top"}}>
+                  {
+                    formData.transactionEntries.map((entry, index) => 
+                      <tr key={index} style={{fontSize: "11pt", lineHeight: "26px", background: "none"}}>
+                        <td style={{color: "#37a3c6"}}>{entry.variantName}</td>
+                        <td ><pre className="enty-note-column">{entry.description}</pre></td>
+                        <td style={styles.entryiesCurrency}>{util.formatCurrency(entry.price)}</td>
+                        <td style={styles.entryiesCurrency}>{entry.quantity}</td>
+                        <td style={styles.entryiesCurrency}>{util.formatCurrency(util.floor(entry.price) * entry.quantity)}</td>
+                      </tr>
+                    )
+                  }
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr style={{background: "none"}}>
+            <td colSpan={2}></td>
+            <td>
+              <div style={{display: "flex", justifyContent: "space-between", textAlign: "right", paddingLeft: 80, paddingTop: 20, lineHeight: "28px"}}>
+                <div>
+                  <div>Subtotal</div>
+                  <div>Paid to Date</div>
+                  <div>Balance</div>
+                </div>
+                <div>
+                  <div>{util.formatCurrency(formData.total)}</div>
+                  <div>{util.formatCurrency(0)}</div>
+                  <div style={{color: "#37a3c6"}}>{util.formatCurrency(formData.total)}</div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+const styles = {
+  ulStyle: {
+    listStyleType: "none",
+    padding: 0,
+    fontSize: "11pt",
+    marginBottom: 0,
+    lineHeight: "25px"
+  },
+  entryiesCurrency: {
+    textAlign: "right",
+  }
+}

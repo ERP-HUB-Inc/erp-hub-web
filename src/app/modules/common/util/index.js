@@ -322,6 +322,13 @@ export default class Util {
 
     return `${unsigne}${result}`;
   }
+
+  floor(value) {
+    if (!value) {
+      return 0;
+    }
+    return parseFloat((value * 1).toFixed(2));
+  }
   
   formatCurrencyV2(n, currency) {
     return currency + n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,");
@@ -721,5 +728,41 @@ export default class Util {
       text,
       icon
     })
+  }
+
+  converNumberToWord(value = 0) {
+    let result = "";
+    if (!value) 
+      result = "";
+
+    value = this.floor(value);
+
+    let strNumber = value.toString().split(".");
+    let number = strNumber[0];
+    let decimal = strNumber[1];
+    
+    let intNumber = this.getWordFromInt(number);
+    let decNumber = this.getWordFromInt(decimal);
+    result = intNumber + "Dollar";
+    if (decNumber) {
+      result = result + ` and ${decNumber} Cent`;
+    }
+    
+    return result + " Only.";
+  }
+
+  getWordFromInt(number) {
+    let str = "";
+    const arr1 = ["", "one ","two ","three ","four ", "five ","six ","seven ","eight ","nine ","ten ","eleven ","twelve ","thirteen ","fourteen ","fifteen ","sixteen ","seventeen ","eighteen ","nineteen "];
+    const arr2 = ["", "", "twenty","thirty","forty","fifty", "sixty","seventy","eighty","ninety"];
+
+    let n = ('000000000' + number).substr(-9).match(/^(\d{2})(\d{1})(\d{1})(\d{2})(\d{1})(\d{2})$/);
+    if (!n) return;
+    str += (n[2] !== "0") ? (arr1[Number(n[2])] || arr2[n[2][0]] + ' ' + arr1[n[2][1]]) + 'million ' : '';
+    str += (n[3] !== "0") ? (arr1[Number(n[3])] || arr2[n[3][0]] + ' ' + arr1[n[3][1]]) + 'hundred thousand ' : '';
+    str += (n[4] !== "00") ? (arr1[Number(n[4])] || arr2[n[4][0]] + ' ' + arr1[n[4][1]]) + 'thousand ' : '';
+    str += (n[5] !== "0") ? (arr1[Number(n[5])] || arr2[n[5][0]] + ' ' + arr1[n[5][1]]) + 'hundred ' : '';
+    str += (n[6] !== "00") ? ((str !== '') ? 'and ' : '') + (arr1[Number(n[6])] || arr2[n[6][0]] + ' ' + arr1[n[6][1]]) : '';
+    return str;
   }
 }

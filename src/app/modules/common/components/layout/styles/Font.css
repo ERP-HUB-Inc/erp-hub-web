@@ -38,6 +38,16 @@
   font-style: bold;
 }
 
+@font-face {
+  font-family: "Khmer OS Muol Light"; 
+  src: url("//db.onlinewebfonts.com/t/079fe5217b2c7dac6ba6e22f6a3c5ccc.eot"); 
+  src: url("//db.onlinewebfonts.com/t/079fe5217b2c7dac6ba6e22f6a3c5ccc.eot?#iefix") format("embedded-opentype"), 
+  url("//db.onlinewebfonts.com/t/079fe5217b2c7dac6ba6e22f6a3c5ccc.woff2") format("woff2"), 
+  url("//db.onlinewebfonts.com/t/079fe5217b2c7dac6ba6e22f6a3c5ccc.woff") format("woff"), 
+  url("//db.onlinewebfonts.com/t/079fe5217b2c7dac6ba6e22f6a3c5ccc.ttf") format("truetype"), 
+  url("//db.onlinewebfonts.com/t/079fe5217b2c7dac6ba6e22f6a3c5ccc.svg#Khmer OS Muol Light") format("svg"); 
+}
+
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'ca' !important;

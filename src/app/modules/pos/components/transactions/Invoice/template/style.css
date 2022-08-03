@@ -2,6 +2,28 @@
   width: 100%;
 }
 
+.table-invoice tr {
+  background: none;
+}
+
+.table-invoice-data {
+  width: 100%;
+  border: 2px solid;  
+}
+
+.table-invoice-data tr {
+  height: 34px;
+}
+
+.table-invoice-data .entry-header th {
+  padding: 6px;
+}
+
+.table-invoice-data tr th, .table-invoice-data tr td {
+  border: 1px solid;
+  font-size: 11pt;
+}
+
 .table-invoice-entry {
   width: 100%;
   margin-top: 20px;
@@ -13,7 +35,27 @@
   padding: 6px;
 }
 
+.tax-table-invoice-entry-row th {
+  padding: 6;
+}
+
+.tax-table-invoice-entry-row td {
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  vertical-align: top;
+}
+
+.tax-table-invoice-entry-row td .enty-note-column {
+  margin-bottom: 0;
+  font-size: 11pt;
+  border: none;
+}
+
 @media print {
+  body, .ant-layout-content {
+    background: #FFFFFF;
+  }
+
   #sidebar,
   .ant-layout-header,
   .ant-page-header
