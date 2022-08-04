@@ -49,11 +49,21 @@
   margin-bottom: 0;
   font-size: 11pt;
   border: none;
+  white-space: pre-wrap;
 }
 
 @media print {
-  body, .ant-layout-content {
+  html, body {
+    margin: 0;
+  }
+  .ant-layout-content {
     background: #FFFFFF;
+    margin-left: 0;
+    margin-top: 0;
+  }
+
+  .tooltipster-base.Balloon {
+    display: none !important;
   }
 
   #sidebar,

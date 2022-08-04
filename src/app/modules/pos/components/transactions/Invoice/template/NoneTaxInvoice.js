@@ -13,7 +13,7 @@ export default function NoneTaxInvoice(props) {
         <tbody>
           <tr style={{background: "none"}}>
             <td style={{display: "flex", width: 230, paddingLeft: 0}}>
-              <img src={`/CALogo.png`} alt="Logo" />
+              <img src={"/CALogo.png"} alt="Logo" />
             </td>
             <td style={{width: 230}}>
               <ul style={styles.ulStyle}>
@@ -109,7 +109,7 @@ export default function NoneTaxInvoice(props) {
         </tbody>
       </table>
     </div>
-  )
+  );
 }
 
 const styles = {
@@ -123,4 +123,4 @@ const styles = {
   entryiesCurrency: {
     textAlign: "right",
   }
-}
+};

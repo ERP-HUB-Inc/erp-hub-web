@@ -13,14 +13,14 @@ export default function CAInvoice(props) {
       title="404"
       subTitle="Invoice found"
       extra={<Button type="info"><Translate id="text_back" /></Button>}
-    />
-  }
+    />;
+  };
 
   const {formData} = props;
-  let invoice = <NoneTaxInvoice formData={formData} />
+  let invoice = <NoneTaxInvoice formData={formData} />;
   formData.totalExcludeTax = 10;
   if (formData.totalExcludeTax) {
-    invoice = <TaxInvoice formData={formData} />
+    invoice = <TaxInvoice formData={formData} />;
   }
 
   return Object.keys(formData).length ? invoice : notFoundInvoice();

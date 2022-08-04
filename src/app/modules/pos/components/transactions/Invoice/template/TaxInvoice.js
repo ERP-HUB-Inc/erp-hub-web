@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import Util from "../../../../../common/util";
 
 export default function TaxInvoice(props) {
@@ -6,9 +6,9 @@ export default function TaxInvoice(props) {
 
   const getTaxAmount = (total) => {
     let tax = 10;
-    tax = (tax * total) / 100
+    tax = (tax * total) / 100;
     return util.floor(tax);
-  }
+  };
 
   const {formData} = props;
   let tax = getTaxAmount(formData.total);
@@ -19,7 +19,7 @@ export default function TaxInvoice(props) {
         <tbody>
           <tr style={{background: "none"}}>
             <td style={{position: "relative", textAlign: "center", lineHeight: "28px", borderBottom: "2px solid #000", paddingBottom: 0}}>
-              <img src={`/panjacLogo.png`} alt="Logo" style={{position: "absolute", top: 0, left: 0, height: 55}} />
+              <img src={"/panjacLogo.png"} alt="Logo" style={{position: "absolute", top: 0, left: 0, height: 55}} />
               <h2 style={{fontFamily: "Khmer OS Muol Light"}}>បញ្ច ផ្លេន ឯ.ក</h2>
               <h3 style={{textTransform: "uppercase", fontFamily: "Time News Romen", fontWeight: "bold"}}>PANJAC PLAN CO., LTD.</h3>
               <h6 style={{fontWeight: 600, marginLeft: 118}}>លេខអត្តសញ្ញាណកម្ម អតប​ (VATTIN) K004-902003351</h6>
@@ -170,5 +170,5 @@ export default function TaxInvoice(props) {
         </tbody>
       </table>
     </div>
-  )
+  );
 }
