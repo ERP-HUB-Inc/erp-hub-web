@@ -318,5 +318,10 @@ export default {
   "text_please_choose_template": [
     "Please choose invoice template",
     "សូមជ្រើសរើសគំរូវិក័្កយប័ត្រ"
+  ],
+
+  "text_template": [
+    "Template",
+    "គំរូវិក័្កយប័ត្រ"
   ]
 };

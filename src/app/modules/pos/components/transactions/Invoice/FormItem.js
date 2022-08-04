@@ -211,7 +211,8 @@ class NewInvoice extends React.PureComponent {
                     discount: data.discount,
                     discountType: data.discountType,
                     deposit: data.deposit,
-                    publicNote: data.publicNote
+                    publicNote: data.publicNote,
+                    template: data.template
                 };
                 const transactionEntries = data.transactionEntries.length && data.transactionEntries.map(entry => ({
                     ...entry, 
@@ -238,7 +239,8 @@ class NewInvoice extends React.PureComponent {
                     deposit: 0,
                     discount: 0,
                     discountType: Enum.DISCOUNT_TYPE.AMOUNT,
-                    publicNote: ""
+                    publicNote: "",
+                    template: Enum.PAPER_SIZE.EXCLUDE_TAX
                 },
                 transactionEntries: [{
                     productVariantId: "",
@@ -303,6 +305,7 @@ class NewInvoice extends React.PureComponent {
                     lastName: formData.lastName,
                     phoneNumber: formData.phoneNumber,
                     publicNote: values.publicNote,
+                    template: values.template,
                     invoiceDate: this.util.formatDateForMYSQL(values["invoiceDate"]),
                     dueDate: this.util.formatDateForMYSQL(values["dueDate"]),
                     registerDate: this.util.formatDateForMYSQL(formData.registerDate ? formData.registerDate : moment()),
@@ -628,13 +631,12 @@ class NewInvoice extends React.PureComponent {
     }
 
     renderPreviewInvoice(formData) {
-        const template = this.props.form.getFieldValue("template");
         formData.invoiceDate = moment(this.props.form.getFieldValue("invoiceDate"));
         formData.transactionEntries = this.state.transactionEntries;
         formData.total = this.getTotal();
         formData.discount = this.getTotalDiscount();
 
-        return this.state.isShowTemplate && template ? <CAInvoice formData={formData} /> : null;
+        return this.state.isShowTemplate ? <CAInvoice formData={formData} /> : null;
     }
 
     render() {
@@ -774,7 +776,7 @@ class NewInvoice extends React.PureComponent {
                     </Row>
                     <Row>
                         <Col md={16}>
-                            <table style={{width: 500}}>
+                            <table style={{width: 394}}>
                                 <thead>
                                     <tr style={{height: 20, background: "none"}}>
                                         <th><Translate id="text_note" /></th>
@@ -814,33 +816,28 @@ class NewInvoice extends React.PureComponent {
                         </Col>
                     </Row>
                     <hr />
-                    <Row style={{paddingBottom: 20, display: "flex", justifyContent: "center"}}>
-                        <Col md={2}>
-                            <Button onClick={this.handleShowTemplate} style={{minWidth: "100%"}}>
-                                {this.state.isShowTemplate ? <Translate id="text_close" /> : <Translate id="text_preview_invoice" />}
-                            </Button>
-                        </Col>
-                        <Col md={4} style={{paddingLeft: 15}}>
-                            <Form.Item style={{marginTop: -3, marginBottom: 0}}>
+                    <Row style={{paddingBottom: 20}}>
+                        <Col md={4} style={{marginTop: -5}}>
+                            <Form.Item>
                                 {
-                                    getFieldDecorator("template")(
+                                    getFieldDecorator("template", {initialValue: formData.template})(
                                         <Select 
-                                            style={{width: 280}} 
+                                            style={{width: 250}} 
                                             placeholder={`${stringTranslate("text_choose_template", this.props.locale)}`}
                                             allowClear={true}
                                             onChange={(value) => this.onChangeTemplate(value)}
                                         >
-                                            <Select.Option key={2} value={Enum.PAPER_SIZE.EXCLUDE_TAX}>Exclude Tax</Select.Option>
-                                            <Select.Option key={1} value={Enum.PAPER_SIZE.INCLUDE_TAX}>Include Tax</Select.Option>
+                                            <Select.Option key={2} value={Enum.PAPER_SIZE.EXCLUDE_TAX}><Translate id="text_template" /> 1</Select.Option>
+                                            <Select.Option key={1} value={Enum.PAPER_SIZE.INCLUDE_TAX}><Translate id="text_template" /> 2</Select.Option>
                                         </Select>
                                     )
                                 }
                             </Form.Item>
-                            {
-                                this.state.isShowTemplate && !(this.props.form.getFieldValue("template")) ?
-                                    <span style={{color: "red", fontSize: "10pt"}}><Translate id="text_please_choose_template" /></span>
-                                : null
-                            }
+                        </Col>
+                        <Col md={2}>
+                            <Button onClick={this.handleShowTemplate} style={{minWidth: "100%"}}>
+                                {this.state.isShowTemplate ? <Translate id="text_close" /> : <Translate id="text_preview_invoice" />}
+                            </Button>
                         </Col>
                     </Row>
                 </Form>
