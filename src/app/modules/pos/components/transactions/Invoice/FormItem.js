@@ -35,6 +35,7 @@ import InvoiceService from "../../../services/transactions/InvoiceService";
 import SearchProductDropdwon from "./SearchProduct";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
 import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCreate";
+import CAInvoice from "../../transactions/Invoice/CAInvoice";
 
 const styles = {
     itemCenter: {
@@ -58,7 +59,8 @@ class NewInvoice extends React.PureComponent {
         transactionEntries: [],
         customerForm: null,
         saveCloseLoading: false,
-        saveLoading: false
+        saveLoading: false,
+        isShowTemplate: false
     }
     entryColumn = [
         {
@@ -406,6 +408,17 @@ class NewInvoice extends React.PureComponent {
         });
     }
 
+    onChangeTemplate = (value) => {
+        this.setState(preState => {
+            preState.formData.template = value;
+            return preState;
+        });
+    }
+
+    handleShowTemplate = () => {
+        this.setState({isShowTemplate: !this.state.isShowTemplate});
+    }
+
     removeEntry = (index) => {
         const {transactionEntries} = this.state;
         if (transactionEntries[index].id) {
@@ -614,6 +627,15 @@ class NewInvoice extends React.PureComponent {
         return total;
     }
 
+    renderPreviewInvoice(formData) {
+        const template = this.props.form.getFieldValue("template");
+        formData.invoiceDate = moment(this.props.form.getFieldValue("invoiceDate"));
+        formData.transactionEntries = this.state.transactionEntries;
+        formData.total = this.getTotal();
+        formData.discount = this.getTotalDiscount();
+
+        return this.state.isShowTemplate && template ? <CAInvoice formData={formData} /> : null;
+    }
 
     render() {
         const {getFieldDecorator} = this.props.form;
@@ -630,7 +652,7 @@ class NewInvoice extends React.PureComponent {
         const {formData} = this.state;
         return ( 
             !this.state.loading && Object.keys(formData).length ? 
-            <div style={{marginBottom: 25}}>
+            <div style={{paddingBottom: 40}}>
                 <Form 
                     {...formItemLayout}
                     onSubmit={this.handleSubmit}>
@@ -764,7 +786,7 @@ class NewInvoice extends React.PureComponent {
                                             <InputTextArea 
                                                 name="publicNote"
                                                 placeholder={`${stringTranslate("text_note", this.props.locale)}....`}
-                                                rows={10}
+                                                rows={8}
                                                 data={formData.publicNote}
                                                 form={this.props.form}
                                             />
@@ -791,7 +813,39 @@ class NewInvoice extends React.PureComponent {
                             </div>
                         </Col>
                     </Row>
+                    <hr />
+                    <Row style={{paddingBottom: 20, display: "flex", justifyContent: "center"}}>
+                        <Col md={2}>
+                            <Button onClick={this.handleShowTemplate} style={{minWidth: "100%"}}>
+                                {this.state.isShowTemplate ? <Translate id="text_close" /> : <Translate id="text_preview_invoice" />}
+                            </Button>
+                        </Col>
+                        <Col md={4} style={{paddingLeft: 15}}>
+                            <Form.Item style={{marginTop: -3, marginBottom: 0}}>
+                                {
+                                    getFieldDecorator("template")(
+                                        <Select 
+                                            style={{width: 280}} 
+                                            placeholder={`${stringTranslate("text_choose_template", this.props.locale)}`}
+                                            allowClear={true}
+                                            onChange={(value) => this.onChangeTemplate(value)}
+                                        >
+                                            <Select.Option key={2} value={Enum.PAPER_SIZE.EXCLUDE_TAX}>Exclude Tax</Select.Option>
+                                            <Select.Option key={1} value={Enum.PAPER_SIZE.INCLUDE_TAX}>Include Tax</Select.Option>
+                                        </Select>
+                                    )
+                                }
+                            </Form.Item>
+                            {
+                                this.state.isShowTemplate && !(this.props.form.getFieldValue("template")) ?
+                                    <span style={{color: "red", fontSize: "10pt"}}><Translate id="text_please_choose_template" /></span>
+                                : null
+                            }
+                        </Col>
+                    </Row>
                 </Form>
+                {this.renderPreviewInvoice(formData)}
+
                 {this.state.customerForm}
             </div>
             :

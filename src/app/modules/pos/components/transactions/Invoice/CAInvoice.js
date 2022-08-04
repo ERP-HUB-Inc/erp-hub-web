@@ -4,6 +4,7 @@ import { Translate } from "react-localize-redux";
 import { Button } from "../../../../common/elements/ant-ui";
 import NoneTaxInvoice from "./template/NoneTaxInvoice";
 import TaxInvoice from "./template/TaxInvoice";
+import Enum from "../../../enums/index";
 
 export default function CAInvoice(props) {
 
@@ -18,8 +19,7 @@ export default function CAInvoice(props) {
 
   const {formData} = props;
   let invoice = <NoneTaxInvoice formData={formData} />;
-  formData.totalExcludeTax = 10;
-  if (formData.totalExcludeTax) {
+  if (formData.template === Enum.PAPER_SIZE.INCLUDE_TAX) {
     invoice = <TaxInvoice formData={formData} />;
   }
 

@@ -70,6 +70,6 @@ export default class InvoiceDetail extends React.PureComponent {
           <CAInvoice formData={formData} />
         </div>
       </div>
-    )
+    );
   }
 }

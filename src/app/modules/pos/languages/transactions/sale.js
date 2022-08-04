@@ -303,6 +303,20 @@ export default {
   "text_view_invoice": [
     "View Invoice",
     "មើលវិក័្កយប័ត្រ"
-  ]
+  ],
 
+  "text_preview_invoice": [
+    "Preview Invoice",
+    "មើលវិក័្កយប័ត្រគំរូ"
+  ],
+
+  "text_choose_template": [
+    "Choose Invoice Template",
+    "ជ្រើសរើសគំរូវិក័្កយប័ត្រ"
+  ],
+
+  "text_please_choose_template": [
+    "Please choose invoice template",
+    "សូមជ្រើសរើសគំរូវិក័្កយប័ត្រ"
+  ]
 };
