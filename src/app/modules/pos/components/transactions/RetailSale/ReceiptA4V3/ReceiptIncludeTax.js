@@ -1,5 +1,5 @@
 import React from "react";
-import ReactHtml from "raw-html-react";
+import htmlParse from "html-react-parser";
 import Component from "../../../../../common/components/Component";
 export default class ReceiptIncludeTax extends Component {
   constructor(props) {
@@ -56,7 +56,7 @@ export default class ReceiptIncludeTax extends Component {
             <tbody>
               <tr style={{ backgroundColor: "white" }}>
                 <td valign="top"  style={{ textAlign: "left", fontWeight: "bold", fontSize: "12px", width: "60px" }}>Address :</td>
-                <td style={{ textAlign: "left",fontSize: "12px" }}> <ReactHtml html={this.props.data.client.address} /></td>
+                <td style={{ textAlign: "left",fontSize: "12px" }}>{htmlParse(this.props.data.client.address)}</td>
               </tr>
               <tr style={{ backgroundColor: "white" }}>
                 <td colSpan={2} style={{ textAlign: "left", fontWeight: "bold", fontSize: "12px" }}>Phone : { this.props.data.client.phoneNumber }</td>
@@ -114,7 +114,7 @@ export default class ReceiptIncludeTax extends Component {
               <div style={{ height: "20px", backgroundColor: "rgb(255, 192, 0)", width: "100%" }}>
                 <span style={{ borderLeft: "1px solid black",position: "relative", height: "25px", float: "right", marginRight: "-2px", marginTop: "-2px"  }}></span>
               </div>
-              <ReactHtml html={this.Util.getClientPaymentTerm()} />
+              {htmlParse(this.Util.getClientPaymentTerm())}
             </td>
             <td colSpan={2} style={{ letterSpacing: "1.2px",  fontWeight: "bold", fontFamily: "Khmer OS Muol", textAlign: "left", padding: 1, backgroundColor: "rgb(255, 192, 0)", fontSize: "12px"}}>
              SUBTOTAL :

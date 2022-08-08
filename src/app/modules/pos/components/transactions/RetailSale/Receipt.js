@@ -1,4 +1,5 @@
 import React from "react";
+import htmlParse from "html-react-parser";
 import JsBarcode from "jsbarcode";
 import ReceiptA4 from "./ReceiptA4";
 import ReceiptExcludeTax from "./ReceiptA4V3/ReceiptExcludeTax";
@@ -79,7 +80,7 @@ export default class Receipt extends Component {
               <td style={{ backgroundColor: "white", textAlign: "right" }}><this.Translate id="receipt_no" />. {this.props.data.receiptNumber ? this.props.data.receiptNumber : this.props.data.number}</td>
             </tr>
             <tr>
-              <td style={{ backgroundColor: "white", textAlign: "left" }}><this.Translate id="text_address" />: {this.props.customer.address}</td>
+              <td style={{ backgroundColor: "white", textAlign: "left" }}><this.Translate id="text_address" />: {htmlParse(this.props.customer.address)}</td>
               <td style={{ backgroundColor: "white", textAlign: "right" }}><this.Translate id="text_cashier" />. {cashier}</td>
             </tr>
           </tbody>
@@ -262,7 +263,7 @@ export default class Receipt extends Component {
                 </tr>
                 {this.renderStoreName(paperSize, businessName)}
                 <tr>
-                  <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white" }}>{address} {phoneNumber}</td>
+                  <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white" }}>{htmlParse(address)} {phoneNumber}</td>
                 </tr>
                 <tr>
                   <td colSpan="2">
