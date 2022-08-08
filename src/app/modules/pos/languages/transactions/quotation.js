@@ -11,7 +11,7 @@ export default {
   ],
   "text_terms": [
     "Terms",
-    "ល័ក្ខខ័ណ្",
+    "លក្ខខណ្ឌ",
     "Terms"
   ],
   "text_quotation": [

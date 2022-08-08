@@ -96,16 +96,16 @@ export default class Invoice extends List {
         key: "total",
         render: total => this.formatCurrency(total)
       },
-      // {
-      //   title: <this.Translate id="text_tax" />,
-      //   dataIndex: "tax",
-      //   key: "tax",
-      //   render: (text, record, index) => {
-      //     if (!record.totalExcludeTax) record.totalExcludeTax = 0;
-      //     return this.formatCurrency(record.total - record.totalExcludeTax);
-      //   },
-      //   sorter: true
-      // },
+      {
+        title: <this.Translate id="text_tax" />,
+        dataIndex: "tax",
+        key: "tax",
+        render: (text, record, index) => {
+          if (!record.totalExcludeTax) record.totalExcludeTax = record.total;
+          return this.formatCurrency(record.total - record.totalExcludeTax);
+        },
+        sorter: true
+      },
       {
         title: <this.Translate id="text_discount" />,
         dataIndex: "discount",

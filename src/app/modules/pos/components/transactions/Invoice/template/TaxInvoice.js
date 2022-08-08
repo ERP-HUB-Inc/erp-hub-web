@@ -1,17 +1,32 @@
 import React from "react";
+import Enum from "../../../../enums";
 import Util from "../../../../../common/util";
 
 export default function TaxInvoice(props) {
   const util = new Util();
 
-  const getTaxAmount = (total) => {
-    let tax = 10;
-    tax = (tax * total) / 100;
-    return util.floor(tax);
-  };
+  function getSubTotal(formData) {
+    let subtotal = 0;
+    if (formData.transactionEntries.length) {
+      subtotal = formData.transactionEntries.map(entry => entry.quantity * entry.price);
+    }
+    if (!subtotal) 
+      subtotal = 0;
 
-  const {formData} = props;
-  let tax = getTaxAmount(formData.total);
+    return subtotal;
+  }
+
+  function getDiscount(formData) {
+    let discount = formData.discount;
+    if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+      discount = util.getValueFromPercentage(formData.subtotal, discount);
+    }
+    return discount;
+  }
+
+  const {formData, setting} = props;
+  let tax = formData.total - formData.totalExcludeTax;
+  formData.subtotal = getSubTotal(formData);
   const exchangeRate = 4101;
   return (
     <div style={{width: "250mm", margin: "auto", background: "#FFFFFF", padding: 40, minHeight: "297mm"}}>
@@ -22,7 +37,7 @@ export default function TaxInvoice(props) {
               <img src={"/panjacLogo.png"} alt="Logo" style={{position: "absolute", top: 0, left: 0, height: 55}} />
               <h2 style={{fontFamily: "Khmer OS Muol Light"}}>បញ្ច ផ្លេន ឯ.ក</h2>
               <h3 style={{textTransform: "uppercase", fontFamily: "Time News Romen", fontWeight: "bold"}}>PANJAC PLAN CO., LTD.</h3>
-              <h6 style={{fontWeight: 600, marginLeft: 118}}>លេខអត្តសញ្ញាណកម្ម អតប​ (VATTIN) K004-902003351</h6>
+              <h6 style={{fontWeight: 600, marginLeft: 118}}>លេខអត្តសញ្ញាណកម្ម អតប​ (VATTIN) {setting.VATNo}</h6>
               <div>អាសយដ្ឋានៈ ផ្ទះលេខ៣៣-៣៤ព្យា ផ្សាបាយ័ន សង្កាត់ មនោរម្យ ខណ្ឌ ៧មករា រាជធានី ភ្នំពេញ</div>
               <div>Address No.33-34, Street 12.Hayon Market, Sangkat Monerom, Khan 7 Makara, Phnom Penh, Cambodia</div>
               <div style={{fontSize: 13, color: "#224b99", marginLeft: 120}}>ទូរស័ព្ទលេខ: 855-16 767 127, Email:chendatuy@gmail.com</div>
@@ -51,7 +66,7 @@ export default function TaxInvoice(props) {
                     <td style={{fontWeight: 600, textAlign: "center"}} rowSpan={2}>{formData.invoiceNumber}</td>
                   </tr>
                   <tr>
-                    <td colSpan={3}>{formData.firstName} {formData.lastName}</td>
+                    <td colSpan={3}>{formData.customer.company ? formData.customer.company : `${formData.firstName} ${formData.lastName}` }</td>
                   </tr>
                   <tr>
                     <td colSpan={3}>Address: {formData.address}</td>
@@ -106,25 +121,29 @@ export default function TaxInvoice(props) {
                     ))
                   }
                   <tr>
-                    <td colSpan={2} rowSpan={2}></td>
+                    <td colSpan={2} rowSpan={3}></td>
                     <td colSpan={2} style={{textAlign: "right"}}><div>សរុប</div><div>Sub Total</div></td>
-                    <td style={{textAlign: "right"}}>{util.formatCurrency(formData.total)}</td>
+                    <td style={{textAlign: "right"}}>{util.formatCurrency(formData.subtotal)}</td>
+                  </tr>
+                  <tr>
+                    <td colSpan={2} style={{textAlign: "right"}}><div>បញ្ចុះតម្លៃ</div><div>Discount</div></td>
+                    <td style={{textAlign: "right"}}>-{util.formatCurrency(getDiscount(formData))}</td>
                   </tr>
                   <tr style={{textAlign: "right"}}>
-                    <td colSpan={2}><div>អាករលើតម្លៃបន្ថែម១០%</div><div>VAT(10%)</div></td>
+                    <td colSpan={2}><div>អាករលើតម្លៃបន្ថែម{util.fromStandardNumberKHV2(util.getTaxRate(formData.subtotal, tax))}%</div><div>VAT({util.getTaxRate(formData.subtotal, tax)}%)</div></td>
                     <td>{util.formatCurrency(tax)}</td>
                   </tr>
                   <tr style={{fontWeight: 600}}>
-                    <td colSpan={2} style={{textTransform: "capitalize"}}>{util.converNumberToWord(formData.total + tax)}</td>
+                    <td colSpan={2} style={{textTransform: "capitalize"}}>{util.converNumberToWord(formData.total - util.floor(getDiscount(formData)))}</td>
                     <td colSpan={2} style={{textAlign: "right"}}><div>សរុបរួម</div><div>Grand Total</div></td>
-                    <td style={{textAlign: "right"}}>{util.formatCurrency(formData.total + tax)}</td>
+                    <td style={{textAlign: "right"}}>{util.formatCurrency(formData.total - util.floor(getDiscount(formData)))}</td>
                   </tr>
                   <tr style={{fontWeight: 600}}>
                     <td colSpan={2} style={{borderRight: "none"}}>
                       <div style={{display: "flex", justifyContent: "space-between"}}><div>អត្រាប្ដូរប្រាក់</div><div>{exchangeRate}</div></div>
                     </td>
                     <td style={{textAlign: "right"}} colSpan={2}>សរុបជាប្រាក់រៀល</td>
-                    <td style={{textAlign: "right"}}>{util.formatCurrency((formData.total + tax) * exchangeRate, "")} ៛</td>
+                    <td style={{textAlign: "right"}}>{util.formatCurrency((formData.total - formData.discount) * exchangeRate, "")} ៛</td>
                   </tr>
                 </tbody>
               </table>

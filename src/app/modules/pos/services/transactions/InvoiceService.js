@@ -27,12 +27,20 @@ class InvoiceService extends BaseService {
     });
   }
 
+  checkAvialableInvoiceNo(number) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/check-available/${number}`,
+      headers: this.header
+    });
+  }
+
   detail(id) {
     this.setHeader();
     return this.GET({
       url: `${this.baseUrl}/${id}`,
       headers: this.header
-    })
+    });
   }
 
   create(data) {
@@ -41,7 +49,7 @@ class InvoiceService extends BaseService {
       url: this.baseUrl,
       data,
       headers: this.header
-    })
+    });
   }
 
   update(data, id) {
@@ -50,7 +58,7 @@ class InvoiceService extends BaseService {
       url: `${this.baseUrl}/${id}`,
       data,
       headers: this.header
-    })
+    });
   }
 }
 

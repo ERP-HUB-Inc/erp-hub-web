@@ -10,12 +10,17 @@ import {
     Divider,
     Icon,
     Table,
-    message
+    message,
+    Tabs,
+    Dropdown,
+    Menu
 } from "antd";
 import { Translate } from "react-localize-redux";
 import { connect } from "react-redux";
 import moment from "moment";
 import _ from "lodash";
+import CKEditor from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { 
     InputNumber, 
     InputText,
@@ -36,6 +41,9 @@ import SearchProductDropdwon from "./SearchProduct";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
 import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCreate";
 import CAInvoice from "../../transactions/Invoice/CAInvoice";
+import InputInvoiceNo from "./InvoiceNo";
+
+const {TabPane} = Tabs;
 
 const styles = {
     itemCenter: {
@@ -59,8 +67,7 @@ class NewInvoice extends React.PureComponent {
         transactionEntries: [],
         customerForm: null,
         saveCloseLoading: false,
-        saveLoading: false,
-        isShowTemplate: false
+        saveLoading: false
     }
     entryColumn = [
         {
@@ -200,28 +207,25 @@ class NewInvoice extends React.PureComponent {
             InvoiceService.detail(this.id)
             .then((response) => {
                 const data = response.data;
-                const formData = {
-                    customerId: data.customerId,
-                    firstName: data.firstName,
-                    lastName: data.lastName,
-                    phoneNumber: data.phoneNumber,
-                    invoiceDate: moment(data.invoiceDate),
-                    dueDate: data.dueDate ? moment(data.dueDate) : null,
-                    registerDate: moment(data.registerDate),
-                    discount: data.discount,
-                    discountType: data.discountType,
-                    deposit: data.deposit,
-                    publicNote: data.publicNote,
-                    template: data.template
-                };
+                let totalExcludeTax = Number(data.totalExcludeTax);
+                if (!totalExcludeTax) {
+                    totalExcludeTax = data.total;
+                }
                 const transactionEntries = data.transactionEntries.length && data.transactionEntries.map(entry => ({
                     ...entry, 
                     discount: 0,
                     amount: entry.quantity * entry.price,
                 }));
 
+                let taxRate = parseInt(this.util.getTaxRate(data.totalExcludeTax, data.total - totalExcludeTax));
+                if (!taxRate)
+                    taxRate = 0;
+                data.taxRate = taxRate;
+
+                delete data.transactionEntries;
+
                 this.setState({
-                    formData,
+                    formData: data,
                     transactionEntries,
                 });
             })
@@ -234,7 +238,7 @@ class NewInvoice extends React.PureComponent {
                     firstName: "",
                     lastName: "",
                     phoneNumber: "",
-                    invoiceDate: moment(),
+                    invoiceDate: moment().format("YYYY-MM-DD"),
                     dueDate: null,
                     deposit: 0,
                     discount: 0,
@@ -304,12 +308,13 @@ class NewInvoice extends React.PureComponent {
                     firstName: formData.firstName,
                     lastName: formData.lastName,
                     phoneNumber: formData.phoneNumber,
-                    publicNote: values.publicNote,
+                    publicNote: formData.publicNote,
                     template: values.template,
                     invoiceDate: this.util.formatDateForMYSQL(values["invoiceDate"]),
                     dueDate: this.util.formatDateForMYSQL(values["dueDate"]),
                     registerDate: this.util.formatDateForMYSQL(formData.registerDate ? formData.registerDate : moment()),
-                    total: this.getTotal()
+                    totalExcludeTax:  this.getTotal(),
+                    total: this.getGrandTotal()
                 };
 
                 const transactionEntries = [];
@@ -341,10 +346,11 @@ class NewInvoice extends React.PureComponent {
     }
 
     save(invoice) {
-        this.setState({
-            saveLoading: true,
-            saveCloseLoading: true
-        });
+        if (this.saveOption === "save_close") {
+            this.setState({saveCloseLoading: true});
+        } else {
+            this.setState({saveLoading: true});
+        }
 
         if (this.id) {
             InvoiceService.update(invoice, this.id)
@@ -400,7 +406,7 @@ class NewInvoice extends React.PureComponent {
     onChangeTotalDiscount = (discount) => {
         this.setState(preState => {
             preState.formData.discount = discount;
-            return discount;
+            return preState;
         });
     }
 
@@ -411,15 +417,22 @@ class NewInvoice extends React.PureComponent {
         });
     }
 
+    onChangeTaxRate = (e) => {
+        e.preventDefault();
+        const value = e.target.value;
+        if (value) {
+            this.setState(preState => {
+                preState.formData.taxRate = Number(value);
+                return preState;
+            });
+        }
+    }
+
     onChangeTemplate = (value) => {
         this.setState(preState => {
             preState.formData.template = value;
             return preState;
         });
-    }
-
-    handleShowTemplate = () => {
-        this.setState({isShowTemplate: !this.state.isShowTemplate});
     }
 
     removeEntry = (index) => {
@@ -613,30 +626,53 @@ class NewInvoice extends React.PureComponent {
         return total;
     }
 
-    getTotalDiscount() {
-        const type = this.state.formData.discountType;
-        let discount = this.state.formData.discount;
-        const total = this.getTotal();
-        if (type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+    getDiscount(total, formData) {
+        let discount = formData.discount;
+        if (discount.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
             discount = this.util.getValueFromPercentage(total, discount);
         }
-        if (!discount || discount < 0) discount = 0;
         return discount;
     }
 
+    onChangeVATType = (type) => {
+        if (type !== "include") {
+            this.setState(preState => {
+                preState.formData.taxRate = 0;
+                return preState;
+            });
+        }
+    }
+
+    getVATValue() {
+        let vat = 0;
+        const total = this.getTotal();
+        const taxPercentage = this.state.formData.taxRate;
+        vat = this.util.getTaxValue(total, taxPercentage);
+        if (!vat || vat < 0) 
+            vat = 0;
+
+        return vat;
+    }
+
     getGrandTotal() {
-        let total = this.getTotal() - this.getTotalDiscount();
-        if (!total || total < 0) total = 0;
+        let total = this.getTotal();
+        let taxInclude = this.getVATValue();
+        if (taxInclude) 
+            total += taxInclude;
+
+        if (!total || total < 0) 
+            total = 0;
         return total;
     }
 
     renderPreviewInvoice(formData) {
         formData.invoiceDate = moment(this.props.form.getFieldValue("invoiceDate"));
         formData.transactionEntries = this.state.transactionEntries;
-        formData.total = this.getTotal();
-        formData.discount = this.getTotalDiscount();
-
-        return this.state.isShowTemplate ? <CAInvoice formData={formData} /> : null;
+        formData.subTotal = this.getTotal();
+        formData.total = this.getGrandTotal();
+        return <div id="wrap-invoice-form">
+            <CAInvoice formData={formData} />;
+        </div>;
     }
 
     render() {
@@ -652,11 +688,17 @@ class NewInvoice extends React.PureComponent {
             },
         };
         const {formData} = this.state;
+        let discount = Number(formData.discount);
+        if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+            discount = this.util.getValueFromPercentage(this.getTotal(), discount);
+        }
+
         return ( 
             !this.state.loading && Object.keys(formData).length ? 
-            <div style={{paddingBottom: 40}}>
+            <div>
                 <Form 
                     {...formItemLayout}
+                    id="invoice-form"
                     onSubmit={this.handleSubmit}>
                     <PageHeader
                         style={{
@@ -666,19 +708,7 @@ class NewInvoice extends React.PureComponent {
                         position: "relative"
                         }}
                         onBack={() => history.goBack()}
-                        title={this.pageTitle}
-                        onChange={(e) => console.log("e", e)}
-                        extra={[
-                            <Button key={1} htmlType="submit" type="info" onClick={() => this.saveOption = "save_close"} loading={this.state.saveCloseLoading} >
-                                <Translate id="text_save_and_close" />
-                            </Button>,
-                            <Button key={2} htmlType="submit" style={{marginLeft: 15}} onClick={() => this.saveOption = "save"} loading={this.state.saveLoading} >
-                                <Translate id="text_save" />
-                            </Button>,
-                            <Button key={3} style={{marginLeft: 15}} onClick={this.handleResetForm}>
-                                <Translate id="text_clear" />
-                            </Button>                           
-                        ]} />
+                        title={this.pageTitle} />
 
                     <Row>
                         <Col md={8}>
@@ -705,7 +735,7 @@ class NewInvoice extends React.PureComponent {
                                 name="invoiceDate"
                                 label={<Translate id="text_invoice_date" />}
                                 placeholder={`${stringTranslate("text_invoice_date", this.props.locale)}`}
-                                defaultValue={formData.invoiceDate}
+                                defaultValue={moment(formData.invoiceDate)}
                                 style={styles.itemCenter}
                                 form={this.props.form} />
                             <DatePickers
@@ -713,7 +743,7 @@ class NewInvoice extends React.PureComponent {
                                 style={styles.itemCenter}
                                 label={<Translate id="text_due_date" />}
                                 placeholder={`${stringTranslate("text_due_date", this.props.locale)}`}
-                                defaultValue={formData.dueDate}
+                                defaultValue={formData.dueDate ? moment(formData.dueDate) : null}
                                 form={this.props.form} />
                             <InputNumber
                                 name="deposit"
@@ -725,13 +755,23 @@ class NewInvoice extends React.PureComponent {
                                 form={this.props.form}
                             />
                         </Col>
-                        <Col md={8}>
+                        <Col md={8} style={{display: "flex", flexDirection: "column", alignItems: "flex-end"}}>
+                            <InputInvoiceNo
+                                name="invoiceNumber"
+                                label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_invoice_no" /></div>}
+                                placeholder={`${stringTranslate("text_invoice_no", this.props.locale)}`}
+                                data={formData.invoiceNumber}
+                                style={{display: "flex", marginBottom: -6}}
+                                inputStyle={{width: 269}}
+                                locale={this.props.locale}
+                                form={this.props.form}
+                            />
                             <Input.Group compact style={{textAlign: "right"}}>
                                 <InputNumber
                                     name="discount"
                                     data={formData.discount}
-                                    label={<div style={{marginTop: 7, marginRight: 21}}><Translate id="text_discount" /></div>}
-                                    style={{width: 280, marginRight : 8}}
+                                    label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_discount" /></div>}
+                                    style={{width: 210, marginRight : 8, marginBottom: 0}}
                                     isAutoSelect={true}
                                     min={0}
                                     onChange={this.onChangeTotalDiscount}
@@ -751,6 +791,30 @@ class NewInvoice extends React.PureComponent {
                                         )
                                     }
                                 </Form.Item>
+                            </Input.Group>
+                            <Input.Group compact style={{textAlign: "right"}} className="input-group-full-width">
+                                <Form.Item label={<div style={{marginTop: 7, marginRight: 10}}>VAT</div>}>
+                                    {
+                                        getFieldDecorator("vatType", {initialValue: formData.taxRate ? "include" : "exclude"})
+                                        (<Select 
+                                            onChange={this.onChangeVATType}
+                                            style={{marginTop: 4, width: 140, marginRight: 48}} 
+                                        >
+                                            <Select.Option key={0} value="exclude" >Exclude</Select.Option>
+                                            <Select.Option key={1} value="include" >Include</Select.Option>
+                                        </Select>)
+                                    }
+                                </Form.Item>
+                                <InputText
+                                    name="taxRate"
+                                    data={`${formData.taxRate}`}
+                                    style={{width: 120}}
+                                    addonAfter="%"
+                                    disabled={this.props.form.getFieldValue("vatType") !== "include" ? true : false}
+                                    handleOnFocus={(e) => e.target.select()}
+                                    onChange={this.onChangeTaxRate}
+                                    form={this.props.form}
+                                />
                             </Input.Group>
                         </Col>
                     </Row>
@@ -776,26 +840,28 @@ class NewInvoice extends React.PureComponent {
                     </Row>
                     <Row>
                         <Col md={16}>
-                            <table style={{width: 394}}>
-                                <thead>
-                                    <tr style={{height: 20, background: "none"}}>
-                                        <th><Translate id="text_note" /></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr style={{background: "none"}}>
-                                        <td className="entry-column-note">
-                                            <InputTextArea 
-                                                name="publicNote"
-                                                placeholder={`${stringTranslate("text_note", this.props.locale)}....`}
-                                                rows={8}
-                                                data={formData.publicNote}
-                                                form={this.props.form}
-                                            />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <Tabs type="card" className="invoice-form-tab-note">
+                                <TabPane tab={<Translate id="text_public_not" />} key="1">
+                                    <CKEditor
+                                        editor={ClassicEditor}
+                                        data={formData.publicNote}
+                                        onChange={(event, editor) => {
+                                            const data = editor.getData();
+                                            this.setState(preState => {
+                                                preState.formData.publicNote = data;
+                                                return preState;
+                                            });
+                                        }}
+                                    />
+                                </TabPane>
+                                <TabPane tab={<Translate id="text_terms" />} key="2">
+                                    <InputNumber
+                                        name="terms"
+                                        style={{width: 450}}
+                                        isAutoSelect={true}
+                                        form={this.props.form} />
+                                </TabPane>
+                            </Tabs>
                         </Col>
                         <Col md={8} style={{lineHeight: "30px", paddingRight: 25}}>
                             <div style={styles.itemSummary}>
@@ -806,23 +872,28 @@ class NewInvoice extends React.PureComponent {
                             <div style={styles.itemSummary}>
                                 <div style={{width: 100}}><Translate id="text_discount" /></div>
                                 <div>:</div>
-                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(this.getTotalDiscount())}</div>
+                                <div style={{width: 100, textAlign: "right", color: "red"}}>-{this.util.formatCurrency(discount)}</div>
+                            </div>
+                            <div style={styles.itemSummary}>
+                                <div style={{width: 100}}>VAT({formData.taxRate}%)</div>
+                                <div>:</div>
+                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(this.getVATValue())}</div>
                             </div>
                             <div style={styles.itemSummary}>
                                 <div style={{width: 100}}><Translate id="text_grand_total" /></div>
                                 <div>:</div>
-                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(this.getGrandTotal())}</div>
+                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(this.getGrandTotal() - discount)}</div>
                             </div>
                         </Col>
                     </Row>
                     <hr />
-                    <Row style={{paddingBottom: 20}}>
-                        <Col md={4} style={{marginTop: -5}}>
-                            <Form.Item>
+                    <Row style={{paddingBottom: 3}}>
+                        <Col md={24} style={{display: "flex", justifyContent: "center"}}>
+                            <Form.Item style={{marginTop: -4, marginRight: 15}}>
                                 {
-                                    getFieldDecorator("template", {initialValue: formData.template})(
+                                    getFieldDecorator("template", {initialValue: formData.template ? formData.template : Enum.PAPER_SIZE.EXCLUDE_TAX})(
                                         <Select 
-                                            style={{width: 250}} 
+                                            style={{width: 175}} 
                                             placeholder={`${stringTranslate("text_choose_template", this.props.locale)}`}
                                             allowClear={true}
                                             onChange={(value) => this.onChangeTemplate(value)}
@@ -833,11 +904,25 @@ class NewInvoice extends React.PureComponent {
                                     )
                                 }
                             </Form.Item>
-                        </Col>
-                        <Col md={2}>
-                            <Button onClick={this.handleShowTemplate} style={{minWidth: "100%"}}>
-                                {this.state.isShowTemplate ? <Translate id="text_close" /> : <Translate id="text_preview_invoice" />}
+                            <Button htmlType="submit" type="info" onClick={() => this.saveOption = "save_close"} loading={this.state.saveCloseLoading} >
+                                <Translate id="text_save_and_close" />
                             </Button>
+                            <Button htmlType="submit" style={{marginLeft: 15}} onClick={() => this.saveOption = "save"} loading={this.state.saveLoading} >
+                                <Translate id="text_save_and_new" />
+                            </Button>
+                            <Button style={{marginLeft: 15, marginRight: 15}} onClick={this.handleResetForm}>
+                                <Translate id="text_clear" />
+                            </Button> 
+                            <Dropdown 
+                                overlay={(
+                                    <Menu>
+                                        <Menu.Item onClick={() => window.print()} key={1}><Translate id="text_print" /></Menu.Item>
+                                    </Menu>
+                                )}
+                                trigger={["click"]}
+                            >
+                                <Button><Translate id="text_more_action" /> <Icon type="down" /></Button>
+                            </Dropdown>                          
                         </Col>
                     </Row>
                 </Form>

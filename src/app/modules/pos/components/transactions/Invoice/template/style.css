@@ -50,16 +50,40 @@
   font-size: 11pt;
   border: none;
   white-space: pre-wrap;
+  font-family: enfont,khfont !important;
+}
+
+.invoice-form-tab-note .ant-tabs-bar {
+  margin-bottom: 0;
+  width: fit-content;
+}
+
+#wrap-invoice-form {
+  background: #525659;
+  padding-top: 26px;
+}
+
+.input-group-full-width .ant-form-item-control-wrapper{
+  /* width: 100%; */
 }
 
 @media print {
   html, body {
     margin: 0;
+    padding: 0;
+  }
+
+  #wrap-invoice-form {
+    width: fit-content;
+    background: #FFFFFF;
+    padding: 0 !important;
+    margin: 0;
+    height: fit-content;
+    margin: auto;
   }
   .ant-layout-content {
     background: #FFFFFF;
-    margin-left: 0;
-    margin-top: 0;
+    margin: 0 !important
   }
 
   .tooltipster-base.Balloon {
@@ -68,7 +92,9 @@
 
   #sidebar,
   .ant-layout-header,
-  .ant-page-header
+  .ant-page-header,
+  #invoice-form,
+  .ant-dropdown-menu-item
   {
     display: none;
   }

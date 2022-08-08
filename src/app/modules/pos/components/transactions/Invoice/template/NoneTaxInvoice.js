@@ -6,7 +6,7 @@ const util = new Util();
 const dateFormat = "DD-MM-YYYY";
 
 export default function NoneTaxInvoice(props) {
-  const {formData} = props;
+  const {formData, setting} = props;
   return (
     <div style={{width: "250mm", margin: "auto", background: "#FFFFFF", padding: 40, minHeight: "297mm"}}>
       <table className="table-invoice">
@@ -19,8 +19,8 @@ export default function NoneTaxInvoice(props) {
               <ul style={styles.ulStyle}>
                 <li style={{color: "#37a3c6", fontSize: "12pt"}}>CA INVENTION</li>
                 <li>http://cainvention.com </li>
-                <li>info@cainvention.com</li>
-                <li>+85599983339</li>
+                <li>{setting.email}</li>
+                <li>{setting.phoneNumber}</li>
               </ul>
             </td>
             <td style={{paddingRight: 0}}>
@@ -66,7 +66,7 @@ export default function NoneTaxInvoice(props) {
               <table className="table-invoice-entry">
                 <thead>
                   <tr style={{height: 54, background: "none", borderBottom: "2px solid #ddd"}}>
-                    <th style={{width: 145}}>Item</th>
+                    <th style={{width: 20}}>Item</th>
                     <th style={{width: 380}}>Descirption</th>
                     <th style={{textAlign: "right"}}>Price</th>
                     <th style={{textAlign: "right"}}>Quantity</th>
@@ -77,7 +77,7 @@ export default function NoneTaxInvoice(props) {
                   {
                     formData.transactionEntries.map((entry, index) => 
                       <tr key={index} style={{fontSize: "11pt", lineHeight: "26px", background: "none"}}>
-                        <td style={{color: "#37a3c6"}}>{entry.variantName}</td>
+                        <td style={{textAlign: "center"}}>{index + 1}</td>
                         <td ><pre className="enty-note-column">{entry.description}</pre></td>
                         <td style={styles.entryiesCurrency}>{util.formatCurrency(entry.price)}</td>
                         <td style={styles.entryiesCurrency}>{entry.quantity}</td>

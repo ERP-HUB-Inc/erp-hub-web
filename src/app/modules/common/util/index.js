@@ -279,6 +279,14 @@ export default class Util {
     return value;
   }
 
+  getTaxValue(subtotal, valueAddedTaxRate) {
+    return parseFloat((subtotal * valueAddedTaxRate / 100).toFixed(4));
+  }
+
+  getTaxRate(subTotal, taxAmount) {
+    return (taxAmount * 100) / subTotal;
+  }
+
   formatPercentage(n, position = 0) {
     let percentage = "%";
 
@@ -321,6 +329,15 @@ export default class Util {
     }
 
     return `${unsigne}${result}`;
+  }
+
+  formatPhonenoWithCountryCode(phoneno) {
+    let clearSpace = phoneno.replace(/\D/g, "");
+    let match = clearSpace.match(/^(\d{3})(\d{3})(\d{4})$/);
+    console.log("match", match);
+    console.log("phoen", clearSpace);
+    if (!match) return "";
+    return `+855-${match[1]} ${match[2]} ${match[3]}`;
   }
 
   floor(value) {
@@ -660,6 +677,23 @@ export default class Util {
 
     return newDataValue;
   }  
+
+  fromStandardNumberKHV2(number) {
+    let result = "០";
+    if (number){
+      let strNum = number + "";
+      const dataValue = `${strNum}`.split("");
+      const khNumber = ["០","១","២","៣","៤","៥","៦","៧","៨","៩"];
+      dataValue.forEach(value=> {
+        if(khNumber[value]){
+          const regex = new RegExp("" + value + "", "g");
+          strNum = strNum.replace(regex,`${khNumber[value]}`);
+        }
+      });
+      result = strNum;
+    }
+    return result;
+  }
 
   /**
    * When user want to push search params to URL

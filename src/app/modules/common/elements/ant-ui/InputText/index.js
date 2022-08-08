@@ -25,6 +25,8 @@ export function InputText(props) {
     form={props.form}
     min={props.min}
     max={props.max}
+    addonBefore={props.addonBefore}
+    addonAfter={props.addonAfter}
     onChange={props.onChange}
     handleKeyDown={props.handleKeyDown}
     handleKeyUp={props.handleKeyUp}

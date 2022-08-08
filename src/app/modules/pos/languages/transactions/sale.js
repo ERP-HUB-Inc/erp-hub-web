@@ -285,8 +285,8 @@ export default {
     "ភាគរយ"
   ],
 
-  "text_note": [
-    "Note",
+  "text_public_not": [
+    "Public Note",
     "ចំណាំ"
   ],
 
@@ -323,5 +323,15 @@ export default {
   "text_template": [
     "Template",
     "គំរូវិក័្កយប័ត្រ"
-  ]
+  ],
+
+  "text_invoice_number_already_exist": [
+    "This invoice number has already taken.",
+    "លេខវិក័្កយប័ត្រនេះបានប្រើរួចហើយ"
+  ],
+
+  "text_invoice_no_pl": [
+    "Note: Keep it blank for auto generate number",
+    "បញ្ជាក់: ទុកនៅទទេដើម្បីបង្កើតលេខដោយស្វ័យប្រវត្តិ"
+  ],
 };

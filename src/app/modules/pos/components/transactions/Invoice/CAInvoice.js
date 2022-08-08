@@ -5,8 +5,10 @@ import { Button } from "../../../../common/elements/ant-ui";
 import NoneTaxInvoice from "./template/NoneTaxInvoice";
 import TaxInvoice from "./template/TaxInvoice";
 import Enum from "../../../enums/index";
+import Util from "../../../../common/util";
 
 export default function CAInvoice(props) {
+  const util = new Util();
 
   const notFoundInvoice = () => {
     return <Result  
@@ -18,9 +20,10 @@ export default function CAInvoice(props) {
   };
 
   const {formData} = props;
-  let invoice = <NoneTaxInvoice formData={formData} />;
+  const setting = util.getSetting();
+  let invoice = <NoneTaxInvoice formData={formData} setting={setting} />;
   if (formData.template === Enum.PAPER_SIZE.INCLUDE_TAX) {
-    invoice = <TaxInvoice formData={formData} />;
+    invoice = <TaxInvoice formData={formData} setting={setting} />;
   }
 
   return Object.keys(formData).length ? invoice : notFoundInvoice();

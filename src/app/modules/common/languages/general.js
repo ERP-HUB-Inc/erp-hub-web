@@ -4,6 +4,11 @@ export default {
     "សកម្មភាព"
   ],
 
+  "text_more_action": [
+    "More Action",
+    "សកម្មភាពផ្សេងទៀត"
+  ],
+
   "text_warning_info": [
     "Warning Information",
     "ព័ត៏មានបញ្ជាក់"
@@ -458,7 +463,13 @@ export default {
 
   "text_save_and_close": [
     "Save & Close",
-    "រក្សារទុក និងបិទ"
+    "រក្សារទុក & បិទ"
+  ],
+
+  
+  "text_save_and_new": [
+    "Save & New",
+    "រក្សារទុក & បង្កើតថ្មី"
   ],
 
   "text_edit": [
