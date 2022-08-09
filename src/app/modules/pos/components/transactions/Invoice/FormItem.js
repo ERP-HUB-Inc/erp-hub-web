@@ -217,7 +217,7 @@ class NewInvoice extends React.PureComponent {
                     amount: entry.quantity * entry.price,
                 }));
 
-                let taxRate = parseInt(this.util.getTaxRate(data.totalExcludeTax, data.total - totalExcludeTax));
+                let taxRate = parseInt(this.util.getTaxRate(data.totalExcludeTax - data.discount, data.total - totalExcludeTax));
                 if (!taxRate)
                     taxRate = 0;
                 data.taxRate = taxRate;
@@ -555,6 +555,10 @@ class NewInvoice extends React.PureComponent {
         }
     }
 
+    handlePrintInvoice = () => {
+        window.print();
+    }
+
     onSelectCustomer(value, record) {
         if (value) {
             const customer = record.props.object;
@@ -628,9 +632,13 @@ class NewInvoice extends React.PureComponent {
 
     getDiscount(total, formData) {
         let discount = formData.discount;
-        if (discount.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+        if (formData.discountType && discount.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
             discount = this.util.getValueFromPercentage(total, discount);
         }
+
+        if (!discount)
+            discount = 0;
+
         return discount;
     }
 
@@ -645,7 +653,11 @@ class NewInvoice extends React.PureComponent {
 
     getVATValue() {
         let vat = 0;
-        const total = this.getTotal();
+        let total = this.getTotal();
+        const discount = this.getDiscount(total, this.state.formData);
+        if (discount) {
+            total -= discount;
+        }
         const taxPercentage = this.state.formData.taxRate;
         vat = this.util.getTaxValue(total, taxPercentage);
         if (!vat || vat < 0) 
@@ -666,7 +678,6 @@ class NewInvoice extends React.PureComponent {
     }
 
     renderPreviewInvoice(formData) {
-        formData.invoiceDate = moment(this.props.form.getFieldValue("invoiceDate"));
         formData.transactionEntries = this.state.transactionEntries;
         formData.subTotal = this.getTotal();
         formData.total = this.getGrandTotal();
@@ -735,7 +746,7 @@ class NewInvoice extends React.PureComponent {
                                 name="invoiceDate"
                                 label={<Translate id="text_invoice_date" />}
                                 placeholder={`${stringTranslate("text_invoice_date", this.props.locale)}`}
-                                defaultValue={moment(formData.invoiceDate)}
+                                defaultValue={formData.invoiceDate ? moment(formData.invoiceDate) : null}
                                 style={styles.itemCenter}
                                 form={this.props.form} />
                             <DatePickers
@@ -841,7 +852,7 @@ class NewInvoice extends React.PureComponent {
                     <Row>
                         <Col md={16}>
                             <Tabs type="card" className="invoice-form-tab-note">
-                                <TabPane tab={<Translate id="text_public_not" />} key="1">
+                                <TabPane tab={<Translate id="text_public_not" />} key="1" style={{width: 668}}>
                                     <CKEditor
                                         editor={ClassicEditor}
                                         data={formData.publicNote}
@@ -916,7 +927,7 @@ class NewInvoice extends React.PureComponent {
                             <Dropdown 
                                 overlay={(
                                     <Menu>
-                                        <Menu.Item onClick={() => window.print()} key={1}><Translate id="text_print" /></Menu.Item>
+                                        <Menu.Item onClick={this.handlePrintInvoice} key={1}><Translate id="text_print" /></Menu.Item>
                                     </Menu>
                                 )}
                                 trigger={["click"]}

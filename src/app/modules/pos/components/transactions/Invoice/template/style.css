@@ -63,45 +63,30 @@
   padding-top: 26px;
 }
 
-.input-group-full-width .ant-form-item-control-wrapper{
-  /* width: 100%; */
-}
-
 @media print {
-  html, body {
-    margin: 0;
-    padding: 0;
-  }
-
   #wrap-invoice-form {
     width: fit-content;
     background: #FFFFFF;
     padding: 0 !important;
-    margin: 0;
+    margin: 0 auto;
     height: fit-content;
-    margin: auto;
   }
   .ant-layout-content {
     background: #FFFFFF;
-    margin: 0 !important
-  }
-
-  .tooltipster-base.Balloon {
-    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   #sidebar,
   .ant-layout-header,
   .ant-page-header,
   #invoice-form,
+  .ant-dropdown-menu,
   .ant-dropdown-menu-item
   {
     display: none;
   }
 
-  .invoice-page {
-    padding: 0;
-  }
 }
 
 .entry-column-note .wrap-textarea .ant-form-item-control-wrapper{

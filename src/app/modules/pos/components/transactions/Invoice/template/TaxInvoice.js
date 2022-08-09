@@ -121,16 +121,23 @@ export default function TaxInvoice(props) {
                     ))
                   }
                   <tr>
-                    <td colSpan={2} rowSpan={3}></td>
+                    <td colSpan={2} rowSpan={formData.discount ? 3 : 2}></td>
                     <td colSpan={2} style={{textAlign: "right"}}><div>សរុប</div><div>Sub Total</div></td>
                     <td style={{textAlign: "right"}}>{util.formatCurrency(formData.subtotal)}</td>
                   </tr>
-                  <tr>
-                    <td colSpan={2} style={{textAlign: "right"}}><div>បញ្ចុះតម្លៃ</div><div>Discount</div></td>
-                    <td style={{textAlign: "right"}}>-{util.formatCurrency(getDiscount(formData))}</td>
-                  </tr>
+                  {
+                    formData.discount ?
+                    <tr>
+                      <td colSpan={2} style={{textAlign: "right"}}><div>បញ្ចុះតម្លៃ</div><div>Discount</div></td>
+                      <td style={{textAlign: "right"}}>-{util.formatCurrency(getDiscount(formData))}</td>
+                    </tr>
+                    : null
+                  }
                   <tr style={{textAlign: "right"}}>
-                    <td colSpan={2}><div>អាករលើតម្លៃបន្ថែម{util.fromStandardNumberKHV2(util.getTaxRate(formData.subtotal, tax))}%</div><div>VAT({util.getTaxRate(formData.subtotal, tax)}%)</div></td>
+                    <td colSpan={2}>
+                      <div>អាករលើតម្លៃបន្ថែម{util.fromStandardNumberKHV2(util.floor(util.getTaxRate(formData.subtotal - formData.discount, tax)))}%</div>
+                      <div>VAT({util.floor(util.getTaxRate(formData.subtotal - formData.discount, tax))}%)</div>
+                    </td>
                     <td>{util.formatCurrency(tax)}</td>
                   </tr>
                   <tr style={{fontWeight: 600}}>
