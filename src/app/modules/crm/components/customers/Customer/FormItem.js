@@ -163,6 +163,15 @@ export default class FormItem extends Modal {
             </this.Col> 
 
             <this.Col md="12">
+              <this.InputText
+                name="VATNo"
+                label={<this.Translate id="text_vat_no" />}
+                data={formData.VATNo}
+                placeholder={this.CATranslate("text_vat_no", this.props.locale)}
+                form={this.props.form} />
+            </this.Col> 
+
+            <this.Col md="12">
               <this.SelectSearch
                 name="groupCustomerId"
                 label={<this.Translate id="text_group" />}
@@ -194,7 +203,7 @@ export default class FormItem extends Modal {
                 form={this.props.form}/>
             </this.Col> 
               
-            <this.Col md="12">
+            <this.Col md="12" className="hidden">
               <this.Select
                 name="status"
                 label={<this.Translate id="text_status" />}

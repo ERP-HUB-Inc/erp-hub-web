@@ -68,7 +68,7 @@ export default class SaleHistoryList extends List {
         title: <this.Translate id="text_date" />,
         dataIndex: "registerDate",
         key: "createdAt",
-        render: registerDate => this.Util.formatDateTime(registerDate),
+        render: registerDate => this.Util.formatDate(registerDate),
         sorter: true
       },
       {

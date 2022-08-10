@@ -50,7 +50,7 @@ export default class Invoice extends List {
         title: <this.Translate id="text_date" />,
         dataIndex: "invoiceDate",
         key: "invoiceDate",
-        render: invoiceDate => this.Util.formatDateTime(invoiceDate)
+        render: invoiceDate => this.Util.formatDate(invoiceDate, "DD/MM/YYYY")
       },
       {
         title: <this.Translate id="text_invoice_no" />,
