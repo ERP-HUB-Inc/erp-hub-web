@@ -49,8 +49,8 @@ export default function NoneTaxInvoice(props) {
     <div style={{width: "250mm", margin: "auto", background: "#FFFFFF", padding: 40, minHeight: "297mm"}}>
       <table className="table-invoice">
         <tbody>
-          <tr style={{background: "none"}}>
-            <td style={{display: "flex", height: 100, paddingLeft: 0}}>
+          <tr style={{background: "none", verticalAlign: "top"}}>
+            <td style={{height: 100, paddingLeft: 0}}>
               <img src={util.getProductImage(setting.logo, "general").url} alt="Logo" style={{height: "100%"}} />
             </td>
             <td style={{width: 230}}>
@@ -61,13 +61,13 @@ export default function NoneTaxInvoice(props) {
                 <li>{util.formatPhonenoWithCountryCode(setting.phoneNumber)}</li>
               </ul>
             </td>
-            <td style={{paddingRight: 0}}>
+            <td style={{paddingRight: 0, lineHeight: "28px"}}>
               <div dangerouslySetInnerHTML={{__html: setting.address}} />
             </td>
           </tr>
           <tr>
             <td colSpan={3} >
-              <div style={{color: "#37a3c6", paddingTop: 40, paddingBottom: 10}}>INVOICE</div>
+              <div style={{color: "#37a3c6", paddingBottom: 10}}>INVOICE</div>
             </td>
           </tr>
           <tr style={{background: "none", borderTop: "2px solid #ddd", borderBottom: "2px solid #ddd"}}>

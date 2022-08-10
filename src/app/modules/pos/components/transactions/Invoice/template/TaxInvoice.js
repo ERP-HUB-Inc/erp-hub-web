@@ -48,7 +48,7 @@ export default function TaxInvoice(props) {
               <h2 style={{fontFamily: "Khmer OS Muol Light"}}>{setting.businessNamekm}</h2>
               <h3 style={{textTransform: "uppercase", fontFamily: "Time News Romen", fontWeight: "bold"}}>{setting.businessName}</h3>
               <h6 style={{fontWeight: 610, marginLeft: 118}}>លេខអត្តសញ្ញាណកម្ម អតប​ (VATTIN) {setting.VATNo}</h6>
-              <div style={{width: 600, margin: "auto", display: "flex"}}>អាសយដ្ឋានៈ <div dangerouslySetInnerHTML={{__html: setting.address}}></div></div>
+              <div style={{width: 800, margin: "auto"}} dangerouslySetInnerHTML={{__html: setting.address}} />
               <div style={{fontSize: 13, color: "#224b99", marginLeft: 120}}>ទូរស័ព្ទលេខ: {util.formatPhonenoWithCountryCode(setting.phoneNumber)}, Email:{setting.email}</div>
             </td>
           </tr>
