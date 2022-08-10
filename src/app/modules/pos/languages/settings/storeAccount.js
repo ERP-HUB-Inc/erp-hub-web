@@ -309,6 +309,12 @@ export default {
     "Module",
     "Module",
     "Module"
+  ],
+
+  "text_website": [
+    "Website",
+    "គេហទំព័រ",
+    "Website"
   ]
 };
   

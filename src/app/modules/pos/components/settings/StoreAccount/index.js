@@ -658,6 +658,14 @@ export default class StoreAccountList extends Component {
                                 label={<this.Translate id="text_last_name" />}
                                 placeholder={this.CATranslate("text_last_name", locale)}
                                 form={form}/>
+
+                              <this.InputText
+                                data={storeAccount.list.website}
+                                name="website"
+                                label={<this.Translate id="text_website" />}
+                                placeholder={this.CATranslate("text_website", this.props.locale)}
+                                form={this.props.form}
+                              />
                            
                               <this.InputEmail
                                 data={storeAccount.list.email}
