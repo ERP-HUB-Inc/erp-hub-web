@@ -18,9 +18,9 @@ export class Select extends Element {
       return value[this.props.nestedName][this.props.nameKey];
     }
     
-    if(this.props.concatNameKey){
+    if (this.props.concatNameKey) {
       return `${value[this.props.nameKey]} ${value[this.props.concatNameKey]}`;
-    }else{
+    } else {
       return value[this.props.nameKey];
     }
    

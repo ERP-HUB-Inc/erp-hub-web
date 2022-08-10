@@ -289,7 +289,8 @@ export default class ProductList extends List {
                 valueKey="id"
                 nameKey="name"
                 form={form}
-                defaultValue={this.locationList[0].id}/>
+                defaultValue={0}
+              />
             </this.Col>
             <this.Col md="2" className="hidden">
               <this.Select
@@ -427,7 +428,7 @@ class ColumnExpand extends List {
       quantity = Util.getProductQTYLocation(record["productVariants"]);
     }
 
-    return quantity < 0 ? 0 : quantity;
+    return quantity;
   }
 
   getAllQTY(record) {
@@ -479,7 +480,7 @@ class Column extends List {
         title: <this.Translate id="text_barcode" />,
         dataIndex: "barcode",
         key: "barcode",
-        width: 130,
+        width: 140,
         render: (text, record) => Util.getProductBarcode(record)
       },
       {
@@ -497,13 +498,6 @@ class Column extends List {
 
           return stockTypeStr;
         }
-      },
-      {
-        title: <this.Translate id="text_category" />,
-        dataIndex: "productType",
-        key: "productType",
-        width: 200,
-        render: productType => productType ? productType.name : productType.namekm
       },
       {
         title: <this.Translate id="text_retial_price" />,
@@ -557,7 +551,7 @@ class Column extends List {
       quantity = Util.getProductQTYLocation(record["productVariants"]);
     }
 
-    return quantity < 0 ? 0 : quantity;
+    return quantity;
   }
 
   getAllQTY(record) {

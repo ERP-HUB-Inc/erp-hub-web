@@ -72,6 +72,7 @@ export default function InventoryReport() {
 
   const reorderProduct = alertProducts.find(alertProduct => alertProduct.type === "reorder"),
     zeroStock = alertProducts.find(alertProduct => alertProduct.type === "stockZero"),
+    errorStock = alertProducts.find(alertProduct => alertProduct.type === "stockError"),
     stockValue = alertProducts.find(alertProduct => alertProduct.type === "stockValue");
   
   let stockOk = 100,
@@ -100,7 +101,7 @@ export default function InventoryReport() {
         subTitle=""
         />
       <Row gutter={16}>
-        <Col span={6}>
+        <Col span={5}>
           <Card onClick={() => history.push("/reports/product?viewStock=reorder")} style={{cursor: "pointer"}}>
             <Statistic
               title="Products to Reorder"
@@ -109,16 +110,29 @@ export default function InventoryReport() {
             />
           </Card>
         </Col>
-        <Col span={6}>
-          <Card onClick={() => history.push("/reports/product?viewStock=zeroStock")} style={{cursor: "pointer"}}>
-            <Statistic
-              title="Zero Stock Products"
-              value={zeroStock ? zeroStock.value : 0}
-              valueStyle={{ color: "#cf1322" }}
-            />
-          </Card>
+        <Col span={8}>
+          <Row>
+            <Col span={12}>
+              <Card onClick={() => history.push("/reports/product?viewStock=zeroStock")} style={{cursor: "pointer", borderBottomRightRadius: 0, borderTopRightRadius: 0}}>
+                <Statistic
+                  title="Zero Stock Products"
+                  value={zeroStock ? zeroStock.value : 0}
+                  valueStyle={{ color: "#cf1322" }}
+                />
+              </Card>
+            </Col>
+            <Col span={12}>
+              <Card onClick={() => history.push("/reports/product?viewStock=errorStock")} style={{cursor: "pointer", borderBottomLeftRadius: 0, borderTopLeftRadius: 0}}>
+                <Statistic
+                  title="Stock Error"
+                  value={errorStock ? errorStock.value : 0}
+                  valueStyle={{ color: "#cf1322" }}
+                />
+              </Card>
+            </Col>
+          </Row>
         </Col>
-        <Col span={6}>
+        <Col span={5}>
           <Card onClick={() => history.push("/products/list")} style={{cursor: "pointer"}}>
             <Statistic
               title="Products"

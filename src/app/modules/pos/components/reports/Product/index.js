@@ -134,7 +134,7 @@ export default class ProductList extends List {
       current = this.state.current;
     }
     
-    this.props.form.setFieldsValue({locationId});
+    if (locationId) this.props.form.setFieldsValue({locationId});
 
     this.props.dispatch(ProductReportAction.getProductReport({limit, offset, viewStock, search, locationId}));
     this.props.dispatch(LocationAction.fetch(100));
@@ -247,7 +247,7 @@ export default class ProductList extends List {
                   valueKey="id"
                   nameKey="name"
                   form={form}
-                  defaultValue={this.locationList[0].id}/>
+                  defaultValue={0}/>
               </this.Col>
               <this.Col md="2" className="wrap-btn-search">
                 <div className="ant-form-item-label" style={{visibility: "hidden"}}>
