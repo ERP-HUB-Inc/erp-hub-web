@@ -16,6 +16,12 @@ export default class ProductTypeList extends DataTable {
         title: <this.Translate id="text_name" />,
         dataIndex: "name",
         key: "name"
+      },
+      {
+        title: <this.Translate id="text_parent_category" />,
+        dataIndex: "parentId",
+        key: "parentId",
+        render: (parentId, record) => record.parent && record.parent.name
       }
     ];
     this.formCreate = <FormCreate />;

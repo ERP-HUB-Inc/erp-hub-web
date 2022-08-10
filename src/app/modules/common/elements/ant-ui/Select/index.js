@@ -56,7 +56,11 @@ export class Select extends Element {
         {
           getFieldDecorator(this.props.name, options)(
             <this.Select
+              showSearch={this.props.showSearch}
+              allowClear={this.props.allowClear}
               placeholder={this.props.placeholder}
+              filterOption={this.props.filterOption}
+              optionFilterProp={this.props.optionFilterProp}
               onChange={this.props.onChange}
               onFocus={this.props.handleOnFocus}
               disabled={this.props.disabled}
