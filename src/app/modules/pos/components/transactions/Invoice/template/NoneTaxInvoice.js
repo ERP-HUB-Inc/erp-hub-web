@@ -33,7 +33,7 @@ export default function NoneTaxInvoice(props) {
             </td>
           </tr>
           <tr style={{background: "none", borderTop: "2px solid #ddd", borderBottom: "2px solid #ddd"}}>
-            <td style={{paddingTop: 6, paddingBottom: 6}}>
+            <td style={{paddingTop: 6, paddingBottom: 6, width: 244}}>
               <ul style={styles.ulStyle}>
                 <li style={{display: "flex"}}>
                   <div style={{width: 145}}>Invoice Number</div><div style={{fontWeight: 600}}>{formData.invoiceNumber}</div>
