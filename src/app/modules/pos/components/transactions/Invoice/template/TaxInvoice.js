@@ -8,7 +8,9 @@ export default function TaxInvoice(props) {
   function getSubTotal(formData) {
     let subtotal = 0;
     if (formData.transactionEntries.length) {
-      subtotal = formData.transactionEntries.map(entry => entry.quantity * entry.price);
+      formData.transactionEntries.forEach(entry => {
+        subtotal += entry.quantity * entry.price;
+      });
     }
     if (!subtotal) 
       subtotal = 0;
@@ -25,12 +27,17 @@ export default function TaxInvoice(props) {
   }
 
   const {formData, setting} = props;
+    
+  formData.subtotal = getSubTotal(formData);
+  const exchangeRate = formData.exchangeRate;
+
+  if (!formData.totalExcludeTax) {
+    formData.totalExcludeTax = formData.subtotal;
+  }
+  
   let tax = formData.total - formData.totalExcludeTax;
   if (!tax)
     tax = 0;
-    
-  formData.subtotal = getSubTotal(formData);
-  const exchangeRate = 4101;
   return (
     <div style={{width: "250mm", margin: "auto", background: "#FFFFFF", padding: 40, minHeight: "297mm"}}>
       <table className="table-invoice">
@@ -38,10 +45,10 @@ export default function TaxInvoice(props) {
           <tr style={{background: "none"}}>
             <td style={{position: "relative", textAlign: "center", lineHeight: "28px", borderBottom: "2px solid #000", paddingBottom: 0}}>
               <img src={`${util.getProductImage(setting.logo, "general").url}`} alt="Logo" style={{position: "absolute", top: 0, left: 0, height: 90}} />
-              <h2 style={{fontFamily: "Khmer OS Muol Light"}}>បញ្ច ផ្លេន ឯ.ក</h2>
-              <h3 style={{textTransform: "uppercase", fontFamily: "Time News Romen", fontWeight: "bold"}}>PANJAC PLAN CO., LTD.</h3>
+              <h2 style={{fontFamily: "Khmer OS Muol Light"}}>{setting.businessNamekm}</h2>
+              <h3 style={{textTransform: "uppercase", fontFamily: "Time News Romen", fontWeight: "bold"}}>{setting.businessName}</h3>
               <h6 style={{fontWeight: 610, marginLeft: 118}}>លេខអត្តសញ្ញាណកម្ម អតប​ (VATTIN) {setting.VATNo}</h6>
-              <div style={{width: 600, margin: "auto"}}>អាសយដ្ឋានៈ {setting.address}</div>
+              <div style={{width: 600, margin: "auto", display: "flex"}}>អាសយដ្ឋានៈ <div dangerouslySetInnerHTML={{__html: setting.address}}></div></div>
               <div style={{fontSize: 13, color: "#224b99", marginLeft: 120}}>ទូរស័ព្ទលេខ: {util.formatPhonenoWithCountryCode(setting.phoneNumber)}, Email:{setting.email}</div>
             </td>
           </tr>
@@ -71,7 +78,7 @@ export default function TaxInvoice(props) {
                     <td colSpan={3}>{formData.customer && formData.customer.company ? formData.customer.company : `${formData.firstName} ${formData.lastName}` }</td>
                   </tr>
                   <tr>
-                    <td colSpan={3}>Address: {formData.address}</td>
+                    <td colSpan={3}>Address: {formData.customer && formData.customer.address}</td>
                     <td rowSpan={2} style={{fontWeight: 600, textAlign: "right"}}>
                       <div>កាលបរិច្ឆេទ :</div>
                       <div>Date :</div>

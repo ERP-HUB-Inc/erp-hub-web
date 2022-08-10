@@ -1,4 +1,5 @@
 import React from "react";
+import Enum from "../../../../enums";
 import Util from "../../../../../common/util";
 import "./style.css";
 
@@ -6,7 +7,44 @@ const util = new Util();
 const dateFormat = "DD-MM-YYYY";
 
 export default function NoneTaxInvoice(props) {
+
+  function getSubTotal(formData) {
+    let subtotal = 0;
+    if (formData.transactionEntries.length) {
+      formData.transactionEntries.forEach(entry => {
+        subtotal += entry.quantity * entry.price;
+      });
+    }
+    if (!subtotal) 
+      subtotal = 0;
+  
+    return subtotal;
+  }
+
+  function getDiscount(formData) {
+    let discount = formData.discount;
+    if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+      discount = util.getValueFromPercentage(formData.subtotal, discount);
+    }
+
+    if (!discount) 
+      discount = 0;
+
+    return discount;
+  }
+
   const {formData, setting} = props;
+  let discount = getDiscount(formData);
+  let subtotal = getSubTotal(formData);
+
+  if (!formData.totalExcludeTax) {
+    formData.totalExcludeTax = subtotal;
+  }
+
+  let tax = formData.total - formData.totalExcludeTax;
+  if (!tax || tax < 0)
+    tax = 0;
+
   return (
     <div style={{width: "250mm", margin: "auto", background: "#FFFFFF", padding: 40, minHeight: "297mm"}}>
       <table className="table-invoice">
@@ -17,14 +55,14 @@ export default function NoneTaxInvoice(props) {
             </td>
             <td style={{width: 230}}>
               <ul style={styles.ulStyle}>
-                <li style={{color: "#37a3c6", fontSize: "12pt"}}>CA INVENTION</li>
-                <li>http://cainvention.com </li>
+                <li style={{color: "#37a3c6", fontSize: "12pt", textTransform: "uppercase"}}>{setting.businessName}</li>
+                <li>{setting.website}</li>
                 <li>{setting.email}</li>
                 <li>{util.formatPhonenoWithCountryCode(setting.phoneNumber)}</li>
               </ul>
             </td>
             <td style={{paddingRight: 0}}>
-              {setting.address}
+              <div dangerouslySetInnerHTML={{__html: setting.address}} />
             </td>
           </tr>
           <tr>
@@ -45,7 +83,7 @@ export default function NoneTaxInvoice(props) {
                   <div style={{width: 145}}>Due Date</div><div>{formData.dueDate ? util.formatDate(formData.dueDate, dateFormat) : null}</div>
                 </li>
                 <li style={{display: "flex"}}>
-                  <div style={{width: 145}}>Balance Due</div><div>{util.formatCurrency(formData.total)}</div>
+                  <div style={{width: 145}}>Balance Due</div><div>{util.formatCurrency(formData.total - discount)}</div>
                 </li>
               </ul>
             </td>
@@ -90,17 +128,37 @@ export default function NoneTaxInvoice(props) {
           </tr>
           <tr style={{background: "none"}}>
             <td colSpan={2}></td>
-            <td>
+            <td style={{width: 300}}>
               <div style={{display: "flex", justifyContent: "space-between", textAlign: "right", paddingLeft: 80, paddingTop: 20, lineHeight: "28px"}}>
                 <div>
                   <div>Subtotal</div>
+                  {
+                    discount && discount > 0 ?
+                      <div>Discount</div>
+                    : null
+                  }
+                  {
+                    tax ?
+                      <div>VAT</div>
+                    : null
+                  }
                   <div>Paid to Date</div>
                   <div>Balance</div>
                 </div>
                 <div>
-                  <div>{util.formatCurrency(formData.total)}</div>
+                  <div>{util.formatCurrency(subtotal)}</div>
+                  {
+                    discount && discount > 0 ?
+                      <div>{util.formatCurrency(discount)}</div>
+                    : null
+                  }
+                  {
+                    tax ?
+                      <div>{util.formatCurrency(tax)}</div>
+                    : null
+                  }
                   <div>{util.formatCurrency(0)}</div>
-                  <div style={{color: "#37a3c6"}}>{util.formatCurrency(formData.total)}</div>
+                  <div style={{color: "#37a3c6"}}>{util.formatCurrency(formData.total - discount)}</div>
                 </div>
               </div>
             </td>

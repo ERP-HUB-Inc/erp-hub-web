@@ -681,10 +681,9 @@ class NewInvoice extends React.PureComponent {
 
     renderPreviewInvoice(formData) {
         formData.transactionEntries = this.state.transactionEntries;
-        formData.subTotal = this.getTotal();
         formData.total = this.getGrandTotal();
         return <div id="wrap-invoice-form">
-            <CAInvoice formData={formData} />;
+            <CAInvoice formData={formData} />
         </div>;
     }
 
@@ -763,6 +762,8 @@ class NewInvoice extends React.PureComponent {
                                 label={<Translate id="currency_exchange" />}
                                 placeholder={`${stringTranslate("currency_exchange", this.props.locale)}`}
                                 style={styles.itemCenter}
+                                required={true}
+                                precision={0}
                                 data={formData.exchangeRate}
                                 isAutoSelect={true}
                                 onChange={(value) => this.setState(preState => {
@@ -920,7 +921,6 @@ class NewInvoice extends React.PureComponent {
                                         <Select 
                                             style={{width: 175}} 
                                             placeholder={`${stringTranslate("text_choose_template", this.props.locale)}`}
-                                            allowClear={true}
                                             onChange={(value) => this.onChangeTemplate(value)}
                                         >
                                             <Select.Option key={2} value={Enum.PAPER_SIZE.EXCLUDE_TAX}><Translate id="text_template" /> 1</Select.Option>
