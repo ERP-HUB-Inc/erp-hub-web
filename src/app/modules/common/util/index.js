@@ -332,12 +332,18 @@ export default class Util {
   }
 
   formatPhonenoWithCountryCode(phoneno) {
-    let clearSpace = phoneno.replace(/\D/g, "");
-    let match = clearSpace.match(/^(\d{3})(\d{3})(\d{4})$/);
-    console.log("match", match);
-    console.log("phoen", clearSpace);
-    if (!match) return "";
-    return `+855-${match[1]} ${match[2]} ${match[3]}`;
+    if (phoneno) {
+      var cleaned = ("" + phoneno).replace(/\D/g, "");
+      var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+      if (phoneno.length === 9) {
+        match = cleaned.match(/^(\d{3})(\d{3})(\d{3})$/);
+      }
+
+      if (match) {
+        return "(+855) "  + match[1] + " " + match[2] + " " + match[3];
+      }
+    }
+    return phoneno;
   }
 
   floor(value) {

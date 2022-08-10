@@ -35,7 +35,8 @@ export default {
   IMAGE_SPACE: {
     GENERAL: "general",
     EMPLOYEE: "employee",
-    PRODUCT: "product"
+    PRODUCT: "product",
+    CATEGORY: "category"
   },
   CASHIER_ROLE: "R003",
   PO_STEP_COLOR: {

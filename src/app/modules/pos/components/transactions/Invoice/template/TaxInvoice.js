@@ -26,6 +26,9 @@ export default function TaxInvoice(props) {
 
   const {formData, setting} = props;
   let tax = formData.total - formData.totalExcludeTax;
+  if (!tax)
+    tax = 0;
+    
   formData.subtotal = getSubTotal(formData);
   const exchangeRate = 4101;
   return (
@@ -34,13 +37,12 @@ export default function TaxInvoice(props) {
         <tbody>
           <tr style={{background: "none"}}>
             <td style={{position: "relative", textAlign: "center", lineHeight: "28px", borderBottom: "2px solid #000", paddingBottom: 0}}>
-              <img src={"/panjacLogo.png"} alt="Logo" style={{position: "absolute", top: 0, left: 0, height: 55}} />
+              <img src={`${util.getProductImage(setting.logo, "general").url}`} alt="Logo" style={{position: "absolute", top: 0, left: 0, height: 90}} />
               <h2 style={{fontFamily: "Khmer OS Muol Light"}}>បញ្ច ផ្លេន ឯ.ក</h2>
               <h3 style={{textTransform: "uppercase", fontFamily: "Time News Romen", fontWeight: "bold"}}>PANJAC PLAN CO., LTD.</h3>
-              <h6 style={{fontWeight: 600, marginLeft: 118}}>លេខអត្តសញ្ញាណកម្ម អតប​ (VATTIN) {setting.VATNo}</h6>
-              <div>អាសយដ្ឋានៈ ផ្ទះលេខ៣៣-៣៤ព្យា ផ្សាបាយ័ន សង្កាត់ មនោរម្យ ខណ្ឌ ៧មករា រាជធានី ភ្នំពេញ</div>
-              <div>Address No.33-34, Street 12.Hayon Market, Sangkat Monerom, Khan 7 Makara, Phnom Penh, Cambodia</div>
-              <div style={{fontSize: 13, color: "#224b99", marginLeft: 120}}>ទូរស័ព្ទលេខ: 855-16 767 127, Email:chendatuy@gmail.com</div>
+              <h6 style={{fontWeight: 610, marginLeft: 118}}>លេខអត្តសញ្ញាណកម្ម អតប​ (VATTIN) {setting.VATNo}</h6>
+              <div style={{width: 600, margin: "auto"}}>អាសយដ្ឋានៈ {setting.address}</div>
+              <div style={{fontSize: 13, color: "#224b99", marginLeft: 120}}>ទូរស័ព្ទលេខ: {util.formatPhonenoWithCountryCode(setting.phoneNumber)}, Email:{setting.email}</div>
             </td>
           </tr>
           <tr>
@@ -66,7 +68,7 @@ export default function TaxInvoice(props) {
                     <td style={{fontWeight: 600, textAlign: "center"}} rowSpan={2}>{formData.invoiceNumber}</td>
                   </tr>
                   <tr>
-                    <td colSpan={3}>{formData.customer.company ? formData.customer.company : `${formData.firstName} ${formData.lastName}` }</td>
+                    <td colSpan={3}>{formData.customer && formData.customer.company ? formData.customer.company : `${formData.firstName} ${formData.lastName}` }</td>
                   </tr>
                   <tr>
                     <td colSpan={3}>Address: {formData.address}</td>
@@ -83,9 +85,9 @@ export default function TaxInvoice(props) {
                       <div>ល/ខការទូទាត់ :</div>
                       <div>Term of Payment :</div>
                     </td>
-                    <td style={{fontWeight: 600, textAlign: "center"}} rowSpan={2}>14days</td>
+                    <td style={{fontWeight: 600, textAlign: "center"}} rowSpan={2}>{formData.terms}</td>
                   </tr>
-                  <tr className="customer-info-row"><td colSpan={3}>លេខអត្តសញ្ញាណកម្ម អតប (VATTIN): L001-902002075</td></tr>
+                  <tr className="customer-info-row"><td colSpan={3}>លេខអត្តសញ្ញាណកម្ម អតប (VATTIN): {formData.customer && formData.customer.VATNo}</td></tr>
                   <tr>
                     <td colSpan={3} style={{border: "2px solid"}}></td>
                     <td colSpan={2} style={{border: "2px solid"}}></td>
@@ -150,7 +152,7 @@ export default function TaxInvoice(props) {
                       <div style={{display: "flex", justifyContent: "space-between"}}><div>អត្រាប្ដូរប្រាក់</div><div>{exchangeRate}</div></div>
                     </td>
                     <td style={{textAlign: "right"}} colSpan={2}>សរុបជាប្រាក់រៀល</td>
-                    <td style={{textAlign: "right"}}>{util.formatCurrency((formData.total - formData.discount) * exchangeRate, "")} ៛</td>
+                    <td style={{textAlign: "right"}}>{util.formatCurrency((formData.total - util.floor(getDiscount(formData))) * exchangeRate, "")} ៛</td>
                   </tr>
                 </tbody>
               </table>
@@ -158,25 +160,10 @@ export default function TaxInvoice(props) {
           </tr>
           <tr>
             <td>
-              <ul style={{padding: 0, listStyle: "none", fontSize: "11pt", paddingTop: 14}}>
-                <li><strong>Noted: </strong>Details of Bank Transfer as below:</li>
-                <li style={{display: "flex"}}>
-                  <div style={{width: 184}}>Bank Transfer to:</div>
-                  <div>Panjac Plan Co., Ltd</div>
-                </li>
-                <li style={{display: "flex"}}>
-                  <div style={{width: 184}}>Bank AC Number:</div>
-                  <div>001840841</div>
-                </li>
-                <li style={{display: "flex"}}>
-                  <div style={{width: 184}}>Bank Name:</div>
-                  <div>Advanced Bank of Asia Limited</div>
-                </li>
-                <li style={{display: "flex"}}>
-                  <div style={{width: 184}}>Swift Code:</div>
-                  <div>ABAAKHPP</div>
-                </li>
-              </ul>
+              <div 
+                dangerouslySetInnerHTML={{ __html: formData.publicNote}} 
+                style={{lineHeight: "14px", marginTop: 20, fontFamily: "enfont,khfont !important"}}
+              />
             </td>
           </tr>
           <tr>

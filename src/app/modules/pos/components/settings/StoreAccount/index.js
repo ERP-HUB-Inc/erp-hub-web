@@ -217,7 +217,7 @@ export default class StoreAccountList extends Component {
         })
         .finally(() => this.setState({isClearTransaction: false}));
       }
-    })
+    });
   }
 
   handleOnCopyDeviceNumber(id, status) {

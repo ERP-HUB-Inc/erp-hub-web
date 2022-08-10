@@ -303,13 +303,15 @@ class NewInvoice extends React.PureComponent {
                 const invoice = {
                     customerId: values.customerId,
                     discount: values.discount,
-                    deposit: values.deposit,
+                    exchangeRate: values.exchangeRate,
                     discountType: values.discountType,
                     firstName: formData.firstName,
                     lastName: formData.lastName,
                     phoneNumber: formData.phoneNumber,
                     publicNote: formData.publicNote,
                     template: values.template,
+                    invoiceNumber: values.invoiceNumber,
+                    terms: values.terms,
                     invoiceDate: this.util.formatDateForMYSQL(values["invoiceDate"]),
                     dueDate: this.util.formatDateForMYSQL(values["dueDate"]),
                     registerDate: this.util.formatDateForMYSQL(formData.registerDate ? formData.registerDate : moment()),
@@ -757,12 +759,16 @@ class NewInvoice extends React.PureComponent {
                                 defaultValue={formData.dueDate ? moment(formData.dueDate) : null}
                                 form={this.props.form} />
                             <InputNumber
-                                name="deposit"
-                                label="Partial/Deposit"
-                                placeholder={`${stringTranslate("text_deposit", this.props.locale)}`}
+                                name="exchangeRate"
+                                label={<Translate id="currency_exchange" />}
+                                placeholder={`${stringTranslate("currency_exchange", this.props.locale)}`}
                                 style={styles.itemCenter}
-                                data={formData.deposit}
+                                data={formData.exchangeRate}
                                 isAutoSelect={true}
+                                onChange={(value) => this.setState(preState => {
+                                    preState.formData.exchangeRate = value;
+                                    return preState;
+                                })}
                                 form={this.props.form}
                             />
                         </Col>
@@ -866,9 +872,17 @@ class NewInvoice extends React.PureComponent {
                                     />
                                 </TabPane>
                                 <TabPane tab={<Translate id="text_terms" />} key="2">
-                                    <InputNumber
+                                    <InputText
                                         name="terms"
                                         style={{width: 450}}
+                                        data={formData.terms}
+                                        onChange={(e) => {
+                                            let value = e.target.value;
+                                            this.setState(preState => {
+                                                preState.formData.terms = value;
+                                                return preState;
+                                            });
+                                        }}
                                         isAutoSelect={true}
                                         form={this.props.form} />
                                 </TabPane>

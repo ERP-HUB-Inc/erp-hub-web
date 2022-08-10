@@ -12,24 +12,19 @@ export default function NoneTaxInvoice(props) {
       <table className="table-invoice">
         <tbody>
           <tr style={{background: "none"}}>
-            <td style={{display: "flex", width: 230, paddingLeft: 0}}>
-              <img src={"/CALogo.png"} alt="Logo" />
+            <td style={{display: "flex", height: 100, paddingLeft: 0}}>
+              <img src={util.getProductImage(setting.logo, "general").url} alt="Logo" style={{height: "100%"}} />
             </td>
             <td style={{width: 230}}>
               <ul style={styles.ulStyle}>
                 <li style={{color: "#37a3c6", fontSize: "12pt"}}>CA INVENTION</li>
                 <li>http://cainvention.com </li>
                 <li>{setting.email}</li>
-                <li>{setting.phoneNumber}</li>
+                <li>{util.formatPhonenoWithCountryCode(setting.phoneNumber)}</li>
               </ul>
             </td>
             <td style={{paddingRight: 0}}>
-              <ul style={styles.ulStyle}>
-                <li>No. 33-34, Room 488 (4th floor), st. 114</li>
-                <li>sangkat Monorom, khan 7 Makara</li>
-                <li>Phnm Penh 12251</li>
-                <li>Cambodia</li>
-              </ul>
+              {setting.address}
             </td>
           </tr>
           <tr>
@@ -56,7 +51,11 @@ export default function NoneTaxInvoice(props) {
             </td>
             <td colSpan={2} style={{paddingTop: 6, paddingBottom: 6, position: "relative"}}>
               <ul style={{...styles.ulStyle, position: "absolute", top: 6}}>
-                <li style={{fontWeight: 600}}>{formData.firstName} {formData.lastName}</li>
+                <li style={{fontWeight: 600}}>
+                  {
+                    formData.customer ? formData.customer.company : `${formData.firstName} ${formData.lastName}`
+                  }
+                </li>
                 <li>{formData.address}</li>
               </ul>
             </td>
