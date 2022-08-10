@@ -929,19 +929,19 @@ class NewInvoice extends React.PureComponent {
                                     )
                                 }
                             </Form.Item>
-                            <Button htmlType="submit" type="info" onClick={() => this.saveOption = "save_close"} loading={this.state.saveCloseLoading} >
-                                <Translate id="text_save_and_close" />
+                            <Button htmlType="submit" style={{marginRight: 15}} onClick={() => this.saveOption = "save"} loading={this.state.saveLoading} >
+                                <Translate id="text_save" />
                             </Button>
-                            <Button htmlType="submit" style={{marginLeft: 15}} onClick={() => this.saveOption = "save"} loading={this.state.saveLoading} >
-                                <Translate id="text_save_and_new" />
-                            </Button>
-                            <Button style={{marginLeft: 15, marginRight: 15}} onClick={this.handleResetForm}>
+                            <Button style={{marginRight: 15}} onClick={this.handleResetForm}>
                                 <Translate id="text_clear" />
+                            </Button> 
+                            <Button style={{marginRight: 15}} onClick={this.handlePrintInvoice}>
+                                <Translate id="text_print" />
                             </Button> 
                             <Dropdown 
                                 overlay={(
                                     <Menu>
-                                        <Menu.Item onClick={this.handlePrintInvoice} key={1}><Translate id="text_print" /></Menu.Item>
+                                        {/* <Menu.Item onClick={this.handlePrintInvoice} key={1}><Translate id="text_print" /></Menu.Item> */}
                                     </Menu>
                                 )}
                                 trigger={["click"]}

@@ -63,6 +63,16 @@
   padding-top: 26px;
 }
 
+#public-not {
+  margin-top: 10px;
+  font-family: enfont,khfont !important;
+  line-height: 28px;
+}
+
+#public-not p {
+  margin-bottom: 0;
+}
+
 @media print {
   #wrap-invoice-form {
     width: fit-content;

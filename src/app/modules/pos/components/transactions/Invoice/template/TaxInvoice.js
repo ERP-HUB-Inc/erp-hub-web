@@ -169,7 +169,7 @@ export default function TaxInvoice(props) {
             <td>
               <div 
                 dangerouslySetInnerHTML={{ __html: formData.publicNote}} 
-                style={{lineHeight: "14px", marginTop: 20, fontFamily: "enfont,khfont !important"}}
+                id="public-not"
               />
             </td>
           </tr>
