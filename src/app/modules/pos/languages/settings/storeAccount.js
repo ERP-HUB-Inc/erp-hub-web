@@ -5,6 +5,12 @@ export default {
     "Business Name"
   ],
 
+  "store_acc_business_name_km": [
+    "Business Name(KH)",
+    "ឈ្មោះអជីវកម្មជាភាសាខ្មែរ",
+    "Business Name"
+  ],
+
   "number_of_device": [
     "Number of Device",
     "ចំនួនឧបករណ៍",

@@ -452,6 +452,14 @@ export default class StoreAccountList extends Component {
                           <this.Row>
                             <this.Col lg="4" md="4"> 
                               <this.InputText
+                                name="businessNamekm"
+                                data={storeAccount.list.businessNamekm}
+                                label={<this.Translate id="store_acc_business_name_km" />}
+                                placeholder={this.CATranslate("store_acc_business_name_km", locale)}
+                                isAutoFocus={true}
+                                required={true}
+                                form={form} />
+                              <this.InputText
                                 name="businessName"
                                 data={storeAccount.list.businessName}
                                 label={<this.Translate id="store_acc_business_name" />}
