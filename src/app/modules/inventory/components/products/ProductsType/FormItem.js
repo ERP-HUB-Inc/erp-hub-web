@@ -16,16 +16,16 @@ export default class FormItem extends Modal {
 
   render() {
     const {formData} = this.props;
-    // let image = {};
+    let image = {};
 
-    // if (formData.id) {
-    //   image = {
-    //     uid: "-1",
-    //     name: formData.image,
-    //     status: "done",
-    //     url: this.Util.getProductImage(formData.image, this.Enum.IMAGE_SPACE.CATEGORY).url
-    //   };
-    // }
+    if (formData.id) {
+      image = {
+        uid: "-1",
+        name: formData.image,
+        status: "done",
+        url: this.Util.getProductImage(formData.image, this.Enum.IMAGE_SPACE.CATEGORY).url
+      };
+    }
 
     return <this.Row>
       <this.Col md="12">
@@ -49,6 +49,17 @@ export default class FormItem extends Modal {
             max={100}
             isAutoFocus={true}
             form={this.props.form} />
+      </this.Col>
+      <this.Col md="12">
+      <this.UploadImg
+         name="image" 
+         label={<this.Translate id="text_image" />}
+         data={{file: image}}
+         fileList={[image]}
+         endPoint={`${this.Util.getAPIURL()}/file/v1/upload/category`}
+         endPointDelete={`${this.Util.getAPIURL()}/file/v1/category/delete`}
+         accessToken={this.Util.getAccessToken()}
+         form={this.props.form} />
       </this.Col>
     </this.Row>;
   }

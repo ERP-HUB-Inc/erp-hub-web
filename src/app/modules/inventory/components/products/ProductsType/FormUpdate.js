@@ -18,6 +18,9 @@ export default class Form extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values["id"] = this.props.productsTypeDetail.data.id;
+        if (values["image"]) {
+          values["image"] = this.getImageFromUpload(values, "image");
+        }
         this.props.dispatch(ProductsTypeAction.update(values));
       }
     });

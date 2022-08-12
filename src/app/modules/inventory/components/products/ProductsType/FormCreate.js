@@ -10,6 +10,9 @@ export default class FormCreate extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        if (values["image"]) {
+          values["image"] = this.getImageFromUpload(values, "image");
+        }
         this.props.dispatch(ProductsTypeAction.add(values)); 
       }
     });
