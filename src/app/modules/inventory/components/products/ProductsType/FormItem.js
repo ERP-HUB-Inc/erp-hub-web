@@ -51,15 +51,15 @@ export default class FormItem extends Modal {
             form={this.props.form} />
       </this.Col>
       <this.Col md="12">
-      <this.UploadImg
-         name="image" 
-         label={<this.Translate id="text_image" />}
-         data={{file: image}}
-         fileList={[image]}
-         endPoint={`${this.Util.getAPIURL()}/file/v1/upload/category`}
-         endPointDelete={`${this.Util.getAPIURL()}/file/v1/category/delete`}
-         accessToken={this.Util.getAccessToken()}
-         form={this.props.form} />
+        <this.UploadImg
+          name="image" 
+          label={<this.Translate id="text_image" />}
+          data={{file: image}}
+          fileList={[image]}
+          endPoint={`${this.Util.getAPIURL()}/file/v1/upload/category`}
+          endPointDelete={`${this.Util.getAPIURL()}/file/v1/category/delete`}
+          accessToken={this.Util.getAccessToken()}
+          form={this.props.form} />
       </this.Col>
     </this.Row>;
   }

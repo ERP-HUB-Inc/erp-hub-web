@@ -36,6 +36,7 @@ export default {
     GENERAL: "general",
     EMPLOYEE: "employee",
     PRODUCT: "product",
+    BRAND: "brand",
     CATEGORY: "category"
   },
   CASHIER_ROLE: "R003",

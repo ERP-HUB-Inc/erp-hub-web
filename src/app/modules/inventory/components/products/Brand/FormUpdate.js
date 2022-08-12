@@ -20,6 +20,9 @@ export default class Form extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values["id"] = this.props.brandUpdate.data.id;
+        if (values["image"]) {
+          values["image"] = this.getImageFromUpload(values, "image");
+        }
         values["status"] = this.Enum.ACTIVE;
         this.dispatch(BrandAction.update(values));
       }
