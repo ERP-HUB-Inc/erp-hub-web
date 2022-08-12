@@ -34,8 +34,7 @@ export default function TaxInvoice(props) {
   if (!formData.totalExcludeTax) {
     formData.totalExcludeTax = formData.subtotal;
   }
-  
-  let tax = formData.total - formData.totalExcludeTax;
+  let tax = util.floor(formData.total - formData.totalExcludeTax);
   if (!tax)
     tax = 0;
   return (
@@ -144,22 +143,22 @@ export default function TaxInvoice(props) {
                   }
                   <tr style={{textAlign: "right"}}>
                     <td colSpan={2}>
-                      <div>អាករលើតម្លៃបន្ថែម{util.fromStandardNumberKHV2(util.floor(util.getTaxRate(formData.subtotal - formData.discount, tax)))}%</div>
-                      <div>VAT({util.floor(util.getTaxRate(formData.subtotal - formData.discount, tax))}%)</div>
+                      <div>អាករលើតម្លៃបន្ថែម{util.fromStandardNumberKHV2(parseInt(util.getTaxRate(formData.subtotal - getDiscount(formData), tax)))}%</div>
+                      <div>VAT({parseInt(util.getTaxRate(formData.subtotal - getDiscount(formData), tax))}%)</div>
                     </td>
                     <td>{util.formatCurrency(tax)}</td>
                   </tr>
                   <tr style={{fontWeight: 600}}>
-                    <td colSpan={2} style={{textTransform: "capitalize"}}>{util.converNumberToWord(formData.total - util.floor(getDiscount(formData)))}</td>
+                    <td colSpan={2} style={{textTransform: "capitalize"}}>{util.converNumberToWord(formData.total - getDiscount(formData))}</td>
                     <td colSpan={2} style={{textAlign: "right"}}><div>សរុបរួម</div><div>Grand Total</div></td>
-                    <td style={{textAlign: "right"}}>{util.formatCurrency(formData.total - util.floor(getDiscount(formData)))}</td>
+                    <td style={{textAlign: "right"}}>{util.formatCurrency(formData.total - getDiscount(formData))}</td>
                   </tr>
                   <tr style={{fontWeight: 600}}>
                     <td colSpan={2} style={{borderRight: "none"}}>
                       <div style={{display: "flex", justifyContent: "space-between"}}><div>អត្រាប្ដូរប្រាក់</div><div>{exchangeRate}</div></div>
                     </td>
                     <td style={{textAlign: "right"}} colSpan={2}>សរុបជាប្រាក់រៀល</td>
-                    <td style={{textAlign: "right"}}>{util.formatCurrency((formData.total - util.floor(getDiscount(formData))) * exchangeRate, "")} ៛</td>
+                    <td style={{textAlign: "right"}}>{util.formatCurrency((formData.total - getDiscount(formData)) * exchangeRate, "")} ៛</td>
                   </tr>
                 </tbody>
               </table>

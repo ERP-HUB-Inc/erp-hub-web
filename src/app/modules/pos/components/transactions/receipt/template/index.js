@@ -53,8 +53,8 @@ const ReceiptTemplate = React.forwardRef((props, ref) => {
             <td style={{border: "2px solid", padding: 15}}>
               <h2 style={{color: "#c56f6f", fontWeight: "bold", textAlign: "center"}}>Official Receipt</h2>
               <ul style={{listStyle: "none", paddingRight: 45}}>
-                <li style={styles.listItemStyle}><div style={{width: 100}}>NO.:</div>00011</li>
-                <li style={styles.listItemStyle}><div style={{width: 100}}>Date:</div>{util.formatDate("2022-07-08", "D-MMM-YY")}</li>
+                <li style={styles.listItemStyle}><div style={{width: 100}}>NO.:</div>{formData.receiptNumber}</li>
+                <li style={styles.listItemStyle}><div style={{width: 100}}>Date:</div>{util.formatDate(formData.createdAt, "D-MMM-YY")}</li>
               </ul>
 
               <div style={styles.itemFlex}>
@@ -112,8 +112,8 @@ export default ReceiptTemplate;
 ReceiptTemplate.defaultProps = {
   formData: {
     invoiceNumber: "",
-    receiptNo: "",
-    receiptDate: "2022-07-08",
+    receiptNumber: "",
+    createdAt: "2022-07-08",
     total: 0,
     customer: {
       company: ""

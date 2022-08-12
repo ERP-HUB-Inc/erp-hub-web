@@ -44,6 +44,7 @@ import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCr
 import CAInvoice from "../../transactions/Invoice/CAInvoice";
 import InputInvoiceNo from "./InvoiceNo";
 import ReceiptTemplate from "../receipt/template";
+import { Link } from "react-router-dom";
 
 const {TabPane} = Tabs;
 
@@ -200,6 +201,7 @@ class NewInvoice extends React.PureComponent {
 
     componentDidMount() {
         const idParam = this.props.match.params.id;
+
         if (idParam) {
             this.id = idParam;
             this.pageTitle = <Translate id="text_edit_invoice" />;
@@ -655,7 +657,7 @@ class NewInvoice extends React.PureComponent {
 
     getDiscount(total, formData) {
         let discount = formData.discount;
-        if (formData.discountType && discount.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+        if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
             discount = this.util.getValueFromPercentage(total, discount);
         }
 
@@ -678,11 +680,8 @@ class NewInvoice extends React.PureComponent {
         let vat = 0;
         let total = this.getTotal();
         const discount = this.getDiscount(total, this.state.formData);
-        if (discount) {
-            total -= discount;
-        }
         const taxPercentage = this.state.formData.taxRate;
-        vat = this.util.getTaxValue(total, taxPercentage);
+        vat = this.util.getTaxValue(total - discount, taxPercentage);
         if (!vat || vat < 0) 
             vat = 0;
 
@@ -702,6 +701,7 @@ class NewInvoice extends React.PureComponent {
 
     renderPreviewInvoice(formData) {
         formData.transactionEntries = this.state.transactionEntries;
+        formData.totalExcludeTax = this.getTotal();
         formData.total = this.getGrandTotal();
         return <div id="wrap-invoice-form">
             <CAInvoice formData={formData} />
@@ -979,7 +979,11 @@ class NewInvoice extends React.PureComponent {
                                                 content={() => this.receiptRef}
                                             />
                                         </Menu.Item>
-                                        <Menu.Item key={3}><Translate id="text_clone" /></Menu.Item>
+                                        <Menu.Item key={3}>
+                                            <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}?clone`} >
+                                                <Translate id="text_clone" />
+                                            </Link>
+                                        </Menu.Item>
                                         <Menu.Item key={4} onClick={this.handleNewInvoice}>
                                             <Translate id="text_new_invoice" />
                                         </Menu.Item>
