@@ -97,6 +97,10 @@
     display: none;
   }
 
+  body {
+    background: #FFFFFF !important;
+  }
+
 }
 
 .entry-column-note .wrap-textarea .ant-form-item-control-wrapper{

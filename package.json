@@ -47,6 +47,7 @@
     "react-router-dom": "^4.2.2",
     "react-scripts": "^3.1.1",
     "react-sticky": "^6.0.3",
+    "react-to-print": "^2.14.7",
     "reactstrap": "^5.0.0-alpha.4",
     "redux": "^3.7.2",
     "redux-immutablejs": "0.0.8",

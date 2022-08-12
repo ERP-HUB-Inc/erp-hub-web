@@ -56,7 +56,7 @@ export default function NoneTaxInvoice(props) {
             <td style={{width: 230}}>
               <ul style={styles.ulStyle}>
                 <li style={{color: "#37a3c6", fontSize: "12pt", textTransform: "uppercase"}}>{setting.businessName}</li>
-                <li>{setting.website}</li>
+                <li><a target="blank" style={{textDecoration: "none", color: "#212529"}} href={setting.website}>{setting.website}</a></li>
                 <li>{setting.email}</li>
                 <li>{util.formatPhonenoWithCountryCode(setting.phoneNumber)}</li>
               </ul>

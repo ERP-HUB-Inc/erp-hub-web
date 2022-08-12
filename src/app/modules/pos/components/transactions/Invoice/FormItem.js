@@ -21,6 +21,7 @@ import moment from "moment";
 import _ from "lodash";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import ReactToPrint from "react-to-print";
 import { 
     InputNumber, 
     InputText,
@@ -42,6 +43,7 @@ import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantP
 import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCreate";
 import CAInvoice from "../../transactions/Invoice/CAInvoice";
 import InputInvoiceNo from "./InvoiceNo";
+import ReceiptTemplate from "../receipt/template";
 
 const {TabPane} = Tabs;
 
@@ -66,7 +68,6 @@ class NewInvoice extends React.PureComponent {
         loading: false,
         transactionEntries: [],
         customerForm: null,
-        saveCloseLoading: false,
         saveLoading: false
     }
     entryColumn = [
@@ -194,7 +195,6 @@ class NewInvoice extends React.PureComponent {
     util = new Util();
     timer = null;
     id = "";
-    saveOption = "";
     pageTitle = "";
     textRequiredCustomer = "";
 
@@ -348,34 +348,21 @@ class NewInvoice extends React.PureComponent {
     }
 
     save(invoice) {
-        if (this.saveOption === "save_close") {
-            this.setState({saveCloseLoading: true});
-        } else {
-            this.setState({saveLoading: true});
-        }
-
+        this.setState({saveLoading: true});
         if (this.id) {
             InvoiceService.update(invoice, this.id)
             .then(() => {
                 message.success(stringTranslate("text_success_save_invoice", this.props.locale));
-                this.handlAfterSave();
             })
             .catch(() => message.error("Error"))
-            .finally(() => this.setState({saveCloseLoading: false, saveLoading: false}));
+            .finally(() => this.setState({saveLoading: false}));
         } else {
             InvoiceService.create(invoice)
             .then(() => {
                 message.success(stringTranslate("text_success_save_invoice", this.props.locale));
-                this.handlAfterSave();
             })
             .catch(() => message.error("Error"))
-            .finally(() => this.setState({saveCloseLoading: false, saveLoading: false}));
-        }
-    }
-
-    handlAfterSave() {
-        if (this.saveOption === "save_close") {
-            history.goBack();
+            .finally(() => this.setState({saveLoading: false}));
         }
     }
 
@@ -561,6 +548,40 @@ class NewInvoice extends React.PureComponent {
         window.print();
     }
 
+    handleNewInvoice = () => {
+        history.push("/transactions/create-invoice");
+        this.pageTitle = <Translate id="text_create_invoice" />;
+        this.setState({
+            formData: {
+                customerId: null,
+                firstName: "",
+                lastName: "",
+                phoneNumber: "",
+                invoiceDate: moment().format("YYYY-MM-DD"),
+                dueDate: null,
+                deposit: 0,
+                discount: 0,
+                discountType: Enum.DISCOUNT_TYPE.AMOUNT,
+                publicNote: "",
+                template: Enum.PAPER_SIZE.EXCLUDE_TAX
+            },
+            transactionEntries: [{
+                productVariantId: "",
+                variantName: "",
+                categoryId: "",
+                description: "",
+                unitId: "",
+                quantity: 1,
+                unitName: "",
+                cost: 0,
+                price: 0,
+                discount: 0,
+                amount: 0,
+                status: 1
+            }]
+        });
+    }
+
     onSelectCustomer(value, record) {
         if (value) {
             const customer = record.props.object;
@@ -684,6 +705,13 @@ class NewInvoice extends React.PureComponent {
         formData.total = this.getGrandTotal();
         return <div id="wrap-invoice-form">
             <CAInvoice formData={formData} />
+        </div>;
+    }
+
+    renderReceip(formData) {
+        formData.total = this.getGrandTotal();
+        return <div style={{display: "none"}}>
+            <ReceiptTemplate formData={formData} ref={re => this.receiptRef = re} />
         </div>;
     }
 
@@ -929,10 +957,10 @@ class NewInvoice extends React.PureComponent {
                                     )
                                 }
                             </Form.Item>
-                            <Button htmlType="submit" style={{marginRight: 15}} onClick={() => this.saveOption = "save"} loading={this.state.saveLoading} >
+                            <Button type="info" htmlType="submit" loading={this.state.saveLoading} >
                                 <Translate id="text_save" />
                             </Button>
-                            <Button style={{marginRight: 15}} onClick={this.handleResetForm}>
+                            <Button style={{marginRight: 15, marginLeft: 15}} onClick={this.handleResetForm}>
                                 <Translate id="text_clear" />
                             </Button> 
                             <Button style={{marginRight: 15}} onClick={this.handlePrintInvoice}>
@@ -941,7 +969,20 @@ class NewInvoice extends React.PureComponent {
                             <Dropdown 
                                 overlay={(
                                     <Menu>
-                                        {/* <Menu.Item onClick={this.handlePrintInvoice} key={1}><Translate id="text_print" /></Menu.Item> */}
+                                        <Menu.Item key={1}><Translate id="text_mark_as_sent" /></Menu.Item>
+                                        <Menu.Item key={2}><Translate id="text_receive_payment" /></Menu.Item>
+                                        <Menu.Item key={5}>
+                                            <ReactToPrint
+                                                trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}>
+                                                    <Translate id="text_print_receipt" />
+                                                    </button>}
+                                                content={() => this.receiptRef}
+                                            />
+                                        </Menu.Item>
+                                        <Menu.Item key={3}><Translate id="text_clone" /></Menu.Item>
+                                        <Menu.Item key={4} onClick={this.handleNewInvoice}>
+                                            <Translate id="text_new_invoice" />
+                                        </Menu.Item>
                                     </Menu>
                                 )}
                                 trigger={["click"]}
@@ -951,8 +992,8 @@ class NewInvoice extends React.PureComponent {
                         </Col>
                     </Row>
                 </Form>
+                {this.renderReceip(formData)}
                 {this.renderPreviewInvoice(formData)}
-
                 {this.state.customerForm}
             </div>
             :

@@ -241,7 +241,7 @@ export default {
 
   "text_print_receipt": [
     "Print Receipt",
-    "បោះពុម្ភវិក័យប័ត្រ",
+    "បោះពុម្ភបង្កាន់ដៃ",
     "Print Receipt"
   ],
 
@@ -334,4 +334,15 @@ export default {
     "Note: Keep it blank for auto generate number",
     "បញ្ជាក់: ទុកនៅទទេដើម្បីបង្កើតលេខដោយស្វ័យប្រវត្តិ"
   ],
+
+  "text_mark_as_sent": [
+    "Mark as Sent",
+    "សម្គាល់ថាបានផ្ញើ"
+  ],
+
+  "text_new_invoice": [
+    "New Invoice",
+    "បង្កើតវិក័្កយប័ត្រថ្មី"
+  ]
+
 };
