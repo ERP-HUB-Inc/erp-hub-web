@@ -12,7 +12,8 @@ export default function NoneTaxInvoice(props) {
     let subtotal = 0;
     if (formData.transactionEntries.length) {
       formData.transactionEntries.forEach(entry => {
-        subtotal += entry.quantity * entry.price;
+        if (entry.status !== 3)
+          subtotal += entry.quantity * entry.price;
       });
     }
     if (!subtotal) 
@@ -91,7 +92,7 @@ export default function NoneTaxInvoice(props) {
               <ul style={{...styles.ulStyle, position: "absolute", top: 6}}>
                 <li style={{fontWeight: 600}}>
                   {
-                    formData.customer ? formData.customer.company : `${formData.firstName} ${formData.lastName}`
+                    formData.company ? formData.company : `${formData.firstName} ${formData.lastName}`
                   }
                 </li>
                 <li>{formData.address}</li>
@@ -113,7 +114,7 @@ export default function NoneTaxInvoice(props) {
                 <tbody style={{background: "#fbfbfb", borderBottom: "2px solid #ddd", verticalAlign: "top"}}>
                   {
                     formData.transactionEntries.map((entry, index) => 
-                      <tr key={index} style={{fontSize: "11pt", lineHeight: "26px", background: "none"}}>
+                      <tr key={index} style={{fontSize: "11pt", lineHeight: "26px", background: "none", display: `${entry.status === 3 ? "none" : ""}`}}>
                         <td style={{textAlign: "center"}}>{index + 1}</td>
                         <td ><pre className="enty-note-column">{entry.description}</pre></td>
                         <td style={styles.entryiesCurrency}>{util.formatCurrency(entry.price)}</td>

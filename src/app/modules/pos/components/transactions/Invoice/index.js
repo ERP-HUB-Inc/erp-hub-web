@@ -29,7 +29,7 @@ export default class Invoice extends List {
 
     this.INVOICE_STATUS_STR = {
       [Enum.INVOICE_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "default" },
-      [Enum.INVOICE_STATUS.SENT]: { title: <this.Translate id="processing" />, color: "processing" },
+      [Enum.INVOICE_STATUS.SENT]: { title: <this.Translate id="text_sent" />, color: "processing" },
       [Enum.INVOICE_STATUS.PARTIAL]: { title: <this.Translate id="text_partial_pay" />, color: "warning"},
       [Enum.INVOICE_STATUS.PAID]: { title: <this.Translate id="text_paid" />, color: "success"},
     };
@@ -131,7 +131,7 @@ export default class Invoice extends List {
             const stepValue = this.INVOICE_STATUS_STR[status];
             let stepColor = stepValue.color;
             let stepTitile = stepValue.title;
-            return <this.Badge style={{ textTransform: "uppercase" }} color={stepColor} text={stepTitile} />;
+            return <this.Badge style={{ textTransform: "uppercase" }} status={stepColor} text={stepTitile} />;
           }
         }
       }

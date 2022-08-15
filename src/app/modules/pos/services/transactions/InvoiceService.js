@@ -60,6 +60,23 @@ class InvoiceService extends BaseService {
       headers: this.header
     });
   }
+
+  receivedPayment(id, data) {
+    this.setHeader();
+    return this.PUT({
+      url: `${this.baseUrl}/receve_payment/${id}`,
+      data,
+      headers: this.header
+    });
+  }
+
+  makAsSent(id) {
+    this.setHeader();
+    return this.PUT({
+      url: `${this.baseUrl}/make_as_sent/${id}`,
+      headers: this.header
+    });
+  }
 }
 
 export default new InvoiceService();

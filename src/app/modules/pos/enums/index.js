@@ -1,7 +1,7 @@
 export default {
   DISCOUNT_TYPE: {
-    PERCENTAGE: 0,
-    AMOUNT: 1,
+    PERCENTAGE: 1,
+    AMOUNT: 0,
     EACH_ITEM: 2
   },
   LOCAL_SCHEMA: {
@@ -19,7 +19,7 @@ export default {
   TRANSACTION_STATUS: {
     OPEN: 0,
     OVERDUE: 1,
-    PAID: 2,
+    PAID: 3,
     CREDIT: 4,
     CLOSED: 5
   },

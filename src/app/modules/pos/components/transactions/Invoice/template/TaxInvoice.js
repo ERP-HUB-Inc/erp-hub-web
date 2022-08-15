@@ -9,7 +9,8 @@ export default function TaxInvoice(props) {
     let subtotal = 0;
     if (formData.transactionEntries.length) {
       formData.transactionEntries.forEach(entry => {
-        subtotal += entry.quantity * entry.price;
+        if (entry.status !== 3)
+          subtotal += entry.quantity * entry.price;
       });
     }
     if (!subtotal) 
@@ -74,10 +75,10 @@ export default function TaxInvoice(props) {
                     <td style={{fontWeight: 600, textAlign: "center"}} rowSpan={2}>{formData.invoiceNumber}</td>
                   </tr>
                   <tr>
-                    <td colSpan={3}>{formData.customer && formData.customer.company ? formData.customer.company : `${formData.firstName} ${formData.lastName}` }</td>
+                    <td colSpan={3}>{formData.company ? formData.company : `${formData.firstName} ${formData.lastName}` }</td>
                   </tr>
                   <tr>
-                    <td colSpan={3}>Address: {formData.customer && formData.customer.address}</td>
+                    <td colSpan={3}>Address: {formData.address}</td>
                     <td rowSpan={2} style={{fontWeight: 600, textAlign: "right"}}>
                       <div>កាលបរិច្ឆេទ :</div>
                       <div>Date :</div>
@@ -93,7 +94,7 @@ export default function TaxInvoice(props) {
                     </td>
                     <td style={{fontWeight: 600, textAlign: "center"}} rowSpan={2}>{formData.terms}</td>
                   </tr>
-                  <tr className="customer-info-row"><td colSpan={3}>លេខអត្តសញ្ញាណកម្ម អតប (VATTIN): {formData.customer && formData.customer.VATNo}</td></tr>
+                  <tr className="customer-info-row"><td colSpan={3}>លេខអត្តសញ្ញាណកម្ម អតប (VATTIN): {formData.VATNo}</td></tr>
                   <tr>
                     <td colSpan={3} style={{border: "2px solid"}}></td>
                     <td colSpan={2} style={{border: "2px solid"}}></td>
@@ -119,7 +120,7 @@ export default function TaxInvoice(props) {
                   </tr>
                   {
                     formData.transactionEntries && formData.transactionEntries.map((entry, index) => (
-                      <tr key={index} className="tax-table-invoice-entry-row">
+                      <tr key={index} className={`tax-table-invoice-entry-row ${entry.status === 3 ? "hidden" : ""}`}>
                         <td style={{textAlign: "center"}}>{index + 1})</td>
                         <td><pre className="enty-note-column">{entry.description}</pre></td>
                         <td style={{textAlign: "center"}}>{entry.quantity}</td>

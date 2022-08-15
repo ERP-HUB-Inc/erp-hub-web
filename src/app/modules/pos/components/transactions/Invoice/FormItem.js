@@ -13,7 +13,8 @@ import {
     message,
     Tabs,
     Dropdown,
-    Menu
+    Menu,
+    Drawer
 } from "antd";
 import { Translate } from "react-localize-redux";
 import { connect } from "react-redux";
@@ -45,6 +46,7 @@ import CAInvoice from "../../transactions/Invoice/CAInvoice";
 import InputInvoiceNo from "./InvoiceNo";
 import ReceiptTemplate from "../receipt/template";
 import { Link } from "react-router-dom";
+import ReceivedPayment from "../ReceivedPayment/Form";
 
 const {TabPane} = Tabs;
 
@@ -69,7 +71,8 @@ class NewInvoice extends React.PureComponent {
         loading: false,
         transactionEntries: [],
         customerForm: null,
-        saveLoading: false
+        saveLoading: false,
+        showDrawer: false
     }
     entryColumn = [
         {
@@ -200,7 +203,11 @@ class NewInvoice extends React.PureComponent {
     textRequiredCustomer = "";
 
     componentDidMount() {
-        const idParam = this.props.match.params.id;
+        let idParam = this.props.match.params.id;
+        const params = new URLSearchParams(document.location.search);
+        if (params.get("action") === "clone") {
+            idParam = params.get("id");
+        }
 
         if (idParam) {
             this.id = idParam;
@@ -309,6 +316,9 @@ class NewInvoice extends React.PureComponent {
                     discountType: values.discountType,
                     firstName: formData.firstName,
                     lastName: formData.lastName,
+                    company: formData.company,
+                    address: formData.address,
+                    VATNo: formData.VATNo,
                     phoneNumber: formData.phoneNumber,
                     publicNote: formData.publicNote,
                     template: values.template,
@@ -546,6 +556,26 @@ class NewInvoice extends React.PureComponent {
         }
     }
 
+    handleAfterPayment () {
+        this.setState(preState => {
+            preState.showDrawer = false;
+            preState.formData.status = Enum.INVOICE_STATUS.PAID;
+            return preState;
+        });
+        message.success("Payment sucess");
+    }
+
+    handleMakeAsSent = () => {
+        InvoiceService.makAsSent(this.id)
+        .then(() => {
+            this.setState(preState => {
+                preState.formData.status = Enum.INVOICE_STATUS.SENT;
+            });
+            message.success("Make sent success");
+        })
+        .catch(() => message.error("Error!...."));
+    }
+
     handlePrintInvoice = () => {
         window.print();
     }
@@ -591,6 +621,9 @@ class NewInvoice extends React.PureComponent {
             formData.firstName = customer.firstName;
             formData.lastName = customer.lastName;
             formData.phoneNumber = customer.phoneNumber;
+            formData.address = customer.address;
+            formData.company = customer.company;
+            formData.VATNo = customer.VATNo;
             this.textRequiredCustomer = "";
             this.setState({formData});
         } else {
@@ -733,6 +766,7 @@ class NewInvoice extends React.PureComponent {
             discount = this.util.getValueFromPercentage(this.getTotal(), discount);
         }
 
+        formData.total = this.getGrandTotal();
         return ( 
             !this.state.loading && Object.keys(formData).length ? 
             <div>
@@ -825,7 +859,7 @@ class NewInvoice extends React.PureComponent {
                                 />
                                 <Form.Item>
                                     {
-                                        getFieldDecorator("discountType", {initialValue: formData.discountType})
+                                        getFieldDecorator("discountType", {initialValue: formData.discountType ? formData.discountType : Enum.DISCOUNT_TYPE.AMOUNT})
                                         (
                                             <Select 
                                                 onChange={this.onChangeDiscountType} 
@@ -936,7 +970,7 @@ class NewInvoice extends React.PureComponent {
                             <div style={styles.itemSummary}>
                                 <div style={{width: 100}}><Translate id="text_grand_total" /></div>
                                 <div>:</div>
-                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(this.getGrandTotal() - discount)}</div>
+                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.total - discount)}</div>
                             </div>
                         </Col>
                     </Row>
@@ -969,18 +1003,23 @@ class NewInvoice extends React.PureComponent {
                             <Dropdown 
                                 overlay={(
                                     <Menu>
-                                        <Menu.Item key={1}><Translate id="text_mark_as_sent" /></Menu.Item>
-                                        <Menu.Item key={2}><Translate id="text_receive_payment" /></Menu.Item>
-                                        <Menu.Item key={5}>
-                                            <ReactToPrint
-                                                trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}>
-                                                    <Translate id="text_print_receipt" />
-                                                    </button>}
-                                                content={() => this.receiptRef}
-                                            />
+                                        <Menu.Item key={1} onClick={this.handleMakeAsSent}><Translate id="text_mark_as_sent" /></Menu.Item>
+                                        <Menu.Item key={2} onClick={() => this.setState({showDrawer: true})}>
+                                            <Translate id="text_receive_payment" />
                                         </Menu.Item>
+                                        {formData.status === Enum.INVOICE_STATUS.PAID ?
+                                            <Menu.Item key={5}>
+                                                <ReactToPrint
+                                                    trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}>
+                                                        <Translate id="text_print_receipt" />
+                                                        </button>}
+                                                    content={() => this.receiptRef}
+                                                />
+                                            </Menu.Item>
+                                            : null
+                                        }
                                         <Menu.Item key={3}>
-                                            <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}?clone`} >
+                                            <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} >
                                                 <Translate id="text_clone" />
                                             </Link>
                                         </Menu.Item>
@@ -999,6 +1038,19 @@ class NewInvoice extends React.PureComponent {
                 {this.renderReceip(formData)}
                 {this.renderPreviewInvoice(formData)}
                 {this.state.customerForm}
+                <Drawer
+                    title={<Translate id="text_receive_payment" />}
+                    width={520}
+                    visible={this.state.showDrawer}
+                    onClose={() => this.setState({showDrawer: false})}
+                >
+                    <ReceivedPayment 
+                        formData={formData} 
+                        locale={this.props.locale}
+                        onClose={() => this.setState({showDrawer: false})}
+                        onSuccess={this.handleAfterPayment}
+                        form={this.props.form} />
+                </Drawer>
             </div>
             :
             <div style={{width: 30, margin: "0 auto", paddingTop: 30}}>

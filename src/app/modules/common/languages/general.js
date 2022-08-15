@@ -254,6 +254,12 @@ export default {
     "Cash",
     "សាច់ប្រាក់"
   ],
+
+    
+  "text_bank": [
+    "Bank",
+    "ធនាគារ"
+  ],
   
   "text_copy": [
     "Copied!",

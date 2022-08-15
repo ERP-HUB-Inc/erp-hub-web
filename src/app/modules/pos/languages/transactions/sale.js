@@ -343,6 +343,15 @@ export default {
   "text_new_invoice": [
     "New Invoice",
     "បង្កើតវិក័្កយប័ត្រថ្មី"
-  ]
+  ],
 
+  "text_sent": [
+    "Sent",
+    "បានផ្ញើរ"
+  ],
+
+  "text_already_paid_invoice": [
+    "This invoice has already paid!",
+    "វិក័យបត្រនេះបានទូទាត់រួច!"
+  ],
 };

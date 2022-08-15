@@ -1,20 +1,26 @@
 import React from "react";
 import { Translate } from "react-localize-redux";
+import { connect } from "react-redux";
 import { 
   Dropdown, 
   PageHeader, 
   Spin,
   Icon,
-  Menu
+  Menu,
+  Drawer,
+  Form,
+  message
 } from "antd";
 import history from "../../../../common/router/history";
 import InvoiceService from "../../../services/transactions/InvoiceService";
 import CAInvoice from "./CAInvoice";
+import ReceivedPayment from "../ReceivedPayment/Form";
 
-export default class InvoiceDetail extends React.PureComponent {
+class InvoiceDetail extends React.PureComponent {
   state = {
     formData: {},
-    loading: false
+    loading: false,
+    showDrawer: false
   }
 
   componentDidMount() {
@@ -57,6 +63,9 @@ export default class InvoiceDetail extends React.PureComponent {
                 <Menu.Item key={1} onClick={() => history.push({pathname: `/transactions/update-invoice/${this.props.match.params.id}`})}>
                   <Translate id="text_edit_invoice" />
                 </Menu.Item>
+                <Menu.Item key={2} onClick={() => this.setState({showDrawer: true})}>
+                  <Translate id="text_receive_payment" />
+                </Menu.Item>
               </Menu>
             )}>
               <button className="ant-btn ant-dropdown-link" onClick={e => e.preventDefault()}>
@@ -69,7 +78,37 @@ export default class InvoiceDetail extends React.PureComponent {
         <div className="invoice-page">
           <CAInvoice formData={formData} />
         </div>
+
+        <Drawer
+          title={<Translate id="text_receive_payment" />}
+          width={520}
+          visible={this.state.showDrawer}
+          onClose={() => this.setState({showDrawer: false})}
+        >
+          <ReceivedPayment 
+            formData={formData}
+            locale={this.props.locale}
+            onClose={() => this.setState({showDrawer: false})}
+            onSuccess={() => message.success("Success payment")}
+            form={this.props.form} />
+        </Drawer>
       </div>
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+      locale: state.locale
+  };
+}
+
+function mapPropsToFields(props) {
+  return {
+      form: props.form
+  };
+}
+
+const invoiceDetail =  Form.create(mapPropsToFields)(InvoiceDetail);
+  
+export default connect(mapStateToProps)(invoiceDetail);
