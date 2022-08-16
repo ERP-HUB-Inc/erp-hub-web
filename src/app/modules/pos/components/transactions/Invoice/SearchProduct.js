@@ -1,6 +1,6 @@
-import React from "react"
+import React from "react";
 import BarcodeReader from "react-barcode-reader";
-import { Col, List } from "antd";
+import {List, Alert} from "antd";
 import { Translate } from "react-localize-redux";
 import $ from "jquery";
 import { 
@@ -14,7 +14,7 @@ import { stringTranslate } from "../../../../common/helper/stringTranslate";
 
 export default function SearchProductDropdwon(props) {
   const [visibleDropDown, setVisibleDropdown] = React.useState(false);
-  const [isMouseHoverOnSearchList, setIsMouseHoverOnSearchList] = React.useState(false)
+  const [isMouseHoverOnSearchList, setIsMouseHoverOnSearchList] = React.useState(false);
   const [isSetFocusSearchInput, setIsSetFocusSearchInput] = React.useState(false);
   const [isFocusOnSearchInput, setIsFocusOnSearchInput] = React.useState(false);
   const [productSearch, setProductSearch] = React.useState([]);
@@ -27,13 +27,13 @@ export default function SearchProductDropdwon(props) {
       setVisibleDropdown(false);
     }
 
-    setIsSetFocusSearchInput(false)
+    setIsSetFocusSearchInput(false);
     setIsFocusOnSearchInput(false);
 
     if (props.handleOnBlur) {
       props.handleOnBlur();
     }
-  }
+  };
 
   const handleOnFocusSearch = () => {
     setVisibleDropdown(true);
@@ -42,10 +42,10 @@ export default function SearchProductDropdwon(props) {
     if (props.handleOnFocusSearch) {
       props.handleOnFocusSearch();
     }
-  }
+  };
 
-  const handleScanError = () => {}
-  const handleScan = () => {}
+  const handleScanError = () => {};
+  const handleScan = () => {};
 
   const handleSearchProduct = (value, isSearchingBarcode = false) => {
     const searchKey = JSON.stringify({ column: ["name", "namekm", "namebm", "barcode"], value });
@@ -55,15 +55,15 @@ export default function SearchProductDropdwon(props) {
       setProductSearch(response.data.data);
     })
     .finally(() => setIsFetching(false));
-  }
+  };
 
   const handleOnMouseHoverOnSearchList = () => {
     setIsMouseHoverOnSearchList(true);
-  }
+  };
 
   const handleOnMouseLeaveOnSearchList = () => {
     setIsMouseHoverOnSearchList(false);
-  }
+  };
 
   const handleKeyDownOnProductSearch = (event) => {
     const value = event.target.value.trim();
@@ -105,17 +105,17 @@ export default function SearchProductDropdwon(props) {
         }, 1000);
       }
     }
-  }
+  };
 
   const handleOnSelectList = (value) => {
     props.handleOnSelectList(value, value.productVariants);
     setVisibleDropdown(false);
-  }
+  };
 
   const handleRemoveTextSearch = () => {
     props.form.setFieldsValue({searchProduct: ""});
     setIsSetFocusSearchInput(true);
-  }
+  };
 
   const renderSearchItem = (product) => {
     const barcode = ProductUtil.getProductBarcode(product);
@@ -138,9 +138,9 @@ export default function SearchProductDropdwon(props) {
         }
         
       />;
-  }
+  };
 
-  return <Col md={24} className="search-dropdown-product search-height" style={{position: "relative", ...props.style}}>
+  return <div className="search-dropdown-product search-height" style={{position: "relative", ...props.style}}>
     <BarcodeReader
       minLength={4}
       onError={handleScanError}
@@ -150,13 +150,13 @@ export default function SearchProductDropdwon(props) {
       endChar={[13]}
       timeBeforeScanTest={200}
     />
-    <div className="main-searchs">
-      <div className="search-icon icon-add-product"></div>
+    <div className={`${props.showIcon ? "main-searchs" : ""}`}>
+      {props.showIcon ? <div className="search-icon icon-add-product"></div> : null}
       <InputText
         wrapperCol={{xs: {span: 24}, sm: {span: 24}}}
         name="searchProduct"
         placeholder={`${props.placeholder ? props.placeholder : stringTranslate("text_search_product", props.locale)}`}
-        className={`ca-input-v1-icon-left ${props.className}`}
+        className={`${props.showIcon ? "ca-input-v1-icon-left" : ""} ${props.className}`}
         isAutoFocus={props.isAutoFocus}
         didUpdateMakeAutoFocus={props.didUpdateMakeAutoFocus || isSetFocusSearchInput}
         handleKeyUp={handleKeyDownOnProductSearch}
@@ -172,9 +172,9 @@ export default function SearchProductDropdwon(props) {
           <div style={{ display: isFocusOnSearchInput ? "flex" : "none" }}>
             <div className="icon-scaner icon-clear" onClick={handleRemoveTextSearch} style={{ right: 30 }}></div>
             <div className="text-warning-before-scan" style={{ display: "none" }}>
-              <this.Alert
-                message={<this.Translate id="text_warning" />}
-                description={<this.Translate id="text_warning_before_scan" />}
+              <Alert
+                message={<Translate id="text_warning" />}
+                description={<Translate id="text_warning_before_scan" />}
                 type="warning"
                 showIcon
               />
@@ -183,7 +183,7 @@ export default function SearchProductDropdwon(props) {
           :
           ""
       }
-      <div className="remove-search-icon icon-clear" onClick={handleRemoveTextSearch}></div>
+      {props.showIcon ? <div className="remove-search-icon icon-clear" onClick={handleRemoveTextSearch}></div> : null }
     </div>
     {
       visibleDropDown && props.productSearch ?
@@ -206,5 +206,9 @@ export default function SearchProductDropdwon(props) {
         :
         ""
     }
-  </Col>
+  </div>;
 }
+
+SearchProductDropdwon.defaultProps = {
+  showIcon: true
+};

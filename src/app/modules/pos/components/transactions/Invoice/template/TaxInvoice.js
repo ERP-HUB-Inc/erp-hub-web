@@ -113,7 +113,7 @@ export default function TaxInvoice(props) {
                       <div>ថ្លៃ​ឯកតា</div>
                       <div>Unit Price</div>
                     </th>
-                    <th>
+                    <th style={{width: 156}}>
                       <div style={{width: 140}}>ថ្លៃសេវា</div>
                       <div>Amount</div>
                     </th>

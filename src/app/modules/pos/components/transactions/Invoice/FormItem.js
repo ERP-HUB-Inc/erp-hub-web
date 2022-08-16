@@ -232,11 +232,12 @@ class NewInvoice extends React.PureComponent {
                 data.taxRate = taxRate;
 
                 delete data.transactionEntries;
-
                 this.setState({
                     formData: data,
                     transactionEntries,
                 });
+
+                console.log("data", data);
             })
             .finally(() => this.setState({loading: false}));
         } else {
@@ -244,13 +245,12 @@ class NewInvoice extends React.PureComponent {
             this.setState({
                 formData: {
                     customerId: null,
-                    firstName: "",
-                    lastName: "",
                     phoneNumber: "",
                     invoiceDate: moment().format("YYYY-MM-DD"),
                     dueDate: null,
                     deposit: 0,
                     discount: 0,
+                    taxRate: 0,
                     discountType: Enum.DISCOUNT_TYPE.AMOUNT,
                     publicNote: "",
                     template: Enum.PAPER_SIZE.EXCLUDE_TAX
@@ -314,12 +314,6 @@ class NewInvoice extends React.PureComponent {
                     discount: values.discount,
                     exchangeRate: values.exchangeRate,
                     discountType: values.discountType,
-                    firstName: formData.firstName,
-                    lastName: formData.lastName,
-                    company: formData.company,
-                    address: formData.address,
-                    VATNo: formData.VATNo,
-                    phoneNumber: formData.phoneNumber,
                     publicNote: formData.publicNote,
                     template: values.template,
                     invoiceNumber: values.invoiceNumber,
@@ -614,18 +608,9 @@ class NewInvoice extends React.PureComponent {
         });
     }
 
-    onSelectCustomer(value, record) {
+    onSelectCustomer(value) {
         if (value) {
-            const customer = record.props.object;
-            const {formData} = this.state;
-            formData.firstName = customer.firstName;
-            formData.lastName = customer.lastName;
-            formData.phoneNumber = customer.phoneNumber;
-            formData.address = customer.address;
-            formData.company = customer.company;
-            formData.VATNo = customer.VATNo;
             this.textRequiredCustomer = "";
-            this.setState({formData});
         } else {
             this.textRequiredCustomer = <Translate id="text_required_customer" />;
         }
@@ -672,7 +657,7 @@ class NewInvoice extends React.PureComponent {
                 )}
             >
                 {this.state.customers && this.state.customers.map((customer, index) => 
-                    <Select.Option key={index} object={customer} value={customer.id}>{customer.firstName} {customer.lastName}</Select.Option>
+                    <Select.Option key={index} value={customer.id}>{customer.firstName} {customer.lastName}</Select.Option>
                 )}
             </Select>
         );
@@ -742,7 +727,6 @@ class NewInvoice extends React.PureComponent {
     }
 
     renderReceip(formData) {
-        formData.total = this.getGrandTotal();
         return <div style={{display: "none"}}>
             <ReceiptTemplate formData={formData} ref={re => this.receiptRef = re} />
         </div>;
@@ -766,7 +750,6 @@ class NewInvoice extends React.PureComponent {
             discount = this.util.getValueFromPercentage(this.getTotal(), discount);
         }
 
-        formData.total = this.getGrandTotal();
         return ( 
             !this.state.loading && Object.keys(formData).length ? 
             <div>
@@ -970,7 +953,7 @@ class NewInvoice extends React.PureComponent {
                             <div style={styles.itemSummary}>
                                 <div style={{width: 100}}><Translate id="text_grand_total" /></div>
                                 <div>:</div>
-                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.total - discount)}</div>
+                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(this.getGrandTotal() - discount)}</div>
                             </div>
                         </Col>
                     </Row>

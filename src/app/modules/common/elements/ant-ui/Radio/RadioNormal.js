@@ -31,8 +31,12 @@ export class RadioNormal extends Element {
               <this.Radio.Group
                 disabled={this.props.disabled}
                 onChange={this.props.onChange} 
+                buttonStyle={this.props.buttonStyle}
               >
-                {this.props.dataSource.map((row, index) => <this.Radio key={index} value={row.value}>{row.title}</this.Radio>)}
+                {this.props.buttonStyle === "solid" ?
+                  this.props.dataSource.map((row, index) => <this.Radio.Button key={index} value={row.value}>{row.title}</this.Radio.Button>)
+                  : this.props.dataSource.map((row, index) => <this.Radio style={this.props.inputStyle} key={index} value={row.value}>{row.title}</this.Radio>)
+                }
               </this.Radio.Group>
             )
           }

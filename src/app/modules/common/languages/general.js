@@ -275,6 +275,16 @@ export default {
     "Credit Card",
     "បណ្ឌឥណទាន"
   ],
+
+  "text_specific": [
+    "Specific",
+    "ជាក់លាក់"
+  ],
+
+  "text_all": [
+    "All",
+    "ទាំងអស់"
+  ],
   
   "text_all_category": [
     "All Categories",
@@ -284,6 +294,11 @@ export default {
   "text_all_stores": [
     "All Stores",
     "គ្រប់ទីតាំង"
+  ],
+
+  "text_select_type": [
+    "Select type",
+    "ជ្រើសរើសប្រភេទ"
   ],
   
   "text_price": [

@@ -52,6 +52,7 @@ export class Select extends Element {
         label={this.props.label}
         help={this.props.help}
         className={this.props.className}
+        style={this.props.style}
         validateStatus={this.props.validateStatus}>
         {
           getFieldDecorator(this.props.name, options)(

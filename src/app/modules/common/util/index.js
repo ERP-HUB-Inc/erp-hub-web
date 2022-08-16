@@ -280,7 +280,7 @@ export default class Util {
   }
 
   getTaxValue(subtotal, valueAddedTaxRate) {
-    return parseFloat((subtotal * valueAddedTaxRate / 100).toFixed(4));
+    return parseFloat((subtotal * valueAddedTaxRate / 100).toFixed(2));
   }
 
   getTaxRate(subTotal, taxAmount) {

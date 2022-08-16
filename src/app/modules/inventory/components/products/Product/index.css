@@ -240,3 +240,32 @@
   background: #093163;
   border-color: #093163;
 }
+
+#product-discount-form .ant-radio-group {
+    display: flex;
+}
+
+#product-discount-form 
+.ant-radio-group-solid 
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    background: #1F5A92;
+    border: #1F5A92;
+    box-shadow: none;
+}
+
+#product-discount-form .ant-radio-wrapper {
+    padding: 10px 14px !important;
+    border: 1px solid #D9D9D9;
+}
+
+#product-discount-form .ant-radio-wrapper-checked {
+    border: 1px solid #1F5A92;
+}
+
+#product-discount-form .main-ant-wrapper .ant-radio-wrapper {
+    margin-right: 15px !important;
+}
+
+#product-discount-form .ant-radio-group-solid {
+    margin-top: 10px;
+}

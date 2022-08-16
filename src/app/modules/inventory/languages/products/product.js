@@ -554,4 +554,39 @@ export default {
     "SKU",
     "SKU"
   ],
+
+  "text_new_discount": [
+    "New Discount Setup",
+    "បង្កើតផលិតផលបញ្ចុះតម្លៃ"
+  ],
+
+  "text_promotion_name": [
+    "Promotion Name",
+    "ឈ្មេាះប៉្រូម៉ូសិន"
+  ],
+
+  "text_enter_promotion_name": [
+    "Enter promotion name",
+    "បញ្ចូលឈ្មេាះប៉្រូម៉ូសិន"
+  ],
+
+  "text_promotion_type": [
+    "Type of Promotion",
+    "ប្រភេទប៉្រូម៉ូសិន"
+  ],
+
+  "text_target_promotion": [
+    "Target this Promotion",
+    "គោលដៅប៉្រូម៉ូសិននេះ"
+  ],
+
+  "text_available_to_everyone": [
+    "Available to Everyone",
+    "សម្រាប់គ្រប់គ្នា"
+  ],
+
+  "text_exclusive_to_some": [
+    "Exclusive to Some",
+    "សម្រាប់អតិថិជនមួយចំនួន"
+  ]
 };
