@@ -1,41 +1,12 @@
 import React from "react";
-import Enum from "../../../../enums";
 import Util from "../../../../../common/util";
 
 const ReceiptTemplate = React.forwardRef((props, ref) => {
   const util = new Util();
 
-  function getSubTotal(formData) {
-    let subtotal = 0;
-    if (formData.transactionEntries.length) {
-      formData.transactionEntries.forEach(entry => {
-        subtotal += entry.quantity * entry.price;
-      });
-    }
-    if (!subtotal) 
-      subtotal = 0;
-
-    return subtotal;
-  }
-
-  function getDiscount(formData) {
-    let discount = formData.discount;
-    if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-      discount = util.getValueFromPercentage(formData.subtotal, discount);
-    }
-
-    if (!discount)
-      discount = 0;
-    return discount;
-  }
-
   const setting = util.getSetting();
   const {formData} = props;
-
-  formData.subtotal = getSubTotal(formData);
-  let total = formData.total - getDiscount(formData);
-  if (!total) 
-    total = 0;
+  const total = formData.transactionPayment && formData.transactionPayment[0] && formData.transactionPayment[0].tender;
 
   return (
     <div ref={ref} style={{width: "250mm", minHeight: "297mm", padding: "45px 40px", margin: "auto", background: "#FFFFFF"}}>

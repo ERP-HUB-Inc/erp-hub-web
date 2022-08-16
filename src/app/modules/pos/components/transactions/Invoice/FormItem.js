@@ -556,7 +556,7 @@ class NewInvoice extends React.PureComponent {
         }
     }
 
-    handleAfterPayment () {
+    handleAfterPayment = () => {
         this.setState(preState => {
             preState.showDrawer = false;
             preState.formData.status = Enum.INVOICE_STATUS.PAID;
