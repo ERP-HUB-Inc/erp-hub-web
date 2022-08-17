@@ -22,13 +22,13 @@ import Util from "../../../../common/util";
 import LocationService from "../../../../pos/services/settings/LocationService";
 import ProductService from "../../../services/products/ProductService";
 import Enum from "../../../../pos/enums";
-import SearchProductDropdwon from "../../../../pos/components/transactions/Invoice/SearchProduct";
+import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
 import VariantProduct from "../../../../pos/components/transactions/RetailSale/VaraintProduct";
 
 class FormItem extends React.PureComponent {
   state = {
     locations: [],
-    productEnties: [],
+    productEntries: [],
     productSearch: []
   }
   entryColumn = [
@@ -77,21 +77,19 @@ class FormItem extends React.PureComponent {
   }
 
   handleRemoveEntry = (index) => {
-    const {productEnties} = this.state;
-    if (productEnties && productEnties[index].id) {
+    const {productEntries} = this.state;
+    if (productEntries && productEntries[index].id) {
       this.util.sweetAlertConfirm(stringTranslate("text_confirm_delete", this.props.locale), "warning")
       .then(isDelete => {
         if (isDelete) {
-          productEnties[index].status = 3;
-          this.setState({productEnties, productSearch: []});
+          productEntries[index].status = 3;
+          this.setState({productEntries, productSearch: []});
         }
       });
     } else {
-      productEnties.splice(index, 1);
-      this.setState({productEnties, productSearch: []});
+      productEntries.splice(index, 1);
+      this.setState({productEntries, productSearch: []});
     }
-
-    console.log("entry", this.state.productEnties);
   }
 
   handleOnSelectList = (product, productVariant, isRequestVariantForm = true) => {
@@ -109,7 +107,7 @@ class FormItem extends React.PureComponent {
       productVariant.name = isProductVariant ? productVariant.name : "";
     }
     
-    const existingProductList = this.state.productEnties;
+    const existingProductList = this.state.productEntries;
     if (existingProductList.length === 0) {
       existingProductList.push({
         id: null,
@@ -137,7 +135,7 @@ class FormItem extends React.PureComponent {
       }
     }
 
-    this.setState({productEnties: existingProductList});
+    this.setState({productEntries: existingProductList});
     this.props.form.setFieldsValue({searchProduct: ""});
     document.getElementById("searchProduct").focus();
   }
@@ -196,7 +194,7 @@ class FormItem extends React.PureComponent {
                 label={<Translate id="text_target_promotion" />}
                 dataSource={[
                   {value: 1, title: stringTranslate("text_available_to_everyone", this.props.locale)},
-                  {vlaue: 2, title: stringTranslate("text_exclusive_to_some", this.props.locale)}
+                  {value: 2, title: stringTranslate("text_exclusive_to_some", this.props.locale)}
                 ]}
                 inputStyle={{padding: "10px !important", marginTop: 3}}
                 form={this.props.form} />
@@ -232,7 +230,7 @@ class FormItem extends React.PureComponent {
                     {value: "specific", title: <Translate id="text_specific" />}
                   ]}
                   form={this.props.form} />
-                <SearchProductDropdwon
+                <SearchProductDropdown
                   productSearch={this.state.productSearch}
                   handleOnSelectList={this.handleOnSelectList}
                   locale={this.props.locale}
@@ -244,7 +242,7 @@ class FormItem extends React.PureComponent {
               <Table 
                 rowKey={((record, index) => index)}
                 columns={this.entryColumn}
-                dataSource={this.state.productEnties}
+                dataSource={this.state.productEntries}
                 pagination={false}
                 locale={{emptyText: <Translate id="text_no_sale_entries_product" />}}
                 rowClassName={((record) => record.status === 3 ? "hidden" : "")}

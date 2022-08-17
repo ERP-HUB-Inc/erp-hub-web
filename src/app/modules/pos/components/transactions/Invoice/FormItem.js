@@ -35,11 +35,10 @@ import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import CustomerService from "../../../../crm/services/customers/CustomerService";
-import ProductService from "../../../../inventory/services/products/ProductService";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import CustomerConstant from "../../../../crm/constants/customers/customer";
 import InvoiceService from "../../../services/transactions/InvoiceService";
-import SearchProductDropdwon from "./SearchProduct";
+import SearchProductDropdown from "./SearchProduct";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
 import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCreate";
 import CAInvoice from "../../transactions/Invoice/CAInvoice";
@@ -226,18 +225,22 @@ class NewInvoice extends React.PureComponent {
                     amount: entry.quantity * entry.price,
                 }));
 
-                let taxRate = parseInt(this.util.getTaxRate(data.totalExcludeTax - data.discount, data.total - totalExcludeTax));
+                let discount = data.discount;
+                if (data.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+                    discount = this.util.getValueFromPercentage(data.total, discount);
+                } 
+
+                let taxRate = parseInt(this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax));
                 if (!taxRate)
                     taxRate = 0;
                 data.taxRate = taxRate;
 
                 delete data.transactionEntries;
-                this.setState({
-                    formData: data,
-                    transactionEntries,
+                this.setState(preState => {
+                    preState.formData = data;
+                    preState.transactionEntries = transactionEntries;
+                    return preState;
                 });
-
-                console.log("data", data);
             })
             .finally(() => this.setState({loading: false}));
         } else {
@@ -272,14 +275,12 @@ class NewInvoice extends React.PureComponent {
             });
         }
 
-        CustomerService.lists(15)
+        CustomerService.lists(10)
         .then(response => {
             if (response && response.data) {
                 this.setState({customers: response.data.data});
             }
         });
-        ProductService.searchForDrowDown(15, 0)
-        .then(response => this.setState({productSearch: response && response.data.data}));
     }
 
     componentDidUpdate() {
@@ -309,6 +310,7 @@ class NewInvoice extends React.PureComponent {
                     return;
                 }
                 const {formData} = this.state;
+                const subTotal = this.getTotal();
                 const invoice = {
                     customerId: values.customerId,
                     discount: values.discount,
@@ -321,8 +323,8 @@ class NewInvoice extends React.PureComponent {
                     invoiceDate: this.util.formatDateForMYSQL(values["invoiceDate"]),
                     dueDate: this.util.formatDateForMYSQL(values["dueDate"]),
                     registerDate: this.util.formatDateForMYSQL(formData.registerDate ? formData.registerDate : moment()),
-                    totalExcludeTax:  this.getTotal(),
-                    total: this.getGrandTotal()
+                    totalExcludeTax:  subTotal,
+                    total: values.total
                 };
 
                 const transactionEntries = [];
@@ -556,7 +558,7 @@ class NewInvoice extends React.PureComponent {
             preState.formData.status = Enum.INVOICE_STATUS.PAID;
             return preState;
         });
-        message.success("Payment sucess");
+        message.success("Payment success");
     }
 
     handleMakeAsSent = () => {
@@ -673,18 +675,6 @@ class NewInvoice extends React.PureComponent {
         return total;
     }
 
-    getDiscount(total, formData) {
-        let discount = formData.discount;
-        if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-            discount = this.util.getValueFromPercentage(total, discount);
-        }
-
-        if (!discount)
-            discount = 0;
-
-        return discount;
-    }
-
     onChangeVATType = (type) => {
         if (type !== "include") {
             this.setState(preState => {
@@ -694,39 +684,14 @@ class NewInvoice extends React.PureComponent {
         }
     }
 
-    getVATValue() {
-        let vat = 0;
-        let total = this.getTotal();
-        const discount = this.getDiscount(total, this.state.formData);
-        const taxPercentage = this.state.formData.taxRate;
-        vat = this.util.getTaxValue(total - discount, taxPercentage);
-        if (!vat || vat < 0) 
-            vat = 0;
-
-        return vat;
-    }
-
-    getGrandTotal() {
-        let total = this.getTotal();
-        let taxInclude = this.getVATValue();
-        if (taxInclude) 
-            total += taxInclude;
-
-        if (!total || total < 0) 
-            total = 0;
-        return total;
-    }
-
     renderPreviewInvoice(formData) {
         formData.transactionEntries = this.state.transactionEntries;
-        formData.totalExcludeTax = this.getTotal();
-        formData.total = this.getGrandTotal();
         return <div id="wrap-invoice-form">
             <CAInvoice formData={formData} />
         </div>;
     }
 
-    renderReceip(formData) {
+    renderReceipt(formData) {
         return <div style={{display: "none"}}>
             <ReceiptTemplate formData={formData} ref={re => this.receiptRef = re} />
         </div>;
@@ -746,10 +711,13 @@ class NewInvoice extends React.PureComponent {
         };
         const {formData} = this.state;
         let discount = Number(formData.discount);
+        let subTotal = this.getTotal();
         if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-            discount = this.util.getValueFromPercentage(this.getTotal(), discount);
+            discount = this.util.getValueFromPercentage(subTotal, discount);
         }
-
+        formData.totalExcludeTax = subTotal;
+        let vat = this.util.getTaxValue(subTotal - discount, formData.taxRate);
+        formData.total = subTotal + vat;
         return ( 
             !this.state.loading && Object.keys(formData).length ? 
             <div>
@@ -882,7 +850,7 @@ class NewInvoice extends React.PureComponent {
                         </Col>
                     </Row>
                     <Row style={{marginBottom: 20}}>
-                        <SearchProductDropdwon
+                        <SearchProductDropdown
                             productSearch={this.state.productSearch}
                             handleOnSelectList={this.handleOnSelectList}
                             className="ca-input-v1 purchase-order"
@@ -938,7 +906,7 @@ class NewInvoice extends React.PureComponent {
                             <div style={styles.itemSummary}>
                                 <div style={{width: 100}}><Translate id="text_sub_total" /></div>
                                 <div>:</div>
-                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(this.getTotal())}</div>
+                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.totalExcludeTax)}</div>
                             </div>
                             <div style={styles.itemSummary}>
                                 <div style={{width: 100}}><Translate id="text_discount" /></div>
@@ -948,12 +916,18 @@ class NewInvoice extends React.PureComponent {
                             <div style={styles.itemSummary}>
                                 <div style={{width: 100}}>VAT({formData.taxRate}%)</div>
                                 <div>:</div>
-                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(this.getVATValue())}</div>
+                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(vat)}</div>
                             </div>
                             <div style={styles.itemSummary}>
                                 <div style={{width: 100}}><Translate id="text_grand_total" /></div>
                                 <div>:</div>
-                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(this.getGrandTotal() - discount)}</div>
+                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.total - discount)}</div>
+                                <InputNumber 
+                                    name="total"
+                                    data={formData.total}
+                                    style={{display: "none"}}
+                                    form={this.props.form}
+                                />
                             </div>
                         </Col>
                     </Row>
@@ -1018,7 +992,7 @@ class NewInvoice extends React.PureComponent {
                         </Col>
                     </Row>
                 </Form>
-                {this.renderReceip(formData)}
+                {this.renderReceipt(formData)}
                 {this.renderPreviewInvoice(formData)}
                 {this.state.customerForm}
                 <Drawer

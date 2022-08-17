@@ -52,9 +52,6 @@ export default function ReceivedPayment(props) {
   }
 
   const {formData} = props;
-  if (formData.totalExcludeTax) {
-    formData.totalExcludeTax = formData.total;
-  }
 
   let discount = getDiscount(formData);
   return (

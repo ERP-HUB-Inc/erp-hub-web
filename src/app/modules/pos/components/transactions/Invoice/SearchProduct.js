@@ -12,7 +12,7 @@ import ProductUtil from "../../../../inventory/utils/index";
 import ProductService from "../../../../inventory/services/products/ProductService";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 
-export default function SearchProductDropdwon(props) {
+export default function SearchProductDropdown(props) {
   const [visibleDropDown, setVisibleDropdown] = React.useState(false);
   const [isMouseHoverOnSearchList, setIsMouseHoverOnSearchList] = React.useState(false);
   const [isSetFocusSearchInput, setIsSetFocusSearchInput] = React.useState(false);
@@ -209,6 +209,6 @@ export default function SearchProductDropdwon(props) {
   </div>;
 }
 
-SearchProductDropdwon.defaultProps = {
+SearchProductDropdown.defaultProps = {
   showIcon: true
 };

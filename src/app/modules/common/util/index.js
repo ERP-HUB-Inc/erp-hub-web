@@ -276,6 +276,9 @@ export default class Util {
       value = (amount * total) / 100;
     }
 
+    if (!value)
+      value = 0;
+
     return value;
   }
 

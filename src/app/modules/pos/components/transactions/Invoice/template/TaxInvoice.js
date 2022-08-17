@@ -19,22 +19,18 @@ export default function TaxInvoice(props) {
     return subtotal;
   }
 
-  function getDiscount(formData) {
-    let discount = formData.discount;
-    if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-      discount = util.getValueFromPercentage(formData.subtotal, discount);
-    }
-    return discount;
-  }
-
   const {formData, setting} = props;
     
-  formData.subtotal = getSubTotal(formData);
   const exchangeRate = formData.exchangeRate;
 
   if (!formData.totalExcludeTax) {
-    formData.totalExcludeTax = formData.subtotal;
+    formData.totalExcludeTax = getSubTotal(formData);
   }
+  let discount = Number(formData.discount);
+  if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+    discount = util.getValueFromPercentage(formData.totalExcludeTax, discount);
+  }
+
   let tax = util.floor(formData.total - formData.totalExcludeTax);
   if (!tax)
     tax = 0;
@@ -132,34 +128,34 @@ export default function TaxInvoice(props) {
                   <tr>
                     <td colSpan={2} rowSpan={formData.discount ? 3 : 2}></td>
                     <td colSpan={2} style={{textAlign: "right"}}><div>សរុប</div><div>Sub Total</div></td>
-                    <td style={{textAlign: "right"}}>{util.formatCurrency(formData.subtotal)}</td>
+                    <td style={{textAlign: "right"}}>{util.formatCurrency(formData.totalExcludeTax)}</td>
                   </tr>
                   {
                     formData.discount ?
                     <tr>
                       <td colSpan={2} style={{textAlign: "right"}}><div>បញ្ចុះតម្លៃ</div><div>Discount</div></td>
-                      <td style={{textAlign: "right"}}>-{util.formatCurrency(getDiscount(formData))}</td>
+                      <td style={{textAlign: "right"}}>-{util.formatCurrency(discount)}</td>
                     </tr>
                     : null
                   }
                   <tr style={{textAlign: "right"}}>
                     <td colSpan={2}>
-                      <div>អាករលើតម្លៃបន្ថែម{util.fromStandardNumberKHV2(parseInt(util.getTaxRate(formData.subtotal - getDiscount(formData), tax)))}%</div>
-                      <div>VAT({parseInt(util.getTaxRate(formData.subtotal - getDiscount(formData), tax))}%)</div>
+                      <div>អាករលើតម្លៃបន្ថែម{util.fromStandardNumberKHV2(parseInt(util.getTaxRate(formData.totalExcludeTax - discount, tax)))}%</div>
+                      <div>VAT({parseInt(util.getTaxRate(formData.totalExcludeTax - discount, tax))}%)</div>
                     </td>
                     <td>{util.formatCurrency(tax)}</td>
                   </tr>
                   <tr style={{fontWeight: 600}}>
-                    <td colSpan={2} style={{textTransform: "capitalize"}}>{util.converNumberToWord(formData.total - getDiscount(formData))}</td>
+                    <td colSpan={2} style={{textTransform: "capitalize"}}>{util.converNumberToWord(formData.total - discount)}</td>
                     <td colSpan={2} style={{textAlign: "right"}}><div>សរុបរួម</div><div>Grand Total</div></td>
-                    <td style={{textAlign: "right"}}>{util.formatCurrency(formData.total - getDiscount(formData))}</td>
+                    <td style={{textAlign: "right"}}>{util.formatCurrency(formData.total - discount)}</td>
                   </tr>
                   <tr style={{fontWeight: 600}}>
                     <td colSpan={2} style={{borderRight: "none"}}>
                       <div style={{display: "flex", justifyContent: "space-between"}}><div>អត្រាប្ដូរប្រាក់</div><div>{exchangeRate}</div></div>
                     </td>
                     <td style={{textAlign: "right"}} colSpan={2}>សរុបជាប្រាក់រៀល</td>
-                    <td style={{textAlign: "right"}}>{util.formatCurrency((formData.total - getDiscount(formData)) * exchangeRate, "")} ៛</td>
+                    <td style={{textAlign: "right"}}>{util.formatCurrency((formData.total - discount) * exchangeRate, "")} ៛</td>
                   </tr>
                 </tbody>
               </table>
