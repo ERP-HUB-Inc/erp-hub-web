@@ -59,45 +59,37 @@ export default class FormEntry extends Modal {
         title: <this.Translate id="text_stock_on_hand" />,
         dataIndex: "quantityOnHand",
         width: 150,
-        align: "center",
         key: "quantityOnHand",
         render: (quantityOnHand, product, index) => {
-          quantityOnHand = this.countQuantityOnHand(product);
+          const foundUnit = this.state.units.find(unit => unit.id === product.unitId);
+          const fromLocationId = this.props.form.getFieldValue("fromLocationId");
+          quantityOnHand = this.countQuantityOnHand(product, fromLocationId);
           return <div>
             <this.InputNumber name={`quantityOnHand[${index}]`} className="hidden" data={quantityOnHand} form={this.form} />
-            {quantityOnHand}
+            <this.Select name={`unitId[${index}]`} className="hidden" valueKey="id" dataSource={this.state.units} defaultValue={product.unitId} form={this.form} />
+            {quantityOnHand} {foundUnit ? foundUnit.name : ""}
           </div>;
         }
       },
       {
-        title: <this.Translate id="text_unit" />,
-        dataIndex: "unit",
-        width: 150,
-        key: "unit",
-        align: "center",
-        render: (text, record, index) => {
-          return <this.Select
-            name={`unitId[${index}]`}
-            valueKey="id"
-            dataSource={this.state.units}
-            defaultValue={record.unitId}
-            disabled={true}
-            form={this.form} />;
-        }
-      },
-      {
-        title: <this.Translate id="text_quantity" />,
+        title: <this.Translate id="text_quantity_to_transfer" />,
         dataIndex: "transferQuantity",
-        width: 200,
+        width: 240,
         key: "transferQuantity",
-        align: "right",
         render: (text, product, index) => {
-          return <this.InputNumber
-            name={`transferQuantity[${index}]`}
-            data={`${product.transferQuantity}`}
-            isAutoSelect={true}
-            required={true}
-            form={this.form} />;
+          const fromLocationId = this.props.form.getFieldValue("fromLocationId");
+          const quantityOnHand = this.countQuantityOnHand(product, fromLocationId);
+          return <div>
+              <this.InputNumber
+                name={`transferQuantity[${index}]`}
+                data={`${product.transferQuantity}`}
+                max={quantityOnHand}
+                isAutoSelect={true}
+                form={this.form} />
+              <div style={{color: "#e85757", paddingTop: 4, paddingBottom: 4}}>
+                Quantity available to transfer: {quantityOnHand}
+              </div>
+          </div>;
         }
       },
       {
@@ -176,10 +168,10 @@ export default class FormEntry extends Modal {
     }
   }
 
-  countQuantityOnHand(product) {
+  countQuantityOnHand(product, locationId) {
     let fromLocationId = "";
-    if (this.props.fromLocationId) {
-      fromLocationId = this.props.fromLocationId;
+    if (locationId) {
+      fromLocationId = locationId;
     } else {
       fromLocationId = this.Util.getLocationId();
     }
