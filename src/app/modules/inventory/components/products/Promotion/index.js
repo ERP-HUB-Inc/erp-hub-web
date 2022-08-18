@@ -1,13 +1,110 @@
 import React from "react";
-import { Form } from "antd";
+import { 
+  Dropdown, 
+  Form, 
+  Menu, 
+  message, 
+  Table,
+  Icon,
+  Pagination
+} from "antd";
 import { connect } from "react-redux";
-import List from "../../List";
 import history from "../../../../common/router/history";
+import List from "../../List";
+import PromotionService from "../../../services/products/PromotionService";
+import EnumPos from "../../../../pos/enums";
 
 class Promotion extends List {
+  constructor(props) {
+    super(props);
+    this.state = {
+      ...this.state,
+      data: []
+    };
+    this.columns = [
+      {
+        title: <this.Translate id="text_promotion_name" />,
+        dataIndex: "name",
+        key: "name",
+        width: 620,
+        render: (name, record) => {
+          const menu = (
+            <Menu>
+              <Menu.Item>
+                <this.Link to={`/promotions/update/${record.id}`}>
+                  <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
+                </this.Link>
+              </Menu.Item>
+            </Menu>
+          );
+  
+          return <div className="wrap-product-name" style={{display: "flex"}}>
+          {name}
+          <Dropdown className="product-row-option" overlay={menu}>
+            {/*eslint-disable-next-line*/}
+            <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
+              <this.Translate id="text_option" /> <Icon type="down" />
+            </a>
+          </Dropdown>
+        </div>;
+        }
+      },
+      {
+        title: <this.Translate id="text_discount" />,
+        dataIndex: "discount",
+        key: "discount",
+        render: (discount, record) => {
+          let label = "%";
+          if (record.discountType === EnumPos.DISCOUNT_TYPE.AMOUNT) {
+            label = "$";
+          }
+          return `${this.Util.formatCurrency(discount, "")}${label}`;
+        }
+      },
+      {
+        title: <this.Translate id="text_start_date" />,
+        dataIndex: "startDate",
+        key: "startDate",
+        render: (startDate) => this.Util.formatDate(startDate)
+      },
+      {
+        title: <this.Translate id="text_end_date" />,
+        dataIndex: "endDate",
+        key: "endDate",
+        render: (endDate) => this.Util.formatDate(endDate)
+      }
+    ];
+    this.service = PromotionService;
+  }
 
   componentDidMount() {
+    this.fetchList();
+  }
 
+  fetchList() {
+    this.service.lists(this.pageSize)
+    .then(response => {
+      this.setState({data: response.data});
+    })
+    .catch(() => message.error("Internal Server Error"));
+  }
+
+  handleDelete() {
+    if (this.service) {
+      this.setState({deleting: true});
+      this.service.archive(this.state.selectedListIds)
+        .then(() => {
+          this.fetchList();
+          this.setState({
+            selectedRowKeys: [],
+            modalVisible: false,
+            deleting: false
+          });
+        })
+        .catch(err => {
+          this.setState({deleting: false});
+        });
+    }
   }
 
   renderButtonAddNew() {
@@ -21,12 +118,46 @@ class Promotion extends List {
     </this.Button>;
   }
 
-  renderPagination() {
-    return <div />;
+  renderPagination(data0, classsName = "float-right") {
+    const {data} = this.state;
+    let pagination = {
+      total: data.pagination && data.pagination.total,
+      pageSize: data.pagination && data.pagination.limit,
+      current: this.state.current,
+      pageSizeOptions: this.pageSizeOptions
+    };
+
+    const showTotal = total => {
+      return `${this.CATranslate("text_total", this.props.locale)} ${total} ${this.CATranslate("text_records", this.props.locale)}`;
+    };
+
+    return( 
+      data && pagination.total > 0 ?
+        <div className={classsName}>
+          <Pagination size="small" showTotal={showTotal} showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
+        </div>
+        :
+        ""
+    );
   }
 
   renderTable() {
-    return <div />;
+    const rowSelection = {
+      selectedRowKeys: this.state.selectedRowKeys,
+      onChange: this.onSelectChange,
+      getCheckboxProps: record => ({
+        // disabled: "isSystem" in record && record["isSystem"] ? true : false, // Column configuration not to be checked
+        name: record.name,
+      })
+    };
+
+    return <Table 
+      rowKey="id"
+      rowSelection={this.rowSelection ? rowSelection : null}
+      columns={this.columns}
+      dataSource={this.state.data.data}
+      onChange={this.onChange}
+    />;
   }
 }
 

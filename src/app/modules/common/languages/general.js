@@ -380,6 +380,16 @@ export default {
     "Discount",
     "បញ្ចុះតម្លៃ"
   ],
+
+  "text_start_date": [
+    "Start Date",
+    "ចាប់ពីថ្ងៃទី"
+  ],
+
+  "text_end_date": [
+    "End Date",
+    "ដល់ថ្ងៃទី"
+  ],
   
   "text_sub_total": [
     "Sub Total",
