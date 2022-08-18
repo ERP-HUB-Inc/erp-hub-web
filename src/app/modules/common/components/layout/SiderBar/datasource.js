@@ -51,6 +51,11 @@ const ManageProduct = Loadable({
   loading: () => <StartUp />,
 });
 
+const Promotion = Loadable({
+  loader: () => import("../../../../inventory/components/products/Promotion"),
+  loading: () => <StartUp />
+});
+
 const Attribute = Loadable({
   loader: () => import("../../../../inventory/containers/products/VariantAttribute"),
   loading: () => <StartUp />,
@@ -336,6 +341,13 @@ const dataSource = {
         icon: "icon-time",
         route: "/products/list",
         component: ManageProduct,
+        isFashNav: true
+      },
+      {
+        title: <Translate id="text_promotion" />,
+        icon: "icon-sale-return",
+        route: "/promotions/list",
+        component: Promotion,
         isFashNav: true
       },
       {

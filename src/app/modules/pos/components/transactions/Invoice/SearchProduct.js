@@ -155,9 +155,10 @@ export default function SearchProductDropdown(props) {
       <InputText
         wrapperCol={{xs: {span: 24}, sm: {span: 24}}}
         name="searchProduct"
-        placeholder={`${props.placeholder ? props.placeholder : stringTranslate("text_search_product", props.locale)}`}
+        placeholder={`${props.placeholder ? props.placeholder : stringTranslate("text_search_product_by_name_bc", props.locale)}`}
         className={`${props.showIcon ? "ca-input-v1-icon-left" : ""} ${props.className}`}
         isAutoFocus={props.isAutoFocus}
+        disabled={props.disabled}
         didUpdateMakeAutoFocus={props.didUpdateMakeAutoFocus || isSetFocusSearchInput}
         handleKeyUp={handleKeyDownOnProductSearch}
         // handlePressEnter={this.handlePressEnterOnSearch}

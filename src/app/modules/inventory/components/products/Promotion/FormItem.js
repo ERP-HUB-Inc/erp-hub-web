@@ -7,12 +7,14 @@ import {
   Row,
   PageHeader,
   Table,
-  Icon
+  Icon,
+  message,
 } from "antd";
 import { 
   Button, 
   DateRangePicker, 
   InputText, 
+  InputNumber,
   RadioNormal, 
   Select
 } from "../../../../common/elements/ant-ui";
@@ -20,16 +22,32 @@ import history from "../../../../common/router/history";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import Util from "../../../../common/util";
 import LocationService from "../../../../pos/services/settings/LocationService";
-import ProductService from "../../../services/products/ProductService";
+import PromotionService from "../../../services/products/PromotionService";
 import Enum from "../../../../pos/enums";
 import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
 import VariantProduct from "../../../../pos/components/transactions/RetailSale/VaraintProduct";
+
+const targetDiscount = {
+  all: "all",
+  some: "some"
+};
+
+const targetProduct = {
+  all: "all",
+  specific: "specific"
+};
+
+const promotionType = {
+  basic: "basic",
+  advanced: "advance"
+};
 
 class FormItem extends React.PureComponent {
   state = {
     locations: [],
     productEntries: [],
-    productSearch: []
+    productSearch: [],
+    loading: false
   }
   entryColumn = [
     {
@@ -43,14 +61,40 @@ class FormItem extends React.PureComponent {
       dataIndex: "variantName",
       key: "variantName",
       render: (variantName, record, index) => {
-        return <div style={{display: "flex", justifyContent: "space-between"}}>
+        return <div>
           <div>{variantName}</div>
-          <Icon type="delete" style={{cursor: "pointer", color: "red"}} onClick={() => this.handleRemoveEntry(index)} />
-
           <InputText
             style={{display: "none"}}
             name={`productVariantId[${index}]`}
             data={record.productVariantId}
+            form={this.props.form} />
+        </div>;
+      }
+    },
+    {
+      title: <Translate id="text_price" />,
+      dataIndex: "price",
+      key: "price",
+      render: (price) => this.util.formatCurrency(price)
+    },
+    {
+      title: <Translate id="text_promotion_price" />,
+      dataIndex: "price",
+      key: "discountPrice",
+      render: (price, record, index) => {
+        const discountType = this.props.form.getFieldValue("discountType");
+        let discount = this.props.form.getFieldValue("discount");
+        if (discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+          discount = this.util.getValueFromPercentage(price, discount);
+        }
+        price = price - discount;
+        return <div style={{display: "flex", justifyContent: "space-between"}}>
+          <div>{this.util.formatCurrency(price)}</div>
+          <Icon type="delete" style={{cursor: "pointer", color: "red"}} onClick={() => this.handleRemoveEntry(index)} />
+          <InputNumber
+            style={{display: "none"}}
+            name={`price[${index}]`}
+            data={price}
             form={this.props.form} />
         </div>;
       }
@@ -62,18 +106,44 @@ class FormItem extends React.PureComponent {
   componentDidMount() {
     LocationService.lists(20)
     .then(response => this.setState({locations: response.data.data}));
-
-    ProductService.searchForDrowDown(15, 0)
-    .then(response => this.setState({productSearch: response && response.data.data}));
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log("values", values);
+        values["startDate"] = this.util.formatDateForMYSQL(values.dates[0]);
+        values["endDate"] = this.util.formatDateForMYSQL(values.dates[1]);
+        values.discount = Number(values.discount);
+        if (values.productVariantId) {
+          const productsDiscount = [];
+          values.productVariantId.forEach((productVariantId, index) => {
+            productsDiscount.push({
+              productVariantId,
+              price: values.price[index]
+            });
+          });
+
+          delete values.productVariantId;
+          delete values.price;
+          delete values.dates;
+          values.productDiscount = productsDiscount;
+        }
+
+        this.save(values);
       }
     });
+  }
+
+  save(data) {
+    this.setState({loading: true});
+    PromotionService.create(data)
+    .then(() => {
+      message.success("Success");
+      history.goBack();
+    })
+    .catch(() => message.error("Error!"))
+    .finally(() => this.setState({loading: false}));
   }
 
   handleRemoveEntry = (index) => {
@@ -113,6 +183,7 @@ class FormItem extends React.PureComponent {
         id: null,
         productVariantId: productVariant.id,
         variantName: product.name ? product.name : product.namekm,
+        price: productVariant.price,
         status: 1
       });
     } else {
@@ -130,6 +201,7 @@ class FormItem extends React.PureComponent {
           id: null,
           productVariantId: productVariant.id,
           variantName: product.name ? product.name : product.namekm,
+          price: productVariant.price,
           status: 1
         });
       }
@@ -152,7 +224,7 @@ class FormItem extends React.PureComponent {
             onBack={() => history.goBack()}
             title={this.pageTitle}
             extra={[
-              <Button key={0} type="info" htmlType="submit">
+              <Button key={0} type="info" htmlType="submit" loading={this.state.loading}>
                 <Translate id="text_save_and_close" />
               </Button>
             ]}
@@ -163,12 +235,18 @@ class FormItem extends React.PureComponent {
               <InputText 
                 name="name"
                 label={<Translate id="text_promotion_name" />}
+                required={true}
+                errorRequired={`${stringTranslate("text_enter_promotion_name", this.props.locale)}`}
                 placeholder={`${stringTranslate("text_enter_promotion_name", this.props.locale)}`}
+                handleOnFocus={(e) => e.target.select()}
                 form={this.props.form} />
 
               <DateRangePicker 
                 name="dates"
                 label={<Translate id="text_date" />}
+                ranges={[]}
+                required={true}
+                errorRequired={`${stringTranslate("text_please_enter_dates", this.props.locale)}`}
                 form={this.props.form} />
             </Col>
             <Col md={18} style={{paddingLeft: 20}}>
@@ -185,16 +263,20 @@ class FormItem extends React.PureComponent {
                 name="type"
                 label={<Translate id="text_promotion_type" />}
                 placeholder={`${stringTranslate("text_select_type", this.props.locale)}`}
-                dataSource={[]}
+                valueKey="value"
+                defaultValue={promotionType.basic}
+                dataSource={[
+                  {value: promotionType.basic, name: <Translate id="text_basic" />}
+                ]}
                 style={{width: 318}}
                 form={this.props.form}/> 
 
               <RadioNormal 
-                name="target"
                 label={<Translate id="text_target_promotion" />}
+                defaultValue={targetDiscount.all}
                 dataSource={[
-                  {value: 1, title: stringTranslate("text_available_to_everyone", this.props.locale)},
-                  {value: 2, title: stringTranslate("text_exclusive_to_some", this.props.locale)}
+                  {value: targetDiscount.all, title: stringTranslate("text_available_to_everyone", this.props.locale)},
+                  {value: targetDiscount.some, title: stringTranslate("text_exclusive_to_some", this.props.locale), disabled: true}
                 ]}
                 inputStyle={{padding: "10px !important", marginTop: 3}}
                 form={this.props.form} />
@@ -215,19 +297,23 @@ class FormItem extends React.PureComponent {
               <InputText 
                 name="discount"
                 type="number"
+                required={true}
+                data={0}
+                handleOnFocus={(e) => e.target.select()}
                 style={{paddingTop: 32, paddingLeft: 17}}
                 suffix={this.props.form.getFieldValue("discountType") === Enum.DISCOUNT_TYPE.PERCENTAGE ? "%" : "$"}
                 form={this.props.form} />
             </Col>
-            <Col md={18} style={{paddingLeft: 20, paddingRight: 17}}>
+            <Col md={18} style={{paddingLeft: 20, paddingRight: 38}}>
               <div style={{display: "flex", height: 70}}>
                 <RadioNormal
+                  name="targetProduct"
                   label={<Translate id="text_product" />}
-                  defaultValue="all"
+                  defaultValue={targetProduct.all}
                   buttonStyle="solid"
                   dataSource={[
-                    {value: "all", title: <Translate id="text_all" />},
-                    {value: "specific", title: <Translate id="text_specific" />}
+                    {value: targetProduct.all, title: <Translate id="text_all" />},
+                    {value: targetProduct.specific, title: <Translate id="text_specific" />}
                   ]}
                   form={this.props.form} />
                 <SearchProductDropdown
@@ -235,6 +321,7 @@ class FormItem extends React.PureComponent {
                   handleOnSelectList={this.handleOnSelectList}
                   locale={this.props.locale}
                   showIcon={false}
+                  disabled={this.props.form.getFieldValue("targetProduct") === targetDiscount.all ? true : false}
                   style={{marginTop: 32, flexGrow: 1, paddingLeft: 17}}
                   form={this.props.form} />
               </div>

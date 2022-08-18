@@ -435,6 +435,11 @@ export default {
     "Balance",
     "សមតុល្យសាច់ប្រាក់"
   ],
+
+  "text_basic": [
+    "Basic",
+    "Basic"
+  ],
   
   "text_pay": [
     "Pay",
@@ -1005,5 +1010,10 @@ export default {
   "text_sort": [
     "Order",
     "លំដាប់"
+  ],
+
+  "text_please_enter_dates": [
+    "Please enter dates",
+    "សូមបញ្ចូលកាលបរិច្ឆេទ"
   ]
 };

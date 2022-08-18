@@ -4,6 +4,16 @@ export default {
     "ផលិតផល"
   ],
 
+  "text_promotion": [
+    "Promotion",
+    "ប៉្រូម៉ូសិន"
+  ],
+
+  "text_promotion_price": [
+    "Promotion Price",
+    "តម្លៃប៉្រូម៉ូសិន"
+  ],
+
   "text_product_name": [
     "Product Name",
     "ឈ្មោះផលិតផល"
@@ -197,7 +207,7 @@ export default {
 
   "input_product_upload_image": [
     "You can also upload files by",
-    "អ្នកអាច upload file ដោយ"
+    "​អ្នក​អាច upload file ដោយ"
   ],
 
   "input_product_variant_name": [
@@ -207,7 +217,12 @@ export default {
 
   "text_search_product": [
     "Search product",
-    "ស្ងែងរកផលិតផល"
+    "ស្ងែង​រក​ផលិតផល"
+  ],
+
+  "text_search_product_by_name_bc": [
+    "Search product by name, barcode",
+    "ស្ងែង​រក​​ផលិតផល​ដោយ​ឈ្មេាះ, barcode"
   ],
 
   "text_search_output_product": [
@@ -582,7 +597,7 @@ export default {
 
   "text_available_to_everyone": [
     "Available to Everyone",
-    "សម្រាប់គ្រប់គ្នា"
+    "សម្រាប់គ្រប់អតិថិជន"
   ],
 
   "text_exclusive_to_some": [

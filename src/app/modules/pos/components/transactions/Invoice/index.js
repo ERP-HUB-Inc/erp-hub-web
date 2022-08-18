@@ -92,9 +92,14 @@ export default class Invoice extends List {
       },
       {
         title: <this.Translate id="text_sub_total" />,
-        dataIndex: "total",
-        key: "total",
-        render: total => this.formatCurrency(total)
+        dataIndex: "totalExcludeTax",
+        key: "totalExcludeTax",
+        render: (totalExcludeTax, record) => {
+          if (!totalExcludeTax) {
+            totalExcludeTax = record.total;
+          }
+          return this.Util.formatCurrency(totalExcludeTax);
+        }
       },
       {
         title: <this.Translate id="text_tax" />,
@@ -189,13 +194,10 @@ export default class Invoice extends List {
 
   getDiscount(data) {
     let discount = Number(data.discount);
-    if (!discount) {
-      discount = 0;
+    if (data.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+      discount = this.Util.getValueFromPercentage(data.totalExcludeTax, discount);
     }
 
-    if (data.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-      discount = this.Util.getValueFromPercentage(data.total, discount);
-    }
     return discount;
   }
 

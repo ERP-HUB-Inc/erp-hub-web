@@ -34,8 +34,8 @@ export class RadioNormal extends Element {
                 buttonStyle={this.props.buttonStyle}
               >
                 {this.props.buttonStyle === "solid" ?
-                  this.props.dataSource.map((row, index) => <this.Radio.Button key={index} value={row.value}>{row.title}</this.Radio.Button>)
-                  : this.props.dataSource.map((row, index) => <this.Radio style={this.props.inputStyle} key={index} value={row.value}>{row.title}</this.Radio>)
+                  this.props.dataSource.map((row, index) => <this.Radio.Button disabled={row.disabled} key={index} value={row.value}>{row.title}</this.Radio.Button>)
+                  : this.props.dataSource.map((row, index) => <this.Radio disabled={row.disabled} style={this.props.inputStyle} key={index} value={row.value}>{row.title}</this.Radio>)
                 }
               </this.Radio.Group>
             )

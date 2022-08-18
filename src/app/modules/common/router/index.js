@@ -20,7 +20,7 @@ import ProductSplit from "../../inventory/components/products/Product/ProductSpl
 import ProductUpdate from "../../inventory/containers/products/Product/FormUpdate";
 import ProductDetail from "../../inventory/components/products/Product/ProductDetail";
 import ProductImport from "../../inventory/components/products/Product/FormImport";
-import ProductDiscountCreate from "../../inventory/components/products/ProductDiscount/FormItem";
+import PromotionCreate from "../../inventory/components/products/Promotion/FormItem";
 import EmployeeCreate from "../../hr/containers/employees/Employee/FormCreate";
 import EmployeeUpdate from "../../hr/containers/employees/Employee/FormUpdate";
 import AdjustmentCreate from "../../inventory/containers/stock/StockAdjustmentRequest/FormCreate";
@@ -90,7 +90,7 @@ class Router extends Component {
             <Route path="/products/split/:productVariantId" component={ProductSplit} />
             <Route path="/products/update/:id" component={ProductUpdate} />
             <Route path="/products/detail/:id" component={ProductDetail} />
-            <Route path="/products-discount/create" component={ProductDiscountCreate} />
+            <Route path="/promotions/create" component={PromotionCreate} />
             <Route path="/stocks/adjustment/create" component={AdjustmentCreate} />
             <Route path="/stocks/adjustment/update/:id" component={AdjustmentUpdate} />
             <Route path="/stocks/transfer/create" component={StockTransferCreate} />
