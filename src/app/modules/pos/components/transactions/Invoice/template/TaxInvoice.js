@@ -34,6 +34,7 @@ export default function TaxInvoice(props) {
   let tax = util.floor(formData.total - formData.totalExcludeTax);
   if (!tax)
     tax = 0;
+  
   return (
     <table className="table-invoice">
       <tbody>
@@ -139,8 +140,8 @@ export default function TaxInvoice(props) {
                 }
                 <tr style={{textAlign: "right"}}>
                   <td colSpan={2}>
-                    <div>អាករលើតម្លៃបន្ថែម{util.fromStandardNumberKHV2(parseInt(util.getTaxRate(formData.totalExcludeTax - discount, tax)))}%</div>
-                    <div>VAT({parseInt(util.getTaxRate(formData.totalExcludeTax - discount, tax))}%)</div>
+                    <div>អាករលើតម្លៃបន្ថែម{util.fromStandardNumberKHV2(Math.round(util.getTaxRate(formData.totalExcludeTax - discount, tax)))}%</div>
+                    <div>VAT({Math.round(util.getTaxRate(formData.totalExcludeTax - discount, tax))}%)</div>
                   </td>
                   <td>{util.formatCurrency(tax)}</td>
                 </tr>
