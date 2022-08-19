@@ -12,9 +12,12 @@ import {
   message
 } from "antd";
 import history from "../../../../common/router/history";
+import Enum from "../../../enums";
 import InvoiceService from "../../../services/transactions/InvoiceService";
 import CAInvoice from "./CAInvoice";
 import ReceivedPayment from "../ReceivedPayment/Form";
+import { InputText } from "../../../../common/elements/ant-ui";
+import { stringTranslate } from "../../../../common/helper/stringTranslate";
 
 class InvoiceDetail extends React.PureComponent {
   state = {
@@ -22,9 +25,11 @@ class InvoiceDetail extends React.PureComponent {
     loading: false,
     showDrawer: false
   }
+  lastId = "";
 
   componentDidMount() {
     const id = this.props.match.params.id;
+    this.lastId = id;
     this.setState({loading: true});
     InvoiceService.detail(id)
     .then(response => {
@@ -33,18 +38,52 @@ class InvoiceDetail extends React.PureComponent {
     .finally(() => this.setState({loading: false}));
   }
 
-  handlePrint = () => {
-    window.print();
+  componentDidUpdate() {
+    const id = this.props.match.params.id;
+    if (id && id !== this.lastId) {
+      this.lastId = id;
+      this.setState({loading: true});
+      InvoiceService.detail(id)
+      .then(response => {
+        this.setState({formData: response && response.data});
+      })
+      .finally(() => this.setState({loading: false}));
+    }
+  }
+
+  handleSearchInvoice = (e) => {
+    const value = e.target.value;
+    if (value) {
+      this.setState({loading: true});
+      InvoiceService.searchInvoice(e.target.value)
+      .then(response => {
+        this.setState({formData: response && response.data});
+      })
+      .catch(() => this.setState({formData: {}}))
+      .finally(() => {
+        this.setState({loading: false});
+        history.push({
+          pathname: `/transactions/detail-invoice/${this.state.formData.id}`,
+          search: `search=${value}`
+        });
+      });
+    }
+  }
+
+  handleMakeAsSent = () => {
+    InvoiceService.makAsSent(this.id)
+    .then(() => {
+        this.setState(preState => {
+            preState.formData.status = Enum.INVOICE_STATUS.SENT;
+        });
+        message.success("Make sent success");
+    })
+    .catch(() => message.error("Error!...."));
   }
 
   render() {
     const {formData} = this.state;
     return (
-      this.state.loading && !(Object.keys(formData).length) ?
-        <div style={{width: 30, margin: "0 auto", paddingTop: 30}}>
-          <Spin />
-        </div>
-      :
       <div style={{marginBottom: 25}}>
         <PageHeader
           style={{
@@ -57,13 +96,22 @@ class InvoiceDetail extends React.PureComponent {
           title={<Translate id="text_invoice" />}
           subTitle={formData.invoiceNumber}
           extra={[
+            <InputText
+              key={0}
+              name="search"
+              style={{width: 230, float: "left", marginTop: -4}}
+              placeholder={`${stringTranslate("text_invoice_no", this.props.locale)}`}
+              handlePressEnter={this.handleSearchInvoice}
+              form={this.props.form}
+            />,
             <Dropdown key={1} overlay={(
               <Menu>
-                <Menu.Item key={0} onClick={this.handlePrint} title="Ctrl + P"><Translate id="text_print" /></Menu.Item>
-                <Menu.Item key={1} onClick={() => history.push({pathname: `/transactions/update-invoice/${this.props.match.params.id}`})}>
+                <Menu.Item key={0} onClick={() => window.print()} title="Ctrl + P"><Translate id="text_print" /></Menu.Item>
+                <Menu.Item key={1} onClick={this.handleMakeAsSent}><Translate id="text_mark_as_sent" /></Menu.Item>
+                <Menu.Item key={2} onClick={() => history.push({pathname: `/transactions/update-invoice/${formData.id}`})}>
                   <Translate id="text_edit_invoice" />
                 </Menu.Item>
-                <Menu.Item key={2} onClick={() => this.setState({showDrawer: true})}>
+                <Menu.Item key={3} onClick={() => this.setState({showDrawer: true})}>
                   <Translate id="text_receive_payment" />
                 </Menu.Item>
               </Menu>
@@ -75,9 +123,16 @@ class InvoiceDetail extends React.PureComponent {
           ]}
         />
 
-        <div className="invoice-page">
-          <CAInvoice formData={formData} />
-        </div>
+        {
+          !this.state.loading ?
+            <div className="invoice-page">
+            <CAInvoice formData={formData} />
+          </div>
+          : 
+          <div style={{width: 30, margin: "0 auto", paddingTop: 30}}>
+            <Spin />
+          </div>
+        }
 
         <Drawer
           title={<Translate id="text_receive_payment" />}

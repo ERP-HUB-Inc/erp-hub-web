@@ -50,7 +50,8 @@ class FormItem extends React.PureComponent {
     productEntries: [],
     productSearch: [],
     formData: {},
-    loading: false
+    loading: false,
+    loadingButton: false
   }
   entryColumn = [
     {
@@ -193,23 +194,23 @@ class FormItem extends React.PureComponent {
 
   save(data) {
     if (this.id) {
-      this.setState({loading: true});
+      this.setState({loadingButton: true});
       PromotionService.update(this.id, data)
       .then(() => {
         message.success("Success");
         history.goBack();
       })
       .catch(() => message.error("Error!"))
-      .finally(() => this.setState({loading: false}));
+      .finally(() => this.setState({loadingButton: false}));
     } else {
-      this.setState({loading: true});
+      this.setState({loadingButton: true});
       PromotionService.create(data)
       .then(() => {
         message.success("Success");
         history.goBack();
       })
       .catch(() => message.error("Error!"))
-      .finally(() => this.setState({loading: false}));
+      .finally(() => this.setState({loadingButton: false}));
     }
   }
 
@@ -259,10 +260,6 @@ class FormItem extends React.PureComponent {
         if (product.productVariantId === productVariant.id) {
           if (existingProductList[index]["status"] === 3) {
             existingProductList[index]["status"] = 1;
-          } else {
-            let quantity = existingProductList[index]["quantity"] += 1;
-            existingProductList[index]["quantity"] = quantity;
-            existingProductList[index]["amount"] = quantity * existingProductList[index]["price"];
           }
           isNotTheSameProduct = false;
         }
@@ -297,7 +294,7 @@ class FormItem extends React.PureComponent {
             onBack={() => history.goBack()}
             title={this.pageTitle}
             extra={[
-              <Button key={0} type="info" htmlType="submit" loading={this.state.loading}>
+              <Button key={0} type="info" htmlType="submit" loading={this.state.loadingButton}>
                 <Translate id="text_save_and_close" />
               </Button>
             ]}

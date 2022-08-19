@@ -43,6 +43,14 @@ class InvoiceService extends BaseService {
     });
   }
 
+  searchInvoice(invoiceNumber) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/search/${invoiceNumber}`,
+      headers: this.header
+    });
+  }
+
   create(data) {
     this.setHeader();
     return this.POST({

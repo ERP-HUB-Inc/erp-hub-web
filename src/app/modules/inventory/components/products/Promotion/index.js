@@ -19,7 +19,9 @@ class Promotion extends List {
     super(props);
     this.state = {
       ...this.state,
-      data: []
+      data: [],
+      loading: false,
+      isShowFilter: false
     };
     this.columns = [
       {
@@ -82,11 +84,13 @@ class Promotion extends List {
   }
 
   fetchList() {
+    this.setState({loading: true});
     this.service.lists(this.pageSize)
     .then(response => {
       this.setState({data: response.data});
     })
-    .catch(() => message.error("Internal Server Error"));
+    .catch(() => message.error("Error"))
+    .finally(() => this.setState({loading: false}));
   }
 
   handleDelete() {
@@ -146,7 +150,6 @@ class Promotion extends List {
       selectedRowKeys: this.state.selectedRowKeys,
       onChange: this.onSelectChange,
       getCheckboxProps: record => ({
-        // disabled: "isSystem" in record && record["isSystem"] ? true : false, // Column configuration not to be checked
         name: record.name,
       })
     };
@@ -156,6 +159,7 @@ class Promotion extends List {
       rowSelection={this.rowSelection ? rowSelection : null}
       columns={this.columns}
       dataSource={this.state.data.data}
+      loading={this.state.loading}
       onChange={this.onChange}
     />;
   }

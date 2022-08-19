@@ -10,15 +10,6 @@ import Util from "../../../../common/util";
 export default function CAInvoice(props) {
   const util = new Util();
 
-  const notFoundInvoice = () => {
-    return <Result  
-      status={404}
-      title="404"
-      subTitle="Invoice found"
-      extra={<Button type="info"><Translate id="text_back" /></Button>}
-    />;
-  };
-
   const {formData} = props;
   const setting = util.getSetting();
   let invoice = <NoneTaxInvoice formData={formData} setting={setting} />;
@@ -30,5 +21,11 @@ export default function CAInvoice(props) {
     <div style={{width: "250mm", margin: "auto", background: "#FFFFFF", padding: 40, minHeight: "297mm"}}>
       {invoice}
     </div>
-    : notFoundInvoice();
+    : 
+    <Result  
+      status={404}
+      title="404"
+      subTitle="Invoice found"
+      extra={<Button type="info"><Translate id="text_back" /></Button>}
+    />;
 }
