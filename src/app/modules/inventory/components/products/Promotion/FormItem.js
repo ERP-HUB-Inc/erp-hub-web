@@ -70,6 +70,11 @@ class FormItem extends React.PureComponent {
             name={`productVariantId[${index}]`}
             data={record.productVariantId}
             form={this.props.form} />
+          <InputText
+            style={{display: "none"}}
+            name={`variantName[${index}]`}
+            data={record.variantName}
+            form={this.props.form} />
           <InputNumber
             name={`status[${index}]`}
             style={{display: "none"}}
@@ -124,6 +129,7 @@ class FormItem extends React.PureComponent {
     const idParam = this.props.match.params.id;
     if (idParam) {
       this.id = idParam;
+      this.pageTitle = <Translate id="text_edit_discount" />;
       this.setState({loading: true});
       PromotionService.detail(idParam)
       .then(response => this.setState(preState => {
@@ -167,6 +173,7 @@ class FormItem extends React.PureComponent {
             productsDiscount.push({
               id: values.id[index],
               productVariantId,
+              variantName: values.variantName[index],
               price: values.price[index],
               status: values.status[index]
             });
@@ -250,9 +257,13 @@ class FormItem extends React.PureComponent {
       let isNotTheSameProduct = true;
       existingProductList.forEach((product, index) => {
         if (product.productVariantId === productVariant.id) {
-          let quantity = existingProductList[index]["quantity"] += 1;
-          existingProductList[index]["quantity"] = quantity;
-          existingProductList[index]["amount"] = quantity * existingProductList[index]["price"];
+          if (existingProductList[index]["status"] === 3) {
+            existingProductList[index]["status"] = 1;
+          } else {
+            let quantity = existingProductList[index]["quantity"] += 1;
+            existingProductList[index]["quantity"] = quantity;
+            existingProductList[index]["amount"] = quantity * existingProductList[index]["price"];
+          }
           isNotTheSameProduct = false;
         }
       });

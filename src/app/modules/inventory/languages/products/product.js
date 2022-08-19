@@ -575,6 +575,12 @@ export default {
     "បង្កើតផលិតផលបញ្ចុះតម្លៃ"
   ],
 
+
+  "text_edit_discount": [
+    "Update Discount Setup",
+    "កែប្រែផលិតផលបញ្ចុះតម្លៃ"
+  ],
+
   "text_promotion_name": [
     "Promotion Name",
     "ឈ្មេាះប៉្រូម៉ូសិន"
