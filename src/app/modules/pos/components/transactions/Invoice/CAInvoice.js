@@ -26,5 +26,9 @@ export default function CAInvoice(props) {
     invoice = <TaxInvoice formData={formData} setting={setting} />;
   }
 
-  return Object.keys(formData).length ? invoice : notFoundInvoice();
+  return Object.keys(formData).length ? 
+    <div style={{width: "250mm", margin: "auto", background: "#FFFFFF", padding: 40, minHeight: "297mm"}}>
+      {invoice}
+    </div>
+    : notFoundInvoice();
 }

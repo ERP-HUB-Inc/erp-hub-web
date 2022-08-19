@@ -87,14 +87,17 @@
     padding: 0 !important;
   }
 
+  .ant-dropdown-placement-bottomRight {
+    display: none !important;
+  }
+
   #sidebar,
   .ant-layout-header,
   .ant-page-header,
   #invoice-form,
-  .ant-dropdown-menu,
-  .ant-dropdown-menu-item
+  .ant-dropdown-menu
   {
-    display: none;
+    display: none !important;
   }
 
   body {

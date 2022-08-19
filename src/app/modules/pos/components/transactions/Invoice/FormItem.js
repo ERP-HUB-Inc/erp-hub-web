@@ -572,10 +572,6 @@ class NewInvoice extends React.PureComponent {
         .catch(() => message.error("Error!...."));
     }
 
-    handlePrintInvoice = () => {
-        window.print();
-    }
-
     handleNewInvoice = () => {
         history.push("/transactions/create-invoice");
         this.pageTitle = <Translate id="text_create_invoice" />;
@@ -954,9 +950,9 @@ class NewInvoice extends React.PureComponent {
                             <Button style={{marginRight: 15, marginLeft: 15}} onClick={this.handleResetForm}>
                                 <Translate id="text_clear" />
                             </Button> 
-                            <Button style={{marginRight: 15}} onClick={this.handlePrintInvoice}>
-                                <Translate id="text_print" />
-                            </Button> 
+                            <Button onClick={() => window.print()} style={{marginRight: 15}}>
+                                <Translate id="text_print_invoice" />
+                            </Button>
                             <Dropdown 
                                 overlay={(
                                     <Menu>
@@ -965,7 +961,7 @@ class NewInvoice extends React.PureComponent {
                                             <Translate id="text_receive_payment" />
                                         </Menu.Item>
                                         {formData.status === Enum.INVOICE_STATUS.PAID ?
-                                            <Menu.Item key={5}>
+                                            <Menu.Item key={4}>
                                                 <ReactToPrint
                                                     trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}>
                                                         <Translate id="text_print_receipt" />
@@ -975,7 +971,7 @@ class NewInvoice extends React.PureComponent {
                                             </Menu.Item>
                                             : null
                                         }
-                                        <Menu.Item key={3}>
+                                        <Menu.Item key={5}>
                                             <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} >
                                                 <Translate id="text_clone" />
                                             </Link>
@@ -987,7 +983,7 @@ class NewInvoice extends React.PureComponent {
                                 )}
                                 trigger={["click"]}
                             >
-                                <Button><Translate id="text_more_action" /> <Icon type="down" /></Button>
+                                <Button id="button-more-action"><Translate id="text_more_action" /> <Icon type="down" /></Button>
                             </Dropdown>                          
                         </Col>
                     </Row>

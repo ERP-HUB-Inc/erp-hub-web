@@ -239,6 +239,11 @@ export default {
     "on Credit"
   ],
 
+  "text_print_invoice": [
+    "Print Invoice",
+    "បោះពុម្ភវិក័យប័ត្រ"
+  ],
+
   "text_print_receipt": [
     "Print Receipt",
     "បោះពុម្ភបង្កាន់ដៃ",
