@@ -28,7 +28,7 @@ export default {
 
   "text_vat": [
     "VAT",
-    "ពន្ធអាករ"
+    "ពន្ធលើតម្លៃបន្ថែម"
   ],
 
   "store_acc_store_name": [

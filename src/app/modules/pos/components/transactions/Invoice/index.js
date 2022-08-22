@@ -3,7 +3,8 @@ import swal from "sweetalert";
 import { 
   Dropdown,
   Menu,
-  Icon
+  Icon,
+  Tag
 } from "antd";
 import List from "../List";
 import Enum from "../../../enums";
@@ -28,10 +29,10 @@ export default class Invoice extends List {
     this.columnFilterWithKey = ["firstName", "lastName", "email", "phoneNumber"];
 
     this.INVOICE_STATUS_STR = {
-      [Enum.INVOICE_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "default" },
-      [Enum.INVOICE_STATUS.SENT]: { title: <this.Translate id="text_sent" />, color: "processing" },
-      [Enum.INVOICE_STATUS.PARTIAL]: { title: <this.Translate id="text_partial_pay" />, color: "warning"},
-      [Enum.INVOICE_STATUS.PAID]: { title: <this.Translate id="text_paid" />, color: "success"},
+      [Enum.INVOICE_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#d9d9d9" },
+      [Enum.INVOICE_STATUS.SENT]: { title: <this.Translate id="text_sent" />, color: "#1890ff" },
+      [Enum.INVOICE_STATUS.PARTIAL]: { title: <this.Translate id="text_partial_pay" />, color: "#52c41a"},
+      [Enum.INVOICE_STATUS.PAID]: { title: <this.Translate id="text_paid" />, color: "#52c41a"},
     };
 
     this.service = InvoiceService;
@@ -50,7 +51,22 @@ export default class Invoice extends List {
         title: <this.Translate id="text_date" />,
         dataIndex: "invoiceDate",
         key: "invoiceDate",
+        width: 140,
         render: invoiceDate => this.Util.formatDate(invoiceDate, "DD/MM/YYYY")
+      },
+      {
+        title: <this.Translate id="text_status" />,
+        dataIndex: "status",
+        key: "status",
+        width: 120,
+        render: status => {
+          if(status || status >= 0){
+            const statusValue = this.INVOICE_STATUS_STR[status];
+            const statusColor = statusValue.color;
+            const stepTitile = statusValue.title;
+            return <Tag color={statusColor} style={{width: 100, textAlign: "center"}}>{stepTitile}</Tag>;
+          }
+        }
       },
       {
         title: <this.Translate id="text_invoice_no" />,
@@ -88,7 +104,12 @@ export default class Invoice extends List {
         dataIndex: "firstName",
         key: "firstName",
         render: (firstName, record) => `${firstName} ${record.lastName}`,
-        sorter: true
+      },
+      {
+        title: <this.Translate id="text_phone_number" />,
+        dataIndex: "phoneNumber",
+        key: "phoneNumber",
+        render: phoneNumber => phoneNumber
       },
       {
         title: <this.Translate id="text_sub_total" />,
@@ -103,17 +124,6 @@ export default class Invoice extends List {
         }
       },
       {
-        title: <this.Translate id="text_tax" />,
-        dataIndex: "tax",
-        key: "tax",
-        align: "right",
-        render: (text, record) => {
-          if (!record.totalExcludeTax) record.totalExcludeTax = record.total;
-          return this.formatCurrency(record.total - record.totalExcludeTax);
-        },
-        sorter: true
-      },
-      {
         title: <this.Translate id="text_discount" />,
         dataIndex: "discount",
         key: "discount",
@@ -121,7 +131,17 @@ export default class Invoice extends List {
         render: (discount, record) => this.Util.formatCurrency(this.getDiscount(record))
       },
       {
-        title: <this.Translate id="text_sale_total" />,
+        title: <this.Translate id="text_vat" />,
+        dataIndex: "tax",
+        key: "tax",
+        align: "right",
+        render: (text, record) => {
+          if (!record.totalExcludeTax) record.totalExcludeTax = record.total;
+            return this.formatCurrency(record.total - record.totalExcludeTax);
+        }
+      },
+      {
+        title: <this.Translate id="text_grand_total" />,
         dataIndex: "total",
         key: "totalSale",
         align: "right",
@@ -129,19 +149,6 @@ export default class Invoice extends List {
           total = total - this.Util.floor(this.getDiscount(record));
           if (total < 0) total = 0;
           return this.Util.formatCurrency(total);
-        }
-      },
-      {
-        title: <this.Translate id="text_status" />,
-        dataIndex: "status",
-        key: "status",
-        render: status => {
-          if(status || status >= 0){
-            const stepValue = this.INVOICE_STATUS_STR[status];
-            let stepColor = stepValue.color;
-            let stepTitile = stepValue.title;
-            return <this.Badge style={{ textTransform: "uppercase" }} status={stepColor} text={stepTitile} />;
-          }
         }
       }
     ];
@@ -299,7 +306,7 @@ export default class Invoice extends List {
                 defaultValue={this.state.setDefaultDate}
                 label={<this.Translate id="text_date" />}
                 form={this.props.form}
-                ranges={this.dateRangeDataSource()} />
+                ranges={[]} />
             </this.Col>
             <this.Col md="2">
               <this.Select
