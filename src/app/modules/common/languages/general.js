@@ -606,6 +606,11 @@ export default {
     "ទីកន្លែង"
   ],
 
+  "text_all_location": [
+    "All Location",
+    "គ្រប់ទីតាំង"
+  ],
+
   "text_other_location": [
     "Other Location",
     "ទីតាំងផ្សេង"

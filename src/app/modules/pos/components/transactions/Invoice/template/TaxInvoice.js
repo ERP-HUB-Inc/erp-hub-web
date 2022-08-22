@@ -118,7 +118,7 @@ export default function TaxInvoice(props) {
                   formData.transactionEntries && formData.transactionEntries.map((entry, index) => (
                     <tr key={index} className={`tax-table-invoice-entry-row ${entry.status === 3 ? "hidden" : ""}`}>
                       <td style={{textAlign: "center"}}>{index + 1})</td>
-                      <td><pre className="enty-note-column">{entry.description}</pre></td>
+                      <td><pre className="entry-note-column">{entry.description}</pre></td>
                       <td style={{textAlign: "center"}}>{entry.quantity}</td>
                       <td style={{textAlign: "right"}}>{util.formatCurrency(entry.price)}</td>
                       <td style={{textAlign: "right"}}>{util.formatCurrency(entry.quantity * util.floor(entry.price))}</td>

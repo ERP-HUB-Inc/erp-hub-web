@@ -52,6 +52,12 @@ class Promotion extends List {
         }
       },
       {
+        title: <this.Translate id="text_location" />,
+        dataIndex: "locationId",
+        key: "locationId",
+        render: (locationId, record) => locationId ? record.location.name : <this.Translate id="text_all_location" />
+      },
+      {
         title: <this.Translate id="text_discount" />,
         dataIndex: "discount",
         key: "discount",
@@ -64,16 +70,10 @@ class Promotion extends List {
         }
       },
       {
-        title: <this.Translate id="text_start_date" />,
+        title: <this.Translate id="text_date" />,
         dataIndex: "startDate",
         key: "startDate",
-        render: (startDate) => this.Util.formatDate(startDate)
-      },
-      {
-        title: <this.Translate id="text_end_date" />,
-        dataIndex: "endDate",
-        key: "endDate",
-        render: (endDate) => this.Util.formatDate(endDate)
+        render: (startDate, record) => `${this.Util.formatDate(startDate, "DD-MM-YYYY")} ~ ${this.Util.formatDate(record.endDate, "DD-MM-YYYY")}`
       }
     ];
     this.service = PromotionService;

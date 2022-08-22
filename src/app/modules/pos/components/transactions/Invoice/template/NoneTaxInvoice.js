@@ -104,7 +104,7 @@ export default function NoneTaxInvoice(props) {
               <thead>
                 <tr style={{height: 54, background: "none", borderBottom: "2px solid #ddd"}}>
                   <th style={{width: 20}}>Item</th>
-                  <th style={{width: 380}}>Descirption</th>
+                  <th style={{width: 380}}>Description</th>
                   <th style={{textAlign: "right"}}>Price</th>
                   <th style={{textAlign: "right"}}>Quantity</th>
                   <th style={{textAlign: "right"}}>Amount</th>
@@ -115,10 +115,10 @@ export default function NoneTaxInvoice(props) {
                   formData.transactionEntries.map((entry, index) => 
                     <tr key={index} style={{fontSize: "11pt", lineHeight: "26px", background: "none", display: `${entry.status === 3 ? "none" : ""}`}}>
                       <td style={{textAlign: "center"}}>{index + 1}</td>
-                      <td ><pre className="enty-note-column">{entry.description}</pre></td>
-                      <td style={styles.entryiesCurrency}>{util.formatCurrency(entry.price)}</td>
-                      <td style={styles.entryiesCurrency}>{entry.quantity}</td>
-                      <td style={styles.entryiesCurrency}>{util.formatCurrency(util.floor(entry.price) * entry.quantity)}</td>
+                      <td ><pre className="entry-note-column">{entry.description}</pre></td>
+                      <td style={styles.entriesCurrency}>{util.formatCurrency(entry.price)}</td>
+                      <td style={styles.entriesCurrency}>{entry.quantity}</td>
+                      <td style={styles.entriesCurrency}>{util.formatCurrency(util.floor(entry.price) * entry.quantity)}</td>
                     </tr>
                   )
                 }
@@ -176,7 +176,7 @@ const styles = {
     marginBottom: 0,
     lineHeight: "25px"
   },
-  entryiesCurrency: {
+  entriesCurrency: {
     textAlign: "right",
   }
 };
