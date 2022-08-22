@@ -13,26 +13,27 @@ export default {
 
   "number_of_device": [
     "Number of Device",
-    "ចំនួនឧបករណ៍",
-    "Number of Device"
+    "ចំនួនឧបករណ៍"
   ],
 
   "copy_device_number": [
     "Copy",
-    "ចំលង",
-    "Copy"
+    "ចំលង"
   ],
 
   "text_vat_no": [
     "VAT Number",
-    "លេខពន្ធ",
-    "VAT Number"
+    "លេខពន្ធ"
+  ],
+
+  "text_vat": [
+    "VAT",
+    "ពន្ធអាករ"
   ],
 
   "store_acc_store_name": [
     "Private URL",
-    "URL ឯកជន",
-    "Private URL"
+    "URL ឯកជន"
   ],
 
   "text_country": [

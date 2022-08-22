@@ -164,9 +164,13 @@ export default class SaleHistoryList extends List {
         render: step => {
           if(step){
             const stepValue = this.TRANSACTION_STATUS_STR[step];
-            let stepColor = stepValue.color;
-            let stepTitile = stepValue.title;
-            return <this.Badge style={{ textTransform: "uppercase" }} status={stepColor} text={stepTitile} />;
+            if (stepValue) {
+              let stepColor = stepValue.color;
+              let stepTitile = stepValue.title;
+              return <this.Badge style={{ textTransform: "uppercase" }} status={stepColor} text={stepTitile} />;
+            }
+
+            return null;
           }
         },
         sorter: true

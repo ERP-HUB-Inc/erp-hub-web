@@ -820,7 +820,7 @@ class NewInvoice extends React.PureComponent {
                                 </Form.Item>
                             </Input.Group>
                             <Input.Group compact style={{textAlign: "right"}} className="input-group-full-width">
-                                <Form.Item label={<div style={{marginTop: 7, marginRight: 10}}>VAT</div>}>
+                                <Form.Item label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_vat" /></div>}>
                                     {
                                         getFieldDecorator("vatType", {initialValue: formData.taxRate ? "include" : "exclude"})
                                         (<Select 
