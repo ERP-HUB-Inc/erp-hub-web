@@ -68,45 +68,13 @@ export default class SaleHistoryList extends List {
         title: <this.Translate id="text_date" />,
         dataIndex: "registerDate",
         key: "createdAt",
-        render: registerDate => this.Util.formatDate(registerDate),
-        sorter: true
+        render: registerDate => this.Util.formatDate(registerDate, "DD/MM/YYYY")
       },
       {
         title: <this.Translate id="text_transaction_no" />,
         dataIndex: "number",
         key: "number",
-        width: 140,
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_reference_no" />,
-        dataIndex: "referenceNo",
-        key: "referenceNo",
-        width: 150,
-        sorter: true,
-        render: referenceNo => referenceNo ? referenceNo : this.emptyText
-      },
-      {
-        title: <this.Translate id="text_type" />,
-        dataIndex: "type",
-        key: "type",
-        width: 100,
-        render: type => {
-          const valueType = this.TRANSACTION_TYPE_STR.find(transactionType => transactionType.value === type);
-          if (valueType) {
-            return <this.TagLabel color={[Enum.TRANSACTION_TYPE.CREDIT_NOTE].includes(valueType.value) ? "red" : "blue"}>{valueType.name}</this.TagLabel>;
-          }
-
-          return "";
-        },
-        sorter: true
-      },
-      {
-        title: <this.Translate id="text_seller" />,
-        dataIndex: "user",
-        key: "user",
-        render: user => user ? user.userName : this.emptyText,
-        sorter: true
+        width: 140
       },
       {
         title: <this.Translate id="text_customer" />,
@@ -124,38 +92,37 @@ export default class SaleHistoryList extends List {
             }
           }
           return customer ? customerName : this.emptyCell;
-        },
-        sorter: true
+        }
       },
       {
         title: <this.Translate id="text_sub_total" />,
         dataIndex: "totalExcludeTax",
         key: "totalExcludeTax",
-        render: totalExcludeTax => this.formatCurrency(totalExcludeTax),
-        sorter: true
+        align: "right",
+        render: totalExcludeTax => this.formatCurrency(totalExcludeTax)
       },
       {
-        title: <this.Translate id="text_tax" />,
+        title: <this.Translate id="text_vat" />,
         dataIndex: "tax",
         key: "tax",
+        align: "right",
         render: (text, record, index) => {
           return this.formatCurrency(record.total - record.totalExcludeTax);
-        },
-        sorter: true
+        }
       },
       {
         title: <this.Translate id="text_discount" />,
         dataIndex: "discount",
         key: "discount",
-        render: discount => this.formatCurrency(discount),
-        sorter: true
+        align: "right",
+        render: discount => this.formatCurrency(discount)
       },
       {
         title: <this.Translate id="text_sale_total" />,
         dataIndex: "total",
         key: "total",
-        render: (total, record) => this.formatCurrency(total - record.discount),
-        sorter: true
+        align: "right",
+        render: (total, record) => this.formatCurrency(total - record.discount)
       },
       {
         title: <this.Translate id="text_status" />,
@@ -172,8 +139,7 @@ export default class SaleHistoryList extends List {
 
             return null;
           }
-        },
-        sorter: true
+        }
       },
       {
         title: <this.Translate id="text_action" />,

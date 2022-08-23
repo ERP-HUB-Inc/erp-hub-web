@@ -125,7 +125,7 @@ class FormItem extends React.PureComponent {
 
   componentDidMount() {
     LocationService.lists(20)
-    .then(response => this.setState({locations: response.data.data}));
+    .then(response => this.setState({locations: [{id: 0, name: "All"}, ...response.data.data]}));
 
     const idParam = this.props.match.params.id;
     if (idParam) {

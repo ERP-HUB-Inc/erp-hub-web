@@ -575,6 +575,11 @@ export default {
     "បង្កើតផលិតផលបញ្ចុះតម្លៃ"
   ],
 
+  "text_target_product": [
+    "Target Products",
+    "ផលិតផលដែលបញ្ចុះតម្លៃ"
+  ],
+
 
   "text_edit_discount": [
     "Update Discount Setup",

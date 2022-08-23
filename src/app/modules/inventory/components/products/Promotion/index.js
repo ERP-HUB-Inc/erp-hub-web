@@ -5,10 +5,12 @@ import {
   Menu, 
   message, 
   Table,
+  Tag,
   Icon,
   Pagination
 } from "antd";
 import { connect } from "react-redux";
+import * as moment from "moment";
 import history from "../../../../common/router/history";
 import List from "../../List";
 import PromotionService from "../../../services/products/PromotionService";
@@ -28,7 +30,7 @@ class Promotion extends List {
         title: <this.Translate id="text_promotion_name" />,
         dataIndex: "name",
         key: "name",
-        width: 620,
+        width: 500,
         render: (name, record) => {
           const menu = (
             <Menu>
@@ -52,6 +54,27 @@ class Promotion extends List {
         }
       },
       {
+        title: <this.Translate id="text_date" />,
+        dataIndex: "startDate",
+        key: "startDate",
+        render: (startDate, record) => {
+          return <React.Fragment>
+            {`${this.Util.formatDate(startDate, "DD/MM/YYYY")} ~ ${this.Util.formatDate(record.endDate, "DD/MM/YYYY")}`}
+            {
+              moment(record.endDate).isBefore(moment()) ? 
+                <Tag color="#e85757" style={{marginLeft: 10}}>Expired</Tag>
+                :
+                (
+                  moment(record.startDate).isAfter(moment()) ? 
+                  <Tag color="#f50" style={{marginLeft: 10}}>Upcoming</Tag>
+                  :
+                  <Tag color="#87d068" style={{marginLeft: 10}}>In Progress</Tag>
+                )
+            }
+          </React.Fragment>;
+        }
+      },
+      {
         title: <this.Translate id="text_location" />,
         dataIndex: "locationId",
         key: "locationId",
@@ -70,10 +93,10 @@ class Promotion extends List {
         }
       },
       {
-        title: <this.Translate id="text_date" />,
-        dataIndex: "startDate",
-        key: "startDate",
-        render: (startDate, record) => `${this.Util.formatDate(startDate, "DD-MM-YYYY")} ~ ${this.Util.formatDate(record.endDate, "DD-MM-YYYY")}`
+        title: <this.Translate id="text_target_product" />,
+        dataIndex: "targetProduct",
+        key: "targetProduct",
+        render: targetProduct => targetProduct === "all" ? "គ្រប់ផលិតផល់ទាំងអស់" : "សម្រាប់ផលិតផលមួយចំនួន"
       }
     ];
     this.service = PromotionService;
