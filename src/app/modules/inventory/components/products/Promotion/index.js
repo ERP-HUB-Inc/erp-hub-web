@@ -10,7 +10,7 @@ import {
   Pagination
 } from "antd";
 import { connect } from "react-redux";
-import * as moment from "moment";
+import moment from "moment";
 import history from "../../../../common/router/history";
 import List from "../../List";
 import PromotionService from "../../../services/products/PromotionService";

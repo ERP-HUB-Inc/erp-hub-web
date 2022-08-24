@@ -4,7 +4,6 @@ import {
   Dropdown,
   Icon
 } from "antd";
-
 import List from "../../List";
 import Util from "../../../utils";
 import Enum from "../../../enums";
