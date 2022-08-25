@@ -140,8 +140,8 @@ export default function TaxInvoice(props) {
                 }
                 <tr style={{textAlign: "right"}}>
                   <td colSpan={2}>
-                    <div>អាករលើតម្លៃបន្ថែម{util.fromStandardNumberKHV2(Math.round(util.getTaxRate(formData.totalExcludeTax - discount, tax)))}%</div>
-                    <div>VAT({Math.round(util.getTaxRate(formData.totalExcludeTax - discount, tax))}%)</div>
+                    <div>អាករលើតម្លៃបន្ថែម{util.fromStandardNumberKHV2(util.getTaxRate(formData.totalExcludeTax - discount, tax))}%</div>
+                    <div>VAT({util.getTaxRate(formData.totalExcludeTax - discount, tax)}%)</div>
                   </td>
                   <td>{util.formatCurrency(tax)}</td>
                 </tr>
