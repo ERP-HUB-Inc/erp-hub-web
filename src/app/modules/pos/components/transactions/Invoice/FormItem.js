@@ -473,9 +473,9 @@ class NewInvoice extends React.PureComponent {
                 handleCancel={this.handleCancelVariantProduct}/>
             });
             return;
-        } else if (productVariant && productVariant.length > 0) { // Difference from product variant
-            productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
-            productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
+        } else if (productVariant && productVariant.length > 0) {
+            productVariant = productVariant[0];
+            productVariant.name = isProductVariant ? productVariant.name : "";
         }
         
         const existingProductList = this.state.transactionEntries;
@@ -825,7 +825,7 @@ class NewInvoice extends React.PureComponent {
                                         getFieldDecorator("vatType", {initialValue: formData.taxRate ? "include" : "exclude"})
                                         (<Select 
                                             onChange={this.onChangeVATType}
-                                            style={{marginTop: 4, width: 140, marginRight: 48}} 
+                                            style={{marginTop: 4, width: 140, marginRight: 10}} 
                                         >
                                             <Select.Option key={0} value="exclude" >Exclude</Select.Option>
                                             <Select.Option key={1} value="include" >Include</Select.Option>

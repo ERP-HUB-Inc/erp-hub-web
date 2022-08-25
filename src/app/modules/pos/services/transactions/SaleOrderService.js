@@ -1,9 +1,9 @@
 import BaseService from "../BaseService";
 
-class InvoiceService extends BaseService {
+class SaleOrderService extends BaseService {
   constructor() {
     super();
-    this.module = "invoices";
+    this.module = "sales_order";
     this.baseUrl = `${this.baseUrl}/${this.module}`;
     this.initializeRoute();
   }
@@ -27,10 +27,10 @@ class InvoiceService extends BaseService {
     });
   }
 
-  checkAvialableInvoiceNo(number) {
+  checkAvailableNo(number) {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}/check-available/${number}`,
+      url: `${this.baseUrl}/check_available/${number}`,
       headers: this.header
     });
   }
@@ -51,7 +51,7 @@ class InvoiceService extends BaseService {
     });
   }
 
-  searchInvoice(invoiceNumber) {
+  searchSaleOrder(invoiceNumber) {
     this.setHeader();
     return this.GET({
       url: `${this.baseUrl}/search/${invoiceNumber}`,
@@ -77,15 +77,6 @@ class InvoiceService extends BaseService {
     });
   }
 
-  receivedPayment(id, data) {
-    this.setHeader();
-    return this.PUT({
-      url: `${this.baseUrl}/receve_payment/${id}`,
-      data,
-      headers: this.header
-    });
-  }
-
   makAsSent(id) {
     this.setHeader();
     return this.PUT({
@@ -95,4 +86,4 @@ class InvoiceService extends BaseService {
   }
 }
 
-export default new InvoiceService();
+export default new SaleOrderService();

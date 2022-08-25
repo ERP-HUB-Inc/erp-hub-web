@@ -8,7 +8,7 @@ export default class TextAreas extends Element {
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <this.FormItem label={this.props.label} className="wrap-textarea">
+      <this.FormItem label={this.props.label} className="wrap-textarea" style={this.props.style}>
         {
           getFieldDecorator(this.props.name, {rules: [
             {
