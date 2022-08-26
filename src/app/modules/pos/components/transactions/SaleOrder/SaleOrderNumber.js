@@ -15,7 +15,7 @@ export default function SaleOrderNo(props) {
       setValidateStatus("validating");
       SaleOrderService.checkAvailableNo(saleOrderNo)
       .then(response => {
-        if (response.data && response.data.invoiceNumber !== props.data) {
+        if (response.data && response.data.number !== props.data) {
           setExistSaleOrder(response.data);
           setValidateStatus("error");
         } else {
