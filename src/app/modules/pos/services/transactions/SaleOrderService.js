@@ -77,10 +77,10 @@ class SaleOrderService extends BaseService {
     });
   }
 
-  makAsSent(id) {
+  makAsConfirm(id) {
     this.setHeader();
     return this.PUT({
-      url: `${this.baseUrl}/make_as_sent/${id}`,
+      url: `${this.baseUrl}/make_confirm/${id}`,
       headers: this.header
     });
   }
