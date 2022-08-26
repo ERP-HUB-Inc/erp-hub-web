@@ -287,7 +287,11 @@ export default class Util {
   }
 
   getTaxRate(subTotal, taxAmount) {
-    return (taxAmount * 100) / subTotal;
+    let percentage = (taxAmount * 100) / subTotal;
+    if (!percentage)
+      percentage = 0;
+
+    return Number(percentage.toFixed(2));
   }
 
   formatPercentage(n, position = 0) {

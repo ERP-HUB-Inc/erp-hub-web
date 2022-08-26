@@ -42,6 +42,9 @@ import ReportPurchaseBySupplier from "../../pos/components/reports/Purchase/Repo
 import InvoiceCreate from "../../pos/components/transactions/Invoice/FormItem";
 import InvoiceUpdate from "../../pos/components/transactions/Invoice/FormItem";
 import InvoiceDetail from "../../pos/components/transactions/Invoice/detail";
+import SaleOrderCreate from "../../pos/components/transactions/SaleOrder/FormItem";
+import SaleOrderUpdate from "../../pos/components/transactions/SaleOrder/FormItem";
+import SaleOrderDetail from "../../pos/components/transactions/SaleOrder/detail";
 import Util from "../util";
 
 const {Content} = Layout;
@@ -86,6 +89,9 @@ class Router extends Component {
             <Route path="/transactions/create-invoice" component={InvoiceCreate} />
             <Route path="/transactions/update-invoice/:id" component={InvoiceUpdate} />
             <Route path="/transactions/detail-invoice/:id" component={InvoiceDetail} />
+            <Route path="/transactions/sale-order/create" component={SaleOrderCreate} />
+            <Route path="/transactions/sale-order/update/:id" component={SaleOrderUpdate} />
+            <Route path="/transactions/sale-order/detail/:id" component={SaleOrderDetail} />
             <Route path="/products/create" component={ProductCreate} />
             <Route path="/products/import" component={ProductImport} />
             <Route path="/products/split/:productVariantId" component={ProductSplit} />

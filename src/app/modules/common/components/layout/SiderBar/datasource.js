@@ -15,6 +15,11 @@ const Invoice = Loadable({
   loading: () => <StartUp />
 });
 
+const SaleOrderTransaction = Loadable({
+  loader: () => import("../../../../pos/components/transactions/SaleOrder"),
+  loading: () => <StartUp />
+});
+
 const Return = Loadable({
   loader: () => import("../../../../pos/containers/transactions/SaleHistory/Return"),
   loading: () => <StartUp />,
@@ -293,6 +298,13 @@ const dataSource = {
         route: "/transactions/quotation-update", 
         component: QuotationUpdate,
         isFashNav: false
+      },
+      {
+        title: <Translate id="text_sale_order" />,
+        icon: "icon-time",
+        route: "/transactions/sale-order/lists",
+        component: SaleOrderTransaction,
+        isFashNav: true
       },
       {
         title: <Translate id="text_sales" />,

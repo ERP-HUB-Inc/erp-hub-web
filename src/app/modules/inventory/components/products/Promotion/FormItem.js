@@ -135,7 +135,10 @@ class FormItem extends React.PureComponent {
       PromotionService.detail(idParam)
       .then(response => this.setState(preState => {
         const data = response.data;
-        const productEntries = data.productDiscount;
+        const productEntries = data.productDiscount.length && data.productDiscount.map(entry => ({
+          ...entry, 
+          price: entry.productVariant.price,
+      }));
         delete data.productDiscount;
 
         preState.formData = data;

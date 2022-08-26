@@ -70,8 +70,18 @@ class InvoiceDetail extends React.PureComponent {
     }
   }
 
+  handleAfterPayment = () => {
+    message.success("Success Payment");
+    this.setState({loading: true});
+      InvoiceService.detail(this.state.formData.id)
+      .then(response => {
+        this.setState({formData: response && response.data});
+      })
+      .finally(() => this.setState({loading: false}));
+  }
+
   handleMakeAsSent = () => {
-    InvoiceService.makAsSent(this.id)
+    InvoiceService.makAsSent(this.state.formData.id)
     .then(() => {
         this.setState(preState => {
             preState.formData.status = Enum.INVOICE_STATUS.SENT;
@@ -144,7 +154,7 @@ class InvoiceDetail extends React.PureComponent {
             formData={formData}
             locale={this.props.locale}
             onClose={() => this.setState({showDrawer: false})}
-            onSuccess={() => message.success("Success payment")}
+            onSuccess={this.handleAfterPayment}
             form={this.props.form} />
         </Drawer>
       </div>
