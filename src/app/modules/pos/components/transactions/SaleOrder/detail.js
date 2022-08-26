@@ -6,11 +6,13 @@ import {
   Result,
   Menu,
   Dropdown,
-  Icon
+  Icon,
+  message
 } from "antd";
 import { Link } from "react-router-dom";
 import { Button } from "../../../../common/elements/ant-ui";
 import history from "../../../../common/router/history";
+import Enum from "../../../enums";
 import SaleOrderService from "../../../services/transactions/SaleOrderService";
 import SaleOrderInvoice from "./Invoice";
 
@@ -27,6 +29,18 @@ export default class SaleOrderDetail extends React.PureComponent{
     .then(response => this.setState({formData: response.data}))
     .catch(() => this.setState({formData: {}}))
     .finally(() => this.setState({loading: false}));
+  }
+
+  handleMakeAsConfirm(id) {
+    SaleOrderService.makAsConfirm(id)
+    .then(() => {
+      message.success("Make confirm success");
+      this.setState(preState => {
+        preState.formData.status = Enum.SALE_ORDER_STATUS.CONFIRMED;
+        return preState;
+      });
+    })
+    .catch(() => message.error("Error!....."));
   }
 
   render() {
@@ -47,14 +61,17 @@ export default class SaleOrderDetail extends React.PureComponent{
             <Dropdown key={1} overlay={(
               <Menu>
                 <Menu.Item key={0} onClick={() => window.print()} title="Ctrl + P"><Translate id="text_print" /></Menu.Item>
-                <Menu.Item key={1} onClick={this.handleMakeAsSent}><Translate id="text_mark_as_confirm" /></Menu.Item>
-                  <Menu.Item key={2}><Translate id="text_convert_to_invoice" />
+                <Menu.Item key={1} onClick={() => this.handleMakeAsConfirm(formData.id)}><Translate id="text_mark_as_confirm" /></Menu.Item>
+                <Menu.Item key={2}>
+                  <Link target="_blank" to={`/transactions/create-invoice?saleOrderId=${formData.id}&action=convertToInvoice`}>
+                    <Translate id="text_convert_to_invoice" />
+                  </Link>
                 </Menu.Item>
                 <Menu.Item key={2} onClick={() => history.push({pathname: `/transactions/sale-order/update/${formData.id}`})}>
                   <Translate id="text_edit_sale_order" />
                 </Menu.Item>
                 <Menu.Item key={3}>
-                  <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} >
+                  <Link target="_blank" to={`/transactions/sale-order/create?id=${formData.id}&action=clone`} >
                     <Translate id="text_clone" />
                   </Link>
                 </Menu.Item>

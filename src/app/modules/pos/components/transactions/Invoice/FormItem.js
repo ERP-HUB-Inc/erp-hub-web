@@ -198,6 +198,7 @@ class NewInvoice extends React.PureComponent {
     util = new Util();
     timer = null;
     id = "";
+    saleOrderId = "";
     pageTitle = "";
     textRequiredCustomer = "";
 
@@ -206,17 +207,21 @@ class NewInvoice extends React.PureComponent {
         const params = new URLSearchParams(document.location.search),   
             action = params.get("action");
 
+        if (idParam) {
+            this.id = idParam;
+        }
+
         if (action === "clone") {
             idParam = params.get("id");
         } else if (action === "convertToInvoice") {
             idParam = params.get("saleOrderId");
+            this.saleOrderId = params.get("saleOrderId");
         }
 
         if (idParam) {
-            this.id = idParam;
             this.pageTitle = <Translate id="text_edit_invoice" />;
             this.setState({loading: true});
-            InvoiceService.detail(this.id)
+            InvoiceService.detail(idParam)
             .then((response) => {
                 const data = response.data;
                 let totalExcludeTax = Number(data.totalExcludeTax);
@@ -330,6 +335,11 @@ class NewInvoice extends React.PureComponent {
                     totalExcludeTax:  subTotal,
                     total: values.total
                 };
+
+                if (this.saleOrderId) {
+                    invoice.referenceId = this.saleOrderId;
+                    invoice.referenceNo = formData.number;
+                }
 
                 const transactionEntries = [];
                 if (values["description"] && values["description"].length) {
@@ -684,6 +694,15 @@ class NewInvoice extends React.PureComponent {
         }
     }
 
+    handleGoBack = () => {
+        const action = new URLSearchParams(window.location.search).get("action");
+        if (action) {
+            history.push("/transactions/invoice");
+        } else {
+            history.goBack();
+        }
+    }
+
     renderPreviewInvoice(formData) {
         formData.transactionEntries = this.state.transactionEntries;
         return <div id="wrap-invoice-form">
@@ -732,7 +751,7 @@ class NewInvoice extends React.PureComponent {
                         paddingRight: 0,
                         position: "relative"
                         }}
-                        onBack={() => history.goBack()}
+                        onBack={this.handleGoBack}
                         title={this.pageTitle} />
 
                     <Row>

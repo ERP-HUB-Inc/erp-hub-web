@@ -190,18 +190,21 @@ class FormItem extends React.PureComponent {
   componentDidMount() {
     let idParam = this.props.match.params.id;
     const params = new URLSearchParams(document.location.search);
+
+    if (idParam) {
+      this.id = idParam;
+    }
+
     if (params.get("action") === "clone") {
       idParam = params.get("id");
     }
 
     if (idParam) {
-      this.id = idParam;
       this.pageTitle = "text_edit_sale_order";
       this.setState({loading: true});
-      SaleOrderService.detail(this.id)
+      SaleOrderService.detail(idParam)
       .then(response => {
         const data = response.data;
-        console.log("data", data);
         let totalExcludeTax = Number(data.totalExcludeTax);
         if (!totalExcludeTax) {
           totalExcludeTax = data.total;
@@ -230,10 +233,6 @@ class FormItem extends React.PureComponent {
         });
       })
       .finally(() => this.setState({loading: false}));
-    }
-
-    if (idParam) {
-      this.id = idParam;
     } else {
       this.setState(preState => {
         preState.formData = {
@@ -538,6 +537,35 @@ class FormItem extends React.PureComponent {
     }
   }
 
+  handleMakeConfirm(id) {
+    SaleOrderService.makAsConfirm(id)
+    .then(() => {
+      message.success("Make confirm success");
+      this.setState(preState => {
+        preState.formData.status = Enum.SALE_ORDER_STATUS.CONFIRMED;
+        return preState;
+      });
+    })
+    .catch(() => message.error("Error!....."));
+  }
+
+  handleVoid(id) {
+
+  }
+
+  handleDelete(id) {
+
+  }
+
+  handleGoBack = () => {
+    const action = new URLSearchParams(window.location.search).get("action");
+    if (action) {
+      history.push("/transactions/sale-order/lists");
+    } else {
+      history.goBack();
+    }
+  }
+
   showCustomerForm = () => {
     this.setState({customerForm: <CustomerCreate />});
     this.props.dispatch(CustomerAction.showForm());
@@ -637,7 +665,7 @@ class FormItem extends React.PureComponent {
           paddingRight: 0,
           position: "relative"
           }}
-          onBack={() => history.goBack()}
+          onBack={this.handleGoBack}
           title={<Translate id={this.pageTitle} />} />
 
         <Form onSubmit={this.handleSubmit} {...formItemLayout} id="invoice-form">
@@ -817,16 +845,18 @@ class FormItem extends React.PureComponent {
               <Dropdown 
                 overlay={(
                   <Menu>
-                    <Menu.Item key={1} onClick={this.handleMakeAsSent}><Translate id="text_mark_as_confirm" /></Menu.Item>
-                    <Menu.Item key={2}><Translate id="text_convert_to_invoice" /></Menu.Item>
-                    <Menu.Item key={3}>
-                      <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} >
-                        <Translate id="text_clone" />
+                    <Menu.Item key={1} onClick={() => this.handleMakeConfirm(formData.id)}><Translate id="text_mark_as_confirm" /></Menu.Item>
+                    <Menu.Item key={2}>
+                      <Link target="_blank" to={`/transactions/create-invoice?saleOrderId=${formData.id}&action=convertToInvoice`}>
+                        <Translate id="text_convert_to_invoice" />
                       </Link>
                     </Menu.Item>
+                    <Menu.Item key={3}>
+                      <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} ><Translate id="text_clone" /></Link>
+                    </Menu.Item>
                     <Menu.Item key={5} onClick={this.handleNewInvoice}><Translate id="text_new_sale_order" /></Menu.Item>
-                    <Menu.Item key={6}><Translate id="text_void" /></Menu.Item>
-                    <Menu.Item><Translate id="text_delete" /></Menu.Item>
+                    <Menu.Item key={6} onClick={() => this.handleVoid(formData.id)}><Translate id="text_void" /></Menu.Item>
+                    <Menu.Item key={7} onClick={() => this.handleDelete(formData.id)}><Translate id="text_delete" /></Menu.Item>
                   </Menu>
                 )}
                 trigger={["click"]}

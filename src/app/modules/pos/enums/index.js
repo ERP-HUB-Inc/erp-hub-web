@@ -32,6 +32,11 @@ export default {
     CREDIT: 6,
     PAID: 7
   },
+  SALE_ORDER_STATUS: {
+    DRAFT: 0,
+    CONFIRMED: 1,
+    CLOSED: 2
+  },
   INVOICE_STATUS: {
     DRAFT: 0,
     SENT: 1,
