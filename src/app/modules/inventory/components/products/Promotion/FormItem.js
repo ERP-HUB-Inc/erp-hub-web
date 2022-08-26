@@ -91,6 +91,11 @@ class FormItem extends React.PureComponent {
       key: "variantName"
     },
     {
+      title: <Translate id="text_barcode" />,
+      dataIndex: "barcode",
+      key: "barcode"
+    },
+    {
       title: <Translate id="text_price" />,
       dataIndex: "price",
       key: "price",
@@ -137,6 +142,7 @@ class FormItem extends React.PureComponent {
         const data = response.data;
         const productEntries = data.productDiscount.length && data.productDiscount.map(entry => ({
           ...entry, 
+          barcode: entry.productVariant.barcode,
           price: entry.productVariant.price,
       }));
         delete data.productDiscount;
@@ -168,8 +174,8 @@ class FormItem extends React.PureComponent {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        values["startDate"] = this.util.formatDateForMYSQL(values.dates[0]);
-        values["endDate"] = this.util.formatDateForMYSQL(values.dates[1]);
+        values["startDate"] = this.util.formatDateForMYSQL(values.dates[0], "YYYY-MM-DD HH:mm");
+        values["endDate"] = this.util.formatDateForMYSQL(values.dates[1], "YYYY-MM-DD HH:mm");
         values.discount = Number(values.discount);
         if (values.productVariantId) {
           const productsDiscount = [];
@@ -254,6 +260,7 @@ class FormItem extends React.PureComponent {
         id: null,
         productVariantId: productVariant.id,
         variantName: product.name ? product.name : product.namekm,
+        barcode: productVariant.barcode,
         price: productVariant.price,
         status: 1
       });
@@ -272,6 +279,7 @@ class FormItem extends React.PureComponent {
           id: null,
           productVariantId: productVariant.id,
           variantName: product.name ? product.name : product.namekm,
+          barcode: productVariant.barcode,
           price: productVariant.price,
           status: 1
         });
@@ -304,7 +312,7 @@ class FormItem extends React.PureComponent {
           />
 
           <Row>
-            <Col md={6} style={{paddingLeft: 14, paddingRight: 60}}>
+            <Col md={6} style={{paddingLeft: 14, paddingRight: 28}}>
               <InputText 
                 name="name"
                 label={<Translate id="text_promotion_name" />}
@@ -319,6 +327,8 @@ class FormItem extends React.PureComponent {
                 name="dates"
                 label={<Translate id="text_date" />}
                 ranges={[]}
+                showTime={{format: "hh:mm a"}}
+                dateFormat="DD MM YYYY hh:mm a"
                 defaultValue={formData.startDate ? [moment(formData.startDate), moment(formData.endDate)] : null}
                 required={true}
                 errorRequired={`${stringTranslate("text_please_enter_dates", this.props.locale)}`}
@@ -357,8 +367,9 @@ class FormItem extends React.PureComponent {
                 inputStyle={{padding: "10px !important", marginTop: 3}}
                 form={this.props.form} />
             </Col>
-
-            <Col md={6} style={{paddingLeft: 14, paddingRight: 60, display: "flex"}}>
+          </Row>
+          <Row>
+            <Col md={6} style={{paddingLeft: 14, paddingRight: 28, display: "flex", alignItems: "center"}}>
               <RadioNormal 
                 name="discountType"
                 label={<Translate id="text_discount" />}
@@ -369,14 +380,13 @@ class FormItem extends React.PureComponent {
                   {value: Enum.DISCOUNT_TYPE.AMOUNT, title: "$"}
                 ]}
                 form={this.props.form} />
-
               <InputText 
                 name="discount"
                 type="number"
                 required={true}
                 data={`${(formData.discount)}`}
                 handleOnFocus={(e) => e.target.select()}
-                style={{paddingTop: 32, paddingLeft: 17}}
+                style={{paddingTop: 13, paddingLeft: 17, width: "100%"}}
                 suffix={this.props.form.getFieldValue("discountType") === Enum.DISCOUNT_TYPE.PERCENTAGE ? "%" : "$"}
                 form={this.props.form} />
             </Col>
@@ -398,7 +408,7 @@ class FormItem extends React.PureComponent {
                   locale={this.props.locale}
                   showIcon={false}
                   disabled={this.props.form.getFieldValue("targetProduct") === targetDiscount.all ? true : false}
-                  style={{marginTop: 32, flexGrow: 1, paddingLeft: 17}}
+                  style={{marginTop: 30, flexGrow: 1, paddingLeft: 17}}
                   form={this.props.form} />
               </div>
 
