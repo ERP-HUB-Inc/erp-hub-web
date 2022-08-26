@@ -2,7 +2,8 @@ import React from "react";
 import {
   Menu,
   Icon,
-  Dropdown
+  Dropdown,
+  Tag
 } from "antd";
 import List from "../List";
 import history from "../../../../common/router/history";
@@ -17,12 +18,28 @@ export default class SaleOrder extends List {
       data: [],
       loading: false
     };
+    this.SALE_ORDER_STATUS_STR = {
+      [Enum.SALE_ORDER_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#d9d9d9" },
+      [Enum.SALE_ORDER_STATUS.CONFIRMED]: { title: <this.Translate id="text_confirm" />, color: "#1890ff" },
+      [Enum.SALE_ORDER_STATUS.CLOSED]: { title: <this.Translate id="text_close" />, color: "#f50"}
+    };
     this.columns = [
       {
         title: <this.Translate id="text_date" />,
         dataIndex: "invoiceDate",
         key: "invoiceDate",
         render: (invoiceDate) => this.Util.formatDate(invoiceDate)
+      },
+      {
+        title: <this.Translate id="text_status" />,
+        dataIndex: "status",
+        key: "status",
+        render: (status) => {
+          const statusValue = this.SALE_ORDER_STATUS_STR[status];
+          const statusColor = statusValue.color;
+          const stepTitle = statusValue.title;
+          return <Tag color={statusColor} style={{width: 100, textAlign: "center"}}>{stepTitle}</Tag>;
+        }
       },
       {
         title: <this.Translate id="text_sale_order_no" />,
