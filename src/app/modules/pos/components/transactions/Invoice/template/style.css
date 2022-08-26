@@ -108,6 +108,10 @@
     display: none !important;
   }
 
+  #root {
+    background: white;
+  }
+
 }
 
 .entry-column-note .wrap-textarea .ant-form-item-control-wrapper{
