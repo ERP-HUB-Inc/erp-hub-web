@@ -1,5 +1,8 @@
 import React from "react";
-import { Spin } from "antd";
+import {
+  Spin,
+  Button
+} from "antd";
 import InvoiceService from "../../../services/transactions/InvoiceService";
 import StoreAccountService from "../../../services/settings/StoreAccountService";
 import NoneTaxInvoice from "./template/NoneTaxInvoice";
@@ -7,6 +10,7 @@ import TaxInvoice from "./template/TaxInvoice";
 import Enum from "../../../enums/index";
 import "../../../../common/components/layout/styles/Style.css";
 import "./template/style.css";
+import "antd/dist/antd.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function PublicInvoice() {
@@ -19,6 +23,7 @@ export default function PublicInvoice() {
       StoreAccountService.detail(detail.clientId)
       .then(response => setSetting(response.data && response.data.data));
       setFormData(detail);
+      document.getElementsByTagName("title")[0].innerHTML = detail.invoiceNumber;
     }
   };
 
@@ -34,15 +39,23 @@ export default function PublicInvoice() {
   let invoice = <NoneTaxInvoice formData={formData} setting={setting} />;
   const template = new URLSearchParams(window.location.search).get("template");
   if (Number(template) === Enum.PAPER_SIZE.INCLUDE_TAX) {
-    invoice = <TaxInvoice formData={formData} setting={setting} />;
+    invoice = <TaxInvoice formData={formData} setting={setting} style={{width: "100%"}} />;
   }
 
   return Object.keys(formData).length ? 
-    <div style={{width: "250mm", margin: "auto", background: "#FFFFFF", padding: 40, minHeight: "297mm"}}>
-      {invoice}
-    </div>
-    :
-    <div style={{width: 30, margin: "0 auto", paddingTop: 30}}>
-      <Spin />
-    </div>;
+      <React.Fragment>
+        <div id="header-print-preview" style={{display: "flex", justifyContent: "space-between", padding: 15}}>
+          <h4 style={{margin: 0}}>{formData.invoiceNumber}</h4>
+          <Button type="primary" onClick={() => window.print()}>{"Download Invoice"}</Button>
+        </div>
+        <div style={{background: "#525659", padding: 25, overflow: "auto"}}>
+          <div style={{background: "#ffff", width: "250mm", padding: 40, minHeight: "297mm", margin: "auto"}}>
+            {invoice}
+          </div>
+        </div>
+      </React.Fragment>
+      :
+      <div style={{width: 30, margin: "0 auto", paddingTop: 30}}>
+        <Spin />
+      </div>;
 }

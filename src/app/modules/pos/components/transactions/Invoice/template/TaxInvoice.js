@@ -19,7 +19,7 @@ export default function TaxInvoice(props) {
     return subtotal;
   }
 
-  const {formData, setting} = props;
+  const {formData} = props;
     
   const exchangeRate = formData.exchangeRate;
 
@@ -36,16 +36,16 @@ export default function TaxInvoice(props) {
     tax = 0;
   
   return (
-    <table className="table-invoice">
+    <table className="table-invoice" style={props.style}>
       <tbody>
         <tr style={{background: "none"}}>
           <td style={{position: "relative", textAlign: "center", lineHeight: "28px", borderBottom: "2px solid #000", paddingBottom: 0}}>
-            <img src={`${util.getProductImage(setting.logo, "general").url}`} alt="Logo" style={{position: "absolute", top: 0, left: 0, height: 90}} />
-            <h2 style={{fontFamily: "Khmer OS Muol Light"}}>{setting.businessNamekm}</h2>
-            <h3 style={{textTransform: "uppercase", fontFamily: "Time News Romen", fontWeight: "bold"}}>{setting.businessName}</h3>
-            <h6 style={{fontWeight: 610, marginLeft: 118}}>លេខអត្តសញ្ញាណកម្ម អតប​ (VATTIN) {setting.VATNo}</h6>
-            <div style={{width: 800, margin: "auto"}} dangerouslySetInnerHTML={{__html: setting.address}} />
-            <div style={{fontSize: 13, color: "#224b99", marginLeft: 120}}>ទូរស័ព្ទលេខ: {util.formatPhonenoWithCountryCode(setting.phoneNumber)}, Email:{setting.email}</div>
+            <img src={`${util.getGeneralImage(`${formData.clientId}/general/${formData.client?.logo}`).url}`} alt="Logo" style={{position: "absolute", top: 0, left: 0, height: 90}} />
+            <h2 style={{fontFamily: "Khmer OS Muol Light"}}>{formData.client?.businessNamekm}</h2>
+            <h3 style={{textTransform: "uppercase", fontFamily: "Time News Romen", fontWeight: "bold"}}>{formData.client?.businessName}</h3>
+            <h6 style={{fontWeight: 610, marginLeft: 118}}>លេខអត្តសញ្ញាណកម្ម អតប​ (VATTIN) ddd{formData.client?.VATNo}</h6>
+            <div style={{width: 705, margin: "auto"}} dangerouslySetInnerHTML={{__html: formData.client?.address}} />
+            <div style={{fontSize: 13, color: "#224b99", marginLeft: 120}}>ទូរស័ព្ទលេខ: {util.formatPhonenoWithCountryCode(formData.client?.phoneNumber)}, Email:{formData.client?.email}</div>
           </td>
         </tr>
         <tr>
