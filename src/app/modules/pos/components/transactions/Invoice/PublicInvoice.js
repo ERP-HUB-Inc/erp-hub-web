@@ -48,7 +48,7 @@ export default function PublicInvoice() {
           <h4 style={{margin: 0}}>{formData.invoiceNumber}</h4>
           <Button type="primary" onClick={() => window.print()}>{"Download Invoice"}</Button>
         </div>
-        <div style={{background: "#525659", padding: 25, overflow: "auto"}}>
+        <div style={{background: "#525659", padding: 25, overflow: "auto"}} id="wrap-invoice-form">
           <div style={{background: "#ffff", width: "250mm", padding: 40, minHeight: "297mm", margin: "auto"}}>
             {invoice}
           </div>
