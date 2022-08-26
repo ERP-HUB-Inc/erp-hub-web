@@ -59,7 +59,10 @@ export default class App extends React.Component {
               <Route path="/register" component={ClientRegister} />
               <Route path="/register/detail" component={ClientRegisterDetail} />
               <Route path="/signin-complete" component={ClientRegisterComplete} />
-              <Route path="/invoice-template" component={PublicInvoice} />
+              <Route path="/public/invoice-preview" component={PublicInvoice} />
+              <Route path="/public/sales-order-preview" component={PublicInvoice} />
+              <Route path="/public/quotation-preview" component={PublicInvoice} />
+              <Route path="/public/receipt-preview" component={PublicInvoice} />
               {!token && (
                 <PrivateRoute
                 path="/"
