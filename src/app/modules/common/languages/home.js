@@ -1,238 +1,203 @@
 export default {
   "home_page_dashboard": [
     "Dashboad",
-    "ផ្ទាំងគ្រប់គ្រង",
-    "Dashboad"
+    "ផ្ទាំងគ្រប់គ្រង"
   ],
   
   "home_page_title_today_is_sale": [
     "Today's Sale",
-    "ការលក់ថ្ងៃនេះ",
-    "Today's Sale"
+    "ការលក់ថ្ងៃនេះ"
   ],
   
   "home_page_title_today_is_transaction": [
     "Today's Transaction",
-    "ប្រត្តិបត្តការណ៍លក់ថ្ងៃនេះ",
-    "Today's Transaction"
+    "ប្រត្តិបត្តការណ៍លក់ថ្ងៃនេះ"
   ],
   "home_page_title_today_is_product_sold": [
     "Today's Product Sold",
-    "ផលិតផលបានលក់ថ្ងៃនេះ",
-    "Today's Product Sold"
+    "ផលិតផលបានលក់ថ្ងៃនេះ"
   ],
   
   "home_page_total_customer": [
     "Total Customers",
-    "ចំនួនសរុបអតិថិជន",
-    "Total Customers"
+    "ចំនួនសរុបអតិថិជន"
   ],
   
   "home_page_graph_income": [
     "Income",
-    "ចំណូល",
-    "Income"
+    "ចំណូល"
   ],
   
   "text_expense": [
     "Expense",
-    "ចំណាយ",
-    "Expense"
+    "ចំណាយ"
+  ],
+
+  "text_total_expense": [
+    "Total Expense",
+    "ចំណាយសរុប"
   ],
   
   "text_user_guides": [
     "User Guides",
-    "ការណែរនាំអ្នកប្រើប្រាស់",
-    "User Guides"
+    "ការណែរនាំអ្នកប្រើប្រាស់"
   ],
   "home_page_guide_types": [
     "category",
-    "ប្រភេទ",
-    "category"
+    "ប្រភេទ"
   ],
   
   "home_page_guide_brand": [
     "brand",
-    "ម៉ាកផលិតផល",
-    "brand"
+    "ម៉ាកផលិតផល"
   ],
   "home_page_guide_suppliers": [
     "suppliers",
-    "អ្នកផ្គត់ផ្គង់",
-    "suppliers"
+    "អ្នកផ្គត់ផ្គង់"
   ],
   
   "home_page_guide_pre_order": [
     "pre-order",
-    "ការ​បញ្ជាទិញ​មុន",
-    "pre-order"
+    "ការ​បញ្ជាទិញ​មុន"
   ],
   
   "home_page_guide_setting_up": [
     "setting up",
-    "កំណត់​ឡើង",
-    "setting up"
+    "កំណត់​ឡើង"
   ],
   
   "home_page_guide_employee": [
     "employee",
-    "បុគ្គលិក",
-    "employee"
+    "បុគ្គលិក"
   ],
   
   "home_page_guide_products": [
     "products",
-    "ផលិតផល",
-    "products"
+    "ផលិតផល"
   ],
   
   "home_page_guide_purchasing": [
     "purchasing",
-    "បញ្ជារទិញ",
-    "purchasing"
+    "បញ្ជារទិញ"
   ],
   
   "home_page_guide_customers": [
     "customers",
-    "អតិថិជន",
-    "customers"
+    "អតិថិជន"
   ],
   
   "home_page_guide_sale": [
     "sale",
-    "ការលក់",
-    "sale"
+    "ការលក់"
   ],
   "home_page_guide_reports": [
     "reports",
-    "របាយការណ៍",
-    "reports"
+    "របាយការណ៍"
   ],
   
   "home_page_guide_add_products": [
     "add product",
-    "បញ្ចូលផលិតផល",
-    "add product"
+    "បញ្ចូលផលិតផល"
   ],
   
   "home_page_guide_stock": [
     "Stock",
-    "ស្តុកទំនិញ",
-    "Stock"
+    "ស្តុកទំនិញ"
   ],
   
   "home_page_guide_sale_return": [
     "Sale return",
-    "បង្វិលការលក់",
-    "Sale return"
+    "បង្វិលការលក់"
   ],
   
   "home_page_dashboard_read_more": [
     "Read More",
-    "មើលបន្ថែម",
-    "Read More"
+    "មើលបន្ថែម"
   ],
   
   "text_today_sale_summary": [
     "Today Sale Summary",
-    "សង្ខេបការលក់ថ្ងៃនេះ",
-    "Today Sale Summary",
+    "សង្ខេបការលក់ថ្ងៃនេះ"
   ],
   
   "text_weekly_operation": [
     "Weekly Operation Report",
-    "របាយការណ៍ដំណើរការប្រចាំសប្តាហ៍",
-    "Weekly Operation Report"
+    "របាយការណ៍ដំណើរការប្រចាំសប្តាហ៍"
   ],
   
   "text_summary_report": [
     "Summary Report",
-    "របាយការណ៍សង្ខេប",
-    "Summary Report"
+    "របាយការណ៍សង្ខេប"
   ],
 
   "text_income": [
     "Income",
-    "ចំណូល",
-    "Income"
+    "ចំណូល"
   ],
 
   "text_today_revenue": [
     "Today's Revenu",
-    "ចំណូលថ្ងៃនេះ",
-    "Today's Sale"
+    "ចំណូលថ្ងៃនេះ"
   ],
 
   "text_today_is_transaction": [
     "Today's Transaction",
-    "ប្រតិបត្តិការថ្ងៃនេះ",
-    "Today's Transaction"
+    "ប្រតិបត្តិការថ្ងៃនេះ"
   ],
 
   "text_today_discount": [
     "Today's Discount",
-    "ការបញ្ចុះតម្លៃថ្ងៃនេះ",
-    "Today's Discount"
+    "ការបញ្ចុះតម្លៃថ្ងៃនេះ"
   ],
 
   "text_today_sale": [
     "Today's Sale",
-    "លក់ថ្ងៃនេះ",
-    "Today's Sale"
+    "លក់ថ្ងៃនេះ"
   ],
 
   "text_today_is_product_sold": [
     "Today's Product Sold",
-    "ផលិតផលលក់ថ្ងៃនេះ",
-    "Today's Product Sold"
+    "ផលិតផលលក់ថ្ងៃនេះ"
   ],
 
   "text_total_customer": [
     "Total Customers",
-    "អតិថិជន",
-    "Total Customers"
+    "អតិថិជន"
   ],
 
   "text_monday": [
     "Monday",
-    "ចន្ទ",
-    "Monday"
+    "ចន្ទ"
   ],
 
   "text_tuesday": [
     "Tuesday",
-    "អង្គារ",
-    "Tuesday"
+    "អង្គារ"
   ],
 
   "text_wednesday": [
     "Wednesday",
-    "ពុធ",
-    "Wednesday"
+    "ពុធ"
   ],
 
   "text_thursday": [
     "Thursday",
-    "ព្រហស្បត្តិ៍",
-    "Thursday"
+    "ព្រហស្បត្តិ៍"
   ],
 
   "text_friday": [
     "Friday",
-    "សុក្រ",
-    "Friday"
+    "សុក្រ"
   ],
 
   "text_saturday": [
     "Saturday",
-    "សៅរ៍",
-    "Saturday"
+    "សៅរ៍"
   ],
 
   "text_sunday": [
     "Sunday",
-    "អាទិត្យ",
-    "Sunday"
+    "អាទិត្យ"
   ],
   
 };

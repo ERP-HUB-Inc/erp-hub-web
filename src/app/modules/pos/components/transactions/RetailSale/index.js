@@ -164,25 +164,18 @@ export default class Retail extends Component {
       this.props.dispatch(ProductAction.reset(ProductConstant.RESET_PARTIAL_PRODUCT));
     }
 
-    if (this.props.checkDevice.fetched && this.props.checkDevice.data) {
-      if (!this.props.checkDevice.data.status && !this.hadDidUpdateCheckDevice) {
-        this.setState({
-          modalContent: <DeviceNumber />
-        });
-        this.hadDidUpdateCheckDevice = true;
-      } else if (this.props.checkDevice.data.status && !this.hasDidUpdate && this.props.openSaleRegistration.fetched && this.props.open.showForm) {
-          if(!this.isOpenSaleRegistrationClosed() && this.isSetFocusOnSearchProduct){
-            this.isSetFocusOnSearchProduct = true;
-          }
-    
-          if (this.isOpenSaleRegistrationClosed()) {
-            this.setState({
-              modalContent: <FormOpenSaleRegistration/>
-            });
-          }
-
-          this.hasDidUpdate = true;
+    if (!this.hasDidUpdate && this.props.openSaleRegistration.fetched && this.props.open.showForm) {
+      if(!this.isOpenSaleRegistrationClosed() && this.isSetFocusOnSearchProduct){
+        this.isSetFocusOnSearchProduct = true;
       }
+
+      if (this.isOpenSaleRegistrationClosed()) {
+        this.setState({
+          modalContent: <FormOpenSaleRegistration/>
+        });
+      }
+
+      this.hasDidUpdate = true;
     }
   }
 

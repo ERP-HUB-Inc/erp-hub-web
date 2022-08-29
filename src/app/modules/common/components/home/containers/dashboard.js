@@ -9,12 +9,15 @@ import {
   Radio,
   Table
 } from "antd";
+import { Translate } from "react-localize-redux";
 import { Chart, registerables } from "chart.js";
 import { Line } from "react-chartjs-2";
-import "../index.css";
-import InventoryService from "../../../../pos/services/report/InventoryService";
 import SelectLocation from "../../SelectLocation";
 import SelectDateOption from "../../SelectDateOption";
+import "../index.css";
+import InventoryService from "../../../../pos/services/report/InventoryService";
+import DashboardService from "../../../services/DashboardService";
+import Util from "../../../util";
 Chart.register(...registerables);
 
 const { Option } = Select;
@@ -79,12 +82,14 @@ const data = [
   },
 ];
 const Dashboard = (props) => {
+  const [option, setOption] = React.useState("today");
+  const [dashboardSummaries, setDashboardSummaries] = React.useState([]);
   const [topSellingSize, setTopSellingSize] = React.useState(25);
   const [topSellType, setTopSellType] = React.useState("quantity");
+
   function onChange(value) {
     console.log(`selected ${value}`);
   }
-
 
   const fetchPopularProducts = (limit, popularBy) => {
     InventoryService.getPopularProduct(limit, popularBy)
@@ -92,7 +97,7 @@ const Dashboard = (props) => {
       if (response.data) {
         //
       }
-    })
+    });
   };
   const onChangeTopSellingType = (e) => {
     setTopSellType(e.target.value);
@@ -104,7 +109,18 @@ const Dashboard = (props) => {
     fetchPopularProducts(value, topSellType);
   };
 
+  const getDashboardValue = (index, key) => {
+    return dashboardSummaries.length > 0 ? dashboardSummaries[index][key] : 0;
+  };
+
   React.useEffect(() => {
+    DashboardService.lists(option)
+    .then(response => {
+      if (response.data && response.data.data) {
+        setDashboardSummaries(response.data.data);
+      }
+    });
+
     InventoryService.getInventoryDashboard()
     .then(response => {
       if (response.data) {
@@ -350,6 +366,11 @@ const Dashboard = (props) => {
     ],
   };
 
+  const revenue = getDashboardValue(0, "value");
+  const revenueRisePercentage = getDashboardValue(0, "diffRevenueFromLAstAsPercentag");
+  const discount = getDashboardValue(1, "value");
+  const diffSaleAsPercentage = getDashboardValue(0, "diffSaleFromLastAsPercentag");
+
   return (
     <div id="dashboard">
       <div id="navDaskboard">
@@ -384,13 +405,13 @@ const Dashboard = (props) => {
                     </div>
                   </div>
                   <div className="subtitle">
-                    <span>Revenue</span>
+                    <span><Translate id="text_revenue" /></span>
                   </div>
                   <div className="sub-total">
-                    <span>$360.98</span>
+                    <span>{(new Util()).formatCurrency(revenue)}</span>
                   </div>
                   <div className="total-footer">
-                    <span><Icon type="rise" />12.25%</span>
+                    <span><Icon type={revenueRisePercentage >= 0 ? "rise" : "fall"} />{Math.abs(revenueRisePercentage)}%</span>
                   </div>
                 </Card>
               </div>
@@ -407,14 +428,14 @@ const Dashboard = (props) => {
                     </div>
                   </div>
                   <div className="subtitle">
-                    <span>Discount</span>
+                    <span><Translate id="text_discount" /></span>
                   </div>
                   <div className="sub-total">
-                    <span>$150.70</span>
+                  <span>{discount}</span>
                   </div>
-                  <div className="total-footer">
+                  {/* <div className="total-footer">
                     <span><Icon type="rise" />12.25%</span>
-                  </div>
+                  </div> */}
                 </Card>
               </div>
             </Col>
@@ -430,13 +451,13 @@ const Dashboard = (props) => {
                     </div>
                   </div>
                   <div className="subtitle">
-                    <span>Nets Sales</span>
+                    <span><Translate id="text_net_sale" /></span>
                   </div>
                   <div className="sub-total">
-                    <span>$8.44</span>
+                    <span>{(new Util()).formatCurrency(revenue - discount)}</span>
                   </div>
                   <div className="total-footer">
-                    <span><Icon type="rise" />12.25%</span>
+                    <span><Icon type="rise" />{(new Util()).formatCurrency(diffSaleAsPercentage)}</span>
                   </div>
                 </Card>
               </div>
@@ -453,13 +474,13 @@ const Dashboard = (props) => {
                     </div>
                   </div>
                   <div className="subtitle">
-                    <span>Total Expense</span>
+                    <span><Translate id="text_total_expense" /></span>
                   </div>
                   <div className="sub-total">
-                    <span>$234.40</span>
+                    <span>{(new Util()).formatCurrency(0)}</span>
                   </div>
                   <div className="total-footer">
-                    <span style={{color: "red"}}><Icon type="fall" />12.25%</span>
+                    <span style={{color: "red"}}><Icon type="rise" />0%</span>
                   </div>
                 </Card>
               </div>

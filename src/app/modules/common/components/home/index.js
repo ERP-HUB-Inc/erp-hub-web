@@ -53,7 +53,7 @@ export default class Home extends Component {
     const option = new URLSearchParams(document.location.search).get("option");
       
     if (option) {
-      range = option
+      range = option;
     }
 
     this.props.dispatch(CardAction.fetchDashboardCard(range));   
