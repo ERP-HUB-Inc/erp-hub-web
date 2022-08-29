@@ -76,10 +76,8 @@ export default class Invoice extends List {
         render: (invoiceNumber, record) => {
           const menu = (
             <Menu>
-              <Menu.Item>
-                <this.Link to={`/transactions/update-invoice/${record.id}`}>
-                  <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
-                </this.Link>
+              <Menu.Item onClick={() => this.handleShowEdit(record)}>
+                <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
               </Menu.Item>
               <Menu.Item>
                 <this.Link to={`/transactions/detail-invoice/${record.id}`}>
@@ -166,6 +164,15 @@ export default class Invoice extends List {
     })
     .catch((err) => console.log("error", err))
     .finally(() => this.setState({loading: false}));
+  }
+
+  handleShowEdit(record) {
+    console.log("record", record);
+    if (record.status === Enum.INVOICE_STATUS.PAID || record.status === Enum.INVOICE_STATUS.SENT) {
+      return this.Util.sweetAlertMessage("Can't edit invoice that already sent or paid");
+    }
+
+    history.push(`/transactions/update-invoice/${record.id}`);
   }
 
   getProductOrderList(data) {
