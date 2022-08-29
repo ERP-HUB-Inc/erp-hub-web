@@ -217,10 +217,10 @@ class FormItem extends React.PureComponent {
 
         let discount = data.discount;
         if (data.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-          discount = this.util.getValueFromPercentage(data.total, discount);
+          discount = this.util.getValueFromPercentage(totalExcludeTax, discount);
         } 
 
-        let taxRate = parseInt(this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax));
+        let taxRate = this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax);
         if (!taxRate)
           taxRate = 0;
         data.taxRate = taxRate;
@@ -550,11 +550,28 @@ class FormItem extends React.PureComponent {
   }
 
   handleVoid(id) {
-
+    this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
+    .then(willVoid => {
+      if (willVoid) {
+        SaleOrderService.void(id)
+        .then(() => message.success("Void success"))
+        .catch(() => message.error("Error!......"));
+      }
+    });
   }
 
   handleDelete(id) {
-
+    this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
+    .then(willDelete => {
+      if (willDelete) {
+        SaleOrderService.delete(id)
+        .then(() => {
+          message.success("Delete invoice success");
+          history.goBack();
+        })
+        .catch(() => message.error("Error!......"));
+      }
+    });
   }
 
   handleGoBack = () => {
@@ -823,7 +840,7 @@ class FormItem extends React.PureComponent {
                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.total - discount)}</div>
                 <InputNumber 
                   name="total"
-                  data={formData.total - discount}
+                  data={formData.total}
                   style={{display: "none"}}
                   form={this.props.form}
                 />
