@@ -8,6 +8,7 @@ import Board from "../home/containers/Board";
 import CardAction from "../../../common/actions/home";
 import SelectDateOption from "../SelectDateOption";
 import history from "../../router/history";
+import Dashboard from "./containers/dashboard";
 import "./index.css";
 
 export default class Home extends Component {
@@ -92,8 +93,8 @@ export default class Home extends Component {
     const revenue = this.getDashboardValue(0, "value"),
       discount = this.getDashboardValue(1, "value");
           
-    return(
-      <this.Row style={{alignContent: "flex-start"}}>
+    return(<>
+      <this.Row style={{alignContent: "flex-start", display: "none"}} >
         <this.Col md="12">
           <div className="dashboard " style={{display: "flex", justifyContent: "space-between"}}>
             <ul>
@@ -230,6 +231,8 @@ export default class Home extends Component {
           </div>
         </this.Col>
       </this.Row>
-    );
+      <Dashboard />
+      
+    </>);
   }
 }

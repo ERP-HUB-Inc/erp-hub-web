@@ -44,7 +44,271 @@
 .dash-wrap-guide {
     margin-bottom: 15px
 }
-
-
-
-
+#dashboard .ant-row{
+    margin: 0 !important;
+}
+#dashboard .row-out {
+    padding: 0 !important
+}
+#dashboard .col-in {
+    padding: 0 !important
+}
+#dashboard .item {
+    padding: 8px 8px 8px 0 !important;
+}
+#taskDadhboardFirst .ant-card-body {
+    padding: 0 !important;
+}
+#dashboard #navDaskboard ul {
+    list-style-type: none;
+    padding: 0 !important;
+}
+#dashboard #navDaskboard ul .nav-right {
+    float: right;
+    margin: 21px 0;
+}
+#dashboard #navDaskboard .nav-title {
+    display: block;
+    margin-top: 13px;
+}
+#dashboard #navDaskboard .nav-title h4 {
+    font-size: 18px;
+    color: #030303;
+    font-weight: 500;
+    margin: 0;
+}
+#dashboard #navDaskboard .nav-title span {
+    font-size: 14px;
+    color: #9A9A9A;
+    font-weight: 400;
+}
+#dashboard #navDaskboard ul li {
+    display: inline-flex;
+}
+#taskDadhboardFirst .ant-card {
+    height: 177px;
+    border-radius: 6px;
+}
+#mainChart .header-task {
+    display: inline-flex;
+    width: 100%;
+}
+#taskDadhboardFirst .header-task-item {
+    display: inline-flex;
+    width: 100%;
+    /* padding: 0px 10px 0px 10px; */
+}
+#taskDadhboardFirst .menu-right {
+    font-size: 30px;
+    color: #575757;
+    opacity: 45%;
+    position: absolute;
+    right: 0;
+    margin-right: 11px;
+    margin-top: 1px;
+}
+#taskDadhboardFirst .icon-left {
+    font-size: 17px;
+    color: #000000;
+    border-radius: 6px;
+    background: #F1F1F1;
+    height: 34px;
+    width: 37px;
+    padding: 5px 9px;
+    margin-top: 12px;
+    margin-left: 12px;
+}
+#taskDadhboardFirst .subtitle {
+    margin-left: 12px;
+    margin-top: 12px;
+    color: #000000;
+    opacity: 45%;
+    font-size: 14px;
+    font-weight: 400;
+}
+#taskDadhboardFirst  .sub-total {
+    color: #1F1F39;
+    font-size: 26px;
+    font-weight: 600;
+    margin-left: 12px;
+    margin-top: 7px;
+}
+#taskDadhboardFirst .total-footer {
+    color: #87D068;
+    font-size: 12px;
+    font-weight: 500;
+    margin-left: 12px;
+    margin-top: 10px;
+}
+#taskDadhboardFirst .total-footer span .anticon {
+    margin-right: 10px;
+}
+#mainChart .ant-card{
+    height: 368px;
+}
+#mainChart .ant-card-body {
+    padding: 0 !important;
+}
+#mainChart .header-task .pull-left {
+    margin-top: 12px;
+    margin-left: 12px;
+}
+#mainChart .header-task .pull-right {
+    width: 100%;
+}
+#mainChart .header-task .pull-right .select-pull-right {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+    margin-right: 12px;
+}
+#mainChart .header-task .pull-left h4{
+    color: #000000;
+    opacity: 45%;
+    font-size: 14px;
+    font-weight: 400;
+} 
+#mainChart 
+.header-task
+.pull-left 
+.sub-left 
+.sub-total {
+    font-size: 20px;
+    color: #1F1F39;
+    font-weight: 600;
+    margin-right: 20px;
+}
+#mainChart 
+.header-task 
+.pull-left 
+.sub-left span {
+    color: #87D068;
+    font-size: 12px;
+    font-weight: 500;
+}
+#mainChart 
+.header-task 
+.pull-left 
+.sub-left span .anticon {
+    margin-right: 10px;
+}
+#mainDashboadCategory .ant-card{
+    height: 466px;
+    border-radius: 6px;
+}
+#mainDashboadCategory .ant-card-body {
+    padding: 0 !important;
+}
+#mainDashboadCategory .header-category .title-category {
+    font-size: 16px;
+    font-weight: 600;
+    color: #030303;
+}
+#mainDashboadCategory .header-category {
+    margin-left: 12px;
+    margin-top: 15px;
+}
+#mainDashboadCategory .category-progress {
+    margin: 12px;
+}
+#mainDashboadCategory .category-progress ul {
+    list-style-type: none;
+    padding: 0;
+}
+#mainDashboadCategory .category-progress ul li {
+    padding: 4px 0;
+}
+#mainDashboadCategory 
+.category-progress 
+.label-progress ul li {
+    display: inline-flex;
+}
+#mainDashboadCategory 
+.category-progress  
+.label-progress ul 
+.label-right {
+    float: right;
+}
+#mainDashboadCategory 
+.category-progress 
+.label-progress 
+.label-left {
+    font-size: 14px;
+    color: #1F1F39;
+    font-weight: 500;
+}
+#mainDashboadCategory 
+.category-progress 
+.label-progress 
+.label-right {
+    font-size: 14px;
+    color: #000000;
+    font-weight: 500;
+    opacity: 45%;
+}
+#mainDashboadCategory .ant-progress-text{
+    display: none;
+}
+#mainDashboadCategory .ant-progress-show-info .ant-progress-outer {
+    margin: 0;
+    padding: 0;
+}
+#mainDashboadCategory .ant-progress-success-bg, .ant-progress-bg {
+    background: #1F1F39;
+}
+.task-line-chart {
+    padding-left: 10px !important;
+    padding-right: 0 !important;
+}
+#mainTableList .header-task {
+    display: block;
+    margin-left: 17px;
+    margin-top: 12px;
+}
+#mainTableList .header-task .title-task {
+    font-weight: 600;
+    font-size: 16px;
+    color: #030303;
+}
+#mainTableList .ant-card-body {
+    padding: 0;
+}
+#mainTableList  .ant-card {
+    height: 466px;
+    border-radius: 6px;
+}
+#mainTableList .header-task .btn-header-task {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    display: flex;
+}
+#mainTableList .header-task .btn-header-task .ant-radio-button {
+    color: #102A43;
+    font-size: 14px;
+    font-weight: 400;
+}
+#mainTableList .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
+    border-color: #1F5A92;
+}
+#mainTableList .ant-radio-button-wrapper:hover {
+    color: #1F5A92;
+}
+#mainTableList .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+    border-color: #1F5A92;
+    color: #1F5A92;
+}
+#mainTableList .header-task .btn-header-task .select {
+    margin-left: 30px;
+}
+#mainTableList .table-list-product {
+    margin: 0 17px;
+}
+#mainTableList .table-list-product .ant-table-body table tr td {
+    color: #4D4F5C;
+    font-size: 10pt;
+    font-weight: 400;
+    padding: 16px !important;
+}
+#mainTableList .table-list-product .ant-table-body table tr th {
+    padding: 10px 16px !important;
+} 
