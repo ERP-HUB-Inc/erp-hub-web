@@ -422,7 +422,7 @@ const Dashboard = (props) => {
                 <Card bordered={false}>
                   <div className='header-task-item'>
                     <div className="icon-left">
-                      <Icon type="credit-card" />
+                      <Icon type="dollar" />
                     </div>
                     <div className='menu-right'>
                       <Icon type="ellipsis" />
@@ -445,7 +445,7 @@ const Dashboard = (props) => {
                 <Card bordered={false}>
                   <div className='header-task-item'>
                     <div className="icon-left">
-                      <Icon type="environment" />
+                      <Icon type="wallet" />
                     </div>
                     <div className='menu-right'>
                       <Icon type="ellipsis" />
