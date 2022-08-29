@@ -59,7 +59,7 @@ class Promotion extends List {
         key: "startDate",
         render: (startDate, record) => {
           return <React.Fragment>
-            {`${this.Util.formatDate(startDate, "DD/MM/YYYY hh:mm a")} ~ ${this.Util.formatDate(record.endDate, "DD/MM/YYYY hh:mm a")}`}
+            {`${this.Util.formatDate(startDate, "DD/MM/YYYY hh:mm A")} ~ ${this.Util.formatDate(record.endDate, "DD/MM/YYYY hh:mm A")}`}
             {
               moment(record.endDate).isBefore(moment()) ? 
                 <Tag color="#e85757" style={{marginLeft: 10, width: 80}}>Expired</Tag>
@@ -87,9 +87,9 @@ class Promotion extends List {
         render: (discount, record) => {
           let label = "%";
           if (record.discountType === EnumPos.DISCOUNT_TYPE.AMOUNT) {
-            label = "$";
+            return this.Util.formatCurrency(discount, "$");
           }
-          return `${this.Util.formatCurrency(discount, "")}${label}`;
+          return `${discount}${label}`;
         }
       },
       {
