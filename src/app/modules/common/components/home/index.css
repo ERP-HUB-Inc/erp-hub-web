@@ -114,7 +114,9 @@
     background: #F1F1F1;
     height: 34px;
     width: 37px;
-    padding: 5px 9px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
     margin-top: 12px;
     margin-left: 12px;
 }
