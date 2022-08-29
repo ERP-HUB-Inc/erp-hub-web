@@ -13,7 +13,6 @@ import { Chart, registerables } from "chart.js";
 import { Line } from "react-chartjs-2";
 import "../index.css";
 import InventoryService from "../../../../pos/services/report/InventoryService";
-import SelectLocation from "../../SelectLocation";
 import SelectDateOption from "../../SelectDateOption";
 Chart.register(...registerables);
 
@@ -361,7 +360,7 @@ const Dashboard = (props) => {
             </div>
           </li>
           <li className="nav-right">
-            <SelectLocation 
+            <SelectDateOption 
               onChange={onChange}
               placeholder="Select Location"
               style={{width:165}}
