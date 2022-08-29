@@ -183,16 +183,24 @@
 #mainChart 
 .header-task 
 .pull-left 
-.sub-left span {
-    color: #87D068;
-    font-size: 12px;
-    font-weight: 500;
+.sub-left {
+    display: flex;
 }
 #mainChart 
 .header-task 
 .pull-left 
-.sub-left span .anticon {
-    margin-right: 10px;
+.sub-left .footer-task {
+    color: #87D068;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+}
+#mainChart 
+.header-task 
+.pull-left 
+.sub-left .footer-task .anticon {
+    margin-right: 5px;
+    margin-top: 4px;
 }
 #mainDashboadCategory .ant-card{
     height: 466px;

@@ -473,7 +473,9 @@ const Dashboard = (props) => {
                   <h4>Overall Sales</h4>
                   <div className='sub-left'>
                     <span className="sub-total">$1560.98</span>
-                    <span><Icon type="rise" />12.25%</span>
+                    <div className="footer-task">
+                      <Icon type="rise" />12.25%
+                    </div>
                   </div>
                 </div>
                 <div className="pull-right">
