@@ -84,6 +84,22 @@ class SaleOrderService extends BaseService {
       headers: this.header
     });
   }
+
+  void(id) {
+    this.setHeader();
+    return this.DELETE({
+      url: `${this.baseUrl}/void/${id}`,
+      headers: this.header
+    });
+  }
+
+  delete(id) {
+    this.setHeader();
+    return this.DELETE({
+      url: `${this.baseUrl}/${id}`,
+      headers: this.header
+    });
+  }
 }
 
 export default new SaleOrderService();

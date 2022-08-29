@@ -35,7 +35,8 @@ export default {
   SALE_ORDER_STATUS: {
     DRAFT: 0,
     CONFIRMED: 1,
-    CLOSED: 2
+    CLOSED: 2,
+    VOID: 4
   },
   INVOICE_STATUS: {
     DRAFT: 0,

@@ -236,7 +236,7 @@ class NewInvoice extends React.PureComponent {
 
                 let discount = data.discount;
                 if (data.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-                    discount = this.util.getValueFromPercentage(data.total, discount);
+                    discount = this.util.getValueFromPercentage(totalExcludeTax, discount);
                 } 
 
                 let taxRate = this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax);
