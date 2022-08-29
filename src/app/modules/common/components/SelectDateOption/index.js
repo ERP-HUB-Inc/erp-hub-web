@@ -26,6 +26,7 @@ export default function SelectDateOption(props) {
       id={props.id}
       onChange={props.onChange}
       onSelect={onSelectOption}
+      placeholder={props.placeholder}
     >
       <Select.Option key="today" value="today"><Translate id="text_today" /></Select.Option>
       <Select.Option key="this-week" value="this-week"><Translate id="text_this_week" /></Select.Option>
