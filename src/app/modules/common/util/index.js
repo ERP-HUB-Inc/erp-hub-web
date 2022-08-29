@@ -244,7 +244,7 @@ export default class Util {
       domain = `${domain}.${type}`;
     }
     const protocol = window.location.protocol.replace(/:/g, "");
-    sub = "ca";
+    
     let subdomain = `${protocol}://${sub}.${domain}`;
     if (type != null) {
       subdomain = `${subdomain}.${type}`;
@@ -287,7 +287,11 @@ export default class Util {
   }
 
   getTaxRate(subTotal, taxAmount) {
-    return (taxAmount * 100) / subTotal;
+    let percentage = (taxAmount * 100) / subTotal;
+    if (!percentage)
+      percentage = 0;
+
+    return Number(percentage.toFixed(2));
   }
 
   formatPercentage(n, position = 0) {

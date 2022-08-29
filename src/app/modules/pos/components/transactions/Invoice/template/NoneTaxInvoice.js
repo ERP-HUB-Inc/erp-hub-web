@@ -25,7 +25,7 @@ export default function NoneTaxInvoice(props) {
   function getDiscount(formData) {
     let discount = formData.discount;
     if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-      discount = util.getValueFromPercentage(formData.subtotal, discount);
+      discount = util.getValueFromPercentage(formData.totalExcludeTax, discount);
     }
 
     if (!discount) 
@@ -147,6 +147,7 @@ export default function NoneTaxInvoice(props) {
               </div>
               <div>
                 <div>{util.formatCurrency(subtotal)}</div>
+                {console.log("discount", discount)}
                 {
                   discount && discount > 0 ?
                     <div>{util.formatCurrency(discount)}</div>

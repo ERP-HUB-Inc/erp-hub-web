@@ -20,6 +20,7 @@ export class DateRangePicker extends Element {
               ranges={this.props.ranges}
               format={this.props.dateFormat}
               onChange={this.props.onChange}
+              showTime={this.props.showTime}
               disabled={this.props.disabled} />
           )
         }

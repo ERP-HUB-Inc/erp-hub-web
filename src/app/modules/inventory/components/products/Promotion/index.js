@@ -59,16 +59,16 @@ class Promotion extends List {
         key: "startDate",
         render: (startDate, record) => {
           return <React.Fragment>
-            {`${this.Util.formatDate(startDate, "DD/MM/YYYY")} ~ ${this.Util.formatDate(record.endDate, "DD/MM/YYYY")}`}
+            {`${this.Util.formatDate(startDate, "DD/MM/YYYY hh:mm a")} ~ ${this.Util.formatDate(record.endDate, "DD/MM/YYYY hh:mm a")}`}
             {
               moment(record.endDate).isBefore(moment()) ? 
-                <Tag color="#e85757" style={{marginLeft: 10}}>Expired</Tag>
+                <Tag color="#e85757" style={{marginLeft: 10, width: 80}}>Expired</Tag>
                 :
                 (
                   moment(record.startDate).isAfter(moment()) ? 
-                  <Tag color="#f50" style={{marginLeft: 10}}>Upcoming</Tag>
+                  <Tag color="#f50" style={{marginLeft: 10, width: 80}}>Upcoming</Tag>
                   :
-                  <Tag color="#87d068" style={{marginLeft: 10}}>In Progress</Tag>
+                  <Tag color="#87d068" style={{marginLeft: 10, width: 80}}>In Progress</Tag>
                 )
             }
           </React.Fragment>;

@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import history from "../router/history";
 import StartUp from "../components/StartUp";
+import PublicInvoice from "../../pos/components/transactions/Invoice/PublicInvoice";
 
 export default class App extends React.Component {
   render() {
@@ -46,19 +47,27 @@ export default class App extends React.Component {
       loading: () => <StartUp />,
     });
 
+    const token = new URLSearchParams(window.location.search).get("token");
+
     return (
       <BrowserRouter>
         <Switch>
           <Router history={history}>
-            <div style={{height: "100%"}}>
+            <div style={{height: "100%"}} id="main-route-content">
               <Route path="/signin" component={UserLogin} />
               <Route path="/store" component={LoginStore} />
               <Route path="/register" component={ClientRegister} />
               <Route path="/register/detail" component={ClientRegisterDetail} />
               <Route path="/signin-complete" component={ClientRegisterComplete} />
-              <PrivateRoute
+              <Route path="/public/invoice-preview" component={PublicInvoice} />
+              <Route path="/public/sales-order-preview" component={PublicInvoice} />
+              <Route path="/public/quotation-preview" component={PublicInvoice} />
+              <Route path="/public/receipt-preview" component={PublicInvoice} />
+              {!token && (
+                <PrivateRoute
                 path="/"
                 component={Application} loginComponent={UserLogin} />
+              )}
             </div>
           </Router>
         </Switch>

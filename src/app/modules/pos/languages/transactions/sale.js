@@ -255,6 +255,11 @@ export default {
     "បង្កើតការលក់"
   ],
 
+  "text_new_sale_order": [
+    "New Sales Order",
+    "បង្កើតការបញ្ជារទិញថ្មី"
+  ],
+
   "text_edit_invoice": [
     "Update Invoice",
     "កែប្រែវិក័យប័ត្រ"
@@ -310,6 +315,18 @@ export default {
     "មើលវិក័្កយប័ត្រ"
   ],
 
+
+  "text_view_sale_order": [
+    "View Sale Order",
+    "មើលការបញ្ជារទិញ"
+  ],
+
+
+  "text_view_detail": [
+    "View Detail",
+    "មើលលំអិត"
+  ],
+
   "text_preview_invoice": [
     "Preview Invoice",
     "មើលវិក័្កយប័ត្រគំរូ"
@@ -335,19 +352,35 @@ export default {
     "លេខវិក័្កយប័ត្រនេះបានប្រើរួចហើយ"
   ],
 
+  "text_sale_order_number_already_exist": [
+    "This sale order number has already taken.",
+    "លេខបញ្ជារទិញនេះបានប្រើរួចហើយ"
+  ],
+
   "text_invoice_no_pl": [
     "Note: Keep it blank for auto generate number",
     "បញ្ជាក់: ទុកនៅទទេដើម្បីបង្កើតលេខដោយស្វ័យប្រវត្តិ"
   ],
 
+
+  "text_mark_as_confirm": [
+    "Mark as Confirm",
+    "សម្គាល់ថាបានបញ្ជាក់"
+  ],
+
   "text_mark_as_sent": [
     "Mark as Sent",
-    "សម្គាល់ថាបានផ្ញើ"
+    "សម្គាល់​ថា​បាន​បញ្ជាក់"
   ],
 
   "text_new_invoice": [
     "New Invoice",
     "បង្កើតវិក័្កយប័ត្រថ្មី"
+  ],
+
+  "text_convert_to_invoice": [
+    "Convert to Invoice",
+    "បម្លែងទៅជាវិក្កយបត្រ"
   ],
 
   "text_sent": [
@@ -359,4 +392,24 @@ export default {
     "This invoice has already paid!",
     "វិក័យបត្រនេះបានទូទាត់រួច!"
   ],
+
+  "text_sale_order_no": [
+    "Sale order No",
+    "លេខ​​បញ្ជា​រ​លក់"
+  ],
+
+  "text_edit_sale_order": [
+    "Edit Sale Order",
+    "កែប្រែការបញ្ជារទិញ"
+  ],
+
+  "text_sale_order_date": [
+    "Sales order Date",
+    "កាលបរិច្ឆេទនៃការបញ្ជាទិញ"
+  ],
+
+  "text_expected_shipment_date": [
+    "Expected Shipment Date",
+    "កាលបរិច្ឆេទដឹកជញ្ជូនដែលរំពឹងទុក"
+  ]
 };

@@ -198,21 +198,30 @@ class NewInvoice extends React.PureComponent {
     util = new Util();
     timer = null;
     id = "";
+    saleOrderId = "";
     pageTitle = "";
     textRequiredCustomer = "";
 
     componentDidMount() {
         let idParam = this.props.match.params.id;
-        const params = new URLSearchParams(document.location.search);
-        if (params.get("action") === "clone") {
-            idParam = params.get("id");
-        }
+        const params = new URLSearchParams(document.location.search),   
+            action = params.get("action");
 
         if (idParam) {
             this.id = idParam;
+        }
+
+        if (action === "clone") {
+            idParam = params.get("id");
+        } else if (action === "convertToInvoice") {
+            idParam = params.get("saleOrderId");
+            this.saleOrderId = params.get("saleOrderId");
+        }
+
+        if (idParam) {
             this.pageTitle = <Translate id="text_edit_invoice" />;
             this.setState({loading: true});
-            InvoiceService.detail(this.id)
+            InvoiceService.detail(idParam)
             .then((response) => {
                 const data = response.data;
                 let totalExcludeTax = Number(data.totalExcludeTax);
@@ -230,7 +239,7 @@ class NewInvoice extends React.PureComponent {
                     discount = this.util.getValueFromPercentage(data.total, discount);
                 } 
 
-                let taxRate = parseInt(this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax));
+                let taxRate = this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax);
                 if (!taxRate)
                     taxRate = 0;
                 data.taxRate = taxRate;
@@ -326,6 +335,11 @@ class NewInvoice extends React.PureComponent {
                     totalExcludeTax:  subTotal,
                     total: values.total
                 };
+
+                if (this.saleOrderId) {
+                    invoice.referenceId = this.saleOrderId;
+                    invoice.referenceNo = formData.number;
+                }
 
                 const transactionEntries = [];
                 if (values["description"] && values["description"].length) {
@@ -473,9 +487,9 @@ class NewInvoice extends React.PureComponent {
                 handleCancel={this.handleCancelVariantProduct}/>
             });
             return;
-        } else if (productVariant && productVariant.length > 0) { // Difference from product variant
-            productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
-            productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
+        } else if (productVariant && productVariant.length > 0) {
+            productVariant = productVariant[0];
+            productVariant.name = isProductVariant ? productVariant.name : "";
         }
         
         const existingProductList = this.state.transactionEntries;
@@ -680,6 +694,15 @@ class NewInvoice extends React.PureComponent {
         }
     }
 
+    handleGoBack = () => {
+        const action = new URLSearchParams(window.location.search).get("action");
+        if (action) {
+            history.push("/transactions/invoice");
+        } else {
+            history.goBack();
+        }
+    }
+
     renderPreviewInvoice(formData) {
         formData.transactionEntries = this.state.transactionEntries;
         return <div id="wrap-invoice-form">
@@ -728,7 +751,7 @@ class NewInvoice extends React.PureComponent {
                         paddingRight: 0,
                         position: "relative"
                         }}
-                        onBack={() => history.goBack()}
+                        onBack={this.handleGoBack}
                         title={this.pageTitle} />
 
                     <Row>
@@ -788,7 +811,7 @@ class NewInvoice extends React.PureComponent {
                                 label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_invoice_no" /></div>}
                                 placeholder={`${stringTranslate("text_invoice_no", this.props.locale)}`}
                                 data={formData.invoiceNumber}
-                                style={{display: "flex", marginBottom: -6}}
+                                style={{display: "flex", marginBottom: 4}}
                                 inputStyle={{width: 269}}
                                 locale={this.props.locale}
                                 form={this.props.form}

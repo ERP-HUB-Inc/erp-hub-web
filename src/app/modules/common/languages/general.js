@@ -360,6 +360,11 @@ export default {
     "Please select rows to perform delete operation",
     "សូមជ្រើសរើសទិន្នន័យ ដើម្បីលប់"
   ],
+
+  "text_confirm": [
+    "Confirm",
+    "បានបញ្ជាក់"
+  ],
   
   "text_confirm_delete": [
     "Are you sure delete this record?",
