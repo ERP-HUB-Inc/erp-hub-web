@@ -194,6 +194,7 @@
     font-size: 12px;
     font-weight: 500;
     display: flex;
+    margin-top: 6px;
 }
 #mainChart 
 .header-task 
