@@ -21,6 +21,9 @@ export default function SelectLocation(props) {
         defaultValue={props.defaultValue}
         style={{ width: 200, marginRight: 15 }}
         onChange={props.onChange}
+        placeholder={props.placeholder}
+        onFocus={props.onFocus}
+        onBlur={props.onBlur}
         id={props.id}>
         <Option value={0}><Translate id="text_all_stores" /></Option>
         {

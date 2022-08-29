@@ -12,7 +12,9 @@ import {
 import { Chart, registerables } from "chart.js";
 import { Line } from "react-chartjs-2";
 import "../index.css";
-
+import InventoryService from "../../../../pos/services/report/InventoryService";
+import SelectLocation from "../../SelectLocation";
+import SelectDateOption from "../../SelectDateOption";
 Chart.register(...registerables);
 
 const { Option } = Select;
@@ -76,23 +78,52 @@ const data = [
     total: "$200.00",
   },
 ];
-const Dashboard = () => {
- 
+const Dashboard = (props) => {
+  const [topSellingSize, setTopSellingSize] = React.useState(25);
+  const [topSellType, setTopSellType] = React.useState("quantity");
   function onChange(value) {
     console.log(`selected ${value}`);
   }
 
-  function onBlur() {
-    console.log("blur");
-  }
 
-  function onFocus() {
-    console.log("focus");
-  }
+  const fetchPopularProducts = (limit, popularBy) => {
+    InventoryService.getPopularProduct(limit, popularBy)
+    .then(response => {
+      if (response.data) {
+        //
+      }
+    })
+  };
+  const onChangeTopSellingType = (e) => {
+    setTopSellType(e.target.value);
+    fetchPopularProducts(topSellingSize, e.target.value);
+  };
 
-  function onSearch(val) {
-    console.log("search:", val);
-  }
+  const onChangeTopSellingSize = (value) => {
+    setTopSellingSize(value);
+    fetchPopularProducts(value, topSellType);
+  };
+
+  React.useEffect(() => {
+    InventoryService.getInventoryDashboard()
+    .then(response => {
+      if (response.data) {
+        //
+      }
+    });
+
+    fetchPopularProducts(topSellingSize);
+
+    InventoryService.getTodayPurchase()
+    .then(response => {
+      if (response.data) {
+        //
+      }
+    });
+
+    //eslint-disable-next-line
+  }, []);
+
 
   const getOrCreateTooltip = (chart) => {
     let tooltipEl = chart.canvas.parentNode.querySelector("div");
@@ -330,23 +361,11 @@ const Dashboard = () => {
             </div>
           </li>
           <li className="nav-right">
-            <Select
-                showSearch
-                style={{ width: 200 }}
-                placeholder="Select loaction"
-                optionFilterProp="children"
-                onChange={onChange}
-                onFocus={onFocus}
-                onBlur={onBlur}
-                onSearch={onSearch}
-                filterOption={(input, option) =>
-                  option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                }
-              >
-                <Option value="jack">Jack</Option>
-                <Option value="lucy">Lucy</Option>
-                <Option value="tom">Tom</Option>
-              </Select>
+            <SelectLocation 
+              onChange={onChange}
+              placeholder="Select Location"
+              style={{width:165}}
+            />
           </li>
         </ul>
       </div>
@@ -460,23 +479,10 @@ const Dashboard = () => {
                 </div>
                 <div className="pull-right">
                   <div className="select-pull-right">
-                    <Select
-                      showSearch
-                      style={{ width: 200 }}
-                      placeholder="Select loaction"
-                      optionFilterProp="children"
-                      onChange={onChange}
-                      onFocus={onFocus}
-                      onBlur={onBlur}
-                      onSearch={onSearch}
-                      filterOption={(input, option) =>
-                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                      }
-                    >
-                      <Option value="jack">Jack</Option>
-                      <Option value="lucy">Lucy</Option>
-                      <Option value="tom">Tom</Option>
-                    </Select>
+                    <SelectDateOption 
+                      placeholder="Current Month"
+                      style={{width: 150}}
+                    />
                   </div>
                 </div>
               </div>
@@ -570,28 +576,20 @@ const Dashboard = () => {
               <div className="header-task">
                 <span className="title-task">Top Salling Products</span>
                 <div className="btn-header-task">
-                  <Radio.Group onChange={onChange} defaultValue="a">
-                    <Radio.Button value="a">By Quantity</Radio.Button>
-                    <Radio.Button value="b">By Total Sale</Radio.Button>
+                  <Radio.Group value={topSellType} onChange={onChangeTopSellingType} style={{ marginBottom: 16 }}>
+                    <Radio.Button value="quantity">By Quantity</Radio.Button>
+                    <Radio.Button value="totalSale">By Total Sale</Radio.Button>
                   </Radio.Group>
                   <div className="select">
-                    <Select
-                        showSearch
-                        style={{ width: 200 }}
-                        placeholder="Select loaction"
-                        optionFilterProp="children"
-                        onChange={onChange}
-                        onFocus={onFocus}
-                        onBlur={onBlur}
-                        onSearch={onSearch}
-                        filterOption={(input, option) =>
-                          option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                        }
-                      >
-                        <Option value="jack">Jack</Option>
-                        <Option value="lucy">Lucy</Option>
-                        <Option value="tom">Tom</Option>
-                      </Select>
+                    <Select 
+                    defaultValue={25} 
+                    style={{ width: 199, 
+                    marginLeft: 15 }} 
+                    onChange={onChangeTopSellingSize}>
+                      <Option value={25}>Top 25 Selling Products</Option>
+                      <Option value={50}>Top 50 Selling Products</Option>
+                      <Option value={100}>Top 100 Selling Products</Option>
+                    </Select>
                   </div>
                 </div>
               </div>
