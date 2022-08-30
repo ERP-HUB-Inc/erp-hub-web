@@ -130,20 +130,19 @@
 }
 #taskDadhboardFirst  .sub-total {
     color: #1F1F39;
-    font-size: 26px;
+    font-size: 30px;
     font-weight: 600;
     margin-left: 12px;
     margin-top: 7px;
 }
 #taskDadhboardFirst .total-footer {
     color: #87D068;
-    font-size: 12px;
+    font-size: 15px;
     font-weight: 500;
     margin-left: 12px;
-    margin-top: 10px;
 }
 #taskDadhboardFirst .total-footer span .anticon {
-    margin-right: 10px;
+    margin-right: 5px;
 }
 #mainChart .ant-card{
     height: 368px;
@@ -204,7 +203,7 @@
     margin-top: 4px;
 }
 #mainDashboadCategory .ant-card{
-    height: 466px;
+    height: 500px;
     border-radius: 6px;
 }
 #mainDashboadCategory .ant-card-body {
@@ -285,7 +284,7 @@
     padding: 0;
 }
 #mainTableList  .ant-card {
-    height: 466px;
+    height: 500px;
     border-radius: 6px;
 }
 #mainTableList .header-task .btn-header-task {
@@ -322,4 +321,7 @@
 }
 #mainTableList .table-list-product .ant-table-body table tr th {
     padding: 10px 16px !important;
-} 
+}
+#mainTableList .table-list-product .ant-table-content {
+    margin-top: 0px;
+}

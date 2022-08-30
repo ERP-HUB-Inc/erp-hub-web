@@ -9,19 +9,23 @@ import {
   Radio,
   Table
 } from "antd";
+import { Translate } from "react-localize-redux";
 import { Chart, registerables } from "chart.js";
-import { Line } from "react-chartjs-2";
-import "../index.css";
+import * as _ from "lodash";
+// import { Line } from "react-chartjs-2";
 import InventoryService from "../../../../pos/services/report/InventoryService";
 import SelectDateOption from "../../SelectDateOption";
+import "../index.css";
+import DashboardService from "../../../services/DashboardService";
+import Util from "../../../util";
 Chart.register(...registerables);
 
 const { Option } = Select;
 const columns = [
   {
     title: "Product Name",
-    dataIndex: "productName",
-    key: "productName",
+    dataIndex: "name",
+    key: "name",
   },
   {
     title: "Barcode",
@@ -30,69 +34,51 @@ const columns = [
   },
   {
     title: "Sold",
-    dataIndex: "sold",
-    key: "sold",
+    dataIndex: "soldQuantity",
+    key: "soldQuantity",
+    render: (soldQuantity, record) => `${soldQuantity} ${record.unit}`
   },
   {
     title: "Total",
     dataIndex: "total",
     key: "total",
+    align: "right",
+    render: total => (new Util()).formatCurrency(total)
   },
 ];
 
-const data = [
-  {
-    key: "1",
-    productName: "Sengha Gold 490ml កំប៉ុង​(12) កេស",
-    barcode: "8850999016573",
-    sold: "500 Box",
-    total: "$527.30$",
-  },
-  {
-    key: "2",
-    productName: "Meiji Yoghurt ប្រទាល",
-    barcode: "8850329351015",
-    sold: "50 Box",
-    total: "$230.20$",
-  },
-  {
-    key: "3",
-    productName: "Koh-Kae 115ml កំប៉ុង",
-    barcode: "8850329351015",
-    sold: "40 Pcs",
-    total: "$200.00",
-  },
-  {
-    key: "4",
-    productName: "Koh-Kae 115ml កំប៉ុង",
-    barcode: "8852023665870",
-    sold: "30 Box",
-    total: "$200.00",
-  },
-  {
-    key: "5",
-    productName: "Koh-Kae 115ml កំប៉ុង",
-    barcode: "8852023665870",
-    sold: "25 Box",
-    total: "$200.00",
-  },
-];
 const Dashboard = (props) => {
+  const [option, setOption] = React.useState("today");
+  const [popularProducts, setPopularProducts] = React.useState([]);
+  const [loadingPopular, setLoadingPopular] = React.useState(false);
+  const [dashboardSummaries, setDashboardSummaries] = React.useState([]);
+  const [popularCategories, setPopularCategories] = React.useState([]);
   const [topSellingSize, setTopSellingSize] = React.useState(25);
   const [topSellType, setTopSellType] = React.useState("quantity");
+
   function onChange(value) {
-    console.log(`selected ${value}`);
+    setOption(value);
+    DashboardService.lists(value)
+    .then(response => {
+      if (response.data && response.data.data) {
+        setDashboardSummaries(response.data.data);
+      }
+    });
   }
 
-
   const fetchPopularProducts = (limit, popularBy) => {
-    InventoryService.getPopularProduct(limit, popularBy)
+    setLoadingPopular(true);
+    InventoryService.getPopularProduct(6, popularBy)
     .then(response => {
       if (response.data) {
-        //
+        setPopularProducts(response.data);
       }
     })
+    .finally(() => {
+      setLoadingPopular(false);
+    });
   };
+
   const onChangeTopSellingType = (e) => {
     setTopSellType(e.target.value);
     fetchPopularProducts(topSellingSize, e.target.value);
@@ -103,21 +89,28 @@ const Dashboard = (props) => {
     fetchPopularProducts(value, topSellType);
   };
 
+  const getDashboardValue = (index, key) => {
+    return dashboardSummaries.length > 0 ? dashboardSummaries[index][key] : 0;
+  };
+
   React.useEffect(() => {
-    InventoryService.getInventoryDashboard()
+    DashboardService.lists(option)
     .then(response => {
-      if (response.data) {
-        //
+      if (response.data && response.data.data) {
+        setDashboardSummaries(response.data.data);
       }
     });
 
     fetchPopularProducts(topSellingSize);
 
-    InventoryService.getTodayPurchase()
+    InventoryService.getPopularCategories(7)
     .then(response => {
       if (response.data) {
-        //
+        setPopularCategories(response.data);
       }
+    })
+    .finally(() => {
+      setLoadingPopular(false);
     });
 
     //eslint-disable-next-line
@@ -349,20 +342,29 @@ const Dashboard = (props) => {
     ],
   };
 
+  let revenue = getDashboardValue(0, "value");
+  revenue = revenue ? revenue : 0;
+  const revenueRisePercentage = getDashboardValue(0, "diffRevenueFromLAstAsPercentag");
+  let discount = getDashboardValue(1, "value");
+  discount = discount ? discount : 0;
+  const diffSaleAsPercentage = getDashboardValue(0, "diffSaleFromLastAsPercentag");
+  const mostPopularCategory = _.maxBy(popularCategories, value => value.total);
+  const totalSaleOfPopularCategory = mostPopularCategory ? mostPopularCategory.total : 0;
+
   return (
     <div id="dashboard">
       <div id="navDaskboard">
         <ul>
           <li className="nav-left">
             <div className="nav-title">
-              <h4>Dashboard</h4>
+              <h4><Translate id="text_dashboard" /></h4>
               <span>Here’s your analytic detail</span>
             </div>
           </li>
           <li className="nav-right">
             <SelectDateOption 
               onChange={onChange}
-              placeholder="Select Location"
+              value={option}
               style={{width:165}}
             />
           </li>
@@ -383,13 +385,13 @@ const Dashboard = (props) => {
                     </div>
                   </div>
                   <div className="subtitle">
-                    <span>Revenue</span>
+                    <span><Translate id="text_revenue" /></span>
                   </div>
                   <div className="sub-total">
-                    <span>$360.98</span>
+                    <span>{(new Util()).formatCurrency(revenue)}</span>
                   </div>
                   <div className="total-footer">
-                    <span><Icon type="rise" />12.25%</span>
+                    <span style={revenueRisePercentage > 0 ? {} : {color: "red"}}><Icon type={revenueRisePercentage >= 0 ? "rise" : "fall"} />{Math.abs(revenueRisePercentage)}%</span>
                   </div>
                 </Card>
               </div>
@@ -406,13 +408,10 @@ const Dashboard = (props) => {
                     </div>
                   </div>
                   <div className="subtitle">
-                    <span>Discount</span>
+                    <span><Translate id="text_discount" /></span>
                   </div>
                   <div className="sub-total">
-                    <span>$150.70</span>
-                  </div>
-                  <div className="total-footer">
-                    <span><Icon type="rise" />12.25%</span>
+                    <span style={{color: "red"}}>{(new Util()).formatCurrency(discount)}</span>
                   </div>
                 </Card>
               </div>
@@ -429,13 +428,13 @@ const Dashboard = (props) => {
                     </div>
                   </div>
                   <div className="subtitle">
-                    <span>Nets Sales</span>
+                    <span><Translate id="text_net_sale" /></span>
                   </div>
                   <div className="sub-total">
-                    <span>$8.44</span>
+                    <span>{(new Util()).formatCurrency(revenue - discount)}</span>
                   </div>
                   <div className="total-footer">
-                    <span><Icon type="rise" />12.25%</span>
+                    <span style={diffSaleAsPercentage >= 0 ? {} : {color: "red"}}><Icon type={diffSaleAsPercentage >= 0 ? "rise" : "fall"} />{(new Util()).formatCurrency(Math.abs(diffSaleAsPercentage))}</span>
                   </div>
                 </Card>
               </div>
@@ -452,13 +451,13 @@ const Dashboard = (props) => {
                     </div>
                   </div>
                   <div className="subtitle">
-                    <span>Total Expense</span>
+                    <span><Translate id="text_total_expense" /></span>
                   </div>
                   <div className="sub-total">
-                    <span>$234.40</span>
+                    <span>{(new Util()).formatCurrency(0)}</span>
                   </div>
                   <div className="total-footer">
-                    <span style={{color: "red"}}><Icon type="fall" />12.25%</span>
+                    <span style={{color: "red"}}><Icon type="rise" />0%</span>
                   </div>
                 </Card>
               </div>
@@ -468,7 +467,7 @@ const Dashboard = (props) => {
         <Col span={12} className="task-line-chart">
           <div id="mainChart">
             <Card bordered={false}>
-              <div className="header-task">
+              {/* <div className="header-task">
                 <div className="pull-left">
                   <h4>Overall Sales</h4>
                   <div className='sub-left'>
@@ -480,7 +479,8 @@ const Dashboard = (props) => {
                 </div>
                 <div className="pull-right">
                   <div className="select-pull-right">
-                    <SelectDateOption 
+                    <SelectDateOption
+                      disabled={true}
                       placeholder="Current Month"
                       style={{width: 150}}
                     />
@@ -491,7 +491,7 @@ const Dashboard = (props) => {
                 <div style={{height: 300, padding: 20}}>
                   <Line options={options} data={lineData} />
                 </div>
-              </div>
+              </div> */}
             </Card>
           </div>
         </Col>
@@ -499,73 +499,37 @@ const Dashboard = (props) => {
           <div id="mainDashboadCategory">
             <Card bordered={false}>
               <div className="header-category">
-                <span className="title-category">Popular Category</span>
+                <span className="title-category">Popular Categories</span>
               </div>
               <div className="category-progress">
                 <ul>
-                  <li>
-                    <div className="label-progress">
-                      <ul>
-                        <li className="label-left"><span>Beer</span></li>
-                        <li className="label-right"><span>$734.40</span></li>
-                      </ul>
-                    </div>
-                    <Progress percent={10} status="active" />
-                  </li>
-                  <li>
-                    <div className="label-progress">
-                      <ul>
-                        <li className="label-left"><span>Drink</span></li>
-                        <li className="label-right"><span>$734.40</span></li>
-                      </ul>
-                    </div>
-                    <Progress percent={30} status="active" />
-                  </li>
-                  <li>
-                    <div className="label-progress">
-                      <ul>
-                        <li className="label-left"><span>Milk</span></li>
-                        <li className="label-right"><span>$734.40</span></li>
-                      </ul>
-                    </div>
-                    <Progress percent={20} status="active" />
-                  </li>
-                  <li>
-                    <div className="label-progress">
-                      <ul>
-                        <li className="label-left"><span>Care</span></li>
-                        <li className="label-right"><span>$734.40</span></li>
-                      </ul>
-                    </div>
-                    <Progress percent={40} status="active" />
-                  </li>
-                  <li>
-                    <div className="label-progress">
-                      <ul>
-                        <li className="label-left"><span>Food</span></li>
-                        <li className="label-right"><span>$734.40</span></li>
-                      </ul>
-                    </div>
-                    <Progress percent={60} status="active" />
-                  </li>
-                  <li>
-                    <div className="label-progress">
-                      <ul>
-                        <li className="label-left"><span>Tea</span></li>
-                        <li className="label-right"><span>$734.40</span></li>
-                      </ul>
-                    </div>
-                    <Progress percent={70} status="active" />
-                  </li>
-                  <li>
-                    <div className="label-progress">
-                      <ul>
-                        <li className="label-left"><span>Coffee</span></li>
-                        <li className="label-right"><span>$734.40</span></li>
-                      </ul>
-                    </div>
-                    <Progress percent={80} status="active" />
-                  </li>
+                  {
+                    mostPopularCategory ?
+                    <li>
+                      <div className="label-progress">
+                        <ul>
+                          <li className="label-left"><span>{mostPopularCategory.name}</span></li>
+                          <li className="label-right"><span>{(new Util()).formatCurrency(totalSaleOfPopularCategory)}</span></li>
+                        </ul>
+                      </div>
+                      <Progress percent={100} status="active" />
+                    </li>
+                    :
+                    ""
+                  }
+                  {
+                    popularCategories.filter(value => value.categoryId !== mostPopularCategory.categoryId).map((popularCategory, key) => 
+                      <li key={key}>
+                        <div className="label-progress">
+                          <ul>
+                            <li className="label-left"><span>{popularCategory.name}</span></li>
+                            <li className="label-right"><span>{(new Util()).formatCurrency(popularCategory.total)}</span></li>
+                          </ul>
+                        </div>
+                        <Progress percent={(popularCategory.total * 100) / totalSaleOfPopularCategory} status="active" />
+                      </li>
+                    )
+                  }
                 </ul>
               </div>    
             </Card>
@@ -575,7 +539,7 @@ const Dashboard = (props) => {
           <div id="mainTableList">
             <Card bordered={false}>
               <div className="header-task">
-                <span className="title-task">Top Salling Products</span>
+                <span className="title-task">Top Selling Products</span>
                 <div className="btn-header-task">
                   <Radio.Group value={topSellType} onChange={onChangeTopSellingType} style={{ marginBottom: 16 }}>
                     <Radio.Button value="quantity">By Quantity</Radio.Button>
@@ -595,7 +559,13 @@ const Dashboard = (props) => {
                 </div>
               </div>
               <div className="table-list-product">
-                <Table columns={columns} dataSource={data} pagination={false}/>
+                <Table
+                  rowKey="id"
+                  columns={columns}
+                  dataSource={popularProducts}
+                  pagination={false}
+                  loading={loadingPopular}
+                 />
               </div>
             </Card>
           </div>
