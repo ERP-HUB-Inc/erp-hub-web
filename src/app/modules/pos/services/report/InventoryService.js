@@ -16,6 +16,14 @@ class InventoryService extends BaseService {
     });
   }
 
+  getPopularCategories(limit, locationId) {
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/popular_categories?locationId=${locationId}&limit=${limit}`,  
+      headers: this.header
+    });
+  }
+
   getPopularProduct(limit, popularBy, locationId) {
     this.setHeader();
     return this.GET({ 

@@ -99,7 +99,7 @@ export default class Home extends Component {
           <div className="dashboard " style={{display: "flex", justifyContent: "space-between"}}>
             <ul>
               <li>
-                <this.BreadcrumbTitle title= {this.CATranslate("home_page_dashboard", this.props.locale)} />
+                <this.BreadcrumbTitle title= {this.CATranslate("text_dashboard", this.props.locale)} />
               </li>
               {/* <li style={{marginLeft: "15px"}}>
                 {<this.Switchs name="switch" checked={1} onChange={this.toggleDashboard} form={this.props.form} />}
@@ -126,7 +126,7 @@ export default class Home extends Component {
           percentage={this.getDashboardValue(0, "diffRevenueFromLAstAsPercentag")}
           showPercentage={true}
           icon="icon-dollar" title={<this.Translate id="text_revenue"/>}
-          readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
+          readMoreTitle={<this.Translate id="text_dashboard_read_more"/>}
           to={`reports/sale_summaries?from=${this.range[0]}&to=${this.range[1]}`} />
 
         <Board
@@ -140,7 +140,7 @@ export default class Home extends Component {
               decimal="." />
           }
           icon="icon-sale-return" title={<this.Translate id="text_discount" />}
-          readMoreTitle={<this.Translate id="home_page_dashboard_read_more" />}
+          readMoreTitle={<this.Translate id="text_dashboard_read_more" />}
           route="read"
           color="#cf1322"
           to={`reports/sale_summaries?from=${this.range[0]}&to=${this.range[1]}`} />
@@ -157,7 +157,7 @@ export default class Home extends Component {
         icon="icon-dollar" title={<this.Translate id="text_sales"/>}
         percentage={this.getDashboardValue(0, "diffSaleFromLastAsPercentag")}
         showPercentage={true}
-        readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
+        readMoreTitle={<this.Translate id="text_dashboard_read_more"/>}
         route="read"
         to={`reports/sold_products?from=${this.range[0]}&to=${this.range[1]}`} />
 
@@ -173,7 +173,7 @@ export default class Home extends Component {
           }
           icon="icon-customer"
           title={<this.Translate id="text_total_customer"/>}
-          readMoreTitle={<this.Translate id="home_page_dashboard_read_more"/>}
+          readMoreTitle={<this.Translate id="text_dashboard_read_more"/>}
           route="read"
           to="customer" />
         <this.Col md="8">

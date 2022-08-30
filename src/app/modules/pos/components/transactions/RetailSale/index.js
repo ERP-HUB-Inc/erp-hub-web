@@ -35,7 +35,6 @@ import ConstantAuth from "../../../../common/constants/authentication";
 import CustomerDropDownSearch from "../../../../crm/components/customers/Customer/DropDownSearch";
 import ProductDropDownSearch from "../../../../inventory/components/products/Product/DropDownSearch";
 import FormOpenSaleRegistration from "../../../containers/transactions/OpenSaleRegistration/FormOpen";
-import DeviceNumber from "../../../containers/transactions/SaleOrder/deviceNumber";
 import OpenSaleRegistrationAction from "../../../action/transaction/openSalaRegisration";
 import StartUp from "../../../../common/components/StartUp";
 import history from "../../../../common/router/history";

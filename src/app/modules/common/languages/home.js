@@ -1,5 +1,5 @@
 export default {
-  "home_page_dashboard": [
+  "text_dashboard": [
     "Dashboad",
     "ផ្ទាំងគ្រប់គ្រង"
   ],
@@ -110,7 +110,7 @@ export default {
     "បង្វិលការលក់"
   ],
   
-  "home_page_dashboard_read_more": [
+  "text_dashboard_read_more": [
     "Read More",
     "មើលបន្ថែម"
   ],
