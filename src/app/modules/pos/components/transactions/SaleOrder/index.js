@@ -84,6 +84,7 @@ export default class SaleOrder extends List {
         title: <this.Translate id="text_sub_total" />,
         dataIndex: "totalExcludeTax",
         key: "totalExcludeTax",
+        align: "right",
         render: (totalExcludeTax, record) => {
           if (!totalExcludeTax) {
             totalExcludeTax = record.total;
@@ -92,25 +93,27 @@ export default class SaleOrder extends List {
         }
       },
       {
-        title: <this.Translate id="text_tax" />,
+        title: <this.Translate id="text_vat" />,
         dataIndex: "tax",
         key: "tax",
-        render: (text, record, index) => {
+        align: "right",
+        render: (text, record) => {
           if (!record.totalExcludeTax) record.totalExcludeTax = record.total;
           return this.formatCurrency(record.total - record.totalExcludeTax);
-        },
-        sorter: true
+        }
       },
       {
         title: <this.Translate id="text_discount" />,
         dataIndex: "discount",
         key: "discount",
+        align: "right",
         render: (discount, record) => this.Util.formatCurrency(this.getDiscount(record))
       },
       {
         title: <this.Translate id="text_sale_total" />,
         dataIndex: "total",
         key: "totalSale",
+        align: "right",
         render: (total, record) => {
           total = total - this.Util.floor(this.getDiscount(record));
           if (total < 0) total = 0;

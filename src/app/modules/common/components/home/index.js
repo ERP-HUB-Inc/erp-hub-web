@@ -93,7 +93,7 @@ export default class Home extends Component {
     const revenue = this.getDashboardValue(0, "value"),
       discount = this.getDashboardValue(1, "value");
           
-    return(<>
+    return(<React.Fragment>
       <this.Row style={{alignContent: "flex-start", display: "none"}} >
         <this.Col md="12">
           <div className="dashboard " style={{display: "flex", justifyContent: "space-between"}}>
@@ -233,6 +233,6 @@ export default class Home extends Component {
       </this.Row>
       <Dashboard />
       
-    </>);
+    </React.Fragment>);
   }
 }

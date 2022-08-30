@@ -299,13 +299,13 @@ const dataSource = {
         component: QuotationUpdate,
         isFashNav: false
       },
-      // {
-      //   title: <Translate id="text_sale_order" />,
-      //   icon: "icon-time",
-      //   route: "/transactions/sale-order/lists",
-      //   component: SaleOrderTransaction,
-      //   isFashNav: true
-      // },
+      {
+        title: <Translate id="text_sale_order" />,
+        icon: "icon-time",
+        route: "/transactions/sale-order/lists",
+        component: SaleOrderTransaction,
+        isFashNav: true
+      },
       {
         title: <Translate id="text_sales" />,
         icon: "icon-time",

@@ -15,8 +15,8 @@ export default {
   ],
   
   "text_sale_order": [
-    "Sale Order",
-    "ការបញ្ចារលក់"
+    "Sales Order",
+    "ការបញ្ចារទិញ~លក់"
   ],
 
   "text_pos": [

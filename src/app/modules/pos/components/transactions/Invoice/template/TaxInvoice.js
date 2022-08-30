@@ -40,12 +40,12 @@ export default function TaxInvoice(props) {
       <tbody>
         <tr style={{background: "none"}}>
           <td style={{position: "relative", textAlign: "center", lineHeight: "28px", borderBottom: "2px solid #000", paddingBottom: 0}}>
-            <img src={`${util.getGeneralImage(`${formData.clientId}/general/${formData.client?.logo}`).url}`} alt="Logo" style={{position: "absolute", top: 0, left: 0, height: 90}} />
-            <h2 style={{fontFamily: "Khmer OS Muol Light"}}>{formData.client?.businessNamekm}</h2>
-            <h3 style={{textTransform: "uppercase", fontFamily: "Time News Romen", fontWeight: "bold"}}>{formData.client?.businessName}</h3>
-            <h6 style={{fontWeight: 610, marginLeft: 118}}>លេខអត្តសញ្ញាណកម្ម អតប​ (VATTIN) ddd{formData.client?.VATNo}</h6>
-            <div style={{width: 705, margin: "auto"}} dangerouslySetInnerHTML={{__html: formData.client?.address}} />
-            <div style={{fontSize: 13, color: "#224b99", marginLeft: 120}}>ទូរស័ព្ទលេខ: {util.formatPhonenoWithCountryCode(formData.client?.phoneNumber)}, Email:{formData.client?.email}</div>
+            <img src={`${util.getGeneralImage(`${formData.clientId}/general/${formData.client ? formData.client.logo : ""}`).url}`} alt="Logo" style={{position: "absolute", top: 0, left: 0, height: 90}} />
+            <h2 style={{fontFamily: "Khmer OS Muol Light"}}>{formData.client ? formData.client.businessNamekm : ""}</h2>
+            <h3 style={{textTransform: "uppercase", fontFamily: "Time News Romen", fontWeight: "bold"}}>{formData.client ? formData.client.businessName : ""}</h3>
+            <h6 style={{fontWeight: 610, marginLeft: 118}}>លេខអត្តសញ្ញាណកម្ម អតប​ (VATTIN) ddd{formData.client ? formData.client.VATNo : ""}</h6>
+            <div style={{width: 705, margin: "auto"}} dangerouslySetInnerHTML={{__html: formData.client ? formData.client.address : ""}} />
+            <div style={{fontSize: 13, color: "#224b99", marginLeft: 120}}>ទូរស័ព្ទលេខ: {util.formatPhonenoWithCountryCode(formData.client ? formData.client.phoneNumber : "")}, Email:{formData.client ? formData.client.email : ""}</div>
           </td>
         </tr>
         <tr>

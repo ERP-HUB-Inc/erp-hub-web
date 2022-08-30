@@ -394,8 +394,8 @@ export default {
   ],
 
   "text_sale_order_no": [
-    "Sale order No",
-    "លេខ​​បញ្ជា​រ​លក់"
+    "Sales Order No",
+    "លេខ​​បញ្ជា​រ​ទិញ"
   ],
 
   "text_edit_sale_order": [
