@@ -43,15 +43,15 @@ export default function TaxInvoice(props) {
             <img src={`${util.getGeneralImage(`${formData.clientId}/general/${formData.client ? formData.client.logo : ""}`).url}`} alt="Logo" style={{position: "absolute", top: 0, left: 0, height: 90}} />
             <h2 style={{fontFamily: "Khmer OS Muol Light"}}>{formData.client ? formData.client.businessNamekm : ""}</h2>
             <h3 style={{textTransform: "uppercase", fontFamily: "Time News Romen", fontWeight: "bold"}}>{formData.client ? formData.client.businessName : ""}</h3>
-            <h6 style={{fontWeight: 610, marginLeft: 118}}>លេខអត្តសញ្ញាណកម្ម អតប​ (VATTIN) ddd{formData.client ? formData.client.VATNo : ""}</h6>
+            <h6 style={{fontWeight: 610, marginLeft: 118}}>លេខអត្តសញ្ញាណកម្ម អតប​ (VATTIN) {formData.client ? formData.client.VATNo : ""}</h6>
             <div style={{width: 705, margin: "auto"}} dangerouslySetInnerHTML={{__html: formData.client ? formData.client.address : ""}} />
             <div style={{fontSize: 13, color: "#224b99", marginLeft: 120}}>ទូរស័ព្ទលេខ: {util.formatPhonenoWithCountryCode(formData.client ? formData.client.phoneNumber : "")}, Email:{formData.client ? formData.client.email : ""}</div>
           </td>
         </tr>
         <tr>
           <td style={{textAlign: "center"}}>
-            <div style={{color: "#0a4eb7", fontFamily: "Khmer OS Muol Light", fontSize: 19}}>វិក្កយបត្រអាករ</div>
-            <div style={{fontFamily: "Time New Romen", fontWeight: 600}}>TAX INVOICE</div>
+            <div style={{color: "#0a4eb7", fontFamily: "Khmer OS Muol Light", fontSize: 19}}>{props.invoiceTaxTitleKH}</div>
+            <div style={{fontFamily: "Time New Romen", fontWeight: 600, textTransform: "uppercase"}}>TAX {props.invoiceTitle}</div>
           </td>
         </tr>
         <tr>
@@ -65,8 +65,8 @@ export default function TaxInvoice(props) {
                     </div>
                   </td>
                   <td rowSpan={2} style={{fontWeight: 600, textAlign: "right"}}>
-                    <div>លេខវិក្កយបត្រ :</div>
-                    <div>Invoice No :</div>
+                    <div>{props.invoiceNoTitleKH} :</div>
+                    <div>{props.invoiceNoTitle} :</div>
                   </td>
                   <td style={{fontWeight: 600, textAlign: "center"}} rowSpan={2}>{formData.invoiceNumber}</td>
                 </tr>
@@ -187,3 +187,12 @@ export default function TaxInvoice(props) {
     </table>
   );
 }
+
+TaxInvoice.defaultProps = {
+  invoiceTitle: "Invoice",
+  invoiceTaxTitleKH: "វិក្កយបត្រអាករ",
+  invoiceNoTitle: "Invoice No",
+  invoiceNoTitleKH: "លេខវិក្កយបត្រ",
+  invoiceDateTitle: "Invoice Date",
+  dueDateTitle: "Due Date"
+};
