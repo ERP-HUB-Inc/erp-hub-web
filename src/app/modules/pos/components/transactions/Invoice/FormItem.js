@@ -244,6 +244,12 @@ class NewInvoice extends React.PureComponent {
                     taxRate = 0;
                 data.taxRate = taxRate;
 
+                if (action === "clone") {
+                    let invoiceNumber = data.invoiceNumber.split("-");
+                    invoiceNumber = invoiceNumber[invoiceNumber.length - 1];
+                    console.log("number", invoiceNumber);
+                }
+
                 delete data.transactionEntries;
                 this.setState(preState => {
                     preState.formData = data;
@@ -375,6 +381,9 @@ class NewInvoice extends React.PureComponent {
             InvoiceService.update(invoice, this.id)
             .then(() => {
                 message.success(stringTranslate("text_success_save_invoice", this.props.locale));
+                if (this.saleOrderId) {
+                    history.goBack();
+                }
             })
             .catch(() => message.error("Error"))
             .finally(() => this.setState({saveLoading: false}));

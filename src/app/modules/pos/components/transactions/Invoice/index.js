@@ -4,7 +4,8 @@ import {
   Dropdown,
   Menu,
   Icon,
-  Tag
+  Tag,
+  message
 } from "antd";
 import List from "../List";
 import Enum from "../../../enums";
@@ -13,6 +14,7 @@ import TransactionService from "../../../services/transactions/TransactionServic
 import InvoiceService from "../../../services/transactions/InvoiceService";
 import InventoryEnum from "../../../../inventory/enums";
 import history from "../../../../common/router/history";
+import { stringTranslate } from "../../../../common/helper/stringTranslate";
 
 export default class Invoice extends List {
   constructor(props) {
@@ -167,9 +169,8 @@ export default class Invoice extends List {
   }
 
   handleShowEdit(record) {
-    console.log("record", record);
     if (record.status === Enum.INVOICE_STATUS.PAID || record.status === Enum.INVOICE_STATUS.SENT) {
-      return this.Util.sweetAlertMessage("Can't edit invoice that already sent or paid");
+      return message.warning(stringTranslate("text_error_allow_update_only_draft_step", this.props.locale));
     }
 
     history.push(`/transactions/update-invoice/${record.id}`);
@@ -277,7 +278,7 @@ export default class Invoice extends List {
 
   renderButtonSearch(fetchingProps){
     return <this.Col md="2" className="wrap-btn-search">
-      <div className="ant-form-item-label" style={{visibility: "hidden"}}>
+      <div className="ant-form-item-label" style={{visibility: "hidden", lineHeight: "25px"}}>
         <label htmlFor="status" className="" title="">Filter</label>
       </div>
       <this.Button htmlType="submit" type="default" loading={this.state.isClickFilter && fetchingProps.fetching}>
