@@ -21,7 +21,7 @@ export default class SaleOrder extends List {
     this.SALE_ORDER_STATUS_STR = {
       [Enum.SALE_ORDER_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#bfbfbf" },
       [Enum.SALE_ORDER_STATUS.CONFIRMED]: { title: <this.Translate id="text_confirm" />, color: "#1890ff" },
-      [Enum.SALE_ORDER_STATUS.CLOSED]: { title: <this.Translate id="text_close" />, color: "#f50"},
+      [Enum.SALE_ORDER_STATUS.CLOSED]: { title: <this.Translate id="text_closed" />, color: "#f50"},
       [Enum.SALE_ORDER_STATUS.VOID]: {title: <this.Translate id="text_void"/>, color: "#d9d9d9"}
     };
     this.columns = [

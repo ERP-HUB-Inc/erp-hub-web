@@ -43,6 +43,11 @@ export default {
     "Close",
     "បិទ"
   ],
+
+  "text_closed": [
+    "Closed",
+    "បិទ"
+  ],
   
   "text_yes": [
     "Yes",
