@@ -1,3 +1,9 @@
+#invoice-form .ant-input-number-disabled,
+#invoice-form .ant-input-disabled {
+  background: #FFFFFF;
+  color: #565656;
+}
+
 .table-invoice {
   width: 100%;
   border-collapse: collapse;
