@@ -305,14 +305,6 @@ export default class OpenSaleRegistrationList extends List {
         </this.Col>
         <this.Col md="3">
           <div>
-            <this.Translate id="text_register" />:
-          </div>
-          <div>
-            {data.device.code}
-          </div>
-        </this.Col>
-        <this.Col md="3">
-          <div>
             <this.Translate id="text_open_time" />:
           </div>
           <div>
