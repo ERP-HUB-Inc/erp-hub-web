@@ -803,7 +803,7 @@ export default class Retail extends Component {
   handleLinkSaleHistory() {
     this.handleSetFullScreen();
 
-    history.push("/transactions/sales");
+    history.push("/transactions/invoice");
   }
 
   handleLinkCloseShift() {

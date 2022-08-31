@@ -306,13 +306,13 @@ const dataSource = {
         component: SaleOrderTransaction,
         isFashNav: true
       },
-      {
-        title: <Translate id="text_sales" />,
-        icon: "icon-time",
-        route: "/transactions/sales", 
-        component: SaleHistory,
-        isFashNav: true
-      },
+      // {
+      //   title: <Translate id="text_sales" />,
+      //   icon: "icon-time",
+      //   route: "/transactions/sales", 
+      //   component: SaleHistory,
+      //   isFashNav: true
+      // },
       {
         title: <Translate id="text_invoices" />,
         icon: "icon-calendar",

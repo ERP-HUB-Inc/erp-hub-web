@@ -76,8 +76,10 @@ export default class Invoice extends List {
         render: (invoiceNumber, record) => {
           const menu = (
             <Menu>
-              <Menu.Item onClick={() => this.handleShowEdit(record)}>
-                <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
+              <Menu.Item>
+                <this.Link to={`/transactions/update-invoice/${record.id}`}>
+                  <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
+                </this.Link>
               </Menu.Item>
               <Menu.Item>
                 <this.Link to={`/transactions/detail-invoice/${record.id}`}>

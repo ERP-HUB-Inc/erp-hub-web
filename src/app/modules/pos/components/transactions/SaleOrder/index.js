@@ -27,9 +27,9 @@ export default class SaleOrder extends List {
     this.columns = [
       {
         title: <this.Translate id="text_date" />,
-        dataIndex: "invoiceDate",
-        key: "invoiceDate",
-        render: (invoiceDate) => this.Util.formatDate(invoiceDate)
+        dataIndex: "registerDate",
+        key: "registerDate",
+        render: (registerDate) => this.Util.formatDate(registerDate, "DD/MM/YYYY")
       },
       {
         title: <this.Translate id="text_status" />,
