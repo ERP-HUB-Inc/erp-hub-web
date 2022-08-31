@@ -88,6 +88,9 @@ export default class Invoice extends List {
                   <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_invoice" />
                 </this.Link>
               </Menu.Item>
+              <Menu.Item onClick={() => this.handleReturn(record)}>
+                <Icon type="retweet" style={{marginRight: 10}} /> <this.Translate id="text_return" />
+              </Menu.Item>
             </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
@@ -176,6 +179,33 @@ export default class Invoice extends List {
     }
 
     history.push(`/transactions/update-invoice/${record.id}`);
+  }
+
+  handleReturn(rowData) {
+    swal({
+      title: this.CATranslate("text_confirm_return_invoice", this.props.locale),
+      text: this.CATranslate("text_message_return_invoice", this.props.locale),
+      icon: "warning",
+      buttons: [this.CATranslate("text_cancel", this.props.locale), this.CATranslate("text_ok", this.props.locale)],
+      dangerMode: true,
+    })
+    .then(ok => {
+        if (ok) {
+          TransactionService.returnTransaction(rowData.id)
+          .then(() => {
+            swal({
+              icon: "success",
+              title: "Success!",
+              text: "Your invoice has been returned",
+              buttons: false,
+              timer: 1000
+            })
+            .then(() => {
+              this.fetchList();
+            });
+          });
+        }
+    });
   }
 
   getProductOrderList(data) {
