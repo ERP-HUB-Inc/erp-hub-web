@@ -7,7 +7,7 @@ export default function TaxInvoice(props) {
 
   function getSubTotal(formData) {
     let subtotal = 0;
-    if (formData.transactionEntries.length) {
+    if (formData.transactionEntries && formData.transactionEntries.length) {
       formData.transactionEntries.forEach(entry => {
         if (entry.status !== 3)
           subtotal += entry.quantity * entry.price;
