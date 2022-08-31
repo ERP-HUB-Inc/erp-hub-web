@@ -239,9 +239,6 @@ class NewInvoice extends React.PureComponent {
                 }));
 
                 let discount = data.discount;
-                if (data.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-                    discount = this.util.getValueFromPercentage(totalExcludeTax, discount);
-                } 
 
                 let taxRate = this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax);
                 if (!taxRate)
@@ -427,6 +424,10 @@ class NewInvoice extends React.PureComponent {
 
     onChangeTotalDiscount = (discount) => {
         this.setState(preState => {
+            if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+                let total = this.getTotal();
+                discount = this.util.getValueFromPercentage(total, discount);
+            }
             preState.formData.discount = discount;
             return preState;
         });
@@ -434,7 +435,13 @@ class NewInvoice extends React.PureComponent {
 
     onChangeDiscountType = (type) => {
         this.setState(preState => {
+            let discount = this.props.form.getFieldValue("discountField");
+            if (type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+                let total = this.getTotal();
+                discount = this.util.getValueFromPercentage(total, discount);
+            }
             preState.formData.discountType = type;
+            preState.formData.discount = discount;
             return preState;
         });
     }
@@ -697,6 +704,14 @@ class NewInvoice extends React.PureComponent {
         return total;
     }
 
+    getDiscountField(formData) {
+        let result = formData.discount;
+        if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+            result = this.util.getPercentage(formData.totalExcludeTax, result);
+        }
+        return result;
+    }
+
     onChangeVATType = (type) => {
         if (type !== "include") {
             this.setState(preState => {
@@ -743,9 +758,11 @@ class NewInvoice extends React.PureComponent {
         const {formData} = this.state;
         let discount = Number(formData.discount);
         let subTotal = this.getTotal();
-        if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-            discount = this.util.getValueFromPercentage(subTotal, discount);
+
+        if (discount > subTotal) {
+            discount = subTotal;
         }
+
         formData.totalExcludeTax = subTotal;
         let vat = this.util.getTaxValue(subTotal - discount, formData.taxRate);
         formData.total = subTotal + vat;
@@ -830,8 +847,8 @@ class NewInvoice extends React.PureComponent {
                             />
                             <Input.Group compact style={{textAlign: "right"}}>
                                 <InputNumber
-                                    name="discount"
-                                    data={formData.discount}
+                                    name="discountField"
+                                    data={this.getDiscountField(formData)}
                                     label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_discount" /></div>}
                                     style={{width: 240, marginRight : 8, marginBottom: 0}}
                                     isAutoSelect={true}
@@ -941,6 +958,12 @@ class NewInvoice extends React.PureComponent {
                             </div>
                             <div style={styles.itemSummary}>
                                 <div style={{width: 100}}><Translate id="text_discount" /></div>
+                                <InputNumber
+                                    name="discount"
+                                    data={discount}
+                                    style={{display: "none"}}
+                                    form={this.props.form}
+                                />
                                 <div>:</div>
                                 <div style={{width: 100, textAlign: "right", color: "red"}}>-{this.util.formatCurrency(discount)}</div>
                             </div>
