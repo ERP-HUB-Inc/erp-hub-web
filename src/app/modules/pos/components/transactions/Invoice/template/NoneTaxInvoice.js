@@ -10,7 +10,7 @@ export default function NoneTaxInvoice(props) {
 
   function getSubTotal(formData) {
     let subtotal = 0;
-    if (formData.transactionEntries.length) {
+    if (formData.transactionEntries && formData.transactionEntries.length) {
       formData.transactionEntries.forEach(entry => {
         if (entry.status !== 3)
           subtotal += entry.quantity * entry.price;
@@ -112,7 +112,7 @@ export default function NoneTaxInvoice(props) {
               </thead>
               <tbody style={{background: "#fbfbfb", borderBottom: "2px solid #ddd", verticalAlign: "top"}}>
                 {
-                  formData.transactionEntries.map((entry, index) => 
+                  formData.transactionEntries && formData.transactionEntries.map((entry, index) => 
                     <tr key={index} style={{fontSize: "11pt", lineHeight: "26px", background: "none", display: `${entry.status === 3 ? "none" : ""}`}}>
                       <td style={{textAlign: "center"}}>{index + 1}</td>
                       <td ><pre className="entry-note-column">{entry.description}</pre></td>

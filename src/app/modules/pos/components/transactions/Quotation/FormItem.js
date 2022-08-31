@@ -461,6 +461,43 @@ class FormItem extends React.PureComponent {
     });
   }
 
+  handleResetForm = () => {
+    const {quotationEntries} = this.state;
+    this.props.form.resetFields();
+    if (quotationEntries.length) {
+        if (this.id) {
+            this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
+            .then(willClear => {
+                if (willClear) {
+                    quotationEntries.forEach((entry, index) => {
+                        if (entry.id) {
+                            quotationEntries[index].status = 3;
+                        } else {
+                            quotationEntries.splice(index, 1);
+                        }
+                        this.setState({quotationEntries, productSearch: []});
+                    });
+                }
+            });
+        } else {
+            this.setState({quotationEntries: []});
+        }
+    }
+  }
+
+  handleNewProposal = () => {
+    this.id = "";
+    this.setState({
+      formData: {
+        taxRate: 0,
+        discount: 0,
+        publicNote: ""
+      },
+      quotationEntries: []
+    });
+    history.push("/transactions/quotation-create");
+  }
+
   fetchCustomer = (value) => {
     clearTimeout(this.timer);
     let search = "";

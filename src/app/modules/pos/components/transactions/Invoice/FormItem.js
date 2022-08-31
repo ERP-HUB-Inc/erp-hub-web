@@ -73,6 +73,7 @@ class NewInvoice extends React.PureComponent {
         saveLoading: false,
         showDrawer: false
     }
+    action = new URLSearchParams(window.location.search).get("action");
     entryColumn = [
         {
             title: <Translate id="text_no" />,
@@ -144,6 +145,7 @@ class NewInvoice extends React.PureComponent {
                     <InputTextArea
                         name={`description[${index}]`}
                         data={description}
+                        disabled={this.action === "convertToInvoice" ? true : false}
                         inputStyle={{width: "100%"}}
                         style={{width: "100%"}}
                         form={this.props.form} />
@@ -159,6 +161,7 @@ class NewInvoice extends React.PureComponent {
                     name={`quantity[${index}]`}
                     min={0}
                     data={quantity}
+                    disabled={this.action === "convertToInvoice" ? true : false}
                     isAutoSelect={true}
                     onChange={(value) => this.onChangeQty(value, index)}
                     form={this.props.form} 
@@ -175,6 +178,7 @@ class NewInvoice extends React.PureComponent {
                     min={0}
                     data={price}
                     isAutoSelect={true}
+                    disabled={this.action === "convertToInvoice" ? true : false}
                     onChange={(value) => this.onChangePrice(value, index)}
                     form={this.props.form} 
                 />;
@@ -379,9 +383,6 @@ class NewInvoice extends React.PureComponent {
             InvoiceService.update(invoice, this.id)
             .then(() => {
                 message.success(stringTranslate("text_success_save_invoice", this.props.locale));
-                if (this.saleOrderId) {
-                    history.goBack();
-                }
             })
             .catch(() => message.error("Error"))
             .finally(() => this.setState({saveLoading: false}));
@@ -732,11 +733,11 @@ class NewInvoice extends React.PureComponent {
         const formItemLayout = {
             labelCol: {
                     xs: { span: 24 },
-                    sm: { span: 8 },
+                    sm: { span: 10 },
                 },
                 wrapperCol: {
                     xs: { span: 24 },
-                    sm: { span: 16 },
+                    sm: { span: 14 },
             },
         };
         const {formData} = this.state;
@@ -822,7 +823,7 @@ class NewInvoice extends React.PureComponent {
                                 label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_invoice_no" /></div>}
                                 placeholder={`${stringTranslate("text_invoice_no", this.props.locale)}`}
                                 data={formData.invoiceNumber}
-                                style={{display: "flex", marginBottom: 4}}
+                                style={{display: "flex", marginBottom: 0}}
                                 inputStyle={{width: 269}}
                                 locale={this.props.locale}
                                 form={this.props.form}
@@ -832,7 +833,7 @@ class NewInvoice extends React.PureComponent {
                                     name="discount"
                                     data={formData.discount}
                                     label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_discount" /></div>}
-                                    style={{width: 210, marginRight : 8, marginBottom: 0}}
+                                    style={{width: 240, marginRight : 8, marginBottom: 0}}
                                     isAutoSelect={true}
                                     min={0}
                                     onChange={this.onChangeTotalDiscount}
@@ -854,7 +855,7 @@ class NewInvoice extends React.PureComponent {
                                 </Form.Item>
                             </Input.Group>
                             <Input.Group compact style={{textAlign: "right"}} className="input-group-full-width">
-                                <Form.Item label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_vat" /></div>}>
+                                <Form.Item style={{width: 255}} label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_vat" /></div>}>
                                     {
                                         getFieldDecorator("vatType", {initialValue: formData.taxRate ? "include" : "exclude"})
                                         (<Select 
