@@ -697,14 +697,12 @@ export default {
   
   "text_invoice": [
     "Invoice",
-    "វិក័យប័ត្រ",
-    "Invoice"
+    "វិក័យប័ត្រ"
   ],
 
   "text_invoices": [
-    "Invoice",
-    "វិក័យប័ត្រ",
-    "Invoices"
+    "Invoices",
+    "វិក័យប័ត្រ"
   ],
   
   "text_pre_order": [

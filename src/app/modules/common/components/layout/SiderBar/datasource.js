@@ -40,11 +40,6 @@ const QuotationUpdate = Loadable({
   loading: () => <StartUp />,
 });
 
-const SaleOrder = Loadable({
-  loader: () => import("../../../../pos/containers/transactions/SaleWalkin"),
-  loading: () => <StartUp />,
-});
-
 const OpenSaleRegistration = Loadable({
   loader: () => import("../../../../pos/containers/transactions/OpenSaleRegistration"),
   loading: () => <StartUp />,
@@ -86,61 +81,25 @@ const ProductUnit = Loadable({
   loading: () => <StartUp />,
 });
 
-// const importProduct = Loadable({
-//   loader: () => import("../../../../inventory/containers/products/ProductsUnit/importProduct"),
-//   loading: () => <StartUp />,
-// });
-
-// STOCK CONTROL
-// const Stock = Loadable({
-//   loader: () => import("../../../../inventory/containers/stock/StockManagement"),
-//   loading: () => <StartUp />,
-// });
-
 const PurchaseOrder = Loadable({
   loader: () => import("../../../../inventory/containers/stock/PurchaseOrder"),
   loading: () => <StartUp />,
 });
-
-// const ReceiveOrder = Loadable({
-//   loader: () => import("../../../../inventory/containers/stock/ReceivePurchase"),
-//   loading: () => <StartUp />,
-// });
-
-// const StockReturn = Loadable({
-//   loader: () => import("../../../../inventory/containers/stock/ReturnPurchase"),
-//   loading: () => <StartUp />,
-// });
 
 const StockTransfer = Loadable({
   loader: () => import("../../../../inventory/containers/stock/StockTransfer"),
   loading: () => <StartUp />,
 });
 
-// const ReceiveStockTransfer = Loadable({
-//   loader: () => import("../../../../inventory/containers/stock/ReceiveStockTransfer"),
-//   loading: () => <StartUp />,
-// });
-
 const Supplier = Loadable({
   loader: () => import("../../../../inventory/containers/stock/Supplier"),
   loading: () => <StartUp />,
 });
 
-// const SaleOrderQuotation = Loadable({
-//   loader: () => import("../../../../inventory/containers/stock/SaleOrder"),
-//   loading: () => <StartUp />,
-// });
-
 const StockAdjustmentRequest = Loadable({
   loader: () => import("../../../../inventory/containers/stock/StockAdjustmentRequest"),
   loading: () => <StartUp />,
 });
-
-// const StockAdjustmentApprove = Loadable({
-//   loader: () => import("../../../../inventory/containers/stock/StockAdjustmentApprove"),
-//   loading: () => <StartUp />,
-// });
 
 // REPORT
 const SaleReportDashboard = Loadable({
@@ -302,29 +261,16 @@ const dataSource = {
       {
         title: <Translate id="text_sale_order" />,
         icon: "icon-time",
-        route: "/transactions/sale-order/lists",
+        route: "/transactions/sales-order",
         component: SaleOrderTransaction,
         isFashNav: true
       },
-      // {
-      //   title: <Translate id="text_sales" />,
-      //   icon: "icon-time",
-      //   route: "/transactions/sales", 
-      //   component: SaleHistory,
-      //   isFashNav: true
-      // },
       {
         title: <Translate id="text_invoices" />,
         icon: "icon-calendar",
         route: "/transactions/invoice",
         component: Invoice,
         isFashNav: true
-      },
-      {
-        title: <Translate id="text_pos" />,
-        icon: "icon-sale",
-        route: "/pos",
-        component: SaleOrder
       },
       {
         title: <Translate id="text_close_shift" />,

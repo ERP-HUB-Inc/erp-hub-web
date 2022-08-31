@@ -39,6 +39,7 @@ import ReportSaleByLocation from "../../pos/components/reports/Sale/ReportSaleBy
 import ReportPurchaseSummary from "../../pos/components/reports/Purchase/ReportPurchaseSummary";
 import ReportPurchaseByProduct from "../../pos/components/reports/Purchase/ReportPurchaseByProduct";
 import ReportPurchaseBySupplier from "../../pos/components/reports/Purchase/ReportPurchaseBySupplier";
+import POS from "../../pos/containers/transactions/SaleWalkin";
 import InvoiceCreate from "../../pos/components/transactions/Invoice/FormItem";
 import InvoiceUpdate from "../../pos/components/transactions/Invoice/FormItem";
 import InvoiceDetail from "../../pos/components/transactions/Invoice/detail";
@@ -86,6 +87,7 @@ class Router extends Component {
                 )
               )
             }
+            <Route path="/pos" component={POS} />
             <Route path="/transactions/create-invoice" component={InvoiceCreate} />
             <Route path="/transactions/update-invoice/:id" component={InvoiceUpdate} />
             <Route path="/transactions/detail-invoice/:id" component={InvoiceDetail} />

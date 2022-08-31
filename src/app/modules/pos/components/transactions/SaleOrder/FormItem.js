@@ -589,7 +589,7 @@ class FormItem extends React.PureComponent {
   handleGoBack = () => {
     const action = new URLSearchParams(window.location.search).get("action");
     if (action) {
-      history.push("/transactions/sale-order/lists");
+      history.push("/transactions/sales-order");
     } else {
       history.goBack();
     }
