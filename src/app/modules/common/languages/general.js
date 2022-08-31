@@ -41,7 +41,7 @@ export default {
   
   "text_close": [
     "Close",
-    "បិត"
+    "បិទ"
   ],
   
   "text_yes": [
@@ -571,6 +571,11 @@ export default {
   "text_all_step": [
     "All Step",
     "ជំហានទាំងអស់"
+  ],
+
+  "text_all_status": [
+    "All Status",
+    "ស្ថានភាពទាំងអស់"
   ],
   
   "text_number": [

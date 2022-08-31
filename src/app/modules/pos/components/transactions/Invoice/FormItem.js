@@ -244,6 +244,10 @@ class NewInvoice extends React.PureComponent {
                     taxRate = 0;
                 data.taxRate = taxRate;
 
+                if (action === "clone") {
+                    data.invoiceNumber = "";
+                }
+
                 delete data.transactionEntries;
                 this.setState(preState => {
                     preState.formData = data;
@@ -375,6 +379,9 @@ class NewInvoice extends React.PureComponent {
             InvoiceService.update(invoice, this.id)
             .then(() => {
                 message.success(stringTranslate("text_success_save_invoice", this.props.locale));
+                if (this.saleOrderId) {
+                    history.goBack();
+                }
             })
             .catch(() => message.error("Error"))
             .finally(() => this.setState({saveLoading: false}));
@@ -382,6 +389,9 @@ class NewInvoice extends React.PureComponent {
             InvoiceService.create(invoice)
             .then(() => {
                 message.success(stringTranslate("text_success_save_invoice", this.props.locale));
+                if (this.saleOrderId) {
+                    history.push("/transactions/invoice");
+                }
             })
             .catch(() => message.error("Error"))
             .finally(() => this.setState({saveLoading: false}));
@@ -587,6 +597,7 @@ class NewInvoice extends React.PureComponent {
     }
 
     handleNewInvoice = () => {
+        this.id = "";
         history.push("/transactions/create-invoice");
         this.pageTitle = <Translate id="text_create_invoice" />;
         this.setState({

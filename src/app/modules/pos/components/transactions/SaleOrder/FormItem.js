@@ -189,13 +189,14 @@ class FormItem extends React.PureComponent {
 
   componentDidMount() {
     let idParam = this.props.match.params.id;
-    const params = new URLSearchParams(document.location.search);
+    const params = new URLSearchParams(document.location.search),
+      action = params.get("action");
 
     if (idParam) {
       this.id = idParam;
     }
 
-    if (params.get("action") === "clone") {
+    if (action === "clone") {
       idParam = params.get("id");
     }
 
@@ -224,6 +225,10 @@ class FormItem extends React.PureComponent {
         if (!taxRate)
           taxRate = 0;
         data.taxRate = taxRate;
+
+        if (action === "clone") {
+          data.number = "";
+        }
 
         delete data.transactionEntries;
         this.setState(preState => {
@@ -420,8 +425,15 @@ class FormItem extends React.PureComponent {
     }
   }
 
-  handleNewInvoice = () => {
-
+  handleNewSaleOrder = () => {
+    this.setState({
+      formData: {
+        taxRate: 0
+      },
+      transactionEntries: []
+    });
+    this.id = "";
+    history.push("/transactions/sale-order/create");
   }
 
   handleOnSelectList = (product, productVariant, isRequestVariantForm = true) => {
@@ -869,9 +881,9 @@ class FormItem extends React.PureComponent {
                       </Link>
                     </Menu.Item>
                     <Menu.Item key={3}>
-                      <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} ><Translate id="text_clone" /></Link>
+                      <Link target="_blank" to={`/transactions/sale-order/create?id=${formData.id}&action=clone`} ><Translate id="text_clone" /></Link>
                     </Menu.Item>
-                    <Menu.Item key={5} onClick={this.handleNewInvoice}><Translate id="text_new_sale_order" /></Menu.Item>
+                    <Menu.Item key={5} onClick={this.handleNewSaleOrder}><Translate id="text_new_sale_order" /></Menu.Item>
                     <Menu.Item key={6} onClick={() => this.handleVoid(formData.id)}><Translate id="text_void" /></Menu.Item>
                     <Menu.Item key={7} onClick={() => this.handleDelete(formData.id)}><Translate id="text_delete" /></Menu.Item>
                   </Menu>

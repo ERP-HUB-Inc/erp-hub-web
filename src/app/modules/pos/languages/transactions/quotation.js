@@ -19,10 +19,30 @@ export default {
     "សម្រង់តម្លៃ",
     "Quotation"
   ],
+  "text_quotation_no": [
+    "Quotation No",
+    "លេខសម្រង់តម្លៃ"
+  ],
+  "text_quotation_temp": [
+    "Quotation Template",
+    "គំរូសម្រង់តម្លៃ",
+  ],
+  "text_quotation_date": [
+    "Quotation Date",
+    "កាលបរិច្ឆេទសម្រង់តម្លៃ",
+  ],
+  "text_valid_till": [
+    "Valid Till",
+    "មានសុពលភាពដល់",
+  ],
   "text_create_quotation": [
     "Create Quotation",
     "បង្កើតសម្រង់តម្លៃ",
     "Create Quotation"
+  ],
+  "text_new_proposal": [
+    "New Proposal",
+    "បង្កើតសំណើថ្មី"
   ],
   "text_save_quotation": [
     "Save Quotation",
@@ -38,6 +58,10 @@ export default {
     "Edit Quotation",
     "កែប្រែសម្រង់តម្លៃ",
     "Edit Quotation"
+  ],
+  "print_quotation": [
+    "Print Quotation",
+    "បោះពុម្ពសម្រង់តម្លៃ"
   ],
   "text_all_customer": [
     "All Customer",
@@ -84,6 +108,10 @@ export default {
     "អនុញ្ញាតឱ្យបោះបង់តែដំណាក់កាលសេចក្តីព្រៀង!",
     "We allow cancel only step draft!"
   ],
+  "text_quote_no_already_exist": [
+    "Quote number is already exist",
+    "លេខសម្រង់តម្លៃនេះបានប្រើប្រាស់រួច"
+  ],
 
   "text_clone": [
     "Clone",
@@ -101,6 +129,11 @@ export default {
     "We not allow you to clone with multi record !",
     "យើងមិនអនុញ្ញាតឱ្យអ្នកចម្លងជាមួយកំណត់ត្រាច្រើនទេ!",
     "We not allow you to clone with multi record !"
+  ],
+
+  "text_view_quotation": [
+    "View Quotation",
+    "មើលសម្រង់តម្លៃ"
   ]
 
 };

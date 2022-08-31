@@ -67,20 +67,20 @@ export default function NoneTaxInvoice(props) {
         </tr>
         <tr>
           <td colSpan={3} >
-            <div style={{color: "#37a3c6", paddingBottom: 10}}>INVOICE</div>
+            <div style={{color: "#37a3c6", paddingBottom: 10, textTransform: "uppercase"}}>{props.invoiceTitle}</div>
           </td>
         </tr>
         <tr style={{background: "none", borderTop: "2px solid #ddd", borderBottom: "2px solid #ddd"}}>
           <td style={{paddingTop: 6, paddingBottom: 6, width: 244}}>
             <ul style={styles.ulStyle}>
               <li style={{display: "flex"}}>
-                <div style={{width: 145}}>Invoice Number</div><div style={{fontWeight: 600}}>{formData.invoiceNumber}</div>
+                <div style={{width: 145}}>{props.numberTitle}</div><div style={{fontWeight: 600}}>{formData.invoiceNumber}</div>
               </li>
               <li style={{display: "flex"}}>
-                <div style={{width: 145}}>Invoice Date</div><div>{util.formatDate(formData.invoiceDate, dateFormat)}</div>
+                <div style={{width: 145}}>{props.invoiceDateTitle}</div><div>{util.formatDate(formData.invoiceDate, dateFormat)}</div>
               </li>
               <li style={{display: "flex"}}>
-                <div style={{width: 145}}>Due Date</div><div>{formData.dueDate ? util.formatDate(formData.dueDate, dateFormat) : null}</div>
+                <div style={{width: 145}}>{props.dueDateTitle}</div><div>{formData.dueDate ? util.formatDate(formData.dueDate, dateFormat) : null}</div>
               </li>
               <li style={{display: "flex"}}>
                 <div style={{width: 145}}>Balance Due</div><div>{util.formatCurrency(formData.total - discount)}</div>
@@ -147,7 +147,6 @@ export default function NoneTaxInvoice(props) {
               </div>
               <div>
                 <div>{util.formatCurrency(subtotal)}</div>
-                {console.log("discount", discount)}
                 {
                   discount && discount > 0 ?
                     <div>{util.formatCurrency(discount)}</div>
@@ -168,6 +167,13 @@ export default function NoneTaxInvoice(props) {
     </table>
   );
 }
+
+NoneTaxInvoice.defaultProps = {
+  invoiceTitle: "Invoice",
+  numberTitle: "Invoice Number",
+  invoiceDateTitle: "Invoice Date",
+  dueDateTitle: "Due Date"
+};
 
 const styles = {
   ulStyle: {

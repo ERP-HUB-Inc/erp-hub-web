@@ -31,12 +31,12 @@ const Quotation = Loadable({
 });
 
 const QuotationCreate = Loadable({
-  loader: () => import("../../../../pos/containers/transactions/Quotation/FormCreate"),
+  loader: () => import("../../../../pos/components/transactions/Quotation/FormItem"),
   loading: () => <StartUp />,
 });
 
 const QuotationUpdate = Loadable({
-  loader: () => import("../../../../pos/containers/transactions/Quotation/FormUpdate"),
+  loader: () => import("../../../../pos/components/transactions/Quotation/FormItem"),
   loading: () => <StartUp />,
 });
 
@@ -295,7 +295,7 @@ const dataSource = {
         isFashNav: false
       },
       {
-        route: "/transactions/quotation-update", 
+        route: "/transactions/quotation-update/:id", 
         component: QuotationUpdate,
         isFashNav: false
       },
