@@ -313,7 +313,11 @@ class FormItem extends React.PureComponent {
       .finally(() => this.setState({loadingButton: false}));
     } else {
       QuotationService.add(data)
-      .then(() => message.success("Create quote success"))
+      .then(response => {
+        message.success("Create quotation success");
+        this.id = response.data.data.id;
+        history.push(`/transactions/quotation-update/${this.id}`);
+      })
       .catch(() => message.error("Error!.."))
       .finally(() => this.setState({loadingButton: false}));
     }
