@@ -368,8 +368,10 @@ class FormItem extends React.PureComponent {
       .finally(() => this.setState({saveLoading: false}));
     } else {
       SaleOrderService.create(saleOrder)
-      .then(() => {
+      .then((response) => {
         message.success(stringTranslate("text_success_save_invoice", this.props.locale));
+        this.id = response.data.data.id;
+        history.push(`/transactions/sale-order/update/${this.id}`);
       })
       .catch(() => message.error("Error"))
       .finally(() => this.setState({saveLoading: false}));
@@ -442,7 +444,10 @@ class FormItem extends React.PureComponent {
   handleNewSaleOrder = () => {
     this.setState({
       formData: {
-        taxRate: 0
+        taxRate: 0,
+        totalExcludeTax: 0,
+        discount: 0,
+        total: 0
       },
       transactionEntries: []
     });

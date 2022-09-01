@@ -93,6 +93,10 @@ export default {
     "អនុញ្ញាតឱ្យអាចធ្វើការលុបតែដំណើរការសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",
     "We allow delete only step draft!"
   ],
+  "text_this_quotation_already_convert": [
+    "This quotation is already convert to invoice!",
+    "សម្រង់តម្លៃនេះបានបម្លែងជាវិក័យប័ត្ររួចហើយ!"
+  ],
   "text_error_allow_update_only_draft_step": [
     "We allow edit only step draft!",
     "អនុញ្ញាតឱ្យអាចធ្វើការកែតំរូវតែដំណើរការសេចក្តីព្រៀងតែប៉ុណ្ណោះ!",

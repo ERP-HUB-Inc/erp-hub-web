@@ -16,12 +16,14 @@ import Enum from "../../../enums";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import QuotationService from "../../../services/transactions/QuotationService";
 import CAInvoice from "../Invoice/CAInvoice";
+import Util from "../../../../common/util";
 
 class Detail extends React.PureComponent {
   state = {
     formData: {},
     loading: false
   }
+  util = new Util();
 
   componentDidMount() {
     const id = this.props.match.params.id;
@@ -33,20 +35,28 @@ class Detail extends React.PureComponent {
     .finally(() => this.setState({loading: false}));
   }
 
-  handleShowFormEdit(formData) {
-    if (formData.status !== Enum.QUOTATION_STATUS.DRAFT) {
-      return message.error(stringTranslate("text_error_allow_update_only_draft_step", this.props.locale));
+  handleShowFormEdit(id, status) {
+    if (status !== Enum.QUOTATION_STATUS.DRAFT) {
+      return message.warning(stringTranslate("text_error_allow_update_only_draft_step", this.props.locale));
     }
+    history.push(`/transactions/quotation-update/${id}`);
   }
 
-  handleDeleteQuotation(formData) {
-    if (formData.status !== Enum.QUOTATION_STATUS.DRAFT) {
-      return message.error(stringTranslate("text_error_allow_only_delete_draft_step", this.props.locale));
+  handleConvertToInvoice(id, status) {
+    if (status !== Enum.QUOTATION_STATUS.DRAFT) {
+      return message.warning(stringTranslate("text_this_quotation_already_convert", this.props.locale));
+    }
+    history.push(`/transactions/create-invoice?quotationId=${id}&action=convertToInvoice`);
+  }
+
+  handleDeleteQuotation(id, status) {
+    if (status !== Enum.QUOTATION_STATUS.DRAFT) {
+      return message.warning(stringTranslate("text_error_allow_only_delete_draft_step", this.props.locale));
     }
     this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
     .then(willDelete => {
       if (willDelete) {
-        QuotationService.deleteQuotation(formData.id)
+        QuotationService.deleteQuotation(id)
         .then(() => {
           message.success("Delete success!");
           history.goBack();
@@ -81,10 +91,10 @@ class Detail extends React.PureComponent {
             <Dropdown key={1} overlay={(
               <Menu>
                 <Menu.Item key={0} onClick={() => window.print()}><Translate id="text_print" /></Menu.Item>
-                <Menu.Item key={1} onClick={() => this.handleShowFormEdit(formData)}>
+                <Menu.Item key={1} onClick={() => this.handleShowFormEdit(formData.id, formData.status)}>
                   <Translate id="text_edit_quotation" />
                 </Menu.Item>
-                <Menu.Item key={2}>
+                <Menu.Item key={2} onClick={() => this.handleConvertToInvoice(formData.id, formData.status)}>
                   <Translate id="text_convert_to_invoice" />
                 </Menu.Item>
                 <Menu.Item key={3}>
@@ -97,7 +107,7 @@ class Detail extends React.PureComponent {
                     <Translate id="text_new_proposal" />
                   </Link>
                 </Menu.Item>
-                <Menu.Item key={5} onClick={() => this.handleDeleteQuotation(formData)}>
+                <Menu.Item key={5} onClick={() => this.handleDeleteQuotation(formData.id, formData.status)}>
                   <Translate id="text_delete" />
                 </Menu.Item>
               </Menu>

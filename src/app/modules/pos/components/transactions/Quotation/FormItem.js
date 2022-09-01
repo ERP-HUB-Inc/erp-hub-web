@@ -100,7 +100,7 @@ class FormItem extends React.PureComponent {
             handleOnChange={(e) => {
               const value = e.target.value;
               this.setState(preState => {
-                preState.transactionEntries[index].description = value;
+                preState.quotationEntries[index].description = value;
               });
             }}
             form={this.props.form} />
@@ -313,7 +313,11 @@ class FormItem extends React.PureComponent {
       .finally(() => this.setState({loadingButton: false}));
     } else {
       QuotationService.add(data)
-      .then(() => message.success("Create quote success"))
+      .then(response => {
+        message.success("Create quotation success");
+        this.id = response.data.data.id;
+        history.push(`/transactions/quotation-update/${this.id}`);
+      })
       .catch(() => message.error("Error!.."))
       .finally(() => this.setState({loadingButton: false}));
     }
@@ -457,15 +461,6 @@ class FormItem extends React.PureComponent {
     this.setState(preState => {
       preState.formData.template = value;
       return preState;
-    });
-  }
-
-  handleConvertToInvoice(id) {
-    this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
-    .then(willConvert => {
-      if (willConvert) {
-        
-      }
     });
   }
 
@@ -890,8 +885,10 @@ class FormItem extends React.PureComponent {
                 <Dropdown 
                   overlay={(
                     <Menu>
-                      <Menu.Item key={1} onClick={() => this.handleConvertToInvoice(formData.id)}>
-                        <Translate id="text_convert_to_invoice" />
+                      <Menu.Item key={1}>
+                        <Link to={`/transactions/create-invoice?quotationId=${formData.id}&action=convertToInvoice`}>
+                          <Translate id="text_convert_to_invoice" />
+                        </Link>
                       </Menu.Item>
                       <Menu.Item key={2}>
                         <Link target="_blank" to={`/transactions/quotation-create?id=${formData.id}&action=clone`} >
