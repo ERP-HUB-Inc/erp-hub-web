@@ -205,6 +205,7 @@ class NewInvoice extends React.PureComponent {
     saleOrderId = "";
     pageTitle = "";
     textRequiredCustomer = "";
+    textDiscountErr = "";
 
     componentDidMount() {
         let idParam = this.props.match.params.id;
@@ -325,6 +326,12 @@ class NewInvoice extends React.PureComponent {
                 }
                 const {formData} = this.state;
                 const subTotal = this.getTotal();
+
+                if (formData.discount > subTotal) {
+                    this.textDiscountErr = "Discount amount must be less than total amount";
+                    return;
+                }
+
                 const invoice = {
                     customerId: values.customerId,
                     discount: values.discount,
@@ -423,6 +430,7 @@ class NewInvoice extends React.PureComponent {
     }
 
     onChangeTotalDiscount = (discount) => {
+        this.textDiscountErr = "";
         this.setState(preState => {
             if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
                 let total = this.getTotal();
@@ -434,6 +442,7 @@ class NewInvoice extends React.PureComponent {
     }
 
     onChangeDiscountType = (type) => {
+        this.textDiscountErr = "";
         this.setState(preState => {
             let discount = this.props.form.getFieldValue("discountField");
             if (type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
@@ -759,10 +768,6 @@ class NewInvoice extends React.PureComponent {
         let discount = Number(formData.discount);
         let subTotal = this.getTotal();
 
-        if (discount > subTotal) {
-            discount = subTotal;
-        }
-
         formData.totalExcludeTax = subTotal;
         let vat = this.util.getTaxValue(subTotal - discount, formData.taxRate);
         formData.total = subTotal + vat;
@@ -871,6 +876,7 @@ class NewInvoice extends React.PureComponent {
                                     }
                                 </Form.Item>
                             </Input.Group>
+                            {this.textDiscountErr ?<span style={{color: "red", width: 266, marginTop: -14, marginBottom: 4}}>{this.textDiscountErr}</span> : null}
                             <Input.Group compact style={{textAlign: "right"}} className="input-group-full-width">
                                 <Form.Item style={{width: 255}} label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_vat" /></div>}>
                                     {

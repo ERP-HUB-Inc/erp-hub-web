@@ -1,5 +1,4 @@
 import React from "react";
-import Enum from "../../../../enums";
 import Util from "../../../../../common/util";
 
 export default function TaxInvoice(props) {
@@ -27,9 +26,6 @@ export default function TaxInvoice(props) {
     formData.totalExcludeTax = getSubTotal(formData);
   }
   let discount = Number(formData.discount);
-  if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-    discount = util.getValueFromPercentage(formData.totalExcludeTax, discount);
-  }
 
   let tax = util.floor(formData.total - formData.totalExcludeTax);
   if (!tax)

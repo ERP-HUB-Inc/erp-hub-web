@@ -39,21 +39,8 @@ export default function ReceivedPayment(props) {
     });
   };
 
-  function getDiscount(formData) {
-    let discount = formData.discount;
-    if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-      discount = util.getValueFromPercentage(formData.totalExcludeTax, discount);
-    }
-
-    if (!discount)
-      discount = 0;
-
-    return discount;
-  }
-
   const {formData} = props;
-
-  let discount = getDiscount(formData);
+  let discount = Number(formData.discount);
   return (
     <div>
       <Form onSubmit={handleSubmitPayment}>

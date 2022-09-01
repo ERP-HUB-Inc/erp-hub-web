@@ -186,6 +186,7 @@ class FormItem extends React.PureComponent {
   pageTitle = "text_sale_order";
   textRequiredCustomer = "";
   id = "";
+  textDiscountErr = "";
 
   componentDidMount() {
     let idParam = this.props.match.params.id;
@@ -216,11 +217,7 @@ class FormItem extends React.PureComponent {
           amount: entry.quantity * entry.price,
         }));
 
-        let discount = data.discount;
-        if (data.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-          discount = this.util.getValueFromPercentage(totalExcludeTax, discount);
-        } 
-
+        let discount = Number(data.discount);
         let taxRate = this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax);
         if (!taxRate)
           taxRate = 0;
@@ -308,6 +305,11 @@ class FormItem extends React.PureComponent {
         }
         const {formData} = this.state;
         const subTotal = this.getTotal();
+        if (formData.discount > subTotal) {
+          this.textDiscountErr = "Discount amount must be less than total amount";
+          return;
+        }
+
         const saleOrder = {
           customerId: values.customerId,
           firstName: formData.firstName,
@@ -401,16 +403,28 @@ class FormItem extends React.PureComponent {
   }
 
   onChangeTotalDiscount = (discount) => {
+    this.textDiscountErr = "";
     this.setState(preState => {
-        preState.formData.discount = discount;
-        return preState;
+      if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+        let total = this.getTotal();
+        discount = this.util.getValueFromPercentage(total, discount);
+      }
+      preState.formData.discount = discount;
+      return preState;
     });
   }
 
   onChangeDiscountType = (type) => {
+    this.textDiscountErr = "";
     this.setState(preState => {
-        preState.formData.discountType = type;
-        return preState;
+      let discount = this.props.form.getFieldValue("discountField");
+      if (type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+          let total = this.getTotal();
+          discount = this.util.getValueFromPercentage(total, discount);
+      }
+      preState.formData.discountType = type;
+      preState.formData.discount = discount;
+      return preState;
     });
   }
 
@@ -610,6 +624,14 @@ class FormItem extends React.PureComponent {
     return total;
   }
 
+  getDiscountField(formData) {
+    let result = formData.discount;
+    if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+        result = this.util.getPercentage(formData.totalExcludeTax, result);
+    }
+    return result;
+  }
+
   renderSelectCustomer() {
     return (
       <Select
@@ -674,9 +696,7 @@ class FormItem extends React.PureComponent {
     };
     let discount = Number(formData.discount);
     let subTotal = this.getTotal();
-    if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-        discount = this.util.getValueFromPercentage(subTotal, discount);
-    }
+
     if (!discount)
       discount = 0;
 
@@ -747,8 +767,8 @@ class FormItem extends React.PureComponent {
               />
               <Input.Group compact style={{textAlign: "right"}}>
                 <InputNumber
-                  name="discount"
-                  data={formData.discount}
+                  name="discountField"
+                  data={this.getDiscountField(formData)}
                   label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_discount" /></div>}
                   style={{width: 240, marginRight : 8, marginBottom: 0}}
                   isAutoSelect={true}
@@ -771,6 +791,7 @@ class FormItem extends React.PureComponent {
                   }
                 </Form.Item>
               </Input.Group>
+              {this.textDiscountErr ?<span style={{color: "red", width: 266, marginTop: -14, marginBottom: 4}}>{this.textDiscountErr}</span> : null}
               <Input.Group compact style={{textAlign: "right"}} className="input-group-full-width">
                 <Form.Item style={{width: 255}} label={<div style={{marginTop: 7, marginRight: 10}}>VAT</div>}>
                   {
@@ -840,6 +861,11 @@ class FormItem extends React.PureComponent {
                 <div style={{width: 100}}><Translate id="text_discount" /></div>
                 <div>:</div>
                 <div style={{width: 100, textAlign: "right", color: "red"}}>-{this.util.formatCurrency(discount)}</div>
+                <InputNumber 
+                  name="discount"
+                  data={formData.discount}
+                  style={{display: "none"}}
+                  form={this.props.form} />
               </div>
               <div style={styles.itemSummary}>
                 <div style={{width: 100}}>VAT({formData.taxRate}%)</div>

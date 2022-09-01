@@ -96,7 +96,7 @@ export default class QuotationList extends List {
         key: "discount",
         sorter: true,
         align: "right",
-        render: (discount, record) => this.Util.formatCurrency(this.getDiscount(record.totalExcludeTax, discount, record.discountType))
+        render: (discount) => this.Util.formatCurrency(discount)
       },
       {
         title: <this.Translate id="text_tax" />,
@@ -111,7 +111,7 @@ export default class QuotationList extends List {
         key: "total",
         sorter: true,
         align: "right",
-        render: (total, record) => this.Util.formatCurrency(total - this.getDiscount(record.totalExcludeTax, record.discount, record.discountType))
+        render: (total, record) => this.Util.formatCurrency(total - this.Util.floor(record.discount))
       },
       {
         title: <this.Translate id="text_status" />,
@@ -153,17 +153,6 @@ export default class QuotationList extends List {
     new Promise(() => {
       this.props.dispatch(ReceiptTemplateAction.default());
     });
-  }
-
-  getDiscount(subTotal, discount, type) {
-    if (type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-      discount = this.Util.getValueFromPercentage(subTotal, discount);
-    }
-
-    if (!discount) {
-      discount = 0;
-    }
-    return discount;
   }
 
   buttonActionCollection(){
