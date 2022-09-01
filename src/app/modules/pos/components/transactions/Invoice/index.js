@@ -205,17 +205,14 @@ export default class Invoice extends List {
 
     if (params.get("search")) {
       searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
-      this.props.form.setFieldsValue({number: params.get("search")});
     }
 
     if (params.get("start")) {
       ranges = JSON.stringify({column: "invoiceDate", value: [params.get("start"), params.get("end")]});
-      this.props.form.setFieldsValue({createdAt: [moment(params.get("start")), moment(params.get("end"))]});
     }
 
     if (params.get("locationId")) {
       locationId = params.get("locationId");
-      this.props.form.setFieldsValue("locationId", params.get("locationId"));
     }
 
     offset = (offset - 1) * limit;
@@ -397,13 +394,6 @@ export default class Invoice extends List {
                 name="number"
                 placeholder={this.CATranslate("text_search_for_sale_no", this.props.locale)}
                 label={<this.Translate id="text_search_for_sale_no" />}
-                form={this.props.form}/>
-            </this.Col>
-            <this.Col md="2" className="hidden">
-              <this.InputText
-                name="customer"
-                placeholder={this.CATranslate("text_search_for_customer", this.props.locale)}
-                label={<this.Translate id="text_customer" />}
                 form={this.props.form}/>
             </this.Col>
             <this.Col md="2">
