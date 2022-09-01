@@ -460,6 +460,15 @@ class FormItem extends React.PureComponent {
     });
   }
 
+  handleConvertToInvoice(id) {
+    this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
+    .then(willConvert => {
+      if (willConvert) {
+        
+      }
+    });
+  }
+
   handleDeleteQuotation(id) {
     this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
     .then(willDelete => {
@@ -881,7 +890,9 @@ class FormItem extends React.PureComponent {
                 <Dropdown 
                   overlay={(
                     <Menu>
-                      <Menu.Item key={1} onClick={this.handleConvertToInvoice}><Translate id="text_convert_to_invoice" /></Menu.Item>
+                      <Menu.Item key={1} onClick={() => this.handleConvertToInvoice(formData.id)}>
+                        <Translate id="text_convert_to_invoice" />
+                      </Menu.Item>
                       <Menu.Item key={2}>
                         <Link target="_blank" to={`/transactions/quotation-create?id=${formData.id}&action=clone`} >
                           <Translate id="text_clone" />

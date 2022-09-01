@@ -45,7 +45,7 @@ export default class QuotationList extends List {
                 <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
               </Menu.Item>
               <Menu.Item>
-                <this.Link to={`/transactions/sale-order/detail/${record.id}`}>
+                <this.Link to={`/transactions/quotation-detail/${record.id}`}>
                   <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_detail" />
                 </this.Link>
               </Menu.Item>

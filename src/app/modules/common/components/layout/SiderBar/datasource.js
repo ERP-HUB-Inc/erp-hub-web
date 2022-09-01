@@ -40,6 +40,11 @@ const QuotationUpdate = Loadable({
   loading: () => <StartUp />,
 });
 
+const QuotationDetail = Loadable({
+  loader: () => import("../../../../pos/components/transactions/Quotation/Detail"),
+  loading: () => <StartUp />
+});
+
 const OpenSaleRegistration = Loadable({
   loader: () => import("../../../../pos/containers/transactions/OpenSaleRegistration"),
   loading: () => <StartUp />,
@@ -256,6 +261,11 @@ const dataSource = {
       {
         route: "/transactions/quotation-update/:id", 
         component: QuotationUpdate,
+        isFashNav: false
+      },
+      {
+        route: "/transactions/quotation-detail/:id", 
+        component: QuotationDetail,
         isFashNav: false
       },
       {

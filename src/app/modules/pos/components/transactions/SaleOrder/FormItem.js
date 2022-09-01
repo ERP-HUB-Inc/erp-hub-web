@@ -902,7 +902,7 @@ class FormItem extends React.PureComponent {
                   <Menu>
                     <Menu.Item key={1} onClick={() => this.handleMakeConfirm(formData.id)}><Translate id="text_mark_as_confirm" /></Menu.Item>
                     <Menu.Item key={2}>
-                      <Link target="_blank" to={`/transactions/create-invoice?saleOrderId=${formData.id}&action=convertToInvoice`}>
+                      <Link to={`/transactions/create-invoice?saleOrderId=${formData.id}&action=convertToInvoice`}>
                         <Translate id="text_convert_to_invoice" />
                       </Link>
                     </Menu.Item>

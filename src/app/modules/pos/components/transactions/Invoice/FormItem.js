@@ -61,6 +61,11 @@ const styles = {
     }
 };
 
+const paramsAction = {
+    clone: "clone",
+    convertToInvoice: "convertToInvoice"
+};
+
 class NewInvoice extends React.PureComponent {
     state = {
         fetching: false,
@@ -145,7 +150,7 @@ class NewInvoice extends React.PureComponent {
                     <InputTextArea
                         name={`description[${index}]`}
                         data={description}
-                        disabled={this.action === "convertToInvoice" ? true : false}
+                        disabled={this.action === paramsAction.convertToInvoice ? true : false}
                         inputStyle={{width: "100%"}}
                         style={{width: "100%"}}
                         form={this.props.form} />
@@ -161,7 +166,7 @@ class NewInvoice extends React.PureComponent {
                     name={`quantity[${index}]`}
                     min={0}
                     data={quantity}
-                    disabled={this.action === "convertToInvoice" ? true : false}
+                    disabled={this.action === paramsAction.convertToInvoice ? true : false}
                     isAutoSelect={true}
                     onChange={(value) => this.onChangeQty(value, index)}
                     form={this.props.form} 
@@ -178,7 +183,7 @@ class NewInvoice extends React.PureComponent {
                     min={0}
                     data={price}
                     isAutoSelect={true}
-                    disabled={this.action === "convertToInvoice" ? true : false}
+                    disabled={this.action === paramsAction.convertToInvoice ? true : false}
                     onChange={(value) => this.onChangePrice(value, index)}
                     form={this.props.form} 
                 />;
@@ -475,6 +480,10 @@ class NewInvoice extends React.PureComponent {
 
     removeEntry = (index) => {
         const {transactionEntries} = this.state;
+        if (this.action === paramsAction.convertToInvoice) {
+            return this.util.sweetAlertMessage("Can't remove entry in this step", "warning");
+        }
+
         if (transactionEntries[index].id) {
             this.util.sweetAlertConfirm(stringTranslate("text_confirm_delete", this.props.locale), "warning")
             .then(isDelete => {
@@ -571,6 +580,9 @@ class NewInvoice extends React.PureComponent {
 
     handleResetForm = () => {
         const {transactionEntries} = this.state;
+        if (this.action === paramsAction.convertToInvoice) {
+            return this.util.sweetAlertMessage("Can't clear form in this step", "warning");
+        }
         this.props.form.resetFields();
         if (transactionEntries.length) {
             if (this.id) {
@@ -910,6 +922,7 @@ class NewInvoice extends React.PureComponent {
                             className="ca-input-v1 purchase-order"
                             locale={this.props.locale}
                             style={{marginTop: 12}}
+                            disabled={this.action === paramsAction.convertToInvoice ? true : false}
                             form={this.props.form}/>  
                         <Col md={24}>
                             <Table 

@@ -64,7 +64,7 @@ export default function NoneTaxInvoice(props) {
                 <div style={{width: 145}}>{props.numberTitle}</div><div style={{fontWeight: 600}}>{formData.invoiceNumber}</div>
               </li>
               <li style={{display: "flex"}}>
-                <div style={{width: 145}}>{props.invoiceDateTitle}</div><div>{util.formatDate(formData.invoiceDate, dateFormat)}</div>
+                <div style={{width: 145}}>{props.invoiceDateTitle}</div><div>{formData.invoiceDate ? util.formatDate(formData.invoiceDate, dateFormat) : null}</div>
               </li>
               <li style={{display: "flex"}}>
                 <div style={{width: 145}}>{props.dueDateTitle}</div><div>{formData.dueDate ? util.formatDate(formData.dueDate, dateFormat) : null}</div>
