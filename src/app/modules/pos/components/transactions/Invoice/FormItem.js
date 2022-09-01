@@ -38,6 +38,7 @@ import CustomerService from "../../../../crm/services/customers/CustomerService"
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import CustomerConstant from "../../../../crm/constants/customers/customer";
 import InvoiceService from "../../../services/transactions/InvoiceService";
+import QuotationService from "../../../services/transactions/QuotationService";
 import SearchProductDropdown from "./SearchProduct";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
 import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCreate";
@@ -153,6 +154,12 @@ class NewInvoice extends React.PureComponent {
                         disabled={this.action === paramsAction.convertToInvoice ? true : false}
                         inputStyle={{width: "100%"}}
                         style={{width: "100%"}}
+                        handleOnChange={(e) => {
+                            const value = e.target.value;
+                            this.setState(preState => {
+                              preState.transactionEntries[index].description = value;
+                            });
+                        }}
                         form={this.props.form} />
                 </div>;
             }
@@ -208,6 +215,7 @@ class NewInvoice extends React.PureComponent {
     timer = null;
     id = "";
     saleOrderId = "";
+    quotationId = "";
     pageTitle = "";
     textRequiredCustomer = "";
     textDiscountErr = "";
@@ -226,6 +234,10 @@ class NewInvoice extends React.PureComponent {
         } else if (action === "convertToInvoice") {
             idParam = params.get("saleOrderId");
             this.saleOrderId = params.get("saleOrderId");
+
+            if (params.get("quotationId")) {
+                this.quotationId = params.get("quotationId");
+            }
         }
 
         if (idParam) {
@@ -261,6 +273,37 @@ class NewInvoice extends React.PureComponent {
                     preState.transactionEntries = transactionEntries;
                     return preState;
                 });
+            })
+            .finally(() => this.setState({loading: false}));
+        } else if (this.quotationId) {
+            this.setState({loading: true});
+            QuotationService.detail2(this.quotationId)
+            .then(response => {
+                const data = response.data.data;
+                let totalExcludeTax = Number(data.totalExcludeTax);
+                if (!totalExcludeTax) {
+                    totalExcludeTax = data.total;
+                }
+
+                let taxRate = this.util.getTaxRate(data.totalExcludeTax - data.discount, data.total - totalExcludeTax);
+                if (!taxRate)
+                    taxRate = 0;
+                data.taxRate = taxRate;
+
+                const transactionEntries = data.quotationEntries.length && data.quotationEntries.map(entry => ({
+                    ...entry,
+                    variantName: entry.description,
+                    discount: 0,
+                    amount: entry.quantity * entry.price
+                }));
+                delete data.quotationEntries;
+
+                this.setState(preState => {
+                    preState.formData = data;
+                    preState.transactionEntries = transactionEntries;
+                    return preState;
+                });
+                
             })
             .finally(() => this.setState({loading: false}));
         } else {
@@ -358,6 +401,10 @@ class NewInvoice extends React.PureComponent {
                     invoice.referenceNo = formData.number;
                 }
 
+                if (this.quotationId) {
+                    invoice.quotationId = this.quotationId;
+                }
+
                 const transactionEntries = [];
                 if (values["description"] && values["description"].length) {
                     values["description"].forEach((description, index) => {
@@ -397,11 +444,12 @@ class NewInvoice extends React.PureComponent {
             .finally(() => this.setState({saveLoading: false}));
         } else {
             InvoiceService.create(invoice)
-            .then(() => {
+            .then((response) => {
                 message.success(stringTranslate("text_success_save_invoice", this.props.locale));
-                if (this.saleOrderId) {
-                    history.push("/transactions/invoice");
-                }
+                this.id = response.data.data.id;
+                this.saleOrderId = "";
+                this.quotationId = "";
+                history.push(`/transactions/update-invoice/${response.data.data.id}`);
             })
             .catch(() => message.error("Error"))
             .finally(() => this.setState({saveLoading: false}));
