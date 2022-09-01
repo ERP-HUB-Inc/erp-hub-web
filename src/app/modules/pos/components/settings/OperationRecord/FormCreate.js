@@ -7,7 +7,7 @@ import "./index.css";
 export default class Form extends Modal {
   constructor(props) {
     super(props);
-    this.title = <this.Translate id="operation_record_title"/>;
+    this.title = <this.Translate id="text_income_and_expense"/>;
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.operationTypes = [
@@ -22,6 +22,7 @@ export default class Form extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values["amount"] = Number(values.amount);
+        values["multiple"] = values.type === this.Enum.OPERATION_TYPE.EXPENSE ? -1 : 1;
         values["status"] = this.Enum.ACTIVE;
         this.dispatch(operationRecordAction.add(values));
       }

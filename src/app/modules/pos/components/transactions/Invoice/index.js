@@ -64,12 +64,13 @@ export default class Invoice extends List {
         dataIndex: "status",
         key: "status",
         width: 120,
+        align: "center",
         render: status => {
           if(status || status >= 0){
             const statusValue = this.INVOICE_STATUS_STR[status];
             const statusColor = statusValue.color;
             const stepTitile = statusValue.title;
-            return <Tag color={statusColor} style={{width: 100, textAlign: "center"}}>{stepTitile}</Tag>;
+            return <Tag color={statusColor} style={{width: 100, textAlign: "center", margin: 0}}>{stepTitile}</Tag>;
           }
         }
       },
@@ -231,33 +232,6 @@ export default class Invoice extends List {
     }
 
     history.push(`/transactions/update-invoice/${record.id}`);
-  }
-
-  handleReturn(rowData) {
-    swal({
-      title: this.CATranslate("text_confirm_return_invoice", this.props.locale),
-      text: this.CATranslate("text_message_return_invoice", this.props.locale),
-      icon: "warning",
-      buttons: [this.CATranslate("text_cancel", this.props.locale), this.CATranslate("text_ok", this.props.locale)],
-      dangerMode: true,
-    })
-    .then(ok => {
-        if (ok) {
-          TransactionService.returnTransaction(rowData.id)
-          .then(() => {
-            swal({
-              icon: "success",
-              title: "Success!",
-              text: "Your invoice has been returned",
-              buttons: false,
-              timer: 1000
-            })
-            .then(() => {
-              this.fetchList();
-            });
-          });
-        }
-    });
   }
 
   getProductOrderList(data) {
@@ -483,6 +457,7 @@ export default class Invoice extends List {
   renderTable() {
     return (
       <this.Table
+        bordered={true}
         rowKey="id"
         loading={this.state.loading}
         columns={this.columns}

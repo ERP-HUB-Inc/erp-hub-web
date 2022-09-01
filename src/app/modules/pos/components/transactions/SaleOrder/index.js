@@ -186,7 +186,6 @@ class SaleOrder extends List {
     this.setState({loading: true});
     SaleOrderService.lists(limit, offset, "", "", filter, searchKey, ranges)
     .then(response => {
-      console.log("response", response.data);
       this.setState({data: response && response.data});
     })
     .catch(err => message.error("Error"))
@@ -336,7 +335,8 @@ class SaleOrder extends List {
   }
 
   renderTable() {
-    return <this.Table 
+    return <this.Table
+      bordered={true}
       rowKey="id"
       loading={this.state.loading}
       columns={this.columns}

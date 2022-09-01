@@ -1,7 +1,7 @@
 export default {
   "text_transaction": [
-    "Transactions",
-    "ប្រតិបត្តិការលក់"
+    "Transaction",
+    "ប្រតិបត្តិការ"
   ],
   
   "text_report": [

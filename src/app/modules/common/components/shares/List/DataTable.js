@@ -565,7 +565,8 @@ export default class DataTable extends Component {
     };
     
     return (
-      <this.Table 
+      <this.Table
+          bordered={true}
           rowSelection={this.rowSelection ? rowSelection : null}
           dataSource={this.state.data.data}
           columns={this.columns}

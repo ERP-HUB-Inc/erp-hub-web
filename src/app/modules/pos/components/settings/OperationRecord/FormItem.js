@@ -1,9 +1,18 @@
 import React from "react";
+import {Icon} from "antd";
 import Modal from "../../../../common/components/shares/Modal";
 import Util from "../../../../common/util";
 import Enum from "../../../../common/enums";
 
 export default class FormItem extends Modal {
+  categories = [
+    {name: "General Expense"},
+    {name: "Admin Fee"},
+    {name: "Auto & Fuel"},
+    {name: "Bank Fee"},
+    {name: "Consulting"},
+    {name: "Education"}
+  ];
   constructor(props) {
     super(props);
     this.state = {
@@ -29,11 +38,18 @@ export default class FormItem extends Modal {
     const {formData, form, locale} = this.props;
     return (
       <div>
-        <this.InputText
+        <this.Select
+          name="category"
+          label={<this.Translate id="text_category" />}
+          dataSource={this.categories.map(category => ({name: category.name, value: category.name}))}
+          defaultValue={formData.id ? formData.category : this.categories[0].name}
+          required={true}
+          form={form} />
+        <this.InputTextArea
           data={formData.name}
           name="name"
           label={<this.Translate id="text_description" />}
-          placeholder={this.CATranslate("text_description", locale)}
+          placeholder="Tell something about your income or expense..."
           errorRequired={<this.Translate id="error_require_description" />}
           errorLenght={<this.Translate id="error_operation_record_name_length" />}
           required={true}
@@ -49,7 +65,7 @@ export default class FormItem extends Modal {
         <this.InputNumber
           data={formData.amount}
           name="amount"
-          label={<this.Translate id="text_amount" />}
+          label={<div><this.Translate id="text_amount" />($)</div>}
           placeholder={this.CATranslate("text_amount", locale)}
           required={true}
           isAutoSelect={true}
@@ -61,12 +77,14 @@ export default class FormItem extends Modal {
           className="hidden"
           form={form}/>
         <div className="wrap-income-exp-box">
-          { this.operationTypes.map((operationType, key) => 
-            <div key={key} className={`text-center text-uppercase ca-box ${this.state.type === operationType.value ? "active" : ""}`} onClick={() => this.handleSelectType(operationType.value)}>
-              {operationType.title}
-            </div> 
-          ) 
-          }
+          <div style={{fontSize: 18, color: "#c72727"}} className={`text-center text-uppercase ca-box ${this.state.type === this.Enum.OPERATION_TYPE.EXPENSE ? "active" : ""}`} onClick={() => this.handleSelectType(this.Enum.OPERATION_TYPE.EXPENSE)}>
+            <Icon type="arrow-down" />
+            <this.Translate id="text_expense" />
+          </div>
+          <div style={{fontSize: 18, color: "#4cb64c"}} className={`text-center text-uppercase ca-box ${this.state.type === this.Enum.OPERATION_TYPE.INCOME ? "active" : ""}`} onClick={() => this.handleSelectType(this.Enum.OPERATION_TYPE.INCOME)}>
+            <Icon type="arrow-up" />
+            <this.Translate id="text_income" />
+          </div> 
         </div>
       </div>
     );

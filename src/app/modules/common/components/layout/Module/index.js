@@ -239,7 +239,7 @@ export const modules = {
     parent: "Setting"
   },
   OperationRecord: {
-    title: <Translate id="operation_record_title" />,
+    title: <Translate id="text_income_and_expense" />,
     icon: "icon-operation",
     route: "/settings/operation-record",
     component: loadComponet(import("../../../../pos/containers/settings/OperationRecord")),
