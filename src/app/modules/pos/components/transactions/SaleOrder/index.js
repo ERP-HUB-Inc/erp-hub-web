@@ -107,7 +107,7 @@ export default class SaleOrder extends List {
         dataIndex: "discount",
         key: "discount",
         align: "right",
-        render: (discount, record) => this.Util.formatCurrency(this.getDiscount(record))
+        render: (discount, record) => this.Util.formatCurrency(discount)
       },
       {
         title: <this.Translate id="text_sale_total" />,
@@ -115,7 +115,7 @@ export default class SaleOrder extends List {
         key: "totalSale",
         align: "right",
         render: (total, record) => {
-          total = total - this.Util.floor(this.getDiscount(record));
+          total = total - this.Util.floor(this.Util.floor(record.discount));
           if (total < 0) total = 0;
           return this.Util.formatCurrency(total);
         }
@@ -135,18 +135,6 @@ export default class SaleOrder extends List {
     })
     .catch(err => message.error("Error"))
     .finally(() => this.setState({loading: false}));
-  }
-
-  getDiscount(data) {
-    let discount = Number(data.discount);
-    if (data.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-      discount = this.Util.getValueFromPercentage(data.totalExcludeTax, discount);
-    }
-
-    if (!discount) 
-      discount = 0;
-
-    return discount;
   }
 
   buttonActionCollection() {

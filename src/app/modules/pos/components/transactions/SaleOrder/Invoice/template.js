@@ -1,30 +1,15 @@
 import React from "react";
 import Util from "../../../../../common/util";
-import Enum from "../../../../enums";
 
 export default function Template(props) {
-
   const util = new Util();
 
-  function getDiscount(formData) {
-    let discount = formData.discount;
-    if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-      discount = util.getValueFromPercentage(formData.totalExcludeTax, discount);
-    }
-
-    if (!discount) 
-      discount = 0;
-
-    return discount;
-  };
-
   const {formData, setting} = props;
-  let discount = getDiscount(formData);
+  let discount = Number(formData.discount);
   if (!formData.totalExcludeTax) 
     formData.totalExcludeTax = formData.total;
 
   let tax = formData.total - formData.totalExcludeTax;
-
   return (
     <div style={{width: "250mm", margin: "auto", background: "#FFFFFF", padding: 40, minHeight: "297mm"}}>
       <table style={{width: "100%"}}>

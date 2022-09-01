@@ -1,5 +1,4 @@
 import React from "react";
-import Enum from "../../../../enums";
 import Util from "../../../../../common/util";
 import "./style.css";
 
@@ -22,20 +21,8 @@ export default function NoneTaxInvoice(props) {
     return subtotal;
   }
 
-  function getDiscount(formData) {
-    let discount = formData.discount;
-    if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-      discount = util.getValueFromPercentage(formData.totalExcludeTax, discount);
-    }
-
-    if (!discount) 
-      discount = 0;
-
-    return discount;
-  }
-
   const {formData, setting} = props;
-  let discount = getDiscount(formData);
+  let discount = Number(formData.discount);
   let subtotal = getSubTotal(formData);
 
   if (!formData.totalExcludeTax) {
@@ -77,7 +64,7 @@ export default function NoneTaxInvoice(props) {
                 <div style={{width: 145}}>{props.numberTitle}</div><div style={{fontWeight: 600}}>{formData.invoiceNumber}</div>
               </li>
               <li style={{display: "flex"}}>
-                <div style={{width: 145}}>{props.invoiceDateTitle}</div><div>{util.formatDate(formData.invoiceDate, dateFormat)}</div>
+                <div style={{width: 145}}>{props.invoiceDateTitle}</div><div>{formData.invoiceDate ? util.formatDate(formData.invoiceDate, dateFormat) : null}</div>
               </li>
               <li style={{display: "flex"}}>
                 <div style={{width: 145}}>{props.dueDateTitle}</div><div>{formData.dueDate ? util.formatDate(formData.dueDate, dateFormat) : null}</div>

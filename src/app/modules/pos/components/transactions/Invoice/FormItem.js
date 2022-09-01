@@ -61,6 +61,11 @@ const styles = {
     }
 };
 
+const paramsAction = {
+    clone: "clone",
+    convertToInvoice: "convertToInvoice"
+};
+
 class NewInvoice extends React.PureComponent {
     state = {
         fetching: false,
@@ -145,7 +150,7 @@ class NewInvoice extends React.PureComponent {
                     <InputTextArea
                         name={`description[${index}]`}
                         data={description}
-                        disabled={this.action === "convertToInvoice" ? true : false}
+                        disabled={this.action === paramsAction.convertToInvoice ? true : false}
                         inputStyle={{width: "100%"}}
                         style={{width: "100%"}}
                         form={this.props.form} />
@@ -161,7 +166,7 @@ class NewInvoice extends React.PureComponent {
                     name={`quantity[${index}]`}
                     min={0}
                     data={quantity}
-                    disabled={this.action === "convertToInvoice" ? true : false}
+                    disabled={this.action === paramsAction.convertToInvoice ? true : false}
                     isAutoSelect={true}
                     onChange={(value) => this.onChangeQty(value, index)}
                     form={this.props.form} 
@@ -178,7 +183,7 @@ class NewInvoice extends React.PureComponent {
                     min={0}
                     data={price}
                     isAutoSelect={true}
-                    disabled={this.action === "convertToInvoice" ? true : false}
+                    disabled={this.action === paramsAction.convertToInvoice ? true : false}
                     onChange={(value) => this.onChangePrice(value, index)}
                     form={this.props.form} 
                 />;
@@ -205,6 +210,7 @@ class NewInvoice extends React.PureComponent {
     saleOrderId = "";
     pageTitle = "";
     textRequiredCustomer = "";
+    textDiscountErr = "";
 
     componentDidMount() {
         let idParam = this.props.match.params.id;
@@ -325,6 +331,12 @@ class NewInvoice extends React.PureComponent {
                 }
                 const {formData} = this.state;
                 const subTotal = this.getTotal();
+
+                if (formData.discount > subTotal) {
+                    this.textDiscountErr = "Discount amount must be less than total amount";
+                    return;
+                }
+
                 const invoice = {
                     customerId: values.customerId,
                     discount: values.discount,
@@ -423,6 +435,7 @@ class NewInvoice extends React.PureComponent {
     }
 
     onChangeTotalDiscount = (discount) => {
+        this.textDiscountErr = "";
         this.setState(preState => {
             if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
                 let total = this.getTotal();
@@ -434,6 +447,7 @@ class NewInvoice extends React.PureComponent {
     }
 
     onChangeDiscountType = (type) => {
+        this.textDiscountErr = "";
         this.setState(preState => {
             let discount = this.props.form.getFieldValue("discountField");
             if (type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
@@ -466,6 +480,10 @@ class NewInvoice extends React.PureComponent {
 
     removeEntry = (index) => {
         const {transactionEntries} = this.state;
+        if (this.action === paramsAction.convertToInvoice) {
+            return this.util.sweetAlertMessage("Can't remove entry in this step", "warning");
+        }
+
         if (transactionEntries[index].id) {
             this.util.sweetAlertConfirm(stringTranslate("text_confirm_delete", this.props.locale), "warning")
             .then(isDelete => {
@@ -562,6 +580,9 @@ class NewInvoice extends React.PureComponent {
 
     handleResetForm = () => {
         const {transactionEntries} = this.state;
+        if (this.action === paramsAction.convertToInvoice) {
+            return this.util.sweetAlertMessage("Can't clear form in this step", "warning");
+        }
         this.props.form.resetFields();
         if (transactionEntries.length) {
             if (this.id) {
@@ -759,10 +780,6 @@ class NewInvoice extends React.PureComponent {
         let discount = Number(formData.discount);
         let subTotal = this.getTotal();
 
-        if (discount > subTotal) {
-            discount = subTotal;
-        }
-
         formData.totalExcludeTax = subTotal;
         let vat = this.util.getTaxValue(subTotal - discount, formData.taxRate);
         formData.total = subTotal + vat;
@@ -871,6 +888,7 @@ class NewInvoice extends React.PureComponent {
                                     }
                                 </Form.Item>
                             </Input.Group>
+                            {this.textDiscountErr ?<span style={{color: "red", width: 266, marginTop: -14, marginBottom: 4}}>{this.textDiscountErr}</span> : null}
                             <Input.Group compact style={{textAlign: "right"}} className="input-group-full-width">
                                 <Form.Item style={{width: 255}} label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_vat" /></div>}>
                                     {
@@ -904,6 +922,7 @@ class NewInvoice extends React.PureComponent {
                             className="ca-input-v1 purchase-order"
                             locale={this.props.locale}
                             style={{marginTop: 12}}
+                            disabled={this.action === paramsAction.convertToInvoice ? true : false}
                             form={this.props.form}/>  
                         <Col md={24}>
                             <Table 
