@@ -5,10 +5,10 @@ import Loadable from "react-loadable";
 import StartUp from "../../StartUp";
 
 // TRANSACTION
-const SaleHistory = Loadable({
-  loader: () => import("../../../../pos/containers/transactions/SaleHistory"),
-  loading: () => <StartUp />,
-});
+// const SaleHistory = Loadable({
+//   loader: () => import("../../../../pos/containers/transactions/SaleHistory"),
+//   loading: () => <StartUp />,
+// });
 
 const Invoice = Loadable({
   loader: () => import("../../../../pos/containers/transactions/Invoice"),
