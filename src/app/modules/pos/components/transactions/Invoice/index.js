@@ -14,9 +14,13 @@ import Enum from "../../../enums";
 import POSUtil from "../../../utils";
 import TransactionService from "../../../services/transactions/TransactionService";
 import InvoiceService from "../../../services/transactions/InvoiceService";
+import TransactionAction from "../../../action/transaction/transaction";
+import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
 import InventoryEnum from "../../../../inventory/enums";
 import history from "../../../../common/router/history";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
+import Receipt from "../RetailSale/Receipt";
+import Detail from "../../../containers/transactions/SaleHistory/Detail";
 
 export default class Invoice extends List {
   constructor(props) {
@@ -24,6 +28,9 @@ export default class Invoice extends List {
     this.state = {
       ...this.state,
       isRequestReturn: false,
+      reprintReceiptContent: null,
+      isRequestReprint: false,
+      isRequestShowDetail: false,
       setDefaultDate: [],
       data: [],
       loading: false
@@ -69,8 +76,8 @@ export default class Invoice extends List {
           if(status || status >= 0){
             const statusValue = this.INVOICE_STATUS_STR[status];
             const statusColor = statusValue.color;
-            const stepTitile = statusValue.title;
-            return <Tag color={statusColor} style={{width: 100, textAlign: "center", margin: 0}}>{stepTitile}</Tag>;
+            const stepTitle = statusValue.title;
+            return <Tag color={statusColor} style={{width: 100, textAlign: "center", margin: 0}}>{stepTitle}</Tag>;
           }
         }
       },
@@ -91,6 +98,9 @@ export default class Invoice extends List {
                 <this.Link to={`/transactions/detail-invoice/${record.id}`}>
                   <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_invoice" />
                 </this.Link>
+              </Menu.Item>
+              <Menu.Item onClick={() => this.handlePrintReceipt(record.id)}>
+                <Icon type="printer" /> <this.Translate id="text_print_receipt" />
               </Menu.Item>
               <Menu.Item onClick={() => this.handleReturn(record)}>
                 <Icon type="retweet" style={{marginRight: 10}} /> <this.Translate id="text_return" />
@@ -185,7 +195,28 @@ export default class Invoice extends List {
       this.props.form.setFieldsValue("locationId", params.get("locationId"));
     }
     this.fetchList();
+    this.props.dispatch(ReceiptTemplateAction.default());
   }  
+
+  componentDidUpdate() {
+    if (this.props.detail.fetched) {
+      const isRequestClearReceiptMarginLeft = false;
+      const receiptContent = this.renderReceipt(isRequestClearReceiptMarginLeft);
+      const detailTransactionDisplay = this.renderReceipt();
+      if (this.state.isRequestReprint) {
+        this.props.dispatch(TransactionAction.reset("RESET_DETAIL_TRANSACTION"));
+      } else if (this.state.isRequestShowDetail) {
+        this.setState({
+          loadingPopup: false,
+          isRequestShowDetail: false,
+          modalConten: <Detail
+            reprintReceiptContent={<div style={{display: "none"}} id="reprint-receipt">{receiptContent}</div>}
+            receiptContent={detailTransactionDisplay}
+            dispatch={this.props.dispatch} />
+        });
+      }
+    }
+  }
 
   fetchList() {
     let searchKey = "";
@@ -224,6 +255,63 @@ export default class Invoice extends List {
     })
     .catch((err) => console.log("error", err))
     .finally(() => this.setState({loading: false}));
+  }
+
+  handlePrintReceipt(id) {
+    this.props.dispatch(TransactionAction.detail({id}));
+    this.setState({
+      loadingPopup: true,
+      isRequestShowDetail: true
+    });
+  }
+
+  getCustomerPaymentList(data) {
+    let customerPaymentList = [];
+    let changeAmount = 0;
+    if (this.Util.isValidCollectionInObj(data, "transactionPayment")) {
+      data.transactionPayment.forEach(payment => {
+        if (payment.paymentMethod == null) {
+          payment.paymentMethod = {};
+        }
+
+        if (payment.change > 0) {
+          changeAmount = payment.change;
+        }
+
+        customerPaymentList = POSUtil.appendCustomerPaymentList(customerPaymentList, payment.tender, payment.paymentMethod, payment.balance);
+      });
+    }
+    return {
+      customerPaymentList,
+      changeAmount
+    };
+  }
+
+  getCurrentUserForRePrintReceipt(data) {
+    let currentUser = {
+      setting: {
+        storeName: "",
+        address: "",
+        phoneNumber: "",
+        businessName: ""
+      },
+      currentUser: {
+        fullName: ""
+      }
+    };
+
+    if (data && data.client) {
+      currentUser.setting.storeName = data.client.storeName;
+      currentUser.setting.address = data.client.address;
+      currentUser.setting.phoneNumber = data.client.phoneNumber;
+      currentUser.setting.businessName = data.client.businessName;
+    }
+
+    if (data && data.user) {
+      currentUser.currentUser.fullName = data.user.fullName;
+    }
+
+    return currentUser;
   }
 
   handleShowEdit(record) {
@@ -326,6 +414,31 @@ export default class Invoice extends List {
 
   buttonActionCollection() {
     return [this.renderButtonAddNew()];
+  }
+
+  renderReceipt(isRequestClearReceiptMarginLeft = true) {
+    const data = this.props.detail.data;
+    const customerPayment = this.getCustomerPaymentList(data);
+    const productOrderList = data.transactionEntries && data.transactionEntries;
+    const productTaxList = [];
+
+    console.log("product", productOrderList);
+    return <Receipt
+      data={data}
+      customer={data.customer}
+      isRequestClearMarginLeft={isRequestClearReceiptMarginLeft}
+      isRequestShowDetail={this.state.isRequestShowDetail}
+      receiptTemplate={this.props.receiptTemplate.data}
+      currentUser={this.getCurrentUserForRePrintReceipt(data)}
+      customerFieldPrice="price"
+      customerPaymentList={customerPayment.customerPaymentList}
+      productList={productOrderList}
+      productTaxList={productTaxList}
+      summaryTotal={this.getSummaryTotal(data)}
+      summaryTax={{taxTitle: "", count: 0}}
+      changeAmount={customerPayment.changeAmount}
+      taxAmount={0}
+      discountAmount={data.discount} />;
   }
 
   renderButtonAddNew() {
