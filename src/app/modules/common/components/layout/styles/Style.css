@@ -668,12 +668,12 @@ color: #4D4F5C;
 
 .ant-modal-header,
 .ant-modal-footer {
-    text-align: center
+    text-align: center !important
 }
 
 .ant-modal-footer,
 .ant-modal-header {
-    border: none
+    border: none !important
 }
 
 .ant-modal-title{
