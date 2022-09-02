@@ -10,7 +10,7 @@ import {
   Table
 } from "antd";
 import { Translate } from "react-localize-redux";
-import * as moment from "moment";
+import moment from "moment";
 import { Chart, registerables } from "chart.js";
 import * as _ from "lodash";
 import { Line } from "react-chartjs-2";
