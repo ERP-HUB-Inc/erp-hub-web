@@ -215,7 +215,7 @@ const Dashboard = (props) => {
       scales: {
         y: {
             min: 0,
-            max: 400,
+            max: overallSales.currentPeriodSales.length > 0 ? Math.max(_.maxBy(overallSales.currentPeriodSales), 200) : 500,
             ticks: {
               stepSize: 70,
               font: {

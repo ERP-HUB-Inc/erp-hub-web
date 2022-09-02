@@ -11,7 +11,22 @@ export default class FormItem extends Modal {
     {name: "Auto & Fuel"},
     {name: "Bank Fee"},
     {name: "Consulting"},
-    {name: "Education"}
+    {name: "Education"},
+    {name: "Management Fee Paid"},
+    {name: "Meals and Dining"},
+    {name: "Medical"},
+    {name: "Office Expenses"},
+    {name: "Office Rent"},
+    {name: "Office Suppliers"},
+    {name: "Office Utilities"},
+    {name: "Other"},
+    {name: "Parking"},
+    {name: "Salary"},
+    {name: "Shipping"},
+    {name: "Software"},
+    {name: "Training and Certification"},
+    {name: "Travel"},
+    {name: "Uniforms"}
   ];
   constructor(props) {
     super(props);
