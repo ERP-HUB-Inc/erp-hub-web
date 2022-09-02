@@ -16,6 +16,14 @@ class QuotationService extends BaseService {
     });
   }
 
+  detailPublic(id, token) {
+    this.header["Authorization"] = `Bearer ${token}`;
+    return this.GET({
+      url: `${this.baseUrl}/detailV2/${id}`,
+      headers: this.header
+    });
+  }
+
   checkAvailableNo(number) {
     this.setHeader();
     return this.GET({

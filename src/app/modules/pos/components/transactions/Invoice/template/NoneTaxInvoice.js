@@ -21,7 +21,7 @@ export default function NoneTaxInvoice(props) {
     return subtotal;
   }
 
-  const {formData, setting} = props;
+  const {formData} = props;
   let discount = Number(formData.discount);
   let subtotal = getSubTotal(formData);
 
@@ -38,18 +38,18 @@ export default function NoneTaxInvoice(props) {
       <tbody>
         <tr style={{background: "none", verticalAlign: "top"}}>
           <td style={{height: 100, paddingLeft: 0}}>
-            <img src={util.getProductImage(setting.logo, "general").url} alt="Logo" style={{height: "100%"}} />
+            <img src={util.getProductImage(formData.client && formData.client.logo, "general").url} alt="Logo" style={{height: "100%"}} />
           </td>
           <td style={{width: 230}}>
             <ul style={styles.ulStyle}>
-              <li style={{color: "#37a3c6", fontSize: "12pt", textTransform: "uppercase"}}>{setting.businessName}</li>
-              <li><a target="blank" style={{textDecoration: "none", color: "#212529"}} href={setting.website}>{setting.website}</a></li>
-              <li>{setting.email}</li>
-              <li>{util.formatPhonenoWithCountryCode(setting.phoneNumber)}</li>
+              <li style={{color: "#37a3c6", fontSize: "12pt", textTransform: "uppercase"}}>{formData.client && formData.client.businessName}</li>
+              <li><a target="blank" style={{textDecoration: "none", color: "#212529"}} href={formData.client && formData.client.website}>{formData.client && formData.client.website}</a></li>
+              <li>{formData.client && formData.client.email}</li>
+              <li>{util.formatPhonenoWithCountryCode(formData.client && formData.client.phoneNumber)}</li>
             </ul>
           </td>
           <td style={{paddingRight: 0, lineHeight: "28px"}}>
-            <div dangerouslySetInnerHTML={{__html: setting.address}} />
+            <div dangerouslySetInnerHTML={{__html: formData.client && formData.client.address}} />
           </td>
         </tr>
         <tr>
