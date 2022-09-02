@@ -422,7 +422,6 @@ export default class Invoice extends List {
     const productOrderList = data.transactionEntries && data.transactionEntries;
     const productTaxList = [];
 
-    console.log("product", productOrderList);
     return <Receipt
       data={data}
       customer={data.customer}
