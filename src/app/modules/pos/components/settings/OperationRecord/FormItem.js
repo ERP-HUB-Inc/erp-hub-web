@@ -65,7 +65,7 @@ export default class FormItem extends Modal {
         <this.InputNumber
           data={formData.amount}
           name="amount"
-          label={<div><this.Translate id="text_amount" />($)</div>}
+          label={<this.Translate id="text_amount" />}
           placeholder={this.CATranslate("text_amount", locale)}
           required={true}
           isAutoSelect={true}
@@ -78,11 +78,11 @@ export default class FormItem extends Modal {
           form={form}/>
         <div className="wrap-income-exp-box">
           <div style={{fontSize: 18, color: "#c72727"}} className={`text-center text-uppercase ca-box ${this.state.type === this.Enum.OPERATION_TYPE.EXPENSE ? "active" : ""}`} onClick={() => this.handleSelectType(this.Enum.OPERATION_TYPE.EXPENSE)}>
-            <Icon type="arrow-down" />
+            <Icon type="arrow-up" style={{marginRight: 5}} />
             <this.Translate id="text_expense" />
           </div>
           <div style={{fontSize: 18, color: "#4cb64c"}} className={`text-center text-uppercase ca-box ${this.state.type === this.Enum.OPERATION_TYPE.INCOME ? "active" : ""}`} onClick={() => this.handleSelectType(this.Enum.OPERATION_TYPE.INCOME)}>
-            <Icon type="arrow-up" />
+            <Icon type="arrow-down" style={{marginRight: 5}} />
             <this.Translate id="text_income" />
           </div> 
         </div>

@@ -1,6 +1,6 @@
 import BaseService from "./BaseService";
 
-class HomeService extends BaseService {
+class DashboardService extends BaseService {
   constructor() {
     super();
     this.module = "report/summary/dashboard";
@@ -16,7 +16,14 @@ class HomeService extends BaseService {
     });
   }
   
-
+  getOverallSales(startDate, endDate) {
+    this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
+    return this.GET({ 
+      url: `${this.baseUrl}/overall_sales?startDate=${startDate}&endDate=${endDate}`,  
+      data: this.data,
+      headers: this.header
+    });
+  }
 }
   
-export default new HomeService();
+export default new DashboardService();

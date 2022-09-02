@@ -1,7 +1,7 @@
 export default {
   "text_income_and_expense": [
     "Income & Expense",
-    "ចំណូល&ចំណាយ"
+    "ចំណូល នឹង​ ចំណាយ"
   ],
 
   "operation_record_income": [
