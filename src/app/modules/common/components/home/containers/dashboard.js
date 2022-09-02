@@ -114,8 +114,8 @@ const Dashboard = (props) => {
     .finally(() => {
       setLoadingPopular(false);
     });
-
-    DashboardService.getOverallSales(moment().startOf("months").format("YYYY-MM-DD"),moment().endOf("months").format("YYYY-MM-DD"))
+    
+    DashboardService.getOverallSales(moment().subtract(15, "days").format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))
     .then(response => {
       setOverallSales(response.data);
     });
@@ -205,6 +205,14 @@ const Dashboard = (props) => {
     tooltipEl.style.padding = tooltip.options.padding + "px " + tooltip.options.padding + "px";
   };
 
+  let maxAxis = overallSales.currentPeriodSales.length > 0 ? Math.max(parseInt(_.maxBy(overallSales.currentPeriodSales)), 200) : 500;
+  maxAxis = maxAxis.toString().split("");
+  maxAxis[0] = parseInt(maxAxis[0], 10) + 1;
+  for (let i = 1; i < maxAxis.length; i++) {
+    maxAxis[i] = 0;
+  }
+  maxAxis = parseInt(maxAxis.join(""), 10);
+
   const options = {
       responsive: true,
       elements: {
@@ -215,9 +223,10 @@ const Dashboard = (props) => {
       scales: {
         y: {
             min: 0,
-            max: overallSales.currentPeriodSales.length > 0 ? Math.max(_.maxBy(overallSales.currentPeriodSales), 200) : 500,
+            max: maxAxis,
             ticks: {
-              stepSize: 70,
+              count: 5,
+              precision: 0,
               font: {
                   size: 16,
                   family: "'Open Sans','Kantumruy'",
@@ -249,7 +258,7 @@ const Dashboard = (props) => {
               display: false,
               text: "Overal sales",
               font: {
-                size: 20,
+                size: 16,
                 family: "'Open Sans','Kantumruy'",
                 weight: "bold"
               }
@@ -262,7 +271,7 @@ const Dashboard = (props) => {
       },
   };
 
-  const labels = overallSales["dates"].map(value => value + 1);
+  const labels = overallSales["dates"].map(value => moment().subtract(15, "days").add(value, "days").format("D ddd"));
 
   const lineData = {
     labels,
@@ -270,9 +279,9 @@ const Dashboard = (props) => {
         {
             label: "ចំណូលខែមិថុនា",
             data: overallSales["currentPeriodSales"],
-            borderColor: "rgb(53, 162, 235)",
-            backgroundColor: "rgba(53, 162, 235)",
-            borderWidth: 2.5,
+            borderColor: "#1F1F39",
+            backgroundColor: "white",
+            borderWidth: 2,
             borderJoinStyle: "round"
         },
     ],
@@ -415,7 +424,7 @@ const Dashboard = (props) => {
                     </div>
                   </div>
                 </div>
-                <div className="pull-right">
+                <div className="pull-right hidden">
                   <div className="select-pull-right">
                     <SelectDateOption
                       disabled={true}
@@ -426,8 +435,8 @@ const Dashboard = (props) => {
                 </div>
               </div>
               <div id="mainLinChart">
-                <div style={{height: 300, padding: 20}}>
-                  <Line options={options} data={lineData} height={"90%"} />
+                <div style={{height: 300, padding: 20, paddingTop: 10}}>
+                  <Line options={options} data={lineData} height={"100%"} />
                 </div>
               </div>
             </Card>
@@ -498,6 +507,7 @@ const Dashboard = (props) => {
               </div>
               <div className="table-list-product">
                 <Table
+                  bordered={true}
                   rowKey="id"
                   columns={columns}
                   dataSource={popularProducts}

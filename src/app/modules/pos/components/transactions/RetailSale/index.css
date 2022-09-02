@@ -637,22 +637,6 @@
     padding-bottom: 0 !important
 }
 
-.wrap-order-discount .order-discount .arrow-right{
-    /* right: 0;
-    top: 50%;
-    margin-right: -6px;
-    margin-top: -6px;
-    border-bottom-color: transparent;
-    border-left-color: transparent;
-    box-shadow: 2px -1px 1px rgba(0,0,0,.35);
-    box-sizing: border-box;
-    position: absolute;
-    height: 12px;
-    width: 12px;
-    background-color: #FFF;
-    transform: rotate(45deg) */
-}
-
 .wrap-order-discount button {
    height: 45px
 }
