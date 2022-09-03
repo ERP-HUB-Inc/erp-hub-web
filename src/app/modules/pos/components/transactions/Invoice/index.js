@@ -419,7 +419,7 @@ export default class Invoice extends List {
   renderReceipt(isRequestClearReceiptMarginLeft = true) {
     const data = this.props.detail.data;
     const customerPayment = this.getCustomerPaymentList(data);
-    const productOrderList = data.transactionEntries && data.transactionEntries;
+    const productOrderList = this.getProductOrderList(data);
     const productTaxList = [];
 
     return <Receipt

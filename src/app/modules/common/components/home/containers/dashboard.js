@@ -115,7 +115,7 @@ const Dashboard = (props) => {
       setLoadingPopular(false);
     });
     
-    DashboardService.getOverallSales(moment().subtract(15, "days").format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))
+    DashboardService.getOverallSales(moment().subtract(30, "days").format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))
     .then(response => {
       setOverallSales(response.data);
     });
@@ -228,7 +228,7 @@ const Dashboard = (props) => {
               count: 5,
               precision: 0,
               font: {
-                  size: 16,
+                  size: 14,
                   family: "'Open Sans','Kantumruy'",
               }
             }
@@ -236,7 +236,7 @@ const Dashboard = (props) => {
         x: {
             ticks: {
                 font: {
-                    size: 16,
+                    size: 14,
                     family: "'Open Sans','Kantumruy'",
                 }
             }
@@ -271,7 +271,7 @@ const Dashboard = (props) => {
       },
   };
 
-  const labels = overallSales["dates"].map(value => moment().subtract(15, "days").add(value, "days").format("D ddd"));
+  const labels = overallSales["dates"].map(value => moment().subtract(30, "days").add(value, "days").format("D ddd"));
 
   const lineData = {
     labels,
@@ -435,7 +435,7 @@ const Dashboard = (props) => {
                 </div>
               </div>
               <div id="mainLinChart">
-                <div style={{height: 300, padding: 20, paddingTop: 10}}>
+                <div style={{height: 300, padding: "10px 20px", display: "flex", alignItems: "flex-end"}}>
                   <Line options={options} data={lineData} height={"100%"} />
                 </div>
               </div>

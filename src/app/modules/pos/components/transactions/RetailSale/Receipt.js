@@ -36,11 +36,12 @@ export default class Receipt extends Component {
   renderTitle = () => {
     return this.props.isRequestShowDetail ?
       <div  style={{ position: "relative", margin: "0 auto", marginBottom: "4px" }}>
-        <img height="60px" style={{ maxWidth: "177px" }} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} />
+        <img height="60px" style={{ maxWidth: "177px" }} alt="" src="https://storeveinresource.sgp1.digitaloceanspaces.com/00000001-0001-2019-0001-000000000002/general/photo_2019-05-17_11-34-01.jpg" />
+        {/* <img height="60px" style={{ maxWidth: "177px" }} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} /> */}
       </div>
       :
       <div style={{ position: "relative", margin: "0 auto" }}>
-        {this.state.logoContent ? this.state.logoContent : <img style={{ width: 100 }} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} />}
+        {this.state.logoContent ? this.state.logoContent : <img style={{ width: 100 }} alt="" src="https://storeveinresource.sgp1.digitaloceanspaces.com/00000001-0001-2019-0001-000000000002/general/photo_2019-05-17_11-34-01.jpg" />}
       </div>;
   }
 
@@ -163,7 +164,7 @@ export default class Receipt extends Component {
       countTax
     } = this.props.summaryTax;
 
-    let paperSize = PaperSize.find(paperValue => paperValue.code === this.props.receiptTemplate.paperSize);
+    let paperSize = PaperSize.find(paperValue => paperValue.code === /*this.props.receiptTemplate.paperSize*/Enum.PAPER_SIZE.THERMAL);
     if (!paperSize) {
       paperSize = PaperSize[0];
     }
