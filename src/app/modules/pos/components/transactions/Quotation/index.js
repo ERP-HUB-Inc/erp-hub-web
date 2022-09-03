@@ -1,5 +1,5 @@
 import React from "react";
-import { Dropdown, Menu, Icon } from "antd";
+import { Dropdown, Menu, Icon, Tag } from "antd";
 import QuotationA4 from "./QuotationA4";
 import List from "../List";
 import Enum from "../../../enums";
@@ -27,16 +27,30 @@ export default class QuotationList extends List {
       ...this.state
     };
     this.QUOTATION_STATUS_STR = {
-      [Enum.QUOTATION_STATUS.DRAFT]: {name: <this.Translate id="text_draft" />, color:"warning"},
-      [Enum.QUOTATION_STATUS.PROCESS]: {name: <this.Translate id="text_process" />, color:"processing"},
-      [Enum.QUOTATION_STATUS.CANCELLED]: {name: <this.Translate id="text_cancel" />, color:"error"}
+      [Enum.QUOTATION_STATUS.DRAFT]: {name: <this.Translate id="text_draft" />, color: "#d9d9d9"},
+      [Enum.QUOTATION_STATUS.PROCESS]: {name: <this.Translate id="text_process" />, color: "#52c41a"},
+      [Enum.QUOTATION_STATUS.CANCELLED]: {name: <this.Translate id="text_cancel" />, color: "#f50"}
     };
     this.columns = [
+      {
+        title: <this.Translate id="text_date" />,
+        dataIndex: "quotationDate",
+        key: "quotationDate",
+        render: (quotationDate) => this.Util.formatDate(quotationDate, "DD/MM/YYYY")
+      },
+      {
+        title: <this.Translate id="text_status" />,
+        dataIndex: "status",
+        key: "status",
+        width: 120,
+        render: status => {
+          return status in this.QUOTATION_STATUS_STR ? <Tag color={this.QUOTATION_STATUS_STR[status].color} style={{width: 100, textAlign: "center", margin: 0}}>{this.QUOTATION_STATUS_STR[status].name}</Tag> : this.emptyText;
+        }
+      },
       {
         title: <this.Translate id="text_quotation_no" />,
         dataIndex: "number",
         key: "number",
-        sorter: true,
         width: 160,
         render: (number, record) => {
           const menu = (
@@ -66,27 +80,17 @@ export default class QuotationList extends List {
         title: <this.Translate id="text_customer" />,
         dataIndex: "customer",
         key: "customer",
-        sorter: true,
         render: customer => customer ? `${customer.firstName} ${customer.lastName}` : this.emptyText
       },
       {
         title: <this.Translate id="text_phone_number" />,
         dataIndex: "customer",
         key: "phoneNumber",
-        sorter: true,
         render: customer => customer && customer.phoneNumber ? customer.phoneNumber : this.emptyText
-      },
-      {
-        title: <this.Translate id="text_date" />,
-        dataIndex: "createdAt",
-        key: "createdAt",
-        sorter: true,
-        render: (createdAt) => this.Util.formatDate(createdAt)
       },
       {
         title: <this.Translate id="text_sub_total" />,
         key: "subTotal",
-        sorter: true,
         align: "right",
         render: (total, record) => this.Util.formatCurrency(record.totalExcludeTax)
       },
@@ -94,7 +98,6 @@ export default class QuotationList extends List {
         title: <this.Translate id="text_discount" />,
         dataIndex: "discount",
         key: "discount",
-        sorter: true,
         align: "right",
         render: (discount) => this.Util.formatCurrency(discount)
       },
@@ -109,30 +112,21 @@ export default class QuotationList extends List {
         title: <this.Translate id="text_total" />,
         dataIndex: "total",
         key: "total",
-        sorter: true,
         align: "right",
         render: (total, record) => this.Util.formatCurrency(total - this.Util.floor(record.discount))
       },
-      {
-        title: <this.Translate id="text_status" />,
-        dataIndex: "status",
-        key: "status",
-        sorter: true,
-        width: 120,
-        render: status => status in this.QUOTATION_STATUS_STR ? <this.Badge style={{ textTransform: "uppercase" }} status={this.QUOTATION_STATUS_STR[status].color}  text={this.QUOTATION_STATUS_STR[status].name} /> : this.emptyText
-      },
-      {
-        title: <this.Translate id="text_action" />,
-        key: "action",
-        align: "center",
-        width: 100,
-        render: (text, record) => {
-          return <this.Button className="mg-right text-uppercase danger" onClick={() => this.handleCancelQuotation(record, this.state.selectedRows)}>
-            <span className="icon-cancel icon-padding-right"></span>
-            <this.Translate id="text_cancel" />
-          </this.Button>;
-        }
-      }
+      // {
+      //   title: <this.Translate id="text_action" />,
+      //   key: "action",
+      //   align: "center",
+      //   width: 100,
+      //   render: (text, record) => {
+      //     return <this.Button className="mg-right text-uppercase danger" onClick={() => this.handleCancelQuotation(record, this.state.selectedRows)}>
+      //       <span className="icon-cancel icon-padding-right"></span>
+      //       <this.Translate id="text_cancel" />
+      //     </this.Button>;
+      //   }
+      // }
     ];
     this.customerList = [{firstName: this.CATranslate("text_all_customer", this.props.locale), lastName: "", id: 0}];
     this.formCreate = <FormCreate/>;

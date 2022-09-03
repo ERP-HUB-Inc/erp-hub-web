@@ -748,7 +748,7 @@ class FormItem extends React.PureComponent {
               name="saleOrderDate"
               label={<Translate id="text_sale_order_date" />}
               placeholder={`${stringTranslate("text_sale_order_date", this.props.locale)}`}
-              defaultValue={formData.invoiceDate ? moment(formData.invoiceDate) : null}
+              defaultValue={formData.registerDate ? moment(formData.registerDate) : null}
               style={styles.itemCenter}
               form={this.props.form} />
             <DatePickers
@@ -798,7 +798,7 @@ class FormItem extends React.PureComponent {
               </Input.Group>
               {this.textDiscountErr ?<span style={{color: "red", width: 266, marginTop: -14, marginBottom: 4}}>{this.textDiscountErr}</span> : null}
               <Input.Group compact style={{textAlign: "right"}} className="input-group-full-width">
-                <Form.Item style={{width: 255}} label={<div style={{marginTop: 7, marginRight: 10}}>VAT</div>}>
+                <Form.Item style={{width: 255}} label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_vat" /></div>}>
                   {
                     getFieldDecorator("vatType", {initialValue: formData.taxRate ? "include" : "exclude"})
                     (<Select 
@@ -858,12 +858,12 @@ class FormItem extends React.PureComponent {
             </Col>
             <Col md={8} style={{lineHeight: "30px", paddingRight: 25}}>
               <div style={styles.itemSummary}>
-                <div style={{width: 100}}><Translate id="text_sub_total" /></div>
+                <div style={{width: 160}}><Translate id="text_sub_total" /></div>
                 <div>:</div>
                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.totalExcludeTax)}</div>
               </div>
               <div style={styles.itemSummary}>
-                <div style={{width: 100}}><Translate id="text_discount" /></div>
+                <div style={{width: 160}}><Translate id="text_discount" /></div>
                 <div>:</div>
                 <div style={{width: 100, textAlign: "right", color: "red"}}>-{this.util.formatCurrency(discount)}</div>
                 <InputNumber 
@@ -873,12 +873,12 @@ class FormItem extends React.PureComponent {
                   form={this.props.form} />
               </div>
               <div style={styles.itemSummary}>
-                <div style={{width: 100}}>VAT({formData.taxRate}%)</div>
+                <div style={{width: 160}}><Translate id="text_vat" />({formData.taxRate}%)</div>
                 <div>:</div>
                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(vat)}</div>
               </div>
               <div style={styles.itemSummary}>
-                <div style={{width: 100}}><Translate id="text_grand_total" /></div>
+                <div style={{width: 160}}><Translate id="text_grand_total" /></div>
                 <div>:</div>
                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.total - discount)}</div>
                 <InputNumber 
