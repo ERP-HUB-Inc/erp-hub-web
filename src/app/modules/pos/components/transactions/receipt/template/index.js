@@ -4,20 +4,22 @@ import Util from "../../../../../common/util";
 const ReceiptTemplate = React.forwardRef((props, ref) => {
   const util = new Util();
 
-  const setting = util.getSetting();
   const {formData} = props;
-  const total = formData.transactionPayment && formData.transactionPayment[0] && formData.transactionPayment[0].tender;
+  let total = formData.transactionPayment && formData.transactionPayment[0] && formData.transactionPayment[0].tender;
+  if (!total) {
+    total = 0;
+  }
 
   return (
-    <div ref={ref} style={{width: "250mm", minHeight: "297mm", padding: "45px 40px", margin: "auto", background: "#FFFFFF"}}>
+    <div ref={ref} style={{width: "100%", minHeight: "100%", padding: "45px 40px", margin: "auto", background: "#FFFFFF"}}>
       <table style={{width: "100%"}}>
         <tbody>
           <tr style={{background: "none"}}>
             <td style={{textAlign: "center", position: "relative"}}>
-              <img src={`${util.getProductImage(setting.logo, "general").url}`} alt="Logo" style={{position: "absolute", top: 0, left: 0, height: 60}} />
-              <h2 style={{fontFamily: "Khmer OS Muol Light"}}>{setting.businessNamekm}</h2>
-              <h3 style={{textTransform: "uppercase", fontFamily: "Time News Romen", fontWeight: "bold"}}>{setting.businessName}</h3>
-              <div style={{width: 800, margin: "auto"}} dangerouslySetInnerHTML={{__html: setting.address}} />
+              <img src={`${util.getGeneralImage(`${formData.clientId}/general/${formData.client ? formData.client.logo : ""}`).url}`} alt="Logo" style={{position: "absolute", top: 0, left: 0, height: 60}} />
+              <h2 style={{fontFamily: "Khmer OS Muol Light"}}>{formData.client && formData.client.businessNamekm}</h2>
+              <h3 style={{textTransform: "uppercase", fontFamily: "Time News Romen", fontWeight: "bold"}}>{formData.client && formData.client.businessName}</h3>
+              <div style={{width: 800, margin: "auto"}} dangerouslySetInnerHTML={{__html: formData.client && formData.client.address}} />
             </td>
           </tr>
           <tr>
@@ -56,8 +58,10 @@ const ReceiptTemplate = React.forwardRef((props, ref) => {
                 <div style={{flexGrow: 1, borderBottom: "2px solid", marginLeft: 28, height: 32}}>{formData.chequeNo}</div>
               </div>
               <div style={styles.itemFlex}>
-                <div style={{width: 136}}>Amount in Words:</div>
-                <div style={{borderBottom: "2px solid", flexGrow: 1, marginLeft: 28}}>{util.converNumberToWord(total)}</div>
+                <div style={{width: 166}}>Amount in Words:</div>
+                <div style={{flexGrow: 1}}>
+                  <div style={{width: "100%", borderBottom: "2px solid", textTransform: "capitalize"}}>{util.converNumberToWord(total)}</div>
+                </div>
               </div>
               <div style={styles.itemFlex}>
                 <div>Being Payment Inv.No:</div>
@@ -67,7 +71,7 @@ const ReceiptTemplate = React.forwardRef((props, ref) => {
               <div style={{display: "flex", alignItems: "flex-end", flexDirection: "column", textAlign: "center", marginTop: 100}}>
                 <div>
                   <div style={{borderTop: "2px solid", width: 252, paddingTop: 4}}>Signature & Received by</div>
-                  <div style={{color: "black"}}>{setting.businessName}</div>
+                  <div style={{color: "black"}}>{formData.client && formData.client.businessName}</div>
                 </div>
               </div>
             </td>

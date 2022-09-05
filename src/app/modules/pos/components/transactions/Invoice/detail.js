@@ -11,6 +11,7 @@ import {
   Form,
   message
 } from "antd";
+import ReactToPrint from "react-to-print";
 import history from "../../../../common/router/history";
 import Enum from "../../../enums";
 import InvoiceService from "../../../services/transactions/InvoiceService";
@@ -18,6 +19,7 @@ import CAInvoice from "./CAInvoice";
 import ReceivedPayment from "../ReceivedPayment/Form";
 import { InputText } from "../../../../common/elements/ant-ui";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
+import ReceiptTemplate from "../receipt/template";
 
 class InvoiceDetail extends React.PureComponent {
   state = {
@@ -73,11 +75,11 @@ class InvoiceDetail extends React.PureComponent {
   handleAfterPayment = () => {
     message.success("Success Payment");
     this.setState({loading: true});
-      InvoiceService.detail(this.state.formData.id)
-      .then(response => {
-        this.setState({formData: response && response.data});
-      })
-      .finally(() => this.setState({loading: false}));
+    InvoiceService.detail(this.state.formData.id)
+    .then(response => {
+      this.setState({formData: response && response.data});
+    })
+    .finally(() => this.setState({loading: false}));
   }
 
   handleMakeAsSent = () => {
@@ -124,6 +126,17 @@ class InvoiceDetail extends React.PureComponent {
                 <Menu.Item key={3} onClick={() => this.setState({showDrawer: true})}>
                   <Translate id="text_receive_payment" />
                 </Menu.Item>
+                {formData.status === Enum.INVOICE_STATUS.PAID ?
+                  <Menu.Item key={4}>
+                    <ReactToPrint
+                      trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}>
+                        <Translate id="text_print_receipt" />
+                        </button>}
+                      content={() => this.receiptRef}
+                    />
+                  </Menu.Item>
+                  : null
+                }
               </Menu>
             )}>
               <button className="ant-btn ant-dropdown-link" onClick={e => e.preventDefault()}>
@@ -157,6 +170,10 @@ class InvoiceDetail extends React.PureComponent {
             onSuccess={this.handleAfterPayment}
             form={this.props.form} />
         </Drawer>
+
+        <div style={{display: "none"}}>
+          <ReceiptTemplate formData={formData} ref={re => this.receiptRef = re} />
+        </div>
       </div>
     );
   }

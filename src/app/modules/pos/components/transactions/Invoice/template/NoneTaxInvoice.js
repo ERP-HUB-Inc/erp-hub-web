@@ -38,7 +38,7 @@ export default function NoneTaxInvoice(props) {
       <tbody>
         <tr style={{background: "none", verticalAlign: "top"}}>
           <td style={{height: 100, paddingLeft: 0}}>
-            <img src={util.getProductImage(formData.client && formData.client.logo, "general").url} alt="Logo" style={{height: "100%"}} />
+            <img src={util.getGeneralImage(`${formData.clientId}/general/${formData.client ? formData.client.logo : ""}`).url} alt="Logo" style={{height: "100%"}} />
           </td>
           <td style={{width: 230}}>
             <ul style={styles.ulStyle}>

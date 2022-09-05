@@ -4,6 +4,13 @@
   color: #565656;
 }
 
+#public-receipt-preview {
+  width: 250mm;
+  margin: auto;
+  min-height: 297mm;
+  background: #FFFFFF;
+}
+
 .table-invoice {
   width: 100%;
   border-collapse: collapse;
@@ -98,6 +105,10 @@
     background: #FFFFFF !important;
     margin: 0 !important;
     padding: 0 !important;
+  }
+
+  #public-receipt-preview {
+    width: 280mm;
   }
 
   .ant-dropdown-placement-bottomRight {
