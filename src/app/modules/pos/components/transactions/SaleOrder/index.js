@@ -36,12 +36,15 @@ class SaleOrder extends List {
         title: <this.Translate id="text_date" />,
         dataIndex: "registerDate",
         key: "registerDate",
+        width: 140,
         render: (registerDate) => this.Util.formatDate(registerDate, "DD/MM/YYYY")
       },
       {
         title: <this.Translate id="text_status" />,
         dataIndex: "status",
         key: "status",
+        width: 120,
+        align: "center",
         render: (status) => {
           const statusValue = this.SALE_ORDER_STATUS_STR[status];
           const statusColor = statusValue.color;
@@ -84,8 +87,14 @@ class SaleOrder extends List {
         title: <this.Translate id="text_customer" />,
         dataIndex: "firstName",
         key: "firstName",
-        render: (firstName, record) => `${firstName} ${record.lastName}`,
-        sorter: true
+        render: (firstName, record) => `${firstName} ${record.lastName}`
+      },
+      {
+        title: <this.Translate id="text_expected_shipment_date" />,
+        dataIndex: "expectedShipmentDate",
+        key: "expectedShipmentDate",
+        width: 160,
+        render: (expectedShipmentDate) => this.Util.formatDate(expectedShipmentDate, "DD/MM/YYYY")
       },
       {
         title: <this.Translate id="text_sub_total" />,

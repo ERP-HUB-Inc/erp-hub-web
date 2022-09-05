@@ -410,6 +410,6 @@ export default {
 
   "text_expected_shipment_date": [
     "Expected Shipment Date",
-    "កាលបរិច្ឆេទដឹកជញ្ជូនដែលរំពឹងទុក"
+    "កាលបរិច្ឆេទដឹកជញ្ជូន"
   ]
 };

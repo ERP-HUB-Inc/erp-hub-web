@@ -31,7 +31,7 @@ export default function Template(props) {
             <td style={{display: "flex", justifyContent: "flex-end", paddingTop: 40}}>
               <div style={{display: "flex", justifyContent: "space-between", width: 200}}>
                 <div>Order Date:</div>
-                <div>{util.formatDate(formData.invoiceDate, "DD MMM YYYY")}</div>
+                <div>{util.formatDate(formData.registerDate, "DD MMM YYYY")}</div>
               </div>
             </td>
           </tr>
