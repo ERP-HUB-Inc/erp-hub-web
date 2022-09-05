@@ -148,7 +148,7 @@ class FormItem extends React.PureComponent {
         delete data.productDiscount;
 
         preState.formData = data;
-        preState.productEntries = productEntries;
+        preState.productEntries = productEntries ? productEntries : [];
         return preState;
       }))
       .finally(() => this.setState({loading: false}));
@@ -178,6 +178,9 @@ class FormItem extends React.PureComponent {
         values["endDate"] = this.util.formatDateForMYSQL(values.dates[1], "YYYY-MM-DD HH:mm");
         values.discount = Number(values.discount);
         if (values.productVariantId) {
+          if (!values.targetProduct) {
+            values.targetProduct = targetProduct.specific;
+          }
           const productsDiscount = [];
           values.productVariantId.forEach((productVariantId, index) => {
             productsDiscount.push({
