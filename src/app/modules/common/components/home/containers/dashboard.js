@@ -13,10 +13,7 @@ import { Translate } from "react-localize-redux";
 import moment from "moment";
 import { Chart, registerables } from "chart.js";
 import * as _ from "lodash";
-<<<<<<< HEAD
-=======
-import { Line } from "react-chartjs-2";
->>>>>>> 2483d344a6f64857fff4085a2ec9a054d4992e84
+import {Line} from "react-chartjs-2"
 import InventoryService from "../../../../pos/services/report/InventoryService";
 import SelectDateOption from "../../SelectDateOption";
 import "../index.css";
