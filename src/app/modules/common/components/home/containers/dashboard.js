@@ -12,7 +12,6 @@ import {
 import { Translate } from "react-localize-redux";
 import { Chart, registerables } from "chart.js";
 import * as _ from "lodash";
-// import { Line } from "react-chartjs-2";
 import InventoryService from "../../../../pos/services/report/InventoryService";
 import SelectDateOption from "../../SelectDateOption";
 import "../index.css";
