@@ -6,6 +6,7 @@ export class CTable extends React.Component {
   render() {
     return (
       <Table
+        bordered={this.props.bordered}
         rowKey={record => record[this.props.rowKey]}
         rowClassName={this.props.rowClassName}
         rowSelection={this.props.rowSelection}
@@ -29,6 +30,7 @@ export class TableExpand extends React.Component {
   render() {
     return (
       <Table
+        bordered={this.props.bordered}
         rowKey={record => record.id}
         rowClassName={this.props.rowClassName}
         expandedRowRender={this.props.expandedRowRender}

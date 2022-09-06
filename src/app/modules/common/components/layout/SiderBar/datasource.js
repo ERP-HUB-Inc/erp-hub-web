@@ -5,11 +5,6 @@ import Loadable from "react-loadable";
 import StartUp from "../../StartUp";
 
 // TRANSACTION
-const SaleHistory = Loadable({
-  loader: () => import("../../../../pos/containers/transactions/SaleHistory"),
-  loading: () => <StartUp />,
-});
-
 const Invoice = Loadable({
   loader: () => import("../../../../pos/containers/transactions/Invoice"),
   loading: () => <StartUp />
@@ -31,22 +26,22 @@ const Quotation = Loadable({
 });
 
 const QuotationCreate = Loadable({
-  loader: () => import("../../../../pos/containers/transactions/Quotation/FormCreate"),
+  loader: () => import("../../../../pos/components/transactions/Quotation/FormItem"),
   loading: () => <StartUp />,
 });
 
 const QuotationUpdate = Loadable({
-  loader: () => import("../../../../pos/containers/transactions/Quotation/FormUpdate"),
+  loader: () => import("../../../../pos/components/transactions/Quotation/FormItem"),
   loading: () => <StartUp />,
 });
 
-const SaleOrder = Loadable({
-  loader: () => import("../../../../pos/containers/transactions/SaleWalkin"),
-  loading: () => <StartUp />,
+const QuotationDetail = Loadable({
+  loader: () => import("../../../../pos/components/transactions/Quotation/Detail"),
+  loading: () => <StartUp />
 });
 
-const OpenSaleRegistration = Loadable({
-  loader: () => import("../../../../pos/containers/transactions/OpenSaleRegistration"),
+const OperationRecord = Loadable({
+  loader: () => import("../../../../pos/containers/settings/OperationRecord"),
   loading: () => <StartUp />,
 });
 
@@ -86,61 +81,25 @@ const ProductUnit = Loadable({
   loading: () => <StartUp />,
 });
 
-// const importProduct = Loadable({
-//   loader: () => import("../../../../inventory/containers/products/ProductsUnit/importProduct"),
-//   loading: () => <StartUp />,
-// });
-
-// STOCK CONTROL
-// const Stock = Loadable({
-//   loader: () => import("../../../../inventory/containers/stock/StockManagement"),
-//   loading: () => <StartUp />,
-// });
-
 const PurchaseOrder = Loadable({
   loader: () => import("../../../../inventory/containers/stock/PurchaseOrder"),
   loading: () => <StartUp />,
 });
-
-// const ReceiveOrder = Loadable({
-//   loader: () => import("../../../../inventory/containers/stock/ReceivePurchase"),
-//   loading: () => <StartUp />,
-// });
-
-// const StockReturn = Loadable({
-//   loader: () => import("../../../../inventory/containers/stock/ReturnPurchase"),
-//   loading: () => <StartUp />,
-// });
 
 const StockTransfer = Loadable({
   loader: () => import("../../../../inventory/containers/stock/StockTransfer"),
   loading: () => <StartUp />,
 });
 
-// const ReceiveStockTransfer = Loadable({
-//   loader: () => import("../../../../inventory/containers/stock/ReceiveStockTransfer"),
-//   loading: () => <StartUp />,
-// });
-
 const Supplier = Loadable({
   loader: () => import("../../../../inventory/containers/stock/Supplier"),
   loading: () => <StartUp />,
 });
 
-// const SaleOrderQuotation = Loadable({
-//   loader: () => import("../../../../inventory/containers/stock/SaleOrder"),
-//   loading: () => <StartUp />,
-// });
-
 const StockAdjustmentRequest = Loadable({
   loader: () => import("../../../../inventory/containers/stock/StockAdjustmentRequest"),
   loading: () => <StartUp />,
 });
-
-// const StockAdjustmentApprove = Loadable({
-//   loader: () => import("../../../../inventory/containers/stock/StockAdjustmentApprove"),
-//   loading: () => <StartUp />,
-// });
 
 // REPORT
 const SaleReportDashboard = Loadable({
@@ -229,11 +188,6 @@ const StoreLanguage = Loadable({
   loading: () => <StartUp />,
 });
 
-const OperationRecord = Loadable({
-  loader: () => import("../../../../pos/containers/settings/OperationRecord"),
-  loading: () => <StartUp />,
-});
-
 /*==============================END POS===================================*/
 
 /*==============================HR===================================*/
@@ -295,22 +249,20 @@ const dataSource = {
         isFashNav: false
       },
       {
-        route: "/transactions/quotation-update", 
+        route: "/transactions/quotation-update/:id", 
         component: QuotationUpdate,
         isFashNav: false
       },
-      // {
-      //   title: <Translate id="text_sale_order" />,
-      //   icon: "icon-time",
-      //   route: "/transactions/sale-order/lists",
-      //   component: SaleOrderTransaction,
-      //   isFashNav: true
-      // },
       {
-        title: <Translate id="text_sales" />,
+        route: "/transactions/quotation-detail/:id", 
+        component: QuotationDetail,
+        isFashNav: false
+      },
+      {
+        title: <Translate id="text_sale_order" />,
         icon: "icon-time",
-        route: "/transactions/sales", 
-        component: SaleHistory,
+        route: "/transactions/sales-order",
+        component: SaleOrderTransaction,
         isFashNav: true
       },
       {
@@ -321,26 +273,12 @@ const dataSource = {
         isFashNav: true
       },
       {
-        title: <Translate id="text_pos" />,
-        icon: "icon-sale",
-        route: "/pos",
-        component: SaleOrder
-      },
-      {
-        title: <Translate id="text_close_shift" />,
-        icon: "icon-currency",
-        route: "/transactions/saleregister",
-        component: OpenSaleRegistration,
+        title: <Translate id="text_income_and_expense" />,
+        icon: "icon-operation",
+        route: "/transactions/income_expense",
+        component: OperationRecord,
         isFashNav: true
       }
-     
-      // {
-      //   title: <Translate id="text_return_exchange" />,
-      //   icon: "icon-sale-return",
-      //   route: "/transactions/return/exchange",
-      //   component: ReturnExchange,
-      //   isFashNav: true
-      // }
     ]
   },
   products: {
@@ -422,13 +360,6 @@ const dataSource = {
     route: "stock",
     title: <Translate id="text_stock" />,
     subItems: [
-      // {
-      //   title: <Translate id="text_sale_order" />,
-      //   icon: "icon-time",
-      //   route: "/stock/sale-order",
-      //   component: SaleOrderQuotation,
-      //   isFashNav: true
-      // },
       {
         title: <Translate id="text_supplier" />,
         icon: "icon-customer",
@@ -443,20 +374,6 @@ const dataSource = {
         component: PurchaseOrder,
         isFashNav: true
       },
-      // {
-      //   title: <Translate id="text_receive_purchase" />,
-      //   icon: "icon-import",
-      //   route: "/stock/purchase/receive",
-      //   component: ReceiveOrder,
-      //   isFashNav: false
-      // },
-      // {
-      //   title: <Translate id="text_return_purchase" />,
-      //   icon: "icon-sale-return",
-      //   route: "/stock/return",
-      //   component: StockReturn,
-      //   isFashNav: false
-      // },
       {
         title: <Translate id="text_stock_adjustment" />,
         icon: "icon-stock-audit",
@@ -470,14 +387,7 @@ const dataSource = {
         route: "/stock/transfer",
         component: StockTransfer,
         isFashNav: true
-      },
-      // {
-      //   title: <Translate id="text_receive_transfer" />,
-      //   icon: "icon-import",
-      //   route: "/stock/receive/transfer",
-      //   component: ReceiveStockTransfer,
-      //   isFashNav: false
-      // }
+      }
     ]
   },
   customers: {
@@ -515,19 +425,7 @@ const dataSource = {
       {
         route: "/profile",
         component: Profile
-      },
-      // {
-      //   title: "Timesheets",
-      //   icon: "icon-timesheet",
-      //   route: "/employees/timesheet",
-      //   component: TimeSheet
-      // },
-      // {
-      //   title: "Performance",
-      //   icon: "icon-performance",
-      //   route: "/employees/performance",
-      //   component: Performance
-      // }
+      }
     ]
   },
   reports: {
@@ -580,14 +478,7 @@ const dataSource = {
         route: "/reports/profit-lost",
         component: ProfitAndLostReport,
         isFashNav: true
-      },
-      // {
-      //   title: "Tax Report",
-      //   icon: "icon-tax-report",
-      //   route: "/reports/tax",
-      //   component: TaxReport,
-      //   isFashNav: false
-      // }
+      }
     ]
   },
   settings: {
@@ -657,13 +548,6 @@ const dataSource = {
         route: "/settings/language",
         component: StoreLanguage,
         isFashNav: false
-      },
-      {
-        title: <Translate id="operation_record_title" />,
-        icon: "icon-operation",
-        route: "/settings/operation-record",
-        component: OperationRecord,
-        isFashNav: true
       }
     ]
   }

@@ -6,9 +6,10 @@ import Constant from "../../../constants/settings/operationRecord";
 import OperationRecordAction from "../../../action/settings/operationRecord";
 import OperatinRecordService from "../../../services/settings/OperationRecordService";
 
-export default class OperationRecord extends List {
+export default class IncomeExpense extends List {
   constructor(props) {
     super(props);
+    this.module = "transactions";
     this.columns = new Column();
     this.formCreate = <FormCreate/>;
     this.formUpdate = <FormUpdate/>;
@@ -54,58 +55,54 @@ class Column extends List {
     this.colorOperationType = ["#4cb64c", "#c72727"];
 
     return [
-      this.columnCreatedAt,
       {
-        title: <this.Translate id="text_description" />,
-        dataIndex: "name",
-        key: "name",
-        sorter: true,
-      },
-      {
-        title: <this.Translate id="col_operation_record_recordfor" />,
+        title: <this.Translate id="text_date" />,
         dataIndex: "registerDate",
         key: "registerDate",
         width: 160,
-        sorter: true,
-        render : registerDate => this.Util.formatDate(registerDate)
+        render : registerDate => this.Util.formatDate(registerDate, "DD/MM/YYYY")
       },
       {
-        title: <this.Translate id="text_generated_by" />,
-        dataIndex: "isSystem",
-        key: "isSystem",
-        width: 160,
-        sorter: true,
-        render: (text, record) => {
-          let generatedBy = <this.Translate id="text_system" />;
-          if (record.isSystem !== this.Enum.IS_SYSTEM && record.user) {
-            generatedBy = record.user.fullName;
+        title: <this.Translate id="text_category" />,
+        dataIndex: "name",
+        key: "name",
+        render: (name, record) => {
+          if (record.type === this.Enum.OPERATION_TYPE.EXPENSE) {
+            return <div>
+              <div style={{color: "#c72727", fontSize: 16, fontWeight: 500, marginBottom: 5}}><this.Translate id="text_expense" /></div>
+              <div>
+                {record.category}: {name}
+              </div>
+            </div>;
+          } else {
+            return <div>
+              <div style={{color: "#4cb64c", fontSize: 16, fontWeight: 500, marginBottom: 5}}><this.Translate id="text_income" /></div>
+              <div>
+                {record.category}: {name}
+              </div>
+            </div>;
           }
-          return <this.TagLabel color="blue" style={{marginLeft: 10}}>{generatedBy}</this.TagLabel>;
         }
       },
-      { 
-        title: <this.Translate id="text_type" />,
-        dataIndex: "type",
-        width: 100,
-        align: "center",
-        sorter: true,
-        render: (text, record) => {
-          let colorIndex = 0;
-          let type = <this.Translate id="operation_record_income" />;
-          if (record.type === this.Enum.OPERATION_TYPE.EXPENSE || record.type === this.Enum.OPERATION_TYPE.COGS) {
-            colorIndex = 1;
-            type = <this.Translate id="text_expense" />;
-          }
-          return <this.Tag color={this.colorOperationType[colorIndex]} style={{marginRight: 0}} className="text-center label-stock-status">{type}</this.Tag>;
-        }
+      {
+        title: <this.Translate id="text_recorded_by" />,
+        dataIndex: "user",
+        key: "user",
+        width: 180
+      },
+      {
+        title: <this.Translate id="text_recorded_date" />,
+        dataIndex: "date",
+        key: "date",
+        width: 180,
+        render: date => this.Util.formatDate(date, "DD/MM/YYYY hh:mm A")
       },
       {
         title: <this.Translate id="text_amount" />,
         dataIndex: "amount",
-        width: 150,
         align: "right",
-        sorter: true,
-        render: amount => this.Util.formatCurrency(amount, "")
+        width: 180,
+        render: amount => this.Util.formatCurrency(amount)
       }
     ];
   }

@@ -1,9 +1,13 @@
 import React from "react";
+import { connect } from "react-redux";
+import moment from "moment";
 import {
   Menu,
   Icon,
   Dropdown,
-  Tag
+  Tag,
+  Form,
+  Pagination
 } from "antd";
 import List from "../List";
 import history from "../../../../common/router/history";
@@ -11,30 +15,36 @@ import SaleOrderService from "../../../services/transactions/SaleOrderService";
 import Enum from "../../../enums";
 import { message } from "antd";
 
-export default class SaleOrder extends List {
+class SaleOrder extends List {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
-      loading: false
+      loading: false,
+      loadingButton: false,
+      isShowFilter: true,
+      current: 1
     };
     this.SALE_ORDER_STATUS_STR = {
       [Enum.SALE_ORDER_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#bfbfbf" },
       [Enum.SALE_ORDER_STATUS.CONFIRMED]: { title: <this.Translate id="text_confirm" />, color: "#1890ff" },
-      [Enum.SALE_ORDER_STATUS.CLOSED]: { title: <this.Translate id="text_close" />, color: "#f50"},
+      [Enum.SALE_ORDER_STATUS.CLOSED]: { title: <this.Translate id="text_closed" />, color: "#f50"},
       [Enum.SALE_ORDER_STATUS.VOID]: {title: <this.Translate id="text_void"/>, color: "#d9d9d9"}
     };
     this.columns = [
       {
         title: <this.Translate id="text_date" />,
-        dataIndex: "invoiceDate",
-        key: "invoiceDate",
-        render: (invoiceDate) => this.Util.formatDate(invoiceDate)
+        dataIndex: "registerDate",
+        key: "registerDate",
+        width: 140,
+        render: (registerDate) => this.Util.formatDate(registerDate, "DD/MM/YYYY")
       },
       {
         title: <this.Translate id="text_status" />,
         dataIndex: "status",
         key: "status",
+        width: 120,
+        align: "center",
         render: (status) => {
           const statusValue = this.SALE_ORDER_STATUS_STR[status];
           const statusColor = statusValue.color;
@@ -77,13 +87,20 @@ export default class SaleOrder extends List {
         title: <this.Translate id="text_customer" />,
         dataIndex: "firstName",
         key: "firstName",
-        render: (firstName, record) => `${firstName} ${record.lastName}`,
-        sorter: true
+        render: (firstName, record) => `${firstName} ${record.lastName}`
+      },
+      {
+        title: <this.Translate id="text_expected_shipment_date" />,
+        dataIndex: "expectedShipmentDate",
+        key: "expectedShipmentDate",
+        width: 160,
+        render: (expectedShipmentDate) => this.Util.formatDate(expectedShipmentDate, "DD/MM/YYYY")
       },
       {
         title: <this.Translate id="text_sub_total" />,
         dataIndex: "totalExcludeTax",
         key: "totalExcludeTax",
+        align: "right",
         render: (totalExcludeTax, record) => {
           if (!totalExcludeTax) {
             totalExcludeTax = record.total;
@@ -92,27 +109,29 @@ export default class SaleOrder extends List {
         }
       },
       {
-        title: <this.Translate id="text_tax" />,
+        title: <this.Translate id="text_vat" />,
         dataIndex: "tax",
         key: "tax",
-        render: (text, record, index) => {
+        align: "right",
+        render: (text, record) => {
           if (!record.totalExcludeTax) record.totalExcludeTax = record.total;
           return this.formatCurrency(record.total - record.totalExcludeTax);
-        },
-        sorter: true
+        }
       },
       {
         title: <this.Translate id="text_discount" />,
         dataIndex: "discount",
         key: "discount",
-        render: (discount, record) => this.Util.formatCurrency(this.getDiscount(record))
+        align: "right",
+        render: (discount, record) => this.Util.formatCurrency(discount)
       },
       {
         title: <this.Translate id="text_sale_total" />,
         dataIndex: "total",
         key: "totalSale",
+        align: "right",
         render: (total, record) => {
-          total = total - this.Util.floor(this.getDiscount(record));
+          total = total - this.Util.floor(this.Util.floor(record.discount));
           if (total < 0) total = 0;
           return this.Util.formatCurrency(total);
         }
@@ -121,29 +140,161 @@ export default class SaleOrder extends List {
   }
 
   componentDidMount() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("limit")) {
+      this.pageSize = params.get("limit");
+    }
+
+    if (params.get("offset")) {
+      this.setState({current: params.get("offset")});
+    }
+
+    if (params.get("search")) {
+      this.props.form.setFieldsValue({number: params.get("search")});
+    }
+
+    if (params.get("start")) {
+      this.props.form.setFieldsValue({registerDate: [moment(params.get("start")), moment(params.get("end"))]});
+    }
+
+    if (params.get("status")) {
+      this.props.form.setFieldsValue({status: params.get("status")});
+    }
     this.fetchList();
   }
 
   fetchList() {
-    this.setState({loading: true});
-    SaleOrderService.lists(this.pageSize)
-    .then(response => {
-      this.setState({data: response.data});
-    })
-    .catch(err => message.error("Error"))
-    .finally(() => this.setState({loading: false}));
-  }
+    let searchKey = "";
+    let filter = {};
+    let limit = this.pageSize;
+    let ranges = "";
+    let offset = this.state.current;
+    const params = new URLSearchParams(window.location.search);
 
-  getDiscount(data) {
-    let discount = Number(data.discount);
-    if (data.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-      discount = this.Util.getValueFromPercentage(data.totalExcludeTax, discount);
+    if (params.get("limit")) {
+      limit = Number(params.get("limit"));
     }
 
-    if (!discount) 
-      discount = 0;
+    if (params.get("offset")) {
+      offset = Number(params.get("offset"));
+    }
 
-    return discount;
+    if (params.get("search")) {
+      searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
+    }
+
+    if (params.get("start")) {
+      ranges = JSON.stringify({column: "registerDate", value: [params.get("start"), params.get("end")]});
+    }
+
+    if (params.get("status")) {
+      filter = JSON.stringify({status: Number(params.get("status"))});
+    }
+
+    offset = (offset - 1) * limit;
+    this.setState({loading: true});
+    SaleOrderService.lists(limit, offset, "", "", filter, searchKey, ranges)
+    .then(response => {
+      this.setState({data: response && response.data});
+    })
+    .catch(err => message.error("Error"))
+    .finally(() => this.setState({loading: false, loadingButton: false}));
+  }
+
+  handleSubmitFilter = (e) => {
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        const params = new URLSearchParams(window.location.search);
+        if (values.search) {
+          params.set("search", values.search);
+        } else {
+          params.delete("search");
+        }
+
+        if (values.registerDate && values.registerDate.length) {
+          params.set("start", moment(values.registerDate[0]).format("YYYY-MM-DD"));
+          params.set("end", moment(values.registerDate[1]).format("YYYY-MM-DD"));
+        } else {
+          params.delete("start");
+          params.delete("end");
+        }
+
+        if (values.status && values.status >= 0) {
+          params.set("status", values.status);
+        } else {
+          params.delete("status");
+        }
+
+        this.Util.pushParamsToURL(this.pathname, params.toString());
+        this.setState({loadingButton: true});
+        this.fetchList();
+      }
+    });
+  }
+
+  onShowSizeChange(current, pageSize) {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+  }
+
+  onChangePagination(current, pageSize) {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+  }
+
+  renderFilterRecord() {
+    const saleOrderStatusList = Object.keys(this.SALE_ORDER_STATUS_STR).map((prop) => {
+      return {name: this.SALE_ORDER_STATUS_STR[prop].title, value: prop};
+    });
+    saleOrderStatusList.unshift({name: <this.Translate id="text_all_status"/>, value: -1});
+    return (
+      <this.Form onSubmit={this.handleSubmitFilter}>
+        <this.Row className="main-search-layout">
+          <this.Col md="2">
+            <this.InputText
+              name="search"
+              label={<this.Translate id={this.generalSearchLabel}/>}
+              placeholder={`${this.CATranslate("text_quotation_no", this.props.locale)}, ${this.CATranslate("text_customer", this.props.locale)}`}
+              form={this.props.form}
+              allowClear={true} />
+          </this.Col>
+          <this.Col md="2">
+            <this.DateRangePicker
+              name="registerDate"
+              label={<this.Translate id="text_date" />}
+              form={this.props.form}
+              ranges={[]} />
+          </this.Col>
+          <this.Col md="2">
+            <this.Select
+              name="status"
+              label={<this.Translate id="text_status" />}
+              dataSource={saleOrderStatusList}
+              defaultValue={saleOrderStatusList[0].value}
+              form={this.props.form} />
+          </this.Col>
+          <this.Col md="2" className="wrap-btn-search">
+            <div className="ant-form-item-label" style={{visibility: "hidden"}}>
+              <label htmlFor="status" className="" title=""><this.Translate id="text_filter" /></label>
+            </div>
+            <this.Button htmlType="submit" type="info" loading={this.state.loadingButton}>
+              <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+            </this.Button>
+          </this.Col>
+        </this.Row>
+      </this.Form>
+    );
   }
 
   buttonActionCollection() {
@@ -161,18 +312,61 @@ export default class SaleOrder extends List {
       </this.Button>;
   }
 
-  renderPagination(data, className = "float-right") {
-    return <div />;
+  renderPagination(fetchingProp, className = "float-right") {
+    const data = this.state.data && this.state.data.pagination;
+    let pagination = {
+      total: data && data.total,
+      pageSize: data && data.limit,
+      current: this.state.current,
+      pageSizeOptions: this.pageSizeOptions
+    };
+
+    const showTotal = total => {
+      return `${this.CATranslate("text_total", this.props.locale)} ${total} ${this.CATranslate("text_records", this.props.locale)}`;
+    };
+
+    return( 
+      pagination.total > 0 ?
+        <div className={className}>
+          <Pagination 
+            size="small" 
+            showTotal={showTotal} 
+            showSizeChanger
+            defaultCurrent={this.state.current}
+            defaultPageSize={this.pageSize}
+            onShowSizeChange={this.onShowSizeChange} 
+            onChange={this.onChangePagination} 
+            {...pagination} />
+        </div>
+        :
+        ""
+    );
   }
 
-
   renderTable() {
-    return <this.Table 
+    return <this.Table
+      bordered={true}
       rowKey="id"
       loading={this.state.loading}
       columns={this.columns}
-      dataSource={this.state.data}
+      dataSource={this.state.data.data}
       onChange={this.onChange}
     />;
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    locale: state.locale,
+  };
+}
+
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const saleOrder =  Form.create(mapPropsToFields)(SaleOrder);
+  
+export default connect(mapStateToProps)(saleOrder);

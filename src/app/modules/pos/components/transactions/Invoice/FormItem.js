@@ -38,6 +38,7 @@ import CustomerService from "../../../../crm/services/customers/CustomerService"
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import CustomerConstant from "../../../../crm/constants/customers/customer";
 import InvoiceService from "../../../services/transactions/InvoiceService";
+import QuotationService from "../../../services/transactions/QuotationService";
 import SearchProductDropdown from "./SearchProduct";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
 import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCreate";
@@ -61,6 +62,11 @@ const styles = {
     }
 };
 
+const paramsAction = {
+    clone: "clone",
+    convertToInvoice: "convertToInvoice"
+};
+
 class NewInvoice extends React.PureComponent {
     state = {
         fetching: false,
@@ -73,6 +79,7 @@ class NewInvoice extends React.PureComponent {
         saveLoading: false,
         showDrawer: false
     }
+    action = new URLSearchParams(window.location.search).get("action");
     entryColumn = [
         {
             title: <Translate id="text_no" />,
@@ -144,8 +151,15 @@ class NewInvoice extends React.PureComponent {
                     <InputTextArea
                         name={`description[${index}]`}
                         data={description}
+                        disabled={this.action === paramsAction.convertToInvoice ? true : false}
                         inputStyle={{width: "100%"}}
                         style={{width: "100%"}}
+                        handleOnChange={(e) => {
+                            const value = e.target.value;
+                            this.setState(preState => {
+                              preState.transactionEntries[index].description = value;
+                            });
+                        }}
                         form={this.props.form} />
                 </div>;
             }
@@ -159,6 +173,7 @@ class NewInvoice extends React.PureComponent {
                     name={`quantity[${index}]`}
                     min={0}
                     data={quantity}
+                    disabled={this.action === paramsAction.convertToInvoice ? true : false}
                     isAutoSelect={true}
                     onChange={(value) => this.onChangeQty(value, index)}
                     form={this.props.form} 
@@ -175,6 +190,7 @@ class NewInvoice extends React.PureComponent {
                     min={0}
                     data={price}
                     isAutoSelect={true}
+                    disabled={this.action === paramsAction.convertToInvoice ? true : false}
                     onChange={(value) => this.onChangePrice(value, index)}
                     form={this.props.form} 
                 />;
@@ -199,8 +215,10 @@ class NewInvoice extends React.PureComponent {
     timer = null;
     id = "";
     saleOrderId = "";
+    quotationId = "";
     pageTitle = "";
     textRequiredCustomer = "";
+    textDiscountErr = "";
 
     componentDidMount() {
         let idParam = this.props.match.params.id;
@@ -216,6 +234,10 @@ class NewInvoice extends React.PureComponent {
         } else if (action === "convertToInvoice") {
             idParam = params.get("saleOrderId");
             this.saleOrderId = params.get("saleOrderId");
+
+            if (params.get("quotationId")) {
+                this.quotationId = params.get("quotationId");
+            }
         }
 
         if (idParam) {
@@ -235,14 +257,15 @@ class NewInvoice extends React.PureComponent {
                 }));
 
                 let discount = data.discount;
-                if (data.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-                    discount = this.util.getValueFromPercentage(totalExcludeTax, discount);
-                } 
 
                 let taxRate = this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax);
                 if (!taxRate)
                     taxRate = 0;
                 data.taxRate = taxRate;
+
+                if (action === "clone") {
+                    data.invoiceNumber = "";
+                }
 
                 delete data.transactionEntries;
                 this.setState(preState => {
@@ -250,6 +273,37 @@ class NewInvoice extends React.PureComponent {
                     preState.transactionEntries = transactionEntries;
                     return preState;
                 });
+            })
+            .finally(() => this.setState({loading: false}));
+        } else if (this.quotationId) {
+            this.setState({loading: true});
+            QuotationService.detail2(this.quotationId)
+            .then(response => {
+                const data = response.data.data;
+                let totalExcludeTax = Number(data.totalExcludeTax);
+                if (!totalExcludeTax) {
+                    totalExcludeTax = data.total;
+                }
+
+                let taxRate = this.util.getTaxRate(data.totalExcludeTax - data.discount, data.total - totalExcludeTax);
+                if (!taxRate)
+                    taxRate = 0;
+                data.taxRate = taxRate;
+
+                const transactionEntries = data.quotationEntries.length && data.quotationEntries.map(entry => ({
+                    ...entry,
+                    variantName: entry.description,
+                    discount: 0,
+                    amount: entry.quantity * entry.price
+                }));
+                delete data.quotationEntries;
+
+                this.setState(preState => {
+                    preState.formData = data;
+                    preState.transactionEntries = transactionEntries;
+                    return preState;
+                });
+                
             })
             .finally(() => this.setState({loading: false}));
         } else {
@@ -320,6 +374,12 @@ class NewInvoice extends React.PureComponent {
                 }
                 const {formData} = this.state;
                 const subTotal = this.getTotal();
+
+                if (formData.discount > subTotal) {
+                    this.textDiscountErr = "Discount amount must be less than total amount";
+                    return;
+                }
+
                 const invoice = {
                     customerId: values.customerId,
                     discount: values.discount,
@@ -339,6 +399,10 @@ class NewInvoice extends React.PureComponent {
                 if (this.saleOrderId) {
                     invoice.referenceId = this.saleOrderId;
                     invoice.referenceNo = formData.number;
+                }
+
+                if (this.quotationId) {
+                    invoice.quotationId = this.quotationId;
                 }
 
                 const transactionEntries = [];
@@ -380,8 +444,12 @@ class NewInvoice extends React.PureComponent {
             .finally(() => this.setState({saveLoading: false}));
         } else {
             InvoiceService.create(invoice)
-            .then(() => {
+            .then((response) => {
                 message.success(stringTranslate("text_success_save_invoice", this.props.locale));
+                this.id = response.data.data.id;
+                this.saleOrderId = "";
+                this.quotationId = "";
+                history.push(`/transactions/update-invoice/${response.data.data.id}`);
             })
             .catch(() => message.error("Error"))
             .finally(() => this.setState({saveLoading: false}));
@@ -415,15 +483,27 @@ class NewInvoice extends React.PureComponent {
     }
 
     onChangeTotalDiscount = (discount) => {
+        this.textDiscountErr = "";
         this.setState(preState => {
+            if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+                let total = this.getTotal();
+                discount = this.util.getValueFromPercentage(total, discount);
+            }
             preState.formData.discount = discount;
             return preState;
         });
     }
 
     onChangeDiscountType = (type) => {
+        this.textDiscountErr = "";
         this.setState(preState => {
+            let discount = this.props.form.getFieldValue("discountField");
+            if (type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+                let total = this.getTotal();
+                discount = this.util.getValueFromPercentage(total, discount);
+            }
             preState.formData.discountType = type;
+            preState.formData.discount = discount;
             return preState;
         });
     }
@@ -448,6 +528,10 @@ class NewInvoice extends React.PureComponent {
 
     removeEntry = (index) => {
         const {transactionEntries} = this.state;
+        if (this.action === paramsAction.convertToInvoice) {
+            return this.util.sweetAlertMessage("Can't remove entry in this step", "warning");
+        }
+
         if (transactionEntries[index].id) {
             this.util.sweetAlertConfirm(stringTranslate("text_confirm_delete", this.props.locale), "warning")
             .then(isDelete => {
@@ -544,6 +628,9 @@ class NewInvoice extends React.PureComponent {
 
     handleResetForm = () => {
         const {transactionEntries} = this.state;
+        if (this.action === paramsAction.convertToInvoice) {
+            return this.util.sweetAlertMessage("Can't clear form in this step", "warning");
+        }
         this.props.form.resetFields();
         if (transactionEntries.length) {
             if (this.id) {
@@ -587,6 +674,7 @@ class NewInvoice extends React.PureComponent {
     }
 
     handleNewInvoice = () => {
+        this.id = "";
         history.push("/transactions/create-invoice");
         this.pageTitle = <Translate id="text_create_invoice" />;
         this.setState({
@@ -685,6 +773,14 @@ class NewInvoice extends React.PureComponent {
         return total;
     }
 
+    getDiscountField(formData) {
+        let result = formData.discount;
+        if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+            result = this.util.getPercentage(formData.totalExcludeTax, result);
+        }
+        return result;
+    }
+
     onChangeVATType = (type) => {
         if (type !== "include") {
             this.setState(preState => {
@@ -721,19 +817,17 @@ class NewInvoice extends React.PureComponent {
         const formItemLayout = {
             labelCol: {
                     xs: { span: 24 },
-                    sm: { span: 8 },
+                    sm: { span: 10 },
                 },
                 wrapperCol: {
                     xs: { span: 24 },
-                    sm: { span: 16 },
+                    sm: { span: 14 },
             },
         };
         const {formData} = this.state;
         let discount = Number(formData.discount);
         let subTotal = this.getTotal();
-        if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-            discount = this.util.getValueFromPercentage(subTotal, discount);
-        }
+
         formData.totalExcludeTax = subTotal;
         let vat = this.util.getTaxValue(subTotal - discount, formData.taxRate);
         formData.total = subTotal + vat;
@@ -811,17 +905,17 @@ class NewInvoice extends React.PureComponent {
                                 label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_invoice_no" /></div>}
                                 placeholder={`${stringTranslate("text_invoice_no", this.props.locale)}`}
                                 data={formData.invoiceNumber}
-                                style={{display: "flex", marginBottom: 4}}
+                                style={{display: "flex", marginBottom: 0}}
                                 inputStyle={{width: 269}}
                                 locale={this.props.locale}
                                 form={this.props.form}
                             />
                             <Input.Group compact style={{textAlign: "right"}}>
                                 <InputNumber
-                                    name="discount"
-                                    data={formData.discount}
+                                    name="discountField"
+                                    data={this.getDiscountField(formData)}
                                     label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_discount" /></div>}
-                                    style={{width: 210, marginRight : 8, marginBottom: 0}}
+                                    style={{width: 240, marginRight : 8, marginBottom: 0}}
                                     isAutoSelect={true}
                                     min={0}
                                     onChange={this.onChangeTotalDiscount}
@@ -842,8 +936,9 @@ class NewInvoice extends React.PureComponent {
                                     }
                                 </Form.Item>
                             </Input.Group>
+                            {this.textDiscountErr ?<span style={{color: "red", width: 266, marginTop: -14, marginBottom: 4}}>{this.textDiscountErr}</span> : null}
                             <Input.Group compact style={{textAlign: "right"}} className="input-group-full-width">
-                                <Form.Item label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_vat" /></div>}>
+                                <Form.Item style={{width: 255}} label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_vat" /></div>}>
                                     {
                                         getFieldDecorator("vatType", {initialValue: formData.taxRate ? "include" : "exclude"})
                                         (<Select 
@@ -875,6 +970,7 @@ class NewInvoice extends React.PureComponent {
                             className="ca-input-v1 purchase-order"
                             locale={this.props.locale}
                             style={{marginTop: 12}}
+                            disabled={this.action === paramsAction.convertToInvoice ? true : false}
                             form={this.props.form}/>  
                         <Col md={24}>
                             <Table 
@@ -929,6 +1025,12 @@ class NewInvoice extends React.PureComponent {
                             </div>
                             <div style={styles.itemSummary}>
                                 <div style={{width: 100}}><Translate id="text_discount" /></div>
+                                <InputNumber
+                                    name="discount"
+                                    data={discount}
+                                    style={{display: "none"}}
+                                    form={this.props.form}
+                                />
                                 <div>:</div>
                                 <div style={{width: 100, textAlign: "right", color: "red"}}>-{this.util.formatCurrency(discount)}</div>
                             </div>

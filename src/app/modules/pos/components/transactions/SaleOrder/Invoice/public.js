@@ -1,5 +1,5 @@
 import React from "react";
-import { message, Spin } from "antd";
+import { message, Spin, Button } from "antd";
 import SaleOrderService from "../../../../services/transactions/SaleOrderService";
 import StoreAccountService from "../../../../services/settings/StoreAccountService";
 import Template from "./template";
@@ -37,9 +37,15 @@ export default function SaleOrderPublicInvoice() {
   }, []);
 
   return !loading && Object.keys(formData).length ?
+    <React.Fragment>
+      <div id="header-print-preview" style={{display: "flex", justifyContent: "space-between", padding: 15}}>
+        <h4 style={{margin: 0}}>{formData.receiptNumber}</h4>
+        <Button type="primary" onClick={() => window.print()}>{"Download Invoice"}</Button>
+      </div>
       <Template formData={formData} setting={setting} />
+    </React.Fragment>
     : 
-      <div style={{width: 30, margin: "0 auto", paddingTop: 30}}>
-        <Spin />
-      </div>;
+    <div style={{width: 30, margin: "0 auto", paddingTop: 30}}>
+      <Spin />
+    </div>;
 }

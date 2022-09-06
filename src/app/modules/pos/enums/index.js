@@ -72,6 +72,11 @@ export default {
     PROCESS : 1, //create invoice
     CANCEL : 2
   },
+  QUOTATION_STATUS: {
+    DRAFT: 0,
+    PROCESS: 1,
+    CANCELLED: 2
+  },
   QUOTATION_STEP_COLOR: {
     DRAFT: "#FAAD14",
     PROCESS: "#2db7f5",

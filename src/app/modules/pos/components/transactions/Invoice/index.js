@@ -1,18 +1,26 @@
 import React from "react";
 import swal from "sweetalert";
+import moment from "moment";
 import { 
   Dropdown,
   Menu,
   Icon,
-  Tag
+  Tag,
+  message,
+  Pagination
 } from "antd";
 import List from "../List";
 import Enum from "../../../enums";
 import POSUtil from "../../../utils";
 import TransactionService from "../../../services/transactions/TransactionService";
 import InvoiceService from "../../../services/transactions/InvoiceService";
+import TransactionAction from "../../../action/transaction/transaction";
+import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
 import InventoryEnum from "../../../../inventory/enums";
 import history from "../../../../common/router/history";
+import { stringTranslate } from "../../../../common/helper/stringTranslate";
+import Receipt from "../RetailSale/Receipt";
+import Detail from "../../../containers/transactions/SaleHistory/Detail";
 
 export default class Invoice extends List {
   constructor(props) {
@@ -20,6 +28,9 @@ export default class Invoice extends List {
     this.state = {
       ...this.state,
       isRequestReturn: false,
+      reprintReceiptContent: null,
+      isRequestReprint: false,
+      isRequestShowDetail: false,
       setDefaultDate: [],
       data: [],
       loading: false
@@ -27,7 +38,8 @@ export default class Invoice extends List {
     this.title = <this.Translate id="text_sales"/>;
     this.fetchingProp = "list";
     this.columnFilterWithKey = ["firstName", "lastName", "email", "phoneNumber"];
-
+    this.pathname = "/transactions/invoice";
+    this.pageSizeOptions = ["10", "20", "40"];
     this.INVOICE_STATUS_STR = {
       [Enum.INVOICE_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#d9d9d9" },
       [Enum.INVOICE_STATUS.SENT]: { title: <this.Translate id="text_sent" />, color: "#1890ff" },
@@ -59,12 +71,13 @@ export default class Invoice extends List {
         dataIndex: "status",
         key: "status",
         width: 120,
+        align: "center",
         render: status => {
           if(status || status >= 0){
             const statusValue = this.INVOICE_STATUS_STR[status];
             const statusColor = statusValue.color;
-            const stepTitile = statusValue.title;
-            return <Tag color={statusColor} style={{width: 100, textAlign: "center"}}>{stepTitile}</Tag>;
+            const stepTitle = statusValue.title;
+            return <Tag color={statusColor} style={{width: 100, textAlign: "center", margin: 0}}>{stepTitle}</Tag>;
           }
         }
       },
@@ -76,13 +89,21 @@ export default class Invoice extends List {
         render: (invoiceNumber, record) => {
           const menu = (
             <Menu>
-              <Menu.Item onClick={() => this.handleShowEdit(record)}>
-                <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
+              <Menu.Item>
+                <this.Link to={`/transactions/update-invoice/${record.id}`}>
+                  <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
+                </this.Link>
               </Menu.Item>
               <Menu.Item>
                 <this.Link to={`/transactions/detail-invoice/${record.id}`}>
                   <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_invoice" />
                 </this.Link>
+              </Menu.Item>
+              <Menu.Item onClick={() => this.handlePrintReceipt(record.id)}>
+                <Icon type="printer" /> <this.Translate id="text_print_receipt" />
+              </Menu.Item>
+              <Menu.Item onClick={() => this.handleReturn(record)}>
+                <Icon type="retweet" style={{marginRight: 10}} /> <this.Translate id="text_return" />
               </Menu.Item>
             </Menu>
           );
@@ -126,7 +147,7 @@ export default class Invoice extends List {
         dataIndex: "discount",
         key: "discount",
         align: "right",
-        render: (discount, record) => this.Util.formatCurrency(this.getDiscount(record))
+        render: (discount) => this.Util.formatCurrency(discount)
       },
       {
         title: <this.Translate id="text_vat" />,
@@ -144,7 +165,7 @@ export default class Invoice extends List {
         key: "totalSale",
         align: "right",
         render: (total, record) => {
-          total = total - this.Util.floor(this.getDiscount(record));
+          total = total - this.Util.floor(record.discount);
           if (total < 0) total = 0;
           return this.Util.formatCurrency(total);
         }
@@ -153,12 +174,82 @@ export default class Invoice extends List {
   }
 
   componentDidMount() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("limit")) {
+      this.pageSize = params.get("limit");
+    }
+
+    if (params.get("offset")) {
+      this.setState({current: params.get("offset")});
+    }
+
+    if (params.get("search")) {
+      this.props.form.setFieldsValue({number: params.get("search")});
+    }
+
+    if (params.get("start")) {
+      this.props.form.setFieldsValue({createdAt: [moment(params.get("start")), moment(params.get("end"))]});
+    }
+
+    if (params.get("locationId")) {
+      this.props.form.setFieldsValue("locationId", params.get("locationId"));
+    }
     this.fetchList();
+    this.props.dispatch(ReceiptTemplateAction.default());
   }  
 
+  componentDidUpdate() {
+    if (this.props.detail.fetched) {
+      const isRequestClearReceiptMarginLeft = false;
+      const receiptContent = this.renderReceipt(isRequestClearReceiptMarginLeft);
+      const detailTransactionDisplay = this.renderReceipt();
+      if (this.state.isRequestReprint) {
+        this.props.dispatch(TransactionAction.reset("RESET_DETAIL_TRANSACTION"));
+      } else if (this.state.isRequestShowDetail) {
+        this.setState({
+          loadingPopup: false,
+          isRequestShowDetail: false,
+          modalConten: <Detail
+            reprintReceiptContent={<div style={{display: "none"}} id="reprint-receipt">{receiptContent}</div>}
+            receiptContent={detailTransactionDisplay}
+            dispatch={this.props.dispatch} />
+        });
+      }
+    }
+  }
+
   fetchList() {
+    let searchKey = "";
+    let filter = {};
+    let locationId = 0;
+    let limit = this.pageSize;
+    let ranges = "";
+    let offset = this.state.current;
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("limit")) {
+      limit = Number(params.get("limit"));
+    }
+
+    if (params.get("offset")) {
+      offset = Number(params.get("offset"));
+    }
+
+    if (params.get("search")) {
+      searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
+    }
+
+    if (params.get("start")) {
+      ranges = JSON.stringify({column: "invoiceDate", value: [params.get("start"), params.get("end")]});
+    }
+
+    if (params.get("locationId")) {
+      locationId = params.get("locationId");
+    }
+
+    offset = (offset - 1) * limit;
     this.setState({loading: true});
-    this.service.lists(this.pageSize, 0)
+    this.service.lists(limit, offset, "", "", filter, searchKey, ranges, locationId)
     .then((response) => {
       this.setState({data: response && response.data});
     })
@@ -166,10 +257,66 @@ export default class Invoice extends List {
     .finally(() => this.setState({loading: false}));
   }
 
+  handlePrintReceipt(id) {
+    this.props.dispatch(TransactionAction.detail({id}));
+    this.setState({
+      loadingPopup: true,
+      isRequestShowDetail: true
+    });
+  }
+
+  getCustomerPaymentList(data) {
+    let customerPaymentList = [];
+    let changeAmount = 0;
+    if (this.Util.isValidCollectionInObj(data, "transactionPayment")) {
+      data.transactionPayment.forEach(payment => {
+        if (payment.paymentMethod == null) {
+          payment.paymentMethod = {};
+        }
+
+        if (payment.change > 0) {
+          changeAmount = payment.change;
+        }
+
+        customerPaymentList = POSUtil.appendCustomerPaymentList(customerPaymentList, payment.tender, payment.paymentMethod, payment.balance);
+      });
+    }
+    return {
+      customerPaymentList,
+      changeAmount
+    };
+  }
+
+  getCurrentUserForRePrintReceipt(data) {
+    let currentUser = {
+      setting: {
+        storeName: "",
+        address: "",
+        phoneNumber: "",
+        businessName: ""
+      },
+      currentUser: {
+        fullName: ""
+      }
+    };
+
+    if (data && data.client) {
+      currentUser.setting.storeName = data.client.storeName;
+      currentUser.setting.address = data.client.address;
+      currentUser.setting.phoneNumber = data.client.phoneNumber;
+      currentUser.setting.businessName = data.client.businessName;
+    }
+
+    if (data && data.user) {
+      currentUser.currentUser.fullName = data.user.fullName;
+    }
+
+    return currentUser;
+  }
+
   handleShowEdit(record) {
-    console.log("record", record);
     if (record.status === Enum.INVOICE_STATUS.PAID || record.status === Enum.INVOICE_STATUS.SENT) {
-      return this.Util.sweetAlertMessage("Can't edit invoice that already sent or paid");
+      return message.warning(stringTranslate("text_error_allow_update_only_draft_step", this.props.locale));
     }
 
     history.push(`/transactions/update-invoice/${record.id}`);
@@ -210,15 +357,6 @@ export default class Invoice extends List {
     return POSUtil.appendProductTaxList(productOrderList);
   }
 
-  getDiscount(data) {
-    let discount = Number(data.discount);
-    if (data.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-      discount = this.Util.getValueFromPercentage(data.totalExcludeTax, discount);
-    }
-
-    return discount;
-  }
-
   getTaxAmount(data) {
     return data.total - data.totalExcludeTax;
   }
@@ -254,8 +392,52 @@ export default class Invoice extends List {
     }
   }
 
+  onShowSizeChange(current, pageSize) {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+  }
+
+  onChangePagination(current, pageSize) {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+  }
+
   buttonActionCollection() {
     return [this.renderButtonAddNew()];
+  }
+
+  renderReceipt(isRequestClearReceiptMarginLeft = true) {
+    const data = this.props.detail.data;
+    const customerPayment = this.getCustomerPaymentList(data);
+    const productOrderList = this.getProductOrderList(data);
+    const productTaxList = [];
+
+    return <Receipt
+      data={data}
+      customer={data.customer}
+      isRequestClearMarginLeft={isRequestClearReceiptMarginLeft}
+      isRequestShowDetail={this.state.isRequestShowDetail}
+      receiptTemplate={this.props.receiptTemplate.data}
+      currentUser={this.getCurrentUserForRePrintReceipt(data)}
+      customerFieldPrice="price"
+      customerPaymentList={customerPayment.customerPaymentList}
+      productList={productOrderList}
+      productTaxList={productTaxList}
+      summaryTotal={this.getSummaryTotal(data)}
+      summaryTax={{taxTitle: "", count: 0}}
+      changeAmount={customerPayment.changeAmount}
+      taxAmount={0}
+      discountAmount={data.discount} />;
   }
 
   renderButtonAddNew() {
@@ -277,7 +459,7 @@ export default class Invoice extends List {
 
   renderButtonSearch(fetchingProps){
     return <this.Col md="2" className="wrap-btn-search">
-      <div className="ant-form-item-label" style={{visibility: "hidden"}}>
+      <div className="ant-form-item-label" style={{visibility: "hidden", lineHeight: "28px"}}>
         <label htmlFor="status" className="" title="">Filter</label>
       </div>
       <this.Button htmlType="submit" type="default" loading={this.state.isClickFilter && fetchingProps.fetching}>
@@ -298,13 +480,6 @@ export default class Invoice extends List {
                 name="number"
                 placeholder={this.CATranslate("text_search_for_sale_no", this.props.locale)}
                 label={<this.Translate id="text_search_for_sale_no" />}
-                form={this.props.form}/>
-            </this.Col>
-            <this.Col md="2" className="hidden">
-              <this.InputText
-                name="customer"
-                placeholder={this.CATranslate("text_search_for_customer", this.props.locale)}
-                label={<this.Translate id="text_customer" />}
                 form={this.props.form}/>
             </this.Col>
             <this.Col md="2">
@@ -333,49 +508,72 @@ export default class Invoice extends List {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        let filter = {};
+        const params = new URLSearchParams(window.location.search);
+        if (values.number) {
+          params.set("search", values.number);
+        } else {
+          params.delete("search");
+        }
+
+        if (values.createdAt && values.createdAt.length) {
+          params.set("start", moment(values.createdAt[0]).format("YYYY-MM-DD"));
+          params.set("end", moment(values.createdAt[1]).format("YYYY-MM-DD"));
+        } else {
+          params.delete("start");
+          params.delete("end");
+        }
 
         if (values.locationId) {
-          filter["locationId"] = [values.locationId];
+          params.set("locationId", values.locationId);
+        } else {
+          params.delete("locationId");
         }
 
-        if (values.number) {
-          filter["number"] = [values.number];
-        }
-        
-        let rangFilter = "";
-        if (values.createdAt && values.createdAt.length > 0) {
-          rangFilter = JSON.stringify({
-            column: "registerDate",
-            value: [
-              this.Util.formatDateForMYSQL(values.createdAt[0]) + " 00:00:00",
-              this.Util.formatDateForMYSQL(values.createdAt[1]) + " 23:59:59"
-            ]});
-        }
-        
-        filter = JSON.stringify(filter);
-
-        let searchKey = "";
-
-        if (values.customer) {
-          searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.customer});
-        }
-
-        this.setState({loading: true});
-        InvoiceService.lists(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter)
-        .then((response) => this.setState({loading: false, data: response.data}));
-        this.setState({isClickFilter: true});
+        this.Util.pushParamsToURL(this.pathname, params.toString());
+        this.fetchList();
       }
     });
+  }
+
+  renderPagination(fetchingProp, className = "float-right") {
+    const data = this.state.data && this.state.data.pagination;
+    let pagination = {
+      total: data && data.total,
+      pageSize: data && data.limit,
+      current: data && this.state.current,
+      pageSizeOptions: this.pageSizeOptions
+    };
+
+    const showTotal = total => {
+      return `${this.CATranslate("text_total", this.props.locale)} ${total} ${this.CATranslate("text_records", this.props.locale)}`;
+    };
+
+    return( 
+      pagination.total > 0 ?
+        <div className={className}>
+          <Pagination 
+            size="small" 
+            showTotal={showTotal} 
+            showSizeChanger
+            defaultCurrent={this.state.current}
+            defaultPageSize={this.pageSize}
+            onShowSizeChange={this.onShowSizeChange} 
+            onChange={this.onChangePagination} 
+            {...pagination} />
+        </div>
+        :
+        ""
+    );
   }
 
   renderTable() {
     return (
       <this.Table
+        bordered={true}
         rowKey="id"
         loading={this.state.loading}
         columns={this.columns}
-        dataSource={this.state.data}
+        dataSource={this.state.data.data}
         onChange={this.onChange}
       />
     );

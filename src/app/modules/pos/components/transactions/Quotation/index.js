@@ -1,4 +1,5 @@
 import React from "react";
+import { Dropdown, Menu, Icon, Tag } from "antd";
 import QuotationA4 from "./QuotationA4";
 import List from "../List";
 import Enum from "../../../enums";
@@ -25,84 +26,107 @@ export default class QuotationList extends List {
       quotationStatus: false,
       ...this.state
     };
-    this.QUOTATION_STEP_STR = {
-      [Enum.QUOTATION_STEP.DRAFT]: {name: <this.Translate id="text_draft" />, color:"warning"},
-      [Enum.QUOTATION_STEP.PROCESS]: {name: <this.Translate id="text_process" />, color:"processing"},
-      [Enum.QUOTATION_STEP.CANCEL]: {name: <this.Translate id="text_cancel" />, color:"error"}
+    this.QUOTATION_STATUS_STR = {
+      [Enum.QUOTATION_STATUS.DRAFT]: {name: <this.Translate id="text_draft" />, color: "#d9d9d9"},
+      [Enum.QUOTATION_STATUS.PROCESS]: {name: <this.Translate id="text_process" />, color: "#52c41a"},
+      [Enum.QUOTATION_STATUS.CANCELLED]: {name: <this.Translate id="text_cancel" />, color: "#f50"}
     };
     this.columns = [
-      this.columnCreatedAt,
       {
-        title: <this.Translate id="text_name" />,
-        dataIndex: "name",
-        key: "name",
-        sorter: true,
-        render: (text, record) => `${record.name}:${record.number}`
+        title: <this.Translate id="text_date" />,
+        dataIndex: "quotationDate",
+        key: "quotationDate",
+        render: (quotationDate) => this.Util.formatDate(quotationDate, "DD/MM/YYYY")
+      },
+      {
+        title: <this.Translate id="text_status" />,
+        dataIndex: "status",
+        key: "status",
+        width: 120,
+        render: status => {
+          return status in this.QUOTATION_STATUS_STR ? <Tag color={this.QUOTATION_STATUS_STR[status].color} style={{width: 100, textAlign: "center", margin: 0}}>{this.QUOTATION_STATUS_STR[status].name}</Tag> : this.emptyText;
+        }
+      },
+      {
+        title: <this.Translate id="text_quotation_no" />,
+        dataIndex: "number",
+        key: "number",
+        width: 160,
+        render: (number, record) => {
+          const menu = (
+            <Menu>
+              <Menu.Item onClick={() => this.handleShowFormUpdate(record)}>
+                <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
+              </Menu.Item>
+              <Menu.Item>
+                <this.Link to={`/transactions/quotation-detail/${record.id}`}>
+                  <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_detail" />
+                </this.Link>
+              </Menu.Item>
+            </Menu>
+          );
+          return <div className="wrap-product-name" style={{display: "flex"}}>
+            {number}
+            <Dropdown className="product-row-option" overlay={menu}>
+              {/*eslint-disable-next-line*/}
+              <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
+                <this.Translate id="text_option" /> <Icon type="down" />
+              </a>
+            </Dropdown>
+          </div>;
+        }
       },
       {
         title: <this.Translate id="text_customer" />,
         dataIndex: "customer",
         key: "customer",
-        sorter: true,
         render: customer => customer ? `${customer.firstName} ${customer.lastName}` : this.emptyText
       },
       {
         title: <this.Translate id="text_phone_number" />,
         dataIndex: "customer",
         key: "phoneNumber",
-        sorter: true,
         render: customer => customer && customer.phoneNumber ? customer.phoneNumber : this.emptyText
-      },
-      {
-        title: <this.Translate id="text_email" />,
-        dataIndex: "customer",
-        key: "email",
-        sorter: true,
-        render: customer => customer && customer.email ? customer.email : this.emptyText
       },
       {
         title: <this.Translate id="text_sub_total" />,
         key: "subTotal",
-        sorter: true,
         align: "right",
-        render: (total, record) => this.Util.formatCurrency(record.total + record.discount)
+        render: (total, record) => this.Util.formatCurrency(record.totalExcludeTax)
       },
       {
         title: <this.Translate id="text_discount" />,
         dataIndex: "discount",
         key: "discount",
-        sorter: true,
         align: "right",
-        render: discount => this.Util.formatCurrency(discount)
+        render: (discount) => this.Util.formatCurrency(discount)
+      },
+      {
+        title: <this.Translate id="text_tax" />,
+        dataIndex: "totalExcludeTax",
+        key: "totalExcludeTax",
+        align: "right",
+        render: (totalExcludeTax, record) => this.Util.formatCurrency(record.total - totalExcludeTax)
       },
       {
         title: <this.Translate id="text_total" />,
         dataIndex: "total",
         key: "total",
-        sorter: true,
         align: "right",
-        render: total => this.Util.formatCurrency(total)
+        render: (total, record) => this.Util.formatCurrency(total - this.Util.floor(record.discount))
       },
-      {
-        title: <this.Translate id="text_step" />,
-        dataIndex: "status",
-        key: "status",
-        sorter: true,
-        width: 120,
-        render: status => status in this.QUOTATION_STEP_STR ? <this.Badge style={{ textTransform: "uppercase" }} status={this.QUOTATION_STEP_STR[status].color}  text={this.QUOTATION_STEP_STR[status].name} /> : this.emptyText
-      },
-      {
-        title: <this.Translate id="text_action" />,
-        key: "action",
-        align: "center",
-        width: 100,
-        render: (text, record) => {
-          return <this.Button className="mg-right text-uppercase danger" onClick={() => this.handleCancelQuotation(record, this.state.selectedRows)}>
-            <span className="icon-cancel icon-padding-right"></span>
-            <this.Translate id="text_cancel" />
-          </this.Button>;
-        }
-      }
+      // {
+      //   title: <this.Translate id="text_action" />,
+      //   key: "action",
+      //   align: "center",
+      //   width: 100,
+      //   render: (text, record) => {
+      //     return <this.Button className="mg-right text-uppercase danger" onClick={() => this.handleCancelQuotation(record, this.state.selectedRows)}>
+      //       <span className="icon-cancel icon-padding-right"></span>
+      //       <this.Translate id="text_cancel" />
+      //     </this.Button>;
+      //   }
+      // }
     ];
     this.customerList = [{firstName: this.CATranslate("text_all_customer", this.props.locale), lastName: "", id: 0}];
     this.formCreate = <FormCreate/>;
@@ -114,8 +138,6 @@ export default class QuotationList extends List {
     this.action = QuotationAction;
     this.RESET_CONSTANT = Constant.RESET_QUOTATION;
     this.handleCancelQuotation = this.handleCancelQuotation.bind(this);
-    this.handlePrint = this.handlePrint.bind(this);
-    this.handleClone = this.handleClone.bind(this);
     this.handleShowFormAdd = this.handleShowFormAdd.bind(this);
   }
 
@@ -127,46 +149,11 @@ export default class QuotationList extends List {
     });
   }
 
-  handlePrint(){
-    new Promise(() => {
-      const selectLength = this.state.selectedListIds.length;
-      if (selectLength === 0 && this.state.selectedListIds) {
-        this.Message.error(this.CATranslate("text_reprint_warning_1", this.props.locale));
-      } else if (selectLength > 1) {
-        this.Message.error(this.CATranslate("text_reprint_warning_2", this.props.locale));
-      } else {
-        this.setState({isRequestPrint: true});  
-        this.props.dispatch(QuotationAction.detail(this.state.selectedListIds[0]));
-      }
-    });
-  }
-
-  handleClone(){
-    new Promise(() => {
-      const selectLength = this.state.selectedListIds.length;
-      if (selectLength === 0 && this.state.selectedListIds) {
-        this.Message.error(this.CATranslate("text_clone_warning_1", this.props.locale));
-      } else if (selectLength > 1) {
-        this.Message.error(this.CATranslate("text_clone_warning_2", this.props.locale));
-      } else {
-        this.props.dispatch(QuotationAction.detail(this.state.selectedListIds[0]));
-        history.push("/transactions/quotation-create");
-      }
-    });
-  }
-
   buttonActionCollection(){
     return [
       <this.Button key={1} type="info" id="btnAdd" className="mg-right text-uppercase" disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching} onClick={this.handleShowFormAdd}>
         <span className="icon-add icon-padding-right"></span>
         <this.Translate id="text_add_new" />
-      </this.Button>,
-      <this.Button key={2} className="mg-right text-uppercase" type="info" loading={this.props.list.fetching && this.state.isRequestPrint} onClick={this.handleClone}>
-        <span className="icon-change icon-padding-right text-uppercase"></span>
-        <this.Translate id="text_clone" />
-      </this.Button>,
-      <this.Button key={3} className="mg-right text-uppercase" type="info" loading={this.props.list.fetching && this.state.isRequestPrint} onClick={this.handlePrint}>
-        <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print" />
       </this.Button>
     ];
   }
@@ -179,8 +166,8 @@ export default class QuotationList extends List {
           let filter = {};
           let searchKey = "";
 
-          if (values.step !== -1) {
-            filter["status"] = [values.step];
+          if (values.status !== -1) {
+            filter["status"] = [values.status];
           }
 
           if (values.customerId) {
@@ -202,8 +189,13 @@ export default class QuotationList extends List {
 
   handleCancelQuotation(record){
     if(record.status === Enum.QUOTATION_STEP.DRAFT){
-      let status = { status: Enum.QUOTATION_STEP.CANCEL, id: record.id };
-      this.props.dispatch(QuotationAction.update(status)); 
+      this.Util.sweetAlertConfirm(this.CATranslate("text_are_you_sure", this.props.locale))
+      .then(willCancel => {
+        if (willCancel) {
+          let status = { status: Enum.QUOTATION_STEP.CANCEL, id: record.id };
+          this.props.dispatch(QuotationAction.update(status)); 
+        }
+      });
     }else{
       this.Message.warning(this.CATranslate("text_error_allow_cancel_only_draft_step", this.props.locale));
     }
@@ -212,10 +204,10 @@ export default class QuotationList extends List {
   renderFilterRecord() {
     const {form, locale} = this.props;
 
-    const QuotationStepList = Object.keys(this.QUOTATION_STEP_STR).map((prop) => {
-      return {name: this.QUOTATION_STEP_STR[prop].name, value: prop};
+    const QuotationStepList = Object.keys(this.QUOTATION_STATUS_STR).map((prop) => {
+      return {name: this.QUOTATION_STATUS_STR[prop].name, value: prop};
     });
-    QuotationStepList.unshift({name: <this.Translate id="text_all_step"/>, value: -1});
+    QuotationStepList.unshift({name: <this.Translate id="text_all_status"/>, value: -1});
 
 
     const fetchingProps = this.props[this.fetchingProp];
@@ -245,8 +237,8 @@ export default class QuotationList extends List {
           </this.Col>
           <this.Col md="2">
             <this.Select
-              name="step"
-              label={<this.Translate id="text_step" />}
+              name="status"
+              label={<this.Translate id="text_status" />}
               dataSource={QuotationStepList}
               defaultValue={QuotationStepList[0].value}
               form={form} />
@@ -318,14 +310,15 @@ export default class QuotationList extends List {
     history.push("/transactions/quotation-create");
   }
 
-  handleShowFormEdit(rowData){
+  handleShowFormEdit(rowData) {
+    return;
+  }
+
+  handleShowFormUpdate(rowData){
     if(rowData.status === Enum.QUOTATION_STEP.DRAFT){
-      this.setState({handleUpdateForm: true});
-      this.props.dispatch(QuotationAction.detail(rowData.id));
+      history.push(`/transactions/quotation-update/${rowData.id}`);
     }else{
       this.Message.warning(this.CATranslate("text_error_allow_update_only_draft_step", this.props.locale));
     }
   }
-
-
 }

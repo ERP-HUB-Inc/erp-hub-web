@@ -18,6 +18,7 @@ class TransactionService extends BaseService {
   }
 
   returnTransaction(referenceId, data){
+    this.setHeader();
     return this.PUT({
       url: `${this.baseUrl}/return/${referenceId}`,
       data,
@@ -42,7 +43,7 @@ class TransactionService extends BaseService {
     return this.DELETE({
       url: `${this.baseUrl}/clear`,
       headers: this.header
-    })
+    });
   }
 }
 

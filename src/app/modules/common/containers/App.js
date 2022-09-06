@@ -10,6 +10,8 @@ import history from "../router/history";
 import StartUp from "../components/StartUp";
 import PublicInvoice from "../../pos/components/transactions/Invoice/PublicInvoice";
 import SaleOrderPublicInvoice from "../../pos/components/transactions/SaleOrder/Invoice/public";
+import QuotePreview from "../../pos/components/transactions/Quotation/invoice/PublicQuote";
+import ReceiptPreview from "../../pos/components/transactions/receipt/publicReceipt";
 
 export default class App extends React.Component {
   render() {
@@ -62,8 +64,8 @@ export default class App extends React.Component {
               <Route path="/signin-complete" component={ClientRegisterComplete} />
               <Route path="/public/invoice-preview" component={PublicInvoice} />
               <Route path="/public/sales-order-preview" component={SaleOrderPublicInvoice} /> {/* Query params: saleOrderId, token */}
-              <Route path="/public/quotation-preview" component={PublicInvoice} />
-              <Route path="/public/receipt-preview" component={PublicInvoice} />
+              <Route path="/public/quotation-preview" component={QuotePreview} />
+              <Route path="/public/receipt-preview" component={ReceiptPreview} />
               {!token && (
                 <PrivateRoute
                 path="/"

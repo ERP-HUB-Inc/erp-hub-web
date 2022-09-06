@@ -10,8 +10,13 @@ import {
   Table
 } from "antd";
 import { Translate } from "react-localize-redux";
+import moment from "moment";
 import { Chart, registerables } from "chart.js";
 import * as _ from "lodash";
+<<<<<<< HEAD
+=======
+import { Line } from "react-chartjs-2";
+>>>>>>> 2483d344a6f64857fff4085a2ec9a054d4992e84
 import InventoryService from "../../../../pos/services/report/InventoryService";
 import SelectDateOption from "../../SelectDateOption";
 import "../index.css";
@@ -48,6 +53,7 @@ const columns = [
 
 const Dashboard = (props) => {
   const [option, setOption] = React.useState("today");
+  const [overallSales, setOverallSales] = React.useState({dates: [], currentPeriodSales: [], currentPeriodAmount: 0, growthAsPercentage: 0});
   const [popularProducts, setPopularProducts] = React.useState([]);
   const [loadingPopular, setLoadingPopular] = React.useState(false);
   const [dashboardSummaries, setDashboardSummaries] = React.useState([]);
@@ -110,6 +116,11 @@ const Dashboard = (props) => {
     })
     .finally(() => {
       setLoadingPopular(false);
+    });
+    
+    DashboardService.getOverallSales(moment().subtract(30, "days").format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))
+    .then(response => {
+      setOverallSales(response.data);
     });
 
     //eslint-disable-next-line
@@ -197,6 +208,14 @@ const Dashboard = (props) => {
     tooltipEl.style.padding = tooltip.options.padding + "px " + tooltip.options.padding + "px";
   };
 
+  let maxAxis = overallSales.currentPeriodSales.length > 0 ? Math.max(parseInt(_.maxBy(overallSales.currentPeriodSales)), 200) : 500;
+  maxAxis = maxAxis.toString().split("");
+  maxAxis[0] = parseInt(maxAxis[0], 10) + 1;
+  for (let i = 1; i < maxAxis.length; i++) {
+    maxAxis[i] = 0;
+  }
+  maxAxis = parseInt(maxAxis.join(""), 10);
+
   const options = {
       responsive: true,
       elements: {
@@ -207,18 +226,20 @@ const Dashboard = (props) => {
       scales: {
         y: {
             min: 0,
-            max: 500,
+            max: maxAxis,
             ticks: {
-                font: {
-                    // size: 14,
-                    family: "'Open Sans','Kantumruy'",
-                }
+              count: 5,
+              precision: 0,
+              font: {
+                  size: 14,
+                  family: "'Open Sans','Kantumruy'",
+              }
             }
         },
         x: {
             ticks: {
                 font: {
-                    // size: 14,
+                    size: 14,
                     family: "'Open Sans','Kantumruy'",
                 }
             }
@@ -240,7 +261,7 @@ const Dashboard = (props) => {
               display: false,
               text: "Overal sales",
               font: {
-                size: 20,
+                size: 16,
                 family: "'Open Sans','Kantumruy'",
                 weight: "bold"
               }
@@ -253,96 +274,26 @@ const Dashboard = (props) => {
       },
   };
 
-  const labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+  const labels = overallSales["dates"].map(value => moment().subtract(30, "days").add(value, "days").format("D ddd"));
 
   const lineData = {
     labels,
     datasets: [
         {
-            label: "ចំណូលខែឧសភា",
-            data: [
-              172.347,
-              202.002,
-              278.034,
-              120.85,
-              220.207,
-              219.429,
-              334.08,
-              140.837,
-              177.412,
-              361.489,
-              170.374,
-              194.366,
-              394.283,
-              341.333,
-              189.794,
-              138.535,
-              205.48,
-              247.891,
-              221.407,
-              201.536,
-              72.2175,
-              202.61,
-              172.98,
-              246.562,
-              192.045,
-              239.33,
-              223.706,
-              90.8725,
-              131.39,
-              278.301,
-              0
-            ],
-            borderColor: "#f0f0f0",
-            backgroundColor: "#f0f0f0",
-            borderWidth: 2.5,
-            borderDash: [5, 3],
-            borderJoinStyle: "round"
-        },
-        {
             label: "ចំណូលខែមិថុនា",
-            data: [
-              220.652,
-              148.26,
-              192.574,
-              0,
-              0,
-              284.59,
-              196.06,
-              192.65,
-              167.167,
-              221.936,
-              247.721,
-              92.21,
-              119.903,
-              107.327,
-              95.6275,
-              67.66,
-              112.841,
-              89.84,
-              27.55,
-              7.9515,
-              54.16,
-              139.67,
-              76.2659,
-              170.28,
-              178.729,
-              91.85,
-              186.985,
-              116.48,
-              128.4,
-              196.13
-            ],
-            borderColor: "rgb(53, 162, 235)",
-            backgroundColor: "rgba(53, 162, 235)",
-            borderWidth: 2.5,
+            data: overallSales["currentPeriodSales"],
+            borderColor: "#1F1F39",
+            backgroundColor: "white",
+            borderWidth: 2,
             borderJoinStyle: "round"
         },
     ],
   };
-
+  
   let revenue = getDashboardValue(0, "value");
   revenue = revenue ? revenue : 0;
+  let expense = getDashboardValue(3, "value");
+  expense = expense ? expense : 0;
   const revenueRisePercentage = getDashboardValue(0, "diffRevenueFromLAstAsPercentag");
   let discount = getDashboardValue(1, "value");
   discount = discount ? discount : 0;
@@ -453,7 +404,7 @@ const Dashboard = (props) => {
                     <span><Translate id="text_total_expense" /></span>
                   </div>
                   <div className="sub-total">
-                    <span>{(new Util()).formatCurrency(0)}</span>
+                    <span>{(new Util()).formatCurrency(expense)}</span>
                   </div>
                   <div className="total-footer">
                     <span style={{color: "red"}}><Icon type="rise" />0%</span>
@@ -466,17 +417,17 @@ const Dashboard = (props) => {
         <Col span={12} className="task-line-chart">
           <div id="mainChart">
             <Card bordered={false}>
-              {/* <div className="header-task">
+              <div className="header-task">
                 <div className="pull-left">
-                  <h4>Overall Sales</h4>
+                  <h4><Translate id="text_overall_sales" /></h4>
                   <div className='sub-left'>
-                    <span className="sub-total">$1560.98</span>
-                    <div className="footer-task">
-                      <Icon type="rise" />12.25%
+                    <span className="sub-total">{(new Util()).formatCurrency(overallSales.currentPeriodAmount)}</span>
+                    <div className="footer-task" style={overallSales.growthAsPercentage >= 0 ? {} : {color: "red"}}>
+                      <Icon type="rise" />{Math.abs(overallSales.growthAsPercentage).toFixed(2)}%
                     </div>
                   </div>
                 </div>
-                <div className="pull-right">
+                <div className="pull-right hidden">
                   <div className="select-pull-right">
                     <SelectDateOption
                       disabled={true}
@@ -487,10 +438,10 @@ const Dashboard = (props) => {
                 </div>
               </div>
               <div id="mainLinChart">
-                <div style={{height: 300, padding: 20}}>
-                  <Line options={options} data={lineData} />
+                <div style={{height: 300, padding: "10px 20px", display: "flex", alignItems: "flex-end"}}>
+                  <Line options={options} data={lineData} height={"100%"} />
                 </div>
-              </div> */}
+              </div>
             </Card>
           </div>
         </Col>
@@ -498,7 +449,7 @@ const Dashboard = (props) => {
           <div id="mainDashboadCategory">
             <Card bordered={false}>
               <div className="header-category">
-                <span className="title-category">Popular Categories</span>
+                <span className="title-category"><Translate id="text_popular_categories" /></span>
               </div>
               <div className="category-progress">
                 <ul>
@@ -538,7 +489,7 @@ const Dashboard = (props) => {
           <div id="mainTableList">
             <Card bordered={false}>
               <div className="header-task">
-                <span className="title-task">Top Selling Products</span>
+                <span className="title-task"><Translate id="text_top_selling_products" /></span>
                 <div className="btn-header-task">
                   <Radio.Group value={topSellType} onChange={onChangeTopSellingType} style={{ marginBottom: 16 }}>
                     <Radio.Button value="quantity">By Quantity</Radio.Button>
@@ -559,6 +510,7 @@ const Dashboard = (props) => {
               </div>
               <div className="table-list-product">
                 <Table
+                  bordered={true}
                   rowKey="id"
                   columns={columns}
                   dataSource={popularProducts}

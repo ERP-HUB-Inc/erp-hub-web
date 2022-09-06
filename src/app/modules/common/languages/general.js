@@ -41,7 +41,12 @@ export default {
   
   "text_close": [
     "Close",
-    "បិត"
+    "បិទ"
+  ],
+
+  "text_closed": [
+    "Closed",
+    "បិទ"
   ],
   
   "text_yes": [
@@ -572,6 +577,11 @@ export default {
     "All Step",
     "ជំហានទាំងអស់"
   ],
+
+  "text_all_status": [
+    "All Status",
+    "ស្ថានភាពទាំងអស់"
+  ],
   
   "text_number": [
     "Number",
@@ -687,14 +697,12 @@ export default {
   
   "text_invoice": [
     "Invoice",
-    "វិក័យប័ត្រ",
-    "Invoice"
+    "វិក័យប័ត្រ"
   ],
 
   "text_invoices": [
-    "Invoice",
-    "វិក័យប័ត្រ",
-    "Invoices"
+    "Invoices",
+    "វិក័យប័ត្រ"
   ],
   
   "text_pre_order": [

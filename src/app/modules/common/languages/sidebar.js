@@ -1,7 +1,7 @@
 export default {
   "text_transaction": [
-    "Transactions",
-    "ប្រតិបត្តិការលក់"
+    "Transaction",
+    "ប្រតិបត្តិការ"
   ],
   
   "text_report": [
@@ -15,8 +15,8 @@ export default {
   ],
   
   "text_sale_order": [
-    "Sale Order",
-    "ការបញ្ចារលក់"
+    "Sales Order",
+    "ការបញ្ចារទិញ~លក់"
   ],
 
   "text_pos": [

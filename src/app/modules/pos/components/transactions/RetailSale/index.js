@@ -803,7 +803,7 @@ export default class Retail extends Component {
   handleLinkSaleHistory() {
     this.handleSetFullScreen();
 
-    history.push("/transactions/sales");
+    history.push("/transactions/invoice");
   }
 
   handleLinkCloseShift() {
@@ -913,14 +913,11 @@ export default class Retail extends Component {
             ""
         }
         <div className="pull-left park-receipt" onClick={this.handleLinkSaleHistory}>
-          <span className="icon-time icon-padding-right"></span><this.Translate id="text_sales" />
+          <span className="icon-time icon-padding-right"></span><this.Translate id="text_invoices" />
         </div>
         <div className="pull-left park-receipt" onClick={this.handleLinkCloseShift}>
           <span className="icon-currency icon-padding-right"></span><this.Translate id="text_close_shift" />
         </div>
-        {/* <div className="pull-left park-receipt" onClick={this.handleSetFullScreen}>
-            <span className={`${this.state.iconFullScreen} icon-padding-right`}></span>{this.state.textFullScreen}
-          </div> */}
       </this.Col>
     </this.Row>;
   }

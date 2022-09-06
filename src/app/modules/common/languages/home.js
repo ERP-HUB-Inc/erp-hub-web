@@ -37,11 +37,27 @@ export default {
     "Total Expense",
     "ចំណាយសរុប"
   ],
+
+  "text_popular_categories": [
+    "Popular Categories",
+    "ប្រភេទផលិតផលពេញនិយម"
+  ],
+
+  "text_top_selling_products": [
+    "Top Selling Products",
+    "ផលិតផលលក់ដាច់បំផុត"
+  ],
+
+  "text_overall_sales": [
+    "Overall Sales",
+    "ការលក់រួម"
+  ],
   
   "text_user_guides": [
     "User Guides",
     "ការណែរនាំអ្នកប្រើប្រាស់"
   ],
+
   "home_page_guide_types": [
     "category",
     "ប្រភេទ"
@@ -51,6 +67,7 @@ export default {
     "brand",
     "ម៉ាកផលិតផល"
   ],
+
   "home_page_guide_suppliers": [
     "suppliers",
     "អ្នកផ្គត់ផ្គង់"

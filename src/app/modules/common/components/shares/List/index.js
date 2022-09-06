@@ -683,6 +683,7 @@ export default class List extends Component {
     return (
       this.isShowExpandable ?
         <this.TableExpand
+          bordered={true}
           dataSource={fetchingProps.list}
           columns={this.columns}
           rowClassName={this.rowClassName}
@@ -696,7 +697,8 @@ export default class List extends Component {
           rowSelection={rowSelection}
         loading={fetchingProps.fetching/* || this.state.loadingPopup*/} />
         :
-        <this.Table 
+        <this.Table
+          bordered={true}
           rowSelection={this.rowSelection ? rowSelection : null}
           dataSource={fetchingProps.list}
           columns={this.columns}

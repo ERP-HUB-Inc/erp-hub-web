@@ -12,14 +12,34 @@ export default function CAInvoice(props) {
 
   const {formData} = props;
   const setting = util.getSetting();
-  let invoice = <NoneTaxInvoice formData={formData} setting={setting} />;
-  if (formData.template === Enum.PAPER_SIZE.INCLUDE_TAX) {
-    invoice = <TaxInvoice formData={formData} setting={setting} />;
+  formData.client = setting;
+  if (!formData.clientId) {
+    formData.clientId = util.getClientId();
   }
 
   return Object.keys(formData).length ? 
     <div style={{width: "250mm", margin: "auto", background: "#FFFFFF", padding: 40, minHeight: "297mm"}}>
-      {invoice}
+      {
+        formData.template === Enum.PAPER_SIZE.INCLUDE_TAX ?
+        <TaxInvoice 
+          formData={formData} 
+          setting={setting} 
+          invoiceTitle={props.invoiceTitle}
+          invoiceTaxTitleKH={props.invoiceTaxTitleKH}
+          invoiceNoTitle={props.invoiceNoTitle}
+          invoiceNoTitleKH={props.invoiceNoTitleKH}
+          numberTitle={props.numberTitle}
+          invoiceDateTile={props.invoiceDateTile}
+          dueDateTitle={props.dueDateTitle}/>
+        :
+        <NoneTaxInvoice 
+          formData={formData} 
+          setting={setting} 
+          invoiceTitle={props.invoiceTitle}
+          numberTitle={props.numberTitle} 
+          invoiceDateTitle={props.invoiceDateTitle}
+          dueDateTitle={props.dueDateTitle} />
+      }
     </div>
     : 
     <Result  

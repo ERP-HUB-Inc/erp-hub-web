@@ -186,16 +186,18 @@ class FormItem extends React.PureComponent {
   pageTitle = "text_sale_order";
   textRequiredCustomer = "";
   id = "";
+  textDiscountErr = "";
 
   componentDidMount() {
     let idParam = this.props.match.params.id;
-    const params = new URLSearchParams(document.location.search);
+    const params = new URLSearchParams(document.location.search),
+      action = params.get("action");
 
     if (idParam) {
       this.id = idParam;
     }
 
-    if (params.get("action") === "clone") {
+    if (action === "clone") {
       idParam = params.get("id");
     }
 
@@ -215,15 +217,15 @@ class FormItem extends React.PureComponent {
           amount: entry.quantity * entry.price,
         }));
 
-        let discount = data.discount;
-        if (data.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-          discount = this.util.getValueFromPercentage(totalExcludeTax, discount);
-        } 
-
+        let discount = Number(data.discount);
         let taxRate = this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax);
         if (!taxRate)
           taxRate = 0;
         data.taxRate = taxRate;
+
+        if (action === "clone") {
+          data.number = "";
+        }
 
         delete data.transactionEntries;
         this.setState(preState => {
@@ -303,6 +305,11 @@ class FormItem extends React.PureComponent {
         }
         const {formData} = this.state;
         const subTotal = this.getTotal();
+        if (formData.discount > subTotal) {
+          this.textDiscountErr = "Discount amount must be less than total amount";
+          return;
+        }
+
         const saleOrder = {
           customerId: values.customerId,
           firstName: formData.firstName,
@@ -361,8 +368,10 @@ class FormItem extends React.PureComponent {
       .finally(() => this.setState({saveLoading: false}));
     } else {
       SaleOrderService.create(saleOrder)
-      .then(() => {
+      .then((response) => {
         message.success(stringTranslate("text_success_save_invoice", this.props.locale));
+        this.id = response.data.data.id;
+        history.push(`/transactions/sale-order/update/${this.id}`);
       })
       .catch(() => message.error("Error"))
       .finally(() => this.setState({saveLoading: false}));
@@ -396,16 +405,28 @@ class FormItem extends React.PureComponent {
   }
 
   onChangeTotalDiscount = (discount) => {
+    this.textDiscountErr = "";
     this.setState(preState => {
-        preState.formData.discount = discount;
-        return preState;
+      if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+        let total = this.getTotal();
+        discount = this.util.getValueFromPercentage(total, discount);
+      }
+      preState.formData.discount = discount;
+      return preState;
     });
   }
 
   onChangeDiscountType = (type) => {
+    this.textDiscountErr = "";
     this.setState(preState => {
-        preState.formData.discountType = type;
-        return preState;
+      let discount = this.props.form.getFieldValue("discountField");
+      if (type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+          let total = this.getTotal();
+          discount = this.util.getValueFromPercentage(total, discount);
+      }
+      preState.formData.discountType = type;
+      preState.formData.discount = discount;
+      return preState;
     });
   }
 
@@ -420,8 +441,18 @@ class FormItem extends React.PureComponent {
     }
   }
 
-  handleNewInvoice = () => {
-
+  handleNewSaleOrder = () => {
+    this.setState({
+      formData: {
+        taxRate: 0,
+        totalExcludeTax: 0,
+        discount: 0,
+        total: 0
+      },
+      transactionEntries: []
+    });
+    this.id = "";
+    history.push("/transactions/sale-order/create");
   }
 
   handleOnSelectList = (product, productVariant, isRequestVariantForm = true) => {
@@ -577,7 +608,7 @@ class FormItem extends React.PureComponent {
   handleGoBack = () => {
     const action = new URLSearchParams(window.location.search).get("action");
     if (action) {
-      history.push("/transactions/sale-order/lists");
+      history.push("/transactions/sales-order");
     } else {
       history.goBack();
     }
@@ -596,6 +627,14 @@ class FormItem extends React.PureComponent {
     }
     if (!total || total < 0) total = 0;
     return total;
+  }
+
+  getDiscountField(formData) {
+    let result = formData.discount;
+    if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+        result = this.util.getPercentage(formData.totalExcludeTax, result);
+    }
+    return result;
   }
 
   renderSelectCustomer() {
@@ -662,9 +701,7 @@ class FormItem extends React.PureComponent {
     };
     let discount = Number(formData.discount);
     let subTotal = this.getTotal();
-    if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-        discount = this.util.getValueFromPercentage(subTotal, discount);
-    }
+
     if (!discount)
       discount = 0;
 
@@ -711,7 +748,7 @@ class FormItem extends React.PureComponent {
               name="saleOrderDate"
               label={<Translate id="text_sale_order_date" />}
               placeholder={`${stringTranslate("text_sale_order_date", this.props.locale)}`}
-              defaultValue={formData.invoiceDate ? moment(formData.invoiceDate) : null}
+              defaultValue={formData.registerDate ? moment(formData.registerDate) : null}
               style={styles.itemCenter}
               form={this.props.form} />
             <DatePickers
@@ -735,8 +772,8 @@ class FormItem extends React.PureComponent {
               />
               <Input.Group compact style={{textAlign: "right"}}>
                 <InputNumber
-                  name="discount"
-                  data={formData.discount}
+                  name="discountField"
+                  data={this.getDiscountField(formData)}
                   label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_discount" /></div>}
                   style={{width: 240, marginRight : 8, marginBottom: 0}}
                   isAutoSelect={true}
@@ -759,8 +796,9 @@ class FormItem extends React.PureComponent {
                   }
                 </Form.Item>
               </Input.Group>
+              {this.textDiscountErr ?<span style={{color: "red", width: 266, marginTop: -14, marginBottom: 4}}>{this.textDiscountErr}</span> : null}
               <Input.Group compact style={{textAlign: "right"}} className="input-group-full-width">
-                <Form.Item style={{width: 255}} label={<div style={{marginTop: 7, marginRight: 10}}>VAT</div>}>
+                <Form.Item style={{width: 255}} label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_vat" /></div>}>
                   {
                     getFieldDecorator("vatType", {initialValue: formData.taxRate ? "include" : "exclude"})
                     (<Select 
@@ -820,22 +858,27 @@ class FormItem extends React.PureComponent {
             </Col>
             <Col md={8} style={{lineHeight: "30px", paddingRight: 25}}>
               <div style={styles.itemSummary}>
-                <div style={{width: 100}}><Translate id="text_sub_total" /></div>
+                <div style={{width: 160}}><Translate id="text_sub_total" /></div>
                 <div>:</div>
                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.totalExcludeTax)}</div>
               </div>
               <div style={styles.itemSummary}>
-                <div style={{width: 100}}><Translate id="text_discount" /></div>
+                <div style={{width: 160}}><Translate id="text_discount" /></div>
                 <div>:</div>
                 <div style={{width: 100, textAlign: "right", color: "red"}}>-{this.util.formatCurrency(discount)}</div>
+                <InputNumber 
+                  name="discount"
+                  data={formData.discount}
+                  style={{display: "none"}}
+                  form={this.props.form} />
               </div>
               <div style={styles.itemSummary}>
-                <div style={{width: 100}}>VAT({formData.taxRate}%)</div>
+                <div style={{width: 160}}><Translate id="text_vat" />({formData.taxRate}%)</div>
                 <div>:</div>
                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(vat)}</div>
               </div>
               <div style={styles.itemSummary}>
-                <div style={{width: 100}}><Translate id="text_grand_total" /></div>
+                <div style={{width: 160}}><Translate id="text_grand_total" /></div>
                 <div>:</div>
                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.total - discount)}</div>
                 <InputNumber 
@@ -864,14 +907,14 @@ class FormItem extends React.PureComponent {
                   <Menu>
                     <Menu.Item key={1} onClick={() => this.handleMakeConfirm(formData.id)}><Translate id="text_mark_as_confirm" /></Menu.Item>
                     <Menu.Item key={2}>
-                      <Link target="_blank" to={`/transactions/create-invoice?saleOrderId=${formData.id}&action=convertToInvoice`}>
+                      <Link to={`/transactions/create-invoice?saleOrderId=${formData.id}&action=convertToInvoice`}>
                         <Translate id="text_convert_to_invoice" />
                       </Link>
                     </Menu.Item>
                     <Menu.Item key={3}>
-                      <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} ><Translate id="text_clone" /></Link>
+                      <Link target="_blank" to={`/transactions/sale-order/create?id=${formData.id}&action=clone`} ><Translate id="text_clone" /></Link>
                     </Menu.Item>
-                    <Menu.Item key={5} onClick={this.handleNewInvoice}><Translate id="text_new_sale_order" /></Menu.Item>
+                    <Menu.Item key={5} onClick={this.handleNewSaleOrder}><Translate id="text_new_sale_order" /></Menu.Item>
                     <Menu.Item key={6} onClick={() => this.handleVoid(formData.id)}><Translate id="text_void" /></Menu.Item>
                     <Menu.Item key={7} onClick={() => this.handleDelete(formData.id)}><Translate id="text_delete" /></Menu.Item>
                   </Menu>
