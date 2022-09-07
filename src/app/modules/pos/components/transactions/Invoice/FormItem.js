@@ -23,6 +23,7 @@ import _ from "lodash";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ReactToPrint from "react-to-print";
+import sweetalert from "sweetalert";
 import { 
     InputNumber, 
     InputText,
@@ -242,39 +243,7 @@ class NewInvoice extends React.PureComponent {
 
         if (idParam) {
             this.pageTitle = <Translate id="text_edit_invoice" />;
-            this.setState({loading: true});
-            InvoiceService.detail(idParam)
-            .then((response) => {
-                const data = response.data;
-                let totalExcludeTax = Number(data.totalExcludeTax);
-                if (!totalExcludeTax) {
-                    totalExcludeTax = data.total;
-                }
-                const transactionEntries = data.transactionEntries.length && data.transactionEntries.map(entry => ({
-                    ...entry, 
-                    discount: 0,
-                    amount: entry.quantity * entry.price,
-                }));
-
-                let discount = data.discount;
-
-                let taxRate = this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax);
-                if (!taxRate)
-                    taxRate = 0;
-                data.taxRate = taxRate;
-
-                if (action === "clone") {
-                    data.invoiceNumber = "";
-                }
-
-                delete data.transactionEntries;
-                this.setState(preState => {
-                    preState.formData = data;
-                    preState.transactionEntries = transactionEntries;
-                    return preState;
-                });
-            })
-            .finally(() => this.setState({loading: false}));
+            this.getDetail(idParam);
         } else if (this.quotationId) {
             this.setState({loading: true});
             QuotationService.detail2(this.quotationId)
@@ -433,19 +402,69 @@ class NewInvoice extends React.PureComponent {
         });
     }
 
+    getDetail(id) {
+        const action = new URLSearchParams(document.location.search).get("action");
+        this.setState({loading: true});
+        InvoiceService.detail(id)
+        .then((response) => {
+            const data = response.data;
+            let totalExcludeTax = Number(data.totalExcludeTax);
+            if (!totalExcludeTax) {
+                totalExcludeTax = data.total;
+            }
+            const transactionEntries = data.transactionEntries.length && data.transactionEntries.map(entry => ({
+                ...entry, 
+                discount: 0,
+                amount: entry.quantity * entry.price,
+            }));
+
+            let discount = data.discount;
+
+            let taxRate = this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax);
+            if (!taxRate)
+                taxRate = 0;
+            data.taxRate = taxRate;
+
+            if (action === "clone") {
+                data.invoiceNumber = "";
+            }
+
+            delete data.transactionEntries;
+            this.setState(preState => {
+                preState.formData = data;
+                preState.transactionEntries = transactionEntries;
+                return preState;
+            });
+        })
+        .finally(() => this.setState({loading: false}));
+    }
+
     save(invoice) {
         this.setState({saveLoading: true});
         if (this.id) {
             InvoiceService.update(invoice, this.id)
             .then(() => {
-                message.success(stringTranslate("text_success_save_invoice", this.props.locale));
+                sweetalert({
+                    icon: "success",
+                    title: "Success!",
+                    text: stringTranslate("text_success_save_invoice", this.props.locale),
+                    buttons: false,
+                    timer: 1500
+                });
+                this.getDetail(this.id);
             })
             .catch(() => message.error("Error"))
             .finally(() => this.setState({saveLoading: false}));
         } else {
             InvoiceService.create(invoice)
             .then((response) => {
-                message.success(stringTranslate("text_success_save_invoice", this.props.locale));
+                sweetalert({
+                    icon: "success",
+                    title: "Success!",
+                    text: stringTranslate("text_success_save_invoice", this.props.locale),
+                    buttons: false,
+                    timer: 1500
+                });
                 this.id = response.data.data.id;
                 this.saleOrderId = "";
                 this.quotationId = "";
@@ -465,6 +484,13 @@ class NewInvoice extends React.PureComponent {
             if (!amount || amount < 0) amount = 0;
             preState.transactionEntries[index].quantity = qty;
             preState.transactionEntries[index].amount = amount;
+            let discount = this.props.form.getFieldValue("discountField");
+            let total = this.getTotal(preState.transactionEntries);
+            if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+                discount = this.util.getValueFromPercentage(total, discount);
+            }
+            preState.formData.discount = discount;
+
             return preState;
         });
     }
@@ -478,6 +504,12 @@ class NewInvoice extends React.PureComponent {
             if (!amount || amount < 0) amount = 0;
             preState.transactionEntries[index].price = price;
             preState.transactionEntries[index].amount = amount;
+            let discount = this.props.form.getFieldValue("discountField");
+            let total = this.getTotal(preState.transactionEntries);
+            if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+                discount = this.util.getValueFromPercentage(total, discount);
+            }
+            preState.formData.discount = discount;
             return preState;
         });
     }
@@ -527,7 +559,7 @@ class NewInvoice extends React.PureComponent {
     }
 
     removeEntry = (index) => {
-        const {transactionEntries} = this.state;
+        const {transactionEntries, formData} = this.state;
         if (this.action === paramsAction.convertToInvoice) {
             return this.util.sweetAlertMessage("Can't remove entry in this step", "warning");
         }
@@ -536,8 +568,16 @@ class NewInvoice extends React.PureComponent {
             this.util.sweetAlertConfirm(stringTranslate("text_confirm_delete", this.props.locale), "warning")
             .then(isDelete => {
                 if (isDelete) {
+                    let discount = this.props.form.getFieldValue("discountField");
+                    let type = this.props.form.getFieldValue("discountType");
                     transactionEntries[index].status = 3;
-                    this.setState({transactionEntries, productSearch: []});
+                    if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+                        let total = this.getTotal();
+                        discount = this.util.getValueFromPercentage(total, discount);
+                    }
+                    formData.discount = discount;
+                    transactionEntries[index].status = 3;
+                    this.setState({transactionEntries, formData, productSearch: []});
                 }
             });
         } else {
@@ -563,6 +603,8 @@ class NewInvoice extends React.PureComponent {
 
     handleOnSelectList = (product, productVariant, isRequestVariantForm = true) => {
         let isProductVariant = product.productOption === Enum.PRODUCT_VARIANT;
+        let discount = this.props.form.getFieldValue("discountField");
+        let type = this.props.form.getFieldValue("discountType");
         if (isProductVariant && isRequestVariantForm) {
             this.setState({
                 selectedProduct: product,
@@ -577,6 +619,7 @@ class NewInvoice extends React.PureComponent {
         }
         
         const existingProductList = this.state.transactionEntries;
+        const formData = this.state.formData;
         if (existingProductList.length === 0) {
             existingProductList.push({
                 productVariantId: productVariant.id,
@@ -621,7 +664,16 @@ class NewInvoice extends React.PureComponent {
             }
         }
     
-        this.setState({transactionEntries: existingProductList});
+        let total = 0;
+        if (existingProductList.length) {
+            total = _.sumBy(existingProductList, (value) => value.status !== 3 && value.amount);
+        }
+
+        if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+            discount = this.util.getValueFromPercentage(total, discount);
+        }
+        formData.discount = discount;
+        this.setState({transactionEntries: existingProductList, formData});
         this.props.form.setFieldsValue({searchProduct: ""});
         document.getElementById("searchProduct").focus();
     }
@@ -763,8 +815,7 @@ class NewInvoice extends React.PureComponent {
         );
     }
 
-    getTotal() {
-        const {transactionEntries} = this.state;
+    getTotal(transactionEntries = this.state.transactionEntries) {
         let total = 0;
         if (transactionEntries.length) {
             total = _.sumBy(transactionEntries, (value) => value.status !== 3 && value.amount);
