@@ -405,6 +405,13 @@ class FormItem extends React.PureComponent {
         if (!amount || amount < 0) amount = 0;
         preState.transactionEntries[index].quantity = qty;
         preState.transactionEntries[index].amount = amount;
+
+        let discount = this.props.form.getFieldValue("discountField");
+        let total = this.getTotal(preState.transactionEntries);
+        if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+          discount = this.util.getValueFromPercentage(total, discount);
+        }
+        preState.formData.discount = discount;
         return preState;
     });
   }
@@ -418,6 +425,13 @@ class FormItem extends React.PureComponent {
       if (!amount || amount < 0) amount = 0;
       preState.transactionEntries[index].price = price;
       preState.transactionEntries[index].amount = amount;
+
+      let discount = this.props.form.getFieldValue("discountField");
+      let total = this.getTotal(preState.transactionEntries);
+      if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+        discount = this.util.getValueFromPercentage(total, discount);
+      }
+      preState.formData.discount = discount;
       return preState;
     });
   }
@@ -657,8 +671,7 @@ class FormItem extends React.PureComponent {
     this.props.dispatch(CustomerAction.showForm());
   }
 
-  getTotal() {
-    const {transactionEntries} = this.state;
+  getTotal(transactionEntries = this.state.transactionEntries) {
     let total = 0;
     if (transactionEntries.length) {
         total = _.sumBy(transactionEntries, (value) => value.status !== 3 && value.amount);

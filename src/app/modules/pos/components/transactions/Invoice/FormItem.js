@@ -487,7 +487,6 @@ class NewInvoice extends React.PureComponent {
             let discount = this.props.form.getFieldValue("discountField");
             let total = this.getTotal(preState.transactionEntries);
             if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-                let total = this.getTotal();
                 discount = this.util.getValueFromPercentage(total, discount);
             }
             preState.formData.discount = discount;
@@ -508,7 +507,6 @@ class NewInvoice extends React.PureComponent {
             let discount = this.props.form.getFieldValue("discountField");
             let total = this.getTotal(preState.transactionEntries);
             if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-                let total = this.getTotal();
                 discount = this.util.getValueFromPercentage(total, discount);
             }
             preState.formData.discount = discount;
