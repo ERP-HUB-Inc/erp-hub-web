@@ -87,7 +87,7 @@ export default function ProfitAndLossReport() {
                 <div style={{textAlign: "center"}}>
                     <h4>{(new Util()).getSetting().businessName}</h4>
                     <h4 style={{fontWeight: "bold", marginBottom: 0}}>Profit & Loss</h4>
-                    <div>Date: {fromValue.format("DD MMM YYYY")} ~ {toValue.format("DD MMM YYYY")}</div>
+                    <div>Date: {fromValue.format("DD/MM/YYYY")} ~ {toValue.format("DD/MM/YYYY")}</div>
                 </div>
                 <table className="table">
                     <tbody>
