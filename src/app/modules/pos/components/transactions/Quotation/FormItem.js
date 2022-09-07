@@ -3,6 +3,7 @@ import { Translate } from "react-localize-redux";
 import { connect } from "react-redux";
 import moment from "moment";
 import _ from "lodash";
+import sweetalert from "sweetalert";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { Link } from "react-router-dom";
@@ -173,42 +174,7 @@ class FormItem extends React.PureComponent {
     if (idParam) {
       this.pageTitle = "text_edit_quotation";
       this.setState({loading: true});
-      QuotationService.detail2(idParam)
-      .then(response => {
-        const data = response.data.data;
-        let totalExcludeTax = Number(data.totalExcludeTax);
-        if (!totalExcludeTax) {
-          totalExcludeTax = data.total;
-        }
-        const quotationEntries = data.quotationEntries.length && data.quotationEntries.map(entry => ({
-          id: action === "clone" ? "" : entry.id,
-          status: entry.status,
-          productVariantId: entry.productVariantId,
-          discount: 0,
-          description: entry.description,
-          quantity: entry.quantity,
-          price: entry.price,
-          amount: entry.quantity * entry.price,
-        }));
-
-        let discount = data.discount;
-        let taxRate = this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax);
-        if (!taxRate)
-          taxRate = 0;
-        data.taxRate = taxRate;
-
-        if (action === "clone") {
-          data.number = "";
-        }
-
-        delete data.quotationEntries;
-        this.setState(preState => {
-          preState.formData = data;
-          preState.quotationEntries = quotationEntries;
-          return preState;
-        });
-      })
-      .finally(() => this.setState({loading: false}));
+      this.getDetail(idParam);
     } else {
       this.setState(preState => {
         preState.formData = {
@@ -303,12 +269,62 @@ class FormItem extends React.PureComponent {
     });
   }
 
+  getDetail(id) {
+    this.setState({loading: true});
+    const action = new URLSearchParams(document.location.search).get("action");
+    QuotationService.detail2(id)
+    .then(response => {
+      const data = response.data.data;
+      let totalExcludeTax = Number(data.totalExcludeTax);
+      if (!totalExcludeTax) {
+        totalExcludeTax = data.total;
+      }
+      const quotationEntries = data.quotationEntries.length && data.quotationEntries.map(entry => ({
+        id: action === "clone" ? "" : entry.id,
+        status: entry.status,
+        productVariantId: entry.productVariantId,
+        discount: 0,
+        description: entry.description,
+        quantity: entry.quantity,
+        price: entry.price,
+        amount: entry.quantity * entry.price,
+      }));
+
+      let discount = data.discount;
+      let taxRate = this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax);
+      if (!taxRate)
+        taxRate = 0;
+      data.taxRate = taxRate;
+
+      if (action === "clone") {
+        data.number = "";
+      }
+
+      delete data.quotationEntries;
+      this.setState(preState => {
+        preState.formData = data;
+        preState.quotationEntries = quotationEntries;
+        return preState;
+      });
+    })
+    .finally(() => this.setState({loading: false}));
+  }
+
   save(data) {
     this.setState({loadingButton: true});
     if (this.id) {
       data.id = this.id;
       QuotationService.update(data)
-      .then(() => message.success("Update quote success"))
+      .then(() => {
+        sweetalert({
+          icon: "success",
+          title: "Success!",
+          text: stringTranslate("text_success_save_invoice", this.props.locale),
+          buttons: false,
+          timer: 1500
+        });
+        this.getDetail(this.id);
+      })
       .catch(() => message.error("Error!.."))
       .finally(() => this.setState({loadingButton: false}));
     } else {
@@ -332,6 +348,13 @@ class FormItem extends React.PureComponent {
         if (!amount || amount < 0) amount = 0;
         preState.quotationEntries[index].quantity = qty;
         preState.quotationEntries[index].amount = amount;
+
+        let discount = this.props.form.getFieldValue("discountField");
+        let total = this.getTotal(preState.transactionEntries);
+        if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+          discount = this.util.getValueFromPercentage(total, discount);
+        }
+        preState.formData.discount = discount;
         return preState;
     });
   }
@@ -345,6 +368,13 @@ class FormItem extends React.PureComponent {
       if (!amount || amount < 0) amount = 0;
       preState.quotationEntries[index].price = price;
       preState.quotationEntries[index].amount = amount;
+
+      let discount = this.props.form.getFieldValue("discountField");
+      let total = this.getTotal(preState.transactionEntries);
+      if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+        discount = this.util.getValueFromPercentage(total, discount);
+      }
+      preState.formData.discount = discount;
       return preState;
     });
   }
@@ -388,6 +418,8 @@ class FormItem extends React.PureComponent {
 
   handleOnSelectList = (product, productVariant, isRequestVariantForm = true) => {
     let isProductVariant = product.productOption === EnumProduct.PRODUCT_VARIANT;
+    let discount = this.props.form.getFieldValue("discountField");
+    let type = this.props.form.getFieldValue("discountType");
     if (isProductVariant && isRequestVariantForm) {
       this.setState({
         selectedProduct: product,
@@ -401,6 +433,7 @@ class FormItem extends React.PureComponent {
         productVariant.name = isProductVariant ? productVariant.name : "";
     }
     
+    const formData = this.state.formData;
     const existingProductList = this.state.quotationEntries;
     if (existingProductList.length === 0) {
       existingProductList.push({
@@ -436,19 +469,36 @@ class FormItem extends React.PureComponent {
       }
     }
 
-    this.setState({quotationEntries: existingProductList});
+    let total = 0;
+    if (existingProductList.length) {
+        total = _.sumBy(existingProductList, (value) => value.status !== 3 && value.amount);
+    }
+
+    if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+      discount = this.util.getValueFromPercentage(total, discount);
+    }
+    formData.discount = discount;
+
+    this.setState({quotationEntries: existingProductList, formData});
     this.props.form.setFieldsValue({searchProduct: ""});
     document.getElementById("searchProduct").focus();
   }
 
   removeEntry = (index) => {
-    const {quotationEntries} = this.state;
+    const {quotationEntries, formData} = this.state;
     if (quotationEntries[index].id) {
       this.util.sweetAlertConfirm(stringTranslate("text_confirm_delete", this.props.locale), "warning")
       .then(isDelete => {
         if (isDelete) {
+          let discount = this.props.form.getFieldValue("discountField");
+          let type = this.props.form.getFieldValue("discountType");
           quotationEntries[index].status = 3;
-          this.setState({quotationEntries, productSearch: []});
+          if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+            let total = this.getTotal();
+            discount = this.util.getValueFromPercentage(total, discount);
+          }
+          formData.discount = discount;
+          this.setState({quotationEntries, formData, productSearch: []});
         }
       });
     } else {
@@ -556,8 +606,7 @@ class FormItem extends React.PureComponent {
     }
   }
 
-  getTotal() {
-    const {quotationEntries} = this.state;
+  getTotal(quotationEntries = this.state.quotationEntries) {
     let total = 0;
     if (quotationEntries.length) {
         total = _.sumBy(quotationEntries, (value) => value.status !== 3 && value.amount);
