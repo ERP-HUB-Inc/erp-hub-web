@@ -18,6 +18,7 @@ import {
   message
 } from "antd";
 import { Link } from "react-router-dom";
+import sweetalert from "sweetalert";
 import moment from "moment";
 import _ from "lodash";
 import history from "../../../../common/router/history";
@@ -351,7 +352,6 @@ class FormItem extends React.PureComponent {
         } else {
           return this.util.sweetAlertMessage(stringTranslate("text_please_select_product", this.props.locale), "warning");
         }
-        console.log("sale order", saleOrder);
         this.save(saleOrder);
       }
     });
@@ -362,14 +362,26 @@ class FormItem extends React.PureComponent {
     if (this.id) {
       SaleOrderService.update(saleOrder, this.id)
       .then(() => {
-        message.success(stringTranslate("text_success_save_invoice", this.props.locale));
+        sweetalert({
+          icon: "success",
+          title: "Success!",
+          text: stringTranslate("text_success_save_invoice", this.props.locale),
+          buttons: false,
+          timer: 1500
+        });
       })
       .catch(() => message.error("Error"))
       .finally(() => this.setState({saveLoading: false}));
     } else {
       SaleOrderService.create(saleOrder)
       .then((response) => {
-        message.success(stringTranslate("text_success_save_invoice", this.props.locale));
+        sweetalert({
+          icon: "success",
+          title: "Success!",
+          text: stringTranslate("text_success_save_invoice", this.props.locale),
+          buttons: false,
+          timer: 1500
+        });
         this.id = response.data.data.id;
         history.push(`/transactions/sale-order/update/${this.id}`);
       })

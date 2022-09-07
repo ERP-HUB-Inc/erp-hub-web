@@ -66,6 +66,11 @@ class SaleOrder extends List {
                 </this.Link>
               </Menu.Item>
               <Menu.Item>
+                <this.Link target="_blank" to={`/transactions/sale-order/create?id=${record.id}&action=clone`}>
+                  <Icon type="copy" style={{marginRight: 10}} /> <this.Translate id="text_clone" />
+                </this.Link>
+              </Menu.Item>
+              <Menu.Item>
                 <this.Link to={`/transactions/sale-order/detail/${record.id}`}>
                   <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_detail" />
                 </this.Link>
@@ -93,7 +98,7 @@ class SaleOrder extends List {
         title: <this.Translate id="text_expected_shipment_date" />,
         dataIndex: "expectedShipmentDate",
         key: "expectedShipmentDate",
-        width: 160,
+        width: 200,
         render: (expectedShipmentDate) => this.Util.formatDate(expectedShipmentDate, "DD/MM/YYYY")
       },
       {

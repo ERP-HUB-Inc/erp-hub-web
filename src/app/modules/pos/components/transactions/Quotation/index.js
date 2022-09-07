@@ -102,7 +102,7 @@ export default class QuotationList extends List {
         render: (discount) => this.Util.formatCurrency(discount)
       },
       {
-        title: <this.Translate id="text_tax" />,
+        title: <this.Translate id="text_vat" />,
         dataIndex: "totalExcludeTax",
         key: "totalExcludeTax",
         align: "right",
