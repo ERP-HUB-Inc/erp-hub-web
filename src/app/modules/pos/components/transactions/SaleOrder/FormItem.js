@@ -204,38 +204,7 @@ class FormItem extends React.PureComponent {
 
     if (idParam) {
       this.pageTitle = "text_edit_sale_order";
-      this.setState({loading: true});
-      SaleOrderService.detail(idParam)
-      .then(response => {
-        const data = response.data;
-        let totalExcludeTax = Number(data.totalExcludeTax);
-        if (!totalExcludeTax) {
-          totalExcludeTax = data.total;
-        }
-        const transactionEntries = data.transactionEntries.length && data.transactionEntries.map(entry => ({
-          ...entry, 
-          discount: 0,
-          amount: entry.quantity * entry.price,
-        }));
-
-        let discount = Number(data.discount);
-        let taxRate = this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax);
-        if (!taxRate)
-          taxRate = 0;
-        data.taxRate = taxRate;
-
-        if (action === "clone") {
-          data.number = "";
-        }
-
-        delete data.transactionEntries;
-        this.setState(preState => {
-          preState.formData = data;
-          preState.transactionEntries = transactionEntries;
-          return preState;
-        });
-      })
-      .finally(() => this.setState({loading: false}));
+      this.getUpdatedData(idParam);
     } else {
       this.setState(preState => {
         preState.formData = {
@@ -294,6 +263,42 @@ class FormItem extends React.PureComponent {
 
       this.props.dispatch(CustomerAction.reset("RESET_ADD_CUSTOMERS"));
     }
+  }
+
+  getUpdatedData(id) {
+    const action = new URLSearchParams(document.location.search).get("action");
+    this.setState({loading: true});
+    SaleOrderService.detail(id)
+      .then(response => {
+        const data = response.data;
+        let totalExcludeTax = Number(data.totalExcludeTax);
+        if (!totalExcludeTax) {
+          totalExcludeTax = data.total;
+        }
+        const transactionEntries = data.transactionEntries.length && data.transactionEntries.map(entry => ({
+          ...entry, 
+          discount: 0,
+          amount: entry.quantity * entry.price,
+        }));
+
+        let discount = Number(data.discount);
+        let taxRate = this.util.getTaxRate(data.totalExcludeTax - discount, data.total - totalExcludeTax);
+        if (!taxRate)
+          taxRate = 0;
+        data.taxRate = taxRate;
+
+        if (action === "clone") {
+          data.number = "";
+        }
+
+        delete data.transactionEntries;
+        this.setState(preState => {
+          preState.formData = data;
+          preState.transactionEntries = transactionEntries;
+          return preState;
+        });
+      })
+      .finally(() => this.setState({loading: false}));
   }
 
   handleSubmit = (e) => {
@@ -369,6 +374,7 @@ class FormItem extends React.PureComponent {
           buttons: false,
           timer: 1500
         });
+        this.getUpdatedData(this.id);
       })
       .catch(() => message.error("Error"))
       .finally(() => this.setState({saveLoading: false}));
@@ -469,6 +475,8 @@ class FormItem extends React.PureComponent {
 
   handleOnSelectList = (product, productVariant, isRequestVariantForm = true) => {
     let isProductVariant = product.productOption === EnumProduct.PRODUCT_VARIANT;
+    let discount = this.props.form.getFieldValue("discountField");
+    let type = this.props.form.getFieldValue("discountType");
     if (isProductVariant && isRequestVariantForm) {
       this.setState({
         selectedProduct: product,
@@ -483,6 +491,7 @@ class FormItem extends React.PureComponent {
     }
     
     const existingProductList = this.state.transactionEntries;
+    const formData = this.state.formData;
     if (existingProductList.length === 0) {
       existingProductList.push({
         productVariantId: productVariant.id,
@@ -527,19 +536,36 @@ class FormItem extends React.PureComponent {
       }
     }
 
-    this.setState({transactionEntries: existingProductList});
+    let total = 0;
+    if (existingProductList.length) {
+        total = _.sumBy(existingProductList, (value) => value.status !== 3 && value.amount);
+    }
+
+    if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+      discount = this.util.getValueFromPercentage(total, discount);
+    }
+    formData.discount = discount;
+
+    this.setState({transactionEntries: existingProductList, formData});
     this.props.form.setFieldsValue({searchProduct: ""});
     document.getElementById("searchProduct").focus();
   }
 
   removeEntry = (index) => {
-    const {transactionEntries} = this.state;
+    const {transactionEntries, formData} = this.state;
     if (transactionEntries[index].id) {
       this.util.sweetAlertConfirm(stringTranslate("text_confirm_delete", this.props.locale), "warning")
       .then(isDelete => {
         if (isDelete) {
+          let discount = this.props.form.getFieldValue("discountField");
+          let type = this.props.form.getFieldValue("discountType");
           transactionEntries[index].status = 3;
-          this.setState({transactionEntries, productSearch: []});
+          if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+            let total = this.getTotal();
+            discount = this.util.getValueFromPercentage(total, discount);
+          }
+          formData.discount = discount;
+          this.setState({transactionEntries, formData, productSearch: []});
         }
       });
     } else {
@@ -724,15 +750,15 @@ class FormItem extends React.PureComponent {
     return (
       !this.state.loading && Object.keys(formData).length ?
       <div>
-         <PageHeader
-          style={{
-          backgroundColor: "#f7f7f7",
-          paddingLeft: 0,
-          paddingRight: 0,
-          position: "relative"
-          }}
-          onBack={this.handleGoBack}
-          title={<Translate id={this.pageTitle} />} />
+        <PageHeader
+        style={{
+        backgroundColor: "#f7f7f7",
+        paddingLeft: 0,
+        paddingRight: 0,
+        position: "relative"
+        }}
+        onBack={this.handleGoBack}
+        title={<Translate id={this.pageTitle} />} />
 
         <Form onSubmit={this.handleSubmit} {...formItemLayout} id="invoice-form">
           <Row>
