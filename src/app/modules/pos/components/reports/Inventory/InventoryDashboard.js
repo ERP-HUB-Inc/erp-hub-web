@@ -75,19 +75,27 @@ export default function InventoryReport() {
     errorStock = alertProducts.find(alertProduct => alertProduct.type === "stockError"),
     stockValue = alertProducts.find(alertProduct => alertProduct.type === "stockValue");
   
-  let stockOk = 100,
-    zeroStockInPercentage = 0,
-    reorderStockInPercentage = 0;
+  let stockOk = 100;
+  let zeroStockInPercentage = 0;
+  let errorStockInPercentage = 0;
+  let reorderStockInPercentage = 0;
+
+  if (stockValue) stockValue.value = parseInt(stockValue.value); 
 
   if (zeroStock && stockValue) {
     zeroStockInPercentage = (zeroStock.value * 100 / stockValue.value);
+  }
+
+  if (errorStock) {
+    errorStock.value = parseInt(errorStock.value);
+    errorStockInPercentage = (errorStock.value * 100 / stockValue.value);
   }
 
   if (reorderProduct && stockValue) {
     reorderStockInPercentage = (reorderProduct.value * 100 / stockValue.value);
   }
 
-  stockOk -= (zeroStockInPercentage + reorderStockInPercentage); 
+  stockOk -= (zeroStockInPercentage + errorStockInPercentage + reorderStockInPercentage); 
 
   return <div id="inventory-dashboard">
       <PageHeader
@@ -171,6 +179,7 @@ export default function InventoryReport() {
           </div>
           <Table
             rowKey="id"
+            bordered={true}
             dataSource={popularProducts}
             columns={[
               {
