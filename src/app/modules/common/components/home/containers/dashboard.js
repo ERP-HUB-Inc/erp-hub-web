@@ -13,7 +13,7 @@ import { Translate } from "react-localize-redux";
 import moment from "moment";
 import { Chart, registerables } from "chart.js";
 import * as _ from "lodash";
-import {Line} from "react-chartjs-2"
+import {Line} from "react-chartjs-2";
 import InventoryService from "../../../../pos/services/report/InventoryService";
 import SelectDateOption from "../../SelectDateOption";
 import "../index.css";
@@ -490,7 +490,7 @@ const Dashboard = (props) => {
                 <div className="btn-header-task">
                   <Radio.Group value={topSellType} onChange={onChangeTopSellingType} style={{ marginBottom: 16 }}>
                     <Radio.Button value="quantity">By Quantity</Radio.Button>
-                    <Radio.Button value="totalSale">By Total Sale</Radio.Button>
+                    <Radio.Button value="totalSale">By Total Sales</Radio.Button>
                   </Radio.Group>
                   <div className="select">
                     <Select 

@@ -167,7 +167,7 @@ export default function InventoryReport() {
             <div>
               <Radio.Group value={topSellType} onChange={onChangeTopSellingType} style={{ marginBottom: 16 }}>
                 <Radio.Button value="quantity">By Quantity</Radio.Button>
-                <Radio.Button value="totalSale">By Total Sale</Radio.Button>
+                <Radio.Button value="totalSale">By Total Sales</Radio.Button>
               </Radio.Group>
               <Select defaultValue={25} style={{ width: "fit-content", marginLeft: 15 }} onChange={onChangeTopSellingSize}>
                 <Option value={25}>Top 25 Selling Products</Option>
