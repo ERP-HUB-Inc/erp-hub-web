@@ -5,6 +5,7 @@ import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/V
 import DropDownSearch from "../../../components/products/Product/DropDownSearch";
 import ProductVariantAction from "../../../actions/products/productVariant";
 import StockTransferAction from "../../../actions/stock/stockTransfer";
+import UnitService from "../../../services/products/ProductsUnitService";
 import StockTransferConstant from "../../../constants/stock/stockTransfer";
 import ProductVariantConstant from "../../../constants/products/productVariant";
 import Modal from "../../../../common/components/shares/Modal";
@@ -46,9 +47,9 @@ export default class FormEntry extends Modal {
         title: <this.Translate id="text_product_name" />,
         dataIndex: "productName",
         key: "productName",
-        render: (text, record) => {
+        render: (productName, record) => {
           return <div>
-            <div>{record.productName}</div>
+            <div>{productName}</div>
             {
               record.variantName && <div className="variant-name">{record.variantName}</div>
             }
@@ -76,14 +77,14 @@ export default class FormEntry extends Modal {
         dataIndex: "transferQuantity",
         width: 240,
         key: "transferQuantity",
-        render: (text, product, index) => {
+        render: (transferQuantity, product, index) => {
           const fromLocationId = this.props.form.getFieldValue("fromLocationId");
           const quantityOnHand = this.countQuantityOnHand(product, fromLocationId);
           return <div>
               <this.InputNumber
                 name={`transferQuantity[${index}]`}
-                data={`${product.transferQuantity}`}
-                max={quantityOnHand}
+                data={`${transferQuantity}`}
+                max={this.props.transferStep === Enum.STOCK_STRANSFER_STEP.RECEIVED ? transferQuantity : quantityOnHand}
                 isAutoSelect={true}
                 form={this.form} />
               <div style={{color: "#e85757", paddingTop: 4, paddingBottom: 4}}>
@@ -117,13 +118,17 @@ export default class FormEntry extends Modal {
   }
 
   componentDidMount() {
-    this.setState({units: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT))});
+    UnitService.lists(100)
+    .then(response => {
+      if (response.data && response.data.data) {
+        this.setState({units: response.data.data});
+      }
+    });
   }
 
   componentDidUpdate() {
     if (this.props.stockTransferEntries.length > 0 && this.state.isNotYetLoadComponentDidUpdated) {
       const existingProductList = this.state.productLists;
-      
       this.props.stockTransferEntries.forEach(transferEntry => {
         let productName = "";
         let variantName = "";

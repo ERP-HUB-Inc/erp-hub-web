@@ -77,6 +77,7 @@ export default class FormItem extends Modal {
           <FormEntry
             dataSource={productSearch}
             productVariant={this.props.productVariant}
+            transferStep={formData.step}
             stockTransferEntries={formData.stockTransferEntries}
             fromLocationId={this.state.fromLocationId}
             locale={locale}
