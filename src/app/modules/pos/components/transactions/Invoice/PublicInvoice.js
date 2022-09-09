@@ -71,14 +71,19 @@ export default function PublicInvoice() {
           <Form.Item style={{ marginTop: -4, marginRight: 15 }}>
             <Select
               style={{ width: 175 }}
-              placeholder={"test"}
               defaultValue={template}
               onChange={(value) => onChangeTemplate(value)}
             >
-              <Select.Option key={2} value={"4"}>
+              <Select.Option
+                key={2}
+                value={Enum.PAPER_SIZE.EXCLUDE_TAX.toString()}
+              >
                 <Translate id="text_template" /> 1
               </Select.Option>
-              <Select.Option key={1} value={"5"}>
+              <Select.Option
+                key={1}
+                value={Enum.PAPER_SIZE.INCLUDE_TAX.toString()}
+              >
                 <Translate id="text_template" /> 2
               </Select.Option>
             </Select>
