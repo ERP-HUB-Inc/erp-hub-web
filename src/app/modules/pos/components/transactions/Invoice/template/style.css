@@ -101,7 +101,7 @@
     margin: 0 auto;
     height: fit-content;
   }
-  .ant-layout-content {
+  .ant-layout-content, body {
     background: #FFFFFF !important;
     margin: 0 !important;
     padding: 0 !important;

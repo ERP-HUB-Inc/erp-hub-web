@@ -1,6 +1,7 @@
 import React from "react";
 import htmlParse from "html-react-parser";
 import JsBarcode from "jsbarcode";
+import MainUtil from "../../../../common/util";
 import ReceiptA4 from "./ReceiptA4";
 import ReceiptExcludeTax from "./ReceiptA4V3/ReceiptExcludeTax";
 import ReceiptIncludeTax from "./ReceiptA4V3/ReceiptIncludeTax";
@@ -9,13 +10,14 @@ import Component from "../../../../common/components/Component";
 import Enum from "../../../../pos/enums";
 import Util from "../../../../pos/utils";
 import "./Receipt.css";
+
 export default class Receipt extends Component {
   constructor(props) {
     super(props);
     this.state = {
       logoContent: ""
     };
-
+    this.util = new MainUtil();
     this.contentId = "pos-receipt-preview";
   }
   componentDidMount() {
@@ -33,15 +35,15 @@ export default class Receipt extends Component {
     }
   }
 
-  renderTitle = () => {
+  renderTitle = (data) => {
     return this.props.isRequestShowDetail ?
       <div  style={{ position: "relative", margin: "0 auto", marginBottom: "4px" }}>
-        <img height="60px" style={{ maxWidth: "177px" }} alt="" src="https://storeveinresource.sgp1.digitaloceanspaces.com/00000001-0001-2019-0001-000000000002/general/photo_2019-05-17_11-34-01.jpg" />
+        <img height="60px" style={{ maxWidth: "177px" }} alt="" src={this.util.getGeneralImage(`${data.clientId}/general/${data.client ? data.client.logo : ""}`).url} />
         {/* <img height="60px" style={{ maxWidth: "177px" }} alt="" src={this.Util.getProductImage(this.props.receiptTemplate.logo, "general").url} /> */}
       </div>
       :
       <div style={{ position: "relative", margin: "0 auto" }}>
-        {this.state.logoContent ? this.state.logoContent : <img style={{ width: 100 }} alt="" src="https://storeveinresource.sgp1.digitaloceanspaces.com/00000001-0001-2019-0001-000000000002/general/photo_2019-05-17_11-34-01.jpg" />}
+        {this.state.logoContent ? this.state.logoContent : <img style={{ width: 100 }} alt="" src={this.util.getGeneralImage(`${data.clientId}/general/${data.client ? data.client.logo : ""}`).url} />}
       </div>;
   }
 
@@ -171,7 +173,7 @@ export default class Receipt extends Component {
 
     const total = this.props.summaryTotal.subTotalAfterDiscount + this.props.taxAmount;
 
-    return <div id={this.contentId}>
+    return <div id={this.contentId} ref={ref => this.contentRef = ref}>
         {
         paperSize.code === Enum.PAPER_SIZE.A4 ?
           <ReceiptA4
@@ -259,7 +261,7 @@ export default class Receipt extends Component {
               <tbody>
                 <tr>
                   <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white" }}>
-                    {this.renderTitle()}
+                    {this.renderTitle(this.props.data)}
                   </td>
                 </tr>
                 {this.renderStoreName(paperSize, businessName)}

@@ -20,6 +20,7 @@ import ProductAction from "../../../actions/products/product";
 import ProductsTypeService from "../../../services/products/ProductsTypeService";
 import BrandService from "../../../services/products/BrandService";
 import ProductsUnitService from "../../../services/products/ProductsUnitService";
+import SupplierService from "../../../services/stock/SupplierService";
 import Modal from "../../../../common/components/shares/Modal";
 import CommonEnum from "../../../../common/enums";
 import "./index.css";
@@ -177,6 +178,58 @@ function SelectUnit(props) {
     </div>;
 }
 
+function SelectOwner(props) {
+  const limit = 15;
+  const {formData} = props;
+  const [loading, setLoading] = React.useState(false);
+  const [isEdit, setIsEdit] = React.useState(false || !formData.seller);
+  const [owners, setOwners] = React.useState([]);
+  let timeout = null;
+  const onSearchOwner = search => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      if (search) {
+        setLoading(true);
+        SupplierService.lists(limit, 0, "", "", "", JSON.stringify({column: ["name"], value: search}))
+        .then(response => {
+          if (response && response.data) {
+            setOwners([{id: "", name: "N/A"}].concat(response.data.data));
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+      }
+    }, 1000);
+  };
+
+  return <div style={{display: "flex", alignItems: "center"}}>
+      <InputText
+        name="ownerName"
+        label={<Translate id="text_owner" />}
+        data={formData.seller ? formData.seller.name : ""}
+        disabled={true}
+        className={isEdit ? "hidden" : ""}
+        form={props.form} />
+      <SelectSearch
+        name="sellerId"
+        label={<Translate id="text_owner" />}
+        placeholder={props.placeholder}
+        notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
+        valueKey="id"
+        dataSource={owners}
+        form={props.form}
+        className={!isEdit ? "hidden" : ""}
+        onSearch={onSearchOwner} />
+        {
+          formData.unit && 
+          <Button onClick={() => setIsEdit(!isEdit)} style={{marginLeft: 10, marginTop: 15}}>
+            {isEdit ? <Translate id="text_back" /> : <Translate id="text_edit" />}
+          </Button>
+        }
+    </div>;
+}
+
 export default class FormItem extends Modal {
   constructor(props) {
     super(props);
@@ -216,17 +269,13 @@ export default class FormItem extends Modal {
     ];
 
     this.serialTypes = [
-      // {
-      //   name: <this.Translate id="text_serial" />,
-      //   value: Enum.SERIAL_TYPE.SERIAL
-      // },
       {
-        name: <this.Translate id="text_non_inventory" />,
-        value: Enum.SERIAL_TYPE.NON_INVENTORY
+        name: <this.Translate id="text_yes" />,
+        value: Enum.SERIAL_TYPE.STANDARD
       },
       {
-        name: <this.Translate id="text_inventory" />,
-        value: Enum.SERIAL_TYPE.STANDARD
+        name: <this.Translate id="text_no" />,
+        value: Enum.SERIAL_TYPE.NON_INVENTORY
       }
     ];
 
@@ -373,13 +422,13 @@ export default class FormItem extends Modal {
                   name="serialType"
                   label={
                     <span>
-                      <this.Translate id="text_stock_type" />&nbsp;
+                      <this.Translate id="text_manage_stock" />&nbsp;
                       <this.Tooltip title="Do you want your product calculate stock or not?">
                         <this.Icon type="question-circle-o" />
                       </this.Tooltip>
                     </span>
                   }
-                  placeholder={this.CATranslate("text_stock_type", locale)}
+                  placeholder={this.CATranslate("text_do_you_want_manage_stock", locale)}
                   dataSource={this.serialTypes}
                   defaultValue={formData.serialType}
                   errorRequired={<this.Translate id="error_require_serial_type" />}
@@ -425,15 +474,13 @@ export default class FormItem extends Modal {
               <SelectUnit formData={formData} placeholder={this.CATranslate("text_unit", locale)} form={form} />
             </this.Col>
 
-            <this.Col md="4" className="form-group">
-              <this.InputNumber
-                name="costDisplay"
-                label={<span><this.Translate id="text_cost" /><span> ({currentUser.setting.currency})</span></span>}
-                data={Util.getProductCost(formData)}
-                placeholder={this.CATranslate("text_cost_placeholder", locale)}
-                disabled={true}
-                form={form}/>
+            <this.Col md="4">
+                <SelectOwner
+                  formData={formData}
+                  placeholder={this.CATranslate("text_owner", locale)}
+                  form={form}/>
             </this.Col>
+
 
             <this.Col md="12" className="form-group">
               <this.Checkboxs
@@ -505,10 +552,19 @@ export default class FormItem extends Modal {
                         onChange={this.handleChangeType}
                         form={form}/>
                     </this.Col>
+                    <this.Col md="4" className="form-group">
+                      <this.InputNumber
+                        name="costDisplay"
+                        label={<span><this.Translate id="text_cost" /><span> ({currentUser.setting.currency})</span></span>}
+                        data={Util.getProductCost(formData)}
+                        placeholder={this.CATranslate("text_cost_placeholder", locale)}
+                        disabled={true}
+                        form={form}/>
+                    </this.Col>
                     <this.Col md="4">
                       <this.InputNumber
                         name="reorderPoint"
-                        label={<this.Translate id="input_product_re_order_point" />}
+                        label={<this.Translate id="text_alert_quantity" />}
                         data={formData.reorderPoint === 0 ? null : formData.reorderPoint}
                         placeholder={this.CATranslate("input_product_re_order_point_placeholder", locale)}
                         max={9999999}
