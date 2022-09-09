@@ -149,7 +149,22 @@ export default {
     "ប្រភេទស្តុក"
   ],
 
-  "input_product_re_order_point": [
+  "text_manage_stock": [
+    "Manage Stock?",
+    "តើអ្នកគ្រប់គ្រងស្តុកទេ?"
+  ],
+
+  "text_do_you_want_manage_stock": [
+    "Do you want to manage stock?",
+    "តើអ្នកចង់គ្រប់គ្រងស្តុកផលិតផលឬទេ?"
+  ],
+
+  "text_owner": [
+    "Owner",
+    "ម្ចាស់ផលិតផល"
+  ],
+
+  "text_alert_quantity": [
     "Alert Quantity",
     "បរិមាណជូនដំណឹង"
   ],
