@@ -5,7 +5,8 @@ import {
   Table,
   DatePicker,
   Row,
-  Col
+  Col,
+  Input
 } from "antd";
 import moment from "moment";
 import { Translate } from "react-localize-redux";
@@ -16,26 +17,49 @@ import Util from "../../../../common/util";
 import PurchaseService from "../../../services/report/PurchaseService";
 import "./index.css";
 
+
+const util = new Util();
+const pathName = "/reports/purchased_products";
+const { Search  } = Input;
 function ReportPurchaseByProduct() {
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [fromValue, setFromValue] = React.useState(moment().startOf("month"));
   const [toValue, setToValue] = React.useState(moment().endOf("month"));
-
+  const params = new URLSearchParams(document.location.search);
   const onFromChange = value => {
+    if(value){
       setFromValue(value);
       setToValue(value);
       fetchReport(value, value);
+      params.set("startDate", value.format("YYYY-MM-DD"));
+    }else{
+      params.delete("startDate")
+    }
+    util.pushParamsToURL(pathName, params.toString());
+    fetchReport(fromValue,toValue,value)
   };
 
   const onToChange = value => {
+    if(value){
       setToValue(value);
       fetchReport(fromValue, value);
+      params.set("endDate", value.format("YYYY-MM-DD"));
+      
+    } else{
+      params.delete("endDate")
+    }
+    util.pushParamsToURL(pathName, params.toString());
+    fetchReport(fromValue,toValue,value)
   };
 
-  const fetchReport = (from, to) => {
+  const fetchReport = (from, to,search="") => {
     setLoading(true);
-    PurchaseService.getReportSummaryByProduct({startDate: from.format("YYYY-MM-DD"), endDate: to.format("YYYY-MM-DD")})
+    PurchaseService.getReportSummaryByProduct({
+      startDate: from.format("YYYY-MM-DD"), 
+      endDate: to.format("YYYY-MM-DD"), 
+      search
+    })
     .then(response => {
       if (response.data) {
         setData(response.data);
@@ -44,13 +68,22 @@ function ReportPurchaseByProduct() {
     .finally(() => {
       setLoading(false);
     });
-  };
-
+  }
   React.useEffect(() => {
-    fetchReport(fromValue, toValue);
+    fetchReport(fromValue, toValue, params.get("search"));
     //eslint-disable-next-line
   }, []);
 
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    if(value){
+      params.set("search", value)
+    }else{  
+      params.delete("search")
+    }
+    util.pushParamsToURL(pathName, params.toString());
+    fetchReport(fromValue,toValue,value)
+  };
   return <div id="report-purchase">
     <PageHeader
       style={{
@@ -62,12 +95,24 @@ function ReportPurchaseByProduct() {
       title="Product Purchase Report"
       subTitle=""
       extra={[
-        <div style={{display: "flex"}}>
+        <div style={{display: "flex"}} >
+          <div id="formSearchHeaderOnReportPurchase">
+            <Search
+              placeholder="Search by product name,barcode"
+              onChange={handleSearch}
+              style={{marginRight: 15}}
+              className="input-search"
+              name="search"
+              allowClear={true}
+              defaultValue={params.get("search")}
+            />
+          </div>
           <DatePicker
               format="DD/MM/YYYY"
               value={fromValue}
               placeholder="From"
               onChange={onFromChange}
+              allowClear={false}
               />
           <DatePicker
               format="DD/MM/YYYY"
@@ -75,6 +120,7 @@ function ReportPurchaseByProduct() {
               placeholder="To"
               onChange={onToChange}
               style={{marginLeft: 15}}
+              allowClear={false}
               />
         </div>
       ]}

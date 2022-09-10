@@ -23,6 +23,7 @@ class PurchaseService extends BaseService {
       url: `${this.baseUrl}/summary_by_products?${this.bindQueryParam(option)}`,
       headers: this.header
     });
+    
   }
 
   getReportSummaryBySupplier(option) {
