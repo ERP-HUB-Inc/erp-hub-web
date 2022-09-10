@@ -49,7 +49,7 @@ class InvoiceReceipt extends React.Component {
         title={<Translate id="text_invoice" />}
         subTitle={formData.receiptNumber}
       />
-      <div style={{width: "250mm", margin: "auto", minHeight: "297mm", background: "#FFFFFF"}}>
+      <div style={{width: "250mm", margin: "auto", minHeight: "297mm"}}>
         <ReceiptTemplate 
           formData={formData} 
           receiptTemplate={this.props.receiptTemplate.data}

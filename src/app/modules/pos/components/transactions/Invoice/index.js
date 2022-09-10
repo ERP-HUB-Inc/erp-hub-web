@@ -9,6 +9,7 @@ import {
   message,
   Pagination
 } from "antd";
+import ReactToPrint, { PrintContextConsumer } from "react-to-print";
 import List from "../List";
 import Enum from "../../../enums";
 import POSUtil from "../../../utils";
@@ -21,25 +22,26 @@ import history from "../../../../common/router/history";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import Receipt from "../RetailSale/Receipt";
 import Detail from "../../../containers/transactions/SaleHistory/Detail";
+import ReceiptTemplate from "../receipt/template";
 
 export default class Invoice extends List {
   constructor(props) {
     super(props);
     this.state = {
-      ...this.state,
       isRequestReturn: false,
       reprintReceiptContent: null,
       isRequestReprint: false,
       isRequestShowDetail: false,
+      isShowFilter: true,
       setDefaultDate: [],
       data: [],
+      detail: {},
       loading: false
     };
     this.title = <this.Translate id="text_sales"/>;
     this.fetchingProp = "list";
     this.columnFilterWithKey = ["firstName", "lastName", "email", "phoneNumber"];
     this.pathname = "/transactions/invoice";
-    this.pageSizeOptions = ["10", "20", "40"];
     this.INVOICE_STATUS_STR = {
       [Enum.INVOICE_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#d9d9d9" },
       [Enum.INVOICE_STATUS.SENT]: { title: <this.Translate id="text_sent" />, color: "#1890ff" },
@@ -99,9 +101,27 @@ export default class Invoice extends List {
                   <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_invoice" />
                 </this.Link>
               </Menu.Item>
-              <Menu.Item onClick={() => this.handlePrintReceipt(record.id)}>
-                <Icon type="printer" /> <this.Translate id="text_print_receipt" />
-              </Menu.Item>
+              {
+                record.status === Enum.INVOICE_STATUS.PAID ?
+                  <Menu.Item>
+                    <ReactToPrint
+                      content={() => this.receiptRef}
+                      onBeforeGetContent={() => this.handlePrintReceipt(record.id)}
+                      onAfterPrint={() => {
+                        this.setState({detail: {}});
+                      }}
+                    >
+                      <PrintContextConsumer>
+                        {({ handlePrint }) => (
+                          <button style={{background: "none", border: "none", paddingLeft: 0}} onClick={handlePrint}>
+                            <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print_receipt" />
+                          </button>
+                        )}
+                      </PrintContextConsumer>
+                    </ReactToPrint>
+                  </Menu.Item>
+                : null
+              }
               <Menu.Item onClick={() => this.handleReturn(record)}>
                 <Icon type="retweet" style={{marginRight: 10}} /> <this.Translate id="text_return" />
               </Menu.Item>
@@ -257,11 +277,11 @@ export default class Invoice extends List {
     .finally(() => this.setState({loading: false}));
   }
 
-  handlePrintReceipt(id) {
-    this.props.dispatch(TransactionAction.detail({id}));
+  async handlePrintReceipt(id) {
+    const detail = (await TransactionService.detail(id)).data.data;
+    detail.receiptTemplate = 2;
     this.setState({
-      loadingPopup: true,
-      isRequestShowDetail: true
+      detail
     });
   }
 
@@ -576,6 +596,22 @@ export default class Invoice extends List {
         dataSource={this.state.data.data}
         onChange={this.onChange}
       />
+    );
+  }
+
+  render() {
+    const {detail} = this.state;
+    return (
+      <React.Fragment>
+        <div style={{display: "none"}}>
+          <ReceiptTemplate 
+            formData={detail} 
+            receiptTemplate={this.props.receiptTemplate.data}
+            locale={this.props.locale}
+            ref={re => this.receiptRef = re} />
+        </div>
+        {super.render()}
+      </React.Fragment>
     );
   }
 
