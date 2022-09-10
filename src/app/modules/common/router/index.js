@@ -44,6 +44,7 @@ import OpenSaleRegistration from "../../pos/containers/transactions/OpenSaleRegi
 import InvoiceCreate from "../../pos/components/transactions/Invoice/FormItem";
 import InvoiceUpdate from "../../pos/components/transactions/Invoice/FormItem";
 import InvoiceDetail from "../../pos/components/transactions/Invoice/detail";
+import InvoiceReceipt from "../../pos/components/transactions/receipt";
 import SaleOrderCreate from "../../pos/components/transactions/SaleOrder/FormItem";
 import SaleOrderUpdate from "../../pos/components/transactions/SaleOrder/FormItem";
 import SaleOrderDetail from "../../pos/components/transactions/SaleOrder/detail";
@@ -93,6 +94,7 @@ class Router extends Component {
             <Route path="/transactions/create-invoice" component={InvoiceCreate} />
             <Route path="/transactions/update-invoice/:id" component={InvoiceUpdate} />
             <Route path="/transactions/detail-invoice/:id" component={InvoiceDetail} />
+            <Route path="/transactions/invoice-receipt/:id" component={InvoiceReceipt} />
             <Route path="/transactions/sale-order/create" component={SaleOrderCreate} />
             <Route path="/transactions/sale-order/update/:id" component={SaleOrderUpdate} />
             <Route path="/transactions/sale-order/detail/:id" component={SaleOrderDetail} />
