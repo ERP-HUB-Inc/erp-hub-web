@@ -34,10 +34,10 @@ function ReportPurchaseByProduct() {
       fetchReport(value, value);
       params.set("startDate", value.format("YYYY-MM-DD"));
     }else{
-      params.delete("startDate")
+      params.delete("startDate");
     }
     util.pushParamsToURL(pathName, params.toString());
-    fetchReport(fromValue,toValue,value)
+    fetchReport(fromValue,toValue,value);
   };
 
   const onToChange = value => {
@@ -47,19 +47,22 @@ function ReportPurchaseByProduct() {
       params.set("endDate", value.format("YYYY-MM-DD"));
       
     } else{
-      params.delete("endDate")
+      params.delete("endDate");
     }
     util.pushParamsToURL(pathName, params.toString());
-    fetchReport(fromValue,toValue,value)
+    fetchReport(fromValue,toValue,value);
   };
 
-  const fetchReport = (from, to,search="") => {
+  const fetchReport = (from, to, search) => {
     setLoading(true);
-    PurchaseService.getReportSummaryByProduct({
+    const option = {
       startDate: from.format("YYYY-MM-DD"), 
-      endDate: to.format("YYYY-MM-DD"), 
-      search
-    })
+      endDate: to.format("YYYY-MM-DD")
+    };
+    
+    if (search) option["search"] = search;
+
+    PurchaseService.getReportSummaryByProduct(option)
     .then(response => {
       if (response.data) {
         setData(response.data);
@@ -68,7 +71,7 @@ function ReportPurchaseByProduct() {
     .finally(() => {
       setLoading(false);
     });
-  }
+  };
   React.useEffect(() => {
     fetchReport(fromValue, toValue, params.get("search"));
     //eslint-disable-next-line
@@ -76,13 +79,15 @@ function ReportPurchaseByProduct() {
 
   const handleSearch = (e) => {
     const value = e.target.value;
-    if(value){
-      params.set("search", value)
-    }else{  
-      params.delete("search")
+    if (value) {
+      params.set("search", value);
+    } else {  
+      params.delete("search");
     }
+
     util.pushParamsToURL(pathName, params.toString());
-    fetchReport(fromValue,toValue,value)
+    
+    fetchReport(fromValue,toValue,value);
   };
   return <div id="report-purchase">
     <PageHeader
