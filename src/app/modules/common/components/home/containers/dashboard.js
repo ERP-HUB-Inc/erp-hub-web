@@ -215,6 +215,7 @@ const Dashboard = (props) => {
 
   const options = {
       responsive: true,
+      animated: false,
       elements: {
           line: {
             tension: 0.4
