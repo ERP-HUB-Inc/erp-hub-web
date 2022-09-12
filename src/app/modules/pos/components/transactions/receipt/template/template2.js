@@ -11,11 +11,11 @@ export default function ReceiptTemplate2(props) {
   const util = new Util();
   function renderTitle(data) {
     return props.isRequestShowDetail ?
-      <div  style={{ position: "relative", margin: "0 auto", marginBottom: "4px" }}>
+      <div  style={{ position: "relative", marginBottom: "4px" }}>
         <img height="60px" style={{ maxWidth: "177px" }} alt="" src={util.getGeneralImage(`${data.clientId}/general/${data.client ? data.client.logo : ""}`).url} />
       </div>
       :
-      <div style={{ position: "relative", margin: "0 auto" }}>
+      <div style={{ position: "relative"}}>
         {logoContent ? logoContent : <img style={{ width: 100 }} alt="" src={util.getGeneralImage(`${data.clientId}/general/${data.client ? data.client.logo : ""}`).url} />}
       </div>;
   }
@@ -35,66 +35,21 @@ export default function ReceiptTemplate2(props) {
     }
     const paddingTopForHeaderAndFooter = paperSize.code === Enum.PAPER_SIZE.MINI_THERMAL ? -10 : 2.5;
 
-    if (paperSize.code === Enum.PAPER_SIZE.A4) {
-
-      if (props.customer) {
-        return <table style={{ color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white", width: "100%" }}>
-          <tbody>
-            <tr>
-              <td style={{ backgroundColor: "white", textAlign: "left", paddingTop: 10, paddingRight: 0 }}><Translate id="text_customer_name" />. {`${props.customer.firstName} ${props.customer.lastName}`}</td>
-              <td style={{ backgroundColor: "white", textAlign: "right", paddingTop: 10 }}><Translate id="text_date" />: {util.formatDate(props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
-            </tr>
-            <tr>
-              <td style={{ backgroundColor: "white", textAlign: "left" }}><Translate id="text_phone_number" />: {props.customer.phoneNumber}</td>
-              <td style={{ backgroundColor: "white", textAlign: "right" }}><Translate id="receipt_no" />. {props.data.receiptNumber ?props.data.receiptNumber : props.data.number}</td>
-            </tr>
-            <tr>
-              <td style={{ backgroundColor: "white", textAlign: "left" }}><Translate id="text_address" />: {htmlParse(props.customer.address)}</td>
-              <td style={{ backgroundColor: "white", textAlign: "right" }}><Translate id="text_cashier" />. {cashier}</td>
-            </tr>
-          </tbody>
-        </table>;
-      }
-
-      return <table style={{ color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white", width: "100%" }}>
-        <tbody>
-          <tr>
-            <td style={{ backgroundColor: "white", textAlign: "left", paddingTop: 10, paddingRight: 0 }}><Translate id="register_no" />. {util.getDeviceNumber()}</td>
-            <td style={{ backgroundColor: "white", textAlign: "right", paddingTop: 10 }}><Translate id="text_date" />: {util.formatDate(props.data.createdAt, "DD MMM YYYY h:mm A")}</td>
-          </tr>
-          <tr>
-            <td style={{ backgroundColor: "white", textAlign: "left" }}><Translate id="receipt_no" />. {props.data.receiptNumber ? props.data.receiptNumber : props.data.number}</td>
-            <td style={{ backgroundColor: "white", textAlign: "right" }}><Translate id="text_cashier" />: {cashier}</td>
-          </tr>
-        </tbody>
-      </table>;
-    
-  
-    }else {
-      return <table className="invoice-title" style={{ color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white" }}>
-        <style>
-        {"@media print { table tr td { line-height: 8px } }"}
-      </style>
-        <tbody>
-          <tr>
-            <td  colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: 10 }}>
-              <Translate id="register_no" />: {util.getDeviceNumber()}
-            </td>
-          </tr>
-          <tr>
-            <td valign="top" colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}>
-              <Translate id="text_date" />: {util.formatDate(props.data.createdAt, "DD MMM YYYY h:mm A")}
-            </td>
-          </tr>
-          <tr>
-            <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><Translate id="receipt_no" />: {props.data.receiptNumber ? props.data.receiptNumber : props.data.number}</td>
-          </tr>
-          <tr>
-            <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><Translate id="text_cashier" />: <span style={{ textTransform: "uppercase" }}>{cashier}</span></td>
-          </tr>
-        </tbody>
-      </table>;
-    }
+    return <table style={{ color: paperSize.setting.color, fontSize: paperSize.setting.dataFontSize, backgroundColor: "white" }}>
+      <tbody>
+        <tr>
+          <td valign="top" colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}>
+            <Translate id="text_date" />: {util.formatDate(props.data.createdAt, "DD MMM YYYY h:mm A")}
+          </td>
+        </tr>
+        <tr>
+          <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><Translate id="receipt_no" />: {props.data.receiptNumber ? props.data.receiptNumber : props.data.number}</td>
+        </tr>
+        <tr>
+          <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><Translate id="text_cashier" />: <span style={{ textTransform: "uppercase" }}>{cashier}</span></td>
+        </tr>
+      </tbody>
+    </table>;
   };
 
   function renderCustomerFooter(paperSize) {
@@ -131,7 +86,6 @@ export default function ReceiptTemplate2(props) {
   const total = props.summaryTotal.subTotalAfterDiscount + props.taxAmount;
   return (
     <div style={{
-      margin: "0 auto",
       fontFamily: "Khmer OS Content",
       pageBreakBefore: "always",
       paddingTop: 40
@@ -140,10 +94,9 @@ export default function ReceiptTemplate2(props) {
         color: paperSize.setting.color,
         fontSize: paperSize.setting.dataFontSize,
         backgroundColor: "white",
-        margin: "auto",
-        width: paperSize.setting.width,
         padding: paperSize.setting.padding,
-        marginLeft: props.isRequestClearMarginLeft ? 0 : paperSize.setting.marginLef
+        marginLeft: 0,
+        width: "80mm"
       }}>
         <tbody>
           <tr>
@@ -153,7 +106,7 @@ export default function ReceiptTemplate2(props) {
           </tr>
           {renderStoreName(paperSize, businessName)}
           <tr>
-            <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white" }}>{htmlParse(address)} {phoneNumber}</td>
+            <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white", width: "" }}>{htmlParse(address)} {phoneNumber}</td>
           </tr>
           <tr>
             <td colSpan="2">
@@ -162,19 +115,19 @@ export default function ReceiptTemplate2(props) {
           </tr>
           <tr>
             <td colSpan={2} style={{ paddingTop: 5, backgroundColor: "white" }}>
-              <table style={{ fontSize: paperSize.setting.dataFontSize, color: paperSize.setting.color, margin: "0 auto" }}>
+              <table style={{ fontSize: paperSize.setting.dataFontSize, color: paperSize.setting.color, width: "100%"}}>
                 <thead>
                   <tr>
-                    <th style={{ fontWeight: 500, width: "8mm", textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
-                      <Translate id="text_qty" />
-                    </th>
                     <th style={{ fontWeight: 500, padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color, textAlign: "left" }}>
                       <Translate id="text_desc" />
                     </th>
-                    <th style={{ fontWeight: 500, width: "16mm", textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
+                    <th style={{ fontWeight: 500, width: "8mm", textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
+                      <Translate id="text_qty" />
+                    </th>
+                    <th style={{ fontWeight: 500, /*width: "16mm",*/ textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
                       <Translate id="text_price" />
                     </th>
-                    <th style={{ fontWeight: 500, width: "17mm", textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
+                    <th style={{ fontWeight: 500, /*width: "17mm",*/ textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
                       <Translate id="text_amount" />
                     </th>
                   </tr>
@@ -186,8 +139,7 @@ export default function ReceiptTemplate2(props) {
                   {
                     props.productList.map((product, index) =>
                       <tr key={index}>
-                        <td style={{ textAlign: "center", backgroundColor: "white" }}>{product.quantity}</td>
-                        <td style={{ backgroundColor: "white", paddingTop: 2, paddingBottom: 2 }}>
+                        <td style={{ backgroundColor: "white", paddingTop: 2, paddingBottom: 2, width: "40mm" }}>
                           <div style={{lineHeight: "12px"}}>{product.name ? product.name : product.namekm}</div>
                             {
                               product.variantName ?
@@ -196,6 +148,7 @@ export default function ReceiptTemplate2(props) {
                                 ""
                             }
                         </td>
+                        <td style={{ textAlign: "center", backgroundColor: "white" }}>{product.quantity}</td>
                         <td style={{ textAlign: "right", backgroundColor: "white" }}>{util.formatCurrency(product[props.customerFieldPrice])}</td>
                         <td style={{ textAlign: "right", backgroundColor: "white" }}>{util.formatCurrency(product[props.customerFieldPrice] * product.quantity)}</td>
                       </tr>

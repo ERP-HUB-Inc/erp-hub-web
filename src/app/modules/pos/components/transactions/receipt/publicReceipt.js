@@ -23,6 +23,8 @@ export default function PublicReceipt()  {
     .finally(() => setLoading(false));
   }, []);
 
+  formData.receiptTemplate = 2;
+
   return !loading ?
     <React.Fragment>
       <div id="header-print-preview" style={{display: "flex", justifyContent: "space-between", padding: 15}}>

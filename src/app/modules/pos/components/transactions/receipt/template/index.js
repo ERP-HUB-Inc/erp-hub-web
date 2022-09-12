@@ -102,6 +102,7 @@ const ReceiptTemplate = React.forwardRef((props, ref) => {
   }
 
   const {formData} = props;
+  formData.receiptTemplate = 2;
   let receipt = <ReceiptTemplate1 formData={formData} />;
   if (formData.receiptTemplate === receiptTemplate.temp2) {
     const customerPayment = getCustomerPaymentList(formData);
@@ -128,7 +129,7 @@ const ReceiptTemplate = React.forwardRef((props, ref) => {
 
   return (
     <div ref={ref}>
-      <div style={{width: props.width, margin: "auto", minHeight: props.height, background: "#FFFFFF"}}>{receipt}</div>
+      {receipt}
     </div>
   );
 });
@@ -145,7 +146,5 @@ ReceiptTemplate.defaultProps = {
     customer: {
       company: ""
     }
-  },
-  width: "250mm",
-  height: "297mm"
+  }
 };

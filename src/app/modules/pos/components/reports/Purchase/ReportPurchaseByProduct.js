@@ -5,7 +5,9 @@ import {
   Table,
   DatePicker,
   Row,
-  Col
+  Col,
+  Input,
+  Select 
 } from "antd";
 import moment from "moment";
 import { Translate } from "react-localize-redux";
@@ -13,29 +15,64 @@ import ExportFormByProduct from "./ExportFormByProduct";
 import history from "../../../../common/router/history";
 import Enum from "../../../../inventory/enums";
 import Util from "../../../../common/util";
-import PurchaseService from "../../../services/report/PurchaseService";
+import  PurchaseService from "../../../services/report/PurchaseService";
 import "./index.css";
+
+
+const util = new Util();
+const pathName = "/reports/purchased_products";
+const { Search  } = Input;
+const { Option } = Select;
 
 function ReportPurchaseByProduct() {
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
+  const [dataSuplier, setdataSuplier] = React.useState([]);
   const [fromValue, setFromValue] = React.useState(moment().startOf("month"));
   const [toValue, setToValue] = React.useState(moment().endOf("month"));
-
+  const params = new URLSearchParams(document.location.search);
   const onFromChange = value => {
+    if(value){
       setFromValue(value);
       setToValue(value);
       fetchReport(value, value);
+      params.set("startDate", value.format("YYYY-MM-DD"));
+    } else {
+      params.delete("startDate");
+    }
+
+    util.pushParamsToURL(pathName, params.toString());
+    
+    fetchReport(fromValue,toValue,value);
   };
 
   const onToChange = value => {
+    if(value){
       setToValue(value);
       fetchReport(fromValue, value);
+      params.set("endDate", value.format("YYYY-MM-DD"));
+    } else {
+      params.delete("endDate");
+    }
+
+    util.pushParamsToURL(pathName, params.toString());
+
+    fetchReport(fromValue,toValue,value);
   };
 
-  const fetchReport = (from, to) => {
+  const fetchReport = (from, to, search, supplierId) => {
     setLoading(true);
-    PurchaseService.getReportSummaryByProduct({startDate: from.format("YYYY-MM-DD"), endDate: to.format("YYYY-MM-DD")})
+    const option = {
+      startDate: from.format("YYYY-MM-DD"), 
+      endDate: to.format("YYYY-MM-DD")
+    };
+
+    if (search) option["search"] = search;
+
+    if (supplierId) option["supplierId"] = supplierId;
+
+
+    PurchaseService.getReportSummaryByProduct(option)
     .then(response => {
       if (response.data) {
         setData(response.data);
@@ -44,12 +81,43 @@ function ReportPurchaseByProduct() {
     .finally(() => {
       setLoading(false);
     });
-  };
 
+    PurchaseService.getReportSummaryBySupplier(option)
+    .then(response => {
+      if (response.data){
+        setdataSuplier(response.data)
+      }
+    })
+  };
   React.useEffect(() => {
-    fetchReport(fromValue, toValue);
+    fetchReport(fromValue, toValue, params.get("search"), params.get("supplierId"));
     //eslint-disable-next-line
   }, []);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    if (value) {
+      params.set("search", value);
+    } else {  
+      params.delete("search");
+    }
+
+    util.pushParamsToURL(pathName, params.toString());
+    
+    fetchReport(fromValue,toValue,value);
+  };
+
+  const onChangeSelect = (value) => {
+    const search = params.get("search") && params.get("search")
+    if (value) {
+      params.set("supplierId", value)
+    } else {
+      params.delete("supplierId");
+    }
+    util.pushParamsToURL(pathName, params.toString());
+    
+    fetchReport(fromValue,toValue,search,value);
+  }
 
   return <div id="report-purchase">
     <PageHeader
@@ -62,12 +130,41 @@ function ReportPurchaseByProduct() {
       title="Product Purchase Report"
       subTitle=""
       extra={[
-        <div style={{display: "flex"}}>
+        <div style={{display: "flex"}} >
+          <div id="formSearchHeaderOnReportPurchase">
+            <Search
+              placeholder="Search product by name,barcode"
+              onChange={handleSearch}
+              style={{marginRight: 15}}
+              className="input-search"
+              name="search"
+              allowClear={true}
+              defaultValue={params.get("search")}
+            />
+          </div>
+          <div id="selectDrop">
+            <Select
+              showSearch
+              name="supplierId"
+              style={{ width: 200 , marginRight: 15}}
+              placeholder="Select supplier"
+              onChange={onChangeSelect}
+              allowClear={true}
+              defaultValue={params.get("supplierId") && params.get("supplierId")}
+            >
+              {dataSuplier.map((value, key) => (
+                <Option key={key} value={value.supplierId}>
+                  {value.supplierName}
+                </Option>
+              ))}
+            </Select>
+          </div>
           <DatePicker
               format="DD/MM/YYYY"
               value={fromValue}
               placeholder="From"
               onChange={onFromChange}
+              allowClear={false}
               />
           <DatePicker
               format="DD/MM/YYYY"
@@ -75,6 +172,7 @@ function ReportPurchaseByProduct() {
               placeholder="To"
               onChange={onToChange}
               style={{marginLeft: 15}}
+              allowClear={false}
               />
         </div>
       ]}
