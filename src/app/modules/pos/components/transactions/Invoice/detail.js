@@ -172,7 +172,7 @@ class InvoiceDetail extends React.PureComponent {
         </Drawer>
 
         <div style={{display: "none"}}>
-          <ReceiptTemplate formData={formData} ref={re => this.receiptRef = re} />
+          <ReceiptTemplate formData={formData} ref={re => this.receiptRef = re} locale={this.props.locale} />
         </div>
       </div>
     );
