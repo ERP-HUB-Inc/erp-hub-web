@@ -85,9 +85,9 @@ function ReportPurchaseByProduct() {
     PurchaseService.getReportSummaryBySupplier(option)
     .then(response => {
       if (response.data){
-        setdataSuplier(response.data)
+        setdataSuplier(response.data);
       }
-    })
+    });
   };
   React.useEffect(() => {
     fetchReport(fromValue, toValue, params.get("search"), params.get("supplierId"));
@@ -108,16 +108,16 @@ function ReportPurchaseByProduct() {
   };
 
   const onChangeSelect = (value) => {
-    const search = params.get("search") && params.get("search")
+    const search = params.get("search") && params.get("search");
     if (value) {
-      params.set("supplierId", value)
+      params.set("supplierId", value);
     } else {
       params.delete("supplierId");
     }
     util.pushParamsToURL(pathName, params.toString());
     
     fetchReport(fromValue,toValue,search,value);
-  }
+  };
 
   return <div id="report-purchase">
     <PageHeader
@@ -184,6 +184,7 @@ function ReportPurchaseByProduct() {
         <Col span={24}>
           <Table
             rowKey="id"
+            bordered={true}
             dataSource={data}
             columns={[
               {

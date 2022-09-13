@@ -88,6 +88,7 @@ function ReportLowSales() {
       <Row gutter={16}>
         <Col span={24}>
           <Table
+            bordered={true}
             rowKey="id"
             dataSource={data ? data : []}
             columns={[

@@ -104,7 +104,7 @@ export default function InventoryReport() {
             paddingLeft: 0,
             paddingRight: 0
         }}
-        onBack={() => history.goBack()}
+        backIcon=""
         title="Inventory Dashboard"
         subTitle=""
         />

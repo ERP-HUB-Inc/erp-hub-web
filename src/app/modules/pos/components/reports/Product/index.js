@@ -1,266 +1,328 @@
 import React from "react";
+import {
+  Statistic,
+  PageHeader,
+  Table,
+  Select,
+  Card,
+  Row,
+  Col,
+  Input
+} from "antd";
+import * as _ from "lodash";
+import { Translate } from "react-localize-redux";
 import ExportForm from "./ExportForm";
-import List from "../List";
-import Constant from "../../../constants/report/purchase";
 import history from "../../../../common/router/history";
-import FormCreate from "../../../../inventory/containers/stock/PurchaseOrder/FormCreate";
-import ProductReportAction from "../../../action/report/product";
-import ProductReportService from "../../../services/report/ProductService";
-import LocationAction from "../../../../pos/action/settings/location";
-import PurchaseAction from "../../../../inventory/actions/stock/purchaseOrder";
-import InventoryUtil from "../../../../inventory/utils"; 
+import Util from "../../../../common/util";
 import Enum from "../../../../inventory/enums";
-import "./index.css";
+import InventoryUtil from "../../../../inventory/utils"; 
+import LocationService from "../../../services/settings/LocationService";
+import ProductService from "../../../services/report/ProductService";
 
-export default class ProductList extends List {
-  constructor(props) {
-    super(props);
-    this.colorStockStatus = ["#4cb64c", "#f3a638", "#c72727"];
-    this.columns = [
-      {
-        title: <this.Translate id="text_product_name" />,
-        dataIndex: "name",
-        key: "name",
-        render: (text, record) => {
-          let variantName = "";
-          if (record.product && record.product.productOption === Enum.PRODUCT_VARIANT) {
-            variantName = ` / ${record.name}`;
-          }
-          return InventoryUtil.getProductNameV2(record.product) + variantName;
-        }
-      },
-      {
-        title: <this.Translate id="text_barcode" />,
-        dataIndex: "barcode",
-        key: "barcode"
-      },
-      {
-        title: <this.Translate id="text_quantity" />,
-        dataIndex: "quantity",
-        width: 150,
-        key: "quantity",
-        render: (quantity, record) => {
-          quantity = record.quantity;
-          if ("productLocations" in record) {
-            quantity = InventoryUtil.getProductQTYLocation(record["productLocations"]);
-          } else if ("productVariants" in record) {
-            quantity = InventoryUtil.getProductQTYLocation(record["productVariants"]);
-          }
-          
-          return `${quantity} ${record.product.unit.name}`;
-        }
-      },
-      {
-        title: <this.Translate id="text_cost" />,
-        dataIndex: "cost",
-        width: 150,
-        align: "right",
-        key: "cost",
-        render: cost => this.formatCurrency(cost)
-      },
-      {
-        title: <this.Translate id="text_product_total_cost" />,
-        dataIndex: "totalCost",
-        width: 150,
-        align: "right",
-        key: "totalCost",
-        render: (text, record) => {
-          return this.formatCurrency(record.cost * record.quantity);
-        }
-      },
-      {
-        title: <this.Translate id="text_retail_price" />,
-        dataIndex: "price",
-        width: 150,
-        align: "right",
-        key: "price",
-        render: price => this.formatCurrency(price)
-      },
-      {
-        title: <this.Translate id="text_total_price" />,
-        dataIndex: "price",
-        width: 150,
-        align: "right",
-        key: "totalPrice",
-        render: (price, record) => {
-          return this.formatCurrency(price * record.quantity);
-        }
-      },
-      {
-        title: <this.Translate id="text_margin" />,
-        dataIndex: "price",
-        width: 150,
-        align: "right",
-        key: "margin",
-        render: (price, record) => {
+const { Option } = Select;
 
-          const totalPrice = price * record.quantity,
-            totalCost = record.cost * record.quantity,
-            margin = ((totalPrice - totalCost) / totalPrice) * 100;
+export default function ReportProduct() {
+  const queryparam = new URLSearchParams(document.location.search);
+  const [loading, setLoading] = React.useState(false);
+  const [searchValue, setSearchValue] = React.useState(queryparam.get("search"));
+  const [data, setData] = React.useState(null);
+  const [locations, setLocations] = React.useState([]);
+  const [pagination, setPagination] = React.useState({pageSize: 50, defaultCurrent: 1, total: 0});
+  const [locationId, setLocationId] = React.useState(queryparam.get("locationId"));
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [summary, setSummary] = React.useState(null);
+  const { Search } = Input;
+  const pathName = "/reports/product";
+  const util = new Util();
 
-          return `${margin.toFixed(2)}%`;
-        }
-      }
-    ];
-    this.brandList = [{name: <this.Translate id="text_all_brand"/>, id: 0}];
-    this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
-    this.productTypeList = [{productTypeDescriptions: {name: <this.Translate id="text_all_product_type"/>}, id: 0}];
-    this.columnFilterWithKey = ["name", "barcode"];
-    this.pageSize = 50;
-    this.pageSizeOptions = ["50", "100", "150", "200"];
-    this.placeHolderForGeneralSearch = "text_general_seach_product";
-    this.service = ProductReportService;
-    this.action = ProductReportAction;
-    this.RESET_CONSTANT = Constant.RESET_PURCHASE_REPORT;
-    this.handleSubmitFilter = this.handleSubmitFilter.bind(this);
-    this.handlePurchaseOrderForm = this.handlePurchaseOrderForm.bind(this);
-  }
+  const onChangeSearch = (event) => {
+    const viewStock = queryparam.get("viewStock");
+    const similarSearch = event.target.value;
 
-  componentDidMount() {
-    const viewStock = this.Util.getQueryParam(this.props.location, "viewStock"),
-      search = this.Util.getQueryParam(this.props.location, "search") | "",
-      locationId = parseInt(this.Util.getQueryParam(this.props.location, "locationId"));
+    if (similarSearch) {
 
-    let limit = this.Util.getQueryParam(this.props.location, "limit"),
-      offset = this.Util.getQueryParam(this.props.location, "offset"),
-      current = this.Util.getQueryParam(this.props.location, "current");
+      queryparam.set("search", similarSearch);
 
-    limit = limit ? limit : this.pageSize;
-    offset = offset ? offset : (this.state.current - 1) * limit;
+      util.pushParamsToURL(pathName, queryparam.toString());
 
-    if (current) {
-      this.setState({current: parseInt(current)});
     } else {
-      current = this.state.current;
+      queryparam.delete("search");
     }
-    
-    if (locationId) this.props.form.setFieldsValue({locationId});
 
-    this.props.dispatch(ProductReportAction.getProductReport({limit, offset, viewStock, search, locationId}));
-    this.props.dispatch(LocationAction.fetch(100));
-  }
+    queryparam.delete("limit");
+    queryparam.delete("offset");
 
-  onShowSizeChange(current, pageSize) {
-    const params = new URLSearchParams(this.props.location.search);
-    let search = params.get("search"),
-      locationId = params.get("locationId");
+    history.push({pathname: "/reports/product", search: `?${queryparam.toString()}`});
 
-    const option = {
-      limit: pageSize,
-      offset: (current - 1) * pageSize,
-      search: search ? search : "",
-      locationId: locationId > 0 ? locationId : 0
-    };
+    setSearchValue(similarSearch);
 
-    params.set("limit", pageSize);
+    fetchReport(50, 0, viewStock, similarSearch);
+  };
+
+  const onChangeLocation = (selectLocationId) => {
+    const params = new URLSearchParams(document.location.search);
+    setLocationId(selectLocationId);
+    const limit = queryparam.get("limit");
+    const offset = queryparam.get("offset");
+    const viewStock = queryparam.get("viewStock");
+    params.set("locationId", selectLocationId);
     history.push({pathname: "/reports/product", search: `?${params.toString()}`});
-    this.props.dispatch(ProductReportAction.getProductReport(option));
-  }
+    fetchReport(limit, offset, viewStock, searchValue, selectLocationId);
+  };
 
-  onChangePagination(current, pageSize) {
-    const viewStock = this.Util.getQueryParam(this.props.location, "viewStock"),
-      params = new URLSearchParams(this.props.location.search),
-      offset = (current - 1) * pageSize;
+  const onChangePagination = (current, pageSize) => {
+    const params = new URLSearchParams(document.location.search);
+    const viewStock = params.get("viewStock");
+    const similarSearch = params.get("search");
+    const offset = (current - 1) * pageSize;
     params.set("current", current);
     params.set("offset", offset);
     history.push({pathname: "/reports/product", search: `?${params.toString()}`});
-    this.props.dispatch(ProductReportAction.getProductReport({limit: pageSize, offset, viewStock}));
-    this.setState({current});
-  }
+    fetchReport(pageSize, offset, viewStock, similarSearch);
+  };
 
-  handleSubmitFilter(e) {
-    if (this.action != null) {
-      e.preventDefault();
-      this.props.form.validateFieldsAndScroll((err, values) => {
-        if (!err) {
-          const option = {
-            limit: this.pageSize,
-            offset: (this.state.current - 1) * this.pageSize,
-            search: values.key ? values.key : "",
-            locationId: values.locationId > 0 ? values.locationId : 0
-          };
+  const fetchReport = (limit, offset, viewStock, search, locationId) => {
+    let current = queryparam.get("current");
 
-          history.push({path: "/reports/product", search: `?limit=${option.limit}&offset=${option.offset}&current=${this.state.current}&search=${option.search}&locationId=${option.locationId}`});
+    limit = limit ? limit : 50;
+    offset = offset ? offset : (currentPage - 1) * limit;
 
-          this.props.dispatch(ProductReportAction.getProductReport(option));
-          
-          this.setState({isClickFilter: true});
-        }
-      }); 
-    } 
-  }
+    search = search ? search : "";
 
-  handlePurchaseOrderForm() {
-    const limitRecord = 10;
-    this.props.dispatch(PurchaseAction.showForm());
-    if (this.props.list.list && Array.isArray(this.props.list.list)) {
-      let productReOrderPointList = [];
-      if (this.state.selectedListIds.length > 0) {
-        const selectedListIds = this.state.selectedListIds.filter((value, index) => index < limitRecord);
-        productReOrderPointList = this.props.list.list.filter(value => selectedListIds.includes(value.id) && value.product.serialType === Enum.SERIAL_TYPE.STANDARD);
-      } else {
-        productReOrderPointList = this.props.list.list.filter((value, index) => index < limitRecord && value.quantity <= value.reorderPoint && value.product.serialType === Enum.SERIAL_TYPE.STANDARD);
-      }
-      this.setState({ modalConten: <FormCreate productReOrderPointList={productReOrderPointList} /> });
+    if (current) {
+      current = parseInt(current);
+      setCurrentPage(current);
+    } else {
+      current = currentPage;
     }
-  }
 
-  renderButtonAddNew() {
-    const viewStock = this.Util.getQueryParam(this.props.location, "viewStock"),
-      locationId = this.props.form.getFieldValue("locationId");
+    setLoading(true);
+    ProductService.getProductReport({limit, offset, viewStock, search, locationId})
+      .then((response) => {
+        if (response.data && response.data.data) {
+          const data = response.data;
+          setSummary(data.summary);
+          setData([...data.data]);
+          setPagination(prev => ({...prev, current, total: data.pagination.total, showTotal: total => `Total ${total} items`}));
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
-    return <div style={{ float: "left", marginRight: "11px" }}>
-      <ExportForm locationId={locationId} viewStock={viewStock} />
-    </div>;
-  }
+  React.useEffect(() => {
+    const queryparam = new URLSearchParams(document.location.search);
+    const viewStock = queryparam.get("viewStock");
+    const search = queryparam.get("search");
+    const locationId = parseInt(queryparam.get("locationId"));
+    const limit = queryparam.get("limit");
+    const offset = queryparam.get("offset");
 
-  renderButtonDelete() {
-    return(
-      <this.Button
-        type="info"
-        id="btnAdd"
-        className="mg-right text-uppercase"
-        disabled={this.state.loadingPopup}
-        onClick={this.handlePurchaseOrderForm}>
-        <span className="icon-purchasing icon-padding-right"></span>
-        <this.Translate id="text_order_product" />
-      </this.Button>
+    fetchReport(
+      limit,
+      offset,
+      viewStock,
+      search,
+      locationId
     );
+
+    LocationService.lists(50)
+    .then(response => {
+      if (response.data && response.data.data) {
+        setLocations(response.data.data);
+      }
+    });
+    //eslint-disable-next-line
+  }, []);
+
+  let currentStockValueByCost = 0;
+  let currentStockValueByPrice = 0;
+  let expectedProfit = 0;
+  let expectedMargin = 0;
+
+  if (summary) {
+    currentStockValueByCost = summary.currentStockValueByCost;
+    currentStockValueByPrice = summary.currentStockValueByPrice;
+    expectedProfit = summary.expectedProfit;
+    expectedMargin = summary.expectedMargin;
   }
 
-  renderFilterRecord() {
-    const {form} = this.props;
-    const fetchingProps = this.props[this.fetchingProp];
-    return(
-      form == null ?
-        ""
-        :
-        <div>
-          <this.Form onSubmit={this.handleSubmitFilter}>
-            <this.Row className="main-search-layout"> 
-              {this.renderFilterGeneralKey()}
-              <this.Col md="2">
-                <this.Select
-                  name="locationId"
-                  label={<this.Translate id="text_store"/>}
-                  dataSource={this.locationList.concat(this.props.locations.list)}
-                  valueKey="id"
-                  nameKey="name"
-                  form={form}
-                  defaultValue={0}/>
-              </this.Col>
-              <this.Col md="2" className="wrap-btn-search">
-                <div className="ant-form-item-label" style={{visibility: "hidden"}}>
-                  <label htmlFor="status" className="" title=""></label>
-                </div>
-                <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
-                </this.Button> 
-              </this.Col>
+  const viewStock = queryparam.get("viewStock");
 
-            </this.Row>
-          </this.Form>
-        </div>
-    );
-  }
+  return (
+    <div id="report-sale">
+      <PageHeader
+        style={{
+          backgroundColor: "#f7f7f7",
+          paddingLeft: 0,
+          paddingRight: 0,
+        }}
+        backIcon={""}
+        title={<Translate id="text_product_report" />}
+        subTitle=""
+        extra={[
+          <div key={1}>
+            <Search
+              placeholder="Search product by name,barcode"
+              onChange={onChangeSearch}
+              style={{ width: "280px" }}
+              allowClear={true}
+              defaultValue={searchValue ? searchValue : ""}
+            />
+            <Select
+              name="locationId"
+              style={{ width: 200 , marginLeft: 15}}
+              defaultValue={locationId ? parseInt(locationId) : 0}
+              onChange={onChangeLocation}
+            >
+              {[{name: <Translate id="text_all_store"/>, id: 0}].concat(locations).map((value, key) => (
+                <Option key={key} value={value.id}>
+                  {value.name}
+                </Option>
+              ))}
+            </Select>
+          </div>
+        ]}
+      />
+      <Row gutter={16}>
+        <Col span={6}>
+          <Card>
+            <Statistic
+              title="Current Stock Value (By purchase price)"
+              value={currentStockValueByCost}
+              precision={2}
+            />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
+            <Statistic
+              title="Current Stock Value (By selling price)"
+              value={currentStockValueByPrice}
+              precision={2}
+            />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
+            <Statistic
+              title="Expected Gross Profit"
+              valueStyle={{ color: "#3f8600" }}
+              value={expectedProfit}
+              precision={2}
+            />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
+            <Statistic
+              title={<Translate id="text_margin" />}
+              value={expectedMargin}
+              precision={2}
+              suffix="%"
+            />
+          </Card>
+        </Col>
+        <Col span={24}>
+          <ExportForm locationId={locationId} viewStock={viewStock} />
+        </Col>
+        <Col span={24}>
+          <Table
+            rowKey="id"
+            bordered={true}
+            dataSource={data ? data : []}
+            columns={[
+              {
+                title: <Translate id="text_product_name" />,
+                dataIndex: "name",
+                key: "name",
+                render: (text, record) => {
+                  let variantName = "";
+                  if (record.product && record.product.productOption === Enum.PRODUCT_VARIANT) {
+                    variantName = ` / ${record.name}`;
+                  }
+                  return InventoryUtil.getProductNameV2(record.product) + variantName;
+                }
+              },
+              {
+                title: <Translate id="text_barcode" />,
+                dataIndex: "barcode",
+                key: "barcode"
+              },
+              {
+                title: <Translate id="text_quantity" />,
+                dataIndex: "quantity",
+                width: 150,
+                key: "quantity",
+                render: (quantity, record) => {
+                  quantity = record.quantity;
+                  if ("productLocations" in record) {
+                    quantity = InventoryUtil.getProductQTYLocation(record["productLocations"]);
+                  } else if ("productVariants" in record) {
+                    quantity = InventoryUtil.getProductQTYLocation(record["productVariants"]);
+                  }
+                  
+                  return `${quantity} ${record.product.unit.name}`;
+                }
+              },
+              {
+                title: <Translate id="text_cost" />,
+                dataIndex: "cost",
+                width: 150,
+                align: "right",
+                key: "cost",
+                render: cost => (new Util()).formatCurrency(cost)
+              },
+              {
+                title: <Translate id="text_product_total_cost" />,
+                dataIndex: "totalCost",
+                width: 150,
+                align: "right",
+                key: "totalCost",
+                render: (text, record) => {
+                  return (new Util()).formatCurrency(record.cost * record.quantity);
+                }
+              },
+              {
+                title: <Translate id="text_retail_price" />,
+                dataIndex: "price",
+                width: 150,
+                align: "right",
+                key: "price",
+                render: price => (new Util()).formatCurrency(price)
+              },
+              {
+                title: <Translate id="text_total_price" />,
+                dataIndex: "price",
+                width: 150,
+                align: "right",
+                key: "totalPrice",
+                render: (price, record) => {
+                  return (new Util()).formatCurrency(price * record.quantity);
+                }
+              },
+              {
+                title: <Translate id="text_margin" />,
+                dataIndex: "price",
+                width: 150,
+                align: "right",
+                key: "margin",
+                render: (price, record) => {
+                  const quantity = Math.max(record.quantity, 1);
+                  const totalPrice = price * quantity;
+                  const totalCost = record.cost * quantity;
+                  const margin = ((totalPrice - totalCost) / totalPrice) * 100;
+        
+                  return `${margin.toFixed(2)}%`;
+                }
+              }
+            ]}
+            pagination={{...pagination, onChange: (page, pageSize) => onChangePagination(page, pageSize)}}
+            loading={loading}
+          />
+        </Col>
+      </Row>
+    </div>
+  );
 }

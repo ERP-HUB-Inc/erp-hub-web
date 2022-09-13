@@ -673,14 +673,12 @@ export default {
   
   "text_all_employee": [
     "All Employees",
-    "បុគ្គលិកទាំងអស់",
-    "All Employees"
+    "បុគ្គលិកទាំងអស់"
   ],
   
   "text_all_store": [
     "All Stores",
-    "ហាងទាំងអស់",
-    "All Stores"
+    "ហាងទាំងអស់"
   ],
   
   "text_receipt": [
@@ -719,20 +717,22 @@ export default {
   
   "text_return": [
     "Return",
-    "បង្វិលជូនវិញ",
-    "Return"
+    "បង្វិលជូនវិញ"
+  ],
+
+  "text_void": [
+    "Void",
+    "Void"
   ],
 
   "text_ok": [
     "ok",
-    "យល់ព្រម",
-    "ok"
+    "អូខេ"
   ],
   
   "text_returned": [
     "Returned",
-    "បង្វិលអោយវិញហើយ",
-    "Returned"
+    "បង្វិលអោយវិញហើយ"
   ],
   
   "text_description": [

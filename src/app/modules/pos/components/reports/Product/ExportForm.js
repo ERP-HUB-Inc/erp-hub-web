@@ -2,11 +2,8 @@ import React from "react";
 import {
     Drawer,
     Result,
-    Button as AntButton
-} from "antd";
-import {
     Button
-} from "../../../../common/elements/ant-ui";
+} from "antd";
 import ProductService from "../../../services/report/ProductService";
 
 function ExportFormLoader({locationId, viewStock}) {
@@ -74,7 +71,7 @@ export default class ExportForm extends React.PureComponent {
     render() {
         return (
         <div>
-            <Button type="info" onClick={this.showDrawer}>
+            <Button type="info" style={{marginTop: 15}} onClick={this.showDrawer}>
                 Export
             </Button>
             <Drawer
@@ -100,14 +97,14 @@ export default class ExportForm extends React.PureComponent {
                     borderRadius: "0 0 4px 4px",
                     }}
                 >
-                    <AntButton
+                    <Button
                     style={{
                         marginRight: 8,
                     }}
                     onClick={this.onClose}
                     >
-                    Close
-                    </AntButton>
+                        Close
+                    </Button>
                 </div>
             </Drawer>
         </div>

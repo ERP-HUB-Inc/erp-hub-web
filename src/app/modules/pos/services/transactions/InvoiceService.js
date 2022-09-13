@@ -93,6 +93,14 @@ class InvoiceService extends BaseService {
       headers: this.header
     });
   }
+
+  makAsReturn(id) {
+    this.setHeader();
+    return this.PUT({
+      url: `${this.baseUrl}/mark_as_return/${id}`,
+      headers: this.header
+    });
+  }
 }
 
 export default new InvoiceService();

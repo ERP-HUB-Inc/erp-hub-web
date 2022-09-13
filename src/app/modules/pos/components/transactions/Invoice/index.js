@@ -47,6 +47,7 @@ export default class Invoice extends List {
       [Enum.INVOICE_STATUS.SENT]: { title: <this.Translate id="text_sent" />, color: "#1890ff" },
       [Enum.INVOICE_STATUS.PARTIAL]: { title: <this.Translate id="text_partial_pay" />, color: "#52c41a"},
       [Enum.INVOICE_STATUS.PAID]: { title: <this.Translate id="text_paid" />, color: "#52c41a"},
+      [Enum.INVOICE_STATUS.VOID]: { title: <this.Translate id="text_void" />, color: "#d9d9d9"},
     };
 
     this.service = InvoiceService;
@@ -102,29 +103,31 @@ export default class Invoice extends List {
                 </this.Link>
               </Menu.Item>
               {
-                record.status === Enum.INVOICE_STATUS.PAID ?
-                  <Menu.Item>
-                    <ReactToPrint
-                      content={() => this.receiptRef}
-                      onBeforeGetContent={() => this.handlePrintReceipt(record.id)}
-                      onAfterPrint={() => {
-                        this.setState({detail: {}});
-                      }}
-                    >
-                      <PrintContextConsumer>
-                        {({ handlePrint }) => (
-                          <button style={{background: "none", border: "none", paddingLeft: 0}} onClick={handlePrint}>
-                            <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print_receipt" />
-                          </button>
-                        )}
-                      </PrintContextConsumer>
-                    </ReactToPrint>
-                  </Menu.Item>
-                : null
+                record.status === Enum.INVOICE_STATUS.PAID && 
+                <Menu.Item>
+                  <ReactToPrint
+                    content={() => this.receiptRef}
+                    onBeforeGetContent={() => this.handlePrintReceipt(record.id)}
+                    onAfterPrint={() => {
+                      this.setState({detail: {}});
+                    }}
+                  >
+                    <PrintContextConsumer>
+                      {({ handlePrint }) => (
+                        <button style={{background: "none", border: "none", paddingLeft: 0}} onClick={handlePrint}>
+                          <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print_receipt" />
+                        </button>
+                      )}
+                    </PrintContextConsumer>
+                  </ReactToPrint>
+                </Menu.Item>
               }
-              <Menu.Item onClick={() => this.handleReturn(record)}>
-                <Icon type="retweet" style={{marginRight: 10}} /> <this.Translate id="text_return" />
-              </Menu.Item>
+              {
+                record.status === Enum.INVOICE_STATUS.PAID && 
+                <Menu.Item onClick={() => this.handleReturn(record)}>
+                  <Icon type="close" style={{marginRight: 10}} /> <this.Translate id="text_void" />
+                </Menu.Item>
+              }
             </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
@@ -382,27 +385,27 @@ export default class Invoice extends List {
   }
 
   handleReturn(rowData) {
-    if (rowData.step === Enum.TRANSACTION_STEP.PAID || rowData.step === Enum.TRANSACTION_STEP.CREDIT) {
+    if (rowData.status === Enum.INVOICE_STATUS.PAID) {
       swal({
         title: this.CATranslate("text_confirm_return_invoice", this.props.locale),
         text: this.CATranslate("text_message_return_invoice", this.props.locale),
         icon: "warning",
-        buttons: [this.CATranslate("text_cancel", this.props.locale), this.CATranslate("text_ok", this.props.locale)],
+        buttons: [this.CATranslate("text_no", this.props.locale), this.CATranslate("text_yes", this.props.locale)],
         dangerMode: true,
       })
       .then(ok => {
           if (ok) {
-            TransactionService.returnTransaction(rowData.id)
+            InvoiceService.makAsReturn(rowData.id)
             .then(() => {
               swal({
                 icon: "success",
                 title: "Success!",
-                text: "Your transaction has been returned",
+                text: "Your invoice has been returned",
                 buttons: false,
                 timer: 1500
               })
               .then(() => {
-                super.componentDidMount();
+                this.fetchList();
               });
             });
           }

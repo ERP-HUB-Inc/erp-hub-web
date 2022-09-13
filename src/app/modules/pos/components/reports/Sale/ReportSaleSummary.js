@@ -303,6 +303,7 @@ function ReportSaleSummary() {
         <Col span={24}>
           <Table
             rowKey={((record, index) => index)}
+            bordered={true}
             dataSource={data ? data.summaries : []}
             columns={[
               {

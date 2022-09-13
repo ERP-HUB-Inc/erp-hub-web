@@ -42,7 +42,8 @@ export default {
     DRAFT: 0,
     SENT: 1,
     PARTIAL: 2,
-    PAID: 3
+    PAID: 3,
+    VOID: 4
   },
   PAYMENT_METHOD_AVIALE_ON_POS: 1,
   PRODUCT_AVIALABLE_ON_SALE: 1,

@@ -161,6 +161,7 @@ function ReportSaleByCategory() {
         <Col span={24}>
           <Table
             rowKey="id"
+            bordered={true}
             dataSource={data ? data : []}
             columns={[
               {
