@@ -56,6 +56,16 @@ const Promotion = Loadable({
   loading: () => <StartUp />
 });
 
+const LoyaltyProgram = Loadable({
+  loader: () => import("../../../../inventory/components/products/LoyaltyProgram"),
+  loading: () => <StartUp />
+});
+
+const LoyaltyProgramForm = Loadable({
+  loader: () => import("../../../../inventory/components/products/LoyaltyProgram/FormItem"),
+  loading: () => <StartUp />
+});
+
 const Attribute = Loadable({
   loader: () => import("../../../../inventory/containers/products/VariantAttribute"),
   loading: () => <StartUp />,
@@ -299,6 +309,23 @@ const dataSource = {
         route: "/promotions/list",
         component: Promotion,
         isFashNav: true
+      },
+      {
+        title: <Translate id="text_loyalty_program" />,
+        icon: "icon-sale-return",
+        route: "/loyalty-program/list",
+        component: LoyaltyProgram,
+        isFashNav: true
+      },
+      {
+        route: "/loyalty-program/create",
+        component: LoyaltyProgramForm,
+        isFashNav: false
+      },
+      {
+        route: "/loyalty-program/update/:id",
+        component: LoyaltyProgramForm,
+        isFashNav: false
       },
       {
         title: <Translate id="text_category" />,

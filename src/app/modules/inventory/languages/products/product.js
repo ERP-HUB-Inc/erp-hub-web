@@ -629,5 +629,96 @@ export default {
   "text_exclusive_to_some": [
     "Exclusive to Some",
     "សម្រាប់អតិថិជនមួយចំនួន"
+  ],
+
+  //Loyalty Program
+  "text_loyalty_program": [
+    "Loyalty Program",
+    "Loyalty Program"
+  ],
+
+  "text_enter_loyalty_program_name": [
+    "Enter loyalty program name",
+    "Enter loyalty program name"
+  ],
+
+  "text_new_loyalty_program": [
+    "New Loyalty Program",
+    "New Loyalty Program"
+  ],
+
+  "text_update_loyalty_program": [
+    "Update Loyalty Program",
+    "Update Loyalty Program"
+  ],
+
+  "text_point_per_amount": [
+    "Point Per Amount",
+    "Point Per Amount"
+  ],
+
+  "text_enter_point_per_amount": [
+    "Enter point per amount",
+    "Enter point per amount"
+  ],
+
+  "text_point_per_order": [
+    "Point Per Order",
+    "Point Per Order"
+  ],
+
+  "text_enter_point_per_order": [
+    "Enter point per order",
+    "Enter point per order"
+  ],
+
+  "text_point_per_product": [
+    "Point Per Product",
+    "Point Per Product"
+  ],
+
+  "text_enter_point_per_product": [
+    "Enter point per product",
+    "Enter point per product"
+  ],
+
+  "text_point_increament": [
+    "Point Increament",
+    "Point Increament"
+  ],
+
+  "text_enter_point_increament": [
+    "Enter point increament",
+    "Enter point increament"
+  ],
+
+  "text_rewards": [
+    "Rewards",
+    "រង្វាន់"
+  ],
+
+  "text_please_enter_reward": [
+    "Please enter reward",
+    "Please enter reward"
+  ],
+
+  "text_reward_customer_gift_loyalty_point": [
+    "Rewards the customer with gifts for loyalty points",
+    "Rewards the customer with gifts for loyalty points"
+  ],
+
+  "text_gift": [
+    "Gift",
+    "កាដូរ"
+  ],
+
+  "text_discount_value": [
+    "Discount",
+    "តម្លៃបញ្ចុះតម្លៃ"
+  ],
+
+  "text_discount_percentage": [
+    "Discount Percentage",
+    "បញ្ចុះតម្លៃជាភាគរយ"
   ]
 };

@@ -1043,5 +1043,15 @@ export default {
   "text_please_enter_dates": [
     "Please enter dates",
     "សូមបញ្ចូលកាលបរិច្ឆេទ"
+  ],
+
+  "text_save_success": [
+    "Success save record",
+    "បានរក្សាទុកដោយជោគជ័យ"
+  ],
+
+  "text_update_success": [
+    "Success update record",
+    "បានកែប្រែដោយជោគជ័យ"
   ]
 };
