@@ -120,7 +120,7 @@ const ReceiptTemplate = React.forwardRef((props, ref) => {
       productTaxList={productTaxList}
       customerFieldPrice="price"
       summaryTotal={getSummaryTotal(formData)}
-      summaryTax={POSUtil.getSummaryTax(productTaxList, <Translate id="text_no_tax"/>, stringTranslate("text_taxes", props.locale))}
+      summaryTax={POSUtil.getSummaryTax(productTaxList, <Translate id="text_no_tax"/>, <Translate id="text_taxes" />)}
       changeAmount={customerPayment.changeAmount}
       taxAmount={getTaxAmount(formData)}
       discountAmount={formData.discount}
