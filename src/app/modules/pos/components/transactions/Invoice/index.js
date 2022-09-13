@@ -43,10 +43,11 @@ export default class Invoice extends List {
     this.columnFilterWithKey = ["firstName", "lastName", "email", "phoneNumber"];
     this.pathname = "/transactions/invoice";
     this.INVOICE_STATUS_STR = {
-      [Enum.INVOICE_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#d9d9d9" },
+      [Enum.INVOICE_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#bfbfbf" },
       [Enum.INVOICE_STATUS.SENT]: { title: <this.Translate id="text_sent" />, color: "#1890ff" },
       [Enum.INVOICE_STATUS.PARTIAL]: { title: <this.Translate id="text_partial_pay" />, color: "#52c41a"},
       [Enum.INVOICE_STATUS.PAID]: { title: <this.Translate id="text_paid" />, color: "#52c41a"},
+      [Enum.INVOICE_STATUS.VOID]: { title: <this.Translate id="text_void" />, color: "#d9d9d9"}
     };
 
     this.service = InvoiceService;
