@@ -3,7 +3,7 @@ import { Translate } from "react-localize-redux";
 import { Button, Spin, Result } from "antd";
 import history from "../../../../common/router/history";
 import InvoiceService from "../../../services/transactions/InvoiceService";
-import ReceiptTemplate from "./template/template1";
+import ReceiptTemplate from "./template";
 
 export default function PublicReceipt()  {
   const [formData, setFormData] = React.useState({});
