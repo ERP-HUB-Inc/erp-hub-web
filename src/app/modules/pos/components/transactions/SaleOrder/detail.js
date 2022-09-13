@@ -1,5 +1,6 @@
 import React from "react";
 import { Translate } from "react-localize-redux";
+import { connect } from "react-redux";
 import { 
   PageHeader, 
   Spin, 
@@ -7,20 +8,24 @@ import {
   Menu,
   Dropdown,
   Icon,
-  message
+  message,
+  Form
 } from "antd";
 import { Link } from "react-router-dom";
 import { Button } from "../../../../common/elements/ant-ui";
 import history from "../../../../common/router/history";
 import Enum from "../../../enums";
+import Util from "../../../../common/util";
+import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import SaleOrderService from "../../../services/transactions/SaleOrderService";
 import SaleOrderInvoice from "./Invoice";
 
-export default class SaleOrderDetail extends React.PureComponent{
+class SaleOrderDetail extends React.PureComponent{
   state = {
     loading: false,
     formData: {}
   }
+  util = new Util();
 
   componentDidMount() {
     const id = this.props.match.params.id;
@@ -41,6 +46,31 @@ export default class SaleOrderDetail extends React.PureComponent{
       });
     })
     .catch(() => message.error("Error!....."));
+  }
+
+  handleVoid(id) {
+    this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
+    .then(willVoid => {
+      if (willVoid) {
+        SaleOrderService.void(id)
+        .then(() => message.success("Void success"))
+        .catch(() => message.error("Error!......"));
+      }
+    });
+  }
+
+  handleDelete(id) {
+    this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
+    .then(willDelete => {
+      if (willDelete) {
+        SaleOrderService.delete(id)
+        .then(() => {
+          message.success("Delete invoice success");
+          history.goBack();
+        })
+        .catch(() => message.error("Error!......"));
+      }
+    });
   }
 
   render() {
@@ -67,16 +97,16 @@ export default class SaleOrderDetail extends React.PureComponent{
                     <Translate id="text_convert_to_invoice" />
                   </Link>
                 </Menu.Item>
-                <Menu.Item key={2} onClick={() => history.push({pathname: `/transactions/sale-order/update/${formData.id}`})}>
+                <Menu.Item key={3} onClick={() => history.push({pathname: `/transactions/sale-order/update/${formData.id}`})}>
                   <Translate id="text_edit_sale_order" />
                 </Menu.Item>
-                <Menu.Item key={3}>
+                <Menu.Item key={4}>
                   <Link target="_blank" to={`/transactions/sale-order/create?id=${formData.id}&action=clone`} >
                     <Translate id="text_clone" />
                   </Link>
                 </Menu.Item>
-                <Menu.Item key={6}><Translate id="text_void" /></Menu.Item>
-                <Menu.Item><Translate id="text_delete" /></Menu.Item>
+                <Menu.Item key={5} onClick={() => this.handleVoid(formData.id)}><Translate id="text_void" /></Menu.Item>
+                <Menu.Item key={6} onClick={() => this.handleDelete(formData.id)}><Translate id="text_delete" /></Menu.Item>
               </Menu>
             )}>
               <button className="ant-btn ant-dropdown-link" onClick={e => e.preventDefault()}>
@@ -106,3 +136,19 @@ export default class SaleOrderDetail extends React.PureComponent{
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    locale: state.locale,
+  };
+}
+
+function mapPropsToFields(props) {
+  return {
+    form: props.form
+  };
+}
+
+const saleOrderDetail =  Form.create(mapPropsToFields)(SaleOrderDetail);
+  
+export default connect(mapStateToProps)(saleOrderDetail);
