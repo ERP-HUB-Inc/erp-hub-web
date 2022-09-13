@@ -76,7 +76,7 @@ class FormItem extends React.PureComponent {
       }
     },
     {
-      title: <Translate id="text_price" />,
+      title: <Translate id="text_reward_cost" />,
       dataIndex: "cost",
       key: "cost",
       render: (cost, record, index) => {
