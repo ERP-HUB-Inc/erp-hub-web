@@ -697,6 +697,11 @@ export default {
     "រង្វាន់"
   ],
 
+  "text_reward_cost": [
+    "Reward Cost",
+    "តម្លៃរង្វាន់"
+  ],
+
   "text_please_enter_reward": [
     "Please enter reward",
     "Please enter reward"

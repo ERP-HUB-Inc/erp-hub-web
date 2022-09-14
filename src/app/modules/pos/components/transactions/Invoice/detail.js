@@ -15,6 +15,7 @@ import ReactToPrint from "react-to-print";
 import history from "../../../../common/router/history";
 import Enum from "../../../enums";
 import InvoiceService from "../../../services/transactions/InvoiceService";
+import TransactionService from "../../../services/transactions/TransactionService";
 import CAInvoice from "./CAInvoice";
 import ReceivedPayment from "../ReceivedPayment/Form";
 import { InputText } from "../../../../common/elements/ant-ui";
@@ -25,7 +26,8 @@ class InvoiceDetail extends React.PureComponent {
   state = {
     formData: {},
     loading: false,
-    showDrawer: false
+    showDrawer: false,
+    receipt: {}
   }
   lastId = "";
 
@@ -70,6 +72,14 @@ class InvoiceDetail extends React.PureComponent {
         });
       });
     }
+  }
+
+  async getReceiptData(invoiceId) {
+    const result = (await TransactionService.detail(invoiceId)).data.data;
+    if (!result) {
+      return;
+    }
+    this.setState({receipt: result});
   }
 
   handleAfterPayment = () => {
@@ -129,9 +139,8 @@ class InvoiceDetail extends React.PureComponent {
                 {formData.status === Enum.INVOICE_STATUS.PAID ?
                   <Menu.Item key={4}>
                     <ReactToPrint
-                      trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}>
-                        <Translate id="text_print_receipt" />
-                        </button>}
+                      onBeforeGetContent={() => this.getReceiptData(formData.id)}
+                      trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}><Translate id="text_print_receipt" /></button>}
                       content={() => this.receiptRef}
                     />
                   </Menu.Item>
@@ -172,7 +181,7 @@ class InvoiceDetail extends React.PureComponent {
         </Drawer>
 
         <div style={{display: "none"}}>
-          <ReceiptTemplate formData={formData} ref={re => this.receiptRef = re} locale={this.props.locale} />
+          <ReceiptTemplate formData={this.state.receipt} ref={re => this.receiptRef = re} locale={this.props.locale} />
         </div>
       </div>
     );
