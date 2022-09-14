@@ -34,7 +34,7 @@ class FormItem extends React.PureComponent {
       title: <Translate id="text_name" />,
       dataIndex: "name",
       key: "name",
-      width: 650,
+      width: "50%",
       render: (name, record, index) => {
         return <React.Fragment>
           <InputText 
@@ -60,17 +60,17 @@ class FormItem extends React.PureComponent {
       title: <Translate id="text_type" />,
       dataIndex: "type",
       key: "type",
-      width: 450,
+      width: "25%",
       render: (type, record, index) => {
         return <Select 
           name={`type[${index}]`}
-          defaultValue={type}
+          defaultValue="gift"
           placeholder={`${stringTranslate("text_type", this.props.locale)}`}
           valueKey="value"
           dataSource={[
-            {value: "gift", name: <Translate id="text_gift" />},
-            {value: "discount_value", name: <Translate id="text_discount_value" />},
-            {value: "discount_percentage", name: <Translate id="text_discount_percentage" />},
+            {value: "gift", name: <Translate id="text_gift" />}
+            // {value: "discount_value", name: <Translate id="text_discount_value" />},
+            // {value: "discount_percentage", name: <Translate id="text_discount_percentage" />},
           ]}
           form={this.props.form} />;
       }
@@ -314,6 +314,7 @@ class FormItem extends React.PureComponent {
                 name="pointIncreament"
                 label={<Translate id="text_point_increament" />}
                 placeholder={stringTranslate("text_enter_point_increament", this.props.locale)}
+                required
                 isAutoSelect={true}
                 data={formData.pointPerProduct}
                 form={this.props.form} />
