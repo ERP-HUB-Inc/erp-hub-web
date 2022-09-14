@@ -9,7 +9,6 @@ import {
   Col,
   Input
 } from "antd";
-import * as _ from "lodash";
 import { Translate } from "react-localize-redux";
 import ExportForm from "./ExportForm";
 import history from "../../../../common/router/history";

@@ -9,7 +9,6 @@ import {
 import "./index.css";
 import ProfitAndLossContext from "./ProfitAndLossContext";
 import ExportForm from "./ExportForm";
-import history from "../../../../common/router/history";
 import ProfitAndLostService from "../../../services/report/ProfitAndLostService";
 import Util from "../../../../common/util";
 
@@ -58,7 +57,7 @@ export default function ProfitAndLossReport() {
                     paddingLeft: 0,
                     paddingRight: 0
                 }}
-                onBack={() => history.goBack()}
+                backIcon=""
                 title="Report"
                 subTitle="Profit&Loss Report"
                 extra={[

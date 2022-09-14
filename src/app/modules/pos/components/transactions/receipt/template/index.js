@@ -1,6 +1,5 @@
 import React from "react";
 import { Translate } from "react-localize-redux";
-import { stringTranslate } from "../../../../../common/helper/stringTranslate";
 import Util from "../../../../../common/util";
 import POSUtil from "../../../../utils";
 import InventoryEnum from "../../../../../inventory/enums";
