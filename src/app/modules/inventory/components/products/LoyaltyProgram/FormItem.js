@@ -316,7 +316,7 @@ class FormItem extends React.PureComponent {
                 placeholder={stringTranslate("text_enter_point_increament", this.props.locale)}
                 required
                 isAutoSelect={true}
-                data={formData.pointPerProduct}
+                data={formData.pointIncreament}
                 form={this.props.form} />
             </Col>
           </Row>
