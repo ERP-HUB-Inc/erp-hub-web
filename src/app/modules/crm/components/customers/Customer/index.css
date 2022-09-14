@@ -36,3 +36,45 @@ tr.ant-table-expanded-row td {
 .customerType .ant-radio-group > label.ant-radio-wrapper { 
     width: 150px;
 }
+
+.customer-profile-card {
+    min-height: 78vh;
+    border-radius: 5px;
+}
+
+.customer-profile-card .ant-card-body {
+    padding: 0;
+}
+
+.customer-profile-card .profile-avatar {
+    height: 80px;
+    border: 2px solid #ddd;
+    width: 80px;
+    margin: auto;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+}
+
+.customer-profile-card .customer-contact-icon {
+    font-size: 14px;
+    padding: 16px;
+    background: #f5f5f5;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    text-transform: uppercase;
+}
+
+.customer-profile-card .contact-list {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}

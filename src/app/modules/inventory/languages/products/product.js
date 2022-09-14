@@ -717,6 +717,11 @@ export default {
     "កាដូរ"
   ],
 
+  "text_gift_name": [
+    "Gift Name",
+    "ឈ្មេាះកាដូរ"
+  ],
+
   "text_discount_value": [
     "Discount",
     "តម្លៃបញ្ចុះតម្លៃ"

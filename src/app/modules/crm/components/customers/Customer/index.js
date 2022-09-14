@@ -1,4 +1,5 @@
 import React from "react";
+import { Menu, Dropdown } from "antd";
 import List from "../../List";
 import FormCreate from "../../../containers/customers/Customer/FormCreate";
 import FormUpdate from "../../../containers/customers/Customer/FormUpdate";
@@ -251,7 +252,22 @@ class Column extends List {
         title: <this.Translate id="text_name" />,
         dataIndex: "firstName",
         width: 200,
-        render: (text, row) => text + " " + row.lastName
+        render: (text, row) => {
+          const menu = (
+            <Menu>
+              <Menu.Item><this.Link to={`/customer-profile/${row.id}`}><this.Translate id="text_profile" /></this.Link></Menu.Item>
+            </Menu>
+          );
+          return <div className="wrap-product-name" style={{display: "flex"}}>
+            {text + " " + row.lastName}
+            <Dropdown className="product-row-option" overlay={menu}>
+              {/*eslint-disable-next-line*/}
+              <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
+                <this.Translate id="text_option" /> <this.Icon type="down" />
+              </a>
+            </Dropdown>
+          </div>;
+        }
       },
       {
         title: <this.Translate id="text_company" />,

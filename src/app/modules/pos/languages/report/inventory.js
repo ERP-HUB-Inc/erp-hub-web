@@ -53,6 +53,12 @@ export default {
     "Order Product"
   ],
 
+  "text_order_history": [
+    "Order History",
+    "ប្រវត្តិបញ្ជាទិញ",
+    "Order Product"
+  ],
+
   "input_inventory_report_key": [
     "Input keyword to filter report",
     "បញ្ចូលពាក្យគន្លឹះដើម្បីត្រងរបាយការណ៍",

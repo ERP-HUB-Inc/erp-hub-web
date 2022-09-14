@@ -182,13 +182,14 @@ class Promotion extends List {
       rowSelection={this.rowSelection ? rowSelection : null}
       columns={this.columns}
       dataSource={this.state.data.data}
+      bordered
       loading={this.state.loading}
       onChange={this.onChange}
     />;
   }
 }
 
-export function mapStateToProps(state) {
+function mapStateToProps(state) {
   return {
     locale: state.locale
   };

@@ -38,6 +38,16 @@ export default {
     "ចំណាយសរុប"
   ],
 
+  "text_total_spent": [
+    "Total Spent",
+    "ចំណាយសរុប"
+  ],
+
+  "text_total_credit": [
+    "Total Credit",
+    "ជំពាក់សរុប"
+  ],
+
   "text_popular_categories": [
     "Popular Categories",
     "ប្រភេទផលិតផលពេញនិយម"

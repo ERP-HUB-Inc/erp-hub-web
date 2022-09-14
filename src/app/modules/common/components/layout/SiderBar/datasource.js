@@ -222,6 +222,11 @@ const ManageCustomer = Loadable({
   loading: () => <StartUp />,
 });
 
+const CustomerProfile = Loadable({
+  loader: () => import("../../../../crm/components/customers/Customer/Profile"),
+  loading: () => <StartUp />
+});
+
 const Profile = Loadable({
   loader: () => import("../../../containers/user/Profile"),
   loading: () => <StartUp />,
@@ -435,6 +440,11 @@ const dataSource = {
         route: "/customers/group",
         component: GroupCustomer,
         isFashNav: true
+      },
+      {
+        route: "/customer-profile/:id",
+        component: CustomerProfile,
+        isFashNav: false
       }
     ]
   },

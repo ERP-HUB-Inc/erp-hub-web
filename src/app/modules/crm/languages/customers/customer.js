@@ -22,6 +22,16 @@ export default {
     "អតិថិជនឈ្មោះ",
     "Customer Name"
   ],
+
+  "text_customer_profile": [
+    "Customer Profile",
+    "ប្រវត្តិរូបអតិថិជន"
+  ],
+
+  "text_detail_dealer": [
+    "Detail Dealer",
+    "Detail Dealer"
+  ],
   
   "text_group": [
     "Group",
@@ -133,6 +143,27 @@ export default {
   "text_required_customer": [
     "Please select customer",
     "សូមជ្រើសរើសអតិថិជន"
+  ],
+
+  "text_redeemed_point": [
+    "Redeemed Point",
+    "Redeemed Point"
+  ],
+
+  "text_available_point": [
+    "Available Point",
+    "Available Point"
+  ],
+
+  "text_redeem": [
+    "Redeem",
+    "Redeem"
+  ],
+
+
+  "text_contact_detail": [
+    "Contact Detail",
+    "ព័ត៌មានលម្អិត",
   ],
   
 };
