@@ -250,7 +250,6 @@ class Column extends List {
       {
         title: <this.Translate id="text_name" />,
         dataIndex: "firstName",
-        sorter: true,
         width: 200,
         render: (text, row) => text + " " + row.lastName
       },
@@ -258,14 +257,12 @@ class Column extends List {
         title: <this.Translate id="text_company" />,
         dataIndex: "company",
         key: "company",
-        sorter: true,
         render: company => company ? company : this.emptyText
       },
       {
         title: <this.Translate id="text_phone_number" />,
         dataIndex: "phoneNumber",
         key: "phoneNumber",
-        sorter: true,
         width: 160,
         render: phoneNumber => phoneNumber ? this.Util.formtTextError(phoneNumber) : this.emptyText
       },
@@ -273,42 +270,23 @@ class Column extends List {
         title: <this.Translate id="text_address" />,
         dataIndex: "address",
         key: "address",
-        sorter: true,
         render: address => address ? this.Util.formtTextError(address) : this.emptyText
-      },
-      {
-        title: <this.Translate id="text_email" />,
-        dataIndex: "email",
-        key: "email",
-        sorter: true,
-        render: email => email ? this.Util.formtTextError(email) : this.emptyText
       },
       {
         title: <this.Translate id="text_group" />,
         dataIndex: "groupCustomer",
         key: "groupCustomer",
-        sorter: true,
         render: groupCustomer => groupCustomer ? <span className="text-capitalize">{groupCustomer.name}</span> : this.emptyText
       },
       {
         title: <this.Translate id="text_type" />,
         dataIndex: "type",
         key: "type",
-        sorter: true,
         render: type => {
           const customerType = this.customerTypes.find(customer => customer.value === type);
           return <this.Tag color="blue" className="text-center label-stock-status" style={{width: 100}}>{customerType ? customerType.title : this.emptyText}</this.Tag>;
         }
-      },
-      {
-        title: <this.Translate id="text_credit" />,
-        dataIndex: "credit",
-        key: "credit",
-        sorter: true,
-        align: "right",
-        render: credit => credit ? this.formatCurrency(credit) : this.formatCurrency(0)
-      },
-      this.columnStatus
+      }
     ];
   }
 }

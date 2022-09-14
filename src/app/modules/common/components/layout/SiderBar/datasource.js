@@ -420,17 +420,17 @@ const dataSource = {
   customers: {
     icon: "icon-customer",
     route: "customers",
-    title: <Translate id="text_customer" />,
+    title: <Translate id="text_manage_customer" />,
     subItems: [
       {
-        title: <Translate id="text_manage_customer" />,
+        title: <Translate id="text_customer" />,
         icon: "icon-customer ",
         route: "/customer",
         component: ManageCustomer,
         isFashNav: true
       },
       {
-        title: <Translate id="text_group_customer" />,
+        title: <Translate id="text_group" />,
         icon: "icon-employee",
         route: "/customers/group",
         component: GroupCustomer,
