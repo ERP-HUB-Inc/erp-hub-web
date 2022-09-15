@@ -242,7 +242,7 @@ class NewInvoice extends React.PureComponent {
         }
 
         if (idParam) {
-            this.pageTitle = <Translate id="text_edit_invoice" />;
+            this.pageTitle = "text_edit_invoice";
             this.getDetail(idParam);
         } else if (this.quotationId) {
             this.setState({loading: true});
@@ -276,7 +276,7 @@ class NewInvoice extends React.PureComponent {
             })
             .finally(() => this.setState({loading: false}));
         } else {
-            this.pageTitle = <Translate id="text_create_invoice" />;
+            this.pageTitle = "text_create_invoice";
             this.setState({
                 formData: {
                     customerId: null,
@@ -469,6 +469,8 @@ class NewInvoice extends React.PureComponent {
                 this.saleOrderId = "";
                 this.quotationId = "";
                 history.push(`/transactions/update-invoice/${response.data.data.id}`);
+                this.pageTitle = "text_edit_invoice";
+                this.getDetail(this.id);
             })
             .catch(() => message.error("Error"))
             .finally(() => this.setState({saveLoading: false}));
@@ -728,7 +730,7 @@ class NewInvoice extends React.PureComponent {
     handleNewInvoice = () => {
         this.id = "";
         history.push("/transactions/create-invoice");
-        this.pageTitle = <Translate id="text_create_invoice" />;
+        this.pageTitle = "text_create_invoice";
         this.setState({
             formData: {
                 customerId: null,
@@ -897,7 +899,7 @@ class NewInvoice extends React.PureComponent {
                         position: "relative"
                         }}
                         onBack={this.handleGoBack}
-                        title={this.pageTitle} />
+                        title={<Translate id={`${this.pageTitle}`} />} />
 
                     <Row>
                         <Col md={8}>

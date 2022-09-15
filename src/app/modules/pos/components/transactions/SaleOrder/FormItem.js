@@ -390,6 +390,8 @@ class FormItem extends React.PureComponent {
         });
         this.id = response.data.data.id;
         history.push(`/transactions/sale-order/update/${this.id}`);
+        this.pageTitle = "text_edit_sale_order";
+        this.getUpdatedData(this.id);
       })
       .catch(() => message.error("Error"))
       .finally(() => this.setState({saveLoading: false}));

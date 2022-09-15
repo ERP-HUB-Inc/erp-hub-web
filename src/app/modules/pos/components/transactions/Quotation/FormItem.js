@@ -37,11 +37,13 @@ import Util from "../../../../common/util";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import CustomerService from "../../../../crm/services/customers/CustomerService";
 import QuotationService from "../../../services/transactions/QuotationService";
+import CustomerAction from "../../../../crm/actions/customers/customer";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
 import QuotationNo from "./QuotationNo";
 import SearchProductDropdown from "../Invoice/SearchProduct";
-import styles from "../styles";
 import CAInvoice from "../Invoice/CAInvoice";
+import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCreate";
+import styles from "../styles";
 
 const {TabPane} = Tabs;
 
@@ -52,7 +54,8 @@ class FormItem extends React.PureComponent {
     productSearch: [],
     customers: [],
     quotationEntries: [],
-    loadingButton: false
+    loadingButton: false,
+    customerForm: null
   }
   entryColumn = [
     {
@@ -216,6 +219,24 @@ class FormItem extends React.PureComponent {
     });
   }
 
+  componentDidUpdate() {
+    if (this.props.customerAdd.added) {
+      const {customers, formData} = this.state;
+      const data = this.props.customerAdd.response.data;
+      formData.customerId = data.id;
+      formData.firstName = data.firstName;
+      formData.lastName = data.lastName;
+      formData.phoneNumber = data.phoneNumber;
+      formData.address = data.address;
+      customers.unshift(data);
+      this.setState({
+        customers, 
+        formData
+      });
+      this.props.dispatch(CustomerAction.reset("RESET_ADD_CUSTOMERS"));
+    }
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
@@ -333,6 +354,8 @@ class FormItem extends React.PureComponent {
         message.success("Create quotation success");
         this.id = response.data.data.id;
         history.push(`/transactions/quotation-update/${this.id}`);
+        this.pageTitle = "text_edit_quotation";
+        this.getDetail(this.id);
       })
       .catch(() => message.error("Error!.."))
       .finally(() => this.setState({loadingButton: false}));
@@ -604,6 +627,11 @@ class FormItem extends React.PureComponent {
     } else {
       history.goBack();
     }
+  }
+
+  showCustomerForm = () => {
+    this.setState({customerForm: <CustomerCreate />});
+    this.props.dispatch(CustomerAction.showForm());
   }
 
   getTotal(quotationEntries = this.state.quotationEntries) {
