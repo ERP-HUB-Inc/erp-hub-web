@@ -107,7 +107,7 @@ class Profile extends React.Component {
           </Col>
           <Col md={18}>
             <Card className="customer-profile-card">
-              <Tabs defaultActiveKey="1">
+              <Tabs defaultActiveKey="1" type="card">
                 <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_order_history" />} key="1">
                   <OrderHistory ordersHistory={this.state.ordersHistory} />
                 </TabPane>
@@ -140,7 +140,9 @@ function OrderHistory(props) {
     let total = 0;
     if (ordersHistory && ordersHistory.data && ordersHistory.data.length) {
       ordersHistory.data.forEach(order => {
-        total += Number(order.tenderBank) + Number(order.tenderCash);
+        if (order.status === EnumInvoice.INVOICE_STATUS.PARTIAL || order.status === EnumInvoice.INVOICE_STATUS.PAID) {
+          total += Number(order.tenderBank) + Number(order.tenderCash);
+        }
       });
     }
     return total;
@@ -199,6 +201,7 @@ function OrderHistory(props) {
         <Col md={24}>
         <Table
           rowKey="id"
+          rowClassName="customer-order-history-table-row"
           columns={[
             {
               title: <Translate id="text_date" />,
@@ -223,7 +226,8 @@ function OrderHistory(props) {
               title: <Translate id="text_invoice_no" />,
               dataIndex: "invoiceNumber",
               key: "invoiceNumber",
-              render: (invoiceNumber, row) => <Link style={{color: "#4D4F5C"}} to={`/transactions/detail-invoice/${row.id}`}>{invoiceNumber}</Link>
+              className: "invoice-number-column",
+              render: (invoiceNumber, row) => <Link to={`/transactions/detail-invoice/${row.id}`}>{invoiceNumber}</Link>
             },
             {
               title: <Translate id="text_sub_total" />,

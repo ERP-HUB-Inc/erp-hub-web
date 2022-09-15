@@ -78,3 +78,12 @@ tr.ant-table-expanded-row td {
     align-items: center;
     margin-bottom: 10px;
 }
+
+.customer-order-history-table-row .invoice-number-column a {
+    color: #4D4F5C;
+}
+
+.customer-order-history-table-row:hover .invoice-number-column a {
+    color: #1890ff;
+    text-decoration: underline;
+}
