@@ -255,7 +255,7 @@ class Column extends List {
         render: (text, row) => {
           const menu = (
             <Menu>
-              <Menu.Item><this.Link to={`/customer-profile/${row.id}`}><this.Translate id="text_profile" /></this.Link></Menu.Item>
+              <Menu.Item><this.Link to={`/customer-profile/${row.id}`}><this.Translate id="text_view" /> <this.Translate id="text_profile" /></this.Link></Menu.Item>
             </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>

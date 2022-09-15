@@ -637,6 +637,11 @@ export default {
     "Loyalty Program"
   ],
 
+  "text_loyalty_rewards": [
+    "Loyalty Rewards",
+    "រង្វាន់ភាពស្មោះត្រង់"
+  ],
+
   "text_enter_loyalty_program_name": [
     "Enter loyalty program name",
     "Enter loyalty program name"

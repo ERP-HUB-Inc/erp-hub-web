@@ -1,6 +1,7 @@
 import React from "react";
 import { Translate } from "react-localize-redux";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { 
   PageHeader,
   Form,
@@ -13,12 +14,14 @@ import {
   Result,
   Spin,
   Statistic,
-  Table
+  Table,
+  Tag
 } from "antd";
 import CustomerService from "../../../services/customers/CustomerService";
 import InvoiceService from "../../../../pos/services/transactions/InvoiceService";
 import { Button } from "../../../../common/elements/ant-ui";
 import history from "../../../../common/router/history";
+import EnumInvoice from "../../../../pos/enums";
 import Util from "../../../../common/util";
 
 const {TabPane} = Tabs;
@@ -67,8 +70,8 @@ class Profile extends React.Component {
             <Card className="customer-profile-card">
               <div style={{textAlign: "center", paddingTop: 15}}>
                 <div className="profile-avatar">
-                  {detail.firstName.substring(0, 1)}
-                  {detail.lastName ? detail.lastName.substring(0, 1) : detail.firstName.substring(1, 1)}
+                  {detail.firstName.substr(0, 1)}
+                  {detail.lastName ? detail.lastName.substr(0, 1) : detail.firstName.substr(1, 1)}
                 </div>
                 <h4>{detail.firstName} {detail.lastName}</h4>
                 <span><Translate id="text_detail_dealer" /></span>
@@ -108,7 +111,7 @@ class Profile extends React.Component {
                 <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_order_history" />} key="1">
                   <OrderHistory ordersHistory={this.state.ordersHistory} />
                 </TabPane>
-                <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_loyalty_program" />} key="2">
+                <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_loyalty_rewards" />} key="2">
                   <LoyaltyProgram detail={detail} />
                 </TabPane>
               </Tabs>
@@ -133,32 +136,38 @@ class Profile extends React.Component {
 function OrderHistory(props) {
   const util = new Util();
 
-  function getTotalSpent() {
-    const {ordersHistory} = props;
+  function getTotalSpent(ordersHistory) {
     let total = 0;
-    if (ordersHistory.data && ordersHistory.data.length) {
+    if (ordersHistory && ordersHistory.data && ordersHistory.data.length) {
       ordersHistory.data.forEach(order => {
-        total += Number(order.total);
+        total += Number(order.tenderBank) + Number(order.tenderCash);
       });
     }
-
     return total;
   }
 
-  function getTotalCredit() {
-    const totalOrder = getTotalSpent();
-    const {ordersHistory} = props;
-    let total = 0;
-    let totalTender = 0;
-    
-    if (ordersHistory.data && ordersHistory.data.length) {
+  function getTotalCredit(ordersHistory) {
+    let total = 0;    
+    const totalTender = getTotalSpent(ordersHistory);
+    if (ordersHistory && ordersHistory.data && ordersHistory.data.length) {
+      const activeInvoiceStatus = [EnumInvoice.INVOICE_STATUS.SENT, EnumInvoice.INVOICE_STATUS.PARTIAL, EnumInvoice.INVOICE_STATUS.PAID];
       ordersHistory.data.forEach(order => {
-        totalTender += Number(order.tenderBank) + Number(order.tenderCash);
+        if (activeInvoiceStatus.includes(order.status)) {
+          total += util.floor(order.total - order.discount);
+        }
       });
     }
-    total = totalOrder - totalTender;
+    total = total - totalTender;
     return total;
   }
+
+  const INVOICE_STATUS_STR = {
+    [EnumInvoice.INVOICE_STATUS.DRAFT]: {title: <Translate id="text_draft" />, color: "#bfbfbf"},
+    [EnumInvoice.INVOICE_STATUS.SENT]: {title: <Translate id="text_sent" />, color: "#1890ff"},
+    [EnumInvoice.INVOICE_STATUS.PARTIAL]: {title: <Translate id="text_partial_pay" />, color: "#52c41a"},
+    [EnumInvoice.INVOICE_STATUS.PAID]: {title: <Translate id="text_paid" />, color: "#52c41a"},
+    [EnumInvoice.INVOICE_STATUS.VOID]: {title: <Translate id="text_void" />, color: "#d9d9d9"},
+  };
 
   return (
     <div>
@@ -168,7 +177,7 @@ function OrderHistory(props) {
             <Statistic
               style={{padding: 15}}
               title={<Translate id="text_total_spent" />}
-              value={getTotalSpent()}
+              value={getTotalSpent(props.ordersHistory)}
               precision={2}
               prefix="$"
             />
@@ -179,7 +188,7 @@ function OrderHistory(props) {
             <Statistic
               style={{padding: 15}}
               title={<Translate id="text_total_credit" />}
-              value={getTotalCredit()}
+              value={getTotalCredit(props.ordersHistory)}
               precision={2}
               prefix="$"
             />
@@ -200,12 +209,21 @@ function OrderHistory(props) {
             {
               title: <Translate id="text_status" />,
               dataIndex: "status",
-              key: "status"
+              key: "status",
+              render: (status) => {
+                if(status || status >= 0){
+                  const statusValue = INVOICE_STATUS_STR[status];
+                  const statusColor = statusValue.color;
+                  const statusTitle = statusValue.title;
+                  return <Tag color={statusColor} style={{width: 100, textAlign: "center", margin: 0}}>{statusTitle}</Tag>;
+                }
+              }
             },
             {
               title: <Translate id="text_invoice_no" />,
               dataIndex: "invoiceNumber",
-              key: "invoiceNumber"
+              key: "invoiceNumber",
+              render: (invoiceNumber, row) => <Link style={{color: "#4D4F5C"}} to={`/transactions/detail-invoice/${row.id}`}>{invoiceNumber}</Link>
             },
             {
               title: <Translate id="text_sub_total" />,
@@ -229,7 +247,7 @@ function OrderHistory(props) {
               title: <Translate id="text_grand_total" />,
               dataIndex: "total",
               key: "total",
-              render: (total) => util.formatCurrency(total)
+              render: (total, row) => util.formatCurrency(total - row.discount)
             }
           ]}
           bordered
@@ -259,7 +277,7 @@ function LoyaltyProgram(props) {
           <Card>
             <Statistic
               title={<Translate id="text_available_point" />}
-              value={props.detail.rewardPoint}
+              value={Number(props.detail.rewardPoint)}
               style={{padding: 15}}
             />
           </Card>

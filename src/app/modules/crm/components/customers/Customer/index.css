@@ -57,6 +57,7 @@ tr.ant-table-expanded-row td {
     align-items: center;
     justify-content: center;
     font-size: 28px;
+    text-transform: uppercase;
 }
 
 .customer-profile-card .customer-contact-icon {
@@ -70,7 +71,6 @@ tr.ant-table-expanded-row td {
     align-items: center;
     justify-content: center;
     margin-right: 20px;
-    text-transform: uppercase;
 }
 
 .customer-profile-card .contact-list {

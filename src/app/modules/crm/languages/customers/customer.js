@@ -163,7 +163,7 @@ export default {
 
   "text_contact_detail": [
     "Contact Detail",
-    "ព័ត៌មានលម្អិត",
+    "ទំនាក់ទំនងលម្អិត",
   ],
   
 };
