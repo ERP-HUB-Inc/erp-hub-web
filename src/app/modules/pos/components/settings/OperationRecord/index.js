@@ -71,7 +71,6 @@ export default class IncomeExpense extends List {
           column: this.columnFilterWithKey,
           value: values.key ? values.key : "",
         });
-        console.log(values);
         const dates =
           values.dates && values.dates.length > 0
             ? `${moment(values.dates[0]).format("YYYY-MM-DD")},${moment(
