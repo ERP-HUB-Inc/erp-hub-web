@@ -69,18 +69,25 @@ export default class IncomeExpense extends List {
       if (!err) {
         const searchKey = JSON.stringify({
           column: this.columnFilterWithKey,
-          value: values.key,
+          value: values.key ? values.key : "",
         });
+        console.log(values);
+        const dates =
+          values.dates && values.dates.length > 0
+            ? `${moment(values.dates[0]).format("YYYY-MM-DD")},${moment(
+                values.dates[1]
+              ).format("YYYY-MM-DD")}`
+            : "";
+
         this.props.dispatch(
           OperationRecordAction.fetch(
             this.pageSize,
             (this.state.current - 1) * this.pageSize,
-            0,
             "",
             "",
             "",
-            "",
-            "2022-09-01,2022-09-03"
+            searchKey,
+            dates
           )
         );
         this.setState({ isClickFilter: true });
