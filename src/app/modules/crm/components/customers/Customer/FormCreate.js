@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import FormItem from "./FormItem";
 import CustomerAction from "../../../actions/customers/customer";
 import GroupCustomerAction from "../../../actions/customers/group";
@@ -26,6 +27,9 @@ export default class FormCreate extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values["contacts"] = this.state.contact;
+        if (values.dob) {
+          values.dob = moment(values.dob).format("YYYY-MM-DD");
+        }
         this.dispatch(CustomerAction.add(values));
       }
     });
