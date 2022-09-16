@@ -148,6 +148,7 @@ const Dashboard = (props) => {
     return tooltipEl;
   };
 
+  // eslint-disable-next-line
   const externalTooltipHandler = (context) => {console.log(context);
     // Tooltip Element rgba(255, 99, 132, 0.5)
     const {chart, tooltip} = context;
@@ -264,11 +265,11 @@ const Dashboard = (props) => {
                 weight: "bold"
               }
           },
-          tooltip: {
-            enabled: false,
-            position: "nearest",
-            external: externalTooltipHandler
-          }
+          // tooltip: {
+          //   enabled: false,
+          //   position: "nearest",
+          //   external: externalTooltipHandler
+          // }
       },
   };
 

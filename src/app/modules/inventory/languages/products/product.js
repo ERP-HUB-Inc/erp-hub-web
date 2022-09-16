@@ -634,7 +634,7 @@ export default {
   //Loyalty Program
   "text_loyalty_program": [
     "Loyalty Program",
-    "Loyalty Program"
+    "កម្មវិធីសន្សំពិន្ទុ"
   ],
 
   "text_loyalty_rewards": [
@@ -644,42 +644,42 @@ export default {
 
   "text_enter_loyalty_program_name": [
     "Enter loyalty program name",
-    "Enter loyalty program name"
+    "សូមបញ្ចូលឈ្មោះ"
   ],
 
   "text_new_loyalty_program": [
     "New Loyalty Program",
-    "New Loyalty Program"
+    "បង្កើតកម្មវិធីសន្សំពិន្ទុថ្មី"
   ],
 
   "text_update_loyalty_program": [
     "Update Loyalty Program",
-    "Update Loyalty Program"
+    "កែប្រែកម្មវិធីសន្សំពិន្ទុថ្មី"
   ],
 
   "text_point_per_amount": [
     "Point Per Amount",
-    "Point Per Amount"
+    "ពិន្ទុក្នុងមួយចំនួន"
   ],
 
   "text_enter_point_per_amount": [
     "Enter point per amount",
-    "Enter point per amount"
+    "សូមបញ្ចូលពិន្ទុក្នុងមួយចំនួន"
   ],
 
   "text_point_per_order": [
     "Point Per Order",
-    "Point Per Order"
+    "ពិន្ទុ/កុម្មង់"
   ],
 
   "text_enter_point_per_order": [
     "Enter point per order",
-    "Enter point per order"
+    "សូមបញ្ចូលពិន្ទុ/កុម្មង់"
   ],
 
   "text_point_per_product": [
     "Point Per Product",
-    "Point Per Product"
+    "ពិន្ទុ/ផលិតផល"
   ],
 
   "text_enter_point_per_product": [
@@ -689,7 +689,7 @@ export default {
 
   "text_point_increament": [
     "Point Increament",
-    "Point Increament"
+    "ពិន្ទុទទួលបានម្តង"
   ],
 
   "text_enter_point_increament": [
@@ -714,7 +714,7 @@ export default {
 
   "text_reward_customer_gift_loyalty_point": [
     "Rewards the customer with gifts for loyalty points",
-    "Rewards the customer with gifts for loyalty points"
+    "ផ្តល់រង្វាន់ដល់អតិថិជនជាមួយនឹងអំណោយសម្រាប់ការសន្សំពិន្ទុ"
   ],
 
   "text_gift": [
