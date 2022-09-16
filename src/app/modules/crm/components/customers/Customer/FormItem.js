@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import FormContact from "./FormContact";
 import Enum from "../../../enum";
 import GroupCustomerAction from "../../../actions/customers/group";
@@ -161,6 +162,15 @@ export default class FormItem extends Modal {
                 max={100}
                 form={this.props.form} />
             </this.Col> 
+
+            <this.Col md="12">
+              <this.DatePickers
+                name="dob"
+                label={<this.Translate id="text_date_of_birth" />}
+                placeholder={this.CATranslate("text_date_of_birth", this.props.locale)}
+                defaultValue={formData.dob ? moment(formData.dob) : ""}
+                form={this.props.form} />
+            </this.Col>
 
             <this.Col md="12">
               <this.InputText
