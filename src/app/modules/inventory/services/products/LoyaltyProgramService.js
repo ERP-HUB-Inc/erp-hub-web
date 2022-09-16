@@ -25,6 +25,14 @@ class LoyaltyProgramService extends BaseService {
     });
   }
 
+  getReward(limit, offset) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.generateAPIUrl()}/rewards?limit=${limit}&offset=${offset}`,
+      headers: this.header
+    });
+  }
+
   detail(id) {
     this.setHeader();
     return this.GET({
