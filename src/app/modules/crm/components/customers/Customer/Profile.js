@@ -19,8 +19,10 @@ import {
 } from "antd";
 import CustomerService from "../../../services/customers/CustomerService";
 import InvoiceService from "../../../../pos/services/transactions/InvoiceService";
+import LoyaltyProgramService from "../../../../inventory/services/products/LoyaltyProgramService";
 import { Button } from "../../../../common/elements/ant-ui";
 import history from "../../../../common/router/history";
+import {stringTranslate} from "../../../../common/helper/stringTranslate";
 import EnumInvoice from "../../../../pos/enums";
 import Util from "../../../../common/util";
 
@@ -30,6 +32,7 @@ class Profile extends React.Component {
   state = {
     detail: {},
     ordersHistory: [],
+    rewards: [],
     loading: false
   }
   util = new Util();
@@ -45,8 +48,14 @@ class Profile extends React.Component {
 
     InvoiceService.lists(1000, 0, "", "", JSON.stringify({customerId: id}))
     .then(response => {
-      console.log("response", response);
       this.setState({ordersHistory: response.data});
+    });
+
+    LoyaltyProgramService.getReward(50)
+    .then(response => {
+      this.setState({
+        rewards: response.data
+      });
     });
   }
 
@@ -112,7 +121,7 @@ class Profile extends React.Component {
                   <OrderHistory ordersHistory={this.state.ordersHistory} />
                 </TabPane>
                 <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_loyalty_rewards" />} key="2">
-                  <LoyaltyProgram detail={detail} />
+                  <LoyaltyProgram detail={detail} rewards={this.state.rewards} locale={this.props.locale} />
                 </TabPane>
               </Tabs>
             </Card>
@@ -141,11 +150,11 @@ function OrderHistory(props) {
     if (ordersHistory && ordersHistory.data && ordersHistory.data.length) {
       ordersHistory.data.forEach(order => {
         if (order.status === EnumInvoice.INVOICE_STATUS.PARTIAL || order.status === EnumInvoice.INVOICE_STATUS.PAID) {
-          total += Number(order.tenderBank) + Number(order.tenderCash);
+          total += Number(order.tenderBank + order.tenderCash);
         }
       });
     }
-    return total;
+    return util.floor(total);
   }
 
   function getTotalCredit(ordersHistory) {
@@ -155,12 +164,12 @@ function OrderHistory(props) {
       const activeInvoiceStatus = [EnumInvoice.INVOICE_STATUS.SENT, EnumInvoice.INVOICE_STATUS.PARTIAL, EnumInvoice.INVOICE_STATUS.PAID];
       ordersHistory.data.forEach(order => {
         if (activeInvoiceStatus.includes(order.status)) {
-          total += util.floor(order.total - order.discount);
+          total += Number(order.total - order.discount);
         }
       });
     }
     total = total - totalTender;
-    return total;
+    return util.floor(total);
   }
 
   const INVOICE_STATUS_STR = {
@@ -265,6 +274,17 @@ function OrderHistory(props) {
 }
 
 function LoyaltyProgram(props) {
+  const util = new Util();
+
+  function handleRedeemPoint(id) {
+    util.sweetAlertMessageV2(
+      stringTranslate("text_congratulation", props.locale),
+      stringTranslate("text_you_got_this_gift", props.locale),
+      "success",
+      stringTranslate("text_ok", props.locale)
+    );
+  }
+
   return (
     <div>
       <Row gutter={25} style={{padding: "3px 20px"}}>
@@ -272,7 +292,7 @@ function LoyaltyProgram(props) {
           <Card>
             <Statistic
               title={<Translate id="text_redeemed_point" />}
-              value={300}
+              value={Number(props.detail.redeemedPoint)}
               style={{padding: 15}}
             />
           </Card>
@@ -296,18 +316,18 @@ function LoyaltyProgram(props) {
               {
                 title: <Translate id="text_gift_name" />,
                 dataIndex: "name",
-                key: "name"
+                key: "name",
+                width: "64%"
               },
               {
                 title: <Translate id="text_action" />,
                 dataIndex: "id",
                 key: "action",
-                render: (id) => <Button><Translate id="text_redeem" /></Button>
+                render: (id) => <Button onClick={() => handleRedeemPoint(id)}><Translate id="text_redeem" /></Button>
               }
             ]}
             bordered
-            dataSource={props.gifts}
-            pagination={false}
+            dataSource={props.rewards.data}
           />
         </Col>
       </Row>
@@ -316,7 +336,7 @@ function LoyaltyProgram(props) {
 }
 
 LoyaltyProgram.defaultProps = {
-  gifts: [
+  loyaltyPrograms: [
     {
       id: "aaaaa",
       name: "Special gift"

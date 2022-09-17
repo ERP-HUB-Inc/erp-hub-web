@@ -366,6 +366,11 @@ export default {
     "សូមជ្រើសរើសទិន្នន័យ ដើម្បីលប់"
   ],
 
+  "text_congratulation": [
+    "Congratulation",
+    "សូមអបអរសាទរ"
+  ],
+
   "text_confirm": [
     "Confirm",
     "បានបញ្ជាក់"

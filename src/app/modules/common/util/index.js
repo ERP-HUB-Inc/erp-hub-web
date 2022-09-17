@@ -777,6 +777,15 @@ export default class Util {
     });
   }
 
+  sweetAlertMessageV2(title, text, icon, button) {
+    return swal({
+      title,
+      text,
+      icon,
+      button
+    });
+  }
+
   converNumberToWord(value = 0) {
     let result = "";
     if (!value) 

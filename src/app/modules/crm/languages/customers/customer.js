@@ -165,5 +165,10 @@ export default {
     "Contact Detail",
     "ទំនាក់ទំនងលម្អិត",
   ],
+
+  "text_you_got_this_gift": [
+    "You got this gift!",
+    "អ្នកបានទទួលកាដូរនេះ!"
+  ]
   
 };
