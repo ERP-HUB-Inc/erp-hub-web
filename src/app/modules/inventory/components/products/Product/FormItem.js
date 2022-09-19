@@ -582,6 +582,26 @@ export default class FormItem extends Modal {
               </this.Collapse>
             </this.Col>
 
+            <this.Col md="12" className="main-product-collapse form-group">
+              <this.Collapse bordered={false}>
+                <this.Panel header={<this.Translate id="text_web_setting" />} key="1">
+                  <this.Row>
+                    <this.Col md="4">
+                      <this.Select
+                        name="isFeatured"
+                        label={<this.Translate id="text_featured_product" />}
+                        dataSource={[
+                          {name: "Yes", value: true},
+                          {name: "No", value: false}
+                        ]}
+                        defaultValue={formData.isFeatured ? true : false}
+                        form={form}/>
+                    </this.Col>
+                  </this.Row>
+                </this.Panel>
+              </this.Collapse>
+            </this.Col>
+
             <this.Col md="12">
               <this.UploadImg
                 name="image"    

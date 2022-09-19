@@ -169,6 +169,16 @@ export default {
     "បរិមាណជូនដំណឹង"
   ],
 
+  "text_web_setting": [
+    "Web Setting",
+    "ការកំណត់គេហទំព័រ"
+  ],
+
+  "text_featured_product": [
+    "Featured Product",
+    "ផលិតផលពិសេស"
+  ],
+
   "input_product_tax": [
     "Tax",
     "ពន្ធអាករ"

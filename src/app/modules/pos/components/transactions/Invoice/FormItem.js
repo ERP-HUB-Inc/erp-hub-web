@@ -1040,7 +1040,7 @@ class NewInvoice extends React.PureComponent {
                     <Row>
                         <Col md={16}>
                             <Tabs type="card" className="invoice-form-tab-note">
-                                <TabPane tab={<Translate id="text_public_not" />} key="1" style={{width: 668}}>
+                                <TabPane tab={<Translate id="text_public_note" />} key="1" style={{width: 668}}>
                                     <CKEditor
                                         editor={ClassicEditor}
                                         data={formData.publicNote}

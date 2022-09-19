@@ -21,6 +21,7 @@ import { Link } from "react-router-dom";
 import sweetalert from "sweetalert";
 import moment from "moment";
 import _ from "lodash";
+import SaleOrderNo from "./SaleOrderNumber";
 import history from "../../../../common/router/history";
 import { 
   DatePickers, 
@@ -38,7 +39,6 @@ import SaleOrderService from "../../../services/transactions/SaleOrderService";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import SearchProductDropdown from "../Invoice/SearchProduct";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
-import SaleOrderNo from "./SaleOrderNumber";
 import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCreate";
 import SaleOrderInvoice from "./Invoice";
 import styles from "../styles";
@@ -216,6 +216,7 @@ class FormItem extends React.PureComponent {
           discount: 0,
           taxRate: 0,
           discountType: Enum.DISCOUNT_TYPE.AMOUNT,
+          customerNote: "",
           publicNote: "",
           template: Enum.PAPER_SIZE.EXCLUDE_TAX
         };
@@ -326,6 +327,7 @@ class FormItem extends React.PureComponent {
           discount: values.discount,
           exchangeRate: values.exchangeRate,
           discountType: values.discountType,
+          customerNote: values.customerNote,
           publicNote: values.publicNote,
           number: values.number,
           invoiceDate: this.util.formatDateForMYSQL(values["saleOrderDate"]),
@@ -899,19 +901,21 @@ class FormItem extends React.PureComponent {
           <Row>
             <Col md={16}>
               <Tabs type="card" className="invoice-form-tab-note">
-                <TabPane tab={<Translate id="text_public_not" />} key="1" style={{width: 668}}>
+                <TabPane tab={<Translate id="text_customer_note" />} key="1" style={{width: 668}}>
                   <InputTextArea
-                    name="publicNote"
+                    name="customerNote"
                     rows={6}
                     style={{width: 1000, marginTop: -4}}
-                    data={formData.publicNote}
+                    data={formData.customerNote}
                     form={this.props.form} />
                 </TabPane>
               </Tabs>
             </Col>
             <Col md={8} style={{lineHeight: "30px", paddingRight: 25}}>
               <div style={styles.itemSummary}>
-                <div style={{width: 160}}><Translate id="text_sub_total" /></div>
+                <div style={{width: 160}}>
+                  <Translate id="text_sub_total" />
+                </div>
                 <div>:</div>
                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.totalExcludeTax)}</div>
               </div>

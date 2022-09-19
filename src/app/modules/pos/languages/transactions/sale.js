@@ -295,7 +295,12 @@ export default {
     "ភាគរយ"
   ],
 
-  "text_public_not": [
+  "text_customer_note": [
+    "Customer Note",
+    "ការបញ្ជាក់អតិថិជន"
+  ],
+
+  "text_public_note": [
     "Public Note",
     "ចំណាំ"
   ],
