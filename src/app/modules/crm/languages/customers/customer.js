@@ -160,6 +160,15 @@ export default {
     "Redeem"
   ],
 
+  "text_reward_point_history": [
+    "Reward Point History",
+    "ប្រវត្តិពិន្ទុរង្វាន់"
+  ],
+
+  "text_point": [
+    "Point",
+    "Point"
+  ],
 
   "text_contact_detail": [
     "Contact Detail",

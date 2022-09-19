@@ -1,0 +1,25 @@
+import BaseService from "../../../common/services/BaseService";
+
+class CustomerMicroService extends BaseService {
+  host = process.env.REACT_APP_CUSTOMER_API_HOST;
+  port = process.env.REACT_APP_CUSTOMER_API_PORT;
+  baseUrl = `${this.host}:${this.port}/customers`;
+
+  lists(limit, offset) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}?limit=${limit}&offset=${offset}`,
+      headers: this.header
+    });
+  }
+
+  detail(id) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/${id}`,
+      headers: this.header
+    });
+  }
+}
+
+export default new CustomerMicroService();
