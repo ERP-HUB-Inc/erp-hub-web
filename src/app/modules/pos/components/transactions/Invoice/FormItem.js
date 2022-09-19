@@ -717,14 +717,19 @@ class NewInvoice extends React.PureComponent {
     }
 
     handleMakeAsSent = () => {
-        InvoiceService.makAsSent(this.id)
-        .then(() => {
-            this.setState(preState => {
-                preState.formData.status = Enum.INVOICE_STATUS.SENT;
-            });
-            message.success("Make sent success");
-        })
-        .catch(() => message.error("Error!...."));
+        this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
+        .then(willSend => {
+            if (willSend) {
+                InvoiceService.makAsSent(this.id)
+                .then(() => {
+                    this.setState(preState => {
+                        preState.formData.status = Enum.INVOICE_STATUS.SENT;
+                    });
+                    message.success("Make sent success");
+                })
+                .catch(() => message.error("Error!...."));
+            }
+        });
     }
 
     handleNewInvoice = () => {

@@ -15,9 +15,11 @@ import {
   Spin,
   Statistic,
   Table,
-  Tag
+  Tag,
+  message
 } from "antd";
-import CustomerService from "../../../services/customers/CustomerService";
+import CustomerMicroService from "../../../services/customers/CustomerMicroService";
+import CustomerRewardMicService from "../../../services/customers/CustomerRewardMicService";
 import InvoiceService from "../../../../pos/services/transactions/InvoiceService";
 import LoyaltyProgramService from "../../../../inventory/services/products/LoyaltyProgramService";
 import { Button } from "../../../../common/elements/ant-ui";
@@ -33,19 +35,15 @@ class Profile extends React.Component {
     detail: {},
     ordersHistory: [],
     rewards: [],
-    loading: false
+    rewardsHistory: [],
+    loading: false,
+    activeTab: 1
   }
   util = new Util();
   
   componentDidMount() {
     const id = this.props.match.params.id;
-    this.setState({loading: true});
-    CustomerService.detail(id)
-    .then(response => {
-      this.setState({detail: response.data.data});
-    })
-    .finally(() => this.setState({loading: false}));
-
+    this.getDetailCustomer(id);
     InvoiceService.lists(1000, 0, "", "", JSON.stringify({customerId: id}))
     .then(response => {
       this.setState({ordersHistory: response.data});
@@ -57,6 +55,30 @@ class Profile extends React.Component {
         rewards: response.data
       });
     });
+
+    this.getRewardsPointHistory(id);
+  }
+
+  getDetailCustomer(id) {
+    this.setState({loading: true});
+    CustomerMicroService.detail(id)
+    .then(response => {
+      this.setState({detail: response.data.data});
+    })
+    .finally(() => this.setState({loading: false}));
+  }
+
+  getRewardsPointHistory(customerId) {
+    CustomerRewardMicService.lists(customerId)
+    .then(response => {
+      this.setState({rewardsHistory: response.data});
+    });
+  }
+
+  onAfterRedeem(id) {
+    this.getDetailCustomer(id);
+    this.getRewardsPointHistory(id);
+    this.setState({activeTab: 2});
   }
 
   render() {
@@ -79,8 +101,8 @@ class Profile extends React.Component {
             <Card className="customer-profile-card">
               <div style={{textAlign: "center", paddingTop: 15}}>
                 <div className="profile-avatar">
-                  {detail.firstName.substr(0, 1)}
-                  {detail.lastName ? detail.lastName.substr(0, 1) : detail.firstName.substr(1, 1)}
+                  {detail.firstName && detail.firstName.substr(0, 1)}
+                  {detail.lastName ? detail.lastName.substr(0, 1) : detail.firstName && detail.firstName.substr(1, 1)}
                 </div>
                 <h4>{detail.firstName} {detail.lastName}</h4>
                 <span><Translate id="text_detail_dealer" /></span>
@@ -116,12 +138,21 @@ class Profile extends React.Component {
           </Col>
           <Col md={18}>
             <Card className="customer-profile-card">
-              <Tabs defaultActiveKey="1" type="card">
+              <Tabs defaultActiveKey={`${this.state.activeTab}`} type="card">
                 <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_order_history" />} key="1">
                   <OrderHistory ordersHistory={this.state.ordersHistory} />
                 </TabPane>
                 <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_loyalty_rewards" />} key="2">
-                  <LoyaltyProgram detail={detail} rewards={this.state.rewards} locale={this.props.locale} />
+                  <LoyaltyProgram 
+                    detail={detail} 
+                    rewards={this.state.rewards} 
+                    onSuccess={() => this.onAfterRedeem(detail.id)} 
+                    locale={this.props.locale} />
+                </TabPane>
+                <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_reward_point_history" />} key="3">
+                  <RewardPointHistory 
+                    locale={this.props.locale} 
+                    rewardsHistory={this.state.rewardsHistory} />
                 </TabPane>
               </Tabs>
             </Card>
@@ -277,12 +308,26 @@ function LoyaltyProgram(props) {
   const util = new Util();
 
   function handleRedeemPoint(id) {
-    util.sweetAlertMessageV2(
-      stringTranslate("text_congratulation", props.locale),
-      stringTranslate("text_you_got_this_gift", props.locale),
-      "success",
-      stringTranslate("text_ok", props.locale)
-    );
+    const data = {
+      rewardId: id,
+      customerId: props.detail.id
+    };
+    CustomerRewardMicService.create(data)
+    .then(() => {
+      util.sweetAlertMessageV2(
+        stringTranslate("text_congratulation", props.locale),
+        stringTranslate("text_you_got_this_gift", props.locale),
+        "success",
+        stringTranslate("text_ok", props.locale)
+      );
+      props.onSuccess();
+    })
+    .catch(err => {
+      const error = err.response && err.response.data && err.response.data.error;
+      if (error && error.message) {
+        message.error(error.message);
+      }
+    });
   }
 
   return (
@@ -317,13 +362,25 @@ function LoyaltyProgram(props) {
                 title: <Translate id="text_gift_name" />,
                 dataIndex: "name",
                 key: "name",
-                width: "64%"
+                width: "65%",
+                render: (name, row) => {
+                  return (
+                    <div style={{display: "flex", justifyContent: "space-between"}}>
+                      <div>{name}</div>
+                      <div style={{color: "#9b9999", fontSize: 12}}>
+                        <Translate id="text_reward_cost" /> {row.cost}
+                      </div>
+                    </div>
+                  );
+                }
               },
               {
                 title: <Translate id="text_action" />,
                 dataIndex: "id",
                 key: "action",
-                render: (id) => <Button onClick={() => handleRedeemPoint(id)}><Translate id="text_redeem" /></Button>
+                render: (id, row) => <Button onClick={() => handleRedeemPoint(id)} disabled={row.cost > props.detail.rewardPoint ? true : false}>
+                  <Translate id="text_redeem" />
+                </Button>
               }
             ]}
             bordered
@@ -351,6 +408,41 @@ LoyaltyProgram.defaultProps = {
     }
   ]
 };
+
+function RewardPointHistory(props) {
+  const util = new Util();
+  return (
+    <div>
+      <Row gutter={25} style={{padding: "0px 20px 20px 20px"}}>
+        <Col md={24}>
+          <Table
+            style={{marginTop: -11}}
+            rowKey={((row, index) => index)}
+            columns={[
+              {
+                title: <Translate id="text_date" />,
+                dataIndex: "createAt",
+                key: "date",
+                render: (createdAt) => util.formatDate(createdAt)
+              },
+              {
+                title: <Translate id="text_rewards" />,
+                dataIndex: "name",
+                key: "name"
+              },
+              {
+                title: <Translate id="text_reward_cost" />,
+                dataIndex: "point",
+                key: "point"
+              }
+            ]}
+            dataSource={props.rewardsHistory.data}
+          />
+        </Col>
+      </Row>
+    </div>
+  );
+}
 
 function mapStateToProps(state) {
   return {
