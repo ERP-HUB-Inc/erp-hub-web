@@ -367,7 +367,7 @@ function LoyaltyProgram(props) {
                   return (
                     <div style={{display: "flex", justifyContent: "space-between"}}>
                       <div>{name}</div>
-                      <div style={{color: row.cost > props.detail.rewardPoint ? "#a5a3a3" : "#565656", fontSize: 12}}>
+                      <div style={{color: "#9b9999", fontSize: 12}}>
                         <Translate id="text_reward_cost" /> {row.cost}
                       </div>
                     </div>
@@ -378,7 +378,9 @@ function LoyaltyProgram(props) {
                 title: <Translate id="text_action" />,
                 dataIndex: "id",
                 key: "action",
-                render: (id) => <Button onClick={() => handleRedeemPoint(id)}><Translate id="text_redeem" /></Button>
+                render: (id, row) => <Button onClick={() => handleRedeemPoint(id)} disabled={row.cost > props.detail.rewardPoint ? true : false}>
+                  <Translate id="text_redeem" />
+                </Button>
               }
             ]}
             bordered
@@ -414,7 +416,7 @@ function RewardPointHistory(props) {
       <Row gutter={25} style={{padding: "0px 20px 20px 20px"}}>
         <Col md={24}>
           <Table
-            style={{marginTop: -12}}
+            style={{marginTop: -11}}
             rowKey={((row, index) => index)}
             columns={[
               {
@@ -429,7 +431,7 @@ function RewardPointHistory(props) {
                 key: "name"
               },
               {
-                title: <Translate id="text_point" />,
+                title: <Translate id="text_reward_cost" />,
                 dataIndex: "point",
                 key: "point"
               }
