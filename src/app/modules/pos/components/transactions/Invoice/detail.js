@@ -12,6 +12,7 @@ import {
   message
 } from "antd";
 import ReactToPrint from "react-to-print";
+import Util from "../../../../common/util";
 import history from "../../../../common/router/history";
 import Enum from "../../../enums";
 import InvoiceService from "../../../services/transactions/InvoiceService";
@@ -30,6 +31,7 @@ class InvoiceDetail extends React.PureComponent {
     receipt: {}
   }
   lastId = "";
+  util = new Util();
 
   componentDidMount() {
     const id = this.props.match.params.id;
@@ -93,14 +95,19 @@ class InvoiceDetail extends React.PureComponent {
   }
 
   handleMakeAsSent = () => {
-    InvoiceService.makAsSent(this.state.formData.id)
-    .then(() => {
-        this.setState(preState => {
-            preState.formData.status = Enum.INVOICE_STATUS.SENT;
-        });
-        message.success("Make sent success");
-    })
-    .catch(() => message.error("Error!...."));
+    this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
+    .then(willSent => {
+      if (willSent) {
+        InvoiceService.makAsSent(this.state.formData.id)
+        .then(() => {
+            this.setState(preState => {
+                preState.formData.status = Enum.INVOICE_STATUS.SENT;
+            });
+            message.success("Make sent success");
+        })
+        .catch(() => message.error("Error!...."));
+      }
+    });
   }
 
   render() {
