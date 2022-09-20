@@ -275,7 +275,7 @@ function OrderHistory(props) {
               title: <Translate id="text_date" />,
               dataIndex: "invoiceDate",
               key: "invoiceDate",
-              render: (invoiceDate) => invoiceDate ? util.formatDate(invoiceDate) : ""
+              render: (invoiceDate) => invoiceDate ? util.formatDate(invoiceDate, "DD/MM/YYYY") : ""
             },
             {
               title: <Translate id="text_status" />,
@@ -313,24 +313,28 @@ function OrderHistory(props) {
               title: <Translate id="text_sub_total" />,
               dataIndex: "totalExcludeTax",
               key: "totalExcludeTax",
+              align: "right",
               render: (totalExcludeTax) => util.formatCurrency(totalExcludeTax)
             },
             {
               title: <Translate id="text_discount" />,
               dataIndex: "discount",
               key: "discount",
+              align: "right",
               render: (discount) => util.formatCurrency(discount)
             },
             {
               title: <Translate id="text_vat" />,
               dataIndex: "total",
               key: "vat",
+              align: "right",
               render: (total, row) => util.formatCurrency(total - row.totalExcludeTax)
             },
             {
               title: <Translate id="text_grand_total" />,
               dataIndex: "total",
               key: "total",
+              align: "right",
               render: (total, row) => util.formatCurrency(total - row.discount)
             }
           ]}
@@ -366,7 +370,11 @@ function LoyaltyProgram(props) {
     .catch(err => {
       const error = err.response && err.response.data && err.response.data.error;
       if (error && error.message) {
-        message.error(error.message);
+        let message = "Internal Server Error!";
+        if (error.code === 403) {
+          message = stringTranslate("text_not_enough_point", props.locale);
+        }
+        util.sweetAlertMessageV2(stringTranslate("text_sorry", props.locale), message, "error");
       }
     });
   }
@@ -403,23 +411,19 @@ function LoyaltyProgram(props) {
                 title: <Translate id="text_gift_name" />,
                 dataIndex: "name",
                 key: "name",
-                width: "65%",
-                render: (name, row) => {
-                  return (
-                    <div style={{display: "flex", justifyContent: "space-between"}}>
-                      <div>{name}</div>
-                      <div style={{color: "#9b9999", fontSize: 12}}>
-                        <Translate id="text_reward_cost" /> {row.cost}
-                      </div>
-                    </div>
-                  );
-                }
+                width: "64%"
+              },
+              {
+                title: <Translate id="text_cost" />,
+                dataIndex: "cost",
+                key: "cost",
+                align: "right"
               },
               {
                 title: <Translate id="text_action" />,
                 dataIndex: "id",
                 key: "action",
-                render: (id, row) => <Button onClick={() => handleRedeemPoint(id)} disabled={row.cost > props.detail.rewardPoint ? true : false}>
+                render: (id) => <Button onClick={() => handleRedeemPoint(id)}>
                   <Translate id="text_redeem" />
                 </Button>
               }
@@ -464,7 +468,7 @@ function RewardPointHistory(props) {
                 title: <Translate id="text_date" />,
                 dataIndex: "createAt",
                 key: "date",
-                render: (createdAt) => util.formatDate(createdAt)
+                render: (createdAt) => util.formatDate(createdAt, "DD/MM/YYYY")
               },
               {
                 title: <Translate id="text_rewards" />,
@@ -474,7 +478,8 @@ function RewardPointHistory(props) {
               {
                 title: <Translate id="text_reward_cost" />,
                 dataIndex: "point",
-                key: "point"
+                key: "point",
+                align: "right"
               }
             ]}
             dataSource={props.rewardsHistory.data}

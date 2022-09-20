@@ -178,6 +178,11 @@ export default {
   "text_you_got_this_gift": [
     "You got this gift!",
     "អ្នកបានទទួលកាដូរនេះ!"
+  ],
+
+  "text_not_enough_point": [
+    "You don't have enough point to get this gift!",
+    "អ្នកមិនមានកាក់គ្រប់គ្រាន់សម្រាប់ទទួលរង្វាន់នេះទេ!"
   ]
   
 };
