@@ -22,7 +22,7 @@ import CustomerMicroService from "../../../services/customers/CustomerMicroServi
 import CustomerRewardMicService from "../../../services/customers/CustomerRewardMicService";
 import InvoiceService from "../../../../pos/services/transactions/InvoiceService";
 import LoyaltyProgramService from "../../../../inventory/services/products/LoyaltyProgramService";
-import { Button } from "../../../../common/elements/ant-ui";
+import { Button, DateRangePicker } from "../../../../common/elements/ant-ui";
 import history from "../../../../common/router/history";
 import {stringTranslate} from "../../../../common/helper/stringTranslate";
 import EnumInvoice from "../../../../pos/enums";
@@ -37,7 +37,8 @@ class Profile extends React.Component {
     rewards: [],
     rewardsHistory: [],
     loading: false,
-    activeTab: 1
+    activeTab: 1,
+    orderLoading: false
   }
   util = new Util();
   
@@ -81,6 +82,22 @@ class Profile extends React.Component {
     this.setState({activeTab: 2});
   }
 
+  onChangeDateFilter = dates => {
+    let filter = JSON.stringify({customerId: this.props.match.params.id}),
+      ranges = "";
+
+    if (dates && dates.length) {
+      ranges = JSON.stringify({column: "invoiceDate", value: [this.util.formatDateForMYSQL(dates[0]), this.util.formatDateForMYSQL(dates[1])]});
+    }
+
+    this.setState({orderLoading: true});
+    InvoiceService.lists(1000, 0, "", "", filter, "", ranges)
+    .then(response => {
+      this.setState({ordersHistory: response.data});
+    })
+    .finally(() => this.setState({orderLoading: false}));
+  }
+
   render() {
     const {detail} = this.state;
     return (
@@ -93,6 +110,14 @@ class Profile extends React.Component {
           }}
           onBack={() => history.goBack()}
           title={<Translate id="text_customer_profile" />}
+          extra={[
+            <DateRangePicker
+              name="dates"
+              onChange={this.onChangeDateFilter}
+              style={{marginBottom: 0, width: 260}}
+              key={1}
+              form={this.props.form} />
+          ]}
         />
 
         {Object.keys(detail).length ?
@@ -140,7 +165,10 @@ class Profile extends React.Component {
             <Card className="customer-profile-card">
               <Tabs defaultActiveKey={`${this.state.activeTab}`} type="card">
                 <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_order_history" />} key="1">
-                  <OrderHistory ordersHistory={this.state.ordersHistory} />
+                  <OrderHistory 
+                    ordersHistory={this.state.ordersHistory} 
+                    locale={this.props.locale}
+                    loading={this.state.orderLoading} />
                 </TabPane>
                 <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_loyalty_rewards" />} key="2">
                   <LoyaltyProgram 
@@ -163,7 +191,7 @@ class Profile extends React.Component {
           status={404}
           title="404"
           subTitle="Customer not found"
-          extra={<Button type="info" onClick><Translate id="text_back" /></Button>}
+          extra={<Button type="info" onClick={() => history.goBack()}><Translate id="text_back" /></Button>}
         />
         }
       </div>
@@ -253,6 +281,18 @@ function OrderHistory(props) {
               title: <Translate id="text_status" />,
               dataIndex: "status",
               key: "status",
+              filters: [
+                {text: <Translate id="text_draft" />, value: EnumInvoice.INVOICE_STATUS.DRAFT},
+                {text: <Translate id="text_sent" />, value: EnumInvoice.INVOICE_STATUS.SENT},
+                {text: <Translate id="text_partial_pay" />, value: EnumInvoice.INVOICE_STATUS.PARTIAL},
+                {text: <Translate id="text_paid" />, value: EnumInvoice.INVOICE_STATUS.PAID},
+                {text: <Translate id="text_void" />, value: EnumInvoice.INVOICE_STATUS.VOID}
+              ],
+              onFilter: (value, record) => record.status === value,
+              locale: {
+                filterConfirm: stringTranslate("text_ok", props.locale),
+                filterReset: stringTranslate("text_reset", props.locale)
+              },
               render: (status) => {
                 if(status || status >= 0){
                   const statusValue = INVOICE_STATUS_STR[status];
@@ -296,6 +336,7 @@ function OrderHistory(props) {
           ]}
           bordered
           dataSource={props.ordersHistory.data}
+          loading={props.loading}
         />
         </Col>
       </Row>

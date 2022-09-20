@@ -7,7 +7,7 @@ export class DateRangePicker extends Element {
   render(){
     const {getFieldDecorator} = this.props.form;
     return (
-      <this.FormItem label={this.props.label}>
+      <this.FormItem label={this.props.label} style={this.props.style}>
         { 
           getFieldDecorator(this.props.name, {rules: [
             {

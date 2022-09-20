@@ -558,6 +558,11 @@ export default {
     "បញ្ចប់"
   ],
 
+  "text_reset": [
+    "Reset",
+    "ដូចដើម"
+  ],
+
   "text_mark_as_approved": [
     "Mark as Approved",
     "បានអនុម័ត"
@@ -727,7 +732,7 @@ export default {
 
   "text_void": [
     "Void",
-    "Void"
+    "បានលុប"
   ],
 
   "text_ok": [
