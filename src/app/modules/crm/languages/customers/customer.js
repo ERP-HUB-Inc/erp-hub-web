@@ -182,7 +182,7 @@ export default {
 
   "text_not_enough_point": [
     "You don't have enough point to get this gift!",
-    "អ្នកមិនមានកាក់គ្រប់គ្រាន់សម្រាប់ទទួលរង្វាន់នេះទេ!"
+    "អ្នកមិនមានពិន្ទុគ្រប់គ្រាន់សម្រាប់ទទួលរង្វាន់នេះទេ!"
   ]
   
 };

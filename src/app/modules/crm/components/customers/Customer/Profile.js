@@ -337,6 +337,7 @@ function OrderHistory(props) {
               render: (total, row) => util.formatCurrency(total - row.discount)
             }
           ]}
+          pagination={false}
           bordered
           dataSource={props.ordersHistory.data}
           loading={props.loading}
@@ -422,11 +423,12 @@ function LoyaltyProgram(props) {
                 title: <Translate id="text_action" />,
                 dataIndex: "id",
                 key: "action",
-                render: (id) => <Button onClick={() => handleRedeemPoint(id)}>
+                render: (id) => <Button type="info" onClick={() => handleRedeemPoint(id)}>
                   <Translate id="text_redeem" />
                 </Button>
               }
             ]}
+            pagination={false}
             bordered
             dataSource={props.rewards.data}
           />
