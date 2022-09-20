@@ -15,11 +15,10 @@ import {
   Spin,
   Statistic,
   Table,
-  Tag,
-  message
+  Tag
 } from "antd";
 import CustomerMicroService from "../../../services/customers/CustomerMicroService";
-import CustomerRewardMicService from "../../../services/customers/CustomerRewardMicService";
+import RewardHistoryService from "../../../services/customers/RewardHistoryService";
 import InvoiceService from "../../../../pos/services/transactions/InvoiceService";
 import LoyaltyProgramService from "../../../../inventory/services/products/LoyaltyProgramService";
 import { Button, DateRangePicker } from "../../../../common/elements/ant-ui";
@@ -70,7 +69,7 @@ class Profile extends React.Component {
   }
 
   getRewardsPointHistory(customerId) {
-    CustomerRewardMicService.lists(customerId)
+    RewardHistoryService.lists(customerId)
     .then(response => {
       this.setState({rewardsHistory: response.data});
     });
@@ -357,7 +356,7 @@ function LoyaltyProgram(props) {
       rewardId: id,
       customerId: props.detail.id
     };
-    CustomerRewardMicService.create(data)
+    RewardHistoryService.create(data)
     .then(() => {
       util.sweetAlertMessageV2(
         stringTranslate("text_congratulation", props.locale),
@@ -477,8 +476,8 @@ function RewardPointHistory(props) {
               },
               {
                 title: <Translate id="text_reward_cost" />,
-                dataIndex: "point",
-                key: "point",
+                dataIndex: "cost",
+                key: "cost",
                 align: "right"
               }
             ]}

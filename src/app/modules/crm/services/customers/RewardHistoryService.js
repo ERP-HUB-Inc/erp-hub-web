@@ -1,9 +1,9 @@
 import BaseService from "../../../common/services/BaseService";
 
-class CustomerRewardMicroService extends BaseService {
+class RewardHistoryService extends BaseService {
   host = process.env.REACT_APP_CUSTOMER_API_HOST;
   port = process.env.REACT_APP_CUSTOMER_API_PORT;
-  baseUrl = `${this.host}:${this.port}/customer_rewards`;
+  baseUrl = `${this.host}:${this.port}/rewards_history`;
 
   lists(customerId) {
     this.setHeader();
@@ -23,4 +23,4 @@ class CustomerRewardMicroService extends BaseService {
   }
 }
 
-export default new CustomerRewardMicroService();
+export default new RewardHistoryService();
