@@ -229,7 +229,7 @@ function OrderHistory(props) {
             <Statistic
               style={{padding: 15}}
               title={<Translate id="text_total_spent" />}
-              value={Number(totalSpent)}
+              value={util.floor(totalSpent)}
               precision={2}
               prefix="$"
             />
@@ -240,7 +240,7 @@ function OrderHistory(props) {
             <Statistic
               style={{padding: 15}}
               title={<Translate id="text_total_credit" />}
-              value={Number(totalCredit)}
+              value={util.floor(totalCredit)}
               precision={2}
               prefix="$"
             />
