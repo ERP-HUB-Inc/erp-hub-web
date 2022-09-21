@@ -112,7 +112,7 @@ class Profile extends React.Component {
         />
 
         {Object.keys(detail).length ?
-        <Row gutter={24} style={{paddingLeft: 24}}>
+        <Row gutter={24} style={{paddingLeft: 24, display: "flex", paddingBottom: 20}}>
           <Col md={6}>
             <Card className="customer-profile-card">
               <div style={{textAlign: "center", paddingTop: 15}}>
@@ -261,7 +261,7 @@ function OrderHistory(props) {
         <Col md={24}>
         <Table
           rowKey="id"
-          style={{marginTop: -10}}
+          style={{marginTop: -10, paddingBottom: 15}}
           rowClassName="customer-order-history-table-row"
           columns={[
             {
