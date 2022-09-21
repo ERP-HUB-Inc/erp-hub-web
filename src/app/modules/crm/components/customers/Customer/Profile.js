@@ -109,14 +109,6 @@ class Profile extends React.Component {
           }}
           onBack={() => history.goBack()}
           title={<Translate id="text_customer_profile" />}
-          extra={[
-            <DateRangePicker
-              name="dates"
-              onChange={this.onChangeDateFilter}
-              style={{marginBottom: 0, width: 260}}
-              key={1}
-              form={this.props.form} />
-          ]}
         />
 
         {Object.keys(detail).length ?
@@ -167,6 +159,9 @@ class Profile extends React.Component {
                   <OrderHistory 
                     ordersHistory={this.state.ordersHistory} 
                     locale={this.props.locale}
+                    id={detail.id}
+                    onChangeDateFilter={this.onChangeDateFilter}
+                    form={this.props.form}
                     loading={this.state.orderLoading} />
                 </TabPane>
                 <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_loyalty_rewards" />} key="2">
@@ -201,34 +196,9 @@ class Profile extends React.Component {
 }
 
 function OrderHistory(props) {
+  const [totalSpent, setTotalSpent] = React.useState(0);
+  const [totalCredit, setTotalCredit] = React.useState(0);
   const util = new Util();
-
-  function getTotalSpent(ordersHistory) {
-    let total = 0;
-    if (ordersHistory && ordersHistory.data && ordersHistory.data.length) {
-      ordersHistory.data.forEach(order => {
-        if (order.status === EnumInvoice.INVOICE_STATUS.PARTIAL || order.status === EnumInvoice.INVOICE_STATUS.PAID) {
-          total += Number(order.tenderBank + order.tenderCash);
-        }
-      });
-    }
-    return util.floor(total);
-  }
-
-  function getTotalCredit(ordersHistory) {
-    let total = 0;    
-    const totalTender = getTotalSpent(ordersHistory);
-    if (ordersHistory && ordersHistory.data && ordersHistory.data.length) {
-      const activeInvoiceStatus = [EnumInvoice.INVOICE_STATUS.SENT, EnumInvoice.INVOICE_STATUS.PARTIAL, EnumInvoice.INVOICE_STATUS.PAID];
-      ordersHistory.data.forEach(order => {
-        if (activeInvoiceStatus.includes(order.status)) {
-          total += Number(order.total - order.discount);
-        }
-      });
-    }
-    total = total - totalTender;
-    return util.floor(total);
-  }
 
   const INVOICE_STATUS_STR = {
     [EnumInvoice.INVOICE_STATUS.DRAFT]: {title: <Translate id="text_draft" />, color: "#bfbfbf"},
@@ -238,6 +208,19 @@ function OrderHistory(props) {
     [EnumInvoice.INVOICE_STATUS.VOID]: {title: <Translate id="text_void" />, color: "#d9d9d9"},
   };
 
+  React.useEffect(() => {
+    CustomerMicroService.getTotalSpent(props.id)
+    .then(response => {
+      setTotalSpent(response.data && response.data.data.total);
+    });
+
+    CustomerMicroService.getTotalCredit(props.id)
+    .then(response => {
+      setTotalCredit(response.data && response.data.data.total);
+    });
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <div>
       <Row gutter={25} style={{padding: "3px 20px"}}>
@@ -246,7 +229,7 @@ function OrderHistory(props) {
             <Statistic
               style={{padding: 15}}
               title={<Translate id="text_total_spent" />}
-              value={getTotalSpent(props.ordersHistory)}
+              value={Number(totalSpent)}
               precision={2}
               prefix="$"
             />
@@ -257,17 +240,28 @@ function OrderHistory(props) {
             <Statistic
               style={{padding: 15}}
               title={<Translate id="text_total_credit" />}
-              value={getTotalCredit(props.ordersHistory)}
+              value={Number(totalCredit)}
               precision={2}
               prefix="$"
             />
           </Card>
         </Col>
       </Row>
-      <Row style={{padding: "3px 20px 2px 20px"}}>
+      <Row gutter={25} style={{padding: "13px 20px 0"}}>
+        <Col md={8}>
+          <DateRangePicker
+            name="dates"
+            onChange={props.onChangeDateFilter}
+            style={{marginBottom: 0}}
+            key={1}
+            form={props.form} />
+        </Col>
+      </Row>
+      <Row style={{padding: "0px 20px 2px 20px"}}>
         <Col md={24}>
         <Table
           rowKey="id"
+          style={{marginTop: -10}}
           rowClassName="customer-order-history-table-row"
           columns={[
             {
