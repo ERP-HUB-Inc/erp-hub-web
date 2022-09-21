@@ -707,12 +707,9 @@ class NewInvoice extends React.PureComponent {
         }
     }
 
-    handleAfterPayment = () => {
-        this.setState(preState => {
-            preState.showDrawer = false;
-            preState.formData.status = Enum.INVOICE_STATUS.PAID;
-            return preState;
-        });
+    handleAfterPayment = (id) => {
+        this.getDetail(id);
+        this.setState({showDrawer: false});
         message.success("Payment success");
     }
 
@@ -1184,7 +1181,7 @@ class NewInvoice extends React.PureComponent {
                         formData={formData} 
                         locale={this.props.locale}
                         onClose={() => this.setState({showDrawer: false})}
-                        onSuccess={this.handleAfterPayment}
+                        onSuccess={() => this.handleAfterPayment(formData.id)}
                         form={this.props.form} />
                 </Drawer>
             </div>
