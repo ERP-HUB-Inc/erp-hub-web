@@ -7,16 +7,17 @@ import StartUp from "../../StartUp";
 // TRANSACTION
 const Invoice = Loadable({
   loader: () => import("../../../../pos/containers/transactions/Invoice"),
-  loading: () => <StartUp />
+  loading: () => <StartUp />,
 });
 
 const SaleOrderTransaction = Loadable({
   loader: () => import("../../../../pos/components/transactions/SaleOrder"),
-  loading: () => <StartUp />
+  loading: () => <StartUp />,
 });
 
 const Return = Loadable({
-  loader: () => import("../../../../pos/containers/transactions/SaleHistory/Return"),
+  loader: () =>
+    import("../../../../pos/containers/transactions/SaleHistory/Return"),
   loading: () => <StartUp />,
 });
 
@@ -26,18 +27,21 @@ const Quotation = Loadable({
 });
 
 const QuotationCreate = Loadable({
-  loader: () => import("../../../../pos/components/transactions/Quotation/FormItem"),
+  loader: () =>
+    import("../../../../pos/components/transactions/Quotation/FormItem"),
   loading: () => <StartUp />,
 });
 
 const QuotationUpdate = Loadable({
-  loader: () => import("../../../../pos/components/transactions/Quotation/FormItem"),
+  loader: () =>
+    import("../../../../pos/components/transactions/Quotation/FormItem"),
   loading: () => <StartUp />,
 });
 
 const QuotationDetail = Loadable({
-  loader: () => import("../../../../pos/components/transactions/Quotation/Detail"),
-  loading: () => <StartUp />
+  loader: () =>
+    import("../../../../pos/components/transactions/Quotation/Detail"),
+  loading: () => <StartUp />,
 });
 
 const OperationRecord = Loadable({
@@ -53,21 +57,24 @@ const ManageProduct = Loadable({
 
 const Promotion = Loadable({
   loader: () => import("../../../../inventory/components/products/Promotion"),
-  loading: () => <StartUp />
+  loading: () => <StartUp />,
 });
 
 const LoyaltyProgram = Loadable({
-  loader: () => import("../../../../inventory/components/products/LoyaltyProgram"),
-  loading: () => <StartUp />
+  loader: () =>
+    import("../../../../inventory/components/products/LoyaltyProgram"),
+  loading: () => <StartUp />,
 });
 
 const LoyaltyProgramForm = Loadable({
-  loader: () => import("../../../../inventory/components/products/LoyaltyProgram/FormItem"),
-  loading: () => <StartUp />
+  loader: () =>
+    import("../../../../inventory/components/products/LoyaltyProgram/FormItem"),
+  loading: () => <StartUp />,
 });
 
 const Attribute = Loadable({
-  loader: () => import("../../../../inventory/containers/products/VariantAttribute"),
+  loader: () =>
+    import("../../../../inventory/containers/products/VariantAttribute"),
   loading: () => <StartUp />,
 });
 
@@ -77,17 +84,20 @@ const Brand = Loadable({
 });
 
 const Category = Loadable({
-  loader: () => import("../../../../inventory/containers/products/ProductsType"),
+  loader: () =>
+    import("../../../../inventory/containers/products/ProductsType"),
   loading: () => <StartUp />,
 });
 
 const PrintPriceTag = Loadable({
-  loader: () => import("../../../../inventory/containers/products/PrintPriceTag"),
+  loader: () =>
+    import("../../../../inventory/containers/products/PrintPriceTag"),
   loading: () => <StartUp />,
 });
 
 const ProductUnit = Loadable({
-  loader: () => import("../../../../inventory/containers/products/ProductsUnit"),
+  loader: () =>
+    import("../../../../inventory/containers/products/ProductsUnit"),
   loading: () => <StartUp />,
 });
 
@@ -107,23 +117,29 @@ const Supplier = Loadable({
 });
 
 const StockAdjustmentRequest = Loadable({
-  loader: () => import("../../../../inventory/containers/stock/StockAdjustmentRequest"),
+  loader: () =>
+    import("../../../../inventory/containers/stock/StockAdjustmentRequest"),
   loading: () => <StartUp />,
 });
 
 // REPORT
 const SaleReportDashboard = Loadable({
-  loader: () => import("../../../../pos/containers/reports/Sale/SaleReportDashboard"),
+  loader: () =>
+    import("../../../../pos/containers/reports/Sale/SaleReportDashboard"),
   loading: () => <StartUp />,
 });
 
 const LowSaleReport = Loadable({
-  loader: () => import("../../../../pos/components/reports/Sale/ReportLowSales"),
+  loader: () =>
+    import("../../../../pos/components/reports/Sale/ReportLowSales"),
   loading: () => <StartUp />,
 });
 
 const PurchaseReportDashboard = Loadable({
-  loader: () => import("../../../../pos/components/reports/Purchase/PurchaseReportDashboard"),
+  loader: () =>
+    import(
+      "../../../../pos/components/reports/Purchase/PurchaseReportDashboard"
+    ),
   loading: () => <StartUp />,
 });
 
@@ -133,7 +149,13 @@ const ProductReport = Loadable({
 });
 
 const InventoryDashboard = Loadable({
-  loader: () => import("../../../../pos/containers/reports/Inventory/InventoryDashboard"),
+  loader: () =>
+    import("../../../../pos/containers/reports/Inventory/InventoryDashboard"),
+  loading: () => <StartUp />,
+});
+
+const AdjustmentReport = Loadable({
+  loader: () => import("../../../../pos/containers/reports/Adjustment"),
   loading: () => <StartUp />,
 });
 
@@ -224,7 +246,7 @@ const ManageCustomer = Loadable({
 
 const CustomerProfile = Loadable({
   loader: () => import("../../../../crm/components/customers/Customer/Profile"),
-  loading: () => <StartUp />
+  loading: () => <StartUp />,
 });
 
 const Profile = Loadable({
@@ -233,7 +255,6 @@ const Profile = Loadable({
 });
 
 /*==============================END CRM===================================*/
-
 
 /*==============================COMMON===================================*/
 // SETTING
@@ -247,54 +268,54 @@ const dataSource = {
     title: <Translate id="text_transaction" />,
     subItems: [
       {
-        route: "/transactions/return", 
+        route: "/transactions/return",
         component: Return,
-        isFashNav: false
+        isFashNav: false,
       },
       {
         title: <Translate id="text_quotation" />,
         icon: "icon-pre-order",
-        route: "/transactions/quotation", 
+        route: "/transactions/quotation",
         component: Quotation,
-        isFashNav: true
+        isFashNav: true,
       },
       {
-        route: "/transactions/quotation-create", 
+        route: "/transactions/quotation-create",
         component: QuotationCreate,
-        isFashNav: false
+        isFashNav: false,
       },
       {
-        route: "/transactions/quotation-update/:id", 
+        route: "/transactions/quotation-update/:id",
         component: QuotationUpdate,
-        isFashNav: false
+        isFashNav: false,
       },
       {
-        route: "/transactions/quotation-detail/:id", 
+        route: "/transactions/quotation-detail/:id",
         component: QuotationDetail,
-        isFashNav: false
+        isFashNav: false,
       },
       {
         title: <Translate id="text_sale_order" />,
         icon: "icon-time",
         route: "/transactions/sales-order",
         component: SaleOrderTransaction,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_invoices" />,
         icon: "icon-calendar",
         route: "/transactions/invoice",
         component: Invoice,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_income_and_expense" />,
         icon: "icon-operation",
         route: "/transactions/income_expense",
         component: OperationRecord,
-        isFashNav: true
-      }
-    ]
+        isFashNav: true,
+      },
+    ],
   },
   products: {
     icon: "icon-items",
@@ -306,63 +327,63 @@ const dataSource = {
         icon: "icon-time",
         route: "/products/list",
         component: ManageProduct,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_promotion" />,
         icon: "icon-sale-return",
         route: "/promotions/list",
         component: Promotion,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_loyalty_program" />,
         icon: "icon-sale-return",
         route: "/loyalty-program/list",
         component: LoyaltyProgram,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         route: "/loyalty-program/create",
         component: LoyaltyProgramForm,
-        isFashNav: false
+        isFashNav: false,
       },
       {
         route: "/loyalty-program/update/:id",
         component: LoyaltyProgramForm,
-        isFashNav: false
+        isFashNav: false,
       },
       {
         title: <Translate id="text_category" />,
         icon: "icon-types",
         route: "/products/category",
         component: Category,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_attribute" />,
         icon: "icon-time",
         route: "/products/attributes",
-        component: Attribute
+        component: Attribute,
       },
       {
-        title:  <Translate id="text_brand" />,
+        title: <Translate id="text_brand" />,
         icon: "icon-brand",
         route: "/products/brand",
-        component: Brand
+        component: Brand,
       },
       {
         title: <Translate id="text_manage_unit" />,
         icon: "icon-price-book",
         route: "/products/units",
         component: ProductUnit,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_print_price_tags" />,
         icon: "icon-price-book",
         route: "/products/price-tags",
-        component: PrintPriceTag
+        component: PrintPriceTag,
       },
       // {
       //   title: "Import Product",
@@ -385,7 +406,7 @@ const dataSource = {
       //   component: Promotion,
       //   isFashNav: true
       // }
-    ]
+    ],
   },
   stocks: {
     icon: "icon-stock",
@@ -397,30 +418,30 @@ const dataSource = {
         icon: "icon-customer",
         route: "/stock/supplier",
         component: Supplier,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_purchase_order" />,
         icon: "icon-purchasing",
         route: "/stock/purchase/order",
         component: PurchaseOrder,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_stock_adjustment" />,
         icon: "icon-stock-audit",
         route: "/stock/adjustment/request",
         component: StockAdjustmentRequest,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_stock_transfer" />,
         icon: "icon-stock-transfer",
         route: "/stock/transfer",
         component: StockTransfer,
-        isFashNav: true
-      }
-    ]
+        isFashNav: true,
+      },
+    ],
   },
   customers: {
     icon: "icon-customer",
@@ -432,21 +453,21 @@ const dataSource = {
         icon: "icon-customer ",
         route: "/customer",
         component: ManageCustomer,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_group" />,
         icon: "icon-employee",
         route: "/customers/group",
         component: GroupCustomer,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         route: "/customer-profile/:id",
         component: CustomerProfile,
-        isFashNav: false
-      }
-    ]
+        isFashNav: false,
+      },
+    ],
   },
   employees: {
     icon: "icon-employee",
@@ -457,13 +478,13 @@ const dataSource = {
         title: <Translate id="text_manage_employee" />,
         icon: "icon-employee",
         route: "/employee",
-        component: ManageEmployee
+        component: ManageEmployee,
       },
       {
         route: "/profile",
-        component: Profile
-      }
-    ]
+        component: Profile,
+      },
+    ],
   },
   reports: {
     icon: "icon-reports",
@@ -474,27 +495,27 @@ const dataSource = {
         title: <Translate id="text_sale_report" />,
         icon: "icon-sale-report",
         route: "/reports/sale_dashboard",
-        component: SaleReportDashboard
+        component: SaleReportDashboard,
       },
       {
         title: <Translate id="text_low_sales_report" />,
         icon: "icon-stock",
         route: "/reports/low_sales",
         new: "New",
-        component: LowSaleReport
+        component: LowSaleReport,
       },
       {
         title: <Translate id="text_register_report" />,
         icon: "icon-currency",
         route: "/reports/register",
         isFashNav: true,
-        component: RegisterReport
+        component: RegisterReport,
       },
       {
         title: <Translate id="text_purchase_report" />,
         icon: "icon-purchasing",
         route: "/reports/purchase_dashboard",
-        component: PurchaseReportDashboard
+        component: PurchaseReportDashboard,
       },
       {
         title: <Translate id="text_product_report" />,
@@ -507,16 +528,23 @@ const dataSource = {
         icon: "icon-stock",
         route: "/reports/inventory_dashboard",
         component: InventoryDashboard,
-        isFashNav: true
+        isFashNav: true,
+      },
+      {
+        title: "Adjustment Report",
+        icon: "icon-stock",
+        route: "/reports/adjustment-report",
+        component: AdjustmentReport,
+        isFashNav: true,
       },
       {
         title: <Translate id="text_profit_and_loss_report" />,
         icon: "icon-sale-return",
         route: "/reports/profit-lost",
         component: ProfitAndLostReport,
-        isFashNav: true
-      }
-    ]
+        isFashNav: true,
+      },
+    ],
   },
   settings: {
     icon: "icon-settings",
@@ -528,66 +556,66 @@ const dataSource = {
         icon: "icon-account",
         route: "/settings/account",
         component: StoreAccount,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_location" />,
         icon: "icon-store",
         route: "/settings/location",
         component: StoreLocation,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_receipt_template" />,
         icon: "icon-receipt",
         route: "/settings/receipt/template",
         component: ReceiptTemplate,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_payment_method" />,
         icon: "icon-payment-method",
         route: "/settings/payment-method",
         component: PaymentMethod,
-        isFashNav: false
+        isFashNav: false,
       },
       {
         title: <Translate id="text_tax" />,
         icon: "icon-taxes",
         route: "/settings/tax",
         component: Tax,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_role_access" />,
         icon: "icon-role",
         route: "/settings/role",
         component: RoleAccess,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_currency" />,
         icon: "icon-currency",
         route: "/settings/currency",
         component: Currency,
-        isFashNav: false
+        isFashNav: false,
       },
       {
         title: <Translate id="currency_exchange" />,
         icon: "icon-operation",
         route: "/settings/currency-exchange",
         component: CurrencyExchange,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         title: <Translate id="text_language" />,
         icon: "icon-language",
         route: "/settings/language",
         component: StoreLanguage,
-        isFashNav: false
-      }
-    ]
-  }
+        isFashNav: false,
+      },
+    ],
+  },
 };
 
 export default dataSource;

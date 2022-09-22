@@ -1,0 +1,9 @@
+.main-purchase .totals {
+    margin-right: 366px;
+    font-size: 10pt;
+}
+
+.main-purchase .ant-table-footer {
+    border-top: none;
+    padding-right: 0 !important
+}
