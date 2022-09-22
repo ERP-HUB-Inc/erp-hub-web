@@ -20,6 +20,22 @@ class CustomerMicroService extends BaseService {
       headers: this.header
     });
   }
+
+  getTotalSpent(id) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/${id}/total_paid`,
+      headers: this.header
+    });
+  }
+
+  getTotalCredit(id) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/${id}/total_credit`,
+      headers: this.header
+    });
+  }
 }
 
 export default new CustomerMicroService();
