@@ -22,5 +22,10 @@ export default {
     "Unit",
     "ឯកតា",
     "Unit",
+  ],
+
+  "text_stock_consignment": [
+    "Stock Consignment",
+    "Stock Consignment"
   ]
 };

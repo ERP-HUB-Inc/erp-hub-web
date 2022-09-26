@@ -742,7 +742,7 @@ export default {
   
   "text_returned": [
     "Returned",
-    "បង្វិលអោយវិញហើយ"
+    "បានបង្វិលអោយវិញ"
   ],
   
   "text_description": [
