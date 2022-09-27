@@ -182,9 +182,7 @@ class FormItem extends React.PureComponent {
       if (!err) {
         if (values.status === "Returned") {
           const {formData} = this.state;
-          if (formData && formData.status === "Received") {
-
-          } else {
+          if (formData && formData.status === "Draft" && values.status === "Returned") {
             return this.util.sweetAlertMessageV2("Error!", "Can't return stock before received!", "error");
           }
         }
@@ -425,6 +423,7 @@ class FormItem extends React.PureComponent {
                   productSearch={this.state.productSearch}
                   handleOnSelectList={this.handleOnSelectList}
                   placeholder={`${stringTranslate("text_search_product", this.props.locale)}`}
+                  disabled={this.props.form.getFieldValue("status") === "Returned" ? true : false}
                   locale={this.props.locale}
                   form={this.props.form} />
 
