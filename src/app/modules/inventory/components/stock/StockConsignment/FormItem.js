@@ -53,7 +53,7 @@ class FormItem extends React.PureComponent {
           <InputText
             name={`productName[${index}]`}
             placeholder={`${stringTranslate("text_product_name", this.props.locale)}`}
-            data={`${productName} ${record.variantName}`}
+            data={`${productName} ${record.variantName ? record.variantName : ""}`}
             form={this.props.form} />
           <InputText
             name={`id[${index}]`}
