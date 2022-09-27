@@ -164,7 +164,7 @@ class FormItem extends React.PureComponent {
       if (this.props.productVariant.list) {
         this.handleOnSelectList(this.state.selectedProduct, [this.props.productVariant.list], false);
       } else {
-        this.Message.error(this.CATranslate("error_product_not_found", this.props.locale));
+        this.Message.error(stringTranslate("error_product_not_found", this.props.locale));
         this.props.form.setFieldsValue({searchProduct: ""});
         document.getElementById("searchProduct").focus();
       }

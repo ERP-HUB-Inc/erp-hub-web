@@ -36,6 +36,7 @@ import EnumProduct from "../../../../inventory/enums";
 import Util from "../../../../common/util";
 import CustomerService from "../../../../crm/services/customers/CustomerService";
 import SaleOrderService from "../../../services/transactions/SaleOrderService";
+import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import SearchProductDropdown from "../Invoice/SearchProduct";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
@@ -53,6 +54,8 @@ class FormItem extends React.PureComponent {
     productSearch: [],
     transactionEntries: [],
     customerForm: null,
+    selectedProduct: null,
+    modalVariant: null,
     loading: false
   }
   entryColumn = [
@@ -263,6 +266,17 @@ class FormItem extends React.PureComponent {
       });
 
       this.props.dispatch(CustomerAction.reset("RESET_ADD_CUSTOMERS"));
+    }
+
+    if (this.props.productVariant.fetched) {
+      if (this.props.productVariant.list) {
+        this.handleOnSelectList(this.state.selectedProduct, [this.props.productVariant.list], false);
+      } else {
+        this.Message.error(stringTranslate("error_product_not_found", this.props.locale));
+        this.props.form.setFieldsValue({searchProduct: ""});
+        document.getElementById("searchProduct").focus();
+      }
+      this.props.dispatch(ProductVariantAction.reset("RESET_PRODUCT_VARIANT"));
     }
   }
 
@@ -500,7 +514,7 @@ class FormItem extends React.PureComponent {
         selectedProduct: product,
         modalVariant: <VariantProduct
         product={product}
-        handleCancel={this.handleCancelVariantProduct}/>
+        handleCancel={() => this.setState({modalVariant: null})}/>
       });
       return;
     } else if (productVariant && productVariant.length > 0) {
@@ -515,7 +529,7 @@ class FormItem extends React.PureComponent {
         productVariantId: productVariant.id,
         variantName: product.name ? product.name : product.namekm,
         categoryId: product.productTypeId,
-        description: product.name ? product.name : product.namekm,
+        description: `${product.name ? product.name : product.namekm} ${isProductVariant ? productVariant.name : ""}`,
         unitId: product.defaultUnitId,
         quantity: 1,
         unitName: product.unit.name,
@@ -541,7 +555,7 @@ class FormItem extends React.PureComponent {
           productVariantId: productVariant.id,
           variantName: product.name ? product.name : product.namekm,
           categoryId: product.productTypeId,
-          description: product.name ? product.name : product.namekm,
+          description: `${product.name ? product.name : product.namekm} ${isProductVariant ? productVariant.name : ""}`,
           unitId: product.defaultUnitId,
           quantity: 1,
           unitName: product.unit.name,
@@ -984,6 +998,7 @@ class FormItem extends React.PureComponent {
           </Row>
         </Form>
         {this.state.customerForm}
+        {this.state.modalVariant}
         {this.renderPreviewInvoice(formData)}
       </div>
       : 
@@ -997,6 +1012,7 @@ class FormItem extends React.PureComponent {
 function mapStateToProps(state) {
   return {
       customerAdd: state.reducer.customer.add,
+      productVariant: state.reducer.productVariant.request,
       locale: state.locale
   };
 }
