@@ -106,6 +106,16 @@ const PurchaseOrder = Loadable({
   loading: () => <StartUp />,
 });
 
+const StockConsignment = Loadable({
+  loader: () => import("../../../../inventory/components/stock/StockConsignment"),
+  loading: () => <StartUp />
+});
+
+const StockConsignmentForm = Loadable({
+  loader: () => import("../../../../inventory/components/stock/StockConsignment/FormItem"),
+  loading: () => <StartUp />
+});
+
 const StockTransfer = Loadable({
   loader: () => import("../../../../inventory/containers/stock/StockTransfer"),
   loading: () => <StartUp />,
@@ -426,6 +436,23 @@ const dataSource = {
         route: "/stock/purchase/order",
         component: PurchaseOrder,
         isFashNav: true,
+      },
+      {
+        title: <Translate id="text_stock_consignment" />,
+        icon: "icon-purchasing",
+        route: "/stock/consignment/list",
+        component: StockConsignment,
+        isFashNav: true
+      },
+      {
+        route: "/stock/consignment/create",
+        component: StockConsignmentForm,
+        isFashNav: false
+      },
+      {
+        route: "/stock/consignment/update/:id",
+        component: StockConsignmentForm,
+        isFashNav: false
       },
       {
         title: <Translate id="text_stock_adjustment" />,
