@@ -1,20 +1,27 @@
 import React from "react";
 import { Drawer, Result, Button } from "antd";
-import ProductService from "../../../services/report/ProductService";
+import moment from "moment";
+import AdjustmentService from "../../../services/report/AdjustmentService";
 
-function ExportFormLoader({ locationId, viewStock }) {
+function ExportFormLoader({ locationId, endDate, startDate, searchValue }) {
   const [loading, setLoading] = React.useState(false);
   const [result, setResult] = React.useState(null);
   React.useEffect(() => {
+    let option = {};
+    if (searchValue) {
+      option["search"] = searchValue;
+    }
+    option["locationId"] = locationId;
+    option["startDate"] = moment(startDate).format("YYYY-MM-DD");
+    option["endDate"] = moment(endDate).format("YYYY-MM-DD");
+    option["isExport"] = true;
     try {
       setLoading(true);
-      ProductService.exportProducts({ locationId, viewStock }).then(
-        (response) => {
-          if (response.data) {
-            setResult(response.data);
-          }
+      AdjustmentService.getAdjustmentReport(option).then((response) => {
+        if (response.data) {
+          setResult(response.data);
         }
-      );
+      });
     } catch (error) {
       setLoading(false);
     } finally {
@@ -79,7 +86,9 @@ export default class ExportForm extends React.PureComponent {
           {this.state.visible && (
             <ExportFormLoader
               locationId={this.props.locationId}
-              viewStock={this.props.viewStock}
+              endDate={this.props.endDate}
+              startDate={this.props.startDate}
+              searchValue={this.props.searchValue}
             />
           )}
           <div

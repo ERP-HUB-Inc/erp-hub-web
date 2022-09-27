@@ -222,7 +222,12 @@ export default function ReportProduct() {
           </Card>
         </Col>
         <Col span={24}>
-          <ExportForm locationId={locationId} />
+          <ExportForm
+            locationId={locationId}
+            endDate={endDate}
+            startDate={startDate}
+            searchValue={searchValue}
+          />
         </Col>
         <Col span={24}>
           <Table
