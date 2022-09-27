@@ -23,6 +23,7 @@ import Util from "../../../../common/util";
 import SupplierService from "../../../services/stock/SupplierService";
 import LocationService from "../../../../pos/services/settings/LocationService";
 import StockConsignmentService from "../../../services/stock/StockConsignmentService";
+import ProductVariantAction from "../../../actions/products/productVariant";
 import history from "../../../../common/router/history";
 import Enum from "../../../enums";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
@@ -36,8 +37,10 @@ class FormItem extends React.PureComponent {
     locations: [],
     productSearch: [],
     productEntries: [],
+    selectedProduct: null,
     loading: false,
-    submitLoading: false
+    submitLoading: false,
+    modalVariant: null
   }
   util = new Util();
   entryColumn = [
@@ -50,7 +53,7 @@ class FormItem extends React.PureComponent {
           <InputText
             name={`productName[${index}]`}
             placeholder={`${stringTranslate("text_product_name", this.props.locale)}`}
-            data={productName}
+            data={`${productName} ${record.variantName}`}
             form={this.props.form} />
           <InputText
             name={`id[${index}]`}
@@ -154,6 +157,19 @@ class FormItem extends React.PureComponent {
 
     LocationService.lists(100)
     .then(response => this.setState({locations: response.data.data}));
+  }
+
+  componentDidUpdate() {
+    if (this.props.productVariant.fetched) {
+      if (this.props.productVariant.list) {
+        this.handleOnSelectList(this.state.selectedProduct, [this.props.productVariant.list], false);
+      } else {
+        this.Message.error(this.CATranslate("error_product_not_found", this.props.locale));
+        this.props.form.setFieldsValue({searchProduct: ""});
+        document.getElementById("searchProduct").focus();
+      }
+      this.props.dispatch(ProductVariantAction.reset("RESET_PRODUCT_VARIANT"));
+    }
   }
 
   fetchDetail() {
@@ -306,7 +322,7 @@ class FormItem extends React.PureComponent {
         selectedProduct: product,
         modalVariant: <VariantProduct
         product={product}
-        handleCancel={this.handleCancelVariantProduct}/>
+        handleCancel={() => this.setState({modalVariant: null})}/>
       });
       return;
     } else if (productVariant && productVariant.length > 0) {
@@ -320,6 +336,7 @@ class FormItem extends React.PureComponent {
         id: null,
         productVariantId: productVariant.id,
         productName: product.name ? product.name : product.namekm,
+        variantName: productVariant.name,
         barcode: productVariant.barcode,
         quantity: 1,
         cost: productVariant.cost,
@@ -341,6 +358,7 @@ class FormItem extends React.PureComponent {
           id: null,
           productVariantId: productVariant.id,
           productName: product.name ? product.name : product.namekm,
+          variantName: productVariant.name,
           barcode: productVariant.barcode,
           quantity: 1,
           cost: productVariant.cost,
@@ -455,6 +473,8 @@ class FormItem extends React.PureComponent {
             <Spin />
           </div>
         }
+
+        {this.state.modalVariant}
       </div>
     );
   }
@@ -462,6 +482,7 @@ class FormItem extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
+    productVariant: state.reducer.productVariant.request,
     locale: state.locale
   };
 }
