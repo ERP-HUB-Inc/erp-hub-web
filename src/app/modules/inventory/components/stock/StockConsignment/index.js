@@ -199,7 +199,7 @@ class StockConsignment extends List {
               <div className="ant-form-item-label" style={{visibility: "hidden"}}>
                 <label htmlFor="status" className="" title="">Filter</label>
               </div>
-              <this.Button htmlType="submit" type="default" loading={this.state.loadingFilter}>
+              <this.Button htmlType="submit" type="info" style={{marginTop: -3}} loading={this.state.loadingFilter}>
                 <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
               </this.Button>
             </this.Col>
