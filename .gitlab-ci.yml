@@ -9,8 +9,6 @@ deploy:
       - npm install
       - npm run webpack:build
       - rm -rf /var/www/pos/*
-      - rm -rf /var/www/pos-backup/*
-      - cp -R /var/www/pos /var/www/pos-backup
       - cp -R dist/* /var/www/pos
       - echo "Deploy successful"
   only:
