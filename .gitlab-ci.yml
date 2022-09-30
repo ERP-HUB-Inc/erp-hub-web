@@ -14,4 +14,4 @@ deploy:
       - cp -R dist/* /var/www/pos
       - echo "Deploy successful"
   only:
-      - master
+      - develop
