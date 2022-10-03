@@ -23,6 +23,7 @@ import _ from "lodash";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ReactToPrint from "react-to-print";
+import { Link } from "react-router-dom";
 import sweetalert from "sweetalert";
 import { 
     InputNumber, 
@@ -48,7 +49,6 @@ import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCr
 import CAInvoice from "../../transactions/Invoice/CAInvoice";
 import InputInvoiceNo from "./InvoiceNo";
 import ReceiptTemplate from "../receipt/template";
-import { Link } from "react-router-dom";
 import ReceivedPayment from "../ReceivedPayment/Form";
 
 const {TabPane} = Tabs;
@@ -779,6 +779,26 @@ class NewInvoice extends React.PureComponent {
         });
     }
 
+    handleVoidInvoice = () => {
+        this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
+        .then(willVoid => {
+            if (willVoid) {
+                InvoiceService.void(this.id)
+                .then(() => {
+                    this.getDetail(this.id);
+                    message.success("Void invoice success");
+                })
+                .catch(err => {
+                    console.log("error", err.response);
+                    const error = err.response && err.response.data && err.response.data.error;
+                    if (error.message) {
+                        message.error(error.message);
+                    }
+                });
+            }
+        });
+    }
+
     onSelectCustomer(value) {
         if (value) {
             this.textRequiredCustomer = "";
@@ -1156,7 +1176,7 @@ class NewInvoice extends React.PureComponent {
                                             <Translate id="text_receive_payment" />
                                         </Menu.Item>
                                         {formData.status === Enum.INVOICE_STATUS.PAID ?
-                                            <Menu.Item key={4}>
+                                            <Menu.Item key={3}>
                                                 <ReactToPrint
                                                     trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}>
                                                         <Translate id="text_print_receipt" />
@@ -1166,14 +1186,20 @@ class NewInvoice extends React.PureComponent {
                                             </Menu.Item>
                                             : null
                                         }
-                                        <Menu.Item key={5}>
+                                        <Menu.Item key={4}>
                                             <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} >
                                                 <Translate id="text_clone" />
                                             </Link>
                                         </Menu.Item>
-                                        <Menu.Item key={4} onClick={this.handleNewInvoice}>
+                                        <Menu.Item key={5} onClick={this.handleNewInvoice}>
                                             <Translate id="text_new_invoice" />
                                         </Menu.Item>
+                                        {this.id ?
+                                            <Menu.Item key={6} onClick={this.handleVoidInvoice}>
+                                                <Translate id="text_void" />
+                                            </Menu.Item>
+                                            : null
+                                        }
                                     </Menu>
                                 )}
                                 trigger={["click"]}
