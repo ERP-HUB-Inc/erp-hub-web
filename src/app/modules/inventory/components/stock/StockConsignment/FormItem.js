@@ -417,7 +417,7 @@ class FormItem extends React.PureComponent {
                   name="locationId"
                   label={<Translate id="text_location" />}
                   placeholder={`${stringTranslate("text_location", this.props.locale)}`}
-                  defaultValue={formData.locationId}
+                  defaultValue={Number(formData.locationId)}
                   valueKey="id"
                   dataSource={this.state.locations}
                   form={this.props.form}/>
