@@ -54,6 +54,7 @@ class FormItem extends React.PureComponent {
             name={`productName[${index}]`}
             placeholder={`${stringTranslate("text_product_name", this.props.locale)}`}
             data={`${productName} ${record.variantName ? record.variantName : ""}`}
+            handleOnFocus={(e) => e.target.select()}
             form={this.props.form} />
           <InputText
             name={`id[${index}]`}
@@ -101,12 +102,10 @@ class FormItem extends React.PureComponent {
       dataIndex: "cost",
       key: "cost",
       render: (cost, record, index) => {
-        const status = this.props.form.getFieldValue("status");
         return <InputNumber
           name={`cost[${index}]`}
           placeholder={`${stringTranslate("text_cost", this.props.locale)}`}
           data={Number(cost)}
-          disabled={status === "Returned" ? true : false}
           isAutoSelect={true}
           onChange={(value) => this.onChangeCost(value, index)}
           form={this.props.form}
@@ -196,13 +195,6 @@ class FormItem extends React.PureComponent {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        if (values.status === "Returned") {
-          const {formData} = this.state;
-          if (formData && formData.status === "Draft" && values.status === "Returned") {
-            return this.util.sweetAlertMessageV2("Error!", "Can't return stock before received!", "error");
-          }
-        }
-
         const consignment = {
           locationId: values.locationId,
           sellerId: values.sellerId,
@@ -265,19 +257,6 @@ class FormItem extends React.PureComponent {
 
   onChangeQty(qty, index) {
     if (qty) {
-      const lastQty = this.state.productEntries[index].quantity;
-      const status = this.props.form.getFieldValue("status");
-      if (status === "Returned" && qty > lastQty) {
-        return this.util.sweetAlertMessageV2("Error", "Can't set quantity more then last quantity in return stock", "error")
-        .then(() => {
-          this.setState(prevState => {
-            prevState.productEntries[index].quantity = 0;
-            prevState.productEntries[index].amount = 0;
-            return prevState;
-          });
-        });
-      }
-      
       this.setState(prevState => {
         const cost = prevState.productEntries[index].cost;
         prevState.productEntries[index].quantity = qty;
@@ -305,7 +284,7 @@ class FormItem extends React.PureComponent {
       this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
       .then(willDelete => {
         if (willDelete) {
-          entries[index].status = 3;
+          entries[index].status = Enum.DELETE;
           this.setState({productEntries: entries});
         }
       });
@@ -373,10 +352,6 @@ class FormItem extends React.PureComponent {
     document.getElementById("searchProduct").focus();
   }
 
-  onChangeStatus = value => {
-  
-  }
-
   render() {
 
     const {formData} = this.state;
@@ -417,7 +392,7 @@ class FormItem extends React.PureComponent {
                   name="locationId"
                   label={<Translate id="text_location" />}
                   placeholder={`${stringTranslate("text_location", this.props.locale)}`}
-                  defaultValue={Number(formData.locationId)}
+                  defaultValue={formData.locationId ? Number(formData.locationId) : null}
                   valueKey="id"
                   dataSource={this.state.locations}
                   form={this.props.form}/>
@@ -427,7 +402,6 @@ class FormItem extends React.PureComponent {
                   label={<Translate id="text_status" />}
                   placeholder={`${stringTranslate("text_status", this.props.locale)}`}
                   defaultValue={formData.status}
-                  onChange={this.onChangeStatus}
                   valueKey="value"
                   dataSource={[
                     {value: "Draft", name: <Translate id="text_draft" />},
@@ -441,7 +415,6 @@ class FormItem extends React.PureComponent {
                   productSearch={this.state.productSearch}
                   handleOnSelectList={this.handleOnSelectList}
                   placeholder={`${stringTranslate("text_search_product", this.props.locale)}`}
-                  disabled={this.props.form.getFieldValue("status") === "Returned" ? true : false}
                   locale={this.props.locale}
                   form={this.props.form} />
 
@@ -452,7 +425,7 @@ class FormItem extends React.PureComponent {
                   dataSource={this.state.productEntries}
                   pagination={false}
                   locale={{emptyText: <Translate id="table_empty_data" />}}
-                  rowClassName={((record) => record.status === 3 ? "hidden" : "")}
+                  rowClassName={((record) => record.status === Enum.DELETE ? "hidden" : "")}
                 />
               </Col>
             </Row>
