@@ -130,7 +130,7 @@ export default function TaxInvoice(props) {
                   formData.discount ?
                   <tr>
                     <td colSpan={2} style={{textAlign: "right"}}><div>បញ្ចុះតម្លៃ</div><div>Discount</div></td>
-                    <td style={{textAlign: "right"}}>-{util.formatCurrency(discount)}</td>
+                    <td style={{textAlign: "right"}}>{util.formatCurrency(discount)}</td>
                   </tr>
                   : null
                 }

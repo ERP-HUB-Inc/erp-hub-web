@@ -338,6 +338,22 @@ export default class Util {
     return `${unsigne}${result}`;
   }
 
+  formatPhoneno(phoneno) {
+    if (phoneno) {
+      var cleaned = ("" + phoneno).replace(/\D/g, "");
+      var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+      if (phoneno.length === 9) {
+        match = cleaned.match(/^(\d{3})(\d{3})(\d{3})$/);
+      }
+      console.log("match", match);
+      if (match) {
+        return match[1] + " " + match[2] + " " + match[3];
+      }
+    }
+
+    return "";
+  }
+
   formatPhonenoWithCountryCode(phoneno) {
     if (phoneno) {
       var cleaned = ("" + phoneno).replace(/\D/g, "");
