@@ -481,8 +481,15 @@ export default class FormItem extends Modal {
                   form={form}/>
             </this.Col>
 
+            <this.Col md="6">
+              <this.Checkboxs
+                name="enableDescription"
+                label={<this.Translate id="text_enable_pro_des_imei_serial_number" />}
+                defaultValue={formData.enableDescription}
+                form={this.props.form} />
+            </this.Col>
 
-            <this.Col md="12" className="form-group">
+            <this.Col md="6" className="form-group" style={{textAlign: "right", paddingRight: 8}}>
               <this.Checkboxs
                 name="isSplittable"
                 label={<this.Translate id="text_splittable" />}

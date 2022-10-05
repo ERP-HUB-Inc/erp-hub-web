@@ -58,6 +58,12 @@ export default {
     RECEIVED: "#87d068",
     CANCEL: "#108ee9"
   },
+  BUSINESS_PLAN_TYPE: {
+    FREE: 0,
+    LITE: 1,
+    PRO: 2,
+    PREMIUM: 3
+  },
   RECORD_EXIST: 603,
   TAX_NOT_FOUND: 622,
   BRAND_NOT_FOUND: 614,

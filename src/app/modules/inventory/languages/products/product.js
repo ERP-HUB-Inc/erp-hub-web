@@ -280,6 +280,11 @@ export default {
     "បំបែកផលិតផលសម្រាប់លក់រាយ"
   ],
 
+  "text_enable_pro_des_imei_serial_number": [
+    "Enable Product description, IMEI or Serial Number",
+    "ភ្ជាប់ការពិពណ៌នាផលិតផល IMEI ឬលេខ Serial"
+  ],
+
   "text_split": [
     "Split",
     "បំបែក"

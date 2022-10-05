@@ -6,6 +6,7 @@ import EmployeeAction from "../../../actions/employees/employee";
 import EmployeeService from "../../../services/employees/EmployeeService";
 import "./index.css";
 import history from "../../../../common/router/history";
+import FormWarning from "./FormWarning";
 
 export default class EmployeeList extends List {
   constructor(props) {
@@ -88,12 +89,25 @@ export default class EmployeeList extends List {
     }
   }
 
+  showFormAdd = () => {
+    const setting = this.Util.getSetting();
+    if (setting.businessPlanType === this.Enum.BUSINESS_PLAN_TYPE.FREE) {
+      this.props.dispatch(this.action.showForm());
+      this.setState({
+        modalConten: <FormWarning />,
+        loadingPopup: false
+      });
+      return;
+    }
+    history.push("/employees/create");
+  }
+
   renderButtonAddNew() {
     return (
-      <this.Link to="/employees/create" className="ant-btn info" style={{marginRight: 15}}>
+      <this.Button onClick={this.showFormAdd} className="ant-btn info" style={{marginRight: 15}}>
         <span className="icon-add icon-padding-right"></span>
         <this.Translate id="text_add_new" />
-      </this.Link>
+      </this.Button>
     );
   }
 

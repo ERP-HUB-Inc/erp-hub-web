@@ -23,6 +23,7 @@ import Util from "../../../../common/util";
 import SupplierService from "../../../services/stock/SupplierService";
 import LocationService from "../../../../pos/services/settings/LocationService";
 import StockConsignmentService from "../../../services/stock/StockConsignmentService";
+import ProductVariantAction from "../../../actions/products/productVariant";
 import history from "../../../../common/router/history";
 import Enum from "../../../enums";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
@@ -36,8 +37,10 @@ class FormItem extends React.PureComponent {
     locations: [],
     productSearch: [],
     productEntries: [],
+    selectedProduct: null,
     loading: false,
-    submitLoading: false
+    submitLoading: false,
+    modalVariant: null
   }
   util = new Util();
   entryColumn = [
@@ -50,7 +53,8 @@ class FormItem extends React.PureComponent {
           <InputText
             name={`productName[${index}]`}
             placeholder={`${stringTranslate("text_product_name", this.props.locale)}`}
-            data={productName}
+            data={`${productName} ${record.variantName ? record.variantName : ""}`}
+            handleOnFocus={(e) => e.target.select()}
             form={this.props.form} />
           <InputText
             name={`id[${index}]`}
@@ -98,12 +102,10 @@ class FormItem extends React.PureComponent {
       dataIndex: "cost",
       key: "cost",
       render: (cost, record, index) => {
-        const status = this.props.form.getFieldValue("status");
         return <InputNumber
           name={`cost[${index}]`}
           placeholder={`${stringTranslate("text_cost", this.props.locale)}`}
           data={Number(cost)}
-          disabled={status === "Returned" ? true : false}
           isAutoSelect={true}
           onChange={(value) => this.onChangeCost(value, index)}
           form={this.props.form}
@@ -156,6 +158,19 @@ class FormItem extends React.PureComponent {
     .then(response => this.setState({locations: response.data.data}));
   }
 
+  componentDidUpdate() {
+    if (this.props.productVariant.fetched) {
+      if (this.props.productVariant.list) {
+        this.handleOnSelectList(this.state.selectedProduct, [this.props.productVariant.list], false);
+      } else {
+        this.Message.error(stringTranslate("error_product_not_found", this.props.locale));
+        this.props.form.setFieldsValue({searchProduct: ""});
+        document.getElementById("searchProduct").focus();
+      }
+      this.props.dispatch(ProductVariantAction.reset("RESET_PRODUCT_VARIANT"));
+    }
+  }
+
   fetchDetail() {
     this.setState({loading: true});
     StockConsignmentService.detail(this.id)
@@ -180,13 +195,6 @@ class FormItem extends React.PureComponent {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        if (values.status === "Returned") {
-          const {formData} = this.state;
-          if (formData && formData.status === "Draft" && values.status === "Returned") {
-            return this.util.sweetAlertMessageV2("Error!", "Can't return stock before received!", "error");
-          }
-        }
-
         const consignment = {
           locationId: values.locationId,
           sellerId: values.sellerId,
@@ -249,19 +257,6 @@ class FormItem extends React.PureComponent {
 
   onChangeQty(qty, index) {
     if (qty) {
-      const lastQty = this.state.productEntries[index].quantity;
-      const status = this.props.form.getFieldValue("status");
-      if (status === "Returned" && qty > lastQty) {
-        return this.util.sweetAlertMessageV2("Error", "Can't set quantity more then last quantity in return stock", "error")
-        .then(() => {
-          this.setState(prevState => {
-            prevState.productEntries[index].quantity = 0;
-            prevState.productEntries[index].amount = 0;
-            return prevState;
-          });
-        });
-      }
-      
       this.setState(prevState => {
         const cost = prevState.productEntries[index].cost;
         prevState.productEntries[index].quantity = qty;
@@ -289,7 +284,7 @@ class FormItem extends React.PureComponent {
       this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
       .then(willDelete => {
         if (willDelete) {
-          entries[index].status = 3;
+          entries[index].status = Enum.DELETE;
           this.setState({productEntries: entries});
         }
       });
@@ -306,7 +301,7 @@ class FormItem extends React.PureComponent {
         selectedProduct: product,
         modalVariant: <VariantProduct
         product={product}
-        handleCancel={this.handleCancelVariantProduct}/>
+        handleCancel={() => this.setState({modalVariant: null})}/>
       });
       return;
     } else if (productVariant && productVariant.length > 0) {
@@ -320,6 +315,7 @@ class FormItem extends React.PureComponent {
         id: null,
         productVariantId: productVariant.id,
         productName: product.name ? product.name : product.namekm,
+        variantName: productVariant.name,
         barcode: productVariant.barcode,
         quantity: 1,
         cost: productVariant.cost,
@@ -341,6 +337,7 @@ class FormItem extends React.PureComponent {
           id: null,
           productVariantId: productVariant.id,
           productName: product.name ? product.name : product.namekm,
+          variantName: productVariant.name,
           barcode: productVariant.barcode,
           quantity: 1,
           cost: productVariant.cost,
@@ -353,10 +350,6 @@ class FormItem extends React.PureComponent {
     this.setState({productEntries: existingProductList});
     this.props.form.setFieldsValue({searchProduct: ""});
     document.getElementById("searchProduct").focus();
-  }
-
-  onChangeStatus = value => {
-  
   }
 
   render() {
@@ -399,7 +392,7 @@ class FormItem extends React.PureComponent {
                   name="locationId"
                   label={<Translate id="text_location" />}
                   placeholder={`${stringTranslate("text_location", this.props.locale)}`}
-                  defaultValue={formData.locationId}
+                  defaultValue={formData.locationId ? Number(formData.locationId) : null}
                   valueKey="id"
                   dataSource={this.state.locations}
                   form={this.props.form}/>
@@ -409,7 +402,6 @@ class FormItem extends React.PureComponent {
                   label={<Translate id="text_status" />}
                   placeholder={`${stringTranslate("text_status", this.props.locale)}`}
                   defaultValue={formData.status}
-                  onChange={this.onChangeStatus}
                   valueKey="value"
                   dataSource={[
                     {value: "Draft", name: <Translate id="text_draft" />},
@@ -423,7 +415,6 @@ class FormItem extends React.PureComponent {
                   productSearch={this.state.productSearch}
                   handleOnSelectList={this.handleOnSelectList}
                   placeholder={`${stringTranslate("text_search_product", this.props.locale)}`}
-                  disabled={this.props.form.getFieldValue("status") === "Returned" ? true : false}
                   locale={this.props.locale}
                   form={this.props.form} />
 
@@ -434,7 +425,7 @@ class FormItem extends React.PureComponent {
                   dataSource={this.state.productEntries}
                   pagination={false}
                   locale={{emptyText: <Translate id="table_empty_data" />}}
-                  rowClassName={((record) => record.status === 3 ? "hidden" : "")}
+                  rowClassName={((record) => record.status === Enum.DELETE ? "hidden" : "")}
                 />
               </Col>
             </Row>
@@ -455,6 +446,8 @@ class FormItem extends React.PureComponent {
             <Spin />
           </div>
         }
+
+        {this.state.modalVariant}
       </div>
     );
   }
@@ -462,6 +455,7 @@ class FormItem extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
+    productVariant: state.reducer.productVariant.request,
     locale: state.locale
   };
 }

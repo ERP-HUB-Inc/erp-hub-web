@@ -87,7 +87,7 @@ export default function ReportProduct() {
         if (response && response.data) {
           const data = response.data;
           setSummary(data.summary);
-          setData(data);
+          setData(data.results);
         }
       })
       .finally(() => {
@@ -127,16 +127,20 @@ export default function ReportProduct() {
     //eslint-disable-next-line
   }, []);
 
-  let currentStockValueByCost = 0;
-  let currentStockValueByPrice = 0;
-  let expectedProfit = 0;
-  let expectedMargin = 0;
+  let damagedGoods = 0;
+  let leakAge = 0;
+  let incorrectStock = 0;
+  let stolenGoods = 0;
 
   if (summary) {
-    currentStockValueByCost = summary.currentStockValueByCost;
-    currentStockValueByPrice = summary.currentStockValueByPrice;
-    expectedProfit = summary.expectedProfit;
-    expectedMargin = summary.expectedMargin;
+    damagedGoods = summary.find(value => value.type === "BROKEN");
+    damagedGoods = damagedGoods ? damagedGoods.totalAmount : 0;
+    leakAge = summary.find(value => value.type === "LEAKAGE");
+    leakAge = leakAge ? leakAge.totalAmount : 0;
+    incorrectStock = summary.find(value => value.type === "INCORRECT_STOCK");
+    incorrectStock = incorrectStock ? incorrectStock.totalAmount : 0;
+    stolenGoods = summary.find(value => value.type === "STOLEN");
+    stolenGoods = stolenGoods ? stolenGoods.totalAmount : 0;
   }
 
   return (
@@ -189,7 +193,7 @@ export default function ReportProduct() {
           <Card>
             <Statistic
               title="Damaged Goods"
-              value={currentStockValueByCost}
+              value={damagedGoods}
               precision={2}
             />
           </Card>
@@ -198,7 +202,7 @@ export default function ReportProduct() {
           <Card>
             <Statistic
               title="Leakage"
-              value={currentStockValueByPrice}
+              value={leakAge}
               precision={2}
             />
           </Card>
@@ -207,7 +211,7 @@ export default function ReportProduct() {
           <Card>
             <Statistic
               title="Incorrect Stock"
-              value={expectedProfit}
+              value={incorrectStock}
               precision={2}
             />
           </Card>
@@ -216,7 +220,7 @@ export default function ReportProduct() {
           <Card>
             <Statistic
               title={"Stolen Goods"}
-              value={expectedMargin}
+              value={stolenGoods}
               precision={2}
             />
           </Card>

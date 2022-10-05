@@ -76,12 +76,10 @@ export default function NoneTaxInvoice(props) {
           </td>
           <td colSpan={2} style={{paddingTop: 6, paddingBottom: 6, position: "relative"}}>
             <ul style={{...styles.ulStyle, position: "absolute", top: 6}}>
-              <li style={{fontWeight: 600}}>
-                {
-                  formData.company ? formData.company : `${formData.firstName} ${formData.lastName}`
-                }
-              </li>
-              <li>{formData.address}</li>
+              <li>{formData.firstName} {formData.lastName}</li>
+              <li>{formData.phoneNumber}</li>
+              <li style={{fontWeight: 600}}>{formData.company}</li>
+              {/* <li>{formData.address}</li> */}
             </ul>
           </td>
         </tr>
@@ -113,10 +111,14 @@ export default function NoneTaxInvoice(props) {
             </table>
           </td>
         </tr>
-        <tr style={{background: "none"}}>
-          <td colSpan={2}></td>
+        <tr style={{background: "none", verticalAlign: "initial"}}>
+          <td colSpan={2}>
+            <div 
+              dangerouslySetInnerHTML={{ __html: formData.publicNote}} 
+              id="public-not" />
+          </td>
           <td style={{width: 300}}>
-            <div style={{display: "flex", justifyContent: "space-between", textAlign: "right", paddingLeft: 80, paddingTop: 20, lineHeight: "28px"}}>
+            <div style={{display: "flex", justifyContent: "space-between", textAlign: "right", paddingLeft: 80, lineHeight: "28px"}}>
               <div>
                 <div>Subtotal</div>
                 {
@@ -146,6 +148,22 @@ export default function NoneTaxInvoice(props) {
                 }
                 <div>{util.formatCurrency(0)}</div>
                 <div style={{color: "#37a3c6"}}>{util.formatCurrency(formData.total - discount)}</div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colSpan={3}>
+            <div style={{display: "flex", justifyContent: "space-between", textAlign: "center", paddingTop: 60}}>
+              <div>
+                <hr />
+                <div>ហត្ថលេខា និងឈ្មេាះអ្នកទិញ</div>
+                <div>Customer's Signature & Name</div>
+              </div>
+              <div>
+                <hr />
+                <div>ហត្ថលេខា និងឈ្មេាះអ្នកលក់</div>
+                <div>Seller's Signature & Name</div>
               </div>
             </div>
           </td>

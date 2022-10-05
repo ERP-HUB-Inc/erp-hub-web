@@ -23,6 +23,7 @@ import _ from "lodash";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ReactToPrint from "react-to-print";
+import { Link } from "react-router-dom";
 import sweetalert from "sweetalert";
 import { 
     InputNumber, 
@@ -32,6 +33,7 @@ import {
     InputTextArea
 } from "../../../../common/elements/ant-ui";
 import Enum from "../../../enums/index";
+import EnumProduct from "../../../../inventory/enums";
 import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
@@ -40,13 +42,13 @@ import CustomerAction from "../../../../crm/actions/customers/customer";
 import CustomerConstant from "../../../../crm/constants/customers/customer";
 import InvoiceService from "../../../services/transactions/InvoiceService";
 import QuotationService from "../../../services/transactions/QuotationService";
+import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import SearchProductDropdown from "./SearchProduct";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
 import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCreate";
 import CAInvoice from "../../transactions/Invoice/CAInvoice";
 import InputInvoiceNo from "./InvoiceNo";
 import ReceiptTemplate from "../receipt/template";
-import { Link } from "react-router-dom";
 import ReceivedPayment from "../ReceivedPayment/Form";
 
 const {TabPane} = Tabs;
@@ -78,7 +80,9 @@ class NewInvoice extends React.PureComponent {
         transactionEntries: [],
         customerForm: null,
         saveLoading: false,
-        showDrawer: false
+        showDrawer: false,
+        selectedProduct: null,
+        modalVariant: null
     }
     action = new URLSearchParams(window.location.search).get("action");
     entryColumn = [
@@ -331,6 +335,17 @@ class NewInvoice extends React.PureComponent {
 
             this.props.dispatch(CustomerAction.reset(CustomerConstant.RESET_ADD_CUSTOMERS));
         }
+
+        if (this.props.productVariant.fetched) {
+            if (this.props.productVariant.list) {
+                this.handleOnSelectList(this.state.selectedProduct, [this.props.productVariant.list], false);
+            } else {
+                this.Message.error(stringTranslate("error_product_not_found", this.props.locale));
+                this.props.form.setFieldsValue({searchProduct: ""});
+                document.getElementById("searchProduct").focus();
+            }
+            this.props.dispatch(ProductVariantAction.reset("RESET_PRODUCT_VARIANT"));
+          }
     }
 
     handleSubmit = (e) => {
@@ -604,7 +619,7 @@ class NewInvoice extends React.PureComponent {
     }
 
     handleOnSelectList = (product, productVariant, isRequestVariantForm = true) => {
-        let isProductVariant = product.productOption === Enum.PRODUCT_VARIANT;
+        let isProductVariant = product.productOption === EnumProduct.PRODUCT_VARIANT;
         let discount = this.props.form.getFieldValue("discountField");
         let type = this.props.form.getFieldValue("discountType");
         if (isProductVariant && isRequestVariantForm) {
@@ -612,7 +627,7 @@ class NewInvoice extends React.PureComponent {
                 selectedProduct: product,
                 modalVariant: <VariantProduct
                 product={product}
-                handleCancel={this.handleCancelVariantProduct}/>
+                handleCancel={() => this.setState({modalVariant: null})}/>
             });
             return;
         } else if (productVariant && productVariant.length > 0) {
@@ -627,7 +642,7 @@ class NewInvoice extends React.PureComponent {
                 productVariantId: productVariant.id,
                 variantName: product.name ? product.name : product.namekm,
                 categoryId: product.productTypeId,
-                description: product.name ? product.name : product.namekm,
+                description: `${product.name ? product.name : product.namekm} ${isProductVariant ? productVariant.name : ""}`,
                 unitId: product.defaultUnitId,
                 quantity: 1,
                 unitName: product.unit.name,
@@ -653,7 +668,7 @@ class NewInvoice extends React.PureComponent {
                     productVariantId: productVariant.id,
                     variantName: product.name ? product.name : product.namekm,
                     categoryId: product.productTypeId,
-                    description: product.name ? product.name : product.namekm,
+                    description: `${product.name ? product.name : product.namekm} ${isProductVariant ? productVariant.name : ""}`,
                     unitId: product.defaultUnitId,
                     quantity: 1,
                     unitName: product.unit.name,
@@ -761,6 +776,26 @@ class NewInvoice extends React.PureComponent {
                 amount: 0,
                 status: 1
             }]
+        });
+    }
+
+    handleVoidInvoice = () => {
+        this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
+        .then(willVoid => {
+            if (willVoid) {
+                InvoiceService.void(this.id)
+                .then(() => {
+                    this.getDetail(this.id);
+                    message.success("Void invoice success");
+                })
+                .catch(err => {
+                    console.log("error", err.response);
+                    const error = err.response && err.response.data && err.response.data.error;
+                    if (error.message) {
+                        message.error(error.message);
+                    }
+                });
+            }
         });
     }
 
@@ -1141,7 +1176,7 @@ class NewInvoice extends React.PureComponent {
                                             <Translate id="text_receive_payment" />
                                         </Menu.Item>
                                         {formData.status === Enum.INVOICE_STATUS.PAID ?
-                                            <Menu.Item key={4}>
+                                            <Menu.Item key={3}>
                                                 <ReactToPrint
                                                     trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}>
                                                         <Translate id="text_print_receipt" />
@@ -1151,14 +1186,20 @@ class NewInvoice extends React.PureComponent {
                                             </Menu.Item>
                                             : null
                                         }
-                                        <Menu.Item key={5}>
+                                        <Menu.Item key={4}>
                                             <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} >
                                                 <Translate id="text_clone" />
                                             </Link>
                                         </Menu.Item>
-                                        <Menu.Item key={4} onClick={this.handleNewInvoice}>
+                                        <Menu.Item key={5} onClick={this.handleNewInvoice}>
                                             <Translate id="text_new_invoice" />
                                         </Menu.Item>
+                                        {this.id ?
+                                            <Menu.Item key={6} onClick={this.handleVoidInvoice}>
+                                                <Translate id="text_void" />
+                                            </Menu.Item>
+                                            : null
+                                        }
                                     </Menu>
                                 )}
                                 trigger={["click"]}
@@ -1171,6 +1212,7 @@ class NewInvoice extends React.PureComponent {
                 {this.renderReceipt(formData)}
                 {this.renderPreviewInvoice(formData)}
                 {this.state.customerForm}
+                {this.state.modalVariant}
                 <Drawer
                     title={<Translate id="text_receive_payment" />}
                     width={520}
@@ -1196,6 +1238,7 @@ class NewInvoice extends React.PureComponent {
 function mapStateToProps(state) {
     return {
         customerAdd: state.reducer.customer.add,
+        productVariant: state.reducer.productVariant.request,
         locale: state.locale
     };
 }

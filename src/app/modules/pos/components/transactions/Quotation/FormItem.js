@@ -37,6 +37,7 @@ import Util from "../../../../common/util";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import CustomerService from "../../../../crm/services/customers/CustomerService";
 import QuotationService from "../../../services/transactions/QuotationService";
+import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
 import QuotationNo from "./QuotationNo";
@@ -55,7 +56,9 @@ class FormItem extends React.PureComponent {
     customers: [],
     quotationEntries: [],
     loadingButton: false,
-    customerForm: null
+    customerForm: null,
+    selectedProduct: null,
+    modalVariant: null
   }
   entryColumn = [
     {
@@ -234,6 +237,17 @@ class FormItem extends React.PureComponent {
         formData
       });
       this.props.dispatch(CustomerAction.reset("RESET_ADD_CUSTOMERS"));
+    }
+
+    if (this.props.productVariant.fetched) {
+      if (this.props.productVariant.list) {
+        this.handleOnSelectList(this.state.selectedProduct, [this.props.productVariant.list], false);
+      } else {
+        this.Message.error(stringTranslate("error_product_not_found", this.props.locale));
+        this.props.form.setFieldsValue({searchProduct: ""});
+        document.getElementById("searchProduct").focus();
+      }
+      this.props.dispatch(ProductVariantAction.reset("RESET_PRODUCT_VARIANT"));
     }
   }
 
@@ -448,7 +462,7 @@ class FormItem extends React.PureComponent {
         selectedProduct: product,
         modalVariant: <VariantProduct
         product={product}
-        handleCancel={this.handleCancelVariantProduct}/>
+        handleCancel={() => this.setState({modalVariant: null})}/>
       });
       return;
     } else if (productVariant && productVariant.length > 0) {
@@ -461,7 +475,7 @@ class FormItem extends React.PureComponent {
     if (existingProductList.length === 0) {
       existingProductList.push({
         productVariantId: productVariant.id,
-        description: product.name ? product.name : product.namekm,
+        description: `${product.name ? product.name : product.namekm} ${isProductVariant ? productVariant.name : ""}`,
         quantity: 1,
         price: productVariant.price,
         discount: 0,
@@ -482,7 +496,7 @@ class FormItem extends React.PureComponent {
       if (isNotTheSameProduct) {
         existingProductList.push({
           productVariantId: productVariant.id,
-          description: product.name ? product.name : product.namekm,
+          description: `${product.name ? product.name : product.namekm} ${isProductVariant ? productVariant.name : ""}`,
           quantity: 1,
           price: productVariant.price,
           discount: 0,
@@ -988,6 +1002,7 @@ class FormItem extends React.PureComponent {
           </Row>
         </Form>
         {this.state.customerForm}
+        {this.state.modalVariant}
         {this.renderPreviewInvoice(formData)}
       </div>
       :
@@ -1001,6 +1016,7 @@ class FormItem extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     customerAdd: state.reducer.customer.add,
+    productVariant: state.reducer.productVariant.request,
     locale: state.locale
   };
 }
