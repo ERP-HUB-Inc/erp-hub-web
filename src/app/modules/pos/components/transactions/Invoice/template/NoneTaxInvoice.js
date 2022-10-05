@@ -77,7 +77,7 @@ export default function NoneTaxInvoice(props) {
           <td colSpan={2} style={{paddingTop: 6, paddingBottom: 6, position: "relative"}}>
             <ul style={{...styles.ulStyle, position: "absolute", top: 6}}>
               <li>{formData.firstName} {formData.lastName}</li>
-              <li>{util.formatPhoneno(formData.phoneNumber)}</li>
+              <li>{formData.phoneNumber}</li>
               <li style={{fontWeight: 600}}>{formData.company}</li>
               {/* <li>{formData.address}</li> */}
             </ul>
