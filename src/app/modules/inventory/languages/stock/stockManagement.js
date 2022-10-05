@@ -26,6 +26,6 @@ export default {
 
   "text_stock_consignment": [
     "Stock Consignment",
-    "Stock Consignment"
+    "ស្តុកខនសាញ្ញមិន"
   ]
 };

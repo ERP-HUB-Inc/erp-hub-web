@@ -5,10 +5,10 @@ class StockConsignmentService extends BaseService {
   port = process.env.REACT_APP_INVENTORY_API_PORT;
   baseUrl = `${this.host}:${this.port}/stock_consignments`;
 
-  lists(limit, offset = 0, status = "") {
+  lists(limit, offset = 0, searchKey = "", date = "") {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}?limit=${limit}&offset=${offset}&status=${status}`,
+      url: `${this.baseUrl}?limit=${limit}&offset=${offset}&searchKey=${searchKey}&date=${date}`,
       headers: this.header
     });
   }

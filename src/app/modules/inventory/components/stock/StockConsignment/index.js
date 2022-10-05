@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import { 
   Table,
   Form,
@@ -69,8 +70,12 @@ class StockConsignment extends List {
       this.setState({current: params.get("offset")});
     }
 
-    if (params.get("status")) {
-      this.props.form.setFieldsValue({status: params.get("status")});
+    if (params.get("searchKey")) {
+      this.props.form.setFieldsValue({status: params.get("searchKey")});
+    }
+
+    if (params.get("date")) {
+      this.props.form.setFieldsValue({date: moment(params.get("date"))});
     }
 
     this.fetchList();
@@ -81,7 +86,8 @@ class StockConsignment extends List {
   fetchList() {
     let limit = this.pageSize;
     let offset = this.state.current;
-    let status = "";
+    let searchKey = "";
+    let date = "";
     const params = new URLSearchParams(window.location.search);
     if (params.get("limit")) {
       limit = Number(params.get("limit"));
@@ -91,13 +97,17 @@ class StockConsignment extends List {
       offset = Number(params.get("offset"));
     }
 
-    if (params.get("status")) {
-      status = params.get("status");
+    if (params.get("searchKey")) {
+      searchKey = params.get("searchKey");
+    }
+
+    if (params.get("date")) {
+      date = this.Util.formatDateForMYSQL(params.get("date"));
     }
 
     offset = (offset - 1) * limit;
     this.setState({loading: true});
-    StockConsignmentService.lists(limit, offset, status)
+    StockConsignmentService.lists(limit, offset, searchKey, date)
     .then(response => {
       this.setState({data: response.data});
     })
@@ -109,16 +119,16 @@ class StockConsignment extends List {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const params = new URLSearchParams(document.location.search);
-        if (values.locationId) {
-          params.set("locationId", values.locationId);
+        if (values.searchKey) {
+          params.set("searchKey", values.searchKey);
         } else {
-          params.delete("locationId");
+          params.delete("searchKey");
         }
 
-        if (values.status) {
-          params.set("status", values.status);
+        if (values.date) {
+          params.set("date", this.Util.formatDateForMYSQL(values.date));
         } else {
-          params.delete("status");
+          params.delete("date");
         }
 
         this.Util.pushParamsToURL(this.pathname, params.toString());
@@ -185,21 +195,25 @@ class StockConsignment extends List {
     return (
       <this.Form onSubmit={this.handleSubmitFilter}>
           <this.Row className="main-search-layout">
-            {/* <this.Col md="2">
-              <this.Select
-                name="locationId"
-                label={<this.Translate id="text_location" />}
-                valueKey="id"
-                dataSource={[{id: 0, name: <this.Translate id="text_all_location" />}].concat(this.state.locations)}
-                defaultValue={0}
-                form={this.props.form}/>
-            </this.Col> */}
-            {this.renderFilterStatus()}
+            <this.Col md="2">
+              <this.InputText
+                name="searchKey"
+                label={<this.Translate id={this.generalSearchLabel}/>}
+                placeholder={this.CATranslate("text_search_by_seller", this.props.locale)}
+                form={this.props.form}
+                allowClear={true} />
+            </this.Col>
+            <this.Col md="2">
+              <this.DatePickers
+                name="date"
+                label={<this.Translate id="text_date" />}
+                form={this.props.form} />
+            </this.Col>
             <this.Col md="2" className="wrap-btn-search">
               <div className="ant-form-item-label" style={{visibility: "hidden"}}>
                 <label htmlFor="status" className="" title="">Filter</label>
               </div>
-              <this.Button htmlType="submit" type="info" style={{marginTop: -3}} loading={this.state.loadingFilter}>
+              <this.Button htmlType="submit" type="info" loading={this.state.loadingFilter}>
                 <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
               </this.Button>
             </this.Col>
