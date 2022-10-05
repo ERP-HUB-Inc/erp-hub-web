@@ -1,0 +1,22 @@
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 4px;
+}
+
+#banner-table .ant-table-footer {
+    position: relative !important;
+    border: 1px solid #e8e8e8;
+    text-align: left !important;
+    display: flex !important;
+    justify-content: flex-start ;
+    padding: 16px 16px !important;
+    color: rgba(0, 0, 0, 0.85) !important;
+    background: #fafafa !important;
+    border-top: 1px solid #e8e8e8 !important;
+    border-radius: 0 0 4px 4px !important;
+}
+
+

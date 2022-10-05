@@ -226,6 +226,16 @@ export const modules = {
     parent: "Setting",
     isFashNav: true,
   },
+  WebsiteSetting: {
+    title: <Translate id="text_store_account" />,
+    icon: "icon-account",
+    route: "/settings/website-setting",
+    component: loadComponet(
+      import("../../../../pos/containers/settings/WebsiteSetting")
+    ),
+    parent: "Setting",
+    isFashNav: true,
+  },
   StoreLocation: {
     title: <Translate id="text_location" />,
     icon: "icon-store",

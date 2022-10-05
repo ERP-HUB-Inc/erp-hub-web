@@ -107,13 +107,15 @@ const PurchaseOrder = Loadable({
 });
 
 const StockConsignment = Loadable({
-  loader: () => import("../../../../inventory/components/stock/StockConsignment"),
-  loading: () => <StartUp />
+  loader: () =>
+    import("../../../../inventory/components/stock/StockConsignment"),
+  loading: () => <StartUp />,
 });
 
 const StockConsignmentForm = Loadable({
-  loader: () => import("../../../../inventory/components/stock/StockConsignment/FormItem"),
-  loading: () => <StartUp />
+  loader: () =>
+    import("../../../../inventory/components/stock/StockConsignment/FormItem"),
+  loading: () => <StartUp />,
 });
 
 const StockTransfer = Loadable({
@@ -187,6 +189,11 @@ const ProfitAndLostReport = Loadable({
 // SETTING
 const StoreAccount = Loadable({
   loader: () => import("../../../../pos/containers/settings/StoreAccount"),
+  loading: () => <StartUp />,
+});
+
+const WebsiteSetting = Loadable({
+  loader: () => import("../../../../pos/containers/settings/WebsiteSetting"),
   loading: () => <StartUp />,
 });
 
@@ -442,17 +449,17 @@ const dataSource = {
         icon: "icon-purchasing",
         route: "/stock/consignment/list",
         component: StockConsignment,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         route: "/stock/consignment/create",
         component: StockConsignmentForm,
-        isFashNav: false
+        isFashNav: false,
       },
       {
         route: "/stock/consignment/update/:id",
         component: StockConsignmentForm,
-        isFashNav: false
+        isFashNav: false,
       },
       {
         title: <Translate id="text_stock_adjustment" />,
@@ -583,6 +590,13 @@ const dataSource = {
         icon: "icon-account",
         route: "/settings/account",
         component: StoreAccount,
+        isFashNav: true,
+      },
+      {
+        title: "Website Setting",
+        icon: "icon-account",
+        route: "/settings/website-setting",
+        component: WebsiteSetting,
         isFashNav: true,
       },
       {
