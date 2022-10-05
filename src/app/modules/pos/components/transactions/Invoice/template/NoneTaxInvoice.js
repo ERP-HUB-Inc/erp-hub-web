@@ -152,6 +152,22 @@ export default function NoneTaxInvoice(props) {
             </div>
           </td>
         </tr>
+        <tr>
+          <td colSpan={3}>
+            <div style={{display: "flex", justifyContent: "space-between", textAlign: "center", paddingTop: 60}}>
+              <div>
+                <hr />
+                <div>ហត្ថលេខា និងឈ្មេាះអ្នកទិញ</div>
+                <div>Customer's Signature & Name</div>
+              </div>
+              <div>
+                <hr />
+                <div>ហត្ថលេខា និងឈ្មេាះអ្នកលក់</div>
+                <div>Seller's Signature & Name</div>
+              </div>
+            </div>
+          </td>
+        </tr>
       </tbody>
     </table>
   );
