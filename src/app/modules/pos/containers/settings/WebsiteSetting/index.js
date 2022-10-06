@@ -392,7 +392,7 @@ const WebsiteSetting = (props) => {
     },
   };
   return (
-    <>
+    <React.Fragment>
       <PageHeader
         style={{
           backgroundColor: "#f7f7f7",
@@ -531,7 +531,7 @@ const WebsiteSetting = (props) => {
                   <Col lg="5" md="5">
                     <Form onSubmit={onBannerSubmit}>
                       {visibleBannerTable && (
-                        <>
+                        <React.Fragment>
                           <Button
                             type="info"
                             id="btnAdd"
@@ -590,12 +590,12 @@ const WebsiteSetting = (props) => {
                             loading={loadingBanner}
                             pagination={false}
                           />
-                        </>
+                        </React.Fragment>
                       )}
 
                       {visibleFormBanner && (
                         // <div id="banner-table">
-                        <>
+                        <React.Fragment>
                           <PageHeader
                             style={{
                               padding: "0px 0px 15px 0px",
@@ -728,7 +728,7 @@ const WebsiteSetting = (props) => {
                             <span className="icon-save icon-padding-right"></span>
                             SAVE
                           </Button>
-                        </>
+                        </React.Fragment>
                       )}
                     </Form>
                   </Col>
@@ -748,7 +748,7 @@ const WebsiteSetting = (props) => {
           </Col>
         </Row>
       </div>
-    </>
+    </React.Fragment>
   );
 };
 
@@ -760,12 +760,12 @@ function UploadImage({ uploadProps, form, label, name }) {
         {getFieldDecorator(name)(
           <Upload {...uploadProps}>
             {uploadProps.fileList.length === 0 ? (
-              <>
+              <React.Fragment>
                 <UploadButton />
                 <Button>
                   <Icon type="upload" /> Upload
                 </Button>
-              </>
+              </React.Fragment>
             ) : null}
           </Upload>
         )}
@@ -834,12 +834,12 @@ function UploadImageBanner({
         {getFieldDecorator(name)(
           <Upload {...uploadProps}>
             {uploadProps.fileList.length === 0 ? (
-              <>
+              <React.Fragment>
                 <UploadButton />
                 <Button>
                   <Icon type="upload" /> Upload
                 </Button>
-              </>
+              </React.Fragment>
             ) : null}
           </Upload>
         )}
