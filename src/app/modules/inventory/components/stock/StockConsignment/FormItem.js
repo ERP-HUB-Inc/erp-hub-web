@@ -195,6 +195,15 @@ class FormItem extends React.PureComponent {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        const {formData} = this.state;
+        if (formData.status === Enum.STOCK_CONSIGNMENT_STATUS.RECEIVED && values.status !== Enum.STOCK_CONSIGNMENT_STATUS.RETURNED) {
+          return this.util.sweetAlertMessageV2("Warning", "This consignment already received", "error");
+        }
+
+        if (formData.status === Enum.STOCK_CONSIGNMENT_STATUS.RETURNED) {
+          return this.util.sweetAlertMessageV2("Warning", "This consignment already returned", "error");
+        }
+
         const consignment = {
           locationId: values.locationId,
           sellerId: values.sellerId,

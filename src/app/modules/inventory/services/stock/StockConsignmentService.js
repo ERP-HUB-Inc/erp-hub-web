@@ -8,7 +8,7 @@ class StockConsignmentService extends BaseService {
   lists(limit, offset = 0, searchKey = "", date = "") {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}?limit=${limit}&offset=${offset}&searchKey=${searchKey}&date=${date}`,
+      url: `${this.baseUrl}?limit=${limit}&offset=${offset}&search=${searchKey}&date=${date}`,
       headers: this.header
     });
   }
