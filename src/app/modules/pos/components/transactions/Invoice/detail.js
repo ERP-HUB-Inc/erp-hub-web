@@ -95,6 +95,14 @@ class InvoiceDetail extends React.PureComponent {
   }
 
   handleMakeAsSent = () => {
+    if (Number(this.state.formData.status) === Enum.INVOICE_STATUS.SENT) {
+      return this.util.sweetAlertMessageV2("Warning!", "This invoice already sent");
+    }
+
+    if (Number(this.state.formData.status) !== Enum.INVOICE_STATUS.DRAFT) {
+      return this.util.sweetAlertMessageV2("Warning!", "Can't mark sent invoice in this step");
+    }
+
     this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
     .then(willSent => {
       if (willSent) {
