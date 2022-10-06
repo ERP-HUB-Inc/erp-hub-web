@@ -4,6 +4,11 @@ export default {
     "ប្រភេទ"
   ],
 
+  "text_feature_category": [
+    "Featured Category",
+    "ប្រភេទផលិតផលពិសេស"
+  ],
+
   "text_parent_category": [
     "Parent Category",
     "ប្រភេទផលិតផលចម្បង"

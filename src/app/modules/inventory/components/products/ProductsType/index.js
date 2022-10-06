@@ -22,6 +22,24 @@ export default class ProductTypeList extends DataTable {
         dataIndex: "parentId",
         key: "parentId",
         render: (parentId, record) => record.parent && record.parent.name
+      },
+      {
+        title: <this.Translate id="text_feature_category" />,
+        dataIndex: "isFeature",
+        key: "isFeature",
+        render: (isFeature) => {
+          const isFeatureObj = {
+            title: "close",
+            color: "#bfbfbf"
+          };
+
+          if (isFeature) {
+            isFeatureObj.title = "check";
+            isFeatureObj.color = "#87d068";
+          }
+
+          return <this.Tag style={{width: 90, textAlign: "center"}} color={isFeatureObj.color}><this.Icon type={isFeatureObj.title} /></this.Tag>;
+        }
       }
     ];
     this.formCreate = <FormCreate />;
