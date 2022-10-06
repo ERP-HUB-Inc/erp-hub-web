@@ -91,7 +91,6 @@ class FormItem extends React.PureComponent {
           data={quantity}
           isAutoSelect={true}
           precision={0}
-          max={record.quantity}
           onChange={(value) => this.onChangeQty(value, index)}
           form={this.props.form}
         />;
