@@ -58,8 +58,8 @@ export default class FormItem extends Modal {
           defaultValue={formData.isFeature}
           valueKey="value"
           dataSource={[
-            {value: false, name: <this.Translate id="text_no" />},
-            {value: true, name: <this.Translate id="text_yes" />}
+            {value: false, name: "No"},
+            {value: true, name: "Yes"}
           ]}
           form={this.props.form} />
       </this.Col>
