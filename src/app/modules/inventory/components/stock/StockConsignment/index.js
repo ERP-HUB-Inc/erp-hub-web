@@ -7,7 +7,6 @@ import {
   Pagination
 } from "antd";
 import { connect } from "react-redux";
-import Util from "../../../../common/util";
 import StockConsignmentService from "../../../services/stock/StockConsignmentService";
 import LocationService from "../../../../pos/services/settings/LocationService";
 import history from "../../../../common/router/history";
@@ -24,7 +23,6 @@ class StockConsignment extends List {
     loadingFilter: false,
     current: 1
   }
-  util = new Util();
   consignmentStatus = {
     "Draft": {title: <this.Translate id="text_draft" />, color: "#bfbfbf"},
     "Received": {title: <this.Translate id="text_received" />, color: "#1890ff"},
@@ -35,7 +33,7 @@ class StockConsignment extends List {
       title: <this.Translate id="text_date" />,
       dataIndex: "date",
       key: "date",
-      render: (date) => this.util.formatDate(date, "DD/MM/YYYY")
+      render: (date) => this.Util.formatDate(date, "DD/MM/YYYY")
     },
     {
       title: <this.Translate id="text_location" />,
@@ -162,17 +160,27 @@ class StockConsignment extends List {
   }
 
   handleDelete() {
-    this.setState({loading: true});
-    console.log("selected delete ids", this.state.selectedListIds);
-    StockConsignmentService.archive(this.state.selectedListIds)
-    .then(() => {
-      this.fetchList();
-      this.setState({
-        selectedRowKeys: [],
-        modalVisible: false,
-      });
-    })
-    .finally(() => this.setState({loading: false}));
+    this.Util.sweetAlertConfirm(this.CATranslate("text_are_you_sure", this.props.locale))
+    .then(willDelete => {
+      if (willDelete) {
+        this.setState({loading: true});
+        StockConsignmentService.archive(this.state.selectedListIds)
+        .then(() => {
+          this.fetchList();
+          this.setState({
+            selectedRowKeys: [],
+            modalVisible: false,
+          });
+        })
+        .catch(err => {
+          const error = err.response && err.response.data && err.response.data.error;
+          if (error.message) {
+            this.Util.sweetAlertMessageV2("Error!", error.message, "error");
+          }
+        })
+        .finally(() => this.setState({loading: false}));
+      }
+    });
   }
 
   renderFilterStatus() {
@@ -219,6 +227,19 @@ class StockConsignment extends List {
             </this.Col>
           </this.Row>
         </this.Form>
+    );
+  }
+
+  renderButtonDelete() {
+    return (
+      <this.Button
+        type="danger"
+        className="text-uppercase"
+        disabled={this.state.isRequestDelete}
+        onClick={this.handleDelete}>
+        <span className="icon-delete icon-padding-right"></span>
+        <this.Translate id="text_delete" />
+      </this.Button>
     );
   }
 

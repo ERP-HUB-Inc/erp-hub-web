@@ -278,6 +278,22 @@ class FormItem extends React.PureComponent {
   }
 
   handleRemoveEntry(id, index) {
+    if (this.state.formData.status === Enum.STOCK_CONSIGNMENT_STATUS.RETURNED) {
+      return this.util.sweetAlertMessageV2(
+        "Sorry",
+        "Can't delete product in returned step",
+        "error"
+      );
+    }
+
+    if (this.state.formData.status === Enum.STOCK_CONSIGNMENT_STATUS.RECEIVED) {
+      return this.util.sweetAlertMessageV2(
+        "Sorry",
+        "Can't delete product in received step",
+        "error"
+      );
+    }
+
     const entries = [];
     Object.assign(entries, this.state.productEntries);
     if (id) {
