@@ -197,7 +197,7 @@ export default class DropDownSearch extends Component {
       />;
   }
 
-  render() {console.log("DDDDDD:", this.props.productSearch.list);
+  render() {
     return (
       <this.Col md="12" className="search-dropdown-product search-height" style={{position: "relative"}}>
         <BarcodeReader
