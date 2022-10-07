@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import swal from "sweetalert";
+
 import { Col, Row } from "reactstrap";
 import {
   PageHeader,
@@ -13,11 +12,10 @@ import {
   Input,
   Upload,
 } from "antd";
-import history from "../../../../common/router/history";
-import "./style.css";
+import axios from "axios";
+import swal from "sweetalert";
 import { Select, InputText } from "../../../../common/elements/ant-ui";
 import { connect } from "react-redux";
-import Util from "./../../../../common/util";
 import {
   getGeneralSetting,
   UpdateGeneralSetting,
@@ -26,7 +24,13 @@ import {
   createBannerSetting,
   updateBannerSetting,
   achiveBannerSetting,
+  getFeaturedProducts,
+  updateFeaturedProducts,
 } from "./service";
+import history from "../../../../common/router/history";
+import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
+import Util from "./../../../../common/util";
+import "./style.css";
 
 const WebsiteSetting = (props) => {
   // General State
@@ -47,14 +51,19 @@ const WebsiteSetting = (props) => {
   const [loadingBanner, setLloadingBanner] = useState(false);
   const [loadingButtonBanner, setLloadingButtonBanner] = useState(false);
 
+  // Featured Products
+
+  const [productSearch, setProductSearch] = useState([]);
+  const [productEntries, setProductEntries] = useState([]);
+  const [deleteProductEntries, setDeleteProductEntries] = useState([]);
+  const [loadingFeaturedProduct, setLoadingFeaturedProduct] = useState(false);
+  const [loadingButtonFeaturedProduct, setLoadingButtonFeaturedProduct] =
+    useState(false);
+
   const { TabPane } = Tabs;
   const queryParam = new URLSearchParams(document.location.search);
   const util = new Util();
   const pathName = "/settings/website-setting";
-  const onChangeTab = (key) => {
-    queryParam.set("tabKey", key);
-    util.pushParamsToURL(pathName, queryParam.toString());
-  };
 
   // General Function
 
@@ -237,6 +246,7 @@ const WebsiteSetting = (props) => {
 
     setDataSourceBanner([...dataSourceBanner]);
   };
+
   const handleButtonRemoveBanner = (value, findIndex) => {
     if ("id" in value) {
       const foundDelete = dataSourceBanner.find(
@@ -260,6 +270,7 @@ const WebsiteSetting = (props) => {
 
     setDataSourceBanner([...dataSourceBanner]);
   };
+
   const onChangeOrderBanner = (value, findIndex) => {
     dataSourceBanner.forEach((preValue, index) => {
       if (index === findIndex) {
@@ -319,14 +330,183 @@ const WebsiteSetting = (props) => {
     });
   };
 
+  // featured Products Function
+
+  const onFeaturedProductSubmit = (e) => {
+    e.preventDefault();
+    props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        setLoadingButtonFeaturedProduct(true);
+        if (deleteProductEntries.length > 0) {
+          updateFeaturedProducts(deleteProductEntries)
+            .then(() => {
+              fetchFeaturedProducts();
+              swal("Success", {
+                buttons: false,
+                timer: 1500,
+                icon: "success",
+              });
+            })
+            .finally(() => setLoadingButtonFeaturedProduct(false));
+        } else {
+          updateFeaturedProducts(productEntries)
+            .then(() => {
+              fetchFeaturedProducts();
+              swal("Success", {
+                buttons: false,
+                timer: 1500,
+                icon: "success",
+              });
+            })
+            .finally(() => setLoadingButtonFeaturedProduct(false));
+        }
+      }
+    });
+  };
+
+  const fetchFeaturedProducts = () => {
+    setLoadingFeaturedProduct(true);
+    getFeaturedProducts()
+      .then((response) => {
+        if (response.data && response.data.data) {
+          const newProductEntries = response.data.data.map((value) => ({
+            id: value.id,
+            name: value.name,
+            image: value.image,
+            isFeatured: value.isFeatured,
+            defaultValue: 1,
+          }));
+          setDeleteProductEntries(newProductEntries);
+          setProductEntries(response.data.data);
+        }
+      })
+      .finally(() => setLoadingFeaturedProduct(false));
+  };
+
+  const handleOnSelectList = (product) => {
+    const existingProductList = productEntries;
+    if (existingProductList.length === 0) {
+      existingProductList.push({
+        id: product.id,
+        name: product.name,
+        image: product.image,
+        isFeatured: 1,
+      });
+    } else {
+      let isNotTheSameProduct = true;
+      existingProductList.forEach((value, index) => {
+        if (value.id === product.id) {
+          isNotTheSameProduct = false;
+        }
+      });
+      if (isNotTheSameProduct) {
+        existingProductList.push({
+          id: product.id,
+          name: product.name,
+          image: product.image,
+          isFeatured: 1,
+        });
+      }
+    }
+    if (deleteProductEntries.length > 0) {
+      let notFound = true;
+      deleteProductEntries.forEach((value, index) => {
+        if (value.id === product.id) {
+          if ("defaultValue" in value) {
+            deleteProductEntries[index]["isFeatured"] = 1;
+            notFound = false;
+          }
+        }
+      });
+
+      if (notFound) {
+        deleteProductEntries.push({
+          id: product.id,
+          name: product.name,
+          image: product.image,
+          isFeatured: 1,
+        });
+      }
+      setDeleteProductEntries([...deleteProductEntries]);
+    }
+    setProductEntries([...existingProductList]);
+    props.form.setFieldsValue({ searchProduct: "" });
+    setProductSearch([]);
+    document.getElementById("searchProduct").focus();
+  };
+
+  const handleRemoveEntry = (record, findIndex) => {
+    util
+      .sweetAlertConfirm("Are you sure delete this record?")
+      .then((willDelete) => {
+        if (willDelete) {
+          if (deleteProductEntries.length > 0) {
+            deleteProductEntries.forEach((value, index) => {
+              if (value.id === record.id) {
+                if ("defaultValue" in value) {
+                  deleteProductEntries[index]["isFeatured"] = 0;
+                } else {
+                  deleteProductEntries.splice(index, 1);
+                }
+                setDeleteProductEntries([...deleteProductEntries]);
+              }
+            });
+          }
+          productEntries.splice(findIndex, 1);
+          setProductSearch([]);
+          setProductEntries([...productEntries]);
+        }
+      });
+  };
+
+  const entryColumn = [
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      render: (image) => (
+        <img
+          alt="product"
+          src={util.getProductImage(image).url}
+          width={60}
+          height={60}
+        />
+      ),
+    },
+    {
+      title: "Product Name",
+      dataIndex: "name",
+      key: "name",
+    },
+
+    {
+      title: "Action",
+      dataIndex: "id",
+      key: "id",
+      render: (id, record, index) => (
+        <Icon
+          type="delete"
+          style={{ cursor: "pointer", color: "red" }}
+          onClick={() => handleRemoveEntry(record, index)}
+        />
+      ),
+    },
+  ];
+
   // useEffect
   useEffect(() => {
     fetchGeneral();
     fetchBanner();
+    fetchFeaturedProducts();
     // eslint-disable-next-line
   }, []);
 
   //
+  const onChangeTab = (key) => {
+    queryParam.set("tabKey", key);
+    util.pushParamsToURL(pathName, queryParam.toString());
+  };
+
   const getImageFromUpload = (value, key = "image") => {
     let image = "";
 
@@ -391,6 +571,7 @@ const WebsiteSetting = (props) => {
       }
     },
   };
+
   return (
     <>
       <PageHeader
@@ -594,14 +775,13 @@ const WebsiteSetting = (props) => {
                       )}
 
                       {visibleFormBanner && (
-                        // <div id="banner-table">
                         <>
                           <PageHeader
                             style={{
                               padding: "0px 0px 15px 0px",
                             }}
                             onBack={onBackToTable}
-                            title={"New Banner"}
+                            title={bannerId ? "Edit Banner" : "New Banner"}
                             subTitle=""
                           />
                           <InputText
@@ -736,7 +916,36 @@ const WebsiteSetting = (props) => {
               </TabPane>
               <TabPane tab={"Featured Products"} key="3">
                 <Row>
-                  <Col lg="4" md="4"></Col>
+                  <Col lg="4" md="4">
+                    <Form onSubmit={onFeaturedProductSubmit}>
+                      <SearchProductDropdown
+                        productSearch={productSearch}
+                        handleOnSelectList={handleOnSelectList}
+                        locale={props.locale}
+                        showIcon={false}
+                        form={props.form}
+                      />
+
+                      <Table
+                        rowKey={(record, index) => index}
+                        columns={entryColumn}
+                        dataSource={productEntries}
+                        pagination={false}
+                        locale={"Empty Product"}
+                        loading={loadingFeaturedProduct}
+                      />
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="ant-btn info undefined"
+                        loading={loadingButtonFeaturedProduct}
+                        style={{ marginTop: 15 }}
+                      >
+                        <span className="icon-save icon-padding-right"></span>
+                        SAVE
+                      </Button>
+                    </Form>
+                  </Col>
                 </Row>
               </TabPane>
               <TabPane tab={"SEO"} key="4">
@@ -758,7 +967,7 @@ function UploadImage({ uploadProps, form, label, name }) {
     <div className="clearfix main-upload">
       <Form.Item className="wrap-upload">
         {getFieldDecorator(name)(
-          <Upload {...uploadProps}>
+          <Upload {...uploadProps} width={150} height={120}>
             {uploadProps.fileList.length === 0 ? (
               <>
                 <UploadButton />
@@ -832,7 +1041,7 @@ function UploadImageBanner({
     <div className="clearfix main-upload">
       <Form.Item className="wrap-upload">
         {getFieldDecorator(name)(
-          <Upload {...uploadProps}>
+          <Upload {...uploadProps} width={150} height={120}>
             {uploadProps.fileList.length === 0 ? (
               <>
                 <UploadButton />

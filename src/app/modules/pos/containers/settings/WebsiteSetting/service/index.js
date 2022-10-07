@@ -75,3 +75,22 @@ export function achiveBannerSetting(id) {
     url: `${url}/banners/${id}`,
   });
 }
+
+//  Featured Products
+
+export function getFeaturedProducts() {
+  return axios({
+    method: "GET",
+    headers,
+    url: `${url}/featured_products`,
+  });
+}
+
+export function updateFeaturedProducts(data) {
+  return axios({
+    method: "PUT",
+    headers,
+    url: `${url}/featured_products`,
+    data,
+  });
+}
