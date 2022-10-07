@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { connect } from "react-redux";
 import { Col, Row } from "reactstrap";
 import {
   PageHeader,
@@ -15,7 +15,6 @@ import {
 import axios from "axios";
 import swal from "sweetalert";
 import { Select, InputText } from "../../../../common/elements/ant-ui";
-import { connect } from "react-redux";
 import {
   getGeneralSetting,
   UpdateGeneralSetting,
@@ -51,8 +50,7 @@ const WebsiteSetting = (props) => {
   const [loadingBanner, setLloadingBanner] = useState(false);
   const [loadingButtonBanner, setLloadingButtonBanner] = useState(false);
 
-  // Featured Products
-
+  // Featured Products State
   const [productSearch, setProductSearch] = useState([]);
   const [productEntries, setProductEntries] = useState([]);
   const [deleteProductEntries, setDeleteProductEntries] = useState([]);
@@ -60,19 +58,40 @@ const WebsiteSetting = (props) => {
   const [loadingButtonFeaturedProduct, setLoadingButtonFeaturedProduct] =
     useState(false);
 
+  // SEO State
+  const [metaTitle, setMetaTitle] = useState("");
+  const [metaTagDescription, setMetaTagDescription] = useState("");
+  const [metaTagKeyword, setMetaTagKeyword] = useState("");
+  const [loadingButtonSeo, setLoadingButtonSeo] = useState(false);
+
   const { TabPane } = Tabs;
   const queryParam = new URLSearchParams(document.location.search);
   const util = new Util();
   const pathName = "/settings/website-setting";
 
   // General Function
-
   const fetchGeneral = () => {
     getGeneralSetting().then((response) => {
       if (response.data.data) {
         const data = response.data.data;
-        setPrimaryColor(data.primaryColor);
-        setSecondaryColor(data.secondColor);
+        if ("metaTitle" in data) {
+          setMetaTitle(data.metaTitle);
+        }
+        if ("metaTagDescription" in data) {
+          setMetaTagDescription(data.metaTagDescription);
+        }
+
+        if ("metaTagKeyword" in data) {
+          setMetaTagKeyword(data.metaTagKeyword);
+        }
+
+        if ("primaryColor" in data) {
+          setPrimaryColor(data.primaryColor);
+        }
+        if ("secondColor" in data) {
+          setSecondaryColor(data.secondColor);
+        }
+
         if ("theme" in data) {
           setTheme(data.theme);
         }
@@ -151,7 +170,6 @@ const WebsiteSetting = (props) => {
   };
 
   // Banner Function
-
   const fetchBanner = () => {
     setLloadingBanner(true);
     getBannerSetting()
@@ -331,7 +349,6 @@ const WebsiteSetting = (props) => {
   };
 
   // featured Products Function
-
   const onFeaturedProductSubmit = (e) => {
     e.preventDefault();
     props.form.validateFieldsAndScroll((err, values) => {
@@ -394,7 +411,7 @@ const WebsiteSetting = (props) => {
       });
     } else {
       let isNotTheSameProduct = true;
-      existingProductList.forEach((value, index) => {
+      existingProductList.forEach((value) => {
         if (value.id === product.id) {
           isNotTheSameProduct = false;
         }
@@ -492,6 +509,42 @@ const WebsiteSetting = (props) => {
       ),
     },
   ];
+
+  // SEO Function
+  const onSeoSubmit = (e) => {
+    e.preventDefault();
+    props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        setLoadingButtonSeo(true);
+        const seo = [
+          {
+            key: "metaTitle",
+            value: values.metaTitle ? values.metaTitle : "",
+          },
+          {
+            key: "metaTagDescription",
+            value: values.metaTagDescription ? values.metaTagDescription : "",
+          },
+          {
+            key: "metaTagKeyword",
+            value: values.metaTagKeyword ? values.metaTagKeyword : "",
+          },
+        ];
+        UpdateGeneralSetting(seo)
+          .then(() => {
+            fetchGeneral();
+            swal("Success", {
+              buttons: false,
+              timer: 1500,
+              icon: "success",
+            });
+          })
+          .finally(() => {
+            setLoadingButtonSeo(false);
+          });
+      }
+    });
+  };
 
   // useEffect
   useEffect(() => {
@@ -950,7 +1003,41 @@ const WebsiteSetting = (props) => {
               </TabPane>
               <TabPane tab={"SEO"} key="4">
                 <Row>
-                  <Col lg="4" md="4"></Col>
+                  <Col lg="4" md="4">
+                    <Form onSubmit={onSeoSubmit}>
+                      <InputText
+                        data={metaTitle}
+                        name="metaTitle"
+                        label={"Meta Title"}
+                        placeholder={"Meta title"}
+                        form={props.form}
+                      />
+                      <InputText
+                        data={metaTagDescription}
+                        name="metaTagDescription"
+                        label={"Meta Tag Description"}
+                        placeholder={"Meta tag description"}
+                        form={props.form}
+                      />
+                      <InputText
+                        data={metaTagKeyword}
+                        name="metaTagKeyword"
+                        label={"Meta Tag Keyword"}
+                        placeholder={"Meta tag keyword"}
+                        form={props.form}
+                      />
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="ant-btn info undefined"
+                        loading={loadingButtonSeo}
+                        style={{ marginTop: 15 }}
+                      >
+                        <span className="icon-save icon-padding-right"></span>
+                        SAVE
+                      </Button>
+                    </Form>
+                  </Col>
                 </Row>
               </TabPane>
             </Tabs>
@@ -961,13 +1048,13 @@ const WebsiteSetting = (props) => {
   );
 };
 
-function UploadImage({ uploadProps, form, label, name }) {
+function UploadImage({ uploadProps, form, name }) {
   const { getFieldDecorator } = form;
   return (
     <div className="clearfix main-upload">
       <Form.Item className="wrap-upload">
         {getFieldDecorator(name)(
-          <Upload {...uploadProps} width={150} height={120}>
+          <Upload {...uploadProps} style={{ height: "120px" }}>
             {uploadProps.fileList.length === 0 ? (
               <React.Fragment>
                 <UploadButton />
@@ -1003,7 +1090,7 @@ function UploadImageBanner({
           "Content-Type": "application/json",
           Authorization: `Bearer ${util.getAccessToken()}`,
         },
-      }).then((response) => {
+      }).then(() => {
         onChangeImageName(null, index);
         form.setFieldsValue({ [`image${index}`]: null });
       });
@@ -1041,7 +1128,7 @@ function UploadImageBanner({
     <div className="clearfix main-upload">
       <Form.Item className="wrap-upload">
         {getFieldDecorator(name)(
-          <Upload {...uploadProps} width={150} height={120}>
+          <Upload {...uploadProps} style={{ height: "120px" }}>
             {uploadProps.fileList.length === 0 ? (
               <React.Fragment>
                 <UploadButton />

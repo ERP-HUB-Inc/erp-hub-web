@@ -33,7 +33,6 @@ export function UpdateGeneralSetting(data) {
 }
 
 // Banner
-
 export function getBannerSetting() {
   return axios({
     method: "GET",
@@ -77,7 +76,6 @@ export function achiveBannerSetting(id) {
 }
 
 //  Featured Products
-
 export function getFeaturedProducts() {
   return axios({
     method: "GET",
