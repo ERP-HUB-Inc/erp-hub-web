@@ -249,10 +249,5 @@ export default {
     "Price require",
     "សូមបញ្ចូលតម្លៃ",
     "Price require"
-  ],
-
-  "text_search_by_seller": [
-    "Search by seller",
-    "ស្វែងរកតាមអ្នកលក់"
   ]
 };

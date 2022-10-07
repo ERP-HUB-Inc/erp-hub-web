@@ -99,6 +99,11 @@ export default {
     "របាយការណ៍បញ្ជារទិញ"
   ],
 
+  "text_consignment_report": [
+    "Stock Consignment Report",
+    "របាយការណ៍ស្តុកខនសាញ្ញមិន"
+  ],
+
   "text_product_report": [
     "Product Report",
     "របាយការណ៍ទំនិញ"

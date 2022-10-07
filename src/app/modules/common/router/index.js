@@ -39,6 +39,8 @@ import ReportSaleByLocation from "../../pos/components/reports/Sale/ReportSaleBy
 import ReportPurchaseSummary from "../../pos/components/reports/Purchase/ReportPurchaseSummary";
 import ReportPurchaseByProduct from "../../pos/components/reports/Purchase/ReportPurchaseByProduct";
 import ReportPurchaseBySupplier from "../../pos/components/reports/Purchase/ReportPurchaseBySupplier";
+import ReportConsignmentSummary from "../../pos/components/reports/Stock/Consignment/ReportConsignmentSummary";
+import ReportConsignmentByProduct from "../../pos/components/reports/Stock/Consignment/ReportConsignmentByProduct";
 import POS from "../../pos/containers/transactions/SaleWalkin";
 import OpenSaleRegistration from "../../pos/containers/transactions/OpenSaleRegistration";
 import InvoiceCreate from "../../pos/components/transactions/Invoice/FormItem";
@@ -122,6 +124,8 @@ class Router extends Component {
             <Route path="/reports/purchase_summaries" component={ReportPurchaseSummary} />
             <Route path="/reports/purchased_products" component={ReportPurchaseByProduct} />
             <Route path="/reports/purchased_suppliers" component={ReportPurchaseBySupplier} />
+            <Route path="/reports/stock-consignment-summary" component={ReportConsignmentSummary} />
+            <Route path="/reports/stock-consignment-product" component={ReportConsignmentByProduct} />
             <Route path="/" component={Home} />
             <Route path="/profile" component={Profile} />
           </Switch>
