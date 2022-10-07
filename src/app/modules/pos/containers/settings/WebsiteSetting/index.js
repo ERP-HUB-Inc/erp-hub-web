@@ -812,6 +812,7 @@ const WebsiteSetting = (props) => {
                                         type="delete"
                                         style={{
                                           cursor: "pointer",
+                                          color: "red",
                                         }}
                                         onClick={() => onDeleteBanner(id)}
                                       />
