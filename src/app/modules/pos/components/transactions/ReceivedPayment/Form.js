@@ -14,7 +14,7 @@ export default function ReceivedPayment(props) {
   const handleSubmitPayment = (e) => {
     e.preventDefault();
 
-    if (props.formData.status === Enum.INVOICE_STATUS.PAID) {
+    if (Number(props.formData.status) === Enum.INVOICE_STATUS.PAID) {
       return util.sweetAlertMessage(stringTranslate("text_already_paid_invoice", props.locale), "warning");
     }
 

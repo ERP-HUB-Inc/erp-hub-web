@@ -91,7 +91,6 @@ class FormItem extends React.PureComponent {
           data={quantity}
           isAutoSelect={true}
           precision={0}
-          max={record.quantity}
           onChange={(value) => this.onChangeQty(value, index)}
           form={this.props.form}
         />;
@@ -143,7 +142,7 @@ class FormItem extends React.PureComponent {
       this.setState({
         formData: {
           sellerId: "",
-          locationId: null,
+          locationId: this.util.getLocationId(),
           date: moment(),
           status: "Draft",
         },
@@ -195,6 +194,15 @@ class FormItem extends React.PureComponent {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        const {formData} = this.state;
+        if (formData.status === Enum.STOCK_CONSIGNMENT_STATUS.RECEIVED && values.status !== Enum.STOCK_CONSIGNMENT_STATUS.RETURNED) {
+          return this.util.sweetAlertMessageV2("Warning", "This consignment already received", "error");
+        }
+
+        if (formData.status === Enum.STOCK_CONSIGNMENT_STATUS.RETURNED) {
+          return this.util.sweetAlertMessageV2("Warning", "This consignment already returned", "error");
+        }
+
         const consignment = {
           locationId: values.locationId,
           sellerId: values.sellerId,
@@ -278,6 +286,22 @@ class FormItem extends React.PureComponent {
   }
 
   handleRemoveEntry(id, index) {
+    if (this.state.formData.status === Enum.STOCK_CONSIGNMENT_STATUS.RETURNED) {
+      return this.util.sweetAlertMessageV2(
+        "Sorry",
+        "Can't delete product in returned step",
+        "error"
+      );
+    }
+
+    if (this.state.formData.status === Enum.STOCK_CONSIGNMENT_STATUS.RECEIVED) {
+      return this.util.sweetAlertMessageV2(
+        "Sorry",
+        "Can't delete product in received step",
+        "error"
+      );
+    }
+
     const entries = [];
     Object.assign(entries, this.state.productEntries);
     if (id) {
@@ -392,8 +416,9 @@ class FormItem extends React.PureComponent {
                   name="locationId"
                   label={<Translate id="text_location" />}
                   placeholder={`${stringTranslate("text_location", this.props.locale)}`}
-                  defaultValue={formData.locationId ? Number(formData.locationId) : null}
+                  defaultValue={Number(formData.locationId)}
                   valueKey="id"
+                  disabled={formData.status !== Enum.STOCK_CONSIGNMENT_STATUS.DRAFT ? true : false}
                   dataSource={this.state.locations}
                   form={this.props.form}/>
 

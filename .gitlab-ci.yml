@@ -2,14 +2,14 @@ stages:
   - deploy
 deploy:
   stage: deploy
-  tags: 
-      - webserver
+  tags:
+    - webserver
   script:
-      - echo "Building deploy package"
-      - npm install
-      - npm run webpack:build
-      - rm -rf /var/www/pos/*
-      - cp -R dist/* /var/www/pos
-      - echo "Deploy successful"
+    - echo "Building deploy package"
+    - npm install
+    - npm run webpack:build
+    - rm -rf /var/www/pos/*
+    - cp -R dist/* /var/www/pos
+    - echo "Deploy successful"
   only:
-      - develop
+    - master

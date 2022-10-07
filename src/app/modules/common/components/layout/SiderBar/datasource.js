@@ -107,13 +107,15 @@ const PurchaseOrder = Loadable({
 });
 
 const StockConsignment = Loadable({
-  loader: () => import("../../../../inventory/components/stock/StockConsignment"),
-  loading: () => <StartUp />
+  loader: () =>
+    import("../../../../inventory/components/stock/StockConsignment"),
+  loading: () => <StartUp />,
 });
 
 const StockConsignmentForm = Loadable({
-  loader: () => import("../../../../inventory/components/stock/StockConsignment/FormItem"),
-  loading: () => <StartUp />
+  loader: () =>
+    import("../../../../inventory/components/stock/StockConsignment/FormItem"),
+  loading: () => <StartUp />,
 });
 
 const StockTransfer = Loadable({
@@ -153,6 +155,11 @@ const PurchaseReportDashboard = Loadable({
   loading: () => <StartUp />,
 });
 
+const StockReport = Loadable({
+  loader: () => import("../../../../pos/components/reports/Stock"),
+  loading: () => <StartUp />
+});
+
 const ProductReport = Loadable({
   loader: () => import("../../../../pos/containers/reports/Product"),
   loading: () => <StartUp />,
@@ -187,6 +194,11 @@ const ProfitAndLostReport = Loadable({
 // SETTING
 const StoreAccount = Loadable({
   loader: () => import("../../../../pos/containers/settings/StoreAccount"),
+  loading: () => <StartUp />,
+});
+
+const WebsiteSetting = Loadable({
+  loader: () => import("../../../../pos/containers/settings/WebsiteSetting"),
   loading: () => <StartUp />,
 });
 
@@ -442,17 +454,17 @@ const dataSource = {
         icon: "icon-purchasing",
         route: "/stock/consignment/list",
         component: StockConsignment,
-        isFashNav: true
+        isFashNav: true,
       },
       {
         route: "/stock/consignment/create",
         component: StockConsignmentForm,
-        isFashNav: false
+        isFashNav: false,
       },
       {
         route: "/stock/consignment/update/:id",
         component: StockConsignmentForm,
-        isFashNav: false
+        isFashNav: false,
       },
       {
         title: <Translate id="text_stock_adjustment" />,
@@ -545,6 +557,12 @@ const dataSource = {
         component: PurchaseReportDashboard,
       },
       {
+        title: <Translate id="text_stock_report" />,
+        icon: "icon-stock",
+        route: "/reports/stock",
+        component: StockReport
+      },
+      {
         title: <Translate id="text_product_report" />,
         icon: "icon-items",
         route: "/reports/product",
@@ -558,11 +576,9 @@ const dataSource = {
         isFashNav: true,
       },
       {
-        title: "Adjustment Report",
-        icon: "icon-stock",
         route: "/reports/adjustment-report",
         component: AdjustmentReport,
-        isFashNav: true,
+        isFashNav: false,
       },
       {
         title: <Translate id="text_profit_and_loss_report" />,
@@ -583,6 +599,13 @@ const dataSource = {
         icon: "icon-account",
         route: "/settings/account",
         component: StoreAccount,
+        isFashNav: true,
+      },
+      {
+        title: "Website Setting",
+        icon: "icon-account",
+        route: "/settings/website-setting",
+        component: WebsiteSetting,
         isFashNav: true,
       },
       {

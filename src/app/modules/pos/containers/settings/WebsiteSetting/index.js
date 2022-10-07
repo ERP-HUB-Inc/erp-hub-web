@@ -1,0 +1,1175 @@
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { Col, Row } from "reactstrap";
+import {
+  PageHeader,
+  Form,
+  Tabs,
+  Button,
+  Table,
+  Icon,
+  InputNumber,
+  Input,
+  Upload,
+} from "antd";
+import axios from "axios";
+import swal from "sweetalert";
+import { Select, InputText } from "../../../../common/elements/ant-ui";
+import {
+  getGeneralSetting,
+  UpdateGeneralSetting,
+  getBannerSetting,
+  getBannerSettingById,
+  createBannerSetting,
+  updateBannerSetting,
+  achiveBannerSetting,
+  getFeaturedProducts,
+  updateFeaturedProducts,
+} from "./service";
+import history from "../../../../common/router/history";
+import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
+import Util from "./../../../../common/util";
+import "./style.css";
+
+const WebsiteSetting = (props) => {
+  // General State
+  const [primaryColor, setPrimaryColor] = useState("#FFFFFF");
+  const [secondaryColor, setSecondaryColor] = useState("#FFFFFF");
+  const [generalLoadingButton, setGeneralLoadingButton] = useState(false);
+  const [placeholderImage, setPlaceholderImage] = useState(null);
+  const [theme, setTheme] = useState("");
+
+  // Banner State
+  const [visibleFormBanner, setVisibleFormBanner] = useState(false);
+  const [visibleBannerTable, setVisibleBannerTable] = useState(true);
+  const [bannerId, setBannerId] = useState(undefined);
+  const [bannerName, setBannerName] = useState("");
+  const [dataSourceBanner, setDataSourceBanner] = useState([]);
+  const [deleteDataSourceBanner, setDeleteDataSourceBanner] = useState([]);
+  const [bannerList, setBannerList] = useState([]);
+  const [loadingBanner, setLloadingBanner] = useState(false);
+  const [loadingButtonBanner, setLloadingButtonBanner] = useState(false);
+
+  // Featured Products State
+  const [productSearch, setProductSearch] = useState([]);
+  const [productEntries, setProductEntries] = useState([]);
+  const [deleteProductEntries, setDeleteProductEntries] = useState([]);
+  const [loadingFeaturedProduct, setLoadingFeaturedProduct] = useState(false);
+  const [loadingButtonFeaturedProduct, setLoadingButtonFeaturedProduct] =
+    useState(false);
+
+  // SEO State
+  const [metaTitle, setMetaTitle] = useState("");
+  const [metaTagDescription, setMetaTagDescription] = useState("");
+  const [metaTagKeyword, setMetaTagKeyword] = useState("");
+  const [loadingButtonSeo, setLoadingButtonSeo] = useState(false);
+
+  const { TabPane } = Tabs;
+  const queryParam = new URLSearchParams(document.location.search);
+  const util = new Util();
+  const pathName = "/settings/website-setting";
+
+  // General Function
+  const fetchGeneral = () => {
+    getGeneralSetting().then((response) => {
+      if (response.data.data) {
+        const data = response.data.data;
+        if ("metaTitle" in data) {
+          setMetaTitle(data.metaTitle);
+        }
+        if ("metaTagDescription" in data) {
+          setMetaTagDescription(data.metaTagDescription);
+        }
+
+        if ("metaTagKeyword" in data) {
+          setMetaTagKeyword(data.metaTagKeyword);
+        }
+
+        if ("primaryColor" in data) {
+          setPrimaryColor(data.primaryColor);
+        }
+        if ("secondColor" in data) {
+          setSecondaryColor(data.secondColor);
+        }
+
+        if ("theme" in data) {
+          setTheme(data.theme);
+        }
+        if (!data.placeHolderImage) {
+          setPlaceholderImage(null);
+        } else {
+          const splitName = data.placeHolderImage.split("/");
+
+          setPlaceholderImage({
+            ...{
+              uid: "1",
+              name: splitName[2],
+              status: "done",
+              url: util.getWebsitePlaceholderImage(data.placeHolderImage).url,
+            },
+          });
+        }
+      }
+    });
+  };
+
+  const onChangeColor = (event, name) => {
+    if (name === "primaryColor") {
+      setPrimaryColor(event.target.value);
+    } else {
+      setSecondaryColor(event.target.value);
+    }
+  };
+
+  const onSelectTheme = (value) => {
+    setTheme(value);
+  };
+
+  const onGeneralSubmit = (e) => {
+    e.preventDefault();
+    props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        setGeneralLoadingButton(true);
+        let general = [
+          {
+            key: "primaryColor",
+            value: primaryColor,
+          },
+          {
+            key: "secondColor",
+            value: secondaryColor,
+          },
+          {
+            key: "placeHolderImage",
+            value: values["placeHolderImage"]
+              ? `website/placeholder/${getImageFromUpload(
+                  values,
+                  "placeHolderImage"
+                )}`
+              : "",
+          },
+          {
+            key: "theme",
+            value: theme,
+          },
+        ];
+        UpdateGeneralSetting(general)
+          .then(() => {
+            fetchGeneral();
+            swal("Success", {
+              buttons: false,
+              timer: 1500,
+              icon: "success",
+            });
+          })
+          .finally(() => {
+            setGeneralLoadingButton(false);
+          });
+      }
+    });
+  };
+
+  // Banner Function
+  const fetchBanner = () => {
+    setLloadingBanner(true);
+    getBannerSetting()
+      .then((response) => {
+        if (response.data && response.data.data) {
+          setBannerList(response.data.data);
+        }
+      })
+      .finally(() => {
+        setLloadingBanner(false);
+      });
+  };
+
+  const onDeleteBanner = (id) => {
+    util
+      .sweetAlertConfirm("Are you sure delete this record?")
+      .then((willDelete) => {
+        if (willDelete) {
+          achiveBannerSetting(id).then(() => {
+            fetchBanner();
+          });
+        }
+      });
+  };
+
+  const onBackToTable = () => {
+    props.form.resetFields();
+    setDataSourceBanner([]);
+    setBannerName("");
+    setDeleteDataSourceBanner([]);
+    fetchBanner();
+    setVisibleFormBanner(false);
+    setVisibleBannerTable(true);
+    setLloadingButtonBanner(false);
+    setBannerId(undefined);
+  };
+
+  const onShowFormBanner = (id) => {
+    if (id) {
+      setBannerId(id);
+      getBannerSettingById(id).then((response) => {
+        if (response.data && response.data.data) {
+          const data = response.data.data;
+          const bannerImage = data.banner_images.map((value) => {
+            const splitName = value.image ? value.image.split("/") : null;
+            return {
+              id: value.id,
+              bannerId: value.bannerId,
+              description: value.description,
+              descriptionkm: value.descriptionkm,
+              name: value.name,
+              namekm: value.namekm,
+              order: value.order,
+              image: value.image
+                ? {
+                    uid: `${Date.now()}`,
+                    name: splitName[2],
+                    status: "done",
+                    url: util.getWebsitePlaceholderImage(value.image).url,
+                  }
+                : null,
+            };
+          });
+          setDataSourceBanner(bannerImage);
+          setBannerName(data.name);
+        }
+      });
+    }
+    setVisibleFormBanner(true);
+    setVisibleBannerTable(false);
+  };
+
+  const handleButtonAddBanner = () => {
+    dataSourceBanner.push({
+      name: "",
+      image: null,
+      order: null,
+    });
+    setDataSourceBanner([...dataSourceBanner]);
+  };
+
+  const onChangeImageName = (value, findIndex) => {
+    dataSourceBanner.forEach((preValue, index) => {
+      if (index === findIndex) {
+        if (value) {
+          dataSourceBanner[index]["image"] = value;
+        } else {
+          dataSourceBanner[index]["image"] = null;
+        }
+      }
+    });
+
+    setDataSourceBanner([...dataSourceBanner]);
+  };
+
+  const handleButtonRemoveBanner = (value, findIndex) => {
+    if ("id" in value) {
+      const foundDelete = dataSourceBanner.find(
+        (preValue, index) => index === findIndex
+      );
+      foundDelete["status"] = 3;
+
+      setDeleteDataSourceBanner([...deleteDataSourceBanner, foundDelete]);
+    }
+    dataSourceBanner.splice(findIndex, 1);
+
+    setDataSourceBanner([...dataSourceBanner]);
+  };
+
+  const onChangeBannerName = (event, findIndex) => {
+    dataSourceBanner.forEach((preValue, index) => {
+      if (index === findIndex) {
+        dataSourceBanner[index]["name"] = event.target.value;
+      }
+    });
+
+    setDataSourceBanner([...dataSourceBanner]);
+  };
+
+  const onChangeOrderBanner = (value, findIndex) => {
+    dataSourceBanner.forEach((preValue, index) => {
+      if (index === findIndex) {
+        dataSourceBanner[index]["order"] = value;
+      }
+    });
+
+    setDataSourceBanner([...dataSourceBanner]);
+  };
+
+  const onBannerSubmit = (e) => {
+    e.preventDefault();
+    props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        setLloadingButtonBanner(true);
+        // eslint-disable-next-line
+        const entries = dataSourceBanner.filter((value) => {
+          if ("id" in value) {
+            return true;
+          } else {
+            if (value.name !== "" || value.image !== null) {
+              return true;
+            }
+          }
+        });
+        const newEntries = entries.map((value) => {
+          if ("id" in value) {
+            return {
+              id: value.id,
+              name: value.name,
+              image: value.image ? `website/banner/${value.image.name}` : null,
+              order: value.order,
+            };
+          } else {
+            return {
+              name: value.name,
+              image: value.image ? `website/banner/${value.image.name}` : null,
+              order: value.order,
+            };
+          }
+        });
+        values["entries"] = [...newEntries, ...deleteDataSourceBanner];
+        if (bannerId) {
+          updateBannerSetting(bannerId, values)
+            .then(() => {
+              onBackToTable();
+            })
+            .finally(() => setLloadingButtonBanner(false));
+        } else {
+          createBannerSetting(values)
+            .then(() => {
+              onBackToTable();
+            })
+            .finally(() => setLloadingButtonBanner(false));
+        }
+      }
+    });
+  };
+
+  // featured Products Function
+  const onFeaturedProductSubmit = (e) => {
+    e.preventDefault();
+    props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        setLoadingButtonFeaturedProduct(true);
+        if (deleteProductEntries.length > 0) {
+          updateFeaturedProducts(deleteProductEntries)
+            .then(() => {
+              fetchFeaturedProducts();
+              swal("Success", {
+                buttons: false,
+                timer: 1500,
+                icon: "success",
+              });
+            })
+            .finally(() => setLoadingButtonFeaturedProduct(false));
+        } else {
+          updateFeaturedProducts(productEntries)
+            .then(() => {
+              fetchFeaturedProducts();
+              swal("Success", {
+                buttons: false,
+                timer: 1500,
+                icon: "success",
+              });
+            })
+            .finally(() => setLoadingButtonFeaturedProduct(false));
+        }
+      }
+    });
+  };
+
+  const fetchFeaturedProducts = () => {
+    setLoadingFeaturedProduct(true);
+    getFeaturedProducts()
+      .then((response) => {
+        if (response.data && response.data.data) {
+          const newProductEntries = response.data.data.map((value) => ({
+            id: value.id,
+            name: value.name,
+            image: value.image,
+            isFeatured: value.isFeatured,
+            defaultValue: 1,
+          }));
+          setDeleteProductEntries(newProductEntries);
+          setProductEntries(response.data.data);
+        }
+      })
+      .finally(() => setLoadingFeaturedProduct(false));
+  };
+
+  const handleOnSelectList = (product) => {
+    const existingProductList = productEntries;
+    if (existingProductList.length === 0) {
+      existingProductList.push({
+        id: product.id,
+        name: product.name,
+        image: product.image,
+        isFeatured: 1,
+      });
+    } else {
+      let isNotTheSameProduct = true;
+      existingProductList.forEach((value) => {
+        if (value.id === product.id) {
+          isNotTheSameProduct = false;
+        }
+      });
+      if (isNotTheSameProduct) {
+        existingProductList.push({
+          id: product.id,
+          name: product.name,
+          image: product.image,
+          isFeatured: 1,
+        });
+      }
+    }
+    if (deleteProductEntries.length > 0) {
+      let notFound = true;
+      deleteProductEntries.forEach((value, index) => {
+        if (value.id === product.id) {
+          if ("defaultValue" in value) {
+            deleteProductEntries[index]["isFeatured"] = 1;
+            notFound = false;
+          }
+        }
+      });
+
+      if (notFound) {
+        deleteProductEntries.push({
+          id: product.id,
+          name: product.name,
+          image: product.image,
+          isFeatured: 1,
+        });
+      }
+      setDeleteProductEntries([...deleteProductEntries]);
+    }
+    setProductEntries([...existingProductList]);
+    props.form.setFieldsValue({ searchProduct: "" });
+    setProductSearch([]);
+    document.getElementById("searchProduct").focus();
+  };
+
+  const handleRemoveEntry = (record, findIndex) => {
+    util
+      .sweetAlertConfirm("Are you sure delete this record?")
+      .then((willDelete) => {
+        if (willDelete) {
+          if (deleteProductEntries.length > 0) {
+            deleteProductEntries.forEach((value, index) => {
+              if (value.id === record.id) {
+                if ("defaultValue" in value) {
+                  deleteProductEntries[index]["isFeatured"] = 0;
+                } else {
+                  deleteProductEntries.splice(index, 1);
+                }
+                setDeleteProductEntries([...deleteProductEntries]);
+              }
+            });
+          }
+          productEntries.splice(findIndex, 1);
+          setProductSearch([]);
+          setProductEntries([...productEntries]);
+        }
+      });
+  };
+
+  const entryColumn = [
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      render: (image) => (
+        <img
+          alt="product"
+          src={util.getProductImage(image).url}
+          width={60}
+          height={60}
+        />
+      ),
+    },
+    {
+      title: "Product Name",
+      dataIndex: "name",
+      key: "name",
+    },
+
+    {
+      title: "Action",
+      dataIndex: "id",
+      key: "id",
+      render: (id, record, index) => (
+        <Icon
+          type="delete"
+          style={{ cursor: "pointer", color: "red" }}
+          onClick={() => handleRemoveEntry(record, index)}
+        />
+      ),
+    },
+  ];
+
+  // SEO Function
+  const onSeoSubmit = (e) => {
+    e.preventDefault();
+    props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        setLoadingButtonSeo(true);
+        const seo = [
+          {
+            key: "metaTitle",
+            value: values.metaTitle ? values.metaTitle : "",
+          },
+          {
+            key: "metaTagDescription",
+            value: values.metaTagDescription ? values.metaTagDescription : "",
+          },
+          {
+            key: "metaTagKeyword",
+            value: values.metaTagKeyword ? values.metaTagKeyword : "",
+          },
+        ];
+        UpdateGeneralSetting(seo)
+          .then(() => {
+            fetchGeneral();
+            swal("Success", {
+              buttons: false,
+              timer: 1500,
+              icon: "success",
+            });
+          })
+          .finally(() => {
+            setLoadingButtonSeo(false);
+          });
+      }
+    });
+  };
+
+  // useEffect
+  useEffect(() => {
+    fetchGeneral();
+    fetchBanner();
+    fetchFeaturedProducts();
+    // eslint-disable-next-line
+  }, []);
+
+  //
+  const onChangeTab = (key) => {
+    queryParam.set("tabKey", key);
+    util.pushParamsToURL(pathName, queryParam.toString());
+  };
+
+  const getImageFromUpload = (value, key = "image") => {
+    let image = "";
+
+    if (value === null) return image;
+
+    if (
+      key in value &&
+      value[key] &&
+      "file" in value[key] &&
+      value[key]["file"] &&
+      "name" in value[key]["file"]
+    ) {
+      image = value[key]["file"]["name"];
+    }
+
+    return image;
+  };
+
+  const uploadProps = {
+    listType: "picture-card",
+    onRemove: (file) => {
+      axios({
+        method: "DELETE",
+        url: `${util.getAPIURL()}/file/v1/delete`,
+        data: { path: `website/placeholder/${file.name}` },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${util.getAccessToken()}`,
+        },
+      }).then((response) => {
+        props.form.setFieldsValue({ placeHolderImage: null });
+      });
+      setPlaceholderImage(null);
+    },
+    beforeUpload: (file) => {
+      return false;
+    },
+    fileList: placeholderImage ? [placeholderImage] : [],
+    onChange: ({ fileList, file }) => {
+      let formData = new FormData();
+      formData.append("image", file);
+      if (file.status !== "removed") {
+        axios
+          .post(
+            `${util.getAPIURL()}/file/v1/upload/web_placeholder`,
+            formData,
+            {
+              headers: {
+                "content-type": "multipart/form-data",
+                Authorization: `Bearer ${util.getAccessToken()}`,
+              },
+            }
+          )
+          .then((response) => {
+            setPlaceholderImage({
+              uid: "1",
+              name: response.data.originalname,
+              status: "done",
+              url: response.data.location,
+            });
+          });
+      }
+    },
+  };
+
+  return (
+    <React.Fragment>
+      <PageHeader
+        style={{
+          backgroundColor: "#f7f7f7",
+          paddingLeft: 0,
+          paddingRight: 0,
+        }}
+        onBack={() => history.goBack()}
+        title={"Website Setting"}
+        subTitle=""
+      />
+      <div className="main-layout main-store-account">
+        <Row>
+          <Col md="12">
+            <Tabs
+              type="card"
+              onChange={onChangeTab}
+              defaultActiveKey={
+                queryParam.has("tabKey") ? queryParam.get("tabKey") : "1"
+              }
+            >
+              <TabPane tab={"General"} key="1">
+                <Row>
+                  <Col lg="4" md="4">
+                    <Form onSubmit={onGeneralSubmit}>
+                      <div className="ant-row ant-form-item">
+                        <div className="ant-col ant-form-item-label">
+                          <label>Primary Color</label>
+                        </div>
+                        <div className="ant-col ant-form-item-control-wrapper">
+                          <div className="ant-form-item-control">
+                            <span
+                              className="ant-form-item-children"
+                              id="color-picker"
+                            >
+                              <input
+                                type="color"
+                                className="ant-input"
+                                style={{
+                                  padding: 0,
+                                  margin: 0,
+                                }}
+                                value={primaryColor}
+                                onChange={(event) =>
+                                  onChangeColor(event, "primaryColor")
+                                }
+                              />
+                              <label className="notation-textfield"></label>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="ant-row ant-form-item">
+                        <div className="ant-col ant-form-item-label">
+                          <label>Secondary Color</label>
+                        </div>
+                        <div className="ant-col ant-form-item-control-wrapper">
+                          <div className="ant-form-item-control">
+                            <span
+                              className="ant-form-item-children"
+                              id="color-picker"
+                            >
+                              <input
+                                type="color"
+                                className="ant-input"
+                                style={{
+                                  padding: 0,
+                                  margin: 0,
+                                }}
+                                value={secondaryColor}
+                                onChange={(event) =>
+                                  onChangeColor(event, "secondaryColor")
+                                }
+                              />
+                              <label className="notation-textfield"></label>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <Select
+                        label="Theme"
+                        form={props.form}
+                        onChange={onSelectTheme}
+                        defaultValue={theme}
+                        required={true}
+                        name="theme"
+                        placeholder={"Please select theme"}
+                        dataSource={[
+                          {
+                            value: "template_1",
+                            name: "Template 1",
+                          },
+                          {
+                            value: "template_2",
+                            name: "Template 2",
+                          },
+                        ]}
+                      />
+                      {React.useMemo(
+                        () => (
+                          <UploadImage
+                            uploadProps={uploadProps}
+                            form={props.form}
+                            name="placeHolderImage"
+                            label="Placeholder Image"
+                          />
+                        ),
+                        // eslint-disable-next-line
+                        [placeholderImage]
+                      )}
+                      {/* <UploadImg
+                        data={{ file: placeholderImage }}
+                        fileList={[placeholderImage]}
+                        name="placeHolderImage"
+                        label={"Placeholder Image"}
+                        endPoint={`${util.getAPIURL()}/file/v1/upload/web_placeholder`}
+                        endPointDelete={`${util.getAPIURL()}/file/v1/delete`}
+                        accessToken={util.getAccessToken()}
+                        pathName={"website/placeholder"}
+                        form={props.form}
+                      /> */}
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="ant-btn info undefined"
+                        loading={generalLoadingButton}
+                      >
+                        <span className="icon-save icon-padding-right"></span>
+                        SAVE
+                      </Button>
+                    </Form>
+                  </Col>
+                </Row>
+              </TabPane>
+              <TabPane tab={"Banner"} key="2">
+                <Row>
+                  <Col lg="5" md="5">
+                    <Form onSubmit={onBannerSubmit}>
+                      {visibleBannerTable && (
+                        <React.Fragment>
+                          <Button
+                            type="info"
+                            id="btnAdd"
+                            className="ant-btn info mg-right text-uppercase"
+                            onClick={() => onShowFormBanner()}
+                          >
+                            <span className="icon-add icon-padding-right"></span>
+                            ADD NEW
+                          </Button>
+                          <Table
+                            rowKey={(record) => record.id.toString()}
+                            dataSource={bannerList}
+                            columns={[
+                              {
+                                title: "Banner Name",
+                                dataIndex: "name",
+                                key: "name",
+                              },
+                              // {
+                              //   title: "Type",
+                              //   dataIndex: "type",
+                              //   key: "type",
+                              // },
+                              {
+                                title: "Action",
+                                dataIndex: "id",
+                                key: "id",
+                                render: (id) => {
+                                  return (
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                      }}
+                                    >
+                                      <Icon
+                                        type="edit"
+                                        style={{
+                                          marginRight: 8,
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => onShowFormBanner(id)}
+                                      />
+                                      <Icon
+                                        type="delete"
+                                        style={{
+                                          cursor: "pointer",
+                                          color: "red",
+                                        }}
+                                        onClick={() => onDeleteBanner(id)}
+                                      />
+                                    </div>
+                                  );
+                                },
+                              },
+                            ]}
+                            locale={{ emptyText: "Empty data" }}
+                            loading={loadingBanner}
+                            pagination={false}
+                          />
+                        </React.Fragment>
+                      )}
+
+                      {visibleFormBanner && (
+                        <React.Fragment>
+                          <PageHeader
+                            style={{
+                              padding: "0px 0px 15px 0px",
+                            }}
+                            onBack={onBackToTable}
+                            title={bannerId ? "Edit Banner" : "New Banner"}
+                            subTitle=""
+                          />
+                          <InputText
+                            data={bannerName}
+                            name="name"
+                            label={"Banner Name"}
+                            required={true}
+                            placeholder={"Banner name"}
+                            form={props.form}
+                          />
+                          {/* <Select
+                            label="Type"
+                            form={props.form}
+                            // onChange={onSelectTheme}
+                            // defaultValue={theme}
+                            // required={true}
+                            disabled={true}
+                            name="type"
+                            placeholder={"Please select type"}
+                            dataSource={[
+                              {
+                                value: "1",
+                                name: "Type 1",
+                              },
+                              {
+                                value: "2",
+                                name: "Type 2",
+                              },
+                            ]}
+                          /> */}
+                          <table style={{ width: "100%" }}>
+                            <thead className="ant-table-thead">
+                              <tr>
+                                <th className="ant-table-header-column">
+                                  Title
+                                </th>
+                                <th className="ant-table-header-column">
+                                  Image
+                                </th>
+                                <th className="ant-table-header-column">
+                                  ORDER
+                                </th>
+                                <th className="ant-table-header-column"></th>
+                              </tr>
+                            </thead>
+                            <tbody className="ant-table-tbody">
+                              {dataSourceBanner.map((value, index) => {
+                                return (
+                                  <tr
+                                    key={index}
+                                    className={
+                                      "ant-table-row ant-table-row-level-0"
+                                    }
+                                  >
+                                    <td>
+                                      <Input
+                                        value={value.name}
+                                        onChange={(value) =>
+                                          onChangeBannerName(value, index)
+                                        }
+                                      />
+                                    </td>
+                                    <td>
+                                      <UploadImageBanner
+                                        fileList={
+                                          value.image ? [value.image] : []
+                                        }
+                                        util={util}
+                                        form={props.form}
+                                        name={`image${index}`}
+                                        onChangeImageName={onChangeImageName}
+                                        index={index}
+                                      />
+                                    </td>
+                                    <td>
+                                      <InputNumber
+                                        type={"number"}
+                                        value={value.order}
+                                        onChange={(event) =>
+                                          onChangeOrderBanner(event, index)
+                                        }
+                                      />
+                                    </td>
+                                    <td>
+                                      <Icon
+                                        onClick={() =>
+                                          handleButtonRemoveBanner(value, index)
+                                        }
+                                        type="minus-circle"
+                                        style={{
+                                          fontSize: "32px",
+                                          cursor: "pointer",
+                                        }}
+                                      />
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                              <tr
+                                className={
+                                  "ant-table-row ant-table-row-level-0"
+                                }
+                              >
+                                <td colSpan={4}>
+                                  <Icon
+                                    onClick={handleButtonAddBanner}
+                                    type="plus-circle"
+                                    style={{
+                                      fontSize: "32px",
+                                      cursor: "pointer",
+                                    }}
+                                  />
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <Button
+                            type="primary"
+                            htmlType="submit"
+                            className="ant-btn info undefined"
+                            loading={loadingButtonBanner}
+                            style={{ marginTop: 15 }}
+                          >
+                            <span className="icon-save icon-padding-right"></span>
+                            SAVE
+                          </Button>
+                        </React.Fragment>
+                      )}
+                    </Form>
+                  </Col>
+                </Row>
+              </TabPane>
+              <TabPane tab={"Featured Products"} key="3">
+                <Row>
+                  <Col lg="4" md="4">
+                    <Form onSubmit={onFeaturedProductSubmit}>
+                      <SearchProductDropdown
+                        productSearch={productSearch}
+                        handleOnSelectList={handleOnSelectList}
+                        locale={props.locale}
+                        showIcon={false}
+                        form={props.form}
+                      />
+
+                      <Table
+                        rowKey={(record, index) => index}
+                        columns={entryColumn}
+                        dataSource={productEntries}
+                        pagination={false}
+                        locale={"Empty Product"}
+                        loading={loadingFeaturedProduct}
+                      />
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="ant-btn info undefined"
+                        loading={loadingButtonFeaturedProduct}
+                        style={{ marginTop: 15 }}
+                      >
+                        <span className="icon-save icon-padding-right"></span>
+                        SAVE
+                      </Button>
+                    </Form>
+                  </Col>
+                </Row>
+              </TabPane>
+              <TabPane tab={"SEO"} key="4">
+                <Row>
+                  <Col lg="4" md="4">
+                    <Form onSubmit={onSeoSubmit}>
+                      <InputText
+                        data={metaTitle}
+                        name="metaTitle"
+                        label={"Meta Title"}
+                        placeholder={"Meta title"}
+                        form={props.form}
+                      />
+                      <InputText
+                        data={metaTagDescription}
+                        name="metaTagDescription"
+                        label={"Meta Tag Description"}
+                        placeholder={"Meta tag description"}
+                        form={props.form}
+                      />
+                      <InputText
+                        data={metaTagKeyword}
+                        name="metaTagKeyword"
+                        label={"Meta Tag Keyword"}
+                        placeholder={"Meta tag keyword"}
+                        form={props.form}
+                      />
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="ant-btn info undefined"
+                        loading={loadingButtonSeo}
+                        style={{ marginTop: 15 }}
+                      >
+                        <span className="icon-save icon-padding-right"></span>
+                        SAVE
+                      </Button>
+                    </Form>
+                  </Col>
+                </Row>
+              </TabPane>
+            </Tabs>
+          </Col>
+        </Row>
+      </div>
+    </React.Fragment>
+  );
+};
+
+function UploadImage({ uploadProps, form, name }) {
+  const { getFieldDecorator } = form;
+  return (
+    <div className="clearfix main-upload">
+      <Form.Item className="wrap-upload">
+        {getFieldDecorator(name)(
+          <Upload {...uploadProps} style={{ height: "120px" }}>
+            {uploadProps.fileList.length === 0 ? (
+              <React.Fragment>
+                <UploadButton />
+                <Button>
+                  <Icon type="upload" /> Upload
+                </Button>
+              </React.Fragment>
+            ) : null}
+          </Upload>
+        )}
+      </Form.Item>
+    </div>
+  );
+}
+
+function UploadImageBanner({
+  form,
+  name,
+  fileList,
+  util,
+  index,
+  onChangeImageName,
+}) {
+  const { getFieldDecorator } = form;
+  const uploadProps = {
+    listType: "picture-card",
+    onRemove: (file) => {
+      axios({
+        method: "DELETE",
+        url: `${util.getAPIURL()}/file/v1/delete`,
+        data: { path: `website/banner/${file.name}` },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${util.getAccessToken()}`,
+        },
+      }).then(() => {
+        onChangeImageName(null, index);
+        form.setFieldsValue({ [`image${index}`]: null });
+      });
+    },
+    beforeUpload: (file) => {
+      return false;
+    },
+    fileList,
+    onChange: ({ fileList, file }) => {
+      let formData = new FormData();
+      formData.append("image", file);
+      if (file.status !== "removed") {
+        axios
+          .post(`${util.getAPIURL()}/file/v1/upload/web_banner`, formData, {
+            headers: {
+              "content-type": "multipart/form-data",
+              Authorization: `Bearer ${util.getAccessToken()}`,
+            },
+          })
+          .then((response) => {
+            onChangeImageName(
+              {
+                uid: `${Date.now()}`,
+                name: response.data.originalname,
+                status: "done",
+                url: response.data.location,
+              },
+              index
+            );
+          });
+      }
+    },
+  };
+  return (
+    <div className="clearfix main-upload">
+      <Form.Item className="wrap-upload">
+        {getFieldDecorator(name)(
+          <Upload {...uploadProps} style={{ height: "120px" }}>
+            {uploadProps.fileList.length === 0 ? (
+              <React.Fragment>
+                <UploadButton />
+                <Button>
+                  <Icon type="upload" /> Upload
+                </Button>
+              </React.Fragment>
+            ) : null}
+          </Upload>
+        )}
+      </Form.Item>
+    </div>
+  );
+}
+
+const UploadButton = () => (
+  <div>
+    <span className="icon-upload"></span>
+    <div className="ant-upload-text">
+      <div className="upload-extension-title">. JPG . PNG . GIF</div>
+      <div className="upload-file-title">
+        You can also upload files by <br />
+        <span>clicking here </span>
+      </div>
+    </div>
+  </div>
+);
+
+function mapStateToProps(state) {
+  return {
+    locale: state.locale,
+  };
+}
+
+function mapPropsToFields(props) {
+  return {
+    form: props.form,
+  };
+}
+
+const websiteSetting = Form.create(mapPropsToFields)(WebsiteSetting);
+
+export default connect(mapStateToProps)(websiteSetting);

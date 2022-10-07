@@ -359,6 +359,10 @@ class NewInvoice extends React.PureComponent {
                 const {formData} = this.state;
                 const subTotal = this.getTotal();
 
+                if (this.id && Number(formData.status) !== Enum.INVOICE_STATUS.DRAFT) {
+                    return this.util.sweetAlertMessageV2("Warning", "Can't update invoice in this step", "error");
+                }
+
                 if (formData.discount > subTotal) {
                     this.textDiscountErr = "Discount amount must be less than total amount";
                     return;
@@ -729,14 +733,20 @@ class NewInvoice extends React.PureComponent {
     }
 
     handleMakeAsSent = () => {
+        if (Number(this.state.formData.status) === Enum.INVOICE_STATUS.SENT) {
+            return this.util.sweetAlertMessageV2("Warning!", "This invoice already sent");
+        }
+      
+        if (Number(this.state.formData.status) !== Enum.INVOICE_STATUS.DRAFT) {
+            return this.util.sweetAlertMessageV2("Warning!", "Can't mark sent invoice in this step");
+        }
+
         this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
         .then(willSend => {
             if (willSend) {
                 InvoiceService.makAsSent(this.id)
                 .then(() => {
-                    this.setState(preState => {
-                        preState.formData.status = Enum.INVOICE_STATUS.SENT;
-                    });
+                    this.getDetail(this.id);
                     message.success("Make sent success");
                 })
                 .catch(() => message.error("Error!...."));
@@ -789,10 +799,9 @@ class NewInvoice extends React.PureComponent {
                     message.success("Void invoice success");
                 })
                 .catch(err => {
-                    console.log("error", err.response);
                     const error = err.response && err.response.data && err.response.data.error;
                     if (error.message) {
-                        message.error(error.message);
+                        this.util.sweetAlertMessageV2("Warning", error.message, "error");
                     }
                 });
             }

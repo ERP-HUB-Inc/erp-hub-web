@@ -69,6 +69,26 @@ export default {
     "Search for Key",
     "ស្វែងរកពាក្យគន្លឹះ",
     "Search for Key"
+  ],
+
+  "text_stock_adjustment_report": [
+    "Stock Adjustment Report",
+    "របាយការណ៍កែស្តុក"
+  ],
+
+  "text_stock_report": [
+    "Stock Report",
+    "របាយការណ៍ស្តុក"
+  ],
+
+  "text_consignment_summary": [
+    "Stock Consignment Summary Report",
+    "របាយការណ៍ស្តុកខនសាញ្ញមិនសង្ខែប"
+  ],
+
+  "text_consignment_product": [
+    "Stock Consignment by Product",
+    "របាយការណ៍ស្តុកខនសាញ្ញតាមផលិតផល"
   ]
 
 };
