@@ -51,6 +51,19 @@ export default class FormItem extends Modal {
             form={this.props.form} />
       </this.Col>
       <this.Col md="12">
+        <this.Select 
+          name="isFeature"
+          label={<this.Translate id="text_feature_category" />}
+          placeholder={`${this.CATranslate("text_feature_category", this.props.locale)}`}
+          defaultValue={formData.isFeature}
+          valueKey="value"
+          dataSource={[
+            {value: false, name: "No"},
+            {value: true, name: "Yes"}
+          ]}
+          form={this.props.form} />
+      </this.Col>
+      <this.Col md="12">
         <this.UploadImg
           name="image" 
           label={<this.Translate id="text_image" />}

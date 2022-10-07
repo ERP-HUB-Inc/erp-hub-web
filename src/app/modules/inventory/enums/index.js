@@ -39,6 +39,11 @@ export default {
     RECEIVED : 2,
     CANCEL: 3
   },
+  STOCK_CONSIGNMENT_STATUS: {
+    DRAFT: "Draft",
+    RECEIVED: "Received",
+    RETURNED: "Returned"
+  },
   CLIENT_AUTO_NUMBER_TYPE: {
     QUOTATION : 2,
     INVOICE : 4,

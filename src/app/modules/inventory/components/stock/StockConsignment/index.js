@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import { 
   Table,
   Form,
@@ -6,7 +7,6 @@ import {
   Pagination
 } from "antd";
 import { connect } from "react-redux";
-import Util from "../../../../common/util";
 import StockConsignmentService from "../../../services/stock/StockConsignmentService";
 import LocationService from "../../../../pos/services/settings/LocationService";
 import history from "../../../../common/router/history";
@@ -23,7 +23,6 @@ class StockConsignment extends List {
     loadingFilter: false,
     current: 1
   }
-  util = new Util();
   consignmentStatus = {
     "Draft": {title: <this.Translate id="text_draft" />, color: "#bfbfbf"},
     "Received": {title: <this.Translate id="text_received" />, color: "#1890ff"},
@@ -34,7 +33,7 @@ class StockConsignment extends List {
       title: <this.Translate id="text_date" />,
       dataIndex: "date",
       key: "date",
-      render: (date) => this.util.formatDate(date, "DD/MM/YYYY")
+      render: (date) => this.Util.formatDate(date, "DD/MM/YYYY")
     },
     {
       title: <this.Translate id="text_location" />,
@@ -69,8 +68,12 @@ class StockConsignment extends List {
       this.setState({current: params.get("offset")});
     }
 
-    if (params.get("status")) {
-      this.props.form.setFieldsValue({status: params.get("status")});
+    if (params.get("searchKey")) {
+      this.props.form.setFieldsValue({status: params.get("searchKey")});
+    }
+
+    if (params.get("date")) {
+      this.props.form.setFieldsValue({date: moment(params.get("date"))});
     }
 
     this.fetchList();
@@ -81,7 +84,8 @@ class StockConsignment extends List {
   fetchList() {
     let limit = this.pageSize;
     let offset = this.state.current;
-    let status = "";
+    let searchKey = "";
+    let date = "";
     const params = new URLSearchParams(window.location.search);
     if (params.get("limit")) {
       limit = Number(params.get("limit"));
@@ -91,13 +95,17 @@ class StockConsignment extends List {
       offset = Number(params.get("offset"));
     }
 
-    if (params.get("status")) {
-      status = params.get("status");
+    if (params.get("searchKey")) {
+      searchKey = params.get("searchKey");
+    }
+
+    if (params.get("date")) {
+      date = this.Util.formatDateForMYSQL(params.get("date"));
     }
 
     offset = (offset - 1) * limit;
     this.setState({loading: true});
-    StockConsignmentService.lists(limit, offset, status)
+    StockConsignmentService.lists(limit, offset, searchKey, date)
     .then(response => {
       this.setState({data: response.data});
     })
@@ -109,16 +117,16 @@ class StockConsignment extends List {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const params = new URLSearchParams(document.location.search);
-        if (values.locationId) {
-          params.set("locationId", values.locationId);
+        if (values.searchKey) {
+          params.set("searchKey", values.searchKey);
         } else {
-          params.delete("locationId");
+          params.delete("searchKey");
         }
 
-        if (values.status) {
-          params.set("status", values.status);
+        if (values.date) {
+          params.set("date", this.Util.formatDateForMYSQL(values.date));
         } else {
-          params.delete("status");
+          params.delete("date");
         }
 
         this.Util.pushParamsToURL(this.pathname, params.toString());
@@ -152,17 +160,27 @@ class StockConsignment extends List {
   }
 
   handleDelete() {
-    this.setState({loading: true});
-    console.log("selected delete ids", this.state.selectedListIds);
-    StockConsignmentService.archive(this.state.selectedListIds)
-    .then(() => {
-      this.fetchList();
-      this.setState({
-        selectedRowKeys: [],
-        modalVisible: false,
-      });
-    })
-    .finally(() => this.setState({loading: false}));
+    this.Util.sweetAlertConfirm(this.CATranslate("text_are_you_sure", this.props.locale))
+    .then(willDelete => {
+      if (willDelete) {
+        this.setState({loading: true});
+        StockConsignmentService.archive(this.state.selectedListIds)
+        .then(() => {
+          this.fetchList();
+          this.setState({
+            selectedRowKeys: [],
+            modalVisible: false,
+          });
+        })
+        .catch(err => {
+          const error = err.response && err.response.data && err.response.data.error;
+          if (error.message) {
+            this.Util.sweetAlertMessageV2("Error!", error.message, "error");
+          }
+        })
+        .finally(() => this.setState({loading: false}));
+      }
+    });
   }
 
   renderFilterStatus() {
@@ -185,26 +203,43 @@ class StockConsignment extends List {
     return (
       <this.Form onSubmit={this.handleSubmitFilter}>
           <this.Row className="main-search-layout">
-            {/* <this.Col md="2">
-              <this.Select
-                name="locationId"
-                label={<this.Translate id="text_location" />}
-                valueKey="id"
-                dataSource={[{id: 0, name: <this.Translate id="text_all_location" />}].concat(this.state.locations)}
-                defaultValue={0}
-                form={this.props.form}/>
-            </this.Col> */}
-            {this.renderFilterStatus()}
+            <this.Col md="2">
+              <this.InputText
+                name="searchKey"
+                label={<this.Translate id={this.generalSearchLabel}/>}
+                placeholder={this.CATranslate("text_search_by_seller", this.props.locale)}
+                form={this.props.form}
+                allowClear={true} />
+            </this.Col>
+            <this.Col md="2">
+              <this.DatePickers
+                name="date"
+                label={<this.Translate id="text_date" />}
+                form={this.props.form} />
+            </this.Col>
             <this.Col md="2" className="wrap-btn-search">
               <div className="ant-form-item-label" style={{visibility: "hidden"}}>
                 <label htmlFor="status" className="" title="">Filter</label>
               </div>
-              <this.Button htmlType="submit" type="info" style={{marginTop: -3}} loading={this.state.loadingFilter}>
+              <this.Button htmlType="submit" type="info" loading={this.state.loadingFilter}>
                 <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
               </this.Button>
             </this.Col>
           </this.Row>
         </this.Form>
+    );
+  }
+
+  renderButtonDelete() {
+    return (
+      <this.Button
+        type="danger"
+        className="text-uppercase"
+        disabled={this.state.isRequestDelete}
+        onClick={this.handleDelete}>
+        <span className="icon-delete icon-padding-right"></span>
+        <this.Translate id="text_delete" />
+      </this.Button>
     );
   }
 
