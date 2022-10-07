@@ -160,6 +160,10 @@ class StockConsignment extends List {
   }
 
   handleDelete() {
+    if (!this.state.selectedListIds.length) {
+      return;
+    }
+    
     this.Util.sweetAlertConfirm(this.CATranslate("text_are_you_sure", this.props.locale))
     .then(willDelete => {
       if (willDelete) {
@@ -207,7 +211,7 @@ class StockConsignment extends List {
               <this.InputText
                 name="searchKey"
                 label={<this.Translate id={this.generalSearchLabel}/>}
-                placeholder={this.CATranslate("text_search_by_seller", this.props.locale)}
+                placeholder={this.CATranslate("text_search_consignment", this.props.locale)}
                 form={this.props.form}
                 allowClear={true} />
             </this.Col>
@@ -221,7 +225,7 @@ class StockConsignment extends List {
               <div className="ant-form-item-label" style={{visibility: "hidden"}}>
                 <label htmlFor="status" className="" title="">Filter</label>
               </div>
-              <this.Button htmlType="submit" type="info" loading={this.state.loadingFilter}>
+              <this.Button htmlType="submit" type="info" loading={this.state.loadingFilter} style={{marginTop: -3}}>
                 <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
               </this.Button>
             </this.Col>

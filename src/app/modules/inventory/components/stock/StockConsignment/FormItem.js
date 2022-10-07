@@ -142,7 +142,7 @@ class FormItem extends React.PureComponent {
       this.setState({
         formData: {
           sellerId: "",
-          locationId: null,
+          locationId: this.util.getLocationId(),
           date: moment(),
           status: "Draft",
         },
@@ -416,8 +416,9 @@ class FormItem extends React.PureComponent {
                   name="locationId"
                   label={<Translate id="text_location" />}
                   placeholder={`${stringTranslate("text_location", this.props.locale)}`}
-                  defaultValue={formData.locationId ? Number(formData.locationId) : null}
+                  defaultValue={Number(formData.locationId)}
                   valueKey="id"
+                  disabled={formData.status !== Enum.STOCK_CONSIGNMENT_STATUS.DRAFT ? true : false}
                   dataSource={this.state.locations}
                   form={this.props.form}/>
 
