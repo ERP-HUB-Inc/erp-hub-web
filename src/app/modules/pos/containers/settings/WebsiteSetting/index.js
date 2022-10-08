@@ -12,6 +12,7 @@ import {
   InputNumber,
   Input,
   Upload,
+  Spin,
 } from "antd";
 import axios from "axios";
 import swal from "sweetalert";
@@ -48,8 +49,9 @@ const WebsiteSetting = (props) => {
   const [dataSourceBanner, setDataSourceBanner] = useState([]);
   const [deleteDataSourceBanner, setDeleteDataSourceBanner] = useState([]);
   const [bannerList, setBannerList] = useState([]);
-  const [loadingBanner, setLloadingBanner] = useState(false);
-  const [loadingButtonBanner, setLloadingButtonBanner] = useState(false);
+  const [loadingBanner, setLoadingBanner] = useState(false);
+  const [loadingUpdateBanner, setLoadingUpdateBanner] = useState(false);
+  const [loadingButtonBanner, setLoadingButtonBanner] = useState(false);
 
   // Featured Products State
   const [productSearch, setProductSearch] = useState([]);
@@ -172,7 +174,7 @@ const WebsiteSetting = (props) => {
 
   // Banner Function
   const fetchBanner = () => {
-    setLloadingBanner(true);
+    setLoadingBanner(true);
     getBannerSetting()
       .then((response) => {
         if (response.data && response.data.data) {
@@ -180,7 +182,7 @@ const WebsiteSetting = (props) => {
         }
       })
       .finally(() => {
-        setLloadingBanner(false);
+        setLoadingBanner(false);
       });
   };
 
@@ -204,40 +206,43 @@ const WebsiteSetting = (props) => {
     fetchBanner();
     setVisibleFormBanner(false);
     setVisibleBannerTable(true);
-    setLloadingButtonBanner(false);
+    setLoadingButtonBanner(false);
     setBannerId(undefined);
   };
 
   const onShowFormBanner = (id) => {
     if (id) {
       setBannerId(id);
-      getBannerSettingById(id).then((response) => {
-        if (response.data && response.data.data) {
-          const data = response.data.data;
-          const bannerImage = data.banner_images.map((value) => {
-            const splitName = value.image ? value.image.split("/") : null;
-            return {
-              id: value.id,
-              bannerId: value.bannerId,
-              description: value.description,
-              descriptionkm: value.descriptionkm,
-              name: value.name,
-              namekm: value.namekm,
-              order: value.order,
-              image: value.image
-                ? {
-                    uid: `${Date.now()}`,
-                    name: splitName[2],
-                    status: "done",
-                    url: util.getWebsitePlaceholderImage(value.image).url,
-                  }
-                : null,
-            };
-          });
-          setDataSourceBanner(bannerImage);
-          setBannerName(data.name);
-        }
-      });
+      setLoadingUpdateBanner(true);
+      getBannerSettingById(id)
+        .then((response) => {
+          if (response.data && response.data.data) {
+            const data = response.data.data;
+            const bannerImage = data.banner_images.map((value) => {
+              const splitName = value.image ? value.image.split("/") : null;
+              return {
+                id: value.id,
+                bannerId: value.bannerId,
+                description: value.description,
+                descriptionkm: value.descriptionkm,
+                name: value.name,
+                namekm: value.namekm,
+                order: value.order,
+                image: value.image
+                  ? {
+                      uid: `${Date.now()}`,
+                      name: splitName[2],
+                      status: "done",
+                      url: util.getWebsitePlaceholderImage(value.image).url,
+                    }
+                  : null,
+              };
+            });
+            setDataSourceBanner(bannerImage);
+            setBannerName(data.name);
+          }
+        })
+        .finally(() => setLoadingUpdateBanner(false));
     }
     setVisibleFormBanner(true);
     setVisibleBannerTable(false);
@@ -304,7 +309,7 @@ const WebsiteSetting = (props) => {
     e.preventDefault();
     props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        setLloadingButtonBanner(true);
+        setLoadingButtonBanner(true);
         // eslint-disable-next-line
         const entries = dataSourceBanner.filter((value) => {
           if ("id" in value) {
@@ -337,13 +342,13 @@ const WebsiteSetting = (props) => {
             .then(() => {
               onBackToTable();
             })
-            .finally(() => setLloadingButtonBanner(false));
+            .finally(() => setLoadingButtonBanner(false));
         } else {
           createBannerSetting(values)
             .then(() => {
               onBackToTable();
             })
-            .finally(() => setLloadingButtonBanner(false));
+            .finally(() => setLoadingButtonBanner(false));
         }
       }
     });
@@ -895,92 +900,105 @@ const WebsiteSetting = (props) => {
                               },
                             ]}
                           /> */}
-                          <table style={{ width: "100%" }}>
-                            <thead className="ant-table-thead">
-                              <tr>
-                                <th className="ant-table-header-column">
-                                  {<Translate id="text_name" />}
-                                </th>
-                                <th className="ant-table-header-column">
-                                  {<Translate id="text_image" />}
-                                </th>
-                                <th className="ant-table-header-column">
-                                  {<Translate id="text_sort" />}
-                                </th>
-                                <th className="ant-table-header-column"></th>
-                              </tr>
-                            </thead>
-                            <tbody className="ant-table-tbody">
-                              {dataSourceBanner.map((value, index) => {
-                                return (
-                                  <tr
-                                    key={index}
-                                    className={
-                                      "ant-table-row ant-table-row-level-0"
-                                    }
-                                  >
-                                    <td>
-                                      <Input
-                                        value={value.name}
-                                        onChange={(value) =>
-                                          onChangeBannerName(value, index)
-                                        }
-                                      />
-                                    </td>
-                                    <td>
-                                      <UploadImageBanner
-                                        fileList={
-                                          value.image ? [value.image] : []
-                                        }
-                                        util={util}
-                                        form={props.form}
-                                        name={`image${index}`}
-                                        onChangeImageName={onChangeImageName}
-                                        index={index}
-                                      />
-                                    </td>
-                                    <td>
-                                      <InputNumber
-                                        type={"number"}
-                                        value={value.order}
-                                        onChange={(event) =>
-                                          onChangeOrderBanner(event, index)
-                                        }
-                                      />
-                                    </td>
-                                    <td>
-                                      <Icon
-                                        onClick={() =>
-                                          handleButtonRemoveBanner(value, index)
-                                        }
-                                        type="minus-circle"
-                                        style={{
-                                          fontSize: "32px",
-                                          cursor: "pointer",
-                                        }}
-                                      />
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                              <tr
-                                className={
-                                  "ant-table-row ant-table-row-level-0"
-                                }
-                              >
-                                <td colSpan={4}>
-                                  <Icon
-                                    onClick={handleButtonAddBanner}
-                                    type="plus-circle"
-                                    style={{
-                                      fontSize: "32px",
-                                      cursor: "pointer",
-                                    }}
-                                  />
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
+                          <Spin
+                            spinning={loadingUpdateBanner}
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              width: "100%",
+                            }}
+                          >
+                            <table style={{ width: "100%" }}>
+                              <thead className="ant-table-thead">
+                                <tr>
+                                  <th className="ant-table-header-column">
+                                    {<Translate id="text_name" />}
+                                  </th>
+                                  <th className="ant-table-header-column">
+                                    {<Translate id="text_image" />}
+                                  </th>
+                                  <th className="ant-table-header-column">
+                                    {<Translate id="text_sort" />}
+                                  </th>
+                                  <th className="ant-table-header-column"></th>
+                                </tr>
+                              </thead>
+                              <tbody className="ant-table-tbody">
+                                {dataSourceBanner.map((value, index) => {
+                                  return (
+                                    <tr
+                                      key={index}
+                                      className={
+                                        "ant-table-row ant-table-row-level-0"
+                                      }
+                                    >
+                                      <td>
+                                        <Input
+                                          value={value.name}
+                                          onChange={(value) =>
+                                            onChangeBannerName(value, index)
+                                          }
+                                        />
+                                      </td>
+                                      <td>
+                                        <UploadImageBanner
+                                          fileList={
+                                            value.image ? [value.image] : []
+                                          }
+                                          util={util}
+                                          form={props.form}
+                                          name={`image${index}`}
+                                          onChangeImageName={onChangeImageName}
+                                          index={index}
+                                        />
+                                      </td>
+                                      <td>
+                                        <InputNumber
+                                          type={"number"}
+                                          value={value.order}
+                                          onChange={(event) =>
+                                            onChangeOrderBanner(event, index)
+                                          }
+                                        />
+                                      </td>
+                                      <td>
+                                        <Icon
+                                          onClick={() =>
+                                            handleButtonRemoveBanner(
+                                              value,
+                                              index
+                                            )
+                                          }
+                                          type="minus-circle"
+                                          style={{
+                                            fontSize: "32px",
+                                            cursor: "pointer",
+                                          }}
+                                        />
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+
+                                <tr
+                                  className={
+                                    "ant-table-row ant-table-row-level-0"
+                                  }
+                                >
+                                  <td colSpan={4}>
+                                    <Icon
+                                      onClick={handleButtonAddBanner}
+                                      type="plus-circle"
+                                      style={{
+                                        fontSize: "32px",
+                                        cursor: "pointer",
+                                      }}
+                                    />
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </Spin>
                           <Button
                             type="primary"
                             htmlType="submit"
