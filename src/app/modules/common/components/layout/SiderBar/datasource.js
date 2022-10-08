@@ -155,6 +155,11 @@ const PurchaseReportDashboard = Loadable({
   loading: () => <StartUp />,
 });
 
+const StockReport = Loadable({
+  loader: () => import("../../../../pos/components/reports/Stock"),
+  loading: () => <StartUp />
+});
+
 const ProductReport = Loadable({
   loader: () => import("../../../../pos/containers/reports/Product"),
   loading: () => <StartUp />,
@@ -552,6 +557,12 @@ const dataSource = {
         component: PurchaseReportDashboard,
       },
       {
+        title: <Translate id="text_stock_report" />,
+        icon: "icon-stock",
+        route: "/reports/stock",
+        component: StockReport
+      },
+      {
         title: <Translate id="text_product_report" />,
         icon: "icon-items",
         route: "/reports/product",
@@ -565,11 +576,9 @@ const dataSource = {
         isFashNav: true,
       },
       {
-        title: "Adjustment Report",
-        icon: "icon-stock",
         route: "/reports/adjustment-report",
         component: AdjustmentReport,
-        isFashNav: true,
+        isFashNav: false,
       },
       {
         title: <Translate id="text_profit_and_loss_report" />,

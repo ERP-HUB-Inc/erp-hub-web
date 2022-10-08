@@ -238,7 +238,7 @@ class FormItem extends React.PureComponent {
     if (this.id) {
       StockConsignmentService.update(this.id, consignment)
       .then(() => {
-        this.util.sweetAlertMessageV2("Success!", stringTranslate("text_update_success", this.props.locale), "success")
+        this.util.sweetAlertMessageV2("Success!", stringTranslate("text_update_success", this.props.locale), "success", false, 1500)
         .then(() => history.goBack());
       })
       .catch(err => {
@@ -252,7 +252,7 @@ class FormItem extends React.PureComponent {
     } else {
       StockConsignmentService.create(consignment)
       .then(() => {
-        this.util.sweetAlertMessageV2("Success!", stringTranslate("text_save_success", this.props.locale), "success")
+        this.util.sweetAlertMessageV2("Success!", stringTranslate("text_save_success", this.props.locale), "success", false, 1500)
         .then(() => history.goBack());
       })
       .catch(err => {

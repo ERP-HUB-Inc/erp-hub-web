@@ -862,13 +862,17 @@ export default class Util {
     });
   }
 
-  sweetAlertMessageV2(title, text, icon, button) {
-    return swal({
+  sweetAlertMessageV2(title, text, icon, button, timer = 0) {
+    const option = {
       title,
       text,
       icon,
       button,
-    });
+    };
+    if (timer) {
+      option.timer = timer;
+    }
+    return swal(option);
   }
 
   converNumberToWord(value = 0) {
