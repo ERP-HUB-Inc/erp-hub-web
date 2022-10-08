@@ -593,7 +593,7 @@ const dataSource = {
         isFashNav: true,
       },
       {
-        title: "Website Setting",
+        title: <Translate id="text_website_setting" />,
         icon: "icon-account",
         route: "/settings/website-setting",
         component: WebsiteSetting,

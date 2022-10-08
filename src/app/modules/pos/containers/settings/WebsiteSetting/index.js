@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { Translate, getActiveLanguage } from "react-localize-redux";
 import { Col, Row } from "reactstrap";
 import {
   PageHeader,
@@ -156,7 +157,7 @@ const WebsiteSetting = (props) => {
         UpdateGeneralSetting(general)
           .then(() => {
             fetchGeneral();
-            swal("Success", {
+            swal(CATranslate("text_save_success", props.locale), {
               buttons: false,
               timer: 1500,
               icon: "success",
@@ -185,7 +186,7 @@ const WebsiteSetting = (props) => {
 
   const onDeleteBanner = (id) => {
     util
-      .sweetAlertConfirm("Are you sure delete this record?")
+      .sweetAlertConfirm(CATranslate("text_confirm_delete", props.locale))
       .then((willDelete) => {
         if (willDelete) {
           achiveBannerSetting(id).then(() => {
@@ -358,7 +359,7 @@ const WebsiteSetting = (props) => {
           updateFeaturedProducts(deleteProductEntries)
             .then(() => {
               fetchFeaturedProducts();
-              swal("Success", {
+              swal(CATranslate("text_save_success", props.locale), {
                 buttons: false,
                 timer: 1500,
                 icon: "success",
@@ -369,7 +370,7 @@ const WebsiteSetting = (props) => {
           updateFeaturedProducts(productEntries)
             .then(() => {
               fetchFeaturedProducts();
-              swal("Success", {
+              swal(CATranslate("text_save_success", props.locale), {
                 buttons: false,
                 timer: 1500,
                 icon: "success",
@@ -454,7 +455,7 @@ const WebsiteSetting = (props) => {
 
   const handleRemoveEntry = (record, findIndex) => {
     util
-      .sweetAlertConfirm("Are you sure delete this record?")
+      .sweetAlertConfirm(CATranslate("text_confirm_delete", props.locale))
       .then((willDelete) => {
         if (willDelete) {
           if (deleteProductEntries.length > 0) {
@@ -478,7 +479,7 @@ const WebsiteSetting = (props) => {
 
   const entryColumn = [
     {
-      title: "Image",
+      title: <Translate id="text_image" />,
       dataIndex: "image",
       key: "image",
       render: (image) => (
@@ -491,13 +492,13 @@ const WebsiteSetting = (props) => {
       ),
     },
     {
-      title: "Product Name",
+      title: <Translate id="text_product_name" />,
       dataIndex: "name",
       key: "name",
     },
 
     {
-      title: "Action",
+      title: <Translate id="text_action" />,
       dataIndex: "id",
       key: "id",
       render: (id, record, index) => (
@@ -533,7 +534,7 @@ const WebsiteSetting = (props) => {
         UpdateGeneralSetting(seo)
           .then(() => {
             fetchGeneral();
-            swal("Success", {
+            swal(CATranslate("text_save_success", props.locale), {
               buttons: false,
               timer: 1500,
               icon: "success",
@@ -625,6 +626,22 @@ const WebsiteSetting = (props) => {
     },
   };
 
+  const getCurrentIndexLanguage = (state) => {
+    const currentLanguage = getActiveLanguage(state);
+    for (var i = 0; i < state.languages.length; i++) {
+      if (state.languages[i].code === currentLanguage.code) {
+        return i;
+      }
+    }
+  };
+
+  const CATranslate = (key, state) => {
+    const currentIndex = getCurrentIndexLanguage(state);
+
+    if (state.translations[key] == null) return null;
+    return state.translations[key][currentIndex];
+  };
+
   return (
     <React.Fragment>
       <PageHeader
@@ -634,7 +651,7 @@ const WebsiteSetting = (props) => {
           paddingRight: 0,
         }}
         onBack={() => history.goBack()}
-        title={"Website Setting"}
+        title={<Translate id="text_website_setting" />}
         subTitle=""
       />
       <div className="main-layout main-store-account">
@@ -647,13 +664,13 @@ const WebsiteSetting = (props) => {
                 queryParam.has("tabKey") ? queryParam.get("tabKey") : "1"
               }
             >
-              <TabPane tab={"General"} key="1">
+              <TabPane tab={<Translate id="text_general" />} key="1">
                 <Row>
                   <Col lg="4" md="4">
                     <Form onSubmit={onGeneralSubmit}>
                       <div className="ant-row ant-form-item">
                         <div className="ant-col ant-form-item-label">
-                          <label>Primary Color</label>
+                          <label>{<Translate id="text_primary_color" />}</label>
                         </div>
                         <div className="ant-col ant-form-item-control-wrapper">
                           <div className="ant-form-item-control">
@@ -680,7 +697,9 @@ const WebsiteSetting = (props) => {
                       </div>
                       <div className="ant-row ant-form-item">
                         <div className="ant-col ant-form-item-label">
-                          <label>Secondary Color</label>
+                          <label>
+                            {<Translate id="text_secondary_color" />}
+                          </label>
                         </div>
                         <div className="ant-col ant-form-item-control-wrapper">
                           <div className="ant-form-item-control">
@@ -706,21 +725,23 @@ const WebsiteSetting = (props) => {
                         </div>
                       </div>
                       <Select
-                        label="Theme"
+                        label={<Translate id="text_theme" />}
                         form={props.form}
                         onChange={onSelectTheme}
                         defaultValue={theme}
                         required={true}
                         name="theme"
-                        placeholder={"Please select theme"}
+                        placeholder={
+                          <Translate id="text_please_select_theme" />
+                        }
                         dataSource={[
                           {
                             value: "template_1",
-                            name: "Template 1",
+                            name: <Translate id="text_template_1" />,
                           },
                           {
                             value: "template_2",
-                            name: "Template 2",
+                            name: <Translate id="text_template_2" />,
                           },
                         ]}
                       />
@@ -730,7 +751,7 @@ const WebsiteSetting = (props) => {
                             uploadProps={uploadProps}
                             form={props.form}
                             name="placeHolderImage"
-                            label="Placeholder Image"
+                            label={<Translate id="text_placeholder_image" />}
                           />
                         ),
                         // eslint-disable-next-line
@@ -754,13 +775,13 @@ const WebsiteSetting = (props) => {
                         loading={generalLoadingButton}
                       >
                         <span className="icon-save icon-padding-right"></span>
-                        SAVE
+                        {<Translate id="text_save" />}
                       </Button>
                     </Form>
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab={"Banner"} key="2">
+              <TabPane tab={<Translate id="text_banner" />} key="2">
                 <Row>
                   <Col lg="5" md="5">
                     <Form onSubmit={onBannerSubmit}>
@@ -773,14 +794,14 @@ const WebsiteSetting = (props) => {
                             onClick={() => onShowFormBanner()}
                           >
                             <span className="icon-add icon-padding-right"></span>
-                            ADD NEW
+                            {<Translate id="text_add_new" />}
                           </Button>
                           <Table
                             rowKey={(record) => record.id.toString()}
                             dataSource={bannerList}
                             columns={[
                               {
-                                title: "Banner Name",
+                                title: <Translate id="text_banner_name" />,
                                 dataIndex: "name",
                                 key: "name",
                               },
@@ -790,7 +811,7 @@ const WebsiteSetting = (props) => {
                               //   key: "type",
                               // },
                               {
-                                title: "Action",
+                                title: <Translate id="text_action" />,
                                 dataIndex: "id",
                                 key: "id",
                                 render: (id) => {
@@ -821,7 +842,6 @@ const WebsiteSetting = (props) => {
                                 },
                               },
                             ]}
-                            locale={{ emptyText: "Empty data" }}
                             loading={loadingBanner}
                             pagination={false}
                           />
@@ -835,15 +855,24 @@ const WebsiteSetting = (props) => {
                               padding: "0px 0px 15px 0px",
                             }}
                             onBack={onBackToTable}
-                            title={bannerId ? "Edit Banner" : "New Banner"}
+                            title={
+                              bannerId ? (
+                                <Translate id="text_edit_banner" />
+                              ) : (
+                                <Translate id="text_new_banner" />
+                              )
+                            }
                             subTitle=""
                           />
                           <InputText
                             data={bannerName}
                             name="name"
-                            label={"Banner Name"}
+                            label={<Translate id="text_banner_name" />}
                             required={true}
-                            placeholder={"Banner name"}
+                            placeholder={CATranslate(
+                              "text_banner_name",
+                              props.locale
+                            )}
                             form={props.form}
                           />
                           {/* <Select
@@ -870,13 +899,13 @@ const WebsiteSetting = (props) => {
                             <thead className="ant-table-thead">
                               <tr>
                                 <th className="ant-table-header-column">
-                                  Title
+                                  {<Translate id="text_name" />}
                                 </th>
                                 <th className="ant-table-header-column">
-                                  Image
+                                  {<Translate id="text_image" />}
                                 </th>
                                 <th className="ant-table-header-column">
-                                  ORDER
+                                  {<Translate id="text_sort" />}
                                 </th>
                                 <th className="ant-table-header-column"></th>
                               </tr>
@@ -960,7 +989,7 @@ const WebsiteSetting = (props) => {
                             style={{ marginTop: 15 }}
                           >
                             <span className="icon-save icon-padding-right"></span>
-                            SAVE
+                            {<Translate id="text_save" />}
                           </Button>
                         </React.Fragment>
                       )}
@@ -968,7 +997,7 @@ const WebsiteSetting = (props) => {
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab={"Featured Products"} key="3">
+              <TabPane tab={<Translate id="text_featured_products" />} key="3">
                 <Row>
                   <Col lg="4" md="4">
                     <Form onSubmit={onFeaturedProductSubmit}>
@@ -985,7 +1014,6 @@ const WebsiteSetting = (props) => {
                         columns={entryColumn}
                         dataSource={productEntries}
                         pagination={false}
-                        locale={"Empty Product"}
                         loading={loadingFeaturedProduct}
                       />
                       <Button
@@ -996,7 +1024,7 @@ const WebsiteSetting = (props) => {
                         style={{ marginTop: 15 }}
                       >
                         <span className="icon-save icon-padding-right"></span>
-                        SAVE
+                        {<Translate id="text_save" />}
                       </Button>
                     </Form>
                   </Col>
@@ -1009,22 +1037,31 @@ const WebsiteSetting = (props) => {
                       <InputText
                         data={metaTitle}
                         name="metaTitle"
-                        label={"Meta Title"}
-                        placeholder={"Meta title"}
+                        label={<Translate id="text_meta_title" />}
+                        placeholder={CATranslate(
+                          "text_meta_title",
+                          props.locale
+                        )}
                         form={props.form}
                       />
                       <InputText
                         data={metaTagDescription}
                         name="metaTagDescription"
-                        label={"Meta Tag Description"}
-                        placeholder={"Meta tag description"}
+                        label={<Translate id="text_meta_tag_description" />}
+                        placeholder={CATranslate(
+                          "text_meta_tag_description",
+                          props.locale
+                        )}
                         form={props.form}
                       />
                       <InputText
                         data={metaTagKeyword}
                         name="metaTagKeyword"
-                        label={"Meta Tag Keyword"}
-                        placeholder={"Meta tag keyword"}
+                        label={<Translate id="text_meta_tag_keyword" />}
+                        placeholder={CATranslate(
+                          "text_meta_tag_keyword",
+                          props.locale
+                        )}
                         form={props.form}
                       />
                       <Button
@@ -1035,7 +1072,7 @@ const WebsiteSetting = (props) => {
                         style={{ marginTop: 15 }}
                       >
                         <span className="icon-save icon-padding-right"></span>
-                        SAVE
+                        {<Translate id="text_save" />}
                       </Button>
                     </Form>
                   </Col>
@@ -1049,11 +1086,11 @@ const WebsiteSetting = (props) => {
   );
 };
 
-function UploadImage({ uploadProps, form, name }) {
+function UploadImage({ uploadProps, label, form, name }) {
   const { getFieldDecorator } = form;
   return (
     <div className="clearfix main-upload">
-      <Form.Item className="wrap-upload">
+      <Form.Item className="wrap-upload" label={label}>
         {getFieldDecorator(name)(
           <Upload {...uploadProps} style={{ height: "120px" }}>
             {uploadProps.fileList.length === 0 ? (
