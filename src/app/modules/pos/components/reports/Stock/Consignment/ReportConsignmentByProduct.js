@@ -2,30 +2,27 @@ import React, {useState} from "react";
 import { Translate } from "react-localize-redux";
 import moment from "moment";
 import { 
-  DatePicker, 
-  Input, 
   PageHeader, 
-  Select,
   Row,
   Col,
   Table,
-  Form
+  Form,
+  message
 } from "antd";
+import {Select, DatePickers, InputText} from "../../../../../common/elements/ant-ui";
 import SupplierService from "../../../../../inventory/services/stock/SupplierService";
+import ConsignmentService from "../../../../services/report/ConsignmentService";
 import history from "../../../../../common/router/history";
 import Util from "../../../../../common/util";
 import Enum from "../../../../../inventory/enums";
-import ExportConsignmentProduct from "./ExportConsignmentProduct";
-
-const {Search} = Input;
-const {Option} = Select;
+import ExportConsignmentProduct from "./ExportByProduct";
 
 function ReportConsignmentByProduct(props) {
   const [data, setData] = useState([]);
-  const [fromValue, setFromValue] = useState(moment());
+  const [fromValue, setFromValue] = useState(moment().startOf("month"));
   const [toValue, setToValue] = useState(moment());
   const [dataSeller, setDataSeller] = useState([]);
-  //const [loading, setLoading] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const util = new Util();
   const params = new URLSearchParams(document.location.search);
@@ -34,7 +31,35 @@ function ReportConsignmentByProduct(props) {
   let timer = null;
 
   const fetchReport = () => {
-    setData([]);
+    let search = "",
+      sellerId = "",
+      startDate = util.formatDateForMYSQL(fromValue),
+      endDate = util.formatDateForMYSQL(toValue);
+
+    const params = new URLSearchParams(document.location.search);
+    if (params.get("search")) {
+      search = params.get("search");
+    }
+
+    if (params.get("sellerId")) {
+      sellerId = params.get("sellerId");
+    }
+
+    if (params.get("start")) {
+      startDate = params.get("start");
+    }
+
+    if (params.get("end")) {
+      endDate = params.get("end");
+    }
+
+    setLoading(true);
+    ConsignmentService.getReportByProduct(search, sellerId, startDate, endDate)
+    .then(response => {
+      setData(response.data);
+    })
+    .catch(err => message.error("Internal Servicer Error"))
+    .finally(() => setLoading(false));
   };
 
   const onChangeSelect = value => {
@@ -57,8 +82,8 @@ function ReportConsignmentByProduct(props) {
       params.delete("search");
     }
 
+    util.pushParamsToURL(pathname, params.toString());
     timer = setTimeout(() => {
-      console.log("value", value);
       fetchReport();
     }, 1000);
 
@@ -68,19 +93,23 @@ function ReportConsignmentByProduct(props) {
     date = moment(date).format(formatDate);
     setFromValue(moment(date));
     setToValue(moment(date));
-    (new Util()).pushParamsToURL(pathname, `from=${date}&to=${date}`);
+    util.pushParamsToURL(pathname, `start=${date}&end=${date}`);
     fetchReport();
   };
 
   const onToChange = date => {
     date = moment(date).format(formatDate);
     setToValue(moment(date));
-    (new Util()).pushParamsToURL(pathname, `from=${moment(fromValue).format(formatDate)}&to=${date}`);
+    util.pushParamsToURL(pathname, `start=${moment(fromValue).format(formatDate)}&end=${date}`);
     fetchReport();
   };
 
+  const handleGoBack = () => {
+    history.goBack();
+  };
+
   React.useEffect(() => {
-    fetchReport(fromValue, toValue, params.get("search"), params.get("sellerId"));
+    fetchReport();
 
     SupplierService.lists(15)
     .then(response => {
@@ -89,10 +118,22 @@ function ReportConsignmentByProduct(props) {
       }
     });
 
+    const params = new URLSearchParams(document.location.search);
+    if (params.get("search")) {
+      props.form.setFieldsValue({search: params.get("search")});
+    }
+
     if (params.get("sellerId")) {
       props.form.setFieldsValue({sellerId: params.get("sellerId")});
     }
 
+    if (params.get("start")) {
+      setFromValue(moment(params.get("start")));
+    }
+
+    if (params.get("end")) {
+      setToValue(moment(params.get("end")));
+    }
     // eslint-disable-next-line
   }, []);
 
@@ -104,21 +145,21 @@ function ReportConsignmentByProduct(props) {
           paddingLeft: 0,
           paddingRight: 0
         }}
-        onBack={() => history.goBack()}
+        onBack={handleGoBack}
         title={<Translate id="text_consignment_product" />}
         subTitle=""
         extra={[
           <div style={{display: "flex"}} key={1} >
             <div id="formSearchHeaderOnReportPurchase">
-              <Search
+              <InputText
                 placeholder="Search product by name,barcode"
                 onChange={handleSearch}
                 style={{marginRight: 15}}
                 className="input-search"
                 name="search"
                 allowClear={true}
-                defaultValue={params.get("search")}
-              />
+                defaultValue={params.get("search") ? params.get("search") : ""}
+                form={props.form} />
             </div>
             <div id="selectDrop">
               <Select
@@ -128,39 +169,44 @@ function ReportConsignmentByProduct(props) {
                 placeholder="Select seller"
                 onChange={onChangeSelect}
                 allowClear={true}
-              >
-                {dataSeller.map((value, key) => (
-                  <Option key={key} value={value.id}>
-                    {value.name}
-                  </Option>
-                ))}
-              </Select>
+                valueKey="id"
+                dataSource={dataSeller}
+                form={props.form} />
             </div>
-            <DatePicker
+            <DatePickers
+              name="start"
               format="DD/MM/YYYY"
-              value={fromValue}
+              defaultValue={fromValue}
               placeholder="From"
               onChange={onFromChange}
-              allowClear={false} />
-            <DatePicker
+              allowClear={false}
+              form={props.form} />
+            <DatePickers
+              name="end"
               format="DD/MM/YYYY"
-              value={toValue}
+              defaultValue={toValue}
               placeholder="To"
               onChange={onToChange}
               style={{marginLeft: 15}}
-              allowClear={false} />
+              allowClear={false} 
+              form={props.form} />
           </div>
         ]}
       />
       <Row gutter={16}>
         <Col md={24}>
-          <ExportConsignmentProduct />
+          <ExportConsignmentProduct 
+            search={props.form.getFieldValue("search")}
+            sellerId={props.form.getFieldValue("sellerId")}
+            startDate={fromValue.format(formatDate)} 
+            endDate={toValue.format(formatDate)} />
         </Col>
         <Col md={24}>
           <Table
             rowKey="id"
             bordered={true}
             dataSource={data}
+            loading={loading}
             columns={[
               {
                 title: "#",
@@ -177,7 +223,7 @@ function ReportConsignmentByProduct(props) {
                   if (record.productOption === Enum.PRODUCT_VARIANT) {
                     variantName = ` / ${record.variantName}`;
                   }
-                  return productName + variantName;
+                  return productName ? productName + variantName : "";
                 }
               },
               {
@@ -186,15 +232,15 @@ function ReportConsignmentByProduct(props) {
                 key: "barcode"
               },
               {
-                title: <Translate id="text_purchase_date" />,
+                title: <Translate id="text_date" />,
                 dataIndex: "date",
                 key: "date",
                 render: date => (new Util()).formatDate(date, "DD/MM/YYYY")
               },
               {
                 title: <Translate id="text_seller" />,
-                dataIndex: "supplierName",
-                key: "supplierName"
+                dataIndex: "seller",
+                key: "seller"
               },
               {
                 title: <Translate id="text_quantity" />,
@@ -203,7 +249,7 @@ function ReportConsignmentByProduct(props) {
                 render: (quantity, record) => `${quantity} ${record.unitName ? record.unitName : ""}`
               },
               {
-                title: <Translate id="text_unit_cost" />,
+                title: <Translate id="text_cost" />,
                 dataIndex: "cost",
                 key: "cost",
                 align: "right",
@@ -217,6 +263,7 @@ function ReportConsignmentByProduct(props) {
                 render: total => (new Util()).formatCurrency(total)
               }
             ]}
+            pagination={false}
           />
         </Col>
       </Row>
