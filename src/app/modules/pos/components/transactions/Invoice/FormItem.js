@@ -250,6 +250,7 @@ class NewInvoice extends React.PureComponent {
 
             if (params.get("quotationId")) {
                 this.quotationId = params.get("quotationId");
+                idParam = "";
             }
         }
 
@@ -270,7 +271,8 @@ class NewInvoice extends React.PureComponent {
                 if (!taxRate)
                     taxRate = 0;
                 data.taxRate = taxRate;
-                data.invoiceDate = this.util.formatDateForMYSQL(moment());
+                data.invoiceDate = moment().format("YYYY-MM-DD");
+                this.pageTitle = "text_create_invoice";
 
                 const transactionEntries = data.quotationEntries.length && data.quotationEntries.map(entry => ({
                     ...entry,
@@ -369,7 +371,7 @@ class NewInvoice extends React.PureComponent {
                 const subTotal = this.getTotal();
 
                 if (this.id && Number(formData.status) !== Enum.INVOICE_STATUS.DRAFT) {
-                    return this.util.sweetAlertMessageV2("Warning", "Can't update invoice in this step", "error");
+                    return this.util.sweetAlertMessageV2("Warning", "Can't update invoice in this step", "warning");
                 }
 
                 if (formData.discount > subTotal) {

@@ -811,7 +811,7 @@ class FormItem extends React.PureComponent {
               <Translate id="text_sale_order" />
               {this.id ? <Badge count={this.SALE_ORDER_STATUS_STR[formData.status].title} style={{ backgroundColor: this.SALE_ORDER_STATUS_STR[formData.status].color}} /> : ""}
             </div>
-        }
+          }
         />
 
         <Form onSubmit={this.handleSubmit} {...formItemLayout} id="invoice-form">

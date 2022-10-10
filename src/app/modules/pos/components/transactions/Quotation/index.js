@@ -315,10 +315,6 @@ export default class QuotationList extends List {
   }
 
   handleShowFormUpdate(rowData){
-    if(rowData.status === Enum.QUOTATION_STEP.DRAFT){
-      history.push(`/transactions/quotation-update/${rowData.id}`);
-    }else{
-      this.Message.warning(this.CATranslate("text_error_allow_update_only_draft_step", this.props.locale));
-    }
+    history.push(`/transactions/quotation-update/${rowData.id}`);
   }
 }
