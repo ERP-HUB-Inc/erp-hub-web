@@ -14,7 +14,8 @@ import {
     Tabs,
     Dropdown,
     Menu,
-    Drawer
+    Drawer,
+    Badge
 } from "antd";
 import { Translate } from "react-localize-redux";
 import { connect } from "react-redux";
@@ -216,6 +217,13 @@ class NewInvoice extends React.PureComponent {
             }
         }
     ];
+    INVOICE_STATUS_STR = {
+        [Enum.INVOICE_STATUS.DRAFT]: { title: stringTranslate("text_draft", this.props.locale), color: "#bfbfbf" },
+        [Enum.INVOICE_STATUS.SENT]: { title: stringTranslate("text_sent", this.props.locale), color: "#1890ff" },
+        [Enum.INVOICE_STATUS.PARTIAL]: { title: stringTranslate("text_partial_pay", this.props.locale), color: "#52c41a"},
+        [Enum.INVOICE_STATUS.PAID]: { title: stringTranslate("text_paid", this.props.locale), color: "#52c41a"},
+        [Enum.INVOICE_STATUS.VOID]: { title: stringTranslate("text_void", this.props.locale), color: "#d9d9d9"},
+    };
     util = new Util();
     timer = null;
     id = "";
@@ -262,6 +270,7 @@ class NewInvoice extends React.PureComponent {
                 if (!taxRate)
                     taxRate = 0;
                 data.taxRate = taxRate;
+                data.invoiceDate = this.util.formatDateForMYSQL(moment());
 
                 const transactionEntries = data.quotationEntries.length && data.quotationEntries.map(entry => ({
                     ...entry,
@@ -444,8 +453,10 @@ class NewInvoice extends React.PureComponent {
                 taxRate = 0;
             data.taxRate = taxRate;
 
-            if (action === "clone") {
+            if (action) {
+                this.pageTitle = "text_create_invoice";
                 data.invoiceNumber = "";
+                data.invoiceDate = moment().format("YYYY-MM-DD");
             }
 
             delete data.transactionEntries;
@@ -603,7 +614,14 @@ class NewInvoice extends React.PureComponent {
             });
         } else {
             transactionEntries.splice(index, 1);
-            this.setState({transactionEntries, productSearch: []});
+            let discount = this.props.form.getFieldValue("discountField");
+            let type = this.props.form.getFieldValue("discountType");
+            if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+                let total = this.getTotal();
+                discount = this.util.getValueFromPercentage(total, discount);
+            }
+            formData.discount = discount;
+            this.setState({transactionEntries, formData, productSearch: []});
         }
     }
 
@@ -642,7 +660,7 @@ class NewInvoice extends React.PureComponent {
         const existingProductList = this.state.transactionEntries;
         const formData = this.state.formData;
         if (existingProductList.length === 0) {
-            existingProductList.push({
+            existingProductList.unshift({
                 productVariantId: productVariant.id,
                 variantName: product.name ? product.name : product.namekm,
                 categoryId: product.productTypeId,
@@ -668,7 +686,7 @@ class NewInvoice extends React.PureComponent {
             });
     
             if (isNotTheSameProduct) {
-                existingProductList.push({
+                existingProductList.unshift({
                     productVariantId: productVariant.id,
                     variantName: product.name ? product.name : product.namekm,
                     categoryId: product.productTypeId,
@@ -930,6 +948,8 @@ class NewInvoice extends React.PureComponent {
         formData.totalExcludeTax = subTotal;
         let vat = this.util.getTaxValue(subTotal - discount, formData.taxRate);
         formData.total = subTotal + vat;
+        formData.status = Number(formData.status);
+        
         return ( 
             !this.state.loading && Object.keys(formData).length ? 
             <div>
@@ -945,7 +965,14 @@ class NewInvoice extends React.PureComponent {
                         position: "relative"
                         }}
                         onBack={this.handleGoBack}
-                        title={<Translate id={`${this.pageTitle}`} />} />
+                        title={<Translate id={`${this.pageTitle}`} />} 
+                        subTitle={  
+                            <div>
+                                <Translate id="text_invoice" />
+                                {this.id ? <Badge count={this.INVOICE_STATUS_STR[formData.status].title} style={{ backgroundColor: this.INVOICE_STATUS_STR[formData.status].color}} /> : ""}
+                            </div>
+                        }
+                    />
 
                     <Row>
                         <Col md={8}>

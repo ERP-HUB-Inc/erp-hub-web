@@ -15,7 +15,8 @@ import {
   Tabs,
   Menu,
   Dropdown,
-  message
+  message,
+  Badge
 } from "antd";
 import { Link } from "react-router-dom";
 import sweetalert from "sweetalert";
@@ -186,6 +187,12 @@ class FormItem extends React.PureComponent {
       }
     }
   ];
+  SALE_ORDER_STATUS_STR = {
+    [Enum.SALE_ORDER_STATUS.DRAFT]: { title: stringTranslate("text_draft", this.props.locale), color: "#bfbfbf" },
+    [Enum.SALE_ORDER_STATUS.CONFIRMED]: { title: stringTranslate("text_confirm", this.props.locale), color: "#1890ff" },
+    [Enum.SALE_ORDER_STATUS.CLOSED]: { title: stringTranslate("text_closed", this.props.locale), color: "#f50"},
+    [Enum.SALE_ORDER_STATUS.VOID]: {title: stringTranslate("text_void", this.props.locale), color: "#d9d9d9"}
+  };
   util = new Util();
   pageTitle = "text_sale_order";
   textRequiredCustomer = "";
@@ -302,8 +309,10 @@ class FormItem extends React.PureComponent {
           taxRate = 0;
         data.taxRate = taxRate;
 
-        if (action === "clone") {
+        if (action) {
+          this.pageTitle = "text_sale_order";
           data.number = "";
+          data.saleOrderDate = moment().format("YYYY-MM-DD");
         }
 
         delete data.transactionEntries;
@@ -525,7 +534,7 @@ class FormItem extends React.PureComponent {
     const existingProductList = this.state.transactionEntries;
     const formData = this.state.formData;
     if (existingProductList.length === 0) {
-      existingProductList.push({
+      existingProductList.unshift({
         productVariantId: productVariant.id,
         variantName: product.name ? product.name : product.namekm,
         categoryId: product.productTypeId,
@@ -551,7 +560,7 @@ class FormItem extends React.PureComponent {
       });
 
       if (isNotTheSameProduct) {
-        existingProductList.push({
+        existingProductList.unshift({
           productVariantId: productVariant.id,
           variantName: product.name ? product.name : product.namekm,
           categoryId: product.productTypeId,
@@ -602,7 +611,14 @@ class FormItem extends React.PureComponent {
       });
     } else {
       transactionEntries.splice(index, 1);
-      this.setState({transactionEntries, productSearch: []});
+      let discount = this.props.form.getFieldValue("discountField");
+        let type = this.props.form.getFieldValue("discountType");
+        if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+          let total = this.getTotal();
+          discount = this.util.getValueFromPercentage(total, discount);
+        }
+        formData.discount = discount;
+      this.setState({transactionEntries, formData, productSearch: []});
     }
   }
 
@@ -777,19 +793,26 @@ class FormItem extends React.PureComponent {
     formData.totalExcludeTax = subTotal;
     let vat = this.util.getTaxValue(subTotal - discount, formData.taxRate);
     formData.total = subTotal + vat;
-
+    formData.status = Number(formData.status);
     return (
       !this.state.loading && Object.keys(formData).length ?
       <div>
         <PageHeader
-        style={{
-        backgroundColor: "#f7f7f7",
-        paddingLeft: 0,
-        paddingRight: 0,
-        position: "relative"
-        }}
-        onBack={this.handleGoBack}
-        title={<Translate id={this.pageTitle} />} />
+          style={{
+          backgroundColor: "#f7f7f7",
+          paddingLeft: 0,
+          paddingRight: 0,
+          position: "relative"
+          }}
+          onBack={this.handleGoBack}
+          title={<Translate id={this.pageTitle} />} 
+          subTitle={  
+            <div>
+              <Translate id="text_sale_order" />
+              {this.id ? <Badge count={this.SALE_ORDER_STATUS_STR[formData.status].title} style={{ backgroundColor: this.SALE_ORDER_STATUS_STR[formData.status].color}} /> : ""}
+            </div>
+        }
+        />
 
         <Form onSubmit={this.handleSubmit} {...formItemLayout} id="invoice-form">
           <Row>
