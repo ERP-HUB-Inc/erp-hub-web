@@ -6,6 +6,8 @@ import {
 import {
   Translate
 } from "react-localize-redux";
+import CKEditor from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import FormComposite from "./FormComposite";
 import FormVariant from "./FormVariant";
 import Enum from "../../../enums";
@@ -241,7 +243,8 @@ export default class FormItem extends Modal {
       isSetFocusBarcode: false,
       isComponentNotYetUpdated: true,
       isComponentNotYetLoadedWillUpdate: true,
-      productOptionClassDisabled: ""
+      productOptionClassDisabled: "",
+      description: ""
     };
 
     this.TAB_PRODUCT_COST_LOG = 3;
@@ -591,18 +594,36 @@ export default class FormItem extends Modal {
 
             <this.Col md="12" className="main-product-collapse form-group">
               <this.Collapse bordered={false}>
-                <this.Panel header={<this.Translate id="text_web_setting" />} key="1">
+                <this.Panel header={<this.Translate id="text_web_display" />} key="1">
                   <this.Row>
-                    <this.Col md="4">
-                      <this.Select
+                    <this.Col md="12">
+                      <this.Checkboxs
                         name="isFeatured"
                         label={<this.Translate id="text_featured_product" />}
-                        dataSource={[
-                          {name: "Yes", value: true},
-                          {name: "No", value: false}
-                        ]}
                         defaultValue={formData.isFeatured ? true : false}
-                        form={form}/>
+                        form={this.props.form} />
+                    </this.Col>
+                    <this.Col md="12">
+                      <div className="ant-col ant-form-item-label">
+                        <label htmlFor="description">
+                          <this.Translate id="text_description" />
+                        </label>
+                      </div>
+                      <CKEditor
+                        editor={ClassicEditor}
+                        data={formData.description ? formData.description : "<p></p>"}
+                        onInit={paymentTerm => {
+                          // this.setState({ paymentTerm: paymentTerm.data });
+                        }}
+                        onChange={(event, editor) => {
+                          const data = editor.getData();
+                          this.props.form.setFieldsValue({
+                            description: data
+                          });
+                          this.setState({ description: data });
+                        }}
+                      />
+                      <this.InputText name="description" data={form.description} form={form} className="hidden" max={null} />
                     </this.Col>
                   </this.Row>
                 </this.Panel>

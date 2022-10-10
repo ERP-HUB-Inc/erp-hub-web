@@ -239,7 +239,12 @@
 }
 
 .pos-payment .confirm-payment .complete-action button {
-    width: 100%
+    width: 100%;
+    height: 50px;
+}
+
+.btn-send-email-receipt {
+    height: 43px
 }
 
 .currency-symbol-payment {

@@ -261,7 +261,7 @@ export default {
   ],
 
   "text_edit_invoice": [
-    "Update Invoice",
+    "Edit Invoice",
     "កែប្រែវិក័យប័ត្រ"
   ],
 
@@ -286,7 +286,7 @@ export default {
   ],
 
   "text_create_invoice": [
-    "Create New Invoice",
+    "New Invoice",
     "បង្កើតវិក័្កយប័ត្រថ្មី"
   ],
 
