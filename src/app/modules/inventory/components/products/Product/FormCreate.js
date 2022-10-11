@@ -206,17 +206,21 @@ export default class ProductCreate extends Component {
     } = this.props;
 
     return <div style={{marginBottom: 25}}>
-      <PageHeader
-        style={{
-            backgroundColor: "#f7f7f7",
-            paddingLeft: 0,
-            paddingRight: 0
-        }}
-        onBack={() => history.goBack()}
-        title={<this.Translate id="text_product" />}
-        subTitle={<this.Translate id="text_new_product" />}
-        extra={[]} />
       <Form autoComplete="off" onSubmit={this.handleSubmit}>
+        <PageHeader
+          style={{
+              backgroundColor: "#f7f7f7",
+              paddingLeft: 0,
+              paddingRight: 0
+          }}
+          onBack={() => history.goBack()}
+          title={<this.Translate id="text_product" />}
+          subTitle={<this.Translate id="text_new_product" />}
+          extra={[
+            <this.Button htmlType="submit" loading={productAdd.adding} className="info" style={{marginLeft: 15}} id="btnSubmit">
+              <this.Translate id="text_save" />(Ctrl+s)
+            </this.Button>
+          ]} />
         <FormItem
           form={form}
           languages={storeLanguage.list}
@@ -245,14 +249,6 @@ export default class ProductCreate extends Component {
           variantAttributeAdd={variantAttributeAdd}
           handleAddVariantAttribute={this.handleAddVariantAttribute}
           productSearch={productSearch} />
-          <this.Row style={{justifyContent: "center", marginTop: 25}}>
-            <this.Button className="danger" onClick={this.handleCancel}>
-              <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_back" />
-            </this.Button>  
-            <this.Button htmlType="submit" loading={productAdd.adding} className="info" style={{marginLeft: 15}} id="btnSubmit">
-              <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />(Ctrl+s)
-            </this.Button>
-          </this.Row>
       </Form>
     </div>;
   }

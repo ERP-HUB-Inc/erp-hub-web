@@ -21,7 +21,8 @@ import {
   Tabs,
   Dropdown,
   Menu,
-  message
+  message,
+  Badge
 } from "antd";
 import { 
   DatePickers,
@@ -159,6 +160,11 @@ class FormItem extends React.PureComponent {
       }
     }
   ];
+  QUOTATION_STATUS_STR = {
+    [Enum.QUOTATION_STATUS.DRAFT]: {name: stringTranslate("text_draft", this.props.locale), color: "#d9d9d9"},
+    [Enum.QUOTATION_STATUS.PROCESS]: {name: stringTranslate("text_process", this.props.locale), color: "#52c41a"},
+    [Enum.QUOTATION_STATUS.CANCELLED]: {name: stringTranslate("text_cancel", this.props.locale), color: "#f50"}
+  };
   util = new Util();
   pageTitle = "text_create_quotation";
   id = "";
@@ -255,11 +261,16 @@ class FormItem extends React.PureComponent {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        const {formData} = this.state;
+
+        if (this.id && Number(formData.status) !== Enum.INVOICE_STATUS.DRAFT) {
+          return this.util.sweetAlertMessageV2("Warning", "Can't update quotation in this step", "warning");
+        }
+
         if (!values.customerId) {
           this.textRequiredCustomer = <Translate id="text_required_customer" />;
           return;
         }
-        const {formData} = this.state;
         const subTotal = this.getTotal();
         if (formData.discount > subTotal) {
           this.textDiscountErr = "Discount amount must be less than total amount";
@@ -332,7 +343,9 @@ class FormItem extends React.PureComponent {
       data.taxRate = taxRate;
 
       if (action === "clone") {
+        this.pageTitle = "text_create_quotation";
         data.number = "";
+        data.quotationDate = moment().format("YYYY-MM-DD");
       }
 
       delete data.quotationEntries;
@@ -473,7 +486,7 @@ class FormItem extends React.PureComponent {
     const formData = this.state.formData;
     const existingProductList = this.state.quotationEntries;
     if (existingProductList.length === 0) {
-      existingProductList.push({
+      existingProductList.unshift({
         productVariantId: productVariant.id,
         description: `${product.name ? product.name : product.namekm} ${isProductVariant ? productVariant.name : ""}`,
         quantity: 1,
@@ -494,7 +507,7 @@ class FormItem extends React.PureComponent {
       });
 
       if (isNotTheSameProduct) {
-        existingProductList.push({
+        existingProductList.unshift({
           productVariantId: productVariant.id,
           description: `${product.name ? product.name : product.namekm} ${isProductVariant ? productVariant.name : ""}`,
           quantity: 1,
@@ -540,7 +553,14 @@ class FormItem extends React.PureComponent {
       });
     } else {
       quotationEntries.splice(index, 1);
-      this.setState({quotationEntries, productSearch: []});
+      let discount = this.props.form.getFieldValue("discountField");
+      let type = this.props.form.getFieldValue("discountType");
+      if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+        let total = this.getTotal();
+        discount = this.util.getValueFromPercentage(total, discount);
+      }
+      formData.discount = discount;
+      this.setState({quotationEntries, formData, productSearch: []});
     }
   }
 
@@ -745,6 +765,7 @@ class FormItem extends React.PureComponent {
     formData.totalExcludeTax = subTotal;
     let vat = this.util.getTaxValue(subTotal - discount, formData.taxRate);
     formData.total = subTotal + vat;
+    formData.status = Number(formData.status);
     return (
       !this.state.loading && Object.keys(formData).length ?
       <div>
@@ -756,7 +777,14 @@ class FormItem extends React.PureComponent {
           position: "relative"
           }}
           onBack={this.handleGoBack}
-          title={<Translate id={this.pageTitle} />} />
+          title={<Translate id={this.pageTitle} />} 
+          subTitle={  
+            <div>
+              <Translate id="text_quotation" />
+              {this.id ? <Badge count={this.QUOTATION_STATUS_STR[formData.status].name} style={{ backgroundColor: this.QUOTATION_STATUS_STR[formData.status].color}} /> : ""}
+            </div>
+          }
+        />
 
         <Form onSubmit={this.handleSubmit} {...formItemLayout} id="invoice-form">
           <Row>

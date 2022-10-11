@@ -4,7 +4,7 @@ import {
     Result,
     Button
 } from "antd";
-import PurchaseService from "../../../../services/report/PurchaseService";
+import ConsignmentService from "../../../../services/report/ConsignmentService";
 
 function ExportFormLoader({startDate, endDate}) {
   const [loading, setLoading] = React.useState(false);
@@ -12,7 +12,7 @@ function ExportFormLoader({startDate, endDate}) {
   React.useEffect(() => {
     try {
         setLoading(true);
-        PurchaseService.getReportSummary({startDate, endDate, isExport: true})
+        ConsignmentService.getSummary(startDate, endDate, true)
         .then(response => {
             if (response.data) {
             setResult(response.data);
@@ -31,7 +31,7 @@ function ExportFormLoader({startDate, endDate}) {
         title="Successfully Exported Report"
         subTitle={loading ? "Please wait..." : ""}
         extra={[
-            <a href={result ? result.link : "#"}>
+            <a href={result ? result.link : "#"} key={1}>
                 Download File(xlsx)
             </a>
         ]}

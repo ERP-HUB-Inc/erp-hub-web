@@ -203,64 +203,60 @@ export default class ProductUpdate extends Component {
     } = this.props;
 
     return <div style={{marginBottom: 25}}>
-      <PageHeader
-        style={{
-            backgroundColor: "#f7f7f7",
-            paddingLeft: 0,
-            paddingRight: 0
-        }}
-        onBack={() => history.goBack()}
-        title={<this.Translate id="text_product" />}
-        subTitle={<this.Translate id="text_edit_product" />}
-        extra={[]}
-    />
       {
         productDetail.fetched ?
         <Form autoComplete="off" onSubmit={this.handleSubmit}>
-            <FormItem
-              form={form}
-              languages={storeLanguage}
-              locale={locale}
-              dispatch={dispatch}
-              formData={productDetail.data}
-              productLog={productLog}
-              productCostLog={productCostLog}
-              switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
-              productVariantArchive={this.props.productVariantArchive}
-              productVariantCheckStatus={this.props.productVariantCheckStatus}
-              productAttributeCheckStatus={this.props.productAttributeCheckStatus}
-              productAttributeValueCheckStatus={this.props.productAttributeValueCheckStatus}
-              brands={brands}
-              brandAdd={brandAdd}
-              productsType={productsType}
-              productsTypeAdd={productsTypeAdd}
-              units={units}
-              unitAdd={unitAdd}
-              taxs={taxs}
-              taxAdd={taxAdd}
-              handleAddTax={this.handleAddTax}
-              callBackGetProductAttribute={this.handleCallBackGetProductAttribute}
-              callBackGetProductVariant={this.handleCallBackGetProductVariant}
-              handleCallBackGetArchiveProductVariant={this.handleCallBackGetArchiveProductVariant}
-              handleCallBackGetArchiveProductAttributes={this.handleCallBackGetArchiveProductAttributes}
-              variantAttributes={variantAttributes}
-              variantAttributeAdd={variantAttributeAdd}
-              handleAddVariantAttribute={this.handleAddVariantAttribute}
-              productSearch={productSearch} />
-          <this.Row style={{justifyContent: "center", marginTop: 25}}>
-            <this.Button className="danger" onClick={this.handleCancel}>
-              <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_back" />
-            </this.Button>  
-            <this.Button htmlType="submit" loading={this.props.productUpdate.updating} className="info" style={{marginLeft: 15}} id="btnSubmit">
-              <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />(Ctrl+s)
-            </this.Button>
-          </this.Row>
-        </Form>
-        :
-        <div style={{width: 30, margin: "0 auto"}}>
-          <Spin />
-        </div>
-      }
+          <PageHeader
+            style={{
+                backgroundColor: "#f7f7f7",
+                paddingLeft: 0,
+                paddingRight: 0
+            }}
+            onBack={() => history.goBack()}
+            title={<this.Translate id="text_product" />}
+            subTitle={<this.Translate id="text_edit_product" />}
+            extra={[
+              <this.Button key="1" htmlType="submit" loading={this.props.productUpdate.updating} className="info" style={{marginLeft: 15}} id="btnSubmit">
+                <this.Translate id="text_save" />(Ctrl+s)
+              </this.Button>
+            ]}
+        />
+          <FormItem
+            form={form}
+            languages={storeLanguage}
+            locale={locale}
+            dispatch={dispatch}
+            formData={productDetail.data}
+            productLog={productLog}
+            productCostLog={productCostLog}
+            switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
+            productVariantArchive={this.props.productVariantArchive}
+            productVariantCheckStatus={this.props.productVariantCheckStatus}
+            productAttributeCheckStatus={this.props.productAttributeCheckStatus}
+            productAttributeValueCheckStatus={this.props.productAttributeValueCheckStatus}
+            brands={brands}
+            brandAdd={brandAdd}
+            productsType={productsType}
+            productsTypeAdd={productsTypeAdd}
+            units={units}
+            unitAdd={unitAdd}
+            taxs={taxs}
+            taxAdd={taxAdd}
+            handleAddTax={this.handleAddTax}
+            callBackGetProductAttribute={this.handleCallBackGetProductAttribute}
+            callBackGetProductVariant={this.handleCallBackGetProductVariant}
+            handleCallBackGetArchiveProductVariant={this.handleCallBackGetArchiveProductVariant}
+            handleCallBackGetArchiveProductAttributes={this.handleCallBackGetArchiveProductAttributes}
+            variantAttributes={variantAttributes}
+            variantAttributeAdd={variantAttributeAdd}
+            handleAddVariantAttribute={this.handleAddVariantAttribute}
+            productSearch={productSearch} />
+      </Form>
+      :
+      <div style={{width: 30, margin: "0 auto"}}>
+        <Spin />
+      </div>
+    }
     </div>;
   }
 }

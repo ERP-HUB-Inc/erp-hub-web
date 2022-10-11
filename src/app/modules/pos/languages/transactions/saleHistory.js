@@ -56,7 +56,7 @@ export default {
 
   "text_void": [
     "Void",
-    "Void"
+    "បោះបង់ចោល"
   ],
 
   "text_in_delivery": [

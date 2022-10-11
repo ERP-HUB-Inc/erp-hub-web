@@ -3,20 +3,24 @@ import { Translate } from "react-localize-redux";
 import moment from "moment";
 import { 
   PageHeader,
-  DatePicker,
+  Form,
   Row,
   Col,
   Table
 } from "antd";
+import { DatePickers } from "../../../../../common/elements/ant-ui";
+import ConsignmentService from "../../../../services/report/ConsignmentService";
 import Util from "../../../../../common/util";
 import history from "../../../../../common/router/history";
-import ExportFormSummary from "./ExportConsignmentSummary";
+import ExportFormSummary from "./ExportBySummary";
 
-export default function ReportConsignmentSummary() {
+function ReportConsignmentSummary(props) {
   const [data, setData] = React.useState([]);
-  const [fromValue, setFromValue] = React.useState(moment());
+  const [fromValue, setFromValue] = React.useState(moment().startOf("month"));
   const [toValue, setToValue] = React.useState(moment());
+  const [loading, setLoading] = React.useState(false);
 
+  const util = new Util();
   const pathname = "/reports/stock-consignment-summary";
   const formatDate = "YYYY-MM-DD";
 
@@ -24,23 +28,52 @@ export default function ReportConsignmentSummary() {
     date = moment(date).format(formatDate);
     setFromValue(moment(date));
     setToValue(moment(date));
-    (new Util()).pushParamsToURL(pathname, `from=${date}&to=${date}`);
+    util.pushParamsToURL(pathname, `start=${date}&end=${date}`);
     fetchReport();
   };
 
   const onToChange = (date) => {
     date = moment(date).format(formatDate);
     setToValue(moment(date));
-    (new Util()).pushParamsToURL(pathname, `from=${moment(fromValue).format(formatDate)}&to=${date}`);
+    util.pushParamsToURL(pathname, `start=${moment(fromValue).format(formatDate)}&end=${date}`);
     fetchReport();
   };
 
   function fetchReport() {
-    setData([]);
+    const params = new URLSearchParams(document.location.search);
+    let startDate = util.formatDateForMYSQL(fromValue),
+      endDate = util.formatDateForMYSQL(toValue);
+
+    if (params.get("start")) {
+      startDate = params.get("start");
+    }
+
+    if (params.get("end")) {
+      endDate = params.get("end");
+    }
+
+    setLoading(true);
+    ConsignmentService.getSummary(startDate, endDate)
+    .then(response => {
+      setData(response.data);
+    })
+    .catch(err => console.log("error", err.response))
+    .finally(() => setLoading(false));
   }
 
   React.useEffect(() => {
     fetchReport();
+
+    const params = new URLSearchParams(document.location.search);
+    if (params.get("start")) {
+      setFromValue(moment(params.get("start")));
+    }
+
+    if (params.get("end")) {
+      setToValue(moment(params.get("end")));
+    }
+
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -56,33 +89,36 @@ export default function ReportConsignmentSummary() {
         subTitle=""
         extra={[
           <div style={{display: "flex"}} key={1}>
-            <DatePicker
+            <DatePickers
+              name="start"
               format="DD/MM/YYYY"
-              value={fromValue}
+              defaultValue={fromValue}
               placeholder="From"
               allowClear={false}
               onChange={onFromChange}
-              />
-            <DatePicker
+              form={props.form} />
+            <DatePickers
+              name="end"
               format="DD/MM/YYYY"
-              value={toValue}
+              defaultValue={toValue}
               placeholder="To"
               allowClear={false}
               onChange={onToChange}
               style={{marginLeft: 15}}
-              />
+              form={props.form} />
           </div>
         ]}
       />
 
       <Row gutter={16}>
         <Col md={24}>
-          <ExportFormSummary startDate={fromValue.format("YYYY-MM-DD")} endDate={toValue.format("YYYY-MM-DD")} />
+          <ExportFormSummary startDate={fromValue.format(formatDate)} endDate={toValue.format(formatDate)} />
         </Col>
         <Col md={24}>
           <Table
             rowKey="id"
             dataSource={data}
+            loading={loading}
             columns={[
               {
                 title: <Translate id="text_date" />,
@@ -92,14 +128,14 @@ export default function ReportConsignmentSummary() {
                 render: date => (new Util()).formatDate(date, "DD/MM/YYYY")
               },
               {
-                title: <Translate id="text_location" />,
-                dataIndex: "location",
-                key: "location"
-              },
-              {
                 title: <Translate id="text_seller" />,
                 dataIndex: "seller",
                 key: "seller"
+              },
+              {
+                title: <Translate id="text_location" />,
+                dataIndex: "location",
+                key: "location"
               },
               {
                 title: <Translate id="text_items" />,
@@ -114,9 +150,13 @@ export default function ReportConsignmentSummary() {
                 render: total => (new Util()).formatCurrency(total)
               }
             ]}
+            pagination={false}
           />
         </Col>
       </Row>
     </div>
   );
 }
+
+const reportConsignmentSummary = Form.create({name: "report-consignment-by-product"})(ReportConsignmentSummary);
+export default reportConsignmentSummary;

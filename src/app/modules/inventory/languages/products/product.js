@@ -174,6 +174,11 @@ export default {
     "ការកំណត់គេហទំព័រ"
   ],
 
+  "text_web_display": [
+    "Web Display",
+    "ការកំណត់គេហទំព័រ"
+  ],
+
   "text_featured_product": [
     "Featured Product",
     "ផលិតផលពិសេស"

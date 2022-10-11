@@ -4,15 +4,15 @@ import {
     Result,
     Button
 } from "antd";
-import PurchaseService from "../../../../services/report/PurchaseService";
+import ConsignmentService from "../../../../services/report/ConsignmentService";
 
-function ExportFormLoader({startDate, endDate}) {
+function ExportFormLoader({search, sellerId, startDate, endDate}) {
   const [loading, setLoading] = React.useState(false);
   const [result, setResult] = React.useState(null);
   React.useEffect(() => {
     try {
       setLoading(true);
-      PurchaseService.getReportSummary({startDate, endDate, isExport: true})
+      ConsignmentService.getReportByProduct(search, sellerId, startDate, endDate, true)
       .then(response => {
         if (response.data) {
           setResult(response.data);
