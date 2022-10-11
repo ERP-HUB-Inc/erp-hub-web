@@ -305,7 +305,7 @@ class FormItem extends React.PureComponent {
               status: values.status[index]
             });
           });
-          quotation["Entries"] = quotationEntries;
+          quotation["entries"] = quotationEntries;
         } else {
           return this.util.sweetAlertMessage(stringTranslate("text_please_select_product", this.props.locale), "warning");
         }
