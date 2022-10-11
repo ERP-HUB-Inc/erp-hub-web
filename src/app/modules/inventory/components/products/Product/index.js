@@ -194,7 +194,7 @@ export default class ProductList extends List {
   buttonActionCollection() {
     return [
       this.renderButtonAddNew(),
-      // this.renderButtonImport(),
+      this.renderButtonImport(),
       this.renderButtonDelete()
     ];
   }
