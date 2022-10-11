@@ -250,7 +250,7 @@ class NewInvoice extends React.PureComponent {
             this.getDetail(idParam);
         } else if (this.quotationId) {
             this.setState({loading: true});
-            QuotationService.detail2(this.quotationId)
+            QuotationService.detail(this.quotationId)
             .then(response => {
                 const data = response.data.data;
                 let totalExcludeTax = Number(data.totalExcludeTax);

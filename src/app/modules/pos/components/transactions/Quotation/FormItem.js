@@ -307,7 +307,7 @@ class FormItem extends React.PureComponent {
   getDetail(id) {
     this.setState({loading: true});
     const action = new URLSearchParams(document.location.search).get("action");
-    QuotationService.detail2(id)
+    QuotationService.detail(id)
     .then(response => {
       const data = response.data.data;
       let totalExcludeTax = Number(data.totalExcludeTax);

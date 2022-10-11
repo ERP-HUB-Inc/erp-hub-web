@@ -28,7 +28,7 @@ class Detail extends React.PureComponent {
   componentDidMount() {
     const id = this.props.match.params.id;
     this.setState({loading: true});
-    QuotationService.detail2(id)
+    QuotationService.detail(id)
     .then(response => {
       this.setState({formData: response && response.data.data});
     })
