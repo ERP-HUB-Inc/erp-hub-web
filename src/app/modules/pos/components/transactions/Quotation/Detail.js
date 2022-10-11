@@ -9,7 +9,8 @@ import {
   Icon,
   message,
   Spin,
-  Form
+  Form,
+  Badge
 } from "antd";
 import history from "../../../../common/router/history";
 import Enum from "../../../enums";
@@ -23,6 +24,11 @@ class Detail extends React.PureComponent {
     formData: {},
     loading: false
   }
+  QUOTATION_STATUS_STR = {
+    [Enum.QUOTATION_STATUS.DRAFT]: {name: stringTranslate("text_draft", this.props.locale), color: "#d9d9d9"},
+    [Enum.QUOTATION_STATUS.PROCESS]: {name: stringTranslate("text_process", this.props.locale), color: "#52c41a"},
+    [Enum.QUOTATION_STATUS.CANCELLED]: {name: stringTranslate("text_cancel", this.props.locale), color: "#f50"}
+  };
   util = new Util();
 
   componentDidMount() {
@@ -86,7 +92,16 @@ class Detail extends React.PureComponent {
           }}
           onBack={() => history.goBack()}
           title={<Translate id="text_quotation" />}
-          subTitle={formData.invoiceNumber}
+          subTitle={  
+            <div>
+              {formData.number}
+              {
+                Object.keys(formData).length && formData.status ?
+                  <Badge count={this.QUOTATION_STATUS_STR[formData.status].name} style={{ backgroundColor: this.QUOTATION_STATUS_STR[formData.status].color}} />
+                : null
+              }
+            </div>
+          }
           extra={[
             <Dropdown key={1} overlay={(
               <Menu>

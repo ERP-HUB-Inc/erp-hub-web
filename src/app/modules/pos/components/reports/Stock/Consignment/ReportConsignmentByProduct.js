@@ -14,7 +14,6 @@ import SupplierService from "../../../../../inventory/services/stock/SupplierSer
 import ConsignmentService from "../../../../services/report/ConsignmentService";
 import history from "../../../../../common/router/history";
 import Util from "../../../../../common/util";
-import Enum from "../../../../../inventory/enums";
 import ExportConsignmentProduct from "./ExportByProduct";
 
 function ReportConsignmentByProduct(props) {
@@ -219,11 +218,10 @@ function ReportConsignmentByProduct(props) {
                 dataIndex: "productName",
                 key: "productName",
                 render: (productName, record) => {
-                  let variantName = "";
-                  if (record.productOption === Enum.PRODUCT_VARIANT) {
-                    variantName = ` / ${record.variantName}`;
-                  }
-                  return productName ? productName + variantName : "";
+                  return <div>
+                    {productName} 
+                    {record.variantName ? <span style={{marginLeft: 10}} className="variant-name">{record.variantName}</span> : ""}
+                  </div>;
                 }
               },
               {

@@ -879,7 +879,7 @@ export default class Retail extends Component {
       )
       :
       <div style={{display: "flex", alignItems: "center", margin: "0 auto", height: "100%"}}>
-        <img src={`${this.Util.getGeneralImage("storeVein/no-product-found.png").url}`} style={{width: 150}} />
+        <img src={`${this.Util.getGeneralImage("storeVein/no-product-found.png").url}`} style={{width: 150}} alt="" />
       </div>;
   }
 
@@ -977,7 +977,7 @@ export default class Retail extends Component {
     
     return <this.Row className="main-layout main-store-account" id="retail-sale">
       <div id="receiptLogoPreLoading" style={{display: "none"}}>
-        <img style={{width: 100}} src={this.Util.getProductImage(this.props.receiptTemplate && this.props.receiptTemplate.data ? this.props.receiptTemplate.data.logo : "", "general").url} />
+        <img style={{width: 100}} src={this.Util.getProductImage(this.props.receiptTemplate && this.props.receiptTemplate.data ? this.props.receiptTemplate.data.logo : "", "general").url} alt="" />
       </div>
       <this.Col md="8" id="left-block">
 

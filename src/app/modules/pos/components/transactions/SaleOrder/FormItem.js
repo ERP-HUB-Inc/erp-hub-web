@@ -655,13 +655,10 @@ class FormItem extends React.PureComponent {
   }
 
   handleMakeConfirm(id) {
-    SaleOrderService.makAsConfirm(id)
+    SaleOrderService.markAsConfirm(id)
     .then(() => {
       message.success("Make confirm success");
-      this.setState(preState => {
-        preState.formData.status = Enum.SALE_ORDER_STATUS.CONFIRMED;
-        return preState;
-      });
+      this.getUpdatedData(id);
     })
     .catch(() => message.error("Error!....."));
   }
