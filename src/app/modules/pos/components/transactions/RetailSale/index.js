@@ -282,7 +282,7 @@ export default class Retail extends Component {
       discountType: this.state.initialOrderDiscountType,
       tax: tax.taxRate/100,
       taxDescription: tax,
-      description: "",
+      description: product.name,
       options: [],
       status: this.Enum.ACTIVE
     });
