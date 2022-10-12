@@ -75,8 +75,9 @@ export default {
   },
   QUOTATION_STATUS: {
     DRAFT: 0,
-    PROCESS: 1,
-    CANCELLED: 2
+    SENT: 1,
+    APPROVED: 2,
+    CLOSED: 3
   },
   QUOTATION_STEP_COLOR: {
     DRAFT: "#FAAD14",

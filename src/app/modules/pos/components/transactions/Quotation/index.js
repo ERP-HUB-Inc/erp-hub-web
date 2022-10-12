@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import { Dropdown, Menu, Icon, Tag } from "antd";
 import QuotationA4 from "./QuotationA4";
 import List from "../List";
@@ -28,8 +29,9 @@ export default class QuotationList extends List {
     };
     this.QUOTATION_STATUS_STR = {
       [Enum.QUOTATION_STATUS.DRAFT]: {name: <this.Translate id="text_draft" />, color: "#d9d9d9"},
-      [Enum.QUOTATION_STATUS.PROCESS]: {name: <this.Translate id="text_process" />, color: "#52c41a"},
-      [Enum.QUOTATION_STATUS.CANCELLED]: {name: <this.Translate id="text_cancel" />, color: "#f50"}
+      [Enum.QUOTATION_STATUS.SENT]: {name: <this.Translate id="text_sent" />, color: "#108ee9"},
+      [Enum.QUOTATION_STATUS.APPROVED]: {name: <this.Translate id="text_approved" />, color: "#87d068"},
+      [Enum.QUOTATION_STATUS.CLOSED]: {name: <this.Translate id="text_close" />, color: "#f50"}
     };
     this.columns = [
       {
@@ -43,8 +45,17 @@ export default class QuotationList extends List {
         dataIndex: "status",
         key: "status",
         width: 120,
-        render: status => {
-          return status in this.QUOTATION_STATUS_STR ? <Tag color={this.QUOTATION_STATUS_STR[status].color} style={{width: 100, textAlign: "center", margin: 0}}>{this.QUOTATION_STATUS_STR[status].name}</Tag> : this.emptyText;
+        render: (status, record) => {
+          const quotation_status = {
+            name: this.QUOTATION_STATUS_STR[Number(status)].name,
+            color: this.QUOTATION_STATUS_STR[Number(status)].color
+          };
+
+          if (record.validDate && moment(moment(record.validDate).format("YYYY-MM-DD")).isBefore(moment(moment().format("YYYY-MM-DD")))) {
+            quotation_status.name = <this.Translate id="text_expired" />;
+            quotation_status.color = "#f5222d";
+          }
+          return status in this.QUOTATION_STATUS_STR ? <Tag color={quotation_status.color} style={{width: 100, textAlign: "center", margin: 0}}>{quotation_status.name}</Tag> : this.emptyText;
         }
       },
       {
@@ -179,6 +190,7 @@ export default class QuotationList extends List {
           if(values.key){
             searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
           }
+          console.log("filter", filter);
           this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, ""));
           this.setState({isClickFilter: true});
         }

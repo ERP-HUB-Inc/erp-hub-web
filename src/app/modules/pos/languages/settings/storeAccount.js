@@ -210,6 +210,11 @@ export default {
     "Expired Date"
   ],
 
+  "text_expired": [
+    "Expired",
+    "ផុតកំណត់"
+  ],
+
   "text_plan": [
     "Plan",
     "គំរោង",
