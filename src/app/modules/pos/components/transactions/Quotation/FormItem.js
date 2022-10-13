@@ -160,7 +160,7 @@ class FormItem extends React.PureComponent {
     [Enum.QUOTATION_STATUS.DRAFT]: {name: stringTranslate("text_draft", this.props.locale), color: "#d9d9d9"},
     [Enum.QUOTATION_STATUS.SENT]: {name: stringTranslate("text_sent", this.props.locale), color: "#108ee9"},
     [Enum.QUOTATION_STATUS.APPROVED]: {name: stringTranslate("text_approved", this.props.locale), color: "#87d068"},
-    [Enum.QUOTATION_STATUS.CLOSED]: {name: stringTranslate("text_close", this.props.locale), color: "#f50"}
+    [Enum.QUOTATION_STATUS.CLOSED]: {name: stringTranslate("text_closed", this.props.locale), color: "#f50"}
   };
   util = new Util();
   pageTitle = "text_create_quotation";
@@ -615,7 +615,12 @@ class FormItem extends React.PureComponent {
           message.success("Delete success!");
           history.goBack();
         })
-        .catch(() => message.error("Error!..."));
+        .catch(err => {
+          const error = err.response && err.response.data && err.response.data.error;
+          if (error.message) {
+            this.util.sweetAlertMessageV2("Sorry", error.message, "error");
+          }
+        });
       }
     });
   }
@@ -790,7 +795,7 @@ class FormItem extends React.PureComponent {
     formData.status = Number(formData.status);
     return (
       !this.state.loading && Object.keys(formData).length ?
-      <div>Green
+      <div>
         <PageHeader
           style={{
           backgroundColor: "#f7f7f7",
@@ -803,7 +808,7 @@ class FormItem extends React.PureComponent {
           subTitle={  
             <div>
               <Translate id="text_quotation" />
-              {this.id ? <Badge count={this.QUOTATION_STATUS_STR[formData.status].name} style={{ backgroundColor: this.QUOTATION_STATUS_STR[formData.status].color}} /> : ""}
+              {this.id && formData.status >= 0 ? <Badge count={this.QUOTATION_STATUS_STR[formData.status].name} style={{ backgroundColor: this.QUOTATION_STATUS_STR[formData.status].color}} /> : ""}
             </div>
           }
         />

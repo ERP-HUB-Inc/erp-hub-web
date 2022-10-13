@@ -26,8 +26,9 @@ class Detail extends React.PureComponent {
   }
   QUOTATION_STATUS_STR = {
     [Enum.QUOTATION_STATUS.DRAFT]: {name: stringTranslate("text_draft", this.props.locale), color: "#d9d9d9"},
-    [Enum.QUOTATION_STATUS.PROCESS]: {name: stringTranslate("text_process", this.props.locale), color: "#52c41a"},
-    [Enum.QUOTATION_STATUS.CANCELLED]: {name: stringTranslate("text_cancel", this.props.locale), color: "#f50"}
+    [Enum.QUOTATION_STATUS.SENT]: {name: stringTranslate("text_sent", this.props.locale), color: "#108ee9"},
+    [Enum.QUOTATION_STATUS.APPROVED]: {name: stringTranslate("text_approved", this.props.locale), color: "#87d068"},
+    [Enum.QUOTATION_STATUS.CLOSED]: {name: stringTranslate("text_closed", this.props.locale), color: "#f50"}
   };
   util = new Util();
 

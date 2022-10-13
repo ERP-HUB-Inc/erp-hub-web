@@ -160,12 +160,7 @@ class NewInvoice extends React.PureComponent {
                         disabled={this.action === paramsAction.convertToInvoice ? true : false}
                         inputStyle={{width: "100%"}}
                         style={{width: "100%"}}
-                        handleOnChange={(e) => {
-                            const value = e.target.value;
-                            this.setState(preState => {
-                              preState.transactionEntries[index].description = value;
-                            });
-                        }}
+                        handleOnChange={(e) => this.onChangeDescription(e, index)}
                         form={this.props.form} />
                 </div>;
             }
@@ -306,12 +301,13 @@ class NewInvoice extends React.PureComponent {
                     template: Enum.PAPER_SIZE.EXCLUDE_TAX
                 },
                 transactionEntries: [{
+                    id: "",
                     productVariantId: "",
                     variantName: "",
                     categoryId: "",
                     description: "",
                     unitId: "",
-                    quantity: 1,
+                    quantity: 0,
                     unitName: "",
                     cost: 0,
                     price: 0,
@@ -370,7 +366,7 @@ class NewInvoice extends React.PureComponent {
                 const {formData} = this.state;
                 const subTotal = this.getTotal();
 
-                if (this.id && Number(formData.status) !== Enum.INVOICE_STATUS.DRAFT) {
+                if (this.id && ![Enum.INVOICE_STATUS.DRAFT, Enum.INVOICE_STATUS.PAID].includes(Number(formData.status))) {
                     return this.util.sweetAlertMessageV2("Warning", "Can't update invoice in this step", "warning");
                 }
 
@@ -407,20 +403,22 @@ class NewInvoice extends React.PureComponent {
                 const transactionEntries = [];
                 if (values["description"] && values["description"].length) {
                     values["description"].forEach((description, index) => {
-                        transactionEntries.push({
-                            id: values.id[index],
-                            productVariantId: values.productVariantId[index],
-                            variantName: values.variantName[index],
-                            categoryId: values.categoryId[index],
-                            description,
-                            quantity: values.quantity[index],
-                            unitId: values.unitId[index],
-                            unitName: values.unitName[index],
-                            cost: values.cost[index],
-                            price: values.price[index],
-                            discount: 0,
-                            status: values.status[index]
-                        });
+                        if (description || values.quantity[index]) {
+                            transactionEntries.push({
+                                id: values.id[index],
+                                productVariantId: values.productVariantId[index],
+                                variantName: values.variantName[index],
+                                categoryId: values.categoryId[index],
+                                description,
+                                quantity: values.quantity[index],
+                                unitId: values.unitId[index],
+                                unitName: values.unitName[index],
+                                cost: values.cost[index],
+                                price: values.price[index],
+                                discount: 0,
+                                status: values.status[index]
+                            });
+                        }
                     });
                     invoice["transactionEntries"] = transactionEntries;
                 } else {
@@ -500,13 +498,38 @@ class NewInvoice extends React.PureComponent {
                 this.id = response.data.data.id;
                 this.saleOrderId = "";
                 this.quotationId = "";
-                history.push(`/transactions/update-invoice/${response.data.data.id}`);
+                history.push(`/transactions/update-invoice/${response.data.data.id}?after-created=1`);
                 this.pageTitle = "text_edit_invoice";
                 this.getDetail(this.id);
             })
             .catch(() => message.error("Error"))
             .finally(() => this.setState({saveLoading: false}));
         }
+    }
+
+    onChangeDescription = (e, index) => {
+        const value = e.target.value;
+        const {transactionEntries} = this.state;
+        transactionEntries[index].description = value;
+        const activeEntries = transactionEntries.filter(item => item.status !== 3);
+        if (value && index === (activeEntries.length - 1)) {
+            transactionEntries.push({
+                id: "",
+                productVariantId: "",
+                variantName: "",
+                categoryId: "",
+                description: "",
+                unitId: "",
+                quantity: 0,
+                unitName: "",
+                cost: 0,
+                price: 0,
+                discount: 0,
+                amount: 0,
+                status: 1
+            });
+        }
+        this.setState({transactionEntries});
     }
 
     onChangeQty = (qty, index) => {
@@ -663,6 +686,7 @@ class NewInvoice extends React.PureComponent {
         const formData = this.state.formData;
         if (existingProductList.length === 0) {
             existingProductList.unshift({
+                id: "",
                 productVariantId: productVariant.id,
                 variantName: product.name ? product.name : product.namekm,
                 categoryId: product.productTypeId,
@@ -689,6 +713,7 @@ class NewInvoice extends React.PureComponent {
     
             if (isNotTheSameProduct) {
                 existingProductList.unshift({
+                    id: "",
                     productVariantId: productVariant.id,
                     variantName: product.name ? product.name : product.namekm,
                     categoryId: product.productTypeId,
@@ -715,7 +740,14 @@ class NewInvoice extends React.PureComponent {
         }
         formData.discount = discount;
         this.setState({transactionEntries: existingProductList, formData});
-        this.props.form.setFieldsValue({searchProduct: ""});
+        this.props.form.setFieldsValue({
+            searchProduct: "",
+            [`productVariantId[${0}]`]: existingProductList[0].productVariantId,
+            [`description[${0}]`]: existingProductList[0].description,
+            [`quantity[${0}]`]: existingProductList[0].quantity,
+            [`cost[${0}]`]: existingProductList[0].cost,
+            [`price[${0}]`]: existingProductList[0].price
+        });
         document.getElementById("searchProduct").focus();
     }
 
@@ -910,8 +942,8 @@ class NewInvoice extends React.PureComponent {
     }
 
     handleGoBack = () => {
-        const action = new URLSearchParams(window.location.search).get("action");
-        if (action) {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("action") || params.get("after-created")) {
             history.push("/transactions/invoice");
         } else {
             history.goBack();
@@ -951,7 +983,7 @@ class NewInvoice extends React.PureComponent {
         let vat = this.util.getTaxValue(subTotal - discount, formData.taxRate);
         formData.total = subTotal + vat;
         formData.status = Number(formData.status);
-        
+
         return ( 
             !this.state.loading && Object.keys(formData).length ? 
             <div>
@@ -971,7 +1003,7 @@ class NewInvoice extends React.PureComponent {
                         subTitle={  
                             <div>
                                 <Translate id="text_invoice" />
-                                {this.id ? <Badge count={this.INVOICE_STATUS_STR[formData.status].title} style={{ backgroundColor: this.INVOICE_STATUS_STR[formData.status].color}} /> : ""}
+                                {this.id && formData.status >= 0 ? <Badge count={this.INVOICE_STATUS_STR[formData.status].title} style={{ backgroundColor: this.INVOICE_STATUS_STR[formData.status].color}} /> : ""}
                             </div>
                         }
                     />
@@ -981,7 +1013,7 @@ class NewInvoice extends React.PureComponent {
                             <Form.Item
                                 style={{paddingLeft: 10, position: "relative", ...styles.itemCenter}}
                                 label={<Translate id="text_customer" />}
-                                labelCol={{xs: {span: 20}, sm: {span: 4}}}
+                                labelCol={{xs: {span: 16}, sm: {span: 4}}}
                             >
                                 {
                                     getFieldDecorator("customerId", {

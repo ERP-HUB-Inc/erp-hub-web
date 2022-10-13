@@ -132,12 +132,7 @@ class FormItem extends React.PureComponent {
             data={description}
             inputStyle={{width: "100%"}}
             style={{width: "100%"}}
-            handleOnChange={(e) => {
-              const value = e.target.value;
-              this.setState(preState => {
-                preState.transactionEntries[index].description = value;
-              });
-            }}
+            handleOnChange={(e) => this.onChangeDescription(e, index)}
             form={this.props.form} />
         </div>;
       }
@@ -231,12 +226,13 @@ class FormItem extends React.PureComponent {
           template: Enum.PAPER_SIZE.EXCLUDE_TAX
         };
         preState.transactionEntries = [{
+          id: "",
           productVariantId: "",
           variantName: "",
           categoryId: "",
           description: "",
           unitId: "",
-          quantity: 1,
+          quantity: 0,
           unitName: "",
           cost: 0,
           price: 0,
@@ -335,6 +331,10 @@ class FormItem extends React.PureComponent {
         }
         const {formData} = this.state;
         const subTotal = this.getTotal();
+        if (formData.status === Enum.SALE_ORDER_STATUS.CLOSED) {
+          return this.util.sweetAlertMessageV2("Sorry", "Can't update closed sale order", "warning");
+        }
+
         if (formData.discount > subTotal) {
           this.textDiscountErr = "Discount amount must be less than total amount";
           return;
@@ -363,20 +363,22 @@ class FormItem extends React.PureComponent {
         const transactionEntries = [];
         if (values["description"] && values["description"].length) {
           values["description"].forEach((description, index) => {
-            transactionEntries.push({
-              id: values.id[index],
-              productVariantId: values.productVariantId[index],
-              variantName: values.variantName[index],
-              categoryId: values.categoryId[index],
-              description,
-              quantity: values.quantity[index],
-              unitId: values.unitId[index],
-              unitName: values.unitName[index],
-              cost: values.cost[index],
-              price: values.price[index],
-              discount: 0,
-              status: values.status[index]
-            });
+            if (description || values.quantity[index]) {
+              transactionEntries.push({
+                id: values.id[index],
+                productVariantId: values.productVariantId[index],
+                variantName: values.variantName[index],
+                categoryId: values.categoryId[index],
+                description,
+                quantity: values.quantity[index],
+                unitId: values.unitId[index],
+                unitName: values.unitName[index],
+                cost: values.cost[index],
+                price: values.price[index],
+                discount: 0,
+                status: values.status[index]
+              });
+            }
           });
           saleOrder["transactionEntries"] = transactionEntries;
         } else {
@@ -414,13 +416,38 @@ class FormItem extends React.PureComponent {
           timer: 1500
         });
         this.id = response.data.data.id;
-        history.push(`/transactions/sale-order/update/${this.id}`);
+        history.push(`/transactions/sale-order/update/${this.id}?after-created=1`);
         this.pageTitle = "text_edit_sale_order";
         this.getUpdatedData(this.id);
       })
       .catch(() => message.error("Error"))
       .finally(() => this.setState({saveLoading: false}));
     }
+  }
+
+  onChangeDescription = (e, index) => {
+    const value = e.target.value;
+    const {transactionEntries} = this.state;
+    transactionEntries[index].description = value;
+    const activeEntries = transactionEntries.filter(item => item.status !== 3);
+    if (value && index === (activeEntries.length - 1)) {
+      transactionEntries.push({
+        id: "",
+        productVariantId: "",
+        variantName: "",
+        categoryId: "",
+        description: "",
+        unitId: "",
+        quantity: 0,
+        unitName: "",
+        cost: 0,
+        price: 0,
+        discount: 0,
+        amount: 0,
+        status: 1
+      });
+    }
+    this.setState({transactionEntries});
   }
 
   onChangeQty = (qty, index) => {
@@ -535,6 +562,7 @@ class FormItem extends React.PureComponent {
     const formData = this.state.formData;
     if (existingProductList.length === 0) {
       existingProductList.unshift({
+        id: "",
         productVariantId: productVariant.id,
         variantName: product.name ? product.name : product.namekm,
         categoryId: product.productTypeId,
@@ -561,6 +589,7 @@ class FormItem extends React.PureComponent {
 
       if (isNotTheSameProduct) {
         existingProductList.unshift({
+          id: "",
           productVariantId: productVariant.id,
           variantName: product.name ? product.name : product.namekm,
           categoryId: product.productTypeId,
@@ -588,7 +617,16 @@ class FormItem extends React.PureComponent {
     formData.discount = discount;
 
     this.setState({transactionEntries: existingProductList, formData});
-    this.props.form.setFieldsValue({searchProduct: ""});
+    formData.discount = discount;
+    this.setState({transactionEntries: existingProductList, formData});
+    this.props.form.setFieldsValue({
+      searchProduct: "",
+      [`productVariantId[${0}]`]: existingProductList[0].productVariantId,
+      [`description[${0}]`]: existingProductList[0].description,
+      [`quantity[${0}]`]: existingProductList[0].quantity,
+      [`cost[${0}]`]: existingProductList[0].cost,
+      [`price[${0}]`]: existingProductList[0].price
+    });
     document.getElementById("searchProduct").focus();
   }
 
@@ -612,12 +650,12 @@ class FormItem extends React.PureComponent {
     } else {
       transactionEntries.splice(index, 1);
       let discount = this.props.form.getFieldValue("discountField");
-        let type = this.props.form.getFieldValue("discountType");
-        if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-          let total = this.getTotal();
-          discount = this.util.getValueFromPercentage(total, discount);
-        }
-        formData.discount = discount;
+      let type = this.props.form.getFieldValue("discountType");
+      if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+        let total = this.getTotal();
+        discount = this.util.getValueFromPercentage(total, discount);
+      }
+      formData.discount = discount;
       this.setState({transactionEntries, formData, productSearch: []});
     }
   }
@@ -689,8 +727,8 @@ class FormItem extends React.PureComponent {
   }
 
   handleGoBack = () => {
-    const action = new URLSearchParams(window.location.search).get("action");
-    if (action) {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("action") || params.get("after-created")) {
       history.push("/transactions/sales-order");
     } else {
       history.goBack();
@@ -806,7 +844,7 @@ class FormItem extends React.PureComponent {
           subTitle={  
             <div>
               <Translate id="text_sale_order" />
-              {this.id ? <Badge count={this.SALE_ORDER_STATUS_STR[formData.status].title} style={{ backgroundColor: this.SALE_ORDER_STATUS_STR[formData.status].color}} /> : ""}
+              {this.id && formData.status >= 0 ? <Badge count={this.SALE_ORDER_STATUS_STR[formData.status].title} style={{ backgroundColor: this.SALE_ORDER_STATUS_STR[formData.status].color}} /> : ""}
             </div>
           }
         />
