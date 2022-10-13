@@ -143,7 +143,7 @@ class InvoiceDetail extends React.PureComponent {
             <div>
               {formData.invoiceNumber}
               {
-                Object.keys(formData).length && formData.status ?
+                Object.keys(formData).length && formData.status >= 0 ?
                   <Badge count={this.INVOICE_STATUS_STR[formData.status].title} style={{ backgroundColor: this.INVOICE_STATUS_STR[formData.status].color}} />
                 : null
               }

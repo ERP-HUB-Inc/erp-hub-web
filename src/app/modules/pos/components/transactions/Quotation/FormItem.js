@@ -759,8 +759,6 @@ class FormItem extends React.PureComponent {
     formData.invoiceDate = formData.quotationDate;
     formData.dueDate = formData.validDate;
     formData.invoiceNumber = formData.number;
-    formData.company = formData.customer && formData.customer.company;
-    formData.address = formData.customer && formData.customer.address;
     return <div id="wrap-invoice-form">
       <CAInvoice 
         invoiceTitle="Quotation"
