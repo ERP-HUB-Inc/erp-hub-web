@@ -109,6 +109,14 @@ class InvoiceService extends BaseService {
       headers: this.header
     });
   }
+
+  delete(id) {
+    this.setHeader();
+    return this.DELETE({
+      url: `${this.baseUrl}/${id}`,
+      headers: this.header
+    });
+  }
 }
 
 export default new InvoiceService();
