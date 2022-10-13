@@ -79,8 +79,7 @@ class Detail extends React.PureComponent {
     formData.invoiceDate = formData.quotationDate;
     formData.dueDate = formData.validDate;
     formData.invoiceNumber = formData.number;
-    formData.company = formData.customer && formData.customer.company;
-    formData.address = formData.customer && formData.customer.address;
+    formData.status = Number(formData.status);
 
     return (
       <div style={{marginBottom: 25}}>
@@ -97,7 +96,7 @@ class Detail extends React.PureComponent {
             <div>
               {formData.number}
               {
-                Object.keys(formData).length && formData.status ?
+                Object.keys(formData).length && formData.status >= 0 ?
                   <Badge count={this.QUOTATION_STATUS_STR[formData.status].name} style={{ backgroundColor: this.QUOTATION_STATUS_STR[formData.status].color}} />
                 : null
               }
