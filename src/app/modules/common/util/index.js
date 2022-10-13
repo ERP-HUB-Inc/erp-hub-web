@@ -220,7 +220,6 @@ export default class Util {
     //window.location.host is subdomain.domain.com
     const parts = full.split(".");
     let sub = parts[0];
-    sub = "ca";
     let domain = parts[1];
     const type = parts[2];
     if (type != null) {
