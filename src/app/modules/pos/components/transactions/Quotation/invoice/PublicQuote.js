@@ -38,7 +38,7 @@ export default function QuotePreview() {
       <React.Fragment>
         <div id="header-print-preview" style={{display: "flex", justifyContent: "space-between", padding: 15}}>
           <h4 style={{margin: 0}}>{formData.invoiceNumber}</h4>
-          <Button type="primary" onClick={() => window.print()}>{"Download Invoice"}</Button>
+          <Button type="primary" onClick={() => window.print()}>{"Download"}</Button>
         </div>
         <div style={{width: "250mm", margin: "auto", background: "#FFFFFF", padding: 40, minHeight: "297mm"}}>
           {Number(template) === Enum.PAPER_SIZE.INCLUDE_TAX ?
