@@ -1179,29 +1179,26 @@ class NewInvoice extends React.PureComponent {
                         </Col>
                         <Col md={8} style={{lineHeight: "30px", paddingRight: 25}}>
                             <div style={styles.itemSummary}>
-                                <div style={{width: 100}}><Translate id="text_sub_total" /></div>
+                                <div><Translate id="text_sub_total" /></div>
                                 <div>:</div>
                                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.totalExcludeTax)}</div>
                             </div>
                             <div style={styles.itemSummary}>
-                                <div style={{width: 100}}><Translate id="text_discount" /></div>
+                                <div><Translate id="text_discount" />:</div>
                                 <InputNumber
                                     name="discount"
                                     data={discount}
                                     style={{display: "none"}}
                                     form={this.props.form}
                                 />
-                                <div>:</div>
                                 <div style={{width: 100, textAlign: "right", color: "red"}}>-{this.util.formatCurrency(discount)}</div>
                             </div>
                             <div style={styles.itemSummary}>
-                                <div style={{width: 100}}>VAT({formData.taxRate}%)</div>
-                                <div>:</div>
+                                <div><Translate id="text_vat" />({formData.taxRate}%):</div>
                                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(vat)}</div>
                             </div>
                             <div style={styles.itemSummary}>
-                                <div style={{width: 100}}><Translate id="text_grand_total" /></div>
-                                <div>:</div>
+                                <div><Translate id="text_grand_total" />:</div>
                                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.total - discount)}</div>
                                 <InputNumber 
                                     name="total"
