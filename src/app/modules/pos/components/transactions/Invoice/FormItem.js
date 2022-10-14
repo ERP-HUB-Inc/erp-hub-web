@@ -1269,7 +1269,7 @@ class NewInvoice extends React.PureComponent {
                                                 <Translate id="text_void" />
                                             </Menu.Item>
                                             : null
-                                        }
+                                        } 
                                     </Menu>
                                 )}
                                 trigger={["click"]}

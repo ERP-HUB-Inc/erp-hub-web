@@ -75,20 +75,32 @@ const ReceiptTemplate = React.forwardRef((props, ref) => {
   function getProductOrderList(data) {
     let productOrderList = [];
     if (util.isValidCollectionInObj(data, "transactionEntries")) {
-      data.transactionEntries.forEach(transactionEntry => {
-        if (transactionEntry.productVariant && transactionEntry.productVariant.product) {
-          const productVariant = transactionEntry.productVariant;
+      data.transactionEntries.forEach(entry => {
+        if (entry.productVariant && entry.productVariant.product) {
+          const productVariant = entry.productVariant;
           const tax = POSUtil.getTaxFromProduct(productVariant.product);
           productOrderList.push({
-            quantity: transactionEntry.quantity,
+            quantity: entry.quantity,
             name: productVariant.product.name,
             namekm: productVariant.product.namekm,
             variantName: productVariant.product.productOption === InventoryEnum.PRODUCT_VARIANT ? productVariant.name : "",
             tax: tax.taxRate/100,
             taxDescription: tax,
-            price: transactionEntry.price,
-            discount: transactionEntry.discount,
-            newPrice: transactionEntry.price
+            price: entry.price,
+            discount: entry.discount,
+            newPrice: entry.price
+          });
+        } else {
+          productOrderList.push({
+            quantity: entry.quantity,
+            name: entry.description,
+            namekm: "",
+            variantName: "",
+            tax: 0,
+            taxDescription: "",
+            price: entry.price,
+            discount: entry.discount,
+            newPrice: entry.price
           });
         }
       });
