@@ -1,5 +1,5 @@
 import React from "react";
-import moment from "moment";
+import { Card } from "antd";
 import PrintSummary from "./PrintSummary";
 import List from "../List";
 import Enum from "../../../enums";
@@ -9,6 +9,7 @@ import OpenSaleRegistrationAction from "../../../action/transaction/openSalaRegi
 import TransactionAction from "../../../action/transaction/transaction";
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
 import ConstantPaymentMethod from "../../../../pos/constants/settings/paymentMethod";
+import OpenSaleRegistrationService from "../../../../pos/services/transactions/OpenSaleRegistrationService";
 
 export default class OpenSaleRegistrationList extends List {
   constructor(props) {
@@ -16,6 +17,7 @@ export default class OpenSaleRegistrationList extends List {
     this.state = {
       ...this.state,
       summaryList: [],
+      summaryProducts: [],
       totalSummary: {
         expected: 0,
         count: 0,
@@ -78,6 +80,47 @@ export default class OpenSaleRegistrationList extends List {
           }
           return <this.Tag color={this.colorDifferenceStatus[colorIndex]} style={{marginRight: 0}} className="text-center label-stock-status">{this.Util.formatCurrency(record.difference, "")}</this.Tag>;
         }
+      }
+    ];
+    this.productColumns = [
+      {
+        title: <this.Translate id="text_no" />,
+        dataIndex: "index",
+        key: "index",
+        render: (id,record,index) => index + 1
+      },
+      {
+        title: <this.Translate id="text_product_name" />,
+        dataIndex: "product",
+        key: "product"
+      },
+      {
+        title: <this.Translate id="text_barcode" />,
+        dataIndex: "barcode",
+        key: "barcode",
+        width: 150,
+        align: "right"
+      },
+      {
+        title: <this.Translate id="text_quantity"/>,
+        dataIndex: "quantity",
+        key: "quantity",
+        width: 150,
+        align: "right"
+      },
+      {
+        title: <span><this.Translate id="text_price" /> ($)</span>,
+        dataIndex: "price",
+        key: "price",
+        width: 150,
+        align: "right"
+      },
+      {
+        title: <span><this.Translate id="text_amount" /> ($)</span>,
+        dataIndex: "amount",
+        key: "amount",
+        width: 150,
+        align: "right"
       }
     ];
     this.hasDidUpdate = false;
@@ -192,6 +235,9 @@ export default class OpenSaleRegistrationList extends List {
     this.props.dispatch(this.action.last());
     this.props.dispatch(PaymentMethodAction.reset(ConstantPaymentMethod.RESET_PARTIAL_PAYMENT_METHOD));
     this.props.dispatch(PaymentMethodAction.fetch(100, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
+    OpenSaleRegistrationService.summarySoldProducts().then(({data})=>{
+      this.setState({summaryProducts: data.data});
+    });
   }
 
   calculateTotalSummary(summaryList) {
@@ -352,43 +398,68 @@ export default class OpenSaleRegistrationList extends List {
     ];
   }
 
+render() {
+  return (
+      <div className={{paddingBottom : "50px", marginBottom : "50px"}}>
+        {super.render()}
+        <this.Row>
+          <this.Col md={12}  style={{marginBottom: "20px"}}>
+            <Card title="Summary Sold Products"  extra={<this.Button><this.Translate id="text_print"/></this.Button>} >
+              <this.Table
+                  rowKey="paymentMethodId"
+                  dataSource={this.state.summaryProducts}
+                  columns={this.productColumns}
+                  locale={{emptyText: <this.Translate id="table_empty_data"/>}}
+                  loading={this.props.paymentMethodList.fetching}
+              />
+            </Card>
+          </this.Col>
+        </this.Row>
+      </div>
+  );
+}
+
   renderTable() {
     return (
-      <this.Form onSubmit={this.handleCloseTodaySale}>
-        <this.Table
-          rowKey="paymentMethodId"
-          dataSource={this.state.summaryList}
-          columns={this.columns}
-          locale={{emptyText: <this.Translate id="table_empty_data"/>}}
-          loading={this.props.paymentMethodList.fetching}
-          footer={() => <div className="wrap-table-footer">
-            <div className="text-uppercase pull-left">
-              <this.Translate id="text_total" />:
-            </div>
-            <div className="item pull-left" style={{width: 150}}>
-              {this.Util.formatCurrency(this.state.totalSummary.expected, "")}
-            </div>
-            <div className="item pull-left" style={{width: 150}}>
-              {this.Util.formatCurrency(this.state.totalSummary.count, "")}
-            </div>
-            <div className="item pull-left" style={{width: 150}}>
-              <this.Tag color={this.colorDifferenceStatus[this.state.totalSummary.difference < 0 ? 1 : 0]} className="text-center label-stock-status" style={{marginRight: 0}}>
-                {this.Util.formatCurrency(this.state.totalSummary.difference, "")}
-              </this.Tag>
-            </div>
-            <div style={{clear: "both"}}></div>
-          </div>} />
-        {
-          !this.isOpenSaleRegistrationClosed() ?
-            <div style={{marginTop: 15}}>
-              <this.Button htmlType="submit" loading={this.props.close.updating} type="info" className="pull-right">
-                <span className="icon-completed icon-padding-right text-uppercase"></span>
-                <this.Translate id="text_close_register"/>
-              </this.Button>
-            </div>
-            :
-            ""
-        }
-      </this.Form>);
+      <>
+        <this.Form onSubmit={this.handleCloseTodaySale}>
+          <this.Table
+            rowKey="paymentMethodId"
+            dataSource={this.state.summaryList}
+            columns={this.columns}
+            locale={{emptyText: <this.Translate id="table_empty_data"/>}}
+            loading={this.props.paymentMethodList.fetching}
+            footer={() => <div className="wrap-table-footer">
+              <div className="text-uppercase pull-left">
+                <this.Translate id="text_total" />:
+              </div>
+              <div className="item pull-left" style={{width: 150}}>
+                {this.Util.formatCurrency(this.state.totalSummary.expected, "")}
+              </div>
+              <div className="item pull-left" style={{width: 150}}>
+                {this.Util.formatCurrency(this.state.totalSummary.count, "")}
+              </div>
+              <div className="item pull-left" style={{width: 150}}>
+                <this.Tag color={this.colorDifferenceStatus[this.state.totalSummary.difference < 0 ? 1 : 0]} className="text-center label-stock-status" style={{marginRight: 0}}>
+                  {this.Util.formatCurrency(this.state.totalSummary.difference, "")}
+                </this.Tag>
+              </div>
+              <div style={{clear: "both"}}></div>
+            </div>} />
+          {
+            !this.isOpenSaleRegistrationClosed() ?
+              <div style={{marginTop: 15}}>
+                <this.Button htmlType="submit" loading={this.props.close.updating} type="info" className="pull-right">
+                  <span className="icon-completed icon-padding-right text-uppercase"></span>
+                  <this.Translate id="text_close_register"/>
+                </this.Button>
+              </div>
+              :
+              ""
+          }
+        </this.Form>
+
+      </>
+    );
   }
 }
