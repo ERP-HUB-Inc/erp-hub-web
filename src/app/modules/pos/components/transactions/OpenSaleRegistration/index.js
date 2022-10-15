@@ -1,6 +1,7 @@
 import React from "react";
 import { Card } from "antd";
 import moment from "moment";
+import "./index.css";
 import PrintSummary from "./PrintSummary";
 import List from "../List";
 import Enum from "../../../enums";
@@ -17,6 +18,7 @@ export default class OpenSaleRegistrationList extends List {
     super(props);
     this.state = {
       ...this.state,
+      productListIsLoading: true,
       summaryList: [],
       summaryProducts: [],
       totalSummary: {
@@ -103,7 +105,7 @@ export default class OpenSaleRegistrationList extends List {
         align: "right"
       },
       {
-        title: <this.Translate id="text_quantity"/>,
+        title: <this.Translate id="text_sold_quantity"/>,
         dataIndex: "quantity",
         key: "quantity",
         width: 150,
@@ -237,7 +239,7 @@ export default class OpenSaleRegistrationList extends List {
     this.props.dispatch(PaymentMethodAction.reset(ConstantPaymentMethod.RESET_PARTIAL_PAYMENT_METHOD));
     this.props.dispatch(PaymentMethodAction.fetch(100, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
     OpenSaleRegistrationService.summarySoldProducts().then(({data})=>{
-      this.setState({summaryProducts: data.data});
+      this.setState({productListIsLoading: false, summaryProducts: data.data});
     });
   }
 
@@ -405,13 +407,13 @@ render() {
         {super.render()}
         <this.Row>
           <this.Col md={12}  style={{marginBottom: "20px"}}>
-            <Card title="Summary Sold Products"  extra={<this.Button><this.Translate id="text_print"/></this.Button>} >
+            <Card id="product-list" title={<this.Translate id="text_summary_sold_product"/>}  extra={<this.Button id="btn_print" onClick={()=> window.print()}><this.Translate id="text_print"/></this.Button>} >
               <this.Table
-                  rowKey="paymentMethodId"
+                  rowKey="id"
                   dataSource={this.state.summaryProducts}
                   columns={this.productColumns}
                   locale={{emptyText: <this.Translate id="table_empty_data"/>}}
-                  loading={this.props.paymentMethodList.fetching}
+                  loading={this.state.productListIsLoading}
               />
             </Card>
           </this.Col>

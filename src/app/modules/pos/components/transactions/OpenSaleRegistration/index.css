@@ -1,0 +1,18 @@
+@media print {
+    .content-list, #btn_print{
+        display: none;
+    }
+
+}
+
+@page {
+    margin: 3em;
+}
+
+#product-list .ant-card-body{
+    padding: 15px !important;
+}
+
+#product-list  .ant-table-content{
+    margin-top: 0 !important;
+}

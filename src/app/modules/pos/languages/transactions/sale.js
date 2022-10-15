@@ -137,6 +137,16 @@ export default {
     "Last sale registration summary"
   ],
 
+  "text_sold_quantity": [
+    "Sold Quantity",
+    "បរិមាណលក់ចេញ"
+  ],
+
+  "text_summary_sold_product": [
+    "Summary Sold Products",
+    "សង្ខេបទំនិញបានលក់ចេញ"
+  ],
+
   "text_cashier": [
     "Cashier",
     "អ្នកគិតលុយ",
