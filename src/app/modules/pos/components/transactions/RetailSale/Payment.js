@@ -665,6 +665,7 @@ export default class Payment extends Modal {
                                 type="info"
                                 className={index2 === 0 && paymentMethodListChild.length > 1 ? "mg-right" : ""}
                                 width="308px"
+                                htmlType="submit"
                                 loading={this.state.loadingSubmit}
                               >
                                 <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
