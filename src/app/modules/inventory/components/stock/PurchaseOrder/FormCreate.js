@@ -162,6 +162,7 @@ export default class FormCreate extends Component {
     } = this.props;
 
     return <div style={{marginBottom: 25, height: "100%"}}>
+      <Form autoComplete="off" onSubmit={this.handleSubmit}>
       <PageHeader
         style={{
             backgroundColor: "#f7f7f7",
@@ -171,9 +172,12 @@ export default class FormCreate extends Component {
         onBack={() => history.goBack()}
         title={<this.Translate id="text_po" />}
         subTitle={<this.Translate id="text_po" />}
-        extra={[]}
+        extra={[
+          <this.Button key="1" htmlType="submit" loading={purchaseOrderAdd.adding} className="info" style={{marginLeft: 15}} id="btnSubmit">
+              <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />(Ctrl+s)
+            </this.Button>
+        ]}
       />
-      <Form autoComplete="off" onSubmit={this.handleSubmit} style={{height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
           <FormItem 
               form={form} 
               supplier={supplier}
@@ -186,14 +190,6 @@ export default class FormCreate extends Component {
               productReOrderPointList={this.props.productReOrderPointList}
               dispatch={dispatch} 
               locale={locale} />
-          <this.Row style={{justifyContent: "center", marginTop: 25, marginBottom: 25}}>
-            <this.Button className="danger" onClick={this.handleCancel}>
-              <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_back" />
-            </this.Button>  
-            <this.Button htmlType="submit" loading={purchaseOrderAdd.adding} className="info" style={{marginLeft: 15}} id="btnSubmit">
-              <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />(Ctrl+s)
-            </this.Button>
-          </this.Row>
       </Form>
     </div>;
   }

@@ -84,23 +84,6 @@ export default class FormItem extends Modal {
     return (
       <this.Row id="purchase-order-form">
         <this.Col md="4">
-          <this.InputText
-            name="name"
-            label={<this.Translate id="text_description" />}
-            data={formData.name}
-            placeholder={this.CATranslate("text_description", locale)}
-            errorRequired={<this.Translate id="error_require_name" />}
-            required={true}
-            isAutoFocus={true}
-            max={100}
-            form={form} />
-          <this.InputText
-            name="number"
-            label={<this.Translate id="input_stock_purchase_order_number" />}
-            data={formData.number}
-            placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
-            errorRequired={<this.Translate id="error_require_po_number" />}
-            form={form} />
           <this.Select
             name="supplierId"
             label={<this.Translate id="text_supplier" /> }
@@ -110,6 +93,13 @@ export default class FormItem extends Modal {
             dataSource={this.props.supplier.list}
             valueKey="id"
             required={true}
+            form={form} />
+          <this.InputText
+            name="number"
+            label={<this.Translate id="input_stock_purchase_order_number" />}
+            data={formData.number}
+            placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
+            errorRequired={<this.Translate id="error_require_po_number" />}
             form={form} />
           <this.InputText
             name="invoiceNo"
