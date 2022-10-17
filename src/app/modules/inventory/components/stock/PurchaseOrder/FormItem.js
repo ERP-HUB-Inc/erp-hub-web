@@ -6,6 +6,7 @@ import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
 import SupplierAction from "../../../actions/stock/supplier";
 import UnitAction from "../../../actions/products/productsUnit";
 import Modal from "../../../../common/components/shares/Modal";
+import moment from "moment";
 
 export default class FormItem extends Modal {
   constructor(props) {
@@ -134,6 +135,41 @@ export default class FormItem extends Modal {
                 }
               ]}
               form={form} />
+          <this.Row>
+            <this.Col md="7">
+              <this.InputNumber
+                  name="payTermNumber"
+                  label={<this.Translate id="text_payment_terms" />}
+                  placeholder={this.CATranslate("text_payment_terms", locale)}
+                  data={formData.payTermNumber}
+                  precision={0}
+                  form={form} />
+            </this.Col>
+            <this.Col md="5"  id="payment-term" style={{paddingLeft: "0"}}>
+              <this.Select
+                  name="payTermType"
+                  label={<this.Translate id="text_payment_terms" />}
+                  placeholder={this.CATranslate("text_please_select", locale)}
+                  defaultValue={formData.payTermType}
+                  dataSource={[
+                    {
+                      name: <this.Translate id="text_day" />,
+                      value: Enum.PAYMENT_TERM_TYPE.DAY
+                    },
+                    {
+                      name: <this.Translate id="text_month" />,
+                      value: Enum.PAYMENT_TERM_TYPE.MONTH
+                    }
+                  ]}
+                  form={form} />
+              </this.Col>
+          </this.Row>
+          <this.DatePickers
+            name="paymentDueDate"
+            label={<this.Translate id="text_payment_due_date"/>}
+            defaultValue={formData.paymentDueDate ? moment(formData.paymentDueDate) : ""}
+            form={form}
+          />
           <this.Row className="ca-penel-v1 wrap-po-filter-create hidden">
           </this.Row>
         </this.Col>
@@ -158,7 +194,10 @@ FormItem.defaultProps = {
   formData: {
     name:"",
     supplierid:"",
-    POEntries: []
+    POEntries: [],
+    payTermType: "",
+    payTermNumber: "",
+    payDueDate: ""
   },
   productSearch: []
 };

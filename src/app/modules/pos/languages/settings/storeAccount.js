@@ -299,6 +299,11 @@ export default {
     "Payment Condition"
   ],
 
+  "text_payment_terms": [
+    "Payment Term",
+    "រយៈពេលទូទាត់ប្រាក់"
+  ],
+
   "text_new_device_success": [
     "Device has renew successfully",
     "លេខឧបករណ៍បានបង្កើរឡើងវិញ",
