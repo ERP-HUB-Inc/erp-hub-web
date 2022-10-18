@@ -265,6 +265,11 @@ export default {
     "លេខរៀងផលិតផល"
   ],
 
+  "text_serial_no": [
+    "Serial Number",
+    "លេខ​សម្គាល់ផលិតផល"
+  ],
+
   "text_non_inventory": [
     "Non-Inventory",
     "ទំនិញគ្មានស្តុក"

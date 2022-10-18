@@ -15,7 +15,8 @@ import {
     Dropdown,
     Menu,
     Drawer,
-    Badge
+    Badge,
+    Modal
 } from "antd";
 import { Translate } from "react-localize-redux";
 import { connect } from "react-redux";
@@ -33,6 +34,7 @@ import {
     Button,
     InputTextArea
 } from "../../../../common/elements/ant-ui";
+import { IconKeyboard } from "../../../../common/elements/IconKeyboard";
 import "./formItem.css";
 import Enum from "../../../enums/index";
 import EnumProduct from "../../../../inventory/enums";
@@ -44,6 +46,7 @@ import CustomerAction from "../../../../crm/actions/customers/customer";
 import CustomerConstant from "../../../../crm/constants/customers/customer";
 import InvoiceService from "../../../services/transactions/InvoiceService";
 import QuotationService from "../../../services/transactions/QuotationService";
+import SerialService from "../../../services/transactions/SerialService";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import SearchProductDropdown from "./SearchProduct";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
@@ -84,7 +87,8 @@ class NewInvoice extends React.PureComponent {
         saveLoading: false,
         showDrawer: false,
         selectedProduct: null,
-        modalVariant: null
+        modalVariant: null,
+        isShowModal: false
     }
     action = new URLSearchParams(window.location.search).get("action");
     entryColumn = [
@@ -149,6 +153,10 @@ class NewInvoice extends React.PureComponent {
             className: "entry-column-note",
             width: 600,
             render: (description, record, index) => {
+                let serials = [];
+                if (record.serialNo) {
+                    serials = record.serialNo.toString().split(",");
+                }
                 return <div>
                     <InputText 
                         style={{display: "none"}}
@@ -163,6 +171,44 @@ class NewInvoice extends React.PureComponent {
                         style={{width: "100%"}}
                         handleOnChange={(e) => this.onChangeDescription(e, index)}
                         form={this.props.form} />
+                    
+                    {
+                        record.enableDescription || serials.length ? <div style={{position: "relative"}}>
+                            <Form.Item 
+                                style={{width: "100%", marginTop: 5, textAlign: "left"}} 
+                                wrapperCol={{sm: {span: 24}, xs: {span: 24}}}
+                                labelAlign="left"
+                                label="IMEI OR SERIAL"
+                            >
+                            {
+                                this.props.form.getFieldDecorator(`serialNo[${index}]`, {
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: stringTranslate("error_serial_number_require", this.props.locale)
+                                        },
+                                        {
+                                            validator: (rule, value, callback) => this.validateSerialNo(value, callback, index)
+                                        }
+                                    ],
+                                    initialValue: serials
+                                })(
+                                    <Select mode="tags" 
+                                        style={{width: "100%"}}
+                                        placeholder="serialNo1, serialNo2, ...."
+                                        dropdownStyle={{display: "none"}}
+                                        onChange={(value) => this.handleChangeSerialNo(value, index)}
+                                    />
+                                )
+                            }
+                            </Form.Item>
+                            <div style={{display: "flex", position: "absolute", right: 5, top: 28, color: "#5656", fontSize: 18}}>
+                                <IconKeyboard style={{opacity: 0.3, marginRight: 5, cursor: "pointer"}} onClick={() => this.handelFocus(`serialNo[${index}]`)} />
+                                <div style={{cursor: "pointer"}} className="icon-scaner icon-clear" onClick={() => this.handelFocus(`serialNo[${index}]`)} />
+                            </div>
+                        </div> : null
+                    }
+                    
                 </div>;
             }
         },
@@ -414,6 +460,7 @@ class NewInvoice extends React.PureComponent {
                                 categoryId: values.categoryId[index],
                                 description,
                                 quantity: values.quantity[index],
+                                serialNo: values.serialNo[index] ? values.serialNo[index].toString() : "",
                                 unitId: values.unitId[index],
                                 unitName: values.unitName[index],
                                 cost: values.cost[index],
@@ -535,8 +582,48 @@ class NewInvoice extends React.PureComponent {
         this.setState({transactionEntries});
     }
 
+    handleChangeSerialNo = (serials, index) => {
+        if (serials && serials.length) {
+            const serialNo = serials[serials.length - 1];
+            SerialService.findByNumber(serialNo)
+            .then(response => {
+                if (response.data && response.data.length) {
+                    serials.pop();
+                    this.props.form.setFields({
+                        [`serialNo[${index}]`]: {
+                            value: serials,
+                            errors: [new Error(serialNo + ": " + stringTranslate("text_this_serial_is_sold", this.props.locale))]
+                        }
+                    });
+                }
+            })
+            .catch(err => console.log("error", err.response));
+        }
+    }
+
+    validateSerialNo(value, callback, index) {
+        let qty = this.props.form.getFieldValue(`quantity[${index}]`);
+        if (value && value.length !== Number(qty)) {
+            callback(stringTranslate("text_serial_number_must_equal_quantity", this.props.locale));
+        }
+
+        callback();
+    }
+
     onChangeQty = (qty, index) => {
         if (!qty || qty < 0) qty = 0;
+        const serialNos = this.props.form.getFieldValue(`serialNo[${index}]`);
+        if (serialNos && serialNos.length) {
+            if (qty < serialNos.length) {
+                this.setState({isShowModal: true}, () => {
+                    this.props.form.setFieldsValue({
+                        serialNameField: `serialNo[${index}]`
+                    });
+                });
+            }
+            this.props.form.validateFields([`serialNo[${index}]`]);
+        }
+
         this.setState(preState => {
             const price = preState.transactionEntries[index].price;
             let amount = (qty * price);
@@ -574,6 +661,19 @@ class NewInvoice extends React.PureComponent {
         });
     }
 
+    handleRemoveSerialsNo = () => {
+        const removeSerials = this.props.form.getFieldValue("removeSerials");
+        const serialNameField = this.props.form.getFieldValue("serialNameField");
+
+        const serialsNo = this.props.form.getFieldValue(serialNameField);
+        
+        const newSerials = serialsNo.filter(serial => !removeSerials.includes(serial));
+        if (newSerials) {
+            this.props.form.setFieldsValue({[`${serialNameField}`]: newSerials});
+            this.setState({isShowModal: false});
+        }
+    }
+
     onChangeTotalDiscount = (discount) => {
         this.textDiscountErr = "";
         this.setState(preState => {
@@ -609,6 +709,10 @@ class NewInvoice extends React.PureComponent {
                 return preState;
             });
         }
+    }
+
+    handelFocus(fieldName) {
+        
     }
 
     onChangeTemplate = (value) => {
@@ -701,7 +805,8 @@ class NewInvoice extends React.PureComponent {
                 price: productVariant.price,
                 discount: 0,
                 amount: (productVariant.price * 1),
-                status: 1
+                status: 1,
+                enableDescription: product.enableDescription
             });
         } else {
             let isNotTheSameProduct = true;
@@ -728,7 +833,8 @@ class NewInvoice extends React.PureComponent {
                     price: productVariant.price,
                     discount: 0,
                     amount: (productVariant.price * 1),
-                    status: 1
+                    status: 1,
+                    enableDescription: product.enableDescription
                 });
             }
         }
@@ -1317,6 +1423,47 @@ class NewInvoice extends React.PureComponent {
                 {this.renderPreviewInvoice(formData)}
                 {this.state.customerForm}
                 {this.state.modalVariant}
+                {
+                    this.state.isShowModal ?
+                    <Modal
+                        title={`${stringTranslate("text_remove", this.props.locale)} ${stringTranslate("text_serial_no", this.props.locale)}`}
+                        visible={this.state.isShowModal}
+                        onCancel={() => this.setState({isShowModal: false})}
+                        footer={null}
+                    >
+                        <div style={{position: "relative"}}>
+                            <Form.Item
+                                label={<Translate id="text_input_serial_for_remove" />}
+                                style={{width: "100%"}} 
+                                wrapperCol={{sm: {span: 24}, xs: {span: 24}}}>
+                                {
+                                    this.props.form.getFieldDecorator("removeSerials", {
+                                    })(
+                                        <Select mode="tags" 
+                                            style={{width: "100%"}}
+                                            placeholder="SerialNo1, SerialNo2, ...."
+                                            dropdownStyle={{display: "none"}}
+                                        />
+                                    )
+                                }
+                            </Form.Item>
+                            <div style={{display: "flex", position: "absolute", right: 5, top: 33, color: "#5656", fontSize: 18}}>
+                                <IconKeyboard style={{opacity: 0.3, marginRight: 5}} />
+                                <div className="icon-scaner icon-clear"></div>
+                            </div>
+                        </div>
+                        <InputText name="serialNameField" style={{display: "none"}} form={this.props.form} />
+                        <div style={{padding: "0 0 22px"}}>
+                            <Button className="danger" onClick={() => this.setState({isShowModal: false})} style={{width: 80}}>
+                                <Translate id="text_cancel" />
+                            </Button>  
+                            <Button className="info" style={{marginLeft: 15, width: 80}} onClick={this.handleRemoveSerialsNo}>
+                                <Translate id="text_ok" />
+                            </Button>
+                        </div>
+                    </Modal>
+                    : null
+                }
                 <Drawer
                     title={<Translate id="text_receive_payment" />}
                     width={520}
