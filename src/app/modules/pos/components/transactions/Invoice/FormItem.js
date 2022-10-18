@@ -35,6 +35,7 @@ import {
     InputTextArea
 } from "../../../../common/elements/ant-ui";
 import { IconKeyboard } from "../../../../common/elements/IconKeyboard";
+import "./formItem.css";
 import Enum from "../../../enums/index";
 import EnumProduct from "../../../../inventory/enums";
 import history from "../../../../common/router/history";
@@ -1142,13 +1143,50 @@ class NewInvoice extends React.PureComponent {
                                 defaultValue={formData.invoiceDate ? moment(formData.invoiceDate) : null}
                                 style={styles.itemCenter}
                                 form={this.props.form} />
-                            <DatePickers
+                          {/*  <DatePickers
                                 name="dueDate"
                                 style={styles.itemCenter}
                                 label={<Translate id="text_due_date" />}
                                 placeholder={`${stringTranslate("text_due_date", this.props.locale)}`}
                                 defaultValue={formData.dueDate ? moment(formData.dueDate) : null}
-                                form={this.props.form} />
+                                form={this.props.form} />*/}
+                            <Row>
+                                <Col md={24}>
+                                    <div style={{display:"flex"}}>
+                                        <div className="ant-col ant-form-item-label ant-col-xs-24 ant-col-sm-10" style={{marginTop: "10px"}}><label htmlFor="dueDate" className="" title=""><Translate id="text_payment_terms" /></label></div>
+                                        <Row>
+                                            <Col md={12} id="paymentTermNumber" style={{paddingRight: "3px"}}>
+                                                <InputNumber
+                                                    name="payTermNumber"
+                                                    placeholder={`${stringTranslate("text_payment_terms", this.props.locale)}`}
+                                                    data={formData.payTermNumber ?? "" }
+                                                    defaultValue={formData.payTermNumber ?? ""}
+                                                    precision={0}
+                                                    form={this.props.form}
+                                                />
+                                            </Col>
+                                            <Col md={12}  id="paymentTermType" style={{paddingLeft: "3px"}}>
+                                                <Form.Item>
+                                                    {
+                                                        getFieldDecorator("payTermType", {[formData.payTermType?"initialValue":""]: Enum.PAYMENT_TERM_TYPE.DAY === formData.payTermType ? Enum.PAYMENT_TERM_TYPE.DAY : Enum.PAYMENT_TERM_TYPE.MONTH   })
+                                                        (
+                                                            <Select
+                                                                placeholder={`${stringTranslate("text_please_select", this.props.locale)}`}
+                                                                style={{marginTop: 4, width: "100%"}}
+                                                            >
+                                                                <Select.Option key={0}  value={Enum.PAYMENT_TERM_TYPE.DAY}><Translate id="text_day" /></Select.Option>
+                                                                <Select.Option key={1} value={Enum.PAYMENT_TERM_TYPE.MONTH}><Translate id="text_month" /></Select.Option>
+                                                            </Select>
+                                                        )
+                                                    }
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
+
+                                    </div>
+
+                                </Col>
+                            </Row>
                             <InputNumber
                                 name="exchangeRate"
                                 label={<Translate id="currency_exchange" />}
@@ -1293,7 +1331,7 @@ class NewInvoice extends React.PureComponent {
                                 <div><Translate id="text_discount" />:</div>
                                 <InputNumber
                                     name="discount"
-                                    data={discount}
+                                    data={discount ? discount : 0}
                                     style={{display: "none"}}
                                     form={this.props.form}
                                 />
@@ -1306,9 +1344,9 @@ class NewInvoice extends React.PureComponent {
                             <div style={styles.itemSummary}>
                                 <div><Translate id="text_grand_total" />:</div>
                                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.total - discount)}</div>
-                                <InputNumber 
+                                <InputNumber
                                     name="total"
-                                    data={formData.total}
+                                    data={formData.total ? formData.total : 0}
                                     style={{display: "none"}}
                                     form={this.props.form}
                                 />

@@ -1,4 +1,8 @@
 export default {
+  PAYMENT_TERM_TYPE: {
+    DAY:"DAY",
+    MONTH:"MONTH"
+  },
   DISCOUNT_TYPE: {
     PERCENTAGE: 1,
     AMOUNT: 0,

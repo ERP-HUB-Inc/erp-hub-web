@@ -34,11 +34,6 @@ export default class PrintSummary extends Component {
               </td>
             </tr>
             <tr>
-              <td colSpan="2" style={{backgroundColor: "white", borderBottom: "1px solid white", paddingBottom: 20}}>
-                <this.Translate id="text_register" />: {this.props.dataHeader.device.code}
-              </td>
-            </tr>
-            <tr>
               <td colSpan="2" style={{backgroundColor: "white"}}>
                 <table style={{width: "100%", backgroundColor: "white", fontSize: "9.5pt"}}>
                   <thead>
