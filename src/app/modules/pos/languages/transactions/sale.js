@@ -219,6 +219,21 @@ export default {
     "Serial number required"
   ],
 
+  "text_serial_number_must_equal_quantity": [
+    "The number of serial number must equal to quantity",
+    "ចំនួននៃលេខស៊េរីត្រូវតែស្មើគ្នានឹងបរិមាណផលិតផល"
+  ],
+
+  "text_input_serial_for_remove": [
+    "Input serial number you want to remove",
+    "បញ្ចូលលេខស៊េរីដើម្បីលុបចេញ"
+  ],
+
+  "text_this_serial_is_sold": [
+    "This serial number is sold",
+    "លេខស៊េរីនេះបានលក់រួចហើយ"
+  ],
+
   "text_unavailable_mobile_layout": [
     "This page is unavailable on mobile",
     "គេហទំព័រនេះមិនអាច​បើលលើទូរស័ព្ទបានទេ",
