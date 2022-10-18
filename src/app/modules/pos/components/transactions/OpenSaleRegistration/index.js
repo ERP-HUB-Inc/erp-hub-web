@@ -239,7 +239,9 @@ export default class OpenSaleRegistrationList extends List {
     this.props.dispatch(PaymentMethodAction.reset(ConstantPaymentMethod.RESET_PARTIAL_PAYMENT_METHOD));
     this.props.dispatch(PaymentMethodAction.fetch(100, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
     OpenSaleRegistrationService.summarySoldProducts().then(({data})=>{
-      this.setState({productListIsLoading: false, summaryProducts: data.data});
+      this.setState({summaryProducts: data.data});
+    }).finally(()=>{
+      this.setState({productListIsLoading: false});
     });
   }
 

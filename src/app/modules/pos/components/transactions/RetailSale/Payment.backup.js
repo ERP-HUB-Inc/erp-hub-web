@@ -6,12 +6,9 @@ import DeliveryNote from "./DeliveryNote";
 import Enum from "../../../enums";
 import GeneralAction from "../../../../common/actions/general";
 import TransactionAction from "../../../action/transaction/transaction";
-import TransactionService from "../../../services/transactions/TransactionService";
 import POSUtil from "../../../utils";
 import Modal from "../../../../common/components/shares/Modal";
 import "./Payment.css";
-import ReactToPrint from "react-to-print";
-import ReceiptTemplate from "../receipt/template";
 
 export default class Payment extends Modal {
   static PAYMENT_METHOD_CREDIT_CODE = "002";
@@ -30,7 +27,7 @@ export default class Payment extends Modal {
       validateStatus: "",
       errorMsg: "",
       formData: {},
-      loadingSubmit: false,
+      loadingSubmit: false
     };
     this.paymentMethodSelectedIndex = null;
     this.wrapClassName = "pos-payment";
@@ -156,16 +153,18 @@ export default class Payment extends Modal {
   }
 
   handleOnCompletePayment() {
-    this.props.dispatch(TransactionAction.reset());
-    this.setState({
-      isCustomerCredit: false,
-      isAlreadyAutoPrint: false,
-      isNotYetPaid: true,
-      customerPaymentList: [],
-      amountToPay: 0
-    });
-    this.wrapClassName = "pos-payment";
-    this.props.handleOnResetOrder();
+    if (this.props.transaction.paid && this.state.isNotYetPaid) {
+      this.props.dispatch(TransactionAction.reset());
+      this.setState({
+        isCustomerCredit: false,
+        isAlreadyAutoPrint: false,
+        isNotYetPaid: true,
+        customerPaymentList: [],
+        amountToPay: 0
+      });
+      this.wrapClassName = "pos-payment";
+      this.props.handleOnResetOrder();
+    }
   }
 
   handleOnMakePaymentWithCash(paymentMethod, paymentMethodIndex) {
@@ -245,98 +244,6 @@ export default class Payment extends Modal {
           buttons: [false, this.CATranslate("text_close", this.props.locale)],
           dangerMode: true
         });
-      }
-    }
-  }
-
-  async handleSubmitPayment(paymentMethod, paymentMethodIndex) {
-    const values = this.props.form.getFieldsValue();
-    let amountToPay = values.amountToPay;
-    let amountToPaySubCurrency = values.amountToPaySubCurrency;
-    let paymentMethodId = null;
-    amountToPay = parseFloat(amountToPay);
-    amountToPaySubCurrency = parseFloat(amountToPaySubCurrency);
-    let grandTotal = this.getGrandTotal();
-
-    // CHECK WETHER USER HAS CLICK CREDIT PAYMENT
-    if (paymentMethod.code === Payment.PAYMENT_METHOD_CREDIT_CODE) {
-      amountToPay = grandTotal;
-      paymentMethodId = paymentMethod.id;
-      this.setState({
-        isCustomerCredit: true,
-        isAllowPrintDeliveryNote: true
-      });
-    }
-
-    if (!isNaN(amountToPaySubCurrency)) {
-      amountToPay = amountToPay + POSUtil.toSubCurrencyGrantTotal(amountToPaySubCurrency, this.props.subCurrency, this.props.baseCurrency);
-    }
-
-    let totalCustomerHasGiveMoney = this.totalCustomerPaymentList() + amountToPay; 
-    const previousBalance = this.calculateBalance(grandTotal, totalCustomerHasGiveMoney - amountToPay); // balance before get money from customer
-    const balance = this.calculateBalance(grandTotal, totalCustomerHasGiveMoney);
-    const {
-      summaryTotal,
-      discountAmount,
-    } = this.props.summaryTotal;
-
-    this.appendCustomerPaymentList(this.state.customerPaymentList, amountToPay, paymentMethod, previousBalance);
-
-    if (totalCustomerHasGiveMoney < (grandTotal - discountAmount)) {
-      this.props.form.setFieldsValue({amountToPay: 0});
-
-      this.props.form.setFieldsValue({amountToPaySubCurrency: 0});
-
-      this.setState({
-        amountToPay: balance,
-        isAllowPrintReceipt: false
-      });
-
-      document.getElementById("amountToPay").focus();
-      return false;
-    } else {
-      this.paymentMethodSelectedIndex = paymentMethodIndex;
-
-      const dataValue = {
-        customerId: this.props.customer ? this.props.customer.id : null,
-        deviceNumber: this.Util.getDeviceNumber(),
-        deposit: 0,
-        discount: discountAmount,
-        total: this.getGrandTotalIncludeTax(),
-        totalExcludeTax: summaryTotal.subTotal,
-        type: Enum.TRANSACTION_TYPE.RECEIPT,
-        transactionEntries: this.props.productOrderList,
-        paymentMethodId,
-        transactionPaymentEntries: this.state.customerPaymentList
-      };
-
-      if (typeof _.sumBy(this.state.customerPaymentList, "tender") === "number") {
-        this.setState({loadingSubmit: true});
-        try {
-          const response = (await TransactionService.add(dataValue)).data.data;
-          if (response) {
-            response.receiptTemplate = 2;
-            this.setState({
-              formData: response,
-              loadingSubmit: false,
-              isAllowPrintDeliveryOrder: values.isAllowPrintReceipt,
-              amountToPay,
-              isCustomerCredit: false,
-              isAlreadyAutoPrint: false,
-              customerPaymentList: []
-            });
-
-            if (!values.isAllowPrintReceipt) {
-              this.setState({isNotYetPaid: false});
-            } else {
-              this.setState({isAllowPrintReceipt: true});
-            }
-          }
-        } catch (err) {
-          return false;
-        } finally {
-          this.setState({submitLoading: false});
-        }
       }
     }
   }
@@ -463,17 +370,6 @@ export default class Payment extends Modal {
         };
       }
 
-      const printProps = {
-        content: () => this.receiptRef,
-        onAfterPrint: () => this.setState({isNotYetPaid: false}),
-      };
-
-      if (!this.state.isAllowPrintReceipt) {
-        printProps.print = () => {
-          return false;
-        };
-      }
-
       this.content = (
         <this.Row>
           {
@@ -590,7 +486,7 @@ export default class Payment extends Modal {
           <this.Col md="7" className="wrap-payment-tool">
             {
               // this.totalCustomerPaymentList() < grandTotal && !this.props.transaction.paid ?
-              this.state.isNotYetPaid ?
+              !this.props.transaction.paid ?
                 <div className="payment-tool">
                   <div className="total-display">
                     <div className="title-total-display">
@@ -656,26 +552,20 @@ export default class Payment extends Modal {
                       form={this.props.form} />
                     {
                       paymentMethodList.map((paymentMethodListChild, index1) =>
-                        paymentMethodListChild.map((paymentMethod, index2) =>
-                          <ReactToPrint 
+                        paymentMethodListChild.map((paymentMethod, index2) => 
+                          <this.Button
+                            htmlType="submit"
                             key={parseInt(`${index1}${index2}`, 10)} // duplicate key index of loop
-                            onBeforeGetContent={() => this.handleSubmitPayment(paymentMethod, parseInt(`${index1}${index2}`, 10))}
-                            trigger={() => {
-                              return <this.Button
-                                type="info"
-                                className={index2 === 0 && paymentMethodListChild.length > 1 ? "mg-right" : ""}
-                                width="308px"
-                                htmlType="submit"
-                                loading={this.state.loadingSubmit}
-                              >
-                                <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                                  <img src={this.Util.getGeneralImage("storeVein/cash-payment-method.svg").url} alt="cash" style={{width: 40, marginRight: 15}} />
-                                  <div>{paymentMethod.name}</div>
-                                </div>
-                              </this.Button>;
-                            }}
-                            {...printProps} 
-                          />
+                            loading={this.paymentMethodSelectedIndex === parseInt(`${index1}${index2}`, 10) && this.props.transaction.paying} 
+                            type="info"
+                            className={index2 === 0 && paymentMethodListChild.length > 1 ? "mg-right" : ""}
+                            width="308px"
+                            onClick={() => this.handleOnMakePaymentWithCash(paymentMethod, parseInt(`${index1}${index2}`, 10))}>
+                            <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                              <img src={this.Util.getGeneralImage("storeVein/cash-payment-method.svg").url} alt="cash" style={{width: 40, marginRight: 15}} />
+                              <div>{paymentMethod.name}</div>
+                            </div>
+                          </this.Button>
                         ) 
                       )
                     }
@@ -755,21 +645,6 @@ export default class Payment extends Modal {
                 </div>
             }
           </this.Col>
-
-          <div style={{display: "none"}}>
-            <ReceiptTemplate 
-              ref={re => this.receiptRef = re}
-              formData={this.state.formData}
-              receiptTemplate={this.props.receiptTemplate.data}
-              currentUser={this.currentUser}
-              customerPaymentList={this.state.customerPaymentList}
-              customer={this.props.customer}
-              isCustomerCredit={this.state.isCustomerCredit}
-              productList={this.props.productOrderList}
-              customerFieldPrice={this.props.customerFieldPrice}
-              productTaxList={this.props.productTaxList}
-            />
-          </div>
         </this.Row>
       );
       return super.render();

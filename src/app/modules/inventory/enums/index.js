@@ -17,6 +17,10 @@ export default {
     AUTO: 0,
     CUSTOM: 1
   },
+  PAYMENT_TERM_TYPE: {
+    DAY:"DAY",
+    MONTH:"MONTH"
+  },
   PO_STEP: {
     DRAFT : 0,
     PROCESS : 1,
