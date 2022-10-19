@@ -187,7 +187,7 @@ export default function SearchProductDropdown(props) {
       {props.showIcon ? <div className="remove-search-icon icon-clear" onClick={handleRemoveTextSearch}></div> : null }
     </div>
     {
-      visibleDropDown && props.productSearch ?
+      visibleDropDown ?
         <div className="wrap-dropdown-search-product">
           <List
             itemLayout="horizontal"

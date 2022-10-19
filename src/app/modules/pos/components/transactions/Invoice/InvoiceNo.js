@@ -29,7 +29,7 @@ export default function InputInvoiceNo(props) {
 
   return <React.Fragment>
     <InputText
-      name={`${props.name}`}
+      name={props.name}
       data={props.data}
       hasFeedback={true}
       help={validateStatus === "error" ? <div style={{marginBottom: 5}}>

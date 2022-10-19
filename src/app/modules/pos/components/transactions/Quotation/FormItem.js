@@ -565,7 +565,6 @@ class FormItem extends React.PureComponent {
       [`quantity[${0}]`]: existingProductList[0].quantity,
       [`price[${0}]`]: existingProductList[0].price
     });
-    document.getElementById("searchProduct").focus();
     this.setState({loadingEntry: false});
   }
 

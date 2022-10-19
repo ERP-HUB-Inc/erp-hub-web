@@ -627,7 +627,6 @@ class FormItem extends React.PureComponent {
       [`cost[${0}]`]: existingProductList[0].cost,
       [`price[${0}]`]: existingProductList[0].price
     });
-    document.getElementById("searchProduct").focus();
   }
 
   removeEntry = (index) => {

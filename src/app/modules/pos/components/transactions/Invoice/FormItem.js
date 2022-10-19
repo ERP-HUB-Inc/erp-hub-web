@@ -460,7 +460,7 @@ class NewInvoice extends React.PureComponent {
                                 categoryId: values.categoryId[index],
                                 description,
                                 quantity: values.quantity[index],
-                                serialNo: values.serialNo[index] ? values.serialNo[index].toString() : "",
+                                serialNo: values.serialNo && values.serialNo[index] ? values.serialNo[index].toString() : "",
                                 unitId: values.unitId[index],
                                 unitName: values.unitName[index],
                                 cost: values.cost[index],
@@ -857,7 +857,6 @@ class NewInvoice extends React.PureComponent {
             [`cost[${0}]`]: existingProductList[0].cost,
             [`price[${0}]`]: existingProductList[0].price
         });
-        document.getElementById("searchProduct").focus();
     }
 
     handleResetForm = () => {
