@@ -316,6 +316,8 @@ export default {
 
   text_ok: ["ok", "អូខេ"],
 
+  text_link: ["Link", "តំណភ្ជាប់"],
+
   text_returned: ["Returned", "បានបង្វិលអោយវិញ"],
 
   text_description: ["Description", "ការពិពណ៌នា", "Description"],
@@ -493,4 +495,7 @@ export default {
   ],
   text_meta_tag_keyword: ["Meta Tag Keyword", "ពាក្យគន្លឹះ ស្លាកមេតា"],
   text_product_name: ["Product Name", "ឈ្មោះ​ផលិតផល"],
+  text_facebook: ["Facebook", "Facebook"],
+  text_instagram: ["Instagram", "Instagram"],
+  text_youtube: ["Youtube", "Youtube"],
 };

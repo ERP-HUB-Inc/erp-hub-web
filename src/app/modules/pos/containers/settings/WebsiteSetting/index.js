@@ -67,6 +67,14 @@ const WebsiteSetting = (props) => {
   const [metaTagKeyword, setMetaTagKeyword] = useState("");
   const [loadingButtonSeo, setLoadingButtonSeo] = useState(false);
 
+  // Social Media State
+
+  const [facebook, setFacebook] = useState("");
+  const [instagram, setInstagram] = useState("");
+  const [youtube, setYoutube] = useState("");
+  const [loadingButtonSocialMedia, setLoadingButtonSocialMedia] =
+    useState(false);
+
   const { TabPane } = Tabs;
   const queryParam = new URLSearchParams(document.location.search);
   const util = new Util();
@@ -77,9 +85,23 @@ const WebsiteSetting = (props) => {
     getGeneralSetting().then((response) => {
       if (response.data.data) {
         const data = response.data.data;
+
+        if ("facebook" in data) {
+          setFacebook(data.facebook);
+        }
+
+        if ("instagram" in data) {
+          setInstagram(data.instagram);
+        }
+
+        if ("youtube" in data) {
+          setYoutube(data.youtube);
+        }
+
         if ("metaTitle" in data) {
           setMetaTitle(data.metaTitle);
         }
+
         if ("metaTagDescription" in data) {
           setMetaTagDescription(data.metaTagDescription);
         }
@@ -91,6 +113,7 @@ const WebsiteSetting = (props) => {
         if ("primaryColor" in data) {
           setPrimaryColor(data.primaryColor);
         }
+
         if ("secondColor" in data) {
           setSecondaryColor(data.secondColor);
         }
@@ -228,6 +251,7 @@ const WebsiteSetting = (props) => {
                 name: value.name,
                 namekm: value.namekm,
                 order: value.order,
+                link: value.link,
                 image: value.image
                   ? {
                       uid: `${Date.now()}`,
@@ -251,6 +275,8 @@ const WebsiteSetting = (props) => {
   const handleButtonAddBanner = () => {
     dataSourceBanner.push({
       name: "",
+      description: "",
+      link: "",
       image: null,
       order: null,
     });
@@ -285,10 +311,10 @@ const WebsiteSetting = (props) => {
     setDataSourceBanner([...dataSourceBanner]);
   };
 
-  const onChangeBannerName = (event, findIndex) => {
+  const onChangeBannerInput = (event, findIndex, key) => {
     dataSourceBanner.forEach((preValue, index) => {
       if (index === findIndex) {
-        dataSourceBanner[index]["name"] = event.target.value;
+        dataSourceBanner[index][key] = event.target.value;
       }
     });
 
@@ -325,12 +351,16 @@ const WebsiteSetting = (props) => {
             return {
               id: value.id,
               name: value.name,
+              description: value.description,
+              link: value.link,
               image: value.image ? `website/banner/${value.image.name}` : null,
               order: value.order,
             };
           } else {
             return {
               name: value.name,
+              description: value.description,
+              link: value.link,
               image: value.image ? `website/banner/${value.image.name}` : null,
               order: value.order,
             };
@@ -547,6 +577,43 @@ const WebsiteSetting = (props) => {
           })
           .finally(() => {
             setLoadingButtonSeo(false);
+          });
+      }
+    });
+  };
+
+  // Social Media Function
+
+  const onSocialMediaSubmit = (e) => {
+    e.preventDefault();
+    props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        setLoadingButtonSocialMedia(true);
+        const socialMedia = [
+          {
+            key: "facebook",
+            value: values.facebook ? values.facebook : "",
+          },
+          {
+            key: "instagram",
+            value: values.instagram ? values.instagram : "",
+          },
+          {
+            key: "youtube",
+            value: values.youtube ? values.youtube : "",
+          },
+        ];
+        UpdateGeneralSetting(socialMedia)
+          .then(() => {
+            fetchGeneral();
+            swal(CATranslate("text_save_success", props.locale), {
+              buttons: false,
+              timer: 1500,
+              icon: "success",
+            });
+          })
+          .finally(() => {
+            setLoadingButtonSocialMedia(false);
           });
       }
     });
@@ -788,7 +855,7 @@ const WebsiteSetting = (props) => {
               </TabPane>
               <TabPane tab={<Translate id="text_banner" />} key="2">
                 <Row>
-                  <Col lg="5" md="5">
+                  <Col lg="12" md="12">
                     <Form onSubmit={onBannerSubmit}>
                       {visibleBannerTable && (
                         <React.Fragment>
@@ -871,6 +938,7 @@ const WebsiteSetting = (props) => {
                           />
                           <InputText
                             data={bannerName}
+                            style={{ width: 300 }}
                             name="name"
                             label={<Translate id="text_banner_name" />}
                             required={true}
@@ -911,16 +979,41 @@ const WebsiteSetting = (props) => {
                             <table style={{ width: "100%" }}>
                               <thead className="ant-table-thead">
                                 <tr>
-                                  <th className="ant-table-header-column">
-                                    {<Translate id="text_name" />}
-                                  </th>
-                                  <th className="ant-table-header-column">
+                                  <th
+                                    className="ant-table-header-column"
+                                    style={{ width: 300 }}
+                                  >
                                     {<Translate id="text_image" />}
                                   </th>
-                                  <th className="ant-table-header-column">
+                                  <th
+                                    className="ant-table-header-column"
+                                    style={{ width: 250 }}
+                                  >
+                                    {<Translate id="text_name" />}
+                                  </th>
+                                  <th
+                                    style={{ width: 250 }}
+                                    className="ant-table-header-column"
+                                  >
+                                    {<Translate id="text_description" />}
+                                  </th>
+                                  <th
+                                    style={{ width: 250 }}
+                                    className="ant-table-header-column"
+                                  >
+                                    {<Translate id="text_link" />}
+                                  </th>
+
+                                  <th
+                                    className="ant-table-header-column"
+                                    style={{ width: 100 }}
+                                  >
                                     {<Translate id="text_sort" />}
                                   </th>
-                                  <th className="ant-table-header-column"></th>
+                                  <th
+                                    className="ant-table-header-column"
+                                    style={{ width: 50 }}
+                                  ></th>
                                 </tr>
                               </thead>
                               <tbody className="ant-table-tbody">
@@ -933,14 +1026,6 @@ const WebsiteSetting = (props) => {
                                       }
                                     >
                                       <td>
-                                        <Input
-                                          value={value.name}
-                                          onChange={(value) =>
-                                            onChangeBannerName(value, index)
-                                          }
-                                        />
-                                      </td>
-                                      <td>
                                         <UploadImageBanner
                                           fileList={
                                             value.image ? [value.image] : []
@@ -952,6 +1037,44 @@ const WebsiteSetting = (props) => {
                                           index={index}
                                         />
                                       </td>
+                                      <td>
+                                        <Input
+                                          value={value.name}
+                                          onChange={(value) =>
+                                            onChangeBannerInput(
+                                              value,
+                                              index,
+                                              "name"
+                                            )
+                                          }
+                                        />
+                                      </td>
+                                      <td>
+                                        <Input.TextArea
+                                          rows={4}
+                                          value={value.description}
+                                          onChange={(value) =>
+                                            onChangeBannerInput(
+                                              value,
+                                              index,
+                                              "description"
+                                            )
+                                          }
+                                        />
+                                      </td>
+                                      <td>
+                                        <Input
+                                          value={value.link}
+                                          onChange={(value) =>
+                                            onChangeBannerInput(
+                                              value,
+                                              index,
+                                              "link"
+                                            )
+                                          }
+                                        />
+                                      </td>
+
                                       <td>
                                         <InputNumber
                                           type={"number"}
@@ -985,7 +1108,7 @@ const WebsiteSetting = (props) => {
                                     "ant-table-row ant-table-row-level-0"
                                   }
                                 >
-                                  <td colSpan={4}>
+                                  <td colSpan={6}>
                                     <Icon
                                       onClick={handleButtonAddBanner}
                                       type="plus-circle"
@@ -1087,6 +1210,48 @@ const WebsiteSetting = (props) => {
                         htmlType="submit"
                         className="ant-btn info undefined"
                         loading={loadingButtonSeo}
+                        style={{ marginTop: 15 }}
+                      >
+                        <span className="icon-save icon-padding-right"></span>
+                        {<Translate id="text_save" />}
+                      </Button>
+                    </Form>
+                  </Col>
+                </Row>
+              </TabPane>
+              <TabPane tab={"Social Media"} key="5">
+                <Row>
+                  <Col lg="4" md="4">
+                    <Form onSubmit={onSocialMediaSubmit}>
+                      <InputText
+                        data={facebook}
+                        name="facebook"
+                        label={<Translate id="text_facebook" />}
+                        placeholder={CATranslate("text_facebook", props.locale)}
+                        form={props.form}
+                      />
+                      <InputText
+                        data={instagram}
+                        name="instagram"
+                        label={<Translate id="text_instagram" />}
+                        placeholder={CATranslate(
+                          "text_instagram",
+                          props.locale
+                        )}
+                        form={props.form}
+                      />
+                      <InputText
+                        data={youtube}
+                        name="youtube"
+                        label={<Translate id="text_youtube" />}
+                        placeholder={CATranslate("text_youtube", props.locale)}
+                        form={props.form}
+                      />
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="ant-btn info undefined"
+                        loading={loadingButtonSocialMedia}
                         style={{ marginTop: 15 }}
                       >
                         <span className="icon-save icon-padding-right"></span>
