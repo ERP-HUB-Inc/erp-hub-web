@@ -15,6 +15,7 @@ function mapStateToProps(state) {
   return {
     roleAccess: state.reducer.roleAccess.request,
     roleAccessAdd: state.reducer.roleAccess.add,
+    roleAccessDetail: state.reducer.roleAccess.detail,
     roleAccessArchive: state.reducer.roleAccess.archive,
     roleAccessUpdate: state.reducer.roleAccess.update,
     rolePrivileges: state.reducer.rolePrivilege.request,

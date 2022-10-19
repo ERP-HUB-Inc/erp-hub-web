@@ -11,11 +11,19 @@ export default class Form extends Modal {
       rolePrivileges: []
     };
     this.title = <this.Translate id="text_role" />;
-    this.style = {height: 550};
+    this.style = {height: "98vh"};
+    this.width = "80%";
     this.wrapClassName = "modal-fix-footer";
     this.dispatch = this.props.dispatch;
+    this.grantPermissions = [];
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCallBackGetPrivilegeList = this.handleCallBackGetPrivilegeList.bind(this);
+  }
+
+
+
+  handleCallBackGetGrantPermissions(permissions) {
+    this.grantPermissions = permissions;
   }
 
   handleCallBackGetPrivilegeList(rolePrivileges) {
@@ -26,13 +34,13 @@ export default class Form extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const {roleAccessUpdate} = this.props;
-        values["id"] = roleAccessUpdate.data.id;
+        const {roleAccessDetail} = this.props;
+        values["id"] = roleAccessDetail.data.id;
         this.Util.clearObjProperty(values, [
           "search_name_privillege"
         ]);
-
-        values["privileges"] = this.state.rolePrivileges;
+        values["metaData"]    = JSON.stringify(this.grantPermissions);
+        values["privileges"]  = this.state.rolePrivileges;
         values["description"] = "";
         this.dispatch(RoleAccessAction.update(values));
       }
@@ -44,15 +52,17 @@ export default class Form extends Modal {
   }
   
   render() {
-    const {roleAccessUpdate, locale, form} = this.props;
+    const {roleAccessUpdate, roleAccessDetail, locale, form} = this.props;
     this.submitLoading = roleAccessUpdate.updating;
+    console.log("roleAccessUpdate", this.props);
 
     if (roleAccessUpdate.showForm) {
       this.content = <FormItem
         privileges={this.props.privileges}
         rolePrivileges={this.props.rolePrivileges}
-        formData={roleAccessUpdate.data}
+        formData={roleAccessDetail.data}
         handleCallBackGetPrivilegeList={this.handleCallBackGetPrivilegeList}
+        handleCallBackGetGrantPermissions={(permissions)=>this.handleCallBackGetGrantPermissions(permissions)}
         form={form}
         locale={locale}
         dispatch={this.props.dispatch} />;

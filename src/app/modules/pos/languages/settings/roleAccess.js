@@ -11,6 +11,12 @@ export default {
     "General"
   ],
 
+  "text_select_all": [
+    "Select All",
+    "ជ្រើសរើសទាំងអស់",
+    "General"
+  ],
+
   "text_privilege": [
     "Privilege",
     "សិទ្ធិ",

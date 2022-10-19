@@ -12,6 +12,14 @@ export default combineReducers({
     ];
     return reducer.request(state, action, constants);
   },
+  detail: (state = InitialState.detail(), action) => {
+    const constants = [
+      Constant.DETAIL_ROLE_ACCESS_PENDING,
+      Constant.DETAIL_ROLE_ACCESS_REJECTED,
+      Constant.DETAIL_ROLE_ACCESS_FULFILLED
+    ];
+    return reducer.detail(state, action, constants);
+  },
   archive: (state = InitialState.archive(), action) => {
     const constants = [
       Constant.ARCHIVE_ROLE_ACCESS_PENDING,

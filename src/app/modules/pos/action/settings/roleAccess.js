@@ -10,6 +10,14 @@ export default {
       });
     };
   },
+  detail: (id) => {
+    return dispatch => {
+      return dispatch({
+        type: Constant.DETAIL_ROLE_ACCESS,
+        payload: RoleAccessService.detail(id)
+      });
+    };
+  },
   archive: (ids) => {
     return dispatch => {
       return dispatch({

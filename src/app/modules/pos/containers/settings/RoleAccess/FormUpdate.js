@@ -14,8 +14,8 @@ class RoleAccessForm extends React.Component {
 function mapStateToProps(state) {
   return {
     roleAccessUpdate: state.reducer.roleAccess.update,
+    roleAccessDetail: state.reducer.roleAccess.detail,
     rolePrivileges: state.reducer.rolePrivilege.request,
-
     privileges: state.reducer.privilege.request,
     rowData: state.reducer.roleAccess.update.data,
     locale: state.locale

@@ -10,15 +10,21 @@ export default class Form extends Modal {
       rolePrivileges: []
     };
     this.title = <this.Translate id="text_role" />;
-    this.style = {height: 550};
+    this.style = {height: "98vh"};
+    this.width = "80%";
     this.wrapClassName = "modal-fix-footer";
     this.dispatch = this.props.dispatch;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCallBackGetPrivilegeList = this.handleCallBackGetPrivilegeList.bind(this);
+    this.grantPermissions = [];
   }
 
   handleCallBackGetPrivilegeList(rolePrivileges) {
     this.setState({rolePrivileges});
+  }
+
+  handleCallBackGetGrantPermissions(permissions) {
+    this.grantPermissions = permissions;
   }
 
   handleSubmit (e) {
@@ -26,7 +32,8 @@ export default class Form extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         this.Util.clearObjProperty(values, ["search_name_privillege"]);
-        values["privileges"] = this.state.rolePrivileges;
+        values["privileges"]  = this.state.rolePrivileges;
+        values["metaData"]    = JSON.stringify(this.grantPermissions);
         values["description"] = "";
         this.dispatch(RoleAccessAction.add(values));
       }
@@ -48,6 +55,7 @@ export default class Form extends Modal {
         rolePrivileges={this.props.rolePrivileges} 
         privileges={this.props.privileges}
         handleCallBackGetPrivilegeList={this.handleCallBackGetPrivilegeList}
+        handleCallBackGetGrantPermissions={(permissions)=>this.handleCallBackGetGrantPermissions(permissions)}
         rowData={this.props.rowData}
         dispatch={this.props.dispatch}
         locale={locale}/>;
