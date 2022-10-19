@@ -11,6 +11,11 @@ export default {
     "Delivery Date"
   ],
 
+  "text_payment_due_date": [
+    "Payment Due Date",
+    "កាលបរិច្ឆេតបង់ប្រាក់"
+  ],
+
   "text_purchase_date": [
     "Purchase Date",
     "កាលបរិច្ឆេតទិញចូល",

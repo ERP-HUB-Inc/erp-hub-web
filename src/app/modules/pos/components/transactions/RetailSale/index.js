@@ -86,7 +86,7 @@ export default class Retail extends Component {
     this.service = TransactionService;
 
     this.handleOnSelectCategory = this.handleOnSelectCategory.bind(this);
-    this.handleOnLoadMoreProduct = this.handleOnLoadMoreProduct.bind(this);
+    // this.handleOnLoadMoreProduct = this.handleOnLoadMoreProduct.bind(this);
     this.handleOnSelectProduct = this.handleOnSelectProduct.bind(this);
     this.handleCancelVariantProduct = this.handleCancelVariantProduct.bind(this);
     this.handleOnAddNewCustomer = this.handleOnAddNewCustomer.bind(this);
@@ -282,7 +282,7 @@ export default class Retail extends Component {
       discountType: this.state.initialOrderDiscountType,
       tax: tax.taxRate/100,
       taxDescription: tax,
-      description: "",
+      description: product.name,
       options: [],
       status: this.Enum.ACTIVE
     });
@@ -414,14 +414,14 @@ export default class Retail extends Component {
     this.props.dispatch(ProductAction.fetch(10, "", "", "", filter, "", this.Util.getLocationId()));
   }
 
-  handleOnLoadMoreProduct() {
-    let filter = "";
-    if (this.state.selectedCategoryIds.length > 0) {
-      filter = JSON.stringify({productTypeId: [this.state.selectedCategoryIds[0]]});
-    }
-    this.setState({isRequestLoadingMore: true});
-    this.props.dispatch(ProductAction.fetch(10, this.state.productList.length, "", "", filter, "", this.Util.getLocationId()));
-  }
+  // handleOnLoadMoreProduct() {
+  //   let filter = "";
+  //   if (this.state.selectedCategoryIds.length > 0) {
+  //     filter = JSON.stringify({productTypeId: [this.state.selectedCategoryIds[0]]});
+  //   }
+  //   this.setState({isRequestLoadingMore: true});
+  //   this.props.dispatch(ProductAction.fetch(10, this.state.productList.length, "", "", filter, "", this.Util.getLocationId()));
+  // }
 
   handleCancelVariantProduct() {
     this.setState({modalContent: null});
@@ -879,7 +879,7 @@ export default class Retail extends Component {
       )
       :
       <div style={{display: "flex", alignItems: "center", margin: "0 auto", height: "100%"}}>
-        <img src={`${this.Util.getGeneralImage("storeVein/no-product-found.png").url}`} style={{width: 150}}  alt=""/>
+        <img src={`${this.Util.getGeneralImage("storeVein/no-product-found.png").url}`} style={{width: 150}} alt="" />
       </div>;
   }
 
@@ -965,19 +965,19 @@ export default class Retail extends Component {
     } = POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale));
     
     const leftSideElement = document.getElementById("wrap-product-box-list");
-    let leftSideElementWidth = 0;
+    // let leftSideElementWidth = 0;
     if (leftSideElement) {
-      leftSideElementWidth = leftSideElement.offsetWidth;
+      // leftSideElementWidth = leftSideElement.offsetWidth;
     }
 
     let categoryList = this.props.productsType.list;
     if (categoryList.length > 4) {
       categoryList = this.state.categoryList.concat(categoryList);
     }
-
+    
     return <this.Row className="main-layout main-store-account" id="retail-sale">
       <div id="receiptLogoPreLoading" style={{display: "none"}}>
-        {<img style={{width: 100}} alt="" src={this.Util.getProductImage(this.props.receiptTemplate && this.props.receiptTemplate.data ? this.props.receiptTemplate.data.logo : "", "general").url} />}
+        <img style={{width: 100}} src={this.Util.getProductImage(this.props.receiptTemplate && this.props.receiptTemplate.data ? this.props.receiptTemplate.data.logo : "", "general").url} alt="" />
       </div>
       <this.Col md="8" id="left-block">
 
@@ -1009,7 +1009,7 @@ export default class Retail extends Component {
               :
               this.renderProductList()
           }
-          {
+          {/* {
             this.props.products.fetching && this.state.isRequestLoadingMore ?
               <div className="loading-more-spin" style={{left: leftSideElementWidth / 2}}>
                 <this.Spin />
@@ -1018,7 +1018,7 @@ export default class Retail extends Component {
               <div className="load-more-button" style={{left: leftSideElementWidth / 2}} onClick={this.handleOnLoadMoreProduct}>
                 <span className="icon-move-down" style={{fontSize: "30pt"}}></span>
               </div>
-          }
+          } */}
         </this.Row>
       </this.Col>
       <this.Col md="4" id="right-block">

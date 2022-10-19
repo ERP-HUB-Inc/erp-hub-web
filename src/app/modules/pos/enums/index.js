@@ -1,4 +1,8 @@
 export default {
+  PAYMENT_TERM_TYPE: {
+    DAY:"DAY",
+    MONTH:"MONTH"
+  },
   DISCOUNT_TYPE: {
     PERCENTAGE: 1,
     AMOUNT: 0,
@@ -75,8 +79,9 @@ export default {
   },
   QUOTATION_STATUS: {
     DRAFT: 0,
-    PROCESS: 1,
-    CANCELLED: 2
+    SENT: 1,
+    APPROVED: 2,
+    CLOSED: 3
   },
   QUOTATION_STEP_COLOR: {
     DRAFT: "#FAAD14",

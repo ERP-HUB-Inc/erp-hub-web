@@ -8,10 +8,10 @@ class QuotationService extends BaseService {
     this.initializeRoute();
   }
 
-  detail2(id) {
+  detail(id) {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}/detailV2/${id}`,
+      url: `${this.baseUrl}/detail/${id}`,
       headers: this.header
     });
   }
@@ -19,7 +19,7 @@ class QuotationService extends BaseService {
   detailPublic(id, token) {
     this.header["Authorization"] = `Bearer ${token}`;
     return this.GET({
-      url: `${this.baseUrl}/detailV2/${id}`,
+      url: `${this.baseUrl}/detail/${id}`,
       headers: this.header
     });
   }

@@ -9,7 +9,8 @@ import {
   Dropdown,
   Icon,
   message,
-  Form
+  Form,
+  Badge
 } from "antd";
 import { Link } from "react-router-dom";
 import { Button } from "../../../../common/elements/ant-ui";
@@ -25,6 +26,12 @@ class SaleOrderDetail extends React.PureComponent{
     loading: false,
     formData: {}
   }
+  SALE_ORDER_STATUS_STR = {
+    [Enum.SALE_ORDER_STATUS.DRAFT]: { title: stringTranslate("text_draft", this.props.locale), color: "#bfbfbf" },
+    [Enum.SALE_ORDER_STATUS.CONFIRMED]: { title: stringTranslate("text_confirm", this.props.locale), color: "#1890ff" },
+    [Enum.SALE_ORDER_STATUS.CLOSED]: { title: stringTranslate("text_closed", this.props.locale), color: "#f50"},
+    [Enum.SALE_ORDER_STATUS.VOID]: {title: stringTranslate("text_void", this.props.locale), color: "#d9d9d9"}
+  };
   util = new Util();
 
   componentDidMount() {
@@ -37,7 +44,7 @@ class SaleOrderDetail extends React.PureComponent{
   }
 
   handleMakeAsConfirm(id) {
-    SaleOrderService.makAsConfirm(id)
+    SaleOrderService.markAsConfirm(id)
     .then(() => {
       message.success("Make confirm success");
       this.setState(preState => {
@@ -86,7 +93,16 @@ class SaleOrderDetail extends React.PureComponent{
           }}
           onBack={() => history.goBack()}
           title={<Translate id="text_sale_order" />}
-          subTitle={formData.number} 
+          subTitle={
+            <div>
+              {formData.number}
+              {
+                Object.keys(formData).length ?
+                  <Badge count={this.SALE_ORDER_STATUS_STR[formData.status].title} style={{ backgroundColor: this.SALE_ORDER_STATUS_STR[formData.status].color}} />
+                : null
+              }
+            </div>
+          } 
           extra={[
             <Dropdown key={1} overlay={(
               <Menu>

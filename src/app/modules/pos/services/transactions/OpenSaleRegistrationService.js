@@ -23,6 +23,15 @@ class OpenSaleRegistrationService extends BaseService {
     });
   }
 
+  summarySoldProducts() {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/lists/summary_sold_products`,
+      data: this.data,
+      headers: this.header
+    });
+  }
+
   open(open, description) {
     this.setHeader();
     const setting = this.Util.getSetting();

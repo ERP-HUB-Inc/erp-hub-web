@@ -22,15 +22,10 @@ export default class PurchaseOrderLists extends List {
     this.columns = [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="text_description" />,
-        dataIndex: "name",
-        key: "name"
-      },
-      {
-        title: <this.Translate id="text_receiver"/>,
-        dataIndex: "receiver",
-        key: "receiverId",
-        render: receiver => receiver ? <span style={{textTransform: "uppercase"}}>{receiver.fullName}</span> : this.emptyText
+        title: <this.Translate id="text_location" />,
+        dataIndex: "location",
+        key: "location",
+        render: location => location ? location.name: this.emptyText
       },
       {
         title: <this.Translate id="text_supplier" />,
@@ -39,10 +34,10 @@ export default class PurchaseOrderLists extends List {
         render: supplier => supplier ? supplier.name : this.emptyText
       },
       {
-        title: <this.Translate id="text_location" />,
-        dataIndex: "location",
-        key: "location",
-        render: location => location ? location.name: this.emptyText
+        title: <this.Translate id="text_receiver"/>,
+        dataIndex: "receiver",
+        key: "receiverId",
+        render: receiver => receiver ? <span style={{textTransform: "uppercase"}}>{receiver.fullName}</span> : this.emptyText
       },
       {
         title: <this.Translate id="text_total" />,

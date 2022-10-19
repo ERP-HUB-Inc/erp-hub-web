@@ -84,23 +84,6 @@ export default class FormItem extends Modal {
     return (
       <this.Row id="purchase-order-form">
         <this.Col md="4">
-          <this.InputText
-            name="name"
-            label={<this.Translate id="text_description" />}
-            data={formData.name}
-            placeholder={this.CATranslate("text_description", locale)}
-            errorRequired={<this.Translate id="error_require_name" />}
-            required={true}
-            isAutoFocus={true}
-            max={100}
-            form={form} />
-          <this.InputText
-            name="number"
-            label={<this.Translate id="input_stock_purchase_order_number" />}
-            data={formData.number}
-            placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
-            errorRequired={<this.Translate id="error_require_po_number" />}
-            form={form} />
           <this.Select
             name="supplierId"
             label={<this.Translate id="text_supplier" /> }
@@ -110,6 +93,13 @@ export default class FormItem extends Modal {
             dataSource={this.props.supplier.list}
             valueKey="id"
             required={true}
+            form={form} />
+          <this.InputText
+            name="number"
+            label={<this.Translate id="input_stock_purchase_order_number" />}
+            data={formData.number}
+            placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
+            errorRequired={<this.Translate id="error_require_po_number" />}
             form={form} />
           <this.InputText
             name="invoiceNo"
@@ -144,6 +134,42 @@ export default class FormItem extends Modal {
                 }
               ]}
               form={form} />
+          <this.Row>
+            <this.Col md="7">
+              <this.InputNumber
+                name="payTermNumber"
+                label={<this.Translate id="text_payment_terms" />}
+                placeholder={this.CATranslate("text_payment_terms", locale)}
+                data={formData.payTermNumber}
+                precision={0}
+                form={form} />
+            </this.Col>
+            <this.Col md="5"  id="payment-term" style={{paddingLeft: "0"}}>
+              <this.Select
+                name="payTermType"
+                label={<this.Translate id="text_payment_terms" />}
+                placeholder={this.CATranslate("text_please_select", locale)}
+                defaultValue={formData.payTermType}
+                dataSource={[
+                  {
+                    name: <this.Translate id="text_day" />,
+                    value: Enum.PAYMENT_TERM_TYPE.DAY
+                  },
+                  {
+                    name: <this.Translate id="text_month" />,
+                    value: Enum.PAYMENT_TERM_TYPE.MONTH
+                  }
+                ]}
+                form={form} />
+              </this.Col>
+          </this.Row>
+          {/*<this.DatePickers
+            name="paymentDueDate"
+            label={<this.Translate id="text_payment_due_date"/>}
+            disabled={true}
+            defaultValue={formData.paymentDueDate ? moment(formData.paymentDueDate) : ""}
+            form={form}
+          />*/}
           <this.Row className="ca-penel-v1 wrap-po-filter-create hidden">
           </this.Row>
         </this.Col>
@@ -168,7 +194,10 @@ FormItem.defaultProps = {
   formData: {
     name:"",
     supplierid:"",
-    POEntries: []
+    POEntries: [],
+    payTermType: "",
+    payTermNumber: "",
+    payDueDate: ""
   },
   productSearch: []
 };

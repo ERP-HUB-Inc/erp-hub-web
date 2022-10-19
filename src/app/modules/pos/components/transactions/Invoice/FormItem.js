@@ -14,7 +14,9 @@ import {
     Tabs,
     Dropdown,
     Menu,
-    Drawer
+    Drawer,
+    Badge,
+    Modal
 } from "antd";
 import { Translate } from "react-localize-redux";
 import { connect } from "react-redux";
@@ -32,6 +34,8 @@ import {
     Button,
     InputTextArea
 } from "../../../../common/elements/ant-ui";
+import { IconKeyboard } from "../../../../common/elements/IconKeyboard";
+import "./formItem.css";
 import Enum from "../../../enums/index";
 import EnumProduct from "../../../../inventory/enums";
 import history from "../../../../common/router/history";
@@ -42,6 +46,7 @@ import CustomerAction from "../../../../crm/actions/customers/customer";
 import CustomerConstant from "../../../../crm/constants/customers/customer";
 import InvoiceService from "../../../services/transactions/InvoiceService";
 import QuotationService from "../../../services/transactions/QuotationService";
+import SerialService from "../../../services/transactions/SerialService";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import SearchProductDropdown from "./SearchProduct";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
@@ -82,7 +87,8 @@ class NewInvoice extends React.PureComponent {
         saveLoading: false,
         showDrawer: false,
         selectedProduct: null,
-        modalVariant: null
+        modalVariant: null,
+        isShowModal: false
     }
     action = new URLSearchParams(window.location.search).get("action");
     entryColumn = [
@@ -147,6 +153,10 @@ class NewInvoice extends React.PureComponent {
             className: "entry-column-note",
             width: 600,
             render: (description, record, index) => {
+                let serials = [];
+                if (record.serialNo) {
+                    serials = record.serialNo.toString().split(",");
+                }
                 return <div>
                     <InputText 
                         style={{display: "none"}}
@@ -159,13 +169,46 @@ class NewInvoice extends React.PureComponent {
                         disabled={this.action === paramsAction.convertToInvoice ? true : false}
                         inputStyle={{width: "100%"}}
                         style={{width: "100%"}}
-                        handleOnChange={(e) => {
-                            const value = e.target.value;
-                            this.setState(preState => {
-                              preState.transactionEntries[index].description = value;
-                            });
-                        }}
+                        handleOnChange={(e) => this.onChangeDescription(e, index)}
                         form={this.props.form} />
+                    
+                    {
+                        record.enableDescription || serials.length ? <div style={{position: "relative"}}>
+                            <Form.Item 
+                                style={{width: "100%", marginTop: 5, textAlign: "left"}} 
+                                wrapperCol={{sm: {span: 24}, xs: {span: 24}}}
+                                labelAlign="left"
+                                label="IMEI OR SERIAL"
+                            >
+                            {
+                                this.props.form.getFieldDecorator(`serialNo[${index}]`, {
+                                    rules: [
+                                        {
+                                            required: true,
+                                            message: stringTranslate("error_serial_number_require", this.props.locale)
+                                        },
+                                        {
+                                            validator: (rule, value, callback) => this.validateSerialNo(value, callback, index)
+                                        }
+                                    ],
+                                    initialValue: serials
+                                })(
+                                    <Select mode="tags" 
+                                        style={{width: "100%"}}
+                                        placeholder="serialNo1, serialNo2, ...."
+                                        dropdownStyle={{display: "none"}}
+                                        onChange={(value) => this.handleChangeSerialNo(value, index)}
+                                    />
+                                )
+                            }
+                            </Form.Item>
+                            <div style={{display: "flex", position: "absolute", right: 5, top: 28, color: "#5656", fontSize: 18}}>
+                                <IconKeyboard style={{opacity: 0.3, marginRight: 5, cursor: "pointer"}} onClick={() => this.handelFocus(`serialNo[${index}]`)} />
+                                <div style={{cursor: "pointer"}} className="icon-scaner icon-clear" onClick={() => this.handelFocus(`serialNo[${index}]`)} />
+                            </div>
+                        </div> : null
+                    }
+                    
                 </div>;
             }
         },
@@ -216,6 +259,13 @@ class NewInvoice extends React.PureComponent {
             }
         }
     ];
+    INVOICE_STATUS_STR = {
+        [Enum.INVOICE_STATUS.DRAFT]: { title: stringTranslate("text_draft", this.props.locale), color: "#bfbfbf" },
+        [Enum.INVOICE_STATUS.SENT]: { title: stringTranslate("text_sent", this.props.locale), color: "#1890ff" },
+        [Enum.INVOICE_STATUS.PARTIAL]: { title: stringTranslate("text_partial_pay", this.props.locale), color: "#52c41a"},
+        [Enum.INVOICE_STATUS.PAID]: { title: stringTranslate("text_paid", this.props.locale), color: "#52c41a"},
+        [Enum.INVOICE_STATUS.VOID]: { title: stringTranslate("text_void", this.props.locale), color: "#d9d9d9"},
+    };
     util = new Util();
     timer = null;
     id = "";
@@ -242,6 +292,7 @@ class NewInvoice extends React.PureComponent {
 
             if (params.get("quotationId")) {
                 this.quotationId = params.get("quotationId");
+                idParam = "";
             }
         }
 
@@ -250,7 +301,7 @@ class NewInvoice extends React.PureComponent {
             this.getDetail(idParam);
         } else if (this.quotationId) {
             this.setState({loading: true});
-            QuotationService.detail2(this.quotationId)
+            QuotationService.detail(this.quotationId)
             .then(response => {
                 const data = response.data.data;
                 let totalExcludeTax = Number(data.totalExcludeTax);
@@ -262,6 +313,8 @@ class NewInvoice extends React.PureComponent {
                 if (!taxRate)
                     taxRate = 0;
                 data.taxRate = taxRate;
+                data.invoiceDate = moment().format("YYYY-MM-DD");
+                this.pageTitle = "text_create_invoice";
 
                 const transactionEntries = data.quotationEntries.length && data.quotationEntries.map(entry => ({
                     ...entry,
@@ -295,12 +348,13 @@ class NewInvoice extends React.PureComponent {
                     template: Enum.PAPER_SIZE.EXCLUDE_TAX
                 },
                 transactionEntries: [{
+                    id: "",
                     productVariantId: "",
                     variantName: "",
                     categoryId: "",
                     description: "",
                     unitId: "",
-                    quantity: 1,
+                    quantity: 0,
                     unitName: "",
                     cost: 0,
                     price: 0,
@@ -359,8 +413,8 @@ class NewInvoice extends React.PureComponent {
                 const {formData} = this.state;
                 const subTotal = this.getTotal();
 
-                if (this.id && Number(formData.status) !== Enum.INVOICE_STATUS.DRAFT) {
-                    return this.util.sweetAlertMessageV2("Warning", "Can't update invoice in this step", "error");
+                if (this.id && ![Enum.INVOICE_STATUS.DRAFT, Enum.INVOICE_STATUS.PAID].includes(Number(formData.status))) {
+                    return this.util.sweetAlertMessageV2("Warning", "Can't update invoice in this step", "warning");
                 }
 
                 if (formData.discount > subTotal) {
@@ -374,6 +428,8 @@ class NewInvoice extends React.PureComponent {
                     exchangeRate: values.exchangeRate,
                     discountType: values.discountType,
                     publicNote: formData.publicNote,
+                    payTermType: values.payTermType,
+                    payTermNumber: values.payTermNumber,
                     template: values.template,
                     invoiceNumber: values.invoiceNumber,
                     terms: values.terms,
@@ -396,20 +452,23 @@ class NewInvoice extends React.PureComponent {
                 const transactionEntries = [];
                 if (values["description"] && values["description"].length) {
                     values["description"].forEach((description, index) => {
-                        transactionEntries.push({
-                            id: values.id[index],
-                            productVariantId: values.productVariantId[index],
-                            variantName: values.variantName[index],
-                            categoryId: values.categoryId[index],
-                            description,
-                            quantity: values.quantity[index],
-                            unitId: values.unitId[index],
-                            unitName: values.unitName[index],
-                            cost: values.cost[index],
-                            price: values.price[index],
-                            discount: 0,
-                            status: values.status[index]
-                        });
+                        if (description || values.quantity[index]) {
+                            transactionEntries.push({
+                                id: values.id[index],
+                                productVariantId: values.productVariantId[index],
+                                variantName: values.variantName[index],
+                                categoryId: values.categoryId[index],
+                                description,
+                                quantity: values.quantity[index],
+                                serialNo: values.serialNo && values.serialNo[index] ? values.serialNo[index].toString() : "",
+                                unitId: values.unitId[index],
+                                unitName: values.unitName[index],
+                                cost: values.cost[index],
+                                price: values.price[index],
+                                discount: 0,
+                                status: values.status[index]
+                            });
+                        }
                     });
                     invoice["transactionEntries"] = transactionEntries;
                 } else {
@@ -444,8 +503,10 @@ class NewInvoice extends React.PureComponent {
                 taxRate = 0;
             data.taxRate = taxRate;
 
-            if (action === "clone") {
+            if (action) {
+                this.pageTitle = "text_create_invoice";
                 data.invoiceNumber = "";
+                data.invoiceDate = moment().format("YYYY-MM-DD");
             }
 
             delete data.transactionEntries;
@@ -487,7 +548,7 @@ class NewInvoice extends React.PureComponent {
                 this.id = response.data.data.id;
                 this.saleOrderId = "";
                 this.quotationId = "";
-                history.push(`/transactions/update-invoice/${response.data.data.id}`);
+                history.push(`/transactions/update-invoice/${response.data.data.id}?after-created=1`);
                 this.pageTitle = "text_edit_invoice";
                 this.getDetail(this.id);
             })
@@ -496,8 +557,73 @@ class NewInvoice extends React.PureComponent {
         }
     }
 
+    onChangeDescription = (e, index) => {
+        const value = e.target.value;
+        const {transactionEntries} = this.state;
+        transactionEntries[index].description = value;
+        const activeEntries = transactionEntries.filter(item => item.status !== 3);
+        if (value && index === (activeEntries.length - 1)) {
+            transactionEntries.push({
+                id: "",
+                productVariantId: "",
+                variantName: "",
+                categoryId: "",
+                description: "",
+                unitId: "",
+                quantity: 0,
+                unitName: "",
+                cost: 0,
+                price: 0,
+                discount: 0,
+                amount: 0,
+                status: 1
+            });
+        }
+        this.setState({transactionEntries});
+    }
+
+    handleChangeSerialNo = (serials, index) => {
+        if (serials && serials.length) {
+            const serialNo = serials[serials.length - 1];
+            SerialService.findByNumber(serialNo)
+            .then(response => {
+                if (response.data && response.data.length) {
+                    serials.pop();
+                    this.props.form.setFields({
+                        [`serialNo[${index}]`]: {
+                            value: serials,
+                            errors: [new Error(serialNo + ": " + stringTranslate("text_this_serial_is_sold", this.props.locale))]
+                        }
+                    });
+                }
+            })
+            .catch(err => console.log("error", err.response));
+        }
+    }
+
+    validateSerialNo(value, callback, index) {
+        let qty = this.props.form.getFieldValue(`quantity[${index}]`);
+        if (value && value.length !== Number(qty)) {
+            callback(stringTranslate("text_serial_number_must_equal_quantity", this.props.locale));
+        }
+
+        callback();
+    }
+
     onChangeQty = (qty, index) => {
         if (!qty || qty < 0) qty = 0;
+        const serialNos = this.props.form.getFieldValue(`serialNo[${index}]`);
+        if (serialNos && serialNos.length) {
+            if (qty < serialNos.length) {
+                this.setState({isShowModal: true}, () => {
+                    this.props.form.setFieldsValue({
+                        serialNameField: `serialNo[${index}]`
+                    });
+                });
+            }
+            this.props.form.validateFields([`serialNo[${index}]`]);
+        }
+
         this.setState(preState => {
             const price = preState.transactionEntries[index].price;
             let amount = (qty * price);
@@ -533,6 +659,19 @@ class NewInvoice extends React.PureComponent {
             preState.formData.discount = discount;
             return preState;
         });
+    }
+
+    handleRemoveSerialsNo = () => {
+        const removeSerials = this.props.form.getFieldValue("removeSerials");
+        const serialNameField = this.props.form.getFieldValue("serialNameField");
+
+        const serialsNo = this.props.form.getFieldValue(serialNameField);
+        
+        const newSerials = serialsNo.filter(serial => !removeSerials.includes(serial));
+        if (newSerials) {
+            this.props.form.setFieldsValue({[`${serialNameField}`]: newSerials});
+            this.setState({isShowModal: false});
+        }
     }
 
     onChangeTotalDiscount = (discount) => {
@@ -572,6 +711,10 @@ class NewInvoice extends React.PureComponent {
         }
     }
 
+    handelFocus(fieldName) {
+        
+    }
+
     onChangeTemplate = (value) => {
         this.setState(preState => {
             preState.formData.template = value;
@@ -603,7 +746,14 @@ class NewInvoice extends React.PureComponent {
             });
         } else {
             transactionEntries.splice(index, 1);
-            this.setState({transactionEntries, productSearch: []});
+            let discount = this.props.form.getFieldValue("discountField");
+            let type = this.props.form.getFieldValue("discountType");
+            if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+                let total = this.getTotal();
+                discount = this.util.getValueFromPercentage(total, discount);
+            }
+            formData.discount = discount;
+            this.setState({transactionEntries, formData, productSearch: []});
         }
     }
 
@@ -642,7 +792,8 @@ class NewInvoice extends React.PureComponent {
         const existingProductList = this.state.transactionEntries;
         const formData = this.state.formData;
         if (existingProductList.length === 0) {
-            existingProductList.push({
+            existingProductList.unshift({
+                id: "",
                 productVariantId: productVariant.id,
                 variantName: product.name ? product.name : product.namekm,
                 categoryId: product.productTypeId,
@@ -654,7 +805,8 @@ class NewInvoice extends React.PureComponent {
                 price: productVariant.price,
                 discount: 0,
                 amount: (productVariant.price * 1),
-                status: 1
+                status: 1,
+                enableDescription: product.enableDescription
             });
         } else {
             let isNotTheSameProduct = true;
@@ -668,7 +820,8 @@ class NewInvoice extends React.PureComponent {
             });
     
             if (isNotTheSameProduct) {
-                existingProductList.push({
+                existingProductList.unshift({
+                    id: "",
                     productVariantId: productVariant.id,
                     variantName: product.name ? product.name : product.namekm,
                     categoryId: product.productTypeId,
@@ -680,7 +833,8 @@ class NewInvoice extends React.PureComponent {
                     price: productVariant.price,
                     discount: 0,
                     amount: (productVariant.price * 1),
-                    status: 1
+                    status: 1,
+                    enableDescription: product.enableDescription
                 });
             }
         }
@@ -695,8 +849,14 @@ class NewInvoice extends React.PureComponent {
         }
         formData.discount = discount;
         this.setState({transactionEntries: existingProductList, formData});
-        this.props.form.setFieldsValue({searchProduct: ""});
-        document.getElementById("searchProduct").focus();
+        this.props.form.setFieldsValue({
+            searchProduct: "",
+            [`productVariantId[${0}]`]: existingProductList[0].productVariantId,
+            [`description[${0}]`]: existingProductList[0].description,
+            [`quantity[${0}]`]: existingProductList[0].quantity,
+            [`cost[${0}]`]: existingProductList[0].cost,
+            [`price[${0}]`]: existingProductList[0].price
+        });
     }
 
     handleResetForm = () => {
@@ -890,8 +1050,8 @@ class NewInvoice extends React.PureComponent {
     }
 
     handleGoBack = () => {
-        const action = new URLSearchParams(window.location.search).get("action");
-        if (action) {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("action") || params.get("after-created")) {
             history.push("/transactions/invoice");
         } else {
             history.goBack();
@@ -930,6 +1090,8 @@ class NewInvoice extends React.PureComponent {
         formData.totalExcludeTax = subTotal;
         let vat = this.util.getTaxValue(subTotal - discount, formData.taxRate);
         formData.total = subTotal + vat;
+        formData.status = Number(formData.status);
+
         return ( 
             !this.state.loading && Object.keys(formData).length ? 
             <div>
@@ -945,14 +1107,21 @@ class NewInvoice extends React.PureComponent {
                         position: "relative"
                         }}
                         onBack={this.handleGoBack}
-                        title={<Translate id={`${this.pageTitle}`} />} />
+                        title={<Translate id={`${this.pageTitle}`} />} 
+                        subTitle={  
+                            <div>
+                                <Translate id="text_invoice" />
+                                {this.id && formData.status >= 0 ? <Badge count={this.INVOICE_STATUS_STR[formData.status].title} style={{ backgroundColor: this.INVOICE_STATUS_STR[formData.status].color}} /> : ""}
+                            </div>
+                        }
+                    />
 
                     <Row>
                         <Col md={8}>
                             <Form.Item
                                 style={{paddingLeft: 10, position: "relative", ...styles.itemCenter}}
                                 label={<Translate id="text_customer" />}
-                                labelCol={{xs: {span: 20}, sm: {span: 4}}}
+                                labelCol={{xs: {span: 16}, sm: {span: 4}}}
                             >
                                 {
                                     getFieldDecorator("customerId", {
@@ -975,13 +1144,47 @@ class NewInvoice extends React.PureComponent {
                                 defaultValue={formData.invoiceDate ? moment(formData.invoiceDate) : null}
                                 style={styles.itemCenter}
                                 form={this.props.form} />
-                            <DatePickers
+                          {/*  <DatePickers
                                 name="dueDate"
                                 style={styles.itemCenter}
                                 label={<Translate id="text_due_date" />}
                                 placeholder={`${stringTranslate("text_due_date", this.props.locale)}`}
                                 defaultValue={formData.dueDate ? moment(formData.dueDate) : null}
                                 form={this.props.form} />
+                          */}
+
+                            <div style={{display:"flex"}}>
+                                <div className="ant-col ant-form-item-label ant-col-xs-24 ant-col-sm-10" style={{marginTop: "10px"}}><label htmlFor="dueDate" className="" title=""><Translate id="text_payment_terms" /></label></div>
+                                <Row>
+                                    <Col md={12} id="paymentTermNumber" style={{paddingRight: "3px"}}>
+                                        <InputNumber
+                                            name="payTermNumber"
+                                            placeholder={`${stringTranslate("text_payment_terms", this.props.locale)}`}
+                                            data={formData.payTermNumber ?? "" }
+                                            defaultValue={formData.payTermNumber ?? ""}
+                                            precision={0}
+                                            form={this.props.form}
+                                        />
+                                    </Col>
+                                    <Col md={12}  id="paymentTermType" style={{paddingLeft: "3px"}}>
+                                        <Form.Item>
+                                            {
+                                                getFieldDecorator("payTermType", {[formData.payTermType?"initialValue":""]: Enum.PAYMENT_TERM_TYPE.DAY === formData.payTermType ? Enum.PAYMENT_TERM_TYPE.DAY : Enum.PAYMENT_TERM_TYPE.MONTH   })
+                                                (
+                                                    <Select
+                                                        placeholder={`${stringTranslate("text_please_select", this.props.locale)}`}
+                                                        style={{marginTop: 4, width: "100%"}}
+                                                    >
+                                                        <Select.Option key={0}  value={Enum.PAYMENT_TERM_TYPE.DAY}><Translate id="text_day" /></Select.Option>
+                                                        <Select.Option key={1} value={Enum.PAYMENT_TERM_TYPE.MONTH}><Translate id="text_month" /></Select.Option>
+                                                    </Select>
+                                                )
+                                            }
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
+                            </div>
+
                             <InputNumber
                                 name="exchangeRate"
                                 label={<Translate id="currency_exchange" />}
@@ -1118,33 +1321,30 @@ class NewInvoice extends React.PureComponent {
                         </Col>
                         <Col md={8} style={{lineHeight: "30px", paddingRight: 25}}>
                             <div style={styles.itemSummary}>
-                                <div style={{width: 100}}><Translate id="text_sub_total" /></div>
+                                <div><Translate id="text_sub_total" /></div>
                                 <div>:</div>
                                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.totalExcludeTax)}</div>
                             </div>
                             <div style={styles.itemSummary}>
-                                <div style={{width: 100}}><Translate id="text_discount" /></div>
+                                <div><Translate id="text_discount" />:</div>
                                 <InputNumber
                                     name="discount"
-                                    data={discount}
+                                    data={discount ? discount : 0}
                                     style={{display: "none"}}
                                     form={this.props.form}
                                 />
-                                <div>:</div>
                                 <div style={{width: 100, textAlign: "right", color: "red"}}>-{this.util.formatCurrency(discount)}</div>
                             </div>
                             <div style={styles.itemSummary}>
-                                <div style={{width: 100}}>VAT({formData.taxRate}%)</div>
-                                <div>:</div>
+                                <div><Translate id="text_vat" />({formData.taxRate}%):</div>
                                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(vat)}</div>
                             </div>
                             <div style={styles.itemSummary}>
-                                <div style={{width: 100}}><Translate id="text_grand_total" /></div>
-                                <div>:</div>
+                                <div><Translate id="text_grand_total" />:</div>
                                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.total - discount)}</div>
-                                <InputNumber 
+                                <InputNumber
                                     name="total"
-                                    data={formData.total}
+                                    data={formData.total ? formData.total : 0}
                                     style={{display: "none"}}
                                     form={this.props.form}
                                 />
@@ -1208,7 +1408,7 @@ class NewInvoice extends React.PureComponent {
                                                 <Translate id="text_void" />
                                             </Menu.Item>
                                             : null
-                                        }
+                                        } 
                                     </Menu>
                                 )}
                                 trigger={["click"]}
@@ -1222,6 +1422,47 @@ class NewInvoice extends React.PureComponent {
                 {this.renderPreviewInvoice(formData)}
                 {this.state.customerForm}
                 {this.state.modalVariant}
+                {
+                    this.state.isShowModal ?
+                    <Modal
+                        title={`${stringTranslate("text_remove", this.props.locale)} ${stringTranslate("text_serial_no", this.props.locale)}`}
+                        visible={this.state.isShowModal}
+                        onCancel={() => this.setState({isShowModal: false})}
+                        footer={null}
+                    >
+                        <div style={{position: "relative"}}>
+                            <Form.Item
+                                label={<Translate id="text_input_serial_for_remove" />}
+                                style={{width: "100%"}} 
+                                wrapperCol={{sm: {span: 24}, xs: {span: 24}}}>
+                                {
+                                    this.props.form.getFieldDecorator("removeSerials", {
+                                    })(
+                                        <Select mode="tags" 
+                                            style={{width: "100%"}}
+                                            placeholder="SerialNo1, SerialNo2, ...."
+                                            dropdownStyle={{display: "none"}}
+                                        />
+                                    )
+                                }
+                            </Form.Item>
+                            <div style={{display: "flex", position: "absolute", right: 5, top: 33, color: "#5656", fontSize: 18}}>
+                                <IconKeyboard style={{opacity: 0.3, marginRight: 5}} />
+                                <div className="icon-scaner icon-clear"></div>
+                            </div>
+                        </div>
+                        <InputText name="serialNameField" style={{display: "none"}} form={this.props.form} />
+                        <div style={{padding: "0 0 22px"}}>
+                            <Button className="danger" onClick={() => this.setState({isShowModal: false})} style={{width: 80}}>
+                                <Translate id="text_cancel" />
+                            </Button>  
+                            <Button className="info" style={{marginLeft: 15, width: 80}} onClick={this.handleRemoveSerialsNo}>
+                                <Translate id="text_ok" />
+                            </Button>
+                        </div>
+                    </Modal>
+                    : null
+                }
                 <Drawer
                     title={<Translate id="text_receive_payment" />}
                     width={520}

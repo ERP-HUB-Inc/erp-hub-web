@@ -14,6 +14,8 @@ export class DatePickers extends Element {
           getFieldDecorator(this.props.name, {rules: [{ type: "object", required: this.props.required, message: this.props.errorRequired }], initialValue: this.props.defaultValue})(
             <this.DatePicker
               format={this.props.dateFormat}
+              onChange={this.props.onChange}
+              allowClear={this.props.allowClear}
               disabled={this.props.disabled} />  
           )
         }

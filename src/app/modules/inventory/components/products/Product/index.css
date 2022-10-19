@@ -269,3 +269,7 @@
 #product-discount-form .ant-radio-group-solid {
     margin-top: 10px;
 }
+
+.ck-editor__editable_inline {
+    min-height: 200px;
+}

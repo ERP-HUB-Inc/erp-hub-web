@@ -92,19 +92,19 @@ export default class Invoice extends List {
         render: (invoiceNumber, record) => {
           const menu = (
             <Menu>
-              <Menu.Item>
+              <Menu.Item key={1}>
                 <this.Link to={`/transactions/update-invoice/${record.id}`}>
                   <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
                 </this.Link>
               </Menu.Item>
-              <Menu.Item>
+              <Menu.Item key={2}>
                 <this.Link to={`/transactions/detail-invoice/${record.id}`}>
                   <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_invoice" />
                 </this.Link>
               </Menu.Item>
               {
                 record.status === Enum.INVOICE_STATUS.PAID && 
-                <Menu.Item>
+                <Menu.Item key={3}>
                   <ReactToPrint
                     content={() => this.receiptRef}
                     onBeforeGetContent={() => this.handlePrintReceipt(record.id)}
@@ -124,10 +124,13 @@ export default class Invoice extends List {
               }
               {
                 record.status === Enum.INVOICE_STATUS.PAID && 
-                <Menu.Item onClick={() => this.handleReturn(record)}>
+                <Menu.Item onClick={() => this.handleReturn(record)} key={4}>
                   <Icon type="close" style={{marginRight: 10}} /> <this.Translate id="text_void" />
                 </Menu.Item>
               }
+              <Menu.Item key={5} onClick={() => this.handleDeleteInvoice(record)} style={{color: "red"}}>
+                <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
+              </Menu.Item>
             </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
@@ -343,6 +346,29 @@ export default class Invoice extends List {
     }
 
     history.push(`/transactions/update-invoice/${record.id}`);
+  }
+
+  handleDeleteInvoice(record) {
+    if (Number(record.status) !== Enum.INVOICE_STATUS.DRAFT) {
+      return this.Util.sweetAlertMessageV2("Sorry", "Allow delete invoice only in draft step", "warning");
+    }
+
+    this.Util.sweetAlertConfirm(this.CATranslate("text_are_you_sure", this.props.locale))
+    .then(willDelete => {
+      if (willDelete) {
+        InvoiceService.delete(record.id)
+        .then(() => {
+          message.success("Delete invoice success");
+          this.fetchList();
+        })
+        .catch(err => {
+          const error = err.response && err.response.data && err.response.data.error;
+          if (error.message) {
+              this.Util.sweetAlertMessageV2("Warning", error.message, "error");
+          }
+        });
+      }
+    });
   }
 
   getProductOrderList(data) {

@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import { Dropdown, Menu, Icon, Tag } from "antd";
 import QuotationA4 from "./QuotationA4";
 import List from "../List";
@@ -28,8 +29,9 @@ export default class QuotationList extends List {
     };
     this.QUOTATION_STATUS_STR = {
       [Enum.QUOTATION_STATUS.DRAFT]: {name: <this.Translate id="text_draft" />, color: "#d9d9d9"},
-      [Enum.QUOTATION_STATUS.PROCESS]: {name: <this.Translate id="text_process" />, color: "#52c41a"},
-      [Enum.QUOTATION_STATUS.CANCELLED]: {name: <this.Translate id="text_cancel" />, color: "#f50"}
+      [Enum.QUOTATION_STATUS.SENT]: {name: <this.Translate id="text_sent" />, color: "#108ee9"},
+      [Enum.QUOTATION_STATUS.APPROVED]: {name: <this.Translate id="text_approved" />, color: "#87d068"},
+      [Enum.QUOTATION_STATUS.CLOSED]: {name: <this.Translate id="text_closed" />, color: "#f50"}
     };
     this.columns = [
       {
@@ -43,8 +45,17 @@ export default class QuotationList extends List {
         dataIndex: "status",
         key: "status",
         width: 120,
-        render: status => {
-          return status in this.QUOTATION_STATUS_STR ? <Tag color={this.QUOTATION_STATUS_STR[status].color} style={{width: 100, textAlign: "center", margin: 0}}>{this.QUOTATION_STATUS_STR[status].name}</Tag> : this.emptyText;
+        render: (status, record) => {
+          const quotation_status = {
+            name: this.QUOTATION_STATUS_STR[Number(status)].name,
+            color: this.QUOTATION_STATUS_STR[Number(status)].color
+          };
+
+          if (record.validDate && moment(moment(record.validDate).format("YYYY-MM-DD")).isBefore(moment(moment().format("YYYY-MM-DD")))) {
+            quotation_status.name = <this.Translate id="text_expired" />;
+            quotation_status.color = "#f5222d";
+          }
+          return status in this.QUOTATION_STATUS_STR ? <Tag color={quotation_status.color} style={{width: 100, textAlign: "center", margin: 0}}>{quotation_status.name}</Tag> : this.emptyText;
         }
       },
       {
@@ -78,15 +89,15 @@ export default class QuotationList extends List {
       },
       {
         title: <this.Translate id="text_customer" />,
-        dataIndex: "customer",
-        key: "customer",
-        render: customer => customer ? `${customer.firstName} ${customer.lastName}` : this.emptyText
+        dataIndex: "firstName",
+        key: "firstName",
+        render: (firstName, record) => `${firstName ? firstName : ""} ${record.lastName ? record.lastName : ""}`
       },
       {
         title: <this.Translate id="text_phone_number" />,
-        dataIndex: "customer",
+        dataIndex: "phoneNumber",
         key: "phoneNumber",
-        render: customer => customer && customer.phoneNumber ? customer.phoneNumber : this.emptyText
+        render: (phoneNumber) => phoneNumber
       },
       {
         title: <this.Translate id="text_sub_total" />,
@@ -114,19 +125,7 @@ export default class QuotationList extends List {
         key: "total",
         align: "right",
         render: (total, record) => this.Util.formatCurrency(total - this.Util.floor(record.discount))
-      },
-      // {
-      //   title: <this.Translate id="text_action" />,
-      //   key: "action",
-      //   align: "center",
-      //   width: 100,
-      //   render: (text, record) => {
-      //     return <this.Button className="mg-right text-uppercase danger" onClick={() => this.handleCancelQuotation(record, this.state.selectedRows)}>
-      //       <span className="icon-cancel icon-padding-right"></span>
-      //       <this.Translate id="text_cancel" />
-      //     </this.Button>;
-      //   }
-      // }
+      }
     ];
     this.customerList = [{firstName: this.CATranslate("text_all_customer", this.props.locale), lastName: "", id: 0}];
     this.formCreate = <FormCreate/>;
@@ -136,17 +135,49 @@ export default class QuotationList extends List {
     this.columnFilterWithKey = ["name", "number"];
     this.service = QuotationService;
     this.action = QuotationAction;
+    this.pathname = "/transactions/quotation";
     this.RESET_CONSTANT = Constant.RESET_QUOTATION;
     this.handleCancelQuotation = this.handleCancelQuotation.bind(this);
     this.handleShowFormAdd = this.handleShowFormAdd.bind(this);
   }
 
   componentDidMount(){
-    this.props.dispatch(QuotationAction.fetch(this.pageSize, "", "", "", "", "", ""));
+    this.fetchList();
     this.props.dispatch(CustomerAction.fetch(100));
     new Promise(() => {
       this.props.dispatch(ReceiptTemplateAction.default());
     });
+  }
+
+  fetchList() {
+    let searchKey = "";
+    let filter = {};
+    let limit = this.pageSize;
+    let ranges = "";
+    let offset = this.state.current;
+    const params = new URLSearchParams(document.location.search);
+    if (params.get("limit")) {
+      limit = Number(params.get("limit"));
+    }
+
+    if (params.get("offset")) {
+      offset = Number(params.get("offset"));
+    }
+
+    if (params.get("search")) {
+      searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
+    }
+
+    if (params.get("start")) {
+      ranges = JSON.stringify({column: "quotationDate", value: [params.get("start"), params.get("end")]});
+    }
+
+    if (params.get("status")) {
+      filter = JSON.stringify({status: [Number(params.get("status"))]});
+    }
+
+    offset = (offset - 1) * limit;
+    this.props.dispatch(QuotationAction.fetch(limit, offset, "", "", filter, searchKey, ranges));
   }
 
   buttonActionCollection(){
@@ -163,23 +194,30 @@ export default class QuotationList extends List {
       e.preventDefault();
       this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
-          let filter = {};
-          let searchKey = "";
+          const params = new URLSearchParams(document.location.search);
 
-          if (values.status !== -1) {
-            filter["status"] = [values.status];
+          if (values.search) {
+            params.set("search", values.search);
+          } else {
+            params.delete("search");
           }
 
-          if (values.customerId) {
-            filter["customerId"] = [values.customerId];
+          if (values.dates && values.dates.length) {
+            params.set("start", moment(values.dates[0]).format("YYYY-MM-DD"));
+            params.set("end", moment(values.dates[1]).format("YYYY-MM-DD"));
+          } else {
+            params.delete("start");
+            params.delete("end");
           }
-          
-          filter = JSON.stringify(filter);
 
-          if(values.key){
-            searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
+          if (values.status && values.status >= 0) {
+            params.set("status", values.status);
+          } else {
+            params.delete("status");
           }
-          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, ""));
+
+          this.Util.pushParamsToURL(this.pathname, params.toString());
+          this.fetchList();
           this.setState({isClickFilter: true});
         }
       
@@ -218,22 +256,18 @@ export default class QuotationList extends List {
         <this.Row className="main-search-layout">
           <this.Col md="2">
             <this.InputText
-              name="key"
+              name="search"
               label={<this.Translate id="text_search" />}
               placeholder={this.CATranslate("text_general", locale)}
               isAutoFocus={true}
               form={form} />
           </this.Col>
           <this.Col md="2">
-            <this.Select
-              name="customerId"
-              label={<this.Translate id="text_customer" /> }
-              dataSource={this.customerList.concat(this.props.customer.list)}
-              defaultValue={this.customerList[0].id}
-              valueKey="id"
-              nameKey="firstName"
-              concatNameKey="lastName"
-              form={form} />
+            <this.DateRangePicker
+              name="dates"
+              label={<this.Translate id="text_date" />}
+              form={form}
+              ranges={[]} />
           </this.Col>
           <this.Col md="2">
             <this.Select
@@ -315,10 +349,27 @@ export default class QuotationList extends List {
   }
 
   handleShowFormUpdate(rowData){
-    if(rowData.status === Enum.QUOTATION_STEP.DRAFT){
-      history.push(`/transactions/quotation-update/${rowData.id}`);
-    }else{
-      this.Message.warning(this.CATranslate("text_error_allow_update_only_draft_step", this.props.locale));
-    }
+    history.push(`/transactions/quotation-update/${rowData.id}`);
   }
+
+  onShowSizeChange(current, pageSize) {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+  }
+
+  onChangePagination(current, pageSize) {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+  }
+
 }

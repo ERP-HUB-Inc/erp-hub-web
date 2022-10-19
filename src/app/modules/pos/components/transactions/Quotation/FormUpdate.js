@@ -141,7 +141,7 @@ export default class Form extends Retail {
             values["totalExcludeTax"] = summaryTotal.subTotalAfterDiscount;
             values["discount"] = discountAmount;
             values["terms"] = this.state.discountValue.value;
-            values["Entries"] = productOrderList;
+            values["entries"] = productOrderList;
 
             if(this.state.selectedCustomer && this.state.quotationId) {
             values["customerId"] = this.state.selectedCustomer.id;

@@ -21,7 +21,8 @@ import {
   Tabs,
   Dropdown,
   Menu,
-  message
+  message,
+  Badge
 } from "antd";
 import { 
   DatePickers,
@@ -51,6 +52,7 @@ const {TabPane} = Tabs;
 class FormItem extends React.PureComponent {
   state = {
     loading: false,
+    loadingEntry: false,
     formData: {},
     productSearch: [],
     customers: [],
@@ -104,12 +106,7 @@ class FormItem extends React.PureComponent {
             data={description}
             inputStyle={{width: "100%"}}
             style={{width: "100%"}}
-            handleOnChange={(e) => {
-              const value = e.target.value;
-              this.setState(preState => {
-                preState.quotationEntries[index].description = value;
-              });
-            }}
+            handleOnChange={(e) => this.onChangeDescription(e, index)}
             form={this.props.form} />
         </div>;
       }
@@ -159,6 +156,12 @@ class FormItem extends React.PureComponent {
       }
     }
   ];
+  QUOTATION_STATUS_STR = {
+    [Enum.QUOTATION_STATUS.DRAFT]: {name: stringTranslate("text_draft", this.props.locale), color: "#d9d9d9"},
+    [Enum.QUOTATION_STATUS.SENT]: {name: stringTranslate("text_sent", this.props.locale), color: "#108ee9"},
+    [Enum.QUOTATION_STATUS.APPROVED]: {name: stringTranslate("text_approved", this.props.locale), color: "#87d068"},
+    [Enum.QUOTATION_STATUS.CLOSED]: {name: stringTranslate("text_closed", this.props.locale), color: "#f50"}
+  };
   util = new Util();
   pageTitle = "text_create_quotation";
   id = "";
@@ -196,9 +199,9 @@ class FormItem extends React.PureComponent {
           template: Enum.PAPER_SIZE.EXCLUDE_TAX
         };
         preState.quotationEntries = [{
+          id: "",
           productVariantId: "",
           variantName: "",
-          categoryId: "",
           description: "",
           unitId: "",
           quantity: 1,
@@ -255,11 +258,16 @@ class FormItem extends React.PureComponent {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        const {formData} = this.state;
+
+        if (this.id && ![Enum.QUOTATION_STATUS.DRAFT, Enum.QUOTATION_STATUS.SENT].includes(Number(formData.status))) {
+          return this.util.sweetAlertMessageV2("Warning", "Can't update quotation in this step", "warning");
+        }
+
         if (!values.customerId) {
           this.textRequiredCustomer = <Translate id="text_required_customer" />;
           return;
         }
-        const {formData} = this.state;
         const subTotal = this.getTotal();
         if (formData.discount > subTotal) {
           this.textDiscountErr = "Discount amount must be less than total amount";
@@ -284,17 +292,20 @@ class FormItem extends React.PureComponent {
         const quotationEntries = [];
         if (values["description"] && values["description"].length) {
           values["description"].forEach((description, index) => {
-            quotationEntries.push({
-              id: values.id[index],
-              productVariantId: values.productVariantId[index],
-              description,
-              quantity: values.quantity[index],
-              price: values.price[index],
-              discount: 0,
-              status: values.status[index]
-            });
+            if (description || values.quantity[index]) {
+              quotationEntries.push({
+                id: values.id[index],
+                productVariantId: values.productVariantId[index],
+                description,
+                unitName: this.state.quotationEntries[index].unitName,
+                quantity: values.quantity[index],
+                price: values.price[index],
+                discount: 0,
+                status: values.status[index]
+              });
+            }
           });
-          quotation["Entries"] = quotationEntries;
+          quotation["entries"] = quotationEntries;
         } else {
           return this.util.sweetAlertMessage(stringTranslate("text_please_select_product", this.props.locale), "warning");
         }
@@ -307,7 +318,7 @@ class FormItem extends React.PureComponent {
   getDetail(id) {
     this.setState({loading: true});
     const action = new URLSearchParams(document.location.search).get("action");
-    QuotationService.detail2(id)
+    QuotationService.detail(id)
     .then(response => {
       const data = response.data.data;
       let totalExcludeTax = Number(data.totalExcludeTax);
@@ -332,7 +343,9 @@ class FormItem extends React.PureComponent {
       data.taxRate = taxRate;
 
       if (action === "clone") {
+        this.pageTitle = "text_create_quotation";
         data.number = "";
+        data.quotationDate = moment().format("YYYY-MM-DD");
       }
 
       delete data.quotationEntries;
@@ -367,12 +380,33 @@ class FormItem extends React.PureComponent {
       .then(response => {
         message.success("Create quotation success");
         this.id = response.data.data.id;
-        history.push(`/transactions/quotation-update/${this.id}`);
+        history.push(`/transactions/quotation-update/${this.id}?after-created=1`);
         this.pageTitle = "text_edit_quotation";
         this.getDetail(this.id);
       })
       .catch(() => message.error("Error!.."))
       .finally(() => this.setState({loadingButton: false}));
+    }
+  }
+
+  onChangeDescription = (e, index) => {
+    const value = e.target.value;
+    const {quotationEntries} = this.state;
+    quotationEntries[index].description = value;
+    const activeEntries = quotationEntries.filter(item => item.status !== 3);
+    if (value && index === (activeEntries.length - 1)) {
+      quotationEntries.push({
+        id: "",
+        productVariantId: "",
+        unitName: "",
+        description: "",
+        quantity: 0,
+        cost: 0,
+        price: 0,
+        discount: 0,
+        amount: 0,
+        status: 1
+      });
     }
   }
 
@@ -457,6 +491,7 @@ class FormItem extends React.PureComponent {
     let isProductVariant = product.productOption === EnumProduct.PRODUCT_VARIANT;
     let discount = this.props.form.getFieldValue("discountField");
     let type = this.props.form.getFieldValue("discountType");
+    this.setState({loadingEntry: true});
     if (isProductVariant && isRequestVariantForm) {
       this.setState({
         selectedProduct: product,
@@ -471,11 +506,15 @@ class FormItem extends React.PureComponent {
     }
     
     const formData = this.state.formData;
-    const existingProductList = this.state.quotationEntries;
+    const existingProductList = [];
+    Object.assign(existingProductList, this.state.quotationEntries);
     if (existingProductList.length === 0) {
-      existingProductList.push({
+      existingProductList.unshift({
+        id: "",
         productVariantId: productVariant.id,
         description: `${product.name ? product.name : product.namekm} ${isProductVariant ? productVariant.name : ""}`,
+        unitName: product.unit.name,
+        cost: productVariant.cost,
         quantity: 1,
         price: productVariant.price,
         discount: 0,
@@ -494,10 +533,13 @@ class FormItem extends React.PureComponent {
       });
 
       if (isNotTheSameProduct) {
-        existingProductList.push({
+        existingProductList.unshift({
+          id: "",
           productVariantId: productVariant.id,
+          unitName: product.unit.name,
           description: `${product.name ? product.name : product.namekm} ${isProductVariant ? productVariant.name : ""}`,
           quantity: 1,
+          cost: productVariant.cost,
           price: productVariant.price,
           discount: 0,
           amount: (productVariant.price * 1),
@@ -515,10 +557,15 @@ class FormItem extends React.PureComponent {
       discount = this.util.getValueFromPercentage(total, discount);
     }
     formData.discount = discount;
-
+    
     this.setState({quotationEntries: existingProductList, formData});
-    this.props.form.setFieldsValue({searchProduct: ""});
-    document.getElementById("searchProduct").focus();
+    this.props.form.setFieldsValue({
+      searchProduct: "",
+      [`description[${0}]`]: existingProductList[0].description,
+      [`quantity[${0}]`]: existingProductList[0].quantity,
+      [`price[${0}]`]: existingProductList[0].price
+    });
+    this.setState({loadingEntry: false});
   }
 
   removeEntry = (index) => {
@@ -540,7 +587,14 @@ class FormItem extends React.PureComponent {
       });
     } else {
       quotationEntries.splice(index, 1);
-      this.setState({quotationEntries, productSearch: []});
+      let discount = this.props.form.getFieldValue("discountField");
+      let type = this.props.form.getFieldValue("discountType");
+      if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+        let total = this.getTotal();
+        discount = this.util.getValueFromPercentage(total, discount);
+      }
+      formData.discount = discount;
+      this.setState({quotationEntries, formData, productSearch: []});
     }
   }
 
@@ -560,7 +614,12 @@ class FormItem extends React.PureComponent {
           message.success("Delete success!");
           history.goBack();
         })
-        .catch(() => message.error("Error!..."));
+        .catch(err => {
+          const error = err.response && err.response.data && err.response.data.error;
+          if (error.message) {
+            this.util.sweetAlertMessageV2("Sorry", error.message, "error");
+          }
+        });
       }
     });
   }
@@ -587,19 +646,6 @@ class FormItem extends React.PureComponent {
             this.setState({quotationEntries: []});
         }
     }
-  }
-
-  handleNewProposal = () => {
-    this.id = "";
-    this.setState({
-      formData: {
-        taxRate: 0,
-        discount: 0,
-        publicNote: ""
-      },
-      quotationEntries: []
-    });
-    history.push("/transactions/quotation-create");
   }
 
   fetchCustomer = (value) => {
@@ -635,8 +681,8 @@ class FormItem extends React.PureComponent {
   }
 
   handleGoBack = () => {
-    const action = new URLSearchParams(window.location.search).get("action");
-    if (action) {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("action") || params.get("after-created")) {
       history.push("/transactions/quotation");
     } else {
       history.goBack();
@@ -712,8 +758,6 @@ class FormItem extends React.PureComponent {
     formData.invoiceDate = formData.quotationDate;
     formData.dueDate = formData.validDate;
     formData.invoiceNumber = formData.number;
-    formData.company = formData.customer && formData.customer.company;
-    formData.address = formData.customer && formData.customer.address;
     return <div id="wrap-invoice-form">
       <CAInvoice 
         invoiceTitle="Quotation"
@@ -745,6 +789,7 @@ class FormItem extends React.PureComponent {
     formData.totalExcludeTax = subTotal;
     let vat = this.util.getTaxValue(subTotal - discount, formData.taxRate);
     formData.total = subTotal + vat;
+    formData.status = Number(formData.status);
     return (
       !this.state.loading && Object.keys(formData).length ?
       <div>
@@ -756,7 +801,14 @@ class FormItem extends React.PureComponent {
           position: "relative"
           }}
           onBack={this.handleGoBack}
-          title={<Translate id={this.pageTitle} />} />
+          title={<Translate id={this.pageTitle} />} 
+          subTitle={  
+            <div>
+              <Translate id="text_quotation" />
+              {this.id && formData.status >= 0 ? <Badge count={this.QUOTATION_STATUS_STR[formData.status].name} style={{ backgroundColor: this.QUOTATION_STATUS_STR[formData.status].color}} /> : ""}
+            </div>
+          }
+        />
 
         <Form onSubmit={this.handleSubmit} {...formItemLayout} id="invoice-form">
           <Row>
@@ -874,6 +926,7 @@ class FormItem extends React.PureComponent {
                 className="table-form-invoice-entry"
                 dataSource={this.state.quotationEntries}
                 pagination={false}
+                loading={this.state.loadingEntry}
                 locale={{emptyText: <Translate id="text_no_sale_entries_product" />}}
                 rowClassName={((record) => record.status === 3 ? "hidden" : "")}
               />
@@ -986,8 +1039,8 @@ class FormItem extends React.PureComponent {
                           <Translate id="text_clone" />
                         </Link>
                       </Menu.Item>
-                      <Menu.Item key={3} onClick={this.handleNewProposal}>
-                        <Translate id="text_new_proposal" />
+                      <Menu.Item key={3}>
+                        <Link to="/transactions/quotation-create" target="_blank"><Translate id="text_new_proposal" /></Link>
                       </Menu.Item>
                       <Menu.Item key={4} onClick={() => this.handleDeleteQuotation(formData.id)}>
                         <Translate id="text_delete" />

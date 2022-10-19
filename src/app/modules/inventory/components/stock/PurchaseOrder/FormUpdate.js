@@ -218,20 +218,24 @@ export default class PurchaseOrderUpdate extends Component {
     }
 
     return <div style={{marginBottom: 25, height: "100%"}}>
-      <PageHeader
-        style={{
-            backgroundColor: "#f7f7f7",
-            paddingLeft: 0,
-            paddingRight: 0
-        }}
-        onBack={() => history.goBack()}
-        title={<this.Translate id="text_po" />}
-        subTitle={<div><this.Translate id="text_po" /><Badge count={this.PO_STEP_STR[step].name} style={{ backgroundColor: this.PO_STEP_STR[step].color}} /></div>}
-        extra={[]}
-      />
       {
-        purchaseOrderDetail.fetched ?
-        <Form autoComplete="off" onSubmit={this.handleSubmit} style={{height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
+      purchaseOrderDetail.fetched ?
+      <Form autoComplete="off" onSubmit={this.handleSubmit}>
+        <PageHeader
+          style={{
+              backgroundColor: "#f7f7f7",
+              paddingLeft: 0,
+              paddingRight: 0
+          }}
+          onBack={() => history.goBack()}
+          title={<this.Translate id="text_po" />}
+          subTitle={<div><this.Translate id="text_po" /><Badge count={this.PO_STEP_STR[step].name} style={{ backgroundColor: this.PO_STEP_STR[step].color}} /></div>}
+          extra={[
+            <this.Button key="1" htmlType="submit" loading={purchaseOrderUpdate.updating} className="info" style={{marginLeft: 15}} id="btnSubmit">
+              <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />(Ctrl+s)
+            </this.Button>
+          ]}
+        />
           <FormItem 
             form={form} 
             formData={purchaseOrderDetail.data}
@@ -245,19 +249,11 @@ export default class PurchaseOrderUpdate extends Component {
             buttonPushToSupplier={buttonPushToSupplier}
             reportProduct={this.props.reportProduct}
             locale={locale} />
-          <this.Row style={{justifyContent: "center", marginTop: 25, marginBottom: 25}}>
-            <this.Button className="danger" onClick={this.handleCancel}>
-              <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_back" />
-            </this.Button>  
-            <this.Button htmlType="submit" loading={purchaseOrderUpdate.updating} className="info" style={{marginLeft: 15}} id="btnSubmit">
-              <span className="icon-save icon-padding-right"></span><this.Translate id="text_save" />(Ctrl+s)
-            </this.Button>
-          </this.Row>
-        </Form>
-        :
-        <div style={{width: 30, margin: "0 auto"}}>
-          <Spin />
-        </div>
+      </Form>
+      :
+      <div style={{width: 30, margin: "0 auto"}}>
+        <Spin />
+      </div>
       }
     </div>;
   }

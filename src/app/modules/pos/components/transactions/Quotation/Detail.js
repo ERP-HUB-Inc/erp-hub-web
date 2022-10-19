@@ -9,7 +9,8 @@ import {
   Icon,
   message,
   Spin,
-  Form
+  Form,
+  Badge
 } from "antd";
 import history from "../../../../common/router/history";
 import Enum from "../../../enums";
@@ -23,12 +24,18 @@ class Detail extends React.PureComponent {
     formData: {},
     loading: false
   }
+  QUOTATION_STATUS_STR = {
+    [Enum.QUOTATION_STATUS.DRAFT]: {name: stringTranslate("text_draft", this.props.locale), color: "#d9d9d9"},
+    [Enum.QUOTATION_STATUS.SENT]: {name: stringTranslate("text_sent", this.props.locale), color: "#108ee9"},
+    [Enum.QUOTATION_STATUS.APPROVED]: {name: stringTranslate("text_approved", this.props.locale), color: "#87d068"},
+    [Enum.QUOTATION_STATUS.CLOSED]: {name: stringTranslate("text_closed", this.props.locale), color: "#f50"}
+  };
   util = new Util();
 
   componentDidMount() {
     const id = this.props.match.params.id;
     this.setState({loading: true});
-    QuotationService.detail2(id)
+    QuotationService.detail(id)
     .then(response => {
       this.setState({formData: response && response.data.data});
     })
@@ -72,8 +79,7 @@ class Detail extends React.PureComponent {
     formData.invoiceDate = formData.quotationDate;
     formData.dueDate = formData.validDate;
     formData.invoiceNumber = formData.number;
-    formData.company = formData.customer && formData.customer.company;
-    formData.address = formData.customer && formData.customer.address;
+    formData.status = Number(formData.status);
 
     return (
       <div style={{marginBottom: 25}}>
@@ -86,7 +92,16 @@ class Detail extends React.PureComponent {
           }}
           onBack={() => history.goBack()}
           title={<Translate id="text_quotation" />}
-          subTitle={formData.invoiceNumber}
+          subTitle={  
+            <div>
+              {formData.number}
+              {
+                Object.keys(formData).length && formData.status >= 0 ?
+                  <Badge count={this.QUOTATION_STATUS_STR[formData.status].name} style={{ backgroundColor: this.QUOTATION_STATUS_STR[formData.status].color}} />
+                : null
+              }
+            </div>
+          }
           extra={[
             <Dropdown key={1} overlay={(
               <Menu>

@@ -25,6 +25,7 @@
 #retail-sale .wrap-category {
     overflow: auto hidden;
     margin-bottom: 15px;
+    margin-left: -20px;
     height: 60px;
     flex: none
 }
@@ -33,7 +34,7 @@
     width: 390px
 }
 
-#retail-sale #left-block .wrap-category,
+/* #retail-sale #left-block .wrap-category, */
 #retail-sale #left-block .wrap-product-box-list {
     padding: 5px;
     background-color: #FAFAFA;
@@ -90,7 +91,7 @@
     padding-left: 10px;
     padding-right: 10px;
     color: #4D4F5C;
-    height: 40px;
+    height: 52px;
     font-weight: 500;
     display: flex;
     align-items: center;
@@ -111,13 +112,14 @@
 }
 
 
-#retail-sale .category-box,
+/* #retail-sale .category-box, */
 #retail-sale .product-box,
 .wrap-product-varaint .product-variant .variant-box {
     padding: 5px !important
 }
 
 #retail-sale .category-box {
+    padding: 5px;
     max-width: none !important;
     flex: none !important
 }

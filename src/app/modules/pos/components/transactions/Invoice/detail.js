@@ -9,7 +9,8 @@ import {
   Menu,
   Drawer,
   Form,
-  message
+  message,
+  Badge
 } from "antd";
 import ReactToPrint from "react-to-print";
 import Util from "../../../../common/util";
@@ -30,6 +31,13 @@ class InvoiceDetail extends React.PureComponent {
     showDrawer: false,
     receipt: {}
   }
+  INVOICE_STATUS_STR = {
+    [Enum.INVOICE_STATUS.DRAFT]: { title: stringTranslate("text_draft", this.props.locale), color: "#bfbfbf" },
+    [Enum.INVOICE_STATUS.SENT]: { title: stringTranslate("text_sent", this.props.locale), color: "#1890ff" },
+    [Enum.INVOICE_STATUS.PARTIAL]: { title: stringTranslate("text_partial_pay", this.props.locale), color: "#52c41a"},
+    [Enum.INVOICE_STATUS.PAID]: { title: stringTranslate("text_paid", this.props.locale), color: "#52c41a"},
+    [Enum.INVOICE_STATUS.VOID]: { title: stringTranslate("text_void", this.props.locale), color: "#d9d9d9"},
+  };
   lastId = "";
   util = new Util();
 
@@ -131,7 +139,16 @@ class InvoiceDetail extends React.PureComponent {
           }}
           onBack={() => history.goBack()}
           title={<Translate id="text_invoice" />}
-          subTitle={formData.invoiceNumber}
+          subTitle={  
+            <div>
+              {formData.invoiceNumber}
+              {
+                Object.keys(formData).length && formData.status >= 0 ?
+                  <Badge count={this.INVOICE_STATUS_STR[formData.status].title} style={{ backgroundColor: this.INVOICE_STATUS_STR[formData.status].color}} />
+                : null
+              }
+            </div>
+          }
           extra={[
             <InputText
               key={0}

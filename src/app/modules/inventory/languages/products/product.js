@@ -174,6 +174,11 @@ export default {
     "ការកំណត់គេហទំព័រ"
   ],
 
+  "text_web_display": [
+    "Web Display",
+    "ការកំណត់គេហទំព័រ"
+  ],
+
   "text_featured_product": [
     "Featured Product",
     "ផលិតផលពិសេស"
@@ -258,6 +263,11 @@ export default {
   "text_serial": [
     "Serial",
     "លេខរៀងផលិតផល"
+  ],
+
+  "text_serial_no": [
+    "Serial Number",
+    "លេខ​សម្គាល់ផលិតផល"
   ],
 
   "text_non_inventory": [

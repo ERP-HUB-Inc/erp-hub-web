@@ -210,6 +210,11 @@ export default {
     "Expired Date"
   ],
 
+  "text_expired": [
+    "Expired",
+    "ផុតកំណត់"
+  ],
+
   "text_plan": [
     "Plan",
     "គំរោង",
@@ -292,6 +297,11 @@ export default {
     "Payment Condition",
     "ល័ក្ខខ័ណ្ឌទូទាត់",
     "Payment Condition"
+  ],
+
+  "text_payment_terms": [
+    "Payment Term",
+    "រយៈពេលទូទាត់ប្រាក់"
   ],
 
   "text_new_device_success": [
