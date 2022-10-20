@@ -18,6 +18,9 @@ export default class TextAreas extends Element {
             {
               min: this.props.min,
               message: this.props.errorLenght
+            },
+            {
+              validator: this.props.validator
             }
           ],
           initialValue: this.props.data})(
@@ -25,6 +28,7 @@ export default class TextAreas extends Element {
               placeholder={this.props.placeholder}
               rows={this.props.rows}
               cols={this.props.cols}
+              style={this.props.inputStyle}
               onKeyUp={this.props.handleKeyUp}
               onChange={this.props.onChange}
               disabled={this.props.disabled}
