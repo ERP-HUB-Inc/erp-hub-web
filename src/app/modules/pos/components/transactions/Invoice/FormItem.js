@@ -16,7 +16,7 @@ import {
     Menu,
     Drawer,
     Badge,
-    Modal
+    Tag
 } from "antd";
 import { Translate } from "react-localize-redux";
 import { connect } from "react-redux";
@@ -34,7 +34,6 @@ import {
     Button,
     InputTextArea
 } from "../../../../common/elements/ant-ui";
-import { IconKeyboard } from "../../../../common/elements/IconKeyboard";
 import "./formItem.css";
 import Enum from "../../../enums/index";
 import EnumProduct from "../../../../inventory/enums";
@@ -46,7 +45,6 @@ import CustomerAction from "../../../../crm/actions/customers/customer";
 import CustomerConstant from "../../../../crm/constants/customers/customer";
 import InvoiceService from "../../../services/transactions/InvoiceService";
 import QuotationService from "../../../services/transactions/QuotationService";
-import SerialService from "../../../services/transactions/SerialService";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import SearchProductDropdown from "./SearchProduct";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
@@ -55,6 +53,8 @@ import CAInvoice from "../../transactions/Invoice/CAInvoice";
 import InputInvoiceNo from "./InvoiceNo";
 import ReceiptTemplate from "../receipt/template";
 import ReceivedPayment from "../ReceivedPayment/Form";
+import SerialForm from "./SerialForm";
+import SerialFormDelete from "./SerialFormDelete";
 
 const {TabPane} = Tabs;
 
@@ -88,9 +88,12 @@ class NewInvoice extends React.PureComponent {
         showDrawer: false,
         selectedProduct: null,
         modalVariant: null,
-        isShowModal: false
+        isShowModal: false,
+        serialFormData: {},
+        deleteSerialIndex: null
     }
     action = new URLSearchParams(window.location.search).get("action");
+    modalTitle = "";
     entryColumn = [
         {
             title: <Translate id="text_no" />,
@@ -154,8 +157,9 @@ class NewInvoice extends React.PureComponent {
             width: 600,
             render: (description, record, index) => {
                 let serials = [];
-                if (record.serialNo) {
-                    serials = record.serialNo.toString().split(",");
+                if (record.serialNo && this.util.isJsonString(record.serialNo)) {
+                    let serialArr = JSON.parse(record.serialNo);
+                    serials = serialArr;
                 }
                 return <div>
                     <InputText 
@@ -173,40 +177,43 @@ class NewInvoice extends React.PureComponent {
                         form={this.props.form} />
                     
                     {
-                        record.enableDescription || serials.length ? <div style={{position: "relative"}}>
-                            <Form.Item 
-                                style={{width: "100%", marginTop: 5, textAlign: "left"}} 
-                                wrapperCol={{sm: {span: 24}, xs: {span: 24}}}
-                                labelAlign="left"
-                                label="IMEI OR SERIAL"
-                            >
-                            {
-                                this.props.form.getFieldDecorator(`serialNo[${index}]`, {
-                                    rules: [
-                                        {
-                                            required: true,
-                                            message: stringTranslate("error_serial_number_require", this.props.locale)
-                                        },
-                                        {
-                                            validator: (rule, value, callback) => this.validateSerialNo(value, callback, index)
-                                        }
-                                    ],
-                                    initialValue: serials
-                                })(
-                                    <Select mode="tags" 
-                                        style={{width: "100%"}}
-                                        placeholder="serialNo1, serialNo2, ...."
-                                        dropdownStyle={{display: "none"}}
-                                        onChange={(value) => this.handleChangeSerialNo(value, index)}
-                                    />
-                                )
-                            }
-                            </Form.Item>
-                            <div style={{display: "flex", position: "absolute", right: 5, top: 28, color: "#5656", fontSize: 18}}>
-                                <IconKeyboard style={{opacity: 0.3, marginRight: 5, cursor: "pointer"}} onClick={() => this.handelFocus(`serialNo[${index}]`)} />
-                                <div style={{cursor: "pointer"}} className="icon-scaner icon-clear" onClick={() => this.handelFocus(`serialNo[${index}]`)} />
+                        record.enableDescription ? <React.Fragment>
+                            <div style={{marginTop: 3}}><i style={{color: "red"}}>*</i> IMEI OR SERIAL</div>
+                            <div style={{marginBottom: 4}}>
+                                {
+                                    serials && serials.map((serial, key) => 
+                                        <Tag 
+                                            onClose={() => this.handleRemoveSerialNo(index, key)}
+                                            style={{cursor: "pointer", marginTop: 7}}
+                                            title={stringTranslate("text_double_click_edit_serial", this.props.locale)}
+                                            onDoubleClick={() => this.handleUPdateSerial(serial, index, key)}
+                                        >
+                                            {serial.serialNo}
+                                        </Tag>
+                                    )
+                                }
+                                <Button type="info" style={{fontSize: 12, height: 23, marginTop: 7, marginRight: 8}} onClick={() => this.handleShowModal(index)} >
+                                    <Icon type="plus-circle" style={{paddingRight: 5}} />
+                                    <Translate id="text_add" />
+                                </Button>
+                                {
+                                    serials.length ?
+                                    <Button className="danger" style={{fontSize: 12, height: 23, marginTop: 7}} onClick={() => this.onShowDeleteSerialForm(index)}>
+                                        <Icon type="close-circle" style={{paddingRight: 5}} />
+                                        <Translate id="text_delete" />
+                                    </Button>
+                                    : null
+                                }
                             </div>
-                        </div> : null
+                            <InputTextArea 
+                                name={`serialNo[${index}]`}
+                                required={true}
+                                errorRequired={stringTranslate("error_serial_number_require", this.props.locale)}
+                                validator={(rule, value, callback) => this.validateSerialNo(value, callback, index)}
+                                data={serials.length ? JSON.stringify(serials) : null}
+                                inputStyle={{display: "none"}}
+                                form={this.props.form} />
+                        </React.Fragment> : null
                     }
                     
                 </div>;
@@ -320,7 +327,8 @@ class NewInvoice extends React.PureComponent {
                     ...entry,
                     variantName: entry.description,
                     discount: 0,
-                    amount: entry.quantity * entry.price
+                    amount: entry.quantity * entry.price,
+                    enableDescription: entry.productVariant && entry.productVariant.product && entry.productVariant.product.enableDescription
                 }));
                 delete data.quotationEntries;
 
@@ -494,6 +502,7 @@ class NewInvoice extends React.PureComponent {
                 ...entry, 
                 discount: 0,
                 amount: entry.quantity * entry.price,
+                enableDescription: entry.productVariant && entry.productVariant.product && entry.productVariant.product.enableDescription
             }));
 
             let discount = data.discount;
@@ -535,6 +544,7 @@ class NewInvoice extends React.PureComponent {
             })
             .catch(() => message.error("Error"))
             .finally(() => this.setState({saveLoading: false}));
+            //eslint-disable-next-line
         } else {
             InvoiceService.create(invoice)
             .then((response) => {
@@ -582,29 +592,83 @@ class NewInvoice extends React.PureComponent {
         this.setState({transactionEntries});
     }
 
-    handleChangeSerialNo = (serials, index) => {
-        if (serials && serials.length) {
-            const serialNo = serials[serials.length - 1];
-            SerialService.findByNumber(serialNo)
-            .then(response => {
-                if (response.data && response.data.length) {
-                    serials.pop();
-                    this.props.form.setFields({
-                        [`serialNo[${index}]`]: {
-                            value: serials,
-                            errors: [new Error(serialNo + ": " + stringTranslate("text_this_serial_is_sold", this.props.locale))]
-                        }
-                    });
-                }
-            })
-            .catch(err => console.log("error", err.response));
+    handleShowModal(index) {
+        this.modalTitle = <div><Translate id="text_add" /> <Translate id="text_serial_no" /></div>;
+        this.setState({
+            serialFormData: {
+                serialNo: "",
+                warrantyDate: "",
+                index,
+                index2: null
+            }
+        });
+        this.serialRef.handleShowModal();
+    }
+
+    handleUPdateSerial(serial, index, index2) {
+        this.modalTitle = <div><Translate id="text_edit" /> <Translate id="text_serial_no" /></div>;
+        this.setState({
+            serialFormData: {
+                serialNo: serial.serialNo,
+                warrantyDate: serial.warrantyDate,
+                index,
+                index2
+            }
+        });
+        this.serialRef.handleShowModal();
+    }
+
+    onShowDeleteSerialForm(index) {
+        this.setState({
+            deleteSerialIndex: index
+        });
+        this.deleteSerialRef.handleShowModal();
+    }
+
+    handleSaveSerialNo = (values) => {
+        let transactionEntries = [];
+        const index = Number(values.fieldIndex);
+        const index2 = values.fieldIndex2;
+        const serialNumber = values.serialNumber;
+        const warrantyDate = values.warrantyDate;
+
+        if (!serialNumber && !warrantyDate) {
+            return false;
         }
+
+        Object.assign(transactionEntries, this.state.transactionEntries);
+        let newSerials = [];
+        let serialsNo = transactionEntries[index].serialNo;
+        if (serialsNo && this.util.isJsonString(serialsNo)) {
+            serialsNo = JSON.parse(serialsNo);
+            if (serialsNo && serialsNo.length) {
+                newSerials = serialsNo;
+            }
+        }
+
+        if (index2 === null) {
+            newSerials.push({serialNo: serialNumber, warrantyDate});
+        } else {
+            newSerials[index2].serialNo = serialNumber;
+            newSerials[index2].warrantyDate = warrantyDate;
+        }
+
+        newSerials = JSON.stringify(newSerials);
+        transactionEntries[index].serialNo = newSerials;
+        this.setState({transactionEntries, isShowModal: false});
+        this.props.form.setFieldsValue({[`serialNo[${index}]`]: newSerials});
+        setTimeout(() => {
+            this.props.form.validateFields([`serialNo[${index}]`]);
+        }, 600);
     }
 
     validateSerialNo(value, callback, index) {
-        let qty = this.props.form.getFieldValue(`quantity[${index}]`);
-        if (value && value.length !== Number(qty)) {
-            callback(stringTranslate("text_serial_number_must_equal_quantity", this.props.locale));
+        if (value && this.util.isJsonString(value)) {
+            value = JSON.parse(value);
+            let qty = this.props.form.getFieldValue(`quantity[${index}]`);
+            if (value && value.length !== Number(qty)) {
+                callback(stringTranslate("text_serial_number_must_equal_quantity", this.props.locale));
+            }
         }
 
         callback();
@@ -612,15 +676,9 @@ class NewInvoice extends React.PureComponent {
 
     onChangeQty = (qty, index) => {
         if (!qty || qty < 0) qty = 0;
-        const serialNos = this.props.form.getFieldValue(`serialNo[${index}]`);
-        if (serialNos && serialNos.length) {
-            if (qty < serialNos.length) {
-                this.setState({isShowModal: true}, () => {
-                    this.props.form.setFieldsValue({
-                        serialNameField: `serialNo[${index}]`
-                    });
-                });
-            }
+        let serialNos = this.props.form.getFieldValue(`serialNo[${index}]`);
+        if (serialNos && this.util.isJsonString(serialNos)) {
+            serialNos = JSON.parse(serialNos);
             this.props.form.validateFields([`serialNo[${index}]`]);
         }
 
@@ -661,19 +719,30 @@ class NewInvoice extends React.PureComponent {
         });
     }
 
-    handleRemoveSerialsNo = () => {
-        const removeSerials = this.props.form.getFieldValue("removeSerials");
-        const serialNameField = this.props.form.getFieldValue("serialNameField");
+    handleRemoveSerialsNo = (values) => {
+        const removeSerials = values.serials;
+        const index = Number(values.index);
+        const {transactionEntries} = this.state;
+        let serialsNo = transactionEntries[index].serialNo;
+        if (serialsNo && this.util.isJsonString(serialsNo)) {
+            serialsNo = JSON.parse(serialsNo);
+            if (serialsNo.length) {
+                serialsNo = serialsNo.filter(serial => !removeSerials.includes(serial.serialNo));
+                this.setState(prevState => {
+                    prevState.transactionEntries[index].serialNo = JSON.stringify(serialsNo);
+                    this.props.form.setFieldsValue({[`serialNo[${index}]`]: JSON.stringify(serialsNo)});
+                    return prevState;
+                });
+                
+                setTimeout(() => {
+                    this.props.form.validateFields([`serialNo[${index}]`]);
+                }, 600);
 
-        const serialsNo = this.props.form.getFieldValue(serialNameField);
-        
-        const newSerials = serialsNo.filter(serial => !removeSerials.includes(serial));
-        if (newSerials) {
-            this.props.form.setFieldsValue({[`${serialNameField}`]: newSerials});
-            this.setState({isShowModal: false});
+                this.deleteSerialRef.handleCancel();
+            }
         }
-    }
-
+    }        
+        
     onChangeTotalDiscount = (discount) => {
         this.textDiscountErr = "";
         this.setState(preState => {
@@ -709,10 +778,6 @@ class NewInvoice extends React.PureComponent {
                 return preState;
             });
         }
-    }
-
-    handelFocus(fieldName) {
-        
     }
 
     onChangeTemplate = (value) => {
@@ -1078,9 +1143,9 @@ class NewInvoice extends React.PureComponent {
                     xs: { span: 24 },
                     sm: { span: 10 },
                 },
-                wrapperCol: {
-                    xs: { span: 24 },
-                    sm: { span: 14 },
+            wrapperCol: {
+                xs: { span: 24 },
+                sm: { span: 14 },
             },
         };
         const {formData} = this.state;
@@ -1155,7 +1220,7 @@ class NewInvoice extends React.PureComponent {
 
                             <div style={{display:"flex"}}>
                                 <div className="ant-col ant-form-item-label ant-col-xs-24 ant-col-sm-10" style={{marginTop: "10px"}}><label htmlFor="dueDate" className="" title=""><Translate id="text_payment_terms" /></label></div>
-                                <Row>
+                                <Row style={{width: "100%"}}>
                                     <Col md={12} id="paymentTermNumber" style={{paddingRight: "3px"}}>
                                         <InputNumber
                                             name="payTermNumber"
@@ -1422,47 +1487,21 @@ class NewInvoice extends React.PureComponent {
                 {this.renderPreviewInvoice(formData)}
                 {this.state.customerForm}
                 {this.state.modalVariant}
-                {
-                    this.state.isShowModal ?
-                    <Modal
-                        title={`${stringTranslate("text_remove", this.props.locale)} ${stringTranslate("text_serial_no", this.props.locale)}`}
-                        visible={this.state.isShowModal}
-                        onCancel={() => this.setState({isShowModal: false})}
-                        footer={null}
-                    >
-                        <div style={{position: "relative"}}>
-                            <Form.Item
-                                label={<Translate id="text_input_serial_for_remove" />}
-                                style={{width: "100%"}} 
-                                wrapperCol={{sm: {span: 24}, xs: {span: 24}}}>
-                                {
-                                    this.props.form.getFieldDecorator("removeSerials", {
-                                    })(
-                                        <Select mode="tags" 
-                                            style={{width: "100%"}}
-                                            placeholder="SerialNo1, SerialNo2, ...."
-                                            dropdownStyle={{display: "none"}}
-                                        />
-                                    )
-                                }
-                            </Form.Item>
-                            <div style={{display: "flex", position: "absolute", right: 5, top: 33, color: "#5656", fontSize: 18}}>
-                                <IconKeyboard style={{opacity: 0.3, marginRight: 5}} />
-                                <div className="icon-scaner icon-clear"></div>
-                            </div>
-                        </div>
-                        <InputText name="serialNameField" style={{display: "none"}} form={this.props.form} />
-                        <div style={{padding: "0 0 22px"}}>
-                            <Button className="danger" onClick={() => this.setState({isShowModal: false})} style={{width: 80}}>
-                                <Translate id="text_cancel" />
-                            </Button>  
-                            <Button className="info" style={{marginLeft: 15, width: 80}} onClick={this.handleRemoveSerialsNo}>
-                                <Translate id="text_ok" />
-                            </Button>
-                        </div>
-                    </Modal>
-                    : null
-                }
+                <SerialForm 
+                    ref={ref => this.serialRef = ref}
+                    modalTitle={this.modalTitle}
+                    locale={this.props.locale}
+                    formData={this.state.serialFormData}
+                    onSuccess={this.handleSaveSerialNo}
+                    form={this.props.form} 
+                />
+                <SerialFormDelete 
+                    ref={ref => this.deleteSerialRef = ref}
+                    locale={this.props.locale}
+                    index={this.state.deleteSerialIndex}
+                    onSuccess={this.handleRemoveSerialsNo}
+                    form={this.props.form} 
+                />
                 <Drawer
                     title={<Translate id="text_receive_payment" />}
                     width={520}

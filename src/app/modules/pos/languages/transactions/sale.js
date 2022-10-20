@@ -219,19 +219,29 @@ export default {
     "Serial number required"
   ],
 
+  "text_warranty_date_required": [
+    "Warranty date is required",
+    "សូមបញ្ចូលកាលបរិច្ឆេទធានា"
+  ],
+
   "text_serial_number_must_equal_quantity": [
     "The number of serial number must equal to quantity",
     "ចំនួននៃលេខស៊េរីត្រូវតែស្មើគ្នានឹងបរិមាណផលិតផល"
   ],
 
-  "text_input_serial_for_remove": [
-    "Input serial number you want to remove",
-    "បញ្ចូលលេខស៊េរីដើម្បីលុបចេញ"
+  "text_input_serial": [
+    "Input serial number",
+    "បញ្ចូលលេខស៊េរី"
   ],
 
   "text_this_serial_is_sold": [
     "This serial number is sold",
     "លេខស៊េរីនេះបានលក់រួចហើយ"
+  ],
+
+  "text_double_click_edit_serial": [
+    "Double click to edit serial",
+    "ចុចពីរដងដើម្បីកែប្រែលេខស៊េរី"
   ],
 
   "text_unavailable_mobile_layout": [
@@ -441,5 +451,10 @@ export default {
   "text_expected_shipment_date": [
     "Expected Shipment Date",
     "កាលបរិច្ឆេទដឹកជញ្ជូន"
+  ],
+
+  "text_warranty_date": [
+    "Warranty Date",
+    "កាលបរិច្ឆេទធានា"
   ]
 };

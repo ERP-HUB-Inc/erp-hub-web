@@ -22,6 +22,7 @@ export class InputTextArea extends Element {
         rows={this.props.rows}
         cols={this.props.cols}
         style={this.props.style}
+        inputStyle={this.props.inputStyle}
         disabled={this.props.disabled}
         onChange={this.props.handleOnChange}
       />
