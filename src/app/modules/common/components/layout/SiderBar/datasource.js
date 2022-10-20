@@ -540,7 +540,6 @@ const dataSource = {
         title: <Translate id="text_low_sales_report" />,
         icon: "icon-stock",
         route: "/reports/low_sales",
-        new: "New",
         component: LowSaleReport,
       },
       {
