@@ -1,14 +1,16 @@
 import React from "react";
-import FormItem from "./FormItem";
-import RoleAccessAction from "../../../action/settings/roleAccess";
 import Modal from "../../../../common/components/shares/Modal";
+import FormItem from "./FormItem";
+import RoleAccessService from "../../../services/settings/RoleAccessService";
+import RoleAccessAction from "../../../action/settings/roleAccess";
 
 export default class Form extends Modal {
   constructor(props) {
     super(props);
     this.state = {
       ...this.state,
-      rolePrivileges: []
+      rolePrivileges: [],
+      formData: null
     };
     this.title = <this.Translate id="text_role" />;
     this.style = {height: "98vh"};
@@ -16,11 +18,26 @@ export default class Form extends Modal {
     this.wrapClassName = "modal-fix-footer";
     this.dispatch = this.props.dispatch;
     this.grantPermissions = [];
+    this.isLoadedData = false;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCallBackGetPrivilegeList = this.handleCallBackGetPrivilegeList.bind(this);
   }
 
+  componentWillReceiveProps(props) {
+    if (props.roleAccessUpdate.showForm && !this.isLoadedData){
+      RoleAccessService.detail(props.rowData.id).then(({data})=>{
+        this.setState({formData : data.data});
+        if (data.data.metaData){
+          this.grantPermissions = JSON.parse(data.data.metaData);
+        }
+      });
+      this.isLoadedData = true;
+    }
 
+    if (this.submitLoading){
+      this.resetFormData();
+    }
+  }
 
   handleCallBackGetGrantPermissions(permissions) {
     this.grantPermissions = permissions;
@@ -46,21 +63,28 @@ export default class Form extends Modal {
       }
     });
   }
-    
+
   handleCancel() {
     this.dispatch(RoleAccessAction.reset());
+    this.resetFormData();
+  }
+
+  resetFormData(){
+    this.setState({formData: null});
+    this.isLoadedData = false;
+    this.grantPermissions = [];
   }
   
   render() {
-    const {roleAccessUpdate, roleAccessDetail, locale, form} = this.props;
+
+    const {roleAccessUpdate, locale, form} = this.props;
     this.submitLoading = roleAccessUpdate.updating;
-    console.log("roleAccessUpdate", this.props);
 
     if (roleAccessUpdate.showForm) {
       this.content = <FormItem
         privileges={this.props.privileges}
         rolePrivileges={this.props.rolePrivileges}
-        formData={roleAccessDetail.data}
+        formData={this.state.formData}
         handleCallBackGetPrivilegeList={this.handleCallBackGetPrivilegeList}
         handleCallBackGetGrantPermissions={(permissions)=>this.handleCallBackGetGrantPermissions(permissions)}
         form={form}
