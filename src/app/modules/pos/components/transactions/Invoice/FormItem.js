@@ -178,29 +178,27 @@ class NewInvoice extends React.PureComponent {
                     
                     {
                         record.enableDescription ? <React.Fragment>
-                            <div style={{marginTop: 5}}><i style={{color: "red"}}>*</i> IMEI OR SERIAL</div>
-                            <div style={{display: "flex", marginTop: 5, marginBottom: 4}}>
-                                <div>
-                                    {
-                                        serials && serials.map((serial, key) => 
-                                            <Tag 
-                                                onClose={() => this.handleRemoveSerialNo(index, key)}
-                                                style={{cursor: "pointer"}}
-                                                title={stringTranslate("text_double_click_edit_serial", this.props.locale)}
-                                                onDoubleClick={() => this.handleUPdateSerial(serial, index, key)}
-                                            >
-                                                {serial.serialNo}
-                                            </Tag>
-                                        )
-                                    }
-                                </div>
-                                <Button type="info" style={{fontSize: 12, height: 23}} onClick={() => this.handleShowModal(index)} >
+                            <div style={{marginTop: 3}}><i style={{color: "red"}}>*</i> IMEI OR SERIAL</div>
+                            <div style={{marginBottom: 4}}>
+                                {
+                                    serials && serials.map((serial, key) => 
+                                        <Tag 
+                                            onClose={() => this.handleRemoveSerialNo(index, key)}
+                                            style={{cursor: "pointer", marginTop: 7}}
+                                            title={stringTranslate("text_double_click_edit_serial", this.props.locale)}
+                                            onDoubleClick={() => this.handleUPdateSerial(serial, index, key)}
+                                        >
+                                            {serial.serialNo}
+                                        </Tag>
+                                    )
+                                }
+                                <Button type="info" style={{fontSize: 12, height: 23, marginTop: 7, marginRight: 8}} onClick={() => this.handleShowModal(index)} >
                                     <Icon type="plus-circle" style={{paddingRight: 5}} />
                                     <Translate id="text_add" />
                                 </Button>
                                 {
                                     serials.length ?
-                                    <Button className="danger" style={{fontSize: 12, height: 23, marginLeft: 8}} onClick={() => this.onShowDeleteSerialForm(index)}>
+                                    <Button className="danger" style={{fontSize: 12, height: 23, marginTop: 7}} onClick={() => this.onShowDeleteSerialForm(index)}>
                                         <Icon type="close-circle" style={{paddingRight: 5}} />
                                         <Translate id="text_delete" />
                                     </Button>
