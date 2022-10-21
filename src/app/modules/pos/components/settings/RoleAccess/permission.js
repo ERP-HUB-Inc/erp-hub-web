@@ -44,28 +44,6 @@ export default [
     ]
   },
   {
-    name: "Front Desk",
-    nameKH: "ផ្ទាំងគ្រប់គ្រង",
-    code: "front-desk",
-    permissions: [
-      {
-        name: "Add New Rent",
-        nameKH: "បន្ថែមព័ត៏មានជួល",
-        code: "add"
-      },
-      {
-        name: "Edit Rent Info",
-        nameKH: "កែប្រែព័ត៏មានជួល",
-        code: "edit"
-      },
-      {
-        name: "Record Utility",
-        nameKH: "កត់ទឹកភ្លើង",
-        code: "record"
-      }
-    ]
-  },
-  {
     name: "Invoice",
     nameKH: "វិក័្កយប័ត្រ",
     code: "payment",

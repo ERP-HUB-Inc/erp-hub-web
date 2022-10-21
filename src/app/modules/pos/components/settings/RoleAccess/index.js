@@ -35,7 +35,6 @@ export default class RoleAccessList extends List {
 
   showFormEdit(rowData) {
     this.props.dispatch(RoleAccessAction.showForm(rowData));
-    this.props.dispatch(RoleAccessAction.detail(rowData.id));
     this.props.dispatch(RolePrivilegeAction.fetch(rowData.id));
     this.setState({modalConten: <FormUpdate/>});
   }

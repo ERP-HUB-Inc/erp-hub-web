@@ -142,7 +142,7 @@ export default class FormItem extends Modal {
               {
                 formData ?
                     <>
-                      <this.Col md="12" style={{maxHeight: "30%"}}>
+                      <this.Col md="12" style={{maxHeight: "41%"}}>
                         <this.InputText
                             data={formData.name}
                             name="name"
@@ -153,14 +153,14 @@ export default class FormItem extends Modal {
                             isAutoFocus={true}
                             max={100}
                             form={form}/>
-                        {/*<this.InputText
-                    data={formData.code}
-                    name="code"
-                    label={<this.Translate id="text_code" />}
-                    placeholder={this.CATranslate("text_code", locale)}
-                    max={255}
-                    disabled={formData.isDefault === this.Enum.IS_DEFAULT}
-                    form={form}/>*/}
+                        <this.InputText
+                          data={formData.code}
+                          name="code"
+                          label={<this.Translate id="text_code" />}
+                          placeholder={this.CATranslate("text_code", locale)}
+                          max={255}
+                          disabled={formData.isDefault === this.Enum.IS_DEFAULT}
+                          form={form}/>
                         <this.Select
                             name="status"
                             label={<this.Translate id="text_status" />}
@@ -168,7 +168,7 @@ export default class FormItem extends Modal {
                             defaultValue={formData.status}
                             form={form}/>
                       </this.Col>
-                      <this.Col md="12" style={{ marginTop: 15 , maxHeight: "68%"}}>
+                      <this.Col md="12" style={{ marginTop: 15 , maxHeight: "57%"}}>
                         <this.Row style={{ maxHeight: "100%", overflow: "auto" }}>
                           {
                             permissions.map((main, key) =>

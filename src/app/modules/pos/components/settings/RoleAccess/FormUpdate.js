@@ -51,8 +51,7 @@ export default class Form extends Modal {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const {roleAccessDetail} = this.props;
-        values["id"] = roleAccessDetail.data.id;
+        values["id"] = this.props.rowData.id;
         this.Util.clearObjProperty(values, [
           "search_name_privillege"
         ]);
