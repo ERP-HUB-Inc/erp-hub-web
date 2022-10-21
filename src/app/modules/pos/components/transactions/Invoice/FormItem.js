@@ -1230,8 +1230,8 @@ class NewInvoice extends React.PureComponent {
                                         <InputNumber
                                             name="payTermNumber"
                                             placeholder={`${stringTranslate("text_payment_terms", this.props.locale)}`}
-                                            data={formData.payTermNumber ?? "" }
-                                            defaultValue={formData.payTermNumber ?? ""}
+                                            data={formData.payTermNumber ? formData.payTermNumber : "" }
+                                            defaultValue={formData.payTermNumber ? formData.payTermNumber : ""}
                                             precision={0}
                                             form={this.props.form}
                                         />

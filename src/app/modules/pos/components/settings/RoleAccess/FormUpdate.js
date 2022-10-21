@@ -23,6 +23,18 @@ export default class Form extends Modal {
     this.handleCallBackGetPrivilegeList = this.handleCallBackGetPrivilegeList.bind(this);
   }
 
+  componentDidMount() {
+    if (this.props.roleAccessUpdate.showForm && !this.isLoadedData){
+      RoleAccessService.detail(this.props.rowData.id).then(({data})=>{
+        this.setState({formData : data.data});
+        if (data.data.metaData){
+          this.grantPermissions = JSON.parse(data.data.metaData);
+        }
+      });
+      this.isLoadedData = true;
+    }
+  }
+
   componentWillReceiveProps(props) {
     if (props.roleAccessUpdate.showForm && !this.isLoadedData){
       RoleAccessService.detail(props.rowData.id).then(({data})=>{
