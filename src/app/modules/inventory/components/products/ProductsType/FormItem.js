@@ -51,6 +51,14 @@ export default class FormItem extends Modal {
             form={this.props.form} />
       </this.Col>
       <this.Col md="12">
+          <this.InputText
+            name="description"
+            data={formData.description}
+            label={<this.Translate id="text_description" />}
+            placeholder={this.CATranslate("text_description", this.props.locale)}
+            form={this.props.form} />
+      </this.Col>
+      <this.Col md="12">
         <this.Select 
           name="isFeature"
           label={<this.Translate id="text_feature_category" />}
