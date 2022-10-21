@@ -963,4 +963,38 @@ export default class Util {
         : "";
     return str;
   }
+
+  calculateWarrantyDate(currentDay, number, durationType) {
+    let warrantyDate = moment(currentDay);
+    number = Number(number);
+    if (durationType === Enum.DURATION_TYPE.DAY) {
+      warrantyDate = warrantyDate.add(number, "days");
+    } else if (durationType === Enum.DURATION_TYPE.WEEK) {
+      warrantyDate = warrantyDate.add(number, "weeks");
+    } else if (durationType === Enum.DURATION_TYPE.MONTH) {
+      warrantyDate = warrantyDate.add(number, "months");
+    } else if (durationType === Enum.DURATION_TYPE.YEAR) {
+      warrantyDate = warrantyDate.add(number, "years");
+    }
+
+    return moment(warrantyDate).format("YYYY-MM-DD");
+  }
+
+  calculateDurationNumber(currentDate, durationType, warrantyDate) {
+    let number = 0;
+    currentDate = moment(currentDate);
+    warrantyDate = moment(warrantyDate);
+    if (durationType === Enum.DURATION_TYPE.DAY) {
+      number = moment(warrantyDate).diff(currentDate, "days");
+    } else if (durationType === Enum.DURATION_TYPE.WEEK) {
+      number = moment(warrantyDate).diff(currentDate, "weeks");
+    } else if (durationType === Enum.DURATION_TYPE.MONTH) {
+      number = moment(warrantyDate).diff(currentDate, "months");
+    } else if (durationType === Enum.DURATION_TYPE.YEAR) {
+      number = moment(warrantyDate).diff(currentDate, "years");
+    }
+
+    return Number(number);
+  }
+
 }

@@ -7,11 +7,13 @@ import {
   Select
 } from "antd";
 import { Translate } from "react-localize-redux";
+import BarcodeReader from "react-barcode-reader";
 import { Button, InputNumber } from "../../../../common/elements/ant-ui";
 
 export default class SerialFormDelete extends React.PureComponent {
   state = {
-    isVisible: false
+    isVisible: false,
+    isScanBarcode: false
   }
 
   handleRemove = () => {
@@ -33,6 +35,23 @@ export default class SerialFormDelete extends React.PureComponent {
     this.setState({isVisible: false});
   };
 
+  handleScan = (serialNumber) => {
+    const removeSerials = this.props.form.getFieldValue("removeSerial");
+    let newRemoveSerials = [];
+    if (removeSerials && removeSerials.length) {
+      newRemoveSerials = removeSerials;
+    }
+
+    newRemoveSerials.push(serialNumber);
+
+    this.setState({ isScanBarcode: true });
+    this.props.form.setFieldsValue({ removeSerial: newRemoveSerials });
+  }
+
+  handleScanError = (err) => {
+    console.error(err);
+  }
+
   render() {
     return (
       this.state.isVisible ?
@@ -45,6 +64,15 @@ export default class SerialFormDelete extends React.PureComponent {
         <Form>
           <Row>
             <Col md={24}>
+              <BarcodeReader
+                minLength={4}
+                onError={this.handleScanError}
+                onScan={this.handleScan}
+                preventDefault={true}
+                avgTimeByChar={40}
+                endChar={[13]}
+                timeBeforeScanTest={200}
+              />
               <Form.Item
                 label="IMEI OR SERIAL"
               >

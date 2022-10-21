@@ -186,9 +186,10 @@ class NewInvoice extends React.PureComponent {
                                             onClose={() => this.handleRemoveSerialNo(index, key)}
                                             style={{cursor: "pointer", marginTop: 7}}
                                             title={stringTranslate("text_double_click_edit_serial", this.props.locale)}
+                                            key={key}
                                             onDoubleClick={() => this.handleUPdateSerial(serial, index, key)}
                                         >
-                                            {serial.serialNo}
+                                            {serial.number}
                                         </Tag>
                                     )
                                 }
@@ -327,8 +328,7 @@ class NewInvoice extends React.PureComponent {
                     ...entry,
                     variantName: entry.description,
                     discount: 0,
-                    amount: entry.quantity * entry.price,
-                    enableDescription: entry.productVariant && entry.productVariant.product && entry.productVariant.product.enableDescription
+                    amount: entry.quantity * entry.price
                 }));
                 delete data.quotationEntries;
 
@@ -468,7 +468,7 @@ class NewInvoice extends React.PureComponent {
                                 categoryId: values.categoryId[index],
                                 description,
                                 quantity: values.quantity[index],
-                                serialNo: values.serialNo && values.serialNo[index] ? values.serialNo[index].toString() : "",
+                                serialNo: values.serialNo[index],
                                 unitId: values.unitId[index],
                                 unitName: values.unitName[index],
                                 cost: values.cost[index],
@@ -501,8 +501,7 @@ class NewInvoice extends React.PureComponent {
             const transactionEntries = data.transactionEntries.length && data.transactionEntries.map(entry => ({
                 ...entry, 
                 discount: 0,
-                amount: entry.quantity * entry.price,
-                enableDescription: entry.productVariant && entry.productVariant.product && entry.productVariant.product.enableDescription
+                amount: entry.quantity * entry.price
             }));
 
             let discount = data.discount;
@@ -596,6 +595,7 @@ class NewInvoice extends React.PureComponent {
         this.modalTitle = <div><Translate id="text_add" /> <Translate id="text_serial_no" /></div>;
         this.setState({
             serialFormData: {
+                invoiceDate: this.props.form.getFieldValue("invoiceDate"),
                 serialNo: "",
                 warrantyDate: "",
                 index,
@@ -609,8 +609,10 @@ class NewInvoice extends React.PureComponent {
         this.modalTitle = <div><Translate id="text_edit" /> <Translate id="text_serial_no" /></div>;
         this.setState({
             serialFormData: {
-                serialNo: serial.serialNo,
+                invoiceDate: this.props.form.getFieldValue("invoiceDate"),
+                number: serial.number,
                 warrantyDate: serial.warrantyDate,
+                durationType: serial.durationType,
                 index,
                 index2
             }
@@ -636,6 +638,8 @@ class NewInvoice extends React.PureComponent {
             return false;
         }
 
+        console.log("values", values);
+
         Object.assign(transactionEntries, this.state.transactionEntries);
         let newSerials = [];
         let serialsNo = transactionEntries[index].serialNo;
@@ -647,10 +651,11 @@ class NewInvoice extends React.PureComponent {
         }
 
         if (index2 === null) {
-            newSerials.push({serialNo: serialNumber, warrantyDate});
+            newSerials.push({number: serialNumber, warrantyDate, durationType: values.durationType});
         } else {
-            newSerials[index2].serialNo = serialNumber;
+            newSerials[index2].number = serialNumber;
             newSerials[index2].warrantyDate = warrantyDate;
+            newSerials[index2].durationType = values.durationType;
         }
 
         newSerials = JSON.stringify(newSerials);
@@ -727,7 +732,7 @@ class NewInvoice extends React.PureComponent {
         if (serialsNo && this.util.isJsonString(serialsNo)) {
             serialsNo = JSON.parse(serialsNo);
             if (serialsNo.length) {
-                serialsNo = serialsNo.filter(serial => !removeSerials.includes(serial.serialNo));
+                serialsNo = serialsNo.filter(serial => !removeSerials.includes(serial.number));
                 this.setState(prevState => {
                     prevState.transactionEntries[index].serialNo = JSON.stringify(serialsNo);
                     this.props.form.setFieldsValue({[`serialNo[${index}]`]: JSON.stringify(serialsNo)});

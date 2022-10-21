@@ -453,6 +453,11 @@ export default {
     "កាលបរិច្ឆេទដឹកជញ្ជូន"
   ],
 
+  "text_warranty_duration": [
+    "Duration of warranty",
+    "រយៈពេលនៃការធានា"
+  ],
+
   "text_warranty_date": [
     "Warranty Date",
     "កាលបរិច្ឆេទធានា"

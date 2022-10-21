@@ -64,6 +64,12 @@ export default {
     PRO: 2,
     PREMIUM: 3
   },
+  DURATION_TYPE: {
+    DAY: "day",
+    WEEK: "week",
+    MONTH: "month",
+    YEAR: "year"
+  },
   RECORD_EXIST: 603,
   TAX_NOT_FOUND: 622,
   BRAND_NOT_FOUND: 614,
