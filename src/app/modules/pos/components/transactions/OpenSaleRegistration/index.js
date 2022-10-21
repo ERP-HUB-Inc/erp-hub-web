@@ -426,7 +426,7 @@ render() {
 
   renderTable() {
     return (
-      <>
+      <React.Fragment>
         <this.Form onSubmit={this.handleCloseTodaySale}>
           <this.Table
             rowKey="paymentMethodId"
@@ -464,7 +464,7 @@ render() {
           }
         </this.Form>
 
-      </>
+      </React.Fragment>
     );
   }
 }
