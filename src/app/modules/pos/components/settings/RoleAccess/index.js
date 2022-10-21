@@ -7,7 +7,7 @@ import FormCreate from "../../../containers/settings/RoleAccess/FormCreate";
 import FormUpdate from "../../../containers/settings/RoleAccess/FormUpdate";
 import Constant from "../../../constants/settings/roleAccess";
 import RoleAccessAction from "../../../action/settings/roleAccess";
-import RolePrivilegeAction from "../../../action/settings/rolePrivilege";
+/*import RolePrivilegeAction from "../../../action/settings/rolePrivilege";*/
 import RoleAccessService from "../../../services/settings/RoleAccessService";
 import menuSource from "../../../../common/components/layout/SiderBar/datasource";
 import StartUp from "../../../../common/components/StartUp";
@@ -35,7 +35,7 @@ export default class RoleAccessList extends List {
 
   showFormEdit(rowData) {
     this.props.dispatch(RoleAccessAction.showForm(rowData));
-    this.props.dispatch(RolePrivilegeAction.fetch(rowData.id));
+    //this.props.dispatch(RolePrivilegeAction.fetch(rowData.id));
     this.setState({modalConten: <FormUpdate/>});
   }
 
