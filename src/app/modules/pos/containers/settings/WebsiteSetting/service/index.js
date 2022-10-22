@@ -23,7 +23,7 @@ export function getGeneralSetting() {
   });
 }
 
-export function UpdateGeneralSetting(data) {
+export function updateGeneralSetting(data) {
   return axios({
     method: "PUT",
     headers,

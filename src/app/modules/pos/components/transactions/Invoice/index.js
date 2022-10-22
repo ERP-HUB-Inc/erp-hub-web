@@ -180,7 +180,7 @@ export default class Invoice extends List {
         dataIndex: "deliveryFee",
         key: "deliveryFee",
         align: "right",
-        render: (deliveryFee) => this.Util.formatCurrency(deliveryFee)
+        render: deliveryFee => this.Util.formatCurrency(deliveryFee)
       },
       {
         title: <this.Translate id="text_vat" />,

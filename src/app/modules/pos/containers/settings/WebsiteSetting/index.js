@@ -19,7 +19,7 @@ import swal from "sweetalert";
 import { Select, InputText } from "../../../../common/elements/ant-ui";
 import {
   getGeneralSetting,
-  UpdateGeneralSetting,
+  updateGeneralSetting,
   getBannerSetting,
   getBannerSettingById,
   createBannerSetting,
@@ -72,8 +72,8 @@ const WebsiteSetting = (props) => {
   const [facebook, setFacebook] = useState("");
   const [instagram, setInstagram] = useState("");
   const [youtube, setYoutube] = useState("");
-  const [loadingButtonSocialMedia, setLoadingButtonSocialMedia] =
-    useState(false);
+  const [telegram, setTelegram] = useState("");
+  const [loadingButtonSocialMedia, setLoadingButtonSocialMedia] = useState(false);
 
   const { TabPane } = Tabs;
   const queryParam = new URLSearchParams(document.location.search);
@@ -96,6 +96,10 @@ const WebsiteSetting = (props) => {
 
         if ("youtube" in data) {
           setYoutube(data.youtube);
+        }
+
+        if ("telegram" in data) {
+          setTelegram(data.telegram);
         }
 
         if ("metaTitle" in data) {
@@ -179,7 +183,7 @@ const WebsiteSetting = (props) => {
             value: theme,
           },
         ];
-        UpdateGeneralSetting(general)
+        updateGeneralSetting(general)
           .then(() => {
             fetchGeneral();
             swal(CATranslate("text_save_success", props.locale), {
@@ -566,7 +570,7 @@ const WebsiteSetting = (props) => {
             value: values.metaTagKeyword ? values.metaTagKeyword : "",
           },
         ];
-        UpdateGeneralSetting(seo)
+        updateGeneralSetting(seo)
           .then(() => {
             fetchGeneral();
             swal(CATranslate("text_save_success", props.locale), {
@@ -602,8 +606,12 @@ const WebsiteSetting = (props) => {
             key: "youtube",
             value: values.youtube ? values.youtube : "",
           },
+          {
+            key: "telegram",
+            value: values.telegram ? values.telegram : "",
+          }
         ];
-        UpdateGeneralSetting(socialMedia)
+        updateGeneralSetting(socialMedia)
           .then(() => {
             fetchGeneral();
             swal(CATranslate("text_save_success", props.locale), {
@@ -1245,6 +1253,13 @@ const WebsiteSetting = (props) => {
                         name="youtube"
                         label={<Translate id="text_youtube" />}
                         placeholder={CATranslate("text_youtube", props.locale)}
+                        form={props.form}
+                      />
+                      <InputText
+                        data={telegram}
+                        name="telegram"
+                        label={<Translate id="text_telegram" />}
+                        placeholder={CATranslate("text_telegram", props.locale)}
                         form={props.form}
                       />
                       <Button
