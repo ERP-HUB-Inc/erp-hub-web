@@ -31,6 +31,11 @@ export default {
     "ពន្ធលើតម្លៃបន្ថែម"
   ],
 
+  "text_delivery_fee": [
+    "Delivery Fee",
+    "តម្លៃដឹកជញ្ជូន"
+  ],
+
   "store_acc_store_name": [
     "Private URL",
     "URL ឯកជន"
