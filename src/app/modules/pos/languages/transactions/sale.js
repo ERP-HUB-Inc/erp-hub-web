@@ -300,6 +300,11 @@ export default {
     "កែប្រែវិក័យប័ត្រ"
   ],
 
+  "text_delivery_fee": [
+    "Delivery Fee",
+    "តម្លៃដឹកជញ្ជូន"
+  ],
+
   "text_grand_total": [
     "Grand Total",
     "តម្លៃសរុបរួម"

@@ -687,6 +687,13 @@ export default class StoreAccountList extends Component {
                                 label={<this.Translate id="text_address" />}
                                 placeholder={this.CATranslate("text_address", locale)}
                                 form={form}/> */}
+
+                              <this.InputText
+                                data={storeAccount.list.geolocation}
+                                name="geolocation"
+                                label={<this.Translate id="text_geolocation" />}
+                                placeholder={this.CATranslate("text_geolocation", locale)}
+                                form={form} />
                               
                               <div>
                                 <div className="ant-form-item-label">

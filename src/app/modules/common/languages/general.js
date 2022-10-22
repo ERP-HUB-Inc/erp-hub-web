@@ -328,6 +328,8 @@ export default {
 
   text_phone_number: ["Phone Number", "លេខទូរសព្ទ័", "Phone Number"],
 
+  text_geolocation: ["Geolocation", "ទីតាំងភូមិសាស្ត្រ"],
+
   text_supplier: ["Supplier", "អ្នកផ្គត់ផ្គង់", "Supplier"],
 
   text_all_supplier: ["All Supplier", "អ្នកផ្គត់ផ្គង់", "All Supplier"],
@@ -496,6 +498,7 @@ export default {
   text_meta_tag_keyword: ["Meta Tag Keyword", "ពាក្យគន្លឹះ ស្លាកមេតា"],
   text_product_name: ["Product Name", "ឈ្មោះ​ផលិតផល"],
   text_facebook: ["Facebook", "Facebook"],
+  text_telegram: ["Telegram", "Telegram"],
   text_instagram: ["Instagram", "Instagram"],
   text_youtube: ["Youtube", "Youtube"],
 };

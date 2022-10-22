@@ -176,6 +176,13 @@ export default class Invoice extends List {
         render: (discount) => this.Util.formatCurrency(discount)
       },
       {
+        title: <this.Translate id="text_delivery_fee" />,
+        dataIndex: "deliveryFee",
+        key: "deliveryFee",
+        align: "right",
+        render: deliveryFee => this.Util.formatCurrency(deliveryFee)
+      },
+      {
         title: <this.Translate id="text_vat" />,
         dataIndex: "tax",
         key: "tax",
