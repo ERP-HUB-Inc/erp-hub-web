@@ -24,8 +24,6 @@ export default class FormItem extends Modal {
     }
   }
 
-
-
   componentWillUnmount() {
     this.setState({grantPermissions: []});
     this.isLoadedData = false;
@@ -210,7 +208,6 @@ export default class FormItem extends Modal {
                 </div>
           }
         </div>
-
         /*<this.TabPane tab={<this.Translate id="text_privilege" />} key="2">
           <this.Row>  
             <this.Col lg="12" md="12">

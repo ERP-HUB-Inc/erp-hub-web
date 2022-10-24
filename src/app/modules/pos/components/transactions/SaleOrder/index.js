@@ -75,12 +75,16 @@ class SaleOrder extends List {
                   <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_detail" />
                 </this.Link>
               </Menu.Item>
+              <Menu.Item>
+                <this.Link to={`/transactions/sale-order/packing-slip/${record.id}`}>
+                  <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print_packing_slip" />
+                </this.Link>
+              </Menu.Item>
             </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
             {number}
             <Dropdown className="product-row-option" overlay={menu}>
-              {/*eslint-disable-next-line*/}
               <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
                 <this.Translate id="text_option" /> <Icon type="down" />
               </a>

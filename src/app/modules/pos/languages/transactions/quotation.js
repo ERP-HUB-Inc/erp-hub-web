@@ -123,6 +123,12 @@ export default {
     "Clone"
   ],
 
+  "text_print_packing_slip": [
+    "Print Packing Slip",
+    "បោះពុម្ពបញ្ជីទំនិញ",
+    "Print Packing Slip"
+  ],
+
   "text_clone_warning_1": [
     "Please select any record for clone !",
     "សូមជ្រើសរើសកំណត់ត្រាណាមួយសម្រាប់ចម្លង !",

@@ -50,6 +50,7 @@ import InvoiceReceipt from "../../pos/components/transactions/receipt";
 import SaleOrderCreate from "../../pos/components/transactions/SaleOrder/FormItem";
 import SaleOrderUpdate from "../../pos/components/transactions/SaleOrder/FormItem";
 import SaleOrderDetail from "../../pos/components/transactions/SaleOrder/detail";
+import PackingSlip from "../../pos/components/transactions/SaleOrder/packingSlip";
 import Util from "../util";
 
 const {Content} = Layout;
@@ -100,6 +101,7 @@ class Router extends Component {
             <Route path="/transactions/sale-order/create" component={SaleOrderCreate} />
             <Route path="/transactions/sale-order/update/:id" component={SaleOrderUpdate} />
             <Route path="/transactions/sale-order/detail/:id" component={SaleOrderDetail} />
+            <Route path="/transactions/sale-order/packing-slip/:id" component={PackingSlip} />
             <Route path="/products/create" component={ProductCreate} />
             <Route path="/products/import" component={ProductImport} />
             <Route path="/products/split/:productVariantId" component={ProductSplit} />
