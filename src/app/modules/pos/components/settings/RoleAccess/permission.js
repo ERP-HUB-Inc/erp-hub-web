@@ -1,11 +1,11 @@
 export default [
   {
-    name: "Customer",
-    nameKH: "គ្រប់គ្រងអតិថិជន",
-    code: "customer",
+    name: "Product",
+    nameKH: "ផលិតផល",
+    code: "product",
     permissions: [
       {
-        name: "Add",
+        name: "Create New",
         nameKH: "បន្ថែមថ្មី",
         code: "add"
       },
@@ -22,12 +22,12 @@ export default [
     ]
   },
   {
-    name: "Group Customer",
-    nameKH: "ក្រុមអតិថិជន",
-    code: "group/customer",
+    name: "Promotion",
+    nameKH: "ប្រ៉ម៉ូសិន",
+    code: "promotion",
     permissions: [
       {
-        name: "Add",
+        name: "Create New",
         nameKH: "បន្ថែមថ្មី",
         code: "add"
       },
@@ -44,36 +44,141 @@ export default [
     ]
   },
   {
-    name: "Invoice",
-    nameKH: "វិក័្កយប័ត្រ",
-    code: "payment",
+    name: "Purchase Order",
+    nameKH: "ការបញ្ជាទិញ",
+    code: "purchase_order",
     permissions: [
       {
-        name: "Create New Invoice",
-        nameKH: "បង្កើតវិក័យបត្រថ្មី",
+        name: "Create New",
+        nameKH: "បង្កើតថ្មី",
         code: "add"
       },
       {
-        name: "Edit Invoice",
-        nameKH: "កែប្រែវិក័យបត្រ",
+        name: "Edit",
+        nameKH: "កែប្រែ",
         code: "edit"
       },
       {
-        name: "Receive Payment",
-        nameKH: "ទទួលការបង់ប្រាក់",
-        code: "receive-payment"
-      },
-      {
-        name: "Delete Invoice",
-        nameKH: "លុបវិក័យបត្រ",
+        name: "Delete",
+        nameKH: "លុប",
         code: "delete"
       },
     ]
   },
   {
-    name: "User",
-    nameKH: "អ្នកប្រើប្រាស់",
-    code: "user",
+    name: "Stock Adjustment",
+    nameKH: "កែប្រែស្តុក",
+    code: "stock_adjustment",
+    permissions: [
+      {
+        name: "Create New",
+        nameKH: "បង្កើតថ្មី",
+        code: "add"
+      },
+      {
+        name: "Edit",
+        nameKH: "កែប្រែ",
+        code: "edit"
+      },
+      {
+        name: "Delete",
+        nameKH: "លុប",
+        code: "delete"
+      },
+    ]
+  },
+  {
+    name: "Stock Transfer",
+    nameKH: "ផ្ទេរស្តុកទំនិញ",
+    code: "stock_transfer",
+    permissions: [
+      {
+        name: "Create New",
+        nameKH: "បង្កើតថ្មី",
+        code: "add"
+      },
+      {
+        name: "Edit",
+        nameKH: "កែប្រែ",
+        code: "edit"
+      },
+      {
+        name: "Delete",
+        nameKH: "លុប",
+        code: "delete"
+      },
+    ]
+  },
+  {
+    name: "Quotation",
+    nameKH: "សម្រង់តម្លៃ",
+    code: "quotation",
+    permissions: [
+      {
+        name: "Create New",
+        nameKH: "បង្កើតថ្មី",
+        code: "add"
+      },
+      {
+        name: "Edit",
+        nameKH: "កែប្រែ",
+        code: "edit"
+      },
+      {
+        name: "Delete",
+        nameKH: "លុប",
+        code: "delete"
+      },
+    ]
+  },
+  {
+    name: "Sales Order",
+    nameKH: "ការបញ្ចារទិញ~លក់",
+    code: "sales_order",
+    permissions: [
+      {
+        name: "Create New",
+        nameKH: "បង្កើតថ្មី",
+        code: "add"
+      },
+      {
+        name: "Edit",
+        nameKH: "កែប្រែ",
+        code: "edit"
+      },
+      {
+        name: "Delete",
+        nameKH: "លុប",
+        code: "delete"
+      },
+    ]
+  },
+  {
+    name: "Invoices",
+    nameKH: "វិក័យប័ត្រ",
+    code: "invoice",
+    permissions: [
+      {
+        name: "Create New",
+        nameKH: "បង្កើតថ្មី",
+        code: "add"
+      },
+      {
+        name: "Edit",
+        nameKH: "កែប្រែ",
+        code: "edit"
+      },
+      {
+        name: "Delete",
+        nameKH: "លុប",
+        code: "delete"
+      },
+    ]
+  },
+  {
+    name: "Employee",
+    nameKH: "គ្រប់គ្រងបុគ្គលិគ",
+    code: "employee",
     permissions: [
       {
         name: "Add",
@@ -98,18 +203,18 @@ export default [
     code: "role",
     permissions: [
       {
-        name: "Add Role",
-        nameKH: "បង្កើតសិទ្ធថ្មី",
+        name: "Create New",
+        nameKH: "បង្កើតថ្មី",
         code: "add"
       },
       {
-        name: "Edit Role",
-        nameKH: "កែប្រែសិទ្ធ",
+        name: "Edit",
+        nameKH: "កែប្រែ",
         code: "edit"
       },
       {
-        name: "Delete Role",
-        nameKH: "លុបសិទ្ធ",
+        name: "Delete",
+        nameKH: "លុប",
         code: "delete"
       }
     ]
@@ -120,7 +225,7 @@ export default [
     code: "location",
     permissions: [
       {
-        name: "Add",
+        name: "Create New",
         nameKH: "បង្កើតថ្មី",
         code: "add"
       },
@@ -142,31 +247,9 @@ export default [
     code: "setting",
     permissions: [
       {
-        name: "Edit Owner Account",
+        name: "Edit Store Account",
         nameKH: "កែប្រែការកំណត់",
         code: "edit"
-      },
-      {
-        name: "Edit Invoice Template",
-        nameKH: "កែប្រែគំរូវិក័យបត្រ",
-        code: "edit-invoice"
-      },
-      {
-        name: "Edit Currency",
-        nameKH: "កែប្រែរូបិយប័ណ្ណ",
-        code: "edit-currency"
-      }
-    ]
-  },
-  {
-    name: "Exchange Rate",
-    nameKH: "អត្រាប្តូរប្រាក់",
-    code: "currency/exchange",
-    permissions: [
-      {
-        name: "Add Exchnage Rate",
-        nameKH: "បង្កើតថ្មី",
-        code: "add"
       }
     ]
   },
@@ -176,24 +259,29 @@ export default [
     code: "report",
     permissions: [
       {
-        name: "Cash Flow Report",
-        nameKH: "របាយការណ៏សាច់ប្រាក់",
-        code: "view-cash-flow-report"
+        name: "Sales Report",
+        nameKH: "របាយការណ៏លក់",
+        code: "sales_report"
       },
       {
-        name: "Deposit Report",
-        nameKH: "របាយការណ៏ប្រាក់កក់",
-        code: "view-deposit-report"
+        name: "Purchase Report",
+        nameKH: "របាយការណ៏ទិញទំនិញ",
+        code: "purchase_report"
       },
       {
-        name: "Aging Report",
-        nameKH: "របាយការណ៏ជំពាក់",
-        code: "view-aging-report"
+        name: "Product Report",
+        nameKH: "របាយការណ៏ទំនិញ",
+        code: "product_report"
       },
       {
-        name: "Store Report",
-        nameKH: "របាយការណ៏តូបសរុប",
-        code: "view-store-report"
+        name: "Inventory Dashboard",
+        nameKH: "ផ្ទាំងគ្រប់គ្រងទំនិញ",
+        code: "inventory_dashboard"
+      },
+      {
+        name: "Profit&Loss Report",
+        nameKH: "របាយការណ៏ចំណេញខាត",
+        code: "profit_and_loss_report"
       },
     ]
   },
@@ -203,9 +291,9 @@ export default [
     code: "dashboard",
     permissions: [
       {
-        name: "View Summary",
+        name: "View Dashboard",
         nameKH: "មើលរបាយការណ៏សង្ខែប",
-        code: "view-summary"
+        code: "view_dashbaord"
       }
     ]
   }

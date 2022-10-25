@@ -13,7 +13,7 @@ export default {
 
   "text_select_all": [
     "Select All",
-    "ជ្រើសរើសទាំងអស់",
+    "ទាំងអស់",
     "General"
   ],
 

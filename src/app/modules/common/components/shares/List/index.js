@@ -759,16 +759,7 @@ export default class List extends Component {
             </div>
             :
             this.renderActionButton()
-        }
-
-        {
-          this.isMobileOnly ?
-            ""
-            :
-            this.renderPagination(fetchingProps)
-        }
-
-        <this.clearFloating/>        
+        }      
 
         {this.renderTable(fetchingProps)}
 
