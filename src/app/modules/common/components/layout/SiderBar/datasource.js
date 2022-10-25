@@ -143,20 +143,20 @@ const SaleReportDashboard = Loadable({
 
 const LowSaleReport = Loadable({
   loader: () =>
-    import("../../../../pos/components/reports/Sale/ReportLowSales"),
-  loading: () => <StartUp />,
+    import("../../../../pos/containers/reports/Sale/ReportLowSales"),
+    loading: () => <StartUp />,
 });
 
 const PurchaseReportDashboard = Loadable({
   loader: () =>
     import(
-      "../../../../pos/components/reports/Purchase/PurchaseReportDashboard"
+      "../../../../pos/containers/reports/Purchase/PurchaseReportDashboard"
     ),
   loading: () => <StartUp />,
 });
 
 const StockReport = Loadable({
-  loader: () => import("../../../../pos/components/reports/Stock"),
+  loader: () => import("../../../../pos/containers/reports/Stock"),
   loading: () => <StartUp />
 });
 

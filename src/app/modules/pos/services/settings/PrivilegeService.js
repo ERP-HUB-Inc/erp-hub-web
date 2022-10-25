@@ -8,7 +8,7 @@ class PrivilegeService extends BaseService {
     this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
   }
 
-  checkPermission(code) {
+  checkPermission(code="") {
     this.setHeader();
     return this.GET(
       {

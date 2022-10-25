@@ -264,6 +264,11 @@ export default [
         code: "sales_report"
       },
       {
+        name: "Low Sales Report",
+        nameKH: "របាយការណ៏លក់បានតិច",
+        code: "low_sales_report"
+      },
+      {
         name: "Purchase Report",
         nameKH: "របាយការណ៏ទិញទំនិញ",
         code: "purchase_report"
