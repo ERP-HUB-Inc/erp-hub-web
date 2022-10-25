@@ -1,19 +1,21 @@
 import React from "react";
 import { connect } from "react-redux";
 import moment from "moment";
+import ReactToPrint from "react-to-print";
 import {
   Menu,
   Icon,
   Dropdown,
   Tag,
   Form,
-  Pagination
+  Pagination,
+  message
 } from "antd";
 import List from "../List";
 import history from "../../../../common/router/history";
 import SaleOrderService from "../../../services/transactions/SaleOrderService";
 import Enum from "../../../enums";
-import { message } from "antd";
+import {PackingSlipTem} from "./Invoice/packingSlipTem";
 
 class SaleOrder extends List {
   constructor(props) {
@@ -23,7 +25,8 @@ class SaleOrder extends List {
       loading: false,
       loadingButton: false,
       isShowFilter: true,
-      current: 1
+      current: 1,
+      formData: null
     };
     this.SALE_ORDER_STATUS_STR = {
       [Enum.SALE_ORDER_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#bfbfbf" },
@@ -72,13 +75,25 @@ class SaleOrder extends List {
               </Menu.Item>
               <Menu.Item>
                 <this.Link to={`/transactions/sale-order/detail/${record.id}`}>
-                  <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_detail" />
+                  <Icon type="eye" style={{marginRight: 10}} />
+                  <this.Translate id="text_view_detail" />
                 </this.Link>
               </Menu.Item>
               <Menu.Item>
-                <this.Link to={`/transactions/sale-order/packing-slip/${record.id}`}>
-                  <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print_packing_slip" />
-                </this.Link>
+                  <div>
+                    <ReactToPrint
+                        trigger={() => {
+                          return (
+                              <div>
+                                <Icon type="printer" style={{marginRight: 10}} />
+                                <this.Translate id="text_print_packing_slip" />
+                              </div>
+                          );
+                        }}
+                        content={() => this.componentRef}
+                        onBeforeGetContent={()=>this.fetchTransactionDetail(record.id)}
+                    />
+                  </div>
               </Menu.Item>
             </Menu>
           );
@@ -208,6 +223,11 @@ class SaleOrder extends List {
     })
     .catch(err => message.error("Error"))
     .finally(() => this.setState({loading: false, loadingButton: false}));
+  }
+
+  async fetchTransactionDetail(id){
+     const formData = await SaleOrderService.detail(id);
+    this.setState({formData: formData.data});
   }
 
   handleSubmitFilter = (e) => {
@@ -346,6 +366,7 @@ class SaleOrder extends List {
             onShowSizeChange={this.onShowSizeChange} 
             onChange={this.onChangePagination} 
             {...pagination} />
+            <PackingSlipTem formData={this.state.formData} ref={el => (this.componentRef = el)} />
         </div>
         :
         ""
