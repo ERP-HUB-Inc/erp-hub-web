@@ -22,9 +22,12 @@ const util                      = new Util();
 
 export default function SaleReportDashboard(props) {
 
+    const [checkPermissionDataIsNotLoaded, setCheckPermissionDataIsNotLoaded] = React.useState(true);
+
     useEffect(()=>{
-        if (!props.checkPermission.checked){
+        if (checkPermissionDataIsNotLoaded){
             props.dispatch(PrivilegeAction.checkPermission());
+            setCheckPermissionDataIsNotLoaded(false);
         }
     }, [props]);
 

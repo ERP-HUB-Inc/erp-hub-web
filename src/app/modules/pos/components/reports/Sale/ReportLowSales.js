@@ -28,10 +28,12 @@ function ReportLowSales(props) {
   const [fromValue, setFromValue] = React.useState(moment());
   const [toValue, setToValue] = React.useState(moment());
   const [criticalLevel, setCriticalLevel] = React.useState(0);
+  const [checkPermissionDataIsNotLoaded, setCheckPermissionDataIsNotLoaded] = React.useState(true);
 
     useEffect(()=>{
-        if (!props.checkPermission.checked){
+        if (checkPermissionDataIsNotLoaded){
             props.dispatch(PrivilegeAction.checkPermission());
+            setCheckPermissionDataIsNotLoaded(false);
         }
     }, [props]);
 

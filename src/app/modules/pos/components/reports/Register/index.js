@@ -29,11 +29,14 @@ export default function RegiserReport(props) {
         [loading, setLoading] = React.useState(false),
         [fromValue, setFromValue] = React.useState(moment().startOf("month")),
         [toValue, setToValue] = React.useState(moment().endOf("month")),
-        [registerDetail, setRegisterDetail] = React.useState(null);
+        [registerDetail, setRegisterDetail] = React.useState(null),
+        [checkPermissionDataIsNotLoaded, setCheckPermissionDataIsNotLoaded] = React.useState(true);
+
 
     useEffect(()=>{
-        if (!props.checkPermission.checked){
+        if (checkPermissionDataIsNotLoaded){
             props.dispatch(PrivilegeAction.checkPermission());
+            setCheckPermissionDataIsNotLoaded(false);
         }
     }, [props]);
 

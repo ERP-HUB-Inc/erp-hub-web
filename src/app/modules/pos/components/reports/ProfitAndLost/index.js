@@ -23,6 +23,7 @@ export default function ProfitAndLossReport(props) {
     const [data, setData] = React.useState(null);
     const [fromValue, setFromValue] = React.useState(moment().startOf("month"));
     const [toValue, setToValue] = React.useState(moment().endOf("month"));
+    const [checkPermissionDataIsNotLoaded, setCheckPermissionDataIsNotLoaded] = React.useState(true);
 
     const onFromChange = value => {
         setFromValue(value);
@@ -47,8 +48,9 @@ export default function ProfitAndLossReport(props) {
     React.useEffect(() => {
         try {
             fetchReport(fromValue, toValue);
-            if (!props.checkPermission.checked){
+            if (checkPermissionDataIsNotLoaded){
                 props.dispatch(PrivilegeAction.checkPermission());
+                setCheckPermissionDataIsNotLoaded(false);
             }
         } catch (error) {
             

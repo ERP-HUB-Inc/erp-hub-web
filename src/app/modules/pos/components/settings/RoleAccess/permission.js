@@ -269,14 +269,19 @@ export default [
         code: "low_sales_report"
       },
       {
+        name: "Shift Report",
+        nameKH: "របាយការណ៏វេនអ្នកលក់",
+        code: "shift_report"
+      },
+      {
         name: "Purchase Report",
         nameKH: "របាយការណ៏ទិញទំនិញ",
         code: "purchase_report"
       },
       {
-        name: "Shift Report",
-        nameKH: "របាយការណ៏វេននាក់លក់",
-        code: "shift_report"
+        name: "Stock Report",
+        nameKH: "របាយការណ៏ឃ្លាំងទំនិញ",
+        code: "stock_report"
       },
       {
         name: "Product Report",

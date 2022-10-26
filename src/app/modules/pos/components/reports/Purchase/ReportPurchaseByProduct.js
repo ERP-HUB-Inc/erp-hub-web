@@ -18,7 +18,6 @@ import Util from "../../../../common/util";
 import  PurchaseService from "../../../services/report/PurchaseService";
 import "./index.css";
 
-
 const util = new Util();
 const pathName = "/reports/purchased_products";
 const { Search  } = Input;

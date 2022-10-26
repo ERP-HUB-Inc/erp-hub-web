@@ -35,6 +35,7 @@ export default function ReportProduct(props) {
   const [locationId, setLocationId] = React.useState(queryparam.get("locationId"));
   const [currentPage, setCurrentPage] = React.useState(1);
   const [summary, setSummary] = React.useState(null);
+  const [checkPermissionDataIsNotLoaded, setCheckPermissionDataIsNotLoaded] = React.useState(true);
   const { Search } = Input;
   const pathName = "/reports/product";
 
@@ -122,8 +123,9 @@ export default function ReportProduct(props) {
     const limit = queryparam.get("limit");
     const offset = queryparam.get("offset");
 
-    if (!props.checkPermission.checked){
+    if (checkPermissionDataIsNotLoaded){
       props.dispatch(PrivilegeAction.checkPermission());
+      setCheckPermissionDataIsNotLoaded(false);
     }
 
     fetchReport(

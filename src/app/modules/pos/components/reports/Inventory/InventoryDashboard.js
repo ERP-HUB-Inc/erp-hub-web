@@ -31,6 +31,7 @@ export default function InventoryReport(props) {
   const [topSellingSize, setTopSellingSize] = React.useState(25);
   const [todayPurchases, setTodayPurchases] = React.useState([]);
   const [topSellType, setTopSellType] = React.useState("quantity");
+  const [checkPermissionDataIsNotLoaded, setCheckPermissionDataIsNotLoaded] = React.useState(true);
 
   const fetchPopularProducts = (limit, popularBy) => {
     setLoading(true);
@@ -57,8 +58,9 @@ export default function InventoryReport(props) {
 
   React.useEffect(() => {
 
-    if (!props.checkPermission.checked){
+    if (checkPermissionDataIsNotLoaded){
       props.dispatch(PrivilegeAction.checkPermission());
+      setCheckPermissionDataIsNotLoaded(false);
     }
 
     InventoryService.getInventoryDashboard()
