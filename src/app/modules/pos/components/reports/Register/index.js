@@ -21,7 +21,7 @@ import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissi
 import PrivilegeAction from "../../../action/settings/privilege";
 
 const permission_module_code    = "report";
-const permission_code           = "low_sales_report";
+const permission_code           = "shift_report";
 const util                      = new Util();
 
 export default function RegiserReport(props) {
