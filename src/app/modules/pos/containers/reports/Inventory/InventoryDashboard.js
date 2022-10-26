@@ -9,7 +9,8 @@ function InventoryDashboardContainer(props) {
 
 function mapStateToProps(state) {
   return {
-    locale: state.locale
+    locale: state.locale,
+    checkPermission: state.reducer.privilege.checkPermission,
   };
 }
 

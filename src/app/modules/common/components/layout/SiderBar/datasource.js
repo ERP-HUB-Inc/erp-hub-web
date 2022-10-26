@@ -177,7 +177,7 @@ const AdjustmentReport = Loadable({
 });
 
 const RegisterReport = Loadable({
-  loader: () => import("../../../../pos/components/reports/Register"),
+  loader: () => import("../../../../pos/containers/reports/Register"),
   loading: () => <StartUp />,
 });
 

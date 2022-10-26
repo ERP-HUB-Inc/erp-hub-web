@@ -17,10 +17,15 @@ import Enum from "../../../../inventory/enums";
 import InventoryUtil from "../../../../inventory/utils"; 
 import LocationService from "../../../services/settings/LocationService";
 import ProductService from "../../../services/report/ProductService";
+import PrivilegeAction from "../../../action/settings/privilege";
+import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
 
 const { Option } = Select;
+const permission_module_code    = "report";
+const permission_code           = "product_report";
+const util                      = new Util();
 
-export default function ReportProduct() {
+export default function ReportProduct(props) {
   const queryparam = new URLSearchParams(document.location.search);
   const [loading, setLoading] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState(queryparam.get("search"));
@@ -32,7 +37,6 @@ export default function ReportProduct() {
   const [summary, setSummary] = React.useState(null);
   const { Search } = Input;
   const pathName = "/reports/product";
-  const util = new Util();
 
   const onChangeSearch = (event) => {
     const viewStock = queryparam.get("viewStock");
@@ -118,6 +122,10 @@ export default function ReportProduct() {
     const limit = queryparam.get("limit");
     const offset = queryparam.get("offset");
 
+    if (!props.checkPermission.checked){
+      props.dispatch(PrivilegeAction.checkPermission());
+    }
+
     fetchReport(
       limit,
       offset,
@@ -133,7 +141,7 @@ export default function ReportProduct() {
       }
     });
     //eslint-disable-next-line
-  }, []);
+  }, [props]);
 
   let currentStockValueByCost = 0;
   let currentStockValueByPrice = 0;
@@ -150,178 +158,186 @@ export default function ReportProduct() {
   const viewStock = queryparam.get("viewStock");
 
   return (
-    <div id="report-sale">
-      <PageHeader
-        style={{
-          backgroundColor: "#f7f7f7",
-          paddingLeft: 0,
-          paddingRight: 0,
-        }}
-        backIcon={""}
-        title={<Translate id="text_product_report" />}
-        subTitle=""
-        extra={[
-          <div key={1}>
-            <Search
-              placeholder="Search product by name,barcode"
-              onChange={onChangeSearch}
-              style={{ width: "280px" }}
-              allowClear={true}
-              defaultValue={searchValue ? searchValue : ""}
-            />
-            <Select
-              name="locationId"
-              style={{ width: 200 , marginLeft: 15}}
-              defaultValue={locationId ? parseInt(locationId) : 0}
-              onChange={onChangeLocation}
-            >
-              {[{name: <Translate id="text_all_store"/>, id: 0}].concat(locations).map((value, key) => (
-                <Option key={key} value={value.id}>
-                  {value.name}
-                </Option>
-              ))}
-            </Select>
-          </div>
-        ]}
-      />
-      <Row gutter={16}>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="Current Stock Value (By purchase price)"
-              value={currentStockValueByCost}
-              precision={2}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="Current Stock Value (By selling price)"
-              value={currentStockValueByPrice}
-              precision={2}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="Expected Gross Profit"
-              valueStyle={{ color: "#3f8600" }}
-              value={expectedProfit}
-              precision={2}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title={<Translate id="text_margin" />}
-              value={expectedMargin}
-              precision={2}
-              suffix="%"
-            />
-          </Card>
-        </Col>
-        <Col span={24}>
-          <ExportForm locationId={locationId} viewStock={viewStock} />
-        </Col>
-        <Col span={24}>
-          <Table
-            rowKey="id"
-            bordered={true}
-            dataSource={data ? data : []}
-            columns={[
-              {
-                title: <Translate id="text_product_name" />,
-                dataIndex: "name",
-                key: "name",
-                render: (text, record) => {
-                  let variantName = "";
-                  if (record.product && record.product.productOption === Enum.PRODUCT_VARIANT) {
-                    variantName = ` / ${record.name}`;
-                  }
-                  return InventoryUtil.getProductNameV2(record.product) + variantName;
-                }
-              },
-              {
-                title: <Translate id="text_barcode" />,
-                dataIndex: "barcode",
-                key: "barcode"
-              },
-              {
-                title: <Translate id="text_quantity" />,
-                dataIndex: "quantity",
-                width: 150,
-                key: "quantity",
-                render: (quantity, record) => {
-                  quantity = record.quantity;
-                  if ("productLocations" in record) {
-                    quantity = InventoryUtil.getProductQTYLocation(record["productLocations"]);
-                  } else if ("productVariants" in record) {
-                    quantity = InventoryUtil.getProductQTYLocation(record["productVariants"]);
-                  }
-                  
-                  return `${quantity} ${record.product.unit.name}`;
-                }
-              },
-              {
-                title: <Translate id="text_cost" />,
-                dataIndex: "cost",
-                width: 150,
-                align: "right",
-                key: "cost",
-                render: cost => (new Util()).formatCurrency(cost)
-              },
-              {
-                title: <Translate id="text_product_total_cost" />,
-                dataIndex: "totalCost",
-                width: 150,
-                align: "right",
-                key: "totalCost",
-                render: (text, record) => {
-                  return (new Util()).formatCurrency(record.cost * record.quantity);
-                }
-              },
-              {
-                title: <Translate id="text_retail_price" />,
-                dataIndex: "price",
-                width: 150,
-                align: "right",
-                key: "price",
-                render: price => (new Util()).formatCurrency(price)
-              },
-              {
-                title: <Translate id="text_total_price" />,
-                dataIndex: "price",
-                width: 150,
-                align: "right",
-                key: "totalPrice",
-                render: (price, record) => {
-                  return (new Util()).formatCurrency(price * record.quantity);
-                }
-              },
-              {
-                title: <Translate id="text_margin" />,
-                dataIndex: "price",
-                width: 150,
-                align: "right",
-                key: "margin",
-                render: (price, record) => {
-                  const quantity = Math.max(record.quantity, 1);
-                  const totalPrice = price * quantity;
-                  const totalCost = record.cost * quantity;
-                  const margin = ((totalPrice - totalCost) / totalPrice) * 100;
-        
-                  return `${margin.toFixed(2)}%`;
-                }
-              }
-            ]}
-            pagination={{...pagination, onChange: (page, pageSize) => onChangePagination(page, pageSize)}}
-            loading={loading}
-          />
-        </Col>
-      </Row>
-    </div>
+      <React.Fragment>
+        { !util.isCheckingPermission(props) &&
+          (util.checkIfHasAccessPermission( permission_module_code, permission_code, props.checkPermission.response) ?
+            <div id="report-sale">
+              <PageHeader
+                  style={{
+                    backgroundColor: "#f7f7f7",
+                    paddingLeft: 0,
+                    paddingRight: 0,
+                  }}
+                  backIcon={""}
+                  title={<Translate id="text_product_report" />}
+                  subTitle=""
+                  extra={[
+                    <div key={1}>
+                      <Search
+                          placeholder="Search product by name,barcode"
+                          onChange={onChangeSearch}
+                          style={{ width: "280px" }}
+                          allowClear={true}
+                          defaultValue={searchValue ? searchValue : ""}
+                      />
+                      <Select
+                          name="locationId"
+                          style={{ width: 200 , marginLeft: 15}}
+                          defaultValue={locationId ? parseInt(locationId) : 0}
+                          onChange={onChangeLocation}
+                      >
+                        {[{name: <Translate id="text_all_store"/>, id: 0}].concat(locations).map((value, key) => (
+                            <Option key={key} value={value.id}>
+                              {value.name}
+                            </Option>
+                        ))}
+                      </Select>
+                    </div>
+                  ]}
+              />
+              <Row gutter={16}>
+                <Col span={6}>
+                  <Card>
+                    <Statistic
+                        title="Current Stock Value (By purchase price)"
+                        value={currentStockValueByCost}
+                        precision={2}
+                    />
+                  </Card>
+                </Col>
+                <Col span={6}>
+                  <Card>
+                    <Statistic
+                        title="Current Stock Value (By selling price)"
+                        value={currentStockValueByPrice}
+                        precision={2}
+                    />
+                  </Card>
+                </Col>
+                <Col span={6}>
+                  <Card>
+                    <Statistic
+                        title="Expected Gross Profit"
+                        valueStyle={{ color: "#3f8600" }}
+                        value={expectedProfit}
+                        precision={2}
+                    />
+                  </Card>
+                </Col>
+                <Col span={6}>
+                  <Card>
+                    <Statistic
+                        title={<Translate id="text_margin" />}
+                        value={expectedMargin}
+                        precision={2}
+                        suffix="%"
+                    />
+                  </Card>
+                </Col>
+                <Col span={24}>
+                  <ExportForm locationId={locationId} viewStock={viewStock} />
+                </Col>
+                <Col span={24}>
+                  <Table
+                      rowKey="id"
+                      bordered={true}
+                      dataSource={data ? data : []}
+                      columns={[
+                        {
+                          title: <Translate id="text_product_name" />,
+                          dataIndex: "name",
+                          key: "name",
+                          render: (text, record) => {
+                            let variantName = "";
+                            if (record.product && record.product.productOption === Enum.PRODUCT_VARIANT) {
+                              variantName = ` / ${record.name}`;
+                            }
+                            return InventoryUtil.getProductNameV2(record.product) + variantName;
+                          }
+                        },
+                        {
+                          title: <Translate id="text_barcode" />,
+                          dataIndex: "barcode",
+                          key: "barcode"
+                        },
+                        {
+                          title: <Translate id="text_quantity" />,
+                          dataIndex: "quantity",
+                          width: 150,
+                          key: "quantity",
+                          render: (quantity, record) => {
+                            quantity = record.quantity;
+                            if ("productLocations" in record) {
+                              quantity = InventoryUtil.getProductQTYLocation(record["productLocations"]);
+                            } else if ("productVariants" in record) {
+                              quantity = InventoryUtil.getProductQTYLocation(record["productVariants"]);
+                            }
+
+                            return `${quantity} ${record.product.unit.name}`;
+                          }
+                        },
+                        {
+                          title: <Translate id="text_cost" />,
+                          dataIndex: "cost",
+                          width: 150,
+                          align: "right",
+                          key: "cost",
+                          render: cost => (new Util()).formatCurrency(cost)
+                        },
+                        {
+                          title: <Translate id="text_product_total_cost" />,
+                          dataIndex: "totalCost",
+                          width: 150,
+                          align: "right",
+                          key: "totalCost",
+                          render: (text, record) => {
+                            return (new Util()).formatCurrency(record.cost * record.quantity);
+                          }
+                        },
+                        {
+                          title: <Translate id="text_retail_price" />,
+                          dataIndex: "price",
+                          width: 150,
+                          align: "right",
+                          key: "price",
+                          render: price => (new Util()).formatCurrency(price)
+                        },
+                        {
+                          title: <Translate id="text_total_price" />,
+                          dataIndex: "price",
+                          width: 150,
+                          align: "right",
+                          key: "totalPrice",
+                          render: (price, record) => {
+                            return (new Util()).formatCurrency(price * record.quantity);
+                          }
+                        },
+                        {
+                          title: <Translate id="text_margin" />,
+                          dataIndex: "price",
+                          width: 150,
+                          align: "right",
+                          key: "margin",
+                          render: (price, record) => {
+                            const quantity = Math.max(record.quantity, 1);
+                            const totalPrice = price * quantity;
+                            const totalCost = record.cost * quantity;
+                            const margin = ((totalPrice - totalCost) / totalPrice) * 100;
+
+                            return `${margin.toFixed(2)}%`;
+                          }
+                        }
+                      ]}
+                      pagination={{...pagination, onChange: (page, pageSize) => onChangePagination(page, pageSize)}}
+                      loading={loading}
+                  />
+                </Col>
+              </Row>
+            </div>
+            :
+            <NoPermissionV2/>
+          )
+        }
+      </React.Fragment>
   );
 }

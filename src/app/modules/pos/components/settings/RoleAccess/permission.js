@@ -274,6 +274,11 @@ export default [
         code: "purchase_report"
       },
       {
+        name: "Shift Report",
+        nameKH: "របាយការណ៏វេននាក់លក់",
+        code: "shift_report"
+      },
+      {
         name: "Product Report",
         nameKH: "របាយការណ៏ទំនិញ",
         code: "product_report"
