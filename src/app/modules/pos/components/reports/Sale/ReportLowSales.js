@@ -17,8 +17,9 @@ import ReportSaleService from "../../../services/report/SaleService";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
 import PrivilegeAction from "../../../action/settings/privilege";
 
-const permission_module_code = "report";
-const permission_code = "low_sales_report";
+const permission_module_code    = "report";
+const permission_code           = "low_sales_report";
+const util                      = new Util();
 
 function ReportLowSales(props) {
 
@@ -28,11 +29,11 @@ function ReportLowSales(props) {
   const [toValue, setToValue] = React.useState(moment());
   const [criticalLevel, setCriticalLevel] = React.useState(0);
 
-  const util = new Util();
-
-  useEffect(()=>{
-     props.dispatch(PrivilegeAction.checkPermission());
-  }, []);
+    useEffect(()=>{
+        if (!props.checkPermission.checked){
+            props.dispatch(PrivilegeAction.checkPermission());
+        }
+    }, [props]);
 
   const onFromChange = value => {
       setFromValue(value);

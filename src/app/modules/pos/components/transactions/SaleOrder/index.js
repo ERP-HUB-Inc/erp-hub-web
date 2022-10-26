@@ -100,7 +100,7 @@ class SaleOrder extends List {
           return <div className="wrap-product-name" style={{display: "flex"}}>
             {number}
             <Dropdown className="product-row-option" overlay={menu}>
-              <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
+              <a className="ant-dropdown-link" href="javascipt:(void)" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
                 <this.Translate id="text_option" /> <Icon type="down" />
               </a>
             </Dropdown>

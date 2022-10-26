@@ -17,16 +17,16 @@ import PrivilegeAction from "../../../action/settings/privilege";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
 
 const permission_module_code = "report";
-const permission_code = "purchase_report";
-
+const permission_code        = "purchase_report";
+const util                   = new Util();
 
 function PurchaseReportDashboard(props) {
 
-    const util = new Util();
-
     useEffect(()=>{
-        props.dispatch(PrivilegeAction.checkPermission());
-    }, []);
+        if (!props.checkPermission.checked){
+            props.dispatch(PrivilegeAction.checkPermission());
+        }
+    }, [props]);
 
     return (
         <React.Fragment>
