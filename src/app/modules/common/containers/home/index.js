@@ -18,6 +18,7 @@ function mapStateToProps(state) {
     saleReport: state.reducer.saleReport.request,
     pipeChat: state.reducer.homePage.listChat,
     cardDashboard: state.reducer.homePage.listCardDashboard,
+    checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale
   };
 }

@@ -231,7 +231,7 @@ export default class Home extends Component {
           </div>
         </this.Col>
       </this.Row>
-      <Dashboard />
+      <Dashboard {...this.props} />
       
     </React.Fragment>);
   }

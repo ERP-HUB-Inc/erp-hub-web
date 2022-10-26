@@ -308,7 +308,7 @@ export default [
       {
         name: "View Dashboard",
         nameKH: "មើលរបាយការណ៏សង្ខែប",
-        code: "view_dashbaord"
+        code: "view_dashboard"
       }
     ]
   }

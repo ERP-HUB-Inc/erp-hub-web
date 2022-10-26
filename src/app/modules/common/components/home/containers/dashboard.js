@@ -1,6 +1,6 @@
 import React from "react";
-import { 
-  Row, 
+import {
+  Row,
   Col,
   Card,
   Icon,
@@ -19,9 +19,15 @@ import SelectDateOption from "../../SelectDateOption";
 import "../index.css";
 import DashboardService from "../../../services/DashboardService";
 import Util from "../../../util";
+import NoPermissionV2 from "../../shares/List/NoPermissionV2";
+import PrivilegeAction from "../../../../pos/action/settings/privilege";
 Chart.register(...registerables);
 
-const { Option } = Select;
+const permission_module_code    = "dashboard";
+const permission_code           = "view_dashboard";
+const util                      = new Util();
+const { Option }                = Select;
+
 const columns = [
   {
     title: "Product Name",
@@ -44,7 +50,7 @@ const columns = [
     dataIndex: "total",
     key: "total",
     align: "right",
-    render: total => (new Util()).formatCurrency(total)
+    render: total => util.formatCurrency(total)
   },
 ];
 
@@ -57,6 +63,7 @@ const Dashboard = (props) => {
   const [popularCategories, setPopularCategories] = React.useState([]);
   const [topSellingSize, setTopSellingSize] = React.useState(25);
   const [topSellType, setTopSellType] = React.useState("quantity");
+  const [checkPermissionDataIsNotLoaded, setCheckPermissionDataIsNotLoaded] = React.useState(true);
 
   function onChange(value) {
     setOption(value);
@@ -96,6 +103,12 @@ const Dashboard = (props) => {
   };
 
   React.useEffect(() => {
+
+    if (checkPermissionDataIsNotLoaded){
+      props.dispatch(PrivilegeAction.checkPermission());
+      setCheckPermissionDataIsNotLoaded(false);
+    }
+
     DashboardService.lists(option)
     .then(response => {
       if (response.data && response.data.data) {
@@ -301,227 +314,235 @@ const Dashboard = (props) => {
   const totalSaleOfPopularCategory = mostPopularCategory ? mostPopularCategory.total : 0;
 
   return (
-    <div id="dashboard">
-      <div id="navDaskboard">
-        <ul>
-          <li className="nav-left">
-            <div className="nav-title">
-              <h4><Translate id="text_dashboard" /></h4>
-              <span>Here’s your analytic detail</span>
-            </div>
-          </li>
-          <li className="nav-right">
-            <SelectDateOption 
-              onChange={onChange}
-              value={option}
-              style={{width:165}}
-            />
-          </li>
-        </ul>
-      </div>
-      <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 20]} className="row-out">
-        <Col span={12} className="col-in">
-          <Row gutter={[16,16]}>
-            <Col span={12} className="item">
-              <div id="taskDadhboardFirst">
-                <Card bordered={false}>
-                  <div className='header-task-item'>
-                    <div className="icon-left">
-                      <Icon type="shopping-cart" />
-                    </div>
-                    <div className='menu-right'>
-                      <Icon type="ellipsis" />
-                    </div>
-                  </div>
-                  <div className="subtitle">
-                    <span><Translate id="text_revenue" /></span>
-                  </div>
-                  <div className="sub-total">
-                    <span>{(new Util()).formatCurrency(revenue)}</span>
-                  </div>
-                  <div className="total-footer">
-                    <span style={revenueRisePercentage > 0 ? {} : {color: "red"}}><Icon type={revenueRisePercentage >= 0 ? "rise" : "fall"} />{Math.abs(revenueRisePercentage)}%</span>
-                  </div>
-                </Card>
-              </div>
-            </Col>
-            <Col span={12}>
-              <div id="taskDadhboardFirst">
-                <Card bordered={false}>
-                  <div className='header-task-item'>
-                    <div className="icon-left">
-                    <Icon type="tag" />
-                    </div>
-                    <div className='menu-right'>
-                      <Icon type="ellipsis" />
-                    </div>
-                  </div>
-                  <div className="subtitle">
-                    <span><Translate id="text_discount" /></span>
-                  </div>
-                  <div className="sub-total">
-                    <span style={{color: "red"}}>{(new Util()).formatCurrency(discount)}</span>
-                  </div>
-                </Card>
-              </div>
-            </Col>
-            <Col span={12} className="item">
-              <div id="taskDadhboardFirst">
-                <Card bordered={false}>
-                  <div className='header-task-item'>
-                    <div className="icon-left">
-                      <Icon type="dollar" />
-                    </div>
-                    <div className='menu-right'>
-                      <Icon type="ellipsis" />
-                    </div>
-                  </div>
-                  <div className="subtitle">
-                    <span><Translate id="text_net_sale" /></span>
-                  </div>
-                  <div className="sub-total">
-                    <span>{(new Util()).formatCurrency(revenue - discount)}</span>
-                  </div>
-                  <div className="total-footer">
-                    <span style={diffSaleAsPercentage >= 0 ? {} : {color: "red"}}><Icon type={diffSaleAsPercentage >= 0 ? "rise" : "fall"} />{(new Util()).formatCurrency(Math.abs(diffSaleAsPercentage))}</span>
-                  </div>
-                </Card>
-              </div>
-            </Col>
-            <Col span={12}>
-              <div id="taskDadhboardFirst">
-                <Card bordered={false}>
-                  <div className='header-task-item'>
-                    <div className="icon-left">
-                      <Icon type="wallet" />
-                    </div>
-                    <div className='menu-right'>
-                      <Icon type="ellipsis" />
-                    </div>
-                  </div>
-                  <div className="subtitle">
-                    <span><Translate id="text_total_expense" /></span>
-                  </div>
-                  <div className="sub-total">
-                    <span>{(new Util()).formatCurrency(expense)}</span>
-                  </div>
-                  <div className="total-footer">
-                    <span style={{color: "red"}}><Icon type="rise" />0%</span>
-                  </div>
-                </Card>
-              </div>
-            </Col>
-          </Row>
-        </Col>
-        <Col span={12} className="task-line-chart">
-          <div id="mainChart">
-            <Card bordered={false}>
-              <div className="header-task">
-                <div className="pull-left">
-                  <h4><Translate id="text_overall_sales" /></h4>
-                  <div className='sub-left'>
-                    <span className="sub-total">{(new Util()).formatCurrency(overallSales.currentPeriodAmount)}</span>
-                    <div className="footer-task" style={overallSales.growthAsPercentage >= 0 ? {} : {color: "red"}}>
-                      <Icon type="rise" />{Math.abs(overallSales.growthAsPercentage).toFixed(2)}%
-                    </div>
-                  </div>
-                </div>
-                <div className="pull-right hidden">
-                  <div className="select-pull-right">
-                    <SelectDateOption
-                      disabled={true}
-                      placeholder="Current Month"
-                      style={{width: 150}}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div id="mainLinChart">
-                <div style={{height: 300, padding: "10px 20px", display: "flex", alignItems: "flex-end"}}>
-                  <Line options={options} data={lineData} height={"100%"} />
-                </div>
-              </div>
-            </Card>
-          </div>
-        </Col>
-        <Col span={6} className="item">
-          <div id="mainDashboadCategory">
-            <Card bordered={false}>
-              <div className="header-category">
-                <span className="title-category"><Translate id="text_popular_categories" /></span>
-              </div>
-              <div className="category-progress">
+      <React.Fragment>
+        { !util.isCheckingPermission(props) &&
+          (util.checkIfHasAccessPermission( permission_module_code, permission_code, props.checkPermission.response) ?
+            <div id="dashboard">
+              <div id="navDaskboard">
                 <ul>
-                  {
-                    mostPopularCategory ?
-                    <li>
-                      <div className="label-progress">
+                  <li className="nav-left">
+                    <div className="nav-title">
+                      <h4><Translate id="text_dashboard" /></h4>
+                      <span>Here’s your analytic detail</span>
+                    </div>
+                  </li>
+                  <li className="nav-right">
+                    <SelectDateOption
+                        onChange={onChange}
+                        value={option}
+                        style={{width:165}}
+                    />
+                  </li>
+                </ul>
+              </div>
+              <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 20]} className="row-out">
+                <Col span={12} className="col-in">
+                  <Row gutter={[16,16]}>
+                    <Col span={12} className="item">
+                      <div id="taskDadhboardFirst">
+                        <Card bordered={false}>
+                          <div className='header-task-item'>
+                            <div className="icon-left">
+                              <Icon type="shopping-cart" />
+                            </div>
+                            <div className='menu-right'>
+                              <Icon type="ellipsis" />
+                            </div>
+                          </div>
+                          <div className="subtitle">
+                            <span><Translate id="text_revenue" /></span>
+                          </div>
+                          <div className="sub-total">
+                            <span>{(new Util()).formatCurrency(revenue)}</span>
+                          </div>
+                          <div className="total-footer">
+                            <span style={revenueRisePercentage > 0 ? {} : {color: "red"}}><Icon type={revenueRisePercentage >= 0 ? "rise" : "fall"} />{Math.abs(revenueRisePercentage)}%</span>
+                          </div>
+                        </Card>
+                      </div>
+                    </Col>
+                    <Col span={12}>
+                      <div id="taskDadhboardFirst">
+                        <Card bordered={false}>
+                          <div className='header-task-item'>
+                            <div className="icon-left">
+                              <Icon type="tag" />
+                            </div>
+                            <div className='menu-right'>
+                              <Icon type="ellipsis" />
+                            </div>
+                          </div>
+                          <div className="subtitle">
+                            <span><Translate id="text_discount" /></span>
+                          </div>
+                          <div className="sub-total">
+                            <span style={{color: "red"}}>{(new Util()).formatCurrency(discount)}</span>
+                          </div>
+                        </Card>
+                      </div>
+                    </Col>
+                    <Col span={12} className="item">
+                      <div id="taskDadhboardFirst">
+                        <Card bordered={false}>
+                          <div className='header-task-item'>
+                            <div className="icon-left">
+                              <Icon type="dollar" />
+                            </div>
+                            <div className='menu-right'>
+                              <Icon type="ellipsis" />
+                            </div>
+                          </div>
+                          <div className="subtitle">
+                            <span><Translate id="text_net_sale" /></span>
+                          </div>
+                          <div className="sub-total">
+                            <span>{(new Util()).formatCurrency(revenue - discount)}</span>
+                          </div>
+                          <div className="total-footer">
+                            <span style={diffSaleAsPercentage >= 0 ? {} : {color: "red"}}><Icon type={diffSaleAsPercentage >= 0 ? "rise" : "fall"} />{(new Util()).formatCurrency(Math.abs(diffSaleAsPercentage))}</span>
+                          </div>
+                        </Card>
+                      </div>
+                    </Col>
+                    <Col span={12}>
+                      <div id="taskDadhboardFirst">
+                        <Card bordered={false}>
+                          <div className='header-task-item'>
+                            <div className="icon-left">
+                              <Icon type="wallet" />
+                            </div>
+                            <div className='menu-right'>
+                              <Icon type="ellipsis" />
+                            </div>
+                          </div>
+                          <div className="subtitle">
+                            <span><Translate id="text_total_expense" /></span>
+                          </div>
+                          <div className="sub-total">
+                            <span>{(new Util()).formatCurrency(expense)}</span>
+                          </div>
+                          <div className="total-footer">
+                            <span style={{color: "red"}}><Icon type="rise" />0%</span>
+                          </div>
+                        </Card>
+                      </div>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col span={12} className="task-line-chart">
+                  <div id="mainChart">
+                    <Card bordered={false}>
+                      <div className="header-task">
+                        <div className="pull-left">
+                          <h4><Translate id="text_overall_sales" /></h4>
+                          <div className='sub-left'>
+                            <span className="sub-total">{(new Util()).formatCurrency(overallSales.currentPeriodAmount)}</span>
+                            <div className="footer-task" style={overallSales.growthAsPercentage >= 0 ? {} : {color: "red"}}>
+                              <Icon type="rise" />{Math.abs(overallSales.growthAsPercentage).toFixed(2)}%
+                            </div>
+                          </div>
+                        </div>
+                        <div className="pull-right hidden">
+                          <div className="select-pull-right">
+                            <SelectDateOption
+                                disabled={true}
+                                placeholder="Current Month"
+                                style={{width: 150}}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div id="mainLinChart">
+                        <div style={{height: 300, padding: "10px 20px", display: "flex", alignItems: "flex-end"}}>
+                          <Line options={options} data={lineData} height={"100%"} />
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+                </Col>
+                <Col span={6} className="item">
+                  <div id="mainDashboadCategory">
+                    <Card bordered={false}>
+                      <div className="header-category">
+                        <span className="title-category"><Translate id="text_popular_categories" /></span>
+                      </div>
+                      <div className="category-progress">
                         <ul>
-                          <li className="label-left"><span>{mostPopularCategory.name}</span></li>
-                          <li className="label-right"><span>{(new Util()).formatCurrency(totalSaleOfPopularCategory)}</span></li>
+                          {
+                            mostPopularCategory ?
+                                <li>
+                                  <div className="label-progress">
+                                    <ul>
+                                      <li className="label-left"><span>{mostPopularCategory.name}</span></li>
+                                      <li className="label-right"><span>{(new Util()).formatCurrency(totalSaleOfPopularCategory)}</span></li>
+                                    </ul>
+                                  </div>
+                                  <Progress percent={100} status="active" />
+                                </li>
+                                :
+                                ""
+                          }
+                          {
+                            popularCategories.filter(value => value.categoryId !== mostPopularCategory.categoryId).map((popularCategory, key) =>
+                                <li key={key}>
+                                  <div className="label-progress">
+                                    <ul>
+                                      <li className="label-left"><span>{popularCategory.name}</span></li>
+                                      <li className="label-right"><span>{(new Util()).formatCurrency(popularCategory.total)}</span></li>
+                                    </ul>
+                                  </div>
+                                  <Progress percent={(popularCategory.total * 100) / totalSaleOfPopularCategory} status="active" />
+                                </li>
+                            )
+                          }
                         </ul>
                       </div>
-                      <Progress percent={100} status="active" />
-                    </li>
-                    :
-                    ""
-                  }
-                  {
-                    popularCategories.filter(value => value.categoryId !== mostPopularCategory.categoryId).map((popularCategory, key) => 
-                      <li key={key}>
-                        <div className="label-progress">
-                          <ul>
-                            <li className="label-left"><span>{popularCategory.name}</span></li>
-                            <li className="label-right"><span>{(new Util()).formatCurrency(popularCategory.total)}</span></li>
-                          </ul>
-                        </div>
-                        <Progress percent={(popularCategory.total * 100) / totalSaleOfPopularCategory} status="active" />
-                      </li>
-                    )
-                  }
-                </ul>
-              </div>    
-            </Card>
-          </div>
-        </Col>
-        <Col span={18} className="task-line-chart">
-          <div id="mainTableList">
-            <Card bordered={false}>
-              <div className="header-task">
-                <span className="title-task"><Translate id="text_top_selling_products" /></span>
-                <div className="btn-header-task">
-                  <Radio.Group value={topSellType} onChange={onChangeTopSellingType} style={{ marginBottom: 16 }}>
-                    <Radio.Button value="quantity">By Quantity</Radio.Button>
-                    <Radio.Button value="totalSale">By Total Sales</Radio.Button>
-                  </Radio.Group>
-                  <div className="select">
-                    <Select 
-                    defaultValue={25} 
-                    style={{ width: 199, 
-                    marginLeft: 15 }} 
-                    onChange={onChangeTopSellingSize}>
-                      <Option value={25}>Top 25 Selling Products</Option>
-                      <Option value={50}>Top 50 Selling Products</Option>
-                      <Option value={100}>Top 100 Selling Products</Option>
-                    </Select>
+                    </Card>
                   </div>
-                </div>
-              </div>
-              <div className="table-list-product">
-                <Table
-                  bordered={true}
-                  rowKey="id"
-                  columns={columns}
-                  dataSource={popularProducts}
-                  pagination={false}
-                  loading={loadingPopular}
-                 />
-              </div>
-            </Card>
-          </div>
-        </Col>
-      </Row>
-    </div>
+                </Col>
+                <Col span={18} className="task-line-chart">
+                  <div id="mainTableList">
+                    <Card bordered={false}>
+                      <div className="header-task">
+                        <span className="title-task"><Translate id="text_top_selling_products" /></span>
+                        <div className="btn-header-task">
+                          <Radio.Group value={topSellType} onChange={onChangeTopSellingType} style={{ marginBottom: 16 }}>
+                            <Radio.Button value="quantity">By Quantity</Radio.Button>
+                            <Radio.Button value="totalSale">By Total Sales</Radio.Button>
+                          </Radio.Group>
+                          <div className="select">
+                            <Select
+                                defaultValue={25}
+                                style={{ width: 199,
+                                  marginLeft: 15 }}
+                                onChange={onChangeTopSellingSize}>
+                              <Option value={25}>Top 25 Selling Products</Option>
+                              <Option value={50}>Top 50 Selling Products</Option>
+                              <Option value={100}>Top 100 Selling Products</Option>
+                            </Select>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="table-list-product">
+                        <Table
+                            bordered={true}
+                            rowKey="id"
+                            columns={columns}
+                            dataSource={popularProducts}
+                            pagination={false}
+                            loading={loadingPopular}
+                        />
+                      </div>
+                    </Card>
+                  </div>
+                </Col>
+              </Row>
+            </div>
+            :
+            <NoPermissionV2/>
+          )
+        }
+      </React.Fragment>
   );
 };
 
