@@ -35,7 +35,7 @@ function ReportLowSales(props) {
             props.dispatch(PrivilegeAction.checkPermission());
             setCheckPermissionDataIsNotLoaded(false);
         }
-    }, [props]);
+    }, [props, checkPermissionDataIsNotLoaded]);
 
   const onFromChange = value => {
       setFromValue(value);

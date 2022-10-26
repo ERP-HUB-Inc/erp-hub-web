@@ -26,7 +26,7 @@ export default function StockReport(props) {
       props.dispatch(PrivilegeAction.checkPermission());
       setCheckPermissionDataIsNotLoaded(false);
     }
-  }, [props]);
+  }, [props, checkPermissionDataIsNotLoaded]);
 
   return (
       <React.Fragment>

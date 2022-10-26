@@ -58,7 +58,7 @@ export default function ProfitAndLossReport(props) {
 
         }
 
-    }, [props, fromValue, toValue]);
+    }, [props, checkPermissionDataIsNotLoaded, fromValue, toValue]);
 
     return (
         <React.Fragment>

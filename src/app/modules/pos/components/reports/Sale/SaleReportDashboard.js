@@ -29,7 +29,7 @@ export default function SaleReportDashboard(props) {
             props.dispatch(PrivilegeAction.checkPermission());
             setCheckPermissionDataIsNotLoaded(false);
         }
-    }, [props]);
+    }, [props, checkPermissionDataIsNotLoaded]);
 
     return (
         <React.Fragment>
