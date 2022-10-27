@@ -8,10 +8,10 @@ class SerialService extends BaseService {
         this.initializeRoute();
     }
 
-    findByNumber(number) {
+    findByNumber(number, variantId, transEntryId) {
         this.setHeader();
         return this.GET({
-            url: `${this.baseUrl}/find_by_number/${number}`,
+            url: `${this.baseUrl}/find_by_number/${number}?productVariantId=${variantId}&transactionEntryId=${transEntryId}`,
             headers: this.header
         });
     }

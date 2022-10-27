@@ -1,3 +1,43 @@
 #paymentTermNumber .ant-form-item-control-wrapper , #paymentTermType .ant-form-item-control-wrapper{
     width: 100%;
 }
+
+.serial-panel .ant-collapse-item {
+    border: none;
+}
+
+.serial-panel .ant-collapse-content {
+    background: none;
+    border: none;
+    margin-top: -5px;
+}
+
+.serial-panel .ant-collapse-header {
+    padding-left: 18px !important;
+}
+
+.serial-panel .ant-collapse-arrow {
+    left: 0 !important;
+}
+
+.serial-panel .ant-collapse-content-box {
+    padding: 0;
+}
+
+.serial-panel .serial-tag {
+    position: relative;
+    cursor: pointer;
+    font-size: 14px;
+    height: 30px;
+    line-height: 27px;
+    margin-bottom: 7px;
+    z-index: 100;
+}
+
+.serial-panel .btn-remove-serial {
+    position: absolute;
+    color: red;
+    top: 4px;
+    font-size: 20px;
+    right: -30px;
+}

@@ -466,5 +466,10 @@ export default {
   "text_warranty_date": [
     "Warranty Date",
     "កាលបរិច្ឆេទធានា"
+  ],
+
+  "text_quantity_to_remove": [
+    "Quantity to remove",
+    "ចំនួនដែលត្រូវលុបចេញ"
   ]
 };

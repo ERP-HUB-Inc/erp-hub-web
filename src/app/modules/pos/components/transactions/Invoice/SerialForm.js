@@ -1,11 +1,9 @@
 import React from "react";
 import { Translate } from "react-localize-redux";
 import BarcodeReader from "react-barcode-reader";
-import moment from "moment";
 import { 
   Col, 
   Form, 
-  Input, 
   Modal,
   Row
 } from "antd";
@@ -30,6 +28,7 @@ export default class SerialForm extends React.PureComponent  {
 
   handleSaveSerial = () => {
     const values = this.props.form.getFieldsValue();
+
     if (!values.serialNumber) {
       this.props.form.setFields({
         serialNumber: {
@@ -38,7 +37,7 @@ export default class SerialForm extends React.PureComponent  {
       });
     }
 
-    if (!values.numberWarranty) {
+    if (!values.numOfWarranty) {
       this.props.form.setFields({
         numberWarranty: {
           errors: [new Error(stringTranslate("text_warranty_date_required", this.props.locale))]
@@ -46,30 +45,41 @@ export default class SerialForm extends React.PureComponent  {
       });
     }
 
-    if (values.serialNumber && values.numberWarranty) {
-      let warrantyDate = null;
-      let currentDate = this.util.formatDate(this.props.formData.invoiceDate);
+    if (values.serialNumber && values.numOfWarranty) {
       const durationType = values.durationType;
-
-      warrantyDate = this.util.calculateWarrantyDate(currentDate, Number(values.numberWarranty), durationType);
-
       this.props.onSuccess({
+        id: this.props.formData.id,
         serialNumber: values.serialNumber,
-        warrantyDate,
+        oldSerial: this.props.formData.number,
+        numOfWarranty: values.numOfWarranty,
         durationType, 
         fieldIndex: values.fieldIndex,
         fieldIndex2: values.fieldIndex2
       });
-      this.setState({isVisible: false});
+
+      this.props.form.setFieldsValue({
+        serialNumber: "",
+        numOfWarranty: 0,
+        durationType: ""
+      });
+
     }
   };
 
   onChangeSerialNo = (e) => {
     clearTimeout(this.timer);
     const value = e.target.value;
-    if (value) {
+    if (value && value !== this.props.formData.number) {
       this.timer = setTimeout(() => {
-        SerialService.findByNumber(value)
+        if (this.props.selectedSerials.length && this.props.selectedSerials.includes(value)) {
+          return this.props.form.setFields({
+            serialNumber: {
+              errors: [new Error("This serial number already selected")]
+            }
+          });
+        }
+        
+        SerialService.findByNumber(value, this.props.formData.pVariantId)
         .then(response => {
           if (response.data && response.data.length) {
             this.props.form.setFields({
@@ -78,22 +88,52 @@ export default class SerialForm extends React.PureComponent  {
               }
             });
           }
-        });
-      }, 1000);
+        })
+        .catch(e => console.log("error ========", e.response));
+      }, 600);
     }
   };
+
+  onChangeNumberWarranty = value => {
+
+  }
 
   handleShowModal = () => {
     this.setState({isVisible: true});
   };
 
+  onCloseModal = () => {
+    this.setState({isVisible: false});
+  }
+
   handleCancel = () => {
     this.setState({isVisible: false});
+    this.props.onCanceled(this.props.formData.index);
   };
 
-  handleScan = (serialNumber) => {
+  handleScan = (value) => {
     this.setState({ isScanBarcode: true });
-    this.props.form.setFieldsValue({ serialNumber });
+    if (this.props.selectedSerials.length && this.props.selectedSerials.includes(value)) {
+      return this.props.form.setFields({
+        serialNumber: {
+          errors: [new Error("This serial number already selected")]
+        }
+      });
+    }
+
+    SerialService.findByNumber(value, this.props.formData.pVariantId)
+    .then(response => {
+      if (response.data && response.data.length) {
+        return this.props.form.setFields({
+          serialNumber: {
+            errors: [new Error(value + ": " + stringTranslate("text_this_serial_is_sold", this.props.locale))]
+          }
+        });
+      }
+    })
+    .catch(e => console.log("error ========", e.response));
+
+    this.props.form.setFieldsValue({ serialNumber: value });
   }
 
   handleScanError = (err) => {
@@ -102,10 +142,11 @@ export default class SerialForm extends React.PureComponent  {
 
   render() {
     const {formData} = this.props;
-    let warrantyNumber = 1;
     formData.invoiceDate = this.util.formatDate(formData.invoiceDate);
-    if (formData.warrantyDate) {
-      warrantyNumber = this.util.calculateDurationNumber(formData.invoiceDate, formData.durationType, formData.warrantyDate);
+    let numOfSerials = this.props.form.getFieldValue(`serials[${Number(formData.index)}]`);
+    if (this.util.isJsonString(numOfSerials)) {
+      numOfSerials = JSON.parse(numOfSerials);
+      numOfSerials = Array.isArray(numOfSerials) && numOfSerials.length;
     }
 
     return (
@@ -118,6 +159,13 @@ export default class SerialForm extends React.PureComponent  {
         >
           <Form>
             <Row>
+              <div style={{marginTop: -10, paddingBottom: 12, textAlign: "center"}}>{formData.description}</div>
+              {
+                numOfSerials && numOfSerials < formData.quantity ?
+                  <label>Please input {formData.quantity - numOfSerials} more serials </label>
+                : null
+              }
+              
               <Col md={24}>
                 <BarcodeReader
                   minLength={4}
@@ -140,14 +188,15 @@ export default class SerialForm extends React.PureComponent  {
               </Col>
               <Col md={24}>
                 <label><Translate id="text_warranty_duration" />:</label>
-                <Row>
+                <Row gutter={12}>
                   <Col md={12}>
                     <InputNumber
-                      name="numberWarranty"
+                      name="numOfWarranty"
                       required={true}
                       precision={0}
                       isAutoSelect={true}
-                      data={warrantyNumber}
+                      data={formData.numOfWarranty}
+                      onChange={this.onChangeNumberWarranty}
                       form={this.props.form} />
                   </Col>
                   <Col md={12}>
@@ -163,6 +212,12 @@ export default class SerialForm extends React.PureComponent  {
                       ]}
                       form={this.props.form} />
                   </Col>
+                  {/* {
+                    formData.warrantyDate &&
+                      <Col md={12}>
+                        <label><Translate id="text_warranty_date" />: <span style={{marginLeft: 8}}>{this.util.formatDate(formData.warrantyDate, "DD-MM-YYYY")}</span></label>
+                      </Col>       
+                  } */}
                 </Row>
               </Col>
             </Row>
@@ -186,8 +241,8 @@ export default class SerialForm extends React.PureComponent  {
 SerialForm.defaultProps = {
   formData: {
     number: "",
-    warrantyDate: "",
-    durationType: "month",
+    numOfWarranty: 1,
+    durationType: Enum.DURATION_TYPE.DAY,
     fieldName: "",
     index: null,
     index2: null
