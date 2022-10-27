@@ -18,7 +18,7 @@ const permission_module_code    = "report";
 const permission_code           = "profit_and_loss_report";
 const util                      = new Util();
 
-export default function ProfitAndLossReport(props) {
+export default function ProfitAndLossReport() {
     
     const [data, setData] = React.useState(null);
     const [fromValue, setFromValue] = React.useState(moment().startOf("month"));
