@@ -15,8 +15,8 @@ import history from "../../../../common/router/history";
 import InventoryService from "../../../services/report/InventoryService";
 import Util from "../../../../common/util";
 import "./index.css";
-import PrivilegeAction from "../../../action/settings/privilege";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
+import PrivilegeService from "../../../services/settings/PrivilegeService";
 
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -31,7 +31,7 @@ export default function InventoryReport(props) {
   const [topSellingSize, setTopSellingSize] = React.useState(25);
   const [todayPurchases, setTodayPurchases] = React.useState([]);
   const [topSellType, setTopSellType] = React.useState("quantity");
-  const [checkPermissionDataIsNotLoaded, setCheckPermissionDataIsNotLoaded] = React.useState(true);
+  const [isHasAccessPermission, setIsHasAccessPermission] = React.useState(null);
 
   const fetchPopularProducts = (limit, popularBy) => {
     setLoading(true);
@@ -58,9 +58,10 @@ export default function InventoryReport(props) {
 
   React.useEffect(() => {
 
-    if (checkPermissionDataIsNotLoaded){
-      props.dispatch(PrivilegeAction.checkPermission());
-      setCheckPermissionDataIsNotLoaded(false);
+    if (isHasAccessPermission == null){
+      PrivilegeService.checkPermissionV2(permission_module_code, permission_code)
+          .then(({data}) => setIsHasAccessPermission(data))
+          .catch(() => setIsHasAccessPermission(false));
     }
 
     InventoryService.getInventoryDashboard()
@@ -111,8 +112,8 @@ export default function InventoryReport(props) {
 
   return (
       <React.Fragment>
-        { !util.isCheckingPermission(props) &&
-          (util.checkIfHasAccessPermission( permission_module_code, permission_code, props.checkPermission.response) ?
+        {util.isNotCheckingPermissionV2(isHasAccessPermission) &&
+          (isHasAccessPermission ?
             <div id="inventory-dashboard">
               <PageHeader
                   style={{

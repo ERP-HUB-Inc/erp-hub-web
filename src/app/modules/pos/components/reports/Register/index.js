@@ -18,27 +18,27 @@ import Enum from "../../../enums";
 import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
-import PrivilegeAction from "../../../action/settings/privilege";
+import PrivilegeService from "../../../services/settings/PrivilegeService";
 
 const permission_module_code    = "report";
 const permission_code           = "shift_report";
 const util                      = new Util();
 
-export default function RegiserReport(props) {
+export default function RegiserReport() {
     const [records, setRecords] = React.useState([]),
         [loading, setLoading] = React.useState(false),
         [fromValue, setFromValue] = React.useState(moment().startOf("month")),
         [toValue, setToValue] = React.useState(moment().endOf("month")),
         [registerDetail, setRegisterDetail] = React.useState(null),
-        [checkPermissionDataIsNotLoaded, setCheckPermissionDataIsNotLoaded] = React.useState(true);
-
+        [isHasAccessPermission, setIsHasAccessPermission] = React.useState(null);
 
     useEffect(()=>{
-        if (checkPermissionDataIsNotLoaded){
-            props.dispatch(PrivilegeAction.checkPermission());
-            setCheckPermissionDataIsNotLoaded(false);
+        if (isHasAccessPermission == null){
+            PrivilegeService.checkPermissionV2(permission_module_code, permission_code)
+                .then(({data}) => setIsHasAccessPermission(data))
+                .catch(() => setIsHasAccessPermission(false));
         }
-    }, [props, checkPermissionDataIsNotLoaded]);
+    }, [isHasAccessPermission]);
 
     const onFromChange = value => {
         setFromValue(value);
@@ -63,12 +63,12 @@ export default function RegiserReport(props) {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [isHasAccessPermission]);
 
     return (
         <React.Fragment>
-            { !util.isCheckingPermission(props) &&
-                (util.checkIfHasAccessPermission( permission_module_code, permission_code, props.checkPermission.response) ?
+            {util.isNotCheckingPermissionV2(isHasAccessPermission) &&
+                (isHasAccessPermission ?
                     <div className="content-list">
                         <PageHeader
                             style={{

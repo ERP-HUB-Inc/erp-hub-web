@@ -13,28 +13,29 @@ import "./index.css";
 import history from "../../../../common/router/history";
 import { Translate } from "react-localize-redux";
 import Util from "../../../../common/util";
-import PrivilegeAction from "../../../action/settings/privilege";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
+import PrivilegeService from "../../../services/settings/PrivilegeService";
 
 const permission_module_code    = "report";
 const permission_code           = "sales_report";
 const util                      = new Util();
 
-export default function SaleReportDashboard(props) {
+export default function SaleReportDashboard() {
 
-    const [checkPermissionDataIsNotLoaded, setCheckPermissionDataIsNotLoaded] = React.useState(true);
+    const [isHasAccessPermission, setIsHasAccessPermission] = React.useState(null);
 
     useEffect(()=>{
-        if (checkPermissionDataIsNotLoaded){
-            props.dispatch(PrivilegeAction.checkPermission());
-            setCheckPermissionDataIsNotLoaded(false);
+        if (isHasAccessPermission == null){
+            PrivilegeService.checkPermissionV2(permission_module_code, permission_code)
+                .then(({data}) => setIsHasAccessPermission(data))
+                .catch(() => setIsHasAccessPermission(false));
         }
-    }, [props, checkPermissionDataIsNotLoaded]);
+    }, [isHasAccessPermission]);
 
     return (
         <React.Fragment>
-            { !util.isCheckingPermission(props) &&
-                (util.checkIfHasAccessPermission( permission_module_code, permission_code,  props.checkPermission.response) ?
+            {util.isNotCheckingPermissionV2(isHasAccessPermission) &&
+                (isHasAccessPermission ?
                     <div id="sale-report-dashboard">
                         <PageHeader
                             style={{

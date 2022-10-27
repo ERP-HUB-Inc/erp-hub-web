@@ -11,8 +11,8 @@ import ProfitAndLossContext from "./ProfitAndLossContext";
 import ExportForm from "./ExportForm";
 import ProfitAndLostService from "../../../services/report/ProfitAndLostService";
 import Util from "../../../../common/util";
-import PrivilegeAction from "../../../action/settings/privilege";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
+import PrivilegeService from "../../../services/settings/PrivilegeService";
 
 const permission_module_code    = "report";
 const permission_code           = "profit_and_loss_report";
@@ -23,7 +23,7 @@ export default function ProfitAndLossReport(props) {
     const [data, setData] = React.useState(null);
     const [fromValue, setFromValue] = React.useState(moment().startOf("month"));
     const [toValue, setToValue] = React.useState(moment().endOf("month"));
-    const [checkPermissionDataIsNotLoaded, setCheckPermissionDataIsNotLoaded] = React.useState(true);
+    const [isHasAccessPermission, setIsHasAccessPermission] = React.useState(null);
 
     const onFromChange = value => {
         setFromValue(value);
@@ -48,22 +48,24 @@ export default function ProfitAndLossReport(props) {
     React.useEffect(() => {
         try {
             fetchReport(fromValue, toValue);
-            if (checkPermissionDataIsNotLoaded){
-                props.dispatch(PrivilegeAction.checkPermission());
-                setCheckPermissionDataIsNotLoaded(false);
+            if (isHasAccessPermission == null){
+                PrivilegeService.checkPermissionV2(permission_module_code, permission_code)
+                    .then(({data}) => setIsHasAccessPermission(data))
+                    .catch(() => setIsHasAccessPermission(false));
             }
+
         } catch (error) {
             
         } finally {
 
         }
 
-    }, [props, checkPermissionDataIsNotLoaded, fromValue, toValue]);
+    }, [isHasAccessPermission, fromValue, toValue]);
 
     return (
         <React.Fragment>
-            { !util.isCheckingPermission(props) &&
-                (util.checkIfHasAccessPermission( permission_module_code, permission_code, props.checkPermission.response) ?
+            {util.isNotCheckingPermissionV2(isHasAccessPermission) &&
+                (isHasAccessPermission ?
                     <ProfitAndLossContext.Provider value={{startDate: fromValue.format("YYYY-MM-DD"), endDate: toValue.format("YYYY-MM-DD")}}>
                         <div style={{width: "100%", backgroundColor: "#fff"}}>
                             <PageHeader

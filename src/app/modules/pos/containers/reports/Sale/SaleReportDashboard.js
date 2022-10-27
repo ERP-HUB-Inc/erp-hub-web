@@ -10,7 +10,6 @@ function  SaleReportDashboardContainer(props) {
 function mapStateToProps(state) {
   return {
     saleReport: state.reducer.saleReport.request,
-    checkPermission: state.reducer.privilege.checkPermission,
     locale: state.locale
   };
 }

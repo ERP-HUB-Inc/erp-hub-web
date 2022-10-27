@@ -15,27 +15,28 @@ import ExportLowSaleForm from "./ExportLowSaleForm";
 import Util from "../../../../common/util";
 import ReportSaleService from "../../../services/report/SaleService";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
-import PrivilegeAction from "../../../action/settings/privilege";
+import PrivilegeService from "../../../services/settings/PrivilegeService";
 
 const permission_module_code    = "report";
 const permission_code           = "low_sales_report";
 const util                      = new Util();
 
-function ReportLowSales(props) {
+function ReportLowSales() {
 
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState(null);
   const [fromValue, setFromValue] = React.useState(moment());
   const [toValue, setToValue] = React.useState(moment());
   const [criticalLevel, setCriticalLevel] = React.useState(0);
-  const [checkPermissionDataIsNotLoaded, setCheckPermissionDataIsNotLoaded] = React.useState(true);
+  const [isHasAccessPermission, setIsHasAccessPermission] = React.useState(null);
 
     useEffect(()=>{
-        if (checkPermissionDataIsNotLoaded){
-            props.dispatch(PrivilegeAction.checkPermission());
-            setCheckPermissionDataIsNotLoaded(false);
+        if (isHasAccessPermission == null){
+            PrivilegeService.checkPermissionV2(permission_module_code, permission_code)
+                .then(({data}) => setIsHasAccessPermission(data))
+                .catch(() => setIsHasAccessPermission(false));
         }
-    }, [props, checkPermissionDataIsNotLoaded]);
+    }, [isHasAccessPermission]);
 
   const onFromChange = value => {
       setFromValue(value);
@@ -68,8 +69,8 @@ function ReportLowSales(props) {
 
     return (
         <React.Fragment>
-            { !util.isCheckingPermission(props) &&
-                (util.checkIfHasAccessPermission( permission_module_code, permission_code, props.checkPermission.response) ?
+            {util.isNotCheckingPermissionV2(isHasAccessPermission) &&
+                (isHasAccessPermission ?
                     <div id="report-sale">
                         <PageHeader
                             style={{

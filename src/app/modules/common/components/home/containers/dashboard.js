@@ -20,7 +20,7 @@ import "../index.css";
 import DashboardService from "../../../services/DashboardService";
 import Util from "../../../util";
 import NoPermissionV2 from "../../shares/List/NoPermissionV2";
-import PrivilegeAction from "../../../../pos/action/settings/privilege";
+import PrivilegeService from "../../../../pos/services/settings/PrivilegeService";
 Chart.register(...registerables);
 
 const permission_module_code    = "dashboard";
@@ -54,7 +54,7 @@ const columns = [
   },
 ];
 
-const Dashboard = (props) => {
+const Dashboard = () => {
   const [option, setOption] = React.useState("today");
   const [overallSales, setOverallSales] = React.useState({dates: [], currentPeriodSales: [], currentPeriodAmount: 0, growthAsPercentage: 0});
   const [popularProducts, setPopularProducts] = React.useState([]);
@@ -63,7 +63,7 @@ const Dashboard = (props) => {
   const [popularCategories, setPopularCategories] = React.useState([]);
   const [topSellingSize, setTopSellingSize] = React.useState(25);
   const [topSellType, setTopSellType] = React.useState("quantity");
-  const [checkPermissionDataIsNotLoaded, setCheckPermissionDataIsNotLoaded] = React.useState(true);
+  const [isHasAccessPermission, setIsHasAccessPermission] = React.useState(null);
 
   function onChange(value) {
     setOption(value);
@@ -104,9 +104,10 @@ const Dashboard = (props) => {
 
   React.useEffect(() => {
 
-    if (checkPermissionDataIsNotLoaded){
-      props.dispatch(PrivilegeAction.checkPermission());
-      setCheckPermissionDataIsNotLoaded(false);
+    if (isHasAccessPermission == null){
+      PrivilegeService.checkPermissionV2(permission_module_code, permission_code)
+          .then(({data}) => setIsHasAccessPermission(data))
+          .catch(() => setIsHasAccessPermission(false));
     }
 
     DashboardService.lists(option)
@@ -134,7 +135,7 @@ const Dashboard = (props) => {
     });
 
     //eslint-disable-next-line
-  }, []);
+  }, [isHasAccessPermission]);
 
 
   const getOrCreateTooltip = (chart) => {
@@ -315,8 +316,8 @@ const Dashboard = (props) => {
 
   return (
       <React.Fragment>
-        { !util.isCheckingPermission(props) &&
-          (util.checkIfHasAccessPermission( permission_module_code, permission_code, props.checkPermission.response) ?
+        {util.isNotCheckingPermissionV2(isHasAccessPermission) &&
+          (isHasAccessPermission ?
             <div id="dashboard">
               <div id="navDaskboard">
                 <ul>

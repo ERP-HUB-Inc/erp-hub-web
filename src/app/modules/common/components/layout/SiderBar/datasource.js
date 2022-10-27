@@ -102,7 +102,7 @@ const ProductUnit = Loadable({
 });
 
 const PurchaseOrder = Loadable({
-  loader: () => import("../../../../inventory/containers/stock/PurchaseOrder"),
+  loader: () => import("../../../../inventory/components/stock/PurchaseOrder"),
   loading: () => <StartUp />,
 });
 
@@ -143,20 +143,20 @@ const SaleReportDashboard = Loadable({
 
 const LowSaleReport = Loadable({
   loader: () =>
-    import("../../../../pos/containers/reports/Sale/ReportLowSales"),
+    import("../../../../pos/components/reports/Sale/ReportLowSales"),
     loading: () => <StartUp />,
 });
 
 const PurchaseReportDashboard = Loadable({
   loader: () =>
     import(
-      "../../../../pos/containers/reports/Purchase/PurchaseReportDashboard"
+      "../../../../pos/components/reports/Purchase/PurchaseReportDashboard"
     ),
   loading: () => <StartUp />,
 });
 
 const StockReport = Loadable({
-  loader: () => import("../../../../pos/containers/reports/Stock"),
+  loader: () => import("../../../../pos/components/reports/Stock"),
   loading: () => <StartUp />
 });
 
@@ -166,8 +166,7 @@ const ProductReport = Loadable({
 });
 
 const InventoryDashboard = Loadable({
-  loader: () =>
-    import("../../../../pos/containers/reports/Inventory/InventoryDashboard"),
+  loader: () => import("../../../../pos/components/reports/Inventory/InventoryDashboard"),
   loading: () => <StartUp />,
 });
 
@@ -177,7 +176,7 @@ const AdjustmentReport = Loadable({
 });
 
 const RegisterReport = Loadable({
-  loader: () => import("../../../../pos/containers/reports/Register"),
+  loader: () => import("../../../../pos/components/reports/Register"),
   loading: () => <StartUp />,
 });
 
