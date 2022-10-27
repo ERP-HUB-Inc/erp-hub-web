@@ -615,13 +615,16 @@ export default class Util {
   }
 
   checkIfHasAccessPermission(module, permission, response) {
+
     if (response && response.data && response.data.metaData){
       const found = JSON.parse(response.data.metaData).find(item => item.code === module);
       if (found){
         return found.permissions.includes(permission);
       }
     }
-    return false;
+
+    return response && response.data && response.data.id;
+
   }
 
   isCheckingPermission(props) {
