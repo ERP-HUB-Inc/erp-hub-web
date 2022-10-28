@@ -32,7 +32,7 @@ export const PackingSlipTem = React.forwardRef((props, ref) => {
                 <span>{formData.firstName+ " "+ formData.lastName}</span>
                 <div style={{paddingRight: "20%"}}>{formData.address}</div>
                 <div style={{paddingRight: "20%"}}>
-                  <span style={{fontWeight: "bold"}}>Mobile: </span>{formData.phoneNumber}
+                  <span style={{fontWeight: "bold"}}>Mobile: </span>{util.formatPhoneno(formData.phoneNumber)}
                 </div>
               </td>
               <td style={{verticalAlign: "baseline",paddingTop: "15px", textAlign: "right"}}>

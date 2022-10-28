@@ -92,7 +92,7 @@ export default function ProfitAndLossReport() {
                                             onChange={onToChange}
                                             style={{marginLeft: 15}}
                                         />
-                                        <Button style={{marginLeft: 15, marginRight: 15}}onClick={() => window.print()}>
+                                        <Button style={{marginLeft: 15, marginRight: 15}} onClick={() => window.print()}>
                                             <Icon type="printer" style={{fontSize: 14}} /> Print
                                         </Button>
                                         <ExportForm startDate={fromValue.format("YYYY-MM-DD")} endDate={toValue.format("YYYY-MM-DD")} />
@@ -101,7 +101,7 @@ export default function ProfitAndLossReport() {
                             />
                             <div id="profit-loss-report">
                                 <div style={{textAlign: "center"}}>
-                                    <h4>{(new Util()).getSetting().businessName}</h4>
+                                    <h4>{util.getSetting().businessName}</h4>
                                     <h4 style={{fontWeight: "bold", marginBottom: 0}}>Profit & Loss</h4>
                                     <div>Date: {fromValue.format("DD/MM/YYYY")} ~ {toValue.format("DD/MM/YYYY")}</div>
                                 </div>
@@ -117,14 +117,14 @@ export default function ProfitAndLossReport() {
                                                     {income.name}
                                                 </td>
                                                 <td>
-                                                    {(new Util()).formatCurrency(income.amount, "")}
+                                                    {util.formatCurrency(income.amount, "")}
                                                 </td>
                                             </tr>
                                         )
                                     }
                                     <tr className="summary-row">
                                         <td>Total Revenue</td>
-                                        <td>{(new Util()).formatCurrency(data ? data.totalIncome : 0, "")}</td>
+                                        <td>{util.formatCurrency(data ? data.totalIncome : 0, "")}</td>
                                     </tr>
                                     {
                                         data && data.cogs.map((value, index) =>
@@ -133,14 +133,14 @@ export default function ProfitAndLossReport() {
                                                     {value.name}
                                                 </td>
                                                 <td>
-                                                    {(new Util()).formatCurrency(Math.abs(value.amount), "")}
+                                                    {util.formatCurrency(Math.abs(value.amount), "")}
                                                 </td>
                                             </tr>
                                         )
                                     }
                                     <tr className="summary-row">
                                         <td>Gross Profit</td>
-                                        <td>{(new Util()).formatCurrency(data ? data.grossProfit : 0, "")}</td>
+                                        <td>{util.formatCurrency(data ? data.grossProfit : 0, "")}</td>
                                     </tr>
                                     <tr className="title">
                                         <td colSpan="2">Expense</td>
@@ -152,18 +152,18 @@ export default function ProfitAndLossReport() {
                                                     {expense.name ? expense.name : "N/A"}
                                                 </td>
                                                 <td>
-                                                    {expense.amount ? (new Util()).formatCurrency(expense.amount, "") : "N/A"}
+                                                    {expense.amount ? util.formatCurrency(expense.amount, "") : "N/A"}
                                                 </td>
                                             </tr>
                                         )
                                     }
                                     <tr className="summary-row">
                                         <td>Total Expense</td>
-                                        <td>{(new Util()).formatCurrency(data ? data.totalExpense : 0, "")}</td>
+                                        <td>{util.formatCurrency(data ? data.totalExpense : 0, "")}</td>
                                     </tr>
                                     <tr className="summary-row">
                                         <td>Net Profit{data && data.netIncome < 0 ? "(Loss)" : ""}</td>
-                                        <td>{(new Util()).formatCurrency(data ? data.netIncome : 0, "")}</td>
+                                        <td>{util.formatCurrency(data ? data.netIncome : 0, "")}</td>
                                     </tr>
                                     </tbody>
                                 </table>
