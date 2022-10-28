@@ -329,7 +329,6 @@ export default class Util {
       if (phoneno.length === 9) {
         match = cleaned.match(/^(\d{3})(\d{3})(\d{3})$/);
       }
-      console.log("match", match);
       if (match) {
         return match[1] + " " + match[2] + " " + match[3];
       }
