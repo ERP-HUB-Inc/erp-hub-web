@@ -127,17 +127,9 @@ export default class List extends Component {
 
   /**===================================================================EVENT CONTROL FOR CHILD CLASS============================================================**/
   componentDidMount() {
-    new Promise(() => {
-      setTimeout(() => {
-        this.props.dispatch(PrivilegeAction.reset());
-        if (this.service.listRoute) {
-          this.props.dispatch(PrivilegeAction.checkPermission(this.service.listRoute));
-        }
-        if (this.action) {
-          this.props.dispatch(this.action.fetch(this.pageSize));   
-        }
-      }, 100);
-    });
+    if (this.action) {
+      this.props.dispatch(this.action.fetch(this.pageSize));   
+    }
   }
 
   /**
@@ -217,23 +209,6 @@ export default class List extends Component {
         modalConten: this.formCreate,
         loadingPopup: false
       });
-
-      // TO DO: Disable check permission temporary
-      // this.setState({
-      //   loadingPopup: true
-      // });
-      // this.PrivilegeService.checkPermission(this.service.createRoute)
-      //   .then(response => {
-      //     this.props.dispatch(this.action.showForm());
-      //     this.setState({
-      //       modalConten: this.formCreate,
-      //       loadingPopup: false
-      //     });
-      //   })
-      //   .catch(error => {
-      //     this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
-      //     this.setState({loadingPopup: false});
-      //   });
     }
   }
 
@@ -247,26 +222,14 @@ export default class List extends Component {
     }
 
     if (this.action) {
-      this.setState({loadingPopup: true});
-
-      this.PrivilegeService.checkPermission(this.service.updateRoute)
-        .then(response => {
-          if (this.callBackOnShowEditForm) {
-            this.callBackOnShowEditForm(rowData);
-          } else {
-            this.props.dispatch(this.action.showForm(rowData));
-            this.setState({
-              modalConten: this.formUpdate
-            });
-          }
-          this.setState({loadingPopup: false});
-        })
-        .catch(error => {
-          this.setState({
-            loadingPopup: false
-          });
-          this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
+      if (this.callBackOnShowEditForm) {
+        this.callBackOnShowEditForm(rowData);
+      } else {
+        this.props.dispatch(this.action.showForm(rowData));
+        this.setState({
+          modalConten: this.formUpdate
         });
+      }
     }
   }
 
@@ -306,24 +269,11 @@ export default class List extends Component {
       return;
     }
 
-    this.setState({isRequestDelete: true});
-
-    this.PrivilegeService.checkPermission(this.service.archiveRoute)
-      .then(response => {
-        if (this.state.selectedRowKeys.length > 0) {
-          this.setState({
-            modalVisible: true,
-            isRequestDelete: false
-          });
-        } else {
-          this.setState({isRequestDelete: false});
-          this.Message.warning(this.CATranslate("text_warning_select_row_to_delete", this.props.locale));
-        }
-      })
-      .catch(error => {
-        this.setState({isRequestDelete: false});
-        this.Message.warning(this.CATranslate(this.messageNoPermissionKey, this.props.locale));
-      });
+    if (this.state.selectedRowKeys.length > 0) {
+      this.setState({modalVisible: true});
+    } else {
+      this.Message.warning(this.CATranslate("text_warning_select_row_to_delete", this.props.locale));
+    }
   }
 
   /**

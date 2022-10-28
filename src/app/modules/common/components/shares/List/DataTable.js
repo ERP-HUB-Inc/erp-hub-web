@@ -224,25 +224,10 @@ export default class DataTable extends Component {
    */
   handleShowFormEdit(rowData) {
     if (this.action) {
-      this.setState({loadingPopup: true});
-
-      this.PrivilegeService.checkPermission(this.service.updateRoute)
-        .then(response => {
-          if (this.callBackOnShowEditForm) {
-            this.callBackOnShowEditForm(rowData);
-          } else {
-            this.props.dispatch(this.action.showForm(rowData));
-            this.setState({
-              modalContent: this.formUpdate
-            });
-          }
-          this.setState({loadingPopup: false});
-        })
-        .catch(error => {
-          this.setState({
-            loadingPopup: false
-          });
-        });
+      this.props.dispatch(this.action.showForm(rowData));
+      this.setState({
+        modalContent: this.formUpdate
+      });
     }
   }
 
@@ -253,21 +238,15 @@ export default class DataTable extends Component {
   handleConfirm() {
     this.setState({isRequestDelete: true});
 
-    this.PrivilegeService.checkPermission(this.service.archiveRoute)
-      .then(response => {
-        if (this.state.selectedRowKeys.length > 0) {
-          this.setState({
-            modalVisible: true,
-            isRequestDelete: false
-          });
-        } else {
-          this.setState({isRequestDelete: false});
-          this.Message.warning(this.CATranslate("text_warning_select_row_to_delete", this.props.locale));
-        }
-      })
-      .catch(error => {
-        this.setState({isRequestDelete: false});
+    if (this.state.selectedRowKeys.length > 0) {
+      this.setState({
+        modalVisible: true,
+        isRequestDelete: false
       });
+    } else {
+      this.setState({isRequestDelete: false});
+      this.Message.warning(this.CATranslate("text_warning_select_row_to_delete", this.props.locale));
+    }
   }
 
   /**

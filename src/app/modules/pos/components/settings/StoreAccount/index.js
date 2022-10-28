@@ -11,17 +11,14 @@ import StoreAccountAction from "../../../action/settings/storeAccount";
 import TaxAction from "../../../action/settings/tax";
 import LanguageAction from "../../../action/settings/storeLanguage";
 import DeviceAction from "../../../action/settings/device";
-import StoreAccountService from "../../../services/settings/StoreAccountService";
 import {fetchAllBusinessPlanSystem} from "../../../../../modules/common/actions/businessPlan";
 import ConstantDevice from "../../../constants/settings/device";
 import Component from "../../../../common/components/Component";
 import NoPermission from "../../../../common/components/shares/List/NoPermission";
 import StartUp from "../../../../common/components/StartUp";
 import menuSource from "../../../../common/components/layout/SiderBar/datasource";
-import PrivilegeService from "../../../../pos/services/settings/PrivilegeService";
 import ProductService from "../../../../inventory/services/products/ProductService";
 import TransactionService from "../../../services/transactions/TransactionService";
-import PrivilegeAction from "../../../../pos/action/settings/privilege";
 import {modules} from "../../../../common/components/layout/Module";
 import "./index.css";
 
@@ -125,7 +122,6 @@ export default class StoreAccountList extends Component {
   }
 
   componentDidMount(){
-    this.dispatch(PrivilegeAction.checkPermission(StoreAccountService.updateRoute));
     this.dispatch(StoreAccountAction.fetch(this.client.clientId));
     this.dispatch(fetchAllBusinessPlanSystem());
     this.dispatch(TaxAction.fetch(100));
@@ -159,23 +155,17 @@ export default class StoreAccountList extends Component {
 
   handleSubmit(e){
     e.preventDefault();
-    PrivilegeService.checkPermission(StoreAccountService.updateRoute)
-      .then(response => {
-        this.props.form.validateFieldsAndScroll((err, values) => {
-          if (!err) {
-            values["id"] = this.client.clientId;
-            values["userId"] = this.client.userId;
-            values["logo"] = this.getImageFromUpload(values, "logo");
-            values["paymentTerm"] = this.state.paymentTerm;
-            values["address"] = this.state.address;
-            values["status"] = this.Enum.ACTIVE;
-            this.dispatch(StoreAccountAction.update(values));
-          }
-        });
-      })
-      .catch(error => {
-        this.Message.warning(this.CATranslate("text_no_permission", this.props.locale));
-      });
+    this.props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        values["id"] = this.client.clientId;
+        values["userId"] = this.client.userId;
+        values["logo"] = this.getImageFromUpload(values, "logo");
+        values["paymentTerm"] = this.state.paymentTerm;
+        values["address"] = this.state.address;
+        values["status"] = this.Enum.ACTIVE;
+        this.dispatch(StoreAccountAction.update(values));
+      }
+    });
   }
 
   onClearProduct = () => {

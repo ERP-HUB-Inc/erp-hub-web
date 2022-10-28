@@ -7,6 +7,7 @@ import {
   Progress,
   Select,
   Radio,
+  Spin,
   Table
 } from "antd";
 import { Translate } from "react-localize-redux";
@@ -63,7 +64,8 @@ const Dashboard = () => {
   const [popularCategories, setPopularCategories] = React.useState([]);
   const [topSellingSize, setTopSellingSize] = React.useState(25);
   const [topSellType, setTopSellType] = React.useState("quantity");
-  const [isHasAccessPermission, setIsHasAccessPermission] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+  const [isHasPermission, setIsHasPermission] = React.useState(false);
 
   function onChange(value) {
     setOption(value);
@@ -104,121 +106,40 @@ const Dashboard = () => {
 
   React.useEffect(() => {
 
-    if (isHasAccessPermission == null){
-      PrivilegeService.checkPermissionV2(permission_module_code, permission_code)
-          .then(({data}) => setIsHasAccessPermission(data))
-          .catch(() => setIsHasAccessPermission(false));
+    PrivilegeService.checkPermission(permission_module_code, permission_code)
+      .then(() => setIsHasPermission(true))
+      .catch(() => setIsHasPermission(false))
+      .finally(() => setLoading(false));
+
+    if (isHasPermission) {
+      DashboardService.lists(option)
+      .then(response => {
+        if (response.data && response.data.data) {
+          setDashboardSummaries(response.data.data);
+        }
+      });
+
+      fetchPopularProducts(topSellingSize);
+
+      InventoryService.getPopularCategories(7)
+      .then(response => {
+        if (response.data) {
+          setPopularCategories(response.data);
+        }
+      })
+      .finally(() => {
+        setLoadingPopular(false);
+      });
+      
+      DashboardService.getOverallSales(moment().subtract(30, "days").format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))
+      .then(response => {
+        setOverallSales(response.data);
+      });
     }
-
-    DashboardService.lists(option)
-    .then(response => {
-      if (response.data && response.data.data) {
-        setDashboardSummaries(response.data.data);
-      }
-    });
-
-    fetchPopularProducts(topSellingSize);
-
-    InventoryService.getPopularCategories(7)
-    .then(response => {
-      if (response.data) {
-        setPopularCategories(response.data);
-      }
-    })
-    .finally(() => {
-      setLoadingPopular(false);
-    });
-    
-    DashboardService.getOverallSales(moment().subtract(30, "days").format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))
-    .then(response => {
-      setOverallSales(response.data);
-    });
 
     //eslint-disable-next-line
-  }, [isHasAccessPermission]);
+  }, [isHasPermission]);
 
-
-  const getOrCreateTooltip = (chart) => {
-    let tooltipEl = chart.canvas.parentNode.querySelector("div");
-  
-    if (!tooltipEl) {
-      tooltipEl = document.createElement("div");
-      tooltipEl.style.background = "#0D62AF";
-      tooltipEl.style.borderRadius = "5px";
-      tooltipEl.style.color = "white";
-      tooltipEl.style.opacity = 1;
-      tooltipEl.style.pointerEvents = "none";
-      tooltipEl.style.position = "absolute";
-      tooltipEl.style.transform = "translate(-50%, 0)";
-      tooltipEl.style.transition = "all .1s ease";
-  
-      const table = document.createElement("table");
-      table.style.margin = "0px";
-  
-      tooltipEl.appendChild(table);
-      chart.canvas.parentNode.appendChild(tooltipEl);
-    }
-  
-    return tooltipEl;
-  };
-
-  // eslint-disable-next-line
-  const externalTooltipHandler = (context) => {console.log(context);
-    // Tooltip Element rgba(255, 99, 132, 0.5)
-    const {chart, tooltip} = context;
-    const tooltipEl = getOrCreateTooltip(chart);
-  
-    // Hide if no tooltip
-    if (tooltip.opacity === 0) {
-      tooltipEl.style.opacity = 0;
-      return;
-    }
-  
-    // Set Text
-    if (tooltip.body) {
-      // const titleLines = tooltip.title || [];
-      const bodyLines = tooltip.body.map(b => b.lines);
-  
-      const tableHead = document.createElement("thead");
-  
-      const tableBody = document.createElement("tbody");
-      bodyLines.forEach((body, i) => {
-        const tr = document.createElement("tr");
-        tr.style.fontFamily = "'Open Sans','Kantumruy'";
-        tr.style.fontWeight = "bold";
-        tr.style.backgroundColor = "inherit";
-        tr.style.borderWidth = 0;
-  
-        const td = document.createElement("td");
-        td.style.borderWidth = 0;
-  
-        const text = document.createTextNode(`${tooltip.dataPoints[0].formattedValue}`);
-        td.appendChild(text);
-        tr.appendChild(td);
-        tableBody.appendChild(tr);
-      });
-  
-      const tableRoot = tooltipEl.querySelector("table");
-  
-      // Remove old children
-      while (tableRoot.firstChild) {
-        tableRoot.firstChild.remove();
-      }
-  
-      // Add new children
-      tableRoot.appendChild(tableHead);
-      tableRoot.appendChild(tableBody);
-    }
-  
-    const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
-  
-    // Display, position, and set styles for font
-    tooltipEl.style.opacity = 1;
-    tooltipEl.style.left = positionX + tooltip.caretX + "px";
-    tooltipEl.style.top = positionY + tooltip.caretY + "px";
-    tooltipEl.style.font = tooltip.options.bodyFont.string;
-    tooltipEl.style.padding = tooltip.options.padding + "px " + tooltip.options.padding + "px";
-  };
 
   let maxAxis = overallSales.currentPeriodSales.length > 0 ? Math.max(parseInt(_.maxBy(overallSales.currentPeriodSales)), 200) : 500;
   maxAxis = maxAxis.toString().split("");
@@ -314,10 +235,11 @@ const Dashboard = () => {
   const mostPopularCategory = _.maxBy(popularCategories, value => value.total);
   const totalSaleOfPopularCategory = mostPopularCategory ? mostPopularCategory.total : 0;
 
+  if (loading) return <div style={{width: 30, margin: "0 auto"}}><Spin /></div>; 
+
   return (
       <React.Fragment>
-        {util.isNotCheckingPermissionV2(isHasAccessPermission) &&
-          (isHasAccessPermission ?
+        {isHasPermission ? 
             <div id="dashboard">
               <div id="navDaskboard">
                 <ul>
@@ -541,7 +463,6 @@ const Dashboard = () => {
             </div>
             :
             <NoPermissionV2/>
-          )
         }
       </React.Fragment>
   );

@@ -23,7 +23,7 @@ export default function StockReport() {
 
   useEffect(()=>{
     if (isHasAccessPermission == null){
-      PrivilegeService.checkPermissionV2(permission_module_code, permission_code)
+      PrivilegeService.checkPermission(permission_module_code, permission_code)
           .then(({data}) => setIsHasAccessPermission(data))
           .catch(() => setIsHasAccessPermission(false));
     }
