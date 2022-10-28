@@ -102,7 +102,7 @@ const ProductUnit = Loadable({
 });
 
 const PurchaseOrder = Loadable({
-  loader: () => import("../../../../inventory/components/stock/PurchaseOrder"),
+  loader: () => import("../../../../inventory/containers/stock/PurchaseOrder"),
   loading: () => <StartUp />,
 });
 
