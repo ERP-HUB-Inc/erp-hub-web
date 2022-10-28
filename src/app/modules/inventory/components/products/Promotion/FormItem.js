@@ -73,6 +73,11 @@ class FormItem extends React.PureComponent {
             form={this.props.form} />
           <InputText
             style={{display: "none"}}
+            name={`productId[${index}]`}
+            data={record.productId}
+            form={this.props.form} />
+          <InputText
+            style={{display: "none"}}
             name={`variantName[${index}]`}
             data={record.variantName}
             form={this.props.form} />
@@ -144,7 +149,7 @@ class FormItem extends React.PureComponent {
           ...entry, 
           barcode: entry.productVariant.barcode,
           price: entry.productVariant.price,
-      }));
+        }));
         delete data.productDiscount;
 
         preState.formData = data;
@@ -185,6 +190,7 @@ class FormItem extends React.PureComponent {
           values.productVariantId.forEach((productVariantId, index) => {
             productsDiscount.push({
               id: values.id[index],
+              productId: values.productId[index],
               productVariantId,
               variantName: values.variantName[index],
               price: values.price[index],
@@ -198,7 +204,6 @@ class FormItem extends React.PureComponent {
           delete values.status;
           values.productDiscount = productsDiscount;
         }
-
         this.save(values);
       }
     });
@@ -261,6 +266,7 @@ class FormItem extends React.PureComponent {
     if (existingProductList.length === 0) {
       existingProductList.push({
         id: null,
+        productId: productVariant.productId,
         productVariantId: productVariant.id,
         variantName: product.name ? product.name : product.namekm,
         barcode: productVariant.barcode,
@@ -280,6 +286,7 @@ class FormItem extends React.PureComponent {
       if (isNotTheSameProduct) {
         existingProductList.push({
           id: null,
+          productId: productVariant.productId,
           productVariantId: productVariant.id,
           variantName: product.name ? product.name : product.namekm,
           barcode: productVariant.barcode,
