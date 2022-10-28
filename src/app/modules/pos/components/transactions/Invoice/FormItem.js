@@ -482,7 +482,7 @@ class NewInvoice extends React.PureComponent {
                             });
                         }
                     });
-                    invoice["transactionEntries"] = transactionEntries;
+                    invoice["transactionEntries"] = entries;
                 } else {
                     return this.util.sweetAlertMessage(stringTranslate("text_please_select_product", this.props.locale), "warning");
                 }
@@ -801,24 +801,24 @@ class NewInvoice extends React.PureComponent {
     
                 this.props.form.validateFields([`serials[${index}]`]);
             }
-    
-            this.setState(preState => {
-                const price = preState.transactionEntries[index].price;
-                let amount = (qty * price);
-    
-                if (!amount || amount < 0) amount = 0;
-                preState.transactionEntries[index].quantity = qty;
-                preState.transactionEntries[index].amount = amount;
-                let discount = this.props.form.getFieldValue("discountField");
-                let total = this.getTotal(preState.transactionEntries);
-                if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-                    discount = this.util.getValueFromPercentage(total, discount);
-                }
-                preState.formData.discount = discount;
-    
-                return preState;
-            });
         }, 500);
+    
+        this.setState(preState => {
+            const price = preState.transactionEntries[index].price;
+            let amount = (qty * price);
+
+            if (!amount || amount < 0) amount = 0;
+            preState.transactionEntries[index].quantity = qty;
+            preState.transactionEntries[index].amount = amount;
+            let discount = this.props.form.getFieldValue("discountField");
+            let total = this.getTotal(preState.transactionEntries);
+            if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+                discount = this.util.getValueFromPercentage(total, discount);
+            }
+            preState.formData.discount = discount;
+
+            return preState;
+        });
     }
 
     onChangePrice = (price, index) => {
@@ -1124,9 +1124,11 @@ class NewInvoice extends React.PureComponent {
             [`cost[${0}]`]: existingProductList[0].cost,
             [`price[${0}]`]: existingProductList[0].price
         }, () => {
-            setTimeout(() => {
-                this.handleShowModal(0, productVariant.id);
-            }, 800);
+            if (product.enableDescription) {
+                setTimeout(() => {
+                    this.handleShowModal(0, productVariant.id);
+                }, 800);
+            }
         });
     }
 
