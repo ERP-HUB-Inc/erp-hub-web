@@ -113,10 +113,10 @@ export default class FormItem extends Modal {
             name="locationId"
             label={<this.Translate id="text_location" />}
             placeholder={this.CATranslate("text_location", locale)}
-            errorRequired={<this.Translate id="error_select_delivery_location" />}
             defaultValue={locationId}
             dataSource={this.state.locations}
             valueKey="id"
+            required={true}
             form={form} />
           <this.Select
               name="step"
