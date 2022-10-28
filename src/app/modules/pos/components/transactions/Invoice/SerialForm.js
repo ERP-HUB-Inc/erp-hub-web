@@ -21,10 +21,17 @@ import { stringTranslate } from "../../../../common/helper/stringTranslate";
 export default class SerialForm extends React.PureComponent  {
   state = {
     isVisible: false,
-    isScanBarcode: false
+    isScanBarcode: false,
+    isInputFocus: false
   }
   timer = null;
   util = new Util();
+
+  componentDidUpdate() {
+    if (this.state.isInputFocus) {
+      this.setState({isInputFocus: false});
+    }
+  }
 
   handleSaveSerial = () => {
     const values = this.props.form.getFieldsValue();
@@ -94,8 +101,16 @@ export default class SerialForm extends React.PureComponent  {
     }
   };
 
-  onChangeNumberWarranty = value => {
+  onChangeNumberWarranty = (value) => {
+    const warrantyDate = document.getElementById("warranty-date");
+    const durationType = this.props.form.getFieldValue("durationType");
+    warrantyDate.innerText = this.util.formatDate(this.util.calculateWarrantyDate(this.props.formData.invoiceDate, value, durationType), "DD-MM-YYYY");
+  }
 
+  onChangeDurationType = (value) => {
+    const warrantyDate = document.getElementById("warranty-date");
+    const numOfWarranty = this.props.form.getFieldValue("numOfWarranty");
+    warrantyDate.innerText = this.util.formatDate(this.util.calculateWarrantyDate(this.props.formData.invoiceDate, numOfWarranty, value), "DD-MM-YYYY");
   }
 
   handleShowModal = () => {
@@ -130,10 +145,9 @@ export default class SerialForm extends React.PureComponent  {
           }
         });
       }
-    })
-    .catch(e => console.log("error ========", e.response));
+    });
 
-    this.props.form.setFieldsValue({ serialNumber: value });
+    this.props.form.setFieldsValue({serialNumber: value});
   }
 
   handleScanError = (err) => {
@@ -180,8 +194,10 @@ export default class SerialForm extends React.PureComponent  {
                   name="serialNumber"
                   label="SERIAL OR IMEI"
                   data={formData.number}
+                  suffix={<div className="icon-scaner icon-clear" style={{opacity: .5, cursor: "pointer"}} onClick={() => this.setState({isInputFocus: true})} />}
                   placeholder={`${stringTranslate("text_input_serial", this.props.locale)}`}
                   isAutoFocus={true}
+                  didUpdateMakeAutoFocus={this.state.isInputFocus}
                   required={true}
                   onChange={this.onChangeSerialNo}
                   form={this.props.form} />
@@ -196,6 +212,7 @@ export default class SerialForm extends React.PureComponent  {
                       precision={0}
                       isAutoSelect={true}
                       data={formData.numOfWarranty}
+                      min={0}
                       onChange={this.onChangeNumberWarranty}
                       form={this.props.form} />
                   </Col>
@@ -204,6 +221,7 @@ export default class SerialForm extends React.PureComponent  {
                       name="durationType"
                       required={true}
                       defaultValue={formData.durationType}
+                      onChange={this.onChangeDurationType}
                       dataSource={[
                         {name: <Translate id="text_day" />, value: Enum.DURATION_TYPE.DAY},
                         {name: <Translate id="text_week" />, value: Enum.DURATION_TYPE.WEEK},
@@ -212,12 +230,14 @@ export default class SerialForm extends React.PureComponent  {
                       ]}
                       form={this.props.form} />
                   </Col>
-                  {/* {
-                    formData.warrantyDate &&
-                      <Col md={12}>
-                        <label><Translate id="text_warranty_date" />: <span style={{marginLeft: 8}}>{this.util.formatDate(formData.warrantyDate, "DD-MM-YYYY")}</span></label>
-                      </Col>       
-                  } */}
+                  <Col md={24}>
+                    <label>
+                      <Translate id="text_warranty_date" />: 
+                      <span style={{marginLeft: 8, textDecoration: "underline"}} id="warranty-date">
+                        {this.util.formatDate(this.util.calculateWarrantyDate(formData.invoiceDate, formData.numOfWarranty, formData.durationType), "DD-MM-YYYY")}
+                      </span>
+                    </label>
+                  </Col>       
                 </Row>
               </Col>
             </Row>

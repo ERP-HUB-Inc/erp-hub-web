@@ -165,6 +165,7 @@ class NewInvoice extends React.PureComponent {
                 if (record.serials && record.serials.length) {
                     serials = record.serials;
                 }
+                let activeLen = serials && serials.filter(serial => serial.status !== ARCHIVE).length;
                 return <div>
                     <InputText 
                         style={{display: "none"}}
@@ -182,17 +183,15 @@ class NewInvoice extends React.PureComponent {
                     
                     {
                         record.enableDescription ? <React.Fragment>
-                            <Collapse defaultActiveKey={["0"]} style={{background: "none", border: "none"}} className="serial-panel">
-                                <Collapse.Panel header={<div><i style={{color: "red"}}>*</i> IMEI OR SERIAL</div>}>
+                            <Collapse defaultActiveKey={["1"]} style={{background: "none", border: "none"}} className="serial-panel">
+                                <Collapse.Panel header={<div><i style={{color: "red"}}>*</i> IMEI OR SERIAL</div>} key="1">
                                     <div style={{marginBottom: 4, display: "flex", flexDirection: "column", width: 200}}>
                                         {
-                                            serials && serials.map((serial, key) => <React.Fragment>
+                                            serials && serials.map((serial, key) => <React.Fragment key={key}>
                                                 <Tag 
                                                     onClose={() => this.handleRemoveSerialNo(index, key)}
                                                     title={stringTranslate("text_double_click_edit_serial", this.props.locale)}
                                                     className={`${serial.status === ARCHIVE ? "hidden" : ""} serial-tag`}
-                                                    key={key}
-                                                    htmlType="button"
                                                     onDoubleClick={() => this.handleUpdateSerial(serial, index, key)}
                                                 >
                                                     {serial.number}
@@ -214,7 +213,8 @@ class NewInvoice extends React.PureComponent {
                                 errorRequired={stringTranslate("error_serial_number_require", this.props.locale)}
                                 validator={(rule, value, callback) => this.validateSerialNo(value, callback, index)}
                                 data={serials.length ? JSON.stringify(serials) : null}
-                                style={{display: "none"}}
+                                style={{display: `${activeLen ? "none" : "block"}`}}
+                                inputStyle={{display: "none"}}
                                 form={this.props.form} />
                         </React.Fragment> : null
                     }
@@ -673,6 +673,7 @@ class NewInvoice extends React.PureComponent {
                 index,
                 pVariantId: this.props.form.getFieldValue(`productVariantId[${index}]`),
                 transEntryId: this.props.form.getFieldValue(`id[${index}]`),
+                description: this.props.form.getFieldValue(`description[${index}]`),
                 quantity: this.props.form.getFieldValue(`quantity[${index}]`)
             }
         });
@@ -793,6 +794,7 @@ class NewInvoice extends React.PureComponent {
         this.timer = setTimeout(() => {
             if (serials && this.util.isJsonString(serials)) {
                 serials = JSON.parse(serials);
+                serials = Array.isArray(serials) && serials.filter(serial => serial.status !== ARCHIVE);
                 if (qty < serials.length) {
                     this.onShowDeleteSerialForm(index);
                 } else if (qty > serials.length) {
@@ -841,7 +843,7 @@ class NewInvoice extends React.PureComponent {
     }
 
     onDeleteSerial = (serial, index, index2) => {
-        const {formData} = this.state;
+        const {formData, selectedSerials} = this.state;
         const transactionEntries = JSON.parse(JSON.stringify(this.state.transactionEntries));
         let qty = transactionEntries[index].quantity - 1;
         let price = transactionEntries[index].price;
@@ -861,6 +863,7 @@ class NewInvoice extends React.PureComponent {
                 }
                 preState.formData.discount = discount;
                 preState.transactionEntries = transactionEntries;
+                preState.selectedSerials = _.without(selectedSerials, serial.number);
                 return preState;
             });
         } else {
@@ -880,7 +883,10 @@ class NewInvoice extends React.PureComponent {
                         discount = this.util.getValueFromPercentage(total, discount);
                     }
                     formData.discount = discount;
-                    this.setState({transactionEntries, formData});
+                    this.setState({
+                        transactionEntries, 
+                        formData
+                    });
                 }
             });
         }
@@ -891,6 +897,7 @@ class NewInvoice extends React.PureComponent {
         const index = Number(values.index);
         const {formData} = this.state;
         const transactionEntries = JSON.parse(JSON.stringify(this.state.transactionEntries));
+        let selectedSerials = this.state.selectedSerials;
         let serials = transactionEntries[index].serials;
         let discount = this.props.form.getFieldValue("discountField");
         const price = transactionEntries[index].price;
@@ -904,6 +911,7 @@ class NewInvoice extends React.PureComponent {
                     } else {
                         serials[index2].status = ARCHIVE;
                     }
+                    selectedSerials = _.without(selectedSerials, item.number);
                 }
             });
             transactionEntries[index].serials = serials;
@@ -920,7 +928,7 @@ class NewInvoice extends React.PureComponent {
                 this.deleteSerialRef.onCloseModal();
             }
             this.props.form.setFieldsValue({[`serials[${index}]`]: JSON.stringify(serials)});
-            this.setState({formData, transactionEntries});
+            this.setState({formData, transactionEntries, selectedSerials});
         }
     }
     
@@ -940,8 +948,8 @@ class NewInvoice extends React.PureComponent {
                 discount = this.util.getValueFromPercentage(total, discount);
             }
             formData.discount = discount;
-            this.setState({formData, transactionEntries});
             this.props.form.setFieldsValue({[`quantity[${index}]`]: qty});
+            this.setState({formData, transactionEntries});
         }
     }
         
