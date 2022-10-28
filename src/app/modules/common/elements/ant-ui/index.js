@@ -35,4 +35,4 @@ export * from "./Doughnut";
 export * from "./Line";
 export * from "./C3Chart";
 export * from "./Message";
-
+export * from "./Spin";

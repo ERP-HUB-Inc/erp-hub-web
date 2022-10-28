@@ -13,7 +13,7 @@ import {
 import "./index.css";
 import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
-import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
+import NoPermissionV2 from "../../../../common/components/shares/List/NoPermission";
 import PrivilegeService from "../../../services/settings/PrivilegeService";
 
 const permission_module_code = "report";
@@ -21,7 +21,7 @@ const permission_code        = "purchase_report";
 const util                   = new Util();
 
 function PurchaseReportDashboard() {
-
+    
     const [isHasAccessPermission, setIsHasAccessPermission] = React.useState(null);
 
     useEffect(()=>{

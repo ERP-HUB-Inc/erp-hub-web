@@ -1,20 +1,15 @@
 import React from "react";
-import Component from "../../Component";
+import {Button, Result} from "antd";
+import history from "../../../router/history";
 
-export default class NoPermission extends Component {
-  render() {
+export default function () {
     return (
-      <div id="wrap-no-permission">
-        <div>
-          <img style={{width: "120px"}} src={`${this.Util.getGeneralImage("storeVein/no-permission.svg").url}`} alt="" />
-          <h2>
-            <this.Translate id="text_no_permission_title" />
-          </h2>
-          <p>
-            <this.Translate id="text_no_permission_detail" />
-          </p>
-        </div>
-      </div>
+        <Result
+            status="403"
+            title="403"
+            subTitle="Sorry, you are not authorized to access this page."
+            extra={<Button type="primary" onClick={() => history.goBack()}>Back Home</Button>}
+        />
     );
-  }
+
 }

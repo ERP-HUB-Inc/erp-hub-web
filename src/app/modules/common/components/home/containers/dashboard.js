@@ -7,7 +7,6 @@ import {
   Progress,
   Select,
   Radio,
-  Spin,
   Table
 } from "antd";
 import { Translate } from "react-localize-redux";
@@ -15,12 +14,13 @@ import moment from "moment";
 import { Chart, registerables } from "chart.js";
 import * as _ from "lodash";
 import {Line} from "react-chartjs-2";
-import InventoryService from "../../../../pos/services/report/InventoryService";
 import SelectDateOption from "../../SelectDateOption";
+import NoPermission from "../../shares/List/NoPermission";
+import {Spin} from "../../../elements/ant-ui";
+import InventoryService from "../../../../pos/services/report/InventoryService";
 import "../index.css";
 import DashboardService from "../../../services/DashboardService";
 import Util from "../../../util";
-import NoPermissionV2 from "../../shares/List/NoPermissionV2";
 import PrivilegeService from "../../../../pos/services/settings/PrivilegeService";
 Chart.register(...registerables);
 
@@ -235,7 +235,7 @@ const Dashboard = () => {
   const mostPopularCategory = _.maxBy(popularCategories, value => value.total);
   const totalSaleOfPopularCategory = mostPopularCategory ? mostPopularCategory.total : 0;
 
-  if (loading) return <div style={{width: 30, margin: "0 auto"}}><Spin /></div>; 
+  if (loading) return <Spin />; 
 
   return (
       <React.Fragment>
@@ -462,7 +462,7 @@ const Dashboard = () => {
               </Row>
             </div>
             :
-            <NoPermissionV2/>
+            <NoPermission/>
         }
       </React.Fragment>
   );
