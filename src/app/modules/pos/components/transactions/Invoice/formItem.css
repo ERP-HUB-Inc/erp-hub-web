@@ -13,11 +13,17 @@
 }
 
 .serial-panel .ant-collapse-header {
-    padding-left: 18px !important;
+    padding-left: 0 !important;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: left;
 }
 
 .serial-panel .ant-collapse-arrow {
-    left: 0 !important;
+    position: unset !important;
+    margin-top: 10px;
+    margin-left: 10px;
 }
 
 .serial-panel .ant-collapse-content-box {

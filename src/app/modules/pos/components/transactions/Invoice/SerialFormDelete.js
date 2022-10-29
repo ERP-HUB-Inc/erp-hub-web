@@ -15,9 +15,17 @@ export default class SerialFormDelete extends React.PureComponent {
   state = {
     isVisible: false,
     isScanBarcode: false,
-    removeSerials: []
+    removeSerials: [],
+    isInputFocus: false
   }
   util = new Util();
+
+  componentDidUpdate() {
+    if (this.state.isInputFocus) {
+      this.removeFieldRef.focus();
+      this.setState({isInputFocus: false});
+    }
+  }
 
   handleRemove = () => {
     const removeSerials = this.state.removeSerials.slice();
@@ -26,8 +34,8 @@ export default class SerialFormDelete extends React.PureComponent {
       serials: removeSerials,
       index
     });
-    this.props.form.setFieldsValue({removeSerial: ""});
-    this.setState({removeSerials});
+    this.props.form.setFields({removeSerial: null});
+    this.setState({removeSerials: []});
   }
 
   handleShowModal = () => {
@@ -91,7 +99,7 @@ export default class SerialFormDelete extends React.PureComponent {
     } else {
       return this.props.form.setFields({
         removeSerial: {
-          value: removeSerialsField.splice(removeSerialsField[removeSerialsField.length - 1], 1),
+          value: removeSerialsField && removeSerialsField.splice(removeSerialsField[removeSerialsField.length - 1], 1),
           errors: [new Error("This serial number is not in this product")]
         }
       });
@@ -126,7 +134,11 @@ export default class SerialFormDelete extends React.PureComponent {
         >
           <Form>
             <Row>
-              {numOfSerials && numOfSerials > formData.quantity ? <div><Translate id="text_quantity_to_remove" />: {numOfSerials - formData.quantity - this.state.removeSerials.length}</div> : null}
+              <div style={{marginTop: -10, paddingBottom: 12, textAlign: "center"}}>{formData.description}</div>
+              {numOfSerials && numOfSerials > formData.quantity + this.state.removeSerials.length ? 
+                <label><Translate id="text_quantity_to_remove" />: {numOfSerials - formData.quantity - this.state.removeSerials.length}</label> 
+                : null
+              }
               <Col md={24}>
                 <BarcodeReader
                   minLength={4}
@@ -139,15 +151,21 @@ export default class SerialFormDelete extends React.PureComponent {
                 />
                 <Form.Item
                   label="IMEI OR SERIAL"
+                  style={{position: "relative"}}
                 >
                   {this.props.form.getFieldDecorator("removeSerial")(
                     <Select mode="tags" 
+                      ref={ref => this.removeFieldRef = ref}
                       style={{width: "100%"}}
                       placeholder="SerialNo1, SerialNo2, ..."
                       dropdownStyle={{display: "none"}}
                       onChange={(value) => this.handleChange(value)}
                     />
                   )}
+                  <div 
+                    className="icon-scaner icon-clear" 
+                    style={{opacity: .5, cursor: "pointer", position: "absolute", right: 7, top: 3}} 
+                    onClick={() => this.setState({isInputFocus: true})} />
                 </Form.Item>
               </Col>
             </Row>

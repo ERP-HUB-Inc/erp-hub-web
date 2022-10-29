@@ -20,7 +20,7 @@ export default class InputText extends Element {
     return (
       <this.FormItem
         label={this.props.label}
-        labelCol={this.props.label}
+        labelCol={this.props.labelCol}
         wrapperCol={this.props.wrapperCol}
         help={this.props.help}
         validateStatus={this.props.validateStatus}
