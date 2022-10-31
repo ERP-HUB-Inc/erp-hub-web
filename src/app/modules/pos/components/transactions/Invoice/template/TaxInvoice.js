@@ -1,8 +1,24 @@
 import React from "react";
 import Util from "../../../../../common/util";
 
+const util = new Util();
+
 export default function TaxInvoice(props) {
-  const util = new Util();
+
+  function renderSerials(entry) {
+    let serialStr = null;
+      let serialNo = entry.serialNo.toString().split(",");
+      let serialLen = serialNo.length;
+      serialStr = <div style={{fontSize: 13, display: "flex", flexWrap: "wrap"}}>
+      <label style={{color: "#033261", marginRight: 6, marginBottom: 0}}>Serial Number(s):</label>
+      {
+        serialStr = serialNo.map((serial, index) =>
+          <span key={index} style={{marginRight: 5}}>{serial}{index < serialLen - 1 ? "," : ""}</span>
+        )
+      }
+    </div>;
+    return serialStr;
+  }
 
   function getSubTotal(formData) {
     let subtotal = 0;
@@ -113,8 +129,11 @@ export default function TaxInvoice(props) {
                 {
                   formData.transactionEntries && formData.transactionEntries.map((entry, index) => (
                     <tr key={index} className={`tax-table-invoice-entry-row ${entry.status === 3 ? "hidden" : ""}`}>
-                      <td style={{textAlign: "center"}}>{index + 1})</td>
-                      <td><pre className="entry-note-column">{entry.description}</pre></td>
+                      <td style={{textAlign: "center"}}>{index + 1}</td>
+                      <td>
+                        <pre className="entry-note-column">{entry.description}</pre>
+                        {entry.enableDescription && renderSerials(entry)}
+                      </td>
                       <td style={{textAlign: "center"}}>{entry.quantity}</td>
                       <td style={{textAlign: "right"}}>{util.formatCurrency(entry.price)}</td>
                       <td style={{textAlign: "right"}}>{util.formatCurrency(entry.quantity * util.floor(entry.price))}</td>

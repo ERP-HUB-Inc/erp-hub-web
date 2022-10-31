@@ -519,6 +519,7 @@ class NewInvoice extends React.PureComponent {
                     price: entry.price,
                     discount: 0,
                     amount: entry.quantity * entry.price,
+                    serialNo: entry.serialNo,
                     serials: entry.serialNo && entry.serialNo.split(",").map(serial => ({number: serial, status: "old"})),
                     status: entry.status,
                     enableDescription: entry.enableDescription
@@ -681,7 +682,8 @@ class NewInvoice extends React.PureComponent {
     }
 
     handleSaveSerialNo = (values) => {
-        let transactionEntries = [];
+        let transactionEntries = this.state.transactionEntries.slice();
+        const {formData} = this.state;
         let selectedSerials = this.state.selectedSerials;
         const index = Number(values.fieldIndex);
         const index2 = values.fieldIndex2;
@@ -693,7 +695,6 @@ class NewInvoice extends React.PureComponent {
             return false;
         }
 
-        Object.assign(transactionEntries, this.state.transactionEntries);
         let newSerials = [];
         let serials = transactionEntries[index].serials;
         if (serials && serials.length) {
@@ -704,30 +705,30 @@ class NewInvoice extends React.PureComponent {
             newSerials.push({number: serialNumber, numOfWarranty, durationType: values.durationType, isNew: true, status: 1});
             if (qty < newSerials.length) {
                 qty += 1;
-                this.setState(preState => {
-                    const price = preState.transactionEntries[index].price;
-                    let amount = (qty * price);
-        
-                    if (!amount || amount < 0) amount = 0;
-                    preState.transactionEntries[index].quantity = qty;
-                    preState.transactionEntries[index].amount = amount;
-                    let discount = this.props.form.getFieldValue("discountField");
-                    let total = this.getTotal(preState.transactionEntries);
-                    if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-                        discount = this.util.getValueFromPercentage(total, discount);
-                    }
-                    preState.formData.discount = discount;
-        
-                    return preState;
-                });
+                const price = transactionEntries[index].price;
+                let amount = (qty * price);
+    
+                if (!amount || amount < 0) amount = 0;
+                transactionEntries[index].quantity = qty;
+                transactionEntries[index].amount = amount;
+                let discount = this.props.form.getFieldValue("discountField");
+                let total = this.getTotal(transactionEntries);
+                if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+                    discount = this.util.getValueFromPercentage(total, discount);
+                }
+                formData.discount = discount;
             }
+            transactionEntries[index].serialNo += `,${serialNumber}`;
             selectedSerials.push(serialNumber);
         } else {
+            let serialNo = transactionEntries[index].serialNo.toString().split(",");
             newSerials[index2].id = values.id;
             newSerials[index2].number = serialNumber;
             newSerials[index2].numOfWarranty = numOfWarranty;
             newSerials[index2].durationType = values.durationType;
             newSerials[index2].status = 1;
+            serialNo[index2] = serialNumber;
+            transactionEntries[index].serialNo = serialNo.toString();
             let serialIndex = selectedSerials.indexOf(values.oldSerial);
             if (serialIndex) {
                 selectedSerials[serialIndex] = serialNumber;
@@ -738,8 +739,10 @@ class NewInvoice extends React.PureComponent {
         this.setState({
             transactionEntries,
             selectedSerials,
+            formData,
             isShowModal: false
         });
+        this.props.form.setFieldsValue({[`quantity[${index}]`]: qty});
         this.props.form.setFieldsValue({[`serials[${index}]`]: JSON.stringify(newSerials)});
         if (qty === newSerials.length) {
             this.serialRef.onCloseModal();
@@ -843,39 +846,47 @@ class NewInvoice extends React.PureComponent {
     }
 
     onDeleteSerial = (serial, index, index2) => {
-        const {formData, selectedSerials} = this.state;
-        const transactionEntries = JSON.parse(JSON.stringify(this.state.transactionEntries));
-        let qty = transactionEntries[index].quantity - 1;
+        let {formData, selectedSerials} = this.state;
+        const transactionEntries = this.util.copyArrayObj(this.state.transactionEntries);
+        let qty = Number(this.props.form.getFieldValue(`quantity[${index}]`)) - 1;
         let price = transactionEntries[index].price;
         let amount = qty * price;
         if (serial.isNew) {
             let serials = transactionEntries[index].serials;
+            let serialNo = transactionEntries[index].serialNo.toString().split(",");
             serials.splice(index2, 1);
             transactionEntries[index].serials = serials;
+            serialNo = _.without(serialNo, serial.number);
+            transactionEntries[index].serialNo = serialNo.toString();
             this.props.form.setFieldsValue({[`serials[${index}]`]: JSON.stringify(serials)});
-            this.setState(preState => {
-                transactionEntries[index].quantity = qty;
-                transactionEntries[index].amount = amount;
-                let discount = this.props.form.getFieldValue("discountField");
-                let total = this.getTotal(preState.transactionEntries);
-                if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-                    discount = this.util.getValueFromPercentage(total, discount);
-                }
-                preState.formData.discount = discount;
-                preState.transactionEntries = transactionEntries;
-                preState.selectedSerials = _.without(selectedSerials, serial.number);
-                return preState;
+            this.props.form.setFieldsValue({[`quantity[${index}]`]: qty});
+            transactionEntries[index].quantity = qty;
+            transactionEntries[index].amount = amount;
+            let discount = this.props.form.getFieldValue("discountField");
+            let total = this.getTotal(transactionEntries);
+            if (formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+                discount = this.util.getValueFromPercentage(total, discount);
+            }
+            formData.discount = discount;
+            selectedSerials = _.without(selectedSerials, serial.number);
+            this.setState({
+                formData,
+                transactionEntries,
+                selectedSerials
             });
         } else {
             this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
             .then(willDelete => {
                 if (willDelete) {
                     let serials = transactionEntries[index].serials;
+                    let serialNo = transactionEntries[index].serialNo.toString().split(",");
                     serials[index2].status = ARCHIVE;
+                    serialNo = _.without(serialNo, serial.number);
                     this.props.form.setFieldsValue({[`serials[${index}]`]: JSON.stringify(serials)});
                     this.props.form.setFieldsValue({[`quantity[${index}]`]: qty});
                     let discount = this.props.form.getFieldValue("discountField");
                     transactionEntries[index].serials = serials;
+                    transactionEntries[index].serialNo = serialNo;
                     transactionEntries[index].quantity = qty;
                     transactionEntries[index].amount = amount;
                     let total = this.getTotal(transactionEntries);
@@ -899,6 +910,7 @@ class NewInvoice extends React.PureComponent {
         const transactionEntries = JSON.parse(JSON.stringify(this.state.transactionEntries));
         let selectedSerials = this.state.selectedSerials;
         let serials = transactionEntries[index].serials;
+        let serialNo = transactionEntries[index].serialNo.toString().split(",");
         let discount = this.props.form.getFieldValue("discountField");
         const price = transactionEntries[index].price;
         let qty = transactionEntries[index].quantity;
@@ -911,10 +923,12 @@ class NewInvoice extends React.PureComponent {
                     } else {
                         serials[index2].status = ARCHIVE;
                     }
+                    serialNo = _.without(serialNo, item.number);
                     selectedSerials = _.without(selectedSerials, item.number);
                 }
             });
             transactionEntries[index].serials = serials;
+            transactionEntries[index].serialNo = serialNo.toString();
             transactionEntries[index].quantity = qty;
             transactionEntries[index].amount = price * qty;
             let total = this.getTotal(transactionEntries);

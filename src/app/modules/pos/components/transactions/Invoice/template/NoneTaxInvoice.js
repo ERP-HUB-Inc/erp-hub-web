@@ -7,6 +7,21 @@ const dateFormat = "DD-MM-YYYY";
 
 export default function NoneTaxInvoice(props) {
 
+  function renderSerials(entry) {
+    let serialStr = null;
+      let serialNo = entry.serialNo.toString().split(",");
+      let serialLen = serialNo.length;
+      serialStr = <div style={{fontSize: 13, display: "flex", flexWrap: "wrap"}}>
+      <label style={{color: "#033261", marginRight: 6, marginBottom: 0}}>Serial Number(s):</label>
+      {
+        serialStr = serialNo.map((serial, index) =>
+          <span key={index} style={{marginRight: 5}}>{serial}{index < serialLen - 1 ? "," : ""}</span>
+        )
+      }
+    </div>;
+    return serialStr;
+  }
+
   function getSubTotal(formData) {
     let subtotal = 0;
     if (formData.transactionEntries && formData.transactionEntries.length) {
@@ -89,7 +104,7 @@ export default function NoneTaxInvoice(props) {
               <thead>
                 <tr style={{height: 54, background: "none", borderBottom: "2px solid #ddd"}}>
                   <th style={{width: 20}}>Item</th>
-                  <th style={{width: 380}}>Description</th>
+                  <th style={{width: 400}}>Description</th>
                   <th style={{textAlign: "right"}}>Price</th>
                   <th style={{textAlign: "right"}}>Quantity</th>
                   <th style={{textAlign: "right"}}>Amount</th>
@@ -100,7 +115,10 @@ export default function NoneTaxInvoice(props) {
                   formData.transactionEntries && formData.transactionEntries.map((entry, index) => 
                     <tr key={index} style={{fontSize: "11pt", lineHeight: "26px", background: "none", display: `${entry.status === 3 ? "none" : ""}`}}>
                       <td style={{textAlign: "center"}}>{index + 1}</td>
-                      <td ><pre className="entry-note-column">{entry.description}</pre></td>
+                      <td >
+                        <pre className="entry-note-column">{entry.description}</pre>
+                        {entry.enableDescription && renderSerials(entry)}
+                      </td>
                       <td style={styles.entriesCurrency}>{util.formatCurrency(entry.price)}</td>
                       <td style={styles.entriesCurrency}>{entry.quantity}</td>
                       <td style={styles.entriesCurrency}>{util.formatCurrency(util.floor(entry.price) * entry.quantity)}</td>

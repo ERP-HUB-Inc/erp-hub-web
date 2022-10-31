@@ -50,6 +50,10 @@
   padding: 6px;
 }
 
+.table-invoice-entry tbody td{
+  border-top: 1px solid #ddd;
+}
+
 .tax-table-invoice-entry-row th {
   padding: 6;
 }
@@ -57,7 +61,6 @@
 .tax-table-invoice-entry-row td {
   border-top: 0 !important;
   border-bottom: 0 !important;
-  vertical-align: top;
 }
 
 .entry-note-column {
