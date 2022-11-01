@@ -74,7 +74,7 @@ export default class SerialForm extends React.PureComponent  {
         if (this.props.selectedSerials.length && this.props.selectedSerials.includes(value)) {
           return this.props.form.setFields({
             serialNumber: {
-              errors: [new Error(value + ": " + "This serial number already selected")]
+              errors: [new Error(value + ": This serial number already selected")]
             }
           });
         }

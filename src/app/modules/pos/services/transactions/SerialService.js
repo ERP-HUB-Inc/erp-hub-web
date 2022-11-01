@@ -8,6 +8,14 @@ class SerialService extends BaseService {
         this.initializeRoute();
     }
 
+    lists(limit, offset, search) {
+        this.setHeader();
+        return this.GET({
+            url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&search=${search}`,
+            headers: this.header
+        });
+    }
+
     findByNumber(number, variantId, transEntryId) {
         this.setHeader();
         return this.GET({

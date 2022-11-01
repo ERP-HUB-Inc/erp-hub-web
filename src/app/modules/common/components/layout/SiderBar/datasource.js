@@ -49,6 +49,11 @@ const OperationRecord = Loadable({
   loading: () => <StartUp />,
 });
 
+const SerialList = Loadable({
+  loader: () => import("../../../../pos/components/transactions/Serial"),
+  loading: () => <StartUp />
+});
+
 // PRODUCT
 const ManageProduct = Loadable({
   loader: () => import("../../../../inventory/containers/products/Product"),
@@ -328,6 +333,13 @@ const dataSource = {
         route: "/transactions/invoice",
         component: Invoice,
         isFashNav: true,
+      },
+      {
+        title: <Translate id="text_serial_no" />,
+        icon: "icon-barcode",
+        route: "/transaction/serial/list",
+        component: SerialList,
+        isFashNav: true
       },
       {
         title: <Translate id="text_income_and_expense" />,
