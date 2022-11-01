@@ -44,14 +44,6 @@ export default class SerialForm extends React.PureComponent  {
       });
     }
 
-    if (!values.numOfWarranty) {
-      this.props.form.setFields({
-        numberWarranty: {
-          errors: [new Error(stringTranslate("text_warranty_date_required", this.props.locale))]
-        }
-      });
-    }
-
     if (values.serialNumber && values.numOfWarranty) {
       const durationType = values.durationType;
       this.props.onSuccess({
@@ -75,13 +67,14 @@ export default class SerialForm extends React.PureComponent  {
 
   onChangeSerialNo = (e) => {
     clearTimeout(this.timer);
-    const value = e.target.value;
+    let value = e.target.value;
+
     if (value && value !== this.props.formData.number) {
       this.timer = setTimeout(() => {
         if (this.props.selectedSerials.length && this.props.selectedSerials.includes(value)) {
           return this.props.form.setFields({
             serialNumber: {
-              errors: [new Error("This serial number already selected")]
+              errors: [new Error(value + ": " + "This serial number already selected")]
             }
           });
         }
@@ -100,6 +93,18 @@ export default class SerialForm extends React.PureComponent  {
       }, 600);
     }
   };
+
+  validateSerial = (rule, value, callback) => {
+    console.log("value", value);
+    if (value && value.toString().trim() === "") {
+      return this.props.form.setFields({
+        serialNumber: {
+          errors: [new Error("Serial number can't be empty string")]
+        }
+      });
+    }
+    callback();
+  }
 
   onChangeNumberWarranty = (value) => {
     const warrantyDate = document.getElementById("warranty-date");
@@ -199,7 +204,9 @@ export default class SerialForm extends React.PureComponent  {
                   isAutoFocus={true}
                   didUpdateMakeAutoFocus={this.state.isInputFocus}
                   required={true}
+                  errorRequired={stringTranslate("error_serial_number_require", this.props.locale)}
                   handleOnFocus={e => e.target.select()}
+                  validator={this.validateSerial}
                   onChange={this.onChangeSerialNo}
                   form={this.props.form} />
               </Col>

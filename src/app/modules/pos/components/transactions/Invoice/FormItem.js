@@ -702,6 +702,7 @@ class NewInvoice extends React.PureComponent {
         }
 
         if (index2 === null) {
+            let serialNo = transactionEntries[index].serialNo;
             newSerials.push({number: serialNumber, numOfWarranty, durationType: values.durationType, isNew: true, status: 1});
             if (qty < newSerials.length) {
                 qty += 1;
@@ -718,7 +719,7 @@ class NewInvoice extends React.PureComponent {
                 }
                 formData.discount = discount;
             }
-            transactionEntries[index].serialNo += `,${serialNumber}`;
+            transactionEntries[index].serialNo = serialNo ? `${serialNo},${serialNumber}` : serialNumber;
             selectedSerials.push(serialNumber);
         } else {
             let serialNo = transactionEntries[index].serialNo.toString().split(",");
