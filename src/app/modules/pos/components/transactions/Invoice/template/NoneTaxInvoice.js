@@ -9,16 +9,18 @@ export default function NoneTaxInvoice(props) {
 
   function renderSerials(entry) {
     let serialStr = null;
-      let serialNo = entry.serialNo.toString().split(",");
-      let serialLen = serialNo.length;
-      serialStr = <div style={{fontSize: 13, display: "flex", flexWrap: "wrap"}}>
-      <label style={{color: "#033261", marginRight: 6, marginBottom: 0}}>Serial Number(s):</label>
-      {
-        serialStr = serialNo.map((serial, index) =>
-          <span key={index} style={{marginRight: 5}}>{serial}{index < serialLen - 1 ? "," : ""}</span>
-        )
+      let serialNo = entry.serialNo && entry.serialNo.toString().split(",");
+      if (serialNo && serialNo.length) {
+        let serialLen = serialNo.length;
+        serialStr = <div style={{fontSize: 13, display: "flex", flexWrap: "wrap"}}>
+          <label style={{color: "#033261", marginRight: 6, marginBottom: 0}}>Serial Number(s):</label>
+          {
+            serialStr = serialNo.map((serial, index) =>
+              <span key={index} style={{marginRight: 5}}>{serial}{index < serialLen - 1 ? "," : ""}</span>
+            )
+          }
+        </div>;
       }
-    </div>;
     return serialStr;
   }
 
