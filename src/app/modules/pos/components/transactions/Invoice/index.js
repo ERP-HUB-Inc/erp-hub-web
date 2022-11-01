@@ -3,14 +3,17 @@ import swal from "sweetalert";
 import moment from "moment";
 import { 
   Dropdown,
+  DatePicker,
+  Input,
   Menu,
   Icon,
+  Row,
+  Col,
   Tag,
   message,
   Pagination
 } from "antd";
 import ReactToPrint, { PrintContextConsumer } from "react-to-print";
-import List from "../List";
 import Enum from "../../../enums";
 import POSUtil from "../../../utils";
 import TransactionService from "../../../services/transactions/TransactionService";
@@ -18,16 +21,18 @@ import InvoiceService from "../../../services/transactions/InvoiceService";
 import TransactionAction from "../../../action/transaction/transaction";
 import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
 import InventoryEnum from "../../../../inventory/enums";
+import Component  from "../../../../common/components/Component";
 import history from "../../../../common/router/history";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import Receipt from "../RetailSale/Receipt";
 import Detail from "../../../containers/transactions/SaleHistory/Detail";
 import ReceiptTemplate from "../receipt/template";
 
-export default class Invoice extends List {
+export default class Invoice extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      current: 1,
       isRequestReturn: false,
       reprintReceiptContent: null,
       isRequestReprint: false,
@@ -35,11 +40,13 @@ export default class Invoice extends List {
       isShowFilter: true,
       setDefaultDate: [],
       data: [],
+      pagination: {},
       detail: {},
       loading: false
     };
     this.title = <this.Translate id="text_sales"/>;
     this.fetchingProp = "list";
+    this.pageSize = 50;
     this.columnFilterWithKey = ["firstName", "lastName", "email", "phoneNumber"];
     this.pathname = "/transactions/invoice";
     this.INVOICE_STATUS_STR = {
@@ -49,17 +56,13 @@ export default class Invoice extends List {
       [Enum.INVOICE_STATUS.PAID]: { title: <this.Translate id="text_paid" />, color: "#52c41a"},
       [Enum.INVOICE_STATUS.VOID]: { title: <this.Translate id="text_void" />, color: "#d9d9d9"},
     };
-
     this.service = InvoiceService;
-
-    this.employeeList = [{
-      id: "",
-      fullName: <this.Translate id="text_all_employee"/>
-    }];
     this.storeList = [{
       id: "",
       name: <this.Translate id="text_all_store"/>
     }];
+
+    this.timer = null;
 
     this.columns = [
       {
@@ -209,11 +212,11 @@ export default class Invoice extends List {
   componentDidMount() {
     const params = new URLSearchParams(window.location.search);
     if (params.get("limit")) {
-      this.pageSize = params.get("limit");
+      this.pageSize = parseInt(params.get("limit"));
     }
 
     if (params.get("offset")) {
-      this.setState({current: params.get("offset")});
+      this.setState({current: parseInt(params.get("offset"))});
     }
 
     if (params.get("search")) {
@@ -227,7 +230,9 @@ export default class Invoice extends List {
     if (params.get("locationId")) {
       this.props.form.setFieldsValue("locationId", params.get("locationId"));
     }
+
     this.fetchList();
+    
     this.props.dispatch(ReceiptTemplateAction.default());
   }  
 
@@ -282,9 +287,14 @@ export default class Invoice extends List {
 
     offset = (offset - 1) * limit;
     this.setState({loading: true});
-    this.service.lists(limit, offset, "", "", filter, searchKey, ranges, locationId)
+    InvoiceService.lists(limit, offset, "", "", JSON.stringify(filter), searchKey, ranges, locationId)
     .then((response) => {
-      this.setState({data: response && response.data});
+      if (response.data && response.data.data) {
+        this.setState({
+          data: response.data.data,
+          pagination: response.data.pagination
+        });
+      }
     })
     .catch((err) => console.log("error", err))
     .finally(() => this.setState({loading: false}));
@@ -296,6 +306,25 @@ export default class Invoice extends List {
     this.setState({
       detail
     });
+  }
+
+  handleSearch = (e) => {
+    const queryParams = new URLSearchParams(document.location.search);
+    const value = e.target.value;
+    queryParams.set("search", value);
+    history.push({pathname: "/transactions/invoice", search: queryParams.toString()});
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      this.fetchList();
+    }, 1000);
+  }
+
+  handleChangeDate = (date) => {
+    const queryParams = new URLSearchParams(document.location.search);
+    queryParams.set("start", moment(date).format("YYYY-MM-DD"));
+    queryParams.set("end", moment(date).format("YYYY-MM-DD"));
+    history.push({pathname: "/transactions/invoice", search: queryParams.toString()});
+    this.fetchList();
   }
 
   getCustomerPaymentList(data) {
@@ -458,7 +487,8 @@ export default class Invoice extends List {
     this.fetchList();
   }
 
-  onChangePagination(current, pageSize) {
+
+  onChangePagination = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     params.set("limit", pageSize);
     params.set("offset", current);
@@ -466,10 +496,6 @@ export default class Invoice extends List {
     this.setState({current});
     this.Util.pushParamsToURL(this.pathname, params.toString());
     this.fetchList();
-  }
-
-  buttonActionCollection() {
-    return [this.renderButtonAddNew()];
   }
 
   renderReceipt(isRequestClearReceiptMarginLeft = true) {
@@ -506,97 +532,12 @@ export default class Invoice extends List {
         <this.Translate id="text_add_new" />
       </this.Button>;
   }
-  
-  renderButtonDelete(){
-    return <this.Button type="info" loading={this.props.detail.fetching && this.state.isRequestReprint} onClick={this.handleReceivePayment}>
-      <span className="icon-payment-report icon-padding-right text-uppercase"></span><this.Translate id="text_receive_payment" />
-    </this.Button>;
-  }
 
-  renderButtonSearch(fetchingProps){
-    return <this.Col md="2" className="wrap-btn-search">
-      <div className="ant-form-item-label" style={{visibility: "hidden", lineHeight: "28px"}}>
-        <label htmlFor="status" className="" title="">Filter</label>
-      </div>
-      <this.Button htmlType="submit" type="default" loading={this.state.isClickFilter && fetchingProps.fetching}>
-        <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
-      </this.Button>
-    </this.Col>;
-  }
-
-  renderFilterRecord() {
-    const fetchingProps = this.props[this.fetchingProp];
-    return this.props.form == null ?
-        ""
-        :
-        <this.Form onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout">
-            <this.Col md="2">
-              <this.InputText
-                name="number"
-                placeholder={this.CATranslate("text_search_for_sale_no", this.props.locale)}
-                label={<this.Translate id="text_search_for_sale_no" />}
-                form={this.props.form}/>
-            </this.Col>
-            <this.Col md="2">
-              <this.DateRangePicker
-                name="createdAt"
-                defaultValue={this.state.setDefaultDate}
-                label={<this.Translate id="text_date" />}
-                form={this.props.form}
-                ranges={[]} />
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="locationId"
-                dataSource={this.storeList.concat(this.props.storeLocation.list)}
-                defaultValue=""
-                valueKey="id"
-                label={<this.Translate id="text_store" />}
-                form={this.props.form}/>
-            </this.Col>
-            {this.renderButtonSearch(fetchingProps)}
-          </this.Row>
-        </this.Form>;
-  }
-
-  handleSubmitFilter(e) {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        const params = new URLSearchParams(window.location.search);
-        if (values.number) {
-          params.set("search", values.number);
-        } else {
-          params.delete("search");
-        }
-
-        if (values.createdAt && values.createdAt.length) {
-          params.set("start", moment(values.createdAt[0]).format("YYYY-MM-DD"));
-          params.set("end", moment(values.createdAt[1]).format("YYYY-MM-DD"));
-        } else {
-          params.delete("start");
-          params.delete("end");
-        }
-
-        if (values.locationId) {
-          params.set("locationId", values.locationId);
-        } else {
-          params.delete("locationId");
-        }
-
-        this.Util.pushParamsToURL(this.pathname, params.toString());
-        this.fetchList();
-      }
-    });
-  }
-
-  renderPagination(fetchingProp, className = "float-right") {
-    const data = this.state.data && this.state.data.pagination;
-    let pagination = {
-      total: data && data.total,
-      pageSize: data && data.limit,
-      current: data && this.state.current,
+  renderPagination(pagination) {
+    pagination = {
+      total: pagination.total,
+      pageSize: pagination.limit,
+      current: pagination.current,
       pageSizeOptions: this.pageSizeOptions
     };
 
@@ -606,7 +547,7 @@ export default class Invoice extends List {
 
     return( 
       pagination.total > 0 ?
-        <div className={className}>
+        <div className="float-right">
           <Pagination 
             size="small" 
             showTotal={showTotal} 
@@ -622,19 +563,6 @@ export default class Invoice extends List {
     );
   }
 
-  renderTable() {
-    return (
-      <this.Table
-        bordered={true}
-        rowKey="id"
-        loading={this.state.loading}
-        columns={this.columns}
-        dataSource={this.state.data.data}
-        onChange={this.onChange}
-      />
-    );
-  }
-
   render() {
     const {detail} = this.state;
     return (
@@ -646,7 +574,50 @@ export default class Invoice extends List {
             locale={this.props.locale}
             ref={re => this.receiptRef = re} />
         </div>
-        {super.render()}
+        <div className="content-list">
+            <div style={{height: "100%"}}>
+              <div className="table-wrapper">
+                <Row>
+                  <Col span={12} style={{marginBottom: 0}}>
+                    <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_invoices" /></h3>
+                  </Col>
+                  <Col span={12} style={{textAlign: "right"}}>
+                    <Input
+                      placeholder="Search"
+                      prefix={<Icon type="search" />}
+                      style={{width: 200, marginRight: 10}}
+                      allowClear={true}
+                      onChange={this.handleSearch}
+                    />
+                    <DatePicker onChange={this.handleChangeDate} style={{maxWidth: 200, marginRight: 10}} />
+                    <this.Button
+                      type="info"
+                      id="btnAdd"
+                      className="mg-right text-uppercase"
+                      onClick={() => history.push({pathname: "/transactions/create-invoice"})}>
+                      <span className="icon-add icon-padding-right"></span>
+                      <this.Translate id="text_add_new" />
+                    </this.Button>
+                  </Col>  
+                </Row>    
+
+                <this.Table
+                  bordered={true}
+                  rowKey="id"
+                  loading={this.state.loading}
+                  columns={this.columns}
+                  dataSource={this.state.data}
+                />
+
+                <div style={{marginTop: 15}}>
+                  {this.renderPagination(this.state.pagination)}
+                </div>
+
+                <this.clearFloating/>
+
+            </div>
+          </div>
+        </div>
       </React.Fragment>
     );
   }

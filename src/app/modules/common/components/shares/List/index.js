@@ -4,7 +4,6 @@ import {
   isMobileOnly
 } from "react-device-detect";
 import {Pagination} from "antd";
-import NoPermission from "./NoPermission";
 import Component  from "../../Component";
 import menuSource from "../../layout/SiderBar/datasource";
 import BaseService from "../../../services/BaseService";
@@ -788,27 +787,19 @@ export default class List extends Component {
             this.renderBreadCrumb()
         }
         
-        {
-          // this.Util.isCheckingPermission(this.props) ?
-          //   <StartUp/>
-          //   :
-            this.Util.isNoPermissionProp(this.props) ?
-              <NoPermission />
-              :
-              <div style={{height: "100%"}}>
-                <div className="wrap-filter" style={{ display: `${this.state.isShowFilter ? "" : "none"}`}}>
-                  { this.renderFilterRecord() }
-                </div>
+        <div style={{height: "100%"}}>
+          <div className="wrap-filter" style={{ display: `${this.state.isShowFilter ? "" : "none"}`}}>
+            { this.renderFilterRecord() }
+          </div>
 
-                { this.renderTableList(fetchingProps) }
-        
-                { this.state.modalContent1 }
+          { this.renderTableList(fetchingProps) }
+  
+          { this.state.modalContent1 }
 
-                { this.state.modalConten }
-            
-                { this.renderModalConfirmDelete() }
-              </div>
-        }
+          { this.state.modalConten }
+      
+          { this.renderModalConfirmDelete() }
+        </div>
       </div>
       
     );
