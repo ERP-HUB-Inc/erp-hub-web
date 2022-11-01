@@ -199,6 +199,7 @@ export default class SerialForm extends React.PureComponent  {
                   isAutoFocus={true}
                   didUpdateMakeAutoFocus={this.state.isInputFocus}
                   required={true}
+                  handleOnFocus={e => e.target.select()}
                   onChange={this.onChangeSerialNo}
                   form={this.props.form} />
               </Col>

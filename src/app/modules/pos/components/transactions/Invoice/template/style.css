@@ -54,6 +54,10 @@
   border-top: 1px solid #ddd;
 }
 
+.tax-table-invoice-entry-row {
+  vertical-align: baseline;
+}
+
 .tax-table-invoice-entry-row th {
   padding: 6;
 }
