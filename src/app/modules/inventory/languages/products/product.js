@@ -184,6 +184,11 @@ export default {
     "ផលិតផលពិសេស"
   ],
 
+  "text_product_tag": [
+    "Tag",
+    "ពាក្យសំគាល់"
+  ],
+
   "input_product_tax": [
     "Tax",
     "ពន្ធអាករ"

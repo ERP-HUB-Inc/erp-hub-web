@@ -34,6 +34,7 @@ export default class ProductUpdate extends Component {
     this.handleCallBackGetArchiveProductAttributes = this.handleCallBackGetArchiveProductAttributes.bind(this);
     this.handleAddVariantAttribute = this.handleAddVariantAttribute.bind(this);
     this.handleAddTax = this.handleAddTax.bind(this);
+    this.productTags = [];
   }
 
   componentDidMount() {
@@ -66,6 +67,9 @@ export default class ProductUpdate extends Component {
         timer: 1500
       });
       this.props.dispatch(ProductAction.reset());
+    }
+    if (this.props.productDetail.fetched){
+      this.productTags = this.props.productDetail.data && this.props.productDetail.data.tag ? this.props.productDetail.data.tag.split(",") : [];
     }
   }
 
@@ -148,6 +152,7 @@ export default class ProductUpdate extends Component {
         values["reorderPoint"] = values["reorderPoint"] ? values["reorderPoint"] : 0;
         values["factoryCost"] = values["factoryCost"] ? values["factoryCost"] : 0;
         values["shippingFee"] = values["shippingFee"] ? values["shippingFee"] : 0;
+        values["tag"] = this.productTags.toString();
         values["cost"] = values["cost"] ? values["cost"] : 0;
         values["markup"] = values["markup"] ? values["markup"] : 0;
         values["price"] = values["price"] ? values["price"] : 0;
@@ -161,6 +166,10 @@ export default class ProductUpdate extends Component {
         this.dispatch(ProductAction.update(values));
       }
     });
+  }
+
+  handleCallBackGetProductTags(productTage){
+    this.productTags = productTage;
   }
       
   handleCancel() {
@@ -247,6 +256,7 @@ export default class ProductUpdate extends Component {
             callBackGetProductVariant={this.handleCallBackGetProductVariant}
             handleCallBackGetArchiveProductVariant={this.handleCallBackGetArchiveProductVariant}
             handleCallBackGetArchiveProductAttributes={this.handleCallBackGetArchiveProductAttributes}
+            callBackGetProductTags={(tags) => this.handleCallBackGetProductTags(tags)}
             variantAttributes={variantAttributes}
             variantAttributeAdd={variantAttributeAdd}
             handleAddVariantAttribute={this.handleAddVariantAttribute}

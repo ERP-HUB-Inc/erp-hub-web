@@ -39,6 +39,7 @@ export default class ProductCreate extends Component {
     this.handleAddUnit = this.handleAddUnit.bind(this);
     this.handleAddTax = this.handleAddTax.bind(this);
     this.handleAddProductType = this.handleAddProductType.bind(this);
+    this.productTags = [];
   }
 
   componentDidMount() {
@@ -72,6 +73,10 @@ export default class ProductCreate extends Component {
         // this.props.dispatch(ProductAction.reset());
       });
     }
+  }
+
+  handleCallBackGetProductTags(productTage){
+    this.productTags = productTage;
   }
 
   handleCallBackGetProductAttribute(productAttributes) {
@@ -134,6 +139,7 @@ export default class ProductCreate extends Component {
           "tagId"
         ]);
 
+        values["tag"] = this.productTags.toString();
         values["isAutoGenerateBarcode"] = values["barcode"] ? this.Enum.GENERATE_PRODUCT_CODE.MANAUL : this.Enum.GENERATE_PRODUCT_CODE.AUTO;
         values["quantity"] = 0;
         values["reorderPoint"] = values["reorderPoint"] ? values["reorderPoint"] : 0;
@@ -246,6 +252,7 @@ export default class ProductCreate extends Component {
           taxs={this.props.taxs}
           callBackGetProductAttribute={this.handleCallBackGetProductAttribute}
           callBackGetProductVariant={this.handleCallBackGetProductVariant}
+          callBackGetProductTags={(tags) => this.handleCallBackGetProductTags(tags)}
           variantAttributes={variantAttributes}
           variantAttributeAdd={variantAttributeAdd}
           handleAddVariantAttribute={this.handleAddVariantAttribute}

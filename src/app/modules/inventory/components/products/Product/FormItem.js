@@ -1,7 +1,12 @@
 import React from "react";
 import {
   Spin,
-  Button
+  Button,
+  Card,
+  Tag,
+  Input,
+  Tooltip,
+  Icon
 } from "antd";
 import {
   Translate
@@ -244,7 +249,10 @@ export default class FormItem extends Modal {
       isComponentNotYetUpdated: true,
       isComponentNotYetLoadedWillUpdate: true,
       productOptionClassDisabled: "",
-      description: ""
+      description: "",
+      tags: [],
+      inputVisible: false,
+      inputValue: "",
     };
 
     this.TAB_PRODUCT_COST_LOG = 3;
@@ -300,6 +308,13 @@ export default class FormItem extends Modal {
     this.handleChangeType = this.handleChangeType.bind(this);
   }
 
+  componentDidMount() {
+    const {formData} = this.props;
+    if (formData.tag && formData.tag.length){
+      this.setState({tags: formData.tag.split(",")});
+    }
+  }
+
   getProductImageFromCallBack(value) {
     this.props.form.setFieldsValue({image: value});
   } 
@@ -353,7 +368,38 @@ export default class FormItem extends Modal {
     }
   }
 
+  handleClose = removedTag => {
+    const tags = this.state.tags.filter(tag => tag !== removedTag);
+    this.setState({ tags });
+    this.props.callBackGetProductTags(tags);
+  };
+
+  showInput = () => {
+    this.setState({ inputVisible: true }, () => this.input.focus());
+  };
+
+  handleInputChange = e => {
+    this.setState({ inputValue: e.target.value });
+  };
+
+  handleInputConfirm = () => {
+    const { inputValue } = this.state;
+    let { tags } = this.state;
+    if (inputValue && tags.indexOf(inputValue) === -1) {
+      tags = [...tags, inputValue];
+    }
+    this.setState({
+      tags,
+      inputVisible: false,
+      inputValue: "",
+    });
+    this.props.callBackGetProductTags(tags);
+  };
+
+  saveInputRef = input => (this.input = input);
+
   render() {
+    const { tags, inputVisible, inputValue } = this.state;
     const {
       dispatch,
       form,
@@ -602,6 +648,47 @@ export default class FormItem extends Modal {
                         label={<this.Translate id="text_featured_product" />}
                         defaultValue={formData.isFeatured ? true : false}
                         form={this.props.form} />
+                    </this.Col>
+                    <this.Col md="12" style={{marginBottom: 15}}>
+                      <div className="ant-col ant-form-item-label">
+                        <label htmlFor="isFeatured" ><this.Translate id="text_product_tag" /></label>
+                      </div>
+                      <Card>
+                        <div>
+                          {tags.map((tag) => {
+                            const isLongTag = tag.length > 20;
+                            const tagElem = (
+                                <Tag key={tag} style={{marginBottom: 10}} closable={true} onClose={() => this.handleClose(tag)}>
+                                  {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                                </Tag>
+                            );
+                            return isLongTag ? (
+                                <Tooltip title={tag} key={tag} style={{paddingBottom: 10}}>
+                                  {tagElem}
+                                </Tooltip>
+                            ) : (
+                                tagElem
+                            );
+                          })}
+                          {inputVisible && (
+                              <Input
+                                  ref={this.saveInputRef}
+                                  type="text"
+                                  size="small"
+                                  style={{ width: 78 }}
+                                  value={inputValue}
+                                  onChange={this.handleInputChange}
+                                  onBlur={this.handleInputConfirm}
+                                  onPressEnter={this.handleInputConfirm}
+                              />
+                          )}
+                          {!inputVisible && (
+                              <Tag onClick={this.showInput} style={{ background: "#fff", borderStyle: "dashed" }}>
+                                <Icon type="plus" /> New Tag
+                              </Tag>
+                          )}
+                        </div>
+                      </Card>
                     </this.Col>
                     <this.Col md="12">
                       <div className="ant-col ant-form-item-label">
