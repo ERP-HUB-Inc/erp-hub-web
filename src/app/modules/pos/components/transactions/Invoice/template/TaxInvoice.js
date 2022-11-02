@@ -44,6 +44,7 @@ export default function TaxInvoice(props) {
     formData.totalExcludeTax = getSubTotal(formData);
   }
   let discount = Number(formData.discount);
+  const deliveryFee = formData.deliveryFee ? formData.deliveryFee : 0;
 
   let tax = util.floor(formData.total - formData.totalExcludeTax);
   if (!tax)
@@ -143,7 +144,7 @@ export default function TaxInvoice(props) {
                   ))
                 }
                 <tr>
-                  <td colSpan={2} rowSpan={formData.discount ? 3 : 2}></td>
+                  <td colSpan={2} rowSpan={formData.discount ? 4 : 3}></td>
                   <td colSpan={2} style={{textAlign: "right"}}><div>សរុប</div><div>Sub Total</div></td>
                   <td style={{textAlign: "right"}}>{util.formatCurrency(formData.totalExcludeTax)}</td>
                 </tr>
@@ -162,10 +163,17 @@ export default function TaxInvoice(props) {
                   </td>
                   <td>{util.formatCurrency(tax)}</td>
                 </tr>
+                <tr style={{textAlign: "right"}}>
+                  <td colSpan={2}>
+                    <div>តម្លៃដឹកជញ្ជូន</div>
+                    <div>Delivery Fee</div>
+                  </td>
+                  <td>{util.formatCurrency(deliveryFee)}</td>
+                </tr>
                 <tr style={{fontWeight: 600}}>
-                  <td colSpan={2} style={{textTransform: "capitalize"}}>{util.converNumberToWord(formData.total - discount)}</td>
+                  <td colSpan={2} style={{textTransform: "capitalize"}}>{util.converNumberToWord(formData.total - discount + deliveryFee )}</td>
                   <td colSpan={2} style={{textAlign: "right"}}><div>សរុបរួម</div><div>Grand Total</div></td>
-                  <td style={{textAlign: "right"}}>{util.formatCurrency(formData.total - discount)}</td>
+                  <td style={{textAlign: "right"}}>{util.formatCurrency(formData.total - discount + deliveryFee)}</td>
                 </tr>
                 {
                   exchangeRate ?
@@ -174,7 +182,7 @@ export default function TaxInvoice(props) {
                       <div style={{display: "flex", justifyContent: "space-between"}}><div>អត្រាប្ដូរប្រាក់</div><div>{exchangeRate}</div></div>
                     </td>
                     <td style={{textAlign: "right"}} colSpan={2}>សរុបជាប្រាក់រៀល</td>
-                    <td style={{textAlign: "right"}}>{util.formatCurrency((formData.total - discount) * exchangeRate, "")} ៛</td>
+                    <td style={{textAlign: "right"}}>{util.formatCurrency((formData.total - discount +  deliveryFee) * exchangeRate, "")} ៛</td>
                   </tr>
                   : null
                 }

@@ -658,12 +658,12 @@ export default class FormItem extends Modal {
                           {tags.map((tag) => {
                             const isLongTag = tag.length > 20;
                             const tagElem = (
-                                <Tag key={tag} style={{marginBottom: 10}} closable={true} onClose={() => this.handleClose(tag)}>
+                                <Tag  key={tag} style={{marginBottom: 5, marginTop: 5}} closable={true} onClose={() => this.handleClose(tag)}>
                                   {isLongTag ? `${tag.slice(0, 20)}...` : tag}
                                 </Tag>
                             );
                             return isLongTag ? (
-                                <Tooltip title={tag} key={tag} style={{paddingBottom: 10}}>
+                                <Tooltip title={tag} key={tag}>
                                   {tagElem}
                                 </Tooltip>
                             ) : (

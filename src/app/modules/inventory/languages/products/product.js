@@ -185,7 +185,7 @@ export default {
   ],
 
   "text_product_tag": [
-    "Tag",
+    "Tags",
     "ពាក្យសំគាល់"
   ],
 

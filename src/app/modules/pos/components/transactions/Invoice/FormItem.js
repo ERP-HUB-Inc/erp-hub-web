@@ -439,6 +439,7 @@ class NewInvoice extends React.PureComponent {
                     exchangeRate: values.exchangeRate,
                     discountType: values.discountType,
                     publicNote: formData.publicNote,
+                    deliveryFee: values.deliveryFee ? values.deliveryFee : 0,
                     payTermType: values.payTermType,
                     payTermNumber: values.payTermNumber,
                     template: values.template,
@@ -1482,6 +1483,20 @@ class NewInvoice extends React.PureComponent {
                             </div>
 
                             <InputNumber
+                                name="deliveryFee"
+                                label={<Translate id="text_delivery_fee" />}
+                                placeholder={`${stringTranslate("text_delivery_fee", this.props.locale)}`}
+                                style={styles.itemCenter}
+                                precision={2}
+                                data={formData.deliveryFee ? formData.deliveryFee : 0}
+                                isAutoSelect={true}
+                                onChange={(value) => this.setState(preState => {
+                                    preState.formData.deliveryFee = value;
+                                    return preState;
+                                })}
+                                form={this.props.form}
+                            />
+                            <InputNumber
                                 name="exchangeRate"
                                 label={<Translate id="currency_exchange" />}
                                 placeholder={`${stringTranslate("currency_exchange", this.props.locale)}`}
@@ -1636,8 +1651,12 @@ class NewInvoice extends React.PureComponent {
                                 <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(vat)}</div>
                             </div>
                             <div style={styles.itemSummary}>
+                                <div><Translate id="text_delivery_fee" />:</div>
+                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.deliveryFee ? formData.deliveryFee : 0)}</div>
+                            </div>
+                            <div style={styles.itemSummary}>
                                 <div><Translate id="text_grand_total" />:</div>
-                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.total - discount)}</div>
+                                <div style={{width: 100, textAlign: "right"}}>{this.util.formatCurrency(formData.total - discount + (formData.deliveryFee ? formData.deliveryFee : 0))}</div>
                                 <InputNumber
                                     name="total"
                                     data={formData.total ? formData.total : 0}
