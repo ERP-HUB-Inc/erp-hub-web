@@ -556,7 +556,7 @@ class NewInvoice extends React.PureComponent {
     }
 
     save(invoice) {
-        console.log("invoice", invoice);
+
         this.setState({saveLoading: true});
         if (this.id) {
             InvoiceService.update(invoice, this.id)
