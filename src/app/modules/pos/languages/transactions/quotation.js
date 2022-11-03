@@ -28,6 +28,11 @@ export default {
     "Closed",
     "បានបិទបញ្ចប់",
   ],
+
+  "text_confirmed": [
+    "Confirmed",
+    "បានបញ្ចាក់រួច",
+  ],
   "text_quotation_temp": [
     "Quotation Template",
     "គំរូសម្រង់តម្លៃ",

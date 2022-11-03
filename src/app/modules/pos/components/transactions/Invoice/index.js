@@ -59,14 +59,6 @@ export default class Invoice extends Component {
       [Enum.INVOICE_STATUS.PAID]: { title: <this.Translate id="text_paid" />, color: "#52c41a"},
       [Enum.INVOICE_STATUS.VOID]: { title: <this.Translate id="text_void" />, color: "#d9d9d9"},
     };
-    this.service = InvoiceService;
-    this.storeList = [{
-      id: "",
-      name: <this.Translate id="text_all_store"/>
-    }];
-
-    this.timer = null;
-
     this.columns = [
       {
         title: <this.Translate id="text_date" />,

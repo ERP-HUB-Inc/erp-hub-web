@@ -1,6 +1,6 @@
 import React from "react";
 import moment from "moment";
-import { Dropdown, Menu, Icon, Tag } from "antd";
+import {Dropdown, Menu, Icon, Tag, Row, Col, Card, Statistic, Pagination, message} from "antd";
 import QuotationA4 from "./QuotationA4";
 import List from "../List";
 import Enum from "../../../enums";
@@ -16,16 +16,20 @@ import Detail from "../../../containers/transactions/Quotation/Detail";
 import InventoryUtil from "../../../../inventory/utils";
 import InventoryEnum from "../../../../inventory/enums";
 import "./index.css";
+import Component from "../../../../common/components/Component";
+import {PackingSlipTem} from "../SaleOrder/Invoice/packingSlipTem";
 
-export default class QuotationList extends List {
+export default class QuotationList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      current: 1,
       isNotYetLoadComponentDidUpdated: true,
       isRequestPrint: false,
       handleUpdateForm: false,
       quotationStatus: false,
-      ...this.state
+      summaryData: {},
+      data: []
     };
     this.QUOTATION_STATUS_STR = {
       [Enum.QUOTATION_STATUS.DRAFT]: {name: <this.Translate id="text_draft" />, color: "#d9d9d9"},
@@ -127,14 +131,10 @@ export default class QuotationList extends List {
         render: (total, record) => this.Util.formatCurrency(total - this.Util.floor(record.discount))
       }
     ];
-    this.customerList = [{firstName: this.CATranslate("text_all_customer", this.props.locale), lastName: "", id: 0}];
-    this.formCreate = <FormCreate/>;
-    this.formUpdate = <FormUpdate/>;
-    this.generalSearchLabel = "text_name";
-    this.placeHolderForGeneralSearch = "text_name";
     this.columnFilterWithKey = ["name", "number"];
     this.service = QuotationService;
-    this.action = QuotationAction;
+    this.pageSize = 50;
+    this.fetchingProp = "list";
     this.pathname = "/transactions/quotation";
     this.RESET_CONSTANT = Constant.RESET_QUOTATION;
     this.handleCancelQuotation = this.handleCancelQuotation.bind(this);
@@ -142,6 +142,9 @@ export default class QuotationList extends List {
   }
 
   componentDidMount(){
+    QuotationService.summary().then(({summaryData})=>{
+      this.setState({summaryData});
+    });
     this.fetchList();
     this.props.dispatch(CustomerAction.fetch(100));
     new Promise(() => {
@@ -177,7 +180,14 @@ export default class QuotationList extends List {
     }
 
     offset = (offset - 1) * limit;
-    this.props.dispatch(QuotationAction.fetch(limit, offset, "", "", filter, searchKey, ranges));
+    //this.props.dispatch(QuotationAction.fetch(limit, offset, "", "", filter, searchKey, ranges));
+    this.setState({loading: true});
+    QuotationService.lists(limit, offset, "", "", filter, searchKey, ranges)
+        .then(response => {
+          this.setState({data: response && response.data});
+        })
+        .catch(err => message.error("Error"))
+        .finally(() => this.setState({loading: false, loadingButton: false}));
   }
 
   buttonActionCollection(){
@@ -189,10 +199,9 @@ export default class QuotationList extends List {
     ];
   }
 
-  handleSubmitFilter(e){
-    if (this.action != null) {
-      e.preventDefault();
-      this.props.form.validateFieldsAndScroll((err, values) => {
+  handleSubmitFilter = (e)=>{
+    e.preventDefault();
+    this.props.form.validateFieldsAndScroll((err, values) => {
         if (!err) {
           const params = new URLSearchParams(document.location.search);
 
@@ -222,7 +231,6 @@ export default class QuotationList extends List {
         }
       
       }); 
-    } 
   }
 
   handleCancelQuotation(record){
@@ -254,7 +262,7 @@ export default class QuotationList extends List {
       :
       <this.Form onSubmit={this.handleSubmitFilter}>
         <this.Row className="main-search-layout">
-          <this.Col md="2">
+          <this.Col md="3">
             <this.InputText
               name="search"
               label={<this.Translate id="text_search" />}
@@ -262,14 +270,14 @@ export default class QuotationList extends List {
               isAutoFocus={true}
               form={form} />
           </this.Col>
-          <this.Col md="2">
+          <this.Col md="3">
             <this.DateRangePicker
               name="dates"
               label={<this.Translate id="text_date" />}
               form={form}
               ranges={[]} />
           </this.Col>
-          <this.Col md="2">
+          <this.Col md="3">
             <this.Select
               name="status"
               label={<this.Translate id="text_status" />}
@@ -277,7 +285,7 @@ export default class QuotationList extends List {
               defaultValue={QuotationStepList[0].value}
               form={form} />
           </this.Col>
-          <this.Col md="2" className="wrap-btn-search">
+          <this.Col md="3" className="wrap-btn-search">
             <div className="ant-form-item-label" style={{visibility: "hidden"}}>
               <label htmlFor="status" className="" title=""><this.Translate id="text_filter" /></label>
             </div>
@@ -314,7 +322,6 @@ export default class QuotationList extends List {
       this.props.dispatch(QuotationAction.fetch(this.pageSize,"","","",JSON.stringify({status: [Enum.QUOTATION_STEP.DRAFT]}),"",""));
     }
   } 
- 
 
   componentDidUpdate(){
     if(this.props.quotationDetail.data && this.state.isRequestPrint){
@@ -352,7 +359,7 @@ export default class QuotationList extends List {
     history.push(`/transactions/quotation-update/${rowData.id}`);
   }
 
-  onShowSizeChange(current, pageSize) {
+  onShowSizeChange = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     params.set("limit", pageSize);
     params.set("offset", current);
@@ -362,7 +369,7 @@ export default class QuotationList extends List {
     this.fetchList();
   }
 
-  onChangePagination(current, pageSize) {
+  onChangePagination = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     params.set("limit", pageSize);
     params.set("offset", current);
@@ -370,6 +377,106 @@ export default class QuotationList extends List {
     this.setState({current});
     this.Util.pushParamsToURL(this.pathname, params.toString());
     this.fetchList();
+  }
+
+  renderPagination(fetchingProp, className = "float-right") {
+    const data = this.state.data && this.state.data.pagination;
+    let pagination = {
+      total: data && data.total,
+      pageSize: data && data.limit,
+      current: this.state.current,
+      pageSizeOptions: this.pageSizeOptions
+    };
+
+    const showTotal = total => {
+      return `${this.CATranslate("text_total", this.props.locale)} ${total} ${this.CATranslate("text_records", this.props.locale)}`;
+    };
+
+    return(
+        pagination.total > 0 ?
+            <div className={className}>
+              <Pagination
+                  size="small"
+                  showTotal={showTotal}
+                  showSizeChanger
+                  defaultCurrent={this.state.current}
+                  defaultPageSize={this.pageSize}
+                  onShowSizeChange={this.onShowSizeChange}
+                  onChange={this.onChangePagination}
+                  {...pagination} />
+              <PackingSlipTem formData={this.state.formData} ref={el => (this.componentRef = el)} />
+            </div>
+            :
+            ""
+    );
+  }
+
+  render() {
+    const {summaryData} = this.state;
+    return (
+        <React.Fragment>
+          <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
+            <Col span={8}>
+              <Card>
+                <Statistic
+                    title={<this.Translate id="text_sent"/>}
+                    value={summaryData.sent ? summaryData.sent : 0 }
+                    precision={2}
+                    valueStyle={{color: "rgb(24, 144, 255)"}}
+                />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card>
+                <Statistic
+                    title={<this.Translate id="text_approved"/>}
+                    value={summaryData.approved ? summaryData.approved : 0 }
+                    precision={2}
+                    valueStyle={{ color: "#3f8600" }}
+                />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card>
+                <Statistic
+                    title={<this.Translate id="text_closed"/>}
+                    value={summaryData.closed ? summaryData.closed : 0 }
+                    precision={2}
+                    valueStyle={{ color: "#cf1322" }}
+                />
+              </Card>
+            </Col>
+          </Row>
+          <div className="content-list">
+            <div style={{height: "100%"}}>
+              <div className="table-wrapper">
+                {this.renderFilterRecord()}
+              </div>
+            </div>
+          </div>
+          <div className="content-list">
+            <div style={{height: "100%"}}>
+              <div className="table-wrapper">
+                {
+                  this.buttonActionCollection()
+                }
+                <this.Table
+                    bordered={true}
+                    rowKey="id"
+                    loading={this.state.loading}
+                    columns={this.columns}
+                    dataSource={this.state.data.data}
+                    onChange={this.onChange}
+                />
+                <div style={{marginTop: 15}}>
+                  {this.renderPagination(this.state.pagination)}
+                </div>
+                <this.clearFloating/>
+              </div>
+            </div>
+          </div>
+        </React.Fragment>
+    );
   }
 
 }

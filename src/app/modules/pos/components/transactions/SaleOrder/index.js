@@ -32,6 +32,7 @@ class SaleOrder extends Component {
     this.title = <this.Translate id="text_sales"/>;
     this.fetchingProp = "list";
     this.pageSize = 50;
+    this.pathname = "/transactions/sales-order";
     this.SALE_ORDER_STATUS_STR = {
       [Enum.SALE_ORDER_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#bfbfbf" },
       [Enum.SALE_ORDER_STATUS.CONFIRMED]: { title: <this.Translate id="text_confirm" />, color: "#1890ff" },
@@ -188,6 +189,11 @@ class SaleOrder extends Component {
     if (params.get("status")) {
       this.props.form.setFieldsValue({status: params.get("status")});
     }
+
+    SaleOrderService.summary().then(({summaryData})=>{
+      this.setState({summaryData});
+    });
+
     this.fetchList();
   }
 
@@ -266,7 +272,7 @@ class SaleOrder extends Component {
     });
   }
 
-  onShowSizeChange(current, pageSize) {
+  onShowSizeChange = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     params.set("limit", pageSize);
     params.set("offset", current);
@@ -276,7 +282,7 @@ class SaleOrder extends Component {
     this.fetchList();
   }
 
-  onChangePagination(current, pageSize) {
+  onChangePagination = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     params.set("limit", pageSize);
     params.set("offset", current);
@@ -396,7 +402,7 @@ class SaleOrder extends Component {
               <Col span={8}>
                 <Card>
                   <Statistic
-                      title={<this.Translate id="text_confirm"/>}
+                      title={<this.Translate id="text_confirmed"/>}
                       value={summaryData.confirmed ? summaryData.confirmed : 0 }
                       precision={2}
                       valueStyle={{color: "rgb(24, 144, 255)"}}
