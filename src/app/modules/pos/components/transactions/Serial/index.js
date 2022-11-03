@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import { connect } from "react-redux";
 import BarcodeReader from "react-barcode-reader";
 import { Link } from "react-router-dom";
@@ -66,6 +66,10 @@ class SerialList extends List {
   }
 
   componentDidMount() {
+    const searchKey = new URLSearchParams(document.location.search).get("search");
+    if (searchKey) {
+      this.props.form.setFieldsValue({searchKey});
+    }
     this.fetchList();
   }
 
