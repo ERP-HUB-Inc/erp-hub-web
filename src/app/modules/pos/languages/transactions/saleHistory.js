@@ -64,9 +64,14 @@ export default {
     "Delivery"
   ],
 
+  "text_sent_invoice": [
+    "Sent Invoices",
+    "វិក័យប័ត្របានផ្ញើរចេញ"
+  ],
+
   "text_overdue": [
     "Overdue",
-    "Overdue"
+    "ផុតកំណត់ថ្ងៃបង់ប្រាក់"
   ],
 
   "text_paid": [

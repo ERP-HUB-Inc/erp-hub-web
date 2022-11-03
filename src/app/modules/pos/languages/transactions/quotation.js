@@ -23,6 +23,11 @@ export default {
     "Quotation No",
     "លេខសម្រង់តម្លៃ"
   ],
+
+  "text_closed": [
+    "Closed",
+    "បានបិទបញ្ចប់",
+  ],
   "text_quotation_temp": [
     "Quotation Template",
     "គំរូសម្រង់តម្លៃ",

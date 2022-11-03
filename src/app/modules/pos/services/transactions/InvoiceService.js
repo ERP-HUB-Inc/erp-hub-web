@@ -27,6 +27,14 @@ class InvoiceService extends BaseService {
     });
   }
 
+  summary(){
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/summary`,
+      headers: this.header
+    });
+  }
+
   checkAvialableInvoiceNo(number) {
     this.setHeader();
     return this.GET({

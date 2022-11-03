@@ -42,6 +42,7 @@ export default class Invoice extends Component {
       isShowFilter: true,
       setDefaultDate: [],
       data: [],
+      summaryData: {},
       pagination: {},
       detail: {},
       loading: false
@@ -232,6 +233,10 @@ export default class Invoice extends Component {
     if (params.get("locationId")) {
       this.props.form.setFieldsValue("locationId", params.get("locationId"));
     }
+
+    InvoiceService.summary().then(({data})=>{
+      this.setState({summaryData: data});
+    });
 
     this.fetchList();
     
@@ -566,7 +571,7 @@ export default class Invoice extends Component {
   }
 
   render() {
-    const {detail} = this.state;
+    const {detail, summaryData} = this.state;
     return (
       <React.Fragment>
         <div style={{display: "none"}}>
@@ -580,18 +585,18 @@ export default class Invoice extends Component {
           <Col span={8}>
             <Card>
               <Statistic
-                title="Sent Invoice"
-                value={0}
-                precision={2}
-                valueStyle={{color: "rgb(24, 144, 255)"}}
+                  title={<this.Translate id="text_sent_invoice"/>}
+                  value={summaryData.sent ? summaryData.sent : 0 }
+                  precision={2}
+                  valueStyle={{color: "rgb(24, 144, 255)"}}
               />
             </Card>
           </Col>
           <Col span={8}>
             <Card>
               <Statistic
-                title="Overdue"
-                value={0}
+                title={<this.Translate id="text_overdue"/>}
+                value={summaryData.overdue ? summaryData.overdue : 0 }
                 precision={2}
                 valueStyle={{ color: "#cf1322" }}
               />
@@ -600,10 +605,10 @@ export default class Invoice extends Component {
           <Col span={8}>
             <Card>
               <Statistic
-                title="Paid"
-                value={0}
-                precision={2}
-                valueStyle={{ color: "#3f8600" }}
+                  title={<this.Translate id="text_paid"/>}
+                  value={summaryData.paid ? summaryData.paid : 0 }
+                  precision={2}
+                  valueStyle={{ color: "#3f8600" }}
               />
             </Card>
           </Col>

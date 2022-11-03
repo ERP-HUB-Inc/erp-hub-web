@@ -9,25 +9,29 @@ import {
   Tag,
   Form,
   Pagination,
-  message
+  message, Row, Col, Card, Statistic
 } from "antd";
-import List from "../List";
 import history from "../../../../common/router/history";
+import Component from "../../../../common/components/Component";
 import SaleOrderService from "../../../services/transactions/SaleOrderService";
 import Enum from "../../../enums";
 import {PackingSlipTem} from "./Invoice/packingSlipTem";
 
-class SaleOrder extends List {
+class SaleOrder extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
+      summaryData: {},
       loading: false,
       loadingButton: false,
       isShowFilter: true,
       current: 1,
       formData: null
     };
+    this.title = <this.Translate id="text_sales"/>;
+    this.fetchingProp = "list";
+    this.pageSize = 50;
     this.SALE_ORDER_STATUS_STR = {
       [Enum.SALE_ORDER_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#bfbfbf" },
       [Enum.SALE_ORDER_STATUS.CONFIRMED]: { title: <this.Translate id="text_confirm" />, color: "#1890ff" },
@@ -290,22 +294,22 @@ class SaleOrder extends List {
     return (
       <this.Form onSubmit={this.handleSubmitFilter}>
         <this.Row className="main-search-layout">
-          <this.Col md="2">
+          <this.Col md="3">
             <this.InputText
               name="search"
-              label={<this.Translate id={this.generalSearchLabel}/>}
+              label={<this.Translate id="text_search"/>}
               placeholder={`${this.CATranslate("text_quotation_no", this.props.locale)}, ${this.CATranslate("text_customer", this.props.locale)}`}
               form={this.props.form}
               allowClear={true} />
           </this.Col>
-          <this.Col md="2">
+          <this.Col md="3">
             <this.DateRangePicker
               name="registerDate"
               label={<this.Translate id="text_date" />}
               form={this.props.form}
               ranges={[]} />
           </this.Col>
-          <this.Col md="2">
+          <this.Col md="3">
             <this.Select
               name="status"
               label={<this.Translate id="text_status" />}
@@ -382,6 +386,67 @@ class SaleOrder extends List {
       dataSource={this.state.data.data}
       onChange={this.onChange}
     />;
+  }
+
+  render() {
+    const {summaryData} = this.state;
+    return (
+        <React.Fragment>
+            <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
+              <Col span={8}>
+                <Card>
+                  <Statistic
+                      title={<this.Translate id="text_confirm"/>}
+                      value={summaryData.confirmed ? summaryData.confirmed : 0 }
+                      precision={2}
+                      valueStyle={{color: "rgb(24, 144, 255)"}}
+                  />
+                </Card>
+              </Col>
+              <Col span={8}>
+                <Card>
+                  <Statistic
+                      title={<this.Translate id="text_closed"/>}
+                      value={summaryData.closed ? summaryData.overdue : 0 }
+                      precision={2}
+                      valueStyle={{ color: "#3f8600" }}
+                  />
+                </Card>
+              </Col>
+              <Col span={8}>
+                <Card>
+                  <Statistic
+                      title={<this.Translate id="text_void"/>}
+                      value={summaryData.void ? summaryData.void : 0 }
+                      precision={2}
+                      valueStyle={{ color: "#cf1322" }}
+                  />
+                </Card>
+              </Col>
+            </Row>
+          <div className="content-list">
+            <div style={{height: "100%"}}>
+              <div className="table-wrapper">
+                {this.renderFilterRecord()}
+              </div>
+            </div>
+          </div>
+          <div className="content-list">
+            <div style={{height: "100%"}}>
+              <div className="table-wrapper">
+                {
+                  this.buttonActionCollection()
+                }
+                {this.renderTable()}
+                <div style={{marginTop: 15}}>
+                  {this.renderPagination(this.state.pagination)}
+                </div>
+                <this.clearFloating/>
+              </div>
+            </div>
+          </div>
+        </React.Fragment>
+    );
   }
 }
 

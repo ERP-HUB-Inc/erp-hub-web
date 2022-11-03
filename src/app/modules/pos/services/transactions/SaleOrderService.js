@@ -27,6 +27,14 @@ class SaleOrderService extends BaseService {
     });
   }
 
+  summary() {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/summary`,
+      headers: this.header
+    });
+  }
+
   checkAvailableNo(number) {
     this.setHeader();
     return this.GET({
