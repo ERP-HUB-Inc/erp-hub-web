@@ -9,6 +9,8 @@ import {
   Icon,
   Row,
   Col,
+  Card,
+  Statistic,
   Tag,
   message,
   Pagination
@@ -574,6 +576,38 @@ export default class Invoice extends Component {
             locale={this.props.locale}
             ref={re => this.receiptRef = re} />
         </div>
+        <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
+          <Col span={8}>
+            <Card>
+              <Statistic
+                title="Sent Invoice"
+                value={0}
+                precision={2}
+                valueStyle={{color: "rgb(24, 144, 255)"}}
+              />
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card>
+              <Statistic
+                title="Overdue"
+                value={0}
+                precision={2}
+                valueStyle={{ color: "#cf1322" }}
+              />
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card>
+              <Statistic
+                title="Paid"
+                value={0}
+                precision={2}
+                valueStyle={{ color: "#3f8600" }}
+              />
+            </Card>
+          </Col>
+        </Row>
         <div className="content-list">
             <div style={{height: "100%"}}>
               <div className="table-wrapper">
