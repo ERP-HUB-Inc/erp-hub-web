@@ -479,7 +479,7 @@ export default class Invoice extends Component {
     }
   }
 
-  onShowSizeChange(current, pageSize) {
+  onShowSizeChange = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     params.set("limit", pageSize);
     params.set("offset", current);

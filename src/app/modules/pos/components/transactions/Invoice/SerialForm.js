@@ -95,7 +95,6 @@ export default class SerialForm extends React.PureComponent  {
   };
 
   validateSerial = (rule, value, callback) => {
-    console.log("value", value);
     if (value && value.toString().trim() === "") {
       return this.props.form.setFields({
         serialNumber: {

@@ -783,6 +783,10 @@ class NewInvoice extends React.PureComponent {
             value = JSON.parse(value);
             let qty = this.props.form.getFieldValue(`quantity[${index}]`);
             value = value.filter(serial => serial.status !== ARCHIVE && serial.number);
+            if (value && !value.length) {
+                callback(stringTranslate("error_serial_number_require", this.props.locale));
+            }
+
             if (value && value.length !== Number(qty)) {
                 callback(stringTranslate("text_serial_number_must_equal_quantity", this.props.locale));
             }
