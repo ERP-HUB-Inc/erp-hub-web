@@ -28,6 +28,14 @@ class OperationRecordService extends BaseService {
       headers: this.header,
     });
   }
+
+  summary() {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/summary`,
+      headers: this.header
+    });
+  }
 }
 
 export default new OperationRecordService();

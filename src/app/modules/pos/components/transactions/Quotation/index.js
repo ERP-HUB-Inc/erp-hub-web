@@ -1,12 +1,11 @@
 import React from "react";
 import moment from "moment";
 import {Dropdown, Menu, Icon, Tag, Row, Col, Card, Statistic, Pagination, message} from "antd";
+import "./index.css";
+import Component from "../../../../common/components/Component";
 import QuotationA4 from "./QuotationA4";
-import List from "../List";
 import Enum from "../../../enums";
 import history from "../../../../../modules/common/router/history";
-import FormCreate from "../../../containers/transactions/Quotation/FormCreate";
-import FormUpdate from "../../../containers/transactions/Quotation/FormUpdate";
 import Constant from "../../../constants/transactions/quotation";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import QuotationAction from "../../../action/transaction/quotation";
@@ -15,15 +14,13 @@ import QuotationService from "../../../services/transactions/QuotationService";
 import Detail from "../../../containers/transactions/Quotation/Detail";
 import InventoryUtil from "../../../../inventory/utils";
 import InventoryEnum from "../../../../inventory/enums";
-import "./index.css";
-import Component from "../../../../common/components/Component";
-import {PackingSlipTem} from "../SaleOrder/Invoice/packingSlipTem";
 
 export default class QuotationList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       current: 1,
+      pagination: {},
       isNotYetLoadComponentDidUpdated: true,
       isRequestPrint: false,
       handleUpdateForm: false,
@@ -404,7 +401,6 @@ export default class QuotationList extends Component {
                   onShowSizeChange={this.onShowSizeChange}
                   onChange={this.onChangePagination}
                   {...pagination} />
-              <PackingSlipTem formData={this.state.formData} ref={el => (this.componentRef = el)} />
             </div>
             :
             ""
