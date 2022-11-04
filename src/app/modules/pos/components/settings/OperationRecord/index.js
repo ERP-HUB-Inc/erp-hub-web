@@ -114,6 +114,24 @@ export default class IncomeExpense extends Component {
   }
 
   componentDidMount() {
+    const params = new URLSearchParams(document.location.search);
+
+    if (params.get("limit")) {
+      this.pageSize = params.get("limit");
+    }
+
+    if (params.get("offset")) {
+      this.setState({current: parseInt(params.get("offset"))});
+    }
+
+    if (params.get("search")) {
+      this.props.form.setFieldsValue({search: params.get("search")});
+    }
+
+    if (params.get("start")) {
+      this.props.form.setFieldsValue({dates: [moment(params.get("start")), moment(params.get("end"))]});
+    }
+
     this.service.summary().then(({summaryData})=>{
       this.setState({summaryData});
     });
@@ -128,7 +146,7 @@ export default class IncomeExpense extends Component {
     }
     if (nextProps.update.updated) {
       const {data} = this.state;
-      const index = data.data.findIndex(item =>item.id == nextProps.update.response.data.id);
+      const index = data.data.findIndex(item =>item.id === nextProps.update.response.data.id);
       if (index >= 0 && nextProps.update.response){
         data.data[index] = nextProps.update.response.data;
         this.setState({data});
@@ -243,6 +261,17 @@ export default class IncomeExpense extends Component {
             });
       });
 
+    }
+  }
+
+  showDeleteModal = () => {
+    if (this.checkIsAllowDeleteRecordOrNot()) {
+      return;
+    }
+    if (this.state.selectedRowKeys.length > 0) {
+      this.setState({modalVisible: true, showDeleteModal: true});
+    } else {
+      this.Message.warning(this.CATranslate("text_warning_select_row_to_delete", this.props.locale));
     }
   }
 
@@ -430,7 +459,7 @@ export default class IncomeExpense extends Component {
                   type="danger"
                   className="text-uppercase"
                   disabled={this.state.isRequestDelete}
-                  onClick={()=>this.setState({modalVisible: true, showDeleteModal: true})}>
+                  onClick={this.showDeleteModal}>
                 <span className="icon-delete icon-padding-right"></span>
                 <this.Translate id="text_delete" />
               </this.Button>

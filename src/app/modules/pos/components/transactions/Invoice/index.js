@@ -215,11 +215,11 @@ export default class Invoice extends Component {
     }
 
     if (params.get("search")) {
-      this.props.form.setFieldsValue({number: params.get("search")});
+      this.props.form.setFieldsValue({search: params.get("search")});
     }
 
     if (params.get("start")) {
-      this.props.form.setFieldsValue({createdAt: [moment(params.get("start")), moment(params.get("end"))]});
+      this.props.form.setFieldsValue({date:moment(params.get("end"))});
     }
 
     if (params.get("locationId")) {
@@ -614,13 +614,14 @@ export default class Invoice extends Component {
                   </Col>
                   <Col span={12} style={{textAlign: "right"}}>
                     <Input
+                      name="search"
                       placeholder="Search"
                       prefix={<Icon type="search" />}
                       style={{width: 200, marginRight: 10}}
                       allowClear={true}
                       onChange={this.handleSearch}
                     />
-                    <DatePicker onChange={this.handleChangeDate} style={{maxWidth: 200, marginRight: 10}} />
+                    <DatePicker onChange={this.handleChangeDate} name="date" style={{maxWidth: 200, marginRight: 10}} />
                     <this.Button
                       type="info"
                       id="btnAdd"

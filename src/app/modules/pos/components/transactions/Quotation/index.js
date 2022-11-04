@@ -139,6 +139,29 @@ export default class QuotationList extends Component {
   }
 
   componentDidMount(){
+
+    const params = new URLSearchParams(document.location.search);
+
+    if (params.get("limit")) {
+      this.pageSize = params.get("limit");
+    }
+
+    if (params.get("offset")) {
+      this.setState({current: parseInt(params.get("offset"))});
+    }
+
+    if (params.get("search")) {
+      this.props.form.setFieldsValue({search: params.get("search")});
+    }
+
+    if (params.get("start")) {
+      this.props.form.setFieldsValue({dates: [moment(params.get("start")), moment(params.get("end"))]});
+    }
+
+    if (params.get("status")) {
+      this.props.form.setFieldsValue({status: params.get("status")});
+    }
+
     QuotationService.summary().then(({summaryData})=>{
       this.setState({summaryData});
     });

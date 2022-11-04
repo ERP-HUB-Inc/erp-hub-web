@@ -175,11 +175,11 @@ class SaleOrder extends Component {
     }
 
     if (params.get("offset")) {
-      this.setState({current: params.get("offset")});
+      this.setState({current: parseInt(params.get("offset"))});
     }
 
     if (params.get("search")) {
-      this.props.form.setFieldsValue({number: params.get("search")});
+      this.props.form.setFieldsValue({search: params.get("search")});
     }
 
     if (params.get("start")) {
