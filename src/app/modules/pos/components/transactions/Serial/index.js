@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import BarcodeReader from "react-barcode-reader";
 import { Link } from "react-router-dom";
@@ -63,6 +63,7 @@ class SerialList extends List {
         render: (numOfWarranty, record) => this.Util.formatDate(this.Util.calculateWarrantyDate(record.invoiceDate, numOfWarranty, record.durationType))
       }
     ];
+    this.pathname = "/transaction/serial/list";
   }
 
   componentDidMount() {
