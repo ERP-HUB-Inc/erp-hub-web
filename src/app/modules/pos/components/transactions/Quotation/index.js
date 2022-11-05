@@ -275,7 +275,6 @@ export default class QuotationList extends Component {
     });
     QuotationStepList.unshift({name: <this.Translate id="text_all_status"/>, value: -1});
 
-
     const fetchingProps = this.props[this.fetchingProp];
     return form == null ?
       ""

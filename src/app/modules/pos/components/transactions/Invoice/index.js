@@ -50,6 +50,7 @@ export default class Invoice extends Component {
     this.title = <this.Translate id="text_sales"/>;
     this.fetchingProp = "list";
     this.pageSize = 50;
+    this.isSarching =  false;
     this.columnFilterWithKey = ["firstName", "lastName", "email", "phoneNumber"];
     this.pathname = "/transactions/invoice";
     this.INVOICE_STATUS_STR = {
@@ -258,7 +259,6 @@ export default class Invoice extends Component {
   fetchList() {
     let searchKey = "";
     let filter = {};
-    let locationId = 0;
     let limit = this.pageSize;
     let ranges = "";
     let offset = this.state.current;
@@ -272,21 +272,31 @@ export default class Invoice extends Component {
       offset = Number(params.get("offset"));
     }
 
-    if (params.get("search")) {
-      searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
-    }
-
-    if (params.get("start")) {
-      ranges = JSON.stringify({column: "invoiceDate", value: [params.get("start"), params.get("end")]});
-    }
-
-    if (params.get("locationId")) {
-      locationId = params.get("locationId");
-    }
-
     offset = (offset - 1) * limit;
+
+    if (params.get("search")) {
+      console.log("params.get(\"search\")", params.get("search"));
+      searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
+    }else{
+      params.delete("search");
+    }
+
+    if (params.get("date")) {
+      ranges = JSON.stringify({column: "invoiceDate", value: [params.get("date"), params.get("date")]});
+    }else{
+      params.delete("date");
+    }
+
+    if (this.isSarching){
+      offset = 1;
+      params.delete("offset");
+      this.setState({current: 1});
+    }
+
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+
     this.setState({loading: true});
-    InvoiceService.lists(limit, offset, "", "", JSON.stringify(filter), searchKey, ranges, locationId)
+    InvoiceService.lists(limit, offset, "", "", JSON.stringify(filter), searchKey, ranges)
     .then((response) => {
       if (response.data && response.data.data) {
         this.setState({
@@ -308,9 +318,10 @@ export default class Invoice extends Component {
   }
 
   handleSearch = (e) => {
+    this.isSarching = true;
     const queryParams = new URLSearchParams(document.location.search);
     const value = e.target.value;
-    queryParams.set("search", value);
+    queryParams.set("search", value ? value.trim() : "");
     history.push({pathname: "/transactions/invoice", search: queryParams.toString()});
     clearTimeout(this.timer);
     this.timer = setTimeout(() => {
@@ -319,9 +330,10 @@ export default class Invoice extends Component {
   }
 
   handleChangeDate = (date) => {
+    console.log("date",date);
+    this.isSarching = true;
     const queryParams = new URLSearchParams(document.location.search);
-    queryParams.set("start", moment(date).format("YYYY-MM-DD"));
-    queryParams.set("end", moment(date).format("YYYY-MM-DD"));
+    queryParams.set("date", date ? moment(date).format("YYYY-MM-DD") : "");
     history.push({pathname: "/transactions/invoice", search: queryParams.toString()});
     this.fetchList();
   }
@@ -486,7 +498,6 @@ export default class Invoice extends Component {
     this.fetchList();
   }
 
-
   onChangePagination = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     params.set("limit", pageSize);
@@ -536,7 +547,7 @@ export default class Invoice extends Component {
     pagination = {
       total: pagination.total,
       pageSize: pagination.limit,
-      current: pagination.current,
+      current: this.state.current,
       pageSizeOptions: this.pageSizeOptions
     };
 
@@ -564,6 +575,8 @@ export default class Invoice extends Component {
 
   render() {
     const {detail, summaryData} = this.state;
+    const params = new URLSearchParams(window.location.search);
+
     return (
       <React.Fragment>
         <div style={{display: "none"}}>
@@ -617,11 +630,19 @@ export default class Invoice extends Component {
                       name="search"
                       placeholder="Search"
                       prefix={<Icon type="search" />}
+                      defaultValue={params.get("search") ? params.get("search") : ""}
                       style={{width: 200, marginRight: 10}}
                       allowClear={true}
                       onChange={this.handleSearch}
+                      form={this.props.form}
                     />
-                    <DatePicker onChange={this.handleChangeDate} name="date" style={{maxWidth: 200, marginRight: 10}} />
+                    <DatePicker
+                        onChange={this.handleChangeDate}
+                        name="date"
+                        defaultValue={params.get("date") ? moment(params.get("date")) : ""}
+                        style={{maxWidth: 200, marginRight: 10}}
+                        form={this.props.form}
+                    />
                     <this.Button
                       type="info"
                       id="btnAdd"
