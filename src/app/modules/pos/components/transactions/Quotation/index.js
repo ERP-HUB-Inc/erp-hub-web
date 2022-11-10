@@ -172,7 +172,7 @@ export default class QuotationList extends Component {
     });
   }
 
-  fetchList() {
+  fetchList(withPagination= false) {
     let searchKey = "";
     let filter = {};
     let limit = this.pageSize;
@@ -189,17 +189,30 @@ export default class QuotationList extends Component {
 
     if (params.get("search")) {
       searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
+    }else{
+      params.delete("search");
     }
 
     if (params.get("start")) {
       ranges = JSON.stringify({column: "quotationDate", value: [params.get("start"), params.get("end")]});
+    }else{
+      params.delete("start");
     }
 
     if (params.get("status")) {
       filter = JSON.stringify({status: [Number(params.get("status"))]});
+    }else{
+      params.delete("start");
     }
 
     offset = (offset - 1) * limit;
+
+    if (!withPagination){
+      offset = 1;
+      params.delete("offset");
+      this.setState({current: 1});
+    }
+
     //this.props.dispatch(QuotationAction.fetch(limit, offset, "", "", filter, searchKey, ranges));
     this.setState({loading: true});
     QuotationService.lists(limit, offset, "", "", filter, searchKey, ranges)
@@ -395,7 +408,7 @@ export default class QuotationList extends Component {
 
     this.setState({current});
     this.Util.pushParamsToURL(this.pathname, params.toString());
-    this.fetchList();
+    this.fetchList(true);
   }
 
   renderPagination(fetchingProp, className = "float-right") {

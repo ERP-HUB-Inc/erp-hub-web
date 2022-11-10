@@ -50,7 +50,6 @@ export default class Invoice extends Component {
     this.title = <this.Translate id="text_sales"/>;
     this.fetchingProp = "list";
     this.pageSize = 50;
-    this.isSarching =  false;
     this.columnFilterWithKey = ["firstName", "lastName", "email", "phoneNumber"];
     this.pathname = "/transactions/invoice";
     this.INVOICE_STATUS_STR = {
@@ -256,7 +255,7 @@ export default class Invoice extends Component {
     }
   }
 
-  fetchList() {
+  fetchList(withPagination= false) {
     let searchKey = "";
     let filter = {};
     let limit = this.pageSize;
@@ -275,7 +274,6 @@ export default class Invoice extends Component {
     offset = (offset - 1) * limit;
 
     if (params.get("search")) {
-      console.log("params.get(\"search\")", params.get("search"));
       searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
     }else{
       params.delete("search");
@@ -287,7 +285,7 @@ export default class Invoice extends Component {
       params.delete("date");
     }
 
-    if (this.isSarching){
+    if (!withPagination){
       offset = 1;
       params.delete("offset");
       this.setState({current: 1});
@@ -305,7 +303,6 @@ export default class Invoice extends Component {
         });
       }
     })
-    .catch((err) => console.log("error", err))
     .finally(() => this.setState({loading: false}));
   }
 
@@ -318,7 +315,6 @@ export default class Invoice extends Component {
   }
 
   handleSearch = (e) => {
-    this.isSarching = true;
     const queryParams = new URLSearchParams(document.location.search);
     const value = e.target.value;
     queryParams.set("search", value ? value.trim() : "");
@@ -330,8 +326,6 @@ export default class Invoice extends Component {
   }
 
   handleChangeDate = (date) => {
-    console.log("date",date);
-    this.isSarching = true;
     const queryParams = new URLSearchParams(document.location.search);
     queryParams.set("date", date ? moment(date).format("YYYY-MM-DD") : "");
     history.push({pathname: "/transactions/invoice", search: queryParams.toString()});
@@ -505,7 +499,7 @@ export default class Invoice extends Component {
 
     this.setState({current});
     this.Util.pushParamsToURL(this.pathname, params.toString());
-    this.fetchList();
+    this.fetchList(true);
   }
 
   renderReceipt(isRequestClearReceiptMarginLeft = true) {
