@@ -297,6 +297,7 @@ class FormItem extends React.PureComponent {
                 id: values.id[index],
                 productVariantId: values.productVariantId[index],
                 description,
+                enableDescription: this.state.quotationEntries[index].enableDescription,
                 unitName: this.state.quotationEntries[index].unitName,
                 quantity: values.quantity[index],
                 price: values.price[index],
@@ -334,6 +335,7 @@ class FormItem extends React.PureComponent {
         quantity: entry.quantity,
         price: entry.price,
         amount: entry.quantity * entry.price,
+        enableDescription: entry.enableDescription
       }));
 
       let discount = data.discount;
@@ -513,6 +515,7 @@ class FormItem extends React.PureComponent {
         id: "",
         productVariantId: productVariant.id,
         description: `${product.name ? product.name : product.namekm} ${isProductVariant ? productVariant.name : ""}`,
+        enableDescription: product.enableDescription,
         unitName: product.unit.name,
         cost: productVariant.cost,
         quantity: 1,
@@ -538,6 +541,7 @@ class FormItem extends React.PureComponent {
           productVariantId: productVariant.id,
           unitName: product.unit.name,
           description: `${product.name ? product.name : product.namekm} ${isProductVariant ? productVariant.name : ""}`,
+          enableDescription: product.enableDescription,
           quantity: 1,
           cost: productVariant.cost,
           price: productVariant.price,
