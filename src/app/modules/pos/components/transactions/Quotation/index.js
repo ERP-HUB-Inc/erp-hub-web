@@ -163,7 +163,7 @@ export default class QuotationList extends Component {
     }
 
     QuotationService.summary().then(({data})=>{
-      this.setState({summaryData: data});
+      this.setState({summaryData: data.data});
     });
     this.fetchList(true);
     this.props.dispatch(CustomerAction.fetch(100));
