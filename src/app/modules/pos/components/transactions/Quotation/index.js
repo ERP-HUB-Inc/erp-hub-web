@@ -162,8 +162,8 @@ export default class QuotationList extends Component {
       this.props.form.setFieldsValue({status: params.get("status")});
     }
 
-    QuotationService.summary().then(({summaryData})=>{
-      this.setState({summaryData});
+    QuotationService.summary().then(({data})=>{
+      this.setState({summaryData: data});
     });
     this.fetchList(true);
     this.props.dispatch(CustomerAction.fetch(100));
