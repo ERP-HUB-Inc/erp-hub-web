@@ -30,7 +30,7 @@ class SaleOrderService extends BaseService {
   summary() {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}/summary`,
+      url: `${this.baseUrl}/v1/summary`,
       headers: this.header
     });
   }

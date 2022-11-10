@@ -190,8 +190,8 @@ class SaleOrder extends Component {
       this.props.form.setFieldsValue({status: params.get("status")});
     }
 
-    SaleOrderService.summary().then(({summaryData})=>{
-      this.setState({summaryData});
+    SaleOrderService.summary().then(({data})=>{
+      this.setState({summaryData: data.data});
     });
 
     this.fetchList(true);
@@ -422,7 +422,7 @@ class SaleOrder extends Component {
                 <Card>
                   <Statistic
                       title={<this.Translate id="text_closed"/>}
-                      value={summaryData.closed ? summaryData.overdue : 0 }
+                      value={summaryData.closed ? summaryData.closed : 0 }
                       precision={2}
                       valueStyle={{ color: "#3f8600" }}
                   />

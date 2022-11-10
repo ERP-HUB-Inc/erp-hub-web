@@ -132,8 +132,8 @@ export default class IncomeExpense extends Component {
       this.props.form.setFieldsValue({dates: [moment(params.get("start")), moment(params.get("end"))]});
     }
 
-    this.service.summary().then(({summaryData})=>{
-      this.setState({summaryData});
+    this.service.summary().then(({data})=>{
+      this.setState({summaryData: data.data});
     });
     this.fetchList(true);
   }

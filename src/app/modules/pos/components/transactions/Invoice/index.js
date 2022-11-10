@@ -134,7 +134,6 @@ export default class Invoice extends Component {
           return <div className="wrap-product-name" style={{display: "flex"}}>
             {invoiceNumber}
             <Dropdown className="product-row-option" overlay={menu}>
-              {/*eslint-disable-next-line*/}
               <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
                 <this.Translate id="text_option" /> <Icon type="down" />
               </a>
@@ -227,7 +226,7 @@ export default class Invoice extends Component {
     }
 
     InvoiceService.summary().then(({data})=>{
-      this.setState({summaryData: data});
+      this.setState({summaryData: data.data});
     });
 
     this.fetchList(true);
@@ -585,7 +584,8 @@ export default class Invoice extends Component {
             <Card>
               <Statistic
                   title={<this.Translate id="text_sent_invoice"/>}
-                  value={summaryData.sent ? summaryData.sent : 0 }
+                  value={summaryData.sentAmount ? summaryData.sentAmount : 0 }
+                  suffix={" / " + (summaryData.sent ? summaryData.sent  :  0) + " invoice(s)"}
                   precision={2}
                   valueStyle={{color: "rgb(24, 144, 255)"}}
               />
@@ -595,7 +595,8 @@ export default class Invoice extends Component {
             <Card>
               <Statistic
                 title={<this.Translate id="text_overdue"/>}
-                value={summaryData.overdue ? summaryData.overdue : 0 }
+                value={summaryData.overdueAmount ? summaryData.overdueAmount : 0 }
+                suffix={" / " + (summaryData.overdue ? summaryData.overdue  :  0) + " invoice(s)"}
                 precision={2}
                 valueStyle={{ color: "#cf1322" }}
               />
@@ -605,7 +606,8 @@ export default class Invoice extends Component {
             <Card>
               <Statistic
                   title={<this.Translate id="text_paid"/>}
-                  value={summaryData.paid ? summaryData.paid : 0 }
+                  value={summaryData.paidAmount ? summaryData.paidAmount : 0 }
+                  suffix={ " / " + (summaryData.paid ? summaryData.paid  :  0) + " invoice(s)"}
                   precision={2}
                   valueStyle={{ color: "#3f8600" }}
               />
