@@ -135,7 +135,7 @@ export default class IncomeExpense extends Component {
     this.service.summary().then(({summaryData})=>{
       this.setState({summaryData});
     });
-    this.fetchList();
+    this.fetchList(true);
   }
 
   componentWillUpdate(nextProps) {
@@ -155,7 +155,7 @@ export default class IncomeExpense extends Component {
     }
   }
 
-  fetchList() {
+  fetchList(withPagination = false) {
     let searchKey = "";
     let filter = {};
     let limit = this.pageSize;
@@ -179,6 +179,14 @@ export default class IncomeExpense extends Component {
     }
 
     offset = (offset - 1) * limit;
+    if (!withPagination){
+      offset = 0;
+      params.delete("offset");
+      this.setState({current: 1});
+    }
+
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+
     this.setState({loading: true});
     this.service.lists(limit, offset, "", "", filter, searchKey, ranges)
         .then(response => {
@@ -231,7 +239,7 @@ export default class IncomeExpense extends Component {
 
     this.setState({current});
     this.Util.pushParamsToURL(this.pathname, params.toString());
-    this.fetchList();
+    this.fetchList(true);
   }
 
   onSelectChange = (selectedRowKeys, selectedRows) => {

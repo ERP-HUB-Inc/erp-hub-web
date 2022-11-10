@@ -194,10 +194,10 @@ class SaleOrder extends Component {
       this.setState({summaryData});
     });
 
-    this.fetchList();
+    this.fetchList(true);
   }
 
-  fetchList() {
+  fetchList(withPagination= false) {
     let searchKey = "";
     let filter = {};
     let limit = this.pageSize;
@@ -226,6 +226,15 @@ class SaleOrder extends Component {
     }
 
     offset = (offset - 1) * limit;
+
+    if (!withPagination){
+      offset = 0;
+      params.delete("offset");
+      this.setState({current: 1});
+    }
+
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+
     this.setState({loading: true});
     SaleOrderService.lists(limit, offset, "", "", filter, searchKey, ranges)
     .then(response => {
@@ -289,7 +298,7 @@ class SaleOrder extends Component {
 
     this.setState({current});
     this.Util.pushParamsToURL(this.pathname, params.toString());
-    this.fetchList();
+    this.fetchList(true);
   }
 
   renderFilterRecord() {

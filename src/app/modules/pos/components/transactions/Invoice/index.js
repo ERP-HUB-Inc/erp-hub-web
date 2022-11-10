@@ -230,7 +230,7 @@ export default class Invoice extends Component {
       this.setState({summaryData: data});
     });
 
-    this.fetchList();
+    this.fetchList(true);
     
     this.props.dispatch(ReceiptTemplateAction.default());
   }  
@@ -286,7 +286,7 @@ export default class Invoice extends Component {
     }
 
     if (!withPagination){
-      offset = 1;
+      offset = 0;
       params.delete("offset");
       this.setState({current: 1});
     }

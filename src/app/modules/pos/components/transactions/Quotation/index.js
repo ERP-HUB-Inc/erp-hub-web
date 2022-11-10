@@ -165,7 +165,7 @@ export default class QuotationList extends Component {
     QuotationService.summary().then(({summaryData})=>{
       this.setState({summaryData});
     });
-    this.fetchList();
+    this.fetchList(true);
     this.props.dispatch(CustomerAction.fetch(100));
     new Promise(() => {
       this.props.dispatch(ReceiptTemplateAction.default());
@@ -208,10 +208,12 @@ export default class QuotationList extends Component {
     offset = (offset - 1) * limit;
 
     if (!withPagination){
-      offset = 1;
+      offset = 0;
       params.delete("offset");
       this.setState({current: 1});
     }
+
+    this.Util.pushParamsToURL(this.pathname, params.toString());
 
     //this.props.dispatch(QuotationAction.fetch(limit, offset, "", "", filter, searchKey, ranges));
     this.setState({loading: true});
