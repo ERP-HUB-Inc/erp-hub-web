@@ -425,6 +425,7 @@ export default class IncomeExpense extends Component {
                   title={<this.Translate id="text_income"/>}
                   value={summaryData.income ? summaryData.income : 0 }
                   precision="0"
+                  prefix="$"
                   valueStyle={{ color: "#3f8600" }}
               />
             </Card>
@@ -435,6 +436,7 @@ export default class IncomeExpense extends Component {
                   title={<this.Translate id="text_expense"/>}
                   value={summaryData.expense ? summaryData.expense : 0 }
                   precision="0"
+                  prefix="$"
                   valueStyle={{ color: "#cf1322" }}
               />
             </Card>
