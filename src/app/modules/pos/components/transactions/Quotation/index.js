@@ -189,20 +189,14 @@ export default class QuotationList extends Component {
 
     if (params.get("search")) {
       searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
-    }else{
-      params.delete("search");
     }
 
-    if (params.get("start")) {
+    if (params.get("start") && params.get("end")) {
       ranges = JSON.stringify({column: "quotationDate", value: [params.get("start"), params.get("end")]});
-    }else{
-      params.delete("start");
     }
 
     if (params.get("status")) {
-      filter = JSON.stringify({status: [Number(params.get("status"))]});
-    }else{
-      params.delete("start");
+      filter = JSON.stringify({status: Number(params.get("status"))});
     }
 
     offset = (offset - 1) * limit;
@@ -215,7 +209,6 @@ export default class QuotationList extends Component {
 
     this.Util.pushParamsToURL(this.pathname, params.toString());
 
-    //this.props.dispatch(QuotationAction.fetch(limit, offset, "", "", filter, searchKey, ranges));
     this.setState({loading: true});
     QuotationService.lists(limit, offset, "", "", filter, searchKey, ranges)
         .then(response => {
@@ -240,8 +233,8 @@ export default class QuotationList extends Component {
         if (!err) {
           const params = new URLSearchParams(document.location.search);
 
-          if (values.search) {
-            params.set("search", values.search);
+          if (values.search && values.search.trim()) {
+            params.set("search", values.search.trim());
           } else {
             params.delete("search");
           }
@@ -454,7 +447,7 @@ export default class QuotationList extends Component {
                 <Statistic
                     title={<this.Translate id="text_sent"/>}
                     value={summaryData.sent ? summaryData.sent : 0 }
-                    precision={2}
+                    precision="0"
                     valueStyle={{color: "rgb(24, 144, 255)"}}
                 />
               </Card>
@@ -464,7 +457,7 @@ export default class QuotationList extends Component {
                 <Statistic
                     title={<this.Translate id="text_approved"/>}
                     value={summaryData.approved ? summaryData.approved : 0 }
-                    precision={2}
+                    precision="0"
                     valueStyle={{ color: "#3f8600" }}
                 />
               </Card>
@@ -474,7 +467,7 @@ export default class QuotationList extends Component {
                 <Statistic
                     title={<this.Translate id="text_closed"/>}
                     value={summaryData.closed ? summaryData.closed : 0 }
-                    precision={2}
+                    precision="0"
                     valueStyle={{ color: "#cf1322" }}
                 />
               </Card>

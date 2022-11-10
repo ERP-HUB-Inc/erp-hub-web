@@ -254,8 +254,8 @@ class SaleOrder extends Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const params = new URLSearchParams(window.location.search);
-        if (values.search) {
-          params.set("search", values.search);
+        if (values.search && values.search.trim()) {
+          params.set("search", values.search.trim());
         } else {
           params.delete("search");
         }
@@ -413,7 +413,7 @@ class SaleOrder extends Component {
                   <Statistic
                       title={<this.Translate id="text_confirmed"/>}
                       value={summaryData.confirmed ? summaryData.confirmed : 0 }
-                      precision={2}
+                      precision="0"
                       valueStyle={{color: "rgb(24, 144, 255)"}}
                   />
                 </Card>
@@ -423,7 +423,7 @@ class SaleOrder extends Component {
                   <Statistic
                       title={<this.Translate id="text_closed"/>}
                       value={summaryData.closed ? summaryData.closed : 0 }
-                      precision={2}
+                      precision="0"
                       valueStyle={{ color: "#3f8600" }}
                   />
                 </Card>
@@ -433,7 +433,7 @@ class SaleOrder extends Component {
                   <Statistic
                       title={<this.Translate id="text_void"/>}
                       value={summaryData.void ? summaryData.void : 0 }
-                      precision={2}
+                      precision="0"
                       valueStyle={{ color: "#cf1322" }}
                   />
                 </Card>

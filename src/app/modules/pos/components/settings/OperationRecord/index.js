@@ -174,7 +174,7 @@ export default class IncomeExpense extends Component {
       searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
     }
 
-    if (params.get("start")) {
+    if (params.get("start") && params.get("end")) {
       ranges = params.get("start") +","+params.get("end");
     }
 
@@ -385,8 +385,8 @@ export default class IncomeExpense extends Component {
       if (!err) {
         const params = new URLSearchParams(document.location.search);
 
-        if (values.search) {
-          params.set("search", values.search);
+        if (values.search && values.search.trim()) {
+          params.set("search", values.search.trim());
         } else {
           params.delete("search");
         }
@@ -424,7 +424,7 @@ export default class IncomeExpense extends Component {
               <Statistic
                   title={<this.Translate id="text_income"/>}
                   value={summaryData.income ? summaryData.income : 0 }
-                  precision={2}
+                  precision="0"
                   valueStyle={{ color: "#3f8600" }}
               />
             </Card>
@@ -434,7 +434,7 @@ export default class IncomeExpense extends Component {
               <Statistic
                   title={<this.Translate id="text_expense"/>}
                   value={summaryData.expense ? summaryData.expense : 0 }
-                  precision={2}
+                  precision="0"
                   valueStyle={{ color: "#cf1322" }}
               />
             </Card>
