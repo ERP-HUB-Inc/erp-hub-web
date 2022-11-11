@@ -36,6 +36,7 @@ import "./style.css";
 const WebsiteSetting = (props) => {
   // General State
   const [primaryColor, setPrimaryColor] = useState("#FFFFFF");
+  const [description,setDescription] = useState("");
   const [secondaryColor, setSecondaryColor] = useState("#FFFFFF");
   const [generalLoadingButton, setGeneralLoadingButton] = useState(false);
   const [placeholderImage, setPlaceholderImage] = useState(null);
@@ -122,6 +123,10 @@ const WebsiteSetting = (props) => {
           setSecondaryColor(data.secondColor);
         }
 
+        if("description" in data){
+          setDescription(data.description);
+        }
+
         if ("theme" in data) {
           setTheme(data.theme);
         }
@@ -164,6 +169,10 @@ const WebsiteSetting = (props) => {
           {
             key: "primaryColor",
             value: primaryColor,
+          },
+          {
+            key: "description",
+            value: values.description ? values.description : "",
           },
           {
             key: "secondColor",
@@ -824,6 +833,16 @@ const WebsiteSetting = (props) => {
                             name: <Translate id="text_template_2" />,
                           },
                         ]}
+                      />
+                      <InputText
+                        data={description}
+                        name="description"
+                        label={<Translate id="text_store_description" />}
+                        placeholder={CATranslate(
+                          "text_store_description",
+                          props.locale
+                        )}
+                        form={props.form}
                       />
                       {React.useMemo(
                         () => (
