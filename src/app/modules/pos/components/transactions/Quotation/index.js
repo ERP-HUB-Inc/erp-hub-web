@@ -2,6 +2,7 @@ import React from "react";
 import moment from "moment";
 import {
   Dropdown,
+  DatePicker,
   Menu,
   Icon,
   Tag,
@@ -9,6 +10,7 @@ import {
   Col,
   Card,
   Statistic,
+  Select,
   Pagination,
   message,
   Input,
@@ -451,28 +453,27 @@ export default class QuotationList extends Component {
                       placeholder={this.CATranslate("text_search", this.props.locale)}
                       prefix={<Icon type="search" />}
                       defaultValue={params.get("search") ? params.get("search") : ""}
-                      style={{height: 32, width: 200, marginRight: 10, marginTop: 5}}
+                      style={{height: 32, width: 200, marginRight: 10}}
                       allowClear={true}
                       onChange={this.handleSearch}
-                      form={this.props.form}
                     />
-                    <this.DateRangePicker
-                      name="dates"
-                      onChange={this.handleChangeDate}
-                      form={this.props.form}
-                      style={{textAlign: "left", width: 300, marginRight: 10}}
-                      ranges={[]} />
-                    <this.Select
-                      name="status"
-                      dataSource={this.status_options}
-                      defaultValue={this.status_options[0].value}
-                      onChange={this.handleChangeStatus}
-                      style={{width: 200, marginRight: 10}}
-                      form={this.props.form} />
+                    <DatePicker.RangePicker
+                        onChange={this.handleChangeDate}
+                        name="date"
+                        placeholder={this.CATranslate("text_select_date", this.props.locale)}
+                        defaultValue={params.get("date") ? moment(params.get("date")) : ""}
+                        style={{maxWidth: 300, marginRight: 10}}
+                    />
+                    <Select defaultValue={this.status_options[0].value} onChange={this.handleChangeStatus} style={{width: 200, marginRight: 10}}>
+                      {
+                        this.status_options.map((statusOption, index) => 
+                          <Select.Option value={statusOption.value} key={index}>{statusOption.name}</Select.Option>
+                        )
+                      }
+                    </Select>
                     <this.Button
                       type="info"
                       id="btnAdd"
-                      style={{marginTop: 5}}
                       className="mg-right text-uppercase"
                       disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
                       onClick={() => history.push("/transactions/quotation-create")}>
