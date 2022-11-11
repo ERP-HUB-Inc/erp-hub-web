@@ -73,11 +73,16 @@ export default class Invoice extends Component {
         key: "status",
         width: 120,
         align: "center",
-        render: status => {
+        render: (status, record) => {
           if(status || status >= 0){
             const statusValue = this.INVOICE_STATUS_STR[status];
-            const statusColor = statusValue.color;
-            const stepTitle = statusValue.title;
+            let statusColor = statusValue.color;
+            let stepTitle = statusValue.title;
+            if (Number(status) === Enum.INVOICE_STATUS.SENT && moment(record.dueDate).format("YYYY-MM-DD") < moment().format("YYYY-MM-DD")) {
+              statusColor = "#f5222d";
+              stepTitle = <this.Translate id="text_expired" />;
+            }
+
             return <Tag color={statusColor} style={{width: 100, textAlign: "center", margin: 0}}>{stepTitle}</Tag>;
           }
         }
@@ -134,6 +139,7 @@ export default class Invoice extends Component {
           return <div className="wrap-product-name" style={{display: "flex"}}>
             {invoiceNumber}
             <Dropdown className="product-row-option" overlay={menu}>
+              {/* eslint-disable-next-line */}
               <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
                 <this.Translate id="text_option" /> <Icon type="down" />
               </a>
