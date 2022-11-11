@@ -49,6 +49,7 @@ export default class ProductTypeList extends DataTable {
     this.service = ProductTypeService;
     this.action = ProductTypeAction;
     this.RESET_CONSTANT = Constant.RESET_PRODUCTS_TYPE;
+    this.handleShowFormEdit = this.showFormEdit.bind(this);
   }
 
   showFormEdit(rowData) {
