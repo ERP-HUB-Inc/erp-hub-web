@@ -5,7 +5,7 @@ import FormUpdate from "../../../containers/settings/OperationRecord/FormUpdate"
 import Constant from "../../../constants/settings/operationRecord";
 import OperationRecordAction from "../../../action/settings/operationRecord";
 import OperationRecordService from "../../../services/settings/OperationRecordService";
-import {Card, Col, Icon, Input, message, Pagination, Row, Statistic} from "antd";
+import {Card, Col, Icon, Input, message, Pagination, Row, Statistic,DatePicker} from "antd";
 import Component from "../../../../common/components/Component";
 
 export default class IncomeExpense extends Component {
@@ -122,10 +122,6 @@ export default class IncomeExpense extends Component {
 
     if (params.get("offset")) {
       this.setState({current: parseInt(params.get("offset"))});
-    }
-
-    if (params.get("start")) {
-      this.props.form.setFieldsValue({dates: [moment(params.get("start")), moment(params.get("end"))]});
     }
 
     this.service.summary().then(({data})=>{
@@ -412,22 +408,20 @@ export default class IncomeExpense extends Component {
                     placeholder={this.CATranslate("text_search", this.props.locale)}
                     prefix={<Icon type="search" />}
                     defaultValue={params.get("search") ? params.get("search") : ""}
-                    style={{height: 32, width: 200, marginRight: 10, marginTop: 5}}
+                    style={{height: 32, width: 200, marginRight: 10}}
                     allowClear={true}
                     onChange={this.handleSearch}
-                    form={this.props.form}
                   />
-                  <this.DateRangePicker
+                  <DatePicker.RangePicker
                     name="dates"
                     onChange={this.handleChangeDate}
-                    form={this.props.form}
-                    style={{textAlign: "left", width: 300, marginRight: 10}}
-                    ranges={[]} />
+                    style={{maxWidth: 300, marginRight: 10}}
+                    defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : ""}
+                  />
                   <this.Button
                     type="info"
                     id="btnAdd"
                     className="mg-right text-uppercase"
-                    style={{marginTop: 5}}
                     disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
                     onClick={()=> {
                       this.props.dispatch(this.action.showForm());
@@ -441,7 +435,6 @@ export default class IncomeExpense extends Component {
                     type="danger"
                     className="text-uppercase"
                     disabled={this.state.isRequestDelete}
-                    style={{marginTop: 5}}
                     onClick={this.showDeleteModal}>
                     <span className="icon-delete icon-padding-right"></span>
                     <this.Translate id="text_delete" />
