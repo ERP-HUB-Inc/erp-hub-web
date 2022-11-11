@@ -130,6 +130,8 @@ export default {
 
   text_select_type: ["Select type", "ជ្រើសរើសប្រភេទ"],
 
+  text_select_date: ["Select Date", "ជ្រើសរើសថ្ងៃទី"],
+
   text_price: ["Price", "តម្លៃ"],
 
   text_current_price: ["Current Price", "តម្លៃលក់បច្ចុប្បន្ន"],

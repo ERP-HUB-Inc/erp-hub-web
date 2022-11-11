@@ -1,6 +1,18 @@
 import React from "react";
 import moment from "moment";
-import {Dropdown, Menu, Icon, Tag, Row, Col, Card, Statistic, Pagination, message} from "antd";
+import {
+  Dropdown,
+  Menu,
+  Icon,
+  Tag,
+  Row,
+  Col,
+  Card,
+  Statistic,
+  Pagination,
+  message,
+  Input,
+} from "antd";
 import "./index.css";
 import Component from "../../../../common/components/Component";
 import QuotationA4 from "./QuotationA4";
@@ -14,7 +26,16 @@ import QuotationService from "../../../services/transactions/QuotationService";
 import Detail from "../../../containers/transactions/Quotation/Detail";
 import InventoryUtil from "../../../../inventory/utils";
 import InventoryEnum from "../../../../inventory/enums";
+import * as PropTypes from "prop-types";
 
+function Option(props) {
+  return null;
+}
+
+Option.propTypes = {
+  value: PropTypes.string,
+  children: PropTypes.node
+};
 export default class QuotationList extends Component {
   constructor(props) {
     super(props);
@@ -134,8 +155,8 @@ export default class QuotationList extends Component {
     this.fetchingProp = "list";
     this.pathname = "/transactions/quotation";
     this.RESET_CONSTANT = Constant.RESET_QUOTATION;
+    this.quotation_status = [{name: <this.Translate id="text_all_status"/>, value: -1}];
     this.handleCancelQuotation = this.handleCancelQuotation.bind(this);
-    this.handleShowFormAdd = this.handleShowFormAdd.bind(this);
   }
 
   componentDidMount(){
@@ -150,17 +171,17 @@ export default class QuotationList extends Component {
       this.setState({current: parseInt(params.get("offset"))});
     }
 
-    if (params.get("search")) {
-      this.props.form.setFieldsValue({search: params.get("search")});
-    }
-
-    if (params.get("start")) {
+    if (params.get("start") && params.get("end") ) {
       this.props.form.setFieldsValue({dates: [moment(params.get("start")), moment(params.get("end"))]});
     }
 
     if (params.get("status")) {
       this.props.form.setFieldsValue({status: params.get("status")});
     }
+
+   Object.keys(this.QUOTATION_STATUS_STR).forEach((prop) => {
+      this.quotation_status.push({name: this.QUOTATION_STATUS_STR[prop].name, value: prop});
+    });
 
     QuotationService.summary().then(({data})=>{
       this.setState({summaryData: data.data});
@@ -218,49 +239,6 @@ export default class QuotationList extends Component {
         .finally(() => this.setState({loading: false, loadingButton: false}));
   }
 
-  buttonActionCollection(){
-    return [
-      <this.Button key={1} type="info" id="btnAdd" className="mg-right text-uppercase" disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching} onClick={this.handleShowFormAdd}>
-        <span className="icon-add icon-padding-right"></span>
-        <this.Translate id="text_add_new" />
-      </this.Button>
-    ];
-  }
-
-  handleSubmitFilter = (e)=>{
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-        if (!err) {
-          const params = new URLSearchParams(document.location.search);
-
-          if (values.search && values.search.trim()) {
-            params.set("search", values.search.trim());
-          } else {
-            params.delete("search");
-          }
-
-          if (values.dates && values.dates.length) {
-            params.set("start", moment(values.dates[0]).format("YYYY-MM-DD"));
-            params.set("end", moment(values.dates[1]).format("YYYY-MM-DD"));
-          } else {
-            params.delete("start");
-            params.delete("end");
-          }
-
-          if (values.status && values.status >= 0) {
-            params.set("status", values.status);
-          } else {
-            params.delete("status");
-          }
-
-          this.Util.pushParamsToURL(this.pathname, params.toString());
-          this.fetchList();
-          this.setState({isClickFilter: true});
-        }
-      
-      }); 
-  }
-
   handleCancelQuotation(record){
     if(record.status === Enum.QUOTATION_STEP.DRAFT){
       this.Util.sweetAlertConfirm(this.CATranslate("text_are_you_sure", this.props.locale))
@@ -273,55 +251,6 @@ export default class QuotationList extends Component {
     }else{
       this.Message.warning(this.CATranslate("text_error_allow_cancel_only_draft_step", this.props.locale));
     }
-  }
-
-  renderFilterRecord() {
-    const {form, locale} = this.props;
-
-    const QuotationStepList = Object.keys(this.QUOTATION_STATUS_STR).map((prop) => {
-      return {name: this.QUOTATION_STATUS_STR[prop].name, value: prop};
-    });
-    QuotationStepList.unshift({name: <this.Translate id="text_all_status"/>, value: -1});
-
-    const fetchingProps = this.props[this.fetchingProp];
-    return form == null ?
-      ""
-      :
-      <this.Form onSubmit={this.handleSubmitFilter}>
-        <this.Row className="main-search-layout">
-          <this.Col md="3">
-            <this.InputText
-              name="search"
-              label={<this.Translate id="text_search" />}
-              placeholder={this.CATranslate("text_general", locale)}
-              isAutoFocus={true}
-              form={form} />
-          </this.Col>
-          <this.Col md="3">
-            <this.DateRangePicker
-              name="dates"
-              label={<this.Translate id="text_date" />}
-              form={form}
-              ranges={[]} />
-          </this.Col>
-          <this.Col md="3">
-            <this.Select
-              name="status"
-              label={<this.Translate id="text_status" />}
-              dataSource={QuotationStepList}
-              defaultValue={QuotationStepList[0].value}
-              form={form} />
-          </this.Col>
-          <this.Col md="3" className="wrap-btn-search">
-            <div className="ant-form-item-label" style={{visibility: "hidden"}}>
-              <label htmlFor="status" className="" title=""><this.Translate id="text_filter" /></label>
-            </div>
-            <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-              <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-            </this.Button>
-          </this.Col>
-        </this.Row>
-      </this.Form>;
   }
 
   getProductOrderList(data) {
@@ -372,14 +301,6 @@ export default class QuotationList extends Component {
     }
 
     this.Util.removeFullScreen();
-  }
-
-  handleShowFormAdd() {
-    history.push("/transactions/quotation-create");
-  }
-
-  handleShowFormEdit(rowData) {
-    return;
   }
 
   handleShowFormUpdate(rowData){
@@ -437,8 +358,51 @@ export default class QuotationList extends Component {
     );
   }
 
+  handleSearch = (e) => {
+    const queryParams = new URLSearchParams(document.location.search);
+    const search = e.target.value ? e.target.value.trim() : "";
+
+    if (search){
+      queryParams.set("search", search);
+    }else{
+      queryParams.delete("search");
+    }
+    this.Util.pushParamsToURL(this.pathname,  queryParams.toString());
+
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      this.fetchList();
+    }, 1000);
+  }
+
+  handleChangeDate = (dates) => {
+    const params = new URLSearchParams(document.location.search);
+    if (dates.length) {
+      params.set("start", moment(dates[0]).format("YYYY-MM-DD"));
+      params.set("end", moment(dates[1]).format("YYYY-MM-DD"));
+    } else {
+      params.delete("start");
+      params.delete("end");
+    }
+    this.Util.pushParamsToURL(this.pathname,  params.toString());
+    this.fetchList();
+  }
+
+  handleChangeStatus = (status) => {
+    const params = new URLSearchParams(document.location.search);
+    if (status && status >= 0){
+      params.set("status", status);
+    }else{
+      params.delete("status");
+    }
+    this.Util.pushParamsToURL(this.pathname,  params.toString());
+    this.fetchList();
+  }
+
   render() {
     const {summaryData} = this.state;
+    const params = new URLSearchParams(window.location.search);
+
     return (
         <React.Fragment>
           <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
@@ -476,16 +440,47 @@ export default class QuotationList extends Component {
           <div className="content-list">
             <div style={{height: "100%"}}>
               <div className="table-wrapper">
-                {this.renderFilterRecord()}
-              </div>
-            </div>
-          </div>
-          <div className="content-list">
-            <div style={{height: "100%"}}>
-              <div className="table-wrapper">
-                {
-                  this.buttonActionCollection()
-                }
+                <Row>
+                  <Col span={6} style={{marginBottom: 0}}>
+                    <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_quotations" /></h3>
+                  </Col>
+                  <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
+                    <Input
+                      name="search"
+                      placeholder={this.CATranslate("text_search", this.props.locale)}
+                      prefix={<Icon type="search" />}
+                      defaultValue={params.get("search") ? params.get("search") : ""}
+                      style={{height: 32, width: 200, marginRight: 10, marginTop: 5}}
+                      allowClear={true}
+                      onChange={this.handleSearch}
+                      form={this.props.form}
+                    />
+                    <this.DateRangePicker
+                      name="dates"
+                      onChange={this.handleChangeDate}
+                      form={this.props.form}
+                      style={{textAlign: "left", width: 300, marginRight: 10}}
+                      ranges={[]} />
+                    <this.Select
+                      name="status"
+                      dataSource={this.quotation_status}
+                      defaultValue={this.quotation_status[0].value}
+                      onChange={this.handleChangeStatus}
+                      style={{width: 200, marginRight: 10}}
+                      form={this.props.form} />
+                    <this.Button
+                      type="info"
+                      id="btnAdd"
+                      style={{marginTop: 5}}
+                      className="mg-right text-uppercase"
+                      disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
+                      onClick={() => history.push("/transactions/quotation-create")}>
+                      <span className="icon-add icon-padding-right"></span>
+                      <this.Translate id="text_add_new" />
+                    </this.Button>
+                  </Col>
+
+                </Row>
                 <this.Table
                     bordered={true}
                     rowKey="id"

@@ -627,7 +627,7 @@ export default class Invoice extends Component {
                   <Col span={12} style={{textAlign: "right"}}>
                     <Input
                       name="search"
-                      placeholder="Search"
+                      placeholder={this.CATranslate("text_search", this.props.locale)}
                       prefix={<Icon type="search" />}
                       defaultValue={params.get("search") ? params.get("search") : ""}
                       style={{width: 200, marginRight: 10}}
@@ -638,6 +638,7 @@ export default class Invoice extends Component {
                     <DatePicker
                         onChange={this.handleChangeDate}
                         name="date"
+                        placeholder={this.CATranslate("text_select_date", this.props.locale)}
                         defaultValue={params.get("date") ? moment(params.get("date")) : ""}
                         style={{maxWidth: 200, marginRight: 10}}
                         form={this.props.form}
