@@ -11,7 +11,7 @@ export default function TaxInvoice(props) {
       if (serialNo && serialNo.length) {
         let serialLen = serialNo.length;
         serialStr = <div style={{fontSize: 13, display: "flex", flexWrap: "wrap"}}>
-          <label style={{color: "#033261", marginRight: 6, marginBottom: 0}}>Serial Number(s):</label>
+          <label style={{color: "#033261", marginRight: 6, marginBottom: 0}}>IMEI or Serial Number:</label>
           {
             serialStr = serialNo.map((serial, index) =>
               <span key={index} style={{marginRight: 5}}>{serial}{index < serialLen - 1 ? "," : ""}</span>
