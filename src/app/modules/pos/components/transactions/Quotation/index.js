@@ -155,7 +155,7 @@ export default class QuotationList extends Component {
     this.fetchingProp = "list";
     this.pathname = "/transactions/quotation";
     this.RESET_CONSTANT = Constant.RESET_QUOTATION;
-    this.quotation_status = [{name: <this.Translate id="text_all_status"/>, value: -1}];
+    this.status_options = [{name: <this.Translate id="text_all_status"/>, value: -1}];
     this.handleCancelQuotation = this.handleCancelQuotation.bind(this);
   }
 
@@ -180,7 +180,7 @@ export default class QuotationList extends Component {
     }
 
    Object.keys(this.QUOTATION_STATUS_STR).forEach((prop) => {
-      this.quotation_status.push({name: this.QUOTATION_STATUS_STR[prop].name, value: prop});
+      this.status_options.push({name: this.QUOTATION_STATUS_STR[prop].name, value: prop});
     });
 
     QuotationService.summary().then(({data})=>{
@@ -400,6 +400,7 @@ export default class QuotationList extends Component {
   }
 
   render() {
+
     const {summaryData} = this.state;
     const params = new URLSearchParams(window.location.search);
 
@@ -463,8 +464,8 @@ export default class QuotationList extends Component {
                       ranges={[]} />
                     <this.Select
                       name="status"
-                      dataSource={this.quotation_status}
-                      defaultValue={this.quotation_status[0].value}
+                      dataSource={this.status_options}
+                      defaultValue={this.status_options[0].value}
                       onChange={this.handleChangeStatus}
                       style={{width: 200, marginRight: 10}}
                       form={this.props.form} />

@@ -9,7 +9,7 @@ import {
   Tag,
   Form,
   Pagination,
-  message, Row, Col, Card, Statistic
+  message, Row, Col, Card, Statistic, Input
 } from "antd";
 import history from "../../../../common/router/history";
 import Component from "../../../../common/components/Component";
@@ -39,6 +39,7 @@ class SaleOrder extends Component {
       [Enum.SALE_ORDER_STATUS.CLOSED]: { title: <this.Translate id="text_closed" />, color: "#f50"},
       [Enum.SALE_ORDER_STATUS.VOID]: {title: <this.Translate id="text_void"/>, color: "#d9d9d9"}
     };
+    this.status_options = [{name: <this.Translate id="text_all_status"/>, value: -1}];
     this.columns = [
       {
         title: <this.Translate id="text_date" />,
@@ -178,17 +179,17 @@ class SaleOrder extends Component {
       this.setState({current: parseInt(params.get("offset"))});
     }
 
-    if (params.get("search")) {
-      this.props.form.setFieldsValue({search: params.get("search")});
-    }
-
-    if (params.get("start")) {
-      this.props.form.setFieldsValue({registerDate: [moment(params.get("start")), moment(params.get("end"))]});
+    if (params.get("start") && params.get("end")) {
+      this.props.form.setFieldsValue({dates: [moment(params.get("start")), moment(params.get("end"))]});
     }
 
     if (params.get("status")) {
       this.props.form.setFieldsValue({status: params.get("status")});
     }
+
+    Object.keys(this.SALE_ORDER_STATUS_STR).forEach((prop) => {
+      this.status_options.push( {name: this.SALE_ORDER_STATUS_STR[prop].title, value: prop});
+    });
 
     SaleOrderService.summary().then(({data})=>{
       this.setState({summaryData: data.data});
@@ -392,19 +393,52 @@ class SaleOrder extends Component {
     );
   }
 
-  renderTable() {
-    return <this.Table
-      bordered={true}
-      rowKey="id"
-      loading={this.state.loading}
-      columns={this.columns}
-      dataSource={this.state.data.data}
-      onChange={this.onChange}
-    />;
+  handleSearch = (e) => {
+    const queryParams = new URLSearchParams(document.location.search);
+    const search = e.target.value ? e.target.value.trim() : "";
+
+    if (search){
+      queryParams.set("search", search);
+    }else{
+      queryParams.delete("search");
+    }
+    this.Util.pushParamsToURL(this.pathname,  queryParams.toString());
+
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      this.fetchList();
+    }, 1000);
+  }
+
+  handleChangeDate = (dates) => {
+    const params = new URLSearchParams(document.location.search);
+    if (dates.length) {
+      params.set("start", moment(dates[0]).format("YYYY-MM-DD"));
+      params.set("end", moment(dates[1]).format("YYYY-MM-DD"));
+    } else {
+      params.delete("start");
+      params.delete("end");
+    }
+    this.Util.pushParamsToURL(this.pathname,  params.toString());
+    this.fetchList();
+  }
+
+  handleChangeStatus = (status) => {
+    const params = new URLSearchParams(document.location.search);
+    if (status && status >= 0){
+      params.set("status", status);
+    }else{
+      params.delete("status");
+    }
+    this.Util.pushParamsToURL(this.pathname,  params.toString());
+    this.fetchList();
   }
 
   render() {
+
     const {summaryData} = this.state;
+    const params = new URLSearchParams(window.location.search);
+
     return (
         <React.Fragment>
             <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
@@ -442,17 +476,55 @@ class SaleOrder extends Component {
           <div className="content-list">
             <div style={{height: "100%"}}>
               <div className="table-wrapper">
-                {this.renderFilterRecord()}
-              </div>
-            </div>
-          </div>
-          <div className="content-list">
-            <div style={{height: "100%"}}>
-              <div className="table-wrapper">
-                {
-                  this.buttonActionCollection()
-                }
-                {this.renderTable()}
+                <Row>
+                  <Col span={6} style={{marginBottom: 0}}>
+                    <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_sale_order" /></h3>
+                  </Col>
+                  <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
+                    <Input
+                        name="search"
+                        placeholder={this.CATranslate("text_search", this.props.locale)}
+                        prefix={<Icon type="search" />}
+                        defaultValue={params.get("search") ? params.get("search") : ""}
+                        style={{height: 32, width: 200, marginRight: 10, marginTop: 5}}
+                        allowClear={true}
+                        onChange={this.handleSearch}
+                        form={this.props.form}
+                    />
+                    <this.DateRangePicker
+                        name="dates"
+                        onChange={this.handleChangeDate}
+                        form={this.props.form}
+                        style={{textAlign: "left", width: 300, marginRight: 10}}
+                        ranges={[]} />
+                    <this.Select
+                        name="status"
+                        dataSource={this.status_options}
+                        defaultValue={this.status_options[0].value}
+                        onChange={this.handleChangeStatus}
+                        style={{width: 200, marginRight: 10}}
+                        form={this.props.form} />
+                    <this.Button
+                        type="info"
+                        id="btnAdd"
+                        style={{marginTop: 5}}
+                        className="mg-right text-uppercase"
+                        disabled={this.state.loading}
+                        onClick={() => history.push("/transactions/sale-order/create")}>
+                      <span className="icon-add icon-padding-right"></span>
+                      <this.Translate id="text_add_new" />
+                    </this.Button>
+                  </Col>
+
+                </Row>
+                <this.Table
+                    bordered={true}
+                    rowKey="id"
+                    loading={this.state.loading}
+                    columns={this.columns}
+                    dataSource={this.state.data.data}
+                    onChange={this.onChange}
+                />
                 <div style={{marginTop: 15}}>
                   {this.renderPagination(this.state.pagination)}
                 </div>
