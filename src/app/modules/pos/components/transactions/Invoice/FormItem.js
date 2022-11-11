@@ -1372,6 +1372,21 @@ class NewInvoice extends React.PureComponent {
         </div>;
     }
 
+    renderPageHeaderSubTitle(formData) {
+        let statusColor = formData.status >= 0 && this.INVOICE_STATUS_STR[formData.status].color;
+        let statusTitle = formData.status >= 0 && this.INVOICE_STATUS_STR[formData.status].title;
+
+        if (formData.status === Enum.INVOICE_STATUS.SENT && moment(formData.dueDate).format("YYYY-MM-DD") < moment().format("YYYY-MM-DD")) {
+            statusColor = "#f5222d";
+            statusTitle = stringTranslate("text_expired", this.props.locale);
+        }
+
+        return <div>
+            <Translate id="text_invoice" />
+            {this.id && formData.status >= 0 ? <Badge count={statusTitle} style={{ backgroundColor: statusColor}} /> : ""}
+        </div>;
+    }
+
     render() {
         const {getFieldDecorator} = this.props.form;
         const formItemLayout = {
@@ -1409,12 +1424,7 @@ class NewInvoice extends React.PureComponent {
                         }}
                         onBack={this.handleGoBack}
                         title={<Translate id={`${this.pageTitle}`} />} 
-                        subTitle={  
-                            <div>
-                                <Translate id="text_invoice" />
-                                {this.id && formData.status >= 0 ? <Badge count={this.INVOICE_STATUS_STR[formData.status].title} style={{ backgroundColor: this.INVOICE_STATUS_STR[formData.status].color}} /> : ""}
-                            </div>
-                        }
+                        subTitle={this.renderPageHeaderSubTitle(formData)}
                     />
 
                     <Row>

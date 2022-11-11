@@ -132,9 +132,7 @@ export default class IncomeExpense extends Component {
       this.props.form.setFieldsValue({dates: [moment(params.get("start")), moment(params.get("end"))]});
     }
 
-    this.service.summary().then(({data})=>{
-      this.setState({summaryData: data.data});
-    });
+    this.fetchSummary();
     this.fetchList(true);
   }
 
@@ -142,6 +140,7 @@ export default class IncomeExpense extends Component {
 
     if (nextProps.add.added) {
       this.fetchList();
+      this.fetchSummary();
       this.props.dispatch(this.action.reset());
     }
     if (nextProps.update.updated) {
@@ -150,6 +149,7 @@ export default class IncomeExpense extends Component {
       if (index >= 0 && nextProps.update.response){
         data.data[index] = nextProps.update.response.data;
         this.setState({data});
+        this.fetchSummary();
         this.props.dispatch(this.action.reset());
       }
     }
@@ -194,6 +194,12 @@ export default class IncomeExpense extends Component {
         })
         .catch(err => message.error("Error"))
         .finally(() => this.setState({loading: false}));
+  }
+
+  fetchSummary() {
+    this.service.summary().then(({data})=>{
+      this.setState({summaryData: data.data});
+    });
   }
 
   checkIsAllowDeleteRecordOrNot() {
@@ -261,6 +267,7 @@ export default class IncomeExpense extends Component {
       this.service.archive(this.state.selectedListIds)
           .then(() => {
             this.fetchList();
+            this.fetchSummary();
           }).finally(() => {
             this.setState({
               selectedRowKeys: [],

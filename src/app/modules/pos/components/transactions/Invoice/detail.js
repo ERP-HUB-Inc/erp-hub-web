@@ -1,6 +1,7 @@
 import React from "react";
 import { Translate } from "react-localize-redux";
 import { connect } from "react-redux";
+import moment from "moment";
 import { 
   Dropdown, 
   PageHeader, 
@@ -126,6 +127,21 @@ class InvoiceDetail extends React.PureComponent {
     });
   }
 
+  renderPageHeaderSubTitle(formData) {
+    let statusColor = formData.status && this.INVOICE_STATUS_STR[formData.status].color;
+    let statusTitle = formData.status && this.INVOICE_STATUS_STR[formData.status].title;
+
+    if (formData.status === Enum.INVOICE_STATUS.SENT && moment(formData.dueDate).format("YYYY-MM-DD") < moment().format("YYYY-MM-DD")) {
+        statusColor = "#f5222d";
+        statusTitle = stringTranslate("text_expired", this.props.locale);
+    }
+
+    return <div>
+      {formData.invoiceNumber}
+      {Object.keys(formData).length && formData.status >= 0 ?<Badge count={statusTitle} style={{ backgroundColor: statusColor}} />: null}
+    </div>;
+  }
+
   render() {
     const {formData} = this.state;
     return (
@@ -139,16 +155,7 @@ class InvoiceDetail extends React.PureComponent {
           }}
           onBack={() => history.goBack()}
           title={<Translate id="text_invoice" />}
-          subTitle={  
-            <div>
-              {formData.invoiceNumber}
-              {
-                Object.keys(formData).length && formData.status >= 0 ?
-                  <Badge count={this.INVOICE_STATUS_STR[formData.status].title} style={{ backgroundColor: this.INVOICE_STATUS_STR[formData.status].color}} />
-                : null
-              }
-            </div>
-          }
+          subTitle={this.renderPageHeaderSubTitle(formData)}
           extra={[
             <InputText
               key={0}
