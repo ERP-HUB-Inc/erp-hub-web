@@ -5,7 +5,7 @@ import FormUpdate from "../../../containers/settings/OperationRecord/FormUpdate"
 import Constant from "../../../constants/settings/operationRecord";
 import OperationRecordAction from "../../../action/settings/operationRecord";
 import OperationRecordService from "../../../services/settings/OperationRecordService";
-import {Card, Col, message, Pagination, Row, Statistic} from "antd";
+import {Card, Col, Icon, Input, message, Pagination, Row, Statistic} from "antd";
 import Component from "../../../../common/components/Component";
 
 export default class IncomeExpense extends Component {
@@ -124,10 +124,6 @@ export default class IncomeExpense extends Component {
       this.setState({current: parseInt(params.get("offset"))});
     }
 
-    if (params.get("search")) {
-      this.props.form.setFieldsValue({search: params.get("search")});
-    }
-
     if (params.get("start")) {
       this.props.form.setFieldsValue({dates: [moment(params.get("start")), moment(params.get("end"))]});
     }
@@ -141,7 +137,7 @@ export default class IncomeExpense extends Component {
   componentWillUpdate(nextProps) {
 
     if (nextProps.add.added) {
-      this.fetchList();
+      this.fetchList(true);
       this.props.dispatch(this.action.reset());
     }
     if (nextProps.update.updated) {
@@ -334,75 +330,34 @@ export default class IncomeExpense extends Component {
     );
   }
 
-  renderFilterRecord() {
-    const { form } = this.props;
-    const fetchingProps = this.props[this.fetchingProp];
-    return form == null ? (
-        ""
-    ) : (
-        <this.Form onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout">
-            <this.Col md="3">
-              <this.InputText
-                  name="search"
-                  label={<this.Translate id={this.generalSearchLabel}/>}
-                  placeholder={this.CATranslate(this.placeHolderForGeneralSearch, this.props.locale)}
-                  form={this.props.form}
-                  allowClear={true} />
-            </this.Col>
-            <this.DateRangePicker
-                name="dates"
-                label={<this.Translate id="text_date" />}
-                ranges={[]}
-                form={this.props.form}
-            />
-            <this.Col md="2" className="wrap-btn-search">
-              <div
-                  className="ant-form-item-label"
-                  style={{ visibility: "hidden" }}
-              >
-                <label htmlFor="status" className="" title="">
-                  Filter
-                </label>
-              </div>
-              <this.Button
-                  htmlType="submit"
-                  type="default"
-                  loading={this.state.isClickFilter && fetchingProps.fetching}
-              >
-                <span className="icon-search icon-padding-right text-uppercase"></span>
-                <this.Translate id="button_text_search" />
-              </this.Button>
-            </this.Col>
-          </this.Row>
-        </this.Form>
-    );
+  handleSearch = (e) => {
+    const queryParams = new URLSearchParams(document.location.search);
+    const search = e.target.value ? e.target.value.trim() : "";
+
+    if (search){
+      queryParams.set("search", search);
+    }else{
+      queryParams.delete("search");
+    }
+    this.Util.pushParamsToURL(this.pathname,  queryParams.toString());
+
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      this.fetchList();
+    }, 1000);
   }
 
-  handleSubmitFilter = (e) => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        const params = new URLSearchParams(document.location.search);
-
-        if (values.search && values.search.trim()) {
-          params.set("search", values.search.trim());
-        } else {
-          params.delete("search");
-        }
-
-        if (values.dates && values.dates.length) {
-          params.set("start", moment(values.dates[0]).format("YYYY-MM-DD"));
-          params.set("end", moment(values.dates[1]).format("YYYY-MM-DD"));
-        } else {
-          params.delete("start");
-          params.delete("end");
-        }
-        this.Util.pushParamsToURL(this.pathname, params.toString());
-        this.fetchList();
-        this.setState({ isClickFilter: true });
-      }
-    });
+  handleChangeDate = (dates) => {
+    const params = new URLSearchParams(document.location.search);
+    if (dates.length) {
+      params.set("start", moment(dates[0]).format("YYYY-MM-DD"));
+      params.set("end", moment(dates[1]).format("YYYY-MM-DD"));
+    } else {
+      params.delete("start");
+      params.delete("end");
+    }
+    this.Util.pushParamsToURL(this.pathname,  params.toString());
+    this.fetchList();
   }
 
   render() {
@@ -415,6 +370,8 @@ export default class IncomeExpense extends Component {
         name: record.name,
       })
     };
+
+    const params = new URLSearchParams(window.location.search);
 
     return (
       <React.Fragment>
@@ -445,46 +402,63 @@ export default class IncomeExpense extends Component {
         <div className="content-list">
           <div style={{height: "100%"}}>
             <div className="table-wrapper">
-              {this.renderFilterRecord()}
-            </div>
-          </div>
-        </div>
-        <div className="content-list">
-          <div style={{height: "100%"}}>
-            <div className="table-wrapper">
-              <this.Button
-                  type="info"
-                  id="btnAdd"
-                  className="mg-right text-uppercase"
-                  disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
-                  onClick={()=> {
-                    this.props.dispatch(this.action.showForm());
-                    this.props.add.showForm = true;
-                    this.setState({modalVisible: false, content: <FormCreate />});
-                  }}>
-                <span className="icon-add icon-padding-right"></span>
-                <this.Translate id="text_add_new" />
-              </this.Button>
-              <this.Button
-                  type="danger"
-                  className="text-uppercase"
-                  disabled={this.state.isRequestDelete}
-                  onClick={this.showDeleteModal}>
-                <span className="icon-delete icon-padding-right"></span>
-                <this.Translate id="text_delete" />
-              </this.Button>
-
+              <Row>
+                <Col span={6} style={{marginBottom: 0}}>
+                  <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_income_and_expense" /></h3>
+                </Col>
+                <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
+                  <Input
+                    name="search"
+                    placeholder={this.CATranslate("text_search", this.props.locale)}
+                    prefix={<Icon type="search" />}
+                    defaultValue={params.get("search") ? params.get("search") : ""}
+                    style={{height: 32, width: 200, marginRight: 10, marginTop: 5}}
+                    allowClear={true}
+                    onChange={this.handleSearch}
+                    form={this.props.form}
+                  />
+                  <this.DateRangePicker
+                    name="dates"
+                    onChange={this.handleChangeDate}
+                    form={this.props.form}
+                    style={{textAlign: "left", width: 300, marginRight: 10}}
+                    ranges={[]} />
+                  <this.Button
+                    type="info"
+                    id="btnAdd"
+                    className="mg-right text-uppercase"
+                    style={{marginTop: 5}}
+                    disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
+                    onClick={()=> {
+                      this.props.dispatch(this.action.showForm());
+                      this.props.add.showForm = true;
+                      this.setState({modalVisible: false, content: <FormCreate />});
+                    }}>
+                    <span className="icon-add icon-padding-right"></span>
+                    <this.Translate id="text_add_new" />
+                  </this.Button>
+                  <this.Button
+                    type="danger"
+                    className="text-uppercase"
+                    disabled={this.state.isRequestDelete}
+                    style={{marginTop: 5}}
+                    onClick={this.showDeleteModal}>
+                    <span className="icon-delete icon-padding-right"></span>
+                    <this.Translate id="text_delete" />
+                  </this.Button>
+                </Col>
+              </Row>
               <this.Table
-                  bordered={true}
-                  rowSelection={rowSelection}
-                  rowKey="id"
-                  loading={this.state.loading}
-                  columns={this.columns}
-                  dataSource={this.state.data.data}
-                  onChange={this.onChange}
-                  onRow={record =>({
-                    onDoubleClick:() => this.handleShowFormEdit(record)
-                  })}
+                bordered={true}
+                rowSelection={rowSelection}
+                rowKey="id"
+                loading={this.state.loading}
+                columns={this.columns}
+                dataSource={this.state.data.data}
+                onChange={this.onChange}
+                onRow={record =>({
+                  onDoubleClick:() => this.handleShowFormEdit(record)
+                })}
               />
 
               <div style={{marginTop: 15}}>
