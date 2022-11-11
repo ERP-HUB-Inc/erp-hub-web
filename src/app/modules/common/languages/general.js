@@ -501,4 +501,5 @@ export default {
   text_telegram: ["Telegram", "Telegram"],
   text_instagram: ["Instagram", "Instagram"],
   text_youtube: ["Youtube", "Youtube"],
+  text_store_description: ["Store Descripion","ការពិពណ៌នាហាង"]
 };
