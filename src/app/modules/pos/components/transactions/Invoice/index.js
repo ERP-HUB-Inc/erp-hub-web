@@ -639,7 +639,6 @@ export default class Invoice extends Component {
                       style={{width: 200, marginRight: 10}}
                       allowClear={true}
                       onChange={this.handleSearch}
-                      form={this.props.form}
                     />
                     <DatePicker
                         onChange={this.handleChangeDate}
@@ -647,7 +646,6 @@ export default class Invoice extends Component {
                         placeholder={this.CATranslate("text_select_date", this.props.locale)}
                         defaultValue={params.get("date") ? moment(params.get("date")) : ""}
                         style={{maxWidth: 200, marginRight: 10}}
-                        form={this.props.form}
                     />
                     <this.Button
                       type="info"
