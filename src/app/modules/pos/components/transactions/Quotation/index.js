@@ -173,14 +173,6 @@ export default class QuotationList extends Component {
       this.setState({current: parseInt(params.get("offset"))});
     }
 
-   /* if (params.get("start") && params.get("end") ) {
-      this.props.form.setFieldsValue({dates: [moment(params.get("start")), moment(params.get("end"))]});
-    }
-
-    if (params.get("status")) {
-      this.props.form.setFieldsValue({status: params.get("status")});
-    }*/
-
    Object.keys(this.QUOTATION_STATUS_STR).forEach((prop) => {
       this.status_options.push({name: this.QUOTATION_STATUS_STR[prop].name, value: prop});
     });
