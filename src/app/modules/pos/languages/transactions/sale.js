@@ -458,6 +458,21 @@ export default {
     "កាលបរិច្ឆេទដឹកជញ្ជូន"
   ],
 
+  "text_warranty": [
+    "Warranty",
+    "ការធានា"
+  ],
+
+  "text_in_warranty": [
+    "In Warranty",
+    "នៅក្នុងការធានា"
+  ],
+
+  "text_expired_warranty": [
+    "Expired Warranty",
+    "ការធានាផុតកំណត់"
+  ],
+
   "text_warranty_duration": [
     "Duration of warranty",
     "រយៈពេលនៃការធានា"

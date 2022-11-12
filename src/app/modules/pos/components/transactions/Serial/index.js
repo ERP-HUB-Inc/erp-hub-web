@@ -2,68 +2,78 @@ import React from "react";
 import { connect } from "react-redux";
 import BarcodeReader from "react-barcode-reader";
 import { Link } from "react-router-dom";
+import moment from "moment";
 import {
   Form,
-  Dropdown,
-  Menu,
-  Pagination
+  Pagination,
+  Row,
+  Col,
+  Input,
+  DatePicker,
+  Tag
 } from "antd";
 import SerialService from "../../../services/transactions/SerialService";
-import List from "../List";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
+import Component from "../../../../common/components/Component";
 
-class SerialList extends List {
+class SerialList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
       loading: false,
-      isFocusSearch: false,
-      isShowFilter: true,
       current: 1,
+      pagination: {},
     };
+    this.pageSize = 50;
     this.columns = [
       {
-        title: <this.Translate id="text_number" />,
+        title: "IMEI or Serial Number",
         dataIndex: "number",
-        key: "number",
-        width: 400,
-        render: (number, record) => {
-          return <div className="wrap-product-name" style={{display: "flex"}}>
-            {number}
-            <Dropdown className="product-row-option" overlay={(
-              <Menu>
-                <Menu.Item>
-                  <Link to={`/transactions/detail-invoice/${record.transactionId}`}><this.Translate id="text_view_invoice" /></Link>
-                </Menu.Item>
-              </Menu>
-            )}>
-              <a className="ant-dropdown-link" href="javascipt:(void)" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
-                <this.Translate id="text_option" /> <this.Icon type="down" />
-              </a>
-            </Dropdown>
-          </div>;
-        }
-      },
-      {
-        title: <this.Translate id="text_product_name" />,
-        dataIndex: "productName",
-        key: "productName"
+        key: "number"
       },
       {
         title: <this.Translate id="text_invoice_date" />,
         dataIndex: "invoiceDate",
         key: "invoiceDate",
-        render: (invoiceDate) => this.Util.formatDate(invoiceDate)
+        render: (invoiceDate) => this.Util.formatDate(invoiceDate, "DD/MM/YYYY")
       },
       {
-        title: <this.Translate id="text_warranty_date" />,
+        title: <this.Translate id="text_warranty" />,
         dataIndex: "numOfWarranty",
-        key: "warrantyDate",
-        render: (numOfWarranty, record) => this.Util.formatDate(this.Util.calculateWarrantyDate(record.invoiceDate, numOfWarranty, record.durationType))
+        key: "numOfWarranty",
+        render: (numOfWarranty, record) => `${numOfWarranty} ${stringTranslate(`text_${record.durationType && record.durationType.toLowerCase()}`, this.props.locale)}`
+      },
+      {
+        title: <this.Translate id="text_status" />,
+        dataIndex: "numOfWarranty",
+        key: "status",
+        render: (numOfWarranty, record) => {
+          const warrantyDate = this.Util.calculateWarrantyDate(record.invoiceDate, numOfWarranty, record.durationType);
+          let statusTitle = "text_in_warranty";
+          let statusColor = "#87d068";
+          if (moment(moment(warrantyDate).format("YYYY-MM-DD")).isBefore(moment().format("YYYY-MM-DD"))) {
+            statusTitle = "text_expired_warranty";
+            statusColor = "#f5222d";
+          }
+          return <Tag style={{width: 112, textAlign: "center"}} color={statusColor}><this.Translate id={statusTitle} /></Tag>;
+        }
+      },
+      {
+        title: <this.Translate id="text_invoice_no" />,
+        dataIndex: "invoiceNumber",
+        key: "invoiceNumber",
+        className: "invoice-number-column",
+        render: (invoiceNumber, record) => <Link to={`/transactions/detail-invoice/${record.transactionId}`}>{invoiceNumber}</Link>
+      },
+      {
+        title: <this.Translate id="text_product_name" />,
+        dataIndex: "productName",
+        key: "productName"
       }
     ];
     this.pathname = "/transaction/serial/list";
+    this.timer = null;
   }
 
   componentDidMount() {
@@ -71,19 +81,14 @@ class SerialList extends List {
     if (searchKey) {
       this.props.form.setFieldsValue({searchKey});
     }
-    this.fetchList();
+    this.fetchList(true);
   }
 
-  componentDidUpdate() {
-    if (this.state.isFocusSearch) {
-      this.setState({isFocusSearch: false});
-    }
-  }
-
-  fetchList() {
+  fetchList(withPagination = false) {
     let searchKey = "";
     let limit = this.pageSize;
     let offset = this.state.current;
+    let rangeFilter = "";
     const params = new URLSearchParams(window.location.search);
 
     if (params.get("limit")) {
@@ -98,30 +103,26 @@ class SerialList extends List {
       searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
     }
 
+    if (params.get("date")) {
+      rangeFilter = JSON.stringify({column: "invoiceDate", value: [params.get("date"), params.get("date")]});
+    }
+
+    if (!withPagination){
+      offset = 0;
+      params.delete("offset");
+      this.setState({current: 1});
+    }
+
     offset = (offset - 1) * limit;
     this.setState({loading: true});
-    SerialService.lists(limit, offset, searchKey)
+    SerialService.lists(limit, offset, searchKey, rangeFilter)
     .then(response => {
-      this.setState({data: response && response.data});
+      this.setState({
+        data: response && response.data.data,
+        pagination: response && response.data.pagination
+      });
     })
     .finally(() => this.setState({loading: false}));
-  }
-
-  handleSubmitFilter = (e) => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        const params = new URLSearchParams(window.location.search);
-        if (values.searchKey) {
-          params.set("search", values.searchKey);
-        } else {
-          params.delete("search");
-        }
-
-        this.Util.pushParamsToURL(this.pathname, params.toString());
-        this.fetchList();
-      }
-    });
   }
 
   handleScan = (value) => {
@@ -130,70 +131,61 @@ class SerialList extends List {
 
   handleScanError = () => {}
 
-  onShowSizeChange(current, pageSize) {
+  onSearchKey = e => {
+    clearTimeout(this.timer);
+    const value = e.target.value;
+    const params = new URLSearchParams(document.location.search);
+    if (value) {
+      params.set("search", value);
+    } else {
+      params.delete("search");
+    }
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.timer = setTimeout(() => {
+      this.fetchList();
+    }, 600);
+  }
+
+  handleChangeDate = date => {
+    const params = new URLSearchParams(document.location.search);
+    if (date) {
+      params.set("date", moment(date).format("YYYY-MM-DD"));
+    } else {
+      params.delete("date");
+    }
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+
+    this.fetchList();
+  }
+
+  onShowSizeChange = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     params.set("limit", pageSize);
     params.set("offset", current);
 
     this.setState({current});
     this.Util.pushParamsToURL(this.pathname, params.toString());
-    this.fetchList();
+    this.fetchList(true);
   }
 
-  onChangePagination(current, pageSize) {
+  onChangePagination = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     params.set("limit", pageSize);
     params.set("offset", current);
 
     this.setState({current});
     this.Util.pushParamsToURL(this.pathname, params.toString());
-    this.fetchList();
-  }
-
-  renderFilterRecord() {
-    return <this.Form onSubmit={this.handleSubmitFilter}>
-      <this.Row>
-        <this.Col md="2">
-          <BarcodeReader
-            minLength={4}
-            onError={this.handleScanError}
-            onScan={this.handleScan}
-            preventDefault={true}
-            avgTimeByChar={40}
-            endChar={[13]}
-            timeBeforeScanTest={200}
-          />
-          <this.InputText 
-            name="searchKey"
-            label={<this.Translate id="text_search" />}
-            placeholder={`${stringTranslate("text_serial_no", this.props.locale)}`}
-            allowClear={true}
-            isAutoFocus={this.state.isFocusSearch}
-            didUpdateMakeAutoFocus={this.state.isFocusSearch}
-            suffix={<div className="icon-scaner icon-clear" style={{opacity: .5, cursor: "pointer"}} onClick={() => this.setState({isFocusSearch: true})} />}
-            form={this.props.form} />
-        </this.Col>
-        <this.Col md="2" className="wrap-btn-search">
-          <div className="ant-form-item-label" style={{visibility: "hidden"}}>
-            <label htmlFor="status" className="" title=""><this.Translate id="text_filter" /></label>
-          </div>
-          <this.Button htmlType="submit" type="info" loading={this.state.loading}>
-            <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-          </this.Button>
-        </this.Col>
-      </this.Row>
-    </this.Form>;
+    this.fetchList(true);
   }
 
   renderActionButton() {
     return <div />;
   }
 
-  renderPagination(fetchingProp, className = "float-right") {
-    const data = this.state.data && this.state.data.pagination;
-    let pagination = {
-      total: data && data.total,
-      pageSize: data && data.limit,
+  renderPagination(pagination) {
+    pagination = {
+      total: pagination.total,
+      pageSize: pagination.limit,
       current: this.state.current,
       pageSizeOptions: this.pageSizeOptions
     };
@@ -204,7 +196,7 @@ class SerialList extends List {
 
     return( 
       pagination.total > 0 ?
-        <div className={className}>
+        <div className="float-right">
           <Pagination 
             size="small" 
             showTotal={showTotal} 
@@ -220,15 +212,66 @@ class SerialList extends List {
     );
   }
 
-  renderTable() {
-    return <this.Table
-      bordered={true}
-      rowKey="id"
-      loading={this.state.loading}
-      columns={this.columns}
-      dataSource={this.state.data.data}
-      onChange={this.onChange}
-    />;
+  render() {
+    const params = new URLSearchParams(window.location.search);
+    return (
+      <React.Fragment>
+        <div className="content-list">
+          <div style={{height: "100%", marginTop: 10}}>
+            <div className="table-wrapper">
+              <Row>
+                <Col span={12} style={{marginBottom: 0}}>
+                  <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_serial_no" /></h3>
+                </Col>
+                <Col span={12} style={{textAlign: "right"}}>
+                  <BarcodeReader
+                    minLength={4}
+                    onError={this.handleScanError}
+                    onScan={this.handleScan}
+                    preventDefault={true}
+                    avgTimeByChar={40}
+                    endChar={[13]}
+                    timeBeforeScanTest={200}
+                  />
+                  <Input 
+                    name="searchKey"
+                    ref={ref => this.searchRef = ref}
+                    placeholder={`${stringTranslate("text_serial_no", this.props.locale)}`}
+                    allowClear={true}
+                    style={{width: 230, marginRight: 10}}
+                    isAutoFocus={this.state.isFocusSearch}
+                    prefix={<this.Icon type="search" />}
+                    suffix={<div className="icon-scaner icon-clear" style={{opacity: .5, cursor: "pointer"}} onClick={() => this.searchRef.focus()} />}
+                    onChange={this.onSearchKey}
+                  />
+                  <DatePicker
+                    onChange={this.handleChangeDate}
+                    name="date"
+                    placeholder={`${stringTranslate("text_invoice_date", this.props.locale)}`}
+                    defaultValue={params.get("date") ? moment(params.get("date")) : ""}
+                    style={{maxWidth: 200}}
+                  />
+                </Col>
+              </Row>
+
+              <this.Table
+                bordered={true}
+                rowKey="id"
+                loading={this.state.loading}
+                columns={this.columns}
+                dataSource={this.state.data}
+              />
+
+              <div style={{marginTop: 15}}>
+                {this.renderPagination(this.state.pagination)}
+              </div>
+
+              <this.clearFloating/>
+            </div>
+          </div>
+        </div>
+      </React.Fragment>
+    );
   }
 }
 

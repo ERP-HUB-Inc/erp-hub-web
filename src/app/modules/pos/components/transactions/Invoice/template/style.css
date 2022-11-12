@@ -150,3 +150,12 @@
 .table-form-invoice-entry tbody {
   vertical-align: top;
 }
+
+.invoice-number-column a {
+  color: #4D4F5C;
+}
+
+.invoice-number-column:hover a {
+  text-decoration: underline;
+  color: #0056b3;
+}

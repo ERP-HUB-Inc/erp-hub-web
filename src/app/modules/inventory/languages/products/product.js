@@ -267,12 +267,12 @@ export default {
 
   "text_serial": [
     "Serial",
-    "លេខរៀងផលិតផល"
+    "លេខស៊េរី"
   ],
 
   "text_serial_no": [
     "Serial Number",
-    "លេខ​សម្គាល់ផលិតផល"
+    "លេខ​ស៊េរីផលិតផល"
   ],
 
   "text_non_inventory": [
