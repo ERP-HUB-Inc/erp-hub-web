@@ -3,13 +3,20 @@ import { connect } from "react-redux";
 import moment from "moment";
 import ReactToPrint from "react-to-print";
 import {
+  DatePicker,
   Menu,
   Icon,
   Dropdown,
   Tag,
   Form,
   Pagination,
-  message, Row, Col, Card, Statistic, Input
+  message,
+  Row,
+  Col,
+  Card,
+  Statistic,
+  Select,
+  Input
 } from "antd";
 import history from "../../../../common/router/history";
 import Component from "../../../../common/components/Component";
@@ -302,50 +309,6 @@ class SaleOrder extends Component {
     this.fetchList(true);
   }
 
-  renderFilterRecord() {
-    const saleOrderStatusList = Object.keys(this.SALE_ORDER_STATUS_STR).map((prop) => {
-      return {name: this.SALE_ORDER_STATUS_STR[prop].title, value: prop};
-    });
-    saleOrderStatusList.unshift({name: <this.Translate id="text_all_status"/>, value: -1});
-    return (
-      <this.Form onSubmit={this.handleSubmitFilter}>
-        <this.Row className="main-search-layout">
-          <this.Col md="3">
-            <this.InputText
-              name="search"
-              label={<this.Translate id="text_search"/>}
-              placeholder={`${this.CATranslate("text_quotation_no", this.props.locale)}, ${this.CATranslate("text_customer", this.props.locale)}`}
-              form={this.props.form}
-              allowClear={true} />
-          </this.Col>
-          <this.Col md="3">
-            <this.DateRangePicker
-              name="registerDate"
-              label={<this.Translate id="text_date" />}
-              form={this.props.form}
-              ranges={[]} />
-          </this.Col>
-          <this.Col md="3">
-            <this.Select
-              name="status"
-              label={<this.Translate id="text_status" />}
-              dataSource={saleOrderStatusList}
-              defaultValue={saleOrderStatusList[0].value}
-              form={this.props.form} />
-          </this.Col>
-          <this.Col md="2" className="wrap-btn-search">
-            <div className="ant-form-item-label" style={{visibility: "hidden"}}>
-              <label htmlFor="status" className="" title=""><this.Translate id="text_filter" /></label>
-            </div>
-            <this.Button htmlType="submit" type="info" loading={this.state.loadingButton}>
-              <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-            </this.Button>
-          </this.Col>
-        </this.Row>
-      </this.Form>
-    );
-  }
-
   buttonActionCollection() {
     return [this.renderButtonAddNew()];
   }
@@ -486,28 +449,30 @@ class SaleOrder extends Component {
                         placeholder={this.CATranslate("text_search", this.props.locale)}
                         prefix={<Icon type="search" />}
                         defaultValue={params.get("search") ? params.get("search") : ""}
-                        style={{height: 32, width: 200, marginRight: 10, marginTop: 5}}
+                        style={{height: 32, width: 200, marginRight: 10}}
                         allowClear={true}
                         onChange={this.handleSearch}
-                        form={this.props.form}
                     />
-                    <this.DateRangePicker
+                    <DatePicker.RangePicker
                         name="dates"
+                        defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : ""}
                         onChange={this.handleChangeDate}
-                        form={this.props.form}
-                        style={{textAlign: "left", width: 300, marginRight: 10}}
-                        ranges={[]} />
-                    <this.Select
-                        name="status"
-                        dataSource={this.status_options}
-                        defaultValue={this.status_options[0].value}
-                        onChange={this.handleChangeStatus}
-                        style={{width: 200, marginRight: 10}}
-                        form={this.props.form} />
+                        style={{textAlign: "left", maxWidth: 300, marginRight: 10}}
+                    />
+                    <Select
+                      defaultValue={this.status_options[0].value}
+                      onChange={this.handleChangeStatus}
+                      style={{width: 200, marginRight: 10}}
+                    >
+                      {
+                        this.status_options.map((statusOption, index) => 
+                          <Select.Option value={statusOption.value} key={index}>{statusOption.name}</Select.Option>
+                        )
+                      }
+                    </Select>
                     <this.Button
                         type="info"
                         id="btnAdd"
-                        style={{marginTop: 5}}
                         className="mg-right text-uppercase"
                         disabled={this.state.loading}
                         onClick={() => history.push("/transactions/sale-order/create")}>
