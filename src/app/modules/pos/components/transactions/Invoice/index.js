@@ -80,7 +80,7 @@ export default class Invoice extends Component {
             let stepTitle = statusValue.title;
             if (Number(status) === Enum.INVOICE_STATUS.SENT && moment(record.dueDate).format("YYYY-MM-DD") < moment().format("YYYY-MM-DD")) {
               statusColor = "#f5222d";
-              stepTitle = <this.Translate id="text_expired" />;
+              stepTitle = <this.Translate id="text_overdue" />;
             }
 
             return <Tag color={statusColor} style={{width: 100, textAlign: "center", margin: 0}}>{stepTitle}</Tag>;

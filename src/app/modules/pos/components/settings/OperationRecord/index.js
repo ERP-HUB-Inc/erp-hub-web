@@ -372,7 +372,7 @@ export default class IncomeExpense extends Component {
     return (
       <React.Fragment>
         <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
-          <Col span={8}>
+          <Col span={12}>
             <Card>
               <Statistic
                   title={<this.Translate id="text_income"/>}
@@ -383,7 +383,7 @@ export default class IncomeExpense extends Component {
               />
             </Card>
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <Card>
               <Statistic
                   title={<this.Translate id="text_expense"/>}
