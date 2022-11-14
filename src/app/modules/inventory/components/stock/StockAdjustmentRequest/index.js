@@ -1,18 +1,36 @@
 import React from "react";
-import List from "../List";
+import {Col, Icon, Input, Pagination, Row, Select} from "antd";
+import Component from "../../../../common/components/Component";
 import Enum from "../../../enums";
 import history from "../../../../common/router/history";
-import FormCreate from "../../../containers/stock/StockAdjustmentRequest/FormCreate";
-import Constant from "../../../constants/stock/stockAdjustmentRequest";
-import StockAdjustmentRequestAction from "../../../actions/stock/stockAdjustmentRequest";
 import StockAdjustmentRequestService from "../../../services/stock/StockAdjustmentRequestService";
-import "../PurchaseOrder/index.css";
+import StockAdjustmentRequestAction from "../../../actions/stock/stockAdjustmentRequest";
 
-export default class StockAdjustmentRequestLists extends List {
+export default class PurchaseOrderLists extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      current: 1,
+      data: [],
+      pagination: {},
+      dataForSendMail: null,
+      emailForPushToSupplier: null,
+      selectedListIds: [],
+      selectedRowKeys: [],
+      selectedRows: [],
+      modalVisible: false,
+      loading: false,
+      deleting: false
+    };
+    this.title = <this.Translate id="text_stock_adjustment"/>;
     this.columns = [
-      this.columnCreatedAt,
+      {
+        title: <this.Translate id="text_date" />,
+        dataIndex: "createdAt",
+        key: "createdAt",
+        width: 180,
+        render: value => this.Util.formatDate(value, "DD/MM/YYYY")
+      },
       {
         title: <this.Translate id="text_description" />,
         dataIndex: "title",
@@ -43,160 +61,322 @@ export default class StockAdjustmentRequestLists extends List {
         render: step => step in this.ADJUSTMENT_STEP ? <this.Tag color={this.ADJUSTMENT_STEP[step].color} className="text-uppercase text-center adjustment-step-tag">{this.ADJUSTMENT_STEP[step].name}</this.Tag> : ""
       }
     ];
-    this.formCreate = <FormCreate/>;
-    this.callBackOnShowEditForm = this.showFormEdit;
-    this.fetchingProp = "stockAdjustmentRequest";
+    this.fetchingProp = "adjustment";
     this.service = StockAdjustmentRequestService;
+    this.fetchingProp = "list";
+    this.pageSize = 50;
+    this.pathname = "/stock/adjustment/request";
+    this.status_options = [{name: <this.Translate id="text_all_step"/>, value: -1}];
     this.ADJUSTMENT_STEP = {
       [Enum.STOCK_ADJUST_STEP.REQUEST]: {name: <this.Translate id="text_requested" />, color:  this.Enum.STOCK_ADJUST_COLOR.REQUEST},
       [Enum.STOCK_ADJUST_STEP.COMPLETE]: { name: <this.Translate id="text_approved" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
     };
     this.action = StockAdjustmentRequestAction;
-    this.RESET_CONSTANT = Constant.RESET_STOCK_ADJUSTMENT_REQUEST;
   }
 
-  componentWillUpdate(nextProps){
-    if (nextProps.stockAdjustmentRequestAdd.added) {
-      nextProps.dispatch(StockAdjustmentRequestAction.fetch(this.pageSize));
-      nextProps.dispatch(StockAdjustmentRequestAction.reset());
+  componentDidMount() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("limit")) {
+      this.pageSize = parseInt(params.get("limit"));
     }
-    if (nextProps.stockAdjustmentRequestUpdate.updated) {
-      nextProps.dispatch(StockAdjustmentRequestAction.fetch(this.pageSize));
-      nextProps.dispatch(StockAdjustmentRequestAction.reset());
-      nextProps.dispatch(StockAdjustmentRequestAction.reset(Constant.RESET_STOCK_ADJUSTMENT_FULL_RESET));
-    }
-    
-  }
 
-  componentDidUpdate() {
-    let errorResponse = null;
-    if (this.props.stockAdjustmentRequestAdd.error) {
-      errorResponse = this.props.stockAdjustmentRequestAdd.error;
-    } else if (this.props.stockAdjustmentRequestUpdate.error) {
-      errorResponse = this.props.stockAdjustmentRequestUpdate.error;
-    } 
-    if (errorResponse) {
-      let errorCode = this.Util.getErrorCodeFromState(errorResponse);
-      let message = "Something wrong, Please contact system provider";
-      if (errorCode === Enum.LOCATION_NOT_FOUND) {
-        message = this.CATranslate("error_location_not_found", this.props.locale);
-      } else if (errorCode === Enum.PRODUCT_NOT_FOUND) {
-        message = this.CATranslate("error_product_not_found", this.props.locale);
-      } else if (errorCode === Enum.PRODUCT_UNIT_NOT_FOUND) {
-        message = this.CATranslate("error_unit_not_found", this.props.locale);
-      } else if (errorCode === Enum.INVALID_LOCATION_FOR_RECEIVE) {
-        message = this.CATranslate("invalid_location_for_receive", this.props.locale);
-      } else if (errorCode === Enum.STOCK_ADJUSTMENT_ENTRY_NOT_FOUND) {
-        message = this.CATranslate("invalid_stock_adjustment_entry", this.props.locale);
-      }
-      this.props.dispatch(StockAdjustmentRequestAction.reset());
-      this.Message.error(message);
+    if (params.get("offset")) {
+      this.setState({current: parseInt(params.get("offset"))});
     }
+
+    Object.keys(this.ADJUSTMENT_STEP).map((prop) => {
+      this.status_options.push({name: this.ADJUSTMENT_STEP[prop].name, value: prop});
+    });
+
+    this.fetchList(true);
 
   }
 
-  renderButtonAddNew() {
-    return (
-      <this.Link to="/stocks/adjustment/create" className="ant-btn info" style={{marginRight: 15}}>
-        <span className="icon-add icon-padding-right"></span>
-        <this.Translate id="text_add_new" />
-      </this.Link>
+  fetchList(withPagination= false) {
+    let searchKey = "";
+    let filter = {};
+    let limit = this.pageSize;
+    let ranges = "";
+    let offset = this.state.current;
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("limit")) {
+      limit = Number(params.get("limit"));
+    }
+
+    if (params.get("offset")) {
+      offset = Number(params.get("offset"));
+    }
+
+    offset = (offset - 1) * limit;
+
+    if (params.get("search")) {
+      searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
+    }else{
+      params.delete("search");
+    }
+
+    if (params.get("status")) {
+      filter.step = [Number(params.get("status"))];
+    }
+
+    if (!withPagination){
+      offset = 0;
+      params.delete("offset");
+      this.setState({current: 1});
+    }
+
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+
+    this.setState({loading: true});
+    this.service.lists(limit, offset, "", "", JSON.stringify(filter), searchKey, ranges)
+        .then((response) => {
+          if (response.data && response.data.data) {
+            this.setState({
+              data: response.data.data,
+              pagination: response.data.pagination
+            });
+          }
+        })
+        .finally(() => this.setState({loading: false}));
+  }
+
+  checkIsAllowDeleteRecordOrNot() {
+    if (
+        this.state.selectedListIds &&
+        this.state.selectedListIds.length > 0 &&
+        this.props[this.fetchingProp]
+    ) {
+      let isHasSystemRecord = false;
+      this.state.selectedListIds.forEach((selectedId) => {
+        const result = this.props[this.fetchingProp].list.find(
+            (record) => record.id === selectedId
+        );
+
+        if (result && result.isSystem === this.Enum.IS_SYSTEM) {
+          isHasSystemRecord = true;
+          this.Message.warning(
+              this.CATranslate(
+                  "text_warning_delete_system_record",
+                  this.props.locale
+              )
+          );
+        }
+      });
+      return isHasSystemRecord;
+    }
+  }
+
+  handleSearch = (e) => {
+    const queryParams = new URLSearchParams(document.location.search);
+    const value = e.target.value;
+    queryParams.set("search", value ? value.trim() : "");
+    history.push({pathname: this.pathname, search: queryParams.toString()});
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      this.fetchList();
+    }, 1000);
+  }
+
+  handleChangeStatus = (status) => {
+    const params = new URLSearchParams(document.location.search);
+    if (status && status >= 0){
+      params.set("status", status);
+    }else{
+      params.delete("status");
+    }
+    this.Util.pushParamsToURL(this.pathname,  params.toString());
+    this.fetchList();
+  }
+
+  onShowSizeChange = (current, pageSize) => {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+  }
+
+  onChangePagination = (current, pageSize) => {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList(true);
+  }
+
+  onSelectChange = (selectedRowKeys, selectedRows) => {
+    this.setState({
+      selectedListIds: this.mapSelectedListIds(selectedRows),
+      selectedRowKeys,
+      selectedRows
+    });
+  }
+
+  mapSelectedListIds(values) {
+    return values.map(value => value.id);
+  }
+
+  handleDelete = () => {
+    if (this.service) {
+      this.setState({deleting: true});
+      this.service.archive(this.state.selectedListIds)
+         .finally(() => {
+           this.fetchList();
+           this.setState({
+              selectedRowKeys: [],
+              modalVisible: false,
+              deleting: false
+            });
+      });
+
+    }
+  }
+
+  showDeleteModal = () => {
+    if (this.checkIsAllowDeleteRecordOrNot()) {
+      return;
+    }
+    if (this.state.selectedRowKeys.length > 0) {
+      this.setState({modalVisible: true, showDeleteModal: true});
+    } else {
+      this.Message.warning(this.CATranslate("text_warning_select_row_to_delete", this.props.locale));
+    }
+  }
+
+  renderPagination(pagination) {
+    pagination = {
+      total: pagination.total,
+      pageSize: pagination.limit,
+      current: this.state.current,
+      pageSizeOptions: this.pageSizeOptions
+    };
+
+    const showTotal = total => {
+      return `${this.CATranslate("text_total", this.props.locale)} ${total} ${this.CATranslate("text_records", this.props.locale)}`;
+    };
+
+    return(
+        pagination.total > 0 ?
+            <div className="float-right">
+              <Pagination
+                  size="small"
+                  showTotal={showTotal}
+                  showSizeChanger
+                  defaultCurrent={this.state.current}
+                  defaultPageSize={this.pageSize}
+                  onShowSizeChange={this.onShowSizeChange}
+                  onChange={this.onChangePagination}
+                  {...pagination} />
+            </div>
+            :
+            ""
     );
   }
 
-  showFormEdit(rowData){
-    history.push(`/stocks/adjustment/update/${rowData.id}`);
-  }
-
-  handleDelete() {
-    this.setState({deleting: true});
-    StockAdjustmentRequestService.archive(this.state.selectedListIds)
-      .then(response => {
-        this.props.dispatch(StockAdjustmentRequestAction.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
-        this.setState({
-          selectedRowKeys: [],
-          modalVisible: false,
-          deleting: false
-        });
+  render() {
+    const rowSelection = {
+      selectedRowKeys: this.state.selectedRowKeys,
+      onChange: this.onSelectChange,
+      getCheckboxProps: record => ({
+        name: record.name,
       })
-      .catch(err => {
-        this.Message.error(this.CATranslate("error_warning_delete_adjustment", this.props.locale));
-        this.setState({deleting: false});
-        this.setState({
-          modalVisible: false,
-          deleting: false
-        });
-      });
-  }
+    };
+    const params = new URLSearchParams(window.location.search);
 
-  handleSubmitFilter(e){
-    if (this.action != null) {
-      e.preventDefault();
-      this.props.form.validateFieldsAndScroll((err, values) => {
-      
-        if (!err) {
-
-          let filter = {};
-          if (values.step !== -1) {
-            filter["step"] = [values.step];
-          }
-    
-          filter = JSON.stringify(filter);
-
-          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
-          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
-          this.setState({isClickFilter: true});
-        }
-        
-      }); 
-    } 
-  }
-
-  
-  
-
-  renderFilterRecord() {
-    const {form, locale} = this.props;
-
-    const adjustmentStepList = Object.keys(this.ADJUSTMENT_STEP).map((prop) => {
-      return {name: this.ADJUSTMENT_STEP[prop].name, value: prop};
-    });
-    adjustmentStepList.unshift({name: <this.Translate id="text_all_step"/>, value: -1});
-
-    const fetchingProps = this.props[this.fetchingProp];
     return (
-      form == null ?
-        ""
-        :
-        <this.Form onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout">
-            <this.Col md="2">
-              <this.InputText
-                name="key"
-                label={<this.Translate id="text_search" />}
-                placeholder={this.CATranslate("text_search", locale)}
-                isAutoFocus={true}
-                form={form}/>
-            </this.Col>
-            <this.Col md="2">
-              <this.Select
-                name="step"
-                label={<this.Translate id="text_step" />}
-                dataSource={adjustmentStepList}
-                defaultValue={adjustmentStepList[0].value}
-                form={form}
-              />
-            </this.Col>
-            <this.Col md="2" className="wrap-btn-search">
-              <div className="ant-form-item-label" style={{visibility: "hidden"}}>
-                <label htmlFor="status" className="" title="">Filter</label>
+        <React.Fragment>
+          <div className="content-list">
+            <div style={{height: "100%"}}>
+              <div className="table-wrapper">
+                <Row>
+                  <Col span={6} style={{marginBottom: 0}}>
+                    <h3 style={{marginBottom: 0, fontWeight: 600}}>{this.title}</h3>
+                  </Col>
+                  <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
+                    <Input
+                        name="search"
+                        placeholder={this.CATranslate("text_search", this.props.locale)}
+                        prefix={<Icon type="search" />}
+                        defaultValue={params.get("search") ? params.get("search") : ""}
+                        style={{height: 32, width: 200, marginRight: 10}}
+                        allowClear={true}
+                        onChange={this.handleSearch}
+                    />
+                    <Select
+                        defaultValue={params.get("status") == null ? this.status_options[0].value : params.get("status") }
+                        onChange={this.handleChangeStatus}
+                        style={{width: 200, marginRight: 10}}
+                    >
+                      {
+                        this.status_options.map((statusOption, index) =>
+                            <Select.Option value={statusOption.value} key={index}>{statusOption.name}</Select.Option>
+                        )
+                      }
+                    </Select>
+                    <this.Button
+                        type="info"
+                        id="btnAdd"
+                        className="mg-right text-uppercase"
+                        onClick={()=> history.push({pathname: "/stocks/adjustment/create"})}>
+                      <span className="icon-add icon-padding-right"></span>
+                      <this.Translate id="text_add_new" />
+                    </this.Button>
+                    <this.Button
+                        type="danger"
+                        className="text-uppercase"
+                        disabled={this.state.isRequestDelete}
+                        onClick={this.showDeleteModal}>
+                      <span className="icon-delete icon-padding-right"></span>
+                      <this.Translate id="text_delete" />
+                    </this.Button>
+                  </Col>
+                </Row>
+                <this.Table
+                    bordered={true}
+                    rowKey="id"
+                    rowSelection={rowSelection}
+                    loading={this.state.loading}
+                    columns={this.columns}
+                    dataSource={this.state.data}
+                    onRow={record =>({
+                      onDoubleClick:() => history.push({pathname: "/stocks/adjustment/update/"+record.id})
+                    })}
+                />
+                <div style={{marginTop: 15}}>
+                  {this.renderPagination(this.state.pagination)}
+                </div>
+                <this.clearFloating/>
               </div>
-              <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+            </div>
+          </div>
+          <this.Modal
+              visible={this.state.modalVisible}
+              wrapClassName="confirm-delete"
+              footer={null}>
+            <div>
+              { this.state.showDeleteModal &&
+              <React.Fragment>
+                <span className="icon-help icon-padding-right"></span>
+                <span className="title">COMPLETED</span><br/>
+                <span><this.Translate id="text_confirm_delete" /></span>
+              </React.Fragment>
+              }
+            </div>
+            <div className="ant-modal-footer">
+              <this.Button className="danger text-uppercase" onClick={()=>this.setState({modalVisible: false})}>
+                <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel"/>
               </this.Button>
-            </this.Col>
-          </this.Row>
-        </this.Form>
+              <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info text-uppercase">
+                <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes"/>
+              </this.Button>
+            </div>
+          </this.Modal>
+        </React.Fragment>
     );
   }
 

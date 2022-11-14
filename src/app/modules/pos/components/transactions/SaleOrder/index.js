@@ -186,14 +186,6 @@ class SaleOrder extends Component {
       this.setState({current: parseInt(params.get("offset"))});
     }
 
-    if (params.get("start") && params.get("end")) {
-      this.props.form.setFieldsValue({dates: [moment(params.get("start")), moment(params.get("end"))]});
-    }
-
-    if (params.get("status")) {
-      this.props.form.setFieldsValue({status: params.get("status")});
-    }
-
     Object.keys(this.SALE_ORDER_STATUS_STR).forEach((prop) => {
       this.status_options.push( {name: this.SALE_ORDER_STATUS_STR[prop].title, value: prop});
     });
@@ -230,7 +222,7 @@ class SaleOrder extends Component {
     }
 
     if (params.get("status")) {
-      filter = JSON.stringify({status: Number(params.get("status"))});
+      filter.status = Number(params.get("status"));
     }
 
     offset = (offset - 1) * limit;
@@ -244,7 +236,7 @@ class SaleOrder extends Component {
     this.Util.pushParamsToURL(this.pathname, params.toString());
 
     this.setState({loading: true});
-    SaleOrderService.lists(limit, offset, "", "", filter, searchKey, ranges)
+    SaleOrderService.lists(limit, offset, "", "", JSON.stringify(filter), searchKey, ranges)
     .then(response => {
       this.setState({data: response && response.data});
     })
@@ -460,7 +452,7 @@ class SaleOrder extends Component {
                         style={{textAlign: "left", maxWidth: 300, marginRight: 10}}
                     />
                     <Select
-                      defaultValue={this.status_options[0].value}
+                      defaultValue={params.get("status") == null ? this.status_options[0].value : params.get("status")}
                       onChange={this.handleChangeStatus}
                       style={{width: 200, marginRight: 10}}
                     >
