@@ -225,13 +225,20 @@ export default class PurchaseOrderLists extends Component {
     if (this.service) {
       this.setState({deleting: true});
       this.service.archive(this.state.selectedListIds)
-         .finally(() => {
-           this.fetchList();
-           this.setState({
-              selectedRowKeys: [],
-              modalVisible: false,
-              deleting: false
-            });
+        .then(() => {
+          this.fetchList(true);
+          this.setState({
+            selectedRowKeys: []
+          });
+        })
+        .catch(() => {
+          this.Message.error(this.CATranslate("error_warning_delete_adjustment", this.props.locale));
+        })
+        .finally(() => {
+         this.setState({
+          modalVisible: false,
+          deleting: false
+        });
       });
 
     }
