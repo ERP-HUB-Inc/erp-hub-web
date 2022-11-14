@@ -148,12 +148,14 @@ export default class IncomeExpense extends Component {
   }
 
   fetchList(withPagination = false) {
+
     let searchKey = "";
     let filter = {};
     let limit = this.pageSize;
     let ranges = "";
     let offset = this.state.current;
     const params = new URLSearchParams(document.location.search);
+
     if (params.get("limit")) {
       limit = Number(params.get("limit"));
     }
@@ -171,6 +173,7 @@ export default class IncomeExpense extends Component {
     }
 
     offset = (offset - 1) * limit;
+
     if (!withPagination){
       offset = 0;
       params.delete("offset");
@@ -487,8 +490,7 @@ export default class IncomeExpense extends Component {
             </this.Button>
           </div>
         </this.Modal>
-
-    </React.Fragment>
+      </React.Fragment>
     );
 
   }

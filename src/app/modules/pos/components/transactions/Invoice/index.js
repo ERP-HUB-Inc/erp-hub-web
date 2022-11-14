@@ -323,7 +323,7 @@ export default class Invoice extends Component {
     const queryParams = new URLSearchParams(document.location.search);
     const value = e.target.value;
     queryParams.set("search", value ? value.trim() : "");
-    history.push({pathname: "/transactions/invoice", search: queryParams.toString()});
+    history.push({pathname: this.pathname, search: queryParams.toString()});
     clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       this.fetchList();
@@ -333,7 +333,7 @@ export default class Invoice extends Component {
   handleChangeDate = (date) => {
     const queryParams = new URLSearchParams(document.location.search);
     queryParams.set("date", date ? moment(date).format("YYYY-MM-DD") : "");
-    history.push({pathname: "/transactions/invoice", search: queryParams.toString()});
+    history.push({pathname: this.pathname, search: queryParams.toString()});
     this.fetchList();
   }
 
@@ -589,12 +589,12 @@ export default class Invoice extends Component {
           <Col span={8}>
             <Card>
               <Statistic
-                  title={<this.Translate id="text_sent_invoice"/>}
-                  value={summaryData.sentAmount ? summaryData.sentAmount : 0 }
-                  prefix="$"
-                  suffix={" / " + (summaryData.sent ? summaryData.sent  :  0) + " invoice(s)"}
-                  precision={2}
-                  valueStyle={{color: "rgb(24, 144, 255)"}}
+                title={<this.Translate id="text_sent_invoice"/>}
+                value={summaryData.sentAmount ? summaryData.sentAmount : 0 }
+                prefix="$"
+                suffix={" / " + (summaryData.sent ? summaryData.sent  :  0) + " invoice(s)"}
+                precision={2}
+                valueStyle={{color: "rgb(24, 144, 255)"}}
               />
             </Card>
           </Col>
@@ -613,12 +613,12 @@ export default class Invoice extends Component {
           <Col span={8}>
             <Card>
               <Statistic
-                  title={<this.Translate id="text_paid"/>}
-                  value={summaryData.paidAmount ? summaryData.paidAmount : 0 }
-                  prefix="$"
-                  suffix={ " / " + (summaryData.paid ? summaryData.paid  :  0) + " invoice(s)"}
-                  precision={2}
-                  valueStyle={{ color: "#3f8600" }}
+                title={<this.Translate id="text_paid"/>}
+                value={summaryData.paidAmount ? summaryData.paidAmount : 0 }
+                prefix="$"
+                suffix={ " / " + (summaryData.paid ? summaryData.paid  :  0) + " invoice(s)"}
+                precision={2}
+                valueStyle={{ color: "#3f8600" }}
               />
             </Card>
           </Col>
@@ -656,8 +656,7 @@ export default class Invoice extends Component {
                       <this.Translate id="text_add_new" />
                     </this.Button>
                   </Col>  
-                </Row>    
-
+                </Row>
                 <this.Table
                   bordered={true}
                   rowKey="id"
