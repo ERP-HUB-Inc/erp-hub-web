@@ -77,10 +77,6 @@ class SerialList extends Component {
   }
 
   componentDidMount() {
-    const searchKey = new URLSearchParams(document.location.search).get("search");
-    if (searchKey) {
-      this.props.form.setFieldsValue({searchKey});
-    }
     this.fetchList(true);
   }
 
@@ -215,62 +211,60 @@ class SerialList extends Component {
   render() {
     const params = new URLSearchParams(window.location.search);
     return (
-      <React.Fragment>
-        <div className="content-list">
-          <div style={{height: "100%", marginTop: 10}}>
-            <div className="table-wrapper">
-              <Row>
-                <Col span={12} style={{marginBottom: 0}}>
-                  <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_serial_no" /></h3>
-                </Col>
-                <Col span={12} style={{textAlign: "right"}}>
-                  <BarcodeReader
-                    minLength={4}
-                    onError={this.handleScanError}
-                    onScan={this.handleScan}
-                    preventDefault={true}
-                    avgTimeByChar={40}
-                    endChar={[13]}
-                    timeBeforeScanTest={200}
-                  />
-                  <Input 
-                    name="searchKey"
-                    ref={ref => this.searchRef = ref}
-                    placeholder={`${stringTranslate("text_serial_no", this.props.locale)}`}
-                    allowClear={true}
-                    style={{width: 230, marginRight: 10}}
-                    isAutoFocus={this.state.isFocusSearch}
-                    prefix={<this.Icon type="search" />}
-                    suffix={<div className="icon-scaner icon-clear" style={{opacity: .5, cursor: "pointer"}} onClick={() => this.searchRef.focus()} />}
-                    onChange={this.onSearchKey}
-                  />
-                  <DatePicker
-                    onChange={this.handleChangeDate}
-                    name="date"
-                    placeholder={`${stringTranslate("text_invoice_date", this.props.locale)}`}
-                    defaultValue={params.get("date") ? moment(params.get("date")) : ""}
-                    style={{maxWidth: 200}}
-                  />
-                </Col>
-              </Row>
+      <div className="content-list">
+        <div style={{height: "100%", marginTop: 10}}>
+          <div className="table-wrapper">
+            <Row>
+              <Col span={12} style={{marginBottom: 0}}>
+                <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_serial_no" /></h3>
+              </Col>
+              <Col span={12} style={{textAlign: "right"}}>
+                <BarcodeReader
+                  minLength={4}
+                  onError={this.handleScanError}
+                  onScan={this.handleScan}
+                  preventDefault={true}
+                  avgTimeByChar={40}
+                  endChar={[13]}
+                  timeBeforeScanTest={200}
+                />
+                <Input 
+                  name="searchKey"
+                  ref={ref => this.searchRef = ref}
+                  defaultValue={params.get("search") ? params.get("search") : ""}
+                  placeholder={`${stringTranslate("text_serial_no", this.props.locale)}, ${stringTranslate("text_invoice_no", this.props.locale)}`}
+                  allowClear={true}
+                  style={{width: 230, marginRight: 10}}
+                  prefix={<this.Icon type="search" />}
+                  suffix={<div className="icon-scaner icon-clear" style={{opacity: .5, cursor: "pointer"}} onClick={() => this.searchRef.focus()} />}
+                  onChange={this.onSearchKey}
+                />
+                <DatePicker
+                  onChange={this.handleChangeDate}
+                  name="date"
+                  placeholder={`${stringTranslate("text_invoice_date", this.props.locale)}`}
+                  defaultValue={params.get("date") ? moment(params.get("date")) : ""}
+                  style={{maxWidth: 200}}
+                />
+              </Col>
+            </Row>
 
-              <this.Table
-                bordered={true}
-                rowKey="id"
-                loading={this.state.loading}
-                columns={this.columns}
-                dataSource={this.state.data}
-              />
+            <this.Table
+              bordered={true}
+              rowKey="id"
+              loading={this.state.loading}
+              columns={this.columns}
+              dataSource={this.state.data}
+            />
 
-              <div style={{marginTop: 15}}>
-                {this.renderPagination(this.state.pagination)}
-              </div>
-
-              <this.clearFloating/>
+            <div style={{marginTop: 15}}>
+              {this.renderPagination(this.state.pagination)}
             </div>
+
+            <this.clearFloating/>
           </div>
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }
