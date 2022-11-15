@@ -308,7 +308,7 @@ export default class PurchaseOrderLists extends Component {
     const params = new URLSearchParams(window.location.search);
 
     return (
-        <React.Fragment>
+      <React.Fragment>
           <div className="content-list">
             <div style={{height: "100%"}}>
               <div className="table-wrapper">

@@ -113,7 +113,7 @@ const PurchaseOrder = Loadable({
 
 const StockConsignment = Loadable({
   loader: () =>
-    import("../../../../inventory/components/stock/StockConsignment"),
+    import("../../../../inventory/containers/stock/StockConsignment"),
   loading: () => <StartUp />,
 });
 

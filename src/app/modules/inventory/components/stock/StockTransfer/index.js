@@ -325,13 +325,13 @@ export default class StockTransferList extends Component {
   }
 
   render() {
-    const rowSelection = {
+    /*const rowSelection = {
       selectedRowKeys: this.state.selectedRowKeys,
       onChange: this.onSelectChange,
       getCheckboxProps: record => ({
         name: record.name,
       })
-    };
+    };*/
     const params = new URLSearchParams(window.location.search);
 
     return (
