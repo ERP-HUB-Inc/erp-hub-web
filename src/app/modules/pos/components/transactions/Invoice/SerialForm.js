@@ -44,6 +44,14 @@ export default class SerialForm extends React.PureComponent  {
       });
     }
 
+    if (!values.numOfWarranty || !values.durationType) {
+      this.props.form.setFields({
+        numOfWarranty: {
+          errors: [new Error(stringTranslate("error__num_of_warranty_require", this.props.locale))]
+        }
+      });
+    }
+
     if (values.serialNumber && values.numOfWarranty) {
       const durationType = values.durationType;
       this.props.onSuccess({

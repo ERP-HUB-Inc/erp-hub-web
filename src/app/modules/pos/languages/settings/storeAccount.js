@@ -331,6 +331,11 @@ export default {
     "Website",
     "គេហទំព័រ",
     "Website"
+  ],
+
+  "text_invoice_size": [
+    "Invoice Size",
+    "ទំហំវិក្កយបត្រ"
   ]
 };
   

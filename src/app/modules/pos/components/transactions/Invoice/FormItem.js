@@ -746,7 +746,8 @@ class NewInvoice extends React.PureComponent {
         });
         this.props.form.setFieldsValue({[`quantity[${index}]`]: qty});
         this.props.form.setFieldsValue({[`serials[${index}]`]: JSON.stringify(newSerials)});
-        if (qty === newSerials.length) {
+        const activeSerialLen = newSerials.filter(serial => serial.status !== ARCHIVE).length;
+        if (qty === activeSerialLen) {
             this.serialRef.onCloseModal();
         }
     }
@@ -892,7 +893,7 @@ class NewInvoice extends React.PureComponent {
                     this.props.form.setFieldsValue({[`quantity[${index}]`]: qty});
                     let discount = this.props.form.getFieldValue("discountField");
                     transactionEntries[index].serials = serials;
-                    transactionEntries[index].serialNo = serialNo;
+                    transactionEntries[index].serialNo = serialNo.toString();
                     transactionEntries[index].quantity = qty;
                     transactionEntries[index].amount = amount;
                     let total = this.getTotal(transactionEntries);
@@ -1361,7 +1362,7 @@ class NewInvoice extends React.PureComponent {
 
     renderPreviewInvoice(formData) {
         formData.transactionEntries = this.state.transactionEntries;
-        return <div id="wrap-invoice-form">
+        return <div id={formData.client && formData.client.invoiceSize === "A5" ? "wrap-invoice-form-A5" : "wrap-invoice-form"}>
             <CAInvoice formData={formData} />
         </div>;
     }

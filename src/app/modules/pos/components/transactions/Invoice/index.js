@@ -83,7 +83,7 @@ export default class Invoice extends Component {
               stepTitle = <this.Translate id="text_overdue" />;
             }
 
-            return <Tag color={statusColor} style={{width: 100, textAlign: "center", margin: 0}}>{stepTitle}</Tag>;
+            return <Tag color={statusColor} style={{width: 120, textAlign: "center", margin: 0}}>{stepTitle}</Tag>;
           }
         }
       },

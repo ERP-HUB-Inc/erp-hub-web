@@ -216,7 +216,11 @@ export default {
   "error_serial_number_require": [
     "Serial number required",
     "លេខស៊េរីទាមទារ",
-    "Serial number required"
+  ],
+
+  "error__num_of_warranty_require": [
+    "Number of warranty required",
+    "សូមបញ្ជូលរយៈពេលនៃការធានា",
   ],
 
   "text_warranty_date_required": [

@@ -44,7 +44,7 @@ export default class StoreAccountList extends Component {
       activeTap: 1
     };
     this.module = <this.Translate id="text_setting" />;
-    
+    this.firstRender = true;
     // ERROR CURRENT PASSWORD
     this.errorMessageCurrentPWD = "";
     this.validateClassStatusCurrentPWD = "";
@@ -131,6 +131,11 @@ export default class StoreAccountList extends Component {
   }
 
   componentDidUpdate() {
+    if (this.props.storeAccount.fetched && this.firstRender) {
+      this.setState({address: this.props.storeAccount.list.address});
+      this.firstRender = false;
+    }
+
     if (this.props.renew.updated) {
       if (this.props.renew.response && this.props.renew.response.data) {
         const deviceList = this.state.deviceList.find(device => device.id === this.props.renew.response.data.id);
@@ -507,6 +512,18 @@ export default class StoreAccountList extends Component {
                                 defaultValue={storeAccount.list.currencyPosition}
                                 label={<this.Translate id="text_currency_position" />}
                                 placeholder={this.CATranslate("text_currency_position", locale)}
+                                form={form} />
+
+                              <this.Select
+                                name="invoiceSize"
+                                label={<this.Translate id="text_invoice_size" />}
+                                placeholder={this.CATranslate("text_invoice_size", locale)}
+                                dataSource={[
+                                  {name: "A4", value: "A4"},
+                                  {name: "A5", value: "A5"}
+                                ]}
+                                defaultValue={storeAccount.list.invoiceSize}
+                                valueKey="value"
                                 form={form} />
 
                               <this.Select
