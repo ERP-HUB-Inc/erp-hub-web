@@ -1,26 +1,55 @@
 import React from "react";
-import List from "../List";
+import {Col, DatePicker, Icon, Input, Pagination, Row, Select} from "antd";
+import Component from "../../../../common/components/Component";
 import Enum from "../../../enums";
 import history from "../../../../common/router/history";
-import FormCreate from "../../../containers/stock/StockTransfer/FormCreate";
-import FormUpdate from "../../../containers/stock/StockTransfer/FormUpdate";
-import Constant from "../../../constants/stock/stockTransfer";
-import StockTransferAction from "../../../actions/stock/stockTransfer";
 import StockTransferService from "../../../services/stock/StockTransferService";
-import LoctionAction from "../../../../pos/action/settings/location";
-import "./index.css";
+import StockAdjustmentRequestAction from "../../../actions/stock/stockAdjustmentRequest";
+import LocationService from "../../../../pos/services/settings/LocationService";
+import moment from "moment";
 
-export default class StockTransferList extends List {
+export default class StockTransferList extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
-      ...this.state,
-      setDefaultDate: []
+      current: 1,
+      data: [],
+      locations: [],
+      pagination: {},
+      dataForSendMail: null,
+      emailForPushToSupplier: null,
+      selectedListIds: [],
+      selectedRowKeys: [],
+      selectedRows: [],
+      modalVisible: false,
+      loading: false,
+      deleting: false
     };
-    this.formCreate = <FormCreate />;
-    this.formUpdate = <FormUpdate />;
+    this.title = <this.Translate id="text_stock_transfer"/>;
+    this.pageSize = 50;
+    this.path = "/stock/transfer";
+    this.pathCreate = "/stocks/transfer/create";
+    this.pathUpdate = "/stocks/transfer/update";
+    this.fetchingProp = "list";
+    this.service = StockTransferService;
+    this.action = StockAdjustmentRequestAction;
+    this.columnFilterWithKey = ["name", "title", "number"];
+    this.locations = [{name: <this.Translate id="text_all_store"/>, id: 0}];
+    this.status_options = [{name: <this.Translate id="text_all_step"/>, value: -1}];
+    this.STATUS_STEP_STR = {
+      [Enum.STOCK_STRANSFER_STEP.PROCESS]: {name: <this.Translate id="text_process" />, color: this.Enum.STOCK_TRANSFER_STEP_COLOR.PROCESS},
+      [Enum.STOCK_STRANSFER_STEP.RECEIVED]: {name: <this.Translate id="text_received" />, color:  this.Enum.STOCK_TRANSFER_STEP_COLOR.RECEIVED},
+      [Enum.STOCK_STRANSFER_STEP.CANCEL]: {name: <this.Translate id="text_canceled" />, color:  this.Enum.STOCK_TRANSFER_STEP_COLOR.CANCEL}
+    };
     this.columns = [
-      this.columnCreatedAt,
+      {
+        title: <this.Translate id="text_date" />,
+        dataIndex: "createdAt",
+        key: "createdAt",
+        width: 180,
+        render: value => this.Util.formatDate(value, "DD/MM/YYYY")
+      },
       {
         title: <this.Translate id="text_from_location" />,
         dataIndex: "fromLocation",
@@ -43,201 +72,377 @@ export default class StockTransferList extends List {
         dataIndex: "step",
         key: "step",
         width: 100,
-        render: step => step in this.STOCK_STRANSFER_STEP_STR ? <this.Tag color={this.STOCK_STRANSFER_STEP_STR[step].color} className="text-uppercase text-center po-step-tag">{this.STOCK_STRANSFER_STEP_STR[step].name}</this.Tag> : ""
+        render: step => step in this.STATUS_STEP_STR ? <this.Tag color={this.STATUS_STEP_STR[step].color} className="text-uppercase text-center po-step-tag">{this.STATUS_STEP_STR[step].name}</this.Tag> : ""
       }
     ];
-    this.rowSelection = false;
-    this.STOCK_STRANSFER_STEP_STR = {
-      [Enum.STOCK_STRANSFER_STEP.PROCESS]: {name: <this.Translate id="text_process" />, color: this.Enum.STOCK_TRANSFER_STEP_COLOR.PROCESS},
-      [Enum.STOCK_STRANSFER_STEP.RECEIVED]: {name: <this.Translate id="text_received" />, color:  this.Enum.STOCK_TRANSFER_STEP_COLOR.RECEIVED},
-      [Enum.STOCK_STRANSFER_STEP.CANCEL]: {name: <this.Translate id="text_canceled" />, color:  this.Enum.STOCK_TRANSFER_STEP_COLOR.CANCEL}
-    };
-    this.service = StockTransferService;
-    this.action = StockTransferAction;
-    this.callBackOnShowEditForm = this.showFormEdit;
-    this.columnFilterWithKey = ["name", "description", "number"];
-    this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
-    this.RESET_CONSTANT = Constant.RESET_STOCK_TRANSFER;
-  }
-
-  renderButtonAddNew() {
-    return (
-      <this.Link to="/stocks/transfer/create" className="ant-btn info" style={{marginRight: 15}}>
-        <span className="icon-add icon-padding-right"></span>
-        <this.Translate id="text_add_new" />
-      </this.Link>
-    );
-  }
-
-  showFormEdit(rowData){
-    history.push(`/stocks/transfer/update/${rowData.id}`);
-  }
-
-  componentWillUpdate(nextProps) {
-    if (nextProps.update.updated) {
-      nextProps.dispatch(StockTransferAction.fetch(this.pageSize));
-      nextProps.dispatch(StockTransferAction.reset(Constant.REQUEST_STOCK_TRANSFER_DETAIL_FULL_RESET));
-      nextProps.dispatch(StockTransferAction.reset(Constant.RESET_UPDATE_STOCK_TRANSFER));
-    } else if (nextProps.add.added) {
-      nextProps.dispatch(StockTransferAction.fetch(this.pageSize));
-      nextProps.dispatch(StockTransferAction.reset(Constant.RESET_ADD_STOCK_TRANSFER));
-    } else if (nextProps.cancel.updated) {
-      this.setState({loadingPopup: false});
-      nextProps.dispatch(StockTransferAction.fetch(this.pageSize));
-      nextProps.dispatch(StockTransferAction.reset(Constant.RESET_CANCEL_STOCK_TRANSFER));
-    }
-  }
-
-  componentDidUpdate() {
-    if (this.props.detail.fetched) {
-      this.setState({loadingPopup: false});
-      this.props.dispatch(StockTransferAction.reset(Constant.REQUEST_STOCK_TRANSFER_DETAIL_RESET));
-    }
-
-    let errorResponse = null;
-    if (this.props.add.error) {
-      errorResponse = this.props.add.error;
-    } else if (this.props.update.error) {
-      errorResponse = this.props.update.error;
-    } else if (this.props.cancel.error) {
-      errorResponse = this.props.cancel.error;
-    }
-
-    if (errorResponse) {
-      let errorCode = this.Util.getErrorCodeFromState(errorResponse);
-
-      let message = "Something wrong, Please contact system provider";
-
-      if (errorCode === Enum.LOCATION_NOT_FOUND) {
-        message = this.CATranslate("error_location_not_found", this.props.locale);
-      } else if (errorCode === Enum.INVALID_TRANSFER_TO_SAME_LOCATION) {
-        message = this.CATranslate("error_the_same_location", this.props.locale);
-      } else if (errorCode === Enum.TRANSFER_NUMBER_EXIST) {
-        message = this.CATranslate("text_transfer_number_exist", this.props.locale);
-      } else if (errorCode === Enum.PRODUCT_NOT_FOUND) {
-        message = this.CATranslate("error_product_not_found", this.props.locale);
-      } else if (errorCode === Enum.PRODUCT_QTY_NOT_ENOUGHT) {
-        message = this.CATranslate("text_transfer_qty_warning", this.props.locale);
-      } else if (errorCode === Enum.TRANSFER_NOT_FOUND) {
-        message = this.CATranslate("error_transfer_not_found", this.props.locale);
-      } else if (errorCode === Enum.PRODUCT_UNIT_NOT_FOUND) {
-        message = this.CATranslate("error_unit_not_found", this.props.locale);
-      } else if (errorCode === Enum.INVALID_LOCATION_FOR_RECEIVE) {
-        message = this.CATranslate("invalid_location_for_receive", this.props.locale);
-      } else if (errorCode === Enum.FORBIDEN_STEP_PROCESS) {
-        message = this.CATranslate("error_receive_invalid_step", this.props.locale);
-      }
-
-      this.Message.error(message);
-
-      this.props.dispatch(StockTransferAction.reset(Constant.RESET_ADD_PARTIAL_STOCK_TRANSFER));
-      this.props.dispatch(StockTransferAction.reset(Constant.RESET_UPDATE_PARTIAL_STOCK_TRANSFER));
-      this.props.dispatch(StockTransferAction.reset(Constant.RESET_CANCEL_STOCK_TRANSFER));
-      this.props.dispatch(StockTransferAction.reset(Constant.RESET_APPROVE_STOCK_TRANSFER));
-    }
   }
 
   componentDidMount() {
-    super.componentDidMount();
-    this.props.dispatch(LoctionAction.fetch(100));
-  }
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("limit")) {
+      this.pageSize = parseInt(params.get("limit"));
+    }
 
-  handleSubmitFilter(e){
-    if (this.action != null) {
-      e.preventDefault();
-      this.props.form.validateFieldsAndScroll((err, values) => {
-        if (!err) {
-          let filter = {};
-          let rangFilter = {};
+    if (params.get("offset")) {
+      this.setState({current: parseInt(params.get("offset"))});
+    }
 
-          if (values.step !== -1) {
-            filter["step"] = [values.step];
-          }
-
-          if (values.locationId !== 0) {
-            filter["fromLocationId"] = [values.locationId];
-          }
-
-          if (values.createdAt && values.createdAt.length > 0) {
-            rangFilter = JSON.stringify({
-              column: "createdAt",
-              value: [
-                this.Util.formatDateForMYSQL(values.createdAt[0]) + " 00:00:00",
-                this.Util.formatDateForMYSQL(values.createdAt[1]) + " 23:59:59"
-              ]});
-          }
-    
-          filter = JSON.stringify(filter);
-
-          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
-          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey, rangFilter));
-          this.setState({isClickFilter: true});
-        }
-      
-      }); 
-    } 
-  }
-
-  renderFilterRecord() {
-    const {form} = this.props;
-
-    const STOCK_STRANSFER_STEP_STR_LIST = Object.keys(this.STOCK_STRANSFER_STEP_STR).map((prop) => {
-      return {name: this.STOCK_STRANSFER_STEP_STR[prop].name, value: prop};
+    Object.keys(this.STATUS_STEP_STR).map((prop) => {
+      this.status_options.push({name: this.STATUS_STEP_STR[prop].name, value: prop});
     });
-    STOCK_STRANSFER_STEP_STR_LIST.unshift({name: <this.Translate id="text_all_step"/>, value: -1});
+    LocationService.lists().then(({data})=>{
+      this.setState({locations: [...this.locations, ...data.data]});
+      this.locations = [...this.locations, ...data.data];
+    });
+    this.fetchList(true);
+
+  }
+
+  fetchList(withPagination= false) {
+    let searchKey = "";
+    let filter = {};
+    let limit = this.pageSize;
+    let ranges = "";
+    let offset = this.state.current;
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("limit")) {
+      limit = Number(params.get("limit"));
+    }
+
+    if (params.get("offset")) {
+      offset = Number(params.get("offset"));
+    }
+
+    offset = (offset - 1) * limit;
+
+    if (params.get("search")) {
+      searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
+    }
+
+    if (params.get("start") && params.get("end")) {
+      ranges = JSON.stringify({column: "createdAt", value: [params.get("start"), params.get("end")]});
+    }
+
+    if (params.get("status")) {
+      filter.step = [Number(params.get("status"))];
+    }
+
+    if (params.get("location")) {
+      filter.fromLocationId = [Number(params.get("location"))];
+    }
+
+    if (!withPagination){
+      offset = 0;
+      params.delete("offset");
+      this.Util.pushParamsToURL(this.pathname, params.toString());
+      this.setState({current: 1});
+    }
+
+    this.setState({loading: true});
+    this.service.lists(limit, offset, "", "", JSON.stringify(filter), searchKey, ranges)
+        .then((response) => {
+          if (response.data && response.data.data) {
+            this.setState({
+              data: response.data.data,
+              pagination: response.data.pagination
+            });
+          }
+        })
+        .finally(() => this.setState({loading: false}));
+  }
+
+  checkIsAllowDeleteRecordOrNot() {
+    if (
+        this.state.selectedListIds &&
+        this.state.selectedListIds.length > 0 &&
+        this.props[this.fetchingProp]
+    ) {
+      let isHasSystemRecord = false;
+      this.state.selectedListIds.forEach((selectedId) => {
+        const result = this.props[this.fetchingProp].list.find(
+            (record) => record.id === selectedId
+        );
+
+        if (result && result.isSystem === this.Enum.IS_SYSTEM) {
+          isHasSystemRecord = true;
+          this.Message.warning(
+              this.CATranslate(
+                  "text_warning_delete_system_record",
+                  this.props.locale
+              )
+          );
+        }
+      });
+      return isHasSystemRecord;
+    }
+  }
+
+  handleSearch = (e) => {
+    const params = new URLSearchParams(document.location.search);
+    const value = e.target.value;
+    if (value && value.trim()){
+      params.set("search", value.trim());
+    }else{
+      params.delete("search");
+    }
+    this.Util.pushParamsToURL(this.pathname,  params.toString());
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      this.fetchList();
+    }, 1000);
+  }
+
+  handleChangeStatus = (status) => {
+    const params = new URLSearchParams(document.location.search);
+    if (status && status >= 0){
+      params.set("status", status);
+    }else{
+      params.delete("status");
+    }
+    this.Util.pushParamsToURL(this.pathname,  params.toString());
+    this.fetchList();
+  }
+
+  handleChangeDate = (dates) => {
+    const params = new URLSearchParams(document.location.search);
+    if (dates.length) {
+      params.set("start", moment(dates[0]).format("YYYY-MM-DD"));
+      params.set("end", moment(dates[1]).format("YYYY-MM-DD"));
+    } else {
+      params.delete("start");
+      params.delete("end");
+    }
+    this.Util.pushParamsToURL(this.pathname,  params.toString());
+    this.fetchList();
+  }
+
+  handleChangeLocation = (location) => {
+    const params = new URLSearchParams(document.location.search);
+    if (location != 0){
+      params.set("location", location);
+    }else{
+      params.delete("location");
+    }
+    this.Util.pushParamsToURL(this.pathname,  params.toString());
+    this.fetchList();
+  }
+
+  onShowSizeChange = (current, pageSize) => {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+  }
+
+  onChangePagination = (current, pageSize) => {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList(true);
+  }
+
+  onSelectChange = (selectedRowKeys, selectedRows) => {
+    this.setState({
+      selectedListIds: this.mapSelectedListIds(selectedRows),
+      selectedRowKeys,
+      selectedRows
+    });
+  }
+
+  mapSelectedListIds(values) {
+    return values.map(value => value.id);
+  }
+
+  handleDelete = () => {
+    if (this.service) {
+      this.setState({deleting: true});
+      this.service.archive(this.state.selectedListIds)
+          .then(() => {
+            this.fetchList(true);
+            this.setState({
+              selectedRowKeys: []
+            });
+          })
+          .catch(() => {
+            this.Message.error(this.CATranslate("error_warning_delete_adjustment", this.props.locale));
+          })
+          .finally(() => {
+            this.setState({
+              modalVisible: false,
+              deleting: false
+            });
+          });
+
+    }
+  }
+
+  showDeleteModal = () => {
+    if (this.checkIsAllowDeleteRecordOrNot()) {
+      return;
+    }
+    if (this.state.selectedRowKeys.length > 0) {
+      this.setState({modalVisible: true, showDeleteModal: true});
+    } else {
+      this.Message.warning(this.CATranslate("text_warning_select_row_to_delete", this.props.locale));
+    }
+  }
+
+  renderPagination(pagination) {
+    pagination = {
+      total: pagination.total,
+      pageSize: pagination.limit,
+      current: this.state.current,
+      pageSizeOptions: this.pageSizeOptions
+    };
+
+    const showTotal = total => {
+      return `${this.CATranslate("text_total", this.props.locale)} ${total} ${this.CATranslate("text_records", this.props.locale)}`;
+    };
 
     return(
-      <div>
-        { form == null ?
-          ""
-          :
-          <this.Form onSubmit={this.handleSubmitFilter}>
-            <this.Row className="main-search-layout">
-              <this.Col md="3">
-                <this.InputText
-                  name="key"
-                  label={<this.Translate id="text_search" />}
-                  placeholder={this.CATranslate("text_po_return_general_search", this.props.locale)}
-                  isAutoFocus={true}
-                  form={form}/>
-              </this.Col>
-              <this.Col md="2">
-                <this.DateRangePicker
-                  name="createdAt"
-                  defaultValue={this.state.setDefaultDate}
-                  label={<this.Translate id="text_date" />}
-                  form={this.props.form}/>
-              </this.Col>
-              <this.Col md="2">
-                <this.Select
-                  name="locationId"
-                  label={<this.Translate id="text_store" />}
-                  dataSource={this.locationList.concat(this.props.storeLocation.list)}
-                  valueKey="id"
-                  nameKey="name"
-                  form={form}
-                  defaultValue={this.locationList[0].id}/>
-              </this.Col>
-              <this.Col md="2">
-                <this.Select
-                  name="step"
-                  label={<this.Translate id="text_step" />}
-                  dataSource={STOCK_STRANSFER_STEP_STR_LIST}
-                  defaultValue={STOCK_STRANSFER_STEP_STR_LIST[0].value}
-                  form={form} />
-              </this.Col>
-              <this.Col md="2" className="wrap-btn-search">
-                <div className="ant-form-item-label" style={{visibility: "hidden"}}>
-                  <label htmlFor="status" className="" title="">Filter</label>
+        pagination.total > 0 ?
+            <div className="float-right">
+              <Pagination
+                  size="small"
+                  showTotal={showTotal}
+                  showSizeChanger
+                  defaultCurrent={this.state.current}
+                  defaultPageSize={this.pageSize}
+                  onShowSizeChange={this.onShowSizeChange}
+                  onChange={this.onChangePagination}
+                  {...pagination} />
+            </div>
+            :
+            ""
+    );
+  }
+
+  render() {
+    const rowSelection = {
+      selectedRowKeys: this.state.selectedRowKeys,
+      onChange: this.onSelectChange,
+      getCheckboxProps: record => ({
+        name: record.name,
+      })
+    };
+    const params = new URLSearchParams(window.location.search);
+
+    return (
+        <React.Fragment>
+          <div className="content-list">
+            <div style={{height: "100%"}}>
+              <div className="table-wrapper">
+                <Row>
+                  <Col span={5} style={{marginBottom: 0}}>
+                    <h3 style={{marginBottom: 0, fontWeight: 600}}>{this.title}</h3>
+                  </Col>
+                  <Col span={19} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
+                    <Input
+                      name="search"
+                      placeholder={this.CATranslate("text_search", this.props.locale)}
+                      prefix={<Icon type="search" />}
+                      defaultValue={params.get("search") ? params.get("search") : ""}
+                      style={{height: 32, width: 200, marginRight: 10}}
+                      allowClear={true}
+                      onChange={this.handleSearch}
+                    />
+                    <DatePicker.RangePicker
+                      name="dates"
+                      placeholder={this.CATranslate("text_select_date", this.props.locale)}
+                      defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : ""}
+                      style={{maxWidth: 200, marginRight: 10, textAlign: "left"}}
+                      onChange={this.handleChangeDate}
+                    />
+                    <Select
+                      defaultValue={params.get("status") == null ? this.status_options[0].value : params.get("status") }
+                      onChange={this.handleChangeStatus}
+                      style={{width: 150, marginRight: 10}}
+                    >
+                      {
+                        this.status_options.map((statusOption, index) =>
+                          <Select.Option value={statusOption.value} key={index}>{statusOption.name}</Select.Option>
+                        )
+                      }
+                    </Select>
+                    {this.state.locations.length &&
+                      <Select
+                        defaultValue={params.get("location") ? parseInt(params.get("location")) : this.state.locations[0].id}
+                        onChange={this.handleChangeLocation}
+                        style={{width: 150, marginRight: 10}}
+                      >
+                        {
+                          this.state.locations.map((location, index) =>
+                            <Select.Option value={location.id} key={index}>{location.name}</Select.Option>
+                          )
+                        }
+                      </Select>
+                    }
+                    <this.Button
+                      type="info"
+                      id="btnAdd"
+                      className="mg-right text-uppercase"
+                      onClick={()=> history.push({pathname: this.pathCreate})}>
+                    <span className="icon-add icon-padding-right"></span>
+                    <this.Translate id="text_add_new" />
+                  </this.Button>
+                    {/*<this.Button
+                      type="danger"
+                      className="text-uppercase"
+                      disabled={this.state.isRequestDelete}
+                      onClick={this.showDeleteModal}>
+                    <span className="icon-delete icon-padding-right"></span>
+                    <this.Translate id="text_delete" />
+                  </this.Button>*/}
+                  </Col>
+                </Row>
+                <this.Table
+                  bordered={true}
+                  rowKey="id"
+                  /*rowSelection={rowSelection}*/
+                  loading={this.state.loading}
+                  columns={this.columns}
+                  dataSource={this.state.data}
+                  onRow={record =>({
+                    onDoubleClick:() => history.push({pathname: this.pathUpdate +"/"+ record.id})
+                  })}
+                />
+                <div style={{marginTop: 15}}>
+                  {this.renderPagination(this.state.pagination)}
                 </div>
-                <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && this.props.list.fetching}>
-                  <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="text_search" />
-                </this.Button>
-              </this.Col>
-            </this.Row>
-          </this.Form>
-        }
-      </div>
+                <this.clearFloating/>
+              </div>
+            </div>
+          </div>
+          <this.Modal
+              visible={this.state.modalVisible}
+              wrapClassName="confirm-delete"
+              footer={null}>
+            <div>
+              { this.state.showDeleteModal &&
+              <React.Fragment>
+                <span className="icon-help icon-padding-right"></span>
+                <span className="title">COMPLETED</span><br/>
+                <span><this.Translate id="text_confirm_delete" /></span>
+              </React.Fragment>
+              }
+            </div>
+            <div className="ant-modal-footer">
+              <this.Button className="danger text-uppercase" onClick={()=>this.setState({modalVisible: false})}>
+                <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel"/>
+              </this.Button>
+              <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info text-uppercase">
+                <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes"/>
+              </this.Button>
+            </div>
+          </this.Modal>
+        </React.Fragment>
     );
   }
 }

@@ -450,11 +450,11 @@ export default class QuotationList extends Component {
                       onChange={this.handleSearch}
                     />
                     <DatePicker.RangePicker
-                        name="dates"
-                        placeholder={this.CATranslate("text_select_date", this.props.locale)}
-                        defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : ""}
-                        style={{maxWidth: 300, marginRight: 10}}
-                        onChange={this.handleChangeDate}
+                      name="dates"
+                      placeholder={this.CATranslate("text_select_date", this.props.locale)}
+                      defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : ""}
+                      style={{maxWidth: 300, marginRight: 10}}
+                      onChange={this.handleChangeDate}
                     />
                     <Select defaultValue={this.status_options[0].value} onChange={this.handleChangeStatus} style={{width: 200, marginRight: 10}}>
                       {

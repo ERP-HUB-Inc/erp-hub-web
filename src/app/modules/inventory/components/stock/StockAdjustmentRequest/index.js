@@ -13,8 +13,6 @@ export default class PurchaseOrderLists extends Component {
       current: 1,
       data: [],
       pagination: {},
-      dataForSendMail: null,
-      emailForPushToSupplier: null,
       selectedListIds: [],
       selectedRowKeys: [],
       selectedRows: [],
@@ -61,7 +59,6 @@ export default class PurchaseOrderLists extends Component {
         render: step => step in this.ADJUSTMENT_STEP ? <this.Tag color={this.ADJUSTMENT_STEP[step].color} className="text-uppercase text-center adjustment-step-tag">{this.ADJUSTMENT_STEP[step].name}</this.Tag> : ""
       }
     ];
-    this.fetchingProp = "adjustment";
     this.service = StockAdjustmentRequestService;
     this.fetchingProp = "list";
     this.pageSize = 50;
@@ -112,8 +109,6 @@ export default class PurchaseOrderLists extends Component {
 
     if (params.get("search")) {
       searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
-    }else{
-      params.delete("search");
     }
 
     if (params.get("status")) {
@@ -123,10 +118,9 @@ export default class PurchaseOrderLists extends Component {
     if (!withPagination){
       offset = 0;
       params.delete("offset");
+      this.Util.pushParamsToURL(this.pathname, params.toString());
       this.setState({current: 1});
     }
-
-    this.Util.pushParamsToURL(this.pathname, params.toString());
 
     this.setState({loading: true});
     this.service.lists(limit, offset, "", "", JSON.stringify(filter), searchKey, ranges)
@@ -168,10 +162,14 @@ export default class PurchaseOrderLists extends Component {
   }
 
   handleSearch = (e) => {
-    const queryParams = new URLSearchParams(document.location.search);
+    const params = new URLSearchParams(document.location.search);
     const value = e.target.value;
-    queryParams.set("search", value ? value.trim() : "");
-    history.push({pathname: this.pathname, search: queryParams.toString()});
+    if (value && value.trim()){
+      params.set("search", value.trim());
+    }else{
+      params.delete("search");
+    }
+    this.Util.pushParamsToURL(this.pathname,  params.toString());
     clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       this.fetchList();
