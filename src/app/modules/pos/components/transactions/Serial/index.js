@@ -230,13 +230,11 @@ class SerialList extends Component {
                 />
                 <Input 
                   name="searchKey"
-                  ref={ref => this.searchRef = ref}
                   defaultValue={params.get("search") ? params.get("search") : ""}
                   placeholder={`${stringTranslate("text_serial_no", this.props.locale)}, ${stringTranslate("text_invoice_no", this.props.locale)}`}
                   allowClear={true}
                   style={{width: 230, marginRight: 10}}
                   prefix={<this.Icon type="search" />}
-                  suffix={<div className="icon-scaner icon-clear" style={{opacity: .5, cursor: "pointer"}} onClick={() => this.searchRef.focus()} />}
                   onChange={this.onSearchKey}
                 />
                 <DatePicker
