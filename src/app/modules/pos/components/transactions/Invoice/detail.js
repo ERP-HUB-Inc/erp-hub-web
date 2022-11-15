@@ -128,8 +128,8 @@ class InvoiceDetail extends React.PureComponent {
   }
 
   renderPageHeaderSubTitle(formData) {
-    let statusColor = formData.status && this.INVOICE_STATUS_STR[formData.status].color;
-    let statusTitle = formData.status && this.INVOICE_STATUS_STR[formData.status].title;
+    let statusColor = formData.status >= 0 && this.INVOICE_STATUS_STR[formData.status].color;
+    let statusTitle = formData.status >= 0 && this.INVOICE_STATUS_STR[formData.status].title;
 
     if (formData.status === Enum.INVOICE_STATUS.SENT && moment(formData.dueDate).format("YYYY-MM-DD") < moment().format("YYYY-MM-DD")) {
         statusColor = "#f5222d";

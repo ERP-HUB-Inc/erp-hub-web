@@ -95,17 +95,9 @@ export default function PublicInvoice() {
       </div>
       <div
         style={{ background: "#525659", padding: 25, overflow: "auto" }}
-        id="wrap-invoice-form"
+        id={formData.client && formData.client.invoiceSize === "A5" ? "wrap-invoice-form-A5" : "wrap-invoice-form"}
       >
-        <div
-          style={{
-            background: "#ffff",
-            width: "250mm",
-            padding: 40,
-            minHeight: "297mm",
-            margin: "auto",
-          }}
-        >
+        <div className={formData.client && formData.client.invoiceSize === "A5" ? "invoice-A5" : "invoice-A4"} >
           {invoice}
         </div>
       </div>
