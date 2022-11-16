@@ -5,14 +5,17 @@ import Enum from "../../../enums";
 import history from "../../../../common/router/history";
 import StockAdjustmentRequestService from "../../../services/stock/StockAdjustmentRequestService";
 import StockAdjustmentRequestAction from "../../../actions/stock/stockAdjustmentRequest";
+import Permission from "../../../../pos/components/settings/RoleAccess/permission";
+import PrivilegeService from "../../../../pos/services/settings/PrivilegeService";
 
-export default class PurchaseOrderLists extends Component {
+export default class StockAdjustmentRequestLists extends Component {
   constructor(props) {
     super(props);
     this.state = {
       current: 1,
       data: [],
       pagination: {},
+      permissions: {},
       selectedListIds: [],
       selectedRowKeys: [],
       selectedRows: [],
@@ -60,9 +63,12 @@ export default class PurchaseOrderLists extends Component {
       }
     ];
     this.service = StockAdjustmentRequestService;
-    this.fetchingProp = "list";
     this.pageSize = 50;
+    this.fetchingProp = "list";
     this.pathname = "/stock/adjustment/request";
+    this.pathCreate= "/stock/adjustment/create";
+    this.pathUpdate= "/stock/adjustment/update";
+    this.permissionModuleCode = "stock_adjustment";
     this.status_options = [{name: <this.Translate id="text_all_step"/>, value: -1}];
     this.ADJUSTMENT_STEP = {
       [Enum.STOCK_ADJUST_STEP.REQUEST]: {name: <this.Translate id="text_requested" />, color:  this.Enum.STOCK_ADJUST_COLOR.REQUEST},
@@ -85,6 +91,7 @@ export default class PurchaseOrderLists extends Component {
       this.status_options.push({name: this.ADJUSTMENT_STEP[prop].name, value: prop});
     });
 
+    this.getAllPermissionsByModule();
     this.fetchList(true);
 
   }
@@ -133,6 +140,30 @@ export default class PurchaseOrderLists extends Component {
           }
         })
         .finally(() => this.setState({loading: false}));
+  }
+
+  getAllPermissionsByModule(){
+    const permissionModule = Permission.find(item => item.code === this.permissionModuleCode);
+
+    if (permissionModule && permissionModule.permissions && permissionModule.permissions.length){
+
+      const promises = [];
+      const permissions = {};
+
+      permissionModule.permissions.forEach((permission) => {
+        promises.push(PrivilegeService.checkPermission(this.permissionModuleCode, permission.code));
+      });
+
+      Promise.allSettled(promises).then((response) =>{
+        permissionModule.permissions.forEach(function (permission, index) {
+          const {status, value} = response[index];
+          if (status === "fulfilled"){
+            permissions[permission.code] = value.data;
+          }
+        });
+        this.setState({permissions});
+      });
+    }
   }
 
   checkIsAllowDeleteRecordOrNot() {
@@ -266,20 +297,20 @@ export default class PurchaseOrderLists extends Component {
     };
 
     return(
-        pagination.total > 0 ?
-            <div className="float-right">
-              <Pagination
-                  size="small"
-                  showTotal={showTotal}
-                  showSizeChanger
-                  defaultCurrent={this.state.current}
-                  defaultPageSize={this.pageSize}
-                  onShowSizeChange={this.onShowSizeChange}
-                  onChange={this.onChangePagination}
-                  {...pagination} />
-            </div>
-            :
-            ""
+      pagination.total > 0 ?
+        <div className="float-right">
+          <Pagination
+            size="small"
+            showTotal={showTotal}
+            showSizeChanger
+            defaultCurrent={this.state.current}
+            defaultPageSize={this.pageSize}
+            onShowSizeChange={this.onShowSizeChange}
+            onChange={this.onChangePagination}
+            {...pagination} />
+        </div>
+        :
+        ""
     );
   }
 
@@ -292,6 +323,7 @@ export default class PurchaseOrderLists extends Component {
       })
     };
     const params = new URLSearchParams(window.location.search);
+    const {permissions} = this.state;
 
     return (
         <React.Fragment>
@@ -304,18 +336,18 @@ export default class PurchaseOrderLists extends Component {
                   </Col>
                   <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
                     <Input
-                        name="search"
-                        placeholder={this.CATranslate("text_search", this.props.locale)}
-                        prefix={<Icon type="search" />}
-                        defaultValue={params.get("search") ? params.get("search") : ""}
-                        style={{height: 32, width: 200, marginRight: 10}}
-                        allowClear={true}
-                        onChange={this.handleSearch}
+                      name="search"
+                      placeholder={this.CATranslate("text_search", this.props.locale)}
+                      prefix={<Icon type="search" />}
+                      defaultValue={params.get("search") ? params.get("search") : ""}
+                      style={{height: 32, width: 200, marginRight: 10}}
+                      allowClear={true}
+                      onChange={this.handleSearch}
                     />
                     <Select
-                        defaultValue={params.get("status") == null ? this.status_options[0].value : params.get("status") }
-                        onChange={this.handleChangeStatus}
-                        style={{width: 200, marginRight: 10}}
+                      defaultValue={params.get("status") == null ? this.status_options[0].value : params.get("status") }
+                      onChange={this.handleChangeStatus}
+                      style={{width: 200, marginRight: 10}}
                     >
                       {
                         this.status_options.map((statusOption, index) =>
@@ -323,33 +355,38 @@ export default class PurchaseOrderLists extends Component {
                         )
                       }
                     </Select>
-                    <this.Button
+                    {permissions.add &&
+                      <this.Button
                         type="info"
                         id="btnAdd"
                         className="mg-right text-uppercase"
-                        onClick={()=> history.push({pathname: "/stocks/adjustment/create"})}>
-                      <span className="icon-add icon-padding-right"></span>
-                      <this.Translate id="text_add_new" />
-                    </this.Button>
-                    <this.Button
+                        onClick={() => history.push({pathname: this.pathCreate})}>
+                        <span className="icon-add icon-padding-right"></span>
+                        <this.Translate id="text_add_new"/>
+                      </this.Button>
+                    }
+                    {
+                      permissions.delete &&
+                      <this.Button
                         type="danger"
                         className="text-uppercase"
                         disabled={this.state.isRequestDelete}
                         onClick={this.showDeleteModal}>
-                      <span className="icon-delete icon-padding-right"></span>
-                      <this.Translate id="text_delete" />
-                    </this.Button>
+                        <span className="icon-delete icon-padding-right"></span>
+                        <this.Translate id="text_delete"/>
+                      </this.Button>
+                    }
                   </Col>
                 </Row>
                 <this.Table
                     bordered={true}
                     rowKey="id"
-                    rowSelection={rowSelection}
+                    {...permissions.delete && {rowSelection : rowSelection}}
                     loading={this.state.loading}
                     columns={this.columns}
                     dataSource={this.state.data}
                     onRow={record =>({
-                      onDoubleClick:() => history.push({pathname: "/stocks/adjustment/update/"+record.id})
+                      onDoubleClick:() => history.push({pathname: this.pathUpdate+"/"+record.id})
                     })}
                 />
                 <div style={{marginTop: 15}}>

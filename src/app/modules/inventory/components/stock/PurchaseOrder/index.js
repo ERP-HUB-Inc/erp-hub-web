@@ -1,13 +1,13 @@
 import React from "react";
+import moment from "moment";
 import {Col, DatePicker, Icon, Input, Pagination, Row} from "antd";
 import Component from "../../../../common/components/Component";
+import "./index.css";
 import Enum from "../../../enums";
 import history from "../../../../common/router/history";
 import PurchaseAction from "../../../actions/stock/purchaseOrder";
 import PurchaseService from "../../../services/stock/PurchaseOrderService";
-import "./index.css";
 import Permission from "../../../../pos/components/settings/RoleAccess/permission";
-import moment from "moment";
 import PrivilegeService from "../../../../pos/services/settings/PrivilegeService";
 
 export default class PurchaseOrderLists extends Component {
