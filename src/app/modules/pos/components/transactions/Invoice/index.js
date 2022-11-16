@@ -201,7 +201,7 @@ export default class Invoice extends Component {
         key: "totalSale",
         align: "right",
         render: (total, record) => {
-          total = total - this.Util.floor(record.discount);
+          total = total - this.Util.floor(record.discount) + record.deliveryFee;
           if (total < 0) total = 0;
           return this.Util.formatCurrency(total);
         }
