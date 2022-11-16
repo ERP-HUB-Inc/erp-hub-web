@@ -7,6 +7,8 @@ import StockTransferService from "../../../services/stock/StockTransferService";
 import StockAdjustmentRequestAction from "../../../actions/stock/stockAdjustmentRequest";
 import LocationService from "../../../../pos/services/settings/LocationService";
 import moment from "moment";
+import Permission from "../../../../pos/components/settings/RoleAccess/permission";
+import PrivilegeService from "../../../../pos/services/settings/PrivilegeService";
 
 export default class StockTransferList extends Component {
 
@@ -17,6 +19,7 @@ export default class StockTransferList extends Component {
       data: [],
       locations: [],
       pagination: {},
+      permissions: {},
       dataForSendMail: null,
       emailForPushToSupplier: null,
       selectedListIds: [],
@@ -28,10 +31,11 @@ export default class StockTransferList extends Component {
     };
     this.title = <this.Translate id="text_stock_transfer"/>;
     this.pageSize = 50;
+    this.fetchingProp = "list";
     this.path = "/stock/transfer";
     this.pathCreate = "/stocks/transfer/create";
     this.pathUpdate = "/stocks/transfer/update";
-    this.fetchingProp = "list";
+    this.permissionModuleCode = "stock_transfer";
     this.service = StockTransferService;
     this.action = StockAdjustmentRequestAction;
     this.columnFilterWithKey = ["name", "title", "number"];
@@ -94,6 +98,8 @@ export default class StockTransferList extends Component {
       this.setState({locations: [...this.locations, ...data.data]});
       this.locations = [...this.locations, ...data.data];
     });
+
+    this.getAllPermissionsByModule();
     this.fetchList(true);
 
   }
@@ -150,6 +156,30 @@ export default class StockTransferList extends Component {
           }
         })
         .finally(() => this.setState({loading: false}));
+  }
+
+  getAllPermissionsByModule(){
+    const permissionModule = Permission.find(item => item.code === this.permissionModuleCode);
+
+    if (permissionModule && permissionModule.permissions && permissionModule.permissions.length){
+
+      const promises = [];
+      const permissions = {};
+
+      permissionModule.permissions.forEach((permission) => {
+        promises.push(PrivilegeService.checkPermission(this.permissionModuleCode, permission.code));
+      });
+
+      Promise.allSettled(promises).then((response) =>{
+        permissionModule.permissions.forEach(function (permission, index) {
+          const {status, value} = response[index];
+          if (status === "fulfilled"){
+            permissions[permission.code] = value.data;
+          }
+        });
+        this.setState({permissions});
+      });
+    }
   }
 
   checkIsAllowDeleteRecordOrNot() {
@@ -325,14 +355,15 @@ export default class StockTransferList extends Component {
   }
 
   render() {
-    /*const rowSelection = {
+    const rowSelection = {
       selectedRowKeys: this.state.selectedRowKeys,
       onChange: this.onSelectChange,
       getCheckboxProps: record => ({
         name: record.name,
       })
-    };*/
+    };
     const params = new URLSearchParams(window.location.search);
+    const {permissions} = this.state;
 
     return (
         <React.Fragment>
@@ -356,7 +387,7 @@ export default class StockTransferList extends Component {
                     <DatePicker.RangePicker
                       name="dates"
                       placeholder={this.CATranslate("text_select_date", this.props.locale)}
-                      defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : ""}
+                      defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : null}
                       style={{maxWidth: 200, marginRight: 10, textAlign: "left"}}
                       onChange={this.handleChangeDate}
                     />
@@ -384,28 +415,33 @@ export default class StockTransferList extends Component {
                         }
                       </Select>
                     }
-                    <this.Button
-                      type="info"
-                      id="btnAdd"
-                      className="mg-right text-uppercase"
-                      onClick={()=> history.push({pathname: this.pathCreate})}>
-                    <span className="icon-add icon-padding-right"></span>
-                    <this.Translate id="text_add_new" />
-                  </this.Button>
-                    {/*<this.Button
-                      type="danger"
-                      className="text-uppercase"
-                      disabled={this.state.isRequestDelete}
-                      onClick={this.showDeleteModal}>
-                    <span className="icon-delete icon-padding-right"></span>
-                    <this.Translate id="text_delete" />
-                  </this.Button>*/}
+                    {permissions.add &&
+                      <this.Button
+                        type="info"
+                        id="btnAdd"
+                        className="mg-right text-uppercase"
+                        onClick={() => history.push({pathname: this.pathCreate})}>
+                        <span className="icon-add icon-padding-right"></span>
+                        <this.Translate id="text_add_new"/>
+                      </this.Button>
+                    }
+                    {
+                      permissions.delete &&
+                      <this.Button
+                        type="danger"
+                        className="text-uppercase"
+                        disabled={this.state.isRequestDelete}
+                        onClick={this.showDeleteModal}>
+                        <span className="icon-delete icon-padding-right"></span>
+                        <this.Translate id="text_delete"/>
+                      </this.Button>
+                    }
                   </Col>
                 </Row>
                 <this.Table
                   bordered={true}
                   rowKey="id"
-                  /*rowSelection={rowSelection}*/
+                  {...permissions.delete && {rowSelection}}
                   loading={this.state.loading}
                   columns={this.columns}
                   dataSource={this.state.data}

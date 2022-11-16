@@ -390,7 +390,7 @@ export default class PurchaseOrderLists extends Component {
               <this.Table
                 bordered={true}
                 rowKey="id"
-                {...permissions.delete && {rowSelection : rowSelection}}
+                {...permissions.delete && {rowSelection}}
                 loading={this.state.loading}
                 columns={this.columns}
                 dataSource={this.state.data}
