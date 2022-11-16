@@ -92,9 +92,8 @@ export default class StockConsignment extends Component {
 
   fetchList(withPagination= false) {
     let searchKey = "";
-    let filter = {};
     let limit = this.pageSize;
-    let ranges = "";
+    let date = "";
     let offset = this.state.current;
     const params = new URLSearchParams(window.location.search);
 
@@ -109,11 +108,11 @@ export default class StockConsignment extends Component {
     offset = (offset - 1) * limit;
 
     if (params.get("search")) {
-      searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
+      searchKey = params.get("search");
     }
 
     if (params.get("date")) {
-      ranges = JSON.stringify({column: "invoiceDate", value: [params.get("date"), params.get("date")]});
+      date = params.get("date");
     }
 
     if (!withPagination){
@@ -124,16 +123,16 @@ export default class StockConsignment extends Component {
     }
 
     this.setState({loading: true});
-    this.service.lists(limit, offset, "", "", JSON.stringify(filter), searchKey, ranges)
-        .then((response) => {
-          if (response.data && response.data.data) {
-            this.setState({
-              data: response.data.data,
-              pagination: response.data.pagination
-            });
-          }
-        })
-        .finally(() => this.setState({loading: false}));
+    this.service.lists(limit, offset, searchKey, date)
+      .then((response) => {
+        if (response.data && response.data.data) {
+          this.setState({
+            data: response.data.data,
+            pagination: response.data.pagination
+          });
+        }
+      })
+      .finally(() => this.setState({loading: false}));
   }
 
   checkIsAllowDeleteRecordOrNot() {
@@ -230,8 +229,11 @@ export default class StockConsignment extends Component {
               selectedRowKeys: []
             });
           })
-          .catch(() => {
-            this.Message.error(this.CATranslate("error_warning_delete_adjustment", this.props.locale));
+          .catch((err) => {
+            const error = err.response && err.response.data && err.response.data.error;
+            if (error){
+              this.Message.error(error.message);
+            }
           })
           .finally(() => {
             this.setState({
