@@ -1216,41 +1216,6 @@ class NewInvoice extends React.PureComponent {
         });
     }
 
-    handleNewInvoice = () => {
-        this.id = "";
-        history.push("/transactions/create-invoice");
-        this.pageTitle = "text_create_invoice";
-        this.setState({
-            formData: {
-                customerId: null,
-                firstName: "",
-                lastName: "",
-                phoneNumber: "",
-                invoiceDate: moment().format("YYYY-MM-DD"),
-                dueDate: null,
-                deposit: 0,
-                discount: 0,
-                discountType: Enum.DISCOUNT_TYPE.AMOUNT,
-                publicNote: "",
-                template: Enum.PAPER_SIZE.EXCLUDE_TAX
-            },
-            transactionEntries: [{
-                productVariantId: "",
-                variantName: "",
-                categoryId: "",
-                description: "",
-                unitId: "",
-                quantity: 1,
-                unitName: "",
-                cost: 0,
-                price: 0,
-                discount: 0,
-                amount: 0,
-                status: 1
-            }]
-        });
-    }
-
     handleVoidInvoice = () => {
         this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
         .then(willVoid => {
@@ -1360,9 +1325,17 @@ class NewInvoice extends React.PureComponent {
         }
     }
 
+    handlePrintInvoiceA5 = () => {
+        document.getElementById("invoice-content").classList.add("invoice-A5");
+        document.getElementById("wrap-invoice-form").setAttribute("id", "wrap-invoice-form-A5");
+        setTimeout(() => {
+            window.print();
+        }, 600);
+    }
+
     renderPreviewInvoice(formData) {
         formData.transactionEntries = this.state.transactionEntries;
-        return <div id={formData.client && formData.client.invoiceSize === "A5" ? "wrap-invoice-form-A5" : "wrap-invoice-form"}>
+        return <div id="wrap-invoice-form">
             <CAInvoice formData={formData} />
         </div>;
     }
@@ -1408,6 +1381,12 @@ class NewInvoice extends React.PureComponent {
         let vat = this.util.getTaxValue(subTotal - discount, formData.taxRate);
         formData.total = subTotal + vat;
         formData.status = Number(formData.status);
+
+        onafterprint = (() => {
+            document.getElementById("invoice-content").classList.remove("invoice-A5");
+            const wrapInvoiceEl = document.getElementById("wrap-invoice-form-A5");
+            wrapInvoiceEl.setAttribute("id", "wrap-invoice-form");
+        });
 
         return ( 
             !this.state.loading && Object.keys(formData).length ? 
@@ -1710,6 +1689,7 @@ class NewInvoice extends React.PureComponent {
                             <Dropdown 
                                 overlay={(
                                     <Menu>
+                                        <Menu.Item key={0} onClick={this.handlePrintInvoiceA5}><Translate id="text_print_invoice" /> A5</Menu.Item>
                                         <Menu.Item key={1} onClick={this.handleMakeAsSent}><Translate id="text_mark_as_sent" /></Menu.Item>
                                         <Menu.Item key={2} onClick={() => this.setState({showDrawer: true})}>
                                             <Translate id="text_receive_payment" />
@@ -1730,8 +1710,10 @@ class NewInvoice extends React.PureComponent {
                                                 <Translate id="text_clone" />
                                             </Link>
                                         </Menu.Item>
-                                        <Menu.Item key={5} onClick={this.handleNewInvoice}>
-                                            <Translate id="text_new_invoice" />
+                                        <Menu.Item key={5}>
+                                            <Link to="/transactions/create-invoice" target="_blank">
+                                                <Translate id="text_new_invoice" />
+                                            </Link>
                                         </Menu.Item>
                                         {this.id ?
                                             <Menu.Item key={6} onClick={this.handleVoidInvoice}>
@@ -1741,9 +1723,10 @@ class NewInvoice extends React.PureComponent {
                                         } 
                                     </Menu>
                                 )}
-                                trigger={["click"]}
                             >
-                                <Button id="button-more-action"><Translate id="text_more_action" /> <Icon type="down" /></Button>
+                                <button className="ant-btn ant-dropdown-link" id="button-more-action" type="button">
+                                    <Translate id="text_more_action" /> <Icon type="down" />
+                                </button>
                             </Dropdown>                          
                         </Col>
                     </Row>
