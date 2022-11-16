@@ -163,7 +163,7 @@ export default class ProductList extends List {
 
       if (product[0].serialType === Enum.SERIAL_TYPE.NON_INVENTORY){
         super.handleDelete();
-      }else if(quantity === 0){
+      } else if(quantity <= 0) {
         super.handleDelete();
       } else{
         this.setState({modalVisible: false});

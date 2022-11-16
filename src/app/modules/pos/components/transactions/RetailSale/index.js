@@ -280,6 +280,7 @@ export default class Retail extends Component {
       quantity: this.state.initialOrderQuantity,
       discount: this.state.initialOrderDiscount,
       discountType: this.state.initialOrderDiscountType,
+      enableDescription: product.enableDescription,
       tax: tax.taxRate/100,
       taxDescription: tax,
       description: product.name,
@@ -414,15 +415,6 @@ export default class Retail extends Component {
     this.props.dispatch(ProductAction.fetch(10, "", "", "", filter, "", this.Util.getLocationId()));
   }
 
-  // handleOnLoadMoreProduct() {
-  //   let filter = "";
-  //   if (this.state.selectedCategoryIds.length > 0) {
-  //     filter = JSON.stringify({productTypeId: [this.state.selectedCategoryIds[0]]});
-  //   }
-  //   this.setState({isRequestLoadingMore: true});
-  //   this.props.dispatch(ProductAction.fetch(10, this.state.productList.length, "", "", filter, "", this.Util.getLocationId()));
-  // }
-
   handleCancelVariantProduct() {
     this.setState({modalContent: null});
   }
@@ -449,30 +441,6 @@ export default class Retail extends Component {
     if (this.openFormSaleRegisration()) {
       return;
     }
-
-    // if(this.state.isOutOfStock){  
-    //   if (product.serialType !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY) {
-    //     if (
-    //       (product.productOption === InventoryEnum.PRODUCT_STANDARD && Util.isOutOfStandardProductStock(product))
-    //       || (productVariant && productVariant.quantity <= 0)) {
-    //       const varinatName = productVariant && productVariant.name ? `(${productVariant.name})` : "N/A";
-    //       sweetalert({
-    //         icon: "error",
-    //         title: this.CATranslate("text_out_of_stock", this.props.locale),
-    //         text: `
-    //           ${this.CATranslate("text_name", this.props.locale)}: ${Util.getProductNameV2(product)}\n
-    //           ${this.CATranslate("text_variant", this.props.locale)}: ${varinatName}\n
-    //           ${this.CATranslate("text_barcode", this.props.locale)}: ${Util.getProductBarcode(product)}\n
-    //           ${this.CATranslate("text_product_in_stock", this.props.locale)}: ${Util.countProductQTYCurrentLocation(product, (new CommonUtil()).getLocationId())}`,
-    //         buttons: [false, this.CATranslate("text_close", this.props.locale)],
-    //         dangerMode: true
-    //       });
-    //       this.props.form.setFieldsValue({searchProduct: ""});
-    //       document.getElementById("searchProduct").focus();
-    //       return;
-    //     }
-    //   }
-    // }
 
     let isProductVariant = product.productOption === InventoryEnum.PRODUCT_VARIANT;
     if (isProductVariant && isRequestVariantForm) {
@@ -856,7 +824,6 @@ export default class Retail extends Component {
     }
 
     const imageHeight = productWidth - 70;
-    // const imageWidth = productWidth - 25;
     this.productWidth = productWidth;
 
     return countProduct > 0 ?
@@ -864,10 +831,8 @@ export default class Retail extends Component {
         <this.Col style={{width: productWidth, maxWidth: "none", flex: "none"}} md="3" className="product-box" key={index}>
           <div onClick={() => this.handleOnSelectProduct(product, product.productVariants)} className="product" style={{height: productWidth}}>
             <div className="image" style={{minHeight: imageHeight, maxHeight: imageHeight}}>
-              {/* <this.Image style={{maxHeight: imageHeight}} url={this.Util.processImageOnFlightCropCenter(this.Util.getProductImage(product.image).url, {height: imageHeight, width: imageWidth})}/> */}
               <this.Image style={{maxHeight: imageHeight}} url={this.Util.getProductImage(product.image).url}/>
             </div>
-            {/* {this.renderOutOfStock(product)} */}
             <div style={{maxHeight: 20, overflow: "hidden", wordBreak: "break-all"}}>
               <div className="name">
                 {Util.getProductNameV2(product)}
@@ -926,11 +891,11 @@ export default class Retail extends Component {
     <div className="detail-row-2">
       <this.InputText
         name={`description[${productOrderIndex}]`}
-        label={<this.Translate id="text_notation" />}
-        data={productOrder.description}
+        label={productOrder.enableDescription ? <this.Translate id="text_serial_or_imei" /> : <this.Translate id="text_notation" />}
+        // data={productOrder.description}
         className="ca-input-v1"
         handleKeyUp={(event) => this.handleOnChangOrderField(event, productOrderIndex, "description")}
-        placeholder={this.CATranslate("text_add_notation", this.props.locale)}
+        placeholder={this.CATranslate(productOrder.enableDescription ? "text_search_serial_no" : "text_add_notation", this.props.locale)}
         form={this.props.form} />
     </div>
   )

@@ -176,6 +176,28 @@ export default [
     ]
   },
   {
+    name: "Income & Expense",
+    nameKH: "ចំណូល & ចំណាយ",
+    code: "income_expense",
+    permissions: [
+      {
+        name: "Create New",
+        nameKH: "បង្កើតថ្មី",
+        code: "add"
+      },
+      {
+        name: "Edit",
+        nameKH: "កែប្រែ",
+        code: "edit"
+      },
+      {
+        name: "Delete",
+        nameKH: "លុប",
+        code: "delete"
+      },
+    ]
+  },
+  {
     name: "Employee",
     nameKH: "គ្រប់គ្រងបុគ្គលិគ",
     code: "employee",

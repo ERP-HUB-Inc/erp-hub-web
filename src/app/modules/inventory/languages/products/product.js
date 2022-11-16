@@ -275,6 +275,11 @@ export default {
     "លេខ​ស៊េរីផលិតផល"
   ],
 
+  text_serial_or_imei: [
+    "Serial or IMEI",
+    "Serial or IMEI"
+  ],
+
   "text_non_inventory": [
     "Non-Inventory",
     "ទំនិញគ្មានស្តុក"

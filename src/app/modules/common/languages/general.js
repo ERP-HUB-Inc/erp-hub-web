@@ -199,6 +199,8 @@ export default {
 
   text_add_notation: ["Add product notation", "បញ្ចូលកំណត់សំគាល់ផលិតផល"],
 
+  text_search_serial_no: ["Serial No or IMEI", "Serial No or IMEI"],
+
   text_no_tax: ["No Tax", "គ្នានពន្ធ"],
 
   text_item: ["Item", "មុខទំនិញ"],

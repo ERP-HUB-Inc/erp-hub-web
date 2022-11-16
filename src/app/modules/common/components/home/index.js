@@ -16,29 +16,11 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.isShowDiagram = null;
-    // this.toggleDashboard = this.toggleDashboard.bind(this);
     this.hasDidUpdate = false;
     this.formatDate = "YYYY-MM-DD";
     this.range = [moment().format(this.formatDate), moment().format(this.formatDate)];
     this.defaultOption = "today";
-  }	
-
-  // toggleDashboard(checked) {
-  //   this.isShowDiagram  =  checked === 0;
-  //   localStorage.setItem("defaultDashboardSetting", JSON.stringify(checked));
-  // }
-
-  // componentWillUpdate() {
-  //   if(!this.hasDidUpdate){
-  //     let getDefaultSetting = localStorage.getItem("defaultDashboardSetting");
-  //     if(parseInt(getDefaultSetting, 10) === 1) {
-  //       this.isShowDiagram  = true;
-  //     } else {
-  //       this.isShowDiagram  = false;
-  //     }
-  //   }
-  // }
-
+  }
 
   componentDidMount() {
     let option = new URLSearchParams(document.location.search).get("option");
