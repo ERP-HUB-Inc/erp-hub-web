@@ -195,7 +195,7 @@ class NewInvoice extends React.PureComponent {
                                                     onDoubleClick={() => this.handleUpdateSerial(serial, index, key)}
                                                 >
                                                     {serial.number}
-                                                    <Icon type="close-circle" className="btn-remove-serial" onClick={() => this.onDeleteSerial(serial, index, key)} />
+                                                    <Icon type="close-circle" title="Delete serial" className="btn-remove-serial" onClick={() => this.onDeleteSerial(serial, index, key)} />
                                                 </Tag>
                                                 {!serial.number && <span onDoubleClick={() => this.handleUpdateSerial(serial, index, key)} style={{color: "red", fontSize: 13, margin: "-7px 0 6px"}}><Translate id="error_serial_number_require" /></span>}
                                             </React.Fragment>)
