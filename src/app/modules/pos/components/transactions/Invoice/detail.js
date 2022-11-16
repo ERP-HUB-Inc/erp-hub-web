@@ -93,6 +93,13 @@ class InvoiceDetail extends React.PureComponent {
     this.setState({receipt: result});
   }
 
+  handlePrintA5 = () => {
+    document.getElementById("invoice-content").classList.add("invoice-A5");
+    setTimeout(() => {
+      window.print();
+    }, 500);
+  }
+
   handleAfterPayment = () => {
     message.success("Success Payment");
     this.setState({loading: true});
@@ -144,6 +151,11 @@ class InvoiceDetail extends React.PureComponent {
 
   render() {
     const {formData} = this.state;
+
+    onafterprint = (() => {
+      document.getElementById("invoice-content").classList.remove("invoice-A5");
+    });
+
     return (
       <div style={{marginBottom: 25}}>
         <PageHeader
@@ -168,15 +180,16 @@ class InvoiceDetail extends React.PureComponent {
             <Dropdown key={1} overlay={(
               <Menu>
                 <Menu.Item key={0} onClick={() => window.print()} title="Ctrl + P"><Translate id="text_print" /></Menu.Item>
-                <Menu.Item key={1} onClick={this.handleMakeAsSent}><Translate id="text_mark_as_sent" /></Menu.Item>
-                <Menu.Item key={2} onClick={() => history.push({pathname: `/transactions/update-invoice/${formData.id}`})}>
+                <Menu.Item key={1} onClick={this.handlePrintA5}><Translate id="text_print" /> A5</Menu.Item>
+                <Menu.Item key={2} onClick={this.handleMakeAsSent}><Translate id="text_mark_as_sent" /></Menu.Item>
+                <Menu.Item key={3} onClick={() => history.push({pathname: `/transactions/update-invoice/${formData.id}`})}>
                   <Translate id="text_edit_invoice" />
                 </Menu.Item>
-                <Menu.Item key={3} onClick={() => this.setState({showDrawer: true})}>
+                <Menu.Item key={4} onClick={() => this.setState({showDrawer: true})}>
                   <Translate id="text_receive_payment" />
                 </Menu.Item>
                 {formData.status === Enum.INVOICE_STATUS.PAID ?
-                  <Menu.Item key={4}>
+                  <Menu.Item key={5}>
                     <ReactToPrint
                       onBeforeGetContent={() => this.getReceiptData(formData.id)}
                       trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}><Translate id="text_print_receipt" /></button>}
