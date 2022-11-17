@@ -1,7 +1,7 @@
 import React from "react";
 import swal from "sweetalert";
 import moment from "moment";
-import { 
+import {
   Dropdown,
   DatePicker,
   Input,
@@ -29,29 +29,33 @@ import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import Receipt from "../RetailSale/Receipt";
 import Detail from "../../../containers/transactions/SaleHistory/Detail";
 import ReceiptTemplate from "../receipt/template";
+import PrivilegeService from "../../../services/settings/PrivilegeService";
+import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
 
 export default class Invoice extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      setDefaultDate: [],
+      data: [],
+      summaryData: {},
+      pagination: {},
+      detail: {},
       current: 1,
       isRequestReturn: false,
       reprintReceiptContent: null,
       isRequestReprint: false,
       isRequestShowDetail: false,
       isShowFilter: true,
-      setDefaultDate: [],
-      data: [],
-      summaryData: {},
-      pagination: {},
-      detail: {},
-      loading: false
+      loading: false,
+      isHasAccessPermission: null
     };
-    this.title = <this.Translate id="text_sales"/>;
-    this.fetchingProp = "list";
+    this.title = <this.Translate id="text_invoices"/>;
     this.pageSize = 50;
-    this.columnFilterWithKey = ["firstName", "lastName", "email", "phoneNumber"];
+    this.fetchingProp = "list";
     this.pathname = "/transactions/invoice";
+    this.pathCreate= "/transactions/create-invoice";
+    this.columnFilterWithKey = ["firstName", "lastName", "email", "phoneNumber"];
     this.INVOICE_STATUS_STR = {
       [Enum.INVOICE_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#bfbfbf" },
       [Enum.INVOICE_STATUS.SENT]: { title: <this.Translate id="text_sent" />, color: "#1890ff" },
@@ -231,6 +235,8 @@ export default class Invoice extends Component {
       this.props.form.setFieldsValue("locationId", params.get("locationId"));
     }
 
+    this.getPermission();
+
     InvoiceService.summary().then(({data})=>{
       this.setState({summaryData: data.data});
     });
@@ -258,6 +264,12 @@ export default class Invoice extends Component {
         });
       }
     }
+  }
+
+  getPermission(){
+    PrivilegeService.checkPermission(this.permissionModuleCode, "view")
+        .then(({data}) => this.setState({isHasAccessPermission: data}))
+        .catch(() => this.setState({isHasAccessPermission: false}));
   }
 
   fetchList(withPagination= false) {
@@ -448,10 +460,6 @@ export default class Invoice extends Component {
     };
   }
 
-  getProductTaxList(productOrderList) {
-    return POSUtil.appendProductTaxList(productOrderList);
-  }
-
   getTaxAmount(data) {
     return data.total - data.totalExcludeTax;
   }
@@ -577,104 +585,112 @@ export default class Invoice extends Component {
     const params = new URLSearchParams(window.location.search);
 
     return (
-      <React.Fragment>
-        <div style={{display: "none"}}>
-          <ReceiptTemplate 
-            formData={detail} 
-            receiptTemplate={this.props.receiptTemplate.data}
-            locale={this.props.locale}
-            ref={re => this.receiptRef = re} />
-        </div>
-        <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
-          <Col span={8}>
-            <Card>
-              <Statistic
-                title={<this.Translate id="text_sent_invoice"/>}
-                value={summaryData.sentAmount ? summaryData.sentAmount : 0 }
-                prefix="$"
-                suffix={" / " + (summaryData.sent ? summaryData.sent  :  0) + " invoice(s)"}
-                precision={2}
-                valueStyle={{color: "rgb(24, 144, 255)"}}
-              />
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card>
-              <Statistic
-                title={<this.Translate id="text_overdue"/>}
-                value={summaryData.overdueAmount ? summaryData.overdueAmount : 0 }
-                prefix="$"
-                suffix={" / " + (summaryData.overdue ? summaryData.overdue  :  0) + " invoice(s)"}
-                precision={2}
-                valueStyle={{ color: "#cf1322" }}
-              />
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card>
-              <Statistic
-                title={<this.Translate id="text_paid"/>}
-                value={summaryData.paidAmount ? summaryData.paidAmount : 0 }
-                prefix="$"
-                suffix={ " / " + (summaryData.paid ? summaryData.paid  :  0) + " invoice(s)"}
-                precision={2}
-                valueStyle={{ color: "#3f8600" }}
-              />
-            </Card>
-          </Col>
-        </Row>
-        <div className="content-list">
-            <div style={{height: "100%"}}>
-              <div className="table-wrapper">
-                <Row>
-                  <Col span={12} style={{marginBottom: 0}}>
-                    <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_invoices" /></h3>
-                  </Col>
-                  <Col span={12} style={{textAlign: "right"}}>
-                    <Input
-                      name="search"
-                      placeholder={this.CATranslate("text_search", this.props.locale)}
-                      prefix={<Icon type="search" />}
-                      defaultValue={params.get("search") ? params.get("search") : ""}
-                      style={{width: 200, marginRight: 10}}
-                      allowClear={true}
-                      onChange={this.handleSearch}
-                    />
-                    <DatePicker
-                        onChange={this.handleChangeDate}
-                        name="date"
-                        placeholder={this.CATranslate("text_select_date", this.props.locale)}
-                        defaultValue={params.get("date") ? moment(params.get("date")) : ""}
-                        style={{maxWidth: 200, marginRight: 10}}
-                    />
-                    <this.Button
-                      type="info"
-                      id="btnAdd"
-                      className="mg-right text-uppercase"
-                      onClick={() => history.push({pathname: "/transactions/create-invoice"})}>
-                      <span className="icon-add icon-padding-right"></span>
-                      <this.Translate id="text_add_new" />
-                    </this.Button>
-                  </Col>  
-                </Row>
-                <this.Table
-                  bordered={true}
-                  rowKey="id"
-                  loading={this.state.loading}
-                  columns={this.columns}
-                  dataSource={this.state.data}
-                />
-
-                <div style={{marginTop: 15}}>
-                  {this.renderPagination(this.state.pagination)}
+        <React.Fragment>
+          {this.Util.isNotCheckingPermissionV2(this.state.isHasAccessPermission) &&
+          (this.state.isHasAccessPermission ?
+              <React.Fragment>
+                <div style={{display: "none"}}>
+                  <ReceiptTemplate
+                      formData={detail}
+                      receiptTemplate={this.props.receiptTemplate.data}
+                      locale={this.props.locale}
+                      ref={re => this.receiptRef = re} />
                 </div>
+                <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
+                  <Col span={8}>
+                    <Card>
+                      <Statistic
+                          title={<this.Translate id="text_sent_invoice"/>}
+                          value={summaryData.sentAmount ? summaryData.sentAmount : 0 }
+                          prefix="$"
+                          suffix={" / " + (summaryData.sent ? summaryData.sent  :  0) + " invoice(s)"}
+                          precision={2}
+                          valueStyle={{color: "rgb(24, 144, 255)"}}
+                      />
+                    </Card>
+                  </Col>
+                  <Col span={8}>
+                    <Card>
+                      <Statistic
+                          title={<this.Translate id="text_overdue"/>}
+                          value={summaryData.overdueAmount ? summaryData.overdueAmount : 0 }
+                          prefix="$"
+                          suffix={" / " + (summaryData.overdue ? summaryData.overdue  :  0) + " invoice(s)"}
+                          precision={2}
+                          valueStyle={{ color: "#cf1322" }}
+                      />
+                    </Card>
+                  </Col>
+                  <Col span={8}>
+                    <Card>
+                      <Statistic
+                          title={<this.Translate id="text_paid"/>}
+                          value={summaryData.paidAmount ? summaryData.paidAmount : 0 }
+                          prefix="$"
+                          suffix={ " / " + (summaryData.paid ? summaryData.paid  :  0) + " invoice(s)"}
+                          precision={2}
+                          valueStyle={{ color: "#3f8600" }}
+                      />
+                    </Card>
+                  </Col>
+                </Row>
+                <div className="content-list">
+                  <div style={{height: "100%"}}>
+                    <div className="table-wrapper">
+                      <Row>
+                        <Col span={12} style={{marginBottom: 0}}>
+                          <h3 style={{marginBottom: 0, fontWeight: 600}}>{this.title}</h3>
+                        </Col>
+                        <Col span={12} style={{textAlign: "right"}}>
+                          <Input
+                              name="search"
+                              placeholder={this.CATranslate("text_search", this.props.locale)}
+                              prefix={<Icon type="search" />}
+                              defaultValue={params.get("search") ? params.get("search") : ""}
+                              style={{width: 200, marginRight: 10}}
+                              allowClear={true}
+                              onChange={this.handleSearch}
+                          />
+                          <DatePicker
+                              onChange={this.handleChangeDate}
+                              name="date"
+                              placeholder={this.CATranslate("text_select_date", this.props.locale)}
+                              defaultValue={params.get("date") ? moment(params.get("date")) : ""}
+                              style={{maxWidth: 200, marginRight: 10}}
+                          />
+                          <this.Button
+                              type="info"
+                              id="btnAdd"
+                              className="mg-right text-uppercase"
+                              onClick={() => history.push({pathname: this.pathCreate})}>
+                            <span className="icon-add icon-padding-right"></span>
+                            <this.Translate id="text_add_new" />
+                          </this.Button>
+                        </Col>
+                      </Row>
+                      <this.Table
+                          bordered={true}
+                          rowKey="id"
+                          loading={this.state.loading}
+                          columns={this.columns}
+                          dataSource={this.state.data}
+                      />
 
-                <this.clearFloating/>
+                      <div style={{marginTop: 15}}>
+                        {this.renderPagination(this.state.pagination)}
+                      </div>
 
-            </div>
-          </div>
-        </div>
-      </React.Fragment>
+                      <this.clearFloating/>
+
+                    </div>
+                  </div>
+                </div>
+              </React.Fragment>
+              :
+              <NoPermissionV2/>
+          )
+          }
+        </React.Fragment>
     );
   }
 
