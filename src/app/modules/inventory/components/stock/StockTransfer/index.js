@@ -37,7 +37,6 @@ export default class StockTransferList extends Component {
     this.pathCreate = "/stocks/transfer/create";
     this.pathUpdate = "/stocks/transfer/update";
     this.permissionModuleCode = "stock_transfer";
-    this.permissionCode = "view";
     this.service = StockTransferService;
     this.action = StockAdjustmentRequestAction;
     this.columnFilterWithKey = ["name", "title", "number"];
@@ -107,7 +106,7 @@ export default class StockTransferList extends Component {
   }
 
   getPermission(){
-    PrivilegeService.checkPermission(this.permissionModuleCode, this.permissionCode)
+    PrivilegeService.checkPermission(this.permissionModuleCode, "view")
         .then(({data}) => this.setState({isHasAccessPermission: data}))
         .catch(() => this.setState({isHasAccessPermission: false}));
   }
@@ -347,12 +346,11 @@ export default class StockTransferList extends Component {
       })
     };
     const params = new URLSearchParams(window.location.search);
-    const {isHasAccessPermission} = this.state;
 
     return (
       <React.Fragment>
-        {this.Util.isNotCheckingPermissionV2(isHasAccessPermission) &&
-        (isHasAccessPermission ?
+        {this.Util.isNotCheckingPermissionV2(this.state.isHasAccessPermission) &&
+        (this.state.isHasAccessPermission ?
           <React.Fragment>
             <div className="content-list">
               <div style={{height: "100%"}}>
