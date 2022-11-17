@@ -106,53 +106,7 @@ class NewInvoice extends React.PureComponent {
             key: "no",
             width: 80,
             align: "center",
-            render: (no, record, index) => {
-                return <div>
-                    {index + 1}
-                    <InputText
-                        style={{display: "none"}}
-                        name={`id[${index}]`}
-                        data={record.id ? record.id : null}
-                        form={this.props.form}
-                    />
-                    <InputText
-                        style={{display: "none"}}
-                        name={`productVariantId[${index}]`}
-                        data={record.productVariantId}
-                        form={this.props.form}
-                    />
-                    <InputText
-                        style={{display: "none"}}
-                        name={`categoryId[${index}]`}
-                        data={record.categoryId}
-                        form={this.props.form}
-                    />
-                    <InputText
-                        style={{display: "none"}}
-                        name={`unitId[${index}]`}
-                        data={record.unitId}
-                        form={this.props.form}
-                    />
-                    <InputText
-                        style={{display: "none"}}
-                        name={`unitName[${index}]`}
-                        data={record.unitName}
-                        form={this.props.form}
-                    />
-                    <InputNumber
-                        style={{display: "none"}}
-                        name={`cost[${index}]`}
-                        data={record.cost}
-                        form={this.props.form}
-                    />
-                    <InputNumber
-                        style={{display: "none"}}
-                        name={`status[${index}]`}
-                        data={record.status}
-                        form={this.props.form}
-                    />
-                </div>;
-            }
+            render: (no, record, index) => index + 1
         },
         {
             title: <Translate id="text_description" />,
@@ -466,19 +420,19 @@ class NewInvoice extends React.PureComponent {
                     values["description"].forEach((description, index) => {
                         if (description || values.quantity[index]) {
                             entries.push({
-                                id: values.id[index],
-                                productVariantId: values.productVariantId[index],
-                                variantName: values.variantName[index],
-                                categoryId: values.categoryId[index],
+                                id: transactionEntries[index].id,
+                                productVariantId: transactionEntries[index].productVariantId,
+                                variantName: transactionEntries[index].variantName,
+                                categoryId: transactionEntries[index].categoryId,
                                 description,
                                 quantity: values.quantity[index],
                                 enableDescription: transactionEntries[index].enableDescription,
-                                unitId: values.unitId[index],
-                                unitName: values.unitName[index],
-                                cost: values.cost[index],
+                                unitId: transactionEntries[index].unitId,
+                                unitName: transactionEntries[index].unitName,
+                                cost: transactionEntries[index].cost,
                                 price: values.price[index],
                                 discount: 0,
-                                status: values.status[index],
+                                status: transactionEntries[index].status,
                                 serials: transactionEntries[index].serials && transactionEntries[index].serials.length ? transactionEntries[index].serials : ""
                             });
                         }
@@ -1050,6 +1004,13 @@ class NewInvoice extends React.PureComponent {
             }
             formData.discount = discount;
             this.setState({transactionEntries, formData, productSearch: []});
+            transactionEntries.length && transactionEntries.forEach((entry, index) => {
+                this.props.form.setFieldsValue({
+                    [`description[${index}]`]: entry.description,
+                    [`quantity[${index}]`]: entry.quantity,
+                    [`price[${index}]`]: entry.price
+                });
+            });
         }
     }
 
@@ -1145,20 +1106,19 @@ class NewInvoice extends React.PureComponent {
         }
         formData.discount = discount;
         this.setState({transactionEntries: existingProductList, formData});
-        this.props.form.setFieldsValue({
-            searchProduct: "",
-            [`productVariantId[${0}]`]: existingProductList[0].productVariantId,
-            [`description[${0}]`]: existingProductList[0].description,
-            [`quantity[${0}]`]: existingProductList[0].quantity,
-            [`cost[${0}]`]: existingProductList[0].cost,
-            [`price[${0}]`]: existingProductList[0].price
-        }, () => {
-            if (product.enableDescription) {
-                setTimeout(() => {
-                    this.handleShowModal(0, productVariant.id);
-                }, 800);
-            }
+        this.props.form.setFieldsValue({searchProduct: ""});
+        existingProductList.length && existingProductList.forEach((entry, index) => {
+            this.props.form.setFieldsValue({
+                [`description[${index}]`]: entry.description,
+                [`quantity[${index}]`]: entry.quantity,
+                [`price[${index}]`]: entry.price
+            });
         });
+        if (product.enableDescription) {
+            setTimeout(() => {
+                this.handleShowModal(0, productVariant.id);
+            }, 900);
+        }
     }
 
     handleResetForm = () => {

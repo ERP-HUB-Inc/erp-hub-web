@@ -109,6 +109,8 @@ class SerialList extends Component {
       this.setState({current: 1});
     }
 
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+
     offset = (offset - 1) * limit;
     this.setState({loading: true});
     SerialService.lists(limit, offset, searchKey, rangeFilter)

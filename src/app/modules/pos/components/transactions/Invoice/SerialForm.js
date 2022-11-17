@@ -79,25 +79,35 @@ export default class SerialForm extends React.PureComponent  {
 
     if (value && value !== this.props.formData.number) {
       this.timer = setTimeout(() => {
-        if (this.props.selectedSerials.length && this.props.selectedSerials.includes(value)) {
-          return this.props.form.setFields({
-            serialNumber: {
-              errors: [new Error(value + ": This serial number already selected")]
-            }
-          });
+        let delSerials = this.props.form.getFieldValue(`serials[${Number(this.props.formData.index)}]`);
+        if (delSerials && this.util.isJsonString(delSerials)) {
+          delSerials = JSON.parse(delSerials);
+          //eslint-disable-next-line
+          delSerials = delSerials.length && delSerials.filter(serial => serial.number === value && serial.status == 3);
+        } else {
+          delSerials = [];
         }
         
-        SerialService.findByNumber(value, this.props.formData.pVariantId)
-        .then(response => {
-          if (response.data && response.data.length) {
-            this.props.form.setFields({
+        if (!delSerials.length) {
+          if (this.props.selectedSerials.length && this.props.selectedSerials.includes(value)) {
+            return this.props.form.setFields({
               serialNumber: {
-                errors: [new Error(value + ": " + stringTranslate("text_this_serial_is_sold", this.props.locale))]
+                errors: [new Error(value + ": This serial number already selected")]
               }
             });
           }
-        })
-        .catch(e => console.log("error ========", e.response));
+          
+          SerialService.findByNumber(value, this.props.formData.pVariantId)
+          .then(response => {
+            if (response.data && response.data.length) {
+              this.props.form.setFields({
+                serialNumber: {
+                  errors: [new Error(value + ": " + stringTranslate("text_this_serial_is_sold", this.props.locale))]
+                }
+              });
+            }
+          });
+        }
       }, 600);
     }
   };
