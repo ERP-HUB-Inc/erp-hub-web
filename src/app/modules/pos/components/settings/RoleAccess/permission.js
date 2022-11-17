@@ -63,6 +63,11 @@ export default [
         nameKH: "លុប",
         code: "delete"
       },
+      {
+        name: "View",
+        nameKH: "មើល",
+        code: "view"
+      }
     ]
   },
   {
@@ -84,6 +89,11 @@ export default [
         name: "Delete",
         nameKH: "លុប",
         code: "delete"
+      },
+      {
+        name: "View",
+        nameKH: "មើល",
+        code: "view"
       },
     ]
   },
@@ -107,6 +117,11 @@ export default [
         nameKH: "លុប",
         code: "delete"
       },
+      {
+        name: "View",
+        nameKH: "មើល",
+        code: "view"
+      }
     ]
   },
   {
@@ -129,6 +144,11 @@ export default [
         nameKH: "លុប",
         code: "delete"
       },
+      {
+        name: "View",
+        nameKH: "មើល",
+        code: "view"
+      }
     ]
   },
   {
