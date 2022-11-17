@@ -4,9 +4,8 @@ import Component from "../../../../common/components/Component";
 import Enum from "../../../enums";
 import history from "../../../../common/router/history";
 import StockAdjustmentRequestService from "../../../services/stock/StockAdjustmentRequestService";
-import StockAdjustmentRequestAction from "../../../actions/stock/stockAdjustmentRequest";
-import Permission from "../../../../pos/components/settings/RoleAccess/permission";
 import PrivilegeService from "../../../../pos/services/settings/PrivilegeService";
+import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
 
 export default class StockAdjustmentRequestLists extends Component {
   constructor(props) {
@@ -15,13 +14,13 @@ export default class StockAdjustmentRequestLists extends Component {
       current: 1,
       data: [],
       pagination: {},
-      permissions: {},
       selectedListIds: [],
       selectedRowKeys: [],
       selectedRows: [],
       modalVisible: false,
       loading: false,
-      deleting: false
+      deleting: false,
+      isHasAccessPermission: null
     };
     this.title = <this.Translate id="text_stock_adjustment"/>;
     this.columns = [
@@ -91,9 +90,15 @@ export default class StockAdjustmentRequestLists extends Component {
       this.status_options.push({name: this.ADJUSTMENT_STEP[prop].name, value: prop});
     });
 
-    this.getAllPermissionsByModule();
+    this.getPermission();
     this.fetchList(true);
 
+  }
+
+  getPermission(){
+    PrivilegeService.checkPermission(this.permissionModuleCode, "view")
+        .then(({data}) => this.setState({isHasAccessPermission: data}))
+        .catch(() => this.setState({isHasAccessPermission: false}));
   }
 
   fetchList(withPagination= false) {
@@ -140,30 +145,6 @@ export default class StockAdjustmentRequestLists extends Component {
           }
         })
         .finally(() => this.setState({loading: false}));
-  }
-
-  getAllPermissionsByModule(){
-    const permissionModule = Permission.find(item => item.code === this.permissionModuleCode);
-
-    if (permissionModule && permissionModule.permissions && permissionModule.permissions.length){
-
-      const promises = [];
-      const permissions = {};
-
-      permissionModule.permissions.forEach((permission) => {
-        promises.push(PrivilegeService.checkPermission(this.permissionModuleCode, permission.code));
-      });
-
-      Promise.allSettled(promises).then((response) =>{
-        permissionModule.permissions.forEach(function (permission, index) {
-          const {status, value} = response[index];
-          if (status === "fulfilled"){
-            permissions[permission.code] = value.data;
-          }
-        });
-        this.setState({permissions});
-      });
-    }
   }
 
   checkIsAllowDeleteRecordOrNot() {
@@ -323,101 +304,103 @@ export default class StockAdjustmentRequestLists extends Component {
       })
     };
     const params = new URLSearchParams(window.location.search);
-    const {permissions} = this.state;
 
     return (
         <React.Fragment>
-          <div className="content-list">
-            <div style={{height: "100%"}}>
-              <div className="table-wrapper">
-                <Row>
-                  <Col span={6} style={{marginBottom: 0}}>
-                    <h3 style={{marginBottom: 0, fontWeight: 600}}>{this.title}</h3>
-                  </Col>
-                  <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
-                    <Input
-                      name="search"
-                      placeholder={this.CATranslate("text_search", this.props.locale)}
-                      prefix={<Icon type="search" />}
-                      defaultValue={params.get("search") ? params.get("search") : ""}
-                      style={{height: 32, width: 200, marginRight: 10}}
-                      allowClear={true}
-                      onChange={this.handleSearch}
-                    />
-                    <Select
-                      defaultValue={params.get("status") == null ? this.status_options[0].value : params.get("status") }
-                      onChange={this.handleChangeStatus}
-                      style={{width: 200, marginRight: 10}}
-                    >
-                      {
-                        this.status_options.map((statusOption, index) =>
-                            <Select.Option value={statusOption.value} key={index}>{statusOption.name}</Select.Option>
-                        )
-                      }
-                    </Select>
-                    {permissions.add &&
-                      <this.Button
-                        type="info"
-                        id="btnAdd"
-                        className="mg-right text-uppercase"
-                        onClick={() => history.push({pathname: this.pathCreate})}>
-                        <span className="icon-add icon-padding-right"></span>
-                        <this.Translate id="text_add_new"/>
-                      </this.Button>
-                    }
-                    {
-                      permissions.delete &&
-                      <this.Button
-                        type="danger"
-                        className="text-uppercase"
-                        disabled={this.state.isRequestDelete}
-                        onClick={this.showDeleteModal}>
-                        <span className="icon-delete icon-padding-right"></span>
-                        <this.Translate id="text_delete"/>
-                      </this.Button>
-                    }
-                  </Col>
-                </Row>
-                <this.Table
-                    bordered={true}
-                    rowKey="id"
-                    {...permissions.delete && {rowSelection : rowSelection}}
-                    loading={this.state.loading}
-                    columns={this.columns}
-                    dataSource={this.state.data}
-                    onRow={record =>({
-                      onDoubleClick:() => history.push({pathname: this.pathUpdate+"/"+record.id})
-                    })}
-                />
-                <div style={{marginTop: 15}}>
-                  {this.renderPagination(this.state.pagination)}
-                </div>
-                <this.clearFloating/>
-              </div>
-            </div>
-          </div>
-          <this.Modal
-              visible={this.state.modalVisible}
-              wrapClassName="confirm-delete"
-              footer={null}>
-            <div>
-              { this.state.showDeleteModal &&
+          {this.Util.isNotCheckingPermissionV2(this.state.isHasAccessPermission) &&
+          (this.state.isHasAccessPermission ?
               <React.Fragment>
-                <span className="icon-help icon-padding-right"></span>
-                <span className="title">COMPLETED</span><br/>
-                <span><this.Translate id="text_confirm_delete" /></span>
+                <div className="content-list">
+                  <div style={{height: "100%"}}>
+                    <div className="table-wrapper">
+                      <Row>
+                        <Col span={6} style={{marginBottom: 0}}>
+                          <h3 style={{marginBottom: 0, fontWeight: 600}}>{this.title}</h3>
+                        </Col>
+                        <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
+                          <Input
+                              name="search"
+                              placeholder={this.CATranslate("text_search", this.props.locale)}
+                              prefix={<Icon type="search" />}
+                              defaultValue={params.get("search") ? params.get("search") : ""}
+                              style={{height: 32, width: 200, marginRight: 10}}
+                              allowClear={true}
+                              onChange={this.handleSearch}
+                          />
+                          <Select
+                              defaultValue={params.get("status") == null ? this.status_options[0].value : params.get("status") }
+                              onChange={this.handleChangeStatus}
+                              style={{width: 200, marginRight: 10}}
+                          >
+                            {
+                              this.status_options.map((statusOption, index) =>
+                                  <Select.Option value={statusOption.value} key={index}>{statusOption.name}</Select.Option>
+                              )
+                            }
+                          </Select>
+                          <this.Button
+                              type="info"
+                              id="btnAdd"
+                              className="mg-right text-uppercase"
+                              onClick={() => history.push({pathname: this.pathCreate})}>
+                            <span className="icon-add icon-padding-right"></span>
+                            <this.Translate id="text_add_new"/>
+                          </this.Button>
+                          <this.Button
+                              type="danger"
+                              className="text-uppercase"
+                              disabled={this.state.isRequestDelete}
+                              onClick={this.showDeleteModal}>
+                            <span className="icon-delete icon-padding-right"></span>
+                            <this.Translate id="text_delete"/>
+                          </this.Button>
+                        </Col>
+                      </Row>
+                      <this.Table
+                          bordered={true}
+                          rowKey="id"
+                          rowSelection={rowSelection}
+                          loading={this.state.loading}
+                          columns={this.columns}
+                          dataSource={this.state.data}
+                          onRow={record =>({
+                            onDoubleClick:() => history.push({pathname: this.pathUpdate+"/"+record.id})
+                          })}
+                      />
+                      <div style={{marginTop: 15}}>
+                        {this.renderPagination(this.state.pagination)}
+                      </div>
+                      <this.clearFloating/>
+                    </div>
+                  </div>
+                </div>
+                <this.Modal
+                    visible={this.state.modalVisible}
+                    wrapClassName="confirm-delete"
+                    footer={null}>
+                  <div>
+                    { this.state.showDeleteModal &&
+                    <React.Fragment>
+                      <span className="icon-help icon-padding-right"></span>
+                      <span className="title">COMPLETED</span><br/>
+                      <span><this.Translate id="text_confirm_delete" /></span>
+                    </React.Fragment>
+                    }
+                  </div>
+                  <div className="ant-modal-footer">
+                    <this.Button className="danger text-uppercase" onClick={()=>this.setState({modalVisible: false})}>
+                      <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel"/>
+                    </this.Button>
+                    <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info text-uppercase">
+                      <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes"/>
+                    </this.Button>
+                  </div>
+                </this.Modal>
               </React.Fragment>
-              }
-            </div>
-            <div className="ant-modal-footer">
-              <this.Button className="danger text-uppercase" onClick={()=>this.setState({modalVisible: false})}>
-                <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel"/>
-              </this.Button>
-              <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info text-uppercase">
-                <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes"/>
-              </this.Button>
-            </div>
-          </this.Modal>
+              :
+              <NoPermissionV2/>
+          )
+          }
         </React.Fragment>
     );
   }

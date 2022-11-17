@@ -23,7 +23,6 @@ export default class PurchaseOrderLists extends Component {
       selectedListIds: [],
       selectedRowKeys: [],
       selectedRows: [],
-      permissions: {},
       modalVisible: false,
       loading: false,
       deleting: false,
@@ -82,7 +81,6 @@ export default class PurchaseOrderLists extends Component {
     this.service = PurchaseService;
     this.title = <this.Translate id="text_sales"/>;
     this.fetchingProp = "list";
-    this.pageSize = 50;
     this.pathname = "/stock/purchase/order";
     this.pathCreate= "/stocks/purchase/create";
     this.pathUpdate= "/stocks/purchase/update";
@@ -169,30 +167,6 @@ export default class PurchaseOrderLists extends Component {
           }
         })
         .finally(() => this.setState({loading: false}));
-  }
-
-  getAllPermissionsByModule(){
-    const permissionModule = Permission.find(item => item.code === this.permissionModuleCode);
-
-    if (permissionModule && permissionModule.permissions && permissionModule.permissions.length){
-
-      const promises = [];
-      const permissions = {};
-
-      permissionModule.permissions.forEach((permission) => {
-        promises.push(PrivilegeService.checkPermission(this.permissionModuleCode, permission.code));
-      });
-
-      Promise.allSettled(promises).then((response) =>{
-        permissionModule.permissions.forEach(function (permission, index) {
-          const {status, value} = response[index];
-          if (status === "fulfilled"){
-            permissions[permission.code] = value.data;
-          }
-        });
-        this.setState({permissions});
-      });
-    }
   }
 
   checkIsAllowDeleteRecordOrNot() {
@@ -344,7 +318,6 @@ export default class PurchaseOrderLists extends Component {
       })
     };
     const params = new URLSearchParams(window.location.search);
-    const {permissions} = this.state;
 
     return (
         <React.Fragment>
@@ -401,7 +374,7 @@ export default class PurchaseOrderLists extends Component {
                         columns={this.columns}
                         dataSource={this.state.data}
                         onRow={record =>({
-                          onDoubleClick:() => permissions.edit && history.push({pathname: this.pathUpdate+"/"+record.id})
+                          onDoubleClick:() => history.push({pathname: this.pathUpdate+"/"+record.id})
                         })}
                     />
                     <div style={{marginTop: 15}}>
