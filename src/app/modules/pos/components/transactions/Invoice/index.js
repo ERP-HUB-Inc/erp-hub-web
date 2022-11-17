@@ -55,6 +55,7 @@ export default class Invoice extends Component {
     this.fetchingProp = "list";
     this.pathname = "/transactions/invoice";
     this.pathCreate= "/transactions/create-invoice";
+    this.permissionModuleCode = "invoice";
     this.columnFilterWithKey = ["firstName", "lastName", "email", "phoneNumber"];
     this.INVOICE_STATUS_STR = {
       [Enum.INVOICE_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#bfbfbf" },

@@ -11,12 +11,12 @@ export default class StockAdjustmentRequestLists extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 1,
       data: [],
       pagination: {},
       selectedListIds: [],
       selectedRowKeys: [],
       selectedRows: [],
+      current: 1,
       modalVisible: false,
       loading: false,
       deleting: false,

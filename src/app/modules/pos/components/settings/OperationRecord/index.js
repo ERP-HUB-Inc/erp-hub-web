@@ -5,29 +5,40 @@ import FormUpdate from "../../../containers/settings/OperationRecord/FormUpdate"
 import Constant from "../../../constants/settings/operationRecord";
 import OperationRecordAction from "../../../action/settings/operationRecord";
 import OperationRecordService from "../../../services/settings/OperationRecordService";
-import {Card, Col, Icon, Input, message, Pagination, Row, Statistic,DatePicker} from "antd";
+import {Card, Col, Icon, Input, message, Pagination, Row, Statistic, DatePicker} from "antd";
 import Component from "../../../../common/components/Component";
+import PrivilegeService from "../../../services/settings/PrivilegeService";
+import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
 
 export default class IncomeExpense extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
+      pagination: {},
       summaryData: {},
+      selectedListIds: [],
+      selectedRowKeys: [],
+      selectedRows: [],
+      current: 1,
+      content: "",
       modalVisible: false,
       loading: false,
       deleting: false,
       showDeleteModal: false,
       showCreateFrom: false,
-      pagination: {},
-      current: 1,
-      content: "",
-      selectedListIds: [],
-      selectedRowKeys: [],
-      selectedRows: []
+      isHasAccessPermission: null
     };
 
-    this.module = "transactions";
+    this.placeHolderForGeneralSearch = "text_description";
+    this.pageSize = 50;
+    this.fetchingProp = "list";
+    this.pathname = "/transactions/income_expense";
+    this.permissionModuleCode = "income_expense";
+    this.service = OperationRecordService;
+    this.action = OperationRecordAction;
+    this.RESET_CONSTANT = Constant.RESET_OPERATION_RECORD;
+    this.columnFilterWithKey = ["name"];
     this.columns = [
       {
         title: <this.Translate id="text_date" />,
@@ -102,15 +113,6 @@ export default class IncomeExpense extends Component {
         render: (amount) => this.Util.formatCurrency(amount),
       },
     ];
-    this.generalSearchLabel = "text_search";
-    this.placeHolderForGeneralSearch = "text_description";
-    this.columnFilterWithKey = ["name"];
-    this.pageSize = 50;
-    this.fetchingProp = "list";
-    this.pathname = "/transactions/income_expense";
-    this.service = OperationRecordService;
-    this.action = OperationRecordAction;
-    this.RESET_CONSTANT = Constant.RESET_OPERATION_RECORD;
   }
 
   componentDidMount() {
@@ -124,6 +126,7 @@ export default class IncomeExpense extends Component {
       this.setState({current: parseInt(params.get("offset"))});
     }
 
+    this.getPermission();
     this.service.summary().then(({data})=>{
       this.setState({summaryData: data.data});
     });
@@ -145,6 +148,12 @@ export default class IncomeExpense extends Component {
         this.props.dispatch(this.action.reset());
       }
     }
+  }
+
+  getPermission(){
+    PrivilegeService.checkPermission(this.permissionModuleCode, "view")
+        .then(({data}) => this.setState({isHasAccessPermission: data}))
+        .catch(() => this.setState({isHasAccessPermission: false}));
   }
 
   fetchList(withPagination = false) {
@@ -184,11 +193,11 @@ export default class IncomeExpense extends Component {
 
     this.setState({loading: true});
     this.service.lists(limit, offset, "", "", filter, searchKey, ranges)
-        .then(response => {
-          this.setState({data: response && response.data});
-        })
-        .catch(err => message.error("Error"))
-        .finally(() => this.setState({loading: false}));
+      .then(response => {
+        this.setState({data: response && response.data});
+      })
+      .catch(() => message.error("Error"))
+      .finally(() => this.setState({loading: false}));
   }
 
   checkIsAllowDeleteRecordOrNot() {
@@ -373,124 +382,132 @@ export default class IncomeExpense extends Component {
     const params = new URLSearchParams(window.location.search);
 
     return (
-      <React.Fragment>
-        <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
-          <Col span={12}>
-            <Card>
-              <Statistic
-                  title={<this.Translate id="text_income"/>}
-                  value={summaryData.income ? summaryData.income : 0 }
-                  precision="0"
-                  prefix="$"
-                  valueStyle={{ color: "#3f8600" }}
-              />
-            </Card>
-          </Col>
-          <Col span={12}>
-            <Card>
-              <Statistic
-                  title={<this.Translate id="text_expense"/>}
-                  value={summaryData.expense ? summaryData.expense : 0 }
-                  precision="0"
-                  prefix="$"
-                  valueStyle={{ color: "#cf1322" }}
-              />
-            </Card>
-          </Col>
-        </Row>
-        <div className="content-list">
-          <div style={{height: "100%"}}>
-            <div className="table-wrapper">
-              <Row>
-                <Col span={6} style={{marginBottom: 0}}>
-                  <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_income_and_expense" /></h3>
+        <React.Fragment>
+          {this.Util.isNotCheckingPermissionV2(this.state.isHasAccessPermission) &&
+          (this.state.isHasAccessPermission ?
+            <React.Fragment>
+              <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
+                <Col span={12}>
+                  <Card>
+                    <Statistic
+                        title={<this.Translate id="text_income"/>}
+                        value={summaryData.income ? summaryData.income : 0 }
+                        precision="0"
+                        prefix="$"
+                        valueStyle={{ color: "#3f8600" }}
+                    />
+                  </Card>
                 </Col>
-                <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
-                  <Input
-                    name="search"
-                    placeholder={this.CATranslate("text_search", this.props.locale)}
-                    prefix={<Icon type="search" />}
-                    defaultValue={params.get("search") ? params.get("search") : ""}
-                    style={{height: 32, width: 200, marginRight: 10}}
-                    allowClear={true}
-                    onChange={this.handleSearch}
-                  />
-                  <DatePicker.RangePicker
-                    name="dates"
-                    onChange={this.handleChangeDate}
-                    style={{maxWidth: 300, marginRight: 10}}
-                    defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : ""}
-                  />
-                  <this.Button
-                    type="info"
-                    id="btnAdd"
-                    className="mg-right text-uppercase"
-                    disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
-                    onClick={()=> {
-                      this.props.dispatch(this.action.showForm());
-                      this.props.add.showForm = true;
-                      this.setState({modalVisible: false, content: <FormCreate />});
-                    }}>
-                    <span className="icon-add icon-padding-right"></span>
-                    <this.Translate id="text_add_new" />
-                  </this.Button>
-                  <this.Button
-                    type="danger"
-                    className="text-uppercase"
-                    disabled={this.state.isRequestDelete}
-                    onClick={this.showDeleteModal}>
-                    <span className="icon-delete icon-padding-right"></span>
-                    <this.Translate id="text_delete" />
-                  </this.Button>
+                <Col span={12}>
+                  <Card>
+                    <Statistic
+                        title={<this.Translate id="text_expense"/>}
+                        value={summaryData.expense ? summaryData.expense : 0 }
+                        precision="0"
+                        prefix="$"
+                        valueStyle={{ color: "#cf1322" }}
+                    />
+                  </Card>
                 </Col>
               </Row>
-              <this.Table
-                bordered={true}
-                rowSelection={rowSelection}
-                rowKey="id"
-                loading={this.state.loading}
-                columns={this.columns}
-                dataSource={this.state.data.data}
-                onChange={this.onChange}
-                onRow={record =>({
-                  onDoubleClick:() => this.handleShowFormEdit(record)
-                })}
-              />
+              <div className="content-list">
+                <div style={{height: "100%"}}>
+                  <div className="table-wrapper">
+                    <Row>
+                      <Col span={6} style={{marginBottom: 0}}>
+                        <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_income_and_expense" /></h3>
+                      </Col>
+                      <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
+                        <Input
+                            name="search"
+                            placeholder={this.CATranslate("text_search", this.props.locale)}
+                            prefix={<Icon type="search" />}
+                            defaultValue={params.get("search") ? params.get("search") : ""}
+                            style={{height: 32, width: 200, marginRight: 10}}
+                            allowClear={true}
+                            onChange={this.handleSearch}
+                        />
+                        <DatePicker.RangePicker
+                            name="dates"
+                            onChange={this.handleChangeDate}
+                            style={{maxWidth: 300, marginRight: 10}}
+                            defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : ""}
+                        />
+                        <this.Button
+                            type="info"
+                            id="btnAdd"
+                            className="mg-right text-uppercase"
+                            disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
+                            onClick={()=> {
+                              this.props.dispatch(this.action.showForm());
+                              this.props.add.showForm = true;
+                              this.setState({modalVisible: false, content: <FormCreate />});
+                            }}>
+                          <span className="icon-add icon-padding-right"></span>
+                          <this.Translate id="text_add_new" />
+                        </this.Button>
+                        <this.Button
+                            type="danger"
+                            className="text-uppercase"
+                            disabled={this.state.isRequestDelete}
+                            onClick={this.showDeleteModal}>
+                          <span className="icon-delete icon-padding-right"></span>
+                          <this.Translate id="text_delete" />
+                        </this.Button>
+                      </Col>
+                    </Row>
+                    <this.Table
+                        bordered={true}
+                        rowSelection={rowSelection}
+                        rowKey="id"
+                        loading={this.state.loading}
+                        columns={this.columns}
+                        dataSource={this.state.data.data}
+                        onChange={this.onChange}
+                        onRow={record =>({
+                          onDoubleClick:() => this.handleShowFormEdit(record)
+                        })}
+                    />
 
-              <div style={{marginTop: 15}}>
-                {this.renderPagination(this.state.pagination)}
+                    <div style={{marginTop: 15}}>
+                      {this.renderPagination(this.state.pagination)}
+                    </div>
+                    <this.clearFloating/>
+
+                  </div>
+                </div>
               </div>
-              <this.clearFloating/>
-
-            </div>
-          </div>
-        </div>
-        {
-           this.state.content
-        }
-        <this.Modal
-            visible={this.state.modalVisible}
-            wrapClassName="confirm-delete"
-            footer={null}>
-          <div>
-            { this.state.showDeleteModal &&
-                <React.Fragment>
-                  <span className="icon-help icon-padding-right"></span>
-                  <span className="title">COMPLETED</span><br/>
-                  <span><this.Translate id="text_confirm_delete" /></span>
-                </React.Fragment>
-            }
-          </div>
-          <div className="ant-modal-footer">
-            <this.Button className="danger text-uppercase" onClick={()=>this.setState({modalVisible: false})}>
-              <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel"/>
-            </this.Button>
-            <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info text-uppercase">
-              <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes"/>
-            </this.Button>
-          </div>
-        </this.Modal>
-      </React.Fragment>
+              {
+                this.state.content
+              }
+              <this.Modal
+                  visible={this.state.modalVisible}
+                  wrapClassName="confirm-delete"
+                  footer={null}>
+                <div>
+                  { this.state.showDeleteModal &&
+                  <React.Fragment>
+                    <span className="icon-help icon-padding-right"></span>
+                    <span className="title">COMPLETED</span><br/>
+                    <span><this.Translate id="text_confirm_delete" /></span>
+                  </React.Fragment>
+                  }
+                </div>
+                <div className="ant-modal-footer">
+                  <this.Button className="danger text-uppercase" onClick={()=>this.setState({modalVisible: false})}>
+                    <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel"/>
+                  </this.Button>
+                  <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info text-uppercase">
+                    <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes"/>
+                  </this.Button>
+                </div>
+              </this.Modal>
+            </React.Fragment>
+            :
+            <NoPermissionV2/>
+          )
+          }
+        </React.Fragment>
     );
 
   }

@@ -23,6 +23,8 @@ import Component from "../../../../common/components/Component";
 import SaleOrderService from "../../../services/transactions/SaleOrderService";
 import Enum from "../../../enums";
 import {PackingSlipTem} from "./Invoice/packingSlipTem";
+import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
+import PrivilegeService from "../../../services/settings/PrivilegeService";
 
 class SaleOrder extends Component {
   constructor(props) {
@@ -30,16 +32,18 @@ class SaleOrder extends Component {
     this.state = {
       data: [],
       summaryData: {},
+      current: 1,
+      formData: null,
       loading: false,
       loadingButton: false,
       isShowFilter: true,
-      current: 1,
-      formData: null
+      isHasAccessPermission: null
     };
     this.title = <this.Translate id="text_sales"/>;
-    this.fetchingProp = "list";
     this.pageSize = 50;
+    this.fetchingProp = "list";
     this.pathname = "/transactions/sales-order";
+    this.permissionModuleCode = "sales_order";
     this.SALE_ORDER_STATUS_STR = {
       [Enum.SALE_ORDER_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#bfbfbf" },
       [Enum.SALE_ORDER_STATUS.CONFIRMED]: { title: <this.Translate id="text_confirm" />, color: "#1890ff" },
@@ -194,7 +198,14 @@ class SaleOrder extends Component {
       this.setState({summaryData: data.data});
     });
 
+    this.getPermission();
     this.fetchList(true);
+  }
+
+  getPermission(){
+    PrivilegeService.checkPermission(this.permissionModuleCode, "view")
+        .then(({data}) => this.setState({isHasAccessPermission: data}))
+        .catch(() => this.setState({isHasAccessPermission: false}));
   }
 
   fetchList(withPagination= false) {
@@ -240,7 +251,7 @@ class SaleOrder extends Component {
     .then(response => {
       this.setState({data: response && response.data});
     })
-    .catch(err => message.error("Error"))
+    .catch(() => message.error("Error"))
     .finally(() => this.setState({loading: false, loadingButton: false}));
   }
 
@@ -396,99 +407,107 @@ class SaleOrder extends Component {
 
     return (
         <React.Fragment>
-            <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
-              <Col span={8}>
-                <Card>
-                  <Statistic
-                      title={<this.Translate id="text_confirmed"/>}
-                      value={summaryData.confirmed ? summaryData.confirmed : 0 }
-                      precision="0"
-                      valueStyle={{color: "rgb(24, 144, 255)"}}
-                  />
-                </Card>
-              </Col>
-              <Col span={8}>
-                <Card>
-                  <Statistic
-                      title={<this.Translate id="text_closed"/>}
-                      value={summaryData.closed ? summaryData.closed : 0 }
-                      precision="0"
-                      valueStyle={{ color: "#3f8600" }}
-                  />
-                </Card>
-              </Col>
-              <Col span={8}>
-                <Card>
-                  <Statistic
-                      title={<this.Translate id="text_void"/>}
-                      value={summaryData.void ? summaryData.void : 0 }
-                      precision="0"
-                      valueStyle={{ color: "#cf1322" }}
-                  />
-                </Card>
-              </Col>
-            </Row>
-          <div className="content-list">
-            <div style={{height: "100%"}}>
-              <div className="table-wrapper">
-                <Row>
-                  <Col span={6} style={{marginBottom: 0}}>
-                    <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_sale_order" /></h3>
+          {this.Util.isNotCheckingPermissionV2(this.state.isHasAccessPermission) &&
+          (this.state.isHasAccessPermission ?
+              <React.Fragment>
+                <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
+                  <Col span={8}>
+                    <Card>
+                      <Statistic
+                          title={<this.Translate id="text_confirmed"/>}
+                          value={summaryData.confirmed ? summaryData.confirmed : 0 }
+                          precision="0"
+                          valueStyle={{color: "rgb(24, 144, 255)"}}
+                      />
+                    </Card>
                   </Col>
-                  <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
-                    <Input
-                        name="search"
-                        placeholder={this.CATranslate("text_search", this.props.locale)}
-                        prefix={<Icon type="search" />}
-                        defaultValue={params.get("search") ? params.get("search") : ""}
-                        style={{height: 32, width: 200, marginRight: 10}}
-                        allowClear={true}
-                        onChange={this.handleSearch}
-                    />
-                    <DatePicker.RangePicker
-                        name="dates"
-                        defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : ""}
-                        onChange={this.handleChangeDate}
-                        style={{textAlign: "left", maxWidth: 300, marginRight: 10}}
-                    />
-                    <Select
-                      defaultValue={params.get("status") == null ? this.status_options[0].value : params.get("status")}
-                      onChange={this.handleChangeStatus}
-                      style={{width: 200, marginRight: 10}}
-                    >
-                      {
-                        this.status_options.map((statusOption, index) => 
-                          <Select.Option value={statusOption.value} key={index}>{statusOption.name}</Select.Option>
-                        )
-                      }
-                    </Select>
-                    <this.Button
-                        type="info"
-                        id="btnAdd"
-                        className="mg-right text-uppercase"
-                        disabled={this.state.loading}
-                        onClick={() => history.push("/transactions/sale-order/create")}>
-                      <span className="icon-add icon-padding-right"></span>
-                      <this.Translate id="text_add_new" />
-                    </this.Button>
+                  <Col span={8}>
+                    <Card>
+                      <Statistic
+                          title={<this.Translate id="text_closed"/>}
+                          value={summaryData.closed ? summaryData.closed : 0 }
+                          precision="0"
+                          valueStyle={{ color: "#3f8600" }}
+                      />
+                    </Card>
                   </Col>
-
+                  <Col span={8}>
+                    <Card>
+                      <Statistic
+                          title={<this.Translate id="text_void"/>}
+                          value={summaryData.void ? summaryData.void : 0 }
+                          precision="0"
+                          valueStyle={{ color: "#cf1322" }}
+                      />
+                    </Card>
+                  </Col>
                 </Row>
-                <this.Table
-                    bordered={true}
-                    rowKey="id"
-                    loading={this.state.loading}
-                    columns={this.columns}
-                    dataSource={this.state.data.data}
-                    onChange={this.onChange}
-                />
-                <div style={{marginTop: 15}}>
-                  {this.renderPagination(this.state.pagination)}
+                <div className="content-list">
+                  <div style={{height: "100%"}}>
+                    <div className="table-wrapper">
+                      <Row>
+                        <Col span={6} style={{marginBottom: 0}}>
+                          <h3 style={{marginBottom: 0, fontWeight: 600}}>{this.title}</h3>
+                        </Col>
+                        <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
+                          <Input
+                              name="search"
+                              placeholder={this.CATranslate("text_search", this.props.locale)}
+                              prefix={<Icon type="search" />}
+                              defaultValue={params.get("search") ? params.get("search") : ""}
+                              style={{height: 32, width: 200, marginRight: 10}}
+                              allowClear={true}
+                              onChange={this.handleSearch}
+                          />
+                          <DatePicker.RangePicker
+                              name="dates"
+                              defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : ""}
+                              onChange={this.handleChangeDate}
+                              style={{textAlign: "left", maxWidth: 300, marginRight: 10}}
+                          />
+                          <Select
+                              defaultValue={params.get("status") == null ? this.status_options[0].value : params.get("status")}
+                              onChange={this.handleChangeStatus}
+                              style={{width: 200, marginRight: 10}}
+                          >
+                            {
+                              this.status_options.map((statusOption, index) =>
+                                  <Select.Option value={statusOption.value} key={index}>{statusOption.name}</Select.Option>
+                              )
+                            }
+                          </Select>
+                          <this.Button
+                              type="info"
+                              id="btnAdd"
+                              className="mg-right text-uppercase"
+                              disabled={this.state.loading}
+                              onClick={() => history.push("/transactions/sale-order/create")}>
+                            <span className="icon-add icon-padding-right"></span>
+                            <this.Translate id="text_add_new" />
+                          </this.Button>
+                        </Col>
+
+                      </Row>
+                      <this.Table
+                          bordered={true}
+                          rowKey="id"
+                          loading={this.state.loading}
+                          columns={this.columns}
+                          dataSource={this.state.data.data}
+                          onChange={this.onChange}
+                      />
+                      <div style={{marginTop: 15}}>
+                        {this.renderPagination(this.state.pagination)}
+                      </div>
+                      <this.clearFloating/>
+                    </div>
+                  </div>
                 </div>
-                <this.clearFloating/>
-              </div>
-            </div>
-          </div>
+              </React.Fragment>
+              :
+              <NoPermissionV2/>
+          )
+          }
         </React.Fragment>
     );
   }
