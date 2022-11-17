@@ -73,7 +73,6 @@ export default class StockAdjustmentRequestLists extends Component {
       [Enum.STOCK_ADJUST_STEP.REQUEST]: {name: <this.Translate id="text_requested" />, color:  this.Enum.STOCK_ADJUST_COLOR.REQUEST},
       [Enum.STOCK_ADJUST_STEP.COMPLETE]: { name: <this.Translate id="text_approved" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
     };
-    this.action = StockAdjustmentRequestAction;
   }
 
   componentDidMount() {
@@ -86,7 +85,7 @@ export default class StockAdjustmentRequestLists extends Component {
       this.setState({current: parseInt(params.get("offset"))});
     }
 
-    Object.keys(this.ADJUSTMENT_STEP).map((prop) => {
+    Object.keys(this.ADJUSTMENT_STEP).forEach((prop) => {
       this.status_options.push({name: this.ADJUSTMENT_STEP[prop].name, value: prop});
     });
 

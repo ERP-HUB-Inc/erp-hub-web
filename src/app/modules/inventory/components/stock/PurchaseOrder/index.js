@@ -92,7 +92,6 @@ export default class PurchaseOrderLists extends Component {
       [Enum.PO_STEP.PAID]: {name: <this.Translate id="purchase_order_step_paid" />, color:  this.Enum.PO_STEP_COLOR.PAID}
     };
     this.columnFilterWithKey = ["name", "number", "invoiceNo", "shippingFee", "requestTotal", "returnTotal", "receiveTotal"];
-    this.action = PurchaseAction;
   }
 
   componentDidMount() {
