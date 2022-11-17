@@ -2,8 +2,8 @@ import React from "react";
 import {
   Spin,
   Button,
-  Card,
   Tag,
+  Tabs,
   Input,
   Tooltip,
   Icon
@@ -250,6 +250,7 @@ export default class FormItem extends Modal {
       isComponentNotYetLoadedWillUpdate: true,
       productOptionClassDisabled: "",
       description: "",
+      specification: "",
       tags: [],
       inputVisible: false,
       inputValue: "",
@@ -436,7 +437,7 @@ export default class FormItem extends Modal {
     return (<this.Row id="wrap-product-form">
         <this.Col md="6" className="create-product-column-left">
           <this.Row>
-              <this.Col md="4" className="form-group">
+              <this.Col md="8" className="form-group">
                 <this.InputText
                   name="name"
                   label={<this.Translate id="text_product_name" />}
@@ -449,10 +450,10 @@ export default class FormItem extends Modal {
                   max={100}
                   min={0}
                   form={form}
-                  suffix={this.getLanguageIcon("en")}/>
+                />
               </this.Col>
 
-              <this.Col md="4" className="form-group">
+              <this.Col md="4" className="form-group hidden">
                 <this.InputText
                   name="namekm"
                   label={<this.Translate id="text_product_name" />}
@@ -649,12 +650,11 @@ export default class FormItem extends Modal {
                         defaultValue={formData.isFeatured ? true : false}
                         form={this.props.form} />
                     </this.Col>
-                    <this.Col md="12" style={{marginBottom: 15}}>
+                    <this.Col md="12" style={{marginBottom: 15, display: "flex", alignItems: "center"}}>
                       <div className="ant-col ant-form-item-label">
                         <label htmlFor="isFeatured" ><this.Translate id="text_product_tag" /></label>
                       </div>
-                      <Card>
-                        <div>
+                      <div>
                           {tags.map((tag) => {
                             const isLongTag = tag.length > 20;
                             const tagElem = (
@@ -688,29 +688,38 @@ export default class FormItem extends Modal {
                               </Tag>
                           )}
                         </div>
-                      </Card>
                     </this.Col>
                     <this.Col md="12">
-                      <div className="ant-col ant-form-item-label">
-                        <label htmlFor="description">
-                          <this.Translate id="text_description" />
-                        </label>
-                      </div>
-                      <CKEditor
-                        editor={ClassicEditor}
-                        data={formData.description ? formData.description : "<p></p>"}
-                        onInit={paymentTerm => {
-                          // this.setState({ paymentTerm: paymentTerm.data });
-                        }}
-                        onChange={(event, editor) => {
-                          const data = editor.getData();
-                          this.props.form.setFieldsValue({
-                            description: data
-                          });
-                          this.setState({ description: data });
-                        }}
-                      />
-                      <this.InputText name="description" data={form.description} form={form} className="hidden" max={null} />
+                      <Tabs type="card">
+                        <Tabs.TabPane tab={<this.Translate id="text_description" />} key="1">
+                          <CKEditor
+                            editor={ClassicEditor}
+                            data={formData.description ? formData.description : "<p></p>"}
+                            onChange={(event, editor) => {
+                              const data = editor.getData();
+                              this.props.form.setFieldsValue({
+                                description: data
+                              });
+                              this.setState({ description: data });
+                            }}
+                          />
+                          <this.InputText name="description" data={form.description} form={form} className="hidden" max={null} />
+                        </Tabs.TabPane>
+                        <Tabs.TabPane tab={<this.Translate id="text_specification" />} key="2">
+                          <CKEditor
+                              editor={ClassicEditor}
+                              data={formData.specification ? formData.specification : "<p></p>"}
+                              onChange={(event, editor) => {
+                                const data = editor.getData();
+                                this.props.form.setFieldsValue({
+                                  specification: data
+                                });
+                                this.setState({ description: data });
+                              }}
+                            />
+                            <this.InputText name="specification" data={form.specification} form={form} className="hidden" max={null} />
+                        </Tabs.TabPane>
+                      </Tabs>
                     </this.Col>
                   </this.Row>
                 </this.Panel>

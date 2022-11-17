@@ -326,6 +326,8 @@ export default {
 
   text_description: ["Description", "ការពិពណ៌នា", "Description"],
 
+  text_specification: ["Specification", "ការបញ្ជាក់"],
+
   text_name: ["Name", "ឈ្មោះ", "Name"],
 
   text_email: ["Email", "អុីម៉ែល", "Email"],
