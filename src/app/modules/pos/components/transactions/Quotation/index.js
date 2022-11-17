@@ -29,6 +29,8 @@ import Detail from "../../../containers/transactions/Quotation/Detail";
 import InventoryUtil from "../../../../inventory/utils";
 import InventoryEnum from "../../../../inventory/enums";
 import * as PropTypes from "prop-types";
+import PrivilegeService from "../../../services/settings/PrivilegeService";
+import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
 
 function Option() {
   return null;
@@ -42,15 +44,24 @@ export default class QuotationList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 1,
+      summaryData: {},
+      data: [],
       pagination: {},
+      current: 1,
       isNotYetLoadComponentDidUpdated: true,
       isRequestPrint: false,
       handleUpdateForm: false,
       quotationStatus: false,
-      summaryData: {},
-      data: []
+      isHasAccessPermission: null
     };
+    this.service = QuotationService;
+    this.pageSize = 50;
+    this.fetchingProp = "list";
+    this.pathname = "/transactions/quotation";
+    this.permissionModuleCode = "quotation";
+    this.RESET_CONSTANT = Constant.RESET_QUOTATION;
+    this.status_options = [{name: <this.Translate id="text_all_status"/>, value: -1}];
+    this.columnFilterWithKey = ["name", "number"];
     this.QUOTATION_STATUS_STR = {
       [Enum.QUOTATION_STATUS.DRAFT]: {name: <this.Translate id="text_draft" />, color: "#d9d9d9"},
       [Enum.QUOTATION_STATUS.SENT]: {name: <this.Translate id="text_sent" />, color: "#108ee9"},
@@ -89,16 +100,16 @@ export default class QuotationList extends Component {
         width: 160,
         render: (number, record) => {
           const menu = (
-            <Menu>
-              <Menu.Item onClick={() => this.handleShowFormUpdate(record)}>
-                <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
-              </Menu.Item>
-              <Menu.Item>
-                <this.Link to={`/transactions/quotation-detail/${record.id}`}>
-                  <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_detail" />
-                </this.Link>
-              </Menu.Item>
-            </Menu>
+              <Menu>
+                <Menu.Item onClick={() => this.handleShowFormUpdate(record)}>
+                  <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
+                </Menu.Item>
+                <Menu.Item>
+                  <this.Link to={`/transactions/quotation-detail/${record.id}`}>
+                    <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_detail" />
+                  </this.Link>
+                </Menu.Item>
+              </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
             {number}
@@ -151,13 +162,6 @@ export default class QuotationList extends Component {
         render: (total, record) => this.Util.formatCurrency(total - this.Util.floor(record.discount))
       }
     ];
-    this.columnFilterWithKey = ["name", "number"];
-    this.service = QuotationService;
-    this.pageSize = 50;
-    this.fetchingProp = "list";
-    this.pathname = "/transactions/quotation";
-    this.RESET_CONSTANT = Constant.RESET_QUOTATION;
-    this.status_options = [{name: <this.Translate id="text_all_status"/>, value: -1}];
     this.handleCancelQuotation = this.handleCancelQuotation.bind(this);
   }
 
@@ -173,10 +177,11 @@ export default class QuotationList extends Component {
       this.setState({current: parseInt(params.get("offset"))});
     }
 
-   Object.keys(this.QUOTATION_STATUS_STR).forEach((prop) => {
+    Object.keys(this.QUOTATION_STATUS_STR).forEach((prop) => {
       this.status_options.push({name: this.QUOTATION_STATUS_STR[prop].name, value: prop});
     });
 
+    this.getPermission();
     QuotationService.summary().then(({data})=>{
       this.setState({summaryData: data.data});
     });
@@ -185,6 +190,12 @@ export default class QuotationList extends Component {
     new Promise(() => {
       this.props.dispatch(ReceiptTemplateAction.default());
     });
+  }
+
+  getPermission(){
+    PrivilegeService.checkPermission(this.permissionModuleCode, "view")
+        .then(({data}) => this.setState({isHasAccessPermission: data}))
+        .catch(() => this.setState({isHasAccessPermission: false}));
   }
 
   fetchList(withPagination= false) {
@@ -400,96 +411,104 @@ export default class QuotationList extends Component {
 
     return (
         <React.Fragment>
-          <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
-            <Col span={8}>
-              <Card>
-                <Statistic
-                    title={<this.Translate id="text_sent"/>}
-                    value={summaryData.sent ? summaryData.sent : 0 }
-                    precision="0"
-                    valueStyle={{color: "rgb(24, 144, 255)"}}
-                />
-              </Card>
-            </Col>
-            <Col span={8}>
-              <Card>
-                <Statistic
-                    title={<this.Translate id="text_approved"/>}
-                    value={summaryData.approved ? summaryData.approved : 0 }
-                    precision="0"
-                    valueStyle={{ color: "#3f8600" }}
-                />
-              </Card>
-            </Col>
-            <Col span={8}>
-              <Card>
-                <Statistic
-                    title={<this.Translate id="text_closed"/>}
-                    value={summaryData.closed ? summaryData.closed : 0 }
-                    precision="0"
-                    valueStyle={{ color: "#cf1322" }}
-                />
-              </Card>
-            </Col>
-          </Row>
-          <div className="content-list">
-            <div style={{height: "100%"}}>
-              <div className="table-wrapper">
-                <Row>
-                  <Col span={6} style={{marginBottom: 0}}>
-                    <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_quotations" /></h3>
+          {this.Util.isNotCheckingPermissionV2(this.state.isHasAccessPermission) &&
+          (this.state.isHasAccessPermission ?
+              <React.Fragment>
+                <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
+                  <Col span={8}>
+                    <Card>
+                      <Statistic
+                          title={<this.Translate id="text_sent"/>}
+                          value={summaryData.sent ? summaryData.sent : 0 }
+                          precision="0"
+                          valueStyle={{color: "rgb(24, 144, 255)"}}
+                      />
+                    </Card>
                   </Col>
-                  <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
-                    <Input
-                      name="search"
-                      placeholder={this.CATranslate("text_search", this.props.locale)}
-                      prefix={<Icon type="search" />}
-                      defaultValue={params.get("search") ? params.get("search") : ""}
-                      style={{height: 32, width: 200, marginRight: 10}}
-                      allowClear={true}
-                      onChange={this.handleSearch}
-                    />
-                    <DatePicker.RangePicker
-                      name="dates"
-                      placeholder={this.CATranslate("text_select_date", this.props.locale)}
-                      defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : ""}
-                      style={{maxWidth: 300, marginRight: 10}}
-                      onChange={this.handleChangeDate}
-                    />
-                    <Select defaultValue={this.status_options[0].value} onChange={this.handleChangeStatus} style={{width: 200, marginRight: 10}}>
-                      {
-                        this.status_options.map((statusOption, index) => 
-                          <Select.Option value={statusOption.value} key={index}>{statusOption.name}</Select.Option>
-                        )
-                      }
-                    </Select>
-                    <this.Button
-                      type="info"
-                      id="btnAdd"
-                      className="mg-right text-uppercase"
-                      disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
-                      onClick={() => history.push("/transactions/quotation-create")}>
-                      <span className="icon-add icon-padding-right"></span>
-                      <this.Translate id="text_add_new" />
-                    </this.Button>
+                  <Col span={8}>
+                    <Card>
+                      <Statistic
+                          title={<this.Translate id="text_approved"/>}
+                          value={summaryData.approved ? summaryData.approved : 0 }
+                          precision="0"
+                          valueStyle={{ color: "#3f8600" }}
+                      />
+                    </Card>
                   </Col>
-
+                  <Col span={8}>
+                    <Card>
+                      <Statistic
+                          title={<this.Translate id="text_closed"/>}
+                          value={summaryData.closed ? summaryData.closed : 0 }
+                          precision="0"
+                          valueStyle={{ color: "#cf1322" }}
+                      />
+                    </Card>
+                  </Col>
                 </Row>
-                <this.Table
-                    bordered={true}
-                    rowKey="id"
-                    loading={this.state.loading}
-                    columns={this.columns}
-                    dataSource={this.state.data.data}
-                    onChange={this.onChange}
-                />
-                <div style={{marginTop: 15}}>
-                  {this.renderPagination(this.state.pagination)}
+                <div className="content-list">
+                  <div style={{height: "100%"}}>
+                    <div className="table-wrapper">
+                      <Row>
+                        <Col span={6} style={{marginBottom: 0}}>
+                          <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_quotations" /></h3>
+                        </Col>
+                        <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
+                          <Input
+                              name="search"
+                              placeholder={this.CATranslate("text_search", this.props.locale)}
+                              prefix={<Icon type="search" />}
+                              defaultValue={params.get("search") ? params.get("search") : ""}
+                              style={{height: 32, width: 200, marginRight: 10}}
+                              allowClear={true}
+                              onChange={this.handleSearch}
+                          />
+                          <DatePicker.RangePicker
+                              name="dates"
+                              placeholder={this.CATranslate("text_select_date", this.props.locale)}
+                              defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : ""}
+                              style={{maxWidth: 300, marginRight: 10}}
+                              onChange={this.handleChangeDate}
+                          />
+                          <Select defaultValue={this.status_options[0].value} onChange={this.handleChangeStatus} style={{width: 200, marginRight: 10}}>
+                            {
+                              this.status_options.map((statusOption, index) =>
+                                  <Select.Option value={statusOption.value} key={index}>{statusOption.name}</Select.Option>
+                              )
+                            }
+                          </Select>
+                          <this.Button
+                              type="info"
+                              id="btnAdd"
+                              className="mg-right text-uppercase"
+                              disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
+                              onClick={() => history.push("/transactions/quotation-create")}>
+                            <span className="icon-add icon-padding-right"></span>
+                            <this.Translate id="text_add_new" />
+                          </this.Button>
+                        </Col>
+
+                      </Row>
+                      <this.Table
+                          bordered={true}
+                          rowKey="id"
+                          loading={this.state.loading}
+                          columns={this.columns}
+                          dataSource={this.state.data.data}
+                          onChange={this.onChange}
+                      />
+                      <div style={{marginTop: 15}}>
+                        {this.renderPagination(this.state.pagination)}
+                      </div>
+                      <this.clearFloating/>
+                    </div>
+                  </div>
                 </div>
-                <this.clearFloating/>
-              </div>
-            </div>
-          </div>
+              </React.Fragment>
+              :
+              <NoPermissionV2/>
+          )
+          }
         </React.Fragment>
     );
   }

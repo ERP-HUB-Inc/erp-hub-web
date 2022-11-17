@@ -19,7 +19,6 @@ export default class StockTransferList extends Component {
       data: [],
       locations: [],
       pagination: {},
-      permissions: {},
       dataForSendMail: null,
       emailForPushToSupplier: null,
       selectedListIds: [],

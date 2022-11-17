@@ -5,9 +5,7 @@ import Component from "../../../../common/components/Component";
 import "./index.css";
 import Enum from "../../../enums";
 import history from "../../../../common/router/history";
-import PurchaseAction from "../../../actions/stock/purchaseOrder";
 import PurchaseService from "../../../services/stock/PurchaseOrderService";
-import Permission from "../../../../pos/components/settings/RoleAccess/permission";
 import PrivilegeService from "../../../../pos/services/settings/PrivilegeService";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
 
