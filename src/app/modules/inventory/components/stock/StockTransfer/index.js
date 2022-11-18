@@ -91,7 +91,7 @@ export default class StockTransferList extends Component {
       this.setState({current: parseInt(params.get("offset"))});
     }
 
-    Object.keys(this.STATUS_STEP_STR).map((prop) => {
+    Object.keys(this.STATUS_STEP_STR).forEach((prop) => {
       this.status_options.push({name: this.STATUS_STEP_STR[prop].name, value: prop});
     });
     LocationService.lists().then(({data})=>{
@@ -231,7 +231,7 @@ export default class StockTransferList extends Component {
 
   handleChangeLocation = (location) => {
     const params = new URLSearchParams(document.location.search);
-    if (location != 0){
+    if (location !== 0){
       params.set("location", location);
     }else{
       params.delete("location");

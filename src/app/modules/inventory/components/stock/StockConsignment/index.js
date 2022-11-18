@@ -79,7 +79,7 @@ export default class StockConsignment extends Component {
       this.setState({current: parseInt(params.get("offset"))});
     }
 
-    Object.keys(this.STATUS_STEP_STR).map((prop) => {
+    Object.keys(this.STATUS_STEP_STR).forEach((prop) => {
       this.status_options.push({name: this.STATUS_STEP_STR[prop].name, value: prop});
     });
     LocationService.lists().then(({data})=>{

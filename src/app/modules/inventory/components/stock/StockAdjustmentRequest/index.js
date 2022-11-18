@@ -86,7 +86,7 @@ export default class StockAdjustmentRequestLists extends Component {
       this.setState({current: parseInt(params.get("offset"))});
     }
 
-    Object.keys(this.ADJUSTMENT_STEP).map((prop) => {
+    Object.keys(this.ADJUSTMENT_STEP).forEach((prop) => {
       this.status_options.push({name: this.ADJUSTMENT_STEP[prop].name, value: prop});
     });
 
