@@ -852,6 +852,7 @@ export default class Util {
   sweetAlertConfirm(title, text, buttons = ["Cancel", "Yes"]) {
     return swal({
       title,
+      text,
       icon: "warning",
       buttons,
       dangerMode: true,

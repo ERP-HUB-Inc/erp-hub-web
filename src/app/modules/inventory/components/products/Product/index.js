@@ -2,7 +2,9 @@ import React from "react";
 import {
   Menu,
   Dropdown,
-  Icon
+  Icon,
+  Row,
+  Col
 } from "antd";
 import List from "../../List";
 import Util from "../../../utils";
@@ -36,7 +38,6 @@ export default class ProductList extends List {
     this.callBackOnShowEditForm = this.showFormEdit;
     this.columnExpend = new ColumnExpand(); 
     this.fetchingProp = "products";
-    this.placeHolderForGeneralSearch = "text_general_seach_product";
     this.isShowExpandable = true;
     this.rowClassName = record => record.productOption !== Enum.PRODUCT_VARIANT ? "standard-product-row" : "";
     this.componentHasUpdated = false;
@@ -46,6 +47,7 @@ export default class ProductList extends List {
     this.RESET_CONSTANT = Constant.RESET_PRODUCT;
     this.handleClone = this.handleClone.bind(this);
     this.pathName = "/products/list";
+    this.timer = null;
   }
 
   componentDidMount() {
@@ -59,7 +61,7 @@ export default class ProductList extends List {
     if (params.get("locationId")) {
       this.props.form.setFieldsValue({locationId: Number(params.get("locationId"))});
     }
-    this.fetchList();
+    this.fetchList(true);
     this.props.dispatch(LocationAction.fetch()); 
   }
 
@@ -105,7 +107,7 @@ export default class ProductList extends List {
     }
   }
 
-  fetchList() {
+  fetchList(withPagination = false) {
     let searchKey = "";
     let filter = {};
     let locationId = 0;
@@ -127,6 +129,13 @@ export default class ProductList extends List {
 
     if (params.get("locationId")) {
       locationId = Number(params.get("locationId"));
+    }
+
+    if (!withPagination) {
+      offset = 1;
+      this.setState({current: 1});
+      params.delete("current");
+      this.Util.pushParamsToURL(this.pathName, params.toString());
     }
 
     offset = (offset - 1) * limit;
@@ -166,7 +175,6 @@ export default class ProductList extends List {
       } else if(quantity <= 0) {
         super.handleDelete();
       } else{
-        this.setState({modalVisible: false});
         this.Message.warning(this.CATranslate("error_delete_product", this.props.locale));
       }
 
@@ -176,7 +184,12 @@ export default class ProductList extends List {
   handleConfirm() {
     let selectedRows = this.state.selectedRows;
     if(selectedRows.length === 1){
-      this.setState({ modalVisible: true });
+      this.Util.sweetAlertConfirm(this.CATranslate("text_confirm_delete", this.props.locale))
+      .then(willDelete => {
+        if (willDelete) {
+          this.handleDelete();
+        }
+      });
     }else if(selectedRows.length > 1){
       this.Message.warning(this.CATranslate("text_allow_select_one_record", this.props.locale));
     }else{
@@ -192,48 +205,40 @@ export default class ProductList extends List {
   }
 
   buttonActionCollection() {
-    return [
-      this.renderButtonAddNew(),
-      this.renderButtonDelete(),
-      this.renderButtonImport()
-    ];
+    return <div style={{marginTop: 3}}>
+      {this.renderButtonAddNew()}
+      {this.renderButtonDelete()}
+      {this.renderButtonImport()}
+    </div>;
   }
 
-  handleSubmitFilter(e){
-    if (this.action != null) {
-      e.preventDefault();
-      this.props.form.validateFieldsAndScroll((err, values) => {
-        if (!err) {
-          const params = new URLSearchParams(document.location.search);
-          if (values.key) {
-            if (params.get("search")) {
-              params.set("search", values.key);
-            } else {
-              params.append("search", values.key);
-            }
-          } else {
-            params.delete("search");
-          }
-
-          if (values.locationId) {
-            if (params.get("locationId")) {
-              params.set("locationId", values.locationId); 
-            } else {
-              params.append("locationId", values.locationId);
-            }
-          } else {
-            params.delete("locationId");
-          }
-
-          this.Util.pushParamsToURL(this.pathName, params.toString());
-          this.fetchList();
-          this.setState({isClickFilter: true});
-        }
-      }); 
-    } 
+  handleSearch = (e) => {
+    const value = e.target.value;
+    const params = new URLSearchParams(document.location.search);
+    clearTimeout(this.timer);
+    if (value) {
+      params.set("search", value);
+    } else {
+      params.delete("search");
+    }
+    this.Util.pushParamsToURL(this.pathName, params.toString());
+    this.timer = setTimeout(() => {
+      this.fetchList();
+    }, 800);
   }
 
-  onShowSizeChange(current, pageSize) {
+  handleChangeLocation = (locationId) => {
+    const params = new URLSearchParams(document.location.search);
+    if (locationId) {
+      params.set("locationId", locationId);
+    } else {
+      params.delete("locationId");
+    }
+    this.Util.pushParamsToURL(this.pathName, params.toString());
+    this.fetchList();
+  }
+
+  onShowSizeChange = (current, pageSize) => {
     if (this.action) {
       const params = new URLSearchParams(document.location.search);
       let strParam = `limit=${pageSize}&current=${current}`;
@@ -247,11 +252,11 @@ export default class ProductList extends List {
 
       this.setState({ current, isClickFilter: false });
       this.Util.pushParamsToURL(this.pathName, strParam);
-      this.fetchList();
+      this.fetchList(true);
     }
   }
 
-  onChangePagination(current, pageSize) {
+  onChangePagination = (current, pageSize) => {
     if (this.action != null) {
       const params = new URLSearchParams(document.location.search);
       let strParam = `limit=${pageSize}&current=${current}`;
@@ -266,50 +271,8 @@ export default class ProductList extends List {
 
       this.setState({ current, isClickFilter: false });
       this.Util.pushParamsToURL(this.pathName, strParam);
-      this.fetchList();
+      this.fetchList(true);
     }
-  }
-
-  renderFilterRecord() {
-    const {form} = this.props;
-    const fetchingProps = this.props[this.fetchingProp];
-    return (
-      form == null ?
-        ""
-        :
-        <this.Form onSubmit={this.handleSubmitFilter}>
-          <this.Row className="main-search-layout">
-            {this.renderFilterGeneralKey()}
-            <this.Col md="2">
-              <this.Select
-                name="locationId"
-                label={<this.Translate id="text_store"/>}
-                dataSource={this.locationList.concat(this.props.locations.list)}
-                valueKey="id"
-                nameKey="name"
-                form={form}
-                defaultValue={0}
-              />
-            </this.Col>
-            <this.Col md="2" className="hidden">
-              <this.Select
-                name="status"
-                label={<this.Translate id="text_status" />}
-                dataSource={this.statusList}
-                defaultValue={this.Enum.ALL_STATE}
-                form={form}/>
-            </this.Col>
-            <this.Col md="2" className="wrap-btn-search">
-              <div className="ant-form-item-label" style={{visibility: "hidden"}}>
-                <label htmlFor="status" className="" title="">Filter</label>
-              </div>
-              <this.Button htmlType="submit" type="default" loading={this.state.isClickFilter && fetchingProps.fetching}>
-                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-              </this.Button>
-            </this.Col>
-          </this.Row>
-        </this.Form>
-    ); 
   }
 
   onSelectChange(selectedRowKeys, selectedRows) {
@@ -324,6 +287,67 @@ export default class ProductList extends List {
           columns={this.columnExpend}
           dataSource={record.productVariants}
           locale={{emptyText: <this.Translate id="placeholder_table_variant_product" />}}/>
+      </div>
+    );
+  }
+
+  render() {
+    let fetchingProp = this.props[this.fetchingProp];
+    const rowSelection = {
+      selectedRowKeys: this.state.selectedRowKeys,
+      onChange: this.onSelectChange,
+      getCheckboxProps: record => ({
+        name: record.name,
+      })
+    };
+
+    return (
+      <div className="content-list">
+        <div style={{height: "100%", marginTop: 10}}>
+          <div className="table-wrapper">
+            <Row>
+              <Col span={3} style={{marginBottom: 0}}>
+                <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_product" /></h3>
+              </Col>
+              <Col span={21} style={{display: "flex", justifyContent: "flex-end"}}>
+                <this.InputText
+                  name="key"
+                  placeholder={this.CATranslate("text_general_seach_product", this.props.locale)}
+                  form={this.props.form}
+                  style={{width: 314, marginBottom: 0}}
+                  onChange={this.handleSearch}
+                  allowClear={true} />
+                <this.Select
+                  name="locationId"
+                  dataSource={this.locationList.concat(this.props.locations.list)}
+                  valueKey="id"
+                  nameKey="name"
+                  form={this.props.form}
+                  style={{width: 180, margin: "0 15px"}}
+                  onChange={this.handleChangeLocation}
+                  defaultValue={0} />
+                {this.buttonActionCollection()}
+              </Col>
+            </Row>
+
+            <this.TableExpand
+              bordered={true}
+              dataSource={fetchingProp.list}
+              columns={this.columns}
+              rowClassName={this.rowClassName}
+              locale={{emptyText: <this.Translate id="table_empty_data"/>}}
+              expandedRowRender={this.expandedRender}
+              onRow={record =>({onDoubleClick:() => this.handleShowFormEdit(record),})}
+              rowSelection={rowSelection}
+              loading={fetchingProp.fetching} />
+
+            <div style={{marginTop: 15}}>
+              {this.renderPagination(fetchingProp)}
+            </div>
+
+            <this.clearFloating/>
+          </div>
+        </div>
       </div>
     );
   }
