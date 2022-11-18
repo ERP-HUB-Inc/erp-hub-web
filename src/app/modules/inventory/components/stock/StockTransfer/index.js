@@ -231,7 +231,7 @@ export default class StockTransferList extends Component {
 
   handleChangeLocation = (location) => {
     const params = new URLSearchParams(document.location.search);
-    if (location !== 0){
+    if (location){
       params.set("location", location);
     }else{
       params.delete("location");

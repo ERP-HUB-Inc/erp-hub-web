@@ -112,6 +112,8 @@ export default class Component extends React.Component {
   constructor(props) {
     super(props);
 
+    this.pageSize = 50;
+
     // Element Ant ui
     this.Table = CTable;
     this.TableExpand = TableExpand;

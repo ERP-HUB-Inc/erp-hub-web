@@ -73,7 +73,6 @@ export default class StockAdjustmentRequestLists extends Component {
       [Enum.STOCK_ADJUST_STEP.REQUEST]: {name: <this.Translate id="text_requested" />, color:  this.Enum.STOCK_ADJUST_COLOR.REQUEST},
       [Enum.STOCK_ADJUST_STEP.COMPLETE]: { name: <this.Translate id="text_approved" />, color: this.Enum.STOCK_ADJUST_COLOR.COMPLETE}
     };
-    this.action = StockAdjustmentRequestAction;
   }
 
   componentDidMount() {

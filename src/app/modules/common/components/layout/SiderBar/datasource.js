@@ -337,7 +337,7 @@ const dataSource = {
       {
         title: <Translate id="text_serial_no" />,
         icon: "icon-barcode",
-        route: "/transaction/serial/list",
+        route: "/transaction/serials",
         component: SerialList,
         isFashNav: true
       },
