@@ -66,7 +66,7 @@ export default class StockAdjustmentRequestLists extends Component {
     this.fetchingProp = "list";
     this.pathname = "/stock/adjustment/request";
     this.pathCreate= "/stock/adjustment/create";
-    this.pathUpdate= "/stock/adjustment/update";
+    this.pathUpdate= "/stocks/adjustment/update";
     this.permissionModuleCode = "stock_adjustment";
     this.status_options = [{name: <this.Translate id="text_all_step"/>, value: -1}];
     this.ADJUSTMENT_STEP = {
