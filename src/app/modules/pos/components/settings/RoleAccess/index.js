@@ -13,6 +13,7 @@ import menuSource from "../../../../common/components/layout/SiderBar/datasource
 import StartUp from "../../../../common/components/StartUp";
 import NoPermission from "../../../../common/components/shares/List/NoPermission";
 import "./index.css";
+import history from "../../../../common/router/history";
 
 export default class RoleAccessList extends List {
   constructor(props) {
@@ -34,9 +35,11 @@ export default class RoleAccessList extends List {
   }
 
   showFormEdit(rowData) {
-    this.props.dispatch(RoleAccessAction.showForm(rowData));
-    //this.props.dispatch(RolePrivilegeAction.fetch(rowData.id));
-    this.setState({modalConten: <FormUpdate/>});
+    history.push(`/settings/role-update/${rowData.id}`);
+  }
+
+  handleShowFormAdd() {
+    history.push("/settings/role-create");
   }
 
   renderFilterRecord() {

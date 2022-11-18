@@ -5,6 +5,16 @@ export default {
     "Role"
   ],
 
+  "text_new_role": [
+    "Create new role",
+    "បង្កើតតួនាទីថ្មី"
+  ],
+
+  "text_update_role": [
+    "Update role",
+    "កែប្រែតួនាទី"
+  ],
+
   "text_general": [
     "General",
     "ទូទៅ",

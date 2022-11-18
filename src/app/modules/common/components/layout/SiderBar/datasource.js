@@ -231,6 +231,16 @@ const RoleAccess = Loadable({
   loading: () => <StartUp />,
 });
 
+const RoleCreate = Loadable({
+  loader: () => import("../../../../pos/containers/settings/RoleAccess/FormCreate"),
+  loading: () => <StartUp />
+});
+
+const RoleUpdate = Loadable({
+  loader: () => import("../../../../pos/containers/settings/RoleAccess/FormUpdate"),
+  loading: () => <StartUp />
+});
+
 const Currency = Loadable({
   loader: () => import("../../../../pos/containers/settings/Currency"),
   loading: () => <StartUp />,
@@ -652,6 +662,16 @@ const dataSource = {
         route: "/settings/role",
         component: RoleAccess,
         isFashNav: true,
+      },
+      {
+        route: "/settings/role-create",
+        component: RoleCreate,
+        isFashNav: false
+      },
+      {
+        route: "/settings/role-update/:id",
+        component: RoleUpdate,
+        isFashNav: false
       },
       {
         title: <Translate id="text_currency" />,

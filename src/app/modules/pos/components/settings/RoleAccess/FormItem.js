@@ -1,9 +1,22 @@
 import React from "react";
-import Modal from "../../../../common/components/shares/Modal";
+import {Translate} from "react-localize-redux";
+import {
+  Checkbox, 
+  Divider,
+  Row,
+  Col,
+  Spin
+} from "antd";
+import { 
+  InputText,
+  Select
+} from "../../../../common/elements/ant-ui";
+import Util from "../../../../common/util";
+import Enum from "../../../../common/enums";
+import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import permissions from "./permission";
-import {Checkbox, Divider} from "antd";
 
-export default class FormItem extends Modal {
+export default class FormItem extends React.Component {
 
   constructor(props) {
     super(props);
@@ -15,6 +28,7 @@ export default class FormItem extends Modal {
       km:"KH"
     };
     this.isLoadedData = false;
+    this.Util = new Util();
   }
 
   componentDidUpdate() {
@@ -44,7 +58,7 @@ export default class FormItem extends Modal {
 
   onCheckAllChange = (e, main) => {
     const foundAssignedModuleIndex = this.findGrantModuleIndex(main.code),
-        grantPermissions = this.state.grantPermissions;
+      grantPermissions = this.state.grantPermissions;
     let needToRefreshState = false;
     if (e.target.checked) {
       if (foundAssignedModuleIndex >= 0) {
@@ -132,99 +146,101 @@ export default class FormItem extends Modal {
 
   render() {
     const {formData, form, locale} = this.props;
-
     return (
-        <div>
-            <Divider style={{margin: "0"}} />
-          {
-            formData ?
-              <this.Row  style={{padding: "15px 25px 0 25px", height: "77vh", maxHeight: "100vh"}}>
-                  <this.Col md="12" style={{maxHeight: "41%"}}>
-                    <this.InputText
-                        data={formData.name}
-                        name="name"
-                        label={<this.Translate id="text_name" />}
-                        placeholder={this.CATranslate("text_name", locale)}
-                        errorLenght={<this.Translate id="error_name_length" />}
-                        required={true}
-                        isAutoFocus={true}
-                        max={100}
-                        form={form}/>
-                    <this.InputText
-                      data={formData.code}
-                      name="code"
-                      label={<this.Translate id="text_code" />}
-                      placeholder={this.CATranslate("text_code", locale)}
-                      max={255}
-                      disabled={formData.isDefault === this.Enum.IS_DEFAULT}
-                      form={form}/>
-                    <this.Select
-                        name="status"
-                        label={<this.Translate id="text_status" />}
-                        dataSource={this.statusDataSource}
-                        defaultValue={formData.status}
-                        form={form}/>
-                  </this.Col>
-                  <this.Col md="12" style={{ marginTop: 15 , maxHeight: "57%"}}>
-                    <this.Row style={{ maxHeight: "100%", overflow: "auto" }}>
-                      {
-                        permissions.map((main, key) =>
-                            <this.Col md="4" key={key} style={{ marginBottom: 15 }}>
-                              <div style={{ borderBottom: "1px solid #E9E9E9", marginBottom: 10 }}>
-                                {this.translatePermission(main)}
-                              </div>
-                              {
-                                main.permissions.length > 1 ?
-                                    <Checkbox
-                                        onChange={e => this.onCheckAllChange(e, main)}
-                                        checked={this.isCheckedPermissionAll(main.code, main.permissions.length)}
-                                    >
-                                      <this.Translate id="text_select_all" />
-                                    </Checkbox>
-                                    :
-                                    ""
-                              }
-                              {
-                                main.permissions.map((permission, index) =>
-                                    <div key={index}>
-                                      <Checkbox
-                                          onChange={() => this.onChange(main, permission.code)}
-                                          checked={this.isCheckedPermission(main.code, permission.code)}
-                                      >
-                                        {this.translatePermission(permission)}
-                                      </Checkbox>
-                                    </div>
-                                )
-                              }
-                            </this.Col>
-                        )
-                      }
-                    </this.Row>
-                  </this.Col>
-              </this.Row>
-             :
-              <div style={{display: "flex", justifyContent:"center", alignItems: "center", padding: "15px 25px 0 25px", height: "77vh", maxHeight: "100vh"}}>
-                  <this.Spin />
-                </div>
-          }
-        </div>
-        /*<this.TabPane tab={<this.Translate id="text_privilege" />} key="2">
-          <this.Row>  
-            <this.Col lg="12" md="12">
-              { 
-                <PrivilegeList 
-                  rolePrivileges={this.props.rolePrivileges}
-                  handleCallBackGetPrivilegeList={this.props.handleCallBackGetPrivilegeList}
-                  formvalue={this.props.formvalue} 
-                  privileges={this.props.privileges}
-                  rowData={this.props.rowData}  
-                  form ={this.props.form}
-                  locale={locale}
-                  dispatch={this.props.dispatch}/> 
-              }
-            </this.Col> 
-          </this.Row>
-        </this.TabPane>*/
+      <div>
+        <Divider style={{margin: "0"}} />
+        {
+          !this.props.loading && formData ?
+            <Row  style={{padding: "15px 25px 0 25px", height: "77vh", maxHeight: "100vh"}}>
+              <Col md={24} style={{maxHeight: "41%"}}>
+                <InputText
+                  data={formData.name}
+                  name="name"
+                  label={<Translate id="text_name" />}
+                  placeholder={stringTranslate("text_name", locale)}
+                  errorLenght={<Translate id="error_name_length" />}
+                  required={true}
+                  isAutoFocus={true}
+                  max={100}
+                  form={form}/>
+                <InputText
+                  data={formData.code}
+                  name="code"
+                  label={<Translate id="text_code" />}
+                  placeholder={stringTranslate("text_code", locale)}
+                  max={255}
+                  disabled={formData.isDefault === Enum.IS_DEFAULT}
+                  form={form}/>
+                <Select
+                  name="status"
+                  label={<Translate id="text_status" />}
+                  dataSource={[
+                    {name: <Translate id="select_text_active" />, value: Enum.ACTIVE},
+                    {name: <Translate id="select_text_deactive" />, value: Enum.DEACTIVE}
+                  ]}
+                  defaultValue={formData.status}
+                  form={form}/>
+              </Col>
+              <Col md={24} style={{ marginTop: 15 , maxHeight: "57%"}}>
+                <Row style={{ height: "50vh", overflow: "auto" }}>
+                  {
+                    permissions.map((main, key) =>
+                      <Col md={8} key={key} style={{ marginBottom: 15 }}>
+                        <div style={{ borderBottom: "1px solid #E9E9E9", marginBottom: 10 }}>
+                          {this.translatePermission(main)}
+                        </div>
+                        {
+                          main.permissions.length > 1 ?
+                            <Checkbox
+                              onChange={e => this.onCheckAllChange(e, main)}
+                              checked={this.isCheckedPermissionAll(main.code, main.permissions.length)}
+                            >
+                              <Translate id="text_select_all" />
+                            </Checkbox>
+                            :
+                            ""
+                        }
+                        {
+                          main.permissions.map((permission, index) =>
+                            <div key={index}>
+                              <Checkbox
+                                onChange={() => this.onChange(main, permission.code)}
+                                checked={this.isCheckedPermission(main.code, permission.code)}
+                              >
+                                {this.translatePermission(permission)}
+                              </Checkbox>
+                            </div>
+                          )
+                        }
+                      </Col>
+                    )
+                  }
+                </Row>
+              </Col>
+            </Row>
+            :
+            <div style={{display: "flex", justifyContent:"center", alignItems: "center", padding: "15px 25px 0 25px", height: "77vh", maxHeight: "100vh"}}>
+              <Spin />
+            </div>
+        }
+      </div>
+      /*<this.TabPane tab={<this.Translate id="text_privilege" />} key="2">
+        <this.Row>  
+          <this.Col lg="12" md="12">
+            { 
+              <PrivilegeList 
+                rolePrivileges={this.props.rolePrivileges}
+                handleCallBackGetPrivilegeList={this.props.handleCallBackGetPrivilegeList}
+                formvalue={this.props.formvalue} 
+                privileges={this.props.privileges}
+                rowData={this.props.rowData}  
+                form ={this.props.form}
+                locale={locale}
+                dispatch={this.props.dispatch}/> 
+            }
+          </this.Col> 
+        </this.Row>
+      </this.TabPane>*/
     );
   }
 }
