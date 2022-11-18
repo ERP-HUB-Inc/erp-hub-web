@@ -28,9 +28,21 @@ class SerialList extends Component {
     this.pageSize = 50;
     this.columns = [
       {
+        title: <this.Translate id="text_product_name" />,
+        dataIndex: "productName",
+        key: "productName"
+      },
+      {
         title: "IMEI or Serial Number",
         dataIndex: "number",
         key: "number"
+      },
+      {
+        title: <this.Translate id="text_invoice_no" />,
+        dataIndex: "invoiceNumber",
+        key: "invoiceNumber",
+        className: "invoice-number-column",
+        render: (invoiceNumber, record) => <Link to={`/transactions/detail-invoice/${record.transactionId}`}>{invoiceNumber}</Link>
       },
       {
         title: <this.Translate id="text_invoice_date" />,
@@ -58,21 +70,9 @@ class SerialList extends Component {
           }
           return <Tag style={{width: 112, textAlign: "center"}} color={statusColor}><this.Translate id={statusTitle} /></Tag>;
         }
-      },
-      {
-        title: <this.Translate id="text_invoice_no" />,
-        dataIndex: "invoiceNumber",
-        key: "invoiceNumber",
-        className: "invoice-number-column",
-        render: (invoiceNumber, record) => <Link to={`/transactions/detail-invoice/${record.transactionId}`}>{invoiceNumber}</Link>
-      },
-      {
-        title: <this.Translate id="text_product_name" />,
-        dataIndex: "productName",
-        key: "productName"
       }
     ];
-    this.pathname = "/transaction/serial/list";
+    this.pathname = "/transaction/serials";
     this.timer = null;
   }
 
