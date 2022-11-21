@@ -135,7 +135,7 @@ export default function TaxInvoice(props) {
                       <td style={{textAlign: "center"}}>{index + 1}</td>
                       <td>
                         <pre className="entry-note-column">{entry.description}</pre>
-                        {entry.enableDescription && renderSerials(entry)}
+                        {entry.enableDescription ? renderSerials(entry) : null}
                       </td>
                       <td style={{textAlign: "center"}}>{entry.quantity}</td>
                       <td style={{textAlign: "right"}}>{util.formatCurrency(entry.price)}</td>

@@ -322,6 +322,16 @@ export default class Util {
     return `${unsigne}${result}`;
   }
 
+  toValidKHMoney(money) {
+    const validMoney = 100;
+    let decimalValue =  (money % validMoney);
+    const nonDecimal = (money / validMoney) - (decimalValue / validMoney);
+  
+    decimalValue = decimalValue >= 50 ? 100 : 0;
+  
+    return Math.round((nonDecimal * validMoney) + decimalValue);
+  }
+
   formatPhoneno(phoneno) {
     if (phoneno) {
       var cleaned = ("" + phoneno).replace(/\D/g, "");
@@ -359,8 +369,8 @@ export default class Util {
     return parseFloat((value * 1).toFixed(2));
   }
 
-  formatCurrencyV2(n, currency) {
-    return currency + n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,");
+  formatCurrencyV2(n, currency, precision = 0) {
+    return currency + n.toFixed(precision).replace(/(\d)(?=(\d{3})+\.)/g, "$1,");
   }
   isJsonString(str) {
     try {

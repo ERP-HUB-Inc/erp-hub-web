@@ -329,3 +329,25 @@
     position: absolute;
     top: -12px
 }
+
+.customer-reward-pos-modal .ant-modal-header {
+    padding: 16px !important;
+    background: #0D62AF;
+}
+
+.customer-reward-pos-modal .ant-modal-title {
+    text-align: left;
+    color: white;
+    padding-left: 10px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.customer-reward-pos-modal .ant-modal-close-x {
+    color: white;
+}
+
+.customer-reward-pos-modal .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: green;
+    border-color: green;
+}

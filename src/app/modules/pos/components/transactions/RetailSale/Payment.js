@@ -9,6 +9,7 @@ import TransactionAction from "../../../action/transaction/transaction";
 import POSUtil from "../../../utils";
 import Modal from "../../../../common/components/shares/Modal";
 import "./Payment.css";
+import RewardModal from "./RewardModal";
 
 export default class Payment extends Modal {
   static PAYMENT_METHOD_CREDIT_CODE = "002";
@@ -27,7 +28,8 @@ export default class Payment extends Modal {
       validateStatus: "",
       errorMsg: "",
       formData: {},
-      loadingSubmit: false
+      loadingSubmit: false,
+      isShowModalReward: true
     };
     this.paymentMethodSelectedIndex = null;
     this.wrapClassName = "pos-payment";
@@ -72,7 +74,7 @@ export default class Payment extends Modal {
       });
     }    
   }
-
+              
   componentWillUnmount() {
     this.setState({isAlreadyAutoPrint: false});
   }
@@ -341,7 +343,7 @@ export default class Payment extends Modal {
 
     if (this.props.transaction.showForm) {
       let dataForReceipt = {};
-
+      let dataForCustomerReward = {};
       if (this.props.transaction.response) {
         let {
           total,
@@ -367,6 +369,13 @@ export default class Payment extends Modal {
           taxRate,
           taxAmount,
           discountAmount
+        };
+
+        dataForCustomerReward = {
+          data: this.props.transaction.response.data,
+          visible: this.state.isShowModalReward,
+          isAllowPrintReceipt: !this.state.isAllowPrintReceipt,
+          onClose: () => this.setState({isShowModalReward: false})
         };
       }
 
@@ -642,6 +651,7 @@ export default class Payment extends Modal {
                       <this.Translate id="text_done" /> (ESC)
                     </this.Button>
                   </div>
+                  {<RewardModal {...dataForCustomerReward} />}
                 </div>
             }
           </this.Col>
