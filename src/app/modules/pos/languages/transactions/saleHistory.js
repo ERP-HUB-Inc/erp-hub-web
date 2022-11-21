@@ -65,7 +65,7 @@ export default {
   ],
 
   "text_sent_invoice": [
-    "Sent Invoices",
+    "Sent",
     "វិក័យប័ត្របានផ្ញើរចេញ"
   ],
 

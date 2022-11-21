@@ -15,6 +15,7 @@ import ExportFormByProduct from "./ExportFormByProduct";
 import history from "../../../../common/router/history";
 import Enum from "../../../../inventory/enums";
 import Util from "../../../../common/util";
+import SupplierService from "../../../../inventory/services/stock/SupplierService";
 import  PurchaseService from "../../../services/report/PurchaseService";
 import "./index.css";
 
@@ -26,15 +27,34 @@ const { Option } = Select;
 function ReportPurchaseByProduct() {
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
-  const [dataSuplier, setdataSuplier] = React.useState([]);
-  const [fromValue, setFromValue] = React.useState(moment().startOf("month"));
-  const [toValue, setToValue] = React.useState(moment().endOf("month"));
+  const [suppliers, setSuppliers] = React.useState([]);
+  const [fromValue] = React.useState(moment().startOf("month"));
+  const [toValue] = React.useState(moment().endOf("month"));
+
   const params = new URLSearchParams(document.location.search);
+  const search = params.get("search");
+  const supplierId = params.get("supplierId");
+
+  let timer = null;
+
+  React.useEffect(() => {
+    SupplierService.lists(500, 0)
+    .then(response => {
+      if (response && response.data) {
+        setSuppliers(response.data.data);
+      }
+    });
+
+    fetchReport(fromValue, toValue, search, supplierId);
+
+    params.set("startDate", moment().startOf("month").format("YYYY-MM-DD"));
+    params.set("endDate", moment().endOf("month").format("YYYY-MM-DD"));
+    util.pushParamsToURL(pathName, params.toString());
+    // eslint-disable-next-line
+  }, [fromValue, toValue, search, supplierId]);
+
   const onFromChange = value => {
-    if(value){
-      setFromValue(value);
-      setToValue(value);
-      fetchReport(value, value);
+    if (value) {
       params.set("startDate", value.format("YYYY-MM-DD"));
     } else {
       params.delete("startDate");
@@ -42,13 +62,12 @@ function ReportPurchaseByProduct() {
 
     util.pushParamsToURL(pathName, params.toString());
     
-    fetchReport(fromValue,toValue,value);
+    fetchReport(value, toValue, search);
   };
 
   const onToChange = value => {
-    if(value){
-      setToValue(value);
-      fetchReport(fromValue, value);
+    if (value) {
+      fetchReport(fromValue, value, search);
       params.set("endDate", value.format("YYYY-MM-DD"));
     } else {
       params.delete("endDate");
@@ -67,7 +86,6 @@ function ReportPurchaseByProduct() {
     };
 
     if (search) option["search"] = search;
-
     if (supplierId) option["supplierId"] = supplierId;
 
 
@@ -80,42 +98,33 @@ function ReportPurchaseByProduct() {
     .finally(() => {
       setLoading(false);
     });
-
-    PurchaseService.getReportSummaryBySupplier(option)
-    .then(response => {
-      if (response.data){
-        setdataSuplier(response.data);
-      }
-    });
   };
-  React.useEffect(() => {
-    fetchReport(fromValue, toValue, params.get("search"), params.get("supplierId"));
-    //eslint-disable-next-line
-  }, []);
 
   const handleSearch = (e) => {
     const value = e.target.value;
-    if (value) {
-      params.set("search", value);
-    } else {  
-      params.delete("search");
-    }
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      if (value) {
+        params.set("search", value);
+      } else {  
+        params.delete("search");
+      }
 
-    util.pushParamsToURL(pathName, params.toString());
-    
-    fetchReport(fromValue,toValue,value);
+      util.pushParamsToURL(pathName, params.toString());
+      fetchReport(fromValue, toValue, value);
+    }, 1000);
   };
 
-  const onChangeSelect = (value) => {
-    const search = params.get("search") && params.get("search");
+  const onChangeSupplier = (value) => {
     if (value) {
       params.set("supplierId", value);
     } else {
       params.delete("supplierId");
     }
+
     util.pushParamsToURL(pathName, params.toString());
     
-    fetchReport(fromValue,toValue,search,value);
+    fetchReport(fromValue, toValue, search, value);
   };
 
   return <div id="report-purchase">
@@ -125,7 +134,7 @@ function ReportPurchaseByProduct() {
           paddingLeft: 0,
           paddingRight: 0
       }}
-      onBack={() => history.goBack()}
+      onBack={() => history.push("/reports/purchase_dashboard")}
       title="Product Purchase Report"
       subTitle=""
       extra={[
@@ -143,17 +152,15 @@ function ReportPurchaseByProduct() {
           </div>
           <div id="selectDrop">
             <Select
-              showSearch
               name="supplierId"
               style={{ width: 200 , marginRight: 15}}
               placeholder="Select supplier"
-              onChange={onChangeSelect}
               allowClear={true}
-              defaultValue={params.get("supplierId") && params.get("supplierId")}
+              onChange={onChangeSupplier}
             >
-              {dataSuplier.map((value, key) => (
-                <Option key={key} value={value.supplierId}>
-                  {value.supplierName}
+              {suppliers.map((value, key) => (
+                <Option key={key} value={value.id}>
+                  {value.name}
                 </Option>
               ))}
             </Select>

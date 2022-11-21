@@ -8,11 +8,9 @@ import {
   Spin
 } from "antd";
 import { 
-  InputText,
-  Select
+  InputText
 } from "../../../../common/elements/ant-ui";
 import Util from "../../../../common/util";
-import Enum from "../../../../common/enums";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import permissions from "./permission";
 
@@ -163,26 +161,9 @@ export default class FormItem extends React.Component {
                   isAutoFocus={true}
                   max={100}
                   form={form}/>
-                <InputText
-                  data={formData.code}
-                  name="code"
-                  label={<Translate id="text_code" />}
-                  placeholder={stringTranslate("text_code", locale)}
-                  max={255}
-                  disabled={formData.isDefault === Enum.IS_DEFAULT}
-                  form={form}/>
-                <Select
-                  name="status"
-                  label={<Translate id="text_status" />}
-                  dataSource={[
-                    {name: <Translate id="select_text_active" />, value: Enum.ACTIVE},
-                    {name: <Translate id="select_text_deactive" />, value: Enum.DEACTIVE}
-                  ]}
-                  defaultValue={formData.status}
-                  form={form}/>
               </Col>
               <Col md={24} style={{ marginTop: 15 , maxHeight: "57%"}}>
-                <Row style={{ height: "50vh", overflow: "auto" }}>
+                <Row>
                   {
                     permissions.map((main, key) =>
                       <Col md={8} key={key} style={{ marginBottom: 15 }}>
