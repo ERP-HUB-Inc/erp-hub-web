@@ -90,8 +90,8 @@ export default function RewardModal(props) {
                 <td>
                   Points
                   <div style={{display: "flex", justifyContent: "center"}}>
-                    {customer ? customer.previousPoint: 0}
-                    <span style={{color: "green", fontSize: 13, marginTop: -1, marginLeft: 3}}> + {customer && customer.additionalPoint}</span>
+                    {customer ? util.floor(customer.previousPoint): 0}
+                    <span style={{color: "green", fontSize: 13, marginTop: -1, marginLeft: 3}}> + {customer && util.floor(customer.additionalPoint)}</span>
                   </div>
                 </td>
               </tr>

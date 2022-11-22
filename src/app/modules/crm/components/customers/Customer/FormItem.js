@@ -168,7 +168,7 @@ export default class FormItem extends Modal {
                 name="dob"
                 label={<this.Translate id="text_date_of_birth" />}
                 placeholder={this.CATranslate("text_date_of_birth", this.props.locale)}
-                defaultValue={formData.dob ? formData.dob : null}
+                defaultValue={formData.dob ? moment(formData.dob) : null}
                 form={this.props.form} />
             </this.Col>
 

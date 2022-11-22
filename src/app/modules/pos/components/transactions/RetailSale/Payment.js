@@ -162,7 +162,8 @@ export default class Payment extends Modal {
         isAlreadyAutoPrint: false,
         isNotYetPaid: true,
         customerPaymentList: [],
-        amountToPay: 0
+        amountToPay: 0,
+        isShowModalReward: true
       });
       this.wrapClassName = "pos-payment";
       this.props.handleOnResetOrder();
@@ -651,7 +652,7 @@ export default class Payment extends Modal {
                       <this.Translate id="text_done" /> (ESC)
                     </this.Button>
                   </div>
-                  {<RewardModal {...dataForCustomerReward} />}
+                  {this.props.customer && <RewardModal {...dataForCustomerReward} />}
                 </div>
             }
           </this.Col>
