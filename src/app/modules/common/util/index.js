@@ -300,7 +300,7 @@ export default class Util {
     return `${unsigne}${result}`;
   }
 
-  formatCurrency(n, currency = "$", position = 0) {
+  formatCurrency(n, currency = "$", position = 0, precision = 2) {
     let unsigne = "";
     if (n < 0) {
       n = Math.abs(n);
@@ -308,7 +308,7 @@ export default class Util {
     }
     // 0: BEFORE, 1: AFTER
     let result = parseFloat(n)
-      .toFixed(2)
+      .toFixed(precision)
       .replace(/./g, function (c, i, a) {
         return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
       });

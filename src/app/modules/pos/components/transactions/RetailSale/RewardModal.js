@@ -20,6 +20,33 @@ export default function RewardModal(props) {
     return total;
   }
 
+  function entriesDiscount(entries) {
+    let discount = 0;
+    entries.length && entries.forEach(entry => {
+      if (entry.discount > 0) {
+        discount += (entry.price - entry.newPrice) * entry.quantity;
+      }
+    });
+
+    if (discount < 0) {
+      discount = 0;
+    }
+
+    return discount;
+  };
+
+  function renderItemPrice(entry) {
+    let html = util.formatCurrency(entry.quantity * entry.price, "");
+    if (entry.discount) {
+      html = <React.Fragment>
+        <div style={{marginTop: 4, marginBottom: -4}}>{util.formatCurrency(entry.quantity * entry.newPrice, "")}</div>
+        <del>{util.formatCurrency(entry.quantity * entry.price, "")}</del>
+      </React.Fragment>;
+    }
+
+    return html;
+  }
+
   const {data} = props;
   const {customer} = data;
 
@@ -34,30 +61,35 @@ export default function RewardModal(props) {
     >
       <Row style={{paddingBottom: 25}}>
         <Col span={8}>
-          <table style={{width: "100%", borderTop: "1px solid #ddd"}}>
+          <table style={{width: "100%", borderTop: "1px solid #ddd"}} id="table-customer-reward">
             <tbody>
               {
-                data.transactionEntries && data.transactionEntries.map((product, index) => 
-                  <tr key={index} style={{background: "none", height: 44, borderBottom: "1px solid #ddd"}}>
-                    <td>{product.name}</td>
-                    <td>{product.quantity}</td>
-                    <td style={{textAlign: "right"}}>{util.formatCurrency(product.quantity * product.price, "")}</td>
+                data.transactionEntries && data.transactionEntries.map((entry, index) => 
+                  <tr key={index} style={{height: 44, borderBottom: "1px solid #ddd"}}>
+                    <td>{entry.name}</td>
+                    <td>{entry.quantity}x</td>
+                    <td style={{textAlign: "right"}}>
+                      {renderItemPrice(entry)}
+                    </td>
                   </tr>
                 )
               }
               <tr style={{height: 60, borderBottom: "1px solid #ddd"}}><td colSpan={3}></td></tr>
-              <tr style={{height: 42, background: "none"}}>
-                <td colSpan={2}>Sub-total</td>
-                <td style={{fontWeight: 600, color: "#767373", textAlign: "right"}}>{util.formatCurrency(data.totalExcludeTax, "")}</td>
-              </tr>
               <tr style={{height: 42, borderBottom: "1px solid #ddd"}}>
-                <td colSpan={2}>Add Discount</td>
-                <td style={{textAlign: "right"}}>{util.formatCurrency(data.discount, "")}</td>
+                <td colSpan={2}>Sub-total</td>
+                <td style={{fontWeight: 600, color: "#767373", textAlign: "right"}}>{util.formatCurrency(data.totalExcludeTax - entriesDiscount(data.transactionEntries), "")}</td>
               </tr>
-              <tr style={{height: 42, background: "none", borderBottom: "1px solid #ddd"}}>
+              {data.discount && !entriesDiscount(data.transactionEntries) ?
+                <tr style={{height: 42, borderBottom: "1px solid #ddd"}}>
+                  <td colSpan={2}>Add Discount</td>
+                  <td style={{textAlign: "right"}}>{util.formatCurrency(data.discount, "")}</td>
+                </tr>
+                : null
+              }
+              <tr style={{height: 42, borderBottom: "1px solid #ddd"}}>
                 <td colSpan={2}>Total</td>
                 <td style={{fontWeight: 600, color: "#767373", textAlign: "right"}}>
-                  {util.formatCurrency(data.total - data.discount, "")} = {util.formatCurrency(util.toValidKHMoney((data.total - data.discount)* data.exchangeRate), "")}៛
+                  {util.formatCurrency(data.total - data.discount, "")} = {util.formatCurrency(util.toValidKHMoney((data.total - data.discount)* data.exchangeRate), "៛", 1, 0)}
                 </td>
               </tr>
               <tr style={{fontWeight: "bold", fontSize: 18, height: 40, color: "#2b5279"}}>
@@ -77,7 +109,7 @@ export default function RewardModal(props) {
           >
             DONE
           </button>
-          <table style={{width: 380, border: "1px solid #ddd", display: "inline-table"}}>
+          <table style={{width: 380, border: "1px solid #ddd", display: "inline-table"}} id="table-customer-reward-point">
             <thead>
               <tr><td colSpan={2} style={{padding: 10, borderBottom: "1px solid #ddd"}}>{data.firstName} {data.lastName}</td></tr>
             </thead>

@@ -351,3 +351,8 @@
     background-color: green;
     border-color: green;
 }
+
+#table-customer-reward tr, 
+#table-customer-reward-point tr {
+    background: none !important;
+}
