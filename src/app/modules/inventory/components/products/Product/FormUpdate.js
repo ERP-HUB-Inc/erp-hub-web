@@ -14,6 +14,7 @@ import FormCreateVariantAttribute from "../../../containers/products/VariantAttr
 import TaxAction from "../../../../pos/action/settings/tax";
 import FormCreateTax from "../../../../pos/containers/settings/Tax/FormCreate";
 import Component from "../../../../common/components/Component";
+import CurrencyExchangeService from "../../../../pos/services/settings/CurrencyExchangeService";
 
 export default class ProductUpdate extends Component {
   constructor(props) {
@@ -22,7 +23,8 @@ export default class ProductUpdate extends Component {
       productAttributes: [],
       productVariants: [],
       productArchiveVariants: [],
-      productArchiveAttributes: []
+      productArchiveAttributes: [],
+      exchangeRate: 1,
     };
 
     this.title = <this.Translate id="text_product" />;
@@ -51,6 +53,16 @@ export default class ProductUpdate extends Component {
         }
       }
     });
+
+    const {currency, currencyId}  = this.Util.getSetting();
+    if (currency !== "$"){
+      CurrencyExchangeService.getExchangeRate(JSON.stringify({"currencyId": [currencyId]})).then(({data})=>{
+        const data1 = data.data;
+        if (data1 && data1.length){
+          this.exchangeRate = data1[0].value;
+        }
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -87,6 +99,20 @@ export default class ProductUpdate extends Component {
 
   handleCallBackGetArchiveProductAttributes(productArchiveAttributes) {
     this.setState({productArchiveAttributes});
+  }
+
+  exchangeDollarToRiel(amount, rate= this.exchangeRate){
+    if (amount && rate){
+      return amount * rate;
+    }
+    return  0;
+  }
+
+  exchangeRielToDollar(amount, rate= this.exchangeRate){
+    if (amount && rate){
+      return amount / rate;
+    }
+    return  0;
   }
 
   handleSubmit(e) {
@@ -155,9 +181,9 @@ export default class ProductUpdate extends Component {
         values["tag"] = this.productTags.toString();
         values["cost"] = values["cost"] ? values["cost"] : 0;
         values["markup"] = values["markup"] ? values["markup"] : 0;
-        values["price"] = values["price"] ? values["price"] : 0;
-        values["wholePrice"] = values["wholePrice"] ? values["wholePrice"] : 0;
-        values["distributePrice"] = values["distributePrice"] ? values["distributePrice"] : 0;
+        values["price"] = this.exchangeRielToDollar(values["price"]);
+        values["wholePrice"] = this.exchangeRielToDollar(values["wholePrice"]);
+        values["distributePrice"] = this.exchangeRielToDollar(values["distributePrice"]);
         values["taxes"] = [{taxId: values["taxId"]}];
         values["attributes"] = this.state.productArchiveAttributes.concat(this.state.productAttributes);
         values["variantProducts"] = this.state.productArchiveVariants.concat(this.state.productVariants);
@@ -252,6 +278,7 @@ export default class ProductUpdate extends Component {
             taxs={taxs}
             taxAdd={taxAdd}
             handleAddTax={this.handleAddTax}
+            setExchangeRateCallBack={(rate) => this.exchangeRate = rate}
             callBackGetProductAttribute={this.handleCallBackGetProductAttribute}
             callBackGetProductVariant={this.handleCallBackGetProductVariant}
             handleCallBackGetArchiveProductVariant={this.handleCallBackGetArchiveProductVariant}

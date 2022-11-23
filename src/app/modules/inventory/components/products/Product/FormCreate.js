@@ -18,6 +18,7 @@ import UnitAction from "../../../actions/products/productsUnit";
 import FormCreateUnit from "../../../containers/products/ProductsUnit/FormCreate";
 import TaxAction from "../../../../pos/action/settings/tax";
 import FormCreateTax from "../../../../pos/containers/settings/Tax/FormCreate";
+import CurrencyExchangeService from "../../../../pos/services/settings/CurrencyExchangeService";
 import Component from "../../../../common/components/Component";
 
 export default class ProductCreate extends Component {
@@ -31,6 +32,7 @@ export default class ProductCreate extends Component {
     this.title = <this.Translate id="text_product" />;
     this.width = "100%";
     this.dispatch = this.props.dispatch;
+    this.exchangeRate = 1;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCallBackGetProductAttribute = this.handleCallBackGetProductAttribute.bind(this);
     this.handleCallBackGetProductVariant = this.handleCallBackGetProductVariant.bind(this);
@@ -52,6 +54,16 @@ export default class ProductCreate extends Component {
         }
       }
     });
+
+    const {currency, currencyId}  = this.Util.getSetting();
+    if (currency !== "$"){
+      CurrencyExchangeService.getExchangeRate(JSON.stringify({"currencyId": [currencyId]})).then(({data})=>{
+        const data1 = data.data;
+        if (data1 && data1.length){
+          this.exchangeRate = data1[0].value;
+        }
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -84,6 +96,20 @@ export default class ProductCreate extends Component {
 
   handleCallBackGetProductVariant(productVariants) {
     this.setState({productVariants});
+  }
+
+  exchangeDollarToRiel(amount, rate= this.exchangeRate){
+    if (amount && rate){
+      return amount * rate;
+    }
+    return  0;
+  }
+
+  exchangeRielToDollar(amount, rate= this.exchangeRate){
+    if (amount && rate){
+      return amount / rate;
+    }
+    return  0;
   }
 
   handleSubmit (e) {
@@ -146,9 +172,9 @@ export default class ProductCreate extends Component {
         values["shippingFee"] = values["shippingFee"] ? values["shippingFee"] : 0;
         values["cost"] = values["cost"] ? values["cost"] : 0;
         values["markup"] = values["markup"] ? values["markup"] : 0;
-        values["price"] = values["price"] ? values["price"] : 0;
-        values["wholePrice"] = values["wholePrice"] ? values["wholePrice"] : 0;
-        values["distributePrice"] = values["distributePrice"] ? values["distributePrice"] : 0;
+        values["price"] = this.exchangeRielToDollar(values["price"]);
+        values["wholePrice"] = this.exchangeRielToDollar(values["wholePrice"]);
+        values["distributePrice"] = this.exchangeRielToDollar(values["distributePrice"]);
         values["productTags"] = [];
         values["attributes"] = this.state.productAttributes;
         values["variantProducts"] = this.state.productVariants;
@@ -249,6 +275,7 @@ export default class ProductCreate extends Component {
           taxAdd={taxAdd}
           handleAddTax={this.handleAddTax}
           taxs={this.props.taxs}
+          setExchangeRateCallBack={(rate) => this.exchangeRate = rate}
           callBackGetProductAttribute={this.handleCallBackGetProductAttribute}
           callBackGetProductVariant={this.handleCallBackGetProductVariant}
           callBackGetProductTags={(tags) => this.handleCallBackGetProductTags(tags)}

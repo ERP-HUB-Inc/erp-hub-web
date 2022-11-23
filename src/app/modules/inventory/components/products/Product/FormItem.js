@@ -31,6 +31,7 @@ import SupplierService from "../../../services/stock/SupplierService";
 import Modal from "../../../../common/components/shares/Modal";
 import CommonEnum from "../../../../common/enums";
 import "./index.css";
+import CurrencyExchangeService from "../../../../pos/services/settings/CurrencyExchangeService";
 
 function SelectBrand(props) {
   const limit = 15;
@@ -259,6 +260,7 @@ export default class FormItem extends Modal {
     this.TAB_PRODUCT_COST_LOG = 3;
 
     this.TAB_PRODUCT_LOG = 4;
+    this.exchangeRate = 1;
 
     this.productTypeContent = "";
     
@@ -313,6 +315,18 @@ export default class FormItem extends Modal {
     const {formData} = this.props;
     if (formData.tag && formData.tag.length){
       this.setState({tags: formData.tag.split(",")});
+    }
+
+    const {currency, currencyId}  = this.Util.getSetting();
+
+    if (currency !== "$"){
+      CurrencyExchangeService.getExchangeRate(JSON.stringify({"currencyId": [currencyId]})).then(({data})=>{
+        const data1 = data.data;
+        if (data1 && data1.length){
+          this.setState({exchangeRate: data1[0].value});
+          this.props.setExchangeRateCallBack(data1[0].value);
+        }
+      });
     }
   }
 
@@ -399,6 +413,24 @@ export default class FormItem extends Modal {
 
   saveInputRef = input => (this.input = input);
 
+  getPrecisionByCurrency(length=2){
+    return this.Util.getSetting().currency === "$"  ? length :  0;
+  }
+
+  exchangeDollarToRiel(amount, rate= this.state.exchangeRate){
+    if (amount && rate){
+      return amount * rate;
+    }
+    return  0;
+  }
+
+  exchangeRielToDollar(amount, rate= this.state.exchangeRate){
+    if (amount && rate){
+      return amount / rate;
+    }
+    return  0;
+  }
+
   render() {
     const { tags, inputVisible, inputValue } = this.state;
     const {
@@ -427,6 +459,7 @@ export default class FormItem extends Modal {
       productTypeBox = this.state.productTypeIndex;
     }
 
+
     const image = {
       uid: "-1",
       name: formData.image,
@@ -437,7 +470,7 @@ export default class FormItem extends Modal {
     return (<this.Row id="wrap-product-form">
         <this.Col md="6" className="create-product-column-left">
           <this.Row>
-              <this.Col md="8" className="form-group">
+            <this.Col md="8" className="form-group">
                 <this.InputText
                   name="name"
                   label={<this.Translate id="text_product_name" />}
@@ -453,7 +486,7 @@ export default class FormItem extends Modal {
                 />
               </this.Col>
 
-              <this.Col md="4" className="form-group hidden">
+            <this.Col md="4" className="form-group hidden">
                 <this.InputText
                   name="namekm"
                   label={<this.Translate id="text_product_name" />}
@@ -467,7 +500,7 @@ export default class FormItem extends Modal {
                   suffix={this.getLanguageIcon("km")}/>
               </this.Col>
 
-              <this.Col md="4" className="form-group">
+            <this.Col md="4" className="form-group">
                 <this.Select
                   name="serialType"
                   label={
@@ -487,7 +520,7 @@ export default class FormItem extends Modal {
                   form={form}/>
               </this.Col>
               
-              <this.Col md="4">
+            <this.Col md="4">
                 <div className="ant-col ant-form-item-label">
                     <label htmlFor="unitName" className="ant-form-item-required"><this.Translate id="text_barcode" /></label>
                   </div>
@@ -551,7 +584,8 @@ export default class FormItem extends Modal {
               <this.InputNumber
                 name="price"
                 label={<span><this.Translate id="text_retial_price" /><span> ({currentUser.setting.currency})</span></span>}
-                data={Util.getProductPrice(formData)}
+                data={this.exchangeDollarToRiel(Util.getProductPrice(formData))}
+                precision={this.getPrecisionByCurrency()}
                 isAutoSelect={true}
                 placeholder={this.CATranslate("input_product_price_placeholder", locale)}
                 errorRequired={<this.Translate id="error_require_price" />}
@@ -563,8 +597,9 @@ export default class FormItem extends Modal {
               <this.InputNumber
                 name="wholePrice"
                 label={<span><this.Translate id="text_whole_price" /><span> ({currentUser.setting.currency})</span></span>}
-                data={Util.getProductWholeSalePrice(formData)}
+                data={this.exchangeDollarToRiel(Util.getProductWholeSalePrice(formData))}
                 isAutoSelect={true}
+                precision={this.getPrecisionByCurrency()}
                 placeholder={this.CATranslate("input_product_price_placeholder", locale)}
                 errorRequired={<this.Translate id="error_require_price" />}
                 max={99999999}
@@ -575,7 +610,8 @@ export default class FormItem extends Modal {
               <this.InputNumber
                 name="distributePrice"
                 label={<span><this.Translate id="text_distribute_price" /><span> ({currentUser.setting.currency})</span></span>}
-                data={Util.getProductDistributePrice(formData)}
+                data={this.exchangeDollarToRiel(Util.getProductDistributePrice(formData))}
+                precision={this.getPrecisionByCurrency()}
                 isAutoSelect={true}
                 placeholder={this.CATranslate("input_product_price_placeholder", locale)}
                 errorRequired={<this.Translate id="error_require_price" />}
