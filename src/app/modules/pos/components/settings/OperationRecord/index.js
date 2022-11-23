@@ -431,7 +431,7 @@ export default class IncomeExpense extends Component {
                             name="dates"
                             onChange={this.handleChangeDate}
                             style={{maxWidth: 300, marginRight: 10}}
-                            defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : ""}
+                            defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : null}
                         />
                         <this.Button
                             type="info"
