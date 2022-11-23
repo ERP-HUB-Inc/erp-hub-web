@@ -656,13 +656,13 @@ export default class Invoice extends Component {
                               onChange={this.handleChangeDate}
                               name="date"
                               placeholder={this.CATranslate("text_select_date", this.props.locale)}
-                              defaultValue={params.get("date") ? moment(params.get("date")) : ""}
+                              defaultValue={params.get("date") ? moment(params.get("date")) : null}
                               style={{maxWidth: 200, marginRight: 10}}
                           />
                           <this.Button
                               type="info"
                               id="btnAdd"
-                              className="mg-right text-uppercase"
+                              className="text-uppercase"
                               onClick={() => history.push({pathname: this.pathCreate})}>
                             <span className="icon-add icon-padding-right"></span>
                             <this.Translate id="text_add_new" />

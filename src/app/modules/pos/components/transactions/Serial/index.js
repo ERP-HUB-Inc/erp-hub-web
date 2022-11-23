@@ -243,7 +243,7 @@ class SerialList extends Component {
                   onChange={this.handleChangeDate}
                   name="date"
                   placeholder={`${stringTranslate("text_invoice_date", this.props.locale)}`}
-                  defaultValue={params.get("date") ? moment(params.get("date")) : ""}
+                  defaultValue={params.get("date") ? moment(params.get("date")) : null}
                   style={{maxWidth: 200}}
                 />
               </Col>

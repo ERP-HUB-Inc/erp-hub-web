@@ -461,7 +461,7 @@ class SaleOrder extends Component {
                           />
                           <DatePicker.RangePicker
                               name="dates"
-                              defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : ""}
+                              defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : null}
                               onChange={this.handleChangeDate}
                               style={{textAlign: "left", maxWidth: 300, marginRight: 10}}
                           />
@@ -479,7 +479,7 @@ class SaleOrder extends Component {
                           <this.Button
                               type="info"
                               id="btnAdd"
-                              className="mg-right text-uppercase"
+                              className="text-uppercase"
                               disabled={this.state.loading}
                               onClick={() => history.push("/transactions/sale-order/create")}>
                             <span className="icon-add icon-padding-right"></span>

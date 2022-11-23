@@ -466,7 +466,7 @@ export default class QuotationList extends Component {
                           <DatePicker.RangePicker
                               name="dates"
                               placeholder={this.CATranslate("text_select_date", this.props.locale)}
-                              defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : ""}
+                              defaultValue={params.get("start") && params.get("end") ? [moment(params.get("start")),moment(params.get("end"))] : null}
                               style={{maxWidth: 300, marginRight: 10}}
                               onChange={this.handleChangeDate}
                           />
@@ -480,7 +480,7 @@ export default class QuotationList extends Component {
                           <this.Button
                               type="info"
                               id="btnAdd"
-                              className="mg-right text-uppercase"
+                              className="text-uppercase"
                               disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
                               onClick={() => history.push("/transactions/quotation-create")}>
                             <span className="icon-add icon-padding-right"></span>
