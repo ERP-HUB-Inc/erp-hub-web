@@ -358,7 +358,7 @@ export default class StockTransferList extends Component {
                     <Col span={5} style={{marginBottom: 0}}>
                       <h3 style={{marginBottom: 0, fontWeight: 600}}>{this.title}</h3>
                     </Col>
-                    <Col span={19} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
+                    <Col span={19} style={{textAlign: "right", display: "flex", justifyContent: "flex-end"}}>
                       <Input
                           name="search"
                           placeholder={this.CATranslate("text_search", this.props.locale)}
