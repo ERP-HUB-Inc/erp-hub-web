@@ -81,7 +81,7 @@ export default class FormVariant extends Modal {
             isAutoSelect={true}
             isHideTool={true}
             errorRequired={<this.Translate id="error_require_price" />}
-            data={Exchange.dollarToRiel(price, this.props.exchangeRate)}
+            data={price}
             precision={this.props.getPrecisionByCurrency()}
             handleKeyUp={(e) => this.handleOnChangePrice(e, index)}
             form={this.props.form} />;
@@ -100,7 +100,7 @@ export default class FormVariant extends Modal {
             isAutoSelect={true}
             isHideTool={true}
             errorRequired={<this.Translate id="error_require_price" />}
-            data={Exchange.dollarToRiel(wholePrice, this.props.exchangeRate)}
+            data={wholePrice}
             precision={this.props.getPrecisionByCurrency()}
             handleKeyUp={(e) => this.handleOnChangePrice(e, index, "wholePrice")}
             form={this.props.form}/>;
@@ -119,7 +119,7 @@ export default class FormVariant extends Modal {
             isAutoSelect={true}
             isHideTool={true}
             errorRequired={<this.Translate id="error_require_price" />}
-            data={Exchange.dollarToRiel(distributePrice, this.props.exchangeRate)}
+            data={distributePrice}
             precision={this.props.getPrecisionByCurrency()}
             handleKeyUp={(e) => this.handleOnChangePrice(e, index, "distributePrice")}
             form={this.props.form} />;
@@ -428,16 +428,23 @@ export default class FormVariant extends Modal {
 
   componentDidUpdate() {
     let {
-      productVariants,
       productAttributes,
       dispatch,
       variantAttributeAdd
     } = this.props;
 
-    if (productVariants && productAttributes &&  this.state.isNotYetLoadComponentDidUpdated) {
+    const productVariants = this.Util.copyArrayObj(this.props.productVariants);
+    productVariants.map( (variant) => {
+        variant.price           = Number(Exchange.dollarToRiel(variant.price, this.props.exchangeRate).toFixed());
+        variant.distributePrice = Number(Exchange.dollarToRiel(variant.distributePrice, this.props.exchangeRate).toFixed());
+        variant.wholePrice      = Number(Exchange.dollarToRiel(variant.wholePrice, this.props.exchangeRate).toFixed());
+        return variant;
+   });
 
+    if (productVariants && productAttributes &&  this.state.isNotYetLoadComponentDidUpdated && this.props.exchangeRate) {
       productAttributes = _.sortBy(productAttributes, ["createdAt"]);
-
+      console.log("gg", productVariants);
+      console.log("productVariants", productVariants);
       this.setState({
         variantAttributeList: productAttributes,
         productVariantList: productVariants,
@@ -512,6 +519,7 @@ export default class FormVariant extends Modal {
   handleOnChangePrice(event, index, fieldName = "price") {
     const productVariantList = this.state.productVariantList;
     productVariantList[index][fieldName] = parseFloat(event.target.value);
+    this.setState({productVariantList});
   }
 
   handleOnChangeBarcode(event, index) {
@@ -1179,6 +1187,7 @@ export default class FormVariant extends Modal {
   render() {
     this.submitConfirmActionLoading = this.props.productVariantArchive.archiving;
     const attributeLength = this.countProductAttribute(this.state.variantAttributeList);
+    console.log("render", this.state.productVariantList);
     return (
       <this.Row>
         <this.InputNumber

@@ -256,7 +256,7 @@ export default class FormItem extends Modal {
       tags: [],
       inputVisible: false,
       inputValue: "",
-      exchangeRate: 1,
+      exchangeRate: null,
     };
 
     this.TAB_PRODUCT_COST_LOG = 3;
@@ -329,6 +329,8 @@ export default class FormItem extends Modal {
           this.props.setExchangeRateCallBack(data1[0].value);
         }
       });
+    }else {
+      this.setState({exchangeRate: 1});
     }
   }
 
