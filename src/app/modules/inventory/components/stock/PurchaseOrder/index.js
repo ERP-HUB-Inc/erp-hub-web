@@ -328,7 +328,7 @@ export default class PurchaseOrderLists extends Component {
                       <Col span={6} style={{marginBottom: 0}}>
                         <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_purchase_order" /></h3>
                       </Col>
-                      <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "end"}}>
+                      <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "flex-end"}}>
                         <Input
                             name="search"
                             placeholder={this.CATranslate("text_search", this.props.locale)}
