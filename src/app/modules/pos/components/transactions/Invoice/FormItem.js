@@ -594,8 +594,8 @@ class NewInvoice extends React.PureComponent {
     }
 
     async handleUpdateSerial(serial, index, index2) {
-        const variantId = this.props.form.getFieldValue(`productVariantId[${index}]`);
-        const transEntryId = this.props.form.getFieldValue(`id[${index}]`);
+        const variantId = this.state.transactionEntries[index].productVariantId;
+        const transEntryId = this.state.transactionEntries[index].id;
         if (!serial.isNew) {
             const response = (await SerialService.findByNumber(serial.number, variantId, transEntryId)).data;
             if (response.length) {
@@ -609,7 +609,7 @@ class NewInvoice extends React.PureComponent {
         this.setState({
             serialFormData: {
                 id: serial.id,
-                pVariantId: this.props.form.getFieldValue(`productVariantId[${index}]`),
+                pVariantId: variantId,
                 invoiceDate: this.props.form.getFieldValue("invoiceDate"),
                 quantity: this.props.form.getFieldValue(`quantity[${index}]`),
                 description: this.props.form.getFieldValue(`description[${index}]`),
@@ -627,8 +627,8 @@ class NewInvoice extends React.PureComponent {
         this.setState({
             deleteSerialData: {
                 index,
-                pVariantId: this.props.form.getFieldValue(`productVariantId[${index}]`),
-                transEntryId: this.props.form.getFieldValue(`id[${index}]`),
+                pVariantId: this.state.transactionEntries[index].productVariantId,
+                transEntryId: this.state.transactionEntries[index].id,
                 description: this.props.form.getFieldValue(`description[${index}]`),
                 quantity: this.props.form.getFieldValue(`quantity[${index}]`)
             }
