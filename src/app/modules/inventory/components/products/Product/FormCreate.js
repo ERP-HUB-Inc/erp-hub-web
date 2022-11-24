@@ -20,6 +20,7 @@ import TaxAction from "../../../../pos/action/settings/tax";
 import FormCreateTax from "../../../../pos/containers/settings/Tax/FormCreate";
 import CurrencyExchangeService from "../../../../pos/services/settings/CurrencyExchangeService";
 import Component from "../../../../common/components/Component";
+import Exchange from "./ExchangeMoneyFunc";
 
 export default class ProductCreate extends Component {
   constructor(props) {
@@ -98,20 +99,6 @@ export default class ProductCreate extends Component {
     this.setState({productVariants});
   }
 
-  exchangeDollarToRiel(amount, rate= this.exchangeRate){
-    if (amount && rate){
-      return amount * rate;
-    }
-    return  0;
-  }
-
-  exchangeRielToDollar(amount, rate= this.exchangeRate){
-    if (amount && rate){
-      return amount / rate;
-    }
-    return  0;
-  }
-
   handleSubmit (e) {
     e.preventDefault();
     if (this.props.form.getFieldValue("isFocusOnVariantInput") === 1) {
@@ -172,12 +159,19 @@ export default class ProductCreate extends Component {
         values["shippingFee"] = values["shippingFee"] ? values["shippingFee"] : 0;
         values["cost"] = values["cost"] ? values["cost"] : 0;
         values["markup"] = values["markup"] ? values["markup"] : 0;
-        values["price"] = this.exchangeRielToDollar(values["price"]);
-        values["wholePrice"] = this.exchangeRielToDollar(values["wholePrice"]);
-        values["distributePrice"] = this.exchangeRielToDollar(values["distributePrice"]);
+        values["price"] = Exchange.rielToDollar(values["price"], this.exchangeRate);
+        values["wholePrice"] = Exchange.rielToDollar(values["wholePrice"], this.exchangeRate);
+        values["distributePrice"] = Exchange.rielToDollar(values["distributePrice"], this.exchangeRate);
         values["productTags"] = [];
         values["attributes"] = this.state.productAttributes;
-        values["variantProducts"] = this.state.productVariants;
+        const productVariants = this.state.productVariants;
+        productVariants.map( (variant) => {
+          variant.price           = Exchange.rielToDollar(variant.price, this.exchangeRate);
+          variant.distributePrice = Exchange.rielToDollar(variant.distributePrice, this.exchangeRate);
+          variant.wholePrice      = Exchange.rielToDollar(variant.wholePrice, this.exchangeRate);
+          return variant;
+        });
+        values["variantProducts"] = productVariants;
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
         this.dispatch(ProductAction.add(values));

@@ -5,6 +5,7 @@ import {
   PageHeader
 } from "antd";
 import sweetalert from "sweetalert";
+import Component from "../../../../common/components/Component";
 import FormItem from "./FormItem";
 import history from "../../../../common/router/history";
 import ProductAction from "../../../actions/products/product";
@@ -13,8 +14,8 @@ import VariantAttributeAction from "../../../actions/products/variantAttribute";
 import FormCreateVariantAttribute from "../../../containers/products/VariantAttribute/FormCreate";
 import TaxAction from "../../../../pos/action/settings/tax";
 import FormCreateTax from "../../../../pos/containers/settings/Tax/FormCreate";
-import Component from "../../../../common/components/Component";
 import CurrencyExchangeService from "../../../../pos/services/settings/CurrencyExchangeService";
+import Exchange from "./ExchangeMoneyFunc";
 
 export default class ProductUpdate extends Component {
   constructor(props) {
@@ -101,20 +102,6 @@ export default class ProductUpdate extends Component {
     this.setState({productArchiveAttributes});
   }
 
-  exchangeDollarToRiel(amount, rate= this.exchangeRate){
-    if (amount && rate){
-      return amount * rate;
-    }
-    return  0;
-  }
-
-  exchangeRielToDollar(amount, rate= this.exchangeRate){
-    if (amount && rate){
-      return amount / rate;
-    }
-    return  0;
-  }
-
   handleSubmit(e) {
     e.preventDefault();
 
@@ -181,12 +168,19 @@ export default class ProductUpdate extends Component {
         values["tag"] = this.productTags.toString();
         values["cost"] = values["cost"] ? values["cost"] : 0;
         values["markup"] = values["markup"] ? values["markup"] : 0;
-        values["price"] = this.exchangeRielToDollar(values["price"]);
-        values["wholePrice"] = this.exchangeRielToDollar(values["wholePrice"]);
-        values["distributePrice"] = this.exchangeRielToDollar(values["distributePrice"]);
+        values["price"] = Exchange.rielToDollar(values["price"], this.exchangeRate);
+        values["wholePrice"] = Exchange.rielToDollar(values["wholePrice"], this.exchangeRate);
+        values["distributePrice"] = Exchange.rielToDollar(values["distributePrice"], this.exchangeRate);
         values["taxes"] = [{taxId: values["taxId"]}];
         values["attributes"] = this.state.productArchiveAttributes.concat(this.state.productAttributes);
-        values["variantProducts"] = this.state.productArchiveVariants.concat(this.state.productVariants);
+        const productVariants = this.state.productArchiveVariants.concat(this.state.productVariants);
+        productVariants.map( (variant) => {
+          variant.price           = Exchange.rielToDollar(variant.price, this.exchangeRate);
+          variant.distributePrice = Exchange.rielToDollar(variant.distributePrice, this.exchangeRate);
+          variant.wholePrice      = Exchange.rielToDollar(variant.wholePrice, this.exchangeRate);
+          return variant;
+        });
+        values["variantProducts"] = productVariants;
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
         this.dispatch(ProductAction.update(values));

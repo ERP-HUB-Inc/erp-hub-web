@@ -32,6 +32,7 @@ import Modal from "../../../../common/components/shares/Modal";
 import CommonEnum from "../../../../common/enums";
 import "./index.css";
 import CurrencyExchangeService from "../../../../pos/services/settings/CurrencyExchangeService";
+import Exchange from "./ExchangeMoneyFunc";
 
 function SelectBrand(props) {
   const limit = 15;
@@ -255,6 +256,7 @@ export default class FormItem extends Modal {
       tags: [],
       inputVisible: false,
       inputValue: "",
+      exchangeRate: 1,
     };
 
     this.TAB_PRODUCT_COST_LOG = 3;
@@ -417,22 +419,8 @@ export default class FormItem extends Modal {
     return this.Util.getSetting().currency === "$"  ? length :  0;
   }
 
-  exchangeDollarToRiel(amount, rate= this.state.exchangeRate){
-    if (amount && rate){
-      return amount * rate;
-    }
-    return  0;
-  }
-
-  exchangeRielToDollar(amount, rate= this.state.exchangeRate){
-    if (amount && rate){
-      return amount / rate;
-    }
-    return  0;
-  }
-
   render() {
-    const { tags, inputVisible, inputValue } = this.state;
+    const { tags, inputVisible, inputValue, exchangeRate } = this.state;
     const {
       dispatch,
       form,
@@ -584,7 +572,7 @@ export default class FormItem extends Modal {
               <this.InputNumber
                 name="price"
                 label={<span><this.Translate id="text_retial_price" /><span> ({currentUser.setting.currency})</span></span>}
-                data={this.exchangeDollarToRiel(Util.getProductPrice(formData))}
+                data={Exchange.dollarToRiel(Util.getProductPrice(formData), exchangeRate)}
                 precision={this.getPrecisionByCurrency()}
                 isAutoSelect={true}
                 placeholder={this.CATranslate("input_product_price_placeholder", locale)}
@@ -597,7 +585,7 @@ export default class FormItem extends Modal {
               <this.InputNumber
                 name="wholePrice"
                 label={<span><this.Translate id="text_whole_price" /><span> ({currentUser.setting.currency})</span></span>}
-                data={this.exchangeDollarToRiel(Util.getProductWholeSalePrice(formData))}
+                data={Exchange.dollarToRiel(Util.getProductWholeSalePrice(formData), exchangeRate)}
                 isAutoSelect={true}
                 precision={this.getPrecisionByCurrency()}
                 placeholder={this.CATranslate("input_product_price_placeholder", locale)}
@@ -610,7 +598,7 @@ export default class FormItem extends Modal {
               <this.InputNumber
                 name="distributePrice"
                 label={<span><this.Translate id="text_distribute_price" /><span> ({currentUser.setting.currency})</span></span>}
-                data={this.exchangeDollarToRiel(Util.getProductDistributePrice(formData))}
+                data={Exchange.dollarToRiel(Util.getProductDistributePrice(formData), exchangeRate)}
                 precision={this.getPrecisionByCurrency()}
                 isAutoSelect={true}
                 placeholder={this.CATranslate("input_product_price_placeholder", locale)}
@@ -649,7 +637,8 @@ export default class FormItem extends Modal {
                       <this.InputNumber
                         name="costDisplay"
                         label={<span><this.Translate id="text_cost" /><span> ({currentUser.setting.currency})</span></span>}
-                        data={Util.getProductCost(formData)}
+                        data={Exchange.dollarToRiel(Util.getProductCost(formData), exchangeRate)}
+                        precision={this.getPrecisionByCurrency()}
                         placeholder={this.CATranslate("text_cost_placeholder", locale)}
                         disabled={true}
                         form={form}/>
@@ -804,6 +793,8 @@ export default class FormItem extends Modal {
                   form={form}
                   locale={locale}
                   formData={formData}
+                  exchangeRate={exchangeRate}
+                  getPrecisionByCurrency={(length)=>this.getPrecisionByCurrency(length)}
                   switchAutoGenerateSKU={this.props.switchAutoGenerateSKU}
                   productVariantArchive={this.props.productVariantArchive}
                   productVariantCheckStatus={this.props.productVariantCheckStatus}

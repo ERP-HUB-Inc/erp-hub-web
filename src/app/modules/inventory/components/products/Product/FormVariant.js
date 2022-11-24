@@ -1,12 +1,13 @@
 import React from "react";
+import { Icon } from "antd";
 import _ from "lodash";
+import Modal from "../../../../common/components/shares/Modal";
 import ProductAction from "../../../actions/products/product";
 import Constant from "../../../constants/products/product";
 import ProductVariantAction from "../../../actions/products/productVariant";
 import ConstantAttribute from "../../../constants/products/variantAttribute";
 import VariantAttributeAction from "../../../actions/products/variantAttribute";
-import Modal from "../../../../common/components/shares/Modal";
-import { Icon } from "antd";
+import Exchange from "./ExchangeMoneyFunc";
 
 import "./index.css";
 
@@ -80,7 +81,8 @@ export default class FormVariant extends Modal {
             isAutoSelect={true}
             isHideTool={true}
             errorRequired={<this.Translate id="error_require_price" />}
-            data={price}
+            data={Exchange.dollarToRiel(price, this.props.exchangeRate)}
+            precision={this.props.getPrecisionByCurrency()}
             handleKeyUp={(e) => this.handleOnChangePrice(e, index)}
             form={this.props.form} />;
         }
@@ -98,7 +100,8 @@ export default class FormVariant extends Modal {
             isAutoSelect={true}
             isHideTool={true}
             errorRequired={<this.Translate id="error_require_price" />}
-            data={wholePrice}
+            data={Exchange.dollarToRiel(wholePrice, this.props.exchangeRate)}
+            precision={this.props.getPrecisionByCurrency()}
             handleKeyUp={(e) => this.handleOnChangePrice(e, index, "wholePrice")}
             form={this.props.form}/>;
         }
@@ -116,7 +119,8 @@ export default class FormVariant extends Modal {
             isAutoSelect={true}
             isHideTool={true}
             errorRequired={<this.Translate id="error_require_price" />}
-            data={distributePrice}
+            data={Exchange.dollarToRiel(distributePrice, this.props.exchangeRate)}
+            precision={this.props.getPrecisionByCurrency()}
             handleKeyUp={(e) => this.handleOnChangePrice(e, index, "distributePrice")}
             form={this.props.form} />;
         }
