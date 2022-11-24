@@ -37,17 +37,25 @@ export default class SerialForm extends React.PureComponent  {
     const values = this.props.form.getFieldsValue();
 
     if (!values.serialNumber) {
-      this.props.form.setFields({
+      return this.props.form.setFields({
         serialNumber: {
           errors: [new Error(stringTranslate("error_serial_number_require", this.props.locale))]
         }
       });
     }
 
-    if (!values.numOfWarranty || !values.durationType) {
-      this.props.form.setFields({
+    if (!values.numOfWarranty) {
+      return this.props.form.setFields({
         numOfWarranty: {
           errors: [new Error(stringTranslate("error__num_of_warranty_require", this.props.locale))]
+        }
+      });
+    }
+
+    if (!values.durationType) {
+      return this.props.form.setFields({
+        durationType: {
+          errors: [new Error("Please select duration type")]
         }
       });
     }
