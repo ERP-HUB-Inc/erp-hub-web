@@ -3,7 +3,6 @@
         if (amount && rate){
             return amount * rate;
         }
-        console.log("amount", amount);
         return  0;
     },
 

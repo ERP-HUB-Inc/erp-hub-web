@@ -14,7 +14,6 @@ import VariantAttributeAction from "../../../actions/products/variantAttribute";
 import FormCreateVariantAttribute from "../../../containers/products/VariantAttribute/FormCreate";
 import TaxAction from "../../../../pos/action/settings/tax";
 import FormCreateTax from "../../../../pos/containers/settings/Tax/FormCreate";
-import CurrencyExchangeService from "../../../../pos/services/settings/CurrencyExchangeService";
 import Exchange from "./ExchangeMoneyFunc";
 
 export default class ProductUpdate extends Component {
@@ -38,6 +37,7 @@ export default class ProductUpdate extends Component {
     this.handleAddVariantAttribute = this.handleAddVariantAttribute.bind(this);
     this.handleAddTax = this.handleAddTax.bind(this);
     this.productTags = [];
+    this.exchangeRate= 1;
   }
 
   componentDidMount() {
@@ -55,15 +55,6 @@ export default class ProductUpdate extends Component {
       }
     });
 
-    const {currency, currencyId}  = this.Util.getSetting();
-    if (currency !== "$"){
-      CurrencyExchangeService.getExchangeRate(JSON.stringify({"currencyId": [currencyId]})).then(({data})=>{
-        const data1 = data.data;
-        if (data1 && data1.length){
-          this.exchangeRate = data1[0].value;
-        }
-      });
-    }
   }
 
   componentWillUnmount() {

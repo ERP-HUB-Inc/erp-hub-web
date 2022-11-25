@@ -432,19 +432,18 @@ export default class FormVariant extends Modal {
       dispatch,
       variantAttributeAdd
     } = this.props;
-
     const productVariants = this.Util.copyArrayObj(this.props.productVariants);
-    productVariants.map( (variant) => {
-        variant.price           = Number(Exchange.dollarToRiel(variant.price, this.props.exchangeRate).toFixed());
-        variant.distributePrice = Number(Exchange.dollarToRiel(variant.distributePrice, this.props.exchangeRate).toFixed());
-        variant.wholePrice      = Number(Exchange.dollarToRiel(variant.wholePrice, this.props.exchangeRate).toFixed());
-        return variant;
-   });
 
     if (productVariants && productAttributes &&  this.state.isNotYetLoadComponentDidUpdated && this.props.exchangeRate) {
+      if (this.props.exchangeRate !== 1){
+        productVariants.map( (variant) => {
+          variant.price           = Number(Exchange.dollarToRiel(variant.price, this.props.exchangeRate).toFixed());
+          variant.distributePrice = Number(Exchange.dollarToRiel(variant.distributePrice, this.props.exchangeRate).toFixed());
+          variant.wholePrice      = Number(Exchange.dollarToRiel(variant.wholePrice, this.props.exchangeRate).toFixed());
+          return variant;
+        });
+      }
       productAttributes = _.sortBy(productAttributes, ["createdAt"]);
-      console.log("gg", productVariants);
-      console.log("productVariants", productVariants);
       this.setState({
         variantAttributeList: productAttributes,
         productVariantList: productVariants,

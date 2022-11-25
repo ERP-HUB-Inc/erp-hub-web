@@ -4,6 +4,7 @@ import {
   PageHeader
 } from "antd";
 import sweetalert from "sweetalert";
+import Component from "../../../../common/components/Component";
 import FormItem from "./FormItem";
 import history from "../../../../common/router/history";
 import Enum from "../../../enums";
@@ -18,8 +19,6 @@ import UnitAction from "../../../actions/products/productsUnit";
 import FormCreateUnit from "../../../containers/products/ProductsUnit/FormCreate";
 import TaxAction from "../../../../pos/action/settings/tax";
 import FormCreateTax from "../../../../pos/containers/settings/Tax/FormCreate";
-import CurrencyExchangeService from "../../../../pos/services/settings/CurrencyExchangeService";
-import Component from "../../../../common/components/Component";
 import Exchange from "./ExchangeMoneyFunc";
 
 export default class ProductCreate extends Component {
@@ -55,16 +54,6 @@ export default class ProductCreate extends Component {
         }
       }
     });
-
-    const {currency, currencyId}  = this.Util.getSetting();
-    if (currency !== "$"){
-      CurrencyExchangeService.getExchangeRate(JSON.stringify({"currencyId": [currencyId]})).then(({data})=>{
-        const data1 = data.data;
-        if (data1 && data1.length){
-          this.exchangeRate = data1[0].value;
-        }
-      });
-    }
   }
 
   componentWillUnmount() {
