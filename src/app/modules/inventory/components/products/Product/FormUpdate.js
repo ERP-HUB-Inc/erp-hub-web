@@ -164,17 +164,28 @@ export default class ProductUpdate extends Component {
         values["distributePrice"] = Exchange.rielToDollar(values["distributePrice"], this.exchangeRate);
         values["taxes"] = [{taxId: values["taxId"]}];
         values["attributes"] = this.state.productArchiveAttributes.concat(this.state.productAttributes);
+
         const productVariants = this.state.productArchiveVariants.concat(this.state.productVariants);
+
+        ///display Updated product price
+        if (productVariants && productVariants.length) {
+          this.props.form.setFieldsValue({price: productVariants[0].price});
+          this.props.form.setFieldsValue({wholePrice: productVariants[0].wholePrice});
+          this.props.form.setFieldsValue({distributePrice: productVariants[0].distributePrice});
+        }
+
         productVariants.map( (variant) => {
-          variant.price           = Exchange.rielToDollar(variant.price, this.exchangeRate);
-          variant.distributePrice = Exchange.rielToDollar(variant.distributePrice, this.exchangeRate);
-          variant.wholePrice      = Exchange.rielToDollar(variant.wholePrice, this.exchangeRate);
-          return variant;
+        variant.price           = Exchange.rielToDollar(variant.price, this.exchangeRate);
+        variant.distributePrice = Exchange.rielToDollar(variant.distributePrice, this.exchangeRate);
+        variant.wholePrice      = Exchange.rielToDollar(variant.wholePrice, this.exchangeRate);
+        return variant;
         });
+
         values["variantProducts"] = productVariants;
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
         this.dispatch(ProductAction.update(values));
+
       }
     });
   }

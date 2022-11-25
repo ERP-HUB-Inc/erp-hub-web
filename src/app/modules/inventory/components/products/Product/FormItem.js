@@ -325,8 +325,8 @@ export default class FormItem extends Modal {
       CurrencyExchangeService.getExchangeRate(JSON.stringify({"currencyId": [currencyId]})).then(({data})=>{
         const data1 = data.data;
         if (data1 && data1.length){
-          this.setState({exchangeRate: data1[0].value});
-          this.props.setExchangeRateCallBack(data1[0].value);
+          this.setState({exchangeRate: data1[data1.length-1].value});
+          this.props.setExchangeRateCallBack(data1[data1.length-1].value);
         }
       });
     }else {

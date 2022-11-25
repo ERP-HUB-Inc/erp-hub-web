@@ -1186,7 +1186,6 @@ export default class FormVariant extends Modal {
   render() {
     this.submitConfirmActionLoading = this.props.productVariantArchive.archiving;
     const attributeLength = this.countProductAttribute(this.state.variantAttributeList);
-    console.log("render", this.state.productVariantList);
     return (
       <this.Row>
         <this.InputNumber
