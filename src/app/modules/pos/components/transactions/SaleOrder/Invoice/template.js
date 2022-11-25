@@ -17,7 +17,7 @@ export default function Template(props) {
           <tr style={{background: "none"}}>
             <td>
               <h4>{setting.businessName}</h4>
-              <div>Cambodia</div>
+              <div style={{width: 460, lineHeight: "28px"}}>{setting.address}</div>
             </td>
             <td style={{textAlign: "right"}}>
               <h2>SALES ORDER</h2>
