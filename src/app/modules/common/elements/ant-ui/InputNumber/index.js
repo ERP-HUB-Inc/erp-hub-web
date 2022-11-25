@@ -49,6 +49,7 @@ export class InputNumber extends Element {
         min={this.props.min}
         max={this.props.max}
         formatter={this.props.formatter}
+        parser={this.props.parser}
         step={this.props.step}
         compare={this.props.compare}
         style={this.props.style}

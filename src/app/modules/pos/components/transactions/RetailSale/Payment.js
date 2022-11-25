@@ -175,6 +175,12 @@ export default class Payment extends Modal {
     let amountToPaySubCurrency = this.props.form.getFieldValue("amountToPaySubCurrency"); // AMOUNT FROM INPUT OF CASHEIR AS SUB CURRENCY
     let paymentMethodId = null;
 
+    if (!amountToPay && !amountToPaySubCurrency) {
+      this.props.form.setFieldsValue({amountToPay: 0, amountToPaySubCurrency: 0});
+      document.getElementById("amountToPay").focus();
+      return;
+    }
+
     amountToPay = parseFloat(amountToPay);
     amountToPaySubCurrency = parseFloat(amountToPaySubCurrency);
     let grandTotal = this.getGrandTotal();
@@ -529,6 +535,13 @@ export default class Payment extends Modal {
                       validateStatus={this.state.validateStatus}
                       errorMsg={this.state.errorMsg}
                       // data={grandTotal}
+                      parser={(value) => {
+                        if (isNaN(value)) {
+                          const regex = /\D+/;
+                          return value.replace(regex, "");
+                        }
+                        return value;
+                      }}
                       form={this.props.form}
                       handleOnFocus={() => this.handleOnFocusInputAmount(true)} />
                   </div>
@@ -547,6 +560,13 @@ export default class Payment extends Modal {
                           isAutoSelect={true}
                           validateStatus={this.state.validateStatus}
                           errorMsg={this.state.errorMsg}
+                          parser={(value) => {
+                            if (isNaN(value)) {
+                              const regex = /\D+/;
+                              return value.replace(regex, "");
+                            }
+                            return value;
+                          }}
                           form={this.props.form}
                           handleOnFocus={() => this.handleOnFocusInputAmount(false)}
                           handleOnBlur={() => this.handleOnFocusInputAmount(true)} />

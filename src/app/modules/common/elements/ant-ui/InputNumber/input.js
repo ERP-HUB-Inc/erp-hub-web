@@ -89,6 +89,7 @@ export default class InputNumber extends Element {
               onBlur={this.props.handleOnBlur}
               onFocus={this.handleOnFocus}
               style={this.props.inputStyle}
+              parser={this.props.parser}
               onPressEnter={this.props.handlePressEnter}
               className={`${this.props.isHideTool ? "hide-input-number-tool" : "" } ${this.props.className}`}
               help={this.errorMessage} />
