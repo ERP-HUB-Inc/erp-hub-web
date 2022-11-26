@@ -7,7 +7,8 @@ import {
   Col
 } from "antd";
 import List from "../../List";
-import Util from "../../../utils";
+import CommonUtil from "../../../../common/util";
+import Util from "../../../../inventory/utils";
 import Enum from "../../../enums";
 import history from "../../../../common/router/history";
 import FormCreate from "../../../containers/products/Product/FormCreate";
@@ -16,8 +17,11 @@ import LocationAction from "../../../../pos/action/settings/location";
 import ProductAction from "../../../actions/products/product";
 import ProductService from "../../../services/products/ProductService";
 import "./index.css";
+import CurrencyExchangeService from "../../../../pos/services/settings/CurrencyExchangeService";
+import Exchange from "./ExchangeMoneyFunc";
 
 export default class ProductList extends List {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -25,7 +29,7 @@ export default class ProductList extends List {
       brands: [],
       locations: [],
       productTypes: [],
-      dataSourceToPrint: []
+      dataSourceToPrint: [],
     };
     this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
     this.stockList = [
@@ -52,6 +56,7 @@ export default class ProductList extends List {
 
   componentDidMount() {
     const params = new URLSearchParams(document.location.search);
+    const {currency, currencyId}  = this.Util.getSetting();
     if (params.get("current")) {
       this.setState({ current: Number(params.get("current")) });
     }
@@ -62,7 +67,16 @@ export default class ProductList extends List {
       this.props.form.setFieldsValue({locationId: Number(params.get("locationId"))});
     }
     this.fetchList(true);
-    this.props.dispatch(LocationAction.fetch()); 
+    this.props.dispatch(LocationAction.fetch());
+    if (currency !== "$"){
+      CurrencyExchangeService.getExchangeRate(JSON.stringify({"currencyId": [currencyId]})).then(({data})=>{
+        const data1 = data.data;
+        if (data1 && data1.length){
+          exchangeRate = data1[data1.length-1].value;
+          this.forceUpdate();
+        }
+      });
+    }
   }
 
   componentWillUpdate(nextProps) {
@@ -353,6 +367,19 @@ export default class ProductList extends List {
   }
 }
 
+const commonUtil = new CommonUtil();
+let exchangeRate = 1;
+
+const exchangeAndFormatToDollar = (price) => {
+  return commonUtil.formatCurrency(price);
+};
+const exchangeAndFormatToRiel = (price) => {
+  return commonUtil.formatCurrency(commonUtil.toValidKHMoney(Exchange.dollarToRiel(price, exchangeRate)), "៛", 1, 0);
+};
+
+const currencyIsDollar = commonUtil.getSetting().currency === "$";
+const exchangeAndFormatCurrency = currencyIsDollar ? exchangeAndFormatToDollar : exchangeAndFormatToRiel;
+
 class ColumnExpand extends List {
   constructor(props) {
     super(props);
@@ -392,21 +419,21 @@ class ColumnExpand extends List {
         key: "price",
         width: 150,
         align: "center",
-        render: price => this.formatCurrency(price)
+        render: price => exchangeAndFormatCurrency(price)
       },
       {
         dataIndex: "wholePrice",
         key: "wholePrice",
         width: 150,
         align: "center",
-        render: wholePrice => this.formatCurrency(wholePrice),
+        render: wholePrice => exchangeAndFormatCurrency(wholePrice),
       },
       {
         dataIndex: "distributePrice",
         key: "distributePrice",
         width: 180,
         align: "center",
-        render: distributePrice => this.formatCurrency(distributePrice)
+        render: distributePrice => exchangeAndFormatCurrency(distributePrice)
       },
       {
         dataIndex: "quantity",
@@ -528,7 +555,7 @@ class Column extends List {
         dataIndex: "price",
         width: 150,
         align: "center",
-        render: (text, record) => this.formatCurrency(Util.getProductPrice(record))
+        render: (text, record) => exchangeAndFormatCurrency(Util.getProductPrice(record))
       },
       {
         title: <this.Translate id="text_whole_price" />,
@@ -536,7 +563,7 @@ class Column extends List {
         dataIndex: "wholePrice",
         width: 150,
         align: "center",
-        render: (text, record) => this.formatCurrency(Util.getProductWholeSalePrice(record))
+        render: (text, record) => exchangeAndFormatCurrency(Util.getProductWholeSalePrice(record))
       },
       {
         title: <this.Translate id="text_distribute_price" />,
@@ -544,7 +571,7 @@ class Column extends List {
         dataIndex: "distributePrice",
         width: 170,
         align: "center",
-        render: (text, record) => this.formatCurrency(Util.getProductDistributePrice(record))
+        render: (text, record) => exchangeAndFormatCurrency(Util.getProductDistributePrice(record))
       },
       {
         title: <this.Translate id="text_quantity" />,
