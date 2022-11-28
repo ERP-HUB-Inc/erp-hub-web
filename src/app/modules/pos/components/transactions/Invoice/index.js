@@ -602,10 +602,9 @@ export default class Invoice extends Component {
                     <Card>
                       <Statistic
                           title={<this.Translate id="text_sent_invoice"/>}
-                          value={summaryData.sentAmount ? summaryData.sentAmount : 0 }
+                          value={summaryData.sentAmount ? summaryData.sentAmount.toFixed(2) : 0 }
                           prefix="$"
                           suffix={" / " + (summaryData.sent ? summaryData.sent  :  0) + " invoice(s)"}
-                          precision={2}
                           valueStyle={{color: "rgb(24, 144, 255)"}}
                       />
                     </Card>
@@ -614,10 +613,9 @@ export default class Invoice extends Component {
                     <Card>
                       <Statistic
                           title={<this.Translate id="text_overdue"/>}
-                          value={summaryData.overdueAmount ? summaryData.overdueAmount : 0 }
+                          value={summaryData.overdueAmount ? summaryData.overdueAmount.toFixed(2) : 0 }
                           prefix="$"
                           suffix={" / " + (summaryData.overdue ? summaryData.overdue  :  0) + " invoice(s)"}
-                          precision={2}
                           valueStyle={{ color: "#cf1322" }}
                       />
                     </Card>
@@ -626,10 +624,9 @@ export default class Invoice extends Component {
                     <Card>
                       <Statistic
                           title={<this.Translate id="text_paid"/>}
-                          value={summaryData.paidAmount ? summaryData.paidAmount : 0 }
+                          value={summaryData.paidAmount ? summaryData.paidAmount.toFixed(2) : 0 }
                           prefix="$"
                           suffix={ " / " + (summaryData.paid ? summaryData.paid  :  0) + " invoice(s)"}
-                          precision={2}
                           valueStyle={{ color: "#3f8600" }}
                       />
                     </Card>

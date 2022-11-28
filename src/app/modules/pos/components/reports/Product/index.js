@@ -203,7 +203,7 @@ export default function ReportProduct() {
                     <Card>
                       <Statistic
                           title="Current Stock Value (By purchase price)"
-                          value={currentStockValueByCost}
+                          value={currentStockValueByCost.toFixed(2)}
                           precision={2}
                       />
                     </Card>
@@ -212,7 +212,7 @@ export default function ReportProduct() {
                     <Card>
                       <Statistic
                           title="Current Stock Value (By selling price)"
-                          value={currentStockValueByPrice}
+                          value={currentStockValueByPrice.toFixed(2)}
                           precision={2}
                       />
                     </Card>
@@ -222,7 +222,7 @@ export default function ReportProduct() {
                       <Statistic
                           title="Expected Gross Profit"
                           valueStyle={{ color: "#3f8600" }}
-                          value={expectedProfit}
+                          value={expectedProfit.toFixed(2)}
                           precision={2}
                       />
                     </Card>
@@ -231,7 +231,7 @@ export default function ReportProduct() {
                     <Card>
                       <Statistic
                           title={<Translate id="text_margin" />}
-                          value={expectedMargin}
+                          value={expectedMargin.toFixed(2)}
                           precision={2}
                           suffix="%"
                       />

@@ -193,7 +193,7 @@ export default function ReportProduct() {
           <Card>
             <Statistic
               title="Damaged Goods"
-              value={damagedGoods}
+              value={damagedGoods.toFixed(2)}
               precision={2}
             />
           </Card>
@@ -202,7 +202,7 @@ export default function ReportProduct() {
           <Card>
             <Statistic
               title="Leakage"
-              value={leakAge}
+              value={leakAge.toFixed(2)}
               precision={2}
             />
           </Card>
@@ -211,7 +211,7 @@ export default function ReportProduct() {
           <Card>
             <Statistic
               title="Incorrect Stock"
-              value={incorrectStock}
+              value={incorrectStock.toFixed(2)}
               precision={2}
             />
           </Card>
@@ -220,7 +220,7 @@ export default function ReportProduct() {
           <Card>
             <Statistic
               title={"Stolen Goods"}
-              value={stolenGoods}
+              value={stolenGoods.toFixed(2)}
               precision={2}
             />
           </Card>
