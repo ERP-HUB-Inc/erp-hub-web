@@ -159,7 +159,7 @@ export default function ReportSaleByProduct() {
     totalRevenue = summary.totalRevenue;
     totalCost = summary.totalCost;
     totalProfit = summary.totalNetSale - totalCost;
-    totalMargin = ((totalRevenue - totalCost) / totalRevenue) * 100;
+    totalMargin = totalProfit && ((totalRevenue - totalCost) / totalRevenue) * 100;
   }
   return (
     <div id="report-sale">
@@ -228,7 +228,7 @@ export default function ReportSaleByProduct() {
           <Card>
             <Statistic
               title={<Translate id="text_revenue" />}
-              value={summary ? summary.totalRevenue : 0}
+              value={summary ? summary.totalRevenue.toFixed(2) : 0}
               precision={2}
             />
           </Card>
@@ -237,7 +237,7 @@ export default function ReportSaleByProduct() {
           <Card>
             <Statistic
               title={<Translate id="text_discount" />}
-              value={summary ? summary.totalDiscount : 0}
+              value={summary ? summary.totalDiscount.toFixed(2) : 0}
               valueStyle={{ color: "#cf1322" }}
               precision={2}
             />
@@ -248,7 +248,7 @@ export default function ReportSaleByProduct() {
             <Statistic
               title={<Translate id="text_net_sale" />}
               valueStyle={{ color: "#3f8600" }}
-              value={summary ? summary.totalNetSale : 0}
+              value={summary ? summary.totalNetSale.toFixed(2) : 0}
               precision={2}
             />
           </Card>
@@ -257,7 +257,7 @@ export default function ReportSaleByProduct() {
           <Card>
             <Statistic
               title={<Translate id="text_cost_of_good" />}
-              value={summary ? summary.totalCost : 0}
+              value={summary ? summary.totalCost.toFixed(2) : 0}
               precision={2}
             />
           </Card>
@@ -266,7 +266,7 @@ export default function ReportSaleByProduct() {
           <Card>
             <Statistic
               title={<Translate id="text_gross_profit" />}
-              value={totalProfit}
+              value={totalProfit.toFixed(2)}
               precision={2}
             />
           </Card>
@@ -275,7 +275,7 @@ export default function ReportSaleByProduct() {
           <Card>
             <Statistic
               title={<Translate id="text_margin" />}
-              value={totalMargin}
+              value={totalMargin.toFixed(2)}
               precision={2}
               suffix="%"
             />

@@ -276,7 +276,7 @@ function ReportSaleSummary() {
           <Card>
             <Statistic
               title={<Translate id="text_cost_of_good" />}
-              value={data ? data.cost : 0}
+              value={data ? data.cost.toFixed(2) : 0}
               precision={2}
             />
           </Card>

@@ -104,7 +104,7 @@ function ReportSaleByLocation() {
           <Card>
             <Statistic
               title={<Translate id="text_revenue" />}
-              value={summary ? summary.totalRevenue : 0}
+              value={summary ? summary.totalRevenue.toFixed(2) : 0}
               precision={2}
             />
           </Card>
@@ -113,7 +113,7 @@ function ReportSaleByLocation() {
           <Card>
             <Statistic
               title={<Translate id="text_cost_of_good" />}
-              value={summary ? summary.totalCost : 0}
+              value={summary ? summary.totalCost.toFixed(2) : 0}
               precision={2}
             />
           </Card>
@@ -122,7 +122,7 @@ function ReportSaleByLocation() {
           <Card>
             <Statistic
               title={<Translate id="text_gross_profit" />}
-              value={totalProfit}
+              value={totalProfit.toFixed(2)}
               precision={2}
             />
           </Card>
@@ -131,7 +131,7 @@ function ReportSaleByLocation() {
           <Card>
             <Statistic
               title={<Translate id="text_margin" />}
-              value={totalMargin}
+              value={totalMargin.toFixed(2)}
               precision={2}
               suffix="%"
             />
