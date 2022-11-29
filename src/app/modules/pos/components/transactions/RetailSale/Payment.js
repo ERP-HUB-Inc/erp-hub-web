@@ -9,7 +9,6 @@ import TransactionAction from "../../../action/transaction/transaction";
 import POSUtil from "../../../utils";
 import Modal from "../../../../common/components/shares/Modal";
 import "./Payment.css";
-import RewardModal from "./RewardModal";
 
 export default class Payment extends Modal {
   static PAYMENT_METHOD_CREDIT_CODE = "002";
@@ -29,7 +28,6 @@ export default class Payment extends Modal {
       errorMsg: "",
       formData: {},
       loadingSubmit: false,
-      isShowModalReward: true
     };
     this.paymentMethodSelectedIndex = null;
     this.wrapClassName = "pos-payment";
@@ -162,8 +160,7 @@ export default class Payment extends Modal {
         isAlreadyAutoPrint: false,
         isNotYetPaid: true,
         customerPaymentList: [],
-        amountToPay: 0,
-        isShowModalReward: true
+        amountToPay: 0
       });
       this.wrapClassName = "pos-payment";
       this.props.handleOnResetOrder();
@@ -340,6 +337,7 @@ export default class Payment extends Modal {
     const balance = this.calculateBalance(grandTotal, totalCustomerHasGiveMoney);
     
     let paymentMethodList = [];
+    let customer = {};
     if (this.props.paymentMethodList) {
       paymentMethodList = this.Util.chuckCollection(this.props.paymentMethodList.list.filter(paymentMethod => paymentMethod.code !== Payment.PAYMENT_METHOD_CREDIT_CODE), 2);
     }
@@ -350,7 +348,6 @@ export default class Payment extends Modal {
 
     if (this.props.transaction.showForm) {
       let dataForReceipt = {};
-      let dataForCustomerReward = {};
       if (this.props.transaction.response) {
         let {
           total,
@@ -358,7 +355,7 @@ export default class Payment extends Modal {
         } = this.props.transaction.response.data;
 
         summaryTotal.subTotalAfterDiscount = total - discount;
-
+        customer = this.props.transaction.response.data.customer;
         dataForReceipt = {
           data: this.props.transaction.response.data,
           receiptTemplate: this.props.receiptTemplate.data,
@@ -376,13 +373,6 @@ export default class Payment extends Modal {
           taxRate,
           taxAmount,
           discountAmount
-        };
-
-        dataForCustomerReward = {
-          data: this.props.transaction.response.data,
-          visible: this.state.isShowModalReward,
-          isAllowPrintReceipt: !this.state.isAllowPrintReceipt,
-          onClose: () => this.setState({isShowModalReward: false})
         };
       }
 
@@ -667,12 +657,38 @@ export default class Payment extends Modal {
                       <this.Translate id="text_email_receipt" />
                     </this.Button>
                   </div>
+                  {
+                    this.props.customer ?
+                    <table style={{width: "100%", border: "1px solid #ddd", display: "inline-table", textAlign: "center"}} id="table-customer-reward-point">
+                      <thead>
+                        <tr>
+                          <td colSpan={2} style={{padding: 10, borderBottom: "1px solid #ddd"}}>{customer.firstName} {customer.lastName}</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td style={{width: "50%", borderRight: "1px solid #ddd", padding: 20}}>
+                            Redeem Points 
+                            <div>{customer.redeemedPoint}</div>
+                          </td>
+                          <td>
+                            Points
+                            <div style={{display: "flex", justifyContent: "center"}}>
+                              {this.Util.floor(customer.previousPoint)}
+                              <span style={{color: "green", fontSize: 13, marginTop: -1, marginLeft: 3}}> + {this.Util.floor(customer.additionalPoint)}</span>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    : null
+                  }
+                  
                   <div className="complete-action">
                     <this.Button type="info" className="ca-button-v1 btn-send-email-receipt" onClick={this.handleOnCompletePayment}>
                       <this.Translate id="text_done" /> (ESC)
                     </this.Button>
                   </div>
-                  {this.props.customer && <RewardModal {...dataForCustomerReward} />}
                 </div>
             }
           </this.Col>

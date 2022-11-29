@@ -232,7 +232,7 @@ export default class ProductCreate extends Component {
           title={<this.Translate id="text_product" />}
           subTitle={<this.Translate id="text_new_product" />}
           extra={[
-            <this.Button htmlType="submit" loading={productAdd.adding} className="info" style={{marginLeft: 15}} id="btnSubmit">
+            <this.Button htmlType="submit" loading={productAdd.adding} key={0} className="info" style={{marginLeft: 15}} id="btnSubmit">
               <this.Translate id="text_save" />(Ctrl+s)
             </this.Button>
           ]} />
