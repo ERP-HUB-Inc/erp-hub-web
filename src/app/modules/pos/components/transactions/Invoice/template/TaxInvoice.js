@@ -49,6 +49,15 @@ export default function TaxInvoice(props) {
   let tax = util.floor(formData.total - formData.totalExcludeTax);
   if (!tax)
     tax = 0;
+
+  let entryRowSpan = 2;
+  if (discount) {
+    entryRowSpan += 1;
+  }
+
+  if (deliveryFee) {
+    entryRowSpan += 1;
+  }
   
   return (
     <table className="table-invoice" style={props.style}>
@@ -144,7 +153,7 @@ export default function TaxInvoice(props) {
                   ))
                 }
                 <tr>
-                  <td colSpan={2} rowSpan={formData.discount ? 4 : 3}></td>
+                  <td colSpan={2} rowSpan={entryRowSpan}></td>
                   <td colSpan={2} style={{textAlign: "right"}}><div>សរុប</div><div>Sub Total</div></td>
                   <td style={{textAlign: "right"}}>{util.formatCurrency(formData.totalExcludeTax)}</td>
                 </tr>
@@ -163,13 +172,14 @@ export default function TaxInvoice(props) {
                   </td>
                   <td>{util.formatCurrency(tax)}</td>
                 </tr>
-                <tr style={{textAlign: "right"}}>
+                {deliveryFee ? <tr style={{textAlign: "right"}}>
                   <td colSpan={2}>
                     <div>តម្លៃដឹកជញ្ជូន</div>
                     <div>Delivery Fee</div>
                   </td>
                   <td>{util.formatCurrency(deliveryFee)}</td>
                 </tr>
+                : null}
                 <tr style={{fontWeight: 600}}>
                   <td colSpan={2} style={{textTransform: "capitalize"}}>{util.converNumberToWord(formData.total - discount + deliveryFee )}</td>
                   <td colSpan={2} style={{textAlign: "right"}}><div>សរុបរួម</div><div>Grand Total</div></td>

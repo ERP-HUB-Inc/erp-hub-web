@@ -153,8 +153,8 @@ export default function NoneTaxInvoice(props) {
                     <div>VAT</div>
                   : null
                 }
-                <div>Delivery Fee</div>
-                <div>Paid to Date</div>
+                {deliveryFee ? <div>Delivery Fee</div> : null}
+                {/* <div>Paid to Date</div> */}
                 <div>Balance</div>
               </div>
               <div>
@@ -169,8 +169,8 @@ export default function NoneTaxInvoice(props) {
                     <div>{util.formatCurrency(tax)}</div>
                   : null
                 }
-                <div>{util.formatCurrency(deliveryFee)}</div>
-                <div>{util.formatCurrency(0)}</div>
+                {deliveryFee ? <div>{util.formatCurrency(deliveryFee)}</div> : null}
+                {/* <div>{util.formatCurrency(0)}</div> */}
                 <div style={{color: "#37a3c6"}}>{util.formatCurrency(formData.total - discount + deliveryFee)}</div>
               </div>
             </div>
