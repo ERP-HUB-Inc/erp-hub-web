@@ -657,9 +657,14 @@ export default class Payment extends Modal {
                       <this.Translate id="text_email_receipt" />
                     </this.Button>
                   </div>
+                  <div className="complete-action">
+                    <this.Button type="info" className="ca-button-v1 btn-send-email-receipt" onClick={this.handleOnCompletePayment}>
+                      <this.Translate id="text_done" /> (ESC)
+                    </this.Button>
+                  </div>
                   {
                     this.props.customer ?
-                    <table style={{width: "100%", border: "1px solid #ddd", display: "inline-table", textAlign: "center"}} id="table-customer-reward-point">
+                    <table id="table-customer-reward-point">
                       <thead>
                         <tr>
                           <td colSpan={2} style={{padding: 10, borderBottom: "1px solid #ddd"}}>{customer.firstName} {customer.lastName}</td>
@@ -683,12 +688,6 @@ export default class Payment extends Modal {
                     </table>
                     : null
                   }
-                  
-                  <div className="complete-action">
-                    <this.Button type="info" className="ca-button-v1 btn-send-email-receipt" onClick={this.handleOnCompletePayment}>
-                      <this.Translate id="text_done" /> (ESC)
-                    </this.Button>
-                  </div>
                 </div>
             }
           </this.Col>
