@@ -91,6 +91,11 @@ class SaleOrder extends Component {
                 </this.Link>
               </Menu.Item>
               <Menu.Item>
+                <this.Link to={`/transactions/create-invoice?saleOrderId=${record.id}&action=convertToInvoice`}>
+                  <Icon type="retweet" style={{marginRight: 10}} /> <this.Translate id="text_convert_to_invoice" />
+                </this.Link>
+              </Menu.Item>
+              <Menu.Item>
                 <this.Link to={`/transactions/sale-order/detail/${record.id}`}>
                   <Icon type="eye" style={{marginRight: 10}} />
                   <this.Translate id="text_view_detail" />

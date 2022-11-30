@@ -130,13 +130,18 @@ export default class Invoice extends Component {
                   </ReactToPrint>
                 </Menu.Item>
               }
+              <Menu.Item key={4}>
+                <this.Link target="_blank" to={`/transactions/create-invoice?id=${record.id}&action=clone`} >
+                  <Icon type="copy" style={{marginRight: 10}} /> <this.Translate id="text_clone" />
+                </this.Link>
+              </Menu.Item>
               {
                 record.status === Enum.INVOICE_STATUS.PAID && 
-                <Menu.Item onClick={() => this.handleReturn(record)} key={4}>
+                <Menu.Item onClick={() => this.handleReturn(record)} key={5}>
                   <Icon type="close" style={{marginRight: 10}} /> <this.Translate id="text_void" />
                 </Menu.Item>
               }
-              <Menu.Item key={5} onClick={() => this.handleDeleteInvoice(record)} style={{color: "red"}}>
+              <Menu.Item key={6} onClick={() => this.handleDeleteInvoice(record)} style={{color: "red"}}>
                 <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
               </Menu.Item>
             </Menu>
