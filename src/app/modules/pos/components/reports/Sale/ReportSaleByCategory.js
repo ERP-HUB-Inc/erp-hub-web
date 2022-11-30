@@ -85,7 +85,7 @@ function ReportSaleByCategory() {
       title={<Translate id="text_categories_sale_report" />}
       subTitle=""
       extra={[
-        <div style={{display: "flex"}}>
+        <div style={{display: "flex"}} key={0}>
           <DatePicker
               format="DD/MM/YYYY"
               value={fromValue}

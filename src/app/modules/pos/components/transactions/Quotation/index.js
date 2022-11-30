@@ -21,7 +21,6 @@ import QuotationA4 from "./QuotationA4";
 import Enum from "../../../enums";
 import history from "../../../../../modules/common/router/history";
 import Constant from "../../../constants/transactions/quotation";
-import CustomerAction from "../../../../crm/actions/customers/customer";
 import QuotationAction from "../../../action/transaction/quotation";
 import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
 import QuotationService from "../../../services/transactions/QuotationService";
@@ -109,6 +108,16 @@ export default class QuotationList extends Component {
                     <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_detail" />
                   </this.Link>
                 </Menu.Item>
+                <Menu.Item>
+                  <this.Link to={`/transactions/quotation-create?id=${record.id}&action=clone`}>
+                    <Icon type="copy" style={{marginRight: 10}} /> <this.Translate id="text_clone" />
+                  </this.Link>
+                </Menu.Item>
+                <Menu.Item>
+                  <this.Link to={`/transactions/create-invoice?quotationId=${record.id}&action=convertToInvoice`}>
+                    <Icon type="retweet" style={{marginRight: 10}} /> <this.Translate id="text_convert_to_invoice" />
+                  </this.Link>
+                </Menu.Item>
               </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
@@ -186,7 +195,6 @@ export default class QuotationList extends Component {
       this.setState({summaryData: data.data});
     });
     this.fetchList(true);
-    this.props.dispatch(CustomerAction.fetch(100));
     new Promise(() => {
       this.props.dispatch(ReceiptTemplateAction.default());
     });

@@ -348,6 +348,7 @@ class FormItem extends React.PureComponent {
         this.pageTitle = "text_create_quotation";
         data.number = "";
         data.quotationDate = moment().format("YYYY-MM-DD");
+        data.validDate = moment().add(1, "week").format("YYYY-MM-DD");
       }
 
       delete data.quotationEntries;
