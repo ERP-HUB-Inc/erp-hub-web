@@ -392,7 +392,7 @@ export default class StoreAccountList extends Component {
       this.dispatch(StoreAccountAction.reset());
     }
 
-    const currency = storeAccount.list.currency != null ? [storeAccount.list.currency] : [];
+    const currencies = storeAccount.list.currencies != null ? storeAccount.list.currencies : [];
     
     let image = {};
     if (storeAccount.fetched) {
@@ -499,12 +499,12 @@ export default class StoreAccountList extends Component {
 
                               <this.Select
                                 name="currencyId"
-                                dataSource={currency}
+                                dataSource={currencies}
                                 defaultValue={storeAccount.list.currencyId}
                                 valueKey="id"
                                 label={<this.Translate id="text_currency" />}
                                 placeholder={this.CATranslate("text_currency", locale)}
-                                form={form} disabled />
+                                form={form} />
 
                               <this.Select
                                 name="currencyPosition"
