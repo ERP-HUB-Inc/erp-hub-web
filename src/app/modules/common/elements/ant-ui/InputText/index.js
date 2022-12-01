@@ -6,6 +6,7 @@ import "./index.css";
 export function InputText(props) {
   return <Input
     suffix={props.suffix}
+    prefix={props.prefix}
     type={ props.type }
     name={props.name}
     className={props.className}

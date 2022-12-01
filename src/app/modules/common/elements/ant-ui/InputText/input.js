@@ -46,6 +46,7 @@ export default class InputText extends Element {
           ],
           initialValue: this.props.data})(<this.Input
             suffix={this.props.suffix}
+            prefix={this.props.prefix}
             type={this.props.type}
             style={this.props.inputStyle}
             ref={(input) => { this.nameInput = input; }}

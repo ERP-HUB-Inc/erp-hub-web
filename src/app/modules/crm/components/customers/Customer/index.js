@@ -13,6 +13,10 @@ import "./index.css";
 export default class CustomerList extends List {
   constructor(props) {
     super(props);
+    this.state = {
+      ...this.state,
+      isShowFilter: false
+    };
     this.columns = new Column();
     this.formCreate = <FormCreate/>;
     this.callBackOnShowEditForm = this.showFormEdit;
@@ -23,7 +27,7 @@ export default class CustomerList extends List {
     this.action = CustomerAction;
     this.groupCustomerList = [{name: <this.Translate id="text_all_group" />, id: 0}];
     this.customerTypes = [
-      {name: <this.Translate id="text_all_group"/>, value: 4},
+      {name: <this.Translate id="text_all_group"/>, value: null},
       {name: <this.Translate id="text_retail_sale"/>, value: Enum.CUSTOMER_TYPE.RETAIL_SALE},
       {name: <this.Translate id="text_whole_sale"/>, value: Enum.CUSTOMER_TYPE.WHOLE_SALE},
       {name: <this.Translate id="text_distributor"/>, value: Enum.CUSTOMER_TYPE.DISTRIBUTOR}
@@ -39,11 +43,27 @@ export default class CustomerList extends List {
     ];
 
     this.RESET_CONSTANT = Constant.RESET_CUSTOMERS;
+    this.timer = null;
+    this.pathname = "/customer";
   }
 
   componentDidMount(){
     this.props.dispatch(GroupCustomerAction.fetch(this.pageSize));
-    super.componentDidMount();
+    const params = new URLSearchParams(document.location.search);
+
+    if (params.get("search")) {
+      this.props.form.setFieldsValue({search: params.get("search")});
+    }
+
+    if (params.get("groupId")) {
+      this.props.form.setFieldsValue({groupCustomerId: params.get("groupId")});
+    }
+
+    if (params.get("type")) {
+      this.props.form.setFieldsValue({type: Number(params.get("type"))});
+    }
+
+    this.fetchList(true);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -77,6 +97,108 @@ export default class CustomerList extends List {
     }
   }
 
+  fetchList(withPagination = false) {
+    let offset = this.state.current;
+    let limit = this.pageSize;
+    let searchKey = "";
+    let filter = {};
+    const params = new URLSearchParams(document.location.search);
+
+    if (params.get("limit")) {
+      limit = Number(params.get("limit"));
+    }
+
+    if (params.get("current")) {
+      offset = Number(params.get("current"));
+    }
+
+    if (params.get("search")) {
+      searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
+    }
+
+    if (params.get("groupId")) {
+      filter["groupCustomerId"] = [params.get("groupId")];
+    }
+
+    if (params.get("type") >= 0 && params.get("type") !== null) {
+      filter["type"] = [params.get("type")];
+    }
+
+    if (filter) {
+      filter = JSON.stringify(filter);
+    }
+
+    if (!withPagination) {
+      offset = 1;
+      this.setState({current: 1});
+      params.delete("current");
+      this.Util.pushParamsToURL(this.pathName, params.toString());
+    }
+
+    offset = (offset - 1) * limit;
+    this.props.dispatch(this.action.fetch(limit, offset, "", "", filter, searchKey));
+  }
+
+  onSearchKey = (e) => {
+    clearTimeout(this.timer);
+    const value = e.target.value;
+    const params = new URLSearchParams(document.location.search);
+    if (value) {
+      params.set("search", value);
+    } else {
+      params.delete("search");
+    }
+
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.timer = setTimeout(() => {
+      this.fetchList();
+    }, 800);
+  }
+
+  onChangeGroup = (value) => {
+    const params = new URLSearchParams(document.location.search);
+    if (value) {
+      params.set("groupId", value);
+    } else {
+      params.delete("groupId");
+    }
+
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+  }
+
+  onChangeType = (value) => {
+    const params = new URLSearchParams(document.location.search);
+    if (value >= 0 && value !== null) {
+      params.set("type", value);
+    } else {
+      params.delete("type");
+    }
+
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+  }
+
+  onShowSizeChange = (current, pageSize) => {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+  }
+
+  onChangePagination = (current, pageSize) => {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList(true);
+  }
+
   expandedRender(record){
     return( 
       <div className="sub-table">
@@ -96,95 +218,53 @@ export default class CustomerList extends List {
     });
   }
 
-  handleSubmitFilter(e) {
-    if (this.action != null) {
-      e.preventDefault();
-      this.props.form.validateFieldsAndScroll((err, values) => {
-        if (!err) {
-          const {dispatch} = this.props;
-          const status = values.status === this.Enum.ALL_STATE ? [this.Enum.ACTIVE, this.Enum.DEACTIVE] : [values.status];
-          let filter = {status};
+  renderBreadCrumb() {}
 
-          if ((values.groupCustomerId - this.groupCustomerList[0].id) !== 0) {
-            filter["groupCustomerId"] = [values.groupCustomerId];
-          }
-  
-
-          if(values.type === 4){
-            filter["type"] = [Enum.CUSTOMER_TYPE.RETAIL_SALE,Enum.CUSTOMER_TYPE.WHOLE_SALE,Enum.CUSTOMER_TYPE.DISTRIBUTOR];
-          }else{
-            filter["type"] = [values.type];
-          }
-
-          filter = JSON.stringify(filter);
-
-          const searchKey = JSON.stringify({column: this.columnFilterWithKey, value: values.key});
-          dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize, "", "", filter, searchKey));
-          this.setState({isClickFilter: true});
-        }
-      });
-    }
-  }
-
-  renderFilterRecord() {
-    const {customerGroup, locale, form} = this.props;
-    if (customerGroup) {
-      const fetchingProps = this.props[this.fetchingProp];
-      return (
-        form == null ?
-          ""
-          :
-          <this.Form layout="inline" onSubmit={this.handleSubmitFilter}>
-            <this.Row className="main-search-layout form-group">
-              <this.Col md="3">
-                <this.InputText
-                  name="key"
-                  label={<this.Translate id="text_search" />}
-                  placeholder= {this.CATranslate("text_search_code", locale)}
-                  form={form}
-                />
-              </this.Col>
-              <this.Col md="2">
-                <this.Select
-                  name="groupCustomerId"
-                  label={<this.Translate id="text_group" />}
-                  dataSource={this.groupCustomerList.concat(customerGroup.list)}
-                  defaultValue={this.groupCustomerList[0].id}
-                  valueKey="id"
-                  form={form}
-                />
-              </this.Col>
-              <this.Col md="2">
-                <this.Select
-                  name="type"
-                  label={<this.Translate id="text_type" />}
-                  dataSource={this.customerTypes}
-                  defaultValue={4}
-                  form={form}
-                />
-              </this.Col>
-              <this.Col md="2">
-                <this.Select
-                  name="status"
-                  label={<this.Translate id="text_status" />}
-                  placeholder="Please select status"
-                  dataSource={this.statusList}
-                  defaultValue={this.Enum.ALL_STATE}
-                  form={form}
-                />
-              </this.Col>
-              <this.Col md="2"  className="wrap-btn-search">
-                <div className="ant-form-item-label" style={{visibility: "hidden"}}>
-                  <label htmlFor="status" className="" title=""></label>
-                </div>
-                <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-                  <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
-                </this.Button>
-              </this.Col>
-            </this.Row>
-          </this.Form>
-      ); 
-    }
+  renderTableList() {
+    const fetchingProp = this.props[this.fetchingProp];
+    return (
+      <div className="table-wrapper" style={{marginTop: 10}}>
+        <this.Row>
+          <this.Col span={3} style={{marginBottom: 0}}>
+            <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_customer" /></h3>
+          </this.Col>
+          <this.Col span={21} style={{display: "flex", justifyContent: "flex-end"}}>
+            <this.InputText
+              name="search"
+              prefix={<this.Icon type="search" />}
+              placeholder= {this.CATranslate("text_search_code", this.props.locale)}
+              allowClear={true}
+              style={{width: 220, marginBottom: 0}}
+              onChange={this.onSearchKey}
+              form={this.props.form} />
+            <this.Select
+              name="groupCustomerId"
+              dataSource={this.groupCustomerList.concat(this.props.customerGroup.list)}
+              defaultValue={this.groupCustomerList[0].id}
+              valueKey="id"
+              style={{width: 180, marginLeft: 10, marginBottom: 0}}
+              onChange={this.onChangeGroup}
+              form={this.props.form} />
+            <this.Select
+              name="type"
+              dataSource={this.customerTypes}
+              defaultValue={null}
+              style={{width: 180, marginLeft: 10, marginBottom: 0}}
+              onChange={this.onChangeType}
+              form={this.props.form} />
+            <div style={{display: "flex", marginLeft: 10, marginTop: 4}}>
+              {this.renderButtonAddNew()}
+              {this.renderButtonDelete()}
+            </div>
+          </this.Col>
+        </this.Row>
+        {this.renderTable(fetchingProp)}
+        <div style={{marginTop: 15}}>
+          {this.renderPagination(fetchingProp)}
+        </div>
+        <this.clearFloating/>
+      </div>
+    );
   }
 }
 
@@ -306,5 +386,3 @@ class Column extends List {
     ];
   }
 }
-
-
