@@ -335,6 +335,7 @@ export default class Payment extends Modal {
     const totalCustomerHasGiveMoney = this.totalCustomerPaymentList();
 
     const balance = this.calculateBalance(grandTotal, totalCustomerHasGiveMoney);
+    const {exchangeRate} = this.props;
     
     let paymentMethodList = [];
     let customer = {};
@@ -413,13 +414,13 @@ export default class Payment extends Modal {
                         {
                           productOrder.discount > 0 ?
                             <div className="after-discount-price">
-                              {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity,  productOrder[this.props.customerFieldPrice], productOrder.discount))}
+                              {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity,  productOrder[this.props.customerFieldPrice] * exchangeRate, productOrder.discount))}
                             </div>
                             :
                             ""
                         }
-                        <div className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`}>
-                          {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder[this.props.customerFieldPrice]))}
+                        <div className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`} style={{width: "100%", paddingRight: productOrder.discount > 0 ? 16 : 0}}>
+                          {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder[this.props.customerFieldPrice] * exchangeRate))}
                         </div>
                       </div>
                     </li>   
@@ -433,7 +434,7 @@ export default class Payment extends Modal {
                   <this.Translate id="text_sub_total" />
                 </div>
                 <div className="sub-total-value">
-                  {this.formatCurrency(summaryTotal.subTotalAfterDiscount)}
+                  {this.formatCurrency(summaryTotal.subTotalAfterDiscount * exchangeRate)}
                 </div>
               </li>
               <li>
@@ -441,7 +442,7 @@ export default class Payment extends Modal {
                   <this.Translate id="text_tax"/> {taxTitle}
                 </div>
                 <div className="sub-total-value">
-                  {this.formatCurrency(taxAmount)}
+                  {this.formatCurrency(taxAmount * exchangeRate)}
                 </div>
               </li>
               {
@@ -452,7 +453,7 @@ export default class Payment extends Modal {
                         {productTax.name}
                       </div>
                       <div className="sub-total-value">
-                        {this.formatCurrency(productTax.totalTaxAmount)}
+                        {this.formatCurrency(productTax.totalTaxAmount * exchangeRate)}
                       </div>
                     </li>
                   )
@@ -467,7 +468,7 @@ export default class Payment extends Modal {
                       {discountTypeStr}
                     </div>
                     <div className="sub-total-value">
-                      {this.formatCurrency(discountAmount)}
+                      {this.formatCurrency(discountAmount * exchangeRate)}
                     </div>
                   </li>
                   :
@@ -483,7 +484,7 @@ export default class Payment extends Modal {
                   <div className="total-quantity">{this.props.productOrderList.length} {summaryTotal.totalQuantity > 1 ? <this.Translate id="text_items"/> : <this.Translate id="text_item"/>}</div>
                 </div>
                 <div className="grand-total-value">
-                  {this.formatCurrency(grandTotal)}
+                  {this.formatCurrency(grandTotal * exchangeRate)}
                 </div>
               </li>
               {this.renderMoneyExhangeAfterPay(balance, changeAmount).map(element => element)}
@@ -501,7 +502,7 @@ export default class Payment extends Modal {
                     <div className="value-total-display">
                       {
                         this.state.isFocusOnInputBaseCurrency ?
-                          this.formatCurrency(balance)
+                          this.formatCurrency(balance, "$")
                           :
                           this.Util.formatCurrency(POSUtil.toSubCurrencyGrantTotal(balance, this.props.baseCurrency, this.props.subCurrency), this.props.subCurrency.symbol)
                       }
@@ -513,7 +514,8 @@ export default class Payment extends Modal {
                     </div> */}
                     <div className="currency-symbol-payment">
                       <div>
-                        {this.Util.getSetting() ? this.Util.getSetting().currency : "ERROR"}
+                        $
+                        {/* {this.Util.getSetting() ? this.Util.getSetting().currency : "ERROR"} */}
                       </div>
                     </div>
                     <this.InputNumber

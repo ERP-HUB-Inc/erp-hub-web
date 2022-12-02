@@ -19,6 +19,7 @@ import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
 import Constant from "../../../constants/transactions/transaction";
 // import ConstantDevice from "../../../constants/settings/device";
+import CurrencyExchangeService from "../../../services/settings/CurrencyExchangeService";
 import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
 import FormCreateCustomer from "../../../../crm/containers/customers/Customer/FormCreate";
@@ -75,7 +76,8 @@ export default class Retail extends Component {
       isRequestLoadingMore: false,
       baseCurrency: {},
       subCurrency: {},
-      modalVisible: false
+      modalVisible: false,
+      currencyExchange: {}
     };
 
     this.isSetFocusOnSearchProduct = false;
@@ -214,6 +216,14 @@ export default class Retail extends Component {
       } else if (e.keyCode === S && e.ctrlKey) {
         e.preventDefault();
         this.handleOnSaveParkReceipt();
+      }
+    });
+
+    CurrencyExchangeService.getExchangeRate()
+    .then(response => {
+      const data = response.data.data;
+      if (data.length) {
+        this.setState({currencyExchange: data[0]});
       }
     });
 
@@ -654,8 +664,14 @@ export default class Retail extends Component {
     if (this.openFormSaleRegisration()) {
       return;
     }
-    
+
     if (this.state.productOrderList.length > 0) {
+      const setting = this.Util.getSetting();
+      let exchangeRate = 1;
+      let currency = setting.currency && setting.currency.trim();
+      if (currency === "៛" || currency === "R") {
+        exchangeRate = this.state.currencyExchange && this.state.currencyExchange.value;
+      }
 
       this.props.dispatch(TransactionAction.showForm());
       this.setState({modalContent: <PaymentForm
@@ -668,6 +684,7 @@ export default class Retail extends Component {
         productOrderList={this.state.productOrderList}
         paymentMethodList={this.props.paymentMethod}
         productTaxList={this.state.productTaxList}
+        exchangeRate={exchangeRate}
         handleOnResetOrder={this.handleOnResetOrder}
         summaryTotal={this.getSummaryTotal()}
         summaryTax={POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale))}/>
@@ -939,6 +956,14 @@ export default class Retail extends Component {
     if (categoryList.length > 4) {
       categoryList = this.state.categoryList.concat(categoryList);
     }
+
+    const setting = this.Util.getSetting();
+    let currency = setting.currency && setting.currency.trim();
+    let exchangeRate = 1;
+    if (currency === "៛" || currency === "R") {
+      currency = "៛";
+      exchangeRate = this.state.currencyExchange && this.state.currencyExchange.value;
+    }
     
     return <this.Row className="main-layout main-store-account" id="retail-sale">
       <div id="receiptLogoPreLoading" style={{display: "none"}}>
@@ -1074,13 +1099,13 @@ export default class Retail extends Component {
                         {
                           productOrder.discount > 0 ?
                             <div className="after-discount-price">
-                              {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity, productOrder[this.state.customerFieldPrice], productOrder.discount))}
+                              {this.formatCurrency(POSUtil.getTotalAmountAfterDiscount(productOrder.quantity, productOrder[this.state.customerFieldPrice] * exchangeRate, productOrder.discount))}
                             </div>
                             :
                             ""
                         }
                         <div className={`main-price ${productOrder.discount > 0 ? "strike-price" : ""}`}>
-                          {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder[this.state.customerFieldPrice]))}
+                          {this.formatCurrency(POSUtil.getTotalAmount(productOrder.quantity, productOrder[this.state.customerFieldPrice] * exchangeRate))}
                         </div>
                       </div>
                     </div>
@@ -1159,13 +1184,13 @@ export default class Retail extends Component {
                 {/* SUB TOTAL ROW */}
                 <div className="sub-total">
                   <div className="sub-total-title"><this.Translate id="text_sub_total"/></div>
-                  <div className="sub-total-value">{this.formatCurrency(summaryTotal.subTotalAfterDiscount)}</div>
+                  <div className="sub-total-value">{this.formatCurrency(summaryTotal.subTotalAfterDiscount * exchangeRate)}</div>
                 </div>
                 {
                   summaryTotal.discount > 0 ?
                     <div className="sub-total">
                       <div className="sub-total-title" style={{fontWeight: 600}}><this.Translate id="text_discount"/></div>
-                      <div className="sub-total-value">{this.formatCurrency(discountAmount)}</div>
+                      <div className="sub-total-value">{this.formatCurrency(discountAmount * exchangeRate)}</div>
                     </div>
                     :
                     ""
@@ -1179,7 +1204,7 @@ export default class Retail extends Component {
                     <div className="sub-total-title" onClick={countTax > 0 ? this.handleOnOpenTaxSetting : null}>
                       <span className={`${countTax > 0 ? "ca-link" : ""}`}><this.Translate id="text_tax"/></span> {taxTitle}
                     </div>
-                    <div className="sub-total-value">{this.formatCurrency(taxTotal)}</div>
+                    <div className="sub-total-value">{this.formatCurrency(taxTotal * exchangeRate)}</div>
                   </div>
                 }
                 {/*END TAX ROW */}
@@ -1194,7 +1219,7 @@ export default class Retail extends Component {
                         {discountTypeStr}
                       </div>
                       <div className="sub-total-value" style={{position: "relative"}}>
-                        {this.formatCurrency(discountAmount)}
+                        {this.formatCurrency(discountAmount * exchangeRate)}
                       </div>
                     </div>
                     :
@@ -1208,7 +1233,7 @@ export default class Retail extends Component {
                     {this.state.isHasSubCurrency ? ` (${this.state.baseCurrency.symbol})` : ""}
                   </div>
                   <div className="sub-total-value">
-                    {this.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount))}
+                    {this.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount), `${this.state.baseCurrency.symbol}`)}
                   </div>
                 </div>
 
