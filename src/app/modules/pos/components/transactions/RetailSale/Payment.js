@@ -359,6 +359,7 @@ export default class Payment extends Modal {
         customer = this.props.transaction.response.data.customer;
         dataForReceipt = {
           data: this.props.transaction.response.data,
+          exchangeRate,
           receiptTemplate: this.props.receiptTemplate.data,
           currentUser: this.currentUser,
           customerPaymentList: this.state.customerPaymentList,
@@ -640,7 +641,7 @@ export default class Payment extends Modal {
                         {
                           changeAmount > 0 ?
                             <span>
-                              <this.Translate id="text_give" /> {this.formatCurrency(changeAmount)} <this.Translate id="text_change" />
+                              <this.Translate id="text_give" /> {this.formatCurrency(changeAmount * exchangeRate)} <this.Translate id="text_change" />
                             </span>
                             :
                             <span>

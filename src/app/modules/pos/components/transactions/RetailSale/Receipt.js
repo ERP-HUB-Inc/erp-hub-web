@@ -172,6 +172,7 @@ export default class Receipt extends Component {
     }
 
     const total = this.props.summaryTotal.subTotalAfterDiscount + this.props.taxAmount;
+    const {exchangeRate} = this.props;
 
     return <div id={this.contentId} ref={ref => this.contentRef = ref}>
         {
@@ -309,8 +310,8 @@ export default class Receipt extends Component {
                                       ""
                                   }
                               </td>
-                              <td style={{ textAlign: "right", backgroundColor: "white" }}>{this.formatCurrency(product[this.props.customerFieldPrice])}</td>
-                              <td style={{ textAlign: "right", backgroundColor: "white" }}>{this.formatCurrency(product[this.props.customerFieldPrice] * product.quantity)}</td>
+                              <td style={{ textAlign: "right", backgroundColor: "white" }}>{this.formatCurrency(product[this.props.customerFieldPrice] * exchangeRate)}</td>
+                              <td style={{ textAlign: "right", backgroundColor: "white" }}>{this.formatCurrency((product[this.props.customerFieldPrice] * product.quantity) * exchangeRate)}</td>
                             </tr>
                           )
                         }
@@ -322,7 +323,7 @@ export default class Receipt extends Component {
                         <tr>
                           <td style={{ backgroundColor: "white", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5 }} />
                           <td colSpan="2" style={{ backgroundColor: "white", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5, textDecoration: "uppercase" }}><this.Translate id="text_sub_total" />:</td>
-                          <td style={{ backgroundColor: "white", textAlign: "right", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5 }}>{this.formatCurrency(this.props.summaryTotal.subTotalAfterDiscount + this.props.discountAmount)}</td>
+                          <td style={{ backgroundColor: "white", textAlign: "right", borderTop: "1px dashed " + paperSize.setting.color, paddingTop: 5 }}>{this.formatCurrency((this.props.summaryTotal.subTotalAfterDiscount + this.props.discountAmount) * exchangeRate)}</td>
                         </tr>
                         {
                           this.props.taxAmount > 0 ?
@@ -331,7 +332,7 @@ export default class Receipt extends Component {
                             <td colSpan="2" style={{ backgroundColor: "white" }}>
                               <span className="text-uppercase"><this.Translate id="text_tax" /></span> {taxTitle}:
                             </td>
-                            <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(this.props.taxAmount)}</td>
+                            <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(this.props.taxAmount * exchangeRate)}</td>
                           </tr>
                           :
                           <tr/>
@@ -339,12 +340,12 @@ export default class Receipt extends Component {
                         <tr>
                           <td style={{ backgroundColor: "white", paddingTop: 5 }} />
                           <td colSpan="2" style={{ backgroundColor: "white" }}><this.Translate id="text_discount" />:</td>
-                          <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(this.props.discountAmount)}</td>
+                          <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(this.props.discountAmount * exchangeRate)}</td>
                         </tr>
                         <tr>
                           <td style={{ backgroundColor: "white", paddingTop: 5 }} />
                           <td colSpan="2" style={{ backgroundColor: "white" }}><this.Translate id="text_total" />{this.props.receiptTemplate.isHasSubCurrency ? `(${this.props.receiptTemplate.baseCurrency.symbol})` : ""}:</td>
-                          <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(total)}</td>
+                          <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(total, "$")}</td>
                         </tr>
                         {
                           this.props.receiptTemplate.isHasSubCurrency ?
@@ -389,7 +390,7 @@ export default class Receipt extends Component {
                               <tr key={customerPaymentIndex}>
                                 <td style={{ backgroundColor: "white", paddingTop: customerPaymentIndex === 0 ? 5 : 0 }} />
                                 <td colSpan="2" style={{ backgroundColor: "white", paddingTop: customerPaymentIndex === 0 ? 5 : 0 }}>{customerPayment.paymentMethodName}:</td>
-                                <td style={{ backgroundColor: "white", textAlign: "right", paddingTop: customerPaymentIndex === 0 ? 5 : 0 }}>{this.formatCurrency(customerPayment.tender)}</td>
+                                <td style={{ backgroundColor: "white", textAlign: "right", paddingTop: customerPaymentIndex === 0 ? 5 : 0 }}>{this.formatCurrency(customerPayment.tender * exchangeRate)}</td>
                               </tr>
                             )
                         }
@@ -400,7 +401,7 @@ export default class Receipt extends Component {
                             <tr>
                               <td style={{ backgroundColor: "white" }} />
                               <td colSpan="2" style={{ backgroundColor: "white" }}><this.Translate id="text_change" />{this.props.receiptTemplate.isHasSubCurrency ? `(${this.props.receiptTemplate.baseCurrency.symbol})` : ""}:</td>
-                              <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(this.props.changeAmount)}</td>
+                              <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(this.props.changeAmount, "$")}</td>
                             </tr>
                         }
                         {
