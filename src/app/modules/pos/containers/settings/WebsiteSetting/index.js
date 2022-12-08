@@ -47,6 +47,7 @@ const WebsiteSetting = (props) => {
   const [visibleBannerTable, setVisibleBannerTable] = useState(true);
   const [bannerId, setBannerId] = useState(undefined);
   const [bannerName, setBannerName] = useState("");
+  const [bannerType, setBannerType] = useState(0);
   const [dataSourceBanner, setDataSourceBanner] = useState([]);
   const [deleteDataSourceBanner, setDeleteDataSourceBanner] = useState([]);
   const [bannerList, setBannerList] = useState([]);
@@ -277,6 +278,7 @@ const WebsiteSetting = (props) => {
             });
             setDataSourceBanner(bannerImage);
             setBannerName(data.name);
+            setBannerType(data.type);
           }
         })
         .finally(() => setLoadingUpdateBanner(false));
@@ -975,26 +977,25 @@ const WebsiteSetting = (props) => {
                             )}
                             form={props.form}
                           />
-                          {/* <Select
+                          <Select
                             label="Type"
                             form={props.form}
-                            // onChange={onSelectTheme}
-                            // defaultValue={theme}
-                            // required={true}
-                            disabled={true}
+                            defaultValue={bannerType}
+                            required={true}
                             name="type"
                             placeholder={"Please select type"}
                             dataSource={[
                               {
-                                value: "1",
-                                name: "Type 1",
+                                value: 0,
+                                name: "Home Page",
                               },
                               {
-                                value: "2",
-                                name: "Type 2",
+                                value: 1,
+                                name: "Shop"
                               },
                             ]}
-                          /> */}
+                            style={{maxWidth: 300}}
+                          />
                           <Spin
                             spinning={loadingUpdateBanner}
                             style={{
