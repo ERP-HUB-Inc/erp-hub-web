@@ -224,6 +224,12 @@ export default class Retail extends Component {
       const data = response.data.data;
       if (data.length) {
         this.setState({currencyExchange: data[0]});
+        if (data[0].value !== this.state.subCurrency.value) {
+          this.setState(preState => {
+            preState.subCurrency.value = data[0].value;
+            return preState;
+          });
+        }
       }
     });
 

@@ -15,6 +15,7 @@ import Component from "../components/Component";
 import dataSource from "../components/layout/SiderBar/datasource";
 import AuthService from "../services/AuthService";
 import Authentication from "../constants/authentication";
+import Util from "../util";
 import ProductCreate from "../../inventory/containers/products/Product/FormCreate";
 import ProductSplit from "../../inventory/components/products/Product/ProductSplit";
 import ProductUpdate from "../../inventory/containers/products/Product/FormUpdate";
@@ -50,22 +51,27 @@ import InvoiceReceipt from "../../pos/components/transactions/receipt";
 import SaleOrderCreate from "../../pos/components/transactions/SaleOrder/FormItem";
 import SaleOrderUpdate from "../../pos/components/transactions/SaleOrder/FormItem";
 import SaleOrderDetail from "../../pos/components/transactions/SaleOrder/detail";
-import Util from "../util";
 
 const {Content} = Layout;
 
 class Router extends Component {
-  render() {
-    const accessToken = (new Util()).getAccessToken(Authentication.ACCESS_TOKEN);
+  lastPath = "";
+  componentDidUpdate() {
+    if (window.location.pathname !== this.lastPath) {
+      this.lastPath = window.location.pathname;
+      const accessToken = (new Util()).getAccessToken(Authentication.ACCESS_TOKEN);
 
-    AuthService.checkAuthenticated(accessToken)
+      AuthService.checkAuthenticated(accessToken)
       .then(response => {
         if (response.data === false) {
           localStorage.removeItem(Authentication.ACCESS_TOKEN);
           history.push("/signin");
         }
       });
+    }
+  }
 
+  render() {
     return (
       <Layout>
         {/* <Offline>
