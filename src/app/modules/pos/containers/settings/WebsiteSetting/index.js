@@ -828,12 +828,20 @@ const WebsiteSetting = (props) => {
                         dataSource={[
                           {
                             value: "template_1",
-                            name: <Translate id="text_template_1" />,
+                            name: "Hmart",
                           },
                           {
                             value: "template_2",
-                            name: <Translate id="text_template_2" />,
+                            name: "Koganic",
                           },
+                          {
+                            value: "template_3",
+                            name: "Stylista",
+                          },
+                          {
+                            value: "template_4",
+                            name: "Technocy",
+                          }
                         ]}
                       />
                       <InputText
