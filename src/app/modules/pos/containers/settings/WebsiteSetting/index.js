@@ -261,6 +261,7 @@ const WebsiteSetting = (props) => {
                 id: value.id,
                 bannerId: value.bannerId,
                 description: value.description,
+                label: value.label,
                 descriptionkm: value.descriptionkm,
                 name: value.name,
                 namekm: value.namekm,
@@ -291,6 +292,7 @@ const WebsiteSetting = (props) => {
     dataSourceBanner.push({
       name: "",
       description: "",
+      label: "",
       link: "",
       image: null,
       order: null,
@@ -314,9 +316,7 @@ const WebsiteSetting = (props) => {
 
   const handleButtonRemoveBanner = (value, findIndex) => {
     if ("id" in value) {
-      const foundDelete = dataSourceBanner.find(
-        (preValue, index) => index === findIndex
-      );
+      const foundDelete = dataSourceBanner.find((preValue, index) => index === findIndex);
       foundDelete["status"] = 3;
 
       setDeleteDataSourceBanner([...deleteDataSourceBanner, foundDelete]);
@@ -367,6 +367,7 @@ const WebsiteSetting = (props) => {
               id: value.id,
               name: value.name,
               description: value.description,
+              label: value.label,
               link: value.link,
               image: value.image ? `website/banner/${value.image.name}` : null,
               order: value.order,
@@ -375,6 +376,7 @@ const WebsiteSetting = (props) => {
             return {
               name: value.name,
               description: value.description,
+              label: value.label,
               link: value.link,
               image: value.image ? `website/banner/${value.image.name}` : null,
               order: value.order,
@@ -914,11 +916,6 @@ const WebsiteSetting = (props) => {
                                 dataIndex: "name",
                                 key: "name",
                               },
-                              // {
-                              //   title: "Type",
-                              //   dataIndex: "type",
-                              //   key: "type",
-                              // },
                               {
                                 title: <Translate id="text_action" />,
                                 dataIndex: "id",
@@ -1033,17 +1030,14 @@ const WebsiteSetting = (props) => {
                                   >
                                     {<Translate id="text_description" />}
                                   </th>
-                                  <th
-                                    style={{ width: 250 }}
-                                    className="ant-table-header-column"
-                                  >
+                                  <th className="ant-table-header-column" style={{width: 150}}>
+                                    {<Translate id="text_label" />}
+                                  </th>
+                                  <th style={{ width: 250 }} className="ant-table-header-column">
                                     {<Translate id="text_link" />}
                                   </th>
 
-                                  <th
-                                    className="ant-table-header-column"
-                                    style={{ width: 100 }}
-                                  >
+                                  <th className="ant-table-header-column" style={{ width: 100 }}>
                                     {<Translate id="text_sort" />}
                                   </th>
                                   <th
@@ -1100,6 +1094,18 @@ const WebsiteSetting = (props) => {
                                       </td>
                                       <td>
                                         <Input
+                                          value={value.label}
+                                          onChange={(value) =>
+                                            onChangeBannerInput(
+                                              value,
+                                              index,
+                                              "label"
+                                            )
+                                          }
+                                        />
+                                      </td>
+                                      <td>
+                                        <Input
                                           value={value.link}
                                           onChange={(value) =>
                                             onChangeBannerInput(
@@ -1110,7 +1116,6 @@ const WebsiteSetting = (props) => {
                                           }
                                         />
                                       </td>
-
                                       <td>
                                         <InputNumber
                                           type={"number"}
