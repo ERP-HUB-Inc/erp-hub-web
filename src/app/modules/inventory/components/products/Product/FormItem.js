@@ -21,7 +21,8 @@ import {
   SelectSearch
 } from "../../../../common/elements/ant-ui/Select/selectSearch";
 import {
-  InputText
+  InputText,
+  UploadImageCrop
 } from "../../../../common/elements/ant-ui";
 import ProductAction from "../../../actions/products/product";
 import ProductsTypeService from "../../../services/products/ProductsTypeService";
@@ -256,7 +257,7 @@ export default class FormItem extends Modal {
       tags: [],
       inputVisible: false,
       inputValue: "",
-      exchangeRate: null,
+      exchangeRate: null
     };
 
     this.TAB_PRODUCT_COST_LOG = 3;
@@ -754,7 +755,7 @@ export default class FormItem extends Modal {
             </this.Col>
 
             <this.Col md="12">
-              <this.UploadImg
+              {/* <this.UploadImg
                 name="image"    
                 label={<this.Translate id="text_image" />}
                 data={{file: image}}
@@ -762,7 +763,18 @@ export default class FormItem extends Modal {
                 endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}
                 endPointDelete={`${this.Util.getAPIURL()}/file/v1/product/delete`}
                 accessToken={this.Util.getAccessToken()}
-                form={form}/>
+                form={form}/> */}
+
+              <UploadImageCrop 
+                name="image"
+                label={<this.Translate id="text_image" />}
+                data={{file: image}}
+                fileList={[image]}
+                endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}
+                endPointDelete={`${this.Util.getAPIURL()}/file/v1/product/delete`}
+                accessToken={this.Util.getAccessToken()}
+                locale={locale}
+                form={form} />
             </this.Col>
           </this.Row> 
         </this.Col>

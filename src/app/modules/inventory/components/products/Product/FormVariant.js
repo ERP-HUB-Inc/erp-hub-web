@@ -8,7 +8,7 @@ import ProductVariantAction from "../../../actions/products/productVariant";
 import ConstantAttribute from "../../../constants/products/variantAttribute";
 import VariantAttributeAction from "../../../actions/products/variantAttribute";
 import Exchange from "./ExchangeMoneyFunc";
-
+import { UploadImageCrop } from "../../../../common/elements/ant-ui";
 import "./index.css";
 
 export default class FormVariant extends Modal {
@@ -145,7 +145,21 @@ export default class FormVariant extends Modal {
             </div>
           );
           
-          return <this.UploadImg
+          // return <this.UploadImg
+          //   customerButtonUpload={uploadButton}
+          //   className="variantImage .ant-upload.ant-upload-select-picture-card main-upload .ant-upload-list-picture-card .ant-upload-list-item "
+          //   name={`image${index}`}  
+          //   data={{file: image}}
+          //   fileList={[image]}
+          //   showPlusIcon={true}
+          //   endPoint={`${this.Util.getAPIURL()}/file/v1/upload/product`}
+          //   endPointDelete={`${this.Util.getAPIURL()}/file/v1/product/delete`}
+          //   varianrIndex={index}
+          //   accessToken={this.Util.getAccessToken()}
+          //   responseAfterUpload={data => this.responseAfterUpload(data,index)}
+          //   form={this.props.form}/>;
+
+          return <UploadImageCrop
             customerButtonUpload={uploadButton}
             className="variantImage .ant-upload.ant-upload-select-picture-card main-upload .ant-upload-list-picture-card .ant-upload-list-item "
             name={`image${index}`}  
@@ -157,7 +171,7 @@ export default class FormVariant extends Modal {
             varianrIndex={index}
             accessToken={this.Util.getAccessToken()}
             responseAfterUpload={data => this.responseAfterUpload(data,index)}
-            form={this.props.form}/>;
+            form={this.props.form} />;
         }
       },
       {

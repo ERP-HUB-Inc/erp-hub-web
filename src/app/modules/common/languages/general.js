@@ -495,6 +495,7 @@ export default {
   text_template_2: ["Template 2", "គំរូ 2"],
   text_placeholder_image: ["Placeholder Image", "កន្លែងដាក់រូបភាព"],
   text_image: ["Image", "រូបភាព"],
+  text_crop_image: ["Crop Image", "ច្រឹបរូបភាព"],
   text_banner_name: ["Banner Name", "ឈ្មោះបដា"],
   text_edit_banner: ["Edit Banner", "កែសម្រួលបដា"],
   text_new_banner: ["New Banner", "បដាថ្មី"],

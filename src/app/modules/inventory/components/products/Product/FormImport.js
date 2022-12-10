@@ -39,7 +39,7 @@ export default function ProductImport() {
     const formData = new FormData();
     fileList.forEach(file => {
       formData.append("csv", file);
-    })
+    });
     
     setUploading(true);
     setShowError(false);
@@ -67,7 +67,7 @@ export default function ProductImport() {
         onCancel: () => {
           history.push({pathname: "/products/list" });
         }
-      })
+      });
     })
     .catch(err => {
       const error = err.response && err.response.data && err.response.data.error;
@@ -79,11 +79,11 @@ export default function ProductImport() {
       setReponseError(err.response && err.response.data && err.response.data.error);
     })
     .finally(() => setUploading(false));
-  }
+  };
 
   const onViewLog = () => {
     setShowError(!showError);
-  }
+  };
 
   const generateAPIUrl = () => {
     let host = process.env.REACT_APP_API_HOST;
@@ -98,11 +98,11 @@ export default function ProductImport() {
     const rootPath = process.env.REACT_APP_API_ROOT;
     const url = `${host}:${port}/${rootPath}`;
     return url;
-  }
+  };
 
   function renderErrorContent() {
     const existProducts = responseError.message.existProducts;
-    const dupProduct = responseError.message.duplicateProducts
+    const dupProduct = responseError.message.duplicateProducts;
     return (
       <Tabs defaultActiveKey="1" tabPosition="left" style={{ marginBottom: 15 }} className="sv-tabs">
         <TabPane tab="Exist products" key="1">
@@ -150,7 +150,7 @@ export default function ProductImport() {
           </table>
         </TabPane>
       </Tabs>
-    )
+    );
   }
 
   const draggerProps = {
@@ -184,7 +184,7 @@ export default function ProductImport() {
       return false;
     },
     fileList
-  }
+  };
 
   return (
     <div style={{ marginBottom: 25}}>
@@ -200,7 +200,7 @@ export default function ProductImport() {
         subTitle={<Translate id="text_import" />}
         extra={[
           <div>
-            <a href={`/product_import_template.xlsx`} className="ant-btn" download={`Product Import Template.xlsx`}>
+            <a href={"/product_import_template.xlsx"} className="ant-btn" download={"Product Import Template.xlsx"}>
               <Icon type="download" /> <Translate id="text_download_template" />
             </a>
           </div>
@@ -247,5 +247,5 @@ export default function ProductImport() {
         </Col>
       </Row>
     </div>
-  )
+  );
 }

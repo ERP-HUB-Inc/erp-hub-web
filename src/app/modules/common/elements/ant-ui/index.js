@@ -22,6 +22,7 @@ export * from "./InputText";
 export * from "./InputNumber";
 export * from "./InputEmail";
 export * from "./Upload";
+export * from "./UploadImageCrop";
 export * from "./Image";
 export * from "./InputPassword";
 export * from "./inputTextArea";

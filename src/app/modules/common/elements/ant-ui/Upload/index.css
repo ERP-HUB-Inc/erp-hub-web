@@ -38,4 +38,20 @@
     margin: auto
 }
 
+.ant-upload-list-picture .ant-upload-list-item-error, .ant-upload-list-picture-card .ant-upload-list-item-error {
+    border-color: #f5222d !important;
+}
 
+.ant-modal-crop-image .ant-modal-header {
+    padding: 16px 24px !important;
+}
+
+.ant-modal-crop-image .ant-modal-title {
+    text-align: left;
+    font-size: 18px;
+}
+
+.ant-modal-crop-image .ant-btn-primary {
+    background: #093163;
+    border: #093163;
+}
