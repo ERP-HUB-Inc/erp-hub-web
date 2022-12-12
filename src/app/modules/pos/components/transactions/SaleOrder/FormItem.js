@@ -720,7 +720,7 @@ class FormItem extends React.PureComponent {
       if (willDelete) {
         SaleOrderService.delete(id)
         .then(() => {
-          message.success("Delete invoice success");
+          message.success("Delete success");
           history.goBack();
         })
         .catch(() => message.error("Error!......"));

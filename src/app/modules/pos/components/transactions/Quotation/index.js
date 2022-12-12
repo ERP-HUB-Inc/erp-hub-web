@@ -118,6 +118,9 @@ export default class QuotationList extends Component {
                     <Icon type="retweet" style={{marginRight: 10}} /> <this.Translate id="text_convert_to_invoice" />
                   </this.Link>
                 </Menu.Item>
+                <Menu.Item onClick={() => this.handleDelete(record.id)} style={{color: "red"}}>
+                  <Icon type="delete" style={{marginRight: 12}} /> <this.Translate id="text_delete" />
+                </Menu.Item>
               </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
@@ -191,9 +194,7 @@ export default class QuotationList extends Component {
     });
 
     this.getPermission();
-    QuotationService.summary().then(({data})=>{
-      this.setState({summaryData: data.data});
-    });
+    this.fetchSummary();
     this.fetchList(true);
     new Promise(() => {
       this.props.dispatch(ReceiptTemplateAction.default());
@@ -250,6 +251,12 @@ export default class QuotationList extends Component {
         })
         .catch(err => message.error("Error"))
         .finally(() => this.setState({loading: false, loadingButton: false}));
+  }
+
+  fetchSummary() {
+    QuotationService.summary().then(({data})=>{
+      this.setState({summaryData: data.data});
+    });
   }
 
   handleCancelQuotation(record){
@@ -318,6 +325,26 @@ export default class QuotationList extends Component {
 
   handleShowFormUpdate(rowData){
     history.push(`/transactions/quotation-update/${rowData.id}`);
+  }
+
+  handleDelete(id) {
+    this.Util.sweetAlertConfirm(this.CATranslate("text_are_you_sure", this.props.locale))
+    .then(willDelete => {
+      if (willDelete) {
+        QuotationService.deleteQuotation(id)
+        .then(() => {
+          message.success("Delete success!");
+          this.fetchList();
+          this.fetchSummary();
+        })
+        .catch(err => {
+          const error = err.response && err.response.data && err.response.data.error;
+          if (error.message) {
+            this.Util.sweetAlertMessageV2("Sorry", error.message, "error");
+          }
+        });
+      }
+    });
   }
 
   onShowSizeChange = (current, pageSize) => {

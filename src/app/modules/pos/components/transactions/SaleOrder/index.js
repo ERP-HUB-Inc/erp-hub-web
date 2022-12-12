@@ -117,6 +117,12 @@ class SaleOrder extends Component {
                     />
                   </div>
               </Menu.Item>
+              <Menu.Item onClick={() => this.handleVoid(record.id)}>
+                <Icon type="close" /> <this.Translate id="text_void" />
+              </Menu.Item>
+              <Menu.Item onClick={() => this.handleDelete(record.id)} style={{color: "red"}} >
+                <Icon type="delete" /> <this.Translate id="text_delete" />
+              </Menu.Item>
             </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
@@ -199,11 +205,8 @@ class SaleOrder extends Component {
       this.status_options.push( {name: this.SALE_ORDER_STATUS_STR[prop].title, value: prop});
     });
 
-    SaleOrderService.summary().then(({data})=>{
-      this.setState({summaryData: data.data});
-    });
-
     this.getPermission();
+    this.fetchSummary();
     this.fetchList(true);
   }
 
@@ -258,6 +261,42 @@ class SaleOrder extends Component {
     })
     .catch(() => message.error("Error"))
     .finally(() => this.setState({loading: false, loadingButton: false}));
+  }
+
+  fetchSummary() {
+    SaleOrderService.summary().then(({data})=>{
+      this.setState({summaryData: data.data});
+    });
+  }
+
+  handleVoid(id) {
+    this.Util.sweetAlertConfirm(this.CATranslate("text_are_you_sure", this.props.locale))
+    .then(willVoid => {
+      if (willVoid) {
+        SaleOrderService.void(id)
+        .then(() => {
+          message.success("Void success");
+          this.fetchList();
+          this.fetchSummary();
+        })
+        .catch(() => message.error("Error!......"));
+      }
+    });
+  }
+
+  handleDelete(id) {
+    this.Util.sweetAlertConfirm(this.CATranslate("text_are_you_sure", this.props.locale))
+    .then(willDelete => {
+      if (willDelete) {
+        SaleOrderService.delete(id)
+        .then(() => {
+          message.success("Delete success");
+          this.fetchList();
+          this.fetchSummary();
+        })
+        .catch(() => message.error("Error!......"));
+      }
+    });
   }
 
   async fetchTransactionDetail(id){
