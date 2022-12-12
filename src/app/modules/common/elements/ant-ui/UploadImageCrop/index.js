@@ -241,6 +241,7 @@ export class UploadImageCrop extends React.Component {
           <Upload
             action={this.props.endPoint}
             listType="picture-card"
+            className="upload-image-with-crop"
             fileList={this.state.fileList}
             onChange={this.handleChange}
             onRemove={this.handleRemove}
