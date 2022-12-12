@@ -16,6 +16,7 @@ export class UploadImageCrop extends React.Component {
     fileList: [],
     visible: false,
     previewImage: "",
+    previewVisible: false,
     cropFile: {},
     blobImg: null,
     uploading: false
@@ -125,7 +126,7 @@ export class UploadImageCrop extends React.Component {
     ctx.translate(-centerX, -centerY);
     ctx.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 0, 0, image.naturalWidth, image.naturalHeight);
     cropFile.url = canvas.toDataURL();
-    const blobImg = this.canvasImageURLToBlob(cropFile.url);
+    const blobImg = this.convertImageURLToBlob(cropFile.url);
     this.setState({cropFile, blobImg});
   }
 
@@ -133,7 +134,7 @@ export class UploadImageCrop extends React.Component {
     return false;
   }
 
-  canvasImageURLToBlob(dataURL) {
+  convertImageURLToBlob(dataURL) {
     let arr = dataURL.split(",");
     let mime = arr[0].match(/:(.*?);/)[1];
     let bstr = atob(arr[1]);
@@ -148,12 +149,15 @@ export class UploadImageCrop extends React.Component {
 
   handleUpload = (e) => {
     e.preventDefault();
-    if (!this.state.blobImg) {
-      return;
-    }
+
     const file = this.state.cropFile;
+    let uploadFile = this.state.blobImg;
+    if (!uploadFile || !this.state.crop) {
+      uploadFile = this.convertImageURLToBlob(file.url);
+    }
+
     const formData = new FormData();
-    formData.append("image", this.state.blobImg, file.name);
+    formData.append("image", uploadFile, file.name);
     this.setState({uploading: true});
     axios.post(this.props.endPoint, formData, {
       headers: {
@@ -171,9 +175,21 @@ export class UploadImageCrop extends React.Component {
     .finally(() => {
       this.setState({
         fileList: [file],
+        crop: {},
         visible: false,
         uploading: false
       });
+    });
+  }
+
+  handlePreviewImage = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await this.getBase64(file.originFileObj);
+    }
+
+    this.setState({
+      previewImage: file.url || file.preview,
+      previewVisible: true,
     });
   }
 
@@ -228,13 +244,21 @@ export class UploadImageCrop extends React.Component {
             fileList={this.state.fileList}
             onChange={this.handleChange}
             onRemove={this.handleRemove}
+            onPreview={this.handlePreviewImage}
             beforeUpload={this.handleBeforeUpload}
           >
             {this.state.fileList.length ? null : this.props.customerButtonUpload ? this.props.customerButtonUpload : uploadButton}
           </Upload>
         )}
       </Form.Item>
-
+      <Modal 
+        title="Preview Image" 
+        visible={this.state.previewVisible} 
+        footer={null} 
+        className="ant-modal-crop-image"
+        onCancel={() => this.setState({previewVisible: false})}>
+        <img alt="preview" style={{ width: "100%", marginBottom: 24}} src={this.state.previewImage} />
+      </Modal>
       <Modal 
         title={<Translate id="text_crop_image" />}
         visible={this.state.visible}
