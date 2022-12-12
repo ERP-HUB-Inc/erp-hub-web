@@ -97,7 +97,7 @@ export class UploadImageCrop extends React.Component {
       return;
     }
 
-    const scaleX = image.naturalHeight / image.width;
+    const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
     const pixelRatio = window.devicePixelRatio;
     canvas.width = Math.floor(c.width * scaleX * pixelRatio);
@@ -248,11 +248,22 @@ export class UploadImageCrop extends React.Component {
           onComplete={this.handleCroppedImage} 
           style={{width: "100%"}}
         >
-          <img style={{width: "100%"}} src={this.state.previewImage} ref={ref => this.imageRef = ref} alt="cropped" />
+          <img 
+            style={{width: "100%"}} 
+            src={this.state.previewImage} 
+            ref={ref => this.imageRef = ref} alt="cropped" />
         </ReactCrop>
 
         {this.state.cropFile && 
-          <canvas ref={ref => this.canvasPreviewRef = ref} style={{display: "none"}} />
+          <canvas 
+            ref={ref => this.canvasPreviewRef = ref} 
+            style={{
+              width: this.state.crop.width, 
+              height: this.state.crop.height,
+              objectFit: "contain",
+              display: "none"
+            }}
+          />
         }
 
         <div className="ant-modal-footer">
