@@ -48,6 +48,7 @@ const WebsiteSetting = (props) => {
   const [bannerId, setBannerId] = useState(undefined);
   const [bannerName, setBannerName] = useState("");
   const [bannerType, setBannerType] = useState(0);
+  const [bannerPosition, setBannerPosition] = useState("");
   const [dataSourceBanner, setDataSourceBanner] = useState([]);
   const [deleteDataSourceBanner, setDeleteDataSourceBanner] = useState([]);
   const [bannerList, setBannerList] = useState([]);
@@ -239,6 +240,7 @@ const WebsiteSetting = (props) => {
     props.form.resetFields();
     setDataSourceBanner([]);
     setBannerName("");
+    setBannerPosition("")
     setDeleteDataSourceBanner([]);
     fetchBanner();
     setVisibleFormBanner(false);
@@ -280,6 +282,7 @@ const WebsiteSetting = (props) => {
             setDataSourceBanner(bannerImage);
             setBannerName(data.name);
             setBannerType(data.type);
+            setBannerPosition(data.position)
           }
         })
         .finally(() => setLoadingUpdateBanner(false));
@@ -384,6 +387,7 @@ const WebsiteSetting = (props) => {
           }
         });
         values["entries"] = [...newEntries, ...deleteDataSourceBanner];
+        console.log("values",values)
         if (bannerId) {
           updateBannerSetting(bannerId, values)
             .then(() => {
@@ -988,7 +992,7 @@ const WebsiteSetting = (props) => {
                             defaultValue={bannerType}
                             required={true}
                             name="type"
-                            placeholder={"Please select type"}
+                            placeholder={"Select type"}
                             dataSource={[
                               {
                                 value: 0,
@@ -997,6 +1001,29 @@ const WebsiteSetting = (props) => {
                               {
                                 value: 1,
                                 name: "Shop"
+                              },
+                            ]}
+                            style={{maxWidth: 300}}
+                          />
+                          <Select
+                            label="Position"
+                            form={props.form}
+                            defaultValue={bannerPosition}
+                            required={true}
+                            name="position"
+                            placeholder={"Select position"}
+                            dataSource={[
+                              {
+                                value: "TOP",
+                                name: "Top",
+                              },
+                              {
+                                value: "CENTER",
+                                name: "Center"
+                              },
+                              {
+                                value: "BOTTOM",
+                                name: "Bottom"
                               },
                             ]}
                             style={{maxWidth: 300}}
