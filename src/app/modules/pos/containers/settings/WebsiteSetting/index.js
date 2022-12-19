@@ -916,12 +916,12 @@ const WebsiteSetting = (props) => {
                          <Col lg="4" md="4">
                           <div  onClick={() => onSelectTheme("template_2")} >
                             <div id="image-position">
-                                <img src={"/index-2.jpg"} alt={"template 2"} width={"100%"} height="100%"  id="image-border" />
+                                <img src={"/index-4.jpg"} alt={"template 2"} width={"100%"} height="100%"  id="image-border" />
                                 {
                                   theme === "template_2" && <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{fontSize: 40}}/>
                                 }
                               </div>  
-                              <div className="image-title"><span>Technocy</span></div>
+                              <div className="image-title"><span>Koganic</span></div>
                           </div>
                          </Col>
                          <Col lg="4" md="4">
@@ -940,12 +940,12 @@ const WebsiteSetting = (props) => {
                           <Col lg="4" md="4">
                           <div  onClick={() => onSelectTheme("template_4")}>
                               <div id="image-position">
-                                <img src={"/index-4.jpg"} alt={"template 4"} width={"100%"} height="100%"  id="image-border" />
+                                <img src={"/index-2.jpg"} alt={"template 4"} width={"100%"} height="100%"  id="image-border" />
                                 {
                                   theme === "template_4" && <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{fontSize: 40}}/>
                                 }
                               </div>      
-                              <div className="image-title"><span>Koganic</span></div>
+                              <div className="image-title"><span>Technocy</span></div>
                           </div>
                           </Col>
                       </Row>
