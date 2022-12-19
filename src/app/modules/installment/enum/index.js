@@ -1,0 +1,7 @@
+export default {
+  INSTALLMENT_STATUS: {
+    DRAFT: "DRAFT",
+    RECEIVED: "RECEIVED",
+    COMPLETED: "COMPLETED"
+  }
+};

@@ -224,7 +224,6 @@ export default class SerialForm extends React.PureComponent  {
                   name="serialNumber"
                   label="SERIAL OR IMEI"
                   data={formData.number}
-                  suffix={<div className="icon-scaner icon-clear" style={{opacity: .5, cursor: "pointer"}} onClick={() => this.setState({isInputFocus: true})} />}
                   placeholder={`${stringTranslate("text_input_serial", this.props.locale)}`}
                   isAutoFocus={true}
                   didUpdateMakeAutoFocus={this.state.isInputFocus}

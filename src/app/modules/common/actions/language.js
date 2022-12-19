@@ -28,6 +28,10 @@ import brand from "../../inventory/languages/products/brand";
 import productType from "../../inventory/languages/products/productsType";
 import productTag from "../../inventory/languages/products/productsTag";
 import variantAttribute from "../../inventory/languages/products/variantAttribute";
+
+//Installment
+import installment from "../../installment/languages/installment";
+
 //stock
 import supplier from "../../inventory/languages/stock/supplier";
 import stockManagement from "../../inventory/languages/stock/stockManagement";
@@ -74,6 +78,7 @@ export function setTranslation() {
     ...language,
     ...currency,
     ...sale,
+    ...installment,
     ...manageCustomer,
     ...groupCustomer,
     ...employees,

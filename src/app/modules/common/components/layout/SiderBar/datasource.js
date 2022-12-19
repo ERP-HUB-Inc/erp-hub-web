@@ -54,6 +54,17 @@ const SerialList = Loadable({
   loading: () => <StartUp />
 });
 
+//Installment
+const Installment = Loadable({
+  loader: () => import("../../../../installment/components/installment"),
+  loading: () => <StartUp />
+});
+
+const InstallmentForm = Loadable({
+  loader: () => import("../../../../installment/components/installment/FormItem"),
+  loading: () => <StartUp />
+});
+
 // PRODUCT
 const ManageProduct = Loadable({
   loader: () => import("../../../../inventory/containers/products/Product"),
@@ -359,6 +370,30 @@ const dataSource = {
         isFashNav: true,
       },
     ],
+  },
+  installment: {
+    icon: "icon-calendar",
+    route: "installment",
+    title: <Translate id="text_installment" />,
+    subItems: [
+      {
+        title: <Translate id="text_installment" />,
+        icon: "icon-calendar",
+        route: "/installment/list",
+        component: Installment,
+        isFashNav: true,
+      },
+      {
+        route: "/installment/create",
+        component: InstallmentForm,
+        isFashNav: false,
+      },
+      {
+        route: "/installment/update/:id",
+        component: InstallmentForm,
+        isFashNav: false
+      }
+    ]
   },
   products: {
     icon: "icon-items",

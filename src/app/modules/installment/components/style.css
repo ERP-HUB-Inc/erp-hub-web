@@ -1,0 +1,9 @@
+.table-row-border th {
+  font-size: 14px;
+  padding: 10px 0;
+  text-align: center;
+}
+
+.table-row-border th, .table-row-border td {
+  border: 1px solid #565656;
+}

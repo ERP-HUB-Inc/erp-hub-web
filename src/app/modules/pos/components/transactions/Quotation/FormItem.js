@@ -343,7 +343,7 @@ class FormItem extends React.PureComponent {
       if (!taxRate)
         taxRate = 0;
       data.taxRate = taxRate;
-
+      data.VATNo = data.customer && data.customer.VATNo;
       if (action === "clone") {
         this.pageTitle = "text_create_quotation";
         data.number = "";

@@ -1,0 +1,118 @@
+import React from "react";
+import moment from "moment";
+import {Translate} from "react-localize-redux";
+import {Result, Button} from "antd";
+import Util from "../../../common/util";
+import "../style.css";
+
+const util = new Util();
+
+function displayDateWithMonthKH(date) {
+  if (date && moment(date).isValid()) {
+    const months = {1: "មករា", 2: "កុម្ភៈ", 3: "មិនា", 4: "មេសា", 5: "ឧសភា", 6: "មិថុនា", 7: "កក្កដា", 8: "សីហា", 9: "កញ្ញា", 10: "តុលា", 11: "វិច្ឆិកា", 12: "ធ្នូ"};
+    const day = moment(date).format("D");
+    const month = months[Number(moment(date).format("M"))];
+    const year = moment(date).format("YYYY");
+    return `${day} ${month} ${year}`;
+  }
+
+  return null;
+}
+
+export default function DownPaymentTable(props) {
+
+  function finalPaymentDate(paymentSchedule) {
+    const len = paymentSchedule && paymentSchedule.length;
+    if (len) {
+      const lastSchedule = paymentSchedule[len - 1];
+      return displayDateWithMonthKH(lastSchedule.date);
+    }
+
+    return null;
+  }
+
+  const {formData} = props;
+  const product = formData.productVariant;
+  return (
+    Object.keys(formData).length ?
+    <div id="invoice-content">
+      <table className="table-invoice">
+        <tbody>
+          <tr>
+            <td colSpan={5} style={{textAlign: "center", fontSize: 16, fontWeight: "bold", paddingBottom: 12}}>តារាងបង់ប្រាក់ឈ្នួល ប្រចាំខែ</td>
+          </tr>
+          <tr className="table-row-border">
+            <td colSpan={2} style={{textAlign: "right"}}>ឈ្មេាះអតិថិជន</td>
+            <td>{formData.customer && formData.customer.firstName + " " + formData.customer.lastName}</td>
+            <td style={{textAlign: "right"}}>ប្រភេទទ្រព្យ</td>
+            <td>{product && product.name}</td>
+          </tr>
+          <tr className="table-row-border">
+            <td colSpan={2} style={{textAlign: "right"}}>លេខកូដអតិថិជន</td>
+            <td>{formData.customer && formData.customer.number}</td>
+            <td style={{textAlign: "right"}}>តម្លៃ</td>
+            <td>{formData.price ? util.formatCurrency(formData.price, "") : null}</td>
+          </tr>
+          <tr className="table-row-border">
+            <td colSpan={2} style={{textAlign: "right"}}>រយៈពេលបង់ប្រាក់</td>
+            <td>{formData.duration ? <div>{formData.duration} <Translate id={`text_${formData.durationType.toLowerCase()}`} /></div> : null}</td>
+            <td style={{textAlign: "right"}}>លេខទូរស័ព្ទ</td>
+            <td>{formData.customer && formData.customer.phoneNumber}</td>
+          </tr>
+          <tr className="table-row-border">
+            <td colSpan={2} style={{textAlign: "right"}}>ថ្ងៃទទួលទ្រព្យ</td>
+            <td>{displayDateWithMonthKH(formData.receiveDate)}</td>
+            <td style={{textAlign: "right"}}>បង់ដាច់ថ្ងៃទី</td>
+            <td>{finalPaymentDate(formData.paymentSchedule)}</td>
+          </tr>
+          <tr className="table-row-border">
+            <th style={{width: 50}}>ល.រ</th>
+            <th style={{width: 200}}>ថ្ងៃខែឆ្នាំ</th>
+            <th style={{width: 160}}>ចំនួនបង់ប្រចាំខែ</th>
+            <th style={{width: 190}}>ចំនួនប្រាក់នៅសល់</th>
+            <th>ផ្សេងៗ</th>
+          </tr>
+          {
+            formData.paymentSchedule && formData.paymentSchedule.length ? formData.paymentSchedule.map((schedule, index) =>
+              <tr key={index} className="table-row-border">
+                <td style={{textAlign: "center"}}>{index + 1}</td>
+                <td>{displayDateWithMonthKH(schedule.date)}</td>
+                <td style={{textAlign: "center"}}>{util.formatCurrency(Number(schedule.payAmount), "")}</td>
+                <td style={{textAlign: "center"}}>{util.formatCurrency(Number(schedule.balance), "")}</td>
+                <td></td>
+              </tr>
+            )
+            : null
+          }
+          <tr style={{verticalAlign: "top"}}>
+            <td colSpan={3} style={{paddingTop: 30, paddingLeft: 51}}>
+              <div style={{marginBottom: 75}}>ស្នាមមេដៃអ្នកជួល</div>
+              <hr style={{marginBottom: 5, width: 150, marginLeft: 0, background: "#000"}} />
+              <div>ឈ្មេាះ {formData.customer && formData.customer.firstName + " " + formData.customer.lastName}</div>
+              <div>{displayDateWithMonthKH(formData.receiveDate)}</div>
+            </td>
+            <td style={{paddingTop: 30}}>
+              <div style={{marginBottom: 75}}>ស្នាមមេដៃអ្នកធានា</div>
+              <hr style={{marginBottom: 5, width: 150, marginLeft: 0, background: "#000"}} />
+              <div>ឈ្មេាះ </div>
+              <div>{displayDateWithMonthKH(formData.receiveDate)}</div>
+            </td>
+            <td style={{paddingTop: 30}}>
+              <div style={{marginBottom: 75}}>ស្នាមមេដៃម្ចាស់ទ្រព្យ</div>
+              <hr style={{marginBottom: 5, width: 150, marginLeft: 0, background: "#000"}} />
+              <div>ឈ្មេាះ {formData.client && formData.client.businessNamekm}</div>
+              <div>{displayDateWithMonthKH(formData.receiveDate)}</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    : 
+    <Result  
+      status={404}
+      title="404"
+      subTitle="Invoice not found"
+      extra={<Button type="info"><Translate id="text_back" /></Button>}
+    />
+  );
+}
