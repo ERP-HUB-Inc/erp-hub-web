@@ -60,6 +60,11 @@ const Installment = Loadable({
   loading: () => <StartUp />
 });
 
+const InstallmentDetail = Loadable({
+  loader: () => import("../../../../installment/components/installment/detail"),
+  loading: () => <StartUp />
+});
+
 const InstallmentForm = Loadable({
   loader: () => import("../../../../installment/components/installment/FormItem"),
   loading: () => <StartUp />
@@ -382,6 +387,11 @@ const dataSource = {
         route: "/installment/list",
         component: Installment,
         isFashNav: true,
+      },
+      {
+        route: "/installment/detail/:id",
+        component: InstallmentDetail,
+        isFashNav: false
       },
       {
         route: "/installment/create",

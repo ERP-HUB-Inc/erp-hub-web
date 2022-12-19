@@ -55,6 +55,14 @@ class InstallmentService extends BaseService {
     });
   }
 
+  markAsReceived(id) {
+    this.setHeader();
+    return this.PUT({
+      url: `${this.baseUrl}/mark_as_received/${id}`,
+      headers: this.header
+    });
+  }
+
   delete(id) {
     this.setHeader();
     return this.DELETE({

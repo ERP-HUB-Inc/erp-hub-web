@@ -7,7 +7,9 @@ import {
   Icon,
   Input,
   Form,
-  Tag
+  Tag,
+  Menu,
+  Dropdown
 } from "antd";
 import InstallmentService from "../../services/InstallmentService";
 import history from "../../../common/router/history";
@@ -36,9 +38,46 @@ class Installment extends Component {
         render: (firstName, record) => firstName + " " + record.lastName
       },
       {
+        title: <this.Translate id="text_phone_number" />,
+        dataIndex: "phoneNumber",
+        key: "phoneNumber"
+      },
+      {
         title: <this.Translate id="text_product" />,
         dataIndex: "product",
-        key: "product"
+        key: "product",
+        width: 350,
+        render: (product, record) => {
+          const menu = (
+            <Menu>
+              <Menu.Item>
+                <this.Link to={`/installment/detail/${record.id}`}>
+                  <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
+                </this.Link>
+              </Menu.Item>
+              <Menu.Item>
+                <this.Link to={`/installment/update/${record.id}`}>
+                  <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
+                </this.Link>
+              </Menu.Item>
+              <Menu.Item onClick={() => this.handleMarkReceived(this.id)}>
+                <Icon type="retweet" style={{marginRight: 10}} /> <this.Translate id="text_mark_as_received" />
+              </Menu.Item>
+              <Menu.Item onClick={() => this.handleDelete(record.id)} style={{color: "red"}}>
+                <Icon type="delete" /> <this.Translate id="text_delete" />
+              </Menu.Item>
+            </Menu>
+          );
+          return <div className="wrap-product-name" style={{display: "flex"}}>
+            {product}
+            <Dropdown className="product-row-option" overlay={menu}>
+              {/* eslint-disable-next-line */}
+              <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
+                <this.Translate id="text_option" /> <Icon type="down" />
+              </a>
+            </Dropdown>
+          </div>;
+        }
       },
       {
         title: <this.Translate id="text_received_date" />,
@@ -144,6 +183,14 @@ class Installment extends Component {
     .finally(() => this.setState({loading: false}));
   }
 
+  handleMarkReceived(id) {
+
+  }
+
+  handleDelete(id) {
+
+  }
+
   handleSearch = (e) => {
     clearTimeout(this.timer);
     const value = e.target.value;
@@ -158,6 +205,10 @@ class Installment extends Component {
     this.timer = setTimeout(() => {
       this.fetchList();
     }, 600);
+  }
+
+  onChangePaymentDate = (value) => {
+
   }
 
   onTableChange = (current, pageSize) => {
@@ -221,6 +272,13 @@ class Installment extends Component {
                     allowClear={true}
                     onChange={this.handleSearch}
                   />
+                  <this.DatePickers
+                    name="paymentDate"
+                    placeholder={`${this.CATranslate("text_payment_date", this.props.locale)}`}
+                    style={{width: 200, margin: "-4px 10px 0 0"}}
+                    onChange={this.onChangePaymentDate}
+                    form={this.props.form}
+                  />
 
                   <this.Button
                     type="info"
@@ -240,9 +298,6 @@ class Installment extends Component {
                 columns={this.columns}
                 dataSource={this.state.data}
                 onChange={this.onChange}
-                onRow={record => ({
-                  onDoubleClick:() => history.push(`/installment/update/${record.id}`)
-                })}
               />
               <div style={{marginTop: 15}}>
                 {this.renderPagination(this.state.pagination)}

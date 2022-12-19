@@ -17,7 +17,8 @@ import {
   Table,
   Dropdown,
   Menu,
-  message
+  message,
+  Badge
 } from "antd";
 import {
   Button,
@@ -32,9 +33,10 @@ import ProductVariantAction from "../../../inventory/actions/products/productVar
 import CustomerConstant from "../../../crm/constants/customers/customer";
 import Util from "../../../common/util";
 import Enum from "../../../common/enums";
+import EnumProduct from "../../../inventory/enums";
+import EnumINS from "../../enum";
 import history from "../../../common/router/history";
 import {stringTranslate} from "../../../common/helper/stringTranslate";
-import EnumProduct from "../../../inventory/enums";
 import SearchProductDropdown from "../../../pos/components/transactions/Invoice/SearchProduct";
 import DownPaymentTable from "./downPayment";
 import CustomerCreate from "../../../crm/containers/customers/Customer/FormCreate";
@@ -50,7 +52,8 @@ class FormItem extends React.Component {
     selectedSerials: [],
     loading: false,
     loadingSubmit: false,
-    fetchingCustomer: false
+    fetchingCustomer: false,
+    isChangeSchedule: false
   }
   Util = new Util();
   productColumns = [
@@ -125,6 +128,11 @@ class FormItem extends React.Component {
       }
     }
   ]
+  INSTALLMENT_STATUS_STR = {
+    [EnumINS.INSTALLMENT_STATUS.DRAFT]: { title: stringTranslate("text_draft", this.props.locale), color: "#bfbfbf"},
+    [EnumINS.INSTALLMENT_STATUS.RECEIVED]: { title: stringTranslate("text_received", this.props.locale), color: "#1890ff"},
+    [EnumINS.INSTALLMENT_STATUS.COMPLETED]: { title: stringTranslate("text_completed", this.props.locale), color: "#f50"},
+  };
   id = "";
   pageTitle = "text_create_installment";
   modalTitle = "";
@@ -213,7 +221,7 @@ class FormItem extends React.Component {
       }
     })
     .finally(() => {
-      this.setState({loading: false});
+      this.setState({loading: false, isChangeSchedule: false});
     });
   }
 
@@ -252,6 +260,10 @@ class FormItem extends React.Component {
         values.paymentDate = this.Util.formatDateForMYSQL(values.paymentDate);
         values.price = formData.price;
         values.total = _.sumBy(formData.paymentSchedule, "payAmount");
+        values.isChangeSchedule = this.state.isChangeSchedule;
+        if (values.receiveDate <= moment().format("YYYY-MM-DD")) {
+          values.status = EnumINS.INSTALLMENT_STATUS.RECEIVED;
+        }
         delete values.searchProduct;
         this.save(values);
       }
@@ -374,7 +386,6 @@ class FormItem extends React.Component {
 
   handleChangeRate = (rate) => {
     const {formData} = this.state;
-    console.log("formdata", formData);
     let duration = formData.duration;
     let numberOfMonth = duration;
     if (formData.durationType === Enum.DURATION_TYPE.YEAR) {
@@ -440,11 +451,27 @@ class FormItem extends React.Component {
     }
   }
 
-  handleDelete(id) {
-
+  handleDeleteSchedule(status) {
+    if (status === EnumINS.INSTALLMENT_STATUS.DRAFT) {
+      this.setState(preState => {
+        preState.formData.paymentSchedule = [];
+        return preState;
+      });
+    } else {
+      this.Util.sweetAlertConfirm("", stringTranslate("text_are_you_sure", this.props.locale))
+      .then(willDelete => {
+        if (willDelete) {
+          this.setState(preState => {
+            preState.formData.paymentSchedule = [];
+            preState.isChangeSchedule = true;
+            return preState;
+          });
+        }
+      });
+    }
   }
 
-  handleVoid(id) {
+  handleDelete(id) {
 
   }
 
@@ -497,8 +524,12 @@ class FormItem extends React.Component {
     }, 600);
   }
 
-  handleShowFormPayment = (id) => {
-
+  handleMarkReceived(id) {
+    InstallmentService.markAsReceived(id)
+    .then(() => {
+      message.success("Mark as received success");
+      this.fetchDetail(id);
+    });
   }
 
   handleGoBack = () => {
@@ -593,6 +624,14 @@ class FormItem extends React.Component {
   render() {
     const {formData} = this.state;
     const {form, locale} = this.props;
+    let disabledEdit = false;
+    if (formData.id && formData.status !== EnumINS.INSTALLMENT_STATUS.DRAFT && formData.paymentSchedule && formData.paymentSchedule.length) {
+      disabledEdit = true;
+    }
+
+    if (this.state.isChangeSchedule) {
+      disabledEdit = false;
+    }
 
     onafterprint = (() => {
       document.getElementById("invoice-content").classList.remove("invoice-A5");
@@ -611,7 +650,13 @@ class FormItem extends React.Component {
           position: "relative"
           }}
           onBack={this.handleGoBack}
-          title={<Translate id={this.pageTitle} />} 
+          title={<Translate id={this.pageTitle} />}
+          subTitle={
+            formData.status ? <Badge 
+              count={this.INSTALLMENT_STATUS_STR[formData.status].title} 
+              style={{background: this.INSTALLMENT_STATUS_STR[formData.status].color}} 
+            /> : null
+          }
         />
 
         <Form onSubmit={this.handleSubmit} id="invoice-form">
@@ -668,6 +713,7 @@ class FormItem extends React.Component {
                       name="rate"
                       placeholder={`${stringTranslate("text_rate", locale)}`}
                       data={formData.rate}
+                      disabled={disabledEdit}
                       style={{width: "80%"}}
                       isAutoSelect={true}
                       onChange={this.handleChangeRate}
@@ -692,6 +738,7 @@ class FormItem extends React.Component {
                       data={formData.duration}
                       onChange={this.handelChangeDuration}
                       precision={0}
+                      disabled={disabledEdit}
                       form={form} />
                     <Select 
                       name="durationType"
@@ -702,6 +749,7 @@ class FormItem extends React.Component {
                         {name: <Translate id="text_month" />, value: Enum.DURATION_TYPE.MONTH},
                         {name: <Translate id="text_year" />, value: Enum.DURATION_TYPE.YEAR}
                       ]}
+                      disabled={disabledEdit}
                       onChange={this.handelChangeDurationType}
                       form={form} />
                   </Input.Group>
@@ -716,6 +764,7 @@ class FormItem extends React.Component {
               handleOnSelectList={this.handleOnSelectList}
               className="ca-input-v1 purchase-order"
               locale={this.props.locale}
+              disabled={disabledEdit}
               style={{marginTop: 12}}
               form={form}/>  
             <Col md={24}>
@@ -743,22 +792,14 @@ class FormItem extends React.Component {
                 overlay={(
                   <Menu>
                     <Menu.Item onClick={this.handlePrintInvoiceA5}><Translate id="text_print_invoice" /> A5</Menu.Item>
-                    {
-                      this.id ?
-                      <React.Fragment>
-                        <Menu.Item className="ant-dropdown-menu-item" onClick={() => this.handleShowFormPayment(this.id)}>
-                          <Translate id="text_pay" />
-                        </Menu.Item>
-                        <Menu.Item className="ant-dropdown-menu-item"><Translate id="text_mark_as_received" /></Menu.Item>
-                      </React.Fragment>
-                      :
-                      null
-                    }
+                    <Menu.Item onClick={() => this.handleMarkReceived(this.id)}>
+                      <Translate id="text_mark_as_received" />
+                    </Menu.Item>
                     <Menu.Item>
                       <Link to="/installment/create" target="_blank"><Translate id="text_new_installment" /></Link>
                     </Menu.Item>
-                    <Menu.Item onClick={() => this.handleVoid(formData.id)}><Translate id="text_void" /></Menu.Item>
-                    <Menu.Item onClick={() => this.handleDelete(formData.id)}><Translate id="text_delete" /></Menu.Item>
+                    <Menu.Item style={{color: "red"}} onClick={() => this.handleDeleteSchedule(formData.status)}><Translate id="text_delete_schedule" /></Menu.Item>
+                    <Menu.Item style={{color: "red"}} onClick={() => this.handleDelete(this.id)}><Translate id="text_delete" /></Menu.Item>
                   </Menu>
                 )}
               >
