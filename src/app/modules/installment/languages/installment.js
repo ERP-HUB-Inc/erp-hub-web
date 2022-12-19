@@ -30,5 +30,13 @@ export default {
   "text_duration": [
     "Duration",
     "រយៈពេល"
+  ],
+  "text_view_payment_history": [
+    "View Payment History",
+    "មើលប្រវត្តិទូទាត់"
+  ],
+  "text_delete_schedule": [
+    "Delete schedule",
+    "Delete schedule"
   ]
 };
