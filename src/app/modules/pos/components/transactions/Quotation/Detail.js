@@ -80,7 +80,10 @@ class Detail extends React.PureComponent {
     formData.dueDate = formData.validDate;
     formData.invoiceNumber = formData.number;
     formData.status = Number(formData.status);
+    formData.phoneNumber = formData.customer && formData.customer.phoneNumber;
     formData.VATNo = formData.customer && formData.customer.VATNo;
+    formData.address = formData.customer && formData.customer.address;
+    
     return (
       <div style={{marginBottom: 25}}>
         <PageHeader

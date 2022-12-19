@@ -98,14 +98,23 @@ export default function TaxInvoice(props) {
                   <td colSpan={3}>{formData.company ? formData.company : `${formData.firstName} ${formData.lastName}` }</td>
                 </tr>
                 <tr>
-                  <td colSpan={3}>Address: {formData.address}</td>
+                  <td colSpan={3}>
+                    {
+                      formData.phoneNumber ?
+                        <React.Fragment>លេខទូរស័ព្ទ: {formData.phoneNumber}</React.Fragment>
+                      :
+                        <React.Fragment>ឤស័យដ្ឋាន: {formData.address}</React.Fragment>
+                    }
+                  </td>
                   <td rowSpan={2} style={{fontWeight: 600, textAlign: "right"}}>
                     <div>កាលបរិច្ឆេទ :</div>
                     <div>Date :</div>
                   </td>
                   <td style={{fontWeight: 600, textAlign: "center"}} rowSpan={2}>{util.formatDate(formData.invoiceDate, "D-MM-YYYY")}</td>
                 </tr>
-                <tr><td colSpan={3}></td></tr>
+                <tr>
+                  <td colSpan={3}>{formData.phoneNumber ? ` ឤស័យដ្ឋាន: ${formData.address}` : ""}</td>
+                </tr>
                 <tr>
                   <td colSpan={3}></td>
                   <td rowSpan={2} style={{fontWeight: 600, textAlign: "right"}}>

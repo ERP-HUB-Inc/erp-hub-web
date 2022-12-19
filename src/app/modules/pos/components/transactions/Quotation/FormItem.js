@@ -344,6 +344,8 @@ class FormItem extends React.PureComponent {
         taxRate = 0;
       data.taxRate = taxRate;
       data.VATNo = data.customer && data.customer.VATNo;
+      data.phoneNumber = data.customer && data.customer.phoneNumber;
+      data.address = data.customer && data.customer.address;
       if (action === "clone") {
         this.pageTitle = "text_create_quotation";
         data.number = "";
