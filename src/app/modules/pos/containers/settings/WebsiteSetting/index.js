@@ -240,7 +240,7 @@ const WebsiteSetting = (props) => {
     props.form.resetFields();
     setDataSourceBanner([]);
     setBannerName("");
-    setBannerPosition("")
+    setBannerPosition("");
     setDeleteDataSourceBanner([]);
     fetchBanner();
     setVisibleFormBanner(false);
@@ -282,7 +282,7 @@ const WebsiteSetting = (props) => {
             setDataSourceBanner(bannerImage);
             setBannerName(data.name);
             setBannerType(data.type);
-            setBannerPosition(data.position)
+            setBannerPosition(data.position);
           }
         })
         .finally(() => setLoadingUpdateBanner(false));
@@ -387,7 +387,6 @@ const WebsiteSetting = (props) => {
           }
         });
         values["entries"] = [...newEntries, ...deleteDataSourceBanner];
-        console.log("values",values)
         if (bannerId) {
           updateBannerSetting(bannerId, values)
             .then(() => {
@@ -821,7 +820,7 @@ const WebsiteSetting = (props) => {
                           </div>
                         </div>
                       </div>
-                      <Select
+                      {/* <Select
                         label={<Translate id="text_theme" />}
                         form={props.form}
                         onChange={onSelectTheme}
@@ -849,7 +848,7 @@ const WebsiteSetting = (props) => {
                             name: "Technocy",
                           }
                         ]}
-                      />
+                      /> */}
                       <InputText
                         data={description}
                         name="description"
@@ -894,6 +893,63 @@ const WebsiteSetting = (props) => {
                       </Button>
                     </Form>
                   </Col>
+                   <Col lg="8" md="8">
+                      <div className="ant-row ant-form-item">
+                        <div className="ant-col ant-form-item-label">
+                          <label>
+                            Theme
+                          </label>
+                        </div>
+                        </div>
+                      <Row>
+                         <Col lg="4" md="4">
+                          <div onClick={() => onSelectTheme("template_1")}>
+                              <div  id="image-position">
+                                <img src={process.env.PUBLIC_URL + "/index-1.webp"} alt={"template 1"} width={"100%"} height="100%"  id="image-border" />
+                               {
+                                  theme === "template_1" && <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{fontSize: 40}}/>
+                               }
+                              </div> 
+                              <div className="image-title"><span>Hmart</span></div>
+                          </div>
+                         </Col>
+                         <Col lg="4" md="4">
+                          <div  onClick={() => onSelectTheme("template_2")} >
+                            <div id="image-position">
+                                <img src={process.env.PUBLIC_URL + "/index-2.jpg"} alt={"template 2"} width={"100%"} height="100%"  id="image-border" />
+                                {
+                                  theme === "template_2" && <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{fontSize: 40}}/>
+                                }
+                              </div>  
+                              <div className="image-title"><span>Technocy</span></div>
+                          </div>
+                         </Col>
+                         <Col lg="4" md="4">
+                          <div  onClick={() => onSelectTheme("template_3")}>
+                             <div id="image-position">
+                                <img src={process.env.PUBLIC_URL + "/index-3.jpg"} alt={"template 3"} width={"100%"} height="100%"   id="image-border" />
+                                {
+                                  theme === "template_3" && <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{fontSize: 40}}/>
+                                }
+                              </div> 
+                              <div className="image-title"><span>Stylista</span></div>
+                          </div>
+                         </Col>
+                      </Row>
+                      <Row style={{marginTop: 30}}>
+                          <Col lg="4" md="4">
+                          <div  onClick={() => onSelectTheme("template_4")}>
+                              <div id="image-position">
+                                <img src={process.env.PUBLIC_URL + "/index-4.jpg"} alt={"template 4"} width={"100%"} height="100%"  id="image-border" />
+                                {
+                                  theme === "template_4" && <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{fontSize: 40}}/>
+                                }
+                              </div>      
+                              <div className="image-title"><span>Koganic</span></div>
+                          </div>
+                          </Col>
+                      </Row>
+                   </Col>
                 </Row>
               </TabPane>
               <TabPane tab={<Translate id="text_banner" />} key="2">

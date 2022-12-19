@@ -1,6 +1,7 @@
 input[type="color"]::-webkit-color-swatch-wrapper {
     padding: 0;
 }
+
 input[type="color"]::-webkit-color-swatch {
     border: none;
     border-radius: 4px;
@@ -11,7 +12,7 @@ input[type="color"]::-webkit-color-swatch {
     border: 1px solid #e8e8e8;
     text-align: left !important;
     display: flex !important;
-    justify-content: flex-start ;
+    justify-content: flex-start;
     padding: 16px 16px !important;
     color: rgba(0, 0, 0, 0.85) !important;
     background: #fafafa !important;
@@ -19,4 +20,48 @@ input[type="color"]::-webkit-color-swatch {
     border-radius: 0 0 4px 4px !important;
 }
 
+#image-border {
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0px 0px 0px 1px #b3b3b3;
+    cursor: pointer;
+}
 
+#image-border:hover {
+    transition: all 1s ease;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0px 0px 0px 3px var(--primary);
+}
+
+.image-title {
+    text-align: center;
+    width: 98%;
+    margin-top: 10px;
+}
+
+.image-title span {
+    font-weight: 600;
+}
+
+#image-position {
+    position: relative;
+    width: 98%;
+    height: 400px;
+}
+
+#image-position .anticon {
+    left: 45%;
+    display: inline-block;
+    color: inherit;
+    font-style: normal;
+    line-height: 0;
+    text-align: center;
+    text-transform: none;
+    vertical-align: -0.125em;
+    text-rendering: optimizeLegibility;
+    position: absolute;
+    top: 45%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
