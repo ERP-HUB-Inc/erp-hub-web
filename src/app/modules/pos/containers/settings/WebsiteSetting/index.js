@@ -905,7 +905,7 @@ const WebsiteSetting = (props) => {
                          <Col lg="4" md="4">
                           <div onClick={() => onSelectTheme("template_1")}>
                               <div  id="image-position">
-                                <img src={"/index-1.webp"} alt={"template 1"} width={"100%"} height="100%"  id="image-border" />
+                                <img src={require("../../../../common/components/layout/styles/images/index-1.webp")} alt={"template 1"} width={"100%"} height="100%"  id="image-border" />
                                {
                                   theme === "template_1" && <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{fontSize: 40}}/>
                                }
@@ -916,7 +916,7 @@ const WebsiteSetting = (props) => {
                          <Col lg="4" md="4">
                           <div  onClick={() => onSelectTheme("template_2")} >
                             <div id="image-position">
-                                <img src={"/index-4.jpg"} alt={"template 2"} width={"100%"} height="100%"  id="image-border" />
+                                <img src={require("../../../../common/components/layout/styles/images/index-4.jpg")} alt={"template 2"} width={"100%"} height="100%"  id="image-border" />
                                 {
                                   theme === "template_2" && <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{fontSize: 40}}/>
                                 }
@@ -927,7 +927,7 @@ const WebsiteSetting = (props) => {
                          <Col lg="4" md="4">
                           <div  onClick={() => onSelectTheme("template_3")}>
                              <div id="image-position">
-                                <img src={"/index-3.jpg"} alt={"template 3"} width={"100%"} height="100%"   id="image-border" />
+                                <img src={require("../../../../common/components/layout/styles/images/index-3.jpg")} alt={"template 3"} width={"100%"} height="100%"   id="image-border" />
                                 {
                                   theme === "template_3" && <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{fontSize: 40}}/>
                                 }
@@ -940,7 +940,7 @@ const WebsiteSetting = (props) => {
                           <Col lg="4" md="4">
                           <div  onClick={() => onSelectTheme("template_4")}>
                               <div id="image-position">
-                                <img src={"/index-2.jpg"} alt={"template 4"} width={"100%"} height="100%"  id="image-border" />
+                                <img src={require("../../../../common/components/layout/styles/images/index-2.jpg")} alt={"template 4"} width={"100%"} height="100%"  id="image-border" />
                                 {
                                   theme === "template_4" && <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{fontSize: 40}}/>
                                 }
