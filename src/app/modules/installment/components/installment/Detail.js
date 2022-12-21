@@ -16,7 +16,9 @@ import EnumINS from "../../enum";
 import InstallmentService from "../../services/InstallmentService";
 import history from "../../../common/router/history";
 import {stringTranslate} from "../../../common/helper/stringTranslate";
-import DownPaymentTable from "./downPayment";
+import DownPaymentTable from "./DownPayment";
+import PaymentForm from "./PaymentForm";
+import PaymentHistory from "./PaymentHistory";
 
 class DetailInstallment extends React.Component {
   state = {
@@ -34,8 +36,21 @@ class DetailInstallment extends React.Component {
     const id = this.props.match.params.id;
     InstallmentService.detail(id)
     .then(response => {
-      this.setState({detail: response.data.data});
+      this.setState({detail: response.data.data}, () => {
+        const action = new URLSearchParams(document.location.search).get("action");
+        if (action === "print" && Object.keys(this.state.detail).length) {
+          window.print();
+        }
+      });
     });
+  }
+
+  handlePay = () => {
+    this.paymentFormRef.onShowDrawer();
+  }
+
+  handleAfterPayment = () => {
+    this.paymentFormRef.onCloseDrawer();
   }
 
   handlePrintA5 = () => {
@@ -71,8 +86,8 @@ class DetailInstallment extends React.Component {
                 <Menu.Item>
                   <Link to={`/installment/update/${detail.id && detail.id}`}><Translate id="text_edit" /></Link>
                 </Menu.Item>
-                <Menu.Item><Translate id="text_pay" /></Menu.Item>
-                <Menu.Item><Translate id="text_view_payment_history" /></Menu.Item>
+                <Menu.Item onClick={this.handlePay}><Translate id="text_pay" /></Menu.Item>
+                <Menu.Item onClick={() => this.paymentHistoryRef.onShowDrawer()}><Translate id="text_view_payment_history" /></Menu.Item>
               </Menu>
             )}>
               <button className="ant-btn ant-dropdown-link" onClick={e => e.preventDefault()}>
@@ -90,6 +105,18 @@ class DetailInstallment extends React.Component {
           :
             <DownPaymentTable formData={detail} />
         }
+
+        <PaymentForm
+          ref={ref => this.paymentFormRef = ref}
+          formData={detail}
+          locale={this.props.locale}
+          onSuccess={this.handleAfterPayment}
+          form={this.props.form} />
+
+        <PaymentHistory
+          ref={ref => this.paymentHistoryRef = ref}
+          data={[]}
+        />
       </div>
     );
   }

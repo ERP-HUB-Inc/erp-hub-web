@@ -7,3 +7,7 @@
 .table-row-border th, .table-row-border td {
   border: 1px solid #565656;
 }
+
+.input-installment-rate .ant-input-number-handler-wrap {
+  display: none;
+}

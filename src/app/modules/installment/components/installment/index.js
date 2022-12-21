@@ -9,7 +9,9 @@ import {
   Form,
   Tag,
   Menu,
-  Dropdown
+  Dropdown,
+  Card,
+  Statistic
 } from "antd";
 import InstallmentService from "../../services/InstallmentService";
 import history from "../../../common/router/history";
@@ -51,6 +53,11 @@ class Installment extends Component {
           const menu = (
             <Menu>
               <Menu.Item>
+                <this.Link to={`/installment/detail/${record.id}?action=print`}>
+                  <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" />
+                </this.Link>
+              </Menu.Item>
+              <Menu.Item>
                 <this.Link to={`/installment/detail/${record.id}`}>
                   <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
                 </this.Link>
@@ -64,7 +71,7 @@ class Installment extends Component {
                 <Icon type="retweet" style={{marginRight: 10}} /> <this.Translate id="text_mark_as_received" />
               </Menu.Item>
               <Menu.Item onClick={() => this.handleDelete(record.id)} style={{color: "red"}}>
-                <Icon type="delete" /> <this.Translate id="text_delete" />
+                <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
               </Menu.Item>
             </Menu>
           );
@@ -207,10 +214,6 @@ class Installment extends Component {
     }, 600);
   }
 
-  onChangePaymentDate = (value) => {
-
-  }
-
   onTableChange = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     params.set("limit", pageSize);
@@ -255,6 +258,26 @@ class Installment extends Component {
     const params = new URLSearchParams(document.location.search);
     return (
       <React.Fragment>
+        <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
+          <Col span={8}>
+            <Card>
+              <Statistic
+                title={<this.Translate id="text_received"/>}
+                value={0}
+                valueStyle={{color: "#1890ff"}}
+              />
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card>
+              <Statistic 
+                title={<this.Translate id="text_complete" />}
+                value={0}
+                valueStyle={{color: "#f50"}}
+              />
+            </Card>
+          </Col>
+        </Row>
         <div className="content-list">
           <div style={{height: "100%", marginTop: 10}}>
             <div className="table-wrapper">
@@ -272,14 +295,6 @@ class Installment extends Component {
                     allowClear={true}
                     onChange={this.handleSearch}
                   />
-                  <this.DatePickers
-                    name="paymentDate"
-                    placeholder={`${this.CATranslate("text_payment_date", this.props.locale)}`}
-                    style={{width: 200, margin: "-4px 10px 0 0"}}
-                    onChange={this.onChangePaymentDate}
-                    form={this.props.form}
-                  />
-
                   <this.Button
                     type="info"
                     id="btnAdd"
