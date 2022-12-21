@@ -9,6 +9,8 @@ export default {
 
   text_no: ["No", "លេខរៀង"],
 
+  text_number_of: ["No.", "លេខរៀង"],
+
   text_title: ["Title", "ចំណងជើង"],
 
   text_logo: ["Logo", "រូបសញ្ញា"],

@@ -57,7 +57,7 @@ class FormItem extends React.Component {
   Util = new Util();
   productColumns = [
     {
-      title: <Translate id="text_no" />,
+      title: <Translate id="text_number_of" />,
       dataIndex: "no",
       key: "no",
       render: (no, record, index) => index + 1

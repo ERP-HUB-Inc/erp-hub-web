@@ -18,7 +18,7 @@ export default class FormItem extends Modal {
     this.onSelectChange = this.onSelectChange.bind(this);
     this.columns = [
       {
-        title: <this.Translate id="text_no" />,
+        title: <this.Translate id="text_number_of" />,
         dataIndex: "id",
         key: "no",
         width: 50,

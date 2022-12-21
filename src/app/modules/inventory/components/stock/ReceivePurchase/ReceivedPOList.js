@@ -13,7 +13,7 @@ export default class ReceivedPo extends Modal {
     this.form = this.props.form;
     this.columns = [
       {
-        title: <this.Translate id="text_no" />,
+        title: <this.Translate id="text_number_of" />,
         dataIndex: "no",
         width: 100,
         align: "center",

@@ -71,7 +71,7 @@ export default class PO extends Component {
                       <td style={paddingLine} colSpan="7"></td>
                     </tr>
                     <tr style={{width: "100%", color: "rgb(132, 129, 129)" }}>
-                      <td bgcolor="#F7F7F7" style={{padding: "7px", fontSize: "13px", width: "30px", borderBottom: "1px dashed #ecebeb"}}>{<this.Translate id="text_no"/>}</td>
+                      <td bgcolor="#F7F7F7" style={{padding: "7px", fontSize: "13px", width: "30px", borderBottom: "1px dashed #ecebeb"}}>{<this.Translate id="text_number_of"/>}</td>
                       <td bgcolor="#F7F7F7" style={{padding: "7px", fontSize: "13px", borderBottom: "1px dashed #ecebeb"}}>{<this.Translate id="text_product_description"/>}</td>
                       <td bgcolor="#F7F7F7" style={{padding: "7px", width: "80px", fontSize: "13px", borderBottom: "1px dashed #ecebeb"}}>{<this.Translate id="text_price"/>}</td>
                       <td bgcolor="#F7F7F7" style={{padding: "7px", width: "80px", fontSize: "13px", borderBottom: "1px dashed #ecebeb"}}>{<this.Translate id="text_order_qty"/>}</td>

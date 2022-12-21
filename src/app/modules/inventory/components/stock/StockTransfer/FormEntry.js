@@ -25,7 +25,7 @@ export default class FormEntry extends Modal {
     this.form = this.props.form;
     this.columns = [
       {
-        title: <this.Translate id="text_no" />,
+        title: <this.Translate id="text_number_of" />,
         dataIndex: "id",
         key: "no",
         width: 100,
