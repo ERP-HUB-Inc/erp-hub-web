@@ -486,7 +486,6 @@ export default {
 
   text_website_setting: ["Website Setting", "ការកំណត់គេហទំព័រ"],
   text_banner: ["Banner", "បដា"],
-  text_featured_products: ["Featured Products", "ផលិតផល​ពិសេស"],
   text_primary_color: ["Primary Color", "ពណ៌ចម្បង"],
   text_secondary_color: ["Secondary Color", "ពណ៌បន្ទាប់បន្សំ"],
   text_theme: ["Theme", "ប្រធានបទ"],

@@ -184,6 +184,11 @@ export default {
     "ផលិតផលពិសេស"
   ],
 
+  "text_featured_offer": [
+    "Featured Offer",
+    "ការផ្តល់ជូនពិសេស"
+  ],
+
   "text_product_tag": [
     "Tags",
     "ពាក្យសំគាល់"

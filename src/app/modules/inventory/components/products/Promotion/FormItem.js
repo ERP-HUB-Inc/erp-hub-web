@@ -12,7 +12,8 @@ import {
   Spin,
 } from "antd";
 import { 
-  Button, 
+  Button,
+  Checkboxs,
   DateRangePicker, 
   InputText, 
   InputNumber,
@@ -342,6 +343,12 @@ class FormItem extends React.PureComponent {
                 defaultValue={formData.startDate ? [moment(formData.startDate), moment(formData.endDate)] : null}
                 required={true}
                 errorRequired={`${stringTranslate("text_please_enter_dates", this.props.locale)}`}
+                form={this.props.form} />
+
+              <Checkboxs
+                name="isFeatured"
+                label={<Translate id="text_featured_offer" />}
+                defaultValue={formData.isFeatured ? true : false}
                 form={this.props.form} />
             </Col>
             <Col md={18} style={{paddingLeft: 20}}>
