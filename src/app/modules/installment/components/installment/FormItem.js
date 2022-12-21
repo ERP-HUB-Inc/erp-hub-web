@@ -462,7 +462,14 @@ class FormItem extends React.Component {
     this.Util.sweetAlertConfirm("Warning", stringTranslate("text_are_you_sure", this.props.locale))
     .then(willDelete => {
       if (willDelete) {
-
+        InstallmentService.delete(id)
+        .then(() => {
+          message.success("One record has been deleted");
+          history.goBack();
+        })
+        .catch(() => {
+          message.error("Something went wrong");
+        });
       }
     });
   }

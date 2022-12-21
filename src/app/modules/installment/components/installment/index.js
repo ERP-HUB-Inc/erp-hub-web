@@ -11,7 +11,8 @@ import {
   Menu,
   Dropdown,
   Card,
-  Statistic
+  Statistic,
+  message
 } from "antd";
 import InstallmentService from "../../services/InstallmentService";
 import history from "../../../common/router/history";
@@ -31,7 +32,7 @@ class Installment extends Component {
     this.INSTALLMENT_STATUS_STR = {
       [Enum.INSTALLMENT_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#bfbfbf"},
       [Enum.INSTALLMENT_STATUS.RECEIVED]: { title: <this.Translate id="text_received" />, color: "#1890ff"},
-      [Enum.INSTALLMENT_STATUS.COMPLETED]: { title: <this.Translate id="text_completed" />, color: "#52c41a"},
+      [Enum.INSTALLMENT_STATUS.COMPLETED]: { title: <this.Translate id="text_completed" />, color: "#f50"},
     };
     this.columns = [
       {
@@ -68,10 +69,7 @@ class Installment extends Component {
                   <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
                 </this.Link>
               </Menu.Item>
-              <Menu.Item onClick={() => this.handleMarkReceived(this.id)}>
-                <Icon type="retweet" style={{marginRight: 10}} /> <this.Translate id="text_mark_as_received" />
-              </Menu.Item>
-              <Menu.Item onClick={() => this.handleDelete(record.id)} style={{color: "red"}}>
+              <Menu.Item onClick={() => this.handleDelete(record.id)}>
                 <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
               </Menu.Item>
             </Menu>
@@ -199,12 +197,21 @@ class Installment extends Component {
     .finally(() => this.setState({loading: false}));
   }
 
-  handleMarkReceived(id) {
-
-  }
-
   handleDelete(id) {
-
+    this.Util.sweetAlertConfirm("", this.CATranslate("text_are_you_sure", this.props.locale))
+    .then(willDelete => {
+      if (willDelete) {
+        InstallmentService.delete(id)
+        .then(() => {
+          this.fetchList();
+          this.fetchSummary();
+          message.success("One record has been deleted");
+        })
+        .catch(() => {
+          message.error("Something went wrong");
+        });
+      }
+    });
   }
 
   handleSearch = (e) => {
@@ -293,7 +300,7 @@ class Installment extends Component {
               <Statistic 
                 title={<this.Translate id="text_complete" />}
                 value={summaryData && summaryData.completed}
-                valueStyle={{color: "#52c41a"}}
+                valueStyle={{color: "#f50"}}
               />
             </Card>
           </Col>
