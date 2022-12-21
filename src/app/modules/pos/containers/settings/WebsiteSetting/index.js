@@ -1262,7 +1262,7 @@ const WebsiteSetting = (props) => {
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab={<Translate id="text_featured_products" />} key="3">
+              <TabPane tab={<Translate id="text_featured_product" />} key="3">
                 <Row>
                   <Col lg="4" md="4">
                     <Form onSubmit={onFeaturedProductSubmit}>

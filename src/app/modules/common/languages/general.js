@@ -496,7 +496,6 @@ export default {
   text_image: ["Image", "រូបភាព"],
   text_crop_image: ["Crop Image", "ច្រឹបរូបភាព"],
   text_banner_name: ["Banner Name", "ឈ្មោះបដា"],
-  text_featured_product: ["Featured Product", "ផលិតផលពិសេស"],
   text_edit_banner: ["Edit Banner", "កែសម្រួលបដា"],
   text_new_banner: ["New Banner", "បដាថ្មី"],
   text_meta_title: ["Meta Title", "ចំណងជើងមេតា"],
