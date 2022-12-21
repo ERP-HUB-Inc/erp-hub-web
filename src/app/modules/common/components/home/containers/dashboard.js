@@ -24,10 +24,10 @@ import Util from "../../../util";
 import PrivilegeService from "../../../../pos/services/settings/PrivilegeService";
 Chart.register(...registerables);
 
-const permission_module_code    = "dashboard";
-const permission_code           = "view_dashboard";
-const util                      = new Util();
-const { Option }                = Select;
+const permission_module_code = "dashboard";
+const permission_code = "view_dashboard";
+const util = new Util();
+const { Option } = Select;
 
 const columns = [
   {
@@ -259,9 +259,9 @@ const Dashboard = () => {
                 </ul>
               </div>
               <Row gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 20]} className="row-out">
-                <Col span={12} className="col-in">
+                <Col lg={12} xs={24} className="col-in">
                   <Row gutter={[16,16]}>
-                    <Col span={12} className="item">
+                    <Col lg={12} sm={24} className="item">
                       <div id="taskDadhboardFirst">
                         <Card bordered={false}>
                           <div className='header-task-item'>
@@ -284,7 +284,7 @@ const Dashboard = () => {
                         </Card>
                       </div>
                     </Col>
-                    <Col span={12}>
+                    <Col lg={12} sm={24}>
                       <div id="taskDadhboardFirst">
                         <Card bordered={false}>
                           <div className='header-task-item'>
@@ -304,7 +304,7 @@ const Dashboard = () => {
                         </Card>
                       </div>
                     </Col>
-                    <Col span={12} className="item">
+                    <Col lg={12} sm={24} className="item">
                       <div id="taskDadhboardFirst">
                         <Card bordered={false}>
                           <div className='header-task-item'>
@@ -327,7 +327,7 @@ const Dashboard = () => {
                         </Card>
                       </div>
                     </Col>
-                    <Col span={12}>
+                    <Col lg={12} sm={24}>
                       <div id="taskDadhboardFirst">
                         <Card bordered={false}>
                           <div className='header-task-item'>
@@ -352,7 +352,7 @@ const Dashboard = () => {
                     </Col>
                   </Row>
                 </Col>
-                <Col span={12} className="task-line-chart">
+                <Col lg={12} xs={24} className="task-line-chart">
                   <div id="mainChart">
                     <Card bordered={false}>
                       <div className="header-task">
@@ -383,7 +383,7 @@ const Dashboard = () => {
                     </Card>
                   </div>
                 </Col>
-                <Col span={6} className="item">
+                <Col lg={6} xs={24} className="item">
                   <div id="mainDashboadCategory">
                     <Card bordered={false}>
                       <div className="header-category">
@@ -423,7 +423,7 @@ const Dashboard = () => {
                     </Card>
                   </div>
                 </Col>
-                <Col span={18} className="task-line-chart">
+                <Col lg={18} xs={24} className="task-line-chart">
                   <div id="mainTableList">
                     <Card bordered={false}>
                       <div className="header-task">
