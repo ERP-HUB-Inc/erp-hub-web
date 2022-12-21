@@ -3,6 +3,7 @@ import moment from "moment";
 import _ from "lodash";
 import {connect} from "react-redux";
 import {Translate} from "react-localize-redux";
+import BarcodeReader from "react-barcode-reader";
 import {Link} from "react-router-dom";
 import {
   Form,
@@ -15,8 +16,6 @@ import {
   Divider,
   Select as AntSelect,
   Table,
-  Dropdown,
-  Menu,
   message,
   Badge
 } from "antd";
@@ -24,10 +23,12 @@ import {
   Button,
   DatePickers,
   InputNumber,
+  InputText,
   Select
 } from "../../../common/elements/ant-ui";
 import CustomerService from "../../../crm/services/customers/CustomerService";
 import InstallmentService from "../../services/InstallmentService";
+import SerialService from "../../../pos/services/transactions/SerialService";
 import CustomerAction from "../../../crm/actions/customers/customer";
 import ProductVariantAction from "../../../inventory/actions/products/productVariant";
 import CustomerConstant from "../../../crm/constants/customers/customer";
@@ -38,10 +39,9 @@ import EnumINS from "../../enum";
 import history from "../../../common/router/history";
 import {stringTranslate} from "../../../common/helper/stringTranslate";
 import SearchProductDropdown from "../../../pos/components/transactions/Invoice/SearchProduct";
-import DownPaymentTable from "./downPayment";
+import DownPaymentTable from "./DownPayment";
 import CustomerCreate from "../../../crm/containers/customers/Customer/FormCreate";
 import VariantProduct from "../../../pos/containers/transactions/SaleWalkin/VariantProduct";
-import SerialForm from "../../../pos/components/transactions/Invoice/SerialForm";
 
 class FormItem extends React.Component {
   state = {
@@ -49,7 +49,6 @@ class FormItem extends React.Component {
     customers: [],
     modalVariant: null,
     customerForm: null,
-    selectedSerials: [],
     loading: false,
     loadingSubmit: false,
     fetchingCustomer: false,
@@ -69,42 +68,57 @@ class FormItem extends React.Component {
       key: "description",
       width: 600,
       render: (productVariantId, record, index) => {
-        // const serialNo = this.state.formData.serialNo;
-        // const serial = this.state.formData.serial;
+        const {formData} = this.state;
         return (
           <div>
             {record.name}
             {
-              record.enableDescription ?
-              <div style={{marginTop: 8}}>
-                {/* {serialNo ?
-                  <Tag 
-                    onClose={() => this.handleRemoveSerialNo(index)}
-                    title={stringTranslate("text_double_click_edit_serial", this.props.locale)}
-                    className="serial-tag"
-                    style={{padding: 5}}
-                    onDoubleClick={() => this.handleUpdateSerial(serial, index)}
-                  >
-                    {serialNo}
-                    <Icon style={{paddingLeft: 3}} type="close-circle" title="Delete serial" className="btn-remove-serial" onClick={() => this.handleDeleteSerial(serialNo, index)} />
-                  </Tag>
-                :
-                  <Button type="info" style={{fontSize: 12, height: 31, marginRight: 8}} onClick={() => this.handleShowSerialModal(index, record.productVariantId)} >
-                    <Icon type="plus-circle" style={{paddingRight: 5}} />
-                    <Translate id="text_add" /> Serial
-                  </Button>
-                } */}
-                {/* <InputText 
-                  name={`serial[${index}]`}
+              record.enableDescription &&
+              <div style={{width: 200, marginTop: 6}}>
+                <InputText
+                  name="serialId"
+                  data={formData.serial ? formData.serial.id : ""}
+                  style={{display: "none"}}
+                  form={this.props.form} />
+                <BarcodeReader
+                  minLength={4}
+                  onError={this.handleScanError}
+                  onScan={this.handleScan}
+                  preventDefault={true}
+                  avgTimeByChar={40}
+                  endChar={[13]}
+                  timeBeforeScanTest={200} />
+                <InputText 
+                  name="serialNo"
+                  label="Serial or IMEI"
                   required={true}
-                  errorRequired={stringTranslate("error_serial_number_require", this.props.locale)}
-                  validator={(rule, value, callback) => this.validateSerialNo(value, callback)}
-                  data={serialNo}
-                  inputStyle={{display: "none"}}
-                  form={this.props.form} /> */}
+                  placeholder="Serial or IMEI"
+                  data={formData.serialNo}
+                  onChange={this.onChangeSerial}
+                  form={this.props.form} />
+                <InputNumber
+                  name="numOfWarranty"
+                  label={<Translate id="text_warranty_duration" />}
+                  required={true}
+                  precision={0}
+                  style={{padding: "6px 0"}}
+                  isAutoSelect={true}
+                  data={formData.serial && formData.serial.numOfWarranty}
+                  min={0}
+                  form={this.props.form} />
+                <Select 
+                  name="serialDurationType"
+                  label={<Translate id="text_duration_type" />}
+                  required={true}
+                  defaultValue={formData.serial ? formData.serial.durationType : Enum.DURATION_TYPE.DAY}
+                  dataSource={[
+                    {name: <Translate id="text_day" />, value: Enum.DURATION_TYPE.DAY},
+                    {name: <Translate id="text_week" />, value: Enum.DURATION_TYPE.WEEK},
+                    {name: <Translate id="text_month" />, value: Enum.DURATION_TYPE.MONTH},
+                    {name: <Translate id="text_year" />, value: Enum.DURATION_TYPE.YEAR}
+                  ]}
+                  form={this.props.form} />
               </div>
-              :
-              null
             }
           </div>
         );
@@ -245,6 +259,14 @@ class FormItem extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const {formData} = this.state;
+        if (formData.status === EnumINS.INSTALLMENT_STATUS.COMPLETED) {
+          this.Util.sweetAlertMessageV2(
+            "Sorry",
+            "This installment is already completed",
+            "warning"
+          );
+        }
+
         if (!values.customerId) {
           this.textRequiredCustomer = <Translate id="text_required_customer" />;
           return;
@@ -255,7 +277,7 @@ class FormItem extends React.Component {
         }
 
         values.productVariantId = formData.productVariantId;
-        values.serialNo = "";
+        values.productName = formData.products[0].name;
         values.receiveDate = this.Util.formatDateForMYSQL(values.receiveDate);
         values.paymentDate = this.Util.formatDateForMYSQL(values.paymentDate);
         values.price = formData.price;
@@ -264,7 +286,16 @@ class FormItem extends React.Component {
         if (values.receiveDate <= moment().format("YYYY-MM-DD")) {
           values.status = EnumINS.INSTALLMENT_STATUS.RECEIVED;
         }
+        values.serial = {
+          id: values.serialId,
+          number: values.serialNo,
+          numOfWarranty: values.numOfWarranty,
+          durationType: values.serialDurationType
+        };
+        
         delete values.searchProduct;
+        delete values.serialDurationType;
+        delete values.numOfWarranty;
         this.save(values);
       }
     });
@@ -298,75 +329,51 @@ class FormItem extends React.Component {
     }
   }
 
-  handleShowSerialModal(index, pVariantId) {
-    this.modalTitle = <div><Translate id="text_add" /> <Translate id="text_serial_no" /></div>;
-    this.setState({
-      serialFormData: {
-        id: "",
-        pVariantId,
-        invoiceDate: this.props.form.getFieldValue("receivedDate"),
-        quantity: this.props.form.getFieldValue(`quantity[${index}]`),
-        description: this.state.formData.products[index].name,
-        number: "",
-        numOfWarranty: 0,
-        durationType: "DAY",
-        index,
-      }
-    });
-    this.serialRef.handleShowModal();
+  onChangeSerial = (e) => {
+    clearTimeout(this.timer);
+    const value = e.target.value;
+    if (value !== this.state.formData.serialNo) {
+      this.timer = setTimeout(() => {
+        SerialService.findByNumber(value, this.state.formData.productVariantId)
+        .then(response => {
+          if (response.data && response.data.length) {
+            return this.props.form.setFields({
+              serialNo: {
+                errors: [new Error(value + ": " + stringTranslate("text_this_serial_is_sold", this.props.locale))]
+              }
+            });
+          } else {
+            this.setState(preState => {
+              preState.formData.serialNo = value;
+              return preState;
+            });
+          }
+        });
+      });
+    }
   }
 
-  handleSaveSerialNo = (values) => {
-    const {formData} = this.state;
-    const serialNumber = values.serialNumber;
-    const numOfWarranty = values.numOfWarranty;
-    let newSerials = {};
-    if (values.id) {
-      newSerials.id = values.id;
-      newSerials.number = serialNumber;
-      newSerials.numOfWarranty = numOfWarranty;
-      newSerials.durationType = values.durationType;
-      newSerials.status = 1;
-    } else {
-      newSerials = {
-        number: serialNumber, 
-        numOfWarranty, 
-        durationType: values.durationType, 
-        isNew: true, 
-        status: 1
-      };
+  handleScan = (value) => {
+    this.setState({ isScanBarcode: true });
+
+    if (value !== this.state.formData.serialNo) {
+      SerialService.findByNumber(value, this.state.formData.productVariantId)
+      .then(response => {
+        if (response.data && response.data.length) {
+          return this.props.form.setFields({
+            serialNo: {
+              errors: [new Error(value + ": " + stringTranslate("text_this_serial_is_sold", this.props.locale))]
+            }
+          });
+        }
+      });
     }
 
-    formData.serial = newSerials;
-    formData.serialNo = serialNumber;
-    this.setState({
-      selectedSerials: [serialNumber],
-      formData
-    });
-    this.serialRef.onCloseModal();
+    this.props.form.setFieldsValue({serialNo: value});
   }
 
-  onCancelAddSerial = (index = 1) => {
-    this.serialRef.onCloseModal();
-  }
-
-  handleUpdateSerial(serial, index) {
-
-  }
-
-  handleRemoveSerialNo(index) {
-
-  }
-
-  handleDeleteSerial(serial, index) {
-
-  }
-
-  validateSerialNo(value, callback) {
-    if (!value) {
-      callback(stringTranslate("error_serial_number_require", this.props.locale));
-    }
-    callback();
+  handleScanError = (err) => {
+    console.error(err);
   }
 
   handleChangePayDate = (date) => {
@@ -451,28 +458,13 @@ class FormItem extends React.Component {
     }
   }
 
-  handleDeleteSchedule(status) {
-    if (status === EnumINS.INSTALLMENT_STATUS.DRAFT) {
-      this.setState(preState => {
-        preState.formData.paymentSchedule = [];
-        return preState;
-      });
-    } else {
-      this.Util.sweetAlertConfirm("", stringTranslate("text_are_you_sure", this.props.locale))
-      .then(willDelete => {
-        if (willDelete) {
-          this.setState(preState => {
-            preState.formData.paymentSchedule = [];
-            preState.isChangeSchedule = true;
-            return preState;
-          });
-        }
-      });
-    }
-  }
-
   handleDelete(id) {
+    this.Util.sweetAlertConfirm("Warning", stringTranslate("text_are_you_sure", this.props.locale))
+    .then(willDelete => {
+      if (willDelete) {
 
+      }
+    });
   }
 
   handleOnSelectList = (product, productVariant, isRequestVariantForm = true) => {
@@ -522,14 +514,6 @@ class FormItem extends React.Component {
     setTimeout(() => {
         window.print();
     }, 600);
-  }
-
-  handleMarkReceived(id) {
-    InstallmentService.markAsReceived(id)
-    .then(() => {
-      message.success("Mark as received success");
-      this.fetchDetail(id);
-    });
   }
 
   handleGoBack = () => {
@@ -705,21 +689,22 @@ class FormItem extends React.Component {
                     name="paymentDate"
                     placeholder={`${stringTranslate("text_payment_date", locale)}`}
                     defaultValue={formData.paymentDate ? moment(formData.paymentDate) : null}
+                    disabled={disabledEdit}
                     onChange={this.handleChangePayDate}
                     form={form} />
                   
-                  <Input.Group style={{display: "flex"}}>
+                  <div style={{position: "relative"}}>
                     <InputNumber
                       name="rate"
+                      className="input-installment-rate"
                       placeholder={`${stringTranslate("text_rate", locale)}`}
                       data={formData.rate}
                       disabled={disabledEdit}
-                      style={{width: "80%"}}
                       isAutoSelect={true}
                       onChange={this.handleChangeRate}
                       form={form} />
-                    <Input value="%" style={{width: "20%", marginLeft: 10, marginTop: 3}} disabled={true} />
-                  </Input.Group>
+                    <div style={{position: "absolute", top: 9, right: 13}}>%</div>
+                  </div>
                 </Col>
               </Row>
             </Col>
@@ -788,25 +773,15 @@ class FormItem extends React.Component {
               <Button onClick={() => window.print()} style={{margin: "0 15px"}}>
                 <Translate id="text_print" />
               </Button>
-              <Dropdown 
-                overlay={(
-                  <Menu>
-                    <Menu.Item onClick={this.handlePrintInvoiceA5}><Translate id="text_print_invoice" /> A5</Menu.Item>
-                    <Menu.Item onClick={() => this.handleMarkReceived(this.id)}>
-                      <Translate id="text_mark_as_received" />
-                    </Menu.Item>
-                    <Menu.Item>
-                      <Link to="/installment/create" target="_blank"><Translate id="text_new_installment" /></Link>
-                    </Menu.Item>
-                    <Menu.Item style={{color: "red"}} onClick={() => this.handleDeleteSchedule(formData.status)}><Translate id="text_delete_schedule" /></Menu.Item>
-                    <Menu.Item style={{color: "red"}} onClick={() => this.handleDelete(this.id)}><Translate id="text_delete" /></Menu.Item>
-                  </Menu>
-                )}
-              >
-                <button className="ant-btn ant-dropdown-link" id="button-more-action" type="button">
-                  <Translate id="text_more_action" /> <Icon type="down" />
-                </button>
-              </Dropdown>
+              <Button onClick={this.handlePrintInvoiceA5}>
+                <Translate id="text_print" /> A5
+              </Button>
+              <Link to="/installment/create" target="_blank" type="button" className="ant-btn" style={{margin: "0 15px"}}>
+                <Translate id="text_new_installment" />
+              </Link>
+              <Button onClick={() => this.handleDelete(this.id)} type="danger">
+                <Translate id="text_delete" />
+              </Button>
             </Col>
           </Row>
         </Form>
@@ -815,16 +790,6 @@ class FormItem extends React.Component {
         <div id="wrap-invoice-form">
           <DownPaymentTable formData={formData} />
         </div>
-        <SerialForm 
-          ref={ref => this.serialRef = ref}
-          modalTitle={this.modalTitle}
-          locale={this.props.locale}
-          formData={this.state.serialFormData}
-          selectedSerials={this.state.selectedSerials}
-          onSuccess={this.handleSaveSerialNo}
-          onCanceled={this.onCancelAddSerial}
-          form={form} 
-        />
       </div>
       : 
       <div style={{width: 30, margin: "0 auto", paddingTop: 30}}>

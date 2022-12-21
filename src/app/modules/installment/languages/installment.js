@@ -38,5 +38,9 @@ export default {
   "text_delete_schedule": [
     "Delete schedule",
     "Delete schedule"
+  ],
+  "text_duration_type": [
+    "Duration Type",
+    "ប្រភេទរយៈពេល"
   ]
 };

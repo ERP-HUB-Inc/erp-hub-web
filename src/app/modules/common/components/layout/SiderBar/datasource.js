@@ -61,7 +61,7 @@ const Installment = Loadable({
 });
 
 const InstallmentDetail = Loadable({
-  loader: () => import("../../../../installment/components/installment/detail"),
+  loader: () => import("../../../../installment/components/installment/Detail"),
   loading: () => <StartUp />
 });
 
