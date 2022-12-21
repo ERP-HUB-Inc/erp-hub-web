@@ -23,6 +23,7 @@ class Installment extends Component {
     super(props);
     this.state = {
       data: [],
+      summaryData: {},
       pagination: {},
       current: 1,
       loading: false
@@ -30,7 +31,7 @@ class Installment extends Component {
     this.INSTALLMENT_STATUS_STR = {
       [Enum.INSTALLMENT_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#bfbfbf"},
       [Enum.INSTALLMENT_STATUS.RECEIVED]: { title: <this.Translate id="text_received" />, color: "#1890ff"},
-      [Enum.INSTALLMENT_STATUS.COMPLETED]: { title: <this.Translate id="text_completed" />, color: "#f50"},
+      [Enum.INSTALLMENT_STATUS.COMPLETED]: { title: <this.Translate id="text_completed" />, color: "#52c41a"},
     };
     this.columns = [
       {
@@ -151,6 +152,14 @@ class Installment extends Component {
     }
 
     this.fetchList();
+    this.fetchSummary();
+  }
+
+  fetchSummary() {
+    InstallmentService.summary()
+    .then(response => {
+      this.setState({summaryData: response.data.data});
+    });
   }
 
   fetchList(withPagination = false) {
@@ -256,14 +265,25 @@ class Installment extends Component {
 
   render() {
     const params = new URLSearchParams(document.location.search);
+    const {summaryData} = this.state;
+
     return (
       <React.Fragment>
         <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
           <Col span={8}>
             <Card>
               <Statistic
+                title={<this.Translate id="text_draft" />}
+                value={summaryData && summaryData.draft}
+                valueStyle={{color: "#817e7e"}}
+              />
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card>
+              <Statistic
                 title={<this.Translate id="text_received"/>}
-                value={0}
+                value={summaryData && summaryData.received}
                 valueStyle={{color: "#1890ff"}}
               />
             </Card>
@@ -272,8 +292,8 @@ class Installment extends Component {
             <Card>
               <Statistic 
                 title={<this.Translate id="text_complete" />}
-                value={0}
-                valueStyle={{color: "#f50"}}
+                value={summaryData && summaryData.completed}
+                valueStyle={{color: "#52c41a"}}
               />
             </Card>
           </Col>

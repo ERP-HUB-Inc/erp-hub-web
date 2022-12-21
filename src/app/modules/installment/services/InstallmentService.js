@@ -23,6 +23,14 @@ class InstallmentService extends BaseService {
     });
   }
 
+  summary() {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/v1/summary`,
+      headers: this.header
+    });
+  }
+
   generatePaymentSchedule(price, rate, numberOfMonth, paymentDate) {
     this.setHeader();
     return this.POST({
