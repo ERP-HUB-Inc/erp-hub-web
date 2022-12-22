@@ -1,7 +1,6 @@
 import React from "react";
 import moment from "moment";
 import {Translate} from "react-localize-redux";
-import {Result, Button} from "antd";
 import Util from "../../../common/util";
 import "../style.css";
 

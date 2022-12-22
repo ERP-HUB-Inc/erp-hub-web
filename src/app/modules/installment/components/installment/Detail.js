@@ -9,7 +9,9 @@ import {
   Spin,
   Dropdown,
   Menu,
-  Icon
+  Icon,
+  Result,
+  Button
 } from "antd";
 import Util from "../../../common/util";
 import EnumINS from "../../enum";
@@ -31,15 +33,37 @@ class DetailInstallment extends React.Component {
     [EnumINS.INSTALLMENT_STATUS.COMPLETED]: { title: stringTranslate("text_completed", this.props.locale), color: "#f50"},
   };
   util = new Util();
+  isRequestPrint = false;
 
   componentDidMount() {
     const id = this.props.match.params.id;
+    this.setState({loading: true});
     InstallmentService.detail(id)
     .then(response => {
-      this.setState({detail: response.data.data}, () => {
-        const action = new URLSearchParams(document.location.search).get("action");
+      this.setState({detail: response.data.data});
+    })
+    .finally(() => {
+      this.setState({loading: false}, () => {
+        const params = new URLSearchParams(document.location.search);
+        const action = params.get("action");
+        const pageSize = params.get("size");
         if (action === "print" && Object.keys(this.state.detail).length) {
-          window.print();
+          if (!this.state.loading) {
+            if (pageSize && pageSize === "A5") {
+              document.getElementById("invoice-content").classList.add("invoice-A5");
+              setTimeout(() => {
+                window.print();
+              }, 600);
+            } else {
+              setTimeout(() => {
+                window.print();
+              }, 600);
+            }
+          }
+          this.isRequestPrint = true;
+          params.delete("action");
+          params.delete("size");
+          this.util.pushParamsToURL(`/installment/detail/${id}`, params.toString());
         }
       });
     });
@@ -75,7 +99,13 @@ class DetailInstallment extends React.Component {
             paddingRight: 0,
             position: "relative"
           }}
-          onBack={() => history.goBack()}
+          onBack={() => {
+            if (this.isRequestPrint) {
+              history.push("/installment/list");
+            } else {
+              history.goBack();
+            }
+          }}
           title={<Translate id="text_installment" />}
           subTitle={detail.status && <Badge count={this.INSTALLMENT_STATUS_STR[detail.status].title} style={{background: this.INSTALLMENT_STATUS_STR[detail.status].color}} />}
           extra={[
@@ -103,7 +133,15 @@ class DetailInstallment extends React.Component {
               <Spin />
             </div>
           :
-            <DownPaymentTable formData={detail} />
+            Object.keys(detail).length ?
+              <DownPaymentTable formData={detail} />
+            :
+              <Result  
+                status={404}
+                title="404"
+                subTitle="Invoice not found"
+                extra={<Button type="primary" onClick={() => history.goBack()}><Translate id="text_back" /></Button>}
+              />
         }
 
         <PaymentForm

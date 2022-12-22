@@ -60,6 +60,11 @@ class Installment extends Component {
                 </this.Link>
               </Menu.Item>
               <Menu.Item>
+                <this.Link to={`/installment/detail/${record.id}?action=print&size=A5`}>
+                  <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" /> A5
+                </this.Link>
+              </Menu.Item>
+              <Menu.Item>
                 <this.Link to={`/installment/detail/${record.id}`}>
                   <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
                 </this.Link>
@@ -90,13 +95,13 @@ class Installment extends Component {
         dataIndex: "receiveDate",
         key: "receiveDate",
         width: 140,
-        render: receiveDate => this.Util.formatDate(receiveDate, "DD/MM/YYYY")
+        render: receiveDate => receiveDate && this.Util.formatDate(receiveDate, "DD/MM/YYYY")
       },
       {
         title: <this.Translate id="text_payment_date" />,
         dataIndex: "paymentDate",
         key: "paymentDate",
-        render: paymentDate => this.Util.formatDate(paymentDate, "DD/MM/YYYY")
+        render: paymentDate => paymentDate && this.Util.formatDate(paymentDate, "DD/MM/YYYY")
       },
       {
         title: <this.Translate id="text_duration" />,
@@ -149,7 +154,7 @@ class Installment extends Component {
       this.props.form.setFieldsValue({search: params.get("search")});
     }
 
-    this.fetchList();
+    this.fetchList(true);
     this.fetchSummary();
   }
 
@@ -175,7 +180,7 @@ class Installment extends Component {
     }
 
     if (params.get("search")) {
-      searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
+      searchKey = params.get("search");
     }
 
     offset = (offset - 1) * limit;

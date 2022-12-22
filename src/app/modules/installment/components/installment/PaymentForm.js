@@ -42,7 +42,7 @@ export default class PaymentForm extends React.PureComponent {
   }
 
   render() {
-    const {formData, form, locale} = this.props;
+    const {form, locale} = this.props;
     return (
       <Drawer
         title={<Translate id="text_payment" />}

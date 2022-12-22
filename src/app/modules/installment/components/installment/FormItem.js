@@ -697,6 +697,7 @@ class FormItem extends React.Component {
                     placeholder={`${stringTranslate("text_payment_date", locale)}`}
                     defaultValue={formData.paymentDate ? moment(formData.paymentDate) : null}
                     disabled={disabledEdit}
+                    required={form.getFieldValue("receiveDate") ? true : false}
                     onChange={this.handleChangePayDate}
                     form={form} />
                   
