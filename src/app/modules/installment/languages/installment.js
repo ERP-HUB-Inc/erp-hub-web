@@ -42,5 +42,10 @@ export default {
   "text_duration_type": [
     "Duration Type",
     "ប្រភេទរយៈពេល"
+  ],
+
+  "text_repayment": [
+    "Repayment",
+    "ការសងប្រាក់"
   ]
 };

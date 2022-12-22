@@ -34,7 +34,7 @@ export default function DownPaymentTable(props) {
   const {formData} = props;
   const product = formData.productVariant;
   return (
-    Object.keys(formData).length ?
+    Object.keys(formData).length &&
     <div id="invoice-content">
       <table className="table-invoice">
         <tbody>
@@ -107,12 +107,5 @@ export default function DownPaymentTable(props) {
         </tbody>
       </table>
     </div>
-    : 
-    <Result  
-      status={404}
-      title="404"
-      subTitle="Invoice not found"
-      extra={<Button type="info"><Translate id="text_back" /></Button>}
-    />
   );
 }
