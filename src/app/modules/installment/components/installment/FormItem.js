@@ -464,7 +464,7 @@ class FormItem extends React.Component {
       if (willDelete) {
         InstallmentService.delete(id)
         .then(() => {
-          message.success("One record has been deleted");
+          message.success("Installment has been deleted");
           history.goBack();
         })
         .catch(() => {
@@ -512,7 +512,7 @@ class FormItem extends React.Component {
     this.setState({formData}, () => {
       this.generatePaymentSchedule(productVariant.price, formData.rate, numberOfMonth, formData.paymentDate);
     });
-    this.props.form.setFieldsValue({searchProduct: ""});
+    this.props.form.setFieldsValue({searchProduct: "", serialNo: "", numberOfMonth: 0});
   }
 
   handlePrintInvoiceA5 = () => {

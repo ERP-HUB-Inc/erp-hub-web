@@ -134,7 +134,10 @@ class DetailInstallment extends React.Component {
             </div>
           :
             Object.keys(detail).length ?
-              <DownPaymentTable formData={detail} />
+              <DownPaymentTable 
+                formData={detail}
+                locale={this.props.locale}
+              />
             :
               <Result  
                 status={404}

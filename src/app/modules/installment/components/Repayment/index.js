@@ -1,5 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
+import moment from "moment";
 import {
   Form,
   Row,
@@ -61,11 +62,17 @@ class RepaymentList extends Component {
         dataIndex: "status",
         key: "status",
         width: 150,
-        render: (status) => {
+        render: (status, record) => {
           const statusValue = this.REPAYMENT_STATUS_STR[status];
-          const statusColor = statusValue.color;
-          const stepTitle = statusValue.title;
-          return <Tag color={statusColor} style={{width: 100, textAlign: "center"}}>{stepTitle}</Tag>;
+          let statusColor = statusValue.color;
+          let statusTitle = statusValue.title;
+          if (status === Enum.REPAYMENT_STATUS.PENDING && 
+            moment(record.date).format("YYYY-MM-DD") < moment().format("YYYY-MM-DD")
+          ) {
+            statusColor = "#f5222d";
+            statusTitle = <this.Translate id="text_overdue" />;
+          }
+          return <Tag color={statusColor} style={{width: 100, textAlign: "center"}}>{statusTitle}</Tag>;
         }
       },
       {

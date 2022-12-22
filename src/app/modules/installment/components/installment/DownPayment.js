@@ -2,6 +2,7 @@ import React from "react";
 import moment from "moment";
 import {Translate} from "react-localize-redux";
 import Util from "../../../common/util";
+import Enum from "../../enum";
 import "../style.css";
 
 const util = new Util();
@@ -28,6 +29,18 @@ export default function DownPaymentTable(props) {
     }
 
     return null;
+  }
+
+  function renderScheduleStatus(schedule) {
+    let ele = "";
+    if (schedule.status === Enum.REPAYMENT_STATUS.PENDING) {
+      if (moment(schedule.date).format("YYYY-MM-DD") < moment().format("YYYY-MM-DD")) {
+        ele = <span style={{color: "#f5222d"}}><Translate id="text_overdue" /></span>;
+      }
+    } else if (schedule.status === Enum.REPAYMENT_STATUS.PAID) {
+      ele = <span style={{color: "#52c41a"}}><Translate id="text_paid" /></span>;
+    }
+    return ele;
   }
 
   const {formData} = props;
@@ -78,7 +91,9 @@ export default function DownPaymentTable(props) {
                 <td>{displayDateWithMonthKH(schedule.date)}</td>
                 <td style={{textAlign: "center"}}>{util.formatCurrency(Number(schedule.payAmount), "")}</td>
                 <td style={{textAlign: "center"}}>{util.formatCurrency(Number(schedule.balance), "")}</td>
-                <td></td>
+                <td>
+                  {renderScheduleStatus(schedule)}
+                </td>
               </tr>
             )
             : null
