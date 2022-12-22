@@ -63,6 +63,7 @@ export class Select extends Element {
               filterOption={this.props.filterOption}
               optionFilterProp={this.props.optionFilterProp}
               onChange={this.props.onChange}
+              mode={this.props.mode}
               onFocus={this.props.handleOnFocus}
               disabled={this.props.disabled}
               style={{ width: "100%" }}>

@@ -92,3 +92,55 @@ export function updateFeaturedProducts(data) {
     data,
   });
 }
+
+// Menu Items Builder
+
+export function getMenuItems(){
+  return axios({
+    method: "GET",
+    headers,
+    url: `${url}/menu_items`,
+  });
+}
+
+export function getMenuItemsById(id){
+  return axios({
+    method: "GET",
+    headers,
+    url: `${url}/menu_items/${id}`,
+  });
+}
+
+export function createMenuItem(data) {
+  return axios({
+    method: "POST",
+    headers,
+    url: `${url}/menu_items`,
+    data,
+  });
+}
+
+export function updateMenuItem(id,data) {
+  return axios({
+    method: "PUT",
+    headers,
+    url: `${url}/menu_items/${id}`,
+    data,
+  });
+}
+
+export function achiveMenuItem(id){
+  return axios({
+    method: "DELETE",
+    headers,
+    url: `${url}/menu_items/${id}`,
+  });
+}
+
+export function getChildMenuItems(){
+  return axios({
+    method: "GET",
+    headers,
+    url: `${url}/menu_items/sub_menu_items`,
+  });
+}

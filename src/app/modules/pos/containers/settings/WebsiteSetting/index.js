@@ -27,6 +27,12 @@ import {
   achiveBannerSetting,
   getFeaturedProducts,
   updateFeaturedProducts,
+  getMenuItems,
+  getChildMenuItems,
+  getMenuItemsById,
+  createMenuItem,
+  updateMenuItem,
+  achiveMenuItem,
 } from "./service";
 import history from "../../../../common/router/history";
 import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
@@ -64,6 +70,25 @@ const WebsiteSetting = (props) => {
   const [loadingButtonFeaturedProduct, setLoadingButtonFeaturedProduct] =
     useState(false);
 
+
+  // Menu Item State
+  const [menuItemId, setMenuItemId] = useState(undefined);
+  const [loadingButtonMenuItem,setLoadingButtonMenuItem] = useState(false);
+  const [loadingFormUpdateMenuItem,setLoadingFormUpdateMenuItem] = useState(false);
+  const [urlMenuItem,setUrlMenuItem] = useState("");
+  const [routeMenuItem,setRouteMenuItem] = useState("");
+  const [targetMenuItem,setTagetMenuItem] = useState("");
+  const [orderMenuItem,setOrderMenuItem] = useState(undefined);
+  const [chilsMenuItem,setChilsMenuItem] = useState([]);
+  const [linkType,setLinkType] = useState("");
+  const [menuItemTitle,setMenuItemTitle] = useState("");
+  const [visibleFormMenuItems, setVisibleFormMenuItems] = useState(false);
+  const [visibleMenuItemsTable, setVisibleMenuItemsTable] = useState(true); 
+  const [menuItemList,setMenuItemList] = useState([]);
+  const [subMenuItems,setSubMenuItems] = useState([]);
+  const [loadingMenuItemList,setLoadingMenuItemList] = useState(false);
+  
+
   // SEO State
   const [metaTitle, setMetaTitle] = useState("");
   const [metaTagDescription, setMetaTagDescription] = useState("");
@@ -79,9 +104,9 @@ const WebsiteSetting = (props) => {
   const [loadingButtonSocialMedia, setLoadingButtonSocialMedia] = useState(false);
 
   const { TabPane } = Tabs;
-  const queryParam = new URLSearchParams(document.location.search);
+  const { getFieldDecorator } = props.form;
   const util = new Util();
-  const pathName = "/settings/website-setting";
+  
 
   // General Function
   const fetchGeneral = () => {
@@ -404,6 +429,117 @@ const WebsiteSetting = (props) => {
     });
   };
 
+  // Menu Items Builder
+
+  const fetchMenuItems = () => {
+    setLoadingMenuItemList(true);
+    getMenuItems().then(response =>{
+      if(response && response.data.data){
+        setMenuItemList(response.data.data);
+      }
+    }).then(() => setLoadingMenuItemList(false));
+  };
+
+  const onShowFormMenuItem = (id) => {
+    getChildMenuItems().then(response => {
+      if(response && response.data.data){
+        setSubMenuItems(response.data.data.map(value =>(
+          {
+            value: value.id,
+            name: value.title,
+          }
+        )));
+      }
+    });
+
+    if(id){
+      setMenuItemId(id);
+      setLoadingFormUpdateMenuItem(true);
+      getMenuItemsById(id).then(response =>{
+        if (response.data && response.data.data) {
+          const data = response.data.data;
+          setMenuItemTitle(data.title);
+          setChilsMenuItem(data.childs.map(value => value.id));
+          setOrderMenuItem(data.order);
+          setTagetMenuItem(data.target);
+          setRouteMenuItem(data.route);
+          setUrlMenuItem(data.url);
+          if(data.url) setLinkType("static_url");
+          if(data.route) setLinkType("dynamic_route");
+        }
+      }).finally(() => setLoadingFormUpdateMenuItem(false));
+    }
+    setVisibleFormMenuItems(true);
+    setVisibleMenuItemsTable(false);
+  };
+
+  const onChangeLinkType = (value) =>{
+    setLinkType(value);
+  };
+
+  const onBackToMenuItemTable = () => {
+    props.form.resetFields();
+    setMenuItemTitle("");
+    setChilsMenuItem([]);
+    setOrderMenuItem(undefined);
+    setTagetMenuItem("");
+    setRouteMenuItem("");
+    setUrlMenuItem("");
+    fetchMenuItems();
+    setLinkType("");
+    setVisibleFormMenuItems(false);
+    setVisibleMenuItemsTable(true);
+    setLoadingFormUpdateMenuItem(false);
+    setLoadingButtonMenuItem(false);
+    setMenuItemId(undefined);
+  };
+  const onDeleteMenuItem = (id) => {
+    util
+    .sweetAlertConfirm(CATranslate("text_confirm_delete", props.locale))
+    .then((willDelete) => {
+      if (willDelete) {
+        achiveMenuItem(id).then(() => {
+          fetchMenuItems();
+        });
+      }
+    });
+  };
+
+  const onMenuItemSubmit = (e) => {
+    e.preventDefault();
+    props.form.validateFieldsAndScroll((err, values) => {  
+      if (!err) {
+        setLoadingButtonMenuItem(true);
+        let newValues ={
+          title: values["title"],
+          target: values["target"],
+          order: values["order"],
+          childs: values["childs"],
+          url: "",
+          route: "",
+        };
+        if(linkType === "static_url"){
+          newValues["url"] = values["url"];      
+        }else{
+          newValues["route"] = values["route"];
+        }
+        if(menuItemId){
+          updateMenuItem(menuItemId,newValues).then(() => {
+            onBackToMenuItemTable();
+          }).finally(() => setLoadingButtonMenuItem(false));
+        }else{
+          createMenuItem(newValues).then(() => {
+            onBackToMenuItemTable();
+          }).finally(() => setLoadingButtonMenuItem(false));
+        }    
+      }
+    });
+  };
+
+
+
+  
+
   // featured Products Function
   const onFeaturedProductSubmit = (e) => {
     e.preventDefault();
@@ -646,15 +782,18 @@ const WebsiteSetting = (props) => {
   // useEffect
   useEffect(() => {
     fetchGeneral();
-    fetchBanner();
-    fetchFeaturedProducts();
     // eslint-disable-next-line
   }, []);
 
   //
   const onChangeTab = (key) => {
-    queryParam.set("tabKey", key);
-    util.pushParamsToURL(pathName, queryParam.toString());
+    if(key === "banner"){
+      fetchBanner();
+    }else if(key === "featured_products"){
+      fetchFeaturedProducts();
+    }else if(key === "menu_builder"){
+      fetchMenuItems();
+    }
   };
 
   const getImageFromUpload = (value, key = "image") => {
@@ -756,11 +895,9 @@ const WebsiteSetting = (props) => {
             <Tabs
               type="card"
               onChange={onChangeTab}
-              defaultActiveKey={
-                queryParam.has("tabKey") ? queryParam.get("tabKey") : "1"
-              }
+              defaultActiveKey={"general"}
             >
-              <TabPane tab={<Translate id="text_general" />} key="1">
+              <TabPane tab={<Translate id="text_general" />} key="general">
                 <Row>
                   <Col lg="4" md="4">
                     <Form onSubmit={onGeneralSubmit}>
@@ -952,7 +1089,7 @@ const WebsiteSetting = (props) => {
                    </Col>
                 </Row>
               </TabPane>
-              <TabPane tab={<Translate id="text_banner" />} key="2">
+              <TabPane tab={<Translate id="text_banner" />} key="banner">
                 <Row>
                   <Col lg="12" md="12">
                     <Form onSubmit={onBannerSubmit}>
@@ -1262,7 +1399,7 @@ const WebsiteSetting = (props) => {
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab={<Translate id="text_featured_products" />} key="3">
+              <TabPane tab={"Featured Products"} key="featured_products">
                 <Row>
                   <Col lg="4" md="4">
                     <Form onSubmit={onFeaturedProductSubmit}>
@@ -1295,7 +1432,242 @@ const WebsiteSetting = (props) => {
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab={"SEO"} key="4">
+              <TabPane tab={"Menu Builder"} key="menu_builder">
+                <Row>
+                  <Col lg="12" md="12">
+                    <Form onSubmit={onMenuItemSubmit}>
+                    {visibleMenuItemsTable && (
+                        <React.Fragment>
+                          <Button
+                            type="info"
+                            id="btnAdd"
+                            className="ant-btn info mg-right text-uppercase"
+                            onClick={() => onShowFormMenuItem()}
+                          >
+                            <span className="icon-add icon-padding-right"></span>
+                            {<Translate id="text_add_new" />}
+                          </Button>
+
+                          {
+                            loadingMenuItemList ? 
+                            
+                           <div className="spinning-menu-item-list">
+                             <Spin spinning={loadingMenuItemList} /> 
+                           </div>
+                            : 
+                           <React.Fragment>
+                             {
+                              Array.isArray(menuItemList)  && menuItemList.map((menuItem,index) => {
+                                return (
+                                  <div key={index}> 
+                                    <div className="menu-item-list">        
+                                        <span style={{marginLeft: 25}}>{menuItem.title}</span>
+                                        <div className="menu-btn">
+                                          <Icon
+                                            type="edit"
+                                            style={{
+                                                marginRight: 8,
+                                                cursor: "pointer",
+                                            }}
+                                            onClick={() => onShowFormMenuItem(menuItem.id)}
+                                            />
+                                            <Icon
+                                              type="delete"
+                                              style={{
+                                                cursor: "pointer",
+                                                color: "red",
+                                              }}
+                                              onClick={() => onDeleteMenuItem(menuItem.id)}
+                                            />
+                                        </div>
+                                    </div>
+                                    {
+                                      menuItem.childs.map((child,index) => {
+                                        return (
+                                          <div style={{marginLeft: 25}} key={index}>
+                                          <div className="menu-item-list">
+                                            <span style={{marginLeft: 25}}>{child.title}</span>
+                                                <div className="menu-btn">
+                                                  <Icon
+                                                    type="edit"
+                                                    style={{
+                                                        marginRight: 8,
+                                                        cursor: "pointer",
+                                                    }}
+                                                    onClick={() => onShowFormMenuItem(child.id)}
+                                                    />
+                                                    <Icon
+                                                      type="delete"
+                                                      style={{
+                                                        cursor: "pointer",
+                                                        color: "red",
+                                                      }}
+                                                      onClick={() => onDeleteMenuItem(child.id)}
+                                                    />
+                                                </div>  
+                                            </div>
+                                          </div>
+                                        );
+                                      })
+                                    }
+                                
+                                  </div>
+                                );
+                              })
+                            }
+                           </React.Fragment>
+                          }                       
+                        </React.Fragment>
+                      )}
+
+                      {
+                        visibleFormMenuItems && (
+                          <React.Fragment>
+                          <PageHeader
+                            style={{
+                              padding: "0px 0px 15px 0px",
+                            }}
+                            onBack={onBackToMenuItemTable}
+                            title={
+                              menuItemId ? (
+                                "Edit Menu Item"
+                              ) : (
+                                "New Menu Item"
+                              )
+                            }
+                            subTitle=""
+                          />
+
+                          {
+                            loadingFormUpdateMenuItem ? 
+                            <div className="spinning-menu-item-list">
+                            <Spin spinning={loadingFormUpdateMenuItem} /> 
+                          </div> :
+                          <React.Fragment>
+                          <InputText
+                            data={menuItemTitle}
+                            style={{ width: 300 }}
+                            name="title"
+                            label={"Title of the Menu Item"}
+                            required={true}
+                            placeholder="Title of the Menu Item"
+                            form={props.form}
+                          />
+                          <Select
+                            label="Link Type"
+                            form={props.form}
+                            defaultValue={linkType}
+                            required={true}
+                            name="linkType"
+                            onChange={onChangeLinkType}
+                            placeholder={"Select link type"}
+                            dataSource={[
+                              {
+                                value: "static_url",
+                                name: "Static URL",
+                              },
+                              {
+                                value: "dynamic_route",
+                                name: "Dynamic Route"
+                              },
+                            ]}
+                            style={{maxWidth: 300}}
+                          />
+                          {
+                            linkType === "static_url" ?  <InputText
+                            data={urlMenuItem}
+                            style={{ width: 300 }}
+                            name="url"
+                            label={"URL for the Menu Item"}
+                            required={true}
+                            placeholder="URL for the Menu Item"
+                            form={props.form}
+                          /> 
+                          : linkType === "dynamic_route" ?   
+                          <Select
+                          label="Route"
+                          form={props.form}
+                          defaultValue={routeMenuItem}
+                          required={true}
+                          name="route"
+                          placeholder={"Select route"}
+                          dataSource={[
+                            {
+                              value: "/",
+                              name: "Home",
+                            },
+                            {
+                              value: "/products",
+                              name: "Shop"
+                            },
+                            {
+                              value: "/contact",
+                              name: "Contact"
+                            },
+                          ]}
+                          style={{maxWidth: 300}}
+                         />
+                          :
+                          ""
+                          }
+                         
+                          <Select
+                            label="Open In"
+                            form={props.form}
+                            defaultValue={targetMenuItem}
+                            required={true}
+                            name="target"
+                            placeholder={"Select open in"}
+                            dataSource={[
+                              {
+                                value: "_self",
+                                name: "Same Tab/Window",
+                              },
+                              {
+                                value: "_blank",
+                                name: "New Tab/Window"
+                              },
+                            ]}
+                            style={{maxWidth: 300}}
+                          />
+                          <Form.Item label="Order"   style={{maxWidth: 300}}>
+                          {getFieldDecorator("order", { 
+                            rules: [{ required: true, message: "Field required" }],
+                            initialValue: orderMenuItem
+                          })(
+                          <InputNumber type={"number"} placeholder="Order"/>)}
+                          </Form.Item>
+                          <Select
+                            label="Sub Menu Item"
+                            form={props.form}
+                            defaultValue={chilsMenuItem}
+                            name="childs"
+                            mode="multiple"
+                            placeholder={"Sub Menu Item"}
+                            dataSource={subMenuItems}
+                            style={{maxWidth: 300}}
+                          />
+                           <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="ant-btn info undefined"
+                        loading={loadingButtonMenuItem}
+                        style={{ marginTop: 15 }}
+                      >
+                        <span className="icon-save icon-padding-right"></span>
+                        {<Translate id="text_save" />}
+                      </Button>
+                          </React.Fragment>
+                          }
+                        
+                          </React.Fragment>)       
+                      }
+                     
+                    </Form>
+                  </Col>
+                </Row>
+              </TabPane>
+              <TabPane tab={"SEO"} key="seo">
                 <Row>
                   <Col lg="4" md="4">
                     <Form onSubmit={onSeoSubmit}>
@@ -1343,7 +1715,7 @@ const WebsiteSetting = (props) => {
                   </Col>
                 </Row>
               </TabPane>
-              <TabPane tab={"Social Media"} key="5">
+              <TabPane tab={"Social Media"} key="social_media">
                 <Row>
                   <Col lg="4" md="4">
                     <Form onSubmit={onSocialMediaSubmit}>
@@ -1391,7 +1763,7 @@ const WebsiteSetting = (props) => {
                     </Form>
                   </Col>
                 </Row>
-              </TabPane>
+              </TabPane>       
             </Tabs>
           </Col>
         </Row>
