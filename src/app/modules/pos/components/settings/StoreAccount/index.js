@@ -1,7 +1,4 @@
 import React from "react";
-import {
-  isMobile
-} from "react-device-detect";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import {message} from "antd";
@@ -21,8 +18,6 @@ import ProductService from "../../../../inventory/services/products/ProductServi
 import TransactionService from "../../../services/transactions/TransactionService";
 import {modules} from "../../../../common/components/layout/Module";
 import "./index.css";
-
-const currentPath = window.location.pathname;
 
 export default class StoreAccountList extends Component {
   constructor(props) {
@@ -405,31 +400,6 @@ export default class StoreAccountList extends Component {
     }
 
     return <div style={{width: "100%"}}>
-        {
-          isMobile ?
-            this.renderMiniBreadCrumb()
-            :
-            <div className="breadcrumb">
-              <ul className="list-unstyled">
-                <li>
-                  <this.Link to="/"><span className="icon-home"></span></this.Link>
-                </li>
-                <li className="fast-nav text-uppercase">
-                  <this.Link to="/">{this.module}</this.Link>
-                </li>
-                {
-                  menuSource["settings"]["subItems"].map((value, index) =>
-                    "isFashNav" in value && value["isFashNav"] ?
-                      <li className={(currentPath===value["route"] ? "active" : "") + " fast-nav"} key={index}>
-                        <this.Link to={value["route"]}>{value["title"]}</this.Link>
-                      </li>
-                      :
-                      ""
-                  )
-                }
-              </ul>
-            </div>
-        }
         {
           this.Util.isCheckingPermission(this.props) || storeAccount.fetching ?
             <StartUp />

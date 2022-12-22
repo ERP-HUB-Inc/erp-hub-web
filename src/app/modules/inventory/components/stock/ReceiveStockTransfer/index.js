@@ -19,7 +19,7 @@ export default class Lists extends List {
     this.columns = [
       this.columnCreatedAt,
       {
-        title: <this.Translate id="text_no" />,
+        title: <this.Translate id="text_number_of" />,
         dataIndex: "number",
         key: "number",
         sorter: true

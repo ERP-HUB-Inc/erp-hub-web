@@ -3,5 +3,9 @@ export default {
     DRAFT: "DRAFT",
     RECEIVED: "RECEIVED",
     COMPLETED: "COMPLETED"
+  },
+  REPAYMENT_STATUS: {
+    PENDING: "PENDING",
+    PAID: "PAID"
   }
 };

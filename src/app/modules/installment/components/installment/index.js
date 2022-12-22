@@ -11,7 +11,8 @@ import {
   Menu,
   Dropdown,
   Card,
-  Statistic
+  Statistic,
+  message
 } from "antd";
 import InstallmentService from "../../services/InstallmentService";
 import history from "../../../common/router/history";
@@ -23,6 +24,7 @@ class Installment extends Component {
     super(props);
     this.state = {
       data: [],
+      summaryData: {},
       pagination: {},
       current: 1,
       loading: false
@@ -58,6 +60,11 @@ class Installment extends Component {
                 </this.Link>
               </Menu.Item>
               <Menu.Item>
+                <this.Link to={`/installment/detail/${record.id}?action=print&size=A5`}>
+                  <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" /> A5
+                </this.Link>
+              </Menu.Item>
+              <Menu.Item>
                 <this.Link to={`/installment/detail/${record.id}`}>
                   <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
                 </this.Link>
@@ -67,10 +74,7 @@ class Installment extends Component {
                   <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
                 </this.Link>
               </Menu.Item>
-              <Menu.Item onClick={() => this.handleMarkReceived(this.id)}>
-                <Icon type="retweet" style={{marginRight: 10}} /> <this.Translate id="text_mark_as_received" />
-              </Menu.Item>
-              <Menu.Item onClick={() => this.handleDelete(record.id)} style={{color: "red"}}>
+              <Menu.Item onClick={() => this.handleDelete(record.id)}>
                 <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
               </Menu.Item>
             </Menu>
@@ -91,13 +95,13 @@ class Installment extends Component {
         dataIndex: "receiveDate",
         key: "receiveDate",
         width: 140,
-        render: receiveDate => this.Util.formatDate(receiveDate, "DD/MM/YYYY")
+        render: receiveDate => receiveDate && this.Util.formatDate(receiveDate, "DD/MM/YYYY")
       },
       {
         title: <this.Translate id="text_payment_date" />,
         dataIndex: "paymentDate",
         key: "paymentDate",
-        render: paymentDate => this.Util.formatDate(paymentDate, "DD/MM/YYYY")
+        render: paymentDate => paymentDate && this.Util.formatDate(paymentDate, "DD/MM/YYYY")
       },
       {
         title: <this.Translate id="text_duration" />,
@@ -150,7 +154,15 @@ class Installment extends Component {
       this.props.form.setFieldsValue({search: params.get("search")});
     }
 
-    this.fetchList();
+    this.fetchList(true);
+    this.fetchSummary();
+  }
+
+  fetchSummary() {
+    InstallmentService.summary()
+    .then(response => {
+      this.setState({summaryData: response.data.data});
+    });
   }
 
   fetchList(withPagination = false) {
@@ -168,7 +180,7 @@ class Installment extends Component {
     }
 
     if (params.get("search")) {
-      searchKey = JSON.stringify({column: this.columnFilterWithKey, value: params.get("search")});
+      searchKey = params.get("search");
     }
 
     offset = (offset - 1) * limit;
@@ -190,12 +202,21 @@ class Installment extends Component {
     .finally(() => this.setState({loading: false}));
   }
 
-  handleMarkReceived(id) {
-
-  }
-
   handleDelete(id) {
-
+    this.Util.sweetAlertConfirm("", this.CATranslate("text_are_you_sure", this.props.locale))
+    .then(willDelete => {
+      if (willDelete) {
+        InstallmentService.delete(id)
+        .then(() => {
+          this.fetchList();
+          this.fetchSummary();
+          message.success("One record has been deleted");
+        })
+        .catch(() => {
+          message.error("Something went wrong");
+        });
+      }
+    });
   }
 
   handleSearch = (e) => {
@@ -256,14 +277,25 @@ class Installment extends Component {
 
   render() {
     const params = new URLSearchParams(document.location.search);
+    const {summaryData} = this.state;
+
     return (
       <React.Fragment>
         <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
           <Col span={8}>
             <Card>
               <Statistic
+                title={<this.Translate id="text_draft" />}
+                value={summaryData && summaryData.draft}
+                valueStyle={{color: "#817e7e"}}
+              />
+            </Card>
+          </Col>
+          <Col span={8}>
+            <Card>
+              <Statistic
                 title={<this.Translate id="text_received"/>}
-                value={0}
+                value={summaryData && summaryData.received}
                 valueStyle={{color: "#1890ff"}}
               />
             </Card>
@@ -272,7 +304,7 @@ class Installment extends Component {
             <Card>
               <Statistic 
                 title={<this.Translate id="text_complete" />}
-                value={0}
+                value={summaryData && summaryData.completed}
                 valueStyle={{color: "#f50"}}
               />
             </Card>

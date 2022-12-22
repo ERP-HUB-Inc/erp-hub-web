@@ -70,6 +70,11 @@ const InstallmentForm = Loadable({
   loading: () => <StartUp />
 });
 
+const Repayment = Loadable({
+  loader: () => import("../../../../installment/components/Repayment"),
+  loading: () => <StartUp />
+});
+
 // PRODUCT
 const ManageProduct = Loadable({
   loader: () => import("../../../../inventory/containers/products/Product"),
@@ -402,6 +407,13 @@ const dataSource = {
         route: "/installment/update/:id",
         component: InstallmentForm,
         isFashNav: false
+      },
+      {
+        title: <Translate id="text_repayment" />,
+        icon: "icon-dollar",
+        route: "/installment/repayment/list",
+        component: Repayment,
+        isFashNav: true
       }
     ]
   },

@@ -57,7 +57,7 @@ class FormItem extends React.Component {
   Util = new Util();
   productColumns = [
     {
-      title: <Translate id="text_no" />,
+      title: <Translate id="text_number_of" />,
       dataIndex: "no",
       key: "no",
       render: (no, record, index) => index + 1
@@ -145,7 +145,7 @@ class FormItem extends React.Component {
   INSTALLMENT_STATUS_STR = {
     [EnumINS.INSTALLMENT_STATUS.DRAFT]: { title: stringTranslate("text_draft", this.props.locale), color: "#bfbfbf"},
     [EnumINS.INSTALLMENT_STATUS.RECEIVED]: { title: stringTranslate("text_received", this.props.locale), color: "#1890ff"},
-    [EnumINS.INSTALLMENT_STATUS.COMPLETED]: { title: stringTranslate("text_completed", this.props.locale), color: "#f50"},
+    [EnumINS.INSTALLMENT_STATUS.COMPLETED]: { title: stringTranslate("text_completed", this.props.locale), color: "#52c41a"},
   };
   id = "";
   pageTitle = "text_create_installment";
@@ -462,7 +462,14 @@ class FormItem extends React.Component {
     this.Util.sweetAlertConfirm("Warning", stringTranslate("text_are_you_sure", this.props.locale))
     .then(willDelete => {
       if (willDelete) {
-
+        InstallmentService.delete(id)
+        .then(() => {
+          message.success("Installment has been deleted");
+          history.goBack();
+        })
+        .catch(() => {
+          message.error("Something went wrong");
+        });
       }
     });
   }
@@ -505,7 +512,7 @@ class FormItem extends React.Component {
     this.setState({formData}, () => {
       this.generatePaymentSchedule(productVariant.price, formData.rate, numberOfMonth, formData.paymentDate);
     });
-    this.props.form.setFieldsValue({searchProduct: ""});
+    this.props.form.setFieldsValue({searchProduct: "", serialNo: "", numberOfMonth: 0});
   }
 
   handlePrintInvoiceA5 = () => {
@@ -690,6 +697,7 @@ class FormItem extends React.Component {
                     placeholder={`${stringTranslate("text_payment_date", locale)}`}
                     defaultValue={formData.paymentDate ? moment(formData.paymentDate) : null}
                     disabled={disabledEdit}
+                    required={form.getFieldValue("receiveDate") ? true : false}
                     onChange={this.handleChangePayDate}
                     form={form} />
                   

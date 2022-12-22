@@ -87,7 +87,7 @@ export default class OpenSaleRegistrationList extends List {
     ];
     this.productColumns = [
       {
-        title: <this.Translate id="text_no" />,
+        title: <this.Translate id="text_number_of" />,
         dataIndex: "index",
         key: "index",
         render: (id,record,index) => index + 1

@@ -56,7 +56,7 @@ class FormItem extends React.PureComponent {
   }
   entryColumn = [
     {
-      title: <Translate id="text_no" />,
+      title: <Translate id="text_number_of" />,
       dataIndex: "id",
       key: "id",
       render: (id, record, index) => {

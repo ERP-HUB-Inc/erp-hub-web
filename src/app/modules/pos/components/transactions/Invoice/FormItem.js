@@ -101,7 +101,7 @@ class NewInvoice extends React.PureComponent {
     modalTitle = "";
     entryColumn = [
         {
-            title: <Translate id="text_no" />,
+            title: <Translate id="text_number_of" />,
             dataIndex: "no",
             key: "no",
             width: 80,

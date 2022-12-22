@@ -62,7 +62,7 @@ export default function Detail(props) {
                 dataSource={records}
                 columns={[
                     {
-                        title: <Translate id="text_no" />,
+                        title: <Translate id="text_number_of" />,
                         dataIndex: "no",
                         key: "no",
                         render: (no, record, index) => index + 1
