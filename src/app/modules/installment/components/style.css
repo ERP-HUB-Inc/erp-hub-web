@@ -11,3 +11,7 @@
 .input-installment-rate .ant-input-number-handler-wrap {
   display: none;
 }
+
+.drawer-payment-history .ant-drawer-body {
+  padding-top: 5px;
+}

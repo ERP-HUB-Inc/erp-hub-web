@@ -206,6 +206,38 @@ export default [
     ]
   },
   {
+    name: "Installment",
+    nameKH: "បង់រំលស់",
+    code: "installment",
+    permissions: [
+      {
+        name: "Create New",
+        nameKH: "បង្កើតថ្មី",
+        code: "add"
+      },
+      {
+        name: "Edit",
+        nameKH: "កែប្រែ",
+        code: "edit"
+      },
+      {
+        name: "Delete",
+        nameKH: "លុប",
+        code: "delete"
+      },
+      {
+        name: "View",
+        nameKH: "មើល",
+        code: "view"
+      },
+      {
+        name: "Pay",
+        nameKH: "បង់ប្រាក់",
+        code: "pay"
+      }
+    ]
+  },
+  {
     name: "Income & Expense",
     nameKH: "ចំណូល & ចំណាយ",
     code: "income_expense",

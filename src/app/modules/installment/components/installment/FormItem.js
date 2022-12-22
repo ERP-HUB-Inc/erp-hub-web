@@ -29,6 +29,7 @@ import {
 import CustomerService from "../../../crm/services/customers/CustomerService";
 import InstallmentService from "../../services/InstallmentService";
 import SerialService from "../../../pos/services/transactions/SerialService";
+import PrivilegeService from "../../../pos/services/settings/PrivilegeService";
 import CustomerAction from "../../../crm/actions/customers/customer";
 import ProductVariantAction from "../../../inventory/actions/products/productVariant";
 import CustomerConstant from "../../../crm/constants/customers/customer";
@@ -52,7 +53,8 @@ class FormItem extends React.Component {
     loading: false,
     loadingSubmit: false,
     fetchingCustomer: false,
-    isChangeSchedule: false
+    isChangeSchedule: false,
+    isCanDelete: false
   }
   Util = new Util();
   productColumns = [
@@ -151,6 +153,7 @@ class FormItem extends React.Component {
   pageTitle = "text_create_installment";
   modalTitle = "";
   textRequiredCustomer = "";
+  permissionModuleCode = "installment";
   timer = null;
 
   componentDidMount() {
@@ -169,6 +172,7 @@ class FormItem extends React.Component {
         this.setState({customers: response.data.data});
       }
     });
+    this.checkDeletePermission();
   }
 
   componentDidUpdate() {
@@ -195,6 +199,11 @@ class FormItem extends React.Component {
       }
       this.props.dispatch(ProductVariantAction.reset("RESET_PRODUCT_VARIANT"));
     }
+  }
+
+  checkDeletePermission() {
+    PrivilegeService.checkPermission(this.permissionModuleCode, "delete")
+    .then(({data}) => this.setState({isCanDelete: data}));
   }
 
   getDefaultData() {
@@ -787,9 +796,11 @@ class FormItem extends React.Component {
               <Link to="/installment/create" target="_blank" type="button" className="ant-btn" style={{margin: "0 15px"}}>
                 <Translate id="text_new_installment" />
               </Link>
-              <Button onClick={() => this.handleDelete(this.id)} type="danger">
-                <Translate id="text_delete" />
-              </Button>
+              {this.state.isCanDelete &&
+                <Button onClick={() => this.handleDelete(this.id)} type="danger">
+                  <Translate id="text_delete" />
+                </Button>
+              }
             </Col>
           </Row>
         </Form>

@@ -1,14 +1,20 @@
 import React from "react";
+import {Translate} from "react-localize-redux";
 import {
   Drawer,
-  Button
+  Button,
+  Table,
+  Icon
 } from "antd";
-import { Translate } from "react-localize-redux";
 import Util from "../../../common/util";
 
 export default class PaymentHistory extends React.PureComponent {
   state = {
     visible: false
+  }
+
+  handleEditPayment(id) {
+
   }
 
   onShowDrawer = () => {
@@ -25,32 +31,38 @@ export default class PaymentHistory extends React.PureComponent {
         title="Payment history"
         width={600}
         visible={this.state.visible}
+        className="drawer-payment-history"
         onClose={this.onCloseDrawer}
       >
-        <table border="1" style={{width: "100%", borderCollapse: "collapse", marginTop: -10}}>
-          <thead>
-            <tr>
-              <th><Translate id="text_payment_date" /></th>
-              <th><Translate id="text_amount" /></th>
-              <th><Translate id="text_action" /></th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table 
+          rowKey="id"
+          columns={[
             {
-              this.props.data.length && this.props.data.map((payment, index) => 
-                <tr>
-                  <td>{Util.prototype.formatDate(payment.paidDate)}</td>
-                  <td>{Util.prototype.formatCurrency(payment.paidAmount)}</td>
-                  <td>
-                    <Button>
-                      <Translate id="text_edit" />
-                    </Button>
-                  </td>
-                </tr>
-              )
+              title: <Translate id="text_payment_date" />,
+              dataIndex: "paidDate",
+              key: "paidDate",
+              render: (paidDate) => Util.prototype.formatDate(paidDate)
+            },
+            {
+              title: <Translate id="text_amount" />,
+              dataIndex: "amount",
+              key: "amount",
+              render: (amount) => Util.prototype.formatCurrency(amount)
+            },
+            {
+              title: <Translate id="text_action" />,
+              dataIndex: "id",
+              key: "id",
+              render: (id) => {
+                return <Button onClick={() => this.handleEditPayment(id)}>
+                  <Icon type="edit" /> <Translate id="text_edit" />
+                </Button>;
+              }
             }
-          </tbody>
-        </table>
+          ]}
+          dataSource={this.props.data}
+          loading={this.props.loading}
+        />
       </Drawer>
     );
   }

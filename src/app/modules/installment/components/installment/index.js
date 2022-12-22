@@ -15,8 +15,10 @@ import {
   message
 } from "antd";
 import InstallmentService from "../../services/InstallmentService";
+import PrivilegeService from "../../../pos/services/settings/PrivilegeService";
 import history from "../../../common/router/history";
 import Component from "../../../common/components/Component";
+import NoPermissionV2 from "../../../common/components/shares/List/NoPermissionV2";
 import Enum from "../../enum";
 
 class Installment extends Component {
@@ -27,7 +29,9 @@ class Installment extends Component {
       summaryData: {},
       pagination: {},
       current: 1,
-      loading: false
+      loading: false,
+      isHasAccessPermission: null,
+      isCanDelete: false
     };
     this.INSTALLMENT_STATUS_STR = {
       [Enum.INSTALLMENT_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#bfbfbf"},
@@ -74,9 +78,13 @@ class Installment extends Component {
                   <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
                 </this.Link>
               </Menu.Item>
-              <Menu.Item onClick={() => this.handleDelete(record.id)}>
-                <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
-              </Menu.Item>
+              {
+                this.state.isCanDelete ?
+                <Menu.Item onClick={() => this.handleDelete(record.id)}>
+                  <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
+                </Menu.Item>
+                : null
+              }
             </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
@@ -138,6 +146,7 @@ class Installment extends Component {
     ];
     this.pathname = "/installment/list";
     this.timer = null;
+    this.permissionModuleCode = "installment";
   }
 
   componentDidMount() {
@@ -156,6 +165,19 @@ class Installment extends Component {
 
     this.fetchList(true);
     this.fetchSummary();
+    this.getPermission();
+    this.checkDeletePermission();
+  }
+
+  getPermission(){
+    PrivilegeService.checkPermission(this.permissionModuleCode, "view")
+    .then(({data}) => this.setState({isHasAccessPermission: data}))
+    .catch(() => this.setState({isHasAccessPermission: false}));
+  }
+
+  checkDeletePermission() {
+    PrivilegeService.checkPermission(this.permissionModuleCode, "delete")
+    .then(({data}) => this.setState({isCanDelete: data}));
   }
 
   fetchSummary() {
@@ -278,83 +300,88 @@ class Installment extends Component {
   render() {
     const params = new URLSearchParams(document.location.search);
     const {summaryData} = this.state;
-
+    console.log("permission", this.state.isHasAccessPermission);
     return (
-      <React.Fragment>
-        <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
-          <Col span={8}>
-            <Card>
-              <Statistic
-                title={<this.Translate id="text_draft" />}
-                value={summaryData && summaryData.draft}
-                valueStyle={{color: "#817e7e"}}
-              />
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card>
-              <Statistic
-                title={<this.Translate id="text_received"/>}
-                value={summaryData && summaryData.received}
-                valueStyle={{color: "#1890ff"}}
-              />
-            </Card>
-          </Col>
-          <Col span={8}>
-            <Card>
-              <Statistic 
-                title={<this.Translate id="text_complete" />}
-                value={summaryData && summaryData.completed}
-                valueStyle={{color: "#f50"}}
-              />
-            </Card>
-          </Col>
-        </Row>
-        <div className="content-list">
-          <div style={{height: "100%", marginTop: 10}}>
-            <div className="table-wrapper">
-              <Row>
-                <Col span={6} style={{marginBottom: 0}}>
-                  <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_installment" /></h3>
-                </Col>
-                <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "flex-end"}}>
-                  <Input
-                    name="search"
-                    placeholder={this.CATranslate("text_search", this.props.locale)}
-                    prefix={<Icon type="search" />}
-                    defaultValue={params.get("search") ? params.get("search") : ""}
-                    style={{height: 32, width: 200, marginRight: 10}}
-                    allowClear={true}
-                    onChange={this.handleSearch}
-                  />
-                  <this.Button
-                    type="info"
-                    id="btnAdd"
-                    className="text-uppercase"
-                    onClick={() => history.push("/installment/create")}
-                  >
-                    <span className="icon-add icon-padding-right"></span>
-                    <this.Translate id="text_add_new" />
-                  </this.Button>
-                </Col>
-              </Row>
-              <this.Table 
-                bordered={true}
-                rowKey="id"
-                loading={this.state.loading}
-                columns={this.columns}
-                dataSource={this.state.data}
-                onChange={this.onChange}
-              />
-              <div style={{marginTop: 15}}>
-                {this.renderPagination(this.state.pagination)}
-              </div>
+      this.Util.isNotCheckingPermissionV2(this.state.isHasAccessPermission) &&
+      (this.state.isHasAccessPermission ? 
+        <React.Fragment>
+          <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
+            <Col span={8}>
+              <Card>
+                <Statistic
+                  title={<this.Translate id="text_draft" />}
+                  value={summaryData && summaryData.draft}
+                  valueStyle={{color: "#817e7e"}}
+                />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card>
+                <Statistic
+                  title={<this.Translate id="text_received"/>}
+                  value={summaryData && summaryData.received}
+                  valueStyle={{color: "#1890ff"}}
+                />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card>
+                <Statistic 
+                  title={<this.Translate id="text_completed" />}
+                  value={summaryData && summaryData.completed}
+                  valueStyle={{color: "#f50"}}
+                />
+              </Card>
+            </Col>
+          </Row>
+          <div className="content-list">
+            <div style={{height: "100%", marginTop: 10}}>
+              <div className="table-wrapper">
+                <Row>
+                  <Col span={6} style={{marginBottom: 0}}>
+                    <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_installment" /></h3>
+                  </Col>
+                  <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "flex-end"}}>
+                    <Input
+                      name="search"
+                      placeholder={this.CATranslate("text_search", this.props.locale)}
+                      prefix={<Icon type="search" />}
+                      defaultValue={params.get("search") ? params.get("search") : ""}
+                      style={{height: 32, width: 200, marginRight: 10}}
+                      allowClear={true}
+                      onChange={this.handleSearch}
+                    />
+                    <this.Button
+                      type="info"
+                      id="btnAdd"
+                      className="text-uppercase"
+                      onClick={() => history.push("/installment/create")}
+                    >
+                      <span className="icon-add icon-padding-right"></span>
+                      <this.Translate id="text_add_new" />
+                    </this.Button>
+                  </Col>
+                </Row>
+                <this.Table 
+                  bordered={true}
+                  rowKey="id"
+                  loading={this.state.loading}
+                  columns={this.columns}
+                  dataSource={this.state.data}
+                  onChange={this.onChange}
+                />
+                <div style={{marginTop: 15}}>
+                  {this.renderPagination(this.state.pagination)}
+                </div>
 
-              <this.clearFloating/>
+                <this.clearFloating/>
+              </div>
             </div>
           </div>
-        </div>
-      </React.Fragment>
+        </React.Fragment>
+        :
+        <NoPermissionV2 />
+      )
     );
   }
 }

@@ -69,6 +69,7 @@ export default class FormUpdate extends React.Component {
         values["metaData"]    = JSON.stringify(this.grantPermissions);
         values["privileges"]  = this.state.rolePrivileges;
         values["description"] = "";
+        values["status"] = 1;
         this.setState({submitLoading: true});
         RoleAccessService.update(values)
         .then(() => this.fetchDetail(this.state.formData.id))

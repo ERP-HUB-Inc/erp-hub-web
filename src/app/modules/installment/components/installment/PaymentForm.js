@@ -1,5 +1,6 @@
 import React from "react";
 import {Translate} from "react-localize-redux";
+import moment from "moment";
 import {
   Col,
   Drawer,
@@ -53,29 +54,35 @@ export default class PaymentForm extends React.PureComponent {
       >
         <Form onSubmit={this.handleSubmit} style={{marginTop: -10}}>
           <Row>
-            <Col md={24}>
-              <DatePickers 
-                name="paidDate"
-                label={<Translate id="text_payment_date" />}
-                required={true}
-                placeholder={`${stringTranslate("text_payment_date", locale)}`}
-                form={form} />
-
-              <InputNumber 
-                name="amount"
-                label={<Translate id="text_amount" />}
-                required={true}
-                placeholder={`${stringTranslate("text_amount", locale)}`}
-                isAutoSelect={true}
-                form={form} />
+            <Col md={10}>
+              <label style={{marginTop: 8}}><Translate id="text_payment_date" /></label>
             </Col>
+            <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
+              : <DatePickers
+                  name="paidDate"
+                  placeholder={`${stringTranslate("text_payment_date", locale)}`}
+                  defaultValue={moment()}
+                  style={{paddingLeft: 10, width: "100%"}}
+                  form={form} /> 
+            </Col>
+            <Col md={10}>
+              <label style={{marginTop: 8}}><Translate id="text_amount" /></label>
+            </Col>
+            <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
+              : <InputNumber 
+                  name="amount"
+                  inputStyle={{background: "white", color: "#565656"}}
+                  isAutoSelect={true}
+                  style={{paddingLeft: 10, width: "100%"}}
+                  form={form} />
+            </Col>
+
           </Row>
           <div
             style={{
               width: "100%",
               borderTop: "1px solid #e8e8e8",
               paddingTop: 14,
-              textAlign: "right",
               background: "#fff",
             }}
           >
