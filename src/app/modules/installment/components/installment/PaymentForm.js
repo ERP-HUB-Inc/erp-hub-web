@@ -5,7 +5,8 @@ import {
   Col,
   Drawer,
   Form, 
-  Row
+  Row,
+  Select
 } from "antd";
 import {
   DatePickers,
@@ -14,6 +15,13 @@ import {
 } from "../../../common/elements/ant-ui";
 import Util from "../../../common/util";
 import {stringTranslate} from "../../../common/helper/stringTranslate";
+import RepaymentService from "../../services/RepaymentService";
+
+const errStatus = {
+  notFound: 404,
+  alreadyPaid: 611,
+  completed: 610,
+};
 
 export default class PaymentForm extends React.PureComponent {
   state = {
@@ -26,13 +34,52 @@ export default class PaymentForm extends React.PureComponent {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        values.paidDate = this.util.formatDateForMYSQL(values.paidDate);
-        console.log("values", values);
-        this.props.form.resetFields();
-        this.props.onSuccess();
+        this.util.sweetAlertConfirm("", stringTranslate("text_are_you_sure", this.props.locale))
+        .then(willPay => {
+          if (willPay) {
+            values.installmentId = this.props.formData.id;
+            values.paidDate = this.util.formatDateForMYSQL(values.paidDate);
+            this.save(values);
+          }
+        });
       }
     });
   };
+
+  save(data) {
+    this.setState({loading: true});
+    if (this.props.formData.repaymentId) {
+
+    } else {
+      RepaymentService.create(data)
+      .then(response => {
+        this.props.onSuccess(this.props.formData.id);
+        this.props.form.resetFields();
+      })
+      .catch(err => {
+        const error = err.response && err.response.data && err.response.data.error;
+        console.log("error", error);
+        let message = "";
+        if (error.code === errStatus.notFound) {
+          message = "Installment not found";
+        } else if (error.code === errStatus.alreadyPaid) {
+          message = "This schedule already paid. Please select another schedule";
+        } else if (error.code === errStatus.completed) {
+          message = "This installment has completed";
+        }
+        if (message) {
+          this.util.sweetAlertMessageV2("Sorry", message, "warning");
+        }
+      })
+      .finally(() => this.setState({loading: false}));
+    }
+  }
+
+  handleChangeMonth = (value, row) => {
+    if (value) {
+      this.props.form.setFieldsValue({amount: row.props.object.payAmount});
+    }
+  }
 
   onShowDrawer = () => {
     this.setState({visible: true});
@@ -42,8 +89,23 @@ export default class PaymentForm extends React.PureComponent {
     this.setState({visible: false});
   }
 
+  getDefaultMonth(schedules) {
+    let result = {
+      id: "",
+      payAmount: 0
+    };
+
+    const currentMonth = schedules && schedules.find(schedule => moment(schedule.date).format("YYYY-MM") === moment().format("YYYY-MM"));
+    if (currentMonth) {
+      result.id = currentMonth.id;
+      result.payAmount = currentMonth.payAmount;
+    }
+
+    return result;
+  }
+
   render() {
-    const {form, locale} = this.props;
+    const {formData, form, locale} = this.props;
     return (
       <Drawer
         title={<Translate id="text_payment" />}
@@ -55,28 +117,60 @@ export default class PaymentForm extends React.PureComponent {
         <Form onSubmit={this.handleSubmit} style={{marginTop: -10}}>
           <Row>
             <Col md={10}>
-              <label style={{marginTop: 8}}><Translate id="text_payment_date" /></label>
+              <label style={{marginTop: 8}}><Translate id="text_pay_for_month" /> <span style={{color: "red"}}>*</span></label>
+            </Col>
+            <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
+              : <Form.Item
+                  style={{paddingLeft: 10, width: "100%"}}
+                >
+                  {
+                    form.getFieldDecorator("paymentScheduleId", {
+                      initialValue: this.getDefaultMonth(formData.paymentSchedule).id,
+                      rules: [
+                        {
+                          required: true,
+                          message: "Please select schedule"
+                        }
+                      ]
+                    })(
+                      <Select placeholder="Select schedule" allowClear onChange={this.handleChangeMonth}>
+                        {
+                          formData.paymentSchedule && formData.paymentSchedule.map((schedule, index) => 
+                            <Select.Option key={index} value={schedule.id} object={schedule}>
+                              {moment(schedule.date).format("MM-YYYY")}
+                            </Select.Option>
+                          )
+                        }
+                      </Select>
+                    )
+                  }
+                </Form.Item>
+            </Col>
+            <Col md={10}>
+              <label style={{marginTop: 8}}><Translate id="text_payment_date" /> <span style={{color: "red"}}>*</span></label>
             </Col>
             <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
               : <DatePickers
                   name="paidDate"
                   placeholder={`${stringTranslate("text_payment_date", locale)}`}
                   defaultValue={moment()}
+                  required={true}
                   style={{paddingLeft: 10, width: "100%"}}
                   form={form} /> 
             </Col>
             <Col md={10}>
-              <label style={{marginTop: 8}}><Translate id="text_amount" /></label>
+              <label style={{marginTop: 8}}><Translate id="text_amount" /> <span style={{color: "red"}}>*</span></label>
             </Col>
             <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
               : <InputNumber 
                   name="amount"
+                  data={this.getDefaultMonth(formData.paymentSchedule).payAmount}
                   inputStyle={{background: "white", color: "#565656"}}
                   isAutoSelect={true}
+                  required={true}
                   style={{paddingLeft: 10, width: "100%"}}
                   form={form} />
             </Col>
-
           </Row>
           <div
             style={{

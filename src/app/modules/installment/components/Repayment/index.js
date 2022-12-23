@@ -116,7 +116,11 @@ class RepaymentList extends Component {
     }
 
     if (params.get("date")) {
-      this.props.form.setFieldsValue({date: params.get("date")});
+      this.props.form.setFieldsValue({date: moment(params.get("date"))});
+    } else {
+      this.props.form.setFieldsValue({date: moment()});
+      params.set("date", moment().format("YYYY-MM-DD"));
+      this.Util.pushParamsToURL(this.pathname, params.toString());
     }
 
     this.fetchList(true);

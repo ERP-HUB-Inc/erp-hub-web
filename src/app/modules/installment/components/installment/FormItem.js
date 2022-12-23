@@ -269,7 +269,7 @@ class FormItem extends React.Component {
       if (!err) {
         const {formData} = this.state;
         if (formData.status === EnumINS.INSTALLMENT_STATUS.COMPLETED) {
-          this.Util.sweetAlertMessageV2(
+          return this.Util.sweetAlertMessageV2(
             "Sorry",
             "This installment is already completed",
             "warning"
@@ -292,7 +292,7 @@ class FormItem extends React.Component {
         values.price = formData.price;
         values.total = _.sumBy(formData.paymentSchedule, "payAmount");
         values.isChangeSchedule = this.state.isChangeSchedule;
-        if (values.receiveDate <= moment().format("YYYY-MM-DD")) {
+        if (formData.status !== EnumINS.INSTALLMENT_STATUS.COMPLETED && values.receiveDate <= moment().format("YYYY-MM-DD")) {
           values.status = EnumINS.INSTALLMENT_STATUS.RECEIVED;
         }
         values.serial = {

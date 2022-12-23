@@ -16,6 +16,8 @@ import {
 import Util from "../../../common/util";
 import EnumINS from "../../enum";
 import InstallmentService from "../../services/InstallmentService";
+import PrivilegeService from "../../../pos/services/settings/PrivilegeService";
+import RepaymentService from "../../services/RepaymentService";
 import history from "../../../common/router/history";
 import {stringTranslate} from "../../../common/helper/stringTranslate";
 import DownPaymentTable from "./DownPayment";
@@ -25,7 +27,11 @@ import PaymentHistory from "./PaymentHistory";
 class DetailInstallment extends React.Component {
   state = {
     detail: {},
-    loading: false
+    paymentsHistory: [],
+    loading: false,
+    loadingPaymentHistory: false,
+    isCanPay: false,
+    isCanEdit: false
   }
   INSTALLMENT_STATUS_STR = {
     [EnumINS.INSTALLMENT_STATUS.DRAFT]: { title: stringTranslate("text_draft", this.props.locale), color: "#bfbfbf"},
@@ -34,6 +40,7 @@ class DetailInstallment extends React.Component {
   };
   util = new Util();
   isRequestPrint = false;
+  permissionModuleCode = "installment";
 
   componentDidMount() {
     const id = this.props.match.params.id;
@@ -67,14 +74,40 @@ class DetailInstallment extends React.Component {
         }
       });
     });
+
+    this.checkPermission();
+  }
+
+  checkPermission() {
+    PrivilegeService.checkPermission(this.permissionModuleCode, "pay")
+    .then(({data}) => this.setState({isCanPay: data}));
+
+    PrivilegeService.checkPermission(this.permissionModuleCode, "edit")
+    .then(({data}) => this.setState({isCanEdit: data}));
   }
 
   handlePay = () => {
     this.paymentFormRef.onShowDrawer();
   }
 
-  handleAfterPayment = () => {
+  handleAfterPayment = (id) => {
+    this.setState({loading: true});
+    InstallmentService.detail(id)
+    .then(response => {
+      this.setState({detail: response.data.data});
+    })
+    .finally(() => this.setState({loading: false}));
     this.paymentFormRef.onCloseDrawer();
+  }
+
+  handleShowPaymentHistory = () => {
+    this.setState({loadingPaymentHistory: true});
+    RepaymentService.getHistory(this.state.detail.id)
+    .then(response => {
+      this.setState({paymentsHistory: response.data.data});
+    })
+    .finally(() => this.setState({loadingPaymentHistory: false}));
+    this.paymentHistoryRef.onShowDrawer();
   }
 
   handlePrintA5 = () => {
@@ -113,11 +146,24 @@ class DetailInstallment extends React.Component {
               <Menu>
                 <Menu.Item onClick={() => window.print()} title="Ctrl + P"><Translate id="text_print" /></Menu.Item>
                 <Menu.Item onClick={this.handlePrintA5}><Translate id="text_print" /> A5</Menu.Item>
-                <Menu.Item>
-                  <Link to={`/installment/update/${detail.id && detail.id}`}><Translate id="text_edit" /></Link>
-                </Menu.Item>
-                <Menu.Item onClick={this.handlePay}><Translate id="text_pay" /></Menu.Item>
-                <Menu.Item onClick={() => this.paymentHistoryRef.onShowDrawer()}><Translate id="text_view_payment_history" /></Menu.Item>
+                {
+                  this.state.isCanEdit ?
+                    <Menu.Item>
+                      <Link to={`/installment/update/${detail.id && detail.id}`}><Translate id="text_edit" /></Link>
+                    </Menu.Item>
+                  : null
+                }
+                
+                {
+                  this.state.isCanPay ?
+                    <Menu.Item className="ant-dropdown-menu-item" onClick={this.handlePay}><Translate id="text_pay" /></Menu.Item>
+                  : null
+                }
+                {
+                  this.state.isCanPay ?
+                    <Menu.Item className="ant-dropdown-menu-item" onClick={this.handleShowPaymentHistory}><Translate id="text_view_payment_history" /></Menu.Item>
+                  : null
+                }
               </Menu>
             )}>
               <button className="ant-btn ant-dropdown-link" onClick={e => e.preventDefault()}>
@@ -156,7 +202,9 @@ class DetailInstallment extends React.Component {
 
         <PaymentHistory
           ref={ref => this.paymentHistoryRef = ref}
-          data={[]}
+          loading={this.state.loadingPaymentHistory}
+          data={this.state.paymentsHistory}
+          locale={this.props.locale}
         />
       </div>
     );

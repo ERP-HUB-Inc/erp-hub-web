@@ -31,7 +31,8 @@ class Installment extends Component {
       current: 1,
       loading: false,
       isHasAccessPermission: null,
-      isCanDelete: false
+      isCanDelete: false,
+      isCanEdit: false
     };
     this.INSTALLMENT_STATUS_STR = {
       [Enum.INSTALLMENT_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#bfbfbf"},
@@ -73,11 +74,16 @@ class Installment extends Component {
                   <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
                 </this.Link>
               </Menu.Item>
-              <Menu.Item>
-                <this.Link to={`/installment/update/${record.id}`}>
-                  <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
-                </this.Link>
-              </Menu.Item>
+              {
+                this.state.isCanEdit ?
+                <Menu.Item>
+                  <this.Link to={`/installment/update/${record.id}`}>
+                    <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
+                  </this.Link>
+                </Menu.Item>
+                : null
+              }
+              
               {
                 this.state.isCanDelete ?
                 <Menu.Item onClick={() => this.handleDelete(record.id)}>
@@ -165,19 +171,19 @@ class Installment extends Component {
 
     this.fetchList(true);
     this.fetchSummary();
-    this.getPermission();
-    this.checkDeletePermission();
+    this.checkPermission();
   }
 
-  getPermission(){
+  checkPermission() {
     PrivilegeService.checkPermission(this.permissionModuleCode, "view")
     .then(({data}) => this.setState({isHasAccessPermission: data}))
     .catch(() => this.setState({isHasAccessPermission: false}));
-  }
 
-  checkDeletePermission() {
     PrivilegeService.checkPermission(this.permissionModuleCode, "delete")
     .then(({data}) => this.setState({isCanDelete: data}));
+
+    PrivilegeService.checkPermission(this.permissionModuleCode, "edit")
+    .then(({data}) => this.setState({isCanEdit: data}));
   }
 
   fetchSummary() {
@@ -300,7 +306,6 @@ class Installment extends Component {
   render() {
     const params = new URLSearchParams(document.location.search);
     const {summaryData} = this.state;
-    console.log("permission", this.state.isHasAccessPermission);
     return (
       this.Util.isNotCheckingPermissionV2(this.state.isHasAccessPermission) &&
       (this.state.isHasAccessPermission ? 

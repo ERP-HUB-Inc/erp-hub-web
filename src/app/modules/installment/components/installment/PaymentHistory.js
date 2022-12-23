@@ -2,16 +2,16 @@ import React from "react";
 import {Translate} from "react-localize-redux";
 import {
   Drawer,
-  Button,
-  Table,
-  Icon
+  Spin
 } from "antd";
 import Util from "../../../common/util";
+import { stringTranslate } from "../../../common/helper/stringTranslate";
 
 export default class PaymentHistory extends React.PureComponent {
   state = {
-    visible: false
+    visible: false,
   }
+  util = new Util();
 
   handleEditPayment(id) {
 
@@ -25,6 +25,15 @@ export default class PaymentHistory extends React.PureComponent {
     this.setState({visible: false});
   }
 
+  getTotalPaid(payments) {
+    let total = 0;
+    payments.length && payments.forEach(payment => {
+      total += this.util.floor(payment.amount);
+    });
+
+    return total;
+  }
+
   render() {
     return (
       <Drawer 
@@ -34,35 +43,46 @@ export default class PaymentHistory extends React.PureComponent {
         className="drawer-payment-history"
         onClose={this.onCloseDrawer}
       >
-        <Table 
-          rowKey="id"
-          columns={[
+        <table id="table-payment-history">
+          <thead>
+            <tr>
+              <th><Translate id="text_date" /></th>
+              <th><Translate id="text_amount" /></th>
+            </tr>
+          </thead>
+          <tbody>
             {
-              title: <Translate id="text_payment_date" />,
-              dataIndex: "paidDate",
-              key: "paidDate",
-              render: (paidDate) => Util.prototype.formatDate(paidDate)
-            },
-            {
-              title: <Translate id="text_amount" />,
-              dataIndex: "amount",
-              key: "amount",
-              render: (amount) => Util.prototype.formatCurrency(amount)
-            },
-            {
-              title: <Translate id="text_action" />,
-              dataIndex: "id",
-              key: "id",
-              render: (id) => {
-                return <Button onClick={() => this.handleEditPayment(id)}>
-                  <Icon type="edit" /> <Translate id="text_edit" />
-                </Button>;
-              }
+              this.props.loading ?
+                <tr>
+                  <td colSpan={3} style={{padding: 30, textAlign: "center"}}><Spin /></td>
+                </tr>
+              :
+                this.props.data.length ? this.props.data.map((payment, index) => 
+                  <tr title={`${stringTranslate("text_double_to_edit_payment", this.props.locale)}`}>
+                    <td>{this.util.formatDate(payment.paidDate)}</td>
+                    <td>{this.util.formatCurrency(payment.amount)}</td>
+                  </tr>
+                )
+                :
+                <tr>
+                  <td colSpan={3} style={{padding: 30, textAlign: "center"}}>
+                    <Translate id="no_payment_history" />
+                  </td>
+                </tr>
             }
-          ]}
-          dataSource={this.props.data}
-          loading={this.props.loading}
-        />
+          </tbody>
+          {
+            this.props.data.length ?
+              <tfoot>
+                <tr>
+                  <td style={{textAlign: "right", paddingRight: 15}}><Translate id="text_total" /></td>
+                  <td>{this.util.formatCurrency(this.getTotalPaid(this.props.data))}</td>
+                </tr>
+              </tfoot>
+            : null
+          }
+          
+        </table>
       </Drawer>
     );
   }

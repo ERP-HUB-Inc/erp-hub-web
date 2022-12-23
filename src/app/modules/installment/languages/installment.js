@@ -43,9 +43,20 @@ export default {
     "Duration Type",
     "ប្រភេទរយៈពេល"
   ],
-
   "text_repayment": [
     "Repayment",
     "ការសងប្រាក់"
+  ],
+  "text_pay_for_month": [
+    "Pay for month",
+    "បង់សម្រាប់ខែ"
+  ],
+  "text_double_to_edit_payment": [
+    "Double click to edit payment",
+    "ចុចពីរដងដើម្បីកែប្រែការបង់ប្រាក់"
+  ],
+  "no_payment_history": [
+    "No payment history",
+    "មិនមានប្រវត្តិបង់ប្រាក់"
   ]
 };

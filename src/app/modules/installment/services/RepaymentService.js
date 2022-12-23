@@ -14,6 +14,23 @@ class RepaymentService extends BaseService {
       headers: this.header
     });
   }
+
+  getHistory(installmentId) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/history/${installmentId}`,
+      headers: this.header
+    });
+  }
+
+  create(data) {
+    this.setHeader();
+    return this.POST({
+      url: this.baseUrl,
+      data,
+      headers: this.header
+    });
+  }
 }
 
 export default new RepaymentService();
