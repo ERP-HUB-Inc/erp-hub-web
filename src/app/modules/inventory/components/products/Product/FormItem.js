@@ -671,11 +671,18 @@ export default class FormItem extends Modal {
               <this.Collapse bordered={false}>
                 <this.Panel header={<this.Translate id="text_web_display" />} key="1">
                   <this.Row>
-                    <this.Col md="12">
+                    <this.Col md="6">
                       <this.Checkboxs
                         name="isFeatured"
                         label={<this.Translate id="text_featured_product" />}
                         defaultValue={formData.isFeatured ? true : false}
+                        form={this.props.form} />
+                    </this.Col>
+                    <this.Col md="6">
+                      <this.Checkboxs
+                        name="isPublic"
+                        label={<this.Translate id="text_avialable_on_ecommerce" />}
+                        defaultValue={formData.isPublic ? true : false}
                         form={this.props.form} />
                     </this.Col>
                     <this.Col md="12" style={{marginBottom: 15, display: "flex", alignItems: "center"}}>
