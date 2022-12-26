@@ -53,7 +53,6 @@ class FormItem extends React.Component {
     loading: false,
     loadingSubmit: false,
     fetchingCustomer: false,
-    isChangeSchedule: false,
     isCanDelete: false
   }
   Util = new Util();
@@ -291,8 +290,7 @@ class FormItem extends React.Component {
         values.paymentDate = this.Util.formatDateForMYSQL(values.paymentDate);
         values.price = formData.price;
         values.total = _.sumBy(formData.paymentSchedule, "payAmount");
-        values.isChangeSchedule = this.state.isChangeSchedule;
-        if (formData.status !== EnumINS.INSTALLMENT_STATUS.COMPLETED && values.receiveDate <= moment().format("YYYY-MM-DD")) {
+        if (moment(values.receiveDate).isValid()) {
           values.status = EnumINS.INSTALLMENT_STATUS.RECEIVED;
         }
         values.serial = {
@@ -311,11 +309,12 @@ class FormItem extends React.Component {
   }
 
   save(data) {
-    if (this.id) {
+    const id = this.props.match.params.id;
+    if (id) {
       this.setState({loadingSubmit: true});
-      InstallmentService.update(data, this.id)
+      InstallmentService.update(data, id)
       .then(() => {
-        this.fetchDetail(this.id);
+        this.fetchDetail(id);
       })
       .finally(() => {
         this.setState({loadingSubmit: false});
@@ -330,7 +329,7 @@ class FormItem extends React.Component {
         this.fetchDetail(response.data.id);
       })
       .catch(err => {
-        message.error("Something went wrong!");
+        this.Util.sweetAlertMessageV2("Sorry!", "Something went wrong", "error");
       })
       .finally(() => {
         this.setState({loadingSubmit: false});
@@ -473,11 +472,15 @@ class FormItem extends React.Component {
       if (willDelete) {
         InstallmentService.delete(id)
         .then(() => {
-          message.success("Installment has been deleted");
-          history.goBack();
+          this.Util.sweetAlertMessageV2(
+            "Success",
+            "Installment has been deleted.",
+            "success"
+          );
+          history.push("/installment/list");
         })
         .catch(() => {
-          message.error("Something went wrong");
+          this.Util.sweetAlertMessageV2("Error", "Something went wrong", "error");
         });
       }
     });

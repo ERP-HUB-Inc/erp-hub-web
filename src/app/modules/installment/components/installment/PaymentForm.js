@@ -132,76 +132,79 @@ export default class PaymentForm extends React.PureComponent {
         visible={this.state.visible}
         onClose={this.onCloseDrawer}
       >
-        <Form onSubmit={this.handleSubmit} style={{marginTop: -10}}>
-          <Row>
-            <Col md={10}>
-              <label style={{marginTop: 8}}><Translate id="text_pay_for_month" /> <span style={{color: "red"}}>*</span></label>
-            </Col>
-            <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
-              : <Form.Item
-                  style={{paddingLeft: 10, width: "100%"}}
-                >
-                  {
-                    form.getFieldDecorator("paymentScheduleId", {
-                      initialValue: this.getDefaultSchedule(formData).id,
-                      rules: [
-                        {
-                          required: true,
-                          message: "Please select schedule"
-                        }
-                      ]
-                    })(
-                      <Select placeholder="Select schedule" allowClear onChange={this.handleChangeMonth}>
-                        {
-                          formData.paymentSchedule && formData.paymentSchedule.map((schedule, index) => 
-                            <Select.Option key={index} value={schedule.id} object={schedule}>
-                              {moment(schedule.date).format("MM-YYYY")}
-                            </Select.Option>
-                          )
-                        }
-                      </Select>
-                    )
-                  }
-                </Form.Item>
-            </Col>
-            <Col md={10}>
-              <label style={{marginTop: 8}}><Translate id="text_payment_date" /> <span style={{color: "red"}}>*</span></label>
-            </Col>
-            <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
-              : <DatePickers
-                  name="paidDate"
-                  placeholder={`${stringTranslate("text_payment_date", locale)}`}
-                  defaultValue={this.getDefaultSchedule(formData).paidDate}
-                  required={true}
-                  style={{paddingLeft: 10, width: "100%"}}
-                  form={form} /> 
-            </Col>
-            <Col md={10}>
-              <label style={{marginTop: 8}}><Translate id="text_amount" /> <span style={{color: "red"}}>*</span></label>
-            </Col>
-            <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
-              : <InputNumber 
-                  name="amount"
-                  data={this.getDefaultSchedule(formData).payAmount}
-                  inputStyle={{background: "white", color: "#565656"}}
-                  isAutoSelect={true}
-                  required={true}
-                  style={{paddingLeft: 10, width: "100%"}}
-                  form={form} />
-            </Col>
-          </Row>
-          <div
-            style={{
-              width: "100%",
-              borderTop: "1px solid #e8e8e8",
-              paddingTop: 14,
-              background: "#fff",
-            }}
-          >
-            <Button type="danger" style={{marginRight: 15}} onClick={this.onCloseDrawer}><Translate id="text_cancel" /></Button>
-            <Button type="info" htmlType="submit" loading={this.state.loading}><Translate id="text_save" /></Button>
-          </div>
-        </Form>
+        {this.state.visible ?
+          <Form onSubmit={this.handleSubmit} style={{marginTop: -10}}>
+            <Row>
+              <Col md={10}>
+                <label style={{marginTop: 8}}><Translate id="text_pay_for_month" /> <span style={{color: "red"}}>*</span></label>
+              </Col>
+              <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
+                : <Form.Item
+                    style={{paddingLeft: 10, width: "100%"}}
+                  >
+                    {
+                      form.getFieldDecorator("paymentScheduleId", {
+                        initialValue: this.getDefaultSchedule(formData).id,
+                        rules: [
+                          {
+                            required: true,
+                            message: "Please select schedule"
+                          }
+                        ]
+                      })(
+                        <Select placeholder="Select schedule" allowClear onChange={this.handleChangeMonth}>
+                          {
+                            formData.paymentSchedule && formData.paymentSchedule.map((schedule, index) => 
+                              <Select.Option key={index} value={schedule.id} object={schedule}>
+                                {moment(schedule.date).format("MM-YYYY")}
+                              </Select.Option>
+                            )
+                          }
+                        </Select>
+                      )
+                    }
+                  </Form.Item>
+              </Col>
+              <Col md={10}>
+                <label style={{marginTop: 8}}><Translate id="text_payment_date" /> <span style={{color: "red"}}>*</span></label>
+              </Col>
+              <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
+                : <DatePickers
+                    name="paidDate"
+                    placeholder={`${stringTranslate("text_payment_date", locale)}`}
+                    defaultValue={this.getDefaultSchedule(formData).paidDate}
+                    required={true}
+                    style={{paddingLeft: 10, width: "100%"}}
+                    form={form} /> 
+              </Col>
+              <Col md={10}>
+                <label style={{marginTop: 8}}><Translate id="text_amount" /> <span style={{color: "red"}}>*</span></label>
+              </Col>
+              <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
+                : <InputNumber 
+                    name="amount"
+                    data={this.getDefaultSchedule(formData).payAmount}
+                    inputStyle={{background: "white", color: "#565656"}}
+                    isAutoSelect={true}
+                    required={true}
+                    style={{paddingLeft: 10, width: "100%"}}
+                    form={form} />
+              </Col>
+            </Row>
+            <div
+              style={{
+                width: "100%",
+                borderTop: "1px solid #e8e8e8",
+                paddingTop: 14,
+                background: "#fff",
+              }}
+            >
+              <Button type="danger" style={{marginRight: 15}} onClick={this.onCloseDrawer}><Translate id="text_cancel" /></Button>
+              <Button type="info" htmlType="submit" loading={this.state.loading}><Translate id="text_save" /></Button>
+            </div>
+          </Form>
+          : null
+        }
       </Drawer>
     );
   }
