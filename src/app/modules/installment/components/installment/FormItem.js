@@ -136,9 +136,15 @@ class FormItem extends React.Component {
       key: "amount",
       align: "right",
       render: (amount, record) => {
+        const {formData} = this.state;
         return <div>
           {this.Util.formatCurrency(record.quantity * record.price)}
-          <Icon style={{color: "red", marginLeft: 5}} onClick={() => this.handleDeleteProduct()} type="close" />
+          {
+            formData.id && formData.status !== EnumINS.INSTALLMENT_STATUS.DRAFT ?
+            null
+            :
+            <Icon style={{color: "red", marginLeft: 5}} onClick={() => this.handleDeleteProduct()} type="close" />
+          }
         </div>;
       }
     }
@@ -524,7 +530,7 @@ class FormItem extends React.Component {
     this.setState({formData}, () => {
       this.generatePaymentSchedule(productVariant.price, formData.rate, numberOfMonth, formData.paymentDate);
     });
-    this.props.form.setFieldsValue({searchProduct: "", serialNo: "", numberOfMonth: 0});
+    this.props.form.setFieldsValue({searchProduct: ""});
   }
 
   handlePrintInvoiceA5 = () => {
