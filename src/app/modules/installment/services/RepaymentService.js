@@ -15,6 +15,14 @@ class RepaymentService extends BaseService {
     });
   }
 
+  detail(id) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/${id}`,
+      headers: this.header
+    });
+  }
+
   getHistory(installmentId) {
     this.setHeader();
     return this.GET({
@@ -28,6 +36,23 @@ class RepaymentService extends BaseService {
     return this.POST({
       url: this.baseUrl,
       data,
+      headers: this.header
+    });
+  }
+
+  update(data, id) {
+    this.setHeader();
+    return this.PUT({
+      url: `${this.baseUrl}/${id}`,
+      data,
+      headers: this.header
+    });
+  }
+
+  delete(id) {
+    this.setHeader();
+    return this.DELETE({
+      url: `${this.baseUrl}/${id}`,
       headers: this.header
     });
   }

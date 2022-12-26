@@ -230,6 +230,8 @@ export default {
 
   text_payment: ["Payment", "ការបង់ប្រាក់"],
 
+  text_edit_payment: ["Edit Payment", "កែប្រែការបង់ប្រាក់"],
+
   text_search: ["Search", "ស្វែងរក"],
 
   text_store: ["Store", "ហាង"],

@@ -5,7 +5,6 @@ import {
   Spin
 } from "antd";
 import Util from "../../../common/util";
-import { stringTranslate } from "../../../common/helper/stringTranslate";
 
 export default class PaymentHistory extends React.PureComponent {
   state = {
@@ -58,7 +57,7 @@ export default class PaymentHistory extends React.PureComponent {
                 </tr>
               :
                 this.props.data.length ? this.props.data.map((payment, index) => 
-                  <tr title={`${stringTranslate("text_double_to_edit_payment", this.props.locale)}`}>
+                  <tr onDoubleClick={() => this.props.handleEditPayment(payment.id)} key={index}>
                     <td>{this.util.formatDate(payment.paidDate)}</td>
                     <td>{this.util.formatCurrency(payment.amount)}</td>
                   </tr>
