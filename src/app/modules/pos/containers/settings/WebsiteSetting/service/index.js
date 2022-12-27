@@ -144,3 +144,21 @@ export function getChildMenuItems(){
     url: `${url}/menu_items/sub_menu_items`,
   });
 }
+
+export function getFooter(){
+  return axios({
+    method: "GET",
+    headers,
+    url: `${url}/footers`,
+  });
+}
+
+export function updateFooter(data){
+  return axios({
+    method: "PUT",
+    headers,
+    url: `${url}/footers`,
+    data,
+  });
+}
+

@@ -13,6 +13,7 @@ import {
   Input,
   Upload,
   Spin,
+  Menu,
 } from "antd";
 import axios from "axios";
 import swal from "sweetalert";
@@ -33,6 +34,8 @@ import {
   createMenuItem,
   updateMenuItem,
   achiveMenuItem,
+  getFooter,
+  updateFooter
 } from "./service";
 import history from "../../../../common/router/history";
 import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
@@ -103,9 +106,61 @@ const WebsiteSetting = (props) => {
   const [telegram, setTelegram] = useState("");
   const [loadingButtonSocialMedia, setLoadingButtonSocialMedia] = useState(false);
 
+  // Footer State
+
+  const [menuSelect,setMenuSelect] = useState("free_delivery");
+  const [loadingButtonFooter,setLoadingButtonFooter] = useState(false);
+  const [freeDelivery,setFreeDelivery] = useState("");
+  const [freeReturn,setFreeReturn] = useState("");
+  const [customerSupport,setCustomerSupport] = useState("");
+  const [moneyBackGuarantee,setMoneyBackGuarantee] = useState("");
+
+
   const { TabPane } = Tabs;
   const { getFieldDecorator } = props.form;
   const util = new Util();
+
+
+  // Footer Function
+
+  const fetchFooter = () => {
+    getFooter().then(response => {
+      if(response.data.data){
+        const data = response.data.data; 
+        setFreeDelivery(data.free_delivery);
+        setFreeReturn(data.free_return);
+        setCustomerSupport(data.customer_support);
+        setMoneyBackGuarantee(data.money_back_guarantee);
+      }
+    });
+  };
+
+  const onFooterSubmit = (e) => {
+    e.preventDefault();
+    props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        const newValues = {
+          free_delivery: values["free_delivery"],
+          free_return: values["free_return"],
+          customer_support: values["customer_support"],
+          money_back_guarantee: values["money_back_guarantee"],
+        };
+        setLoadingButtonFooter(true);
+        updateFooter(newValues).then(() => {
+          fetchFooter();
+          swal(CATranslate("text_save_success", props.locale), {
+            buttons: false,
+            timer: 1500,
+            icon: "success",
+          });
+        }).finally(() => setLoadingButtonFooter(false));
+      }
+    });
+  };
+
+  const onClickFooterItem = ({ item, key, keyPath, domEvent }) => {
+    setMenuSelect(key);
+  };
   
 
   // General Function
@@ -782,6 +837,7 @@ const WebsiteSetting = (props) => {
   // useEffect
   useEffect(() => {
     fetchGeneral();
+    fetchFooter();  
     // eslint-disable-next-line
   }, []);
 
@@ -793,6 +849,8 @@ const WebsiteSetting = (props) => {
       fetchFeaturedProducts();
     }else if(key === "menu_builder"){
       fetchMenuItems();
+    }else if(key === "footer"){
+      fetchFooter();
     }
   };
 
@@ -1763,6 +1821,71 @@ const WebsiteSetting = (props) => {
                     </Form>
                   </Col>
                 </Row>
+              </TabPane> 
+              <TabPane tab={"Footer"} key="footer">
+              <Form onSubmit={onFooterSubmit}>
+                <Row>    
+                  <Col lg="3" md="3">
+                    <Menu
+                      defaultSelectedKeys={["free_delivery"]} 
+                      onClick={onClickFooterItem} 
+                    >
+                       <Menu.Item key="free_delivery">
+                        Free Delivery
+                      </Menu.Item>
+                      <Menu.Item key="free_return">
+                        Free Return
+                      </Menu.Item>
+                      <Menu.Item key="customer_support">
+                      Customer Support   
+                     </Menu.Item>
+                     <Menu.Item key="money_back_guarantee">    
+                     Money Back Guarantee
+                     </Menu.Item>
+                    </Menu>  
+                      </Col>
+                      <Col lg="2" md="2">
+                        <div style={{display: menuSelect === "free_delivery" ? "block" : "none"}}>
+                          <InputText
+                            data={freeDelivery}
+                            name="free_delivery"
+                            form={props.form}
+                          /> 
+                        </div>
+                        <div style={{display: menuSelect === "free_return" ? "block" : "none"}}>
+                          <InputText
+                            data={freeReturn}
+                            name="free_return"
+                            form={props.form}
+                          /> 
+                        </div>
+                        <div style={{display: menuSelect === "customer_support" ? "block" : "none"}}>
+                          <InputText
+                            data={customerSupport}
+                            name="customer_support"
+                            form={props.form}
+                          />
+                        </div>
+                        <div style={{display: menuSelect === "money_back_guarantee" ? "block" : "none"}}>
+                         <InputText
+                          data={moneyBackGuarantee}
+                          name="money_back_guarantee"
+                          form={props.form}
+                          />
+                        </div>      
+                  </Col>
+                </Row>
+                <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="ant-btn info undefined"
+                        loading={loadingButtonFooter}
+                        style={{ marginTop: 15 }}
+                      >
+                        <span className="icon-save icon-padding-right"></span>
+                        {<Translate id="text_save" />}
+                      </Button>
+                      </Form> 
               </TabPane>       
             </Tabs>
           </Col>
