@@ -162,3 +162,45 @@ export function updateFooter(data){
   });
 }
 
+export function getPages(){
+  return axios({
+    method: "GET",
+    headers,
+    url: `${url}/pages`,
+  });
+}
+
+export function getPageById(id){
+  return axios({
+    method: "GET",
+    headers,
+    url: `${url}/pages/${id}`,
+  });
+}
+
+export function createPage(data) {
+  return axios({
+    method: "POST",
+    headers,
+    url: `${url}/pages`,
+    data,
+  });
+}
+
+export function updatePage(id,data) {
+  return axios({
+    method: "PUT",
+    headers,
+    url: `${url}/pages/${id}`,
+    data,
+  });
+}
+
+export function achivePage(id){
+  return axios({
+    method: "DELETE",
+    headers,
+    url: `${url}/pages/${id}`,
+  });
+}
+

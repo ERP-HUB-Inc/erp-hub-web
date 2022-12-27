@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Translate, getActiveLanguage } from "react-localize-redux";
 import { Col, Row } from "reactstrap";
+import CKEditor from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import {
   PageHeader,
   Form,
@@ -35,7 +37,12 @@ import {
   updateMenuItem,
   achiveMenuItem,
   getFooter,
-  updateFooter
+  updateFooter,
+  getPages,
+  createPage,
+  updatePage,
+  getPageById,
+  achivePage,
 } from "./service";
 import history from "../../../../common/router/history";
 import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
@@ -115,11 +122,103 @@ const WebsiteSetting = (props) => {
   const [customerSupport,setCustomerSupport] = useState("");
   const [moneyBackGuarantee,setMoneyBackGuarantee] = useState("");
 
+  // Pages State
+
+  const [visibleFormPages, setVisibleFormPages] = useState(false);
+  const [pageList,setPagelist] = useState([]);
+  const [loadingButtonPage,setLoadingButtonPage] = useState(false);
+  const [LoadingPageForm,setLoadingPageForm] = useState(false);
+  const [loadingPages,setLoadingPages] = useState(false);
+  const [visiblePagesTable, setVisiblePagesTable] = useState(true); 
+  const [pageId,setPageId] = useState(undefined);
+  const [bodyPage,setBodyPage] = useState("");
+  const [titlePage,setTitlePage] = useState("");
+  const [slugPage,setSlugPage] = useState("");
+
 
   const { TabPane } = Tabs;
   const { getFieldDecorator } = props.form;
   const util = new Util();
 
+
+  // Pages Function
+
+  const fetchPages = () => {
+    setLoadingPages(true);
+    getPages().then(response => {
+      const data = response.data.data;
+      if(data){
+        setPagelist(data);
+      };
+    }).finally(() => setLoadingPages(false));
+  };
+
+  const onShowFormPages = (id) => {
+    if(id){
+      setPageId(id);
+      setLoadingPageForm(true);
+      getPageById(id).then(response => {
+        const data = response.data.data;
+        if(data){
+          setTitlePage(data.title);
+          setSlugPage(data.slug);
+          setBodyPage(data.body);
+        }
+      }).finally(() => setLoadingPageForm(false));
+    }
+    setVisibleFormPages(true);
+    setVisiblePagesTable(false);
+  };
+
+  const onPageSubmit = (e) => {
+    e.preventDefault();
+    props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        const newValues = {
+          title: values["title"],
+          slug: values["slug"],
+          body: bodyPage
+        };
+        setLoadingButtonPage(true);
+        if(pageId){
+          updatePage(pageId,newValues).then(() => {
+            fetchPages();
+            onBackToPageTable();
+          }).finally(() => setLoadingButtonPage(false));
+        }else{
+          createPage(newValues).then(() => {
+            fetchPages();
+            onBackToPageTable();
+          }).finally(() => setLoadingButtonPage(false));
+        }
+       
+      }
+    });
+  };
+
+  const onBackToPageTable = () => {
+    props.form.resetFields();
+    setVisibleFormPages(false);
+    setVisiblePagesTable(true);
+    setLoadingButtonPage(false);
+    setPageId(undefined);
+    setBodyPage("");
+    setTitlePage("");
+    setSlugPage("");
+
+  };
+
+  const onDeletePage = (id) => {
+    util
+      .sweetAlertConfirm(CATranslate("text_confirm_delete", props.locale))
+      .then((willDelete) => {
+        if (willDelete) {
+          achivePage(id).then(() => {
+            fetchPages();
+          });
+        }
+      });
+  };
 
   // Footer Function
 
@@ -851,6 +950,8 @@ const WebsiteSetting = (props) => {
       fetchMenuItems();
     }else if(key === "footer"){
       fetchFooter();
+    }else if(key === "pages"){
+      fetchPages();
     }
   };
 
@@ -1886,7 +1987,143 @@ const WebsiteSetting = (props) => {
                         {<Translate id="text_save" />}
                       </Button>
                       </Form> 
-              </TabPane>       
+              </TabPane>    
+              <TabPane tab={"Pages"} key="pages">
+              <Row>
+                  <Col lg="12" md="12">
+                    <Form onSubmit={onPageSubmit}>
+                      {visiblePagesTable && (
+                        <React.Fragment>
+                          <Button
+                            type="info"
+                            id="btnAdd"
+                            className="ant-btn info mg-right text-uppercase"
+                            onClick={() => onShowFormPages()}
+                          >
+                            <span className="icon-add icon-padding-right"></span>
+                            {<Translate id="text_add_new" />}
+                          </Button>
+                          <Table
+                            rowKey={(record) => record.id.toString()}
+                            dataSource={pageList}
+                            columns={[
+                              {
+                                title: "Title",
+                                dataIndex: "title",
+                                key: "title",
+                              },
+                              {
+                                title: "Slug",
+                                dataIndex: "slug",
+                                key: "slug",
+                              },
+                              {
+                                title: <Translate id="text_action" />,
+                                dataIndex: "id",
+                                key: "id",
+                                render: (id) => {
+                                  return (
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                      }}
+                                    >
+                                      <Icon
+                                        type="edit"
+                                        style={{
+                                          marginRight: 8,
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => onShowFormPages(id)}
+                                      />
+                                      <Icon
+                                        type="delete"
+                                        style={{
+                                          cursor: "pointer",
+                                          color: "red",
+                                        }}
+                                        onClick={() => onDeletePage(id)}
+                                      />
+                                    </div>
+                                  );
+                                },
+                              },
+                            ]}
+                            loading={loadingPages}
+                            pagination={false}
+                          />
+                        </React.Fragment>
+                      )}
+                    {visibleFormPages &&(
+                      <React.Fragment>
+                        <PageHeader
+                            style={{
+                              padding: "0px 0px 15px 0px",
+                            }}
+                            onBack={onBackToPageTable}
+                            title={
+                              pageId ? (
+                                "Edit Page"
+                              ) : (
+                                "New Page"
+                              )
+                            }
+                            subTitle=""
+                          />
+                           {
+                            LoadingPageForm ? 
+                            <div className="spinning-menu-item-list">
+                            <Spin spinning={LoadingPageForm} /> 
+                          </div> :
+                           <Row>
+                           <Col lg="4" md="4">
+                           <InputText
+                             data={titlePage}
+                             name="title"
+                             label={"Title"}
+                             placeholder={"Title"}
+                             form={props.form}
+                           />
+                           <InputText
+                             data={slugPage}
+                             name="slug"
+                             label={"Slug"}
+                             placeholder={"Slug"}
+                             form={props.form}
+                           />
+                             <div >
+                               <div className="ant-form-item-label">
+                                 <label htmlFor="body">Body</label>
+                               </div>
+                               <div style={{ marginTop: 5 }}>
+                                 <CKEditor
+                                   editor={ClassicEditor}
+                                   data={bodyPage ? bodyPage : "<p></p>"}
+                                   onChange={(event, editor) => setBodyPage(editor.getData())}
+                                 />
+                               </div>
+                             </div>  
+                             <Button
+                               type="primary"
+                               htmlType="submit"
+                               className="ant-btn info undefined"
+                               loading={loadingButtonPage}
+                               style={{ marginTop: 15 }}
+                             >
+                               <span className="icon-save icon-padding-right"></span>
+                               {<Translate id="text_save" />}
+                             </Button> 
+                           </Col>
+                          </Row>
+                       
+                            }
+                          
+                      </React.Fragment>
+                    )}
+                  </Form>
+                </Col>
+              </Row>
+              </TabPane>   
             </Tabs>
           </Col>
         </Row>
