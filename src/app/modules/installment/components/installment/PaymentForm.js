@@ -5,7 +5,6 @@ import {
   Col,
   Drawer,
   Form, 
-  message, 
   Row,
   Select
 } from "antd";
@@ -34,16 +33,28 @@ export default class PaymentForm extends React.PureComponent {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        this.util.sweetAlertConfirm("", stringTranslate("text_are_you_sure", this.props.locale))
-        .then(willPay => {
-          if (willPay) {
-            values.installmentId = this.props.formData.id;
-            values.paidDate = this.util.formatDateForMYSQL(values.paidDate);
-            this.save(values);
+      if (err) {
+        return;
+      }
+
+      if (values.amount < values.amountToPaid) {
+        return this.props.form.setFields({
+          amount: {
+            value: values.amount,
+            errors: [new Error("Your input amount is not enough")]
           }
         });
       }
+
+      this.util.sweetAlertConfirm("", stringTranslate("text_are_you_sure", this.props.locale))
+      .then(willPay => {
+        if (willPay) {
+          values.installmentId = this.props.formData.id;
+          values.paidDate = this.util.formatDateForMYSQL(values.paidDate);
+          delete values.amountToPaid;
+          this.save(values);
+        }
+      });
     });
   };
 
@@ -54,15 +65,16 @@ export default class PaymentForm extends React.PureComponent {
       data.id = paymentId;
       RepaymentService.update(data, paymentId)
       .then(() => {
-        message.success("Payment updated");
+        this.util.sweetAlertMessageV2("Success", "Payment updated", "success");
         this.props.onSuccessUpdate(this.props.formData.id);
         this.props.form.resetFields();
       })
+      .catch(() => this.util.sweetAlertMessageV2("Error", "Something went wrong", "error"))
       .finally(() => this.setState({loading: false}));
     } else {
       RepaymentService.create(data)
       .then(() => {
-        message.success("Payment received!");
+        this.util.sweetAlertMessageV2("Success", "Payment received", "success");
         this.props.onSuccess(this.props.formData.id);
         this.props.form.resetFields();
       })
@@ -86,7 +98,10 @@ export default class PaymentForm extends React.PureComponent {
 
   handleChangeMonth = (value, row) => {
     if (value) {
-      this.props.form.setFieldsValue({amount: row.props.object.payAmount});
+      this.props.form.setFieldsValue({
+        amount: row.props.object.payAmount,
+        amountToPaid: row.props.object.payAmount
+      });
     }
   }
 
@@ -188,6 +203,11 @@ export default class PaymentForm extends React.PureComponent {
                     isAutoSelect={true}
                     required={true}
                     style={{paddingLeft: 10, width: "100%"}}
+                    form={form} />
+                  <InputNumber
+                    name="amountToPaid"
+                    data={this.getDefaultSchedule(formData).payAmount}
+                    style={{display: "none"}}
                     form={form} />
               </Col>
             </Row>

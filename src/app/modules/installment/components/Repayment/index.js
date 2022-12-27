@@ -72,7 +72,7 @@ class RepaymentList extends Component {
             statusColor = "#f5222d";
             statusTitle = <this.Translate id="text_overdue" />;
           }
-          return <Tag color={statusColor} style={{width: 100, textAlign: "center"}}>{statusTitle}</Tag>;
+          return <Tag color={statusColor} style={{width: 120, textAlign: "center"}}>{statusTitle}</Tag>;
         }
       },
       {
