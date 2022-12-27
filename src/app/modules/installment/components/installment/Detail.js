@@ -87,6 +87,10 @@ class DetailInstallment extends React.Component {
   }
 
   handlePay = () => {
+    this.setState(preState => {
+      preState.detail.payment = null;
+      return preState;
+    });
     this.paymentFormRef.onShowDrawer();
   }
 
@@ -108,6 +112,29 @@ class DetailInstallment extends React.Component {
     })
     .finally(() => this.setState({loadingPaymentHistory: false}));
     this.paymentHistoryRef.onShowDrawer();
+  }
+
+  handleEditPayment = (paymentId) => {
+    RepaymentService.detail(paymentId)
+    .then(response => {
+      const {detail} = this.state;
+      detail.payment = response.data.data;
+      this.setState({detail}, () => {
+        this.paymentHistoryRef.onCloseDrawer();
+        this.paymentFormRef.onShowDrawer();
+      });
+    });
+  }
+
+  handleAfterPaymentUpdate = (id) => {
+    this.setState({loading: true});
+    InstallmentService.detail(id)
+    .then(response => {
+      this.setState({detail: response.data.data});
+    })
+    .finally(() => this.setState({loading: false}));
+    this.paymentFormRef.onCloseDrawer();
+    this.handleShowPaymentHistory();
   }
 
   handlePrintA5 = () => {
@@ -197,13 +224,16 @@ class DetailInstallment extends React.Component {
           ref={ref => this.paymentFormRef = ref}
           formData={detail}
           locale={this.props.locale}
+          onGoBackHistory={this.handleShowPaymentHistory}
           onSuccess={this.handleAfterPayment}
+          onSuccessUpdate={this.handleAfterPaymentUpdate}
           form={this.props.form} />
 
         <PaymentHistory
           ref={ref => this.paymentHistoryRef = ref}
           loading={this.state.loadingPaymentHistory}
           data={this.state.paymentsHistory}
+          handleEditPayment={this.handleEditPayment}
           locale={this.props.locale}
         />
       </div>

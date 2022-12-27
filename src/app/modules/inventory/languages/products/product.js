@@ -184,6 +184,11 @@ export default {
     "ផលិតផលពិសេស"
   ],
 
+  "text_avialable_on_ecommerce": [
+    "Avialable on eCommerce",
+    "បង្ហាញនៅលើគេហទំព័រ"
+  ],
+
   "text_featured_offer": [
     "Featured Offer",
     "ការផ្តល់ជូនពិសេស"

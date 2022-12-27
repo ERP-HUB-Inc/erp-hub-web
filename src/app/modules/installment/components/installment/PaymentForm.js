@@ -5,6 +5,7 @@ import {
   Col,
   Drawer,
   Form, 
+  message, 
   Row,
   Select
 } from "antd";
@@ -48,17 +49,25 @@ export default class PaymentForm extends React.PureComponent {
 
   save(data) {
     this.setState({loading: true});
-    if (this.props.formData.repaymentId) {
-
+    if (this.props.formData.payment) {
+      const paymentId = this.props.formData.payment.id;
+      data.id = paymentId;
+      RepaymentService.update(data, paymentId)
+      .then(() => {
+        message.success("Payment updated");
+        this.props.onSuccessUpdate(this.props.formData.id);
+        this.props.form.resetFields();
+      })
+      .finally(() => this.setState({loading: false}));
     } else {
       RepaymentService.create(data)
-      .then(response => {
+      .then(() => {
+        message.success("Payment received!");
         this.props.onSuccess(this.props.formData.id);
         this.props.form.resetFields();
       })
       .catch(err => {
         const error = err.response && err.response.data && err.response.data.error;
-        console.log("error", error);
         let message = "";
         if (error.code === errStatus.notFound) {
           message = "Installment not found";
@@ -87,18 +96,27 @@ export default class PaymentForm extends React.PureComponent {
 
   onCloseDrawer = () => {
     this.setState({visible: false});
+    if (this.props.formData.payment) {
+      this.props.onGoBackHistory();
+    }
   }
 
-  getDefaultMonth(schedules) {
+  getDefaultSchedule(formData) {
     let result = {
       id: "",
-      payAmount: 0
+      payAmount: 0,
+      paidDate: moment()
     };
-
-    const currentMonth = schedules && schedules.find(schedule => moment(schedule.date).format("YYYY-MM") === moment().format("YYYY-MM"));
-    if (currentMonth) {
-      result.id = currentMonth.id;
-      result.payAmount = currentMonth.payAmount;
+    if (formData.payment) {
+      result.id = formData.payment.paymentScheduleId;
+      result.payAmount = formData.payment.amount;
+      result.paidDate = moment(formData.payment.paidDate);
+    } else {
+      const currentMonth = formData.paymentSchedule && formData.paymentSchedule.find(schedule => moment(schedule.date).format("YYYY-MM") === moment().format("YYYY-MM"));
+      if (currentMonth) {
+        result.id = currentMonth.id;
+        result.payAmount = currentMonth.payAmount;
+      }
     }
 
     return result;
@@ -108,82 +126,85 @@ export default class PaymentForm extends React.PureComponent {
     const {formData, form, locale} = this.props;
     return (
       <Drawer
-        title={<Translate id="text_payment" />}
+        title={<Translate id={`${formData.payment ? "text_edit_payment" : "text_payment"}`} />}
         width={520}
         closable={false}
         visible={this.state.visible}
         onClose={this.onCloseDrawer}
       >
-        <Form onSubmit={this.handleSubmit} style={{marginTop: -10}}>
-          <Row>
-            <Col md={10}>
-              <label style={{marginTop: 8}}><Translate id="text_pay_for_month" /> <span style={{color: "red"}}>*</span></label>
-            </Col>
-            <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
-              : <Form.Item
-                  style={{paddingLeft: 10, width: "100%"}}
-                >
-                  {
-                    form.getFieldDecorator("paymentScheduleId", {
-                      initialValue: this.getDefaultMonth(formData.paymentSchedule).id,
-                      rules: [
-                        {
-                          required: true,
-                          message: "Please select schedule"
-                        }
-                      ]
-                    })(
-                      <Select placeholder="Select schedule" allowClear onChange={this.handleChangeMonth}>
-                        {
-                          formData.paymentSchedule && formData.paymentSchedule.map((schedule, index) => 
-                            <Select.Option key={index} value={schedule.id} object={schedule}>
-                              {moment(schedule.date).format("MM-YYYY")}
-                            </Select.Option>
-                          )
-                        }
-                      </Select>
-                    )
-                  }
-                </Form.Item>
-            </Col>
-            <Col md={10}>
-              <label style={{marginTop: 8}}><Translate id="text_payment_date" /> <span style={{color: "red"}}>*</span></label>
-            </Col>
-            <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
-              : <DatePickers
-                  name="paidDate"
-                  placeholder={`${stringTranslate("text_payment_date", locale)}`}
-                  defaultValue={moment()}
-                  required={true}
-                  style={{paddingLeft: 10, width: "100%"}}
-                  form={form} /> 
-            </Col>
-            <Col md={10}>
-              <label style={{marginTop: 8}}><Translate id="text_amount" /> <span style={{color: "red"}}>*</span></label>
-            </Col>
-            <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
-              : <InputNumber 
-                  name="amount"
-                  data={this.getDefaultMonth(formData.paymentSchedule).payAmount}
-                  inputStyle={{background: "white", color: "#565656"}}
-                  isAutoSelect={true}
-                  required={true}
-                  style={{paddingLeft: 10, width: "100%"}}
-                  form={form} />
-            </Col>
-          </Row>
-          <div
-            style={{
-              width: "100%",
-              borderTop: "1px solid #e8e8e8",
-              paddingTop: 14,
-              background: "#fff",
-            }}
-          >
-            <Button type="danger" style={{marginRight: 15}} onClick={this.onCloseDrawer}><Translate id="text_cancel" /></Button>
-            <Button type="info" htmlType="submit" loading={this.state.loading}><Translate id="text_save" /></Button>
-          </div>
-        </Form>
+        {this.state.visible ?
+          <Form onSubmit={this.handleSubmit} style={{marginTop: -10}}>
+            <Row>
+              <Col md={10}>
+                <label style={{marginTop: 8}}><Translate id="text_pay_for_month" /> <span style={{color: "red"}}>*</span></label>
+              </Col>
+              <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
+                : <Form.Item
+                    style={{paddingLeft: 10, width: "100%"}}
+                  >
+                    {
+                      form.getFieldDecorator("paymentScheduleId", {
+                        initialValue: this.getDefaultSchedule(formData).id,
+                        rules: [
+                          {
+                            required: true,
+                            message: "Please select schedule"
+                          }
+                        ]
+                      })(
+                        <Select placeholder="Select schedule" allowClear onChange={this.handleChangeMonth}>
+                          {
+                            formData.paymentSchedule && formData.paymentSchedule.map((schedule, index) => 
+                              <Select.Option key={index} value={schedule.id} object={schedule}>
+                                {moment(schedule.date).format("MM-YYYY")}
+                              </Select.Option>
+                            )
+                          }
+                        </Select>
+                      )
+                    }
+                  </Form.Item>
+              </Col>
+              <Col md={10}>
+                <label style={{marginTop: 8}}><Translate id="text_payment_date" /> <span style={{color: "red"}}>*</span></label>
+              </Col>
+              <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
+                : <DatePickers
+                    name="paidDate"
+                    placeholder={`${stringTranslate("text_payment_date", locale)}`}
+                    defaultValue={this.getDefaultSchedule(formData).paidDate}
+                    required={true}
+                    style={{paddingLeft: 10, width: "100%"}}
+                    form={form} /> 
+              </Col>
+              <Col md={10}>
+                <label style={{marginTop: 8}}><Translate id="text_amount" /> <span style={{color: "red"}}>*</span></label>
+              </Col>
+              <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
+                : <InputNumber 
+                    name="amount"
+                    data={this.getDefaultSchedule(formData).payAmount}
+                    inputStyle={{background: "white", color: "#565656"}}
+                    isAutoSelect={true}
+                    required={true}
+                    style={{paddingLeft: 10, width: "100%"}}
+                    form={form} />
+              </Col>
+            </Row>
+            <div
+              style={{
+                width: "100%",
+                borderTop: "1px solid #e8e8e8",
+                paddingTop: 14,
+                background: "#fff",
+              }}
+            >
+              <Button type="danger" style={{marginRight: 15}} onClick={this.onCloseDrawer}><Translate id="text_cancel" /></Button>
+              <Button type="info" htmlType="submit" loading={this.state.loading}><Translate id="text_save" /></Button>
+            </div>
+          </Form>
+          : null
+        }
       </Drawer>
     );
   }
