@@ -14,6 +14,7 @@ import {
   Button
 } from "../../../common/elements/ant-ui";
 import Util from "../../../common/util";
+import Enum from "../../enum";
 import {stringTranslate} from "../../../common/helper/stringTranslate";
 import RepaymentService from "../../services/RepaymentService";
 
@@ -117,7 +118,7 @@ export default class PaymentForm extends React.PureComponent {
     if (formData.payment) {
       result.id = formData.payment.paymentScheduleId;
       result.payAmount = formData.payment.amount;
-      result.paidDate = moment(formData.payment.paidDate);
+      result.paidDate = formData.payment.paidDate && moment(formData.payment.paidDate);
     } else {
       const currentMonth = formData.paymentSchedule && formData.paymentSchedule.find(schedule => moment(schedule.date).format("YYYY-MM") === moment().format("YYYY-MM"));
       if (currentMonth) {
@@ -131,6 +132,12 @@ export default class PaymentForm extends React.PureComponent {
 
   render() {
     const {formData, form, locale} = this.props;
+    const defaultSchedule = this.getDefaultSchedule(formData);
+    const schedules = formData.paymentSchedule && formData.paymentSchedule.filter(
+      schedule => schedule.status === Enum.REPAYMENT_STATUS.PENDING ||
+      schedule.id === defaultSchedule.id
+    );
+
     return (
       <Drawer
         title={<Translate id={`${formData.isEditPayment ? "text_edit_payment" : "text_payment"}`} />}
@@ -151,7 +158,7 @@ export default class PaymentForm extends React.PureComponent {
                   >
                     {
                       form.getFieldDecorator("paymentScheduleId", {
-                        initialValue: this.getDefaultSchedule(formData).id,
+                        initialValue: defaultSchedule.id,
                         rules: [
                           {
                             required: true,
@@ -159,9 +166,13 @@ export default class PaymentForm extends React.PureComponent {
                           }
                         ]
                       })(
-                        <Select placeholder="Select schedule" allowClear onChange={this.handleChangeMonth}>
+                        <Select placeholder="Select schedule" 
+                          allowClear 
+                          onChange={this.handleChangeMonth}
+                          disabled={formData.payment && formData.payment.disableSchedule ? true : false}
+                        >
                           {
-                            formData.paymentSchedule && formData.paymentSchedule.map((schedule, index) => 
+                            schedules && schedules.map((schedule, index) => 
                               <Select.Option key={index} value={schedule.id} object={schedule}>
                                 {moment(schedule.date).format("MM-YYYY")}
                               </Select.Option>
@@ -179,7 +190,7 @@ export default class PaymentForm extends React.PureComponent {
                 : <DatePickers
                     name="paidDate"
                     placeholder={`${stringTranslate("text_payment_date", locale)}`}
-                    defaultValue={this.getDefaultSchedule(formData).paidDate}
+                    defaultValue={defaultSchedule.paidDate}
                     required={true}
                     style={{paddingLeft: 10, width: "100%"}}
                     form={form} /> 
@@ -190,8 +201,7 @@ export default class PaymentForm extends React.PureComponent {
               <Col md={14} style={{display: "flex", lineHeight: "35px"}}>
                 : <InputNumber 
                     name="amount"
-                    data={this.getDefaultSchedule(formData).payAmount}
-                    inputStyle={{background: "white", color: "#565656"}}
+                    data={defaultSchedule.payAmount}
                     isAutoSelect={true}
                     required={true}
                     disabled={true}

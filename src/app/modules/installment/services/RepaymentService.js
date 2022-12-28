@@ -23,6 +23,14 @@ class RepaymentService extends BaseService {
     });
   }
 
+  detailSchedule(scheduleId) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/schedule/${scheduleId}`,
+      headers: this.header
+    });
+  }
+
   getHistory(installmentId) {
     this.setHeader();
     return this.GET({
