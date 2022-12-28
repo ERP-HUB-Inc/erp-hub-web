@@ -58,5 +58,9 @@ export default {
   "no_payment_history": [
     "No payment history",
     "មិនមានប្រវត្តិបង់ប្រាក់"
+  ],
+  "text_pending": [
+    "Pending",
+    "កំពុងរង់ចាំ"
   ]
 };

@@ -27,7 +27,7 @@ class RepaymentList extends Component {
       detail: {}
     };
     this.REPAYMENT_STATUS_STR = {
-      [Enum.REPAYMENT_STATUS.PENDING]: { title: "Pending", color: "#bfbfbf"},
+      [Enum.REPAYMENT_STATUS.PENDING]: { title: <this.Translate id="text_pending" />, color: "#ffa940"},
       [Enum.REPAYMENT_STATUS.PAID]: { title: <this.Translate id="text_paid" />, color: "#52c41a"},
     };
     this.columns = [
@@ -298,7 +298,7 @@ class RepaymentList extends Component {
             <div className="table-wrapper">
               <Row>
                 <Col span={6} style={{marginBottom: 0}}>
-                  <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_repayment" /></h3>
+                  <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_payment" /></h3>
                 </Col>
                 <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "flex-end"}}>
                   <this.InputText
