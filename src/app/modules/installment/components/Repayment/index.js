@@ -8,11 +8,14 @@ import {
   Icon,
   Pagination,
   Tag,
+  Dropdown,
+  Menu,
 } from "antd";
 import Enum from "../../enum";
 import Component from "../../../common/components/Component";
 import RepaymentService from "../../services/RepaymentService";
-import history from "../../../common/router/history";
+import PaymentForm from "../installment/PaymentForm";
+import InstallmentService from "../../services/InstallmentService";
 
 class RepaymentList extends Component {
   constructor(props) {
@@ -20,7 +23,8 @@ class RepaymentList extends Component {
     this.state = {
       data: [],
       pagination: {},
-      loading: false
+      loading: false,
+      detail: {}
     };
     this.REPAYMENT_STATUS_STR = {
       [Enum.REPAYMENT_STATUS.PENDING]: { title: "Pending", color: "#bfbfbf"},
@@ -36,7 +40,31 @@ class RepaymentList extends Component {
       {
         title: <this.Translate id="text_phone_number" />,
         dataIndex: "phoneNumber",
-        key: "phoneNumber"
+        key: "phoneNumber",
+        width: 300,
+        render: (phoneNumber, record) => {
+          const menu = (
+            <Menu>
+              <Menu.Item>
+                <this.Link to={`/installment/detail/${record.installmentId}`}>
+                  <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_detail" />
+                </this.Link>
+              </Menu.Item>
+              <Menu.Item onClick={() => this.handlePayment(record)}>
+                <Icon type="dollar" style={{marginRight: 10}} /> <this.Translate id="text_pay" />
+              </Menu.Item>
+            </Menu>
+          );
+          return <div className="wrap-product-name" style={{display: "flex"}}>
+            {phoneNumber}
+            <Dropdown className="product-row-option" overlay={menu}>
+              {/* eslint-disable-next-line */}
+              <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
+                <this.Translate id="text_option" /> <Icon type="down" />
+              </a>
+            </Dropdown>
+          </div>;
+        }
       },
       {
         title: <this.Translate id="text_received_date" />,
@@ -169,6 +197,31 @@ class RepaymentList extends Component {
     .finally(() => this.setState({loading: false}));
   }
 
+  handlePayment(record) {
+    const {detail} = this.state;
+    detail.id = record.installmentId;
+    InstallmentService.detail(record.installmentId)
+    .then(response => {
+      Object.assign(detail, response.data.data);
+      detail.payment = {
+        paymentScheduleId: record.id,
+        amount: record.payAmount,
+        paidDate: record.date
+      };
+      this.setState({detail}, () => {
+        this.paymentRef.onShowDrawer();
+      });
+    });
+  }
+
+  handleAfterPayment = (id) => {
+    const params = new URLSearchParams(document.location.search);
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+    this.setState({detail: {}});
+    this.paymentRef.onCloseDrawer();
+  }
+
   handleSearch = (e) => {
     clearTimeout(this.timer);
     const value = e.target.value;
@@ -273,9 +326,6 @@ class RepaymentList extends Component {
                 rowKey="id"
                 loading={this.state.loading}
                 columns={this.columns}
-                onRow={record =>({
-                  onDoubleClick:() => history.push(`/installment/detail/${record.installmentId}`)
-                })}
                 dataSource={this.state.data}
               />
 
@@ -284,6 +334,14 @@ class RepaymentList extends Component {
               </div>
 
               <this.clearFloating/>
+
+              <PaymentForm 
+                ref={ref => this.paymentRef = ref}
+                formData={this.state.detail}
+                onSuccess={this.handleAfterPayment}
+                onSuccessUpdate={this.handleAfterPayment}
+                locale={this.props.locale}
+                form={this.props.form} />
             </div>
           </div>
         </div>

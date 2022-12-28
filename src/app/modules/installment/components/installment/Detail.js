@@ -119,6 +119,7 @@ class DetailInstallment extends React.Component {
     .then(response => {
       const {detail} = this.state;
       detail.payment = response.data.data;
+      detail.isEditPayment = true;
       this.setState({detail}, () => {
         this.paymentHistoryRef.onCloseDrawer();
         this.paymentFormRef.onShowDrawer();

@@ -876,7 +876,7 @@ export default class Util {
     });
   }
 
-  sweetAlertMessageV2(title, text, icon, button, timer = 1500) {
+  sweetAlertMessageV2(title, text, icon, button, timer = 2000) {
     const option = {
       title,
       text,

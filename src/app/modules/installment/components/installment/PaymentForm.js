@@ -37,21 +37,11 @@ export default class PaymentForm extends React.PureComponent {
         return;
       }
 
-      if (values.amount < values.amountToPaid) {
-        return this.props.form.setFields({
-          amount: {
-            value: values.amount,
-            errors: [new Error("Your input amount is not enough")]
-          }
-        });
-      }
-
       this.util.sweetAlertConfirm("", stringTranslate("text_are_you_sure", this.props.locale))
       .then(willPay => {
         if (willPay) {
           values.installmentId = this.props.formData.id;
           values.paidDate = this.util.formatDateForMYSQL(values.paidDate);
-          delete values.amountToPaid;
           this.save(values);
         }
       });
@@ -60,7 +50,7 @@ export default class PaymentForm extends React.PureComponent {
 
   save(data) {
     this.setState({loading: true});
-    if (this.props.formData.payment) {
+    if (this.props.formData.payment && this.props.formData.isEditPayment) {
       const paymentId = this.props.formData.payment.id;
       data.id = paymentId;
       RepaymentService.update(data, paymentId)
@@ -112,7 +102,9 @@ export default class PaymentForm extends React.PureComponent {
   onCloseDrawer = () => {
     this.setState({visible: false});
     if (this.props.formData.payment) {
-      this.props.onGoBackHistory();
+      if (this.props.onGoBackHistory) {
+        this.props.onGoBackHistory();
+      }
     }
   }
 
@@ -141,7 +133,7 @@ export default class PaymentForm extends React.PureComponent {
     const {formData, form, locale} = this.props;
     return (
       <Drawer
-        title={<Translate id={`${formData.payment ? "text_edit_payment" : "text_payment"}`} />}
+        title={<Translate id={`${formData.isEditPayment ? "text_edit_payment" : "text_payment"}`} />}
         width={520}
         closable={false}
         visible={this.state.visible}
@@ -202,12 +194,8 @@ export default class PaymentForm extends React.PureComponent {
                     inputStyle={{background: "white", color: "#565656"}}
                     isAutoSelect={true}
                     required={true}
+                    disabled={true}
                     style={{paddingLeft: 10, width: "100%"}}
-                    form={form} />
-                  <InputNumber
-                    name="amountToPaid"
-                    data={this.getDefaultSchedule(formData).payAmount}
-                    style={{display: "none"}}
                     form={form} />
               </Col>
             </Row>
