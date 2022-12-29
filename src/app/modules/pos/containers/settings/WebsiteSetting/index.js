@@ -56,6 +56,7 @@ const WebsiteSetting = (props) => {
   const [secondaryColor, setSecondaryColor] = useState("#FFFFFF");
   const [generalLoadingButton, setGeneralLoadingButton] = useState(false);
   const [placeholderImage, setPlaceholderImage] = useState(null);
+  const [favicon, setFavIcon] = useState(null);
   const [theme, setTheme] = useState("");
 
   // Banner State
@@ -311,6 +312,7 @@ const WebsiteSetting = (props) => {
         if ("theme" in data) {
           setTheme(data.theme);
         }
+        
         if (!data.placeHolderImage) {
           setPlaceholderImage(null);
         } else {
@@ -321,7 +323,22 @@ const WebsiteSetting = (props) => {
               uid: "1",
               name: splitName[2],
               status: "done",
-              url: util.getWebsitePlaceholderImage(data.placeHolderImage).url,
+              url: util.getWebsiteImage(data.placeHolderImage).url,
+            },
+          });
+        }
+        
+        if (!data.favicon) {
+          setFavIcon(null);
+        } else {
+          const splitName = data.favicon.split("/");
+
+          setFavIcon({
+            ...{
+              uid: "1",
+              name: splitName[2],
+              status: "done",
+              url: util.getWebsiteImage(data.favicon).url,
             },
           });
         }
@@ -361,12 +378,11 @@ const WebsiteSetting = (props) => {
           },
           {
             key: "placeHolderImage",
-            value: values["placeHolderImage"]
-              ? `website/placeholder/${getImageFromUpload(
-                  values,
-                  "placeHolderImage"
-                )}`
-              : "",
+            value: values["placeHolderImage"] ? `website/placeholder/${getImageFromUpload(values, "placeHolderImage")}` : "",
+          },
+          {
+            key: "favicon",
+            value: values["favicon"] ? `website/favicon/${getImageFromUpload(values, "favicon")}` : "",
           },
           {
             key: "theme",
@@ -453,7 +469,7 @@ const WebsiteSetting = (props) => {
                       uid: `${Date.now()}`,
                       name: splitName[2],
                       status: "done",
-                      url: util.getWebsitePlaceholderImage(value.image).url,
+                      url: util.getWebsiteImage(value.image).url,
                     }
                   : null,
               };
@@ -973,7 +989,7 @@ const WebsiteSetting = (props) => {
     return image;
   };
 
-  const uploadProps = {
+  const uploadPlaceholderImageProps = {
     listType: "picture-card",
     onRemove: (file) => {
       axios({
@@ -984,7 +1000,7 @@ const WebsiteSetting = (props) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${util.getAccessToken()}`,
         },
-      }).then((response) => {
+      }).then(() => {
         props.form.setFieldsValue({ placeHolderImage: null });
       });
       setPlaceholderImage(null);
@@ -1010,6 +1026,53 @@ const WebsiteSetting = (props) => {
           )
           .then((response) => {
             setPlaceholderImage({
+              uid: "1",
+              name: response.data.originalname,
+              status: "done",
+              url: response.data.location,
+            });
+          });
+      }
+    },
+  };
+
+  const uploadFaviconProps = {
+    listType: "picture-card",
+    onRemove: (file) => {
+      axios({
+        method: "DELETE",
+        url: `${util.getAPIURL()}/file/v1/delete`,
+        data: { path: `website/favicon/${file.name}` },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${util.getAccessToken()}`,
+        },
+      }).then(() => {
+        props.form.setFieldsValue({ favicon: null });
+      });
+      setFavIcon(null);
+    },
+    beforeUpload: (file) => {
+      return false;
+    },
+    fileList: favicon ? [favicon] : [],
+    onChange: ({ file }) => {
+      let formData = new FormData();
+      formData.append("image", file);
+      if (file.status !== "removed") {
+        axios
+          .post(
+            `${util.getAPIURL()}/file/v1/upload/web_favicon`,
+            formData,
+            {
+              headers: {
+                "content-type": "multipart/form-data",
+                Authorization: `Bearer ${util.getAccessToken()}`,
+              },
+            }
+          )
+          .then((response) => {
+            setFavIcon({
               uid: "1",
               name: response.data.originalname,
               status: "done",
@@ -1116,35 +1179,6 @@ const WebsiteSetting = (props) => {
                           </div>
                         </div>
                       </div>
-                      {/* <Select
-                        label={<Translate id="text_theme" />}
-                        form={props.form}
-                        onChange={onSelectTheme}
-                        defaultValue={theme}
-                        required={true}
-                        name="theme"
-                        placeholder={
-                          <Translate id="text_please_select_theme" />
-                        }
-                        dataSource={[
-                          {
-                            value: "template_1",
-                            name: "Hmart",
-                          },
-                          {
-                            value: "template_2",
-                            name: "Koganic",
-                          },
-                          {
-                            value: "template_3",
-                            name: "Stylista",
-                          },
-                          {
-                            value: "template_4",
-                            name: "Technocy",
-                          }
-                        ]}
-                      /> */}
                       <InputText
                         data={description}
                         name="description"
@@ -1158,7 +1192,7 @@ const WebsiteSetting = (props) => {
                       {React.useMemo(
                         () => (
                           <UploadImage
-                            uploadProps={uploadProps}
+                            uploadProps={uploadPlaceholderImageProps}
                             form={props.form}
                             name="placeHolderImage"
                             label={<Translate id="text_placeholder_image" />}
@@ -1167,17 +1201,19 @@ const WebsiteSetting = (props) => {
                         // eslint-disable-next-line
                         [placeholderImage]
                       )}
-                      {/* <UploadImg
-                        data={{ file: placeholderImage }}
-                        fileList={[placeholderImage]}
-                        name="placeHolderImage"
-                        label={"Placeholder Image"}
-                        endPoint={`${util.getAPIURL()}/file/v1/upload/web_placeholder`}
-                        endPointDelete={`${util.getAPIURL()}/file/v1/delete`}
-                        accessToken={util.getAccessToken()}
-                        pathName={"website/placeholder"}
-                        form={props.form}
-                      /> */}
+
+                      {React.useMemo(
+                        () => (
+                          <UploadImage
+                            uploadProps={uploadFaviconProps}
+                            form={props.form}
+                            name="favicon"
+                            label={"Favicon"}
+                          />
+                        ),
+                        // eslint-disable-next-line
+                        [favicon]
+                      )}
                       <Button
                         type="primary"
                         htmlType="submit"
@@ -2227,6 +2263,7 @@ function UploadImageBanner({
     </div>
   );
 }
+
 
 const UploadButton = () => (
   <div>

@@ -527,7 +527,7 @@ export default class Util {
     };
   }
 
-  getWebsitePlaceholderImage(fileName) {
+  getWebsiteImage(fileName) {
     return {
       url: `${
         process.env.REACT_APP_RESOURCE_HOST
