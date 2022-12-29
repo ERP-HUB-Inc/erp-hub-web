@@ -5,7 +5,6 @@ import {
   Form,
   Row,
   Col,
-  Icon,
   Pagination,
   Tag,
   Dropdown,
@@ -47,12 +46,19 @@ class RepaymentList extends Component {
             <Menu>
               <Menu.Item>
                 <this.Link to={`/installment/detail/${record.installmentId}`}>
-                  <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_detail" />
+                  <this.Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_detail" />
                 </this.Link>
               </Menu.Item>
               <Menu.Item onClick={() => this.handlePayment(record)}>
-                <Icon type="dollar" style={{marginRight: 10}} /> <this.Translate id="text_pay" />
+                <this.Icon type="dollar" style={{marginRight: 10}} /> <this.Translate id="text_pay" />
               </Menu.Item>
+              {
+                record.status === Enum.REPAYMENT_STATUS.PAID ?
+                  <Menu.Item onClick={() => this.handleEditPayment(record)}>
+                    <this.Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit_payment" />
+                  </Menu.Item>
+                : null
+              }
             </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
@@ -60,7 +66,7 @@ class RepaymentList extends Component {
             <Dropdown className="product-row-option" overlay={menu}>
               {/* eslint-disable-next-line */}
               <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
-                <this.Translate id="text_option" /> <Icon type="down" />
+                <this.Translate id="text_option" /> <this.Icon type="down" />
               </a>
             </Dropdown>
           </div>;
@@ -206,7 +212,8 @@ class RepaymentList extends Component {
       detail.payment = {
         paymentScheduleId: record.id,
         amount: record.payAmount,
-        paidDate: record.date
+        paidDate: moment().format("YYYY-MM-DD"),
+        disableSchedule: true
       };
       this.setState({detail}, () => {
         this.paymentRef.onShowDrawer();
@@ -214,10 +221,37 @@ class RepaymentList extends Component {
     });
   }
 
+  handleEditPayment(record) {
+    const {detail} = this.state;
+    RepaymentService.detailSchedule(record.id)
+    .then(response => {
+      const data = response.data.data;
+      detail.id = record.installmentId;
+      detail.isEditPayment = true;
+      detail.payment = {
+        id: data.repaymentId,
+        paymentScheduleId: data.id,
+        amount: data.amount,
+        paidDate: data.paidDate,
+        disableSchedule: true
+      };
+      detail.paymentSchedule = [{
+        id: record.id,
+        date: record.date,
+        payAmount: record.payAmount,
+        balance: record.balance
+      }];
+      this.setState({detail}, () => {
+        this.paymentRef.onShowDrawer();
+      });
+    });
+  }
+
   handleAfterPayment = (id) => {
+    console.log("updated");
     const params = new URLSearchParams(document.location.search);
     this.Util.pushParamsToURL(this.pathname, params.toString());
-    this.fetchList();
+    this.fetchList(true);
     this.setState({detail: {}});
     this.paymentRef.onCloseDrawer();
   }
@@ -304,7 +338,7 @@ class RepaymentList extends Component {
                   <this.InputText
                     name="search"
                     placeholder={this.CATranslate("text_search", this.props.locale)}
-                    prefix={<Icon type="search" />}
+                    prefix={<this.Icon type="search" />}
                     style={{height: 32, width: 200, marginBottom: 0}}
                     allowClear={true}
                     onChange={this.handleSearch}
