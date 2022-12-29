@@ -1,9 +1,7 @@
 import React from "react";
 import moment from "moment";
-import _ from "lodash";
 import {connect} from "react-redux";
 import {Translate} from "react-localize-redux";
-import BarcodeReader from "react-barcode-reader";
 import {Link} from "react-router-dom";
 import {
   Form,
@@ -65,53 +63,39 @@ class FormItem extends React.Component {
     },
     {
       title: <Translate id="text_description" />,
-      dataIndex: "description",
+      dataIndex: "productName",
       key: "description",
       width: 600,
-      render: (productVariantId, record, index) => {
-        const {formData} = this.state;
+      render: (productName, record, index) => {
         return (
           <div>
-            {record.name}
+            {productName} {record.variantName}
             {
-              record.enableDescription &&
+              record.enableDescription || record.serialNo ?
               <div style={{width: 200, marginTop: 6}}>
-                <InputText
-                  name="serialId"
-                  data={formData.serial ? formData.serial.id : ""}
-                  style={{display: "none"}}
-                  form={this.props.form} />
-                <BarcodeReader
-                  minLength={4}
-                  onError={this.handleScanError}
-                  onScan={this.handleScan}
-                  preventDefault={true}
-                  avgTimeByChar={40}
-                  endChar={[13]}
-                  timeBeforeScanTest={200} />
                 <InputText 
-                  name="serialNo"
+                  name={`serialNo[${index}]`}
                   label="Serial or IMEI"
                   required={true}
                   placeholder="Serial or IMEI"
-                  data={formData.serialNo}
-                  onChange={this.onChangeSerial}
+                  data={record.serialNo}
+                  onChange={(e) => this.onChangeSerial(e.target.value, index)}
                   form={this.props.form} />
                 <InputNumber
-                  name="numOfWarranty"
+                  name={`numOfWarranty[${index}]`}
                   label={<Translate id="text_warranty_duration" />}
                   required={true}
                   precision={0}
                   style={{padding: "6px 0"}}
                   isAutoSelect={true}
-                  data={formData.serial && formData.serial.numOfWarranty}
+                  data={record.numOfWarranty}
                   min={0}
                   form={this.props.form} />
                 <Select 
-                  name="serialDurationType"
+                  name={`serialDurationType[${index}]`}
                   label={<Translate id="text_duration_type" />}
                   required={true}
-                  defaultValue={formData.serial ? formData.serial.durationType : Enum.DURATION_TYPE.DAY}
+                  defaultValue={record.serial ? record.durationType : Enum.DURATION_TYPE.DAY}
                   dataSource={[
                     {name: <Translate id="text_day" />, value: Enum.DURATION_TYPE.DAY},
                     {name: <Translate id="text_week" />, value: Enum.DURATION_TYPE.WEEK},
@@ -120,7 +104,7 @@ class FormItem extends React.Component {
                   ]}
                   form={this.props.form} />
               </div>
-            }
+            : null}
           </div>
         );
       }
@@ -131,11 +115,17 @@ class FormItem extends React.Component {
       key: "quantity"
     },
     {
+      title: <Translate id="text_price" />,
+      dataIndex: "price",
+      key: "price",
+      render: (price) => this.Util.formatCurrency(price)
+    },
+    {
       title: <Translate id="text_amount" />,
       dataIndex: "amount",
       key: "amount",
       align: "right",
-      render: (amount, record) => {
+      render: (amount, record, index) => {
         const {formData} = this.state;
         return <div>
           {this.Util.formatCurrency(record.quantity * record.price)}
@@ -143,7 +133,7 @@ class FormItem extends React.Component {
             formData.id && formData.status !== EnumINS.INSTALLMENT_STATUS.DRAFT ?
             null
             :
-            <Icon style={{color: "red", marginLeft: 5}} onClick={() => this.handleDeleteProduct()} type="close" />
+            <Icon style={{color: "red", marginLeft: 5}} onClick={() => this.handleDeleteProduct(index)} type="close" />
           }
         </div>;
       }
@@ -221,6 +211,7 @@ class FormItem extends React.Component {
       duration: 0,
       durationType: Enum.DURATION_TYPE.MONTH,
       rate: 0,
+      firstPayment: 0,
       paymentDate: "",
       customer: {
         firstName: "",
@@ -231,7 +222,7 @@ class FormItem extends React.Component {
       client: {
         businessNamekm: Util.prototype.getSetting().businessNamekm
       },
-      products: [],
+      installmentEntries: [],
       paymentSchedule: []
     };
     this.setState({formData});
@@ -244,7 +235,6 @@ class FormItem extends React.Component {
       if (response) {
         const data = response.data.data;
         const formData = data;
-        formData.products = [data.productVariant];
         this.setState({formData});
       }
     })
@@ -253,12 +243,23 @@ class FormItem extends React.Component {
     });
   }
 
-  generatePaymentSchedule(price, rate, numberOfMonth, paymentDate) {
+  generatePaymentSchedule(rate, numberOfMonth, paymentDate) {
+    const {formData} = this.state;
+    let price = 0;
+
+    formData.installmentEntries && formData.installmentEntries.forEach(entry => {
+      price += this.Util.floor(entry.quantity * entry.price);
+    });
+    price = price - formData.firstPayment;
+
+    if (price < 0) {
+      price = 0;
+    }
+
     if (!(price && rate && numberOfMonth && paymentDate)) {
       return;
     }
 
-    const {formData} = this.state;
     InstallmentService.generatePaymentSchedule(price, rate, numberOfMonth, paymentDate)
     .then(response => {
       if (response) {
@@ -286,29 +287,40 @@ class FormItem extends React.Component {
           return;
         }
 
-        if (!formData.productVariantId) {
+        if (!formData.installmentEntries.length) {
           return this.Util.sweetAlertMessageV2("Error", "Please select product", "error");
         }
 
-        values.productVariantId = formData.productVariantId;
-        values.productName = formData.products[0].name;
         values.receiveDate = this.Util.formatDateForMYSQL(values.receiveDate);
         values.paymentDate = this.Util.formatDateForMYSQL(values.paymentDate);
-        values.price = formData.price;
-        values.total = _.sumBy(formData.paymentSchedule, "payAmount");
         if (moment(values.receiveDate).isValid()) {
           values.status = EnumINS.INSTALLMENT_STATUS.RECEIVED;
         }
-        values.serial = {
-          id: values.serialId,
-          number: values.serialNo,
-          numOfWarranty: values.numOfWarranty,
-          durationType: values.serialDurationType
-        };
-        
-        delete values.searchProduct;
+
+        const installmentEntries = [];
+        let total = 0;
+        formData.installmentEntries.forEach((entry, index) => {
+          total += entry.quantity * entry.price;
+          installmentEntries.push({
+            id: entry.id,
+            productVariantId: entry.productVariantId,
+            productName: entry.productName,
+            variantName: entry.variantName,
+            quantity: entry.quantity,
+            price: entry.price,
+            serialId: entry.serialId,
+            numOfWarranty: values.numOfWarranty[index],
+            durationType: values.serialDurationType[index],
+            serialNo: entry.serialNo
+          });
+        });
+        values.total = total;
+        values.installmentEntries = installmentEntries;
+        delete values.serialNo;
         delete values.serialDurationType;
         delete values.numOfWarranty;
+        delete values.searchProduct;
+        console.log("values", values);
         this.save(values);
       }
     });
@@ -343,12 +355,11 @@ class FormItem extends React.Component {
     }
   }
 
-  onChangeSerial = (e) => {
+  onChangeSerial = (value, index) => {
     clearTimeout(this.timer);
-    const value = e.target.value;
-    if (value !== this.state.formData.serialNo) {
+    if (value !== this.state.formData.installmentEntries[index].serialNo) {
       this.timer = setTimeout(() => {
-        SerialService.findByNumber(value, this.state.formData.productVariantId)
+        SerialService.findByNumber(value, this.state.formData.installmentEntries[index].productVariantId)
         .then(response => {
           if (response.data && response.data.length) {
             return this.props.form.setFields({
@@ -358,36 +369,13 @@ class FormItem extends React.Component {
             });
           } else {
             this.setState(preState => {
-              preState.formData.serialNo = value;
+              preState.formData.installmentEntries[index].serialNo = value;
               return preState;
             });
           }
         });
       });
     }
-  }
-
-  handleScan = (value) => {
-    this.setState({ isScanBarcode: true });
-
-    if (value !== this.state.formData.serialNo) {
-      SerialService.findByNumber(value, this.state.formData.productVariantId)
-      .then(response => {
-        if (response.data && response.data.length) {
-          return this.props.form.setFields({
-            serialNo: {
-              errors: [new Error(value + ": " + stringTranslate("text_this_serial_is_sold", this.props.locale))]
-            }
-          });
-        }
-      });
-    }
-
-    this.props.form.setFieldsValue({serialNo: value});
-  }
-
-  handleScanError = (err) => {
-    console.error(err);
   }
 
   handleChangePayDate = (date) => {
@@ -416,7 +404,21 @@ class FormItem extends React.Component {
       preState.formData.rate = rate;
       return preState;
     });
-    this.generatePaymentSchedule(formData.price, rate, numberOfMonth, formData.paymentDate);
+    this.generatePaymentSchedule(rate, numberOfMonth, formData.paymentDate);
+  }
+
+  handleChangeFirstPayment = (value) => {
+    const {formData} = this.state;
+    let numberOfMonth = formData.duration;
+    if (formData.durationType === Enum.DURATION_TYPE.YEAR) {
+      numberOfMonth = numberOfMonth * 12;
+    }
+
+    this.setState(preState => {
+      preState.formData.firstPayment = value;
+      return preState;
+    });
+    this.generatePaymentSchedule(formData.rate, numberOfMonth, formData.paymentDate);
   }
 
   handelChangeDuration = (duration) => {
@@ -429,7 +431,7 @@ class FormItem extends React.Component {
       preState.formData.duration = duration;
       return preState;
     });
-    this.generatePaymentSchedule(formData.price, formData.rate, numberOfMonth, formData.paymentDate);
+    this.generatePaymentSchedule(formData.rate, numberOfMonth, formData.paymentDate);
   }
 
   handelChangeDurationType = (type) => {
@@ -442,19 +444,18 @@ class FormItem extends React.Component {
       preState.formData.durationType = type;
       return preState;
     });
-    this.generatePaymentSchedule(formData.price, formData.rate, numberOfMonth, formData.paymentDate);
+    this.generatePaymentSchedule(formData.rate, numberOfMonth, formData.paymentDate);
   }
 
-  handleDeleteProduct() {
+  handleDeleteProduct(index) {
+    const installmentEntries = this.Util.copyArrayObj(this.state.formData.installmentEntries);
     if (this.id) {
       this.Util.sweetAlertConfirm(stringTranslate("text_confirm", this.props.locale), stringTranslate("text_are_you_sure", this.props.locale))
       .then(willDelete => {
         if (willDelete) {
           this.setState(preState => {
-            preState.formData.productVariantId = "";
-            preState.formData.productVariant = {};
-            preState.formData.products = [];
-            preState.formData.price = 0;
+            installmentEntries[index].status = Enum.ARCHIVE;
+            preState.formData.installmentEntries = installmentEntries;
             preState.formData.paymentSchedule = [];
             return preState;
           });
@@ -462,10 +463,8 @@ class FormItem extends React.Component {
       });
     } else {
       this.setState(preState => {
-        preState.formData.productVariant = {};
-        preState.formData.productVariantId = "";
-        preState.formData.products = [];
-        preState.formData.price = 0;
+        installmentEntries.splice(index, 1);
+        preState.formData.installmentEntries = installmentEntries;
         preState.formData.paymentSchedule = [];
         return preState;
       });
@@ -508,27 +507,37 @@ class FormItem extends React.Component {
     }
     
     const formData = this.Util.copyObj(this.state.formData);
-    formData.productVariantId = productVariant.id;
-    formData.price = productVariant.price;
-    formData.productVariant = {
-      name: product.name
-    };
-    formData.products = [{
-      id: formData.products[0] ? formData.products[0].id : "",
-      name: `${product.name ? product.name : product.namekm} ${isProductVariant ? productVariant.name : ""}`,
+    const {installmentEntries} = formData;
+    installmentEntries.unshift({
+      id: "",
+      serialId: "",
+      productVariantId: productVariant.id,
+      productName: product.name,
+      variantName: productVariant.name,
       quantity: 1,
       price: productVariant.price,
       status: 1,
       enableDescription: product.enableDescription
-    }];
+    });
+
+    formData.installmentEntries = installmentEntries;
 
     let numberOfMonth = formData.duration;
     if (formData.durationType === Enum.DURATION_TYPE.YEAR) {
       numberOfMonth = formData.duration * 12;
     }
 
+    installmentEntries.forEach((entry, index) => {
+      this.props.form.setFieldsValue({
+        [`serialId[${index}]`]: entry.serialId,
+        [`serialNo[${index}]`]: entry.serialNo,
+        [`numOfWarranty[${index}]`]: entry.numOfWarranty,
+        [`serialDurationType[${index}]`]: entry.serialDurationType
+      });
+    });
+
     this.setState({formData}, () => {
-      this.generatePaymentSchedule(productVariant.price, formData.rate, numberOfMonth, formData.paymentDate);
+      this.generatePaymentSchedule(formData.rate, numberOfMonth, formData.paymentDate);
     });
     this.props.form.setFieldsValue({searchProduct: ""});
   }
@@ -692,16 +701,17 @@ class FormItem extends React.Component {
             </Col>
             <Col md={8}>
               <Row>
-                <Col md={8} style={{display: "inline-grid", textAlign: "right", paddingRight: 10, lineHeight: "40px"}}>
+                <Col md={8} style={{display: "inline-grid", textAlign: "right", paddingRight: 10, lineHeight: "40px", marginLeft: -30}}>
                   <label><Translate id="text_received_date" /></label>
                   <label><Translate id="text_payment_date" /></label>
                   <label><Translate id="text_rate" /></label>
                 </Col>
-                <Col md={16}>
+                <Col md={16} style={{paddingRight: 25}}>
                   <DatePickers
                     name="receiveDate"
                     placeholder={`${stringTranslate("text_received_date", locale)}`}
                     defaultValue={formData.receiveDate ? moment(formData.receiveDate) : null}
+                    disabled={disabledEdit}
                     onChange={(date) => this.setState(preState => {
                       if (!date) {
                         date = "";
@@ -736,10 +746,19 @@ class FormItem extends React.Component {
             </Col>
             <Col md={8}>
               <Row>
-                <Col md={8} style={{textAlign: "right", paddingRight: 10, paddingTop: 8}}>
+                <Col md={8} style={{textAlign: "right", paddingRight: 10, display: "inline-grid", lineHeight: "40px"}}>
+                  <label><Translate id="text_first_payment" /></label>
                   <label><Translate id="text_duration" /></label>
                 </Col>
                 <Col md={16}>
+                  <InputNumber 
+                    name="firstPayment"
+                    placeholder={`${stringTranslate("text_first_payment", locale)}`}
+                    isAutoSelect={true}
+                    disabled={disabledEdit}
+                    data={formData.firstPayment}
+                    onChange={this.handleChangeFirstPayment}
+                    form={form} />
                   <Input.Group style={{display: "flex"}}>
                     <InputNumber
                       name="duration"
@@ -783,7 +802,7 @@ class FormItem extends React.Component {
                 rowKey={((record, index) => index)}
                 columns={this.productColumns}
                 className="table-form-invoice-entry"
-                dataSource={formData.products}
+                dataSource={formData.installmentEntries}
                 pagination={false}
                 locale={{emptyText: <div style={{padding: "25px 0"}}><Translate id="text_no_sale_entries_product" /></div>}}
                 rowClassName={((record) => record.status === 3 ? "hidden" : "")}
