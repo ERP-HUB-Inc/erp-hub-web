@@ -49,14 +49,9 @@ class Installment extends Component {
       {
         title: <this.Translate id="text_phone_number" />,
         dataIndex: "phoneNumber",
-        key: "phoneNumber"
-      },
-      {
-        title: <this.Translate id="text_product" />,
-        dataIndex: "product",
-        key: "product",
-        width: 350,
-        render: (product, record) => {
+        key: "phoneNumber",
+        width: 300,
+        render: (phoneNumber, record) => {
           const menu = (
             <Menu>
               <Menu.Item>
@@ -94,7 +89,7 @@ class Installment extends Component {
             </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
-            {product}
+            {phoneNumber}
             <Dropdown className="product-row-option" overlay={menu}>
               {/* eslint-disable-next-line */}
               <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
@@ -134,13 +129,6 @@ class Installment extends Component {
           const stepTitle = statusValue.title;
           return <Tag color={statusColor} style={{width: 100, textAlign: "center"}}>{stepTitle}</Tag>;
         }
-      },
-      {
-        title: <this.Translate id="text_price" />,
-        dataIndex: "price",
-        key: "price",
-        align: "right",
-        render: price => this.Util.formatCurrency(price)
       },
       {
         title: <this.Translate id="text_total" />,

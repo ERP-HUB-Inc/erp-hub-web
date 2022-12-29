@@ -31,6 +31,16 @@ export default function DownPaymentTable(props) {
     return null;
   }
 
+  function getTotal(products) {
+    let total = 0;
+    if (products.length) {
+      products.forEach(product => {
+        total += util.floor(product.quantity * product.price);
+      });
+    }
+    return total;
+  }
+
   function renderScheduleStatus(schedule) {
     let ele = "";
     if (schedule.status === Enum.REPAYMENT_STATUS.PENDING) {
@@ -44,7 +54,6 @@ export default function DownPaymentTable(props) {
   }
 
   const {formData} = props;
-  const product = formData.productVariant;
   return (
     Object.keys(formData).length &&
     <div id="invoice-content">
@@ -56,14 +65,14 @@ export default function DownPaymentTable(props) {
           <tr className="table-row-border">
             <td colSpan={2} style={{textAlign: "right"}}>ឈ្មេាះអតិថិជន</td>
             <td>{formData.customer && formData.customer.firstName + " " + formData.customer.lastName}</td>
-            <td style={{textAlign: "right"}}>ប្រភេទទ្រព្យ</td>
-            <td>{product && product.name}</td>
+            <td style={{textAlign: "right"}}>តម្លៃទំនិញ</td>
+            <td>{util.formatCurrency(getTotal(formData.installmentEntries))}</td>
           </tr>
           <tr className="table-row-border">
             <td colSpan={2} style={{textAlign: "right"}}>លេខកូដអតិថិជន</td>
             <td>{formData.customer && formData.customer.number}</td>
-            <td style={{textAlign: "right"}}>តម្លៃ</td>
-            <td>{formData.price ? util.formatCurrency(formData.price, "") : null}</td>
+            <td style={{textAlign: "right"}}>បង់ដំបូង</td>
+            <td>{util.formatCurrency(formData.firstPayment)}</td>
           </tr>
           <tr className="table-row-border">
             <td colSpan={2} style={{textAlign: "right"}}>រយៈពេលបង់ប្រាក់</td>
@@ -76,6 +85,29 @@ export default function DownPaymentTable(props) {
             <td>{displayDateWithMonthKH(formData.receiveDate)}</td>
             <td style={{textAlign: "right"}}>បង់ដាច់ថ្ងៃទី</td>
             <td>{finalPaymentDate(formData.paymentSchedule)}</td>
+          </tr>
+          <tr className="table-row-border">
+            <th colSpan={5}>បញ្ជីរាយមុខទំនិញ</th>
+          </tr>
+          <tr className="table-row-border">
+            <th style={{width: 50}}>ល.រ</th>
+            <th colSpan={2}>ឈ្មេាះផលិតផល</th>
+            <th>បរិមាណ</th>
+            <th style={{textAlign: "right"}}>តម្លៃ</th>
+          </tr>
+          {
+            formData.installmentEntries && formData.installmentEntries.length ? formData.installmentEntries.map((product, index) => 
+              <tr className="table-row-border" key={index}>
+                <td style={{textAlign: "center"}}>{index + 1}</td>
+                <td colSpan={2}>{product.productName} <div>Serial: {product.serialNo}</div></td>
+                <td style={{textAlign: "center"}}>{product.quantity}</td>
+                <td style={{textAlign: "right"}}>{util.formatCurrency(product.price)}</td>
+              </tr>
+            )
+            : null
+          }
+          <tr className="table-row-border">
+            <th colSpan={5} style={{textAlign: "center"}}>កាលវិភាគបង់ប្រាក់</th>
           </tr>
           <tr className="table-row-border">
             <th style={{width: 50}}>ល.រ</th>

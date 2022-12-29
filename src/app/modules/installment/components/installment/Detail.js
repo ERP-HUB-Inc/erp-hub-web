@@ -216,7 +216,7 @@ class DetailInstallment extends React.Component {
               <Result  
                 status={404}
                 title="404"
-                subTitle="Invoice not found"
+                subTitle="Installment not found"
                 extra={<Button type="primary" onClick={() => history.goBack()}><Translate id="text_back" /></Button>}
               />
         }

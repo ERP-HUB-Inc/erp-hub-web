@@ -3,6 +3,10 @@ export default {
     "Installment",
     "បង់រំលស់"
   ],
+  "text_first_payment": [
+    "First Payment",
+    "ការទូទាត់ដំបូង"
+  ],
   "text_create_installment": [
     "Create Installment",
     "Create Installment"

@@ -1,9 +1,3 @@
-#invoice-form .ant-input-number-disabled,
-#invoice-form .ant-input-disabled {
-  background: #FFFFFF;
-  color: #565656;
-}
-
 #public-receipt-preview {
   width: 250mm;
   margin: auto;
