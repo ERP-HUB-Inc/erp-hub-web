@@ -17,7 +17,7 @@ export default function Template(props) {
           <tr style={{background: "none"}}>
             <td>
               <h4>{setting.businessName}</h4>
-              <div style={{width: 460, lineHeight: "28px"}}>{setting.address}</div>
+              <div style={{width: 460, lineHeight: "28px"}} dangerouslySetInnerHTML={{__html: setting.address}} />
             </td>
             <td style={{textAlign: "right"}}>
               <h2>SALES ORDER</h2>
@@ -43,7 +43,7 @@ export default function Template(props) {
                     <td style={{width: 40, textAlign: "center"}}>#</td>
                     <td>Item & Description</td>
                     <td style={{textAlign: "right"}}>Qty</td>
-                    <td style={{textAlign: "right", width: 100}}>Rate</td>
+                    <td style={{textAlign: "right", width: 100}}>Unit Price</td>
                     <td style={{textAlign: "right", paddingRight: 10, width: 150}}>Amount</td>
                   </tr>
                 </thead>
@@ -90,7 +90,7 @@ export default function Template(props) {
                   }
                   <tr style={{background: "none", height: 38}}>
                     <td colSpan={2}></td>
-                    <td colSpan={2} style={{background: "#faf9f9", textAlign: "right", paddingRight: 40}}>Total</td>
+                    <td colSpan={2} style={{background: "#faf9f9", textAlign: "right", paddingRight: 40}}>Grand Total</td>
                     <td style={{textAlign: "right", paddingRight: 10, background: "#faf9f9"}}>${util.formatCurrency(formData.total - discount, "")}</td>
                   </tr>
                 </tbody>

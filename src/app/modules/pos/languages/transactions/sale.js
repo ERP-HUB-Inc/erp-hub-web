@@ -279,7 +279,7 @@ export default {
   ],
 
   "text_print_invoice": [
-    "Print Invoice",
+    "Print",
     "បោះពុម្ភវិក័យប័ត្រ"
   ],
 

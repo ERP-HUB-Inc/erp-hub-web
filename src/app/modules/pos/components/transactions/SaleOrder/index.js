@@ -18,11 +18,11 @@ import {
   Select,
   Input
 } from "antd";
+import PackingSlipTem from "./Invoice/packingSlipTem";
 import history from "../../../../common/router/history";
 import Component from "../../../../common/components/Component";
 import SaleOrderService from "../../../services/transactions/SaleOrderService";
 import Enum from "../../../enums";
-import {PackingSlipTem} from "./Invoice/packingSlipTem";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
 import PrivilegeService from "../../../services/settings/PrivilegeService";
 
@@ -104,6 +104,7 @@ class SaleOrder extends Component {
               <Menu.Item>
                   <div>
                     <ReactToPrint
+                      
                         trigger={() => {
                           return (
                               <div>
