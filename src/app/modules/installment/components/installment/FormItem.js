@@ -248,7 +248,7 @@ class FormItem extends React.Component {
     let price = 0;
 
     formData.installmentEntries && formData.installmentEntries.forEach(entry => {
-      price += this.Util.floor(entry.quantity * entry.price);
+      price += entry.quantity * entry.price;
     });
     price = price - formData.firstPayment;
 

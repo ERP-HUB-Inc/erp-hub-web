@@ -7,10 +7,10 @@ class RepaymentService extends BaseService {
     this.baseUrl = `${this.baseUrl}/${this.module}`;
   }
 
-  list(limit, offset, search, locationId, date) {
+  list(limit, offset, search, locationId, dateRange) {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}?limit=${limit}&offset=${offset}&search=${search}&locationId=${locationId}&date=${date}`,
+      url: `${this.baseUrl}?limit=${limit}&offset=${offset}&search=${search}&locationId=${locationId}&rangFilter=${dateRange}`,
       headers: this.header
     });
   }

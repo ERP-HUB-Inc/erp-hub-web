@@ -149,11 +149,10 @@ class RepaymentList extends Component {
       this.props.form.setFieldsValue({search: params.get("search")});
     }
 
-    if (params.get("date")) {
-      this.props.form.setFieldsValue({date: moment(params.get("date"))});
-    } else if (!params.toString()) {
+    if (!params.toString()) {
       this.props.form.setFieldsValue({date: moment()});
-      params.set("date", moment().format("YYYY-MM-DD"));
+      params.set("start", moment().format("YYYY-MM-DD"));
+      params.set("end", moment().format("YYYY-MM-DD"));
       this.Util.pushParamsToURL(this.pathname, params.toString());
     }
 
@@ -165,7 +164,7 @@ class RepaymentList extends Component {
     let limit = this.pageSize,
       offset = this.state.current,
       searchKey = "",
-      date = "";
+      dateRange = "";
 
     if (params.get("limit")) {
       limit = Number(params.get("limit"));
@@ -179,8 +178,9 @@ class RepaymentList extends Component {
       searchKey = params.get("search");
     }
 
-    if (params.get("date")) {
-      date = params.get("date");
+    if (params.get("start")) {
+      dateRange = JSON.stringify({column: "date", value: [params.get("start"), params.get("end")]});
+      this.props.form.setFieldsValue({dates: [moment(params.get("start")), moment(params.get("end"))]});
     }
 
     offset = (offset - 1) * limit;
@@ -192,7 +192,7 @@ class RepaymentList extends Component {
     }
 
     this.setState({loading: true});
-    RepaymentService.list(limit, offset, searchKey, null, date)
+    RepaymentService.list(limit, offset, searchKey, null, dateRange)
     .then(response => {
       this.setState({
         data: response.data.data,
@@ -272,12 +272,14 @@ class RepaymentList extends Component {
     }, 600);
   }
 
-  handleChangDate = (date) => {
+  handleChangDate = (dates) => {
     const params = new URLSearchParams(document.location.search);
-    if (date) {
-      params.set("date", this.Util.formatDateForMYSQL(date));
+    if (dates.length) {
+      params.set("start", moment(dates[0]).format("YYYY-MM-DD"));
+      params.set("end", moment(dates[1]).format("YYYY-MM-DD"));
     } else {
-      params.delete("date");
+      params.delete("start");
+      params.delete("end");
     }
 
     this.Util.pushParamsToURL(this.pathname, params.toString());
@@ -334,7 +336,7 @@ class RepaymentList extends Component {
                 <Col span={6} style={{marginBottom: 0}}>
                   <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_payment" /></h3>
                 </Col>
-                <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "flex-end"}}>
+                <Col span={18} style={{display: "flex", justifyContent: "flex-end"}}>
                   <this.InputText
                     name="search"
                     placeholder={this.CATranslate("text_search", this.props.locale)}
@@ -344,11 +346,15 @@ class RepaymentList extends Component {
                     onChange={this.handleSearch}
                     form={this.props.form}
                   />
-                  <this.DatePickers 
-                    name="date"
-                    placeholder={`${this.CATranslate("text_date", this.props.locale)}`}
+                  <this.DateRangePicker 
+                    name="dates"
+                    placeholder={`${this.CATranslate("text_date_range", this.props.locale)}`}
                     allowClear={true}
-                    style={{width: 200, marginLeft: 15, marginBottom: 0}}
+                    ranges={{
+                      Today: [moment(), moment()],
+                      "This Week": [moment().startOf("isoWeek"), moment().endOf("isoWeek")]
+                    }}
+                    style={{width: 260, marginLeft: 15, marginBottom: 0}}
                     onChange={this.handleChangDate}
                     form={this.props.form}
                   />

@@ -97,11 +97,11 @@ export default function DownPaymentTable(props) {
           </tr>
           {
             formData.installmentEntries && formData.installmentEntries.length ? formData.installmentEntries.map((product, index) => 
-              <tr className="table-row-border" key={index}>
+              <tr className="table-row-border" key={index} style={{verticalAlign: "baseline"}}>
                 <td style={{textAlign: "center"}}>{index + 1}</td>
-                <td colSpan={2}>{product.productName} <div>Serial: {product.serialNo}</div></td>
+                <td colSpan={2}>{product.productName} {product.serialNo ? <div>Serial: {product.serialNo}</div> : null}</td>
                 <td style={{textAlign: "center"}}>{product.quantity}</td>
-                <td style={{textAlign: "right"}}>{util.formatCurrency(product.price)}</td>
+                <td style={{textAlign: "right", paddingRight: 10}}>{util.formatCurrency(product.price)}</td>
               </tr>
             )
             : null

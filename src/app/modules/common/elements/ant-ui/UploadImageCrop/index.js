@@ -21,6 +21,7 @@ export class UploadImageCrop extends React.Component {
     blobImg: null,
     uploading: false
   }
+  defaultCrop = {unit: "px", x: 20, y: 20, width: 360, height: 330};
 
   initializeImage = (status) => {
     if (status === "success") {
@@ -35,6 +36,7 @@ export class UploadImageCrop extends React.Component {
   }
 
   componentDidMount() {
+    this.setState({crop: this.defaultCrop});
     if (this.props.fileList.length > 0) {
       this.validImage(this.props.fileList[0].url, this.initializeImage);
     }
@@ -82,52 +84,58 @@ export class UploadImageCrop extends React.Component {
         visible: true,
         previewImage: file.url,
         cropFile: file
+      }, () => {
+        setTimeout(() => {
+          this.generateCropImage(this.state.crop, file);
+        }, 1000);
       });
     }
   }
 
   handleCroppedImage = async (c) => {
     const cropFile = JSON.parse(JSON.stringify(this.state.cropFile));
+    this.generateCropImage(c, cropFile);
+  }
+
+  generateCropImage(c, cropFile) {
     const TO_RADIANS = Math.PI / 180;
     const image = this.imageRef;
     const canvas = this.canvasPreviewRef;
     const scale = 1;
     const rotate = 0;
-    const ctx = canvas.getContext("2d");
-    if (!ctx || !c.width) {
-      return;
-    }
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      const scaleX = image.naturalWidth / image.width;
+      const scaleY = image.naturalHeight / image.height;
+      const pixelRatio = window.devicePixelRatio;
+      canvas.width = Math.floor(c.width * scaleX * pixelRatio);
+      canvas.height = Math.floor(c.height * scaleY * pixelRatio);
 
-    const scaleX = image.naturalWidth / image.width;
-    const scaleY = image.naturalHeight / image.height;
-    const pixelRatio = window.devicePixelRatio;
-    canvas.width = Math.floor(c.width * scaleX * pixelRatio);
-    canvas.height = Math.floor(c.height * scaleY * pixelRatio);
-  
-    ctx.scale(pixelRatio, pixelRatio);
-    ctx.imageSmoothingQuality = "high";
-    const cropX = c.x * scaleX;
-    const cropY = c.y * scaleY;
-  
-    const rotateRads = rotate * TO_RADIANS;
-    const centerX = image.naturalWidth / 2;
-    const centerY = image.naturalHeight / 2;
+      ctx.scale(pixelRatio, pixelRatio);
+      ctx.imageSmoothingQuality = "high";
+      const cropX = c.x * scaleX;
+      const cropY = c.y * scaleY;
     
-    ctx.save();
-    // 5) Move the crop origin to the canvas origin (0,0)
-    ctx.translate(-cropX, -cropY);
-    // 4) Move the origin to the center of the original position
-    ctx.translate(centerX, centerY);
-    // 3) Rotate around the origin
-    ctx.rotate(rotateRads);
-    // 2) Scale the image
-    ctx.scale(scale, scale);
-    // 1) Move the center of the image to the origin (0,0)
-    ctx.translate(-centerX, -centerY);
-    ctx.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 0, 0, image.naturalWidth, image.naturalHeight);
-    cropFile.url = canvas.toDataURL();
-    const blobImg = this.convertImageURLToBlob(cropFile.url);
-    this.setState({cropFile, blobImg});
+      const rotateRads = rotate * TO_RADIANS;
+      const centerX = image.naturalWidth / 2;
+      const centerY = image.naturalHeight / 2;
+      
+      ctx.save();
+      // 5) Move the crop origin to the canvas origin (0,0)
+      ctx.translate(-cropX, -cropY);
+      // 4) Move the origin to the center of the original position
+      ctx.translate(centerX, centerY);
+      // 3) Rotate around the origin
+      ctx.rotate(rotateRads);
+      // 2) Scale the image
+      ctx.scale(scale, scale);
+      // 1) Move the center of the image to the origin (0,0)
+      ctx.translate(-centerX, -centerY);
+      ctx.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 0, 0, image.naturalWidth, image.naturalHeight);
+      cropFile.url = canvas.toDataURL();
+      const blobImg = this.convertImageURLToBlob(cropFile.url);
+      this.setState({cropFile, blobImg});
+    }
   }
 
   handleBeforeUpload = (file) => {
@@ -175,7 +183,7 @@ export class UploadImageCrop extends React.Component {
     .finally(() => {
       this.setState({
         fileList: [file],
-        crop: {},
+        crop: this.defaultCrop,
         visible: false,
         uploading: false
       });
@@ -216,7 +224,7 @@ export class UploadImageCrop extends React.Component {
     this.setState({
       cropFile: {}, 
       visible: false, 
-      crop: {}
+      crop: this.defaultCrop
     });
   }
 
@@ -269,6 +277,9 @@ export class UploadImageCrop extends React.Component {
       >
         <ReactCrop 
           crop={this.state.crop} 
+          aspect={1}
+          keepSelection={true}
+          locked={true}
           onChange={crop => this.setState({crop})} 
           onComplete={this.handleCroppedImage} 
           style={{width: "100%"}}
