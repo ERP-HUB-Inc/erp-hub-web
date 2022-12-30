@@ -7,6 +7,7 @@ import {
   Menu,
   Icon,
   Dropdown,
+  Divider,
   Tag,
   Form,
   Pagination,
@@ -19,6 +20,7 @@ import {
   Input
 } from "antd";
 import PackingSlipTem from "./Invoice/packingSlipTem";
+import DeliveryNote from "./Invoice/DeliveryNote";
 import history from "../../../../common/router/history";
 import Component from "../../../../common/components/Component";
 import SaleOrderService from "../../../services/transactions/SaleOrderService";
@@ -39,7 +41,7 @@ class SaleOrder extends Component {
       isShowFilter: true,
       isHasAccessPermission: null
     };
-    this.title = <this.Translate id="text_sales"/>;
+    this.title = <this.Translate id="text_sale_order"/>;
     this.pageSize = 50;
     this.fetchingProp = "list";
     this.pathname = "/transactions/sales-order";
@@ -81,6 +83,12 @@ class SaleOrder extends Component {
           const menu = (
             <Menu>
               <Menu.Item>
+                <this.Link to={`/transactions/sale-order/detail/${record.id}`}>
+                  <Icon type="eye" style={{marginRight: 10}} />
+                  <this.Translate id="text_view" />
+                </this.Link>
+              </Menu.Item>
+              <Menu.Item>
                 <this.Link to={`/transactions/sale-order/update/${record.id}`}>
                   <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
                 </this.Link>
@@ -95,12 +103,7 @@ class SaleOrder extends Component {
                   <Icon type="retweet" style={{marginRight: 10}} /> <this.Translate id="text_convert_to_invoice" />
                 </this.Link>
               </Menu.Item>
-              <Menu.Item>
-                <this.Link to={`/transactions/sale-order/detail/${record.id}`}>
-                  <Icon type="eye" style={{marginRight: 10}} />
-                  <this.Translate id="text_view_detail" />
-                </this.Link>
-              </Menu.Item>
+              <Divider style={{marginTop: 4, marginBottom: 4}} />
               <Menu.Item>
                   <div>
                     <ReactToPrint
@@ -109,15 +112,50 @@ class SaleOrder extends Component {
                           return (
                               <div>
                                 <Icon type="printer" style={{marginRight: 10}} />
-                                <this.Translate id="text_print_packing_slip" />
+                                <this.Translate id="text_print_sales_order" />
                               </div>
                           );
                         }}
                         content={() => this.componentRef}
-                        onBeforeGetContent={()=>this.fetchTransactionDetail(record.id)}
+                        onBeforeGetContent={()=>this.fetchSalesOrderById(record.id)}
                     />
                   </div>
               </Menu.Item>
+              <Menu.Item>
+                  <div>
+                    <ReactToPrint
+                      
+                        trigger={() => {
+                          return (
+                              <div>
+                                <Icon type="file-protect" style={{marginRight: 10}} />
+                                <this.Translate id="text_packing_slip" />
+                              </div>
+                          );
+                        }}
+                        content={() => this.componentRef}
+                        onBeforeGetContent={()=>this.fetchSalesOrderById(record.id)}
+                    />
+                  </div>
+              </Menu.Item>
+              <Menu.Item>
+                  <div>
+                    <ReactToPrint
+                      
+                        trigger={() => {
+                          return (
+                              <div>
+                                <Icon type="file-text" style={{marginRight: 10}} />
+                                <this.Translate id="text_delivery_note" />
+                              </div>
+                          );
+                        }}
+                        content={() => this.deliveryNoteRef}
+                        onBeforeGetContent={()=>this.fetchSalesOrderById(record.id)}
+                    />
+                  </div>
+              </Menu.Item>
+              <Divider style={{marginTop: 4, marginBottom: 4}} />
               <Menu.Item onClick={() => this.handleVoid(record.id)}>
                 <Icon type="close" /> <this.Translate id="text_void" />
               </Menu.Item>
@@ -143,11 +181,30 @@ class SaleOrder extends Component {
         render: (firstName, record) => `${firstName} ${record.lastName}`
       },
       {
+        title: <this.Translate id="text_contact_number" />,
+        dataIndex: "phoneNumber",
+        key: "phoneNumber",
+        render: phoneNumber => phoneNumber
+      },
+      {
+        title: <this.Translate id="text_shipping_status" />,
+        dataIndex: "shippingStatus",
+        key: "shippingStatus",
+        render: shippingStatus => shippingStatus
+      },
+      {
         title: <this.Translate id="text_expected_shipment_date" />,
         dataIndex: "expectedShipmentDate",
         key: "expectedShipmentDate",
         width: 200,
         render: (expectedShipmentDate) => this.Util.formatDate(expectedShipmentDate, "DD/MM/YYYY")
+      },
+      {
+        title: <this.Translate id="text_total_items" />,
+        dataIndex: "totalItem",
+        key: "totalItem",
+        align: "center",
+        render: totalItem => totalItem
       },
       {
         title: <this.Translate id="text_sub_total" />,
@@ -300,8 +357,8 @@ class SaleOrder extends Component {
     });
   }
 
-  async fetchTransactionDetail(id){
-     const formData = await SaleOrderService.detail(id);
+  async fetchSalesOrderById(id) {
+    const formData = await SaleOrderService.detail(id);
     this.setState({formData: formData.data});
   }
 
@@ -396,8 +453,10 @@ class SaleOrder extends Component {
             defaultPageSize={this.pageSize}
             onShowSizeChange={this.onShowSizeChange} 
             onChange={this.onChangePagination} 
-            {...pagination} />
-            <PackingSlipTem formData={this.state.formData} ref={el => (this.componentRef = el)} />
+            {...pagination}
+          />
+          <PackingSlipTem formData={this.state.formData} ref={el => (this.componentRef = el)} />
+          <DeliveryNote formData={this.state.formData} ref={el => (this.deliveryNoteRef = el)} />
         </div>
         :
         ""

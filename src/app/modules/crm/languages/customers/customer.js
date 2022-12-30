@@ -4,6 +4,11 @@ export default {
     "អតិថិជន",
     "Customer"
   ],
+
+  "text_contact_number": [
+    "Contact Number",
+    "លេខទំនាក់ទំនង"
+  ],
   
   "text_first_name": [
     "First Name",

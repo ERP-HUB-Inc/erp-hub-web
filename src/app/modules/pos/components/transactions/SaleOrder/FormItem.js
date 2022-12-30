@@ -331,7 +331,7 @@ class FormItem extends React.PureComponent {
         }
         const {formData} = this.state;
         const subTotal = this.getTotal();
-        if (formData.status === Enum.SALE_ORDER_STATUS.CLOSED) {
+        if (formData.status === Enum.SALE_ORDER_STATUS.CLOSED && this.id) {
           return this.util.sweetAlertMessageV2("Sorry", "Can't update closed sale order", "warning");
         }
 

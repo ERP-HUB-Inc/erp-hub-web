@@ -10,7 +10,7 @@ const PackingSlipTem = React.forwardRef((props, ref) => {
 
   return (
       <div style={{display: "none", background: "white"}}>
-        <div ref={ref} style={{width: "250mm", margin: "auto", padding: 40, minHeight: "297mm", display: "none"}}>
+        <div ref={ref} style={{width: "250mm", margin: "auto", padding: 40, minHeight: "297mm"}}>
           <table style={{width: "100%"}}>
             <tbody>
               <tr style={{background: "none"}}>

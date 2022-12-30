@@ -140,8 +140,7 @@ export default {
 
   "text_print_packing_slip": [
     "Print Packing Slip",
-    "បោះពុម្ពបញ្ជីទំនិញ",
-    "Print Packing Slip"
+    "បោះពុម្ពបញ្ជីទំនិញ"
   ],
 
   "text_clone_warning_1": [
