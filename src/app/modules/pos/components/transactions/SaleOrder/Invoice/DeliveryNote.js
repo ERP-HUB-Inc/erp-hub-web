@@ -79,10 +79,10 @@ const DeliveryNote = React.forwardRef((props, ref) => {
                 </td>
                 <td style={styles.td}>
                   <ul style={{listStyle: "none", paddingLeft: 0, margin: 0}}>
-                    <li>Shipping Detail: {formData.shippingDetail}</li>
-                    <li>Shipping Address: {formData.shippingAddress ? formData.shippingAddress : formData.address}</li>
+                    <li>Shipping Detail: <strong>{formData.shippingDetail}</strong></li>
+                    <li>Shipping Address: <strong>{formData.shippingAddress ? formData.shippingAddress : formData.address}</strong></li>
                     <li>Contact Number 1: <strong>{formData.shippingContact1 ? formData.shippingContact1 : formData.phoneNumber}</strong></li>
-                    <li>Contact Number 2: {formData.shippingContact2}</li>
+                    <li>Contact Number 2: <strong>{formData.shippingContact2}</strong></li>
                   </ul>
                 </td>
               </tr>
