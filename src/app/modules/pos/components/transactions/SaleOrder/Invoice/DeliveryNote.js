@@ -28,6 +28,7 @@ const DeliveryNote = React.forwardRef((props, ref) => {
               </tr>
             </tbody>
           </table>
+
           <table style={{width: "100%", marginBottom: 50}}>
             <thead>
               <tr>
@@ -50,8 +51,8 @@ const DeliveryNote = React.forwardRef((props, ref) => {
           <table style={{width: "100%", marginBottom: 40}}>
             <thead>
               <tr>
-                <th style={{...styles.th, width: "50%"}}>INVOICE TO</th>
-                <th style={{...styles.th, width: "50%"}}>SHIP TO</th>
+                <th style={{...styles.th, width: "50%"}}>វិក័យបត្រទៅ/INVOICE TO</th>
+                <th style={{...styles.th, width: "50%"}}>ដឹកទៅ/SHIP TO</th>
               </tr>
             </thead>
             <tbody>
@@ -113,8 +114,8 @@ const DeliveryNote = React.forwardRef((props, ref) => {
           <table style={{width: "100%", marginTop: 40}}>
             <thead>
               <tr>
-                <th style={{...styles.th, width: "50%"}}>DELIVERY BY</th>
-                <th style={{...styles.th, width: "50%"}}>RECEIVED BY</th>
+                <th style={{...styles.th, width: "50%"}}>អ្នកដឹក/DELIVERY BY</th>
+                <th style={{...styles.th, width: "50%"}}>អ្នកទទួល/RECEIVED BY</th>
               </tr>
             </thead>
             <tbody>

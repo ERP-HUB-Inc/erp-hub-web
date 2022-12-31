@@ -19,7 +19,7 @@ import {
   Select,
   Input
 } from "antd";
-import PackingSlipTem from "./Invoice/packingSlipTem";
+import PackingSlipTem from "./Invoice/PackingSlip";
 import DeliveryNote from "./Invoice/DeliveryNote";
 import history from "../../../../common/router/history";
 import Component from "../../../../common/components/Component";
