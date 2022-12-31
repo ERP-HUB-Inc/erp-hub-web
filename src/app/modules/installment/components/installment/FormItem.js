@@ -319,7 +319,8 @@ class FormItem extends React.Component {
             serialId: entry.serialId,
             numOfWarranty: values.numOfWarranty && values.numOfWarranty[index],
             durationType: values.serialDurationType && values.serialDurationType[index],
-            serialNo: entry.serialNo && entry.serialNo
+            serialNo: entry.serialNo && entry.serialNo,
+            status: entry.status
           });
         });
         values.total = total;
