@@ -17,14 +17,26 @@ export default class FormItem extends Modal {
           max={100}
           errorRequired={<this.Translate id="error_require_name" />}
           errorLenght={<this.Translate id="error_tax_name_length" />}
-          form={form}/>
+          form={form}
+        />
+
+        <this.Select
+          name="code"
+          label={<this.Translate id="text_code" />}
+          dataSource={this.currencies}
+          defaultValue={formData.code}
+          form={form}
+        />
+
         <this.InputText
           data={formData.symbol}
           name="symbol"
           label={<this.Translate id="text_symbol" />}
           placeholder={this.CATranslate("text_symbol", locale)}
           max={255}
-          form={form}/>
+          form={form}
+        />
+
         <this.InputNumber
           data={formData.value}
           name="value"
@@ -32,13 +44,16 @@ export default class FormItem extends Modal {
           placeholder={this.CATranslate("text_value", locale)}
           precision="6"
           isAutoSelect={true}
-          form={form}/>
+          form={form}
+        />
+        
         <this.Select
           name="status"
           label={<this.Translate id="text_status" />}
           dataSource={this.statusDataSource}
           defaultValue={formData.status}
-          form={form}/>
+          form={form}
+        />
       </div>
     );
   }

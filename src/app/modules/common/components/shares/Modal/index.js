@@ -39,6 +39,17 @@ export default class Modal extends Component {
       }
     ];
 
+    this.currencies = [
+      {
+        name: "USD",
+        value: "USD"
+      },
+      {
+        name: "KHR",
+        value: "KHR"
+      }
+    ];
+
     this.isDefaultDataSource = [
       {
         name: <this.Translate id="text_yes" />,
