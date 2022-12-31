@@ -81,7 +81,7 @@ class Installment extends Component {
               
               {
                 this.state.isCanDelete ?
-                <Menu.Item onClick={() => this.handleDelete(record.id)}>
+                <Menu.Item onClick={() => this.handleDelete(record)}>
                   <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
                 </Menu.Item>
                 : null
@@ -218,11 +218,15 @@ class Installment extends Component {
     .finally(() => this.setState({loading: false}));
   }
 
-  handleDelete(id) {
+  handleDelete(record) {
+    if (record.status !== Enum.INSTALLMENT_STATUS.DRAFT) {
+      return this.Util.sweetAlertMessageV2("Warning", "Allow delete only in draft step", "warning");
+    }
+
     this.Util.sweetAlertConfirm("", this.CATranslate("text_are_you_sure", this.props.locale))
     .then(willDelete => {
       if (willDelete) {
-        InstallmentService.delete(id)
+        InstallmentService.delete(record.id)
         .then(() => {
           this.fetchList();
           this.fetchSummary();

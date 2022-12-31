@@ -173,7 +173,7 @@ class DetailInstallment extends React.Component {
             <Dropdown key={1} overlay={(
               <Menu>
                 <Menu.Item onClick={() => window.print()} title="Ctrl + P"><Translate id="text_print" /></Menu.Item>
-                <Menu.Item onClick={this.handlePrintA5}><Translate id="text_print" /> A5</Menu.Item>
+                {/* <Menu.Item onClick={this.handlePrintA5}><Translate id="text_print" /> A5</Menu.Item> */}
                 {
                   this.state.isCanEdit ?
                     <Menu.Item>

@@ -41,6 +41,14 @@ export default function DownPaymentTable(props) {
     return total;
   }
 
+  function getTotalPaidAmount(schedules) {
+    let total = 0;
+    schedules.length && schedules.forEach(schedule => {
+      total += schedule.payAmount;
+    });
+    return total;
+  }
+
   function renderScheduleStatus(schedule) {
     let ele = "";
     if (schedule.status === Enum.REPAYMENT_STATUS.PENDING) {
@@ -65,14 +73,8 @@ export default function DownPaymentTable(props) {
           <tr className="table-row-border">
             <td colSpan={2} style={{textAlign: "right"}}>ឈ្មេាះអតិថិជន</td>
             <td>{formData.customer && formData.customer.firstName + " " + formData.customer.lastName}</td>
-            <td style={{textAlign: "right"}}>តម្លៃទំនិញ</td>
-            <td>{util.formatCurrency(getTotal(formData.installmentEntries))}</td>
-          </tr>
-          <tr className="table-row-border">
-            <td colSpan={2} style={{textAlign: "right"}}>លេខកូដអតិថិជន</td>
+            <td style={{textAlign: "right"}}>លេខកូដអតិថិជន</td>
             <td>{formData.customer && formData.customer.number}</td>
-            <td style={{textAlign: "right"}}>បង់ដំបូង</td>
-            <td>{util.formatCurrency(formData.firstPayment)}</td>
           </tr>
           <tr className="table-row-border">
             <td colSpan={2} style={{textAlign: "right"}}>រយៈពេលបង់ប្រាក់</td>
@@ -86,8 +88,8 @@ export default function DownPaymentTable(props) {
             <td style={{textAlign: "right"}}>បង់ដាច់ថ្ងៃទី</td>
             <td>{finalPaymentDate(formData.paymentSchedule)}</td>
           </tr>
-          <tr className="table-row-border">
-            <th colSpan={5}>បញ្ជីរាយមុខទំនិញ</th>
+          <tr>
+            <th colSpan={5} style={{fontSize: 14, textAlign: "center", padding: "16px 0 9px 0"}}>បញ្ជីរាយមុខទំនិញ</th>
           </tr>
           <tr className="table-row-border">
             <th style={{width: 50}}>ល.រ</th>
@@ -106,8 +108,35 @@ export default function DownPaymentTable(props) {
             )
             : null
           }
-          <tr className="table-row-border">
-            <th colSpan={5} style={{textAlign: "center"}}>កាលវិភាគបង់ប្រាក់</th>
+          <tr>
+            <td colSpan={4}></td>
+            <td style={{border: "1px solid", color: "#000", paddingRight: 10}}>
+              <div style={{display: "flex", justifyContent: "flex-end", textAlign: "right"}}>
+                <div>សរុបដំបូង :</div>
+                <div style={{width: 110}}>{util.formatCurrency(getTotal(formData.installmentEntries))}</div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={4}></td>
+            <td style={{border: "1px solid", color: "#000", paddingRight: 10}}>
+              <div style={{display: "flex", justifyContent: "flex-end", textAlign: "right"}}>
+                <div>ប្រាក់បង់មុន :</div>
+                <div style={{width: 110}}>{util.formatCurrency(formData.firstPayment)}</div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={4}></td>
+            <td style={{border: "1px solid", color: "#000", paddingRight: 10}}>
+              <div style={{display: "flex", justifyContent: "flex-end", textAlign: "right"}}>
+                <div>ប្រាក់ត្រូវបង់ :</div>
+                <div style={{width: 110}}>{util.formatCurrency(getTotalPaidAmount(formData.paymentSchedule))}</div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th colSpan={5} style={{textAlign: "center", fontSize: 14, padding: "16px 0 9px 0"}}>កាលវិភាគបង់ប្រាក់</th>
           </tr>
           <tr className="table-row-border">
             <th style={{width: 50}}>ល.រ</th>
@@ -130,6 +159,15 @@ export default function DownPaymentTable(props) {
             )
             : null
           }
+          <tr>
+            <td colSpan={5} style={{padding: 0}}>
+              <div 
+                style={{minHeight: 150}}
+                dangerouslySetInnerHTML={{ __html: formData.description}} 
+                id="public-not"
+              />
+            </td>
+          </tr>
           <tr style={{verticalAlign: "top"}}>
             <td colSpan={3} style={{paddingTop: 30, paddingLeft: 51}}>
               <div style={{marginBottom: 75}}>ស្នាមមេដៃអ្នកជួល</div>
