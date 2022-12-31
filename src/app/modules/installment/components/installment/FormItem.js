@@ -2,6 +2,8 @@ import React from "react";
 import moment from "moment";
 import {connect} from "react-redux";
 import {Translate} from "react-localize-redux";
+import CKEditor from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import {Link} from "react-router-dom";
 import {
   Form,
@@ -15,7 +17,8 @@ import {
   Select as AntSelect,
   Table,
   message,
-  Badge
+  Badge,
+  Tabs
 } from "antd";
 import {
   Button,
@@ -274,10 +277,11 @@ class FormItem extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         const {formData} = this.state;
-        if (formData.status === EnumINS.INSTALLMENT_STATUS.COMPLETED) {
+        let needConfirm = false;
+        if (formData.id && formData.status !== EnumINS.INSTALLMENT_STATUS.DRAFT) {
           return this.Util.sweetAlertMessageV2(
             "Sorry",
-            "This installment is already completed",
+            "Allow update only in draft step!",
             "warning"
           );
         }
@@ -289,6 +293,10 @@ class FormItem extends React.Component {
 
         if (!formData.installmentEntries.length) {
           return this.Util.sweetAlertMessageV2("Error", "Please select product", "error");
+        }
+
+        if (values.receiveDate) {
+          needConfirm = true;
         }
 
         values.receiveDate = this.Util.formatDateForMYSQL(values.receiveDate);
@@ -309,19 +317,32 @@ class FormItem extends React.Component {
             quantity: entry.quantity,
             price: entry.price,
             serialId: entry.serialId,
-            numOfWarranty: values.numOfWarranty[index],
-            durationType: values.serialDurationType[index],
-            serialNo: entry.serialNo
+            numOfWarranty: values.numOfWarranty && values.numOfWarranty[index],
+            durationType: values.serialDurationType && values.serialDurationType[index],
+            serialNo: entry.serialNo && entry.serialNo,
+            status: entry.status
           });
         });
         values.total = total;
         values.installmentEntries = installmentEntries;
+        values.description = formData.description;
         delete values.serialNo;
         delete values.serialDurationType;
         delete values.numOfWarranty;
         delete values.searchProduct;
-        console.log("values", values);
-        this.save(values);
+        if (needConfirm) {
+          return this.Util.sweetAlertConfirm(
+            "Are you sure?",
+            "Make sure all your information are correctly."
+          )
+          .then(willUpdate => {
+            if (willUpdate) {
+              this.save(values);
+            }
+          });
+        } else {
+          this.save(values);
+        }
       }
     });
   }
@@ -472,6 +493,11 @@ class FormItem extends React.Component {
   }
 
   handleDelete(id) {
+    const {formData} = this.state;
+    if (formData.status !== EnumINS.INSTALLMENT_STATUS.DRAFT) {
+      return this.Util.sweetAlertMessageV2("Warning", "Allow delete only in draft step", "warning");
+    }
+
     this.Util.sweetAlertConfirm("Warning", stringTranslate("text_are_you_sure", this.props.locale))
     .then(willDelete => {
       if (willDelete) {
@@ -642,14 +668,6 @@ class FormItem extends React.Component {
   render() {
     const {formData} = this.state;
     const {form, locale} = this.props;
-    let disabledEdit = false;
-    if (formData.id && formData.status !== EnumINS.INSTALLMENT_STATUS.DRAFT && formData.paymentSchedule && formData.paymentSchedule.length) {
-      disabledEdit = true;
-    }
-
-    if (this.state.isChangeSchedule) {
-      disabledEdit = false;
-    }
 
     onafterprint = (() => {
       document.getElementById("invoice-content").classList.remove("invoice-A5");
@@ -711,7 +729,6 @@ class FormItem extends React.Component {
                     name="receiveDate"
                     placeholder={`${stringTranslate("text_received_date", locale)}`}
                     defaultValue={formData.receiveDate ? moment(formData.receiveDate) : null}
-                    disabled={disabledEdit}
                     onChange={(date) => this.setState(preState => {
                       if (!date) {
                         date = "";
@@ -724,7 +741,6 @@ class FormItem extends React.Component {
                     name="paymentDate"
                     placeholder={`${stringTranslate("text_payment_date", locale)}`}
                     defaultValue={formData.paymentDate ? moment(formData.paymentDate) : null}
-                    disabled={disabledEdit}
                     required={form.getFieldValue("receiveDate") ? true : false}
                     onChange={this.handleChangePayDate}
                     form={form} />
@@ -735,7 +751,6 @@ class FormItem extends React.Component {
                       className="input-installment-rate"
                       placeholder={`${stringTranslate("text_rate", locale)}`}
                       data={formData.rate}
-                      disabled={disabledEdit}
                       isAutoSelect={true}
                       onChange={this.handleChangeRate}
                       form={form} />
@@ -755,7 +770,6 @@ class FormItem extends React.Component {
                     name="firstPayment"
                     placeholder={`${stringTranslate("text_first_payment", locale)}`}
                     isAutoSelect={true}
-                    disabled={disabledEdit}
                     data={formData.firstPayment}
                     onChange={this.handleChangeFirstPayment}
                     form={form} />
@@ -768,7 +782,6 @@ class FormItem extends React.Component {
                       data={formData.duration}
                       onChange={this.handelChangeDuration}
                       precision={0}
-                      disabled={disabledEdit}
                       form={form} />
                     <Select 
                       name="durationType"
@@ -779,7 +792,6 @@ class FormItem extends React.Component {
                         {name: <Translate id="text_month" />, value: Enum.DURATION_TYPE.MONTH},
                         {name: <Translate id="text_year" />, value: Enum.DURATION_TYPE.YEAR}
                       ]}
-                      disabled={disabledEdit}
                       onChange={this.handelChangeDurationType}
                       form={form} />
                   </Input.Group>
@@ -794,7 +806,6 @@ class FormItem extends React.Component {
               handleOnSelectList={this.handleOnSelectList}
               className="ca-input-v1 purchase-order"
               locale={this.props.locale}
-              disabled={disabledEdit}
               style={{marginTop: 12}}
               form={form}/>  
             <Col md={24}>
@@ -809,6 +820,25 @@ class FormItem extends React.Component {
               />
             </Col>
           </Row>
+          <Row style={{marginBottom: 20}}>
+            <Col md={10}>
+              <Tabs type="card" className="invoice-form-tab-note">
+                <Tabs.TabPane tab={<Translate id="text_remark" />} key="1">
+                  <CKEditor
+                    editor={ClassicEditor}
+                    data={formData.description}
+                    onChange={(event, editor) => {
+                      const data = editor.getData();
+                      this.setState(preState => {
+                        preState.formData.description = data;
+                        return preState;
+                      });
+                    }}
+                  />
+                </Tabs.TabPane>
+              </Tabs>
+            </Col>
+          </Row>
           <hr />
           <Row style={{paddingBottom: 14}}>
             <Col span={24} style={{textAlign: "center"}}>
@@ -818,10 +848,10 @@ class FormItem extends React.Component {
               <Button onClick={() => window.print()} style={{margin: "0 15px"}}>
                 <Translate id="text_print" />
               </Button>
-              <Button onClick={this.handlePrintInvoiceA5}>
+              {/* <Button onClick={this.handlePrintInvoiceA5}>
                 <Translate id="text_print" /> A5
-              </Button>
-              <Link to="/installment/create" target="_blank" type="button" className="ant-btn" style={{margin: "0 15px"}}>
+              </Button> */}
+              <Link to="/installment/create" target="_blank" type="button" className="ant-btn" style={{marginRight: "15px"}}>
                 <Translate id="text_new_installment" />
               </Link>
               {this.state.isCanDelete &&

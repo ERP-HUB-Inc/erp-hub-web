@@ -66,5 +66,9 @@ export default {
   "text_pending": [
     "Pending",
     "កំពុងរង់ចាំ"
+  ],
+  "text_remark": [
+    "Remark",
+    "ចំណាំ"
   ]
 };
