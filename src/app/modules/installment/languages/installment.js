@@ -70,5 +70,9 @@ export default {
   "text_remark": [
     "Remark",
     "ចំណាំ"
+  ],
+  "text_view_detail": [
+    "View detail",
+    "មើលលំអិត"
   ]
 };
