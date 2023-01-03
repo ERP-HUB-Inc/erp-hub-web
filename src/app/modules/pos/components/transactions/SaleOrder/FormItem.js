@@ -247,9 +247,24 @@ class FormItem extends React.PureComponent {
 
     CustomerService.lists(10)
     .then(response => {
-        if (response && response.data) {
-            this.setState({customers: response.data.data});
+      if (response && response.data) {
+        let customer = [];
+        const data = response.data.data;
+        const {formData} = this.state;
+        if (formData && formData.customerId) {
+          const customerId = formData && formData.customerId;
+          let selectedCustomer = data.find(customer => customer.id === customerId);
+          if (!selectedCustomer) {
+            customer.push({
+              id: customerId,
+              firstName: formData.firstName,
+              lastName: formData.lastName,
+              phoneNumber: formData.phoneNumber
+            });
+          }
         }
+        this.setState({customers: data.concat(customer)});
+      }
     });
   }
 

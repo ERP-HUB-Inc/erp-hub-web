@@ -41,14 +41,6 @@ export default function DownPaymentTable(props) {
     return total;
   }
 
-  function getTotalPaidAmount(schedules) {
-    let total = 0;
-    schedules.length && schedules.forEach(schedule => {
-      total += schedule.payAmount;
-    });
-    return total;
-  }
-
   function renderScheduleStatus(schedule) {
     let ele = "";
     if (schedule.status === Enum.REPAYMENT_STATUS.PENDING) {

@@ -167,7 +167,17 @@ class FormItem extends React.Component {
     CustomerService.lists(10)
     .then(response => {
       if (response && response.data) {
-        this.setState({customers: response.data.data});
+        let customer = [];
+        const data = response.data.data;
+        if (this.state.formData && this.state.formData.customer) {
+          const customerId = this.state.formData && this.state.formData.customerId;
+          let selectedCustomer = data.find(customer => customer.id === customerId);
+          if (!selectedCustomer) {
+            customer.push({...this.state.formData.customer, id: customerId});
+          }
+        }
+
+        this.setState({customers: data.concat(customer)});
       }
     });
     this.checkDeletePermission();
@@ -280,8 +290,8 @@ class FormItem extends React.Component {
         let needConfirm = false;
         if (formData.id && formData.status !== EnumINS.INSTALLMENT_STATUS.DRAFT) {
           return this.Util.sweetAlertMessageV2(
-            "Sorry",
-            "Allow update only in draft step!",
+            stringTranslate("text_warning", this.props.locale),
+            stringTranslate("text_allow_update_only_in_draft_step", this.props.locale),
             "warning"
           );
         }
@@ -292,7 +302,7 @@ class FormItem extends React.Component {
         }
 
         if (!formData.installmentEntries.length) {
-          return this.Util.sweetAlertMessageV2("Error", "Please select product", "error");
+          return this.Util.sweetAlertMessageV2(stringTranslate("text_error_info", this.props.locale), stringTranslate("text_please_input_product", this.props.locale), "error");
         }
 
         if (values.receiveDate) {
@@ -332,8 +342,9 @@ class FormItem extends React.Component {
         delete values.searchProduct;
         if (needConfirm) {
           return this.Util.sweetAlertConfirm(
-            "Are you sure?",
-            "Make sure all your information are correctly."
+            stringTranslate("text_are_you_sure", this.props.locale),
+            stringTranslate("text_make_sure_all_info_correct", this.props.locale),
+            [stringTranslate("text_cancel", this.props.locale), stringTranslate("text_save", this.props.locale)]
           )
           .then(willUpdate => {
             if (willUpdate) {
@@ -354,10 +365,14 @@ class FormItem extends React.Component {
       InstallmentService.update(data, id)
       .then(() => {
         this.fetchDetail(id);
-        this.Util.sweetAlertMessageV2("Success", stringTranslate("text_update_success", this.props.locale), "success");
+        this.Util.sweetAlertMessageV2(stringTranslate("text_success", this.props.locale), stringTranslate("text_update_success", this.props.locale), "success");
       })
       .catch(err => {
-        this.Util.sweetAlertMessageV2("Sorry!", "Something went wrong", "error");
+        this.Util.sweetAlertMessageV2(
+          stringTranslate("text_sorry", this.props.locale),
+          stringTranslate("text_something_went_wrong", this.props.locale),
+          "error"
+        );
       })
       .finally(() => {
         this.setState({loadingSubmit: false});
@@ -368,12 +383,20 @@ class FormItem extends React.Component {
       .then(response => {
         this.setState({loadingSubmit: false});
         history.push(`/installment/update/${response.data.id}?after-create=true`);
-        this.Util.sweetAlertMessageV2("Success", stringTranslate("text_success_save_invoice", this.props.locale), "success");
+        this.Util.sweetAlertMessageV2(
+          stringTranslate("text_success", this.props.locale),
+          stringTranslate("text_success_save_invoice", this.props.locale),
+          "success"
+        );
         this.pageTitle = "text_update_installment";
         this.fetchDetail(response.data.id);
       })
       .catch(err => {
-        this.Util.sweetAlertMessageV2("Sorry!", "Something went wrong", "error");
+        this.Util.sweetAlertMessageV2(
+          stringTranslate("text_sorry", this.props.locale),
+          stringTranslate("text_something_went_wrong", this.props.locale),
+          "error",
+        );
       })
       .finally(() => {
         this.setState({loadingSubmit: false});
@@ -476,7 +499,11 @@ class FormItem extends React.Component {
   handleDeleteProduct(index) {
     const installmentEntries = this.Util.copyArrayObj(this.state.formData.installmentEntries);
     if (this.id) {
-      this.Util.sweetAlertConfirm(stringTranslate("text_confirm", this.props.locale), stringTranslate("text_are_you_sure", this.props.locale))
+      this.Util.sweetAlertConfirm(
+        stringTranslate("text_confirm", this.props.locale), 
+        stringTranslate("text_are_you_sure", this.props.locale),
+        [stringTranslate("text_cancel", this.props.locale), stringTranslate("text_yes", this.props.locale)]
+      )
       .then(willDelete => {
         if (willDelete) {
           this.setState(preState => {
@@ -500,23 +527,35 @@ class FormItem extends React.Component {
   handleDelete(id) {
     const {formData} = this.state;
     if (formData.status !== EnumINS.INSTALLMENT_STATUS.DRAFT) {
-      return this.Util.sweetAlertMessageV2("Warning", "Allow delete only in draft step", "warning");
+      return this.Util.sweetAlertMessageV2(
+        stringTranslate("text_warning", this.props.locale),
+        stringTranslate("text_allow_delete_only_in_draft_step", this.props.locale),
+        "warning"
+      );
     }
 
-    this.Util.sweetAlertConfirm("Warning", stringTranslate("text_are_you_sure", this.props.locale))
+    this.Util.sweetAlertConfirm(
+      stringTranslate("text_warning", this.props.locale), 
+      stringTranslate("text_are_you_sure", this.props.locale),
+      [stringTranslate("text_cancel", this.props.locale), stringTranslate("text_delete", this.props.locale)]
+    )
     .then(willDelete => {
       if (willDelete) {
         InstallmentService.delete(id)
         .then(() => {
           this.Util.sweetAlertMessageV2(
-            "Success",
-            "Installment has been deleted.",
+            stringTranslate("text_success", this.props.locale),
+            stringTranslate("text_installment_deleted", this.props.locale),
             "success"
           );
           history.push("/installment/list");
         })
         .catch(() => {
-          this.Util.sweetAlertMessageV2("Error", "Something went wrong", "error");
+          this.Util.sweetAlertMessageV2(
+            stringTranslate("text_sorry", this.props.locale),
+            stringTranslate("text_something_went_wrong", this.props.locale),
+            "error"
+          );
         });
       }
     });

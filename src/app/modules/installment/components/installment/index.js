@@ -11,8 +11,7 @@ import {
   Menu,
   Dropdown,
   Card,
-  Statistic,
-  message
+  Statistic
 } from "antd";
 import InstallmentService from "../../services/InstallmentService";
 import PrivilegeService from "../../../pos/services/settings/PrivilegeService";
@@ -220,20 +219,34 @@ class Installment extends Component {
 
   handleDelete(record) {
     if (record.status !== Enum.INSTALLMENT_STATUS.DRAFT) {
-      return this.Util.sweetAlertMessageV2("Warning", "Allow delete only in draft step", "warning");
+      return this.Util.sweetAlertMessageV2(
+        this.CATranslate("text_warning", this.props.locale),
+        this.CATranslate("text_allow_delete_only_in_draft_step", this.props.locale),
+        "warning"
+      );
     }
 
-    this.Util.sweetAlertConfirm("", this.CATranslate("text_are_you_sure", this.props.locale))
+    this.Util.sweetAlertConfirm(
+      this.CATranslate("text_warning", this.props.locale),
+      this.CATranslate("text_are_you_sure", this.props.locale),
+      [this.CATranslate("text_cancel", this.props.locale), this.CATranslate("text_delete", this.props.locale)]
+    )
     .then(willDelete => {
       if (willDelete) {
         InstallmentService.delete(record.id)
         .then(() => {
           this.fetchList();
           this.fetchSummary();
-          message.success("One record has been deleted");
+          this.Util.sweetAlertMessageV2(this.CATranslate("text_success", this.state.locale), this.CATranslate("text_one_record_deleted", this.props.locale));
         })
-        .catch(() => {
-          message.error("Something went wrong");
+        .catch(err => {
+          if (err.response && err.response.data) {
+            this.Util.sweetAlertMessageV2(
+              this.CATranslate("text_sorry", this.props.locale),
+              this.CATranslate("text_something_went_wrong", this.props.locale),
+              "error"
+            );
+          }
         });
       }
     });

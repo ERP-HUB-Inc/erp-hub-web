@@ -72,7 +72,7 @@ export default {
   ],
 
   text_please_contact_us: [
-    "Please contact with customer support​ to solve problem",
+    "Please contact with customer support to solve problem",
     "សូមទំនាក់ទំនងទៅកាន់ផ្នែកបម្រើអតិថិជនដើម្បីដោះស្រាយបញ្ហានេះ",
   ],
 
@@ -255,6 +255,8 @@ export default {
   text_received: ["Received", "បានទទួល"],
 
   text_done: ["Done", "បញ្ចប់"],
+
+  text_success: ["Success", "ជោគជ័យ"],
 
   text_reset: ["Reset", "ដូចដើម"],
 
@@ -487,6 +489,10 @@ export default {
   text_save_success: ["Success save record", "បានរក្សាទុកដោយជោគជ័យ"],
 
   text_update_success: ["Success update record", "បានកែប្រែដោយជោគជ័យ"],
+
+  text_something_went_wrong: ["Something went wrong", "មាន​អ្វីមួយ​មិន​ប្រក្រតី"],
+
+  text_one_record_deleted: ["One record has been deleted", "បានលុបដោយជោគជ័យ"],
 
   text_website_setting: ["Website Setting", "ការកំណត់គេហទំព័រ"],
   text_banner: ["Banner", "បដា"],
