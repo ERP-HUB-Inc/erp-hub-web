@@ -38,7 +38,11 @@ export default class PaymentForm extends React.PureComponent {
         return;
       }
 
-      this.util.sweetAlertConfirm("", stringTranslate("text_are_you_sure", this.props.locale))
+      this.util.sweetAlertConfirm(
+        "", 
+        stringTranslate("text_are_you_sure", this.props.locale),
+        [stringTranslate("text_cancel", this.props.locale), stringTranslate("text_yes", this.props.locale)]
+      )
       .then(willPay => {
         if (willPay) {
           values.installmentId = this.props.formData.id;

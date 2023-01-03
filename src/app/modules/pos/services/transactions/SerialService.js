@@ -16,6 +16,13 @@ class SerialService extends BaseService {
         });
     }
 
+    listsByInstallment(limit, offset, search, rangeFilter) {
+        return this.GET({
+            url: `${this.baseUrl}/lists/installment?limit=${limit}&offset=${offset}&search=${search}&rangFilter=${rangeFilter}`,
+            headers: this.header
+        });
+    }
+
     findByNumber(number, variantId, transEntryId) {
         this.setHeader();
         return this.GET({

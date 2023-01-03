@@ -348,7 +348,7 @@ class RepaymentList extends Component {
                   />
                   <this.DateRangePicker 
                     name="dates"
-                    placeholder={`${this.CATranslate("text_date_range", this.props.locale)}`}
+                    placeholder={[this.CATranslate("text_start_date", this.props.locale), this.CATranslate("text_end_date", this.props.locale)]}
                     allowClear={true}
                     ranges={{
                       Today: [moment(), moment()],

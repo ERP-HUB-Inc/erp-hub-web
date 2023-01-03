@@ -27,6 +27,10 @@ export default {
     "Received Date",
     "ថ្ងៃទទួលទ្រព្យ"
   ],
+  "text_sale_date": [
+    "Sale date",
+    "ថ្ងៃលក់"
+  ],
   "text_rate": [
     "Rate",
     "អត្រាការប្រាក់"
@@ -49,7 +53,7 @@ export default {
   ],
   "text_repayment": [
     "Repayment",
-    "ការសងប្រាក់"
+    "ការបង់ប្រាក់"
   ],
   "text_pay_for_month": [
     "Pay for month",
