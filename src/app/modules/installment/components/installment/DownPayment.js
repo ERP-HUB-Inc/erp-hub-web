@@ -131,7 +131,7 @@ export default function DownPaymentTable(props) {
             <td style={{border: "1px solid", color: "#000", paddingRight: 10}}>
               <div style={{display: "flex", justifyContent: "flex-end", textAlign: "right"}}>
                 <div>ប្រាក់ត្រូវបង់ :</div>
-                <div style={{width: 110}}>{util.formatCurrency(getTotalPaidAmount(formData.paymentSchedule))}</div>
+                <div style={{width: 110}}>{util.formatCurrency(getTotal(formData.installmentEntries) - formData.firstPayment)}</div>
               </div>
             </td>
           </tr>
