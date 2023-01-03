@@ -21,7 +21,7 @@ export class UploadImageCrop extends React.Component {
     blobImg: null,
     uploading: false
   }
-  defaultCrop = {unit: "px", x: 20, y: 20, width: 360, height: 330};
+  defaultCrop = {unit: "px", x: 20, y: 20, width: 500, height: 500};
 
   initializeImage = (status) => {
     if (status === "success") {
