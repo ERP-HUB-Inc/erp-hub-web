@@ -354,6 +354,10 @@ class FormItem extends React.Component {
       InstallmentService.update(data, id)
       .then(() => {
         this.fetchDetail(id);
+        this.Util.sweetAlertMessageV2("Success", stringTranslate("text_update_success", this.props.locale), "success");
+      })
+      .catch(err => {
+        this.Util.sweetAlertMessageV2("Sorry!", "Something went wrong", "error");
       })
       .finally(() => {
         this.setState({loadingSubmit: false});
@@ -364,6 +368,7 @@ class FormItem extends React.Component {
       .then(response => {
         this.setState({loadingSubmit: false});
         history.push(`/installment/update/${response.data.id}?after-create=true`);
+        this.Util.sweetAlertMessageV2("Success", stringTranslate("text_success_save_invoice", this.props.locale), "success");
         this.pageTitle = "text_update_installment";
         this.fetchDetail(response.data.id);
       })
