@@ -58,11 +58,11 @@ class Installment extends Component {
                   <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" />
                 </this.Link>
               </Menu.Item>
-              <Menu.Item>
+              {/* <Menu.Item>
                 <this.Link to={`/installment/detail/${record.id}?action=print&size=A5`}>
                   <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" /> A5
                 </this.Link>
-              </Menu.Item>
+              </Menu.Item> */}
               <Menu.Item>
                 <this.Link to={`/installment/detail/${record.id}`}>
                   <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />

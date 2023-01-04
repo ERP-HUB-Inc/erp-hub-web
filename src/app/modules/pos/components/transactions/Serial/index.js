@@ -8,7 +8,6 @@ import {
   Pagination,
   Row,
   Col,
-  Input,
   DatePicker,
   Tag
 } from "antd";
@@ -92,7 +91,7 @@ class SerialList extends Component {
         title: <this.Translate id="text_sale_date" />,
         dataIndex: "receiveDate",
         key: "receiveDate",
-        render: (receiveDate) => this.Util.formatDate(receiveDate, "DD/MM/YYYY")
+        render: (receiveDate) => receiveDate && this.Util.formatDate(receiveDate, "DD/MM/YYYY")
       },
       {
         title: <this.Translate id="text_warranty" />,
@@ -180,7 +179,11 @@ class SerialList extends Component {
   }
 
   handleScan = (value) => {
-    this.props.form.setFieldsValue({searchKey: value});
+    if (this.state.activeTab === 1) {
+      this.props.form.setFieldsValue({searchKey: value});
+    } else {
+      this.props.form.setFieldsValue({searchKey2: value});
+    }
   }
 
   handleScanError = () => {}
@@ -284,7 +287,7 @@ class SerialList extends Component {
             <this.Tabs type="card" onChange={this.onChangeTab} style={{marginTop: 10}}>
               <this.TabPane key="1" tab={<this.Translate id="text_invoice" />}>
                 <Row>
-                  <Col span={24} style={{textAlign: "right"}}>
+                  <Col span={24} style={{display: "flex", justifyContent: "flex-end"}}>
                     <BarcodeReader
                       minLength={4}
                       onError={this.handleScanError}
@@ -294,21 +297,22 @@ class SerialList extends Component {
                       endChar={[13]}
                       timeBeforeScanTest={200}
                     />
-                    <Input 
+                    <this.InputText 
                       name="searchKey"
                       defaultValue={params.get("search") ? params.get("search") : ""}
                       placeholder={`${stringTranslate("text_serial_no", this.props.locale)}, ${stringTranslate("text_invoice_no", this.props.locale)}`}
                       allowClear={true}
-                      style={{width: 230, marginRight: 10}}
+                      style={{width: 230, marginRight: 10, marginBottom: 0}}
                       prefix={<this.Icon type="search" />}
                       onChange={this.onSearchKey}
+                      form={this.props.form}
                     />
                     <DatePicker
                       onChange={this.handleChangeDate}
                       name="date"
                       placeholder={`${stringTranslate("text_invoice_date", this.props.locale)}`}
                       defaultValue={params.get("date") ? moment(params.get("date")) : null}
-                      style={{maxWidth: 200}}
+                      style={{maxWidth: 200, marginTop: 3}}
                     />
                   </Col>
                 </Row>
@@ -328,7 +332,7 @@ class SerialList extends Component {
               </this.TabPane>
               <this.TabPane key="2" tab={<this.Translate id="text_installment" />}>
                 <Row>
-                  <Col span={24} style={{textAlign: "right"}}>
+                  <Col span={24} style={{display: "flex", justifyContent: "flex-end"}}>
                     <BarcodeReader
                       minLength={4}
                       onError={this.handleScanError}
@@ -338,21 +342,22 @@ class SerialList extends Component {
                       endChar={[13]}
                       timeBeforeScanTest={200}
                     />
-                    <Input 
+                    <this.InputText 
                       name="searchKey2"
                       defaultValue={params.get("search") ? params.get("search") : ""}
                       placeholder={`${stringTranslate("text_serial_no", this.props.locale)}, ${stringTranslate("text_customer", this.props.locale)}`}
                       allowClear={true}
-                      style={{width: 230, marginRight: 10}}
+                      style={{width: 230, marginRight: 10, marginBottom: 0}}
                       prefix={<this.Icon type="search" />}
                       onChange={this.onSearchKey}
+                      form={this.props.form}
                     />
                     <DatePicker
                       onChange={this.handleChangeDate}
                       name="receiveDate"
                       placeholder={`${stringTranslate("text_sale_date", this.props.locale)}`}
                       defaultValue={params.get("date") ? moment(params.get("date")) : null}
-                      style={{maxWidth: 200}} />
+                      style={{maxWidth: 200, marginTop: 3}} />
                   </Col>
                 </Row>
                 <this.Table 
