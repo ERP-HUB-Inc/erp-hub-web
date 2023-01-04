@@ -18,6 +18,7 @@ export class DateRangePicker extends Element {
           ], initialValue: this.props.defaultValue})(
             <DatePicker.RangePicker
               ranges={this.props.ranges}
+              placeholder={this.props.placeholder}
               format={this.props.dateFormat}
               onChange={this.props.onChange}
               showTime={this.props.showTime}

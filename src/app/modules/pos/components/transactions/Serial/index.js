@@ -20,13 +20,16 @@ class SerialList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
+      dataWithInvoice: [],
+      dataWithInstallment: [],
       loading: false,
       current: 1,
       pagination: {},
+      pagination2: {},
+      activeTab: 1
     };
     this.pageSize = 50;
-    this.columns = [
+    this.columnsByInvoice = [
       {
         title: <this.Translate id="text_product_name" />,
         dataIndex: "productName",
@@ -49,6 +52,47 @@ class SerialList extends Component {
         dataIndex: "invoiceDate",
         key: "invoiceDate",
         render: (invoiceDate) => this.Util.formatDate(invoiceDate, "DD/MM/YYYY")
+      },
+      {
+        title: <this.Translate id="text_warranty" />,
+        dataIndex: "numOfWarranty",
+        key: "numOfWarranty",
+        render: (numOfWarranty, record) => `${numOfWarranty} ${stringTranslate(`text_${record.durationType && record.durationType.toLowerCase()}`, this.props.locale)}`
+      },
+      {
+        title: <this.Translate id="text_status" />,
+        dataIndex: "numOfWarranty",
+        key: "status",
+        render: (numOfWarranty, record) => {
+          const warrantyDate = this.Util.calculateWarrantyDate(record.invoiceDate, numOfWarranty, record.durationType);
+          let statusTitle = "text_in_warranty";
+          let statusColor = "#87d068";
+          if (moment(moment(warrantyDate).format("YYYY-MM-DD")).isBefore(moment().format("YYYY-MM-DD"))) {
+            statusTitle = "text_expired_warranty";
+            statusColor = "#f5222d";
+          }
+          return <Tag style={{width: 112, textAlign: "center"}} color={statusColor}><this.Translate id={statusTitle} /></Tag>;
+        }
+      }
+    ];
+    this.columnsByInstallment = [
+      {
+        title: <this.Translate id="text_product_name" />,
+        dataIndex: "productName",
+        key: "productName"
+      },
+      {
+        title: "IMEI or Serial Number",
+        dataIndex: "number",
+        key: "number",
+        className: "invoice-number-column",
+        render: (number, record) => <Link to={`/installment/detail/${record.installmentId}`}>{number}</Link>
+      },
+      {
+        title: <this.Translate id="text_sale_date" />,
+        dataIndex: "receiveDate",
+        key: "receiveDate",
+        render: (receiveDate) => this.Util.formatDate(receiveDate, "DD/MM/YYYY")
       },
       {
         title: <this.Translate id="text_warranty" />,
@@ -113,14 +157,26 @@ class SerialList extends Component {
 
     offset = (offset - 1) * limit;
     this.setState({loading: true});
-    SerialService.lists(limit, offset, searchKey, rangeFilter)
-    .then(response => {
-      this.setState({
-        data: response && response.data.data,
-        pagination: response && response.data.pagination
-      });
-    })
-    .finally(() => this.setState({loading: false}));
+
+    if (this.state.activeTab === 1) {
+      SerialService.lists(limit, offset, searchKey, rangeFilter)
+      .then(response => {
+        this.setState({
+          dataWithInvoice: response && response.data.data,
+          pagination: response && response.data.pagination
+        });
+      })
+      .finally(() => this.setState({loading: false}));
+    } else {
+      SerialService.listsByInstallment(limit, offset, searchKey, rangeFilter)
+      .then(response => {
+        this.setState({
+          dataWithInstallment: response.data.data,
+          pagination2: response && response.data.pagination
+        });
+      })
+      .finally(() => this.setState({loading: false}));
+    }
   }
 
   handleScan = (value) => {
@@ -176,6 +232,10 @@ class SerialList extends Component {
     this.fetchList(true);
   }
 
+  onChangeTab = (key) => {
+    this.setState({activeTab: Number(key)}, () => this.fetchList());
+  }
+
   renderActionButton() {
     return <div />;
   }
@@ -220,48 +280,97 @@ class SerialList extends Component {
               <Col span={12} style={{marginBottom: 0}}>
                 <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_serial_no" /></h3>
               </Col>
-              <Col span={12} style={{textAlign: "right"}}>
-                <BarcodeReader
-                  minLength={4}
-                  onError={this.handleScanError}
-                  onScan={this.handleScan}
-                  preventDefault={true}
-                  avgTimeByChar={40}
-                  endChar={[13]}
-                  timeBeforeScanTest={200}
-                />
-                <Input 
-                  name="searchKey"
-                  defaultValue={params.get("search") ? params.get("search") : ""}
-                  placeholder={`${stringTranslate("text_serial_no", this.props.locale)}, ${stringTranslate("text_invoice_no", this.props.locale)}`}
-                  allowClear={true}
-                  style={{width: 230, marginRight: 10}}
-                  prefix={<this.Icon type="search" />}
-                  onChange={this.onSearchKey}
-                />
-                <DatePicker
-                  onChange={this.handleChangeDate}
-                  name="date"
-                  placeholder={`${stringTranslate("text_invoice_date", this.props.locale)}`}
-                  defaultValue={params.get("date") ? moment(params.get("date")) : null}
-                  style={{maxWidth: 200}}
-                />
-              </Col>
             </Row>
+            <this.Tabs type="card" onChange={this.onChangeTab} style={{marginTop: 10}}>
+              <this.TabPane key="1" tab={<this.Translate id="text_invoice" />}>
+                <Row>
+                  <Col span={24} style={{textAlign: "right"}}>
+                    <BarcodeReader
+                      minLength={4}
+                      onError={this.handleScanError}
+                      onScan={this.handleScan}
+                      preventDefault={true}
+                      avgTimeByChar={40}
+                      endChar={[13]}
+                      timeBeforeScanTest={200}
+                    />
+                    <Input 
+                      name="searchKey"
+                      defaultValue={params.get("search") ? params.get("search") : ""}
+                      placeholder={`${stringTranslate("text_serial_no", this.props.locale)}, ${stringTranslate("text_invoice_no", this.props.locale)}`}
+                      allowClear={true}
+                      style={{width: 230, marginRight: 10}}
+                      prefix={<this.Icon type="search" />}
+                      onChange={this.onSearchKey}
+                    />
+                    <DatePicker
+                      onChange={this.handleChangeDate}
+                      name="date"
+                      placeholder={`${stringTranslate("text_invoice_date", this.props.locale)}`}
+                      defaultValue={params.get("date") ? moment(params.get("date")) : null}
+                      style={{maxWidth: 200}}
+                    />
+                  </Col>
+                </Row>
+                <this.Table
+                  bordered={true}
+                  rowKey="id"
+                  loading={this.state.loading}
+                  columns={this.columnsByInvoice}
+                  dataSource={this.state.dataWithInvoice}
+                />
 
-            <this.Table
-              bordered={true}
-              rowKey="id"
-              loading={this.state.loading}
-              columns={this.columns}
-              dataSource={this.state.data}
-            />
+                <div style={{marginTop: 15}}>
+                  {this.renderPagination(this.state.pagination)}
+                </div>
 
-            <div style={{marginTop: 15}}>
-              {this.renderPagination(this.state.pagination)}
-            </div>
+                <this.clearFloating/>
+              </this.TabPane>
+              <this.TabPane key="2" tab={<this.Translate id="text_installment" />}>
+                <Row>
+                  <Col span={24} style={{textAlign: "right"}}>
+                    <BarcodeReader
+                      minLength={4}
+                      onError={this.handleScanError}
+                      onScan={this.handleScan}
+                      preventDefault={true}
+                      avgTimeByChar={40}
+                      endChar={[13]}
+                      timeBeforeScanTest={200}
+                    />
+                    <Input 
+                      name="searchKey2"
+                      defaultValue={params.get("search") ? params.get("search") : ""}
+                      placeholder={`${stringTranslate("text_serial_no", this.props.locale)}, ${stringTranslate("text_customer", this.props.locale)}`}
+                      allowClear={true}
+                      style={{width: 230, marginRight: 10}}
+                      prefix={<this.Icon type="search" />}
+                      onChange={this.onSearchKey}
+                    />
+                    <DatePicker
+                      onChange={this.handleChangeDate}
+                      name="receiveDate"
+                      placeholder={`${stringTranslate("text_sale_date", this.props.locale)}`}
+                      defaultValue={params.get("date") ? moment(params.get("date")) : null}
+                      style={{maxWidth: 200}} />
+                  </Col>
+                </Row>
+                <this.Table 
+                  bordered={true}
+                  rowKey="id"
+                  loading={this.state.loading}
+                  columns={this.columnsByInstallment}
+                  dataSource={this.state.dataWithInstallment}
+                />
 
-            <this.clearFloating/>
+                <div style={{marginTop: 15}}>
+                  {this.renderPagination(this.state.pagination2)}
+                </div>
+
+                <this.clearFloating/>
+              </this.TabPane>
+            </this.Tabs>
+            
           </div>
         </div>
       </div>

@@ -348,12 +348,13 @@ class RepaymentList extends Component {
                   />
                   <this.DateRangePicker 
                     name="dates"
-                    placeholder={`${this.CATranslate("text_date_range", this.props.locale)}`}
+                    placeholder={[this.CATranslate("text_start_date", this.props.locale), this.CATranslate("text_end_date", this.props.locale)]}
                     allowClear={true}
                     ranges={{
-                      Today: [moment(), moment()],
-                      "This Week": [moment().startOf("isoWeek"), moment().endOf("isoWeek")]
+                      [`${this.CATranslate("text_today", this.props.locale)}`]: [moment(), moment()],
+                      [`${this.CATranslate("text_this_week", this.props.locale)}`]: [moment().startOf("isoWeek"), moment().endOf("isoWeek")]
                     }}
+                    dateFormat="DD-MM-YYYY"
                     style={{width: 260, marginLeft: 15, marginBottom: 0}}
                     onChange={this.handleChangDate}
                     form={this.props.form}
