@@ -43,6 +43,8 @@ import {
   updatePage,
   getPageById,
   achivePage,
+  getMethodPayment,
+  updateMthodPayment,
 } from "./service";
 import history from "../../../../common/router/history";
 import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
@@ -136,10 +138,126 @@ const WebsiteSetting = (props) => {
   const [titlePage,setTitlePage] = useState("");
   const [slugPage,setSlugPage] = useState("");
 
+  // Method Payment State
+
+  const [methodPayment,setMethodPayment] = useState([]);
+  const [defautMethodPayment,setDefaultMethodPayment] = useState([]);
+  const [loadingButtonMethodPayment,setLoadingButtonMethodPayment] = useState(false);
+  const [loadingDataMethodPayment,setLoadingDataMethodPayment] = useState(false);
+
 
   const { TabPane } = Tabs;
   const { getFieldDecorator } = props.form;
   const util = new Util();
+
+  // Method Payment Function
+
+  const fetchMehtodPayment = () => {
+    setLoadingDataMethodPayment(true);
+    getMethodPayment().then(response => {
+      const datas = response.data.data;
+      if(datas){  
+          const newDatas = datas.map(data => {
+            const splitName =  data.value.split("/");
+            return {
+              id: data.id,
+              value: {
+                uid: data.id,
+                name: splitName[2],
+                status: "done",
+                url: util.getWebsiteImage(data.value).url,
+              },
+              status: 1,
+            };
+          });
+          setMethodPayment(newDatas);
+          setDefaultMethodPayment([...newDatas]);
+      }
+    }).finally(() =>  setLoadingDataMethodPayment(false));
+  };
+
+  const onChangePaymentImageName = (data, findIndex) => {
+    methodPayment.forEach((preValue, index) => {
+      if (index === findIndex) {
+        if (data) {
+          methodPayment[index]["value"] = data;
+        } else {
+          methodPayment[index]["value"] = null;
+        }
+      }
+    });
+
+    defautMethodPayment.forEach((preValue, index) => {
+      if (index === findIndex) {
+        if (data) {
+          defautMethodPayment[index]["value"] = data;
+          defautMethodPayment[index]["status"] = 1;
+        } else {
+          defautMethodPayment[index]["value"] = null;
+          defautMethodPayment[index]["status"] = 3;
+        }
+       
+      }
+    });
+
+    setMethodPayment([...methodPayment]);
+    setDefaultMethodPayment([...defautMethodPayment]);
+  };
+
+  const handleNewMethodPayment = () => {
+    methodPayment.push({value: null});
+    defautMethodPayment.push({value: null});
+    setMethodPayment([...methodPayment]);
+    setDefaultMethodPayment([...defautMethodPayment]);
+  };
+
+  const handleRemoveMethodPayment = (data,findIndex) => {
+    if ("id" in data) {
+      defautMethodPayment.forEach((value,index) => {
+        if(index === findIndex){
+          defautMethodPayment[index]["status"] = 3;
+        }
+      });
+      setDefaultMethodPayment([...defautMethodPayment]);
+    }
+    methodPayment.splice(findIndex, 1);
+
+    setMethodPayment([...methodPayment]);
+  };
+
+
+
+  const onMethodPaymentSubmit = (e) => {
+    e.preventDefault();
+    props.form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        const newDefautMethodPayment = defautMethodPayment.filter((data) => ("id" in data || data.value));
+        const newData = newDefautMethodPayment.map(data => {
+          if ("id" in data) {
+            return {
+              id: data.id,
+              value: data.value ? `website/payment_method/${data.value.name}` : null,
+              status: data.status,
+            };
+          }else{
+            return {
+              value: data.value ? `website/payment_method/${data.value.name}` : null,
+            };
+          }
+        });
+        setLoadingButtonMethodPayment(true);
+        updateMthodPayment(newData).then(() => {
+          fetchMehtodPayment();
+          swal(CATranslate("text_save_success", props.locale), {
+            buttons: false,
+            timer: 1500,
+            icon: "success",
+          });
+        }).finally(() => setLoadingButtonMethodPayment(false));
+      }
+    });
+  };
+
 
 
   // Pages Function
@@ -391,12 +509,12 @@ const WebsiteSetting = (props) => {
         ];
         updateGeneralSetting(general)
           .then(() => {
-            fetchGeneral();
             swal(CATranslate("text_save_success", props.locale), {
               buttons: false,
               timer: 1500,
               icon: "success",
             });
+            fetchGeneral();
           })
           .finally(() => {
             setGeneralLoadingButton(false);
@@ -968,6 +1086,8 @@ const WebsiteSetting = (props) => {
       fetchFooter();
     }else if(key === "pages"){
       fetchPages();
+    }else if(key === "method_payment"){
+      fetchMehtodPayment();
     }
   };
 
@@ -2023,6 +2143,63 @@ const WebsiteSetting = (props) => {
                         {<Translate id="text_save" />}
                       </Button>
                       </Form> 
+              </TabPane>
+              <TabPane tab={"Method Payment"} key="method_payment">
+              <Form onSubmit={onMethodPaymentSubmit}>
+                <Row>  
+                  <Col span="2">
+                    {loadingDataMethodPayment ?
+                       <div className="spinning-menu-item-list">
+                       <Spin spinning={loadingDataMethodPayment} /> 
+                     </div>
+                     :
+                     <div style={{display: "flex", flexDirection : "column"}}>
+                     {methodPayment.map((data,index) => {
+                       return (
+                         <div style={{display: "flex", alignItems: "center"}}>
+                           <UploadImageMethodPayment
+                             fileList={
+                               data.value ? [data.value] : []
+                             }
+                             util={util}
+                             form={props.form}
+                             name={`paymentImage${index}`}
+                             onChangeImageName={onChangePaymentImageName}
+                             index={index}
+                           />
+                           <Icon
+                             onClick={() => handleRemoveMethodPayment(data,index)}
+                             type="minus-circle"
+                             style={{fontSize: "32px",cursor: "pointer" ,margin: "0px 0px 25px 20px"}}
+                           />
+                         </div>
+                       );
+                     })}
+                     </div>
+                    }
+                
+                  </Col>         
+                </Row>
+                <Row>
+                <Col span="2">
+                  <Icon
+                    onClick={handleNewMethodPayment}
+                    type="plus-circle"
+                    style={{fontSize: "32px",cursor: "pointer"}}
+                  />
+                  </Col>
+                </Row>
+                <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="ant-btn info undefined"
+                        loading={loadingButtonMethodPayment}
+                        style={{ marginTop: 15 }}
+                      >
+                        <span className="icon-save icon-padding-right"></span>
+                        {<Translate id="text_save" />}
+                      </Button>
+                      </Form> 
               </TabPane>    
               <TabPane tab={"Pages"} key="pages">
               <Row>
@@ -2173,6 +2350,79 @@ function UploadImage({ uploadProps, label, form, name }) {
   return (
     <div className="clearfix main-upload">
       <Form.Item className="wrap-upload" label={label}>
+        {getFieldDecorator(name)(
+          <Upload {...uploadProps} style={{ height: "120px" }}>
+            {uploadProps.fileList.length === 0 ? (
+              <React.Fragment>
+                <UploadButton />
+                <Button>
+                  <Icon type="upload" /> Upload
+                </Button>
+              </React.Fragment>
+            ) : null}
+          </Upload>
+        )}
+      </Form.Item>
+    </div>
+  );
+}
+function UploadImageMethodPayment({
+  form,
+  name,
+  fileList,
+  util,
+  index,
+  onChangeImageName,
+}) {
+  const { getFieldDecorator } = form;
+  const uploadProps = {
+    listType: "picture-card",
+    onRemove: (file) => {
+      axios({
+        method: "DELETE",
+        url: `${util.getAPIURL()}/file/v1/delete`,
+        data: { path: `website/favicon/${file.name}` },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${util.getAccessToken()}`,
+        },
+      }).then(() => {
+        onChangeImageName(null, index);
+        form.setFieldsValue({ [`image${index}`]: null });
+      });
+    },
+    beforeUpload: (file) => {
+      return false;
+    },
+    fileList,
+    onChange: ({ fileList, file }) => {
+      let formData = new FormData();
+      formData.append("image", file);
+      if (file.status !== "removed") {
+        axios
+          .post(`${util.getAPIURL()}/file/v1/upload/web_payment_method`, formData, {
+            headers: {
+              "content-type": "multipart/form-data",
+              Authorization: `Bearer ${util.getAccessToken()}`,
+            },
+          })
+          .then((response) => {
+            onChangeImageName(
+              {
+                uid: `${Date.now()}`,
+                name: response.data.originalname,
+                status: "done",
+                url: response.data.location,
+              },
+              index
+            );
+          });
+      }
+    },
+  };
+  return (
+    <div className="clearfix main-upload">
+      <Form.Item className="wrap-upload">
         {getFieldDecorator(name)(
           <Upload {...uploadProps} style={{ height: "120px" }}>
             {uploadProps.fileList.length === 0 ? (

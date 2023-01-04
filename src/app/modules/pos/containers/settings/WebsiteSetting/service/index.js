@@ -204,3 +204,21 @@ export function achivePage(id){
   });
 }
 
+export function getMethodPayment(){
+  return axios({
+    method: "GET",
+    headers,
+    url: `${url}/payment_methods`,
+  });
+}
+
+export function updateMthodPayment(data) {
+  return axios({
+    method: "PUT",
+    headers,
+    url: `${url}/payment_methods`,
+    data,
+  });
+}
+
+
