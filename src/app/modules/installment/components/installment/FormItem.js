@@ -121,7 +121,19 @@ class FormItem extends React.Component {
       title: <Translate id="text_price" />,
       dataIndex: "price",
       key: "price",
-      render: (price) => this.Util.formatCurrency(price)
+      width: 245,
+      render: (price, record, index) => {
+        return (
+          <InputNumber
+            name={`price[${index}]`}
+            placeholder={`${stringTranslate("text_price", this.props.locale)}`}
+            isAutoSelect={true}
+            data={price}
+            style={{width: 240}}
+            onChange={(value) => this.onChangePrice(value, index)}
+            form={this.props.form} />
+        );
+      }
     },
     {
       title: <Translate id="text_amount" />,
@@ -402,6 +414,21 @@ class FormItem extends React.Component {
         this.setState({loadingSubmit: false});
       });
     }
+  }
+
+  onChangePrice = (value, index) => {
+    clearTimeout(this.timer);
+    const {formData} = this.state;
+    let duration = formData.duration;
+    let numberOfMonth = duration;
+    if (formData.durationType === Enum.DURATION_TYPE.YEAR) {
+      numberOfMonth = duration * 12;
+    }
+    this.timer = setTimeout(() => {
+      this.setState(preState => {
+        preState.formData.installmentEntries[index].price = value;
+      }, () => this.generatePaymentSchedule(formData.rate, numberOfMonth, formData.paymentDate));
+    }, 500);
   }
 
   onChangeSerial = (value, index) => {
@@ -724,10 +751,10 @@ class FormItem extends React.Component {
       <div>
         <PageHeader
           style={{
-          backgroundColor: "#f7f7f7",
-          paddingLeft: 0,
-          paddingRight: 0,
-          position: "relative"
+            backgroundColor: "#f7f7f7",
+            paddingLeft: 0,
+            paddingRight: 0,
+            position: "relative"
           }}
           onBack={this.handleGoBack}
           title={<Translate id={this.pageTitle} />}

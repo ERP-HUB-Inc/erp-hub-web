@@ -9,6 +9,8 @@ import {
   Tag,
   Dropdown,
   Menu,
+  Card,
+  Statistic,
 } from "antd";
 import Enum from "../../enum";
 import Component from "../../../common/components/Component";
@@ -21,6 +23,7 @@ class RepaymentList extends Component {
     super(props);
     this.state = {
       data: [],
+      summary: {},
       pagination: {},
       loading: false,
       detail: {}
@@ -201,6 +204,11 @@ class RepaymentList extends Component {
     })
     .catch(err => console.log("error", err.response))
     .finally(() => this.setState({loading: false}));
+
+    RepaymentService.getSummary(searchKey, dateRange)
+    .then(response => {
+      this.setState({summary: response.data.data});
+    });
   }
 
   handlePayment(record) {
@@ -327,6 +335,7 @@ class RepaymentList extends Component {
   }
 
   render() {
+    const {data, summary} = this.state;
     return (
       <React.Fragment>
         <div className="content-list">
@@ -362,12 +371,42 @@ class RepaymentList extends Component {
                 </Col>
               </Row>
 
+              <Row gutter={16} style={{marginTop: 9}}>
+                <Col span={8}>
+                  <Card>
+                    <Statistic 
+                      title={<this.Translate id="text_paid"/>}
+                      value={summary && summary.paid}
+                      valueStyle={{color: "#52c41a"}}
+                    />
+                  </Card>
+                </Col>
+                <Col span={8}>
+                  <Card>
+                    <Statistic
+                      title={<this.Translate id="text_unpaid"/>}
+                      value={summary && summary.unpaid}
+                      valueStyle={{color: "#ffa940"}}
+                    />
+                  </Card>
+                </Col>
+                <Col span={8}>
+                  <Card>
+                    <Statistic
+                      title={<this.Translate id="text_overdue"/>}
+                      value={summary && summary.overdue}
+                      valueStyle={{color: "#f5222d"}}
+                    />
+                  </Card>
+                </Col>
+              </Row>
+
               <this.Table 
                 bordered={true}
                 rowKey="id"
                 loading={this.state.loading}
                 columns={this.columns}
-                dataSource={this.state.data}
+                dataSource={data}
               />
 
               <div style={{marginTop: 15}}>

@@ -609,7 +609,7 @@ export default class Invoice extends Component {
                           title={<this.Translate id="text_sent_invoice"/>}
                           value={summaryData.sentAmount ? summaryData.sentAmount.toFixed(2) : 0 }
                           prefix="$"
-                          suffix={" / " + (summaryData.sent ? summaryData.sent  :  0) + " invoice(s)"}
+                          suffix={" / " + (summaryData.sent ? summaryData.sent  :  0) + " " + this.CATranslate("text_invoices", this.props.locale).toLowerCase()}
                           valueStyle={{color: "rgb(24, 144, 255)"}}
                       />
                     </Card>
@@ -620,7 +620,7 @@ export default class Invoice extends Component {
                           title={<this.Translate id="text_overdue"/>}
                           value={summaryData.overdueAmount ? summaryData.overdueAmount.toFixed(2) : 0 }
                           prefix="$"
-                          suffix={" / " + (summaryData.overdue ? summaryData.overdue  :  0) + " invoice(s)"}
+                          suffix={" / " + (summaryData.overdue ? summaryData.overdue  :  0) + " " + this.CATranslate("text_invoices", this.props.locale).toLowerCase()}
                           valueStyle={{ color: "#cf1322" }}
                       />
                     </Card>
@@ -631,7 +631,7 @@ export default class Invoice extends Component {
                           title={<this.Translate id="text_paid"/>}
                           value={summaryData.paidAmount ? summaryData.paidAmount.toFixed(2) : 0 }
                           prefix="$"
-                          suffix={ " / " + (summaryData.paid ? summaryData.paid  :  0) + " invoice(s)"}
+                          suffix={ " / " + (summaryData.paid ? summaryData.paid  :  0) + " " + this.CATranslate("text_invoices", this.props.locale).toLowerCase()}
                           valueStyle={{ color: "#3f8600" }}
                       />
                     </Card>

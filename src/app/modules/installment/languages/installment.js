@@ -55,6 +55,10 @@ export default {
     "Repayment",
     "ការបង់ប្រាក់"
   ],
+  "text_unpaid": [
+    "Unpaid",
+    "មិនទាន់បង់ប្រាក់"
+  ],
   "text_pay_for_month": [
     "Pay for month",
     "បង់សម្រាប់ខែ"
