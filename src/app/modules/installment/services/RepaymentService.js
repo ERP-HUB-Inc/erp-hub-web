@@ -39,6 +39,14 @@ class RepaymentService extends BaseService {
     });
   }
 
+  getSummary(search, rangeFilter) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/v1/summary?search=${search}&rangFilter=${rangeFilter}`,
+      headers: this.header
+    });
+  }
+
   create(data) {
     this.setHeader();
     return this.POST({
