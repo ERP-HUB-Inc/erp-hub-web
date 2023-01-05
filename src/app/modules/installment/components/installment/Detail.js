@@ -183,7 +183,7 @@ class DetailInstallment extends React.Component {
                 }
                 
                 {
-                  this.state.isCanPay ?
+                  this.state.isCanPay && detail.status !== EnumINS.INSTALLMENT_STATUS.DRAFT ?
                     <Menu.Item className="ant-dropdown-menu-item" onClick={this.handlePay}><Translate id="text_pay" /></Menu.Item>
                   : null
                 }
