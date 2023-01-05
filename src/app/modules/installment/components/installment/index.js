@@ -36,7 +36,7 @@ class Installment extends Component {
     this.INSTALLMENT_STATUS_STR = {
       [Enum.INSTALLMENT_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#bfbfbf"},
       [Enum.INSTALLMENT_STATUS.RECEIVED]: { title: <this.Translate id="text_received" />, color: "#1890ff"},
-      [Enum.INSTALLMENT_STATUS.COMPLETED]: { title: <this.Translate id="text_completed" />, color: "#f50"},
+      [Enum.INSTALLMENT_STATUS.COMPLETED]: { title: <this.Translate id="text_completed" />, color: "#52c41a"},
     };
     this.columns = [
       {

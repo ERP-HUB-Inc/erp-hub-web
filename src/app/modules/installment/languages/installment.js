@@ -55,6 +55,10 @@ export default {
     "Repayment",
     "ការបង់ប្រាក់"
   ],
+  "text_expired_pay_date": [
+    "Expired",
+    "ផុតថ្ងៃបង់ប្រាក់"
+  ],
   "text_unpaid": [
     "Unpaid",
     "មិនទាន់បង់ប្រាក់"

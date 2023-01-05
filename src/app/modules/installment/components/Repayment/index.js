@@ -107,13 +107,13 @@ class RepaymentList extends Component {
             moment(record.date).format("YYYY-MM-DD") < moment().format("YYYY-MM-DD")
           ) {
             statusColor = "#f5222d";
-            statusTitle = <this.Translate id="text_overdue" />;
+            statusTitle = `${this.CATranslate("text_expired_pay_date", this.props.locale)} (${this.getExpiredDate(record.date)} ${this.CATranslate("text_day", this.props.locale)})`;
           }
           return <Tag color={statusColor} style={{width: 120, textAlign: "center"}}>{statusTitle}</Tag>;
         }
       },
       {
-        title: <this.Translate id="text_amount" />,
+        title: <this.Translate id="text_amount_to_pay" />,
         dataIndex: "payAmount",
         key: "payAmount",
         align: "right",
@@ -125,13 +125,6 @@ class RepaymentList extends Component {
         key: "balance",
         align: "right",
         render: balance => this.Util.formatCurrency(balance)
-      },
-      {
-        title: <this.Translate id="text_total" />,
-        dataIndex: "total",
-        key: "total",
-        align: "right",
-        render: total => this.Util.formatCurrency(total)
       }
     ];
     this.pathname = "/installment/repayment/list";
@@ -209,6 +202,11 @@ class RepaymentList extends Component {
     .then(response => {
       this.setState({summary: response.data.data});
     });
+  }
+
+  getExpiredDate(date) {
+    let diff = moment(moment()).diff(moment(date), "days");
+    return diff;
   }
 
   handlePayment(record) {
