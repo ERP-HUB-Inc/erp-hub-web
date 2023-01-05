@@ -12,6 +12,7 @@ import PublicInvoice from "../../pos/components/transactions/Invoice/PublicInvoi
 import SaleOrderPublicInvoice from "../../pos/components/transactions/SaleOrder/Invoice/public";
 import QuotePreview from "../../pos/components/transactions/Quotation/invoice/PublicQuote";
 import ReceiptPreview from "../../pos/components/transactions/receipt/publicReceipt";
+import ExportPDFSaleByProduct from "../../pos/components/reports/Sale/ExportPDFSaleByProduct";
 
 export default class App extends React.Component {
   render() {
@@ -66,6 +67,7 @@ export default class App extends React.Component {
               <Route path="/public/sales-order-preview" component={SaleOrderPublicInvoice} /> {/* Query params: saleOrderId, token */}
               <Route path="/public/quotation-preview" component={QuotePreview} />
               <Route path="/public/receipt-preview" component={ReceiptPreview} />
+              <Route path="/reports/sold_products/pdf-preview" component={ExportPDFSaleByProduct} />
               {!token && (
                 <PrivateRoute
                 path="/"

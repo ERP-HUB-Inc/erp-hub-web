@@ -1,0 +1,39 @@
+#export-pdf .data-table td,
+#export-pdf .data-table th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+#export-pdf .data-table th {
+    background-color: #acacac;
+}
+
+#export-pdf .presence-break-up-header td {
+    font-size: 12px
+}
+
+#export-pdf .presence-break-up th,
+#export-pdf .presence-break-up td {
+    font-size: 12px;
+    text-align: center;
+}
+
+@media print {
+    #export-pdf {
+        background-color: #fff;
+    }
+
+    #toolbar {
+        display: none
+    }
+
+    #export-pdf {
+        height: auto !important
+    }
+
+    @page {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+}

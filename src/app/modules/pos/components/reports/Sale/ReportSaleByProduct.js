@@ -82,7 +82,7 @@ export default function ReportSaleByProduct() {
       startDate: from.format("YYYY-MM-DD"),
       endDate: to.format("YYYY-MM-DD"),
       search,
-      supplierId,
+      supplierId
     })
       .then((response) => {
         if (response.data) {
@@ -110,6 +110,16 @@ export default function ReportSaleByProduct() {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const getExportableData = () => {
+    return ReportSaleService.getReportSummaryByProduct({
+      startDate: fromValue.format("YYYY-MM-DD"),
+      endDate: toValue.format("YYYY-MM-DD"),
+      search: searchValue,
+      supplierId,
+      isExport: true
+    });
   };
 
   React.useEffect(() => {
@@ -283,8 +293,8 @@ export default function ReportSaleByProduct() {
         </Col>
         <Col span={24}>
           <ExportForm
-            startDate={fromValue.format("YYYY-MM-DD")}
-            endDate={toValue.format("YYYY-MM-DD")}
+            pdfLink={"/reports/sold_products/pdf-preview"}
+            getData={getExportableData}
           />
         </Col>
         <Col span={24}>

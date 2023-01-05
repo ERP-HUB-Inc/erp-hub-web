@@ -4,20 +4,31 @@ import {
     Result,
     Button
 } from "antd";
-import SaleService from "../../../services/report/SaleService";
+import { Link } from "react-router-dom";
+// import SaleService from "../../../services/report/SaleService";
 
-function ExportFormLoader({startDate, endDate}) {
+function ExportFormLoader({pdfLink,getData}) {
     const [loading, setLoading] = React.useState(false);
     const [result, setResult] = React.useState(null);
+    const params = new URLSearchParams(document.location.search);
+    const pdf = `${pdfLink}?${params.toString()}`;
     React.useEffect(() => {
         try {
             setLoading(true);
-            SaleService.getReportSummaryByProduct({startDate, endDate, isExport: true})
-            .then(response => {
-                if (response.data) {
-                    setResult(response.data);
-                }
-            });
+            if (typeof getData === "function") {
+                getData()
+                .then(response => {
+                    if (response.data) {
+                        setResult(response.data);
+                    }
+                });
+            }
+            // SaleService.getReportSummaryByProduct({startDate, endDate, isExport: true})
+            // .then(response => {
+            //     if (response.data) {
+            //         setResult(response.data);
+            //     }
+            // });
         } catch (error) {
             setLoading(false);
         } finally {
@@ -31,9 +42,16 @@ function ExportFormLoader({startDate, endDate}) {
         title="Successfully Exported Report"
         subTitle={loading ? "Please wait..." : ""}
         extra={[
-            <a href={result ? result.link : "#"}>
+            <div style={{marginBottom: 25}}>
+              <a key="1" className="ant-btn ant-btn-dashed" href={result ? result.link : "#"}>
                 Download File(xlsx)
-            </a>
+              </a>
+            </div>,
+            <div>
+              <Link key="2" className="ant-btn ant-btn-dashed" to={pdf} target="_blank">
+                Preview PDF
+              </Link>
+            </div>
         ]}
     />;
 }
