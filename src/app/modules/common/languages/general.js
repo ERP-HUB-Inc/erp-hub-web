@@ -308,7 +308,7 @@ export default {
 
   text_all_store: ["All Stores", "ហាងទាំងអស់"],
 
-  text_receipt: ["Receipt", "បង្កាន់ដៃ", "Receipt"],
+  text_receipt: ["Receipt", "បង្កាន់ដៃបង់ប្រាក់", "Receipt"],
 
   text_pay_amount: ["Pay Amount", "ប្រាក់ត្រូវបង់", "Pay Amount"],
 
