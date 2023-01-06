@@ -11,7 +11,7 @@ import {
 } from "antd";
 import moment from "moment";
 import { Translate } from "react-localize-redux";
-import ExportFormByProduct from "./ExportFormByProduct";
+import ExportForm from "./ExportForm";
 import history from "../../../../common/router/history";
 import Enum from "../../../../inventory/enums";
 import Util from "../../../../common/util";
@@ -28,12 +28,11 @@ function ReportPurchaseByProduct() {
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState([]);
   const [suppliers, setSuppliers] = React.useState([]);
-  const [fromValue] = React.useState(moment().startOf("month"));
-  const [toValue] = React.useState(moment().endOf("month"));
-
+  const [fromValue,setFromValue] = React.useState(moment().startOf("month"));
+  const [toValue,setToValue] = React.useState(moment().endOf("month"));
+  const [search,setSearch] = React.useState("");
+  const [supplierId,setSupplierId] = React.useState("");
   const params = new URLSearchParams(document.location.search);
-  const search = params.get("search");
-  const supplierId = params.get("supplierId");
 
   let timer = null;
 
@@ -45,37 +44,83 @@ function ReportPurchaseByProduct() {
       }
     });
 
-    fetchReport(fromValue, toValue, search, supplierId);
+    let option = {
+      startDate: fromValue,
+      endDate: toValue,
+      searchValue: search,
+      supplierId: supplierId,
+    };
 
-    params.set("startDate", moment().startOf("month").format("YYYY-MM-DD"));
-    params.set("endDate", moment().endOf("month").format("YYYY-MM-DD"));
+    if (params.has("startDate")) {
+      setFromValue(moment(params.get("startDate")));
+      option["startDate"] = moment(params.get("startDate"));
+    }
+    else{
+      params.set("startDate", moment().startOf("month").format("YYYY-MM-DD"));
+    }
+    
+    if (params.has("endDate")) {
+      setToValue(moment(params.get("endDate")));
+      option["endDate"] = moment(params.get("endDate"));
+    }
+    else{
+      params.set("endDate", moment().endOf("month").format("YYYY-MM-DD"));
+    }
+    
+    if (params.has("search")) {
+      setSearch(params.get("search"));
+      option["searchValue"] = params.get("search");
+    }
+    if (params.has("supplierId")) {
+      setSupplierId(params.get("supplierId"));
+      option["supplierId"] = params.get("supplierId");
+    }
+
+    fetchReport(
+      option.startDate,
+      option.endDate,
+      option.searchValue,
+      option.supplierId
+    );
     util.pushParamsToURL(pathName, params.toString());
     // eslint-disable-next-line
-  }, [fromValue, toValue, search, supplierId]);
+  }, []);
 
   const onFromChange = value => {
     if (value) {
       params.set("startDate", value.format("YYYY-MM-DD"));
+      setFromValue(moment(value));
     } else {
       params.delete("startDate");
     }
 
     util.pushParamsToURL(pathName, params.toString());
     
-    fetchReport(value, toValue, search);
+    fetchReport(value, toValue, search,supplierId);
+  };
+
+  const getExportableData = () => {
+    return  PurchaseService.getReportSummaryByProduct(
+      {
+        startDate: fromValue.format("YYYY-MM-DD"),
+        endDate: toValue.format("YYYY-MM-DD"),
+        search,
+        supplierId,
+        isExport: true,
+      }
+    );
   };
 
   const onToChange = value => {
-    if (value) {
-      fetchReport(fromValue, value, search);
+    if (value) {  
       params.set("endDate", value.format("YYYY-MM-DD"));
+      setToValue(moment(value));
     } else {
       params.delete("endDate");
     }
-
+    fetchReport(fromValue, value, search,supplierId);
     util.pushParamsToURL(pathName, params.toString());
 
-    fetchReport(fromValue,toValue,value);
   };
 
   const fetchReport = (from, to, search, supplierId) => {
@@ -106,20 +151,24 @@ function ReportPurchaseByProduct() {
     timer = setTimeout(() => {
       if (value) {
         params.set("search", value);
+        setSearch(value);
       } else {  
         params.delete("search");
+        setSearch("");
       }
 
       util.pushParamsToURL(pathName, params.toString());
-      fetchReport(fromValue, toValue, value);
+      fetchReport(fromValue, toValue, value,supplierId);
     }, 1000);
   };
 
   const onChangeSupplier = (value) => {
     if (value) {
       params.set("supplierId", value);
+      setSupplierId(value);
     } else {
       params.delete("supplierId");
+      setSupplierId("");
     }
 
     util.pushParamsToURL(pathName, params.toString());
@@ -154,6 +203,11 @@ function ReportPurchaseByProduct() {
             <Select
               name="supplierId"
               style={{ width: 200 , marginRight: 15}}
+              defaultValue={
+                params.has("supplierId")
+                  ? params.get("supplierId")
+                  : undefined
+              }
               placeholder="Select supplier"
               allowClear={true}
               onChange={onChangeSupplier}
@@ -185,7 +239,10 @@ function ReportPurchaseByProduct() {
       />
       <Row gutter={16}>
         <Col span={24}>
-          <ExportFormByProduct startDate={fromValue.format("YYYY-MM-DD")} endDate={toValue.format("YYYY-MM-DD")} />
+          <ExportForm 
+          pdfLink={"/reports/purchased_products/pdf-preview"}
+          getData={getExportableData}
+          />
         </Col>
         <Col span={24}>
           <Table

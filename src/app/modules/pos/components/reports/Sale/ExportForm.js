@@ -7,7 +7,7 @@ import {
 import { Link } from "react-router-dom";
 // import SaleService from "../../../services/report/SaleService";
 
-function ExportFormLoader({pdfLink,getData}) {
+function ExportFormLoader({ pdfLink,getData }) {
     const [loading, setLoading] = React.useState(false);
     const [result, setResult] = React.useState(null);
     const params = new URLSearchParams(document.location.search);

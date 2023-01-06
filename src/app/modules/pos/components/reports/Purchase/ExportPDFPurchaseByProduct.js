@@ -2,22 +2,22 @@
 import React,{useEffect,useState} from "react";
 import { Translate } from "react-localize-redux";
 import { Button, Spin } from "antd";
-import ReportSaleService from "../../../services/report/SaleService";
+import  PurchaseService from "../../../services/report/PurchaseService";
 import Util from "../../../../common/util";
+import Enum from "../../../../inventory/enums";
 import "../preview-pdf.css";
 
 
-export default function ExportPDFSaleByProduct() {
+export default function  ExportPDFPurcaseByProduct() {
   const [datas, setDatas] = useState([]);
   const [loading,setLoading] = useState(true);
   const valueLocalStorage = JSON.parse(window.localStorage.getItem("ACCESS_TOKEN"));
   const params = new URLSearchParams(document.location.search);
-  const title = "MONTHLY SALE BY PRODUCT REPORT";
+  const title = "MONTHLY PURCHASE BY PRODUCT REPORT";
  
-  
+  let option = {};
   useEffect(() => {
     document.title =  title;
-    let option = {};
     
     if (params.has("startDate")) {
       option["startDate"] = params.get("startDate");
@@ -32,30 +32,21 @@ export default function ExportPDFSaleByProduct() {
     if (params.has("search")) {
       option["search"] = params.get("search");
     }
-    ReportSaleService.getReportSummaryByProduct(option).then(response => {
+
+    PurchaseService.getReportSummaryByProduct(option).then(response => {
       if (response.data) {
-        const { summaryByProducts } = response.data;
-        setDatas(summaryByProducts);
+        setDatas(response.data);
       }
     }).finally(() => setLoading(false));
     // eslint-disable-next-line
   },[]);
 
-  const getProfit = (profit, record) => {
-    const netSale = record.revenue - record.discount;
-    profit = netSale - record.cost;
-    return new Util().formatCurrency(profit);
-  };
-
-  const getMargin = (margin, record) => {
-    if (record.revenue > 0) {
-      const profit = record.revenue - record.cost;
-      margin = (profit / record.revenue) * 100;
-    } else {
-      margin = -1 * 100;
+  const getProductName = (productName, record) => {
+    let variantName = "";
+    if (record.productOption === Enum.PRODUCT_VARIANT) {
+      variantName = ` / ${record.variantName}`;
     }
-
-    return new Util().formatPercentage(margin);
+    return productName + variantName;
   };
 
   return <React.Fragment>
@@ -68,10 +59,10 @@ export default function ExportPDFSaleByProduct() {
       <div style={{height: 25 ,backgroundColor: "rgb(82 86 89)"}} id="space-block" />
       <div id="export-pdf" style={{backgroundColor: "rgb(82 86 89)", width: "100%", height: window.innerWidth + 120}}>
           <div style={{width: "297mm", height: "100%", backgroundColor: "#fff", padding: 25, margin: "auto", position: "relative"}}>
-            {
+          {
               loading ? <Spin spinning={loading} id="spinner"/>
               : <React.Fragment>
-                  <table style={{marginBottom: 15, width: "100%"}}>
+              <table style={{marginBottom: 15, width: "100%"}}>
                   <tbody>
                       <tr>
                           <td colSpan="2" style={{textAlign: "center", paddingBottom: 67}}>
@@ -88,17 +79,13 @@ export default function ExportPDFSaleByProduct() {
                   <thead>
                       <tr>
                           <th style={{textAlign: "center"}}>#</th>
-                          <th><Translate id="text_product" /></th>
-                          <th><Translate id="text_variant" /></th>
+                          <th><Translate id="text_product_name" /></th>
                           <th><Translate id="text_barcode" /></th>
-                          <th><Translate id="text_quantity" /></th>
-                          <th><Translate id="text_revenue" /></th>
-                          <th><Translate id="text_discount" /></th>
-                          <th><Translate id="text_net_sale" /></th>
-                          <th><Translate id="text_cost_of_good" /></th>
-                          <th><Translate id="text_gross_profit" /></th>
-                          <th><Translate id="text_margin" /></th>
-              
+                          <th><Translate id="text_purchase_date" /></th>
+                          <th><Translate id="text_supplier" /></th>
+                          <th><Translate id="text_quantity_buy_in" /></th>
+                          <th><Translate id="text_unit_cost" /></th>
+                          <th><Translate id="text_total" /></th>
                       </tr>
                   </thead>
                   <tbody>
@@ -107,25 +94,22 @@ export default function ExportPDFSaleByProduct() {
                               {    
                                   return <tr key={index}>
                                     <td style={{width: 60, textAlign: "center"}}>{index + 1}</td>
-                                    <td>{data.name}</td>
-                                    <td style={{textAlign: "center"}}>{data.variant}</td>
-                                    <td style={{textAlign: "center"}}>{data.barcode}</td>
-                                    <td style={{textAlign: "center"}}>{`${data.quantity} ${data.unitName ? data.unitName : ""}`}</td>
-                                    <td style={{textAlign: "center"}}>{new Util().formatCurrency(data.revenue)}</td>
-                                    <td style={{textAlign: "center"}}>{new Util().formatCurrency(data.discount)}</td>
-                                    <td style={{textAlign: "center"}}>{new Util().formatCurrency(data.revenue - data.discount)}</td>
-                                    <td style={{textAlign: "center"}}>{new Util().formatCurrency(data.cost)}</td>
-                                    <td style={{textAlign: "center"}}>{getProfit(data.profit,data)}</td>
-                                    <td style={{textAlign: "center"}}>{getMargin(data.margin,data)}</td> 
+                                    <td>{getProductName(data.productName,data)}</td>
+                                    <td>{data.barcode}</td>
+                                    <td>{new Util().formatDate(data.date, "DD/MM/YYYY")}</td>
+                                    <td>{data.supplierName}</td>
+                                    <td>{`${data.quantity} ${data.unitName ? data.unitName : ""}`}</td>
+                                    <td>{new Util().formatCurrency(data.cost)}</td>
+                                    <td>{new Util().formatCurrency(data.total)}</td>
                                   </tr>;
                               }  
                           )
                       }
                   </tbody>
               </table>
-
               </React.Fragment>
-            }    
+          }
+            
           </div>
           <div style={{height: 25 ,backgroundColor: "rgb(82 86 89)"}} id="space-block" />
       </div>

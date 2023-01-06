@@ -3,10 +3,12 @@
     border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;
+    font-size: 10px;
 }
 
 #export-pdf .data-table th {
     background-color: #acacac;
+    font-size: 10px;
 }
 
 #export-pdf .presence-break-up-header td {
@@ -19,9 +21,21 @@
     text-align: center;
 }
 
+#spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 297mm;
+    height: 20%;
+}
+
 @media print {
     #export-pdf {
         background-color: #fff;
+    }
+
+    #space-block {
+        display: none;
     }
 
     #toolbar {
@@ -33,6 +47,7 @@
     }
 
     @page {
+        size: portrait;
         margin-top: 50px;
         margin-bottom: 50px;
     }

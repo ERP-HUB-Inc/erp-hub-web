@@ -51,6 +51,8 @@ import InvoiceReceipt from "../../pos/components/transactions/receipt";
 import SaleOrderCreate from "../../pos/components/transactions/SaleOrder/FormItem";
 import SaleOrderUpdate from "../../pos/components/transactions/SaleOrder/FormItem";
 import SaleOrderDetail from "../../pos/components/transactions/SaleOrder/detail";
+import ExportPDFPurchaseByProduct from "../../pos/components/reports/Purchase/ExportPDFPurchaseByProduct";
+import ExportPDFSaleByProduct from "../../pos/components/reports/Sale/ExportPDFSaleByProduct";
 
 const {Content} = Layout;
 
@@ -122,12 +124,14 @@ class Router extends Component {
             <Route path="/employees/create" component={EmployeeCreate} />
             <Route path="/employees/update/:id" component={EmployeeUpdate} />
             <Route path="/reports/sale_summaries" component={ReportSaleSummary} />
+            <Route path="/reports/sold_products/pdf-preview" component={ExportPDFSaleByProduct} />
             <Route path="/reports/sold_products" component={ReportSaleByProduct} />
             <Route path="/reports/sold_categories" component={ReportSaleByCategory} />
             <Route path="/reports/sold_cashiers" component={ReportSaleByCashier} />
             <Route path="/reports/sold_customers" component={ReportSaleByCustomer} />
             <Route path="/reports/sold_locations" component={ReportSaleByLocation} />
             <Route path="/reports/purchase_summaries" component={ReportPurchaseSummary} />
+            <Route path="/reports/purchased_products/pdf-preview" component={ExportPDFPurchaseByProduct} />
             <Route path="/reports/purchased_products" component={ReportPurchaseByProduct} />
             <Route path="/reports/purchased_suppliers" component={ReportPurchaseBySupplier} />
             <Route path="/reports/stock-consignment-summary" component={ReportConsignmentSummary} />
