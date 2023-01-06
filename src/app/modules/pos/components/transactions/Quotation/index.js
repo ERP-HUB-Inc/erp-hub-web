@@ -1,6 +1,7 @@
 import React from "react";
 import moment from "moment";
 import {
+  Divider,
   Dropdown,
   DatePicker,
   Menu,
@@ -15,9 +16,10 @@ import {
   message,
   Input,
 } from "antd";
+import * as PropTypes from "prop-types";
 import "./index.css";
-import Component from "../../../../common/components/Component";
 import QuotationA4 from "./QuotationA4";
+import Component from "../../../../common/components/Component";
 import Enum from "../../../enums";
 import history from "../../../../../modules/common/router/history";
 import Constant from "../../../constants/transactions/quotation";
@@ -27,7 +29,6 @@ import QuotationService from "../../../services/transactions/QuotationService";
 import Detail from "../../../containers/transactions/Quotation/Detail";
 import InventoryUtil from "../../../../inventory/utils";
 import InventoryEnum from "../../../../inventory/enums";
-import * as PropTypes from "prop-types";
 import PrivilegeService from "../../../services/settings/PrivilegeService";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
 
@@ -39,6 +40,7 @@ Option.propTypes = {
   value: PropTypes.string,
   children: PropTypes.node
 };
+
 export default class QuotationList extends Component {
   constructor(props) {
     super(props);
@@ -96,17 +98,17 @@ export default class QuotationList extends Component {
         title: <this.Translate id="text_quotation_no" />,
         dataIndex: "number",
         key: "number",
-        width: 160,
+        width: 180,
         render: (number, record) => {
           const menu = (
               <Menu>
-                <Menu.Item onClick={() => this.handleShowFormUpdate(record)}>
-                  <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
-                </Menu.Item>
                 <Menu.Item>
                   <this.Link to={`/transactions/quotation-detail/${record.id}`}>
-                    <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_detail" />
+                    <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
                   </this.Link>
+                </Menu.Item>
+                <Menu.Item onClick={() => this.handleShowFormUpdate(record)}>
+                  <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
                 </Menu.Item>
                 <Menu.Item>
                   <this.Link to={`/transactions/quotation-create?id=${record.id}&action=clone`}>
@@ -118,6 +120,11 @@ export default class QuotationList extends Component {
                     <Icon type="retweet" style={{marginRight: 10}} /> <this.Translate id="text_convert_to_invoice" />
                   </this.Link>
                 </Menu.Item>
+                <Divider style={{marginTop: 4, marginBottom: 4}} />
+                <Menu.Item onClick={() => alert("Coming Soon")}>
+                  <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" />
+                </Menu.Item>
+                <Divider style={{marginTop: 4, marginBottom: 4}} />
                 <Menu.Item onClick={() => this.handleDelete(record.id)} style={{color: "red"}}>
                   <Icon type="delete" style={{marginRight: 12}} /> <this.Translate id="text_delete" />
                 </Menu.Item>

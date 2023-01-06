@@ -83,10 +83,6 @@ export default {
     "Remark",
     "ចំណាំ"
   ],
-  "text_view_detail": [
-    "View detail",
-    "មើលលំអិត"
-  ],
   "text_allow_update_only_in_draft_step": [
     "Allow update only in draft step",
     "អនុញ្ញាតឲ្យកែប្រែតែក្នុងករណីព្រៀងប៉ុណ្ណេាះ"

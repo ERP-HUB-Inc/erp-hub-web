@@ -137,6 +137,9 @@ export default class Invoice extends Component {
                   </ReactToPrint>
                 </Menu.Item>
               }
+              <Menu.Item>
+                <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" />
+              </Menu.Item>
               {
                 record.status === Enum.INVOICE_STATUS.PAID && 
                 <Divider style={{marginTop: 4, marginBottom: 4}} />
