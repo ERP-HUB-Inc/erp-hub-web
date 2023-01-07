@@ -14,7 +14,7 @@ export default function SelectDateOption(props) {
     } else {
       setShowRangePicker(false);
     }
-  }
+  };
 
   return <div style={{display: "flex"}}>
     <Select
@@ -54,5 +54,5 @@ export default function SelectDateOption(props) {
       : null
     }
     
-  </div>
+  </div>;
 }

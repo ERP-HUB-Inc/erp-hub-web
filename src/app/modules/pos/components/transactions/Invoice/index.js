@@ -2,6 +2,7 @@ import React from "react";
 import swal from "sweetalert";
 import moment from "moment";
 import {
+  Divider,
   Dropdown,
   DatePicker,
   Input,
@@ -100,16 +101,22 @@ export default class Invoice extends Component {
         render: (invoiceNumber, record) => {
           const menu = (
             <Menu>
+              <Menu.Item key={2}>
+                <this.Link to={`/transactions/detail-invoice/${record.id}`}>
+                  <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
+                </this.Link>
+              </Menu.Item>
               <Menu.Item key={1}>
                 <this.Link to={`/transactions/update-invoice/${record.id}`}>
                   <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
                 </this.Link>
               </Menu.Item>
-              <Menu.Item key={2}>
-                <this.Link to={`/transactions/detail-invoice/${record.id}`}>
-                  <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_invoice" />
+              <Menu.Item key={4}>
+                <this.Link target="_blank" to={`/transactions/create-invoice?id=${record.id}&action=clone`} >
+                  <Icon type="copy" style={{marginRight: 10}} /> <this.Translate id="text_clone" />
                 </this.Link>
               </Menu.Item>
+              <Divider style={{marginTop: 4, marginBottom: 4}} />
               {
                 record.status === Enum.INVOICE_STATUS.PAID && 
                 <Menu.Item key={3}>
@@ -123,18 +130,20 @@ export default class Invoice extends Component {
                     <PrintContextConsumer>
                       {({ handlePrint }) => (
                         <button style={{background: "none", border: "none", paddingLeft: 0}} onClick={handlePrint}>
-                          <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print_receipt" />
+                          <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_receipt" />
                         </button>
                       )}
                     </PrintContextConsumer>
                   </ReactToPrint>
                 </Menu.Item>
               }
-              <Menu.Item key={4}>
-                <this.Link target="_blank" to={`/transactions/create-invoice?id=${record.id}&action=clone`} >
-                  <Icon type="copy" style={{marginRight: 10}} /> <this.Translate id="text_clone" />
-                </this.Link>
+              <Menu.Item>
+                <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" />
               </Menu.Item>
+              {
+                record.status === Enum.INVOICE_STATUS.PAID && 
+                <Divider style={{marginTop: 4, marginBottom: 4}} />
+              }
               {
                 record.status === Enum.INVOICE_STATUS.PAID && 
                 <Menu.Item onClick={() => this.handleReturn(record)} key={5}>

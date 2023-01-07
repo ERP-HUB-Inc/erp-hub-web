@@ -254,11 +254,6 @@ export default {
     "បោះពុម្ភវិក័យប័ត្រ"
   ],
 
-  "text_print_sales_order": [
-    "Print Sales Order",
-    "បោះពុម្ភការកុម្មង់"
-  ],
-
   "text_packing_slip": [
     "Packing Slip",
     "បញ្ជីទំនិញ"
@@ -413,7 +408,7 @@ export default {
 
   "text_convert_to_invoice": [
     "Convert to Invoice",
-    "បម្លែងទៅជាវិក្កយបត្រ"
+    "បម្លែងជាវិក្កយបត្រ"
   ],
 
   "text_sent": [

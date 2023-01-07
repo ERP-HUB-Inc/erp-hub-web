@@ -19,6 +19,7 @@ import {
   Select,
   Input
 } from "antd";
+import SalesOrderPrint from "./Invoice/SalesOrderPrint";
 import PackingSlipTem from "./Invoice/PackingSlip";
 import DeliveryNote from "./Invoice/DeliveryNote";
 import history from "../../../../common/router/history";
@@ -107,12 +108,11 @@ class SaleOrder extends Component {
               <Menu.Item>
                   <div>
                     <ReactToPrint
-                      
                         trigger={() => {
                           return (
                               <div>
                                 <Icon type="printer" style={{marginRight: 10}} />
-                                <this.Translate id="text_print_sales_order" />
+                                <this.Translate id="text_print" />
                               </div>
                           );
                         }}
@@ -124,7 +124,6 @@ class SaleOrder extends Component {
               <Menu.Item>
                   <div>
                     <ReactToPrint
-                      
                         trigger={() => {
                           return (
                               <div>
@@ -133,7 +132,7 @@ class SaleOrder extends Component {
                               </div>
                           );
                         }}
-                        content={() => this.componentRef}
+                        content={() => this.packingSlipRef}
                         onBeforeGetContent={()=>this.fetchSalesOrderById(record.id)}
                     />
                   </div>
@@ -141,7 +140,6 @@ class SaleOrder extends Component {
               <Menu.Item>
                   <div>
                     <ReactToPrint
-                      
                         trigger={() => {
                           return (
                               <div>
@@ -455,7 +453,8 @@ class SaleOrder extends Component {
             onChange={this.onChangePagination} 
             {...pagination}
           />
-          <PackingSlipTem formData={this.state.formData} ref={el => (this.componentRef = el)} />
+          <SalesOrderPrint formData={this.state.formData} ref={el => (this.componentRef = el)} />
+          <PackingSlipTem formData={this.state.formData} ref={el => (this.packingSlipRef = el)} />
           <DeliveryNote formData={this.state.formData} ref={el => (this.deliveryNoteRef = el)} />
         </div>
         :
