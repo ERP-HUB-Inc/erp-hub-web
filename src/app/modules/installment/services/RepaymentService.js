@@ -7,10 +7,10 @@ class RepaymentService extends BaseService {
     this.baseUrl = `${this.baseUrl}/${this.module}`;
   }
 
-  list(limit, offset, search, locationId, dateRange) {
+  list(limit, offset, search, locationId, filter, dateRange) {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}?limit=${limit}&offset=${offset}&search=${search}&locationId=${locationId}&rangFilter=${dateRange}`,
+      url: `${this.baseUrl}?limit=${limit}&offset=${offset}&search=${search}&locationId=${locationId}&filter=${filter}&rangFilter=${dateRange}`,
       headers: this.header
     });
   }
@@ -39,10 +39,10 @@ class RepaymentService extends BaseService {
     });
   }
 
-  getSummary(search, rangeFilter) {
+  getSummary(search, filter, rangeFilter) {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}/v1/summary?search=${search}&rangFilter=${rangeFilter}`,
+      url: `${this.baseUrl}/v1/summary?search=${search}&filter=${filter}&rangFilter=${rangeFilter}`,
       headers: this.header
     });
   }

@@ -10,7 +10,7 @@ import {
   Dropdown,
   Menu,
   Card,
-  Statistic,
+  Statistic
 } from "antd";
 import Enum from "../../enum";
 import Component from "../../../common/components/Component";
@@ -26,6 +26,7 @@ class RepaymentList extends Component {
       summary: {},
       pagination: {},
       loading: false,
+      showCustomerOverdue: false,
       detail: {}
     };
     this.REPAYMENT_STATUS_STR = {
@@ -141,12 +142,11 @@ class RepaymentList extends Component {
       this.setState({current: parseInt(params.get("offset"))});
     }
 
-    if (params.get("search")) {
-      this.props.form.setFieldsValue({search: params.get("search")});
+    if (params.get("overdue-from")) {
+      this.setState({showCustomerOverdue: true});
     }
 
     if (!params.toString()) {
-      this.props.form.setFieldsValue({date: moment()});
       params.set("start", moment().format("YYYY-MM-DD"));
       params.set("end", moment().format("YYYY-MM-DD"));
       this.Util.pushParamsToURL(this.pathname, params.toString());
@@ -160,6 +160,7 @@ class RepaymentList extends Component {
     let limit = this.pageSize,
       offset = this.state.current,
       searchKey = "",
+      filter = {},
       dateRange = "";
 
     if (params.get("limit")) {
@@ -174,9 +175,16 @@ class RepaymentList extends Component {
       searchKey = params.get("search");
     }
 
+    if (params.get("overdue-filter")) {
+      let overdueFilter = params.get("overdue-filter");
+      if (overdueFilter === "custom") {
+        overdueFilter = [params.get("overdue-from"), params.get("overdue-to")];
+      }
+      filter = JSON.stringify({overdue: overdueFilter});
+    }
+
     if (params.get("start")) {
       dateRange = JSON.stringify({column: "date", value: [params.get("start"), params.get("end")]});
-      this.props.form.setFieldsValue({dates: [moment(params.get("start")), moment(params.get("end"))]});
     }
 
     offset = (offset - 1) * limit;
@@ -188,7 +196,7 @@ class RepaymentList extends Component {
     }
 
     this.setState({loading: true});
-    RepaymentService.list(limit, offset, searchKey, null, dateRange)
+    RepaymentService.list(limit, offset, searchKey, null, filter, dateRange)
     .then(response => {
       this.setState({
         data: response.data.data,
@@ -198,7 +206,7 @@ class RepaymentList extends Component {
     .catch(err => console.log("error", err.response))
     .finally(() => this.setState({loading: false}));
 
-    RepaymentService.getSummary(searchKey, dateRange)
+    RepaymentService.getSummary(searchKey, filter, dateRange)
     .then(response => {
       this.setState({summary: response.data.data});
     });
@@ -278,6 +286,43 @@ class RepaymentList extends Component {
     }, 600);
   }
 
+  handleChangeOverFilter = (option) => {
+    const params = new URLSearchParams(document.location.search);
+    if (option) {
+      params.delete("start");
+      params.delete("end");
+      this.props.form.setFieldsValue({dates: []});
+      if (option === "custom") {
+        params.set("overdue-filter", option);
+        this.Util.pushParamsToURL(this.pathname, params.toString());
+        return this.setState({showCustomerOverdue: true});
+      } else {
+        params.set("overdue-filter", option);
+      }
+    } else {
+      params.delete("overdue-filter");
+      params.delete("overdue-from");
+      params.delete("overdue-to");
+    }
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+    this.setState({showCustomerOverdue: false});
+  }
+
+  handleChangeOverdue = (dates) => {
+    const params = new URLSearchParams(document.location.search);
+    if (dates.length) {
+      params.set("overdue-from", moment(dates[0]).format("YYYY-MM-DD"));
+      params.set("overdue-to", moment(dates[1]).format("YYYY-MM-DD"));
+    } else {
+      params.delete("overdue-from");
+      params.delete("overdue-to");
+    }
+
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+  }
+
   handleChangDate = (dates) => {
     const params = new URLSearchParams(document.location.search);
     if (dates.length) {
@@ -334,6 +379,7 @@ class RepaymentList extends Component {
 
   render() {
     const {data, summary} = this.state;
+    const params = new URLSearchParams(document.location.search);
     return (
       <React.Fragment>
         <div className="content-list">
@@ -350,9 +396,38 @@ class RepaymentList extends Component {
                     prefix={<this.Icon type="search" />}
                     style={{height: 32, width: 200, marginBottom: 0}}
                     allowClear={true}
+                    data={params.get("search") ? params.get("search") : ""}
                     onChange={this.handleSearch}
                     form={this.props.form}
                   />
+                  <this.Select
+                    name="overdueFilter"
+                    placeholder={`${this.CATranslate("text_overdue", this.props.locale)}`}
+                    allowClear={true}
+                    style={{marginBottom: 0, marginLeft: 15, width: 200}}
+                    defaultValue={params.get("overdue-filter") ? params.get("overdue-filter") : null}
+                    dataSource={[
+                      {name: `7 ${this.CATranslate("text_day", this.props.locale)}`, value: "7days"},
+                      {name: `15 ${this.CATranslate("text_day", this.props.locale)}`, value: "15days"},
+                      {name: `30 ${this.CATranslate("text_day", this.props.locale)}`, value: "30days"},
+                      {name: this.CATranslate("text_custom", this.props.locale), value: "custom"},
+                    ]}
+                    onChange={this.handleChangeOverFilter}
+                    form={this.props.form}
+                  />
+                  {
+                    this.state.showCustomerOverdue && 
+                    <this.DateRangePicker
+                      name="overdueRange"
+                      placeholder={[this.CATranslate("text_start_date", this.props.locale), this.CATranslate("text_end_date", this.props.locale)]}
+                      ranges={[]}
+                      dateFormat="DD-MM-YYYY"
+                      style={{width: 260, marginBottom: 0}}
+                      defaultValue={params.get("overdue-from") ? [moment(params.get("overdue-from")), moment(params.get("overdue-to"))] : []}
+                      onChange={this.handleChangeOverdue}
+                      form={this.props.form}
+                    />
+                  }
                   <this.DateRangePicker 
                     name="dates"
                     placeholder={[this.CATranslate("text_start_date", this.props.locale), this.CATranslate("text_end_date", this.props.locale)]}
@@ -361,6 +436,7 @@ class RepaymentList extends Component {
                       [`${this.CATranslate("text_today", this.props.locale)}`]: [moment(), moment()],
                       [`${this.CATranslate("text_this_week", this.props.locale)}`]: [moment().startOf("isoWeek"), moment().endOf("isoWeek")]
                     }}
+                    defaultValue={params.get("start") ? [moment(params.get("start")), moment(params.get("end"))] : []}
                     dateFormat="DD-MM-YYYY"
                     style={{width: 260, marginLeft: 15, marginBottom: 0}}
                     onChange={this.handleChangDate}
