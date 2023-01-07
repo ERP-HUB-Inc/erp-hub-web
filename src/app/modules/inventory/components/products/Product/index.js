@@ -6,6 +6,7 @@ import {
   Row,
   Col
 } from "antd";
+import Exchange from "./ExchangeMoneyFunc";
 import List from "../../List";
 import CommonUtil from "../../../../common/util";
 import Util from "../../../../inventory/utils";
@@ -18,7 +19,6 @@ import ProductAction from "../../../actions/products/product";
 import ProductService from "../../../services/products/ProductService";
 import "./index.css";
 import CurrencyExchangeService from "../../../../pos/services/settings/CurrencyExchangeService";
-import Exchange from "./ExchangeMoneyFunc";
 
 export default class ProductList extends List {
 
@@ -500,7 +500,7 @@ class Column extends List {
             <Menu>
               <Menu.Item className="hidden">
                 <this.Link to={`/products/detail/${record.id}?productOption=${record.productOption}`}>
-                  <Icon type="eye" style={{marginRight: 10}} /> View
+                  <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
                 </this.Link>
               </Menu.Item>
               <Menu.Item>

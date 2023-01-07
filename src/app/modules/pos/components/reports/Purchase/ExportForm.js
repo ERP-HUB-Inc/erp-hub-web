@@ -4,20 +4,28 @@ import {
     Result,
     Button
 } from "antd";
-import PurchaseService from "../../../services/report/PurchaseService";
+import { Link } from "react-router-dom";
+// import PurchaseService from "../../../services/report/PurchaseService";
 
-function ExportFormLoader({startDate, endDate}) {
+function ExportFormLoader({ pdfLink,getData }) {
     const [loading, setLoading] = React.useState(false);
     const [result, setResult] = React.useState(null);
+    const params = new URLSearchParams(document.location.search);
+    const pdf = `${pdfLink}?${params.toString()}`;
     React.useEffect(() => {
         try {
-            setLoading(true);
-            PurchaseService.getReportSummaryByProduct({startDate, endDate, isExport: true})
-            .then(response => {
+            getData().then(response => {
                 if (response.data) {
                     setResult(response.data);
                 }
             });
+            // setLoading(true);
+            // PurchaseService.getReportSummaryByProduct({startDate, endDate, isExport: true})
+            // .then(response => {
+            //     if (response.data) {
+            //         setResult(response.data);
+            //     }
+            // });
         } catch (error) {
             setLoading(false);
         } finally {
@@ -31,9 +39,16 @@ function ExportFormLoader({startDate, endDate}) {
         title="Successfully Exported Report"
         subTitle={loading ? "Please wait..." : ""}
         extra={[
-            <a href={result ? result.link : "#"}>
-                Download File(xlsx)
+            <div style={{marginBottom: 25}}>
+            <a key="1" className="ant-btn ant-btn-dashed" href={result ? result.link : "#"}>
+              Download File(xlsx)
             </a>
+          </div>,
+          <div>
+            <Link key="2" className="ant-btn ant-btn-dashed" to={pdf} target="_blank">
+              Preview PDF
+            </Link>
+          </div>
         ]}
     />;
 }

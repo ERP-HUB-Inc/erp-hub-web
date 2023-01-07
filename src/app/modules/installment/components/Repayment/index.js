@@ -50,7 +50,7 @@ class RepaymentList extends Component {
             <Menu>
               <Menu.Item>
                 <this.Link to={`/installment/detail/${record.installmentId}`}>
-                  <this.Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view_detail" />
+                  <this.Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
                 </this.Link>
               </Menu.Item>
               <Menu.Item onClick={() => this.handlePayment(record)}>

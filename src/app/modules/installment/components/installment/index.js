@@ -339,7 +339,7 @@ class Installment extends Component {
                 <Statistic 
                   title={<this.Translate id="text_completed" />}
                   value={summaryData && summaryData.completed}
-                  valueStyle={{color: "#f50"}}
+                  valueStyle={{color: "#52c41a"}}
                 />
               </Card>
             </Col>

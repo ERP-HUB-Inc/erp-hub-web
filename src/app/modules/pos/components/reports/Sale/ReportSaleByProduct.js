@@ -139,10 +139,18 @@ export default function ReportSaleByProduct() {
       setFromValue(moment(queryparam.get("startDate")));
       option["startDate"] = moment(queryparam.get("startDate"));
     }
+    else{
+      queryparam.set("startDate", moment().format("YYYY-MM-DD"));
+    }
+
     if (queryparam.has("endDate")) {
       setToValue(moment(queryparam.get("endDate")));
       option["endDate"] = moment(queryparam.get("endDate"));
     }
+    else{
+      queryparam.set("endDate",  moment().format("YYYY-MM-DD"));
+    }
+
     if (queryparam.has("search")) {
       setSearchValue(queryparam.get("search"));
       option["searchValue"] = queryparam.get("search");
@@ -157,6 +165,8 @@ export default function ReportSaleByProduct() {
       option.searchValue,
       option.supplierId
     );
+
+    util.pushParamsToURL(pathName, queryparam.toString());
     //eslint-disable-next-line
   }, []);
 
