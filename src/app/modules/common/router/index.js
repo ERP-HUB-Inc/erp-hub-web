@@ -51,6 +51,7 @@ import InvoiceReceipt from "../../pos/components/transactions/receipt";
 import SaleOrderCreate from "../../pos/components/transactions/SaleOrder/FormItem";
 import SaleOrderUpdate from "../../pos/components/transactions/SaleOrder/FormItem";
 import SaleOrderDetail from "../../pos/components/transactions/SaleOrder/detail";
+import ExportPDFPurchaseSummary from "../../pos/components/reports/Purchase/ExportPDFPurchaseSummary";
 import ExportPDFPurchaseByProduct from "../../pos/components/reports/Purchase/ExportPDFPurchaseByProduct";
 import ExportPDFSaleByProduct from "../../pos/components/reports/Sale/ExportPDFSaleByProduct";
 
@@ -130,6 +131,7 @@ class Router extends Component {
             <Route path="/reports/sold_cashiers" component={ReportSaleByCashier} />
             <Route path="/reports/sold_customers" component={ReportSaleByCustomer} />
             <Route path="/reports/sold_locations" component={ReportSaleByLocation} />
+            <Route path="/reports/purchase_summaries/pdf-preview" component={ExportPDFPurchaseSummary} />
             <Route path="/reports/purchase_summaries" component={ReportPurchaseSummary} />
             <Route path="/reports/purchased_products/pdf-preview" component={ExportPDFPurchaseByProduct} />
             <Route path="/reports/purchased_products" component={ReportPurchaseByProduct} />

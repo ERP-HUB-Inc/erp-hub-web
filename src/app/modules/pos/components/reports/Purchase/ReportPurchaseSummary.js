@@ -9,7 +9,7 @@ import {
 } from "antd";
 import moment from "moment";
 import { Translate } from "react-localize-redux";
-import ExportFormBySummary from "./ExportFormBySummary";
+import ExportForm from "./ExportForm";
 import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import PurchaseService from "../../../services/report/PurchaseService";
@@ -20,16 +20,23 @@ function ReportPurchaseSummary() {
   const [data, setData] = React.useState([]);
   const [fromValue, setFromValue] = React.useState(moment().startOf("month"));
   const [toValue, setToValue] = React.useState(moment().endOf("month"));
+  const params = new URLSearchParams(document.location.search);
+  const pathName = "/reports/purchase_summaries";
 
   const onFromChange = value => {
-      setFromValue(value);
-      setToValue(value);
-      fetchReport(value, value);
+    params.set("startDate", value.format("YYYY-MM-DD"));
+    params.set("endDate", value.format("YYYY-MM-DD"));
+    setFromValue(moment(value));
+    setToValue(moment(value));
+    fetchReport(value, value);
+    new Util().pushParamsToURL(pathName, params.toString());
   };
 
   const onToChange = value => {
-      setToValue(value);
+      params.set("endDate", value.format("YYYY-MM-DD"));
+      setToValue(moment(value));
       fetchReport(fromValue, value);
+      new Util().pushParamsToURL(pathName, params.toString());
   };
 
   const fetchReport = (from, to) => {
@@ -45,8 +52,45 @@ function ReportPurchaseSummary() {
     });
   };
 
+  const getExportableData = () => {
+    return  PurchaseService.getReportSummary(
+      {
+        startDate: fromValue.format("YYYY-MM-DD"),
+        endDate: toValue.format("YYYY-MM-DD"),
+        isExport: true,
+      }
+    );
+  };
+
+
   React.useEffect(() => {
-    fetchReport(fromValue, toValue);
+
+    let option = {
+      startDate: fromValue,
+      endDate: toValue,
+    };
+
+    if (params.has("startDate")) {
+      setFromValue(moment(params.get("startDate")));
+      option["startDate"] = moment(params.get("startDate"));
+    }
+    else{
+      params.set("startDate", moment().startOf("month").format("YYYY-MM-DD"));
+    }
+    
+    if (params.has("endDate")) {
+      setToValue(moment(params.get("endDate")));
+      option["endDate"] = moment(params.get("endDate"));
+    }
+    else{
+      params.set("endDate", moment().endOf("month").format("YYYY-MM-DD"));
+    }
+
+    fetchReport(
+      option.startDate,
+      option.endDate,
+    );
+    new Util().pushParamsToURL(pathName, params.toString());
     //eslint-disable-next-line
   }, []);
 
@@ -67,6 +111,7 @@ function ReportPurchaseSummary() {
               value={fromValue}
               placeholder="From"
               onChange={onFromChange}
+              allowClear={false}
               />
           <DatePicker
               format="DD/MM/YYYY"
@@ -74,13 +119,14 @@ function ReportPurchaseSummary() {
               placeholder="To"
               onChange={onToChange}
               style={{marginLeft: 15}}
+              allowClear={false}
               />
         </div>
       ]}
       />
       <Row gutter={16}>
         <Col span={24}>
-          <ExportFormBySummary startDate={fromValue.format("YYYY-MM-DD")} endDate={toValue.format("YYYY-MM-DD")} />
+          <ExportForm pdfLink = "/reports/purchase_summaries/pdf-preview" getData={getExportableData} />
         </Col>
         <Col span={24}>
           <Table
