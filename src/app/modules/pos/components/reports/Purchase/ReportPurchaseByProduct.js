@@ -93,7 +93,7 @@ function ReportPurchaseByProduct() {
     } else {
       params.delete("startDate");
     }
-
+    
     util.pushParamsToURL(pathName, params.toString());
     
     fetchReport(value, toValue, search,supplierId);
@@ -156,7 +156,7 @@ function ReportPurchaseByProduct() {
         params.delete("search");
         setSearch("");
       }
-
+      
       util.pushParamsToURL(pathName, params.toString());
       fetchReport(fromValue, toValue, value,supplierId);
     }, 1000);

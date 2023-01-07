@@ -100,7 +100,7 @@ function ReportLowSales() {
                                         min={0}
                                         onChange={onChangeCriticalLevel}
                                         style={{marginLeft: 15}} />
-                                    <Button type="primary" onClick={onGetData} style={{marginLeft: 15}}>Analye</Button>
+                                    <Button type="primary" onClick={onGetData} style={{marginLeft: 15}}>Analyse</Button>
                                     <ExportLowSaleForm startDate={fromValue.format("YYYY-MM-DD")} endDate={toValue.format("YYYY-MM-DD")} criticalLevel={criticalLevel} style={{marginTop: 0, marginLeft: 15}} />
                                 </div>
                             ]}

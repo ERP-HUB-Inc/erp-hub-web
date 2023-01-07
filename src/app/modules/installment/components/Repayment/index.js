@@ -30,10 +30,28 @@ class RepaymentList extends Component {
       detail: {}
     };
     this.REPAYMENT_STATUS_STR = {
-      [Enum.REPAYMENT_STATUS.PENDING]: { title: <this.Translate id="text_pending" />, color: "#ffa940"},
+      [Enum.REPAYMENT_STATUS.PENDING]: { title: <this.Translate id="text_not_yet_pay" />, color: "#ffa940"},
       [Enum.REPAYMENT_STATUS.PAID]: { title: <this.Translate id="text_paid" />, color: "#52c41a"},
     };
     this.columns = [
+      {
+        title: <this.Translate id="text_status" />,
+        dataIndex: "status",
+        key: "status",
+        width: 150,
+        render: (status, record) => {
+          const statusValue = this.REPAYMENT_STATUS_STR[status];
+          let statusColor = statusValue.color;
+          let statusTitle = statusValue.title;
+          if (status === Enum.REPAYMENT_STATUS.PENDING && 
+            moment(record.date).format("YYYY-MM-DD") < moment().format("YYYY-MM-DD")
+          ) {
+            statusColor = "#f5222d";
+            statusTitle = `${this.CATranslate("text_expired_pay_date", this.props.locale)} (${this.getExpiredDate(record.date)} ${this.CATranslate("text_day", this.props.locale)})`;
+          }
+          return <Tag color={statusColor} style={{width: 120, textAlign: "center"}}>{statusTitle}</Tag>;
+        }
+      },
       {
         title: <this.Translate id="text_customer" />,
         dataIndex: "firstName",
@@ -77,13 +95,6 @@ class RepaymentList extends Component {
         }
       },
       {
-        title: <this.Translate id="text_received_date" />,
-        dataIndex: "receiveDate",
-        key: "receiveDate",
-        width: 140,
-        render: receiveDate => receiveDate && this.Util.formatDate(receiveDate, "DD/MM/YYYY")
-      },
-      {
         title: <this.Translate id="text_payment_date" />,
         dataIndex: "date",
         key: "date",
@@ -94,24 +105,6 @@ class RepaymentList extends Component {
         dataIndex: "duration",
         key: "duration",
         render: (duration, record) => `${duration} ${this.CATranslate(`text_${record.durationType.toLowerCase()}`, this.props.locale)}`
-      },
-      {
-        title: <this.Translate id="text_status" />,
-        dataIndex: "status",
-        key: "status",
-        width: 150,
-        render: (status, record) => {
-          const statusValue = this.REPAYMENT_STATUS_STR[status];
-          let statusColor = statusValue.color;
-          let statusTitle = statusValue.title;
-          if (status === Enum.REPAYMENT_STATUS.PENDING && 
-            moment(record.date).format("YYYY-MM-DD") < moment().format("YYYY-MM-DD")
-          ) {
-            statusColor = "#f5222d";
-            statusTitle = `${this.CATranslate("text_expired_pay_date", this.props.locale)} (${this.getExpiredDate(record.date)} ${this.CATranslate("text_day", this.props.locale)})`;
-          }
-          return <Tag color={statusColor} style={{width: 120, textAlign: "center"}}>{statusTitle}</Tag>;
-        }
       },
       {
         title: <this.Translate id="text_amount_to_pay" />,
@@ -128,7 +121,7 @@ class RepaymentList extends Component {
         render: balance => this.Util.formatCurrency(balance)
       }
     ];
-    this.pathname = "/installment/repayment/list";
+    this.pathname = "/installment/repayments";
     this.timer = null;
   }
 

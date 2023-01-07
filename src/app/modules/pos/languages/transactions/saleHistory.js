@@ -106,7 +106,7 @@ export default {
 
   "text_payment_date": [
     "Payment Date",
-    "កាលបរិច្ឆេទទូទាត់ប្រាក់"
+    "ថ្ងៃត្រូវបង់ប្រាក់"
   ],
 
   "text_receive_amount": [
