@@ -1658,52 +1658,59 @@ class NewInvoice extends React.PureComponent {
                             </Button>
                             <Button style={{marginRight: 15, marginLeft: 15}} onClick={this.handleResetForm}>
                                 <Translate id="text_clear" />
-                            </Button> 
-                            <Button onClick={() => window.print()} style={{marginRight: 15}}>
-                                <Translate id="text_print_invoice" />
                             </Button>
-                            <Dropdown 
-                                overlay={(
-                                    <Menu>
-                                        <Menu.Item key={0} onClick={this.handlePrintInvoiceA5}><Translate id="text_print_invoice" /> A5</Menu.Item>
-                                        <Menu.Item key={1} onClick={this.handleMakeAsSent}><Translate id="text_mark_as_sent" /></Menu.Item>
-                                        <Menu.Item key={2} onClick={() => this.setState({showDrawer: true})}>
-                                            <Translate id="text_receive_payment" />
-                                        </Menu.Item>
-                                        {formData.status === Enum.INVOICE_STATUS.PAID ?
-                                            <Menu.Item key={3}>
-                                                <ReactToPrint
-                                                    trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}>
-                                                        <Translate id="text_print_receipt" />
-                                                        </button>}
-                                                    content={() => this.receiptRef}
-                                                />
-                                            </Menu.Item>
-                                            : null
-                                        }
-                                        <Menu.Item key={4}>
-                                            <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} >
-                                                <Translate id="text_clone" />
-                                            </Link>
-                                        </Menu.Item>
-                                        <Menu.Item key={5}>
-                                            <Link to="/transactions/create-invoice" target="_blank">
-                                                <Translate id="text_new_invoice" />
-                                            </Link>
-                                        </Menu.Item>
-                                        {this.id ?
-                                            <Menu.Item key={6} onClick={this.handleVoidInvoice}>
-                                                <Translate id="text_void" />
-                                            </Menu.Item>
-                                            : null
-                                        } 
-                                    </Menu>
-                                )}
-                            >
-                                <button className="ant-btn ant-dropdown-link" id="button-more-action" type="button">
-                                    <Translate id="text_more_action" /> <Icon type="down" />
-                                </button>
-                            </Dropdown>                          
+                            {
+                                formData.id ? 
+                                <React.Fragment>
+                                    <Button onClick={() => window.print()} style={{marginRight: 15}}>
+                                        <Translate id="text_print_invoice" />
+                                    </Button>
+                                    <Dropdown
+                                        overlay={(
+                                            <Menu>
+                                                <Menu.Item key={0} onClick={this.handlePrintInvoiceA5}><Translate id="text_print_invoice" /> A5</Menu.Item>
+                                                <Menu.Item key={1} onClick={this.handleMakeAsSent}><Translate id="text_mark_as_sent" /></Menu.Item>
+                                                <Menu.Item key={2} onClick={() => this.setState({showDrawer: true})}>
+                                                    <Translate id="text_receive_payment" />
+                                                </Menu.Item>
+                                                {formData.status === Enum.INVOICE_STATUS.PAID ?
+                                                    <Menu.Item key={3}>
+                                                        <ReactToPrint
+                                                            trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}>
+                                                                <Translate id="text_print_receipt" />
+                                                                </button>}
+                                                            content={() => this.receiptRef}
+                                                        />
+                                                    </Menu.Item>
+                                                    : null
+                                                }
+                                                <Menu.Item key={4}>
+                                                    <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} >
+                                                        <Translate id="text_clone" />
+                                                    </Link>
+                                                </Menu.Item>
+                                                <Menu.Item key={5}>
+                                                    <Link to="/transactions/create-invoice" target="_blank">
+                                                        <Translate id="text_new_invoice" />
+                                                    </Link>
+                                                </Menu.Item>
+                                                {this.id ?
+                                                    <Menu.Item key={6} onClick={this.handleVoidInvoice}>
+                                                        <Translate id="text_void" />
+                                                    </Menu.Item>
+                                                    : null
+                                                } 
+                                            </Menu>
+                                        )}
+                                    >
+                                        <button className="ant-btn ant-dropdown-link" id="button-more-action" type="button">
+                                            <Translate id="text_more_action" /> <Icon type="down" />
+                                        </button>
+                                    </Dropdown>
+                                </React.Fragment>
+                                :
+                                ""
+                            }                         
                         </Col>
                     </Row>
                 </Form>
