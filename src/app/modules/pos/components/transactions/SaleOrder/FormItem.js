@@ -371,7 +371,8 @@ class FormItem extends React.PureComponent {
           invoiceDate: this.util.formatDateForMYSQL(values["saleOrderDate"]),
           expectedShipmentDate: this.util.formatDateForMYSQL(values.expectedShipmentDate),
           registerDate: this.util.formatDateForMYSQL(formData.registerDate ? formData.registerDate : moment()),
-          totalExcludeTax:  subTotal,
+          totalExcludeTax: subTotal,
+          deposit: values.deposit,
           total: values.total
         };
 
@@ -913,6 +914,15 @@ class FormItem extends React.PureComponent {
                 inputStyle={{width: 269}}
                 locale={this.props.locale}
                 form={this.props.form}
+              />
+              <InputNumber
+                  name="deposit"
+                  data={formData.deposit}
+                  label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_deposit" /></div>}
+                  style={{width: 455, display: "flex", justifyContent: "flex-start", marginBottom: 4}}
+                  isAutoSelect={true}
+                  min={0}
+                  form={this.props.form}
               />
               <Input.Group compact style={{textAlign: "right"}}>
                 <InputNumber

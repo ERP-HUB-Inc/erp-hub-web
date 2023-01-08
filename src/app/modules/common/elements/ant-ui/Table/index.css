@@ -66,11 +66,6 @@ tr:nth-child(odd) {
     padding-right: 5px
 }
 
-.ant-table-body table tr th,
-.ant-table-body-inner table tr th {
-    text-transform: uppercase;
-}
-
 .ant-table-tbody > tr:hover > td {
     background: #95ddff1a !important;
 }

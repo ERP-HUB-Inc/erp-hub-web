@@ -124,6 +124,12 @@ export default class Util {
     else return null;
   }
 
+  getClientLogo() {
+    const result = this.getAuthSession();
+    if (result) return result.setting.logo;
+    else return null;
+  }
+
   getLocationId() {
     const result = this.getAuthSession();
     if (result) return result.locationId;

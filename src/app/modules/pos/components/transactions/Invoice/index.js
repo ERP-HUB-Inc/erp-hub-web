@@ -179,6 +179,13 @@ export default class Invoice extends Component {
         render: phoneNumber => phoneNumber
       },
       {
+        title: <this.Translate id="text_deposit" />,
+        dataIndex: "deposit",
+        key: "deposit",
+        align: "right",
+        render: deposit => deposit ? this.Util.formatCurrency(deposit) : "-"
+      },
+      {
         title: <this.Translate id="text_sub_total" />,
         dataIndex: "totalExcludeTax",
         key: "totalExcludeTax",
@@ -195,14 +202,14 @@ export default class Invoice extends Component {
         dataIndex: "discount",
         key: "discount",
         align: "right",
-        render: (discount) => this.Util.formatCurrency(discount)
+        render: (discount) => discount ? this.Util.formatCurrency(discount) : "-"
       },
       {
         title: <this.Translate id="text_delivery_fee" />,
         dataIndex: "deliveryFee",
         key: "deliveryFee",
         align: "right",
-        render: deliveryFee => this.Util.formatCurrency(deliveryFee)
+        render: deliveryFee => deliveryFee ? this.Util.formatCurrency(deliveryFee) : "-"
       },
       {
         title: <this.Translate id="text_vat" />,
@@ -211,7 +218,9 @@ export default class Invoice extends Component {
         align: "right",
         render: (text, record) => {
           if (!record.totalExcludeTax) record.totalExcludeTax = record.total;
-            return this.formatCurrency(record.total - record.totalExcludeTax);
+          const vat = record.total - record.totalExcludeTax;
+
+          return vat ? this.formatCurrency(record.total - record.totalExcludeTax) : "-";
         }
       },
       {

@@ -67,11 +67,6 @@ html,
     color: #9A9A9A !important;
 }
 
-.ant-table-body table tr th,
-.ant-table-header table tr th {
-    text-transform: uppercase;
-}
-
 .ant-table-thead > tr > th.ant-table-selection-column,
 .ant-table-tbody > tr > td.ant-table-selection-column {
     padding-left: 0 !important;

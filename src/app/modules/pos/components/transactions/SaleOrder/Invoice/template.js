@@ -5,11 +5,17 @@ export default function Template(props) {
   const util = new Util();
 
   const {formData, setting} = props;
+
   let discount = Number(formData.discount);
+  let deposit = Number(formData.deposit);
+
   if (!formData.totalExcludeTax) 
     formData.totalExcludeTax = formData.total;
 
   let tax = formData.total - formData.totalExcludeTax;
+  let grandTotal = formData.total - discount;
+  grandTotal  = grandTotal - deposit;
+
   return (
     <div style={{width: "250mm", margin: "auto", background: "#FFFFFF", padding: 40, minHeight: "297mm"}}>
       <table style={{width: "100%"}}>
@@ -65,7 +71,7 @@ export default function Template(props) {
                   }
                   <tr style={{background: "none", height: 34}}>
                     <td colSpan={2}></td>
-                    <td colSpan={2} style={{textAlign: "right", paddingRight: 40}}>Sub Total</td>
+                    <td colSpan={2} style={{textAlign: "right", paddingRight: 40}}>Subtotal</td>
                     <td style={{textAlign: "right", paddingRight: 10}}>{util.formatCurrency(formData.totalExcludeTax)}</td>
                   </tr>
                   {
@@ -88,10 +94,21 @@ export default function Template(props) {
                       </tr>
                     : null
                   }
+                  {
+                    deposit ?
+                      <tr style={{background: "none", height: 34}}>
+                        <td colSpan={2}></td>
+                        <td colSpan={2} style={{textAlign: "right", paddingRight: 40}}>
+                          Deposit
+                        </td>
+                        <td style={{textAlign: "right", paddingRight: 10}}>{util.formatCurrency(deposit)}</td>
+                      </tr>
+                    : null
+                  }
                   <tr style={{background: "none", height: 38}}>
                     <td colSpan={2}></td>
                     <td colSpan={2} style={{background: "#faf9f9", textAlign: "right", paddingRight: 40}}>Grand Total</td>
-                    <td style={{textAlign: "right", paddingRight: 10, background: "#faf9f9"}}>${util.formatCurrency(formData.total - discount, "")}</td>
+                    <td style={{textAlign: "right", paddingRight: 10, background: "#faf9f9"}}>${util.formatCurrency(grandTotal, "")}</td>
                   </tr>
                 </tbody>
               </table>

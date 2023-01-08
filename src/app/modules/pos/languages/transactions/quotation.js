@@ -1,7 +1,7 @@
 export default {
   "text_deposit": [
     "Deposit",
-    "ការដាក់ប្រាក់",
+    "ប្រាក់កក់",
     "Deposit"
   ],
   "text_complete": [

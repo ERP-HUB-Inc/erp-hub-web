@@ -28,6 +28,13 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ReactToPrint from "react-to-print";
 import { Link } from "react-router-dom";
 import sweetalert from "sweetalert";
+import InputInvoiceNo from "./InvoiceNo";
+import SerialForm from "./SerialForm";
+import SerialFormDelete from "./SerialFormDelete";
+import ReceiptTemplate from "../receipt/template";
+import ReceivedPayment from "../ReceivedPayment/Form";
+import SearchProductDropdown from "./SearchProduct";
+import CAInvoice from "../../transactions/Invoice/CAInvoice";
 import { 
     InputNumber, 
     InputText,
@@ -48,15 +55,8 @@ import InvoiceService from "../../../services/transactions/InvoiceService";
 import QuotationService from "../../../services/transactions/QuotationService";
 import SerialService from "../../../services/transactions/SerialService";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
-import SearchProductDropdown from "./SearchProduct";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
 import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCreate";
-import CAInvoice from "../../transactions/Invoice/CAInvoice";
-import InputInvoiceNo from "./InvoiceNo";
-import ReceiptTemplate from "../receipt/template";
-import ReceivedPayment from "../ReceivedPayment/Form";
-import SerialForm from "./SerialForm";
-import SerialFormDelete from "./SerialFormDelete";
 
 const {TabPane} = Tabs;
 
@@ -417,7 +417,8 @@ class NewInvoice extends React.PureComponent {
                     invoiceDate: this.util.formatDateForMYSQL(values["invoiceDate"]),
                     dueDate: this.util.formatDateForMYSQL(values["dueDate"]),
                     registerDate: this.util.formatDateForMYSQL(formData.registerDate ? formData.registerDate : moment()),
-                    totalExcludeTax:  subTotal,
+                    totalExcludeTax: subTotal,
+                    deposit: values.deposit,
                     total: values.total
                 };
 
@@ -1409,46 +1410,37 @@ class NewInvoice extends React.PureComponent {
                                 placeholder={`${stringTranslate("text_invoice_date", this.props.locale)}`}
                                 defaultValue={formData.invoiceDate ? moment(formData.invoiceDate) : null}
                                 style={styles.itemCenter}
-                                form={this.props.form} />
-                          {/*  <DatePickers
-                                name="dueDate"
-                                style={styles.itemCenter}
-                                label={<Translate id="text_due_date" />}
-                                placeholder={`${stringTranslate("text_due_date", this.props.locale)}`}
-                                defaultValue={formData.dueDate ? moment(formData.dueDate) : null}
-                                form={this.props.form} />
-                          */}
+                                form={this.props.form}
+                            />
 
                             <div style={{display:"flex"}}>
-                                <div className="ant-col ant-form-item-label ant-col-xs-24 ant-col-sm-10" style={{marginTop: "10px"}}><label htmlFor="dueDate" className="" title=""><Translate id="text_payment_terms" /></label></div>
-                                <Row style={{width: "100%"}}>
-                                    <Col md={12} id="paymentTermNumber" style={{paddingRight: "3px"}}>
-                                        <InputNumber
-                                            name="payTermNumber"
-                                            placeholder={`${stringTranslate("text_payment_terms", this.props.locale)}`}
-                                            data={formData.payTermNumber ? formData.payTermNumber : "" }
-                                            defaultValue={formData.payTermNumber ? formData.payTermNumber : ""}
-                                            precision={0}
-                                            form={this.props.form}
-                                        />
-                                    </Col>
-                                    <Col md={12}  id="paymentTermType" style={{paddingLeft: "3px"}}>
-                                        <Form.Item>
-                                            {
-                                                getFieldDecorator("payTermType", {[formData.payTermType?"initialValue":""]: Enum.PAYMENT_TERM_TYPE.DAY === formData.payTermType ? Enum.PAYMENT_TERM_TYPE.DAY : Enum.PAYMENT_TERM_TYPE.MONTH   })
-                                                (
-                                                    <Select
-                                                        placeholder={`${stringTranslate("text_please_select", this.props.locale)}`}
-                                                        style={{marginTop: 4, width: "100%"}}
-                                                    >
-                                                        <Select.Option key={0}  value={Enum.PAYMENT_TERM_TYPE.DAY}><Translate id="text_day" /></Select.Option>
-                                                        <Select.Option key={1} value={Enum.PAYMENT_TERM_TYPE.MONTH}><Translate id="text_month" /></Select.Option>
-                                                    </Select>
-                                                )
-                                            }
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
+                                <div className="ant-col ant-form-item-label ant-col-xs-24 ant-col-sm-10" style={{marginTop: "10px"}}>
+                                    <label htmlFor="payTermNumber"><Translate id="text_payment_terms" /></label>
+                                </div>
+                                <InputNumber
+                                    name="payTermNumber"
+                                    placeholder={stringTranslate("text_payment_terms", this.props.locale)}
+                                    data={formData.payTermNumber ? formData.payTermNumber : "" }
+                                    isAutoSelect={true}
+                                    defaultValue={formData.payTermNumber ? formData.payTermNumber : ""}
+                                    precision={0}
+                                    inputStyle={{width: 170}}
+                                    form={this.props.form}
+                                />
+                                <Form.Item style={{marginLeft: 10}}>
+                                    {
+                                        getFieldDecorator("payTermType", {initialValue: formData.payTermType ? formData.payTermType : Enum.PAYMENT_TERM_TYPE.DAY })
+                                        (
+                                            <Select
+                                                placeholder={`${stringTranslate("text_please_select", this.props.locale)}`}
+                                                style={{marginTop: 4, width: 90}}
+                                            >
+                                                <Select.Option key={0} value={Enum.PAYMENT_TERM_TYPE.DAY}><Translate id="text_day" /></Select.Option>
+                                                <Select.Option key={1} value={Enum.PAYMENT_TERM_TYPE.MONTH}><Translate id="text_month" /></Select.Option>
+                                            </Select>
+                                        )
+                                    }
+                                </Form.Item>
                             </div>
 
                             <InputNumber
@@ -1490,6 +1482,15 @@ class NewInvoice extends React.PureComponent {
                                 style={{display: "flex", marginBottom: 0}}
                                 inputStyle={{width: 269}}
                                 locale={this.props.locale}
+                                form={this.props.form}
+                            />
+                            <InputNumber
+                                name="deposit"
+                                data={formData.deposit}
+                                label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_deposit" /></div>}
+                                style={{width: 455, display: "flex", justifyContent: "flex-start", marginBottom: 4}}
+                                isAutoSelect={true}
+                                min={0}
                                 form={this.props.form}
                             />
                             <Input.Group compact style={{textAlign: "right"}}>

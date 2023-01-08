@@ -129,7 +129,7 @@ export default function SearchProductDropdown(props) {
             {
               barcode ?
                 <div className="wrap-description">
-                  <Translate id="text_barcode"/>: {barcode}
+                  {barcode}
                 </div>
                 :
                 ""

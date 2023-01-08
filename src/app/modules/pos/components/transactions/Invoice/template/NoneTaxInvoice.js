@@ -6,7 +6,6 @@ const util = new Util();
 const dateFormat = "DD-MM-YYYY";
 
 export default function NoneTaxInvoice(props) {
-
   function renderSerials(entry) {
     let serialStr = null;
     let serialNo = entry.serialNo && entry.serialNo.toString().split(",");
@@ -52,12 +51,25 @@ export default function NoneTaxInvoice(props) {
 
   const deliveryFee = formData.deliveryFee ? formData.deliveryFee : 0;
 
+  let client = {
+    clientId: null,
+    logo: null
+  };
+
+  if (formData.client) {
+    client.clientId = formData.clientId;
+    client.logo = formData.client.logo;
+  } else {
+    client.clientId = util.getClientId();
+    client.logo = util.getClientLogo();
+  }
+
   return (
     <table className="table-invoice">
       <tbody>
         <tr style={{background: "none", verticalAlign: "top"}}>
           <td style={{height: 100, paddingLeft: 0}}>
-            <img src={util.getGeneralImage(`${formData.clientId}/general/${formData.client ? formData.client.logo : ""}`).url} alt="Logo" style={{height: "100%"}} />
+            <img src={util.getGeneralImage(`${client.clientId}/general/${client.logo}`).url} alt="Logo" style={{height: "100%"}} />
           </td>
           <td style={{width: 230}}>
             <ul style={styles.ulStyle}>
@@ -155,7 +167,7 @@ export default function NoneTaxInvoice(props) {
                 }
                 {deliveryFee ? <div>Delivery Fee</div> : null}
                 {/* <div>Paid to Date</div> */}
-                <div>Balance</div>
+                <div>Grand Total</div>
               </div>
               <div>
                 <div>{util.formatCurrency(subtotal)}</div>
