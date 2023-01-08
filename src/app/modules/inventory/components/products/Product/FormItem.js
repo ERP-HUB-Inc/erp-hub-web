@@ -612,7 +612,36 @@ export default class FormItem extends Modal {
 
             <this.Col md="12" className="main-product-collapse form-group">
               <this.Collapse bordered={false}>
-                <this.Panel header={<Translate id="text_other" />} key="1">
+                <this.Panel header={<Translate id="text_warranty" />} key="1">
+                  <this.Row>
+                    <this.Col md="6">
+                      <div style={{display: "flex"}}>
+                        <this.InputNumber
+                          name="warrantyDuration"
+                          label={<this.Translate id="text_warranty" />}
+                          placeholder={this.CATranslate("text_warranty", this.props.locale)}
+                          data={formData.warrantyDuration}
+                          isAutoSelect={true}
+                          precision={0}
+                          form={form}
+                        />
+                        <this.Select
+                          name="warrantyDurationType"
+                          dataSource={[{name: <Translate id="text_day" />, value: "DAY"}, {name: <Translate id="text_week" />, value: "WEEK"}, {name: <Translate id="text_month" />, value: "MONTH"}, {name: <Translate id="text_year" />, value: "YEAR"}]}
+                          defaultValue={formData.warrantyDurationType}
+                          style={{width: 60, marginTop: 21, marginLeft: 5}}
+                          form={form}
+                        />
+                      </div>
+                    </this.Col>
+                  </this.Row>
+                </this.Panel>
+              </this.Collapse>
+            </this.Col>
+
+            <this.Col md="12" className="main-product-collapse form-group">
+              <this.Collapse bordered={false}>
+                <this.Panel header={<Translate id="text_other" />} key="2">
                   <this.Row>
                     <this.Col md="4">
                         <SelectCategory
@@ -669,7 +698,7 @@ export default class FormItem extends Modal {
 
             <this.Col md="12" className="main-product-collapse form-group">
               <this.Collapse bordered={false}>
-                <this.Panel header={<this.Translate id="text_web_display" />} key="1">
+                <this.Panel header={<this.Translate id="text_web_display" />} key="3">
                   <this.Row>
                     <this.Col md="6">
                       <this.Checkboxs
