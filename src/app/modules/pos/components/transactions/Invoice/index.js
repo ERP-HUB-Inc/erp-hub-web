@@ -150,9 +150,12 @@ export default class Invoice extends Component {
                   <Icon type="close" style={{marginRight: 10}} /> <this.Translate id="text_void" />
                 </Menu.Item>
               }
-              <Menu.Item key={6} onClick={() => this.handleDeleteInvoice(record)} style={{color: "red"}}>
-                <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
-              </Menu.Item>
+              {
+                record.status !== Enum.INVOICE_STATUS.PAID && 
+                <Menu.Item key={6} onClick={() => this.handleDeleteInvoice(record)} style={{color: "red"}}>
+                  <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
+                </Menu.Item>
+              }
             </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
@@ -179,6 +182,13 @@ export default class Invoice extends Component {
         render: phoneNumber => phoneNumber
       },
       {
+        title: <this.Translate id="text_deposit" />,
+        dataIndex: "deposit",
+        key: "deposit",
+        align: "right",
+        render: deposit => deposit ? this.Util.formatCurrency(deposit) : "-"
+      },
+      {
         title: <this.Translate id="text_sub_total" />,
         dataIndex: "totalExcludeTax",
         key: "totalExcludeTax",
@@ -195,14 +205,14 @@ export default class Invoice extends Component {
         dataIndex: "discount",
         key: "discount",
         align: "right",
-        render: (discount) => this.Util.formatCurrency(discount)
+        render: (discount) => discount ? this.Util.formatCurrency(discount) : "-"
       },
       {
         title: <this.Translate id="text_delivery_fee" />,
         dataIndex: "deliveryFee",
         key: "deliveryFee",
         align: "right",
-        render: deliveryFee => this.Util.formatCurrency(deliveryFee)
+        render: deliveryFee => deliveryFee ? this.Util.formatCurrency(deliveryFee) : "-"
       },
       {
         title: <this.Translate id="text_vat" />,
@@ -211,7 +221,9 @@ export default class Invoice extends Component {
         align: "right",
         render: (text, record) => {
           if (!record.totalExcludeTax) record.totalExcludeTax = record.total;
-            return this.formatCurrency(record.total - record.totalExcludeTax);
+          const vat = record.total - record.totalExcludeTax;
+
+          return vat ? this.formatCurrency(record.total - record.totalExcludeTax) : "-";
         }
       },
       {
@@ -422,10 +434,6 @@ export default class Invoice extends Component {
   }
 
   handleDeleteInvoice(record) {
-    if (Number(record.status) !== Enum.INVOICE_STATUS.DRAFT) {
-      return this.Util.sweetAlertMessageV2("Sorry", "Allow delete invoice only in draft step", "warning");
-    }
-
     this.Util.sweetAlertConfirm(this.CATranslate("text_are_you_sure", this.props.locale))
     .then(willDelete => {
       if (willDelete) {

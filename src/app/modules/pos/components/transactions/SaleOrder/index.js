@@ -205,6 +205,13 @@ class SaleOrder extends Component {
         render: totalItem => totalItem
       },
       {
+        title: <this.Translate id="text_deposit" />,
+        dataIndex: "deposit",
+        key: "deposit",
+        align: "right",
+        render: deposit => this.Util.formatCurrency(deposit)
+      },
+      {
         title: <this.Translate id="text_sub_total" />,
         dataIndex: "totalExcludeTax",
         key: "totalExcludeTax",

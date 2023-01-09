@@ -1,7 +1,7 @@
 export default {
   "text_deposit": [
     "Deposit",
-    "ការដាក់ប្រាក់",
+    "ប្រាក់កក់",
     "Deposit"
   ],
   "text_complete": [
@@ -38,9 +38,13 @@ export default {
     "Confirmed",
     "បានបញ្ចាក់រួច",
   ],
-  "text_quotation_temp": [
-    "Quotation Template",
-    "គំរូសម្រង់តម្លៃ",
+  "text_template_1": [
+    "Template 1",
+    "Template 1"
+  ],
+  "text_template_2": [
+    "Template 2",
+    "Template 2"
   ],
   "text_quotation_date": [
     "Quotation Date",
@@ -73,10 +77,6 @@ export default {
     "Edit Quotation",
     "កែប្រែសម្រង់តម្លៃ",
     "Edit Quotation"
-  ],
-  "print_quotation": [
-    "Print Quotation",
-    "បោះពុម្ពសម្រង់តម្លៃ"
   ],
   "text_all_customer": [
     "All Customer",

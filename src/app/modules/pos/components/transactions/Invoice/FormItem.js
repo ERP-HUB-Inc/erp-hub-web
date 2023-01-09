@@ -28,6 +28,13 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ReactToPrint from "react-to-print";
 import { Link } from "react-router-dom";
 import sweetalert from "sweetalert";
+import InputInvoiceNo from "./InvoiceNo";
+import SerialForm from "./SerialForm";
+import SerialFormDelete from "./SerialFormDelete";
+import ReceiptTemplate from "../receipt/template";
+import ReceivedPayment from "../ReceivedPayment/Form";
+import SearchProductDropdown from "./SearchProduct";
+import CAInvoice from "../../transactions/Invoice/CAInvoice";
 import { 
     InputNumber, 
     InputText,
@@ -48,15 +55,8 @@ import InvoiceService from "../../../services/transactions/InvoiceService";
 import QuotationService from "../../../services/transactions/QuotationService";
 import SerialService from "../../../services/transactions/SerialService";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
-import SearchProductDropdown from "./SearchProduct";
 import VariantProduct from "../../../containers/transactions/SaleWalkin/VariantProduct";
 import CustomerCreate from "../../../../crm/containers/customers/Customer/FormCreate";
-import CAInvoice from "../../transactions/Invoice/CAInvoice";
-import InputInvoiceNo from "./InvoiceNo";
-import ReceiptTemplate from "../receipt/template";
-import ReceivedPayment from "../ReceivedPayment/Form";
-import SerialForm from "./SerialForm";
-import SerialFormDelete from "./SerialFormDelete";
 
 const {TabPane} = Tabs;
 
@@ -417,7 +417,8 @@ class NewInvoice extends React.PureComponent {
                     invoiceDate: this.util.formatDateForMYSQL(values["invoiceDate"]),
                     dueDate: this.util.formatDateForMYSQL(values["dueDate"]),
                     registerDate: this.util.formatDateForMYSQL(formData.registerDate ? formData.registerDate : moment()),
-                    totalExcludeTax:  subTotal,
+                    totalExcludeTax: subTotal,
+                    deposit: values.deposit,
                     total: values.total
                 };
 
@@ -1409,46 +1410,37 @@ class NewInvoice extends React.PureComponent {
                                 placeholder={`${stringTranslate("text_invoice_date", this.props.locale)}`}
                                 defaultValue={formData.invoiceDate ? moment(formData.invoiceDate) : null}
                                 style={styles.itemCenter}
-                                form={this.props.form} />
-                          {/*  <DatePickers
-                                name="dueDate"
-                                style={styles.itemCenter}
-                                label={<Translate id="text_due_date" />}
-                                placeholder={`${stringTranslate("text_due_date", this.props.locale)}`}
-                                defaultValue={formData.dueDate ? moment(formData.dueDate) : null}
-                                form={this.props.form} />
-                          */}
+                                form={this.props.form}
+                            />
 
                             <div style={{display:"flex"}}>
-                                <div className="ant-col ant-form-item-label ant-col-xs-24 ant-col-sm-10" style={{marginTop: "10px"}}><label htmlFor="dueDate" className="" title=""><Translate id="text_payment_terms" /></label></div>
-                                <Row style={{width: "100%"}}>
-                                    <Col md={12} id="paymentTermNumber" style={{paddingRight: "3px"}}>
-                                        <InputNumber
-                                            name="payTermNumber"
-                                            placeholder={`${stringTranslate("text_payment_terms", this.props.locale)}`}
-                                            data={formData.payTermNumber ? formData.payTermNumber : "" }
-                                            defaultValue={formData.payTermNumber ? formData.payTermNumber : ""}
-                                            precision={0}
-                                            form={this.props.form}
-                                        />
-                                    </Col>
-                                    <Col md={12}  id="paymentTermType" style={{paddingLeft: "3px"}}>
-                                        <Form.Item>
-                                            {
-                                                getFieldDecorator("payTermType", {[formData.payTermType?"initialValue":""]: Enum.PAYMENT_TERM_TYPE.DAY === formData.payTermType ? Enum.PAYMENT_TERM_TYPE.DAY : Enum.PAYMENT_TERM_TYPE.MONTH   })
-                                                (
-                                                    <Select
-                                                        placeholder={`${stringTranslate("text_please_select", this.props.locale)}`}
-                                                        style={{marginTop: 4, width: "100%"}}
-                                                    >
-                                                        <Select.Option key={0}  value={Enum.PAYMENT_TERM_TYPE.DAY}><Translate id="text_day" /></Select.Option>
-                                                        <Select.Option key={1} value={Enum.PAYMENT_TERM_TYPE.MONTH}><Translate id="text_month" /></Select.Option>
-                                                    </Select>
-                                                )
-                                            }
-                                        </Form.Item>
-                                    </Col>
-                                </Row>
+                                <div className="ant-col ant-form-item-label ant-col-xs-24 ant-col-sm-10" style={{marginTop: "10px"}}>
+                                    <label htmlFor="payTermNumber"><Translate id="text_payment_terms" /></label>
+                                </div>
+                                <InputNumber
+                                    name="payTermNumber"
+                                    placeholder={stringTranslate("text_payment_terms", this.props.locale)}
+                                    data={formData.payTermNumber ? formData.payTermNumber : "" }
+                                    isAutoSelect={true}
+                                    defaultValue={formData.payTermNumber ? formData.payTermNumber : ""}
+                                    precision={0}
+                                    inputStyle={{width: 170}}
+                                    form={this.props.form}
+                                />
+                                <Form.Item style={{marginLeft: 10}}>
+                                    {
+                                        getFieldDecorator("payTermType", {initialValue: formData.payTermType ? formData.payTermType : Enum.PAYMENT_TERM_TYPE.DAY })
+                                        (
+                                            <Select
+                                                placeholder={`${stringTranslate("text_please_select", this.props.locale)}`}
+                                                style={{marginTop: 4, width: 90}}
+                                            >
+                                                <Select.Option key={0} value={Enum.PAYMENT_TERM_TYPE.DAY}><Translate id="text_day" /></Select.Option>
+                                                <Select.Option key={1} value={Enum.PAYMENT_TERM_TYPE.MONTH}><Translate id="text_month" /></Select.Option>
+                                            </Select>
+                                        )
+                                    }
+                                </Form.Item>
                             </div>
 
                             <InputNumber
@@ -1490,6 +1482,15 @@ class NewInvoice extends React.PureComponent {
                                 style={{display: "flex", marginBottom: 0}}
                                 inputStyle={{width: 269}}
                                 locale={this.props.locale}
+                                form={this.props.form}
+                            />
+                            <InputNumber
+                                name="deposit"
+                                data={formData.deposit}
+                                label={<div style={{marginTop: 7, marginRight: 10}}><Translate id="text_deposit" /></div>}
+                                style={{width: 455, display: "flex", justifyContent: "flex-start", marginBottom: 4}}
+                                isAutoSelect={true}
+                                min={0}
                                 form={this.props.form}
                             />
                             <Input.Group compact style={{textAlign: "right"}}>
@@ -1657,52 +1658,59 @@ class NewInvoice extends React.PureComponent {
                             </Button>
                             <Button style={{marginRight: 15, marginLeft: 15}} onClick={this.handleResetForm}>
                                 <Translate id="text_clear" />
-                            </Button> 
-                            <Button onClick={() => window.print()} style={{marginRight: 15}}>
-                                <Translate id="text_print_invoice" />
                             </Button>
-                            <Dropdown 
-                                overlay={(
-                                    <Menu>
-                                        <Menu.Item key={0} onClick={this.handlePrintInvoiceA5}><Translate id="text_print_invoice" /> A5</Menu.Item>
-                                        <Menu.Item key={1} onClick={this.handleMakeAsSent}><Translate id="text_mark_as_sent" /></Menu.Item>
-                                        <Menu.Item key={2} onClick={() => this.setState({showDrawer: true})}>
-                                            <Translate id="text_receive_payment" />
-                                        </Menu.Item>
-                                        {formData.status === Enum.INVOICE_STATUS.PAID ?
-                                            <Menu.Item key={3}>
-                                                <ReactToPrint
-                                                    trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}>
-                                                        <Translate id="text_print_receipt" />
-                                                        </button>}
-                                                    content={() => this.receiptRef}
-                                                />
-                                            </Menu.Item>
-                                            : null
-                                        }
-                                        <Menu.Item key={4}>
-                                            <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} >
-                                                <Translate id="text_clone" />
-                                            </Link>
-                                        </Menu.Item>
-                                        <Menu.Item key={5}>
-                                            <Link to="/transactions/create-invoice" target="_blank">
-                                                <Translate id="text_new_invoice" />
-                                            </Link>
-                                        </Menu.Item>
-                                        {this.id ?
-                                            <Menu.Item key={6} onClick={this.handleVoidInvoice}>
-                                                <Translate id="text_void" />
-                                            </Menu.Item>
-                                            : null
-                                        } 
-                                    </Menu>
-                                )}
-                            >
-                                <button className="ant-btn ant-dropdown-link" id="button-more-action" type="button">
-                                    <Translate id="text_more_action" /> <Icon type="down" />
-                                </button>
-                            </Dropdown>                          
+                            {
+                                formData.id ? 
+                                <React.Fragment>
+                                    <Button onClick={() => window.print()} style={{marginRight: 15}}>
+                                        <Translate id="text_print_invoice" />
+                                    </Button>
+                                    <Dropdown
+                                        overlay={(
+                                            <Menu>
+                                                <Menu.Item key={0} onClick={this.handlePrintInvoiceA5}><Translate id="text_print_invoice" /> A5</Menu.Item>
+                                                <Menu.Item key={1} onClick={this.handleMakeAsSent}><Translate id="text_mark_as_sent" /></Menu.Item>
+                                                <Menu.Item key={2} onClick={() => this.setState({showDrawer: true})}>
+                                                    <Translate id="text_receive_payment" />
+                                                </Menu.Item>
+                                                {formData.status === Enum.INVOICE_STATUS.PAID ?
+                                                    <Menu.Item key={3}>
+                                                        <ReactToPrint
+                                                            trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}>
+                                                                <Translate id="text_print_receipt" />
+                                                                </button>}
+                                                            content={() => this.receiptRef}
+                                                        />
+                                                    </Menu.Item>
+                                                    : null
+                                                }
+                                                <Menu.Item key={4}>
+                                                    <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} >
+                                                        <Translate id="text_clone" />
+                                                    </Link>
+                                                </Menu.Item>
+                                                <Menu.Item key={5}>
+                                                    <Link to="/transactions/create-invoice" target="_blank">
+                                                        <Translate id="text_new_invoice" />
+                                                    </Link>
+                                                </Menu.Item>
+                                                {this.id ?
+                                                    <Menu.Item key={6} onClick={this.handleVoidInvoice}>
+                                                        <Translate id="text_void" />
+                                                    </Menu.Item>
+                                                    : null
+                                                } 
+                                            </Menu>
+                                        )}
+                                    >
+                                        <button className="ant-btn ant-dropdown-link" id="button-more-action" type="button">
+                                            <Translate id="text_more_action" /> <Icon type="down" />
+                                        </button>
+                                    </Dropdown>
+                                </React.Fragment>
+                                :
+                                ""
+                            }                         
                         </Col>
                     </Row>
                 </Form>

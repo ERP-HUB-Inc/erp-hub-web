@@ -1033,8 +1033,8 @@ class FormItem extends React.PureComponent {
                     placeholder={`${stringTranslate("text_choose_template", this.props.locale)}`}
                     onChange={(value) => this.onChangeTemplate(value)}
                   >
-                    <Select.Option key={2} value={Enum.PAPER_SIZE.EXCLUDE_TAX}><Translate id="text_quotation_temp" /> 1</Select.Option>
-                    <Select.Option key={1} value={Enum.PAPER_SIZE.INCLUDE_TAX}><Translate id="text_quotation_temp" /> 2</Select.Option>
+                    <Select.Option key={2} value={Enum.PAPER_SIZE.EXCLUDE_TAX}><Translate id="text_template_1" /></Select.Option>
+                    <Select.Option key={1} value={Enum.PAPER_SIZE.INCLUDE_TAX}><Translate id="text_template_2" /></Select.Option>
                   </Select>
                 )
               }
@@ -1046,33 +1046,36 @@ class FormItem extends React.PureComponent {
                 <Translate id="text_clear" />
               </Button> 
               <Button onClick={() => window.print()} style={{marginRight: 15}}>
-                <Translate id="print_quotation" />
+                <Translate id="text_print" />
               </Button>
+              {
+                formData.id && 
                 <Dropdown 
-                  overlay={(
-                    <Menu>
-                      <Menu.Item key={1}>
-                        <Link to={`/transactions/create-invoice?quotationId=${formData.id}&action=convertToInvoice`}>
-                          <Translate id="text_convert_to_invoice" />
-                        </Link>
-                      </Menu.Item>
-                      <Menu.Item key={2}>
-                        <Link target="_blank" to={`/transactions/quotation-create?id=${formData.id}&action=clone`} >
-                          <Translate id="text_clone" />
-                        </Link>
-                      </Menu.Item>
-                      <Menu.Item key={3}>
-                        <Link to="/transactions/quotation-create" target="_blank"><Translate id="text_new_proposal" /></Link>
-                      </Menu.Item>
-                      <Menu.Item key={4} onClick={() => this.handleDeleteQuotation(formData.id)}>
-                        <Translate id="text_delete" />
-                      </Menu.Item>
-                    </Menu>
-                  )}
-                  trigger={["click"]}
-                >
-                <Button id="button-more-action"><Translate id="text_more_action" /> <Icon type="down" /></Button>
-              </Dropdown> 
+                    overlay={(
+                      <Menu>
+                        <Menu.Item key={1}>
+                          <Link to={`/transactions/create-invoice?quotationId=${formData.id}&action=convertToInvoice`}>
+                            <Translate id="text_convert_to_invoice" />
+                          </Link>
+                        </Menu.Item>
+                        <Menu.Item key={2}>
+                          <Link target="_blank" to={`/transactions/quotation-create?id=${formData.id}&action=clone`} >
+                            <Translate id="text_clone" />
+                          </Link>
+                        </Menu.Item>
+                        <Menu.Item key={3}>
+                          <Link to="/transactions/quotation-create" target="_blank"><Translate id="text_new_proposal" /></Link>
+                        </Menu.Item>
+                        <Menu.Item key={4} onClick={() => this.handleDeleteQuotation(formData.id)}>
+                          <Translate id="text_delete" />
+                        </Menu.Item>
+                      </Menu>
+                    )}
+                    trigger={["click"]}
+                  >
+                  <Button id="button-more-action"><Translate id="text_more_action" /> <Icon type="down" /></Button>
+                </Dropdown>
+              }
             </Col>
           </Row>
         </Form>

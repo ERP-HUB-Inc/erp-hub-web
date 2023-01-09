@@ -189,7 +189,7 @@ export default function ReportSaleByProduct() {
           paddingLeft: 0,
           paddingRight: 0,
         }}
-        onBack={() => history.goBack()}
+        onBack={() => history.push("/reports/sale_dashboard")}
         title={<Translate id="text_product_sale_report" />}
         subTitle=""
         extra={[

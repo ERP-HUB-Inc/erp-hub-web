@@ -30,71 +30,10 @@ class RepaymentList extends Component {
       detail: {}
     };
     this.REPAYMENT_STATUS_STR = {
-      [Enum.REPAYMENT_STATUS.PENDING]: { title: <this.Translate id="text_pending" />, color: "#ffa940"},
+      [Enum.REPAYMENT_STATUS.PENDING]: { title: <this.Translate id="text_not_yet_pay" />, color: "#ffa940"},
       [Enum.REPAYMENT_STATUS.PAID]: { title: <this.Translate id="text_paid" />, color: "#52c41a"},
     };
     this.columns = [
-      {
-        title: <this.Translate id="text_customer" />,
-        dataIndex: "firstName",
-        key: "firstName",
-        render: (firstName, record) => `${firstName} ${record.lastName}`
-      },
-      {
-        title: <this.Translate id="text_phone_number" />,
-        dataIndex: "phoneNumber",
-        key: "phoneNumber",
-        width: 300,
-        render: (phoneNumber, record) => {
-          const menu = (
-            <Menu>
-              <Menu.Item>
-                <this.Link to={`/installment/detail/${record.installmentId}`}>
-                  <this.Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
-                </this.Link>
-              </Menu.Item>
-              <Menu.Item onClick={() => this.handlePayment(record)}>
-                <this.Icon type="dollar" style={{marginRight: 10}} /> <this.Translate id="text_pay" />
-              </Menu.Item>
-              {
-                record.status === Enum.REPAYMENT_STATUS.PAID ?
-                  <Menu.Item onClick={() => this.handleEditPayment(record)}>
-                    <this.Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit_payment" />
-                  </Menu.Item>
-                : null
-              }
-            </Menu>
-          );
-          return <div className="wrap-product-name" style={{display: "flex"}}>
-            {phoneNumber}
-            <Dropdown className="product-row-option" overlay={menu}>
-              {/* eslint-disable-next-line */}
-              <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
-                <this.Translate id="text_option" /> <this.Icon type="down" />
-              </a>
-            </Dropdown>
-          </div>;
-        }
-      },
-      {
-        title: <this.Translate id="text_received_date" />,
-        dataIndex: "receiveDate",
-        key: "receiveDate",
-        width: 140,
-        render: receiveDate => receiveDate && this.Util.formatDate(receiveDate, "DD/MM/YYYY")
-      },
-      {
-        title: <this.Translate id="text_payment_date" />,
-        dataIndex: "date",
-        key: "date",
-        render: date => this.Util.formatDate(date, "DD/MM/YYYY")
-      },
-      {
-        title: <this.Translate id="text_duration" />,
-        dataIndex: "duration",
-        key: "duration",
-        render: (duration, record) => `${duration} ${this.CATranslate(`text_${record.durationType.toLowerCase()}`, this.props.locale)}`
-      },
       {
         title: <this.Translate id="text_status" />,
         dataIndex: "status",
@@ -114,6 +53,59 @@ class RepaymentList extends Component {
         }
       },
       {
+        title: <this.Translate id="text_customer" />,
+        dataIndex: "firstName",
+        key: "firstName",
+        render: (firstName, record) => `${firstName} ${record.lastName}`
+      },
+      {
+        title: <this.Translate id="text_phone_number" />,
+        dataIndex: "phoneNumber",
+        key: "phoneNumber",
+        width: 300,
+        render: (phoneNumber, record) => {
+          const menu = (
+            <Menu>
+              <Menu.Item>
+                <this.Link to={`/installment/detail/${record.installmentId}`}>
+                  <this.Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
+                </this.Link>
+              </Menu.Item>
+              {
+                record.status === Enum.REPAYMENT_STATUS.PAID &&
+                <Menu.Item onClick={() => this.handleEditPayment(record)}>
+                  <this.Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit_payment" />
+                </Menu.Item>
+              }
+              <Menu.Item onClick={() => this.handlePayment(record)}>
+                <this.Icon type="dollar" style={{marginRight: 10}} /> <this.Translate id="text_pay" />
+              </Menu.Item>
+            </Menu>
+          );
+          return <div className="wrap-product-name" style={{display: "flex"}}>
+            {phoneNumber}
+            <Dropdown className="product-row-option" overlay={menu}>
+              {/* eslint-disable-next-line */}
+              <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
+                <this.Translate id="text_option" /> <this.Icon type="down" />
+              </a>
+            </Dropdown>
+          </div>;
+        }
+      },
+      {
+        title: <this.Translate id="text_payment_date" />,
+        dataIndex: "date",
+        key: "date",
+        render: date => this.Util.formatDate(date, "DD/MM/YYYY")
+      },
+      {
+        title: <this.Translate id="text_duration" />,
+        dataIndex: "duration",
+        key: "duration",
+        render: (duration, record) => `${duration} ${this.CATranslate(`text_${record.durationType.toLowerCase()}`, this.props.locale)}`
+      },
+      {
         title: <this.Translate id="text_amount_to_pay" />,
         dataIndex: "payAmount",
         key: "payAmount",
@@ -128,7 +120,7 @@ class RepaymentList extends Component {
         render: balance => this.Util.formatCurrency(balance)
       }
     ];
-    this.pathname = "/installment/repayment/list";
+    this.pathname = "/installment/repayments";
     this.timer = null;
   }
 

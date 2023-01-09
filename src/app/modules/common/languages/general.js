@@ -189,7 +189,7 @@ export default {
 
   text_end_date: ["End Date", "ដល់ថ្ងៃទី"],
 
-  text_sub_total: ["Sub Total", "សរុបដំបូង"],
+  text_sub_total: ["Subtotal", "សរុបដំបូង"],
 
   text_notation: ["Notation", "កំណត់សំគាល់"],
 

@@ -79,6 +79,10 @@ export default {
     "Pending",
     "កំពុងរង់ចាំ"
   ],
+  "text_not_yet_pay": [
+    "Pending",
+    "មិនទាន់បង់"
+  ],
   "text_remark": [
     "Remark",
     "ចំណាំ"

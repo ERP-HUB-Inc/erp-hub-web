@@ -411,7 +411,7 @@ const dataSource = {
       {
         title: <Translate id="text_repayment" />,
         icon: "icon-dollar",
-        route: "/installment/repayment/list",
+        route: "/installment/repayments",
         component: Repayment,
         isFashNav: true
       }

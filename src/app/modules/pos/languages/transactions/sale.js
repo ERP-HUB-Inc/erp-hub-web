@@ -150,7 +150,7 @@ export default {
   ],
 
   "text_sub_total": [
-    "Sub Total",
+    "Subtotal",
     "សរុបដំបូង"
   ],
 

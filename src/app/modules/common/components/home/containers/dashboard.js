@@ -199,12 +199,7 @@ const Dashboard = () => {
                 family: "'Open Sans','Kantumruy'",
                 weight: "bold"
               }
-          },
-          // tooltip: {
-          //   enabled: false,
-          //   position: "nearest",
-          //   external: externalTooltipHandler
-          // }
+          }
       },
   };
 
