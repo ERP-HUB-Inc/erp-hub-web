@@ -15,6 +15,7 @@ export class DatePickers extends Element {
             <this.DatePicker
               format={this.props.dateFormat}
               onChange={this.props.onChange}
+              placeholder={this.props.placeholder}
               allowClear={this.props.allowClear}
               disabled={this.props.disabled} />  
           )

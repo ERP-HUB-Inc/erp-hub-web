@@ -16,6 +16,7 @@ export class TimePickers extends Element {
               format={this.props.timeFormat}
               onChange={this.props.onChange}
               allowClear={this.props.allowClear}
+              placeholder={this.props.placeholder}
               style={this.props.inputStyle}
               use12Hours={this.props.use12Hours}
               disabled={this.props.disabled} />  
