@@ -135,7 +135,7 @@ class RepaymentList extends Component {
       this.setState({current: parseInt(params.get("offset"))});
     }
 
-    if (params.get("overdue-from")) {
+    if (params.get("overdue-filter") === "custom") {
       this.setState({showCustomerOverdue: true});
     }
 
@@ -171,9 +171,11 @@ class RepaymentList extends Component {
     if (params.get("overdue-filter")) {
       let overdueFilter = params.get("overdue-filter");
       if (overdueFilter === "custom") {
-        overdueFilter = [params.get("overdue-from"), params.get("overdue-to")];
+        overdueFilter = Number(params.get("custom-overdue"));
       }
-      filter = JSON.stringify({overdue: overdueFilter});
+
+      if (overdueFilter)
+        filter = JSON.stringify({overdue: Number(overdueFilter)});
     }
 
     if (params.get("start")) {
@@ -255,7 +257,6 @@ class RepaymentList extends Component {
   }
 
   handleAfterPayment = (id) => {
-    console.log("updated");
     const params = new URLSearchParams(document.location.search);
     this.Util.pushParamsToURL(this.pathname, params.toString());
     this.fetchList(true);
@@ -294,26 +295,27 @@ class RepaymentList extends Component {
       }
     } else {
       params.delete("overdue-filter");
-      params.delete("overdue-from");
-      params.delete("overdue-to");
+      params.delete("custom-overdue");
     }
     this.Util.pushParamsToURL(this.pathname, params.toString());
     this.fetchList();
     this.setState({showCustomerOverdue: false});
   }
 
-  handleChangeOverdue = (dates) => {
+  handleChangeCustomOver = (e) => {
+    clearTimeout(this.timer);
     const params = new URLSearchParams(document.location.search);
-    if (dates.length) {
-      params.set("overdue-from", moment(dates[0]).format("YYYY-MM-DD"));
-      params.set("overdue-to", moment(dates[1]).format("YYYY-MM-DD"));
+    const value = e.target.value;
+    if (value) {
+      params.set("custom-overdue", value);
     } else {
-      params.delete("overdue-from");
-      params.delete("overdue-to");
+      params.delete("custom-overdue");
     }
 
     this.Util.pushParamsToURL(this.pathname, params.toString());
-    this.fetchList();
+    this.timer = setTimeout(() => {
+      this.fetchList();
+    }, 500);
   }
 
   handleChangDate = (dates) => {
@@ -400,9 +402,9 @@ class RepaymentList extends Component {
                     style={{marginBottom: 0, marginLeft: 15, width: 200}}
                     defaultValue={params.get("overdue-filter") ? params.get("overdue-filter") : null}
                     dataSource={[
-                      {name: `7 ${this.CATranslate("text_day", this.props.locale)}`, value: "7days"},
-                      {name: `15 ${this.CATranslate("text_day", this.props.locale)}`, value: "15days"},
-                      {name: `30 ${this.CATranslate("text_day", this.props.locale)}`, value: "30days"},
+                      {name: `7 ${this.CATranslate("text_day", this.props.locale)}`, value: 7},
+                      {name: `15 ${this.CATranslate("text_day", this.props.locale)}`, value: 15},
+                      {name: `30 ${this.CATranslate("text_day", this.props.locale)}`, value: 30},
                       {name: this.CATranslate("text_custom", this.props.locale), value: "custom"},
                     ]}
                     onChange={this.handleChangeOverFilter}
@@ -410,16 +412,14 @@ class RepaymentList extends Component {
                   />
                   {
                     this.state.showCustomerOverdue && 
-                    <this.DateRangePicker
-                      name="overdueRange"
-                      placeholder={[this.CATranslate("text_start_date", this.props.locale), this.CATranslate("text_end_date", this.props.locale)]}
-                      ranges={[]}
-                      dateFormat="DD-MM-YYYY"
-                      style={{width: 260, marginBottom: 0}}
-                      defaultValue={params.get("overdue-from") ? [moment(params.get("overdue-from")), moment(params.get("overdue-to"))] : []}
-                      onChange={this.handleChangeOverdue}
-                      form={this.props.form}
-                    />
+                    <this.InputText
+                      name="customOverdue"
+                      style={{width: 120, marginBottom: 0, marginTop: 4}}
+                      addonAfter={<this.Translate id="text_day" />}
+                      data={params.get("custom-overdue") ? params.get("custom-overdue") : ""}
+                      onChange={this.handleChangeCustomOver}
+                      handleOnFocus={(e) => e.target.select()}
+                      form={this.props.form} />
                   }
                   <this.DateRangePicker 
                     name="dates"
