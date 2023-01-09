@@ -67,7 +67,7 @@ export default class QuotationList extends Component {
       [Enum.QUOTATION_STATUS.DRAFT]: {name: <this.Translate id="text_draft" />, color: "#d9d9d9"},
       [Enum.QUOTATION_STATUS.SENT]: {name: <this.Translate id="text_sent" />, color: "#108ee9"},
       [Enum.QUOTATION_STATUS.APPROVED]: {name: <this.Translate id="text_approved" />, color: "#87d068"},
-      [Enum.QUOTATION_STATUS.CLOSED]: {name: <this.Translate id="text_closed" />, color: "#f50"}
+      [Enum.QUOTATION_STATUS.CLOSED]: {name: <this.Translate id="text_closed" />, color: "#52c41a"}
     };
     this.columns = [
       {
@@ -87,7 +87,7 @@ export default class QuotationList extends Component {
             color: this.QUOTATION_STATUS_STR[Number(status)].color
           };
 
-          if (record.validDate && moment(moment(record.validDate).format("YYYY-MM-DD")).isBefore(moment(moment().format("YYYY-MM-DD")))) {
+          if (status === Enum.QUOTATION_STATUS.SENT && record.validDate && moment(moment(record.validDate).format("YYYY-MM-DD")).isBefore(moment(moment().format("YYYY-MM-DD")))) {
             quotation_status.name = <this.Translate id="text_expired" />;
             quotation_status.color = "#f5222d";
           }
