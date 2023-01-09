@@ -1,9 +1,9 @@
 import React from "react";
 import { Result } from "antd";
 import { Translate } from "react-localize-redux";
-import { Button } from "../../../../common/elements/ant-ui";
 import NoneTaxInvoice from "./template/NoneTaxInvoice";
 import TaxInvoice from "./template/TaxInvoice";
+import { Button } from "../../../../common/elements/ant-ui";
 import Enum from "../../../enums/index";
 import Util from "../../../../common/util";
 

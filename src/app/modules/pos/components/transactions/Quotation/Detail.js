@@ -2,16 +2,22 @@ import React from "react";
 import { Translate } from "react-localize-redux";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { 
+import {
+  Divider,
   Dropdown, 
   Menu, 
   PageHeader,
   Icon,
   message,
   Spin,
+  Tabs,
   Form,
+  Col,
+  Row,
   Badge
 } from "antd";
+import moment from "moment";
+import _ from "lodash";
 import history from "../../../../common/router/history";
 import Enum from "../../../enums";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
@@ -19,16 +25,42 @@ import QuotationService from "../../../services/transactions/QuotationService";
 import CAInvoice from "../Invoice/CAInvoice";
 import Util from "../../../../common/util";
 
+const { TabPane } = Tabs;
+
+const DescriptionItem = ({ title, content }) => (
+  <div
+    style={{
+      fontSize: 14,
+      lineHeight: "22px",
+      marginBottom: 7,
+      color: "rgba(0,0,0,0.65)",
+    }}
+  >
+    <p
+      style={{
+        marginRight: 8,
+        display: "inline-block",
+        color: "rgba(0,0,0,0.85)",
+      }}
+    >
+      {title}:
+    </p>
+    {content}
+  </div>
+);
+
 class Detail extends React.PureComponent {
   state = {
     formData: {},
+    invoice: {},
+    invoiceLoading: false,
     loading: false
   }
   QUOTATION_STATUS_STR = {
     [Enum.QUOTATION_STATUS.DRAFT]: {name: stringTranslate("text_draft", this.props.locale), color: "#d9d9d9"},
     [Enum.QUOTATION_STATUS.SENT]: {name: stringTranslate("text_sent", this.props.locale), color: "#108ee9"},
     [Enum.QUOTATION_STATUS.APPROVED]: {name: stringTranslate("text_approved", this.props.locale), color: "#87d068"},
-    [Enum.QUOTATION_STATUS.CLOSED]: {name: stringTranslate("text_closed", this.props.locale), color: "#f50"}
+    [Enum.QUOTATION_STATUS.CLOSED]: {name: stringTranslate("text_closed", this.props.locale), color: "#52c41a"}
   };
   util = new Util();
 
@@ -73,6 +105,21 @@ class Detail extends React.PureComponent {
     });
   }
 
+  onTabChangge = (key) => {
+    if (key === "invoice" && _.isEmpty(this.state.invoice)) {
+      this.setState({invoiceLoading: true});
+      QuotationService.getInvoiceByQuoteId(this.state.formData.id)
+      .then(response => {
+        if (response.data) {
+          this.setState({invoice: response.data.find(value => value)});
+        }
+      })
+      .finally(() => {
+        this.setState({invoiceLoading: false});
+      });
+    }
+  }
+
   render() {
     const {formData} = this.state;
     formData.transactionEntries = formData.quotationEntries;
@@ -83,6 +130,12 @@ class Detail extends React.PureComponent {
     formData.phoneNumber = formData.customer && formData.customer.phoneNumber;
     formData.VATNo = formData.customer && formData.customer.VATNo;
     formData.address = formData.customer && formData.customer.address;
+
+    if (this.state.loading) {
+      return <div style={{width: 30, margin: "0 auto", paddingTop: 30}}>
+      <Spin />
+    </div>;
+    } 
     
     return (
       <div style={{marginBottom: 25}}>
@@ -97,7 +150,6 @@ class Detail extends React.PureComponent {
           title={<Translate id="text_quotation" />}
           subTitle={  
             <div>
-              {formData.number}
               {
                 Object.keys(formData).length && formData.status >= 0 ?
                   <Badge count={this.QUOTATION_STATUS_STR[formData.status].name} style={{ backgroundColor: this.QUOTATION_STATUS_STR[formData.status].color}} />
@@ -108,25 +160,29 @@ class Detail extends React.PureComponent {
           extra={[
             <Dropdown key={1} overlay={(
               <Menu>
-                <Menu.Item key={0} onClick={() => window.print()}><Translate id="text_print" /></Menu.Item>
-                <Menu.Item key={1} onClick={() => this.handleShowFormEdit(formData.id, formData.status)}>
-                  <Translate id="text_edit_quotation" />
+                <Menu.Item disabled={formData.status !== Enum.QUOTATION_STATUS.DRAFT} key={1} onClick={() => this.handleShowFormEdit(formData.id, formData.status)}>
+                  <Icon type="edit" style={{marginRight: 10}} />  <Translate id="text_edit" />
                 </Menu.Item>
                 <Menu.Item key={2} onClick={() => this.handleConvertToInvoice(formData.id, formData.status)}>
-                  <Translate id="text_convert_to_invoice" />
+                  <Icon type="retweet" style={{marginRight: 10}} /> <Translate id="text_convert_to_invoice" />
                 </Menu.Item>
                 <Menu.Item key={3}>
                   <Link target="_blank" to={`/transactions/quotation-create?id=${formData.id}&action=clone`} >
-                    <Translate id="text_clone" />
+                    <Icon type="copy" style={{marginRight: 10}} /> <Translate id="text_clone" />
                   </Link>
                 </Menu.Item>
                 <Menu.Item key={4}>
                   <Link target="_blank" to="/transactions/quotation-create">
-                    <Translate id="text_new_proposal" />
+                    <Icon type="plus" style={{marginRight: 10}} /> <Translate id="text_new_proposal" />
                   </Link>
                 </Menu.Item>
-                <Menu.Item key={5} onClick={() => this.handleDeleteQuotation(formData.id, formData.status)}>
-                  <Translate id="text_delete" />
+                <Divider style={{marginTop: 4, marginBottom: 4}} />
+                <Menu.Item key={0} onClick={() => window.print()}>
+                  <Icon type="printer" style={{marginRight: 10}} /> <Translate id="text_print" />
+                </Menu.Item>
+                <Divider style={{marginTop: 4, marginBottom: 4}} />
+                <Menu.Item disabled={formData.status !== Enum.QUOTATION_STATUS.DRAFT} key={5} onClick={() => this.handleDeleteQuotation(formData.id, formData.status)}>
+                  <Icon type="delete" style={{marginRight: 12}} /> <Translate id="text_delete" />
                 </Menu.Item>
               </Menu>
             )}>
@@ -137,25 +193,67 @@ class Detail extends React.PureComponent {
           ]}
         />
 
-        {
-          !this.state.loading ?
-            <div className="invoice-page">
-            <CAInvoice 
-              invoiceTitle="Quotation"
-              invoiceTaxTitleKH="សម្រង់តម្លៃអាករ"
-              invoiceNoTitle="Quote No"
-              invoiceNoTitleKH="លេខសម្រង់តម្លៃ"
-              numberTitle="Quote Number"
-              invoiceDateTitle="Quote Date"
-              dueDateTitle="Valid till Date"
-              formData={formData} 
-            />
-          </div>
-          : 
-          <div style={{width: 30, margin: "0 auto", paddingTop: 30}}>
-            <Spin />
-          </div>
-        }
+          <h5 style={{marginBottom: 30, lineHeight: 1.4}}><Translate id="text_quotation_no" />: {formData.number}</h5>
+          <Row>
+          <Col span={8}>
+              <DescriptionItem title={<Translate id="text_compnay" />} content={<Link to={`/customer-profile/${formData.customerId}`}>{formData.company}</Link>} />
+            </Col>
+            <Col span={8}>
+              <DescriptionItem title={<Translate id="text_customer_name" />} content={<Link to={`/customer-profile/${formData.customerId}`}>{formData.firstName} {formData.lastName}</Link>} />
+            </Col>
+            <Col span={8}>
+              <DescriptionItem title={<Translate id="text_phone_number" />} content={formData.phoneNumber} />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={8}>
+              <DescriptionItem title="លេខអត្តសញ្ញាណកម្ម អតប (VATTIN)" content={formData.VATNo} />
+            </Col>
+            <Col span={8}>
+              <DescriptionItem title={<Translate id="text_date" />} content={moment().format("dddd MM, YYYY")} />
+            </Col>
+            <Col span={8}>
+              <DescriptionItem title={<Translate id="text_valid_till" />} content={moment(formData.validDate).format("dddd MM, YYYY")} />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <DescriptionItem
+                title={<Translate id="text_address" />}
+                content={formData.address}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+            <Tabs onChange={this.onTabChangge} type="card">
+              <TabPane tab={<Translate id="text_details" />} key="detail" style={{paddingTop: 25, paddingBottom: 25}}>
+                <div className="invoice-page">
+                  <CAInvoice 
+                    invoiceTitle="Quotation"
+                    invoiceTaxTitleKH="សម្រង់តម្លៃអាករ"
+                    invoiceNoTitle="Quote No"
+                    invoiceNoTitleKH="លេខសម្រង់តម្លៃ"
+                    numberTitle="Quote Number"
+                    invoiceDateTitle="Quote Date"
+                    dueDateTitle="Valid till Date"
+                    formData={formData} 
+                  />
+                </div>
+              </TabPane>
+              <TabPane tab={<Translate id="text_invoice" />} key="invoice">
+                {
+                  this.state.invoiceLoading ?
+                  <Spin style={{display: "flex", justifyContent: "center"}} />
+                  :
+                  <div className="invoice-page" style={{paddingTop: 25, paddingBottom: 25}}>
+                    <CAInvoice formData={this.state.invoice} />
+                  </div>
+                }
+              </TabPane>
+            </Tabs>
+            </Col>
+          </Row>
       </div>
     );
   }

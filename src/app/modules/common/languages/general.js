@@ -314,6 +314,8 @@ export default {
 
   text_invoice: ["Invoice", "វិក័យប័ត្រ"],
 
+  text_details: ["Details", "លម្អិត"],
+
   text_invoices: ["Invoices", "វិក័យប័ត្រ"],
 
   text_pre_order: ["Pre-Order", "ការ​បញ្ជាទិញ​មុន", "Pre-Order"],

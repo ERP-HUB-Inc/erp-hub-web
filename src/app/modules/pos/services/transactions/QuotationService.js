@@ -25,6 +25,14 @@ class QuotationService extends BaseService {
     });
   }
 
+  getInvoiceByQuoteId(quoteId) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/invoices/${quoteId}`,
+      headers: this.header
+    });
+  }
+
   detailPublic(id, token) {
     this.header["Authorization"] = `Bearer ${token}`;
     return this.GET({
