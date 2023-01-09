@@ -71,16 +71,15 @@ class RepaymentList extends Component {
                   <this.Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
                 </this.Link>
               </Menu.Item>
+              {
+                record.status === Enum.REPAYMENT_STATUS.PAID &&
+                <Menu.Item onClick={() => this.handleEditPayment(record)}>
+                  <this.Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit_payment" />
+                </Menu.Item>
+              }
               <Menu.Item onClick={() => this.handlePayment(record)}>
                 <this.Icon type="dollar" style={{marginRight: 10}} /> <this.Translate id="text_pay" />
               </Menu.Item>
-              {
-                record.status === Enum.REPAYMENT_STATUS.PAID ?
-                  <Menu.Item onClick={() => this.handleEditPayment(record)}>
-                    <this.Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit_payment" />
-                  </Menu.Item>
-                : null
-              }
             </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
