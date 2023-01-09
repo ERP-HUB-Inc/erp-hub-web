@@ -1,20 +1,23 @@
 import React from "react";
 import moment from "moment";
+import { Translate } from "react-localize-redux";
 import {
   Form,
   Icon,
   Modal,
 } from "antd";
-import { Translate } from "react-localize-redux";
-import FormItem from "./FormItem";
 import { Button } from "../../../common/elements/ant-ui";
 import BookingService from "../../services/BookingService";
+import Util from "../../../common/util";
+import { stringTranslate } from "../../../common/helper/stringTranslate";
+import FormItem from "./FormItem";
 
 export default class FormCreate extends React.PureComponent {
   state = {
     visible: false,
     loading: false
   }
+  util = new Util();
 
   handleSubmit = (e) => {
     e.preventDefault();
@@ -27,11 +30,24 @@ export default class FormCreate extends React.PureComponent {
         delete values.date;
         delete values.dates;
         delete values.search;
-        console.log("values", values);
         BookingService.create(values)
         .then(() => {
           this.props.onSuccess();
           this.setState({visible: false});
+          this.util.sweetAlertMessageV2(
+            stringTranslate("text_success", this.props.locale),
+            stringTranslate("text_save_success", this.props.locale),
+            "success"
+          );
+        })
+        .catch(err => {
+          if (err.response && err.response.data) {
+            this.util.sweetAlertMessageV2(
+              stringTranslate("text_sorry", this.props.locale),
+              stringTranslate("text_something_went_wrong", this.props.locale),
+              "error"
+            );
+          }
         })
         .finally(() => this.setState({loading: false}));
       }
@@ -61,7 +77,7 @@ export default class FormCreate extends React.PureComponent {
             form={this.props.form} />
 
           <div style={{paddingBottom: 22, paddingTop: 10, textAlign: "center"}}>
-            <Button htmlType="button" onClick={this.handleClose}>
+            <Button htmlType="button" type="danger" onClick={this.handleClose}>
               <Icon type="close-circle" /> <Translate id="text_cancel" />
             </Button>
             <Button type="info" htmlType="submit" style={{marginLeft: 15}} loading={this.state.loading}>

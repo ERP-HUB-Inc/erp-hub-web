@@ -23,13 +23,15 @@ export default function FormItem(props) {
             name="customerName"
             label={<Translate id="text_customer_name" />}
             placeholder={`${stringTranslate("text_customer_name", props.locale)}`}
-            data={formData.firstName ? `${formData.firstName} ${formData.lastName}` : ""}
+            required={true}
+            data={formData.firstName ? `${formData.firstName} ${formData.lastName ? formData.lastName : ""}` : ""}
             form={form} />
 
           <InputText
             name="phoneNumber"
             label={<Translate id="text_phone_number" />}
             placeholder={`${stringTranslate("text_phone_number", props.locale)}`}
+            required={true}
             data={formData.phoneNumber}
             form={form} />
 
@@ -37,8 +39,9 @@ export default function FormItem(props) {
             name="date"
             label={<Translate id="text_book_for_date" />}
             placeholder="DD/MM/YYYY"
-            defaultValue={formData.start ? moment(formData.start) : null}
+            defaultValue={formData.start ? moment(formData.start) : moment()}
             dateFormat="DD/MM/YYYY"
+            allowClear={false}
             form={form} />
         </Col>
       </Row>
@@ -48,6 +51,8 @@ export default function FormItem(props) {
             name="start"
             label={<Translate id="text_from_time" />}
             placeholder="hh:mm"
+            required={true}
+            defaultValue={formData.start ? moment(formData.start) : null}
             use12Hours={true}
             inputStyle={{width: "100%"}}
             form={form} />
@@ -57,6 +62,8 @@ export default function FormItem(props) {
             name="end"
             label={<Translate id="text_to_time" />}
             placeholder="hh:mm"
+            required={true}
+            defaultValue={formData.start ? moment(formData.end) : null}
             use12Hours={true}
             inputStyle={{width: "100%"}}
             form={form} />

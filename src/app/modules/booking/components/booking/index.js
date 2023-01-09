@@ -6,18 +6,23 @@ import {
   Row,
   Col,
   Card,
-  Statistic
+  Statistic,
+  Pagination,
+  Dropdown,
+  Menu
 } from "antd";
 import Enum from "../../enum";
 import Component from "../../../common/components/Component";
 import FormCreate from "./FormCreate";
 import BookingService from "../../services/BookingService";
+import FormUpdate from "./FormUpdate";
 
 class BookingList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
+      detail: {},
       summary: {},
       customers: [],
       pagination: {},
@@ -35,13 +40,39 @@ class BookingList extends Component {
         title: <this.Translate id="text_date" />,
         dataIndex: "start",
         key: "start",
-        render: (start, record) => `${moment(start).format(this.dateFormat)} ~ ${moment(record.end).format(this.dateFormat)}`
+        width: 700,
+        render: (start, record) => {
+          const menu = (
+            <Menu>
+              <Menu.Item onClick={() => this.handleShowFormEdit(record.id)}>
+                <this.Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
+              </Menu.Item>
+              <Menu.Item onClick={() => this.handleDelete(record.id)}>
+                <this.Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
+              </Menu.Item>
+            </Menu>
+          );
+          return <div className="wrap-product-name" style={{display: "flex"}}>
+            {moment(start).format("DD/MM/YYYY hh:mm A")} ~ {moment(record.end).format("DD/MM/YYYY hh:mm A")}
+            <Dropdown className="product-row-option" overlay={menu}>
+              {/* eslint-disable-next-line */}
+              <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
+                <this.Translate id="text_option" /> <this.Icon type="down" />
+              </a>
+            </Dropdown>
+          </div>;
+        }
       },
       {
         title: <this.Translate id="text_customer" />,
         dataIndex: "firstName",
         key: "firstName",
-        render: (firstName, record) => `${firstName} ${record.lastName}`
+        render: (firstName, record) => `${firstName} ${record.lastName ? record.lastName : ""}`
+      },
+      {
+        title: <this.Translate id="text_phone_number" />,
+        dataIndex: "phoneNumber",
+        key: "phoneNumber"
       },
       {
         title: <this.Translate id="text_status" />,
@@ -56,19 +87,46 @@ class BookingList extends Component {
       }
     ];
     this.pathname = "/bookings/list";
+    this.timer = null;
   }
 
   componentDidMount() {
     this.fetchList();
   }
 
-  fetchList() {
+  fetchList(withPagination = false) {
     let limit = this.pageSize,
       offset = this.state.current,
       search = "",
       range = "";
 
+    const params = new URLSearchParams(document.location.search);
+
+    if (params.get("limit")) {
+      limit = Number(params.get("limit"));
+    }
+
+    if (params.get("offset")) {
+      offset = Number(params.get("offset"));
+    }
+
+    if (params.get("search")) {
+      search = params.get("search");
+    }
+
+    if (params.get("start")) {
+      range = JSON.stringify({value: [params.get("start"), params.get("end")]});
+    }
+
     offset = (offset - 1) * limit;
+
+    if (!withPagination){
+      offset = 0;
+      params.delete("offset");
+      this.setState({current: 1});
+      this.Util.pushParamsToURL(this.pathname, params.toString());
+    }
+
     this.setState({loading: true});
     BookingService.list(limit, offset, search, 0, "", range)
     .then(response => {
@@ -78,9 +136,49 @@ class BookingList extends Component {
       });
     })
     .finally(() => this.setState({loading: false}));
+
+    BookingService.summary(search, range)
+    .then(response => {
+      this.setState({summary: response.data.data});
+    });
+  }
+
+  handleSearch = (e) => {
+    clearTimeout(this.timer);
+    const value = e.target.value;
+    const params = new URLSearchParams(document.location.search);
+    if (value) {
+      params.set("search", value);
+    } else {
+      params.delete("search");
+    }
+
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.timer = setTimeout(() => {
+      this.fetchList();
+    }, 600);
+  }
+
+  handleChangDate = (dates) => {
+    const params = new URLSearchParams(document.location.search);
+    if (dates.length) {
+      params.set("start", moment(dates[0]).format("YYYY-MM-DD"));
+      params.set("end", moment(dates[1]).format("YYYY-MM-DD"));
+    } else {
+      params.delete("start");
+      params.delete("end");
+    }
+
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
   }
 
   handleAfterCreate = () => {
+    this.fetchList();
+  }
+
+  handleAfterUpdate = () => {
+    this.setState({detail: {}});
     this.fetchList();
   }
 
@@ -89,11 +187,86 @@ class BookingList extends Component {
   }
 
   handleShowFormEdit(id) {
+    BookingService.detail(id)
+    .then(response => {
+      this.setState({detail: response.data.data}, () => {
+        this.formUpdateRef.handleShow();
+      });
+    });
+  }
 
+  handleDelete(id) {
+    this.Util.sweetAlertConfirm(
+      "",
+      this.CATranslate("text_are_you_sure", this.props.locale),
+      [this.CATranslate("text_cancel", this.props.locale), this.CATranslate("text_delete", this.props.locale)]
+    )
+    .then(willDelete => {
+      if (willDelete) {
+        BookingService.delete(id)
+        .then(() => {
+          this.fetchList();
+          this.Util.sweetAlertMessageV2(this.CATranslate("text_success", this.state.locale), this.CATranslate("text_one_record_deleted", this.props.locale), "success");
+        })
+        .catch(err => {
+          if (err.response && err.response.data) {
+            this.Util.sweetAlertMessageV2(
+              this.CATranslate("text_sorry", this.props.locale),
+              this.CATranslate("text_something_went_wrong", this.props.locale),
+              "error"
+            );
+          }
+        });
+      }
+    });
+  }
+
+  onTableChange = (current, pageSize) => {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList(true);
+  }
+
+  onSelectChange(selectedRowKeys, selectedRows) {
+    this.setState({
+      selectedListIds: this.mapSelectedListIds(selectedRows),
+      selectedRowKeys,
+      selectedRows
+    });
   }
 
   renderPagination(pagination) {
-    return;
+    pagination = {
+      total: pagination.total,
+      pageSize: pagination.limit,
+      current: this.state.current,
+      pageSizeOptions: this.pageSizeOptions
+    };
+
+    const showTotal = total => {
+      return `${this.CATranslate("text_total", this.props.locale)} ${total} ${this.CATranslate("text_records", this.props.locale)}`;
+    };
+
+    return( 
+      pagination.total > 0 ?
+        <div className="float-right">
+          <Pagination 
+            size="small" 
+            showTotal={showTotal} 
+            showSizeChanger
+            defaultCurrent={this.state.current}
+            defaultPageSize={this.pageSize}
+            onShowSizeChange={this.onTableChange} 
+            onChange={this.onTableChange} 
+            {...pagination} />
+        </div>
+        :
+        ""
+    );
   }
 
   render() {
@@ -139,7 +312,7 @@ class BookingList extends Component {
                     <Statistic 
                       title={<this.Translate id="text_booked"/>}
                       value={summary && summary.booked}
-                      valueStyle={{color: "#52c41a"}}
+                      valueStyle={{color: "#bfbfbf"}}
                     />
                   </Card>
                 </Col>
@@ -157,13 +330,13 @@ class BookingList extends Component {
                     <Statistic
                       title={<this.Translate id="text_served"/>}
                       value={summary && summary.served}
-                      valueStyle={{color: "#f5222d"}}
+                      valueStyle={{color: "#52c41a"}}
                     />
                   </Card>
                 </Col>
               </Row>
 
-              <div style={{marginTop: 26, textAlign: "right"}}>
+              <div style={{marginTop: 26}}>
                 <this.Button type="info" onClick={() => this.handleShowFormCreate()}>
                   <this.Icon type="plus-circle" /> <this.Translate id="text_create_booking" />
                 </this.Button>
@@ -173,9 +346,6 @@ class BookingList extends Component {
                 rowKey="id"
                 loading={this.state.loading}
                 columns={this.columns}
-                onRow={record => ({
-                  onDoubleClick: () => this.handleShowFormEdit(record.id)
-                })}
                 dataSource={data}
               />
 
@@ -190,6 +360,13 @@ class BookingList extends Component {
                 locale={this.props.locale}
                 onSuccess={this.handleAfterCreate}
                 form={this.props.form}/>
+
+              <FormUpdate
+                ref={ref => this.formUpdateRef = ref}
+                locale={this.props.locale}
+                formData={this.state.detail}
+                onSuccess={this.handleAfterUpdate}
+                form={this.props.form} />
             </div>
           </div>
         </div>

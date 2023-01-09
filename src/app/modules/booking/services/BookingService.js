@@ -48,6 +48,14 @@ class BookingService extends BaseService {
       headers: this.header
     });
   }
+
+  summary(search, rangeFilter) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/v1/summary?search=${search}&rangFilter=${rangeFilter}`,
+      headers: this.header
+    });
+  }
 }
 
 export default new BookingService();
