@@ -2,6 +2,12 @@
     display: flex;
     justify-content: flex-end
 }
+
 #formSearchHeaderOnReportPurchase .ant-input-search {
     width: 280px;
+}
+
+.tfoot-colspan {
+    background-color: rgb(255, 255, 255);
+    border: none !important;
 }

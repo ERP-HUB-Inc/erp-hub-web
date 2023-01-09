@@ -15,6 +15,7 @@ export default function  ExportPDFPurcaseByProduct() {
   const title = "MONTHLY PURCHASE SUMMARY REPORT";
  
   let option = {};
+  let total = 0;
   useEffect(() => {
     document.title =  title;
     
@@ -50,7 +51,7 @@ export default function  ExportPDFPurcaseByProduct() {
               <table style={{marginBottom: 15, width: "100%"}}>
                   <tbody>
                       <tr>
-                          <td colSpan="2" style={{textAlign: "center", paddingBottom: 67}}>
+                          <td colSpan="2" style={{textAlign: "center", paddingBottom: 67,backgroundColor: "rgb(255, 255, 255)"}}>
                           <img src={valueLocalStorage.setting.logo ? `${new Util().getProductImage(valueLocalStorage.setting.logo,"general").url}`: ""} style={{width: 100, position: "absolute", left: 15, top: 20 ,height: 100 ,objectFit:"cover"}} alt="logo" />
                               <span style={{fontSize: 25, fontWeight: "bold"}}>
                                   {title}
@@ -77,8 +78,9 @@ export default function  ExportPDFPurcaseByProduct() {
                   <tbody>
                       {
                           datas.map((data, index) => 
-                              {    
-                                  return <tr key={index}>
+                              { 
+                                total += data.total ;   
+                                return <tr key={index}>
                                     <td style={{width: 60, textAlign: "center"}}>{index + 1}</td>
                                     <td>{(new Util()).formatDate(data.date, "DD/MM/YYYY")}</td>
                                     <td>{data.description}</td>
@@ -87,12 +89,19 @@ export default function  ExportPDFPurcaseByProduct() {
                                     <td>{data.supplierName}</td>
                                     <td>{data.locationName}</td>
                                     <td>{data.numberOfItem}</td>
-                                    <td>{(new Util()).formatCurrency(data.total)}</td>
-                                  </tr>;
+                                    <td>{(new Util()).formatCurrency(data.total)}</td>          
+                                </tr>;
+                                   
                               }  
                           )
                       }
                   </tbody>
+                  <tfoot>
+                      <tr>
+                        <td colSpan={8} className="tfoot-colspan"></td>
+                        <td>{(new Util()).formatCurrency(total)}</td>
+                      </tr>
+                  </tfoot>
               </table>
               </React.Fragment>
           }

@@ -14,7 +14,11 @@ export default function ExportPDFSaleByProduct() {
   const params = new URLSearchParams(document.location.search);
   const title = "MONTHLY SALE BY PRODUCT REPORT";
  
-  
+  let revenue = 0; 
+  let discount = 0; 
+  let netSale = 0; 
+  let costOfGoods = 0; 
+  let grossProfit = 0; 
   useEffect(() => {
     document.title =  title;
     let option = {};
@@ -44,6 +48,7 @@ export default function ExportPDFSaleByProduct() {
   const getProfit = (profit, record) => {
     const netSale = record.revenue - record.discount;
     profit = netSale - record.cost;
+    grossProfit += profit;
     return new Util().formatCurrency(profit);
   };
 
@@ -74,7 +79,7 @@ export default function ExportPDFSaleByProduct() {
                   <table style={{marginBottom: 15, width: "100%"}}>
                   <tbody>
                       <tr>
-                          <td colSpan="2" style={{textAlign: "center", paddingBottom: 67}}>
+                          <td colSpan="2" style={{textAlign: "center", paddingBottom: 67 ,backgroundColor: "rgb(255, 255, 255)"}}>
                           <img src={valueLocalStorage.setting.logo ? `${new Util().getProductImage(valueLocalStorage.setting.logo,"general").url}`: ""} style={{width: 100, position: "absolute", left: 15, top: 20 ,height: 100 ,objectFit:"cover"}} alt="logo" />
                               <span style={{fontSize: 25, fontWeight: "bold"}}>
                                   {title}
@@ -104,7 +109,11 @@ export default function ExportPDFSaleByProduct() {
                   <tbody>
                       {
                           datas.map((data, index) => 
-                              {    
+                              { 
+                                  revenue +=  data.revenue;
+                                  discount += data.discount;
+                                  netSale += data.revenue - data.discount;
+                                  costOfGoods += data.cost;
                                   return <tr key={index}>
                                     <td style={{width: 60, textAlign: "center"}}>{index + 1}</td>
                                     <td>{data.name}</td>
@@ -122,6 +131,17 @@ export default function ExportPDFSaleByProduct() {
                           )
                       }
                   </tbody>
+                  <tfoot>
+                      <tr>
+                        <td colSpan={5} className="tfoot-colspan"></td>
+                        <td style={{textAlign: "center"}}>{new Util().formatCurrency(revenue)}</td>
+                        <td style={{textAlign: "center"}}>{new Util().formatCurrency(discount)}</td>
+                        <td style={{textAlign: "center"}}>{new Util().formatCurrency(netSale)}</td>
+                        <td style={{textAlign: "center"}}>{new Util().formatCurrency(costOfGoods)}</td>
+                        <td style={{textAlign: "center"}}>{new Util().formatCurrency(grossProfit)}</td>
+                        <td className="tfoot-colspan"></td>
+                      </tr>
+                  </tfoot>
               </table>
 
               </React.Fragment>
