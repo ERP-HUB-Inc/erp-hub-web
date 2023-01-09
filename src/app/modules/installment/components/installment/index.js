@@ -1,6 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {
+  Divider,
   Col,
   Pagination,
   Row,
@@ -54,8 +55,8 @@ class Installment extends Component {
           const menu = (
             <Menu>
               <Menu.Item>
-                <this.Link to={`/installment/detail/${record.id}?action=print`}>
-                  <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" />
+                <this.Link to={`/installment/detail/${record.id}`}>
+                  <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
                 </this.Link>
               </Menu.Item>
               {/* <Menu.Item>
@@ -63,11 +64,6 @@ class Installment extends Component {
                   <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" /> A5
                 </this.Link>
               </Menu.Item> */}
-              <Menu.Item>
-                <this.Link to={`/installment/detail/${record.id}`}>
-                  <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
-                </this.Link>
-              </Menu.Item>
               {
                 this.state.isCanEdit ?
                 <Menu.Item>
@@ -77,13 +73,18 @@ class Installment extends Component {
                 </Menu.Item>
                 : null
               }
-              
+              <Divider style={{marginTop: 4, marginBottom: 4}} />
+              <Menu.Item>
+                <this.Link to={`/installment/detail/${record.id}?action=print`}>
+                  <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" />
+                </this.Link>
+              </Menu.Item>
+              <Divider style={{marginTop: 4, marginBottom: 4}} />
               {
-                this.state.isCanDelete ?
+                this.state.isCanDelete && 
                 <Menu.Item onClick={() => this.handleDelete(record)}>
                   <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
                 </Menu.Item>
-                : null
               }
             </Menu>
           );

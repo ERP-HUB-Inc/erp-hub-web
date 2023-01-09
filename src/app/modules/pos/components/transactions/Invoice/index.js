@@ -150,9 +150,12 @@ export default class Invoice extends Component {
                   <Icon type="close" style={{marginRight: 10}} /> <this.Translate id="text_void" />
                 </Menu.Item>
               }
-              <Menu.Item key={6} onClick={() => this.handleDeleteInvoice(record)} style={{color: "red"}}>
-                <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
-              </Menu.Item>
+              {
+                record.status !== Enum.INVOICE_STATUS.PAID && 
+                <Menu.Item key={6} onClick={() => this.handleDeleteInvoice(record)} style={{color: "red"}}>
+                  <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
+                </Menu.Item>
+              }
             </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
@@ -431,10 +434,6 @@ export default class Invoice extends Component {
   }
 
   handleDeleteInvoice(record) {
-    if (Number(record.status) !== Enum.INVOICE_STATUS.DRAFT) {
-      return this.Util.sweetAlertMessageV2("Sorry", "Allow delete invoice only in draft step", "warning");
-    }
-
     this.Util.sweetAlertConfirm(this.CATranslate("text_are_you_sure", this.props.locale))
     .then(willDelete => {
       if (willDelete) {

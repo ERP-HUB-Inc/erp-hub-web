@@ -629,7 +629,7 @@ export default class FormItem extends Modal {
                           name="warrantyDurationType"
                           dataSource={[{name: <Translate id="text_day" />, value: "DAY"}, {name: <Translate id="text_week" />, value: "WEEK"}, {name: <Translate id="text_month" />, value: "MONTH"}, {name: <Translate id="text_year" />, value: "YEAR"}]}
                           defaultValue={formData.warrantyDurationType}
-                          style={{width: 60, marginTop: 21, marginLeft: 5}}
+                          style={{marginTop: 25, marginLeft: 5}}
                           form={form}
                         />
                       </div>
