@@ -24,8 +24,12 @@ export default {
 
   "text_customer_name": [
     "Customer Name",
-    "អតិថិជនឈ្មោះ",
-    "Customer Name"
+    "អតិថិជនឈ្មោះ"
+  ],
+
+  "text_compnay": [
+    "Company",
+    "ក្រុមហ៊ុន"
   ],
 
   "text_customer_profile": [

@@ -25,7 +25,7 @@ export default {
     "Quotations"
   ],
   "text_quotation_no": [
-    "Quotation No",
+    "Quote No",
     "លេខសម្រង់តម្លៃ"
   ],
 

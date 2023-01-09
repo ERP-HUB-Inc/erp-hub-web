@@ -75,6 +75,12 @@ const Repayment = Loadable({
   loading: () => <StartUp />
 });
 
+//Booking
+const Booking = Loadable({
+  loader: () => import("../../../../booking/components/booking"),
+  loading: () => <StartUp />
+});
+
 // PRODUCT
 const ManageProduct = Loadable({
   loader: () => import("../../../../inventory/containers/products/Product"),
@@ -413,6 +419,20 @@ const dataSource = {
         icon: "icon-dollar",
         route: "/installment/repayments",
         component: Repayment,
+        isFashNav: true
+      }
+    ]
+  },
+  bookings: {
+    icon: "icon-time",
+    route: "bookings",
+    title: <Translate id="text_booking" />,
+    subItems: [
+      {
+        title: <Translate id="text_booking" />,
+        icon: "icon-time",
+        route: "/bookings/list",
+        component: Booking,
         isFashNav: true
       }
     ]
