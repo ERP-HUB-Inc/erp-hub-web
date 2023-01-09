@@ -7,7 +7,7 @@ import { Button } from "../../../../common/elements/ant-ui";
 import Enum from "../../../enums/index";
 import Util from "../../../../common/util";
 
-export default function CAInvoice(props) {
+const CAInvoice = React.forwardRef((props, ref) => {
   const util = new Util();
 
   const {formData} = props;
@@ -16,7 +16,7 @@ export default function CAInvoice(props) {
   }
 
   return Object.keys(formData).length ? 
-    <div id="invoice-content">
+    <div id="invoice-content" ref={ref}>
       {formData.template === Enum.PAPER_SIZE.INCLUDE_TAX ?
         <TaxInvoice 
           formData={formData} 
@@ -43,4 +43,6 @@ export default function CAInvoice(props) {
       subTitle="Invoice not found"
       extra={<Button type="info"><Translate id="text_back" /></Button>}
     />;
-}
+});
+
+export default CAInvoice;

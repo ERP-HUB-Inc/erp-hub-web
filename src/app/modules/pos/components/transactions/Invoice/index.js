@@ -32,6 +32,7 @@ import Detail from "../../../containers/transactions/SaleHistory/Detail";
 import ReceiptTemplate from "../receipt/template";
 import PrivilegeService from "../../../services/settings/PrivilegeService";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
+import CAInvoice from "./CAInvoice";
 
 export default class Invoice extends Component {
   constructor(props) {
@@ -138,7 +139,19 @@ export default class Invoice extends Component {
                 </Menu.Item>
               }
               <Menu.Item>
-                <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" />
+                <div>
+                  <ReactToPrint
+                    content={() => this.invoiceRef}
+                    onBeforeGetContent={() => this.getDetailInvoice(record.id)}
+                    trigger={() => {
+                      return (
+                        <div>
+                          <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" />
+                        </div>
+                      );
+                    }}
+                  />
+                </div>
               </Menu.Item>
               {
                 record.status === Enum.INVOICE_STATUS.PAID && 
@@ -433,6 +446,11 @@ export default class Invoice extends Component {
     history.push(`/transactions/update-invoice/${record.id}`);
   }
 
+  async getDetailInvoice(id) {
+    const detail = (await InvoiceService.detail(id)).data;
+    this.setState({detail});
+  }
+
   handleDeleteInvoice(record) {
     this.Util.sweetAlertConfirm(this.CATranslate("text_are_you_sure", this.props.locale))
     .then(willDelete => {
@@ -493,7 +511,7 @@ export default class Invoice extends Component {
         title: this.CATranslate("text_confirm_return_invoice", this.props.locale),
         text: this.CATranslate("text_message_return_invoice", this.props.locale),
         icon: "warning",
-        buttons: [this.CATranslate("text_no", this.props.locale), this.CATranslate("text_yes", this.props.locale)],
+        buttons: [this.CATranslate("text_cancel", this.props.locale), this.CATranslate("text_yes", this.props.locale)],
         dangerMode: true,
       })
       .then(ok => {
@@ -614,10 +632,15 @@ export default class Invoice extends Component {
               <React.Fragment>
                 <div style={{display: "none"}}>
                   <ReceiptTemplate
-                      formData={detail}
-                      receiptTemplate={this.props.receiptTemplate.data}
-                      locale={this.props.locale}
-                      ref={re => this.receiptRef = re} />
+                    formData={detail}
+                    receiptTemplate={this.props.receiptTemplate.data}
+                    locale={this.props.locale}
+                    ref={re => this.receiptRef = re} />
+
+                  <CAInvoice
+                    ref={ref => this.invoiceRef = ref}
+                    formData={detail}
+                  />
                 </div>
                 <Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
                   <Col span={8}>

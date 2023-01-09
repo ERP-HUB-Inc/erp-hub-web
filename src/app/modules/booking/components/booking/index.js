@@ -31,9 +31,9 @@ class BookingList extends Component {
     };
     this.dateFormat = "DD/MM/YYYY h:mm A";
     this.BOOKING_STATUS_STR = {
-      [Enum.BOOKING_STATUS.BOOKED]: {title: <this.Translate id="text_booked" />, color: "#bfbfbf" },
-      [Enum.BOOKING_STATUS.SERVING]: {title: <this.Translate id="text_serving" />, color: "#ffa940" },
-      [Enum.BOOKING_STATUS.SERVED]: {title: <this.Translate id="text_served" />, color: "#52c41a" }
+      [Enum.BOOKING_STATUS.BOOKED]: {title: <this.Translate id="text_booked" />, color: "#bfbfbf"},
+      [Enum.BOOKING_STATUS.SERVING]: {title: <this.Translate id="text_serving" />, color: "#1890ff"},
+      [Enum.BOOKING_STATUS.SERVED]: {title: <this.Translate id="text_served" />, color: "#52c41a"}
     };
     this.columns = [
       {
@@ -321,7 +321,7 @@ class BookingList extends Component {
                     <Statistic
                       title={<this.Translate id="text_serving"/>}
                       value={summary && summary.serving}
-                      valueStyle={{color: "#ffa940"}}
+                      valueStyle={{color: "#1890ff"}}
                     />
                   </Card>
                 </Col>
