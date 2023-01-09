@@ -19,6 +19,7 @@ import sale from "../../pos/languages/transactions/sale";
 
 import error from "../elements/common/language/error";
 import manageCustomer from "../../crm/languages/customers/customer";
+import booking from "../../booking/languages/booking";
 import groupCustomer from "../../crm/languages/customers/group";
 import employees from "../../hr/languages/employee";
 import product from "../../inventory/languages/products/product";
@@ -81,6 +82,7 @@ export function setTranslation() {
     ...installment,
     ...manageCustomer,
     ...groupCustomer,
+    ...booking,
     ...employees,
     ...product,
     ...priceTag,

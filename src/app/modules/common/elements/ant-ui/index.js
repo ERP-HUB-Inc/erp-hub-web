@@ -32,6 +32,7 @@ export * from "./Loading";
 export * from "./TagButton";
 export * from "./WeekPicker";
 export * from "./MonthPicker";
+export * from "./TimePicker";
 export * from "./Doughnut";
 export * from "./Line";
 export * from "./C3Chart";
