@@ -144,7 +144,7 @@ class SaleOrderDetail extends React.PureComponent{
 
   render() {
     const {formData} = this.state;
-    console.log("invoice", this.state.invoiceDetail);
+
     return (
       <div style={{marginBottom: 25}}>
         <PageHeader
@@ -169,23 +169,31 @@ class SaleOrderDetail extends React.PureComponent{
           extra={[
             <Dropdown key={1} overlay={(
               <Menu>
-                <Menu.Item key={0} onClick={() => window.print()} title="Ctrl + P"><Translate id="text_print" /></Menu.Item>
-                <Menu.Item key={1} onClick={() => this.handleMakeAsConfirm(formData.id)}><Translate id="text_mark_as_confirm" /></Menu.Item>
+                <Menu.Item key={0} onClick={() => window.print()} title="Ctrl + P">
+                  <Icon type="printer" style={{marginRight: 10}} /> <Translate id="text_print" />
+                </Menu.Item>
+                <Menu.Item key={1} onClick={() => this.handleMakeAsConfirm(formData.id)} disabled={formData.status === Enum.SALE_ORDER_STATUS.CLOSED ? true : false}>
+                  <Icon type="check" style={{marginRight: 10}} /> <Translate id="text_mark_as_confirm" />
+                </Menu.Item>
                 <Menu.Item key={2}>
                   <Link target="_blank" to={`/transactions/create-invoice?saleOrderId=${formData.id}&action=convertToInvoice`}>
-                    <Translate id="text_convert_to_invoice" />
+                    <Icon type="retweet" style={{marginRight: 10}} /> <Translate id="text_convert_to_invoice" />
                   </Link>
                 </Menu.Item>
                 <Menu.Item key={3} onClick={() => history.push({pathname: `/transactions/sale-order/update/${formData.id}`})}>
-                  <Translate id="text_edit_sale_order" />
+                  <Icon type="edit" style={{marginRight: 10}} /> <Translate id="text_edit_sale_order" />
                 </Menu.Item>
                 <Menu.Item key={4}>
                   <Link target="_blank" to={`/transactions/sale-order/create?id=${formData.id}&action=clone`} >
-                    <Translate id="text_clone" />
+                    <Icon type="copy" style={{marginRight: 10}} /> <Translate id="text_clone" />
                   </Link>
                 </Menu.Item>
-                <Menu.Item key={5} onClick={() => this.handleVoid(formData.id)}><Translate id="text_void" /></Menu.Item>
-                <Menu.Item key={6} onClick={() => this.handleDelete(formData.id)}><Translate id="text_delete" /></Menu.Item>
+                <Menu.Item key={5} onClick={() => this.handleVoid(formData.id)}>
+                  <Icon type="close" style={{marginRight: 10}} /> <Translate id="text_void" />
+                </Menu.Item>
+                <Menu.Item key={6} onClick={() => this.handleDelete(formData.id)}>
+                  <Icon type="delete" style={{marginRight: 10}} /> <Translate id="text_delete" />
+                </Menu.Item>
               </Menu>
             )}>
               <button className="ant-btn ant-dropdown-link" onClick={e => e.preventDefault()}>

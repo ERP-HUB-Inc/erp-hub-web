@@ -172,24 +172,28 @@ class DetailInstallment extends React.Component {
           extra={[
             <Dropdown key={1} overlay={(
               <Menu>
-                <Menu.Item onClick={() => window.print()} title="Ctrl + P"><Translate id="text_print" /></Menu.Item>
+                <Menu.Item onClick={() => window.print()} title="Ctrl + P"><Icon type="printer" style={{marginRight: 14}} /><Translate id="text_print" /></Menu.Item>
                 {/* <Menu.Item onClick={this.handlePrintA5}><Translate id="text_print" /> A5</Menu.Item> */}
                 {
                   this.state.isCanEdit ?
                     <Menu.Item>
-                      <Link to={`/installment/update/${detail.id && detail.id}`}><Translate id="text_edit" /></Link>
+                      <Link to={`/installment/update/${detail.id && detail.id}`}><Icon type="edit" style={{marginRight: 8}} /> <Translate id="text_edit" /></Link>
                     </Menu.Item>
                   : null
                 }
                 
                 {
                   this.state.isCanPay && detail.status !== EnumINS.INSTALLMENT_STATUS.DRAFT ?
-                    <Menu.Item className="ant-dropdown-menu-item" onClick={this.handlePay}><Translate id="text_pay" /></Menu.Item>
+                    <Menu.Item className="ant-dropdown-menu-item" onClick={this.handlePay}>
+                      <Icon type="dollar" style={{marginRight: 10}} /> <Translate id="text_pay" />
+                    </Menu.Item>
                   : null
                 }
                 {
                   this.state.isCanPay ?
-                    <Menu.Item className="ant-dropdown-menu-item" onClick={this.handleShowPaymentHistory}><Translate id="text_view_payment_history" /></Menu.Item>
+                    <Menu.Item className="ant-dropdown-menu-item" onClick={this.handleShowPaymentHistory}>
+                      <Icon type="clock-circle" style={{marginRight: 10}} /> <Translate id="text_view_payment_history" />
+                    </Menu.Item>
                   : null
                 }
               </Menu>
