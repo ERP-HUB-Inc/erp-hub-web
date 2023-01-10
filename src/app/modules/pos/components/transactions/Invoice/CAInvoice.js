@@ -5,17 +5,11 @@ import NoneTaxInvoice from "./template/NoneTaxInvoice";
 import TaxInvoice from "./template/TaxInvoice";
 import { Button } from "../../../../common/elements/ant-ui";
 import Enum from "../../../enums/index";
-import Util from "../../../../common/util";
 
 const CAInvoice = React.forwardRef((props, ref) => {
-  const util = new Util();
 
   const {formData} = props;
-  if (!formData.clientId) {
-    formData.clientId = util.getClientId();
-  }
-
-  return Object.keys(formData).length ? 
+  return formData && Object.keys(formData).length ? 
     <div id="invoice-content" ref={ref}>
       {formData.template === Enum.PAPER_SIZE.INCLUDE_TAX ?
         <TaxInvoice 
@@ -41,8 +35,12 @@ const CAInvoice = React.forwardRef((props, ref) => {
       status={404}
       title="404"
       subTitle="Invoice not found"
-      extra={<Button type="info"><Translate id="text_back" /></Button>}
+      extra={props.notFoundContent}
     />;
 });
 
 export default CAInvoice;
+
+CAInvoice.defaultProps = {
+  notFoundContent: <Button type="info"><Translate id="text_back" /></Button>
+};

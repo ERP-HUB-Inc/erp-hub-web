@@ -192,10 +192,10 @@ class Detail extends React.PureComponent {
             </Dropdown>
           ]}
         />
-
+        <div className="detail-invoice-description">
           <h5 style={{marginBottom: 30, lineHeight: 1.4}}><Translate id="text_quotation_no" />: {formData.number}</h5>
           <Row>
-          <Col span={8}>
+            <Col span={8}>
               <DescriptionItem title={<Translate id="text_compnay" />} content={<Link to={`/customer-profile/${formData.customerId}`}>{formData.company}</Link>} />
             </Col>
             <Col span={8}>
@@ -224,36 +224,37 @@ class Detail extends React.PureComponent {
               />
             </Col>
           </Row>
-          <Row>
-            <Col span={24}>
-            <Tabs onChange={this.onTabChangge} type="card">
-              <TabPane tab={<Translate id="text_details" />} key="detail" style={{paddingTop: 25, paddingBottom: 25}}>
-                <div className="invoice-page">
-                  <CAInvoice 
-                    invoiceTitle="Quotation"
-                    invoiceTaxTitleKH="សម្រង់តម្លៃអាករ"
-                    invoiceNoTitle="Quote No"
-                    invoiceNoTitleKH="លេខសម្រង់តម្លៃ"
-                    numberTitle="Quote Number"
-                    invoiceDateTitle="Quote Date"
-                    dueDateTitle="Valid till Date"
-                    formData={formData} 
-                  />
+        </div>
+        <Row>
+          <Col span={24}>
+          <Tabs onChange={this.onTabChangge} type="card" className="invoice-detail-tab">
+            <TabPane tab={<Translate id="text_details" />} key="detail" style={{paddingTop: 25, paddingBottom: 25}}>
+              <div className="invoice-page">
+                <CAInvoice
+                  invoiceTitle="Quotation"
+                  invoiceTaxTitleKH="សម្រង់តម្លៃអាករ"
+                  invoiceNoTitle="Quote No"
+                  invoiceNoTitleKH="លេខសម្រង់តម្លៃ"
+                  numberTitle="Quote Number"
+                  invoiceDateTitle="Quote Date"
+                  dueDateTitle="Valid till Date"
+                  formData={formData}
+                />
+              </div>
+            </TabPane>
+            <TabPane tab={<Translate id="text_invoice" />} key="invoice">
+              {
+                this.state.invoiceLoading ?
+                <Spin style={{display: "flex", justifyContent: "center"}} />
+                :
+                <div className="invoice-page" style={{paddingTop: 25, paddingBottom: 25}}>
+                  <CAInvoice formData={this.state.invoice} />
                 </div>
-              </TabPane>
-              <TabPane tab={<Translate id="text_invoice" />} key="invoice">
-                {
-                  this.state.invoiceLoading ?
-                  <Spin style={{display: "flex", justifyContent: "center"}} />
-                  :
-                  <div className="invoice-page" style={{paddingTop: 25, paddingBottom: 25}}>
-                    <CAInvoice formData={this.state.invoice} />
-                  </div>
-                }
-              </TabPane>
-            </Tabs>
-            </Col>
-          </Row>
+              }
+            </TabPane>
+          </Tabs>
+          </Col>
+        </Row>
       </div>
     );
   }

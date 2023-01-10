@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import { Translate } from "react-localize-redux";
 import { connect } from "react-redux";
 import { 
@@ -10,7 +11,10 @@ import {
   Icon,
   message,
   Form,
-  Badge
+  Badge,
+  Row,
+  Col,
+  Tabs
 } from "antd";
 import { Link } from "react-router-dom";
 import { Button } from "../../../../common/elements/ant-ui";
@@ -20,11 +24,46 @@ import Util from "../../../../common/util";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import SaleOrderService from "../../../services/transactions/SaleOrderService";
 import SaleOrderInvoice from "./Invoice";
+import CAInvoice from "../Invoice/CAInvoice";
+import PackingSlipTem from "./Invoice/PackingSlip";
+import DeliveryNote from "./Invoice/DeliveryNote";
+
+const DescriptionItem = ({ title, content }) => (
+  <div
+    style={{
+      fontSize: 14,
+      lineHeight: "22px",
+      marginBottom: 7,
+      color: "rgba(0,0,0,0.65)",
+    }}
+  >
+    <p
+      style={{
+        marginRight: 8,
+        display: "inline-block",
+        color: "rgba(0,0,0,0.85)",
+      }}
+    >
+      {title}:
+    </p>
+    {content}
+  </div>
+);
+
+const tabs = {
+  SALE_ORDER: 1,
+  INVOICE: 2,
+  PACKING_SLIP: 3,
+  DELIVERY_NOTE: 4
+};
 
 class SaleOrderDetail extends React.PureComponent{
   state = {
     loading: false,
-    formData: {}
+    formData: {},
+    invoiceDetail: {},
+    activeKey: 1,
+    loadingTab: false
   }
   SALE_ORDER_STATUS_STR = {
     [Enum.SALE_ORDER_STATUS.DRAFT]: { title: stringTranslate("text_draft", this.props.locale), color: "#bfbfbf" },
@@ -80,8 +119,32 @@ class SaleOrderDetail extends React.PureComponent{
     });
   }
 
+  getInvoiceData = () => {
+    const {invoiceDetail} = this.state;
+    if (!Object.keys(invoiceDetail).length) {
+      SaleOrderService.getInvoiceBySaleOrderId(this.state.formData.id)
+      .then(response => {
+        this.setState({invoiceDetail: response.data});
+      });
+    }
+  } 
+
+  onChangeTab = (key) => {
+    key = parseInt(key);
+    const id = this.props.match.params.id;
+    if (key === tabs.INVOICE) {
+      this.setState({loadingTab: true});
+      SaleOrderService.getInvoiceBySaleOrderId(id)
+      .then(response => {
+        this.setState({invoiceDetail: response.data});
+      })
+      .finally(() => this.setState({loadingTab: false}));
+    }
+  }
+
   render() {
     const {formData} = this.state;
+    console.log("invoice", this.state.invoiceDetail);
     return (
       <div style={{marginBottom: 25}}>
         <PageHeader
@@ -139,7 +202,77 @@ class SaleOrderDetail extends React.PureComponent{
             </div>
           : 
           Object.keys(this.state.formData).length ?
-            <SaleOrderInvoice formData={formData} />
+            <React.Fragment>
+              <div className="detail-invoice-description">
+                <h5 style={{marginBottom: 30, lineHeight: 1.4}}><Translate id="text_sale_order_no" />: {formData.number}</h5>
+                <Row>
+                  <Col span={8}>
+                    <DescriptionItem title={<Translate id="text_compnay" />} content={<Link to={`/customer-profile/${formData.customerId}`}>{formData.company}</Link>} />
+                  </Col>
+                  <Col span={8}>
+                    <DescriptionItem title={<Translate id="text_customer_name" />} content={<Link to={`/customer-profile/${formData.customerId}`}>{formData.firstName} {formData.lastName}</Link>} />
+                  </Col>
+                  <Col span={8}>
+                    <DescriptionItem title={<Translate id="text_phone_number" />} content={formData.phoneNumber} />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8}>
+                    <DescriptionItem title="លេខអត្តសញ្ញាណកម្ម អតប (VATTIN)" content={formData.VATNo} />
+                  </Col>
+                  <Col span={8}>
+                    <DescriptionItem title={<Translate id="text_date" />} content={moment().format("dddd MM, YYYY")} />
+                  </Col>
+                  <Col span={8}>
+                    <DescriptionItem title={<Translate id="text_valid_till" />} content={moment(formData.validDate).format("dddd MM, YYYY")} />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24}>
+                    <DescriptionItem
+                      title={<Translate id="text_address" />}
+                      content={formData.address}
+                    />
+                  </Col>
+                </Row>
+              </div>
+              <Row>
+                <Col span={24}>
+                  <Tabs onChange={this.onChangeTab} type="card" className="invoice-detail-tab">
+                    <Tabs.TabPane tab={<Translate id="text_sale_order" />} key="1">
+                      <SaleOrderInvoice formData={formData} />
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab={<Translate id="text_invoice" />} key="2">
+                      <div className="invoice-page">
+                        {this.state.loadingTab ? 
+                          <LoadingComponent /> 
+                          : 
+                          <CAInvoice 
+                            formData={this.state.invoiceDetail} 
+                            ref={ref => this.invoiceRef = ref}
+                            notFoundContent={<Translate id="text_sale_order_is_closed" />}
+                          />
+                        }
+                      </div>
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab={<Translate id="text_packing_slip" />} key="3">
+                      <div style={{display: "flex", justifyContent: "center"}}>
+                        <div style={{padding: 20, width: "fit-content", background: "white"}}>
+                          <PackingSlipTem formData={formData} ref={ref => (this.packingSlipRef = ref)} />
+                        </div>
+                      </div>
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab={<Translate id="text_delivery_note" />} key="4">
+                      <div style={{display: "flex", justifyContent: "center"}}>
+                        <div style={{padding: 20, width: "fit-content", background: "white"}}>
+                          <DeliveryNote formData={formData} ref={ref => (this.deliveryNoteRef = ref)} />
+                        </div>
+                      </div>
+                    </Tabs.TabPane>
+                  </Tabs>
+                </Col>
+              </Row>
+            </React.Fragment>
           :
             <Result  
               status={404}
@@ -166,5 +299,11 @@ function mapPropsToFields(props) {
 }
 
 const saleOrderDetail =  Form.create(mapPropsToFields)(SaleOrderDetail);
+
+function LoadingComponent() {
+  return <div style={{textAlign: "center", padding: "30px 0"}}>
+    <Spin />
+  </div>;
+}
   
 export default connect(mapStateToProps)(saleOrderDetail);
