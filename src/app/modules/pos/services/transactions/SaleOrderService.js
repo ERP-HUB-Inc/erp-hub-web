@@ -51,6 +51,14 @@ class SaleOrderService extends BaseService {
     });
   }
 
+  getInvoiceBySaleOrderId(saleOrderId) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/invoices/${saleOrderId}`,
+      headers: this.header
+    });
+  }
+
   detailPublic(id, token) {
     this.header["Authorization"] = `Bearer ${token}`;
     return this.GET({

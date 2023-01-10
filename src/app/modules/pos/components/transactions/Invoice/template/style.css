@@ -147,7 +147,9 @@
   .ant-page-header,
   #invoice-form,
   .ant-dropdown-menu,
-  #header-print-preview
+  #header-print-preview,
+  .detail-invoice-description,
+  .invoice-detail-tab .ant-tabs-bar
   {
     display: none !important;
   }
