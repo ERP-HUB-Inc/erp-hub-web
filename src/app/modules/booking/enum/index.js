@@ -1,6 +1,6 @@
 export default {
   BOOKING_STATUS: {
-    BOOKED: "BOOKEN",
+    BOOKED: "BOOKED",
     SERVING: "SERVING",
     SERVED: "SERVED"
   }
