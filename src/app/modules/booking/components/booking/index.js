@@ -53,7 +53,7 @@ class BookingList extends Component {
             </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
-            {moment(start).format("DD/MM/YYYY hh:mm A")} ~ {moment(record.end).format("DD/MM/YYYY hh:mm A")}
+            {moment(start).format("DD/MM/YYYY")} ~ ({moment(start).format("hh:mm A")} - {moment(record.end).format("hh:mm A")})
             <Dropdown className="product-row-option" overlay={menu}>
               {/* eslint-disable-next-line */}
               <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
