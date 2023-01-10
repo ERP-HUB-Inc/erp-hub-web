@@ -460,9 +460,11 @@ class SaleOrder extends Component {
             onChange={this.onChangePagination} 
             {...pagination}
           />
-          <SalesOrderPrint formData={this.state.formData} ref={el => (this.componentRef = el)} />
-          <PackingSlipTem formData={this.state.formData} ref={el => (this.packingSlipRef = el)} />
-          <DeliveryNote formData={this.state.formData} ref={el => (this.deliveryNoteRef = el)} />
+          <div style={{display: "none"}}>
+            <SalesOrderPrint formData={this.state.formData} ref={el => (this.componentRef = el)} />
+            <PackingSlipTem formData={this.state.formData} ref={el => (this.packingSlipRef = el)} />
+            <DeliveryNote formData={this.state.formData} ref={el => (this.deliveryNoteRef = el)} />
+          </div>
         </div>
         :
         ""

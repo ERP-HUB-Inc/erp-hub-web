@@ -250,7 +250,7 @@ export default {
   ],
 
   "text_print_invoice": [
-    "Print",
+    "Print Invoice",
     "បោះពុម្ភវិក័យប័ត្រ"
   ],
 
@@ -469,5 +469,10 @@ export default {
   "text_quantity_to_remove": [
     "Quantity to remove",
     "ចំនួនដែលត្រូវលុបចេញ"
+  ],
+
+  "text_sale_order_is_closed": [
+    "Make sure your sale order is already",
+    "ត្រូវប្រាកដថាការបញ្ជារទិញនេះបានបិទបញ្ចប់"
   ]
 };
