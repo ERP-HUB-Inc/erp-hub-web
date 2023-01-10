@@ -1,5 +1,6 @@
 import React from "react";
 import moment from "moment";
+import ReactToPrint from "react-to-print";
 import {
   Divider,
   Dropdown,
@@ -31,6 +32,7 @@ import InventoryUtil from "../../../../inventory/utils";
 import InventoryEnum from "../../../../inventory/enums";
 import PrivilegeService from "../../../services/settings/PrivilegeService";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
+import CAInvoice from "../Invoice/CAInvoice";
 
 function Option() {
   return null;
@@ -47,6 +49,7 @@ export default class QuotationList extends Component {
     this.state = {
       summaryData: {},
       data: [],
+      detail: {},
       pagination: {},
       current: 1,
       isNotYetLoadComponentDidUpdated: true,
@@ -121,8 +124,18 @@ export default class QuotationList extends Component {
                   </this.Link>
                 </Menu.Item>
                 <Divider style={{marginTop: 4, marginBottom: 4}} />
-                <Menu.Item onClick={() => alert("Coming Soon")}>
-                  <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" />
+                <Menu.Item>
+                  <ReactToPrint
+                    content={() => this.quotInvoiceRef}
+                    onBeforeGetContent={() => this.getDetailQuotation(record.id)}
+                    trigger={() => {
+                      return (
+                        <div>
+                          <Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" />
+                        </div>
+                      );
+                    }}
+                  />
                 </Menu.Item>
                 <Divider style={{marginTop: 4, marginBottom: 4}} />
                 <Menu.Item onClick={() => this.handleDelete(record.id)} style={{color: "red"}}>
@@ -258,6 +271,16 @@ export default class QuotationList extends Component {
         })
         .catch(err => message.error("Error"))
         .finally(() => this.setState({loading: false, loadingButton: false}));
+  }
+
+  async getDetailQuotation(id) {
+    const detail = (await QuotationService.detail(id)).data.data;
+    detail.transactionEntries = detail.quotationEntries;
+    detail.invoiceDate = detail.quotationDate;
+    detail.dueDate = detail.validDate;
+    detail.invoiceNumber = detail.number;
+    delete detail.quotationEntries;
+    this.setState({detail});
   }
 
   fetchSummary() {
@@ -545,6 +568,20 @@ export default class QuotationList extends Component {
                       <this.clearFloating/>
                     </div>
                   </div>
+                </div>
+
+                <div style={{display: "none"}}>
+                  <CAInvoice 
+                    ref={ref => this.quotInvoiceRef = ref}
+                    invoiceTitle="Quotation"
+                    invoiceTaxTitleKH="សម្រង់តម្លៃអាករ"
+                    invoiceNoTitle="Quote No"
+                    invoiceNoTitleKH="លេខសម្រង់តម្លៃ"
+                    numberTitle="Quote Number"
+                    invoiceDateTitle="Quote Date"
+                    dueDateTitle="Valid till Date"
+                    formData={this.state.detail}
+                  />
                 </div>
               </React.Fragment>
               :
