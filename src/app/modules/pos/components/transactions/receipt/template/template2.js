@@ -106,7 +106,7 @@ export default function ReceiptTemplate2(props) {
           </tr>
           {renderStoreName(paperSize, businessName)}
           <tr>
-            <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white", width: "" }}>{htmlParse(address)} {phoneNumber}</td>
+            <td colSpan={2} style={{ textAlign: "center", backgroundColor: "white", width: "" }}>{address && htmlParse(address)} {phoneNumber}</td>
           </tr>
           <tr>
             <td colSpan="2">
