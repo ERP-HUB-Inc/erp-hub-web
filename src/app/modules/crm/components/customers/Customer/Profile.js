@@ -224,7 +224,7 @@ function OrderHistory(props) {
   return (
     <div>
       <Row gutter={25} style={{padding: "3px 20px"}}>
-        <Col span={8}>
+        <Col span={12}>
           <Card>
             <Statistic
               style={{padding: 15}}
@@ -235,7 +235,7 @@ function OrderHistory(props) {
             />
           </Card>
         </Col>
-        <Col span={8}>
+        <Col span={12}>
           <Card>
             <Statistic
               style={{padding: 15}}
@@ -376,7 +376,7 @@ function LoyaltyProgram(props) {
   return (
     <div>
       <Row gutter={25} style={{padding: "3px 20px"}}>
-        <Col md={8}>
+        <Col md={12}>
           <Card>
             <Statistic
               title={<Translate id="text_redeemed_point" />}
@@ -385,7 +385,7 @@ function LoyaltyProgram(props) {
             />
           </Card>
         </Col>
-        <Col md={8}>
+        <Col md={12}>
           <Card>
             <Statistic
               title={<Translate id="text_available_point" />}
@@ -396,7 +396,7 @@ function LoyaltyProgram(props) {
         </Col>
       </Row>
       <Row style={{padding: "3px 20px 20px 20px"}}>
-        <Col md={16}>
+        <Col md={24}>
           <Table
             rowKey="id"
             style={{paddingRight: 8}}
