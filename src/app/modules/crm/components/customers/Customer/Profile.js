@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import { Translate } from "react-localize-redux";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -15,7 +16,8 @@ import {
   Spin,
   Statistic,
   Table,
-  Tag
+  Tag,
+  Pagination
 } from "antd";
 import CustomerMicroService from "../../../services/customers/CustomerMicroService";
 import RewardHistoryService from "../../../services/customers/RewardHistoryService";
@@ -26,6 +28,7 @@ import history from "../../../../common/router/history";
 import {stringTranslate} from "../../../../common/helper/stringTranslate";
 import EnumInvoice from "../../../../pos/enums";
 import Util from "../../../../common/util";
+import QuotationService from "../../../../pos/services/transactions/QuotationService";
 
 const {TabPane} = Tabs;
 
@@ -40,9 +43,11 @@ class Profile extends React.Component {
     orderLoading: false
   }
   util = new Util();
+  pathname = `/customer-profile/${this.props.match.params.id}`;
   
   componentDidMount() {
     const id = this.props.match.params.id;
+    const params = new URLSearchParams(document.location.search);
     this.getDetailCustomer(id);
     InvoiceService.lists(1000, 0, "", "", JSON.stringify({customerId: id}))
     .then(response => {
@@ -57,6 +62,10 @@ class Profile extends React.Component {
     });
 
     this.getRewardsPointHistory(id);
+
+    if (params.get("active-tab")) {
+      this.setState({activeTab: Number(params.get("active-tab"))});
+    }
   }
 
   getDetailCustomer(id) {
@@ -73,6 +82,18 @@ class Profile extends React.Component {
     .then(response => {
       this.setState({rewardsHistory: response.data});
     });
+  }
+
+  onChangeTab = (key) => {
+    const params = new URLSearchParams(document.location.search);
+    if (Number(key) === 1) {
+      params.delete("active-tab");
+    } else {
+      params.set("active-tab", key);
+    }
+    params.delete("limit");
+    params.delete("offset");
+    this.util.pushParamsToURL(this.pathname, params.toString());
   }
 
   onAfterRedeem(id) {
@@ -154,8 +175,15 @@ class Profile extends React.Component {
           </Col>
           <Col md={18}>
             <Card className="customer-profile-card">
-              <Tabs defaultActiveKey={`${this.state.activeTab}`} type="card">
-                <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_order_history" />} key="1">
+              <Tabs defaultActiveKey={`${this.state.activeTab}`} type="card" onChange={this.onChangeTab}>
+                <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_quotation" />} key="1">
+                  <QuotationList 
+                    customerId={detail.id}
+                    locale={this.props.locale}
+                    pathname={this.pathname}
+                  />
+                </TabPane>
+                <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_order_history" />} key="2">
                   <OrderHistory 
                     ordersHistory={this.state.ordersHistory} 
                     locale={this.props.locale}
@@ -164,14 +192,14 @@ class Profile extends React.Component {
                     form={this.props.form}
                     loading={this.state.orderLoading} />
                 </TabPane>
-                <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_loyalty_rewards" />} key="2">
+                <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_loyalty_rewards" />} key="3">
                   <LoyaltyProgram 
                     detail={detail} 
                     rewards={this.state.rewards} 
                     onSuccess={() => this.onAfterRedeem(detail.id)} 
                     locale={this.props.locale} />
                 </TabPane>
-                <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_reward_point_history" />} key="3">
+                <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_reward_point_history" />} key="4">
                   <RewardPointHistory 
                     locale={this.props.locale} 
                     rewardsHistory={this.state.rewardsHistory} />
@@ -193,6 +221,27 @@ class Profile extends React.Component {
       <div style={{width: 30, margin: "0 auto", paddingTop: 30}}><Spin /></div>
     );
   }
+}
+
+function RenderPagination(props) {
+  const {pagination, locale} = props;
+  return (
+    pagination.total ?
+      <div className="float-right" style={{marginRight: 12}}>
+        <Pagination 
+          total={pagination.total}
+          showTotal={(total) => `${stringTranslate("text_total", locale)} ${total} ${stringTranslate("text_records", locale)}`}
+          pageSize={pagination.limit}
+          current={props.offset}
+          size="small"
+          showSizeChanger
+          pageSizeOptions={["10", "20", "40", "50"]}
+          onShowSizeChange={props.onShowSizeChange}
+          onChange={props.onChange}
+        />
+      </div>
+    : <div />
+  );
 }
 
 function OrderHistory(props) {
@@ -481,6 +530,146 @@ function RewardPointHistory(props) {
           />
         </Col>
       </Row>
+    </div>
+  );
+}
+
+function QuotationList(props) {
+  const [data, setData] = React.useState([]);
+  const [pagination, setPagination] = React.useState({});
+  const [loading, setLoading] = React.useState(false);
+  const [current, setCurrent] = React.useState(1);
+  let limit = 50;
+
+  function fetchQuotation() {
+    let offset = current;
+    const params = new URLSearchParams(document.location.search);
+    if (params.get("limit")) {
+      limit = Number(params.get("limit"));
+    }
+
+    if (params.get("offset")) {
+      offset = Number(params.get("offset"));
+    }
+
+    offset = (offset - 1) * limit;
+    setLoading(true);
+    QuotationService.lists(limit, offset, "", "", JSON.stringify({customerId: props.customerId}))
+    .then(response => {
+      setData(response.data.data);
+      setPagination(response.data.pagination);
+    })
+    .finally(() => setLoading(false));
+  }
+
+  const onChangePagination = (currentPage, pageSize) => {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", currentPage);
+    setCurrent(currentPage);
+    Util.prototype.pushParamsToURL(props.pathname, params.toString());
+    fetchQuotation(true);
+  };
+
+  React.useEffect(() => {
+    const params = new URLSearchParams(document.location.search);
+    
+    if (params.get("offset")) {
+      setCurrent(Number(params.get("offset")));
+    }
+
+    fetchQuotation();
+    // eslint-disable-next-line
+  }, []);
+
+  const STATUS_STR = {
+    [EnumInvoice.QUOTATION_STATUS.DRAFT]: {name: <Translate id="text_draft" />, color: "#d9d9d9"},
+    [EnumInvoice.QUOTATION_STATUS.SENT]: {name: <Translate id="text_sent" />, color: "#108ee9"},
+    [EnumInvoice.QUOTATION_STATUS.APPROVED]: {name: <Translate id="text_approved" />, color: "#87d068"},
+    [EnumInvoice.QUOTATION_STATUS.CLOSED]: {name: <Translate id="text_closed" />, color: "#52c41a"}
+  };
+
+  return (
+    <div>
+      <Row gutter={25} style={{padding: "0 20px 20px 20px"}}>
+        <Col md={24}>
+          <Table
+            rowKey={((row, index) => index)}
+            columns={[
+              {
+                title: <Translate id="text_date" />,
+                dataIndex: "quotationDate",
+                key: "quotationDate",
+                render: (quotationDate) => Util.prototype.formatDate(quotationDate)
+              },
+              {
+                title: <Translate id="text_status" />,
+                dataIndex: "status",
+                key: "status",
+                render: (status, record) => {
+                  const quotation_status = {
+                    name: STATUS_STR[Number(status)].name,
+                    color: STATUS_STR[Number(status)].color
+                  };
+        
+                  if (status === EnumInvoice.QUOTATION_STATUS.SENT && record.validDate && moment(moment(record.validDate).format("YYYY-MM-DD")).isBefore(moment(moment().format("YYYY-MM-DD")))) {
+                    quotation_status.name = <this.Translate id="text_expired" />;
+                    quotation_status.color = "#f5222d";
+                  }
+                  return status in STATUS_STR ? <Tag color={quotation_status.color} style={{width: 100, textAlign: "center", margin: 0}}>{quotation_status.name}</Tag> : "N/A";
+                }
+              },
+              {
+                title: <Translate id="text_quotation_no" />,
+                dataIndex: "number",
+                key: "number",
+                className: "invoice-number-column",
+                render: (number, record) => <Link to={`/transactions/quotation-detail/${record.id}`}>{number}</Link>
+              },
+              {
+                title: <Translate id="text_sub_total" />,
+                dataIndex: "totalExcludeTax",
+                key: "subTotal",
+                align: "right",
+                render: (totalExcludeTax) => Util.prototype.formatCurrency(totalExcludeTax)
+              },
+              {
+                title: <Translate id="text_discount" />,
+                dataIndex: "discount",
+                key: "discount",
+                align: "right",
+                render: (discount) => Util.prototype.formatCurrency(discount)
+              },
+              {
+                title: <Translate id="text_vat" />,
+                dataIndex: "totalExcludeTax",
+                key: "totalExcludeTax",
+                align: "right",
+                render: (totalExcludeTax, record) => Util.prototype.formatCurrency(record.total - totalExcludeTax)
+              },
+              {
+                title: <Translate id="text_total" />,
+                dataIndex: "total",
+                key: "total",
+                align: "right",
+                render: (total, record) => Util.prototype.formatCurrency(total - Util.prototype.floor(record.discount))
+              }
+            ]}
+            loading={loading}
+            dataSource={data}
+            pagination={false}
+            style={{marginTop: -11}}
+          />
+        </Col>
+      </Row>
+
+      <RenderPagination 
+        pagination={pagination}
+        locale={props.locale}
+        offset={current}
+        onShowSizeChange={onChangePagination}
+        onChange={onChangePagination}
+      />
     </div>
   );
 }
