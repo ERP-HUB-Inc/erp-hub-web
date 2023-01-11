@@ -179,20 +179,26 @@ class InvoiceDetail extends React.PureComponent {
             />,
             <Dropdown key={1} overlay={(
               <Menu>
-                <Menu.Item key={0} onClick={() => window.print()} title="Ctrl + P"><Translate id="text_print" /></Menu.Item>
-                <Menu.Item key={1} onClick={this.handlePrintA5}><Translate id="text_print" /> A5</Menu.Item>
-                <Menu.Item key={2} onClick={this.handleMakeAsSent}><Translate id="text_mark_as_sent" /></Menu.Item>
+                <Menu.Item key={0} onClick={() => window.print()} title="Ctrl + P">
+                  <Icon type="printer" style={{marginRight: 10}} /> <Translate id="text_print" />
+                </Menu.Item>
+                <Menu.Item key={1} onClick={this.handlePrintA5}>
+                  <Icon type="printer" style={{marginRight: 10}} /> <Translate id="text_print" /> A5
+                </Menu.Item>
+                <Menu.Item key={2} onClick={this.handleMakeAsSent}>
+                  <Icon type="check" style={{marginRight: 10}} /> <Translate id="text_mark_as_sent" />
+                </Menu.Item>
                 <Menu.Item key={3} onClick={() => history.push({pathname: `/transactions/update-invoice/${formData.id}`})}>
-                  <Translate id="text_edit_invoice" />
+                  <Icon type="edit" style={{marginRight: 10}} /> <Translate id="text_edit_invoice" />
                 </Menu.Item>
                 <Menu.Item key={4} onClick={() => this.setState({showDrawer: true})}>
-                  <Translate id="text_receive_payment" />
+                  <Icon type="dollar" style={{marginRight: 10}} /> <Translate id="text_receive_payment" />
                 </Menu.Item>
                 {formData.status === Enum.INVOICE_STATUS.PAID ?
                   <Menu.Item key={5}>
                     <ReactToPrint
                       onBeforeGetContent={() => this.getReceiptData(formData.id)}
-                      trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}><Translate id="text_print_receipt" /></button>}
+                      trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}><Icon type="printer" style={{marginRight: 10}} /><Translate id="text_print_receipt" /></button>}
                       content={() => this.receiptRef}
                     />
                   </Menu.Item>

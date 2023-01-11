@@ -472,7 +472,7 @@ export default {
   ],
 
   "text_sale_order_is_closed": [
-    "Make sure your sale order is already",
+    "Make sure your sale order is closed",
     "ត្រូវប្រាកដថាការបញ្ជារទិញនេះបានបិទបញ្ចប់"
   ]
 };
