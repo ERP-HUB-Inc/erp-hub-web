@@ -65,7 +65,7 @@ export default class StockAdjustmentRequestLists extends Component {
     this.pageSize = 50;
     this.fetchingProp = "list";
     this.pathname = "/stock/adjustment/request";
-    this.pathCreate= "/stock/adjustment/create";
+    this.pathCreate= "/stocks/adjustment/create";
     this.pathUpdate= "/stocks/adjustment/update";
     this.permissionModuleCode = "stock_adjustment";
     this.status_options = [{name: <this.Translate id="text_all_step"/>, value: -1}];
@@ -341,7 +341,7 @@ export default class StockAdjustmentRequestLists extends Component {
                               type="info"
                               id="btnAdd"
                               className="mg-right text-uppercase"
-                              onClick={() => history.push({pathname: this.pathCreate})}>
+                              onClick={() => history.push(this.pathCreate)}>
                             <span className="icon-add icon-padding-right"></span>
                             <this.Translate id="text_add_new"/>
                           </this.Button>
