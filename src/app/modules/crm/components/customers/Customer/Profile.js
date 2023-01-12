@@ -298,12 +298,12 @@ function OrderHistory(props) {
   };
 
   React.useEffect(() => {
-    CustomerMicroService.getTotalSpent(props.id)
+    CustomerMicroService.getTotalSpent(props.customerId)
     .then(response => {
       setTotalSpent(response.data && response.data.data.total);
     });
 
-    CustomerMicroService.getTotalCredit(props.id)
+    CustomerMicroService.getTotalCredit(props.customerId)
     .then(response => {
       setTotalCredit(response.data && response.data.data.total);
     });
