@@ -81,7 +81,7 @@
 #sum-menu ul li a {
     color: #9A9A9A;
     display: block;
-    padding: 7px 10px
+    padding: 10px 10px
 }
 
 #sum-menu div.title,
@@ -90,7 +90,7 @@
 }
 
 #sum-menu ul li {
-    font-size: 10pt
+    font-size: 14.5px
 }
 
 #sum-menu ul li:hover {
@@ -116,8 +116,9 @@
 }
 
 #sum-menu ul li a .item-text {
+    text-transform: capitalize;
     position: relative;
-    left: 5px;
+    left: 10px;
     top: -2px;
 }
 

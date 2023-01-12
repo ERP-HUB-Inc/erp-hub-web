@@ -431,6 +431,16 @@ export default {
     "កែប្រែការបញ្ជារទិញ"
   ],
 
+  "text_clone_to_recurring": [
+    "Clone to Recurring",
+    "Clone to Recurring"
+  ],
+
+  "text_clone_to_invoice": [
+    "Clone to Invoice",
+    "Clone to Invoice"
+  ],
+
   "text_sale_order_date": [
     "Sales order Date",
     "កាលបរិច្ឆេទនៃការបញ្ជាទិញ"

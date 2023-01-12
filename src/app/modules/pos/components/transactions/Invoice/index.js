@@ -102,25 +102,29 @@ export default class Invoice extends Component {
         render: (invoiceNumber, record) => {
           const menu = (
             <Menu>
-              <Menu.Item key={2}>
+              <Menu.Item key={1}>
                 <this.Link to={`/transactions/detail-invoice/${record.id}`}>
                   <Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
                 </this.Link>
               </Menu.Item>
-              <Menu.Item key={1}>
+              <Menu.Item key={2}>
                 <this.Link to={`/transactions/update-invoice/${record.id}`}>
                   <Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
                 </this.Link>
               </Menu.Item>
-              <Menu.Item key={4}>
+              <Divider style={{marginTop: 4, marginBottom: 4}} />
+              <Menu.Item key={3}>
                 <this.Link target="_blank" to={`/transactions/create-invoice?id=${record.id}&action=clone`} >
-                  <Icon type="copy" style={{marginRight: 10}} /> <this.Translate id="text_clone" />
+                  <Icon type="copy" style={{marginRight: 10}} /> <this.Translate id="text_clone_to_invoice" />
                 </this.Link>
+              </Menu.Item>
+              <Menu.Item key={4} onClick={() => alert("Coming Soon")}>
+                <Icon type="copy" style={{marginRight: 10}} /> <this.Translate id="text_clone_to_recurring" />
               </Menu.Item>
               <Divider style={{marginTop: 4, marginBottom: 4}} />
               {
                 record.status === Enum.INVOICE_STATUS.PAID && 
-                <Menu.Item key={3}>
+                <Menu.Item key={5}>
                   <ReactToPrint
                     content={() => this.receiptRef}
                     onBeforeGetContent={() => this.handlePrintReceipt(record.id)}
@@ -138,7 +142,7 @@ export default class Invoice extends Component {
                   </ReactToPrint>
                 </Menu.Item>
               }
-              <Menu.Item>
+              <Menu.Item key={6}>
                 <div>
                   <ReactToPrint
                     content={() => this.invoiceRef}
@@ -159,13 +163,13 @@ export default class Invoice extends Component {
               }
               {
                 record.status === Enum.INVOICE_STATUS.PAID && 
-                <Menu.Item onClick={() => this.handleReturn(record)} key={5}>
+                <Menu.Item onClick={() => this.handleReturn(record)} key={7}>
                   <Icon type="close" style={{marginRight: 10}} /> <this.Translate id="text_void" />
                 </Menu.Item>
               }
               {
                 record.status !== Enum.INVOICE_STATUS.PAID && 
-                <Menu.Item key={6} onClick={() => this.handleDeleteInvoice(record)} style={{color: "red"}}>
+                <Menu.Item key={8} onClick={() => this.handleDeleteInvoice(record)} style={{color: "red"}}>
                   <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
                 </Menu.Item>
               }
@@ -690,7 +694,7 @@ export default class Invoice extends Component {
                               placeholder={this.CATranslate("text_search", this.props.locale)}
                               prefix={<Icon type="search" />}
                               defaultValue={params.get("search") ? params.get("search") : ""}
-                              style={{width: 200, marginRight: 10}}
+                              style={{width: 300, marginRight: 10}}
                               allowClear={true}
                               onChange={this.handleSearch}
                           />

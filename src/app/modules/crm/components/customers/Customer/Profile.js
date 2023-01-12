@@ -109,7 +109,7 @@ class Profile extends React.Component {
             paddingLeft: 0,
             paddingRight: 0,
           }}
-          onBack={() => history.goBack()}
+          onBack={() => history.push("/customer")}
           title={<Translate id="text_customer_profile" />}
         />
 
@@ -155,7 +155,7 @@ class Profile extends React.Component {
             </Card>
           </Col>
           <Col md={18}>
-            <Card className="customer-profile-card">
+            <Card className="customer-profile-card" style={{borderTop: 0}}>
               <Tabs defaultActiveKey={`${this.state.activeTab}`} type="card" onChange={this.onChangeTab}>
                 <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_quotation" />} key="1">
                   <QuotationList 
