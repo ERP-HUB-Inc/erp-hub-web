@@ -17,6 +17,7 @@ import {
   Pagination
 } from "antd";
 import ReactToPrint, { PrintContextConsumer } from "react-to-print";
+import CAInvoice from "./CAInvoice";
 import Enum from "../../../enums";
 import POSUtil from "../../../utils";
 import TransactionService from "../../../services/transactions/TransactionService";
@@ -32,7 +33,6 @@ import Detail from "../../../containers/transactions/SaleHistory/Detail";
 import ReceiptTemplate from "../receipt/template";
 import PrivilegeService from "../../../services/settings/PrivilegeService";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
-import CAInvoice from "./CAInvoice";
 
 export default class Invoice extends Component {
   constructor(props) {

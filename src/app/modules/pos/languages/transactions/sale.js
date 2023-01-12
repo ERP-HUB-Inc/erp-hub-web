@@ -398,7 +398,7 @@ export default {
 
   "text_mark_as_sent": [
     "Mark as Sent",
-    "សម្គាល់​ថា​បាន​បញ្ជាក់"
+    "សម្គាល់​ថា​បាន​ផ្ញើរ"
   ],
 
   "text_new_invoice": [
