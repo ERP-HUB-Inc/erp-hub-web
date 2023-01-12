@@ -23,12 +23,13 @@ import CustomerMicroService from "../../../services/customers/CustomerMicroServi
 import RewardHistoryService from "../../../services/customers/RewardHistoryService";
 import InvoiceService from "../../../../pos/services/transactions/InvoiceService";
 import LoyaltyProgramService from "../../../../inventory/services/products/LoyaltyProgramService";
+import QuotationService from "../../../../pos/services/transactions/QuotationService";
+import SaleOrderService from "../../../../pos/services/transactions/SaleOrderService";
 import { Button, DateRangePicker } from "../../../../common/elements/ant-ui";
 import history from "../../../../common/router/history";
 import {stringTranslate} from "../../../../common/helper/stringTranslate";
 import EnumInvoice from "../../../../pos/enums";
 import Util from "../../../../common/util";
-import QuotationService from "../../../../pos/services/transactions/QuotationService";
 
 const {TabPane} = Tabs;
 
@@ -49,10 +50,6 @@ class Profile extends React.Component {
     const id = this.props.match.params.id;
     const params = new URLSearchParams(document.location.search);
     this.getDetailCustomer(id);
-    InvoiceService.lists(1000, 0, "", "", JSON.stringify({customerId: id}))
-    .then(response => {
-      this.setState({ordersHistory: response.data});
-    });
 
     LoyaltyProgramService.getReward(50)
     .then(response => {
@@ -100,22 +97,6 @@ class Profile extends React.Component {
     this.getDetailCustomer(id);
     this.getRewardsPointHistory(id);
     this.setState({activeTab: 2});
-  }
-
-  onChangeDateFilter = dates => {
-    let filter = JSON.stringify({customerId: this.props.match.params.id}),
-      ranges = "";
-
-    if (dates && dates.length) {
-      ranges = JSON.stringify({column: "invoiceDate", value: [this.util.formatDateForMYSQL(dates[0]), this.util.formatDateForMYSQL(dates[1])]});
-    }
-
-    this.setState({orderLoading: true});
-    InvoiceService.lists(1000, 0, "", "", filter, "", ranges)
-    .then(response => {
-      this.setState({ordersHistory: response.data});
-    })
-    .finally(() => this.setState({orderLoading: false}));
   }
 
   render() {
@@ -184,22 +165,27 @@ class Profile extends React.Component {
                   />
                 </TabPane>
                 <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_order_history" />} key="2">
-                  <OrderHistory 
-                    ordersHistory={this.state.ordersHistory} 
+                  <OrderHistory
                     locale={this.props.locale}
-                    id={detail.id}
-                    onChangeDateFilter={this.onChangeDateFilter}
-                    form={this.props.form}
-                    loading={this.state.orderLoading} />
+                    customerId={detail.id}
+                    pathname={this.pathname}
+                    form={this.props.form} />
                 </TabPane>
-                <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_loyalty_rewards" />} key="3">
+                <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_sale_order" />} key="3">
+                  <SaleOrderList 
+                    customerId={detail.id}
+                    locale={this.props.locale}
+                    pathname={this.pathname}
+                  />
+                </TabPane>
+                <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_loyalty_rewards" />} key="4">
                   <LoyaltyProgram 
                     detail={detail} 
                     rewards={this.state.rewards} 
                     onSuccess={() => this.onAfterRedeem(detail.id)} 
                     locale={this.props.locale} />
                 </TabPane>
-                <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_reward_point_history" />} key="4">
+                <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_reward_point_history" />} key="5">
                   <RewardPointHistory 
                     locale={this.props.locale} 
                     rewardsHistory={this.state.rewardsHistory} />
@@ -227,7 +213,7 @@ function RenderPagination(props) {
   const {pagination, locale} = props;
   return (
     pagination.total ?
-      <div className="float-right" style={{marginRight: 12}}>
+      <div className="float-right" style={{marginRight: 12, paddingBottom: 18}}>
         <Pagination 
           total={pagination.total}
           showTotal={(total) => `${stringTranslate("text_total", locale)} ${total} ${stringTranslate("text_records", locale)}`}
@@ -245,16 +231,70 @@ function RenderPagination(props) {
 }
 
 function OrderHistory(props) {
+  const [data, setData] = React.useState([]);
+  const [pagination, setPagination] = React.useState({});
   const [totalSpent, setTotalSpent] = React.useState(0);
   const [totalCredit, setTotalCredit] = React.useState(0);
+  const [current, setCurrent] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
   const util = new Util();
-
+  let limit = 50;
   const INVOICE_STATUS_STR = {
     [EnumInvoice.INVOICE_STATUS.DRAFT]: {title: <Translate id="text_draft" />, color: "#bfbfbf"},
     [EnumInvoice.INVOICE_STATUS.SENT]: {title: <Translate id="text_sent" />, color: "#1890ff"},
     [EnumInvoice.INVOICE_STATUS.PARTIAL]: {title: <Translate id="text_partial_pay" />, color: "#52c41a"},
     [EnumInvoice.INVOICE_STATUS.PAID]: {title: <Translate id="text_paid" />, color: "#52c41a"},
     [EnumInvoice.INVOICE_STATUS.VOID]: {title: <Translate id="text_void" />, color: "#d9d9d9"},
+  };
+
+  function fetchHistory() {
+    let offset = current;
+    let range = "";
+    const params = new URLSearchParams(document.location.search);
+
+    if (params.get("limit")) {
+      limit = Number(params.get("limit"));
+    }
+
+    if (params.get("offset")) {
+      offset = Number(params.get("offset"));
+    }
+
+    if (params.get("start")) {
+      range = JSON.stringify({column: "invoiceDate", value: [params.get("start"), params.get("end")]});
+    }
+
+    offset = (offset - 1) * limit;
+    setLoading(true);
+    InvoiceService.lists(limit, offset, "", "", JSON.stringify({customerId: props.customerId}), "", range)
+    .then(response => {
+      setData(response.data.data);
+      setPagination(response.data.pagination);
+    })
+    .finally(() => setLoading(false));
+  }
+
+  const onChangeDateFilter = dates => {
+    const params = new URLSearchParams(document.location.search);
+    if (dates.length) {
+      params.set("start", moment(dates[0]).format("YYYY-MM-DD"));
+      params.set("end", moment(dates[1]).format("YYYY-MM-DD"));
+    } else {
+      params.delete("start");
+      params.delete("end");
+    }
+
+    util.pushParamsToURL(props.pathname, params.toString());
+    fetchHistory();
+  };
+
+  const onChangePagination = (currentPage, pageSize) => {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", currentPage);
+    setCurrent(currentPage);
+    util.pushParamsToURL(props.pathname, params.toString());
+    fetchHistory(true);
   };
 
   React.useEffect(() => {
@@ -267,6 +307,13 @@ function OrderHistory(props) {
     .then(response => {
       setTotalCredit(response.data && response.data.data.total);
     });
+
+    const params = new URLSearchParams(document.location.search);
+    if (params.get("offset")) {
+      setCurrent(Number(params.get("offset")));
+    }
+
+    fetchHistory();
     // eslint-disable-next-line
   }, []);
 
@@ -300,7 +347,7 @@ function OrderHistory(props) {
         <Col md={8}>
           <DateRangePicker
             name="dates"
-            onChange={props.onChangeDateFilter}
+            onChange={onChangeDateFilter}
             style={{marginBottom: 0}}
             key={1}
             form={props.form} />
@@ -382,12 +429,18 @@ function OrderHistory(props) {
           ]}
           pagination={false}
           bordered
-          dataSource={props.ordersHistory.data}
-          loading={props.loading}
+          dataSource={data}
+          loading={loading}
         />
         </Col>
       </Row>
 
+      <RenderPagination 
+        pagination={pagination}
+        locale={props.locale}
+        offset={current}
+        onShowSizeChange={onChangePagination}
+        onChange={onChangePagination} />
     </div>
   );
 }
@@ -573,7 +626,7 @@ function QuotationList(props) {
 
   React.useEffect(() => {
     const params = new URLSearchParams(document.location.search);
-    
+
     if (params.get("offset")) {
       setCurrent(Number(params.get("offset")));
     }
@@ -613,7 +666,7 @@ function QuotationList(props) {
                   };
         
                   if (status === EnumInvoice.QUOTATION_STATUS.SENT && record.validDate && moment(moment(record.validDate).format("YYYY-MM-DD")).isBefore(moment(moment().format("YYYY-MM-DD")))) {
-                    quotation_status.name = <this.Translate id="text_expired" />;
+                    quotation_status.name = <Translate id="text_expired" />;
                     quotation_status.color = "#f5222d";
                   }
                   return status in STATUS_STR ? <Tag color={quotation_status.color} style={{width: 100, textAlign: "center", margin: 0}}>{quotation_status.name}</Tag> : "N/A";
@@ -668,12 +721,180 @@ function QuotationList(props) {
         locale={props.locale}
         offset={current}
         onShowSizeChange={onChangePagination}
-        onChange={onChangePagination}
-      />
+        onChange={onChangePagination} />
     </div>
   );
 }
 
+function SaleOrderList(props) {
+  const [data, setData] = React.useState([]);
+  const [pagination, setPagination] = React.useState({});
+  const [loading, setLoading] = React.useState(false);
+  const [current, setCurrent] = React.useState(1);
+  let limit = 50;
+  const STATUS_STR = {
+    [EnumInvoice.SALE_ORDER_STATUS.DRAFT]: { title: <Translate id="text_draft" />, color: "#bfbfbf" },
+    [EnumInvoice.SALE_ORDER_STATUS.CONFIRMED]: { title: <Translate id="text_confirm" />, color: "#1890ff" },
+    [EnumInvoice.SALE_ORDER_STATUS.CLOSED]: { title: <Translate id="text_closed" />, color: "#f50"},
+    [EnumInvoice.SALE_ORDER_STATUS.VOID]: {title: <Translate id="text_void"/>, color: "#d9d9d9"}
+  };
+
+  function fetchSaleOrders() {
+    let offset = current;
+    const params = new URLSearchParams(document.location.search);
+    if (params.get("limit")) {
+      limit = Number(params.get("limit"));
+    }
+
+    if (params.get("offset")) {
+      offset = Number(params.get("offset"));
+    }
+
+    offset = (offset - 1) * limit;
+    setLoading(true);
+    SaleOrderService.lists(limit, offset, "", "", JSON.stringify({customerId: props.customerId}))
+    .then(response => {
+      setData(response.data.data);
+      setPagination(response.data.pagination);
+    })
+    .finally(setLoading(false));
+  }
+
+  const onChangePagination = (currentPage, pageSize) => {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", currentPage);
+    setCurrent(currentPage);
+    Util.prototype.pushParamsToURL(props.pathname, params.toString());
+    fetchSaleOrders();
+  };
+
+  React.useEffect(() => {
+    fetchSaleOrders();
+
+    const params = new URLSearchParams(document.location.search);
+    if (params.get("offset")) {
+      setCurrent(Number(params.get("offset")));
+    }
+
+    //eslint-disable-next-line
+  }, []);
+
+  return (
+    <div>
+      <Row gutter={25} style={{padding: "0 20px 20px 20px"}}>
+        <Col md={24}>
+          <Table
+            rowKey="id"
+            columns={[
+              {
+                title: <Translate id="text_date" />,
+                dataIndex: "registerDate",
+                key: "registerDate",
+                width: 140,
+                render: (registerDate) => Util.prototype.formatDate(registerDate, "DD/MM/YYYY")
+              },
+              {
+                title: <Translate id="text_status" />,
+                dataIndex: "status",
+                key: "status",
+                width: 120,
+                render: (status) => {
+                  const statusValue = STATUS_STR[status];
+                  const statusColor = statusValue.color;
+                  const stepTitle = statusValue.title;
+                  return <Tag color={statusColor} style={{width: 100, textAlign: "center"}}>{stepTitle}</Tag>;
+                }
+              },
+              {
+                title: <Translate id="text_sale_order_no" />,
+                dataIndex: "number",
+                key: "number",
+                className: "invoice-number-column",
+                render: (number, record) => <Link to={`/transactions/sale-order/detail/${record.id}`}>{number}</Link>
+              },
+              {
+                title: <Translate id="text_expected_shipment_date" />,
+                dataIndex: "expectedShipmentDate",
+                key: "expectedShipmentDate",
+                width: 200,
+                render: (expectedShipmentDate) => Util.prototype.formatDate(expectedShipmentDate, "DD/MM/YYYY")
+              },
+              {
+                title: <Translate id="text_total_items" />,
+                dataIndex: "totalItem",
+                key: "totalItem",
+                align: "center",
+                render: totalItem => totalItem
+              },
+              {
+                title: <Translate id="text_deposit" />,
+                dataIndex: "deposit",
+                key: "deposit",
+                align: "right",
+                render: deposit => Util.prototype.formatCurrency(Number(deposit))
+              },
+              {
+                title: <Translate id="text_sub_total" />,
+                dataIndex: "totalExcludeTax",
+                key: "totalExcludeTax",
+                align: "right",
+                render: (totalExcludeTax, record) => {
+                  if (!totalExcludeTax) {
+                    totalExcludeTax = record.total;
+                  }
+                  return Util.prototype.formatCurrency(totalExcludeTax);
+                }
+              },
+              {
+                title: <Translate id="text_vat" />,
+                dataIndex: "tax",
+                key: "tax",
+                align: "right",
+                render: (text, record) => {
+                  if (!record.totalExcludeTax) record.totalExcludeTax = record.total;
+                  return Util.prototype.formatCurrency(record.total - record.totalExcludeTax);
+                }
+              },
+              {
+                title: <Translate id="text_discount" />,
+                dataIndex: "discount",
+                key: "discount",
+                align: "right",
+                render: (discount, record) => Util.prototype.formatCurrency(discount)
+              },
+              {
+                title: <Translate id="text_sale_total" />,
+                dataIndex: "total",
+                key: "totalSale",
+                align: "right",
+                render: (total, record) => {
+                  total = total - Util.prototype.floor(Util.prototype.floor(record.discount));
+                  if (total < 0) total = 0;
+                  return Util.prototype.formatCurrency(total);
+                }
+              },
+            ]}
+            loading={loading}
+            dataSource={data}
+            bordered={true}
+            pagination={false}
+            style={{marginTop: -11}}
+          />
+        </Col>
+      </Row>
+
+      <RenderPagination 
+        pagination={pagination}
+        locale={props.locale}
+        offset={current}
+        onShowSizeChange={onChangePagination}
+        onChange={onChangePagination} />
+    </div>
+  );
+}
+
+//Redux function
 function mapStateToProps(state) {
   return {
     locale: state.locale
