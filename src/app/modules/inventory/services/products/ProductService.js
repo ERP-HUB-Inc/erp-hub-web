@@ -130,6 +130,17 @@ class ProductService extends BaseService {
     });
   }
 
+  getDetailStock(
+    id
+  ){
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/stock/${id}`,
+      data: this.data,
+      headers: this.header
+    });
+  }
+
   detailForSplit(
     productVariantId,
     locationId

@@ -1,64 +1,44 @@
 import React from "react";
 import {
-  Col,
-  Row,
   Menu,
   Dropdown,
-  Card,
   Icon,
-  message,
+  Spin,
   PageHeader
 } from "antd";
+
 import {Translate} from "react-localize-redux";
 import history from "../../../../common/router/history";
 import ProductService from "../../../services/products/ProductService";
+import ProductDetailOption from "./ProductDetailOption";
+import ProductDetailStockInformation from "./ProductDetailStockInformation";
+import ProductDetailHistory from "./ProductDetailHistory";
 
-const DescriptionItem = ({ title, content }) => (
-  <div
-    style={{
-      fontSize: 14,
-      lineHeight: "22px",
-      marginBottom: 7,
-      color: "rgba(0,0,0,0.65)",
-    }}
-  >
-    <p
-      style={{
-        marginRight: 8,
-        display: "inline-block",
-        color: "rgba(0,0,0,0.85)",
-      }}
-    >
-      {title}:
-    </p>
-    {content}
-  </div>
-);
 
 export default function ProductDetail(props) {
   const [data, setData] = React.useState({});
-  // const [loading, setLoading] = React.useState(false);
+  const params = new URLSearchParams(props.location.search);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     const params = new URLSearchParams(props.location.search);
+    setLoading(true);
     ProductService.detail(props.match.params.id, params.get("productOption"), true)
     .then(response => {
       if (response.data) {
         setData(response.data.data);
       }
-    });
+    })
+    .finally(() => setLoading(false));
 
     // eslint-disable-next-line
   }, []);
 
-  function handleButtonClick(e) {
-    message.info("Click on left button.");
-    console.log("click left button", e);
+  function handleButtonUpdate() {
+    history.push(`/products/update/${props.match.params.id}?${params.get("productOption")}`);
   }
   
   function handleMenuClick(e) {
-    message.info("Click on menu item.");
-    console.log("click", e);
   }
 
   const menu = (
@@ -87,60 +67,23 @@ export default function ProductDetail(props) {
         subTitle={data.name}
         extra={
           [
-            <Dropdown.Button type="primary" onClick={handleButtonClick} overlay={menu}>
+            <Dropdown.Button type="primary" onClick={handleButtonUpdate} overlay={menu}>
               Edit
             </Dropdown.Button>
           ]
         }
       />
-      <Card bordered={false}>
-        <Row>
-          <Col span={12}>
-            <DescriptionItem title="Manage Stock" content="yes" />
-          </Col>
-          <Col span={12}>
-            <DescriptionItem title="Barcode" content="AntDesign@example.com" />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={12}>
-            <DescriptionItem title="Cost" content="$12.00" />
-          </Col>
-          <Col span={12}>
-            <DescriptionItem title="Retail Price" content="$20.00" />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={12}>
-            <DescriptionItem title="Category" content="Drink" />
-          </Col>
-          <Col span={12}>
-            <DescriptionItem title="Brand" content="Apple" />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={24}>
-            <DescriptionItem
-              title="Message"
-              content="Make things as simple as possible but no simpler."
-            />
-          </Col>
-        </Row>
-      </Card>
 
-      <Card title="Stock Information" bordered={false} style={{marginTop: 25}}>
-        <Row>
-          <Col span={8}>
-            <DescriptionItem title="ទំនិញក្នុងស្តុក" content="Lily" />
-          </Col>
-          <Col span={8}>
-            <DescriptionItem title="នៅឃ្លាំងផ្សេង" content="AntDesign@example.com" />
-          </Col>
-          <Col span={8}>
-            <DescriptionItem title="ឯកតា" content="កេះ" />
-          </Col>
-        </Row>
-      </Card>
+      {
+        loading ? <Spin spinning={loading} style={{width: "100%",justifyContent: "center"}}/> :
+        <React.Fragment> 
+           <ProductDetailOption option={params.get("productOption")} data={data}/>
+           <ProductDetailStockInformation option={params.get("productOption")} data={data} id={props.match.params.id}/>
+           <ProductDetailHistory id={props.match.params.id}/>
+        </React.Fragment>
+      
+      }
+    
     </React.Fragment>
   );
 }
