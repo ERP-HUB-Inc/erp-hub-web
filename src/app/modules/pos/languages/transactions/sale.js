@@ -314,6 +314,21 @@ export default {
     "បង្កើតវិក័្កយប័ត្រថ្មី"
   ],
 
+  "text_create_recurring_invoice": [
+    "Create Recurring Invoice",
+    "បង្កើតវិក័្កយប័ត្របន្តថ្មី"
+  ],
+
+  "text_frequency": [
+    "Frequency",
+    "ប្រេកង់"
+  ],
+
+  "text_next_send_date": [
+    "Next Send Date",
+    "កាលបរិច្ឆេទផ្ញើបន្ទាប់"
+  ],
+
   "text_percentage": [
     "Percentage",
     "ភាគរយ"

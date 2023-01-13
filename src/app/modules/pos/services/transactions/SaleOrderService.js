@@ -27,10 +27,10 @@ class SaleOrderService extends BaseService {
     });
   }
 
-  summary() {
+  summary(filter) {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}/v1/summary`,
+      url: `${this.baseUrl}/v1/summary?filter=${filter}`,
       headers: this.header
     });
   }
