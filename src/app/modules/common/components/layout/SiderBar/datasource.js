@@ -369,6 +369,7 @@ const dataSource = {
         icon: "icon-calendar",
         route: "/transactions/invoice",
         component: Invoice,
+        isSeparate: true,
         isFashNav: true,
       },
       {
@@ -450,20 +451,6 @@ const dataSource = {
         isFashNav: true,
       },
       {
-        title: <Translate id="text_promotion" />,
-        icon: "icon-sale-return",
-        route: "/promotions/list",
-        component: Promotion,
-        isFashNav: true,
-      },
-      {
-        title: <Translate id="text_loyalty_program" />,
-        icon: "icon-sale-return",
-        route: "/loyalty-program/list",
-        component: LoyaltyProgram,
-        isFashNav: true,
-      },
-      {
         route: "/loyalty-program/create",
         component: LoyaltyProgramForm,
         isFashNav: false,
@@ -497,6 +484,22 @@ const dataSource = {
         icon: "icon-price-book",
         route: "/products/units",
         component: ProductUnit,
+        isSeparate: true,
+        isFashNav: true,
+      },
+      {
+        title: <Translate id="text_promotion" />,
+        icon: "icon-sale-return",
+        route: "/promotions/list",
+        component: Promotion,
+        isFashNav: true,
+      },
+      {
+        title: <Translate id="text_loyalty_program" />,
+        icon: "icon-sale-return",
+        route: "/loyalty-program/list",
+        component: LoyaltyProgram,
+        isSeparate: true,
         isFashNav: true,
       },
       {
@@ -538,6 +541,7 @@ const dataSource = {
         icon: "icon-customer",
         route: "/stock/supplier",
         component: Supplier,
+        isSeparate: true,
         isFashNav: true,
       },
       {
@@ -552,6 +556,7 @@ const dataSource = {
         icon: "icon-purchasing",
         route: "/stock/consignment/list",
         component: StockConsignment,
+        isSeparate: true,
         isFashNav: true,
       },
       {
@@ -609,10 +614,10 @@ const dataSource = {
   employees: {
     icon: "icon-employee",
     route: "employees",
-    title: <Translate id="text_employee" />,
+    title: <Translate id="text_manage_employee" />,
     subItems: [
       {
-        title: <Translate id="text_manage_employee" />,
+        title: <Translate id="text_employee" />,
         icon: "icon-employee",
         route: "/employee",
         component: ManageEmployee,
@@ -644,8 +649,9 @@ const dataSource = {
         title: <Translate id="text_register_report" />,
         icon: "icon-currency",
         route: "/reports/register",
-        isFashNav: true,
         component: RegisterReport,
+        isSeparate: true,
+        isFashNav: true
       },
       {
         title: <Translate id="text_purchase_report" />,
@@ -670,6 +676,7 @@ const dataSource = {
         icon: "icon-stock",
         route: "/reports/inventory_dashboard",
         component: InventoryDashboard,
+        isSeparate: true,
         isFashNav: true,
       },
       {

@@ -373,15 +373,6 @@ class Column extends List {
         dataIndex: "groupCustomer",
         key: "groupCustomer",
         render: groupCustomer => groupCustomer ? <span className="text-capitalize">{groupCustomer.name}</span> : this.emptyText
-      },
-      {
-        title: <this.Translate id="text_type" />,
-        dataIndex: "type",
-        key: "type",
-        render: type => {
-          const customerType = this.customerTypes.find(customer => customer.value === type);
-          return <this.Tag color="blue" className="text-center label-stock-status" style={{width: 100}}>{customerType ? customerType.title : this.emptyText}</this.Tag>;
-        }
       }
     ];
   }

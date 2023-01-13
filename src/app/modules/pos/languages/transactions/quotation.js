@@ -134,8 +134,7 @@ export default {
 
   "text_clone": [
     "Clone",
-    "ចម្លង",
-    "Clone"
+    "ចម្លង"
   ],
 
   "text_print_packing_slip": [

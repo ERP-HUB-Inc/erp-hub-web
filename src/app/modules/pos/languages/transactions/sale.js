@@ -398,7 +398,7 @@ export default {
 
   "text_mark_as_sent": [
     "Mark as Sent",
-    "សម្គាល់​ថា​បាន​បញ្ជាក់"
+    "សម្គាល់​ថា​បាន​ផ្ញើរ"
   ],
 
   "text_new_invoice": [
@@ -429,6 +429,16 @@ export default {
   "text_edit_sale_order": [
     "Edit Sale Order",
     "កែប្រែការបញ្ជារទិញ"
+  ],
+
+  "text_clone_to_recurring": [
+    "Clone to Recurring",
+    "Clone to Recurring"
+  ],
+
+  "text_clone_to_invoice": [
+    "Clone to Invoice",
+    "Clone to Invoice"
   ],
 
   "text_sale_order_date": [

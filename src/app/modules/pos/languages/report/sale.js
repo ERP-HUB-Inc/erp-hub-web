@@ -31,7 +31,7 @@ export default {
 
   text_net_sale: ["Net Sale", "ការលក់សុទ្ធ"],
 
-  text_sale_report: ["Sale Report", "របាយការណ៍លក់"],
+  text_sale_report: ["Sales Report", "របាយការណ៍លក់"],
 
   text_low_sales_report: ["Low Sales Report", "របាយការណ៍លក់ទាប"],
 

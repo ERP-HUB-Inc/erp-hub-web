@@ -134,11 +134,11 @@ export default class SideBar extends React.PureComponent {
     );
   }
 
-  subMenuItem(key, route, title, icon, titleNew) {
+  subMenuItem(key, route, title, icon, titleNew, isSeparate) {
     return (
-      <li key={key} onClick={() => this.handleOnClickSubMenu()}>
+      <li key={key} onClick={() => this.handleOnClickSubMenu()} style={isSeparate ? {borderBottom: "1px solid #ECECEC"} : {}}>
         <Link to={ route }>
-          <div className="icon item"><span className={icon}></span></div>
+          {/* <div className="icon item"><span className={icon}></span></div> */}
           <div className="item-text item" style={{position: "relative"}}>
             {title}
             <div style={{position: "absolute", top: -16, right: -25}}>
@@ -181,7 +181,7 @@ export default class SideBar extends React.PureComponent {
                 <ul className="list-unstyled text-left text-uppercase">
                   {
                     this.state.menuItems[subMenuItemTitle]["subItems"].map((menu, key) => 
-                      menu["title"] ? this.subMenuItem(key, menu["route"], menu["title"], menu["icon"], menu["new"]) : ""
+                      menu["title"] ? this.subMenuItem(key, menu["route"], menu["title"], menu["icon"], menu["new"], menu["isSeparate"]) : ""
                     )
                   }
                 </ul>
