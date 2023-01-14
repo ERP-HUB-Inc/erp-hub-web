@@ -13,6 +13,7 @@ import ProductService from "../../../services/products/ProductService";
 import ProductDetailOption from "./ProductDetailOption";
 import ProductDetailStockInformation from "./ProductDetailStockInformation";
 import ProductDetailHistory from "./ProductDetailHistory";
+import ProductDetailPurcheseHistory from "./ProductDetailPurcheseHistory";
 
 
 export default function ProductDetail(props) {
@@ -80,6 +81,7 @@ export default function ProductDetail(props) {
            <ProductDetailOption option={params.get("productOption")} data={data}/>
            <ProductDetailStockInformation option={params.get("productOption")} data={data} id={props.match.params.id}/>
            <ProductDetailHistory id={props.match.params.id}/>
+           <ProductDetailPurcheseHistory id={props.match.params.id}/>
         </React.Fragment>
       
       }

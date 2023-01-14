@@ -22,6 +22,7 @@ class Promotion extends List {
     this.state = {
       ...this.state,
       data: [],
+      pagination: {},
       loading: false,
       isShowFilter: false
     };
@@ -103,14 +104,36 @@ class Promotion extends List {
   }
 
   componentDidMount() {
+    const params = new URLSearchParams(document.location.search);
+    if (params.get("offset")) {
+      this.setState({
+        current: Number(params.get("offset"))
+      });
+    }
     this.fetchList();
   }
 
   fetchList() {
+    let limit = this.pageSize;
+    let offset = this.state.current;
+    const params = new URLSearchParams(document.location.search);
+
+    if (params.get("limit")) {
+      limit = Number(params.get("limit"));
+    }
+
+    if (params.get("offset")) {
+      offset = Number(params.get("offset"));
+    }
+
+    offset = (offset - 1) * limit;
     this.setState({loading: true});
-    this.service.lists(this.pageSize)
+    this.service.lists(limit, offset)
     .then(response => {
-      this.setState({data: response.data});
+      this.setState({
+        data: response.data.data,
+        pagination: response.data.pagination
+      });
     })
     .catch(() => message.error("Error"))
     .finally(() => this.setState({loading: false}));
@@ -145,11 +168,20 @@ class Promotion extends List {
     </this.Button>;
   }
 
-  renderPagination(data0, classsName = "float-right") {
-    const {data} = this.state;
-    let pagination = {
-      total: data.pagination && data.pagination.total,
-      pageSize: data.pagination && data.pagination.limit,
+  onTableChange = (current, pageSize) => {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList(true);
+  }
+
+  renderPagination(pagination = this.state.pagination) {
+    pagination = {
+      total: pagination.total,
+      pageSize: pagination.limit,
       current: this.state.current,
       pageSizeOptions: this.pageSizeOptions
     };
@@ -159,9 +191,15 @@ class Promotion extends List {
     };
 
     return( 
-      data && pagination.total > 0 ?
-        <div className={classsName}>
-          <Pagination size="small" showTotal={showTotal} showSizeChanger onShowSizeChange={this.onShowSizeChange} onChange={this.onChangePagination} {...pagination} />
+      pagination.total > 0 ?
+        <div className="float-right">
+          <Pagination 
+            size="small" 
+            showTotal={showTotal} 
+            showSizeChanger 
+            onShowSizeChange={this.onTableChange} 
+            onChange={this.onTableChange} 
+            {...pagination} />
         </div>
         :
         ""
@@ -181,10 +219,11 @@ class Promotion extends List {
       rowKey="id"
       rowSelection={this.rowSelection ? rowSelection : null}
       columns={this.columns}
-      dataSource={this.state.data.data}
+      dataSource={this.state.data}
       bordered
       loading={this.state.loading}
       onChange={this.onChange}
+      pagination={false}
     />;
   }
 }
