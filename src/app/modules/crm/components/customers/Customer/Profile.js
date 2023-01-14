@@ -90,6 +90,8 @@ class Profile extends React.Component {
     }
     params.delete("limit");
     params.delete("offset");
+    params.delete("start");
+    params.delete("end");
     this.util.pushParamsToURL(this.pathname, params.toString());
   }
 
@@ -162,6 +164,7 @@ class Profile extends React.Component {
                     customerId={detail.id}
                     locale={this.props.locale}
                     pathname={this.pathname}
+                    form={this.props.form}
                   />
                 </TabPane>
                 <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_order_history" />} key="2">
@@ -176,6 +179,7 @@ class Profile extends React.Component {
                     customerId={detail.id}
                     locale={this.props.locale}
                     pathname={this.pathname}
+                    form={this.props.form}
                   />
                 </TabPane>
                 <TabPane style={{textTransform: "capitalize"}} tab={<Translate id="text_loyalty_rewards" />} key="4">
@@ -589,6 +593,7 @@ function RewardPointHistory(props) {
 
 function QuotationList(props) {
   const [data, setData] = React.useState([]);
+  const [summary, setSummary] = React.useState({});
   const [pagination, setPagination] = React.useState({});
   const [loading, setLoading] = React.useState(false);
   const [current, setCurrent] = React.useState(1);
@@ -596,6 +601,7 @@ function QuotationList(props) {
 
   function fetchQuotation() {
     let offset = current;
+    let range = "";
     const params = new URLSearchParams(document.location.search);
     if (params.get("limit")) {
       limit = Number(params.get("limit"));
@@ -605,14 +611,25 @@ function QuotationList(props) {
       offset = Number(params.get("offset"));
     }
 
+    if (params.get("start") && params.get("end")) {
+      range = JSON.stringify({column: "quotationDate", value: [params.get("start"), params.get("end")]});
+    }
+
     offset = (offset - 1) * limit;
     setLoading(true);
-    QuotationService.lists(limit, offset, "", "", JSON.stringify({customerId: props.customerId}))
+    QuotationService.lists(limit, offset, "", "", JSON.stringify({customerId: props.customerId}), "", range)
     .then(response => {
       setData(response.data.data);
       setPagination(response.data.pagination);
     })
     .finally(() => setLoading(false));
+  }
+
+  function fetchSummary() {
+    QuotationService.summary(JSON.stringify({customerId: props.customerId}))
+    .then(response => {
+      setSummary(response.data.data);
+    });
   }
 
   const onChangePagination = (currentPage, pageSize) => {
@@ -624,6 +641,19 @@ function QuotationList(props) {
     fetchQuotation(true);
   };
 
+  const onChangeDateFilter = (dates) => {
+    const params = new URLSearchParams(document.location.search);
+    if (dates.length) {
+      params.set("start", moment(dates[0]).format("YYYY-MM-DD"));
+      params.set("end", moment(dates[1]).format("YYYY-MM-DD"));
+    } else {
+      params.delete("start");
+      params.delete("end");
+    }
+    Util.prototype.pushParamsToURL(props.pathname,  params.toString());
+    fetchQuotation();
+  };
+
   React.useEffect(() => {
     const params = new URLSearchParams(document.location.search);
 
@@ -632,19 +662,65 @@ function QuotationList(props) {
     }
 
     fetchQuotation();
+    fetchSummary();
     // eslint-disable-next-line
   }, []);
 
   const STATUS_STR = {
     [EnumInvoice.QUOTATION_STATUS.DRAFT]: {name: <Translate id="text_draft" />, color: "#d9d9d9"},
     [EnumInvoice.QUOTATION_STATUS.SENT]: {name: <Translate id="text_sent" />, color: "#108ee9"},
-    [EnumInvoice.QUOTATION_STATUS.APPROVED]: {name: <Translate id="text_approved" />, color: "#87d068"},
-    [EnumInvoice.QUOTATION_STATUS.CLOSED]: {name: <Translate id="text_closed" />, color: "#52c41a"}
+    [EnumInvoice.QUOTATION_STATUS.APPROVED]: {name: <Translate id="text_approved" />, color: "#3f8600"},
+    [EnumInvoice.QUOTATION_STATUS.CLOSED]: {name: <Translate id="text_closed" />, color: "#cf1322"}
   };
 
+  const params = new URLSearchParams(document.location.search);
   return (
     <div>
-      <Row gutter={25} style={{padding: "0 20px 20px 20px"}}>
+      <Row gutter={18} style={{padding: "3px 20px"}}>
+        <Col span={8}>
+          <Card style={{padding: 10}}>
+            <Statistic
+              title={<Translate id="text_sent"/>}
+              value={summary.sent ? summary.sent : 0 }
+              precision="0"
+              valueStyle={{color: "rgb(24, 144, 255)"}}
+            />
+          </Card>
+        </Col>
+        <Col span={8}>
+          <Card style={{padding: 10}}>
+            <Statistic
+              title={<Translate id="text_approved"/>}
+              value={summary.approved ? summary.approved : 0 }
+              precision="0"
+              valueStyle={{ color: "#3f8600" }}
+            />
+          </Card>
+        </Col>
+        <Col span={8}>
+          <Card style={{padding: 10}}>
+            <Statistic
+              title={<Translate id="text_closed"/>}
+              value={summary.closed ? summary.closed : 0 }
+              precision="0"
+              valueStyle={{ color: "#cf1322" }}
+            />
+          </Card>
+        </Col>
+      </Row>
+      <Row gutter={18} style={{padding: "13px 20px 0"}}>
+        <Col md={8}>
+          <DateRangePicker
+            name="dates"
+            onChange={onChangeDateFilter}
+            style={{marginBottom: 0}}
+            key={1}
+            ranges={[]}
+            defaultValue={params.get("start") ? [moment(params.get("start")), moment(params.get("end"))] : null}
+            form={props.form} />
+        </Col>
+      </Row>
+      <Row gutter={25} style={{padding: "11px 20px 20px 20px"}}>
         <Col md={24}>
           <Table
             rowKey={((row, index) => index)}
@@ -665,7 +741,7 @@ function QuotationList(props) {
                     color: STATUS_STR[Number(status)].color
                   };
         
-                  if (status === EnumInvoice.QUOTATION_STATUS.SENT && record.validDate && moment(moment(record.validDate).format("YYYY-MM-DD")).isBefore(moment(moment().format("YYYY-MM-DD")))) {
+                  if ([EnumInvoice.QUOTATION_STATUS.SENT, EnumInvoice.QUOTATION_STATUS.APPROVED].includes(status) && record.validDate && moment(record.validDate).format("YYYY-MM-DD") < moment().format("YYYY-MM-DD")) {
                     quotation_status.name = <Translate id="text_expired" />;
                     quotation_status.color = "#f5222d";
                   }
@@ -728,6 +804,7 @@ function QuotationList(props) {
 
 function SaleOrderList(props) {
   const [data, setData] = React.useState([]);
+  const [summary, setSummary] = React.useState({});
   const [pagination, setPagination] = React.useState({});
   const [loading, setLoading] = React.useState(false);
   const [current, setCurrent] = React.useState(1);
@@ -741,6 +818,7 @@ function SaleOrderList(props) {
 
   function fetchSaleOrders() {
     let offset = current;
+    let range = "";
     const params = new URLSearchParams(document.location.search);
     if (params.get("limit")) {
       limit = Number(params.get("limit"));
@@ -750,15 +828,39 @@ function SaleOrderList(props) {
       offset = Number(params.get("offset"));
     }
 
+    if (params.get("start")) {
+      range = JSON.stringify({column: "registerDate", value: [params.get("start"), params.get("end")]});
+    }
+
     offset = (offset - 1) * limit;
     setLoading(true);
-    SaleOrderService.lists(limit, offset, "", "", JSON.stringify({customerId: props.customerId}))
+    SaleOrderService.lists(limit, offset, "", "", JSON.stringify({customerId: props.customerId}), "", range)
     .then(response => {
       setData(response.data.data);
       setPagination(response.data.pagination);
     })
     .finally(setLoading(false));
   }
+
+  function fetchSummary() {
+    SaleOrderService.summary(JSON.stringify({customerId: props.customerId}))
+    .then(response => {
+      setSummary(response.data.data);
+    });
+  }
+
+  const onChangeDateFilter = (dates) => {
+    const params = new URLSearchParams(document.location.search);
+    if (dates.length) {
+      params.set("start", moment(dates[0]).format("YYYY-MM-DD"));
+      params.set("end", moment(dates[1]).format("YYYY-MM-DD"));
+    } else {
+      params.delete("start");
+      params.delete("end");
+    }
+    Util.prototype.pushParamsToURL(props.pathname,  params.toString());
+    fetchSaleOrders();
+  };
 
   const onChangePagination = (currentPage, pageSize) => {
     const params = new URLSearchParams(document.location.search);
@@ -771,6 +873,7 @@ function SaleOrderList(props) {
 
   React.useEffect(() => {
     fetchSaleOrders();
+    fetchSummary();
 
     const params = new URLSearchParams(document.location.search);
     if (params.get("offset")) {
@@ -780,9 +883,55 @@ function SaleOrderList(props) {
     //eslint-disable-next-line
   }, []);
 
+  const params = new URLSearchParams(document.location.search);
   return (
     <div>
-      <Row gutter={25} style={{padding: "0 20px 20px 20px"}}>
+      <Row gutter={18} style={{padding: "3px 20px"}}>
+        <Col span={8}>
+          <Card style={{padding: 10}}>
+            <Statistic
+              title={<Translate id="text_confirmed"/>}
+              value={summary.confirmed ? summary.confirmed : 0 }
+              precision="0"
+              valueStyle={{color: "rgb(24, 144, 255)"}}
+            />
+          </Card>
+        </Col>
+        <Col span={8}>
+          <Card style={{padding: 10}}>
+            <Statistic
+              title={<Translate id="text_closed"/>}
+              value={summary.closed ? summary.closed : 0 }
+              precision="0"
+              valueStyle={{ color: "#3f8600" }}
+            />
+          </Card>
+        </Col>
+        <Col span={8}>
+          <Card style={{padding: 10}}>
+            <Statistic
+              title={<Translate id="text_void"/>}
+              value={summary.void ? summary.void : 0 }
+              precision="0"
+              valueStyle={{ color: "#cf1322" }}
+            />
+          </Card>
+        </Col>
+      </Row>
+      <Row gutter={18} style={{padding: "13px 20px 0"}}>
+        <Col md={8}>
+          <DateRangePicker
+            name="dates"
+            onChange={onChangeDateFilter}
+            placeholder={[stringTranslate("text_start_date", props.locale), stringTranslate("text_end_date", props.locale)]}
+            style={{marginBottom: 0}}
+            key={1}
+            ranges={[]}
+            defaultValue={params.get("start") ? [moment(params.get("start")), moment(params.get("end"))] : null}
+            form={props.form} />
+        </Col>
+      </Row>
+      <Row gutter={25} style={{padding: "11px 20px 20px 20px"}}>
         <Col md={24}>
           <Table
             rowKey="id"

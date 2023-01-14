@@ -8,10 +8,10 @@ class QuotationService extends BaseService {
     this.initializeRoute();
   }
 
-  summary() {
+  summary(filter) {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}/summary`,
+      url: `${this.baseUrl}/summary?filter=${filter}`,
       headers: this.header
     });
   }
