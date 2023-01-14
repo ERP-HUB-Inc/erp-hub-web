@@ -16,7 +16,8 @@ class LoyaltyProgram extends List {
     super(props);
     this.state = {
       current: 1,
-      data: {},
+      data: [],
+      pagination: {},
       loading: false,
       selectedRowKeys: [],
       selectedListIds: []
@@ -103,7 +104,10 @@ class LoyaltyProgram extends List {
     this.setState({loading: true});
     this.service.lists(limit, offset, "", "", filter, search, "", locationId)
     .then(response => {
-      this.setState({data: response.data});
+      this.setState({
+        data: response.data.data,
+        pagination: response.data.pagination
+      });
     })
     .finally(() => this.setState({loading: false}));
   }
@@ -123,7 +127,7 @@ class LoyaltyProgram extends List {
     }
   }
 
-  onShowSizeChange(current, pageSize) {
+  onTableChange = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     params.set("limit", pageSize);
     params.set("offset", current);
@@ -133,21 +137,10 @@ class LoyaltyProgram extends List {
     this.fetchList();
   }
 
-  onChangePagination(current, pageSize) {
-    const params = new URLSearchParams(document.location.search);
-    params.set("limit", pageSize);
-    params.set("offset", current);
-
-    this.setState({current});
-    this.Util.pushParamsToURL(this.pathname, params.toString());
-    this.fetchList();
-  }
-
-  renderPagination(data0, className = "float-right") {
-    const {data} = this.state;
-    let pagination = {
-      total: data.pagination && data.pagination.total,
-      pageSize: data.pagination && data.pagination.limit,
+  renderPagination(pagination = this.state.pagination) {
+    pagination = {
+      total: pagination.total,
+      pageSize: pagination.limit,
       current: this.state.current,
       pageSizeOptions: this.pageSizeOptions
     };
@@ -157,13 +150,13 @@ class LoyaltyProgram extends List {
     };
 
     return( 
-      data && pagination.total > 0 ?
-        <div className={className}>
+      pagination.total > 0 ?
+        <div className="float-right">
           <Pagination size="small" 
             showTotal={showTotal} 
             showSizeChanger 
-            onShowSizeChange={this.onShowSizeChange} 
-            onChange={this.onChangePagination} 
+            onShowSizeChange={this.onTableChange} 
+            onChange={this.onTableChange} 
             {...pagination} />
         </div>
         :
@@ -197,8 +190,9 @@ class LoyaltyProgram extends List {
         columns={this.columns}
         rowSelection={this.rowSelection ? rowSelection : null}
         loading={this.state.loading}
-        dataSource={this.state.data.data}
+        dataSource={this.state.data}
         bordered={true}
+        pagination={false}
         onChange={this.onChange}
       />
     );
