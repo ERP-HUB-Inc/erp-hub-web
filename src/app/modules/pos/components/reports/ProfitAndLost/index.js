@@ -14,9 +14,9 @@ import Util from "../../../../common/util";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
 import PrivilegeService from "../../../services/settings/PrivilegeService";
 
-const permission_module_code    = "report";
-const permission_code           = "profit_and_loss_report";
-const util                      = new Util();
+const permission_module_code = "report";
+const permission_code = "profit_and_loss_report";
+const util = new Util();
 
 export default function ProfitAndLossReport() {
     
@@ -111,20 +111,32 @@ export default function ProfitAndLossReport() {
                                         <td colSpan="2">Revenue</td>
                                     </tr>
                                     {
-                                        data && data.incomes.map((income, index) =>
-                                            <tr key={index} className="income-row">
-                                                <td>
-                                                    {income.name}
-                                                </td>
-                                                <td>
-                                                    {util.formatCurrency(income.amount, "")}
-                                                </td>
-                                            </tr>
-                                        )
+                                        data && data.grossSalesIncome && 
+                                        <tr className="income-row">
+                                            <td>
+                                                {data.grossSalesIncome.name}
+                                            </td>
+                                            <td>
+                                                {util.formatCurrency(data.grossSalesIncome.amount, "")}
+                                            </td>
+                                        </tr>
                                     }
+
+                                    {
+                                        data && data.salesDiscount && 
+                                        <tr className="income-row">
+                                            <td>
+                                                Less: {data.salesDiscount.name}
+                                            </td>
+                                            <td>
+                                                ({util.formatCurrency(data.salesDiscount.amount, "")})
+                                            </td>
+                                        </tr>
+                                    }
+
                                     <tr className="summary-row">
                                         <td>Total Revenue</td>
-                                        <td>{util.formatCurrency(data ? data.totalIncome : 0, "")}</td>
+                                        <td>{util.formatCurrency(data ? data.netSalesIncome.amount : 0, "")}</td>
                                     </tr>
                                     {
                                         data && data.cogs.map((value, index) =>
