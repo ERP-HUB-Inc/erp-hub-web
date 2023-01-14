@@ -9,6 +9,15 @@ class ProductService extends BaseService {
     this.initializeRoute();
   }
 
+  getPurchaseHistoryByProductID(id){
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/purchase_history/${id}`,
+      data: this.data,
+      headers: this.header
+    });
+  }
+
   lists(
     limit,
     offset,
