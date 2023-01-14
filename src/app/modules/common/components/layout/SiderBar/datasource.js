@@ -10,6 +10,16 @@ const Invoice = Loadable({
   loading: () => <StartUp />,
 });
 
+const RecurringInvoice = Loadable({
+  loader: () => import("../../../../pos/components/transactions/RecurringInvoice"),
+  loading: () => <StartUp />
+});
+
+const RecurringInvoiceForm = Loadable({
+  loader: () => import("../../../../pos/components/transactions/RecurringInvoice/FormItem"),
+  loading: () => <StartUp />
+});
+
 const SaleOrderTransaction = Loadable({
   loader: () => import("../../../../pos/components/transactions/SaleOrder"),
   loading: () => <StartUp />,
@@ -369,8 +379,25 @@ const dataSource = {
         icon: "icon-calendar",
         route: "/transactions/invoice",
         component: Invoice,
-        isSeparate: true,
         isFashNav: true,
+      },
+      {
+        title: <Translate id="text_recurring_invoice" />,
+        icon: "icon-undo",
+        route: "/transactions/recurring-invoice/list",
+        component: RecurringInvoice,
+        isSeparate: true,
+        isFashNav: true
+      },
+      {
+        route: "/transactions/recurring-invoice/create",
+        component: RecurringInvoiceForm,
+        isFashNav: false
+      },
+      {
+        route: "/transactions/recurring-invoice/update/:id",
+        component: RecurringInvoiceForm,
+        isFashNav: false
       },
       {
         title: <Translate id="text_serial_no" />,

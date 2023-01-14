@@ -319,9 +319,19 @@ export default {
     "បង្កើតវិក័្កយប័ត្របន្តថ្មី"
   ],
 
+  "text_update_recurring_invoice": [
+    "Update Recurring Invoice",
+    "កែប្រែវិក័្កយប័ត្របន្ត"
+  ],
+
   "text_frequency": [
     "Frequency",
     "ប្រេកង់"
+  ],
+
+  "text_auto_bill": [
+    "Auto Bill",
+    "បង្កើតស្វ័យប្រវត្តិ"
   ],
 
   "text_next_send_date": [

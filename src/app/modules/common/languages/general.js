@@ -47,7 +47,11 @@ export default {
 
   text_month: ["Month", "ខែ"],
 
+  text_monthly: ["Monthly", "ប្រចាំខែ"],
+
   text_week: ["Week", "សប្តាហ៍"],
+
+  text_weekly: ["Weekly", "ប្រចាំសប្តាហ៍"],
 
   text_year: ["Year", "ឆ្នាំ"],
 
@@ -317,6 +321,8 @@ export default {
   text_details: ["Details", "លម្អិត"],
 
   text_invoices: ["Invoices", "វិក័យប័ត្រ"],
+
+  text_recurring_invoice: ["Recurring Invoice", "វិក្កយបត្របន្ត"],
 
   text_pre_order: ["Pre-Order", "ការ​បញ្ជាទិញ​មុន", "Pre-Order"],
 
