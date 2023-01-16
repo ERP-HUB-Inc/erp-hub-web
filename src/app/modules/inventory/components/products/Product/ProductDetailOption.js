@@ -35,10 +35,10 @@ const OptionZero = ({data}) => {
         </Row>
         <Row>
           <Col span={12}>
-              <DescriptionItem title="Category" content={data.productType?.name} />
+              <DescriptionItem title="Category" content={data.productType ? data.productType.name : ""} />
           </Col>
           <Col span={12}>
-              <DescriptionItem title="Brand" content={data.brand?.name} />
+              <DescriptionItem title="Brand" content={data.brand ? data.brand.name : ""} />
           </Col>
         </Row>
     </Card>;
@@ -89,12 +89,12 @@ const OptionOne = ({data}) => {
             <DescriptionItem title="Manage Stock" content={data.serialType === 2 ? "Yes" : "No"} />
         </Col>
         <Col span={12}>
-            <DescriptionItem title="Category" content={data.productType?.name} />
+            <DescriptionItem title="Category" content={data.productType ? data.productType.name : ""} />
         </Col>
       </Row>
       <Row>
         <Col span={24}>
-            <DescriptionItem title="Brand" content={data.brand?.name} />
+            <DescriptionItem title="Brand" content={data.brand? data.brand.name : ""} />
         </Col>
       </Row>
       <Row>
