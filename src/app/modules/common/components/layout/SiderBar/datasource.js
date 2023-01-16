@@ -20,6 +20,11 @@ const RecurringInvoiceForm = Loadable({
   loading: () => <StartUp />
 });
 
+const RecurringInvoiceDetail = Loadable({
+  loader: () => import("../../../../pos/components/transactions/RecurringInvoice/Detail"),
+  loading: () => <StartUp />
+});
+
 const SaleOrderTransaction = Loadable({
   loader: () => import("../../../../pos/components/transactions/SaleOrder"),
   loading: () => <StartUp />,
@@ -392,6 +397,11 @@ const dataSource = {
       {
         route: "/transactions/recurring-invoice/create",
         component: RecurringInvoiceForm,
+        isFashNav: false
+      },
+      {
+        route: "/transactions/recurring-invoice/detail/:id",
+        component: RecurringInvoiceDetail,
         isFashNav: false
       },
       {

@@ -465,6 +465,7 @@ class NewInvoice extends React.PureComponent {
 
     getDetail(id) {
         const action = new URLSearchParams(document.location.search).get("action");
+        const isClone = action === "clone";
         this.setState({loading: true});
         InvoiceService.detail(id)
         .then((response) => {
@@ -490,8 +491,8 @@ class NewInvoice extends React.PureComponent {
                     price: entry.price,
                     discount: 0,
                     amount: entry.quantity * entry.price,
-                    serialNo: entry.serialNo,
-                    serials: entry.serialNo && entry.serialNo.split(",").map(serial => ({number: serial, status: "old"})),
+                    serialNo: isClone ? "" : entry.serialNo,
+                    serials: isClone ? [] : entry.serialNo && entry.serialNo.split(",").map(serial => ({number: serial, status: "old"})),
                     status: entry.status,
                     enableDescription: entry.enableDescription
                 });

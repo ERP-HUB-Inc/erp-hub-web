@@ -20,12 +20,14 @@ import history from "../../../../common/router/history";
 import Enum from "../../../enums";
 import Component from "../../../../common/components/Component";
 import InvoiceService from "../../../services/transactions/InvoiceService";
+import CAInvoice from "../Invoice/CAInvoice";
 
 class RecurringInvoice extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
+      detail: {},
       summaryData: {},
       pagination: {},
       current: 1,
@@ -85,7 +87,7 @@ class RecurringInvoice extends Component {
                 </this.Link>
               </Menu.Item>
               <Menu.Item key={4}>
-                <this.Link target="_blank" to={`/transactions/create-invoice?id=${record.id}&action=clone`} >
+                <this.Link target="_blank" to={`/transactions/recurring-invoice/create?id=${record.id}&action=clone`} >
                   <this.Icon type="copy" style={{marginRight: 10}} /> <this.Translate id="text_clone" />
                 </this.Link>
               </Menu.Item>
@@ -111,7 +113,7 @@ class RecurringInvoice extends Component {
               }
               {
                 record.status !== Enum.INVOICE_STATUS.PAID && 
-                <Menu.Item key={6} onClick={() => this.handleDeleteInvoice(record)} style={{color: "red"}}>
+                <Menu.Item key={6} onClick={() => this.handleDeleteInvoice(record)}>
                   <this.Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
                 </Menu.Item>
               }
@@ -191,6 +193,7 @@ class RecurringInvoice extends Component {
       }
     ];
     this.pathname = "/transactions/recurring-invoice/list";
+    this.timer = null;
   }
 
   componentDidMount() {
@@ -241,6 +244,76 @@ class RecurringInvoice extends Component {
       });
     })
     .finally(() => this.setState({loading: false}));
+  }
+
+  fetchSummary() {
+    InvoiceService.summary()
+    .then(response => {
+      this.setState({summaryData: response.data.data});
+    });
+  }
+
+  async getDetailInvoice(id) {
+    const detail = (await InvoiceService.detail(id)).data;
+    this.setState({detail});
+  }
+
+  handleDeleteInvoice(record) {
+    this.Util.sweetAlertConfirm(this.CATranslate("text_are_you_sure", this.props.locale))
+    .then(willDelete => {
+      if (willDelete) {
+        InvoiceService.delete(record.id)
+        .then(() => {
+          this.Util.sweetAlertMessageV2(this.CATranslate("text_success", this.state.locale), this.CATranslate("text_one_record_deleted", this.props.locale), "success");
+          this.fetchList();
+        })
+        .catch(err => {
+          const error = err.response && err.response.data && err.response.data.error;
+          if (error.message) {
+            this.Util.sweetAlertMessageV2("Warning", error.message, "error");
+          }
+        });
+      }
+    });
+  }
+
+  handleSearch = (e) => {
+    clearTimeout(this.timer);
+    const value = e.target.value;
+    const params = new URLSearchParams(document.location.search);
+  
+    if (value) {
+      params.set("search", value);
+    } else {
+      params.delete("search");
+    }
+
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.timer = setTimeout(() => {
+      this.fetchList();
+    }, 600);
+  }
+
+  handleChangeDate = (date) => {
+    const params = new URLSearchParams(document.location.search);
+    if (date) {
+      params.set("date", date);
+    } else {
+      params.delete("date");
+    }
+
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+  }
+
+  onTableChange = (current, pageSize) => {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
   }
 
   render() {
@@ -328,7 +401,7 @@ class RecurringInvoice extends Component {
 
               <div style={{marginTop: 15}}>
                 {
-                  pagination.total &&
+                  pagination.total ?
                   <div className="float-right">
                     <Pagination 
                       total={pagination.total}
@@ -337,12 +410,21 @@ class RecurringInvoice extends Component {
                       current={this.state.current}
                       size="small"
                       showSizeChanger
+                      onShowSizeChange={this.onTableChange}
+                      onChange={this.onTableChange}
                     />
                   </div>
+                  : null
                 }
               </div>
 
               <this.clearFloating/>
+
+              <div style={{display: "none"}}>
+                <CAInvoice
+                  ref={ref => this.invoiceRef = ref}
+                  formData={this.state.detail} />
+              </div>
             </div>
           </div>
         </div>
