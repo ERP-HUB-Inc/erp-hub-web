@@ -68,7 +68,7 @@ const OptionZero = ({data,id}) => {
                     <DescriptionItem title="នៅឃ្លាំងផ្សេង" content={otherStock} />
                 </Col>
                 <Col span={8}>
-                    <DescriptionItem title="ឯកតា" content={data.unit?.name} />
+                    <DescriptionItem title="ឯកតា" content={data.unit ? data.unit.name : ""} />
                 </Col>
             </Row>
             <Row>
