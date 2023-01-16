@@ -75,7 +75,6 @@ export default function ProductDetailPurcheseHistory({id}) {
       
     <Row>
       <Col span={24}>
-        <p style={{marginRight: 8,display: "inline-block",color: "rgba(0, 0, 0, 0.85)"}}>Detail Purchase History</p>
          <Table
           dataSource={purchaseHistorys}
           bordered={true}

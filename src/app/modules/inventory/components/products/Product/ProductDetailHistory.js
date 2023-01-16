@@ -68,8 +68,7 @@ export default function ProductDetailHistory({id}) {
       
     <Row>
       <Col span={24}>
-        <p style={{marginRight: 8,display: "inline-block",color: "rgba(0, 0, 0, 0.85)"}}>Detail History</p>
-         <Table
+        <Table
           dataSource={movementLogs}
           bordered={true}
           loading={loading}
