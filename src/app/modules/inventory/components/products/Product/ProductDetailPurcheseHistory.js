@@ -72,7 +72,6 @@ export default function ProductDetailPurcheseHistory({id}) {
       }
       ];
     return <Card title="Purchase History Information" bordered={false} style={{marginTop: 25}}>
-      
     <Row>
       <Col span={24}>
          <Table
