@@ -872,6 +872,7 @@ class FormItem extends React.PureComponent {
         preState.formData.taxRate = 0;
         return preState;
       });
+      this.props.form.setFieldsValue({taxRate: "0"});
     }
   }
 
@@ -1040,7 +1041,15 @@ class FormItem extends React.PureComponent {
           this.getDetail(this.id);
           message.success("Make sent success");
         })
-        .catch(() => message.error("Error!...."));
+        .catch(err => {
+          if (err.response && err.response.data) {
+            this.util.sweetAlertMessageV2(
+              "Ops",
+              "Something went wrong",
+              "error"
+            );
+          }
+        });
       }
     });
   }
@@ -1222,7 +1231,7 @@ class FormItem extends React.PureComponent {
                     name="interval"
                     valueKey="value"
                     placeholder={`${stringTranslate("text_frequency", this.props.locale)}`}
-                    defaultValue={formData.frequency}
+                    defaultValue={formData.interval}
                     dataSource={[
                       {name: <Translate id="text_weekly" />, value: Enum.INVOICE_INTERVAL.WEEKLY},
                       {name: <Translate id="text_monthly" />, value: Enum.INVOICE_INTERVAL.MONTHLY}
@@ -1338,6 +1347,7 @@ class FormItem extends React.PureComponent {
                         {name: "Exclude", value: "exclude"}
                       ]}
                       style={{width: "100%", paddingRight: 10}}
+                      onChange={this.onChangeVATType}
                       form={this.props.form} />
                     <InputText
                       name="taxRate"

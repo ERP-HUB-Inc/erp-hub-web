@@ -198,6 +198,7 @@ class RecurringInvoice extends Component {
 
   componentDidMount() {
     this.fetchList();
+    this.fetchSummary();
   }
 
   fetchList(withPagination = false) {
@@ -247,7 +248,7 @@ class RecurringInvoice extends Component {
   }
 
   fetchSummary() {
-    InvoiceService.summary()
+    InvoiceService.summary(JSON.stringify({invoiceType: [Enum.INVOICE_TYPE.SCHEDULED]}))
     .then(response => {
       this.setState({summaryData: response.data.data});
     });

@@ -81,7 +81,11 @@ class Detail extends React.Component {
       return this.util.sweetAlertMessageV2("Warning!", "Can't mark sent invoice in this step");
     }
 
-    this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
+    this.util.sweetAlertConfirm(
+      "", 
+      stringTranslate("text_are_you_sure", this.props.locale),
+      [stringTranslate("text_cancel", this.props.locale), stringTranslate("text_yes", this.props.locale)]
+    )
     .then(willSent => {
       if (willSent) {
         InvoiceService.makAsSent(this.state.formData.id)

@@ -20,7 +20,11 @@ export default function ReceivedPayment(props) {
 
     props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        util.sweetAlertConfirm(stringTranslate("text_are_you_sure", props.locale))
+        util.sweetAlertConfirm(
+          "",
+          stringTranslate("text_are_you_sure", props.locale),
+          [stringTranslate("text_cancel", props.locale), stringTranslate("text_pay", props.locale)]
+        )
         .then(willReceived => {
           if (willReceived) {
             let paymentMethod = values.paymentMethod;

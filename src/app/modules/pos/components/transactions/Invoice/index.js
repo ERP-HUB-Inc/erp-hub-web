@@ -280,13 +280,8 @@ export default class Invoice extends Component {
     }
 
     this.getPermission();
-
-    InvoiceService.summary().then(({data})=>{
-      this.setState({summaryData: data.data});
-    });
-
+    this.fetchSummary();
     this.fetchList(true);
-    
     this.props.dispatch(ReceiptTemplateAction.default());
   }  
 
@@ -352,6 +347,8 @@ export default class Invoice extends Component {
       this.setState({current: 1});
     }
 
+    filter.invoiceType = [Enum.INVOICE_TYPE.NON_SCHEDULED];
+
     this.Util.pushParamsToURL(this.pathname, params.toString());
 
     this.setState({loading: true});
@@ -365,6 +362,12 @@ export default class Invoice extends Component {
       }
     })
     .finally(() => this.setState({loading: false}));
+  }
+
+  fetchSummary() {
+    InvoiceService.summary(JSON.stringify({invoiceType: [Enum.INVOICE_TYPE.NON_SCHEDULED]})).then(({data})=>{
+      this.setState({summaryData: data.data});
+    });
   }
 
   async handlePrintReceipt(id) {
