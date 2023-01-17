@@ -259,18 +259,22 @@ class RecurringInvoice extends Component {
     this.setState({detail});
   }
 
-  handleDeleteInvoice(record) {
+  handleDeleteInvoice = (record) => {
     this.Util.sweetAlertConfirm(this.CATranslate("text_are_you_sure", this.props.locale))
     .then(willDelete => {
       if (willDelete) {
         InvoiceService.delete(record.id)
         .then(() => {
-          this.Util.sweetAlertMessageV2(this.CATranslate("text_success", this.state.locale), this.CATranslate("text_one_record_deleted", this.props.locale), "success");
+          this.Util.sweetAlertMessageV2(
+            this.CATranslate("text_success", this.props.locale),
+            this.CATranslate("text_one_record_deleted", this.props.locale),
+            "success"
+          );
           this.fetchList();
         })
         .catch(err => {
           const error = err.response && err.response.data && err.response.data.error;
-          if (error.message) {
+          if (error && error.message) {
             this.Util.sweetAlertMessageV2("Warning", error.message, "error");
           }
         });
