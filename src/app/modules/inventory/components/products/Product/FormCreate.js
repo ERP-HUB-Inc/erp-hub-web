@@ -70,8 +70,9 @@ export default class ProductCreate extends Component {
         timer: 1500
       })
       .then(() => {
-        this.props.form.resetFields();
-        this.props.dispatch(ProductAction.reset());
+        // this.props.form.resetFields();
+        // this.props.dispatch(ProductAction.reset());
+        window.location.reload();
       });
     }
   }
