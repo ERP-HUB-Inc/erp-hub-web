@@ -104,7 +104,7 @@ export default {
     "ត្រូវប្រាកដថារាល់ព័ត៌មានដែលអ្នកបញ្ចូលគឺត្រឹមត្រូវទាំងអស់"
   ],
   "text_please_input_product": [
-    "text_please_input_product",
+    "Please input product",
     "សូមបញ្ចូលផលិតផល"
   ]
 };

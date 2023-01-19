@@ -48,6 +48,10 @@ export default {
     RECEIVED: "Received",
     RETURNED: "Returned"
   },
+  STOCK_COUNT_TYPE: {
+    PARTIAL: "partial",
+    FULL_COUNT: "fullCount"
+  },
   CLIENT_AUTO_NUMBER_TYPE: {
     QUOTATION : 2,
     INVOICE : 4,

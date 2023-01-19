@@ -1,0 +1,19 @@
+.input-count-quantity {
+  height: 42px;
+  margin-top: 4px;
+}
+
+.input-count-quantity .ant-input-number-input {
+  margin-top: 6px;
+}
+
+.quick-scan-count-switch {
+  height: 38px;
+  width: 110px;
+}
+
+.quick-scan-count-switch::after {
+  height: 30px;
+  width: 30px;
+  margin-top: 1px;
+}

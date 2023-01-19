@@ -181,6 +181,16 @@ const StockAdjustmentRequest = Loadable({
   loading: () => <StartUp />,
 });
 
+const StockCount = Loadable({
+  loader: () => import("../../../../inventory/components/stock/StockCount"),
+  loading: () => <StartUp />
+});
+
+const StockCountForm = Loadable({
+  loader: () => import("../../../../inventory/components/stock/StockCount/FormItem"),
+  loading: () => <StartUp />
+});
+
 // REPORT
 const SaleReportDashboard = Loadable({
   loader: () =>
@@ -620,6 +630,23 @@ const dataSource = {
         component: StockTransfer,
         isFashNav: true,
       },
+      {
+        title: <Translate id="text_stock_count" />,
+        icon: "icon-cube",
+        route: "/stock/stock-count/list",
+        component: StockCount,
+        isFashNav: true
+      },
+      {
+        route: "/stock/stock-count/create",
+        component: StockCountForm,
+        isFashNav: false
+      },
+      {
+        route: "/stock/stock-count/update/:id",
+        component: StockCountForm,
+        isFashNav: false
+      }
     ],
   },
   customers: {

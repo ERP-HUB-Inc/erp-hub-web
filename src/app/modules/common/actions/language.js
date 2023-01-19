@@ -43,6 +43,8 @@ import stockAdjustmentApprove from "../../inventory/languages/stock/stockAdjustm
 import returnPurchase from "../../inventory/languages/stock/returnPurchase";
 import receivePurchase from "../../inventory/languages/stock/receivePurchase";
 import reorderPoint from "../../inventory/languages/stock/reorderPoint";
+import stockCount from "../../inventory/languages/stock/stockCount";
+
 //report 
 import saleReport from "../../pos/languages/report/sale";
 import inventoryReport from "../../pos/languages/report/inventory";
@@ -100,6 +102,7 @@ export function setTranslation() {
     ...returnPurchase,
     ...receivePurchase,
     ...reorderPoint,
+    ...stockCount,
     ...saleReport,
     ...inventoryReport,
     ...profitAndLostReport,
