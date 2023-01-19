@@ -160,7 +160,7 @@ export default class FormItem extends Modal {
                 <div className="right" />
                 <div className="left" style={{marginTop: 24}}>
                 <this.Button htmlType="submit" onClick={this.handleReceive} style={{ width: "100%" }} loading={this.props.updateReceivePayment.updating} type="info">
-                  <span className="icon-payment-report icon-padding-right text-uppercase"></span> { this.props.buttonReceivePaymentTitle ? this.props.buttonReceivePaymentTitle : <this.Translate id="text_receive_payment" /> }
+                  <span className="icon-payment-report icon-padding-right"></span> { this.props.buttonReceivePaymentTitle ? this.props.buttonReceivePaymentTitle : <this.Translate id="text_receive_payment" /> }
                 </this.Button>
                 </div>
               </div>

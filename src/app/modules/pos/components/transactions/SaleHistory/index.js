@@ -147,7 +147,7 @@ export default class SaleHistoryList extends List {
         align: "center",
         width: 100,
         render: (text, record) => {
-          return <this.Button className="danger mg-right text-uppercase"  onClick={() => this.handleReturn(record, this.state.selectedRows)}>
+          return <this.Button className="danger mg-right"  onClick={() => this.handleReturn(record, this.state.selectedRows)}>
             <span className="icon-sale-return icon-padding-right"></span>
             <this.Translate id="text_return" />
           </this.Button>;
@@ -418,8 +418,8 @@ export default class SaleHistoryList extends List {
   }
 
   renderButtonAddNew() {
-    return <this.Button className="mg-right text-uppercase" type="info" loading={this.props.detail.fetching && this.state.isRequestReprint} onClick={this.handleRePrint}>
-      <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print" />
+    return <this.Button className="mg-right" type="info" loading={this.props.detail.fetching && this.state.isRequestReprint} onClick={this.handleRePrint}>
+      <span className="icon-print icon-padding-right"></span><this.Translate id="text_print" />
       <div id="receiptLogoPreLoading" style={{ display: "none" }}>
         {<img style={{ width: 100 }} alt="" src={this.Util.getProductImage(this.props.receiptTemplate && this.props.receiptTemplate.data ? this.props.receiptTemplate.data.logo : "", "general").url} />}
       </div>
@@ -428,7 +428,7 @@ export default class SaleHistoryList extends List {
   
   renderButtonDelete(){
     return <this.Button type="info" loading={this.props.detail.fetching && this.state.isRequestReprint} onClick={this.handleReceivePayment}>
-      <span className="icon-payment-report icon-padding-right text-uppercase"></span><this.Translate id="text_receive_payment" />
+      <span className="icon-payment-report icon-padding-right"></span><this.Translate id="text_receive_payment" />
     </this.Button>;
   }
 
@@ -449,7 +449,7 @@ export default class SaleHistoryList extends List {
         <label htmlFor="status" className="" title="">Filter</label>
       </div>
       <this.Button htmlType="submit" type="default" loading={this.state.isClickFilter && fetchingProps.fetching}>
-        <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
+        <span className="icon-search icon-padding-right"></span>{<this.Translate id="text_search" />}
       </this.Button>
     </this.Col>;
   }

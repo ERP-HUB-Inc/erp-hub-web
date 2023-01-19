@@ -611,7 +611,7 @@ export default class PrintPriceTag extends List {
             </this.Col>
           </this.Row>
           <div className="text-center" style={{marginTop: 15}}>
-            <this.Button className="danger text-uppercase" onClick={this.handleOnClickLabelSetting}>
+            <this.Button className="danger" onClick={this.handleOnClickLabelSetting}>
               <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_close" />
             </this.Button>
             {
@@ -702,8 +702,8 @@ export default class PrintPriceTag extends List {
                       }
                     ]}
                     form={this.props.form} />
-                  <this.Button htmlType="submit" type="info" className="btn-print-label text-uppercase" onClick={this.handleOnGeneratePriceTag}>
-                    <span className="icon-print icon-padding-right text-uppercase"></span> <this.Translate id="text_generate"/>
+                  <this.Button htmlType="submit" type="info" className="btn-print-label" onClick={this.handleOnGeneratePriceTag}>
+                    <span className="icon-print icon-padding-right"></span> <this.Translate id="text_generate"/>
                   </this.Button>
                   {
                     this.state.dataSourceToPrint.length > 0 ?

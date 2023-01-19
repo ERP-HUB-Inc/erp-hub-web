@@ -436,7 +436,7 @@ export default class IncomeExpense extends Component {
                         <this.Button
                             type="info"
                             id="btnAdd"
-                            className="mg-right text-uppercase"
+                            className="mg-right"
                             disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
                             onClick={()=> {
                               this.props.dispatch(this.action.showForm());
@@ -448,7 +448,6 @@ export default class IncomeExpense extends Component {
                         </this.Button>
                         <this.Button
                             type="danger"
-                            className="text-uppercase"
                             disabled={this.state.isRequestDelete}
                             onClick={this.showDeleteModal}>
                           <span className="icon-delete icon-padding-right"></span>
@@ -494,10 +493,10 @@ export default class IncomeExpense extends Component {
                   }
                 </div>
                 <div className="ant-modal-footer">
-                  <this.Button className="danger text-uppercase" onClick={()=>this.setState({modalVisible: false})}>
+                  <this.Button className="danger" onClick={()=>this.setState({modalVisible: false})}>
                     <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel"/>
                   </this.Button>
-                  <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info text-uppercase">
+                  <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info">
                     <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes"/>
                   </this.Button>
                 </div>

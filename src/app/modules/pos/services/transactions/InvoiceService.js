@@ -102,6 +102,14 @@ class InvoiceService extends BaseService {
     });
   }
 
+  editShipping(id, shippingDetail, shippingAddress, shippingContact1, shippingContact2, shippingStatus) {
+    this.setHeader();
+    return this.PUT({
+      url: `${this.baseUrl}/edit_shipping/${id}?shippingDetail=${shippingDetail}&shippingAddress=${shippingAddress}&shippingContact1=${shippingContact1}&shippingContact2=${shippingContact2}&shippingStatus=${shippingStatus}`,
+      headers: this.header
+    });
+  }
+
   makAsReturn(id) {
     this.setHeader();
     return this.PUT({

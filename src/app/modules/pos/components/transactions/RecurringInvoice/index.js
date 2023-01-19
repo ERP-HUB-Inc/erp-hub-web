@@ -388,7 +388,6 @@ class RecurringInvoice extends Component {
                   <this.Button
                     type="info"
                     id="btnAdd"
-                    className="text-uppercase"
                     onClick={() => history.push({pathname: "/transactions/recurring-invoice/create"})}
                   >
                     <span className="icon-add icon-padding-right"></span>

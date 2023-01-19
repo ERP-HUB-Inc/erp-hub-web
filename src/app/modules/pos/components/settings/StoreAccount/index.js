@@ -340,7 +340,7 @@ export default class StoreAccountList extends Component {
           {
             menuSource[this.module]["subItems"].map((value, index) =>
               currentPath === value["route"] ? 
-                <li className="fast-nav text-uppercase" key={index}>
+                <li className="fast-nav" key={index}>
                   <this.Link to={value["route"]}>{value["title"]}</this.Link>
                 </li>
                 :

@@ -226,7 +226,7 @@ class StockConsignment extends List {
                 <label htmlFor="status" className="" title="">Filter</label>
               </div>
               <this.Button htmlType="submit" type="info" loading={this.state.loadingFilter} style={{marginTop: -3}}>
-                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+                <span className="icon-search icon-padding-right"></span><this.Translate id="button_text_search" />
               </this.Button>
             </this.Col>
           </this.Row>
@@ -238,7 +238,6 @@ class StockConsignment extends List {
     return (
       <this.Button
         type="danger"
-        className="text-uppercase"
         disabled={this.state.isRequestDelete}
         onClick={this.handleDelete}>
         <span className="icon-delete icon-padding-right"></span>
@@ -251,7 +250,7 @@ class StockConsignment extends List {
     return <this.Button
       type="info"
       id="btnAdd"
-      className="mg-right text-uppercase"
+      className="mg-right"
       onClick={() => history.push({pathname: "/stock/consignment/create"})}>
       <span className="icon-add icon-padding-right"></span>
       <this.Translate id="text_add_new" />

@@ -402,14 +402,13 @@ export default class StockTransferList extends Component {
                       <this.Button
                         type="info"
                         id="btnAdd"
-                        className="mg-right text-uppercase"
+                        className="mg-right"
                         onClick={() => history.push({pathname: this.pathCreate})}>
                         <span className="icon-add icon-padding-right"></span>
                         <this.Translate id="text_add_new"/>
                       </this.Button>
                         <this.Button
                           type="danger"
-                          className="text-uppercase"
                           disabled={this.state.isRequestDelete}
                           onClick={this.showDeleteModal}>
                           <span className="icon-delete icon-padding-right"></span>
@@ -449,10 +448,10 @@ export default class StockTransferList extends Component {
                 }
               </div>
               <div className="ant-modal-footer">
-                <this.Button className="danger text-uppercase" onClick={()=>this.setState({modalVisible: false})}>
+                <this.Button className="danger" onClick={()=>this.setState({modalVisible: false})}>
                   <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel"/>
                 </this.Button>
-                <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info text-uppercase">
+                <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info">
                   <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes"/>
                 </this.Button>
               </div>

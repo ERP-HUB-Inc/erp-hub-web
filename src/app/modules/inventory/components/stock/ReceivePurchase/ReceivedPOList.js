@@ -200,7 +200,7 @@ export default class ReceivedPo extends Modal {
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
           footer={() => <div className={`${this.state.productLists.length > 0 ? "" : "hidden"}`} style={{display: "flex"}}>
-            <div className="total-title text-uppercase" style={{width: "auto", display: "flex"}}>
+            <div className="total-title" style={{width: "auto", display: "flex"}}>
               <this.Translate id="text_total_amount" />:
             </div>
             <div className="total-value" style={{width: 128, display: "flex", alignItems: "center", paddingRight: 5}}>

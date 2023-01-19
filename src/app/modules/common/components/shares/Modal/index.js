@@ -107,14 +107,14 @@ export default class Modal extends Component {
         footer={null}>
         <div>
           <span className="icon-help icon-padding-right"></span>
-          <span className="title text-uppercase">{this.confirmTitle}</span><br/>
+          <span className="title">{this.confirmTitle}</span><br/>
           <span>{this.confirmTextAction}</span>
         </div>
         <div className="ant-modal-footer">
-          <this.Button className="danger text-uppercase" onClick={() => this.handleCancelConfirmAction()}>
+          <this.Button className="danger" onClick={() => this.handleCancelConfirmAction()}>
             <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_no" />
           </this.Button>
-          <this.Button onClick={() => this.handleSubmitConfirmAction()} loading={this.submitConfirmActionLoading} className="info text-uppercase">
+          <this.Button onClick={() => this.handleSubmitConfirmAction()} loading={this.submitConfirmActionLoading} className="info">
             <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes" />
           </this.Button>
         </div>

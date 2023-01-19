@@ -123,7 +123,7 @@ export default class IncomeExpense extends List {
               type="default"
               loading={this.state.isClickFilter && fetchingProps.fetching}
             >
-              <span className="icon-search icon-padding-right text-uppercase"></span>
+              <span className="icon-search icon-padding-right"></span>
               <this.Translate id="button_text_search" />
             </this.Button>
           </this.Col>

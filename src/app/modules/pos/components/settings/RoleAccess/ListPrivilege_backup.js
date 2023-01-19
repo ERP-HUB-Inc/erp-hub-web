@@ -323,7 +323,7 @@ export default class ListPrivilege extends Component {
       <this.Panel 
         header={
           <div>
-            <span className="text-uppercase">
+            <span>
               {parent.name}
             </span>
             <this.Checkbox // 1 THIS THE SAME IT SHOW WHEN COLAPSE CLOSE

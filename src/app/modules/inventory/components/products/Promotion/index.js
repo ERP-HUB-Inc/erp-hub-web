@@ -161,7 +161,7 @@ class Promotion extends List {
     return <this.Button
       type="info"
       id="btnAdd"
-      className="mg-right text-uppercase"
+      className="mg-right"
       onClick={() => history.push({pathname: "/promotions/create"})}>
       <span className="icon-add icon-padding-right"></span>
       <this.Translate id="text_add_new" />

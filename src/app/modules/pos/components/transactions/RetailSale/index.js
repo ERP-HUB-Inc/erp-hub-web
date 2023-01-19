@@ -1023,7 +1023,7 @@ export default class Retail extends Component {
             <div>
               <this.Translate id="text_cashier" />: 
             </div>
-            <div className="current-cashier text-uppercase">
+            <div className="current-cashier">
               {this.Util.getCurrentUser().fullName}
             </div>
           </this.Col>

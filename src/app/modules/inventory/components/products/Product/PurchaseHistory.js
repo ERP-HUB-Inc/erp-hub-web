@@ -9,7 +9,7 @@ import ProductService from "../../../services/products/ProductService";
 import Util from "../../../../common/util";
 
 const util = new Util();
-export default function ProductDetailPurcheseHistory({id}) {
+export default function PurchaseHistory({id}) {
     const [purchaseHistorys,setPurchaseHistorys] = useState([]);
     const [loading,setLoading] = useState(false);
 
@@ -56,7 +56,7 @@ export default function ProductDetailPurcheseHistory({id}) {
             title: "Quantity Buy In",
             dataIndex: "quantity",
             key: "quantity",
-            render: (unitName,record) => `${record.quantity} ${unitName}`
+            render: (quantity, record) => `${quantity} ${record.unitName}`
         },
         {
             title: "Unit Cost",
@@ -71,7 +71,7 @@ export default function ProductDetailPurcheseHistory({id}) {
           render: (total) => total ? util.formatCurrency(total) : null
       }
       ];
-    return <Card title="Purchase History Information" bordered={false} style={{marginTop: 25}}>
+    return <Card title="Purchase History" bordered={false} style={{marginTop: 25}}>
     <Row>
       <Col span={24}>
          <Table

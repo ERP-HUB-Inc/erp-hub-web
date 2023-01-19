@@ -27,7 +27,7 @@ export default class Form extends Modal {
     return(
       <div className="ant-modal-footer">
         <this.Button type="info" onClick={this.handleRePrint}>
-          <span className="icon-print icon-padding-right text-uppercase"></span><this.Translate id="text_print"/>
+          <span className="icon-print icon-padding-right"></span><this.Translate id="text_print"/>
         </this.Button>
       </div>
     );

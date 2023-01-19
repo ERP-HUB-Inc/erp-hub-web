@@ -148,7 +148,7 @@ export default class ClientSignIn extends Component {
         {
           client.list ?
             <div>
-              <div className="storename text-uppercase">{this.storeName}</div>
+              <div className="storename">{this.storeName}</div>
               <div className="store-email">
                 {this.storeName}<span className="store-email-url">.storevein.com</span>
               </div>

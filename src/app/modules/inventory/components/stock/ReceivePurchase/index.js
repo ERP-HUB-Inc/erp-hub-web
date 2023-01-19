@@ -83,7 +83,7 @@ export default class ReceivePurchaseList extends List {
         render: id => <this.Button
           type="info"
           id="btnAdd"
-          className="mg-right text-uppercase"
+          className="mg-right"
           onClick={() => this.handleShowFormEdit({id})}>
           <span className="icon-completed icon-padding-right"></span>
           <this.Translate id="text_receive"/>
@@ -211,7 +211,7 @@ export default class ReceivePurchaseList extends List {
               <label htmlFor="status" className="" title="">Filter</label>
             </div>
             <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-              <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+              <span className="icon-search icon-padding-right"></span><this.Translate id="button_text_search" />
             </this.Button>
           </this.Col>
         </this.Row>

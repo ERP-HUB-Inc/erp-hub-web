@@ -144,7 +144,6 @@ class Router extends Component {
         </Content>
         <this.Button
           type="info"
-          className="text-uppercase"
           onClick={() => window.location.reload(true)}
           style={{
             display: "none",

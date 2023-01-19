@@ -1414,7 +1414,7 @@ const WebsiteSetting = (props) => {
                           <Button
                             type="info"
                             id="btnAdd"
-                            className="ant-btn info mg-right text-uppercase"
+                            className="ant-btn info mg-right"
                             onClick={() => onShowFormBanner()}
                           >
                             <span className="icon-add icon-padding-right"></span>
@@ -1757,7 +1757,7 @@ const WebsiteSetting = (props) => {
                           <Button
                             type="info"
                             id="btnAdd"
-                            className="ant-btn info mg-right text-uppercase"
+                            className="ant-btn info mg-right"
                             onClick={() => onShowFormMenuItem()}
                           >
                             <span className="icon-add icon-padding-right"></span>
@@ -2211,7 +2211,7 @@ const WebsiteSetting = (props) => {
                           <Button
                             type="info"
                             id="btnAdd"
-                            className="ant-btn info mg-right text-uppercase"
+                            className="ant-btn info mg-right"
                             onClick={() => onShowFormPages()}
                           >
                             <span className="icon-add icon-padding-right"></span>

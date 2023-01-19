@@ -177,8 +177,8 @@ export default class SideBar extends React.PureComponent {
             this.state.classToggle === "show" 
               ?  
               <div>
-                <div className="title text-center text-uppercase">{this.state.titleSubmenu}</div>
-                <ul className="list-unstyled text-left text-uppercase">
+                <div className="title text-center">{this.state.titleSubmenu}</div>
+                <ul className="list-unstyled text-left">
                   {
                     this.state.menuItems[subMenuItemTitle]["subItems"].map((menu, key) => 
                       menu["title"] ? this.subMenuItem(key, menu["route"], menu["title"], menu["icon"], menu["new"], menu["isSeparate"]) : ""

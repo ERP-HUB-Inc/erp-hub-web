@@ -153,12 +153,12 @@ export default class DropDownSearch extends Modal {
             title={`${record.firstName} ${record.lastName}`}
             description={
               <div className="wrap-description">
-                <span className="text-uppercase">{record.phoneNumber}</span>
+                <span>{record.phoneNumber}</span>
                 <div className="right-description">
                   {
                     record.number ? <div className="customer-code">{this.customerType[record.type].name}</div> : ""
                   }
-                  <this.Tag color="#FFD627" className="text-uppercase">{record.groupCustomer ? record.groupCustomer.name : "general" }</this.Tag>
+                  <this.Tag color="#FFD627">{record.groupCustomer ? record.groupCustomer.name : "general" }</this.Tag>
                 </div>
               </div>} />
         </this.List.Item>

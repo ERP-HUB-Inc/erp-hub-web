@@ -20,7 +20,7 @@ import {
   Input
 } from "antd";
 import SalesOrderPrint from "./Invoice/SalesOrderPrint";
-import PackingSlipTem from "./Invoice/PackingSlip";
+import PackingSlip from "./Invoice/PackingSlip";
 import DeliveryNote from "./Invoice/DeliveryNote";
 import history from "../../../../common/router/history";
 import Component from "../../../../common/components/Component";
@@ -427,7 +427,7 @@ class SaleOrder extends Component {
     return <this.Button
         type="info"
         id="btnAdd"
-        className="mg-right text-uppercase"
+        className="mg-right"
         onClick={() => history.push({pathname: "/transactions/sale-order/create"})}>
         <span className="icon-add icon-padding-right"></span>
         <this.Translate id="text_add_new" />
@@ -462,7 +462,7 @@ class SaleOrder extends Component {
           />
           <div style={{display: "none"}}>
             <SalesOrderPrint formData={this.state.formData} ref={el => (this.componentRef = el)} />
-            <PackingSlipTem formData={this.state.formData} ref={el => (this.packingSlipRef = el)} />
+            <PackingSlip formData={this.state.formData} ref={el => (this.packingSlipRef = el)} />
             <DeliveryNote formData={this.state.formData} ref={el => (this.deliveryNoteRef = el)} />
           </div>
         </div>
@@ -591,7 +591,6 @@ class SaleOrder extends Component {
                           <this.Button
                               type="info"
                               id="btnAdd"
-                              className="text-uppercase"
                               disabled={this.state.loading}
                               onClick={() => history.push("/transactions/sale-order/create")}>
                             <span className="icon-add icon-padding-right"></span>

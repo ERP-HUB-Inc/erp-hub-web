@@ -41,8 +41,8 @@ const DeliveryNote = React.forwardRef((props, ref) => {
           <tr style={{background: "none"}}>
             <td style={styles.td}>{invoice && invoice.invoiceNumber}</td>
             <td style={styles.td}>{formData.number}</td>
-            <td style={styles.td}>{util.formatDate(formData.orderDate, "DD/MM/YYYY")}</td>
-            <td style={styles.td}>{formData.expectedShipmentDate ? util.formatDate(formData.expectedShipmentDate, "DD/MM/YYYY hh:mm A") : "N/A"}</td>
+            <td style={styles.td}>{formData.orderDate ? util.formatDate(formData.orderDate, "DD/MM/YYYY") : ""}</td>
+            <td style={styles.td}>{formData.expectedShipmentDate ? util.formatDate(formData.expectedShipmentDate, "DD/MM/YYYY hh:mm A") : ""}</td>
           </tr>
         </tbody>
       </table>

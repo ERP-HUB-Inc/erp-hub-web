@@ -173,7 +173,7 @@ export default class ReceivedPO extends Modal {
           columns={this.columns}
           locale={{emptyText: <this.Translate id="placeholder_table_purchase_order" />}}
           footer={() => <div className={`pull-right ${this.state.productLists.length > 0 ? "" : "hidden"}`}>
-            <div className="total-title text-uppercase pull-left">
+            <div className="total-title pull-left">
               <this.Translate id="text_total_amount" />: </div>
             <div className="total-value pull-left" style={{width: 100}}>
               <this.InputText name="returnTotal" disabled={true} className="ca-input-no-border grandTotal" form={this.props.form}/>

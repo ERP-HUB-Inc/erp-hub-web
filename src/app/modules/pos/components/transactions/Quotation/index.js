@@ -545,7 +545,6 @@ export default class QuotationList extends Component {
                           <this.Button
                               type="info"
                               id="btnAdd"
-                              className="text-uppercase"
                               disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
                               onClick={() => history.push("/transactions/quotation-create")}>
                             <span className="icon-add icon-padding-right"></span>

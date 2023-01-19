@@ -375,7 +375,7 @@ export default class DataTable extends Component {
           <li>
             <this.Link to="/"><span className="icon-home"></span></this.Link>
           </li>
-          <li className="fast-nav text-uppercase">
+          <li className="fast-nav">
             <this.Link to="#">{menuSource[this.module]["title"]}</this.Link>
           </li>
           {
@@ -405,7 +405,7 @@ export default class DataTable extends Component {
           {
             menuSource[this.module]["subItems"].map((value, index) =>
               currentPath === value["route"] ? 
-                <li className="fast-nav text-uppercase" key={index}>
+                <li className="fast-nav" key={index}>
                   <this.Link to={value["route"]}>{value["title"]}</this.Link>
                 </li>
                 :
@@ -422,7 +422,7 @@ export default class DataTable extends Component {
       <this.Button
         type="info"
         id="btnAdd"
-        className="mg-right text-uppercase"
+        className="mg-right"
         disabled={this.state.loadingPopup || this.props[this.fetchingProp].fetching}
         onClick={this.handleShowFormAdd}>
         <span className="icon-add icon-padding-right"></span>
@@ -435,7 +435,6 @@ export default class DataTable extends Component {
     return (
       <this.Button
         type="danger"
-        className="text-uppercase"
         disabled={this.state.isRequestDelete}
         onClick={this.handleConfirm}>
         <span className="icon-delete icon-padding-right"></span>
@@ -476,10 +475,10 @@ export default class DataTable extends Component {
           <span>{this.confirmTextDelete}</span>
         </div>
         <div className="ant-modal-footer">
-          <this.Button className="danger text-uppercase" onClick={this.handleCancel}>
+          <this.Button className="danger" onClick={this.handleCancel}>
             <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel"/>
           </this.Button>
-          <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info text-uppercase">
+          <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info">
             <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes"/>
           </this.Button>
         </div>

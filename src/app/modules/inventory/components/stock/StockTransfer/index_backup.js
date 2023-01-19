@@ -231,7 +231,7 @@ export default class StockTransferList extends List {
                   <label htmlFor="status" className="" title="">Filter</label>
                 </div>
                 <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && this.props.list.fetching}>
-                  <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="text_search" />
+                  <span className="icon-search icon-padding-right"></span><this.Translate id="text_search" />
                 </this.Button>
               </this.Col>
             </this.Row>

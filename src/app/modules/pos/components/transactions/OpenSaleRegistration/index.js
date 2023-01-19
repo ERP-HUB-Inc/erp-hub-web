@@ -391,11 +391,11 @@ export default class OpenSaleRegistrationList extends List {
       isOpenedRegister ?
         <div>
           <this.Button type="info" onClick={this.handlePrintSummary}>
-            <span className="icon-print icon-padding-right text-uppercase"></span>
+            <span className="icon-print icon-padding-right"></span>
             <this.Translate id="text_print_summary"/>
           </this.Button>
           <this.Button loading={this.props.close.updating} type="info" className="margin-left-8" onClick={this.handleShowFormAdd}>
-            <span className="icon-add icon-padding-right text-uppercase"></span><this.Translate id="text_open_register"/>
+            <span className="icon-add icon-padding-right"></span><this.Translate id="text_open_register"/>
           </this.Button>
         </div>
         :
@@ -455,7 +455,7 @@ render() {
             !this.isOpenSaleRegistrationClosed() ?
               <div style={{marginTop: 15}}>
                 <this.Button htmlType="submit" loading={this.props.close.updating} type="info" className="pull-right">
-                  <span className="icon-completed icon-padding-right text-uppercase"></span>
+                  <span className="icon-completed icon-padding-right"></span>
                   <this.Translate id="text_close_register"/>
                 </this.Button>
               </div>

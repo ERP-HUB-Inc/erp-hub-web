@@ -491,7 +491,7 @@ export default class Payment extends Modal {
               ""
           }
           <this.Col md="5" className="sale-summary">
-            <div className="title text-uppercase"><this.Translate id="text_sale_summary"/></div>
+            <div className="title"><this.Translate id="text_sale_summary"/></div>
             <div className="list-order-summary">
               <ul className="list-unstyled">
                 {

@@ -24,7 +24,7 @@ export default class FormSelectType extends Modal {
   render() {
     this.content = <div className="wrap-income-exp-box">
       { [{title: "QR", value: 1}, {title: "Barcode", value: 2}].map((typeOfPrint, key) => 
-        <div key={key} className={`text-center text-uppercase ca-box ${this.state.type === typeOfPrint.value ? "active" : ""}`}  onClick={() => this.handleSelectType(typeOfPrint.value)}>
+        <div key={key} className={`text-center ca-box ${this.state.type === typeOfPrint.value ? "active" : ""}`}  onClick={() => this.handleSelectType(typeOfPrint.value)}>
           {typeOfPrint.title}
         </div> 
       ) 

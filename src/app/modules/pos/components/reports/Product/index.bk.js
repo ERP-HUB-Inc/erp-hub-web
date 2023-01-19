@@ -242,7 +242,7 @@ export default class ProductList extends List {
                   <label htmlFor="status" className="" title=""></label>
                 </div>
                 <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-                  <span className="icon-search icon-padding-right text-uppercase"></span>{<this.Translate id="text_search" />}
+                  <span className="icon-search icon-padding-right"></span>{<this.Translate id="text_search" />}
                 </this.Button> 
               </this.Col>
 

@@ -55,7 +55,7 @@ export default class RoleAccessList extends List {
             {this.renderFilterStatus()}
             <this.Col md="2" className="wrap-btn-search">
               <this.Button htmlType="submit" type="info" loading={this.state.isClickFilter && fetchingProps.fetching}>
-                <span className="icon-search icon-padding-right text-uppercase"></span><this.Translate id="button_text_search" />
+                <span className="icon-search icon-padding-right"></span><this.Translate id="button_text_search" />
               </this.Button>
             </this.Col>
           </this.Row>
@@ -75,7 +75,7 @@ export default class RoleAccessList extends List {
           {
             menuSource[this.module]["subItems"].map((value, index) =>
               currentPath === value["route"] ? 
-                <li className="fast-nav text-uppercase" key={index}>
+                <li className="fast-nav" key={index}>
                   <this.Link to={value["route"]}>{value["title"]}</this.Link>
                 </li>
                 :

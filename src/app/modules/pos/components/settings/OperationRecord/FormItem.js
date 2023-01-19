@@ -112,7 +112,7 @@ export default class FormItem extends Modal {
         <div className="wrap-income-exp-box">
           <div
             style={{ fontSize: 18, color: "#c72727" }}
-            className={`text-center text-uppercase ca-box ${
+            className={`text-center ca-box ${
               this.state.type === this.Enum.OPERATION_TYPE.EXPENSE
                 ? "active"
                 : ""
@@ -126,7 +126,7 @@ export default class FormItem extends Modal {
           </div>
           <div
             style={{ fontSize: 18, color: "#4cb64c" }}
-            className={`text-center text-uppercase ca-box ${
+            className={`text-center ca-box ${
               this.state.type === this.Enum.OPERATION_TYPE.INCOME
                 ? "active"
                 : ""

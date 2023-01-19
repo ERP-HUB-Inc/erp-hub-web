@@ -42,8 +42,8 @@ const PackingSlip = React.forwardRef((props, ref) => {
                   :
                   "" 
                 }
-                <li>
-                  Address: <strong>{setting.address}</strong>
+                <li style={{display: "flex"}}>
+                  Address: <strong dangerouslySetInnerHTML={{__html: setting.address}} style={{paddingLeft: 5}} />
                 </li>
                 <li>
                   Contact Number: <strong>{setting.phoneNumber}</strong>

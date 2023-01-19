@@ -365,7 +365,6 @@ class Installment extends Component {
                     <this.Button
                       type="info"
                       id="btnAdd"
-                      className="text-uppercase"
                       onClick={() => history.push("/installment/create")}
                     >
                       <span className="icon-add icon-padding-right"></span>
