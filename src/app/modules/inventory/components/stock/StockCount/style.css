@@ -17,3 +17,7 @@
   width: 30px;
   margin-top: 1px;
 }
+
+.radio-count-type .ant-form-item-children .ant-radio-button-wrapper {
+  width: 50% !important;
+}

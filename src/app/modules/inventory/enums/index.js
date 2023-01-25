@@ -49,8 +49,19 @@ export default {
     RETURNED: "Returned"
   },
   STOCK_COUNT_TYPE: {
-    PARTIAL: "partial",
-    FULL_COUNT: "fullCount"
+    PARTIAL: "PARTIAL",
+    FULL_COUNT: "FULL"
+  },
+  STOCK_COUNT_STATUS: {
+    IN_PROGRESS: "IN_PROGRESS",
+    PAUSE: "PAUSE",
+    COMPLETED: "COMPLETED"
+  },
+  STOCK_COUNT_ENTRY_STATUS: {
+    COUNTED: "COUNTED",
+    UNCOUNTED: "UNCOUNTED",
+    INCLUDE: "INCLUDE",
+    EXCLUDE: "EXCLUDE"
   },
   CLIENT_AUTO_NUMBER_TYPE: {
     QUOTATION : 2,

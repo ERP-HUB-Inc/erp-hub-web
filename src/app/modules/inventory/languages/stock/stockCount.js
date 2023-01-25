@@ -67,6 +67,14 @@ export default {
   "text_unmatched": [
     "Unmatched",
     "មិនត្រូវគ្នា"
+  ],
+  "text_in_progress": [
+    "In Progress",
+    "កំពុងដំណើរការ"
+  ],
+  "text_completed": [
+    "Completed",
+    "បានបញ្ចប់"
   ]
 
 };

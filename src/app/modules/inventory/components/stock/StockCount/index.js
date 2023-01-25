@@ -7,8 +7,13 @@ import {
   Col,
   DatePicker,
   Input,
-  Pagination
+  Pagination,
+  Tag,
+  Menu,
+  Dropdown
 } from "antd";
+import Enum from "../../../enums";
+import StockCountService from "../../../services/stock/StockCountService";
 import history from "../../../../common/router/history";
 import Component from "../../../../common/components/Component";
 
@@ -19,26 +24,93 @@ class StockCountList extends Component {
     this.state = {
       data: [],
       pagination: {},
+      current: 1,
       loading: false
+    };
+    const STATUS_STR = {
+      [Enum.STOCK_COUNT_STATUS.IN_PROGRESS]: {title: <this.Translate id="text_in_progress" />, color: "#ffa940"},
+      [Enum.STOCK_COUNT_STATUS.PAUSE]: {title: <this.Translate id="text_pause" />, color: "#f50"},
+      [Enum.STOCK_COUNT_STATUS.COMPLETED]: {title: <this.Translate id="text_completed" />, color: "#87d068"}
     };
     this.columns = [
       {
-        title: <this.Translate id="text_date" />,
-        dataIndex: "startDate",
-        key: "startDate",
-        render: (startDate, record) => `${this.Util.formatDate(startDate)} ${this.Util.formatDate(record.startTime, "hh:mm A")}`
-      },
-      {
         title: <this.Translate id="text_name" />,
         dataIndex: "name",
-        key: "name"
+        key: "name",
+        width: 500,
+        render: (name, record) => {
+          const menu = (
+            <Menu>
+              <Menu.Item>
+                <this.Link to={`/stock/stock-count/update/${record.id}`}>
+                  <this.Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
+                </this.Link>
+              </Menu.Item>
+              <Menu.Item>
+                <this.Link to={`/stock/stock-count/detail/${record.id}`}>
+                  <this.Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_details" />
+                </this.Link>
+              </Menu.Item>
+            </Menu>
+          );
+
+          return <div className="wrap-product-name" style={{display: "flex"}}>
+            {name}
+            <Dropdown className="product-row-option" overlay={menu}>
+              {/* eslint-disable-next-line */}
+              <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
+                <this.Translate id="text_option" /> <this.Icon type="down" />
+              </a>
+            </Dropdown>
+          </div>;
+        }
       },
       {
         title: <this.Translate id="text_location" />,
         dataIndex: "location",
         key: "location"
+      },
+      {
+        title: <this.Translate id="text_status" />,
+        dataIndex: "status",
+        key: "status",
+        render: (status) => {
+          const statusStr = STATUS_STR[status];
+          return <Tag style={{width: 120, textAlign: "center"}} color={statusStr.color}>{statusStr.title}</Tag>;
+        }
       }
     ];
+    this.pathname = "/stock/stock-count/list";
+  }
+
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData(withPagination = false) {
+    let limit = this.pageSize;
+    let offset = this.state.current;
+    let filter = "";
+    let search = "";
+    let range = "";
+    const params = new URLSearchParams(document.location.search);
+
+    offset = (offset - 1) * limit;
+    if (!withPagination) {
+      offset = 0;
+      params.delete(offset);
+      this.Util.pushParamsToURL(this.pathname, params.toString());
+    }
+
+    this.setState({loading: true});
+    StockCountService.lists(limit, offset, "", "", filter, search, range)
+    .then(response => {
+      this.setState({
+        data: response.data.data,
+        pagination: response.data.pagination
+      });
+    })
+    .finally(() => this.setState({loading: false}));
   }
 
   render() {

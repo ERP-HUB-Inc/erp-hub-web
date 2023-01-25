@@ -191,6 +191,11 @@ const StockCountForm = Loadable({
   loading: () => <StartUp />
 });
 
+const StockCountDetail = Loadable({
+  loader: () => import("../../../../inventory/components/stock/StockCount/Detail"),
+  loading: () => <StartUp />
+});
+
 // REPORT
 const SaleReportDashboard = Loadable({
   loader: () =>
@@ -645,6 +650,11 @@ const dataSource = {
       {
         route: "/stock/stock-count/update/:id",
         component: StockCountForm,
+        isFashNav: false
+      },
+      {
+        route: "/stock/stock-count/detail/:id",
+        component: StockCountDetail,
         isFashNav: false
       }
     ],

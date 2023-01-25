@@ -1,11 +1,11 @@
 import React from "react";
 import { Translate } from "react-localize-redux";
 import {
+  Badge,
   PageHeader,
   Switch,
   Table,
-  Tabs,
-  Tag
+  Tabs
 } from "antd";
 import EnumStock from "../../../enums";
 import EnumProduct from "../../../../inventory/enums";
@@ -14,7 +14,7 @@ import {
   InputNumber
 } from "../../../../common/elements/ant-ui";
 import Util from "../../../../common/util";
-import ProductVariantService from "../../../services/products/ProductVariantService";
+import StockCountService from "../../../services/stock/StockCountService";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
@@ -23,8 +23,15 @@ import "./style.css";
 
 const {TabPane} = Tabs;
 
+const TABS_LIST = {
+  ALL: 1,
+  COUNTED: 2,
+  UNCOUNTED: 3
+};
+
 export default class FormStep2 extends React.Component {
   state = {
+    formData: {},
     products: [],
     productSearch: [],
     modalVariant: null,
@@ -34,19 +41,18 @@ export default class FormStep2 extends React.Component {
     loading: false
   }
   util = new Util();
+  ST_COUNT_STR = {
+    [EnumStock.STOCK_COUNT_STATUS.IN_PROGRESS]: {title: stringTranslate("text_in_progress", this.props.locale), color: "#ffa940"},
+    [EnumStock.STOCK_COUNT_STATUS.PAUSE]: {title: stringTranslate("text_pause", this.props.locale), color: "#f50"},
+    [EnumStock.STOCK_COUNT_STATUS.COMPLETED]: {title: stringTranslate("text_completed", this.props.locale), color: "#87d068"}
+  };
 
   componentDidMount() {
-    const {formData} = this.props;
-    if (formData.countType === EnumStock.STOCK_COUNT_TYPE.PARTIAL) {
-      this.setState({products: this.props.products});
-    } else {
-      this.setState({loading: true});
-      ProductVariantService.lists(10, 0)
-      .then(response => {
-        this.setState({products: response.data.data});
-      })
-      .finally(() => this.setState({loading: false}));
-    }
+    StockCountService.detail(this.props.id)
+    .then(response => {
+      this.setState({formData: response.data.data});
+    });
+    this.fetchEntries(this.props.id, "");
   }
 
   componentDidUpdate() {
@@ -62,8 +68,49 @@ export default class FormStep2 extends React.Component {
     }
   }
 
+  fetchEntries(id, status) {
+    this.setState({loading: true});
+    StockCountService.getStockCountEntriesByStatus(id, status)
+    .then(response => {
+      this.setState({products: response.data});
+    })
+    .catch(err => console.log("error", err.response))
+    .finally(() => this.setState({loading: false}));
+  }
+
   handleReview = () => {
-    this.props.handleReview(this.state.products);
+    const {formData} = this.state;
+    const data = {
+      startDate: this.util.formatDateForMYSQL(formData.startDate),
+      startTime: formData.startTime,
+      status: formData.status
+    };
+
+    const stockCountEntries = [];
+    this.state.products.forEach(entry => {
+      if (entry.count) {
+        stockCountEntries.push({
+          id: entry.id,
+          count: entry.count ? entry.count : 0,
+          status: EnumStock.STOCK_COUNT_ENTRY_STATUS.COUNTED
+        });
+      }
+    });
+
+    if (stockCountEntries.length) {
+      data.stockCountEntries = stockCountEntries;
+
+      StockCountService.update(data, formData.id)
+      .then(() => {
+        this.props.handleReview();
+      });
+    } else {
+      this.props.handleReview();
+    }
+  }
+
+  handlePause = () => {
+    
   }
 
   handleEnterQuantity = () => {
@@ -77,12 +124,12 @@ export default class FormStep2 extends React.Component {
     const quantity = this.props.form.getFieldValue("quantity");
     if (selectCountIndex >= 0) {
       products[selectCountIndex].count = quantity;
-      products[selectCountIndex].counting = false;
+      products[selectCountIndex].status = EnumStock.STOCK_COUNT_ENTRY_STATUS.COUNTED;
       this.setState({
         products,
         selectCountIndex: -1
       });
-      this.props.form.setFieldsValue({quantity: 0});
+      this.props.form.setFieldsValue({quantity: 0, searchProduct: ""});
     } else {
       this.util.sweetAlertMessageV2("", "Please select product to count", "warning");
     }
@@ -103,18 +150,24 @@ export default class FormStep2 extends React.Component {
       productVariant.name = isProductVariant ? productVariant.name : "";
     }
 
-    let index = "";
     const existingProducts = Util.prototype.copyArrayObj(this.state.products);
-    if (this.props.formData.countType === EnumStock.STOCK_COUNT_TYPE.FULL_COUNT) {
-      index = existingProducts.findIndex(p => p.id === productVariant.id);
-    } else {
-      index = existingProducts.findIndex(p => p.productVariantId === productVariant.id);
-    }
-
+    const index = existingProducts.findIndex(p => p.productVariantId === productVariant.id);
     this.setState({products: existingProducts, selectCountIndex: index});
+    this.props.form.setFieldsValue({searchProduct: `${product.name} ${productVariant.name}`});
   }
 
-  renderTable(formData) {
+  onChangeTabs = (key) => {
+    key = Number(key);
+    let status = "";
+    if (key === TABS_LIST.COUNTED) {
+      status = "counted";
+    } else if (key === TABS_LIST.UNCOUNTED) {
+      status = "uncounted";
+    }
+    this.fetchEntries(this.props.id, status);
+  }
+
+  renderTable() {
     return (
       <Table
         rowKey={((row, index) => index)}
@@ -124,17 +177,11 @@ export default class FormStep2 extends React.Component {
         columns={[
           {
             title: <Translate id="text_product_name" />,
-            dataIndex: "name",
-            key: "name",
-            render: (name, record, index) => {
-              if (formData.countType === EnumStock.STOCK_COUNT_TYPE.FULL_COUNT) {
-                name = record.product && record.product.name;
-                record.variantName = record.name;
-              }
-
+            dataIndex: "productName",
+            key: "productName",
+            render: (productName, record) => {
               return <div style={{display: "flex"}}>
-                {name} {record.variantName ? <div className="variant-name" style={{marginLeft: 15}}>{record.variantName}</div> : ""}
-                {index === this.state.selectCountIndex ? <Tag color="#ffa940" style={{marginLeft: 20}}><Translate id="text_process" /> <Translate id="text_count" /></Tag> : ""}
+                {productName} {record.variantName ? <div className="variant-name" style={{marginLeft: 15}}>{record.variantName}</div> : ""}
               </div>;
             }
           },
@@ -145,15 +192,17 @@ export default class FormStep2 extends React.Component {
           },
           {
             title: <Translate id="text_expected" />,
-            dataIndex: "quantity",
+            dataIndex: "expected",
             key: "expected",
-            render: (quantity, record) => `${quantity} ${record.unitName ? record.unitName : ""}`
+            align: "right",
+            render: (expected) => Number(expected)
           },
           {
             title: <Translate id="text_count" />,
             dataIndex: "count",
             key: "count",
-            render: (count, record) => `${count ? count : 0} ${record.unitName ? record.unitName : ""}`
+            align: "right",
+            render: (count) => count ? count : 0
           }
         ]}
         dataSource={this.state.products}
@@ -162,7 +211,7 @@ export default class FormStep2 extends React.Component {
   }
 
   render() {
-    const {formData} = this.props;
+    const {formData} = this.state;
     return (
       <React.Fragment>
         <PageHeader
@@ -174,9 +223,10 @@ export default class FormStep2 extends React.Component {
           }}
           onBack={this.props.goBack}
           title={formData && formData.name}
+          subTitle={formData.status ? <Badge count={this.ST_COUNT_STR[formData.status].title} style={{background: this.ST_COUNT_STR[formData.status].color}} /> : ""}
           extra={[
             <div key={1}>
-              <Button type="danger" htmlType="button" style={{width: 90, marginRight: 15}} onClick={this.props.goBack}>
+              <Button type="danger" htmlType="button" style={{width: 90, marginRight: 15}} onClick={this.handlePause}>
                 <Translate id="text_pause" />
               </Button>
               <Button type="info" htmlType="button" style={{width: 90}} onClick={this.handleReview}>
@@ -219,13 +269,13 @@ export default class FormStep2 extends React.Component {
 
         <Tabs type="card" onChange={this.onChangeTabs} style={{marginTop: 20}}>
           <TabPane tab={<Translate id="text_all" />} key="1">
-            {this.renderTable(formData)}
+            {this.renderTable()}
           </TabPane>
           <TabPane tab={<Translate id="text_counted" />} key="2">
-            {this.renderTable(formData)}
+            {this.renderTable()}
           </TabPane>
           <TabPane tab={<Translate id="text_uncounted" />} key="3">
-            {this.renderTable(formData)}
+            {this.renderTable()}
           </TabPane>
         </Tabs>
 
