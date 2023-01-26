@@ -5,6 +5,7 @@ import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/V
 import DropDownSearch from "../../../components/products/Product/DropDownSearch";
 import ProductVariantAction from "../../../actions/products/productVariant";
 import PurchaseOrderAction from "../../../actions/stock/purchaseOrder";
+import UnitService from "../../../services/products/ProductsUnitService";
 import PurchaseOrderConstant from "../../../constants/stock/purchaseOrder";
 import ProductVariantConstant from "../../../constants/products/productVariant";
 import Modal from "../../../../common/components/shares/Modal";
@@ -16,6 +17,7 @@ export default class SearchPo extends Modal {
     this.state = {
       selectedProduct: null,
       productLists: [],
+      units: [],
       modalVariant: null,
       isNotYetLoadComponentDidUpdated: true,
       didUpdateReportOrder: true
@@ -64,7 +66,7 @@ export default class SearchPo extends Modal {
           return <this.Select
             name={`unitId[${index}]`}
             valueKey="id"
-            dataSource={this.props.unit.list}
+            dataSource={this.state.units}
             defaultValue={record.unitId}
             form={this.form} />;
         }
@@ -157,6 +159,13 @@ export default class SearchPo extends Modal {
     if (this.props.productReOrderPointList && this.props.productReOrderPointList.length > 0) {
       this.getReOrderPointProductList();
     }
+
+    UnitService.lists(500, 0, "name", "ASC")
+    .then(response => {
+        if (response && response.data && response.data.data) {
+          this.setState({units: response.data.data});
+        }
+    });
   }
 
   getReOrderPointProductList(){
