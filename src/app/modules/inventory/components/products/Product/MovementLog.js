@@ -5,6 +5,7 @@ import {
 	Card,
 	Table,
 } from "antd";
+import {Translate} from "react-localize-redux";
 import MovementLogService from "../../../services/stock/MovementLogService";
 import Util from "../../../../common/util";
 
@@ -26,9 +27,9 @@ export default function ProductDetailHistory({id}) {
 	useEffect(() => {
 		setLoading(true);
 		MovementLogService.getMovementLogs(id).then((response) => {
-				if(response.data){
-					setMovementLogs(response.data);
-				}
+			if (response.data) {
+				setMovementLogs(response.data);
+			}
 		})
 		.finally(() => setLoading(false));
 	}
@@ -64,7 +65,7 @@ export default function ProductDetailHistory({id}) {
 				render: (date) => date ? util.formatDate(date, "DD/MM/YYYY") : null
 		}
 		];
-	return <Card title="Movement Log" bordered={false} style={{marginTop: 25}}>
+	return <Card title={<Translate id="text_movement_log" />} bordered={false} style={{marginTop: 25}}>
 		
 	<Row>
 		<Col span={24}>

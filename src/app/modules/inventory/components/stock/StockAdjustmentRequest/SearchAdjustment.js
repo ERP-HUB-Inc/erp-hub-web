@@ -4,6 +4,7 @@ import Util from "../../../utils";
 import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/VariantProduct";
 import DropDownSearch from "../../../components/products/Product/DropDownSearch";
 import ProductVariantAction from "../../../actions/products/productVariant";
+import UnitService from "../../../services/products/ProductsUnitService";
 import ProductVariantConstant from "../../../constants/products/productVariant";
 import Modal from "../../../../common/components/shares/Modal";
 import "../PurchaseOrder/index.css";
@@ -146,7 +147,12 @@ export default class SearchAdjustmentRequest extends Modal {
   }
 
   componentDidMount() {
-    this.setState({units: JSON.parse(localStorage.getItem(Enum.LOCAL_SCHEMA.UNIT))});
+      UnitService.lists(500, 0, "name", "ASC")
+      .then(response => {
+         if (response && response.data && response.data.data) {
+            this.setState({units: response.data.data});
+         }
+      });
   }
 
   componentDidUpdate() {

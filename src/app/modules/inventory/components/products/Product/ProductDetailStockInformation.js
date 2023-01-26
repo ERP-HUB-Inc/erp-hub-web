@@ -5,6 +5,7 @@ import {
     Card,
     Table,
 } from "antd";
+import {Translate} from "react-localize-redux";
 import ProductService from "../../../services/products/ProductService";
 import Util from "../../../../common/util";
 
@@ -23,12 +24,12 @@ const OptionZero = ({data,id}) => {
 
     const columns = [
         {
-          title: "Location",
+          title: <Translate id="text_location" />,
           dataIndex: "location",
           key: "location",
         },
         {
-          title: "Quantity",
+          title: <Translate id="text_quantity" />,
           dataIndex: "quantity",
           key: "quantity",
         },
@@ -59,7 +60,7 @@ const OptionZero = ({data,id}) => {
     // eslint-disable-next-line
     },[]);
 
-    return  <Card title="Stock Information" bordered={false} style={{marginTop: 25}}>
+    return  <Card title={<Translate id="text_stock_information" />} bordered={false} style={{marginTop: 25}}>
             <Row>
                 <Col span={8}>
                     <DescriptionItem title="ទំនិញក្នុងស្តុក" content={stockOnHead} />
@@ -73,14 +74,14 @@ const OptionZero = ({data,id}) => {
             </Row>
             <Row>
                 <Col span={24}>
-                <p style={{marginRight: 8,display: "inline-block",color: "rgba(0, 0, 0, 0.85)"}}>Detail Stock</p>
-                <Table
-                    dataSource={detailStock}
-                    columns={columns}
-                    pagination={false}
-                    bordered={true}
-                    loading={loading}
-                />
+                  <p style={{margin: 0}}><Translate id="text_stock_detail" /></p>
+                  <Table
+                     dataSource={detailStock}
+                     columns={columns}
+                     pagination={false}
+                     bordered={true}
+                     loading={loading}
+                  />
                 </Col>
             </Row>
   </Card>;

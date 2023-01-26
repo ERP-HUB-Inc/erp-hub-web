@@ -496,6 +496,21 @@ export default {
     "ស្តុក"
   ],
 
+  "text_stock_information": [
+    "Stock Information",
+    "ព័ត៏មានស្តុកទំនិញ"
+  ],
+
+  "text_purchase_history": [
+    "Purchase History",
+    "ប្រវត្តិបញ្ជាទិញ"
+  ],
+
+  "text_stock_detail": [
+    "Detail Stock",
+    "លម្អិតស្តុក"
+  ],
+
   "text_in_stock": [
     "In Stock",
     "មាននៅ​ក្នុង​ស្តុក"

@@ -135,7 +135,6 @@ export default class FormItem extends Modal {
               <this.InputText
                 name="company"
                 label={<this.Translate id="text_company" />}
-                required={true}
                 data={formData.company}
                 placeholder={this.CATranslate("text_company", this.props.locale)}
                 max={100}
@@ -202,6 +201,15 @@ export default class FormItem extends Modal {
                 max={100}
                 form={this.props.form}/>
             </this.Col>   */}
+
+            <this.Col md="12">
+              <this.InputText
+                name="geolocation"
+                label={<this.Translate id="text_geolocation" />}
+                data={formData.geolocation}
+                placeholder={this.CATranslate("text_geolocation", this.props.locale)}
+                form={this.props.form} />
+            </this.Col> 
 
             <this.Col md="12">
               <this.InputTextArea

@@ -5,6 +5,7 @@ import {
     Card,
     Table,
 } from "antd";
+import {Translate} from "react-localize-redux";
 import ProductService from "../../../services/products/ProductService";
 import Util from "../../../../common/util";
 
@@ -22,7 +23,7 @@ export default function PurchaseHistory({id}) {
         })
         .finally(() => setLoading(false));
     }
-// eslint-disable-next-line
+        // eslint-disable-next-line
     ,[]);
 
     const columns = [
@@ -71,7 +72,7 @@ export default function PurchaseHistory({id}) {
           render: (total) => total ? util.formatCurrency(total) : null
       }
       ];
-    return <Card title="Purchase History" bordered={false} style={{marginTop: 25}}>
+    return <Card title={<Translate id="text_purchase_history" />} bordered={false} style={{marginTop: 25}}>
     <Row>
       <Col span={24}>
          <Table
