@@ -75,6 +75,16 @@ export default {
   "text_completed": [
     "Completed",
     "បានបញ្ចប់"
+  ],
+
+  "text_product_not_in_list": [
+    "Product not found in list!",
+    "ផលិតផលមិនមានក្នុងបញ្ជី"
+  ],
+
+  "text_confirm_leave_page": [
+    "Leave page? Some information you input may not save.",
+    "ចាកចេញ? \nព័ត៌មានមួយចំនួនដែលអ្នកបញ្ចូលអាចនឹងមិនរក្សាទុក."
   ]
 
 };

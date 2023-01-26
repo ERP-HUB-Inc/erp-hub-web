@@ -1,5 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
+//import { Prompt } from "react-router-dom";
 import {
   Form,
   Spin
@@ -17,6 +18,7 @@ class FormItem extends React.Component {
     step: 1
   };
   util = new Util();
+  pageName = "stock-count-form";
 
   handleStartCount = (formData, entries) => {
     console.log("formData", formData);
@@ -56,6 +58,7 @@ class FormItem extends React.Component {
         dispatch={this.props.dispatch}
         handleStartCount={this.handleStartCount}
         goBack={this.handleGoBackToList}
+        goStep2={() => this.setState({step: 2})}
         form={form} 
       />;
     } else if (this.state.step === 2) {
@@ -84,10 +87,22 @@ class FormItem extends React.Component {
   }
 
   render() {
+
+    if (this.pageName === "stock-count-form") {
+      window.addEventListener("beforeunload", (e) => {
+        e.preventDefault();
+        return e.returnValue = "";
+      });
+    }
+
     const {formData} = this.state;
     return (
       !this.state.loading ?
       <div>
+        {/* <Prompt 
+          when={this.shouldComponentUpdate}
+          message={"Leave site? \n\nChanges you made may not be saved."}
+        /> */}
         {this.renderFormItem(formData)}
       </div>
       :

@@ -15,6 +15,7 @@ import {
 } from "../../../../common/elements/ant-ui";
 import Util from "../../../../common/util";
 import StockCountService from "../../../services/stock/StockCountService";
+import ProductVariantService from "../../../services/products/ProductVariantService";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
@@ -48,10 +49,6 @@ export default class FormStep2 extends React.Component {
   };
 
   componentDidMount() {
-    StockCountService.detail(this.props.id)
-    .then(response => {
-      this.setState({formData: response.data.data});
-    });
     this.fetchEntries(this.props.id, "");
   }
 
@@ -68,14 +65,22 @@ export default class FormStep2 extends React.Component {
     }
   }
 
-  fetchEntries(id, status) {
-    this.setState({loading: true});
-    StockCountService.getStockCountEntriesByStatus(id, status)
-    .then(response => {
-      this.setState({products: response.data});
-    })
-    .catch(err => console.log("error", err.response))
-    .finally(() => this.setState({loading: false}));
+  async fetchEntries(id, status) {
+    const formData = (await StockCountService.detail(this.props.id)).data.data;
+    if (formData) {
+      this.setState({formData});
+      if (formData.type === EnumProduct.STOCK_COUNT_TYPE.PARTIAL) {
+        this.setState({loading: true});
+        StockCountService.getStockCountEntriesByStatus(id, status)
+        .then(response => {
+          this.setState({products: response.data});
+        })
+        .catch(err => console.log("error", err.response))
+        .finally(() => this.setState({loading: false}));
+      } else {
+        this.setState({products: formData.stockCountEntries});
+      }
+    }
   }
 
   handleReview = () => {
@@ -88,16 +93,18 @@ export default class FormStep2 extends React.Component {
 
     const stockCountEntries = [];
     this.state.products.forEach(entry => {
-      if (entry.count) {
+      if (Number(entry.count)) {
         stockCountEntries.push({
-          id: entry.id,
-          count: entry.count ? entry.count : 0,
+          id: entry.id ? entry.id : "",
+          count: entry.count ? Number(entry.count) : 0,
+          productId: entry.productId,
+          productVariantId: entry.productVariantId,
           status: EnumStock.STOCK_COUNT_ENTRY_STATUS.COUNTED
         });
       }
     });
 
-    if (stockCountEntries.length) {
+    if (stockCountEntries.length && formData.status !== EnumStock.STOCK_COUNT_STATUS.PAUSE) {
       data.stockCountEntries = stockCountEntries;
 
       StockCountService.update(data, formData.id)
@@ -150,10 +157,41 @@ export default class FormStep2 extends React.Component {
       productVariant.name = isProductVariant ? productVariant.name : "";
     }
 
-    const existingProducts = Util.prototype.copyArrayObj(this.state.products);
-    const index = existingProducts.findIndex(p => p.productVariantId === productVariant.id);
-    this.setState({products: existingProducts, selectCountIndex: index});
-    this.props.form.setFieldsValue({searchProduct: `${product.name} ${productVariant.name}`});
+    const existingProducts = this.state.products;
+    const index = existingProducts.findIndex(p => p.barcode === productVariant.barcode);
+    if (index >= 0) {
+      existingProducts[index].productId = product.id;
+      existingProducts[index].productVariantId = productVariant.id;
+      this.props.form.setFieldsValue({searchProduct: `${product.name} ${productVariant.name}`});
+      this.setState({selectCountIndex: index, products: existingProducts});
+    } else {
+      this.util.sweetAlertMessageV2(
+        "",
+        stringTranslate("text_product_not_in_list", this.props.locale),
+        "error"
+      );
+    }
+  }
+
+  handleScan = (value) => {
+    ProductVariantService.fetchByBarcode(value)
+    .then(response => {
+      const variant = response.data.data;
+      const products = this.util.copyArrayObj(this.state.products);
+      const index = products.findIndex(p => p.productVariantId = variant && variant.id);
+      if (index >= 0) {
+        this.setState(preState => {
+          preState.products[index].count = products[index].count + 1;
+          return preState;
+        });
+      } else {
+        this.util.sweetAlertMessageV2(
+          "",
+          stringTranslate("text_product_not_in_list", this.props.locale),
+          "error"
+        );
+      }
+    });
   }
 
   onChangeTabs = (key) => {
@@ -212,6 +250,23 @@ export default class FormStep2 extends React.Component {
 
   render() {
     const {formData} = this.state;
+
+    const searchProductProps = {
+      productSearch: this.state.productSearch,
+      handleOnSelectList: this.handleOnSelectList
+    };
+
+    if (this.state.enableQuickScan) {
+      searchProductProps.handleOnSelectList = () => {};
+      searchProductProps.handleScan = this.handleScan;
+      searchProductProps.onChange = (e) => {
+        const value = e.target.value;
+        if (value.length > 5) {
+          this.handleScan(value);
+        }
+      };
+    }
+
     return (
       <React.Fragment>
         <PageHeader
@@ -238,8 +293,7 @@ export default class FormStep2 extends React.Component {
 
         <div style={{display: "flex", marginTop: 10}} className="input-product-count">
           <SearchProductDropdown 
-            productSearch={this.state.productSearch}
-            handleOnSelectList={this.handleOnSelectList}
+            {...searchProductProps}
             placeholder={`${stringTranslate("text_search_product", this.props.locale)}`}
             className="ca-input-v1 purchase-order"
             locale={this.props.locale}

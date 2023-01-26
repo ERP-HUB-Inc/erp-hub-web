@@ -126,7 +126,8 @@ function DetailStockCount(props) {
                 title: <Translate id="text_count" />,
                 dataIndex: "count",
                 key: "count",
-                align: "right"
+                align: "right",
+                render: (count) => count ? count : "-"
               },
               {
                 title: <Translate id="text_status" />,

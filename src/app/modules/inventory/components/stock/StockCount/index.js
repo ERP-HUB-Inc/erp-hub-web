@@ -6,7 +6,6 @@ import {
   Row,
   Col,
   DatePicker,
-  Input,
   Pagination,
   Tag,
   Menu,
@@ -14,8 +13,10 @@ import {
 } from "antd";
 import Enum from "../../../enums";
 import StockCountService from "../../../services/stock/StockCountService";
+import LocationService from "../../../../pos/services/settings/LocationService";
 import history from "../../../../common/router/history";
 import Component from "../../../../common/components/Component";
+import { Select } from "../../../../common/elements/ant-ui";
 
 
 class StockCountList extends Component {
@@ -23,6 +24,7 @@ class StockCountList extends Component {
     super(props);
     this.state = {
       data: [],
+      locations: [],
       pagination: {},
       current: 1,
       loading: false
@@ -85,6 +87,11 @@ class StockCountList extends Component {
 
   componentDidMount() {
     this.fetchData();
+
+    LocationService.lists(this.pageSize, 0)
+    .then(response => {
+      this.setState({locations: response.data.data});
+    });
   }
 
   fetchData(withPagination = false) {
@@ -124,16 +131,7 @@ class StockCountList extends Component {
                 <Col span={12} style={{marginBottom: 0}}>
                   <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_stock_count" /></h3>
                 </Col>
-                <Col span={12} style={{textAlign: "right"}}>
-                  <Input
-                    name="search"
-                    placeholder={this.CATranslate("text_search", this.props.locale)}
-                    prefix={<this.Icon type="search" />}
-                    defaultValue={params.get("search") ? params.get("search") : ""}
-                    style={{width: 200, marginRight: 10}}
-                    allowClear={true}
-                    onChange={this.handleSearch}
-                  />
+                <Col span={12} style={{display: "flex", justifyContent: "flex-end"}}>
                   <DatePicker
                     onChange={this.handleChangeDate}
                     name="date"
@@ -141,6 +139,12 @@ class StockCountList extends Component {
                     defaultValue={params.get("date") ? moment(params.get("date")) : null}
                     style={{maxWidth: 200, marginRight: 10}}
                   />
+                  <Select 
+                    name="locationId"
+                    placeholder={`${this.CATranslate("text_all_location", this.props.locale)}`}
+                    dataSource={this.state.locations}
+                    style={{width: 200, margin: "-4px 10px 0 0"}}
+                    form={this.props.form} />
                   <this.Button
                     type="info"
                     id="btnAdd"

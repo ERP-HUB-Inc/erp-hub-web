@@ -35,13 +35,23 @@ export default function FormStep3(props) {
     [Enum.STOCK_COUNT_STATUS.COMPLETED]: {title: stringTranslate("text_completed", props.locale), color: "#87d068"}
   };
 
-  function fetchEntries(id, status) {
-    setLoading(true);
-    StockCountService.getStockCountEntriesByStatus(id, status)
-    .then(response => {
-      setProductList(response.data);
-    })
-    .finally(() => setLoading(false));
+  async function fetchData(id, status) {
+    const data = (await StockCountService.detail(id)).data.data;
+    if (data) {
+      const entries = data.stockCountEntries;
+      delete data.stockCountEntries;
+      setFormData(data);
+      if (data.type === Enum.STOCK_COUNT_TYPE.PARTIAL) {
+        setLoading(true);
+        StockCountService.getStockCountEntriesByStatus(id, status)
+        .then(response => {
+          setProductList(response.data);
+        })
+        .finally(() => setLoading(false));
+      } else {
+        setProductList(entries);
+      }
+    }
   }
 
   const handelDiscard = () => {
@@ -97,7 +107,7 @@ export default function FormStep3(props) {
     } else if (key === TABS_LIST.MATCHED) {
       status = "matched";
     }
-    fetchEntries(props.id, status);
+    fetchData(props.id, status);
   };
 
   function renderTable() {
@@ -151,14 +161,8 @@ export default function FormStep3(props) {
   }
 
   React.useEffect(() => {
-    StockCountService.detail(props.id)
-    .then(response => {
-      setFormData(response.data.data);
-    });
-
-    fetchEntries(props.id, "");
-    // eslint-disable-next-line 
-  }, []);
+    fetchData(props.id, "");
+  }, [props.id]);
 
   return (
     <React.Fragment>
