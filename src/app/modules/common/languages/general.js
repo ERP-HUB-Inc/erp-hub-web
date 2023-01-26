@@ -1,7 +1,7 @@
 export default {
   text_action: ["Action", "សកម្មភាព"],
 
-  text_more_action: ["More Action", "សកម្មភាពផ្សេងទៀត"],
+  text_more_action: ["More Action", "ជម្រើសផ្សេងទៀត"],
 
   text_warning_info: ["Warning Information", "ព័ត៏មានបញ្ជាក់"],
 
