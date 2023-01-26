@@ -643,7 +643,7 @@ export default class List extends Component {
             onClick: (event) => this.handleOnTapHandler(event, record)
           })}
           rowSelection={rowSelection}
-        loading={fetchingProps.fetching/* || this.state.loadingPopup*/} />
+          loading={fetchingProps.fetching/* || this.state.loadingPopup*/} />
         :
         <this.Table
           bordered={true}
