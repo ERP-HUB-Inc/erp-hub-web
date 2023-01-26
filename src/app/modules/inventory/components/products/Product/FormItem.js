@@ -28,6 +28,7 @@ import ProductAction from "../../../actions/products/product";
 import ProductsTypeService from "../../../services/products/ProductsTypeService";
 import BrandService from "../../../services/products/BrandService";
 import ProductsUnitService from "../../../services/products/ProductsUnitService";
+import ProductService from "../../../services/products/ProductService";
 import SupplierService from "../../../services/stock/SupplierService";
 import Modal from "../../../../common/components/shares/Modal";
 import CommonEnum from "../../../../common/enums";
@@ -256,6 +257,7 @@ export default class FormItem extends Modal {
       specification: "",
       tags: [],
       inputVisible: false,
+      editCostVisible: false,
       inputValue: "",
       exchangeRate: null
     };
@@ -386,6 +388,11 @@ export default class FormItem extends Modal {
     } else {
       this.setState({productOptionClassDisabled: ""});
     }
+  }
+
+  handleEditCost(productVariantId, newCost) {
+    ProductService.editProductCost(productVariantId, newCost)
+    .finally(() => this.setState({editCostVisible: false}));
   }
 
   handleClose = removedTag => {
@@ -666,14 +673,22 @@ export default class FormItem extends Modal {
                         form={form}/>
                     </this.Col>
                     <this.Col md="4" className="form-group">
-                      <this.InputNumber
-                        name="costDisplay"
-                        label={<span><this.Translate id="text_cost" /><span> ({currentUser.setting.currency})</span></span>}
-                        data={Exchange.dollarToRiel(Util.getProductCost(formData), exchangeRate)}
-                        precision={this.getPrecisionByCurrency()}
-                        placeholder={this.CATranslate("text_cost_placeholder", locale)}
-                        disabled={true}
-                        form={form}/>
+                      <div style={{display: "flex", alignItems: "center"}}>
+                        <this.InputNumber
+                          name="costDisplay"
+                          label={<span><this.Translate id="text_cost" /><span> ({currentUser.setting.currency})</span></span>}
+                          data={Exchange.dollarToRiel(Util.getProductCost(formData), exchangeRate)}
+                          precision={this.getPrecisionByCurrency()}
+                          placeholder={this.CATranslate("text_cost_placeholder", locale)}
+                          isAutoSelect={true}
+                          disabled={!this.state.editCostVisible}
+                          form={form} />
+                        
+                        {
+                          formData.productOption === 0 && 
+                          <Button type={this.state.editCostVisible ? "danger" : "default"} onClick={() => this.state.editCostVisible ? this.handleEditCost(Util.getProductVariantId(formData), parseFloat(this.props.form.getFieldValue("costDisplay"))) : this.setState({editCostVisible: true})} style={{marginLeft: 10, marginTop: 15}}>{this.state.editCostVisible ? <Translate id="text_save" /> : <Translate id="text_edit" />}</Button>
+                        }
+                      </div>
                     </this.Col>
                     <this.Col md="4">
                       <this.InputNumber

@@ -117,6 +117,15 @@ class ProductService extends BaseService {
     });
   }
 
+  editProductCost(productVariantId, newCost) {
+    this.setHeader();
+    return this.PUT({  
+      url: `${this.baseUrl}/edit_cost/${productVariantId}`,
+      data: {newCost},
+      headers: this.header
+    });
+  }
+
   clone(id) {
     this.setHeader();
     return this.POST({

@@ -2,6 +2,7 @@ import React from "react";
 import {
   Menu,
   Dropdown,
+  Divider,
   Icon,
   Row,
   Col,
@@ -390,7 +391,7 @@ const currencyIsDollar = commonUtil.getSetting().currency === "$";
 const exchangeAndFormatCurrency = currencyIsDollar ? exchangeAndFormatToDollar : exchangeAndFormatToRiel;
 
 class ColumnExpand extends List {
-  constructor(props, handleDelete) {
+  constructor(props) {
     super(props);
     this.colorStockStatus = ["#4cb64c", "#f3a638"];
     return [
@@ -522,6 +523,7 @@ class Column extends List {
                   <Icon type="scissor" style={{marginRight: 10}} /> <this.Translate id="text_slit_product" />
                 </this.Link>
               </Menu.Item>
+              <Divider style={{marginTop: 4, marginBottom: 4}} />
               <Menu.Item onClick={() => handleDelete(record)}>
                 <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
               </Menu.Item>

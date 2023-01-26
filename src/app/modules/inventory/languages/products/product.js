@@ -655,10 +655,14 @@ export default {
     "ផលិតផលដែលបញ្ចុះតម្លៃ"
   ],
 
-
   "text_edit_discount": [
     "Update Discount Setup",
     "កែប្រែផលិតផលបញ្ចុះតម្លៃ"
+  ],
+
+  "text_edit_cost": [
+    "Edit Cost",
+    "កែប្រែថ្លៃដើម"
   ],
 
   "text_promotion_name": [
