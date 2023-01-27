@@ -37,11 +37,17 @@ export default {
 
   text_cost_of_good: ["Cost of Goods", "ថ្លៃដើមទំនិញ"],
 
-  text_gross_profit: ["Gross Profit", "ប្រាក់​ចំណេញ​ដុល"],
+  text_gross_profit: ["Gross Profit", "ចំណេញ​ដុល"],
 
-  text_margin: ["Margin", "គំលាតលុយចំនេញ"],
+  text_margin: [
+    "Margin",
+    "គំលាតលុយចំនេញ"
+  ],
 
-  text_number_of_order: ["Number of Order", "ចំនួនការកម្មង់"],
+  text_number_of_order: [
+    "Number of Order",
+    "ចំនួនការកម្មង់"
+  ],
 
   text_search_product_placeholder: [
     "Search product by name,barcode",

@@ -125,7 +125,7 @@ function ReportSaleByCategory() {
           <Card>
             <Statistic
               title={<Translate id="text_net_sale" />}
-              value={totalNetSale && totalNetSale.toFixed(0)}
+              value={totalNetSale ? totalNetSale.toFixed(2) : 0}
               precision={2}
             />
           </Card>
