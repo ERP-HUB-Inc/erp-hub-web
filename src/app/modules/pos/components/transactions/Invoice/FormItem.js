@@ -402,6 +402,8 @@ class NewInvoice extends React.PureComponent {
                     return;
                 }
 
+                localStorage.setItem("PUBLIC_NOTE", formData.publicNote);
+
                 const invoice = {
                     customerId: values.customerId,
                     discount: values.discount,
@@ -1566,7 +1568,7 @@ class NewInvoice extends React.PureComponent {
                                 <TabPane tab={<Translate id="text_public_note" />} key="1" style={{width: 668}}>
                                     <CKEditor
                                         editor={ClassicEditor}
-                                        data={formData.publicNote}
+                                        data={formData.id || formData.publicNote ? formData.publicNote : localStorage.getItem("PUBLIC_NOTE")}
                                         onChange={(event, editor) => {
                                             const data = editor.getData();
                                             this.setState(preState => {
