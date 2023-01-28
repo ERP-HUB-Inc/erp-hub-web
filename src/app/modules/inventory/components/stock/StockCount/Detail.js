@@ -97,7 +97,7 @@ function DetailStockCount(props) {
                 dataIndex: "id",
                 key: "no",
                 align: "center",
-                width: 60,
+                width: 80,
                 render: (id, record, index) => index + 1
               },
               {
@@ -105,9 +105,9 @@ function DetailStockCount(props) {
                 dataIndex: "productName",
                 key: "productName",
                 render: (productName, record) => {
-                  return <div>
+                  return <div style={{display: "flex"}}>
                     <div>{productName}</div>
-                    {record.variantName ? <div className="variant-name">{record.variantName}</div> : ""}
+                    {record.variantName ? <div className="variant-name" style={{marginLeft: 15}}>{record.variantName}</div> : ""}
                   </div>;
                 }
               },

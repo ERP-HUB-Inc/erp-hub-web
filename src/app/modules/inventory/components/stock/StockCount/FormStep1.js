@@ -153,7 +153,7 @@ export default class FormStep1 extends React.Component  {
   save(data) {
     if (this.id) {
       if (this.state.formData.type === EnumStock.STOCK_COUNT_TYPE.FULL_COUNT) {
-        return this.props.goStep2();
+        return this.props.goStep(2);
       }
 
       data.status = this.state.formData.status;
@@ -167,7 +167,7 @@ export default class FormStep1 extends React.Component  {
           this.props.handleStartCount(this.state.formData, this.state.entries);
         });
       } else {
-        this.props.goStep2();
+        this.props.goStep(2);
       }
     } else {
       this.setState({loadingSubmit: true});

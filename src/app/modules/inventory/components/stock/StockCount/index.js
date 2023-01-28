@@ -82,25 +82,42 @@ class StockCountList extends Component {
         }
       }
     ];
+    this.locations = [{name: <this.Translate id="text_all_store"/>, id: 0}];
     this.pathname = "/stock/stock-count/list";
   }
 
   componentDidMount() {
-    this.fetchData();
+    this.fetchList();
 
     LocationService.lists(this.pageSize, 0)
     .then(response => {
-      this.setState({locations: response.data.data});
+      this.setState({locations: this.locations.concat(response.data.data)});
     });
   }
 
-  fetchData(withPagination = false) {
+  fetchList(withPagination = false) {
     let limit = this.pageSize;
     let offset = this.state.current;
     let filter = "";
     let search = "";
     let range = "";
     const params = new URLSearchParams(document.location.search);
+
+    if (params.get("limit")) {
+      limit = Number(params.get("limit"));
+    }
+
+    if (params.get("offset")) {
+      offset = Number(params.get("offset"));
+    }
+
+    if (params.get("date")) {
+      range = JSON.stringify({column: "startDate", value: [params.get("date"), params.get("date")]});
+    }
+
+    if (params.get("locationId")) {
+      filter = JSON.stringify({locationId: Number(params.get("locationId"))});
+    }
 
     offset = (offset - 1) * limit;
     if (!withPagination) {
@@ -120,8 +137,41 @@ class StockCountList extends Component {
     .finally(() => this.setState({loading: false}));
   }
 
+  onChangeDate = (date) => {
+    const params = new URLSearchParams(document.location.search);
+    if (date) {
+      params.set("date", this.Util.formatDateForMYSQL(date));
+    } else {
+      params.delete("date");
+    }
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+  }
+
+  onChangeLocation = (locationId) => {
+    const params = new URLSearchParams(document.location.search);
+    if (locationId) {
+      params.set("locationId", locationId);
+    } else {
+      params.delete("locationId");
+    }
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList();
+  }
+
+  onTableChange = (current, pageSize) => {
+    const params = new URLSearchParams(document.location.search);
+    params.set("limit", pageSize);
+    params.set("offset", current);
+
+    this.setState({current});
+    this.Util.pushParamsToURL(this.pathname, params.toString());
+    this.fetchList(true);
+  }
+
   render() {
     const params = new URLSearchParams(document.location.search);
+    const {pagination} = this.state;
     return (
       <React.Fragment>
         <div className="content-list">
@@ -133,7 +183,7 @@ class StockCountList extends Component {
                 </Col>
                 <Col span={12} style={{display: "flex", justifyContent: "flex-end"}}>
                   <DatePicker
-                    onChange={this.handleChangeDate}
+                    onChange={this.onChangeDate}
                     name="date"
                     placeholder={this.CATranslate("text_select_date", this.props.locale)}
                     defaultValue={params.get("date") ? moment(params.get("date")) : null}
@@ -141,9 +191,12 @@ class StockCountList extends Component {
                   />
                   <Select 
                     name="locationId"
+                    valueKey="id"
                     placeholder={`${this.CATranslate("text_all_location", this.props.locale)}`}
+                    defaultValue={params.get("locationId") ? Number(params.get("locationId")) : null}
                     dataSource={this.state.locations}
                     style={{width: 200, margin: "-4px 10px 0 0"}}
+                    onChange={this.onChangeLocation}
                     form={this.props.form} />
                   <this.Button
                     type="info"
@@ -167,12 +220,12 @@ class StockCountList extends Component {
 
               <div style={{marginTop: 15}}>
                 {
-                  this.state.pagination.total ?
+                  pagination.total ?
                   <div className="float-right">
                     <Pagination 
-                      total={this.state.pagination.total}
+                      total={pagination.total}
                       showTotal={(total) => `${this.CATranslate("text_total", this.props.locale)} ${total} ${this.CATranslate("text_records", this.props.locale)}`}
-                      pageSize={this.state.pagination.limit}
+                      pageSize={pagination.limit}
                       current={this.state.current}
                       size="small"
                       showSizeChanger

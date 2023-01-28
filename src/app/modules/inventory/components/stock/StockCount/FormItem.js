@@ -2,8 +2,7 @@ import React from "react";
 import {connect} from "react-redux";
 //import { Prompt } from "react-router-dom";
 import {
-  Form,
-  Spin
+  Form
 } from "antd";
 import Util from "../../../../common/util";
 import history from "../../../../common/router/history";
@@ -43,6 +42,10 @@ class FormItem extends React.Component {
     });
   }
 
+  onGoToStep = (step) => {
+    this.setState({step});
+  }
+
   handleGoBackToList = () => {
     history.goBack();
   }
@@ -58,7 +61,7 @@ class FormItem extends React.Component {
         dispatch={this.props.dispatch}
         handleStartCount={this.handleStartCount}
         goBack={this.handleGoBackToList}
-        goStep2={() => this.setState({step: 2})}
+        goStep={this.onGoToStep}
         form={form} 
       />;
     } else if (this.state.step === 2) {
@@ -70,6 +73,7 @@ class FormItem extends React.Component {
         productVariant={this.props.productVariant}
         dispatch={this.props.dispatch}
         goBack={() => this.setState({step: 1})}
+        goStep={this.onGoToStep}
         handleStartCount={this.handleStartCount}
         handleReview={this.handleGoToPreview}
         form={form} />;
@@ -97,17 +101,12 @@ class FormItem extends React.Component {
 
     const {formData} = this.state;
     return (
-      !this.state.loading ?
       <div>
         {/* <Prompt 
           when={this.shouldComponentUpdate}
           message={"Leave site? \n\nChanges you made may not be saved."}
         /> */}
         {this.renderFormItem(formData)}
-      </div>
-      :
-      <div style={{width: 30, margin: "0 auto", paddingTop: 30}}>
-        <Spin />
       </div>
     );
   }

@@ -4,6 +4,7 @@ import {
   Badge,
   message,
   PageHeader,
+  Pagination,
   Table,
   Tabs
 } from "antd";
@@ -27,6 +28,8 @@ const TABS_LIST = {
 export default function FormStep3(props) {
   const [formData, setFormData] = React.useState({});
   const [productList, setProductList] = React.useState([]);
+  const [pagination, setPagination] = React.useState({});
+  const [current, setCurrent] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
 
   const ST_COUNT_STR = {
@@ -34,24 +37,18 @@ export default function FormStep3(props) {
     [Enum.STOCK_COUNT_STATUS.PAUSE]: {title: stringTranslate("text_pause", props.locale), color: "#f50"},
     [Enum.STOCK_COUNT_STATUS.COMPLETED]: {title: stringTranslate("text_completed", props.locale), color: "#87d068"}
   };
+  let activeTab = "uncounted";
+  let pageSize = 10;
 
-  async function fetchData(id, status) {
-    const data = (await StockCountService.detail(id)).data.data;
-    if (data) {
-      const entries = data.stockCountEntries;
-      delete data.stockCountEntries;
-      setFormData(data);
-      if (data.type === Enum.STOCK_COUNT_TYPE.PARTIAL) {
-        setLoading(true);
-        StockCountService.getStockCountEntriesByStatus(id, status)
-        .then(response => {
-          setProductList(response.data);
-        })
-        .finally(() => setLoading(false));
-      } else {
-        setProductList(entries);
-      }
-    }
+  async function fetchEntries(id, status, limit, offset, type, locationId) {
+    offset = (offset - 1) * limit;
+    setLoading(true);
+    StockCountService.getStockCountEntriesByStatus(id, status, limit, offset, type, locationId)
+    .then(response => {
+      setProductList(response.data.data);
+      setPagination(response.data.pagination);
+    })
+    .finally(() => setLoading(false));
   }
 
   const handelDiscard = () => {
@@ -76,7 +73,15 @@ export default function FormStep3(props) {
     if (uncountedProduct) {
       return util.sweetAlertMessageV2(
         stringTranslate("text_warning", props.locale),
-        "Please count all product",
+        stringTranslate("text_please_count_all_product", props.locale),
+        "warning"
+      );
+    }
+
+    if (formData.status === Enum.STOCK_COUNT_STATUS.COMPLETED) {
+      return util.sweetAlertMessageV2(
+        stringTranslate("text_warning", props.locale),
+        stringTranslate("text_stock_count_is_completed", props.locale),
         "warning"
       );
     }
@@ -99,7 +104,7 @@ export default function FormStep3(props) {
 
   const onChangeTab = (key) => {
     key = parseInt(key);
-    let status = "";
+    let status = "all";
     if (key === TABS_LIST.UNCOUNTED) {
       status = "uncounted";
     } else if (key === TABS_LIST.UNMATCHED) {
@@ -107,7 +112,15 @@ export default function FormStep3(props) {
     } else if (key === TABS_LIST.MATCHED) {
       status = "matched";
     }
-    fetchData(props.id, status);
+    activeTab = status;
+    setCurrent(1);
+    fetchEntries(props.id, status, pageSize, 1, formData.type, formData.locationId);
+  };
+
+  const onTableChange = (current, size) => {
+    pageSize = size;
+    setCurrent(current);
+    fetchEntries(formData.id, activeTab, size, current, formData.type, formData.locationId);
   };
 
   function renderTable() {
@@ -157,12 +170,19 @@ export default function FormStep3(props) {
         }
       ]}
       dataSource={productList}
+      pagination={false}
     />;
   }
 
   React.useEffect(() => {
-    fetchData(props.id, "");
-  }, [props.id]);
+    StockCountService.detail(props.id)
+    .then(response => {
+      const detail = response.data.data;
+      setFormData(detail);
+      fetchEntries(detail.id, activeTab, pageSize, current, detail.type, detail.locationId);
+    });
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <React.Fragment>
@@ -205,6 +225,25 @@ export default function FormStep3(props) {
           {renderTable()}
         </TabPane>
       </Tabs>
+
+      {
+        pagination.total ?
+          <div className="float-right" style={{margin: "20px -8px"}}>
+            <Pagination
+              total={pagination.total}
+              showTotal={(total) => `${stringTranslate("text_total", props.locale)} ${total} ${stringTranslate("text_records", props.locale)}`}
+              pageSize={pagination.limit}
+              current={current}
+              size="small"
+              showSizeChanger
+              onShowSizeChange={onTableChange}
+              onChange={onTableChange}
+            />
+          </div>
+        : null
+      }
+
+      <div className="clearFloat"></div>
     </React.Fragment>
   );
 }

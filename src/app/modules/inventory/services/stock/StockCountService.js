@@ -23,10 +23,10 @@ class StockCountService extends BaseService {
     });
   }
 
-  getStockCountEntriesByStatus(id, status) {
+  getStockCountEntriesByStatus(id, status, limit, offset, type, locationId) {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}/status/${id}?status=${status}`,
+      url: `${this.baseUrl}/status/${id}?status=${status}&limit=${limit}&offset=${offset}&type=${type}&locationId=${locationId}`,
       headers: this.header
     });
   }
