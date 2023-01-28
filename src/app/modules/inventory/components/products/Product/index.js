@@ -338,7 +338,7 @@ export default class ProductList extends List {
                      nameKey="name"
                      allowClear={true}
                      form={this.props.form}
-                     style={{width: 180, marginLeft: 15}}
+                     style={{width: 180, marginLeft: 15, marginBottom: 0}}
                      onChange={this.handleChangeCategory}
                      defaultValue={null} />
                   <this.Select
