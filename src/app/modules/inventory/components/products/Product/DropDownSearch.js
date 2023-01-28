@@ -3,7 +3,7 @@ import BarcodeReader from "react-barcode-reader";
 import $ from "jquery";
 import ProductAction from "../../../actions/products/product";
 import Constant from "../../../constants/products/product";
-import Enum from "../../../enums";
+// import Enum from "../../../enums";
 import Util from "../../../utils";
 import Component from "../../../../common/components/Component";
 import "./DropDownSearch.css";
@@ -178,7 +178,7 @@ export default class DropDownSearch extends Component {
                 :
                 ""
             }
-            {
+            {/* {
               product.productOption === Enum.PRODUCT_VARIANT ?
                 ""
                 :
@@ -190,7 +190,7 @@ export default class DropDownSearch extends Component {
                     <this.Translate id="text_other_location"/>: {Util.countProductQTYOtherLocation(product, this.Util.getLocationId())}
                   </div>
                 </div>
-            }
+            } */}
           </div>
         }
         
