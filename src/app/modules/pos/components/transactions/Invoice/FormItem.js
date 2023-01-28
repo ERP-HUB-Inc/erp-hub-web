@@ -48,6 +48,7 @@ import EnumProduct from "../../../../inventory/enums";
 import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
+import CurrencyExchangeService from "../../../services/settings/CurrencyExchangeService";
 import CustomerService from "../../../../crm/services/customers/CustomerService";
 import CustomerAction from "../../../../crm/actions/customers/customer";
 import CustomerConstant from "../../../../crm/constants/customers/customer";
@@ -95,6 +96,7 @@ class NewInvoice extends React.PureComponent {
         isShowModal: false,
         serialFormData: {},
         deleteSerialData: {},
+        exchangeRate: null,
         selectedSerials: []
     }
     action = new URLSearchParams(window.location.search).get("action");
@@ -297,6 +299,13 @@ class NewInvoice extends React.PureComponent {
             })
             .finally(() => this.setState({loading: false}));
         } else {
+            CurrencyExchangeService.getCurrentExchangeRate()
+            .then(response => {
+                if (response && response.data && response.data.data) {
+                    this.setState({exchangeRate: response.data.data.value});
+                }
+            });
+            
             this.pageTitle = "text_create_invoice";
             this.setState({
                 formData: {
@@ -1459,7 +1468,7 @@ class NewInvoice extends React.PureComponent {
                                 style={styles.itemCenter}
                                 required={true}
                                 precision={0}
-                                data={formData.exchangeRate}
+                                data={formData.id ? formData.exchangeRate : this.state.exchangeRate}
                                 isAutoSelect={true}
                                 onChange={(value) => this.setState(preState => {
                                     preState.formData.exchangeRate = value;
