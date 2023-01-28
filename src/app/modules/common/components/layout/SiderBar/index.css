@@ -78,6 +78,10 @@
     padding-top: 7px
 }
 
+#sum-menu ul li .add-new-btn {
+    display: none;
+}
+
 #sum-menu ul li a {
     color: #9A9A9A;
     display: block;
@@ -90,15 +94,18 @@
 }
 
 #sum-menu ul li {
-    font-size: 14.5px
+    font-size: 14.5px;
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
 }
 
 #sum-menu ul li:hover {
-    background-color: #093163;
+    background-color: #f4f4f4;
 }
 
-#sum-menu ul li:hover a {
-    color: white
+#sum-menu ul li:hover > .add-new-btn {
+    display: block;
 }
 
 #sum-menu ul li a [class^="icon-"] {

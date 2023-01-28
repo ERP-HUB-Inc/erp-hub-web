@@ -1,7 +1,8 @@
 import React from "react";
-import { Badge } from "antd";
+import { Badge, Button } from "antd";
 import {Link} from "react-router-dom";
 import dataSource from "./datasource";
+import history from "../../../router/history";
 import packagejson from "../../../../../../../package.json";
 import "./index.css";
 
@@ -134,18 +135,20 @@ export default class SideBar extends React.PureComponent {
     );
   }
 
-  subMenuItem(key, route, title, icon, titleNew, isSeparate) {
+  subMenuItem(key, route, title, createRoute, titleNew, isSeparate) {
     return (
       <li key={key} onClick={() => this.handleOnClickSubMenu()} style={isSeparate ? {borderBottom: "1px solid #ECECEC"} : {}}>
-        <Link to={ route }>
-          {/* <div className="icon item"><span className={icon}></span></div> */}
-          <div className="item-text item" style={{position: "relative"}}>
-            {title}
-            <div style={{position: "absolute", top: -16, right: -25}}>
-              {titleNew && <Badge count="New" style={{backgroundColor: "#52c41a", marginLeft: 5}} />}
+         <Link to={ route } style={{flexGrow: 1}}>
+            <div className="item-text item" style={{position: "relative"}}>
+               {title}
+               <div style={{position: "absolute", top: -16, right: -25}}>
+                  {titleNew && <Badge count="New" style={{backgroundColor: "#52c41a", marginLeft: 5}} />}
+               </div>
             </div>
-          </div>
-        </Link>
+         </Link>
+         {
+            createRoute && <Button onClick={() => history.push(createRoute)} type="primary" icon="plus" className="add-new-btn" style={{marginRight: 10, backgroundColor: "#093163", borderColor: "#093163", borderRadius: 5}} />
+         }
       </li>
     );
   }
@@ -181,7 +184,7 @@ export default class SideBar extends React.PureComponent {
                 <ul className="list-unstyled text-left">
                   {
                     this.state.menuItems[subMenuItemTitle]["subItems"].map((menu, key) => 
-                      menu["title"] ? this.subMenuItem(key, menu["route"], menu["title"], menu["icon"], menu["new"], menu["isSeparate"]) : ""
+                      menu["title"] ? this.subMenuItem(key, menu["route"], menu["title"], menu["createRoute"], menu["new"], menu["isSeparate"]) : ""
                     )
                   }
                 </ul>
