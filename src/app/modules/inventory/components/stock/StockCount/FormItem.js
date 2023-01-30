@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
-//import { Prompt } from "react-router-dom";
+import {Prompt} from "react-router-dom";
 import {
   Form
 } from "antd";
@@ -102,10 +102,10 @@ class FormItem extends React.Component {
     const {formData} = this.state;
     return (
       <div>
-        {/* <Prompt 
+        <Prompt 
           when={this.shouldComponentUpdate}
           message={"Leave site? \n\nChanges you made may not be saved."}
-        /> */}
+        />
         {this.renderFormItem(formData)}
       </div>
     );

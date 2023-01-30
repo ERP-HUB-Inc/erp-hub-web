@@ -186,23 +186,38 @@ export default class Invoice extends Component {
 					<Menu.Item key={7}>
 						<div>
 						<ReactToPrint
-							content={() => this.invoiceRef}
+							content={() => this.invoiceA5Ref}
 							onBeforeGetContent={() => this.getDetailInvoice(record.id)}
 							trigger={() => {
 								return (
 								<div>
-									<Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" />
+									<Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" /> - A5
 								</div>
 								);
 							}}
 						/>
 						</div>
 					</Menu.Item>
+					<Menu.Item key={8}>
+						<div>
+							<ReactToPrint
+								content={() => this.invoiceRef}
+								onBeforeGetContent={() => this.getDetailInvoice(record.id)}
+								trigger={() => {
+									return (
+									<div>
+										<Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" /> - A4
+									</div>
+									);
+								}}
+							/>
+						</div>
+					</Menu.Item>
 					<Divider style={{marginTop: 4, marginBottom: 4}} />
-					<Menu.Item onClick={() => this.handleReturn(record)} key={7} disabled={record.status !== Enum.INVOICE_STATUS.PAID}>
+					<Menu.Item onClick={() => this.handleReturn(record)} key={9} disabled={record.status !== Enum.INVOICE_STATUS.PAID}>
 						<Icon type="close" style={{marginRight: 10}} /> <this.Translate id="text_void" />
 					</Menu.Item>
-					<Menu.Item key={8} onClick={() => this.handleDeleteInvoice(record)} style={{color: "red"}} disabled={record.status === Enum.INVOICE_STATUS.PAID}>
+					<Menu.Item key={0} onClick={() => this.handleDeleteInvoice(record)} style={{color: "red"}} disabled={record.status === Enum.INVOICE_STATUS.PAID}>
 						<Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
 					</Menu.Item>
 				</Menu>
@@ -702,8 +717,8 @@ render() {
 							receiptTemplate={this.props.receiptTemplate.data}
 							locale={this.props.locale}
 							ref={re => this.receiptRef = re} />
-
 						<CAInvoice ref={ref => this.invoiceRef = ref} formData={detail} />
+						<CAInvoice ref={ref => this.invoiceA5Ref = ref} formData={detail} paperSize="A5" />
 						<PackingSlip ref={el => this.packingSlipRef = el} formData={this.state.salesOrder} />
             		<DeliveryNote ref={el => this.deliveryNoteRef = el} formData={this.state.salesOrder} />
 						<EditShipping ref={f => this.editShippingRef = f} callback={() => this.fetchList()} />
