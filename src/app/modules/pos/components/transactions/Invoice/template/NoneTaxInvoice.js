@@ -119,7 +119,7 @@ export default function NoneTaxInvoice(props) {
             <table className="table-invoice-entry">
               <thead>
                 <tr style={{height: 54, background: "none", borderBottom: "2px solid #ddd"}}>
-                  <th style={{width: 70}}>Item</th>
+                  <th style={{width: 70, textAlign: "center"}}>Item</th>
                   <th style={{width: 350}}>Description</th>
                   <th style={{textAlign: "right"}}>Price</th>
                   <th style={{textAlign: "right"}}>Quantity</th>

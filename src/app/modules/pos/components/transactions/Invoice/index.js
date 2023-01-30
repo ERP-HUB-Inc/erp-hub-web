@@ -186,7 +186,7 @@ export default class Invoice extends Component {
 					<Menu.Item key={7}>
 						<div>
 						<ReactToPrint
-							content={() => this.invoiceRef}
+							content={() => this.invoiceA5Ref}
 							onBeforeGetContent={() => this.getDetailInvoice(record.id)}
 							trigger={() => {
 								return (
@@ -717,8 +717,8 @@ render() {
 							receiptTemplate={this.props.receiptTemplate.data}
 							locale={this.props.locale}
 							ref={re => this.receiptRef = re} />
-
 						<CAInvoice ref={ref => this.invoiceRef = ref} formData={detail} />
+						<CAInvoice ref={ref => this.invoiceA5Ref = ref} formData={detail} paperSize="A5" />
 						<PackingSlip ref={el => this.packingSlipRef = el} formData={this.state.salesOrder} />
             		<DeliveryNote ref={el => this.deliveryNoteRef = el} formData={this.state.salesOrder} />
 						<EditShipping ref={f => this.editShippingRef = f} callback={() => this.fetchList()} />

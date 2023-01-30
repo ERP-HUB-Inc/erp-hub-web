@@ -10,7 +10,7 @@ const CAInvoice = React.forwardRef((props, ref) => {
 
   let style = {};
   if (props.paperSize === "A5") {
-    style = {width: "222mm"};
+    style = {width: "212mm"};
   }
 
   const {formData} = props;

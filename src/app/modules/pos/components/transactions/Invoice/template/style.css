@@ -122,6 +122,11 @@
     margin: 0 !important;
   }
 
+  #invoice-content {
+    padding: 0;
+    margin: 0;
+  }
+
   .invoice-A5 {
     margin: 0 !important;
     width: 222mm !important;

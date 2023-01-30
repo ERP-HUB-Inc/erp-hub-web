@@ -1317,6 +1317,9 @@ class NewInvoice extends React.PureComponent {
         formData.transactionEntries = this.state.transactionEntries;
         return <div id="wrap-invoice-form">
             <CAInvoice formData={formData} />
+            <div style={{display: "none"}}>
+                <CAInvoice ref={ref => this.invoiceRef = ref} formData={formData} paperSize="A5" />
+            </div>
         </div>;
     }
 
@@ -1666,9 +1669,23 @@ class NewInvoice extends React.PureComponent {
                             {
                                 formData.id ? 
                                 <React.Fragment>
-                                    <Button onClick={() => window.print()} style={{marginRight: 15}}>
-                                        <Translate id="text_print_invoice" />
-                                    </Button>
+                                    
+                                    <Dropdown
+                                        overlay={(
+                                            <Menu>
+                                                <Menu.Item key={1}>
+                                                    <ReactToPrint content={() => this.invoiceRef} trigger={() => <div>Paper Size - A5</div>} />
+                                                </Menu.Item>
+                                                <Menu.Item onClick={() => window.print()} key={1}>
+                                                    Paper Size - A4
+                                                </Menu.Item>
+                                            </Menu>
+                                        )}
+                                    >
+                                        <button className="ant-btn ant-dropdown-link" id="button-more-action" type="button">
+                                            <Translate id="text_print_invoice" /> <Icon type="down" />
+                                        </button>
+                                    </Dropdown>
                                     <Dropdown
                                         overlay={(
                                             <Menu>
@@ -1689,9 +1706,10 @@ class NewInvoice extends React.PureComponent {
                                                 </Menu.Item>
                                                 <Menu.Item key={3} disabled={formData.status !== Enum.INVOICE_STATUS.PAID}>
                                                     <ReactToPrint
-                                                        trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}>
+                                                        trigger={() => 
+                                                        <button style={{background: "none", border: "none", paddingLeft: 0}}>
                                                             <Translate id="text_receipt" />
-                                                            </button>}
+                                                        </button>}
                                                         content={() => this.receiptRef}
                                                     />
                                                 </Menu.Item>
