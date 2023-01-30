@@ -106,7 +106,10 @@ export default class FormStep1 extends React.Component  {
     StockCountService.detail(id)
     .then(response => {
       const data = response.data.data;
-      const entries = data.stockCountEntries;
+      let entries = [];
+      if (data.type === EnumStock.STOCK_COUNT_TYPE.PARTIAL) {
+        entries = data.stockCountEntries;
+      }
       delete data.stockCountEntries;
       this.setState({
         formData: data,
@@ -119,9 +122,9 @@ export default class FormStep1 extends React.Component  {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        if (!this.state.entries.length) {
+        if (this.state.formData.type === EnumStock.STOCK_COUNT_TYPE.PARTIAL && !this.state.entries.length) {
           return this.util.sweetAlertMessageV2(
-            stringTranslate("text_warning"),
+            stringTranslate("text_warning", this.props.locale),
             "Please insert products for count",
             "error"
           );
@@ -149,15 +152,23 @@ export default class FormStep1 extends React.Component  {
 
   save(data) {
     if (this.id) {
+      if (this.state.formData.type === EnumStock.STOCK_COUNT_TYPE.FULL_COUNT) {
+        return this.props.goStep(2);
+      }
+
       data.status = this.state.formData.status;
       let entries = data.stockCountEntries;
       delete data.stockCountEntries;
-      entries.filter(entry => !entry.id);
+      entries = entries.filter(entry => !entry.id || entry.status === `${Enum.ARCHIVE}`);
       data.stockCountEntries = entries;
-      StockCountService.update(data, this.id)
-      .then(() => {
-        this.props.handleStartCount(this.state.formData, this.state.entries);
-      });
+      if (entries.length && data.status !== EnumStock.STOCK_COUNT_STATUS.PAUSE) {
+        StockCountService.update(data, this.id)
+        .then(() => {
+          this.props.handleStartCount(this.state.formData, this.state.entries);
+        });
+      } else {
+        this.props.goStep(2);
+      }
     } else {
       this.setState({loadingSubmit: true});
       StockCountService.create(data)

@@ -41,10 +41,12 @@ function ReportSaleByLocation() {
     .then(response => {
       if (response.data) {
         setData(response.data);
-        const totalRevenue = _.sumBy(response.data, value => parseFloat(value.revenue)),
-          totalCost = _.sumBy(response.data, value => parseFloat(value.cost));
+        const totalRevenue = _.sumBy(response.data, value => parseFloat(value.revenue));
+        const totalDiscount = _.sumBy(response.data, value => parseFloat(value.discount));
+        const totalCost = _.sumBy(response.data, value => parseFloat(value.cost));
         setSummary({
           totalRevenue,
+          totalDiscount,
           totalCost
         });
       }
@@ -59,15 +61,20 @@ function ReportSaleByLocation() {
     //eslint-disable-next-line
   }, []);
 
-  let totalRevenue = 0,
-    totalCost = 0, 
-    totalProfit = 0,
-    totalMargin = 0;
+  let totalRevenue = 0;
+  let totalDiscount = 0;
+  let netSale = 0;
+  let totalCost = 0;
+  let totalProfit = 0;
+  let totalMargin = 0;
 
   if (summary) {
     totalRevenue = summary.totalRevenue;
+    totalDiscount = summary.totalDiscount;
+    netSale = totalRevenue - totalDiscount;
     totalCost = summary.totalCost;
     totalProfit = totalRevenue - totalCost;
+
     if (totalProfit > 0) totalMargin = (totalProfit / totalRevenue) * 100;
   }
 
@@ -100,7 +107,7 @@ function ReportSaleByLocation() {
       ]}
       />
       <Row gutter={16}>
-        <Col span={6}>
+        <Col span={4}>
           <Card>
             <Statistic
               title={<Translate id="text_revenue" />}
@@ -109,7 +116,27 @@ function ReportSaleByLocation() {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={4}>
+          <Card>
+            <Statistic
+              title={<Translate id="text_discount" />}
+              value={totalDiscount ? totalDiscount.toFixed(2) : 0}
+              precision={2}
+              valueStyle={{ color: "#cf1322" }}
+            />
+          </Card>
+        </Col>
+        <Col span={4}>
+          <Card>
+            <Statistic
+              title={<Translate id="text_net_sale" />}
+              value={netSale ? netSale.toFixed(2) : 0}
+              precision={2}
+              valueStyle={{ color: "#3f8600" }}
+            />
+          </Card>
+        </Col>
+        <Col span={4}>
           <Card>
             <Statistic
               title={<Translate id="text_cost_of_good" />}
@@ -118,7 +145,7 @@ function ReportSaleByLocation() {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={4}>
           <Card>
             <Statistic
               title={<Translate id="text_gross_profit" />}
@@ -127,7 +154,7 @@ function ReportSaleByLocation() {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col span={4}>
           <Card>
             <Statistic
               title={<Translate id="text_margin" />}
@@ -169,6 +196,20 @@ function ReportSaleByLocation() {
                 align: "right",
                 key: "revenue",
                 render: value => (new Util()).formatCurrency(value)
+              },
+              {
+                title: <Translate id="text_discount" />,
+                dataIndex: "discount",
+                align: "right",
+                key: "discount",
+                render: (discount) => new Util().formatCurrency(discount)
+              },
+              {
+                title: <Translate id="text_net_sale" />,
+                dataIndex: "revenue",
+                align: "right",
+                key: "revenue",
+                render: (revenue, record) => new Util().formatCurrency(revenue - record.discount)
               },
               {
                 title: <Translate id="text_cost_of_good" />,

@@ -80,9 +80,12 @@ class BookingList extends Component {
         key: "status",
         render: (status) => {
           const statusValue = this.BOOKING_STATUS_STR[status];
-          let statusColor = statusValue.color;
-          let statusTitle = statusValue.title;
-          return <this.Tag color={statusColor} style={{width: 120, textAlign: "center"}}>{statusTitle}</this.Tag>;
+
+          if (statusValue) {
+              let statusColor = statusValue.color;
+              let statusTitle = statusValue.title;
+              return <this.Tag color={statusColor} style={{width: 120, textAlign: "center"}}>{statusTitle}</this.Tag>;
+          }
         }
       }
     ];

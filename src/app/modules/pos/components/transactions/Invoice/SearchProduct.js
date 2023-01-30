@@ -44,8 +44,15 @@ export default function SearchProductDropdown(props) {
     }
   };
 
-  const handleScanError = () => {};
-  const handleScan = () => {};
+  const handleScanError = (value) => {};
+  const handleScan = (value) => {
+    if (props.handleScan) {
+      props.handleScan(value);
+    } else {
+      props.form.setFieldsValue({ searchProduct: value });
+      handleSearchProduct(value, true);
+    }
+  };
 
   const handleSearchProduct = (value, isSearchingBarcode = false) => {
     const searchKey = JSON.stringify({ column: ["name", "namekm", "namebm", "barcode"], value });
@@ -164,6 +171,7 @@ export default function SearchProductDropdown(props) {
         // handlePressEnter={this.handlePressEnterOnSearch}
         handleOnBlur={handleOnBlurSearch}
         handleOnFocus={handleOnFocusSearch}
+        onChange={props.onChange}
         autoComplete="off"
         style={{width: "100%"}}
         form={props.form}

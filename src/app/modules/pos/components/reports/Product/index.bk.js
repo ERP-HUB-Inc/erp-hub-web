@@ -104,7 +104,7 @@ export default class ProductList extends List {
     ];
     this.brandList = [{name: <this.Translate id="text_all_brand"/>, id: 0}];
     this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
-    this.productTypeList = [{productTypeDescriptions: {name: <this.Translate id="text_all_product_type"/>}, id: 0}];
+    this.productTypeList = [{productTypeDescriptions: {name: <this.Translate id="text_all_categories"/>}, id: 0}];
     this.columnFilterWithKey = ["name", "barcode"];
     this.pageSize = 50;
     this.pageSizeOptions = ["50", "100", "150", "200"];

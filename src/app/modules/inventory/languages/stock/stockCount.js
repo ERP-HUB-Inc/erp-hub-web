@@ -39,6 +39,10 @@ export default {
     "Pause",
     "ផ្អាក"
   ],
+  "text_resume": [
+    "Resume",
+    "បន្តរ"
+  ],
   "text_review": [
     "Review",
     "ផ្ទៀងផ្ទាត់"
@@ -75,6 +79,22 @@ export default {
   "text_completed": [
     "Completed",
     "បានបញ្ចប់"
+  ],
+  "text_product_not_in_list": [
+    "Product not found in list!",
+    "ផលិតផលមិនមានក្នុងបញ្ជី"
+  ],
+  "text_confirm_leave_page": [
+    "Leave page? Some information you input may not save.",
+    "ចាកចេញ? \nព័ត៌មានមួយចំនួនដែលអ្នកបញ្ចូលអាចនឹងមិនរក្សាទុក."
+  ],
+  "text_please_count_all_product": [
+    "Please count all product",
+    "សូមរាប់រាល់ផលិតផលទាំងអស់"
+  ],
+  "text_stock_count_is_completed": [
+    "This stock count is already complete",
+    "ការរាប់ស្តុកនេះបានបញ្ចប់រួចរាល់"
   ]
 
 };

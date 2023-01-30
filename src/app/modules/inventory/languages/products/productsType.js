@@ -14,8 +14,8 @@ export default {
     "ប្រភេទផលិតផលចម្បង"
   ],
 
-  "text_all_product_type": [
+  "text_all_categories": [
     "All Categories",
-    "គ្រប់ប្រភេទផលិតផល"
+    "ប្រភេទទាំងអស់"
   ]
 };

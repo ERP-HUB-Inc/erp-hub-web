@@ -2,9 +2,11 @@ import React from "react";
 import {
   Menu,
   Dropdown,
+  Divider,
   Icon,
   Row,
-  Col
+  Col,
+  Table
 } from "antd";
 import Exchange from "./ExchangeMoneyFunc";
 import List from "../../List";
@@ -17,66 +19,73 @@ import Constant from "../../../constants/products/product";
 import LocationAction from "../../../../pos/action/settings/location";
 import ProductAction from "../../../actions/products/product";
 import ProductService from "../../../services/products/ProductService";
+import ProductsTypeService from "../../../services/products/ProductsTypeService";
 import "./index.css";
 import CurrencyExchangeService from "../../../../pos/services/settings/CurrencyExchangeService";
 
 export default class ProductList extends List {
 
   constructor(props) {
-    super(props);
-    this.state = {
+   super(props);
+   this.state = {
       ...this.state,
       brands: [],
       locations: [],
       productTypes: [],
-      dataSourceToPrint: [],
-    };
-    this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
-    this.stockList = [
+      dataSourceToPrint: []
+   };
+   this.locationList = [{name: <this.Translate id="text_all_store"/>, id: 0}];
+   this.categoriesList = [{name: <this.Translate id="text_all_categories"/>, id: null}];
+   this.stockList = [
       {name: <this.Translate id="text_all_stock"/>, id: 0},
       {name: <this.Translate id="text_in_stock"/>, id: 1},
       {name: <this.Translate id="text_out_of_stock"/>, id: 2}
-    ];
-    this.columns = new Column(this.props);
-    this.formCreate = <FormCreate/>;
-    this.callBackOnShowEditForm = this.showFormEdit;
-    this.columnExpend = new ColumnExpand(); 
-    this.fetchingProp = "products";
-    this.isShowExpandable = true;
-    this.rowClassName = record => record.productOption !== Enum.PRODUCT_VARIANT ? "standard-product-row" : "";
-    this.componentHasUpdated = false;
-    this.service = ProductService;
-    this.columnFilterWithKey = ["name", "barcode", "namekm"];
-    this.action = ProductAction;
-    this.RESET_CONSTANT = Constant.RESET_PRODUCT;
-    this.handleClone = this.handleClone.bind(this);
-    this.pathName = "/products/list";
-    this.timer = null;
+   ];
+   this.columns = new Column(this.props, this.handleConfirm);
+   this.formCreate = <FormCreate/>;
+   this.callBackOnShowEditForm = this.showFormEdit;
+   this.columnExpend = new ColumnExpand(this.props, this.handleConfirm); 
+   this.fetchingProp = "products";
+   this.isShowExpandable = true;
+   this.rowClassName = record => record.productOption !== Enum.PRODUCT_VARIANT ? "standard-product-row" : "";
+   this.componentHasUpdated = false;
+   this.service = ProductService;
+   this.columnFilterWithKey = ["name", "barcode", "namekm"];
+   this.action = ProductAction;
+   this.RESET_CONSTANT = Constant.RESET_PRODUCT;
+   this.handleClone = this.handleClone.bind(this);
+   this.pathName = "/products/list";
+   this.timer = null;
   }
 
   componentDidMount() {
-    const params = new URLSearchParams(document.location.search);
-    const {currency, currencyId}  = this.Util.getSetting();
-    if (params.get("current")) {
-      this.setState({ current: Number(params.get("current")) });
-    }
-    if (params.get("search")) {
-      this.props.form.setFieldsValue({ key: params.get("search") });
-    }
-    if (params.get("locationId")) {
-      this.props.form.setFieldsValue({locationId: Number(params.get("locationId"))});
-    }
-    this.fetchList(true);
-    this.props.dispatch(LocationAction.fetch());
-    if (currency !== "$"){
-      CurrencyExchangeService.getExchangeRate(JSON.stringify({"currencyId": [currencyId]})).then(({data})=>{
-        const data1 = data.data;
-        if (data1 && data1.length){
-          exchangeRate = data1[data1.length-1].value;
-          this.forceUpdate();
-        }
+      const params = new URLSearchParams(document.location.search);
+      const {currency, currencyId}  = this.Util.getSetting();
+      if (params.get("current")) this.setState({ current: Number(params.get("current")) });
+      if (params.get("search")) this.props.form.setFieldsValue({ key: params.get("search") });
+      if (params.get("productTypeId")) this.props.form.setFieldsValue({productTypeId: params.get("productTypeId")});
+      if (params.get("locationId")) this.props.form.setFieldsValue({locationId: Number(params.get("locationId"))});
+
+      this.fetchList(true);
+
+      this.props.dispatch(LocationAction.fetch());
+
+      ProductsTypeService.lists(500, 0, "name", "ASC")
+      .then(response => {
+         if (response && response.data) {
+            this.setState({productTypes: response.data.data});
+         }
       });
-    }
+
+      if (currency !== "$"){
+         CurrencyExchangeService.getExchangeRate(JSON.stringify({"currencyId": [currencyId]})).then(({data})=>{
+            const data1 = data.data;
+            if (data1 && data1.length){
+               exchangeRate = data1[data1.length-1].value;
+               this.forceUpdate();
+            }
+         });
+      }
   }
 
   componentWillUpdate(nextProps) {
@@ -122,38 +131,28 @@ export default class ProductList extends List {
   }
 
   fetchList(withPagination = false) {
-    let searchKey = "";
-    let filter = {};
-    let locationId = 0;
-    let limit = this.pageSize;
-    let offset = this.state.current;
-    const params = new URLSearchParams(document.location.search);
+      let searchKey = "";
+      let filter = {};
+      let locationId = 0;
+      let limit = this.pageSize;
+      let offset = this.state.current;
+      const params = new URLSearchParams(document.location.search);
 
-    if (params.get("limit")) {
-      limit = Number(params.get("limit"));
-    }
+      if (params.get("limit")) limit = Number(params.get("limit"));
+      if (params.get("current")) offset = Number(params.get("current"));
+      if (params.get("search")) searchKey = JSON.stringify({ column: this.columnFilterWithKey, value: params.get("search") });
+      if (params.get("productTypeId")) filter = JSON.stringify({productTypeId: params.get("productTypeId")});
+      if (params.get("locationId")) locationId = Number(params.get("locationId"));
 
-    if (params.get("current")) {
-      offset = Number(params.get("current"));
-    }
+      if (!withPagination) {
+         offset = 1;
+         this.setState({current: 1});
+         params.delete("current");
+         this.Util.pushParamsToURL(this.pathName, params.toString());
+      }
 
-    if (params.get("search")) {
-      searchKey = JSON.stringify({ column: this.columnFilterWithKey, value: params.get("search") });
-    }
-
-    if (params.get("locationId")) {
-      locationId = Number(params.get("locationId"));
-    }
-
-    if (!withPagination) {
-      offset = 1;
-      this.setState({current: 1});
-      params.delete("current");
-      this.Util.pushParamsToURL(this.pathName, params.toString());
-    }
-
-    offset = (offset - 1) * limit;
-    this.props.dispatch(this.action.fetch(limit, offset, "", "", filter, searchKey, locationId));
+      offset = (offset - 1) * limit;
+      this.props.dispatch(this.action.fetch(limit, offset, "", "", filter, searchKey, locationId));
   }
 
   renderButtonAddNew() {
@@ -181,7 +180,7 @@ export default class ProductList extends List {
 
   handleDelete() {
     let product = this.state.selectedRows;
-    if(product){
+    if (product) {
       let quantity = this.getAllQTY(product[0]);
 
       if (product[0].serialType === Enum.SERIAL_TYPE.NON_INVENTORY){
@@ -195,20 +194,17 @@ export default class ProductList extends List {
     }
   }
 
-  handleConfirm() {
-    let selectedRows = this.state.selectedRows;
-    if(selectedRows.length === 1){
-      this.Util.sweetAlertConfirm(this.CATranslate("text_confirm_delete", this.props.locale))
-      .then(willDelete => {
-        if (willDelete) {
-          this.handleDelete();
-        }
-      });
-    }else if(selectedRows.length > 1){
-      this.Message.warning(this.CATranslate("text_allow_select_one_record", this.props.locale));
-    }else{
-      this.Message.warning(this.CATranslate("text_please_select_record", this.props.locale));
-    }
+  handleConfirm(record) {
+    this.setState({
+      selectedRows: [record],
+      selectedListIds: [record.id]
+    });
+    this.Util.sweetAlertConfirm(this.CATranslate("text_confirm_delete", this.props.locale))
+    .then(willDelete => {
+      if (willDelete) {
+        this.handleDelete();
+      }
+    });
   }
 
   renderButtonImport() {
@@ -221,7 +217,6 @@ export default class ProductList extends List {
   buttonActionCollection() {
     return <div style={{marginTop: 3}}>
       {this.renderButtonAddNew()}
-      {this.renderButtonDelete()}
       {this.renderButtonImport()}
     </div>;
   }
@@ -241,34 +236,45 @@ export default class ProductList extends List {
     }, 800);
   }
 
-  handleChangeLocation = (locationId) => {
-    const params = new URLSearchParams(document.location.search);
-    if (locationId) {
-      params.set("locationId", locationId);
-    } else {
-      params.delete("locationId");
-    }
-    this.Util.pushParamsToURL(this.pathName, params.toString());
-    this.fetchList();
-  }
-
-  onShowSizeChange = (current, pageSize) => {
-    if (this.action) {
+   handleChangeLocation = (locationId) => {
       const params = new URLSearchParams(document.location.search);
-      let strParam = `limit=${pageSize}&current=${current}`;
-      if (params.get("search")) {
-        strParam += `&search=${params.get("search")}`;
+      if (locationId) {
+         params.set("locationId", locationId);
+      } else {
+         params.delete("locationId");
       }
+      this.Util.pushParamsToURL(this.pathName, params.toString());
+      this.fetchList();
+   }
 
-      if (params.get("locationId")) {
-        strParam += `&locationId=${params.get("locationId")}`;
+   handleChangeCategory = (productTypeId) => {
+      const params = new URLSearchParams(document.location.search);
+      if (productTypeId) {
+         params.set("productTypeId", productTypeId);
+      } else {
+         params.delete("productTypeId");
       }
+      this.Util.pushParamsToURL(this.pathName, params.toString());
+      this.fetchList();
+   }
 
-      this.setState({ current, isClickFilter: false });
-      this.Util.pushParamsToURL(this.pathName, strParam);
-      this.fetchList(true);
-    }
-  }
+   onShowSizeChange = (current, pageSize) => {
+      if (this.action) {
+         const params = new URLSearchParams(document.location.search);
+         let strParam = `limit=${pageSize}&current=${current}`;
+         if (params.get("search")) {
+         strParam += `&search=${params.get("search")}`;
+         }
+
+         if (params.get("locationId")) {
+         strParam += `&locationId=${params.get("locationId")}`;
+         }
+
+         this.setState({ current, isClickFilter: false });
+         this.Util.pushParamsToURL(this.pathName, strParam);
+         this.fetchList(true);
+      }
+   }
 
   onChangePagination = (current, pageSize) => {
     if (this.action != null) {
@@ -307,13 +313,6 @@ export default class ProductList extends List {
 
   render() {
     let fetchingProp = this.props[this.fetchingProp];
-    const rowSelection = {
-      selectedRowKeys: this.state.selectedRowKeys,
-      onChange: this.onSelectChange,
-      getCheckboxProps: record => ({
-        name: record.name,
-      })
-    };
 
     return (
       <div className="content-list">
@@ -324,35 +323,46 @@ export default class ProductList extends List {
                 <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_product" /></h3>
               </Col>
               <Col span={21} style={{display: "flex", justifyContent: "flex-end"}}>
-                <this.InputText
-                  name="key"
-                  placeholder={this.CATranslate("text_general_seach_product", this.props.locale)}
-                  form={this.props.form}
-                  style={{width: 314, marginBottom: 0}}
-                  onChange={this.handleSearch}
-                  allowClear={true} />
-                <this.Select
-                  name="locationId"
-                  dataSource={this.locationList.concat(this.props.locations.list)}
-                  valueKey="id"
-                  nameKey="name"
-                  form={this.props.form}
-                  style={{width: 180, margin: "0 15px"}}
-                  onChange={this.handleChangeLocation}
-                  defaultValue={0} />
-                {this.buttonActionCollection()}
+                  <this.InputText
+                     name="key"
+                     placeholder={this.CATranslate("text_general_seach_product", this.props.locale)}
+                     form={this.props.form}
+                     style={{width: 314, marginBottom: 0}}
+                     onChange={this.handleSearch}
+                     allowClear={true} />
+                  <this.Select
+                     name="productTypeId"
+                     placeholder={this.CATranslate("text_all_categories", this.props.locale)}
+                     dataSource={this.categoriesList.concat(this.state.productTypes)}
+                     valueKey="id"
+                     nameKey="name"
+                     allowClear={true}
+                     form={this.props.form}
+                     style={{width: 180, marginLeft: 15, marginBottom: 0}}
+                     onChange={this.handleChangeCategory}
+                     defaultValue={null} />
+                  <this.Select
+                     name="locationId"
+                     dataSource={this.locationList.concat(this.props.locations.list)}
+                     valueKey="id"
+                     nameKey="name"
+                     form={this.props.form}
+                     style={{width: 180, margin: "0 15px"}}
+                     onChange={this.handleChangeLocation}
+                     defaultValue={0} />
+                  {this.buttonActionCollection()}
               </Col>
             </Row>
 
-            <this.TableExpand
+            <Table
               bordered={true}
+              pagination={false}
               dataSource={fetchingProp.list}
               columns={this.columns}
               rowClassName={this.rowClassName}
               locale={{emptyText: <this.Translate id="table_empty_data"/>}}
               expandedRowRender={this.expandedRender}
               onRow={record =>({onDoubleClick:() => this.handleShowFormEdit(record),})}
-              rowSelection={rowSelection}
               loading={fetchingProp.fetching} />
 
             <div style={{marginTop: 15}}>
@@ -487,7 +497,7 @@ class ColumnExpand extends List {
 }
 
 class Column extends List {
-  constructor(props) {
+  constructor(props, handleDelete) {
     super(props);
     this.colorStockStatus = ["#4cb64c", "#f3a638"];
     return [
@@ -512,6 +522,10 @@ class Column extends List {
                 <this.Link to={`/products/split/${Util.getProductVariantId(record)}?productOption=${record.productOption}`}>
                   <Icon type="scissor" style={{marginRight: 10}} /> <this.Translate id="text_slit_product" />
                 </this.Link>
+              </Menu.Item>
+              <Divider style={{marginTop: 4, marginBottom: 4}} />
+              <Menu.Item onClick={() => handleDelete(record)}>
+                <Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
               </Menu.Item>
             </Menu>
           );

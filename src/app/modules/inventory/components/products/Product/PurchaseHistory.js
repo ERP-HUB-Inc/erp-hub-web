@@ -5,6 +5,8 @@ import {
     Card,
     Table,
 } from "antd";
+import {Link} from "react-router-dom";
+import {Translate} from "react-localize-redux";
 import ProductService from "../../../services/products/ProductService";
 import Util from "../../../../common/util";
 
@@ -22,66 +24,71 @@ export default function PurchaseHistory({id}) {
         })
         .finally(() => setLoading(false));
     }
-// eslint-disable-next-line
+        // eslint-disable-next-line
     ,[]);
 
-    const columns = [
-        {
-          title: "Product Name",
-          dataIndex: "productName",
-          key: "productName",
-        },
-        {
-          title: "Barcode",
-          dataIndex: "barcode",
-          key: "barcode",
-        },
-        {
-          title: "Option",
-          dataIndex: "variantName",
-          key: "variantName",
-        },
-        {
-          title: "Purchase Date",
-          dataIndex: "date",
-          key: "date",
-          render: (date) => date ? util.formatDate(date, "DD/MM/YYYY") : null
-        },  
-        {
-            title: "Supplier",
-            dataIndex: "supplierName",
-            key: "supplierName",
-        },
-        {
-            title: "Quantity Buy In",
-            dataIndex: "quantity",
-            key: "quantity",
-            render: (quantity, record) => `${quantity} ${record.unitName}`
-        },
-        {
-            title: "Unit Cost",
-            dataIndex: "cost",
-            key: "cost",
-            render: (cost) => cost ? util.formatCurrency(cost) : null
-        },
-        {
-          title: "Total",
-          dataIndex: "total",
-          key: "total",
-          render: (total) => total ? util.formatCurrency(total) : null
+   const columns = [
+      {
+         title: <Translate id="text_location" />,
+         dataIndex: "locationName",
+         key: "locationName",
+      },
+      {
+         title: <Translate id="text_product_name" />,
+         dataIndex: "productName",
+         key: "productName",
+      },
+      {
+         title: <Translate id="text_barcode" />,
+         dataIndex: "barcode",
+         key: "barcode",
+      },
+      {
+         title: <Translate id="text_option" />,
+         dataIndex: "variantName",
+         key: "variantName",
+      },
+      {
+         title: <Translate id="text_purchase_date" />,
+         dataIndex: "date",
+         key: "date",
+         render: (date, record) => <Link to={`/stocks/purchase/update/${record.purchaseOrderId}`}>{util.formatDate(date, "DD/MM/YYYY")}</Link>
+      },  
+      {
+         title: <Translate id="text_supplier" />,
+         dataIndex: "supplierName",
+         key: "supplierName",
+      },
+      {
+         title: <Translate id="text_quantity_buy_in" />,
+         dataIndex: "quantity",
+         key: "quantity",
+         render: (quantity, record) => `${quantity} ${record.unitName}`
+      },
+      {
+         title: <Translate id="text_unit_cost" />,
+         dataIndex: "cost",
+         key: "cost",
+         render: (cost) => cost ? util.formatCurrency(cost) : null
+      },
+      {
+         title: <Translate id="text_total" />,
+         dataIndex: "total",
+         key: "total",
+         render: (total) => util.formatCurrency(total)
       }
-      ];
-    return <Card title="Purchase History" bordered={false} style={{marginTop: 25}}>
-    <Row>
-      <Col span={24}>
-         <Table
-          dataSource={purchaseHistorys}
-          bordered={true}
-          loading={loading}
-          columns={columns}
-          pagination={false}
-         />
-      </Col>
-    </Row>
-  </Card>;
+   ];
+   return <Card title={<Translate id="text_purchase_history" />} bordered={false} style={{marginTop: 25}} bodyStyle={{paddingTop: 15}}>
+      <Row>
+         <Col span={24}>
+            <Table
+            dataSource={purchaseHistorys}
+            bordered={true}
+            loading={loading}
+            columns={columns}
+            pagination={false}
+            />
+         </Col>
+      </Row>
+   </Card>;
 }

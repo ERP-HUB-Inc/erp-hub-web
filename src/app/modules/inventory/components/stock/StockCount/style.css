@@ -21,3 +21,7 @@
 .radio-count-type .ant-form-item-children .ant-radio-button-wrapper {
   width: 50% !important;
 }
+
+.process-count-row {
+  background: #ffa940 !important;
+}

@@ -1,7 +1,7 @@
 export default {
   text_action: ["Action", "សកម្មភាព"],
 
-  text_more_action: ["More Action", "សកម្មភាពផ្សេងទៀត"],
+  text_more_action: ["More Action", "ជម្រើសផ្សេងទៀត"],
 
   text_warning_info: ["Warning Information", "ព័ត៏មានបញ្ជាក់"],
 
@@ -519,10 +519,7 @@ export default {
   text_edit_banner: ["Edit Banner", "កែសម្រួលបដា"],
   text_new_banner: ["New Banner", "បដាថ្មី"],
   text_meta_title: ["Meta Title", "ចំណងជើងមេតា"],
-  text_meta_tag_description: [
-    "Meta Tag Description",
-    "ការពិពណ៌នាអំពីស្លាកមេតា",
-  ],
+  text_meta_tag_description: ["Meta Tag Description", "ការពិពណ៌នាអំពីស្លាកមេតា"],
   text_meta_tag_keyword: ["Meta Tag Keyword", "ពាក្យគន្លឹះ ស្លាកមេតា"],
   text_product_name: ["Product Name", "ឈ្មោះ​ផលិតផល"],
   text_product_detail: ["Product Detail", "ផលិតផលលម្អិត"],
@@ -530,5 +527,6 @@ export default {
   text_telegram: ["Telegram", "Telegram"],
   text_instagram: ["Instagram", "Instagram"],
   text_youtube: ["Youtube", "Youtube"],
-  text_store_description: ["Store Descripion","ការពិពណ៌នាហាង"]
+  text_store_description: ["Store Descripion","ការពិពណ៌នាហាង"],
+  text_movement_log: ["Movement Log", "កំណត់ហេតុនៃការផ្លាស់ប្តូ"]
 };

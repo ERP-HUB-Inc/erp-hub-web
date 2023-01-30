@@ -17,7 +17,55 @@ export default class CustomerList extends List {
       ...this.state,
       isShowFilter: false
     };
-    this.columns = new Column();
+    this.columns = [
+      {
+        title: <this.Translate id="text_name" />,
+        dataIndex: "firstName",
+        width: 200,
+        render: (text, row) => {
+          const menu = (
+            <Menu>
+              <Menu.Item><this.Link to={`/customer-profile/${row.id}`}><this.Translate id="text_view" /></this.Link></Menu.Item>
+              <Menu.Item onClick={() => this.showFormEdit(row)}><this.Translate id="text_edit" /></Menu.Item>
+            </Menu>
+          );
+          return <div className="wrap-product-name" style={{display: "flex"}}>
+            {text + " " + row.lastName}
+            <Dropdown className="product-row-option" overlay={menu}>
+              {/*eslint-disable-next-line*/}
+              <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
+                <this.Translate id="text_option" /> <this.Icon type="down" />
+              </a>
+            </Dropdown>
+          </div>;
+        }
+      },
+      {
+        title: <this.Translate id="text_company" />,
+        dataIndex: "company",
+        key: "company",
+        render: company => company ? company : ""
+      },
+      {
+        title: <this.Translate id="text_phone_number" />,
+        dataIndex: "phoneNumber",
+        key: "phoneNumber",
+        width: 160,
+        render: phoneNumber => phoneNumber ? this.Util.formtTextError(phoneNumber) : this.emptyText
+      },
+      {
+        title: <this.Translate id="text_address" />,
+        dataIndex: "address",
+        key: "address",
+        render: address => address ? this.Util.formtTextError(address) : this.emptyText
+      },
+      {
+        title: <this.Translate id="text_group" />,
+        dataIndex: "groupCustomer",
+        key: "groupCustomer",
+        render: groupCustomer => groupCustomer ? <span className="text-capitalize">{groupCustomer.name}</span> : this.emptyText
+      }
+    ];
     this.formCreate = <FormCreate/>;
     this.callBackOnShowEditForm = this.showFormEdit;
     this.columnExpend = new ColumnExpend();
@@ -303,76 +351,6 @@ class ColumnExpend extends List {
       {
         dataIndex: "",
         render: () => {}
-      }
-    ];
-  }
-}
-
-class Column extends List {
-  constructor(props) {
-    super(props);
-
-    this.customerTypes = [
-      {
-        title: <this.Translate id="text_retail_sale" />,
-        value: Enum.CUSTOMER_TYPE.RETAIL_SALE
-      },
-      {
-        title: <this.Translate id="text_whole_sale" />,
-        value: Enum.CUSTOMER_TYPE.WHOLE_SALE
-      },
-      {
-        title: <this.Translate id="text_distributor" />,
-        value: Enum.CUSTOMER_TYPE.DISTRIBUTOR
-      }
-    ];
-    
-    return [
-      {
-        title: <this.Translate id="text_name" />,
-        dataIndex: "firstName",
-        width: 200,
-        render: (text, row) => {
-          const menu = (
-            <Menu>
-              <Menu.Item><this.Link to={`/customer-profile/${row.id}`}><this.Translate id="text_view" /> <this.Translate id="text_profile" /></this.Link></Menu.Item>
-            </Menu>
-          );
-          return <div className="wrap-product-name" style={{display: "flex"}}>
-            {text + " " + row.lastName}
-            <Dropdown className="product-row-option" overlay={menu}>
-              {/*eslint-disable-next-line*/}
-              <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
-                <this.Translate id="text_option" /> <this.Icon type="down" />
-              </a>
-            </Dropdown>
-          </div>;
-        }
-      },
-      {
-        title: <this.Translate id="text_company" />,
-        dataIndex: "company",
-        key: "company",
-        render: company => company ? company : this.emptyText
-      },
-      {
-        title: <this.Translate id="text_phone_number" />,
-        dataIndex: "phoneNumber",
-        key: "phoneNumber",
-        width: 160,
-        render: phoneNumber => phoneNumber ? this.Util.formtTextError(phoneNumber) : this.emptyText
-      },
-      {
-        title: <this.Translate id="text_address" />,
-        dataIndex: "address",
-        key: "address",
-        render: address => address ? this.Util.formtTextError(address) : this.emptyText
-      },
-      {
-        title: <this.Translate id="text_group" />,
-        dataIndex: "groupCustomer",
-        key: "groupCustomer",
-        render: groupCustomer => groupCustomer ? <span className="text-capitalize">{groupCustomer.name}</span> : this.emptyText
       }
     ];
   }

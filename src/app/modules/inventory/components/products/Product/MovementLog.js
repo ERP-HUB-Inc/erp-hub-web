@@ -1,10 +1,11 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect, useRef} from "react";
 import {
 	Col,
 	Row,
 	Card,
 	Table,
 } from "antd";
+import {Translate} from "react-localize-redux";
 import MovementLogService from "../../../services/stock/MovementLogService";
 import Util from "../../../../common/util";
 
@@ -15,6 +16,7 @@ export default function ProductDetailHistory({id}) {
 
 	const movementLog = {
 		PURCHASE: "Purchesed",
+		EDIT_COST: "Edit Cost",
 		SALE: "Sold",
 		ADJUSTMENT: "Adjustmented",
 		TRANSFER_OUT: "Transfered Out",
@@ -26,9 +28,9 @@ export default function ProductDetailHistory({id}) {
 	useEffect(() => {
 		setLoading(true);
 		MovementLogService.getMovementLogs(id).then((response) => {
-				if(response.data){
-					setMovementLogs(response.data);
-				}
+			if (response.data) {
+				setMovementLogs(response.data);
+			}
 		})
 		.finally(() => setLoading(false));
 	}
@@ -37,45 +39,61 @@ export default function ProductDetailHistory({id}) {
 
 	const columns = [
 		{
-			title: "Option",
+			title: <Translate id="text_location" />,
+			dataIndex: "locationName",
+			key: "locationName"
+		},
+		{
+			title: <Translate id="text_activity" />,
+			dataIndex: "type",
+			key: "type",
+			render: (type) => movementLog[type]
+		},
+		{
+			title: <Translate id="text_option" />,
 			dataIndex: "productVariant",
 			key: "productVariant",
 		},
 		{
-			title: "Activity",
-			dataIndex: "type",
-			key: "type",
-			render: (type) => movementLog[type]
-		},  
-		{
-				title: "Previous Quantity",
-				dataIndex: "oldQuantity",
-				key: "oldQuantity",
+			title: <Translate id="text_previous_quantity" />,
+			dataIndex: "oldQuantity",
+			key: "oldQuantity",
 		},
 		{
-				title: "Current Quantity",
-				dataIndex: "currentQuantity",
-				key: "currentQuantity",
+			title: <Translate id="text_current_quantity" />,
+			dataIndex: "currentQuantity",
+			key: "currentQuantity",
 		},
 		{
-				title: "Last Modified",
-				dataIndex: "date",
-				key: "date",
-				render: (date) => date ? util.formatDate(date, "DD/MM/YYYY") : null
+			title: <Translate id="text_previous_cost" />,
+			dataIndex: "oldCost",
+			key: "oldCost",
+			render: oldCost => oldCost ? util.formatCurrency(oldCost) : ""
+		},
+		{
+			title: <Translate id="text_current_cost" />,
+			dataIndex: "currentCost",
+			key: "currentCost",
+			render: currentCost => currentCost ? util.formatCurrency(currentCost) : ""
+		},
+		{
+			title: <Translate id="text_last_modified" />,
+			dataIndex: "date",
+			key: "date",
+			render: (date) => util.formatDate(date, "DD/MM/YYYY")
 		}
 		];
-	return <Card title="Movement Log" bordered={false} style={{marginTop: 25}}>
-		
-	<Row>
-		<Col span={24}>
-		<Table
-			dataSource={movementLogs}
-			bordered={true}
-			loading={loading}
-			columns={columns}
-			pagination={false}
-			/>
-		</Col>
-	</Row>
-</Card>;
+	return <Card title={<Translate id="text_movement_log" />} bordered={false} style={{marginTop: 25}} bodyStyle={{paddingTop: 15}}>
+		<Row>
+			<Col span={24}>
+				<Table
+					dataSource={movementLogs}
+					bordered={true}
+					loading={loading}
+					columns={columns}
+					pagination={false}
+				/>
+				</Col>
+		</Row>
+	</Card>;
 }

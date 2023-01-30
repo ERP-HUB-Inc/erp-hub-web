@@ -17,6 +17,7 @@ class Shipping {
    shippingContact1 = "";
    shippingContact2 = "";
    shippingAddress = "";
+   shippingStatus = "";
 }
 
 class EditShipping extends React.Component {

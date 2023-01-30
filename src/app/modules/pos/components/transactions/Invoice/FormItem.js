@@ -402,6 +402,8 @@ class NewInvoice extends React.PureComponent {
                     return;
                 }
 
+                localStorage.setItem("PUBLIC_NOTE", formData.publicNote);
+
                 const invoice = {
                     customerId: values.customerId,
                     discount: values.discount,
@@ -1302,14 +1304,6 @@ class NewInvoice extends React.PureComponent {
         }
     }
 
-    handlePrintInvoiceA5 = () => {
-        document.getElementById("invoice-content").classList.add("invoice-A5");
-        document.getElementById("wrap-invoice-form").setAttribute("id", "wrap-invoice-form-A5");
-        setTimeout(() => {
-            window.print();
-        }, 600);
-    }
-
     renderPreviewInvoice(formData) {
         formData.transactionEntries = this.state.transactionEntries;
         return <div id="wrap-invoice-form">
@@ -1574,7 +1568,7 @@ class NewInvoice extends React.PureComponent {
                                 <TabPane tab={<Translate id="text_public_note" />} key="1" style={{width: 668}}>
                                     <CKEditor
                                         editor={ClassicEditor}
-                                        data={formData.publicNote}
+                                        data={formData.id || formData.publicNote ? formData.publicNote : localStorage.getItem("PUBLIC_NOTE")}
                                         onChange={(event, editor) => {
                                             const data = editor.getData();
                                             this.setState(preState => {
@@ -1669,38 +1663,33 @@ class NewInvoice extends React.PureComponent {
                                     <Dropdown
                                         overlay={(
                                             <Menu>
-                                                <Menu.Item key={0} onClick={this.handlePrintInvoiceA5}><Translate id="text_print_invoice" /> A5</Menu.Item>
-                                                <Menu.Item key={1} onClick={this.handleMakeAsSent}><Translate id="text_mark_as_sent" /></Menu.Item>
-                                                <Menu.Item key={2} onClick={() => this.setState({showDrawer: true})}>
-                                                    <Translate id="text_receive_payment" />
-                                                </Menu.Item>
-                                                {formData.status === Enum.INVOICE_STATUS.PAID ?
-                                                    <Menu.Item key={3}>
-                                                        <ReactToPrint
-                                                            trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}>
-                                                                <Translate id="text_print_receipt" />
-                                                                </button>}
-                                                            content={() => this.receiptRef}
-                                                        />
-                                                    </Menu.Item>
-                                                    : null
-                                                }
-                                                <Menu.Item key={4}>
-                                                    <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} >
-                                                        <Translate id="text_clone" />
-                                                    </Link>
-                                                </Menu.Item>
                                                 <Menu.Item key={5}>
                                                     <Link to="/transactions/create-invoice" target="_blank">
                                                         <Translate id="text_new_invoice" />
                                                     </Link>
                                                 </Menu.Item>
-                                                {this.id ?
-                                                    <Menu.Item key={6} onClick={this.handleVoidInvoice}>
-                                                        <Translate id="text_void" />
-                                                    </Menu.Item>
-                                                    : null
-                                                } 
+                                                <Menu.Item key={4}>
+                                                    <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} >
+                                                        <Translate id="text_clone" />
+                                                    </Link>
+                                                </Menu.Item>
+                                                <Divider style={{marginTop: 4, marginBottom: 4}} />
+                                                <Menu.Item key={1} onClick={this.handleMakeAsSent} disabled={formData.status !== Enum.INVOICE_STATUS.DRAFT}><Translate id="text_mark_as_sent" /></Menu.Item>
+                                                <Menu.Item key={2} onClick={() => this.setState({showDrawer: true})}>
+                                                    <Translate id="text_receive_payment" />
+                                                </Menu.Item>
+                                                <Menu.Item key={3} disabled={formData.status !== Enum.INVOICE_STATUS.PAID}>
+                                                    <ReactToPrint
+                                                        trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}>
+                                                            <Translate id="text_receipt" />
+                                                            </button>}
+                                                        content={() => this.receiptRef}
+                                                    />
+                                                </Menu.Item>
+                                                <Divider style={{marginTop: 4, marginBottom: 4}} />
+                                                <Menu.Item key={6} onClick={this.handleVoidInvoice} disabled={!this.id}>
+                                                    <Translate id="text_void" />
+                                                </Menu.Item>
                                             </Menu>
                                         )}
                                     >

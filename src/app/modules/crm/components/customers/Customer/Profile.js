@@ -68,7 +68,7 @@ class Profile extends React.Component {
   getDetailCustomer(id) {
     this.setState({loading: true});
     CustomerMicroService.detail(id)
-    .then(response => {
+    .then(response => {console.log("DDDDD:", response.data.data);
       this.setState({detail: response.data.data});
     })
     .finally(() => this.setState({loading: false}));
@@ -129,30 +129,32 @@ class Profile extends React.Component {
               </div>
               <Divider style={{marginBottom: 10}} />
               <div style={{paddingLeft: 16}}>
-                <h6><Translate id="text_contact_detail" /></h6>
-                <ul style={{listStyle: "none", padding: 0, marginTop: 13}}>
+                  <h6><Translate id="text_contact_detail" /></h6>
+                  <ul style={{listStyle: "none", padding: 0, marginTop: 13}}>
                   <li className="contact-list">
-                    <div className="customer-contact-icon"><Icon type="mail" /></div>
-                    <div>
-                      <div><Translate id="text_email" /></div>
-                      <div>{detail.email}</div>
-                    </div>
+                     <div className="customer-contact-icon"><Icon type="mail" /></div>
+                     <div>
+                        <div><Translate id="text_email" /></div>
+                        <div>{detail.email}</div>
+                     </div>
                   </li>
                   <li className="contact-list">
-                    <div className="customer-contact-icon"><Icon type="phone" /></div>
-                    <div>
-                      <div><Translate id="text_phone_number" /></div>
-                      <div>{this.util.formatPhonenoWithCountryCode(detail.phoneNumber)}</div>
-                    </div>
+                     <div className="customer-contact-icon"><Icon type="phone" /></div>
+                     <div>
+                        <div><Translate id="text_phone_number" /></div>
+                        <div>{this.util.formatPhonenoWithCountryCode(detail.phoneNumber)}</div>
+                     </div>
                   </li>
                   <li className="contact-list">
-                    <div className="customer-contact-icon"><Icon type="environment" /></div>
-                    <div>
-                      <div><Translate id="text_address" /></div>
-                      <div>{detail.address}</div>
-                    </div>
+                     <div className="customer-contact-icon"><Icon type="environment" /></div>
+                     <div>
+                        <div><Translate id="text_address" /></div>
+                        <div>{detail.address}</div>
+                     </div>
                   </li>
-                </ul>
+                  </ul>
+                  <h6 style={{marginTop: 50}}><Translate id="text_geolocation"/></h6>
+                  <iframe width="98%" height="350" src={`https://maps.google.com/maps?q=${detail.geolocation}&hl=es;z=18&output=embed`} allowFullScreen style={{marginBottom: 15}} title={`${detail.firstName} ${detail.lastName}`} />
               </div>
             </Card>
           </Col>

@@ -5,6 +5,7 @@ import {
     Card,
     Table,
 } from "antd";
+import {Translate} from "react-localize-redux";
 import Util from "../../../../common/util";
 
 
@@ -19,26 +20,26 @@ const OptionZero = ({data}) => {
     return  <Card bordered={false}>
         <Row>
           <Col span={12}>
-              <DescriptionItem title="Manage Stock" content={data.serialType === 2 ? "Yes" : "No"} />
+              <DescriptionItem title={<Translate id="text_manage_stock"/>} content={data.serialType === 2 ? "Yes" : "No"} />
           </Col>
           <Col span={12}>
-              <DescriptionItem title="Barcode" content={data.productVariants ? data.productVariants[0]["barcode"] : null} />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={12}>
-              <DescriptionItem title="Cost" content={data.productVariants ? util.formatCurrency(data.productVariants[0]["cost"]) : null} />
-          </Col>
-          <Col span={12}>
-              <DescriptionItem title="Retail Price" content={data.productVariants ? util.formatCurrency(data.productVariants[0]["price"]): null} />
+              <DescriptionItem title={<Translate id="text_barcode" />} content={data.productVariants ? data.productVariants[0]["barcode"] : null} />
           </Col>
         </Row>
         <Row>
           <Col span={12}>
-              <DescriptionItem title="Category" content={data.productType ? data.productType.name : ""} />
+              <DescriptionItem title={<Translate id="text_cost" />} content={data.productVariants ? util.formatCurrency(data.productVariants[0]["cost"]) : null} />
           </Col>
           <Col span={12}>
-              <DescriptionItem title="Brand" content={data.brand ? data.brand.name : ""} />
+              <DescriptionItem title={<Translate id="text_retail_price" />} content={data.productVariants ? util.formatCurrency(data.productVariants[0]["price"]): null} />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+              <DescriptionItem title={<Translate id="text_category" />} content={data.productType ? data.productType.name : ""} />
+          </Col>
+          <Col span={12}>
+              <DescriptionItem title={<Translate id="text_brand" />} content={data.brand ? data.brand.name : ""} />
           </Col>
         </Row>
     </Card>;
@@ -86,15 +87,15 @@ const OptionOne = ({data}) => {
   return <Card bordered={false}>
       <Row>
         <Col span={12}>
-            <DescriptionItem title="Manage Stock" content={data.serialType === 2 ? "Yes" : "No"} />
+            <DescriptionItem title={<Translate id="text_manage_stock" />} content={data.serialType === 2 ? "Yes" : "No"} />
         </Col>
         <Col span={12}>
-            <DescriptionItem title="Category" content={data.productType ? data.productType.name : ""} />
+            <DescriptionItem title={<Translate id="text_category" />} content={data.productType ? data.productType.name : ""} />
         </Col>
       </Row>
       <Row>
         <Col span={24}>
-            <DescriptionItem title="Brand" content={data.brand? data.brand.name : ""} />
+            <DescriptionItem title={<Translate id="text_brand" />} content={data.brand? data.brand.name : ""} />
         </Col>
       </Row>
       <Row>

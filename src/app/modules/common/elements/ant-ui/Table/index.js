@@ -41,7 +41,7 @@ export class TableExpand extends React.Component {
         loading={this.props.loading}  
         onChange={this.props.onChange}
         onRow={this.props.onRow}
-        locale={this.props.locale}/>
+        locale={this.props.locale} />
     );
   }
 }
