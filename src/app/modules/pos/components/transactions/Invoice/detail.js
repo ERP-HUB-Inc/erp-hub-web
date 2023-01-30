@@ -273,8 +273,22 @@ class InvoiceDetail extends React.PureComponent {
                         />
                      </Menu.Item>
                      <Divider style={{marginTop: 4, marginBottom: 4}} />
+                     <Menu.Item key={0} title="Ctrl + P">
+                        <div>
+                           <ReactToPrint
+                              content={() => this.invoiceRef}
+                              trigger={() => {
+                                 return (
+                                 <div>
+                                    <Icon type="printer" style={{marginRight: 10}} /> <Translate id="text_print" /> - A5
+                                 </div>
+                                 );
+                              }}
+                           />
+                        </div>
+                     </Menu.Item>
                      <Menu.Item key={0} onClick={() => window.print()} title="Ctrl + P">
-                        <Icon type="printer" style={{marginRight: 10}} /> <Translate id="text_print" />
+                        <Icon type="printer" style={{marginRight: 10}} /> <Translate id="text_print" /> - A4
                      </Menu.Item>
                      <Menu.Item key={5} disabled={formData.status !== Enum.INVOICE_STATUS.PAID}>
                         <ReactToPrint
@@ -301,10 +315,14 @@ class InvoiceDetail extends React.PureComponent {
 
          {
             !this.state.loading ?
-               <div className="invoice-page">
+            <div className="invoice-page">
                <CAInvoice formData={formData} />
+               
+               <div style={{display: "none"}}>
+                  <CAInvoice ref={ref => this.invoiceRef = ref} formData={formData} paperSize="A5" />
+               </div>
             </div>
-            : 
+            :
             <div style={{width: 30, margin: "0 auto", paddingTop: 30}}>
                <Spin />
             </div>
