@@ -31,6 +31,7 @@ import ProductVariantAction from "../../../../inventory/actions/products/product
 import {stringTranslate} from "../../../../common/helper/stringTranslate";
 import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
 import VariantProduct from "../../../../pos/containers/transactions/SaleWalkin/VariantProduct";
+import ProductVariantService from "../../../services/products/ProductVariantService";
 
 export default class FormStep1 extends React.Component  {
   state = {
@@ -267,8 +268,9 @@ export default class FormStep1 extends React.Component  {
     this.setState({formData});
   }
 
-  handleOnSelectList = (product, productVariant, isRequestVariantForm = true) => {
+  handleOnSelectList = async (product, productVariant, isRequestVariantForm = true) => {
     let isProductVariant = product.productOption === EnumProduct.PRODUCT_VARIANT;
+    let locationId = Number(this.props.form.getFieldValue("locationId"));
     if (isProductVariant && isRequestVariantForm) {
       this.setState({
         selectedProduct: product,
@@ -282,6 +284,11 @@ export default class FormStep1 extends React.Component  {
       productVariant.name = isProductVariant ? productVariant.name : "";
     }
 
+    const productLocation = (await ProductVariantService.getDetailWithLocation(productVariant.id, locationId)).data.data;
+    if (productLocation) {
+      productVariant.quantity = productLocation.quantity;
+    }
+    
     const existingProductList = this.util.copyArrayObj(this.state.entries);
     if (existingProductList.length === 0) {
       existingProductList.unshift({
@@ -432,11 +439,14 @@ export default class FormStep1 extends React.Component  {
                   className="ca-input-v1 purchase-order"
                   locale={locale}
                   style={{marginTop: 39}}
+                  filter={JSON.stringify({locationId: formData.locationId})}
                   form={form} /> 
 
                 <div style={{display: "flex", justifyContent: "space-between", marginTop: 20}}>
                   <div style={{fontSize: 16}}><Translate id="text_include_product" /></div>
-                  <Button onClick={this.handleClearProduct}><Translate id="text_clear" /></Button>
+                  <Button onClick={this.handleClearProduct} disabled={formData.status === EnumStock.STOCK_COUNT_STATUS.COMPLETED}>
+                    <Translate id="text_clear" />
+                  </Button>
                 </div>
 
                 <Table 
@@ -466,9 +476,11 @@ export default class FormStep1 extends React.Component  {
                       title: <Translate id="text_action" />,
                       dataIndex: "id",
                       key: "id",
-                      render: (id, record, index) => <Button htmlType="button" onClick={() => this.handleRemoveProduct(id, index)} >
-                        <Icon type="delete" /> <Translate id="text_remove" />
-                      </Button>
+                      render: (id, record, index) => {
+                        return <Button htmlType="button" onClick={() => this.handleRemoveProduct(id, index)} disabled={formData.status === EnumStock.STOCK_COUNT_STATUS.COMPLETED}>
+                          <Icon type="delete" /> <Translate id="text_remove" />
+                        </Button>;
+                      }
                     }
                   ]}
                   dataSource={this.state.entries}

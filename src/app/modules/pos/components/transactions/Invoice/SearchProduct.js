@@ -55,7 +55,7 @@ export default function SearchProductDropdown(props) {
   };
 
   const handleSearchProduct = (value, isSearchingBarcode = false) => {
-    const searchKey = JSON.stringify({ column: ["name", "namekm", "namebm", "barcode"], value });
+    const searchKey = JSON.stringify({ column: ["name", "namekm", "barcode"], value });
     setIsFetching(true);
     ProductService.searchForDrowDown(100, 0, "", "", props.filter, searchKey, props.searchFor, isSearchingBarcode)
     .then(response => {
@@ -94,7 +94,7 @@ export default function SearchProductDropdown(props) {
 
     } else if (event.keyCode === 40) {
       const currentActive = $(".ant-spin-container div.search-item-hover");
-      if (currentActive.next().hasClass("ant-list-item")) { // protect offset elemet of row
+      if (currentActive.next().hasClass("ant-list-item")) { // protect offset element of row
         const allRow = $("div.ant-spin-container div.ant-list-item");
 
         allRow.removeClass("search-item-hover");
