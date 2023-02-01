@@ -98,7 +98,7 @@
 }
 
 #public-not p {
-  margin: 0;
+  margin-bottom: 3px;
 }
 
 #invoice-form
@@ -163,6 +163,12 @@
     background: white;
   }
 
+  .A5 .table-invoice,
+  .A5 .table-invoice td,
+  .A5 .table-invoice td .entry-note-column,
+  .A5 .table-invoice td ul {
+    font-size: 18px !important
+  }
 }
 
 .entry-column-note .wrap-textarea .ant-form-item-control-wrapper{

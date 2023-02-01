@@ -20,7 +20,6 @@ class FormItem extends React.Component {
   pageName = "stock-count-form";
 
   handleStartCount = (formData, entries) => {
-    console.log("formData", formData);
     if (!formData.name) {
       return this.util.sweetAlertMessageV2("", "Please input name", "warning");
     }
@@ -104,7 +103,7 @@ class FormItem extends React.Component {
       <div>
         <Prompt 
           when={this.shouldComponentUpdate}
-          message={"Leave site? \n\nChanges you made may not be saved."}
+          message={"Leave site? \nChanges you made may not be saved."}
         />
         {this.renderFormItem(formData)}
       </div>

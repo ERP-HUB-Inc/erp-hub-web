@@ -27,6 +27,14 @@ class ProductVariantService extends BaseService {
     });
   }
 
+  getDetailWithLocation(id, locationId) {
+    this.setHeader();
+    return this.GET({
+      url: `${this.baseUrl}/detail-with-location/${id}?locationId=${locationId}`,
+      headers: this.header
+    });
+  }
+
   checkIsAvailableForArchive(id){
     this.setHeader();
     return this.GET({ 

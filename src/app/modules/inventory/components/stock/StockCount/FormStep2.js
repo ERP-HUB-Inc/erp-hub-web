@@ -136,13 +136,12 @@ export default class FormStep2 extends React.Component {
     };
     data.stockCountEntries = [];
 
-    StockCountService.detail(this.props.id)
-    .then(response => {
-      this.setState({formData: response.data.data});
-    });
-
     StockCountService.update(data, formData.id)
     .then(() => {
+      StockCountService.detail(this.props.id)
+      .then(response => {
+        this.setState({formData: response.data.data});
+      });
       this.fetchEntries(formData.id, this.activeTab, this.pageSize, this.state.current, formData.type, formData.locationId);
     });
   }
@@ -156,13 +155,12 @@ export default class FormStep2 extends React.Component {
     };
     data.stockCountEntries = [];
 
-    StockCountService.detail(this.props.id)
-    .then(response => {
-      this.setState({formData: response.data.data});
-    });
-
     StockCountService.update(data, formData.id)
     .then(() => {
+      StockCountService.detail(this.props.id)
+      .then(response => {
+        this.setState({formData: response.data.data});
+      });
       this.fetchEntries(formData.id, this.activeTab, this.pageSize, this.state.current, formData.type, formData.locationId);
     });
   }
@@ -203,11 +201,6 @@ export default class FormStep2 extends React.Component {
       productVariant = productVariant[0];
       productVariant.name = isProductVariant ? productVariant.name : "";
     }
-
-    console.log("product", {
-      product,
-      productVariant
-    });
 
     const existingProducts = this.state.products;
     const index = existingProducts.findIndex(p => p.barcode === productVariant.barcode);
@@ -387,7 +380,7 @@ export default class FormStep2 extends React.Component {
             handlePressEnter={this.handleEnterQuantity}
             form={this.props.form}/>
 
-          <Button style={{width: 80, height: 40, marginRight: 15}} htmlType="button" onClick={this.handleCount} disabled={this.state.enableQuickScan || disableCount}>
+          <Button type="info" style={{width: 80, height: 40, marginRight: 15}} htmlType="button" onClick={this.handleCount} disabled={this.state.enableQuickScan || disableCount}>
             <Translate id="text_count" />
           </Button>
           <Switch
