@@ -45,7 +45,7 @@ class StockCountList extends Component {
             <Menu>
               <Menu.Item>
                 <this.Link to={`/stock/stock-count/update/${record.id}`}>
-                  <this.Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
+                  <this.Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_continue_count" />
                 </this.Link>
               </Menu.Item>
               <Menu.Item>

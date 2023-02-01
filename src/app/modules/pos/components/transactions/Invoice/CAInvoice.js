@@ -16,7 +16,7 @@ const CAInvoice = React.forwardRef((props, ref) => {
   const {formData} = props;
 
   return formData && Object.keys(formData).length ? 
-    <div id="invoice-content" ref={ref} style={style}>
+    <div id="invoice-content" className={props.paperSize} ref={ref} style={style}>
       {formData.template === Enum.PAPER_SIZE.INCLUDE_TAX ?
         <TaxInvoice 
           formData={formData} 

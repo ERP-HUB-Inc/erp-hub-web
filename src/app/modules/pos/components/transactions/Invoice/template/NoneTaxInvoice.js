@@ -94,22 +94,22 @@ export default function NoneTaxInvoice(props) {
               <li style={{display: "flex"}}>
                 <div style={{width: 145}}>{props.numberTitle}</div><div style={{fontWeight: 600}}>{formData.invoiceNumber}</div>
               </li>
-              <li style={{display: "flex"}}>
+              <li style={{display: "flex", marginTop: 3}}>
                 <div style={{width: 145}}>{props.invoiceDateTitle}</div><div>{formData.invoiceDate ? util.formatDate(formData.invoiceDate, dateFormat) : null}</div>
               </li>
-              <li style={{display: "flex"}}>
+              <li style={{display: "flex", marginTop: 3}}>
                 <div style={{width: 145}}>{props.dueDateTitle}</div><div>{formData.dueDate ? util.formatDate(formData.dueDate, dateFormat) : null}</div>
               </li>
-              <li style={{display: "flex"}}>
-                <div style={{width: 145}}>Balance Due</div><div>{util.formatCurrency(formData.total - discount)}</div>
+              <li style={{display: "flex", marginTop: 3}}>
+                <div style={{width: 145}}>Balance Due</div><div style={{fontWeight: 600}}>{util.formatCurrency(formData.total - discount)}</div>
               </li>
             </ul>
           </td>
           <td colSpan={2} style={{paddingTop: 6, paddingBottom: 6, position: "relative"}}>
             <ul style={{...styles.ulStyle, position: "absolute", top: 6}}>
               <li>{formData.firstName} {formData.lastName}</li>
-              <li>{formData.phoneNumber}</li>
-              <li style={{fontWeight: 600}}>{formData.company}</li>
+              <li style={{marginTop: 3}}>{formData.phoneNumber}</li>
+              <li style={{fontWeight: 600, marginTop: 3}}>{formData.company}</li>
               {/* <li>{formData.address}</li> */}
             </ul>
           </td>
@@ -151,39 +151,21 @@ export default function NoneTaxInvoice(props) {
               dangerouslySetInnerHTML={{ __html: formData.publicNote}} 
               id="public-not" />
           </td>
-          <td style={{width: 300}}>
+          <td style={{width: 240}}>
             <div style={{display: "flex", justifyContent: "space-between", textAlign: "right", paddingLeft: 80, lineHeight: "28px"}}>
+               <div>
+                  <div>Subtotal</div>
+                  {discount && discount > 0 ? <div style={{marginTop: 3}}>Discount</div> : null}
+                  {tax ? <div style={{marginTop: 3}}>VAT</div> : null}
+                  {deliveryFee ? <div style={{marginTop: 3}}>Delivery Fee</div> : null}
+                  <div style={{marginTop: 3}}>Grand Total</div>
+               </div>
               <div>
-                <div>Subtotal</div>
-                {
-                  discount && discount > 0 ?
-                    <div>Discount</div>
-                  : null
-                }
-                {
-                  tax ?
-                    <div>VAT</div>
-                  : null
-                }
-                {deliveryFee ? <div>Delivery Fee</div> : null}
-                {/* <div>Paid to Date</div> */}
-                <div>Grand Total</div>
-              </div>
-              <div>
-                <div>{util.formatCurrency(subtotal)}</div>
-                {
-                  discount && discount > 0 ?
-                    <div>{util.formatCurrency(discount)}</div>
-                  : null
-                }
-                {
-                  tax ?
-                    <div>{util.formatCurrency(tax)}</div>
-                  : null
-                }
-                {deliveryFee ? <div>{util.formatCurrency(deliveryFee)}</div> : null}
-                {/* <div>{util.formatCurrency(0)}</div> */}
-                <div style={{color: "#37a3c6"}}>{util.formatCurrency(formData.total - discount + deliveryFee)}</div>
+                  <div>{util.formatCurrency(subtotal)}</div>
+                  {discount && discount > 0 ? <div style={{marginTop: 3}}>{util.formatCurrency(discount)}</div> : null}
+                  {tax ? <div style={{marginTop: 3}}>{util.formatCurrency(tax)}</div> : null}
+                  {deliveryFee ? <div style={{marginTop: 3}}>{util.formatCurrency(deliveryFee)}</div> : null}
+                  <div style={{color: "#37a3c6", marginTop: 3}}>{util.formatCurrency(formData.total - discount + deliveryFee)}</div>
               </div>
             </div>
           </td>
@@ -194,12 +176,12 @@ export default function NoneTaxInvoice(props) {
               <div>
                 <hr />
                 <div>ហត្ថលេខា និងឈ្មេាះអ្នកទិញ</div>
-                <div>Customer's Signature & Name</div>
+                <div style={{marginTop: 5}}>Customer's Signature & Name</div>
               </div>
               <div>
                 <hr />
                 <div>ហត្ថលេខា និងឈ្មេាះអ្នកលក់</div>
-                <div>Seller's Signature & Name</div>
+                <div style={{marginTop: 5}}>Seller's Signature & Name</div>
               </div>
             </div>
           </td>

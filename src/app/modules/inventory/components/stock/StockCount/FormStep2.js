@@ -380,7 +380,7 @@ export default class FormStep2 extends React.Component {
             handlePressEnter={this.handleEnterQuantity}
             form={this.props.form}/>
 
-          <Button style={{width: 80, height: 40, marginRight: 15}} htmlType="button" onClick={this.handleCount} disabled={this.state.enableQuickScan || disableCount}>
+          <Button type="info" style={{width: 80, height: 40, marginRight: 15}} htmlType="button" onClick={this.handleCount} disabled={this.state.enableQuickScan || disableCount}>
             <Translate id="text_count" />
           </Button>
           <Switch

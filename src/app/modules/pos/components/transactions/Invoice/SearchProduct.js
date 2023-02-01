@@ -45,6 +45,7 @@ export default function SearchProductDropdown(props) {
   };
 
   const handleScanError = (value) => {};
+
   const handleScan = (value) => {
     if (props.handleScan) {
       props.handleScan(value);

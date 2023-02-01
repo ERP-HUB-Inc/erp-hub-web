@@ -477,7 +477,7 @@ export default class FormStep1 extends React.Component  {
                       dataIndex: "id",
                       key: "id",
                       render: (id, record, index) => {
-                        return <Button htmlType="button" onClick={() => this.handleRemoveProduct(id, index)} disabled={formData.status === EnumStock.STOCK_COUNT_STATUS.COMPLETED}>
+                        return <Button type="danger" htmlType="button" onClick={() => this.handleRemoveProduct(id, index)} disabled={formData.status === EnumStock.STOCK_COUNT_STATUS.COMPLETED}>
                           <Icon type="delete" /> <Translate id="text_remove" />
                         </Button>;
                       }
