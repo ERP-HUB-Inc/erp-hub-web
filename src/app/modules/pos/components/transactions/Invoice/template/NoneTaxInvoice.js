@@ -92,24 +92,24 @@ export default function NoneTaxInvoice(props) {
           <td style={{paddingTop: 6, paddingBottom: 6, width: 244}}>
             <ul style={styles.ulStyle}>
               <li style={{display: "flex"}}>
-                <div style={{width: 145}}>{props.numberTitle}</div><div style={{fontWeight: 600}}>{formData.invoiceNumber}</div>
+                <div style={{width: 150}}>{props.numberTitle}</div><div style={{fontWeight: 600}}>{formData.invoiceNumber}</div>
               </li>
-              <li style={{display: "flex", marginTop: 3}}>
-                <div style={{width: 145}}>{props.invoiceDateTitle}</div><div>{formData.invoiceDate ? util.formatDate(formData.invoiceDate, dateFormat) : null}</div>
+              <li style={{display: "flex"}} className="inv-header-title">
+                <div style={{width: 150}}>{props.invoiceDateTitle}</div><div>{formData.invoiceDate ? util.formatDate(formData.invoiceDate, dateFormat) : null}</div>
               </li>
-              <li style={{display: "flex", marginTop: 3}}>
-                <div style={{width: 145}}>{props.dueDateTitle}</div><div>{formData.dueDate ? util.formatDate(formData.dueDate, dateFormat) : null}</div>
+              <li style={{display: "flex"}} className="inv-header-title">
+                <div style={{width: 150}}>{props.dueDateTitle}</div><div>{formData.dueDate ? util.formatDate(formData.dueDate, dateFormat) : null}</div>
               </li>
-              <li style={{display: "flex", marginTop: 3}}>
-                <div style={{width: 145}}>Balance Due</div><div style={{fontWeight: 600}}>{util.formatCurrency(formData.total - discount)}</div>
+              <li style={{display: "flex"}} className="inv-header-title">
+                <div style={{width: 150}}>Balance Due</div><div style={{fontWeight: 600}}>{util.formatCurrency(formData.total - discount)}</div>
               </li>
             </ul>
           </td>
           <td colSpan={2} style={{paddingTop: 6, paddingBottom: 6, position: "relative"}}>
             <ul style={{...styles.ulStyle, position: "absolute", top: 6}}>
               <li>{formData.firstName} {formData.lastName}</li>
-              <li style={{marginTop: 3}}>{formData.phoneNumber}</li>
-              <li style={{fontWeight: 600, marginTop: 3}}>{formData.company}</li>
+              <li className="inv-header-title">{formData.phoneNumber}</li>
+              <li style={{fontWeight: 600}} className="inv-header-title">{formData.company}</li>
               {/* <li>{formData.address}</li> */}
             </ul>
           </td>
