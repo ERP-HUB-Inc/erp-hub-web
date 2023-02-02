@@ -173,6 +173,10 @@
   .A5 .inv-header-title {
     margin-top: 5px;
   }
+
+  .A5 .inv-summary {
+    width: 300px !important
+  }
 }
 
 .entry-column-note .wrap-textarea .ant-form-item-control-wrapper{
