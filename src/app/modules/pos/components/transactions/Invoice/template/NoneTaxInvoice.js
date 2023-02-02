@@ -89,7 +89,7 @@ export default function NoneTaxInvoice(props) {
           </td>
         </tr>
         <tr style={{background: "none", borderTop: "2px solid #ddd", borderBottom: "2px solid #ddd"}}>
-          <td style={{paddingTop: 6, paddingBottom: 6, width: 244}}>
+          <td style={{paddingTop: 6, paddingBottom: 6, width: 280}}>
             <ul style={styles.ulStyle}>
               <li style={{display: "flex"}}>
                 <div style={{width: 150}}>{props.numberTitle}</div><div style={{fontWeight: 600}}>{formData.invoiceNumber}</div>
@@ -151,7 +151,7 @@ export default function NoneTaxInvoice(props) {
               dangerouslySetInnerHTML={{ __html: formData.publicNote}} 
               id="public-not" />
           </td>
-          <td style={{width: 240}}>
+          <td style={{width: 240}} className="inv-summary">
             <div style={{display: "flex", justifyContent: "space-between", textAlign: "right", paddingLeft: 80, lineHeight: "28px"}}>
                <div>
                   <div>Subtotal</div>
