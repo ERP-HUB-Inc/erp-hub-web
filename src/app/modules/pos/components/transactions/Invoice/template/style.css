@@ -167,7 +167,11 @@
   .A5 .table-invoice td,
   .A5 .table-invoice td .entry-note-column,
   .A5 .table-invoice td ul {
-    font-size: 18px !important
+    font-size: 19px !important
+  }
+
+  .A5 .inv-header-title {
+    margin-top: 5px;
   }
 }
 
