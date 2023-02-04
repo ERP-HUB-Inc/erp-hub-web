@@ -29,6 +29,7 @@ import ProductTypeAction from "../../../../inventory/actions/products/productsTy
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
 import ConstantOpenRegistrationSale from "../../../constants/transactions/openSaleRegisration";
 import ProductAction from "../../../../inventory/actions/products/product";
+import ProductService from "../../../../inventory/services/products/ProductService";
 import DeviceAction from "../../../../pos/action/settings/device";
 import ProductConstant from "../../../../inventory/constants/products/product";
 import ProductVariantConstant from "../../../../inventory/constants/products/productVariant";
@@ -87,13 +88,8 @@ export default class Retail extends Component {
     this.productWidth = 0;
     this.service = TransactionService;
 
-    this.handleOnSelectCategory = this.handleOnSelectCategory.bind(this);
     // this.handleOnLoadMoreProduct = this.handleOnLoadMoreProduct.bind(this);
-    this.handleOnSelectProduct = this.handleOnSelectProduct.bind(this);
-    this.handleCancelVariantProduct = this.handleCancelVariantProduct.bind(this);
-    this.handleOnAddNewCustomer = this.handleOnAddNewCustomer.bind(this);
     this.handleOnSelectProductSearchList = this.handleOnSelectProductSearchList.bind(this);
-    this.handleExpandOrderItem = this.handleExpandOrderItem.bind(this);
     this.handleSetFullScreen = this.handleSetFullScreen.bind(this);
     this.handleLinkSaleHistory = this.handleLinkSaleHistory.bind(this);
     this.handleLinkCloseShift = this.handleLinkCloseShift.bind(this);
@@ -271,7 +267,7 @@ export default class Retail extends Component {
     this.setState({productTaxList: POSUtil.appendProductTaxList(productOrderList)});
   }
 
-  appendProductOrder(targetList, product, productVariant) {
+  appendProductOrder(targetList, product, productVariant, newPrice, discount, discountType) {
     if (!productVariant) {
       this.Message.error(this.CATranslate("error_product_not_found", this.props.locale));
       return;
@@ -281,6 +277,7 @@ export default class Retail extends Component {
     const price = isNaN(parseFloat(productVariant.price)) ? 0 : productVariant.price;
     const wholePrice = isNaN(parseFloat(productVariant.wholePrice)) ? 0 : productVariant.wholePrice;
     const distributePrice = isNaN(parseFloat(productVariant.distributePrice)) ? 0 : productVariant.distributePrice;
+    
     targetList.push({
       productId: product.id,
       productVariantId: productVariant.id,
@@ -290,12 +287,12 @@ export default class Retail extends Component {
       variantName: productVariant.name,
       barcode: productVariant.barcode,
       price,
-      newPrice: price,
+      newPrice: newPrice ? newPrice : price,
       wholePrice,
       distributePrice,
       quantity: this.state.initialOrderQuantity,
-      discount: this.state.initialOrderDiscount,
-      discountType: this.state.initialOrderDiscountType,
+      discount,
+      discountType,
       enableDescription: product.enableDescription,
       tax: tax.taxRate/100,
       taxDescription: tax,
@@ -306,28 +303,28 @@ export default class Retail extends Component {
   }
 
   getSummaryTotal() {
-    const summaryTotal = POSUtil.getSummaryTotalInOrder(this.state.productOrderList, this.state.customerFieldPrice);
-    let discountAmount = 0;
-    let discountTypeStr = "";
+      const summaryTotal = POSUtil.getSummaryTotalInOrder(this.state.productOrderList, this.state.customerFieldPrice);
+      let discountAmount = 0;
+      let discountTypeStr = "";
 
-    const taxAmount = POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale)).taxTotal;
+      const taxAmount = POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale)).taxTotal;
 
-    if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-      discountTypeStr = ` (${this.state.discountValue.value}%)`;
-      discountAmount = POSUtil.getDiscountByRate(summaryTotal.subTotal + taxAmount, this.state.discountValue.value); // WE DISCOUNT AFTER TAX IF DIFFERENCE FROM EACH ITEM
-    } else if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.AMOUNT) {
-      discountAmount = this.state.discountValue.value;
-    } else {
-      discountAmount = summaryTotal.discount;
-    }
-    
-    return {
-      summaryTotal,
-      taxAmount,
-      discountAmount,
-      discountTypeStr,
-      discountType: this.state.discountValue.type
-    };
+      if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.PERCENTAGE) {
+         discountTypeStr = ` (${this.state.discountValue.value}%)`;
+         discountAmount = POSUtil.getDiscountByRate(summaryTotal.subTotal + taxAmount, this.state.discountValue.value); // WE DISCOUNT AFTER TAX IF DIFFERENCE FROM EACH ITEM
+      } else if (this.state.discountValue.type === Enum.DISCOUNT_TYPE.AMOUNT) {
+         discountAmount = this.state.discountValue.value;
+      } else {
+         discountAmount = summaryTotal.discount;
+      }
+      
+      return {
+         summaryTotal,
+         taxAmount,
+         discountAmount,
+         discountTypeStr,
+         discountType: this.state.discountValue.type
+      };
   }
 
   getSelectedCustomer = (selectedCustomer) => {
@@ -406,7 +403,7 @@ export default class Retail extends Component {
     // this.setState({modalContent: null});
   }
 
-  handleOnSelectCategory(value) {
+  handleOnSelectCategory = (value) => {
     if (this.openFormSaleRegisration()) {
       return;
     }
@@ -431,11 +428,11 @@ export default class Retail extends Component {
     this.props.dispatch(ProductAction.fetch(10, "", "", "", filter, "", this.Util.getLocationId()));
   }
 
-  handleCancelVariantProduct() {
+  handleCancelVariantProduct = () => {
     this.setState({modalContent: null});
   }
 
-  handleExpandOrderItem(expandOrderItemRow, productOrderIndex, status) {
+  handleExpandOrderItem = (expandOrderItemRow, productOrderIndex, status) => {
     expandOrderItemRow = `${expandOrderItemRow}-${status}`;
     this.handleonSearchFails();
     if (this.state.expandOrderItemRow.includes(expandOrderItemRow)) {
@@ -451,53 +448,75 @@ export default class Retail extends Component {
     }
   }
 
-  handleOnSelectProduct(product, productVariant, isRequestVariantForm = true) {
+  handleOnSelectProduct = async (product, productVariant, isRequestVariantForm = true) => {
+      let newPrice = null;
+      let {
+         initialOrderDiscount,
+         initialOrderDiscountType,
+         isDiscountHasAdded,
+         discountValue
+      } = this.state;
 
-    // POPUP INPUT CASH REQUIRE IF YOU NOT YET OPEN
-    if (this.openFormSaleRegisration()) {
-      return;
-    }
-
-    let isProductVariant = product.productOption === InventoryEnum.PRODUCT_VARIANT;
-    if (isProductVariant && isRequestVariantForm) {
-      this.setState({
-        selectedProduct: product,
-        modalContent: <VaraintProduct
-          product={product}
-          handleCancel={this.handleCancelVariantProduct} />
-      });
-      return;
-    } else if (productVariant && productVariant.length === 1) {
-      productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
-      productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
-    }
-
-    const existingProductOrderList = this.state.productOrderList;
-    if (existingProductOrderList.length === 0) {
-      this.appendProductOrder(existingProductOrderList, product, productVariant);
-    } else {
-      let isNotTheSame = true;
-      existingProductOrderList.forEach((productOrder, productOrderIndex) => {
-        if (productVariant && productOrder.productVariantId === productVariant.id && productOrder.status === this.Enum.ACTIVE) {
-          isNotTheSame = false;
-          existingProductOrderList[productOrderIndex]["quantity"] += this.state.initialOrderQuantity;
-          existingProductOrderList[productOrderIndex]["status"] = this.Enum.ACTIVE;
-        }
-      });
-
-      if (isNotTheSame) {
-        this.appendProductOrder(existingProductOrderList, product, productVariant);
+      // POPUP INPUT CASH REQUIRE IF YOU NOT YET OPEN
+      if (this.openFormSaleRegisration()) {
+         return;
       }
-    }
 
-    this.appendProductTaxList(existingProductOrderList);
+      let isProductVariant = product.productOption === InventoryEnum.PRODUCT_VARIANT;
+      if (isProductVariant && isRequestVariantForm) {
+         this.setState({
+         selectedProduct: product,
+         modalContent: <VaraintProduct
+            product={product}
+            handleCancel={this.handleCancelVariantProduct} />
+         });
+         return;
+      } else if (productVariant && productVariant.length === 1) {
+         productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
+         productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
+         
+         try {
+            const promotion = await ProductService.getPromotionByProductVariantId(productVariant.id);
 
-    this.setState({productOrderList: existingProductOrderList});
+            if (promotion && promotion.data) {
+               newPrice = promotion.data.price;
+               const saveAmount = productVariant.price - newPrice;
+               initialOrderDiscount = POSUtil.getPercentageByValue(saveAmount, productVariant.price);
+               isDiscountHasAdded = true;
+               discountValue = {
+                  type: Enum.DISCOUNT_TYPE.EACH_ITEM
+               };
+            }
+         } catch (error) {}
+      }
 
-    this.saveReceipt(Enum.CURRENT_RECEIPT, existingProductOrderList);
+      const existingProductOrderList = this.state.productOrderList;
+      if (existingProductOrderList.length === 0) {
+         this.appendProductOrder(existingProductOrderList, product, productVariant, newPrice, initialOrderDiscount, initialOrderDiscountType);
+      } else {
+         let isNotTheSame = true;
+         existingProductOrderList.forEach((productOrder, productOrderIndex) => {
+         if (productVariant && productOrder.productVariantId === productVariant.id && productOrder.status === this.Enum.ACTIVE) {
+            isNotTheSame = false;
+            existingProductOrderList[productOrderIndex]["quantity"] += this.state.initialOrderQuantity;
+            existingProductOrderList[productOrderIndex]["status"] = this.Enum.ACTIVE;
+         }
+         });
 
-    this.props.form.setFieldsValue({searchProduct: ""});
-    // document.getElementById("searchProduct").focus();
+         if (isNotTheSame) this.appendProductOrder(existingProductOrderList, product, productVariant, null, initialOrderDiscount, initialOrderDiscountType);
+      }
+
+      this.appendProductTaxList(existingProductOrderList);
+
+      this.setState({
+         productOrderList: existingProductOrderList,
+         isDiscountHasAdded,
+         discountValue
+      });
+      
+      this.saveReceipt(Enum.CURRENT_RECEIPT, existingProductOrderList);
+      
+      this.props.form.setFieldsValue({searchProduct: ""});
   }
 
   removeProductFromOrderList = (productVariant) => {
@@ -601,7 +620,7 @@ export default class Retail extends Component {
     });
   }
 
-  handleOnAddNewCustomer() {
+  handleOnAddNewCustomer = () => {
     this.props.dispatch(CustomerAction.showForm());
     this.setState({
       modalContent: <FormCreateCustomer />
