@@ -35,6 +35,13 @@ export default class PurchaseOrderLists extends Component {
         render: value => this.Util.formatDate(value, "DD/MM/YYYY")
       },
       {
+        title: <this.Translate id="text_status" />,
+        dataIndex: "step",
+        key: "step",
+        width: 100,
+        render: step => step in this.PO_STEP_STR ? <this.Tag color={this.PO_STEP_STR[step].color} className="text-uppercase text-center po-step-tag">{this.PO_STEP_STR[step].name}</this.Tag> : ""
+      },
+      {
         title: <this.Translate id="text_location" />,
         dataIndex: "location",
         key: "location",
@@ -66,13 +73,6 @@ export default class PurchaseOrderLists extends Component {
           }
           return this.formatCurrency(record[key]);
         }
-      },
-      {
-        title: <this.Translate id="text_status" />,
-        dataIndex: "step",
-        key: "step",
-        width: 100,
-        render: step => step in this.PO_STEP_STR ? <this.Tag color={this.PO_STEP_STR[step].color} className="text-uppercase text-center po-step-tag">{this.PO_STEP_STR[step].name}</this.Tag> : ""
       }
     ];
     this.fetchingProp = "purchaseOrder";

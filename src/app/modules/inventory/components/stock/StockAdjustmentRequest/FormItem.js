@@ -64,15 +64,12 @@ export default class FormItem extends Modal {
     return (
       <this.Row id="purchase-order-form">
         <this.Col md="4">
-          <this.InputText
-            name="title"
-            label={<this.Translate id="text_description" />}
-            data={formData.title}
-            placeholder={this.CATranslate("text_description", locale)}
-            errorRequired={<this.Translate id="error_require_description" />}
+          <this.InputTextArea
+            name="reason"
+            label={<this.Translate id="text_reason" />}
+            data={formData.reason}
+            placeholder={this.CATranslate("text_reason_help", this.props.locale)}
             required={true}
-            isAutoFocus={true}
-            max={100}
             form={form} />
           <SelectLocation
             form={form}
@@ -80,7 +77,7 @@ export default class FormItem extends Modal {
             label={<this.Translate id="text_location" />}
             placeholder={this.CATranslate("text_location", locale)}
             onChange={this.handleOnChangeLocation}
-            />
+          />
           <this.Select
             name="step"
             label={<this.Translate id="text_adjustment_status" />}
@@ -88,14 +85,8 @@ export default class FormItem extends Modal {
             dataSource={[{name: <this.Translate id="text_request" />, value: Enum.STOCK_ADJUST_STEP.REQUEST}, {name: <this.Translate id="text_mark_as_approved" />, value: Enum.STOCK_ADJUST_STEP.COMPLETE}]}
             defaultValue={formData.id ? formData.step : Enum.STOCK_ADJUST_STEP.REQUEST}
             required={true}
-            form={form} />
-          <this.InputTextArea
-            name="reason"
-            label={<this.Translate id="text_reason" />}
-            data={formData.reason}
-            placeholder={this.CATranslate("text_reason_help", this.props.locale)}
-            required={true}
-            form={form}/>
+            form={form}
+          />
         </this.Col>
         <this.Col md="8" className="purchase-order-entry" style={{marginTop: 30}}>
           <SearchAdjustment

@@ -111,6 +111,7 @@ export default class AdjustmentEdit extends Component {
               "unitId",
               "adjustQuantity"
             ]);
+            values["title"] = null;
             values["locationId"] = parseFloat(values.locationId);
             values["entries"] = stockAdjustmentEntries;
             this.dispatch(StockAdjustmentRequestAction.update(values));
