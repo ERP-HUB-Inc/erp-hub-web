@@ -32,9 +32,16 @@ export default class StockAdjustmentRequestLists extends Component {
         render: value => this.Util.formatDate(value, "DD/MM/YYYY")
       },
       {
-        title: <this.Translate id="text_description" />,
-        dataIndex: "title",
-        key: "title"
+        title: <this.Translate id="text_status" />,
+        dataIndex: "step",
+        key: "step",
+        width: 80,
+        render: step => step in this.ADJUSTMENT_STEP ? <this.Tag color={this.ADJUSTMENT_STEP[step].color} className="text-uppercase text-center adjustment-step-tag">{this.ADJUSTMENT_STEP[step].name}</this.Tag> : ""
+      },
+      {
+        title: <this.Translate id="text_reason" />,
+        dataIndex: "reason",
+        key: "reason"
       },
       {
         title: <this.Translate id="text_requested_by" />,
@@ -47,18 +54,6 @@ export default class StockAdjustmentRequestLists extends Component {
         dataIndex: "approver",
         key: "approver",
         render: approver => approver ? <span style={{textTransform: "uppercase"}}>{approver.fullName}</span> : this.emptyText
-      },
-      {
-        title: <this.Translate id="text_reason" />,
-        dataIndex: "reason",
-        key: "reason"
-      },
-      {
-        title: <this.Translate id="text_status" />,
-        dataIndex: "step",
-        key: "step",
-        width: 80,
-        render: step => step in this.ADJUSTMENT_STEP ? <this.Tag color={this.ADJUSTMENT_STEP[step].color} className="text-uppercase text-center adjustment-step-tag">{this.ADJUSTMENT_STEP[step].name}</this.Tag> : ""
       }
     ];
     this.service = StockAdjustmentRequestService;

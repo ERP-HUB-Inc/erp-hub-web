@@ -247,6 +247,8 @@ export default {
   text_save_and_new: ["Save & New", "រក្សារទុក & បង្កើតថ្មី"],
 
   text_edit: ["Edit", "កែប្រែ"],
+
+  text_edit_stock: ["Edit Stock", "កែប្រែស្តុក"],
   
   text_edit_shipping: ["Edit Shipping", "កែប្រែការដឺកជញ្ជូន"],
 

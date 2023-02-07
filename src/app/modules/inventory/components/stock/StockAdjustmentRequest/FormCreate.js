@@ -109,6 +109,7 @@ export default class FormCreate extends Component {
               "adjustQuantity"
             ]);
 
+            values["title"] = null;
             values["entries"] = stockAdjustmentEntries;
             values["locationId"] = parseInt(values.locationId);
             this.dispatch(StockAdjustmentRequestAction.add(values)); 

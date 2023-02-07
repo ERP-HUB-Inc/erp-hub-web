@@ -308,79 +308,92 @@ export default class SearchPo extends Modal {
   }
 
   async handleOnSelectList(product, productVariant, isRequestVariantForm = true) {
-    let isProductVariant = product.productOption === Enum.PRODUCT_VARIANT;
-    if (isProductVariant && isRequestVariantForm) {
-      this.setState({
-        selectedProduct: product,
-        modalVariant: <VariantProduct
-          product={product}
-          handleCancel={this.handleCancelVariantProduct}/>
-      });
-      return;
-    } else if (productVariant && productVariant.length > 0) {
-      productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
-      productVariant.name = isProductVariant && productVariant ? productVariant.name : ""; // Remove product variant name away from label table
-    }
-
-    const productName = Util.getProductNameV2(product);
-
-    const {quantity} = productVariant;
-    const existingProductList = this.state.productLists;
-    const initialQuantity = 1;
-
-    if (existingProductList.length === 0) {
-      existingProductList.push({
-        purchaseEntryId: "",
-        productName,
-        unitId: product.defaultUnitId,
-        variantName: productVariant.name,
-        quantityOnHand: quantity,
-        quantity: initialQuantity,
-        price: 0,
-        productVariantId: productVariant.id,
-        totalPrice: 0,
-        purchaseEntryStatus: this.Enum.ACTIVE
-      });
-    } else {
-
-      let isNotTheSameProduct = true;
-
-      existingProductList.forEach((product, index) => {
-        if (product.productVariantId === productVariant.id) {
-          if (product.purchaseEntryStatus === this.Enum.ARCHIVE) {
-            existingProductList[index]["purchaseEntryStatus"] = this.Enum.ACTIVE;
-            existingProductList[index]["quantity"] = 1;
-          } else {
-            existingProductList[index]["quantity"] += 1;
-          }
-
-          isNotTheSameProduct = false;
-          existingProductList[index]["totalPrice"] = existingProductList[index]["quantity"] * existingProductList[index]["price"];
-        }
-      });
-
-      if (isNotTheSameProduct) {
-        existingProductList.push({
-          purchaseEntryId: "",
-          productName,
-          variantName: productVariant.name,
-          unitId: product.defaultUnitId,
-          quantityOnHand: quantity,
-          price: 0,
-          productVariantId: productVariant.id,
-          quantity: initialQuantity,
-          totalPrice: 0,
-          purchaseEntryStatus: this.Enum.ACTIVE
-        });
+      let isProductVariant = product.productOption === Enum.PRODUCT_VARIANT;
+      if (isProductVariant && isRequestVariantForm) {
+         this.setState({
+         selectedProduct: product,
+         modalVariant: <VariantProduct
+            product={product}
+            handleCancel={this.handleCancelVariantProduct}/>
+         });
+         return;
+      } else if (productVariant && productVariant.length > 0) {
+         productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
+         productVariant.name = isProductVariant && productVariant ? productVariant.name : ""; // Remove product variant name away from label table
       }
-    }
 
-    this.setState({productLists: existingProductList});
+      const productName = Util.getProductNameV2(product);
 
-    this.props.form.setFieldsValue({searchProduct: ""});
-    document.getElementById("searchProduct").focus();
+      const {quantity} = productVariant;
+      const existingProductList = this.state.productLists;
+      const initialQuantity = 1;
 
-    this.grandTotal(existingProductList);
+      existingProductList.push({
+         purchaseEntryId: "",
+         productName,
+         unitId: product.defaultUnitId,
+         variantName: productVariant.name,
+         quantityOnHand: quantity,
+         quantity: initialQuantity,
+         price: 0,
+         productVariantId: productVariant.id,
+         totalPrice: 0,
+         purchaseEntryStatus: this.Enum.ACTIVE
+      });
+      
+      // if (existingProductList.length === 0) {
+      //    existingProductList.push({
+      //       purchaseEntryId: "",
+      //       productName,
+      //       unitId: product.defaultUnitId,
+      //       variantName: productVariant.name,
+      //       quantityOnHand: quantity,
+      //       quantity: initialQuantity,
+      //       price: 0,
+      //       productVariantId: productVariant.id,
+      //       totalPrice: 0,
+      //       purchaseEntryStatus: this.Enum.ACTIVE
+      //    });
+      // } else {
+
+      //    let isNotTheSameProduct = true;
+
+      //    existingProductList.forEach((product, index) => {
+      //       if (product.productVariantId === productVariant.id) {
+      //          if (product.purchaseEntryStatus === this.Enum.ARCHIVE) {
+      //             existingProductList[index]["purchaseEntryStatus"] = this.Enum.ACTIVE;
+      //             existingProductList[index]["quantity"] = 1;
+      //          } else {
+      //             existingProductList[index]["quantity"] += 1;
+      //          }
+
+      //          isNotTheSameProduct = false;
+      //          existingProductList[index]["totalPrice"] = existingProductList[index]["quantity"] * existingProductList[index]["price"];
+      //       }
+      //    });
+
+      //    if (isNotTheSameProduct) {
+      //       existingProductList.push({
+      //          purchaseEntryId: "",
+      //          productName,
+      //          variantName: productVariant.name,
+      //          unitId: product.defaultUnitId,
+      //          quantityOnHand: quantity,
+      //          price: 0,
+      //          productVariantId: productVariant.id,
+      //          quantity: initialQuantity,
+      //          totalPrice: 0,
+      //          purchaseEntryStatus: this.Enum.ACTIVE
+      //       });
+      //    }
+      // }
+
+      this.setState({productLists: existingProductList});
+
+      this.props.form.setFieldsValue({searchProduct: ""});
+      document.getElementById("searchProduct").focus();
+
+      this.grandTotal(existingProductList);
   }
 
   render(){
