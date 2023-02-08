@@ -190,7 +190,7 @@ export default class Invoice extends Component {
 							trigger={() => {
 								return (
 								<div>
-									<Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" /> - A5
+									<Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_invoice" /> - A5
 								</div>
 								);
 							}}
@@ -205,7 +205,7 @@ export default class Invoice extends Component {
 								trigger={() => {
 									return (
 									<div>
-										<Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" /> - A4
+										<Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_invoice" /> - A4
 									</div>
 									);
 								}}
