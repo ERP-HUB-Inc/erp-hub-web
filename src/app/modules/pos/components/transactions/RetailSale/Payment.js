@@ -335,7 +335,13 @@ export default class Payment extends Modal {
     const totalCustomerHasGiveMoney = this.totalCustomerPaymentList();
 
     const balance = this.calculateBalance(grandTotal, totalCustomerHasGiveMoney);
-    const {exchangeRate} = this.props;
+    const {
+      exchangeRate,
+      baseCurrency,
+      isHasSubCurrency,
+      subCurrency,
+      receiptTemplate
+    } = this.props;
     
     let paymentMethodList = [];
     let customer = {};
@@ -360,7 +366,10 @@ export default class Payment extends Modal {
         dataForReceipt = {
           data: this.props.transaction.response.data,
           exchangeRate,
-          receiptTemplate: this.props.receiptTemplate.data,
+          baseCurrency,
+          subCurrency,
+          isHasSubCurrency,
+          receiptTemplate,
           currentUser: this.currentUser,
           customerPaymentList: this.state.customerPaymentList,
           customer: this.props.customer,

@@ -1,10 +1,10 @@
 import React from "react";
 import { Translate } from "react-localize-redux";
+import ReceiptTemplate1 from "./template1";
+import ReceiptTemplate2 from "./template2";
 import Util from "../../../../../common/util";
 import POSUtil from "../../../../utils";
 import InventoryEnum from "../../../../../inventory/enums";
-import ReceiptTemplate1 from "./template1";
-import ReceiptTemplate2 from "./template2";
 
 const receiptTemplate = {
   temp1: 1,
@@ -115,6 +115,7 @@ const ReceiptTemplate = React.forwardRef((props, ref) => {
   const {formData} = props;
   formData.receiptTemplate = 2;
   let receipt = <ReceiptTemplate1 formData={formData} />;
+  
   if (formData.receiptTemplate === receiptTemplate.temp2) {
     const customerPayment = getCustomerPaymentList(formData);
     const productOrderList = getProductOrderList(formData);
@@ -124,6 +125,7 @@ const ReceiptTemplate = React.forwardRef((props, ref) => {
       customer={formData.customer}
       isRequestClearMarginLeft={true}
       isRequestShowDetail={true}
+      subCurrency={props.receiptTemplate.subCurrency}
       receiptTemplate={props.receiptTemplate}
       currentUser={getCurrentUserForRePrintReceipt(formData)}
       customerPaymentList={customerPayment.customerPaymentList}

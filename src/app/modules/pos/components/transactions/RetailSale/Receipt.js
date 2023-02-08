@@ -111,11 +111,6 @@ export default class Receipt extends Component {
       </style>
         <tbody>
           <tr>
-            <td  colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: 10 }}>
-              <this.Translate id="register_no" />: {this.Util.getDeviceNumber()}
-            </td>
-          </tr>
-          <tr>
             <td valign="top" colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}>
                 <this.Translate id="text_date" />: {this.Util.formatDate(this.props.data.createdAt, "DD MMM YYYY h:mm A")}
             </td>
@@ -129,7 +124,7 @@ export default class Receipt extends Component {
           {
             this.props.receiptTemplate.isHasSubCurrency ?
               <tr>
-                <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><this.Translate id="exchange_rate" />: {this.Util.formatCurrency(this.props.receiptTemplate.subCurrency.value, this.props.receiptTemplate.subCurrency.symbol)}</td>
+                <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><this.Translate id="exchange_rate" />: {this.Util.formatCurrency(this.props.subCurrency.value, this.props.subCurrency.symbol)}</td>
               </tr>
               :
               <tr />
@@ -344,7 +339,7 @@ export default class Receipt extends Component {
                         </tr>
                         <tr>
                           <td style={{ backgroundColor: "white", paddingTop: 5 }} />
-                          <td colSpan="2" style={{ backgroundColor: "white" }}><this.Translate id="text_total" />{this.props.receiptTemplate.isHasSubCurrency ? `(${this.props.receiptTemplate.baseCurrency.symbol})` : ""}:</td>
+                          <td colSpan="2" style={{ backgroundColor: "white" }}><this.Translate id="text_total" />{this.props.receiptTemplate.isHasSubCurrency ? `(${this.props.baseCurrency.symbol})` : ""}:</td>
                           <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(total, "$")}</td>
                         </tr>
                         {
@@ -352,7 +347,7 @@ export default class Receipt extends Component {
                             <tr>
                               <td style={{ backgroundColor: "white" }} />
                               <td colSpan="2" style={{ backgroundColor: "white", textDecoration: "uppercase" }}>សរុប{`(${this.props.receiptTemplate.subCurrency.symbol})`}:</td>
-                              <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.Util.formatCurrency(Util.toSubCurrencyGrantTotal(total, this.props.receiptTemplate.baseCurrency, this.props.receiptTemplate.subCurrency), this.props.receiptTemplate.subCurrency.symbol)}</td>
+                              <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.Util.formatCurrency(Util.toSubCurrencyGrantTotal(total, this.props.baseCurrency, this.props.subCurrency), this.props.subCurrency.symbol)}</td>
                             </tr>
                             :
                             <tr />
@@ -400,16 +395,16 @@ export default class Receipt extends Component {
                             :
                             <tr>
                               <td style={{ backgroundColor: "white" }} />
-                              <td colSpan="2" style={{ backgroundColor: "white" }}><this.Translate id="text_change" />{this.props.receiptTemplate.isHasSubCurrency ? `(${this.props.receiptTemplate.baseCurrency.symbol})` : ""}:</td>
+                              <td colSpan="2" style={{ backgroundColor: "white" }}><this.Translate id="text_change" />{this.props.isHasSubCurrency ? `(${this.props.baseCurrency.symbol})` : ""}:</td>
                               <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.formatCurrency(this.props.changeAmount, "$")}</td>
                             </tr>
                         }
                         {
-                          !this.props.isCustomerCredit && this.props.receiptTemplate.isHasSubCurrency ?
+                          !this.props.isCustomerCredit && this.props.isHasSubCurrency ?
                             <tr>
                               <td style={{ backgroundColor: "white" }} />
-                              <td colSpan="2" style={{ backgroundColor: "white" }}>ប្រាក់អាប់{`(${this.props.receiptTemplate.subCurrency.symbol})`}:</td>
-                              <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.Util.formatCurrency(Util.toSubCurrencyGrantTotal(this.props.changeAmount, this.props.receiptTemplate.baseCurrency, this.props.receiptTemplate.subCurrency), this.props.receiptTemplate.subCurrency.symbol)}</td>
+                              <td colSpan="2" style={{ backgroundColor: "white" }}>ប្រាក់អាប់{`(${this.props.subCurrency.symbol})`}:</td>
+                              <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.Util.formatCurrency(Util.toSubCurrencyGrantTotal(this.props.changeAmount, this.props.baseCurrency, this.props.subCurrency), this.props.subCurrency.symbol)}</td>
                             </tr>
                             :
                             <tr />
