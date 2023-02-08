@@ -125,7 +125,7 @@ const ReceiptTemplate = React.forwardRef((props, ref) => {
       customer={formData.customer}
       isRequestClearMarginLeft={true}
       isRequestShowDetail={true}
-      subCurrency={props.receiptTemplate.subCurrency}
+      subCurrency={props.receiptTemplate ? props.receiptTemplate.subCurrency : null}
       receiptTemplate={props.receiptTemplate}
       currentUser={getCurrentUserForRePrintReceipt(formData)}
       customerPaymentList={customerPayment.customerPaymentList}
