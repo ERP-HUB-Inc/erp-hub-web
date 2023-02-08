@@ -48,6 +48,9 @@ export default function ReceiptTemplate2(props) {
         <tr>
           <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><Translate id="text_cashier" />: <span style={{ textTransform: "uppercase" }}>{cashier}</span></td>
         </tr>
+        <tr>
+          <td colSpan="2" style={{ backgroundColor: "white", textAlign: "left", paddingTop: paddingTopForHeaderAndFooter }}><Translate id="exchange_rate" />: <span style={{ textTransform: "uppercase" }}>{props.subCurrency ? util.formatCurrency(props.subCurrency.value, props.subCurrency.symbol) : ""}</span></td>
+        </tr>
       </tbody>
     </table>;
   };
@@ -124,10 +127,10 @@ export default function ReceiptTemplate2(props) {
                     <th style={{ fontWeight: 500, width: "8mm", textAlign: "center", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
                       <Translate id="text_qty" />
                     </th>
-                    <th style={{ fontWeight: 500, /*width: "16mm",*/ textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
+                    <th style={{ fontWeight: 500, textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
                       <Translate id="text_price" />
                     </th>
-                    <th style={{ fontWeight: 500, /*width: "17mm",*/ textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
+                    <th style={{ fontWeight: 500, textTransform: "uppercase", textAlign: "right", padding: "5px 0px", backgroundColor: "white", borderBottom: "1px dashed " + paperSize.setting.color }}>
                       <Translate id="text_amount" />
                     </th>
                   </tr>

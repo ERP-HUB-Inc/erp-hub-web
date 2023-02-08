@@ -2,13 +2,12 @@ import React from "react";
 import _ from "lodash";
 import sweetalert from "sweetalert";
 import Receipt from "./Receipt";
-import DeliveryNote from "./DeliveryNote";
+import "./Payment.css";
 import Enum from "../../../enums";
 import GeneralAction from "../../../../common/actions/general";
 import TransactionAction from "../../../action/transaction/transaction";
 import POSUtil from "../../../utils";
 import Modal from "../../../../common/components/shares/Modal";
-import "./Payment.css";
 
 export default class Payment extends Modal {
   static PAYMENT_METHOD_CREDIT_CODE = "002";
@@ -21,7 +20,6 @@ export default class Payment extends Modal {
       isCustomerCredit: false,
       isAlreadyAutoPrint: false,
       isAllowPrintReceipt: false,
-      isAllowPrintDeliveryNote: false,
       isNotYetPaid: true,
       isFocusOnInputBaseCurrency: true,
       validateStatus: "",
@@ -56,14 +54,6 @@ export default class Payment extends Modal {
         this.Util.printElemV2(element.innerHTML);
         this.setState({
           isAllowPrintReceipt: false
-        });
-      }
-
-      const element2 = document.getElementById("content-receipt-and-delivery-order");
-      if (element2 && this.state.isAllowPrintDeliveryNote) {
-        this.Util.printElemV2(element2.innerHTML);
-        this.setState({
-          isAllowPrintDeliveryOrder: false
         });
       }
 
@@ -187,8 +177,7 @@ export default class Payment extends Modal {
       amountToPay = grandTotal;
       paymentMethodId = paymentMethod.id;
       this.setState({
-        isCustomerCredit: true,
-        isAllowPrintDeliveryNote: true
+        isCustomerCredit: true
       });
     }
     
@@ -335,7 +324,13 @@ export default class Payment extends Modal {
     const totalCustomerHasGiveMoney = this.totalCustomerPaymentList();
 
     const balance = this.calculateBalance(grandTotal, totalCustomerHasGiveMoney);
-    const {exchangeRate} = this.props;
+    const {
+      exchangeRate,
+      baseCurrency,
+      isHasSubCurrency,
+      subCurrency,
+      receiptTemplate
+    } = this.props;
     
     let paymentMethodList = [];
     let customer = {};
@@ -360,7 +355,10 @@ export default class Payment extends Modal {
         dataForReceipt = {
           data: this.props.transaction.response.data,
           exchangeRate,
-          receiptTemplate: this.props.receiptTemplate.data,
+          baseCurrency,
+          subCurrency,
+          isHasSubCurrency,
+          receiptTemplate,
           currentUser: this.currentUser,
           customerPaymentList: this.state.customerPaymentList,
           customer: this.props.customer,
@@ -384,12 +382,6 @@ export default class Payment extends Modal {
             this.props.transaction.response ?
               <div style={{display: "none"}} id="content-receipt-and-delivery-order">
                 <Receipt {...dataForReceipt} />
-                {
-                  this.state.isAllowPrintDeliveryNote ?
-                    <DeliveryNote {...dataForReceipt} />
-                    :
-                    ""
-                }
               </div>
               :
               ""

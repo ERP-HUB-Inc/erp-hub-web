@@ -20,7 +20,7 @@ import TransactionService from "../../../services/transactions/TransactionServic
 import Constant from "../../../constants/transactions/transaction";
 // import ConstantDevice from "../../../constants/settings/device";
 import CurrencyExchangeService from "../../../services/settings/CurrencyExchangeService";
-import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
+import ReceiptTemplateService from "../../../../pos/services/settings/ReceiptTemplateService";
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
 import FormCreateCustomer from "../../../../crm/containers/customers/Customer/FormCreate";
 import CustomerAction from "../../../../crm/actions/customers/customer";
@@ -75,6 +75,7 @@ export default class Retail extends Component {
       selectedReceiptType: Enum.CURRENT_RECEIPT,
       isHasSubCurrency: false,
       isRequestLoadingMore: false,
+      receiptTemplate: {},
       baseCurrency: {},
       subCurrency: {},
       modalVisible: false,
@@ -190,7 +191,18 @@ export default class Retail extends Component {
     this.props.dispatch(ProductAction.fetch(6, "", "", "", JSON.stringify({isAvialableSale: [Enum.PRODUCT_AVIALABLE_ON_SALE], type: [InventoryEnum.TYPE_OF_PRODUCT.GOOD]}), "", this.Util.getLocationId()));
 
     new Promise(() => {
-      this.props.dispatch(ReceiptTemplateAction.default());
+      ReceiptTemplateService.default()
+      .then(response => {
+        if (response.data && response.data.data) {
+          const receiptTemplate = response.data.data;
+          this.setState({
+            receiptTemplate,
+            baseCurrency: receiptTemplate.baseCurrency,
+            isHasSubCurrency: receiptTemplate.isHasSubCurrency,
+            subCurrency: receiptTemplate.subCurrency,
+          });
+        }
+      });
       this.props.dispatch(PaymentMethodAction.fetch(2, "", "createdAt", "ASC", JSON.stringify({isEnableOnPOS: [Enum.PAYMENT_METHOD_AVIALE_ON_POS]})));
     });
 
@@ -231,18 +243,6 @@ export default class Retail extends Component {
 
     // RESTORE CURRENT RECEIPT
     //this.restoreReceipt(Enum.CURRENT_RECEIPT);
-  }
-  
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.receiptTemplate.data && this.hadNotYetReceiveProps) {
-      this.hadNotYetReceiveProps = false;
-
-      this.setState({
-        baseCurrency: nextProps.receiptTemplate.data.baseCurrency,
-        isHasSubCurrency: nextProps.receiptTemplate.data.isHasSubCurrency,
-        subCurrency: nextProps.receiptTemplate.data.subCurrency
-      });
-    }
   }
 
   componentWillUnmount() {
@@ -703,6 +703,7 @@ export default class Retail extends Component {
         isHasSubCurrency={this.state.isHasSubCurrency}
         baseCurrency={this.state.baseCurrency}
         subCurrency={this.state.subCurrency}
+        receiptTemplate={this.state.receiptTemplate}
         handleCancel={this.handleCancelMakePayment}
         customer={this.state.selectedCustomer}
         customerFieldPrice={this.state.customerFieldPrice}
@@ -992,7 +993,7 @@ export default class Retail extends Component {
     
     return <this.Row className="main-layout main-store-account" id="retail-sale">
       <div id="receiptLogoPreLoading" style={{display: "none"}}>
-        <img style={{width: 100}} src={this.Util.getProductImage(this.props.receiptTemplate && this.props.receiptTemplate.data ? this.props.receiptTemplate.data.logo : "", "general").url} alt="" />
+        <img style={{width: 100}} src={this.Util.getProductImage(this.state.receiptTemplate ? this.state.receiptTemplate.logo : "", "general").url} alt="" />
       </div>
       <this.Col md="8" id="left-block">
 

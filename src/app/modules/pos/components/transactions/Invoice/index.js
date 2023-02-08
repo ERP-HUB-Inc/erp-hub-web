@@ -27,14 +27,12 @@ import POSUtil from "../../../utils";
 import TransactionService from "../../../services/transactions/TransactionService";
 import InvoiceService from "../../../services/transactions/InvoiceService";
 import SaleOrderService from "../../../services/transactions/SaleOrderService";
-import TransactionAction from "../../../action/transaction/transaction";
 import ReceiptTemplateAction from "../../../../pos/action/settings/receiptTemplate";
+import ReceiptTemplateService from "../../../../pos/services/settings/ReceiptTemplateService";
 import InventoryEnum from "../../../../inventory/enums";
 import Component  from "../../../../common/components/Component";
 import history from "../../../../common/router/history";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
-import Receipt from "../RetailSale/Receipt";
-import Detail from "../../../containers/transactions/SaleHistory/Detail";
 import ReceiptTemplate from "../receipt/template";
 import PrivilegeService from "../../../services/settings/PrivilegeService";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
@@ -49,6 +47,7 @@ export default class Invoice extends Component {
 			summaryData: {},
 			pagination: {},
 			detail: {},
+			receiptTemplate: {},
 			salesOrder: null,
 			current: 1,
 			isRequestReturn: false,
@@ -166,7 +165,7 @@ export default class Invoice extends Component {
 						<Icon type="copy" style={{marginRight: 10}} /> <this.Translate id="text_clone_to_recurring" />
 					</Menu.Item>
 					<Divider style={{marginTop: 4, marginBottom: 4}} />
-					<Menu.Item key={6} disabled={record.status === Enum.INVOICE_STATUS.PAID}>
+					<Menu.Item key={6} disabled={record.status !== Enum.INVOICE_STATUS.PAID}>
 						<ReactToPrint
 							content={() => this.receiptRef}
 							onBeforeGetContent={() => this.handlePrintReceipt(record.id)}
@@ -191,7 +190,7 @@ export default class Invoice extends Component {
 							trigger={() => {
 								return (
 								<div>
-									<Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" /> - A5
+									<Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_invoice" /> - A5
 								</div>
 								);
 							}}
@@ -206,7 +205,7 @@ export default class Invoice extends Component {
 								trigger={() => {
 									return (
 									<div>
-										<Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_print" /> - A4
+										<Icon type="printer" style={{marginRight: 10}} /> <this.Translate id="text_invoice" /> - A4
 									</div>
 									);
 								}}
@@ -342,33 +341,20 @@ componentDidMount() {
 	this.getPermission();
 	this.fetchSummary();
 	this.fetchList(true);
-	this.props.dispatch(ReceiptTemplateAction.default());
-}  
 
-componentDidUpdate() {
-	if (this.props.detail.fetched) {
-	const isRequestClearReceiptMarginLeft = false;
-	const receiptContent = this.renderReceipt(isRequestClearReceiptMarginLeft);
-	const detailTransactionDisplay = this.renderReceipt();
-	if (this.state.isRequestReprint) {
-		this.props.dispatch(TransactionAction.reset("RESET_DETAIL_TRANSACTION"));
-	} else if (this.state.isRequestShowDetail) {
-		this.setState({
-			loadingPopup: false,
-			isRequestShowDetail: false,
-			modalConten: <Detail
-			reprintReceiptContent={<div style={{display: "none"}} id="reprint-receipt">{receiptContent}</div>}
-			receiptContent={detailTransactionDisplay}
-			dispatch={this.props.dispatch} />
-		});
-	}
-	}
+	ReceiptTemplateService.default()
+	.then(response => {
+		if (response && response.data) {
+			this.setState({receiptTemplate: response.data.data});
+		}
+	});
+	this.props.dispatch(ReceiptTemplateAction.default());
 }
 
 getPermission(){
 	PrivilegeService.checkPermission(this.permissionModuleCode, "view")
-		.then(({data}) => this.setState({isHasAccessPermission: data}))
-		.catch(() => this.setState({isHasAccessPermission: false}));
+	.then(({data}) => this.setState({isHasAccessPermission: data}))
+	.catch(() => this.setState({isHasAccessPermission: false}));
 }
 
 fetchList(withPagination= false) {
@@ -637,30 +623,6 @@ onChangePagination = (current, pageSize) => {
 	this.fetchList(true);
 }
 
-renderReceipt(isRequestClearReceiptMarginLeft = true) {
-	const data = this.props.detail.data;
-	const customerPayment = this.getCustomerPaymentList(data);
-	const productOrderList = this.getProductOrderList(data);
-	const productTaxList = [];
-
-	return <Receipt
-	data={data}
-	customer={data.customer}
-	isRequestClearMarginLeft={isRequestClearReceiptMarginLeft}
-	isRequestShowDetail={this.state.isRequestShowDetail}
-	receiptTemplate={this.props.receiptTemplate.data}
-	currentUser={this.getCurrentUserForRePrintReceipt(data)}
-	customerFieldPrice="price"
-	customerPaymentList={customerPayment.customerPaymentList}
-	productList={productOrderList}
-	productTaxList={productTaxList}
-	summaryTotal={this.getSummaryTotal(data)}
-	summaryTax={{taxTitle: "", count: 0}}
-	changeAmount={customerPayment.changeAmount}
-	taxAmount={0}
-	discountAmount={data.discount} />;
-}
-
 renderButtonAddNew() {
 	return <this.Button
 		type="info"
@@ -714,7 +676,7 @@ render() {
 					<div style={{display: "none"}}>
 						<ReceiptTemplate
 							formData={detail}
-							receiptTemplate={this.props.receiptTemplate.data}
+							receiptTemplate={this.state.receiptTemplate}
 							locale={this.props.locale}
 							ref={re => this.receiptRef = re} />
 						<CAInvoice ref={ref => this.invoiceRef = ref} formData={detail} />

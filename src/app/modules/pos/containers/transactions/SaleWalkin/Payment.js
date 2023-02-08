@@ -14,8 +14,7 @@ function mapStateToProps(state) {
   return {
     locale: state.locale,
     mail: state.reducer.mail.send,
-    transaction: state.reducer.transaction.posPay,
-    receiptTemplate: state.reducer.receiptTemplate.detail
+    transaction: state.reducer.transaction.posPay
   };
 }
   
