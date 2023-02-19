@@ -17,6 +17,10 @@ export default {
     AUTO: 0,
     CUSTOM: 1
   },
+  PROMOTION_TYPE: {
+    BASIC: "basic",
+    ADVANCE: "advance"
+  },
   PAYMENT_TERM_TYPE: {
     DAY:"DAY",
     MONTH:"MONTH"

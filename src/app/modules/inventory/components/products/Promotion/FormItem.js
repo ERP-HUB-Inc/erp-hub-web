@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import { Translate } from "react-localize-redux";
 import {connect} from "react-redux";
 import {
@@ -6,8 +7,6 @@ import {
   Form, 
   Row,
   PageHeader,
-  Table,
-  Icon,
   message,
   Spin,
 } from "antd";
@@ -16,7 +15,6 @@ import {
   Checkboxs,
   DateRangePicker, 
   InputText, 
-  InputNumber,
   RadioNormal, 
   Select
 } from "../../../../common/elements/ant-ui";
@@ -26,9 +24,8 @@ import Util from "../../../../common/util";
 import LocationService from "../../../../pos/services/settings/LocationService";
 import PromotionService from "../../../services/products/PromotionService";
 import Enum from "../../../../pos/enums";
-import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
-import VariantProduct from "../../../../pos/components/transactions/RetailSale/VaraintProduct";
-import moment from "moment";
+import BasicDiscount from "./basic";
+import AdvanceDiscount from "./advance";
 
 const targetDiscount = {
   all: "all",
@@ -50,86 +47,12 @@ class FormItem extends React.PureComponent {
     locations: [],
     productEntries: [],
     productSearch: [],
+    whenBuyProducts: [],
+    thenGetProducts: [],
     formData: {},
     loading: false,
     loadingButton: false
   }
-  entryColumn = [
-    {
-      title: <Translate id="text_number_of" />,
-      dataIndex: "id",
-      key: "id",
-      render: (id, record, index) => {
-        return <div>
-          {index + 1}
-          <InputText
-            name={`id[${index}]`}
-            style={{display: "none"}}
-            data={id}
-            form={this.props.form} />
-          <InputText
-            style={{display: "none"}}
-            name={`productVariantId[${index}]`}
-            data={record.productVariantId}
-            form={this.props.form} />
-          <InputText
-            style={{display: "none"}}
-            name={`productId[${index}]`}
-            data={record.productId}
-            form={this.props.form} />
-          <InputText
-            style={{display: "none"}}
-            name={`variantName[${index}]`}
-            data={record.variantName}
-            form={this.props.form} />
-          <InputNumber
-            name={`status[${index}]`}
-            style={{display: "none"}}
-            data={record.status}
-            precision={0}
-            form={this.props.form} />
-        </div>;
-      }
-    },
-    {
-      title: <Translate id="text_product" />,
-      dataIndex: "variantName",
-      key: "variantName"
-    },
-    {
-      title: <Translate id="text_barcode" />,
-      dataIndex: "barcode",
-      key: "barcode"
-    },
-    {
-      title: <Translate id="text_price" />,
-      dataIndex: "price",
-      key: "price",
-      render: (price) => this.util.formatCurrency(price)
-    },
-    {
-      title: <Translate id="text_promotion_price" />,
-      dataIndex: "price",
-      key: "discountPrice",
-      render: (price, record, index) => {
-        const discountType = this.props.form.getFieldValue("discountType");
-        let discount = this.props.form.getFieldValue("discount");
-        if (discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-          discount = this.util.getValueFromPercentage(price, discount);
-        }
-        price = price - discount;
-        return <div style={{display: "flex", justifyContent: "space-between"}}>
-          <div>{this.util.formatCurrency(price)}</div>
-          <Icon type="delete" style={{cursor: "pointer", color: "red"}} onClick={() => this.handleRemoveEntry(index)} />
-          <InputNumber
-            style={{display: "none"}}
-            name={`price[${index}]`}
-            data={price}
-            form={this.props.form} />
-        </div>;
-      }
-    }
-  ];
   pageTitle = <Translate id="text_new_discount" />;
   util = new Util();
   id = null;
@@ -146,16 +69,27 @@ class FormItem extends React.PureComponent {
       PromotionService.detail(idParam)
       .then(response => this.setState(preState => {
         const data = response.data;
-        const productEntries = data.productDiscount.length && data.productDiscount.map(entry => ({
-          ...entry, 
-          barcode: entry.productVariant.barcode,
-          price: entry.productVariant.price,
-        }));
-        delete data.productDiscount;
+        if (data.type === promotionType.basic) {
+          const productEntries = data.productDiscount.length && data.productDiscount.map(entry => ({
+            ...entry, 
+            barcode: entry.productVariant.barcode,
+            price: entry.productVariant.price,
+          }));
+          data.promotionCriteria = {};
+          delete data.productDiscount;
 
-        preState.formData = data;
-        preState.productEntries = productEntries ? productEntries : [];
-        return preState;
+          preState.formData = data;
+          preState.productEntries = productEntries ? productEntries : [];
+          return preState;
+        } else if (data.type === promotionType.advanced) {
+          const promotionCriteria = data.promotionCriteria;
+          const whenBuyProducts = promotionCriteria && promotionCriteria.whenBuyProducts;
+          const thenGetProducts = promotionCriteria && promotionCriteria.thenGetProducts;
+          preState.formData = data;
+          preState.whenBuyProducts = whenBuyProducts;
+          preState.thenGetProducts = thenGetProducts;
+          return preState;
+        }
       }))
       .finally(() => this.setState({loading: false}));
     } else {
@@ -167,8 +101,9 @@ class FormItem extends React.PureComponent {
           locationId: null,
           discount: 0,
           discountType: Enum.DISCOUNT_TYPE.PERCENTAGE,
-          promotionType: promotionType.basic,
-          targetDiscount: targetDiscount.all
+          type: promotionType.basic,
+          targetDiscount: targetDiscount.all,
+          promotionCriteria: {}
         };
 
         return preState;
@@ -180,12 +115,16 @@ class FormItem extends React.PureComponent {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+        const {formData} = this.state;
         values["startDate"] = this.util.formatDateForMYSQL(values.dates[0], "YYYY-MM-DD HH:mm");
         values["endDate"] = this.util.formatDateForMYSQL(values.dates[1], "YYYY-MM-DD HH:mm");
         values.discount = Number(values.discount);
-        if (values.productVariantId) {
-          if (!values.targetProduct) {
-            values.targetProduct = targetProduct.specific;
+          
+        if (formData.type === promotionType.basic) {
+          if (values.productVariantId) {
+            if (!values.targetProduct) {
+              values.targetProduct = targetProduct.specific;
+            }
           }
           const productsDiscount = [];
           values.productVariantId.forEach((productVariantId, index) => {
@@ -198,15 +137,72 @@ class FormItem extends React.PureComponent {
               status: values.status[index]
             });
           });
-
-          delete values.productVariantId;
-          delete values.price;
-          delete values.dates;
-          delete values.status;
           values.productDiscount = productsDiscount;
+        } else if (formData.type === promotionType.advanced) {
+          let promotionCriteria = {
+            id: formData.promotionCriteria && formData.promotionCriteria.id,
+            when: values.when,
+            whenTarget: values.whenTarget,
+            buyQuantity: values.buyQuantity ? values.buyQuantity : 0,
+            spendAmount: values.spendAmount ? values.spendAmount : 0,
+            then: values.then,
+            getQuantity: 0,
+            getPercentage: 0,
+            getAmount: 0,
+            thenTarget: values.thenTarget
+          };
+
+          const whenBuyProducts = [];
+          const thenGetProducts = [];
+
+          if (values.discountType === "free") {
+            promotionCriteria.getQuantity = values.getQuantity;
+          } else if (values.discountType === "%") {
+            promotionCriteria.getPercentage = values.getAmount;
+          } else if (values.discountType === "$") {
+            promotionCriteria.getAmount = values.getAmount;
+          }
+
+          if (this.state.whenBuyProducts && this.state.whenBuyProducts.length) {
+            this.state.whenBuyProducts.forEach(entry => {
+              whenBuyProducts.push({
+                id: entry.id,
+                productId: entry.productId,
+                productVariantId: entry.productVariantId,
+                productName: entry.productName,
+                type: "WHEN",
+                status: entry.status
+              });
+            });
+          }
+
+          if (this.state.thenGetProducts && this.state.thenGetProducts.length) {
+            this.state.thenGetProducts.forEach(entry => {
+              thenGetProducts.push({
+                id: entry.id,
+                productId: entry.productId,
+                productVariantId: entry.productVariantId,
+                productName: entry.productName,
+                type: "THEN",
+                status: entry.status
+              });
+            });
+          }
+
+          if (whenBuyProducts.length) promotionCriteria.whenBuyProducts = whenBuyProducts;
+          if (thenGetProducts.length) promotionCriteria.thenGetProducts = thenGetProducts;
+
+          values.promotionCriteria = promotionCriteria;
+          values.discountType = 0;
         }
-        this.save(values);
+
+        delete values.productVariantId;
+        delete values.price;
+        delete values.dates;
+        delete values.status;
       }
+      console.log("values", values);
+      this.save(values);
     });
   }
 
@@ -232,80 +228,26 @@ class FormItem extends React.PureComponent {
     }
   }
 
-  handleRemoveEntry = (index) => {
-    const {productEntries} = this.state;
-    if (productEntries && productEntries[index].id) {
-      this.util.sweetAlertConfirm(stringTranslate("text_confirm_delete", this.props.locale), "warning")
-      .then(isDelete => {
-        if (isDelete) {
-          productEntries[index].status = 3;
-          this.setState({productEntries, productSearch: []});
-        }
-      });
-    } else {
-      productEntries.splice(index, 1);
-      this.setState({productEntries, productSearch: []});
-    }
+  handleUpdateProductEntries = (productEntries) => {
+    this.setState({productEntries});
   }
 
-  handleOnSelectList = (product, productVariant, isRequestVariantForm = true) => {
-    let isProductVariant = product.productOption === Enum.PRODUCT_VARIANT;
-    if (isProductVariant && isRequestVariantForm) {
-      this.setState({
-        selectedProduct: product,
-        modalVariant: <VariantProduct
-        product={product}
-        handleCancel={this.handleCancelVariantProduct}/>
-      });
-      return;
-    } else if (productVariant && productVariant.length > 0) {
-      productVariant = productVariant[0];
-      productVariant.name = isProductVariant ? productVariant.name : "";
-    }
-    
-    const existingProductList = this.state.productEntries;
-    if (existingProductList.length === 0) {
-      existingProductList.push({
-        id: null,
-        productId: productVariant.productId,
-        productVariantId: productVariant.id,
-        variantName: product.name ? product.name : product.namekm,
-        barcode: productVariant.barcode,
-        price: productVariant.price,
-        status: 1
-      });
-    } else {
-      let isNotTheSameProduct = true;
-      existingProductList.forEach((product, index) => {
-        if (product.productVariantId === productVariant.id) {
-          if (existingProductList[index]["status"] === 3) {
-            existingProductList[index]["status"] = 1;
-          }
-          isNotTheSameProduct = false;
-        }
-      });
-      if (isNotTheSameProduct) {
-        existingProductList.push({
-          id: null,
-          productId: productVariant.productId,
-          productVariantId: productVariant.id,
-          variantName: product.name ? product.name : product.namekm,
-          barcode: productVariant.barcode,
-          price: productVariant.price,
-          status: 1
-        });
-      }
-    }
+  handleUpdateWhenEntries = (whenBuyProducts) => {
+    this.setState({whenBuyProducts: this.util.copyArrayObj(whenBuyProducts)});
+  }
 
-    this.setState({productEntries: existingProductList});
-    this.props.form.setFieldsValue({searchProduct: ""});
-    document.getElementById("searchProduct").focus();
+  handleUpdateThenEntries = (thenGetProducts) => {
+    this.setState({thenGetProducts: this.util.copyArrayObj(thenGetProducts)});
+  }
+
+  handleOnSelectListBasicDiscount = (productEntries) => {
+    this.setState({productEntries});
   }
 
   render() {
     const {formData} = this.state;
     return (
-      !this.state.loading && Object.keys(this.state.formData).length ?
+      !this.state.loading || Object.keys(this.state.formData).length ?
       <div style={{background: "#FFFFFF", padding: "0px 15px 31px 18px", marginTop: 10}}>
         <Form onSubmit={this.handleSubmit} id="product-discount-form">
           <PageHeader
@@ -349,6 +291,7 @@ class FormItem extends React.PureComponent {
                 name="isFeatured"
                 label={<Translate id="text_featured_offer" />}
                 defaultValue={formData.isFeatured ? true : false}
+                style={{display: formData.type === promotionType.advanced ? "none" : "block"}}
                 form={this.props.form} />
             </Col>
             <Col md={18} style={{paddingLeft: 20}}>
@@ -357,7 +300,7 @@ class FormItem extends React.PureComponent {
                 valueKey="id"
                 label={<Translate id="text_location" />}
                 placeholder={`${stringTranslate("text_location", this.props.locale)}`}
-                defaultValue={formData.locationId}
+                defaultValue={formData.locationId ? formData.locationId : this.util.getLocationId()}
                 dataSource={this.state.locations}
                 style={{width: 318}}
                 form={this.props.form} />
@@ -367,11 +310,16 @@ class FormItem extends React.PureComponent {
                 label={<Translate id="text_promotion_type" />}
                 placeholder={`${stringTranslate("text_select_type", this.props.locale)}`}
                 valueKey="value"
-                defaultValue={promotionType.basic}
+                defaultValue={formData.type}
                 dataSource={[
-                  {value: promotionType.basic, name: <Translate id="text_basic" />}
+                  {value: promotionType.basic, name: <Translate id="text_basic" />},
+                  {value: promotionType.advanced, name: <Translate id="text_advance" />}
                 ]}
                 style={{width: 318}}
+                onChange={(value) => this.setState(preState => {
+                  preState.formData.type = value;
+                  return preState;
+                })}
                 form={this.props.form}/> 
 
               <RadioNormal 
@@ -385,60 +333,56 @@ class FormItem extends React.PureComponent {
                 form={this.props.form} />
             </Col>
           </Row>
-          <Row>
-            <Col md={6} style={{paddingLeft: 14, paddingRight: 28, display: "flex", alignItems: "center"}}>
-              <RadioNormal 
-                name="discountType"
-                label={<Translate id="text_discount" />}
-                defaultValue={formData.discountType}
-                buttonStyle="solid"
-                dataSource={[
-                  {value: Enum.DISCOUNT_TYPE.PERCENTAGE, title: "%"},
-                  {value: Enum.DISCOUNT_TYPE.AMOUNT, title: "$"}
-                ]}
-                form={this.props.form} />
-              <InputText 
-                name="discount"
-                type="number"
-                required={true}
-                data={`${(formData.discount)}`}
-                handleOnFocus={(e) => e.target.select()}
-                style={{paddingTop: 13, paddingLeft: 17, width: "100%"}}
-                suffix={this.props.form.getFieldValue("discountType") === Enum.DISCOUNT_TYPE.PERCENTAGE ? "%" : "$"}
-                form={this.props.form} />
-            </Col>
-            <Col md={18} style={{paddingLeft: 20, paddingRight: 38}}>
-              <div style={{display: "flex", height: 70}}>
-                <RadioNormal
-                  name="targetProduct"
-                  label={<Translate id="text_product" />}
-                  defaultValue={formData.targetProduct}
-                  buttonStyle="solid"
-                  dataSource={[
-                    {value: targetProduct.all, title: <Translate id="text_all" />},
-                    {value: targetProduct.specific, title: <Translate id="text_specific" />}
-                  ]}
-                  form={this.props.form} />
-                <SearchProductDropdown
-                  productSearch={this.state.productSearch}
-                  handleOnSelectList={this.handleOnSelectList}
+            {
+              formData.type === promotionType.advanced ?
+              <Row>
+                <Col md={6} style={{paddingRight: 28}}></Col>
+                <AdvanceDiscount 
+                  formData={formData}
                   locale={this.props.locale}
-                  showIcon={false}
-                  disabled={this.props.form.getFieldValue("targetProduct") === targetDiscount.all ? true : false}
-                  style={{marginTop: 30, flexGrow: 1, paddingLeft: 17}}
-                  form={this.props.form} />
-              </div>
-
-              <Table 
-                rowKey={((record, index) => index)}
-                columns={this.entryColumn}
-                dataSource={this.state.productEntries}
-                pagination={false}
-                locale={{emptyText: <Translate id="text_no_sale_entries_product" />}}
-                rowClassName={((record) => record.status === 3 ? "hidden" : "")}
-              />
-            </Col>
-          </Row>
+                  productBuyVariant={this.props.productVariant}
+                  productGetVariant={this.props.productGetVariant}
+                  whenBuyProducts={this.state.whenBuyProducts}
+                  thenGetProducts={this.state.thenGetProducts}
+                  handleUpdateWhenEntries={this.handleUpdateWhenEntries}
+                  handleUpdateThenEntries={this.handleUpdateThenEntries}
+                  form={this.props.form}
+                />
+              </Row>
+              :
+              <Row>
+                <Col md={6} style={{paddingLeft: 14, paddingRight: 28, display: "flex", alignItems: "center"}}>
+                  <RadioNormal 
+                    name="discountType"
+                    label={<Translate id="text_discount" />}
+                    defaultValue={formData.discountType}
+                    buttonStyle="solid"
+                    dataSource={[
+                      {value: Enum.DISCOUNT_TYPE.PERCENTAGE, title: "%"},
+                      {value: Enum.DISCOUNT_TYPE.AMOUNT, title: "$"}
+                    ]}
+                    form={this.props.form} />
+                  <InputText 
+                    name="discount"
+                    type="number"
+                    required={true}
+                    data={`${(formData.discount)}`}
+                    handleOnFocus={(e) => e.target.select()}
+                    style={{paddingTop: 13, paddingLeft: 17, width: "100%"}}
+                    suffix={this.props.form.getFieldValue("discountType") === Enum.DISCOUNT_TYPE.PERCENTAGE ? "%" : "$"}
+                    form={this.props.form} />
+                </Col>
+                <BasicDiscount
+                  formData={formData}
+                  locale={this.props.locale}
+                  productVariant={this.props.productVariant}
+                  productEntries={this.state.productEntries}
+                  handleOnSelectList={this.handleOnSelectListBasicDiscount}
+                  handleUpdateProductEntries={this.handleUpdateProductEntries}
+                  form={this.props.form} 
+                />
+              </Row>
+            }
         </Form>
       </div>
       : <div style={{width: 30, margin: "0 auto", paddingTop: 30}}><Spin /></div>
@@ -448,13 +392,14 @@ class FormItem extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-      locale: state.locale
+    locale: state.locale,
+    productVariant: state.reducer.productVariant.request,
   };
 }
 
 function mapPropsToFields(props) {
   return {
-      form: props.form
+    form: props.form
   };
 }
 

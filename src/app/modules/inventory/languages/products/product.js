@@ -829,5 +829,10 @@ export default {
    "text_current_cost": [
       "Current Cost",
       "ថ្លៃដើមបច្ចុបន្បន្ន"
+   ],
+
+   "text_free": [
+      "Free",
+      "ឥតគិតថ្លៃ"
    ]
 };

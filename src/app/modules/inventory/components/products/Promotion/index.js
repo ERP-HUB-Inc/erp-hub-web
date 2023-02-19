@@ -15,6 +15,7 @@ import history from "../../../../common/router/history";
 import List from "../../List";
 import PromotionService from "../../../services/products/PromotionService";
 import EnumPos from "../../../../pos/enums";
+import Enum from "../../../enums";
 
 class Promotion extends List {
   constructor(props) {
@@ -86,11 +87,16 @@ class Promotion extends List {
         dataIndex: "discount",
         key: "discount",
         render: (discount, record) => {
+          if (record.type === Enum.PROMOTION_TYPE.ADVANCE) {
+            return "";
+          }
+
           let label = "%";
           if (record.discountType === EnumPos.DISCOUNT_TYPE.AMOUNT) {
             return this.Util.formatCurrency(discount, "$");
           }
-          return `${discount}${label}`;
+
+          return discount ? `${discount}${label}` : "";
         }
       },
       {

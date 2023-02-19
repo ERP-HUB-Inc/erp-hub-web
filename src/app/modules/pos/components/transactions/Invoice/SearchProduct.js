@@ -162,7 +162,7 @@ export default function SearchProductDropdown(props) {
       {props.showIcon ? <div className="search-icon icon-add-product"></div> : null}
       <InputText
         wrapperCol={{xs: {span: 24}, sm: {span: 24}}}
-        name="searchProduct"
+        name={props.name ? props.name : "searchProduct"}
         placeholder={`${props.placeholder ? props.placeholder : stringTranslate("text_search_product_by_name_bc", props.locale)}`}
         className={`${props.showIcon ? "ca-input-v1-icon-left" : ""} ${props.className}`}
         isAutoFocus={props.isAutoFocus}

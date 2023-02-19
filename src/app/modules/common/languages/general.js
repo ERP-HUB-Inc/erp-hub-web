@@ -254,6 +254,8 @@ export default {
 
   text_import: ["Import", "Import"],
 
+  text_advance: ["Advance", "Advance"],
+
   text_please_search: ["Please search", "សូមស្វែងរក"],
 
   text_please_select: ["Please select", "សូមជ្រើសរើស"],

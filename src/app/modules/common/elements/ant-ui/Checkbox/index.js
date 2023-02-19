@@ -6,7 +6,7 @@ export class Checkboxs extends Element {
   render(){
     const {getFieldDecorator} = this.props.form;
     return (
-      <this.FormItem>
+      <this.FormItem style={this.props.style}>
         {getFieldDecorator(this.props.name, {
           valuePropName: "checked",
           initialValue: this.props.defaultValue,
