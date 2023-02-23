@@ -115,7 +115,18 @@ class FormItem extends React.Component {
     {
       title: <Translate id="text_quantity" />,
       dataIndex: "quantity",
-      key: "quantity"
+      key: "quantity",
+      render: (quantity, record, index) => {
+        return <InputNumber
+            name={`quantity[${index}]`}
+            placeholder={`${stringTranslate("text_quantity", this.props.locale)}`}
+            isAutoSelect={true}
+            data={quantity}
+            style={{width: 240}}
+            onChange={(value) => this.onChangeQuantity(value, index)}
+            form={this.props.form}
+        />;
+      }
     },
     {
       title: <Translate id="text_price" />,
@@ -123,16 +134,15 @@ class FormItem extends React.Component {
       key: "price",
       width: 245,
       render: (price, record, index) => {
-        return (
-          <InputNumber
+        return <InputNumber
             name={`price[${index}]`}
             placeholder={`${stringTranslate("text_price", this.props.locale)}`}
             isAutoSelect={true}
             data={price}
             style={{width: 240}}
             onChange={(value) => this.onChangePrice(value, index)}
-            form={this.props.form} />
-        );
+            form={this.props.form}
+        />;
       }
     },
     {
@@ -414,6 +424,24 @@ class FormItem extends React.Component {
         this.setState({loadingSubmit: false});
       });
     }
+  }
+
+  onChangeQuantity = (quantity, index) => {
+    clearTimeout(this.timer);
+
+    const {formData} = this.state;
+    let duration = formData.duration;
+    let numberOfMonth = duration;
+
+    if (formData.durationType === Enum.DURATION_TYPE.YEAR) {
+      numberOfMonth = duration * 12;
+    }
+
+    this.timer = setTimeout(() => {
+      this.setState(preState => {
+        preState.formData.installmentEntries[index].quantity = quantity;
+      }, () => this.generatePaymentSchedule(formData.rate, numberOfMonth, formData.paymentDate));
+    }, 500);
   }
 
   onChangePrice = (value, index) => {

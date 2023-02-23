@@ -165,7 +165,7 @@ export default function NoneTaxInvoice(props) {
                   {discount && discount > 0 ? <div style={{marginTop: 3}}>{util.formatCurrency(discount)}</div> : null}
                   {tax ? <div style={{marginTop: 3}}>{util.formatCurrency(tax)}</div> : null}
                   {deliveryFee ? <div style={{marginTop: 3}}>{util.formatCurrency(deliveryFee)}</div> : null}
-                  <div style={{color: "#37a3c6", marginTop: 3}}>{util.formatCurrency(formData.total - discount + deliveryFee)}</div>
+                  <div style={{fontWeight: 600, marginTop: 3}}>{util.formatCurrency(formData.total - discount + deliveryFee)}</div>
               </div>
             </div>
           </td>

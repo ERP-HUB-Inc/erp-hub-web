@@ -1118,6 +1118,7 @@ class NewInvoice extends React.PureComponent {
                 case EnumCustomer.CUSTOMER_TYPE.DISTRIBUTOR:
                     price = productVariant.distributePrice;
                     break;
+                default:
             }
         }
         
