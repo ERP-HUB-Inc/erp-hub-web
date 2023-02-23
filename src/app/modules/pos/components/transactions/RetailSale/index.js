@@ -89,9 +89,6 @@ export default class Retail extends Component {
     this.productWidth = 0;
     this.service = TransactionService;
 
-    // this.handleOnLoadMoreProduct = this.handleOnLoadMoreProduct.bind(this);
-    this.handleOnSelectProductSearchList = this.handleOnSelectProductSearchList.bind(this);
-    this.handleSetFullScreen = this.handleSetFullScreen.bind(this);
     this.handleLinkSaleHistory = this.handleLinkSaleHistory.bind(this);
     this.handleLinkCloseShift = this.handleLinkCloseShift.bind(this);
     this.handleOnMakePayment = this.handleOnMakePayment.bind(this);
@@ -627,7 +624,7 @@ export default class Retail extends Component {
     });
   }
 
-  handleOnSelectProductSearchList(product, productVariants) {
+  handleOnSelectProductSearchList = (product, productVariants) => {
     if (this.openFormSaleRegisration()) {
       return;
     }
@@ -785,7 +782,7 @@ export default class Retail extends Component {
     });
   }
 
-  handleSetFullScreen() {
+  handleSetFullScreen = () => {
     const element = document.getElementById("center-container");
 
     if (element.classList.contains("full-screen")) {

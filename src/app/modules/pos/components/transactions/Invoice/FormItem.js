@@ -43,8 +43,9 @@ import {
     InputTextArea
 } from "../../../../common/elements/ant-ui";
 import "./formItem.css";
-import Enum from "../../../enums/index";
+import Enum from "../../../enums";
 import EnumProduct from "../../../../inventory/enums";
+import EnumCustomer from "../../../../crm/enum";
 import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
@@ -84,6 +85,7 @@ class NewInvoice extends React.PureComponent {
     state = {
         fetching: false,
         customers: [],
+        selectedCustomer: null,
         productSearch: [],
         formData: {},
         loading: false,
@@ -98,7 +100,8 @@ class NewInvoice extends React.PureComponent {
         deleteSerialData: {},
         exchangeRate: null,
         selectedSerials: []
-    }
+    };
+
     action = new URLSearchParams(window.location.search).get("action");
     modalTitle = "";
     entryColumn = [
@@ -331,6 +334,9 @@ class NewInvoice extends React.PureComponent {
                     unitName: "",
                     cost: 0,
                     price: 0,
+                    retailPrice: 0,
+                    wholePrice: 0,
+                    distributePrice: 0,
                     discount: 0,
                     amount: 0,
                     status: 1,
@@ -538,7 +544,6 @@ class NewInvoice extends React.PureComponent {
     }
 
     save(invoice) {
-
         this.setState({saveLoading: true});
         if (this.id) {
             InvoiceService.update(invoice, this.id)
@@ -575,6 +580,27 @@ class NewInvoice extends React.PureComponent {
             .catch(() => message.error("Error"))
             .finally(() => this.setState({saveLoading: false}));
         }
+    }
+
+    refreshPrice = (selectedCustomer) => {
+        this.setState(prevState => {
+            return {
+                transactionEntries: prevState.transactionEntries.map((transactionEntry, index) => {
+                    if (selectedCustomer.type === EnumCustomer.CUSTOMER_TYPE.RETAIL_SALE) {
+                        transactionEntry.price = transactionEntry.retailPrice;
+                    } else if (selectedCustomer.type === EnumCustomer.CUSTOMER_TYPE.WHOLE_SALE) {
+                        transactionEntry.price = transactionEntry.wholePrice;
+                    } else if (selectedCustomer.type === EnumCustomer.CUSTOMER_TYPE.DISTRIBUTOR) {
+                        transactionEntry.price = transactionEntry.distributePrice;
+                    }
+                    
+                    transactionEntry.amount = transactionEntry.quantity * transactionEntry.price;
+                    this.props.form.setFieldsValue({[`price[${index}]`]: transactionEntry.price});
+
+                    return transactionEntry;
+                })
+            };
+        });
     }
 
     onChangeDescription = (e, index) => {
@@ -824,12 +850,15 @@ class NewInvoice extends React.PureComponent {
             if (!amount || amount < 0) amount = 0;
             preState.transactionEntries[index].price = price;
             preState.transactionEntries[index].amount = amount;
+
             let discount = this.props.form.getFieldValue("discountField");
             let total = this.getTotal(preState.transactionEntries);
+
             if (preState.formData.discountType === Enum.DISCOUNT_TYPE.PERCENTAGE) {
                 discount = this.util.getValueFromPercentage(total, discount);
             }
             preState.formData.discount = discount;
+
             return preState;
         });
     }
@@ -1061,6 +1090,7 @@ class NewInvoice extends React.PureComponent {
         let isProductVariant = product.productOption === EnumProduct.PRODUCT_VARIANT;
         let discount = this.props.form.getFieldValue("discountField");
         let type = this.props.form.getFieldValue("discountType");
+
         if (isProductVariant && isRequestVariantForm) {
             this.setState({
                 selectedProduct: product,
@@ -1072,6 +1102,23 @@ class NewInvoice extends React.PureComponent {
         } else if (productVariant && productVariant.length > 0) {
             productVariant = productVariant[0];
             productVariant.name = isProductVariant ? productVariant.name : "";
+        }
+
+        let price = productVariant.price;
+        const selectedCustomer = this.state.customers.find(value => value.id === this.props.form.getFieldValue("customerId"));
+        
+        if (selectedCustomer) {
+            switch (selectedCustomer.type) {
+                case EnumCustomer.CUSTOMER_TYPE.RETAIL_SALE:
+                    price = productVariant.price;
+                    break;
+                case EnumCustomer.CUSTOMER_TYPE.WHOLE_SALE:
+                    price = productVariant.wholePrice;
+                    break;
+                case EnumCustomer.CUSTOMER_TYPE.DISTRIBUTOR:
+                    price = productVariant.distributePrice;
+                    break;
+            }
         }
         
         const existingProductList = this.state.transactionEntries;
@@ -1087,7 +1134,10 @@ class NewInvoice extends React.PureComponent {
                 quantity: 1,
                 unitName: product.unit.name,
                 cost: productVariant.cost,
-                price: productVariant.price,
+                price,
+                retailPrice: productVariant.price,
+                wholePrice: productVariant.wholePrice,
+                distributePrice: productVariant.distributePrice,
                 discount: 0,
                 amount: (productVariant.price * 1),
                 status: 1,
@@ -1115,7 +1165,10 @@ class NewInvoice extends React.PureComponent {
                     quantity: 1,
                     unitName: product.unit.name,
                     cost: productVariant.cost,
-                    price: productVariant.price,
+                    price,
+                    retailPrice: productVariant.price,
+                    wholePrice: productVariant.wholePrice,
+                    distributePrice: productVariant.distributePrice,
                     discount: 0,
                     amount: (productVariant.price * 1),
                     status: 1,
@@ -1223,8 +1276,10 @@ class NewInvoice extends React.PureComponent {
         });
     }
 
-    onSelectCustomer(value) {
-        if (value) {
+    onSelectCustomer(customerId) {
+        if (customerId) {
+            const selectedCustomer = this.state.customers.find(value => value.id === customerId);
+            this.refreshPrice(selectedCustomer);
             this.textRequiredCustomer = "";
         } else {
             this.textRequiredCustomer = <Translate id="text_required_customer" />;
@@ -1564,7 +1619,7 @@ class NewInvoice extends React.PureComponent {
                             form={this.props.form}/>  
                         <Col md={24}>
                             <Table 
-                                rowKey={((record, index) => index)}
+                                rowKey={(record, index) => `${Date.now() + index}`}
                                 columns={this.entryColumn}
                                 className="table-form-invoice-entry"
                                 dataSource={this.state.transactionEntries}

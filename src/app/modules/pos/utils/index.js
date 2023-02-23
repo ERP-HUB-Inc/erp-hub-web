@@ -44,17 +44,17 @@ class Util {
 
       if (selectedFieldPrice === productFieldPrice.distributePrice) {
          if (product[selectedFieldPrice] > 0) {
-         return selectedFieldPrice;
+            return selectedFieldPrice;
          } else if (product[productFieldPrice.wholePrice] > 0) {
-         return productFieldPrice.wholePrice;
+            return productFieldPrice.wholePrice;
          } else {
-         return productFieldPrice.price;
+            return productFieldPrice.price;
          }
       } else if (selectedFieldPrice === productFieldPrice.wholePrice) {
          if (product[selectedFieldPrice] > 0) {
-         return selectedFieldPrice;
+            return selectedFieldPrice;
          } else {
-         return productFieldPrice.price;
+            return productFieldPrice.price;
          }
       } else {
          return selectedFieldPrice;
