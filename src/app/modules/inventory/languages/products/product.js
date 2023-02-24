@@ -834,5 +834,54 @@ export default {
    "text_free": [
       "Free",
       "ឥតគិតថ្លៃ"
+   ],
+
+   "text_when_customer": [
+      "When a customer",
+      "នៅពេលដែលអតិថិជន"
+   ],
+
+   "text_then_will_be": [
+      "Then will be",
+      "បន្ទាប់មកនឹងត្រូវបាន"
+   ],
+
+   "text_buy": [
+      "Buy",
+      "ទិញ"
+   ],
+
+   "text_spend": [
+      "Spend",
+      "ចំណាយ"
+   ],
+
+   "text_get": [
+      "Get",
+      "ទទួលបាន"
+   ],
+
+   "text_save_amount": [
+      "Save",
+      "សន្សំ"
+   ],
+
+   "text_buy_the_following_item": [
+      "Buy the Following Items",
+      "Buy the Following Items"
+   ],
+
+   "text_spend_the_following_amount": [
+      "Spend the Following Amount"
+   ],
+
+   "text_get_following_item": [
+      "Get the following Items",
+      "Get the following Items"
+   ],
+
+   "text_save_certain_amount": [
+      "Save a certain amount",
+      "Save a certain amount"
    ]
 };

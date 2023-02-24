@@ -213,10 +213,7 @@ export default class AdvanceDiscount extends React.Component {
     ];
 
     if (this.props.form.getFieldValue("then") === getItem.SAVE_AMOUNT) {
-      getDiscountType = [
-        {value: "%", title: "%"},
-        {value: "$", title: "$"}
-      ];
+      getDiscountType[0].disabled = true;
     }
 
     const promotionCriteria = formData.promotionCriteria;
@@ -234,18 +231,20 @@ export default class AdvanceDiscount extends React.Component {
           <Col md={6}>
             <Select
               name="when"
-              label="When a customer"
-              placeholder={"By following item"}
-              defaultValue={promotionCriteria.when}
+              label={<Translate id="text_when_customer" />}
+              placeholder={`${stringTranslate("text_buy_the_following_item", this.props.locale)}`}
+              defaultValue={promotionCriteria.when ? promotionCriteria.when : whenBuy.BUY_ITEMS}
               dataSource={[
-                {value: "BUY_ITEMS", name: "By Following Items"},
-                {value: "SPEND_AMOUNT", name: "By Following Amount"}
+                {value: whenBuy.BUY_ITEMS, name: <Translate id="text_buy_the_following_item" />},
+                {value: whenBuy.SPEND_AMOUNT, name: <Translate id="text_spend_the_following_amount" />}
               ]}
               style={{width: 280}}
               form={form} />
           </Col>
           
-          <Col md={2} style={{textAlign: "center", marginTop: 30}}>By</Col>
+          <Col md={2} style={{textAlign: "center", marginTop: 30}}>
+            {this.props.form.getFieldValue("when") === whenBuy.SPEND_AMOUNT ? <Translate id="text_spend" /> : <Translate id="text_buy" /> }
+          </Col>
           <Col md={4}>
             {
               this.props.form.getFieldValue("when") === whenBuy.SPEND_AMOUNT ?
@@ -318,17 +317,19 @@ export default class AdvanceDiscount extends React.Component {
           <Col md={6}>
             <Select
               name="then"
-              label="Then will be"
-              placeholder={"By following item"}
-              defaultValue={promotionCriteria.then}
+              label={<Translate id="text_then_will_be" />}
+              placeholder={`${stringTranslate("text_get_following_item", this.props.locale)}`}
+              defaultValue={promotionCriteria.then ? promotionCriteria.then : getItem.GET_ITEMS}
               dataSource={[
-                {value: "GET_ITEMS", name: "By Following Items"},
-                {value: "SAVE_AMOUNT", name: "By Following Amount"}
+                {value: getItem.GET_ITEMS, name: <Translate id="text_get_following_item" />},
+                {value: getItem.SAVE_AMOUNT, name: <Translate id="text_save_certain_amount" />}
               ]}
               style={{width: 280}}
               form={form} />
           </Col>
-          <Col md={2} style={{textAlign: "center", paddingTop: 30}}>Get</Col>
+          <Col md={2} style={{textAlign: "center", paddingTop: 30}}>
+            <Translate id={this.props.form.getFieldValue("then") === getItem.SAVE_AMOUNT ? "text_save_amount" : "text_get"} />
+          </Col>
           <Col md={3} style={{marginTop: -6}}>
             <RadioNormal
               name="discountType"
