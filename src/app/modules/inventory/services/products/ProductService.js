@@ -9,10 +9,10 @@ class ProductService extends BaseService {
       this.initializeRoute();
    }
 
-   getPromotionByProductVariantId(productVariantId) {
+   getPromotionByProductVariantId(productVariantId, orderQuantity = 0, orderAmount = 0) {
       this.setHeader();
       return this.GET({ 
-         url: `${this.baseUrl}/promotion/${productVariantId}`,
+         url: `${this.baseUrl}/promotion/${productVariantId}?orderQuantity=${orderQuantity}&orderAmount=${orderAmount}`,
          headers: this.header
       });
    }

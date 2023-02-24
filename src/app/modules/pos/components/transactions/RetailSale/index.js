@@ -4,7 +4,6 @@ import {
   isAndroid,
   isIOS
 } from "react-device-detect";
-// import sweetalert from "sweetalert";
 import _ from "lodash";
 import ProductTypeList from "./ProductTypeList";
 import DiscountSetup from "./DiscountSetup";
@@ -12,13 +11,11 @@ import TaxSetting from "./TaxSetting";
 import Enum from "../../../enums";
 import InventoryEnum from "../../../../inventory/enums";
 import HREnum from "../../../../hr/enums";
-// import CommonUtil from "../../../../common/util";
 import CRMUtil from "../../../../crm/util";
 import SettingEnum from "../../../../pos/enums";
 import TransactionAction from "../../../action/transaction/transaction";
 import TransactionService from "../../../services/transactions/TransactionService";
 import Constant from "../../../constants/transactions/transaction";
-// import ConstantDevice from "../../../constants/settings/device";
 import CurrencyExchangeService from "../../../services/settings/CurrencyExchangeService";
 import ReceiptTemplateService from "../../../../pos/services/settings/ReceiptTemplateService";
 import PaymentMethodAction from "../../../../pos/action/settings/paymentMethod";
@@ -88,13 +85,12 @@ export default class Retail extends Component {
     this.hadDidUpdateCheckDevice = false;
     this.productWidth = 0;
     this.service = TransactionService;
+    this.timer = null;
 
-    this.handleLinkSaleHistory = this.handleLinkSaleHistory.bind(this);
     this.handleLinkCloseShift = this.handleLinkCloseShift.bind(this);
     this.handleOnMakePayment = this.handleOnMakePayment.bind(this);
     this.handleCancelMakePayment = this.handleCancelMakePayment.bind(this);
     this.handleOnGetTaxList = this.handleOnGetTaxList.bind(this);
-    this.handleOnChangOrderField = this.handleOnChangOrderField.bind(this);
     this.handleOnSetupDiscount = this.handleOnSetupDiscount.bind(this);
     this.handleOnOpenTaxSetting = this.handleOnOpenTaxSetting.bind(this);
     this.handleCancelTaxSetting = this.handleCancelTaxSetting.bind(this);
@@ -110,68 +106,6 @@ export default class Retail extends Component {
     this.handleOnBlurSearchProduct = this.handleOnBlurSearchProduct.bind(this);
     this.handleOnAutoSelectProductAfterSearchResult = this.handleOnAutoSelectProductAfterSearchResult.bind(this);
     this.handleOnChangOrderFieldBlur = this.handleOnChangOrderFieldBlur.bind(this);
-  }
-
-  componentDidUpdate() {    
-    if (this.props.customerAdd.added && this.props.customerAdd.response.data) {
-      this.getSelectedCustomer(this.props.customerAdd.response.data);
-      this.props.dispatch(CustomerAction.reset(CustomerConstant.RESET_ADD_CUSTOMERS));
-    }
-
-    if (this.props.open.added) {
-      this.props.dispatch(OpenSaleRegistrationAction.last());
-      this.props.dispatch(OpenSaleRegistrationAction.reset(ConstantOpenRegistrationSale.RESET_OPEN_SALE_REGISTRATION));
-    }
-
-    if (this.props.productVariant.fetched) {
-      this.handleOnSelectProduct(this.state.selectedProduct, this.props.productVariant.list, false);// false: cause don't show popup variant product
-      this.props.dispatch(ProductVariantAction.reset(ProductVariantConstant.RESET_PRODUCT_VARIANT));
-    }
-
-    if (this.props.posPay.error) {
-      let errorCode = this.Util.getErrorCodeFromState(this.props.posPay.error);
-      let messageProductError = this.Util.getErrorMessageFromState(this.props.posPay.error);
-      messageProductError = JSON.parse(messageProductError);
-      const productVariantErrorId = messageProductError.productVariantId;
-      const productErrorResult = this.state.productOrderList.find(productOrder => productOrder.productVariantId === productVariantErrorId);
-
-      let message = "Something went wrong";
-      if (errorCode === Enum.LOCATION_NOT_FOUND) {
-        message = this.CATranslate("error_location_not_found", this.props.locale);
-      } else if (errorCode === InventoryEnum.PRODUCT_NOT_FOUND) {
-        message = this.CATranslate("error_product_not_found", this.props.locale);
-      } else if (errorCode === InventoryEnum.PRODUCT_QTY_NOT_ENOUGHT) {
-        message = this.CATranslate("text_qty_not_enought_for_sale", this.props.locale);
-        message = `${message} ${messageProductError.quantityInStock}`;
-      } else if (errorCode === Enum.SERIAL_NUMBER_REQUIRE) {
-        message = this.CATranslate("error_serial_number_require", this.props.locale);
-      }
-
-      this.Message.error(`${productErrorResult.name}/${productErrorResult.variantName} ${message}`);
-      this.props.dispatch(TransactionAction.reset(Constant.RESET_ERROR_TRANSACTION));
-    }
-    
-    if (this.props.products.fetched) {
-      this.setState({
-        productList: this.state.productList.concat(this.props.products.list),
-        isRequestLoadingMore: false
-      });
-      this.props.dispatch(ProductAction.reset(ProductConstant.RESET_PARTIAL_PRODUCT));
-    }
-
-    if (!this.hasDidUpdate && this.props.openSaleRegistration.fetched && this.props.open.showForm) {
-      if(!this.isOpenSaleRegistrationClosed() && this.isSetFocusOnSearchProduct){
-        this.isSetFocusOnSearchProduct = true;
-      }
-
-      if (this.isOpenSaleRegistrationClosed()) {
-        this.setState({
-          modalContent: <FormOpenSaleRegistration/>
-        });
-      }
-
-      this.hasDidUpdate = true;
-    }
   }
 
   componentDidMount() {
@@ -237,9 +171,68 @@ export default class Retail extends Component {
         }
       }
     });
+  }
 
-    // RESTORE CURRENT RECEIPT
-    //this.restoreReceipt(Enum.CURRENT_RECEIPT);
+  componentDidUpdate() {    
+    if (this.props.customerAdd.added && this.props.customerAdd.response.data) {
+      this.getSelectedCustomer(this.props.customerAdd.response.data);
+      this.props.dispatch(CustomerAction.reset(CustomerConstant.RESET_ADD_CUSTOMERS));
+    }
+
+    if (this.props.open.added) {
+      this.props.dispatch(OpenSaleRegistrationAction.last());
+      this.props.dispatch(OpenSaleRegistrationAction.reset(ConstantOpenRegistrationSale.RESET_OPEN_SALE_REGISTRATION));
+    }
+
+    if (this.props.productVariant.fetched) {
+      this.handleOnSelectProduct(this.state.selectedProduct, this.props.productVariant.list, false);// false: cause don't show popup variant product
+      this.props.dispatch(ProductVariantAction.reset(ProductVariantConstant.RESET_PRODUCT_VARIANT));
+    }
+
+    if (this.props.posPay.error) {
+      let errorCode = this.Util.getErrorCodeFromState(this.props.posPay.error);
+      let messageProductError = this.Util.getErrorMessageFromState(this.props.posPay.error);
+      messageProductError = JSON.parse(messageProductError);
+      const productVariantErrorId = messageProductError.productVariantId;
+      const productErrorResult = this.state.productOrderList.find(productOrder => productOrder.productVariantId === productVariantErrorId);
+
+      let message = "Something went wrong";
+      if (errorCode === Enum.LOCATION_NOT_FOUND) {
+        message = this.CATranslate("error_location_not_found", this.props.locale);
+      } else if (errorCode === InventoryEnum.PRODUCT_NOT_FOUND) {
+        message = this.CATranslate("error_product_not_found", this.props.locale);
+      } else if (errorCode === InventoryEnum.PRODUCT_QTY_NOT_ENOUGHT) {
+        message = this.CATranslate("text_qty_not_enought_for_sale", this.props.locale);
+        message = `${message} ${messageProductError.quantityInStock}`;
+      } else if (errorCode === Enum.SERIAL_NUMBER_REQUIRE) {
+        message = this.CATranslate("error_serial_number_require", this.props.locale);
+      }
+
+      this.Message.error(`${productErrorResult.name}/${productErrorResult.variantName} ${message}`);
+      this.props.dispatch(TransactionAction.reset(Constant.RESET_ERROR_TRANSACTION));
+    }
+    
+    if (this.props.products.fetched) {
+      this.setState({
+        productList: this.state.productList.concat(this.props.products.list),
+        isRequestLoadingMore: false
+      });
+      this.props.dispatch(ProductAction.reset(ProductConstant.RESET_PARTIAL_PRODUCT));
+    }
+
+    if (!this.hasDidUpdate && this.props.openSaleRegistration.fetched && this.props.open.showForm) {
+      if(!this.isOpenSaleRegistrationClosed() && this.isSetFocusOnSearchProduct){
+        this.isSetFocusOnSearchProduct = true;
+      }
+
+      if (this.isOpenSaleRegistrationClosed()) {
+        this.setState({
+          modalContent: <FormOpenSaleRegistration/>
+        });
+      }
+
+      this.hasDidUpdate = true;
+    }
   }
 
   componentWillUnmount() {
@@ -262,6 +255,13 @@ export default class Retail extends Component {
 
   appendProductTaxList(productOrderList) {
     this.setState({productTaxList: POSUtil.appendProductTaxList(productOrderList)});
+  }
+
+  appendFreeProduct(orderProducts, freeByVariantId, freeProducts) {
+    const foundOrderProduct = orderProducts.find(value => value.productVariantId === freeByVariantId);
+    if (foundOrderProduct) {
+      foundOrderProduct["freeProducts"] = freeProducts;
+    }
   }
 
   appendProductOrder(targetList, product, productVariant, newPrice, discount, discountType) {
@@ -299,7 +299,53 @@ export default class Retail extends Component {
     });
   }
 
-  getSummaryTotal() {
+   async getProductPromotion(productVariantId, orderQuantity, orderAmount) {
+      let freeProducts = [];
+      let newPrice;
+      let discountType;
+
+      try {
+         const result = await ProductService.getPromotionByProductVariantId(productVariantId, orderQuantity, orderAmount);
+         
+         if (result && result.data) {
+            const promotion = result.data;
+
+            if (promotion.type === "advance") {
+               if (promotion.then === "GET_ITEMS") {
+                  freeProducts = promotion.freeProducts.map(freeProduct => ({
+                     productId: freeProduct.productId,
+                     productVariantId: freeProduct.productVariantId,
+                     freeByVariantId: productVariantId,
+                     name: `${freeProduct.productName} - Free`,
+                     description: `${freeProduct.productName} - Free`,
+                     barcode: freeProduct.barcode,
+                     quantity: freeProduct.quantity,
+                     price: freeProduct.price,
+                     newPrice: freeProduct.newPrice,
+                     discount: 100,
+                     discountType: 1,
+                     status: this.Enum.ACTIVE
+                  }));
+               }
+
+               discountType = promotion.type;
+            } else {
+               discountType = "basic";
+               newPrice = promotion.price;
+            }
+         }
+      } catch (error) {
+
+      }
+
+      return {
+         discountType,
+         newPrice,
+         freeProducts
+      };
+   }
+
+   getSummaryTotal() {
       const summaryTotal = POSUtil.getSummaryTotalInOrder(this.state.productOrderList, this.state.customerFieldPrice);
       let discountAmount = 0;
       let discountTypeStr = "";
@@ -322,7 +368,7 @@ export default class Retail extends Component {
          discountTypeStr,
          discountType: this.state.discountValue.type
       };
-  }
+   }
 
   getSelectedCustomer = (selectedCustomer) => {
     this.setState({selectedCustomer});
@@ -429,9 +475,11 @@ export default class Retail extends Component {
     this.setState({modalContent: null});
   }
 
-  handleExpandOrderItem = (expandOrderItemRow, productOrderIndex, status) => {
-    expandOrderItemRow = `${expandOrderItemRow}-${status}`;
+  handleExpandOrderItem = (expandOrderItem, productOrderIndex, status) => {
+    const expandOrderItemRow = `${expandOrderItem.productVariantId}-${status}`;
+
     this.handleonSearchFails();
+    
     if (this.state.expandOrderItemRow.includes(expandOrderItemRow)) {
       this.setState({
         expandOrderItemRow: [],
@@ -446,12 +494,14 @@ export default class Retail extends Component {
   }
 
   handleOnSelectProduct = async (product, productVariant, isRequestVariantForm = true) => {
+      let freeProducts = [];
       let newPrice = null;
       let {
-         initialOrderDiscount,
-         initialOrderDiscountType,
-         isDiscountHasAdded,
-         discountValue
+          productOrderList,
+          initialOrderDiscount,
+          initialOrderDiscountType,
+          isDiscountHasAdded,
+          discountValue
       } = this.state;
 
       // POPUP INPUT CASH REQUIRE IF YOU NOT YET OPEN
@@ -469,55 +519,65 @@ export default class Retail extends Component {
          });
          return;
       } else if (productVariant && productVariant.length === 1) {
-         productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
-         productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
-         
-         try {
-            const promotion = await ProductService.getPromotionByProductVariantId(productVariant.id);
-
-            if (promotion && promotion.data) {
-               newPrice = promotion.data.price;
-               const saveAmount = productVariant.price - newPrice;
-               initialOrderDiscount = POSUtil.getPercentageByValue(saveAmount, productVariant.price);
-               isDiscountHasAdded = true;
-               discountValue = {
-                  type: Enum.DISCOUNT_TYPE.EACH_ITEM
-               };
-            }
-         } catch (error) {}
+          productVariant = productVariant[0]; // ACCESS TO PRODUCT VARIANT DEFAUTL FOR STARTDARD PRODUCT
+          productVariant.name = isProductVariant ? productVariant.name : ""; // Remove product variant name away from label table
       }
 
-      const existingProductOrderList = this.state.productOrderList;
-      if (existingProductOrderList.length === 0) {
-         this.appendProductOrder(existingProductOrderList, product, productVariant, newPrice, initialOrderDiscount, initialOrderDiscountType);
+      // Checking for promotion
+      let orderQuantity = 1;
+      let orderAmount = 0;
+      const foundOrderProduct = productOrderList.find(value => value.productVariantId === productVariant.id);
+
+      if (foundOrderProduct) {
+         orderQuantity += foundOrderProduct.quantity;
+         orderAmount += foundOrderProduct.quantity * foundOrderProduct.price;
+      }
+      const promotion = await this.getProductPromotion(productVariant.id, orderQuantity, orderAmount);
+      if (promotion.discountType === "basic") {
+         newPrice = promotion.newPrice;
+         const saveAmount = productVariant.price - newPrice;
+
+         initialOrderDiscount = POSUtil.getPercentageByValue(saveAmount, productVariant.price);
+         isDiscountHasAdded = true;
+         discountValue = {type: Enum.DISCOUNT_TYPE.EACH_ITEM};
+      } else {
+         freeProducts = promotion.freeProducts;
+      }
+
+      //##End checking promotion
+
+      if (productOrderList.length === 0) {
+         this.appendProductOrder(productOrderList, product, productVariant, newPrice, initialOrderDiscount, initialOrderDiscountType);
       } else {
          let isNotTheSame = true;
-         existingProductOrderList.forEach((productOrder, productOrderIndex) => {
+         productOrderList.forEach((productOrder, productOrderIndex) => {
          if (productVariant && productOrder.productVariantId === productVariant.id && productOrder.status === this.Enum.ACTIVE) {
             isNotTheSame = false;
-            existingProductOrderList[productOrderIndex]["quantity"] += this.state.initialOrderQuantity;
-            existingProductOrderList[productOrderIndex]["status"] = this.Enum.ACTIVE;
+            productOrderList[productOrderIndex]["quantity"] += this.state.initialOrderQuantity;
+            productOrderList[productOrderIndex]["status"] = this.Enum.ACTIVE;
          }
          });
 
-         if (isNotTheSame) this.appendProductOrder(existingProductOrderList, product, productVariant, null, initialOrderDiscount, initialOrderDiscountType);
+         if (isNotTheSame) this.appendProductOrder(productOrderList, product, productVariant, null, initialOrderDiscount, initialOrderDiscountType);
       }
 
-      this.appendProductTaxList(existingProductOrderList);
-
+      this.appendProductTaxList(productOrderList);
+      this.appendFreeProduct(productOrderList, productVariant.id, freeProducts);
+      
       this.setState({
-         productOrderList: existingProductOrderList,
+         productOrderList,
          isDiscountHasAdded,
          discountValue
       });
       
-      this.saveReceipt(Enum.CURRENT_RECEIPT, existingProductOrderList);
+      this.saveReceipt(Enum.CURRENT_RECEIPT, productOrderList);
       
       this.props.form.setFieldsValue({searchProduct: ""});
   }
 
   removeProductFromOrderList = (productVariant) => {
-    const productOrderList = this.state.productOrderList.filter(productOrder => productOrder.productVariantId !== productVariant.productVariantId);
+    let productOrderList = this.state.productOrderList.filter(productOrder => productOrder.productVariantId !== productVariant.productVariantId);
+
     this.setState({
       productOrderList,
       isDiscountHasAdded: productOrderList.length > 0 ? this.state.isDiscountHasAdded : false
@@ -545,51 +605,54 @@ export default class Retail extends Component {
     });
   }
 
-  handleOnChangOrderFieldBlur(){
-    this.setState({expandRowOrderIndex: null});
-  }
+   handleOnChangOrderFieldBlur(){
+      this.setState({expandRowOrderIndex: null});
+   }
 
-  handleonSearchFails(){
-    this.isSetFocusOnSearchProduct = false;
-  }
+   handleonSearchFails(){
+      this.isSetFocusOnSearchProduct = false;
+   }
 
-  handleOnChangOrderField(event, proderOrderRowIndex, field = "quantity") {
-    this.handleonSearchFails();
-    const value = parseFloat(event.target.value);
-    let existingProductOrderList = this.state.productOrderList;
-    existingProductOrderList[proderOrderRowIndex][field] = isNaN(value) ? 0 : value;
+   handleOnChangOrderField = async (event, proderOrderRowIndex, field = "quantity") => {
+      this.handleonSearchFails();
 
-    if (field === "discount") {
-      if (!isNaN(value) && value > 0) {
-        this.setState({
-          isDiscountHasAdded: true,
-          discountValue: {
-            type: Enum.DISCOUNT_TYPE.EACH_ITEM
-          }
-        });
-      } else {
-        existingProductOrderList[proderOrderRowIndex]["discount"] = 0;
-        const isDiscountHasAdded = existingProductOrderList.filter(productOrderList => parseFloat(productOrderList.discount) > 0 ).length > 0;
-        this.setState({
-          isDiscountHasAdded,
-          discountValue: {
-            type: isDiscountHasAdded ? Enum.DISCOUNT_TYPE.EACH_ITEM : Enum.DISCOUNT_TYPE.PERCENTAGE,
-            value: isDiscountHasAdded ? this.state.discountValue.value : 0
-          }
-        });
+      const value = parseFloat(event.target.value);
+      let orderProducts = this.state.productOrderList;
+      const orderProduct = orderProducts[proderOrderRowIndex];
+
+      orderProducts[proderOrderRowIndex][field] = isNaN(value) ? 0 : value;
+
+      if (field === "discount") {
+         if (!isNaN(value) && value > 0) {
+            this.setState({
+               isDiscountHasAdded: true,
+               discountValue: {
+               type: Enum.DISCOUNT_TYPE.EACH_ITEM
+               }
+            });
+         } else {
+            orderProducts[proderOrderRowIndex]["discount"] = 0;
+            const isDiscountHasAdded = orderProducts.filter(productOrderList => parseFloat(productOrderList.discount) > 0 ).length > 0;
+            this.setState({
+               isDiscountHasAdded,
+               discountValue: {
+               type: isDiscountHasAdded ? Enum.DISCOUNT_TYPE.EACH_ITEM : Enum.DISCOUNT_TYPE.PERCENTAGE,
+               value: isDiscountHasAdded ? this.state.discountValue.value : 0
+               }
+            });
+         }
+         const price = POSUtil.getTotalAmountAfterDiscount(1, orderProducts[proderOrderRowIndex][this.state.customerFieldPrice], orderProducts[proderOrderRowIndex]["discount"]);
+         orderProducts[proderOrderRowIndex]["newPrice"] = price;
+         this.props.form.setFieldsValue({[`price[${proderOrderRowIndex}]`]: price});
       }
-      const price = POSUtil.getTotalAmountAfterDiscount(1, existingProductOrderList[proderOrderRowIndex][this.state.customerFieldPrice], existingProductOrderList[proderOrderRowIndex]["discount"]);
-      existingProductOrderList[proderOrderRowIndex]["newPrice"] = price;
-      this.props.form.setFieldsValue({[`price[${proderOrderRowIndex}]`]: price});
-    }
 
     if (field === "newPrice") {
-      const newPrice = existingProductOrderList[proderOrderRowIndex]["newPrice"];
-      let price = existingProductOrderList[proderOrderRowIndex][this.state.customerFieldPrice];
+      const newPrice = orderProducts[proderOrderRowIndex]["newPrice"];
+      let price = orderProducts[proderOrderRowIndex][this.state.customerFieldPrice];
       if (newPrice < price) { // DISCOUNT EVENT APPEAR
         const discountAmount = price - newPrice;
         const discount = POSUtil.getDiscountRateByAmount(price, discountAmount);
-        existingProductOrderList[proderOrderRowIndex]["discount"] = discount;
+        orderProducts[proderOrderRowIndex]["discount"] = discount;
         this.props.form.setFieldsValue({[`discount[${proderOrderRowIndex}]`]: discount});
         this.setState({
           isDiscountHasAdded: true,
@@ -598,31 +661,37 @@ export default class Retail extends Component {
           }
         });
       } else {
-        this.setState({
-          isDiscountHasAdded: false
-        });
-        existingProductOrderList[proderOrderRowIndex]["discount"] = 0;
+        this.setState({isDiscountHasAdded: false});
+        orderProducts[proderOrderRowIndex]["discount"] = 0;
         this.props.form.setFieldsValue({[`discount[${proderOrderRowIndex}]`]: 0});
       }
     }
 
-    if (field === "description") {
-      existingProductOrderList[proderOrderRowIndex]["description"] = event.target.value;
-    }
+      if (field === "description") {
+         orderProducts[proderOrderRowIndex]["description"] = event.target.value;
+      }
 
-    // UPDATE SUMMARY TAX LIST
-    this.appendProductTaxList(existingProductOrderList);
-    this.setState({
-      productOrderList: existingProductOrderList,
-    });
-  }
+      if (field === "quantity") {
+         const orderQuantity = value;
+         const orderAmount = orderQuantity * orderProduct.price;
+         const promotion = await this.getProductPromotion(orderProduct.productVariantId, orderQuantity, orderAmount);
+         if (promotion.discountType === "basic") {
+            
+         } else {
+            this.appendFreeProduct(orderProducts, orderProduct.productVariantId, promotion.freeProducts);
+         }
+      }
 
-  handleOnAddNewCustomer = () => {
-    this.props.dispatch(CustomerAction.showForm());
-    this.setState({
-      modalContent: <FormCreateCustomer />
-    });
-  }
+      this.appendProductTaxList(orderProducts);
+      this.setState({productOrderList: orderProducts});
+   }
+
+   handleOnAddNewCustomer = () => {
+      this.props.dispatch(CustomerAction.showForm());
+      this.setState({
+         modalContent: <FormCreateCustomer />
+      });
+   }
 
   handleOnSelectProductSearchList = (product, productVariants) => {
     if (this.openFormSaleRegisration()) {
@@ -808,7 +877,7 @@ export default class Retail extends Component {
     }
   }
 
-  handleLinkSaleHistory() {
+  handleLinkSaleHistory = () => {
     this.handleSetFullScreen();
 
     history.push("/transactions/invoice");
@@ -828,15 +897,6 @@ export default class Retail extends Component {
   handleOnRestoreReceipt(key) {
     this.restoreReceipt(key);
     this.setState({selectedReceiptType: key});
-  }
-
-  renderOutOfStock(product){
-    return(
-      Util.countProductQTYCurrentLocation(product, this.Util.getLocationId()) <= 0 && product.serialType !== InventoryEnum.SERIAL_TYPE.NON_INVENTORY ?
-        <div className="out-of-stock"><this.Translate id="text_out_of_stock" /></div>
-        : 
-        ""
-    );  
   }
 
   renderProductList() {
@@ -968,12 +1028,6 @@ export default class Retail extends Component {
       taxTotal,
       countTax
     } = POSUtil.getSummaryTax(this.state.productTaxList, <this.Translate id="text_no_tax"/>, this.CATranslate("text_taxes", this.props.locale));
-    
-    const leftSideElement = document.getElementById("wrap-product-box-list");
-    // let leftSideElementWidth = 0;
-    if (leftSideElement) {
-      // leftSideElementWidth = leftSideElement.offsetWidth;
-    }
 
     let categoryList = this.props.productsType.list;
     if (categoryList.length > 4) {
@@ -1022,16 +1076,6 @@ export default class Retail extends Component {
               :
               this.renderProductList()
           }
-          {/* {
-            this.props.products.fetching && this.state.isRequestLoadingMore ?
-              <div className="loading-more-spin" style={{left: leftSideElementWidth / 2}}>
-                <this.Spin />
-              </div>
-              :
-              <div className="load-more-button" style={{left: leftSideElementWidth / 2}} onClick={this.handleOnLoadMoreProduct}>
-                <span className="icon-move-down" style={{fontSize: "30pt"}}></span>
-              </div>
-          } */}
         </this.Row>
       </this.Col>
       <this.Col md="4" id="right-block">
@@ -1077,10 +1121,11 @@ export default class Retail extends Component {
         <div className="product-order-list">
           {
             this.state.productOrderList.map((productOrder, productOrderIndex) => 
-              productOrder.status === this.Enum.ARCHIVE ? "" :
-                <div className={`product-order-item ${this.state.expandOrderItemRow.includes(`${productOrder.productVariantId}-${productOrder.status}`) ? "expanded" : ""}`} key={productOrderIndex}>
+              <React.Fragment key={productOrderIndex}>
+                {/* Main Order Product */}
+                <div className={`product-order-item ${this.state.expandOrderItemRow.includes(`${productOrder.productVariantId}-${productOrder.status}`) ? "expanded" : ""}`}>
                   <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                    <div className="item" onClick={() => this.handleExpandOrderItem(productOrder.productVariantId, productOrderIndex, productOrder.status)}>
+                    <div className="item" onClick={() => this.handleExpandOrderItem(productOrder, productOrderIndex, productOrder.status)}>
                       <div className={`epxand-icon ${this.state.expandOrderItemRow.includes(`${productOrder.productVariantId}-${productOrder.status}`) ? "icon-move-down" : "icon-next"}`}></div>
                       <div className="description">
                         <div style={{ maxHeight: "20px", maxWidth: "160px", overflow: "hidden", wordBreak: "break-all" }}>
@@ -1101,22 +1146,9 @@ export default class Retail extends Component {
                           {productOrder.barcode}
                         </div>
 
-                        {
-                          productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN ?
-                            <div className="barcode-number return-order variant-name">
-                              <this.Translate id="text_return" />
-                            </div>
-                            :
-                            ""
-                        }
                       </div>
                       <div className="quantity">
-                        {
-                          productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN ?
-                            productOrder.quantity > 0 ? `-${productOrder.quantity}` : productOrder.quantity
-                            :
-                            `${productOrder.quantity}x`
-                        }
+                        {`${productOrder.quantity}x`}
                       </div>
                       <div className="price">
                         {
@@ -1133,10 +1165,10 @@ export default class Retail extends Component {
                       </div>
                     </div>
                     {
-                      productOrder.status === this.Enum.ACTIVE ?
-                        <div className="delete" onClick={() => this.handleOnRemoveProductFromOrderList(productOrder, productOrderIndex)}><span className="icon-delete"></span></div>
-                        :
-                        <div style={{ visibility: "hidden" }} className="delete" onClick={() => this.handleOnRemoveProductFromOrderList(productOrder, productOrderIndex, true)}><span className="icon-undo"></span></div>
+                      productOrder.status === this.Enum.ACTIVE && 
+                        <div className="delete" onClick={() => this.handleOnRemoveProductFromOrderList(productOrder, productOrderIndex)}>
+                          <span className="icon-delete"></span>
+                        </div>
                     }
                   </div>
                   <div className="product-order-item-detail">
@@ -1181,13 +1213,53 @@ export default class Retail extends Component {
                         disabled={this.Util.getCurrentUser().isAllowEditPrice === HREnum.ALLOW_EDIT_SALE_PRODUCT.NOT_ALLOW || productOrder.status === this.Enum.TRANSACTION_ENTRY_STATUS.RETURN}
                         form={this.props.form}
                       />
-                      {/* <div className="detail-inventory">
-                <span className="icon-help icon-padding-right"></span>Show Inventories & Details
-              </div> */}
                     </div>
                     {this.fieldNotation(productOrderIndex, productOrder)}
                   </div>
                 </div>
+
+                {/* Free Product Order */}
+                {
+                  Array.isArray(productOrder.freeProducts) && productOrder.freeProducts.map((freeProductOrder, freeProductIndex) => 
+                    <div className="product-order-item" key={freeProductIndex}>
+                      <img src={require("../../../../common/components/layout/styles/images/free.png")} alt="Free Product" style={{position: "absolute", top: 15, left: 5}}  />
+                      <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                        <div className="item">
+                          <div className="epxand-icon icon-next"></div>
+                          <div className="description">
+                            <div style={{ maxHeight: "20px", maxWidth: "160px", overflow: "hidden", wordBreak: "break-all" }}>
+                              <div className="name">
+                                {freeProductOrder.name}
+                              </div>
+                            </div>
+                            {
+                              freeProductOrder.variantName ?
+                                <div className="barcode-number variant-name" style={{ marginTop: 5 }}>
+                                  {freeProductOrder.variantName}
+                                </div>
+                                :
+                                ""
+                            }
+
+                            <div className="barcode-number" style={{ marginTop: 5 }}>
+                              {freeProductOrder.barcode}
+                            </div>
+
+                          </div>
+                          <div className="quantity">
+                            {`${freeProductOrder.quantity}x`}
+                          </div>
+                          <div className="price">
+                            <div className="main-price">
+                              {this.formatCurrency(0)}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div> 
+                  ) 
+                }
+              </React.Fragment>
             )
           }
         </div>
@@ -1213,7 +1285,7 @@ export default class Retail extends Component {
                   summaryTotal.discount > 0 ?
                     <div className="sub-total">
                       <div className="sub-total-title" style={{fontWeight: 600}}><this.Translate id="text_discount"/></div>
-                      <div className="sub-total-value">{this.formatCurrency(discountAmount * exchangeRate)}</div>
+                      <div className="sub-total-value" style={{color: "#e85757"}}>{this.formatCurrency(discountAmount * exchangeRate)}</div>
                     </div>
                     :
                     ""
@@ -1241,7 +1313,7 @@ export default class Retail extends Component {
                         <this.Translate id="text_discount"/>
                         {discountTypeStr}
                       </div>
-                      <div className="sub-total-value" style={{position: "relative"}}>
+                      <div className="sub-total-value" style={{position: "relative", color: "#e85757"}}>
                         {this.formatCurrency(discountAmount * exchangeRate)}
                       </div>
                     </div>

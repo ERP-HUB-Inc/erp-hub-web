@@ -150,31 +150,32 @@ class Util {
       }
 
       productOrderList.forEach(productOrder => {
-         const productTax = productOrder.taxDescription;
+         const productTax = productOrder.taxDescription ? productOrder.taxDescription : { taxRate: 0 };
          const totalTaxAmount = this.getTaxAmount(productOrder.newPrice * productOrder.quantity, productTax.taxRate);
+
          if (productTaxList.length === 0 && productTax.taxRate > 0) {
-         productTaxList.push({
-            name: productTax.taxName,
-            rate: productTax.taxRate,
-            totalTaxAmount
-         });
-         } else {
-         let isNotTheSame = true;
-         productTaxList.forEach((taxOfProduct, productTaxIndex) => {
-            if (taxOfProduct.rate === productTax.taxRate) {
-               isNotTheSame = false;
-               productTaxList[productTaxIndex]["totalTaxAmount"] += totalTaxAmount;
-            }
-         });
-         if (isNotTheSame && productTax.taxRate > 0) {
             productTaxList.push({
                name: productTax.taxName,
                rate: productTax.taxRate,
                totalTaxAmount
             });
          } else {
-            
-         }
+            let isNotTheSame = true;
+            productTaxList.forEach((taxOfProduct, productTaxIndex) => {
+               if (taxOfProduct.rate === productTax.taxRate) {
+                  isNotTheSame = false;
+                  productTaxList[productTaxIndex]["totalTaxAmount"] += totalTaxAmount;
+               }
+            });
+            if (isNotTheSame && productTax.taxRate > 0) {
+               productTaxList.push({
+                  name: productTax.taxName,
+                  rate: productTax.taxRate,
+                  totalTaxAmount
+               });
+            } else {
+               
+            }
          }
       });
       return productTaxList;

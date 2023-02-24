@@ -15,6 +15,7 @@ export default class Payment extends Modal {
     super(props);
     this.state = {
       ...this.state,
+      orderProducts: [],
       customerPaymentList: [],
       amountToPay: 0,
       isCustomerCredit: false,
@@ -32,10 +33,13 @@ export default class Payment extends Modal {
     this.width = window.innerWidth < 1000 ? window.innerWidth : 1000;
     this.height = window.innerHeight < 700 ? window.innerHeight - 10 : 700;
     this.currentUser = this.getCurrentUser();
-    this.handleOnMakePaymentWithCash = this.handleOnMakePaymentWithCash.bind(this);
     this.handleOnCompletePayment = this.handleOnCompletePayment.bind(this);
     this.handleOnSendMailReceipt = this.handleOnSendMailReceipt.bind(this);
     this.handleOnFocusInputAmount = this.handleOnFocusInputAmount.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({orderProducts: this.mapFreeProductsToOrder()});
   }
 
   componentDidUpdate() {
@@ -70,6 +74,20 @@ export default class Payment extends Modal {
   calculateBalance(grandTotal, amountToPay) {
     const balance = grandTotal - amountToPay;
     return balance < 0 ? 0 : Math.abs(balance);
+  }
+
+  mapFreeProductsToOrder() {
+    let orderProducts = [];
+    this.props.productOrderList.forEach(value => {
+      const orderProduct = {...value};
+      orderProducts.push(orderProduct);
+      if (Array.isArray(orderProduct.freeProducts)) {
+        orderProducts = orderProducts.concat(orderProduct.freeProducts);
+        delete orderProduct.freeProducts;
+      }
+    });
+
+    return orderProducts;
   }
 
   getGrandTotal() {
@@ -157,7 +175,7 @@ export default class Payment extends Modal {
     }
   }
 
-  handleOnMakePaymentWithCash(paymentMethod, paymentMethodIndex) {
+  handleOnMakePaymentWithCash = (paymentMethod, paymentMethodIndex) => {
     let amountToPay = this.props.form.getFieldValue("amountToPay"); // AMOUNT FROM INPUT OF CASHEIR
     let amountToPaySubCurrency = this.props.form.getFieldValue("amountToPaySubCurrency"); // AMOUNT FROM INPUT OF CASHEIR AS SUB CURRENCY
     let paymentMethodId = null;
@@ -218,7 +236,7 @@ export default class Payment extends Modal {
         total: this.getGrandTotalIncludeTax(),
         totalExcludeTax: summaryTotal.subTotal,
         type: Enum.TRANSACTION_TYPE.RECEIPT,
-        transactionEntries: this.props.productOrderList,
+        transactionEntries: this.state.orderProducts,
         paymentMethodId,
         transactionPaymentEntries: this.state.customerPaymentList
       };
@@ -306,6 +324,7 @@ export default class Payment extends Modal {
   }
 
   render() {
+    const orderProducts = this.state.orderProducts;
     const {
       summaryTotal,
       taxRate,
@@ -363,7 +382,7 @@ export default class Payment extends Modal {
           customerPaymentList: this.state.customerPaymentList,
           customer: this.props.customer,
           isCustomerCredit: this.state.isCustomerCredit,
-          productList: this.props.productOrderList,
+          productList: orderProducts,
           customerFieldPrice: this.props.customerFieldPrice,
           productTaxList: this.props.productTaxList,
           summaryTotal,
@@ -391,7 +410,7 @@ export default class Payment extends Modal {
             <div className="list-order-summary">
               <ul className="list-unstyled">
                 {
-                  this.props.productOrderList.map((productOrder, productOrderIndex) => 
+                  orderProducts.map((productOrder, productOrderIndex) => 
                     <li key={productOrderIndex}>
                       <div className="title">
                         {productOrder.name}
@@ -474,7 +493,7 @@ export default class Payment extends Modal {
                   <div className="text-uppercase grand-total-title">
                     <this.Translate id="text_total"/>
                   </div>
-                  <div className="total-quantity">{this.props.productOrderList.length} {summaryTotal.totalQuantity > 1 ? <this.Translate id="text_items"/> : <this.Translate id="text_item"/>}</div>
+                  <div className="total-quantity">{orderProducts.length} {summaryTotal.totalQuantity > 1 ? <this.Translate id="text_items"/> : <this.Translate id="text_item"/>}</div>
                 </div>
                 <div className="grand-total-value">
                   {this.formatCurrency(grandTotal * exchangeRate)}
