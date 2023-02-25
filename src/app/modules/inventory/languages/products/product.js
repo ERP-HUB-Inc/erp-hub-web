@@ -872,6 +872,7 @@ export default {
    ],
 
    "text_spend_the_following_amount": [
+      "Spend the Following Amount",
       "Spend the Following Amount"
    ],
 

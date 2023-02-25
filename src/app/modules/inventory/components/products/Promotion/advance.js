@@ -176,6 +176,7 @@ export default class AdvanceDiscount extends React.Component {
         productId: productVariant.productId,
         productVariantId: productVariant.id,
         productName: product.name,
+        barcode: productVariant.barcode,
         status: 1
       });
     } else {
@@ -194,6 +195,7 @@ export default class AdvanceDiscount extends React.Component {
           productId: productVariant.productId,
           productVariantId: productVariant.id,
           productName: product.name,
+          barcode: productVariant.barcode,
           status: 1
         });
       }
@@ -207,7 +209,7 @@ export default class AdvanceDiscount extends React.Component {
   render () {
     const {formData, form, locale} = this.props;
     let getDiscountType = [
-      {value: "free", title: <Translate id="text_free" />},
+      {value: "free", title: "free"},
       {value: "%", title: "%"},
       {value: "$", title: "$"}
     ];
@@ -291,6 +293,7 @@ export default class AdvanceDiscount extends React.Component {
 
             <Table 
               rowKey={((row, index) => index)}
+              rowClassName={((record) => record.status === 3 ? "hidden" : "")}
               columns={[
                 {
                   title: <Translate id="text_product" />,
@@ -385,6 +388,7 @@ export default class AdvanceDiscount extends React.Component {
 
             <Table 
               rowKey={((row, index) => index)}
+              rowClassName={((record) => record.status === 3 ? "hidden" : "")}
               columns={[
                 {
                   title: <Translate id="text_product" />,

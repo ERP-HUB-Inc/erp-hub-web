@@ -189,9 +189,8 @@ class FormItem extends React.PureComponent {
             });
           }
 
-          if (whenBuyProducts.length) promotionCriteria.whenBuyProducts = whenBuyProducts;
-          if (thenGetProducts.length) promotionCriteria.thenGetProducts = thenGetProducts;
-
+          promotionCriteria.whenBuyProducts = whenBuyProducts;
+          promotionCriteria.thenGetProducts = thenGetProducts;
           values.promotionCriteria = promotionCriteria;
           values.discountType = 0;
         }
@@ -201,7 +200,6 @@ class FormItem extends React.PureComponent {
         delete values.dates;
         delete values.status;
       }
-      console.log("values", values);
       this.save(values);
     });
   }
