@@ -10,6 +10,7 @@ import {
 import {Button} from "../../../common/elements/ant-ui";
 import BookingService from "../../services/BookingService";
 import Util from "../../../common/util";
+import Enum from "../../enum";
 import { stringTranslate } from "../../../common/helper/stringTranslate";
 import FormItem from "./FormItem";
 
@@ -52,12 +53,85 @@ export default class FormUpdate extends React.PureComponent {
     });
   }
 
+  handleMarkCompleted = (id) => {
+    let start = this.props.form.getFieldValue("start");
+    let end = this.props.form.getFieldValue("end");
+    let date = this.props.form.getFieldValue("date");
+    date = moment(date).format("YYYY-MM-DD");
+    start = `${date} ${moment(start).format("HH:mm")}`;
+    end = `${date} ${moment(end).format("HH:mm")}`;
+    this.setState({loading: true});
+    BookingService.markAsComplete(id, {start, end})
+    .then(() => {
+      this.props.afterAction();
+      this.setState({
+        visible: false
+      });
+      this.util.sweetAlertMessageV2(
+        "success",
+        "Mark completed success",
+        "success"
+      );
+    })
+    .finally(() => this.setState({loading: false}));
+  }
+
+  handleMarkDelay = (id) => {
+    let start = this.props.form.getFieldValue("start");
+    let end = this.props.form.getFieldValue("end");
+    const note = this.props.form.getFieldValue("note");
+    let date = this.props.form.getFieldValue("date");
+    date = moment(date).format("YYYY-MM-DD");
+    start = `${date} ${moment(start).format("HH:mm")}`;
+    end = `${date} ${moment(end).format("HH:mm")}`;
+    BookingService.markAsDelay(id, {start, end, note})
+    .then(() => {
+      this.props.afterAction();
+      this.setState({
+        visible: false
+      });
+      this.util.sweetAlertMessageV2(
+        "success",
+        "Mark delay success",
+        "success"
+      );
+    })
+    .finally(() => this.setState({loading: false}));
+  }
+
   handleShow = () => {
     this.setState({visible: true});
   }
 
   handleClose = () => {
     this.setState({visible: false});
+    this.props.handleClose();
+  }
+
+  renderButtonSave() {
+    const {action, formData} = this.props;
+    const btnProps = {
+      type: "info",
+      htmlType: "button",
+      style: {marginLeft: 15},
+      loading: this.state.loading
+    };
+
+    let button = <Button type="info" htmlType="submit" style={{marginLeft: 15}} loading={this.state.loading}>
+        <span className="icon-save icon-padding-right"></span> <Translate id="text_save" />
+      </Button>;
+
+    if (action === Enum.MARK_COMPLETED) {
+      button = <Button {...btnProps} onClick={() => this.handleMarkCompleted(formData.id)}>
+        <span className="icon-save icon-padding-right"></span> <Translate id="text_mark_as_completed" />
+      </Button>;
+    } else if (action === Enum.MARK_DELAY) {
+      button = <Button {...btnProps} onClick={() => this.handleMarkDelay(formData.id)}>
+        <span className="icon-save icon-padding-right"></span> <Translate id="text_mark_as_delay" />
+      </Button>;
+    }
+
+    return button;
   }
 
   render() {
@@ -70,7 +144,8 @@ export default class FormUpdate extends React.PureComponent {
         onCancel={this.handleClose}
       >
         <Form onSubmit={this.handleSubmit}>
-          <FormItem 
+          <FormItem
+            action={this.props.action}
             formData={this.props.formData}
             locale={this.props.locale}
             form={this.props.form} />
@@ -79,9 +154,7 @@ export default class FormUpdate extends React.PureComponent {
             <Button htmlType="button" type="danger" onClick={this.handleClose}>
               <Icon type="close-circle" /> <Translate id="text_cancel" />
             </Button>
-            <Button type="info" htmlType="submit" style={{marginLeft: 15}} loading={this.state.loading}>
-              <span className="icon-save icon-padding-right"></span> <Translate id="text_save" />
-            </Button>
+            {this.renderButtonSave()}
           </div>
         </Form>
       </Modal>
