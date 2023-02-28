@@ -41,6 +41,32 @@ class BookingService extends BaseService {
     });
   }
 
+  markAsComplete(id, data) {
+    this.setHeader();
+    return this.PUT({
+      url: `${this.baseUrl}/mark_as_completed/${id}`,
+      data,
+      headers: this.header
+    });
+  }
+
+  markAsCancelled(id) {
+    this.setHeader();
+    return this.PUT({
+      url: `${this.baseUrl}/mark_as_cancelled/${id}`,
+      headers: this.header
+    });
+  }
+
+  markAsDelay(id, data) {
+    this.setHeader();
+    return this.PUT({
+      url: `${this.baseUrl}/mark_as_delayed/${id}`,
+      data,
+      headers: this.header
+    });
+  }
+
   delete(id) {
     this.setHeader();
     return this.DELETE({

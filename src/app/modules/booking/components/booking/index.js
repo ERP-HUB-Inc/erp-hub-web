@@ -25,6 +25,7 @@ class BookingList extends Component {
       detail: {},
       summary: {},
       customers: [],
+      action: "",
       pagination: {},
       current: 1,
       loading: false
@@ -32,8 +33,10 @@ class BookingList extends Component {
     this.dateFormat = "DD/MM/YYYY h:mm A";
     this.BOOKING_STATUS_STR = {
       [Enum.BOOKING_STATUS.BOOKED]: {title: <this.Translate id="text_booked" />, color: "#bfbfbf"},
+      [Enum.BOOKING_STATUS.CANCELLED]: {title: <this.Translate id="text_cancelled" />, color: "#f5222d"},
       [Enum.BOOKING_STATUS.SERVING]: {title: <this.Translate id="text_serving" />, color: "#1890ff"},
-      [Enum.BOOKING_STATUS.SERVED]: {title: <this.Translate id="text_served" />, color: "#52c41a"}
+      [Enum.BOOKING_STATUS.SERVED]: {title: <this.Translate id="text_served" />, color: "#52c41a"},
+      [Enum.BOOKING_STATUS.DELAYED]: {title: <this.Translate id="text_delayed" />, color: "#ffc069"}
     };
     this.columns = [
       {
@@ -46,6 +49,19 @@ class BookingList extends Component {
             <Menu>
               <Menu.Item onClick={() => this.handleShowFormEdit(record.id)}>
                 <this.Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
+              </Menu.Item>
+              <Menu.Item onClick={() => this.handleMarkAction(record.id, Enum.MARK_COMPLETED)}>
+                <this.Icon type="check" /> <this.Translate id="text_mark_as_completed" />
+              </Menu.Item>
+              {
+                record.status === Enum.BOOKING_STATUS.BOOKED ?
+                <Menu.Item onClick={() => this.handleMarkCancelled(record.id)}>
+                  <this.Icon type="close-circle" /> <this.Translate id="text_mark_as_cancelled" />
+                </Menu.Item>
+                : null
+              }
+              <Menu.Item onClick={() => this.handleMarkAction(record.id, Enum.MARK_DELAY)}>
+                <this.Icon type="clock-circle" /> <this.Translate id="text_mark_as_delay" />
               </Menu.Item>
               <Menu.Item onClick={() => this.handleDelete(record.id)}>
                 <this.Icon type="delete" style={{marginRight: 10}} /> <this.Translate id="text_delete" />
@@ -185,6 +201,11 @@ class BookingList extends Component {
     this.fetchList();
   }
 
+  handleAfterAction = () => {
+    this.setState({detail: {}, action: ""});
+    this.fetchList();
+  }
+
   handleShowFormCreate() {
     this.formCreateRef.handleShowForm();
   }
@@ -196,6 +217,33 @@ class BookingList extends Component {
         this.formUpdateRef.handleShow();
       });
     });
+  }
+
+  handleMarkAction(id, action) {
+    BookingService.detail(id)
+    .then(response => {
+      this.setState({detail: response.data.data, action}, () => {
+        this.formUpdateRef.handleShow();
+      });
+    });
+  }
+
+  handleMarkCancelled(id) {
+    this.Util.sweetAlertConfirm(
+      "Confirm",
+      this.CATranslate("text_are_you_sure", this.props.locale),
+      ["No", "Yes"]
+    )
+    .then(willCancel => {
+      if (willCancel) {
+        BookingService.markAsCancelled(id)
+        .then(() => this.handleAfterAction());
+      }
+    });
+  }
+
+  handleCloseForm = () => {
+    this.setState({action: ""});
   }
 
   handleDelete(id) {
@@ -368,7 +416,10 @@ class BookingList extends Component {
                 ref={ref => this.formUpdateRef = ref}
                 locale={this.props.locale}
                 formData={this.state.detail}
+                action={this.state.action}
+                afterAction={this.handleAfterAction}
                 onSuccess={this.handleAfterUpdate}
+                handleClose={this.handleCloseForm}
                 form={this.props.form} />
             </div>
           </div>

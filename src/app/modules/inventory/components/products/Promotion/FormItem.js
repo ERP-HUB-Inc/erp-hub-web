@@ -170,6 +170,7 @@ class FormItem extends React.PureComponent {
                 productId: entry.productId,
                 productVariantId: entry.productVariantId,
                 productName: entry.productName,
+                barcode: entry.barcode,
                 type: "WHEN",
                 status: entry.status
               });
@@ -183,6 +184,7 @@ class FormItem extends React.PureComponent {
                 productId: entry.productId,
                 productVariantId: entry.productVariantId,
                 productName: entry.productName,
+                barcode: entry.barcode,
                 type: "THEN",
                 status: entry.status
               });

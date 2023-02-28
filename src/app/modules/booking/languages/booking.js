@@ -38,5 +38,25 @@ export default {
   "text_note": [
     "Note",
     "កត់ចំណាំ"
+  ],
+  "text_cancelled": [
+    "Cancelled",
+    "បេាះបង់"
+  ],
+  "text_delayed": [
+    "Delayed",
+    "ពន្យាពេល"
+  ],
+  "text_mark_as_completed": [
+    "Mark as Completed",
+    "សម្គាល់ថាបានបញ្ចប់"
+  ],
+  "text_mark_as_cancelled": [
+    "Mark as Cancelled",
+    "សម្គាល់ថាបានបេាះបង់"
+  ],
+  "text_mark_as_delay": [
+    "Mark as Delay",
+    "សម្គាល់ថាពន្យារពេល"
   ]
 };

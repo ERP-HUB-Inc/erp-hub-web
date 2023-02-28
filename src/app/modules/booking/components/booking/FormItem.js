@@ -11,10 +11,27 @@ import {
   DatePickers,
   TimePickers
 } from "../../../common/elements/ant-ui";
+import Enum from "../../enum";
 import { stringTranslate } from "../../../common/helper/stringTranslate";
 
 export default function FormItem(props) {
-  const {formData, form} = props;
+
+  function getDefaultToTime(formData, action) {
+    let value = null;
+    if (formData.start) {
+      value = moment(formData.end);
+    }
+
+    if (action === Enum.MARK_COMPLETED) {
+      value = moment();
+    } else if (action === Enum.MARK_DELAY) {
+      value = null;
+    }
+
+    return value;
+  }
+
+  const {formData, form, action} = props;
   return (
     <React.Fragment>
       <Row>
@@ -39,6 +56,7 @@ export default function FormItem(props) {
             name="date"
             label={<Translate id="text_book_for_date" />}
             placeholder="DD/MM/YYYY"
+            required={action === Enum.MARK_DELAY}
             defaultValue={formData.start ? moment(formData.start) : moment()}
             dateFormat="DD/MM/YYYY"
             allowClear={false}
@@ -52,7 +70,7 @@ export default function FormItem(props) {
             label={<Translate id="text_from_time" />}
             placeholder="hh:mm"
             required={true}
-            defaultValue={formData.start ? moment(formData.start) : null}
+            defaultValue={action === Enum.MARK_DELAY ? null : formData.start ? moment(formData.start) : null}
             use12Hours={true}
             inputStyle={{width: "100%"}}
             form={form} />
@@ -62,9 +80,9 @@ export default function FormItem(props) {
             name="end"
             label={<Translate id="text_to_time" />}
             placeholder="hh:mm"
-            required={true}
-            defaultValue={formData.start ? moment(formData.end) : null}
+            defaultValue={getDefaultToTime(formData, action)}
             use12Hours={true}
+            required={action === Enum.MARK_DELAY}
             inputStyle={{width: "100%"}}
             form={form} />
         </Col>
