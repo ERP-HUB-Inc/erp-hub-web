@@ -604,63 +604,21 @@ export default class Payment extends Modal {
                       )
                     }
                   </div>
-                  {
-                    this.props.customer ?
-                      <div className="wrap-customer-credit-info">
-                        <div style={{ border: "0.5px solid #d9d9d9" }} />
-                        <div className="separate-title-line">
-                          <this.Translate id="text_or_pay_later" />
-                        </div>
-                        {this.renderCustomerInfo()}
-                        <div className="action-button-to-pay">
-                          {
-                            this.props.paymentMethodList.list.filter(paymentMethod => paymentMethod.code === Payment.PAYMENT_METHOD_CREDIT_CODE).map(paymentMethod => 
-                              <this.Button
-                                htmlType="submit"
-                                key={Payment.PAYMENT_METHOD_CREDIT_CODE} // duplicate key index of loop
-                                loading={this.paymentMethodSelectedIndex === Payment.PAYMENT_METHOD_CREDIT_CODE && this.props.transaction.paying}
-                                type="info"
-                                width="308px"
-                                onClick={() => this.handleOnMakePaymentWithCash(paymentMethod, Payment.PAYMENT_METHOD_CREDIT_CODE)}>
-                                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginLeft: 10 }}>
-                                  <img src={this.Util.getGeneralImage("storeVein/credit-note.svg").url} alt="cash" style={{ width: 50, marginRight: 15 }} />
-                                  <div>{paymentMethod.name}</div>
-                                </div>
-                              </this.Button> 
-                            )
-                          }
-                        </div>
-                      </div>
-                      :
-                      ""
-                  }
                 </div>
                 :
                 <div className="confirm-payment">
-                  {
-                    this.state.isCustomerCredit ?
-                      <div style={{marginBottom: 30}}>
-                        <div className="text-center title">
-                          <span>
-                            {this.formatCurrency(grandTotal)} <this.Translate id="text_info_for_customer_credit" />
-                          </span>
-                        </div>
-                        {this.renderCustomerInfo()}
-                      </div>
-                      :
-                      <div className="text-center title">
-                        {
-                          changeAmount > 0 ?
-                            <span>
-                              <this.Translate id="text_give" /> {this.formatCurrency(changeAmount * exchangeRate)} <this.Translate id="text_change" />
-                            </span>
-                            :
-                            <span>
-                              <this.Translate id="text_payment" /> <this.Translate id="text_received" />
-                            </span>
-                        }
-                      </div>
-                  }
+                  <div className="text-center title">
+                    {
+                      changeAmount > 0 ?
+                        <span>
+                          <this.Translate id="text_give" /> {this.formatCurrency(changeAmount * exchangeRate)} <this.Translate id="text_change" />
+                        </span>
+                        :
+                        <span>
+                          <this.Translate id="text_payment" /> <this.Translate id="text_received" />
+                        </span>
+                    }
+                  </div>
                   <div className="wrap-email-receipt">
                     <this.InputEmail
                       name="email"

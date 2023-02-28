@@ -34,6 +34,7 @@ import {
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import Enum from "../../../enums";
 import EnumProduct from "../../../../inventory/enums";
+import EnumCustomer from "../../../../crm/enum";
 import Util from "../../../../common/util";
 import CustomerService from "../../../../crm/services/customers/CustomerService";
 import SaleOrderService from "../../../services/transactions/SaleOrderService";
@@ -442,6 +443,29 @@ class FormItem extends React.PureComponent {
     }
   }
 
+  refreshPrice = (selectedCustomer) => {
+    this.setState(prevState => {
+        return {
+            transactionEntries: prevState.transactionEntries.map((transactionEntry, index) => {
+                if (!transactionEntry.id) {
+                    if (selectedCustomer.type === EnumCustomer.CUSTOMER_TYPE.RETAIL_SALE) {
+                        transactionEntry.price = transactionEntry.retailPrice;
+                    } else if (selectedCustomer.type === EnumCustomer.CUSTOMER_TYPE.WHOLE_SALE) {
+                        transactionEntry.price = transactionEntry.wholePrice;
+                    } else if (selectedCustomer.type === EnumCustomer.CUSTOMER_TYPE.DISTRIBUTOR) {
+                        transactionEntry.price = transactionEntry.distributePrice;
+                    }
+                }
+                
+                transactionEntry.amount = transactionEntry.quantity * transactionEntry.price;
+                this.props.form.setFieldsValue({[`price[${index}]`]: transactionEntry.price});
+
+                return transactionEntry;
+            })
+        };
+    });
+}
+
   onChangeDescription = (e, index) => {
     const value = e.target.value;
     const {transactionEntries} = this.state;
@@ -574,6 +598,23 @@ class FormItem extends React.PureComponent {
         productVariant = productVariant[0];
         productVariant.name = isProductVariant ? productVariant.name : "";
     }
+
+    let price = productVariant.price;
+    const selectedCustomer = this.state.customers.find(value => value.id === this.props.form.getFieldValue("customerId"));
+    if (selectedCustomer) {
+      switch (selectedCustomer.type) {
+          case EnumCustomer.CUSTOMER_TYPE.RETAIL_SALE:
+              price = productVariant.price;
+              break;
+          case EnumCustomer.CUSTOMER_TYPE.WHOLE_SALE:
+              price = productVariant.wholePrice;
+              break;
+          case EnumCustomer.CUSTOMER_TYPE.DISTRIBUTOR:
+              price = productVariant.distributePrice;
+              break;
+          default:
+      }
+  }
     
     const existingProductList = this.state.transactionEntries;
     const formData = this.state.formData;
@@ -589,9 +630,12 @@ class FormItem extends React.PureComponent {
         quantity: 1,
         unitName: product.unit.name,
         cost: productVariant.cost,
-        price: productVariant.price,
+        price,
+        retailPrice: productVariant.price,
+        wholePrice: productVariant.wholePrice,
+        distributePrice: productVariant.distributePrice,
         discount: 0,
-        amount: (productVariant.price * 1),
+        amount: price * 1,
         status: 1
       });
     } else {
@@ -617,27 +661,27 @@ class FormItem extends React.PureComponent {
           quantity: 1,
           unitName: product.unit.name,
           cost: productVariant.cost,
-          price: productVariant.price,
+          price,
+          retailPrice: productVariant.price,
+          wholePrice: productVariant.wholePrice,
+          distributePrice: productVariant.distributePrice,
           discount: 0,
-          amount: (productVariant.price * 1),
+          amount: price * 1,
           status: 1
         });
       }
     }
 
     let total = 0;
-    if (existingProductList.length) {
-        total = _.sumBy(existingProductList, (value) => value.status !== 3 && value.amount);
-    }
+    if (existingProductList.length) total = _.sumBy(existingProductList, (value) => value.status !== 3 && value.amount);
+    if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) discount = this.util.getValueFromPercentage(total, discount);
 
-    if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) {
-      discount = this.util.getValueFromPercentage(total, discount);
-    }
     formData.discount = discount;
 
     this.setState({transactionEntries: existingProductList, formData});
     formData.discount = discount;
     this.setState({transactionEntries: existingProductList, formData});
+
     this.props.form.setFieldsValue({
       searchProduct: "",
       [`productVariantId[${0}]`]: existingProductList[0].productVariantId,
@@ -693,18 +737,21 @@ class FormItem extends React.PureComponent {
     }, 1000);
   }
 
-  onSelectCustomer(value, record) {
-    if (value) {
-      const customer = record.props.Object;
+  onSelectCustomer(customerId, record) {
+    if (customerId) {
+      const selectedCustomer = record.props.Object;
       this.textRequiredCustomer = "";
       this.setState(preState => {
-        preState.formData.firstName = customer.firstName;
-        preState.formData.lastName = customer.lastName;
-        preState.formData.company = customer.company;
-        preState.formData.phoneNumber = customer.phoneNumber;
-        preState.formData.address = customer.address;
+        preState.formData.firstName = selectedCustomer.firstName;
+        preState.formData.lastName = selectedCustomer.lastName;
+        preState.formData.company = selectedCustomer.company;
+        preState.formData.phoneNumber = selectedCustomer.phoneNumber;
+        preState.formData.address = selectedCustomer.address;
+        preState.selectedCustomer = selectedCustomer;
         return preState;
       });
+
+      this.refreshPrice(selectedCustomer);
     } else {
       this.textRequiredCustomer = <Translate id="text_required_customer" />;
     }

@@ -5,7 +5,7 @@ export default {
   ],
 
   "text_reference_no": [
-    "Reference",
+    "Reference No.",
     "លេខយោង"
   ],
 

@@ -64,12 +64,6 @@ export default {
     "Receive Location"
   ],
 
-  "text_reference": [
-    "Reference",
-    "យោងតាម",
-    "Reference"
-  ],
-
   "text_draft": [
     "Draft",
     "ព្រៀង",

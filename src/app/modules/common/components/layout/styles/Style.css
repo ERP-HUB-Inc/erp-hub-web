@@ -585,33 +585,6 @@ color: #4D4F5C;
     min-height: 35px
 }
 
-/* MODAL */
-.modal-fix-footer,
-.modal-fix-footer .ant-modal,
-.modal-fix-footer .ant-modal .ant-modal-content,
-.modal-fix-footer .ant-modal .ant-modal-body,
-.modal-fix-footer .ant-modal .ant-modal-body form,
-.modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs,
-.modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs-content,
-.modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs-content .tabpanel {
-    height: 100%
-}
-
-.modal-fix-footer .ant-modal .ant-modal-body,
-.modal-fix-footer .ant-modal .ant-modal-content,
-.modal-fix-footer .ant-modal .ant-modal-body form,
-.modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs,
-.modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs-content {
-    display: flex
-}
-
-.modal-fix-footer .ant-modal .ant-modal-content, 
-.modal-fix-footer .ant-modal .ant-modal-body,
-.modal-fix-footer .ant-modal .ant-modal-body form,
-.modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs {
-    flex-direction: column
-}
-
 .modal-fix-footer .ant-modal .ant-modal-body form .ant-tabs .ant-tabs-bar {
     margin-bottom: 0
 }

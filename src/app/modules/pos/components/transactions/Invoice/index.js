@@ -233,6 +233,15 @@ export default class Invoice extends Component {
 			}
 		},
 		{
+			title: <this.Translate id="text_reference_no" />,
+			dataIndex: "referenceNo",
+			key: "referenceNo",
+			width: 150,
+			render: (referenceNo, record) => {
+			return <this.Link to={`/transactions/sale-order/detail/${record.referenceId}`} target="_blank">{referenceNo}</this.Link>;
+			}
+		},
+		{
 			title: <this.Translate id="text_customer" />,
 			dataIndex: "firstName",
 			key: "firstName",
