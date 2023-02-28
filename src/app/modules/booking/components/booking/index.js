@@ -40,10 +40,10 @@ class BookingList extends Component {
     };
     this.columns = [
       {
-        title: <this.Translate id="text_date" />,
+        title: <this.Translate id="text_booking_date" />,
         dataIndex: "start",
         key: "start",
-        width: 700,
+        width: 200,
         render: (start, record) => {
           const menu = (
             <Menu>
@@ -69,7 +69,7 @@ class BookingList extends Component {
             </Menu>
           );
           return <div className="wrap-product-name" style={{display: "flex"}}>
-            {moment(start).format("DD/MM/YYYY")} ~ ({moment(start).format("hh:mm A")} - {moment(record.end).format("hh:mm A")})
+            {moment(start).format("DD/MM/YYYY")}
             <Dropdown className="product-row-option" overlay={menu}>
               {/* eslint-disable-next-line */}
               <a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
@@ -77,6 +77,26 @@ class BookingList extends Component {
               </a>
             </Dropdown>
           </div>;
+        }
+      },
+      {
+        title: <this.Translate id="text_booking_time" />,
+        dataIndex: "start",
+        key: "bookingTime",
+        render: (start, record) => `${moment(start).format("hh:mm A")} ~ ${record.end ? moment(record.end).format("hh:mm A") : "N/A"}`
+      },
+      {
+        title: <this.Translate id="text_status" />,
+        dataIndex: "status",
+        key: "status",
+        render: (status) => {
+          const statusValue = this.BOOKING_STATUS_STR[status];
+
+          if (statusValue) {
+              let statusColor = statusValue.color;
+              let statusTitle = statusValue.title;
+              return <this.Tag color={statusColor} style={{width: 80, textAlign: "center"}}>{statusTitle}</this.Tag>;
+          }
         }
       },
       {
@@ -91,18 +111,9 @@ class BookingList extends Component {
         key: "phoneNumber"
       },
       {
-        title: <this.Translate id="text_status" />,
-        dataIndex: "status",
-        key: "status",
-        render: (status) => {
-          const statusValue = this.BOOKING_STATUS_STR[status];
-
-          if (statusValue) {
-              let statusColor = statusValue.color;
-              let statusTitle = statusValue.title;
-              return <this.Tag color={statusColor} style={{width: 120, textAlign: "center"}}>{statusTitle}</this.Tag>;
-          }
-        }
+        title: <this.Translate id="text_note" />,
+        dataIndex: "note",
+        key: "note"
       }
     ];
     this.pathname = "/bookings/list";
@@ -358,7 +369,7 @@ class BookingList extends Component {
               </Row>
 
               <Row gutter={16} style={{marginTop: 9}}>
-                <Col span={8}>
+                <Col span={6}>
                   <Card>
                     <Statistic 
                       title={<this.Translate id="text_booked"/>}
@@ -367,16 +378,25 @@ class BookingList extends Component {
                     />
                   </Card>
                 </Col>
-                <Col span={8}>
+                <Col span={6}>
                   <Card>
-                    <Statistic
-                      title={<this.Translate id="text_serving"/>}
-                      value={summary && summary.serving}
-                      valueStyle={{color: "#1890ff"}}
+                    <Statistic 
+                      title={<this.Translate id="text_delayed"/>}
+                      value={summary && summary.delayed}
+                      valueStyle={{color: "#ff5500"}}
                     />
                   </Card>
                 </Col>
-                <Col span={8}>
+                <Col span={6}>
+                  <Card>
+                    <Statistic
+                      title={<this.Translate id="text_cancelled"/>}
+                      value={summary && summary.cancelled}
+                      valueStyle={{color: "#cf1322"}}
+                    />
+                  </Card>
+                </Col>
+                <Col span={6}>
                   <Card>
                     <Statistic
                       title={<this.Translate id="text_served"/>}

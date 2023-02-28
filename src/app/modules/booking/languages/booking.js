@@ -1,4 +1,12 @@
 export default {
+  "text_booking_date": [
+    "Date",
+    "ថ្ងៃណាត់ជួប"
+  ],
+  "text_booking_time": [
+    "Time",
+    "ម៉ោងណាត់"
+  ],
   "text_booking": [
     "Booking",
     "ការកក់ទុកមុន"
@@ -25,7 +33,7 @@ export default {
   ],
   "text_served": [
     "Served",
-    "បានបម្រើ"
+    "បានបញ្ចប់"
   ],
   "text_from_time": [
     "From Time",

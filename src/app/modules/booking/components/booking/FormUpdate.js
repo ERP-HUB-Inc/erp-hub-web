@@ -17,7 +17,8 @@ import FormItem from "./FormItem";
 export default class FormUpdate extends React.PureComponent {
   state = {
     visible: false,
-    loading: false
+    loading: false,
+    submitting: false
   }
   util = new Util();
 
@@ -122,11 +123,11 @@ export default class FormUpdate extends React.PureComponent {
       </Button>;
 
     if (action === Enum.MARK_COMPLETED) {
-      button = <Button {...btnProps} onClick={() => this.handleMarkCompleted(formData.id)}>
+      button = <Button {...btnProps} loading={this.state.loading} onClick={() => this.handleMarkCompleted(formData.id)}>
         <span className="icon-save icon-padding-right"></span> <Translate id="text_mark_as_completed" />
       </Button>;
     } else if (action === Enum.MARK_DELAY) {
-      button = <Button {...btnProps} onClick={() => this.handleMarkDelay(formData.id)}>
+      button = <Button {...btnProps} loading={this.state.loading} onClick={() => this.handleMarkDelay(formData.id)}>
         <span className="icon-save icon-padding-right"></span> <Translate id="text_mark_as_delay" />
       </Button>;
     }
