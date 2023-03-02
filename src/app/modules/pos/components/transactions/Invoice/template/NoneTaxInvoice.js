@@ -128,7 +128,7 @@ export default function NoneTaxInvoice(props) {
               </thead>
               <tbody style={{background: "#fbfbfb", borderBottom: "2px solid #ddd", verticalAlign: "top"}}>
                 {
-                  formData.transactionEntries && formData.transactionEntries.map((entry, index) => 
+                  formData.transactionEntries && formData.transactionEntries.filter(entry => entry.description).map((entry, index) => 
                     <tr key={index} style={{fontSize: "11pt", lineHeight: "26px", background: "none", display: `${entry.status === 3 ? "none" : ""}`}}>
                       <td style={{textAlign: "center"}}>{index + 1}</td>
                       <td >

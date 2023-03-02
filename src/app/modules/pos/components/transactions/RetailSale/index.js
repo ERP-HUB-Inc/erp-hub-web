@@ -324,7 +324,7 @@ export default class Retail extends Component {
                      newPrice: freeProduct.newPrice,
                      discount: 100,
                      discountType: 1,
-                     status: this.Enum.ACTIVE
+                     status: 0
                   }));
                }
 

@@ -84,32 +84,25 @@ export default function ReportSaleByProduct() {
       search,
       supplierId
     })
-      .then((response) => {
-        if (response.data) {
-          const { summaryByProducts } = response.data;
+    .then((response) => {
+      if (response.data) {
+        const { summaryByProducts } = response.data;
 
-          setData(summaryByProducts);
-          const totalRevenue = _.sumBy(summaryByProducts, (value) =>
-              parseFloat(value.revenue)
-            ),
-            totalDiscount = _.sumBy(summaryByProducts, (value) =>
-              parseFloat(value.discount)
-            ),
-            totalNetSale = totalRevenue - totalDiscount,
-            totalCost = _.sumBy(summaryByProducts, (value) =>
-              parseFloat(value.cost)
-            );
-          setSummary({
-            totalRevenue,
-            totalDiscount,
-            totalNetSale,
-            totalCost,
-          });
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+        const totalRevenue = _.sumBy(summaryByProducts, (value) =>parseFloat(value.revenue));
+        const totalDiscount = _.sumBy(summaryByProducts, (value) => parseFloat(value.discount));
+        const totalNetSale = totalRevenue - totalDiscount;
+        const totalCost = _.sumBy(summaryByProducts, (value) => parseFloat(value.cost));
+
+        setData(summaryByProducts);
+        setSummary({
+          totalRevenue,
+          totalDiscount,
+          totalNetSale,
+          totalCost,
+        });
+      }
+    })
+    .finally(() => setLoading(false));
   };
 
   const getExportableData = () => {

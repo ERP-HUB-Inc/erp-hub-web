@@ -122,10 +122,9 @@ class NewInvoice extends React.PureComponent {
             width: 600,
             render: (description, record, index) => {
                 let serials = [];
-                if (record.serials && record.serials.length) {
-                    serials = record.serials;
-                }
+                if (record.serials && record.serials.length) serials = record.serials;
                 let activeLen = serials && serials.filter(serial => serial.status !== ARCHIVE).length;
+
                 return <div>
                     <InputText 
                         style={{display: "none"}}
@@ -540,6 +539,7 @@ class NewInvoice extends React.PureComponent {
             }
 
             delete data.transactionEntries;
+            
             this.setState(preState => {
                 preState.formData = data;
                 preState.transactionEntries = transactionEntries;
@@ -625,10 +625,16 @@ class NewInvoice extends React.PureComponent {
                     icon: "success",
                     title: "Success!",
                     text: stringTranslate("text_success_save_invoice", this.props.locale),
-                    buttons: false,
-                    timer: 1500
+                    buttons: ["Continue Editing", "New Invoice"]
+                })
+                .then(newInvoice => {
+                    if (newInvoice) {
+                        history.push("/transactions/create-invoice");
+                        window.location.reload();
+                    } else {
+                        this.getInvoiceById(this.id);
+                    }
                 });
-                this.getInvoiceById(this.id);
             })
             .catch(() => message.error("Error"))
             .finally(() => this.setState({saveLoading: false}));
@@ -640,17 +646,23 @@ class NewInvoice extends React.PureComponent {
                     icon: "success",
                     title: "Success!",
                     text: stringTranslate("text_success_save_invoice", this.props.locale),
-                    buttons: false,
-                    timer: 1500
+                    buttons: ["Continue Editing", "New Invoice"]
+                })
+                .then(newInvoice => {
+                    if (newInvoice) {
+                        history.push("/transactions/create-invoice");
+                        window.location.reload();
+                    } else {
+                        this.id = response.data.data.id;
+                        this.saleOrderId = "";
+                        this.quotationId = "";
+                        history.push(`/transactions/update-invoice/${response.data.data.id}?after-created=1`);
+                        this.pageTitle = "text_edit_invoice";
+                        this.getInvoiceById(this.id);
+                    }
                 });
-                this.id = response.data.data.id;
-                this.saleOrderId = "";
-                this.quotationId = "";
-                history.push(`/transactions/update-invoice/${response.data.data.id}?after-created=1`);
-                this.pageTitle = "text_edit_invoice";
-                this.getInvoiceById(this.id);
             })
-            .catch(() => message.error("Error"))
+            .catch(() => message.error("Error:"))
             .finally(() => this.setState({saveLoading: false}));
         }
     }
@@ -1258,8 +1270,11 @@ class NewInvoice extends React.PureComponent {
         if (Number(type) === Enum.DISCOUNT_TYPE.PERCENTAGE) discount = this.util.getValueFromPercentage(total, discount);
         
         formData.discount = discount;
+
         this.setState({transactionEntries: existingProductList, formData});
+
         this.props.form.setFieldsValue({searchProduct: ""});
+
         existingProductList.length && existingProductList.forEach((entry, index) => {
             this.props.form.setFieldsValue({
                 [`description[${index}]`]: entry.description,
@@ -1267,37 +1282,11 @@ class NewInvoice extends React.PureComponent {
                 [`price[${index}]`]: entry.price
             });
         });
+
         if (product.enableDescription) {
             setTimeout(() => {
                 this.handleShowModal(0, productVariant.id);
             }, 900);
-        }
-    }
-
-    handleResetForm = () => {
-        const {transactionEntries} = this.state;
-        if (this.action === paramsAction.convertToInvoice) {
-            return this.util.sweetAlertMessage("Can't clear form in this step", "warning");
-        }
-        this.props.form.resetFields();
-        if (transactionEntries.length) {
-            if (this.id) {
-                this.util.sweetAlertConfirm(stringTranslate("text_are_you_sure", this.props.locale))
-                .then(willClear => {
-                    if (willClear) {
-                        transactionEntries.forEach((entry, index) => {
-                            if (entry.id) {
-                                transactionEntries[index].status = 3;
-                            } else {
-                                transactionEntries.splice(index, 1);
-                            }
-                            this.setState({transactionEntries, productSearch: []});
-                        });
-                    }
-                });
-            } else {
-                this.setState({transactionEntries: []});
-            }
         }
     }
 
@@ -1699,7 +1688,7 @@ class NewInvoice extends React.PureComponent {
                             form={this.props.form}/>  
                         <Col md={24}>
                             <Table 
-                                rowKey={(record, index) => `${Date.now() + index}`}
+                                rowKey={((record, index) => index)}
                                 columns={this.entryColumn}
                                 className="table-form-invoice-entry"
                                 dataSource={this.state.transactionEntries}
@@ -1798,13 +1787,9 @@ class NewInvoice extends React.PureComponent {
                             <Button type="info" htmlType="submit" loading={this.state.saveLoading} >
                                 <Translate id="text_save" />
                             </Button>
-                            <Button style={{marginRight: 15, marginLeft: 15}} onClick={this.handleResetForm}>
-                                <Translate id="text_clear" />
-                            </Button>
                             {
                                 formData.id ? 
                                 <React.Fragment>
-                                    
                                     <Dropdown
                                         overlay={(
                                             <Menu>
@@ -1817,7 +1802,7 @@ class NewInvoice extends React.PureComponent {
                                             </Menu>
                                         )}
                                     >
-                                        <button className="ant-btn ant-dropdown-link" id="button-more-action" type="button">
+                                        <button style={{marginLeft: 15}} className="ant-btn ant-dropdown-link" id="button-more-action" type="button">
                                             <Translate id="text_print_invoice" /> <Icon type="down" />
                                         </button>
                                     </Dropdown>
@@ -1855,7 +1840,7 @@ class NewInvoice extends React.PureComponent {
                                             </Menu>
                                         )}
                                     >
-                                        <button className="ant-btn ant-dropdown-link" id="button-more-action" type="button">
+                                        <button style={{marginLeft: 15}} className="ant-btn ant-dropdown-link" id="button-more-action" type="button">
                                             <Translate id="text_more_action" /> <Icon type="down" />
                                         </button>
                                     </Dropdown>
