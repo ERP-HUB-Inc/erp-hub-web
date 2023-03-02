@@ -69,7 +69,8 @@ class SaleOrder extends Component {
         width: 120,
         align: "center",
         render: (status) => {
-          const statusValue = this.SALE_ORDER_STATUS_STR[status];
+          let statusValue = this.SALE_ORDER_STATUS_STR[status];
+          statusValue = statusValue ? statusValue : {};
           const statusColor = statusValue.color;
           const stepTitle = statusValue.title;
           return <Tag color={statusColor} style={{width: 100, textAlign: "center"}}>{stepTitle}</Tag>;
