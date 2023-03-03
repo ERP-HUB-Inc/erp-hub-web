@@ -525,13 +525,15 @@ export default class Retail extends Component {
 
       // Checking for promotion
       let orderQuantity = 1;
-      let orderAmount = 0;
+      let orderAmount = productVariant.quantity * productVariant.price;
       const foundOrderProduct = productOrderList.find(value => value.productVariantId === productVariant.id);
 
       if (foundOrderProduct) {
          orderQuantity += foundOrderProduct.quantity;
-         orderAmount += foundOrderProduct.quantity * foundOrderProduct.price;
+         orderAmount += (orderQuantity * foundOrderProduct.price);
       }
+      console.log("orderQuantity:", orderQuantity);
+      console.log("orderAmount:", orderAmount);
       const promotion = await this.getProductPromotion(productVariant.id, orderQuantity, orderAmount);
       if (promotion.discountType === "basic") {
          newPrice = promotion.newPrice;
