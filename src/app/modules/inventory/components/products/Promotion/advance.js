@@ -9,7 +9,11 @@ import {
 } from "antd";
 import Util from "../../../../common/util";
 import ProductVariantAction from "../../../../inventory/actions/products/productVariant";
-import { InputNumber, RadioNormal, Select } from "../../../../common/elements/ant-ui";
+import {
+  InputNumber,
+  RadioNormal,
+  Select
+} from "../../../../common/elements/ant-ui";
 import Enum from "../../../../pos/enums";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import SearchProductDropdown from "../../../../pos/components/transactions/Invoice/SearchProduct";
@@ -123,6 +127,7 @@ export default class AdvanceDiscount extends React.Component {
         id: null,
         productId: productVariant.productId,
         productVariantId: productVariant.id,
+        barcode: productVariant.barcode,
         productName: product.name,
         status: 1
       });
