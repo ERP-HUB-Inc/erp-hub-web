@@ -231,7 +231,7 @@ export default function ReportProduct() {
                     <Card>
                       <Statistic
                           title={<Translate id="text_margin" />}
-                          value={expectedMargin.toFixed(2)}
+                          value={expectedMargin ? expectedMargin.toFixed(2) : 0}
                           precision={2}
                           suffix="%"
                       />
