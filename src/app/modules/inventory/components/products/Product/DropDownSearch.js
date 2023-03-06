@@ -31,7 +31,7 @@ export default class DropDownSearch extends Component {
   }
 
   componentDidUpdate() {
-    var element = document.getElementsByClassName("ant-list-item");
+    const element = document.getElementsByClassName("ant-list-item");
     if (element.length > 0) {
       element[0].classList.add("search-item-hover");
     }
@@ -52,6 +52,7 @@ export default class DropDownSearch extends Component {
     this.props.form.setFieldsValue({ searchProduct });
     this.handleSearchProduct(searchProduct, true);
   }
+
   handleScanError = (err) => {
     console.error(err);
   }
@@ -149,7 +150,7 @@ export default class DropDownSearch extends Component {
         this.timer = setTimeout(function() {
           this.handleSearchProduct(value);
           this.setState({visibleDropDown: true});
-        }.bind(this), 500);
+        }.bind(this), 1500);
       } else {
         this.props.dispatch(ProductAction.reset(Constant.SEARCH_PRODUCT_RESET));
       }
