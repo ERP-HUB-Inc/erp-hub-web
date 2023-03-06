@@ -35,7 +35,6 @@ export default class FormItem extends Modal {
                   data={formData.multiple}
                   errorRequired={<this.Translate id="input_error_products_in_unit" />}
                   required={true}
-                  max={100}
                   precision={0}
                   form={form}/>
               </div>
@@ -48,7 +47,6 @@ export default class FormItem extends Modal {
                   data={formData.label}
                   placeholder={this.CATranslate("text_cans", locale)}
                   required={true}
-                  max={100}
                   form={form}/>
               </div>
             </div>
