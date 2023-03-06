@@ -104,7 +104,6 @@ export default class Retail extends Component {
     this.handleOnSaveParkReceipt = this.handleOnSaveParkReceipt.bind(this);
     this.handleOnRestoreReceipt = this.handleOnRestoreReceipt.bind(this);
     this.handleOnBlurSearchProduct = this.handleOnBlurSearchProduct.bind(this);
-    this.handleOnAutoSelectProductAfterSearchResult = this.handleOnAutoSelectProductAfterSearchResult.bind(this);
     this.handleOnChangOrderFieldBlur = this.handleOnChangOrderFieldBlur.bind(this);
   }
 
@@ -719,7 +718,7 @@ export default class Retail extends Component {
     }
   }
 
-  handleOnAutoSelectProductAfterSearchResult(productList, isRequestVariantForm) {
+  handleOnAutoSelectProductAfterSearchResult = (productList, isRequestVariantForm) => {
     if (this.openFormSaleRegisration()) {
       return;
     }
