@@ -314,18 +314,20 @@ export default class ProductList extends List {
    }
 
    handleDelete() {
-      let product = this.state.selectedRows;
+      const product = this.state.selectedRows;
       if (product) {
-         let quantity = this.getAllQTY(product[0]);
+         const quantity = this.getAllQTY(product[0]);
 
-         if (product[0].serialType === Enum.SERIAL_TYPE.NON_INVENTORY){
-         super.handleDelete();
-         } else if(quantity <= 0) {
-         super.handleDelete();
+         if (product[0].serialType === Enum.SERIAL_TYPE.NON_INVENTORY || quantity <= 0){
+            this.setState({deleting: true});
+            ProductService.archive(this.state.selectedListIds)
+            .then(() => {
+               this.fetchList(true);
+            })
+            .finally(() => this.setState({deleting: false, selectedRowKeys: []}));
          } else{
-         this.Message.warning(this.CATranslate("error_delete_product", this.props.locale));
+            this.Message.warning(this.CATranslate("error_delete_product", this.props.locale));
          }
-
       }
    }
 
@@ -337,7 +339,7 @@ export default class ProductList extends List {
       this.Util.sweetAlertConfirm(this.CATranslate("text_confirm_delete", this.props.locale))
       .then(willDelete => {
          if (willDelete) {
-         this.handleDelete();
+            this.handleDelete();
          }
       });
    }

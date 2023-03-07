@@ -1,7 +1,7 @@
 import React from "react";
 import FormItem from "./FormItem";
 import Modal from "../../../../common/components/shares/Modal";
-import ProductsUnitAction from "../../../actions/products/productsUnit";
+import UnitAction from "../../../actions/products/productsUnit";
 
 
 export default class Form extends Modal {
@@ -21,14 +21,14 @@ export default class Form extends Modal {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         values["id"] = this.props.productsUnitUpdate.data.id;
-        values["status"] = this.Enum.ACTIVE; console.log("Values:", values);
-        this.dispatch(ProductsUnitAction.update(values));
+        values["status"] = this.Enum.ACTIVE;
+        this.dispatch(UnitAction.update(values));
       }
     });
   }
     
   handleCancel() {
-    this.dispatch(ProductsUnitAction.reset());
+    this.dispatch(UnitAction.reset());
   }
 
   render() {
