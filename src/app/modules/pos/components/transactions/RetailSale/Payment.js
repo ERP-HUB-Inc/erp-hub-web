@@ -15,7 +15,6 @@ export default class Payment extends Modal {
     super(props);
     this.state = {
       ...this.state,
-      orderProducts: [],
       customerPaymentList: [],
       amountToPay: 0,
       isCustomerCredit: false,
@@ -38,10 +37,6 @@ export default class Payment extends Modal {
     this.handleOnFocusInputAmount = this.handleOnFocusInputAmount.bind(this);
   }
 
-  componentDidMount() {
-    this.setState({orderProducts: this.mapFreeProductsToOrder()});
-  }
-
   componentDidUpdate() {
     if (this.props.mail.sent) {
       this.Message.success(this.CATranslate("text_receipt_has_sent", this.props.locale));
@@ -50,9 +45,7 @@ export default class Payment extends Modal {
       this.props.dispatch(GeneralAction.sendMailReset());
     }
 
-    if (
-      this.props.transaction.paid
-      && !this.state.isAlreadyAutoPrint) {
+    if (this.props.transaction.paid && !this.state.isAlreadyAutoPrint) {
       let element = document.getElementById("pos-receipt-preview");
       if (element && this.state.isAllowPrintReceipt) {
         this.Util.printElemV2(element.innerHTML);
@@ -236,7 +229,7 @@ export default class Payment extends Modal {
         total: this.getGrandTotalIncludeTax(),
         totalExcludeTax: summaryTotal.subTotal,
         type: Enum.TRANSACTION_TYPE.RECEIPT,
-        transactionEntries: this.state.orderProducts,
+        transactionEntries: this.mapFreeProductsToOrder(),
         paymentMethodId,
         transactionPaymentEntries: this.state.customerPaymentList
       };
@@ -324,7 +317,7 @@ export default class Payment extends Modal {
   }
 
   render() {
-    const orderProducts = this.state.orderProducts;
+    const orderProducts = this.mapFreeProductsToOrder();
     const {
       summaryTotal,
       taxRate,
