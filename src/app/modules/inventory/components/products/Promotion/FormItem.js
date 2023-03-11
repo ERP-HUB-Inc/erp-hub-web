@@ -139,30 +139,22 @@ class FormItem extends React.PureComponent {
           });
           values.productDiscount = productsDiscount;
         } else if (formData.type === promotionType.advanced) {
-          let promotionCriteria = {
+          const promotionCriteria = {
             id: formData.promotionCriteria && formData.promotionCriteria.id,
             when: values.when,
             whenTarget: values.whenTarget,
             buyQuantity: values.buyQuantity ? values.buyQuantity : 0,
             spendAmount: values.spendAmount ? values.spendAmount : 0,
             then: values.then,
-            getQuantity: 0,
-            getPercentage: 0,
-            getAmount: 0,
+            getQuantity: values.getQuantity,
+            getPercentage: values.getPercentage,
+            getAmount: values.getAmount,
             thenTarget: values.thenTarget
           };
 
           const whenBuyProducts = [];
           const thenGetProducts = [];
-
-          if (values.discountType === "free") {
-            promotionCriteria.getQuantity = values.getQuantity;
-          } else if (values.discountType === "%") {
-            promotionCriteria.getPercentage = values.getAmount;
-          } else if (values.discountType === "$") {
-            promotionCriteria.getAmount = values.getAmount;
-          }
-
+          
           if (this.state.whenBuyProducts && this.state.whenBuyProducts.length) {
             this.state.whenBuyProducts.forEach(entry => {
               whenBuyProducts.push({

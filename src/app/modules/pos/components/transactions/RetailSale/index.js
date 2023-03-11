@@ -94,7 +94,6 @@ export default class Retail extends Component {
     this.handleOnSetupDiscount = this.handleOnSetupDiscount.bind(this);
     this.handleOnOpenTaxSetting = this.handleOnOpenTaxSetting.bind(this);
     this.handleCancelTaxSetting = this.handleCancelTaxSetting.bind(this);
-    this.handleCancelDiscountSetup = this.handleCancelDiscountSetup.bind(this);
     this.handleOnClickAllCategory = this.handleOnClickAllCategory.bind(this);
     this.handleOnCancelAllCategory = this.handleOnCancelAllCategory.bind(this);
     this.handleOnResizeScreen = this.handleOnResizeScreen.bind(this);
@@ -300,6 +299,7 @@ export default class Retail extends Component {
 
    async getProductPromotion(productVariantId, orderQuantity, orderAmount) {
       let freeProducts = [];
+      let saveAmount = 0;
       let newPrice;
       let discountType;
 
@@ -310,22 +310,24 @@ export default class Retail extends Component {
             const promotion = result.data;
 
             if (promotion.type === "advance") {
-               if (promotion.then === "GET_ITEMS") {
+                if (promotion.then === "GET_ITEMS") {
                   freeProducts = promotion.freeProducts.map(freeProduct => ({
-                     productId: freeProduct.productId,
-                     productVariantId: freeProduct.productVariantId,
-                     freeByVariantId: productVariantId,
-                     name: `${freeProduct.productName} - Free`,
-                     description: `${freeProduct.productName} - Free`,
-                     barcode: freeProduct.barcode,
-                     quantity: freeProduct.quantity,
-                     price: freeProduct.price,
-                     newPrice: freeProduct.newPrice,
-                     discount: 100,
-                     discountType: 1,
-                     status: 0
+                      productId: freeProduct.productId,
+                      productVariantId: freeProduct.productVariantId,
+                      freeByVariantId: productVariantId,
+                      name: `${freeProduct.productName} - Free`,
+                      description: `${freeProduct.productName} - Free`,
+                      barcode: freeProduct.barcode,
+                      quantity: freeProduct.quantity,
+                      price: freeProduct.price,
+                      newPrice: freeProduct.newPrice,
+                      discount: 100,
+                      discountType: 1,
+                      status: 0
                   }));
-               }
+                } else if (promotion.then === "SAVE_AMOUNT") {
+                  saveAmount = promotion.savedAmount;
+                }
 
                discountType = promotion.type;
             } else {
@@ -340,7 +342,8 @@ export default class Retail extends Component {
       return {
          discountType,
          newPrice,
-         freeProducts
+         freeProducts,
+         saveAmount
       };
    }
 
@@ -544,7 +547,12 @@ export default class Retail extends Component {
          isDiscountHasAdded = true;
          discountValue = {type: Enum.DISCOUNT_TYPE.EACH_ITEM};
       } else {
-         freeProducts = promotion.freeProducts;
+          if (promotion.freeProducts.length) {
+            freeProducts = promotion.freeProducts;
+          } else {
+            discountValue = {type: 0, value: promotion.saveAmount};
+            isDiscountHasAdded = true;
+          }
       }
 
       //##End checking promotion
@@ -734,7 +742,7 @@ export default class Retail extends Component {
     this.setState({modalContent: null});
   }
 
-  handleCancelDiscountSetup() {
+  handleCancelDiscountSetup = () => {
     this.setState({
       modalContent: null,
       isDiscountHasAdded: this.props.form.getFieldValue("discountValue") > 0

@@ -350,12 +350,26 @@ export default class AdvanceDiscount extends React.Component {
           <Col md={4} style={{paddingLeft: 25}}>
             {
               this.props.form.getFieldValue("then") === getItem.SAVE_AMOUNT ?
-              <InputNumber 
-                name="getAmount"
-                label={<Translate id="text_amount" />}
-                isAutoSelect={true}
-                data={promotionCriteria.getAmount}
-                form={form} />
+              <React.Fragment>
+                {
+                  this.props.form.getFieldValue("discountType") === "$" && 
+                  <InputNumber 
+                    name="getAmount"
+                    label={<Translate id="text_amount" />}
+                    isAutoSelect={true}
+                    data={promotionCriteria.getAmount}
+                    form={form} />
+                }
+                {
+                  this.props.form.getFieldValue("discountType") === "%" && 
+                  <InputNumber 
+                    name="getPercentage"
+                    label={<Translate id="text_amount" />}
+                    isAutoSelect={true}
+                    data={promotionCriteria.getPercentage}
+                    form={form} />
+                }
+              </React.Fragment>
               :
               <InputNumber 
                 name="getQuantity"

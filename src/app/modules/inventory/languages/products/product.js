@@ -863,7 +863,7 @@ export default {
 
    "text_save_amount": [
       "Save",
-      "សន្សំ"
+      "ចំណេញ"
    ],
 
    "text_buy_the_following_item": [
