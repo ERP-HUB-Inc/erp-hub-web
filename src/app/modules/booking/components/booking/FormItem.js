@@ -82,7 +82,7 @@ export default function FormItem(props) {
             placeholder="hh:mm"
             defaultValue={getDefaultToTime(formData, action)}
             use12Hours={true}
-            required={action === Enum.MARK_DELAY}
+            required={action === Enum.MARK_COMPLETED}
             inputStyle={{width: "100%"}}
             form={form} />
         </Col>
