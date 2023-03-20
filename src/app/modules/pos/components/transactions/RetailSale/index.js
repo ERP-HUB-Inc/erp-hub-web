@@ -546,7 +546,7 @@ export default class Retail extends Component {
          initialOrderDiscount = POSUtil.getPercentageByValue(saveAmount, productVariant.price);
          isDiscountHasAdded = true;
          discountValue = {type: Enum.DISCOUNT_TYPE.EACH_ITEM};
-      } else {
+      } else if (promotion.discountType === "advance") {
           if (promotion.freeProducts.length) {
             freeProducts = promotion.freeProducts;
           } else {
