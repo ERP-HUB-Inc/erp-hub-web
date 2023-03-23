@@ -1,4 +1,5 @@
 import React from "react";
+import swal from "sweetalert";
 import List from "../../List";
 import Enum from "../../../enums";
 import FormCreate from "../../../containers/products/ProductsUnit/FormCreate";
@@ -30,6 +31,37 @@ export default class Lists extends List {
     }
   }
 
+  /**
+   * handle procedd delete
+  */
+  handleDelete() {
+    if (this.service) {
+      this.setState({deleting: true});
+      this.service.archive(this.state.selectedListIds)
+        .then(() => {
+          this.props.dispatch(this.action.fetch(this.pageSize, (this.state.current - 1) * this.pageSize));
+          this.setState({
+            selectedRowKeys: [],
+            modalVisible: false,
+            deleting: false
+          });
+        })
+        .catch(err => {
+          if (err.response && err.response.data && err.response.data.error && err.response.data.error) {
+            swal({
+              icon: "error",
+              title: err.response.data.error.message,
+              dangerMode: true
+            });
+          }
+
+          this.setState({
+            deleting: false,
+            modalVisible: false
+          });
+        });
+    }
+  }
 }
 
 class Column extends List {
