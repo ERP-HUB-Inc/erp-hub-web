@@ -1780,6 +1780,7 @@ class NewInvoice extends React.PureComponent {
                                         >
                                             <Select.Option key={2} value={Enum.PAPER_SIZE.EXCLUDE_TAX}><Translate id="text_template" /> 1</Select.Option>
                                             <Select.Option key={1} value={Enum.PAPER_SIZE.INCLUDE_TAX}><Translate id="text_template" /> 2</Select.Option>
+                                            <Select.Option key={3} value="non-official"><Translate id="text_template" /> 3</Select.Option>
                                         </Select>
                                     )
                                 }

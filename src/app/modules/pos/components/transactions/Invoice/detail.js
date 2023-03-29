@@ -273,7 +273,7 @@ class InvoiceDetail extends React.PureComponent {
                         />
                      </Menu.Item>
                      <Divider style={{marginTop: 4, marginBottom: 4}} />
-                     <Menu.Item key={0} title="Ctrl + P">
+                     <Menu.Item key={5} title="Ctrl + P">
                         <div>
                            <ReactToPrint
                               content={() => this.invoiceRef}
@@ -287,10 +287,10 @@ class InvoiceDetail extends React.PureComponent {
                            />
                         </div>
                      </Menu.Item>
-                     <Menu.Item key={0} onClick={() => window.print()} title="Ctrl + P">
+                     <Menu.Item key={6} onClick={() => window.print()} title="Ctrl + P">
                         <Icon type="printer" style={{marginRight: 10}} /> <Translate id="text_print" /> - A4
                      </Menu.Item>
-                     <Menu.Item key={5} disabled={formData.status !== Enum.INVOICE_STATUS.PAID}>
+                     <Menu.Item key={7} disabled={formData.status !== Enum.INVOICE_STATUS.PAID}>
                         <ReactToPrint
                         onBeforeGetContent={() => this.getReceiptData(formData.id)}
                         trigger={() => <button style={{background: "none", border: "none", paddingLeft: 0}}><Icon type="printer" style={{marginRight: 10}} /><Translate id="text_receipt" /></button>}
@@ -298,10 +298,10 @@ class InvoiceDetail extends React.PureComponent {
                         />
                      </Menu.Item>
                      <Divider style={{marginTop: 4, marginBottom: 4}} />
-                     <Menu.Item onClick={() => this.handleReturn(formData)} key={7} disabled={formData.status !== Enum.INVOICE_STATUS.PAID}>
+                     <Menu.Item onClick={() => this.handleReturn(formData)} key={8} disabled={formData.status !== Enum.INVOICE_STATUS.PAID}>
                         <Icon type="close" style={{marginRight: 10}} /> <Translate id="text_void" />
                      </Menu.Item>
-                     <Menu.Item key={3} onClick={() => this.handleDeleteInvoice(formData)} disabled={formData.status === Enum.INVOICE_STATUS.PAID}>
+                     <Menu.Item key={10} onClick={() => this.handleDeleteInvoice(formData)} disabled={formData.status === Enum.INVOICE_STATUS.PAID}>
                         <Icon type="delete" style={{marginRight: 10}} /> <Translate id="text_delete" />
                      </Menu.Item>
                </Menu>
