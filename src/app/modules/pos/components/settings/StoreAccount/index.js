@@ -512,6 +512,13 @@ export default class StoreAccountList extends Component {
                                 placeholder={this.CATranslate("text_vat_no", locale)}
                                 form={form} />
 
+                              <this.InputText
+                                name="KHQR1"
+                                data={storeAccount.list.KHQR1}
+                                label="KHQR"
+                                placeholder="Enter KHQR"
+                                form={form} />
+
                               <this.Select
                                 name="isAllowCustomerCredit"
                                 dataSource={this.customerCreditStatus}

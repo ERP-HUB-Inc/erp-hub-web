@@ -59,6 +59,7 @@ export default function NoneTaxInvoice(props) {
   if (formData.client) {
     client.clientId = formData.clientId;
     client.logo = formData.client.logo;
+    client.KHQR1 = formData.client.KHQR1;
   } else {
     client.clientId = util.getClientId();
     client.logo = util.getClientLogo();
@@ -105,13 +106,16 @@ export default function NoneTaxInvoice(props) {
               </li>
             </ul>
           </td>
-          <td colSpan={2} style={{paddingTop: 6, paddingBottom: 6, position: "relative"}}>
+          <td style={{paddingTop: 6, paddingBottom: 6, position: "relative"}}>
             <ul style={{...styles.ulStyle, position: "absolute", top: 6}}>
               <li>{formData.firstName} {formData.lastName}</li>
               <li className="inv-header-title">{formData.phoneNumber}</li>
               <li style={{fontWeight: 600}} className="inv-header-title">{formData.company}</li>
               {/* <li>{formData.address}</li> */}
             </ul>
+          </td>
+          <td>
+            
           </td>
         </tr>
         <tr>
@@ -186,6 +190,19 @@ export default function NoneTaxInvoice(props) {
             </div>
           </td>
         </tr>
+        {
+          client.KHQR1 &&
+          <tr>
+            <td colSpan={3} style={{textAlign: "center", marginTop: 20}}>
+              <div style={{border: "2px solid black", width: "fit-content", borderRadius: 3, position: "relative", marginTop: 20}}>
+                <div style={styles.circle}>
+                  <img src={require("../../../../../common/components/layout/styles/images/KHQR-logo.jpg")} style={{height: 30, marginTop: 11}} alt="KHQR for scanning to process payment" />
+                </div>
+                <img id={`payment-khqr${props.KHQRTimestamp}`}  alt="KHQR for scanning to process payment" />
+              </div>
+            </td>
+          </tr> 
+        }
       </tbody>
     </table>
   );
@@ -208,5 +225,18 @@ const styles = {
   },
   entriesCurrency: {
     textAlign: "right",
+  },
+  circle: {
+    width: "50px",
+    height: "50px",
+    position: "absolute",
+    left: "0",
+    right: "0",
+    top: "0",
+    bottom: "0",
+    margin: "auto",
+    borderRadius: "100%",
+    overflow: "hidden",
+    backgroundColor: "#e31b13",
   }
 };

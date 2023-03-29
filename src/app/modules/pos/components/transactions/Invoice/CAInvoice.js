@@ -1,6 +1,7 @@
 import React from "react";
 import { Result } from "antd";
 import { Translate } from "react-localize-redux";
+import QRCode from "qrcode";
 import NoneTaxInvoice from "./template/NoneTaxInvoice";
 import NonOfficialInvoice from "./template/NonOfficialInvoice";
 import TaxInvoice from "./template/TaxInvoice";
@@ -8,6 +9,23 @@ import { Button } from "../../../../common/elements/ant-ui";
 import Enum from "../../../enums/index";
 
 const CAInvoice = React.forwardRef((props, ref) => {
+  const KHQRTimestamp = Date.now();
+  React.useEffect(() => {
+    if (props.formData.client && props.formData.client.KHQR1) {
+      const paymentkhqrElment = document.getElementById(`payment-khqr${KHQRTimestamp}`);
+      if (paymentkhqrElment) {
+        QRCode.toDataURL(props.formData.client.KHQR1, {type: "image/webp", width: 150})
+      .then(url => {
+        paymentkhqrElment.src = url;
+      })
+      .catch(err => {
+        console.error(err);
+      });
+      }
+    }
+
+    // eslint-disable-next-line
+  }, [props.formData]);
 
   let style = {};
   if (props.paperSize === "A5") {
@@ -40,6 +58,7 @@ const CAInvoice = React.forwardRef((props, ref) => {
           numberTitle={props.numberTitle}
           invoiceDateTitle={props.invoiceDateTitle}
           dueDateTitle={props.dueDateTitle}
+          KHQRTimestamp={KHQRTimestamp}
         />
       }
 
