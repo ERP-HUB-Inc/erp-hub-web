@@ -19,7 +19,8 @@ const CAInvoice = React.forwardRef((props, ref) => {
   return formData && Object.keys(formData).length ? 
     <div id="invoice-content" className={props.paperSize} ref={ref} style={style}>
 
-      {formData.template === Enum.PAPER_SIZE.INCLUDE_TAX &&
+      {/* eslint-disable-next-line */}
+      {formData.template == Enum.PAPER_SIZE.INCLUDE_TAX &&
         <TaxInvoice 
           formData={formData} 
           invoiceTitle={props.invoiceTitle}
@@ -31,11 +32,12 @@ const CAInvoice = React.forwardRef((props, ref) => {
           dueDateTitle={props.dueDateTitle} />
       }
 
-      {formData.template === Enum.PAPER_SIZE.EXCLUDE_TAX &&
+      {/* eslint-disable-next-line */}
+      {formData.template == Enum.PAPER_SIZE.EXCLUDE_TAX &&
         <NoneTaxInvoice
           formData={formData} 
           invoiceTitle={props.invoiceTitle}
-          numberTitle={props.numberTitle} 
+          numberTitle={props.numberTitle}
           invoiceDateTitle={props.invoiceDateTitle}
           dueDateTitle={props.dueDateTitle}
         />

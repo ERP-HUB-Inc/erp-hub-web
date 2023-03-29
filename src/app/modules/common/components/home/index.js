@@ -55,7 +55,6 @@ export default class Home extends Component {
   }
 
   render() {
-
     let pieDataSource = {
       columns: [],
       type: "donut",
