@@ -1,6 +1,7 @@
 import React from "react";
 import CountUp from "react-countup";
 import moment from "moment";
+import {BakongKHQR, khqrData, MerchantInfo} from "bakong-khqr";
 import Component from "../Component";
 import Diagram from "../home/containers/diagram";
 import Guide from "../home/containers/guide";
@@ -28,6 +29,29 @@ export default class Home extends Component {
       this.defaultOption = option;
     }
     this.fetchDashboardCard();
+
+    const optionalData = {
+        currency: khqrData.currency.usd,
+        amount: 0.01,
+        billNumber: "#0001",
+        mobileNumber: "855962416243",
+        storeLabel: "CA INVENTION",
+        terminalLabel: "CA INVENTION",
+    };
+    
+    const merchantInfo = new MerchantInfo(
+        "sophanna@abaa",
+        "Sophanna M.",
+        "Phnom Penh",
+        1243546472,
+        "DEVBKKHPXXX",
+        optionalData
+    );
+    
+    const khqr = new BakongKHQR();
+    const response = khqr.generateIndividual(merchantInfo);
+    
+    console.log(response);
   }
 
   fetchDashboardCard() {

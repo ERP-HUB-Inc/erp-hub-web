@@ -3,12 +3,14 @@ import { Result } from "antd";
 import { Translate } from "react-localize-redux";
 import QRCode from "qrcode";
 import NoneTaxInvoice from "./template/NoneTaxInvoice";
-import NonOfficialInvoice from "./template/NonOfficialInvoice";
+import NonOfficialInvoice1 from "./template/NonOfficialInvoice1";
+import NonOfficialInvoice2 from "./template/NonOfficialInvoice2";
 import TaxInvoice from "./template/TaxInvoice";
 import { Button } from "../../../../common/elements/ant-ui";
 import Enum from "../../../enums/index";
 
 const CAInvoice = React.forwardRef((props, ref) => {
+
   const KHQRTimestamp = Date.now();
   React.useEffect(() => {
     if (props.formData.client && props.formData.client.KHQR1) {
@@ -63,7 +65,20 @@ const CAInvoice = React.forwardRef((props, ref) => {
       }
 
       {formData.template === "non-official" &&
-        <NonOfficialInvoice
+        <NonOfficialInvoice1
+          formData={formData} 
+          invoiceTitle={props.invoiceTitle}
+          invoiceTaxTitleKH={props.invoiceTaxTitleKH}
+          invoiceNoTitle={props.invoiceNoTitle}
+          invoiceNoTitleKH={props.invoiceNoTitleKH}
+          numberTitle={props.numberTitle}
+          invoiceDateTile={props.invoiceDateTile}
+          dueDateTitle={props.dueDateTitle}
+        />
+      }
+
+      {formData.template === "non-official-2" &&
+        <NonOfficialInvoice2
           formData={formData} 
           invoiceTitle={props.invoiceTitle}
           invoiceTaxTitleKH={props.invoiceTaxTitleKH}

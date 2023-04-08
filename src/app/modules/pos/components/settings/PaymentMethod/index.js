@@ -9,7 +9,13 @@ import PaymentMethodService from "../../../services/settings/PaymentMethodServic
 export default class PaymentMethodList extends List {
   constructor(props) {
     super(props);
-    this.columns = new Column();
+    this.columns = [
+      {
+        title: <this.Translate id="text_name" />,
+        dataIndex: "name",
+        key: "name"
+      }
+    ];
     this.formCreate = <FormCreate/>;
     this.formUpdate = <FormUpdate/>;
     this.service = PaymentMethodService;
@@ -18,35 +24,19 @@ export default class PaymentMethodList extends List {
     this.RESET_CONSTANT = Constant.RESET_PAYMENT_METHOD;
   }
 
-  renderActionButton() {}
+  handleShowFormEdit(rowData) {
+    if (this.action) {
+      if (this.callBackOnShowEditForm) {
+        this.callBackOnShowEditForm(rowData);
+      } else {
+        this.props.dispatch(this.action.showForm(rowData));
+        this.setState({
+          modalConten: this.formUpdate
+        });
+      }
+    }
+  }
 
   renderPagination() {}
 
-}
-
-class Column extends List {
-  constructor(props) {
-    super(props);
-    return [
-      this.columnNo,
-      {
-        title: <this.Translate id="text_name" />,
-        dataIndex: "name",
-        key: "name",
-        sorter: true,
-        render: (text, record, index) => {
-          return <div>
-            <span>{record.name}</span>{ record.isDefault === this.Enum.IS_DEFAULT  ? <this.TagLabel color="blue" style={{marginLeft: 10}}><this.Translate id="text_is_default" /></this.TagLabel> : "" }
-          </div>;
-        },
-      },
-      {
-        title: <this.Translate id="text_description" />,
-        dataIndex: "description",
-        key: "description",
-        sorter: true
-      },
-      this.columnStatus
-    ];
-  }
 }

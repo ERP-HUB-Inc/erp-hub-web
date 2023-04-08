@@ -82,9 +82,13 @@ export default class FormUpdate extends React.PureComponent {
     let end = this.props.form.getFieldValue("end");
     const note = this.props.form.getFieldValue("note");
     let date = this.props.form.getFieldValue("date");
+
     date = moment(date).format("YYYY-MM-DD");
     start = `${date} ${moment(start).format("HH:mm")}`;
     end = `${date} ${moment(end).format("HH:mm")}`;
+    
+    this.setState({loading: true});
+    
     BookingService.markAsDelay(id, {start, end, note})
     .then(() => {
       this.props.afterAction();

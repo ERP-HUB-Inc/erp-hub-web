@@ -17,9 +17,11 @@ export default class Form extends Modal {
       if (!err) {
         const {paymentMethodUpdate} = this.props;
         values["id"] = paymentMethodUpdate.data.id;
+        values["logo"] = this.getImageFromUpload(values, "logo");
         values["isSystem"] = paymentMethodUpdate.data.isSystem;
         values["isDefault"] = paymentMethodUpdate.data.isDefault;
         values["isEnableOnPOS"] = this.Util.checkValueSwitch(values.isEnableOnPOS);
+        values["status"] = 1;
         this.dispatch(PaymentMethodAction.update(values));
       }
     });

@@ -1110,6 +1110,7 @@ class NewInvoice extends React.PureComponent {
     }
 
     onChangeTemplate = (value) => {
+        localStorage.setItem("invoice_template", value);
         this.setState(preState => {
             preState.formData.template = value;
             return preState;
@@ -1486,7 +1487,9 @@ class NewInvoice extends React.PureComponent {
         onafterprint = (() => {
             document.getElementById("invoice-content").classList.remove("invoice-A5");
             const wrapInvoiceEl = document.getElementById("wrap-invoice-form-A5");
-            wrapInvoiceEl.setAttribute("id", "wrap-invoice-form");
+            if (wrapInvoiceEl) {
+                wrapInvoiceEl.setAttribute("id", "wrap-invoice-form");
+            }
         });
 
         return ( 
@@ -1775,12 +1778,13 @@ class NewInvoice extends React.PureComponent {
                                     getFieldDecorator("template", {initialValue: formData.template ? formData.template : Enum.PAPER_SIZE.EXCLUDE_TAX})(
                                         <Select 
                                             style={{width: 175}} 
-                                            placeholder={`${stringTranslate("text_choose_template", this.props.locale)}`}
+                                            placeholder={stringTranslate("text_choose_template", this.props.locale)}
                                             onChange={(value) => this.onChangeTemplate(value)}
                                         >
                                             <Select.Option key={2} value={Enum.PAPER_SIZE.EXCLUDE_TAX}><Translate id="text_template" /> 1</Select.Option>
                                             <Select.Option key={1} value={Enum.PAPER_SIZE.INCLUDE_TAX}><Translate id="text_template" /> 2</Select.Option>
                                             <Select.Option key={3} value="non-official"><Translate id="text_template" /> 3</Select.Option>
+                                            <Select.Option key={4} value="non-official-2"><Translate id="text_template" /> 4</Select.Option>
                                         </Select>
                                     )
                                 }

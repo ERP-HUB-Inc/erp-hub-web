@@ -262,6 +262,20 @@ export default {
 
   text_payment_method: ["Payment Method", "មធ្យោបាយទូទាត់ប្រាក់"],
 
+  text_bank_acc_no: ["Bank Acc No.", "លេខគណនីធនាគារ"],
+
+  text_bank_logo: ["Logo", "រូបភាព"],
+
+  text_enter_bank_acc_no: ["Enter bank acc no", "សូមបញ្ចូលលេខគណនីធនាគារ"],
+
+  text_bank_acc_name: ["Bank Acc Name", "ឈ្មោះគណនីធនាគារ"],
+
+  text_transfer_phone_no: ["Transfer Phone Number", "លេខទូរស័ព្ទវេលុយ"],
+
+  text_enter_transfer_phone_no: ["Enter transfer phone number", "សូមបញ្ចូលលេខទូរស័ព្ទវេលុយ"],
+
+  text_enter_bank_acc_name: ["Enter bank acc name", "សូមបញ្ចូលឈ្មោះគណនីធនាគារ"],
+
   text_received: ["Received", "បានទទួល"],
 
   text_done: ["Done", "បញ្ចប់"],

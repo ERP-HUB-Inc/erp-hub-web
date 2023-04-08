@@ -771,7 +771,9 @@ class FormItem extends React.Component {
     onafterprint = (() => {
       document.getElementById("invoice-content").classList.remove("invoice-A5");
       const wrapInvoiceEl = document.getElementById("wrap-invoice-form-A5");
-      wrapInvoiceEl.setAttribute("id", "wrap-invoice-form");
+      if (wrapInvoiceEl) {
+        wrapInvoiceEl.setAttribute("id", "wrap-invoice-form");
+      }
     });
 
     return (

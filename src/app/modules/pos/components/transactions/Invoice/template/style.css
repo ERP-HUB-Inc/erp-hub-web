@@ -106,7 +106,19 @@
   content: "";
 }
 
+footer#non-official-invoice {
+  display: none;
+}
+
 @media print {
+  footer#non-official-invoice {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+  }
+
   #wrap-invoice-form {
     width: fit-content;
     background: #FFFFFF;

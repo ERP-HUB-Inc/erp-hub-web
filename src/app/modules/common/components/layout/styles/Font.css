@@ -18,6 +18,20 @@
 }
 
 @font-face {
+  font-family: 'KhmerOS_Muol';
+  src:  url('fonts/KhmerOS_muol.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'KhmerOS_content';
+  src:  url('fonts/KhmerOS_content.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
   font-family: 'enfont';
   src:  url('fonts/OpenSans-Regular.ttf');
   font-weight: normal;
