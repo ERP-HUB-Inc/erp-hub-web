@@ -24,6 +24,7 @@ import employee from "../modules/hr/reducers/employees/employee";
 import customer from "../modules/crm/reducers/customers/customer";
 import groupCustomers from "../modules/crm/reducers/customers/group";
 import product from "../modules/inventory/reducers/products/product";
+import condition from "../modules/inventory/reducers/products/condition";
 import productVariant from "../modules/inventory/reducers/products/productVariant";
 import priceTag from "../modules/inventory/reducers/products/priceTag";
 import productsUnit from "../modules/inventory/reducers/products/productsUnit";
@@ -83,6 +84,7 @@ const reducer = combineReducers({
   customer,
   groupCustomers,
   product,
+  condition,
   productVariant,
   priceTag,
   productsUnit,

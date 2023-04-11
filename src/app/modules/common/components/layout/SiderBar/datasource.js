@@ -136,6 +136,12 @@ const Category = Loadable({
   loading: () => <StartUp />,
 });
 
+const Condition = Loadable({
+  loader: () =>
+    import("../../../../inventory/containers/products/Condition"),
+  loading: () => <StartUp />,
+});
+
 const PrintPriceTag = Loadable({
   loader: () =>
     import("../../../../inventory/containers/products/PrintPriceTag"),
@@ -520,6 +526,12 @@ const dataSource = {
         route: "/products/category",
         component: Category,
         isFashNav: true,
+      },
+      {
+        title: <Translate id="text_condition" />,
+        icon: "icon-types",
+        route: "/products/condition",
+        component: Condition
       },
       {
         title: <Translate id="text_attribute" />,

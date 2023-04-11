@@ -455,6 +455,11 @@ export default {
       "គ្មានការតាមដានផលិតផល"
    ],
 
+   "text_condition": [
+      "Condition",
+      "លក្ខខណ្ឌ"
+   ],
+
    "placeholder_table_variant_product": [
       "No variant product",
       "ផលិតផលគ្នាលក្ខណៈផ្សេង"
