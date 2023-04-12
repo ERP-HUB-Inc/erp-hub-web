@@ -7,6 +7,7 @@ const util = new Util();
 const dateFormat = "DD/MM/YYYY";
 
 export default function NonOfficialInvoice(props) {
+  let color = "#3083dd";
   const [state, setState] = React.useState({bankTransfers: [], phoneTransfers: []});
   React.useEffect(() => {
     PaymentMethodService.getPaymentMethodsInvoice()
@@ -81,20 +82,75 @@ export default function NonOfficialInvoice(props) {
     client.logo = util.getClientLogo();
   }
 
-  return (
-    <table className="table-invoice">
+  let style = {};
+  if (props.paperSize === "A5") {
+    style = {width: "222mm", padding: 0};
+  } else {
+    style = {width: "264mm", padding: 0};
+  }
+
+  const grandTotal = formData.total - discount + deliveryFee;
+
+  return (<div id="invoice-content" paperSize={props.paperSize} ref={props.passedRef} style={style}>
+    <table className="table-invoice" style={style}>
       <tbody>
         <tr>
-          <td style={{textAlign: "center", position: "relative", height: 100}}>
-            <img src={util.getGeneralImage(`${client.clientId}/general/${client.logo}`).url} alt="Logo" style={{height: 100, position: "absolute", left: 0, top: 0}} />
-            <h2 style={{fontWeight: "bold", color: "#000"}}>{formData.client && formData.client.businessName}</h2>
+          <td colSpan={3} style={{height: 40, backgroundColor: color}}>
+            
           </td>
         </tr>
         <tr>
-          <td colSpan={3} style={{textAlign: "center", position: "relative"}}><h4 style={{fontFamily: "KhmerOS_Muol", color: "#000"}}>វិក្កយបត្រ INVOICE</h4><div style={{position: "absolute", right: 0, top: 20, color: "#000"}}>N&deg;: <span style={{fontSize: 20, fontWeight: "bold", color: "#bb1e56"}}>{formData.invoiceNumber}</span></div></td>
+          <td>
+            <img src={util.getGeneralImage(`${client.clientId}/general/${client.logo}`).url} alt="Logo" style={{width: 100}} />
+          </td>
+          <td width="300">
+            <ul style={{listStyle: "none", marginRight: 25, paddingLeft: 0}}>
+              <li style={{color, fontWeight: "bold"}}>{formData.client && formData.client.businessName}</li>
+              <li>{formData.client && formData.client.email}</li>
+              <li>{util.formatPhonenoWithCountryCode(formData.client && formData.client.phoneNumber)}</li>
+            </ul>
+          </td>
+          <td width={300}>
+            <div dangerouslySetInnerHTML={{__html: formData.client && formData.client.address}}style={{paddingTop: 5, textAlign: "right", marginRight: 20}} />
+          </td>
+        </tr>
+        <tr>
+          <td colSpan={3} style={{textAlign: "center", position: "relative", paddingTop: 20}}><h3 style={{fontFamily: "KhmerOS_Muol", color}}>វិក្កយបត្រ INVOICE</h3></td>
+        </tr>
+        <tr>
+          <td style={{paddingLeft: 25, width: "33.33%"}}>
+            <div>
+              <div style={{fontSize: 14}}>
+                លេខ​វិ​ក័​យ​ប័ត្រ/Invoice No.
+              </div>
+              <div style={{color, fontSize: 18, fontWeight: "bold"}}>
+                {formData.invoiceNumber}
+              </div>
+            </div>
+          </td>
+          <td style={{width: "33.33%", paddingLeft: 70}}>
+            <div>
+              <div style={{fontSize: 14}}>
+                កាលបរិច្ឆេទ/Invoice Date
+              </div>
+              <div style={{color, fontSize: 18, fontWeight: "bold"}}>
+                {formData.invoiceDate ? util.formatDate(formData.invoiceDate, dateFormat) : null}
+              </div>
+            </div>
+          </td>
+          <td style={{paddingRight: 25, textAlign: "right", width: "33.33%"}}>
+            <div>
+              <div style={{fontSize: 14}}>
+                ទឹកប្រាក់សរុប/Invoice Total
+              </div>
+              <div style={{color, fontSize: 18, fontWeight: "bold"}}>
+                {util.formatCurrency(grandTotal)}
+              </div>
+            </div>
+          </td>
         </tr>
         <tr style={{background: "none"}}>
-          <td colSpan={3} style={{paddingTop: 6, paddingBottom: 6}}>
+          <td colSpan={3} style={{paddingTop: 15, paddingBottom: 6, paddingLeft: 15, paddingRight: 15}}>
             <div style={{display: "flex", justifyContent: "space-between"}}>
               <div style={{width: "49%", border: "1px solid #000", borderRadius: 5, padding: 10}}>
                 <ul style={styles.ulStyle}>
@@ -102,10 +158,10 @@ export default function NonOfficialInvoice(props) {
                     <CustomerRow title="អតិថិជន/Customer:" value={`${formData.firstName} ${formData.lastName}`} />
                   </li>
                   <li style={{display: "flex", marginBottom: 10}} className="inv-header-title">
-                    <CustomerRow title="ទូរស័ព្ទ/Phone Number:" value={formData.phoneNumber} />
+                    <CustomerRow title="ទូរស័ព្ទ/Phone Number:" value={util.formatPhoneno(formData.phoneNumber)} />
                   </li>
                   <li style={{display: "flex"}} className="inv-header-title">
-                    <CustomerRow title="កាលបរិច្ឆេទ/Date:" value={formData.invoiceDate ? util.formatDate(formData.invoiceDate, dateFormat) : null} />
+                    <CustomerRow title="អាស័យដ្ឋាន/Address:" value={formData.address ? formData.address : null} />
                   </li>
                 </ul>
               </div>
@@ -113,9 +169,9 @@ export default function NonOfficialInvoice(props) {
                 <ul style={{listStyle: "none", paddingLeft: 0, fontSize: 16, fontWeight: "bold", marginBottom: 0}}>
                   {
                     state.bankTransfers.map((bankTransfer, key) => 
-                      <li key={key} style={{display: "flex", alignItems: "center", marginBottom: 10}}>
+                      <li key={key} style={{display: "flex", alignItems: "center", marginBottom: state.bankTransfers.length === key + 1 ? 0 : 10}}>
                         <div>
-                          <img src={util.getGeneralImage(`${util.getClientId()}/payment_method/${bankTransfer.logo}`).url} style={{width: 40}} />
+                          <img src={util.getGeneralImage(`${util.getClientId()}/payment_method/${bankTransfer.logo}`).url} style={{width: 40}} alt="Payment Method" />
                         </div>
                         <div style={{marginLeft: 5}}>
                           <div>: {bankTransfer.bankAccNo}</div>
@@ -145,7 +201,7 @@ export default function NonOfficialInvoice(props) {
           </td>
         </tr>
         <tr>
-          <td colSpan={3} style={{padding: 0}}>
+          <td colSpan={3} style={{paddingLeft: 15, paddingRight: 15, paddingBottom: 0}}>
             <table className="table-invoice-entry">
               <thead>
                 <tr>
@@ -187,18 +243,25 @@ export default function NonOfficialInvoice(props) {
                   )
                 }
               </tbody>
-              <tfoot>
-                {discount > 0 && tax > 0 && deliveryFee > 0 && <InvoiceSummaryRow label="សរុបដំបូង/Subtotal" value={util.formatCurrency(subtotal)} />}
-                {discount > 0 && <InvoiceSummaryRow label="បញ្ចុះតម្លៃ/Discount" value={util.formatCurrency(discount)} />}
-                {tax > 0 && <InvoiceSummaryRow label="អាករលើតម្លៃបន្ថែម/VAT" value={util.formatCurrency(tax)} />}
-                {deliveryFee > 0 && <InvoiceSummaryRow label="ថ្លៃដឹក/Delivery" value={util.formatCurrency(deliveryFee)} />}
-                <InvoiceSummaryRow label="សរុប/Grand Total" value={util.formatCurrency(formData.total - discount + deliveryFee)} />
-              </tfoot>
             </table>
           </td>
         </tr>
         <tr>
-          <td colSpan={3}>
+          <td colSpan={3} style={{paddingLeft: 15, paddingRight: 15, paddingTop: 0}}>
+            <div style={{display: "flex", justifyContent: "space-between"}}>
+              <div dangerouslySetInnerHTML={{ __html: formData.publicNote}} id="public-not" />
+              <ul style={{listStyle: "none", paddingLeft: 0}}>
+                {discount > 0 && tax > 0 && deliveryFee > 0 && <InvoiceSummaryRow label="សរុបដំបូង/Subtotal" value={util.formatCurrency(subtotal)} />}
+                {discount > 0 && <InvoiceSummaryRow label="បញ្ចុះតម្លៃ/Discount" value={util.formatCurrency(discount)} />}
+                {tax > 0 && <InvoiceSummaryRow label="អាករលើតម្លៃបន្ថែម/VAT" value={util.formatCurrency(tax)} />}
+                {deliveryFee > 0 && <InvoiceSummaryRow label="ថ្លៃដឹក/Delivery" value={util.formatCurrency(deliveryFee)} />}
+                <InvoiceSummaryRow label="សរុប/Grand Total" value={util.formatCurrency(grandTotal)} />
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colSpan={3} style={{paddingLeft: 25, paddingRight: 25}}>
             <div style={{display: "flex", justifyContent: "space-between", textAlign: "center", paddingTop: 60, fontFamily: "KhmerOS_content", color: "#000"}}>
               <div>
                 <hr />
@@ -211,11 +274,23 @@ export default function NonOfficialInvoice(props) {
             </div>
           </td>
         </tr>
+        <tr>
+          <td colSpan={3} style={{paddingLeft: 25, paddingRight: 25}}>
+            <div style={{display: "flex", justifyContent: "space-between", textAlign: "center", paddingTop: 60, fontFamily: "KhmerOS_content", color: "#000"}}>
+              <div>
+                <hr />
+                <div>អ្នកត្រួតពិនិត្យ / Checker</div>
+              </div>
+              <div>
+                <hr />
+                <div>អ្នកដឹក / Delivery</div>
+              </div>
+            </div>
+          </td>
+        </tr>
       </tbody>
-      <footer id="non-official-invoice" style={{borderTop: "2px solid #000"}}>
-        <div dangerouslySetInnerHTML={{__html: formData.client && formData.client.address}}style={{paddingTop: 5, color: "#000"}} />
-      </footer>
     </table>
+    </div>
   );
 }
 
@@ -230,17 +305,15 @@ NonOfficialInvoice.defaultProps = {
 
 function CustomerRow({title, value}) {
   return <React.Fragment>
-    <div style={{fontSize: 16, fontFamily: "KhmerOS_content", fontWeight: "bold", color: "#000"}}>{title} {value}</div>
+    <div style={{fontSize: 16, fontFamily: "KhmerOS_content", color: "#000"}}>{title} <span style={{fontWeight: "bold"}}>{value}</span></div>
   </React.Fragment>;
 }
 
 function InvoiceSummaryRow({label, value}) {
-  return <tr>
-    <td></td>
-    <td></td>
-    <td colSpan={2} style={{textAlign: "right", fontFamily: "KhmerOS_content", fontWeight: "bold"}}>{label}</td>
-    <td style={{textAlign: "right", border: "1px solid #000", fontWeight: "bold"}}>{value}</td>
-  </tr>;
+    return <div style={{display: "flex", justifyContent: "space-between"}}>
+    <div style={{textAlign: "right", fontFamily: "KhmerOS_content", fontWeight: "bold", paddingTop: 6, paddingBottom: 6}}>{label}</div>
+    <div style={{width: 151, textAlign: "right", marginLeft: 15, border: "1px solid #000", borderTop: 0, fontWeight: "bold", paddingTop: 6, paddingBottom: 6, paddingRight: 6}}>{value}</div>
+  </div>;
 }
 
 const styles = {
