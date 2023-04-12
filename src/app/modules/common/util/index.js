@@ -254,7 +254,7 @@ export default class Util {
     let subdomain = `${protocol}://${sub}.${domain}`;
     if (type != null) {
       subdomain = `${subdomain}.${type}`;
-    } sub = "ca";
+    }
 
     return {
       domain: `${protocol}://${domain}`,
