@@ -1,6 +1,13 @@
 import React from "react";
 import moment from "moment";
-import {Col, DatePicker, Icon, Input, Pagination, Row} from "antd";
+import {
+  Col, 
+  DatePicker, 
+  Icon, 
+  Input, 
+  Pagination, 
+  Row
+} from "antd";
 import Component from "../../../../common/components/Component";
 import "./index.css";
 import Enum from "../../../enums";
@@ -58,6 +65,11 @@ export default class PurchaseOrderLists extends Component {
         dataIndex: "receiver",
         key: "receiverId",
         render: receiver => receiver ? <span style={{textTransform: "uppercase"}}>{receiver.fullName}</span> : this.emptyText
+      },
+      {
+        title: <this.Translate id="text_notes"/>,
+        dataIndex: "description",
+        key: "description"
       },
       {
         title: <this.Translate id="text_total" />,

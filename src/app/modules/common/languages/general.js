@@ -360,7 +360,9 @@ export default {
 
   text_returned: ["Returned", "បានបង្វិលអោយវិញ"],
 
-  text_description: ["Description", "ការពិពណ៌នា", "Description"],
+  text_description: ["Description", "ការពិពណ៌នា"],
+
+  text_notes: ["Notes", "កំណត់សំគាល់"],
 
   text_label: ["Label", "ស្លាកសញ្ញា"],
 

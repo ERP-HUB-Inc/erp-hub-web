@@ -119,21 +119,30 @@ export default class FormItem extends Modal {
             required={true}
             form={form} />
           <this.Select
-              name="step"
-              label={<this.Translate id="text_status" />}
-              placeholder={this.CATranslate("text_status", locale)}
-              defaultValue={formData.id ? formData.step : (this.state.isAutoReceive ? Enum.PO_STEP.RECEIVED : Enum.PO_STEP.DRAFT)}
-              dataSource={[
-                {
-                  name: <this.Translate id="text_draft" />,
-                  value: Enum.PO_STEP.DRAFT
-                },
-                {
-                  name: <this.Translate id="text_received" />,
-                  value: Enum.PO_STEP.RECEIVED
-                }
-              ]}
-              form={form} />
+            name="step"
+            label={<this.Translate id="text_status" />}
+            placeholder={this.CATranslate("text_status", locale)}
+            defaultValue={formData.id ? formData.step : (this.state.isAutoReceive ? Enum.PO_STEP.RECEIVED : Enum.PO_STEP.DRAFT)}
+            dataSource={[
+              {
+                name: <this.Translate id="text_draft" />,
+                value: Enum.PO_STEP.DRAFT
+              },
+              {
+                name: <this.Translate id="text_received" />,
+                value: Enum.PO_STEP.RECEIVED
+              }
+            ]}
+            form={form}
+          />
+          <this.InputTextArea
+            name="description"
+            label={<this.Translate id="text_notes" />}
+            data={formData.description}
+            placeholder={this.CATranslate("text_notes", this.props.locale)}
+            max={255}
+            form={this.props.form}
+          />
           <this.Row>
             <this.Col md="7">
               <this.InputNumber
