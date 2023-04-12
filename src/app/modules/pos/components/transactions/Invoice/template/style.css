@@ -119,6 +119,14 @@ footer#non-official-invoice {
     text-align: center;
   }
 
+  @page {
+    margin: 0;
+  }
+
+  body {
+    margin: 0;
+  }
+
   #wrap-invoice-form {
     width: fit-content;
     background: #FFFFFF;
