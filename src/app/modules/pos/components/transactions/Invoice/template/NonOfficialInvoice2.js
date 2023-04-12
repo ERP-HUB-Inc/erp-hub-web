@@ -120,7 +120,7 @@ export default function NonOfficialInvoice(props) {
         <tr>
           <td style={{paddingLeft: 25, width: "33.33%"}}>
             <div>
-              <div style={{fontSize: 14}}>
+              <div style={{fontFamily: "KhmerOS_content"}}>
                 លេខ​វិ​ក័​យ​ប័ត្រ/Invoice No.
               </div>
               <div style={{color, fontSize: 18, fontWeight: "bold"}}>
@@ -130,7 +130,7 @@ export default function NonOfficialInvoice(props) {
           </td>
           <td style={{width: "33.33%", paddingLeft: 70}}>
             <div>
-              <div style={{fontSize: 14}}>
+              <div style={{fontFamily: "KhmerOS_content"}}>
                 កាលបរិច្ឆេទ/Invoice Date
               </div>
               <div style={{color, fontSize: 18, fontWeight: "bold"}}>
@@ -140,7 +140,7 @@ export default function NonOfficialInvoice(props) {
           </td>
           <td style={{paddingRight: 25, textAlign: "right", width: "33.33%"}}>
             <div>
-              <div style={{fontSize: 14}}>
+              <div style={{fontFamily: "KhmerOS_content"}}>
                 ទឹកប្រាក់សរុប/Invoice Total
               </div>
               <div style={{color, fontSize: 18, fontWeight: "bold"}}>
@@ -252,7 +252,7 @@ export default function NonOfficialInvoice(props) {
               <div dangerouslySetInnerHTML={{ __html: formData.publicNote}} id="public-not" />
               <ul style={{listStyle: "none", paddingLeft: 0}}>
                 {discount > 0 && tax > 0 && deliveryFee > 0 && <InvoiceSummaryRow label="សរុបដំបូង/Subtotal" value={util.formatCurrency(subtotal)} />}
-                {discount > 0 && <InvoiceSummaryRow label="បញ្ចុះតម្លៃ/Discount" value={util.formatCurrency(discount)} />}
+                {discount > 0 && <InvoiceSummaryRow label="បញ្ចុះតម្លៃ/Discount" color="red" value={`-${util.formatCurrency(discount)}`} />}
                 {tax > 0 && <InvoiceSummaryRow label="អាករលើតម្លៃបន្ថែម/VAT" value={util.formatCurrency(tax)} />}
                 {deliveryFee > 0 && <InvoiceSummaryRow label="ថ្លៃដឹក/Delivery" value={util.formatCurrency(deliveryFee)} />}
                 <InvoiceSummaryRow label="សរុប/Grand Total" value={util.formatCurrency(grandTotal)} />
@@ -309,10 +309,10 @@ function CustomerRow({title, value}) {
   </React.Fragment>;
 }
 
-function InvoiceSummaryRow({label, value}) {
+function InvoiceSummaryRow({label, value, color}) {
     return <div style={{display: "flex", justifyContent: "space-between"}}>
     <div style={{textAlign: "right", fontFamily: "KhmerOS_content", fontWeight: "bold", paddingTop: 6, paddingBottom: 6}}>{label}</div>
-    <div style={{width: 151, textAlign: "right", marginLeft: 15, border: "1px solid #000", borderTop: 0, fontWeight: "bold", paddingTop: 6, paddingBottom: 6, paddingRight: 6}}>{value}</div>
+    <div style={{width: 151, textAlign: "right", marginLeft: 15, border: "1px solid #000", borderTop: 0, fontWeight: "bold", paddingTop: 6, paddingBottom: 6, paddingRight: 6, color}}>{value}</div>
   </div>;
 }
 

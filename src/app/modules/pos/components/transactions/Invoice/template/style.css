@@ -139,6 +139,10 @@ footer#non-official-invoice {
     margin: 0;
   }
 
+  table.table-invoice {
+    page-break-inside: avoid;
+  }
+
   .invoice-A5 {
     margin: 0 !important;
     width: 222mm !important;

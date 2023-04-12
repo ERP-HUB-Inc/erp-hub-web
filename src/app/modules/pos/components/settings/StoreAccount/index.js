@@ -34,6 +34,13 @@ export default class StoreAccountList extends Component {
       paymentTerm: "",
       address: "",
       deviceList: [],
+      multiInvSetting: [
+        {color: ""},
+        {color: ""},
+        {color: ""},
+        {color: ""},
+        {color: ""}
+      ],
       isClearProduct: false,
       isClearTransaction: false,
       activeTap: 1
@@ -163,9 +170,25 @@ export default class StoreAccountList extends Component {
         values["paymentTerm"] = this.state.paymentTerm;
         values["address"] = this.state.address;
         values["status"] = this.Enum.ACTIVE;
+        if (values.multiInvSetting && values.multiInvSetting.length) {
+          values["multiInvSetting"] = JSON.stringify(values.multiInvSetting.filter(color => color).map(color => ({color})));
+        } else {
+         delete values["multiInvSetting"]; 
+        }
+        
         this.dispatch(StoreAccountAction.update(values));
       }
     });
+  }
+
+  mergeInvoiceColors = (colorArray) => {
+    const multiInvSetting = this.state.multiInvSetting;
+    
+    for (let i = 0; i < colorArray.length && i < multiInvSetting.length; i++) {
+      multiInvSetting[i].color = colorArray[i].color;
+    }
+
+    return multiInvSetting;
   }
 
   onClearProduct = () => {
@@ -591,6 +614,29 @@ export default class StoreAccountList extends Component {
                             </this.Col>
                           </this.Row>
                         </this.TabPane>
+                        <this.TabPane tab={<this.Translate id="text_invoice_setting" />} key="8">
+                          <this.Row style={{marginBottom: 25}}>
+                            <this.Col lg="12">
+                              <this.Table
+                                columns={[
+                                  {
+                                    title: "Color",
+                                    dataIndex: "color",
+                                    key: "color",
+                                    render: (color, record, index) => {
+                                      return <this.InputText
+                                      key={index}
+                                      data={color}
+                                      name={`multiInvSetting[${index}]`}
+                                      form={form}/>;
+                                    }
+                                  }
+                                ]}
+                                dataSource={storeAccount.list.multiInvSetting ? this.mergeInvoiceColors(JSON.parse(storeAccount.list.multiInvSetting)) : this.state.multiInvSetting}
+                              />
+                            </this.Col>
+                          </this.Row>
+                        </this.TabPane>
                         <this.TabPane tab={<this.Translate id="text_account" />} key="2">
                           <this.Row>
                             <this.Col lg="4" md="4">
@@ -599,7 +645,8 @@ export default class StoreAccountList extends Component {
                                 name="userName"
                                 label={<this.Translate id="text_user_name" />}
                                 disabled={true}
-                                form={form}/>
+                                form={form}
+                              />
 
                               <this.InputPassword
                                 // CURRENT PWD

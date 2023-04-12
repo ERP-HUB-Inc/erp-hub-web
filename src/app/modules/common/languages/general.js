@@ -240,6 +240,8 @@ export default {
 
   text_store: ["Store", "ហាង"],
 
+  text_invoice_setting: ["Invoice Setting", "ការកំណត់វិក័យបត្រ"],
+
   text_save: ["Save", "រក្សារទុក", "Save"],
 
   text_save_and_close: ["Save & Close", "រក្សារទុក & បិទ"],
