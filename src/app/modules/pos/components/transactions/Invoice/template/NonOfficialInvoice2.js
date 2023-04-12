@@ -133,15 +133,22 @@ function TableInvoice({pageNumber, client, formData, state, style, color}) {
   const deliveryFee = formData.deliveryFee ? formData.deliveryFee : 0;
 
   const grandTotal = formData.total - discount + deliveryFee;
+  const invoiceDate = formData.invoiceDate ? util.formatDate(formData.invoiceDate, dateFormat) : "";
 
   return <table className="table-invoice" style={style}>
   <tbody>
     <tr>
-      <td colSpan={3} style={{height: 40, backgroundColor: color}}>
-        {
-          pageNumber && 
-          <div style={{fontSize: 14, color: "white", fontWeight: "bold"}}>Page: {pageNumber}</div> 
-        }
+      <td colSpan={3} style={{height: 40, backgroundColor: color, paddingLeft: 25, paddingRight: 25}}>
+        <div style={{display: "flex", justifyContent: "space-between"}}>
+          {
+            pageNumber && 
+            <div style={{fontSize: 14, color: "white", fontWeight: "bold"}}>Page: {pageNumber}</div> 
+          }
+          {
+            pageNumber && 
+            <div style={{fontSize: 14, color: "white", fontWeight: "bold"}}>S/N: {`${formData.invoiceNumber.replace("-","")}${invoiceDate}${grandTotal.toString().replace(".","")}`.replace(/[^\w.-]+/g, "")}</div> 
+          }
+        </div>
       </td>
     </tr>
     <tr>
@@ -179,7 +186,7 @@ function TableInvoice({pageNumber, client, formData, state, style, color}) {
             កាលបរិច្ឆេទ/Invoice Date
           </div>
           <div style={{color, fontSize: 18, fontWeight: "bold"}}>
-            {formData.invoiceDate ? util.formatDate(formData.invoiceDate, dateFormat) : null}
+            {invoiceDate}
           </div>
         </div>
       </td>
