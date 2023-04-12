@@ -241,6 +241,7 @@ class NewInvoice extends React.PureComponent {
     pageTitle = "";
     textRequiredCustomer = "";
     textDiscountErr = "";
+    multiInvSetting = this.util.getMultiInvSetting();
 
     componentDidMount() {
         let idParam = this.props.match.params.id;
@@ -1435,9 +1436,9 @@ class NewInvoice extends React.PureComponent {
     renderPreviewInvoice(formData) {
         formData.transactionEntries = this.state.transactionEntries;
         return <div id="wrap-invoice-form">
-            <CAInvoice formData={formData} />
+            <CAInvoice ref={ref => this.invoiceRef = ref} formData={formData} />
             <div style={{display: "none"}}>
-                <CAInvoice ref={ref => this.invoiceRef = ref} formData={formData} paperSize="A5" />
+                <CAInvoice ref={ref => this.invoiceA5Ref = ref} formData={formData} paperSize="A5" />
             </div>
         </div>;
     }
@@ -1799,10 +1800,10 @@ class NewInvoice extends React.PureComponent {
                                         overlay={(
                                             <Menu>
                                                 <Menu.Item key={1}>
-                                                    <ReactToPrint content={() => this.invoiceRef} trigger={() => <div>Paper Size - A5</div>} />
+                                                    <ReactToPrint content={() => this.invoiceA5Ref} trigger={() => <div>Paper Size - A5</div>} />
                                                 </Menu.Item>
-                                                <Menu.Item onClick={() => window.print()} key={1}>
-                                                    Paper Size - A4
+                                                <Menu.Item key={2}>
+                                                    <ReactToPrint content={() => this.invoiceRef} trigger={() => <div>Paper Size - A4</div>} />
                                                 </Menu.Item>
                                             </Menu>
                                         )}

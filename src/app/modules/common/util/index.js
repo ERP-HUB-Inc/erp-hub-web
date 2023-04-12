@@ -120,14 +120,32 @@ export default class Util {
 
   getClientId() {
     const result = this.getAuthSession();
-    if (result) return result.clientId;
-    else return null;
+    if (result) {
+      return result.clientId;
+    } else {
+      return null;
+    }
   }
 
   getClientLogo() {
     const result = this.getAuthSession();
-    if (result) return result.setting.logo;
-    else return null;
+    if (result) {
+      return result.setting.logo;
+    } else {
+      return null;
+    }
+  }
+
+  getMultiInvSetting() {
+    const result = this.getAuthSession();
+    if (result && result.setting && result.setting.multiInvSetting) {
+      let multiInvSetting = result.setting.multiInvSetting;
+      multiInvSetting = JSON.parse(multiInvSetting);
+
+      return Array.isArray(multiInvSetting) && multiInvSetting.length ? multiInvSetting : null;
+    } else {
+      return null;
+    }
   }
 
   getLocationId() {
