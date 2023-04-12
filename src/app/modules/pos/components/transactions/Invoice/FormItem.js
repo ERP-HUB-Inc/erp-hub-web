@@ -543,6 +543,7 @@ class NewInvoice extends React.PureComponent {
             
             this.setState(preState => {
                 preState.formData = data;
+                preState.selectedCustomer = {id: data.id, totalCredit: 0};
                 preState.transactionEntries = transactionEntries;
                 preState.selectedSerials = selectedSerials;
                 return preState;
@@ -1343,8 +1344,15 @@ class NewInvoice extends React.PureComponent {
         if (customerId) {
             const selectedCustomer = this.state.customers.find(value => value.id === customerId);
             this.refreshPrice(selectedCustomer);
-            this.setState({selectedCustomer});
             this.textRequiredCustomer = "";
+
+            CustomerService.getCredit(customerId)
+            .then(response => {
+                if (response && response.data) {
+                    selectedCustomer["totalCredit"] = response.data.data;
+                    this.setState({selectedCustomer});
+                }
+            });
         } else {
             this.textRequiredCustomer = <Translate id="text_required_customer" />;
             this.setState({selectedCustomer: null});
@@ -1531,13 +1539,18 @@ class NewInvoice extends React.PureComponent {
                                 }
                                 <span style={{color: "red", fontSize: 13, position: "absolute", left: 0, top: 20}}>{this.textRequiredCustomer}</span>
                             </Form.Item>
-                            {/* {
+                            {
                                 this.state.selectedCustomer && 
-                                <div style={{paddingLeft: 90}}>
-                                    <Link to={`/customer-profile/${this.state.selectedCustomer.id}`} className="ant-btn ant-btn-link" target="_blank">View</Link>
-                                    <Link to="" className="ant-btn ant-btn-link">Edit</Link>
+                                <div style={{paddingLeft: 110, display: "flex", alignItems: "center"}}>
+                                    <div style={{color: "red"}}>
+                                        Total Credit: {this.util.formatCurrency(this.state.selectedCustomer.totalCredit)}
+                                    </div>
+                                    <div>
+                                        <Link to={`/customer-profile/${this.state.selectedCustomer.id}`} className="ant-btn ant-btn-link" target="_blank">View</Link>
+                                    </div>
+                                    {/* <Link to="" className="ant-btn ant-btn-link">Edit</Link> */}
                                 </div>
-                            } */}
+                            }
                         </Col>
                         <Col md={8}>
                             <DatePickers 

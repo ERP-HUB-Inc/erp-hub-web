@@ -146,7 +146,7 @@ function TableInvoice({pageNumber, client, formData, state, style, color}) {
           }
           {
             pageNumber && 
-            <div style={{fontSize: 14, color: "white", fontWeight: "bold"}}>S/N: {`${formData.invoiceNumber.replace("-","")}${invoiceDate}${grandTotal.toString().replace(".","")}`.replace(/[^\w.-]+/g, "")}</div> 
+            <div style={{fontSize: 14, color: "white", fontWeight: "bold"}}>S/N: { formData.id ? `${formData.invoiceNumber.replace("-","")}${invoiceDate}${grandTotal.toString().replace(".","")}`.replace(/[^\w.-]+/g, "") : ""}</div> 
           }
         </div>
       </td>
