@@ -62,7 +62,6 @@ export default function NonOfficialInvoice(props) {
             style={style}
             color={colorInvoice.color}
           />
-          <div style={{height: 25, backgroundColor: "#525659"}} />
         </React.Fragment>
         )
         :
