@@ -491,7 +491,7 @@ class NewInvoice extends React.PureComponent {
         const action = new URLSearchParams(document.location.search).get("action");
         const isClone = action === "clone";
         this.setState({loading: true});
-        InvoiceService.detail(id)
+        InvoiceService.detail(id, true)
         .then((response) => {
             const data = response.data;
             let totalExcludeTax = Number(data.totalExcludeTax);
@@ -543,7 +543,7 @@ class NewInvoice extends React.PureComponent {
             
             this.setState(preState => {
                 preState.formData = data;
-                preState.selectedCustomer = {id: data.id, totalCredit: 0};
+                preState.selectedCustomer = {id: data.id, totalCredit: data.totalCredit};
                 preState.transactionEntries = transactionEntries;
                 preState.selectedSerials = selectedSerials;
                 return preState;

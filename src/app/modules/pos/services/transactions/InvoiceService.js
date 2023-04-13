@@ -43,10 +43,10 @@ class InvoiceService extends BaseService {
     });
   }
 
-  detail(id) {
+  detail(id, includeCredit) {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}/${id}`,
+      url: `${this.baseUrl}/${id}?includeCredit=${includeCredit}`,
       headers: this.header
     });
   }
