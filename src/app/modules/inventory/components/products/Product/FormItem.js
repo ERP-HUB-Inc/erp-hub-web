@@ -22,6 +22,7 @@ import {
 } from "../../../../common/elements/ant-ui/Select/selectSearch";
 import {
   InputText,
+  Select,
   UploadImageCrop
 } from "../../../../common/elements/ant-ui";
 import ProductAction from "../../../actions/products/product";
@@ -241,6 +242,29 @@ function SelectOwner(props) {
     </div>;
 }
 
+function SelectCondition(props) {
+  const [conditions, setConditions] = React.useState([]);
+
+  React.useEffect(() => {
+    ProductService.getFormData()
+    .then(response => {
+      if (response.data && response.data.data) {
+        setConditions(response.data.data.conditions);
+      }
+    });
+  }, []);
+
+  return <Select
+      name="conditionId"
+      label={<Translate id="text_condition" />}
+      placeholder={props.placeholder}
+      defaultValue={props.defaultValue}
+      valueKey="id"
+      dataSource={conditions}
+      form={props.form}
+  />;
+}
+
 export default class FormItem extends Modal {
   constructor(props) {
     super(props);
@@ -256,6 +280,7 @@ export default class FormItem extends Modal {
       description: "",
       specification: "",
       tags: [],
+      conditions: [],
       inputVisible: false,
       editCostVisible: false,
       inputValue: "",
@@ -332,7 +357,7 @@ export default class FormItem extends Modal {
           this.props.setExchangeRateCallBack(data1[data1.length-1].value);
         }
       });
-    }else {
+    } else {
       this.setState({exchangeRate: 1});
     }
   }
@@ -556,10 +581,10 @@ export default class FormItem extends Modal {
             </this.Col>
 
             <this.Col md="4">
-                <SelectOwner
-                  formData={formData}
-                  placeholder={this.CATranslate("text_owner", locale)}
-                  form={form}/>
+              <SelectCondition
+                defaultValue={formData.conditionId}
+                placeholder={this.CATranslate("text_select_condition", locale)}
+                form={form} />
             </this.Col>
 
             <this.Col md="6">
@@ -698,6 +723,13 @@ export default class FormItem extends Modal {
                         placeholder={this.CATranslate("input_product_re_order_point_placeholder", locale)}
                         max={9999999}
                         form={form}/>
+                    </this.Col>
+                    <this.Col md="4">
+                      <SelectOwner
+                        formData={formData}
+                        placeholder={this.CATranslate("text_owner", locale)}
+                        form={form}
+                      />
                     </this.Col>
                     <this.Col md="4" style={{ display: "flex", alignItems: "center", paddingTop: 20 }}>
                       <this.Switchs

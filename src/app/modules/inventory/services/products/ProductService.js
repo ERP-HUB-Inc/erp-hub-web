@@ -54,6 +54,14 @@ class ProductService extends BaseService {
       });
    }
 
+   getFormData() {
+      this.setHeader();
+      return this.GET({ 
+         url: `${this.baseUrl}/get_form_data`,
+         headers: this.header
+      });
+   }
+
    searchForDrowDown(
       limit,
       offset,

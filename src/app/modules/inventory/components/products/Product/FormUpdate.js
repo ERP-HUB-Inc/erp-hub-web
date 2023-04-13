@@ -175,9 +175,9 @@ export default class ProductUpdate extends Component {
         }
 
         productVariants.map( (variant) => {
-        variant.price           = Exchange.rielToDollar(variant.price, this.exchangeRate);
+        variant.price  = Exchange.rielToDollar(variant.price, this.exchangeRate);
         variant.distributePrice = Exchange.rielToDollar(variant.distributePrice, this.exchangeRate);
-        variant.wholePrice      = Exchange.rielToDollar(variant.wholePrice, this.exchangeRate);
+        variant.wholePrice = Exchange.rielToDollar(variant.wholePrice, this.exchangeRate);
         return variant;
         });
 
@@ -185,7 +185,6 @@ export default class ProductUpdate extends Component {
         values["productPackages"] = productPackageToProduct;
         values["image"] = this.getImageFromUpload(values);
         this.dispatch(ProductAction.update(values));
-
       }
     });
   }

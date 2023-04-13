@@ -7,8 +7,8 @@ export class Select extends Element {
     super(props);
     this.getName = this.getName.bind(this);
   }
+
   getName(value) {
-  
     if (this.props.nestedName &&
       this.props.nestedName in value &&
       value[this.props.nestedName]) {
@@ -23,7 +23,6 @@ export class Select extends Element {
     } else {
       return value[this.props.nameKey];
     }
-   
   }
 
   render() {
