@@ -20,14 +20,15 @@ import PrivilegeService from "../../../services/settings/PrivilegeService";
 
 const { TabPane } = Tabs;
 const { Option } = Select;
-const permission_module_code    = "report";
-const permission_code           = "inventory_dashboard";
-const util                      = new Util();
+const permission_module_code = "report";
+const permission_code = "inventory_dashboard";
+const util = new Util();
 
 export default function InventoryReport(props) {
   const [loading, setLoading] = React.useState(false);
   const [alertProducts, setAlertProducts] = React.useState([]);
   const [popularProducts, setPopularProducts] = React.useState([]);
+  const [stockByConditions, setStockByConditions] = React.useState([]);
   const [topSellingSize, setTopSellingSize] = React.useState(25);
   const [todayPurchases, setTodayPurchases] = React.useState([]);
   const [topSellType, setTopSellType] = React.useState("quantity");
@@ -67,7 +68,8 @@ export default function InventoryReport(props) {
     InventoryService.getInventoryDashboard()
     .then(response => {
       if (response.data) {
-        setAlertProducts(response.data);
+        setAlertProducts(response.data.stocks);
+        setStockByConditions(response.data.stockByConditions);
       }
     });
 
@@ -126,7 +128,7 @@ export default function InventoryReport(props) {
                   subTitle=""
               />
               <Row gutter={16}>
-                <Col span={5}>
+                <Col lg={5}>
                   <Card onClick={() => history.push("/reports/product?viewStock=reorder")} style={{cursor: "pointer"}}>
                     <Statistic
                         title="Products to Reorder"
@@ -135,9 +137,9 @@ export default function InventoryReport(props) {
                     />
                   </Card>
                 </Col>
-                <Col span={8}>
+                <Col lg={8}>
                   <Row>
-                    <Col span={12}>
+                    <Col lg={12}>
                       <Card onClick={() => history.push("/reports/product?viewStock=zeroStock")} style={{cursor: "pointer", borderBottomRightRadius: 0, borderTopRightRadius: 0}}>
                         <Statistic
                             title="Zero Stock Products"
@@ -146,7 +148,7 @@ export default function InventoryReport(props) {
                         />
                       </Card>
                     </Col>
-                    <Col span={12}>
+                    <Col lg={12}>
                       <Card onClick={() => history.push("/reports/product?viewStock=errorStock")} style={{cursor: "pointer", borderBottomLeftRadius: 0, borderTopLeftRadius: 0}}>
                         <Statistic
                             title="Stock Error"
@@ -157,7 +159,7 @@ export default function InventoryReport(props) {
                     </Col>
                   </Row>
                 </Col>
-                <Col span={5}>
+                <Col lg={5}>
                   <Card onClick={() => history.push("/products/list")} style={{cursor: "pointer"}}>
                     <Statistic
                         title="Products"
@@ -165,7 +167,7 @@ export default function InventoryReport(props) {
                     />
                   </Card>
                 </Col>
-                <Col span={6}>
+                <Col lg={6}>
                   <Card>
                     <Statistic
                         title="Stock Ok"
@@ -176,6 +178,18 @@ export default function InventoryReport(props) {
                     />
                   </Card>
                 </Col>
+                {
+                  stockByConditions.map((stockByCondition, index) => 
+                    <Col lg={5} key={index} style={{marginTop: 15}}>
+                      <Card onClick={() => history.push("/reports/product?conditionId=" + stockByCondition.id)} style={{cursor: "pointer"}}>
+                        <Statistic
+                            title={stockByCondition.name}
+                            value={stockByCondition.quantity}
+                        />
+                      </Card>
+                    </Col>
+                  )
+                }
               </Row>
 
               <Tabs type="card" style={{marginTop: 25}}>

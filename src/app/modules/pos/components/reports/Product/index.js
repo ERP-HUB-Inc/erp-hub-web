@@ -21,9 +21,9 @@ import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissi
 import PrivilegeService from "../../../services/settings/PrivilegeService";
 
 const { Option } = Select;
-const permission_module_code    = "report";
-const permission_code           = "product_report";
-const util                      = new Util();
+const permission_module_code = "report";
+const permission_code = "product_report";
+const util = new Util();
 
 export default function ReportProduct() {
   const queryparam = new URLSearchParams(document.location.search);
@@ -41,6 +41,7 @@ export default function ReportProduct() {
 
   const onChangeSearch = (event) => {
     const viewStock = queryparam.get("viewStock");
+    const conditionId = queryparam.get("conditionId");
     const similarSearch = event.target.value;
 
     if (similarSearch) {
@@ -60,7 +61,7 @@ export default function ReportProduct() {
 
     setSearchValue(similarSearch);
 
-    fetchReport(50, 0, viewStock, similarSearch);
+    fetchReport(50, 0, viewStock, similarSearch, null, conditionId);
   };
 
   const onChangeLocation = (selectLocationId) => {
@@ -69,23 +70,25 @@ export default function ReportProduct() {
     const limit = queryparam.get("limit");
     const offset = queryparam.get("offset");
     const viewStock = queryparam.get("viewStock");
+    const conditionId = queryparam.get("conditionId");
     params.set("locationId", selectLocationId);
     history.push({pathname: "/reports/product", search: `?${params.toString()}`});
-    fetchReport(limit, offset, viewStock, searchValue, selectLocationId);
+    fetchReport(limit, offset, viewStock, searchValue, selectLocationId, conditionId);
   };
 
   const onChangePagination = (current, pageSize) => {
     const params = new URLSearchParams(document.location.search);
     const viewStock = params.get("viewStock");
     const similarSearch = params.get("search");
+    const conditionId = params.get("conditionId");
     const offset = (current - 1) * pageSize;
     params.set("current", current);
     params.set("offset", offset);
     history.push({pathname: "/reports/product", search: `?${params.toString()}`});
-    fetchReport(pageSize, offset, viewStock, similarSearch);
+    fetchReport(pageSize, offset, viewStock, similarSearch, conditionId);
   };
 
-  const fetchReport = (limit, offset, viewStock, search, locationId) => {
+  const fetchReport = (limit, offset, viewStock, search, locationId, conditionId) => {
     let current = queryparam.get("current");
 
     limit = limit ? limit : 50;
@@ -101,7 +104,7 @@ export default function ReportProduct() {
     }
 
     setLoading(true);
-    ProductService.getProductReport({limit, offset, viewStock, search, locationId})
+    ProductService.getProductReport({limit, offset, viewStock, search, locationId, conditionId})
       .then((response) => {
         if (response.data && response.data.data) {
           const data = response.data;
@@ -119,14 +122,15 @@ export default function ReportProduct() {
     const queryparam = new URLSearchParams(document.location.search);
     const viewStock = queryparam.get("viewStock");
     const search = queryparam.get("search");
+    const conditionId = queryparam.get("conditionId");
     const locationId = parseInt(queryparam.get("locationId"));
     const limit = queryparam.get("limit");
     const offset = queryparam.get("offset");
 
     if (isHasAccessPermission == null){
       PrivilegeService.checkPermission(permission_module_code, permission_code)
-          .then(({data}) => setIsHasAccessPermission(data))
-          .catch(() => setIsHasAccessPermission(false));
+      .then(({data}) => setIsHasAccessPermission(data))
+      .catch(() => setIsHasAccessPermission(false));
     }
 
     fetchReport(
@@ -134,7 +138,8 @@ export default function ReportProduct() {
       offset,
       viewStock,
       search,
-      locationId
+      locationId,
+      conditionId
     );
 
     LocationService.lists(50)
