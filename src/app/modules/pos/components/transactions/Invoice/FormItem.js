@@ -543,7 +543,7 @@ class NewInvoice extends React.PureComponent {
             
             this.setState(preState => {
                 preState.formData = data;
-                preState.selectedCustomer = {id: data.id, totalCredit: data.totalCredit};
+                preState.selectedCustomer = {id: data.customerId, totalCredit: data.totalCredit};
                 preState.transactionEntries = transactionEntries;
                 preState.selectedSerials = selectedSerials;
                 return preState;
