@@ -103,8 +103,13 @@ export default function ReportProduct() {
       current = currentPage;
     }
 
+    const option = {limit, offset, viewStock, search, locationId};
+    if (conditionId) {
+      option["conditionId"] = conditionId;
+    }
+
     setLoading(true);
-    ProductService.getProductReport({limit, offset, viewStock, search, locationId, conditionId})
+    ProductService.getProductReport(option)
       .then((response) => {
         if (response.data && response.data.data) {
           const data = response.data;
