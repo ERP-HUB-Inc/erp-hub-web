@@ -183,7 +183,7 @@ export default function InventoryReport(props) {
                     <Col lg={5} key={index} style={{marginTop: 15}}>
                       <Card onClick={() => history.push("/reports/product?conditionId=" + stockByCondition.id)} style={{cursor: "pointer"}}>
                         <Statistic
-                            title={stockByCondition.name}
+                            title={`${stockByCondition.name} (By quantity)`}
                             value={stockByCondition.quantity}
                         />
                       </Card>
