@@ -1,7 +1,7 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { Translate } from "react-localize-redux";
 import { Link } from "react-router-dom";
-import { 
+import {
   Card,
   Col,
   Icon,
@@ -13,19 +13,19 @@ import Util from "../../../../common/util";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
 import PrivilegeService from "../../../services/settings/PrivilegeService";
 
-const permission_module_code  = "report";
-const permission_code         = "stock_report";
-const util                    = new Util();
+const permission_module_code = "report";
+const permission_code = "stock_report";
+const util = new Util();
 
 export default function StockReport() {
 
   const [isHasAccessPermission, setIsHasAccessPermission] = React.useState(null);
 
-  useEffect(()=>{
-    if (isHasAccessPermission == null){
+  useEffect(() => {
+    if (isHasAccessPermission == null) {
       PrivilegeService.checkPermission(permission_module_code, permission_code)
-          .then(({data}) => setIsHasAccessPermission(data))
-          .catch(() => setIsHasAccessPermission(false));
+        .then(({ data }) => setIsHasAccessPermission(data))
+        .catch(() => setIsHasAccessPermission(false));
     }
   }, [isHasAccessPermission]);
 
@@ -35,34 +35,34 @@ export default function StockReport() {
         (isHasAccessPermission ?
           <div>
             <PageHeader
-                style={{
-                  backgroundColor: "#f7f7f7",
-                  paddingLeft: 0,
-                  paddingRight: 0
-                }}
-                onBack={() => history.goBack()}
-                title={<Translate id="text_stock_report" />}
-                subTitle=""
+              style={{
+                backgroundColor: "#f7f7f7",
+                paddingLeft: 0,
+                paddingRight: 0
+              }}
+              onBack={() => history.goBack()}
+              title={<Translate id="text_stock_report" />}
+              subTitle=""
             />
 
-            <Row gutter={16} style={{marginBottom: 15}}>
+            <Row gutter={16} style={{ marginBottom: 15 }}>
               <Col md={8}>
                 <Card
-                    title={
-                      <div>
-                        <Icon type="line-chart" style={{fontSize: 20}} />
-                        <span style={{marginLeft: 15}}><Translate id="text_stock_adjustment_report" /></span>
-                      </div>
-                    }
-                    bordered={false}
+                  title={
+                    <div>
+                      <Icon type="line-chart" style={{ fontSize: 20 }} />
+                      <span style={{ marginLeft: 15 }}><Translate id="text_stock_adjustment_report" /></span>
+                    </div>
+                  }
+                  bordered={false}
                 >
                   <div className="content">
-                    <ul style={{listStyle: "none", paddingLeft: 0}}>
+                    <ul style={{ listStyle: "none", paddingLeft: 0 }}>
                       <li>- the report generate base selected date</li>
                       <li>- includes number of items</li>
                       <li>- show adjustment by employee</li>
                       <li>- able to export to excel file</li>
-                      <li style={{visibility: "hidden"}}>- </li>
+                      <li style={{ visibility: "hidden" }}>- </li>
                     </ul>
                   </div>
                   <div className="footer">
@@ -72,16 +72,16 @@ export default function StockReport() {
               </Col>
               <Col md={8}>
                 <Card
-                    title={
-                      <div>
-                        <Icon type="line-chart" style={{fontSize: 20}} />
-                        <span style={{marginLeft: 15}}><Translate id="text_consignment_summary" /></span>
-                      </div>
-                    }
-                    bordered={false}
+                  title={
+                    <div>
+                      <Icon type="line-chart" style={{ fontSize: 20 }} />
+                      <span style={{ marginLeft: 15 }}><Translate id="text_consignment_summary" /></span>
+                    </div>
+                  }
+                  bordered={false}
                 >
                   <div className="content">
-                    <ul style={{listStyle: "none", paddingLeft: 0}}>
+                    <ul style={{ listStyle: "none", paddingLeft: 0 }}>
                       <li>- the report generate base selected date</li>
                       <li>- show total consignment</li>
                       <li>- includes number of items</li>
@@ -96,15 +96,15 @@ export default function StockReport() {
               </Col>
               <Col md={8}>
                 <Card
-                    title={
-                      <div>
-                        <Icon type="line-chart" style={{fontSize: 20}} />
-                        <span style={{marginLeft: 15}}><Translate id="text_consignment_product" /></span>
-                      </div>
-                    }
-                    bordered={false}>
+                  title={
+                    <div>
+                      <Icon type="line-chart" style={{ fontSize: 20 }} />
+                      <span style={{ marginLeft: 15 }}><Translate id="text_consignment_product" /></span>
+                    </div>
+                  }
+                  bordered={false}>
                   <div className="content">
-                    <ul style={{listStyle: "none", paddingLeft: 0}}>
+                    <ul style={{ listStyle: "none", paddingLeft: 0 }}>
                       <li>- show all consignment product</li>
                       <li>- count quantity off consignment</li>
                       <li>- include cost each products</li>
@@ -118,9 +118,34 @@ export default function StockReport() {
                 </Card>
               </Col>
             </Row>
+            <Row gutter={16}>
+              <Col md={8}>
+                <Card
+                  title={
+                    <div>
+                      <Icon type="line-chart" style={{ fontSize: 20 }} />
+                      <span style={{ marginLeft: 15 }}><Translate id="text_stock_movement_log_report" /></span>
+                    </div>
+                  }
+                  bordered={false}>
+                  <div className="content">
+                    <ul style={{ listStyle: "none", paddingLeft: 0 }}>
+                      <li>- show all consignment product</li>
+                      <li>- count quantity off consignment</li>
+                      <li>- include cost each products</li>
+                      <li>- total each consignment product</li>
+                      <li>- able to export to excel file</li>
+                    </ul>
+                  </div>
+                  <div className="footer">
+                    <Link to="/reports/stock-movement-log-report" className="ant-btn"><Translate id="text_view" /></Link>
+                  </div>
+                </Card>
+              </Col>
+            </Row>
           </div>
           :
-          <NoPermissionV2/>
+          <NoPermissionV2 />
         )
       }
     </React.Fragment>

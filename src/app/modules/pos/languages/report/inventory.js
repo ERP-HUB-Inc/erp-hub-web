@@ -10,7 +10,7 @@ export default {
     "សរុបដោយផលិតផលនិទ្ទេស",
     "TOTALS BY PRODUCT, OUTLET"
   ],
-  
+
   "col_inventory_report_tag": [
     "Tag",
     "ស្លាក",
@@ -89,7 +89,12 @@ export default {
   "text_consignment_product": [
     "Stock Consignment by Product",
     "របាយការណ៍ស្តុកខនសាញ្ញតាមផលិតផល"
-  ]
+  ],
+  "text_stock_movement_log_report":
+    [
+      "Stock Movement Log Report",
+      "របាយការណ៍កំណត់ហេតុនៃចលនាភាគហ៊ុន",
+    ]
+
 
 };
-  

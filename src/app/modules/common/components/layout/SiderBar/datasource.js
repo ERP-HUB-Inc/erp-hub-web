@@ -212,7 +212,7 @@ const SaleReportDashboard = Loadable({
 const LowSaleReport = Loadable({
   loader: () =>
     import("../../../../pos/components/reports/Sale/ReportLowSales"),
-    loading: () => <StartUp />,
+  loading: () => <StartUp />,
 });
 
 const PurchaseReportDashboard = Loadable({
@@ -240,6 +240,11 @@ const InventoryDashboard = Loadable({
 
 const AdjustmentReport = Loadable({
   loader: () => import("../../../../pos/containers/reports/Adjustment"),
+  loading: () => <StartUp />,
+});
+
+const MovementLogReport = Loadable({
+  loader: () => import("../../../../pos/containers/reports/MovementLog"),
   loading: () => <StartUp />,
 });
 
@@ -771,6 +776,11 @@ const dataSource = {
       {
         route: "/reports/adjustment-report",
         component: AdjustmentReport,
+        isFashNav: false,
+      },
+      {
+        route: "/reports/stock-movement-log-report",
+        component: MovementLogReport,
         isFashNav: false,
       },
       {
