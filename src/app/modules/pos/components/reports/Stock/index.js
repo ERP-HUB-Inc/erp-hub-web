@@ -124,7 +124,7 @@ export default function StockReport() {
                   title={
                     <div>
                       <Icon type="line-chart" style={{ fontSize: 20 }} />
-                      <span style={{ marginLeft: 15 }}><Translate id="text_stock_movement_log_report" /></span>
+                      <span style={{ marginLeft: 15 }}><Translate id="text_movement_log_report" /></span>
                     </div>
                   }
                   bordered={false}>

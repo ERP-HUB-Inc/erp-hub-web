@@ -90,10 +90,10 @@ export default {
     "Stock Consignment by Product",
     "របាយការណ៍ស្តុកខនសាញ្ញតាមផលិតផល"
   ],
-  "text_stock_movement_log_report":
+  "text_movement_log_report":
     [
-      "Stock Movement Log Report",
-      "របាយការណ៍កំណត់ហេតុនៃចលនាភាគហ៊ុន",
+      "Movement Log Report",
+      "របាយការណ៍ផ្លាស់ប្តូនៃផលិតផល",
     ]
 
 
