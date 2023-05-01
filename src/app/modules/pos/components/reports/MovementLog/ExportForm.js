@@ -1,7 +1,7 @@
 import React from "react";
 import { Drawer, Result, Button } from "antd";
 import moment from "moment";
-import AdjustmentService from "../../../services/report/AdjustmentService";
+import getMovementLogService from "../../../services/report/MovementLog";
 
 function ExportFormLoader({ locationId, endDate, startDate, searchValue }) {
   const [loading, setLoading] = React.useState(false);
@@ -17,7 +17,7 @@ function ExportFormLoader({ locationId, endDate, startDate, searchValue }) {
     option["isExport"] = true;
     try {
       setLoading(true);
-      AdjustmentService.getAdjustmentReport(option).then((response) => {
+      getMovementLogService.getMovementLogServiceReport(option).then((response) => {
         if (response.data) {
           setResult(response.data);
         }
@@ -33,7 +33,7 @@ function ExportFormLoader({ locationId, endDate, startDate, searchValue }) {
   return (
     <Result
       status="success"
-      title="Successfully Exported Adjustment Report"
+      title="Successfully Exported Movement Log Report"
       subTitle={loading ? "Please wait..." : ""}
       extra={[<a href={result ? result.link : "#"}>Download File(xlsx)</a>]}
     />
@@ -77,7 +77,7 @@ export default class ExportForm extends React.PureComponent {
           Export
         </Button>
         <Drawer
-          title="Export Adjustment"
+          title="Export Movement Log Report"
           width={520}
           closable={true}
           onClose={this.onClose}

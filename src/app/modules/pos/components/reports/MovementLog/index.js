@@ -1,11 +1,9 @@
 import React from "react";
 import {
-  Statistic,
   PageHeader,
   Table,
   Select,
   DatePicker,
-  Card,
   Row,
   Col,
   Input,
@@ -15,14 +13,14 @@ import moment from "moment";
 import ExportForm from "./ExportForm";
 import Util from "../../../../common/util";
 import LocationService from "../../../services/settings/LocationService";
-// import AdjustmentService from "../../../services/report/AdjustmentService";
+import getMovementLogService from "../../../services/report/MovementLog";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 export default function ReportProduct() {
   const [loading, setLoading] = React.useState(false);
-  // const [searchValue, setSearchValue] = React.useState("");
+  const [searchValue, setSearchValue] = React.useState("");
   const [startDate, setStartDate] = React.useState(
     moment().startOf("month").format("YYYY-MM-DD")
   );
@@ -32,92 +30,90 @@ export default function ReportProduct() {
   const [data, setData] = React.useState(null);
   const [locations, setLocations] = React.useState([]);
   const [locationId, setLocationId] = React.useState(0);
-  const [summary, setSummary] = React.useState(null);
   const { Search } = Input;
-  // const pathName = "/reports/adjustment-report";
+  const pathName = "/reports/stock-movement-log-report";
   const util = new Util();
 
-  // const onChangeSearch = (event) => {
-  //   const queryparam = new URLSearchParams(document.location.search);
-  //   const similarSearch = event.target.value;
-  //   if (similarSearch) {
-  //     queryparam.set("search", similarSearch);
-  //     util.pushParamsToURL(pathName, queryparam.toString());
-  //     setSearchValue(similarSearch);
-  //     fetchReport(similarSearch, locationId, startDate, endDate);
-  //   } else {
-  //     queryparam.delete("search");
-  //     util.pushParamsToURL(pathName, queryparam.toString());
-  //     setSearchValue("");
-  //     fetchReport("", locationId, startDate, endDate);
-  //   }
-  // };
+  const onChangeSearch = (event) => {
+    const queryparam = new URLSearchParams(document.location.search);
+    const similarSearch = event.target.value;
+    if (similarSearch) {
+      queryparam.set("search", similarSearch);
+      util.pushParamsToURL(pathName, queryparam.toString());
+      setSearchValue(similarSearch);
+      fetchReport(similarSearch, locationId, startDate, endDate);
+    } else {
+      queryparam.delete("search");
+      util.pushParamsToURL(pathName, queryparam.toString());
+      setSearchValue("");
+      fetchReport("", locationId, startDate, endDate);
+    }
+  };
 
-  // const onChangeLocation = (selectLocationId) => {
-  //   const queryparam = new URLSearchParams(document.location.search);
-  //   setLocationId(parseInt(selectLocationId));
-  //   queryparam.set("locationId", selectLocationId);
-  //   util.pushParamsToURL(pathName, queryparam.toString());
-  //   fetchReport(searchValue, selectLocationId, startDate, endDate);
-  // };
+  const onChangeLocation = (selectLocationId) => {
+    const queryparam = new URLSearchParams(document.location.search);
+    setLocationId(parseInt(selectLocationId));
+    queryparam.set("locationId", selectLocationId);
+    util.pushParamsToURL(pathName, queryparam.toString());
+    fetchReport(searchValue, selectLocationId, startDate, endDate);
+  };
 
-  // const onChangeDate = (values) => {
-  //   const queryparam = new URLSearchParams(document.location.search);
-  //   const fromDate = moment(values[0]).format("YYYY-MM-DD");
-  //   const toDate = moment(values[1]).format("YYYY-MM-DD");
-  //   queryparam.set("startDate", fromDate);
-  //   queryparam.set("endDate", toDate);
-  //   setStartDate(fromDate);
-  //   setEndDate(toDate);
-  //   util.pushParamsToURL(pathName, queryparam.toString());
-  //   fetchReport(searchValue, locationId, fromDate, toDate);
-  // };
+  const onChangeDate = (values) => {
+    const queryparam = new URLSearchParams(document.location.search);
+    const fromDate = moment(values[0]).format("YYYY-MM-DD");
+    const toDate = moment(values[1]).format("YYYY-MM-DD");
+    queryparam.set("startDate", fromDate);
+    queryparam.set("endDate", toDate);
+    setStartDate(fromDate);
+    setEndDate(toDate);
+    util.pushParamsToURL(pathName, queryparam.toString());
+    fetchReport(searchValue, locationId, fromDate, toDate);
+  };
 
-  // const fetchReport = (search, locationId, startDate, endDate) => {
-  //   setLoading(true);
-  //   let option = {};
-  //   if (search) {
-  //     option["search"] = search;
-  //   }
-  //   option["locationId"] = locationId;
-  //   option["startDate"] = moment(startDate).format("YYYY-MM-DD");
-  //   option["endDate"] = moment(endDate).format("YYYY-MM-DD");
-  //   AdjustmentService.getAdjustmentReport(option)
-  //     .then((response) => {
-  //       if (response && response.data) {
-  //         const data = response.data;
-  //         setSummary(data.summary);
-  //         setData(data.results);
-  //       }
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // };
+  const fetchReport = (search, locationId, startDate, endDate) => {
+    setLoading(true);
+    let option = {};
+    if (search) {
+      option["search"] = search;
+    }
+    option["locationId"] = locationId;
+    option["startDate"] = moment(startDate).format("YYYY-MM-DD");
+    option["endDate"] = moment(endDate).format("YYYY-MM-DD");
+    getMovementLogService.getMovementLogServiceReport(option)
+      .then((response) => {
+
+        if (response && response.data) {
+          setData(response.data);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   React.useEffect(() => {
-    // const queryparam = new URLSearchParams(document.location.search);
-    // let fromDate = startDate;
-    // let toDate = endDate;
-    // let search = searchValue;
-    // let location = locationId;
-    // if (queryparam.has("startDate")) {
-    //   fromDate = queryparam.get("startDate");
-    //   setStartDate(moment(fromDate));
-    // }
-    // if (queryparam.has("endDate")) {
-    //   toDate = queryparam.get("endDate");
-    //   setEndDate(moment(toDate));
-    // }
-    // if (queryparam.has("search")) {
-    //   search = queryparam.get("search");
-    //   setSearchValue(search);
-    // }
-    // if (queryparam.has("locationId")) {
-    //   location = queryparam.get("locationId");
-    //   setLocationId(parseInt(location));
-    // }
-    // fetchReport(search, location, fromDate, toDate);
+    const queryparam = new URLSearchParams(document.location.search);
+    let fromDate = startDate;
+    let toDate = endDate;
+    let search = searchValue;
+    let location = locationId;
+    if (queryparam.has("startDate")) {
+      fromDate = queryparam.get("startDate");
+      setStartDate(moment(fromDate));
+    }
+    if (queryparam.has("endDate")) {
+      toDate = queryparam.get("endDate");
+      setEndDate(moment(toDate));
+    }
+    if (queryparam.has("search")) {
+      search = queryparam.get("search");
+      setSearchValue(search);
+    }
+    if (queryparam.has("locationId")) {
+      location = queryparam.get("locationId");
+      setLocationId(parseInt(location));
+    }
+    fetchReport(search, location, fromDate, toDate);
 
     LocationService.lists(50).then((response) => {
       if (response.data && response.data.data) {
@@ -126,22 +122,6 @@ export default function ReportProduct() {
     });
     //eslint-disable-next-line
   }, []);
-
-  let damagedGoods = 0;
-  let leakAge = 0;
-  let incorrectStock = 0;
-  let stolenGoods = 0;
-
-  if (summary) {
-    damagedGoods = summary.find(value => value.type === "BROKEN");
-    damagedGoods = damagedGoods ? damagedGoods.totalAmount : 0;
-    leakAge = summary.find(value => value.type === "LEAKAGE");
-    leakAge = leakAge ? leakAge.totalAmount : 0;
-    incorrectStock = summary.find(value => value.type === "INCORRECT_STOCK");
-    incorrectStock = incorrectStock ? incorrectStock.totalAmount : 0;
-    stolenGoods = summary.find(value => value.type === "STOLEN");
-    stolenGoods = stolenGoods ? stolenGoods.totalAmount : 0;
-  }
 
   return (
     <div id="report-sale">
@@ -158,16 +138,16 @@ export default function ReportProduct() {
           <div key={1} style={{ display: "flex" }}>
             <Search
               placeholder="Search product by name,barcode"
-              // onChange={onChangeSearch}
+              onChange={onChangeSearch}
               style={{ width: "280px" }}
               allowClear={true}
-            // value={searchValue}
+              value={searchValue}
             />
             <Select
               name="locationId"
               style={{ width: 200, marginLeft: 15, marginRight: 15 }}
               value={locationId}
-            // onChange={onChangeLocation}
+              onChange={onChangeLocation}
             >
               {[{ name: <Translate id="text_all_store" />, id: 0 }]
                 .concat(locations)
@@ -181,7 +161,7 @@ export default function ReportProduct() {
               <RangePicker
                 name="dates"
                 value={[moment(startDate), moment(endDate)]}
-                // onChange={onChangeDate}
+                onChange={onChangeDate}
                 allowClear={false}
               />
             </div>
@@ -189,48 +169,12 @@ export default function ReportProduct() {
         ]}
       />
       <Row gutter={16}>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="Damaged Goods"
-              value={damagedGoods.toFixed(2)}
-              precision={2}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="Leakage"
-              value={leakAge.toFixed(2)}
-              precision={2}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="Incorrect Stock"
-              value={incorrectStock.toFixed(2)}
-              precision={2}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title={"Stolen Goods"}
-              value={stolenGoods.toFixed(2)}
-              precision={2}
-            />
-          </Card>
-        </Col>
         <Col span={24}>
           <ExportForm
-          // locationId={locationId}
-          // endDate={endDate}
-          // startDate={startDate}
-          // searchValue={searchValue}
+            locationId={locationId}
+            endDate={endDate}
+            startDate={startDate}
+            searchValue={searchValue}
           />
         </Col>
         <Col span={24}>
@@ -248,8 +192,8 @@ export default function ReportProduct() {
               },
               {
                 title: <Translate id="text_product_name" />,
-                dataIndex: "productName",
-                key: "productName",
+                dataIndex: "name",
+                key: "name",
               },
               {
                 title: <Translate id="text_barcode" />,
@@ -260,16 +204,19 @@ export default function ReportProduct() {
                 title: "Opening Stock",
                 dataIndex: "openingStock",
                 key: "openingStock",
+                render: (_, record) => record.balance + Math.max(record.beforeOutQuantity - record.afterOutQuantity, 0) - Math.max(record.afterInQuantity - record.beforeInQuantity, 0)
               },
               {
                 title: "Stock In",
                 dataIndex: "stockIn",
                 key: "stockIn",
+                render: (_, record) => Math.max(record.afterInQuantity - record.beforeInQuantity, 0)
               },
               {
                 title: "Stock Out",
                 dataIndex: "stockOut",
                 key: "stockOut",
+                render: (_, record) => Math.max(record.beforeOutQuantity - record.afterOutQuantity, 0)
               },
               {
                 title: "Balance",
