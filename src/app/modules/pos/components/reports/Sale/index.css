@@ -2,11 +2,6 @@
     margin-top: 28px;
 }
 
-/* .main-table-sale-report table tr th.sale-report {
-    background-color: white;
-    border: none;
-} */
-
 
 .main-table-sale-report tr:nth-child(odd) {
     background-color: white
@@ -23,10 +18,6 @@
 .main-table-sale-report tr.ant-table-row td.sale-report td {   
     background-color: red !important;
 }
-
-/* .main-table-sale-report .ant-table-tbody > tr.ant-table-row:nth-child(1)   { 
-    background-color: #EAEAEA ;
-} */
 
 .main-table-sale-report .ant-table-content {
     border-top: none ;
@@ -49,3 +40,4 @@
 #sale-report-dashboard .footer .ant-btn {
     min-width: 100px
 }
+

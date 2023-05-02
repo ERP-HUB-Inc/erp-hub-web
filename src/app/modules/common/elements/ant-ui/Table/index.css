@@ -22,8 +22,11 @@ tr:nth-child(odd) {
     background-color: rgb(255, 255, 255)
 }
 
-.ant-table-expanded-row .ant-table table tbody tr td {
-    border-top: 0.5px solid #EAEAEA !important
+.ant-table-expanded-row td {
+    background-color: white;
+    padding-left: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
 }
 
 .ant-table-expanded-row td:last-child {
@@ -49,14 +52,14 @@ tr:nth-child(odd) {
 }
 
 
-.ant-table-tbody>tr>td,
-.ant-table-thead>tr>th {
+.ant-table-tbody>tr.ant-table-row>td,
+.ant-table-thead>tr.trant-table-row>th {
     padding-top: 10px !important;
     padding-bottom: 10px !important
 }
 
-.ant-table-tbody>tr>td,
-.ant-table-thead>tr>th {
+.ant-table-tbody>tr.ant-table-row>td,
+.ant-table-thead>tr.ant-table-row>th {
     padding-left: 14px !important;
     padding-right: 14px !important
 }
@@ -73,11 +76,6 @@ tr.ant-table-expanded-row,
 tr.ant-table-expanded-row:hover,
 .ant-table-tbody>tr.ant-table-expanded-row:hover>td {
     background: white !important
-}
-
-.ant-table-expanded-row>td {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
 }
 
 .sub-table .ant-table-content {

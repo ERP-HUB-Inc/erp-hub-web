@@ -14,6 +14,7 @@ import moment from "moment";
 import * as _ from "lodash";
 import { Translate } from "react-localize-redux";
 import ExportForm from "./ExportForm";
+import "./index.css";
 import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import ReportSaleService from "../../../services/report/SaleService";
@@ -313,7 +314,7 @@ export default function ReportSaleReceipt() {
             getData={getExportableData}
           />
         </Col>
-        <Col span={24}>
+        <Col span={24} id="sales-receipt-report">
           <Table
             rowKey="id"
             bordered={true}
@@ -321,74 +322,281 @@ export default function ReportSaleReceipt() {
               {
                 key: 1,
                 name: "Sophanna M.",
+                phone: "096 241 6243",
                 platform: "iOS",
                 version: "10.3.4.5654",
                 upgradeNum: 500,
                 creator: "Jack",
                 createdAt: "2014-12-24 23:12:00",
+                entries: [
+                  {
+                    key: 1,
+                    date: "2014-12-24 23:12:00",
+                    name: "This is production name",
+                    upgradeNum: "Upgraded: 56",
+                    quantity: 1,
+                    price: 2
+                  },
+                  {
+                    key: 2,
+                    date: "2014-12-24 23:12:00",
+                    name: "This is production name",
+                    upgradeNum: "Upgraded: 56",
+                    quantity: 1,
+                    price: 2
+                  },
+                  {
+                    key: 3,
+                    date: "2014-12-24 23:12:00",
+                    name: "This is production name",
+                    upgradeNum: "Upgraded: 56",
+                    quantity: 1,
+                    price: 2
+                  }
+                ]
               },
               {
                 key: 2,
-                name: "Sophanna M.",
+                name: "Sok Sopha",
+                phone: "096 241 6243",
                 platform: "iOS",
                 version: "10.3.4.5654",
                 upgradeNum: 500,
                 creator: "Jack",
                 createdAt: "2014-12-24 23:12:00",
+                entries: [
+                  {
+                    key: 1,
+                    date: "2014-12-24 23:12:00",
+                    name: "This is production name",
+                    upgradeNum: "Upgraded: 56",
+                    quantity: 1,
+                    price: 2
+                  },
+                  {
+                    key: 2,
+                    date: "2014-12-24 23:12:00",
+                    name: "This is production name",
+                    upgradeNum: "Upgraded: 56",
+                    quantity: 4,
+                    price: 2
+                  },
+                  {
+                    key: 3,
+                    date: "2014-12-24 23:12:00",
+                    name: "This is production name",
+                    upgradeNum: "Upgraded: 56",
+                    quantity: 1,
+                    price: 2
+                  }
+                ]
               },
               {
                 key: 3,
-                name: "Sophanna M.",
+                name: "Keo Bopha",
+                phone: "096 241 6243",
                 platform: "iOS",
                 version: "10.3.4.5654",
                 upgradeNum: 500,
                 creator: "Jack",
                 createdAt: "2014-12-24 23:12:00",
+                entries: [
+                  {
+                    key: 1,
+                    date: "2014-12-24 23:12:00",
+                    name: "This is production name",
+                    upgradeNum: "Upgraded: 56",
+                    quantity: 1,
+                    price: 2
+                  },
+                  {
+                    key: 2,
+                    date: "2014-12-24 23:12:00",
+                    name: "This is production name",
+                    upgradeNum: "Upgraded: 56",
+                    quantity: 10,
+                    price: 2
+                  },
+                  {
+                    key: 3,
+                    date: "2014-12-24 23:12:00",
+                    name: "This is production name",
+                    upgradeNum: "Upgraded: 56",
+                    quantity: 1,
+                    price: 2
+                  }
+                ]
               },
             ]}
             columns={[
-              { title: "Customer", dataIndex: "name", key: "name", width: 120 },
-              { title: "Date", dataIndex: "date", key: "date", width: 120 },
-              { title: "Invoice No.", dataIndex: "invoiceNo", key: "invoiceNo", width: 120 },
-              { title: "Description", dataIndex: "description", key: "description", render: () => null },
-              { title: "Sold Quantity", dataIndex: "soldQuantity", key: "soldQuantity", width: 120 },
-              { title: "Sales Price", dataIndex: "salesPrice", key: "salesPrice", width: 120 },
-              { title: "Amount", dataIndex: "amount", key: "amount", width: 120 }
-            ]}
-            // defaultExpandAllRows={true}
-            expandedRowRender={() => {
-              const columns = [
-                { dataIndex: "name", key: "name", width: 105, render: () => null },
-                { dataIndex: "date", key: "date", width: 120, render: () => "02/10/2023" },
-                { dataIndex: "invoiceNo", key: "invoiceNo", width: 120, render: () => "INV-0001" },
-                { dataIndex: "description", key: "description", render: () => "WH-1000XM5 Wireless Industry Leading Noise Canceling Headphones" },
-                { dataIndex: "soldQuantity", key: "soldQuantity", align: "right", width: 120, render: () => 10 },
-                { dataIndex: "salesPrice", key: "salesPrice", align: "right", width: 120, render: () => 10 },
-                { dataIndex: "amount", key: "amount", align: "right", width: 120, render: () => <div style={{ marginRight: 16 }}>10</div> }
-              ];
-
-              const data = [];
-              for (let i = 0; i < 3; ++i) {
-                data.push({
-                  key: i,
-                  date: "2014-12-24 23:12:00",
-                  name: "This is production name",
-                  upgradeNum: "Upgraded: 56",
-                });
+              { 
+                title: "Customer",
+                dataIndex: "name", 
+                key: "name", 
+                width: 120,
+                render: (name, record) => {
+                  return {
+                    children: `${name} ${record.phone}`,
+                    props: {
+                      colSpan: 7,
+                    }
+                  };
+                }
+              },
+              { 
+                title: "Date", 
+                dataIndex: "date", 
+                key: "date", 
+                width: 120,
+                render: () => {
+                  return {
+                    children: null,
+                    props: {
+                      colSpan: 0
+                    },
+                  };
+                }
+              },
+              { 
+                title: "Invoice No.", 
+                dataIndex: "invoiceNo", 
+                key: "invoiceNo", 
+                width: 120,
+                render: () => {
+                  return {
+                    children: null,
+                    props: {
+                      colSpan: 0
+                    },
+                  };
+                }
+              },
+              { 
+                title: "Description", 
+                dataIndex: "description", 
+                key: "description", 
+                render: () => {
+                  return {
+                    children: null,
+                    props: {
+                      colSpan: 0
+                    },
+                  };
+                } 
+              },
+              { 
+                title: "Sold Quantity", 
+                dataIndex: "soldQuantity", 
+                key: "soldQuantity", 
+                width: 120,
+                render: () => {
+                  return {
+                    children: null,
+                    props: {
+                      colSpan: 0
+                    },
+                  };
+                }
+              },
+              { 
+                title: "Sales Price", 
+                dataIndex: "salesPrice", 
+                key: "salesPrice", 
+                width: 120,
+                render: () => {
+                  return {
+                    children: null,
+                    props: {
+                      colSpan: 0
+                    },
+                  };
+                }
+              },
+              { 
+                title: "Amount", 
+                dataIndex: "amount", 
+                key: "amount", 
+                width: 120,
+                render: () => {
+                  return {
+                    children: null,
+                    props: {
+                      colSpan: 0
+                    },
+                  };
+                }
               }
+            ]}
+            defaultExpandAllRows={true}
+            expandIconAsCell={false}
+            expandIcon={() => null}
+            expandedRowRender={(record) => {
+              const columns = [
+                {
+                  dataIndex: "name",
+                  key: "name",
+                  width: 120,
+                  align: "right",
+                  render: () => null
+                },
+                {
+                  dataIndex: "date",
+                  key: "date",
+                  width: 120,
+                  render: () => "02/10/2023",
+                },
+                {
+                  dataIndex: "invoiceNo",
+                  key: "invoiceNo",
+                  width: 120,
+                  render: () => "INV-0001",
+                },
+                {
+                  dataIndex: "description",
+                  key: "description",
+                  render: () =>
+                    "WH-1000XM5 Wireless Industry Leading Noise Canceling Headphones",
+                },
+                {
+                  dataIndex: "soldQuantity",
+                  key: "soldQuantity",
+                  align: "right",
+                  width: 120,
+                  render: () => 10,
+                },
+                {
+                  dataIndex: "salesPrice",
+                  key: "salesPrice",
+                  align: "right",
+                  width: 120,
+                  render: () => 10,
+                },
+                {
+                  dataIndex: "amount",
+                  key: "amount",
+                  align: "right",
+                  width: 120,
+                  render: () => <div style={{ marginRight: 16 }}>10</div>,
+                }
+              ];
+              const total = record.entries.reduce((sum, obj) => sum + obj.quantity, 0);
               return <div className="sub-table">
                 <Table
                   showHeader={false}
                   columns={columns}
-                  dataSource={data}
+                  dataSource={record.entries}
                   pagination={false}
-                  footer={() => <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <div style={{ width: 120, textAlign: "right" }}>30</div>
-                    <div style={{ width: 120, textAlign: "right" }}>30</div>
-                    <div style={{ width: 120, textAlign: "right" }}>30</div>
+                  bordered={false}
+                  footer={() => <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+                    <div>Total</div>
+                    <div style={{display: "flex", justifyContent: "space-between"}}>
+                      <div style={{ width: 120, textAlign: "right" }}>30</div>
+                      <div style={{ width: 120, textAlign: "right" }}>30</div>
+                      <div style={{ width: 120, textAlign: "right" }}>30</div>
+                    </div>
                   </div>}
                 />
-              </div>;
+                </div>;
             }}
             pagination={false}
             loading={loading}
