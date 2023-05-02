@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   Statistic,
   PageHeader,
@@ -32,6 +32,7 @@ export default function ReportSaleByProduct() {
   const pathName = "/reports/sold_products";
   const queryparam = new URLSearchParams(document.location.search);
   const util = new Util();
+  const timerRef = useRef(null);
 
   const onFromChange = (value) => {
     queryparam.set("startDate", value.format("YYYY-MM-DD"));
@@ -55,11 +56,21 @@ export default function ReportSaleByProduct() {
       queryparam.set("search", event.target.value);
       util.pushParamsToURL(pathName, queryparam.toString());
       setSearchValue(event.target.value);
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        fetchReport(fromValue, toValue, searchValue, supplierId);
+      }, 500);
     } else {
       queryparam.delete("search");
       util.pushParamsToURL(pathName, queryparam.toString());
+      setSearchValue("");
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        fetchReport(fromValue, toValue, "", supplierId);
+      }, 500);
     }
-    fetchReport(fromValue, toValue, event.target.value, supplierId);
+
+
   };
 
   const onChangeSupplier = (value) => {
@@ -84,25 +95,25 @@ export default function ReportSaleByProduct() {
       search,
       supplierId
     })
-    .then((response) => {
-      if (response.data) {
-        const { summaryByProducts } = response.data;
+      .then((response) => {
+        if (response.data) {
+          const { summaryByProducts } = response.data;
 
-        const totalRevenue = _.sumBy(summaryByProducts, (value) =>parseFloat(value.revenue));
-        const totalDiscount = _.sumBy(summaryByProducts, (value) => parseFloat(value.discount));
-        const totalNetSale = totalRevenue - totalDiscount;
-        const totalCost = _.sumBy(summaryByProducts, (value) => parseFloat(value.cost));
+          const totalRevenue = _.sumBy(summaryByProducts, (value) => parseFloat(value.revenue));
+          const totalDiscount = _.sumBy(summaryByProducts, (value) => parseFloat(value.discount));
+          const totalNetSale = totalRevenue - totalDiscount;
+          const totalCost = _.sumBy(summaryByProducts, (value) => parseFloat(value.cost));
 
-        setData(summaryByProducts);
-        setSummary({
-          totalRevenue,
-          totalDiscount,
-          totalNetSale,
-          totalCost,
-        });
-      }
-    })
-    .finally(() => setLoading(false));
+          setData(summaryByProducts);
+          setSummary({
+            totalRevenue,
+            totalDiscount,
+            totalNetSale,
+            totalCost,
+          });
+        }
+      })
+      .finally(() => setLoading(false));
   };
 
   const getExportableData = () => {
@@ -132,7 +143,7 @@ export default function ReportSaleByProduct() {
       setFromValue(moment(queryparam.get("startDate")));
       option["startDate"] = moment(queryparam.get("startDate"));
     }
-    else{
+    else {
       queryparam.set("startDate", moment().format("YYYY-MM-DD"));
     }
 
@@ -140,8 +151,8 @@ export default function ReportSaleByProduct() {
       setToValue(moment(queryparam.get("endDate")));
       option["endDate"] = moment(queryparam.get("endDate"));
     }
-    else{
-      queryparam.set("endDate",  moment().format("YYYY-MM-DD"));
+    else {
+      queryparam.set("endDate", moment().format("YYYY-MM-DD"));
     }
 
     if (queryparam.has("search")) {
@@ -160,6 +171,8 @@ export default function ReportSaleByProduct() {
     );
 
     util.pushParamsToURL(pathName, queryparam.toString());
+
+    return () => clearTimeout(timerRef.current);
     //eslint-disable-next-line
   }, []);
 
@@ -333,9 +346,8 @@ export default function ReportSaleByProduct() {
                 dataIndex: "quantity",
                 key: "quantity",
                 render: (quantity, record) => {
-                  return `${quantity} ${
-                    record.unitName ? record.unitName : ""
-                  }`;
+                  return `${quantity} ${record.unitName ? record.unitName : ""
+                    }`;
                 },
               },
               {

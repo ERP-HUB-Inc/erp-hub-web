@@ -1,15 +1,15 @@
-import React, {useState} from "react";
+import React, { useState, useRef } from "react";
 import { Translate } from "react-localize-redux";
 import moment from "moment";
-import { 
-  PageHeader, 
+import {
+  PageHeader,
   Row,
   Col,
   Table,
   Form,
   message
 } from "antd";
-import {Select, DatePickers, InputText} from "../../../../../common/elements/ant-ui";
+import { Select, DatePickers, InputText } from "../../../../../common/elements/ant-ui";
 import SupplierService from "../../../../../inventory/services/stock/SupplierService";
 import ConsignmentService from "../../../../services/report/ConsignmentService";
 import history from "../../../../../common/router/history";
@@ -27,7 +27,7 @@ function ReportConsignmentByProduct(props) {
   const params = new URLSearchParams(document.location.search);
   const pathname = "/reports/stock-consignment-product";
   const formatDate = "YYYY-MM-DD";
-  let timer = null;
+  const timerRef = useRef(null);
 
   const fetchReport = () => {
     let search = "",
@@ -54,11 +54,11 @@ function ReportConsignmentByProduct(props) {
 
     setLoading(true);
     ConsignmentService.getReportByProduct(search, sellerId, startDate, endDate)
-    .then(response => {
-      setData(response.data);
-    })
-    .catch(err => message.error("Internal Servicer Error"))
-    .finally(() => setLoading(false));
+      .then(response => {
+        setData(response.data);
+      })
+      .catch(err => message.error("Internal Servicer Error"))
+      .finally(() => setLoading(false));
   };
 
   const onChangeSelect = value => {
@@ -68,23 +68,22 @@ function ReportConsignmentByProduct(props) {
       params.delete("sellerId");
     }
     util.pushParamsToURL(pathname, params.toString());
-    
+
     fetchReport();
   };
 
   const handleSearch = e => {
-    clearTimeout(timer);
     const value = e.target.value;
-    if (value) {
-      params.set("search", value);
-    } else {
-      params.delete("search");
-    }
-
-    util.pushParamsToURL(pathname, params.toString());
-    timer = setTimeout(() => {
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      if (value) {
+        params.set("search", value);
+      } else {
+        params.delete("search");
+      }
+      util.pushParamsToURL(pathname, params.toString());
       fetchReport();
-    }, 1000);
+    }, 500);
 
   };
 
@@ -111,19 +110,19 @@ function ReportConsignmentByProduct(props) {
     fetchReport();
 
     SupplierService.lists(15)
-    .then(response => {
-      if (response.data){
-        setDataSeller(response.data && response.data.data);
-      }
-    });
+      .then(response => {
+        if (response.data) {
+          setDataSeller(response.data && response.data.data);
+        }
+      });
 
     const params = new URLSearchParams(document.location.search);
     if (params.get("search")) {
-      props.form.setFieldsValue({search: params.get("search")});
+      props.form.setFieldsValue({ search: params.get("search") });
     }
 
     if (params.get("sellerId")) {
-      props.form.setFieldsValue({sellerId: params.get("sellerId")});
+      props.form.setFieldsValue({ sellerId: params.get("sellerId") });
     }
 
     if (params.get("start")) {
@@ -133,6 +132,8 @@ function ReportConsignmentByProduct(props) {
     if (params.get("end")) {
       setToValue(moment(params.get("end")));
     }
+
+    return () => clearTimeout(timerRef.current);
     // eslint-disable-next-line
   }, []);
 
@@ -148,12 +149,12 @@ function ReportConsignmentByProduct(props) {
         title={<Translate id="text_consignment_product" />}
         subTitle=""
         extra={[
-          <div style={{display: "flex"}} key={1} >
+          <div style={{ display: "flex" }} key={1} >
             <div id="formSearchHeaderOnReportPurchase">
               <InputText
                 placeholder="Search product by name,barcode"
                 onChange={handleSearch}
-                style={{marginRight: 15}}
+                style={{ marginRight: 15 }}
                 className="input-search"
                 name="search"
                 allowClear={true}
@@ -164,7 +165,7 @@ function ReportConsignmentByProduct(props) {
               <Select
                 showSearch
                 name="sellerId"
-                style={{ width: 200 , marginRight: 15}}
+                style={{ width: 200, marginRight: 15 }}
                 placeholder="Select seller"
                 onChange={onChangeSelect}
                 allowClear={true}
@@ -186,18 +187,18 @@ function ReportConsignmentByProduct(props) {
               defaultValue={toValue}
               placeholder="To"
               onChange={onToChange}
-              style={{marginLeft: 15}}
-              allowClear={false} 
+              style={{ marginLeft: 15 }}
+              allowClear={false}
               form={props.form} />
           </div>
         ]}
       />
       <Row gutter={16}>
         <Col md={24}>
-          <ExportConsignmentProduct 
+          <ExportConsignmentProduct
             search={props.form.getFieldValue("search")}
             sellerId={props.form.getFieldValue("sellerId")}
-            startDate={fromValue.format(formatDate)} 
+            startDate={fromValue.format(formatDate)}
             endDate={toValue.format(formatDate)} />
         </Col>
         <Col md={24}>
@@ -219,8 +220,8 @@ function ReportConsignmentByProduct(props) {
                 key: "productName",
                 render: (productName, record) => {
                   return <div>
-                    {productName} 
-                    {record.variantName ? <span style={{marginLeft: 10}} className="variant-name">{record.variantName}</span> : ""}
+                    {productName}
+                    {record.variantName ? <span style={{ marginLeft: 10 }} className="variant-name">{record.variantName}</span> : ""}
                   </div>;
                 }
               },
@@ -269,5 +270,5 @@ function ReportConsignmentByProduct(props) {
   );
 }
 
-const reportConsignmentByProduct = Form.create({name: "report-consignment-by-product"})(ReportConsignmentByProduct);
+const reportConsignmentByProduct = Form.create({ name: "report-consignment-by-product" })(ReportConsignmentByProduct);
 export default reportConsignmentByProduct;

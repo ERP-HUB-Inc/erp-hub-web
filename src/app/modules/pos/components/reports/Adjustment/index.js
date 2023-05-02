@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   Statistic,
   PageHeader,
@@ -20,7 +20,7 @@ import AdjustmentService from "../../../services/report/AdjustmentService";
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
-export default function ReportProduct() {
+export default function ReportAdjustment() {
   const [loading, setLoading] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
   const [startDate, setStartDate] = React.useState(
@@ -36,6 +36,7 @@ export default function ReportProduct() {
   const { Search } = Input;
   const pathName = "/reports/adjustment-report";
   const util = new Util();
+  const timerRef = useRef(null);
 
   const onChangeSearch = (event) => {
     const queryparam = new URLSearchParams(document.location.search);
@@ -44,12 +45,18 @@ export default function ReportProduct() {
       queryparam.set("search", similarSearch);
       util.pushParamsToURL(pathName, queryparam.toString());
       setSearchValue(similarSearch);
-      fetchReport(similarSearch, locationId, startDate, endDate);
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        fetchReport(similarSearch, locationId, startDate, endDate);
+      }, 500);
     } else {
       queryparam.delete("search");
       util.pushParamsToURL(pathName, queryparam.toString());
       setSearchValue("");
-      fetchReport("", locationId, startDate, endDate);
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        fetchReport("", locationId, startDate, endDate);
+      }, 500);
     }
   };
 
@@ -124,6 +131,8 @@ export default function ReportProduct() {
         setLocations(response.data.data);
       }
     });
+
+    return () => clearTimeout(timerRef.current);
     //eslint-disable-next-line
   }, []);
 
