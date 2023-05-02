@@ -82,10 +82,15 @@ export default {
     "Paid"
   ],
 
-  "input_stock_purchase_order_number": [
+  "text_order_number": [
     "Order Number",
     "លេខបញ្ញាទិញ",
     "Order Number",
+  ],
+
+  "text_reference_no": [
+    "Reference No.",
+    "លេខយោង"
   ],
 
   "text_supplier_invoice": [

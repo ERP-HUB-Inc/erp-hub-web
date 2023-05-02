@@ -67,6 +67,11 @@ export default class PurchaseOrderLists extends Component {
         render: receiver => receiver ? <span style={{textTransform: "uppercase"}}>{receiver.fullName}</span> : this.emptyText
       },
       {
+        title: <this.Translate id="text_reference_no"/>,
+        dataIndex: "referenceNo",
+        key: "referenceNo"
+      },
+      {
         title: <this.Translate id="text_notes"/>,
         dataIndex: "description",
         key: "description"

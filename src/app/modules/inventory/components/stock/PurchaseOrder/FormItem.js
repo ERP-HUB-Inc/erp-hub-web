@@ -96,10 +96,15 @@ export default class FormItem extends Modal {
             form={form} />
           <this.InputText
             name="number"
-            label={<this.Translate id="input_stock_purchase_order_number" />}
+            label={<this.Translate id="text_order_number" />}
             data={formData.number}
-            placeholder={this.CATranslate("input_stock_purchase_order_number", locale)}
-            errorRequired={<this.Translate id="error_require_po_number" />}
+            placeholder={this.CATranslate("text_order_number", locale)}
+            form={form} />
+          <this.InputText
+            name="referenceNo"
+            label={<this.Translate id="text_reference_no" />}
+            data={formData.referenceNo}
+            placeholder={this.CATranslate("text_reference_no", locale)}
             form={form} />
           <this.InputText
             name="invoiceNo"
