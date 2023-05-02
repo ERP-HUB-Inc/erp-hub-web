@@ -1,11 +1,11 @@
 import React from "react";
 // import {Offline} from "react-detect-offline";
-import {Layout} from "antd";
+import { Layout } from "antd";
 import {
   Route,
   Switch
 } from "react-router-dom";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import history from "./history";
 import Profile from "../containers/user/Profile";
 import Home from "../containers/home";
@@ -33,6 +33,7 @@ import PurchaseOrderCreate from "../../inventory/containers/stock/PurchaseOrder/
 import PurchaseOrderUpdate from "../../inventory/containers/stock/PurchaseOrder/FormUpdate";
 import ReportSaleSummary from "../../pos/components/reports/Sale/ReportSaleSummary";
 import ReportSaleByProduct from "../../pos/containers/reports/Sale/ReportSaleByProduct";
+import ReportSaleReceipt from "../../pos/containers/reports/Sale/ReportSaleReceipt";
 import ReportSaleByCategory from "../../pos/components/reports/Sale/ReportSaleByCategory";
 import ReportSaleByCashier from "../../pos/components/reports/Sale/ReportSaleByCashier";
 import ReportSaleByCustomer from "../../pos/components/reports/Sale/ReportSaleByCustomer";
@@ -55,7 +56,7 @@ import ExportPDFPurchaseSummary from "../../pos/components/reports/Purchase/Expo
 import ExportPDFPurchaseByProduct from "../../pos/components/reports/Purchase/ExportPDFPurchaseByProduct";
 import ExportPDFSaleByProduct from "../../pos/components/reports/Sale/ExportPDFSaleByProduct";
 
-const {Content} = Layout;
+const { Content } = Layout;
 
 class Router extends Component {
   lastPath = "";
@@ -65,12 +66,12 @@ class Router extends Component {
       const accessToken = (new Util()).getAccessToken(Authentication.ACCESS_TOKEN);
 
       AuthService.checkAuthenticated(accessToken)
-      .then(response => {
-        if (response.data === false) {
-          localStorage.removeItem(Authentication.ACCESS_TOKEN);
-          history.push("/signin");
-        }
-      });
+        .then(response => {
+          if (response.data === false) {
+            localStorage.removeItem(Authentication.ACCESS_TOKEN);
+            history.push("/signin");
+          }
+        });
     }
   }
 
@@ -91,7 +92,7 @@ class Router extends Component {
         <Content className={`layoutContent${window.location.pathname === "/pos" ? "full-screen" : ""}`} id="center-container">
           <Switch>
             {
-              Object.keys(dataSource).map((key) => 
+              Object.keys(dataSource).map((key) =>
                 dataSource[key]["subItems"].map(value =>
                   <Route
                     async
@@ -127,6 +128,7 @@ class Router extends Component {
             <Route path="/reports/sale_summaries" component={ReportSaleSummary} />
             <Route path="/reports/sold_products/pdf-preview" component={ExportPDFSaleByProduct} />
             <Route path="/reports/sold_products" component={ReportSaleByProduct} />
+            <Route path="/reports/sales_receipt" component={ReportSaleReceipt} />
             <Route path="/reports/sold_categories" component={ReportSaleByCategory} />
             <Route path="/reports/sold_cashiers" component={ReportSaleByCashier} />
             <Route path="/reports/sold_customers" component={ReportSaleByCustomer} />
@@ -156,7 +158,7 @@ class Router extends Component {
             backgroundColor: "#ff4b55",
             boxShadow: "0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.2)"
           }}>
-          <span className="icon-reload" style={{fontSize: "18pt"}}></span>
+          <span className="icon-reload" style={{ fontSize: "18pt" }}></span>
         </this.Button>
       </Layout>
     );

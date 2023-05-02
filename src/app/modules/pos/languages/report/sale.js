@@ -19,6 +19,8 @@ export default {
 
   text_sale_product_summary: ["Products", "សង្ខេបការលក់តាមផលិតផល"],
 
+  text_sales_receipt: ["Sales Receipt", "របាយការណ៍បង្កាន់ដៃលក់"],
+
   text_sale_categories_summary: ["Categories", "សង្ខេបការលក់តាមប្រភេទផលិតផល"],
 
   text_sale_cashiers_summary: ["Cashiers", "សង្ខេបការលក់តាមបុគ្គលិកលក់"],
