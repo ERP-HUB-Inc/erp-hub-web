@@ -142,7 +142,7 @@ export default function ReportMovementLog() {
           paddingRight: 0,
         }}
         backIcon={""}
-        title={"Movement Log Report"}
+        title={<Translate id="text_movement_log_report" />}
         subTitle=""
         extra={[
           <div key={1} style={{ display: "flex" }}>
@@ -197,7 +197,7 @@ export default function ReportMovementLog() {
                 title: <Translate id="text_number_of" />,
                 dataIndex: "id",
                 key: "id",
-                width: 80,
+                width: 100,
                 render: (id, record, index) => index + 1
               },
               {
@@ -211,25 +211,29 @@ export default function ReportMovementLog() {
                 key: "barcode",
               },
               {
-                title: "Opening Stock",
+                title: <Translate id="text_opening_stock" />,
                 dataIndex: "openingStock",
                 key: "openingStock",
-                render: (_, record) => record.balance + Math.max(record.beforeOutQuantity - record.afterOutQuantity, 0) - Math.max(record.afterInQuantity - record.beforeInQuantity, 0)
+                render: (_, record) => {
+                  const stockOut = Math.max(record.beforeOutQuantity - record.afterOutQuantity, 0);
+                  const stockIn = Math.max(record.afterInQuantity - record.beforeInQuantity, 0);
+                  return record.balance + stockOut - stockIn;
+                }
               },
               {
-                title: "Stock In",
+                title: <Translate id="text_stock_in" />,
                 dataIndex: "stockIn",
                 key: "stockIn",
                 render: (_, record) => Math.max(record.afterInQuantity - record.beforeInQuantity, 0)
               },
               {
-                title: "Stock Out",
+                title: <Translate id="text_stock_out" />,
                 dataIndex: "stockOut",
                 key: "stockOut",
                 render: (_, record) => Math.max(record.beforeOutQuantity - record.afterOutQuantity, 0)
               },
               {
-                title: "Balance",
+                title: <Translate id="text_stock_balance" />,
                 dataIndex: "balance",
                 key: "balance",
               },

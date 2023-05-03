@@ -370,9 +370,35 @@ export default {
 
   text_name: ["Name", "ឈ្មោះ", "Name"],
 
-  text_email: ["Email", "អុីម៉ែល", "Email"],
+  text_opening_stock: [
+    "Opening Stock", 
+    "ទំនិញដើមគ្រា"
+  ],
 
-  text_phone_number: ["Phone Number", "លេខទូរសព្ទ័", "Phone Number"],
+  text_stock_in: [
+    "Stock In", 
+    "ទំនិញចូល"
+  ],
+
+  text_stock_out: [
+    "Stock Out", 
+    "ទំនិញចេញ"
+  ],
+
+  text_stock_balance: [
+    "Balance",
+    "សមតុល្យ"
+  ],
+
+  text_email: [
+    "Email", 
+    "អុីម៉ែល"
+  ],
+
+  text_phone_number: [
+    "Phone Number", 
+    "លេខទូរសព្ទ័"
+  ],
 
   text_geolocation: ["Geolocation", "ទីតាំងភូមិសាស្ត្រ"],
 
@@ -402,8 +428,7 @@ export default {
 
   text_current_user: [
     "Current User",
-    "អ្នកប្រើប្រាស់បច្ចុប​្បន្ន",
-    "Current User",
+    "អ្នកប្រើប្រាស់បច្ចុប​្បន្ន"
   ],
 
   text_full_screen: ["Full Screen", "ពេញអេក្រង់", "Full Screen"],
@@ -432,68 +457,64 @@ export default {
 
   text_register_closed: [
     "Register closed",
-    "បញ្ចីត្រូវបានបិទ",
-    "Register closed",
+    "បញ្ចីត្រូវបានបិទ"
   ],
 
-  text_open_cash: ["Open Cash", "បើកសាច់ប្រាក់", "Open Cash"],
+  text_open_cash: ["Open Cash", "បើកសាច់ប្រាក់"],
 
-  text_close_shift: ["Close Shift", "បិទវេន", "Close Shift"],
+  text_close_shift: ["Close Shift", "បិទវេន"],
 
   text_no_permission_title: [
     "You don't have permission to view this module",
-    "អ្នកគ្មានសិទ្ធិមើលការងារនេះទេ",
-    "You don't have permission to view this module",
+    "អ្នកគ្មានសិទ្ធិមើលការងារនេះទេ"
   ],
 
   text_no_permission_detail: [
     "This is because of admin don't allow you to access it. Please contact admin, if you really want to access it.",
-    "អ្នកគ្រប់មិនអោយអ្នកប្រើប្រាស់វា សូមទាក់ទងទៅកាន់អ្នកគ្រប់គ្រងប្រពន្ធដើម្បីប្រើប្រាស់",
-    "This is because of admin don't allow you to access it. Please contact admin, if you really want to access it.",
+    "អ្នកគ្រប់មិនអោយអ្នកប្រើប្រាស់វា សូមទាក់ទងទៅកាន់អ្នកគ្រប់គ្រងប្រពន្ធដើម្បីប្រើប្រាស់"
   ],
 
-  error_require_name: ["Enter name", "បញ្ចូលឈ្មោះ", "Enter name"],
+  error_require_name: ["Enter name", "បញ្ចូលឈ្មោះ"],
 
-  error_require_quanity: ["Enter quantity", "បញ្ចូលបរិមាណ", "Enter quantity"],
+  error_require_quanity: ["Enter quantity", "បញ្ចូលបរិមាណ"],
 
   error_require_description: [
     "Enter description",
-    "បញ្ចូលពិពណ៍នា",
-    "Enter description",
+    "បញ្ចូលពិពណ៍នា"
   ],
 
   error_tax_not_found: [
     "Tax do not exist",
-    "គ្មានពន្ធនៅក្នុងនេះ",
-    "Tax do not exist",
+    "គ្មានពន្ធនៅក្នុងនេះ"
   ],
 
   error_brand_not_found: [
     "Brand do not exist",
-    "គ្មានសាខានៅក្នុងនេះ",
-    "Brand do not exist",
+    "គ្មានសាខានៅក្នុងនេះ"
   ],
 
   error_unit_not_found: [
     "Unit do not exist",
-    "គ្មានឯកតានៅក្នុងនេះ",
-    "Unit do not exist",
+    "គ្មានឯកតានៅក្នុងនេះ"
   ],
 
   error_product_type_not_found: [
     "Product type do not exist",
-    "គ្មានប្រភេទទំនិញនៅក្នុងនេះ",
-    "Product type do not exist",
+    "គ្មានប្រភេទទំនិញនៅក្នុងនេះ"
   ],
 
-  text_last_week: ["Last week", "សប្ដាហ៍​មុន", "Last Week"],
+  text_last_week: [
+    "Last week", 
+    "សប្ដាហ៍​មុន"
+  ],
 
-  text_this_week: ["This week", "ស​ប្តា​ហ៍​នេះ", "This Week"],
+  text_this_week: [
+    "This week", 
+    "ស​ប្តា​ហ៍​នេះ"],
 
   text_before_last_month: [
     "Before Last Month",
-    "មុនខែមុន",
-    "Before Last Month",
+    "មុនខែមុន"
   ],
 
   text_last_month: ["Last month", "ខែមុន", "Last Month"],
