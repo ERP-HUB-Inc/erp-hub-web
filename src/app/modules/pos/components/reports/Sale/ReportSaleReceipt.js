@@ -7,8 +7,7 @@ import {
   Card,
   Row,
   Col,
-  Input,
-  Select,
+  Input
 } from "antd";
 import moment from "moment";
 import * as _ from "lodash";
@@ -18,22 +17,28 @@ import "./index.css";
 import history from "../../../../common/router/history";
 import Util from "../../../../common/util";
 import ReportSaleService from "../../../services/report/SaleService";
-import SupplierService from "../../../../inventory/services/stock/SupplierService";
+
+const { Search } = Input;
 
 export default function ReportSaleReceipt() {
   const [loading, setLoading] = React.useState(false);
-  const [data, setData] = React.useState(null);
-  const [summary, setSummary] = React.useState(null);
+  const [data, setData] = React.useState({
+    salesReceipts: [], 
+    revenue: 0, 
+    discount: 0, 
+    netSale: 0, 
+    cost: 0, 
+    grossProfit: 0, 
+    margin: 0
+  });
+
   const [fromValue, setFromValue] = React.useState(moment());
   const [toValue, setToValue] = React.useState(moment());
   const [searchValue, setSearchValue] = React.useState("");
-  const [supplierId, setSupplierId] = React.useState("");
-  const [supplierList, setSupplierList] = React.useState([]);
-  const { Search } = Input;
   const pathName = "/reports/sales_receipt";
   const queryparam = new URLSearchParams(document.location.search);
   const util = new Util();
-  const timerRef = useRef(null);
+  let timerRef = null;
 
   const onFromChange = (value) => {
     queryparam.set("startDate", value.format("YYYY-MM-DD"));
@@ -41,7 +46,7 @@ export default function ReportSaleReceipt() {
     util.pushParamsToURL(pathName, queryparam.toString());
     setFromValue(value);
     setToValue(value);
-    fetchReport(value, value, searchValue, supplierId);
+    fetchReport(value, value, searchValue);
   };
 
   const onToChange = (value) => {
@@ -49,69 +54,37 @@ export default function ReportSaleReceipt() {
     queryparam.set("endDate", value.format("YYYY-MM-DD"));
     util.pushParamsToURL(pathName, queryparam.toString());
     setToValue(value);
-    fetchReport(fromValue, value, searchValue, supplierId);
+    fetchReport(fromValue, value, searchValue);
   };
 
   const onChangeInputSearch = (event) => {
-    if (event.target.value) {
-      queryparam.set("search", event.target.value);
-      util.pushParamsToURL(pathName, queryparam.toString());
-      setSearchValue(event.target.value);
-      clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => {
-        fetchReport(fromValue, toValue, searchValue, supplierId);
-      }, 500);
+    clearTimeout(timerRef);
+
+    const search = event.target.value;
+    if (search) {
+      queryparam.set("search", search);
     } else {
       queryparam.delete("search");
-      util.pushParamsToURL(pathName, queryparam.toString());
-      setSearchValue("");
-      clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(() => {
-        fetchReport(fromValue, toValue, "", supplierId);
-      }, 500);
     }
 
+    timerRef = setTimeout(() => {
+      util.pushParamsToURL(pathName, queryparam.toString());
+      setSearchValue(search);
 
+      fetchReport(fromValue, toValue, search);
+    }, 1000);
   };
 
-  const onChangeSupplier = (value) => {
-    if (value) {
-      queryparam.set("supplierId", value);
-      util.pushParamsToURL(pathName, queryparam.toString());
-      setSupplierId(value);
-      fetchReport(fromValue, toValue, searchValue, value);
-    } else {
-      queryparam.delete("supplierId");
-      util.pushParamsToURL(pathName, queryparam.toString());
-      setSupplierId("");
-      fetchReport(fromValue, toValue, searchValue, "");
-    }
-  };
-
-  const fetchReport = (from, to, search, supplierId) => {
+  const fetchReport = (from, to, search) => {
     setLoading(true);
-    ReportSaleService.getReportSummaryByProduct({
+    ReportSaleService.getReportSalesReceipt({
       startDate: from.format("YYYY-MM-DD"),
       endDate: to.format("YYYY-MM-DD"),
-      search,
-      supplierId
+      search
     })
       .then((response) => {
         if (response.data) {
-          const { summaryByProducts } = response.data;
-
-          const totalRevenue = _.sumBy(summaryByProducts, (value) => parseFloat(value.revenue));
-          const totalDiscount = _.sumBy(summaryByProducts, (value) => parseFloat(value.discount));
-          const totalNetSale = totalRevenue - totalDiscount;
-          const totalCost = _.sumBy(summaryByProducts, (value) => parseFloat(value.cost));
-
-          setData(summaryByProducts);
-          setSummary({
-            totalRevenue,
-            totalDiscount,
-            totalNetSale,
-            totalCost,
-          });
+          setData(response.data);
         }
       })
       .finally(() => setLoading(false));
@@ -122,23 +95,16 @@ export default function ReportSaleReceipt() {
       startDate: fromValue.format("YYYY-MM-DD"),
       endDate: toValue.format("YYYY-MM-DD"),
       search: searchValue,
-      supplierId,
       isExport: true
     });
   };
 
   React.useEffect(() => {
-    SupplierService.lists().then((response) => {
-      if (response && response.data.data && Array.isArray(response.data.data)) {
-        setSupplierList(response.data.data);
-      }
-    });
     const queryparam = new URLSearchParams(document.location.search);
     let option = {
       startDate: fromValue,
       endDate: toValue,
-      searchValue: "",
-      supplierId: supplierId,
+      searchValue: ""
     };
     if (queryparam.has("startDate")) {
       setFromValue(moment(queryparam.get("startDate")));
@@ -160,15 +126,11 @@ export default function ReportSaleReceipt() {
       setSearchValue(queryparam.get("search"));
       option["searchValue"] = queryparam.get("search");
     }
-    if (queryparam.has("supplierId")) {
-      setSupplierId(queryparam.get("supplierId"));
-      option["supplierId"] = queryparam.get("supplierId");
-    }
+
     fetchReport(
       option.startDate,
       option.endDate,
-      option.searchValue,
-      option.supplierId
+      option.searchValue
     );
 
     util.pushParamsToURL(pathName, queryparam.toString());
@@ -176,18 +138,7 @@ export default function ReportSaleReceipt() {
     return () => clearTimeout(timerRef.current);
     //eslint-disable-next-line
   }, []);
-
-  let totalRevenue = 0,
-    totalCost = 0,
-    totalProfit = 0,
-    totalMargin = 0;
-
-  if (summary) {
-    totalRevenue = summary.totalRevenue;
-    totalCost = summary.totalCost;
-    totalProfit = summary.totalNetSale - totalCost;
-    totalMargin = totalProfit && ((totalRevenue - totalCost) / totalRevenue) * 100;
-  }
+  
   return (
     <div id="report-sale">
       <PageHeader
@@ -203,33 +154,13 @@ export default function ReportSaleReceipt() {
           <div style={{ display: "flex" }} key="1">
             <div>
               <Search
+                name="search"
                 placeholder="Search by product name,barcode"
                 onChange={onChangeInputSearch}
                 style={{ width: "280px" }}
                 allowClear={true}
-                defaultValue={
-                  queryparam.has("search") ? queryparam.get("search") : ""
-                }
+                defaultValue={new URLSearchParams(document.location.search).has("search") ? new URLSearchParams(document.location.search).get("search") : ""}
               />
-            </div>
-            <div style={{ marginLeft: 15 }}>
-              <Select
-                style={{ width: "200px" }}
-                allowClear={true}
-                placeholder={"Supplier"}
-                defaultValue={
-                  queryparam.has("supplierId")
-                    ? queryparam.get("supplierId")
-                    : undefined
-                }
-                onChange={onChangeSupplier}
-              >
-                {supplierList.map((supplier, index) => (
-                  <Select.Option key={index} value={supplier.id}>
-                    {supplier.name}
-                  </Select.Option>
-                ))}
-              </Select>
             </div>
             <DatePicker
               format="DD/MM/YYYY"
@@ -255,7 +186,7 @@ export default function ReportSaleReceipt() {
           <Card>
             <Statistic
               title={<Translate id="text_revenue" />}
-              value={summary ? summary.totalRevenue.toFixed(2) : 0}
+              value={data.revenue}
               precision={2}
             />
           </Card>
@@ -264,7 +195,7 @@ export default function ReportSaleReceipt() {
           <Card>
             <Statistic
               title={<Translate id="text_discount" />}
-              value={summary ? summary.totalDiscount.toFixed(2) : 0}
+              value={data.discount}
               valueStyle={{ color: "#cf1322" }}
               precision={2}
             />
@@ -275,7 +206,7 @@ export default function ReportSaleReceipt() {
             <Statistic
               title={<Translate id="text_net_sale" />}
               valueStyle={{ color: "#3f8600" }}
-              value={summary ? summary.totalNetSale.toFixed(2) : 0}
+              value={data.netSale}
               precision={2}
             />
           </Card>
@@ -284,7 +215,7 @@ export default function ReportSaleReceipt() {
           <Card>
             <Statistic
               title={<Translate id="text_cost_of_good" />}
-              value={summary ? summary.totalCost.toFixed(2) : 0}
+              value={data.cost}
               precision={2}
             />
           </Card>
@@ -293,7 +224,7 @@ export default function ReportSaleReceipt() {
           <Card>
             <Statistic
               title={<Translate id="text_gross_profit" />}
-              value={totalProfit.toFixed(2)}
+              value={data.grossProfit}
               precision={2}
             />
           </Card>
@@ -302,7 +233,7 @@ export default function ReportSaleReceipt() {
           <Card>
             <Statistic
               title={<Translate id="text_margin" />}
-              value={totalMargin.toFixed(2)}
+              value={data.margin}
               precision={2}
               suffix="%"
             />
@@ -316,127 +247,20 @@ export default function ReportSaleReceipt() {
         </Col>
         <Col span={24} id="sales-receipt-report">
           <Table
+            key={Date.now()}
             rowKey="id"
             bordered={true}
-            dataSource={[
-              {
-                key: 1,
-                name: "Sophanna M.",
-                phone: "096 241 6243",
-                platform: "iOS",
-                version: "10.3.4.5654",
-                upgradeNum: 500,
-                creator: "Jack",
-                createdAt: "2014-12-24 23:12:00",
-                entries: [
-                  {
-                    key: 1,
-                    date: "2014-12-24 23:12:00",
-                    name: "This is production name",
-                    upgradeNum: "Upgraded: 56",
-                    quantity: 1,
-                    price: 2
-                  },
-                  {
-                    key: 2,
-                    date: "2014-12-24 23:12:00",
-                    name: "This is production name",
-                    upgradeNum: "Upgraded: 56",
-                    quantity: 1,
-                    price: 2
-                  },
-                  {
-                    key: 3,
-                    date: "2014-12-24 23:12:00",
-                    name: "This is production name",
-                    upgradeNum: "Upgraded: 56",
-                    quantity: 1,
-                    price: 2
-                  }
-                ]
-              },
-              {
-                key: 2,
-                name: "Sok Sopha",
-                phone: "096 241 6243",
-                platform: "iOS",
-                version: "10.3.4.5654",
-                upgradeNum: 500,
-                creator: "Jack",
-                createdAt: "2014-12-24 23:12:00",
-                entries: [
-                  {
-                    key: 1,
-                    date: "2014-12-24 23:12:00",
-                    name: "This is production name",
-                    upgradeNum: "Upgraded: 56",
-                    quantity: 1,
-                    price: 2
-                  },
-                  {
-                    key: 2,
-                    date: "2014-12-24 23:12:00",
-                    name: "This is production name",
-                    upgradeNum: "Upgraded: 56",
-                    quantity: 4,
-                    price: 2
-                  },
-                  {
-                    key: 3,
-                    date: "2014-12-24 23:12:00",
-                    name: "This is production name",
-                    upgradeNum: "Upgraded: 56",
-                    quantity: 1,
-                    price: 2
-                  }
-                ]
-              },
-              {
-                key: 3,
-                name: "Keo Bopha",
-                phone: "096 241 6243",
-                platform: "iOS",
-                version: "10.3.4.5654",
-                upgradeNum: 500,
-                creator: "Jack",
-                createdAt: "2014-12-24 23:12:00",
-                entries: [
-                  {
-                    key: 1,
-                    date: "2014-12-24 23:12:00",
-                    name: "This is production name",
-                    upgradeNum: "Upgraded: 56",
-                    quantity: 1,
-                    price: 2
-                  },
-                  {
-                    key: 2,
-                    date: "2014-12-24 23:12:00",
-                    name: "This is production name",
-                    upgradeNum: "Upgraded: 56",
-                    quantity: 10,
-                    price: 2
-                  },
-                  {
-                    key: 3,
-                    date: "2014-12-24 23:12:00",
-                    name: "This is production name",
-                    upgradeNum: "Upgraded: 56",
-                    quantity: 1,
-                    price: 2
-                  }
-                ]
-              },
-            ]}
+            dataSource={data.salesReceipts}
             columns={[
               { 
                 title: "Customer",
-                dataIndex: "name", 
-                key: "name", 
+                dataIndex: "firstName", 
+                key: "firstName", 
                 width: 120,
-                render: (name, record) => {
+                render: (firstName, record) => {
+                  const {lastName, phoneNumber} = record;
                   return {
-                    children: `${name} ${record.phone}`,
+                  children: <div style={{fontWeight: "bold"}}>{`${firstName}${lastName ? " " + lastName : ""} ${phoneNumber ? phoneNumber : ""}`}</div>,
                     props: {
                       colSpan: 7,
                     }
@@ -444,9 +268,9 @@ export default function ReportSaleReceipt() {
                 }
               },
               { 
-                title: "Date", 
-                dataIndex: "date", 
-                key: "date", 
+                title: "Invoice Date", 
+                dataIndex: "invoiceDate", 
+                key: "invoiceDate", 
                 width: 120,
                 render: () => {
                   return {
@@ -530,7 +354,7 @@ export default function ReportSaleReceipt() {
             defaultExpandAllRows={true}
             expandIconAsCell={false}
             expandIcon={() => null}
-            expandedRowRender={(record) => {
+            expandedRowRender={(record, index) => {
               const columns = [
                 {
                   dataIndex: "name",
@@ -540,59 +364,63 @@ export default function ReportSaleReceipt() {
                   render: () => null
                 },
                 {
-                  dataIndex: "date",
-                  key: "date",
+                  dataIndex: "invoiceDate",
+                  key: "invoiceDate",
                   width: 120,
-                  render: () => "02/10/2023",
+                  render: invoiceDate => util.formatDate(invoiceDate),
                 },
                 {
                   dataIndex: "invoiceNo",
                   key: "invoiceNo",
                   width: 120,
-                  render: () => "INV-0001",
+                  render: () => record.invoiceNumber,
                 },
                 {
                   dataIndex: "description",
                   key: "description",
-                  render: () =>
-                    "WH-1000XM5 Wireless Industry Leading Noise Canceling Headphones",
+                  render: description => description
                 },
                 {
-                  dataIndex: "soldQuantity",
-                  key: "soldQuantity",
+                  dataIndex: "quantity",
+                  key: "quantity",
                   align: "right",
                   width: 120,
-                  render: () => 10,
+                  render: (quantity) => quantity,
                 },
                 {
-                  dataIndex: "salesPrice",
-                  key: "salesPrice",
+                  dataIndex: "price",
+                  key: "price",
                   align: "right",
                   width: 120,
-                  render: () => 10,
+                  render: price => util.formatCurrency(price),
                 },
                 {
-                  dataIndex: "amount",
+                  dataIndex: "quantity",
                   key: "amount",
                   align: "right",
                   width: 120,
-                  render: () => <div style={{ marginRight: 16 }}>10</div>,
+                  render: (quantity, record) => util.formatCurrency(quantity * record.price),
                 }
               ];
-              const total = record.entries.reduce((sum, obj) => sum + obj.quantity, 0);
+              
+              const quantity = record.transactionEntries.reduce((sum, obj) => sum + obj.quantity, 0);
+              const amount = record.transactionEntries.reduce((sum, obj) => sum + (obj.quantity * obj.price), 0);
+
               return <div className="sub-table">
                 <Table
+                  key={index}
                   showHeader={false}
+                  rowKey="id"
                   columns={columns}
-                  dataSource={record.entries}
+                  dataSource={record.transactionEntries}
                   pagination={false}
                   bordered={false}
-                  footer={() => <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-                    <div>Total</div>
+                  footer={() => <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
+                    <div style={{ fontWeight: "bold" }}>Total:</div>
                     <div style={{display: "flex", justifyContent: "space-between"}}>
-                      <div style={{ width: 120, textAlign: "right" }}>30</div>
-                      <div style={{ width: 120, textAlign: "right" }}>30</div>
-                      <div style={{ width: 120, textAlign: "right" }}>30</div>
+                      <div style={{ width: 120, textAlign: "right", fontWeight: "bold" }}>{quantity}</div>
+                      <div style={{ width: 120, textAlign: "right" }}></div>
+                      <div style={{ width: 120, textAlign: "right", fontWeight: "bold" }}>{util.formatCurrency(amount)}</div>
                     </div>
                   </div>}
                 />

@@ -25,6 +25,14 @@ class SaleService extends BaseService {
     });
   }
 
+  getReportSalesReceipt(option) {
+    this.setHeader();
+    return this.GET({ 
+      url: `${this.baseUrl}/sales_receipts?${this.bindQueryParam(option)}`,
+      headers: this.header
+    });
+  }
+
   getReportSummaryByProduct(option) {
     this.setHeader();
     return this.GET({ 
