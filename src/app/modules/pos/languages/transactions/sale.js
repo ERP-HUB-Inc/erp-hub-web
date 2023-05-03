@@ -139,6 +139,11 @@ export default {
 	"បរិមាណលក់ចេញ"
 ],
 
+"text_sales_price": [
+	"Sales Price",
+	"តម្លៃ"
+],
+
 "text_summary_sold_product": [
 	"Summary Sold Products",
 	"សង្ខេបទំនិញបានលក់ចេញ"

@@ -148,7 +148,7 @@ export default function ReportSaleReceipt() {
           paddingRight: 0,
         }}
         onBack={() => history.push("/reports/sale_dashboard")}
-        title={"Sales Receipt Report"}
+        title={<Translate id="text_sales_receipt" />}
         subTitle=""
         extra={[
           <div style={{ display: "flex" }} key="1">
@@ -253,7 +253,7 @@ export default function ReportSaleReceipt() {
             dataSource={data.salesReceipts}
             columns={[
               { 
-                title: "Customer",
+                title: <Translate id="text_customer" />,
                 dataIndex: "firstName", 
                 key: "firstName", 
                 width: 120,
@@ -268,10 +268,10 @@ export default function ReportSaleReceipt() {
                 }
               },
               { 
-                title: "Invoice Date", 
+                title: <Translate id="text_invoice_date" />, 
                 dataIndex: "invoiceDate", 
                 key: "invoiceDate", 
-                width: 120,
+                width: 170,
                 render: () => {
                   return {
                     children: null,
@@ -282,7 +282,7 @@ export default function ReportSaleReceipt() {
                 }
               },
               { 
-                title: "Invoice No.", 
+                title: <Translate id="text_invoice_no" />, 
                 dataIndex: "invoiceNo", 
                 key: "invoiceNo", 
                 width: 120,
@@ -296,7 +296,7 @@ export default function ReportSaleReceipt() {
                 }
               },
               { 
-                title: "Description", 
+                title: <Translate id="text_description" />, 
                 dataIndex: "description", 
                 key: "description", 
                 render: () => {
@@ -309,7 +309,7 @@ export default function ReportSaleReceipt() {
                 } 
               },
               { 
-                title: "Sold Quantity", 
+                title: <Translate id="text_quantity" />, 
                 dataIndex: "soldQuantity", 
                 key: "soldQuantity", 
                 width: 120,
@@ -323,7 +323,7 @@ export default function ReportSaleReceipt() {
                 }
               },
               { 
-                title: "Sales Price", 
+                title: <Translate id="text_sales_price" />, 
                 dataIndex: "salesPrice", 
                 key: "salesPrice", 
                 width: 120,
@@ -337,7 +337,7 @@ export default function ReportSaleReceipt() {
                 }
               },
               { 
-                title: "Amount", 
+                title: <Translate id="text_amount" />, 
                 dataIndex: "amount", 
                 key: "amount", 
                 width: 120,
@@ -366,7 +366,7 @@ export default function ReportSaleReceipt() {
                 {
                   dataIndex: "invoiceDate",
                   key: "invoiceDate",
-                  width: 120,
+                  width: 170,
                   render: invoiceDate => util.formatDate(invoiceDate),
                 },
                 {
@@ -398,7 +398,7 @@ export default function ReportSaleReceipt() {
                   dataIndex: "quantity",
                   key: "amount",
                   align: "right",
-                  width: 120,
+                  width: 140,
                   render: (quantity, record) => util.formatCurrency(quantity * record.price),
                 }
               ];
@@ -416,9 +416,9 @@ export default function ReportSaleReceipt() {
                   pagination={false}
                   bordered={false}
                   footer={() => <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
-                    <div style={{ fontWeight: "bold" }}>Total:</div>
+                    <div style={{ fontWeight: "bold" }}><Translate id="text_total" />:</div>
                     <div style={{display: "flex", justifyContent: "space-between"}}>
-                      <div style={{ width: 120, textAlign: "right", fontWeight: "bold" }}>{quantity}</div>
+                      <div style={{ width: 120, textAlign: "right", fontWeight: "bold", paddingRight: 15 }}>{quantity}</div>
                       <div style={{ width: 120, textAlign: "right" }}></div>
                       <div style={{ width: 120, textAlign: "right", fontWeight: "bold" }}>{util.formatCurrency(amount)}</div>
                     </div>
