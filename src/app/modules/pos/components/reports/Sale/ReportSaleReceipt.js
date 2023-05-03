@@ -135,7 +135,7 @@ export default function ReportSaleReceipt() {
 
     util.pushParamsToURL(pathName, queryparam.toString());
 
-    return () => clearTimeout(timerRef.current);
+    return () => clearTimeout(timerRef);
     //eslint-disable-next-line
   }, []);
   
