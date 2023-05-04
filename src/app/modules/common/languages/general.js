@@ -406,19 +406,23 @@ export default {
 
   text_all_supplier: ["All Supplier", "អ្នកផ្គត់ផ្គង់", "All Supplier"],
 
-  text_due_date: ["Due Date", "កាលបរិច្ឆេទ​កំណត់", "Due Date"],
+  text_due_date: ["Due Date", "កាលបរិច្ឆេទ​កំណត់"],
 
-  text_invoice_no: ["Invoice No", "លេខ​វិ​ក័​យ​ប័ត្រ", "Invoice No"],
+  text_invoice_no: ["Invoice No", "លេខ​វិ​ក័​យ​ប័ត្រ"],
 
-  text_shipping_fee: ["Shipping Fee", "ថ្លៃដឹកជញ្ជូន", "Shipping Fee"],
+  text_shipping_fee: ["Shipping Fee", "ថ្លៃដឹកជញ្ជូន"],
 
   text_receive: ["Receive", "ទទួលបាន", "Receive"],
 
-  text_receiver: ["Receiver", "អ្នកទទួល", "Receiver"],
+  text_receiver: ["Receiver", "អ្នកទទួល"],
 
-  text_available: ["Available", "ប្រើបាន", "Available"],
+  text_payment_status: ["Payment Status", "ស្ថានភាពបង់ប្រាក់"],
 
-  text_not_available: ["Not Available", "មិនអាចប្រើបាន", "Not Available"],
+  text_purchase_status: ["Purchase Status", "ស្ថានភាព"],
+
+  text_available: ["Available", "ប្រើបាន"],
+
+  text_not_available: ["Not Available", "មិនអាចប្រើបាន"],
 
   text_renew: ["Re-New", "ធ្វើថ្មី", "Re-New"],
 
@@ -431,7 +435,7 @@ export default {
     "អ្នកប្រើប្រាស់បច្ចុប​្បន្ន"
   ],
 
-  text_full_screen: ["Full Screen", "ពេញអេក្រង់", "Full Screen"],
+  text_full_screen: ["Full Screen", "ពេញអេក្រង់"],
 
   text_exit_full_screen: [
     "Exit Full Screen",

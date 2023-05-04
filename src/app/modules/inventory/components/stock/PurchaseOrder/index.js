@@ -42,6 +42,11 @@ export default class PurchaseOrderLists extends Component {
         render: value => this.Util.formatDate(value, "DD/MM/YYYY")
       },
       {
+        title: <this.Translate id="text_reference_no"/>,
+        dataIndex: "referenceNo",
+        key: "referenceNo"
+      },
+      {
         title: <this.Translate id="text_status" />,
         dataIndex: "step",
         key: "step",
@@ -65,11 +70,6 @@ export default class PurchaseOrderLists extends Component {
         dataIndex: "receiver",
         key: "receiverId",
         render: receiver => receiver ? <span style={{textTransform: "uppercase"}}>{receiver.fullName}</span> : this.emptyText
-      },
-      {
-        title: <this.Translate id="text_reference_no"/>,
-        dataIndex: "referenceNo",
-        key: "referenceNo"
       },
       {
         title: <this.Translate id="text_notes"/>,

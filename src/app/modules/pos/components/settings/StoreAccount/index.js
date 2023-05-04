@@ -609,7 +609,6 @@ export default class StoreAccountList extends Component {
                                 placeholder={this.CATranslate("text_start_sequence_code", locale)}
                                 data={storeAccount.list.productCodeSequenceStart}
                                 max={9999999999}
-                                errorLength={<this.Translate id="store_acc_error_sequence_start_no" />}
                                 form={form} />
                             </this.Col>
                           </this.Row>

@@ -6,6 +6,7 @@ import {
    Col,
    Row,
    Input,
+   InputNumber,
    Select
 } from "antd";
 import {
@@ -152,7 +153,7 @@ class EditStock extends React.Component {
                   </Col>
                   <Col span={24}>
                      <Form.Item label={<Translate id="text_quantity" />}>
-                        <Input placeholder={this.CATranslate("text_adjust_quantity_help")} onChange={(event) => this.onChange("adjustQuantity", event.target.value)} />
+                        <InputNumber placeholder={this.CATranslate("text_adjust_quantity_help")} onChange={(value) => this.onChange("adjustQuantity", value)} />
                      </Form.Item>
                   </Col>
                </Row>

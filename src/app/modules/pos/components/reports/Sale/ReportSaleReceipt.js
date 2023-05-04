@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import {
   Statistic,
   PageHeader,
@@ -10,7 +10,6 @@ import {
   Input
 } from "antd";
 import moment from "moment";
-import * as _ from "lodash";
 import { Translate } from "react-localize-redux";
 import ExportForm from "./ExportForm";
 import "./index.css";
