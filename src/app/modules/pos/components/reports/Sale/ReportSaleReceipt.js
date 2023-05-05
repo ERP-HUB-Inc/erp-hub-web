@@ -154,7 +154,7 @@ export default function ReportSaleReceipt() {
             <div>
               <Search
                 name="search"
-                placeholder="Search by product name,barcode"
+                placeholder="Search by customer, phone number, product name, barcode"
                 onChange={onChangeInputSearch}
                 style={{ width: "280px" }}
                 allowClear={true}
@@ -240,7 +240,7 @@ export default function ReportSaleReceipt() {
         </Col>
         <Col span={24}>
           <ExportForm
-            pdfLink={"/reports/sold_products/pdf-preview"}
+            pdfLink={"/reports/sales_receipt/pdf-preview"}
             getData={getExportableData}
           />
         </Col>
@@ -311,6 +311,7 @@ export default function ReportSaleReceipt() {
                 title: <Translate id="text_quantity" />, 
                 dataIndex: "soldQuantity", 
                 key: "soldQuantity", 
+                align: "right",
                 width: 120,
                 render: () => {
                   return {
@@ -325,6 +326,7 @@ export default function ReportSaleReceipt() {
                 title: <Translate id="text_sales_price" />, 
                 dataIndex: "salesPrice", 
                 key: "salesPrice", 
+                align: "right",
                 width: 120,
                 render: () => {
                   return {
@@ -339,6 +341,7 @@ export default function ReportSaleReceipt() {
                 title: <Translate id="text_amount" />, 
                 dataIndex: "amount", 
                 key: "amount", 
+                align: "right",
                 width: 120,
                 render: () => {
                   return {
@@ -397,7 +400,7 @@ export default function ReportSaleReceipt() {
                   dataIndex: "quantity",
                   key: "amount",
                   align: "right",
-                  width: 140,
+                  width: 120,
                   render: (quantity, record) => util.formatCurrency(quantity * record.price),
                 }
               ];
@@ -417,7 +420,7 @@ export default function ReportSaleReceipt() {
                   footer={() => <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
                     <div style={{ fontWeight: "bold" }}><Translate id="text_total" />:</div>
                     <div style={{display: "flex", justifyContent: "space-between"}}>
-                      <div style={{ width: 120, textAlign: "right", fontWeight: "bold", paddingRight: 15 }}>{quantity}</div>
+                      <div style={{ width: 120, textAlign: "right", fontWeight: "bold" }}>{quantity}</div>
                       <div style={{ width: 120, textAlign: "right" }}></div>
                       <div style={{ width: 120, textAlign: "right", fontWeight: "bold" }}>{util.formatCurrency(amount)}</div>
                     </div>
