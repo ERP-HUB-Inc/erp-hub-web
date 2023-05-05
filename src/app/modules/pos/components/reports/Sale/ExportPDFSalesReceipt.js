@@ -2,7 +2,7 @@
 import React,{useEffect,useState} from "react";
 import { Translate } from "react-localize-redux";
 import { Button, Spin } from "antd";
-import * as moment from "moment";
+import moment from "moment";
 import ReportSaleService from "../../../services/report/SaleService";
 import Util from "../../../../common/util";
 import "../preview-pdf.css";
