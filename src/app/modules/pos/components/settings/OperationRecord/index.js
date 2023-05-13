@@ -130,23 +130,15 @@ export default class IncomeExpense extends Component {
     this.service.summary().then(({data})=>{
       this.setState({summaryData: data.data});
     });
+
     this.fetchList(true);
   }
 
   componentWillUpdate(nextProps) {
-
-    if (nextProps.add.added) {
+    if (nextProps.add.added || nextProps.update.updated) {
+      this.props.dispatch(OperationRecordAction.reset());
+      this.props.dispatch(OperationRecordAction.reset(Constant.RESET_OPERATION_RECORD));
       this.fetchList(true);
-      this.props.dispatch(this.action.reset());
-    }
-    if (nextProps.update.updated) {
-      const {data} = this.state;
-      const index = data.data.findIndex(item =>item.id === nextProps.update.response.data.id);
-      if (index >= 0 && nextProps.update.response){
-        data.data[index] = nextProps.update.response.data;
-        this.setState({data});
-        this.props.dispatch(this.action.reset());
-      }
     }
   }
 
@@ -183,7 +175,7 @@ export default class IncomeExpense extends Component {
 
     offset = (offset - 1) * limit;
 
-    if (!withPagination){
+    if (!withPagination) {
       offset = 0;
       params.delete("offset");
       this.setState({current: 1});

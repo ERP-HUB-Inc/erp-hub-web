@@ -4,6 +4,11 @@ export default {
     "ប្រភេទ"
   ],
 
+  "text_select_category": [
+    "Select category",
+    "ជ្រើសរើសប្រភេទ"
+  ],
+
   "text_feature_category": [
     "Featured Category",
     "ប្រភេទផលិតផលពិសេស"

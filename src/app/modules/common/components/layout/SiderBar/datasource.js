@@ -69,6 +69,11 @@ const SerialList = Loadable({
   loading: () => <StartUp />
 });
 
+const IncomeExpenseCategory = Loadable({
+  loader: () => import("../../../../pos/containers/transactions/IncomeExpenseCategory"),
+  loading: () => <StartUp />,
+});
+
 //Installment
 const Installment = Loadable({
   loader: () => import("../../../../installment/components/installment"),
@@ -403,6 +408,7 @@ const dataSource = {
         icon: "icon-time",
         route: "/transactions/sales-order",
         component: SaleOrderTransaction,
+        isSeparate: true,
         isFashNav: true,
       },
       {
@@ -441,6 +447,7 @@ const dataSource = {
         icon: "icon-barcode",
         route: "/transaction/serials",
         component: SerialList,
+        isSeparate: true,
         isFashNav: true
       },
       {
@@ -450,6 +457,13 @@ const dataSource = {
         component: OperationRecord,
         isFashNav: true,
       },
+      {
+        title: "Category",
+        icon: "icon-operation",
+        route: "/transactions/income_expense_category",
+        component: IncomeExpenseCategory,
+        isFashNav: false
+      }
     ],
   },
   installment: {

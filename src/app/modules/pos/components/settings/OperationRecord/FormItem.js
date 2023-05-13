@@ -1,6 +1,7 @@
 import React from "react";
 import { Icon } from "antd";
 import Modal from "../../../../common/components/shares/Modal";
+import IECategoryService from "../../../../pos/services/transactions/IncomeExpenseCategoryService";
 import Util from "../../../../common/util";
 import Enum from "../../../../common/enums";
 
@@ -31,6 +32,7 @@ export default class FormItem extends Modal {
   constructor(props) {
     super(props);
     this.state = {
+      categories: [],
       type: this.Enum.OPERATION_TYPE.EXPENSE,
     };
     this.operationTypes = [
@@ -47,6 +49,12 @@ export default class FormItem extends Modal {
   }
 
   componentDidMount() {
+    IECategoryService.getCategories()
+    .then(response => {
+      if (response.data) {
+        this.setState({categories: response.data});
+      }
+    });
     this.setState({ type: this.props.formData.type });
   }
 
@@ -60,15 +68,13 @@ export default class FormItem extends Modal {
     return (
       <div>
         <this.Select
-          name="category"
+          defaultValue={formData.categoryId}
+          name="categoryId"
           label={<this.Translate id="text_category" />}
-          dataSource={this.categories.map((category) => ({
-            name: category.name,
-            value: category.name,
-          }))}
-          defaultValue={
-            formData.id ? formData.category : this.categories[0].name
-          }
+          placeholder={this.CATranslate("text_select_category", this.props.locale)}
+          dataSource={this.state.categories}
+          nameKey="name"
+          valueKey="id"
           required={true}
           form={form}
         />
@@ -91,6 +97,7 @@ export default class FormItem extends Modal {
           label={<this.Translate id="input_operation_record_for" />}
           placeholder={this.CATranslate("input_operation_record_for", locale)}
           defaultValue={this.Util.formatDatePicker(formData.registerDate)}
+          required={true}
           form={form}
         />
         <this.InputNumber

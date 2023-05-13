@@ -36,6 +36,7 @@ import variantAttribute from "../modules/inventory/reducers/products/variantAttr
 // transaction
 import quotation from "../modules/pos/reducers/transactions/quotation";
 import transaction from "../modules/pos/reducers/transactions/transaction";
+import incomeExpenseCategory from "../modules/pos/reducers/transactions/incomeExpenseCategory";
 import openSaleRegistration from "../modules/pos/reducers/transactions/openSaleRegistration";
 import supplier from "../modules/inventory/reducers/stock/supplier";
 //stock 
@@ -110,6 +111,7 @@ const reducer = combineReducers({
   productReport,
   profitAndLostReport,
   transaction,
+  incomeExpenseCategory,
   quotation,
   openSaleRegistration,
 
