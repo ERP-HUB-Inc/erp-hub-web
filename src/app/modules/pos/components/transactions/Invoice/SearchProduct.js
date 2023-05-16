@@ -57,8 +57,10 @@ export default function SearchProductDropdown(props) {
 
   const handleSearchProduct = (value, isSearchingBarcode = false) => {
     const searchKey = JSON.stringify({ column: ["name", "namekm", "barcode"], value });
+
     setIsFetching(true);
-    ProductService.searchForDrowDown(100, 0, "", "", props.filter, searchKey, props.searchFor, isSearchingBarcode)
+
+    ProductService.searchForDrowDown(50, 0, "", "", props.filter, searchKey, props.searchFor, isSearchingBarcode)
     .then(response => {
       setProductSearch(response.data.data);
     })

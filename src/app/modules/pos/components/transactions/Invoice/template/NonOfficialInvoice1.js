@@ -116,6 +116,7 @@ export default function NonOfficialInvoice(props) {
                       <td >
                         <pre className="entry-note-column">{entry.description}</pre>
                         {entry.enableDescription ? renderSerials(entry) : null}
+                        {entry.specification && <div className="line-item-specification" dangerouslySetInnerHTML={{__html: entry.specification}}/>}
                       </td>
                       <td style={styles.entriesCurrency}>{util.formatCurrency(entry.price)}</td>
                       <td style={styles.entriesCurrency}>{entry.quantity}</td>

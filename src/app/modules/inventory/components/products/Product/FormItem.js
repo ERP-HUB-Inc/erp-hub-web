@@ -503,8 +503,6 @@ export default class FormItem extends Modal {
                   errorLenght={<this.Translate id="input_error_products_name" />}
                   isAutoFocus={true}
                   required={true}
-                  max={100}
-                  min={0}
                   form={form}
                 />
               </this.Col>
@@ -517,8 +515,6 @@ export default class FormItem extends Modal {
                   placeholder={this.CATranslate("text_product_name", locale)}
                   errorRequired={<this.Translate id="error_require_name" />}
                   errorLenght={<this.Translate id="input_error_products_name" />}
-                  max={100}
-                  min={0}
                   form={form}
                   suffix={this.getLanguageIcon("km")}/>
               </this.Col>
@@ -673,6 +669,106 @@ export default class FormItem extends Modal {
 
             <this.Col md="12" className="main-product-collapse form-group">
               <this.Collapse bordered={false}>
+                <this.Panel header={<this.Translate id="text_description" />} key="description">
+                  <CKEditor
+                    editor={ClassicEditor}
+                    data={formData.description ? formData.description : "<p></p>"}
+                    onChange={(event, editor) => {
+                      const data = editor.getData();
+                      this.props.form.setFieldsValue({
+                        description: data
+                      });
+                      this.setState({ description: data });
+                    }}
+                  />
+                  <this.InputText name="description" data={form.description} form={form} className="hidden" max={null} />
+                </this.Panel>
+              </this.Collapse>
+            </this.Col>
+
+            <this.Col md="12" className="main-product-collapse form-group">
+              <this.Collapse bordered={false}>
+                <this.Panel header={<this.Translate id="text_specification" />} key="specification">
+                  <CKEditor
+                    editor={ClassicEditor}
+                    data={formData.specification ? formData.specification : "<p></p>"}
+                    onChange={(event, editor) => {
+                      const data = editor.getData();
+                      this.props.form.setFieldsValue({
+                        specification: data
+                      });
+                      this.setState({ description: data });
+                    }}
+                  />
+                  <this.InputText name="specification" data={form.specification} form={form} className="hidden" max={null} />
+                </this.Panel>
+              </this.Collapse>
+            </this.Col>
+
+            <this.Col md="12" className="main-product-collapse form-group">
+              <this.Collapse bordered={false}>
+                <this.Panel header={<this.Translate id="text_web_display" />} key="3">
+                  <this.Row>
+                    <this.Col md="6">
+                      <this.Checkboxs
+                        name="isFeatured"
+                        label={<this.Translate id="text_featured_product" />}
+                        defaultValue={formData.isFeatured ? true : false}
+                        form={this.props.form} />
+                    </this.Col>
+                    <this.Col md="6">
+                      <this.Checkboxs
+                        name="isPublic"
+                        label={<this.Translate id="text_avialable_on_ecommerce" />}
+                        defaultValue={formData.isPublic ? true : false}
+                        form={this.props.form} />
+                    </this.Col>
+                    <this.Col md="12" style={{marginBottom: 15, display: "flex", alignItems: "center"}}>
+                      <div className="ant-col ant-form-item-label">
+                        <label htmlFor="isFeatured" ><this.Translate id="text_product_tag" /></label>
+                      </div>
+                      <div>
+                          {tags.map((tag) => {
+                            const isLongTag = tag.length > 20;
+                            const tagElem = (
+                                <Tag  key={tag} style={{marginBottom: 5, marginTop: 5}} closable={true} onClose={() => this.handleClose(tag)}>
+                                  {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                                </Tag>
+                            );
+                            return isLongTag ? (
+                                <Tooltip title={tag} key={tag}>
+                                  {tagElem}
+                                </Tooltip>
+                            ) : (
+                                tagElem
+                            );
+                          })}
+                          {inputVisible && (
+                              <Input
+                                  ref={this.saveInputRef}
+                                  type="text"
+                                  size="small"
+                                  style={{ width: 78 }}
+                                  value={inputValue}
+                                  onChange={this.handleInputChange}
+                                  onBlur={this.handleInputConfirm}
+                                  onPressEnter={this.handleInputConfirm}
+                              />
+                          )}
+                          {!inputVisible && (
+                              <Tag onClick={this.showInput} style={{ background: "#fff", borderStyle: "dashed" }}>
+                                <Icon type="plus" /> New Tag
+                              </Tag>
+                          )}
+                        </div>
+                    </this.Col>
+                  </this.Row>
+                </this.Panel>
+              </this.Collapse>
+            </this.Col>
+
+            <this.Col md="12" className="main-product-collapse form-group">
+              <this.Collapse bordered={false}>
                 <this.Panel header={<Translate id="text_other" />} key="2">
                   <this.Row>
                     <this.Col md="4">
@@ -737,100 +833,6 @@ export default class FormItem extends Modal {
                         label={<this.Translate id="input_product_is_avialable_sale" />}
                         checked={formData.isAvialableSale}
                         form={form} />
-                    </this.Col>
-                  </this.Row>
-                </this.Panel>
-              </this.Collapse>
-            </this.Col>
-
-            <this.Col md="12" className="main-product-collapse form-group">
-              <this.Collapse bordered={false}>
-                <this.Panel header={<this.Translate id="text_web_display" />} key="3">
-                  <this.Row>
-                    <this.Col md="6">
-                      <this.Checkboxs
-                        name="isFeatured"
-                        label={<this.Translate id="text_featured_product" />}
-                        defaultValue={formData.isFeatured ? true : false}
-                        form={this.props.form} />
-                    </this.Col>
-                    <this.Col md="6">
-                      <this.Checkboxs
-                        name="isPublic"
-                        label={<this.Translate id="text_avialable_on_ecommerce" />}
-                        defaultValue={formData.isPublic ? true : false}
-                        form={this.props.form} />
-                    </this.Col>
-                    <this.Col md="12" style={{marginBottom: 15, display: "flex", alignItems: "center"}}>
-                      <div className="ant-col ant-form-item-label">
-                        <label htmlFor="isFeatured" ><this.Translate id="text_product_tag" /></label>
-                      </div>
-                      <div>
-                          {tags.map((tag) => {
-                            const isLongTag = tag.length > 20;
-                            const tagElem = (
-                                <Tag  key={tag} style={{marginBottom: 5, marginTop: 5}} closable={true} onClose={() => this.handleClose(tag)}>
-                                  {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-                                </Tag>
-                            );
-                            return isLongTag ? (
-                                <Tooltip title={tag} key={tag}>
-                                  {tagElem}
-                                </Tooltip>
-                            ) : (
-                                tagElem
-                            );
-                          })}
-                          {inputVisible && (
-                              <Input
-                                  ref={this.saveInputRef}
-                                  type="text"
-                                  size="small"
-                                  style={{ width: 78 }}
-                                  value={inputValue}
-                                  onChange={this.handleInputChange}
-                                  onBlur={this.handleInputConfirm}
-                                  onPressEnter={this.handleInputConfirm}
-                              />
-                          )}
-                          {!inputVisible && (
-                              <Tag onClick={this.showInput} style={{ background: "#fff", borderStyle: "dashed" }}>
-                                <Icon type="plus" /> New Tag
-                              </Tag>
-                          )}
-                        </div>
-                    </this.Col>
-                    <this.Col md="12">
-                      <Tabs type="card">
-                        <Tabs.TabPane tab={<this.Translate id="text_description" />} key="1">
-                          <CKEditor
-                            editor={ClassicEditor}
-                            data={formData.description ? formData.description : "<p></p>"}
-                            onChange={(event, editor) => {
-                              const data = editor.getData();
-                              this.props.form.setFieldsValue({
-                                description: data
-                              });
-                              this.setState({ description: data });
-                            }}
-                          />
-                          <this.InputText name="description" data={form.description} form={form} className="hidden" max={null} />
-                        </Tabs.TabPane>
-                        <Tabs.TabPane tab={<this.Translate id="text_specification" />} key="2">
-                          <CKEditor
-                              editor={ClassicEditor}
-                              data={formData.specification ? formData.specification : "<p></p>"}
-                              onChange={(event, editor) => {
-                                const data = editor.getData();
-                                this.props.form.setFieldsValue({
-                                  specification: data
-                                });
-                                this.setState({ description: data });
-                              }}
-                            />
-                            <this.InputText name="specification" data={form.specification} form={form} className="hidden" max={null} />
-                        </Tabs.TabPane>
-                      </Tabs>
                     </this.Col>
                   </this.Row>
                 </this.Panel>

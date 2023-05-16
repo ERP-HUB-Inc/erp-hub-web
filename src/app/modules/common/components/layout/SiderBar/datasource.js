@@ -451,18 +451,18 @@ const dataSource = {
         isFashNav: true
       },
       {
+        title: <Translate id="text_category" />,
+        icon: "icon-operation",
+        route: "/transactions/income_expense_category",
+        component: IncomeExpenseCategory,
+        isFashNav: false
+      },
+      {
         title: <Translate id="text_income_and_expense" />,
         icon: "icon-operation",
         route: "/transactions/income_expense",
         component: OperationRecord,
         isFashNav: true,
-      },
-      {
-        title: "Category",
-        icon: "icon-operation",
-        route: "/transactions/income_expense_category",
-        component: IncomeExpenseCategory,
-        isFashNav: false
       }
     ],
   },

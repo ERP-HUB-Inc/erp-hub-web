@@ -9,7 +9,7 @@ export default {
 
   text_no: ["No", "លេខរៀង"],
 
-  text_number_of: ["No.", "លេខរៀង"],
+  text_number_of: ["No.", "ល.រ"],
 
   text_title: ["Title", "ចំណងជើង"],
 
@@ -366,7 +366,7 @@ export default {
 
   text_label: ["Label", "ស្លាកសញ្ញា"],
 
-  text_specification: ["Specification", "ការបញ្ជាក់"],
+  text_specification: ["Specifications", "លក្ខណៈ​របស់ផលិតផល"],
 
   text_name: ["Name", "ឈ្មោះ", "Name"],
 

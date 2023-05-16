@@ -130,14 +130,29 @@ class NewInvoice extends React.PureComponent {
                         style={{display: "none"}}
                         name={`variantName[${index}]`}
                         data={record.variantName}
-                        form={this.props.form} />
+                        form={this.props.form}
+                    />
+
                     <InputTextArea
                         name={`description[${index}]`}
                         data={description}
                         inputStyle={{width: "100%"}}
                         style={{width: "100%"}}
                         handleOnChange={(e) => this.onChangeDescription(e, index)}
-                        form={this.props.form} />
+                        form={this.props.form}
+                    />
+
+                    <InputText 
+                        style={{display: "none"}}
+                        name={`specification[${index}]`}
+                        data={record.specification}
+                        form={this.props.form}
+                    />
+
+                    {
+                        record.specification && 
+                        <div className="line-item-specification" dangerouslySetInnerHTML={{__html: record.specification}}/>
+                    }
                     
                     {
                         record.enableDescription ? <React.Fragment>
@@ -336,6 +351,7 @@ class NewInvoice extends React.PureComponent {
                     variantName: "",
                     categoryId: "",
                     description: "",
+                    specification: "",
                     unitId: "",
                     quantity: 0,
                     unitName: "",
@@ -465,6 +481,7 @@ class NewInvoice extends React.PureComponent {
                                 variantName: transactionEntries[index].variantName,
                                 categoryId: transactionEntries[index].categoryId,
                                 description,
+                                specification: transactionEntries[index].specification,
                                 quantity: values.quantity[index],
                                 enableDescription: transactionEntries[index].enableDescription,
                                 unitId: transactionEntries[index].unitId,
@@ -508,6 +525,7 @@ class NewInvoice extends React.PureComponent {
                     variantName: entry.variantName,
                     categoryId: entry.categoryId,
                     description: entry.description,
+                    specification: entry.specification,
                     unitId: entry.unitId,
                     quantity: entry.quantity,
                     unitName: entry.unitName,
@@ -1221,6 +1239,7 @@ class NewInvoice extends React.PureComponent {
                 variantName: product.name ? product.name : product.namekm,
                 categoryId: product.productTypeId,
                 description: `${product.name ? product.name : product.namekm} ${isProductVariant ? productVariant.name : ""}`,
+                specification: product.specification,
                 unitId: product.defaultUnitId,
                 quantity: 1,
                 unitName: product.unit.name,
@@ -1236,11 +1255,20 @@ class NewInvoice extends React.PureComponent {
             });
         } else {
             let isNotTheSameProduct = true;
-            existingProductList.forEach((product, index) => {
-                if (product.productVariantId === productVariant.id) {
-                    let quantity = existingProductList[index]["quantity"] += 1;
+            existingProductList.forEach((existingProduct, index) => {
+                if (existingProduct.productVariantId === productVariant.id) {
+                    let quantity;
+                    if (existingProduct.status === 3) {
+                        quantity = 1;
+                        existingProductList[index]["status"] = 1;
+                    } else {
+                        quantity = existingProductList[index]["quantity"] += 1;
+                    }
+
+                    existingProductList[index]["specification"] = product.specification;
                     existingProductList[index]["quantity"] = quantity;
-                    existingProductList[index]["amount"] = quantity * existingProductList[index]["price"];
+                    existingProductList[index]["amount"] = quantity * existingProduct.price;
+
                     isNotTheSameProduct = false;
                 }
             });
@@ -1252,6 +1280,7 @@ class NewInvoice extends React.PureComponent {
                     variantName: product.name ? product.name : product.namekm,
                     categoryId: product.productTypeId,
                     description: `${product.name ? product.name : product.namekm} ${isProductVariant ? productVariant.name : ""}`,
+                    specification: product.specification,
                     unitId: product.defaultUnitId,
                     quantity: 1,
                     unitName: product.unit.name,

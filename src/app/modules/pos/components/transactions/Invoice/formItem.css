@@ -47,3 +47,12 @@
     font-size: 20px;
     right: -30px;
 }
+
+.line-item-specification {
+    margin-top: 10px;
+}
+
+.line-item-specification ol,
+.line-item-specification ul {
+    padding-left: 15px;
+}
