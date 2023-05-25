@@ -25,7 +25,6 @@ export function InputText(props) {
     validator={props.validator}
     form={props.form}
     min={props.min}
-    max={props.max}
     addonBefore={props.addonBefore}
     addonAfter={props.addonAfter}
     onChange={props.onChange}
@@ -43,7 +42,6 @@ export function InputText(props) {
 }
 
 Input.defaultProps = {
-  max: 255,
   errorRequired: "Field required",
   errorLenght: "Over allow character lenght.",
   type: "text"

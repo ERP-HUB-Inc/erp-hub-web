@@ -3,7 +3,6 @@ import {
   Spin,
   Button,
   Tag,
-  Tabs,
   Input,
   Tooltip,
   Icon
