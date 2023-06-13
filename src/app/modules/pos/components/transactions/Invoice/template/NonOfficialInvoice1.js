@@ -134,9 +134,9 @@ export default function NonOfficialInvoice(props) {
               dangerouslySetInnerHTML={{ __html: formData.publicNote}} 
               id="public-not" />
           </td>
-          <td style={{width: 240}} className="inv-summary">
+          <td style={{width: 280}} className="inv-summary">
             <div style={{display: "flex", justifyContent: "space-between", textAlign: "right", paddingLeft: 80, lineHeight: "28px"}}>
-               <div>
+               <div style={{marginRight: 15}}>
                   <div>Subtotal</div>
                   {discount && discount > 0 ? <div style={{marginTop: 3}}>Discount</div> : null}
                   {tax ? <div style={{marginTop: 3}}>VAT</div> : null}
