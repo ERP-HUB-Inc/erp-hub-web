@@ -115,7 +115,7 @@ class Profile extends React.Component {
           title={<Translate id="text_customer_profile" />}
         />
 
-        {Object.keys(detail).length ?
+        {detail && Object.keys(detail).length ?
         <Row gutter={24} style={{paddingLeft: 24, display: "flex", paddingBottom: 20}}>
           <Col md={6}>
             <Card className="customer-profile-card">
