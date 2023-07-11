@@ -107,6 +107,7 @@ export default function ExportPDFSalesReceipt() {
                           <th><Translate id="text_description" /></th>
                           <th style={{textAlign: "right"}}><Translate id="text_quantity" /></th>
                           <th style={{textAlign: "right"}}><Translate id="text_sales_price" /></th>
+                          <th style={{textAlign: "right"}}><Translate id="text_vat" /></th>
                           <th style={{textAlign: "right"}}><Translate id="text_amount" /></th>
               
                       </tr>
@@ -115,10 +116,21 @@ export default function ExportPDFSalesReceipt() {
                       {
                         datas.map((data, index1) => {
                           let quantity = 0;
+
+                          // eslint-disable-next-line
                           let amount = 0;
+
+                          const totalAfterDisc = data.total - data.discount;
+
+                          let vat = 0;
+
+                          if (totalAfterDisc > data.totalExcludeTax) {
+                            vat = totalAfterDisc - data.totalExcludeTax;
+                          }
+
                           return <React.Fragment>
                             <tr key={index1}>
-                              <td colSpan={7}>{data.firstName} {data.lastName} {data.phoneNumber}</td>
+                              <td colSpan={8}>{data.firstName} {data.lastName} {data.phoneNumber}</td>
                             </tr>
                             { 
                               data.transactionEntries.map((entry, index2) => {
@@ -132,6 +144,7 @@ export default function ExportPDFSalesReceipt() {
                                   <td>{entry.description}</td>
                                   <td style={{textAlign: "right"}}>{entry.quantity}</td>
                                   <td style={{textAlign: "right"}}>{new Util().formatCurrency(entry.price)}</td>
+                                  <td></td>
                                   <td style={{textAlign: "right"}}>{new Util().formatCurrency(entry.quantity * entry.price)}</td>
                                 </tr>;
                               })
@@ -140,7 +153,8 @@ export default function ExportPDFSalesReceipt() {
                               <td colSpan={4}><Translate id="text_total" /> {data.phoneNumber}</td>
                               <td style={{textAlign: "right", borderTop: "2px solid black"}}>{quantity}</td>
                               <td></td>
-                              <td style={{textAlign: "right", borderTop: "2px solid black"}}>{new Util().formatCurrency(amount)}</td>
+                              <td style={{textAlign: "right"}}>{new Util().formatCurrency(vat)}</td>
+                              <td style={{textAlign: "right", borderTop: "2px solid black"}}>{new Util().formatCurrency(totalAfterDisc)}</td>
                             </tr>
                           </React.Fragment>;
                         })

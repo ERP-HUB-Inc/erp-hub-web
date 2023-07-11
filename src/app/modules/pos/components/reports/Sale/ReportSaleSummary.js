@@ -325,7 +325,7 @@ function ReportSaleSummary() {
                 dataIndex: "discount",
                 align: "right",
                 key: "discount",
-                render: discount => (new Util()).formatCurrency(discount)
+                render: discount => (new Util()).formatCurrency(discount || 0)
               },
               {
                 title: <Translate id="text_net_sale" />,

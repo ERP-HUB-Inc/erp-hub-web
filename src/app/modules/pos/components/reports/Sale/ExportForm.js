@@ -5,9 +5,8 @@ import {
     Button
 } from "antd";
 import { Link } from "react-router-dom";
-// import SaleService from "../../../services/report/SaleService";
 
-function ExportFormLoader({ pdfLink,getData }) {
+function ExportFormLoader({ pdfLink, getData, exportExcel, exportPDF }) {
     const [loading, setLoading] = React.useState(false);
     const [result, setResult] = React.useState(null);
     const params = new URLSearchParams(document.location.search);
@@ -23,12 +22,6 @@ function ExportFormLoader({ pdfLink,getData }) {
                     }
                 });
             }
-            // SaleService.getReportSummaryByProduct({startDate, endDate, isExport: true})
-            // .then(response => {
-            //     if (response.data) {
-            //         setResult(response.data);
-            //     }
-            // });
         } catch (error) {
             setLoading(false);
         } finally {
@@ -42,12 +35,12 @@ function ExportFormLoader({ pdfLink,getData }) {
         title="Successfully Exported Report"
         subTitle={loading ? "Please wait..." : ""}
         extra={[
-            <div style={{marginBottom: 25}}>
+            <div style={{marginBottom: 25, display: exportExcel ? "block" : "none"}}>
               <a key="1" className="ant-btn ant-btn-dashed" href={result ? result.link : "#"}>
                 Download File(xlsx)
               </a>
             </div>,
-            <div>
+            <div style={{display: exportPDF ? "block" : "none"}}>
               <Link key="2" className="ant-btn ant-btn-dashed" to={pdf} target="_blank">
                 Preview PDF
               </Link>
@@ -55,6 +48,11 @@ function ExportFormLoader({ pdfLink,getData }) {
         ]}
     />;
 }
+
+ExportFormLoader.defaultProps = {
+    exportExcel: true,
+    exportPDF: true
+};
 
 export default class ExportForm extends React.PureComponent {
     state = {

@@ -242,6 +242,7 @@ export default function ReportSaleReceipt() {
           <ExportForm
             pdfLink={"/reports/sales_receipt/pdf-preview"}
             getData={getExportableData}
+            exportExcel={false}
           />
         </Col>
         <Col span={24} id="sales-receipt-report">
@@ -261,7 +262,7 @@ export default function ReportSaleReceipt() {
                   return {
                   children: <div style={{fontWeight: "bold"}}>{`${firstName}${lastName ? " " + lastName : ""} ${phoneNumber ? phoneNumber : ""}`}</div>,
                     props: {
-                      colSpan: 7,
+                      colSpan: 8,
                     }
                   };
                 }
@@ -338,6 +339,21 @@ export default function ReportSaleReceipt() {
                 }
               },
               { 
+                title: <Translate id="text_vat" />, 
+                dataIndex: "totalExcludeTax", 
+                key: "totalExcludeTax", 
+                align: "right",
+                width: 140,
+                render: () => {
+                  return {
+                    children: null,
+                    props: {
+                      colSpan: 0
+                    },
+                  };
+                }
+              },
+              { 
                 title: <Translate id="text_amount" />, 
                 dataIndex: "amount", 
                 key: "amount", 
@@ -397,6 +413,13 @@ export default function ReportSaleReceipt() {
                   render: price => util.formatCurrency(price),
                 },
                 {
+                  dataIndex: "vat",
+                  key: "vat",
+                  width: 140,
+                  align: "right",
+                  render: () => null
+                },
+                {
                   dataIndex: "quantity",
                   key: "amount",
                   align: "right",
@@ -406,7 +429,15 @@ export default function ReportSaleReceipt() {
               ];
               
               const quantity = record.transactionEntries.reduce((sum, obj) => sum + obj.quantity, 0);
-              const amount = record.transactionEntries.reduce((sum, obj) => sum + (obj.quantity * obj.price), 0);
+              // const amount = record.transactionEntries.reduce((sum, obj) => sum + (obj.quantity * obj.price), 0);
+
+              const totalAfterDisc = record.total - record.discount;
+
+              let vat = 0;
+
+              if (totalAfterDisc > record.totalExcludeTax) {
+                vat = totalAfterDisc - record.totalExcludeTax;
+              }
 
               return <div className="sub-table">
                 <Table
@@ -421,8 +452,8 @@ export default function ReportSaleReceipt() {
                     <div style={{ fontWeight: "bold" }}><Translate id="text_total" />:</div>
                     <div style={{display: "flex", justifyContent: "space-between"}}>
                       <div style={{ width: 120, textAlign: "right", fontWeight: "bold" }}>{quantity}</div>
-                      <div style={{ width: 120, textAlign: "right" }}></div>
-                      <div style={{ width: 120, textAlign: "right", fontWeight: "bold" }}>{util.formatCurrency(amount)}</div>
+                      <div style={{ width: 140, textAlign: "right", fontWeight: "bold" }}>{util.formatCurrency(vat)}</div>
+                      <div style={{ width: 120, textAlign: "right", fontWeight: "bold" }}>{util.formatCurrency(totalAfterDisc)}</div>
                     </div>
                   </div>}
                 />
