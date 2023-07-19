@@ -420,7 +420,7 @@ class NewInvoice extends React.PureComponent {
         }
     }
 
-    handleSubmit = (e) => {
+    handleSave = (e, status = Enum.INVOICE_STATUS.DRAFT) => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
@@ -459,7 +459,8 @@ class NewInvoice extends React.PureComponent {
                     registerDate: this.util.formatDateForMYSQL(formData.registerDate ? formData.registerDate : moment()),
                     totalExcludeTax: subTotal,
                     deposit: values.deposit,
-                    total: values.total
+                    total: values.total,
+                    status
                 };
 
                 if (this.saleOrderId) {
@@ -1530,13 +1531,12 @@ class NewInvoice extends React.PureComponent {
             }
         });
 
+        const params = new URLSearchParams(window.location.search);
+
         return ( 
             !this.state.loading && Object.keys(formData).length ? 
             <div>
-                <Form 
-                    {...formItemLayout}
-                    id="invoice-form"
-                    onSubmit={this.handleSubmit}>
+                <Form {...formItemLayout} id="invoice-form">
                     <PageHeader
                         style={{
                         backgroundColor: "#f7f7f7",
@@ -1832,11 +1832,17 @@ class NewInvoice extends React.PureComponent {
                                     )
                                 }
                             </Form.Item>
-                            <Button type="info" htmlType="submit" loading={this.state.saveLoading} >
+                            <Button type="info" htmlType="submit" onClick={this.handleSave} loading={this.state.saveLoading} >
                                 <Translate id="text_save" />
                             </Button>
                             {
-                                formData.id ? 
+                                !formData.id || params.get("action") === "clone" && 
+                                <Button type="default" htmlType="submit" style={{marginLeft: 15}} onClick={e => this.handleSave(e, Enum.INVOICE_STATUS.SENT)} loading={this.state.saveLoading} >
+                                    <Translate id="text_save_and_sent" />
+                                </Button>
+                            }
+                            {
+                                formData.id && params.get("action") !== "clone" ? 
                                 <React.Fragment>
                                     <Dropdown
                                         overlay={(

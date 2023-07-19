@@ -246,6 +246,8 @@ export default {
 
   text_save_and_close: ["Save & Close", "រក្សារទុក & បិទ"],
 
+  text_save_and_sent: ["Save & Sent", "រក្សារទុក & ផ្ញើរ"],
+
   text_save_and_new: ["Save & New", "រក្សារទុក & បង្កើតថ្មី"],
 
   text_edit: ["Edit", "កែប្រែ"],
