@@ -1,11 +1,12 @@
 import React from "react";
 import moment from "moment";
+import {Card, Col, Icon, Input, message, Pagination, Row, Statistic, DatePicker} from "antd";
+import {Link} from "react-router-dom";
 import FormCreate from "../../../containers/settings/OperationRecord/FormCreate";
 import FormUpdate from "../../../containers/settings/OperationRecord/FormUpdate";
 import Constant from "../../../constants/settings/operationRecord";
 import OperationRecordAction from "../../../action/settings/operationRecord";
 import OperationRecordService from "../../../services/settings/OperationRecordService";
-import {Card, Col, Icon, Input, message, Pagination, Row, Statistic, DatePicker} from "antd";
 import Component from "../../../../common/components/Component";
 import PrivilegeService from "../../../services/settings/PrivilegeService";
 import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
@@ -334,11 +335,12 @@ export default class IncomeExpense extends Component {
     const queryParams = new URLSearchParams(document.location.search);
     const search = e.target.value ? e.target.value.trim() : "";
 
-    if (search){
+    if (search) {
       queryParams.set("search", search);
-    }else{
+    } else {
       queryParams.delete("search");
     }
+
     this.Util.pushParamsToURL(this.pathname,  queryParams.toString());
 
     clearTimeout(this.timer);
@@ -383,7 +385,7 @@ export default class IncomeExpense extends Component {
                   <Card>
                     <Statistic
                         title={<this.Translate id="text_income"/>}
-                        value={summaryData.income ? summaryData.income : 0 }
+                        value={summaryData.income ? summaryData.income.toFixed(2) : 0 }
                         precision="0"
                         prefix="$"
                         valueStyle={{ color: "#3f8600" }}
@@ -394,7 +396,7 @@ export default class IncomeExpense extends Component {
                   <Card>
                     <Statistic
                         title={<this.Translate id="text_expense"/>}
-                        value={summaryData.expense ? summaryData.expense : 0 }
+                        value={summaryData.expense ? summaryData.expense.toFixed(2) : 0 }
                         precision="0"
                         prefix="$"
                         valueStyle={{ color: "#cf1322" }}
@@ -445,6 +447,9 @@ export default class IncomeExpense extends Component {
                           <span className="icon-delete icon-padding-right"></span>
                           <this.Translate id="text_delete" />
                         </this.Button>
+                        <Link to={`/reports/expense/pdf-preview?startDate=${params.get("start")}&endDate=${params.get("end")}`} className="ant-btn info" style={{marginLeft: 10}}>
+                          <this.Translate id="text_print" />
+                        </Link>
                       </Col>
                     </Row>
                     <this.Table

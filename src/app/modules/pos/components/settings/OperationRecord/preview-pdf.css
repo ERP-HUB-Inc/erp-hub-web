@@ -1,0 +1,54 @@
+#export-pdf .data-table td,
+#export-pdf .data-table th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    font-size: 12px;
+}
+
+#export-pdf .data-table th {
+    background-color: #acacac;
+    font-size: 12px;
+}
+
+#export-pdf .presence-break-up-header td {
+    font-size: 12px
+}
+
+#export-pdf .presence-break-up th,
+#export-pdf .presence-break-up td {
+    font-size: 12px;
+    text-align: center;
+}
+
+#spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 297mm;
+    height: 20%;
+}
+
+@media print {
+    #export-pdf {
+        background-color: #fff;
+    }
+
+    #space-block {
+        display: none;
+    }
+
+    #toolbar {
+        display: none
+    }
+
+    #export-pdf {
+        height: auto !important
+    }
+
+    @page {
+        size: portrait;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+}

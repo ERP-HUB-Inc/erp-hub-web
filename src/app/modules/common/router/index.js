@@ -56,6 +56,7 @@ import ExportPDFPurchaseSummary from "../../pos/components/reports/Purchase/Expo
 import ExportPDFPurchaseByProduct from "../../pos/components/reports/Purchase/ExportPDFPurchaseByProduct";
 import ExportPDFSaleByProduct from "../../pos/components/reports/Sale/ExportPDFSaleByProduct";
 import ExportPDFSalesReceipt from "../../pos/components/reports/Sale/ExportPDFSalesReceipt";
+import PrintPDF from "../../pos/components/settings/OperationRecord/PrintPDF";
 
 const { Content } = Layout;
 
@@ -127,6 +128,7 @@ class Router extends Component {
             <Route path="/employees/create" component={EmployeeCreate} />
             <Route path="/employees/update/:id" component={EmployeeUpdate} />
             <Route path="/reports/sale_summaries" component={ReportSaleSummary} />
+            <Route path="/reports/expense/pdf-preview" component={PrintPDF} />
             <Route path="/reports/sold_products/pdf-preview" component={ExportPDFSaleByProduct} />
             <Route path="/reports/sold_products" component={ReportSaleByProduct} />
             <Route path="/reports/sales_receipt/pdf-preview" component={ExportPDFSalesReceipt} />
