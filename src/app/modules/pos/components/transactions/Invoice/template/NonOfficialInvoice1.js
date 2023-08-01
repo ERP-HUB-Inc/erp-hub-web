@@ -142,6 +142,7 @@ export default function NonOfficialInvoice(props) {
                   {tax ? <div style={{marginTop: 3}}>VAT</div> : null}
                   {deliveryFee ? <div style={{marginTop: 3}}>Delivery Fee</div> : null}
                   <div style={{marginTop: 3}}>Grand Total</div>
+                  {formData.deposit > 0 && <div style={{marginTop: 3}}>Deposit</div>}
                </div>
               <div>
                   <div>{util.formatCurrency(subtotal)}</div>
@@ -149,6 +150,7 @@ export default function NonOfficialInvoice(props) {
                   {tax ? <div style={{marginTop: 3}}>{util.formatCurrency(tax)}</div> : null}
                   {deliveryFee ? <div style={{marginTop: 3}}>{util.formatCurrency(deliveryFee)}</div> : null}
                   <div style={{fontWeight: 600, marginTop: 3}}>{util.formatCurrency(formData.total - discount + deliveryFee)}</div>
+                  {formData.deposit > 0 && <div style={{fontWeight: 600, marginTop: 3}}>{util.formatCurrency(formData.deposit)}</div>}
               </div>
             </div>
           </td>

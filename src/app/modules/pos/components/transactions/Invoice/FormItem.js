@@ -516,7 +516,7 @@ class NewInvoice extends React.PureComponent {
             if (!totalExcludeTax) {
                 totalExcludeTax = data.total;
             }
-
+            
             const transactionEntries = [];
             const selectedSerials = [];
             data.transactionEntries.length && data.transactionEntries.forEach(entry => {
