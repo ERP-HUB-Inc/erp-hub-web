@@ -3,7 +3,7 @@ import Util from "../../../../../common/util";
 import "./style.css";
 
 const util = new Util();
-const dateFormat = "DD-MM-YYYY";
+const dateFormat = "DD-MM-YYYY hh:mm";
 
 export default function NonOfficialInvoice(props) {
   function renderSerials(entry) {
@@ -68,31 +68,33 @@ export default function NonOfficialInvoice(props) {
     <table className="table-invoice">
       <tbody>
         <tr>
-          <td colSpan={2}><h1>អតិថិជន</h1></td>
+          <td colSpan={2}><div style={{fontSize: 18}}>អតិថិជន</div></td>
         </tr>
-        <tr style={{background: "none", borderTop: "2px solid #ddd", borderBottom: "2px solid #ddd"}}>
+        <tr style={{background: "none", borderTop: "2px solid #ddd", borderBottom: "2px solid #ddd", height: 94}}>
           <td style={{paddingTop: 6, paddingBottom: 6, width: 280}}>
             <ul style={styles.ulStyle}>
               {/* <li style={{display: "flex"}}>
                 <div style={{width: 150}}>{props.numberTitle}</div><div style={{fontWeight: 600}}>{formData.invoiceNumber}</div>
               </li> */}
-              <li style={{display: "flex"}} className="inv-header-title">
-                <div style={{width: 150}}>{props.invoiceDateTitle}</div><div>{formData.invoiceDate ? util.formatDate(formData.invoiceDate, dateFormat) : null}</div>
-              </li>
-              <li style={{display: "flex"}} className="inv-header-title">
-                <div style={{width: 150}}>{props.dueDateTitle}</div><div>{formData.dueDate ? util.formatDate(formData.dueDate, dateFormat) : null}</div>
-              </li>
-              <li style={{display: "flex"}} className="inv-header-title">
-                <div style={{width: 150}}>Balance Due</div><div style={{fontWeight: 600}}>{util.formatCurrency(formData.total - discount)}</div>
-              </li>
+
+              <li>{formData.firstName} {formData.lastName}</li>
+              <li className="inv-header-title">{formData.phoneNumber}</li>
+              <li style={{fontWeight: 600}} className="inv-header-title">{formData.company}</li>
+             
             </ul>
           </td>
           <td colSpan={2} style={{paddingTop: 6, paddingBottom: 6, position: "relative"}}>
             <ul style={{...styles.ulStyle, position: "absolute", top: 6}}>
-              <li>{formData.firstName} {formData.lastName}</li>
-              <li className="inv-header-title">{formData.phoneNumber}</li>
-              <li style={{fontWeight: 600}} className="inv-header-title">{formData.company}</li>
-              {/* <li>{formData.address}</li> */}
+
+            <li style={{display: "flex"}} className="inv-header-title">
+                <div style={{width: 140}}>{props.invoiceDateTitle}</div><div>{formData.invoiceDate ? util.formatDate(formData.invoiceDate, dateFormat) : null}</div>
+              </li>
+              <li style={{display: "flex"}} className="inv-header-title">
+                <div style={{width: 140}}>{props.dueDateTitle}</div><div>{formData.dueDate ? util.formatDate(formData.dueDate, dateFormat) : null}</div>
+              </li>
+              <li style={{display: "flex"}} className="inv-header-title">
+                <div style={{width: 140}}>Balance Due</div><div style={{fontWeight: 600}}>{util.formatCurrency(formData.total - discount)}</div>
+              </li>
             </ul>
           </td>
         </tr>
@@ -188,7 +190,7 @@ const styles = {
     listStyleType: "none",
     padding: 0,
     fontSize: "11pt",
-    marginBottom: 0,
+    // marginBottom: 0,
     lineHeight: "25px"
   },
   entriesCurrency: {
