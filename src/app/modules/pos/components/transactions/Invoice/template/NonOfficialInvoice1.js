@@ -3,7 +3,7 @@ import Util from "../../../../../common/util";
 import "./style.css";
 
 const util = new Util();
-const dateFormat = "DD-MM-YYYY hh:mm";
+const dateFormat = "DD-MM-YYYY hh:mm A";
 
 export default function NonOfficialInvoice(props) {
   function renderSerials(entry) {
