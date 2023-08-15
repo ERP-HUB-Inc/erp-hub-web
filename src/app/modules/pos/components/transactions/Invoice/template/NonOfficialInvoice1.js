@@ -68,14 +68,14 @@ export default function NonOfficialInvoice(props) {
     <table className="table-invoice">
       <tbody>
         <tr>
-          <td colSpan={2}><h1>INVOICE</h1></td>
+          <td colSpan={2}><h1>អតិថិជន</h1></td>
         </tr>
         <tr style={{background: "none", borderTop: "2px solid #ddd", borderBottom: "2px solid #ddd"}}>
           <td style={{paddingTop: 6, paddingBottom: 6, width: 280}}>
             <ul style={styles.ulStyle}>
-              <li style={{display: "flex"}}>
+              {/* <li style={{display: "flex"}}>
                 <div style={{width: 150}}>{props.numberTitle}</div><div style={{fontWeight: 600}}>{formData.invoiceNumber}</div>
-              </li>
+              </li> */}
               <li style={{display: "flex"}} className="inv-header-title">
                 <div style={{width: 150}}>{props.invoiceDateTitle}</div><div>{formData.invoiceDate ? util.formatDate(formData.invoiceDate, dateFormat) : null}</div>
               </li>
@@ -179,7 +179,7 @@ export default function NonOfficialInvoice(props) {
 NonOfficialInvoice.defaultProps = {
   invoiceTitle: "Invoice",
   numberTitle: "Invoice Number",
-  invoiceDateTitle: "Invoice Date",
+  invoiceDateTitle: "Date",
   dueDateTitle: "Due Date"
 };
 
