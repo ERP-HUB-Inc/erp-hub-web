@@ -70,7 +70,7 @@ export default function NonOfficialInvoice(props) {
         <tr>
           <td colSpan={2}><div style={{fontSize: 18}}>អតិថិជន</div></td>
         </tr>
-        <tr style={{background: "none", borderTop: "2px solid #ddd", borderBottom: "2px solid #ddd", height: 94}}>
+        <tr style={{background: "none", borderTop: "2px solid #ddd", borderBottom: "2px solid #ddd", height: 120}}>
           <td style={{paddingTop: 6, paddingBottom: 6, width: 280}}>
             <ul style={styles.ulStyle}>
               {/* <li style={{display: "flex"}}>
@@ -85,16 +85,18 @@ export default function NonOfficialInvoice(props) {
           </td>
           <td colSpan={2} style={{paddingTop: 6, paddingBottom: 6, position: "relative"}}>
             <ul style={{...styles.ulStyle, position: "absolute", top: 6}}>
-
-            <li style={{display: "flex"}} className="inv-header-title">
-                <div style={{width: 140}}>{props.invoiceDateTitle}</div><div>{formData.invoiceDate ? util.formatDate(formData.invoiceDate, dateFormat) : null}</div>
-              </li>
               <li style={{display: "flex"}} className="inv-header-title">
-                <div style={{width: 140}}>{props.dueDateTitle}</div><div>{formData.dueDate ? util.formatDate(formData.dueDate, dateFormat) : null}</div>
-              </li>
+                  <div style={{width: 140}}>{props.numberTitle}</div><div>{formData.invoiceNumber}</div>
+                </li>
               <li style={{display: "flex"}} className="inv-header-title">
-                <div style={{width: 140}}>Balance Due</div><div style={{fontWeight: 600}}>{util.formatCurrency(formData.total - discount)}</div>
-              </li>
+                  <div style={{width: 140}}>{props.invoiceDateTitle}</div><div>{formData.invoiceDate ? util.formatDate(formData.invoiceDate, dateFormat) : null}</div>
+                </li>
+                <li style={{display: "flex"}} className="inv-header-title">
+                  <div style={{width: 140}}>{props.dueDateTitle}</div><div>{formData.dueDate ? util.formatDate(formData.dueDate, dateFormat) : null}</div>
+                </li>
+                <li style={{display: "flex"}} className="inv-header-title">
+                  <div style={{width: 140}}>Balance Due</div><div style={{fontWeight: 600}}>{util.formatCurrency(formData.total - discount)}</div>
+                </li>
             </ul>
           </td>
         </tr>
