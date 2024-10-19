@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
 
-var DIST_DIR = path.resolve(__dirname, "dist");
+var DIST_DIR = path.resolve(__dirname, "build");
 var SRC_DIR = path.resolve(__dirname, "src");
 
 module.exports = {

@@ -4,7 +4,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 const webpack = require("webpack");
 const Dotenv = require("dotenv-webpack");
 
-var DIST_DIR = path.resolve(__dirname, "dist");
+var DIST_DIR = path.resolve(__dirname, "build");
 var SRC_DIR = path.resolve(__dirname, "src");
 
 
