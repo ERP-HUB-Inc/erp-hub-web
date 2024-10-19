@@ -14,7 +14,7 @@ export default class ParentLayout extends Component {
                   <span className="icon-logo"></span>
                 </div>
                 <div className="text">
-                  <strong>store</strong>Vein
+                  <strong>ERP HUB</strong>
                 </div>
               </div>
             </div>
@@ -22,7 +22,7 @@ export default class ParentLayout extends Component {
           <div className="blog-login">
             {/* <div className="wrap-help"><span className="icon-help icon-padding-right"></span><span className="help">Help</span></div> */}
             <div className="header text-right">
-              <div className="title"><strong>store</strong>Vein</div>
+              <div className="title"><strong>ERP HUB</strong></div>
               <div className="back-office">Backoffice</div>
             </div>
             { this.props.children }

@@ -65,10 +65,10 @@
   },
   "scripts": {
     "production": "webpack-dev-server --open",
-    "start": "set PORT=3081 & react-scripts start",
-    "build": "react-scripts build",
+    "start": "set PORT=3081 & react-scripts --openssl-legacy-provider start",
+    "react:build": "react-scripts build",
     "webpack": "webpack-dev-server --mode development --open",
-    "webpack:build": "npm run prebuild && webpack --mode production",
+    "build": "npm run prebuild && NODE_OPTIONS=--openssl-legacy-provider webpack --mode production",
     "generate-build-version": "node generate-build-version",
     "prebuild": "npm run generate-build-version",
     "test": "react-scripts test --env=jsdom",

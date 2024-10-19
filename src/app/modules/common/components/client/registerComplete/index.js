@@ -15,7 +15,7 @@ export default class RegisterComplete extends Component {
           <div className="register-complete-layout">
             Please waiting for 48 hours (Working hours), we will 
             contact you back and will let you know how running your 
-            business in storeVein platform.
+            business in ERP HUB platform.
           </div>
           <div className="register-complete-layout">
               Your contact information
