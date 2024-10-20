@@ -42,17 +42,17 @@ class ClientService extends BaseService {
 
   signin(userName, password, storeName) {
     this.module = "auth";
-    this.baseUrl = `${this.generateAPIUrl()}/${this.module}/${this.version}`;
+    this.baseUrl = `${this.generateAPIUrl()}/${this.module}`;
     return this.POST({
       url: `${this.baseUrl}/login`,
       headers: {
         "Content-Type": "application/json",
-        "storeName": storeName,
-        "userName": userName,
-        "password": password,
-        "deviceNumber": localStorage.getItem(this.ConstantAuth.ACCESS_DEVICE)
       },
-      data: {}
+      data: {
+        storeName: storeName,
+        userName: userName,
+        password: password
+      }
     });
   }
 

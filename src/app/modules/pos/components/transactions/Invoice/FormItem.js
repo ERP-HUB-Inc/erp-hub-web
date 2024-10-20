@@ -1836,7 +1836,7 @@ class NewInvoice extends React.PureComponent {
                                 <Translate id="text_save" />
                             </Button>
                             {
-                                !formData.id || params.get("action") === "clone" && 
+                                (!formData.id || params.get("action") === "clone") && 
                                 <Button type="default" htmlType="submit" style={{marginLeft: 15}} onClick={e => this.handleSave(e, Enum.INVOICE_STATUS.SENT)} loading={this.state.saveLoading} >
                                     <Translate id="text_save_and_sent" />
                                 </Button>

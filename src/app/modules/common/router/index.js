@@ -47,7 +47,7 @@ import POS from "../../pos/containers/transactions/SaleWalkin";
 import OpenSaleRegistration from "../../pos/containers/transactions/OpenSaleRegistration";
 import InvoiceCreate from "../../pos/components/transactions/Invoice/FormItem";
 import InvoiceUpdate from "../../pos/components/transactions/Invoice/FormItem";
-import InvoiceDetail from "../../pos/components/transactions/Invoice/detail";
+import InvoiceDetail from "../../pos/components/transactions/Invoice/Detail";
 import InvoiceReceipt from "../../pos/components/transactions/receipt";
 import SaleOrderCreate from "../../pos/components/transactions/SaleOrder/FormItem";
 import SaleOrderUpdate from "../../pos/components/transactions/SaleOrder/FormItem";

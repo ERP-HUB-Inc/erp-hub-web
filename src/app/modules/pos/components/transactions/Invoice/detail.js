@@ -196,7 +196,7 @@ class InvoiceDetail extends React.PureComponent {
   }
 
   render() {
-      const {formData} = this.state;
+      const { formData } = this.state;
 
       onafterprint = (() => {
       document.getElementById("invoice-content").classList.remove("invoice-A5");
@@ -361,7 +361,5 @@ function mapPropsToFields(props) {
       form: props.form
   };
 }
-
-const invoiceDetail =  Form.create(mapPropsToFields)(InvoiceDetail);
   
-export default connect(mapStateToProps)(invoiceDetail);
+export default connect(mapStateToProps)(Form.create(mapPropsToFields)(InvoiceDetail));

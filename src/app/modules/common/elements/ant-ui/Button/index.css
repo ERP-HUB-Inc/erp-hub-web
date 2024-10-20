@@ -1,31 +1,9 @@
-.ant-btn.info,
-.ant-btn.danger,
-.ant-btn.receive,
-.wrap-button-action .action-button-right .anticon {
-    color: #FFFFFF !important;
-    font-size: 10pt;
-    border-radius: 3px;
-    border: none;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.5)
-}
-
-.ant-btn.info {
-    background-color: #093163
-}
-
 .ant-btn.danger {
     background-color: #e85757
 }
 
 .ant-btn.receive {
     background-color: #87d068
-}
-
-.ant-btn.info:hover,
-.ant-btn.info:focus,
-.ant-btn.info:active,
-.ant-btn.info.active {
-    background: #124586 !important
 }
 
 .ant-btn.danger:hover,
@@ -45,11 +23,6 @@
 .ant-btn.danger[disabled],
 .ant-btn.danger[disabled]:hover {
     background-color: #b35959 !important
-}
-
-.ant-btn.info[disabled],
-.ant-btn.info[disabled]:hover {
-    background-color: #314c6f !important
 }
 
 /* .ant-btn:hover,

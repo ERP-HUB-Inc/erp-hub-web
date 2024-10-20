@@ -193,8 +193,8 @@ export default function ReceiptTemplate2(props) {
                     props.receiptTemplate && props.receiptTemplate.isHasSubCurrency ?
                       <tr>
                         <td style={{ backgroundColor: "white" }} />
-                        <td colSpan="2" style={{ backgroundColor: "white", textDecoration: "uppercase" }}>សរុប{`(${props.receiptTemplate.subCurrency.symbol})`}:</td>
-                        <td style={{ backgroundColor: "white", textAlign: "right" }}>{util.formatCurrency(POSUtil.toSubCurrencyGrantTotal(total, props.receiptTemplate.baseCurrency, props.receiptTemplate.subCurrency), props.receiptTemplate.subCurrency.symbol)}</td>
+                        <td colSpan="2" style={{ backgroundColor: "white", textDecoration: "uppercase" }}>សរុប{`(${props.receiptTemplate.subCurrency ? props.receiptTemplate.subCurrency.symbol : ""})`}:</td>
+                        <td style={{ backgroundColor: "white", textAlign: "right" }}>{util.formatCurrency(POSUtil.toSubCurrencyGrantTotal(total, props.receiptTemplate.baseCurrency, props.receiptTemplate.subCurrency), props.receiptTemplate.subCurrency ? props.receiptTemplate.subCurrency.symbol : "")}</td>
                       </tr>
                       :
                       <tr />
@@ -233,8 +233,8 @@ export default function ReceiptTemplate2(props) {
                     !props.isCustomerCredit && props.receiptTemplate && props.receiptTemplate.isHasSubCurrency ?
                       <tr>
                         <td style={{ backgroundColor: "white" }} />
-                        <td colSpan="2" style={{ backgroundColor: "white" }}>ប្រាក់អាប់{`(${props.receiptTemplate.subCurrency.symbol})`}:</td>
-                        <td style={{ backgroundColor: "white", textAlign: "right" }}>{util.formatCurrency(POSUtil.toSubCurrencyGrantTotal(props.changeAmount, props.receiptTemplate.baseCurrency, props.receiptTemplate.subCurrency), props.receiptTemplate.subCurrency.symbol)}</td>
+                        <td colSpan="2" style={{ backgroundColor: "white" }}>ប្រាក់អាប់{`(${props.receiptTemplate.subCurrency ? props.receiptTemplate.subCurrency.symbol : ""})`}:</td>
+                        <td style={{ backgroundColor: "white", textAlign: "right" }}>{util.formatCurrency(POSUtil.toSubCurrencyGrantTotal(props.changeAmount, props.receiptTemplate.baseCurrency, props.receiptTemplate.subCurrency), props.receiptTemplate.subCurrency ? props.receiptTemplate.subCurrency.symbol : "")}</td>
                       </tr>
                       :
                       <tr />

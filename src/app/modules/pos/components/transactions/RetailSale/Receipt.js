@@ -346,7 +346,7 @@ export default class Receipt extends Component {
                           this.props.receiptTemplate.isHasSubCurrency ?
                             <tr>
                               <td style={{ backgroundColor: "white" }} />
-                              <td colSpan="2" style={{ backgroundColor: "white", textDecoration: "uppercase" }}>សរុប{`(${this.props.receiptTemplate.subCurrency.symbol})`}:</td>
+                              <td colSpan="2" style={{ backgroundColor: "white", textDecoration: "uppercase" }}>សរុប{`(${this.props.receiptTemplate.subCurrency ? this.props.receiptTemplate.subCurrency.symbol : ""})`}:</td>
                               <td style={{ backgroundColor: "white", textAlign: "right" }}>{this.Util.formatCurrency(Util.toSubCurrencyGrantTotal(total, this.props.baseCurrency, this.props.subCurrency), this.props.subCurrency.symbol)}</td>
                             </tr>
                             :

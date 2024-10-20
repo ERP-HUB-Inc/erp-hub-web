@@ -161,9 +161,12 @@ export default class Retail extends Component {
       const data = response.data.data;
       if (data.length) {
         this.setState({currencyExchange: data[0]});
-        if (data[0].value !== this.state.subCurrency.value) {
+        if (this.state.subCurrency && data[0].value !== this.state.subCurrency.value) {
           this.setState(preState => {
-            preState.subCurrency.value = data[0].value;
+            if (preState.subCurrency) {
+              preState.subCurrency.value = data[0].value;
+            }
+            
             return preState;
           });
         }
@@ -1336,10 +1339,10 @@ export default class Retail extends Component {
                 <div className="sub-total">
                   <div className="sub-total-title">
                     <this.Translate id="text_total"/>
-                    {this.state.isHasSubCurrency ? ` (${this.state.baseCurrency.symbol})` : ""}
+                    {this.state.isHasSubCurrency ? ` (${this.state.baseCurrency ? this.state.baseCurrency.symbol : ""})` : ""}
                   </div>
                   <div className="sub-total-value">
-                    {this.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount), `${this.state.baseCurrency.symbol}`)}
+                    {this.formatCurrency(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount), `${this.state.baseCurrency ? this.state.baseCurrency.symbol : ""}`)}
                   </div>
                 </div>
 
@@ -1347,10 +1350,10 @@ export default class Retail extends Component {
                   this.state.isHasSubCurrency ?
                     <div className="sub-total">
                       <div className="sub-total-title">
-                        <this.Translate id="text_total"/> ({this.state.subCurrency.symbol})
+                        <this.Translate id="text_total"/> ({this.state.subCurrency ? this.state.subCurrency.symbol : ""})
                       </div>
                       <div className="sub-total-value">
-                        {this.Util.formatCurrency(POSUtil.toSubCurrencyGrantTotal(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount), this.state.baseCurrency, this.state.subCurrency), this.state.subCurrency.symbol)}
+                        {this.Util.formatCurrency(POSUtil.toSubCurrencyGrantTotal(POSUtil.getGrandTotal(summaryTotal.subTotal, taxAmount, discountAmount), this.state.baseCurrency, this.state.subCurrency), this.state.subCurrency ? this.state.subCurrency.symbol : "")}
                       </div>
                     </div>
                     :

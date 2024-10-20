@@ -60,13 +60,6 @@ html,
     min-width: 100%
 }
 
-.ant-table-body table tr th,
-.ant-table-header table tr th,
-.ant-table-body-inner table tr .ant-table-thead
-{
-    color: #9A9A9A !important;
-}
-
 .ant-table-thead > tr > th.ant-table-selection-column,
 .ant-table-tbody > tr > td.ant-table-selection-column {
     padding-left: 0 !important;
@@ -532,11 +525,6 @@ color: #4D4F5C;
 
 .ant-badge-status-text {
     font-size: 10pt !important
-}
-
-.ant-layout-sider-children .logo {
-    min-height: 81px;
-    background-color: #093163;
 }
 
 .ant-layout-header {

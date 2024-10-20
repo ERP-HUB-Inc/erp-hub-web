@@ -1,0 +1,19 @@
+#components-layout-demo-custom-trigger .trigger {
+   font-size: 18px;
+   line-height: 64px;
+   padding: 0 24px;
+   cursor: pointer;
+   transition: color 0.3s;
+ }
+ 
+ #components-layout-demo-custom-trigger .trigger:hover {
+   color: #1890ff;
+ }
+ 
+ #components-layout-demo-custom-trigger .logo {
+    color: rgb(255, 255, 255);
+    text-align: center;
+    padding-top: 19px;
+    padding-bottom: 19px;
+    font-weight: bold;
+ }

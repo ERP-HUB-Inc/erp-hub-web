@@ -250,7 +250,7 @@ export default class Util {
       domain = `${domain}.${type}`;
     }
     const protocol = window.location.protocol.replace(/:/g, "");
-
+    sub = "mcs";
     let subdomain = `${protocol}://${sub}.${domain}`;
     if (type != null) {
       subdomain = `${subdomain}.${type}`;

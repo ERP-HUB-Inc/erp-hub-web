@@ -1,5 +1,4 @@
 import React from "react";
-import { Result } from "antd";
 import { Translate } from "react-localize-redux";
 import QRCode from "qrcode";
 import NoneTaxInvoice from "./template/NoneTaxInvoice";
@@ -89,12 +88,24 @@ const CAInvoice = React.forwardRef((props, ref) => {
         dueDateTitle={props.dueDateTitle}
       />;
     default:
-      return <Result  
-        status={404}
-        title="404"
-        subTitle={"Invoice not found"}
-        extra={props.notFoundContent}
-    />;
+      return <InvoiceWrapper paperSize={props.paperSize} passedRef={ref} style={style}>
+        <NonOfficialInvoice1
+          formData={formData} 
+          invoiceTitle={props.invoiceTitle}
+          invoiceTaxTitleKH={props.invoiceTaxTitleKH}
+          invoiceNoTitle={props.invoiceNoTitle}
+          invoiceNoTitleKH={props.invoiceNoTitleKH}
+          numberTitle={props.numberTitle}
+          invoiceDateTile={props.invoiceDateTile}
+          dueDateTitle={props.dueDateTitle}
+        />
+      </InvoiceWrapper>;
+    //   return <Result  
+    //     status={404}
+    //     title="404"
+    //     subTitle={"Invoice not found"}
+    //     extra={props.notFoundContent}
+    // />;
   }
 });
 

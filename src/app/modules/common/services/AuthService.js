@@ -4,7 +4,7 @@ class AuthService extends BaseService {
   constructor() {
     super();
     this.module = "auth";
-    this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+    this.baseUrl = `${this.baseUrl}/${this.module}`;
   }
 
   checkAuthenticated(accessToken) {

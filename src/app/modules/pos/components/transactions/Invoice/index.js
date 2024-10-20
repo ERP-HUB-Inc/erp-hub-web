@@ -2,12 +2,15 @@ import React from "react";
 import swal from "sweetalert";
 import moment from "moment";
 import {
+	Avatar,
+	Button,
 	Divider,
 	Dropdown,
 	DatePicker,
 	Input,
 	Menu,
 	Icon,
+	List,
 	Row,
 	Col,
 	Card,
@@ -35,8 +38,8 @@ import history from "../../../../common/router/history";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
 import ReceiptTemplate from "../receipt/template";
 import PrivilegeService from "../../../services/settings/PrivilegeService";
-import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
-import SelectSeller from "../../../../common/components/SelectSeller";
+// import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
+// import SelectSeller from "../../../../common/components/SelectSeller";
 
 export default class Invoice extends Component {
 	constructor(props) {
@@ -61,7 +64,7 @@ export default class Invoice extends Component {
 		this.title = <this.Translate id="text_invoices"/>;
 		this.pageSize = 50;
 		this.fetchingProp = "list";
-		this.pathname = "/transactions/invoice";
+		this.pathname = "/invoices";
 		this.pathCreate= "/transactions/create-invoice";
 		this.permissionModuleCode = "invoice";
 		this.columnFilterWithKey = ["firstName", "lastName", "email", "phoneNumber"];
@@ -232,13 +235,13 @@ export default class Invoice extends Component {
 				</div>;
 			}
 		},
-		{
-			title: <this.Translate id="text_reference_no" />,
-			dataIndex: "referenceNo",
-			key: "referenceNo",
-			width: 150,
-			render: (referenceNo, record) => referenceNo ? <this.Link to={`/transactions/sale-order/detail/${record.referenceId}`} target="_blank">{referenceNo}</this.Link> : ""
-		},
+		// {
+		// 	title: <this.Translate id="text_reference_no" />,
+		// 	dataIndex: "referenceNo",
+		// 	key: "referenceNo",
+		// 	width: 150,
+		// 	render: (referenceNo, record) => referenceNo ? <this.Link to={`/transactions/sale-order/detail/${record.referenceId}`} target="_blank">{referenceNo}</this.Link> : ""
+		// },
 		{
 			title: <this.Translate id="text_customer" />,
 			dataIndex: "firstName",
@@ -677,57 +680,81 @@ render() {
 	
 	return (
 		<React.Fragment>
-			{this.Util.isNotCheckingPermissionV2(this.state.isHasAccessPermission) &&
-			(this.state.isHasAccessPermission ?
-				<React.Fragment>
-					<div style={{display: "none"}}>
-						<ReceiptTemplate
-							formData={detail}
-							receiptTemplate={this.state.receiptTemplate}
-							locale={this.props.locale}
-							ref={re => this.receiptRef = re} />
-						<CAInvoice ref={ref => this.invoiceRef = ref} formData={detail} />
-						<CAInvoice ref={ref => this.invoiceA5Ref = ref} formData={detail} paperSize="A5" />
-						<PackingSlip ref={el => this.packingSlipRef = el} formData={this.state.salesOrder} />
-            			<DeliveryNote ref={el => this.deliveryNoteRef = el} formData={this.state.salesOrder} />
-						<EditShipping ref={f => this.editShippingRef = f} callback={() => this.fetchList()} />
-					</div>
-					<Row gutter={16} style={{marginTop: 15, marginBottom: 15}}>
-						<Col span={8}>
-							<Card>
-								<Statistic
-									title={<this.Translate id="text_sent_invoice"/>}
-									value={summaryData.sentAmount ? summaryData.sentAmount.toFixed(2) : 0 }
-									prefix="$"
-									suffix={" / " + (summaryData.sent ? summaryData.sent  :  0) + " " + this.CATranslate("text_invoices", this.props.locale).toLowerCase()}
-									valueStyle={{color: "rgb(24, 144, 255)"}}
-								/>
-							</Card>
-						</Col>
-						<Col span={8}>
-							<Card>
-								<Statistic
-									title={<this.Translate id="text_overdue"/>}
-									value={summaryData.overdueAmount ? summaryData.overdueAmount.toFixed(2) : 0 }
-									prefix="$"
-									suffix={" / " + (summaryData.overdue ? summaryData.overdue  :  0) + " " + this.CATranslate("text_invoices", this.props.locale).toLowerCase()}
-									valueStyle={{ color: "#cf1322" }}
-								/>
-							</Card>
-						</Col>
-						<Col span={8}>
-							<Card>
-								<Statistic
-									title={<this.Translate id="text_paid"/>}
-									value={summaryData.paidAmount ? summaryData.paidAmount.toFixed(2) : 0 }
-									prefix="$"
-									suffix={ " / " + (summaryData.paid ? summaryData.paid  :  0) + " " + this.CATranslate("text_invoices", this.props.locale).toLowerCase()}
-									valueStyle={{ color: "#3f8600" }}
-								/>
-							</Card>
-						</Col>
-					</Row>
-					<div className="content-list">
+			<React.Fragment>
+				<div style={{display: "none"}}>
+					<ReceiptTemplate
+						formData={detail}
+						receiptTemplate={this.state.receiptTemplate}
+						locale={this.props.locale}
+						ref={re => this.receiptRef = re} />
+					<CAInvoice ref={ref => this.invoiceRef = ref} formData={detail} />
+					<CAInvoice ref={ref => this.invoiceA5Ref = ref} formData={detail} paperSize="A5" />
+					<PackingSlip ref={el => this.packingSlipRef = el} formData={this.state.salesOrder} />
+						<DeliveryNote ref={el => this.deliveryNoteRef = el} formData={this.state.salesOrder} />
+					<EditShipping ref={f => this.editShippingRef = f} callback={() => this.fetchList()} />
+				</div>
+				<Row gutter={[16, 16]} style={{ display: "none" }}>
+					<Col md={16}>
+						<List
+							className="demo-loadmore-list"
+							itemLayout="horizontal"
+							dataSource={this.state.data}
+							renderItem={item => (
+								<List.Item
+									actions={[<a key="list-loadmore-edit">edit</a>, <a key="list-loadmore-more">more</a>]}
+								>
+									<List.Item.Meta
+										avatar={
+											<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+										}
+										title={<a href="https://ant.design">{item?.phoneNumber}</a>}
+										description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+									/>
+									<div>content</div>
+								</List.Item>
+							)}
+						/>
+					</Col>
+					<Col md={8}>
+
+					</Col>
+				</Row>
+				<Row gutter={16} style={{ marginTop: 15, marginBottom: 15 }}>
+					<Col span={8}>
+						<Card>
+							<Statistic
+								title={<this.Translate id="text_sent_invoice"/>}
+								value={summaryData.sentAmount ? summaryData.sentAmount.toFixed(2) : 0 }
+								prefix="$"
+								suffix={" / " + (summaryData.sent ? summaryData.sent  :  0) + " " + this.CATranslate("text_invoices", this.props.locale).toLowerCase()}
+								valueStyle={{color: "rgb(24, 144, 255)"}}
+							/>
+						</Card>
+					</Col>
+					<Col span={8}>
+						<Card>
+							<Statistic
+								title={<this.Translate id="text_overdue"/>}
+								value={summaryData.overdueAmount ? summaryData.overdueAmount.toFixed(2) : 0 }
+								prefix="$"
+								suffix={" / " + (summaryData.overdue ? summaryData.overdue  :  0) + " " + this.CATranslate("text_invoices", this.props.locale).toLowerCase()}
+								valueStyle={{ color: "#cf1322" }}
+							/>
+						</Card>
+					</Col>
+					<Col span={8}>
+						<Card>
+							<Statistic
+								title={<this.Translate id="text_paid"/>}
+								value={summaryData.paidAmount ? summaryData.paidAmount.toFixed(2) : 0 }
+								prefix="$"
+								suffix={ " / " + (summaryData.paid ? summaryData.paid  :  0) + " " + this.CATranslate("text_invoices", this.props.locale).toLowerCase()}
+								valueStyle={{ color: "#3f8600" }}
+							/>
+						</Card>
+					</Col>
+				</Row>
+				<div className="content-list">
 					<div style={{height: "100%"}}>
 						<div className="table-wrapper">
 							<Row>
@@ -751,18 +778,17 @@ render() {
 									defaultValue={params.get("date") ? moment(params.get("date")) : null}
 									style={{maxWidth: 200, marginRight: 10}}
 								/>
-								<SelectSeller
+								{/* <SelectSeller
 									value={params.get("sellerId") ? params.get("sellerId") : 0}
 									onChange={this.handleChangeSeller}
 									placeholder={this.CATranslate("text_select_seller", this.props.locale)}
-								/>
-								<this.Button
-									type="info"
-									id="btnAdd"
+								/> */}
+								<Button
+									type="primary"
+									icon="plus"
 									onClick={() => history.push({pathname: this.pathCreate})}>
-									<span className="icon-add icon-padding-right"></span>
 									<this.Translate id="text_add_new" />
-								</this.Button>
+								</Button>
 							</Col>
 							</Row>
 							<this.Table
@@ -781,12 +807,8 @@ render() {
 
 						</div>
 					</div>
-					</div>
-				</React.Fragment>
-				:
-				<NoPermissionV2/>
-			)
-			}
+				</div>
+			</React.Fragment>
 		</React.Fragment>
 	);
 }

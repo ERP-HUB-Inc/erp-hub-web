@@ -21,7 +21,7 @@ class InvoiceService extends BaseService {
   ) {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}&type=${type}`,  
+      url: `${this.baseUrl}?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId ? locationId : 0}&type=${type}`,  
       data: this.data,
       headers: this.header
     });
@@ -46,7 +46,7 @@ class InvoiceService extends BaseService {
   detail(id, includeCredit) {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}/${id}?includeCredit=${includeCredit}`,
+      url: `${this.baseUrl}/${id}?includeCredit=${includeCredit ? includeCredit : ""}`,
       headers: this.header
     });
   }

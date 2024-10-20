@@ -7,12 +7,6 @@
     padding: 10px 16px !important
 }
 
-.ant-table-body table tr th,
-.ant-table-header table tr th {
-    background-color: #f5f4f4;
-    font-size: 10pt
-}
-
 tr:nth-child(odd) {
     background-color: #faf9f9;
 }
@@ -31,13 +25,6 @@ tr:nth-child(odd) {
 
 .ant-table-expanded-row td:last-child {
     padding-right: 0 !important
-}
-
-.ant-table-body table {
-    border-left: 1px solid #e8e8e8;
-    border-right: 1px solid #e8e8e8;
-    border-top: 1px solid #e8e8e8;
-    border-bottom: 1px solid #e8e8e8
 }
 
 .ant-table-body table tr td {

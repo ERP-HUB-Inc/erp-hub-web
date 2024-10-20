@@ -1,7 +1,7 @@
 import React from "react";
 import {Form} from "antd";
 import {connect} from "react-redux";
-import List from "../../../components/transactions/Invoice/index";
+import List from "../../../components/transactions/Invoice";
 
 class Invoice extends React.Component {
   render() {
