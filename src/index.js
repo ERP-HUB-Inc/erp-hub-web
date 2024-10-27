@@ -5,13 +5,10 @@ import { render } from "react-dom";
 import { Provider } from "react-redux";
 import 'antd/dist/antd.css';
 // import App from "./app/modules/common/containers/App";
-import App from "./app/layout/MainApp";
+import App from "./layout/MainApp";
 import configureStore from "./app/store/configureStore";
 import Localization from "./app/localization";
-import dotenv from "dotenv";
-require("./app/library/ably");
 
-dotenv.config();
 let store = configureStore();
 store = new Localization(store);
 

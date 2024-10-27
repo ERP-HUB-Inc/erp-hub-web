@@ -64,6 +64,7 @@ export default class Invoice extends Component {
 		this.title = <this.Translate id="text_invoices"/>;
 		this.pageSize = 50;
 		this.fetchingProp = "list";
+		// this.pathname = "/transactions/invoice";
 		this.pathname = "/invoices";
 		this.pathCreate= "/transactions/create-invoice";
 		this.permissionModuleCode = "invoice";
@@ -764,7 +765,7 @@ render() {
 							<Col span={16} style={{textAlign: "right"}}>
 								<Input
 									name="search"
-									placeholder={this.CATranslate("text_search", this.props.locale)}
+									placeholder="Enter invoice number, customer name, or keyword"
 									prefix={<Icon type="search" />}
 									defaultValue={params.get("search") ? params.get("search") : ""}
 									style={{width: 300, marginRight: 10}}
@@ -792,7 +793,7 @@ render() {
 							</Col>
 							</Row>
 							<this.Table
-								bordered={true}
+								// bordered={true}
 								rowKey="id"
 								loading={this.state.loading}
 								columns={this.columns}

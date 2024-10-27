@@ -10,7 +10,7 @@ class InstallmentService extends BaseService {
   list(limit, offset, search, locationId, filter, rangeFilter) {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}?limit=${limit}&offset=${offset}&search=${search}&locationId=${locationId}&filter=${filter}&rangFilter=${rangeFilter}`,
+      url: `${this.baseUrl}?limit=${limit}&offset=${offset ? offset : 0}&search=${search}&locationId=${locationId}&filter=${filter}&rangFilter=${rangeFilter}`,
       headers: this.header
     });
   }

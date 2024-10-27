@@ -23,7 +23,7 @@ class OperationRecordService extends BaseService {
     return this.GET({
       url: `${
         this.baseUrl
-      }/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&dates=${dates}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}&type=${type}`,
+      }/lists?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&dates=${dates}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}&type=${type}`,
       data: this.data,
       headers: this.header,
     });

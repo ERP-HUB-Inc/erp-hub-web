@@ -9,7 +9,7 @@ import Board from "../home/containers/Board";
 import CardAction from "../../../common/actions/home";
 import SelectDateOption from "../SelectDateOption";
 import history from "../../router/history";
-import Dashboard from "./containers/dashboard";
+import Dashboard from "./containers/Dashboard";
 import "./index.css";
 
 export default class Home extends Component {

@@ -45,7 +45,8 @@ class SaleOrder extends Component {
     this.title = <this.Translate id="text_sale_order"/>;
     this.pageSize = 50;
     this.fetchingProp = "list";
-    this.pathname = "/salesorder";
+    // this.pathname = "/transactions/sales-order";
+    this.pathname = "/sales-orders";
     this.permissionModuleCode = "sales_order";
     this.SALE_ORDER_STATUS_STR = {
       [Enum.SALE_ORDER_STATUS.DRAFT]: { title: <this.Translate id="text_draft" />, color: "#bfbfbf" },

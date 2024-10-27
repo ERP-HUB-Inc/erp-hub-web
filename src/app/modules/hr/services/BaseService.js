@@ -42,7 +42,7 @@ export default class BaseService extends Service {
   ) {
     this.header["Authorization"] = `Bearer ${this.Util.getAccessToken()}`;
     return this.GET({ 
-      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}`,
+      url: `${this.baseUrl}/lists?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}`,
       data: this.data,
       headers: this.header
     });

@@ -44,18 +44,6 @@
 .dash-wrap-guide {
     margin-bottom: 15px
 }
-#dashboard .ant-row{
-    margin: 0 !important;
-}
-#dashboard .row-out {
-    padding: 0 !important
-}
-#dashboard .col-in {
-    padding: 0 !important
-}
-#dashboard .item {
-    padding: 8px 8px 8px 0 !important;
-}
 #taskDadhboardFirst .ant-card-body {
     padding: 0 !important;
 }
@@ -89,7 +77,7 @@
     height: 177px;
     border-radius: 6px;
 }
-#mainChart .header-task {
+#overall-sales .header-task {
     display: inline-flex;
     width: 100%;
 }
@@ -144,32 +132,32 @@
 #taskDadhboardFirst .total-footer span .anticon {
     margin-right: 5px;
 }
-#mainChart .ant-card{
-    height: 368px;
+#overall-sales .ant-card{
+    height: 450px;
 }
-#mainChart .ant-card-body {
+#overall-sales .ant-card-body {
     padding: 0 !important;
 }
-#mainChart .header-task .pull-left {
+#overall-sales .header-task .pull-left {
     margin-top: 12px;
     margin-left: 12px;
 }
-#mainChart .header-task .pull-right {
+#overall-sales .header-task .pull-right {
     width: 100%;
 }
-#mainChart .header-task .pull-right .select-pull-right {
+#overall-sales .header-task .pull-right .select-pull-right {
     display: flex;
     justify-content: flex-end;
     margin-top: 12px;
     margin-right: 12px;
 }
-#mainChart .header-task .pull-left h4{
+#overall-sales .header-task .pull-left h4{
     color: #000000;
     opacity: 45%;
     font-size: 14px;
     font-weight: 400;
 } 
-#mainChart 
+#overall-sales 
 .header-task
 .pull-left 
 .sub-left 
@@ -179,13 +167,13 @@
     font-weight: 600;
     margin-right: 20px;
 }
-#mainChart 
+#overall-sales 
 .header-task 
 .pull-left 
 .sub-left {
     display: flex;
 }
-#mainChart 
+#overall-sales 
 .header-task 
 .pull-left 
 .sub-left .footer-task {
@@ -195,7 +183,7 @@
     display: flex;
     align-items: center
 }
-#mainChart 
+#overall-sales 
 .header-task 
 .pull-left 
 .sub-left .footer-task .anticon {
@@ -265,10 +253,6 @@
 }
 #mainDashboadCategory .ant-progress-success-bg, .ant-progress-bg {
     background: #1F1F39;
-}
-.task-line-chart {
-    padding-left: 10px !important;
-    padding-right: 0 !important;
 }
 #mainTableList .header-task {
     display: block;

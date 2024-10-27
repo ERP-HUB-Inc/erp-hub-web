@@ -61,7 +61,8 @@ export default class QuotationList extends Component {
     this.service = QuotationService;
     this.pageSize = 50;
     this.fetchingProp = "list";
-    this.pathname = "/transactions/quotation";
+    // this.pathname = "/transactions/quotation";
+    this.pathname = "/quotes";
     this.permissionModuleCode = "quotation";
     this.RESET_CONSTANT = Constant.RESET_QUOTATION;
     this.status_options = [{name: <this.Translate id="text_all_status"/>, value: -1}];

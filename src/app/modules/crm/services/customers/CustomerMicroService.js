@@ -8,7 +8,7 @@ class CustomerMicroService extends BaseService {
   lists(limit, offset) {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}?limit=${limit}&offset=${offset}`,
+      url: `${this.baseUrl}?limit=${limit}&offset=${offset ? offset : 0}`,
       headers: this.header
     });
   }

@@ -20,7 +20,7 @@ class LoyaltyProgramService extends BaseService {
   ) {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}`,  
+      url: `${this.baseUrl}?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&rangFilter=${rangFilter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}`,  
       headers: this.header
     });
   }
@@ -28,7 +28,7 @@ class LoyaltyProgramService extends BaseService {
   getReward(limit, offset) {
     this.setHeader();
     return this.GET({
-      url: `${this.generateAPIUrl()}/rewards?limit=${limit}&offset=${offset}`,
+      url: `${this.generateAPIUrl()}/rewards?limit=${limit}&offset=${offset ? offset : 0}`,
       headers: this.header
     });
   }

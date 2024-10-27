@@ -32,7 +32,7 @@
     "react": "^16.14.0",
     "react-barcode-reader": "0.0.1",
     "react-c3js": "^0.1.20",
-    "react-chartjs-2": "^4.3.1",
+    "react-chartjs-2": "^5.2.0",
     "react-countup": "^4.0.0",
     "react-csv": "^1.0.15-RC2",
     "react-csv-reader": "^1.2.2",

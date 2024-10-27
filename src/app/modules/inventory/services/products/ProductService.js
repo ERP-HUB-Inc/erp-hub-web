@@ -4,8 +4,8 @@ class ProductService extends BaseService {
 
    constructor() {
       super();
-      this.module = "inventory/product";
-      this.baseUrl = `${this.baseUrl}/${this.module}/${this.version}`;
+      this.module = "products";
+      this.baseUrl = `${this.baseUrl}/${this.module}`;
       this.initializeRoute();
    }
 
@@ -35,14 +35,12 @@ class ProductService extends BaseService {
       searchKey, // {"column": ["columnname1", "columnname2"], "value": "hello"}
       locationId
    ) {
-      return super.lists(limit,
-         offset,
-         sortField,
-         sortOrder,
-         filter,
-         searchKey,
-         "",
-         locationId);
+      this.setHeader();
+      return this.GET({ 
+         url: `${this.baseUrl}?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&languageId=${this.getLanguageId()}&locationId=${locationId}`,  
+         data: this.data,
+         headers: this.header
+      });
    }
 
    attributes(id) {
@@ -75,7 +73,7 @@ class ProductService extends BaseService {
       const languageId = this.getLanguageId();
       this.setHeader();
       return this.GET({ 
-         url: `${this.baseUrl}/lists/dropdown?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&languageId=${languageId}&searchFor=${searchFor}&isSearchingBarcode=${isSearchingBarcode}`,  
+         url: `${this.baseUrl}/lists/dropdown?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}&languageId=${languageId}&searchFor=${searchFor}&isSearchingBarcode=${isSearchingBarcode}`,  
          data: this.data,
          headers: this.header
       });
@@ -92,7 +90,7 @@ class ProductService extends BaseService {
    ) {
       this.setHeader();
       return this.GET({ 
-         url: `${this.baseUrl}/log/${id}?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}`,  
+         url: `${this.baseUrl}/log/${id}?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}`,  
          data: this.data,
          headers: this.header
       });
@@ -109,7 +107,7 @@ class ProductService extends BaseService {
    ) {
       this.setHeader();
       return this.GET({ 
-         url: `${this.baseUrl}/cost/log/${id}?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}`,  
+         url: `${this.baseUrl}/cost/log/${id}?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${searchKey}`,  
          data: this.data,
          headers: this.header
       });
@@ -158,7 +156,7 @@ class ProductService extends BaseService {
    ){
       this.setHeader();
       return this.GET({ 
-         url: `${this.baseUrl}/detail/${id}?productOption=${productOption}&isIncludeLocation=${isIncludeLocation}&languageId=${this.getLanguageId()}`,
+         url: `${this.baseUrl}/${id}?productOption=${productOption}&isIncludeLocation=${isIncludeLocation ? isIncludeLocation : 0}&languageId=${this.getLanguageId()}`,
          data: this.data,
          headers: this.header
       });

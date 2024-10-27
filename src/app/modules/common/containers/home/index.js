@@ -1,24 +1,20 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
-import Component from "../../components/Component";
 import HomePage from "../../components/home";
 
-class Home extends Component {
-  render(){
-    return(
-      <HomePage {...this.props}/>
-    );
-  }
+function Home(props) {
+  return <HomePage {...props}/>;
 }
 
 function mapStateToProps(state) {
+  const { reducer } = state;
   return {
-    graphChat: state.reducer.homePage.listGraph,
-    saleReport: state.reducer.saleReport.request,
-    pipeChat: state.reducer.homePage.listChat,
-    cardDashboard: state.reducer.homePage.listCardDashboard,
-    checkPermission: state.reducer.privilege.checkPermission,
+    graphChat: reducer.homePage.listGraph,
+    saleReport: reducer.saleReport.request,
+    pipeChat: reducer.homePage.listChat,
+    cardDashboard: reducer.homePage.listCardDashboard,
+    checkPermission: reducer.privilege.checkPermission,
     locale: state.locale
   };
 }

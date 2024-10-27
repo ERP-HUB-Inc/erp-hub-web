@@ -11,7 +11,7 @@ class InventoryService extends BaseService {
   getInventoryDashboard(locationId) {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/dashboard?locationId=${locationId}`,  
+      url: `${this.baseUrl}/dashboard?locationId=${locationId ? locationId : 0}`,  
       headers: this.header
     });
   }
@@ -19,7 +19,7 @@ class InventoryService extends BaseService {
   getPopularCategories(limit, locationId) {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/popular_categories?locationId=${locationId}&limit=${limit}`,  
+      url: `${this.baseUrl}/popular_categories?locationId=${locationId ? locationId : 0}&limit=${limit}`,  
       headers: this.header
     });
   }
@@ -27,7 +27,7 @@ class InventoryService extends BaseService {
   getPopularProduct(limit, popularBy, locationId) {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/popular_products?locationId=${locationId}&popularBy=${popularBy}&limit=${limit}`,  
+      url: `${this.baseUrl}/popular_products?locationId=${locationId ? locationId : 0}&popularBy=${popularBy}&limit=${limit}`,  
       headers: this.header
     });
   }
@@ -35,7 +35,7 @@ class InventoryService extends BaseService {
   exportPopularProduct(limit, popularBy, locationId) {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/exports/popular_products?locationId=${locationId}&popularBy=${popularBy}&limit=${limit}`,  
+      url: `${this.baseUrl}/exports/popular_products?locationId=${locationId ? locationId : 0}&popularBy=${popularBy}&limit=${limit}`,  
       headers: this.header
     });
   }
@@ -43,7 +43,7 @@ class InventoryService extends BaseService {
   getTodayPurchase(locationId) {
     this.setHeader();
     return this.GET({ 
-      url: `${this.baseUrl}/today_purchases?locationId=${locationId}`,  
+      url: `${this.baseUrl}/today_purchases?locationId=${locationId ? locationId : 0}`,  
       headers: this.header
     });
   }

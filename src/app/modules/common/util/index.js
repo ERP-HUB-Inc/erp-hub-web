@@ -24,7 +24,7 @@ export default class Util {
 
   removeFullScreen() {
     const element = document.getElementById("center-container");
-    element.classList.remove("full-screen");
+    if (element && element.classList) element.classList.remove("full-screen");
   }
 
   logout(history) {

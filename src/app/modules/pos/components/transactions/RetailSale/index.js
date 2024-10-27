@@ -458,7 +458,7 @@ export default class Retail extends Component {
 
     let filter = "";
     if (value !== 0) {
-      filter = JSON.stringify({productTypeId: [value]});
+      filter = JSON.stringify({categoryId: [value]});
 
       if (this.state.selectedCategoryIds.includes(value)) {
         filter = "";

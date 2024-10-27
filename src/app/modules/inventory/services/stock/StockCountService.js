@@ -18,7 +18,7 @@ class StockCountService extends BaseService {
   lists(limit, offset, sortField, sortOrder, filter, search, rangeFilter) {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}?limit=${limit}&offset=${offset}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${search}&rangFilter=${rangeFilter}`,
+      url: `${this.baseUrl}?limit=${limit}&offset=${offset ? offset : 0}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${filter}&search=${search}&rangFilter=${rangeFilter}`,
       headers: this.header
     });
   }
@@ -26,7 +26,7 @@ class StockCountService extends BaseService {
   getStockCountEntriesByStatus(id, status, limit, offset, type, locationId) {
     this.setHeader();
     return this.GET({
-      url: `${this.baseUrl}/status/${id}?status=${status}&limit=${limit}&offset=${offset}&type=${type}&locationId=${locationId}`,
+      url: `${this.baseUrl}/status/${id}?status=${status}&limit=${limit}&offset=${offset ? offset : 0}&type=${type}&locationId=${locationId}`,
       headers: this.header
     });
   }

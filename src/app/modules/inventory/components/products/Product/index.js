@@ -170,7 +170,7 @@ export default class ProductList extends List {
          const {currency, currencyId}  = this.Util.getSetting();
          if (params.get("current")) this.setState({ current: Number(params.get("current")) });
          if (params.get("search")) this.props.form.setFieldsValue({ key: params.get("search") });
-         if (params.get("productTypeId")) this.props.form.setFieldsValue({productTypeId: params.get("productTypeId")});
+         if (params.get("categoryId")) this.props.form.setFieldsValue({categoryId: params.get("categoryId")});
          if (params.get("locationId")) this.props.form.setFieldsValue({locationId: Number(params.get("locationId"))});
 
          this.fetchList(true);
@@ -248,7 +248,7 @@ export default class ProductList extends List {
          if (params.get("limit")) limit = Number(params.get("limit"));
          if (params.get("current")) offset = Number(params.get("current"));
          if (params.get("search")) searchKey = JSON.stringify({ column: this.columnFilterWithKey, value: params.get("search") });
-         if (params.get("productTypeId")) filter = JSON.stringify({productTypeId: params.get("productTypeId")});
+         if (params.get("categoryId")) filter = JSON.stringify({categoryId: params.get("categoryId")});
          if (params.get("locationId")) locationId = Number(params.get("locationId"));
 
          if (!withPagination) {
@@ -384,12 +384,12 @@ export default class ProductList extends List {
       this.fetchList();
    }
 
-   handleChangeCategory = (productTypeId) => {
+   handleChangeCategory = (categoryId) => {
       const params = new URLSearchParams(document.location.search);
-      if (productTypeId) {
-         params.set("productTypeId", productTypeId);
+      if (categoryId) {
+         params.set("categoryId", categoryId);
       } else {
-         params.delete("productTypeId");
+         params.delete("categoryId");
       }
       this.Util.pushParamsToURL(this.pathName, params.toString());
       this.fetchList();
@@ -490,7 +490,7 @@ export default class ProductList extends List {
                               onChange={this.handleSearch}
                               allowClear={true} />
                            <this.Select
-                              name="productTypeId"
+                              name="categoryId"
                               placeholder={this.CATranslate("text_all_categories", this.props.locale)}
                               dataSource={this.categoriesList.concat(this.state.productTypes)}
                               valueKey="id"

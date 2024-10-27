@@ -121,7 +121,7 @@ function SelectCategory(props) {
         form={props.form}
         className={isEdit ? "hidden" : ""} />
       <SelectSearch
-        name="productTypeId"
+        name="categoryId"
         label={<Translate id="text_category" />}
         placeholder={props.placeholder}
         notFoundContent={loading ? <Spin size="small" /> : <Translate id="text_please_search" />}
@@ -931,7 +931,7 @@ FormItem.defaultProps = {
     description:"",
     defaultUnitId: "",
     brandId: "",
-    productTypeId: "",
+    categoryId: "",
     serialType: "",
     isAutoGenerateBarcode: CommonEnum.GENERATE_PRODUCT_CODE.MANAUL,
     barcode: "",
