@@ -517,7 +517,7 @@ export default class QuotationList extends Component {
                     <div className="table-wrapper">
                       <Row>
                         <Col span={6} style={{marginBottom: 0}}>
-                          <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_quotations" /></h3>
+                          <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_quotes" /></h3>
                         </Col>
                         <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "flex-end"}}>
                           <Input

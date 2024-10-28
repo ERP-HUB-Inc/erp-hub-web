@@ -650,7 +650,7 @@ class NewInvoice extends React.PureComponent {
                 })
                 .then(newInvoice => {
                     if (newInvoice) {
-                        history.push("/transactions/create-invoice");
+                        history.push("/invoices/create");
                         window.location.reload();
                     } else {
                         this.getInvoiceById(this.id);
@@ -671,13 +671,13 @@ class NewInvoice extends React.PureComponent {
                 })
                 .then(newInvoice => {
                     if (newInvoice) {
-                        history.push("/transactions/create-invoice");
+                        history.push("/invoices/create");
                         window.location.reload();
                     } else {
                         this.id = response.data.data.id;
                         this.saleOrderId = "";
                         this.quotationId = "";
-                        history.push(`/transactions/update-invoice/${response.data.data.id}?after-created=1`);
+                        history.push(`/invoices/update/${response.data.data.id}?after-created=1`);
                         this.pageTitle = "text_edit_invoice";
                         this.getInvoiceById(this.id);
                     }
@@ -1864,12 +1864,12 @@ class NewInvoice extends React.PureComponent {
                                         overlay={(
                                             <Menu>
                                                 <Menu.Item key={5}>
-                                                    <Link to="/transactions/create-invoice" target="_blank">
+                                                    <Link to="/invoices/create" target="_blank">
                                                         <Translate id="text_new_invoice" />
                                                     </Link>
                                                 </Menu.Item>
                                                 <Menu.Item key={4}>
-                                                    <Link target="_blank" to={`/transactions/create-invoice?id=${formData.id}&action=clone`} >
+                                                    <Link target="_blank" to={`/invoices/create?id=${formData.id}&action=clone`} >
                                                         <Translate id="text_clone" />
                                                     </Link>
                                                 </Menu.Item>

@@ -42,7 +42,7 @@ class SaleOrder extends Component {
       isShowFilter: true,
       isHasAccessPermission: null
     };
-    this.title = <this.Translate id="text_sale_order"/>;
+    this.title = <this.Translate id="text_orders"/>;
     this.pageSize = 50;
     this.fetchingProp = "list";
     // this.pathname = "/transactions/sales-order";

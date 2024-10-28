@@ -1,12 +1,10 @@
 import React from "react";
 import {Form} from "antd";
 import {connect} from "react-redux";
-import List from "../../../components/transactions/Invoice";
+import InvoicePage from "../../../components/transactions/Invoice";
 
-class Invoice extends React.Component {
-  render() {
-    return <List {...this.props} />;
-  }
+function InvoiceContainer(props) {
+  return <InvoicePage {...props} />;
 }
 
 export function mapStateToProps(state) {
@@ -28,6 +26,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const invoice = Form.create(mapPropsToFields)(Invoice);
+const invoiceContainer = Form.create(mapPropsToFields)(InvoiceContainer);
 
-export default connect(mapStateToProps)(invoice);
+export default connect(mapStateToProps)(invoiceContainer);

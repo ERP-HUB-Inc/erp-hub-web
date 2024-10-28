@@ -374,6 +374,41 @@ const Dashboard = () => {
                 </div>
               </Card>
             </Col>
+            <Col lg={24} xs={24} className="task-line-chart" style={{ padding: "20px 16px" }}>
+              <div id="mainTableList">
+                <Card title={<Translate id="text_top_selling_products" />} bordered={false} extra={<Icon type="ellipsis" />}>
+                  <div className="header-task">
+                    <div className="btn-header-task">
+                      <Radio.Group value={topSellType} onChange={onChangeTopSellingType} style={{ marginBottom: 16 }}>
+                        <Radio.Button value="quantity">By Quantity</Radio.Button>
+                        <Radio.Button value="totalSale">By Total Sales</Radio.Button>
+                      </Radio.Group>
+                      <div className="select">
+                        <Select
+                            defaultValue={25}
+                            style={{ width: 199,
+                              marginLeft: 15 }}
+                            onChange={onChangeTopSellingSize}>
+                          <Option value={25}>Top 25 Selling Products</Option>
+                          <Option value={50}>Top 50 Selling Products</Option>
+                          <Option value={100}>Top 100 Selling Products</Option>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="table-list-product">
+                    <Table
+                        bordered={true}
+                        rowKey="id"
+                        columns={columns}
+                        dataSource={popularProducts}
+                        pagination={false}
+                        loading={loadingPopular}
+                    />
+                  </div>
+                </Card>
+              </div>
+            </Col>
             <Col lg={6} xs={24} className="item" style={{ display: "none" }}>
               <div id="mainDashboadCategory">
                 <Card bordered={false}>
@@ -410,41 +445,6 @@ const Dashboard = () => {
                         )
                       }
                     </ul>
-                  </div>
-                </Card>
-              </div>
-            </Col>
-            <Col lg={24} xs={24} className="task-line-chart" style={{ padding: "20px 16px" }}>
-              <div id="mainTableList">
-                <Card title={<Translate id="text_top_selling_products" />} bordered={false} extra={<Icon type="ellipsis" />}>
-                  <div className="header-task">
-                    <div className="btn-header-task">
-                      <Radio.Group value={topSellType} onChange={onChangeTopSellingType} style={{ marginBottom: 16 }}>
-                        <Radio.Button value="quantity">By Quantity</Radio.Button>
-                        <Radio.Button value="totalSale">By Total Sales</Radio.Button>
-                      </Radio.Group>
-                      <div className="select">
-                        <Select
-                            defaultValue={25}
-                            style={{ width: 199,
-                              marginLeft: 15 }}
-                            onChange={onChangeTopSellingSize}>
-                          <Option value={25}>Top 25 Selling Products</Option>
-                          <Option value={50}>Top 50 Selling Products</Option>
-                          <Option value={100}>Top 100 Selling Products</Option>
-                        </Select>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="table-list-product">
-                    <Table
-                        bordered={true}
-                        rowKey="id"
-                        columns={columns}
-                        dataSource={popularProducts}
-                        pagination={false}
-                        loading={loadingPopular}
-                    />
                   </div>
                 </Card>
               </div>

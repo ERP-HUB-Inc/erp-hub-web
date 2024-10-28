@@ -12,7 +12,7 @@
 #retail-sale .product,
 .product-variant .variant-box .variant-item {
     cursor: pointer;
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.2);
+    /* box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.2); */
     /* border: 1.5px solid #ECECEC */
 }
 
@@ -35,12 +35,6 @@
 }
 
 /* #retail-sale #left-block .wrap-category, */
-#retail-sale #left-block .wrap-product-box-list {
-    padding: 5px;
-    background-color: #FAFAFA;
-    box-shadow: 0 0 4px 0 rgba(0,0,0,0.3)
-}
-
 #retail-sale #left-block .wrap-product-box-list .start-up{
     position: relative
 }

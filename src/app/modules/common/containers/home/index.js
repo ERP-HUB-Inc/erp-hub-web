@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {Form} from "antd";
 import HomePage from "../../components/home";
 
-function Home(props) {
+function Dashboard(props) {
   return <HomePage {...props}/>;
 }
 
@@ -26,6 +26,6 @@ function mapPropsToFields(props) {
 }
 
 
-const home = Form.create(mapPropsToFields)(Home);
+const dashboard = Form.create(mapPropsToFields)(Dashboard);
 
-export default connect(mapStateToProps)(home);
+export default connect(mapStateToProps)(dashboard);

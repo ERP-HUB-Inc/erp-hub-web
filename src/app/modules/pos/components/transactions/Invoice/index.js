@@ -66,7 +66,7 @@ export default class Invoice extends Component {
 		this.fetchingProp = "list";
 		// this.pathname = "/transactions/invoice";
 		this.pathname = "/invoices";
-		this.pathCreate= "/transactions/create-invoice";
+		this.pathCreate= "/invoices/create";
 		this.permissionModuleCode = "invoice";
 		this.columnFilterWithKey = ["firstName", "lastName", "email", "phoneNumber"];
 		this.editShippingRef = React.createRef();
@@ -118,12 +118,12 @@ export default class Invoice extends Component {
 				const menu = (
 				<Menu>
 					<Menu.Item key={1}>
-						<this.Link to={`/transactions/detail-invoice/${record.id}`}>
+						<this.Link to={`/invoices/view/${record.id}`}>
 						<Icon type="eye" style={{marginRight: 10}} /> <this.Translate id="text_view" />
 						</this.Link>
 					</Menu.Item>
 					<Menu.Item key={2}>
-						<this.Link to={`/transactions/update-invoice/${record.id}`}>
+						<this.Link to={`/invoices/update/${record.id}`}>
 						<Icon type="edit" style={{marginRight: 10}} /> <this.Translate id="text_edit" />
 						</this.Link>
 					</Menu.Item>
@@ -161,7 +161,7 @@ export default class Invoice extends Component {
 					</Menu.Item>
 					<Divider style={{marginTop: 4, marginBottom: 4}} />
 					<Menu.Item key={4}>
-						<this.Link target="_blank" to={`/transactions/create-invoice?id=${record.id}&action=clone`} >
+						<this.Link target="_blank" to={`/invoices/create?id=${record.id}&action=clone`} >
 						<Icon type="copy" style={{marginRight: 10}} /> <this.Translate id="text_clone_to_invoice" />
 						</this.Link>
 					</Menu.Item>
@@ -229,7 +229,7 @@ export default class Invoice extends Component {
 					{invoiceNumber}
 					<Dropdown className="product-row-option" overlay={menu}>
 						{/* eslint-disable-next-line */}
-						<a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10}}>
+						<a className="ant-dropdown-link" href="#" onClick={e => e.preventDefault()} style={{marginLeft: 10, display: "none"}}>
 							<this.Translate id="text_option" /> <Icon type="down" />
 						</a>
 					</Dropdown>
@@ -702,7 +702,7 @@ render() {
 							dataSource={this.state.data}
 							renderItem={item => (
 								<List.Item
-									actions={[<a key="list-loadmore-edit">edit</a>, <a key="list-loadmore-more">more</a>]}
+									actions={[<a key="list-loadmore-edit" href="https://ant.design">edit</a>, <a key="list-loadmore-more" href="https://ant.design">more</a>]}
 								>
 									<List.Item.Meta
 										avatar={

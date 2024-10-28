@@ -11,6 +11,7 @@ import Util from "../../../../common/util";
 import ProductUtil from "../../../../inventory/utils/index";
 import ProductService from "../../../../inventory/services/products/ProductService";
 import { stringTranslate } from "../../../../common/helper/stringTranslate";
+import "./SearchProduct.css"
 
 export default function SearchProductDropdown(props) {
   const [visibleDropDown, setVisibleDropdown] = React.useState(false);

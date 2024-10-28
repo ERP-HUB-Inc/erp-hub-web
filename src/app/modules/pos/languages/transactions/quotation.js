@@ -19,10 +19,10 @@ export default {
     "សម្រង់តម្លៃ",
     "Quotation"
   ],
-  "text_quotations": [
-    "Quotations",
+  "text_quotes": [
+    "Quotes",
     "សម្រង់តម្លៃ",
-    "Quotations"
+    "Quotes"
   ],
   "text_quotation_no": [
     "Quote No",

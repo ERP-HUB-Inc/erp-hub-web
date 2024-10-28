@@ -12,7 +12,15 @@ const Wrapper = styled.section`
   background: papayawhip;
 `;
 
+const ERPHub = styled.div`
+  text-align: center;
+  padding-top: 19px;
+  padding-bottom: 19px;
+  font-weight: bold;
+`;
+
 export {
    Title,
-   Wrapper
+   Wrapper,
+   ERPHub
 }

@@ -3,10 +3,8 @@ import {Form} from "antd";
 import {connect} from "react-redux";
 import RetailSale from "../../../components/transactions/RetailSale";
 
-class RetailSaleForm extends React.Component {
-  render() {
-    return <RetailSale {...this.props} />;
-  }
+function WalkinSale(props) {
+  return <RetailSale {...props} />;
 }
 
 export function mapStateToProps(state) {
@@ -34,6 +32,6 @@ function mapPropsToFields(props) {
   };
 }
 
-const retailSale = Form.create(mapPropsToFields)(RetailSaleForm);
+const walkinSale = Form.create(mapPropsToFields)(WalkinSale);
 
-export default connect(mapStateToProps)(retailSale);
+export default connect(mapStateToProps)(walkinSale);

@@ -1,7 +1,6 @@
 #sidebar {
     padding-top: 50px;
     background-image: url("../styles/images/sidebar-bg.jpg");
-    background-repeat-y: repeat;
     background-size: 116px;
     width: 80px;
     position: fixed;

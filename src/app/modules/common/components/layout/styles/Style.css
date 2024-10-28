@@ -38,7 +38,6 @@ html,
 
 /* MAIN LAYOUT */
 .main-layout {
-    background-color: #FFFFFF;
     padding: 8px 15px;
     border-radius: 3px
 }
@@ -119,10 +118,14 @@ html,
 
 /* BREADCRUMB */
 .table-wrapper {
-    padding: 15px 15px;
+    padding: 25px 25px;
     min-height: 100%;
     margin-bottom: 15px;
     /* overflow: auto */
+}
+
+.ant-table-row:hover > .ant-table-row-cell-break-word .ant-dropdown-link {
+    display: block !important;
 }
 
 .ant-table-fixed-header .ant-table-scroll .ant-table-header {
