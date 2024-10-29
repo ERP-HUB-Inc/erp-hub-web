@@ -6,9 +6,9 @@ import InitialState from "../../../common/reducers/initialState";
 export default combineReducers({
   request: (state = InitialState.request(), action) => {
     const constants = [
-      Constant.REQUEST_PRODUCTS_UNIT_PENDING,
-      Constant.REQUEST_PRODUCTS_UNIT_REJECTED,
-      Constant.REQUEST_PRODUCTS_UNIT_FULFILLED
+      Constant.REQUEST_UNIT_PENDING,
+      Constant.REQUEST_UNIT_REJECTED,
+      Constant.REQUEST_UNIT_FULFILLED
     ];
     return reducer.request(state, action, constants);
   },

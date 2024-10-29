@@ -18,7 +18,7 @@ import StartUp from "../app/modules/common/components/StartUp";
 import './NewSidebar.css'
 import { ERPHub } from '../components';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default class SiderDemo extends React.Component {
@@ -83,7 +83,26 @@ export default class SiderDemo extends React.Component {
       loading: () => <StartUp />,
     });
 
-    const token = new URLSearchParams(window.location.search).get("token");
+    // Purchasing
+    const PurchaseOrder = Loadable({
+      loader: () => import("../pages/Purchasing/Orders"),
+      loading: () => <StartUp />,
+    });
+    const NewPurchaseOrder = Loadable({
+      loader: () => import("../pages/Purchasing/Orders/FormCreate"),
+      loading: () => <StartUp />,
+    });
+    const UpdatePurchaseOrder = Loadable({
+      loader: () => import("../pages/Purchasing/Orders/FormUpdate"),
+      loading: () => <StartUp />,
+    });
+
+    const Vendor = Loadable({
+      loader: () => import("../pages/Purchasing/Vendors"),
+      loading: () => <StartUp />,
+    });
+
+    // const token = new URLSearchParams(window.location.search).get("token");
     const theme = 'light';
     const isPOSPage = window.location.pathname === "/pos";
     const styledContent = {
@@ -221,7 +240,7 @@ export default class SiderDemo extends React.Component {
                       type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                       onClick={this.toggle}
                     />
-
+                    <Link to={"/pos"}>POS</Link>
                     <Dropdown overlay={(
                       <Menu>
                         <Menu.Item>
@@ -255,12 +274,22 @@ export default class SiderDemo extends React.Component {
                     <Route path="/pos" component={POS} />
                     <Route path="/sales-orders" component={SalesOrder} />
                     <Route path="/quotes" component={Quotes} />
+                    
                     <Route path="/invoices/view/:id" component={InvoiceDetail} />
                     <Route path="/invoices/create" component={NewInoice} />
                     <Route path="/invoices/update/:id" component={NewInoice} />
                     <Route path="/invoices" component={Invoice} />
+                    
                     <Route path="/customers" component={Customers} />
                     <Route path="/customer-profile/:id" component={CustomerProfile} />
+                    
+                    <Route path="/purchase-orders/create" component={NewPurchaseOrder} />
+                    <Route path="/purchase-orders/update/:id" component={UpdatePurchaseOrder} />
+                    <Route path="/purchase-orders" component={PurchaseOrder} />
+
+                    <Route path="/vendors" component={Vendor} />
+                    <Route path="/vendors/create" component={Vendor} />
+                    <Route path="/vendors/update/:id" component={Vendor} />
                     <Route path="/" component={Dashboard} />
                   </Switch>
                 </Content>

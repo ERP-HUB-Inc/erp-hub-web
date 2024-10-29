@@ -9,13 +9,11 @@ import {
   Pagination, 
   Row
 } from "antd";
-import Component from "../../../../common/components/Component";
+import Component from "../../../../app/modules/common/components/Component";
 import "./index.css";
-import Enum from "../../../enums";
-import history from "../../../../common/router/history";
-import PurchaseService from "../../../services/stock/PurchaseOrderService";
-import PrivilegeService from "../../../../pos/services/settings/PrivilegeService";
-import NoPermissionV2 from "../../../../common/components/shares/List/NoPermissionV2";
+import Enum from "../../../../enums";
+import history from "../../../../app/modules/common/router/history";
+import PurchaseService from "../../../../services/PurchaseOrderService";
 
 export default class PurchaseOrderLists extends Component {
   constructor(props) {
@@ -122,15 +120,8 @@ export default class PurchaseOrderLists extends Component {
       this.setState({current: parseInt(params.get("offset"))});
     }
 
-    this.getPermission();
     this.fetchList(true);
 
-  }
-
-  getPermission(){
-    PrivilegeService.checkPermission(this.permissionModuleCode, "view")
-        .then(({data}) => this.setState({isHasAccessPermission: data}))
-        .catch(() => this.setState({isHasAccessPermission: false}));
   }
 
   fetchList(withPagination= false) {
@@ -172,7 +163,7 @@ export default class PurchaseOrderLists extends Component {
     this.Util.pushParamsToURL(this.pathname, params.toString());
 
     this.setState({loading: true});
-    this.service.lists(limit, offset, "", "", JSON.stringify(filter), searchKey, ranges)
+    this.service.get(limit, offset, "", "", JSON.stringify(filter), searchKey, ranges)
         .then((response) => {
           if (response.data && response.data.data) {
             this.setState({
@@ -334,98 +325,82 @@ export default class PurchaseOrderLists extends Component {
     };
     const params = new URLSearchParams(window.location.search);
 
-    return (
-        <React.Fragment>
-          {this.Util.isNotCheckingPermissionV2(this.state.isHasAccessPermission) &&
-          (this.state.isHasAccessPermission ?
-            <React.Fragment>
-              <div className="content-list">
-                <div style={{height: "100%"}}>
-                  <div className="table-wrapper">
-                    <Row>
-                      <Col span={6} style={{marginBottom: 0}}>
-                        <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_purchase_order" /></h3>
-                      </Col>
-                      <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "flex-end"}}>
-                        <Input
-                            name="search"
-                            placeholder={this.CATranslate("text_search", this.props.locale)}
-                            prefix={<Icon type="search" />}
-                            defaultValue={params.get("search") ? params.get("search") : ""}
-                            style={{height: 32, width: 200, marginRight: 10}}
-                            allowClear={true}
-                            onChange={this.handleSearch}
-                        />
-                        <DatePicker
-                            onChange={this.handleChangeDate}
-                            name="date"
-                            placeholder={this.CATranslate("text_select_date", this.props.locale)}
-                            defaultValue={params.get("date") ? moment(params.get("date")) : null}
-                            style={{maxWidth: 200, marginRight: 10}}
-                        />
-                        <Button
-                            type="primary"
-                            icon="plus"
-                            id="btnAdd"
-                            className="mg-right"
-                            onClick={()=> history.push({pathname: this.pathCreate})}>
-                          <this.Translate id="text_add_new" />
-                        </Button>
-                        <Button
-                            type="danger"
-                            icon="delete"
-                            disabled={this.state.isRequestDelete}
-                            onClick={this.showDeleteModal}>
-                          <this.Translate id="text_delete" />
-                        </Button>
-                      </Col>
-                    </Row>
-                    <this.Table
-                        bordered={true}
-                        rowKey="id"
-                        rowSelection={rowSelection}
-                        loading={this.state.loading}
-                        columns={this.columns}
-                        dataSource={this.state.data}
-                        onRow={record =>({
-                          onDoubleClick:() => history.push({pathname: this.pathUpdate+"/"+record.id})
-                        })}
-                    />
-                    <div style={{marginTop: 15}}>
-                      {this.renderPagination(this.state.pagination)}
-                    </div>
-                    <this.clearFloating/>
-                  </div>
-                </div>
+    return (<React.Fragment>
+        <div className="content-list">
+          <div style={{height: "100%"}}>
+            <div className="table-wrapper">
+              <Row>
+                <Col span={6} style={{marginBottom: 0}}>
+                  <h3 style={{marginBottom: 0, fontWeight: 600}}><this.Translate id="text_purchase_order" /></h3>
+                </Col>
+                <Col span={18} style={{textAlign: "right", display: "flex", justifyContent: "flex-end"}}>
+                  <Input
+                      name="search"
+                      placeholder="Enter PO number, vendor name, or receiver"
+                      prefix={<Icon type="search" />}
+                      defaultValue={params.get("search") ? params.get("search") : ""}
+                      style={{height: 32, width: 300, marginRight: 10}}
+                      allowClear={true}
+                      onChange={this.handleSearch}
+                  />
+                  <DatePicker
+                      onChange={this.handleChangeDate}
+                      name="date"
+                      placeholder={this.CATranslate("text_select_date", this.props.locale)}
+                      defaultValue={params.get("date") ? moment(params.get("date")) : null}
+                      style={{maxWidth: 200, marginRight: 10}}
+                  />
+                  <Button
+                      type="primary"
+                      icon="plus"
+                      id="btnAdd"
+                      className="mg-right"
+                      onClick={()=> history.push({pathname: this.pathCreate})}>
+                    <this.Translate id="text_add_new" />
+                  </Button>
+                </Col>
+              </Row>
+              <this.Table
+                  bordered={true}
+                  rowKey="id"
+                  rowSelection={rowSelection}
+                  loading={this.state.loading}
+                  columns={this.columns}
+                  dataSource={this.state.data}
+                  onRow={record =>({
+                    onDoubleClick:() => history.push({pathname: this.pathUpdate+"/"+record.id})
+                  })}
+              />
+              <div style={{marginTop: 15}}>
+                {this.renderPagination(this.state.pagination)}
               </div>
-              <this.Modal
-                  visible={this.state.modalVisible}
-                  wrapClassName="confirm-delete"
-                  footer={null}>
-                <div>
-                  { this.state.showDeleteModal &&
-                  <React.Fragment>
-                    <span className="icon-help icon-padding-right"></span>
-                    <span className="title">COMPLETED</span><br/>
-                    <span><this.Translate id="text_confirm_delete" /></span>
-                  </React.Fragment>
-                  }
-                </div>
-                <div className="ant-modal-footer">
-                  <this.Button className="danger" onClick={()=>this.setState({modalVisible: false})}>
-                    <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel"/>
-                  </this.Button>
-                  <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info">
-                    <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes"/>
-                  </this.Button>
-                </div>
-              </this.Modal>
+              <this.clearFloating/>
+            </div>
+          </div>
+        </div>
+        <this.Modal
+            visible={this.state.modalVisible}
+            wrapClassName="confirm-delete"
+            footer={null}>
+          <div>
+            { this.state.showDeleteModal &&
+            <React.Fragment>
+              <span className="icon-help icon-padding-right"></span>
+              <span className="title">COMPLETED</span><br/>
+              <span><this.Translate id="text_confirm_delete" /></span>
             </React.Fragment>
-            :
-            <NoPermissionV2/>
-          )
-          }
-        </React.Fragment>
+            }
+          </div>
+          <div className="ant-modal-footer">
+            <this.Button className="danger" onClick={()=>this.setState({modalVisible: false})}>
+              <span className="icon-cancel icon-padding-right"></span><this.Translate id="text_cancel"/>
+            </this.Button>
+            <this.Button onClick={this.handleDelete} loading={this.state.deleting} className="info">
+              <span className="icon-checked icon-padding-right"></span><this.Translate id="text_yes"/>
+            </this.Button>
+          </div>
+        </this.Modal>
+      </React.Fragment>
     );
   }
 

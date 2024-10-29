@@ -4,13 +4,13 @@ import {
   isMobileOnly
 } from "react-device-detect";
 import {Pagination} from "antd";
-import Component  from "../../Component";
-import menuSource from "../../layout/SiderBar/datasource";
-import BaseService from "../../../services/BaseService";
-import PrivilegeAction from "../../../../pos/action/settings/privilege";
-import PrivilegeService from "../../../../pos/services/settings/PrivilegeService";
+import Component  from "../app/modules/common/components/Component";
+import menuSource from "../app/modules/common/components/layout/SiderBar/datasource";
+import BaseService from "../app/modules/common/services/BaseService";
+import PrivilegeAction from "../app/modules/pos/action/settings/privilege";
+import PrivilegeService from "../app/modules/pos/services/settings/PrivilegeService";
 
-export default class List extends Component {
+export default class Datatable extends Component {
   constructor(props) {
     super(props);
     this.state = {

@@ -86,6 +86,7 @@ export default class Invoice extends Component {
 			dataIndex: "invoiceDate",
 			key: "invoiceDate",
 			width: 140,
+			sorter: (a, b) => a.invoiceDate.length - b.invoiceDate.length,
 			render: invoiceDate => this.Util.formatDate(invoiceDate, "DD/MM/YYYY")
 		},
 		{
@@ -94,6 +95,7 @@ export default class Invoice extends Component {
 			key: "status",
 			width: 120,
 			align: "center",
+			sorter: (a, b) => a.status.length - b.status.length,
 			render: (status, record) => {
 				if (status || status >= 0) {
 					const statusValue = this.INVOICE_STATUS_STR[status];
@@ -114,6 +116,7 @@ export default class Invoice extends Component {
 			dataIndex: "invoiceNumber",
 			key: "invoiceNumber",
 			width: 180,
+			sorter: (a, b) => a.invoiceNumber.length - b.invoiceNumber.length,
 			render: (invoiceNumber, record) => {
 				const menu = (
 				<Menu>
@@ -722,7 +725,7 @@ render() {
 				</Row>
 				<Row gutter={16} style={{ marginTop: 15, marginBottom: 15 }}>
 					<Col span={8}>
-						<Card>
+						<Card bordered={false}>
 							<Statistic
 								title={<this.Translate id="text_sent_invoice"/>}
 								value={summaryData.sentAmount ? summaryData.sentAmount.toFixed(2) : 0 }
@@ -733,7 +736,7 @@ render() {
 						</Card>
 					</Col>
 					<Col span={8}>
-						<Card>
+						<Card bordered={false}>
 							<Statistic
 								title={<this.Translate id="text_overdue"/>}
 								value={summaryData.overdueAmount ? summaryData.overdueAmount.toFixed(2) : 0 }
@@ -744,7 +747,7 @@ render() {
 						</Card>
 					</Col>
 					<Col span={8}>
-						<Card>
+						<Card bordered={false}>
 							<Statistic
 								title={<this.Translate id="text_paid"/>}
 								value={summaryData.paidAmount ? summaryData.paidAmount.toFixed(2) : 0 }

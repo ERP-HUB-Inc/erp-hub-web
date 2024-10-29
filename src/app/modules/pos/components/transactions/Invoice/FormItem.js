@@ -1832,7 +1832,7 @@ class NewInvoice extends React.PureComponent {
                                     )
                                 }
                             </Form.Item>
-                            <Button type="info" htmlType="submit" onClick={this.handleSave} loading={this.state.saveLoading} >
+                            <Button type="primary" icon="save" htmlType="submit" onClick={this.handleSave} loading={this.state.saveLoading} >
                                 <Translate id="text_save" />
                             </Button>
                             {

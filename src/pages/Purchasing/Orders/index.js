@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Form} from "antd";
-import PurchaseOrderPage from "../../../components/stock/PurchaseOrder";
+import PurchaseOrderPage from "./components";
 
 function PurchaseOrderContainer(props) {
   return <PurchaseOrderPage {...props} />;

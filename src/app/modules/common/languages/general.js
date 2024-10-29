@@ -136,7 +136,7 @@ export default {
 
   text_select_type: ["Select type", "ជ្រើសរើសប្រភេទ"],
 
-  text_select_date: ["Select Date", "ជ្រើសរើសថ្ងៃទី"],
+  text_select_date: ["Select date", "ជ្រើសរើសថ្ងៃទី"],
 
   text_price: ["Price", "តម្លៃ"],
 

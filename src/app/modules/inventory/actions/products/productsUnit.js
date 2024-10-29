@@ -5,7 +5,7 @@ export default {
   fetch: (limit, offset, sortField, sortOrder, filter, searchKey) => {
     return dispatch => {
       return dispatch({
-        type: Constant.REQUEST_PRODUCTS_UNIT,
+        type: Constant.REQUEST_UNIT,
         payload: UnitService.lists(limit, offset, sortField, sortOrder, filter, searchKey)
       });
     };
@@ -45,7 +45,7 @@ export default {
   resetFetch: () => {
     return dispatch => {
       return dispatch({
-        type: Constant.REQUEST_PRODUCTS_UNIT_RESET,
+        type: Constant.REQUEST_UNIT_RESET,
         payload: null
       });
     };
